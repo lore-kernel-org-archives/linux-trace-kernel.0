@@ -1,207 +1,230 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4411E6BB5D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFAB4D9FE
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444592; cv=none; b=bLSpHXtOK6gSW2CnV+CeSxlluN+jDb5orwh2O8+UZzYg+Q+/SOefKxBdQpQiLVnI+8avBeiDT+9iSLMiuOTpsE3b/fUNa72ce8Lefg4tBy37AabCspj+2fP1b+0+3KK07sBXWbS7ujNFdD3vUD5j9Yco4GkFvrRA0qOKG+dxMes=
+	t=1711447469; cv=none; b=WBrOT17H9bYK60J0mwg0sBSWoaTMS70yxvRr3GkXz8Bx60G5atK10vTR4dGF6q2CqVVs+8+AXMTeX0VRlKeH73Eo3e+gmpRR7JrQ3M91jR/uz/DdxSCFcl5k9iqEDFYPT79TCkvKu1hXzGT6Cj8VCt5f1M7KXWP2gGp4vz2YTvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711444592; c=relaxed/simple;
-	bh=+A3pGDGHlCvfB06rHbYDp02nhAm4PpLDNZT/uPMVXIU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kONPGBXagFTAToLtkeiWHgAjs1kBpVWgAMebsb7g5EdNNlWPOtxdC3Ro7qeR1Dpazhqbxy1PebvRwKO8yjksWCCpva9XlPk1tviB72cBuimU+fXmDpW+P398STf+s2GYjIAxwMySA4oKBeS1iYMCjzN9D4V/kZ/8osmBf3tBofE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bTTWmi/x; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711447469; c=relaxed/simple;
+	bh=YhZi47uHgagethz/FL/89AbKlyMLuDA2yhemmdX0Vh8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lDfBzZ30epzf9BJt5tGLrcv/qSh36mWIjrhPYKxTlvYv85VdbJzeRsIsU6rU1dz5YuzX4Ih/X3wJvpZEkUfciCI5TVFO9Nv0kAxTEvq/nspMaAtTcFm8CyLzFNJ42XALUF43OWHEWNvs8XuFDcVu4lJ0JoBG7oT7e8bkGA7iL2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BefCY7Tr; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bTTWmi/x"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d476d7972aso84505601fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 02:16:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BefCY7Tr"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4147ddecd52so18308945e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711444588; x=1712049388; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tEa7sTPJSW6I5rKhiraqApmqO1PEw1EfsKWWuLtpUqA=;
-        b=bTTWmi/xLUQ4ndFAtr6g1N2PagOQT7+4+FkdOJjBPR5XjAV4OPtuTcQ56z0gcXRGBX
-         YhpvsMupuiTPF08VAsgjzFVc787wZVo0MktpZBM5w4S+lyeiSNgBYC8fojJncFyx6LUe
-         cBRidTkcWmXYk6hhgAlhT8doYgC4eWf74Zm6yptko9fxXRBSoCwcfKcuIQS3z6GtI9+1
-         Kr1iycsH/uKNxa8eQHYWuS2SGpUAjxuGH2t99hMS3h1MH4ZNlOklR2PFCT4PHYF9IxbQ
-         8QzXeH3h8V1dqBIS+CGvfNHi2obgzUhcneMGZv5zXz9lwGl1c3uGw/JuJMRyxNRLxzBc
-         5bWQ==
+        d=google.com; s=20230601; t=1711447466; x=1712052266; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CaC0I3xs2cykMLEBqrJ0O6H6eh7LunXx8Vj6sAn28jg=;
+        b=BefCY7TrMvlxh3tZ4VkGlLEIuqMwnNeZXK7RZUL3wTDg2UtBbXNzAWR8+bxQDRFNTG
+         mGgWA9AtYrujp3ob9Yz9fOOoLns947/13e7RY+8HgIoUJcATvux8+jG4s1uTShfCY1vc
+         mIVkFVdGsaECzaqs9O5ZQtQvR5ctZyJj4QZmykE0WQyydPexdo1eBnWmaqoI0bHAJeXN
+         oUz/z8y62ZDkQ2v8quV4Ku8yMIi6xZbywAKR73tqLadM9Dko202kdIPTg17tPWyahVU7
+         8pyGQzIs/v5tSbcKHsUgNXnvvVD24lfGrZp1ZbGGHQg3yebXYzkF8ngKfBm/tnpn7BUS
+         eY2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711444588; x=1712049388;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tEa7sTPJSW6I5rKhiraqApmqO1PEw1EfsKWWuLtpUqA=;
-        b=jpAgpQ2LARwZXR3XBFeP1bjvl9k06JctDvKWCBKMfjFMjgrqz2ln6AafvlWu03CCkN
-         SbggLbV6Xfb979meAFBWxlQZrROpzodR6zGQVRUahIffu06JzILj+XNWGhMaZJ2EJLTX
-         R24kLzNXT9QWYufA++qHMUWQIyIV9UW9kONeQ6Me8LjOb6XJiCg5PFXDt02VgIqC1Hsl
-         /DFE2qkeIu4+qgEOQ1lKZnOOwRTuTYt9IggWsAldKGkCzOBGjl12NYDbvBfe1fATF6WF
-         E/Zv65wQ6ttD/SePycyNJTPv7SSvbaAtMXJvwlHmRblbkQVL6Gz4glXjJu18ayW5AnGb
-         yh1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVjV7i1Y8Pb0B6oC/7c2Q/ny1BnG0kAckmYfheZK9OKYiT9k8tCjD8IiKJmT6ZmxCuhYNinlcSDwVQQY8/0rlKigzj0j1gqO5HMSKm9DaVVIWtB
-X-Gm-Message-State: AOJu0YyT2AOykSVJ81SHmoRp5SJ2esl2o7/F4IuCACTr2j4TUVvvBsPg
-	6YeHmhtOBh9i5ly9cQRvHGVFhpvuNBAqAtm5nGp75/xjptMq1clyKAdxmqpgn40=
-X-Google-Smtp-Source: AGHT+IGGf2jXiDAnhlOkuMEI4imxOyrO3PVUvWqnMnUfZ8UI9s9IA++rAw1HPl8cghXzf2aqmiMA6w==
-X-Received: by 2002:a2e:88d0:0:b0:2d2:206a:2f2a with SMTP id a16-20020a2e88d0000000b002d2206a2f2amr6919353ljk.17.1711444588320;
-        Tue, 26 Mar 2024 02:16:28 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:e6b6:c92e:43ff:71d7])
-        by smtp.gmail.com with ESMTPSA id m15-20020adffe4f000000b0033e5c54d0d9sm11647606wrs.38.2024.03.26.02.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 02:16:27 -0700 (PDT)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: linux@armlinux.org.uk,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	agross@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	lukasz.luba@arm.com,
-	rui.zhang@intel.com,
-	mhiramat@kernel.org,
-	daniel.lezcano@linaro.org,
-	amit.kachhap@gmail.com,
-	corbet@lwn.net,
-	gregkh@linuxfoundation.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v6 5/5] sched/pelt: Remove shift of thermal clock
-Date: Tue, 26 Mar 2024 10:16:16 +0100
-Message-Id: <20240326091616.3696851-6-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326091616.3696851-1-vincent.guittot@linaro.org>
-References: <20240326091616.3696851-1-vincent.guittot@linaro.org>
+        d=1e100.net; s=20230601; t=1711447466; x=1712052266;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CaC0I3xs2cykMLEBqrJ0O6H6eh7LunXx8Vj6sAn28jg=;
+        b=vwCCLFN9Z1ETUKaGiO8CJYjoTgHlFN8a+qhCD3SJn8VFs/JBZ+6weXYIg3mEy0eCeT
+         SqJ2Trgv80HK+NkHaVitM3x4TmocdG4+W3TEziC6Y7nd2Cg779F20MZxD3YIo8uD0gAv
+         Wo8M5z3H7YBFxZpU5u26YgLGm6qn9qCYM3Hwhh1PaB9P9o/g9WQWcFtd6rNVW0D73JO+
+         eGOpKJkPZFEVi9yfTyBXDxJm7WBwA4dk/vxJDonvzzw75ZjYzwPF4lnCXyTh+wOqxC16
+         Z633c/nkXXfgOiwc2zSG1yJQKMAWLT2pUDiX6NBjreu3PnUjaBLeRVOJVkBhqUmNOO97
+         CshQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqiCki2vuC1oBqYpqqCCzsHXKZsVg7ltzNJ6MfS9CU8YwKVn+T6ApjGpIsAoXZayTmjxFvZ0JarAy3R9DuEaitQFazXWXxpjPeM5Y6BgMuoXlQ
+X-Gm-Message-State: AOJu0YxSionQlJjHiOtVR9ckUbnh1L6IeNYP7YVhjzqqMwddHPpCCwIm
+	IyimvY9aEks1dvrFX9+HMisZ4nHY30fwBpi/5zTYIGmD1QQc9WXvozXPleiCEzPhZH3Le3dB1IH
+	kEOZ0vJIhFK76l209Cw==
+X-Google-Smtp-Source: AGHT+IHsQzrLKKad1YiXVvjOy/OQ7PFGai04aBXP/VkD1cf7DAHciKN3msfe26ixbUO5UV184AumeqfPxe7Ns8jf
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:1d05:b0:413:f62a:aaf8 with
+ SMTP id l5-20020a05600c1d0500b00413f62aaaf8mr30091wms.4.1711447466330; Tue,
+ 26 Mar 2024 03:04:26 -0700 (PDT)
+Date: Tue, 26 Mar 2024 10:03:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240326100330.1321861-1-vdonnefort@google.com>
+Subject: [PATCH v19 0/5] Introducing trace buffer mapping by user-space
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The optional shift of the clock used by thermal/hw load avg has been
-introduced to handle case where the signal was not always a high frequency
-hw signal. Now that cpufreq provides a signal for firmware and
-SW pressure, we can remove this exception and always keep this PELT signal
-aligned with other signals.
-Mark sysctl_sched_migration_cost boot parameter as deprecated
+The tracing ring-buffers can be stored on disk or sent to network
+without any copy via splice. However the later doesn't allow real time
+processing of the traces. A solution is to give userspace direct access
+to the ring-buffer pages via a mapping. An application can now become a
+consumer of the ring-buffer, in a similar fashion to what trace_pipe
+offers.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Qais Yousef <qyousef@layalina.io>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
----
- .../admin-guide/kernel-parameters.txt          |  1 +
- kernel/sched/core.c                            |  2 +-
- kernel/sched/fair.c                            | 10 ++--------
- kernel/sched/sched.h                           | 18 ------------------
- 4 files changed, 4 insertions(+), 27 deletions(-)
+Support for this new feature can already be found in libtracefs from
+version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index bb884c14b2f6..3f390cc5f77e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5807,6 +5807,7 @@
- 			but is useful for debugging and performance tuning.
- 
- 	sched_thermal_decay_shift=
-+			[Deprecated]
- 			[KNL, SMP] Set a decay shift for scheduler thermal
- 			pressure signal. Thermal pressure signal follows the
- 			default decay period of other scheduler pelt
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 67a8302c3131..1a914388144a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5680,7 +5680,7 @@ void sched_tick(void)
- 
- 	update_rq_clock(rq);
- 	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
--	update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure);
-+	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
- 	curr->sched_class->task_tick(rq, curr, 0);
- 	if (sched_feat(LATENCY_WARN))
- 		resched_latency = cpu_resched_latency(rq);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2cdc4c242afe..3ac17b20350a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -78,15 +78,9 @@ static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
--int sched_hw_decay_shift;
- static int __init setup_sched_thermal_decay_shift(char *str)
- {
--	int _shift = 0;
--
--	if (kstrtoint(str, 0, &_shift))
--		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
--
--	sched_hw_decay_shift = clamp(_shift, 0, 10);
-+	pr_warn("Ignoring the deprecated sched_thermal_decay_shift= option\n");
- 	return 1;
- }
- __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-@@ -9371,7 +9365,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure) |
-+		  update_hw_load_avg(now, rq, hw_pressure) |
- 		  update_irq_load_avg(rq, 0);
- 
- 	if (others_have_blocked(rq))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 5d73d4612e58..35a05f95af3a 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1543,24 +1543,6 @@ static inline u64 rq_clock_task(struct rq *rq)
- 	return rq->clock_task;
- }
- 
--/**
-- * By default the decay is the default pelt decay period.
-- * The decay shift can change the decay period in
-- * multiples of 32.
-- *  Decay shift		Decay period(ms)
-- *	0			32
-- *	1			64
-- *	2			128
-- *	3			256
-- *	4			512
-- */
--extern int sched_hw_decay_shift;
--
--static inline u64 rq_clock_hw(struct rq *rq)
--{
--	return rq_clock_task(rq) >> sched_hw_decay_shift;
--}
--
- static inline void rq_clock_skip_update(struct rq *rq)
- {
- 	lockdep_assert_rq_held(rq);
+Vincent
+
+v18 -> v19:
+  * Use VM_PFNMAP and vm_insert_pages
+  * Allocate ring-buffer subbufs with __GFP_COMP
+  * Pad the meta-page with the zero-page to align on the subbuf_order
+  * Extend the ring-buffer test with mmap() dedicated suite
+
+v17 -> v18:
+  * Fix lockdep_assert_held
+  * Fix spin_lock_init typo
+  * Fix CONFIG_TRACER_MAX_TRACE typo
+
+v16 -> v17:
+  * Documentation and comments improvements.
+  * Create get/put_snapshot_map() for clearer code.
+  * Replace kzalloc with kcalloc.
+  * Fix -ENOMEM handling in rb_alloc_meta_page().
+  * Move flush(cpu_buffer->reader_page) behind the reader lock.
+  * Move all inc/dec of cpu_buffer->mapped behind reader lock and buffer
+    mutex. (removes READ_ONCE/WRITE_ONCE accesses).
+
+v15 -> v16:
+  * Add comment for the dcache flush.
+  * Remove now unnecessary WRITE_ONCE for the meta-page.
+
+v14 -> v15:
+  * Add meta-page and reader-page flush. Intends to fix the mapping
+    for VIVT and aliasing-VIPT data caches.
+  * -EPERM on VM_EXEC.
+  * Fix build warning !CONFIG_TRACER_MAX_TRACE.
+
+v13 -> v14:
+  * All cpu_buffer->mapped readers use READ_ONCE (except for swap_cpu)
+  * on unmap, sync meta-page teardown with the reader_lock instead of
+    the synchronize_rcu.
+  * Add a dedicated spinlock for trace_array ->snapshot and ->mapped.
+    (intends to fix a lockdep issue)
+  * Add kerneldoc for flags and Reserved fields.
+  * Add kselftest for snapshot/map mutual exclusion.
+
+v12 -> v13:
+  * Swap subbufs_{touched,lost} for Reserved fields.
+  * Add a flag field in the meta-page.
+  * Fix CONFIG_TRACER_MAX_TRACE.
+  * Rebase on top of trace/urgent.
+  * Add a comment for try_unregister_trigger()
+
+v11 -> v12:
+  * Fix code sample mmap bug.
+  * Add logging in sample code.
+  * Reset tracer in selftest.
+  * Add a refcount for the snapshot users.
+  * Prevent mapping when there are snapshot users and vice versa.
+  * Refine the meta-page.
+  * Fix types in the meta-page.
+  * Collect Reviewed-by.
+
+v10 -> v11:
+  * Add Documentation and code sample.
+  * Add a selftest.
+  * Move all the update to the meta-page into a single
+    rb_update_meta_page().
+  * rb_update_meta_page() is now called from
+    ring_buffer_map_get_reader() to fix NOBLOCK callers.
+  * kerneldoc for struct trace_meta_page.
+  * Add a patch to zero all the ring-buffer allocations.
+
+v9 -> v10:
+  * Refactor rb_update_meta_page()
+  * In-loop declaration for foreach_subbuf_page()
+  * Check for cpu_buffer->mapped overflow
+
+v8 -> v9:
+  * Fix the unlock path in ring_buffer_map()
+  * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+  * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+
+v7 -> v8:
+  * Drop the subbufs renaming into bpages
+  * Use subbuf as a name when relevant
+
+v6 -> v7:
+  * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+  * Support for subbufs
+  * Rename subbufs into bpages
+
+v5 -> v6:
+  * Rebase on next-20230802.
+  * (unsigned long) -> (void *) cast for virt_to_page().
+  * Add a wait for the GET_READER_PAGE ioctl.
+  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+    in the irq_work.
+  * Rearrange id in struct buffer_page.
+  * Rearrange the meta-page.
+  * ring_buffer_meta_page -> trace_buffer_meta_page.
+  * Add meta_struct_len into the meta-page.
+
+v4 -> v5:
+  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+
+v3 -> v4:
+  * Add to the meta-page:
+       - pages_lost / pages_read (allow to compute how full is the
+	 ring-buffer)
+       - read (allow to compute how many entries can be read)
+       - A reader_page struct.
+  * Rename ring_buffer_meta_header -> ring_buffer_meta
+  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+  * Properly consume events on ring_buffer_map_get_reader_page() with
+    rb_advance_reader().
+
+v2 -> v3:
+  * Remove data page list (for non-consuming read)
+    ** Implies removing order > 0 meta-page
+  * Add a new meta page field ->read
+  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+
+v1 -> v2:
+  * Hide data_pages from the userspace struct
+  * Fix META_PAGE_MAX_PAGES
+  * Support for order > 0 meta-page
+  * Add missing page->mapping.
+
+Vincent Donnefort (5):
+  ring-buffer: allocate sub-buffers with __GFP_COMP
+  ring-buffer: Introducing ring-buffer mapping functions
+  tracing: Allow user-space mapping of the ring-buffer
+  Documentation: tracing: Add ring-buffer mapping
+  ring-buffer/selftest: Add ring-buffer mapping test
+
+ Documentation/trace/index.rst                 |   1 +
+ Documentation/trace/ring-buffer-map.rst       | 106 +++++
+ include/linux/ring_buffer.h                   |   6 +
+ include/uapi/linux/trace_mmap.h               |  48 +++
+ kernel/trace/ring_buffer.c                    | 402 +++++++++++++++++-
+ kernel/trace/trace.c                          | 122 +++++-
+ kernel/trace/trace.h                          |   1 +
+ tools/testing/selftests/ring-buffer/Makefile  |   8 +
+ tools/testing/selftests/ring-buffer/config    |   2 +
+ .../testing/selftests/ring-buffer/map_test.c  | 302 +++++++++++++
+ 10 files changed, 987 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/trace/ring-buffer-map.rst
+ create mode 100644 include/uapi/linux/trace_mmap.h
+ create mode 100644 tools/testing/selftests/ring-buffer/Makefile
+ create mode 100644 tools/testing/selftests/ring-buffer/config
+ create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
+
+
+base-commit: 7604256cecef34a82333d9f78262d3180f4eb525
 -- 
-2.34.1
+2.44.0.396.g6e790dbe36-goog
 
