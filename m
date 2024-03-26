@@ -1,116 +1,149 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C5D13D26E;
-	Tue, 26 Mar 2024 19:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F6013D25B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480902; cv=none; b=ODD9L5ASJJz8EYNPM95c+V73KHkPPjb+DBvUQJFjVMIJ5lhwKG5b4rgv+kMtihYjuPVJFeQGTG4GMbU3wAHRzmoOrdul7ecLjkM81pooUh7pr/kW0QSG4EVowKhoiVmUUskUaXpRdzGGlFyt4cApfPjb+SEBp2a63GF23p2iW2k=
+	t=1711481092; cv=none; b=nuyyQubky2aEfsqcZTGBJEbRtDGX4a69YFiOsLb6GApdcyi0jVZBu4KKYZJ6jW0B/+9hHmcjs1FCBayHTeXslpYHei5xhR6js33ZkTl/3KcMj0gVVCBjp4PyCV2DWtqeSCVIz4AiqFwbPBX5UXgiiqMghMEY+AxgWdsk9IEgfII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480902; c=relaxed/simple;
-	bh=3A3cUofIlRna705vx5jsCPCgaHRLlKXj/Nz0QjfDrdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LNFQAahyJlxN2Kmq4JYxKgJvZ4ZQCeY58TbM2o/32w/O+eDbsQMI53u6Ka+xu1VOI7wmTIqNyNTbYbDmCKxeZRhr4clrupYYto3u3IxFJer0scUfVq2aiEc8x/6WQl6a5zvlcXofcoBWIf1vuYmzT8Css+1cufEh4uJcBk9V7fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=R5KMHK5C; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1711481092; c=relaxed/simple;
+	bh=nJEBYeRpGreh1QGrVI8xb2lqButvSZ322Cq+521//Gw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XuSUX8EQHfiNFlMwyrBYrMZPpRufegU0tc6rTitM0zcX53YOHDEYO5klBqBjwugAk/G3766EYhI82T3xpSKmIHshg81Q5Betl7zEMjAbNo3Qe7zjVekkJrFsjyMn21FV8fP71a9c+njorQgB/rfa1lRvYLfeXFUk8W1uGpDBEOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=B273VRIJ; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="R5KMHK5C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=CWDnJWjsGyR5bMSxtWzq19TTn4cNaR7RRe3msB2JQWY=;
-	t=1711480901; x=1712690501; b=R5KMHK5C5UAKY8E905YeRlpAPjuYJtTc/ozGWGjAxjISSM7
-	xzMKQzqBRpsygw+ahuWUwbQ/DuAse6BvFqpNmOsv3GN02Db1SRgi9Ymrbq9ufrUzzKRjHv59CIcYd
-	lnOUCgy/+BW9cvD7AgrIfbTok7S0rNWnQrLWTIAtd7pmM3nyV/EifmviLU6pz2xkjzY/zX07stSEf
-	+cpmh5Qxtlb9DjuWwZHF0uvRkljs+mt+i5htA3+WdiuhpgRkwh6uoBbcmjZacSwNz/EwFJS3pNQHi
-	tgrNylaqfMR8khmqldg90zkMG5dPInQVI46OC/A3ZI24TwxnV0KLfESV2V04ihlg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rpCMc-0000000FvLV-1Pu0;
-	Tue, 26 Mar 2024 20:21:38 +0100
-From: Johannes Berg <johannes@sipsolutions.net>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [RFC PATCH v2 4/4] tracing/timer: use __print_sym()
-Date: Tue, 26 Mar 2024 20:15:59 +0100
-Message-ID: <20240326202131.666447ad089a.I5e112e423a69704fa05db74a05a6ebaad45d4f6e@changeid>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240326192131.438648-6-johannes@sipsolutions.net>
-References: <20240326192131.438648-6-johannes@sipsolutions.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="B273VRIJ"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so85594839f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1711481089; x=1712085889; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ldMsiEP3mMIpydboV2AKm9Ciyx4AVPzGnmoIpfuSLAY=;
+        b=B273VRIJvuaLdT0PcUdpfdXj7ikTwf5++cK/1AeEyiFcAP4cxK4mM7r95Uv9GLcZ9U
+         mdmMmEax/pay4QZNK4/JPbS19fCH7XICDqc7KX39MGMT6xIS4xNdZvO999PyU0uR0s5P
+         TynnZLio/9xEancMrDWcP4XAzEBgBsKQoq1qw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711481089; x=1712085889;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ldMsiEP3mMIpydboV2AKm9Ciyx4AVPzGnmoIpfuSLAY=;
+        b=BPJ+7FlWL1S3lH8oVTzfmbORvKJKnwKpposR7nVF3FOItdJ+/DldiV8Cqld8S0H4sj
+         utc+y+KqsCDbNFO3nZIwcyhr/EoNwTjZbywadHY+7AeVkdGt/yU0MognbEFFPo5waouK
+         5WBz5TsQosmQtt8o4XthnsqPoq3mN3TwfGn7BJJa24N10A/S3IkUvKFCbHNNqZ5ucevK
+         jU82LGp+162k6LTfPOjTg+heC7Vw3Su+CC1Gekx4xJXCsy4p9Vs6VOT6Uq+ze/z0bHWz
+         xrOUpKAYPY1Ri6gdMnrrbP3HgzWDycTZh6ELqG7lJJGieJc4zdUGmJKTl2Wh3sm5k7We
+         ttdg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+1IzGerQryR05wS1cvUzA95l875bTD58KTEcauMuXsfDozAZFqSIfUx0Q4LsscDV2s/dpj0ShPZwgLJE1BXPaJ5ku3HEt3RpDKDNu+4Fl/ml4
+X-Gm-Message-State: AOJu0Yxq3amuIN9UV80cPt2JCTzY9buebeBHY3/R25/N8BmOK96wF7xN
+	Pk4NL/9Oaxs7WC6HbyCkMH64W+80BvvnHV9zW4a1U3JxTccIAEbfr1Hg2Md0bZc=
+X-Google-Smtp-Source: AGHT+IFUHe5xOEXL/Du4BCSSxq1iQ4534XkkfdPWlPWgaWBt+Z+AC8GWX/FuKYk9lSWgJA/RBthZ0w==
+X-Received: by 2002:a92:dc4f:0:b0:368:a917:168f with SMTP id x15-20020a92dc4f000000b00368a917168fmr1220395ilq.3.1711481088841;
+        Tue, 26 Mar 2024 12:24:48 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id v12-20020a92d24c000000b00366bb13bd89sm3115775ilg.41.2024.03.26.12.24.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 12:24:48 -0700 (PDT)
+Message-ID: <54e5ac2c-d844-47c2-b811-03d949554515@linuxfoundation.org>
+Date: Tue, 26 Mar 2024 13:24:47 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/ftrace: Fix event filter target_func selection
+Content-Language: en-US
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, aishwarya.tcv@arm.com,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240320141844.1779984-1-mark.rutland@arm.com>
+ <20240321090950.f96e6b3918bb2dfd121db138@kernel.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240321090950.f96e6b3918bb2dfd121db138@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+On 3/20/24 18:09, Masami Hiramatsu (Google) wrote:
+> On Wed, 20 Mar 2024 14:18:44 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+>> The event filter function test has been failing in our internal test
+>> farm:
+>>
+>> | # not ok 33 event filter function - test event filtering on functions
+>>
+>> Running the test in verbose mode indicates that this is because the test
+>> erroneously determines that kmem_cache_free() is the most common caller
+>> of kmem_cache_free():
+>>
+>>    # # + cut -d: -f3 trace
+>>    # # + sed s/call_site=([^+]*)+0x.*/1/
+>>    # # + sort
+>>    # # + uniq -c
+>>    # # + sort
+>>    # # + tail -n 1
+>>    # # + sed s/^[ 0-9]*//
+>>    # # + target_func=kmem_cache_free
+>>
+>> .. and as kmem_cache_free() doesn't call itself, setting this as the
+>> filter function for kmem_cache_free() results in no hits, and
+>> consequently the test fails:
+>>
+>>    # # + grep kmem_cache_free trace
+>>    # # + grep kmem_cache_free
+>>    # # + wc -l
+>>    # # + hitcnt=0
+>>    # # + grep kmem_cache_free trace
+>>    # # + grep -v kmem_cache_free
+>>    # # + wc -l
+>>    # # + misscnt=0
+>>    # # + [ 0 -eq 0 ]
+>>    # # + exit_fail
+>>
+>> This seems to be because the system in question has tasks with ':' in
+>> their name (which a number of kernel worker threads have). These show up
+>> in the trace, e.g.
+>>
+>>    test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
+>>
+>> .. and so when we try to extact the call_site with:
+>>
+>>    cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
+>>
+>> .. the 'cut' command will extrace the column containing
+>> 'kmem_cache_free' rather than the column containing 'call_site=...', and
+>> the 'sed' command will leave this unchanged. Consequently, the test will
+>> decide to use 'kmem_cache_free' as the filter function, resulting in the
+>> failure seen above.
+>>
+>> Fix this by matching the 'call_site=<func>' part specifically to extract
+>> the function name.
+>>
+> 
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> I think this should be a fix because test task name can have ':'.
+> 
+> Fixes: eb50d0f250e9 ("selftests/ftrace: Choose target function for filter test from samples")
+> Cc: stable@vger.kernel.org
+> 
+> Shuah, can you pick this as a fix?
+> 
 
-Use the new __print_sym() in the timer tracing, just to show
-how to convert something. This adds ~80 bytes of .text for a
-saving of ~1.5K of data in my builds.
+Applied to linux-ksleftest fixes for next rc
 
-Note the format changes from
-
-print fmt: "success=%d dependency=%s", REC->success, __print_symbolic(REC->dependency, { 0, "NONE" }, { (1 << 0), "POSIX_TIMER" }, { (1 << 1), "PERF_EVENTS" }, { (1 << 2), "SCHED" }, { (1 << 3), "CLOCK_UNSTABLE" }, { (1 << 4), "RCU" }, { (1 << 5), "RCU_EXP" })
-
-to
-
-print fmt: "success=%d dependency=%s", REC->success, __print_symbolic(REC->dependency, { 0, "NONE" }, { 1, "POSIX_TIMER" }, { 2, "PERF_EVENTS" }, { 4, "SCHED" }, { 8, "CLOCK_UNSTABLE" }, { 16, "RCU" }, { 32, "RCU_EXP" })
-
-Since the values are now just printed in the show function as
-pure decimal values.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- include/trace/events/timer.h | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
-
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index 1ef58a04fc57..d483abffed78 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -402,26 +402,18 @@ TRACE_EVENT(itimer_expire,
- #undef tick_dep_mask_name
- #undef tick_dep_name_end
- 
--/* The MASK will convert to their bits and they need to be processed too */
--#define tick_dep_name(sdep) TRACE_DEFINE_ENUM(TICK_DEP_BIT_##sdep); \
--	TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
--#define tick_dep_name_end(sdep)  TRACE_DEFINE_ENUM(TICK_DEP_BIT_##sdep); \
--	TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
--/* NONE only has a mask defined for it */
--#define tick_dep_mask_name(sdep) TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
--
--TICK_DEP_NAMES
--
--#undef tick_dep_name
--#undef tick_dep_mask_name
--#undef tick_dep_name_end
--
- #define tick_dep_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
- #define tick_dep_mask_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
- #define tick_dep_name_end(sdep) { TICK_DEP_MASK_##sdep, #sdep }
- 
-+TRACE_DEFINE_SYM_LIST(tick_dep_names, TICK_DEP_NAMES);
-+
-+#undef tick_dep_name
-+#undef tick_dep_mask_name
-+#undef tick_dep_name_end
-+
- #define show_tick_dep_name(val)				\
--	__print_symbolic(val, TICK_DEP_NAMES)
-+	__print_sym(val, tick_dep_names)
- 
- TRACE_EVENT(tick_stop,
- 
--- 
-2.44.0
+thanks,
+-- Shuah
 
