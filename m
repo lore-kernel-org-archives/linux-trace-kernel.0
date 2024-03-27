@@ -1,133 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D0614535D;
-	Wed, 27 Mar 2024 14:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B128014E2EE;
+	Wed, 27 Mar 2024 17:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549434; cv=none; b=ngNwIiSdRROELj3XeEw5m0RtVeMsR+MWkrI/7alHmjRIm8NQ6aAFnhkrcr4FoZGnMutbKHq4+K4EkuqLg1ayf56IOQl4ZBf7qmt3gOu89aR8ELn/AR/U7vIy3h7ZLiL3YmUbT9ki0nDNoqLzElGxTB2pGM9tzrMmW4sHRDeNcQ4=
+	t=1711559166; cv=none; b=YhA5FC4jlC3m/jMcdR2xshXxDwMbJJgQPvcA1aRqyehnbyU+6iS1IIa2WzVJe2QPvMnLX6EjJ3xXRcFtx4hsacze6eVrfIzDCz45QlVhjBW9WDu39OeLqYfVoMgYVWOqCSc/VNSXYH9FtTPbLh9VdB8PlNjMLEk7ExBsyc0k2UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549434; c=relaxed/simple;
-	bh=BmZ4SjxSQBnkpuUFtgR3wQXxh1obJ6n5r0ucuS+Wj4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YMilRaZRvlDVdNTUS4PBRb6kVK9YaZJw7FU98e/AntXHg7mp3CHt+isYZ1vPsZSTf20bZ776bpLK4BuozlIvKzM5nXYTNQP00LLfsHlbzSPTrzjkOrhH0uG3jloOo3M9GZJwMOa5Fu4mOw9gpKIMhlCuQdpFHHtpjJ3liFc5prM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8748DC433F1;
-	Wed, 27 Mar 2024 14:23:53 +0000 (UTC)
-Date: Wed, 27 Mar 2024 10:26:34 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tio Zhang <tiozhang@didiglobal.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <zyhtheonly@yeah.net>,
- <zyhtheonly@gmail.com>
-Subject: Re: [PATCH] trace/sched: add tgid for sched_wakeup_template
-Message-ID: <20240327102634.17013392@gandalf.local.home>
-In-Reply-To: <20240327084948.GA28114@didi-ThinkCentre-M930t-N000>
-References: <20240327084948.GA28114@didi-ThinkCentre-M930t-N000>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711559166; c=relaxed/simple;
+	bh=ahZyAforUiq+wNzRyymfSb7gbzaJyiqD41A/VBDCRLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TjdFiuI7xCaSHLHNFQFcG0fxugKTdjrCCAjBLaaQzEVAT5MB+xWlOa29GaV153bKzAm/U0Q6+u1hArY0jNlG1N9ljkgbPFUPiJyHHsI8ciOotAM5FAcn1maxjawAP+SiptYdg6a84fHq2gcpuFQjcYr63qVfZEFqg8H26oSTqak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7NmMz1a; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7NmMz1a"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a46f0da1b4fso3161566b.2;
+        Wed, 27 Mar 2024 10:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711559163; x=1712163963; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BUi4zEedr7KDhvHU0G0GEp0diV72wfwI5jg0UCvkAig=;
+        b=W7NmMz1adzD4xD9ZaD40hpdYRNJeP6pnvs3/osh3Ljz6zNen2HCuMXr0kvLnYE3DxC
+         diVIDBB8K0hCpu8l7lyZEnqDkEAXNBO8SLNAJifS4yi7cqiJTi46dxNhfZDqQVJv2ckI
+         Wel/BRYMQE5p/fJ+vZmxMkTKJiJlRUSI8K89ov/aVzXeDq52nNM8UsOfd9Gb523Kk9/w
+         jD3xeYyj3VjFjsHbUYw/RyWzoOSGbVpmjRo7vzkqT1XjvAuc+e1lguuR1nimrcQKURCS
+         55aMtVG5Kbg+st103pDRiDq5+h2y5K7IHgRMcmIy/hIuEkDpxjqxLc6Q5tfTwa8Umz3s
+         9gyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711559163; x=1712163963;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BUi4zEedr7KDhvHU0G0GEp0diV72wfwI5jg0UCvkAig=;
+        b=kVIRltAugArcPs53SXx2DvGV3nvOz05ID4T+4DpLpDdYkqMb/AkFShP3eyH2h8mDrz
+         yq3vqD5EgLDJrT8KJrj65hHIZ8VQUffQobe1+9lQVK0FftVM7vLaj9b3HbbzrnR40IPK
+         gGTGRFbq1XFSSC2A0es0W/k2z9okN2NjZqOE424ZncYM/yPjN6Qk4jo3M60uIht5q/Ff
+         fn70HmdSZ0UecDQ5qS6Lq99uvyMJvSEg61aCEnMeRsmsr10H2v6qzRwn2/U2U327Xrco
+         y3u1bvSxKl7Gm2g7AK5jym5KCXNkLT0a/ZbzJiABmvZ6m8kN1NONrUmoznjJhjmkAFW4
+         IRzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlGY06RdSAPg+Vve6/Q+QTxGNfeCbhyJJS1zeO/WrItC5Q1PFftZo3o5LcN4BjV47REFks0tAg8wcehmfQU2glKNigszXv9fH2lEsQ6jU3CltdjQP5k4l0t3YEmg9ntmixYVBfO4RJyxmEScDtLrtYo4RpITQrHhn3r86abFwjMkY046FY51fyCAsFfowfjY6YC/1TGTU4VH5IbTb6SbJsmcWREPrtbw==
+X-Gm-Message-State: AOJu0YzgwNLNTaMb5EoskME7IGt2MjUt0CGik99ZDcRbs1w86D75VR6M
+	hJKKR71bndpDY+zL+bziv71eJewoSTdQkAGYl8/I5wP/aHXPAabf
+X-Google-Smtp-Source: AGHT+IE1PEKoVdAhIynLjkvyagQxfnizdEEGmUrp4CFr48Ozk0XLMxEW+3OrgIWT6Rqhttdhya5atg==
+X-Received: by 2002:a17:906:3798:b0:a46:206d:369b with SMTP id n24-20020a170906379800b00a46206d369bmr52979ejc.28.1711559162756;
+        Wed, 27 Mar 2024 10:06:02 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::4:b63d])
+        by smtp.gmail.com with ESMTPSA id ao18-20020a170907359200b00a46aba003eesm5624401ejc.215.2024.03.27.10.06.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 10:06:02 -0700 (PDT)
+Date: Wed, 27 Mar 2024 17:06:01 +0000
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+ <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+ <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
 
-On Wed, 27 Mar 2024 16:50:57 +0800
-Tio Zhang <tiozhang@didiglobal.com> wrote:
-
-> By doing this, we are able to filter tasks by tgid while we are
-> tracing wakeup events by ebpf or other methods.
+> > Masami,
+> > 
+> > Given the discussion around per-cpu rw semaphore and need for
+> > (internal) batched attachment API for uprobes, do you think you can
+> > apply this patch as is for now? We can then gain initial improvements
+> > in scalability that are also easy to backport, and Jonathan will work
+> > on a more complete solution based on per-cpu RW semaphore, as
+> > suggested by Ingo.
 > 
-> For example, when we care about tracing a user space process (which has
-> uncertain number of LWPs, i.e, pids) to monitor its wakeup latency,
-> without tgid available in sched_wakeup tracepoints, we would struggle
-> finding out all pids to trace, or we could use kprobe to achieve tgid
-> tracing, which is less accurate and much less efficient than using
-> tracepoint.
+> Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
+> I would like to wait for the next version.
 
-This is a very common trace event, and I really do not want to add more
-data than necessary to it, as it increases the size of the event which
-means less events can be recorded on a fixed size trace ring buffer.
+My initial tests show a nice improvement on the over RW spinlocks but
+significant regression in acquiring a write lock. I've got a few days
+vacation over Easter but I'll aim to get some more formalised results out
+to the thread toward the end of next week.
 
-Note, you are not modifying the "tracepoint", but you are actually
-modifying a "trace event".
-
- "tracepoint" is the hook in the kernel code:
-
-   trace_sched_wakeup()
-
- "trace event" is defined by TRACE_EVENT() macro (and friends) that defines
-     what is exposed in the tracefs file system.
-
-I thought ebpf could hook directly to the tracepoint which is:
-
-	trace_sched_wakeup(p);
-
-I believe you can have direct access to the 'p' before it is processed from ebpf.
-
-There's also "trace probes" (I think we are lacking documentation on this,
-as well as event probes :-p):
-
- $ gdb vmlinux
-(gdb) p &((struct task_struct *)0)->tgid
-$1 = (pid_t *) 0x56c
-(gdb) p &((struct task_struct *)0)->pid
-$2 = (pid_t *) 0x568
-
- # echo 't:wakeup sched_waking pid=+0x568($arg1):u32 tgid=+0x56c($arg1):u32' > /sys/kernel/tracing/dynamic_events
-
- # trace-cmd start -e wakeup
- # trace-cmd show
-       trace-cmd-7307    [003] d..6. 599486.485762: wakeup: (__probestub_sched_waking+0x4/0x10) pid=845 tgid=845
-            bash-845     [001] d.s4. 599486.486136: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
-            bash-845     [001] d..4. 599486.486336: wakeup: (__probestub_sched_waking+0x4/0x10) pid=5516 tgid=5516
-   kworker/u18:2-5516    [001] d..4. 599486.486445: wakeup: (__probestub_sched_waking+0x4/0x10) pid=818 tgid=818
-          <idle>-0       [001] d.s4. 599486.491206: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
-          <idle>-0       [001] d.s5. 599486.493218: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
-          <idle>-0       [001] d.s4. 599486.497200: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
-          <idle>-0       [003] d.s4. 599486.829209: wakeup: (__probestub_sched_waking+0x4/0x10) pid=70 tgid=70
-
-The above attaches to the tracepoint and $arg1 is the 'struct task_struct *p'.
-
--- Steve
-
+Jon.
 
 > 
-> Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
-> Signed-off-by: Dylane Chen <dylanechen@didiglobal.com>
-> ---
->  include/trace/events/sched.h | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> Thank you,
 > 
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index dbb01b4b7451..ea7e525649e5 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -149,6 +149,7 @@ DECLARE_EVENT_CLASS(sched_wakeup_template,
->  		__field(	pid_t,	pid			)
->  		__field(	int,	prio			)
->  		__field(	int,	target_cpu		)
-> +		__field(	pid_t,	tgid			)
->  	),
->  
->  	TP_fast_assign(
-> @@ -156,11 +157,12 @@ DECLARE_EVENT_CLASS(sched_wakeup_template,
->  		__entry->pid		= p->pid;
->  		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
->  		__entry->target_cpu	= task_cpu(p);
-> +		__entry->tgid		= p->tgid;
->  	),
->  
-> -	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d",
-> +	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d tgid=%d",
->  		  __entry->comm, __entry->pid, __entry->prio,
-> -		  __entry->target_cpu)
-> +		  __entry->target_cpu, __entry->tgid)
->  );
->  
->  /*
-
+> > 
+> > >
+> > > BTW, how did you measure the overhead? I think spinlock overhead
+> > > will depend on how much lock contention happens.
+> > >
+> > > Thank you,
+> > >
+> > > >
+> > > > [0] https://docs.kernel.org/locking/spinlocks.html
+> > > >
+> > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > > > ---
+> > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> > > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > >
+> > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > > index 929e98c62965..42bf9b6e8bc0 100644
+> > > > --- a/kernel/events/uprobes.c
+> > > > +++ b/kernel/events/uprobes.c
+> > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> > > >   */
+> > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
+> > > >
+> > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
+> > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
+> > > >
+> > > >  #define UPROBES_HASH_SZ      13
+> > > >  /* serialize uprobe->pending_list */
+> > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> > > >  {
+> > > >       struct uprobe *uprobe;
+> > > >
+> > > > -     spin_lock(&uprobes_treelock);
+> > > > +     read_lock(&uprobes_treelock);
+> > > >       uprobe = __find_uprobe(inode, offset);
+> > > > -     spin_unlock(&uprobes_treelock);
+> > > > +     read_unlock(&uprobes_treelock);
+> > > >
+> > > >       return uprobe;
+> > > >  }
+> > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> > > >  {
+> > > >       struct uprobe *u;
+> > > >
+> > > > -     spin_lock(&uprobes_treelock);
+> > > > +     write_lock(&uprobes_treelock);
+> > > >       u = __insert_uprobe(uprobe);
+> > > > -     spin_unlock(&uprobes_treelock);
+> > > > +     write_unlock(&uprobes_treelock);
+> > > >
+> > > >       return u;
+> > > >  }
+> > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
+> > > >               return;
+> > > >
+> > > > -     spin_lock(&uprobes_treelock);
+> > > > +     write_lock(&uprobes_treelock);
+> > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > > > -     spin_unlock(&uprobes_treelock);
+> > > > +     write_unlock(&uprobes_treelock);
+> > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> > > >       put_uprobe(uprobe);
+> > > >  }
+> > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> > > >       min = vaddr_to_offset(vma, start);
+> > > >       max = min + (end - start) - 1;
+> > > >
+> > > > -     spin_lock(&uprobes_treelock);
+> > > > +     read_lock(&uprobes_treelock);
+> > > >       n = find_node_in_range(inode, min, max);
+> > > >       if (n) {
+> > > >               for (t = n; t; t = rb_prev(t)) {
+> > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> > > >                       get_uprobe(u);
+> > > >               }
+> > > >       }
+> > > > -     spin_unlock(&uprobes_treelock);
+> > > > +     read_unlock(&uprobes_treelock);
+> > > >  }
+> > > >
+> > > >  /* @vma contains reference counter, not the probed instruction. */
+> > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> > > >       min = vaddr_to_offset(vma, start);
+> > > >       max = min + (end - start) - 1;
+> > > >
+> > > > -     spin_lock(&uprobes_treelock);
+> > > > +     read_lock(&uprobes_treelock);
+> > > >       n = find_node_in_range(inode, min, max);
+> > > > -     spin_unlock(&uprobes_treelock);
+> > > > +     read_unlock(&uprobes_treelock);
+> > > >
+> > > >       return !!n;
+> > > >  }
+> > > > --
+> > > > 2.43.0
+> > > >
+> > >
+> > >
+> > > --
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
