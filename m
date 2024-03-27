@@ -1,206 +1,143 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2069.outbound.protection.outlook.com [40.107.223.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B128014E2EE;
-	Wed, 27 Mar 2024 17:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711559166; cv=none; b=YhA5FC4jlC3m/jMcdR2xshXxDwMbJJgQPvcA1aRqyehnbyU+6iS1IIa2WzVJe2QPvMnLX6EjJ3xXRcFtx4hsacze6eVrfIzDCz45QlVhjBW9WDu39OeLqYfVoMgYVWOqCSc/VNSXYH9FtTPbLh9VdB8PlNjMLEk7ExBsyc0k2UM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711559166; c=relaxed/simple;
-	bh=ahZyAforUiq+wNzRyymfSb7gbzaJyiqD41A/VBDCRLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TjdFiuI7xCaSHLHNFQFcG0fxugKTdjrCCAjBLaaQzEVAT5MB+xWlOa29GaV153bKzAm/U0Q6+u1hArY0jNlG1N9ljkgbPFUPiJyHHsI8ciOotAM5FAcn1maxjawAP+SiptYdg6a84fHq2gcpuFQjcYr63qVfZEFqg8H26oSTqak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7NmMz1a; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED6F12D77C;
+	Wed, 27 Mar 2024 20:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711572886; cv=fail; b=hwxKeZJAmQZjZ+aLsVR2IK/Cq25izS+JCYcaSp3ydQsMuwln5guS2SEz4YQpHqOeB12BqaqW4MQ2o/KKJ/UTR2QU3k//rz/S+j9/iIc/z0SsxBZdq4yDWSc40MSF1Lh1oJjF19Rh2iLFChFaS/ajbWroc7iFVmEeCTUZxXxQMGQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711572886; c=relaxed/simple;
+	bh=RNZbQbeDUq0N6LhfV47Csftymp1SbrMvz6Ol594Djg0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JTm68QB2aN+zM82yKsF+skd2y/gY7843jwy41OJjkWzJ8vbgwbDCNGIYEjMsyEjOhb7KNZRyiz+repMCD5XxWKSEEiIUGox0W9CqDuTktKwzZZRoRFW6NmkuRweyiiZDJxIqB56OpMyoqIBwI3Fn2SkguZJVblLJlWOQz2CnTkk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LxwWO766; arc=fail smtp.client-ip=40.107.223.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7NmMz1a"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a46f0da1b4fso3161566b.2;
-        Wed, 27 Mar 2024 10:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711559163; x=1712163963; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUi4zEedr7KDhvHU0G0GEp0diV72wfwI5jg0UCvkAig=;
-        b=W7NmMz1adzD4xD9ZaD40hpdYRNJeP6pnvs3/osh3Ljz6zNen2HCuMXr0kvLnYE3DxC
-         diVIDBB8K0hCpu8l7lyZEnqDkEAXNBO8SLNAJifS4yi7cqiJTi46dxNhfZDqQVJv2ckI
-         Wel/BRYMQE5p/fJ+vZmxMkTKJiJlRUSI8K89ov/aVzXeDq52nNM8UsOfd9Gb523Kk9/w
-         jD3xeYyj3VjFjsHbUYw/RyWzoOSGbVpmjRo7vzkqT1XjvAuc+e1lguuR1nimrcQKURCS
-         55aMtVG5Kbg+st103pDRiDq5+h2y5K7IHgRMcmIy/hIuEkDpxjqxLc6Q5tfTwa8Umz3s
-         9gyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711559163; x=1712163963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BUi4zEedr7KDhvHU0G0GEp0diV72wfwI5jg0UCvkAig=;
-        b=kVIRltAugArcPs53SXx2DvGV3nvOz05ID4T+4DpLpDdYkqMb/AkFShP3eyH2h8mDrz
-         yq3vqD5EgLDJrT8KJrj65hHIZ8VQUffQobe1+9lQVK0FftVM7vLaj9b3HbbzrnR40IPK
-         gGTGRFbq1XFSSC2A0es0W/k2z9okN2NjZqOE424ZncYM/yPjN6Qk4jo3M60uIht5q/Ff
-         fn70HmdSZ0UecDQ5qS6Lq99uvyMJvSEg61aCEnMeRsmsr10H2v6qzRwn2/U2U327Xrco
-         y3u1bvSxKl7Gm2g7AK5jym5KCXNkLT0a/ZbzJiABmvZ6m8kN1NONrUmoznjJhjmkAFW4
-         IRzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlGY06RdSAPg+Vve6/Q+QTxGNfeCbhyJJS1zeO/WrItC5Q1PFftZo3o5LcN4BjV47REFks0tAg8wcehmfQU2glKNigszXv9fH2lEsQ6jU3CltdjQP5k4l0t3YEmg9ntmixYVBfO4RJyxmEScDtLrtYo4RpITQrHhn3r86abFwjMkY046FY51fyCAsFfowfjY6YC/1TGTU4VH5IbTb6SbJsmcWREPrtbw==
-X-Gm-Message-State: AOJu0YzgwNLNTaMb5EoskME7IGt2MjUt0CGik99ZDcRbs1w86D75VR6M
-	hJKKR71bndpDY+zL+bziv71eJewoSTdQkAGYl8/I5wP/aHXPAabf
-X-Google-Smtp-Source: AGHT+IE1PEKoVdAhIynLjkvyagQxfnizdEEGmUrp4CFr48Ozk0XLMxEW+3OrgIWT6Rqhttdhya5atg==
-X-Received: by 2002:a17:906:3798:b0:a46:206d:369b with SMTP id n24-20020a170906379800b00a46206d369bmr52979ejc.28.1711559162756;
-        Wed, 27 Mar 2024 10:06:02 -0700 (PDT)
-Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::4:b63d])
-        by smtp.gmail.com with ESMTPSA id ao18-20020a170907359200b00a46aba003eesm5624401ejc.215.2024.03.27.10.06.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 10:06:02 -0700 (PDT)
-Date: Wed, 27 Mar 2024 17:06:01 +0000
-From: Jonthan Haslam <jonathan.haslam@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-ID: <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
- <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LxwWO766"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GQTQynlsXgb6ISbfMUSg7QMXT7OEhD9w13nBIzZJiDqwnMOrG+c0LQV6NGbBqjsRJ+oi6xz8lojYfVcFn7NEatHqs52UIMwzezCF7Qa3MociGKMYP1LhpZvZcDd2dg55qAgKafJDbQEYsziUKqzTDbPfYzhSVgFurwt36olSdAcY/H3cgwQs2vYdqjXrJgtlLvN5KiRuy1B5knvausTkwGAkeG6hb+9ry2kVsrFRS2uweFb2hX/TO8kg9U0I0KYX7RFnQ8lQ1zOjsZRu+jKWHdcvEHWp3Qssoex2WaYJ2Hs3K4iNVhA+kJ3GSiaCLWMmZeGWtCyAbwyh2XoeBBI8sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CW2QXv1IWMlE3MUe8cEwf0KqG88ICo5FYDkHIueGpcA=;
+ b=LF97VbnIXuGxMHX04U9nCX56xF9PA8RynpB4W0BJm3RQdhF8BU/dA/2WDAhT5QW7bdcCeVG6ZO/wpMoMCOnHXP+wttE5CnNQ5UxDKgTikGWpOrh4lguX4kA3P4cEt0yoCTiy6sMLk84p3r9lB/739IeKITAEg2KPt9CMpSAH86F/lADxztqorODEClnXu6bO86jvMmtAzEsFZPfnEaZ4+OOdDeZjzUnMmoYtH8c3gf8oWjJPDiaha9wEGk98lh4x8c50XIHfDzt6UYd7TnXIJ+fB7H/pDVmVAZwZr2KOplaHj5UPiSCQU05Dznqwp9EwQlEA0CNQFydlkcX45vrAqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CW2QXv1IWMlE3MUe8cEwf0KqG88ICo5FYDkHIueGpcA=;
+ b=LxwWO766XVe/26TpSW09afRzjp46FwUwkSUjtrxLWpxbwwTNjxjZ3FUOpJumoyD5U0aKzJ4uPvv6MJfHByvVcnxXoNHinozovZlPvuzD1Szw2XK/fPBUteL4e920YZTSplypCmTg0s46gBXoz2HjeGFPOTTlCm1lOmVMqYpmprs=
+Received: from CH2PR20CA0017.namprd20.prod.outlook.com (2603:10b6:610:58::27)
+ by IA1PR12MB8556.namprd12.prod.outlook.com (2603:10b6:208:452::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Wed, 27 Mar
+ 2024 20:54:42 +0000
+Received: from CH3PEPF0000000E.namprd04.prod.outlook.com
+ (2603:10b6:610:58:cafe::5f) by CH2PR20CA0017.outlook.office365.com
+ (2603:10b6:610:58::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
+ Transport; Wed, 27 Mar 2024 20:54:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH3PEPF0000000E.mail.protection.outlook.com (10.167.244.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Wed, 27 Mar 2024 20:54:41 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 27 Mar 2024 15:54:41 -0500
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <linux-trace-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+CC: <rostedt@goodmis.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, <yazen.ghannam@amd.com>,
+	<avadnaik@amd.com>
+Subject: [PATCH v4 0/2] Update mce_record tracepoint
+Date: Wed, 27 Mar 2024 15:54:33 -0500
+Message-ID: <20240327205435.3667588-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000E:EE_|IA1PR12MB8556:EE_
+X-MS-Office365-Filtering-Correlation-Id: f5ea0768-75f9-4352-d585-08dc4ea02005
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	eTK4EBm+rYjwgpXDIOUFKONMJIBr+UnMfeLzv3o+0x7OwxcimBx7licaSebgQE2LXIKBxlptOWHd3D2RDqVnL8NzpeBc5vQB8FQYwsmqPC6noYQfBPS1BjB7FRYNYneVTSispqSVqejDrHYF5eRHq+BTOTDUwZusbH4VtqSzRZEDCJsxS2nHxcDkkNwD/62DFujwJbJveEyFKfhYpJdhnwm81GhecJf5nW+mNbctED5FKX36V2jRppuAEQmi9994qYXJMG4OFJs1IehHpdjH/s1tUXyL1MtD4Zx4jpdKhFYa05OQQIE7asfe3oUqc5lh+LACQVTYSfNtZKx4hxCtL4FS1jVTFVa8I1VmmG8N9CM7RtPgtzgku/Q4QOmbkieTttwClLfkphkDVLVTJ/fwoHLcgylGOVve2hXKw0UfhCXwh/YprzoR3Vx9qiFKhZSmkvEQBbt45mirtvfVAL5RxNq/EXqNOJM+R7xRNsRvbEIgJqJFsLq+ccAqeBc/otRj4n0PdD4QzmiptWiCJSTI95z0ZlkPlOUJTFBJwSA9RoQTaG3CDH1+PAg4yNH/dWcE8C3ahAgJNCiYbZrOxRsOdPKpTEmSRFyuA0T/kKH95NNPXKRFz2AYlO6d9oqfkIw9TV5W4o3CMePVa9lUiSGSwTFnFG4UPiCjCF61X1xzeIuD33XWVdfQrjbzqw5+6omsWExZ0phNB/Qthd2AfC+bErP25uAYWSk2K7KJwYraDDTAXVQi2QpwZForf17t0NgF
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(82310400014)(36860700004)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 20:54:41.8130
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5ea0768-75f9-4352-d585-08dc4ea02005
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8556
 
-> > Masami,
-> > 
-> > Given the discussion around per-cpu rw semaphore and need for
-> > (internal) batched attachment API for uprobes, do you think you can
-> > apply this patch as is for now? We can then gain initial improvements
-> > in scalability that are also easy to backport, and Jonathan will work
-> > on a more complete solution based on per-cpu RW semaphore, as
-> > suggested by Ingo.
-> 
-> Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> I would like to wait for the next version.
+This patchset updates the mce_record tracepoint so that the recently added
+fields of struct mce are exported through it to userspace.
 
-My initial tests show a nice improvement on the over RW spinlocks but
-significant regression in acquiring a write lock. I've got a few days
-vacation over Easter but I'll aim to get some more formalised results out
-to the thread toward the end of next week.
+The first patch adds PPIN (Protected Processor Inventory Number) field to
+the tracepoint.
 
-Jon.
+The second patch adds the microcode field (Microcode Revision) to the
+tracepoint.
 
-> 
-> Thank you,
-> 
-> > 
-> > >
-> > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > will depend on how much lock contention happens.
-> > >
-> > > Thank you,
-> > >
-> > > >
-> > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > >
-> > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > ---
-> > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > >
-> > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > --- a/kernel/events/uprobes.c
-> > > > +++ b/kernel/events/uprobes.c
-> > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > >   */
-> > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > >
-> > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > >
-> > > >  #define UPROBES_HASH_SZ      13
-> > > >  /* serialize uprobe->pending_list */
-> > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > >  {
-> > > >       struct uprobe *uprobe;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     read_lock(&uprobes_treelock);
-> > > >       uprobe = __find_uprobe(inode, offset);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     read_unlock(&uprobes_treelock);
-> > > >
-> > > >       return uprobe;
-> > > >  }
-> > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > >  {
-> > > >       struct uprobe *u;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     write_lock(&uprobes_treelock);
-> > > >       u = __insert_uprobe(uprobe);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     write_unlock(&uprobes_treelock);
-> > > >
-> > > >       return u;
-> > > >  }
-> > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > >               return;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     write_lock(&uprobes_treelock);
-> > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     write_unlock(&uprobes_treelock);
-> > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > >       put_uprobe(uprobe);
-> > > >  }
-> > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > >       min = vaddr_to_offset(vma, start);
-> > > >       max = min + (end - start) - 1;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     read_lock(&uprobes_treelock);
-> > > >       n = find_node_in_range(inode, min, max);
-> > > >       if (n) {
-> > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > >                       get_uprobe(u);
-> > > >               }
-> > > >       }
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     read_unlock(&uprobes_treelock);
-> > > >  }
-> > > >
-> > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > >       min = vaddr_to_offset(vma, start);
-> > > >       max = min + (end - start) - 1;
-> > > >
-> > > > -     spin_lock(&uprobes_treelock);
-> > > > +     read_lock(&uprobes_treelock);
-> > > >       n = find_node_in_range(inode, min, max);
-> > > > -     spin_unlock(&uprobes_treelock);
-> > > > +     read_unlock(&uprobes_treelock);
-> > > >
-> > > >       return !!n;
-> > > >  }
-> > > > --
-> > > > 2.43.0
-> > > >
-> > >
-> > >
-> > > --
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Changes in v2:
+ - Export microcode field (Microcode Revision) through the tracepoiont in
+   addition to PPIN.
+
+Changes in v3:
+ - Change format specifier for microcode revision from %u to %x
+ - Fix tab alignments
+ - Add Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+
+Changes in v4:
+ - Update commit messages to reflect the reason for the fields being
+   added to the tracepoint.
+ - Add comment to explicitly state the type of information that should
+   be added to the tracepoint.
+ - Add Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+[NOTE:
+
+ - Since only a comment has been added and only the commit messages have
+   been reworked i.e. no code changes have been undertaken for this
+   version, have the retained the below tags from v3:
+    Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+    Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>]
+
+Avadhut Naik (2):
+  tracing: Include PPIN in mce_record tracepoint
+  tracing: Include Microcode Revision in mce_record tracepoint
+
+ include/trace/events/mce.h | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+
+base-commit: 818ea9b4c8237f96ac99dc0b2f02dd6d3f2adb97
+-- 
+2.34.1
+
