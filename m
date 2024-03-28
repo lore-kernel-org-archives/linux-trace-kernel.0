@@ -1,56 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B2A2C6AD;
-	Thu, 28 Mar 2024 15:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960363DAC13;
+	Thu, 28 Mar 2024 15:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711638651; cv=none; b=RTF9NSHXD+5MhH16WmzEsgBTAMHv5ymC3bHdaNYbwEbeBwYZmuhtjESbIG32YEAU/3A9o9B9sRqpH813TbJ1VJlV9ScMQoC5me7S318cwAXy0IDCcrc/rueWivK4dn2euhCnfWdvrVO79K6rnoW+CmrqWHIywX9Mu3knaQYMK1A=
+	t=1711640244; cv=none; b=qk0NCfKT63/39eXJAslyUFDZ1pS1uCB9+AvzMeokNMpOHfdGW3PoA3B77glwjUgZjFzPi1Hmfn7SOKX5gueckl1jME231qRqABlbWK8JhC1GAY2jc0cd1W+745Dy9PlMboUU1I19XJ738tIuvurtfCrzhRPJ4jqFhYkyQ2CXTPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711638651; c=relaxed/simple;
-	bh=r2D0EqkpCrFqFode/ZlZv88Dg4Xknt6j7iyrIgxbYTU=;
+	s=arc-20240116; t=1711640244; c=relaxed/simple;
+	bh=M1/MI7ctmoanaJzMS8Vaa21avZdB8bKDRkpxkpFOS8Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZrLs/p/darscR+NvP4+RVCZY73NhOQzeshRJ3qXd6r1FWuvJGfJv0F4JqW6gZYetnh3TH61LJ9Zc1Ch7Kb0z0CYuRI+BHxvs9E5PKPZqVeFXneU3UMXcNHyTC7QUddAc6/+WXNB0fbW87TAnaNWrSnH93X9jJXa8kxH/O/lhXDU=
+	 MIME-Version:Content-Type; b=duoNiSJMi4Nd9lcUzIxdRVE/TJsg961wOyhOq7mmyWhSiEOyeMxslBhYxXUvP0avr54munlknbN2pdP2Upqiz5OtKNfVA16WVe/Lbx5UaqbNRF3kcEDqUXnFbQ7DrkpU8jG/EDl6CUhewvs0/X/Gs+Q+r/o3DgdUEEisoP8objw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D2BC433C7;
-	Thu, 28 Mar 2024 15:10:47 +0000 (UTC)
-Date: Thu, 28 Mar 2024 11:13:30 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE36FC433F1;
+	Thu, 28 Mar 2024 15:37:20 +0000 (UTC)
+Date: Thu, 28 Mar 2024 11:40:04 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa
- <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, "David S.
- Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Dave
- Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet
- <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-riscv
- <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>,
- Network Development <netdev@vger.kernel.org>,
- linux-trace-kernel@vger.kernel.org, "open list:KERNEL SELFTEST FRAMEWORK"
- <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add
- support to record and check the accessed args
-Message-ID: <20240328111330.194dcbe5@gandalf.local.home>
-In-Reply-To: <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com>
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
-	<20240311093526.1010158-2-dongmenglong.8@bytedance.com>
-	<CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
-	<CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
-	<CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
-	<CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
-	<CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
-	<CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
-	<CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
-	<CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
-	<CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com>
+To: Yi-De Wu <yi-de.wu@mediatek.com>
+Cc: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
+ <ze-yu.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas
+ <catalin.marinas@arm.com>, Wihl Deacon <will@kernel.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Richard Cochran
+ <richardcochran@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <linux-mediatek@lists.infradead.org>, David Bradil <dbrazdil@google.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Jade Shih <jades.shih@mediatek.com>,
+ Ivan Tseng <ivan.tseng@mediatek.com>, My Chuang <my.chuang@mediatek.com>,
+ Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
+ <peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, "Willix
+ Yeh" <chi-shen.yeh@mediatek.com>, Kevenny Hsieh
+ <kevenny.hsieh@mediatek.com>
+Subject: Re: [PATCH v8 19/20] virt: geniezone: Add tracing support for hyp
+ call and vcpu exit_reason
+Message-ID: <20240328114004.5793230a@gandalf.local.home>
+In-Reply-To: <20231228105147.13752-20-yi-de.wu@mediatek.com>
+References: <20231228105147.13752-1-yi-de.wu@mediatek.com>
+	<20231228105147.13752-20-yi-de.wu@mediatek.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -58,75 +49,204 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 28 Mar 2024 22:43:46 +0800
-=E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+On Thu, 28 Dec 2023 18:51:46 +0800
+Yi-De Wu <yi-de.wu@mediatek.com> wrote:
 
-> I have done a simple benchmark on creating 1000
-> trampolines. It is slow, quite slow, which consume up to
-> 60s. We can't do it this way.
->=20
-> Now, I have a bad idea. How about we introduce
-> a "dynamic trampoline"? The basic logic of it can be:
->=20
-> """
-> save regs
-> bpfs =3D trampoline_lookup_ip(ip)
-> fentry =3D bpfs->fentries
-> while fentry:
->   fentry(ctx)
->   fentry =3D fentry->next
->=20
-> call origin
-> save return value
->=20
-> fexit =3D bpfs->fexits
-> while fexit:
->   fexit(ctx)
->   fexit =3D fexit->next
->=20
-> xxxxxx
-> """
->=20
-> And we lookup the "bpfs" by the function ip in a hash map
-> in trampoline_lookup_ip. The type of "bpfs" is:
->=20
-> struct bpf_array {
->   struct bpf_prog *fentries;
->  struct bpf_prog *fexits;
->   struct bpf_prog *modify_returns;
-> }
->=20
-> When we need to attach the bpf progA to function A/B/C,
-> we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
-> and add the progA to them, and insert them to the hash map
-> "direct_call_bpfs", and attach the "dynamic trampoline" to
-> A/B/C. If bpf_arrayA exist, just add progA to the tail of
-> bpf_arrayA->fentries. When we need to attach progB to
-> B/C, just add progB to bpf_arrayB->fentries and
-> bpf_arrayB->fentries.
->=20
-> Compared to the trampoline, extra overhead is introduced
-> by the hash lookuping.
->=20
-> I have not begun to code yet, and I am not sure the overhead is
-> acceptable. Considering that we also need to do hash lookup
-> by the function in kprobe_multi, maybe the overhead is
-> acceptable?
+> Add tracepoints for hypervisor calls and VCPU exit reasons in GenieZone
+> driver. It aids performance debugging by providing more information
+> about hypervisor operations and VCPU behavior.
+> 
+> Command Usage:
+> echo geniezone:* >> /sys/kernel/tracing/set_event
+> echo 1 > /sys/kernel/tracing/tracing_on
+> echo 0 > /sys/kernel/tracing/tracing_on
+> cat /sys/kernel/tracing/trace
+> 
+> For example:
+> crosvm_vcpu0-4838 [004] ..... 76053.536034: mtk_hypcall_enter: id=0xbb001005
+> crosvm_vcpu0-4838 [004] ..... 76053.540039: mtk_hypcall_leave: id=0xbb001005 invalid=0
+> crosvm_vcpu0-4838 [004] ..... 76053.540040: mtk_vcpu_exit: vcpu exit_reason=0x92920003
 
-Sounds like you are just recreating the function management that ftrace
-has. It also can add thousands of trampolines very quickly, because it does
-it in batches. It takes special synchronization steps to attach to fentry.
-ftrace (and I believe multi-kprobes) updates all the attachments for each
-step, so the synchronization needed is only done once.
+Cleaning out patchwork, I noticed this patch.
 
-If you really want to have thousands of functions, why not just register it
-with ftrace itself. It will give you the arguments via the ftrace_regs
-structure. Can't you just register a program as the callback?
+You can make the above more informative by having it output:
 
-It will probably make your accounting much easier, and just let ftrace
-handle the fentry logic. That's what it was made to do.
+ crosvm_vcpu0-4838 [004] ..... 76053.540040: mtk_vcpu_exit: vcpu exit_reason=IRQ
+
+
+> 
+> This example tracks a hypervisor function call by an ID (`0xbb001005`)
+> from initiation to termination, which is supported (invalid=0). A vCPU
+> exit is triggered by an Interrupt Request (IRQ) (exit reason: 0x92920003).
+> 
+> /* VM exit reason */
+> enum {
+> 	GZVM_EXIT_UNKNOWN = 0x92920000,
+> 	GZVM_EXIT_MMIO = 0x92920001,
+> 	GZVM_EXIT_HYPERCALL = 0x92920002,
+> 	GZVM_EXIT_IRQ = 0x92920003,
+> 	GZVM_EXIT_EXCEPTION = 0x92920004,
+> 	GZVM_EXIT_DEBUG = 0x92920005,
+> 	GZVM_EXIT_FAIL_ENTRY = 0x92920006,
+> 	GZVM_EXIT_INTERNAL_ERROR = 0x92920007,
+> 	GZVM_EXIT_SYSTEM_EVENT = 0x92920008,
+> 	GZVM_EXIT_SHUTDOWN = 0x92920009,
+> 	GZVM_EXIT_GZ = 0x9292000a,
+> };
+> 
+> Signed-off-by: Liju-clr Chen <liju-clr.chen@mediatek.com>
+> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
+> ---
+>  arch/arm64/geniezone/vm.c          |  5 +++
+>  drivers/virt/geniezone/gzvm_vcpu.c |  3 ++
+>  include/trace/events/geniezone.h   | 54 ++++++++++++++++++++++++++++++
+>  3 files changed, 62 insertions(+)
+>  create mode 100644 include/trace/events/geniezone.h
+> 
+> diff --git a/arch/arm64/geniezone/vm.c b/arch/arm64/geniezone/vm.c
+> index a9d264bbb3b1..5667643251b5 100644
+> --- a/arch/arm64/geniezone/vm.c
+> +++ b/arch/arm64/geniezone/vm.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/err.h>
+>  #include <linux/uaccess.h>
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/geniezone.h>
+>  #include <linux/gzvm.h>
+>  #include <linux/gzvm_drv.h>
+>  #include "gzvm_arch_common.h"
+> @@ -33,7 +35,10 @@ int gzvm_hypcall_wrapper(unsigned long a0, unsigned long a1,
+>  			 unsigned long a6, unsigned long a7,
+>  			 struct arm_smccc_res *res)
+>  {
+> +	trace_mtk_hypcall_enter(a0);
+>  	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
+> +	trace_mtk_hypcall_leave(a0, (res->a0 != ERR_NOT_SUPPORTED) ? 0 : 1);
+> +
+>  	return gzvm_err_to_errno(res->a0);
+>  }
+>  
+> diff --git a/drivers/virt/geniezone/gzvm_vcpu.c b/drivers/virt/geniezone/gzvm_vcpu.c
+> index 86c690749277..138ec064596b 100644
+> --- a/drivers/virt/geniezone/gzvm_vcpu.c
+> +++ b/drivers/virt/geniezone/gzvm_vcpu.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/mm.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> +
+> +#include <trace/events/geniezone.h>
+>  #include <linux/gzvm_drv.h>
+>  
+>  /* maximum size needed for holding an integer */
+> @@ -103,6 +105,7 @@ static long gzvm_vcpu_run(struct gzvm_vcpu *vcpu, void __user *argp)
+>  
+>  	while (!need_userspace && !signal_pending(current)) {
+>  		gzvm_arch_vcpu_run(vcpu, &exit_reason);
+> +		trace_mtk_vcpu_exit(exit_reason);
+>  
+>  		switch (exit_reason) {
+>  		case GZVM_EXIT_MMIO:
+> diff --git a/include/trace/events/geniezone.h b/include/trace/events/geniezone.h
+> new file mode 100644
+> index 000000000000..1fa44f9c4b3c
+> --- /dev/null
+> +++ b/include/trace/events/geniezone.h
+> @@ -0,0 +1,54 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2023 MediaTek Inc.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM geniezone
+> +
+> +#define _TRACE_GENIEZONE_H
+> +
+> +#include <linux/tracepoint.h>
+
+#define GZVM_EXIT_REASONS	\
+	EM(UNKNOWN)		\
+	EM(MMIO)		\
+	EM(HYPERCALL)		\
+	EM(IRQ)			\
+	EM(EXCEPTION)		\
+	EM(DEBUG)		\
+	EM(FAIL_ENTRY)		\
+	EM(INTERNAL_ERROR)	\
+	EM(SYSTEM_EVENT)	\
+	EM(SHUTDOWN)		\
+	EMe(GZ)
+
+#undef EM
+#undef EMe
+#define EM(a) TRACE_DEFINE_ENUM(GZVM_EXIT_##a);
+#define EMe(a) TRACE_DEFINE_ENUM(GZVM_EXIT_##a);
+
+GZVM_EXIT_REASONS
+
+#undef EM
+#undef EMe
+
+#define EM(a)       { GZVM_EXIT_##a, #a },
+#define EMe(a)      { GZVM_EXIT_##a, #a }
+
+> +
+> +TRACE_EVENT(mtk_hypcall_enter,
+> +	    TP_PROTO(unsigned long id),
+> +
+> +	    TP_ARGS(id),
+> +
+> +	    TP_STRUCT__entry(__field(unsigned long, id)),
+> +
+> +	    TP_fast_assign(__entry->id = id;),
+> +
+> +	    TP_printk("id=0x%lx", __entry->id)
+> +);
+> +
+> +TRACE_EVENT(mtk_hypcall_leave,
+> +	    TP_PROTO(unsigned long id, unsigned long invalid),
+> +
+> +	    TP_ARGS(id, invalid),
+> +
+> +	    TP_STRUCT__entry(__field(unsigned long, id)
+> +			     __field(unsigned long, invalid)
+> +	    ),
+> +
+> +	    TP_fast_assign(__entry->id = id;
+> +			   __entry->invalid = invalid;
+> +	    ),
+> +
+> +	    TP_printk("id=0x%lx invalid=%lu", __entry->id, __entry->invalid)
+> +);
+> +
+> +TRACE_EVENT(mtk_vcpu_exit,
+> +	    TP_PROTO(unsigned long exit_reason),
+> +
+> +	    TP_ARGS(exit_reason),
+> +
+> +	    TP_STRUCT__entry(__field(unsigned long, exit_reason)),
+> +
+> +	    TP_fast_assign(__entry->exit_reason = exit_reason;),
+> +
+> +	    TP_printk("vcpu exit_reason=0x%lx", __entry->exit_reason)
+
+	    TP_printk("vcpu exit_reason=0x%lx",
+		__print_symbolic(__entry->exit_reason, GZVM_EXIT_REASONS))
+
+
+And instead of having the cryptic enum values printed, you will have human
+readable reasons.
 
 -- Steve
+
+
+> +);
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+
