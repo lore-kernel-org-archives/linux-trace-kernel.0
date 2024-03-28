@@ -1,200 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E68A46BF;
-	Thu, 28 Mar 2024 00:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D9A36B;
+	Thu, 28 Mar 2024 00:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711585126; cv=none; b=e+Awu8mHtyFyWKju1cF7JIuJQJGPnvzY2YVuSpIXEH9mwdHOzljFyZfvCpxg5XjSZdKavjYxZWdqcf/BS8AONnGQF+AfT0ikQaxC8xfEvh9MpaTxZ+pPAR64KpNrSBBlU0sSg+w+0KI5lBdX9HAIsSS3e97Ky5mrQGf2WYI0uZc=
+	t=1711585978; cv=none; b=n7shh+LVU6hDSLs1kJQxqXcpJK0OnNdwEcSSaU/g6ZWz1b/SH+/RAM6gakbBPu/gCYqzVgEWPRRO3dhteCvYbT4ylGWk46duxINI2O6hDWH+gazB3gdRiH1exkXZ/Or4S53td/Rnj6HOonq4jhp0ayNrgDROYa+5MgKaFUhpebU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711585126; c=relaxed/simple;
-	bh=zsWvlwMlsTmNhgbPPby4pHnVE3v+PWwV4d8Iew4UmEY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=U1MQXyyZenm37ZzQQ3MTsgV5GVqli7L/ZKUtmzOanL/3Tr4D3kPRSBswA/QaiT3gAiHuuFG40L58SYDOlMOrTcpaVwXf4KEEdkKHc9pxEvUIqDJQzPs27l/YdE2PAi6am2FfhMa8z2xl+0s85XLafxG+EbYXL5P5el3/wv6znk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8E9L4JY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711585978; c=relaxed/simple;
+	bh=UCWHLp4FdzzMBauHwQooqbX9tSiT1V8/n/hnpwh9EFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rLNgkjKfrMxp6gRSaYPHPUzK0Lgq4mH2ETSV09V4irmc1q+KZjeb28Dtc7JlBw60/0yQcA981G6UXRfarUIYZbs0RFg895BoynmDvg4IWzWoBHk9TNgRpmF1b/C4fswVUZg9Wk+7honMAt11+crNnJcjTemnlq2EQyCYmuQqLis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RQxWZHVG; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8E9L4JY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6194C433F1;
-	Thu, 28 Mar 2024 00:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711585125;
-	bh=zsWvlwMlsTmNhgbPPby4pHnVE3v+PWwV4d8Iew4UmEY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q8E9L4JYgtRQazG941hY9iq9Ao7UCltmzgAzNf9H61D2wfNai/cDIjYj/WM2HJKGQ
-	 WuKQzpUCcM595zNc3cjmizTX1CRLwtWvTszj5hcxhNFOkBlDhBg/E0jLF5DkwWD+vX
-	 wtQbPoxnEFak7+9Vj9ne/6G2tYoY4dZoqLgU8/83pR9YU1XWU2e2o5uofQoIeXjLpu
-	 SWEVg6aux2xrzhEkHD7qX4QteLy7LZ6Lu3pTndHd7Z89TFnXh7eTxzW9nmA+0O5/lr
-	 CfGdwK/2Ennnq+xrmppDNd+vHwGtxBZwZ6hl3ssIM1kDlF/glf95DNV58ImhVIA0nh
-	 IHa2dmAlfCblg==
-Date: Thu, 28 Mar 2024 09:18:41 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jonthan Haslam <jonathan.haslam@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org,
- rostedt@goodmis.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240328091841.ce9cc613db375536de843cfb@kernel.org>
-In-Reply-To: <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-	<20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-	<CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
-	<20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
-	<54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RQxWZHVG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=R3IwXdmodzpVMvblIree2CIRTU0R+iTfZh8eA9g3U0g=; b=RQxWZHVGBZ+LUwLaoKA9chZxNT
+	Y1/mipc/u/eYmgmmqrWvcz0yAB1QFNMWprnk3HOjYqIrhnG0SxB2rV1hIsiDyRCmDixferTtxCsqg
+	vGJU1O9auFT++/gQ+HfTP06OdPcXsY62DKDIxSxDM6Zgj9oNEk1i6g7cco0a+knj/B1nEadRuPERI
+	B27JRygJi7rKne3WT2H5J8LgfaYLLM3SAFaoBvhDaMa5WXHoJO2E3d//AUsGcNXuzwrpDDB5JrUAe
+	Vbm5oHOBCE1zIdO6Zl88OF/HziEgk+ppc/+6BounEXWQ2KxXNHzRh5aQXeCwl9crnxyBGF/Ts1yLw
+	LIyXNKRA==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rpdhN-0000000Blyz-0a2K;
+	Thu, 28 Mar 2024 00:32:53 +0000
+Message-ID: <f4158f39-005e-47e7-9fb3-b0fe9b878514@infradead.org>
+Date: Wed, 27 Mar 2024 17:32:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 RESEND 4/5] Documentation: tracing: Add ring-buffer
+ mapping
+Content-Language: en-US
+To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com
+References: <20240326100830.1326610-1-vdonnefort@google.com>
+ <20240326100830.1326610-5-vdonnefort@google.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240326100830.1326610-5-vdonnefort@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 27 Mar 2024 17:06:01 +0000
-Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
+Hi,
 
-> > > Masami,
-> > > 
-> > > Given the discussion around per-cpu rw semaphore and need for
-> > > (internal) batched attachment API for uprobes, do you think you can
-> > > apply this patch as is for now? We can then gain initial improvements
-> > > in scalability that are also easy to backport, and Jonathan will work
-> > > on a more complete solution based on per-cpu RW semaphore, as
-> > > suggested by Ingo.
-> > 
-> > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> > I would like to wait for the next version.
+On 3/26/24 03:08, Vincent Donnefort wrote:
+> It is now possible to mmap() a ring-buffer to stream its content. Add
+> some documentation and a code example.
 > 
-> My initial tests show a nice improvement on the over RW spinlocks but
-> significant regression in acquiring a write lock. I've got a few days
-> vacation over Easter but I'll aim to get some more formalised results out
-> to the thread toward the end of next week.
-
-As far as the write lock is only on the cold path, I think you can choose
-per-cpu RW semaphore. Since it does not do busy wait, the total system
-performance impact will be small.
-I look forward to your formalized results :)
-
-Thank you,
-
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 > 
-> Jon.
-> 
-> > 
-> > Thank you,
-> > 
-> > > 
-> > > >
-> > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > will depend on how much lock contention happens.
-> > > >
-> > > > Thank you,
-> > > >
-> > > > >
-> > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > >
-> > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > ---
-> > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > >
-> > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > --- a/kernel/events/uprobes.c
-> > > > > +++ b/kernel/events/uprobes.c
-> > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > > >   */
-> > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > >
-> > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > > >
-> > > > >  #define UPROBES_HASH_SZ      13
-> > > > >  /* serialize uprobe->pending_list */
-> > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > > >  {
-> > > > >       struct uprobe *uprobe;
-> > > > >
-> > > > > -     spin_lock(&uprobes_treelock);
-> > > > > +     read_lock(&uprobes_treelock);
-> > > > >       uprobe = __find_uprobe(inode, offset);
-> > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > +     read_unlock(&uprobes_treelock);
-> > > > >
-> > > > >       return uprobe;
-> > > > >  }
-> > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > > >  {
-> > > > >       struct uprobe *u;
-> > > > >
-> > > > > -     spin_lock(&uprobes_treelock);
-> > > > > +     write_lock(&uprobes_treelock);
-> > > > >       u = __insert_uprobe(uprobe);
-> > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > +     write_unlock(&uprobes_treelock);
-> > > > >
-> > > > >       return u;
-> > > > >  }
-> > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > >               return;
-> > > > >
-> > > > > -     spin_lock(&uprobes_treelock);
-> > > > > +     write_lock(&uprobes_treelock);
-> > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > +     write_unlock(&uprobes_treelock);
-> > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > > >       put_uprobe(uprobe);
-> > > > >  }
-> > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > > >       min = vaddr_to_offset(vma, start);
-> > > > >       max = min + (end - start) - 1;
-> > > > >
-> > > > > -     spin_lock(&uprobes_treelock);
-> > > > > +     read_lock(&uprobes_treelock);
-> > > > >       n = find_node_in_range(inode, min, max);
-> > > > >       if (n) {
-> > > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > > >                       get_uprobe(u);
-> > > > >               }
-> > > > >       }
-> > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > +     read_unlock(&uprobes_treelock);
-> > > > >  }
-> > > > >
-> > > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > > >       min = vaddr_to_offset(vma, start);
-> > > > >       max = min + (end - start) - 1;
-> > > > >
-> > > > > -     spin_lock(&uprobes_treelock);
-> > > > > +     read_lock(&uprobes_treelock);
-> > > > >       n = find_node_in_range(inode, min, max);
-> > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > +     read_unlock(&uprobes_treelock);
-> > > > >
-> > > > >       return !!n;
-> > > > >  }
-> > > > > --
-> > > > > 2.43.0
-> > > > >
-> > > >
-> > > >
-> > > > --
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> diff --git a/Documentation/trace/ring-buffer-map.rst b/Documentation/trace/ring-buffer-map.rst
+> new file mode 100644
+> index 000000000000..0426ab4bcf3d
+> --- /dev/null
+> +++ b/Documentation/trace/ring-buffer-map.rst
+> @@ -0,0 +1,106 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==================================
+> +Tracefs ring-buffer memory mapping
+> +==================================
+> +
+> +:Author: Vincent Donnefort <vdonnefort@google.com>
+> +
+> +Overview
+> +========
+> +Tracefs ring-buffer memory map provides an efficient method to stream data
+> +as no memory copy is necessary. The application mapping the ring-buffer becomes
+> +then a consumer for that ring-buffer, in a similar fashion to trace_pipe.
+> +
+> +Memory mapping setup
+> +====================
+> +The mapping works with a mmap() of the trace_pipe_raw interface.
+> +
+> +The first system page of the mapping contains ring-buffer statistics and
+> +description. It is referred as the meta-page. One of the most important field of
+
+                      referred to as                                       fields
+
+> +the meta-page is the reader. It contains the sub-buffer ID which can be safely
+> +read by the mapper (see ring-buffer-design.rst).
+> +
+> +The meta-page is followed by all the sub-buffers, ordered by ascendant ID. It is
+
+                                                                ascending
+might be better IMO.
+
+> +therefore effortless to know where the reader starts in the mapping:
+> +
+> +.. code-block:: c
+> +
+> +        reader_id = meta->reader->id;
+> +        reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
+> +
+> +When the application is done with the current reader, it can get a new one using
+> +the trace_pipe_raw ioctl() TRACE_MMAP_IOCTL_GET_READER. This ioctl also updates
+> +the meta-page fields.
 
 
+[snip]
+
+Thanks.
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+#Randy
