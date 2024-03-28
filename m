@@ -1,90 +1,200 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B025114C5B1;
-	Wed, 27 Mar 2024 22:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E68A46BF;
+	Thu, 28 Mar 2024 00:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711578946; cv=none; b=nj50usd/HdxFhbyOvG4Jh/zpq9n8atFE63NBi/StX7VeQ2dugPiFM5QNFBeYrXh4esqguShd1+4HOWJJ94rRBtDKCyS3E0fqhETilMEbSuhgNeZ/VhXlLUIU8K2OVO14mMnAODXXNkydeHV3NfmjaKHPz2dmQ+bOq5z6tnQ+QEw=
+	t=1711585126; cv=none; b=e+Awu8mHtyFyWKju1cF7JIuJQJGPnvzY2YVuSpIXEH9mwdHOzljFyZfvCpxg5XjSZdKavjYxZWdqcf/BS8AONnGQF+AfT0ikQaxC8xfEvh9MpaTxZ+pPAR64KpNrSBBlU0sSg+w+0KI5lBdX9HAIsSS3e97Ky5mrQGf2WYI0uZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711578946; c=relaxed/simple;
-	bh=Oe46liavg6s+uxvOvEuM+L5AqQ2CWTc7CeWZoAczl7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z9+/OHtHLGTZT3iVprYbMwkBgsAJ3IWeDTFxTkguqe+E/0+YjdR+xCaW/pQiojYcMsGpRu61brAIwISOkzdK6/l8U5J5T3LYMJP2qx/5A+pmM/nWOpQXb9Z1UncLMDVyUhJKYDeuwD/TVoc9r5AJyeOr83F6zLcvISmvN2QjvyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=knSnfJjv; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711585126; c=relaxed/simple;
+	bh=zsWvlwMlsTmNhgbPPby4pHnVE3v+PWwV4d8Iew4UmEY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=U1MQXyyZenm37ZzQQ3MTsgV5GVqli7L/ZKUtmzOanL/3Tr4D3kPRSBswA/QaiT3gAiHuuFG40L58SYDOlMOrTcpaVwXf4KEEdkKHc9pxEvUIqDJQzPs27l/YdE2PAi6am2FfhMa8z2xl+0s85XLafxG+EbYXL5P5el3/wv6znk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8E9L4JY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="knSnfJjv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7A82A40E016C;
-	Wed, 27 Mar 2024 22:35:42 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id biQjnQ8wDA07; Wed, 27 Mar 2024 22:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711578938; bh=kQxB+RTMdVrqYKpJ87igtdmlhA/0fWug/WgMwwj9rmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=knSnfJjvxDZXkr6KkrUJzMVf4KJKelEYj9ijRt5G6YGNBIAImBMEeXD8C55emh28r
-	 5or4e8raC6lYYzfiy/28o3cF4Y0mUCDMBe+0+1lVzc7d6xadV9akXMExK8ru/mys87
-	 yKXM7paUYIat0op8ziiXA+8tk1/GBH+THthWO0F9UqV/KtUCRNRDq/PbzOkPNeUUcw
-	 wid9wK1m4HBnFeYueriRwmnWZHbvWDiXV7sQOsI6XO8GUW4n/k//WU65w4geslCwlj
-	 /+GLGym1PnFOxNx0TfUzzXqKM3xVh1XL7pW7VGwZNGY0dQ+B12D0AuyGE10HnaK6i0
-	 ZKEfpmC5O8UDVBrpI+vb9QMh3e/Z9/p8ujGTfU8pL7dnqj4DIErbH3fl/UhT/zcFlw
-	 AnfQqNaC5d/H6VnjazUigKrz+YMFLgZWnRvRZRIOClRyA6HrkjRCbxQxZ/N+HowTbz
-	 AabE74uhSBLuVe7t2SgoWkEWRV2d5I7qoDCwReC6kbmfMegy67oBBo8zMRnRKaqhig
-	 o6A5hTIZjoFi04qqigGVMi+dkub/UY0S5VeN6mSgtSk6U1jTCzRM6omIR/ueQdioQy
-	 my2yW8vpjMj15YjTAZK32PB69r4eqY2lCQEmT3eLQcz7DCKRSTffQhY6WAanDgDHLp
-	 wy7KrqG3ClD/kUh6Rz5vutvQ=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7FC7440E00B2;
-	Wed, 27 Mar 2024 22:35:28 +0000 (UTC)
-Date: Wed, 27 Mar 2024 23:35:22 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>, linux-trace-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org, rostedt@goodmis.org,
-	tony.luck@intel.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-	yazen.ghannam@amd.com, avadnaik@amd.com
-Subject: Re: [PATCH v4 2/2] tracing: Include Microcode Revision in mce_record
- tracepoint
-Message-ID: <20240327223522.GDZgSfKj1CVyZ0zfxs@fat_crate.local>
-References: <20240327205435.3667588-1-avadhut.naik@amd.com>
- <20240327205435.3667588-3-avadhut.naik@amd.com>
- <67ba2ece-6b46-4ae1-a944-a38f84360d0f@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8E9L4JY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6194C433F1;
+	Thu, 28 Mar 2024 00:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711585125;
+	bh=zsWvlwMlsTmNhgbPPby4pHnVE3v+PWwV4d8Iew4UmEY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q8E9L4JYgtRQazG941hY9iq9Ao7UCltmzgAzNf9H61D2wfNai/cDIjYj/WM2HJKGQ
+	 WuKQzpUCcM595zNc3cjmizTX1CRLwtWvTszj5hcxhNFOkBlDhBg/E0jLF5DkwWD+vX
+	 wtQbPoxnEFak7+9Vj9ne/6G2tYoY4dZoqLgU8/83pR9YU1XWU2e2o5uofQoIeXjLpu
+	 SWEVg6aux2xrzhEkHD7qX4QteLy7LZ6Lu3pTndHd7Z89TFnXh7eTxzW9nmA+0O5/lr
+	 CfGdwK/2Ennnq+xrmppDNd+vHwGtxBZwZ6hl3ssIM1kDlF/glf95DNV58ImhVIA0nh
+	 IHa2dmAlfCblg==
+Date: Thu, 28 Mar 2024 09:18:41 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jonthan Haslam <jonathan.haslam@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org,
+ rostedt@goodmis.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-Id: <20240328091841.ce9cc613db375536de843cfb@kernel.org>
+In-Reply-To: <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+	<20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+	<CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+	<20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+	<54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <67ba2ece-6b46-4ae1-a944-a38f84360d0f@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 03:31:01PM -0700, Sohil Mehta wrote:
-> On 3/27/2024 1:54 PM, Avadhut Naik wrote:
-> 
-> > -	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
-> > +	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x, MICROCODE REVISION: %x",
-> 
-> Nit: s/MICROCODE REVISION/MICROCODE/g
-> 
-> You could probably get rid of the word REVISION in the interest of
-> brevity similar to __print_mce().
+On Wed, 27 Mar 2024 17:06:01 +0000
+Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
 
-You *definitely* want to do that - good catch.
+> > > Masami,
+> > > 
+> > > Given the discussion around per-cpu rw semaphore and need for
+> > > (internal) batched attachment API for uprobes, do you think you can
+> > > apply this patch as is for now? We can then gain initial improvements
+> > > in scalability that are also easy to backport, and Jonathan will work
+> > > on a more complete solution based on per-cpu RW semaphore, as
+> > > suggested by Ingo.
+> > 
+> > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
+> > I would like to wait for the next version.
+> 
+> My initial tests show a nice improvement on the over RW spinlocks but
+> significant regression in acquiring a write lock. I've got a few days
+> vacation over Easter but I'll aim to get some more formalised results out
+> to the thread toward the end of next week.
 
-And TBH, all the screaming words aren't helping either... :)
+As far as the write lock is only on the cold path, I think you can choose
+per-cpu RW semaphore. Since it does not do busy wait, the total system
+performance impact will be small.
+I look forward to your formalized results :)
+
+Thank you,
+
+> 
+> Jon.
+> 
+> > 
+> > Thank you,
+> > 
+> > > 
+> > > >
+> > > > BTW, how did you measure the overhead? I think spinlock overhead
+> > > > will depend on how much lock contention happens.
+> > > >
+> > > > Thank you,
+> > > >
+> > > > >
+> > > > > [0] https://docs.kernel.org/locking/spinlocks.html
+> > > > >
+> > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > > > > ---
+> > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > > >
+> > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > > > index 929e98c62965..42bf9b6e8bc0 100644
+> > > > > --- a/kernel/events/uprobes.c
+> > > > > +++ b/kernel/events/uprobes.c
+> > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> > > > >   */
+> > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
+> > > > >
+> > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
+> > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
+> > > > >
+> > > > >  #define UPROBES_HASH_SZ      13
+> > > > >  /* serialize uprobe->pending_list */
+> > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> > > > >  {
+> > > > >       struct uprobe *uprobe;
+> > > > >
+> > > > > -     spin_lock(&uprobes_treelock);
+> > > > > +     read_lock(&uprobes_treelock);
+> > > > >       uprobe = __find_uprobe(inode, offset);
+> > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > +     read_unlock(&uprobes_treelock);
+> > > > >
+> > > > >       return uprobe;
+> > > > >  }
+> > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> > > > >  {
+> > > > >       struct uprobe *u;
+> > > > >
+> > > > > -     spin_lock(&uprobes_treelock);
+> > > > > +     write_lock(&uprobes_treelock);
+> > > > >       u = __insert_uprobe(uprobe);
+> > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > +     write_unlock(&uprobes_treelock);
+> > > > >
+> > > > >       return u;
+> > > > >  }
+> > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
+> > > > >               return;
+> > > > >
+> > > > > -     spin_lock(&uprobes_treelock);
+> > > > > +     write_lock(&uprobes_treelock);
+> > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > +     write_unlock(&uprobes_treelock);
+> > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> > > > >       put_uprobe(uprobe);
+> > > > >  }
+> > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> > > > >       min = vaddr_to_offset(vma, start);
+> > > > >       max = min + (end - start) - 1;
+> > > > >
+> > > > > -     spin_lock(&uprobes_treelock);
+> > > > > +     read_lock(&uprobes_treelock);
+> > > > >       n = find_node_in_range(inode, min, max);
+> > > > >       if (n) {
+> > > > >               for (t = n; t; t = rb_prev(t)) {
+> > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> > > > >                       get_uprobe(u);
+> > > > >               }
+> > > > >       }
+> > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > +     read_unlock(&uprobes_treelock);
+> > > > >  }
+> > > > >
+> > > > >  /* @vma contains reference counter, not the probed instruction. */
+> > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> > > > >       min = vaddr_to_offset(vma, start);
+> > > > >       max = min + (end - start) - 1;
+> > > > >
+> > > > > -     spin_lock(&uprobes_treelock);
+> > > > > +     read_lock(&uprobes_treelock);
+> > > > >       n = find_node_in_range(inode, min, max);
+> > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > +     read_unlock(&uprobes_treelock);
+> > > > >
+> > > > >       return !!n;
+> > > > >  }
+> > > > > --
+> > > > > 2.43.0
+> > > > >
+> > > >
+> > > >
+> > > > --
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
