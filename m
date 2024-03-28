@@ -1,252 +1,326 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960363DAC13;
-	Thu, 28 Mar 2024 15:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F79612A14A;
+	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640244; cv=none; b=qk0NCfKT63/39eXJAslyUFDZ1pS1uCB9+AvzMeokNMpOHfdGW3PoA3B77glwjUgZjFzPi1Hmfn7SOKX5gueckl1jME231qRqABlbWK8JhC1GAY2jc0cd1W+745Dy9PlMboUU1I19XJ738tIuvurtfCrzhRPJ4jqFhYkyQ2CXTPI=
+	t=1711640657; cv=none; b=FeAuaxAUjw80qxwflx4UnCXzwi7rW+1z/LT7QXO3tKX9P6Juqgix2VjJAgMBYyvxwbLofPjcTPK+NkmvqpBxCnGwcJ2OuSfbmK1EIRycKrjcZJbWl53yDRmhoY+aYtVzUGvHT86oSUB2kDjzLQSY9nzXhEDN75KXQvjL6YAJgR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711640244; c=relaxed/simple;
-	bh=M1/MI7ctmoanaJzMS8Vaa21avZdB8bKDRkpxkpFOS8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=duoNiSJMi4Nd9lcUzIxdRVE/TJsg961wOyhOq7mmyWhSiEOyeMxslBhYxXUvP0avr54munlknbN2pdP2Upqiz5OtKNfVA16WVe/Lbx5UaqbNRF3kcEDqUXnFbQ7DrkpU8jG/EDl6CUhewvs0/X/Gs+Q+r/o3DgdUEEisoP8objw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE36FC433F1;
-	Thu, 28 Mar 2024 15:37:20 +0000 (UTC)
-Date: Thu, 28 Mar 2024 11:40:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yi-De Wu <yi-de.wu@mediatek.com>
-Cc: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
- <ze-yu.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas
- <catalin.marinas@arm.com>, Wihl Deacon <will@kernel.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Richard Cochran
- <richardcochran@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-mediatek@lists.infradead.org>, David Bradil <dbrazdil@google.com>,
- Trilok Soni <quic_tsoni@quicinc.com>, Jade Shih <jades.shih@mediatek.com>,
- Ivan Tseng <ivan.tseng@mediatek.com>, My Chuang <my.chuang@mediatek.com>,
- Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
- <peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, "Willix
- Yeh" <chi-shen.yeh@mediatek.com>, Kevenny Hsieh
- <kevenny.hsieh@mediatek.com>
-Subject: Re: [PATCH v8 19/20] virt: geniezone: Add tracing support for hyp
- call and vcpu exit_reason
-Message-ID: <20240328114004.5793230a@gandalf.local.home>
-In-Reply-To: <20231228105147.13752-20-yi-de.wu@mediatek.com>
-References: <20231228105147.13752-1-yi-de.wu@mediatek.com>
-	<20231228105147.13752-20-yi-de.wu@mediatek.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711640657; c=relaxed/simple;
+	bh=qYG1LxutZbe5G+N9vijukhEiMclWEcESiwYYQHumlOs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=thftdyJn1iPFQy6Pn/3EU5qxE/eLBAAG+Imd6urpDfMClrH5i9bAZXGkqBavWHr+BO2ZTwcD7NPteCBpBdIaJQum8s/Q9hc7/h/Rd6/LArDQbmKoXZzVImYZbY3uNBKzlTrYyYoxe5tiLRjBja63uumSezO5CymJxwhn2DBmLbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOKf7imY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOKf7imY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 047D3C433F1;
+	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711640657;
+	bh=qYG1LxutZbe5G+N9vijukhEiMclWEcESiwYYQHumlOs=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=oOKf7imYuDujEq+879+zr/VvxaJ/Ijxr538NSpXlq5SsREFnnUiv4vRFrrHLiASw2
+	 usBDXqc5ay5VUzS+O2eVhJYAuCS7uhHNLjRraHdCQWqv4siI0F6+01L/AskBeAKHWy
+	 i+AfyO7ubBsBPtlfZvpz4sKIMWPepKSLtzGsAmDjIz7DGfJ4E7Gj1nnlIPN0HzvaiT
+	 DRT+WkN6qdvGKZ+1i3LJUwkOo1QeoNFfn5SiZdw4QjZf5B4h1+I3K+lsYhgw0iuYIg
+	 AP8giprQf5mU4AnROcxmfCzeflWRW9KFLPhZGJQHYo+unNbUpIrI/U0i904xmQGBhF
+	 3FxvVtYPTUPxw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB314CD1283;
+	Thu, 28 Mar 2024 15:44:16 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Subject: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel dir
+Date: Thu, 28 Mar 2024 16:44:01 +0100
+Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEGQBWYC/5XNQQ6CMBSE4auYrq15BaLoynsYQ5rHgFVKSYuNh
+ HB3q4kLd7r8Z/HNLAK8QRCH1Sw8ognG9Sny9UrwRfctpKlTi4yyXCnayatuZZgCj13lYV1EBTu
+ MU4UOtrrB9+jkrsaeuKmJSYskDR6NebxfTufUFxNG56f3aVSv9T8/KkkSBUPlZVk3mo5B23Dv2
+ w07K14PMfuoBSkqflOzpJb5lpkKEIG/1WVZnsuAdrIuAQAA
+To: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
+ Kees Cook <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, 
+ Iurii Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
+ Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+ Daniel Bristot de Oliveira <bristot@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, 
+ John Ogness <john.ogness@linutronix.de>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10789;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=WUTQDpfZgZClvygT4HGPLJcUbPNO7wR07Jx0+KFw53U=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkEnQF6PJsgI7eC1YBuxJbg5WY4lcHUDna
+ UUkMAaquYCjeokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBJAAoJELqXzVK3
+ lkFPp/QL+gLcDkTlgpnG3tU6FQCIyBxVmVf7smmcFn+p+oiVPHzfavDSm0fReAcsvVNaRSPZVHz
+ SHga0gGAqDAyPkKcigAHHeGwKdIDOBmeKKjqiopEV4TKhCXmJQJXONiXaJFGZpnM+ddn2E3xgA2
+ /Ou9/B4pUvGR1EKZF/L9YtPa+HmrG0SgNCM5kxW3+gWsqgKlJwdn7e+SpCeuQZAhHseoGgCrWsT
+ +ulHQBI6SZbnu3EcYxakfyTqnasMvGyJ9lXMUinfh7fY0U5NmQxRY5WDoiA+yx5PrPuMdW1E/wQ
+ uZe+JmQK9Lv98WV44XpCHCjl3MJDQl98PHhxtcfCT2NTLhf4i78S9+iIXxlhL+Ho0vLoS6IMF60
+ BhfNo2e/Ud1evvW+21VYAFFLDBbTxc+7hdXBc2V0G5sgpU4f39lfsEUxepCV4CHRTNBHjcyDAhe
+ 5j1O8DfGyzmQNnTeXnJCjEEnnUW1SkVcsZCu5wEtZ6NRa+LPmKXL/9qX/z3WUL3Z8WJo5TSm5H4
+ PA=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On Thu, 28 Dec 2023 18:51:46 +0800
-Yi-De Wu <yi-de.wu@mediatek.com> wrote:
+From: Joel Granados <j.granados@samsung.com>
 
-> Add tracepoints for hypervisor calls and VCPU exit reasons in GenieZone
-> driver. It aids performance debugging by providing more information
-> about hypervisor operations and VCPU behavior.
-> 
-> Command Usage:
-> echo geniezone:* >> /sys/kernel/tracing/set_event
-> echo 1 > /sys/kernel/tracing/tracing_on
-> echo 0 > /sys/kernel/tracing/tracing_on
-> cat /sys/kernel/tracing/trace
-> 
-> For example:
-> crosvm_vcpu0-4838 [004] ..... 76053.536034: mtk_hypcall_enter: id=0xbb001005
-> crosvm_vcpu0-4838 [004] ..... 76053.540039: mtk_hypcall_leave: id=0xbb001005 invalid=0
-> crosvm_vcpu0-4838 [004] ..... 76053.540040: mtk_vcpu_exit: vcpu exit_reason=0x92920003
+What?
+These commits remove the sentinel element (last empty element) from the
+sysctl arrays of all the files under the "kernel/" directory that use a
+sysctl array for registration. The merging of the preparation patches
+[1] to mainline allows us to remove sentinel elements without changing
+behavior. This is safe because the sysctl registration code
+(register_sysctl() and friends) use the array size in addition to
+checking for a sentinel [2].
 
-Cleaning out patchwork, I noticed this patch.
+Why?
+By removing the sysctl sentinel elements we avoid kernel bloat as
+ctl_table arrays get moved out of kernel/sysctl.c into their own
+respective subsystems. This move was started long ago to avoid merge
+conflicts; the sentinel removal bit came after Mathew Wilcox suggested
+it to avoid bloating the kernel by one element as arrays moved out. This
+patchset will reduce the overall build time size of the kernel and run
+time memory bloat by about ~64 bytes per declared ctl_table array (more
+info here [5]).
 
-You can make the above more informative by having it output:
+When are we done?
+There are 4 patchests (25 commits [3]) that are still outstanding to
+completely remove the sentinels: files under "net/", files under
+"kernel/" (this patchset) dir, misc dirs (files under mm/ security/ and
+others) and the final set that removes the unneeded check for ->procname
+== NULL.
 
- crosvm_vcpu0-4838 [004] ..... 76053.540040: mtk_vcpu_exit: vcpu exit_reason=IRQ
+Testing:
+* Ran sysctl selftests (./tools/testing/selftests/sysctl/sysctl.sh)
+* Ran this through 0-day with no errors or warnings
 
+Savings in vmlinux:
+  A total of 64 bytes per sentinel is saved after removal; I measured in
+  x86_64 to give an idea of the aggregated savings. The actual savings
+  will depend on individual kernel configuration.
+    * bloat-o-meter
+        - The "yesall" config saves 1984 bytes [6]
+        - A reduced config [4] saves 1027 bytes [7]
 
-> 
-> This example tracks a hypervisor function call by an ID (`0xbb001005`)
-> from initiation to termination, which is supported (invalid=0). A vCPU
-> exit is triggered by an Interrupt Request (IRQ) (exit reason: 0x92920003).
-> 
-> /* VM exit reason */
-> enum {
-> 	GZVM_EXIT_UNKNOWN = 0x92920000,
-> 	GZVM_EXIT_MMIO = 0x92920001,
-> 	GZVM_EXIT_HYPERCALL = 0x92920002,
-> 	GZVM_EXIT_IRQ = 0x92920003,
-> 	GZVM_EXIT_EXCEPTION = 0x92920004,
-> 	GZVM_EXIT_DEBUG = 0x92920005,
-> 	GZVM_EXIT_FAIL_ENTRY = 0x92920006,
-> 	GZVM_EXIT_INTERNAL_ERROR = 0x92920007,
-> 	GZVM_EXIT_SYSTEM_EVENT = 0x92920008,
-> 	GZVM_EXIT_SHUTDOWN = 0x92920009,
-> 	GZVM_EXIT_GZ = 0x9292000a,
-> };
-> 
-> Signed-off-by: Liju-clr Chen <liju-clr.chen@mediatek.com>
-> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
-> ---
->  arch/arm64/geniezone/vm.c          |  5 +++
->  drivers/virt/geniezone/gzvm_vcpu.c |  3 ++
->  include/trace/events/geniezone.h   | 54 ++++++++++++++++++++++++++++++
->  3 files changed, 62 insertions(+)
->  create mode 100644 include/trace/events/geniezone.h
-> 
-> diff --git a/arch/arm64/geniezone/vm.c b/arch/arm64/geniezone/vm.c
-> index a9d264bbb3b1..5667643251b5 100644
-> --- a/arch/arm64/geniezone/vm.c
-> +++ b/arch/arm64/geniezone/vm.c
-> @@ -7,6 +7,8 @@
->  #include <linux/err.h>
->  #include <linux/uaccess.h>
->  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/geniezone.h>
->  #include <linux/gzvm.h>
->  #include <linux/gzvm_drv.h>
->  #include "gzvm_arch_common.h"
-> @@ -33,7 +35,10 @@ int gzvm_hypcall_wrapper(unsigned long a0, unsigned long a1,
->  			 unsigned long a6, unsigned long a7,
->  			 struct arm_smccc_res *res)
->  {
-> +	trace_mtk_hypcall_enter(a0);
->  	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
-> +	trace_mtk_hypcall_leave(a0, (res->a0 != ERR_NOT_SUPPORTED) ? 0 : 1);
-> +
->  	return gzvm_err_to_errno(res->a0);
->  }
->  
-> diff --git a/drivers/virt/geniezone/gzvm_vcpu.c b/drivers/virt/geniezone/gzvm_vcpu.c
-> index 86c690749277..138ec064596b 100644
-> --- a/drivers/virt/geniezone/gzvm_vcpu.c
-> +++ b/drivers/virt/geniezone/gzvm_vcpu.c
-> @@ -10,6 +10,8 @@
->  #include <linux/mm.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +
-> +#include <trace/events/geniezone.h>
->  #include <linux/gzvm_drv.h>
->  
->  /* maximum size needed for holding an integer */
-> @@ -103,6 +105,7 @@ static long gzvm_vcpu_run(struct gzvm_vcpu *vcpu, void __user *argp)
->  
->  	while (!need_userspace && !signal_pending(current)) {
->  		gzvm_arch_vcpu_run(vcpu, &exit_reason);
-> +		trace_mtk_vcpu_exit(exit_reason);
->  
->  		switch (exit_reason) {
->  		case GZVM_EXIT_MMIO:
-> diff --git a/include/trace/events/geniezone.h b/include/trace/events/geniezone.h
-> new file mode 100644
-> index 000000000000..1fa44f9c4b3c
-> --- /dev/null
-> +++ b/include/trace/events/geniezone.h
-> @@ -0,0 +1,54 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2023 MediaTek Inc.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM geniezone
-> +
-> +#define _TRACE_GENIEZONE_H
-> +
-> +#include <linux/tracepoint.h>
+Savings in allocated memory:
+  None in this set but will occur when the superfluous allocations are
+  removed from proc_sysctl.c. I include it here for context. The
+  estimated savings during boot for config [3] are 6272 bytes. See [8]
+  for how to measure it.
 
-#define GZVM_EXIT_REASONS	\
-	EM(UNKNOWN)		\
-	EM(MMIO)		\
-	EM(HYPERCALL)		\
-	EM(IRQ)			\
-	EM(EXCEPTION)		\
-	EM(DEBUG)		\
-	EM(FAIL_ENTRY)		\
-	EM(INTERNAL_ERROR)	\
-	EM(SYSTEM_EVENT)	\
-	EM(SHUTDOWN)		\
-	EMe(GZ)
+Comments/feedback greatly appreciated
 
-#undef EM
-#undef EMe
-#define EM(a) TRACE_DEFINE_ENUM(GZVM_EXIT_##a);
-#define EMe(a) TRACE_DEFINE_ENUM(GZVM_EXIT_##a);
+Changes in v3:
+- Rebased to v6.9-rc1
+- wrote a shorter cover letter
+- Removed willy@infradead.org from cc
+- Link to v2: https://lore.kernel.org/r/20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com
 
-GZVM_EXIT_REASONS
+Changes in v2:
+- No functional changes; I resent it as I did not see it in the latest
+  sysctl-next. It might be a bit too late to include it in 6.7 version,
+  but this v2 can be used for 6.8 when it comes out.
+- Rebased on top of v6.7-rc6
+- Added trailers to the relevant commits.
+- Link to v1: https://lore.kernel.org/r/20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com
+Best
 
-#undef EM
-#undef EMe
+Joel
 
-#define EM(a)       { GZVM_EXIT_##a, #a },
-#define EMe(a)      { GZVM_EXIT_##a, #a }
+[1] https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
+[2] https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/joel.granados/linux.git/tag/?h=sysctl_remove_empty_elem_v5
+[4] https://gist.github.com/Joelgranados/feaca7af5537156ca9b73aeaec093171
 
-> +
-> +TRACE_EVENT(mtk_hypcall_enter,
-> +	    TP_PROTO(unsigned long id),
-> +
-> +	    TP_ARGS(id),
-> +
-> +	    TP_STRUCT__entry(__field(unsigned long, id)),
-> +
-> +	    TP_fast_assign(__entry->id = id;),
-> +
-> +	    TP_printk("id=0x%lx", __entry->id)
-> +);
-> +
-> +TRACE_EVENT(mtk_hypcall_leave,
-> +	    TP_PROTO(unsigned long id, unsigned long invalid),
-> +
-> +	    TP_ARGS(id, invalid),
-> +
-> +	    TP_STRUCT__entry(__field(unsigned long, id)
-> +			     __field(unsigned long, invalid)
-> +	    ),
-> +
-> +	    TP_fast_assign(__entry->id = id;
-> +			   __entry->invalid = invalid;
-> +	    ),
-> +
-> +	    TP_printk("id=0x%lx invalid=%lu", __entry->id, __entry->invalid)
-> +);
-> +
-> +TRACE_EVENT(mtk_vcpu_exit,
-> +	    TP_PROTO(unsigned long exit_reason),
-> +
-> +	    TP_ARGS(exit_reason),
-> +
-> +	    TP_STRUCT__entry(__field(unsigned long, exit_reason)),
-> +
-> +	    TP_fast_assign(__entry->exit_reason = exit_reason;),
-> +
-> +	    TP_printk("vcpu exit_reason=0x%lx", __entry->exit_reason)
+[5]
+Links Related to the ctl_table sentinel removal:
+* Good summaries from Luis:
+  https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
+  https://lore.kernel.org/all/ZMFizKFkVxUFtSqa@bombadil.infradead.org/
+* Patches adjusting sysctl register calls:
+  https://lore.kernel.org/all/20230302204612.782387-1-mcgrof@kernel.org/
+  https://lore.kernel.org/all/20230302202826.776286-1-mcgrof@kernel.org/
+* Discussions about expectations and approach
+  https://lore.kernel.org/all/20230321130908.6972-1-frank.li@vivo.com
+  https://lore.kernel.org/all/20220220060626.15885-1-tangmeng@uniontech.com
 
-	    TP_printk("vcpu exit_reason=0x%lx",
-		__print_symbolic(__entry->exit_reason, GZVM_EXIT_REASONS))
+[6]
+add/remove: 0/0 grow/shrink: 0/31 up/down: 0/-1984 (-1984)
+Function                                     old     new   delta
+watchdog_sysctls                             576     512     -64
+watchdog_hardlockup_sysctl                   128      64     -64
+vm_table                                    1344    1280     -64
+uts_kern_table                               448     384     -64
+usermodehelper_table                         192     128     -64
+user_table                                   832     768     -64
+user_event_sysctls                           128      64     -64
+timer_sysctl                                 128      64     -64
+signal_debug_table                           128      64     -64
+seccomp_sysctl_table                         192     128     -64
+sched_rt_sysctls                             256     192     -64
+sched_fair_sysctls                           256     192     -64
+sched_energy_aware_sysctls                   128      64     -64
+sched_dl_sysctls                             192     128     -64
+sched_core_sysctls                           384     320     -64
+sched_autogroup_sysctls                      128      64     -64
+printk_sysctls                               512     448     -64
+pid_ns_ctl_table_vm                          128      64     -64
+pid_ns_ctl_table                             128      64     -64
+latencytop_sysctl                            128      64     -64
+kprobe_sysctls                               128      64     -64
+kexec_core_sysctls                           256     192     -64
+kern_table                                  2560    2496     -64
+kern_reboot_table                            192     128     -64
+kern_panic_table                             192     128     -64
+kern_exit_table                              128      64     -64
+kern_delayacct_table                         128      64     -64
+kern_acct_table                              128      64     -64
+hung_task_sysctls                            448     384     -64
+ftrace_sysctls                               128      64     -64
+bpf_syscall_table                            192     128     -64
+Total: Before=429912331, After=429910347, chg -0.00%
 
+[7]
+add/remove: 0/1 grow/shrink: 0/16 up/down: 0/-1027 (-1027)
+Function                                     old     new   delta
+sched_core_sysctl_init                        39      36      -3
+vm_table                                    1024     960     -64
+uts_kern_table                               448     384     -64
+usermodehelper_table                         192     128     -64
+user_table                                   704     640     -64
+signal_debug_table                           128      64     -64
+seccomp_sysctl_table                         192     128     -64
+sched_rt_sysctls                             256     192     -64
+sched_fair_sysctls                           128      64     -64
+sched_dl_sysctls                             192     128     -64
+sched_core_sysctls                            64       -     -64
+printk_sysctls                               512     448     -64
+pid_ns_ctl_table_vm                          128      64     -64
+kern_table                                  1920    1856     -64
+kern_reboot_table                            192     128     -64
+kern_panic_table                             128      64     -64
+kern_exit_table                              128      64     -64
+Total: Before=8522228, After=8521201, chg -0.01%
 
-And instead of having the cryptic enum values printed, you will have human
-readable reasons.
+[8]
+To measure the in memory savings apply this on top of this patchset.
 
--- Steve
+"
+"
+diff --git i/fs/proc/proc_sysctl.c w/fs/proc/proc_sysctl.c
+index 37cde0efee57..896c498600e8 100644
+--- i/fs/proc/proc_sysctl.c
++++ w/fs/proc/proc_sysctl.c
+@@ -966,6 +966,7 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
+        table[0].procname = new_name;
+        table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
+        init_header(&new->header, set->dir.header.root, set, node, table, 1);
++       printk("%ld sysctl saved mem kzalloc\n", sizeof(struct ctl_table));
 
+        return new;
+ }
+@@ -1189,6 +1190,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, s>
+                link_name += len;
+                link++;
+        }
++       printk("%ld sysctl saved mem kzalloc\n", sizeof(struct ctl_table));
+        init_header(links, dir->header.root, dir->header.set, node, link_table,
+                    head->ctl_table_size);
+        links->nreg = nr_entries;
+"
+and then run the following bash script in the kernel:
 
-> +);
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
+accum=0
+for n in $(dmesg | grep kzalloc | awk '{print $3}') ; do
+    accum=$(calc "$accum + $n")
+done
+echo $accum
+
+---
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+
+---
+Joel Granados (10):
+      kernel misc:  Remove the now superfluous sentinel elements from ctl_table array
+      umh:  Remove the now superfluous sentinel elements from ctl_table array
+      ftrace: Remove the now superfluous sentinel elements from ctl_table array
+      timekeeping:  Remove the now superfluous sentinel elements from ctl_table array
+      seccomp: Remove the now superfluous sentinel elements from ctl_table array
+      scheduler: Remove the now superfluous sentinel elements from ctl_table array
+      printk: Remove the now superfluous sentinel elements from ctl_table array
+      kprobes: Remove the now superfluous sentinel elements from ctl_table array
+      delayacct:  Remove the now superfluous sentinel elements from ctl_table array
+      bpf: Remove the now superfluous sentinel elements from ctl_table array
+
+ kernel/acct.c                    | 1 -
+ kernel/bpf/syscall.c             | 1 -
+ kernel/delayacct.c               | 1 -
+ kernel/exit.c                    | 1 -
+ kernel/hung_task.c               | 1 -
+ kernel/kexec_core.c              | 1 -
+ kernel/kprobes.c                 | 1 -
+ kernel/latencytop.c              | 1 -
+ kernel/panic.c                   | 1 -
+ kernel/pid_namespace.c           | 1 -
+ kernel/pid_sysctl.h              | 1 -
+ kernel/printk/sysctl.c           | 1 -
+ kernel/reboot.c                  | 1 -
+ kernel/sched/autogroup.c         | 1 -
+ kernel/sched/core.c              | 1 -
+ kernel/sched/deadline.c          | 1 -
+ kernel/sched/fair.c              | 1 -
+ kernel/sched/rt.c                | 1 -
+ kernel/sched/topology.c          | 1 -
+ kernel/seccomp.c                 | 1 -
+ kernel/signal.c                  | 1 -
+ kernel/stackleak.c               | 1 -
+ kernel/sysctl.c                  | 2 --
+ kernel/time/timer.c              | 1 -
+ kernel/trace/ftrace.c            | 1 -
+ kernel/trace/trace_events_user.c | 1 -
+ kernel/ucount.c                  | 3 +--
+ kernel/umh.c                     | 1 -
+ kernel/utsname_sysctl.c          | 1 -
+ kernel/watchdog.c                | 2 --
+ 30 files changed, 1 insertion(+), 33 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20231107-jag-sysctl_remove_empty_elem_kernel-7de90cfd0c0a
+
+Best regards,
+-- 
+Joel Granados <j.granados@samsung.com>
+
 
