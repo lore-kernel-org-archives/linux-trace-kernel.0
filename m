@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F79612A14A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835B712AAD3;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640657; cv=none; b=FeAuaxAUjw80qxwflx4UnCXzwi7rW+1z/LT7QXO3tKX9P6Juqgix2VjJAgMBYyvxwbLofPjcTPK+NkmvqpBxCnGwcJ2OuSfbmK1EIRycKrjcZJbWl53yDRmhoY+aYtVzUGvHT86oSUB2kDjzLQSY9nzXhEDN75KXQvjL6YAJgR0=
+	t=1711640657; cv=none; b=qUKV+gdXzS7HH2pePYDFBhx5xskps/wd5fe1dtin65q3ZA6DcxZe1wFBJz6itFA7rXAIB6r9jbVSkepH+zGUWzEmGjTwgBSeIiSzh3OdgQjJIu9dXPVy0nP0skJoB6ELvYu5EqIuN6zv/SVvQ4Hrl/T5zIGOUXR/SDvGHFJX8MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711640657; c=relaxed/simple;
-	bh=qYG1LxutZbe5G+N9vijukhEiMclWEcESiwYYQHumlOs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=thftdyJn1iPFQy6Pn/3EU5qxE/eLBAAG+Imd6urpDfMClrH5i9bAZXGkqBavWHr+BO2ZTwcD7NPteCBpBdIaJQum8s/Q9hc7/h/Rd6/LArDQbmKoXZzVImYZbY3uNBKzlTrYyYoxe5tiLRjBja63uumSezO5CymJxwhn2DBmLbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOKf7imY; arc=none smtp.client-ip=10.30.226.201
+	bh=V9eApfrx/luUPTr0ui9HIhkRp0aZQ7q1nffr8rRLCu8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Y4hHOU3QGmL3ev0PxQ/w/ZItVei9zeM4LKp2c4tMBndCLQXhx2HtqNim/hCq4nyPiwJrXa6lLLZSE6sIbX/Q1AGg6CiAPtXVPHhMDanrmWyPQlNVPAXbP06yKeRvqy8fYIS+sdEuI9jf1o0vZ+Bpa1Gwo4pSJCB9UB01xbLiWSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Th2X6ibv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOKf7imY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 047D3C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Th2X6ibv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E039C43330;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711640657;
-	bh=qYG1LxutZbe5G+N9vijukhEiMclWEcESiwYYQHumlOs=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=oOKf7imYuDujEq+879+zr/VvxaJ/Ijxr538NSpXlq5SsREFnnUiv4vRFrrHLiASw2
-	 usBDXqc5ay5VUzS+O2eVhJYAuCS7uhHNLjRraHdCQWqv4siI0F6+01L/AskBeAKHWy
-	 i+AfyO7ubBsBPtlfZvpz4sKIMWPepKSLtzGsAmDjIz7DGfJ4E7Gj1nnlIPN0HzvaiT
-	 DRT+WkN6qdvGKZ+1i3LJUwkOo1QeoNFfn5SiZdw4QjZf5B4h1+I3K+lsYhgw0iuYIg
-	 AP8giprQf5mU4AnROcxmfCzeflWRW9KFLPhZGJQHYo+unNbUpIrI/U0i904xmQGBhF
-	 3FxvVtYPTUPxw==
+	bh=V9eApfrx/luUPTr0ui9HIhkRp0aZQ7q1nffr8rRLCu8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Th2X6ibvVdQ+kgNVc65KbGnF7WOCx3uMpiu8utEkAUXEGRRyiJ3LbFumLPaz3pwRm
+	 hcw4QdtEZZuBdny5UnP4IaNjE7dVBkQCCEdiObTSlwHmPC7kom1wsZymTk2r/jHMak
+	 dncXWL3zaqzj7Qbr7PHgWpgppPhXFHvwYxZi1ZDQcjru8Hu65ql3UUvqT77YNsHI/e
+	 Iw8CpuIG4z8NiKPFFQ5Bjt7RoAXs54ourHz77o36j2YkJUX5lMkxEX7NfG9IDOkTxm
+	 CKkvDgPkYHnfHpKMepZQh9d5AmD8z4/9xbnYX+CBXGKyqJQMfByDIF2BwOcJV20P/+
+	 35HeG/vANiIlA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB314CD1283;
-	Thu, 28 Mar 2024 15:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34012C54E64;
+	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Subject: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel dir
-Date: Thu, 28 Mar 2024 16:44:01 +0100
-Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
+Date: Thu, 28 Mar 2024 16:44:04 +0100
+Subject: [PATCH v3 03/10] ftrace: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,10 +41,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEGQBWYC/5XNQQ6CMBSE4auYrq15BaLoynsYQ5rHgFVKSYuNh
- HB3q4kLd7r8Z/HNLAK8QRCH1Sw8ognG9Sny9UrwRfctpKlTi4yyXCnayatuZZgCj13lYV1EBTu
- MU4UOtrrB9+jkrsaeuKmJSYskDR6NebxfTufUFxNG56f3aVSv9T8/KkkSBUPlZVk3mo5B23Dv2
- w07K14PMfuoBSkqflOzpJb5lpkKEIG/1WVZnsuAdrIuAQAA
+Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-3-285d273912fe@samsung.com>
+References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
+In-Reply-To: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 To: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
  Kees Cook <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, 
  Iurii Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
@@ -74,19 +74,19 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10789;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1508;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=WUTQDpfZgZClvygT4HGPLJcUbPNO7wR07Jx0+KFw53U=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkEnQF6PJsgI7eC1YBuxJbg5WY4lcHUDna
- UUkMAaquYCjeokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBJAAoJELqXzVK3
- lkFPp/QL+gLcDkTlgpnG3tU6FQCIyBxVmVf7smmcFn+p+oiVPHzfavDSm0fReAcsvVNaRSPZVHz
- SHga0gGAqDAyPkKcigAHHeGwKdIDOBmeKKjqiopEV4TKhCXmJQJXONiXaJFGZpnM+ddn2E3xgA2
- /Ou9/B4pUvGR1EKZF/L9YtPa+HmrG0SgNCM5kxW3+gWsqgKlJwdn7e+SpCeuQZAhHseoGgCrWsT
- +ulHQBI6SZbnu3EcYxakfyTqnasMvGyJ9lXMUinfh7fY0U5NmQxRY5WDoiA+yx5PrPuMdW1E/wQ
- uZe+JmQK9Lv98WV44XpCHCjl3MJDQl98PHhxtcfCT2NTLhf4i78S9+iIXxlhL+Ho0vLoS6IMF60
- BhfNo2e/Ud1evvW+21VYAFFLDBbTxc+7hdXBc2V0G5sgpU4f39lfsEUxepCV4CHRTNBHjcyDAhe
- 5j1O8DfGyzmQNnTeXnJCjEEnnUW1SkVcsZCu5wEtZ6NRa+LPmKXL/9qX/z3WUL3Z8WJo5TSm5H4
- PA=
+ bh=1araE0kn/61sWG3kWH8OhE3BK5Hy2HOuryBQQ689H28=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkEpW98gjG1D2aFsgWF2O5xiJynGheSz82
+ sXxRtohHqsNOIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBKAAoJELqXzVK3
+ lkFPCzUL/0SG+3ODZAcC8VOhC+0GoOi4kE7faOWvyEi+zuJjGTMcwSwNf4IntNxUSlKxLruqmu/
+ sXS4rISd6LajFHPlALx1lSwYZelfgle5kubkTKxbxuV4A4EpjxsYLKDFRoFS9tmt60X7MzNuPrv
+ 2ARWH2eTismjVuHNYgaovyHiC3/nZ7Eq0vltmN6f9/mtI49KNhKAy6wgXicwxtfN5J5aRPKDmKF
+ +Crd6eRk4VyjwwB2aR2w++kmDsP6Cjnha4ho87e4AWqV/7W9HLnSNaPkAilDaK+ZwdYvCX/6rhb
+ nSA1+bIMwy8cuyKK461nhWqG3gxm1jyfzvwyM3bhD6Z4yl22JmRQg2TxIPM6rEulBpeOGoNfhm8
+ 60+H0uxestVapnhLqg3gSUklk+b5Qv4YsJ9XowjlmPrCMKeLBtb6t8Wxpm+72Jba9Nba9Gyx7wB
+ 6nHOXmVGMy7L5w1LCv/2Im1SpQ9JngLB+Gni4XCGVVQhaq/cxpd2dV7EQKFfhCDOo17ZGL+oWK6
+ +0=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -96,231 +96,48 @@ Reply-To: j.granados@samsung.com
 
 From: Joel Granados <j.granados@samsung.com>
 
-What?
-These commits remove the sentinel element (last empty element) from the
-sysctl arrays of all the files under the "kernel/" directory that use a
-sysctl array for registration. The merging of the preparation patches
-[1] to mainline allows us to remove sentinel elements without changing
-behavior. This is safe because the sysctl registration code
-(register_sysctl() and friends) use the array size in addition to
-checking for a sentinel [2].
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which
+will reduce the overall build time size of the kernel and run time
+memory bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Why?
-By removing the sysctl sentinel elements we avoid kernel bloat as
-ctl_table arrays get moved out of kernel/sysctl.c into their own
-respective subsystems. This move was started long ago to avoid merge
-conflicts; the sentinel removal bit came after Mathew Wilcox suggested
-it to avoid bloating the kernel by one element as arrays moved out. This
-patchset will reduce the overall build time size of the kernel and run
-time memory bloat by about ~64 bytes per declared ctl_table array (more
-info here [5]).
+Remove sentinel elements from ftrace_sysctls and user_event_sysctls
 
-When are we done?
-There are 4 patchests (25 commits [3]) that are still outstanding to
-completely remove the sentinels: files under "net/", files under
-"kernel/" (this patchset) dir, misc dirs (files under mm/ security/ and
-others) and the final set that removes the unneeded check for ->procname
-== NULL.
-
-Testing:
-* Ran sysctl selftests (./tools/testing/selftests/sysctl/sysctl.sh)
-* Ran this through 0-day with no errors or warnings
-
-Savings in vmlinux:
-  A total of 64 bytes per sentinel is saved after removal; I measured in
-  x86_64 to give an idea of the aggregated savings. The actual savings
-  will depend on individual kernel configuration.
-    * bloat-o-meter
-        - The "yesall" config saves 1984 bytes [6]
-        - A reduced config [4] saves 1027 bytes [7]
-
-Savings in allocated memory:
-  None in this set but will occur when the superfluous allocations are
-  removed from proc_sysctl.c. I include it here for context. The
-  estimated savings during boot for config [3] are 6272 bytes. See [8]
-  for how to measure it.
-
-Comments/feedback greatly appreciated
-
-Changes in v3:
-- Rebased to v6.9-rc1
-- wrote a shorter cover letter
-- Removed willy@infradead.org from cc
-- Link to v2: https://lore.kernel.org/r/20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com
-
-Changes in v2:
-- No functional changes; I resent it as I did not see it in the latest
-  sysctl-next. It might be a bit too late to include it in 6.7 version,
-  but this v2 can be used for 6.8 when it comes out.
-- Rebased on top of v6.7-rc6
-- Added trailers to the relevant commits.
-- Link to v1: https://lore.kernel.org/r/20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com
-Best
-
-Joel
-
-[1] https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
-[2] https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/joel.granados/linux.git/tag/?h=sysctl_remove_empty_elem_v5
-[4] https://gist.github.com/Joelgranados/feaca7af5537156ca9b73aeaec093171
-
-[5]
-Links Related to the ctl_table sentinel removal:
-* Good summaries from Luis:
-  https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
-  https://lore.kernel.org/all/ZMFizKFkVxUFtSqa@bombadil.infradead.org/
-* Patches adjusting sysctl register calls:
-  https://lore.kernel.org/all/20230302204612.782387-1-mcgrof@kernel.org/
-  https://lore.kernel.org/all/20230302202826.776286-1-mcgrof@kernel.org/
-* Discussions about expectations and approach
-  https://lore.kernel.org/all/20230321130908.6972-1-frank.li@vivo.com
-  https://lore.kernel.org/all/20220220060626.15885-1-tangmeng@uniontech.com
-
-[6]
-add/remove: 0/0 grow/shrink: 0/31 up/down: 0/-1984 (-1984)
-Function                                     old     new   delta
-watchdog_sysctls                             576     512     -64
-watchdog_hardlockup_sysctl                   128      64     -64
-vm_table                                    1344    1280     -64
-uts_kern_table                               448     384     -64
-usermodehelper_table                         192     128     -64
-user_table                                   832     768     -64
-user_event_sysctls                           128      64     -64
-timer_sysctl                                 128      64     -64
-signal_debug_table                           128      64     -64
-seccomp_sysctl_table                         192     128     -64
-sched_rt_sysctls                             256     192     -64
-sched_fair_sysctls                           256     192     -64
-sched_energy_aware_sysctls                   128      64     -64
-sched_dl_sysctls                             192     128     -64
-sched_core_sysctls                           384     320     -64
-sched_autogroup_sysctls                      128      64     -64
-printk_sysctls                               512     448     -64
-pid_ns_ctl_table_vm                          128      64     -64
-pid_ns_ctl_table                             128      64     -64
-latencytop_sysctl                            128      64     -64
-kprobe_sysctls                               128      64     -64
-kexec_core_sysctls                           256     192     -64
-kern_table                                  2560    2496     -64
-kern_reboot_table                            192     128     -64
-kern_panic_table                             192     128     -64
-kern_exit_table                              128      64     -64
-kern_delayacct_table                         128      64     -64
-kern_acct_table                              128      64     -64
-hung_task_sysctls                            448     384     -64
-ftrace_sysctls                               128      64     -64
-bpf_syscall_table                            192     128     -64
-Total: Before=429912331, After=429910347, chg -0.00%
-
-[7]
-add/remove: 0/1 grow/shrink: 0/16 up/down: 0/-1027 (-1027)
-Function                                     old     new   delta
-sched_core_sysctl_init                        39      36      -3
-vm_table                                    1024     960     -64
-uts_kern_table                               448     384     -64
-usermodehelper_table                         192     128     -64
-user_table                                   704     640     -64
-signal_debug_table                           128      64     -64
-seccomp_sysctl_table                         192     128     -64
-sched_rt_sysctls                             256     192     -64
-sched_fair_sysctls                           128      64     -64
-sched_dl_sysctls                             192     128     -64
-sched_core_sysctls                            64       -     -64
-printk_sysctls                               512     448     -64
-pid_ns_ctl_table_vm                          128      64     -64
-kern_table                                  1920    1856     -64
-kern_reboot_table                            192     128     -64
-kern_panic_table                             128      64     -64
-kern_exit_table                              128      64     -64
-Total: Before=8522228, After=8521201, chg -0.01%
-
-[8]
-To measure the in memory savings apply this on top of this patchset.
-
-"
-"
-diff --git i/fs/proc/proc_sysctl.c w/fs/proc/proc_sysctl.c
-index 37cde0efee57..896c498600e8 100644
---- i/fs/proc/proc_sysctl.c
-+++ w/fs/proc/proc_sysctl.c
-@@ -966,6 +966,7 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
-        table[0].procname = new_name;
-        table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
-        init_header(&new->header, set->dir.header.root, set, node, table, 1);
-+       printk("%ld sysctl saved mem kzalloc\n", sizeof(struct ctl_table));
-
-        return new;
- }
-@@ -1189,6 +1190,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, s>
-                link_name += len;
-                link++;
-        }
-+       printk("%ld sysctl saved mem kzalloc\n", sizeof(struct ctl_table));
-        init_header(links, dir->header.root, dir->header.set, node, link_table,
-                    head->ctl_table_size);
-        links->nreg = nr_entries;
-"
-and then run the following bash script in the kernel:
-
-accum=0
-for n in $(dmesg | grep kzalloc | awk '{print $3}') ; do
-    accum=$(calc "$accum + $n")
-done
-echo $accum
-
----
+Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
-
 ---
-Joel Granados (10):
-      kernel misc:  Remove the now superfluous sentinel elements from ctl_table array
-      umh:  Remove the now superfluous sentinel elements from ctl_table array
-      ftrace: Remove the now superfluous sentinel elements from ctl_table array
-      timekeeping:  Remove the now superfluous sentinel elements from ctl_table array
-      seccomp: Remove the now superfluous sentinel elements from ctl_table array
-      scheduler: Remove the now superfluous sentinel elements from ctl_table array
-      printk: Remove the now superfluous sentinel elements from ctl_table array
-      kprobes: Remove the now superfluous sentinel elements from ctl_table array
-      delayacct:  Remove the now superfluous sentinel elements from ctl_table array
-      bpf: Remove the now superfluous sentinel elements from ctl_table array
-
- kernel/acct.c                    | 1 -
- kernel/bpf/syscall.c             | 1 -
- kernel/delayacct.c               | 1 -
- kernel/exit.c                    | 1 -
- kernel/hung_task.c               | 1 -
- kernel/kexec_core.c              | 1 -
- kernel/kprobes.c                 | 1 -
- kernel/latencytop.c              | 1 -
- kernel/panic.c                   | 1 -
- kernel/pid_namespace.c           | 1 -
- kernel/pid_sysctl.h              | 1 -
- kernel/printk/sysctl.c           | 1 -
- kernel/reboot.c                  | 1 -
- kernel/sched/autogroup.c         | 1 -
- kernel/sched/core.c              | 1 -
- kernel/sched/deadline.c          | 1 -
- kernel/sched/fair.c              | 1 -
- kernel/sched/rt.c                | 1 -
- kernel/sched/topology.c          | 1 -
- kernel/seccomp.c                 | 1 -
- kernel/signal.c                  | 1 -
- kernel/stackleak.c               | 1 -
- kernel/sysctl.c                  | 2 --
- kernel/time/timer.c              | 1 -
  kernel/trace/ftrace.c            | 1 -
  kernel/trace/trace_events_user.c | 1 -
- kernel/ucount.c                  | 3 +--
- kernel/umh.c                     | 1 -
- kernel/utsname_sysctl.c          | 1 -
- kernel/watchdog.c                | 2 --
- 30 files changed, 1 insertion(+), 33 deletions(-)
----
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20231107-jag-sysctl_remove_empty_elem_kernel-7de90cfd0c0a
+ 2 files changed, 2 deletions(-)
 
-Best regards,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da1710499698..6cec53aa45a6 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -8270,7 +8270,6 @@ static struct ctl_table ftrace_sysctls[] = {
+ 		.mode           = 0644,
+ 		.proc_handler   = ftrace_enable_sysctl,
+ 	},
+-	{}
+ };
+ 
+ static int __init ftrace_sysctl_init(void)
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 70d428c394b6..304ceed9fd7d 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -2833,7 +2833,6 @@ static struct ctl_table user_event_sysctls[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= set_max_user_events_sysctl,
+ 	},
+-	{}
+ };
+ 
+ static int __init trace_events_user_init(void)
+
 -- 
-Joel Granados <j.granados@samsung.com>
+2.43.0
 
 
