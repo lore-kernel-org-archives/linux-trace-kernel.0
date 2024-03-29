@@ -1,292 +1,152 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2105.outbound.protection.outlook.com [40.107.223.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462AC1C0DD4;
-	Fri, 29 Mar 2024 17:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711733652; cv=none; b=jODz7Q8xitZhQ6Cv0X7RXMo/5ZQlW8FPpJIrVqczoXFAGRA8gTV2kwAg0VzNrDZ6dEJX6m5EgcADu+Q2VOGeW4GBds1rZYb80627Rg7KAh/Z70t9sjtG+ZX0LUFpA0MpD/LrHl9Hhqn6DfZgj3WDwV4ANNtmfShgAKYPD2rrqj4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711733652; c=relaxed/simple;
-	bh=rN4xf0zDMtuqColP7OEpPk0ebkIGdYWeV18RXmJk0k8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vy7UxQWowrNdxEhCn/0QlbPAMrnvwz4AGnH8yftDuw3JNqtF8TixuoddDxMHX4vQ5Mx/KDqL546GJseNO5gnfilc7w/IjzuN/hLnMJDNJGLEfLPJMy/NmjKd6xlMFGEYl8LQ2U8O4jOMGETp+lyIFU/gx1o+GDlwhOF7k39aUD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3TBjf9t; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2074A2BB0D;
+	Fri, 29 Mar 2024 18:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711736637; cv=fail; b=stAFfSODPVR0mVYzotUqUeJMkBahnIYcIpKvbw6dkEuJYSDnQ7eTM1Mgr/71/QHb0QxG5M6wOIOjw8chgNByULXW2feRltwR+yzMyiGalFEPQnsvVtzIrsp/lR2D688lLzXcFwkfU1IiWUrJ0L3rMRYxt9kPN4cnA38rK8XSEhw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711736637; c=relaxed/simple;
+	bh=Rvox/OH1RXGYbrJ/44u+v3kb/nDzn/3bweryZ1WbZPw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hxS20nGCH31ov5Hz1TmY1mtrMG3sfXpgSZw/zSGhZH+zxSKXfMWR+CexPL1teH/n2BgfZELlboKwMxLG97TPFliderkXYbPEN1HtW104jYy/I4L0CCsz1bxpcGfpFWlgaWvQBGpTFl9mLMq4tYe3Eqe6woxH+0b8AGfI5JmKqac=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3yOuoEw0; arc=fail smtp.client-ip=40.107.223.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3TBjf9t"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d3907ff128so1652161a12.3;
-        Fri, 29 Mar 2024 10:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711733650; x=1712338450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pi+EIdc69+DrsUnuOwvzWKLb4fOZw5VOAVZBoh+Tb9Y=;
-        b=B3TBjf9tAAV5oC49ymZ5q0XfqQEXP5kPX+IO+mKO0wDUHb6QY/5gV2uBolrbDv6hQg
-         5REEWjmjD5/ZwUlLWEy6vCj+bqwy9EFJFvrxWpmbpupjuU22/gLAe1RzYamt+uDeXbkN
-         5SSILfW3S+N4Y9THCYVIHqzTS5O5Wu+W4ujapwl9YFCRGOPuxU519GaT2pYPmQ/gpdYT
-         ahLL4uTIGGK68wVksT5Q1x17FNH61g9uKVZQtgnFyhR1FLLkuHTnee/jmeajc41eRNdw
-         1EATpfOd1ZWMqoWXsTygdjGZ+BR9H3tLTNUfswVIYKRWVx3uLbIzHXOlnmJjBLS9cqLi
-         DbAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711733650; x=1712338450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pi+EIdc69+DrsUnuOwvzWKLb4fOZw5VOAVZBoh+Tb9Y=;
-        b=W+WNf0uO3Akpoy3UqRg30Fs1lPjfwK5Oi1vF1FBAIW7h0UP7ZPpIYJPHJOU36fXzgB
-         sQM4OhqDl0zYEsIQQNvVQJtgkSAgGCX+r2iI5UPvK7Q2XmDHajOPg9hqBehbcvKLhmco
-         74slg/4iNp+DmmcMTr01yPsh1nbkLDpCWj6DQVgsGWrqS6XXbDJYPkv2hJYAm5Sji+Ov
-         Q1RWAKi+ByMi4kpH6y2UvFtG7LCFjBdRgFMJm/keAV5Pa3qXxarNVelltDYxDRSq/EN4
-         nER1OoB280Sy8au+XpEb5PsR5c+7SuDk04VdSWt5Oe3/5lSPDzmOyYH0cJi9r0OTmlSw
-         tskQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUESd4Hr7cP87wHR4f4iiupBEX+heB4aefjlNHRO00NpBV8pSmidUkTXJWsl5wY49FI8fQklzGtkg5sCM5clRmtJRgi7gbwi4DAjs7OE52ZFSvC9Q9YPs5/NqQ1NrhrQ3ktVFm3V6HG2PCKpa4oLOWaxDDRZ+Y8tY0cZEAkhlWkHiGoPNH9qznbijx5CG2ZAicoqBH1DziHxVlSlz/MrtxNJIAQz/5Gsw==
-X-Gm-Message-State: AOJu0Ywpm/95Qnj/Xhj80EvVDZWEwS6ob77Jgzlia7r5xAjxmUDIkz9v
-	oci6sA52geUYXRjVbRYu5HkyrMvZ7zKT2b1YkNaQGKm1KoKVrvkbtzZnxYxLgBeEPxDYF/84mSk
-	fAZfmDC8Iq+aX0HXovk8FO/OGMAc=
-X-Google-Smtp-Source: AGHT+IFD455eZc5DVwGdagIHFHdn/JrgCPhE7LOCLBgp2sa0HE1dhhzUCjzMRVPdgd69zuEHdTXxc22vk6ihrPYmT2U=
-X-Received: by 2002:a17:90a:c10:b0:2a2:2fd:8bd8 with SMTP id
- 16-20020a17090a0c1000b002a202fd8bd8mr3007695pjs.15.1711733650501; Fri, 29 Mar
- 2024 10:34:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3yOuoEw0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CBKgS9LJQhzSRJIcH8f4ebUrxEs30cthROou4nXQyIK75fWvwsoOzeyQCqxuzmGpbXHATgW+9/adzvH1W0bCore9yAa1bUw0gWjCtZL19XPe2DPc9aYviOKmSxVAEaIioVvOhGJMwNw8rCTp6VbL4YCgtOiHIR2Goa4j13SHPG31g46JeMy/rk8SSnzsuqozxWYXku7W3ZygjQXyJPsUbuO+qYaVHOuXjfq9ceaq2KA23n6bR7GAoL9rolSChnHzptMSWLqEYm4quSLhp50FkIk5i+2giEdylnxFRTOy2OGWYPILlKSRkwsIkaJyqmbKL2ydoN7KXK0j4AwftYWVYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FMXavnfyfuuW6S+BIi7oguFP4QkHplHLQWxtE+2Scwg=;
+ b=V7TTGk9EPyLeq4P0zvaxL2KTWggbLtD/Rl/RHXNs5zJqyyHzwmCGYyJGGgqbq+vJF/6e8PjporfGzM/PUX2s1wWrmoIRu8FrKzTyiSG1KOcdmuJ6GCLuHaAqCC2J6uaV4cMNGiMHy8R1m/fdMVfFwx83g8GTETaN2oak8+9qtA27GAl17UEhC+2B8iC2BCyg3tKC1UNT+P0DY3+KY4XO5mYEcQoz1r+lwWNsUZ01rkRyYEvJgK1svGTgNYERxazSViQImooSjn1PqdlCI3MGUXSguFr9dmRXvjbvim9rxqzMdjtog5TM1A1RYKwcLixUIE3g97D8wHg9w6X8L4e7uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FMXavnfyfuuW6S+BIi7oguFP4QkHplHLQWxtE+2Scwg=;
+ b=3yOuoEw0pPumzOybTT8uTuHH6s6NY293XWbg4HI8bQ7t9f/paS4qxBPR1w7HVVOigJTgYVuN9sNF+Oeer2Xt1C6dpo9xrH4jEJw75Elz5akJmyD6fDcTYh+xx1wrAxmG1bYyU/eiDukFl9WZBA5MoUuHGquy8X7P5SuKR4mqMVo=
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
+ by CY8PR12MB7243.namprd12.prod.outlook.com (2603:10b6:930:58::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.38; Fri, 29 Mar
+ 2024 18:23:51 +0000
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::aaa1:af99:e0e5:7f14]) by CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::aaa1:af99:e0e5:7f14%5]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
+ 18:23:51 +0000
+Message-ID: <76de83cb-af54-4455-ac37-5a0fee7f4af1@amd.com>
+Date: Fri, 29 Mar 2024 13:23:48 -0500
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH] x86/mce: Clean up TP_printk() output line of the mce_record
+ tracepoint
+To: "Luck, Tony" <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>
+Cc: "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>, "bp@alien8.de" <bp@alien8.de>,
+ "x86@kernel.org" <x86@kernel.org>, "Mehta, Sohil" <sohil.mehta@intel.com>,
+ "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+ Avadhut Naik <avadhut.naik@amd.com>
+References: <20240328180435.435076-1-avadhut.naik@amd.com>
+ <20240328180435.435076-2-avadhut.naik@amd.com> <ZgZpn/zbCJWYdL5y@gmail.com>
+ <93895d82-ae81-4fa3-8d58-9958d7130dcd@amd.com>
+ <SJ1PR11MB6083DA954AD9C56DCB68B357FC3A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: "Naik, Avadhut" <avadnaik@amd.com>
+In-Reply-To: <SJ1PR11MB6083DA954AD9C56DCB68B357FC3A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR04CA0002.namprd04.prod.outlook.com
+ (2603:10b6:806:2ce::10) To CH3PR12MB8403.namprd12.prod.outlook.com
+ (2603:10b6:610:133::14)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org> <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org> <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
- <20240328091841.ce9cc613db375536de843cfb@kernel.org> <CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 29 Mar 2024 10:33:57 -0700
-Message-ID: <CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jonthan Haslam <jonathan.haslam@gmail.com>, linux-trace-kernel@vger.kernel.org, 
-	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|CY8PR12MB7243:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oJCJAdP80LeN0QIsSnEhWMkaZLyLS/ot/D8mAX8jtgIxcdLtIDO4+3pzNVVOZQbyGUTOTlRIqbYJSvjFjiBSVo/8+82/GMU5iLxeM0OIwa/t1ehYbJnUswGgU4KVGJXaMbW2ORik1UtRC99q4I4Azu2JLaXlbhcMud/TFk8y0CWN2NzCsnEEnZsAW9X0VzLcyGML4F+9EpDHQ9ZUiidy+zSwLA9IVkSVZBQyZEAJu1KLLIPafQz2qtuCnVGI0cbcs5tzpFqQg5jmI706ONy8lGWKqe13Dv5+k5zTmSZYoT7WQq/Z/gSGIK0MKdm6TYobvIHohbathR8aFesj2rol7YRqRjmyKC0naO1GDY1Ygaq9UARYCUSX4ZUIB+zpO3i++UldAeP/ixy9bcHQMvoecptJkBFuHM3K9Juz0dsBrsGHZzZMJFzWXKYN7SYpCyp1rYJe5XcwbfIPRunxKN6VDzSJweE97bQY6+st5tsY62M57116lYnQB/w8LKBMwYV9dC+3uDkidiaiolj0ldVl+jojvU9vqD4KwUzUzSDFGcR50xlcHjvsEV7nO9IIsfcJiCTkRVMXyCIuODOlSxG+91fjR1LjWvw7z2leqzSQ0xzmYNRBfNpsmYx6tLM0CTPPmexQTBOtR1EqYDrc66weK63OjjvOFhySlDl3k+GcrsU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MEU0eXhZbG5UZVJFd0YwRWFvZzh1ZlpHaVJFcXZ1dkx6SkJJSkthdEV3anZH?=
+ =?utf-8?B?VU96L3QwVWRmd0xYN3l4MDJCL3JPanZRRDhXYnZ0S2R3QjJqSVUrOCthVUY0?=
+ =?utf-8?B?Vm1PTEltV1pCWEZ5a2tpeXJjMXM4WVhWL1JwdnZYS21pMXhLT1FTay9vZEQx?=
+ =?utf-8?B?Z01GcytPRFB5cjMxQ3NmSDhiR1djc0RWOThSRG9JQ0pwTmNmVkk5dHNjTmJK?=
+ =?utf-8?B?T0IvTGFybCtDeGRXQlBhaGE3MllPSXVsV0lCdytMQkpheTZCN0xDOUNBZjNk?=
+ =?utf-8?B?TUVHQXVGc1p5bERaQTNmV2RHUnltbkFKbnUvQW1ZSXlWdk4zTFZZRVR3OGor?=
+ =?utf-8?B?aE04WWRrSzluUmhNa2FBRi8ydDN0eDdWTWZrYkJZY3MzUXRzNVY2a095eVhR?=
+ =?utf-8?B?WmIrTVZmMzdoZmdpWkU1TXlBTWo4dUdMOURoVE8zZ2ppSG56YUZJR2pQN3lP?=
+ =?utf-8?B?dUZBWC8xOGpVM0hhQ0RoQVBKMkdlY1ZreGhGSDNWZmVJWGg3RUJMUFhyN0Er?=
+ =?utf-8?B?UXkybXJyWkp4M1JNemEyWlBaNFRiZUY2T1MzSjRyMHl2YldybXA0eWNja2FM?=
+ =?utf-8?B?eFo1cmF0eDVTanpTdUVuajhISisyOTRRZWgvdzFnOHJIUUViQTBNYTNjWXhw?=
+ =?utf-8?B?bER6Tlc1K0Z0bCtqdW9yc25iZ1FHTkNxL1l4NWhlQldoS0VqS1FaY0hLT0pr?=
+ =?utf-8?B?aXlWM3VZRUduWGdYV3ZiSXhpRzgwcFJETWZyRk1wY0tmT2tZeC93b1MxZ3RQ?=
+ =?utf-8?B?NEs1NzFTQ3ZrM3JHTEppZFlJK0U5amg5KzVBeENDRURnYTdkc2dwK0JUTCtZ?=
+ =?utf-8?B?R3d0N3FoaXUzczBEY0xPL0RTWC9MVWoyVE0xcHBvUiswdUxMckh1aGN5WHE4?=
+ =?utf-8?B?c0ZLUVJWTjNmaUNnLzRMdFg3c3VRMTc4MEh4Q2l2NUhING93OWhSOFRMMDY3?=
+ =?utf-8?B?elVHeWNtVWtKaVdOZzlEcmJUTmlxRVl3OUNrSFpzSXNhaU01YWNTU1VZWW5j?=
+ =?utf-8?B?cEhLU1hIcy8rZ3VvclVFb1NpSDdpd0RJYTdYOW1FT1BYMVphYU5BekxZMDRF?=
+ =?utf-8?B?QW0xdWpBdEtXODhyQ3o5RGpOV1ZQV3JzeC9teEJTS2F1aUhvQlNNbXdRUUZE?=
+ =?utf-8?B?QlNOYUplbkQwQXE0a1c1MWtKK2FVV0NjRjYzZWZFKzZZSCsxL0VPKzNaTzNK?=
+ =?utf-8?B?Z0hieGFXMUFVRTdxZk12OXZoN2pwWi9WNGpLbVlla083eEdheExoVFo1Sm92?=
+ =?utf-8?B?ZTNISTIxRytrcjk3alFUQUE2WkxZTTJIVWJOYmd1WjVSUlcrVFNyK09Zd1VC?=
+ =?utf-8?B?YmpOSEsxV3lOYUJBNFNmUXZ6Sm5DN0p3ZEdicjVLTUxFWTJRWDAzZ3loaWhJ?=
+ =?utf-8?B?TTYzZGZIL0tuQ3NiNm9rYnYwMDNUblh5Nkx4MFV6YmVwZWppWW9qVmY3Q1VZ?=
+ =?utf-8?B?ZDNIOHlhbkEzTjcrWHBGNk5tNjdZNzNLMUE4aklDOWoyUGhQNFBEdWZlNVpB?=
+ =?utf-8?B?K0Q0ejRXTlBlK3pMYnlmTVhEbC9ZVTczMlR0SlNiaU0zcTJySmd5MUFmRkpu?=
+ =?utf-8?B?QWhmek01T2IvaWdMSEZvRjN1S3dtS05jL1M2WGZGekZkN2c2WTF0MHVmRHpw?=
+ =?utf-8?B?cmlJL2RoYy9ka3ZpSDVwY2dNMGpNaHZOOS9obGFKUHpMNy9SOFRVdUhVU0Ix?=
+ =?utf-8?B?USt3RlJLaW50aitYMWFwenpxVUhzcXFYK3dicmJzcGhRY3hTTWFqdUVKV01P?=
+ =?utf-8?B?V0tNdGlFTktrTVdxbDhoMGZnYmV1QVNYUk1vMndaRzRYYlFCRGJJVThWS1E2?=
+ =?utf-8?B?L2l0WitBbENzaUpVdVp1T1pXS3dlb2xTKzA2WCtEQkt5VDZxMUZHUitQOEti?=
+ =?utf-8?B?b1ppZENOZmpRSldkTWhMc01KT3Q0VkVXZTFCNWJhK2xOd05WbG5tZndaVmRq?=
+ =?utf-8?B?a3YwTEc4aVV6ZWtBNDhzenJGbWtQV1FZY0JlOGE1RXJKZE5hMVNiVGx3d3JZ?=
+ =?utf-8?B?SUx6VWNWbmpUS001WTJsWDJrbkovMjNSZjVXTWVLNEc2QUQ4S2ZvV1pzOVNE?=
+ =?utf-8?B?L1I4bE02bHBTQ1pnMkhsM3FCM2ZSK1R4TytHYjMzY3J5TnZpbTRZS01hYkdX?=
+ =?utf-8?Q?99498RYAUjy/eoBKlUQ/bGdRe?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 853570e6-318e-4855-c063-08dc501d6257
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 18:23:51.5861
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IE1rvuDFmbMRUDxHoxvBguCjqmtJPiVvjYd7egSHdxHA3evdgrhzDzwuW7nUhpzQnDIpOPQuLxhhQ9+tiW39tA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7243
 
-On Wed, Mar 27, 2024 at 5:45=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Mar 27, 2024 at 5:18=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel=
-.org> wrote:
-> >
-> > On Wed, 27 Mar 2024 17:06:01 +0000
-> > Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
-> >
-> > > > > Masami,
-> > > > >
-> > > > > Given the discussion around per-cpu rw semaphore and need for
-> > > > > (internal) batched attachment API for uprobes, do you think you c=
-an
-> > > > > apply this patch as is for now? We can then gain initial improvem=
-ents
-> > > > > in scalability that are also easy to backport, and Jonathan will =
-work
-> > > > > on a more complete solution based on per-cpu RW semaphore, as
-> > > > > suggested by Ingo.
-> > > >
-> > > > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> > > > I would like to wait for the next version.
-> > >
-> > > My initial tests show a nice improvement on the over RW spinlocks but
-> > > significant regression in acquiring a write lock. I've got a few days
-> > > vacation over Easter but I'll aim to get some more formalised results=
- out
-> > > to the thread toward the end of next week.
-> >
-> > As far as the write lock is only on the cold path, I think you can choo=
-se
-> > per-cpu RW semaphore. Since it does not do busy wait, the total system
-> > performance impact will be small.
->
-> No, Masami, unfortunately it's not as simple. In BPF we have BPF
-> multi-uprobe, which can be used to attach to thousands of user
-> functions. It currently creates one uprobe at a time, as we don't
-> really have a batched API. If each such uprobe registration will now
-> take a (relatively) long time, when multiplied by number of attach-to
-> user functions, it will be a horrible regression in terms of
-> attachment/detachment performance.
->
-> So when we switch to per-CPU rw semaphore, we'll need to provide an
-> internal batch uprobe attach/detach API to make sure that attaching to
-> multiple uprobes is still fast.
->
-> Which is why I was asking to land this patch as is, as it relieves the
-> scalability pains in production and is easy to backport to old
-> kernels. And then we can work on batched APIs and switch to per-CPU rw
-> semaphore.
->
-> So I hope you can reconsider and accept improvements in this patch,
-> while Jonathan will keep working on even better final solution.
-> Thanks!
->
-> > I look forward to your formalized results :)
-> >
 
-BTW, as part of BPF selftests, we have a multi-attach test for uprobes
-and USDTs, reporting attach/detach timings:
-$ sudo ./test_progs -v -t uprobe_multi_test/bench
-bpf_testmod.ko is already unloaded.
-Loading bpf_testmod.ko...
-Successfully loaded bpf_testmod.ko.
-test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
-test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
-test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
-test_bench_attach_uprobe: attached in   0.120s
-test_bench_attach_uprobe: detached in   0.092s
-#400/5   uprobe_multi_test/bench_uprobe:OK
-test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
-test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
-test_bench_attach_usdt:PASS:usdt_count 0 nsec
-test_bench_attach_usdt: attached in   0.124s
-test_bench_attach_usdt: detached in   0.064s
-#400/6   uprobe_multi_test/bench_usdt:OK
-#400     uprobe_multi_test:OK
-Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-Successfully unloaded bpf_testmod.ko.
 
-So it should be easy for Jonathan to validate his changes with this.
+On 3/29/2024 11:50, Luck, Tony wrote:
+>>> - While at it, don't forget to:
+>>>
+>>>    s/ADDR/MISC/SYND
+>>>     /addr/misc/synd
+>>>
+>> These are actually acronyms for Address, Miscellaneous and Syndrome registers.
+> 
+> They look like abbreviations, not acronyms to me.
+> 
+> -Tony
 
-> > Thank you,
-> >
-> > >
-> > > Jon.
-> > >
-> > > >
-> > > > Thank you,
-> > > >
-> > > > >
-> > > > > >
-> > > > > > BTW, how did you measure the overhead? I think spinlock overhea=
-d
-> > > > > > will depend on how much lock contention happens.
-> > > > > >
-> > > > > > Thank you,
-> > > > > >
-> > > > > > >
-> > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > > >
-> > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > > ---
-> > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.=
-c
-> > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > > --- a/kernel/events/uprobes.c
-> > > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree =3D RB_R=
-OOT;
-> > > > > > >   */
-> > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > > >
-> > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rb=
-tree access */
-> > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rb=
-tree access */
-> > > > > > >
-> > > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > > >  /* serialize uprobe->pending_list */
-> > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct =
-inode *inode, loff_t offset)
-> > > > > > >  {
-> > > > > > >       struct uprobe *uprobe;
-> > > > > > >
-> > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > >       uprobe =3D __find_uprobe(inode, offset);
-> > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > >
-> > > > > > >       return uprobe;
-> > > > > > >  }
-> > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struc=
-t uprobe *uprobe)
-> > > > > > >  {
-> > > > > > >       struct uprobe *u;
-> > > > > > >
-> > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > >       u =3D __insert_uprobe(uprobe);
-> > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > >
-> > > > > > >       return u;
-> > > > > > >  }
-> > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *=
-uprobe)
-> > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > > >               return;
-> > > > > > >
-> > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_activ=
-e() */
-> > > > > > >       put_uprobe(uprobe);
-> > > > > > >  }
-> > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct ino=
-de *inode,
-> > > > > > >       min =3D vaddr_to_offset(vma, start);
-> > > > > > >       max =3D min + (end - start) - 1;
-> > > > > > >
-> > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > >       n =3D find_node_in_range(inode, min, max);
-> > > > > > >       if (n) {
-> > > > > > >               for (t =3D n; t; t =3D rb_prev(t)) {
-> > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct ino=
-de *inode,
-> > > > > > >                       get_uprobe(u);
-> > > > > > >               }
-> > > > > > >       }
-> > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > >  }
-> > > > > > >
-> > > > > > >  /* @vma contains reference counter, not the probed instructi=
-on. */
-> > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *=
-vma, unsigned long start, unsigned long e
-> > > > > > >       min =3D vaddr_to_offset(vma, start);
-> > > > > > >       max =3D min + (end - start) - 1;
-> > > > > > >
-> > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > >       n =3D find_node_in_range(inode, min, max);
-> > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > >
-> > > > > > >       return !!n;
-> > > > > > >  }
-> > > > > > > --
-> > > > > > > 2.43.0
-> > > > > > >
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > >
-> > > >
-> > > > --
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Yes, they are actually abbreviations. Wrong choice of words on my part.
+Was under the impression that Boris' recommendation also applied to
+abbreviations. Will change them though and resubmit.
+
+-- 
+Thanks,
+Avadhut Naik
