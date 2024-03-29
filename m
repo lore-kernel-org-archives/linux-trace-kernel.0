@@ -1,206 +1,101 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CDD2E84F;
-	Fri, 29 Mar 2024 16:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711729362; cv=fail; b=MmqGobdLtTwSJqjQFApqcAxh3y5j3Ds0TJ8RDPcLEPkFoeR4oJTGTU6PTjRfReiSxRCcWRv264UbZbGI1dZWwINb9pGUwpSF8TIrB6muwaCdHPItVanh6/HgJLg0chg37TAQMQ9x+oU9bXvHJfkJMSEfaJMhNT633cB7S9Kkkck=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711729362; c=relaxed/simple;
-	bh=vHUcrX5KwqN3PwNPkf2rZycNq+z7xzeMB6ESEp9gP5I=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tIcG9vfmJbP6injYQKL3G3Gp0qr4ur6soHw/veB9ZLnSOX9Y1GmDH36Bt1CFgeESsHLHdWcafpK6Gtz07GIczWke01E3mKVZj4IsFX1ngjd3jlg2wQe2TClvtoWkqlrz9gYNyBi0g0RhS1CoX6hXSn/5qFKiATf/GV6CxhayNS4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2XYJYlE+; arc=fail smtp.client-ip=40.107.236.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118EE38DF1;
+	Fri, 29 Mar 2024 16:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711730397; cv=none; b=bbGLjfA9vAc+q9VKrhs0MxysmgqSBYTQDJs0YamT1zNCmhNCJycJpavJVrAXneXM52L/c2Ler2zdQpuFtUGheNzQja5IhxseQRq3MboT0c0ED6+YTD3Sk2DupJoyRLLxthqpArciKRorKGDv3fM0mpkzSLAcd/mSgmKaNBp5N88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711730397; c=relaxed/simple;
+	bh=zrjKAG5A+X97LTcF2yevDZ9RRAsjwxnk84XiaJj9cjU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kw92UWinbIAONAiNLx3irPtg/PbKsb2OCAbi6QM9OFZC4ZjGeG1eoRthg0NHUQWqIFKKD0L7YNSgRd2BPhUOjSytVyXNWdk6P7SWHYtjh85+hDYynpBF1UwHD97Fp1i0ODE3oICK/vKPs/j07dL+o5SaNVwQ0D5sSW5D6Fo2OP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDiRH8Y3; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2XYJYlE+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kn2a58awzdzcC+eHHjcAjNQ4d5FWnMl5yIdhWbjB43JpxLlnzgoqz7/C7fcuJyTLeQxCT5iWZOoSj7GK20X+F8FsCRbXtuuz9RhWUS+uRQYSi36wPpIk4rWmtcFK9JKL0RvuEdpc+fZcVacIqHJLs4vK/eDn2mZxGqykWDd54vObw9xs2NU3FdRB4KVAiCw86FXJxeNpkdREkVx/leSisKzx1fGTMM6sd/n1R1Z3Coe9udc6lgFzwNZF9Y+OJ/rPgPLLC5I9WbWzeGKIg8zLaAW1GjBW688ufHUa7+i66XVo7RjxaOhPhHYJ62wGlfuZXvJvBmlfWSspEqp7PxIo5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6mZPBrMXJl7093Scj9dwANyMPhxd9+rCRuj7oNe20GE=;
- b=PWb9MFJAlHuHxhnuv4C8KudGrG98Xjv8Hb9LKJKjWpO9FZAevqbHuQ7uS71fW8rbd/NkwuZ/3dXA4JJXcV7RI8lx3LMpk6gP1BpnkEdkSxOvqiwjip7hGxifP2uf5JsN9JrU+OB4W9qDR7wtmsppjEp5g1diRd4avIT1Unpt85KeaclL/Zt0MIqgT8o9o+IjWsNIcOK6xvDToMeMrG51oVxCq5YsN1WQZdLVuXVzb3ovq/evv6ZOEKasuWTgMQgPTIPscJ20cKPdNncOFa1wedR+GxejOgVAPSqmHbSHa6TQAFma6JjrucXI6Iu+bwDN64YEez9+TKoKcxvo9TRnlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6mZPBrMXJl7093Scj9dwANyMPhxd9+rCRuj7oNe20GE=;
- b=2XYJYlE+DbSxlgARgTMxolILKir4P3ToseRTTaZB7LJt6Z+aq68+ZDUsCgYPCBPvBqq9kLFqPIn40Su87zpYK8wnyO5wvNzXekCw9FHUKvWgvRYgF4CN1f80Rq3cU6RReE4/vYGrFCG10sdUiNmbp3dexahQz8KlAUjft9CA3y0=
-Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
- by IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.39; Fri, 29 Mar
- 2024 16:22:37 +0000
-Received: from CH3PR12MB8403.namprd12.prod.outlook.com
- ([fe80::aaa1:af99:e0e5:7f14]) by CH3PR12MB8403.namprd12.prod.outlook.com
- ([fe80::aaa1:af99:e0e5:7f14%5]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 16:22:37 +0000
-Message-ID: <93895d82-ae81-4fa3-8d58-9958d7130dcd@amd.com>
-Date: Fri, 29 Mar 2024 11:22:35 -0500
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] x86/mce: Clean up TP_printk() output line of the mce_record
- tracepoint
-To: Ingo Molnar <mingo@kernel.org>, Avadhut Naik <avadhut.naik@amd.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- rostedt@goodmis.org, tony.luck@intel.com, bp@alien8.de, x86@kernel.org,
- sohil.mehta@intel.com, yazen.ghannam@amd.com
-References: <20240328180435.435076-1-avadhut.naik@amd.com>
- <20240328180435.435076-2-avadhut.naik@amd.com> <ZgZpn/zbCJWYdL5y@gmail.com>
-Content-Language: en-US
-From: "Naik, Avadhut" <avadnaik@amd.com>
-In-Reply-To: <ZgZpn/zbCJWYdL5y@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P223CA0002.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:806:26::7) To CH3PR12MB8403.namprd12.prod.outlook.com
- (2603:10b6:610:133::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDiRH8Y3"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so1257745a12.3;
+        Fri, 29 Mar 2024 09:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711730395; x=1712335195; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zrjKAG5A+X97LTcF2yevDZ9RRAsjwxnk84XiaJj9cjU=;
+        b=JDiRH8Y3H+AIC9hxyEyM/o60CALpDZbjdBbwI+NV4ukqvyvoBzVnuRUouewh66q6zX
+         KwiwFJOISktm3bazokpqZgnToMbIgfrst9rxXGF4uVK63R9/0USSRfwop/0RDDluZj1B
+         HgEb601oUn/TkPNSUFsMeaVknvpYejeFXkuUdkNNap4vFlhCt1pb+lPKxKsi7nkThGH0
+         KkuW7R0K7lCDB2x+gUwstO9SGa6YEJ3nJybnuA957wr8fLF47WmFQ5wFDBHNyAs8y6qp
+         JR5lSt/I35p5RqwrInvM6qSkC4FjcJY8t/BBSFb8D7xNMue9n2AkppJFzoHdOg5eVKlm
+         wSVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711730395; x=1712335195;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zrjKAG5A+X97LTcF2yevDZ9RRAsjwxnk84XiaJj9cjU=;
+        b=ku7fO5pyCAcdJnxX1DoT520VqfA1GDRegBQaoifoS91VRAwjKjlmMID4QT1WNU3UAY
+         D39Wk7Wuj2MBY3svQRT+rB5nj5Ph0OsgNXwwE5POljIfpIIAbzEXqhuVeWX31Xii3h4P
+         bj2UlTgkSsMoEOVXgvKE34AgBOuO3DoeE7ECh3SnLT4905pYQRmps7HySPZKxKYeDfM/
+         XYhr4kMoTabHi5XcVlyHJRYAGzbevIXoHKwUUmlD68nVCo9kR0iXrPc0SeqVqGnLmj9L
+         RqFzzn5Hdkec5MfyC+A5bXMCJ8TLpeZb3xKCgJg6hyx2k0//VFwyitGgCwaWMdrZSCef
+         mqUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlDvukvBCW7UgGeo/EPfTzmNtTvm7Sc6vsr8xAAm2FCv0/fucdu9WYVUseH7a8jbUOrgCeRaurjRk1QATP2H/U/0zLEVgKQeQw7+/Zcji8Lf503eC/Ed/eyjl1QtzjhMIVRNiz5CfB
+X-Gm-Message-State: AOJu0Ywa0CLSnkLZBzYcCzEU97CZb72RwFAJC9GRG30rz0JYtQ/jXwf1
+	n+gycGzQW0E3tGPZBqUdgKpsfLDbLZFpVLkyBBrpofg0s70CioMViDRHMTw0w0wRlxi/Y7frOxc
+	rcTXmLOVOZZaun9qQTkMqQV1RFNu9lAs4
+X-Google-Smtp-Source: AGHT+IGImYzKETVAsQrXVy7mjtIU6GpAERQlTqewVY1myTrgmW//0YbWiXOoRNc3ENz/wOarEFRBMV+OIH8MzaLD6+0=
+X-Received: by 2002:a17:90a:ba8b:b0:2a2:235e:3e6c with SMTP id
+ t11-20020a17090aba8b00b002a2235e3e6cmr276014pjr.25.1711730395231; Fri, 29 Mar
+ 2024 09:39:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|IA1PR12MB9031:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	E9hxufn1/sQMgBj74AOCKCt2+TkscEuK4e4t1+l9F/Nc7WQxPIZCmfK4Gl+LcasD/LVU6XJQiFlAn0yS/EOwJ5XRX1bQJs2IgGR68BJPmIf5aybv4ez6AAOGIQnm5T9wqj9QA5SUNByZcQjIfv3cdj9bKxSubMFJHEleE6qQf/CX2rn6/mkn6Y+SBzDcRb0GiyjV0wKtIpZmzuBfCRrbrySeR77LmQcEN51Flxifeh1k0XHbDC/ID/kBLRjaqga2L9twdEyZb/paHUQN99ic+l42h8a1cmBCi6XNhZlsLYxgIr8d9TAV27u1sInD3opjdSinm/t+KSfHfUnkbnw0AFzscbjgj3k1fsuiiwm/Jve/CctjxKlMzAR3Q6vFtoiZuYDCFqfcm8CCc753o3TtiCVAwKnfNcLpN/rrhdF1kpHv7ZTOaugwdGZoDHwunwR7QyWZRlgvNPtVJlWWQFZo9XXbm+0v5kdH9EwBg+NS8BFnrnxtsegnipSSxXhWP/nYkVZKDDMR892/qZ3TQqaLZ+BslvaBGJv4yfjwpWQEBlRbnHVN14rDkCvtdOGntz03R+RWghkl6jhPja23RKI5EhY1qXQJTAAQZmTrvk4VxIs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cVFjcjN4Sk9ZdkxVa1JiUm1EeXM5eE5BQ0F0S0MxRHJ2RS9JcWQzcEtVZFFZ?=
- =?utf-8?B?eGxiM3FOUzJnd1h0b2I1WUI1ZE8yZmNBeG0vaG40a1FMa3AzTTBaaGFaVmtp?=
- =?utf-8?B?ZUJYNklJbTh5TVVIV2VUS2hnbTNveW1hK0t1OGtoUmZKcUtRVVI3WFdoeWVR?=
- =?utf-8?B?dnZSKy9wRzQ2bnkrbkYrc1hFU2JXS29zd1RHRjJKMEtEcTVIVm13YmN1RGRN?=
- =?utf-8?B?ZS81a3B2bjcxM3grZFFzMllKaXZuMEpobkVSSUZka0RjSUxkN2VHWVU0Y0Zq?=
- =?utf-8?B?Vk1jTDBaa052SVlYcFUxOE1uUjdWQ0ZpVmUzRHVDVUJlUmIvbCt5M0VtQTd2?=
- =?utf-8?B?T2lrSlNPS3pZSmFsNTVsWGtOWlRCaU1xQ0ZrSC94OUVHbTFQSUVuQ2V5U2k3?=
- =?utf-8?B?L09jZDhJelFVZ3FKVGJYR2pqd2ZKMlMrUUxzWEN1YXZjNnFkTVlvVjRUdUpC?=
- =?utf-8?B?SGNiRk8wSVN2Tythamx3Y0g0d0NTa2lDWkE2TXdtMUpxWlZNWmFKTmZpV05V?=
- =?utf-8?B?UEZ5ZXBCUkNLM2dVTlh1c28wWkgvbkRuRHI5a3lCN3NQdWpQV2dtQk1DdXIw?=
- =?utf-8?B?R0Fwb044OEw1dlhEai9WWTBBM01pQXo0UC9VQjJlZUNvK3FndmhObHg3Yjcz?=
- =?utf-8?B?UERYM2NLR0gycDdNejR4TWRDOXZ0OWhJWmlBbllzVFZET0JaMWszUjJPeUhQ?=
- =?utf-8?B?bzBZRVYvdFBDd1M2NkoveWllMG50ejUzK1oxVHFzSzhraDgwNjVIY1dEQTFy?=
- =?utf-8?B?TUFmVUdKZHlJcktGamZVc1JuOHdNd0hBYVY4SmlCK25URUJxcjhEdWQ2Z0Js?=
- =?utf-8?B?MkhkUTd3TDF1d3cvM09UTmlwU2F0VVgvNlhZRm9WZEs2cm1hdWZ0K0plcGo3?=
- =?utf-8?B?UTV3T2hrVjNvNlpCQmNoV2d0d0RlVXpLV2ZZT1huV0dtRGdpeEQrVFBNbDNL?=
- =?utf-8?B?TlNwM1FHSFJYNWJNNGtndVJ0ckpLTTZzSnQ0SnJUVVRObFlBNTgzOTNyeGY5?=
- =?utf-8?B?WTNleXNSalgzK1dJUWR6RHREWnN5c0N4YURJcU83dDVuY2djbDVmWTJPUG1V?=
- =?utf-8?B?MGhDZE4valdQcGE1MldEbjBhU2NsKzY0VUxNNWxPeHoxTDRMNGt0S1lLK3RR?=
- =?utf-8?B?NkpwNXZWRnVTWkpLNlZ1VGMvc29TTnRCNzJwc2Fmdm1MR0pUZW5IbUVGUjFG?=
- =?utf-8?B?S0RpdnAyWjc0cnRtY1llUlk5elpQQjdmWmg3TzE2RlYzQWVQSTQ2aGRpamIx?=
- =?utf-8?B?RkgwTXBVQWtlTk1rQk9FV2pGSjlqd2I5cVFwYW5ORGw5TUlWbHEzYkZST3gx?=
- =?utf-8?B?RWJwWTFwTFkveE5MQUhZYlgxVDBkU1hxVXYxdkNOMll4TDZidnRmOGhzSitO?=
- =?utf-8?B?bno1SEJPMkVPSExOUkJSeFJaZVdjcUhVc2QySkZ5dlVGTHdRRDZDQm9MRFlo?=
- =?utf-8?B?OC8wWkhWb3Vha0JFWkMxR3hDK2ZVTnZXOUlDZktWNnVmVHowRi8vYXUyNU15?=
- =?utf-8?B?bHJ3R0NJbEw0cjR5WHg0WFpEMTdrcktBUHhhdzNjV1lVMXFvdHhpZXVZcDdW?=
- =?utf-8?B?K05IbzE2a0tPeVVSbDNONFZ5TFVJWldPSUtLQzR3OE1nTHNwb2JLSHBlMUEv?=
- =?utf-8?B?ajFNMjdheU5WM1N2K0g1eGN3MWdpbzRTYTRKQlRRK2VnM2dmT2JCVzViTGp6?=
- =?utf-8?B?NCthbURpeUZzZjRPSXY1SXFiUnZrR0p2WWJOMHRaQy9qYm1uSGNMVXBpMGFC?=
- =?utf-8?B?QmtXbGpvdEphay9wbUNFZjZ5cUpvL3l0TUZIYTBYUEpDZGg4UWdtR2dzSVNr?=
- =?utf-8?B?aksxS2pTNDNTYzUzNEtoL2gxSWV4aFJ3Vi8zRG9YVmxYTXlvNUxDSlJVUXRE?=
- =?utf-8?B?Vk5DdFNxbUg5THlFU2JGalZQanFmQW5YMXNmcklUd3VveXRTc3gwT3AweitL?=
- =?utf-8?B?R0UzRml4Z3JCTGg0eXF5aDlsNFZTMVUrNnpIRGlQUnNWOVc1d2hlWTQ1eldw?=
- =?utf-8?B?cCtpNHFSR1lMcVJVUHhsMUlXa2ppYUlTaHpaM3BsRlRPSVE1bG5VU1laVUc4?=
- =?utf-8?B?RDhWbHF5dGMwQ011dnBHdFBkeUYwTzl2TkR0S2gxSWd4cEdZVCtxSThNSDNp?=
- =?utf-8?Q?pIH10DBH7y32OBP428XR7gXZy?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 168c6561-5890-48e2-e626-08dc500c72c9
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 16:22:37.7255
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gozGYdj06Bl95rr0edEJPuN2CqFrfu99XKa5S3D9HCUt0aozoN4SOsEQpQr5BTN+pXojE13iVHtJP2grWIkxyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9031
+References: <20240322160323.2463329-1-andrii@kernel.org> <20240325113848.32a70948d1cdb0fa76225690@kernel.org>
+ <20240325181338.39376089@gandalf.local.home> <CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
+ <20240326150121.68e9db8a@gandalf.local.home>
+In-Reply-To: <20240326150121.68e9db8a@gandalf.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 29 Mar 2024 09:39:43 -0700
+Message-ID: <CAEf4BzbMqO-mvyDNLn7iRq2muHWqcOVdGKSGvL3RdOdkJJOR8A@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check optional
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, jolsa@kernel.org, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 3/29/2024 02:11, Ingo Molnar wrote:
-> 
-> Please split out the other (capitalization) changes to the output into 
-> a separate patch.
-> 
-Okay. Will put the capitalization changes into a separate patch.
-
-> - While at it, don't forget to:
-> 
->    s/ADDR/MISC/SYND
->     /addr/misc/synd
+On Tue, Mar 26, 2024 at 11:58=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
 >
-These are actually acronyms for Address, Miscellaneous and Syndrome registers.
+> On Tue, 26 Mar 2024 09:16:33 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > > It's no different than lockdep. Test boxes should have it enabled, bu=
+t
+> > > there's no reason to have this enabled in a production system.
+> > >
+> >
+> > I tend to agree with Steven here (which is why I sent this patch as it
+> > is), but I'm happy to do it as an opt-out, if Masami insists. Please
+> > do let me know if I need to send v2 or this one is actually the one
+> > we'll end up using. Thanks!
+>
+> Masami,
+>
+> Are you OK with just keeping it set to N.
+>
+> We could have other options like PROVE_LOCKING enable it.
+>
 
-It was recommended to keep the acronyms in ALL CAPS. Hence, didn't change them.
+So what's the conclusion, Masami? Should I send another version where
+this config is opt-out, or are you ok with keeping it as opt-in as
+proposed in this revision?
 
-https://lore.kernel.org/linux-edac/20240327205435.3667588-1-avadhut.naik@amd.com/T/#m0c04f1c0deaa0347af66653a5950aad5f6b320e7
- 
-> - Also, it's a bit weird that we have 'CPU' but also 'processor' 
->   fields, why isn't it 'vendor' and 'CPUID'?
-> 
-Think it has been this way since the tracepoint was created back
-in 2009. Will modify the field per your suggestion.
-
-> - Finally, why are some fields 'merged' as per ADDR/MISC/SYND, while 
->   others are listed separately? All that have separate names should be 
->   listed separately.
-> 
-Will separate the fields so that each is listed individually.
-> Ie. something like the patch below?
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
-> ============>
-> From: Ingo Molnar <mingo@kernel.org>
-> Date: Fri, 29 Mar 2024 08:09:23 +0100
-> Subject: [PATCH] x86/mce: Clean up TP_printk() output line of the mce_record tracepoint
-> 
->  - Only capitalize entries where that makes sense
->  - Print separate values separately
->  - Rename 'PROCESSOR' to vendor & CPUID
-> 
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  include/trace/events/mce.h | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/trace/events/mce.h b/include/trace/events/mce.h
-> index 1391ada0da3b..c5b0523f25ee 100644
-> --- a/include/trace/events/mce.h
-> +++ b/include/trace/events/mce.h
-> @@ -55,15 +55,18 @@ TRACE_EVENT(mce_record,
->  		__entry->cpuvendor	= m->cpuvendor;
->  	),
->  
-> -	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
-> +	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, addr: %016Lx, misc: %016Lx, SYND: %016Lx, RIP: %02x:<%016Lx>, TSC: %llx, vendor: %u, CPUID: %x, time: %llu, socket: %u, APIC: %x",
->  		__entry->cpu,
->  		__entry->mcgcap, __entry->mcgstatus,
->  		__entry->bank, __entry->status,
->  		__entry->ipid,
-> -		__entry->addr, __entry->misc, __entry->synd,
-> +		__entry->addr,
-> +		__entry->misc,
-> +		__entry->synd,
->  		__entry->cs, __entry->ip,
->  		__entry->tsc,
-> -		__entry->cpuvendor, __entry->cpuid,
-> +		__entry->cpuvendor,
-> +		__entry->cpuid,
->  		__entry->walltime,
->  		__entry->socketid,
->  		__entry->apicid)
-
--- 
-Thanks,
-Avadhut Naik
+> -- Steve
