@@ -1,176 +1,151 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2096.outbound.protection.outlook.com [40.107.93.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89F73BBF1;
-	Thu, 28 Mar 2024 23:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711667854; cv=none; b=GXxLly7f42ZVPohQUJrkguieuROh8N+zEdKyQb56kiNhdvp8POAgArD5exAMwV6QkDULSaoYxipMDgWgU2Nfv9RheM7nQsRuoabVtkzsLZaXnBaP2tcxYAd1BngnxixHwJa6NJy47kYInW+nAh24wzgqv0dASW7JVqpd2kSebPk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711667854; c=relaxed/simple;
-	bh=lxs2ZFR/bExqKNMSEhSfupLSlYECG6xtGJZ2Htju2B4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FIHMp4GUzrUUQ3yTRz/G/FMagjavFSfHSAJrrYmzV7/hTROS/LtudG66Fm/dZ0199SEms9GgsmwvQmVjkXoORw/rIdTZ5VB+sOE40K7GzykLs5AOmru4r53RlmfsmiWuCM6ZiAef1Gh6t7E7diOrBeLx+KgrekEJNREJAwu0wQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZORLLVM; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40463A29;
+	Fri, 29 Mar 2024 00:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711671219; cv=fail; b=Xv/HlKyNZuuuE+EMJxeQKdI2VC/ZSeFFAV3i2ecWLL6Zh+yNXnoFMESDXc0S4kLZH0zojDASEgIWPKwKrGtX2qm+/PJE0AGy/OMhn11vRoTNghZmkNXSmGDbfcw2XrYgBTy2GEcZwRRgmZIRtke34i94d1HXg8YYBNFek/dhrFw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711671219; c=relaxed/simple;
+	bh=6V8lALKU5KgQbyJj8Pq1HFhqzQ6cZHnfr8vw6ejPwxk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=e+UUfiRES1gi9v689qe663Z5RkrhgYqquKFeIK0xhA6/r3fVFz8hccYTs09x6RnT/WcRoRCEXMNJ2ZFCourLlvktzD75B7r8E1VE7+6dgcj6VjR42SMVnPtQvSzACxOpIJIT2wpJHSWj7rm6UacdfTPCLn/lH642xS08BTIints=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pT06LTvG; arc=fail smtp.client-ip=40.107.93.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZORLLVM"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d717603aa5so586161fa.0;
-        Thu, 28 Mar 2024 16:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711667851; x=1712272651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VBPtswbRJVFEjRlZATnnC5PXpnMT+l8bd9tpx27HnBM=;
-        b=FZORLLVM4zTQrqx2Nmbsi0cxFMKlY+f0aT4H8rCdE6yZSJYjqMDcdjuqe/TEn+Wo7F
-         ghBvacZZoOJOcpwzMcXvG0TG3S/0fOKIdwHFmFRxu2LYqVYBt+rMN7bjgyQnaJBxPkf9
-         h+liqXbkE9MUNcLcxMa0vOhpY7I582D/xgj+HRQALIYoSnC6YUy45xGAbxV5SB/1JeCy
-         6BMhl4d9G3np8DiZMRhYLdJ2NDZd9berzJVlhWriMAj/RaXWcZ2fqquz1dnEdRGvTgGw
-         cT79hNvmyuCk+jFeZoKG0m2pdrOzjq4LEZYArlYYR9pzXxo4ZxayLmm+RDHtfH7PcfSu
-         u3mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711667851; x=1712272651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VBPtswbRJVFEjRlZATnnC5PXpnMT+l8bd9tpx27HnBM=;
-        b=xBC3yMEy+HMKWfXGDitVEIWuIyFzdFfJiXpOKiUUO55CbpduuFFsIX6Q1nmtUIiqAa
-         yrh0Z7vpFFSJbot1mO0B24HeDaMMxLSdUgOElK38mwLLx/JvhSShIKrH6zcCEwgzCFz0
-         EjIVA8mk/ITVub1JKA1wPoflbfpkYtdZWUqpIr3wxmVRMmDBw3VASGu2r5MDfvStJP/3
-         EiZ/w40Vwv7pAb7wrcVkSCcYva05Fy1SZ7lAuezqiZdBD03BB0kiagmOIiTcri9SUOCx
-         FEgcPpaDRxaW6WU9myeJA6xhY8P4eBl++2bSBMep53snjpUDpxqH0Wn3m4khbZkdzx1Z
-         dIdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrEhk9ZCNz2T3dkDxm800rRE2SbENK0BG54VELoFgUmeu90XQvXJYAaBWTJb0R/vKfbyGH1N+YU+X4V6FmXQZhvezuJm96cn+XHgqFU/L7f+19eWedq3rADJ3G6q2Y4iTpjdYR3e1CuDm7MUcY7d+Hu1xZxHYiBEshJBjQU/NIS33K7Hx5f3u+u2mk5hjYCHQjjZvuyu3Q0gNUpiOA+w36R7dhy7k4zS9tUlEmDs6kXHb9HgvmU72zuHkzrunOk3HnMrroQzgUNW1kPcmiBr06JnzXwNwo7keA5A==
-X-Gm-Message-State: AOJu0YzLkPKp0+yi/a53yiskBjpLMm/atVgfDkEzvBTNZVeSz9RK3D39
-	0c6gtF6WEEu20HS2BbEKxaMfXuNlIJXO6MBhMDxIvA0xoCXpUQq3YmQb+BLMhmo6KjNFzPleVX6
-	jUb/86upMXvx4sSYsD90CpFmTiPs=
-X-Google-Smtp-Source: AGHT+IG5xIH2Dr8kwrbaPKFwGkwQN2RxPioeS2J7HN42D01hRwbUDEoBKIDHKJKBLqNdT3QFt8lsl8OnqZLOHWZb5Wo=
-X-Received: by 2002:a05:651c:1692:b0:2d6:c7b5:989c with SMTP id
- bd18-20020a05651c169200b002d6c7b5989cmr378385ljb.28.1711667850565; Thu, 28
- Mar 2024 16:17:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pT06LTvG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C9LTctUiS1VZZNSvX80mNs4R1Bijpbr0R08ZhgUMyVRC5Dh9cjxt/XhBnjhyeApLtIeLcmGXzmTJG/La7PY7Zf/Oe9lcBVbwVezQnrl/dyuJWP3Xto8j6sVxuBE1kU/emiDb7vlHwTDlytC0U+vum3tgJpPSTJwasiUh/pkb/YhCX2YBJFpmYwfT6oUoqyZWcvuqaEsKeHt5Xry/t9mkMYh1odbvODyia23Lts/qAwJE9hjLtqs6kjpQzmVLz8QsqThZmNr9NAyhLNrATvsnFJHfanN++/FmmIVhUvsGqw2pbXSo7YODESrCPLNCEY5jZ6YsMEp0TzqKKwc07diqJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Qof4dzK9jdqTOUL8Zy8pcLowa6vWfVFnl52MqC3ISb4=;
+ b=VPgZ1XvIjviAuT65MefbPHRFoBW60yOp/0hwW6UuMSd0LB+ezRDbQCZAGXg9eOns73OpTxXitk04rncFG+ldJjGwhKgpZWGO/BMF/YxdmEufmcgFEwzSaxVPKPKWyhVAN7MJTM11l6AWe7Qo3Fr6xaF+6VAmrSquvIP0BONttbrNLpZEetD+p6ojZYi9AZJbv/lZuAAn+nPW/udyhnklkVAN/Lv80jxeg9Y353oIsHiBOdFzw+YvLN6hkiqgwmGvdQCfy3ftpLwp24QOiM6LfY3oUw79lJNhUjM779slMGQCiQLROu/Cry6cxQb9ORG+mYbbaMiDCOE6ywKyzTNQpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qof4dzK9jdqTOUL8Zy8pcLowa6vWfVFnl52MqC3ISb4=;
+ b=pT06LTvGgll6GXoeeKKHlcX6j58jReUmpfWnGGN9Woa8KOr5WrgDaBdIDbxt8Yu0SmEmVcvZ42MRiX089t1oMC8LqagOstM99Ount9mGPndNQqpKm9B+VvZL/aFK7X2UIgvWj3CaiXBf9uKtehIQVn085H5F2EIk8QNEUSRZFKs=
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
+ by MN0PR12MB5905.namprd12.prod.outlook.com (2603:10b6:208:379::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Fri, 29 Mar
+ 2024 00:13:34 +0000
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::aaa1:af99:e0e5:7f14]) by CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::aaa1:af99:e0e5:7f14%5]) with mapi id 15.20.7409.028; Fri, 29 Mar 2024
+ 00:13:33 +0000
+Message-ID: <a7246356-98bd-4f8e-9a39-3a2e65b2eded@amd.com>
+Date: Thu, 28 Mar 2024 19:13:30 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] Update mce_record tracepoint
+Content-Language: en-US
+To: Sohil Mehta <sohil.mehta@intel.com>, Avadhut Naik <avadhut.naik@amd.com>,
+ linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc: rostedt@goodmis.org, tony.luck@intel.com, bp@alien8.de, x86@kernel.org,
+ yazen.ghannam@amd.com
+References: <20240328180435.435076-1-avadhut.naik@amd.com>
+ <9640d452-c591-495b-8284-92f7f986c97d@intel.com>
+From: "Naik, Avadhut" <avadnaik@amd.com>
+In-Reply-To: <9640d452-c591-495b-8284-92f7f986c97d@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR18CA0005.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::24) To CH3PR12MB8403.namprd12.prod.outlook.com
+ (2603:10b6:610:133::14)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
- <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
- <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
- <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
- <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
- <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
- <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
- <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
- <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com> <20240328111330.194dcbe5@gandalf.local.home>
-In-Reply-To: <20240328111330.194dcbe5@gandalf.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 28 Mar 2024 16:17:19 -0700
-Message-ID: <CAADnVQKsuV2OhT4rc+k=WDmVMQxbjDiC4+zNbre2Kpj1hod5xw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
- to record and check the accessed args
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Quentin Monnet <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|MN0PR12MB5905:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	l8kbM0i6LPAehIrSh0DecYGJmZLtwjRueFJ/gn9nlfbeYQcT9w+ot8spmome8yYmNoXdERvgiOxD7YQJVfm0aK6QRhAxQCS98CIDrNVK3eu+KWq+cXWZnDTppZCvVdeU3z1RFQ/oo4KPIVGsVTzut8k98M2NvSlKlSFovIOE+aWbEHS6Lcw36lfYPKpa9Zga9CEoJuLDgmypVSfmEEfw8IcrCke/cj7IOsWsdmqprZpLhxHOvXtc9kO2EAuDS5kElVUvZwTcLS2+He9qM0dI7oryUvF2NfVXnRUV5eglhyiv2r9f8Yxeps56gwGG0RIgZ45TSZNgKSM4M4j+jyePx5esXUUZ1L2+OCGiQAz9wCICpNU+9LN2AwnzTM3Xx2O7ya7vf9JoiYAnpxrUEWjXh40nW93nvL9dS/778An/pEpQwHcLP2uxb2zNX441UyzTgq8i5Za2UwWUBYRb528VQftXhcV4QqWzkAQGMNpxWOwiHzxg49mcDKZ8LTzhkfu3klW7xLdC8rhbavfO7yM/JjxCljzAe2gtrQgYpSJq3rP/hHkrShQxC6qpuTfdz2hxAMZ1+MpOzLlLgK4Kpoat/KizpEpgIcC6MeV6fY+pI+t6w4UypwMmO+u0Z9YAtUHzrOK1VEKAIp6DhvvluKxZzlaAdhU/dzR5ptN16nN5x2o=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cFU0NHlWc2w2V3d0RkIrdmZGaFo4RXFKYnJnOC9MVlYrbEZPT0RYOXVWZlNZ?=
+ =?utf-8?B?Zy9YeXdkeVlicExPMi9hVFd0WGxpOWZXditnenVLa2c3ckpGSmpVNjJTczA5?=
+ =?utf-8?B?T3cyUS9VUGNpZlRjckNBNkM5NmUvQnloVTZ1M1RVZnhVYzFQZkpqTC9KRE14?=
+ =?utf-8?B?MTMvWCtpRkhsMEgxZWhNN3I1bFBqd2tlMlpsUStEY1JQYjBRZ2s4SXR5WjJ6?=
+ =?utf-8?B?eTR1NWg3alpnOFQ0UXQ1eStSeFpqa3VrWGx3dUN0T1BidFFabmp0RDZHS042?=
+ =?utf-8?B?amM1YUNJelRXOVpUeEQyZ05QbG1pdmhLYkNrbm8xMVJveUpHUDNWazAwQUdr?=
+ =?utf-8?B?Tm01aXhiUEhxUjRKQm9MdDhKZHZ6WGk1a0Y0ZTVPWWNXM1BCUGUvTThuc3R0?=
+ =?utf-8?B?eGtDSWg0RTNzaDVHMHJCMCtuYy9ZWWV2RVo2aWdkNG1IYTFoSWhHZ2VBRklZ?=
+ =?utf-8?B?VlQvZXhiOEtaSlZDc3pxd2xnOSs2blZCS09pczJvV3hLNHRNVHJSVUlYUjNk?=
+ =?utf-8?B?TEZWckdQejB5dC81TzdrNGNQUmIzVFdiMDcxN0tOWHdmTXVNUmtXSGR1Z09B?=
+ =?utf-8?B?QVZsRUxPakkyOXpGUENNZTlmalVyWEVPelZCL3JIY2NJWWYvL083bVIzOGww?=
+ =?utf-8?B?Y1B2WXkvL0kzSVVsaHlwd0FqZHlEcno0djJDdHpXbE9UaVJXRXAyVnFjMnBk?=
+ =?utf-8?B?T2NhRlRVSmRzR3J0SDJvWlJQUHJkTjNCaEtqeHI4dkVBZGJqbXFjT0orblAw?=
+ =?utf-8?B?MHNsM1RyM1lOMERhVWU1YTdDSlQySU1HRU5MWEcycEduSG40ZzcwOUF3azIy?=
+ =?utf-8?B?a0VFa1BlV0ZOakdwdko2OXlndUhISGR1TUFNUisvcUtzR3RTS2RoU2Z2RjZp?=
+ =?utf-8?B?TDQwekEyb0pWZTU0UzRYZXRIZG5iZ3JzbEhuTEhaejBwZXJUM1d5YzdUUndJ?=
+ =?utf-8?B?VFZ0Slo3bExCMEZJSnlJTmRWWnJHTmlCTUUxc1FkQVFGaXZIM0dXUjFDR3Uw?=
+ =?utf-8?B?eUNCYi9ZUjNLSXBDWTZMelhnZ05VZmRqL2ZHQzhJTEJyMHR2UFFLODVHaWgz?=
+ =?utf-8?B?aDhjT2tkU2luVWxHSFZXUnRnMGJaTEl5NHkzSVl6b3hHY1Q1MFptbE96dXJn?=
+ =?utf-8?B?Zmx0V0lpSm5zNWJXSWUwZWZRWlhoQXY1OWRBMGN5QmZJbm56ZS82WjB3N3Bu?=
+ =?utf-8?B?bGFqR2dvN2VuY1JLbVpZVU5GUzQ2R0IzMk02SGExcTUwZ2xTZzhVdlZjRjVu?=
+ =?utf-8?B?S3RIQm02ZjlQc1ROMXpIM0o2Njc5ZDRsdDM1MUt6T3BlNlYrTVRwbEk4MUFv?=
+ =?utf-8?B?N3JJL1ljUEJxcXQ2TDBPTnIvVWlnRlZXQXFvN2FtRHRUamR2T1JXN3cyMHRX?=
+ =?utf-8?B?ZXRPVk1OSTBqL2xVdyt0RVRsbEVYK1RZeU9vSTFMcXFOcWxXOTNhUXA2UkFZ?=
+ =?utf-8?B?c0hzZFRjazBYS1lGSmpCaW9xMGw3eHdjT3lYUlVOOWlrN2lZT3dmOTZVQ1pl?=
+ =?utf-8?B?TGdVRVVzQmRtd2xvekNiY01mL1NxanhmazBMTVF2RWFpZ1dKdFpsZjRNZG13?=
+ =?utf-8?B?dXp5SStjK2c3dUNYbDZVbUM2eVY3ZzlUZTZJVE9HVWNnYy9uNEtMc3ZZaUNI?=
+ =?utf-8?B?bk43c2xaUXlXeVZCcFQ0eStibFFkWk94RmVTcjBXdVAxdVJBNXQ5ejA4WGRR?=
+ =?utf-8?B?N05ESy9Ud3FhUElaVDl2Qy9nMFhVbHdlcHVMMXdWaWJhZTNScnV1TnZiN1Ur?=
+ =?utf-8?B?NGh1QXhEalZoajJ5cEdiVWMzOXdxblJhTmZ3SVI2Q1djc0t6NC9iWkY3b3Y1?=
+ =?utf-8?B?eE9xaHJuV1d1UU5BTEpBbnVBUTRvWUZqMkllR0JMcHRQQTlldVBhOXhac2la?=
+ =?utf-8?B?OCtIOVFqRHY4K0JMNFVoTkY1OFZaV1l6QkFEdXRpempRSktKb1JjaXVRMFpF?=
+ =?utf-8?B?RkJpQzh4WkZMdS9wTittSW5iTWEwWlZUSXd5TnpORTV2QzNGS0N0SnowYnp2?=
+ =?utf-8?B?M2FjeXEyazdPZnlsYUU1d3hoaHo3bjJxT1hUVXBJck5uN2xWcSsxSnlWSXMy?=
+ =?utf-8?B?S3VkZlR3OG1ZWXU4eUliV29vMVhPWFp0THBFdTg2WGY1VnJFREhqYm5SK1l6?=
+ =?utf-8?Q?W5AFQOr0gt5MqFNYCayhELUFa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42d29a20-ad2c-47c6-5960-08dc4f8511d9
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 00:13:32.9911
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gN16zoO+IxcX5gXuAGg2DmWUz9c0jqaSFk+6jWuCqYoumYy0vFBU97suxTNhE26Oj8WHeG6o9mjg7RRJtOAN8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5905
 
-On Thu, Mar 28, 2024 at 8:10=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 28 Mar 2024 22:43:46 +0800
-> =E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
->
-> > I have done a simple benchmark on creating 1000
-> > trampolines. It is slow, quite slow, which consume up to
-> > 60s. We can't do it this way.
-> >
-> > Now, I have a bad idea. How about we introduce
-> > a "dynamic trampoline"? The basic logic of it can be:
-> >
-> > """
-> > save regs
-> > bpfs =3D trampoline_lookup_ip(ip)
-> > fentry =3D bpfs->fentries
-> > while fentry:
-> >   fentry(ctx)
-> >   fentry =3D fentry->next
-> >
-> > call origin
-> > save return value
-> >
-> > fexit =3D bpfs->fexits
-> > while fexit:
-> >   fexit(ctx)
-> >   fexit =3D fexit->next
-> >
-> > xxxxxx
-> > """
-> >
-> > And we lookup the "bpfs" by the function ip in a hash map
-> > in trampoline_lookup_ip. The type of "bpfs" is:
-> >
-> > struct bpf_array {
-> >   struct bpf_prog *fentries;
-> >  struct bpf_prog *fexits;
-> >   struct bpf_prog *modify_returns;
-> > }
-> >
-> > When we need to attach the bpf progA to function A/B/C,
-> > we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
-> > and add the progA to them, and insert them to the hash map
-> > "direct_call_bpfs", and attach the "dynamic trampoline" to
-> > A/B/C. If bpf_arrayA exist, just add progA to the tail of
-> > bpf_arrayA->fentries. When we need to attach progB to
-> > B/C, just add progB to bpf_arrayB->fentries and
-> > bpf_arrayB->fentries.
-> >
-> > Compared to the trampoline, extra overhead is introduced
-> > by the hash lookuping.
-> >
-> > I have not begun to code yet, and I am not sure the overhead is
-> > acceptable. Considering that we also need to do hash lookup
-> > by the function in kprobe_multi, maybe the overhead is
-> > acceptable?
->
-> Sounds like you are just recreating the function management that ftrace
-> has. It also can add thousands of trampolines very quickly, because it do=
-es
-> it in batches. It takes special synchronization steps to attach to fentry=
-.
-> ftrace (and I believe multi-kprobes) updates all the attachments for each
-> step, so the synchronization needed is only done once.
->
-> If you really want to have thousands of functions, why not just register =
-it
-> with ftrace itself. It will give you the arguments via the ftrace_regs
-> structure. Can't you just register a program as the callback?
->
-> It will probably make your accounting much easier, and just let ftrace
-> handle the fentry logic. That's what it was made to do.
 
-Absolutely agree.
-There is no point re-inventing this logic.
 
-Menlong,
-before you hook up into ftrace check whether
-it's going to be any different from kprobe-multi,
-since it's the same ftrace underneath.
-I suspect it will look exactly the same.
-So it sounds like multi-fentry idea will be shelved once again.
+On 3/28/2024 13:14, Sohil Mehta wrote:
+> On 3/28/2024 11:04 AM, Avadhut Naik wrote:
+> 
+>>  - Since only caps of words which are not acronyms have been changed in
+>>    this version and the word "REVISION" has been removed i.e. changes are
+>>    very minor, have retained the the below tags received for previous
+>>    versions:
+>>     Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+> 
+>> Avadhut Naik (2):
+>>   tracing: Include PPIN in mce_record tracepoint
+>>   tracing: Include Microcode Revision in mce_record tracepoint
+> 
+> 
+> The patches look good to me.
+
+Kindly ignore this set.
+
+As pointed out by Sohit, have missed adding linux-kernel@vger.kernel.org
+
+Will resend the set.
+
+-- 
+Thanks,
+Avadhut Naik
