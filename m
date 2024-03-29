@@ -1,180 +1,176 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC88538FB6;
-	Fri, 29 Mar 2024 03:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2A53D964;
+	Fri, 29 Mar 2024 07:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711683788; cv=none; b=KO6AG+yyZhOl6+lc2Ww/1OeNgEBk8teXH21Gk5UgNsKQmKxMSWN1x/wkGET9WKThorfH5FUFrBihJE0TkkR1S6kA7yx3mM4ogku3W76RkmT0YF8kMZk4v9GUAz6B5WPfC7qHwe1lmpJmRruSxgkjRd7kspp87KC/HmpFSmCc/Y4=
+	t=1711696293; cv=none; b=SRExzY7Os8vWH7mHIbRShaFInkB87RlyJVUnZHk/R3yRhsvO9mbGdCkZDSVeYq3l8vbmzu1F0/0pgdNqCeh1AtpSOowNUtEjiaRomGKZuS4gOdVgZgmiwwylrhB0EWolzppRT+imhttz6X4ms6noskKay1wEppchnT0RpaaDg1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711683788; c=relaxed/simple;
-	bh=NW6SOAzOCmfHj7YzA9farLoUt7EnPGzCIYemqeUl0uo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FA0RA8VZE565qYUxkg6ITXoKSlPiC8v9PowkXyi0hwqali0pl1fTjkcb4gpr21CTPxWUgOvXJxHQ5jMj3bllaMnA/hDDyzKz0GqXLyd74yry1GBGGvUDegkhMASNssOvVUwjhypWVTLtXBI3FnkRbqTFmZN7ReDF66Kz8F9OHUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHH5prrY; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1711696293; c=relaxed/simple;
+	bh=D7kH7c8wYDKL3JAmK9VN3cdm/7ml16PXz2EbB8purYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7kzFvU1MA6TJAlWE8Gkp/hsOrE0F/iOWdQAGDyjEHWhzQQAhz8GPH8ZHmswdysayMhNG7D+C61laLh4Rga4IhKB+naw1FQKWbXjk1VN8Iaz+asQMiQoCTvyvzlJcmsSjN4/Hk/RDIuekJRQARsm1MsqNYE9JtkI9+uXpWcC1yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/IWuFJy; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHH5prrY"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e703e0e5deso1407694b3a.3;
-        Thu, 28 Mar 2024 20:43:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/IWuFJy"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a468226e135so210396266b.0;
+        Fri, 29 Mar 2024 00:11:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711683786; x=1712288586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kn212XxO4831NlLN6pezB/sv+pGx9/PfTNcOe8l6A6E=;
-        b=VHH5prrYf//YIyg7971hHS8ZGDGqymfZlkvuTXH+vFY9p16E8j1rOBQWPpAtvYd5F5
-         gHDm0A2U/j+LiK+M6T3++XrIbdpJ+/xXR37Lhw4EQCQF7xAWaHumYrCHhK6ep/LXBaTN
-         1pcMEDmaMTaNB38jFN0gDxR2q5QQ9J7UidTZOARzNT39g3E72CA9AGWCCGW3Z+pvdtfs
-         FIbTraV9MB4AZmKCZ9atue3g90F53lk8wIybA3T5gKwNuhd1HUZpSQtRJ1ueFREh0HXN
-         b/qgBPDKEUEw/CbL78NM95jK7xdl4V1e6VgqIMHuNd78TMV+sNtiw/lvIZ27KDty01Iq
-         Bv4g==
+        d=gmail.com; s=20230601; t=1711696290; x=1712301090; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QlXzzva3tzYsTbX/Roe1pmkbSeytRQqKfpMzo4ef9kA=;
+        b=Y/IWuFJy4qvEa2Bmc4Xtl8lsez2ojixF0cR4B+4DwH50Jt1mEvwqDqf5raNwcz7OO7
+         22gFa/ECog26sbZdX3DZslAWuHPW4cgL8aPvkKUE72yp5Y3DJ8OhtRTIHRVgZqcKdklc
+         stKaYNwamdpv2VyEQ9ycmByoc+jA9Ni2PeEUkCPSNSUF+k66ln27rdcqiX25A7nAqLYZ
+         vpww4OMJjoPLe4Phzt2AGk9D7WV4zKrMWHb01wQKPWowFmE7snehh/SbJmaxNHTQcT0N
+         PDUmQVOuUOfaqh/veHw7Uwg1w+zHRKDFMoVR698KVhF5la7IcJ9fngtHPK/G+NgJhhlz
+         AFeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711683786; x=1712288586;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711696290; x=1712301090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Kn212XxO4831NlLN6pezB/sv+pGx9/PfTNcOe8l6A6E=;
-        b=dWjjmfaGg+gCEed6blN6OYuSMpFZu1o1UGmEofGdqz68sV9YT0/96Fl9v6pjiqFK08
-         eynZuwXBQzATsfA1HXnRNZ92xZW5+YFaZZeALfiPzQuNJT2R060U+pvvSuChKdEChzRX
-         XVJ+t4N44gSAgcMHG1Dn/2JNbcHmREUskYEW9Ms+tEDyASSEKdGw1bXQCtZ5JXMn54SY
-         NwKn2U0HPHL4EFVSyx6pWvHyRve6aBecDXx7FfxpxivboDO0ZSYNm35AXpNrdeOS1HTi
-         Ge/NBEydRiqpzjL/CeT4R3E52CrXDJJ0J6GQIWXvA1aEOvX2rprhVlpEXJdaF08TuOuh
-         TSFA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6XQ7HNLSW7uD496Zt3UGTjD2t4dEjKNCIKsdhGxJCDiAmYXKyk3psE4AS0SKc3KSCU9v2oLpIQG8+27tkcFLBSao5uJxjSjwG6JGAtEnz8Q9o
-X-Gm-Message-State: AOJu0YyyUIViBwFmsM5p5XJRubG6+YQsxIle8ouHprtjmzs5/DWFZG4Y
-	QP4OH3CUOXerR7KG+Q7YhVnVoVW5mpLo2KQn4oOVNBR5pWD3bFjU
-X-Google-Smtp-Source: AGHT+IHeGy9+tq6qSPAoMpL+xc6kUdTfRLfg33kTS1IkNpVXoONOTkmnR829wgACn5DbiIjXo/HMzQ==
-X-Received: by 2002:a05:6a00:2354:b0:6ea:7f6e:f451 with SMTP id j20-20020a056a00235400b006ea7f6ef451mr1298097pfj.1.1711683786127;
-        Thu, 28 Mar 2024 20:43:06 -0700 (PDT)
-Received: from KERNELXING-MB0.tencent.com ([43.132.141.25])
-        by smtp.gmail.com with ESMTPSA id a18-20020aa78e92000000b006e6c0080466sm2201854pfr.176.2024.03.28.20.43.03
+        bh=QlXzzva3tzYsTbX/Roe1pmkbSeytRQqKfpMzo4ef9kA=;
+        b=RUQE3/xndAt1TeKm1VhNkqkOyNewxD0TJB18DBkVqn5BGHc5nsdMVTkohDTfLVsWSk
+         jAJNzkS3y4W5L3DrMxbvaxZvy9XQ+WG5S69YV9N70B9eDA/f6nB7OVCEIJMwFQ4PpmUx
+         3KvoblElIS/SKjBbmUWYBwvTFyEL17w1FR5yLAr+1bLjjkkpkyqHzk8AocLoOQDSOjlC
+         yhxh96frmO1xy1yJpljToCA97WwY2/qZUnzSkNQh2A7t7qSejHd9+3gQBeD2gvRlPpJb
+         VJrB4Ml26ZBaBgsmHi3j+dZwAOpMfCWalKIGrLYFghwrIXS0ZYvVatE06CLMx7S8o3HQ
+         kGcw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2oNH/irEnrLOYw3AI5ZNVl4EVhD3ouiabixJYkOSaJf7nm1n7YLAtnWsTegblFsZkQLIr0a/UfpKd5b5iVlHloARLryvq42OEqw==
+X-Gm-Message-State: AOJu0YxzvEk9CEW/V3bnmSy95HHdaqPFXON6lxg5INz9o2fbUAbhehK3
+	PLPXHewFNLOhq1ZUXHMbgugw/CAxNBcnhf+q76yiShFVyKjAcrco
+X-Google-Smtp-Source: AGHT+IEgGqlQKmbb893pqci3FE+uu9vtfZQCX0qThXh0/soxN53rUqzcmaChWf4gPzV3WpKey2c6VA==
+X-Received: by 2002:a17:906:d054:b0:a4e:14a1:fa81 with SMTP id bo20-20020a170906d05400b00a4e14a1fa81mr1029094ejb.46.1711696290039;
+        Fri, 29 Mar 2024 00:11:30 -0700 (PDT)
+Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
+        by smtp.gmail.com with ESMTPSA id z1-20020a170906668100b00a474b7bbc76sm1588795ejo.56.2024.03.29.00.11.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 20:43:05 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: edumazet@google.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	rostedt@goodmis.org,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net
-Cc: netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v3 3/3] tcp: add location into reset trace process
-Date: Fri, 29 Mar 2024 11:42:43 +0800
-Message-Id: <20240329034243.7929-4-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240329034243.7929-1-kerneljasonxing@gmail.com>
-References: <20240329034243.7929-1-kerneljasonxing@gmail.com>
+        Fri, 29 Mar 2024 00:11:29 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 29 Mar 2024 08:11:27 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Avadhut Naik <avadhut.naik@amd.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	rostedt@goodmis.org, tony.luck@intel.com, bp@alien8.de,
+	x86@kernel.org, sohil.mehta@intel.com, yazen.ghannam@amd.com,
+	avadnaik@amd.com
+Subject: [PATCH] x86/mce: Clean up TP_printk() output line of the mce_record
+ tracepoint
+Message-ID: <ZgZpn/zbCJWYdL5y@gmail.com>
+References: <20240328180435.435076-1-avadhut.naik@amd.com>
+ <20240328180435.435076-2-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328180435.435076-2-avadhut.naik@amd.com>
 
-From: Jason Xing <kernelxing@tencent.com>
 
-In addition to knowing the 4-tuple of the flow which generates RST,
-the reason why it does so is very important because we have some
-cases where the RST should be sent and have no clue which one
-exactly.
+* Avadhut Naik <avadhut.naik@amd.com> wrote:
 
-Adding location of reset process can help us more, like what
-trace_kfree_skb does.
+>  
+> +/*
+> + * MCE Event Record.
+> + *
+> + * Only very relevant and transient information which cannot be
+> + * gathered from a system by any other means or which can only be
+> + * acquired arduously should be added to this record.
+> + */
+> +
+>  TRACE_EVENT(mce_record,
+>  
+>  	TP_PROTO(struct mce *m),
+> @@ -25,6 +33,7 @@ TRACE_EVENT(mce_record,
+>  		__field(	u64,		ipid		)
+>  		__field(	u64,		ip		)
+>  		__field(	u64,		tsc		)
+> +		__field(	u64,		ppin		)
+>  		__field(	u64,		walltime	)
+>  		__field(	u32,		cpu		)
+>  		__field(	u32,		cpuid		)
+> @@ -45,6 +54,7 @@ TRACE_EVENT(mce_record,
+>  		__entry->ipid		= m->ipid;
+>  		__entry->ip		= m->ip;
+>  		__entry->tsc		= m->tsc;
+> +		__entry->ppin		= m->ppin;
+>  		__entry->walltime	= m->time;
+>  		__entry->cpu		= m->extcpu;
+>  		__entry->cpuid		= m->cpuid;
+> @@ -55,7 +65,7 @@ TRACE_EVENT(mce_record,
+>  		__entry->cpuvendor	= m->cpuvendor;
+>  	),
+>  
+> -	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
+> +	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, processor: %u:%x, time: %llu, socket: %u, APIC: %x",
 
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
+Please split out the other (capitalization) changes to the output into 
+a separate patch.
+
+- While at it, don't forget to:
+
+   s/ADDR/MISC/SYND
+    /addr/misc/synd
+
+- Also, it's a bit weird that we have 'CPU' but also 'processor' 
+  fields, why isn't it 'vendor' and 'CPUID'?
+
+- Finally, why are some fields 'merged' as per ADDR/MISC/SYND, while 
+  others are listed separately? All that have separate names should be 
+  listed separately.
+
+Ie. something like the patch below?
+
+Thanks,
+
+	Ingo
+
+============>
+From: Ingo Molnar <mingo@kernel.org>
+Date: Fri, 29 Mar 2024 08:09:23 +0100
+Subject: [PATCH] x86/mce: Clean up TP_printk() output line of the mce_record tracepoint
+
+ - Only capitalize entries where that makes sense
+ - Print separate values separately
+ - Rename 'PROCESSOR' to vendor & CPUID
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/trace/events/tcp.h | 13 +++++++++----
- net/ipv4/tcp_ipv4.c        |  2 +-
- net/ipv4/tcp_output.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  2 +-
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ include/trace/events/mce.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 289438c54227..7a6dc525bfc7 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -80,13 +80,16 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
-  */
- TRACE_EVENT(tcp_send_reset,
- 
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk,
-+		 const struct sk_buff *skb,
-+		 void *location),
- 
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, location),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
- 		__field(const void *, skaddr)
-+		__field(void *, location)
- 		__field(int, state)
- 		__array(__u8, saddr, sizeof(struct sockaddr_in6))
- 		__array(__u8, daddr, sizeof(struct sockaddr_in6))
-@@ -112,12 +115,14 @@ TRACE_EVENT(tcp_send_reset,
- 			 */
- 			TP_STORE_ADDR_PORTS_SKB(skb, entry->daddr, entry->saddr);
- 		}
-+		__entry->location = location;
+diff --git a/include/trace/events/mce.h b/include/trace/events/mce.h
+index 1391ada0da3b..c5b0523f25ee 100644
+--- a/include/trace/events/mce.h
++++ b/include/trace/events/mce.h
+@@ -55,15 +55,18 @@ TRACE_EVENT(mce_record,
+ 		__entry->cpuvendor	= m->cpuvendor;
  	),
  
--	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s location=%pS",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  __entry->saddr, __entry->daddr,
--		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN")
-+		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN",
-+		  __entry->location)
- );
- 
- /*
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index d5c4a969c066..fec54cfc4fb3 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -870,7 +870,7 @@ static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb)
- 		arg.bound_dev_if = sk->sk_bound_dev_if;
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb,  __builtin_return_address(0));
- 
- 	BUILD_BUG_ON(offsetof(struct sock, sk_bound_dev_if) !=
- 		     offsetof(struct inet_timewait_sock, tw_bound_dev_if));
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index e3167ad96567..fb613582817e 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3608,7 +3608,7 @@ void tcp_send_active_reset(struct sock *sk, gfp_t priority)
- 	/* skb of trace_tcp_send_reset() keeps the skb that caused RST,
- 	 * skb here is different to the troublesome skb, so use NULL
- 	 */
--	trace_tcp_send_reset(sk, NULL);
-+	trace_tcp_send_reset(sk, NULL,  __builtin_return_address(0));
- }
- 
- /* Send a crossed SYN-ACK during socket establishment.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 8e9c59b6c00c..7eba9c3d69f1 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1128,7 +1128,7 @@ static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb)
- 			label = ip6_flowlabel(ipv6h);
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb,  __builtin_return_address(0));
- 
- 	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1,
- 			     ipv6_get_dsfield(ipv6h), label, priority, txhash,
--- 
-2.37.3
-
+-	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
++	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, addr: %016Lx, misc: %016Lx, SYND: %016Lx, RIP: %02x:<%016Lx>, TSC: %llx, vendor: %u, CPUID: %x, time: %llu, socket: %u, APIC: %x",
+ 		__entry->cpu,
+ 		__entry->mcgcap, __entry->mcgstatus,
+ 		__entry->bank, __entry->status,
+ 		__entry->ipid,
+-		__entry->addr, __entry->misc, __entry->synd,
++		__entry->addr,
++		__entry->misc,
++		__entry->synd,
+ 		__entry->cs, __entry->ip,
+ 		__entry->tsc,
+-		__entry->cpuvendor, __entry->cpuid,
++		__entry->cpuvendor,
++		__entry->cpuid,
+ 		__entry->walltime,
+ 		__entry->socketid,
+ 		__entry->apicid)
