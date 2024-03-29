@@ -1,55 +1,55 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC2969DF4;
-	Fri, 29 Mar 2024 10:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F79754F92
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711708894; cv=none; b=HBORc7YKYri+Nm11ydu9M+DrVKAKQffJ0Aajm+lJQq8/Fg7r76Ke4+neRAeAq7ebdavU2iHeof80qZC//MCpwoTymdoDV/lRk0c/s8Mb4UAAdNu0mH/xQXa+mP4J67H6i7+BSUexDaiRtgX+kdNCI9jLYtePAsfLECDy+3BFxsg=
+	t=1711709032; cv=none; b=tSL4QknHSssCCRE8zBkoIKDskM8wLJje+ium0tb5JKZ/RcSwkOOtZYMzCCsWaNsrOHJfGpHSgi+VrD+IJadEJEdGxBBls73EZX6r41XV1JrB95Xyg8C07Dg8sgAb55eHOanJPrV2IzbzE9O4KeZCnDLgjxYckhcPQJ9ZOwlXelw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711708894; c=relaxed/simple;
-	bh=JyQADm6StSmCk7VbG8Fc8OvnsSv53ToxBspbRlYQOVI=;
+	s=arc-20240116; t=1711709032; c=relaxed/simple;
+	bh=kANklVzcWLeV7GfBdlIVGJwRz/5Ghl5l8FZ9KpprDXo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AiSGdP9791MxE9TV4zxZWux6Bu9tS6mijiY6iNMz6IM5dxB/ytS0d6ThtEl78pSwpCW/6xfz2mAYVnvIkdg3TtxlzRqlxeUfgEZ5W6+Arauw6YsWXjA0Yk8tpIg4efvthrAdxyf21cFsNLfZKIiGpOTzFVb6gvv1xsspfcazZec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YaF0YhCH; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=CaMRxzDsU20V3QYuk701K9GXZnj5XJmGt2QR4AtvnbOIJZfdiSe7hzJ3b7tqTLMdlP5j+YKjm5eHdBqh9EnjL9P+8rF60YyQ87S8pA+X2zlHGKh4/PsZmAOGM330XPsyty2E8On+938bd36+m/X/vKzxaOfaD9E0HPVKjHg+hlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KZ0OL3Zr; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaF0YhCH"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a470d7f77eeso241425966b.3;
-        Fri, 29 Mar 2024 03:41:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KZ0OL3Zr"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4148c09ec6bso43645e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Mar 2024 03:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711708891; x=1712313691; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711709028; x=1712313828; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oJ7ur8CUhmXoyTw9SZZcPYYLBLjAq/4M04R8NlO7i7o=;
-        b=YaF0YhCHE7ZluG9sKwvmBqNSPdF8DAsBr0xCzeYOQSr/pWwTvBmsKHyZ1AhXdn+PYM
-         zD4mPDiuN1KPAjwAvtlGtm90qtybKRU/+e9cDqR+17TYDoy7p3LthL2Qxo47Ft4SBfTR
-         djTWcHufNWVQOzIlqyP9+hjFamWhO3QzpUBXsbhs6ePOq3tjm+Ow6zUJWZ/O7RMneilP
-         hddZhON0xd7RfD2Llu/Bkk11kHYkC3pmr7DYLODI6bae/N/OsMYdB/Ub+Opg98W6viVc
-         +lnNvjwGBRzPwOpkEUJswexUZv3kXgHftfcQ2RprnLTqKa5bRhk1z3j5zYhBmESzWUUW
-         ZJ3Q==
+        bh=BswVeo27Oh7dAc/LOhv6CTMo7+P1mAzw3bzPOA93dfE=;
+        b=KZ0OL3ZrrftA44suzZ0ULr7Wl4K5lwwF/9FQOnNJMskpZcGm6KB4sg9my6shS2XekH
+         EetmR64Y3824Hlp4wJDKmAHm/TqwywNeyADRtd6OJRHCVuUWNv2RiYIZClxHALfgSMDg
+         6PvwVQST2a3yRnAM3A+89epkBLNNoYjkRQmf/0g2uLDvmEgTv9995Enl9mumU9iABoKx
+         HMmZTLse38zbPltukXFUCx6B10dIktsGTRLv343yEoFFG36W3gnnuN0Skcco/NPgGI79
+         dW8ynBf+JR2DCJlgQZ015w2spG01ucqfSTT/3F1z2viucmkbJOXx5DEoCO2KwFMwTMCr
+         /ESw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711708891; x=1712313691;
+        d=1e100.net; s=20230601; t=1711709028; x=1712313828;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oJ7ur8CUhmXoyTw9SZZcPYYLBLjAq/4M04R8NlO7i7o=;
-        b=TGMWYu3xSHjFfXF0Egpdaq3sn0XJU7qXeE5e+evDbfpiWssl6ds6pen98NG5T918sk
-         FPKkKJsvClrHmK4on6FwuYhTfdkXYVgaOIqXqLI9Uqf9Jsghhto6yjimRAXKRDUyFId2
-         wTup7W3t/0eYABdzKxJAXUl5w2IXjCrGxxLH5R3PGCA1AJH4kJornjaFeTWbx6bxZsw4
-         Ju0jDem0yNbbHBhhGWNpPvwaenM/ODNEm3Dk7EfqrIptZK3GkD5ERv4xEPsD4q/28bCI
-         zjbHdcPTkdo6ZRKH0gzza969DJQXS7yeMh2bgadUnjnk3/ya4kpH505PtmSRyTgy0/3v
-         JjTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTwW772xY+Jg8pAbfZWDCgrmqlD5tsEY7jothVbgjRbNDn+iBo5xBG1Pv7f/2xKrzLZxg7fl37dBXjLgYPNHf42qTnLRJ7feNR2sQ5RCVqQ8tCJPre7/20zqA0rGtRXgv+tyXlS69FsVep
-X-Gm-Message-State: AOJu0YyTlLDsdDXkGDkShndnV0cJbiTSntjtZEUvYBMaBPk3XIe9KoOt
-	nfB4xpQo89pVMLF6X9ZR5EWeHEgKQ2AS1Mx3AIzKKNpe+qDQ6K8iBXiXAAkGqAlOIof0yVscO4o
-	czpAcfBesNtpOUpUolxkMYJZHlC0LoU8SPgc=
-X-Google-Smtp-Source: AGHT+IE9MsTixcTFY2cE03LT8ruG93/33BbQvBX6DoS6IktovOPkcU4CUUgzk0QL0matjkTNT2GCPetnJKf2RQ6TJlU=
-X-Received: by 2002:a17:907:72c6:b0:a46:13d5:46fe with SMTP id
- du6-20020a17090772c600b00a4613d546femr1743237ejc.11.1711708890891; Fri, 29
- Mar 2024 03:41:30 -0700 (PDT)
+        bh=BswVeo27Oh7dAc/LOhv6CTMo7+P1mAzw3bzPOA93dfE=;
+        b=P6Fu0p5A3vxw3veACnW+oBjahE/V3jL9b/SdTtaGAG+1276alSOi4FTl9So0FGZkuJ
+         qztZIxUk3Mm6/r75rJMN8ZBopr9r+5oOtPXytJADMpZDoFSgH9rR9DRWFuLEm86ZWqRn
+         MTqyZiupEYe7zhg3L/MVqBQSbLJJgIHp8DIKv0LXhBkJvhjKSQr/WvIxlAwGTFPrrAfA
+         BkTlraKJRMsfcEQ4CFhvVG+G2FJOPw40t6rYyDD0QUlFWSYqHPCuEj7eGgXl3NGtX9cS
+         g5vazLPcsGCQcsLezNkudsadz3qdxlStwRBkN5qZFFq1UDt7IF4hLobgANMQ9mpLq6bK
+         qa2g==
+X-Forwarded-Encrypted: i=1; AJvYcCU7tU+4iVr6I9/4LHnPsU+drkHPpSAPgug4fm07wFfGYvyzv7A1BeaTaT12QjnllcaZCi0rbie7n/O3bdqGqD+xltW5EbtnHWIcWTrUgoMuVDrP
+X-Gm-Message-State: AOJu0YznnmnVvnG9fKQ2+Lz/rcHHCo4wNSLi0l7zY9ERBbPPj+qBEeDQ
+	SiRoeuqkG4JVgOb6uvMz8k7c/AWOOeCUxaZLMIySHlQ9EFLmL6qmhejMTfmrmcbCrOstXCaOJbf
+	MS6jw4ntX65+1L0tY8EQN2y/5hieb/cDIY+P4
+X-Google-Smtp-Source: AGHT+IE5Na0j/pWpWqmyvzu2Nq1znLyYvblamVutWAXAwm52wP8cG6MFjnGxm4bTZfdfKqaf4u1flVZLHd/Sr5pBzLI=
+X-Received: by 2002:a05:600c:47cf:b0:414:908c:460d with SMTP id
+ l15-20020a05600c47cf00b00414908c460dmr108625wmo.7.1711709027784; Fri, 29 Mar
+ 2024 03:43:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,13 +57,14 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240329034243.7929-1-kerneljasonxing@gmail.com>
- <20240329034243.7929-4-kerneljasonxing@gmail.com> <CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com>
-In-Reply-To: <CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 29 Mar 2024 18:40:54 +0800
-Message-ID: <CAL+tcoD0_tPkmp-jDg8tiQhcwoR6Lb_BwqiZ4xegoxObxsy86g@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 3/3] tcp: add location into reset trace process
-To: Eric Dumazet <edumazet@google.com>
+ <20240329034243.7929-3-kerneljasonxing@gmail.com> <CANn89iK35sZ7yYLfRb+m475b7kg+LHw4nV9qHWP7aQtLvBoeMA@mail.gmail.com>
+ <CAL+tcoBt0DxdSbb5PES8uYgeyBqThUyS_J4d3hUuxZv8=J0H9A@mail.gmail.com>
+In-Reply-To: <CAL+tcoBt0DxdSbb5PES8uYgeyBqThUyS_J4d3hUuxZv8=J0H9A@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 29 Mar 2024 11:43:34 +0100
+Message-ID: <CANn89iJ1c2efW94sxdsiCqir=twc+Yam2KCgcGK8-oNM26nifw@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/3] trace: tcp: fully support trace_tcp_send_reset
+To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, rostedt@goodmis.org, 
 	kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
@@ -71,48 +72,149 @@ Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 5:13=E2=80=AFPM Eric Dumazet <edumazet@google.com> =
-wrote:
+On Fri, Mar 29, 2024 at 11:23=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.=
+com> wrote:
 >
-> On Fri, Mar 29, 2024 at 4:43=E2=80=AFAM Jason Xing <kerneljasonxing@gmail=
-.com> wrote:
+> On Fri, Mar 29, 2024 at 5:07=E2=80=AFPM Eric Dumazet <edumazet@google.com=
+> wrote:
 > >
-> > From: Jason Xing <kernelxing@tencent.com>
+> > On Fri, Mar 29, 2024 at 4:43=E2=80=AFAM Jason Xing <kerneljasonxing@gma=
+il.com> wrote:
+> > >
+> > > From: Jason Xing <kernelxing@tencent.com>
+> > >
+> > > Prior to this patch, what we can see by enabling trace_tcp_send is
+> > > only happening under two circumstances:
+> > > 1) active rst mode
+> > > 2) non-active rst mode and based on the full socket
+> > >
+> > > That means the inconsistency occurs if we use tcpdump and trace
+> > > simultaneously to see how rst happens.
+> > >
+> > > It's necessary that we should take into other cases into consideratio=
+ns,
+> > > say:
+> > > 1) time-wait socket
+> > > 2) no socket
+> > > ...
+> > >
+> > > By parsing the incoming skb and reversing its 4-tuple can
+> > > we know the exact 'flow' which might not exist.
+> > >
+> > > Samples after applied this patch:
+> > > 1. tcp_send_reset: skbaddr=3DXXX skaddr=3DXXX src=3Dip:port dest=3Dip=
+:port
+> > > state=3DTCP_ESTABLISHED
+> > > 2. tcp_send_reset: skbaddr=3D000...000 skaddr=3DXXX src=3Dip:port des=
+t=3Dip:port
+> > > state=3DUNKNOWN
+> > > Note:
+> > > 1) UNKNOWN means we cannot extract the right information from skb.
+> > > 2) skbaddr/skaddr could be 0
+> > >
+> > > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > > ---
+> > >  include/trace/events/tcp.h | 39 ++++++++++++++++++++++++++++++++++++=
+--
+> > >  net/ipv4/tcp_ipv4.c        |  4 ++--
+> > >  net/ipv6/tcp_ipv6.c        |  3 ++-
+> > >  3 files changed, 41 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> > > index 194425f69642..289438c54227 100644
+> > > --- a/include/trace/events/tcp.h
+> > > +++ b/include/trace/events/tcp.h
+> > > @@ -78,11 +78,46 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb=
+,
+> > >   * skb of trace_tcp_send_reset is the skb that caused RST. In case o=
+f
+> > >   * active reset, skb should be NULL
+> > >   */
+> > > -DEFINE_EVENT(tcp_event_sk_skb, tcp_send_reset,
+> > > +TRACE_EVENT(tcp_send_reset,
+> > >
+> > >         TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
+> > >
+> > > -       TP_ARGS(sk, skb)
+> > > +       TP_ARGS(sk, skb),
+> > > +
+> > > +       TP_STRUCT__entry(
+> > > +               __field(const void *, skbaddr)
+> > > +               __field(const void *, skaddr)
+> > > +               __field(int, state)
+> > > +               __array(__u8, saddr, sizeof(struct sockaddr_in6))
+> > > +               __array(__u8, daddr, sizeof(struct sockaddr_in6))
+> > > +       ),
+> > > +
+> > > +       TP_fast_assign(
+> > > +               __entry->skbaddr =3D skb;
+> > > +               __entry->skaddr =3D sk;
+> > > +               /* Zero means unknown state. */
+> > > +               __entry->state =3D sk ? sk->sk_state : 0;
+> > > +
+> > > +               memset(__entry->saddr, 0, sizeof(struct sockaddr_in6)=
+);
+> > > +               memset(__entry->daddr, 0, sizeof(struct sockaddr_in6)=
+);
+> > > +
+> > > +               if (sk && sk_fullsock(sk)) {
+> > > +                       const struct inet_sock *inet =3D inet_sk(sk);
+> > > +
+> > > +                       TP_STORE_ADDR_PORTS(__entry, inet, sk);
+> > > +               } else {
 > >
-> > In addition to knowing the 4-tuple of the flow which generates RST,
-> > the reason why it does so is very important because we have some
-> > cases where the RST should be sent and have no clue which one
-> > exactly.
+> > To be on the safe side, I would test if (skb) here.
+> > We have one caller with skb =3D=3D NULL, we might have more in the futu=
+re.
+>
+> Thanks for the review.
+>
+> How about changing '} else {' to '} else if (skb) {', then if we go
+> into this else-if branch, we will print nothing, right? I'll test it
+> in this case.
+
+Right, the fields are cleared before this else
+
++               memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
++               memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
+
+>
 > >
-> > Adding location of reset process can help us more, like what
-> > trace_kfree_skb does.
+> > > +                       /*
+> > > +                        * We should reverse the 4-tuple of skb, so l=
+ater
+> > > +                        * it can print the right flow direction of r=
+st.
+> > > +                        */
+> > > +                       TP_STORE_ADDR_PORTS_SKB(skb, entry->daddr, en=
+try->saddr);
+> > > +               }
+> > > +       ),
+> > > +
+> > > +       TP_printk("skbaddr=3D%p skaddr=3D%p src=3D%pISpc dest=3D%pISp=
+c state=3D%s",
+> > > +                 __entry->skbaddr, __entry->skaddr,
+> > > +                 __entry->saddr, __entry->daddr,
+> > > +                 __entry->state ? show_tcp_state_name(__entry->state=
+) : "UNKNOWN")
+> > >  );
+> > >
+> > >  /*
+> > > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> > > index a22ee5838751..d5c4a969c066 100644
+> > > --- a/net/ipv4/tcp_ipv4.c
+> > > +++ b/net/ipv4/tcp_ipv4.c
+> > > @@ -868,10 +868,10 @@ static void tcp_v4_send_reset(const struct sock=
+ *sk, struct sk_buff *skb)
+> > >          */
+> > >         if (sk) {
+> > >                 arg.bound_dev_if =3D sk->sk_bound_dev_if;
+> > > -               if (sk_fullsock(sk))
+> > > -                       trace_tcp_send_reset(sk, skb);
+> > >         }
+> >
+> > Remove the { } ?
 >
-> Well, I would prefer a drop_reason here, even if there is no 'dropped' pa=
-cket.
+> Yes, I forgot to remove them.
 
-Good idea really. Then we can accurately diagnose which kind of reason
-exactly causes the RST behavior.
-
-I'm not sure if we can reuse the drop_reason here, like adding/using
-some reasons in enum skb_drop_reason {}? The name is a little bit
-strange.
-
-Oh, I can just print the string of reason directly instead of really
-using enum skb_drop_reason {}...
-
->
-> This would be more stable than something based on function names that
-> could be changed.
->
-> tracepoints do not have to get ugly, we can easily get stack traces if ne=
-eded.
->
-> perf record -a -g  -e tcp:tcp_send_reset ...
-
-Ah, yes, I blindly mimic what trace_skb_kfree() and
-trace_consume_skb() do. Introducing some RST reasons is more
-reasonable and easier to detect since it's not hard to add four or
-five reasons only.
-
-Thanks,
-Jason
+No problem.
