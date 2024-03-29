@@ -1,294 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBC9225A8;
-	Fri, 29 Mar 2024 18:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAE5347B6;
+	Fri, 29 Mar 2024 23:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711737490; cv=none; b=lzaK2sgEjR79kX/f7TMnuYbFLVzQkf9Cly0/oFqJCiVFC3DS/tTyaRaehT+qEwMHDbt3xPJXvqNlvZiFK2E3fRQK5hhDczS8Ra0x//zPexR178MiYVRUEBGdsCfnaMQcADkMtvXh7a4iXkqCBoYPZB4LOne+Q7d+kWfsNlFTApM=
+	t=1711754928; cv=none; b=BiF0sOPYXhrbjY9cOS6Nmj4VXF++Yx8MtZjBDxanMefli+BulHO4QXKn7qwpW3i+7uN65u5cLGhThPJZ2akcLjIgY9UcOJfH9j6D484gs+N5O8HXdnQzg8eZ93GRBeBoDesuvP5WyVY1RlteRQZLbYRhS27z9mKgIzxIt2bJ+Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711737490; c=relaxed/simple;
-	bh=OG2bRo9kq/BnN8MwsBV8qP90ekyyndS4iDqRH1lNo1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sjUuc/t9tem+2x7qZ3fvvyJSk3UTkGPDopHZkaSsDTKEdjvee4XyD+FSOlRALkAJCRmv2Hla+rC1tNfOC0vY+6djzl4rESxwIU3FxklgX1kCjuSRDX96mkaIYFvFPxGl7z/4DZP3gtWAk7e7rj2pOMCKD8cr5XGJPd8xnJiqrSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF8EC433F1;
-	Fri, 29 Mar 2024 18:38:09 +0000 (UTC)
-Date: Fri, 29 Mar 2024 14:40:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com, linux-mm@kvack.org
-Subject: Re: [PATCH v19 RESEND 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <20240329144055.0ae2dd4b@gandalf.local.home>
-In-Reply-To: <20240326100830.1326610-4-vdonnefort@google.com>
-References: <20240326100830.1326610-1-vdonnefort@google.com>
-	<20240326100830.1326610-4-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711754928; c=relaxed/simple;
+	bh=M+CkTC/9QOPKjcAq26pJFK75aD0g4y2+LXJsB0P1JY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lu4xUrtWjk3J0kbVbPD5XAlV9JEyhRuyqvveB8mIxkffhtOM1Y7m4+o5XzftYMKn592GD5CBw41tS2CCKYzMtaJurKzqjxkWsFCCe3ELmR9AEyVvEBDa4PpVwvE2aS0et1z2P9rOIk0ldc7OMYPnDpWEu3jfzLxb8Y4CGi6sJbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fm8qb98v; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fm8qb98v"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d3907ff128so1860607a12.3;
+        Fri, 29 Mar 2024 16:28:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711754926; x=1712359726; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rvV1tZGanDBSafK6edOdycvbQYDEdHbTCxngJvsvk3c=;
+        b=Fm8qb98vO+2rZQDr4ACVbzWOOBhMbNP973of56VDx+7dzKarS23b4VDs0QCZjE/zey
+         IJ/g2gwkTlDZp557gqFy6HVirUKvvI/RhzQOrPjsYmqnt0OS+LXZWxBGcD9ooJmS1u1N
+         Wdq60dFcb/ee3JYL5bUFYzr07cJmwvvmIZoI/b1KQpo+K6ftMzexzXAN8iXh1nJo1QdC
+         4CFMaxfeoUIzc6fyg2ScGW/5rPdZFOXPIXIjGrA7V7Ij1KqAkHvKfDNzy1QS7jMz6z0E
+         /W8l0QAzZuWpon/+MGFe6iPNG81xSsUfka4lIyvOK31ZY63E/sqixJRnh7RpDV18WsJY
+         CtMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711754926; x=1712359726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rvV1tZGanDBSafK6edOdycvbQYDEdHbTCxngJvsvk3c=;
+        b=RU6CYGdij3I8SMDFuLcEkXFxxuMDLhpfo6RmyHf+rD3z+RBxrsmoJ1YligUcYT3VoL
+         YtUHguMvFF7xT9YjyGrK4ujkEA13NT+X1hwUNhKsWaXhpLBG2Wyh4eNaw4zkHN28eYkq
+         dj4reqkSxtXQvjpns3NtubA0ld6+woHqICxMQVR26maDt91aYEPooASIjOoCRnxMnIpI
+         KqBMby8F8aarmJfc6c16rp9hDJK1Cr34usuvnIOrnJ2bdp2qTCOMpl6ARzTAtPA9p7n7
+         9p9R345kssoRHOmDzo2WcF/0oG4wRjb+owNVpsCTExoqfee0d+FSjcyFxitgRQvMQzcC
+         9Pqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlnHyNUDZ0fbOQSV0NEVvOtJTaOmaxwPgZy047hqztaIz7SMsnLeomStI1EizImJzlky/xJNYIS4RJsXEX2rbQoVyo7MFG2+RfwxWnjGonfBHU0k5JSlRGPFtF8Te8neu3qxCi25AWVXDje1k1qkzJLjDnQ+s4R4WJmDmbw/KdNN4l/EBnMx0Wq+GOvmC+DkjFlyebAZoKGfgwdw8BgI1xISF1T+wxXijKToVLbwSSua486L4tXm8nE4lXExEMG+QxE02AxDYDKshvWmyLqPiNewg+cXpbihxLyg==
+X-Gm-Message-State: AOJu0YwCezoL4rml44Ulwt5kaSYk47W3cr0evd5PMAYC8La4m9gnILHN
+	FRelRR6zMz1Bz2qJo3eFKeNyq28N5Yo0kJIQ72rv0EkZFGKfSnjbac0fnT9zQAwbNl/tFnTmfuG
+	Y3REKAMgIbWmVvmHWWGOk0v3R69U=
+X-Google-Smtp-Source: AGHT+IFNbTnA2C1UowyvpIWfWMecar3RYOVPJRlOoVy5NMmPOOKB6ZhvqfzCxbpKkf/w3Z3THbX/GA+A1iwjf07EvPY=
+X-Received: by 2002:a17:90a:be04:b0:2a2:1415:723d with SMTP id
+ a4-20020a17090abe0400b002a21415723dmr3177860pjs.42.1711754926271; Fri, 29 Mar
+ 2024 16:28:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
+ <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+ <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com> <20240328111330.194dcbe5@gandalf.local.home>
+In-Reply-To: <20240328111330.194dcbe5@gandalf.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 29 Mar 2024 16:28:33 -0700
+Message-ID: <CAEf4BzYgzOti+Hfdn3SUCjuofGedXRSGApVDD+K2TdG6oNE-pw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Quentin Monnet <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 26 Mar 2024 10:08:28 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Thu, Mar 28, 2024 at 8:10=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Thu, 28 Mar 2024 22:43:46 +0800
+> =E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+>
+> > I have done a simple benchmark on creating 1000
+> > trampolines. It is slow, quite slow, which consume up to
+> > 60s. We can't do it this way.
+> >
+> > Now, I have a bad idea. How about we introduce
+> > a "dynamic trampoline"? The basic logic of it can be:
+> >
+> > """
+> > save regs
+> > bpfs =3D trampoline_lookup_ip(ip)
+> > fentry =3D bpfs->fentries
+> > while fentry:
+> >   fentry(ctx)
+> >   fentry =3D fentry->next
+> >
+> > call origin
+> > save return value
+> >
+> > fexit =3D bpfs->fexits
+> > while fexit:
+> >   fexit(ctx)
+> >   fexit =3D fexit->next
+> >
+> > xxxxxx
+> > """
+> >
+> > And we lookup the "bpfs" by the function ip in a hash map
+> > in trampoline_lookup_ip. The type of "bpfs" is:
+> >
+> > struct bpf_array {
+> >   struct bpf_prog *fentries;
+> >  struct bpf_prog *fexits;
+> >   struct bpf_prog *modify_returns;
+> > }
+> >
+> > When we need to attach the bpf progA to function A/B/C,
+> > we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
+> > and add the progA to them, and insert them to the hash map
+> > "direct_call_bpfs", and attach the "dynamic trampoline" to
+> > A/B/C. If bpf_arrayA exist, just add progA to the tail of
+> > bpf_arrayA->fentries. When we need to attach progB to
+> > B/C, just add progB to bpf_arrayB->fentries and
+> > bpf_arrayB->fentries.
+> >
+> > Compared to the trampoline, extra overhead is introduced
+> > by the hash lookuping.
+> >
+> > I have not begun to code yet, and I am not sure the overhead is
+> > acceptable. Considering that we also need to do hash lookup
+> > by the function in kprobe_multi, maybe the overhead is
+> > acceptable?
+>
+> Sounds like you are just recreating the function management that ftrace
+> has. It also can add thousands of trampolines very quickly, because it do=
+es
+> it in batches. It takes special synchronization steps to attach to fentry=
+.
+> ftrace (and I believe multi-kprobes) updates all the attachments for each
+> step, so the synchronization needed is only done once.
+>
+> If you really want to have thousands of functions, why not just register =
+it
+> with ftrace itself. It will give you the arguments via the ftrace_regs
+> structure. Can't you just register a program as the callback?
+>
+> It will probably make your accounting much easier, and just let ftrace
+> handle the fentry logic. That's what it was made to do.
+>
 
-> Currently, user-space extracts data from the ring-buffer via splice,
-> which is handy for storage or network sharing. However, due to splice
-> limitations, it is imposible to do real-time analysis without a copy.
-> 
-> A solution for that problem is to let the user-space map the ring-buffer
-> directly.
-> 
-> The mapping is exposed via the per-CPU file trace_pipe_raw. The first
-> element of the mapping is the meta-page. It is followed by each
-> subbuffer constituting the ring-buffer, ordered by their unique page ID:
-> 
->   * Meta-page -- include/uapi/linux/trace_mmap.h for a description
->   * Subbuf ID 0
->   * Subbuf ID 1
->      ...
-> 
-> It is therefore easy to translate a subbuf ID into an offset in the
-> mapping:
-> 
->   reader_id = meta->reader->id;
->   reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
-> 
-> When new data is available, the mapper must call a newly introduced ioctl:
-> TRACE_MMAP_IOCTL_GET_READER. This will update the Meta-page reader ID to
-> point to the next reader containing unread data.
-> 
+I thought I'll just ask instead of digging through code, sorry for
+being lazy :) Is there any way to pass pt_regs/ftrace_regs captured
+before function execution to a return probe (fexit/kretprobe)? I.e.,
+how hard is it to pass input function arguments to a kretprobe? That's
+the biggest advantage of fexit over kretprobe, and if we can make
+these original pt_regs/ftrace_regs available to kretprobe, then
+multi-kretprobe will effectively be this multi-fexit.
 
-Thanks for the update Vincent!
-
-> Mapping will prevent snapshot and buffer size modifications.
-> 
-> CC: <linux-mm@kvack.org>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-> index ffcd8dfcaa4f..d25b9d504a7c 100644
-> --- a/include/uapi/linux/trace_mmap.h
-> +++ b/include/uapi/linux/trace_mmap.h
-> @@ -43,4 +43,6 @@ struct trace_buffer_meta {
->  	__u64	Reserved2;
->  };
->  
-> +#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
-> +
->  #endif /* _TRACE_MMAP_H_ */
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 233d1af39fff..0f37aa9860fd 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -1191,6 +1191,12 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
->  		return;
->  	}
->  
-> +	if (tr->mapped) {
-> +		trace_array_puts(tr, "*** BUFFER MEMORY MAPPED ***\n");
-> +		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
-> +		return;
-> +	}
-> +
->  	local_irq_save(flags);
->  	update_max_tr(tr, current, smp_processor_id(), cond_data);
->  	local_irq_restore(flags);
-> @@ -1323,7 +1329,7 @@ static int tracing_arm_snapshot_locked(struct trace_array *tr)
->  	lockdep_assert_held(&trace_types_lock);
->  
->  	spin_lock(&tr->snapshot_trigger_lock);
-> -	if (tr->snapshot == UINT_MAX) {
-> +	if (tr->snapshot == UINT_MAX || tr->mapped) {
->  		spin_unlock(&tr->snapshot_trigger_lock);
->  		return -EBUSY;
->  	}
-> @@ -6068,7 +6074,7 @@ static void tracing_set_nop(struct trace_array *tr)
->  {
->  	if (tr->current_trace == &nop_trace)
->  		return;
-> -	
-> +
->  	tr->current_trace->enabled--;
->  
->  	if (tr->current_trace->reset)
-> @@ -8194,15 +8200,32 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
->  	return ret;
->  }
->  
-> -/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
->  static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  {
->  	struct ftrace_buffer_info *info = file->private_data;
->  	struct trace_iterator *iter = &info->iter;
-> +	int err;
-> +
-> +	if (cmd == TRACE_MMAP_IOCTL_GET_READER) {
-> +		if (!(file->f_flags & O_NONBLOCK)) {
-> +			err = ring_buffer_wait(iter->array_buffer->buffer,
-> +					       iter->cpu_file,
-> +					       iter->tr->buffer_percent,
-> +					       NULL, NULL);
-> +			if (err)
-> +				return err;
-> +		}
->  
-> -	if (cmd)
-> -		return -ENOIOCTLCMD;
-> +		return ring_buffer_map_get_reader(iter->array_buffer->buffer,
-> +						  iter->cpu_file);
-> +	} else if (cmd) {
-> +		return -ENOTTY;
-> +	}
->  
-> +	/*
-> +	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-> +	 * waiters
-> +	 */
->  	mutex_lock(&trace_types_lock);
->  
->  	/* Make sure the waiters see the new wait_index */
-> @@ -8214,6 +8237,94 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
->  	return 0;
->  }
->  
-> +static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-> +{
-> +	return VM_FAULT_SIGBUS;
-> +}
-
-If this is all it does, I don't believe it's needed.
-
-> +
-> +#ifdef CONFIG_TRACER_MAX_TRACE
-> +static int get_snapshot_map(struct trace_array *tr)
-> +{
-> +	int err = 0;
-> +
-> +	/*
-> +	 * Called with mmap_lock held. lockdep would be unhappy if we would now
-> +	 * take trace_types_lock. Instead use the specific
-> +	 * snapshot_trigger_lock.
-> +	 */
-> +	spin_lock(&tr->snapshot_trigger_lock);
-> +
-> +	if (tr->snapshot || tr->mapped == UINT_MAX)
-> +		err = -EBUSY;
-> +	else
-> +		tr->mapped++;
-> +
-> +	spin_unlock(&tr->snapshot_trigger_lock);
-> +
-> +	/* Wait for update_max_tr() to observe iter->tr->mapped */
-> +	if (tr->mapped == 1)
-> +		synchronize_rcu();
-> +
-> +	return err;
-> +
-> +}
-> +static void put_snapshot_map(struct trace_array *tr)
-> +{
-> +	spin_lock(&tr->snapshot_trigger_lock);
-> +	if (!WARN_ON(!tr->mapped))
-> +		tr->mapped--;
-> +	spin_unlock(&tr->snapshot_trigger_lock);
-> +}
-> +#else
-> +static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
-> +static inline void put_snapshot_map(struct trace_array *tr) { }
-> +#endif
-> +
-> +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-> +{
-> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> +	struct trace_iterator *iter = &info->iter;
-> +
-> +	WARN_ON(ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file));
-> +	put_snapshot_map(iter->tr);
-> +}
-> +
-> +static void tracing_buffers_mmap_open(struct vm_area_struct *vma) { }
-
-Same for the open.
-
-
-> +
-> +static const struct vm_operations_struct tracing_buffers_vmops = {
-> +	.open		= tracing_buffers_mmap_open,
-> +	.close		= tracing_buffers_mmap_close,
-> +	.fault		= tracing_buffers_mmap_fault,
-> +};
-
-I replaced this with:
-
-static const struct vm_operations_struct tracing_buffers_vmops = {
-	.close		= tracing_buffers_mmap_close,
-};
-
-And it appears to work just fine. The mm code handles the NULL cases for
-.open and .fault.
-
-Is there any reason to do something different than the mm defaults?
-
--- Steve
-
-> +
-> +static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-> +{
-> +	struct ftrace_buffer_info *info = filp->private_data;
-> +	struct trace_iterator *iter = &info->iter;
-> +	int ret = 0;
-> +
-> +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
-> +	    !(vma->vm_flags & VM_MAYSHARE))
-> +		return -EPERM;
-> +
-> +	vm_flags_mod(vma,
-> +		     VM_MIXEDMAP | VM_PFNMAP |
-> +		     VM_DONTCOPY | VM_DONTDUMP | VM_DONTEXPAND | VM_IO,
-> +		     VM_MAYWRITE);
-> +
-> +	vma->vm_ops = &tracing_buffers_vmops;
-> +
-> +	ret = get_snapshot_map(iter->tr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file, vma);
-> +	if (ret)
-> +		put_snapshot_map(iter->tr);
-> +
-> +	return ret;
-> +}
-> +
->  static const struct file_operations tracing_buffers_fops = {
->  	.open		= tracing_buffers_open,
->  	.read		= tracing_buffers_read,
-> @@ -8223,6 +8334,7 @@ static const struct file_operations tracing_buffers_fops = {
->  	.splice_read	= tracing_buffers_splice_read,
->  	.unlocked_ioctl = tracing_buffers_ioctl,
->  	.llseek		= no_llseek,
-> +	.mmap		= tracing_buffers_mmap,
->  };
->  
->  static ssize_t
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 64450615ca0c..749a182dab48 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -336,6 +336,7 @@ struct trace_array {
->  	bool			allocated_snapshot;
->  	spinlock_t		snapshot_trigger_lock;
->  	unsigned int		snapshot;
-> +	unsigned int		mapped;
->  	unsigned long		max_latency;
->  #ifdef CONFIG_FSNOTIFY
->  	struct dentry		*d_max_latency;
-
+> -- Steve
