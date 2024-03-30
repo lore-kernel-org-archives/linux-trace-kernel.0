@@ -1,275 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690C24C99;
-	Sat, 30 Mar 2024 00:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7F33FF1
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Mar 2024 03:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711758997; cv=none; b=aJYnkLMP/hx8h5cXw1agNxu/TXM/A8GFGi2/Da6/0ow8ugVlA9NpvIlMKNAV++NydOfztyNwLnLATjITXsypoMHts7lgseKJ3Htj73pKRaDxN/iRGZ/SZ/yYBtjZVICRVMRkRIJ4dhTzcCldFWNRpJ7Gm5N8tCW1ZN9s6II3m4Y=
+	t=1711768630; cv=none; b=biAV9XsMW/7Ap0G17dt/qNEKaWgzYMymy4gKb3kE0x3Vz6sem81I+hL5+86zuVb2JDlmJhI4gv4dt7/zCKedzCSc3ajnwqpvbTFxH0u8FOo0cKiSSOD0fK8r5C/hf8Pc9xCiDm7ooOSyCB7ZcoOLn6Z+kOExQj8BmnEcujrzYkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711758997; c=relaxed/simple;
-	bh=Ab+AY7ZyWjpeu6FnqcS57xd1DicB744MIAHuv5agtGA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NYteGYA59tTgIWKVD1/2AoveuwbTibp1YB2WlGNq0RS5l60/IpFr5b7uDpKb3WKWHH9Z4QUfy2NLMpRwoFyo90IN9xOOGDhgnptoes3FWzQJPDZU+sicPCK899eAtIrXf3Cobwdpi2tFPMT6DTLQVRWoSvOXpzvkXApkGO6pAE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZXHiFll; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711768630; c=relaxed/simple;
+	bh=VmRd6vdqQ/4kj1fNz8tXb6dpWXuQ22GvcuAxWJLw2Uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HHG/uNMYN22N49LJOpnILpP9AZYT+nDtYOLrVOinEHxgzgfksVP6g/YjGK3xSQYsTc8e1pLZERNuXzwGwitYhyzcXT7oQHfi5NMxr6H+W6Q+8vsTFMrtdLKK5YxL+FoOM2J+HcP1bYUOMLCBPAnE042wUnWzf58f8jd9zchvXKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NJ9zwf18; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZXHiFll"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392F4C433C7;
-	Sat, 30 Mar 2024 00:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711758996;
-	bh=Ab+AY7ZyWjpeu6FnqcS57xd1DicB744MIAHuv5agtGA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AZXHiFllv8n5dEaSG9m4+IXHeGilu8MA8ZUo6p+KaOcte1zmtfBf+jY8/nBvOgW/I
-	 ai1q2UJHlVf956ZvihVKGnslmGGvU3irYFpvNniaPIKZQsFffeIse4JwIsUUBMRETt
-	 0P1IYSAQi0EHzxbRsTY5HrURviRvdA2Qa1TK2nNsGxcpB/gDvJMAmakNAX1WvtzdrN
-	 2dEGvyeZTeNi2FwfB0tSqbmYKcexm69MPa9h9sl70npMH+TAvsctqxdmKkMIlSVkNz
-	 1vdFb1WSJyFTEDdJSrkuQsPR0JimgzdoclZ9Mh5/uG1SQvXl/GKJFW+mxSv4G9LYX+
-	 dtZkOsjeRbWnA==
-Date: Sat, 30 Mar 2024 09:36:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jonthan Haslam <jonathan.haslam@gmail.com>,
- linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org,
- rostedt@goodmis.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240330093631.72273967ba818cb16aeb58b6@kernel.org>
-In-Reply-To: <CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-	<20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-	<CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
-	<20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
-	<54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
-	<20240328091841.ce9cc613db375536de843cfb@kernel.org>
-	<CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
-	<CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NJ9zwf18"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cfd95130c6so1530915a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Mar 2024 20:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1711768628; x=1712373428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W+7nrVQkSe14hYl8Q/RTZav7B+/IIz7y9mWl0h4nHVI=;
+        b=NJ9zwf18p7aCeardjmlLPL/ya6ehQ2UR0n73FuJd3VldOc2h/iS/gdTC5rr76kLorV
+         jk9frrEBYFm+FAVyBilKWExgAlTri5cWDU5cvVrSZFW04n8jqm3ZSTfqYRy7AAkwFstX
+         EiIM0t4XC5dFOJ3IHBB3cq+jezLRmcfFGnX0q0dPRsVG1r8zIg/v01mQv2JjQlO/XTMi
+         2ry0wzMjopaa9ovGqDnrz87SfuzD1l6GTbNOF4u9mvBxDWR7RLIAGf3CpORGegtRDtvl
+         tfxveM1hHblM4xnRgn1yH4NgaHzqA8tHGZNnmAWGxlGju2kll9wGHsHh8k6eqhiVgjQp
+         pGpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711768628; x=1712373428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W+7nrVQkSe14hYl8Q/RTZav7B+/IIz7y9mWl0h4nHVI=;
+        b=TSRJpI1wxanLzfPaDNAiB2NkNZGQ5313gmaTxiIOOI62TgU2eVqrCnf/qqtmRmI2YR
+         lClkfWjKSIb4VhGyXkkS+4I+COwm+22cr50AUgX/mwn/IbgUsW9YwyUAHZ3Sbs53OwG7
+         PDiI/L28XYA0WldnsN8ZxP+s6EH/H02FAKRzsjJjx73HbpEIqMr1a/ckzoxnglyRzwGz
+         LgZc3N/EuUbL71BvhLk/Yq4nFV6A83pay2xYWNfgd8X5ZLvdix2sdy5jy3qsRhE5iYmW
+         NfumXO30onkuk1pI7+Cy9hq7sGSwXGg11wWMEcprzcUy9nVqzDtSR3dc2T8YwF70xqz2
+         S3sg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4BrNjBlDoomC1RXeEAnkSj3Nyfsg1xo8+vtZVRoQbIbfWto8bEnhjvoi/sL2XEjJXmwya5sK+qB4jWOWKVw72uL2aCzxNnzACGCJNa6FcOSrH
+X-Gm-Message-State: AOJu0YxulKy8gHi0NMSdvyBbpPeZsyxu/QIptq9SDNILSPAPUDdcBmq0
+	ovrE6k/QqlfplIT3Tm6x8o0ID/iN58zDtKAbacqpZZdlnOkINCIfaV+OObpObVBFfLPKu0+0fKw
+	N/0aJWE1t/XdFOu36ZWLcZBwsFfPG+0bY1X1awA==
+X-Google-Smtp-Source: AGHT+IGVN8mj6fsGuWs3zLqNPpTPCwZ1MIebWhJAEg3QqqK8w6bYcTZi6CuQt3e1msFgcsuQUeuxtwR9869SV0mzVgs=
+X-Received: by 2002:a05:6a21:189:b0:1a3:dc33:2e47 with SMTP id
+ le9-20020a056a21018900b001a3dc332e47mr3993857pzb.4.1711768627780; Fri, 29 Mar
+ 2024 20:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
+ <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+ <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com> <20240328111330.194dcbe5@gandalf.local.home>
+In-Reply-To: <20240328111330.194dcbe5@gandalf.local.home>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Sat, 30 Mar 2024 11:18:29 +0800
+Message-ID: <CALz3k9idLX10+Gh18xWepwtgvp4VZ3zQfY4aoNXn0gCh8Fs_fA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Quentin Monnet <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 29 Mar 2024 10:33:57 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Wed, Mar 27, 2024 at 5:45 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
+On Thu, Mar 28, 2024 at 11:11=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Thu, 28 Mar 2024 22:43:46 +0800
+> =E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+>
+> > I have done a simple benchmark on creating 1000
+> > trampolines. It is slow, quite slow, which consume up to
+> > 60s. We can't do it this way.
 > >
-> > On Wed, Mar 27, 2024 at 5:18 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > >
-> > > On Wed, 27 Mar 2024 17:06:01 +0000
-> > > Jonthan Haslam <jonathan.haslam@gmail.com> wrote:
-> > >
-> > > > > > Masami,
-> > > > > >
-> > > > > > Given the discussion around per-cpu rw semaphore and need for
-> > > > > > (internal) batched attachment API for uprobes, do you think you can
-> > > > > > apply this patch as is for now? We can then gain initial improvements
-> > > > > > in scalability that are also easy to backport, and Jonathan will work
-> > > > > > on a more complete solution based on per-cpu RW semaphore, as
-> > > > > > suggested by Ingo.
-> > > > >
-> > > > > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> > > > > I would like to wait for the next version.
-> > > >
-> > > > My initial tests show a nice improvement on the over RW spinlocks but
-> > > > significant regression in acquiring a write lock. I've got a few days
-> > > > vacation over Easter but I'll aim to get some more formalised results out
-> > > > to the thread toward the end of next week.
-> > >
-> > > As far as the write lock is only on the cold path, I think you can choose
-> > > per-cpu RW semaphore. Since it does not do busy wait, the total system
-> > > performance impact will be small.
+> > Now, I have a bad idea. How about we introduce
+> > a "dynamic trampoline"? The basic logic of it can be:
 > >
-> > No, Masami, unfortunately it's not as simple. In BPF we have BPF
-> > multi-uprobe, which can be used to attach to thousands of user
-> > functions. It currently creates one uprobe at a time, as we don't
-> > really have a batched API. If each such uprobe registration will now
-> > take a (relatively) long time, when multiplied by number of attach-to
-> > user functions, it will be a horrible regression in terms of
-> > attachment/detachment performance.
-
-Ah, got it. So attachment/detachment performance should be counted.
-
+> > """
+> > save regs
+> > bpfs =3D trampoline_lookup_ip(ip)
+> > fentry =3D bpfs->fentries
+> > while fentry:
+> >   fentry(ctx)
+> >   fentry =3D fentry->next
 > >
-> > So when we switch to per-CPU rw semaphore, we'll need to provide an
-> > internal batch uprobe attach/detach API to make sure that attaching to
-> > multiple uprobes is still fast.
-
-Yeah, we need such interface like register_uprobes(...).
-
+> > call origin
+> > save return value
 > >
-> > Which is why I was asking to land this patch as is, as it relieves the
-> > scalability pains in production and is easy to backport to old
-> > kernels. And then we can work on batched APIs and switch to per-CPU rw
-> > semaphore.
-
-OK, then I'll push this to for-next at this moment.
-Please share if you have a good idea for the batch interface which can be
-backported. I guess it should involve updating userspace changes too.
-
-Thank you!
-
+> > fexit =3D bpfs->fexits
+> > while fexit:
+> >   fexit(ctx)
+> >   fexit =3D fexit->next
 > >
-> > So I hope you can reconsider and accept improvements in this patch,
-> > while Jonathan will keep working on even better final solution.
-> > Thanks!
+> > xxxxxx
+> > """
 > >
-> > > I look forward to your formalized results :)
-> > >
-> 
-> BTW, as part of BPF selftests, we have a multi-attach test for uprobes
-> and USDTs, reporting attach/detach timings:
-> $ sudo ./test_progs -v -t uprobe_multi_test/bench
-> bpf_testmod.ko is already unloaded.
-> Loading bpf_testmod.ko...
-> Successfully loaded bpf_testmod.ko.
-> test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
-> test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
-> test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
-> test_bench_attach_uprobe: attached in   0.120s
-> test_bench_attach_uprobe: detached in   0.092s
-> #400/5   uprobe_multi_test/bench_uprobe:OK
-> test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
-> test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
-> test_bench_attach_usdt:PASS:usdt_count 0 nsec
-> test_bench_attach_usdt: attached in   0.124s
-> test_bench_attach_usdt: detached in   0.064s
-> #400/6   uprobe_multi_test/bench_usdt:OK
-> #400     uprobe_multi_test:OK
-> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> Successfully unloaded bpf_testmod.ko.
-> 
-> So it should be easy for Jonathan to validate his changes with this.
-> 
-> > > Thank you,
-> > >
-> > > >
-> > > > Jon.
-> > > >
-> > > > >
-> > > > > Thank you,
-> > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > > > > will depend on how much lock contention happens.
-> > > > > > >
-> > > > > > > Thank you,
-> > > > > > >
-> > > > > > > >
-> > > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > > > >
-> > > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > > > ---
-> > > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > > > --- a/kernel/events/uprobes.c
-> > > > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > > > > > >   */
-> > > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > > > >
-> > > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > > > > > >
-> > > > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > > > >  /* serialize uprobe->pending_list */
-> > > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > > > > > >  {
-> > > > > > > >       struct uprobe *uprobe;
-> > > > > > > >
-> > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > >       uprobe = __find_uprobe(inode, offset);
-> > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > >
-> > > > > > > >       return uprobe;
-> > > > > > > >  }
-> > > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > > > > > >  {
-> > > > > > > >       struct uprobe *u;
-> > > > > > > >
-> > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > >       u = __insert_uprobe(uprobe);
-> > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > >
-> > > > > > > >       return u;
-> > > > > > > >  }
-> > > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > > > >               return;
-> > > > > > > >
-> > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > > > > > >       put_uprobe(uprobe);
-> > > > > > > >  }
-> > > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > >
-> > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > >       if (n) {
-> > > > > > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > >                       get_uprobe(u);
-> > > > > > > >               }
-> > > > > > > >       }
-> > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > >  }
-> > > > > > > >
-> > > > > > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > >
-> > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > >
-> > > > > > > >       return !!n;
-> > > > > > > >  }
-> > > > > > > > --
-> > > > > > > > 2.43.0
-> > > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > --
-> > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > >
-> > >
-> > > --
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > And we lookup the "bpfs" by the function ip in a hash map
+> > in trampoline_lookup_ip. The type of "bpfs" is:
+> >
+> > struct bpf_array {
+> >   struct bpf_prog *fentries;
+> >  struct bpf_prog *fexits;
+> >   struct bpf_prog *modify_returns;
+> > }
+> >
+> > When we need to attach the bpf progA to function A/B/C,
+> > we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
+> > and add the progA to them, and insert them to the hash map
+> > "direct_call_bpfs", and attach the "dynamic trampoline" to
+> > A/B/C. If bpf_arrayA exist, just add progA to the tail of
+> > bpf_arrayA->fentries. When we need to attach progB to
+> > B/C, just add progB to bpf_arrayB->fentries and
+> > bpf_arrayB->fentries.
+> >
+> > Compared to the trampoline, extra overhead is introduced
+> > by the hash lookuping.
+> >
+> > I have not begun to code yet, and I am not sure the overhead is
+> > acceptable. Considering that we also need to do hash lookup
+> > by the function in kprobe_multi, maybe the overhead is
+> > acceptable?
+>
+> Sounds like you are just recreating the function management that ftrace
+> has. It also can add thousands of trampolines very quickly, because it do=
+es
+> it in batches. It takes special synchronization steps to attach to fentry=
+.
+> ftrace (and I believe multi-kprobes) updates all the attachments for each
+> step, so the synchronization needed is only done once.
+>
 
+Yes, it is fast to register a trampoline for a kernel function
+in the managed ftrace in
+register_fentry->register_ftrace_direct->ftrace_add_rec_direct.
+And it will add the trampoline to the hash table "direct_functions".
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+And the trampoline will be called in the following
+step (I'm not sure if I understand it correctly):
+
+ftrace_regs_caller
+|
+__ftrace_ops_list_func -> call_direct_funcs -> save trampoline to
+pt_regs->origin_ax
+|
+call pt_regs->origin_ax if not NULL
+
+The logic above means that we can only call a
+trampoline once, and a kernel function can only have
+one trampoline.
+
+The original idea of mine is to register all the shared
+trampoline to the managed ftrace. For example, if we have
+the shared trampoline1 for function A/B/C, and shared
+trampoline2 for function B/C/D, then I register trampoline1
+and trampoline2 for function B/C. However, it can't work,
+as we can't call 2 trampolines for a function.
+
+Then, I thought that we could create a "dynamic trampoline".
+The logic for the non-ftrace-managed case is simple, we
+only need to replace the "nop" of all the target functions
+to "call dynamic_trampoline". And for the ftrace-managed
+case, the logic is the same too, except that the trampoline
+that we add to the "direct_functions" hash is the
+dynamic-trampoline:
+
+ftrace_regs_caller
+|
+__ftrace_ops_list_func -> call_direct_funcs -> save dynamic-trampoline
+to pt_regs->origin_ax
+|
+call pt_regs->origin_ax(dynamic-trampoline) if not NULL
+
+And in the dynamic-trampoline, we can call prog1 for
+A, call prog1 and prog2 for B/C, call prog2 for D.
+
+And the register is fast enough.
+
+> If you really want to have thousands of functions, why not just register =
+it
+> with ftrace itself. It will give you the arguments via the ftrace_regs
+> structure. Can't you just register a program as the callback?
+>
+
+Ennn...I don't understand. The main purpose for
+me to use TRACING is:
+
+1. we can directly access the memory, which is more
+   efficient.
+2. we can obtain the function args in FEXIT, which
+    kretprobe can't do it. And this is the main reason.
+
+Thanks!
+Menglong Dong
+
+> It will probably make your accounting much easier, and just let ftrace
+> handle the fentry logic. That's what it was made to do.
+>
+> -- Steve
