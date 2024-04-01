@@ -1,164 +1,69 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0D157305
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F8F2A1BF
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712015338; cv=none; b=G56ez1Zu9h7jla/c87VV+YSNV8JL7lQml/yKCENxz/i4n5dApmk4gOhA4N3RSJxruVpyCWPkZKEoPDrxTWEEOP/e9rNjC3Duz6o4ogE67ajBOgULKIKpYPzEsCUtONyclGFs9E+Du9C5EbA5gjyHSKmUcnqL8LOYix0PjDrJ6jE=
+	t=1712015553; cv=none; b=m683Odz5+18QEJY2cnV+XgPYDNjCZqaAWjrhUtvl79Vw0l4aZe/ApQtjVkhsqcJYhxGvq53kd0ErjWD8qShhywrI9++WJiLqf4uf00aFuwrSsl2AgV3VpdxWM0IoppkuFXpDNCpg4X5rpun/L1KoNxxez3IYnwAiIAnjND2L5G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712015338; c=relaxed/simple;
-	bh=4JhNkEpOiWMttmklKDS6dB8Whz9xSe93GiSKkFueDRI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JuYF2rCwNd8c6RSi9XYfzxOm5AqLtCFetx0nedFWpoWtWEHs2nanxqYh6RinOPk7xjpHom2uuQmxwNMtc1cJWEdPwyU+z21+G6Pj0b45owUcH2p4dowfKTZytb2n+kMl9SrBNxRLceVZl4XjhYk42BChjWXH+cJ0gbjIqAQ4Rm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vfaAFvG+; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1712015553; c=relaxed/simple;
+	bh=I1QBPl5Ey4ifEIkMCxl3N8eliVz2YzHxUOV12z15xsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LDD2CvyNl3ym9gD+6dlw0iVH6Yn5WAyEVwJpyGC0mdhpc2RbTinFlljzoBHxm9AjvWf3fLYVdCAUuDkI6IxOdMmHzk7eu+2SfDYXmhqHIYA5RnokdiMz2ekjIvM5x/1+P8yVOyN1U0ZGG8IC6m8N2qklf1ydtdYPAv+NOYQUqPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aaWCmJZb; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vfaAFvG+"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-614bc5c53a1so27507897b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Apr 2024 16:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712015336; x=1712620136; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BeCArdFCgR6hPIyqHhpmGoh9zohrxgi2vCDzv1Uvsng=;
-        b=vfaAFvG+mOqrKjbH9Ge0oDljZh/cSXm67PclGL+fcN/avO/woLbSPb5FLBQg6uXzLD
-         dSp0OBr2PDyfRibpQSC9Pf+upEsj7RNSFzbFreM7ZqaVhqlhTrQT1xiu2arpA14YTk/u
-         B6i6l0MZe+oOAzJEVDR5uwn+9Si+qJtNHjFZADP9xSHIz8a7epD4LZxRVqqN3WQTw+hc
-         jTptohz3JTm6T1N4n2nnQoH2VXzgbD5gTZmanjnieO1HNHHgLDv+dEVqaLe4025qShDl
-         Fh5+f7Ib09HcHAXUA3IaZB8LaCS/nqGZwikS8+sOb2Zm1mW7SinOyKRevnhJdYOBqSP3
-         S5xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712015336; x=1712620136;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BeCArdFCgR6hPIyqHhpmGoh9zohrxgi2vCDzv1Uvsng=;
-        b=BUWzZEhauI6q6FyE1GjrVZwVBXaqcKHKe1/wHeIZ+1g9KLVPuS9q8iza763OKiPfNp
-         nvUedtkFNoo59D3tn8SODuvR2aYoxH17Dvvcm/gg1U2Z2oXS4Y7DepcvfMV9OfiZolCY
-         7n7JgYGJ7Q2Vxfy12lvfUPeCjFN7LEVoUA7I8ruZQSxfxPdl+97osaSGp8+b7dOkXi+R
-         sgzD9Rx5XnMC+9dOUdXROrHps/9YMiQBLuCm9ghuMnNEw/TSrKNciBO3lO18TYVP+0nP
-         UgEajiqMhldKmiU4ZXP4StBcdMdx3mASBg7e0iSAFSh3131PMsgtgVaB7dcp1rJYhviJ
-         wWzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwUMFPm/wfSpxGqSBAGXL66DA76LEq0AqEjZXQOjEGLJdPH4HCsQwAKPbKBkzOeoNmBCAFOlbYuDKW7C5cHxVS/cCn7YIkv3N3KDRMyuJDzO6B
-X-Gm-Message-State: AOJu0Yw5P6LaTapaER00iOuap4+qphgC5guKfONTcFiN3SmYXRqwN9fq
-	HW5BFPQs6gpuMK0b8X3GCzxrotTq/9QilA1qEbhI28KbHxpkfBfwfElN+O8ShPViyEF+Lxlqvl9
-	89idfn7rI/fcMDcFpV8a9Mg==
-X-Google-Smtp-Source: AGHT+IENg/l0w7lJnqGpT/qHSwpQYol/8NlTdFPuRBHCAciA1BzQJQzDQqMPR1/kH8jhEkZOGWe/9UtkbBomwoKlsA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1006:b0:dcc:94b7:a7a3 with
- SMTP id w6-20020a056902100600b00dcc94b7a7a3mr769132ybt.12.1712015336258; Mon,
- 01 Apr 2024 16:48:56 -0700 (PDT)
-Date: Mon, 01 Apr 2024 23:48:52 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aaWCmJZb"
+Date: Mon, 1 Apr 2024 16:52:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712015548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I1QBPl5Ey4ifEIkMCxl3N8eliVz2YzHxUOV12z15xsk=;
+	b=aaWCmJZbN6WUia8WK2ZqGCYGcNR5t9Erobt0UtI7/peiidTZrpG2Qjqzx9d5jj/b68+T3L
+	SeC/Yfw5Lz3vQJICvtLPw2lPUGwruRUcbWCwu2AJzZEeuiX36xZQlQ4Ktz6BGXj6Ht2q2n
+	Gmot9nNsLQaABuOt8Du1c2yz9TvCtn0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Ubisectech Sirius <bugreport@ubisectech.com>
+Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	hannes <hannes@cmpxchg.org>, mhocko <mhocko@kernel.org>,
+	"shakeel.butt" <shakeel.butt@linux.dev>
+Subject: Re: general protection fault in refill_obj_stock
+Message-ID: <ZgtIuBlUVE1Lj_Tc@P9FQF9L96D>
+References: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAONHC2YC/x3NwQrCMAyA4VcZORvoaq3iq4iHro0uoNlI6nCMv
- bvF43f5/w2MlMng2m2gtLDxJA39oYM8JnkScmkG73xwwfVoVSXPK7Lk16cQVk2ZkBaSavguPOG ILh39KZ7jEOIFWmlWevD3f7nd9/0HcnYlG3UAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712015335; l=3378;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=4JhNkEpOiWMttmklKDS6dB8Whz9xSe93GiSKkFueDRI=; b=NKg6XG8BN99gUBI3M2EOxgxK+kUU1xCXzro+M6vtMFE/7+A6dbh9K6zgb0yyqbNaih+k6ztsO
- bX+IDfR2tSbBc3Hz4yHOB8t7lA0pR91YNefcOSR+Ppvq3Y+FZM5/PuR
-X-Mailer: b4 0.12.3
-Message-ID: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-Subject: [PATCH] trace: events: cleanup deprecated strncpy uses
-From: Justin Stitt <justinstitt@google.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
+X-Migadu-Flow: FLOW_OUT
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Mon, Apr 01, 2024 at 03:04:46PM +0800, Ubisectech Sirius wrote:
+> Hello.
+> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
 
-For 2 out of 3 of these changes we can simply swap in strscpy() as it
-guarantess NUL-termination which is needed for the following trace
-print.
+Thank you for the report!
 
-trace_rpcgss_context() should use memcpy as its format specifier %.*s
-allows for the length to be specifier (__entry->len). Due to this,
-acceptor does not technically need to be NUL-terminated. Moreover,
-swapping in strscpy() and keeping everything else the same could result
-in truncation of the source string by one byte. To remedy this, we could
-use `len + 1` but I am unsure of the size of the destination buffer so a
-simple memcpy should suffice.
-|	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
-|		__entry->window_size, __entry->expiry, __entry->now,
-|		__entry->timeout, __entry->len, __get_str(acceptor))
+I tried to compile and run your test program for about half an hour
+on a virtual machine running 6.7 with enabled KASAN, but wasn't able
+to reproduce the problem.
 
-I suspect acceptor not to naturally be a NUL-terminated string due to
-the presence of some stringify methods.
-|	.crstringify_acceptor	= gss_stringify_acceptor,
+Can you, please, share a bit more information? How long does it take
+to reproduce? Do you mind sharing your kernel config? Is there anything special
+about your setup? What are exact steps to reproduce the problem?
+Is this problem reproducible on 6.6?
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+It's interesting that the problem looks like use-after-free for the objcg pointer
+but happens in the context of udev-systemd, which I believe should be fairly stable
+and it's cgroup is not going anywhere.
 
-Found with: $ rg "strncpy\("
----
- include/trace/events/mdio.h   | 2 +-
- include/trace/events/rpcgss.h | 2 +-
- include/trace/events/sock.h   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/trace/events/mdio.h b/include/trace/events/mdio.h
-index 0f241cbe00ab..285b3e4f83ba 100644
---- a/include/trace/events/mdio.h
-+++ b/include/trace/events/mdio.h
-@@ -25,7 +25,7 @@ TRACE_EVENT_CONDITION(mdio_access,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->busid, bus->id, MII_BUS_ID_SIZE);
-+		strscpy(__entry->busid, bus->id, MII_BUS_ID_SIZE);
- 		__entry->read = read;
- 		__entry->addr = addr;
- 		__entry->regnum = regnum;
-diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
-index ba2d96a1bc2f..274c297f1b15 100644
---- a/include/trace/events/rpcgss.h
-+++ b/include/trace/events/rpcgss.h
-@@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
- 		__entry->timeout = timeout;
- 		__entry->window_size = window_size;
- 		__entry->len = len;
--		strncpy(__get_str(acceptor), data, len);
-+		memcpy(__get_str(acceptor), data, len);
- 	),
- 
- 	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
-diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
-index fd206a6ab5b8..1d0b98e6b2cc 100644
---- a/include/trace/events/sock.h
-+++ b/include/trace/events/sock.h
-@@ -109,7 +109,7 @@ TRACE_EVENT(sock_exceed_buf_limit,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, prot->name, 32);
-+		strscpy(__entry->name, prot->name, 32);
- 		__entry->sysctl_mem[0] = READ_ONCE(prot->sysctl_mem[0]);
- 		__entry->sysctl_mem[1] = READ_ONCE(prot->sysctl_mem[1]);
- 		__entry->sysctl_mem[2] = READ_ONCE(prot->sysctl_mem[2]);
-
----
-base-commit: 928a87efa42302a23bb9554be081a28058495f22
-change-id: 20240401-strncpy-include-trace-events-mdio-h-0a325676b468
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Thanks!
