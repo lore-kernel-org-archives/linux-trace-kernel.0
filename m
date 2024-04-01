@@ -1,168 +1,171 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B9452F9B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Apr 2024 19:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851FE56B91
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711999360; cv=none; b=ANORq3AQKvocMvll6B9qWYnXlNogX/oCD2rhP4zYlGbXA3tXUJM36HnpBnV+3oQiJ+b9ouTQybygktmGHmX4+uLzOIi3IAc0dAWDlMx/SywdNz6Yd8KQQnBNgdNEXIFlEq5mirI64Djbl6iDdSqiwpXK4b08brYuPoQpzYEzcsU=
+	t=1712014199; cv=none; b=lVX7ZAZoYZVeTjz/bjbK+0lWl7jB1WKaos6JYPjPCKFhnGPz2zd6sR9djAbhG3tkNCmmfLXXIq4+cEZzLdWP393jNS0qKNXLS3t2MxwQTDqqWZMTynTyCTFYGqi0NAC8GRymC+sBO4kMeEeFXIWapzP3K5BkrydeXBOPW3ls8yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711999360; c=relaxed/simple;
-	bh=8oUFGMmpkpqLpkNpA3EMKT/yDO5+7f6Bm1WN7AwolPE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WYLi/tfjQqypM4wmkE2RaOPW1cxc1xsCS1vr7JWUmT00T6Q1P8+Y6u9wiVfYJ775lrSrpiwQVrusHKvjNXU2v+Vq5dEpQNhVNnhsyMyyBHXxj/5u62+xCU2pSpS9hx1hEoeEnq1SxDe5IShW2b79uimGSFDzjUV6ojfEHxTOvsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=22uWaDKI; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1712014199; c=relaxed/simple;
+	bh=LIU3srPkuAU2Il0Ayu4Wz3ZF0a3r6V03GyttaxoyE9Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WAKSLWHGjbbCcaL2cgaznW14qdGZEAcmhLGU8lyhwn2NxFa/p7M1WllSRGHlDnAQprARgEuTGFzcwITD2t7q8KXJY0+aeavmfTbEHFbAXXkVq5qXXRGhD4N8c0bbPfHHpcX3sH8g3XlsNpJ4iybeL5QkUGvOWMKgWyUkDfYthM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rcUf3/3H; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="22uWaDKI"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a4e7e2a257cso71754266b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Apr 2024 12:22:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rcUf3/3H"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a61b31993so81552277b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Apr 2024 16:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711999357; x=1712604157; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pRKdoK98qnZzkUcUn3OGBOuDQ1g75ltD3kRhKb3BL0c=;
-        b=22uWaDKINClGQOvJi06fBpyOOT7pMDPbf3vKhzp0A0EZNqEMJZEU9ZEQI+hZSku6MG
-         bDpe0EjXvO13ddBX37ofmNnPNsgpJXqGc4AuCCQ8nuthzsZBfIFoF3l84MfjgVpQ/rMz
-         X8r0RgAF5nL/37G5R4ZMVUu7g7ccxrgvXJyBok31bWJ4U/eF8uRTx4l9dRQ4jGtBlNPe
-         xA9xU5PEKcZ6Mo8JfTxnSnXSqVcfGA88I4+hdQ1b5EIF6VP5bvS6Re5X1nESesLYTzOM
-         keFQM0jW7oXypgbtrwSnBZZnye/NvRo6H4FNnGy3aoPjs0A0kSwZBaIAE8vZ+9L09KAa
-         hy5A==
+        d=google.com; s=20230601; t=1712014196; x=1712618996; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3wg9CCGpIdLpfDRqh60QLQofCQe0biAtvSj1Gdo5bk8=;
+        b=rcUf3/3Hx79SQpAY7DJI+A7c4PJxcLpRh9bjArXZWq5RmH8UM59RZPPelNnD82Zs2v
+         UYJAGIA2LNKy5g0kCM+Tdp+TrzmMGXUIfhOkF4TC95s0ATZG3/vMyIwARciwcG/O/gmF
+         6+X9vHutCcV5cnN+YoSUptFqxNDv85n87KX4kICeyLKyMYwtkQRGJLxOClKGqzneIe0H
+         qUlvjbHRsiBu8lP4wG+NsScN5NednQGAv8Yk1N7Qe+Ml6hd7+M0z4KxtuvJlAZPied4s
+         GwOQQd1hW1LyUQqaybsLrbpsRpdhUUjWidmwDeflXEnhFB+OpHvNA55KUD966PLllaKH
+         g2UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711999357; x=1712604157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pRKdoK98qnZzkUcUn3OGBOuDQ1g75ltD3kRhKb3BL0c=;
-        b=Mbs+hgyz7adbmZlNbjlHX31mis5ZCIPDHQCZUU8xb9lOCdkTZjvToA1tbrzgi6NI7W
-         w0WgsHBwLewivzFWPy6VXStGUfXXpjwJLuNfCk2T/uQxNpqlKGcsLKKeAJRhPyTlyz4W
-         XiKLOp07MIdGsyuKvoTcygH1/i/F2B3iRfhgYXd2XS3+RMqwdXbkSXma/dfp9ALLHl+9
-         ddEH+PHBc+yp74whyBZ/xNleC3O8J5EcN5vrd5XaaJsFADYXY/c1v8y+0DDvhYx2wHJ8
-         9AJc23j7CaRPRgY5Lczwmw8oIka9lwbeAycHa9u4oZXjzCTVgDj4fcUWuvCWDXoF3Yuw
-         TOyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcaMpe7lC3WGGheblNou205KYrFxmFbC7h+qsDI5+0KjNQUOOsfQqiNOvdp0mnYFKRkcg8GDRACbBpLpuTHTBMnyJysygjChVS40/1lDhlGPAJ
-X-Gm-Message-State: AOJu0YywmNX3P+JFvcf4oSN1LZNkgdWKfO+XxDhAZeaDlHgSsOwQpxZK
-	Ufpu5ej9Ilj7H714w5xmPRJUPpVcHmYUKABzlotBDPT9scwDI6KrLGuwLaGq3TN9JN4Sux5uzGX
-	GWZ7PIIXDp1NTAg7m6bB7nIFim5qJjMXK47Ep
-X-Google-Smtp-Source: AGHT+IFnZAdqBNjychftax9hJ9HmWGsuFKJlToxmGxuKATUcrfF8Wqh8ADOKipJFMzVFEgjjXqwoqI01MVv3yIjrd3E=
-X-Received: by 2002:a17:906:f289:b0:a46:d978:bf02 with SMTP id
- gu9-20020a170906f28900b00a46d978bf02mr6594862ejb.34.1711999356578; Mon, 01
- Apr 2024 12:22:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712014196; x=1712618996;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3wg9CCGpIdLpfDRqh60QLQofCQe0biAtvSj1Gdo5bk8=;
+        b=Ae4eafFkth165AAEFLY3GxTiPuq/JPP8jCDpcr69CklnkwKrZHIvQUOFsDY5Ebl8l0
+         zdUSsQjox/KK/RbRW/JXzMG9uXmKy//fLDSft9mNXkHu9ekwgcFAFBlmZw3rHd78byPK
+         64f1FHpnQs0LevKy+0me+hCMmd5phEM4V600f9aqPcQTTlHFFGjCaBFN34z91427unDg
+         87HVF92DucB7GPrDw9vtBEwEFm7sTk/RxNHmvl9cilgJpRCxV/GdZLiVBz//l94u7o8f
+         gZX0FyJMsL5qqAAubQHanu8VG7jBpIYQP/7o3Tah0UWuoFaW89xsqZGp+1vlHcbTDLQi
+         aEgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjQKz+o6U2AYkCCUPcp6Ph92j1kJOKDKeEtXjI5fVIOK7jW5BcdGCyWKwYRipFbyQsPPErnVD3sYamT3PE/CfsOzb+XX21cW9RGASDrdiOqN1B
+X-Gm-Message-State: AOJu0YwJSDOnTli+DjVjXxDy0T7YlGChqStmILUR1cnhLuSrVtsto1dx
+	PTC3KRAPszd+cw/YmhaIRQrE9fZFQBqeXm2YQ75PPAlT7bvnJJzclL9fIzwSns5IscH/Vjj+ebj
+	8yfBo6ok6LyBGVonQoQ==
+X-Google-Smtp-Source: AGHT+IGQKV963bGOmZkg1qJdb4wkJ3JL7Okh/SQUhgB3vOnWcX/gauefdkact4kTuSTRZOisDp+cn6EF/9Mo2eKk
+X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
+ (user=jthoughton job=sendgmr) by 2002:a05:690c:f83:b0:614:e20c:d423 with SMTP
+ id df3-20020a05690c0f8300b00614e20cd423mr823185ywb.10.1712014196503; Mon, 01
+ Apr 2024 16:29:56 -0700 (PDT)
+Date: Mon,  1 Apr 2024 23:29:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com> <ZfegzB341oNc_Ocz@infradead.org>
- <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
- <ZgC5JoSiWAYf3IgX@infradead.org> <CAHS8izO5-giYhM1bVCLLOXRXq-Xd0=pi0kPq5E1-R=3i=XihmQ@mail.gmail.com>
- <ZgUc07Szbx5x-obb@infradead.org>
-In-Reply-To: <ZgUc07Szbx5x-obb@infradead.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 1 Apr 2024 12:22:24 -0700
-Message-ID: <CAHS8izM8iLC9J1xSHScMrMkVyoY5HZ_nFMRO4V7HYarHhZhk6Q@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-To: Christoph Hellwig <hch@infradead.org>, Marc Harvey <marcharvey@google.com>, 
-	"Cong Wang ." <cong.wang@bytedance.com>
-Cc: shakeel.butt@linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <20240401232946.1837665-1-jthoughton@google.com>
+Subject: [PATCH v3 0/7] mm/kvm: Improve parallelism for access bit harvesting
+From: James Houghton <jthoughton@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Sean Christopherson <seanjc@google.com>, Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shaoqin Huang <shahuang@redhat.com>, 
+	Gavin Shan <gshan@redhat.com>, Ricardo Koller <ricarkol@google.com>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	David Rientjes <rientjes@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 28, 2024 at 12:31=E2=80=AFAM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
->
-> On Tue, Mar 26, 2024 at 01:19:20PM -0700, Mina Almasry wrote:
-> >
-> > Are you envisioning that dmabuf support would be added to the block
-> > layer
->
-> Yes.
->
-> > (which I understand is part of the VFS and not driver specific),
->
-> The block layer isn't really the VFS, it's just another core stack
-> like the network stack.
->
-> > or as part of the specific storage driver (like nvme for example)? If
-> > we can add dmabuf support to the block layer itself that sounds
-> > awesome. We may then be able to do devmem TCP on all/most storage
-> > devices without having to modify each individual driver.
->
-> I suspect we'll still need to touch the drivers to understand it,
-> but hopefully all the main infrastructure can live in the block layer.
->
-> > In your estimation, is adding dmabuf support to the block layer
-> > something technically feasible & acceptable upstream? I notice you
-> > suggested it so I'm guessing yes to both, but I thought I'd confirm.
->
-> I think so, and I know there has been quite some interest to at least
-> pre-register userspace memory so that the iommu overhead can be
-> pre-loaded.  It also is a much better interface for Peer to Peer
-> transfers than what we currently have.
->
+This patchset adds a fast path in KVM to test and clear access bits on
+sptes without taking the mmu_lock. It also adds support for using a
+bitmap to (1) test the access bits for many sptes in a single call to
+mmu_notifier_test_young, and to (2) clear the access bits for many ptes
+in a single call to mmu_notifier_clear_young.
 
-I think this is positively thrilling news for me. I was worried that
-adding devmemTCP support to storage devices would involve using a
-non-dmabuf standard of buffer sharing like pci_p2pdma_
-(drivers/pci/p2pdma.c) and that would require messy changes to
-pci_p2pdma_ that would get nacked. Also it would require adding
-pci_p2pdma_ support to devmem TCP, which is a can of worms. If adding
-dma-buf support to storage devices is feasible and desirable, that's a
-much better approach IMO. (a) it will maybe work with devmem TCP
-without any changes needed on the netdev side of things and (b)
-dma-buf support may be generically useful and a good contribution even
-outside of devmem TCP.
+With Yu's permission, I'm now working on getting this series into a
+mergeable state.
 
-I don't have a concrete user for devmem TCP for storage devices but
-the use case is very similar to GPU and I imagine the benefits in perf
-can be significant in some setups.
+I'm posting this as an RFC because I'm not sure if the arm64 bits are
+correct, and I haven't done complete performance testing. I want to do
+broader experimentation to see how much this improves VM performance in
+a cloud environment, but I want to be sure that the code is mergeable
+first.
 
-Christoph, if you have any hints or rough specific design in mind for
-how dma-buf support can be added to the block layer, please do let us
-know and we'll follow your hints to investigate. But I don't want to
-use up too much of your time. Marc and I can definitely read enough
-code to figure out how to do it ourselves :-)
+Yu has posted other performance results[1], [2]. This v3 shouldn't
+significantly change the x86 results, but the arm64 results may have
+changed.
 
-Marc, please review and consider this thread and work, this could be a
-good project for you and I. I imagine the work would be:
+The most important changes since v2[3]:
 
-1. Investigate how to add dma-buf support to the block layer (maybe
-write a prototype code, and maybe even test it with devmem TCP).
-2. Share a code or no-code proposal with netdev/fs/block layer mailing
-list and try to work through concerns/nacks.
-3. Finally share RFC through merging etc.
+- Split the test_clear_young MMU notifier back into test_young and
+  clear_young. I did this because the bitmap passed in has a distinct
+  meaning for each of them, and I felt that this was cleaner.
 
---
-Thanks,
-Mina
+- The return value of test_young / clear_young now indicates if the
+  bitmap was used.
+
+- Removed the custom spte walker to implement the lockless path. This
+  was important for arm64 to be functionally correct (thanks Oliver),
+  and it avoids a lot of problems brought up in review of v2 (for
+  example[4]).
+
+- Add kvm_arch_prepare_bitmap_age and kvm_arch_finish_bitmap_age to
+  allow for arm64 to implement its bitmap-based aging to grab the MMU
+  lock for reading while allowing x86 to be lockless.
+
+- The powerpc changes have been dropped.
+
+- The logic to inform architectures how to use the bitmap has been
+  cleaned up (kvm_should_clear_young has been split into
+  kvm_gfn_should_age and kvm_gfn_record_young) (thanks Nicolas).
+
+There were some smaller changes too:
+- Added test_clear_young_metadata (thanks Sean).
+- MMU_NOTIFIER_RANGE_LOCKLESS has been renamed to
+  MMU_NOTIFIER_YOUNG_FAST, to indicate to the caller that passing a
+  bitmap for MGLRU look-around is likely to be beneficial.
+- Cleaned up comments that describe the changes to
+  mmu_notifier_test_young / mmu_notifier_clear_young (thanks Nicolas).
+
+[1]: https://lore.kernel.org/all/20230609005943.43041-1-yuzhao@google.com/
+[2]: https://lore.kernel.org/all/20230609005935.42390-1-yuzhao@google.com/
+[3]: https://lore.kernel.org/kvmarm/20230526234435.662652-1-yuzhao@google.com/
+[4]: https://lore.kernel.org/all/ZItX64Bbx5vdjo9M@google.com/
+
+James Houghton (5):
+  mm: Add a bitmap into mmu_notifier_{clear,test}_young
+  KVM: Move MMU notifier function declarations
+  KVM: Add basic bitmap support into kvm_mmu_notifier_test/clear_young
+  KVM: x86: Participate in bitmap-based PTE aging
+  KVM: arm64: Participate in bitmap-based PTE aging
+
+Yu Zhao (2):
+  KVM: x86: Move tdp_mmu_enabled and shadow_accessed_mask
+  mm: multi-gen LRU: use mmu_notifier_test_clear_young()
+
+ Documentation/admin-guide/mm/multigen_lru.rst |   6 +-
+ arch/arm64/include/asm/kvm_host.h             |   5 +
+ arch/arm64/include/asm/kvm_pgtable.h          |   4 +-
+ arch/arm64/kvm/hyp/pgtable.c                  |  21 +-
+ arch/arm64/kvm/mmu.c                          |  23 ++-
+ arch/x86/include/asm/kvm_host.h               |  20 ++
+ arch/x86/kvm/mmu.h                            |   6 -
+ arch/x86/kvm/mmu/mmu.c                        |  16 +-
+ arch/x86/kvm/mmu/spte.h                       |   1 -
+ arch/x86/kvm/mmu/tdp_mmu.c                    |  10 +-
+ include/linux/kvm_host.h                      | 101 ++++++++--
+ include/linux/mmu_notifier.h                  |  93 ++++++++-
+ include/linux/mmzone.h                        |   6 +-
+ include/trace/events/kvm.h                    |  13 +-
+ mm/mmu_notifier.c                             |  20 +-
+ mm/rmap.c                                     |   9 +-
+ mm/vmscan.c                                   | 183 ++++++++++++++----
+ virt/kvm/kvm_main.c                           | 100 +++++++---
+ 18 files changed, 509 insertions(+), 128 deletions(-)
+
+
+base-commit: 0cef2c0a2a356137b170c3cb46cb9c1dd2ca3e6b
+-- 
+2.44.0.478.gd926399ef9-goog
+
