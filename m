@@ -1,110 +1,168 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A02422085;
-	Mon,  1 Apr 2024 19:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B9452F9B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Apr 2024 19:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711998986; cv=none; b=Pt0V7AVxDrpF0nyytd4n1V1E5RYJbcOeIWNc5WAWzx9gbHhg+7zAKkWopBkYf75n1BQQqwVSyiQtY/H2vwBp7rpYaSgxxNdLZy3/fAV1qkto93MOZLD0mGiaxSzPD53rfjx+LMMuWU+32J2sHtLqRvfLhr/n5BzJz9qKPhMz4Gc=
+	t=1711999360; cv=none; b=ANORq3AQKvocMvll6B9qWYnXlNogX/oCD2rhP4zYlGbXA3tXUJM36HnpBnV+3oQiJ+b9ouTQybygktmGHmX4+uLzOIi3IAc0dAWDlMx/SywdNz6Yd8KQQnBNgdNEXIFlEq5mirI64Djbl6iDdSqiwpXK4b08brYuPoQpzYEzcsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711998986; c=relaxed/simple;
-	bh=W1d1NqcXhfEFc53mLx05GuQo2bdZrUjOS3clRv96L/w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qGuBt34SCVw/EzDlPVKVQU2DUhXxtMWO7jxCkMI46oxNnNQNyKRQS3bglbuyK4AkuqZ89E2xBeENFOYnrlMi0qtf4YN1B21k/eme/CaAktyTDdK8C6ARDpTJ7y0zvuRqxkiYYuc2DN57hzk8r6TD/N8xI2N0G145JTiipJLOfaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SZvisAns; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711999360; c=relaxed/simple;
+	bh=8oUFGMmpkpqLpkNpA3EMKT/yDO5+7f6Bm1WN7AwolPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WYLi/tfjQqypM4wmkE2RaOPW1cxc1xsCS1vr7JWUmT00T6Q1P8+Y6u9wiVfYJ775lrSrpiwQVrusHKvjNXU2v+Vq5dEpQNhVNnhsyMyyBHXxj/5u62+xCU2pSpS9hx1hEoeEnq1SxDe5IShW2b79uimGSFDzjUV6ojfEHxTOvsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=22uWaDKI; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZvisAns"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-22a5df0f789so1748220fac.3;
-        Mon, 01 Apr 2024 12:16:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="22uWaDKI"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a4e7e2a257cso71754266b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Apr 2024 12:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711998984; x=1712603784; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eW71oU99QynNwXgrQuDtBaxu54emi4+sBht5DBCWvRk=;
-        b=SZvisAnscJtkYScqntVLwQaPZzsTqJvmDUGFxkx65lwSsoGyw82I/AXJP8fy20aHkf
-         /f6g/8Z73gtx+9SBLk0CE4LF6dvttvtMV/ySMuRvlg5y13J7OPnLSX4mIRM8Mi08I/EC
-         YsY6jwHbm2H9FzY5QLY3V5VHcH1su42uMgK7GRPrcBEjWmNWwAf4nTotSt02sLuNqZCr
-         XJjGwZllD3LLBSTq99R70fbqqSbAtvAPamDKKuY/Rwyp1m2v9Cw69Efh/0taBby8hZG6
-         GIBXa5L5xZcPuYvEqEUr7kLok+qCP7B4VgEnueW0D+yyL1I3sZxoXO8jZ+Q+rgGq7Afq
-         712Q==
+        d=google.com; s=20230601; t=1711999357; x=1712604157; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pRKdoK98qnZzkUcUn3OGBOuDQ1g75ltD3kRhKb3BL0c=;
+        b=22uWaDKINClGQOvJi06fBpyOOT7pMDPbf3vKhzp0A0EZNqEMJZEU9ZEQI+hZSku6MG
+         bDpe0EjXvO13ddBX37ofmNnPNsgpJXqGc4AuCCQ8nuthzsZBfIFoF3l84MfjgVpQ/rMz
+         X8r0RgAF5nL/37G5R4ZMVUu7g7ccxrgvXJyBok31bWJ4U/eF8uRTx4l9dRQ4jGtBlNPe
+         xA9xU5PEKcZ6Mo8JfTxnSnXSqVcfGA88I4+hdQ1b5EIF6VP5bvS6Re5X1nESesLYTzOM
+         keFQM0jW7oXypgbtrwSnBZZnye/NvRo6H4FNnGy3aoPjs0A0kSwZBaIAE8vZ+9L09KAa
+         hy5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711998984; x=1712603784;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eW71oU99QynNwXgrQuDtBaxu54emi4+sBht5DBCWvRk=;
-        b=QjqPYBP4NZc1LKLnKG4G4OzsT5WENgYILrda+lNm63YlIYYyh5qlSbB9yLaswCfmp2
-         VVPFLDeH4nhdQrsxWr9DkpAUQVtR6Gt0nmwt2NREFe8S3AgkjoGb16/hfyUtfJaZMVj2
-         VS4PegnGuGPDkIJGJH74raBk68yEi2xZUSQmzoxkf6L+H8xzPmQ7dy9EUkQ1gYgAwoA1
-         5JKL/P+gznCpQSYddqeSAj7PDwIhS3jQ9D7Xcnc8HK3CbONAdbySsrzygbuFHmRrY4eu
-         IvGHYM51hCntyoz4uewGcq87eXbC6oOPnAqUcaT3fwlMgPfAEMbVr+HgdWPtPr4aXylX
-         IR1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWvDgyQAneJp/Hg/q2wYF/yaY2QNzOEzEA92KyAvB2JrOI2GqZG/U+dHlJFZTQpPxxuY7vjlHtMKhwhSfODytAvHOfurkUUSbxLm5s8zn7GoDCwGiJwlNJZhJrlmTOLe/MTp3Ze+tOp
-X-Gm-Message-State: AOJu0YycIbBhtlWRyO2xvkiIWjtwL3OnwTsijtX3BQWPJD2N6YilNpeM
-	ZeGbGPQLEK5ZNwd56TsyV+BY22+LNEcuBV8cwYvePNTcenTeKzSG
-X-Google-Smtp-Source: AGHT+IEd2SfRRSSE15M3WKWiXb5JQfut8Xkg9rAS80NNkP2vGvttxCp43F/qD5o1uAaJqLM0d2b6Fg==
-X-Received: by 2002:a05:6870:700a:b0:229:7fa8:f4c4 with SMTP id u10-20020a056870700a00b002297fa8f4c4mr12364246oae.36.1711998984264;
-        Mon, 01 Apr 2024 12:16:24 -0700 (PDT)
-Received: from kickker.attlocal.net ([2600:1700:6cf8:1240:769d:e8e1:4c99:3e97])
-        by smtp.gmail.com with ESMTPSA id lw19-20020a0568708e1300b0022aac1d2430sm2843414oab.31.2024.04.01.12.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 12:16:23 -0700 (PDT)
-From: Kui-Feng Lee <thinker.li@gmail.com>
-To: mhiramat@kernel.org,
-	martin.lau@linux.dev,
-	kernel-team@meta.com,
-	andrii@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Cc: sinquersw@gmail.com,
-	kuifeng@meta.com,
-	Kui-Feng Lee <thinker.li@gmail.com>
-Subject: [PATCH bpf-next] rethook: Remove warning messages printed for finding return address of a frame.
-Date: Mon,  1 Apr 2024 12:16:21 -0700
-Message-Id: <20240401191621.758056-1-thinker.li@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1711999357; x=1712604157;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pRKdoK98qnZzkUcUn3OGBOuDQ1g75ltD3kRhKb3BL0c=;
+        b=Mbs+hgyz7adbmZlNbjlHX31mis5ZCIPDHQCZUU8xb9lOCdkTZjvToA1tbrzgi6NI7W
+         w0WgsHBwLewivzFWPy6VXStGUfXXpjwJLuNfCk2T/uQxNpqlKGcsLKKeAJRhPyTlyz4W
+         XiKLOp07MIdGsyuKvoTcygH1/i/F2B3iRfhgYXd2XS3+RMqwdXbkSXma/dfp9ALLHl+9
+         ddEH+PHBc+yp74whyBZ/xNleC3O8J5EcN5vrd5XaaJsFADYXY/c1v8y+0DDvhYx2wHJ8
+         9AJc23j7CaRPRgY5Lczwmw8oIka9lwbeAycHa9u4oZXjzCTVgDj4fcUWuvCWDXoF3Yuw
+         TOyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcaMpe7lC3WGGheblNou205KYrFxmFbC7h+qsDI5+0KjNQUOOsfQqiNOvdp0mnYFKRkcg8GDRACbBpLpuTHTBMnyJysygjChVS40/1lDhlGPAJ
+X-Gm-Message-State: AOJu0YywmNX3P+JFvcf4oSN1LZNkgdWKfO+XxDhAZeaDlHgSsOwQpxZK
+	Ufpu5ej9Ilj7H714w5xmPRJUPpVcHmYUKABzlotBDPT9scwDI6KrLGuwLaGq3TN9JN4Sux5uzGX
+	GWZ7PIIXDp1NTAg7m6bB7nIFim5qJjMXK47Ep
+X-Google-Smtp-Source: AGHT+IFnZAdqBNjychftax9hJ9HmWGsuFKJlToxmGxuKATUcrfF8Wqh8ADOKipJFMzVFEgjjXqwoqI01MVv3yIjrd3E=
+X-Received: by 2002:a17:906:f289:b0:a46:d978:bf02 with SMTP id
+ gu9-20020a170906f28900b00a46d978bf02mr6594862ejb.34.1711999356578; Mon, 01
+ Apr 2024 12:22:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-3-almasrymina@google.com> <ZfegzB341oNc_Ocz@infradead.org>
+ <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
+ <ZgC5JoSiWAYf3IgX@infradead.org> <CAHS8izO5-giYhM1bVCLLOXRXq-Xd0=pi0kPq5E1-R=3i=XihmQ@mail.gmail.com>
+ <ZgUc07Szbx5x-obb@infradead.org>
+In-Reply-To: <ZgUc07Szbx5x-obb@infradead.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 1 Apr 2024 12:22:24 -0700
+Message-ID: <CAHS8izM8iLC9J1xSHScMrMkVyoY5HZ_nFMRO4V7HYarHhZhk6Q@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
+ custom page providers
+To: Christoph Hellwig <hch@infradead.org>, Marc Harvey <marcharvey@google.com>, 
+	"Cong Wang ." <cong.wang@bytedance.com>
+Cc: shakeel.butt@linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-rethook_find_ret_addr() prints a warning message and returns 0 when the
-target task is running and not the "current" task to prevent returning an
-incorrect return address. However, this check is incomplete as the target
-task can still transition to the running state when finding the return
-address, although it is safe with RCU.
+On Thu, Mar 28, 2024 at 12:31=E2=80=AFAM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+>
+> On Tue, Mar 26, 2024 at 01:19:20PM -0700, Mina Almasry wrote:
+> >
+> > Are you envisioning that dmabuf support would be added to the block
+> > layer
+>
+> Yes.
+>
+> > (which I understand is part of the VFS and not driver specific),
+>
+> The block layer isn't really the VFS, it's just another core stack
+> like the network stack.
+>
+> > or as part of the specific storage driver (like nvme for example)? If
+> > we can add dmabuf support to the block layer itself that sounds
+> > awesome. We may then be able to do devmem TCP on all/most storage
+> > devices without having to modify each individual driver.
+>
+> I suspect we'll still need to touch the drivers to understand it,
+> but hopefully all the main infrastructure can live in the block layer.
+>
+> > In your estimation, is adding dmabuf support to the block layer
+> > something technically feasible & acceptable upstream? I notice you
+> > suggested it so I'm guessing yes to both, but I thought I'd confirm.
+>
+> I think so, and I know there has been quite some interest to at least
+> pre-register userspace memory so that the iommu overhead can be
+> pre-loaded.  It also is a much better interface for Peer to Peer
+> transfers than what we currently have.
+>
 
-The issue we encounter is that the kernel frequently prints warning
-messages when BPF profiling programs call to bpf_get_task_stack() on
-running tasks.
+I think this is positively thrilling news for me. I was worried that
+adding devmemTCP support to storage devices would involve using a
+non-dmabuf standard of buffer sharing like pci_p2pdma_
+(drivers/pci/p2pdma.c) and that would require messy changes to
+pci_p2pdma_ that would get nacked. Also it would require adding
+pci_p2pdma_ support to devmem TCP, which is a can of worms. If adding
+dma-buf support to storage devices is feasible and desirable, that's a
+much better approach IMO. (a) it will maybe work with devmem TCP
+without any changes needed on the netdev side of things and (b)
+dma-buf support may be generically useful and a good contribution even
+outside of devmem TCP.
 
-The callers should be aware and willing to take the risk of receiving an
-incorrect return address from a task that is currently running other than
-the "current" one. A warning is not needed here as the callers are intent
-on it.
+I don't have a concrete user for devmem TCP for storage devices but
+the use case is very similar to GPU and I imagine the benefits in perf
+can be significant in some setups.
 
-Signed-off-by: Kui-Feng Lee <thinker.li@gmail.com>
----
- kernel/trace/rethook.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Christoph, if you have any hints or rough specific design in mind for
+how dma-buf support can be added to the block layer, please do let us
+know and we'll follow your hints to investigate. But I don't want to
+use up too much of your time. Marc and I can definitely read enough
+code to figure out how to do it ourselves :-)
 
-diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-index fa03094e9e69..4297a132a7ae 100644
---- a/kernel/trace/rethook.c
-+++ b/kernel/trace/rethook.c
-@@ -248,7 +248,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
- 	if (WARN_ON_ONCE(!cur))
- 		return 0;
- 
--	if (WARN_ON_ONCE(tsk != current && task_is_running(tsk)))
-+	if (tsk != current && task_is_running(tsk))
- 		return 0;
- 
- 	do {
--- 
-2.34.1
+Marc, please review and consider this thread and work, this could be a
+good project for you and I. I imagine the work would be:
 
+1. Investigate how to add dma-buf support to the block layer (maybe
+write a prototype code, and maybe even test it with devmem TCP).
+2. Share a code or no-code proposal with netdev/fs/block layer mailing
+list and try to work through concerns/nacks.
+3. Finally share RFC through merging etc.
+
+--
+Thanks,
+Mina
