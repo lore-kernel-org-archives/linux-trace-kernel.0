@@ -1,69 +1,86 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F8F2A1BF
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4626A10E4;
+	Tue,  2 Apr 2024 00:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712015553; cv=none; b=m683Odz5+18QEJY2cnV+XgPYDNjCZqaAWjrhUtvl79Vw0l4aZe/ApQtjVkhsqcJYhxGvq53kd0ErjWD8qShhywrI9++WJiLqf4uf00aFuwrSsl2AgV3VpdxWM0IoppkuFXpDNCpg4X5rpun/L1KoNxxez3IYnwAiIAnjND2L5G4=
+	t=1712018324; cv=none; b=PLwYlggYzqDeqnYptvHBOqhFAkoFud848/IDICT6C5BivW7XABkk4hWgzMOZK4vVCxNDWNcFeENBa71kX2q7ATX/tH2OYaivqPu30qMV7md3bKIH2JuxrRObu0sUqAwnE6RglDB9cAIy3gRitYJf1PEUXxXnsDEAseeKNZEmVRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712015553; c=relaxed/simple;
-	bh=I1QBPl5Ey4ifEIkMCxl3N8eliVz2YzHxUOV12z15xsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDD2CvyNl3ym9gD+6dlw0iVH6Yn5WAyEVwJpyGC0mdhpc2RbTinFlljzoBHxm9AjvWf3fLYVdCAUuDkI6IxOdMmHzk7eu+2SfDYXmhqHIYA5RnokdiMz2ekjIvM5x/1+P8yVOyN1U0ZGG8IC6m8N2qklf1ydtdYPAv+NOYQUqPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aaWCmJZb; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712018324; c=relaxed/simple;
+	bh=lneP+EUgNiEaeomVK5I/yhgrIivXWWwKe9x1rE3ckwM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=b+zs1JMionEmGKKXjwgikHFxc6jFBnxmHH6noN8ViJBMQTDdUYy+oO5IaHWpVNlAKqJC8NwfIjzbJOL49yL23VXQw7l11N71oOSHTOtvonlPhAy0cK9XaBTHYBFPzQ6GE9vLIQoqZ9hcUEfkI1W7tDTMoB4SFieiqAO/AMnydts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHCpNX7u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aaWCmJZb"
-Date: Mon, 1 Apr 2024 16:52:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712015548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I1QBPl5Ey4ifEIkMCxl3N8eliVz2YzHxUOV12z15xsk=;
-	b=aaWCmJZbN6WUia8WK2ZqGCYGcNR5t9Erobt0UtI7/peiidTZrpG2Qjqzx9d5jj/b68+T3L
-	SeC/Yfw5Lz3vQJICvtLPw2lPUGwruRUcbWCwu2AJzZEeuiX36xZQlQ4Ktz6BGXj6Ht2q2n
-	Gmot9nNsLQaABuOt8Du1c2yz9TvCtn0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Ubisectech Sirius <bugreport@ubisectech.com>
-Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	hannes <hannes@cmpxchg.org>, mhocko <mhocko@kernel.org>,
-	"shakeel.butt" <shakeel.butt@linux.dev>
-Subject: Re: general protection fault in refill_obj_stock
-Message-ID: <ZgtIuBlUVE1Lj_Tc@P9FQF9L96D>
-References: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHCpNX7u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B572AC433F1;
+	Tue,  2 Apr 2024 00:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712018323;
+	bh=lneP+EUgNiEaeomVK5I/yhgrIivXWWwKe9x1rE3ckwM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bHCpNX7u6xNgv26mUcLYsggkdwDt5n/Ipqsg2dNkbcWFVncZ7hxqckUTYhrSJon2y
+	 4cDtiL5z4/ZaEnyXV/6SMvji/GQax7Rc/AIe1ebmfUmtfndW71eCBKeZqoOGc9zHeI
+	 hyCWan126m1+pUMRPxE5IvF79Sueb2kngVAjODGuHt/SOLtNHmEtA4Od3J9zesaHxU
+	 RRJNnKCVUlFza+SNrSiIgQhvgBl+pSaFipfza5kKA34PwSSvM5nh6C4a19lk0r4S2e
+	 ukxFzL/c7WAUVB3fwfM8htFsixr+/dwSI+axr+UEdldv7mqfLcX0iXltkD3TfIVKPO
+	 TlnXMD3N0JSpQ==
+Date: Tue, 2 Apr 2024 09:38:39 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko
+ <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, jolsa@kernel.org, "Paul E . McKenney"
+ <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check
+ optional
+Message-Id: <20240402093839.7de89341138748f743ae896d@kernel.org>
+In-Reply-To: <20240401120918.67cc3191@gandalf.local.home>
+References: <20240322160323.2463329-1-andrii@kernel.org>
+	<20240325113848.32a70948d1cdb0fa76225690@kernel.org>
+	<20240325181338.39376089@gandalf.local.home>
+	<CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
+	<20240326150121.68e9db8a@gandalf.local.home>
+	<20240401202552.470d845bd79c841b9158fb56@kernel.org>
+	<20240401120918.67cc3191@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 01, 2024 at 03:04:46PM +0800, Ubisectech Sirius wrote:
-> Hello.
-> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
+On Mon, 1 Apr 2024 12:09:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thank you for the report!
+> On Mon, 1 Apr 2024 20:25:52 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > > Masami,
+> > > 
+> > > Are you OK with just keeping it set to N.  
+> > 
+> > OK, if it is only for the debugging, I'm OK to set N this.
+> > 
+> > > 
+> > > We could have other options like PROVE_LOCKING enable it.  
+> > 
+> > Agreed (but it should say this is a debug option)
+> 
+> It does say "Validate" which to me is a debug option. What would you
+> suggest?
 
-I tried to compile and run your test program for about half an hour
-on a virtual machine running 6.7 with enabled KASAN, but wasn't able
-to reproduce the problem.
+I think the help message should have "This is for debugging ftrace."
 
-Can you, please, share a bit more information? How long does it take
-to reproduce? Do you mind sharing your kernel config? Is there anything special
-about your setup? What are exact steps to reproduce the problem?
-Is this problem reproducible on 6.6?
+Thank you,
 
-It's interesting that the problem looks like use-after-free for the objcg pointer
-but happens in the context of udev-systemd, which I believe should be fairly stable
-and it's cgroup is not going anywhere.
+> 
+> -- Steve
 
-Thanks!
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
