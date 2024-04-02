@@ -1,103 +1,105 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F40CA6F;
-	Tue,  2 Apr 2024 05:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC2933062
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Apr 2024 07:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712035578; cv=none; b=c8AJfuvG/yRmCwMr6F8qU6hArg8hdQH/ClEdXwf3MHaZxJaS0wK2MM60olfP1gQLVsOKULxtOdmDmluDc84DdsaRNQKj67sC51L5A74G1LxciI8XSM1vdrbulApO36qZQuMdLll60Bvm1Q8Oh/68pWmptxMgsjNOmpl/cDGFIn0=
+	t=1712041236; cv=none; b=FL0vYeD4vB+O1o2OvGcJR1EN4DENLrwUR4lb0vxoESHprYV1Ps8fMmU6uendc66v4nj52cFkflP+p9WvI3Ym2dchmNK6qCCjr6yFuE+HVCpnldnzUpxXSfeMXbAjBSXReb4bj0bYWkXp9RiaMxVwlxiAxNSYZ0/PQM7FlhgsVPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712035578; c=relaxed/simple;
-	bh=WtUDqbuarXEIgkevhlTVfLHVbMrMQHOYBjHuxT1cJ54=;
+	s=arc-20240116; t=1712041236; c=relaxed/simple;
+	bh=DWwpz4wCjpd3OHwoJNho95qF247VTvrYLLaNHUDRIQs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rL6U4ZmHvYMWfmmuxY2eosfk8DDH+X+tQMHN7IGkgaERFD8SY3MDoH+XdN+mY+lnFbR6t160y3jqW9/A8HO4GX3CUEH1ft02NgAHqP9BdUpwrBiKeWeM/bD3hMHuVlR1/M8WIA1qaay0qdb1zbQiBzMWyozQIujjzxvp/ZVdljg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=krFd6x85; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=IgMPrhEkk7d8U//zGniJQw5g1DP2406iYI5BIAek4UaBOq4klxAA5n1V1slFSh39qw1qAh+V1c4BHkueH6X+LXwtwdZ6Rr7Dr+2Uf0UMmCH8T/ZaE38ZdbjvD1JEgYPBz14hZvQW+vnl7Rc9ICwmkWp3OszZW5OsBwtEdt9L0GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KgJN+PKw; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="krFd6x85"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7t2WjsmH8l5lF/Pmb1Te6bnqZx4BXhCY++fg2NjSv5c=; b=krFd6x850goqIRx5xWkc8LQbPX
-	L1dVt9sISoRBhDUDFdjSOa+piX61bhGbbqw9U0isYl17RkNU8lWzACm/gP/t2y6ANPlSuHGH5aNxa
-	4g/8D1C2AHt5QAzmbLYw+HSLhkvlnuD1V+feTdMOCwfZdZX4UCL33os5bnrdVnHIiM/GOosC+VvdT
-	KBibFwG2gIRfqLeaB4LCXAauvUp7WgKgOD1wcsbz2/amhCfiz71r3erRdjAVppW28F3YMBivo9g9x
-	VqfGKcCzgQI3TRVb0RtvEMFjDlTKEtQP1WO6aE2p0dLKjQKlwTUwZjKzjt1E/QptSTmaP6bWy/WUn
-	dbRihOuA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrWev-00000002HaX-2ykM;
-	Tue, 02 Apr 2024 05:26:10 +0000
-Date: Tue, 2 Apr 2024 06:26:09 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	ltp@lists.linux.it, Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH 7/9] mm: Free up PG_slab
-Message-ID: <ZguW8RtudvsJaHLq@casper.infradead.org>
-References: <20240321142448.1645400-8-willy@infradead.org>
- <202403312344.c0d273ab-oliver.sang@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KgJN+PKw"
+Date: Tue, 2 Apr 2024 00:00:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712041232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jhuzyWXDmRkSGaUwWTpdDkWh7n7iwav7be8n1ReoOqg=;
+	b=KgJN+PKwUf4lvMCNNgRHnuy8Gq613K2HNrcIC+CQUk8Sf/7s4Hx+E56N6lZRoCSA0Dlm9q
+	gxlbMuDbSrzUHZgC90oQuyB0Kd8gPYgsVUsYB6BOdjK0DzwQ2E0WmDAtMn29DrZYMJC+lr
+	+c9QBLLVlmBOcBZkzESUyH9WEo8wfW4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Yu Zhao <yuzhao@google.com>
+Cc: James Houghton <jthoughton@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	David Matlack <dmatlack@google.com>, Marc Zyngier <maz@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shaoqin Huang <shahuang@redhat.com>, Gavin Shan <gshan@redhat.com>,
+	Ricardo Koller <ricarkol@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	David Rientjes <rientjes@google.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] KVM: arm64: Participate in bitmap-based PTE aging
+Message-ID: <Zgus_A_cJ68f6glV@linux.dev>
+References: <20240401232946.1837665-1-jthoughton@google.com>
+ <20240401232946.1837665-7-jthoughton@google.com>
+ <CAOUHufaQ-g6L5roB-3K0GamuS3p9ACpPj9XM-NF67GgrjoTj_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202403312344.c0d273ab-oliver.sang@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOUHufaQ-g6L5roB-3K0GamuS3p9ACpPj9XM-NF67GgrjoTj_A@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Mar 31, 2024 at 11:11:10PM +0800, kernel test robot wrote:
-> kernel test robot noticed "UBSAN:shift-out-of-bounds_in_fs/proc/page.c" on:
+On Tue, Apr 02, 2024 at 12:06:56AM -0400, Yu Zhao wrote:
+> On Mon, Apr 1, 2024 at 7:30 PM James Houghton <jthoughton@google.com> wrote:
+> > Suggested-by: Yu Zhao <yuzhao@google.com>
 > 
-> commit: 30e5296811312a13938b83956a55839ac1e3aa40 ("[PATCH 7/9] mm: Free up PG_slab")
+> Thanks but I did not suggest this.
 
-Quite right.  Spotted another one while I was at it.  Not able to test
-right now, but this should do the trick:
+Entirely up to you, but I would still want to credit everyone who
+contributed to a feature even if the underlying implementation has
+changed since the original attempt.
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index 5bc82828c6aa..55b01535eb22 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -175,6 +175,8 @@ u64 stable_page_flags(const struct page *page)
- 		u |= 1 << KPF_OFFLINE;
- 	if (PageTable(page))
- 		u |= 1 << KPF_PGTABLE;
-+	if (folio_test_slab(folio))
-+		u |= 1 << KPF_SLAB;
- 
- #if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
- 	u |= kpf_copy_bit(k, KPF_IDLE,          PG_idle);
-@@ -184,7 +186,6 @@ u64 stable_page_flags(const struct page *page)
- #endif
- 
- 	u |= kpf_copy_bit(k, KPF_LOCKED,	PG_locked);
--	u |= kpf_copy_bit(k, KPF_SLAB,		PG_slab);
- 	u |= kpf_copy_bit(k, KPF_ERROR,		PG_error);
- 	u |= kpf_copy_bit(k, KPF_DIRTY,		PG_dirty);
- 	u |= kpf_copy_bit(k, KPF_UPTODATE,	PG_uptodate);
-diff --git a/tools/cgroup/memcg_slabinfo.py b/tools/cgroup/memcg_slabinfo.py
-index 1d3a90d93fe2..270c28a0d098 100644
---- a/tools/cgroup/memcg_slabinfo.py
-+++ b/tools/cgroup/memcg_slabinfo.py
-@@ -146,12 +146,11 @@ def detect_kernel_config():
- 
- 
- def for_each_slab(prog):
--    PGSlab = 1 << prog.constant('PG_slab')
--    PGHead = 1 << prog.constant('PG_head')
-+    PGSlab = ~prog.constant('PG_slab')
- 
-     for page in for_each_page(prog):
-         try:
--            if page.flags.value_() & PGSlab:
-+            if page.page_type.value_() == PGSlab:
-                 yield cast('struct slab *', page)
-         except FaultError:
-             pass
+> What I have in v2 is RCU based. I hope Oliver or someone else can help
+> make that work.
+
+Why? If there's data to show that RCU has a material benefit over taking
+the MMU lock for read then I'm all for it. Otherwise, the work required
+to support page-table walkers entirely outside of the MMU lock isn't
+justified.
+
+In addition to ensuring that page table teardown is always RCU-safe,
+we'd need to make sure all of the walkers that take the write lock are
+prepared to handle races.
+
+> Otherwise we can just drop this for now and revisit
+> later.
+
+I really wouldn't get hung up on the locking as the make-or-break for
+whether arm64 supports this MMU notifier.
+
+-- 
+Thanks,
+Oliver
