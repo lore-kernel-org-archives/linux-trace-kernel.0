@@ -1,325 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C9A5822A;
-	Tue,  2 Apr 2024 09:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A96F7E58A;
+	Tue,  2 Apr 2024 13:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712050419; cv=none; b=MrYusPwzvEcZHVVwoUdnvbLTuoySYjiZfZ7RD4uilgj17pBAIFHosW/H7OZxmJlhqMHJ2fBEm/AeOYUK8+qHy9A2U3DPXAGlEfuAeVmgUEcDbIjR+GXi49Xl8bu0sW3rV3oIHAKh0kGL5+eznz5rwPXyFTJkd/lAmx3uQMU4/OI=
+	t=1712062966; cv=none; b=lC0YGsumo+G6By1F9SoJtLVN+hagrx7+uVN5DMbXWndlRxWVJxyRraZOEW0CCw5V3FCpTCL22pSctTed7NpBrHST6RJC8vYgZvCdDuY0ukKQ+8mH/hOvf2sAoNwnLFuxXvk9GabkdH7XF6PGd5F7/2qPm6DwLuyaKx2+OEAEoXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712050419; c=relaxed/simple;
-	bh=CN/0bvZF7u+3c1dNdVa1XcG94ZWxF1kZ5q3Qu3S+EmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZHEfMML+w9s4RCjaLQjVrIKrAjbj1S/JOYIPj9PoQSEnOl3fSm7/9AXn7wG8bpROw7SnCd7xcH/A6BghLQX7wEeg/XTRkNJoTBzw49xIbbN3QI8S2GU2DtoKoaM7kvJJQT1VMR4dlmCryDettqv9DFhJAgvdn1O5zSggfaW2J64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFTNaz+e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712062966; c=relaxed/simple;
+	bh=ADEIRg8/e8hohEcKMVMe7/LI4j5ei9yN1rtzdMjXREo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=V2O4j8yy+vzTx1QZowAV6/u7BE1tCC1Fb1fKWvyAB8ll7FqwBv3KUlOf0yVCa1MwqVOnwfrz6c+HgDewR+D9ie+ACUVe7ov0Ana+MHSO3rwBv7q3jvR/Ok3XwUq+xGXhQofJMgyF2SewJseyE+G6DirZpk2mknvz7Qqn0IE3s6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3f082nd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFTNaz+e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8FDFC433F1;
-	Tue,  2 Apr 2024 09:33:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3f082nd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E07C433F1;
+	Tue,  2 Apr 2024 13:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712050419;
-	bh=CN/0bvZF7u+3c1dNdVa1XcG94ZWxF1kZ5q3Qu3S+EmY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oFTNaz+eE+/N3fwEP+Aln0RB6iAYtWOl/CSrCGziDfrVn/4KONHGXtatH/UetIK2o
-	 dDg+0EKqtrRnP4GEW5I5A3L0tzbjpStI2K8daeUKyWf4gF4J4RGKKdCSEBPSIi7WaV
-	 GhB/5xJCALGHja331wef6/Gp8Iuz02VgoURPw5vBVbeQ3bsdBJWrRB1lS4Z6VQUJQM
-	 AxhQB9Sj6fjvvSSmU7wC0+DW7yKKNM5VXjAaBN8AU37cKORLJNQcVXnGp2orLbDvBp
-	 MB0Uoe8+/hNoRIEpz8+wJDYu0aCpG7ZJVoZCuYHvk/AcyCfA5zoRC+Khf8YxbRe1ay
-	 KnHNDi10z+YzA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	x86@kernel.org
-Subject: [PATCHv2 bpf-next 3/3] selftests/bpf: Add uretprobe test for regs changes
-Date: Tue,  2 Apr 2024 11:33:02 +0200
-Message-ID: <20240402093302.2416467-4-jolsa@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240402093302.2416467-1-jolsa@kernel.org>
-References: <20240402093302.2416467-1-jolsa@kernel.org>
+	s=k20201202; t=1712062965;
+	bh=ADEIRg8/e8hohEcKMVMe7/LI4j5ei9yN1rtzdMjXREo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=n3f082ndyzE8EBgCkP+EurYVCAdYvGKfdOlrmWwpwclVTr2Mh99hBM+y5+OQ3ol5c
+	 dwBueAOAaljn9lI/8vF8FphljSAA/treQlT7hhmzDSZkbIkmXNfE0qSUSD26rF+YDS
+	 79UwmIzYnKBRFG8DAX+zKg4QcSAybKv39GrWaGsMMNYrIMal5nCVlkZAcTCNEcj+pf
+	 0FKI+Ii4b5FohuzfKG9klK2xb2Xilr8UrHGqSlOdS2LLu+EopemFfaqeRSCbDKk5Qa
+	 nKVR6jAodnLGC06zfsy60CVqcGndcP113ymp40a8kdr+xd4NTQTPFqHXI1PwMIzPdo
+	 fs/ML0EXiUxLw==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Puranjay Mohan <puranjay12@gmail.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Andy Chiu <andy.chiu@sifive.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, Ley Foon
+ Tan <leyfoon.tan@starfivetech.com>, Deepak Gupta <debug@rivosinc.com>, Sia
+ Jee Heng <jeeheng.sia@starfivetech.com>, Song Shuai
+ <suagrfillet@gmail.com>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, =?utf-8?Q?Cl=C3=A9ment_L=C3=A9ger?=
+ <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: puranjay12@gmail.com
+Subject: Re: [RFC PATCH] ftrace: riscv: move from REGS to ARGS
+In-Reply-To: <20240328141845.128645-1-puranjay12@gmail.com>
+References: <20240328141845.128645-1-puranjay12@gmail.com>
+Date: Tue, 02 Apr 2024 15:02:41 +0200
+Message-ID: <87bk6rsyry.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Adding test that creates uprobe consumer on uretprobe which changes some
-of the registers. Making sure the changed registers are propagated to the
-user space from the ureprobe trampoline on x86_64.
+Puranjay Mohan <puranjay12@gmail.com> writes:
 
-To be able to do this, adding support to bpf_testmod to create uprobe via
-new attribute file:
-  /sys/kernel/bpf_testmod_uprobe
+> This commit replaces riscv's support for FTRACE_WITH_REGS with support
+> for FTRACE_WITH_ARGS. This is required for the ongoing effort to stop
+> relying on stop_machine() for RISCV's implementation of ftrace.
+>
+> The main relevant benefit that this change will bring for the above
+> use-case is that now we don't have separate ftrace_caller and
+> ftrace_regs_caller trampolines.  This will allow the callsite to call
+> ftrace_caller by modifying a single instruction. Now the callsite can
+> do something similar to:
+>
+> When not tracing:            |             When tracing:
+>
+> func:                                      func:
+>   auipc t0, ftrace_caller_top                auipc t0, ftrace_caller_top
+>   nop  <=3D=3D=3D=3D=3D=3D=3D=3D=3D<Enable/Disable>=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D>  jalr  t0, ftrace_caller_bottom
+>   [...]                                      [...]
+>
+> The above assumes that we are dropping the support of calling a direct
+> trampoline from the callsite. We need to drop this as the callsite can't
+> change the target address to call, it can only enable/disable a call to
+> a preset target (ftrace_caller in the above diagram).
+>
+> Currently, ftrace_regs_caller saves all CPU registers in the format of
+> struct pt_regs and allows the tracer to modify them. We don't need to
+> save all of the CPU registers because at function entry only a subset of
+> pt_regs is live:
+>
+> |----------+----------+---------------------------------------------|
+> | Register | ABI Name | Description                                 |
+> |----------+----------+---------------------------------------------|
+> | x1       | ra       | Return address for traced function          |
+> | x2       | sp       | Stack pointer                               |
+> | x5       | t0       | Return address for ftrace_caller trampoline |
+> | x8       | s0/fp    | Frame pointer                               |
+> | x10-11   | a0-1     | Function arguments/return values            |
+> | x12-17   | a2-7     | Function arguments                          |
+> |----------+----------+---------------------------------------------|
+>
+> See RISCV calling convention[1] for the above table.
+>
+> Saving just the live registers decreases the amount of stack space
+> required from 288 Bytes to 112 Bytes.
+>
+> Basic testing was done with this on the VisionFive 2 development board.
+>
+> Note:
+>   - Moving from REGS to ARGS will mean that RISCV will stop supporting
+>     KPROBES_ON_FTRACE as it requires full pt_regs to be saved.
 
-This file is expecting file offset and creates related uprobe on current
-process exe file and removes existing uprobe if offset is 0. The can be
-only single uprobe at any time.
+...and FPROBES, but Masami is (still?) working on a series to address
+that [1].
 
-The uprobe has specific consumer that changes registers used in ureprobe
-trampoline and which are later checked in the test.
+My perspective; This is following the work Mark et al has done for
+arm64, and it does make sense for RISC-V as well. I'm in favor having
+this change as part of the bigger call_ops/text patch change for RISC-V.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/bpf_testmod/bpf_testmod.c   | 122 +++++++++++++++++-
- .../selftests/bpf/prog_tests/uprobe_syscall.c |  67 ++++++++++
- 2 files changed, 188 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-index 39ad96a18123..704ebd7fb53d 100644
---- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-@@ -10,6 +10,7 @@
- #include <linux/percpu-defs.h>
- #include <linux/sysfs.h>
- #include <linux/tracepoint.h>
-+#include <linux/namei.h>
- #include "bpf_testmod.h"
- #include "bpf_testmod_kfunc.h"
- 
-@@ -343,6 +344,118 @@ static struct bin_attribute bin_attr_bpf_testmod_file __ro_after_init = {
- 	.write = bpf_testmod_test_write,
- };
- 
-+/* bpf_testmod_uprobe sysfs attribute is so far enabled for x86_64 only,
-+ * please see test_uretprobe_regs_change test  */
-+#ifdef __x86_64__
-+
-+static int
-+uprobe_ret_handler(struct uprobe_consumer *self, unsigned long func,
-+		   struct pt_regs *regs)
-+
-+{
-+	regs->ax  = 0x12345678deadbeef;
-+	regs->cx  = 0x87654321feebdaed;
-+	regs->r11 = (u64) -1;
-+	return true;
-+}
-+
-+struct testmod_uprobe {
-+	struct path path;
-+	loff_t offset;
-+	struct uprobe_consumer consumer;
-+};
-+
-+static DEFINE_MUTEX(testmod_uprobe_mutex);
-+
-+static struct testmod_uprobe uprobe = {
-+	.consumer.ret_handler = uprobe_ret_handler,
-+};
-+
-+static int testmod_register_uprobe(loff_t offset)
-+{
-+	int err = -EBUSY;
-+
-+	if (uprobe.offset)
-+		return -EBUSY;
-+
-+	mutex_lock(&testmod_uprobe_mutex);
-+
-+	if (uprobe.offset)
-+		goto out;
-+
-+	err = kern_path("/proc/self/exe", LOOKUP_FOLLOW, &uprobe.path);
-+	if (err)
-+		goto out;
-+
-+	err = uprobe_register_refctr(d_real_inode(uprobe.path.dentry),
-+				     offset, 0, &uprobe.consumer);
-+	if (err)
-+		path_put(&uprobe.path);
-+	else
-+		uprobe.offset = offset;
-+
-+out:
-+	mutex_unlock(&testmod_uprobe_mutex);
-+	return err;
-+}
-+
-+static void testmod_unregister_uprobe(void)
-+{
-+	mutex_lock(&testmod_uprobe_mutex);
-+
-+	if (uprobe.offset) {
-+		uprobe_unregister(d_real_inode(uprobe.path.dentry),
-+				  uprobe.offset, &uprobe.consumer);
-+		uprobe.offset = 0;
-+	}
-+
-+	mutex_unlock(&testmod_uprobe_mutex);
-+}
-+
-+static ssize_t
-+bpf_testmod_uprobe_write(struct file *file, struct kobject *kobj,
-+			 struct bin_attribute *bin_attr,
-+			 char *buf, loff_t off, size_t len)
-+{
-+	unsigned long offset;
-+	int err;
-+
-+	if (kstrtoul(buf, 0, &offset))
-+		return -EINVAL;
-+
-+	if (offset)
-+		err = testmod_register_uprobe(offset);
-+	else
-+		testmod_unregister_uprobe();
-+
-+	return err ?: strlen(buf);
-+}
-+
-+static struct bin_attribute bin_attr_bpf_testmod_uprobe_file __ro_after_init = {
-+	.attr = { .name = "bpf_testmod_uprobe", .mode = 0666, },
-+	.write = bpf_testmod_uprobe_write,
-+};
-+
-+static int register_bpf_testmod_uprobe(void)
-+{
-+	return sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_uprobe_file);
-+}
-+
-+static void unregister_bpf_testmod_uprobe(void)
-+{
-+	testmod_unregister_uprobe();
-+	sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_uprobe_file);
-+}
-+
-+#else
-+static int register_bpf_testmod_uprobe(void)
-+{
-+	return 0;
-+}
-+
-+static void unregister_bpf_testmod_uprobe(void) { }
-+#endif
-+
- BTF_KFUNCS_START(bpf_testmod_common_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_new, KF_ITER_NEW)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_next, KF_ITER_NEXT | KF_RET_NULL)
-@@ -650,7 +763,13 @@ static int bpf_testmod_init(void)
- 		return ret;
- 	if (bpf_fentry_test1(0) < 0)
- 		return -EINVAL;
--	return sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
-+	ret = sysfs_create_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
-+	if (ret < 0)
-+		return ret;
-+	ret = register_bpf_testmod_uprobe();
-+	if (ret < 0)
-+		return ret;
-+	return 0;
- }
- 
- static void bpf_testmod_exit(void)
-@@ -664,6 +783,7 @@ static void bpf_testmod_exit(void)
- 		msleep(20);
- 
- 	sysfs_remove_bin_file(kernel_kobj, &bin_attr_bpf_testmod_file);
-+	unregister_bpf_testmod_uprobe();
- }
- 
- module_init(bpf_testmod_init);
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index 311ac19d8992..1a50cd35205d 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -149,15 +149,82 @@ static void test_uretprobe_regs_equal(void)
- cleanup:
- 	uprobe_syscall__destroy(skel);
- }
-+
-+#define BPF_TESTMOD_UPROBE_TEST_FILE "/sys/kernel/bpf_testmod_uprobe"
-+
-+static int write_bpf_testmod_uprobe(unsigned long offset)
-+{
-+	size_t n, ret;
-+	char buf[30];
-+	int fd;
-+
-+	n = sprintf(buf, "%lu", offset);
-+
-+	fd = open(BPF_TESTMOD_UPROBE_TEST_FILE, O_WRONLY);
-+	if (fd < 0)
-+		return -errno;
-+
-+	ret = write(fd, buf, n);
-+	close(fd);
-+	return ret != n ? (int) ret : 0;
-+}
-+
-+static void test_uretprobe_regs_change(void)
-+{
-+	struct pt_regs before = {}, after = {};
-+	unsigned long *pb = (unsigned long *) &before;
-+	unsigned long *pa = (unsigned long *) &after;
-+	unsigned long cnt = sizeof(before)/sizeof(*pb);
-+	unsigned int i, err, offset;
-+
-+	offset = get_uprobe_offset(uretprobe_regs_trigger);
-+
-+	err = write_bpf_testmod_uprobe(offset);
-+	if (!ASSERT_OK(err, "register_uprobe"))
-+		return;
-+
-+	uretprobe_regs(&before, &after);
-+
-+	err = write_bpf_testmod_uprobe(0);
-+	if (!ASSERT_OK(err, "unregister_uprobe"))
-+		return;
-+
-+	for (i = 0; i < cnt; i++) {
-+		unsigned int offset = i * sizeof(unsigned long);
-+
-+		switch (offset) {
-+		case offsetof(struct pt_regs, rax):
-+			ASSERT_EQ(pa[i], 0x12345678deadbeef, "rax");
-+			break;
-+		case offsetof(struct pt_regs, rcx):
-+			ASSERT_EQ(pa[i], 0x87654321feebdaed, "rcx");
-+			break;
-+		case offsetof(struct pt_regs, r11):
-+			ASSERT_EQ(pa[i], (__u64) -1, "r11");
-+			break;
-+		default:
-+			if (!ASSERT_EQ(pa[i], pb[i], "register before-after value check"))
-+				fprintf(stdout, "failed register offset %u\n", offset);
-+		}
-+	}
-+}
-+
- #else
- static void test_uretprobe_regs_equal(void)
- {
- 	test__skip();
- }
-+
-+static void test_uretprobe_regs_change(void)
-+{
-+	test__skip();
-+}
- #endif
- 
- void test_uprobe_syscall(void)
- {
- 	if (test__start_subtest("uretprobe_regs_equal"))
- 		test_uretprobe_regs_equal();
-+	if (test__start_subtest("uretprobe_regs_change"))
-+		test_uretprobe_regs_change();
- }
--- 
-2.44.0
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftr=
+ace.h
+> index 1276d7d9ca8b..1e95bf4ded6c 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -124,20 +124,87 @@ struct dyn_ftrace;
+>  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+>  #define ftrace_init_nop ftrace_init_nop
+>=20=20
+> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> +#define arch_ftrace_get_regs(regs) NULL
+>  struct ftrace_ops;
+> -struct ftrace_regs;
+> +struct ftrace_regs {
+> +	unsigned long epc;
+> +	unsigned long ra;
+> +	unsigned long sp;
+> +	unsigned long s0;
+> +	unsigned long t1;
+> +	union {
+> +		unsigned long args[8];
+> +		struct {
+> +			unsigned long a0;
+> +			unsigned long a1;
+> +			unsigned long a2;
+> +			unsigned long a3;
+> +			unsigned long a4;
+> +			unsigned long a5;
+> +			unsigned long a6;
+> +			unsigned long a7;
+> +		};
+> +	};
+> +};
+> +
+> +static __always_inline unsigned long
+> +ftrace_regs_get_instruction_pointer(const struct ftrace_regs *fregs)
+> +{
+> +	return fregs->epc;
+> +}
+> +
+> +static __always_inline void
+> +ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+> +				    unsigned long pc)
+> +{
+> +	fregs->epc =3D pc;
+> +}
+> +
+> +static __always_inline unsigned long
+> +ftrace_regs_get_stack_pointer(const struct ftrace_regs *fregs)
+> +{
+> +	return fregs->sp;
+> +}
+> +
+> +static __always_inline unsigned long
+> +ftrace_regs_get_argument(struct ftrace_regs *fregs, unsigned int n)
+> +{
+> +	if (n < 8)
+> +		return fregs->args[n];
+> +	return 0;
+> +}
+> +
+> +static __always_inline unsigned long
+> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
+> +{
+> +	return fregs->a0;
+> +}
+> +
+> +static __always_inline void
+> +ftrace_regs_set_return_value(struct ftrace_regs *fregs,
+> +			     unsigned long ret)
+> +{
+> +	fregs->a0 =3D ret;
+> +}
+> +
+> +static __always_inline void
+> +ftrace_override_function_with_return(struct ftrace_regs *fregs)
+> +{
+> +	fregs->epc =3D fregs->ra;
+> +}
 
+Style/nit: All above; Try to use the full 100 chars, and keep the
+function name return value on the same line for grepability.
+
+
+Bj=C3=B6rn
+
+[1] https://lore.kernel.org/all/170887410337.564249.6360118840946697039.stg=
+it@devnote2/
