@@ -1,69 +1,67 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF2B58AA1
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC4D14389D
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712155192; cv=none; b=k70pA2tEjOVjHxU7J7mzOerWwvydKlvdQgVhuPo/swt/v7riOD1loWYRcA5qwPfV6hj6ABFDoW0KV4b7uVMVEIUrFICKKmWWnJWTSjG2qIIgxqTOVlG9oycVuqopqZw2G4/YeZVeXU0tE9vaWnudoBgsGbNhoaH68k4BPYh6AeQ=
+	t=1712155866; cv=none; b=bIqq2awM4+PYxMuI52ro30Db9kQ8IY9hy9mthMkxAzQ7KeLfS0FY9iuMKwPUBKZzUBlgmrBu9SN86atfhc3EfafEAwwPYNJHjJcZMnZ2QysZNOfANP1UEaTjYoVoYV/qualWlvFuQEcGYiudEcbSKctjoQzLinHpGFgyx7ojmxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712155192; c=relaxed/simple;
-	bh=5WRZA+Dr0y7K8BNMTXM69RHs/uBHis89yH3S75lrVoE=;
+	s=arc-20240116; t=1712155866; c=relaxed/simple;
+	bh=92SXfEvrtPp+vOlUAxFGaSiGP4/h7INh9sOZhfYOXOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XLhi7+iI/cWm1pWmWmElVreVFTwSRozaRLrW0lDn97D7xrfSxco5HM/IQP/WZN1KxKI2lMGaPeeXuHk5SbsDu5k7enx4ZH4C8jXvHxZpTYLdOOAWgJoTMaMYCB8f3H5uzVw//R+EM0UIJq83IYkbkigfi2EQm4KbRt6bsf4bWmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GUHFXP8w; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kvrgWafX05X7d7LxvGnOUNEpDNF9QhQXOpjm5PqcdxC7jtq79l3RGplxz7dTnFQpAELYP9w0BFXJCWc5lQlcGTGRHad2g7cswCC5t4TTIKCZJ+I907+biVaGNM+tdPAYgDKqmCG187EOD3UDgXSy1oJ0zWzXLnmlyVedtrrkUco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AMlYPtmY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GUHFXP8w"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3416df43cabso4525108f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Apr 2024 07:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712155188; x=1712759988; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FklsZuM90rznRBFLrrNtkklczLk3WQXoeuBMkIdc+sw=;
-        b=GUHFXP8wM0ZNbJbzlnWdOtCyOpchY5SUq5iQv+6PUMiuHfhTt0UFLKhGqnRcHSGurc
-         awI23RSWMQQtkv/ekuLnzGAEtNPv0fNjLiRw9cJ/5aBaGBeJxeh09OA9cXAU2nDQmpP2
-         qlpyxVUmHyNsVGrygm9ayxcJGjmqgetNoZbruwzsTNEdJQxS68INMg0GbNoba+1Mkmod
-         vY1G3tJyBRX6XXTM3rt8E9xDTm21mJchY3WFrhY9r4g67MhXqNuQPXx7uaxy4SXFiYht
-         n8DIXi42RNuokB0Z2YwzEeql+7rRenzGWs9ZLP6qIA7O0GLwu/lIFE72FkceHx5YKxBC
-         ehSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712155188; x=1712759988;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FklsZuM90rznRBFLrrNtkklczLk3WQXoeuBMkIdc+sw=;
-        b=lVo4opSmHFAAqnl7PyR/wRqIGF8ACAbYzTBml/jy5m+M8689pxngbteMfw1zOknyw3
-         8jFfahagI6BnDGkUSuMNrjp3v+a/lbYsUwxMjGE/IspKwChzzu/0bRU23AQoXJsm1b6r
-         k3ZlonxTwlxb2CKGLH8DYm3GKaLNPZ4h8j7qiVDenvJ5vYN+iJzwaXl96S1UK9Uz3qU9
-         T9YlL2pUiIuz0JXQJ8M8og+anKW326JSNceVinZe1qvXW0oIY9kAZEnlpyVv1d53iVui
-         ias/XI79cyuvPW2LhIw3/x4UzZw5nec+l4Gjx5RaEmDuTzbRe2mdBsaQ5oeltfTdZn5Y
-         p4NA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOMfdoXJVnzM34DoTKfUay4L+rUXAqjeWmwrJiYfH0t08a9X6yDWcracv419qlSRd5JrqIQO9oKk8ay33dHqXIPFcLCgmd9/ADOxlhobNoSLeB
-X-Gm-Message-State: AOJu0Yyd7qb/xxANYbPHfiNAnIxzhddiUyBSIMwIlbbGrVBuOEyPif0b
-	ITWBtCvkSCfpT4ezp6iYEeXGT8J9WN5YnF5j88X1DSmpcp85Q7RhNWqzDDO5Vg==
-X-Google-Smtp-Source: AGHT+IE0XU9qxmp/M9iPgXeb9rRKuNSCPxPTPloUyHTQq1k1QWzd/q67ITtUheE9vPqlgNtysOX9mA==
-X-Received: by 2002:adf:fac8:0:b0:341:d765:8715 with SMTP id a8-20020adffac8000000b00341d7658715mr1935030wrs.35.1712155188365;
-        Wed, 03 Apr 2024 07:39:48 -0700 (PDT)
-Received: from google.com (161.126.77.34.bc.googleusercontent.com. [34.77.126.161])
-        by smtp.gmail.com with ESMTPSA id az15-20020adfe18f000000b0034335f13570sm15409592wrb.116.2024.04.03.07.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 07:39:47 -0700 (PDT)
-Date: Wed, 3 Apr 2024 15:39:44 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, linux-mm@kvack.org
-Subject: Re: [PATCH v19 RESEND 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <Zg1qMI7JYhdeY_z7@google.com>
-References: <20240326100830.1326610-1-vdonnefort@google.com>
- <20240326100830.1326610-4-vdonnefort@google.com>
- <20240329144055.0ae2dd4b@gandalf.local.home>
- <20240403101352.08c83aa4@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AMlYPtmY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712155864;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=92SXfEvrtPp+vOlUAxFGaSiGP4/h7INh9sOZhfYOXOs=;
+	b=AMlYPtmYFny7dFtxL6AKnjuaZHA4GHSUtq2FxDj9prKCUQPdRNfWnizoa2g843NGmEhgwp
+	aXZGmO9/k4LYGiWFu8mRjQaMQ9ic3z8omSXrfjB28eUReKZXhLwEzgbEupNJ6VK2SQcjAc
+	cSVnVY+CxsLxFeXiRDvKuKAoVkV1BXI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-349-cqVAc2OTMwiuhbvn4k-66Q-1; Wed, 03 Apr 2024 10:50:59 -0400
+X-MC-Unique: cqVAc2OTMwiuhbvn4k-66Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1F9B101A521;
+	Wed,  3 Apr 2024 14:50:58 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.49])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 4928237FC;
+	Wed,  3 Apr 2024 14:50:55 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  3 Apr 2024 16:49:34 +0200 (CEST)
+Date: Wed, 3 Apr 2024 16:49:10 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <20240403144910.GB31764@redhat.com>
+References: <20240402093302.2416467-1-jolsa@kernel.org>
+ <20240402093302.2416467-2-jolsa@kernel.org>
+ <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+ <Zg0lvUIB4WdRUGw_@krava>
+ <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -72,99 +70,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403101352.08c83aa4@gandalf.local.home>
+In-Reply-To: <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Wed, Apr 03, 2024 at 10:13:52AM -0400, Steven Rostedt wrote:
-> On Fri, 29 Mar 2024 14:40:55 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > > +static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-> > > +{
-> > > +	return VM_FAULT_SIGBUS;
-> > > +}  
-> > 
-> > If this is all it does, I don't believe it's needed.
-> > 
-> > > +
-> > > +#ifdef CONFIG_TRACER_MAX_TRACE
-> > > +static int get_snapshot_map(struct trace_array *tr)
-> > > +{
-> > > +	int err = 0;
-> > > +
-> > > +	/*
-> > > +	 * Called with mmap_lock held. lockdep would be unhappy if we would now
-> > > +	 * take trace_types_lock. Instead use the specific
-> > > +	 * snapshot_trigger_lock.
-> > > +	 */
-> > > +	spin_lock(&tr->snapshot_trigger_lock);
-> > > +
-> > > +	if (tr->snapshot || tr->mapped == UINT_MAX)
-> > > +		err = -EBUSY;
-> > > +	else
-> > > +		tr->mapped++;
-> > > +
-> > > +	spin_unlock(&tr->snapshot_trigger_lock);
-> > > +
-> > > +	/* Wait for update_max_tr() to observe iter->tr->mapped */
-> > > +	if (tr->mapped == 1)
-> > > +		synchronize_rcu();
-> > > +
-> > > +	return err;
-> > > +
-> > > +}
-> > > +static void put_snapshot_map(struct trace_array *tr)
-> > > +{
-> > > +	spin_lock(&tr->snapshot_trigger_lock);
-> > > +	if (!WARN_ON(!tr->mapped))
-> > > +		tr->mapped--;
-> > > +	spin_unlock(&tr->snapshot_trigger_lock);
-> > > +}
-> > > +#else
-> > > +static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
-> > > +static inline void put_snapshot_map(struct trace_array *tr) { }
-> > > +#endif
-> > > +
-> > > +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-> > > +{
-> > > +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> > > +	struct trace_iterator *iter = &info->iter;
-> > > +
-> > > +	WARN_ON(ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file));
-> > > +	put_snapshot_map(iter->tr);
-> > > +}
-> > > +
-> > > +static void tracing_buffers_mmap_open(struct vm_area_struct *vma) { }  
-> > 
-> > Same for the open.
-> > 
-> > 
-> > > +
-> > > +static const struct vm_operations_struct tracing_buffers_vmops = {
-> > > +	.open		= tracing_buffers_mmap_open,
-> > > +	.close		= tracing_buffers_mmap_close,
-> > > +	.fault		= tracing_buffers_mmap_fault,
-> > > +};  
-> > 
-> > I replaced this with:
-> > 
-> > static const struct vm_operations_struct tracing_buffers_vmops = {
-> > 	.close		= tracing_buffers_mmap_close,
-> > };
-> > 
-> > And it appears to work just fine. The mm code handles the NULL cases for
-> > .open and .fault.
-> > 
-> > Is there any reason to do something different than the mm defaults?
+Again, I leave this to you and Jiri, but
 
-No other reason here than my own ignorance. I will remove.
+On 04/03, Masami Hiramatsu wrote:
+>
+> On Wed, 3 Apr 2024 11:47:41 +0200
+> > > set in the user function, what happen if the user function directly
+> > > calls this syscall? (maybe it consumes shadow stack?)
+> >
+> > the process should receive SIGILL if there's no pending uretprobe for
+> > the current task, or it will trigger uretprobe if there's one pending
+>
+> No, that is too aggressive and not safe. Since the syscall is exposed to
+> user program, it should return appropriate error code instead of SIGILL.
 
-> 
-> Hi Vincent,
-> 
-> Do you plan on sending out a v20 series?
+...
 
-Of course, let me spin that this week! Got also few typos to fix in the doc and
-I believe an include missing for riscv.
+> Since the syscall is always exposed to the user program, it should
+> - Do nothing and return an error unless it is properly called.
+> - check the prerequisites for operation strictly.
 
-> 
-> -- Steve
+We have sys_munmap(). should it check if the caller is going to unmap
+the code region which contains regs->ip and do nothing?
+
+I don't think it should. Userspace should blame itself, SIGSEGV is not
+"too aggressive" in this case.
+
+> I concern that new system calls introduce vulnerabilities.
+
+Yes, we need to ensure that sys_uretprobe() can only damage the malicious
+caller and nothing else.
+
+Oleg.
+
