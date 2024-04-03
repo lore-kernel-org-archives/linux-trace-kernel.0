@@ -1,149 +1,218 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C43F2F24;
-	Wed,  3 Apr 2024 04:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0661C280;
+	Wed,  3 Apr 2024 04:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712116833; cv=none; b=LN5PfYCtjOYbR4dgIBPWFFxpxQlHqaDmLvln2UEtYatnGAvpYCSU/5xXC7zioOxLTQtxCOeehAucz9CpE9jTyZiQVI1KLpb9gVAgRRkVIT1oPoK2O+EsGNcm59a8LaiZambiUMHJfAKl0XcvLBNTYOUJ5eEKSKHToi3ZaTDd2TI=
+	t=1712116926; cv=none; b=sXZrSQg06xa65EabRMxy6vKX0htsfSNwjDg04dW/8aJfcVNKa13FI9YvbxR88Bd8F/1ZZ9AwVl/Wc/mumGusIVxAqJbr69Kd6BqVp/Y39HLzFvnxTro1mhgtwP8Hz0PZwClh++EjPt+qE+pW0ifjYxawpmhfrTPjzsTzZj4ihG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712116833; c=relaxed/simple;
-	bh=LTUZz+D5/JTV6pG16XzjSYofsaQ8i6U0m9/Lg6KUPcY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UMs5izMmUxfAT0u7EKT55KH4EZA7GMxhAJg5uSI6XkeJl3d5FnKuc6gd/kEILShK+hguEgdKvgEEGgm6+pZesb1qUXoPJDLfLX8O/3fla/SxGSQzqwZ7UnGU05elmSCO4XX0oA1FpHwaJy3EAIiWpE2nFsiTeU5IKWSNrRgXivk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z8P20mHg; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712116926; c=relaxed/simple;
+	bh=cOa4fNgEyvNjT9Vjx3Vq26F8M+OGOGyiXKEqLnmUWkA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Hh0DC/dOwlXsGSf784wIIbQGdewqn212RfSTa0U1CfS4DiLnCg8VBGYkWagKKsP9GRL6Fk2lcXlQMYVUe7amQRQ8DsvV2/JG6YRDtVLifLPdUrEPx2L8trMTW+YLFIeOGpRamuCEJhslXJvPZLR+bSmFOt3z9cOc2wvVy6BBsLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAg1G0/x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8P20mHg"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d8ddbac4fbso4628989a12.0;
-        Tue, 02 Apr 2024 21:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712116831; x=1712721631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ViRR7Pspb50mOxXm1sIKfzjFhEGldeN4t8fEXfZuz2s=;
-        b=Z8P20mHgFQ75nxG02JcsgwpSPjiJTYQ3LISPVs4s4mFxtmlg6uMfQ1I3ClZnC+DTVs
-         vT73x0ChxPkguPGS5RNzqoA7LC/acEmXn+aCsqmOZcMsZuLOFQ8NV5b6mUqM+tSSnPvD
-         +r0YcZ7FGR53xoGlVXWsDfeLiXVQwqDgNxhzgOFesv+dt6wS/t0zk0DYjUxmKRE9WejD
-         Ovft1hZTaqjmqRTaRetN3MiiGl6wOv6wMgOS4LRqoxXaqoeLr0y0mSBy/G/exrDCxXDh
-         XxTDS7nbpPCRlMthH9Y3goDmCEz6t3u70tVm+R00mxqDqEG9y89T942jJq9dG+K/GpOP
-         QRfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712116831; x=1712721631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ViRR7Pspb50mOxXm1sIKfzjFhEGldeN4t8fEXfZuz2s=;
-        b=kKJC04OSA/dwOqURl2f03rlQdDAz/SXwl4cakZwoW5k7YJx1Hbf2fzlz2BU/B9t1/v
-         gDEJw/Sc1TMpjEhLMFOa1CF+Wgw0g6RlqqKZDSjI4/Pm/ZGrKq3jqHSeH4x4wO+4eMnX
-         pELKM1nwpYk4Ot415SZIdaDarLuN872TkxTKUVwFpbBbqj6QT6/+/GFc98ls+zp7pHS4
-         0huCY5xWquS9O0JlZAMeeUXnv9n5jdDQbJHPPZtI2ON8fERqBr6aWUsFThKZgLF43FWq
-         iGluxEfexKg4CbJ0QUVUITALHENu2K3jrQ736etsU6SSX+VDKCF+UC6zRfqLs72qhtu2
-         Lp4g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3bnGoXUcNNOmHYeIAXGwT0af5Da2EGP2K04g+IPeWQqdBd8M9wzPEgbpPnzOSE0VRdWA1/qoV7bPoKFFpUit7jW2tRrbWKjsI2Z+qqazo6Vk0DXZt6KRlS7VjZKDJ4tOaYSJOsjHm
-X-Gm-Message-State: AOJu0Yz0USb2zwwRZ1koiIbJpY6mwAPS730Q5TE/23YY6WAPlcu3DwWo
-	K1WeEUJrbV98kXSJn3lVQbwzH9rtPnAA7fs+4DkO9rwDUDoymHFQC9jhgbEWt2vTNlS4zpmFg8X
-	QzDQMy0QTDqRS8Xx3ET913FhPmbs=
-X-Google-Smtp-Source: AGHT+IFRsJRdfA6rMVHDcIWMdVF7SBTsB8YzdSQryfE+uABcoF0bkSYiHC6ldfTN6GLCizDHtvdNNH0I+v7V7i0vUiE=
-X-Received: by 2002:a05:6a20:3ca8:b0:1a3:3fbd:f859 with SMTP id
- b40-20020a056a203ca800b001a33fbdf859mr19759408pzj.2.1712116831548; Tue, 02
- Apr 2024 21:00:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAg1G0/x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F374C433F1;
+	Wed,  3 Apr 2024 04:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712116925;
+	bh=cOa4fNgEyvNjT9Vjx3Vq26F8M+OGOGyiXKEqLnmUWkA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GAg1G0/xIX2J1J2IzlgQUaI7CAKrBrsNO0nZvJUPlmPNNTu3eCx7XiWUEUlw1Fien
+	 49QTU1ItigL5WfET0Aqm7pwwMS1yzcJpmHDBCb2t+TSbvGyZ06eh5uDJklBIXMsnQF
+	 863JiHn3OCZN4Ro41fhKIUCifx4crkJsp5t8pdRLowpzP2F0kXvYrxpqC6Ap2d1VLW
+	 4C7aznm4dp4E+KlxLkUk8D+O33R72FfCQVR9Js6f7BaiL4yDvgd6zgCYZ4OUXviqQp
+	 CqprBfm1MqQCP0dQLEvwmJaH3QPEqV8iW+1xcmOXGKUxHXbM5tw7rNnSXRnCc9IRZn
+	 z0uNl48TR7s5w==
+Date: Wed, 3 Apr 2024 13:02:01 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Andy Chiu <andy.chiu@sifive.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
+ <mark.rutland@arm.com>, Sami Tolvanen <samitolvanen@google.com>, Guo Ren
+ <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, Deepak
+ Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>,
+ Song Shuai <suagrfillet@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] ftrace: riscv: move from REGS to ARGS
+Message-Id: <20240403130201.3340e5fe1d01a4f86dd2d772@kernel.org>
+In-Reply-To: <87bk6rsyry.fsf@all.your.base.are.belong.to.us>
+References: <20240328141845.128645-1-puranjay12@gmail.com>
+	<87bk6rsyry.fsf@all.your.base.are.belong.to.us>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240322160323.2463329-1-andrii@kernel.org> <20240325113848.32a70948d1cdb0fa76225690@kernel.org>
- <20240325181338.39376089@gandalf.local.home> <CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
- <20240326150121.68e9db8a@gandalf.local.home> <20240401202552.470d845bd79c841b9158fb56@kernel.org>
- <20240401120918.67cc3191@gandalf.local.home> <20240402093839.7de89341138748f743ae896d@kernel.org>
- <CAEf4BzaGWEKnntoD2KLhVORGZ0ATq_TqhPBQnbbWQCeCM2EteA@mail.gmail.com>
- <20240401224733.7a9bcbb6@gandalf.local.home> <20240403094048.3a443fbeeed551f11c1970d8@kernel.org>
- <20240402205459.297c4206@gandalf.local.home>
-In-Reply-To: <20240402205459.297c4206@gandalf.local.home>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Apr 2024 21:00:19 -0700
-Message-ID: <CAEf4BzahMFsdN8QvW6XiUk+3MzvLUjudXO5=qfhKBYfDvEgy5w@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check optional
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, jolsa@kernel.org, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 2, 2024 at 5:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Wed, 3 Apr 2024 09:40:48 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
->
-> > OK, for me, this last sentence is preferred for the help message. That =
-explains
-> > what this is for.
+On Tue, 02 Apr 2024 15:02:41 +0200
+Björn Töpel <bjorn@kernel.org> wrote:
+
+> Puranjay Mohan <puranjay12@gmail.com> writes:
+> 
+> > This commit replaces riscv's support for FTRACE_WITH_REGS with support
+> > for FTRACE_WITH_ARGS. This is required for the ongoing effort to stop
+> > relying on stop_machine() for RISCV's implementation of ftrace.
 > >
-> >         All callbacks that attach to the function tracing have some sor=
-t
-> >         of protection against recursion. This option is only to verify =
-that
-> >=E3=80=80       ftrace (and other users of ftrace_test_recursion_trylock=
-()) are not
-> >         called outside of RCU, as if they are, it can cause a race.
-> >         But it also has a noticeable overhead when enabled.
-
-Sounds good to me, I can add this to the description of the Kconfig option.
-
+> > The main relevant benefit that this change will bring for the above
+> > use-case is that now we don't have separate ftrace_caller and
+> > ftrace_regs_caller trampolines.  This will allow the callsite to call
+> > ftrace_caller by modifying a single instruction. Now the callsite can
+> > do something similar to:
 > >
-> > BTW, how much overhead does this introduce? and the race case a kernel =
-crash?
+> > When not tracing:            |             When tracing:
+> >
+> > func:                                      func:
+> >   auipc t0, ftrace_caller_top                auipc t0, ftrace_caller_top
+> >   nop  <=========<Enable/Disable>=========>  jalr  t0, ftrace_caller_bottom
+> >   [...]                                      [...]
+> >
+> > The above assumes that we are dropping the support of calling a direct
+> > trampoline from the callsite. We need to drop this as the callsite can't
+> > change the target address to call, it can only enable/disable a call to
+> > a preset target (ftrace_caller in the above diagram).
+> >
+> > Currently, ftrace_regs_caller saves all CPU registers in the format of
+> > struct pt_regs and allows the tracer to modify them. We don't need to
+> > save all of the CPU registers because at function entry only a subset of
+> > pt_regs is live:
+> >
+> > |----------+----------+---------------------------------------------|
+> > | Register | ABI Name | Description                                 |
+> > |----------+----------+---------------------------------------------|
+> > | x1       | ra       | Return address for traced function          |
+> > | x2       | sp       | Stack pointer                               |
+> > | x5       | t0       | Return address for ftrace_caller trampoline |
+> > | x8       | s0/fp    | Frame pointer                               |
+> > | x10-11   | a0-1     | Function arguments/return values            |
+> > | x12-17   | a2-7     | Function arguments                          |
+> > |----------+----------+---------------------------------------------|
+> >
+> > See RISCV calling convention[1] for the above table.
+> >
+> > Saving just the live registers decreases the amount of stack space
+> > required from 288 Bytes to 112 Bytes.
+> >
+> > Basic testing was done with this on the VisionFive 2 development board.
+> >
+> > Note:
+> >   - Moving from REGS to ARGS will mean that RISCV will stop supporting
+> >     KPROBES_ON_FTRACE as it requires full pt_regs to be saved.
+> 
+> ...and FPROBES, but Masami is (still?) working on a series to address
+> that [1].
 
-I just checked our fleet-wide production data for the last 24 hours.
-Within the kprobe/kretprobe code path (ftrace_trampoline and
-everything called from it), rcu_is_watching (both calls, see below)
-cause 0.484% CPU cycles usage, which isn't nothing. So definitely we'd
-prefer to be able to avoid that in production use cases.
+Yes, even with this patch, FPROBE can be worked with my series.
+So I'm OK for this change.
 
-> > or just messed up the ftrace buffer?
->
-> There's a hypothetical race where it can cause a use after free.
->
-> That is, after you shutdown ftrace, you need to call synchronize_rcu_task=
-s(),
-> which requires RCU to be watching. There's a theoretical case where that
-> task calls the trampoline and misses the synchronization. Note, these
-> locations are with preemption disabled, as rcu is always watching when
-> preemption is enabled. Thus it would be extremely fast where as the
-> synchronize_rcu_tasks() is rather slow.
->
-> We also have synchronize_rcu_tasks_rude() which would actually keep the
-> trace from happening, as it would schedule on each CPU forcing all CPUs t=
-o
-> have RCU watching.
->
-> I have never heard of this race being hit. I guess it could happen on a V=
-M
-> where a vCPU gets preempted at the right moment for a long time and the
-> other CPUs synchronize.
->
-> But like lockdep, where deadlocks can crash the kernel, we don't enable i=
-t
-> for production.
->
-> The overhead is another function call within the function tracer. I had
-> numbers before, but I guess I could run tests again and get new numbers.
->
+Thank you,
 
-I just noticed another rcu_is_watching() call, in rethook_try_get(),
-which seems to be a similar and complementary validation check to the
-one we are putting under CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING option
-in this patch. It feels like both of them should be controlled by the
-same settings. WDYT? Can I add CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
-guard around rcu_is_watching() check in rethook_try_get() as well?
+> 
+> My perspective; This is following the work Mark et al has done for
+> arm64, and it does make sense for RISC-V as well. I'm in favor having
+> this change as part of the bigger call_ops/text patch change for RISC-V.
+> 
+> [...]
+> 
+> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> > index 1276d7d9ca8b..1e95bf4ded6c 100644
+> > --- a/arch/riscv/include/asm/ftrace.h
+> > +++ b/arch/riscv/include/asm/ftrace.h
+> > @@ -124,20 +124,87 @@ struct dyn_ftrace;
+> >  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+> >  #define ftrace_init_nop ftrace_init_nop
+> >  
+> > -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> > +#define arch_ftrace_get_regs(regs) NULL
+> >  struct ftrace_ops;
+> > -struct ftrace_regs;
+> > +struct ftrace_regs {
+> > +	unsigned long epc;
+> > +	unsigned long ra;
+> > +	unsigned long sp;
+> > +	unsigned long s0;
+> > +	unsigned long t1;
+> > +	union {
+> > +		unsigned long args[8];
+> > +		struct {
+> > +			unsigned long a0;
+> > +			unsigned long a1;
+> > +			unsigned long a2;
+> > +			unsigned long a3;
+> > +			unsigned long a4;
+> > +			unsigned long a5;
+> > +			unsigned long a6;
+> > +			unsigned long a7;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +static __always_inline unsigned long
+> > +ftrace_regs_get_instruction_pointer(const struct ftrace_regs *fregs)
+> > +{
+> > +	return fregs->epc;
+> > +}
+> > +
+> > +static __always_inline void
+> > +ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+> > +				    unsigned long pc)
+> > +{
+> > +	fregs->epc = pc;
+> > +}
+> > +
+> > +static __always_inline unsigned long
+> > +ftrace_regs_get_stack_pointer(const struct ftrace_regs *fregs)
+> > +{
+> > +	return fregs->sp;
+> > +}
+> > +
+> > +static __always_inline unsigned long
+> > +ftrace_regs_get_argument(struct ftrace_regs *fregs, unsigned int n)
+> > +{
+> > +	if (n < 8)
+> > +		return fregs->args[n];
+> > +	return 0;
+> > +}
+> > +
+> > +static __always_inline unsigned long
+> > +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
+> > +{
+> > +	return fregs->a0;
+> > +}
+> > +
+> > +static __always_inline void
+> > +ftrace_regs_set_return_value(struct ftrace_regs *fregs,
+> > +			     unsigned long ret)
+> > +{
+> > +	fregs->a0 = ret;
+> > +}
+> > +
+> > +static __always_inline void
+> > +ftrace_override_function_with_return(struct ftrace_regs *fregs)
+> > +{
+> > +	fregs->epc = fregs->ra;
+> > +}
+> 
+> Style/nit: All above; Try to use the full 100 chars, and keep the
+> function name return value on the same line for grepability.
+> 
+> 
+> Björn
+> 
+> [1] https://lore.kernel.org/all/170887410337.564249.6360118840946697039.stgit@devnote2/
 
 
-> Thanks,
->
-> -- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
