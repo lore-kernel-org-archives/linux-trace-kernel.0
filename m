@@ -1,166 +1,140 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5B44086B;
-	Wed,  3 Apr 2024 05:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3708955C29;
+	Wed,  3 Apr 2024 07:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712121675; cv=none; b=GasC4uLe6wsK7lRhF4UgtxPVJaUaE5oEnYD4aIhyMp4x+nvXfSvtR+RTpEjojv6zh67Fnov7sB2ONXgN9b2I93lNZcFvhWgD0x0JzFJhOZ3PqLdhbPItLFzh2HHfcnKbJUbwsRUr99JOJSCASSYCDXziubQh/cXO3THSDZk0o+c=
+	t=1712129522; cv=none; b=jKAF9IggTMCK3co0X/eWSO/jTIBMHKslzxoiQVDw8jG5CAdK0Qsy80vivA9dmMoaufFTaGYEMpgiU1of3kerXKhmYzsr2L4BsNKBYzgInXIwYpV9fOJA840wZC/MEVdXQmd3daeYHND72nkqiZHFWHCI99AJJulFDoFx/XgbiSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712121675; c=relaxed/simple;
-	bh=Z04dXfqhQoPka3kWZ2rCAbBw5YWEqBvOumRhRZjQBps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=soq0Yq6mifaPhgii1wnX0ndb0fCH6s0yOVLNOkXl5k3zGFynCRRKSxDWgHOoONM+QcgJT79Dl1NmSG4Sn/uD+0Nk3wkPfTmZQB+G48MIaDpGPHoSY7iODAqLGgxVlQdDakYhu96WvVBbmp+fOHqIvZMkUi0OHbQW3Yb67eyeIk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E2UgVxqZ; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1712129522; c=relaxed/simple;
+	bh=IYGqofXTixcqgKsTRQdMNiZ655WhCgAGfO6FimJogF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=osI0P3VQGJZyoQQ3ymCHWwIfFv2Fca6x+VpV6J4OOOeIpPuteIn4Xnw8cBd5JJ+DgpUuOv8USOtkjnvcomcylpeuuOWtnWLUmPwWxJ2wTZJU2gUvvpKXGUxcYMB+FZKvbZFYCpBgwj+AR6EdpN5Ic0t2CfM9MiBdGGuuAJqrU1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sxbo8jqJ; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2UgVxqZ"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a297378cf0so206732a91.1;
-        Tue, 02 Apr 2024 22:21:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sxbo8jqJ"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e6c0098328so5207218b3a.3;
+        Wed, 03 Apr 2024 00:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712121673; x=1712726473; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WoSiAxMmd7PrX2Im9r7GPLxnlY6pQxrAQtsoyEBgojs=;
-        b=E2UgVxqZtVliEhjDU5kIi2Wzlk1Bs1dj+WI32S6eS3cY4wsZSnfnguTCyuVV8SCCUt
-         JRr423zbgWbx1l7wALm+W9QsgjBe13lsG+gZJf/Twk/bJFsD+rxLLFpF5Pv1xNEpMwbZ
-         nHGXfz4aJIMrfQ0wkMTLAkVqIDOcQ/MIV946NkkZEbSvU2pEuR6X27fvbrowVpsEu/ug
-         OWxjvn3HArv7RIzOUBJ8ph5xAlFBcZmFp9tD3xFu/laa2L2ztNuTwzTdB5xrDlnuwbET
-         ePI62n0dEklGQLszBsTK6RaS4rZzSptjBnIz81OO+KTi9smMzKrGCWea6Idgvy19fAYp
-         WLKQ==
+        d=gmail.com; s=20230601; t=1712129520; x=1712734320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pNtMYAEo2tFm50CvZbzCEMtnb8xqmlnnhCu6vPSs0yE=;
+        b=Sxbo8jqJVGKC3uaoFICcHIYkHW2f5KmwsoriVTx5ktvUtiBzVyEahPItaZaOxjzz62
+         7ufCFfZgKwYT3N8m1YY6uUm2PStTLmGjUuUw2BBO2sqcFCa22udUt7o3mxP7pqo0NJRT
+         ZmWhNKN4QJS1EgdMravO1WU0Vd4TFxMC7fn1KCH2jfP1dzgPK7rGAJSSd/2GeJcPIQNL
+         ZzwdPgZD3YLIVLl2YGY6i/GCf4L2uBvmys9rVT2QdkhJyzHix08HOEivT/USSdRXmnhr
+         1k5ISce0d1yPxyUxttgy7/qLKwhUP4O9v5dyaXVA8xhlKuZasrA9WDhSxxZhBQIxUdh2
+         enDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712121673; x=1712726473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WoSiAxMmd7PrX2Im9r7GPLxnlY6pQxrAQtsoyEBgojs=;
-        b=TPLq0im8dtvkzTyhZcL4usweKIYNi8/WyY0LAGHmwqn30k+h9K1CNbBRZAC5Yoxr+D
-         MtaRvl5NxQFEbGK8ltRcomLuNG1FbrtiOsQshgYI3jjDysC+DYbl9skOJLBl4xwGMYMY
-         K3PgufckWKIb+0dIObYuipi82xPHBe7K2HbpL6xgwWJKfFPJbC5v+a252hMYSRGsK3Ni
-         IMhF2vHbpym9ghaMM9DJvQvv22aWeZDi+UGvczA+3b8ktopesj/1/HBX2/T3GOWpR0i6
-         uSH6QQrqJzqcHzazcuiARP7Jv4oHJYBTNafqk71gGd0Edy79QKl1OOL7/BzResM2flTw
-         70IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYw986qk2oZQXb2QwYm6V8pU0tLuddRN25qC8i+r72+h1us5xDaNF+Anv8A9UrLbZZ+75azoY6PGviHpMYKAguoatZUgM3/E9zmf0yPfJaRhmrNxgedMtTrMPeo5VnCpsdM4I31KFU
-X-Gm-Message-State: AOJu0YxRVZl2AZumfL1BjU2zPpMN+cWYJ+8OHmfjIySj/oFcWOsNd6Cc
-	hT845SC8wQmzohykUmkOStoERjbrmHQrrFdkSNijGV0M8Iam0ck6oIS+Z2E9LZ38RYBGwFGkhDK
-	Euo8LNDAce0eZ14gt5AFDmbJ1szNAZ720pwk=
-X-Google-Smtp-Source: AGHT+IFmw+dNkBpNGR/lr+Wwal7rWFu7MeELy85xRmamPutQ0897FhcZ3Z7O7GSUt+yOQwbl+sVA86f+85YrJJKy+/w=
-X-Received: by 2002:a17:90b:1954:b0:2a2:69b9:78d7 with SMTP id
- nk20-20020a17090b195400b002a269b978d7mr2674901pjb.17.1712121673391; Tue, 02
- Apr 2024 22:21:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712129520; x=1712734320;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pNtMYAEo2tFm50CvZbzCEMtnb8xqmlnnhCu6vPSs0yE=;
+        b=I8MpjFR0eyPtpCQNz2KphgKJNJra63pQRzxmbvBVjyN+Kkv2+NeA+PlsNBCAbscyzC
+         yZBf+48TncuXz0wh9Y/CY7HNXenWyUR56NTJWzvjF8alrVNi8VB8bB5Qohd5h0I6raQs
+         iF0GCLBCIXSl5/bs2CxTI6FnVWoFRlX7SMazquUFICOSlxM5JGWXBNyMwC3CcVZMVmYj
+         29/RZM+Hv73MnylIIo9IxyUrnCvuSt1dXnLsPB0JDHlFLpT8QU9bdiGwWyiPR/MYXDBS
+         3a9VtphYpe8BBbwTuIPG56Pg7iWkORBWu8QYp/b69Y2xUswGeHgSgnHhdH6FxcsEWeYh
+         0//g==
+X-Forwarded-Encrypted: i=1; AJvYcCVbriH8fnY08LrzP+XE1B0eagQzCu+e3VToRko6KCp+zqIGXt9KMzYfz95k66JLXPXspAtFlcDsGgz9t2nxqm5DIlBYp720dksfVSUFJSPCJJ6DbMt+oj0XCjVy9d54MRumy/5ouwcLfr6z
+X-Gm-Message-State: AOJu0YxB959mBXherAxJJ1os2vEuBNL83XY4rL5cFeHp+hf5JtaGUCjT
+	ZqOHfkTs9kGsvtEqxMhk73ZvqZiTQzQ4/oD7K/9OF5JX22TDKGBz
+X-Google-Smtp-Source: AGHT+IFjJ4YKli3gCiijcxM+vyWCFeOt2dMZheZQbq9K0r1XuLrzNH4ZMCiXy8XjIrGCQ3X0TtLUAA==
+X-Received: by 2002:a05:6a20:121e:b0:1a3:6404:7f0a with SMTP id v30-20020a056a20121e00b001a364047f0amr11815680pzf.50.1712129520346;
+        Wed, 03 Apr 2024 00:32:00 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id c2-20020a170902d48200b001e03b2f7ab1sm12563067plg.92.2024.04.03.00.31.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 00:31:59 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	rostedt@goodmis.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org
+Cc: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next 0/6]  Implement reset reason mechanism to detect
+Date: Wed,  3 Apr 2024 15:31:38 +0800
+Message-Id: <20240403073144.35036-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322160323.2463329-1-andrii@kernel.org> <20240325113848.32a70948d1cdb0fa76225690@kernel.org>
- <20240325181338.39376089@gandalf.local.home> <CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
- <20240326150121.68e9db8a@gandalf.local.home> <20240401202552.470d845bd79c841b9158fb56@kernel.org>
- <20240401120918.67cc3191@gandalf.local.home> <20240402093839.7de89341138748f743ae896d@kernel.org>
- <CAEf4BzaGWEKnntoD2KLhVORGZ0ATq_TqhPBQnbbWQCeCM2EteA@mail.gmail.com>
- <20240401224733.7a9bcbb6@gandalf.local.home> <20240403094048.3a443fbeeed551f11c1970d8@kernel.org>
- <20240402205459.297c4206@gandalf.local.home> <CAEf4BzahMFsdN8QvW6XiUk+3MzvLUjudXO5=qfhKBYfDvEgy5w@mail.gmail.com>
-In-Reply-To: <CAEf4BzahMFsdN8QvW6XiUk+3MzvLUjudXO5=qfhKBYfDvEgy5w@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Apr 2024 22:21:00 -0700
-Message-ID: <CAEf4BzauQ2WKMjZdc9s0rBWa01BYbgwHN6aNDXQSHYia47pQ-w@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check optional
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, jolsa@kernel.org, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 2, 2024 at 9:00=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Apr 2, 2024 at 5:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
-> >
-> > On Wed, 3 Apr 2024 09:40:48 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> >
-> > > OK, for me, this last sentence is preferred for the help message. Tha=
-t explains
-> > > what this is for.
-> > >
-> > >         All callbacks that attach to the function tracing have some s=
-ort
-> > >         of protection against recursion. This option is only to verif=
-y that
-> > >=E3=80=80       ftrace (and other users of ftrace_test_recursion_trylo=
-ck()) are not
-> > >         called outside of RCU, as if they are, it can cause a race.
-> > >         But it also has a noticeable overhead when enabled.
->
-> Sounds good to me, I can add this to the description of the Kconfig optio=
-n.
->
-> > >
-> > > BTW, how much overhead does this introduce? and the race case a kerne=
-l crash?
->
-> I just checked our fleet-wide production data for the last 24 hours.
-> Within the kprobe/kretprobe code path (ftrace_trampoline and
-> everything called from it), rcu_is_watching (both calls, see below)
-> cause 0.484% CPU cycles usage, which isn't nothing. So definitely we'd
-> prefer to be able to avoid that in production use cases.
->
+From: Jason Xing <kernelxing@tencent.com>
 
-I just ran synthetic microbenchmark testing multi-kretprobe
-throughput. We get (in millions of BPF kretprobe-multi program
-invocations per second):
-  - 5.568M/s as baseline;
-  - 5.679M/s with changes in this patch (+2% throughput improvement);
-  - 5.808M/s with disabling rcu_is_watching in rethook_try_get()
-(+2.3% more vs just one of rcu_is_watching, and +4.3% vs baseline).
+In production, there are so many cases about why the RST skb is sent but
+we don't have a very convenient/fast method to detect the exact underlying
+reasons.
 
-It's definitely noticeable.
+RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+and active kind (like tcp_send_active_reset()). The former can be traced
+carefully 1) in TCP, with the help of drop reasons, which is based on
+Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+RFC 8684. The latter is relatively independent, which should be
+implemented on our own.
 
-> > > or just messed up the ftrace buffer?
-> >
-> > There's a hypothetical race where it can cause a use after free.
-> >
-> > That is, after you shutdown ftrace, you need to call synchronize_rcu_ta=
-sks(),
-> > which requires RCU to be watching. There's a theoretical case where tha=
-t
-> > task calls the trampoline and misses the synchronization. Note, these
-> > locations are with preemption disabled, as rcu is always watching when
-> > preemption is enabled. Thus it would be extremely fast where as the
-> > synchronize_rcu_tasks() is rather slow.
-> >
-> > We also have synchronize_rcu_tasks_rude() which would actually keep the
-> > trace from happening, as it would schedule on each CPU forcing all CPUs=
- to
-> > have RCU watching.
-> >
-> > I have never heard of this race being hit. I guess it could happen on a=
- VM
-> > where a vCPU gets preempted at the right moment for a long time and the
-> > other CPUs synchronize.
-> >
-> > But like lockdep, where deadlocks can crash the kernel, we don't enable=
- it
-> > for production.
-> >
-> > The overhead is another function call within the function tracer. I had
-> > numbers before, but I guess I could run tests again and get new numbers=
-.
-> >
->
-> I just noticed another rcu_is_watching() call, in rethook_try_get(),
-> which seems to be a similar and complementary validation check to the
-> one we are putting under CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING option
-> in this patch. It feels like both of them should be controlled by the
-> same settings. WDYT? Can I add CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
-> guard around rcu_is_watching() check in rethook_try_get() as well?
->
->
-> > Thanks,
-> >
-> > -- Steve
+In this series, I focus on the fundamental implement mostly about how
+the rstreason mechnism and the detailed passive part works as an
+example, not including the active reset part. In future, we can go
+further and refine those NOT_SPECIFIED reasons.
+
+Here are some examples when tracing:
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NOT_SPECIFIED
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NO_SOCKET
+
+[1]
+Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com/
+
+Note:
+It's based on top of https://patchwork.kernel.org/project/netdevbpf/list/?series=840182
+
+
+Jason Xing (6):
+  net: introduce rstreason to detect why the RST is sent
+  rstreason: prepare for passive reset
+  rstreason: prepare for active reset
+  tcp: support rstreason for passive reset
+  mptcp: support rstreason for passive reset
+  rstreason: make it work in trace world
+
+ include/net/request_sock.h |  3 +-
+ include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
+ include/net/tcp.h          |  2 +-
+ include/trace/events/tcp.h | 37 +++++++++++++--
+ net/dccp/ipv4.c            | 10 ++--
+ net/dccp/ipv6.c            | 10 ++--
+ net/dccp/minisocks.c       |  3 +-
+ net/ipv4/tcp.c             | 15 ++++--
+ net/ipv4/tcp_ipv4.c        | 14 +++---
+ net/ipv4/tcp_minisocks.c   |  3 +-
+ net/ipv4/tcp_output.c      |  4 +-
+ net/ipv4/tcp_timer.c       |  9 ++--
+ net/ipv6/tcp_ipv6.c        | 17 ++++---
+ net/mptcp/protocol.c       |  4 +-
+ net/mptcp/subflow.c        | 33 ++++++++++----
+ 15 files changed, 209 insertions(+), 48 deletions(-)
+ create mode 100644 include/net/rstreason.h
+
+-- 
+2.37.3
+
