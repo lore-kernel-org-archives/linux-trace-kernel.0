@@ -1,121 +1,123 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2D1138494;
-	Wed,  3 Apr 2024 22:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F043F15696E
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Apr 2024 22:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712182533; cv=none; b=Ak3DoD6la1BJjao+A/N2BS5MBeFgtI4WJEXBelmwBpCirCwslTGhcgzUyid8J3EdH6bXC9oluteyYyImg5wzX5qj3X9AiY2w+aVRtK9a1Tl02R1WAdK409PkWWXqHQQUiEPcq8euEKqV/PY138A+YPe128VGsSmp5blruO1mq3I=
+	t=1712183198; cv=none; b=t+jHQddk6Te+3r8yEumVHPyOkGldYRnbQUEd4vThB9P2xePrdNGEcUvbjWaFCAHKZXQv7eTYQTzklhoccLvm1su18RR2CIRTHrWdJcM+2eYg1QN7uxBKoHCbbO4RZbF/0UyWtErAHOKp45RRuahmrREZpPnnDoQ2lezR+4wrPqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712182533; c=relaxed/simple;
-	bh=wnI9q1XWClk4UoUz4YToEoTPtMP66zcetGjMY6MOWBc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=LLpDi3MW4g/bxI7DPc3fmcFXYvvea1tvYdDcJ17RIbAL7Q+hNxVR7lGgKmWN0ylF9n0gq1R5FPy4M5ShqYC11EKaL0t5mnMSKoX/YhjmpOmXgqu+P+JxlJLgamM6nmaktqTWMnmNYiSaiMq/O1GpmWcT/OtI4aecozy7cJ+yuY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J4myPBuu; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712183198; c=relaxed/simple;
+	bh=+G+p7PUzf0BfAH297N0kjhQMBzqeiWZ/1h1BedR6ZQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDWFZi5zAe1HfO2QbSl4E1dszqAjNV9nN0z/+fXQ3pqD09te3bhUZQ4l8pHDz7D+zs9bKNJirUYjYDSMrAU9VZ8U8LSHkzjKoFqWerDWx4hY1ii6Iat1htTwUWPvtFR8SjTrwpCvGNKmTPnV37ZRrLsaaSZ0tfeCjBx41pHQ/CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rYZ6ce1b; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4myPBuu"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6eaf9565e6bso213919b3a.2;
-        Wed, 03 Apr 2024 15:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712182531; x=1712787331; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qa83cO8+E/0MeIPqx8GuMYKFzGCtdUc8JeEyD1W6Oxs=;
-        b=J4myPBuu19k2j1U6FmLhHepP4vcYvPxeTabhCPc/0N7tiGJ4PmpEm5VgD3zl3x+LV5
-         TUeAntrISOWlt8qIpneD0iELf6y1yz7Yg7OejmvNJBSg9N6pifPyT9POgteWcc+9REi3
-         a2OlvRBg7p0cLGfIH3dVhhohoF/1H+48jtEkgT0WClOOulniMAU5JyAS1R/zuWiMPol8
-         uC6HsvCT8G6LTB7oPIv5yG9fdADpXCWumLY+QrD7h6lDIi/8MpOyR3GfFQftvMfSf48i
-         tPfvS051MfxS4f7DmZ40tFI2RDw6LNIJ7LagLUbqvGOsNl0LjRRYwj8pz+Jjfe9xzIdv
-         dT+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712182531; x=1712787331;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Qa83cO8+E/0MeIPqx8GuMYKFzGCtdUc8JeEyD1W6Oxs=;
-        b=qr/K1Y4Fh1aO8X8nr4MQMAXUPIdb8lp4XNQUdPchhrt7jkdIDfGrPvC5eMuameCPbi
-         kUyOCo3wsENKahl9WvocijuahkQIYNlXTWnFx7y6EwQG4VqwzTDpjBrMh7PJao15s4g/
-         Q28VLeN/LpZOuB0YwWsi//ACPXYBwI8iQwD3y9J2o0OUqHxg+cLptmfXqN/kwwuFgzty
-         d4hrTDy3U6iNKVQizL6EC0HlFf3F0TG8p30PK1US8yP0u1WF9dRlvwpujHSNuh7UIWn8
-         YHUy3FY2taxSWoDTxNdvNE+eyAgyUsJynMBRU23uOIb1F5MAk3C+IGpfa1Z9UzVF8srA
-         59+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpV9CJQLXDKlxYj1RIWhSHSijC00KD9QePmewx+Yr66wtktGoh+xtivzYKvBSnvOQUGiH/UHthNrtf85Mev599Hi6JrUBI8jKz9b4u0ZmzHUG70Ut2TnBU2ZcfVdo9XaCpkse1ro0u
-X-Gm-Message-State: AOJu0YzB1LP4Oec6izobKBQI6yFWWxGKxlphu9MG0FIaN0FyGp3Qb1PQ
-	J+/izobRyNRYWifsHQ6fpePDXb2SzoBXhvCp4HMqJOCuTdbC93oVuG/PO5va
-X-Google-Smtp-Source: AGHT+IF8Y5ziJQ5zIq+S/EAFVHj5xRMePnALmHrqwKFxt146VSMhBJCRz2jN+0ZaWv4mfUQCijRQVw==
-X-Received: by 2002:a05:6a20:7f96:b0:1a7:208d:9b4f with SMTP id d22-20020a056a207f9600b001a7208d9b4fmr1099909pzj.16.1712182531138;
-        Wed, 03 Apr 2024 15:15:31 -0700 (PDT)
-Received: from localhost ([98.97.36.54])
-        by smtp.gmail.com with ESMTPSA id v186-20020a6261c3000000b006e71e3d1172sm12727853pfb.101.2024.04.03.15.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 15:15:30 -0700 (PDT)
-Date: Wed, 03 Apr 2024 15:15:29 -0700
-From: John Fastabend <john.fastabend@gmail.com>
-To: Kui-Feng Lee <thinker.li@gmail.com>, 
- mhiramat@kernel.org, 
- martin.lau@linux.dev, 
- kernel-team@meta.com, 
- andrii@kernel.org, 
- linux-trace-kernel@vger.kernel.org, 
- bpf@vger.kernel.org
-Cc: sinquersw@gmail.com, 
- kuifeng@meta.com, 
- Kui-Feng Lee <thinker.li@gmail.com>
-Message-ID: <660dd501ee0da_21448208d5@john.notmuch>
-In-Reply-To: <20240401191621.758056-1-thinker.li@gmail.com>
-References: <20240401191621.758056-1-thinker.li@gmail.com>
-Subject: RE: [PATCH bpf-next] rethook: Remove warning messages printed for
- finding return address of a frame.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rYZ6ce1b"
+Date: Wed, 3 Apr 2024 15:26:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712183194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tr4HRJASUWsJ8dz8DfAUU8KdBHE+qIpXfx0KtRQCMR8=;
+	b=rYZ6ce1b3z7JdrEBHUcgwE6NTdSjYGvzF5sLGRd+ms5WCPLbJSvsvITzI3rGhfMkPwc26t
+	i4EuKR/9IzUrjOB70zekb+2W9iaWjuG8Uh+TNmbJirdjMwOCAoKyzrDHwnteGOuYt2XRfn
+	XrNkTcg6kt256I6ScTNHhu4LEwc0bF4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Ubisectech Sirius <bugreport@ubisectech.com>
+Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	hannes <hannes@cmpxchg.org>, mhocko <mhocko@kernel.org>,
+	"shakeel.butt" <shakeel.butt@linux.dev>
+Subject: Re: =?utf-8?B?5Zue5aSN77ya5Zue5aSN77yaZ2Vu?= =?utf-8?Q?eral?=
+ protection fault in refill_obj_stock
+Message-ID: <Zg3XjAEJ6fyHKIK_@P9FQF9L96D.corp.robot.car>
+References: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
+ <ZgtIuBlUVE1Lj_Tc@P9FQF9L96D>
+ <a6b8148d-10b9-4fae-a987-39ae62bad0cb.bugreport@ubisectech.com>
+ <Zgtzup7T4TMZWPuz@P9FQF9L96D>
+ <69eeefa1-b654-4d19-b569-429abfc58d0a.bugreport@ubisectech.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69eeefa1-b654-4d19-b569-429abfc58d0a.bugreport@ubisectech.com>
+X-Migadu-Flow: FLOW_OUT
 
-Kui-Feng Lee wrote:
-> rethook_find_ret_addr() prints a warning message and returns 0 when the
-> target task is running and not the "current" task to prevent returning an
-> incorrect return address. However, this check is incomplete as the target
-> task can still transition to the running state when finding the return
-> address, although it is safe with RCU.
-> 
-> The issue we encounter is that the kernel frequently prints warning
-> messages when BPF profiling programs call to bpf_get_task_stack() on
-> running tasks.
-> 
-> The callers should be aware and willing to take the risk of receiving an
-> incorrect return address from a task that is currently running other than
-> the "current" one. A warning is not needed here as the callers are intent
-> on it.
-> 
-> Signed-off-by: Kui-Feng Lee <thinker.li@gmail.com>
-> ---
->  kernel/trace/rethook.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> index fa03094e9e69..4297a132a7ae 100644
-> --- a/kernel/trace/rethook.c
-> +++ b/kernel/trace/rethook.c
-> @@ -248,7 +248,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
->  	if (WARN_ON_ONCE(!cur))
->  		return 0;
->  
-> -	if (WARN_ON_ONCE(tsk != current && task_is_running(tsk)))
-> +	if (tsk != current && task_is_running(tsk))
->  		return 0;
->  
->  	do {
-> -- 
-> 2.34.1
-> 
-> 
+On Tue, Apr 02, 2024 at 02:14:58PM +0800, Ubisectech Sirius wrote:
+> > On Tue, Apr 02, 2024 at 09:50:54AM +0800, Ubisectech Sirius wrote:
+> >>> On Mon, Apr 01, 2024 at 03:04:46PM +0800, Ubisectech Sirius wrote:
+> >>> Hello.
+> >>> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
+> >>
+> >>> Thank you for the report!
+> >>
+> >>> I tried to compile and run your test program for about half an hour
+> >>> on a virtual machine running 6.7 with enabled KASAN, but wasn't able
+> >>> to reproduce the problem.
+> >> 
+> >>> Can you, please, share a bit more information? How long does it take
+> >>> to reproduce? Do you mind sharing your kernel config? Is there anything special
+> >>> about your setup? What are exact steps to reproduce the problem?
+> >>> Is this problem reproducible on 6.6?
+> >> 
+> >> Hi. 
+> >> The .config of linux kernel 6.7 has send to you as attachment.
+> > Thanks!
+> > How long it takes to reproduce a problem? Do you just start your reproducer and wait?
+> I just start the reproducer and wait without any other operation. The speed of reproducing this problem is vary fast(Less than 5 seconds). 
+> >> And The problem is reproducible on 6.6.
+> > Hm, it rules out my recent changes.
+> > Did you try any older kernels? 6.5? 6.0? Did you try to bisect the problem?
+> > if it's fast to reproduce, it might be the best option.
+> I have try the 6.0, 6.3, 6.4, 6.5 kernel. The Linux kernel 6.5 will get same error output. But other version will get different output like below:
+> [ 55.306672][ T7950] KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
+> [ 55.307259][ T7950] CPU: 1 PID: 7950 Comm: poc Not tainted 6.3.0 #1
+> [ 55.307714][ T7950] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> [ 55.308363][ T7950] RIP: 0010:tomoyo_check_acl (security/tomoyo/domain.c:173)
+> [ 55.316475][ T7950] Call Trace:
+> [ 55.316713][ T7950] <TASK>
+> [ 55.317353][ T7950] tomoyo_path_permission (security/tomoyo/file.c:170 security/tomoyo/file.c:587 security/tomoyo/file.c:573)
+> [ 55.317744][ T7950] tomoyo_check_open_permission (security/tomoyo/file.c:779)
+> [ 55.320152][ T7950] tomoyo_file_open (security/tomoyo/tomoyo.c:332 security/tomoyo/tomoyo.c:327)
+> [ 55.320495][ T7950] security_file_open (security/security.c:1719 (discriminator 13))
+> [ 55.320850][ T7950] do_dentry_open (fs/open.c:908)
+> [ 55.321526][ T7950] path_openat (fs/namei.c:3561 fs/namei.c:3715)
+> [ 55.322614][ T7950] do_filp_open (fs/namei.c:3743)
+> [ 55.325086][ T7950] do_sys_openat2 (fs/open.c:1349)
+> [ 55.326249][ T7950] __x64_sys_openat (fs/open.c:1375)
+> [ 55.327428][ T7950] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+> [ 55.327756][ T7950] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+> [ 55.328185][ T7950] RIP: 0033:0x7f1c4a484f29
+> [ 55.328504][ T7950] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 37 8f 0d 00 f7 d8 64 89 01 48
+> [ 55.329864][ T7950] RSP: 002b:00007ffd7bfe8398 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+> [ 55.330464][ T7950] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1c4a484f29
+> [ 55.331024][ T7950] RDX: 0000000000141842 RSI: 0000000020000380 RDI: 00000000ffffff9c
+> [ 55.331585][ T7950] RBP: 00007ffd7bfe83a0 R08: 0000000000000000 R09: 00007ffd7bfe83f0
+> [ 55.332148][ T7950] R10: 0000000000000000 R11: 0000000000000246 R12: 000055c5e36482d0
+> [ 55.332707][ T7950] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> [ 55.333268][ T7950] </TASK>
+> [ 55.333488][ T7950] Modules linked in:
+> [ 55.340525][ T7950] ---[ end trace 0000000000000000 ]---
+> [ 55.340936][ T7950] RIP: 0010:tomoyo_check_acl (security/tomoyo/domain.c:173)
+> It look like other problem?
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+It does look differently.
+
+I can't reproduce any of those. I run into some build time issues when trying to
+build the kernel with your config (I have a fairly old toolchain, maybe it's the reason),
+but when running a more minimalistic config I do not see any issues on 6.1, 6.6 and 6.7.
+Is this some sort of all-yes config or it's somehow specially crafted? Did you try
+to reproduce the problem with other kernel configs?
+
+It all smells a memory corruption, but who knows.
+
+Thanks!
