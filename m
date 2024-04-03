@@ -1,112 +1,170 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EDF56B70;
-	Wed,  3 Apr 2024 14:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF2B58AA1
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712154999; cv=none; b=Mfg23J4sr9NoBplY2q+uZU+WLUJhKnq4zKP+x9BRgVviUMPIf5X/q2677Yt/Dip3v+NJMZnvVhyroBRMw7SveMiMR1JLK8UawDYp04uLVpuQbdDMxDgSy29nXucOsjXJEXEQJlW0+dv7Y+OTdjfa8YpL4R1RHlEweSinYRy1mUs=
+	t=1712155192; cv=none; b=k70pA2tEjOVjHxU7J7mzOerWwvydKlvdQgVhuPo/swt/v7riOD1loWYRcA5qwPfV6hj6ABFDoW0KV4b7uVMVEIUrFICKKmWWnJWTSjG2qIIgxqTOVlG9oycVuqopqZw2G4/YeZVeXU0tE9vaWnudoBgsGbNhoaH68k4BPYh6AeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712154999; c=relaxed/simple;
-	bh=wtryFZmz9L5MMjPv8jxFilEAGkNNYXS5MUcwlNkp3cU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Mk2jhRgmDenmVc9RX2gpBBO9BF2dJhQO7tEkRase2KSZ5oPZSsiiZdKkdATcxFVciGCHHkbonGuC35eWds7VjGdOh7ailK3U7f1KKZYKITxNlUOu/XkQaEzB3EsSsa4bmlPIDlXl7KP7Grm4+ixh80XiDXs4Rl/ugnvvKAz+jnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=fWLVUWT0; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1712155192; c=relaxed/simple;
+	bh=5WRZA+Dr0y7K8BNMTXM69RHs/uBHis89yH3S75lrVoE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XLhi7+iI/cWm1pWmWmElVreVFTwSRozaRLrW0lDn97D7xrfSxco5HM/IQP/WZN1KxKI2lMGaPeeXuHk5SbsDu5k7enx4ZH4C8jXvHxZpTYLdOOAWgJoTMaMYCB8f3H5uzVw//R+EM0UIJq83IYkbkigfi2EQm4KbRt6bsf4bWmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GUHFXP8w; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="fWLVUWT0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=bZLC0mhIiZ7QjY8sUD7A0lgCAo690O82GwJBkqGJPYA=; b=fWLVUWT0X4AenO87bxk/kokg23
-	p++vPk/1Kk4j2Tn0rxQqbCdM1JVI5ByjHKI9/i7sn07XO4oduPKWSuV7CI+TG6AgUUW++I6bh1b4E
-	sLsnP35j0aFXI2t8+CgkkOlHc3bIdlKvBd7Rdt0UcYdeGOiFLXeVyPy/aqKeGmlcriX8UTmZ1mHvI
-	DF3hULQWMjPkjW/1cIJu9B50JO3AEZcHBbQrP3HHh3gKZmdxwuS5QEjaJRqsSbx/kV/hXzKuRAA4d
-	UpLzVMjd4XoH2ABsK/RfQUxEzmzjj9YPs6ddMx/10oKSRX3Z0C6xQSbDbdOHlD4oWv8lI5eNMrk6y
-	CTFPFlug==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1rs1j0-000OLZ-Bz; Wed, 03 Apr 2024 16:36:26 +0200
-Received: from [178.197.248.12] (helo=linux.home)
-	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1rs1iz-001hAe-2V;
-	Wed, 03 Apr 2024 16:36:25 +0200
-Subject: Re: [PATCH bpf-next] rethook: Remove warning messages printed for
- finding return address of a frame.
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Kui-Feng Lee <thinker.li@gmail.com>
-Cc: mhiramat@kernel.org, martin.lau@linux.dev, kernel-team@meta.com,
- andrii@kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- sinquersw@gmail.com, kuifeng@meta.com
-References: <20240401191621.758056-1-thinker.li@gmail.com>
- <CAEf4BzbbneDHp=sD4+5RmuK=U9vg8Uo_M6XEXdKWrZ_MkjFocw@mail.gmail.com>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <1bbd6200-bb06-f8d2-c22a-39245425b6b1@iogearbox.net>
-Date: Wed, 3 Apr 2024 16:36:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GUHFXP8w"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3416df43cabso4525108f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Apr 2024 07:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712155188; x=1712759988; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FklsZuM90rznRBFLrrNtkklczLk3WQXoeuBMkIdc+sw=;
+        b=GUHFXP8wM0ZNbJbzlnWdOtCyOpchY5SUq5iQv+6PUMiuHfhTt0UFLKhGqnRcHSGurc
+         awI23RSWMQQtkv/ekuLnzGAEtNPv0fNjLiRw9cJ/5aBaGBeJxeh09OA9cXAU2nDQmpP2
+         qlpyxVUmHyNsVGrygm9ayxcJGjmqgetNoZbruwzsTNEdJQxS68INMg0GbNoba+1Mkmod
+         vY1G3tJyBRX6XXTM3rt8E9xDTm21mJchY3WFrhY9r4g67MhXqNuQPXx7uaxy4SXFiYht
+         n8DIXi42RNuokB0Z2YwzEeql+7rRenzGWs9ZLP6qIA7O0GLwu/lIFE72FkceHx5YKxBC
+         ehSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712155188; x=1712759988;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FklsZuM90rznRBFLrrNtkklczLk3WQXoeuBMkIdc+sw=;
+        b=lVo4opSmHFAAqnl7PyR/wRqIGF8ACAbYzTBml/jy5m+M8689pxngbteMfw1zOknyw3
+         8jFfahagI6BnDGkUSuMNrjp3v+a/lbYsUwxMjGE/IspKwChzzu/0bRU23AQoXJsm1b6r
+         k3ZlonxTwlxb2CKGLH8DYm3GKaLNPZ4h8j7qiVDenvJ5vYN+iJzwaXl96S1UK9Uz3qU9
+         T9YlL2pUiIuz0JXQJ8M8og+anKW326JSNceVinZe1qvXW0oIY9kAZEnlpyVv1d53iVui
+         ias/XI79cyuvPW2LhIw3/x4UzZw5nec+l4Gjx5RaEmDuTzbRe2mdBsaQ5oeltfTdZn5Y
+         p4NA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOMfdoXJVnzM34DoTKfUay4L+rUXAqjeWmwrJiYfH0t08a9X6yDWcracv419qlSRd5JrqIQO9oKk8ay33dHqXIPFcLCgmd9/ADOxlhobNoSLeB
+X-Gm-Message-State: AOJu0Yyd7qb/xxANYbPHfiNAnIxzhddiUyBSIMwIlbbGrVBuOEyPif0b
+	ITWBtCvkSCfpT4ezp6iYEeXGT8J9WN5YnF5j88X1DSmpcp85Q7RhNWqzDDO5Vg==
+X-Google-Smtp-Source: AGHT+IE0XU9qxmp/M9iPgXeb9rRKuNSCPxPTPloUyHTQq1k1QWzd/q67ITtUheE9vPqlgNtysOX9mA==
+X-Received: by 2002:adf:fac8:0:b0:341:d765:8715 with SMTP id a8-20020adffac8000000b00341d7658715mr1935030wrs.35.1712155188365;
+        Wed, 03 Apr 2024 07:39:48 -0700 (PDT)
+Received: from google.com (161.126.77.34.bc.googleusercontent.com. [34.77.126.161])
+        by smtp.gmail.com with ESMTPSA id az15-20020adfe18f000000b0034335f13570sm15409592wrb.116.2024.04.03.07.39.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 07:39:47 -0700 (PDT)
+Date: Wed, 3 Apr 2024 15:39:44 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, linux-mm@kvack.org
+Subject: Re: [PATCH v19 RESEND 3/5] tracing: Allow user-space mapping of the
+ ring-buffer
+Message-ID: <Zg1qMI7JYhdeY_z7@google.com>
+References: <20240326100830.1326610-1-vdonnefort@google.com>
+ <20240326100830.1326610-4-vdonnefort@google.com>
+ <20240329144055.0ae2dd4b@gandalf.local.home>
+ <20240403101352.08c83aa4@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzbbneDHp=sD4+5RmuK=U9vg8Uo_M6XEXdKWrZ_MkjFocw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27234/Wed Apr  3 10:25:27 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403101352.08c83aa4@gandalf.local.home>
 
-On 4/2/24 6:58 PM, Andrii Nakryiko wrote:
-> On Mon, Apr 1, 2024 at 12:16 PM Kui-Feng Lee <thinker.li@gmail.com> wrote:
->>
->> rethook_find_ret_addr() prints a warning message and returns 0 when the
->> target task is running and not the "current" task to prevent returning an
->> incorrect return address. However, this check is incomplete as the target
->> task can still transition to the running state when finding the return
->> address, although it is safe with RCU.
->>
->> The issue we encounter is that the kernel frequently prints warning
->> messages when BPF profiling programs call to bpf_get_task_stack() on
->> running tasks.
->>
->> The callers should be aware and willing to take the risk of receiving an
->> incorrect return address from a task that is currently running other than
->> the "current" one. A warning is not needed here as the callers are intent
->> on it.
->>
->> Signed-off-by: Kui-Feng Lee <thinker.li@gmail.com>
->> ---
->>   kernel/trace/rethook.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
->> index fa03094e9e69..4297a132a7ae 100644
->> --- a/kernel/trace/rethook.c
->> +++ b/kernel/trace/rethook.c
->> @@ -248,7 +248,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
->>          if (WARN_ON_ONCE(!cur))
->>                  return 0;
->>
->> -       if (WARN_ON_ONCE(tsk != current && task_is_running(tsk)))
->> +       if (tsk != current && task_is_running(tsk))
->>                  return 0;
->>
+On Wed, Apr 03, 2024 at 10:13:52AM -0400, Steven Rostedt wrote:
+> On Fri, 29 Mar 2024 14:40:55 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> This should probably go through Masami's tree, but the change makes
-> sense to me, given this is an expected condition.
+> > > +static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
+> > > +{
+> > > +	return VM_FAULT_SIGBUS;
+> > > +}  
+> > 
+> > If this is all it does, I don't believe it's needed.
+> > 
+> > > +
+> > > +#ifdef CONFIG_TRACER_MAX_TRACE
+> > > +static int get_snapshot_map(struct trace_array *tr)
+> > > +{
+> > > +	int err = 0;
+> > > +
+> > > +	/*
+> > > +	 * Called with mmap_lock held. lockdep would be unhappy if we would now
+> > > +	 * take trace_types_lock. Instead use the specific
+> > > +	 * snapshot_trigger_lock.
+> > > +	 */
+> > > +	spin_lock(&tr->snapshot_trigger_lock);
+> > > +
+> > > +	if (tr->snapshot || tr->mapped == UINT_MAX)
+> > > +		err = -EBUSY;
+> > > +	else
+> > > +		tr->mapped++;
+> > > +
+> > > +	spin_unlock(&tr->snapshot_trigger_lock);
+> > > +
+> > > +	/* Wait for update_max_tr() to observe iter->tr->mapped */
+> > > +	if (tr->mapped == 1)
+> > > +		synchronize_rcu();
+> > > +
+> > > +	return err;
+> > > +
+> > > +}
+> > > +static void put_snapshot_map(struct trace_array *tr)
+> > > +{
+> > > +	spin_lock(&tr->snapshot_trigger_lock);
+> > > +	if (!WARN_ON(!tr->mapped))
+> > > +		tr->mapped--;
+> > > +	spin_unlock(&tr->snapshot_trigger_lock);
+> > > +}
+> > > +#else
+> > > +static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
+> > > +static inline void put_snapshot_map(struct trace_array *tr) { }
+> > > +#endif
+> > > +
+> > > +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
+> > > +{
+> > > +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
+> > > +	struct trace_iterator *iter = &info->iter;
+> > > +
+> > > +	WARN_ON(ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file));
+> > > +	put_snapshot_map(iter->tr);
+> > > +}
+> > > +
+> > > +static void tracing_buffers_mmap_open(struct vm_area_struct *vma) { }  
+> > 
+> > Same for the open.
+> > 
+> > 
+> > > +
+> > > +static const struct vm_operations_struct tracing_buffers_vmops = {
+> > > +	.open		= tracing_buffers_mmap_open,
+> > > +	.close		= tracing_buffers_mmap_close,
+> > > +	.fault		= tracing_buffers_mmap_fault,
+> > > +};  
+> > 
+> > I replaced this with:
+> > 
+> > static const struct vm_operations_struct tracing_buffers_vmops = {
+> > 	.close		= tracing_buffers_mmap_close,
+> > };
+> > 
+> > And it appears to work just fine. The mm code handles the NULL cases for
+> > .open and .fault.
+> > 
+> > Is there any reason to do something different than the mm defaults?
+
+No other reason here than my own ignorance. I will remove.
+
 > 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Hi Vincent,
+> 
+> Do you plan on sending out a v20 series?
 
-Masami, I assume you'll pick this up?
+Of course, let me spin that this week! Got also few typos to fix in the doc and
+I believe an include missing for riscv.
 
-Thanks,
-Daniel
+> 
+> -- Steve
