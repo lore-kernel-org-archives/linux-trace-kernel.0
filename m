@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024171A5AC;
-	Wed,  3 Apr 2024 18:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5C0154C09;
+	Wed,  3 Apr 2024 19:16:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712170395; cv=none; b=OGV89bETpIr+cPsEoZXxgs5o/07oqNl7y9SVzvVFbtrEXwwuxQqwmb4z12758yZSHwpluNaY46APNV+EqYyqOm/5mxU/fEsm6Y6QCzJ2R69DY6LDl87C1HXKc8QSFohLjAN3060MbdRWTvCzgrry+gprKSlkOAlIU0ZRofwQWMg=
+	t=1712171789; cv=none; b=Uh1GlpWpO5KlPqUxobabDkOwLDdYyOkpiuubmFTxIf5J1WzVYXvKyUQFMwoR6Y8JO/XEM4fi1eJl3TEMrdmrVYXHakB8nRHJGHcQogCMIuuXS/oVjkzcf7UrjtJ0GPY5zSX5hufySaysmxlQ0bywNdqlC/8stZ0BtJacw/O8bCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712170395; c=relaxed/simple;
-	bh=LZLoBx1FU+I9eSqFIXpb6gxTsx2CaE+4KzYX9KyagFE=;
+	s=arc-20240116; t=1712171789; c=relaxed/simple;
+	bh=JsM5mkCH6HCrr21KWiyEBg8/v2IEioU5Aq4XlPGc5zg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EslFKyOQzjlhwBfINcwdgM6JtkZ7Yg/A6s+ak0TM2B2GiQuQa9PJI6bb1X1rRItHkfFxf5UCH+CgeuXxJWwx9vuvAaegL0pq/nNBgpoWHrpeSO8+b0Ql9Y9KdWwqweGGW8fSbOTOQ8NQkhLV55XbTJsOIGJyMy6BC8h3BQjUzDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx+7Z9Vg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=fVYYnOEFM7M52JADt10xUZxk2l9mcqM06DxO/X0BLhfM8qG+EG8ruKYBEmAjRFXXdYMf1UkjT19o/DBbtsrXaGLJQiBKVUv16XAxhB4lMYq40vYAp8loIi+DVmGkkWtt83Gy7hR/o2QTU9zDPX+3patPt0iZICpcHyGISGE8OMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+BsV4B+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx+7Z9Vg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7454BC433C7;
-	Wed,  3 Apr 2024 18:53:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+BsV4B+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4F3C433C7;
+	Wed,  3 Apr 2024 19:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712170394;
-	bh=LZLoBx1FU+I9eSqFIXpb6gxTsx2CaE+4KzYX9KyagFE=;
+	s=k20201202; t=1712171788;
+	bh=JsM5mkCH6HCrr21KWiyEBg8/v2IEioU5Aq4XlPGc5zg=;
 	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=Dx+7Z9Vg5hvLU+jMN0LJqQuSQhaH8NQZG+/PwBme8f25Wx4aeqe03JHWr6DbYPYwM
-	 ljpdxfhMwXJzEiV4wZYhk84PpzWRWexIqtaE+/CzQ0lqcjPGbDUznwiPDHjUhS1vNU
-	 FBjsKG/nip+ZqQgNqVDeEFLL0Lht+iXHWl3Fm5OcLeg8yqDKL3LeLCjI6Y8thKy33v
-	 /uyo1hIk8oklUSpTKYbFlTL6wMvuFZx3y48+0yPvlkEFGxc6CTBiituoK51jIYo3zT
-	 Ut0Iu5TtvZUfvWSMVBAT3iUYKcGTW5TGdId0nYcpDLtd8YAIgyKATXB7gmhgSHSQMr
-	 4ihJ/72Zzl6OQ==
+	b=a+BsV4B+kCslv/iESfG8GcvrWbGidFMrLxDUlHgpi7cN+bOtujc899mQ9EknVYJZp
+	 7AbLj6FjjzVkDc7JTOOXNUzvXMXUPX1bTJDp0/b63ReuTo9ZnNtKHNbYoIm63z6F+L
+	 rp00xhD8pTmEXYWSh/ELe9SvFIi0McXYSvE0rI7+WPutxmb+auHLP4Yd4+4k4rWRHq
+	 GGnyB+gcvBMVSZglMjmfdpaSAKKtMJyYiAZbICojAUjtu9V36mbN/2xM8/fpDPNNRH
+	 6kL4EuN7NWVBK/JCDJoR+sPeCxKncqyNtO8o5JLS51vziWb2+FCu1K0Acx9bJM4f1M
+	 +tHsu2qF2EnOA==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 13991CE0D85; Wed,  3 Apr 2024 11:53:14 -0700 (PDT)
-Date: Wed, 3 Apr 2024 11:53:14 -0700
+	id 41937CE0D85; Wed,  3 Apr 2024 12:16:28 -0700 (PDT)
+Date: Wed, 3 Apr 2024 12:16:28 -0700
 From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>, Chris Mason <clm@fb.com>
-Subject: [PATCH RFC ftrace] Asynchronous grace period for
- register_ftrace_direct()
-Message-ID: <7ed089be-c0c6-43b5-849a-05599cb32cfd@paulmck-laptop>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: Zhenhua Huang <quic_zhenhuah@quicinc.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH fs/proc/bootconfig] remove redundant comments from
+ /proc/bootconfig
+Message-ID: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
 Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,53 +47,55 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Note that the immediate pressure for this patch should be relieved by the
-NAPI patch series [1], but this sort of problem could easily arise again.
-So would this change make sense?
+commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
+/proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
 
-When running heavy test workloads with KASAN enabled, RCU Tasks grace
-periods can extend for many tens of seconds, significantly slowing
-trace registration.  Therefore, make the registration-side RCU Tasks
-grace period be asynchronous via call_rcu_tasks().
+/proc/bootconfig shows boot_command_line[] multiple times following
+every xbc key value pair, that's duplicated and not necessary.
+Remove redundant ones.
 
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Reported-by: Chris Mason <clm@fb.com>
+Output before and after the fix is like:
+key1 = value1
+*bootloader argument comments*
+key2 = value2
+*bootloader argument comments*
+key3 = value3
+*bootloader argument comments*
+...
+
+key1 = value1
+key2 = value2
+key3 = value3
+*bootloader argument comments*
+...
+
+Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
+Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: <linux-trace-kernel@vger.kernel.org>
+Cc: <linux-fsdevel@vger.kernel.org>
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index da1710499698b..6d21e4e97ed48 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5366,6 +5366,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
+index 902b326e1e560..e5635a6b127b0 100644
+--- a/fs/proc/bootconfig.c
++++ b/fs/proc/bootconfig.c
+@@ -62,12 +62,12 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
+ 				break;
+ 			dst += ret;
+ 		}
+-		if (ret >= 0 && boot_command_line[0]) {
+-			ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
+-				       boot_command_line);
+-			if (ret > 0)
+-				dst += ret;
+-		}
++	}
++	if (ret >= 0 && boot_command_line[0]) {
++		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
++			       boot_command_line);
++		if (ret > 0)
++			dst += ret;
  	}
- }
- 
-+static void register_ftrace_direct_cb(struct rcu_head *rhp)
-+{
-+	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
-+
-+	free_ftrace_hash(fhp);
-+}
-+
- /**
-  * register_ftrace_direct - Call a custom trampoline directly
-  * for multiple functions registered in @ops
-@@ -5464,10 +5471,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-  out_unlock:
- 	mutex_unlock(&direct_mutex);
- 
--	if (free_hash && free_hash != EMPTY_HASH) {
--		synchronize_rcu_tasks();
--		free_ftrace_hash(free_hash);
--	}
-+	if (free_hash && free_hash != EMPTY_HASH)
-+		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
- 
- 	if (new_hash)
- 		free_ftrace_hash(new_hash);
+ out:
+ 	kfree(key);
