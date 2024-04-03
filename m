@@ -1,190 +1,102 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76720152DE1;
-	Wed,  3 Apr 2024 17:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024171A5AC;
+	Wed,  3 Apr 2024 18:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712166619; cv=none; b=EBLvNmxcXwcNm4Uh1BBwCYLF0CZpjMAZOoSFwEamq9EaJrps6sd5EpzmKioNkQ3UuXOXDWAGRb4YxkMO/iTgqLB8gcO95jDka4V/NW5YE0GEjVgVUXNYFwRz5thNU0Pq4nR13JJhaJsjrN3yyAA9mAzTXs3SEkdCwOitVyIyJTc=
+	t=1712170395; cv=none; b=OGV89bETpIr+cPsEoZXxgs5o/07oqNl7y9SVzvVFbtrEXwwuxQqwmb4z12758yZSHwpluNaY46APNV+EqYyqOm/5mxU/fEsm6Y6QCzJ2R69DY6LDl87C1HXKc8QSFohLjAN3060MbdRWTvCzgrry+gprKSlkOAlIU0ZRofwQWMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712166619; c=relaxed/simple;
-	bh=0UndWnogXMzcyX7SuExNqnKF0lgD2BtEJNjooUVrjBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PzxnmhPQU88QOUwbjjuIc31quirBboR2I7vY3A0lGfQJqKzexDv41cfOawXSoKPRd8wMYrEEAQns0cBicnYPoJus3rp1dXqmIvIV8LZsWfpcI0dPoNORkXd2gSap22YIHwz0nhKTKFWFX9vzsnPUzb4YuqzOcvBRAlOLkNDOe2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dCdmwxJK; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712170395; c=relaxed/simple;
+	bh=LZLoBx1FU+I9eSqFIXpb6gxTsx2CaE+4KzYX9KyagFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EslFKyOQzjlhwBfINcwdgM6JtkZ7Yg/A6s+ak0TM2B2GiQuQa9PJI6bb1X1rRItHkfFxf5UCH+CgeuXxJWwx9vuvAaegL0pq/nNBgpoWHrpeSO8+b0Ql9Y9KdWwqweGGW8fSbOTOQ8NQkhLV55XbTJsOIGJyMy6BC8h3BQjUzDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx+7Z9Vg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCdmwxJK"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d4a1e66750so125411a12.0;
-        Wed, 03 Apr 2024 10:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712166617; x=1712771417; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9C6DFYe+czN6oSK5SZi6C94NfiSiV4dnkyqrdmVoVYA=;
-        b=dCdmwxJKxumPxuLBNjtu/OUJ0I551T7DA8H79a1XR62ioWvYIud8LE3qBCGx5FpGLg
-         0J/2Pxhjp1Tsi/jThxTiwrtwpSTcK9N8ZhHXNRwcWhyysHq8EAiz7KSA60CE9+4ecb6O
-         ujEeNPem56F0oBvGUXhoL1/kaX9mNjJ22QPmDu2B2DtIIsAz/rDSIfCogSt+KXBYuTp5
-         /CkgF4P5cahcbMRs0PPCdROVxjWgTRAtnO6OsUnlYLNXTL346umjTiqzmULWpYjxlaYc
-         HpXvG+runc70bJzKb1XdYQ4+nRxQcxXdho6BKo1Cvb30Jv2x0BU77GDre7DTujHSDLv4
-         cK5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712166617; x=1712771417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9C6DFYe+czN6oSK5SZi6C94NfiSiV4dnkyqrdmVoVYA=;
-        b=Xi5Na1N90BEOB604pBWKeqg9YjBnsKmYZHPp9JZ1sSJ0qKiXMmrLqyYqoM/Nv4vciP
-         I3pi7qdiWkFQsyemHBWLyL80fQXi/OsF7zSieqSpHGfRvuvgbjhg/tVibnqRilMZ/LVI
-         MdpBncs2qbjqGWAKdbPLFC+EFRKmFDxq1RggIBCBDtaC4U9UYHsNH5tk+yhGQz0gFGoF
-         1A/r86fHDpHRFybZ2x5HpBTU/g3qtltXoSxlGHx23CREhGsDbsWwNrQraMv6vBpGZUKo
-         0m6F381HrfIfB2dNvP4sUDIwdKgDpOrtoWQq/S2p6LCPFzRK4+AJlVLz/kP/crMQZfYs
-         bvSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjGhIwgCHdKugBUQ/YCShOlpfHM1xVInXgg+HVX3QjVFXSebzaAdFPieRSPZpgfA0Rr06DT1f+BtYd687XPV2WPXqpkyJwH3onY5XsKNg718Ojof5jGWnR6Ryeoma0z6h8bZrrJ/K1bjliGpmfuABnB83a5Y9mKr8SD+Hj/9fM9AT7PM8HGjzfuctoVdCC9cuziEt/MT+4EGdASAHAZl9eUg1PKf7Y3g==
-X-Gm-Message-State: AOJu0YxRNnRdMTEeI3yXWZMGV3YZdlI1F9+pseaE0TxZ2vRyVMaURSp0
-	vd8HcF/HEkBF3+QilmV0BODnQM8V7e/vDhLGyWjZAr9mi2CgJmMvfBirw9vWJiW58x6SJe8mhC9
-	zgdR94IMkdQ26jFp8VDjwyXDvMMM=
-X-Google-Smtp-Source: AGHT+IHx9gD0uWJyW5nUfrspzLnG2X9GyN3bBerb8gDbVzCNWDS3L9gLJBn+MR0VObdCITS5G33ZMfprSNBTrpjDwHk=
-X-Received: by 2002:a05:6a20:e607:b0:1a7:1c26:f9ac with SMTP id
- my7-20020a056a20e60700b001a71c26f9acmr382547pzb.62.1712166616715; Wed, 03 Apr
- 2024 10:50:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx+7Z9Vg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7454BC433C7;
+	Wed,  3 Apr 2024 18:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712170394;
+	bh=LZLoBx1FU+I9eSqFIXpb6gxTsx2CaE+4KzYX9KyagFE=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=Dx+7Z9Vg5hvLU+jMN0LJqQuSQhaH8NQZG+/PwBme8f25Wx4aeqe03JHWr6DbYPYwM
+	 ljpdxfhMwXJzEiV4wZYhk84PpzWRWexIqtaE+/CzQ0lqcjPGbDUznwiPDHjUhS1vNU
+	 FBjsKG/nip+ZqQgNqVDeEFLL0Lht+iXHWl3Fm5OcLeg8yqDKL3LeLCjI6Y8thKy33v
+	 /uyo1hIk8oklUSpTKYbFlTL6wMvuFZx3y48+0yPvlkEFGxc6CTBiituoK51jIYo3zT
+	 Ut0Iu5TtvZUfvWSMVBAT3iUYKcGTW5TGdId0nYcpDLtd8YAIgyKATXB7gmhgSHSQMr
+	 4ihJ/72Zzl6OQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 13991CE0D85; Wed,  3 Apr 2024 11:53:14 -0700 (PDT)
+Date: Wed, 3 Apr 2024 11:53:14 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>, Chris Mason <clm@fb.com>
+Subject: [PATCH RFC ftrace] Asynchronous grace period for
+ register_ftrace_direct()
+Message-ID: <7ed089be-c0c6-43b5-849a-05599cb32cfd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org> <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org> <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
- <20240328091841.ce9cc613db375536de843cfb@kernel.org> <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
-In-Reply-To: <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 3 Apr 2024 10:50:04 -0700
-Message-ID: <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-To: Jonthan Haslam <jonathan.haslam@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Apr 3, 2024 at 4:05=E2=80=AFAM Jonthan Haslam <jonathan.haslam@gmai=
-l.com> wrote:
->
-> > > > > Given the discussion around per-cpu rw semaphore and need for
-> > > > > (internal) batched attachment API for uprobes, do you think you c=
-an
-> > > > > apply this patch as is for now? We can then gain initial improvem=
-ents
-> > > > > in scalability that are also easy to backport, and Jonathan will =
-work
-> > > > > on a more complete solution based on per-cpu RW semaphore, as
-> > > > > suggested by Ingo.
-> > > >
-> > > > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
-> > > > I would like to wait for the next version.
-> > >
-> > > My initial tests show a nice improvement on the over RW spinlocks but
-> > > significant regression in acquiring a write lock. I've got a few days
-> > > vacation over Easter but I'll aim to get some more formalised results=
- out
-> > > to the thread toward the end of next week.
-> >
-> > As far as the write lock is only on the cold path, I think you can choo=
-se
-> > per-cpu RW semaphore. Since it does not do busy wait, the total system
-> > performance impact will be small.
-> > I look forward to your formalized results :)
->
-> Sorry for the delay in getting back to you on this Masami.
->
-> I have used one of the bpf selftest benchmarks to provide some form of
-> comparison of the 3 different approaches (spinlock, RW spinlock and
-> per-cpu RW semaphore). The benchmark used here is the 'trig-uprobe-nop'
-> benchmark which just executes a single uprobe with a minimal bpf program
-> attached. The tests were done on a 32 core qemu/kvm instance.
->
+Note that the immediate pressure for this patch should be relieved by the
+NAPI patch series [1], but this sort of problem could easily arise again.
+So would this change make sense?
 
-Thanks a lot for running benchmarks and providing results!
+When running heavy test workloads with KASAN enabled, RCU Tasks grace
+periods can extend for many tens of seconds, significantly slowing
+trace registration.  Therefore, make the registration-side RCU Tasks
+grace period be asynchronous via call_rcu_tasks().
 
-> Things to note about the results:
->
-> - The results are slightly variable so don't get too caught up on
->   individual thread count - it's the trend that is important.
-> - In terms of throughput with this specific benchmark a *very* macro view
->   is that the RW spinlock provides 40-60% more throughput than the
->   spinlock.  The per-CPU RW semaphore provides in the order of 50-100%
->   more throughput then the spinlock.
-> - This doesn't fully reflect the large reduction in latency that we have
->   seen in application based measurements. However, it does demonstrate
->   that even the trivial change of going to a RW spinlock provides
->   significant benefits.
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: Alexei Starovoitov <ast@kernel.org>
+Reported-by: Chris Mason <clm@fb.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: <linux-trace-kernel@vger.kernel.org>
 
-This is probably because trig-uprobe-nop creates a single uprobe that
-is triggered on many CPUs. While in production we have also *many*
-uprobes running on many CPUs. In this benchmark, besides contention on
-uprobes_treelock, we are also hammering on other per-uprobe locks
-(register_rwsem, also if you don't have [0] patch locally, there will
-be another filter lock taken each time, filter->rwlock). There is also
-atomic refcounting going on, which when you have the same uprobe
-across all CPUs at the same time will cause a bunch of cache line
-bouncing.
-
-So yes, it's understandable that in practice in production you see an
-even larger effect of optimizing uprobe_treelock than in this
-micro-benchmark.
-
-  [0] https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git=
-/commit/?h=3Dprobes/for-next&id=3D366f7afd3de31d3ce2f4cbff97c6c23b6aa6bcdf
-
->
-> I haven't included the measurements on per-CPU RW semaphore write
-> performance as they are completely in line with those that Paul McKenney
-> posted on his journal [0]. On a 32 core system I see semaphore writes to
-> take in the order of 25-28 millisecs - the cost of the synchronize_rcu().
->
-> Each block of results below show 1 line per execution of the benchmark (t=
-he
-> "Summary" line) and each line is a run with one more thread added - a
-> thread is a "producer". The lines are edited to remove extraneous output
-> that adds no value here.
->
-> The tests were executed with this driver script:
->
-> for num_threads in {1..20}
-> do
->     sudo ./bench -p $num_threads trig-uprobe-nop | grep Summary
-
-just want to mention -a (affinity) option that you can pass a bench
-tool, it will pin each thread on its own CPU. It generally makes tests
-more uniform, eliminating CPU migrations variability.
-
-> done
->
->
-> spinlock
->
-> Summary: hits    1.453 =C2=B1 0.005M/s (  1.453M/prod)
-> Summary: hits    2.087 =C2=B1 0.005M/s (  1.043M/prod)
-> Summary: hits    2.701 =C2=B1 0.012M/s (  0.900M/prod)
-
-I also wanted to point out that the first measurement (1.453M/s in
-this row) is total throughput across all threads, while value in
-parenthesis (0.900M/prod) is averaged throughput per each thread. So
-this M/prod value is the most interesting in this benchmark where we
-assess the effect of reducing contention.
-
-> Summary: hits    1.917 =C2=B1 0.011M/s (  0.479M/prod)
-> Summary: hits    2.105 =C2=B1 0.003M/s (  0.421M/prod)
-> Summary: hits    1.615 =C2=B1 0.006M/s (  0.269M/prod)
-
-[...]
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da1710499698b..6d21e4e97ed48 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5366,6 +5366,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+ 	}
+ }
+ 
++static void register_ftrace_direct_cb(struct rcu_head *rhp)
++{
++	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
++
++	free_ftrace_hash(fhp);
++}
++
+ /**
+  * register_ftrace_direct - Call a custom trampoline directly
+  * for multiple functions registered in @ops
+@@ -5464,10 +5471,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+  out_unlock:
+ 	mutex_unlock(&direct_mutex);
+ 
+-	if (free_hash && free_hash != EMPTY_HASH) {
+-		synchronize_rcu_tasks();
+-		free_ftrace_hash(free_hash);
+-	}
++	if (free_hash && free_hash != EMPTY_HASH)
++		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
+ 
+ 	if (new_hash)
+ 		free_ftrace_hash(new_hash);
