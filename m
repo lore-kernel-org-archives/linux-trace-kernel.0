@@ -1,52 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A088D14A4CD;
-	Wed,  3 Apr 2024 16:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB96152E10;
+	Wed,  3 Apr 2024 16:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160095; cv=none; b=iwU4RP+Aw3pUUugJkao/8yAZBmDES4Ywh+H1HNhOj1GplnjwAKsLksZ15Rl2uL4r3DqPznN/mqBD3vBU9g3y5FbOu+lXWSk9VpJCKT+5kqhTeGfmtSujhftFPD7wKM6jum1LSClXGrSHoQE4ZcpPZb/k22KWw+7EgnF1kL0AgVE=
+	t=1712163507; cv=none; b=Ip0qiXKi5hdk61kXG4QvNlBPDMcpKDStM2cOoW72lfvGvWrTRRGtwU3ORZMFgnivNyo+00baY2kdBZTJxvGRbsmHebrYj+qYl327xko1g6iIWaexlc4UG6WRv/B0YiQEt0TALkHnJzLXmJxrlPju1oUYmZI2Kw9F1s0GHeu63Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160095; c=relaxed/simple;
-	bh=aMZo+m17UDjkDM728p4hgqKhx33v3jNtJzaJZLBGf5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cuDw7iE8BEL3uH3L4ERiASzIdvIskl3ZVBYAysvjCRS9lp3Mr0Bgf604n7EByrXsIutAcKLHHH/2ev/YSxbct2NGcIJd3w+xj6HLdabgfAL/guzeL8VskfZrKn680A4imVo/SvqPhdpTxMeRqcjzn3Srn0YQrvc0qbwlSXKgtkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E1DC43394;
-	Wed,  3 Apr 2024 16:01:34 +0000 (UTC)
-Date: Wed, 3 Apr 2024 12:03:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com, linux-mm@kvack.org
-Subject: Re: [PATCH v19 RESEND 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <20240403120354.73689a47@gandalf.local.home>
-In-Reply-To: <Zg1qMI7JYhdeY_z7@google.com>
-References: <20240326100830.1326610-1-vdonnefort@google.com>
-	<20240326100830.1326610-4-vdonnefort@google.com>
-	<20240329144055.0ae2dd4b@gandalf.local.home>
-	<20240403101352.08c83aa4@gandalf.local.home>
-	<Zg1qMI7JYhdeY_z7@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712163507; c=relaxed/simple;
+	bh=KLz6OqbRCAgFQiXEjJMZjUoHqrDuXWhfnhfFCT+kHZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gHR1k3pG+MtKFgFPg+6fGghrSrNSqdd4zcUA4Ukuuk2uaq31UzqE+zQQ47HGPmHzjSrh1Rs2ZrIQuKNFMyH9OEuNExMin9h/ZtcF7UBdf2Sh2+UOVXrUVn1oMiFr4uPnSDXpxU2q2z+Q9HfpZ8/R93GzXc5kmJfKzfN+3ZS/+eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f4IGjT8J; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4IGjT8J"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6eaf1005fcaso3251100b3a.3;
+        Wed, 03 Apr 2024 09:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712163505; x=1712768305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yguKOLxlKrQU5jjIYUXqoMHR/GugHTZ27gnX6ZVvXgU=;
+        b=f4IGjT8JFFIoDnjvFDSqFIwgZ6+J8MfChnPyGfQBiK/W+8erhT0j/a/arNS7wSWK2i
+         zPELPGv8dVhXjRkJBuLYuJ0lRl5BjvXUAQw10/TNrsLV2wsOx2gNGviBzpghTjczmCKk
+         6xd6lBNtbRz58aWetYMEb5bnYwrFossNInDP5q9m0N79E+7xpOR9NHMrAANEciHcDJMN
+         5JJxeD8YanpXP/mCzksHl44pGJnQNya2Q1sAxfVETmqlTiHxowDA0AM2yEP1rac5XjQ6
+         0ZziYG0icCCv1PSq6EvRr7rJCgF9ZLUMs3O7z2mDokX0+5Tv60kY/fxw0ENXXXSk0Jn8
+         kCyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712163505; x=1712768305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yguKOLxlKrQU5jjIYUXqoMHR/GugHTZ27gnX6ZVvXgU=;
+        b=U5NPHVITrL3vbWUx5YVVTz/Ie9D1UDo6jst/M93azhXP7bJh8UOw1ygPukloMCbZIk
+         LFFHwOG6SZI2mTya/UB4jbExfAVjZeeRH/3QWSHVk2GJWVDuezTT+5c5r1fFCQouHGOC
+         NVX7jLGLp+szHgt1o2fABzEBmpxn7EqrnTjFJ4x5RyVaESARL9SDYrAduFZ56SfBVTBp
+         2JCWhiszupyHR1RE+PgYShbge+X19w7t7j8t8ABml0GNZ5yFWzLQZZzyssHddmBpN929
+         +6QhGXQ79jW38WJ9mHSSZEp58aDwvhvRI1InyVKG7/zw0uRN6B9XDWBHtFP3CoVCrEFH
+         Pynw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1bVucnFRJXEOLJNDtDmR5ejp8t143yJRM7xbglVbEHZhixrVgFNJS1DCfs5KN1I5oTelztm+ygUbh2vBZ6SAMBMBiAGDfayQoqxtrycFduVaQJeWBJX9/yI5f4iKvMccBfYsVZ5Igjs1Bza8pn06Fh2+LHG3u8sjEV0WoSvI0f4Y5klca
+X-Gm-Message-State: AOJu0YyhYIL/L45tMlnhuYxkZorndkboITW5JUc9eM9s80WlYnNOktoH
+	kf6DC9z+7Zuy48er69S7UUudZLKkFlsMmwPd95anFrsLYjt8SyhCSf60qYungbHmbtdaydu4lOa
+	JsQTWESYvJ3vTmhYOhkwb/pn5NF8=
+X-Google-Smtp-Source: AGHT+IGFlyvJRg6iSqPB84C6RD0yv5Pbdcf4qO65BoYxM7MP9xDxCLU/f67zCSS80H2+8nBmbQfVuqvAZp40VqGL8G0=
+X-Received: by 2002:a05:6a20:1019:b0:1a7:2437:386f with SMTP id
+ gs25-20020a056a20101900b001a72437386fmr225228pzc.61.1712163504911; Wed, 03
+ Apr 2024 09:58:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240402093302.2416467-1-jolsa@kernel.org> <20240402093302.2416467-2-jolsa@kernel.org>
+ <20240403100708.233575a8ac2a5bac2192d180@kernel.org> <Zg0lvUIB4WdRUGw_@krava> <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+In-Reply-To: <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 3 Apr 2024 09:58:12 -0700
+Message-ID: <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return probe
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 3 Apr 2024 15:39:44 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Wed, Apr 3, 2024 at 7:09=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
+>
+> On Wed, 3 Apr 2024 11:47:41 +0200
+> Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> > On Wed, Apr 03, 2024 at 10:07:08AM +0900, Masami Hiramatsu wrote:
+> > > Hi Jiri,
+> > >
+> > > On Tue,  2 Apr 2024 11:33:00 +0200
+> > > Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > > Adding uretprobe syscall instead of trap to speed up return probe.
+> > >
+> > > This is interesting approach. But I doubt we need to add additional
+> > > syscall just for this purpose. Can't we use another syscall or ioctl?
+> >
+> > so the plan is to optimize entry uprobe in a similar way and given
+> > the syscall is not a scarce resource I wanted to add another syscall
+> > for that one as well
+> >
+> > tbh I'm not sure sure which syscall or ioctl to reuse for this, it's
+> > possible to do that, the trampoline will just have to save one or
+> > more additional registers, but adding new syscall seems cleaner to me
+>
+> Hmm, I think a similar syscall is ptrace? prctl may also be a candidate.
 
-> > Do you plan on sending out a v20 series?  
-> 
-> Of course, let me spin that this week! Got also few typos to fix in the doc and
-> I believe an include missing for riscv.
+I think both ptrace and prctl are for completely different use cases
+and it would be an abuse of existing API to reuse them for uretprobe
+tracing. Also, keep in mind, that any extra argument that has to be
+passed into this syscall means that we need to complicate and slow
+generated assembly code that is injected into user process (to
+save/restore registers) and also kernel-side (again, to deal with all
+the extra registers that would be stored/restored on stack).
 
-No rush, I'll be on PTO until next Tuesday, and will not get to it before then.
+Given syscalls are not some kind of scarce resources, what's the
+downside to have a dedicated and simple syscall?
 
--- Steve
+>
+> >
+> > >
+> > > Also, we should run syzkaller on this syscall. And if uretprobe is
+> >
+> > right, I'll check on syzkaller
+> >
+> > > set in the user function, what happen if the user function directly
+> > > calls this syscall? (maybe it consumes shadow stack?)
+> >
+> > the process should receive SIGILL if there's no pending uretprobe for
+> > the current task, or it will trigger uretprobe if there's one pending
+>
+> No, that is too aggressive and not safe. Since the syscall is exposed to
+> user program, it should return appropriate error code instead of SIGILL.
+>
+
+This is the way it is today with uretprobes even through interrupt.
+E.g., it could happen that user process is using fibers and is
+replacing stack pointer without kernel realizing this, which will
+trigger some defensive checks in uretprobe handling code and kernel
+will send SIGILL because it can't support such cases. This is
+happening today already, and it works fine in practice (except for
+applications that manually change stack pointer, too bad, you can't
+trace them with uretprobes, unfortunately).
+
+So I think it's absolutely adequate to have this behavior if the user
+process is *intentionally* abusing this API.
+
+> >
+> > but we could limit the syscall to be executed just from the trampoline,
+> > that should prevent all the user space use cases, I'll do that in next
+> > version and add more tests for that
+>
+> Why not limit? :) The uprobe_handle_trampoline() expects it is called
+> only from the trampoline, so it is natural to check the caller address.
+> (and uprobe should know where is the trampoline)
+>
+> Since the syscall is always exposed to the user program, it should
+> - Do nothing and return an error unless it is properly called.
+> - check the prerequisites for operation strictly.
+> I concern that new system calls introduce vulnerabilities.
+>
+
+As Oleg and Jiri mentioned, this syscall can't harm kernel or other
+processes, only the process that is abusing the API. So any extra
+checks that would slow down this approach is an unnecessary overhead
+and complication that will never be useful in practice.
+
+Also note that sys_uretprobe is a kind of internal and unstable API
+and it is explicitly called out that its contract can change at any
+time and user space shouldn't rely on it. It's purely for the kernel's
+own usage.
+
+So let's please keep it fast and simple.
+
+
+> Thank you,
+>
+>
+> >
+> > thanks,
+> > jirka
+> >
+> >
+> > >
+
+[...]
