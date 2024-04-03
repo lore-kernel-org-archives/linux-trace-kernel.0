@@ -1,437 +1,336 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104411350DB;
-	Wed,  3 Apr 2024 09:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA21139581;
+	Wed,  3 Apr 2024 11:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712137668; cv=none; b=EArk5LpxV759QRJgy7tXRkXoo200mVmuK53AooLcakRCjriYfBgkG4NEhTPlMmp5u3tIEGnRQRjHKmqtlMChrIEtxHweunYf7nAVSRFOuVuFN3VXEH/lLY/GyUV6sW4gr5HU+pIrnQ8v5mMPN/4/R/Ubihpk1Hkx1QIACPWBO3k=
+	t=1712142324; cv=none; b=eIQywWjZ5Tv74QA0J1DVXaVAhOXjaXtyqDJ5Vnb07G6fZuzW2ubez309XxqletXUNCgTvU2sUh6vqv22pENwjE3+xT4l9Zz69pAtKQ1eF0lM1JvKpyNLjsi55t9a503cb5JbcIPJl5rDknWLwLdpduHqGVOf48BHwOdJMNJVS7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712137668; c=relaxed/simple;
-	bh=W0JLyRDXs24sba2ie0SEYZ/EvbHFfoCIW3p6pJcOcc8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KFaOcwNgNbhvov8Q++slIfhLpTQ+Zg3g4hS+/E0I5Z5KuF1zquWHwWIdIFPIx3tLWulMfY97YLVcC0eZxsgIT2fi7E5kXUgUm02Phid8D+cVjkECO7UMH8BU25Q+Z1WgWyjy0kMPm8tny2xYKJE8l8DHdms1WAOKGQMzGE678lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yv1meC8P; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1712142324; c=relaxed/simple;
+	bh=w18UVu/TU5bC9jQqSryPrDVzIgbmEeVdpghUNQpemyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E2LIlYG4gFURdLDcJirtJMk1xCuXXs5A1dl96iiGynQcA8yFmpzKsfwi0g36V3K2Op4dAABg+WuORnpPj7CVDhlrOMKRjEy/p3s66rn5xHFB0RLrXsntjOPVl6qQdbqpkzUIq8PZ2vR3frSkE2rkFq+FWfw1e0l8p8s89tHOXGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PF5EwxrM; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yv1meC8P"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4162514dc22so1428925e9.2;
-        Wed, 03 Apr 2024 02:47:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF5EwxrM"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56df377bd13so2159724a12.0;
+        Wed, 03 Apr 2024 04:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712137664; x=1712742464; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712142320; x=1712747120; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=3E3RqHKLhlU8hp32vkug6HVrDyo1wUIX1ktK1zdtxk8=;
-        b=Yv1meC8Pxlbv7HGkRuXY4jwpBbSDtJGXR5d4Y9Z/9sk8JrB9mtBFl5wfuJ/h2v1Hnr
-         V/HDPR+PxtN+udurS6/QK0OziMDwGB1mC80PJgusFtSZkIDmhJf7sbJLOnYm1pr/wAji
-         3YJQeLfaiBYuR9mJD9Ax7gdTH4GLJqcwfZzQokRTYKrXJTMFG2ZnJFJ0ECs7YFh9FtaH
-         2X/USD6PnT/Z3k6BPvYjwk0kPDjyX9rxR5bbNrq1CqvQiPDV+JEoZ7Qq/Qlkg7rzY8K5
-         xqBuOZaGHtM+G2md/qfEs74H39T7+ObSJIsoTnoL2JSnEG+9YgFr0AnqC4Cvy4duX0u5
-         yxQQ==
+        bh=uTa8/TOckEyTpCdBl7olLE+j8uZidjm/TMH1XrW2qkA=;
+        b=PF5EwxrM/xHaB8H3yTJIIT1CiRCMmxurwoCyekCQIhjvvVmOc+Pq5buR4t9/okvKuA
+         aSSduU3imy6WSejZZo+nWkGh5le2KgYPVkM9p4nOf5CisEmOx2TGRMa/xcGDquJ5uZSe
+         xhRzaPsEBaK1/06HExxMLntsrJYaxOpn+KTOU1FDmT9sitTi7R2jA7SJGF0LuNy5m2qL
+         sNDotinPLibhQhQ3t7gyDpXUFRZirv5ZBHcmEZ41mIKh+b+49x+U85RBAvVkCqswevkx
+         fsxLTRUmMLPuSOEDNjumuUEeE70H+iKQwT3QXIDAg9Ru9XHjQX4MMnO7ieULwoljk8rV
+         jqcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712137664; x=1712742464;
+        d=1e100.net; s=20230601; t=1712142320; x=1712747120;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3E3RqHKLhlU8hp32vkug6HVrDyo1wUIX1ktK1zdtxk8=;
-        b=q7RvIFKGZ0/QMC0xMNSkdYg+yqAPpa8/MOCGok35kpQCL2KoVLOiR//UO/2GlaU41u
-         +67KjqMf8kQyjcuWJ1vtZ/PJBmicCe/a/DeppwbF+12xSGPJcNAhbAZuiuRVSLWKGuK4
-         QVxkPB0P5LFdPIh/ZPNim8JmQeQtvH0jMUJc6aeSfPMALEp9G60fqyl4fRHOlISx6yxp
-         vara/mrj9xmM3HokG0YSCA4xM/8nhN4bVHYtb+wZQ8bsXgkD0HcxQYH7VbR3ul3Ij1eS
-         vykAGKgaW+YF+PM+8haajA+VHCnrCbGlSis1L8BHY8NzE2VFBUrJwGQz5zpkxBZWip8t
-         UNAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5DPPtmNf7OrbHtO8DmHtgm+lbFFJr0DG3ocUSoweGuzQ4Bqli59e8LDxCkHs+bG4I0uDYHCqiQ1RSuyhqvU8hjhl1jtE/3KdakeN5EOvHevkq0Okufrasn1tlOZhV7JU62EErHcMb3kzR7KV+PRTA5cs8XyXDXPOyqPOaBWgPLVomc6k6
-X-Gm-Message-State: AOJu0YwP8LwwzzBUfD5bAtKNXTyyyL6qyka6XoxV74hFrLU8YYn9SjfL
-	5afBeSbJV9ml22IALodOPUipohusKqOFI4dgdFhR/Q6o9+WymST1
-X-Google-Smtp-Source: AGHT+IGgSS4G/na8UzgAlgabXQYUN7OGdx97M5hvhWJEXEB+dTZnsZb3ui79WU1v00h7oIgJENf2CA==
-X-Received: by 2002:a7b:c396:0:b0:415:5492:5356 with SMTP id s22-20020a7bc396000000b0041554925356mr3584176wmj.11.1712137664009;
-        Wed, 03 Apr 2024 02:47:44 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id u22-20020a05600c139600b00414906f1ea1sm20862273wmf.17.2024.04.03.02.47.42
+        bh=uTa8/TOckEyTpCdBl7olLE+j8uZidjm/TMH1XrW2qkA=;
+        b=vizDw1zEE3+AuUjqhNiZMk9CX0DOQhTAj8gghKcYxgL2r+2kgy4e3AIoUMkSbn4GxM
+         GbT3Y0Ljgice1/vdAlRaRjjkZXvJaTO479RyTetGRIQkC7nJfZy1maNqDi7DcbspmHhY
+         i9GbVXJ3Z4c8aFHRHj3mQNBBVnWGfvgHIgmEmLLTsDNhBAaKJIlheN6xYh/V+YD7cx/H
+         wpG9UiwJrzg1xb4Iq4bNu6oaBsps73eT87gORapTe2i9LhWLcdyLLhPavABdJ+tdv8ah
+         paf8cBcGslXNEof9ten2h56nktu5/cj0AwLwHZHaYqXW9ez7Pb5/Qci3kDRcC0TpGEog
+         wUlA==
+X-Forwarded-Encrypted: i=1; AJvYcCU584VqPBXTU72dOjbi7RVHJGCAGoYhxZ94MgLvaGF13Eo7E/oBWDSnUdeLljvtKRo7JlX4WvkwU/eDUuhiaNbtKoN+puB0yNHXvEF/Jt3aPjTrVFaSZvCjbfC8vDAfbg+jh9h+dHeVAEFlvpG7cCK3Grfk0b+ofnUnPJk6eEChzXUbefWpQsBbZqxZzxYa2Ta7j7AES3ju4Q5ftcs9uUUe+2L6UiGcbg==
+X-Gm-Message-State: AOJu0YxEvXJi8fdn21S+1hViV0x7ToqAnIu82J5D6h3wLs50qHiOHFhY
+	5/86bXguVTjRIh1YjYqBUQLag/DOqpGuzfmubl6Nh3Y1j1j8Acxj
+X-Google-Smtp-Source: AGHT+IH3UuYlS2hljnHx5KnGJBypuk1UtnhWXyO/31w1MhNfOjxHFjgdTOAY7TOIKWDlG+e+AcUDqg==
+X-Received: by 2002:a05:6402:3507:b0:56b:9b69:2e81 with SMTP id b7-20020a056402350700b0056b9b692e81mr10836228edd.27.1712142319992;
+        Wed, 03 Apr 2024 04:05:19 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:400::5:2b67])
+        by smtp.gmail.com with ESMTPSA id fi8-20020a056402550800b0056c509a11acsm7814866edb.33.2024.04.03.04.05.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 02:47:43 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 3 Apr 2024 11:47:41 +0200
+        Wed, 03 Apr 2024 04:05:19 -0700 (PDT)
+Date: Wed, 3 Apr 2024 12:05:18 +0100
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
 To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
-Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
- probe
-Message-ID: <Zg0lvUIB4WdRUGw_@krava>
-References: <20240402093302.2416467-1-jolsa@kernel.org>
- <20240402093302.2416467-2-jolsa@kernel.org>
- <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+ <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+ <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+ <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+ <20240328091841.ce9cc613db375536de843cfb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+In-Reply-To: <20240328091841.ce9cc613db375536de843cfb@kernel.org>
 
-On Wed, Apr 03, 2024 at 10:07:08AM +0900, Masami Hiramatsu wrote:
-> Hi Jiri,
+> > > > Given the discussion around per-cpu rw semaphore and need for
+> > > > (internal) batched attachment API for uprobes, do you think you can
+> > > > apply this patch as is for now? We can then gain initial improvements
+> > > > in scalability that are also easy to backport, and Jonathan will work
+> > > > on a more complete solution based on per-cpu RW semaphore, as
+> > > > suggested by Ingo.
+> > > 
+> > > Yeah, it is interesting to use per-cpu rw semaphore on uprobe.
+> > > I would like to wait for the next version.
+> > 
+> > My initial tests show a nice improvement on the over RW spinlocks but
+> > significant regression in acquiring a write lock. I've got a few days
+> > vacation over Easter but I'll aim to get some more formalised results out
+> > to the thread toward the end of next week.
 > 
-> On Tue,  2 Apr 2024 11:33:00 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> > Adding uretprobe syscall instead of trap to speed up return probe.
-> 
-> This is interesting approach. But I doubt we need to add additional
-> syscall just for this purpose. Can't we use another syscall or ioctl?
+> As far as the write lock is only on the cold path, I think you can choose
+> per-cpu RW semaphore. Since it does not do busy wait, the total system
+> performance impact will be small.
+> I look forward to your formalized results :)
 
-so the plan is to optimize entry uprobe in a similar way and given
-the syscall is not a scarce resource I wanted to add another syscall
-for that one as well
+Sorry for the delay in getting back to you on this Masami. 
 
-tbh I'm not sure sure which syscall or ioctl to reuse for this, it's
-possible to do that, the trampoline will just have to save one or
-more additional registers, but adding new syscall seems cleaner to me
+I have used one of the bpf selftest benchmarks to provide some form of
+comparison of the 3 different approaches (spinlock, RW spinlock and
+per-cpu RW semaphore). The benchmark used here is the 'trig-uprobe-nop'
+benchmark which just executes a single uprobe with a minimal bpf program
+attached. The tests were done on a 32 core qemu/kvm instance.
 
-> 
-> Also, we should run syzkaller on this syscall. And if uretprobe is
+Things to note about the results:
 
-right, I'll check on syzkaller
+- The results are slightly variable so don't get too caught up on
+  individual thread count - it's the trend that is important.
+- In terms of throughput with this specific benchmark a *very* macro view
+  is that the RW spinlock provides 40-60% more throughput than the
+  spinlock.  The per-CPU RW semaphore provides in the order of 50-100%
+  more throughput then the spinlock.
+- This doesn't fully reflect the large reduction in latency that we have
+  seen in application based measurements. However, it does demonstrate
+  that even the trivial change of going to a RW spinlock provides
+  significant benefits.
 
-> set in the user function, what happen if the user function directly
-> calls this syscall? (maybe it consumes shadow stack?)
+I haven't included the measurements on per-CPU RW semaphore write
+performance as they are completely in line with those that Paul McKenney
+posted on his journal [0]. On a 32 core system I see semaphore writes to
+take in the order of 25-28 millisecs - the cost of the synchronize_rcu().
 
-the process should receive SIGILL if there's no pending uretprobe for
-the current task, or it will trigger uretprobe if there's one pending
+Each block of results below show 1 line per execution of the benchmark (the
+"Summary" line) and each line is a run with one more thread added - a
+thread is a "producer". The lines are edited to remove extraneous output
+that adds no value here.
 
-but we could limit the syscall to be executed just from the trampoline,
-that should prevent all the user space use cases, I'll do that in next
-version and add more tests for that
+The tests were executed with this driver script:
 
-thanks,
-jirka
+for num_threads in {1..20}
+do
+    sudo ./bench -p $num_threads trig-uprobe-nop | grep Summary
+done
 
+
+spinlock
+
+Summary: hits    1.453 ± 0.005M/s (  1.453M/prod)
+Summary: hits    2.087 ± 0.005M/s (  1.043M/prod)
+Summary: hits    2.701 ± 0.012M/s (  0.900M/prod)
+Summary: hits    1.917 ± 0.011M/s (  0.479M/prod)
+Summary: hits    2.105 ± 0.003M/s (  0.421M/prod)
+Summary: hits    1.615 ± 0.006M/s (  0.269M/prod)
+Summary: hits    2.046 ± 0.004M/s (  0.292M/prod)
+Summary: hits    1.818 ± 0.002M/s (  0.227M/prod)
+Summary: hits    1.867 ± 0.024M/s (  0.207M/prod)
+Summary: hits    1.692 ± 0.003M/s (  0.169M/prod)
+Summary: hits    1.778 ± 0.004M/s (  0.162M/prod)
+Summary: hits    1.710 ± 0.011M/s (  0.142M/prod)
+Summary: hits    1.687 ± 0.022M/s (  0.130M/prod)
+Summary: hits    1.697 ± 0.004M/s (  0.121M/prod)
+Summary: hits    1.645 ± 0.011M/s (  0.110M/prod)
+Summary: hits    1.671 ± 0.002M/s (  0.104M/prod)
+Summary: hits    1.692 ± 0.014M/s (  0.100M/prod)
+Summary: hits    1.700 ± 0.015M/s (  0.094M/prod)
+Summary: hits    1.668 ± 0.005M/s (  0.088M/prod)
+Summary: hits    1.644 ± 0.004M/s (  0.082M/prod)
+
+
+RW spinlock
+
+Summary: hits    1.465 ± 0.008M/s (  1.465M/prod)
+Summary: hits    1.750 ± 0.035M/s (  0.875M/prod)
+Summary: hits    2.164 ± 0.008M/s (  0.721M/prod)
+Summary: hits    2.235 ± 0.014M/s (  0.559M/prod)
+Summary: hits    2.202 ± 0.005M/s (  0.440M/prod)
+Summary: hits    2.816 ± 0.003M/s (  0.469M/prod)
+Summary: hits    2.364 ± 0.002M/s (  0.338M/prod)
+Summary: hits    2.327 ± 0.008M/s (  0.291M/prod)
+Summary: hits    2.147 ± 0.005M/s (  0.239M/prod)
+Summary: hits    2.266 ± 0.011M/s (  0.227M/prod)
+Summary: hits    2.483 ± 0.003M/s (  0.226M/prod)
+Summary: hits    2.573 ± 0.008M/s (  0.214M/prod)
+Summary: hits    2.569 ± 0.004M/s (  0.198M/prod)
+Summary: hits    2.507 ± 0.013M/s (  0.179M/prod)
+Summary: hits    2.165 ± 0.008M/s (  0.144M/prod)
+Summary: hits    2.524 ± 0.004M/s (  0.158M/prod)
+Summary: hits    2.059 ± 0.020M/s (  0.121M/prod)
+Summary: hits    2.332 ± 0.007M/s (  0.130M/prod)
+Summary: hits    2.404 ± 0.017M/s (  0.127M/prod)
+Summary: hits    2.187 ± 0.002M/s (  0.109M/prod)
+
+
+per-CPU RW semaphore
+
+Summary: hits    1.341 ± 0.017M/s (  1.341M/prod)
+Summary: hits    2.397 ± 0.011M/s (  1.198M/prod)
+Summary: hits    3.547 ± 0.041M/s (  1.182M/prod)
+Summary: hits    4.108 ± 0.016M/s (  1.027M/prod)
+Summary: hits    3.138 ± 0.055M/s (  0.628M/prod)
+Summary: hits    3.247 ± 0.017M/s (  0.541M/prod)
+Summary: hits    2.877 ± 0.005M/s (  0.411M/prod)
+Summary: hits    2.880 ± 0.002M/s (  0.360M/prod)
+Summary: hits    2.579 ± 0.001M/s (  0.287M/prod)
+Summary: hits    2.982 ± 0.011M/s (  0.298M/prod)
+Summary: hits    2.603 ± 0.002M/s (  0.237M/prod)
+Summary: hits    3.013 ± 0.004M/s (  0.251M/prod)
+Summary: hits    3.059 ± 0.001M/s (  0.235M/prod)
+Summary: hits    2.721 ± 0.014M/s (  0.194M/prod)
+Summary: hits    2.943 ± 0.005M/s (  0.196M/prod)
+Summary: hits    3.366 ± 0.011M/s (  0.210M/prod)
+Summary: hits    2.459 ± 0.001M/s (  0.145M/prod)
+Summary: hits    3.023 ± 0.024M/s (  0.168M/prod)
+Summary: hits    2.919 ± 0.002M/s (  0.154M/prod)
+Summary: hits    2.569 ± 0.002M/s (  0.128M/prod)
+
+[0] https://paulmck.livejournal.com/67547.html
+
+Thanks.
+
+Jon.
 
 > 
 > Thank you,
 > 
 > > 
-> > At the moment the uretprobe setup/path is:
+> > Jon.
 > > 
-> >   - install entry uprobe
-> > 
-> >   - when the uprobe is hit, it overwrites probed function's return address
-> >     on stack with address of the trampoline that contains breakpoint
-> >     instruction
-> > 
-> >   - the breakpoint trap code handles the uretprobe consumers execution and
-> >     jumps back to original return address
-> > 
-> > This patch replaces the above trampoline's breakpoint instruction with new
-> > ureprobe syscall call. This syscall does exactly the same job as the trap
-> > with some more extra work:
-> > 
-> >   - syscall trampoline must save original value for rax/r11/rcx registers
-> >     on stack - rax is set to syscall number and r11/rcx are changed and
-> >     used by syscall instruction
-> > 
-> >   - the syscall code reads the original values of those registers and
-> >     restore those values in task's pt_regs area
-> > 
-> > Even with the extra registers handling code the having uretprobes handled
-> > by syscalls shows speed improvement.
-> > 
-> >   On Intel (11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz)
-> > 
-> >   current:
-> > 
-> >     base           :   15.888 � 0.033M/s
-> >     uprobe-nop     :    3.016 � 0.000M/s
-> >     uprobe-push    :    2.832 � 0.005M/s
-> >     uprobe-ret     :    1.104 � 0.000M/s
-> >     uretprobe-nop  :    1.487 � 0.000M/s
-> >     uretprobe-push :    1.456 � 0.000M/s
-> >     uretprobe-ret  :    0.816 � 0.001M/s
-> > 
-> >   with the fix:
-> > 
-> >     base           :   15.116 � 0.045M/s
-> >     uprobe-nop     :    3.001 � 0.045M/s
-> >     uprobe-push    :    2.831 � 0.004M/s
-> >     uprobe-ret     :    1.102 � 0.001M/s
-> >     uretprobe-nop  :    1.969 � 0.001M/s  < 32% speedup
-> >     uretprobe-push :    1.905 � 0.004M/s  < 30% speedup
-> >     uretprobe-ret  :    0.933 � 0.002M/s  < 14% speedup
-> > 
-> >   On Amd (AMD Ryzen 7 5700U)
-> > 
-> >   current:
-> > 
-> >     base           :    5.105 � 0.003M/s
-> >     uprobe-nop     :    1.552 � 0.002M/s
-> >     uprobe-push    :    1.408 � 0.003M/s
-> >     uprobe-ret     :    0.827 � 0.001M/s
-> >     uretprobe-nop  :    0.779 � 0.001M/s
-> >     uretprobe-push :    0.750 � 0.001M/s
-> >     uretprobe-ret  :    0.539 � 0.001M/s
-> > 
-> >   with the fix:
-> > 
-> >     base           :    5.119 � 0.002M/s
-> >     uprobe-nop     :    1.523 � 0.003M/s
-> >     uprobe-push    :    1.384 � 0.003M/s
-> >     uprobe-ret     :    0.826 � 0.002M/s
-> >     uretprobe-nop  :    0.866 � 0.002M/s  < 11% speedup
-> >     uretprobe-push :    0.826 � 0.002M/s  < 10% speedup
-> >     uretprobe-ret  :    0.581 � 0.001M/s  <  7% speedup
-> > 
-> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  arch/x86/entry/syscalls/syscall_64.tbl |  1 +
-> >  arch/x86/kernel/uprobes.c              | 83 ++++++++++++++++++++++++++
-> >  include/linux/syscalls.h               |  2 +
-> >  include/linux/uprobes.h                |  2 +
-> >  include/uapi/asm-generic/unistd.h      |  5 +-
-> >  kernel/events/uprobes.c                | 18 ++++--
-> >  kernel/sys_ni.c                        |  2 +
-> >  7 files changed, 108 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> > index 7e8d46f4147f..af0a33ab06ee 100644
-> > --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> > +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> > @@ -383,6 +383,7 @@
-> >  459	common	lsm_get_self_attr	sys_lsm_get_self_attr
-> >  460	common	lsm_set_self_attr	sys_lsm_set_self_attr
-> >  461	common	lsm_list_modules	sys_lsm_list_modules
-> > +462	64	uretprobe		sys_uretprobe
-> >  
-> >  #
-> >  # Due to a historical design error, certain syscalls are numbered differently
-> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > index 6c07f6daaa22..6fc5d16f6c17 100644
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/ptrace.h>
-> >  #include <linux/uprobes.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/syscalls.h>
-> >  
-> >  #include <linux/kdebug.h>
-> >  #include <asm/processor.h>
-> > @@ -308,6 +309,88 @@ static int uprobe_init_insn(struct arch_uprobe *auprobe, struct insn *insn, bool
-> >  }
-> >  
-> >  #ifdef CONFIG_X86_64
-> > +
-> > +asm (
-> > +	".pushsection .rodata\n"
-> > +	".global uretprobe_syscall_entry\n"
-> > +	"uretprobe_syscall_entry:\n"
-> > +	"pushq %rax\n"
-> > +	"pushq %rcx\n"
-> > +	"pushq %r11\n"
-> > +	"movq $" __stringify(__NR_uretprobe) ", %rax\n"
-> > +	"syscall\n"
-> > +	"popq %r11\n"
-> > +	"popq %rcx\n"
-> > +
-> > +	/* The uretprobe syscall replaces stored %rax value with final
-> > +	 * return address, so we don't restore %rax in here and just
-> > +	 * call ret.
-> > +	 */
-> > +	"retq\n"
-> > +	".global uretprobe_syscall_end\n"
-> > +	"uretprobe_syscall_end:\n"
-> > +	".popsection\n"
-> > +);
-> > +
-> > +extern u8 uretprobe_syscall_entry[];
-> > +extern u8 uretprobe_syscall_end[];
-> > +
-> > +void *arch_uprobe_trampoline(unsigned long *psize)
-> > +{
-> > +	*psize = uretprobe_syscall_end - uretprobe_syscall_entry;
-> > +	return uretprobe_syscall_entry;
-> > +}
-> > +
-> > +SYSCALL_DEFINE0(uretprobe)
-> > +{
-> > +	struct pt_regs *regs = task_pt_regs(current);
-> > +	unsigned long err, ip, sp, r11_cx_ax[3];
-> > +
-> > +	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
-> > +	WARN_ON_ONCE(err);
-> > +
-> > +	/* expose the "right" values of r11/cx/ax/sp to uprobe_consumer/s */
-> > +	regs->r11 = r11_cx_ax[0];
-> > +	regs->cx  = r11_cx_ax[1];
-> > +	regs->ax  = r11_cx_ax[2];
-> > +	regs->sp += sizeof(r11_cx_ax);
-> > +	regs->orig_ax = -1;
-> > +
-> > +	ip = regs->ip;
-> > +	sp = regs->sp;
-> > +
-> > +	uprobe_handle_trampoline(regs);
-> > +
-> > +	/*
-> > +	 * uprobe_consumer has changed sp, we can do nothing,
-> > +	 * just return via iret
-> > +	 */
-> > +	if (regs->sp != sp)
-> > +		return regs->ax;
-> > +	regs->sp -= sizeof(r11_cx_ax);
-> > +
-> > +	/* for the case uprobe_consumer has changed r11/cx */
-> > +	r11_cx_ax[0] = regs->r11;
-> > +	r11_cx_ax[1] = regs->cx;
-> > +
-> > +	/*
-> > +	 * ax register is passed through as return value, so we can use
-> > +	 * its space on stack for ip value and jump to it through the
-> > +	 * trampoline's ret instruction
-> > +	 */
-> > +	r11_cx_ax[2] = regs->ip;
-> > +	regs->ip = ip;
-> > +
-> > +	err = copy_to_user((void __user *)regs->sp, r11_cx_ax, sizeof(r11_cx_ax));
-> > +	WARN_ON_ONCE(err);
-> > +
-> > +	/* ensure sysret, see do_syscall_64() */
-> > +	regs->r11 = regs->flags;
-> > +	regs->cx  = regs->ip;
-> > +
-> > +	return regs->ax;
-> > +}
-> > +
-> >  /*
-> >   * If arch_uprobe->insn doesn't use rip-relative addressing, return
-> >   * immediately.  Otherwise, rewrite the instruction so that it accesses
-> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> > index 77eb9b0e7685..db150794f89d 100644
-> > --- a/include/linux/syscalls.h
-> > +++ b/include/linux/syscalls.h
-> > @@ -972,6 +972,8 @@ asmlinkage long sys_lsm_list_modules(u64 *ids, size_t *size, u32 flags);
-> >  /* x86 */
-> >  asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int on);
-> >  
-> > +asmlinkage long sys_uretprobe(void);
-> > +
-> >  /* pciconfig: alpha, arm, arm64, ia64, sparc */
-> >  asmlinkage long sys_pciconfig_read(unsigned long bus, unsigned long dfn,
-> >  				unsigned long off, unsigned long len,
-> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > index f46e0ca0169c..a490146ad89d 100644
-> > --- a/include/linux/uprobes.h
-> > +++ b/include/linux/uprobes.h
-> > @@ -138,6 +138,8 @@ extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
-> >  extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
-> >  extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
-> >  					 void *src, unsigned long len);
-> > +extern void uprobe_handle_trampoline(struct pt_regs *regs);
-> > +extern void *arch_uprobe_trampoline(unsigned long *psize);
-> >  #else /* !CONFIG_UPROBES */
-> >  struct uprobes_state {
-> >  };
-> > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> > index 75f00965ab15..8a747cd1d735 100644
-> > --- a/include/uapi/asm-generic/unistd.h
-> > +++ b/include/uapi/asm-generic/unistd.h
-> > @@ -842,8 +842,11 @@ __SYSCALL(__NR_lsm_set_self_attr, sys_lsm_set_self_attr)
-> >  #define __NR_lsm_list_modules 461
-> >  __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
-> >  
-> > +#define __NR_uretprobe 462
-> > +__SYSCALL(__NR_uretprobe, sys_uretprobe)
-> > +
-> >  #undef __NR_syscalls
-> > -#define __NR_syscalls 462
-> > +#define __NR_syscalls 463
-> >  
-> >  /*
-> >   * 32 bit systems traditionally used different
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 929e98c62965..90395b16bde0 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -1474,11 +1474,20 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
-> >  	return ret;
-> >  }
-> >  
-> > +void * __weak arch_uprobe_trampoline(unsigned long *psize)
-> > +{
-> > +	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-> > +
-> > +	*psize = UPROBE_SWBP_INSN_SIZE;
-> > +	return &insn;
-> > +}
-> > +
-> >  static struct xol_area *__create_xol_area(unsigned long vaddr)
-> >  {
-> >  	struct mm_struct *mm = current->mm;
-> > -	uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-> > +	unsigned long insns_size;
-> >  	struct xol_area *area;
-> > +	void *insns;
-> >  
-> >  	area = kmalloc(sizeof(*area), GFP_KERNEL);
-> >  	if (unlikely(!area))
-> > @@ -1502,7 +1511,8 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
-> >  	/* Reserve the 1st slot for get_trampoline_vaddr() */
-> >  	set_bit(0, area->bitmap);
-> >  	atomic_set(&area->slot_count, 1);
-> > -	arch_uprobe_copy_ixol(area->pages[0], 0, &insn, UPROBE_SWBP_INSN_SIZE);
-> > +	insns = arch_uprobe_trampoline(&insns_size);
-> > +	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
-> >  
-> >  	if (!xol_add_vma(mm, area))
-> >  		return area;
-> > @@ -2123,7 +2133,7 @@ static struct return_instance *find_next_ret_chain(struct return_instance *ri)
-> >  	return ri;
-> >  }
-> >  
-> > -static void handle_trampoline(struct pt_regs *regs)
-> > +void uprobe_handle_trampoline(struct pt_regs *regs)
-> >  {
-> >  	struct uprobe_task *utask;
-> >  	struct return_instance *ri, *next;
-> > @@ -2188,7 +2198,7 @@ static void handle_swbp(struct pt_regs *regs)
-> >  
-> >  	bp_vaddr = uprobe_get_swbp_addr(regs);
-> >  	if (bp_vaddr == get_trampoline_vaddr())
-> > -		return handle_trampoline(regs);
-> > +		return uprobe_handle_trampoline(regs);
-> >  
-> >  	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
-> >  	if (!uprobe) {
-> > diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-> > index faad00cce269..be6195e0d078 100644
-> > --- a/kernel/sys_ni.c
-> > +++ b/kernel/sys_ni.c
-> > @@ -391,3 +391,5 @@ COND_SYSCALL(setuid16);
-> >  
-> >  /* restartable sequence */
-> >  COND_SYSCALL(rseq);
-> > +
-> > +COND_SYSCALL(uretprobe);
-> > -- 
-> > 2.44.0
-> > 
+> > > 
+> > > Thank you,
+> > > 
+> > > > 
+> > > > >
+> > > > > BTW, how did you measure the overhead? I think spinlock overhead
+> > > > > will depend on how much lock contention happens.
+> > > > >
+> > > > > Thank you,
+> > > > >
+> > > > > >
+> > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
+> > > > > >
+> > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > > > > > ---
+> > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > > > >
+> > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > > > > index 929e98c62965..42bf9b6e8bc0 100644
+> > > > > > --- a/kernel/events/uprobes.c
+> > > > > > +++ b/kernel/events/uprobes.c
+> > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> > > > > >   */
+> > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
+> > > > > >
+> > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
+> > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
+> > > > > >
+> > > > > >  #define UPROBES_HASH_SZ      13
+> > > > > >  /* serialize uprobe->pending_list */
+> > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> > > > > >  {
+> > > > > >       struct uprobe *uprobe;
+> > > > > >
+> > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > +     read_lock(&uprobes_treelock);
+> > > > > >       uprobe = __find_uprobe(inode, offset);
+> > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > >
+> > > > > >       return uprobe;
+> > > > > >  }
+> > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> > > > > >  {
+> > > > > >       struct uprobe *u;
+> > > > > >
+> > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > +     write_lock(&uprobes_treelock);
+> > > > > >       u = __insert_uprobe(uprobe);
+> > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > +     write_unlock(&uprobes_treelock);
+> > > > > >
+> > > > > >       return u;
+> > > > > >  }
+> > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
+> > > > > >               return;
+> > > > > >
+> > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > +     write_lock(&uprobes_treelock);
+> > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > +     write_unlock(&uprobes_treelock);
+> > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> > > > > >       put_uprobe(uprobe);
+> > > > > >  }
+> > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> > > > > >       min = vaddr_to_offset(vma, start);
+> > > > > >       max = min + (end - start) - 1;
+> > > > > >
+> > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > +     read_lock(&uprobes_treelock);
+> > > > > >       n = find_node_in_range(inode, min, max);
+> > > > > >       if (n) {
+> > > > > >               for (t = n; t; t = rb_prev(t)) {
+> > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> > > > > >                       get_uprobe(u);
+> > > > > >               }
+> > > > > >       }
+> > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > >  }
+> > > > > >
+> > > > > >  /* @vma contains reference counter, not the probed instruction. */
+> > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> > > > > >       min = vaddr_to_offset(vma, start);
+> > > > > >       max = min + (end - start) - 1;
+> > > > > >
+> > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > +     read_lock(&uprobes_treelock);
+> > > > > >       n = find_node_in_range(inode, min, max);
+> > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > >
+> > > > > >       return !!n;
+> > > > > >  }
+> > > > > > --
+> > > > > > 2.43.0
+> > > > > >
+> > > > >
+> > > > >
+> > > > > --
+> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > 
+> > > -- 
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
 > 
 > -- 
