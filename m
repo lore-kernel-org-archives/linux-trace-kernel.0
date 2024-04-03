@@ -1,94 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4FD15539B;
-	Wed,  3 Apr 2024 19:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B5A155A46;
+	Wed,  3 Apr 2024 22:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712174297; cv=none; b=qAZubBKyNxfK/7CWjT5sz59/IbI0u5Gm3w4iH+8kTA2j0qwW7FnMQ6X+9UyyrE6/Dw/13lcjbIXCIoXMdOXD6bJN4fOooci37nDu0qLgJjle8cZhz/KpRxHQa0i+BUHeXcBxowshcjia6ta6MBbSRYmW8eZx5sfC/HX9NQBzkjo=
+	t=1712181813; cv=none; b=NYK0DIeHcjep1fc/KCymgQh68DzSuor6CH/GsNhgYXiisVs0v4LHF1V7jpI/gD9B7vuihC7wfULcW45aFpEqLeXFoQKEC9NHSF1YTwXhlqilsq9gkPLM+NGCzJ9w/aoTw0CnGgW/jF5H8IRHkyozRq+xYvEYKn7RdSQk2uZDOOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712174297; c=relaxed/simple;
-	bh=hf4KgJLDDHiJkfJJRgfbtMzcLNXDxUFHuHYKNKAixKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxk33sgDXoYnce/C9e2aYkHHHI8IgbSYfk2bzPB9vTdAarBB0rPduNroYK/hgNhbedp/Gq7ia6mYDazyI07IwdSJA3B+Y7DDISRxzsHSQkLt3aEldFnxiHG7D2FKe32yWo2dp7z/iUiZh3VOpzHM+NoD8mI+am6cfWDJP0fqAS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKk5vsaL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712181813; c=relaxed/simple;
+	bh=5sP3DAGV0y7InFAl2knqhH/EQZOjd1FykDpAx3ilIVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aX8jZi/GlOb8K8INQXeJiVejavBBydmUdslhLuWRbjI6/p7UBiExmKcVOTFvjBf2axxkKj5zVR8D3ezqZ8UPwnXxO+tJ3NiJP5wpLF+Yk2BjVzYZfbDh2O1zU1fTlQpAcajmTz0TPQ/Buj2/6RlL5oaTn5T6ycB5XJlADEKf9OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoJ/hj0S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKk5vsaL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D68C43390;
-	Wed,  3 Apr 2024 19:58:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoJ/hj0S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13EA4C433C7;
+	Wed,  3 Apr 2024 22:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712174296;
-	bh=hf4KgJLDDHiJkfJJRgfbtMzcLNXDxUFHuHYKNKAixKI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=KKk5vsaLBfjvXqmkrZZxnvUDD9gjp5BQliOldUEMX2R+csPXjytY1xH3/WY9B9II5
-	 5XNsNY+yeIIJZ/TX7Lc9ditkDhl2UuM2deQfLoQz4vxV3ZAHZgjKJi+d3IdfwErYIV
-	 wRCrosuGAg3RuPTm0aikY+v6gVHAhfx9tvSfqC24w1eLx1glEZNElsq0xZVQSjhSkt
-	 SwIm5NntKcT78FGHPrqOqnOwnLZtaqaIytuAAZFwHT0snCbBNBdBBiPxsY2jiMlxK3
-	 GFWAaZMFApQz/9Vch1/jvCGJMzSsZifcTodv1V9a5cEl32rsBja2AnvCbKOpmZPkfF
-	 3wMZ28wgH9mkQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5D790CE0D85; Wed,  3 Apr 2024 12:58:16 -0700 (PDT)
-Date: Wed, 3 Apr 2024 12:58:16 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>, Chris Mason <clm@fb.com>
-Subject: Re: [PATCH RFC ftrace] Asynchronous grace period for
- register_ftrace_direct()
-Message-ID: <ec30815d-22c0-4a65-9b55-f9e10781d5b2@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <7ed089be-c0c6-43b5-849a-05599cb32cfd@paulmck-laptop>
- <20240403152912.7f03c6db@gandalf.local.home>
+	s=k20201202; t=1712181812;
+	bh=5sP3DAGV0y7InFAl2knqhH/EQZOjd1FykDpAx3ilIVc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OoJ/hj0Sh1/Uqgm0SedOslB6ho9oQ5WsukOps17SwBqERToVF7DUJzp65clDN8X1a
+	 7SVhsGcjmoWZEsWWl7NsG+6SwnCR7VkGjKwL56rOxsx7j+UgXPxmoXAUcvaMQd/hDW
+	 /K+MtUdCfPoQiR3k8oPx1EnxKeJUSItJ7Sr71/EY/jXqIW9A+h5aa+zufQgBEg4T2O
+	 H7+Z2UCjzdcu8I68mWDXh7zg5zdV2C/yErMNx7BkO9MofiZA0hTz2Ebz2rmhQA5XEo
+	 5YapNsKaBVYKVlfpQW5KrLG8cfsw7Q7ssW6ayvUZEiETWqeIB8f6ysIOVXF7vhzVzd
+	 ijizdZQHx9GpA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: bpf@vger.kernel.org,
+	jolsa@kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH v3 1/2] ftrace: make extra rcu_is_watching() validation check optional
+Date: Wed,  3 Apr 2024 15:03:27 -0700
+Message-ID: <20240403220328.455786-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403152912.7f03c6db@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 03:29:12PM -0400, Steven Rostedt wrote:
-> On Wed, 3 Apr 2024 11:53:14 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > @@ -5366,6 +5366,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
-> >  	}
-> >  }
-> >  
-> > +static void register_ftrace_direct_cb(struct rcu_head *rhp)
-> > +{
-> > +	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
-> > +
-> > +	free_ftrace_hash(fhp);
-> > +}
-> > +
-> >  /**
-> >   * register_ftrace_direct - Call a custom trampoline directly
-> >   * for multiple functions registered in @ops
-> > @@ -5464,10 +5471,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-> >   out_unlock:
-> >  	mutex_unlock(&direct_mutex);
-> >  
-> > -	if (free_hash && free_hash != EMPTY_HASH) {
-> > -		synchronize_rcu_tasks();
-> > -		free_ftrace_hash(free_hash);
-> > -	}
-> > +	if (free_hash && free_hash != EMPTY_HASH)
-> > +		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-> >  
-> >  	if (new_hash)
-> >  		free_ftrace_hash(new_hash);
-> 
-> I'm getting ready to go on PTO, but a quick glance doesn't look like this
-> would cause any harm.
+Introduce CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING config option to
+control whether ftrace low-level code performs additional
+rcu_is_watching()-based validation logic in an attempt to catch noinstr
+violations.
 
-It is not urgent, as in v6.10 merge window at the earliest.  So if I
-don't hear from you in a few weeks, I will re-send.  ;-)
+This check is expected to never be true and is mostly useful for
+low-level validation of ftrace subsystem invariants. For most users it
+should probably be kept disabled to eliminate unnecessary runtime
+overhead.
 
-							Thanx, Paul
+This improves BPF multi-kretprobe (relying on ftrace and rethook
+infrastructure) runtime throughput by 2%, according to BPF benchmarks ([0]).
+
+  [0] https://lore.kernel.org/bpf/CAEf4BzauQ2WKMjZdc9s0rBWa01BYbgwHN6aNDXQSHYia47pQ-w@mail.gmail.com/
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ include/linux/trace_recursion.h |  2 +-
+ kernel/trace/Kconfig            | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
+index d48cd92d2364..24ea8ac049b4 100644
+--- a/include/linux/trace_recursion.h
++++ b/include/linux/trace_recursion.h
+@@ -135,7 +135,7 @@ extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
+ # define do_ftrace_record_recursion(ip, pip)	do { } while (0)
+ #endif
+ 
+-#ifdef CONFIG_ARCH_WANTS_NO_INSTR
++#ifdef CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
+ # define trace_warn_on_no_rcu(ip)					\
+ 	({								\
+ 		bool __ret = !rcu_is_watching();			\
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..7aebd1b8f93e 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -974,6 +974,19 @@ config FTRACE_RECORD_RECURSION_SIZE
+ 	  This file can be reset, but the limit can not change in
+ 	  size at runtime.
+ 
++config FTRACE_VALIDATE_RCU_IS_WATCHING
++	bool "Validate RCU is on during ftrace execution"
++	depends on FUNCTION_TRACER
++	depends on ARCH_WANTS_NO_INSTR
++	help
++	  All callbacks that attach to the function tracing have some sort of
++	  protection against recursion. This option is only to verify that
++	  ftrace (and other users of ftrace_test_recursion_trylock()) are not
++	  called outside of RCU, as if they are, it can cause a race. But it
++	  also has a noticeable overhead when enabled.
++
++	  If unsure, say N
++
+ config RING_BUFFER_RECORD_RECURSION
+ 	bool "Record functions that recurse in the ring buffer"
+ 	depends on FTRACE_RECORD_RECURSION
+-- 
+2.43.0
+
