@@ -1,223 +1,157 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE335675F;
-	Thu,  4 Apr 2024 07:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5B38DD1;
+	Thu,  4 Apr 2024 10:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712215303; cv=none; b=ezrS8Q0AlQeISq61wh9mqIuL/7PBqd53Di96DIzO6kMtLznFISKhrAwf62xpab2Hl7lhWIHxXQOcKskLsocC+5kb5O7KQHrFsnT+s4rJYSjttwwEhwEEtiUgHLcbU/kn8wxYqx8N0eC0gwPVGSLZ/q4Q3vTG3tigg7mxq4E+7J0=
+	t=1712227562; cv=none; b=UdrMjTdx1TTqfLziB+yF3ZBB+eTEdUjItjAr2eIBvte0/j0JqGZA7XHDKAjhwrT71HMS2PHUOaszyIHXg8zOVhP7hLhdD172Omawbxstz9/EPq21esoIdkPdhqT7QWCxcp0IzzvX5gK9tkc+NJlWBOQlTqQvc92ma0Y9nPaj1aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712215303; c=relaxed/simple;
-	bh=oZv1Wez/4+bqsLmNS3FVMB20C3FjVPxQSLIEYsk1Hlc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CMxMyptOu7x9QcsquV8O5DC2ADyVKW1VcocrHiLAw0X5M30ivpxS/2jg9003yHNOdmZ//qy61fwtO1HtLloNkshgVdVGWK6rv6oH48/BbI1Q1H1nBMRhurm5uGMLERyvZDXjnrAD0Fg8okS2l6ZWQpUzMApWRIMP862stxKpVFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msP0Oqe2; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1712227562; c=relaxed/simple;
+	bh=ePPMM/uIseZje0ZcIe4lHLIZ0Wj4HLiZRHfwugMfC08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JKb3KhEsDFg2ZzfWrqaLPqBwwr9PVX9RVIWdKHrveZ3jUGXYT7H+IyZclkWsYJUAI96I2vknQVgRfV1eRNt1LSDoeLoKl6ZZYtcYQj2Ahn10fmZbi/R6vC/p3egakG11kC0y0qpm768LQgU8L9g5P9eXOpDFfvXjPMWRVEmRSB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UdmvL/MB; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msP0Oqe2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e27c303573so4601105ad.3;
-        Thu, 04 Apr 2024 00:21:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdmvL/MB"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a5193f56986so25153966b.0;
+        Thu, 04 Apr 2024 03:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712215301; x=1712820101; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oGOhlg//3F0S9mUwjG1Z9GiuJGTOaECWxukxpME741g=;
-        b=msP0Oqe2zagH8e616yVOVH3nfLZEqoidHLqDHaGEl23WuDyoUw6Jdvt6nys6HCExyq
-         MDgPpwmSu9zx3s36J7xqHQT8pXvag3hLlFKrYhNQZ0P5hreHT9zM+FXnf1xVjCvuI19P
-         cJk/ovbLA06KhUqsjP9fGpZbnpbEq5wz/h3KcOCqao09O164fy2VURG2nZthUGkOvMDz
-         mIgSnvMSXqlVmB7jBxzraYNV4kbItaHFAtEiDX9/hDVaztf6LLEQP8I5ZOMvMq9clBuY
-         n0Ec/I3Qx1OUZMFZo4EZDtiYCTyWIq54iik651OjONshBNDm+Aa4Z8BA23tMYu2MXInP
-         LF/g==
+        d=gmail.com; s=20230601; t=1712227559; x=1712832359; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=F/B6UBwFbisopXHNcGO9MAQyxZ/hbRouxLNeeE3qnFQ=;
+        b=UdmvL/MBM0WrFHCdPUDLQ0S1t/W8Rkph1rANEJkNmLIr4Gy+EDUbLNpf+CFS6LMlVL
+         GdBpvi2Yx3qOH/XmBunoZ+iViLqWDKjrgP9EZR93tE/fn4U/ryYscPJXv8aPtmz+KAR4
+         8ezawz5XeeJTTBkRkMWQomVAJtokSawOoQuJnbkM7icz2/6ikOTuVUhc+iw8XyKc5O16
+         qe572ztoyDM6PS9iUjGz7OmBIIkq7gOx+b6wdsF1so76O0jlqSDlNQHU7iMOka9tG7nh
+         MjJiSsmwv6lS8aehn+F3vLPc2npnTKvgI03FTKy9UzWptmClOAyQJFczdXKLYzvUjkhb
+         cL1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712215301; x=1712820101;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oGOhlg//3F0S9mUwjG1Z9GiuJGTOaECWxukxpME741g=;
-        b=ebt3lpeE6j1ml7GpDWe3B9SXdISlz95794hBjJM8PY752gmoBX6m3jL+Mqo+CAIndi
-         BPBGXMIyIJg4+uDgMyRob1CBOMboyo1yD5uoI1XpXe4OWdsd2Bk3WHnEqoB3QxK900k8
-         ieOtTdCFNS7CKv6hnoZ5ifvg3MMSR40Hnu2082R96UaVsdAWVbkS3R3G8AyJL7T5e6bU
-         +cJd3RYS27yYDdYXgVGXQ8j1uhxMYlovth1HydBTO8phC1PvGKezy48aLkaPJU87+ioV
-         Ol/OAFPYEGurDejxOFyhSlI4ihpTGq/R+G/qTpoG239HwqxBtOzxEi/RHhBlrnkmd4WW
-         hX2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWYMCoI/VqDonmnn3OSBquRtlwX1190VMg3uUi2IH4/QeTBZc6fSS7uFuHugGIY7mVUmlOrqT7As0bcCNJ0h7I7mI+6wgO9Gdk/FYLWhtTyeeuXFjQ9wEV7wWlJYAGxJ3E/oDm/Or1vw2An
-X-Gm-Message-State: AOJu0YwkuLG6KzwyNqqXy0BRVYR1XHwmOMSBy6v5rVmipm0gZsbmoMGx
-	0s8P7cPyLCH66Kx6a6HHK1iKZM0JkoHYockLSLrhO32a9HWYqJUK
-X-Google-Smtp-Source: AGHT+IH66YdB2sVgkmH1xvgv4I+C6smt2MXPHmHm4S0q+JrLyLlx88yXDouok+cyXGNV6azCdk+JZw==
-X-Received: by 2002:a17:902:f38c:b0:1e2:7462:b97b with SMTP id f12-20020a170902f38c00b001e27462b97bmr1010177ple.67.1712215301155;
-        Thu, 04 Apr 2024 00:21:41 -0700 (PDT)
-Received: from KERNELXING-MB0.tencent.com ([111.201.28.7])
-        by smtp.gmail.com with ESMTPSA id w2-20020a1709029a8200b001db5b39635dsm14606399plp.277.2024.04.04.00.21.35
+        d=1e100.net; s=20230601; t=1712227559; x=1712832359;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F/B6UBwFbisopXHNcGO9MAQyxZ/hbRouxLNeeE3qnFQ=;
+        b=WseqHV3uqH39PeL22KGbb6ip8vWdOJGqnPrzJi3CoqoV5iz6Wh4eXClrzMCgQHK3ef
+         /HvUS8SrBw+ugdAxmiMAbfPDY3wGIbaf2SMrzTQ2LX6WVZDc4Mp1FtwU4RAE5d6hh4Ji
+         4wrU5nu54jK75pMG/oyE38w3q6GqXbAy/KIpokGtHlPeDzqFgBJfpAzaSFk510ctsDn9
+         4AYq3WmfszCZRntBKTx6eOVmZ5bIJM71Mq+fzVy5K6VhXZFBQ24kpGbZ4Y5Kq0drcMJG
+         F94olmrHpk0BEhW2IOrAntCJcr9X4esG/cr952o5jH4FjM1x3QEaMe2ASjKJNrsZ4ZTU
+         IEnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVA6nNmtq/O8u5+NawdASg71L2XPxZlDzWh2MfC3URWltDdaoq387M8K3F8QMzR1P4GEEx7muKIc0v0beV7Ktaojs9FpG29wg3FNrOn2N5aATc85lN1Ii5QNYphbNju6VLHXyt2qiBZKuP6kHsiEHouawlu7JeNXelpvZP8g5OC3Fh9rL32Xr4qZp6rW94Rg5PrTa8uA4Aw4P5yZyk0420Tyts83WIv7g==
+X-Gm-Message-State: AOJu0YzBUuERcFRZ/aXxLx7oVupcfnTJhtE6ovuNsXJoI1j16HM4oku1
+	7t9axN/v0yMDBM8n4HWlITrfJ6NgPhc+LwtyXfGWDDQj2dmlyVA7
+X-Google-Smtp-Source: AGHT+IE/1NLjMS8nR+IXCRExhY8KPmE74KM21lSRlzizDo1/vs09k4iCje3Q2udrPyYWdVVbVFLRFw==
+X-Received: by 2002:a17:907:10c2:b0:a4e:21e0:2e6e with SMTP id rv2-20020a17090710c200b00a4e21e02e6emr1249068ejb.5.1712227559174;
+        Thu, 04 Apr 2024 03:45:59 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::7:2535])
+        by smtp.gmail.com with ESMTPSA id wn2-20020a170907068200b00a4e781bd30dsm4060237ejb.24.2024.04.04.03.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 00:21:40 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: edumazet@google.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	rostedt@goodmis.org,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org
-Cc: mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v2 6/6] rstreason: make it work in trace world
-Date: Thu,  4 Apr 2024 15:20:47 +0800
-Message-Id: <20240404072047.11490-7-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240404072047.11490-1-kerneljasonxing@gmail.com>
-References: <20240404072047.11490-1-kerneljasonxing@gmail.com>
+        Thu, 04 Apr 2024 03:45:58 -0700 (PDT)
+Date: Thu, 4 Apr 2024 11:45:55 +0100
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <ktzm722fdhwmtjfbvoymaof2k2jh53x627swbswi24d4hq7aes@yje5kzpmzizy>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+ <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+ <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+ <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+ <20240328091841.ce9cc613db375536de843cfb@kernel.org>
+ <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
+ <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
 
-From: Jason Xing <kernelxing@tencent.com>
+> > Things to note about the results:
+> >
+> > - The results are slightly variable so don't get too caught up on
+> >   individual thread count - it's the trend that is important.
+> > - In terms of throughput with this specific benchmark a *very* macro view
+> >   is that the RW spinlock provides 40-60% more throughput than the
+> >   spinlock.  The per-CPU RW semaphore provides in the order of 50-100%
+> >   more throughput then the spinlock.
+> > - This doesn't fully reflect the large reduction in latency that we have
+> >   seen in application based measurements. However, it does demonstrate
+> >   that even the trivial change of going to a RW spinlock provides
+> >   significant benefits.
+> 
+> This is probably because trig-uprobe-nop creates a single uprobe that
+> is triggered on many CPUs. While in production we have also *many*
+> uprobes running on many CPUs. In this benchmark, besides contention on
+> uprobes_treelock, we are also hammering on other per-uprobe locks
+> (register_rwsem, also if you don't have [0] patch locally, there will
+> be another filter lock taken each time, filter->rwlock). There is also
+> atomic refcounting going on, which when you have the same uprobe
+> across all CPUs at the same time will cause a bunch of cache line
+> bouncing.
+> 
+> So yes, it's understandable that in practice in production you see an
+> even larger effect of optimizing uprobe_treelock than in this
+> micro-benchmark.
+> 
+>   [0] https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/commit/?h=probes/for-next&id=366f7afd3de31d3ce2f4cbff97c6c23b6aa6bcdf
 
-At last, we should let it work by introducing this reset reason in
-trace world.
+Thanks for the reply and the thoughts on this Andrii. Yes, I do have the
+filter->rwlock fix applied but, as you say, there are no doubt other
+effects at play here as to be expected in such a synthetic workload. I'm
+pleased with the outcomes though as they show a good result even if they
+are at the lower end of what I expect.
 
-One of the possible expected outputs is:
-... tcp_send_reset: skbaddr=xxx skaddr=xxx src=xxx dest=xxx
-state=TCP_ESTABLISHED reason=NOT_SPECIFIED
+The results also show that pursuing an RCU solution is definitely worth it
+but that write penalty is brutal in the case of a full synchronize_rcu()!
+Should be fun.
 
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
----
- include/trace/events/tcp.h | 37 +++++++++++++++++++++++++++++++++----
- net/ipv4/tcp_ipv4.c        |  2 +-
- net/ipv4/tcp_output.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  2 +-
- 4 files changed, 36 insertions(+), 7 deletions(-)
+> > for num_threads in {1..20}
+> > do
+> >     sudo ./bench -p $num_threads trig-uprobe-nop | grep Summary
+> 
+> just want to mention -a (affinity) option that you can pass a bench
+> tool, it will pin each thread on its own CPU. It generally makes tests
+> more uniform, eliminating CPU migrations variability.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 5c04a61a11c2..9bed9e63c9c5 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -11,6 +11,7 @@
- #include <net/ipv6.h>
- #include <net/tcp.h>
- #include <linux/sock_diag.h>
-+#include <net/rstreason.h>
- 
- /*
-  * tcp event with arguments sk and skb
-@@ -74,20 +75,38 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
- 	TP_ARGS(sk, skb)
- );
- 
-+#undef FN1
-+#define FN1(reason)	TRACE_DEFINE_ENUM(SK_RST_REASON_##reason);
-+#undef FN2
-+#define FN2(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
-+DEFINE_RST_REASON(FN1, FN1)
-+
-+#undef FN1
-+#undef FNe1
-+#define FN1(reason)	{ SK_RST_REASON_##reason, #reason },
-+#define FNe1(reason)	{ SK_RST_REASON_##reason, #reason }
-+
-+#undef FN2
-+#undef FNe2
-+#define FN2(reason)	{ SKB_DROP_REASON_##reason, #reason },
-+#define FNe2(reason)	{ SKB_DROP_REASON_##reason, #reason }
- /*
-  * skb of trace_tcp_send_reset is the skb that caused RST. In case of
-  * active reset, skb should be NULL
-  */
- TRACE_EVENT(tcp_send_reset,
- 
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk,
-+		 const struct sk_buff *skb,
-+		 const int reason),
- 
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, reason),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
- 		__field(const void *, skaddr)
- 		__field(int, state)
-+		__field(int, reason)
- 		__array(__u8, saddr, sizeof(struct sockaddr_in6))
- 		__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 	),
-@@ -113,14 +132,24 @@ TRACE_EVENT(tcp_send_reset,
- 			 */
- 			TP_STORE_ADDR_PORTS_SKB(skb, th, entry->daddr, entry->saddr);
- 		}
-+		__entry->reason = reason;
- 	),
- 
--	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s reason=%s",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  __entry->saddr, __entry->daddr,
--		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN")
-+		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN",
-+		  __entry->reason < RST_REASON_START ?
-+			__print_symbolic(__entry->reason, DEFINE_DROP_REASON(FN2, FNe2)) :
-+			__print_symbolic(__entry->reason, DEFINE_RST_REASON(FN1, FNe1)))
- );
- 
-+#undef FN1
-+#undef FNe1
-+
-+#undef FN2
-+#undef FNe2
-+
- /*
-  * tcp event with arguments sk
-  *
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 1ae2716f0c34..9c52a4a74842 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -871,7 +871,7 @@ static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb,
- 	if (sk)
- 		arg.bound_dev_if = sk->sk_bound_dev_if;
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	BUILD_BUG_ON(offsetof(struct sock, sk_bound_dev_if) !=
- 		     offsetof(struct inet_timewait_sock, tw_bound_dev_if));
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 18fbbad2028a..d5a7ecfcc1b3 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3608,7 +3608,7 @@ void tcp_send_active_reset(struct sock *sk, gfp_t priority, int reason)
- 	/* skb of trace_tcp_send_reset() keeps the skb that caused RST,
- 	 * skb here is different to the troublesome skb, so use NULL
- 	 */
--	trace_tcp_send_reset(sk, NULL);
-+	trace_tcp_send_reset(sk, NULL, SK_RST_REASON_NOT_SPECIFIED);
- }
- 
- /* Send a crossed SYN-ACK during socket establishment.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 6889ea70c760..3c995eff6e52 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1131,7 +1131,7 @@ static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb,
- 			label = ip6_flowlabel(ipv6h);
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1,
- 			     ipv6_get_dsfield(ipv6h), label, priority, txhash,
--- 
-2.37.3
+Thanks for pointing that flag  out!
 
+Jon.
+
+> 
+> > done
+> >
+> >
+> > spinlock
+> >
+> > Summary: hits    1.453 ± 0.005M/s (  1.453M/prod)
+> > Summary: hits    2.087 ± 0.005M/s (  1.043M/prod)
+> > Summary: hits    2.701 ± 0.012M/s (  0.900M/prod)
+> 
+> I also wanted to point out that the first measurement (1.453M/s in
+> this row) is total throughput across all threads, while value in
+> parenthesis (0.900M/prod) is averaged throughput per each thread. So
+> this M/prod value is the most interesting in this benchmark where we
+> assess the effect of reducing contention.
+> 
+> > Summary: hits    1.917 ± 0.011M/s (  0.479M/prod)
+> > Summary: hits    2.105 ± 0.003M/s (  0.421M/prod)
+> > Summary: hits    1.615 ± 0.006M/s (  0.269M/prod)
+> 
+> [...]
