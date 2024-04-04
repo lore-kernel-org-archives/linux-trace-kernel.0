@@ -1,95 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC2312AAF7
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB61612AAF7
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712247170; cv=none; b=k7g5zqeLpPSmjtcHDMcO9dbiSHgpJ+kzdzgWnAlH9CI1VHGZZfb75mQC6cgJzEyJd7dMFpHhXzjX3TlXyAjc13CXHfzTc5qHqCgu1e04TBj8olvsG1ApZZp6RX/zDnOi7Kck98f/lPjYRmOhJmftakUYFQgoqNk2yP/VAq4GSao=
+	t=1712248199; cv=none; b=chygeEzbgVt2pTcdxRoO321Rct7ySyAmTR8jF8CTKJhIFCNazhCCLEh5K/Prf3Pf3B+fBuWZFrULdnIahtCb73bAw9iXCXS7sz9BkQviE1Be1WdfajpwPH4XgWqQJTE038uR292MjfeUzTuSqAgMdd8r2ATE6W8ZauyTldheflA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712247170; c=relaxed/simple;
-	bh=3HSmrmrDL7YmMBwELqadS0hgYO3UwLptL2RIgXbGdgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u4uzQ4vywp3Qjl9YKURyug2WIss4XTRc7KCTXEXWQvesATEiuUsCrlIvLUAUO1/+3Lq0V9BumntFhCf1qhxD0Mjv+3OkU10u8IjCF2vdmOQqw2G4phTwHMCAyPmaqv6KMbbGaeGfcscV4uQUiMiE+dI2kxvFVCdj3bzwmQNSc7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QsbYvA62; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712248199; c=relaxed/simple;
+	bh=ytv+ue1TGaBnCZL0FxJWPJ991CN3uWCP8kbp+s+9WCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IYHNybuuYSA6R4n9pw3pmWWLhguJNqMOixzGaV+urjVz1+jl+Y98Xkck8N8KpkLceRjrb1h4Sna1zE9YUA5Kg1dDiUpQZOTE7FMT17o4tdOGst4PKKI8ud/F6EsQhTDCdWb6cK1KzUc5LuSH8bysRKXTvLn84flTGo9dWp7e5ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ao5y+t5J; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QsbYvA62"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712247167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3HSmrmrDL7YmMBwELqadS0hgYO3UwLptL2RIgXbGdgQ=;
-	b=QsbYvA62wzRq+kCZQd22gy3QsR/FsAyz+R77mjAtZsmBHueKq2UvZWFS5ChORcob3vD2xB
-	s7VVB7wddy2cIzSmcZ1+NQiGP4yXr5ZiQwXcrLkQokE4Kxg6sxUDABGuBJcmqN29dQ1pWv
-	v+kLpCOTyYW/eSXSf7tDmTIc4z4gg5E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-101-j9ymssyqOlWdOSkA-ie3Bw-1; Thu, 04 Apr 2024 12:12:44 -0400
-X-MC-Unique: j9ymssyqOlWdOSkA-ie3Bw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C64885A5B9;
-	Thu,  4 Apr 2024 16:12:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.21])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 10D51492BC6;
-	Thu,  4 Apr 2024 16:12:38 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  4 Apr 2024 18:11:18 +0200 (CEST)
-Date: Thu, 4 Apr 2024 18:11:09 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
- probe
-Message-ID: <20240404161108.GG7153@redhat.com>
-References: <20240402093302.2416467-1-jolsa@kernel.org>
- <20240402093302.2416467-2-jolsa@kernel.org>
- <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
- <Zg0lvUIB4WdRUGw_@krava>
- <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
- <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
- <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
- <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
- <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ao5y+t5J"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7d0772bb5ffso24907639f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712248196; x=1712852996; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pY36khtaeJuaS4ZuxN8qXaz5gkZz7w/s1SIWsgW9Chs=;
+        b=ao5y+t5JHWRgja1ibQvdD9Ingy2AEyRcKm6h2nnoLnMpbzAkVFPHVcbaIyje4u5pSW
+         z/EQNwDeANuJbKarkbn+ueI9XRDyFztYy0GWktfEbCGLZK3pjq0fLtdbdNZ/EL2QxFKQ
+         8eKLhAYabHtihVyiEzjmqCpNSFaUnFrw7LCX0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712248196; x=1712852996;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pY36khtaeJuaS4ZuxN8qXaz5gkZz7w/s1SIWsgW9Chs=;
+        b=to4eMCYYZ8ZE5dbFHcGml2+pm8QL606d6MBS1Hah9L0t3GEAZqgi9Nukpn4TGcKhmo
+         gfiECgJOGYm83AiMP/auWfMG/XLasq+Mk0mx9rK6DLkGqKJaTQcTrju2LrJtsQeVJqjC
+         vssyVTrQn4nmagh8ok20/PuEv7qP/UsacMyn3J1MwhNyDmbjavEdotJrTAmbQCRwpTpD
+         rGY1ObU0InfmyarOSqm9lSv0ShtQLyDf7FSdpJBjXN8ttH7jNCBZNwsUhDKnHPiSbtCO
+         rHevvisiPyCpbFNoKfN7+Vy4GEbIFr+NMsFTHsASSv5NI71pJD11vDAfpZYUa4GBYlXU
+         4DLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDp0KoZOKqK/uapZPBv9BehjlP3a0Y1+hM/biDcWhLE1dbzDJLtQcQohgK/y2hY76x3B8KcjiExu6YHZdu+ZJ/thprfKxDfRHNBzsd4ExMFZzr
+X-Gm-Message-State: AOJu0YzKG9fBrlb2DypF+wMIncjvP0gPVVFo4FCXftwgXjKlVG/OMafj
+	Im4hS3BghKzWSRsJ6bmXRQMvT+kUNN68yPaY3oeUQdfFMm9chrPSyuCOIoO2aac=
+X-Google-Smtp-Source: AGHT+IFAtxn+F+qBPu5j66DqkeU9a1RLFIfhLDUYtCM0d+dADmmnnTGKwyEhlBVyDNO96becWywWog==
+X-Received: by 2002:a5d:8d05:0:b0:7d4:1dae:da1a with SMTP id p5-20020a5d8d05000000b007d41daeda1amr436014ioj.2.1712248196071;
+        Thu, 04 Apr 2024 09:29:56 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id w24-20020a056638379800b00480f0130f19sm133182jal.45.2024.04.04.09.29.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 09:29:55 -0700 (PDT)
+Message-ID: <7c9e1527-b0c0-47be-9d4b-f39a9af21636@linuxfoundation.org>
+Date: Thu, 4 Apr 2024 10:29:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests/ftrace: Limit length in subsystem-enable
+ tests
+To: Steven Rostedt <rostedt@goodmis.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Yuanhe Shu <xiangzao@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240226031816.88715-1-xiangzao@linux.alibaba.com>
+ <20240226150938.7f0d8fd639bab79199d8556b@kernel.org>
+ <20240226115942.1213cff4@gandalf.local.home>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240226115942.1213cff4@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/05, Masami Hiramatsu wrote:
->
-> Can we make this syscall and uprobe behavior clearer? As you said, if
-> the application use sigreturn or longjump, it may skip returns and
-> shadow stack entries are left in the kernel. In such cases, can uretprobe
-> detect it properly, or just crash the process (or process runs wrongly)?
+On 2/26/24 09:59, Steven Rostedt wrote:
+> On Mon, 26 Feb 2024 15:09:38 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+>> On Mon, 26 Feb 2024 11:18:16 +0800
+>> Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
+>>
+>>> While sched* events being traced and sched* events continuously happen,
+>>> "[xx] event tracing - enable/disable with subsystem level files" would
+>>> not stop as on some slower systems it seems to take forever.
+>>> Select the first 100 lines of output would be enough to judge whether
+>>> there are more than 3 types of sched events.
+>>
+>> Looks good to me.
+>>
+>> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Hi Shuah, can you pick this as a fix?
+>>
+> 
+> Yes please.
+> 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> -- Steve
 
-Please see the comment in handle_trampoline(), it tries to detect this case.
-This patch should not make any difference.
+Sorry for the delay on this. Applied to linux-kselftest fixes branch
+for next rc.
 
-Oleg.
-
+thanks,
+-- Shuah
