@@ -1,130 +1,158 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0A66FE04
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Apr 2024 22:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40625134418;
+	Thu,  4 Apr 2024 23:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712270818; cv=none; b=MRiI+C16dEoMkh3a3Y+HLJ80oFacdBD8P1K1Der3rnSuissn64Eh2tmNKePsFt50wqwhW5vF8DPyxlGsczbWt/nS33C3vTn7ksPVvTviY7ZrDkSWBCtS8dIYj8N/CpvaJqNze2WrxStOHCVn52gG4jQQ2NNgjfye2C8vTWuhoyk=
+	t=1712273039; cv=none; b=JlNQUWhgpv2Oxc89/3ZJqkahZdI7j/igBgJuFSyEWEVt3x7fXyr14FyDr5wZ/yoAeSLveq4T0ga25vLqobJcNqu2gZt9YytHCKOxNFPbeVA7bCoEjPrxOG0Vv4O7ATzqp7fchsbgPKeEXO912TeG5z4uF64sXDRmuyAyDsN04tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712270818; c=relaxed/simple;
-	bh=nRMN1OayV5M9uiYB1YduGcB2y8Bnkpw5JgmWGy6PvQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJBvZ9Ok0MxcI922JkLsqfJazBSFNjBqneupk01FWwA2TJmWCp3b7hMizQx80R08VflucUaaBlPzbShm+d7jfObQGa31+hJ5n7eArgXeCYo+wVIDNYTEVLt7bM027jWZ8Chly8kP93q1K6lyE5DBJ0Xoa7p9HHYMba7nAgHuFM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D75e35j5; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712273039; c=relaxed/simple;
+	bh=Do963hSdPrLX5zfMcrNn6SbYrENL0NCjWtgD8cm98Nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ow5zyCK1HIpaAL3AXasXvCcp4rc9v11YbGbdCTsdh15aSq6/hI5D33vdL5ZYeVjrYtOhkh7lgA1w1oujCxc3DLn586A9ZSTwMOuIlA/ipm9AEI9WFlw6Xsq9FwKLjWFYQyeC3uuvn4dd7D8kx3M38xeh8pveRrtpnfsOyvDCn/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmgz4EL6; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D75e35j5"
-Date: Thu, 4 Apr 2024 15:46:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712270814;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4t6PJcXpwiRXFlYkK1VCkAq6xUmXC9rxNeYW9OyOJpk=;
-	b=D75e35j5JGKL4mKThnD7ufpxzQxUwSUoIBM0Bia7JC+TsLyNTYCezyUUxvVCX4ADe3TURi
-	iwr/3NyoSR1Rwdk9JXZTz6L5w+5WkjEVhRkWwKiaWzs3OaEG6GLrcBWPZIMeipwt+sIg3W
-	CFKF4zinPuIqBqhwewzgvf9alpwLkJg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Ubisectech Sirius <bugreport@ubisectech.com>
-Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	hannes <hannes@cmpxchg.org>, mhocko <mhocko@kernel.org>,
-	"shakeel.butt" <shakeel.butt@linux.dev>
-Subject: Re: =?utf-8?B?5Zue5aSN77ya5Zue5aSN77yaZ2Vu?= =?utf-8?Q?eral?=
- protection fault in refill_obj_stock
-Message-ID: <Zg8t2MfzxMufArjg@P9FQF9L96D.corp.robot.car>
-References: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
- <ZgtIuBlUVE1Lj_Tc@P9FQF9L96D>
- <a6b8148d-10b9-4fae-a987-39ae62bad0cb.bugreport@ubisectech.com>
- <Zgtzup7T4TMZWPuz@P9FQF9L96D>
- <69eeefa1-b654-4d19-b569-429abfc58d0a.bugreport@ubisectech.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmgz4EL6"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4162aca8746so8000305e9.1;
+        Thu, 04 Apr 2024 16:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712273035; x=1712877835; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
+        b=gmgz4EL6/ZPvZ5Yhb+G4QxtHAhWjGLbn3SAmMLTUp1Kp8QDZuqhEv39zjg3ekORSGg
+         Q3tnizMdq7UIHHgthc5GH6ADzInaYj80fzspJlX21IQCGLQsOiOzhmkp5nFO+moygwYo
+         JuEt+3wT+JnF9zXHskwN+7/si/sW9/hNlR+rrFO1i2sXHdVZhgMVr9Zd0FSa6GppYrar
+         JQVN+Cl730iMFMY62Fq2IqWzFGXa5sadyfmr4I6LwNZ9W+dyQfP5yHD3mA1bBpjyuDzJ
+         JNW3faNP1gBmhBoKKxzUvJ+NYlZaZqlfeT6eg/d47a2xBA9yw++bhVwDvu7Cy30FQZjn
+         y3hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712273035; x=1712877835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
+        b=wn3/YWpkU0FJMOTgbpF+4YqplvJveYzrLTRTLVJMSqDKhyfehGlX6s5A0QNt3GeEXu
+         +2IfMw5Jya2J2glpdlc+m4Q//nA4PceIm+lKxM/VfqarlHMQbJaEsuxYUIVQqKh7fwSr
+         dlJc7QR60KooWd5v9w0dQvZOqIjNv4NFyv77Kto9WvRKjG5hu7IDaJDhk9DHL7AfC+Cj
+         p9AM77WCCx33gZP56++fdc5RTCE9JsBtZJ28Y4AnIBw/Z55qs+b1U6UeIz0WGPNtaYQ8
+         AfetziDIH/P459J7KIEDQF/A/04tJVXIYHStc+PITeq5prHZeU3oqfcxaq62YfhATFnF
+         81Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEuWOiNM92JyRmXkVqWYlxQahc1pYaopXnYhZc69ftUEhe8Bl7kUl2dtkuWqmxxTkswGrRtPLi2GzQ1uQtHEHbEjbf417b1Nb0oyMHxcqHjecb9M9qnTRGi5Yj7pdKaV19Xml+akl11Bd+rHbjlbwehtBzLoHJzprAh1wS/VPi602HSGv9P60bL6BmB0C4NtG0JSvir1T/ldm4TUqRtKVs
+X-Gm-Message-State: AOJu0YykxXiHNkkDM5sPalsEnbHGiC5j+fj8M5ci/XyQ+WE+//r9vZ8o
+	9iKbtq2cmM/aQA+U6VNkXh+zWSzShkEjCBzkRWnajNBnrFfsmPgz96MOTHcbLih722sxtRxoNCN
+	XwgGxLPV/ovKmEl1JxDd2EDz2tQc=
+X-Google-Smtp-Source: AGHT+IELDycs8Tmz4kVIWaOz90pVFimzN/8PHU3NEjxswWqigqc6Fh/8ut+n0sVFLjVwXD8RlCLctsIME6xMLay3jPc=
+X-Received: by 2002:a05:600c:3b08:b0:414:12f6:a105 with SMTP id
+ m8-20020a05600c3b0800b0041412f6a105mr2948928wms.5.1712273035487; Thu, 04 Apr
+ 2024 16:23:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69eeefa1-b654-4d19-b569-429abfc58d0a.bugreport@ubisectech.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20240404190146.1898103-1-elver@google.com>
+In-Reply-To: <20240404190146.1898103-1-elver@google.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 4 Apr 2024 16:23:44 -0700
+Message-ID: <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Introduce bpf_probe_write_user_registered()
+To: Marco Elver <elver@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 02, 2024 at 02:14:58PM +0800, Ubisectech Sirius wrote:
-> > On Tue, Apr 02, 2024 at 09:50:54AM +0800, Ubisectech Sirius wrote:
-> >>> On Mon, Apr 01, 2024 at 03:04:46PM +0800, Ubisectech Sirius wrote:
-> >>> Hello.
-> >>> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
-> >>
-> >>> Thank you for the report!
-> >>
-> >>> I tried to compile and run your test program for about half an hour
-> >>> on a virtual machine running 6.7 with enabled KASAN, but wasn't able
-> >>> to reproduce the problem.
-> >> 
-> >>> Can you, please, share a bit more information? How long does it take
-> >>> to reproduce? Do you mind sharing your kernel config? Is there anything special
-> >>> about your setup? What are exact steps to reproduce the problem?
-> >>> Is this problem reproducible on 6.6?
-> >> 
-> >> Hi. 
-> >> The .config of linux kernel 6.7 has send to you as attachment.
-> > Thanks!
-> > How long it takes to reproduce a problem? Do you just start your reproducer and wait?
-> I just start the reproducer and wait without any other operation. The speed of reproducing this problem is vary fast(Less than 5 seconds). 
-> >> And The problem is reproducible on 6.6.
-> > Hm, it rules out my recent changes.
-> > Did you try any older kernels? 6.5? 6.0? Did you try to bisect the problem?
-> > if it's fast to reproduce, it might be the best option.
-> I have try the 6.0, 6.3, 6.4, 6.5 kernel. The Linux kernel 6.5 will get same error output. But other version will get different output like below:
-> [ 55.306672][ T7950] KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
-> [ 55.307259][ T7950] CPU: 1 PID: 7950 Comm: poc Not tainted 6.3.0 #1
-> [ 55.307714][ T7950] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> [ 55.308363][ T7950] RIP: 0010:tomoyo_check_acl (security/tomoyo/domain.c:173)
-> [ 55.316475][ T7950] Call Trace:
-> [ 55.316713][ T7950] <TASK>
-> [ 55.317353][ T7950] tomoyo_path_permission (security/tomoyo/file.c:170 security/tomoyo/file.c:587 security/tomoyo/file.c:573)
-> [ 55.317744][ T7950] tomoyo_check_open_permission (security/tomoyo/file.c:779)
-> [ 55.320152][ T7950] tomoyo_file_open (security/tomoyo/tomoyo.c:332 security/tomoyo/tomoyo.c:327)
-> [ 55.320495][ T7950] security_file_open (security/security.c:1719 (discriminator 13))
-> [ 55.320850][ T7950] do_dentry_open (fs/open.c:908)
-> [ 55.321526][ T7950] path_openat (fs/namei.c:3561 fs/namei.c:3715)
-> [ 55.322614][ T7950] do_filp_open (fs/namei.c:3743)
-> [ 55.325086][ T7950] do_sys_openat2 (fs/open.c:1349)
-> [ 55.326249][ T7950] __x64_sys_openat (fs/open.c:1375)
-> [ 55.327428][ T7950] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
-> [ 55.327756][ T7950] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
-> [ 55.328185][ T7950] RIP: 0033:0x7f1c4a484f29
-> [ 55.328504][ T7950] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 37 8f 0d 00 f7 d8 64 89 01 48
-> [ 55.329864][ T7950] RSP: 002b:00007ffd7bfe8398 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-> [ 55.330464][ T7950] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1c4a484f29
-> [ 55.331024][ T7950] RDX: 0000000000141842 RSI: 0000000020000380 RDI: 00000000ffffff9c
-> [ 55.331585][ T7950] RBP: 00007ffd7bfe83a0 R08: 0000000000000000 R09: 00007ffd7bfe83f0
-> [ 55.332148][ T7950] R10: 0000000000000000 R11: 0000000000000246 R12: 000055c5e36482d0
-> [ 55.332707][ T7950] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [ 55.333268][ T7950] </TASK>
-> [ 55.333488][ T7950] Modules linked in:
-> [ 55.340525][ T7950] ---[ end trace 0000000000000000 ]---
-> [ 55.340936][ T7950] RIP: 0010:tomoyo_check_acl (security/tomoyo/domain.c:173)
-> It look like other problem?
-> > Also, are you running vanilla kernels or you do have some custom changes on top?
-> I haven't made any custom changes. 
-> >Thanks!
+On Thu, Apr 4, 2024 at 12:02=E2=80=AFPM Marco Elver <elver@google.com> wrot=
+e:
+>
+> With all the known caveats, tracing BPF programs may directly write to
+> user-space memory with the bpf_probe_write_user() helper. Memory safety
+> is an obvious problem when using this helper, since it is too easy to
+> overwrite memory across all running processes that user space did not
+> expect to be touched (neither the verifier nor the kernel knows what may
+> be touched). While it is possible to come up with mechanisms to safely
+> communicate to the BPF program which memory region may be written to,
+> there are no built-in guarantees of safety. For this reason, the helper
+> produces a warning in the kernel log, and in newer kernels it is
+> possible to disallow use of the helper since 51e1bb9eeaf7 ("bpf: Add
+> lockdown check for probe_write_user helper").
 
-Ok, I installed a new toolchain, built a kernel with your config and reproduced the (a?) problem.
-It definitely smells a generic memory corruption, as I get new stacktraces every time I run it.
-I got something similar to your tomoyo stacktrace, then I got something about
-ima_add_template_entry() and then something else. Never saw your original obj_cgroup_get()
-stack.
+So is it a fix or a feature?
 
-It seems to be connected to your very full kernel config, as I can't reproduce anything
-with my original more minimal config. It also doesn't seem to be connected to the
-kernel memory accounting directly.
+> Nevertheless, direct user-space memory writes from BPF programs can be
+> useful to efficiently manipulate and communicate with cooperating user
+> space processes.
 
-It would be helpful to understand which kernel config options are required to reproduce
-the issue as well as what exactly the reproducer does. I'll try to spend some cycles
-on this, but can't promise much.
+But there are many different ways for bpf to communicate with user space:
+perf ringbuf, bpf ringbug, various maps including mmap-ed array and arena.
+The commit log doesn't explain why we need another one.
 
-Thanks!
+> For example, one of our use cases are for events that happen relatively
+> frequently in the kernel (e.g. specific scheduler events), but a set of
+> user space threads want to check for such events in very hot code paths
+> to make more optimal decisions (the cost of such a check can be no more
+> than a load and compare). The types of events and heuristics used may
+> change based on system environment and application, and a BPF program
+> provides the best trade-offs in terms of performance and deployment.
+
+and the tasks can use mmaped array shared across all or unique to each
+process.
+And both bpf and user space can read/write them with a single instruction.
+
+>
+> To achieve better safety, introduce tagged user writable regions, that
+> must explicitly be registered before tracing BPF programs may use them:
+>
+>  1. The prctl() option PR_BPF_REGISTER_WRITABLE allows any user space
+>     process (that is allowed to use prctl()) to register tagged writable
+>     memory regions for the current thread.
+>
+>  2. Conversely, the prctl() option PR_BPF_UNREGISTER_WRITABLE allows a
+>     user space process to unregister a writable memory region that was
+>     previously registered from the current thread. This must be done
+>     before freeing memory if the thread that registered a region is
+>     still running.
+>
+>  3. Tracing BPF programs may write to any registered region in the
+>     current thread with bpf_probe_write_user_registered(). If the memory
+>     region has been tagged with a non-zero value, the BPF program must
+>     provide a matching tag.
+>
+> Admin capabilities are still required to attach BPF programs that use
+> the new bpf_probe_write_user_registered() helper.
+
+We stopped adding new helpers ~2 years ago.
+Only new kfuncs are allowed.
+
+>
+> With this interface, user space threads are guaranteed that no writes
+> happen to regions that they did not explicitly register. Tagging can be
+> used to associate additional semantics with the memory region.
+>
+> A note on tag allocation: Since such programs can only be installed by
+> the local system administrator, tag allocation may be done by the system
+> administrator. For example, by providing headers with tag definitions,
+> or a central service to distribute tags to the BPF program loader and to
+> user applications.
+
+Not clear how that's achieved in practice.
+To do prctl(REGSISTER, ... tag)
+the process will just pass this u32 tag.
+There is no way for the admin or other process to enforce certain
+tag usage.
+Since there is no way to enforce extra tag seems like a weak
+protection against something? What in particular?
