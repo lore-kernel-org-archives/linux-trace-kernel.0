@@ -1,99 +1,127 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2016A1B948
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D9812B95;
+	Thu,  4 Apr 2024 17:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712248357; cv=none; b=Wu9rECP7LOl3jGVLBCkiX2F51Em10/1yE09ET9WsRQG/Te170dBSa5QCib/6gPszsW5PM8nuvBNLOunjp6biMGJ2KC6e0i6MuwdjX9hbbYW0xOvCEXrcWuG26N4kdT6utamj7sdJSR31HC7oQrnZSCRebHwNvNgG5Pomx3t/KlY=
+	t=1712252595; cv=none; b=RkKXmZoWBesY2eK3vf3fka73jYIUjA8MqaCHFbBIafK4dtvw+8SjW25WZHAR/O4x3fwsqUOvMORG+S2o02pSwX9fepjw5R7WCMtzeGvQ1dlozBxGa2Pnn1p8Yisxqu4jxV07RXAYeN1lHMcia1Y80/3hFr5ePMsh6Sp1VeI6grU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712248357; c=relaxed/simple;
-	bh=FaRTigCLQPwODumK/uro6tAr7hVUCu4TTcem6firu4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aal20tdI0or+MIJAeFZWCC8YEMIySAu/ah8CBuske8V0X86RPDFaCtOkrbLENwP7/OtcV1ZCl23OD7Nsd+I83b/v43XGgafLprAQxBk1nmvxR6MmZpyL1LfArpcXTzqXmyOl58/idC+QZfimhLzuMD03tD4IIihHPVQgvyrJOjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WfyvAADc; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712252595; c=relaxed/simple;
+	bh=XVqjP0+idGhkMlRNHlBMQ51jpiOeoZ7Hg495Orxy1ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u4Azi1aqdp0W3bkA/43p2KcDTq2fXAwZ3wnqDw4NmfWlK+QLknIJEjGV9RviDfVfM8EW9gqa9cZeB9lwJUHd9wuYlyQrVw4NW+GUdjGr0QGd76ggwOqooopwKhfQumGZslmhUVDpCq9OZ8pxFo3qYOO4NUoL/57F9K9NcR7XCHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2M3VFtJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WfyvAADc"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7d341631262so20753039f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712248354; x=1712853154; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rnzPx7jQfSANKpYvBZUrsn52XLSYl8iVTFuQscI6o9Q=;
-        b=WfyvAADcYPjL1OvggdQ94pH3tSeumrxgy0eC1ZC3MgP9VMoKIAz+kCjCDwtFa0gb7/
-         VixEh75GgiG0C2rgsc37nwjKXq9utXfCTysSh/uAnWckfVzlC8eqx+6GXe6YSE23ZX4s
-         GDmCzwS3+FU4AWA9Yx23yN3pZuEnWNFG8rxMU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712248354; x=1712853154;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rnzPx7jQfSANKpYvBZUrsn52XLSYl8iVTFuQscI6o9Q=;
-        b=HHs82CR6aGHcYSrxmUqN7D1ZnAEZ0Za8s9W0+2Z+wswjckiuIQgby++wxlhyhiIsG0
-         e+TyEUujIVhrrZanDj5smopNQUAfN46i8SZ6UH3ypnFs3fayuVHxiVCOhm4LPpf7z3uW
-         5XZ16eh9WHmSC+Y/PFzbziwT5mSgDZfaZDp7g5a8RZEzu+FffxHD8Hb7SArKm2bMFhuG
-         VFZQzSvZ8mJnOnkzMBq4mSg0B93uReKUudITc8LEW8/VvzZGOvtlu2sl/lsur/DtTPca
-         OsXMJYt1z1MTxrsx430ybOLKYRnN2YzPp/xwH6MUH3MHnOnpiGM3k6qPVlEjJgHh4zH7
-         DBlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSl5/CHCald62GDs//w1Ty8UM+nR9N5vjixPr6H9PUC1JjbWHNwoX6NmLWmRTU3pfx9si6z1nonwhyRzRJMxPuk91SYdMbaysTMzaAtNyNHOnm
-X-Gm-Message-State: AOJu0YzwDjMRrOKgVILYHN6dcPGD6oV2oAOwLbV6WXnb44doz0TgGrUq
-	I/E73KItyiQQFwz37s7tRRnzi/BSBwdMCMUX2JK/ULQHHRb8XLVPdP2Q0FTU8DY=
-X-Google-Smtp-Source: AGHT+IG6x3n9pPVk7ZIl/6gWe0CvJfV0aQuqJSosY/xO54MV5MoKOSUCkywMrSzR9EIlLsZzzzQNug==
-X-Received: by 2002:a05:6602:21d6:b0:7d0:9f34:9d85 with SMTP id c22-20020a05660221d600b007d09f349d85mr3234193ioc.2.1712248354140;
-        Thu, 04 Apr 2024 09:32:34 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id o11-20020a02b80b000000b0047be410bcc5sm4826045jam.27.2024.04.04.09.32.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 09:32:33 -0700 (PDT)
-Message-ID: <39f406e4-685e-4371-8726-c7df02299295@linuxfoundation.org>
-Date: Thu, 4 Apr 2024 10:32:33 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2M3VFtJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955F4C433F1;
+	Thu,  4 Apr 2024 17:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712252594;
+	bh=XVqjP0+idGhkMlRNHlBMQ51jpiOeoZ7Hg495Orxy1ig=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=N2M3VFtJ/uVjhjss0pSDO+miIyL0kv0tnP3bK3Ejy1PENtrqVQjt8kVeN5qwmX91C
+	 VhNHoLDEfNTRbwj6p7ve1uJRZtpS5zxsGY2fag1ngIK11ruWoa97v38jNWGQoCsoPG
+	 oIGdDyUDkHvZx/xc/x0TacdbNwZu2RTUulQtWGj5suyyja5/N/vjoiIWrKilycqRtn
+	 lkLD9sZpVeKCoQw9eLyggh3gnMTqgersYDnXavDtJm2HzmcDCZt/7yhkr0iwPf3LOj
+	 8nZgCmRYzScG29KZlWBGi187i7dR18vt6U1ctORI9y4tw7QOpCE9ZeKk0NDjJ0NHAx
+	 4iUvQFZt8wHJA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 337B5CE0D0C; Thu,  4 Apr 2024 10:43:14 -0700 (PDT)
+Date: Thu, 4 Apr 2024 10:43:14 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Subject: Re: [PATCH fs/proc/bootconfig] remove redundant comments from
+ /proc/bootconfig
+Message-ID: <26d56fa5-2c95-46da-8268-35642f857d6d@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
+ <20240404085522.63bf8cce6f961c07c8ce3f17@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] tracing/selftests: Verbosity improvements to KTAP
- output
-To: Steven Rostedt <rostedt@goodmis.org>, Mark Brown <broonie@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Aishwarya TCV <aishwarya.tcv@arm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240325-kselftest-ftrace-ktap-verbose-v1-0-3785199809da@kernel.org>
- <20240326120809.09574951@gandalf.local.home>
- <e2c68911-9b49-4080-b827-3b139b4f3257@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <e2c68911-9b49-4080-b827-3b139b4f3257@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404085522.63bf8cce6f961c07c8ce3f17@kernel.org>
 
-On 3/26/24 13:11, Shuah Khan wrote:
-> On 3/26/24 10:08, Steven Rostedt wrote:
->>
->> Shuah,
->>
->> If Masami is OK with this, can you take this through your tree?
->>
->> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->>
->> -- Steve
->>
->>
+On Thu, Apr 04, 2024 at 08:55:22AM +0900, Masami Hiramatsu wrote:
+> On Wed, 3 Apr 2024 12:16:28 -0700
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
 > 
-> Yes. Will do once Masami gives me the okay
-Hi Masami,
+> > commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
+> > /proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
+> > 
+> > /proc/bootconfig shows boot_command_line[] multiple times following
+> > every xbc key value pair, that's duplicated and not necessary.
+> > Remove redundant ones.
+> > 
+> > Output before and after the fix is like:
+> > key1 = value1
+> > *bootloader argument comments*
+> > key2 = value2
+> > *bootloader argument comments*
+> > key3 = value3
+> > *bootloader argument comments*
+> > ...
+> > 
+> > key1 = value1
+> > key2 = value2
+> > key3 = value3
+> > *bootloader argument comments*
+> > ...
+> > 
+> > Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
+> > Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: <linux-trace-kernel@vger.kernel.org>
+> > Cc: <linux-fsdevel@vger.kernel.org>
+> 
+> OOps, good catch! Let me pick it.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Are you okay with this patch?
+Thank you, and I have applied your ack and pulled this into its own
+bootconfig.2024.04.04a.
 
-thanks,
--- Shuah
+My guess is that you will push this via your own tree, and so I will
+drop my copy as soon as yours hits -next.
 
+							Thanx, Paul
+
+> Thank you!
+> 
+> > 
+> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
+> > index 902b326e1e560..e5635a6b127b0 100644
+> > --- a/fs/proc/bootconfig.c
+> > +++ b/fs/proc/bootconfig.c
+> > @@ -62,12 +62,12 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
+> >  				break;
+> >  			dst += ret;
+> >  		}
+> > -		if (ret >= 0 && boot_command_line[0]) {
+> > -			ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
+> > -				       boot_command_line);
+> > -			if (ret > 0)
+> > -				dst += ret;
+> > -		}
+> > +	}
+> > +	if (ret >= 0 && boot_command_line[0]) {
+> > +		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
+> > +			       boot_command_line);
+> > +		if (ret > 0)
+> > +			dst += ret;
+> >  	}
+> >  out:
+> >  	kfree(key);
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
