@@ -1,157 +1,219 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5B38DD1;
-	Thu,  4 Apr 2024 10:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5978883CDE;
+	Thu,  4 Apr 2024 11:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712227562; cv=none; b=UdrMjTdx1TTqfLziB+yF3ZBB+eTEdUjItjAr2eIBvte0/j0JqGZA7XHDKAjhwrT71HMS2PHUOaszyIHXg8zOVhP7hLhdD172Omawbxstz9/EPq21esoIdkPdhqT7QWCxcp0IzzvX5gK9tkc+NJlWBOQlTqQvc92ma0Y9nPaj1aU=
+	t=1712231930; cv=none; b=pRDCPeCn4jxgjj3NunGHoNeL3Xmi3j2+yKSB5sy5/tO2EfCB20Y5LyS41rNTbZD1pObWRm/yLnw6OoRqGD4VV+2PRjdfwLcg9Rh2tbBUKgREZguS/ylHX7plsw88ZPVlKIi7/2KjxOqeOBOVoavt5Py9s0DZsfRUAfxl/XzvrtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712227562; c=relaxed/simple;
-	bh=ePPMM/uIseZje0ZcIe4lHLIZ0Wj4HLiZRHfwugMfC08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKb3KhEsDFg2ZzfWrqaLPqBwwr9PVX9RVIWdKHrveZ3jUGXYT7H+IyZclkWsYJUAI96I2vknQVgRfV1eRNt1LSDoeLoKl6ZZYtcYQj2Ahn10fmZbi/R6vC/p3egakG11kC0y0qpm768LQgU8L9g5P9eXOpDFfvXjPMWRVEmRSB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UdmvL/MB; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1712231930; c=relaxed/simple;
+	bh=I4S4xPsrmiZqgxMo8An3Q4s4/0gCW+VeyLvu4PCz+QM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HS0NVz8MpKeMPMVfh3+VPEgDtEFjD/PCCpK/lEzl3PG80f4Kr3IcYSjg8cyBMTxNWIWLf6nKCCEpFY7UK/y1tkEn4hSv3VPASEdm4XP6zQ4Pmg47hlFjEAhv/01WmF3OPZGPW3gfdgRoAguvL2+NtYFxex7ox3lio1VrN9BRNIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7f8X9Eg; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdmvL/MB"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a5193f56986so25153966b.0;
-        Thu, 04 Apr 2024 03:46:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7f8X9Eg"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a47385a4379so380302866b.0;
+        Thu, 04 Apr 2024 04:58:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712227559; x=1712832359; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=F/B6UBwFbisopXHNcGO9MAQyxZ/hbRouxLNeeE3qnFQ=;
-        b=UdmvL/MBM0WrFHCdPUDLQ0S1t/W8Rkph1rANEJkNmLIr4Gy+EDUbLNpf+CFS6LMlVL
-         GdBpvi2Yx3qOH/XmBunoZ+iViLqWDKjrgP9EZR93tE/fn4U/ryYscPJXv8aPtmz+KAR4
-         8ezawz5XeeJTTBkRkMWQomVAJtokSawOoQuJnbkM7icz2/6ikOTuVUhc+iw8XyKc5O16
-         qe572ztoyDM6PS9iUjGz7OmBIIkq7gOx+b6wdsF1so76O0jlqSDlNQHU7iMOka9tG7nh
-         MjJiSsmwv6lS8aehn+F3vLPc2npnTKvgI03FTKy9UzWptmClOAyQJFczdXKLYzvUjkhb
-         cL1w==
+        d=gmail.com; s=20230601; t=1712231926; x=1712836726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsRNsoYGonWs9F3wm/xwAs0YUtd7nB9bkZE8SBzuHdw=;
+        b=a7f8X9Eg/qkjuS0RXdEw2FigBgyJc84tsrb4BcHrnNBugTq2DEQJ81pIwdGFYw1DQw
+         TngFSCvKshJHRxQRDGRKihDrQMJ3YmnyOkEaXREFufO6cjSUOyHxk5W2TX6nKYpuqbvS
+         E994cXVwnlFEb3mWN0nuKK3A1I/3e4xgVQmSjBdLqPYZs6OXRzaJDMCj0WIEucOOA/5N
+         7eNczt0qTrg+zh/P2jm6f9JeFuCgvOaxks0myzR+X/cYnbG0WlMoJcsvBiwQ4iRQeEVP
+         dQVa3GyIBKsVQ8zKoSsZXTd6yJPxMkpENkTf1jVQKxG7JtbyBzrcDLwFL3ejTDAcmQiL
+         ZFOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712227559; x=1712832359;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F/B6UBwFbisopXHNcGO9MAQyxZ/hbRouxLNeeE3qnFQ=;
-        b=WseqHV3uqH39PeL22KGbb6ip8vWdOJGqnPrzJi3CoqoV5iz6Wh4eXClrzMCgQHK3ef
-         /HvUS8SrBw+ugdAxmiMAbfPDY3wGIbaf2SMrzTQ2LX6WVZDc4Mp1FtwU4RAE5d6hh4Ji
-         4wrU5nu54jK75pMG/oyE38w3q6GqXbAy/KIpokGtHlPeDzqFgBJfpAzaSFk510ctsDn9
-         4AYq3WmfszCZRntBKTx6eOVmZ5bIJM71Mq+fzVy5K6VhXZFBQ24kpGbZ4Y5Kq0drcMJG
-         F94olmrHpk0BEhW2IOrAntCJcr9X4esG/cr952o5jH4FjM1x3QEaMe2ASjKJNrsZ4ZTU
-         IEnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVA6nNmtq/O8u5+NawdASg71L2XPxZlDzWh2MfC3URWltDdaoq387M8K3F8QMzR1P4GEEx7muKIc0v0beV7Ktaojs9FpG29wg3FNrOn2N5aATc85lN1Ii5QNYphbNju6VLHXyt2qiBZKuP6kHsiEHouawlu7JeNXelpvZP8g5OC3Fh9rL32Xr4qZp6rW94Rg5PrTa8uA4Aw4P5yZyk0420Tyts83WIv7g==
-X-Gm-Message-State: AOJu0YzBUuERcFRZ/aXxLx7oVupcfnTJhtE6ovuNsXJoI1j16HM4oku1
-	7t9axN/v0yMDBM8n4HWlITrfJ6NgPhc+LwtyXfGWDDQj2dmlyVA7
-X-Google-Smtp-Source: AGHT+IE/1NLjMS8nR+IXCRExhY8KPmE74KM21lSRlzizDo1/vs09k4iCje3Q2udrPyYWdVVbVFLRFw==
-X-Received: by 2002:a17:907:10c2:b0:a4e:21e0:2e6e with SMTP id rv2-20020a17090710c200b00a4e21e02e6emr1249068ejb.5.1712227559174;
-        Thu, 04 Apr 2024 03:45:59 -0700 (PDT)
-Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::7:2535])
-        by smtp.gmail.com with ESMTPSA id wn2-20020a170907068200b00a4e781bd30dsm4060237ejb.24.2024.04.04.03.45.57
+        d=1e100.net; s=20230601; t=1712231926; x=1712836726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qsRNsoYGonWs9F3wm/xwAs0YUtd7nB9bkZE8SBzuHdw=;
+        b=vM7MMjwj62Z7nWhWoH8ttF2jMFLT7CWgip6hZLVOh8cHIkdKFXVUQL4VbQR9h+IC0+
+         TvWsWdmNdKrHZX/ee6wWe01b8dRZtppQeQMaOBPF3rras2CHrN1TiZPLNu+xQPBEZl+r
+         NZHV81LGLDJHu94zjtM3yk73ZerIhKGmJZhTZ8IvyNTQ7p8g9u44zLKaeDqxXYCuKaCr
+         tiEMjrfETM7abqyRFFzzWueCFsMbxa13UOhT3wM//cfHLqTACHzuiqQtd3d5hDWJdsM/
+         6iBVgPd5jfR1Qc6ypfnzv6q6u+E2XdptakZ3JwpnA0ppfkRguvZe+c4Wwk2favvu/J8y
+         zCGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrqQLfFyI0lCWEotjKSDzQViZSNNENuYtwjUSoTluNyniU28yNDWLbVi09MflnE1BzcRuj/CvBKZ+s5iWManRnoUSHt/H2M+qskxVZ56zqEvD/Ip3Dyw2A5BDvfj02ZVOB57YTAtW6qlrvkNEEbIMocgQ7SN3dS7wMhFVjFWQR5d/ug/kJ
+X-Gm-Message-State: AOJu0YwYYTzz1Tc7hXyjt6mD5sAM3ZtqmgWKwR5utJLjXVONACeQogtF
+	kUAbJ4S/K6HU5LhQCaW3qUBu7GYBX8aBpj9nNJS/WkEDtT/TfhgR
+X-Google-Smtp-Source: AGHT+IHd7nPhPfR8+dEIdU9lXVEWpv390SUK05ck+5jbxmVDFBpWRITJjq4jHfVI8EDOciClvgu7tg==
+X-Received: by 2002:a17:906:f912:b0:a4e:13ee:5dec with SMTP id lc18-20020a170906f91200b00a4e13ee5decmr4826565ejb.17.1712231926323;
+        Thu, 04 Apr 2024 04:58:46 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id t5-20020a170906a10500b00a46af5f023bsm8913599ejy.202.2024.04.04.04.58.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 03:45:58 -0700 (PDT)
-Date: Thu, 4 Apr 2024 11:45:55 +0100
-From: Jonthan Haslam <jonathan.haslam@gmail.com>
+        Thu, 04 Apr 2024 04:58:45 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 4 Apr 2024 13:58:43 +0200
 To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-ID: <ktzm722fdhwmtjfbvoymaof2k2jh53x627swbswi24d4hq7aes@yje5kzpmzizy>
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
- <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
- <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
- <20240328091841.ce9cc613db375536de843cfb@kernel.org>
- <5yvc6rdiovfjlfpayet57ocqpo3wft3onk6of5sqoh6wjngwhr@blky37q5cuk3>
- <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <olsajiri@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <Zg6V8y2-OP_9at2l@krava>
+References: <20240402093302.2416467-1-jolsa@kernel.org>
+ <20240402093302.2416467-2-jolsa@kernel.org>
+ <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+ <Zg0lvUIB4WdRUGw_@krava>
+ <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+ <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+ <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbFR-EaQV7pyv4q-2o8q-b65rO6gYmrLBp82RomWwu7nA@mail.gmail.com>
+In-Reply-To: <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
 
-> > Things to note about the results:
+On Wed, Apr 03, 2024 at 07:00:07PM -0700, Andrii Nakryiko wrote:
+
+SNIP
+
+> Check rt_sigreturn syscall (manpage at [0], for example).
+> 
+>        sigreturn() exists only to allow the implementation of signal
+>        handlers.  It should never be called directly.  (Indeed, a simple
+>        sigreturn() wrapper in the GNU C library simply returns -1, with
+>        errno set to ENOSYS.)  Details of the arguments (if any) passed
+>        to sigreturn() vary depending on the architecture.  (On some
+>        architectures, such as x86-64, sigreturn() takes no arguments,
+>        since all of the information that it requires is available in the
+>        stack frame that was previously created by the kernel on the
+>        user-space stack.)
+> 
+> This is a very similar use case. Also, check its source code in
+> arch/x86/kernel/signal_64.c. It sends SIGSEGV to the calling process
+> on any sign of something not being right. It's exactly the same with
+> sys_uretprobe.
+> 
+>   [0] https://man7.org/linux/man-pages/man2/sigreturn.2.html
+> 
+> > And the number of syscalls are limited resource.
+> 
+> We have almost 500 of them, it didn't seems like adding 1-2 for good
+> reasons would be a problem. Can you please point to where the limits
+> on syscalls as a resource are described? I'm curious to learn.
+> 
 > >
-> > - The results are slightly variable so don't get too caught up on
-> >   individual thread count - it's the trend that is important.
-> > - In terms of throughput with this specific benchmark a *very* macro view
-> >   is that the RW spinlock provides 40-60% more throughput than the
-> >   spinlock.  The per-CPU RW semaphore provides in the order of 50-100%
-> >   more throughput then the spinlock.
-> > - This doesn't fully reflect the large reduction in latency that we have
-> >   seen in application based measurements. However, it does demonstrate
-> >   that even the trivial change of going to a RW spinlock provides
-> >   significant benefits.
+> > I'm actually not sure how much we need to care of it, but adding a new
+> > syscall is worth to be discussed carefully because all of them are
+> > user-space compatibility.
 > 
-> This is probably because trig-uprobe-nop creates a single uprobe that
-> is triggered on many CPUs. While in production we have also *many*
-> uprobes running on many CPUs. In this benchmark, besides contention on
-> uprobes_treelock, we are also hammering on other per-uprobe locks
-> (register_rwsem, also if you don't have [0] patch locally, there will
-> be another filter lock taken each time, filter->rwlock). There is also
-> atomic refcounting going on, which when you have the same uprobe
-> across all CPUs at the same time will cause a bunch of cache line
-> bouncing.
+> Absolutely, it's a good discussion to have.
 > 
-> So yes, it's understandable that in practice in production you see an
-> even larger effect of optimizing uprobe_treelock than in this
-> micro-benchmark.
-> 
->   [0] https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/commit/?h=probes/for-next&id=366f7afd3de31d3ce2f4cbff97c6c23b6aa6bcdf
-
-Thanks for the reply and the thoughts on this Andrii. Yes, I do have the
-filter->rwlock fix applied but, as you say, there are no doubt other
-effects at play here as to be expected in such a synthetic workload. I'm
-pleased with the outcomes though as they show a good result even if they
-are at the lower end of what I expect.
-
-The results also show that pursuing an RCU solution is definitely worth it
-but that write penalty is brutal in the case of a full synchronize_rcu()!
-Should be fun.
-
-> > for num_threads in {1..20}
-> > do
-> >     sudo ./bench -p $num_threads trig-uprobe-nop | grep Summary
-> 
-> just want to mention -a (affinity) option that you can pass a bench
-> tool, it will pin each thread on its own CPU. It generally makes tests
-> more uniform, eliminating CPU migrations variability.
-
-Thanks for pointing that flag  out!
-
-Jon.
-
-> 
-> > done
 > >
+> > > > > > Also, we should run syzkaller on this syscall. And if uretprobe is
+> > > > >
+> > > > > right, I'll check on syzkaller
+> > > > >
+> > > > > > set in the user function, what happen if the user function directly
+> > > > > > calls this syscall? (maybe it consumes shadow stack?)
+> > > > >
+> > > > > the process should receive SIGILL if there's no pending uretprobe for
+> > > > > the current task, or it will trigger uretprobe if there's one pending
+> > > >
+> > > > No, that is too aggressive and not safe. Since the syscall is exposed to
+> > > > user program, it should return appropriate error code instead of SIGILL.
+> > > >
+> > >
+> > > This is the way it is today with uretprobes even through interrupt.
 > >
-> > spinlock
+> > I doubt that the interrupt (exception) and syscall should be handled
+> > differently. Especially, this exception is injected by uprobes but
+> > syscall will be caused by itself. But syscall can be called from user
+> > program (of couse this works as sys_kill(self, SIGILL)).
+> 
+> Yep, I'd keep the behavior the same between uretprobes implemented
+> through int3 and sys_uretprobe.
+
++1 
+
+> 
 > >
-> > Summary: hits    1.453 ± 0.005M/s (  1.453M/prod)
-> > Summary: hits    2.087 ± 0.005M/s (  1.043M/prod)
-> > Summary: hits    2.701 ± 0.012M/s (  0.900M/prod)
+> > > E.g., it could happen that user process is using fibers and is
+> > > replacing stack pointer without kernel realizing this, which will
+> > > trigger some defensive checks in uretprobe handling code and kernel
+> > > will send SIGILL because it can't support such cases. This is
+> > > happening today already, and it works fine in practice (except for
+> > > applications that manually change stack pointer, too bad, you can't
+> > > trace them with uretprobes, unfortunately).
+> >
+> > OK, we at least need to document it.
 > 
-> I also wanted to point out that the first measurement (1.453M/s in
-> this row) is total throughput across all threads, while value in
-> parenthesis (0.900M/prod) is averaged throughput per each thread. So
-> this M/prod value is the most interesting in this benchmark where we
-> assess the effect of reducing contention.
+> +1, yep
 > 
-> > Summary: hits    1.917 ± 0.011M/s (  0.479M/prod)
-> > Summary: hits    2.105 ± 0.003M/s (  0.421M/prod)
-> > Summary: hits    1.615 ± 0.006M/s (  0.269M/prod)
+> >
+> > >
+> > > So I think it's absolutely adequate to have this behavior if the user
+> > > process is *intentionally* abusing this API.
+> >
+> > Of course user expected that it is abusing. So at least we need to
+> > add a document that this syscall number is reserved to uprobes and
+> > user program must not use it.
+> >
 > 
-> [...]
+> Totally agree about documenting this.
+
+ok there's map page on sigreturn.. do you think we should add man page
+for uretprobe or you can think of some other place to document it?
+
+> 
+> > >
+> > > > >
+> > > > > but we could limit the syscall to be executed just from the trampoline,
+> > > > > that should prevent all the user space use cases, I'll do that in next
+> > > > > version and add more tests for that
+> > > >
+> > > > Why not limit? :) The uprobe_handle_trampoline() expects it is called
+> > > > only from the trampoline, so it is natural to check the caller address.
+> > > > (and uprobe should know where is the trampoline)
+> > > >
+> > > > Since the syscall is always exposed to the user program, it should
+> > > > - Do nothing and return an error unless it is properly called.
+> > > > - check the prerequisites for operation strictly.
+> > > > I concern that new system calls introduce vulnerabilities.
+> > > >
+> > >
+> > > As Oleg and Jiri mentioned, this syscall can't harm kernel or other
+> > > processes, only the process that is abusing the API. So any extra
+> > > checks that would slow down this approach is an unnecessary overhead
+> > > and complication that will never be useful in practice.
+> >
+> > I think at least it should check the caller address to ensure the
+> > address is in the trampoline.
+> > But anyway, uprobes itself can break the target process, so no one
+> > might care if this system call breaks the process now.
+> 
+> If we already have an expected range of addresses, then I think it's
+> fine to do a quick unlikely() check. I'd be more concerned if we need
+> to do another lookup or search to just validate this. I'm sure Jiri
+> will figure it out.
+
+Oleg mentioned the trampoline address check could race with another
+thread's mremap call, however trap is using that check as well, it
+still seems like good idea to do it also in the uretprobe syscall
+
+jirka
