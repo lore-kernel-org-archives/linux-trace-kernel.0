@@ -1,90 +1,295 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D9217C74;
-	Thu,  4 Apr 2024 01:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDA018C38;
+	Thu,  4 Apr 2024 02:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712195910; cv=none; b=I+0GE/beq70TMRn89tbD8u20KVfv87L6q/0/ggwKVyK21yzrQsHHUl3ACSAeM6ryENlTc3AJg1TaWz6wUAAqW+W6YSqfr/2GI6ZjvgeVG/b7KPrvCZgWRSQdnhq3QkGmzGEgdhWSTs4tqaKIOA5RnD+rUUj0+UwQdzkkyNKr82Y=
+	t=1712196024; cv=none; b=ptLCv0YYf4Baz+nj4p7MRlDrLqhXD0FXSiob3E1FZEIwWmDQuzOBa5x4AmNgUBuUmrt86A2lDcFnHtZGq4MOYaA8BUJxS0XiKVmJgBNGinTXC0tS0K/2XDNa8pgLNf9Dh0Z4FToyAt+b+7Lixsl62Z0uGFEoHymTzxHKbrEFBq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712195910; c=relaxed/simple;
-	bh=ymv1KcCN3gYzCfq9KbAxjhU2YrRREjNMUnRC1R1ab18=;
+	s=arc-20240116; t=1712196024; c=relaxed/simple;
+	bh=q8gkWHc5kCbkRF/ybUez70chd5eKVNTJQmZ2vKIyeFM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gad+ebpvJoxgWwwq2yDC+AkKrLNQhbPGLlltCq9B7tDQFD3+XcWFVXUA1B7VwTQwZSa1xGODS1IBu59+GULPDKW3bb0Gmr0ZWJ/IUHlEoU527A6/Ds5zC/BmIls17ie0hrIw59ZxnHSuY+uw1qBRoAMz8sFUmsJUbM98CCmfEaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EH1qFMI1; arc=none smtp.client-ip=209.85.208.46
+	 To:Cc:Content-Type; b=lJwsE1G457ta76lJdVz8p0bUb+0ap09ZOXoZwzBt/tiWCBQfqzJvhQpvqJ9uDSyvqlA/a9XCmoixRgBEhqhdvph2Imkx5YPML2FaYRbR6YFxSiM7mV2LPmcSz5DC++/reCCxbQSk87klTzg1ggNiv46sBPLHefYuAkt32aELtT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXcsqUTn; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EH1qFMI1"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e1f3462caso15041a12.3;
-        Wed, 03 Apr 2024 18:58:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXcsqUTn"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e73e8bdea2so409873b3a.0;
+        Wed, 03 Apr 2024 19:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712195907; x=1712800707; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712196022; x=1712800822; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Edjm4j6Dw4ZOSSQICjoznYKS8GYUsUxh5ZnKOQjsVhI=;
-        b=EH1qFMI1wQKcweTmzYbB4sciBGtm3/pqRqiCEjkcAdjIrLwFTFWwSUj4kWSV3lQYyT
-         C2Quoq6pl/3e2JlLpT/clRXxTBdn1i4C4G1B/QZeih6ECuLuxR9JtakPHHTbNEpBbU6X
-         i9xLD1ABx8RHGeZojAMMDMhnuQI0QLbK3dY3eCs358jPmczVlsaPRy/7N10B3sGUgsk9
-         qz2kF5VyK4ypdfhGLwGaZPXPoqyDjBTSyyCNwcd1ejXZuySc4UOYzmeSr2HvJ1Ku/QV+
-         PUdjtyN3hkz2yCC3WToPWUQOtHGiT348hvRZ2Fl6t/N+Na8dd01k7grk8G6r4Up0VoE6
-         OQUQ==
+        bh=nKh3sxyoRv9cKZKOIDktP1/7vp4+1mfdVBqbgg7wNjk=;
+        b=MXcsqUTnWON7Bjh/sScClAHXjMwQPDKr0hrMK2zNbx0nMdR1HvKrZNaohfBhDwXAJq
+         KY+RA4J2bZKl1mGJQID7b28qX74fXRtlrogv7g6wEDMRJ8fvulEYBKlAiNLAnsp7PI3S
+         E/cA0eW6b6fASV2sxE9U0n495hUb8vAbjimV8UN+HKmedEJTCbNWM6URLL6xXWmC9rmv
+         Rwkh5RRZsiYZ+mbvOzqf+YbsDJVKp1eQTkEOmGfLgYiWwVKSf7Zy58XSBgOGfErhxYWh
+         qlik+gOHdFb52fTa9X51owmxpF2J7k4cJ44Pbn/2vs2gIe6URmGJzrJGqaKNeDR+hq8c
+         3PLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712195907; x=1712800707;
+        d=1e100.net; s=20230601; t=1712196022; x=1712800822;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Edjm4j6Dw4ZOSSQICjoznYKS8GYUsUxh5ZnKOQjsVhI=;
-        b=DrCGARDaGVY3BlpomqcKdYn4e8PCsXYwavwjCfDwttEYjI4Xj8fDnYO7P+c1mimPsI
-         9Fmcaq6QdTOVhJN5Ji+vV9cc3l66GfGWgIkQTSZChVkW8WclZaOaPwEAaTJ3TCNCvzA1
-         ZNXdaSipY9YCOaU0vspE4Qe8zIPnn7CYE2AMr7mSt1+sqkmdBjJsiksDS7p1O6CXziT6
-         y/k2cP1Gxu/979qMQYYfrDbEmV0E9gZ3LiZtV/BfHHhGlICxIG2QpIScuOPL92NsX8S/
-         4tjDXm58wZio9FtIcdsHafkLXUKFFkAPq4419K4Rz1mj1RcnUgKkrUioMdNKOA0/Hvxg
-         KN0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX6vimNVVv0ptszLFawp1/W7mXnzGj3emrTbVnKhoMIHxZS7HiWnhtaPZjWYLcfcf8p8kvpcecIFZlPYnGKHm6XhY0XRzMvHZozwDMPsZNoiua4YIaGtnM3GWp27niKX6GBV2cSIbwt2YUo
-X-Gm-Message-State: AOJu0YxtEKfXTRkrzlgm56fBU2n4rj+RhBvu2njPGWlXH763Pm0CoCxi
-	OEuxXxZc43n11Vmgreeg4nyFk1QjGNsahiPKfGNPy4/RBWuii4ZkkuW8b1yysm4dLnenIrLSCTa
-	eIChHAoYpJeriROPu0dlqcTKyWsQ=
-X-Google-Smtp-Source: AGHT+IEK5qJlWZay2FL+Z0BWOTGdPJfiELN0iLN53ebkDnls5+3I2K0ffBrE8bSeLef9zcTtpKkqgoH9v2+TUwuLqdM=
-X-Received: by 2002:a17:906:f58d:b0:a51:8b96:2931 with SMTP id
- cm13-20020a170906f58d00b00a518b962931mr41427ejd.54.1712195907242; Wed, 03 Apr
- 2024 18:58:27 -0700 (PDT)
+        bh=nKh3sxyoRv9cKZKOIDktP1/7vp4+1mfdVBqbgg7wNjk=;
+        b=T+HRKIY4Jpgua/b3fBnALAh9BIL2kP55TwGeEsCKiyW169xJdXw5Tpsa7X4J6jp4UY
+         RAcf+TzARoIiBcvll6KBXVpkYLLnHXsGMrYBxwvRuOt6aXVrsJ30xbEnErAF8YDztPwb
+         HMEPlxP1PhS89GilkH2cFMtxzff3M9i7ateirGYo0LgHBi24KuX4Le2XHeGSxEJJ7gzP
+         tDNhp5QcZucA467jO0goK1t9pMTIX7RCo++DQlBj3PUco5ZjenQ1TyE4OCI4Kjm2pJmA
+         i2f8wNly3mybW88rEtcVcQDNxfCLmNEW+44uQo4pe61UldVXwA2hlpzAMiPjFM1jMdtU
+         7SIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRYCgJDaqKbvz+0UEbxPLVm8qRFTo+/nEQwDLk3HIYHpmxyp4hCzM4XZ8uN4XuwZO1W6AqcEegD/wgfKu5KrnPfdlnnkAeHXHEe1y92AKSriUwpV9OfGKDvuwbSMl+eoN0a9k4f0HdF4+PYILsArtoPYHSS8+PHJX7IwJn27X9REyIoBnR
+X-Gm-Message-State: AOJu0Yyq1B5lE9HW7Hvk0aMC8CjHlURWGmoURTQaGcBkaSyNFkZZr+ho
+	oOkLg2MiKmiZyfrjAfcitGVDEJEaJqiWV0ZVabq272RmovYH+ttx1JDUSbud81HKDTPG+6Nxzoe
+	HmHFsuNbjHEj7bU+Pokzdgda9klM=
+X-Google-Smtp-Source: AGHT+IERid2KJeMPn9+jPclOZQkCtCIvdoXkTbp0nd54fwPPZTTj0iSLVyRSOiWrN6O1Efy4p8ubNUzmbqJlFRrYrhw=
+X-Received: by 2002:a05:6a20:748e:b0:1a3:6a74:2e6a with SMTP id
+ p14-20020a056a20748e00b001a36a742e6amr1591455pzd.14.1712196019685; Wed, 03
+ Apr 2024 19:00:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403073144.35036-1-kerneljasonxing@gmail.com> <20240403185033.47ebc6a9@kernel.org>
-In-Reply-To: <20240403185033.47ebc6a9@kernel.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 4 Apr 2024 09:57:50 +0800
-Message-ID: <CAL+tcoDd=ueHVqBpe8r9R4R1vW6k0RiSfCn=vzHAaLNycb4xBA@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/6] Implement reset reason mechanism to detect
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: edumazet@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	rostedt@goodmis.org, pabeni@redhat.com, davem@davemloft.net, 
-	matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org, 
-	mptcp@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+References: <20240402093302.2416467-1-jolsa@kernel.org> <20240402093302.2416467-2-jolsa@kernel.org>
+ <20240403100708.233575a8ac2a5bac2192d180@kernel.org> <Zg0lvUIB4WdRUGw_@krava>
+ <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org> <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+In-Reply-To: <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 3 Apr 2024 19:00:07 -0700
+Message-ID: <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return probe
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 4, 2024 at 9:50=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wro=
-te:
+On Wed, Apr 3, 2024 at 5:58=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
 >
-> On Wed,  3 Apr 2024 15:31:38 +0800 Jason Xing wrote:
-> > It's based on top of https://patchwork.kernel.org/project/netdevbpf/lis=
-t/?series=3D840182
+> On Wed, 3 Apr 2024 09:58:12 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 >
-> Please post as RFC if there's a dependency.
-> We don't maintain patch queues for people.
+> > On Wed, Apr 3, 2024 at 7:09=E2=80=AFAM Masami Hiramatsu <mhiramat@kerne=
+l.org> wrote:
+> > >
+> > > On Wed, 3 Apr 2024 11:47:41 +0200
+> > > Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > > On Wed, Apr 03, 2024 at 10:07:08AM +0900, Masami Hiramatsu wrote:
+> > > > > Hi Jiri,
+> > > > >
+> > > > > On Tue,  2 Apr 2024 11:33:00 +0200
+> > > > > Jiri Olsa <jolsa@kernel.org> wrote:
+> > > > >
+> > > > > > Adding uretprobe syscall instead of trap to speed up return pro=
+be.
+> > > > >
+> > > > > This is interesting approach. But I doubt we need to add addition=
+al
+> > > > > syscall just for this purpose. Can't we use another syscall or io=
+ctl?
+> > > >
+> > > > so the plan is to optimize entry uprobe in a similar way and given
+> > > > the syscall is not a scarce resource I wanted to add another syscal=
+l
+> > > > for that one as well
+> > > >
+> > > > tbh I'm not sure sure which syscall or ioctl to reuse for this, it'=
+s
+> > > > possible to do that, the trampoline will just have to save one or
+> > > > more additional registers, but adding new syscall seems cleaner to =
+me
+> > >
+> > > Hmm, I think a similar syscall is ptrace? prctl may also be a candida=
+te.
+> >
+> > I think both ptrace and prctl are for completely different use cases
+> > and it would be an abuse of existing API to reuse them for uretprobe
+> > tracing. Also, keep in mind, that any extra argument that has to be
+> > passed into this syscall means that we need to complicate and slow
+> > generated assembly code that is injected into user process (to
+> > save/restore registers) and also kernel-side (again, to deal with all
+> > the extra registers that would be stored/restored on stack).
+> >
+> > Given syscalls are not some kind of scarce resources, what's the
+> > downside to have a dedicated and simple syscall?
+>
+> Syscalls are explicitly exposed to user space, thus, even if it is used
+> ONLY for a very specific situation, it is an official kernel interface,
+> and need to care about the compatibility. (If it causes SIGILL unless
+> a specific use case, I don't know there is a "compatibility".)
 
-Got it. Thanks.
+Check rt_sigreturn syscall (manpage at [0], for example).
 
-I'll wait for that patch series to get merged. I believe it will not
-take too long:)
+       sigreturn() exists only to allow the implementation of signal
+       handlers.  It should never be called directly.  (Indeed, a simple
+       sigreturn() wrapper in the GNU C library simply returns -1, with
+       errno set to ENOSYS.)  Details of the arguments (if any) passed
+       to sigreturn() vary depending on the architecture.  (On some
+       architectures, such as x86-64, sigreturn() takes no arguments,
+       since all of the information that it requires is available in the
+       stack frame that was previously created by the kernel on the
+       user-space stack.)
 
+This is a very similar use case. Also, check its source code in
+arch/x86/kernel/signal_64.c. It sends SIGSEGV to the calling process
+on any sign of something not being right. It's exactly the same with
+sys_uretprobe.
+
+  [0] https://man7.org/linux/man-pages/man2/sigreturn.2.html
+
+> And the number of syscalls are limited resource.
+
+We have almost 500 of them, it didn't seems like adding 1-2 for good
+reasons would be a problem. Can you please point to where the limits
+on syscalls as a resource are described? I'm curious to learn.
+
+>
+> I'm actually not sure how much we need to care of it, but adding a new
+> syscall is worth to be discussed carefully because all of them are
+> user-space compatibility.
+
+Absolutely, it's a good discussion to have.
+
+>
+> > > > > Also, we should run syzkaller on this syscall. And if uretprobe i=
+s
+> > > >
+> > > > right, I'll check on syzkaller
+> > > >
+> > > > > set in the user function, what happen if the user function direct=
+ly
+> > > > > calls this syscall? (maybe it consumes shadow stack?)
+> > > >
+> > > > the process should receive SIGILL if there's no pending uretprobe f=
+or
+> > > > the current task, or it will trigger uretprobe if there's one pendi=
+ng
+> > >
+> > > No, that is too aggressive and not safe. Since the syscall is exposed=
+ to
+> > > user program, it should return appropriate error code instead of SIGI=
+LL.
+> > >
+> >
+> > This is the way it is today with uretprobes even through interrupt.
+>
+> I doubt that the interrupt (exception) and syscall should be handled
+> differently. Especially, this exception is injected by uprobes but
+> syscall will be caused by itself. But syscall can be called from user
+> program (of couse this works as sys_kill(self, SIGILL)).
+
+Yep, I'd keep the behavior the same between uretprobes implemented
+through int3 and sys_uretprobe.
+
+>
+> > E.g., it could happen that user process is using fibers and is
+> > replacing stack pointer without kernel realizing this, which will
+> > trigger some defensive checks in uretprobe handling code and kernel
+> > will send SIGILL because it can't support such cases. This is
+> > happening today already, and it works fine in practice (except for
+> > applications that manually change stack pointer, too bad, you can't
+> > trace them with uretprobes, unfortunately).
+>
+> OK, we at least need to document it.
+
++1, yep
+
+>
+> >
+> > So I think it's absolutely adequate to have this behavior if the user
+> > process is *intentionally* abusing this API.
+>
+> Of course user expected that it is abusing. So at least we need to
+> add a document that this syscall number is reserved to uprobes and
+> user program must not use it.
+>
+
+Totally agree about documenting this.
+
+> >
+> > > >
+> > > > but we could limit the syscall to be executed just from the trampol=
+ine,
+> > > > that should prevent all the user space use cases, I'll do that in n=
+ext
+> > > > version and add more tests for that
+> > >
+> > > Why not limit? :) The uprobe_handle_trampoline() expects it is called
+> > > only from the trampoline, so it is natural to check the caller addres=
+s.
+> > > (and uprobe should know where is the trampoline)
+> > >
+> > > Since the syscall is always exposed to the user program, it should
+> > > - Do nothing and return an error unless it is properly called.
+> > > - check the prerequisites for operation strictly.
+> > > I concern that new system calls introduce vulnerabilities.
+> > >
+> >
+> > As Oleg and Jiri mentioned, this syscall can't harm kernel or other
+> > processes, only the process that is abusing the API. So any extra
+> > checks that would slow down this approach is an unnecessary overhead
+> > and complication that will never be useful in practice.
+>
+> I think at least it should check the caller address to ensure the
+> address is in the trampoline.
+> But anyway, uprobes itself can break the target process, so no one
+> might care if this system call breaks the process now.
+
+If we already have an expected range of addresses, then I think it's
+fine to do a quick unlikely() check. I'd be more concerned if we need
+to do another lookup or search to just validate this. I'm sure Jiri
+will figure it out.
+
+>
+> >
+> > Also note that sys_uretprobe is a kind of internal and unstable API
+> > and it is explicitly called out that its contract can change at any
+> > time and user space shouldn't rely on it. It's purely for the kernel's
+> > own usage.
+>
+> Is that OK to use a syscall as "internal" and "unstable" API?
+
+See above about rt_sigreturn. It seems like yes, for some highly
+specialized syscalls it is the case already.
+>
+> >
+> > So let's please keep it fast and simple.
+> >
+> >
+> > > Thank you,
+> > >
+> > >
+> > > >
+> > > > thanks,
+> > > > jirka
+> > > >
+> > > >
+> > > > >
+> >
+> > [...]
+>
+>
+> ([OT] If we can add syscall so casually, I would like to add sys_traceeve=
+nt
+> for recording user space events :-) .)
+
+Have you proposed this upstream? :) I have no clue and no opinion about it.=
+..
+
+>
 > --
-> pw-bot: cr
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
