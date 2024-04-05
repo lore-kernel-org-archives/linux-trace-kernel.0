@@ -1,179 +1,212 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC751428F8;
-	Fri,  5 Apr 2024 07:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804C61465A5
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Apr 2024 08:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712303774; cv=none; b=eBSV1Pt+hyW3QwpQedV48R2ngdcru2tiB1r71+CnnZMGCfclzLfKtVYDolVr947ODWByCQwppSTnUDBxhMZdMDPHiOW8KBP5Q76wnt22RRXtOAAXp0UbMpUYf/6TL/vllhxCz8xNz5xAx6K3Ddas/EbEu0AAXzWRj3H17Vzpbyc=
+	t=1712305732; cv=none; b=gbXGGE1HEJqrgNmwYg5rcgwFFILwY1V39kZjxNODCIplR4QMWe83Zr179QFYUXFRkocmRW8l7K8bxElLvL0/ir9zwELz3Zs36r5KmYnOfRFvJRHPKQ0h1EqQTXr10Oye4tb1Z+vGghLTASg6B269F45YrjZ5sdqaBU3tE2n4Veo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712303774; c=relaxed/simple;
-	bh=5FR0ML8gIms8SXMu9qd0IXl0ZXkR1/9EGEn2Gx9HkT0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Huh/gpxOcrb9V0oFPylrOm4ou9oqSEj8KUF0w1Odn8bQPvviIq9rZSRne0wm8mnDAN624b736twIKP3D5YsdMF3IS6Tc9+HN+qyB52wG1bPpJ7Qtm2G5C2cC7B4F+PYJZ+j4qszhBwdi5jxsspSNjqlNCiJhB1sufpiHKbebN9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GoiavdWd; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712305732; c=relaxed/simple;
+	bh=Z5bRgo90vJ1prRsFQfV4KcyZkLttI8kAD0ramKMPe8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I6Rsi6Ef2qxTuDF33omzVhEwmUOf7y+vjDJET5Wv3vLIO7E2cQlxvAzDjAMpZA7yW+W6yp3KLVilgmUvrQRSlVKH+nw51IV8uUO/aNnDRKtbHGQm+jGF8iaFxbdoTh5k+Z+J4fJ2JPXga0CuAMA2MDaj2NFK7T8cIp7qA2nioEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t3Ca323N; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoiavdWd"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso1420910a12.2;
-        Fri, 05 Apr 2024 00:56:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t3Ca323N"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4d43d602cd6so653232e0c.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 05 Apr 2024 01:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712303772; x=1712908572; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1712305729; x=1712910529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hzVlWt4l7qxR/k/EhWDwFrSslFncuI6KSbSzKFf8xEw=;
-        b=GoiavdWdYnmZFK1pWIURcuvw3fbxXZUuj+HqYnjDckH8vVZPSYSzXX8KxPD7kO0Emv
-         L8kudC2ynot/y9wvJ5AaJAomB3XTJlOibmVqDi/vvKzxnipzbS9SqFDxS1qKY2vhsC/U
-         3pYsJp9WPL0mRp3j2WBJ964LU25Hd/nSaGyhljf0mNuitIk0D6uHyw3rmnzXxE08eAxq
-         gGsLaSpgKILgcj/gfADWb9A10mPWHoUdQPYxUNtObjiqeiKy1XX6d288t5fuU6/0NGoM
-         oYC3McmdOL1xm7j0Ty5vogsUn3tHcHr+qFrGlQqvbFS0moKe3uZ6A7ChzHWgYR1ztBMe
-         AMbQ==
+        bh=lcjU7+cRt5Aeub+hKdmibp7iA42IF2luH5dCAZQQUiM=;
+        b=t3Ca323NtbTE0MQvO2a6bAWun/Yr72xOl+dUJY+P4/CBsVj0WYdtyMkNySkcC0Hf0O
+         neBlsEYsEiT1m8OK3fhVSiHL0RnG7FSPMGYacOXfZvgCG5R6CyTb5inMAk9U2rKMwsTE
+         D9lwcmybgMAxKKYTJGBQugqphmwSJmaDAXZUVT83E82B5aR+iEhzB35+dap8OBH+x0Vo
+         kEjk/9pGHdWtITgiMlpLCeyEWRofNF+KwV/SjkqDlgVLVjV0KVOgw8224euGxz3VZgj+
+         n94i9nTdpVcoMFwdoDDnSiy31FcmXxF5OzGGPXFbJtmQIHnvly+LzroSD+VjVgY2aaJt
+         8afA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712303772; x=1712908572;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712305729; x=1712910529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hzVlWt4l7qxR/k/EhWDwFrSslFncuI6KSbSzKFf8xEw=;
-        b=M8QKcnOWgUHDgxKzS4joQHVlJQt8MLj5J7fBuvsaMMRzxOke81N7xmMHT66JN+ES42
-         WDU+DY2oz1GSAOOdlT6n3JxxOSd+744787lKwkqNhVRY5DHYioo8AouDQbgSmvit/6nu
-         6jP/0SXU7ZQlz754+kcqv20nSCEGDG5eoykbjQMatklG8Wlku7/Nn5yh2XF3jzMEDAZa
-         iYm/ME/o/9Hs6WOLXCrcUhNfxGSRQfBaAi0YZC7fPmfjQfdp7n5hgH7Yi/fn8PV0vGNm
-         hP5qKey54mp2WzZNCu2jR2melZe+tWDyeEMOI9gybBqIy/rS8pQQVIP9ouN7VYjWM2SX
-         kzcA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9YH++kKv6TnDhtq8GUOvu2WSmCYY8oxDNTnjNDENbfxxmKEaxVKCfKSQa4Y/fBqKL1eNRP3VjhWK5DgkdmY7AkhhdbMdB2eV78e7XYyVCICRHTsylxjDybCjR/wv72/2MgeoyDLVo/eEIoIALW6vw
-X-Gm-Message-State: AOJu0YxESyqS9O/BQjSZLODbdT6CA6TdPVnKelcOI0pKD2WcBTLeWbay
-	joZLdhjm08+n9+GsQmKInvv2Or4tMiAtuUonKh5ZVs2DR28QQQsP
-X-Google-Smtp-Source: AGHT+IFRQC5Hl1XNJ8UHTusIXnKpuWVMqInH6NDdemHxy91rJUVQyZ1BvHxguN/C539fHznDlLcS0A==
-X-Received: by 2002:a17:90a:e00f:b0:2a2:5876:5a74 with SMTP id u15-20020a17090ae00f00b002a258765a74mr666360pjy.25.1712303771654;
-        Fri, 05 Apr 2024 00:56:11 -0700 (PDT)
-Received: from hyeongtakPC.. ([147.46.174.104])
-        by smtp.googlemail.com with ESMTPSA id ce17-20020a17090aff1100b002a2d4bf345bsm2539161pjb.55.2024.04.05.00.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 00:56:10 -0700 (PDT)
-From: Hyeongtak Ji <hyeongtak.ji@gmail.com>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com
-Subject: Re: [RFC PATCH v3 5/7] mm/damon/paddr: introduce DAMOS_MIGRATE_COLD action for demotion
-Date: Fri,  5 Apr 2024 16:55:57 +0900
-Message-Id: <20240405075557.464190-1-hyeongtak.ji@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240405060858.2818-6-honggyu.kim@sk.com>
-References: 
+        bh=lcjU7+cRt5Aeub+hKdmibp7iA42IF2luH5dCAZQQUiM=;
+        b=rJe/Jnmcf6sngzJL/a5Jex8BYkk/yhU++JeK/16PUD9tYlPiDj/A+jdA3h1GHlZUl7
+         6VKZjeP7zaZiGXccn0b+2WMAgypwcihByluy3GiNWRLs52Xf+8CJo2peZeSofpjUj47G
+         THKm6sA6VPVnKiMr/VSWS5wRrnjb+VBKPjGj5vhux8ApdVWg2D2KTHdkoOIXswS0VGrh
+         KdGmO1vyXj1b4LRbDlm11swBXZttYcccy9OoGkUSMvjQ4T/R7juP9vCskUT+gO4+N4AX
+         1c7PqQdX5Wr1zyYohtl5XyZpuK8P73s8dO2BZfDq40yQCGBHrrE9j5rTRG0tDD5fGOyp
+         KR9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUzoIfLpWPFMj/0W+lOep2zXty4Fvnj5TP/358N3yzLN/h64b9ZBTZa/ZhknvcoOj107Zyu7BXeZVxV4zzwqtwp4/MN6VPkknwnC4n8aGCJbDl2
+X-Gm-Message-State: AOJu0YzE3MfZ8w5XMudmopZjAthUUNcglHfiasvR4T2ykOg3Q1iGVyyy
+	Vf9trhWv0EDqbpWijT1HxLsY07QPby/gRV2wPoFa0Aywb7NKxwyRB3GoxvDactEKty51GBnxHvs
+	So77W8slMgvdKPXKPi+s6Vwksv4RQPyKnCmF5
+X-Google-Smtp-Source: AGHT+IE9J6DVAmZzKmTiQk80OVY4ikVcmcvr9eGddNabGm/u9T4gAl9+FbNPe74Vg8+GJaziHkSrLGV5+PW+g6Pa8n0=
+X-Received: by 2002:a1f:db04:0:b0:4c0:9ed8:57b3 with SMTP id
+ s4-20020a1fdb04000000b004c09ed857b3mr764963vkg.1.1712305729227; Fri, 05 Apr
+ 2024 01:28:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240404190146.1898103-1-elver@google.com> <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
+In-Reply-To: <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Fri, 5 Apr 2024 10:28:10 +0200
+Message-ID: <CANpmjNN+rR1PWKbx6RBWhOjnmAP+jUDzc3TLcwTnmfd=ft03dg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Introduce bpf_probe_write_user_registered()
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri,  5 Apr 2024 15:08:54 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+On Fri, 5 Apr 2024 at 01:23, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Thu, Apr 4, 2024 at 12:02=E2=80=AFPM Marco Elver <elver@google.com> wr=
+ote:
+> >
+> > With all the known caveats, tracing BPF programs may directly write to
+> > user-space memory with the bpf_probe_write_user() helper. Memory safety
+> > is an obvious problem when using this helper, since it is too easy to
+> > overwrite memory across all running processes that user space did not
+> > expect to be touched (neither the verifier nor the kernel knows what ma=
+y
+> > be touched). While it is possible to come up with mechanisms to safely
+> > communicate to the BPF program which memory region may be written to,
+> > there are no built-in guarantees of safety. For this reason, the helper
+> > produces a warning in the kernel log, and in newer kernels it is
+> > possible to disallow use of the helper since 51e1bb9eeaf7 ("bpf: Add
+> > lockdown check for probe_write_user helper").
+>
+> So is it a fix or a feature?
 
-...snip...
+Feature. The above paragraph is just an intro. Remove it?
 
-> +static unsigned long damon_pa_migrate_pages(struct list_head *folio_list,
-> +					    enum migration_mode mm,
-> +					    int target_nid)
-> +{
-> +	int nid;
-> +	unsigned int nr_migrated = 0;
-> +	LIST_HEAD(node_folio_list);
-> +	unsigned int noreclaim_flag;
-> +
-> +	if (list_empty(folio_list))
-> +		return nr_migrated;
+> > Nevertheless, direct user-space memory writes from BPF programs can be
+> > useful to efficiently manipulate and communicate with cooperating user
+> > space processes.
+>
+> But there are many different ways for bpf to communicate with user space:
+> perf ringbuf, bpf ringbug, various maps including mmap-ed array and arena=
+.
+> The commit log doesn't explain why we need another one.
+>
+> > For example, one of our use cases are for events that happen relatively
+> > frequently in the kernel (e.g. specific scheduler events), but a set of
+> > user space threads want to check for such events in very hot code paths
+> > to make more optimal decisions (the cost of such a check can be no more
+> > than a load and compare). The types of events and heuristics used may
+> > change based on system environment and application, and a BPF program
+> > provides the best trade-offs in terms of performance and deployment.
+>
+> and the tasks can use mmaped array shared across all or unique to each
+> process.
+> And both bpf and user space can read/write them with a single instruction=
+.
 
-How about checking if `target_nid` is `NUMA_NO_NODE` or not earlier,
+That's BPF_F_MMAPABLE, right?
 
-> +
-> +	noreclaim_flag = memalloc_noreclaim_save();
-> +
-> +	nid = folio_nid(lru_to_folio(folio_list));
-> +	do {
-> +		struct folio *folio = lru_to_folio(folio_list);
-> +
-> +		if (nid == folio_nid(folio)) {
-> +			folio_clear_active(folio);
-> +			list_move(&folio->lru, &node_folio_list);
-> +			continue;
-> +		}
-> +
-> +		nr_migrated += damon_pa_migrate_folio_list(&node_folio_list,
-> +							   NODE_DATA(nid), mm,
-> +							   target_nid);
-> +		nid = folio_nid(lru_to_folio(folio_list));
-> +	} while (!list_empty(folio_list));
-> +
-> +	nr_migrated += damon_pa_migrate_folio_list(&node_folio_list,
-> +						   NODE_DATA(nid), mm,
-> +						   target_nid);
-> +
-> +	memalloc_noreclaim_restore(noreclaim_flag);
-> +
-> +	return nr_migrated;
-> +}
-> +
+That does not work because the mmapped region is global. Our requirements a=
+re:
 
-...snip...
+1. Single tracing BPF program.
 
-> +static unsigned int migrate_folio_list(struct list_head *migrate_folios,
-> +				       struct pglist_data *pgdat,
-> +				       int target_nid)
-> +{
-> +	unsigned int nr_succeeded;
-> +	nodemask_t allowed_mask = NODE_MASK_NONE;
-> +
-> +	struct migration_target_control mtc = {
-> +		/*
-> +		 * Allocate from 'node', or fail quickly and quietly.
-> +		 * When this happens, 'page' will likely just be discarded
-> +		 * instead of migrated.
-> +		 */
-> +		.gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) | __GFP_NOWARN |
-> +			__GFP_NOMEMALLOC | GFP_NOWAIT,
-> +		.nid = target_nid,
-> +		.nmask = &allowed_mask
-> +	};
-> +
-> +	if (pgdat->node_id == target_nid || target_nid == NUMA_NO_NODE)
-> +		return 0;
+2. Per-process (per VM) memory region (here it's per-thread, but each
+thread just registers the same process-wide region).  No sharing
+between processes.
 
-instead of here.
+3. From #2 it follows: exec unregisters the registered memory region;
+fork gets a cloned region.
 
-> +
-> +	if (list_empty(migrate_folios))
-> +		return 0;
-> +
-> +	/* Migration ignores all cpuset and mempolicy settings */
-> +	migrate_pages(migrate_folios, alloc_migrate_folio, NULL,
-> +		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_DAMON,
-> +		      &nr_succeeded);
-> +
-> +	return nr_succeeded;
-> +}
-> +
+4. Unprivileged processes can do prctl(REGISTER). Some of them might
+not be able to use the bpf syscall.
 
-...snip...
+The reason for #2 is that each user space process also writes to the
+memory region (read by the BPF program to make updates depending on
+what state it finds), and having shared state between processes
+doesn't work here.
 
-Kind regards,
-Hyeongtak
+Is there any reasonable BPF facility that can do this today? (If
+BPF_F_MMAPABLE could do it while satisfying requirements 2-4, I'd be a
+happy camper.)
+
+bpf_probe_write_user() can, but safety is not built in, along with
+getting fork + exec right is brittle.
+
+> > To achieve better safety, introduce tagged user writable regions, that
+> > must explicitly be registered before tracing BPF programs may use them:
+> >
+> >  1. The prctl() option PR_BPF_REGISTER_WRITABLE allows any user space
+> >     process (that is allowed to use prctl()) to register tagged writabl=
+e
+> >     memory regions for the current thread.
+> >
+> >  2. Conversely, the prctl() option PR_BPF_UNREGISTER_WRITABLE allows a
+> >     user space process to unregister a writable memory region that was
+> >     previously registered from the current thread. This must be done
+> >     before freeing memory if the thread that registered a region is
+> >     still running.
+> >
+> >  3. Tracing BPF programs may write to any registered region in the
+> >     current thread with bpf_probe_write_user_registered(). If the memor=
+y
+> >     region has been tagged with a non-zero value, the BPF program must
+> >     provide a matching tag.
+> >
+> > Admin capabilities are still required to attach BPF programs that use
+> > the new bpf_probe_write_user_registered() helper.
+>
+> We stopped adding new helpers ~2 years ago.
+> Only new kfuncs are allowed.
+
+Sure.
+
+> >
+> > With this interface, user space threads are guaranteed that no writes
+> > happen to regions that they did not explicitly register. Tagging can be
+> > used to associate additional semantics with the memory region.
+> >
+> > A note on tag allocation: Since such programs can only be installed by
+> > the local system administrator, tag allocation may be done by the syste=
+m
+> > administrator. For example, by providing headers with tag definitions,
+> > or a central service to distribute tags to the BPF program loader and t=
+o
+> > user applications.
+>
+> Not clear how that's achieved in practice.
+> To do prctl(REGSISTER, ... tag)
+> the process will just pass this u32 tag.
+> There is no way for the admin or other process to enforce certain
+> tag usage.
+> Since there is no way to enforce extra tag seems like a weak
+> protection against something? What in particular?
+
+The main goal is to a) avoid accidental writes into areas the user
+space program doesn't want writing to, along with 2) weakly
+associating "type" via a tag. As soon as the user space program does
+prctl(REGISTER, tag) it wants writes to happen. It's the user space
+program's fault if it uses random tags, because in practice, we know
+exactly which BPF programs are running in production and which tags
+they service. The programs we do _care_ about are reviewed and do use
+the right tags. The mechanism is not for protecting BPF programs or
+what data they communicate, but for the benefit of the user space
+program itself to bound the memory that could be touched in its own
+address space (use the wrong region/tag .. tough luck).
