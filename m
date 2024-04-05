@@ -1,570 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2122.outbound.protection.outlook.com [40.107.94.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCF016EBE4;
-	Fri,  5 Apr 2024 14:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327109; cv=none; b=P9/11/sz2iqG9m14BSErADndFu8jlyP4K0Fa7Qqy95lexvRsctO764JzdNPumj9+dUn0hFNL8mN3x9DKqUgmdroSuanh15HrULarRRgVZzG77+EMM/YpX5Yk7xY4eh2cLm4A5gs5dtCYbetxL5MU6cwsXsg4N0KmkdrIWj1w9RE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327109; c=relaxed/simple;
-	bh=bZzc1/ykJ5+3qh+B1335fGeT/iPCxNqgcBFsQa28B5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sSgoaI/pGbMXu9LwsWOEUY8Bs6tXlXAIDb3yu45erVrfTnnXpR1/4YdeMCvS3YSpJpe40Z2qKpmI6XmnTIUv2JIiO5Kp344F8IA6Z+MSsIO14IJQePhhAJ0SH9EXrFviSW89soDi1cbiDMpe4eJ1mGLFEDjIQ2jQqg0L60KlTGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7JZvnWW; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBE816FF49;
+	Fri,  5 Apr 2024 16:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712336190; cv=fail; b=eheFrMdEADwnDoZ+tm8vRt/bk+O6xzNNudiPt556vbEopjjwFDHKpanGZO4eYqojpWRzh05WjCBLDa8rtr4tOiSFbMKZ/CH1d3W6R6sHelnnZnbIMhslApZCTk4dyTZdXpPRHxRwp1wM8lHRQW5+BI6+znlN/ZX8D2TDWMuq4OQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712336190; c=relaxed/simple;
+	bh=m1TjF+L4VPDmKV4xqFqfMTw8D8AZCktIkY8Tv3ei6Ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=siyz4cwrR0TNFklAS9VBv242SYyBn+9l2X5YI+9B7exlt9QvCXJUcXJ9E7NFqhomRnjWkXxPmguuPh6RerQiRyOG0fuEfKXSNYmmIEakDulcbTzcrRXYsJrxLP6G56BqynNfkjuj2er+Mqz2Eb7gUJygRfPTdZ9Q/RipXXQSJ0I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=ypdILxWl; arc=fail smtp.client-ip=40.107.94.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7JZvnWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB53C433C7;
-	Fri,  5 Apr 2024 14:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712327109;
-	bh=bZzc1/ykJ5+3qh+B1335fGeT/iPCxNqgcBFsQa28B5Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C7JZvnWWHGg+jrEjxFluRGqHmF1EmO7tNy6ywbbfsW5hwOxNGteJexg65Pfj9J703
-	 dd+Jf4WOMNxnDViwVP/SV/TNTlc2wqCKa1T7m0doJzmvrYAODHrgIySGcoi7+OQXo5
-	 tAxyiXmpE4XFkOJ07byuDCkYv/UbSnexpQueLTvVWzCFnOhNf8wW6r8uPigHlEGUND
-	 pto/E8cSIbnZ6t/pChlNHefH6+WUK6xDvDH+IHLIp0q/Xoun0RKRT0jpLbqsRPjbLG
-	 g6wuzDmxK3RmPsv5TuNtxOkeF759PSU4/2vZfDzzGLILFjG6zG7coY2tY62QwwFTQf
-	 nf6JcXGCv/jDg==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Guo Ren <guoren@kernel.org>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
-	Song Shuai <suagrfillet@gmail.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: puranjay12@gmail.com
-Subject: [PATCH] ftrace: riscv: move from REGS to ARGS
-Date: Fri,  5 Apr 2024 14:24:53 +0000
-Message-Id: <20240405142453.4187-1-puranjay@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="ypdILxWl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EmzNqexo9cvcyGSFCG+R3Wsqpr5EwBC/FMP49rJNLrbqZP010o1WHaMKDTZYUjGAeNE0v1eYTDhCvWb/U8+vrX0T3DAAxFSs5ZeIHMIqYbtxfPZtgV1Lwm4TYiaFC/xW2olI/aEWUyrTTb70UlEuxVkAiSXH/f2/6lwMf68abI+R7Rc8zjhUFLngsLl1aFfftvIF+som/DD0d18jqpzWpWdYLGcCvh17Bj0VnXmdwjyvuX0Di1WSNN9veEANUzRVC8H/VDLplYZODWiPGZQrcNUyYIaLlbHzck9ta6Ss+y+b49ZJ31ufHIE40YEebQAIVs+2BU36QcQ7zWuT4IuEvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zErZbMb3jTyXqs57OMGmAAQj4J/j08jQ09xuRyuPM8g=;
+ b=PAjeSCUb4Al6M+Kajf1DUAvPkqhVKqBwLjHKMKnqh+pxCSDXmcerO6392tN1hSmS3Vvnoh/2cprONrknr0RDx8+M6mVkU0+RPYxn1CB4ndRVTryelOA5hXUX3HJpxn15IDhAkSxJnUtEE1Qmst8HIRExs3paG9HzwZW7KZ4wDy+cQcbD3ut5GFX2hBUwDPFhLJupyWLWzc46fLdx7CYWOwdCW6Ch0t7twuNTVFOssdXRXD4CpPau/q27OqjeyVrfEAwgyHb0Y10fibprOdMvyAHNp5lu94FzQmrLem7Z/W7jQ8Z2P2pFNzl54osftipdpcEzo0sNjrscfSCeVaWbqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zErZbMb3jTyXqs57OMGmAAQj4J/j08jQ09xuRyuPM8g=;
+ b=ypdILxWl4DSuOCj8IxeP2ldUvJo40EZB3LgtNqFPc1zyNUoOeIuLNzNr6rmIM8Uy5Qc6iaWLtCHlgbdtHRVVtlPcHQ1Ncc0qM4YYjMIMD1Odp7kQRw9l2XvPLTwXZrxfCfxxPvpsnQMiXgmKMxxyoCG3Ta/oVrMC8Nnn/unLbZg=
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by SJ0PR17MB4582.namprd17.prod.outlook.com (2603:10b6:a03:35b::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.53; Fri, 5 Apr
+ 2024 16:56:24 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::6657:814f:5df0:bb5b]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::6657:814f:5df0:bb5b%5]) with mapi id 15.20.7409.049; Fri, 5 Apr 2024
+ 16:56:23 +0000
+Date: Fri, 5 Apr 2024 12:56:14 -0400
+From: Gregory Price <gregory.price@memverge.com>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: sj@kernel.org, damon@lists.linux.dev, linux-mm@kvack.org,
+	akpm@linux-foundation.org, apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com, dave.jiang@intel.com,
+	hyeongtak.ji@sk.com, kernel_team@skhynix.com, linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	rakie.kim@sk.com, rostedt@goodmis.org, surenb@google.com,
+	yangx.jy@fujitsu.com, ying.huang@intel.com, ziy@nvidia.com,
+	42.hyeyoo@gmail.com, art.jeongseob@gmail.com
+Subject: Re: [RFC PATCH v3 0/7] DAMON based tiered memory management for CXL
+ memory
+Message-ID: <ZhAtLhcU3KfT/9i7@memverge.com>
+References: <20240405060858.2818-1-honggyu.kim@sk.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405060858.2818-1-honggyu.kim@sk.com>
+X-ClientProxiedBy: SJ0P220CA0002.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::10) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB4582:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	W50tsk1jRsL3CJGg0tCzaelddYpwBSdiQgiN3Cr//a/NVnM8S71mUuhBh7qv+6vipPsqWjp/O1WSL2/wmzB+ks4+2lhkg/Jqe/X6J7ZUtuqq+E8mQRDt6dYZ8WbJ1k5nT9Z6AYoObf+du6XZLXGV+pTNjfNOe+LsBgQu81IhD9vKjEQ7kRZo37gVbiupaBKlUvvc+cGRdCb30h5B+3te1pOVC7o7PUXOzsLomBFfP+gpuc06VxEm9leaIjCtlcdoeP5vqcCbOavnPsD2P3mqXzfUWaS5DSULsaIpCt74QNX6YzqzRxaPcsvq7kqT4Q+IoHpmiFbi21qitUz5pIGPMNEG4tLmJXH0uCCHTaQv/870mrBJ6UhmGCcUDfziSMmSYuro/DCRilSnfzgMd109AkNd9wdxgpRgpg/ZiWXt+7uiU1QGZ+hjHZQqTtNBYi+NJajzCRqs6h1RfiE2fZm0xJ3geiuFdACZJg2nmqwXQjpaEiFTzx532yAYjNcZvN/BW795Zox1whuvRfig670i8YaQepbEJDfC83n7OfVxGypKcoDZbdSCd1kYwlRdgJp57DA+qbFGSm1Lt8/2Mj+1bknb3AySi0/Luu60/sQ8CDuYtl/oNw9A+plbBby1pHeQnrBNjjTXhbzV/njpR2rDH7DYXvFkDJgxNPE7ZunmsAE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?u3uA89lnbl1XjLpDljLpSx+EFbKrPa8e92AEIJA2eg+zB1ny2L3/gV8Qg9/v?=
+ =?us-ascii?Q?wcmqhc2yi8DaWC9fvgDNxd6PkaR35SRxXdRAXuhy7VIUvuHrlQpX8JbtLbQa?=
+ =?us-ascii?Q?WHL3K5gPSp3fkLUOXcj9IqqtvqkTJn0kgHWwxkX6DujT1C9/bLdd1alvLOIx?=
+ =?us-ascii?Q?r9XUgWAsuCDxRG5O1ouee0zHz4YskyzcAlVRJFnq889ExUr3Nx7/C5Yg0SB6?=
+ =?us-ascii?Q?wf84rLaaERa2af+b3FncGL1THgD+WBEUmn4Gx1wJ8SzSnP8/3uxIp+N5J+sV?=
+ =?us-ascii?Q?f53Y/elCJNU4OEjg475PCsHZMMyNvVH/FDeHIlExXIruIGvUl61d30/v9y06?=
+ =?us-ascii?Q?qcGDZCdnfLgduhHkhYbUD9CXkKaJFAI3QH2Yo77d6o/nrtLewQjlwsGJHFPj?=
+ =?us-ascii?Q?czyzQKp62Keyn2kC8VtpSpTr7zRP2UbqgKH2lUcSHIldB/1PuhJUVjKc44I/?=
+ =?us-ascii?Q?3nHPLwADQ7neG6Iism7HhhmJWHUnc5ci3myN2muWaPmPhn1ZpR9TR3GRNtRv?=
+ =?us-ascii?Q?Rb9KKSqJd3HuzJye/R9tKHaGNGD+/gi+BkEKplMFpofkkB2ie5mmEUBzpFCc?=
+ =?us-ascii?Q?K+0amEMcg/LE1ZnRrQA44sV4+MI8Ph9Ym7SKJ3AL+ZKnhVjOSe2woxBxITwo?=
+ =?us-ascii?Q?fGLuyt/Z0y8hUPlRYQTQPo4ADWw9WphDEHg5VjbRkVMf5rtNehQnIDk3R6bB?=
+ =?us-ascii?Q?ItRHxtdSyPTxZiRXuyu5k2G/m3cQS33+vnBcn54x9deeFP5VEjuG+mNJ9sxb?=
+ =?us-ascii?Q?z0klIgIZTW0DEkjyXZO/QkKQLgjnOcvRMsAydG/0giVa+sJt9qgF7/rouNYu?=
+ =?us-ascii?Q?ZA6DT3TAlYhZtd+0sNj+BFa6tqI7EXw6PDXiJDOtvaI7vjjd3hSA9Y7rTXjm?=
+ =?us-ascii?Q?NC+8V1HedrbItuqTtFBdeXGK6vV5Mp8VKDXIMcGG+ccxNvsod/4WOkofgwMf?=
+ =?us-ascii?Q?gBVJVVwpoJxzhVbldlHEtgfV7tFwZmNkeo1hBD3eXA7/NWTpaIbSCaE+zJMu?=
+ =?us-ascii?Q?nLgzgQb2faSsniuXNVL5kcG5XDv8P7Yo29/LnL0196JU4GlhcxVV8LK9b6wK?=
+ =?us-ascii?Q?3cQyzctryt1GNf7eXEzCyD+CyuI8FsfPF53Bn90yVtxD3AWA/HMSE58Bb7lx?=
+ =?us-ascii?Q?Eshtol6LFJhI6CFV2Vxm1up/exZwxomRTsVomC/FUvtS7Gr5MUpH2kVwF56S?=
+ =?us-ascii?Q?gGtS3ixv6VMKOgKASgKRFmLRd/PiLBRqH4/TZ575dlK3sAhtE6v8Of4/suet?=
+ =?us-ascii?Q?1jGWsvOJiAW38wKkl3+FcWx/l63Y3+NI/cp7xndyjllelCztAEMcOkOknwVP?=
+ =?us-ascii?Q?voAYGxwMXHashudX9asKuBZi4M/EMCY2pFWzwwFxi69orUuddx5u3E1PNVSz?=
+ =?us-ascii?Q?WpUXJm7fm5pzQ4XbOPVShvxBUO3Cia1KCI90gUBbqfyqDxiE7WHvjFvVtM9i?=
+ =?us-ascii?Q?46BNzP98PNJhlaYCQbgVaX7/22knhGPmEji6j53fPFfGjBPEkasMzwxq+Fgy?=
+ =?us-ascii?Q?YbB8jFV3AFGjfjZSdHOY9+Yk2Fr7ptxOATJKeuXEtYOuqAb+og/UQSK9dN9+?=
+ =?us-ascii?Q?TMHlreZk+aLwsOi75iSPYj41c/zlKgGgqG0Qd1jdUw59ADGBXADNqB5G7/qo?=
+ =?us-ascii?Q?Jw=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fbea0ab-734c-4fc0-54bc-08dc55915356
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2024 16:56:23.8254
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UeqfEUQg0/fVg0jo0o8bRoViY2vDLz8lEsCxvE92XDGxwp65zmDjTteUyTSaqlRis72353TqzOgym5ra8DFfwh3wIqbsbDKXIkbG+mTsOOM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB4582
 
-This commit replaces riscv's support for FTRACE_WITH_REGS with support
-for FTRACE_WITH_ARGS. This is required for the ongoing effort to stop
-relying on stop_machine() for RISCV's implementation of ftrace.
+On Fri, Apr 05, 2024 at 03:08:49PM +0900, Honggyu Kim wrote:
+> There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+> posted at [1].
+> 
+>   1. YCSB zipfian distribution read only workload
+>   memory pressure with cold memory on node0 with 512GB of local DRAM.
+>   =============+================================================+=========
+>                |       cold memory occupied by mmap and memset  |
+>                |   0G  440G  450G  460G  470G  480G  490G  500G |
+>   =============+================================================+=========
+>   Execution time normalized to DRAM-only values                 | GEOMEAN
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+>   CXL-only     | 1.22     -     -     -     -     -     -     - | 1.22
+>   default      |    -  1.12  1.13  1.14  1.16  1.19  1.21  1.21 | 1.17 
+>   DAMON tiered |    -  1.04  1.03  1.04  1.06  1.05  1.05  1.05 | 1.05 
+>   =============+================================================+=========
+>   CXL usage of redis-server in GB                               | AVERAGE
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+>   CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+>   default      |    -  20.4  27.0  33.1  39.5  45.6  50.5  50.3 | 38.1
+>   DAMON tiered |    -   0.1   0.3   0.8   0.6   0.7   1.3   0.9 |  0.7
+>   =============+================================================+=========
+> 
+> Each test result is based on the exeuction environment as follows.
+> 
+>   DRAM-only   : redis-server uses only local DRAM memory.
+>   CXL-only    : redis-server uses only CXL memory.
+>   default     : default memory policy(MPOL_DEFAULT).
+>                 numa balancing disabled.
+>   DAMON tiered: DAMON enabled with DAMOS_MIGRATE_COLD for DRAM nodes and
+>                 DAMOS_MIGRATE_HOT for CXL nodes.
+> 
+> The above result shows the "default" execution time goes up as the size
+> of cold memory is increased from 440G to 500G because the more cold
+> memory used, the more CXL memory is used for the target redis workload
+> and this makes the execution time increase.
+> 
+> However, "DAMON tiered" result shows less slowdown because the
+> DAMOS_MIGRATE_COLD action at DRAM node proactively demotes pre-allocated
+> cold memory to CXL node and this free space at DRAM increases more
+> chance to allocate hot or warm pages of redis-server to fast DRAM node.
+> Moreover, DAMOS_MIGRATE_HOT action at CXL node also promotes hot pages
+> of redis-server to DRAM node actively.
+> 
+> As a result, it makes more memory of redis-server stay in DRAM node
+> compared to "default" memory policy and this makes the performance
+> improvement.
+> 
+> The following result of latest distribution workload shows similar data.
+> 
+>   2. YCSB latest distribution read only workload
+>   memory pressure with cold memory on node0 with 512GB of local DRAM.
+>   =============+================================================+=========
+>                |       cold memory occupied by mmap and memset  |
+>                |   0G  440G  450G  460G  470G  480G  490G  500G |
+>   =============+================================================+=========
+>   Execution time normalized to DRAM-only values                 | GEOMEAN
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+>   CXL-only     | 1.18     -     -     -     -     -     -     - | 1.18
+>   default      |    -  1.18  1.19  1.18  1.18  1.17  1.19  1.18 | 1.18 
+>   DAMON tiered |    -  1.04  1.04  1.04  1.05  1.04  1.05  1.05 | 1.04 
+>   =============+================================================+=========
+>   CXL usage of redis-server in GB                               | AVERAGE
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+>   CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+>   default      |    -  20.5  27.1  33.2  39.5  45.5  50.4  50.5 | 38.1
+>   DAMON tiered |    -   0.2   0.4   0.7   1.6   1.2   1.1   3.4 |  1.2
+>   =============+================================================+=========
+> 
+> In summary of both results, our evaluation shows that "DAMON tiered"
+> memory management reduces the performance slowdown compared to the
+> "default" memory policy from 17~18% to 4~5% when the system runs with
+> high memory pressure on its fast tier DRAM nodes.
+> 
+> Having these DAMOS_MIGRATE_HOT and DAMOS_MIGRATE_COLD actions can make
+> tiered memory systems run more efficiently under high memory pressures.
+> 
 
-The main relevant benefit that this change will bring for the above
-use-case is that now we don't have separate ftrace_caller and
-ftrace_regs_caller trampolines. This will allow the callsite to call
-ftrace_caller by modifying a single instruction. Now the callsite can
-do something similar to:
+Hi,
 
-When not tracing:            |             When tracing:
+It's hard to determine from your results whether the performance
+mitigation is being caused primarily by MIGRATE_COLD freeing up space
+for new allocations, or from some combination of HOT/COLD actions
+occurring during execution but after the database has already been
+warmed up.
 
-func:                                      func:
-  auipc t0, ftrace_caller_top                auipc t0, ftrace_caller_top
-  nop  <=========<Enable/Disable>=========>  jalr  t0, ftrace_caller_bottom
-  [...]                                      [...]
+Do you have test results which enable only DAMOS_MIGRATE_COLD actions
+but not DAMOS_MIGRATE_HOT actions? (and vice versa)
 
-The above assumes that we are dropping the support of calling a direct
-trampoline from the callsite. We need to drop this as the callsite can't
-change the target address to call, it can only enable/disable a call to
-a preset target (ftrace_caller in the above diagram). We can later optimize
-this by calling an intermediate dispatcher trampoline before ftrace_caller.
+The question I have is exactly how often is MIGRATE_HOT actually being
+utilized, and how much data is being moved. Testing MIGRATE_COLD only
+would at least give a rough approximation of that.
 
-Currently, ftrace_regs_caller saves all CPU registers in the format of
-struct pt_regs and allows the tracer to modify them. We don't need to
-save all of the CPU registers because at function entry only a subset of
-pt_regs is live:
 
-|----------+----------+---------------------------------------------|
-| Register | ABI Name | Description                                 |
-|----------+----------+---------------------------------------------|
-| x1       | ra       | Return address for traced function          |
-| x2       | sp       | Stack pointer                               |
-| x5       | t0       | Return address for ftrace_caller trampoline |
-| x8       | s0/fp    | Frame pointer                               |
-| x10-11   | a0-1     | Function arguments/return values            |
-| x12-17   | a2-7     | Function arguments                          |
-|----------+----------+---------------------------------------------|
+Additionally, do you have any data on workloads that exceed the capacity
+of the DRAM tier?  Here you say you have 512GB of local DRAM, but only
+test a workload that caps out at 500G.  Have you run a test of, say,
+550GB to see the effect of DAMON HOT/COLD migration actions when DRAM
+capacity is exceeded?
 
-See RISCV calling convention[1] for the above table.
+Can you also provide the DRAM-only results for each test?  Presumably,
+as workload size increases from 440G to 500G, the system probably starts
+using some amount of swap/zswap/whatever.  It would be good to know how
+this system compares to swap small amounts of overflow.
 
-Saving just the live registers decreases the amount of stack space
-required from 288 Bytes to 112 Bytes.
-
-Basic testing was done with this on the VisionFive 2 development board.
-
-Note:
-  - Moving from REGS to ARGS will mean that RISCV will stop supporting
-    KPROBES_ON_FTRACE as it requires full pt_regs to be saved.
-  - KPROBES_ON_FTRACE will be supplanted by FPROBES see [2].
-
-[1] https://riscv.org/wp-content/uploads/2015/01/riscv-calling.pdf
-[2] https://lore.kernel.org/all/170887410337.564249.6360118840946697039.stgit@devnote2/
-
-Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
----
- arch/riscv/Kconfig              |   2 +-
- arch/riscv/include/asm/ftrace.h |  76 ++++++++++++--
- arch/riscv/kernel/asm-offsets.c |  18 ++++
- arch/riscv/kernel/ftrace.c      |  18 +---
- arch/riscv/kernel/mcount-dyn.S  | 171 ++++++++++----------------------
- include/linux/ftrace.h          |   3 +-
- 6 files changed, 145 insertions(+), 143 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index be09c8836d56..da637fde2137 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -126,7 +126,7 @@ config RISCV
- 	select HAVE_DMA_CONTIGUOUS if MMU
- 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && (CLANG_SUPPORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
- 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
--	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
-+	select HAVE_DYNAMIC_FTRACE_WITH_ARGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index 1276d7d9ca8b..9eb31a7ea0aa 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -124,20 +124,82 @@ struct dyn_ftrace;
- int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
- #define ftrace_init_nop ftrace_init_nop
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-+#define arch_ftrace_get_regs(regs) NULL
- struct ftrace_ops;
--struct ftrace_regs;
-+struct ftrace_regs {
-+	unsigned long epc;
-+	unsigned long ra;
-+	unsigned long sp;
-+	unsigned long s0;
-+	unsigned long t1;
-+	union {
-+		unsigned long args[8];
-+		struct {
-+			unsigned long a0;
-+			unsigned long a1;
-+			unsigned long a2;
-+			unsigned long a3;
-+			unsigned long a4;
-+			unsigned long a5;
-+			unsigned long a6;
-+			unsigned long a7;
-+		};
-+	};
-+};
-+
-+static __always_inline unsigned long ftrace_regs_get_instruction_pointer(const struct ftrace_regs
-+									 *fregs)
-+{
-+	return fregs->epc;
-+}
-+
-+static __always_inline void ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
-+								unsigned long pc)
-+{
-+	fregs->epc = pc;
-+}
-+
-+static __always_inline unsigned long ftrace_regs_get_stack_pointer(const struct ftrace_regs *fregs)
-+{
-+	return fregs->sp;
-+}
-+
-+static __always_inline unsigned long ftrace_regs_get_argument(struct ftrace_regs *fregs,
-+							      unsigned int n)
-+{
-+	if (n < 8)
-+		return fregs->args[n];
-+	return 0;
-+}
-+
-+static __always_inline unsigned long ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
-+{
-+	return fregs->a0;
-+}
-+
-+static __always_inline void ftrace_regs_set_return_value(struct ftrace_regs *fregs,
-+							 unsigned long ret)
-+{
-+	fregs->a0 = ret;
-+}
-+
-+static __always_inline void ftrace_override_function_with_return(struct ftrace_regs *fregs)
-+{
-+	fregs->epc = fregs->ra;
-+}
-+
-+int ftrace_regs_query_register_offset(const char *name);
-+
- void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
- 		       struct ftrace_ops *op, struct ftrace_regs *fregs);
- #define ftrace_graph_func ftrace_graph_func
- 
--static inline void __arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
-+static inline void arch_ftrace_set_direct_caller(struct ftrace_regs *fregs, unsigned long addr)
- {
--		regs->t1 = addr;
-+	fregs->t1 = addr;
- }
--#define arch_ftrace_set_direct_caller(fregs, addr) \
--	__arch_ftrace_set_direct_caller(&(fregs)->regs, addr)
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- 
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index a03129f40c46..b09ca5f944f7 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -9,6 +9,7 @@
- #include <linux/kbuild.h>
- #include <linux/mm.h>
- #include <linux/sched.h>
-+#include <linux/ftrace.h>
- #include <linux/suspend.h>
- #include <asm/kvm_host.h>
- #include <asm/thread_info.h>
-@@ -488,4 +489,21 @@ void asm_offsets(void)
- 	DEFINE(STACKFRAME_SIZE_ON_STACK, ALIGN(sizeof(struct stackframe), STACK_ALIGN));
- 	OFFSET(STACKFRAME_FP, stackframe, fp);
- 	OFFSET(STACKFRAME_RA, stackframe, ra);
-+
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-+	DEFINE(FREGS_SIZE_ON_STACK, ALIGN(sizeof(struct ftrace_regs), STACK_ALIGN));
-+	DEFINE(FREGS_EPC,	    offsetof(struct ftrace_regs, epc));
-+	DEFINE(FREGS_RA,	    offsetof(struct ftrace_regs, ra));
-+	DEFINE(FREGS_SP,	    offsetof(struct ftrace_regs, sp));
-+	DEFINE(FREGS_S0,	    offsetof(struct ftrace_regs, s0));
-+	DEFINE(FREGS_T1,	    offsetof(struct ftrace_regs, t1));
-+	DEFINE(FREGS_A0,	    offsetof(struct ftrace_regs, a0));
-+	DEFINE(FREGS_A1,	    offsetof(struct ftrace_regs, a1));
-+	DEFINE(FREGS_A2,	    offsetof(struct ftrace_regs, a2));
-+	DEFINE(FREGS_A3,	    offsetof(struct ftrace_regs, a3));
-+	DEFINE(FREGS_A4,	    offsetof(struct ftrace_regs, a4));
-+	DEFINE(FREGS_A5,	    offsetof(struct ftrace_regs, a5));
-+	DEFINE(FREGS_A6,	    offsetof(struct ftrace_regs, a6));
-+	DEFINE(FREGS_A7,	    offsetof(struct ftrace_regs, a7));
-+#endif
- }
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index f5aa24d9e1c1..cd144b0c3008 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -127,16 +127,11 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- {
- 	int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
- 				       (unsigned long)func, true, true);
--	if (!ret) {
--		ret = __ftrace_modify_call((unsigned long)&ftrace_regs_call,
--					   (unsigned long)func, true, true);
--	}
--
- 	return ret;
- }
- #endif
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 		       unsigned long addr)
- {
-@@ -178,16 +173,13 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
- }
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
- void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
- 		       struct ftrace_ops *op, struct ftrace_regs *fregs)
- {
--	struct pt_regs *regs = arch_ftrace_get_regs(fregs);
--	unsigned long *parent = (unsigned long *)&regs->ra;
--
--	prepare_ftrace_return(parent, ip, frame_pointer(regs));
-+	prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
- }
--#else /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+#else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- extern void ftrace_graph_call(void);
- int ftrace_enable_ftrace_graph_caller(void)
- {
-@@ -200,6 +192,6 @@ int ftrace_disable_ftrace_graph_caller(void)
- 	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
- 				    (unsigned long)&prepare_ftrace_return, false, true);
- }
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- #endif /* CONFIG_DYNAMIC_FTRACE */
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index b7561288e8da..745dd4c4a69c 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -56,138 +56,77 @@
- 	addi	sp, sp, ABI_SIZE_ON_STACK
- 	.endm
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
- 
- /**
--* SAVE_ABI_REGS - save regs against the pt_regs struct
--*
--* @all: tell if saving all the regs
--*
--* If all is set, all the regs will be saved, otherwise only ABI
--* related regs (a0-a7,epc,ra and optional s0) will be saved.
-+* SAVE_ABI_REGS - save regs against the ftrace_regs struct
- *
- * After the stack is established,
- *
- * 0(sp) stores the PC of the traced function which can be accessed
--* by &(fregs)->regs->epc in tracing function. Note that the real
-+* by &(fregs)->epc in tracing function. Note that the real
- * function entry address should be computed with -FENTRY_RA_OFFSET.
- *
- * 8(sp) stores the function return address (i.e. parent IP) that
--* can be accessed by &(fregs)->regs->ra in tracing function.
-+* can be accessed by &(fregs)->ra in tracing function.
- *
- * The other regs are saved at the respective localtion and accessed
--* by the respective pt_regs member.
-+* by the respective ftrace_regs member.
- *
- * Here is the layout of stack for your reference.
- *
- * PT_SIZE_ON_STACK  ->  +++++++++
- *                       + ..... +
--*                       + t3-t6 +
--*                       + s2-s11+
- *                       + a0-a7 + --++++-> ftrace_caller saved
--*                       + s1    +   +
--*                       + s0    + --+
--*                       + t0-t2 +   +
--*                       + tp    +   +
--*                       + gp    +   +
-+*                       + t1    + --++++-> direct tramp address
-+*                       + s0    + --+ // frame pointer
- *                       + sp    +   +
- *                       + ra    + --+ // parent IP
- *               sp  ->  + epc   + --+ // PC
- *                       +++++++++
- **/
--	.macro SAVE_ABI_REGS, all=0
--	addi	sp, sp, -PT_SIZE_ON_STACK
--
--	REG_S	t0,  PT_EPC(sp)
--	REG_S	x1,  PT_RA(sp)
--
--	// save the ABI regs
--
--	REG_S	x10, PT_A0(sp)
--	REG_S	x11, PT_A1(sp)
--	REG_S	x12, PT_A2(sp)
--	REG_S	x13, PT_A3(sp)
--	REG_S	x14, PT_A4(sp)
--	REG_S	x15, PT_A5(sp)
--	REG_S	x16, PT_A6(sp)
--	REG_S	x17, PT_A7(sp)
--
--	// save the leftover regs
-+	.macro SAVE_ABI_REGS
-+	mv	t4, sp			// Save original SP in T4
-+	addi	sp, sp, -FREGS_SIZE_ON_STACK
- 
--	.if \all == 1
--	REG_S	x2, PT_SP(sp)
--	REG_S	x3, PT_GP(sp)
--	REG_S	x4, PT_TP(sp)
--	REG_S	x5, PT_T0(sp)
--	REG_S	x6, PT_T1(sp)
--	REG_S	x7, PT_T2(sp)
--	REG_S	x8, PT_S0(sp)
--	REG_S	x9, PT_S1(sp)
--	REG_S	x18, PT_S2(sp)
--	REG_S	x19, PT_S3(sp)
--	REG_S	x20, PT_S4(sp)
--	REG_S	x21, PT_S5(sp)
--	REG_S	x22, PT_S6(sp)
--	REG_S	x23, PT_S7(sp)
--	REG_S	x24, PT_S8(sp)
--	REG_S	x25, PT_S9(sp)
--	REG_S	x26, PT_S10(sp)
--	REG_S	x27, PT_S11(sp)
--	REG_S	x28, PT_T3(sp)
--	REG_S	x29, PT_T4(sp)
--	REG_S	x30, PT_T5(sp)
--	REG_S	x31, PT_T6(sp)
--
--	// save s0 if FP_TEST defined
--
--	.else
-+	REG_S	t0,  FREGS_EPC(sp)
-+	REG_S	x1,  FREGS_RA(sp)
-+	REG_S	t4,  FREGS_SP(sp)	// Put original SP on stack
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	REG_S	x8, PT_S0(sp)
-+	REG_S	x8,  FREGS_S0(sp)
- #endif
--	.endif
-+	REG_S	x6,  FREGS_T1(sp)
-+
-+	// save the arguments
-+	REG_S	x10, FREGS_A0(sp)
-+	REG_S	x11, FREGS_A1(sp)
-+	REG_S	x12, FREGS_A2(sp)
-+	REG_S	x13, FREGS_A3(sp)
-+	REG_S	x14, FREGS_A4(sp)
-+	REG_S	x15, FREGS_A5(sp)
-+	REG_S	x16, FREGS_A6(sp)
-+	REG_S	x17, FREGS_A7(sp)
- 	.endm
- 
- 	.macro RESTORE_ABI_REGS, all=0
--	REG_L	t0, PT_EPC(sp)
--	REG_L	x1, PT_RA(sp)
--	REG_L	x10, PT_A0(sp)
--	REG_L	x11, PT_A1(sp)
--	REG_L	x12, PT_A2(sp)
--	REG_L	x13, PT_A3(sp)
--	REG_L	x14, PT_A4(sp)
--	REG_L	x15, PT_A5(sp)
--	REG_L	x16, PT_A6(sp)
--	REG_L	x17, PT_A7(sp)
--
--	.if \all == 1
--	REG_L	x2, PT_SP(sp)
--	REG_L	x3, PT_GP(sp)
--	REG_L	x4, PT_TP(sp)
--	REG_L	x6, PT_T1(sp)
--	REG_L	x7, PT_T2(sp)
--	REG_L	x8, PT_S0(sp)
--	REG_L	x9, PT_S1(sp)
--	REG_L	x18, PT_S2(sp)
--	REG_L	x19, PT_S3(sp)
--	REG_L	x20, PT_S4(sp)
--	REG_L	x21, PT_S5(sp)
--	REG_L	x22, PT_S6(sp)
--	REG_L	x23, PT_S7(sp)
--	REG_L	x24, PT_S8(sp)
--	REG_L	x25, PT_S9(sp)
--	REG_L	x26, PT_S10(sp)
--	REG_L	x27, PT_S11(sp)
--	REG_L	x28, PT_T3(sp)
--	REG_L	x29, PT_T4(sp)
--	REG_L	x30, PT_T5(sp)
--	REG_L	x31, PT_T6(sp)
--
--	.else
-+	REG_L	t0, FREGS_EPC(sp)
-+	REG_L	x1, FREGS_RA(sp)
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	REG_L	x8, PT_S0(sp)
-+	REG_L	x8, FREGS_S0(sp)
- #endif
--	.endif
--	addi	sp, sp, PT_SIZE_ON_STACK
-+	REG_L	x6,  FREGS_T1(sp)
-+
-+	// restore the arguments
-+	REG_L	x10, FREGS_A0(sp)
-+	REG_L	x11, FREGS_A1(sp)
-+	REG_L	x12, FREGS_A2(sp)
-+	REG_L	x13, FREGS_A3(sp)
-+	REG_L	x14, FREGS_A4(sp)
-+	REG_L	x15, FREGS_A5(sp)
-+	REG_L	x16, FREGS_A6(sp)
-+	REG_L	x17, FREGS_A7(sp)
-+
-+	addi	sp, sp, FREGS_SIZE_ON_STACK
- 	.endm
- 
- 	.macro PREPARE_ARGS
-@@ -198,9 +137,9 @@
- 	mv	a3, sp
- 	.endm
- 
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- 
--#ifndef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
- SYM_FUNC_START(ftrace_caller)
- 	SAVE_ABI
- 
-@@ -227,33 +166,23 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
- 	jr	t0
- SYM_FUNC_END(ftrace_caller)
- 
--#else /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
--SYM_FUNC_START(ftrace_regs_caller)
-+#else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
-+SYM_FUNC_START(ftrace_caller)
- 	mv	t1, zero
--	SAVE_ABI_REGS 1
-+	SAVE_ABI_REGS
- 	PREPARE_ARGS
- 
--SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-+SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
- 	call	ftrace_stub
- 
--	RESTORE_ABI_REGS 1
-+	RESTORE_ABI_REGS
- 	bnez	t1, .Ldirect
- 	jr	t0
- .Ldirect:
- 	jr	t1
--SYM_FUNC_END(ftrace_regs_caller)
--
--SYM_FUNC_START(ftrace_caller)
--	SAVE_ABI_REGS 0
--	PREPARE_ARGS
--
--SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
--	call	ftrace_stub
--
--	RESTORE_ABI_REGS 0
--	jr	t0
- SYM_FUNC_END(ftrace_caller)
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- SYM_CODE_START(ftrace_stub_direct_tramp)
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 54d53f345d14..1272264d2e9e 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -822,7 +822,8 @@ static inline int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
- extern int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr);
- 
- #if defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS) || \
--	defined(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS)
-+	defined(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS) || \
-+	defined(CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS)
- /**
-  * ftrace_modify_call - convert from one addr to another (no nop)
-  * @rec: the call site record (e.g. mcount/fentry)
--- 
-2.40.1
-
+~Gregory
