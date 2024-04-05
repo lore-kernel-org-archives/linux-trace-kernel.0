@@ -1,213 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3071179AE;
-	Fri,  5 Apr 2024 04:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41367481AC;
+	Fri,  5 Apr 2024 06:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712291143; cv=none; b=stRt7GDOks9XmblVA7hm90Y3VtlC3X7YfhgPCUyV5gGdj7aiQAcvoGP4rFs4YdF3EaIZBWRdHaKL4cMFHznslb1rDnYrd2IZVLoa1rSDH5g90PAYOvwe5KbkLEDG6qSt3wUyCzJLt5l2QworcJy5wuY6/MJ+/T/XJEm86eemv/I=
+	t=1712297354; cv=none; b=ZwuZrXAkCrvBQLFXEj4KDdwBF5A61wyV/Ls+aUqUSAyTyHepBUr2MROaU9uq7nr9Cj61tc6G4tBcqk6EnZldRyXfX2ecbgUKX4rsO94who1oQG/AUZHQ4PyXZzB8Pf0wfLOJY1NbEmR7+AyOEGw4QxxCY9rj89RQQIOW/DZ6Tbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712291143; c=relaxed/simple;
-	bh=kDYXQzRxOmhqnpbn/Cnzi+p50CCPy4r0h010nVamEu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oumusza6VFx2NV/vo+u2v6R4M4C+NiJIzPVHnWPm2V82c52chdOOew8A+WzoU1xWFfN0flPSQ8k9m0yDqIXnfYjzh1/jZEqTDKCaffjSdZcilQtgi8aosPMZeDFkt6ZVbEBnF1RqhaWtnG7CBtgXDmjFTGFBqkoJM6GZ/u+UVwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXQxDBlU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXQxDBlU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F21C433F1;
-	Fri,  5 Apr 2024 04:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712291142;
-	bh=kDYXQzRxOmhqnpbn/Cnzi+p50CCPy4r0h010nVamEu0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=oXQxDBlUrKDU3PYeB2t21iTiI3AFU4sEjJb5tIU6nP+LDNB1p3765ICPL5vVJsSSr
-	 8P3oX9faftsRhswpUuBu7yYhcJAHXhgLDMj7fqNf/D8yM9U6FsFBJDHQrPwSQHk5jU
-	 qshRar/JiXd+hm7edYh1+qIU8QI2OY/ai9aIqNZKQQ4vuBCQWnLRI8n9YdhjMBh++T
-	 yY1CwqjdIvQTXwch91FTOZ7P54bGhRvztPfRPPFBNcdr0gP3EBrrbh/hnqb98xh5hM
-	 IZirPCKfHXMuaiMiE0OOPu6z28xuxhlYBKXGXkj5sEGHIjQ4DpY86RrbIuhY8i/cvS
-	 TMx+uaF4SBuyA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 00DDECE13D0; Thu,  4 Apr 2024 21:25:41 -0700 (PDT)
-Date: Thu, 4 Apr 2024 21:25:41 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH fs/proc/bootconfig] remove redundant comments from
- /proc/bootconfig
-Message-ID: <ef8cf3e7-9684-4495-a70e-c8f13ad188c5@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
- <20240404085522.63bf8cce6f961c07c8ce3f17@kernel.org>
- <26d56fa5-2c95-46da-8268-35642f857d6d@paulmck-laptop>
- <20240405102324.b7bb9fa052754d352cd2708e@kernel.org>
- <20240405115745.9b95679aa3ac516995d4d885@kernel.org>
+	s=arc-20240116; t=1712297354; c=relaxed/simple;
+	bh=W3mt8mOCa+BsunCXjuZaMC2bD+wmxhYuB7tpSjWh41A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EqMgFJngO8Evv1uOudM49W3avUqyVAF7UF7KYZkUvQMFL3LXZs8EaYz1bXmj4hj2BouRyPJ3K+aTKbDbcY8rlhxt5s4jxmypzTGShWfrJ+NnQY0h+I0bHayh70Pakai89+8EvChtgZ284Z9riEi1MHUq/ApBtrsOha+lVl3az6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-8f-660f9580d017
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: sj@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	honggyu.kim@sk.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com
+Subject: [RFC PATCH v3 2/7] mm: make alloc_demote_folio externally invokable for migration
+Date: Fri,  5 Apr 2024 15:08:51 +0900
+Message-ID: <20240405060858.2818-3-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240405060858.2818-1-honggyu.kim@sk.com>
+References: <20240405060858.2818-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405115745.9b95679aa3ac516995d4d885@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsXC9ZZnkW7DVP40g7N/TC0m9hhYzFm/hs1i
+	140Qi/sPXrNb/N97jNHiyf/frBYnbjayWXR+X8picXnXHDaLe2v+s1ocWX+WxWLz2TPMFouX
+	q1ns63jAZHH46xsmi8mXFrBZvJhyhtHi5KzJLBazj95jdxD2WHr6DZvHhiYgsXPWXXaPln23
+	2D0WbCr1aDnyltVj8Z6XTB6bVnWyeWz6NInd48SM3yweOx9aerzYPJPRo7f5HZvH501yAXxR
+	XDYpqTmZZalF+nYJXBmHjj9hKTgkWHHr/VzGBsbNfF2MHBwSAiYSE85KdjFygpl31zazgdhs
+	AmoSV15OYgIpERFwkFj1VaGLkYuDWeA/s8Tl3l+sIDXCAlESS0+8BLNZBFQlFty7D9bLK2Am
+	8e70O3aImZoSj7f/BLM5Bcwl5j3eAGYLAdV8OniMHaJeUOLkzCcsIDazgLxE89bZzCDLJASO
+	sUv03PrOCDFIUuLgihssExj5ZyHpmYWkZwEj0ypGocy8stzEzBwTvYzKvMwKveT83E2MwKhb
+	VvsnegfjpwvBhxgFOBiVeHg95vKlCbEmlhVX5h5ilOBgVhLh7XbgTRPiTUmsrEotyo8vKs1J
+	LT7EKM3BoiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAWOatH6b/L89C8d/CqDVemTeuZH8+
+	X/5rodYsN9EFLz8aP2P9dG2NeM3+Gw9UlRUvNYRLdK37oDmjOCw8Rj346zMztQ0NSTc2GFY3
+	rWqOqVx95YSpS9aMAzIz7JZYvn3SuOnK6xcNrfv3bfm08e2e757Pvkaw9V0tdLlQbf7ggO0N
+	LdH+Jg6lGCWW4oxEQy3mouJEAHAPeW+2AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsXCNUNLT7dhKn+awclHGhYTewws5qxfw2ax
+	60aIxf0Hr9kt/u89xmjx5P9vVosTNxvZLD4/e81s0fnkO6PF4bknWS06vy9lsbi8aw6bxb01
+	/1ktjqw/y2Kx+ewZZovFy9UsDl17zmqxr+MBk8Xhr2+YLCZfWsBm8WLKGUaLk7Mms1jMPnqP
+	3UHcY+npN2weG5qAxM5Zd9k9WvbdYvdYsKnUo+XIW1aPxXteMnlsWtXJ5rHp0yR2jxMzfrN4
+	7Hxo6fFi80xGj97md2we3257eCx+8YHJ4/MmuQCBKC6blNSczLLUIn27BK6MQ8efsBQcEqy4
+	9X4uYwPjZr4uRk4OCQETibtrm9lAbDYBNYkrLycxdTFycIgIOEis+qrQxcjFwSzwn1nicu8v
+	VpAaYYEoiaUnXoLZLAKqEgvu3Qfr5RUwk3h3+h07xExNicfbf4LZnALmEvMebwCzhYBqPh08
+	xg5RLyhxcuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZec
+	n7uJERhry2r/TNzB+OWy+yFGAQ5GJR5ej7l8aUKsiWXFlbmHGCU4mJVEeLsdeNOEeFMSK6tS
+	i/Lji0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGLdVHdhTwN9+yD3Jw63+
+	JXvOuqMRXl+z9825+mHGKZ8WR529Mb90dG3cTi3O4ckKf3TTi/vew4yrTr3Vy024a479SPhf
+	db/Q7PuhRReyTaTnxlZs65JO8bgv9NmodPkpmVpf37t926983XPrcXDdBIZD6Wn5jCF5ggfs
+	znZ9+DS3LaY2M776jxJLcUaioRZzUXEiAFYH+5KxAgAA
+X-CFilter-Loop: Reflected
 
-On Fri, Apr 05, 2024 at 11:57:45AM +0900, Masami Hiramatsu wrote:
-> On Fri, 5 Apr 2024 10:23:24 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Thu, 4 Apr 2024 10:43:14 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > 
-> > > On Thu, Apr 04, 2024 at 08:55:22AM +0900, Masami Hiramatsu wrote:
-> > > > On Wed, 3 Apr 2024 12:16:28 -0700
-> > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > 
-> > > > > commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
-> > > > > /proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
-> > > > > 
-> > > > > /proc/bootconfig shows boot_command_line[] multiple times following
-> > > > > every xbc key value pair, that's duplicated and not necessary.
-> > > > > Remove redundant ones.
-> > > > > 
-> > > > > Output before and after the fix is like:
-> > > > > key1 = value1
-> > > > > *bootloader argument comments*
-> > > > > key2 = value2
-> > > > > *bootloader argument comments*
-> > > > > key3 = value3
-> > > > > *bootloader argument comments*
-> > > > > ...
-> > > > > 
-> > > > > key1 = value1
-> > > > > key2 = value2
-> > > > > key3 = value3
-> > > > > *bootloader argument comments*
-> > > > > ...
-> > > > > 
-> > > > > Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
-> > > > > Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-> > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > > Cc: <linux-trace-kernel@vger.kernel.org>
-> > > > > Cc: <linux-fsdevel@vger.kernel.org>
-> > > > 
-> > > > OOps, good catch! Let me pick it.
-> > > > 
-> > > > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > Thank you, and I have applied your ack and pulled this into its own
-> > > bootconfig.2024.04.04a.
-> > > 
-> > > My guess is that you will push this via your own tree, and so I will
-> > > drop my copy as soon as yours hits -next.
-> > 
-> > Thanks! I would like to make PR this soon as bootconfig fixes for v6.9-rc2.
-> 
-> Hmm I found that this always shows the command line comment in
-> /proc/bootconfig even without "bootconfig" option.
-> I think that is easier for user-tools but changes the behavior and
-> a bit redundant.
-> 
-> We should skip showing this original argument comment if bootconfig is
-> not initialized (no "bootconfig" in cmdline) as it is now.
+The alloc_demote_folio can be used out of vmscan.c so it'd be better to
+remove static keyword from it.
 
-So something like this folded into that patch?
+This function can also be used for both demotion and promotion so it'd
+be better to rename it from alloc_demote_folio to alloc_migrate_folio.
 
-------------------------------------------------------------------------
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+---
+ mm/internal.h |  1 +
+ mm/vmscan.c   | 10 +++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-index e5635a6b127b0..7d2520378f5f2 100644
---- a/fs/proc/bootconfig.c
-+++ b/fs/proc/bootconfig.c
-@@ -63,7 +63,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
- 			dst += ret;
- 		}
- 	}
--	if (ret >= 0 && boot_command_line[0]) {
-+	if (bootconfig_is_present() && ret >= 0 && boot_command_line[0]) {
- 		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
- 			       boot_command_line);
- 		if (ret > 0)
-diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index ca73940e26df8..ef70d1b381421 100644
---- a/include/linux/bootconfig.h
-+++ b/include/linux/bootconfig.h
-@@ -10,6 +10,7 @@
- #ifdef __KERNEL__
- #include <linux/kernel.h>
- #include <linux/types.h>
-+int bootconfig_is_present(void);
- #else /* !__KERNEL__ */
- /*
-  * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
-diff --git a/init/main.c b/init/main.c
-index 2ca52474d0c30..720a669b1493d 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1572,3 +1572,8 @@ static noinline void __init kernel_init_freeable(void)
+diff --git a/mm/internal.h b/mm/internal.h
+index f309a010d50f..c96ff9bc82d0 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -866,6 +866,7 @@ extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+         unsigned long, unsigned long);
  
- 	integrity_load_keys();
+ extern void set_pageblock_order(void);
++struct folio *alloc_migrate_folio(struct folio *src, unsigned long private);
+ unsigned long reclaim_pages(struct list_head *folio_list);
+ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ 					    struct list_head *folio_list);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4255619a1a31..9e456cac03b4 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -910,8 +910,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
+ 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
  }
-+
-+int bootconfig_is_present(void)
-+{
-+	return bootconfig_found || IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE);
-+}
+ 
+-static struct folio *alloc_demote_folio(struct folio *src,
+-		unsigned long private)
++struct folio *alloc_migrate_folio(struct folio *src, unsigned long private)
+ {
+ 	struct folio *dst;
+ 	nodemask_t *allowed_mask;
+@@ -935,6 +934,11 @@ static struct folio *alloc_demote_folio(struct folio *src,
+ 	if (dst)
+ 		return dst;
+ 
++	/*
++	 * Allocation failed from the target node so try to allocate from
++	 * fallback nodes based on allowed_mask.
++	 * See fallback_alloc() at mm/slab.c.
++	 */
+ 	mtc->gfp_mask &= ~__GFP_THISNODE;
+ 	mtc->nmask = allowed_mask;
+ 
+@@ -973,7 +977,7 @@ static unsigned int demote_folio_list(struct list_head *demote_folios,
+ 	node_get_allowed_targets(pgdat, &allowed_mask);
+ 
+ 	/* Demotion ignores all cpuset and mempolicy settings */
+-	migrate_pages(demote_folios, alloc_demote_folio, NULL,
++	migrate_pages(demote_folios, alloc_migrate_folio, NULL,
+ 		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_DEMOTION,
+ 		      &nr_succeeded);
+ 
+-- 
+2.34.1
 
-------------------------------------------------------------------------
-
-Give or take placement of the bootconfig_is_present() function's
-declaration and definition.
-
-							Thanx, Paul
-
-							Thanx, Paul
-
-> Thank you,
-> 
-> 
-> > Thank you,
-> > 
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > > Thank you!
-> > > > 
-> > > > > 
-> > > > > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> > > > > index 902b326e1e560..e5635a6b127b0 100644
-> > > > > --- a/fs/proc/bootconfig.c
-> > > > > +++ b/fs/proc/bootconfig.c
-> > > > > @@ -62,12 +62,12 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> > > > >  				break;
-> > > > >  			dst += ret;
-> > > > >  		}
-> > > > > -		if (ret >= 0 && boot_command_line[0]) {
-> > > > > -			ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> > > > > -				       boot_command_line);
-> > > > > -			if (ret > 0)
-> > > > > -				dst += ret;
-> > > > > -		}
-> > > > > +	}
-> > > > > +	if (ret >= 0 && boot_command_line[0]) {
-> > > > > +		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> > > > > +			       boot_command_line);
-> > > > > +		if (ret > 0)
-> > > > > +			dst += ret;
-> > > > >  	}
-> > > > >  out:
-> > > > >  	kfree(key);
-> > > > 
-> > > > 
-> > > > -- 
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
