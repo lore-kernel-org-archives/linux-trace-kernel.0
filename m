@@ -1,195 +1,135 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDF1185E;
-	Fri,  5 Apr 2024 00:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC1A7484;
+	Fri,  5 Apr 2024 01:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712276016; cv=none; b=RY/uOZsAzGlwLlIEKhB+y4HD5EbN82pegGDEPEcumkg3mJnsTlTnBOcke2Cixq6c3G9UZuWi0xJq5BAX6nS61+cU9/gikxZ5NxrtOmIxLzhPjf1mIHZJvZHRn2pLy1HgViak4x8eBQyIRaGNozzJfAtYpRW1FqECp+sTWULPHOQ=
+	t=1712280130; cv=none; b=NJ2M24clVjY+4eUKka5WY13RNfTlbTwvb91PSVIi1l3w/A+PKBl3q10ERMdyUCPBLTDyhEJi2JWakQyU7UDLqHordWsAQm1udXTNLduGEXMPArk/IgqGHnrhcbzzG7/+1npm3er0gaU4YuciK1VJwhJXwhB82c7GxdqRtC06ZQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712276016; c=relaxed/simple;
-	bh=aYcNk1K/ICwidZexakaP0dA9+tVqluQB/biKSaxzonQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ItzwG/5uKaJM3zSNW+KMtDZXVtPuaKHBQO171iUz5Bp0RY3BqoqF2zHAadX569RbZR+44OeNf6PJWQGnG5ziac62pnWqt60PExscFTegvwoXZcx8T6XvlLremJ5RQ+cDJl1IIliLK3vw0+56sWtmlBXBM+EY+cvPyPKY2ISuGpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7EJLlwX; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712280130; c=relaxed/simple;
+	bh=szljdTDB94eQ+EkiXsSkkkx9Poh6qFx1veGM9Mfl0+w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oeiiWVwGy2IVqb4hOhaoM9NCq9tf7EUauDslv1ouxgfLP4vcCRVFvhf+QrjBS8yikSuEG4/KcS92meUpETLiVulYio4P8EuJM/BqVnE/nxf3v8tf9/fNau51jPfblzk+9Er95KMXzWE3ks+rfaJ72xwdW8ETE3EJXV+mgS1nTOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWghTJZU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7EJLlwX"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56b0af675deso1821628a12.1;
-        Thu, 04 Apr 2024 17:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712276013; x=1712880813; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RDQ0AI+9sTgw7Asa/hXBXLhuxdgG1OjxAuphEolhA+Q=;
-        b=C7EJLlwXyNDFH1IHQ1gJq79T5LKXowQIZehc/P5v4nlfDDGE36w/F6UMv3FoTAB59C
-         3FlTEzoEgo9n2VQi51TQiYPty8zwiZe95krrZqn87Ggrwbr4JUxwxnmE/fieqzLMUWBO
-         ZoQWgVE2JQ/L0T/dPWf8lSdRWNx9vhXFubkAqv8jXAX80HVa6l4zY+slHtADWGm0/s5k
-         jjcoruvdq4VZ3LHWtG6DwBUcrEmlHzDfrKqNkHk00Qb8S6X8zuBElEhfkBgFVgu/SCsl
-         YqSrgFRFpImv0MCc1j7fPFB3Xx5KS8OgT2LMWTBDuMq4S40tLtcIVBuqXt1/w/YKlt3u
-         2HeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712276013; x=1712880813;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RDQ0AI+9sTgw7Asa/hXBXLhuxdgG1OjxAuphEolhA+Q=;
-        b=Y0l2tJfXJChKWsnUkR4vZJckj5zKE6lP84Zz32NzYxIMQJQSuua9gP34wB/O+GRUHf
-         I2P3EjtQ7E24FH00TmUgX8NkmNbJL953bG0B6N41Ghm7iAo19gCvppyJVb5FBULpgSzo
-         Y3pJfYorZv+n0OA7VKUZqIuAJoY5dO8GKwlbA4WLCj+XD+xOG17+9tHu8Dwu521ycDHp
-         smqEljGF8AjwCOYP6peDIPy2+Nztov6tkByyz6LbHbUoQozQNNnGRf8g/i46U1KvuPjE
-         yLnMCQcjm2NEv/Jp/kozibqJCUU5A6S5nBCJt/8lDaipCX5f3mI6qhFb4FAuZaynlX1+
-         W1hA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5IsZnNTl67+n2vNSNKaFvOvI3Gy9ewWCxDXDgqYQ5OhPaO6rHkHOtPl69L0f3rL7VECkZB6ETZ+TyyOg53SmuQU/H6zIV7H0DfZvCf0a1NyRmN2FKAwDh++v9DDLrMUx/pSdti75i2Z61
-X-Gm-Message-State: AOJu0YwalcOeu1kcbTqcwj/qqPEN0dfcdbqAPM3NfHlLXwtYveSInCsg
-	xt0lDNaqh2AcYwsnpeRx6+xgh3EU9aiedK20mwqHAekAw3HGyrNA1xx4FRZriWRSWbagZlA7C11
-	X7zztRoOfktGvcyRCteno1cCBzGk=
-X-Google-Smtp-Source: AGHT+IH6Q81Un2FH3uF8VE7T4Unxxqeh2qFkaxrnOGFKzV+Z878Eu+hE3fshL8FUJXx6nwSAhwbmRHlSvUGQ+Z7jBEc=
-X-Received: by 2002:a17:907:6d0a:b0:a4e:676f:c34b with SMTP id
- sa10-20020a1709076d0a00b00a4e676fc34bmr929711ejc.61.1712276012643; Thu, 04
- Apr 2024 17:13:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWghTJZU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A8CEC433C7;
+	Fri,  5 Apr 2024 01:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712280129;
+	bh=szljdTDB94eQ+EkiXsSkkkx9Poh6qFx1veGM9Mfl0+w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pWghTJZUHmUJad0KDGhWYm1a9qB9arTjFvpqXMQ7nVDgKzHACTber46um0xQNJNQO
+	 4KQDZEG0lw6FGodDUdKkwzX1El///teqLI1cWXh4SNJtGdzWAHThtnSKKdiFlbZ+Rp
+	 /3ZpiKOD0MENLm5kf70YSRuzRE34dHbCCzKfJs58yocLrCdbHZ2x5XibvfvpLkl/sf
+	 XcssPS5/y0T6Q/xeWmBwbbYLaN4Gb6G94Pc6uglyGHejEF1yxWnthCIg0XYbkyZuYD
+	 1jVuQhiowsnC+EbIT9qMm133Af2MTnerT5G4ZMKfIBFufXYBiqUgilNrWE2W0kFlxW
+	 ANrVfPjxgeWYQ==
+Date: Fri, 5 Apr 2024 10:22:03 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jiri Olsa
+ <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Song Liu
+ <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
+ <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-Id: <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+In-Reply-To: <20240404161108.GG7153@redhat.com>
+References: <20240402093302.2416467-1-jolsa@kernel.org>
+	<20240402093302.2416467-2-jolsa@kernel.org>
+	<20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+	<Zg0lvUIB4WdRUGw_@krava>
+	<20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+	<CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+	<20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+	<CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+	<20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+	<20240404161108.GG7153@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240404072047.11490-1-kerneljasonxing@gmail.com>
- <20240404072047.11490-6-kerneljasonxing@gmail.com> <d8fe5d37-e317-59a5-9a01-d7c6ae43be7b@kernel.org>
-In-Reply-To: <d8fe5d37-e317-59a5-9a01-d7c6ae43be7b@kernel.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 5 Apr 2024 08:12:55 +0800
-Message-ID: <CAL+tcoCDTEov0YkeZD7B0v=TQEsfs9LtGiOge71UxUaPzWA9kQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 5/6] mptcp: support rstreason for passive reset
-To: Mat Martineau <martineau@kernel.org>
-Cc: edumazet@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	rostedt@goodmis.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
-	matttbe@kernel.org, geliang@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello Mat,
+On Thu, 4 Apr 2024 18:11:09 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-On Fri, Apr 5, 2024 at 4:33=E2=80=AFAM Mat Martineau <martineau@kernel.org>=
- wrote:
->
-> On Thu, 4 Apr 2024, Jason Xing wrote:
->
-> > From: Jason Xing <kernelxing@tencent.com>
+> On 04/05, Masami Hiramatsu wrote:
 > >
-> > It relys on what reset options in MPTCP does as rfc8684 says. Reusing
-> > this logic can save us much energy. This patch replaces all the prior
-> > NOT_SPECIFIED reasons.
-> >
-> > Signed-off-by: Jason Xing <kernelxing@tencent.com>
-> > ---
-> > net/mptcp/subflow.c | 26 ++++++++++++++++++++------
-> > 1 file changed, 20 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index a68d5d0f3e2a..24668d3020aa 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -304,7 +304,10 @@ static struct dst_entry *subflow_v4_route_req(cons=
-t struct sock *sk,
-> >
-> >       dst_release(dst);
-> >       if (!req->syncookie)
-> > -             tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_NO=
-T_SPECIFIED);
-> > +             /* According to RFC 8684, 3.2. Starting a New Subflow,
-> > +              * we should use an "MPTCP specific error" reason code.
-> > +              */
-> > +             tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_MP=
-TCP_RST_EMPTCP);
->
-> Hi Jason -
->
-> In this case, the MPTCP reset reason is set in subflow_check_req(). Looks
-> like it uses EMPTCP but that isn't guaranteed to stay the same. I think i=
-t
-> would be better to extract the reset reason from the skb extension or the
-> subflow context "reset_reason" field.
+> > Can we make this syscall and uprobe behavior clearer? As you said, if
+> > the application use sigreturn or longjump, it may skip returns and
+> > shadow stack entries are left in the kernel. In such cases, can uretprobe
+> > detect it properly, or just crash the process (or process runs wrongly)?
+> 
+> Please see the comment in handle_trampoline(), it tries to detect this case.
+> This patch should not make any difference.
 
-Good suggestions :)
+I think you mean this loop will skip and discard the stacked return_instance
+to find the valid one.
 
->
->
-> >       return NULL;
-> > }
-> >
-> > @@ -371,7 +374,10 @@ static struct dst_entry *subflow_v6_route_req(cons=
-t struct sock *sk,
-> >
-> >       dst_release(dst);
-> >       if (!req->syncookie)
-> > -             tcp6_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_N=
-OT_SPECIFIED);
-> > +             /* According to RFC 8684, 3.2. Starting a New Subflow,
-> > +              * we should use an "MPTCP specific error" reason code.
-> > +              */
-> > +             tcp6_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_M=
-PTCP_RST_EMPTCP);
->
-> Same issue here.
+----
+        do {
+                /*
+                 * We should throw out the frames invalidated by longjmp().
+                 * If this chain is valid, then the next one should be alive
+                 * or NULL; the latter case means that nobody but ri->func
+                 * could hit this trampoline on return. TODO: sigaltstack().
+                 */
+                next = find_next_ret_chain(ri);
+                valid = !next || arch_uretprobe_is_alive(next, RP_CHECK_RET, regs);
 
-Got it.
+                instruction_pointer_set(regs, ri->orig_ret_vaddr);
+                do {
+                        if (valid)
+                                handle_uretprobe_chain(ri, regs);
+                        ri = free_ret_instance(ri);
+                        utask->depth--;
+                } while (ri != next);
+        } while (!valid);
+----
 
->
-> >       return NULL;
-> > }
-> > #endif
-> > @@ -778,6 +784,7 @@ static struct sock *subflow_syn_recv_sock(const str=
-uct sock *sk,
-> >       bool fallback, fallback_is_fatal;
-> >       struct mptcp_sock *owner;
-> >       struct sock *child;
-> > +     int reason;
-> >
-> >       pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, lis=
-tener->conn);
-> >
-> > @@ -833,7 +840,8 @@ static struct sock *subflow_syn_recv_sock(const str=
-uct sock *sk,
-> >                */
-> >               if (!ctx || fallback) {
-> >                       if (fallback_is_fatal) {
-> > -                             subflow_add_reset_reason(skb, MPTCP_RST_E=
-MPTCP);
-> > +                             reason =3D MPTCP_RST_EMPTCP;
-> > +                             subflow_add_reset_reason(skb, reason);
-> >                               goto dispose_child;
-> >                       }
-> >                       goto fallback;
-> > @@ -861,7 +869,8 @@ static struct sock *subflow_syn_recv_sock(const str=
-uct sock *sk,
-> >               } else if (ctx->mp_join) {
-> >                       owner =3D subflow_req->msk;
-> >                       if (!owner) {
-> > -                             subflow_add_reset_reason(skb, MPTCP_RST_E=
-PROHIBIT);
-> > +                             reason =3D MPTCP_RST_EPROHIBIT;
-> > +                             subflow_add_reset_reason(skb, reason);
-> >                               goto dispose_child;
-> >                       }
-> >
-> > @@ -875,13 +884,18 @@ static struct sock *subflow_syn_recv_sock(const s=
-truct sock *sk,
-> >                                        ntohs(inet_sk((struct sock *)own=
-er)->inet_sport));
-> >                               if (!mptcp_pm_sport_in_anno_list(owner, s=
-k)) {
-> >                                       SUBFLOW_REQ_INC_STATS(req, MPTCP_=
-MIB_MISMATCHPORTACKRX);
-> > +                                     reason =3D MPTCP_RST_EUNSPEC;
->
-> I think the MPTCP code here should have been using MPTCP_RST_EPROHIBIT.
+I think this expects setjmp/longjmp as below
 
-I'll update in the V2 of the patch.
+foo() { <- retprobe1
+	setjmp()
+	bar() { <- retprobe2
+		longjmp()
+	}
+} <- return to trampoline
 
-Thanks,
-Jason
+In this case, we need to skip retprobe2's instance.
+My concern is, if we can not find appropriate return instance, what happen?
+e.g.
+
+foo() { <-- retprobe1
+   bar() { # sp is decremented
+       sys_uretprobe() <-- ??
+    }
+}
+
+It seems sys_uretprobe() will handle retprobe1 at that point instead of
+SIGILL.
+
+Can we avoid this with below strict check?
+
+if (ri->stack != regs->sp + expected_offset)
+	goto sigill;
+
+expected_offset should be 16 (push * 3 - ret) on x64 if we ri->stack is the
+regs->sp right after call.
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
