@@ -1,137 +1,149 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89FB2161339;
-	Fri,  5 Apr 2024 10:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD3B16C426
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Apr 2024 11:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312022; cv=none; b=cUKLR/pXXqTG6zJm4lPmjZFLLWyVPF0KUbgrKXZeH1AdOfRA/4kUgTqc1H4C+9m1O+7iPCIL8sC/nF104ne8dAKhW/dELhxGbfOSa8R9D3cxdsYB0AoD7i2I4Tos7wvYKIfb1iS38LWFdeX1DAFhQOQKT9JE8H7wpAaQvHVcANw=
+	t=1712315054; cv=none; b=h3IMfxZFtY9P5tfLBH8mD0KA9nlFPl8WV1bWuobRJBdaQ2KJy8fFeA1J3s67yF5qjssqhZfAwrKKIRuYYeh6gFWf1jArpBazYpC3TAN3/khSWJ0uaBHNEpMGVV7qpFZC4SufDedqOOhlXb6WYMrz8BMT7hHuV3ElJ/73fJnv9GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312022; c=relaxed/simple;
-	bh=LwBk8Tg6gmrWwVs84PJrcHAHXc38aGhozruApm71iwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gZBNyVRHfcWea3HeuHWpHjMEL/dFPokU8qya7/v9v8e5LQuDi46R2k885WcvgsxCBDuzI5IF2epom5zAKLC/yXGqTLsMtaI3QzFDDwfxJmVRJu/slWxTu1yvz/uqzXPl04QQ/K7+sT9vrvliweIal5SjWyMUvfHK4AJ2sYuSHWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-5f-660fcecfde3b
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Honggyu Kim <honggyu.kim@sk.com>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com
-Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Fri,  5 Apr 2024 19:13:12 +0900
-Message-ID: <20240405101316.2890-1-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240326230309.47079-1-sj@kernel.org>
-References: 
+	s=arc-20240116; t=1712315054; c=relaxed/simple;
+	bh=wBMV5p3J2JTZi1smUXpNuqqWSBvAhb9I78iswaEzVSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNukQ0PqNx3L3LJE/OJzC7qqD9SY+3bsfCdfAQvugbSvpi2NlrBOmCI7/W8HnW3rjf4sJ5OJKOve6IAtcsX9pyflUDpTfJ7U3BhfOpTI+HhvIfDHPq9fIzHWGDAvoGPONaVbUqNB+lGeSTWhkDj1NWoaW8kPMBBqdpfJvsGriUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HznEYMMg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HznEYMMg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712315051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SEi1RTqH8QtMZRPSPitoNGJj8IFtnVKgY7uUM21+oVQ=;
+	b=HznEYMMgbkHldGkF0W1+VQeFhW7+eAtDKWvxbb6Mo2AUHa2M8dxGnCNRJMreRcmQMXzT0R
+	FPVyeI3Zn02rmQuKD4sqi3/zJJCGe5sSgnpuJ05G5Dm/4Jgjbbl58R8Nx13hEfedqQWNi4
+	tiDg0SZxNgOR4XTS1I0Aj6ayRB9y9V8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-434-rAG5sZ48NdmSfgSkG70qyQ-1; Fri,
+ 05 Apr 2024 07:04:07 -0400
+X-MC-Unique: rAG5sZ48NdmSfgSkG70qyQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 103431C06509;
+	Fri,  5 Apr 2024 11:04:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.136])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 3459F202451F;
+	Fri,  5 Apr 2024 11:04:00 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  5 Apr 2024 13:02:42 +0200 (CEST)
+Date: Fri, 5 Apr 2024 13:02:30 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <20240405110230.GA22839@redhat.com>
+References: <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+ <Zg0lvUIB4WdRUGw_@krava>
+ <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+ <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+ <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+ <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+ <20240404161108.GG7153@redhat.com>
+ <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+ <Zg-8r63tPSkuhN7p@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsXC9ZZnke75c/xpBt1tVhYTewws5qxfw2ax
-	60aIxf+9xxgtnvz/zWpx4mYjm0Xn96UsFpd3zWGzuLfmP6vFkfVnWSw2nz3DbLF4uZrFvo4H
-	TBaHv75hsph8aQGbxYspZxgtTs6azGIx++g9dgchj6Wn37B5bGgCEjtn3WX3aNl3i91jwaZS
-	j5Yjb1k9Fu95yeSxaVUnm8emT5PYPU7M+M3isfOhpceLzTMZPXqb37F5fN4kF8AXxWWTkpqT
-	WZZapG+XwJXx43gHa8FdgYre7++YGhin8nYxcnJICJhI/DvRwA5jf97yiwXEZhNQk7jychIT
-	iC0ioChx7vFF1i5GLg5mgYUsEr3fN4AlhAWCJeae/c8IYrMIqEpMv/EabBCvgJnEsovHWCCG
-	ako83v4TLM4pYCzxZNtZNhBbSIBH4tWG/YwQ9YISJ2c+AatnFpCXaN46mxlkmYTAIXaJk20T
-	mSAGSUocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJljopdRmZdZoZecn7uJERhvy2r/RO9g
-	/HQh+BCjAAejEg+vx1y+NCHWxLLiytxDjBIczEoivN0OvGlCvCmJlVWpRfnxRaU5qcWHGKU5
-	WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGD1tPp1nd9rGfHJH6sZfm5MTVj+c/PTzzpxX
-	tkIX7k6xu7i4we3CGo48katL2c49YjS6+pD5v+uN+seTXyf9FhauWnLp1OSkmef+vM076Ztj
-	wjVDKsG1c9oNQVPv/IuhXWz/giuUwiX7XkW72q98HFN0d9W2ZoE3RYGJ0j6TDbc/nnCg1vWg
-	+34lluKMREMt5qLiRABjQ3agswIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXCNUNLT/f8Of40g/vL1S0m9hhYzFm/hs1i
-	140Qi/97jzFaPPn/m9XixM1GNovPz14zW3Q++c5ocXjuSVaLzu9LWSwu75rDZnFvzX9WiyPr
-	z7JYbD57htli8XI1i0PXnrNa7Ot4wGRx+OsbJovJlxawWbyYcobR4uSsySwWs4/eY3cQ81h6
-	+g2bx4YmILFz1l12j5Z9t9g9Fmwq9Wg58pbVY/Gel0wem1Z1snls+jSJ3ePEjN8sHjsfWnq8
-	2DyT0aO3+R2bx7fbHh6LX3xg8vi8SS5AIIrLJiU1J7MstUjfLoEr48fxDtaCuwIVvd/fMTUw
-	TuXtYuTkkBAwkfi85RcLiM0moCZx5eUkJhBbREBR4tzji6xdjFwczAILWSR6v28ASwgLBEvM
-	PfufEcRmEVCVmH7jNTuIzStgJrHs4jEWiKGaEo+3/wSLcwoYSzzZdpYNxBYS4JF4tWE/I0S9
-	oMTJmU/A6pkF5CWat85mnsDIMwtJahaS1AJGplWMIpl5ZbmJmTmmesXZGZV5mRV6yfm5mxiB
-	Mbas9s/EHYxfLrsfYhTgYFTi4fWYy5cmxJpYVlyZe4hRgoNZSYS324E3TYg3JbGyKrUoP76o
-	NCe1+BCjNAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTqoHRtXLTnQvWpu3XZG6fz58ebOTs
-	0v/i7L8rem+YPm4MZQ1apjntbrBLr51DdusE/V2N8rtdWW/aVt1ZavFZ59gJEYWnm62zKvZ+
-	vut93LNKk+1QWpBTXWOAi/6E2/wiizvdLjSt65yRtv2xvxFHh9obr8fXxGdeNePbFKtuOfmY
-	gKzSiu0BqUFKLMUZiYZazEXFiQD3vveyrQIAAA==
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg-8r63tPSkuhN7p@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hi SeongJae,
+On 04/05, Jiri Olsa wrote:
+>
+> On Fri, Apr 05, 2024 at 10:22:03AM +0900, Masami Hiramatsu wrote:
+> >
+> > I think this expects setjmp/longjmp as below
+> >
+> > foo() { <- retprobe1
+> > 	setjmp()
+> > 	bar() { <- retprobe2
+> > 		longjmp()
+> > 	}
+> > } <- return to trampoline
+> >
+> > In this case, we need to skip retprobe2's instance.
 
-On Tue, 26 Mar 2024 16:03:09 -0700 SeongJae Park <sj@kernel.org> wrote:
-> On Mon, 25 Mar 2024 15:53:03 -0700 SeongJae Park <sj@kernel.org> wrote:
-> 
-> > On Mon, 25 Mar 2024 21:01:04 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> [...]
-> > > On Fri, 22 Mar 2024 09:32:23 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > > > On Fri, 22 Mar 2024 18:02:23 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> [...]
-> > >
-> > > I would like to hear how you think about this.
-> > 
-> > So, to summarize my humble opinion,
-> > 
-> > 1. I like the idea of having two actions.  But I'd like to use names other than
-> >    'promote' and 'demote'.
-> > 2. I still prefer having a filter for the page granularity access re-check.
-> > 
-> [...]
-> > > I will join the DAMON Beer/Coffee/Tea Chat tomorrow as scheduled so I
-> > > can talk more about this issue.
-> > 
-> > Looking forward to chatting with you :)
-> 
-> We met and discussed about this topic in the chat series yesterday.  Sharing
-> the summary for keeping the open discussion.
-> 
-> Honggyu thankfully accepted my humble suggestions on the last reply.  Honggyu
-> will post the third version of this patchset soon.  The patchset will implement
-> two new DAMOS actions, namely MIGRATE_HOT and MIGRATE_COLD.  Those will migrate
-> the DAMOS target regions to a user-specified NUMA node, but will have different
-> prioritization score function.  As name implies, they will prioritize more hot
-> regions and cold regions, respectively.
+Yes,
 
-It's a late answer but thanks very much for the summary.  It was really
-helpful discussion in the chat series.
+> > My concern is, if we can not find appropriate return instance, what happen?
+> > e.g.
+> >
+> > foo() { <-- retprobe1
+> >    bar() { # sp is decremented
+> >        sys_uretprobe() <-- ??
+> >     }
+> > }
+> >
+> > It seems sys_uretprobe() will handle retprobe1 at that point instead of
+> > SIGILL.
+>
+> yes, and I think it's fine, you get the consumer called in wrong place,
+> but it's your fault and kernel won't crash
 
-I'm leaving a message so that anyone can follow for the update.  The v3
-is posted at https://lore.kernel.org/damon/20240405060858.2818-1-honggyu.kim@sk.com.
+Agreed.
 
-> Honggyu, please feel free to fix if there is anything wrong or missed.
+With or without this patch userpace can also do
 
-I don't have anything to fix from your summary.
+	foo() { <-- retprobe1
+		bar() {
+			jump to xol_area
+		}
+	}
 
-> And thanks to Honggyu again for patiently keeping this productive discussion
-> and their awesome work.
+handle_trampoline() will handle retprobe1.
 
-I appreciate your persistent support and kind reviews. 
+> this can be fixed by checking the syscall is called from the trampoline
+> and prevent handle_trampoline call if it's not
 
-Thanks,
-Honggyu
+Yes, but I still do not think this makes a lot of sense. But I won't argue.
 
-> 
-> Thanks,
-> SJ
-> 
-> [...]
+And what should sys_uretprobe() do if it is not called from the trampoline?
+I'd prefer force_sig(SIGILL) to punish the abuser ;) OK, OK, EINVAL.
+
+I agree very much with Andrii,
+
+       sigreturn()  exists only to allow the implementation of signal handlers.  It should never be
+       called directly.  Details of the arguments (if any) passed to sigreturn() vary depending  on
+       the architecture.
+
+this is how sys_uretprobe() should be treated/documented.
+
+sigreturn() can be "improved" too. Say, it could validate sigcontext->ip
+and return -EINVAL if this addr is not valid. But why?
+
+Oleg.
+
