@@ -1,27 +1,63 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C61F55E49;
-	Fri,  5 Apr 2024 06:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC751428F8;
+	Fri,  5 Apr 2024 07:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712297361; cv=none; b=nUOIhIlI7F4Vo70HwqvxnoZKkUVUhKIvSeCX6ZkZf92ly0CYzvoosatDwd39mI+UonUJ+efCTihEMl+6Qu/RsELIP9FnE09fRSfZU/Y02wpTlgnHBE/DxTa3N1PVDDk+RzstMcVfbq+dskozlADvXHTDqLEgpeRTNWjmbJfvjdw=
+	t=1712303774; cv=none; b=eBSV1Pt+hyW3QwpQedV48R2ngdcru2tiB1r71+CnnZMGCfclzLfKtVYDolVr947ODWByCQwppSTnUDBxhMZdMDPHiOW8KBP5Q76wnt22RRXtOAAXp0UbMpUYf/6TL/vllhxCz8xNz5xAx6K3Ddas/EbEu0AAXzWRj3H17Vzpbyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712297361; c=relaxed/simple;
-	bh=XUA4CVfhy0+KcI2uVKXxc554ESRbQuU/raIL43nW8B8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hLlJr/wV51B9yO753qW7Sa17kJ53kxxXSMNXjB9WxsqMX7ieIr8n2tGEAwUqfCeLfU/6QimkvT4/Tc+CEVWl6ilGwVergJZn4ECpS/zQkmUKRX3Y7xHScKcaryTBGQ3JGpN8Lxq6KNxxQ4bbUixBOeEAJWof4ivM7DB6Bz4wkYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-e9-660f9587c0c4
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: sj@kernel.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org
+	s=arc-20240116; t=1712303774; c=relaxed/simple;
+	bh=5FR0ML8gIms8SXMu9qd0IXl0ZXkR1/9EGEn2Gx9HkT0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Huh/gpxOcrb9V0oFPylrOm4ou9oqSEj8KUF0w1Odn8bQPvviIq9rZSRne0wm8mnDAN624b736twIKP3D5YsdMF3IS6Tc9+HN+qyB52wG1bPpJ7Qtm2G5C2cC7B4F+PYJZ+j4qszhBwdi5jxsspSNjqlNCiJhB1sufpiHKbebN9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GoiavdWd; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoiavdWd"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso1420910a12.2;
+        Fri, 05 Apr 2024 00:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712303772; x=1712908572; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hzVlWt4l7qxR/k/EhWDwFrSslFncuI6KSbSzKFf8xEw=;
+        b=GoiavdWdYnmZFK1pWIURcuvw3fbxXZUuj+HqYnjDckH8vVZPSYSzXX8KxPD7kO0Emv
+         L8kudC2ynot/y9wvJ5AaJAomB3XTJlOibmVqDi/vvKzxnipzbS9SqFDxS1qKY2vhsC/U
+         3pYsJp9WPL0mRp3j2WBJ964LU25Hd/nSaGyhljf0mNuitIk0D6uHyw3rmnzXxE08eAxq
+         gGsLaSpgKILgcj/gfADWb9A10mPWHoUdQPYxUNtObjiqeiKy1XX6d288t5fuU6/0NGoM
+         oYC3McmdOL1xm7j0Ty5vogsUn3tHcHr+qFrGlQqvbFS0moKe3uZ6A7ChzHWgYR1ztBMe
+         AMbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712303772; x=1712908572;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hzVlWt4l7qxR/k/EhWDwFrSslFncuI6KSbSzKFf8xEw=;
+        b=M8QKcnOWgUHDgxKzS4joQHVlJQt8MLj5J7fBuvsaMMRzxOke81N7xmMHT66JN+ES42
+         WDU+DY2oz1GSAOOdlT6n3JxxOSd+744787lKwkqNhVRY5DHYioo8AouDQbgSmvit/6nu
+         6jP/0SXU7ZQlz754+kcqv20nSCEGDG5eoykbjQMatklG8Wlku7/Nn5yh2XF3jzMEDAZa
+         iYm/ME/o/9Hs6WOLXCrcUhNfxGSRQfBaAi0YZC7fPmfjQfdp7n5hgH7Yi/fn8PV0vGNm
+         hP5qKey54mp2WzZNCu2jR2melZe+tWDyeEMOI9gybBqIy/rS8pQQVIP9ouN7VYjWM2SX
+         kzcA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9YH++kKv6TnDhtq8GUOvu2WSmCYY8oxDNTnjNDENbfxxmKEaxVKCfKSQa4Y/fBqKL1eNRP3VjhWK5DgkdmY7AkhhdbMdB2eV78e7XYyVCICRHTsylxjDybCjR/wv72/2MgeoyDLVo/eEIoIALW6vw
+X-Gm-Message-State: AOJu0YxESyqS9O/BQjSZLODbdT6CA6TdPVnKelcOI0pKD2WcBTLeWbay
+	joZLdhjm08+n9+GsQmKInvv2Or4tMiAtuUonKh5ZVs2DR28QQQsP
+X-Google-Smtp-Source: AGHT+IFRQC5Hl1XNJ8UHTusIXnKpuWVMqInH6NDdemHxy91rJUVQyZ1BvHxguN/C539fHznDlLcS0A==
+X-Received: by 2002:a17:90a:e00f:b0:2a2:5876:5a74 with SMTP id u15-20020a17090ae00f00b002a258765a74mr666360pjy.25.1712303771654;
+        Fri, 05 Apr 2024 00:56:11 -0700 (PDT)
+Received: from hyeongtakPC.. ([147.46.174.104])
+        by smtp.googlemail.com with ESMTPSA id ce17-20020a17090aff1100b002a2d4bf345bsm2539161pjb.55.2024.04.05.00.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 00:56:10 -0700 (PDT)
+From: Hyeongtak Ji <hyeongtak.ji@gmail.com>
+To: Honggyu Kim <honggyu.kim@sk.com>
 Cc: akpm@linux-foundation.org,
 	apopple@nvidia.com,
 	baolin.wang@linux.alibaba.com,
 	dave.jiang@intel.com,
-	honggyu.kim@sk.com,
 	hyeongtak.ji@sk.com,
 	kernel_team@skhynix.com,
 	linmiaohe@huawei.com,
@@ -37,12 +73,12 @@ Cc: akpm@linux-foundation.org,
 	ziy@nvidia.com,
 	42.hyeyoo@gmail.com,
 	art.jeongseob@gmail.com
-Subject: [RFC PATCH v3 7/7] mm/damon: Add "damon_migrate_{hot,cold}" vmstat
-Date: Fri,  5 Apr 2024 15:08:56 +0900
-Message-ID: <20240405060858.2818-8-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240405060858.2818-1-honggyu.kim@sk.com>
-References: <20240405060858.2818-1-honggyu.kim@sk.com>
+Subject: Re: [RFC PATCH v3 5/7] mm/damon/paddr: introduce DAMOS_MIGRATE_COLD action for demotion
+Date: Fri,  5 Apr 2024 16:55:57 +0900
+Message-Id: <20240405075557.464190-1-hyeongtak.ji@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240405060858.2818-6-honggyu.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,125 +86,94 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsXC9ZZnkW77VP40g/v3jS0m9hhYzFm/hs1i
-	140Qi/sPXrNb/N97jNHiyf/frBYnbjayWXR+X8picXnXHDaLe2v+s1ocWX+WxWLz2TPMFouX
-	q1ns63jAZHH46xsmi8mXFrBZvJhyhtHi5KzJLBazj95jdxD2WHr6DZvHhiYgsXPWXXaPln23
-	2D0WbCr1aDnyltVj8Z6XTB6bVnWyeWz6NInd48SM3yweOx9aerzYPJPRo7f5HZvH501yAXxR
-	XDYpqTmZZalF+nYJXBknXi5iL+gWqzi65j5TA+NXwS5GTg4JAROJG51nGGHsbfvbmEFsNgE1
-	iSsvJzF1MXJwiAg4SKz6qtDFyMXBLPCfWeJy7y9WkBphAW+J6xuOMoLUsAioSnxbbwsS5hUw
-	k1iz7wU7xEhNicfbf4LZnALmEvMebwCzhYBqPh08xg5RLyhxcuYTFhCbWUBeonnrbGaQXRIC
-	p9glfm1+BnWbpMTBFTdYJjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgVG3
-	rPZP9A7GTxeCDzEKcDAq8fB6zOVLE2JNLCuuzD3EKMHBrCTC2+3AmybEm5JYWZValB9fVJqT
-	WnyIUZqDRUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qBsVOshzOZ2dzpVu0tg5VW/auevHjv
-	lv74yKOknQeNZLdk2M0SyAxVPnR3b9MiiUMsG4+4qt5cNJt1O1MnY3bv3MNZT/v/X7zGd6t0
-	xa0yodMLvFNXz3zEe+r2/wB55ddRLDfYdkTkzmyN+znPQa9/4aV4vwcd9SWtFyQPL21K48ru
-	+aJ+/KVqhxJLcUaioRZzUXEiAKaMzZm2AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsXCNUNLT7d9Kn+awe31qhYTewws5qxfw2ax
-	60aIxf0Hr9kt/u89xmjx5P9vVosTNxvZLD4/e81s0fnkO6PF4bknWS06vy9lsbi8aw6bxb01
-	/1ktjqw/y2Kx+ewZZovFy9UsDl17zmqxr+MBk8Xhr2+YLCZfWsBm8WLKGUaLk7Mms1jMPnqP
-	3UHcY+npN2weG5qAxM5Zd9k9WvbdYvdYsKnUo+XIW1aPxXteMnlsWtXJ5rHp0yR2jxMzfrN4
-	7Hxo6fFi80xGj97md2we3257eCx+8YHJ4/MmuQCBKC6blNSczLLUIn27BK6MEy8XsRd0i1Uc
-	XXOfqYHxq2AXIyeHhICJxLb9bcwgNpuAmsSVl5OYuhg5OEQEHCRWfVXoYuTiYBb4zyxxufcX
-	K0iNsIC3xPUNRxlBalgEVCW+rbcFCfMKmEms2feCHWKkpsTj7T/BbE4Bc4l5jzeA2UJANZ8O
-	HmOHqBeUODnzCQuIzSwgL9G8dTbzBEaeWUhSs5CkFjAyrWIUycwry03MzDHVK87OqMzLrNBL
-	zs/dxAiMtGW1fybuYPxy2f0QowAHoxIPr8dcvjQh1sSy4srcQ4wSHMxKIrzdDrxpQrwpiZVV
-	qUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYxVlz35HuTVFB8uXW0c
-	wjiDP7l55bRvM1lzQlf5/pHbt+Ju/QXuj0VPxP96evh9mLw/5d0spTs+1asmvjH9eumt7E03
-	nak8E/sSe2Orte2YEwusOjnfNhlmTrYItvHXaPi0q+z9eh2mhy+EVF0U9eLb9Ez0tl0rMM9/
-	PfOVi+dvH9Fbn01mGymxFGckGmoxFxUnAgDlDExNsAIAAA==
-X-CFilter-Loop: Reflected
 
-This patch adds "damon_migrate_{hot,cold}" under node specific vmstat
-counters at the following location.
+On Fri,  5 Apr 2024 15:08:54 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
 
-  /sys/devices/system/node/node*/vmstat
+...snip...
 
-The counted values are accumulcated to the global vmstat so it also
-introduces the same counter at /proc/vmstat as well.
+> +static unsigned long damon_pa_migrate_pages(struct list_head *folio_list,
+> +					    enum migration_mode mm,
+> +					    int target_nid)
+> +{
+> +	int nid;
+> +	unsigned int nr_migrated = 0;
+> +	LIST_HEAD(node_folio_list);
+> +	unsigned int noreclaim_flag;
+> +
+> +	if (list_empty(folio_list))
+> +		return nr_migrated;
 
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
----
- include/linux/mmzone.h |  4 ++++
- mm/damon/paddr.c       | 17 ++++++++++++++++-
- mm/vmstat.c            |  4 ++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
+How about checking if `target_nid` is `NUMA_NO_NODE` or not earlier,
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index a497f189d988..0005372c5503 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -214,6 +214,10 @@ enum node_stat_item {
- 	PGDEMOTE_KSWAPD,
- 	PGDEMOTE_DIRECT,
- 	PGDEMOTE_KHUGEPAGED,
-+#ifdef CONFIG_DAMON_PADDR
-+	DAMON_MIGRATE_HOT,
-+	DAMON_MIGRATE_COLD,
-+#endif
- 	NR_VM_NODE_STAT_ITEMS
- };
- 
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index fd9d35b5cc83..d559c242d151 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -235,10 +235,23 @@ enum migration_mode {
- 
- static unsigned int migrate_folio_list(struct list_head *migrate_folios,
- 				       struct pglist_data *pgdat,
-+				       enum migration_mode mm,
- 				       int target_nid)
- {
- 	unsigned int nr_succeeded;
- 	nodemask_t allowed_mask = NODE_MASK_NONE;
-+	enum node_stat_item node_stat;
-+
-+	switch (mm) {
-+	case MIG_MIGRATE_HOT:
-+		node_stat = DAMON_MIGRATE_HOT;
-+		break;
-+	case MIG_MIGRATE_COLD:
-+		node_stat = DAMON_MIGRATE_COLD;
-+		break;
-+	default:
-+		return 0;
-+	}
- 
- 	struct migration_target_control mtc = {
- 		/*
-@@ -263,6 +276,8 @@ static unsigned int migrate_folio_list(struct list_head *migrate_folios,
- 		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_DAMON,
- 		      &nr_succeeded);
- 
-+	mod_node_page_state(pgdat, node_stat, nr_succeeded);
-+
- 	return nr_succeeded;
- }
- 
-@@ -302,7 +317,7 @@ static unsigned int damon_pa_migrate_folio_list(struct list_head *folio_list,
- 	/* 'folio_list' is always empty here */
- 
- 	/* Migrate folios selected for migration */
--	nr_migrated += migrate_folio_list(&migrate_folios, pgdat, target_nid);
-+	nr_migrated += migrate_folio_list(&migrate_folios, pgdat, mm, target_nid);
- 	/* Folios that could not be migrated are still in @migrate_folios */
- 	if (!list_empty(&migrate_folios)) {
- 		/* Folios which weren't migrated go back on @folio_list */
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index db79935e4a54..be9ba89fede1 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1252,6 +1252,10 @@ const char * const vmstat_text[] = {
- 	"pgdemote_kswapd",
- 	"pgdemote_direct",
- 	"pgdemote_khugepaged",
-+#ifdef CONFIG_DAMON_PADDR
-+	"damon_migrate_hot",
-+	"damon_migrate_cold",
-+#endif
- 
- 	/* enum writeback_stat_item counters */
- 	"nr_dirty_threshold",
--- 
-2.34.1
+> +
+> +	noreclaim_flag = memalloc_noreclaim_save();
+> +
+> +	nid = folio_nid(lru_to_folio(folio_list));
+> +	do {
+> +		struct folio *folio = lru_to_folio(folio_list);
+> +
+> +		if (nid == folio_nid(folio)) {
+> +			folio_clear_active(folio);
+> +			list_move(&folio->lru, &node_folio_list);
+> +			continue;
+> +		}
+> +
+> +		nr_migrated += damon_pa_migrate_folio_list(&node_folio_list,
+> +							   NODE_DATA(nid), mm,
+> +							   target_nid);
+> +		nid = folio_nid(lru_to_folio(folio_list));
+> +	} while (!list_empty(folio_list));
+> +
+> +	nr_migrated += damon_pa_migrate_folio_list(&node_folio_list,
+> +						   NODE_DATA(nid), mm,
+> +						   target_nid);
+> +
+> +	memalloc_noreclaim_restore(noreclaim_flag);
+> +
+> +	return nr_migrated;
+> +}
+> +
 
+...snip...
+
+> +static unsigned int migrate_folio_list(struct list_head *migrate_folios,
+> +				       struct pglist_data *pgdat,
+> +				       int target_nid)
+> +{
+> +	unsigned int nr_succeeded;
+> +	nodemask_t allowed_mask = NODE_MASK_NONE;
+> +
+> +	struct migration_target_control mtc = {
+> +		/*
+> +		 * Allocate from 'node', or fail quickly and quietly.
+> +		 * When this happens, 'page' will likely just be discarded
+> +		 * instead of migrated.
+> +		 */
+> +		.gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) | __GFP_NOWARN |
+> +			__GFP_NOMEMALLOC | GFP_NOWAIT,
+> +		.nid = target_nid,
+> +		.nmask = &allowed_mask
+> +	};
+> +
+> +	if (pgdat->node_id == target_nid || target_nid == NUMA_NO_NODE)
+> +		return 0;
+
+instead of here.
+
+> +
+> +	if (list_empty(migrate_folios))
+> +		return 0;
+> +
+> +	/* Migration ignores all cpuset and mempolicy settings */
+> +	migrate_pages(migrate_folios, alloc_migrate_folio, NULL,
+> +		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_DAMON,
+> +		      &nr_succeeded);
+> +
+> +	return nr_succeeded;
+> +}
+> +
+
+...snip...
+
+Kind regards,
+Hyeongtak
