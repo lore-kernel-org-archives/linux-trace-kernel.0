@@ -1,158 +1,195 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40625134418;
-	Thu,  4 Apr 2024 23:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDF1185E;
+	Fri,  5 Apr 2024 00:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712273039; cv=none; b=JlNQUWhgpv2Oxc89/3ZJqkahZdI7j/igBgJuFSyEWEVt3x7fXyr14FyDr5wZ/yoAeSLveq4T0ga25vLqobJcNqu2gZt9YytHCKOxNFPbeVA7bCoEjPrxOG0Vv4O7ATzqp7fchsbgPKeEXO912TeG5z4uF64sXDRmuyAyDsN04tE=
+	t=1712276016; cv=none; b=RY/uOZsAzGlwLlIEKhB+y4HD5EbN82pegGDEPEcumkg3mJnsTlTnBOcke2Cixq6c3G9UZuWi0xJq5BAX6nS61+cU9/gikxZ5NxrtOmIxLzhPjf1mIHZJvZHRn2pLy1HgViak4x8eBQyIRaGNozzJfAtYpRW1FqECp+sTWULPHOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712273039; c=relaxed/simple;
-	bh=Do963hSdPrLX5zfMcrNn6SbYrENL0NCjWtgD8cm98Nk=;
+	s=arc-20240116; t=1712276016; c=relaxed/simple;
+	bh=aYcNk1K/ICwidZexakaP0dA9+tVqluQB/biKSaxzonQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ow5zyCK1HIpaAL3AXasXvCcp4rc9v11YbGbdCTsdh15aSq6/hI5D33vdL5ZYeVjrYtOhkh7lgA1w1oujCxc3DLn586A9ZSTwMOuIlA/ipm9AEI9WFlw6Xsq9FwKLjWFYQyeC3uuvn4dd7D8kx3M38xeh8pveRrtpnfsOyvDCn/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmgz4EL6; arc=none smtp.client-ip=209.85.128.48
+	 To:Cc:Content-Type; b=ItzwG/5uKaJM3zSNW+KMtDZXVtPuaKHBQO171iUz5Bp0RY3BqoqF2zHAadX569RbZR+44OeNf6PJWQGnG5ziac62pnWqt60PExscFTegvwoXZcx8T6XvlLremJ5RQ+cDJl1IIliLK3vw0+56sWtmlBXBM+EY+cvPyPKY2ISuGpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7EJLlwX; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmgz4EL6"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4162aca8746so8000305e9.1;
-        Thu, 04 Apr 2024 16:23:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7EJLlwX"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56b0af675deso1821628a12.1;
+        Thu, 04 Apr 2024 17:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712273035; x=1712877835; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712276013; x=1712880813; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
-        b=gmgz4EL6/ZPvZ5Yhb+G4QxtHAhWjGLbn3SAmMLTUp1Kp8QDZuqhEv39zjg3ekORSGg
-         Q3tnizMdq7UIHHgthc5GH6ADzInaYj80fzspJlX21IQCGLQsOiOzhmkp5nFO+moygwYo
-         JuEt+3wT+JnF9zXHskwN+7/si/sW9/hNlR+rrFO1i2sXHdVZhgMVr9Zd0FSa6GppYrar
-         JQVN+Cl730iMFMY62Fq2IqWzFGXa5sadyfmr4I6LwNZ9W+dyQfP5yHD3mA1bBpjyuDzJ
-         JNW3faNP1gBmhBoKKxzUvJ+NYlZaZqlfeT6eg/d47a2xBA9yw++bhVwDvu7Cy30FQZjn
-         y3hw==
+        bh=RDQ0AI+9sTgw7Asa/hXBXLhuxdgG1OjxAuphEolhA+Q=;
+        b=C7EJLlwXyNDFH1IHQ1gJq79T5LKXowQIZehc/P5v4nlfDDGE36w/F6UMv3FoTAB59C
+         3FlTEzoEgo9n2VQi51TQiYPty8zwiZe95krrZqn87Ggrwbr4JUxwxnmE/fieqzLMUWBO
+         ZoQWgVE2JQ/L0T/dPWf8lSdRWNx9vhXFubkAqv8jXAX80HVa6l4zY+slHtADWGm0/s5k
+         jjcoruvdq4VZ3LHWtG6DwBUcrEmlHzDfrKqNkHk00Qb8S6X8zuBElEhfkBgFVgu/SCsl
+         YqSrgFRFpImv0MCc1j7fPFB3Xx5KS8OgT2LMWTBDuMq4S40tLtcIVBuqXt1/w/YKlt3u
+         2HeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712273035; x=1712877835;
+        d=1e100.net; s=20230601; t=1712276013; x=1712880813;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
-        b=wn3/YWpkU0FJMOTgbpF+4YqplvJveYzrLTRTLVJMSqDKhyfehGlX6s5A0QNt3GeEXu
-         +2IfMw5Jya2J2glpdlc+m4Q//nA4PceIm+lKxM/VfqarlHMQbJaEsuxYUIVQqKh7fwSr
-         dlJc7QR60KooWd5v9w0dQvZOqIjNv4NFyv77Kto9WvRKjG5hu7IDaJDhk9DHL7AfC+Cj
-         p9AM77WCCx33gZP56++fdc5RTCE9JsBtZJ28Y4AnIBw/Z55qs+b1U6UeIz0WGPNtaYQ8
-         AfetziDIH/P459J7KIEDQF/A/04tJVXIYHStc+PITeq5prHZeU3oqfcxaq62YfhATFnF
-         81Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEuWOiNM92JyRmXkVqWYlxQahc1pYaopXnYhZc69ftUEhe8Bl7kUl2dtkuWqmxxTkswGrRtPLi2GzQ1uQtHEHbEjbf417b1Nb0oyMHxcqHjecb9M9qnTRGi5Yj7pdKaV19Xml+akl11Bd+rHbjlbwehtBzLoHJzprAh1wS/VPi602HSGv9P60bL6BmB0C4NtG0JSvir1T/ldm4TUqRtKVs
-X-Gm-Message-State: AOJu0YykxXiHNkkDM5sPalsEnbHGiC5j+fj8M5ci/XyQ+WE+//r9vZ8o
-	9iKbtq2cmM/aQA+U6VNkXh+zWSzShkEjCBzkRWnajNBnrFfsmPgz96MOTHcbLih722sxtRxoNCN
-	XwgGxLPV/ovKmEl1JxDd2EDz2tQc=
-X-Google-Smtp-Source: AGHT+IELDycs8Tmz4kVIWaOz90pVFimzN/8PHU3NEjxswWqigqc6Fh/8ut+n0sVFLjVwXD8RlCLctsIME6xMLay3jPc=
-X-Received: by 2002:a05:600c:3b08:b0:414:12f6:a105 with SMTP id
- m8-20020a05600c3b0800b0041412f6a105mr2948928wms.5.1712273035487; Thu, 04 Apr
- 2024 16:23:55 -0700 (PDT)
+        bh=RDQ0AI+9sTgw7Asa/hXBXLhuxdgG1OjxAuphEolhA+Q=;
+        b=Y0l2tJfXJChKWsnUkR4vZJckj5zKE6lP84Zz32NzYxIMQJQSuua9gP34wB/O+GRUHf
+         I2P3EjtQ7E24FH00TmUgX8NkmNbJL953bG0B6N41Ghm7iAo19gCvppyJVb5FBULpgSzo
+         Y3pJfYorZv+n0OA7VKUZqIuAJoY5dO8GKwlbA4WLCj+XD+xOG17+9tHu8Dwu521ycDHp
+         smqEljGF8AjwCOYP6peDIPy2+Nztov6tkByyz6LbHbUoQozQNNnGRf8g/i46U1KvuPjE
+         yLnMCQcjm2NEv/Jp/kozibqJCUU5A6S5nBCJt/8lDaipCX5f3mI6qhFb4FAuZaynlX1+
+         W1hA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5IsZnNTl67+n2vNSNKaFvOvI3Gy9ewWCxDXDgqYQ5OhPaO6rHkHOtPl69L0f3rL7VECkZB6ETZ+TyyOg53SmuQU/H6zIV7H0DfZvCf0a1NyRmN2FKAwDh++v9DDLrMUx/pSdti75i2Z61
+X-Gm-Message-State: AOJu0YwalcOeu1kcbTqcwj/qqPEN0dfcdbqAPM3NfHlLXwtYveSInCsg
+	xt0lDNaqh2AcYwsnpeRx6+xgh3EU9aiedK20mwqHAekAw3HGyrNA1xx4FRZriWRSWbagZlA7C11
+	X7zztRoOfktGvcyRCteno1cCBzGk=
+X-Google-Smtp-Source: AGHT+IH6Q81Un2FH3uF8VE7T4Unxxqeh2qFkaxrnOGFKzV+Z878Eu+hE3fshL8FUJXx6nwSAhwbmRHlSvUGQ+Z7jBEc=
+X-Received: by 2002:a17:907:6d0a:b0:a4e:676f:c34b with SMTP id
+ sa10-20020a1709076d0a00b00a4e676fc34bmr929711ejc.61.1712276012643; Thu, 04
+ Apr 2024 17:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404190146.1898103-1-elver@google.com>
-In-Reply-To: <20240404190146.1898103-1-elver@google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 4 Apr 2024 16:23:44 -0700
-Message-ID: <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Introduce bpf_probe_write_user_registered()
-To: Marco Elver <elver@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
+References: <20240404072047.11490-1-kerneljasonxing@gmail.com>
+ <20240404072047.11490-6-kerneljasonxing@gmail.com> <d8fe5d37-e317-59a5-9a01-d7c6ae43be7b@kernel.org>
+In-Reply-To: <d8fe5d37-e317-59a5-9a01-d7c6ae43be7b@kernel.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 5 Apr 2024 08:12:55 +0800
+Message-ID: <CAL+tcoCDTEov0YkeZD7B0v=TQEsfs9LtGiOge71UxUaPzWA9kQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 5/6] mptcp: support rstreason for passive reset
+To: Mat Martineau <martineau@kernel.org>
+Cc: edumazet@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	rostedt@goodmis.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
+	matttbe@kernel.org, geliang@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 4, 2024 at 12:02=E2=80=AFPM Marco Elver <elver@google.com> wrot=
-e:
+Hello Mat,
+
+On Fri, Apr 5, 2024 at 4:33=E2=80=AFAM Mat Martineau <martineau@kernel.org>=
+ wrote:
 >
-> With all the known caveats, tracing BPF programs may directly write to
-> user-space memory with the bpf_probe_write_user() helper. Memory safety
-> is an obvious problem when using this helper, since it is too easy to
-> overwrite memory across all running processes that user space did not
-> expect to be touched (neither the verifier nor the kernel knows what may
-> be touched). While it is possible to come up with mechanisms to safely
-> communicate to the BPF program which memory region may be written to,
-> there are no built-in guarantees of safety. For this reason, the helper
-> produces a warning in the kernel log, and in newer kernels it is
-> possible to disallow use of the helper since 51e1bb9eeaf7 ("bpf: Add
-> lockdown check for probe_write_user helper").
-
-So is it a fix or a feature?
-
-> Nevertheless, direct user-space memory writes from BPF programs can be
-> useful to efficiently manipulate and communicate with cooperating user
-> space processes.
-
-But there are many different ways for bpf to communicate with user space:
-perf ringbuf, bpf ringbug, various maps including mmap-ed array and arena.
-The commit log doesn't explain why we need another one.
-
-> For example, one of our use cases are for events that happen relatively
-> frequently in the kernel (e.g. specific scheduler events), but a set of
-> user space threads want to check for such events in very hot code paths
-> to make more optimal decisions (the cost of such a check can be no more
-> than a load and compare). The types of events and heuristics used may
-> change based on system environment and application, and a BPF program
-> provides the best trade-offs in terms of performance and deployment.
-
-and the tasks can use mmaped array shared across all or unique to each
-process.
-And both bpf and user space can read/write them with a single instruction.
-
+> On Thu, 4 Apr 2024, Jason Xing wrote:
 >
-> To achieve better safety, introduce tagged user writable regions, that
-> must explicitly be registered before tracing BPF programs may use them:
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > It relys on what reset options in MPTCP does as rfc8684 says. Reusing
+> > this logic can save us much energy. This patch replaces all the prior
+> > NOT_SPECIFIED reasons.
+> >
+> > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > ---
+> > net/mptcp/subflow.c | 26 ++++++++++++++++++++------
+> > 1 file changed, 20 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> > index a68d5d0f3e2a..24668d3020aa 100644
+> > --- a/net/mptcp/subflow.c
+> > +++ b/net/mptcp/subflow.c
+> > @@ -304,7 +304,10 @@ static struct dst_entry *subflow_v4_route_req(cons=
+t struct sock *sk,
+> >
+> >       dst_release(dst);
+> >       if (!req->syncookie)
+> > -             tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_NO=
+T_SPECIFIED);
+> > +             /* According to RFC 8684, 3.2. Starting a New Subflow,
+> > +              * we should use an "MPTCP specific error" reason code.
+> > +              */
+> > +             tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_MP=
+TCP_RST_EMPTCP);
 >
->  1. The prctl() option PR_BPF_REGISTER_WRITABLE allows any user space
->     process (that is allowed to use prctl()) to register tagged writable
->     memory regions for the current thread.
+> Hi Jason -
 >
->  2. Conversely, the prctl() option PR_BPF_UNREGISTER_WRITABLE allows a
->     user space process to unregister a writable memory region that was
->     previously registered from the current thread. This must be done
->     before freeing memory if the thread that registered a region is
->     still running.
->
->  3. Tracing BPF programs may write to any registered region in the
->     current thread with bpf_probe_write_user_registered(). If the memory
->     region has been tagged with a non-zero value, the BPF program must
->     provide a matching tag.
->
-> Admin capabilities are still required to attach BPF programs that use
-> the new bpf_probe_write_user_registered() helper.
+> In this case, the MPTCP reset reason is set in subflow_check_req(). Looks
+> like it uses EMPTCP but that isn't guaranteed to stay the same. I think i=
+t
+> would be better to extract the reset reason from the skb extension or the
+> subflow context "reset_reason" field.
 
-We stopped adding new helpers ~2 years ago.
-Only new kfuncs are allowed.
+Good suggestions :)
 
 >
-> With this interface, user space threads are guaranteed that no writes
-> happen to regions that they did not explicitly register. Tagging can be
-> used to associate additional semantics with the memory region.
 >
-> A note on tag allocation: Since such programs can only be installed by
-> the local system administrator, tag allocation may be done by the system
-> administrator. For example, by providing headers with tag definitions,
-> or a central service to distribute tags to the BPF program loader and to
-> user applications.
+> >       return NULL;
+> > }
+> >
+> > @@ -371,7 +374,10 @@ static struct dst_entry *subflow_v6_route_req(cons=
+t struct sock *sk,
+> >
+> >       dst_release(dst);
+> >       if (!req->syncookie)
+> > -             tcp6_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_N=
+OT_SPECIFIED);
+> > +             /* According to RFC 8684, 3.2. Starting a New Subflow,
+> > +              * we should use an "MPTCP specific error" reason code.
+> > +              */
+> > +             tcp6_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_M=
+PTCP_RST_EMPTCP);
+>
+> Same issue here.
 
-Not clear how that's achieved in practice.
-To do prctl(REGSISTER, ... tag)
-the process will just pass this u32 tag.
-There is no way for the admin or other process to enforce certain
-tag usage.
-Since there is no way to enforce extra tag seems like a weak
-protection against something? What in particular?
+Got it.
+
+>
+> >       return NULL;
+> > }
+> > #endif
+> > @@ -778,6 +784,7 @@ static struct sock *subflow_syn_recv_sock(const str=
+uct sock *sk,
+> >       bool fallback, fallback_is_fatal;
+> >       struct mptcp_sock *owner;
+> >       struct sock *child;
+> > +     int reason;
+> >
+> >       pr_debug("listener=3D%p, req=3D%p, conn=3D%p", listener, req, lis=
+tener->conn);
+> >
+> > @@ -833,7 +840,8 @@ static struct sock *subflow_syn_recv_sock(const str=
+uct sock *sk,
+> >                */
+> >               if (!ctx || fallback) {
+> >                       if (fallback_is_fatal) {
+> > -                             subflow_add_reset_reason(skb, MPTCP_RST_E=
+MPTCP);
+> > +                             reason =3D MPTCP_RST_EMPTCP;
+> > +                             subflow_add_reset_reason(skb, reason);
+> >                               goto dispose_child;
+> >                       }
+> >                       goto fallback;
+> > @@ -861,7 +869,8 @@ static struct sock *subflow_syn_recv_sock(const str=
+uct sock *sk,
+> >               } else if (ctx->mp_join) {
+> >                       owner =3D subflow_req->msk;
+> >                       if (!owner) {
+> > -                             subflow_add_reset_reason(skb, MPTCP_RST_E=
+PROHIBIT);
+> > +                             reason =3D MPTCP_RST_EPROHIBIT;
+> > +                             subflow_add_reset_reason(skb, reason);
+> >                               goto dispose_child;
+> >                       }
+> >
+> > @@ -875,13 +884,18 @@ static struct sock *subflow_syn_recv_sock(const s=
+truct sock *sk,
+> >                                        ntohs(inet_sk((struct sock *)own=
+er)->inet_sport));
+> >                               if (!mptcp_pm_sport_in_anno_list(owner, s=
+k)) {
+> >                                       SUBFLOW_REQ_INC_STATS(req, MPTCP_=
+MIB_MISMATCHPORTACKRX);
+> > +                                     reason =3D MPTCP_RST_EUNSPEC;
+>
+> I think the MPTCP code here should have been using MPTCP_RST_EPROHIBIT.
+
+I'll update in the V2 of the patch.
+
+Thanks,
+Jason
