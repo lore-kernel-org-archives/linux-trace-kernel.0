@@ -1,92 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7282CCA0;
-	Sat,  6 Apr 2024 12:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6624839FC5;
+	Sat,  6 Apr 2024 16:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712406994; cv=none; b=ifN9y3aM/lPu4YlIeYjS8feMVhn0sxSgoz3xJuFNpN96+diyi3hpyvEML238eeFl5Vd0wX84xX+5Wb9+OmWmpAB7W7JFR8Y/hcqImSc5Aer+zR2tzG38sG7oc66gUxYMoOwZhn26dz0vUBgPHArOgc/cOUQGt5EdP6AUlfUkdqg=
+	t=1712419612; cv=none; b=hVVRRA42Wp73PiFwg6GRStOzdIyNlHW0gH3DPqcyqZctqrscQYfll3+khIpYANTrk0tLn8Fj7dH0T2ycKqyOKGkUmr545FXWMTm43j3jfoVXT0tD1+to5iWdiUsGXhR4F40KI4P270xwD4upfMoUMASfpQXNknHxYgu6Xvw4G9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712406994; c=relaxed/simple;
-	bh=QPBTr00SK0kSTFqmClVhMGkpM+Rdxk09fOhF4603Gj8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=T1IWXr8iRKrH7db7MTxMSXReV+PofpQBQ7tfBSj5d4WOqivnXzjt2poCQTi8h4CC7RXDhy00KpLDubw1j3g7wTforHei69dZrmul0Wg/fGlpMZMXjCpyuvI1VbTSV3SCSoHzdn56hzHgOYSqXOFurQtHpt2FH+1NJfyqlInJPdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvXAWZAu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712419612; c=relaxed/simple;
+	bh=xm7FJoKKCux4d/oHVvVrKqKlNsZude49WwII/qXfp6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u8yqMG+2tv68S5Jg5RWsg/5hSBTP4kq7JMEijxOYTQfcIGqdkfO+vSxImH9hFr37yTHVaow4MnSc4q5owSLN4xkWsEZssnmPybagYaRjuJZQVcorUl5DCLlQ3k3IRYRgzsYqnYBCZT4UvHFMY7Em++WigDX2KJyfoeS7Rrigtqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5wYRLfR; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvXAWZAu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F46C433C7;
-	Sat,  6 Apr 2024 12:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712406994;
-	bh=QPBTr00SK0kSTFqmClVhMGkpM+Rdxk09fOhF4603Gj8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AvXAWZAuujdD31Z7AC56BVm8Kaqw5OSCGuDwrzCNfwRECBBQhVqJ4fh3bNfO4Shuz
-	 0C3ejYZ/Cw0S6Wwww6hAEza0RyqysOBi96JPe0Jxf/yhPazuS1Zvu6vXBOHkrvd4Gq
-	 4sEYRo85CyiDLP97jss7fPP9kyEQ1VXeI6jdH+Yd8iOu00N7dF71uJVrsV2Pmb+M5D
-	 haLCMQRCjJUEkJuPil/x9s7Da+omcTf6UKk1ASH6MapRNcGv5asP92bgUH6W6fi8Zu
-	 8FJWE+EZMgBzF/CcR09uMltiQY429kmiqudqoxvOFCJ87xHCW2Otcs8OdCjg4HWAeh
-	 D1l1CGhqj3aDw==
-Date: Sat, 6 Apr 2024 21:36:28 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Brown <broonie@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan
- <shuah@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aishwarya TCV
- <aishwarya.tcv@arm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/2] tracing/selftests: Verbosity improvements to KTAP
- output
-Message-Id: <20240406213628.007e67c8374c45d488bc897c@kernel.org>
-In-Reply-To: <39f406e4-685e-4371-8726-c7df02299295@linuxfoundation.org>
-References: <20240325-kselftest-ftrace-ktap-verbose-v1-0-3785199809da@kernel.org>
-	<20240326120809.09574951@gandalf.local.home>
-	<e2c68911-9b49-4080-b827-3b139b4f3257@linuxfoundation.org>
-	<39f406e4-685e-4371-8726-c7df02299295@linuxfoundation.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5wYRLfR"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e2a7b5ef7bso25668705ad.1;
+        Sat, 06 Apr 2024 09:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712419611; x=1713024411; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ngJECPtFU3bvYIOQYpeXZI9aknWsyMDwcoCnSJe8oU8=;
+        b=b5wYRLfRgE+vhgbL78CvLaspsZKPjERKx1S451gMnAoY9qiEtQ3/Pk23bfFWj5wSVc
+         2zds2yAo8V6+AspGLYZ6gt1Vy71A/TRihJUkbL3OGYRHsV0x2sW6XVs7+Vg1cVZ2ViDV
+         sBghfmg1lWfaUg+vMeZSZ/oQzq9StJcIb190VfHyfz7UxlgFPJIpmPfFulRlpV5SVo0g
+         9PkX3sThwCKzrxkokCyuwsJ1HomHoRf7V4l8QjnI8TOLUm7TDU2vsmxfj9CWRr5w5w1a
+         IF9qsdam4ZArsgGyL7f5F09uD/EHieCpV2jVu3ccTnS5lhmjXT2ppnGTMM3j/iEF/sOV
+         W4yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712419611; x=1713024411;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ngJECPtFU3bvYIOQYpeXZI9aknWsyMDwcoCnSJe8oU8=;
+        b=keZgHjlT+go2qTGz+RRWtGld+fjvJ3eWhiGkwMQ/tRSYZH5Z3kCDllJZcKR7SiW9/y
+         XZSTXBjb9jySNd04wSKjTVPK1HmkfgHjcuwjOrO+uQVwLsg6pD2BWX82L7jHqBWW8u8G
+         N5mmzh92ErB0BdyNdaYo3xoOc8/J2CjYDYX2Z9daNNv3Ujq7fxGC7X7WWA7aDvVQsqTz
+         C5an8gYkZsR5UUl6/iF3q4YHYK/emu0IFPybhawxcyoQ5OQ2snqfDxHjljoCav/5rfXB
+         rAO2j64z0ibqPIyVZUe/E8h2xo4NukJ4sPiW1ulBTvFeecl5dLw/6TFiGVxFkS6dD9Rb
+         9cHA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5zC+XtceLc8p5T/TzhOneryffsuFSXlZ2sWkiUqfMUJuFlb8uZGNy+3c/CmndYDW4TEyMQb2qU8i01QInpCFLRNwqxfbY7tla4kJiitblO14Zjf5XG7jFVYcMZ0TWqJKcGguN1yCH
+X-Gm-Message-State: AOJu0Yz2b3n2XR6HuN6qKQ+eMAqsi+EVgTgtrqQUedQjHdoNweA5mtHM
+	HZe7oT4lySFqgUEps+XWf1EzgITwGf5LO7lFbzDwr4ME85Gy/1KhAPaFGRZhIcVEzLvuyRSZ5DJ
+	cJmWJD9r+6KE5FLG9Lle3dLu2ySPq0uK7HEk=
+X-Google-Smtp-Source: AGHT+IFT9wA4gM+Qyu9QX3E/HS5bJisp56n2GQmt6kYUBgOl6SreTa8iX9LHHrQYAqJJrZ6mMvySJFOEafLp6NRSct8=
+X-Received: by 2002:a17:902:ec8f:b0:1e2:8aa4:f4fc with SMTP id
+ x15-20020a170902ec8f00b001e28aa4f4fcmr6447761plg.56.1712419610682; Sat, 06
+ Apr 2024 09:06:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240322160323.2463329-1-andrii@kernel.org> <20240325113848.32a70948d1cdb0fa76225690@kernel.org>
+ <20240325181338.39376089@gandalf.local.home> <CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
+ <20240326150121.68e9db8a@gandalf.local.home> <20240401202552.470d845bd79c841b9158fb56@kernel.org>
+ <20240401120918.67cc3191@gandalf.local.home> <20240402093839.7de89341138748f743ae896d@kernel.org>
+ <CAEf4BzaGWEKnntoD2KLhVORGZ0ATq_TqhPBQnbbWQCeCM2EteA@mail.gmail.com>
+ <20240401224733.7a9bcbb6@gandalf.local.home> <20240403094048.3a443fbeeed551f11c1970d8@kernel.org>
+ <20240402205459.297c4206@gandalf.local.home> <CAEf4BzahMFsdN8QvW6XiUk+3MzvLUjudXO5=qfhKBYfDvEgy5w@mail.gmail.com>
+ <CAEf4BzauQ2WKMjZdc9s0rBWa01BYbgwHN6aNDXQSHYia47pQ-w@mail.gmail.com> <20240406124105.5a31c488b00c36432cc81446@kernel.org>
+In-Reply-To: <20240406124105.5a31c488b00c36432cc81446@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Sat, 6 Apr 2024 09:06:38 -0700
+Message-ID: <CAEf4BzZWZkU3k902MmRByLDGhL8=K+hiME_y66PPf4h7csy+Uw@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check optional
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, jolsa@kernel.org, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 4 Apr 2024 10:32:33 -0600
-Shuah Khan <skhan@linuxfoundation.org> wrote:
+On Fri, Apr 5, 2024 at 8:41=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
+>
+> On Tue, 2 Apr 2024 22:21:00 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > On Tue, Apr 2, 2024 at 9:00=E2=80=AFPM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Tue, Apr 2, 2024 at 5:52=E2=80=AFPM Steven Rostedt <rostedt@goodmi=
+s.org> wrote:
+> > > >
+> > > > On Wed, 3 Apr 2024 09:40:48 +0900
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > > >
+> > > > > OK, for me, this last sentence is preferred for the help message.=
+ That explains
+> > > > > what this is for.
+> > > > >
+> > > > >         All callbacks that attach to the function tracing have so=
+me sort
+> > > > >         of protection against recursion. This option is only to v=
+erify that
+> > > > >=E3=80=80       ftrace (and other users of ftrace_test_recursion_t=
+rylock()) are not
+> > > > >         called outside of RCU, as if they are, it can cause a rac=
+e.
+> > > > >         But it also has a noticeable overhead when enabled.
+> > >
+> > > Sounds good to me, I can add this to the description of the Kconfig o=
+ption.
+> > >
+> > > > >
+> > > > > BTW, how much overhead does this introduce? and the race case a k=
+ernel crash?
+> > >
+> > > I just checked our fleet-wide production data for the last 24 hours.
+> > > Within the kprobe/kretprobe code path (ftrace_trampoline and
+> > > everything called from it), rcu_is_watching (both calls, see below)
+> > > cause 0.484% CPU cycles usage, which isn't nothing. So definitely we'=
+d
+> > > prefer to be able to avoid that in production use cases.
+> > >
+> >
+> > I just ran synthetic microbenchmark testing multi-kretprobe
+> > throughput. We get (in millions of BPF kretprobe-multi program
+> > invocations per second):
+> >   - 5.568M/s as baseline;
+> >   - 5.679M/s with changes in this patch (+2% throughput improvement);
+> >   - 5.808M/s with disabling rcu_is_watching in rethook_try_get()
+> > (+2.3% more vs just one of rcu_is_watching, and +4.3% vs baseline).
+> >
+> > It's definitely noticeable.
+>
+> Thanks for checking the overhead! Hmm, it is considerable.
+>
+> > > > > or just messed up the ftrace buffer?
+> > > >
+> > > > There's a hypothetical race where it can cause a use after free.
+>
+> Hmm, so it might not lead a kernel crash but is better to enable with
+> other debugging options.
+>
+> > > >
+> > > > That is, after you shutdown ftrace, you need to call synchronize_rc=
+u_tasks(),
+> > > > which requires RCU to be watching. There's a theoretical case where=
+ that
+> > > > task calls the trampoline and misses the synchronization. Note, the=
+se
+> > > > locations are with preemption disabled, as rcu is always watching w=
+hen
+> > > > preemption is enabled. Thus it would be extremely fast where as the
+> > > > synchronize_rcu_tasks() is rather slow.
+> > > >
+> > > > We also have synchronize_rcu_tasks_rude() which would actually keep=
+ the
+> > > > trace from happening, as it would schedule on each CPU forcing all =
+CPUs to
+> > > > have RCU watching.
+> > > >
+> > > > I have never heard of this race being hit. I guess it could happen =
+on a VM
+> > > > where a vCPU gets preempted at the right moment for a long time and=
+ the
+> > > > other CPUs synchronize.
+> > > >
+> > > > But like lockdep, where deadlocks can crash the kernel, we don't en=
+able it
+> > > > for production.
+> > > >
+> > > > The overhead is another function call within the function tracer. I=
+ had
+> > > > numbers before, but I guess I could run tests again and get new num=
+bers.
+> > > >
+> > >
+> > > I just noticed another rcu_is_watching() call, in rethook_try_get(),
+> > > which seems to be a similar and complementary validation check to the
+> > > one we are putting under CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING optio=
+n
+> > > in this patch. It feels like both of them should be controlled by the
+> > > same settings. WDYT? Can I add CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
+> > > guard around rcu_is_watching() check in rethook_try_get() as well?
+>
+> Hmmm, no, I think it should not change the rethook side because rethook
+> can be used with kprobes without ftrace. If we can detect it is used from
 
-> On 3/26/24 13:11, Shuah Khan wrote:
-> > On 3/26/24 10:08, Steven Rostedt wrote:
-> >>
-> >> Shuah,
-> >>
-> >> If Masami is OK with this, can you take this through your tree?
-> >>
-> >> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> >>
-> >> -- Steve
-> >>
-> >>
-> > 
-> > Yes. Will do once Masami gives me the okay
-> Hi Masami,
-> 
-> Are you okay with this patch?
+It's a good thing that I split that into a separate patch, then.
+Hopefully the first patch looks good and you can apply it as is.
 
-Hi Shuah and Mark,
+> the ftrace, we can skip it. (From this reason, I would like to remove
+> return probe from kprobes...)
 
-Sorry, I missed this series. This looks good to me.
+I'm on PTO for the next two weeks and I can take a look at more
+properly guarding rcu_is_watching() in rethook_try_get() when I'm
+back. Thanks.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-> 
-> thanks,
-> -- Shuah
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Thank you,
+>
+> > >
+> > >
+> > > > Thanks,
+> > > >
+> > > > -- Steve
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
