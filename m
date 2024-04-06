@@ -1,208 +1,235 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6624839FC5;
-	Sat,  6 Apr 2024 16:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB401D53F
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  6 Apr 2024 17:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712419612; cv=none; b=hVVRRA42Wp73PiFwg6GRStOzdIyNlHW0gH3DPqcyqZctqrscQYfll3+khIpYANTrk0tLn8Fj7dH0T2ycKqyOKGkUmr545FXWMTm43j3jfoVXT0tD1+to5iWdiUsGXhR4F40KI4P270xwD4upfMoUMASfpQXNknHxYgu6Xvw4G9Q=
+	t=1712425030; cv=none; b=DDKhwZNv5biA0L5O6rCpe7rDKbHGUIBkEbkqz0FLw5Vf4X+rBeYg96JblAQ149wnWXNHG/kXl2dh7RAgEMTCm/QvO73aIZu8Hh7Z31CzC8101lhfohI6rxpuEy+GbxqmHnlZ9ByeCD44+Q5mmOkRC8THoeNrsppF6+tGRwrUrNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712419612; c=relaxed/simple;
-	bh=xm7FJoKKCux4d/oHVvVrKqKlNsZude49WwII/qXfp6c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u8yqMG+2tv68S5Jg5RWsg/5hSBTP4kq7JMEijxOYTQfcIGqdkfO+vSxImH9hFr37yTHVaow4MnSc4q5owSLN4xkWsEZssnmPybagYaRjuJZQVcorUl5DCLlQ3k3IRYRgzsYqnYBCZT4UvHFMY7Em++WigDX2KJyfoeS7Rrigtqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5wYRLfR; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712425030; c=relaxed/simple;
+	bh=x9DG/KzPXeuqYLfVwxHtnuzQ1Sd6OfT/JruaJGPsCpI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pELFOTba6cHlJd0glvxzA6oAl/ByTioH6qgS43u7ceSxpHF4INpa3fL5Ge8GSkImzsTQtzeEaI+vSNkxBPtL+BMl81qPvAZ95IvLSZZK8jVGVeX1fHdvQNSbutvr7QGgoo7KODUHEYQVD6wEcgJ09JtOvWYaxpYDbDimtT1FMN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4yQk4rNC; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5wYRLfR"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e2a7b5ef7bso25668705ad.1;
-        Sat, 06 Apr 2024 09:06:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4yQk4rNC"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de0b4063e59so1798085276.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 06 Apr 2024 10:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712419611; x=1713024411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ngJECPtFU3bvYIOQYpeXZI9aknWsyMDwcoCnSJe8oU8=;
-        b=b5wYRLfRgE+vhgbL78CvLaspsZKPjERKx1S451gMnAoY9qiEtQ3/Pk23bfFWj5wSVc
-         2zds2yAo8V6+AspGLYZ6gt1Vy71A/TRihJUkbL3OGYRHsV0x2sW6XVs7+Vg1cVZ2ViDV
-         sBghfmg1lWfaUg+vMeZSZ/oQzq9StJcIb190VfHyfz7UxlgFPJIpmPfFulRlpV5SVo0g
-         9PkX3sThwCKzrxkokCyuwsJ1HomHoRf7V4l8QjnI8TOLUm7TDU2vsmxfj9CWRr5w5w1a
-         IF9qsdam4ZArsgGyL7f5F09uD/EHieCpV2jVu3ccTnS5lhmjXT2ppnGTMM3j/iEF/sOV
-         W4yg==
+        d=google.com; s=20230601; t=1712425028; x=1713029828; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WK1SjcPrgFwZI40moJ5xTOE82NN/79sUbus4GcyjLt0=;
+        b=4yQk4rNCMWjAlxoP6oJhedLwn1CBicwB+0QSrBci8YDWPzoe1yXQy7SFlwQSU8vk9B
+         aiaV6wmUXHlTeEGzcb+7GodfaGur+eLt/ly1fD6+AalJ/thM2L28Igm6wAcScdGts2R6
+         14kgHl8/JCOyJ+u+ysBlDOfwunMfs7LFDYSra/9nTjll0lLa6n+rCFlr5fLLbQ4ONB4D
+         /afmrFOcAsy2mXRilAt1lfe4TK+UjowwBMbM7PD6BrP/VjkqBBtJ2WTVIDX3324g3ymj
+         jjjAPVw3W+9RsIJ5Uu3NpMY/BCS+eRv3LeB85relyzZ9qHq+xXaDdhemNqZrhxBunR2e
+         XTpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712419611; x=1713024411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ngJECPtFU3bvYIOQYpeXZI9aknWsyMDwcoCnSJe8oU8=;
-        b=keZgHjlT+go2qTGz+RRWtGld+fjvJ3eWhiGkwMQ/tRSYZH5Z3kCDllJZcKR7SiW9/y
-         XZSTXBjb9jySNd04wSKjTVPK1HmkfgHjcuwjOrO+uQVwLsg6pD2BWX82L7jHqBWW8u8G
-         N5mmzh92ErB0BdyNdaYo3xoOc8/J2CjYDYX2Z9daNNv3Ujq7fxGC7X7WWA7aDvVQsqTz
-         C5an8gYkZsR5UUl6/iF3q4YHYK/emu0IFPybhawxcyoQ5OQ2snqfDxHjljoCav/5rfXB
-         rAO2j64z0ibqPIyVZUe/E8h2xo4NukJ4sPiW1ulBTvFeecl5dLw/6TFiGVxFkS6dD9Rb
-         9cHA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5zC+XtceLc8p5T/TzhOneryffsuFSXlZ2sWkiUqfMUJuFlb8uZGNy+3c/CmndYDW4TEyMQb2qU8i01QInpCFLRNwqxfbY7tla4kJiitblO14Zjf5XG7jFVYcMZ0TWqJKcGguN1yCH
-X-Gm-Message-State: AOJu0Yz2b3n2XR6HuN6qKQ+eMAqsi+EVgTgtrqQUedQjHdoNweA5mtHM
-	HZe7oT4lySFqgUEps+XWf1EzgITwGf5LO7lFbzDwr4ME85Gy/1KhAPaFGRZhIcVEzLvuyRSZ5DJ
-	cJmWJD9r+6KE5FLG9Lle3dLu2ySPq0uK7HEk=
-X-Google-Smtp-Source: AGHT+IFT9wA4gM+Qyu9QX3E/HS5bJisp56n2GQmt6kYUBgOl6SreTa8iX9LHHrQYAqJJrZ6mMvySJFOEafLp6NRSct8=
-X-Received: by 2002:a17:902:ec8f:b0:1e2:8aa4:f4fc with SMTP id
- x15-20020a170902ec8f00b001e28aa4f4fcmr6447761plg.56.1712419610682; Sat, 06
- Apr 2024 09:06:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712425028; x=1713029828;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WK1SjcPrgFwZI40moJ5xTOE82NN/79sUbus4GcyjLt0=;
+        b=p/U6hRi+bwcTU+JG/xcBJ2c98cUdb+DWcMbT9323pvf/D/JrC4hMJbgRSGm/1Wd5Nv
+         pYiJ/ClGs251rkY2rlIlU6yrFrj7PAjaK1LUn6fEVUZrdyMouwkOfTN+SnZ537hYYAVp
+         0am9L4bjJLrHUTE6SKRF6j/rYbsClgRbSva59f3gUxqxgeQ2Evt5tsKI03Ec2yZ3m6gw
+         /mqRIdlhtRb/oyb77pY3uklRiywpJ+ntqtgE3HwCopFAlqyblx4RzUDC1FD+2AlJXxSy
+         159W5Zq5hotpqHFXElMXLXqcMTAna+/kMCjY/TtySuSeCnlcmphzNcE3n/Ysn9ISlNp/
+         FfiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmau93a33UCeCLNE4g7GH7zP5XwKNf7AiTe0Ex9qgMVII/Rti46H67RIV6mQ0NO1XzQ8wLLhejPRlnV57jUjLvJRyftRH405v+cgSsyD1055+w
+X-Gm-Message-State: AOJu0Yxx1i/5u+5Cu8C3AtJ+zDxLWpPVvpgCRKKsFmNDYt2XjowREiPA
+	sIRxHhLhk1XfMeVHEOLmpcSa/3NpFEZqLsViWUt0IMpoo0t9CwUA0v6iZcdKizHljWTF2Te5yQA
+	9lXOgMtKwaBhAfjDmZw==
+X-Google-Smtp-Source: AGHT+IEjPcZE4m80n4E3CS1R5ulCRuvGZxKQvhtaMqaKgLVVomYXoaU5NC4fJo2eCbqjYxvUHtn1CdLZkfww/tWo
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:6902:100a:b0:dda:ce5f:b4c3 with
+ SMTP id w10-20020a056902100a00b00ddace5fb4c3mr1453176ybt.1.1712425028177;
+ Sat, 06 Apr 2024 10:37:08 -0700 (PDT)
+Date: Sat,  6 Apr 2024 18:36:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240322160323.2463329-1-andrii@kernel.org> <20240325113848.32a70948d1cdb0fa76225690@kernel.org>
- <20240325181338.39376089@gandalf.local.home> <CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
- <20240326150121.68e9db8a@gandalf.local.home> <20240401202552.470d845bd79c841b9158fb56@kernel.org>
- <20240401120918.67cc3191@gandalf.local.home> <20240402093839.7de89341138748f743ae896d@kernel.org>
- <CAEf4BzaGWEKnntoD2KLhVORGZ0ATq_TqhPBQnbbWQCeCM2EteA@mail.gmail.com>
- <20240401224733.7a9bcbb6@gandalf.local.home> <20240403094048.3a443fbeeed551f11c1970d8@kernel.org>
- <20240402205459.297c4206@gandalf.local.home> <CAEf4BzahMFsdN8QvW6XiUk+3MzvLUjudXO5=qfhKBYfDvEgy5w@mail.gmail.com>
- <CAEf4BzauQ2WKMjZdc9s0rBWa01BYbgwHN6aNDXQSHYia47pQ-w@mail.gmail.com> <20240406124105.5a31c488b00c36432cc81446@kernel.org>
-In-Reply-To: <20240406124105.5a31c488b00c36432cc81446@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Sat, 6 Apr 2024 09:06:38 -0700
-Message-ID: <CAEf4BzZWZkU3k902MmRByLDGhL8=K+hiME_y66PPf4h7csy+Uw@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check optional
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, jolsa@kernel.org, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <20240406173649.3210836-1-vdonnefort@google.com>
+Subject: [PATCH v20 0/5] Introducing trace buffer mapping by user-space
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	rdunlap@infradead.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 5, 2024 at 8:41=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Tue, 2 Apr 2024 22:21:00 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
->
-> > On Tue, Apr 2, 2024 at 9:00=E2=80=AFPM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 2, 2024 at 5:52=E2=80=AFPM Steven Rostedt <rostedt@goodmi=
-s.org> wrote:
-> > > >
-> > > > On Wed, 3 Apr 2024 09:40:48 +0900
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > >
-> > > > > OK, for me, this last sentence is preferred for the help message.=
- That explains
-> > > > > what this is for.
-> > > > >
-> > > > >         All callbacks that attach to the function tracing have so=
-me sort
-> > > > >         of protection against recursion. This option is only to v=
-erify that
-> > > > >=E3=80=80       ftrace (and other users of ftrace_test_recursion_t=
-rylock()) are not
-> > > > >         called outside of RCU, as if they are, it can cause a rac=
-e.
-> > > > >         But it also has a noticeable overhead when enabled.
-> > >
-> > > Sounds good to me, I can add this to the description of the Kconfig o=
-ption.
-> > >
-> > > > >
-> > > > > BTW, how much overhead does this introduce? and the race case a k=
-ernel crash?
-> > >
-> > > I just checked our fleet-wide production data for the last 24 hours.
-> > > Within the kprobe/kretprobe code path (ftrace_trampoline and
-> > > everything called from it), rcu_is_watching (both calls, see below)
-> > > cause 0.484% CPU cycles usage, which isn't nothing. So definitely we'=
-d
-> > > prefer to be able to avoid that in production use cases.
-> > >
-> >
-> > I just ran synthetic microbenchmark testing multi-kretprobe
-> > throughput. We get (in millions of BPF kretprobe-multi program
-> > invocations per second):
-> >   - 5.568M/s as baseline;
-> >   - 5.679M/s with changes in this patch (+2% throughput improvement);
-> >   - 5.808M/s with disabling rcu_is_watching in rethook_try_get()
-> > (+2.3% more vs just one of rcu_is_watching, and +4.3% vs baseline).
-> >
-> > It's definitely noticeable.
->
-> Thanks for checking the overhead! Hmm, it is considerable.
->
-> > > > > or just messed up the ftrace buffer?
-> > > >
-> > > > There's a hypothetical race where it can cause a use after free.
->
-> Hmm, so it might not lead a kernel crash but is better to enable with
-> other debugging options.
->
-> > > >
-> > > > That is, after you shutdown ftrace, you need to call synchronize_rc=
-u_tasks(),
-> > > > which requires RCU to be watching. There's a theoretical case where=
- that
-> > > > task calls the trampoline and misses the synchronization. Note, the=
-se
-> > > > locations are with preemption disabled, as rcu is always watching w=
-hen
-> > > > preemption is enabled. Thus it would be extremely fast where as the
-> > > > synchronize_rcu_tasks() is rather slow.
-> > > >
-> > > > We also have synchronize_rcu_tasks_rude() which would actually keep=
- the
-> > > > trace from happening, as it would schedule on each CPU forcing all =
-CPUs to
-> > > > have RCU watching.
-> > > >
-> > > > I have never heard of this race being hit. I guess it could happen =
-on a VM
-> > > > where a vCPU gets preempted at the right moment for a long time and=
- the
-> > > > other CPUs synchronize.
-> > > >
-> > > > But like lockdep, where deadlocks can crash the kernel, we don't en=
-able it
-> > > > for production.
-> > > >
-> > > > The overhead is another function call within the function tracer. I=
- had
-> > > > numbers before, but I guess I could run tests again and get new num=
-bers.
-> > > >
-> > >
-> > > I just noticed another rcu_is_watching() call, in rethook_try_get(),
-> > > which seems to be a similar and complementary validation check to the
-> > > one we are putting under CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING optio=
-n
-> > > in this patch. It feels like both of them should be controlled by the
-> > > same settings. WDYT? Can I add CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
-> > > guard around rcu_is_watching() check in rethook_try_get() as well?
->
-> Hmmm, no, I think it should not change the rethook side because rethook
-> can be used with kprobes without ftrace. If we can detect it is used from
+The tracing ring-buffers can be stored on disk or sent to network
+without any copy via splice. However the later doesn't allow real time
+processing of the traces. A solution is to give userspace direct access
+to the ring-buffer pages via a mapping. An application can now become a
+consumer of the ring-buffer, in a similar fashion to what trace_pipe
+offers.
 
-It's a good thing that I split that into a separate patch, then.
-Hopefully the first patch looks good and you can apply it as is.
+Support for this new feature can already be found in libtracefs from
+version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
 
-> the ftrace, we can skip it. (From this reason, I would like to remove
-> return probe from kprobes...)
+Vincent
 
-I'm on PTO for the next two weeks and I can take a look at more
-properly guarding rcu_is_watching() in rethook_try_get() when I'm
-back. Thanks.
+v19 -> v20:
+  * Fix typos in documentation.
+  * Remove useless mmap open and fault callbacks.
+  * add mm.h include for vm_insert_pages
 
->
-> Thank you,
->
-> > >
-> > >
-> > > > Thanks,
-> > > >
-> > > > -- Steve
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+v18 -> v19:
+  * Use VM_PFNMAP and vm_insert_pages
+  * Allocate ring-buffer subbufs with __GFP_COMP
+  * Pad the meta-page with the zero-page to align on the subbuf_order
+  * Extend the ring-buffer test with mmap() dedicated suite
+
+v17 -> v18:
+  * Fix lockdep_assert_held
+  * Fix spin_lock_init typo
+  * Fix CONFIG_TRACER_MAX_TRACE typo
+
+v16 -> v17:
+  * Documentation and comments improvements.
+  * Create get/put_snapshot_map() for clearer code.
+  * Replace kzalloc with kcalloc.
+  * Fix -ENOMEM handling in rb_alloc_meta_page().
+  * Move flush(cpu_buffer->reader_page) behind the reader lock.
+  * Move all inc/dec of cpu_buffer->mapped behind reader lock and buffer
+    mutex. (removes READ_ONCE/WRITE_ONCE accesses).
+
+v15 -> v16:
+  * Add comment for the dcache flush.
+  * Remove now unnecessary WRITE_ONCE for the meta-page.
+
+v14 -> v15:
+  * Add meta-page and reader-page flush. Intends to fix the mapping
+    for VIVT and aliasing-VIPT data caches.
+  * -EPERM on VM_EXEC.
+  * Fix build warning !CONFIG_TRACER_MAX_TRACE.
+
+v13 -> v14:
+  * All cpu_buffer->mapped readers use READ_ONCE (except for swap_cpu)
+  * on unmap, sync meta-page teardown with the reader_lock instead of
+    the synchronize_rcu.
+  * Add a dedicated spinlock for trace_array ->snapshot and ->mapped.
+    (intends to fix a lockdep issue)
+  * Add kerneldoc for flags and Reserved fields.
+  * Add kselftest for snapshot/map mutual exclusion.
+
+v12 -> v13:
+  * Swap subbufs_{touched,lost} for Reserved fields.
+  * Add a flag field in the meta-page.
+  * Fix CONFIG_TRACER_MAX_TRACE.
+  * Rebase on top of trace/urgent.
+  * Add a comment for try_unregister_trigger()
+
+v11 -> v12:
+  * Fix code sample mmap bug.
+  * Add logging in sample code.
+  * Reset tracer in selftest.
+  * Add a refcount for the snapshot users.
+  * Prevent mapping when there are snapshot users and vice versa.
+  * Refine the meta-page.
+  * Fix types in the meta-page.
+  * Collect Reviewed-by.
+
+v10 -> v11:
+  * Add Documentation and code sample.
+  * Add a selftest.
+  * Move all the update to the meta-page into a single
+    rb_update_meta_page().
+  * rb_update_meta_page() is now called from
+    ring_buffer_map_get_reader() to fix NOBLOCK callers.
+  * kerneldoc for struct trace_meta_page.
+  * Add a patch to zero all the ring-buffer allocations.
+
+v9 -> v10:
+  * Refactor rb_update_meta_page()
+  * In-loop declaration for foreach_subbuf_page()
+  * Check for cpu_buffer->mapped overflow
+
+v8 -> v9:
+  * Fix the unlock path in ring_buffer_map()
+  * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+  * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+
+v7 -> v8:
+  * Drop the subbufs renaming into bpages
+  * Use subbuf as a name when relevant
+
+v6 -> v7:
+  * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+  * Support for subbufs
+  * Rename subbufs into bpages
+
+v5 -> v6:
+  * Rebase on next-20230802.
+  * (unsigned long) -> (void *) cast for virt_to_page().
+  * Add a wait for the GET_READER_PAGE ioctl.
+  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+    in the irq_work.
+  * Rearrange id in struct buffer_page.
+  * Rearrange the meta-page.
+  * ring_buffer_meta_page -> trace_buffer_meta_page.
+  * Add meta_struct_len into the meta-page.
+
+v4 -> v5:
+  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+
+v3 -> v4:
+  * Add to the meta-page:
+       - pages_lost / pages_read (allow to compute how full is the
+	 ring-buffer)
+       - read (allow to compute how many entries can be read)
+       - A reader_page struct.
+  * Rename ring_buffer_meta_header -> ring_buffer_meta
+  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+  * Properly consume events on ring_buffer_map_get_reader_page() with
+    rb_advance_reader().
+
+v2 -> v3:
+  * Remove data page list (for non-consuming read)
+    ** Implies removing order > 0 meta-page
+  * Add a new meta page field ->read
+  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+
+v1 -> v2:
+  * Hide data_pages from the userspace struct
+  * Fix META_PAGE_MAX_PAGES
+  * Support for order > 0 meta-page
+  * Add missing page->mapping.
+
+Vincent Donnefort (5):
+  ring-buffer: allocate sub-buffers with __GFP_COMP
+  ring-buffer: Introducing ring-buffer mapping functions
+  tracing: Allow user-space mapping of the ring-buffer
+  Documentation: tracing: Add ring-buffer mapping
+  ring-buffer/selftest: Add ring-buffer mapping test
+
+ Documentation/trace/index.rst                 |   1 +
+ Documentation/trace/ring-buffer-map.rst       | 106 +++++
+ include/linux/ring_buffer.h                   |   6 +
+ include/uapi/linux/trace_mmap.h               |  48 +++
+ kernel/trace/ring_buffer.c                    | 403 +++++++++++++++++-
+ kernel/trace/trace.c                          | 113 ++++-
+ kernel/trace/trace.h                          |   1 +
+ tools/testing/selftests/ring-buffer/Makefile  |   8 +
+ tools/testing/selftests/ring-buffer/config    |   2 +
+ .../testing/selftests/ring-buffer/map_test.c  | 302 +++++++++++++
+ 10 files changed, 979 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/trace/ring-buffer-map.rst
+ create mode 100644 include/uapi/linux/trace_mmap.h
+ create mode 100644 tools/testing/selftests/ring-buffer/Makefile
+ create mode 100644 tools/testing/selftests/ring-buffer/config
+ create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
+
+
+base-commit: 7604256cecef34a82333d9f78262d3180f4eb525
+-- 
+2.44.0.478.gd926399ef9-goog
+
