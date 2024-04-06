@@ -1,413 +1,132 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B503B4D9F5
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  6 Apr 2024 17:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45E247F5F
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  6 Apr 2024 17:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712425042; cv=none; b=ce9gQstAprdjT/JTHRkKNNfCug0fjqTCBlAELGxxMUVkaGVUZb4j+U1zjAAJwDo9uDI5htT4Mo8Xer62Tzuh+c6rEpyYFOhDjW+4svfCw3utnpae0OYADY4fKuXM0OJakFQXpRlGh4YJ42ilpprBD+33uZjJZT01JdlP6BCR+II=
+	t=1712426263; cv=none; b=Dk+VYpSMJvlrGS14UqR+WTbvwzUDtGuqYNVjAyX0VmEqYDH5r3J0KpFxtvR3p8ryxlKahMDNZre9OT/w9g7OzFVXkPmLZK/uDu+gKsuh8REIX6MRCAhN1PO5g01e7bJNOVQU8hhYH31kd527pcgEbgLkMiW4Tcx+4TTIbMineNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712425042; c=relaxed/simple;
-	bh=tv8svilkvDZvFABfzJtK3Lj00n0GjWUXpmzVoU3Z7RI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BEZN5002TCES889ddtYgE0rJloNiE9knspXNTKJIsiK5Q2H8H8pzE3WJOyKrxDB+qnbXP2ULUotCMDF6+LXAG5XgYrKxKU+b2qRIBQl27GlXdJQohKLdHX9jPVkthvvGWFTwmzO1Djh+PyXGepDI8CHg8uijwf4mnvBBWxuJET8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qj33Fxx3; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1712426263; c=relaxed/simple;
+	bh=QCupe60Wi+dfmZCvC412Qmcmr7ZevvaEiPxSMLn4g/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KjnBWHwDsIhJnK2Wbdd6ut1uQEZ3uGLCkddTYUjKhTa/G/w+3uvWQ+nejdOIYdJuKXiTUCNlCZbm1Hbv3Z2vsOtLeGFyYZDmYilDOo+h0gYs5l6jL/2wjw1EEJUi55CRAgSz1+qpeteFi7bIhV38OjUwgCjZbf/1of12p81XfiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZU7db6c2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qj33Fxx3"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b269686aso4681666276.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 06 Apr 2024 10:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712425040; x=1713029840; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1sgn1VylNv1NTN97Yx37+bCmXXDqsq6ciENBh1E+umw=;
-        b=Qj33Fxx3xxtx6ol+RC0XZRj3EgeZGgkhPvF6rRfjUIfFm73lfDTFdrm2TpNTUuNGq+
-         ZffPSspGdkGGILqQVDetalmX9UqPrKhcEgSe4eS9csKX2rv022wWwOvCN1aRk7x8NYRC
-         Z7JzOlJ8JznEGz0Ndb6fViv+nxbu+pWXzwHqTcdJ1CptOpIq9bxdJQP4R+TfZiPk7L7y
-         jlZ/osa+lbRnw0DyEq9dh7Pzf2ZgBxc2cU/xwdMeGu8d2e9LJg1xFRp3giFPfW/5U1hO
-         3m+eVDsHIX/gEXHD95lrKLpXTrrqKlL9aE6DqwLj4VscYtU1DklggxS651XZxnCeyk/o
-         i/ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712425040; x=1713029840;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1sgn1VylNv1NTN97Yx37+bCmXXDqsq6ciENBh1E+umw=;
-        b=dwsWzakMeAvTXvZxAGsfy7i0pP9c4cS+Wg58NYsep9J0oRwN02nK4g+hEdbb94uduG
-         JwEd258NSB/IwD7FBHTM8lSRjPSd2aF2pZDyWDLvVQ0CsV6sR4WLSJnkgg5aZlcuKdQI
-         uYnDxxeQpbIXxVmJl/JpEZPLsNXOchAIOdfMzR0JRX8czcdJPl8dB5prKFKrp/Mp2yJr
-         lxhzfa8qFRCbQxsCXk16Ta4OIzzBSxVUQ5DjXJXq970fV+RjpVSFrVxBju1lsf+ChtyX
-         FBjGD11MTo4oqS5kQdEnfxYJB6qpJT2PTjMTmFKJhA1prkurOlnFBS0LljzbmYpmMe7x
-         qUzw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0p7zxZAerBYc+AmJZEvFudIhwofZesSDevMKasLANcCtzff4BlcjY0utBYt/sX1CEqiUWbMqlASq2Szaq3CJ121JBBs0llkEz9DRgKdHkpabq
-X-Gm-Message-State: AOJu0YzRLFgF5hSovCLKNL5tIcU6fSU/uvbPrQHKaYSYrv2uuqFW/7Ob
-	WNzziyXEsQTlu7GVM144Rpn65NFCmNULooupCljQ2Tyv2sDmrrnw5Viu3K/VjD+7oWBj3TFdEMh
-	Kqn5wv1uqswErQJkX9Q==
-X-Google-Smtp-Source: AGHT+IEn1YavN9D57Sp0VBgC9OjfzT+6CC8RsLpq+x8NBBS5FdvRtLD47LcAUs6qcBtEbQTF9DAOct5+W6vu4DM1
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:6902:2d05:b0:dce:30f5:6bc5 with
- SMTP id fo5-20020a0569022d0500b00dce30f56bc5mr384534ybb.4.1712425039882; Sat,
- 06 Apr 2024 10:37:19 -0700 (PDT)
-Date: Sat,  6 Apr 2024 18:36:49 +0100
-In-Reply-To: <20240406173649.3210836-1-vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZU7db6c2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712426260;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GReCWnFPjN08AjP0bPCM7WpKp2nC3psJcp83CUkmhh4=;
+	b=ZU7db6c2wxXLUqXySolHAyrxiuTISTCiCoCIOFU1BQiurxy6TjFjvdxA0JPQ0ioBuSgZWH
+	YfDcOVh70GBLbHQmaeK0xqcZOFHz/aOMukbOWJq4oyIqLnjMuA0v/WDb78EwUVO+izg1In
+	e/ji7HO6TdkrdhL87deYv8un4/gBBwU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-135-1Cg6l7qIPZ2PwNbQHHUDpg-1; Sat,
+ 06 Apr 2024 13:57:34 -0400
+X-MC-Unique: 1Cg6l7qIPZ2PwNbQHHUDpg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 32BB53C0F69A;
+	Sat,  6 Apr 2024 17:57:33 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.136])
+	by smtp.corp.redhat.com (Postfix) with SMTP id F1667100F4D8;
+	Sat,  6 Apr 2024 17:57:28 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat,  6 Apr 2024 19:56:08 +0200 (CEST)
+Date: Sat, 6 Apr 2024 19:55:59 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <20240406175558.GC3060@redhat.com>
+References: <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+ <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+ <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+ <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+ <20240404161108.GG7153@redhat.com>
+ <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+ <Zg-8r63tPSkuhN7p@krava>
+ <20240405110230.GA22839@redhat.com>
+ <20240406120536.57374198f3f45e809d7e4efa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240406173649.3210836-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240406173649.3210836-6-vdonnefort@google.com>
-Subject: [PATCH v20 5/5] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	rdunlap@infradead.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240406120536.57374198f3f45e809d7e4efa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+On 04/06, Masami Hiramatsu wrote:
+>
+> On Fri, 5 Apr 2024 13:02:30 +0200
+> Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> > With or without this patch userpace can also do
+> >
+> > 	foo() { <-- retprobe1
+> > 		bar() {
+> > 			jump to xol_area
+> > 		}
+> > 	}
+> >
+> > handle_trampoline() will handle retprobe1.
+>
+> This is OK because the execution path has been changed to trampoline,
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Agreed, in this case the misuse is more clear. But please see below.
 
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..50a09e1371d4
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,302 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+TEST_F(map, data_mmap)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	unsigned long meta_len, data_len;
-+	void *data;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	/* Map all the available subbufs */
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_NE(data, MAP_FAILED);
-+	munmap(data, data_len);
-+
-+	/* Map all the available subbufs - 1 */
-+	data_len -= desc->meta->subbuf_size;
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_NE(data, MAP_FAILED);
-+	munmap(data, data_len);
-+
-+	/* Overflow the available subbufs by 1 */
-+	meta_len += desc->meta->subbuf_size * 2;
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_EQ(data, MAP_FAILED);
-+
-+	/* Verify meta-page padding */
-+	if (desc->meta->meta_page_size > getpagesize()) {
-+		void *addr;
-+
-+		data_len = desc->meta->meta_page_size;
-+		data = mmap(NULL, data_len,
-+			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+		ASSERT_NE(data, MAP_FAILED);
-+
-+		addr = (void *)((unsigned long)data + getpagesize());
-+		ASSERT_EQ(*((int *)addr), 0);
-+		munmap(data, data_len);
-+	}
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.44.0.478.gd926399ef9-goog
+> but the above will continue running bar() after sys_uretprobe().
+
+... and most probably crash
+
+> > sigreturn() can be "improved" too. Say, it could validate sigcontext->ip
+> > and return -EINVAL if this addr is not valid. But why?
+>
+> Because sigreturn() never returns, but sys_uretprobe() will return.
+
+You mean, sys_uretprobe() returns to the next insn after syscall.
+
+Almost certainly yes, but this is not necessarily true. If one of consumers
+changes regs->sp sys_uretprobe() "returns" to another location, just like
+sys_rt_sigreturn().
+
+That said.
+
+Masami, it is not that I am trying to prove that you are "wrong" ;) No.
+
+I see your points even if I am biased, I understand that my objections are
+not 100% "fair".
+
+I am just trying to explain why, rightly or not, I care much less about the
+abuse of sys_uretprobe().
+
+Thanks!
+
+Oleg.
 
