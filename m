@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8463915A8;
-	Mon,  8 Apr 2024 01:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D384AEDF;
+	Mon,  8 Apr 2024 02:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712538811; cv=none; b=YsTg0DiIDjzlodRpBlWgMw4SxP+VEuJ4rBJ4pCN5/Ak5lARju2+fXciutDYrHT/obM2zWe8vStPW0c5xiRa9Hejs4aPdaXg0xOIyClvMlLkTrlQwgseoVrrLE6aQDUJokyRzm9haJdFMdALF/5aAv8DeRuZO5yyof2IiJkLMhgQ=
+	t=1712544642; cv=none; b=HriD94tJC4DGe2jNjlBVJOmtoV+mmP9sIg0uS3+h9Wu7vhv4CO0x10zKurzJ4n1AkHLYjqh0CQ+LZty2NWnTLLkn4U+inKRRFfHgl5NpXa5ymSzjZwTzHyAzOf3cN2vGJd5SWvY/UfvOq2G/G7gqpHPWjIxK+uVZQ9zXxZNpPgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712538811; c=relaxed/simple;
-	bh=VD/qYrsfbh/pUkYe6JhlzTgZknAD7e9ybrZ34O9LYiM=;
+	s=arc-20240116; t=1712544642; c=relaxed/simple;
+	bh=09KpA1PzryBcQ7Vz+5NdiCGj4r5ml+5yka4hoPNR+eg=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=g8zldsVZkiIJmXElRQy68dprwO0coLp26lLautugA2C9j4wNjgc+wUHtDORmuL7wV3PDtfphNMezBKEkeD7l9cFJCJYxyRHvFYt43mRCDXNuzDdISe2xvSL4UM2P8GOKiXYgawnU7u1mzTcI4I9WwjPOUwZu8P/zg32BBIT3mVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uiR9iJNZ; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=EH32+tmKwym1e+kTUIS28NAXa4tKYz+alYIhiFTV0qI9vPfF+GmWSeDw9/sJFNJpYBupTv+wgxD5Jy8llAT22AUE1euhXRSHUUx98UAIeaPf3U2xqv3nkPMmmkIpZXm4AMNPqMwVddVMhqRYlTOBOb4o/rugr8LvybWdD/Rv4Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owowCrq2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiR9iJNZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70943C433C7;
-	Mon,  8 Apr 2024 01:13:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owowCrq2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36112C433C7;
+	Mon,  8 Apr 2024 02:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712538810;
-	bh=VD/qYrsfbh/pUkYe6JhlzTgZknAD7e9ybrZ34O9LYiM=;
+	s=k20201202; t=1712544641;
+	bh=09KpA1PzryBcQ7Vz+5NdiCGj4r5ml+5yka4hoPNR+eg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uiR9iJNZXNHlKR0UA2r3nq3UlSNcOCA3WjfWqIQrQZRN+O1+lqdFKMGBUk1xquJVG
-	 N/733YhCvOoj4+rbrfdaa9DZ/GAByrI+Uq7M2SL3PPDjnFIR7g8GtzHh7SuTQLTi16
-	 tCYA1LgOvXHwszfbPdHAgjeCVvrN4sUS5rCHcn/II9F9edxwI9WNn8vGmhhvPENiIW
-	 OTYMwYx7HHtfZRsxRKmP239hy457Z1VQ7OQaKuQrigb3z3N38Hx53c4l5K2MH6y3pG
-	 nv0aI3VOPDbIFxUVRW2RAlRVVJRDdhALEn2hidT8lJlk2PlpW7it/OHD+eiM7Gr4Xi
-	 vOlI+iUe7EEkA==
-Date: Mon, 8 Apr 2024 10:13:26 +0900
+	b=owowCrq28PiI61ex81LrhSq7vcjQjvac81F9JFRGeVqo2cmd7s5fHpGiESEGKsOR6
+	 bFKqzrCD7fmPbbYoTneCtw5g6NwATKj0OxrgwZNVWXg9AmjBsQmQ1u0RRDci4Rr7e5
+	 lPHHN3jXAZYpy0M3FOXEJGLE6MoXqBoOd1EcJdud69V/8EHo9FHZRfcilp3AzeqvmT
+	 YEZqNmVbhjq1SnajkBw/VzH07Wq7K9paIIbc5yIRLzxnjlBSwi1UjwzvU7z6Wzi3ma
+	 hi6hBmMqsoTlYS0Au3a1WB/idmT2Vh5XTICii6ryL9lzUg0keZLK+P8b/4tjfep1PK
+	 wzQobv3OvQOzw==
+Date: Mon, 8 Apr 2024 11:50:38 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Kui-Feng Lee
- <thinker.li@gmail.com>, mhiramat@kernel.org, martin.lau@linux.dev,
- kernel-team@meta.com, andrii@kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- sinquersw@gmail.com, kuifeng@meta.com
-Subject: Re: [PATCH bpf-next] rethook: Remove warning messages printed for
- finding return address of a frame.
-Message-Id: <20240408101326.2392a79de4bfe1e677faeff0@kernel.org>
-In-Reply-To: <1bbd6200-bb06-f8d2-c22a-39245425b6b1@iogearbox.net>
-References: <20240401191621.758056-1-thinker.li@gmail.com>
-	<CAEf4BzbbneDHp=sD4+5RmuK=U9vg8Uo_M6XEXdKWrZ_MkjFocw@mail.gmail.com>
-	<1bbd6200-bb06-f8d2-c22a-39245425b6b1@iogearbox.net>
+To: Zheng Yejian <zhengyejian1@huawei.com>
+Cc: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
+ <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kprobes: Fix possible warn in __arm_kprobe_ftrace()
+Message-Id: <20240408115038.b0c85767bf1f249eccc32fff@kernel.org>
+In-Reply-To: <20240407035904.2556645-1-zhengyejian1@huawei.com>
+References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,76 +43,107 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 3 Apr 2024 16:36:25 +0200
-Daniel Borkmann <daniel@iogearbox.net> wrote:
+On Sun, 7 Apr 2024 11:59:04 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-> On 4/2/24 6:58 PM, Andrii Nakryiko wrote:
-> > On Mon, Apr 1, 2024 at 12:16 PM Kui-Feng Lee <thinker.li@gmail.com> wrote:
-> >>
-> >> rethook_find_ret_addr() prints a warning message and returns 0 when the
-> >> target task is running and not the "current" task to prevent returning an
-> >> incorrect return address. However, this check is incomplete as the target
-> >> task can still transition to the running state when finding the return
-> >> address, although it is safe with RCU.
-
-Could you tell me more about this last part? This change just remove
-WARN_ON_ONCE() which warns that the user tries to unwind stack of a running
-task. This means the task can change the stack in parallel if the task is
-running on other CPU.
-Does the BPF stop the task? or do you have any RCU magic to copy the stack?
-
-> >>
-> >> The issue we encounter is that the kernel frequently prints warning
-> >> messages when BPF profiling programs call to bpf_get_task_stack() on
-> >> running tasks.
-
-Hmm, WARN_ON_ONCE should print it once, not frequently.
-
-> >>
-> >> The callers should be aware and willing to take the risk of receiving an
-> >> incorrect return address from a task that is currently running other than
-> >> the "current" one. A warning is not needed here as the callers are intent
-> >> on it.
-> >>
-> >> Signed-off-by: Kui-Feng Lee <thinker.li@gmail.com>
-> >> ---
-> >>   kernel/trace/rethook.c | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> >> index fa03094e9e69..4297a132a7ae 100644
-> >> --- a/kernel/trace/rethook.c
-> >> +++ b/kernel/trace/rethook.c
-> >> @@ -248,7 +248,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
-> >>          if (WARN_ON_ONCE(!cur))
-> >>                  return 0;
-> >>
-> >> -       if (WARN_ON_ONCE(tsk != current && task_is_running(tsk)))
-> >> +       if (tsk != current && task_is_running(tsk))
-> >>                  return 0;
-> >>
-> > 
-> > This should probably go through Masami's tree, but the change makes
-> > sense to me, given this is an expected condition.
-> > 
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> There is once warn in __arm_kprobe_ftrace() on:
 > 
-> Masami, I assume you'll pick this up?
+>  ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
+>  if (WARN_ONCE(..., "Failed to arm kprobe-ftrace at %pS (error %d)\n", ...)
+>    return ret;
+> 
+> This warning is due to 'p->addr' is not a valid ftrace_location and
+> that invalid 'p->addr' was bypassed in check_kprobe_address_safe():
 
-OK, anyway it will just return 0 if this situation happens, and caller will
-get the trampoline address instead of correct return address in this case.
-I think it does not do any unsafe things. So I agree removing it.
-But I think the explanation is a bit confusing.
+Ah, this is a guard warning to detect changes on ftrace_set_filter() and/or
+preparation steps. (A kind of debug message.)
+The ftrace address check is done by check_ftrace_location() at the beginning of
+check_kprobe_address_safe(). At that point, ftrace_location(addr) == addr should
+return true if the module is loaded. But there is a small window that we check
+the ftrace_location() and get the module refcount, even if the "addr" was ftrace
+location, the module is unloaded and failed to get the module refcount and fail
+to register the kprobe.
+
+>    check_kprobe_address_safe() {
+>      ...
+>      // 1. p->addr is in some module, this check passed
+>      is_module_text_address((unsigned long) p->addr)
+>      ...
+>      // 2. If the moudle is removed, the *probed_mod is NULL, but then
+>      //    the return value would still be 0 !!!
+>      *probed_mod = __module_text_address((unsigned long) p->addr);
+>      ...
+>    }
+> 
+> So adjust the module text check to fix it.
+
+This seems just optimizing code (skip the 2nd module search), right?
+Also some comments needs to be updated.
+
+> 
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> ---
+>  kernel/kprobes.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 9d9095e81792..e0612cc3e2a3 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1567,10 +1567,16 @@ static int check_kprobe_address_safe(struct kprobe *p,
+>  	jump_label_lock();
+>  	preempt_disable();
+>
+
+	/* Ensure the address is in a text area, and find a module if exists. */
+  
+> +	*probed_mod = NULL;
+> +	if (!core_kernel_text((unsigned long) p->addr)) {
+> +		*probed_mod = __module_text_address((unsigned long) p->addr);
+> +		if (!(*probed_mod)) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+
+nit: this should get the module refcount soon after getting probed_mod.
+(I think this should be an atomic operation, but we don't have such interface.)
+
+> +	}
+
+>  	/* Ensure it is not in reserved area nor out of text */
+
+	/* Ensure it is not in reserved area. */
+
+> -	if (!(core_kernel_text((unsigned long) p->addr) ||
+> -	    is_module_text_address((unsigned long) p->addr)) ||
+
+Note that this part is doing same thing. If the probe address is !kernel_text
+and !module_text, it will be rejected.
+
+> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
+> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
+>  	    within_kprobe_blacklist((unsigned long) p->addr) ||
+>  	    jump_label_text_reserved(p->addr, p->addr) ||
+>  	    static_call_text_reserved(p->addr, p->addr) ||
+> @@ -1581,7 +1587,6 @@ static int check_kprobe_address_safe(struct kprobe *p,
+>  	}
+>  
+>  	/* Check if 'p' is probing a module. */
+
+	/* Get module refcount and reject __init functions for loaded modules. */
+
+> -	*probed_mod = __module_text_address((unsigned long) p->addr);
+>  	if (*probed_mod) {
+>  		/*
+>  		 * We must hold a refcount of the probed module while updating
+> -- 
+> 2.25.1
+> 
 
 Thank you,
-
-> 
-> Thanks,
-> Daniel
-
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
