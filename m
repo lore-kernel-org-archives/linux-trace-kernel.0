@@ -1,66 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E1A2BAF6
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7400C25570
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712561730; cv=none; b=cu+wAl9rL+IRyE3fkuHNAWYboR0jB4HrBhcvf50cGLRJ8HY35irO3WrByxrHW03LgDoq6B5+X8DnAoOl1hbVX1Iw58Yk7FZmjmRLmvMxLz7AlsCVK2BFolc3uVdviugXA4kZ/hL5EVMRH+WlwGZnIk1NUibsINBcHDBNW67PPLs=
+	t=1712561804; cv=none; b=MUW0IKQKDSHPXRdiomBsrgv/1YcOkS8LVvhaH73iTayqt1G3/a6exUXbyqx1kUDXC1h4OSZdEfY6v+RUcuGn2PPM+hBWE3/GtF/6ZivjWQvZ4elHgCbex+YixT4eorsE4JrvtmoWAJd1wnASKNEq1w+1PSVrrrKVFDbE4IvbApo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712561730; c=relaxed/simple;
-	bh=0IHLjYsCH+95NP2eqcmqensUwJwYqzk/Xe0MSj34hRw=;
+	s=arc-20240116; t=1712561804; c=relaxed/simple;
+	bh=Px5BRqX0d1S4QkhBS9TZflqU7FFIrXPMnhSiTWMdLx4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dKXfdtr/8r2IWAeB/OD/9J5RMRr4F2ghyIAApDZP3IwLCoBOBGdSEQO+76DsIn7o178MOqtuBZfeavwsuEhAFramwfCwKzt6hdss9nDSD6SrNzw1BXOD84gZnEnMdyG0LJ0m05Mjh7Avq5d1K+rlZ/stjYVL9TYS2LWsNK7DL2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhwnLmUe; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=qYJkLJ+AF9JIQXnxaObLjHKYEIc2m8iZ/L/VohnHf9YZF5u/zZ6C9WG0rse2DCrQXto1P7ERXP5yM05OCQfNs6AcdIkJiyOQ44baZRS5kRqjma6VU9pfoDS3c6aJQ/ecHmll12UUywjXsDG5maGUUEne1Hu8PNo0PWRZ9p312u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z1D1bkMW; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhwnLmUe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z1D1bkMW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712561728;
+	s=mimecast20190719; t=1712561802;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=d3GySbiGeorRsqZIt9Ijfkj1iWt87wQlFpIRAmiy934=;
-	b=DhwnLmUecfqCN/9hKJg7T+62QqJ8iDy0SA4ByKTHZzvYZgK6YHGhSG3Re8ubjjY/XJm2vB
-	z2VfYLlJM1aO6OSc8OFEsJGiKRZXmoyaUnB6Qwnrjzz4ZPvFKqdl7j+JmSZr7Jou9N3tTa
-	95ngbP0izLh1ZVGv/z52SJM4g/ncNPQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=si7yJK42Z2mZYAabXm2bLCAnwyhavot+uGq3e+m8mfg=;
+	b=Z1D1bkMW96r5iPhCfTmVwYKnUZ/5MBCu4qiKVdU4Jq9bTPuIE47ox6lJkCJIIIJuKfdI1F
+	b+wbfGGYO1oUkBiavU41gARjJLX1I9ZL7UIy4l121mheT1K8dIQtrxSWFX2nqVI0Gn0PHq
+	XCiZ9uBjkkp0y1wgVpVf0rirWS1ooyE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-JPXtoKzLOGCfJLEMYqw_4w-1; Mon, 08 Apr 2024 03:35:25 -0400
-X-MC-Unique: JPXtoKzLOGCfJLEMYqw_4w-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-416661bb85bso3563245e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Apr 2024 00:35:25 -0700 (PDT)
+ us-mta-444-8_Zzipz2Ot6AEYFMsHuNJw-1; Mon, 08 Apr 2024 03:36:40 -0400
+X-MC-Unique: 8_Zzipz2Ot6AEYFMsHuNJw-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-41545bc8962so18241375e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Apr 2024 00:36:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712561724; x=1713166524;
+        d=1e100.net; s=20230601; t=1712561799; x=1713166599;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=d3GySbiGeorRsqZIt9Ijfkj1iWt87wQlFpIRAmiy934=;
-        b=C/2EKf8gyRqjBBE6+F7ssBdIaCEiGLwRro2bXOBAb8TaXBGqmmjxAZzqkkU4zrTXL2
-         M1/lB+hn315EluVbeaxuXz3RmgrVJVtq1L/AvBiLRfRKJh6+eaf4iRM1e5O5VUvTk1dr
-         0r6djJ0ocaWzdp6mshLTMD2siMl8Wr5uV5ntbj4VoEFSoxSbXJHFwTDh0SobqTgtNJCW
-         kKiat7XNJGlT2YCz59iBHXuG8k00OP6HOjKhZJceyu5P9H33MBakynPrx6LPDRccyY3e
-         pejrZZXDH6jQtXH8ooVT7S9Vh0fSUhNoQs7PZYdE+y2oeeCzWMHW4/4xsdn2xPo+4i9X
-         pJCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUosxOfLzXZWXhj8hpw8x/eixdCZLUmBoqRUSBVvM3UeWfN3SY7uL64aYf89abSvBBsLfetIb3c4fLztiMctbRWyNrbcRwvZoD6+y2r6eGCX13V
-X-Gm-Message-State: AOJu0YxoZnoEzF4pCfaUX0netv8L/fg0w0DJ/Xb2wZT/d/R6FaIQKgqj
-	r5ooOQ/NWNIywlP2kkSN9Q0iWaEAp7hNSsOMyvQk/s15RNeX5OIn1BsCD//TV/INUvSU0IxFvr2
-	l8TDPbcCbntYMSTxmBg939pRQjNcRkizyV+hTq6u91rXLjbQw0IhbSnzqLLtv4HVA8bwILA==
-X-Received: by 2002:a05:600c:4ece:b0:416:3365:b9c7 with SMTP id g14-20020a05600c4ece00b004163365b9c7mr4607163wmq.13.1712561724305;
-        Mon, 08 Apr 2024 00:35:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHjZ9VCYB4AUQb07oKhGHJ1GEtWztGeMgSbalcZWN1jAdx1q+6Zl+lVrclpocaKQsTfHoR1hQ==
-X-Received: by 2002:a05:600c:4ece:b0:416:3365:b9c7 with SMTP id g14-20020a05600c4ece00b004163365b9c7mr4607141wmq.13.1712561723921;
-        Mon, 08 Apr 2024 00:35:23 -0700 (PDT)
+        bh=si7yJK42Z2mZYAabXm2bLCAnwyhavot+uGq3e+m8mfg=;
+        b=fPtlJSVuURzZBWfM61WPHLmqeh1EAM4IWsNsbPAw6cZ+ShpTxYXGDtNLwCKplJlDjV
+         jmPvOKA9Zcv3QeWYbTl4NU8t0nApmkcze1FFyPbokegQO3tvQ000CgNrt2Rw1QSR+qOv
+         ThkJSl+13OYkeSiBq3pzLNk+svjVGGV9HCK1oIzs1b/4i46fNFMk2xydx4Ub8heYGaVE
+         nIW659Dmu/KfepiFGz21cItcLNKvXP7pTWVQULWrWlUwimeUmfiD/FiSNtTnTootcQh3
+         j8L+Pl6ig1p7r+mcT2VpmIPQEV+m6sAZ5isLTFyHF/GJJyoNClYk39kjXGJTcrnKetBV
+         RsuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRuh2dugQoj7ZjtiKvExHx55iV0osl3dAapzPHhav65/PB+bmUDgnusr2pqhvr2tDC4wuDvrcSTYQ7m1GDks4kONA6iQuYixEAHumLJ02S4fgz
+X-Gm-Message-State: AOJu0YwxCdxorvFvYAyJKUQblZIbsxncVvezChQfhINhu4Qe1vP248l6
+	BtRwcvIeXOZzxyc+mQXb4D8sstsm7r1HAF6GwanyFg0JViifBrww9m4IhNn9Xkdi4pH0v9BqUi5
+	JiWKe1+ty79gqRhMtjM6hGwh5PX2TIIfZj2c8KAk4wL2s5PX3HTqT0+KEVNV/IF3xGFChUA==
+X-Received: by 2002:a05:600c:154c:b0:414:610b:13c3 with SMTP id f12-20020a05600c154c00b00414610b13c3mr5692691wmg.27.1712561799432;
+        Mon, 08 Apr 2024 00:36:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHMF/mJT7VmyvOfZP2wNJanQ7CydvAoWGwctBFe1iIdlIRCOMjrgJPMDYTawpM1YL4HfZjXbw==
+X-Received: by 2002:a05:600c:154c:b0:414:610b:13c3 with SMTP id f12-20020a05600c154c00b00414610b13c3mr5692661wmg.27.1712561799039;
+        Mon, 08 Apr 2024 00:36:39 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c718:1300:9860:66a2:fe4d:c379? (p200300cbc7181300986066a2fe4dc379.dip0.t-ipconnect.de. [2003:cb:c718:1300:9860:66a2:fe4d:c379])
-        by smtp.gmail.com with ESMTPSA id l35-20020a05600c1d2300b0041680911b0fsm1228331wms.30.2024.04.08.00.35.22
+        by smtp.gmail.com with ESMTPSA id c2-20020a05600c0a4200b004162bac1393sm12370535wmq.43.2024.04.08.00.36.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 00:35:23 -0700 (PDT)
-Message-ID: <e40ad5e2-6679-47f6-ab9f-14625627ac1e@redhat.com>
-Date: Mon, 8 Apr 2024 09:35:21 +0200
+        Mon, 08 Apr 2024 00:36:38 -0700 (PDT)
+Message-ID: <fb525c6b-4284-4cb2-b3e1-20275fc3c4f3@redhat.com>
+Date: Mon, 8 Apr 2024 09:36:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,7 +68,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] mmu_notifier: remove the .change_pte() callback
+Subject: Re: [PATCH 4/4] mm: replace set_pte_at_notify() with just
+ set_pte_at()
 To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
  kvm@vger.kernel.org
 Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
@@ -83,7 +84,7 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org
 References: <20240405115815.3226315-1-pbonzini@redhat.com>
- <20240405115815.3226315-4-pbonzini@redhat.com>
+ <20240405115815.3226315-5-pbonzini@redhat.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -130,7 +131,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20240405115815.3226315-4-pbonzini@redhat.com>
+In-Reply-To: <20240405115815.3226315-5-pbonzini@redhat.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -138,20 +139,14 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 05.04.24 13:58, Paolo Bonzini wrote:
-> The scope of set_pte_at_notify() has reduced more and more through the
-> years.  Initially, it was meant for when the change to the PTE was
-> not bracketed by mmu_notifier_invalidate_range_{start,end}().  However,
-> that has not been so for over ten years.  During all this period
-> the only implementation of .change_pte() was KVM and it
-> had no actual functionality, because it was called after
-> mmu_notifier_invalidate_range_start() zapped the secondary PTE.
-> 
-> Now that this (nonfunctional) user of the .change_pte() callback is
-> gone, the whole callback can be removed.  For now, leave in place
-> set_pte_at_notify() even though it is just a synonym for set_pte_at().
+> With the demise of the .change_pte() MMU notifier callback, there is no
+> notification happening in set_pte_at_notify().  It is a synonym of
+> set_pte_at() and can be replaced with it.
 > 
 > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
+
+A real joy seeing that gone
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
 
