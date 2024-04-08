@@ -1,216 +1,349 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A436A014;
-	Mon,  8 Apr 2024 12:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF88D6A35A;
+	Mon,  8 Apr 2024 13:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580067; cv=none; b=Qh9zepN0+7kCmHrFbSanlMipaseF4IFT2t8185gTFYFyu/3mc8QxqpXhQuL+xgMT+9EFsT/qXr8HgX2/gSb3OWDY6GcqJ0YS8PaI+6wwyHg650XdTxPEaxxSIo4jTwqid14kN0ucR29HimvM72P6QtyUkSyfeHZQVdTx9lt6TZI=
+	t=1712583696; cv=none; b=S3cUHHCRDorVItQ1IKFhrFtbxYKXcFyf6/yuQn6ZSrJaXV848RfROhC4Za6X7URclHJbolHxgB7iixtXGeiteRArL7dbnubcrlNTFrUyRO2CjbMCUUMjPwoOO54E/nvUX4ZK5J2nD3jTChcy6mC0yATUsGug2atI/HD2zxDMmx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580067; c=relaxed/simple;
-	bh=uznQfg3AOHrzxljdeifxnUVqLDxe5aZvgkCnddzWjPI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GCe+OtQ3pJBpb9fQ7+3yHdyA0+9PqKjPtH96JIb8/D70pgIzGfXH2kjioA4hLLd37nO+5P0S40r9mKGUBs2UTGReyWYsNmjZ/0phHbA+cw0HIq5Xw8NdMKLru2tNZMKcb/CRUVloe4PKBUCkPADIw2wS4L9NS2v1hFaBoWNr53c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0xMeCRG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0xMeCRG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CCAC433C7;
-	Mon,  8 Apr 2024 12:41:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712580066;
-	bh=uznQfg3AOHrzxljdeifxnUVqLDxe5aZvgkCnddzWjPI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=M0xMeCRG7CKo7TXZmry2s3woUlQ93apSYPU5CjKDJUjsUbdCCD2qeAj1KI8TOaB4Z
-	 7HbwMBjnM9i2MUiF3IAQnSzZ/dLqkFT14hnC5ejJN0Lg7TWOTR/uqSm523aVq+wJCG
-	 iux37RJFVsYacSU1l397/li8Ogz5SYj0H3dlLejRW1/K/eYtsh23ejlBw9nSyfavDo
-	 D8GkKZK05hySKPpmFJTjCORgED2UkN4uc073Z2APkXAoJvvfvu3+9+3F+0hXwQqDDU
-	 TlA4xV6RcKIBT0BBUmYDR7x8uPTEr2IgM1GasC1xfg+xZ2JpwT7zq+Xk7fCz0Gwg30
-	 HY3itlSwYS9Ow==
-Date: Mon, 8 Apr 2024 21:41:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Zheng Yejian <zhengyejian1@huawei.com>
-Cc: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
- <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] kprobes: Avoid possible warn in
- __arm_kprobe_ftrace()
-Message-Id: <20240408214102.be792c5cefd5ab757ef32a14@kernel.org>
-In-Reply-To: <20240408083403.3302274-1-zhengyejian1@huawei.com>
-References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
-	<20240408083403.3302274-1-zhengyejian1@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712583696; c=relaxed/simple;
+	bh=zTxukDcymNLo4kdv3AYB9kakG77M4JYjFvwcAVkrN1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A+UeCeebfNlMXGCTSKzodjRynneJ0G6aNvla1xRi1gsMcJM6IL03jDG04vEjc8YURmYxxg0/A1EEuTKmwLvBe08drtPS2ksi3agiiz6KvBVvRDs3hwteWtH3KY0BqTKc6b4afIL7rMRk1GjWGaw7uObVQX+RKHbXdmOBmbEcs2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-66-6613f40876fb
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: sj@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com
+Subject: Re: [RFC PATCH v3 0/7] DAMON based tiered memory management for CXL
+Date: Mon,  8 Apr 2024 22:41:04 +0900
+Message-ID: <20240408134108.2970-1-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <ZhAtLhcU3KfT/9i7@memverge.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsXC9ZZnoS7HF+E0g7Y9GhYTewws5qxfw2ax
+	60aIxf0Hr9kt/u89xmjx5P9vVosTNxvZLBqaHrFYdH5fymJxedccNot7a/6zWhxZf5bFYvPZ
+	M8wWi5erWezreMBkcfjrGyaLyZcWsFm8mHKG0eLkrMksFrOP3mN3EPFYevoNm8eGJiCxc9Zd
+	do+WfbfYPRZsKvVoOfKW1WPxnpdMHptWdbJ5bPo0id3jxIzfLB47H1p6vNg8k9Fj48f/7B69
+	ze/YPD5vkgvgj+KySUnNySxLLdK3S+DK2H56AWvB9LKKg/NusTUwngvuYuTkkBAwkThzfD8L
+	jH1g0XYwm01ATeLKy0lMXYwcHCICehIf/3t2MXJxMAusZJHYfncXG0iNsICPxJQ5HewgNouA
+	qsSHGRBxXgEziffTljNDzNSUeLz9J1gNp4COxOlf18FsIQEeiVcb9jNC1AtKnJz5BGwvs4C8
+	RPPW2cwgyyQETrFLzJ4xDeo4SYmDK26wTGDkn4WkZxaSngWMTKsYhTLzynITM3NM9DIq8zIr
+	9JLzczcxAmNxWe2f6B2Mny4EH2IU4GBU4uG1uCqcJsSaWFZcmXuIUYKDWUmEN9hUME2INyWx
+	siq1KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs1NSC1CKYLBMHp1QD4zrmT5OzT66YnNbz
+	ZuV7lh/bGfm8Vqo9MLhx95X6Fs//H79ZWZlpNpxrXGS24dxeqUl681dNq3i5qvp/aMz3z4oL
+	zHYyfJr0tuqdZzkHexdH9opVq87WKtSpP79QVJVw51/170RN/6AVv+Xq09XORiwKncv1MMX8
+	x13htCPpYZm+TexTzX0KApRYijMSDbWYi4oTAc9/WVTBAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsXCNUNLT5fji3CawcYvghYTewws5qxfw2ax
+	60aIxf0Hr9kt/u89xmjx5P9vVosTNxvZLBqaHrFYdD75zmhxeO5JVovO70tZLC7vmsNmcW/N
+	f1aLI+vPslhsPnuG2WLxcjWLQ9ees1rs63jAZHH46xsmi8mXFrBZvJhyhtHi5KzJLBazj95j
+	dxD3WHr6DZvHhiYgsXPWXXaPln232D0WbCr1aDnyltVj8Z6XTB6bVnWyeWz6NInd48SM3ywe
+	Ox9aerzYPJPRY+PH/+wevc3v2Dy+3fbwWPziA1OAYBSXTUpqTmZZapG+XQJXxvbTC1gLppdV
+	HJx3i62B8VxwFyMnh4SAicSBRdtZQGw2ATWJKy8nMXUxcnCICOhJfPzv2cXIxcEssJJFYvvd
+	XWwgNcICPhJT5nSwg9gsAqoSH2ZAxHkFzCTeT1vODDFTU+Lx9p9gNZwCOhKnf10Hs4UEeCRe
+	bdjPCFEvKHFy5hOwvcwC8hLNW2czT2DkmYUkNQtJagEj0ypGkcy8stzEzBxTveLsjMq8zAq9
+	5PzcTYzAaFtW+2fiDsYvl90PMQpwMCrx8DrcEU4TYk0sK67MPcQowcGsJMIbbCqYJsSbklhZ
+	lVqUH19UmpNafIhRmoNFSZzXKzw1QUggPbEkNTs1tSC1CCbLxMEp1cAY80VYyexGv8H9yw2v
+	3xytYXvV1h+o9ass/OqMX1388zNvOfRqRvxPmrE5+8dl9pmMa3XOp/y4efKK0NLAxvdn7syR
+	X+qxQEM/d5PK+6Av4vstm8L+1h381i4s9bJBqnqtm+aOBZf9DxRdjfz45/ibJUn2kYaVgiUH
+	T105F5c27QD3ootXfSValFiKMxINtZiLihMBXWtiZLICAAA=
+X-CFilter-Loop: Reflected
 
-Hi Zheng,
+Hi Gregory,
 
-On Mon, 8 Apr 2024 16:34:03 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
-
-> There is once warn in __arm_kprobe_ftrace() on:
+On Fri, 5 Apr 2024 12:56:14 -0400 Gregory Price <gregory.price@memverge.com> wrote:
+> On Fri, Apr 05, 2024 at 03:08:49PM +0900, Honggyu Kim wrote:
+> > There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+> > posted at [1].
+> > 
+> >   1. YCSB zipfian distribution read only workload
+> >   memory pressure with cold memory on node0 with 512GB of local DRAM.
+> >   =============+================================================+=========
+> >                |       cold memory occupied by mmap and memset  |
+> >                |   0G  440G  450G  460G  470G  480G  490G  500G |
+> >   =============+================================================+=========
+> >   Execution time normalized to DRAM-only values                 | GEOMEAN
+> >   -------------+------------------------------------------------+---------
+> >   DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+> >   CXL-only     | 1.22     -     -     -     -     -     -     - | 1.22
+> >   default      |    -  1.12  1.13  1.14  1.16  1.19  1.21  1.21 | 1.17 
+> >   DAMON tiered |    -  1.04  1.03  1.04  1.06  1.05  1.05  1.05 | 1.05 
+> >   =============+================================================+=========
+> >   CXL usage of redis-server in GB                               | AVERAGE
+> >   -------------+------------------------------------------------+---------
+> >   DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+> >   CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+> >   default      |    -  20.4  27.0  33.1  39.5  45.6  50.5  50.3 | 38.1
+> >   DAMON tiered |    -   0.1   0.3   0.8   0.6   0.7   1.3   0.9 |  0.7
+> >   =============+================================================+=========
+> > 
+> > Each test result is based on the exeuction environment as follows.
+> > 
+> >   DRAM-only   : redis-server uses only local DRAM memory.
+> >   CXL-only    : redis-server uses only CXL memory.
+> >   default     : default memory policy(MPOL_DEFAULT).
+> >                 numa balancing disabled.
+> >   DAMON tiered: DAMON enabled with DAMOS_MIGRATE_COLD for DRAM nodes and
+> >                 DAMOS_MIGRATE_HOT for CXL nodes.
+> > 
+> > The above result shows the "default" execution time goes up as the size
+> > of cold memory is increased from 440G to 500G because the more cold
+> > memory used, the more CXL memory is used for the target redis workload
+> > and this makes the execution time increase.
+> > 
+> > However, "DAMON tiered" result shows less slowdown because the
+> > DAMOS_MIGRATE_COLD action at DRAM node proactively demotes pre-allocated
+> > cold memory to CXL node and this free space at DRAM increases more
+> > chance to allocate hot or warm pages of redis-server to fast DRAM node.
+> > Moreover, DAMOS_MIGRATE_HOT action at CXL node also promotes hot pages
+> > of redis-server to DRAM node actively.
+> > 
+> > As a result, it makes more memory of redis-server stay in DRAM node
+> > compared to "default" memory policy and this makes the performance
+> > improvement.
+> > 
+> > The following result of latest distribution workload shows similar data.
+> > 
+> >   2. YCSB latest distribution read only workload
+> >   memory pressure with cold memory on node0 with 512GB of local DRAM.
+> >   =============+================================================+=========
+> >                |       cold memory occupied by mmap and memset  |
+> >                |   0G  440G  450G  460G  470G  480G  490G  500G |
+> >   =============+================================================+=========
+> >   Execution time normalized to DRAM-only values                 | GEOMEAN
+> >   -------------+------------------------------------------------+---------
+> >   DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+> >   CXL-only     | 1.18     -     -     -     -     -     -     - | 1.18
+> >   default      |    -  1.18  1.19  1.18  1.18  1.17  1.19  1.18 | 1.18 
+> >   DAMON tiered |    -  1.04  1.04  1.04  1.05  1.04  1.05  1.05 | 1.04 
+> >   =============+================================================+=========
+> >   CXL usage of redis-server in GB                               | AVERAGE
+> >   -------------+------------------------------------------------+---------
+> >   DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+> >   CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+> >   default      |    -  20.5  27.1  33.2  39.5  45.5  50.4  50.5 | 38.1
+> >   DAMON tiered |    -   0.2   0.4   0.7   1.6   1.2   1.1   3.4 |  1.2
+> >   =============+================================================+=========
+> > 
+> > In summary of both results, our evaluation shows that "DAMON tiered"
+> > memory management reduces the performance slowdown compared to the
+> > "default" memory policy from 17~18% to 4~5% when the system runs with
+> > high memory pressure on its fast tier DRAM nodes.
+> > 
+> > Having these DAMOS_MIGRATE_HOT and DAMOS_MIGRATE_COLD actions can make
+> > tiered memory systems run more efficiently under high memory pressures.
+> > 
 > 
->  ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
->  if (WARN_ONCE(..., "Failed to arm kprobe-ftrace at %pS (error %d)\n", ...)
->    return ret;
+> Hi,
 > 
-> This warning is generated because 'p->addr' is detected to be not a valid
-> ftrace location in ftrace_set_filter_ip(). The ftrace address check is done
-> by check_ftrace_location() at the beginning of check_kprobe_address_safe().
-> At that point, ftrace_location(addr) == addr should return true if the
-> module is loaded. Then the module is searched twice:
->   1. in is_module_text_address(), we find that 'p->addr' is in a module;
->   2. in __module_text_address(), we find the module;
+> It's hard to determine from your results whether the performance
+> mitigation is being caused primarily by MIGRATE_COLD freeing up space
+> for new allocations, or from some combination of HOT/COLD actions
+> occurring during execution but after the database has already been
+> warmed up.
+
+Thanks for the question.  I didn't include all the details for the
+evaluation result, but this is a chance to share more in details.
+
+I would say the mitigation comes from both.  DAMOS_MIGRATE_COLD demotes
+some cold data to CXL so redis can allocate more data on the fast DRAM
+during launching time as the mmap+memset and redis launching takes
+several minutes.  But it also promotes some redis data while running.
+
+> Do you have test results which enable only DAMOS_MIGRATE_COLD actions
+> but not DAMOS_MIGRATE_HOT actions? (and vice versa)
 > 
-> If the module has just been unloaded before the second search, then
-> '*probed_mod' is NULL and we would not go to get the module refcount,
-> then the return value of check_kprobe_address_safe() would be 0, but
-> actually we need to return -EINVAL.
+> The question I have is exactly how often is MIGRATE_HOT actually being
+> utilized, and how much data is being moved. Testing MIGRATE_COLD only
+> would at least give a rough approximation of that.
 
-OK, so you found a race window in check_kprobe_address_safe().
+To explain this, I better share more test results.  In the section of
+"Evaluation Workload", the test sequence can be summarized as follows.
 
-It does something like below.
+  *. "Turn on DAMON."
+  1. Allocate cold memory(mmap+memset) at DRAM node, then make the
+     process sleep.
+  2. Launch redis-server and load prebaked snapshot image, dump.rdb.
+     (85GB consumed: 52GB for anon and 33GB for file cache)
+  3. Run YCSB to make zipfian distribution of memory accesses to
+     redis-server, then measure execution time.
+  4. Repeat 4 over 50 times to measure the average execution time for
+     each run.
+  5. Increase the cold memory size then repeat goes to 2.
 
-check_kprobe_address_safe() {
-	...
+I didn't want to make the evaluation too long in the cover letter, but
+I have also evaluated another senario, which lazyly enabled DAMON just
+before YCSB run at step 4.  I will call this test as "DAMON lazy".  This
+is missing part from the cover letter.
 
-	/* Timing [A] */
+  1. Allocate cold memory(mmap+memset) at DRAM node, then make the
+     process sleep.
+  2. Launch redis-server and load prebaked snapshot image, dump.rdb.
+     (85GB consumed: 52GB for anon and 33GB for file cache)
+  *. "Turn on DAMON."
+  4. Run YCSB to make zipfian distribution of memory accesses to
+     redis-server, then measure execution time.
+  5. Repeat 4 over 50 times to measure the average execution time for
+     each run.
+  6. Increase the cold memory size then repeat goes to 2.
 
-	if (!(core_kernel_text(p->addr) ||
-		is_module_text_address(p->addr)) ||
-		...(other reserved address check)) {
-		return -EINVAL;
-	}
+In the "DAMON lazy" senario, DAMON started monitoring late so the
+initial redis-server placement is same as "default", but started to
+demote cold data and promote redis data just before YCSB run.
 
-	/* Timing [B] */
+The full test result is as follows.
 
-	*probed_mod = __module_text_address(p->addr):
-	if (*probe_mod) {
-		if (!try_module_get(*probed_mod)) {
-			return -ENOENT;
-		}
-		...	
-	}
-}
+  1. YCSB zipfian distribution read only workload
+  memory pressure with cold memory on node0 with 512GB of local DRAM.
+  =============+================================================+=========
+               |       cold memory occupied by mmap and memset  |
+               |   0G  440G  450G  460G  470G  480G  490G  500G |
+  =============+================================================+=========
+  Execution time normalized to DRAM-only values                 | GEOMEAN
+  -------------+------------------------------------------------+---------
+  DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+  CXL-only     | 1.22     -     -     -     -     -     -     - | 1.22
+  default      |    -  1.12  1.13  1.14  1.16  1.19  1.21  1.21 | 1.17
+  DAMON tiered |    -  1.04  1.03  1.04  1.06  1.05  1.05  1.05 | 1.05
+  DAMON lazy   |    -  1.04  1.05  1.05  1.06  1.06  1.07  1.07 | 1.06
+  =============+================================================+=========
+  CXL usage of redis-server in GB                               | AVERAGE
+  -------------+------------------------------------------------+---------
+  DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+  CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+  default      |    -  20.4  27.0  33.1  39.5  45.6  50.5  50.3 | 38.1
+  DAMON tiered |    -   0.1   0.3   0.8   0.6   0.7   1.3   0.9 |  0.7
+  DAMON lazy   |    -   2.9   3.1   3.7   4.7   6.6   8.2   9.7 |  5.6
+  =============+================================================+=========
+  Migration size in GB by DAMOS_MIGRATE_COLD(demotion) and      |
+  DAMOS_MIGRATE_HOT(promotion)                                  | AVERAGE
+  -------------+------------------------------------------------+---------
+  DAMON tiered |                                                |
+  - demotion   |    -   522   510   523   520   513   558   558 |  529
+  - promotion  |    -   0.1   1.3   6.2   8.1   7.2    22    17 |  8.8
+  DAMON lazy   |                                                |
+  - demotion   |    -   288   277   322   343   315   312   320 |  311
+  - promotion  |    -    33    44    41    55    73    89   101 |  5.6
+  =============+================================================+=========
 
-So, if p->addr is in a module which is alive at the timing [A], but
-unloaded at timing [B], 'p->addr' is passed the
-'is_module_text_address(p->addr)' check, but *probed_mod becomes NULL.
-Thus the corresponding module is not referenced and kprobe_arm(p) will
-access a wrong address (use after free).
-This happens either kprobe on ftrace is enabled or not.
+I have included "DAMON lazy" result and also the migration size by new
+DAMOS migrate actions.  Please note that demotion size is way higher
+than promotion because promotion target is only for redis data, but
+demotion target includes huge cold memory allocated by mmap + memset.
+(there could be some ping-pong issue though.)
 
-To fix this problem, we should move the mutex_lock(kprobe_mutex) before
-check_kprobe_address_safe() because kprobe_module_callback() also lock it
-so it can stop module unloading.
+As you mentioned, "DAMON tiered" case gets more benefit because new
+redis allocations go to DRAM more than "default", but it also gets
+benefit from promotion when it is under higher memory pressure as shown
+in 490G and 500G cases.  It promotes 22GB and 17GB of redis data to DRAM
+from CXL.
 
-Can you ensure this will fix your problem?
-I think your patch is just optimizing but not fixing the fundamental
-problem, which is we don't have an atomic search symbol and get module
-API. In that case, we should stop a whole module unloading system until
-registering a new kprobe on a module. (After registering the kprobe,
-the callback can mark it gone and disarm_kprobe does not work anymore.)
+In the case of "DAMON lazy", it shows more promotion size as expected
+and it gets increases as memory pressure goes higher from left to right.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 9d9095e81792..94eaefd1bc51 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1633,11 +1633,11 @@ int register_kprobe(struct kprobe *p)
- 	p->nmissed = 0;
- 	INIT_LIST_HEAD(&p->list);
- 
-+	mutex_lock(&kprobe_mutex);
-+
- 	ret = check_kprobe_address_safe(p, &probed_mod);
- 	if (ret)
--		return ret;
--
--	mutex_lock(&kprobe_mutex);
-+		goto out;
- 
- 	if (on_func_entry)
- 		p->flags |= KPROBE_FLAG_ON_FUNC_ENTRY;
+I will share "latest" workload result as well and it shows similar
+tendency.
 
-----
+  2. YCSB latest distribution read only workload
+  memory pressure with cold memory on node0 with 512GB of local DRAM.
+  =============+================================================+=========
+               |       cold memory occupied by mmap and memset  |
+               |   0G  440G  450G  460G  470G  480G  490G  500G |
+  =============+================================================+=========
+  Execution time normalized to DRAM-only values                 | GEOMEAN
+  -------------+------------------------------------------------+---------
+  DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+  CXL-only     | 1.18     -     -     -     -     -     -     - | 1.18
+  default      |    -  1.18  1.19  1.18  1.18  1.17  1.19  1.18 | 1.18 
+  DAMON tiered |    -  1.04  1.04  1.04  1.05  1.04  1.05  1.05 | 1.04 
+  DAMON lazy   |    -  1.05  1.05  1.06  1.06  1.07  1.06  1.07 | 1.06
+  =============+================================================+=========
+  CXL usage of redis-server in GB                               | AVERAGE
+  -------------+------------------------------------------------+---------
+  DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+  CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+  default      |    -  20.5  27.1  33.2  39.5  45.5  50.4  50.5 | 38.1
+  DAMON tiered |    -   0.2   0.4   0.7   1.6   1.2   1.1   3.4 |  1.2
+  DAMON lazy   |    -   5.3   4.1   3.9   6.4   8.8  10.1  11.3 |  7.1
+  =============+================================================+=========
+  Migration size in GB by DAMOS_MIGRATE_COLD(demotion) and      |
+  DAMOS_MIGRATE_HOT(promotion)                                  | AVERAGE
+  -------------+------------------------------------------------+---------
+  DAMON tiered |                                                |
+  - demotion   |    -   493   478   487   516   510   540   512 |  505
+  - promotion  |    -   0.1   0.2   8.2   5.6   4.0   5.9    29 |  7.5
+  DAMON lazy   |                                                |
+  - demotion   |    -   315   318   293   290   308   322   286 |  305
+  - promotion  |    -    36    45    38    56    74    91    99 |   63
+  =============+================================================+=========
 
-Thank you,
+> Additionally, do you have any data on workloads that exceed the capacity
+> of the DRAM tier?  Here you say you have 512GB of local DRAM, but only
+> test a workload that caps out at 500G.  Have you run a test of, say,
+> 550GB to see the effect of DAMON HOT/COLD migration actions when DRAM
+> capacity is exceeded?
+
+I didn't want to remove DRAM from my server so kept using 512GB of DRAM,
+but I couldn't make a single workload that consumes more than the DRAM
+size.
+
+I wanted to use more realistic workload rather than micro benchmarks.
+And the core concept of this test is to cover realisitic senarios with
+the system wide view.  I think if the system has 512GB of local DRAM,
+then it wouldn't be possible to make the entire 512GB of DRAM hot and
+it'd have some amount of cold memory, which can be the target of
+demotion.  Then we can find some workload that is actively used and
+promote it as much as possible.  That's why I made the promotion policy
+aggressively.
+
+> Can you also provide the DRAM-only results for each test?  Presumably,
+> as workload size increases from 440G to 500G, the system probably starts
+> using some amount of swap/zswap/whatever.  It would be good to know how
+> this system compares to swap small amounts of overflow.
+
+It looks like my explanation doesn't correctly inform you.   The size
+from 440GB to 500GB is for pre allocated cold data to give memory
+pressure on the system so that redis-server cannot be fully allocated at
+fast DRAM, then partially allocated at CXL memory as well.
+
+And my evaluation environment doesn't have swap space to focus on
+migration rather than swap.
 
 > 
-> To fix it, originally we can simply check 'p->addr' is out of text again,
-> like below. But that would check twice respectively in kernel text and
-> module text, so finally I reduce them to be once.
-> 
->   if (!(core_kernel_text((unsigned long) p->addr) ||
->       is_module_text_address((unsigned long) p->addr)) || ...) {
-> 	ret = -EINVAL;
-> 	goto out;
->   }
->   ...
->   *probed_mod = __module_text_address((unsigned long) p->addr);
->   if (*probed_mod) {
-> 	...
->   } else if (!core_kernel_text((unsigned long) p->addr)) { // check again!
-> 	ret = -EINVAL;
-> 	goto out;
->   }
-> 
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/kprobes.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
-> 
-> v2:
->  - Update commit messages and comments as suggested by Masami.
->    Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
-> 
-> v1:
->  - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9d9095e81792..65adc815fc6e 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  	jump_label_lock();
->  	preempt_disable();
->  
-> -	/* Ensure it is not in reserved area nor out of text */
-> -	if (!(core_kernel_text((unsigned long) p->addr) ||
-> -	    is_module_text_address((unsigned long) p->addr)) ||
-> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
-> +	/* Ensure the address is in a text area, and find a module if exists. */
-> +	*probed_mod = NULL;
-> +	if (!core_kernel_text((unsigned long) p->addr)) {
-> +		*probed_mod = __module_text_address((unsigned long) p->addr);
-> +		if (!(*probed_mod)) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +	}
-> +	/* Ensure it is not in reserved area. */
-> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
->  	    within_kprobe_blacklist((unsigned long) p->addr) ||
->  	    jump_label_text_reserved(p->addr, p->addr) ||
->  	    static_call_text_reserved(p->addr, p->addr) ||
-> @@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  		goto out;
->  	}
->  
-> -	/* Check if 'p' is probing a module. */
-> -	*probed_mod = __module_text_address((unsigned long) p->addr);
-> +	/* Get module refcount and reject __init functions for loaded modules. */
->  	if (*probed_mod) {
->  		/*
->  		 * We must hold a refcount of the probed module while updating
-> -- 
-> 2.25.1
-> 
+> ~Gregory
 
+I hope my explanation is helpful for you to understand.  Please let me
+know if you have more questions.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Honggyu
+
