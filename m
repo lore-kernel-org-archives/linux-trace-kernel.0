@@ -1,133 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A3D1FC8;
-	Mon,  8 Apr 2024 03:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6841119A
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Apr 2024 06:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712548448; cv=none; b=d2LBDbFGCHizf/h5naSyPLfJkOTugpkMNrBAiQLzlu1Cv0RnUA8iXa3wFLknJgngviKSTLLVnTle7Rbe6Hq2tduxKngNVaNUUPnRyAFSw8McCdpeuRJ/YKccM13idbv3bzAFavsywux5q4L96SBaPqLIC8koUMiuSkDa94iiguI=
+	t=1712557703; cv=none; b=jVPIxPCLqiGJn4ozFSeoam2C3/QFi4u1YMgHuncUhOOxH/ISlmCU+e82Wwgnn8p3KJXsHsQC5MLCIxHSJKvi9p8UjdcB3R0YVfrPfo2iLRgcs0n7V4m+dtFi5akdmFkd85/XajYSDA18ib5gkIu40wauRr3Vh6sfpUOQ3f1GGMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712548448; c=relaxed/simple;
-	bh=ldaL5TI2vG8hJ2dJM8jnvwvFwNTV8s/Opak7rNRuJkQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=kFwO1wyPGg9OKGZ74Z+N9L3IWrxc4FWVCq0VyDy8oda5aOLzrSdSaMFnxLHFS4MQ0ewkPg0jM6mKBAWFTJKS2iRB0CGeQ/viVQHPnYrDcQuYafE2Q+k5U7SfdX8JfV+a3DBCaQk7Cz7TqPuhv2+FasYq9BIWzG3Y3TzH1mGW3Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8pnCjng; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712557703; c=relaxed/simple;
+	bh=IE2dQfOBUfWFV2sRzZOKfpp0BxlqrHbr9xEZn3IEuP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TFldxWEbn/pCVgz+RSjqD4D80lo7gbmpikh3WnR+WkLVJlPKiNoxpjwT0Np6oEJ1H2ScfgDdGSGukQUGtBdaXH93JlvMPmCgI8sltxa0+yNd+lBD6e9Jvj/dwjAI6eV6RiPogphbYiRnyHLKZUPBumZinFEpA4frgwrhLBt9KBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yOXJp81r; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8pnCjng"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D0C4C433F1;
-	Mon,  8 Apr 2024 03:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712548447;
-	bh=ldaL5TI2vG8hJ2dJM8jnvwvFwNTV8s/Opak7rNRuJkQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=V8pnCjngV44K8vktUDKHOC10cJlaZI7dD9ILMpqODQeiAnMyYymlg53uHnn4bTvpS
-	 nfLjZNy9IFergsvkjz3kVlipshMlKutYpIQ/qvSAysMYCeNE/GOPyJR0q5l+jBv4GQ
-	 juwA/wdWVwJmpITYG3zBVWrb8UddARMslSkOidhLvadEHiWGo3gz68lFc8p/XJbGjv
-	 sme6r9YOgeC8Va9i73956WqXI5AouL6Od/VbEjWtauRBfZcnEWiD8JWlVLUE1sj0ev
-	 fFqm9Eg0aOkN8ElM0H+yqIqovds1KEL4n/KLJMI1odWcEc/unLDhq2BHPxNYepOWyD
-	 erQfeKBReg/xQ==
-Date: Mon, 8 Apr 2024 12:54:01 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Song Liu
- <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
- <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- x86@kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
- probe
-Message-Id: <20240408125401.d4f100d184b11bc01fcd0308@kernel.org>
-In-Reply-To: <20240406175558.GC3060@redhat.com>
-References: <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
-	<CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
-	<20240404095829.ec5db177f29cd29e849169fa@kernel.org>
-	<CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
-	<20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
-	<20240404161108.GG7153@redhat.com>
-	<20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
-	<Zg-8r63tPSkuhN7p@krava>
-	<20240405110230.GA22839@redhat.com>
-	<20240406120536.57374198f3f45e809d7e4efa@kernel.org>
-	<20240406175558.GC3060@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yOXJp81r"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56e37503115so1980909a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 07 Apr 2024 23:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712557700; x=1713162500; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6EgD/Muel3BqCojSMMdXuM1Td/LzqFDog01ouaIAt4=;
+        b=yOXJp81rAaNrq1CgYmdLDH1j2ny2sATQ0Jm61sa5Ex90e+AQSMQhg6fXhzgwPXh+TS
+         OF9HCV32Sup3zJYhk3DGDBMvinJDnerJ36Eq2Yr2KFP/2FFR5W8U0KG8ut4nICKn9TKn
+         P5NnSElxCBYRuJu+eoWCyXpBkpD/nWEcBg09Pn3yddBbMT65naPeqwDJbKhP0jsbYtKB
+         7OdZ/5XPp7Bq+yYrJrP12JX2XHV0GNhrJUJiBn/vywNEnxPx6BZtdtKjnBNHE+kAD4MJ
+         l+ZUV9TgVBlx/djmlOfNyNIC9HTDITSqNjcdzrGqn1uWQ9hbrAxInlbTWYGomjY2z/gY
+         Wxfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712557700; x=1713162500;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6EgD/Muel3BqCojSMMdXuM1Td/LzqFDog01ouaIAt4=;
+        b=LW+E8EGTNeGN7VXuOLJkC4MIPIvZjAxUcvCVGyF6YliY28nuwnZhkS15XZdHjkctce
+         sWTyaCJEwzwfgiEUdRDxL/dYYX4eaMW9tb0XYb7lfLkP7vwcf3O0Hv8jIF4krEqPiaRg
+         tXH3BPxKnr1sRQ1ZdVLGhkZs3SJa5r/N7/2on/CSJQiESxuiKbOhaBjJkSY3GAaDVphB
+         2rDYs9CD44BGtre9Yt+KIRz6xqmbfc4QrJSFMem/eF7xwGA/5gx2Q8fyPL8PL4AGWldy
+         g+Psfc9iRafxZkjpQbRsQ3/3ZsiS6M5YtTLq+9qBI/ge3D32KWfJ0JmXeoshj6ZeMlgD
+         Q8SA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjkOa87qssBZ4E1PNcnVD8mtyjDuy2uIwmkArJJglmS9DqA3n8+Lv0XW6STFHga6aPMXOewo2ZcbQngjrnRK6VplQ0Xo3DklOHSBsEQBdx3k7p
+X-Gm-Message-State: AOJu0YzccydErDAull4wUaDjOmaON3PrtcRBbVkEuUgXhMya3WgzmJsq
+	I/C9ImFET1BlSOYWYvumkGx1JhzswakWZfhajXr3gf2mXLyQv5vU+RV0XqZp5ns=
+X-Google-Smtp-Source: AGHT+IEW7NFlAXtt0eb3qEVFrk9JxABFiNRfMx5pOzC0ESg5/RMCffY6KCodQ4v8J7x5a4GlkvTfcw==
+X-Received: by 2002:a50:bae3:0:b0:56c:18d5:1e27 with SMTP id x90-20020a50bae3000000b0056c18d51e27mr5576700ede.5.1712557699936;
+        Sun, 07 Apr 2024 23:28:19 -0700 (PDT)
+Received: from [192.168.69.100] ([176.176.144.67])
+        by smtp.gmail.com with ESMTPSA id k19-20020aa7c393000000b0056bfb7004basm3538428edq.90.2024.04.07.23.28.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Apr 2024 23:28:19 -0700 (PDT)
+Message-ID: <2e481816-2b06-432c-b09c-e92e230debe8@linaro.org>
+Date: Mon, 8 Apr 2024 08:28:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] mm: replace set_pte_at_notify() with just
+ set_pte_at()
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Sean Christopherson
+ <seanjc@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240405115815.3226315-1-pbonzini@redhat.com>
+ <20240405115815.3226315-5-pbonzini@redhat.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <20240405115815.3226315-5-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, 6 Apr 2024 19:55:59 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+On 5/4/24 13:58, Paolo Bonzini wrote:
+> With the demise of the .change_pte() MMU notifier callback, there is no
+> notification happening in set_pte_at_notify().  It is a synonym of
+> set_pte_at() and can be replaced with it.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   include/linux/mmu_notifier.h | 2 --
+>   kernel/events/uprobes.c      | 5 ++---
+>   mm/ksm.c                     | 4 ++--
+>   mm/memory.c                  | 7 +------
+>   mm/migrate_device.c          | 8 ++------
+>   5 files changed, 7 insertions(+), 19 deletions(-)
 
-> On 04/06, Masami Hiramatsu wrote:
-> >
-> > On Fri, 5 Apr 2024 13:02:30 +0200
-> > Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > > With or without this patch userpace can also do
-> > >
-> > > 	foo() { <-- retprobe1
-> > > 		bar() {
-> > > 			jump to xol_area
-> > > 		}
-> > > 	}
-> > >
-> > > handle_trampoline() will handle retprobe1.
-> >
-> > This is OK because the execution path has been changed to trampoline,
-> 
-> Agreed, in this case the misuse is more clear. But please see below.
-> 
-> > but the above will continue running bar() after sys_uretprobe().
-> 
-> .. and most probably crash
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
-Yes, unless it returns with longjmp(). (but this is rare case and
-maybe malicious program.)
-
-> 
-> > > sigreturn() can be "improved" too. Say, it could validate sigcontext->ip
-> > > and return -EINVAL if this addr is not valid. But why?
-> >
-> > Because sigreturn() never returns, but sys_uretprobe() will return.
-> 
-> You mean, sys_uretprobe() returns to the next insn after syscall.
-> 
-> Almost certainly yes, but this is not necessarily true. If one of consumers
-> changes regs->sp sys_uretprobe() "returns" to another location, just like
-> sys_rt_sigreturn().
-> 
-> That said.
-> 
-> Masami, it is not that I am trying to prove that you are "wrong" ;) No.
-> 
-> I see your points even if I am biased, I understand that my objections are
-> not 100% "fair".
-> 
-> I am just trying to explain why, rightly or not, I care much less about the
-> abuse of sys_uretprobe().
-
-I would like to clear that the abuse of this syscall will not possible to harm
-the normal programs, and even if it is used by malicious code (e.g. injected by
-stack overflow) it doesn't cause a problem. At least thsese points are cleared,
-and documented. it is easier to push it as new Linux API.
-
-Thank you,
-
-> 
-> Thanks!
-> 
-> Oleg.
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
