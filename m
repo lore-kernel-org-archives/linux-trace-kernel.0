@@ -1,136 +1,159 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807AE3A1A1;
-	Mon,  8 Apr 2024 08:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DCE41AAB
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712565219; cv=none; b=fe+JnyIVADq3Zwvrn8CiIKUHsEEv+dxhjpIvWi6dfpP74oiDLaO/hBZqk7I7qM4kkRQw8KFn2FmHdwcuXyNs0LVsBo2aIdWwlgzGEc2xq8IFTwxDH8tnFTCOapxdtRKFWMXsN1cHJwtSZ+Rq7G8RHBexOx0vnNtZxfI5HeVYSFg=
+	t=1712566970; cv=none; b=iPUMDMWWC2ZWDUD8bFa0ZHX3JtD4f7wVe5gLZUct3StRC5e50n2ZY5fnSD3hniNqCi8AJTYwm+1lY6xoLzCLd+zLzpeVu2fWQugCqZVjHjZ19nKa0dxxXS85z0/5kdL7fO6NtuNz4P4fNgswfdEMwHcgAwlaTYEbovs5VZNrRlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712565219; c=relaxed/simple;
-	bh=L6Sp0fHnMYGR04YqKkhRgLAJKayv1a/l1+xEZOfPX4E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AfgB4BXKsxFIjRpwC7OUyOLGiBOX7mP80UUYGPqsaH370te90LeFGoBgkaO8agFkbMydQJnrKX0I76fudlaxpnj/AJZHDfUNgcK05lPmVWnhg/PZaySkSGiXfKekFEbsCxO6NrCnki6GAqczZBduxZ12xv6H8dKN1ci/+Z1JBwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VCj3j3yVhz1ymHv;
-	Mon,  8 Apr 2024 16:31:13 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id EF9DA1401E9;
-	Mon,  8 Apr 2024 16:33:26 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Apr 2024 16:33:26 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <mhiramat@kernel.org>, <naveen.n.rao@linux.ibm.com>,
-	<anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<zhengyejian1@huawei.com>
-Subject: [PATCH v2] kprobes: Avoid possible warn in __arm_kprobe_ftrace()
-Date: Mon, 8 Apr 2024 16:34:03 +0800
-Message-ID: <20240408083403.3302274-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240407035904.2556645-1-zhengyejian1@huawei.com>
-References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
+	s=arc-20240116; t=1712566970; c=relaxed/simple;
+	bh=aVuKcbnpYY4FjU+CNW2JrarqfTioWso04jtw3oU+lTI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qVqgmymIk4dxMnNhTPJEWhe1zJUvWRFJhD7Hkbj4oRiIkMWM0fT0GJ1RAwkgx3n4huBqZivFIJsH0UtfdVLz7IZHABbn5uQT/1n9EfzIE+fUotxKf0YPUvx1x7TiTxgzh/VJ8lVM9aPFWuqWad6xs3CGMW4/Cx3KxBT6b+RE/qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LTzLQuKB; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LTzLQuKB"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de0b4063e59so2564321276.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712566967; x=1713171767; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dRUfOG22gFtzSxXckMYpwWSYVbuVuH++MvjmfSoLS8Y=;
+        b=LTzLQuKBm8g7OHxnQdc0+7vk/JxEO9pIvGEIpIY9Qv3Pp4ikHBvaIYm6Cy7ggG0/92
+         kzxeF7ctzHX+UrhFvnfBx0ik7SAEvAFpNyR6JiJGArUqqx6WvHytqCRKvJuGFxbvA9Cv
+         NcOmnj3cWGsroecHaTyDmKfk8c9OXiwR0bOeW9n1nkf16P6qJ0y4B5+yZMzUtHoeyvsZ
+         uZ0/FQQw3URmaL3m4LsZgzl+WhkOCcix74EGIlvZeTBClEeBqyfKg7PJVksc229yhln5
+         el3atGe0wU2ZuH2FlKwnJC7EJ8cl0hMGgobLV81DCEBR+F0W2EIslSTcBBjewRMJy7xh
+         IMQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712566967; x=1713171767;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dRUfOG22gFtzSxXckMYpwWSYVbuVuH++MvjmfSoLS8Y=;
+        b=Rsc1gStOiC6chsSkv5fvx9GsHwbcERRkj9BmXRkiD2HEQFJQmAe4jFZTuLnnekz3Gu
+         +lIH8FaHzSNtzcEZbS5xKuMpfziitSgUU/32yG1rXneX07wkK2dstCEwHlsvpPWahaCJ
+         yO0y2Ux69pPMZlN/o3EmFB/QQe/nHGeMb5ooMWTrsSDR+lxzP8mMleLBr7jVVjWZl7fy
+         EmZAVpNqvCzka3ieiAHHiMt5M9f7S+B8y1dOE0JTrlmXQPw1XdMnJ9w6JkpM/kdQux9J
+         VxXM3EABGjXdb2tw0nWo3zUXGixq3ShLMPmFwV5xoeKB9ZZV0NmH/3KN/DpkPWBp32dd
+         Xfig==
+X-Forwarded-Encrypted: i=1; AJvYcCVSP1dRc9+GSvMA3PURVlNFUpcFFxNvA60TJ/nkHQyoA8nFuLj5QNHpa/aFa9ubk27SwEYIoaAFrk1pf6xQ+24xYBqxnyQLQNOj+my0CgInImgF
+X-Gm-Message-State: AOJu0YzT/zA0KIdpItha4Z2l2e+m7xGWv1AevWUqqsrpuGn6EfIYyzRb
+	rd7RuAeOgikBMncRqTw0a/mIQlCKEOmEQub2eDzsFeuD/d39dnLmKhaACIxaivpzd40kzI3sAg=
+	=
+X-Google-Smtp-Source: AGHT+IF7fNc9CfA3rN0FPE5cCB/FJRCFpa71D/Uyw6NdHdjHjjwDmKUZCoP0gpqMqi3bqfDBxO1+PAF/cA==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:ea4d:dc81:62c5:eeb9])
+ (user=elver job=sendgmr) by 2002:a05:6902:c09:b0:dcd:b431:7f5b with SMTP id
+ fs9-20020a0569020c0900b00dcdb4317f5bmr2823872ybb.0.1712566967683; Mon, 08 Apr
+ 2024 02:02:47 -0700 (PDT)
+Date: Mon,  8 Apr 2024 11:01:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <20240408090205.3714934-1-elver@google.com>
+Subject: [PATCH] tracing: Add new_exec tracepoint
+From: Marco Elver <elver@google.com>
+To: elver@google.com, Steven Rostedt <rostedt@goodmis.org>
+Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-There is once warn in __arm_kprobe_ftrace() on:
+Add "new_exec" tracepoint, which is run right after the point of no
+return but before the current task assumes its new exec identity.
 
- ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
- if (WARN_ONCE(..., "Failed to arm kprobe-ftrace at %pS (error %d)\n", ...)
-   return ret;
+Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
+runs before flushing the old exec, i.e. while the task still has the
+original state (such as original MM), but when the new exec either
+succeeds or crashes (but never returns to the original exec).
 
-This warning is generated because 'p->addr' is detected to be not a valid
-ftrace location in ftrace_set_filter_ip(). The ftrace address check is done
-by check_ftrace_location() at the beginning of check_kprobe_address_safe().
-At that point, ftrace_location(addr) == addr should return true if the
-module is loaded. Then the module is searched twice:
-  1. in is_module_text_address(), we find that 'p->addr' is in a module;
-  2. in __module_text_address(), we find the module;
+Being able to trace this event can be helpful in a number of use cases:
 
-If the module has just been unloaded before the second search, then
-'*probed_mod' is NULL and we would not go to get the module refcount,
-then the return value of check_kprobe_address_safe() would be 0, but
-actually we need to return -EINVAL.
+  * allowing tracing eBPF programs access to the original MM on exec,
+    before current->mm is replaced;
+  * counting exec in the original task (via perf event);
+  * profiling flush time ("new_exec" to "sched_process_exec").
 
-To fix it, originally we can simply check 'p->addr' is out of text again,
-like below. But that would check twice respectively in kernel text and
-module text, so finally I reduce them to be once.
+Example of tracing output ("new_exec" and "sched_process_exec"):
 
-  if (!(core_kernel_text((unsigned long) p->addr) ||
-      is_module_text_address((unsigned long) p->addr)) || ...) {
-	ret = -EINVAL;
-	goto out;
-  }
-  ...
-  *probed_mod = __module_text_address((unsigned long) p->addr);
-  if (*probed_mod) {
-	...
-  } else if (!core_kernel_text((unsigned long) p->addr)) { // check again!
-	ret = -EINVAL;
-	goto out;
-  }
+  $ cat /sys/kernel/debug/tracing/trace_pipe
+      <...>-379     [003] .....   179.626921: new_exec: filename=/usr/bin/sshd pid=379 comm=sshd
+      <...>-379     [003] .....   179.629131: sched_process_exec: filename=/usr/bin/sshd pid=379 old_pid=379
+      <...>-381     [002] .....   180.048580: new_exec: filename=/bin/bash pid=381 comm=sshd
+      <...>-381     [002] .....   180.053122: sched_process_exec: filename=/bin/bash pid=381 old_pid=381
+      <...>-385     [001] .....   180.068277: new_exec: filename=/usr/bin/tty pid=385 comm=bash
+      <...>-385     [001] .....   180.069485: sched_process_exec: filename=/usr/bin/tty pid=385 old_pid=385
+      <...>-389     [006] .....   192.020147: new_exec: filename=/usr/bin/dmesg pid=389 comm=bash
+       bash-389     [006] .....   192.021377: sched_process_exec: filename=/usr/bin/dmesg pid=389 old_pid=389
 
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Signed-off-by: Marco Elver <elver@google.com>
 ---
- kernel/kprobes.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ fs/exec.c                   |  2 ++
+ include/trace/events/task.h | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-v2:
- - Update commit messages and comments as suggested by Masami.
-   Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
-
-v1:
- - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 9d9095e81792..65adc815fc6e 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	jump_label_lock();
- 	preempt_disable();
+diff --git a/fs/exec.c b/fs/exec.c
+index 38bf71cbdf5e..ab778ae1fc06 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1268,6 +1268,8 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	if (retval)
+ 		return retval;
  
--	/* Ensure it is not in reserved area nor out of text */
--	if (!(core_kernel_text((unsigned long) p->addr) ||
--	    is_module_text_address((unsigned long) p->addr)) ||
--	    in_gate_area_no_mm((unsigned long) p->addr) ||
-+	/* Ensure the address is in a text area, and find a module if exists. */
-+	*probed_mod = NULL;
-+	if (!core_kernel_text((unsigned long) p->addr)) {
-+		*probed_mod = __module_text_address((unsigned long) p->addr);
-+		if (!(*probed_mod)) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+	/* Ensure it is not in reserved area. */
-+	if (in_gate_area_no_mm((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
- 	    jump_label_text_reserved(p->addr, p->addr) ||
- 	    static_call_text_reserved(p->addr, p->addr) ||
-@@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 		goto out;
- 	}
++	trace_new_exec(current, bprm);
++
+ 	/*
+ 	 * Ensure all future errors are fatal.
+ 	 */
+diff --git a/include/trace/events/task.h b/include/trace/events/task.h
+index 47b527464d1a..8853dc44783d 100644
+--- a/include/trace/events/task.h
++++ b/include/trace/events/task.h
+@@ -56,6 +56,36 @@ TRACE_EVENT(task_rename,
+ 		__entry->newcomm, __entry->oom_score_adj)
+ );
  
--	/* Check if 'p' is probing a module. */
--	*probed_mod = __module_text_address((unsigned long) p->addr);
-+	/* Get module refcount and reject __init functions for loaded modules. */
- 	if (*probed_mod) {
- 		/*
- 		 * We must hold a refcount of the probed module while updating
++/**
++ * new_exec - called before setting up new exec
++ * @task:	pointer to the current task
++ * @bprm:	pointer to linux_binprm used for new exec
++ *
++ * Called before flushing the old exec, but at the point of no return during
++ * switching to the new exec.
++ */
++TRACE_EVENT(new_exec,
++
++	TP_PROTO(struct task_struct *task, struct linux_binprm *bprm),
++
++	TP_ARGS(task, bprm),
++
++	TP_STRUCT__entry(
++		__string(	filename,	bprm->filename	)
++		__field(	pid_t,		pid		)
++		__string(	comm,		task->comm	)
++	),
++
++	TP_fast_assign(
++		__assign_str(filename, bprm->filename);
++		__entry->pid = task->pid;
++		__assign_str(comm, task->comm);
++	),
++
++	TP_printk("filename=%s pid=%d comm=%s",
++		  __get_str(filename), __entry->pid, __get_str(comm))
++);
++
+ #endif
+ 
+ /* This part must be outside protection */
 -- 
-2.25.1
+2.44.0.478.gd926399ef9-goog
 
