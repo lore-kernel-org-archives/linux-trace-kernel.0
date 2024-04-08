@@ -1,131 +1,104 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 065AF5F861;
-	Mon,  8 Apr 2024 10:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4976769DF5;
+	Mon,  8 Apr 2024 11:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712573827; cv=none; b=tVCwlnx1yVlevo93RN95oUtPPq/5/t3xnNB+mNaK0byDpeuG+/QlmZoQgZKA9AJvUJjbgwd2fAItMkOcVrUV0hJOkrc3p68is40yweeNPVr8ZTQy7W49uhdvMT1hWfcKCy8C0MwOJFmG0rNJyJaSfmGFtGVMrLNwTP9jcSJOsuU=
+	t=1712576726; cv=none; b=rI9sD6GSZZjmPHMB7/V+piQP9ggjZw89UBx5AI2g0M5DbVrVhvrCdcSD3HezLiwj/K6MSjj9R2zh7/ubBPVOYn5vk3eoExaho/721opaVlfNmVIzaPHnPmhocDOom8NwhzoSjsVzuS++88Y7u3Fjq22hKWbZP5NhNK4DrAuqvOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712573827; c=relaxed/simple;
-	bh=f6NiEl26Ym6V484daiGIUK9s0ZRs8CyTVr6wQNiEtys=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VUKmFVPo29W04v/Wm7v3NEvvnhZNhP9J9KzamRWYRgEqwDOj5KdeEKBh6Qidm+WiiXVxUDYqwp+109FCj3TO44BQRx8eiaK1MYmd8/dXkYBnkKfWrVGAeZDgsAhJNRwdwaeQsQKBOyIMBGEvMRUKPuTFxns9+EAASKA928CLKfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-0c-6613cd78f8c3
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com
-Subject: Re: [RFC PATCH v3 0/7] DAMON based tiered memory management for CXL memory
-Date: Mon,  8 Apr 2024 19:56:30 +0900
-Message-ID: <20240408105635.2927-1-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240405192800.67163-1-sj@kernel.org>
-References: 
+	s=arc-20240116; t=1712576726; c=relaxed/simple;
+	bh=Lvr4Q9WQMTuj4LqkHya0HKL9JodxZNBHVeLenTpYopw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EDXwRu52Sy9oXr+MuO/StmrzEo+2LLChmj2Uql18uwMhNSV33XlQ9cAv9nmcOoQjH8xfj2W9i0v9G7Hf+u7pzCYevQzbvTBDPz3aZV3LeBUuXR/aNTddr9wR5jtRUcKxHD7jSV5h2SJYSM0u5/SdsicfQB9UkXvEwYwzx0KOQJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=h0ErTczH; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="h0ErTczH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1712576721;
+	bh=taqzyuzUm+h1dAr9up1EmBlmxQ7Pw3TT7Dqle3r+vfk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=h0ErTczH+J8eOKMVXpItrHYKRUMh+pxxcV6/0CoHG40VtMk6SjHBicTMij8g0QPcl
+	 DqWHMNnSfi+fwP5HiCdifsYmHpkp4Xn+DbOgdxU7qWixZBXfw3jqmo2Mf9TSyh+dfR
+	 6VbzGd3EpRZksCPRiEZyrpuPnkVP77GEek1dnGxxPTCQfwlANrE42GRZMWo8lTHAps
+	 +9qTuFxiU3mHHBuAnio0EBxVUDdvEu22B/D31hrzTZyHyg754PmZ251qNdGHU6OTRk
+	 8cDtgXORRLDOqu5a0FunAuYei0U3LrNTqxk35BBWQCXaFVALq9JB3md16kAgiWqViN
+	 5wPghIA4bJBwA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VCnMf3rffz4wcF;
+	Mon,  8 Apr 2024 21:45:18 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin
+ <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, Atish Patra
+ <atishp@atishpatra.org>, Sean Christopherson <seanjc@google.com>, Andrew
+ Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+In-Reply-To: <20240405115815.3226315-2-pbonzini@redhat.com>
+References: <20240405115815.3226315-1-pbonzini@redhat.com>
+ <20240405115815.3226315-2-pbonzini@redhat.com>
+Date: Mon, 08 Apr 2024 21:45:18 +1000
+Message-ID: <87h6gcaxip.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsXC9ZZnkW7FWeE0g2VT+C0m9hhYzFm/hs1i
-	140Qi/sPXrNb/N97jNHiyf/frBYnbjayWXR+X8picXnXHDaLe2v+s1ocWX+WxWLz2TPMFouX
-	q1ns63jAZHH46xsmi8mXFrBZvJhyhtHi5KzJLBazj95jdxD2WHr6DZvHhiYgsXPWXXaPln23
-	2D0WbCr1aDnyltVj8Z6XTB6bVnWyeWz6NInd48SM3yweOx9aerzYPJPRo7f5HZvH501yAXxR
-	XDYpqTmZZalF+nYJXBmbpj1kLFjFX3H+dxtTA+N37i5GTg4JAROJQ2c3ssDYR04tYAax2QTU
-	JK68nMQEYosIKEqce3yRtYuRi4NZYAaLxOGFXYwgCWGBYInFf2ezg9gsAqoSOyf9B2vmFTCT
-	OL7qFxvEUE2Jx9t/gtVwChhLvH70DKxXSIBH4tWG/YwQ9YISJ2c+ATuCWUBeonnrbGaQZRIC
-	h9gldnzuYoIYJClxcMUNlgmM/LOQ9MxC0rOAkWkVo1BmXlluYmaOiV5GZV5mhV5yfu4mRmDk
-	Lav9E72D8dOF4EOMAhyMSjy8JyYKpQmxJpYVV+YeYpTgYFYS4Q02FUwT4k1JrKxKLcqPLyrN
-	SS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwGgZ9SLjuEaultkknrsOmSE+Vp6t
-	m4rYo6tNJjsGvZJb/cbgzJUfeQKL3d49PVs+Q3NaoX/06pZ4vWvzw593rPQ5uWFa5senGyPW
-	5nxQd5S9KFo2+Y/+cc6K9BXrud/fE5z93fPl0ZL4RMYD6TsDVOYv2XX1dntk+qcoBUfz9U+1
-	ZdYlZfzSnajEUpyRaKjFXFScCACIMt/NuAIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXCNUNLT7f8rHCawZMGS4uJPQYWc9avYbPY
-	dSPE4v6D1+wW//ceY7R48v83q8WJm41sFp1PvjNaHJ57ktWi8/tSFovLu+awWdxb85/V4sj6
-	sywWm8+eYbZYvFzN4tC156wW+zoeMFkc/vqGyWLypQVsFi+mnGG0ODlrMovF7KP32B3EPJae
-	fsPmsaEJSOycdZfdo2XfLXaPBZtKPVqOvGX1WLznJZPHplWdbB6bPk1i9zgx4zeLx86Hlh4v
-	Ns9k9Ohtfsfm8e22h8fiFx+YPD5vkgsQiOKySUnNySxLLdK3S+DK2DTtIWPBKv6K87/bmBoY
-	v3N3MXJySAiYSBw5tYAZxGYTUJO48nISE4gtIqAoce7xRdYuRi4OZoEZLBKHF3YxgiSEBYIl
-	Fv+dzQ5iswioSuyc9B+smVfATOL4ql9sEEM1JR5v/wlWwylgLPH60TOwXiEBHolXG/YzQtQL
-	Spyc+YQFxGYWkJdo3jqbeQIjzywkqVlIUgsYmVYximTmleUmZuaY6hVnZ1TmZVboJefnbmIE
-	xtiy2j8TdzB+uex+iFGAg1GJh9eDSThNiDWxrLgy9xCjBAezkghvsKlgmhBvSmJlVWpRfnxR
-	aU5q8SFGaQ4WJXFer/DUBCGB9MSS1OzU1ILUIpgsEwenVAOjXLWr9sYjr+SX3vyh7eooebUv
-	Q/xfgfV9rWwWxoNMr9iiznROvBC9e8p6WU65V9fOb24W22NieI/x4ewny5007JbumzxDSmuq
-	pmn2HLPKKQpX95yLM/OYeXIqm8TviYEKYTNnpf3rlH18zNupUU5kf5Ly1rsiy9yUY5tTwm/5
-	3ZRnT82SWPVAiaU4I9FQi7moOBEAzndwPa0CAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 
-Hi SeongJae,
+Paolo Bonzini <pbonzini@redhat.com> writes:
+> The .change_pte() MMU notifier callback was intended as an
+> optimization. The original point of it was that KSM could tell KVM to flip
+> its secondary PTE to a new location without having to first zap it. At
+> the time there was also an .invalidate_page() callback; both of them were
+> *not* bracketed by calls to mmu_notifier_invalidate_range_{start,end}(),
+> and .invalidate_page() also doubled as a fallback implementation of
+> .change_pte().
+>
+> Later on, however, both callbacks were changed to occur within an
+> invalidate_range_start/end() block.
+>
+> In the case of .change_pte(), commit 6bdb913f0a70 ("mm: wrap calls to
+> set_pte_at_notify with invalidate_range_start and invalidate_range_end",
+> 2012-10-09) did so to remove the fallback from .invalidate_page() to
+> .change_pte() and allow sleepable .invalidate_page() hooks.
+>
+> This however made KVM's usage of the .change_pte() callback completely
+> moot, because KVM unmaps the sPTEs during .invalidate_range_start()
+> and therefore .change_pte() has no hope of finding a sPTE to change.
+> Drop the generic KVM code that dispatches to kvm_set_spte_gfn(), as
+> well as all the architecture specific implementations.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/arm64/kvm/mmu.c                  | 34 -----------------
+>  arch/loongarch/include/asm/kvm_host.h |  1 -
+>  arch/loongarch/kvm/mmu.c              | 32 ----------------
+>  arch/mips/kvm/mmu.c                   | 30 ---------------
+>  arch/powerpc/include/asm/kvm_ppc.h    |  1 -
+>  arch/powerpc/kvm/book3s.c             |  5 ---
+>  arch/powerpc/kvm/book3s.h             |  1 -
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c   | 12 ------
+>  arch/powerpc/kvm/book3s_hv.c          |  1 -
+>  arch/powerpc/kvm/book3s_pr.c          |  7 ----
+>  arch/powerpc/kvm/e500_mmu_host.c      |  6 ---
 
-On Fri,  5 Apr 2024 12:28:00 -0700 SeongJae Park <sj@kernel.org> wrote:
-> Hello Honggyu,
-> 
-> On Fri,  5 Apr 2024 15:08:49 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> 
-> > There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
-> > posted at [1].
-> > 
-> > It says there is no implementation of the demote/promote DAMOS action
-> > are made.  This RFC is about its implementation for physical address
-> > space.
-> > 
-> > 
-> > Changes from RFC v2:
-> >   1. Rename DAMOS_{PROMOTE,DEMOTE} actions to DAMOS_MIGRATE_{HOT,COLD}.
-> >   2. Create 'target_nid' to set the migration target node instead of
-> >      depending on node distance based information.
-> >   3. Instead of having page level access check in this patch series,
-> >      delegate the job to a new DAMOS filter type YOUNG[2].
-> >   4. Introduce vmstat counters "damon_migrate_{hot,cold}".
-> >   5. Rebase from v6.7 to v6.8.
-> 
-> Thank you for patiently keeping discussion and making this great version!  I
-> left comments on each patch, but found no special concerns.  Per-page access
-> recheck for MIGRATE_HOT and vmstat change are taking my eyes, though.  I doubt
-> if those really needed.  It would be nice if you could answer to the comments.
+LGTM.
 
-I will answer them where you made the comments.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-> Once my comments on this version are addressed, I would have no reason to
-> object at dropping the RFC tag from this patchset.
-
-Thanks.  I will drop the RFC after addressing your comments.
-
-> Nonetheless, I show some warnings and errors from checkpatch.pl.  I don't
-> really care about those for RFC patches, so no problem at all.  But if you
-> agree to my opinion about RFC tag dropping, and therefore if you will send next
-> version without RFC tag, please make sure you also run checkpatch.pl before
-> posting.
-
-Sure.  I will run checkpatch.pl from the next revision.
-
-Thanks,
-Honggyu
-
-> 
-> Thanks,
-> SJ
-> 
-> [...]
+cheers
