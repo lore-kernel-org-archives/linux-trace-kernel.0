@@ -1,222 +1,189 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA3D13F01A;
-	Mon,  8 Apr 2024 14:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F38126F0A;
+	Mon,  8 Apr 2024 15:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712588307; cv=none; b=pG/GOZ6Kq4DJQkxI9NVhCaet/XrXejStyV+c42sJ3LToziG1YTUBfEIcsJDzL8LhdiGlhs+OMvnLkGVJjFgYZhmcin1ERbxyjRxdUTFnSwIJAuWODieuK2+HU6hIVsHGD2oNCg65JmF/1jaewnP/+YY+KpHS5OtLRkxiTDBuSYk=
+	t=1712590471; cv=none; b=cbHXdu42OrOV7ykJUvlUdzgJ5+sIeoNH4vabPtPFWME4KFDDv/gtE5ndujGRv7s0xHnVbO177Kh7UFb4msbxp4nDMQNblZn2I3GucZALFypSBcL4KygdhiY1/B92KGef+kaj9v/JwsNuj+ZkzFhO1s4GzH2T60EVaggdPV8LDEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712588307; c=relaxed/simple;
-	bh=H2v7MTrPicOoDLC8fqGHfCf75dQRyPiiI+mZ/zR7ZIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PB65kLFXBvYIFd8KJhBxMwjpLvb5bsdixtCR1nK1MSUbHEMRoK+bQlnT3DWmLVmNRmwo800t1RQhXPNWE61Fia2Vaiv5Me9meGM1k/dHU3IjORcT6E+geY1//DXy0ogkrBlOg2h8IU7IH6VfRIzfy6s+pVwzqveLL/U7H5MyTfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vWOLiIYf; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vWOLiIYf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712590471; c=relaxed/simple;
+	bh=4YKRX0MlfiV5mpfCzOeBNiJQnPi5WzZXviugTinSpNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QArUo6xInyOSGsy43zIZHs0a4wTh6fA4eALBmXPfrxvr0HaNti7YcbJ5tNYL59ueU+z8jK42WlJAABRnYW03heLiQ7QmDH56OynF/s1kZW2zo9KHpsCuE45doPkMOAEYbazFSEh1CjbK3klHFALpZaUZ5bB8Y7TwYCaj4YE+b14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2EAEEGQ; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vWOLiIYf";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vWOLiIYf"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 08316203F0;
-	Mon,  8 Apr 2024 14:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712588302; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YTjJZsX/P9tXqTfUJFkBVLEtRqDKu3yAXjWfeJPn/ds=;
-	b=vWOLiIYfYbL3aGlyNL1lo+sJ1v8hiRj1ROFWPrNLXjvZyWk7j0Tn4URnBWbbWI/hPtloSi
-	u/F+H/QULKRTeKge7WFIAz9XAjuGrY2tu31B91juR6NFYDgObLLfuCNpL6HzGXBWvcO6NJ
-	wjiiOrCZBLKJZSXIdY63apPBD8J7XaY=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712588302; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YTjJZsX/P9tXqTfUJFkBVLEtRqDKu3yAXjWfeJPn/ds=;
-	b=vWOLiIYfYbL3aGlyNL1lo+sJ1v8hiRj1ROFWPrNLXjvZyWk7j0Tn4URnBWbbWI/hPtloSi
-	u/F+H/QULKRTeKge7WFIAz9XAjuGrY2tu31B91juR6NFYDgObLLfuCNpL6HzGXBWvcO6NJ
-	wjiiOrCZBLKJZSXIdY63apPBD8J7XaY=
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DB92813AA4;
-	Mon,  8 Apr 2024 14:58:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id yNxwNQ0GFGa8dgAAn2gu4w
-	(envelope-from <mkoutny@suse.com>); Mon, 08 Apr 2024 14:58:21 +0000
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2EAEEGQ"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ed627829e6so439601b3a.1;
+        Mon, 08 Apr 2024 08:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712590469; x=1713195269; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XzmG06Fco0ZTrSThkuHAMjjsKBRNcTmAqJu1Q2E5r5g=;
+        b=g2EAEEGQARbhbZodLg1Q71essx5NxOLt1+t7HXWuEBtP2GFhJ48uvE/BeeBMYYwu9g
+         yHs2iUYxM04BIDYiTV/mswHbYfKJxCyAybPY6rmR617sk1z27w/nUfjsTu6GvgoYidrV
+         K9icdU93ee85M1IMHlzcl3j+qPEMarUlF4m3t8N895aDUkyzAW4nufEt7eiaGp83PYz6
+         5smDlNPatzvuC95Q5VDHHGSfqocjm5x7YZTlQIG9gZb5bnxxEWmlPenZpUkYjO1d1iaj
+         dn1dyabZvQTnlDklvshhhPnd/JpckcVfjfbePZQaY4onHO1fiDW7PNk6eVizXYnOwKI+
+         5OFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712590469; x=1713195269;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XzmG06Fco0ZTrSThkuHAMjjsKBRNcTmAqJu1Q2E5r5g=;
+        b=R4/W27N65uwZMzN5dBdxizc8EfDzgMoLLqbuaOA/0Di+Llxw3lCW5Bmd6+3VoE6OnB
+         4o8ra0hpMIM5S8ifhcsbZf4Y1ENFe7x6yXrCsTnW+w321oAcJxHcXySQJnPDXKE3wxaS
+         eJ+ppH/24+91xcB7DAkifBPe0r8X9ARlTR75l19//Y9CW5w8AdqGsikLe3g27Lbqh2vx
+         SvPHsCVHKdUUNfCy7faDRfWXvy4SqQ6yi0p+yUEe9rJTMn57n+Zh66RTXXtQluMBBGV7
+         21fbB9dIAD4nhFa08EjG0Enk6gg8CEOKM7kO4ba0A0lAlEQ4w3PeMOUxGQ0v0DJWUOYO
+         Ky/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXYOzx06o08AlNy3qbEm8GGTgh6TmnlinybgbKX3mNfSOtPQ3wu6YGtfpO/+cvQ/06LYY1KskWCsIXo5/b5TN42p36iulmykd6L5gkrahmiI6XR1TcT99K9CjJieL++ydGVDC5g2xziNq6r56dPCiwJxZs8OAao4zF4l8ezyLvjFj7cJqzttsckJ7C4YonAtRZyNgtMzhKa43/1wF6ibUU/BFbGx8ZgFm5V5ZjjwSVgN019kGz6llBBQ37yP6irppi5AUEcFuyRO/afe3t+ShpeLbj9aSzoLm0uYPF8ZpVF23W6Sd/DLp0SI0JFVyaesSG539uieH37eeK+WsxbTghxYb5lKaad/ppa9pFg0GlKBZqo/u0eJ5ir4e/SQzgxtlTuTT/9ksgxlbWEUWnrrLQY6Y0qi25Wl46Ib7IFfxeV6CH7KmfECCf3HxbSa04NQGJOdq2bv40V4SVw/hHYLLX8+yztF4vX3YPQo8ah9z7gj8WICPqAk6I9c2aJ8dn0egu0o2RjXQ==
+X-Gm-Message-State: AOJu0YwcFJIAOg6DBsic/Gb3gnjT5zWImrA0tRUFYlNotbrkL9GK56pM
+	H5h12J7MII8snt7VEGC3aFrBH22GNot97N71JiaJNE2/yPuvm7Ep
+X-Google-Smtp-Source: AGHT+IHBXATYsnCAi18Pnmd94XM8gXF1KK2c5ntBdRmFa9x8kfwO+o1mRSI9SAgTVsohRvBTBjU3lg==
+X-Received: by 2002:a05:6a00:8618:b0:6ed:1c7:8c65 with SMTP id hg24-20020a056a00861800b006ed01c78c65mr9832006pfb.10.1712590468982;
+        Mon, 08 Apr 2024 08:34:28 -0700 (PDT)
+Received: from localhost ([2601:647:6881:9060:13a8:4fe8:4da1:7ea2])
+        by smtp.gmail.com with ESMTPSA id s7-20020aa78d47000000b006e5808b472esm6878408pfe.95.2024.04.08.08.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 08:34:27 -0700 (PDT)
+Date: Mon, 8 Apr 2024 08:34:26 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Marc Harvey <marcharvey@google.com>,
+	"Cong Wang ." <cong.wang@bytedance.com>, shakeel.butt@linux.dev,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Kees Cook <keescook@chromium.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH 2/3] kernel/pid: Remove default pid_max value
-Date: Mon,  8 Apr 2024 16:58:18 +0200
-Message-ID: <20240408145819.8787-3-mkoutny@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240408145819.8787-1-mkoutny@suse.com>
-References: <20240408145819.8787-1-mkoutny@suse.com>
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZhQOgjkna94y9VBx@pop-os.localdomain>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-3-almasrymina@google.com>
+ <ZfegzB341oNc_Ocz@infradead.org>
+ <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
+ <ZgC5JoSiWAYf3IgX@infradead.org>
+ <CAHS8izO5-giYhM1bVCLLOXRXq-Xd0=pi0kPq5E1-R=3i=XihmQ@mail.gmail.com>
+ <ZgUc07Szbx5x-obb@infradead.org>
+ <CAHS8izM8iLC9J1xSHScMrMkVyoY5HZ_nFMRO4V7HYarHhZhk6Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+In-Reply-To: <CAHS8izM8iLC9J1xSHScMrMkVyoY5HZ_nFMRO4V7HYarHhZhk6Q@mail.gmail.com>
 
-pid_max is a per-pidns (thus global too) limit on a number of tasks the
-kernel admits. The knob can be configured by admin in the range between
-pid_max_min and pid_max_max (sic). The default value sits between
-those and it typically equals max(32k, 1k*nr_cpus).
+On Mon, Apr 01, 2024 at 12:22:24PM -0700, Mina Almasry wrote:
+> On Thu, Mar 28, 2024 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Tue, Mar 26, 2024 at 01:19:20PM -0700, Mina Almasry wrote:
+> > >
+> > > Are you envisioning that dmabuf support would be added to the block
+> > > layer
+> >
+> > Yes.
+> >
+> > > (which I understand is part of the VFS and not driver specific),
+> >
+> > The block layer isn't really the VFS, it's just another core stack
+> > like the network stack.
+> >
+> > > or as part of the specific storage driver (like nvme for example)? If
+> > > we can add dmabuf support to the block layer itself that sounds
+> > > awesome. We may then be able to do devmem TCP on all/most storage
+> > > devices without having to modify each individual driver.
+> >
+> > I suspect we'll still need to touch the drivers to understand it,
+> > but hopefully all the main infrastructure can live in the block layer.
+> >
+> > > In your estimation, is adding dmabuf support to the block layer
+> > > something technically feasible & acceptable upstream? I notice you
+> > > suggested it so I'm guessing yes to both, but I thought I'd confirm.
+> >
+> > I think so, and I know there has been quite some interest to at least
+> > pre-register userspace memory so that the iommu overhead can be
+> > pre-loaded.  It also is a much better interface for Peer to Peer
+> > transfers than what we currently have.
+> >
 
-The nr_cpu scaling was introduced in commit 72680a191b93 ("pids:
-increase pid_max based on num_possible_cpus") to accommodate kernel's own
-helper tasks (before workqueues). Generally, 1024 tasks/cpu cap is too
-much if they were all running and it is also too little when they are
-idle (memory being bottleneck).
+Thanks for copying me on this. This sounds really great. 
 
-The kernel also provides other mechanisms to restrict number of tasks --
-threads-max sysctl and RLIMIT_NPROC with memory-scaled defaults and
-generic pids cgroup controller (the last one being the solution of
-fork-bombs, with qualified limits set up by admin).
+Also P2PDMA requires PCI root complex to support this kind of direct transfer,
+and IIUC dmabuf does not have such hardware dependency.
 
-The kernel provides mechanisms, while it should not imply policies --
-default pid_max seems to be an example of the policy that does not fit
-all. At the same time pid_max must have some value assigned, so use the
-end of the allowed range -- pid_max_max.
+> 
+> I think this is positively thrilling news for me. I was worried that
+> adding devmemTCP support to storage devices would involve using a
+> non-dmabuf standard of buffer sharing like pci_p2pdma_
+> (drivers/pci/p2pdma.c) and that would require messy changes to
+> pci_p2pdma_ that would get nacked. Also it would require adding
+> pci_p2pdma_ support to devmem TCP, which is a can of worms. If adding
+> dma-buf support to storage devices is feasible and desirable, that's a
+> much better approach IMO. (a) it will maybe work with devmem TCP
+> without any changes needed on the netdev side of things and (b)
+> dma-buf support may be generically useful and a good contribution even
+> outside of devmem TCP.
 
-This change thus increases initial pid_max from 32k to 4M (x86_64
-defconfig).
+I think the major difference is its interface, which exposes an mmap memory
+region instead of fd: https://lwn.net/Articles/906092/.
 
-This has effect on size of structure that alloc_pid/idr_alloc_cyclic
-eventually uses and structure that kernel tracing uses with
-'record-tgid' (~16 MiB).
+> 
+> I don't have a concrete user for devmem TCP for storage devices but
+> the use case is very similar to GPU and I imagine the benefits in perf
+> can be significant in some setups.
 
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
----
- include/linux/pid.h     |  4 ++--
- include/linux/threads.h | 15 ++++-----------
- kernel/pid.c            |  8 +++-----
- 3 files changed, 9 insertions(+), 18 deletions(-)
+We have storage use cases at ByteDance, we use NVME SSD to cache videos
+transferred through network, so moving data directly from SSD to NIC
+would help a lot.
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index a3aad9b4074c..0d191ac02958 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -106,8 +106,8 @@ extern void exchange_tids(struct task_struct *task, struct task_struct *old);
- extern void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			 enum pid_type);
- 
--extern int pid_max;
--extern int pid_max_min, pid_max_max;
-+extern int pid_max_min, pid_max;
-+extern const int pid_max_max;
- 
- /*
-  * look up a PID in the hash table. Must be called with the tasklist_lock
-diff --git a/include/linux/threads.h b/include/linux/threads.h
-index c34173e6c5f1..43f8f38a0c13 100644
---- a/include/linux/threads.h
-+++ b/include/linux/threads.h
-@@ -22,25 +22,18 @@
- 
- #define MIN_THREADS_LEFT_FOR_ROOT 4
- 
--/*
-- * This controls the default maximum pid allocated to a process
-- */
--#define PID_MAX_DEFAULT (CONFIG_BASE_SMALL ? 0x1000 : 0x8000)
--
- /*
-  * A maximum of 4 million PIDs should be enough for a while.
-  * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
-  */
- #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
--	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
-+	(sizeof(long) > 4 ? 4 * 1024 * 1024 : 0x8000))
- 
- /*
-- * Define a minimum number of pids per cpu.  Heuristically based
-- * on original pid max of 32k for 32 cpus.  Also, increase the
-- * minimum settable value for pid_max on the running system based
-- * on similar defaults.  See kernel/pid.c:pid_idr_init() for details.
-+ * Define a minimum number of pids per cpu. Mainly to accommodate
-+ * smpboot_register_percpu_thread() kernel threads.
-+ * See kernel/pid.c:pid_idr_init() for details.
-  */
--#define PIDS_PER_CPU_DEFAULT	1024
- #define PIDS_PER_CPU_MIN	8
- 
- #endif
-diff --git a/kernel/pid.c b/kernel/pid.c
-index da76ed1873f7..24ae505ac3b0 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -60,10 +60,10 @@ struct pid init_struct_pid = {
- 	}, }
- };
- 
--int pid_max = PID_MAX_DEFAULT;
-+int pid_max = PID_MAX_LIMIT;
- 
- int pid_max_min = RESERVED_PIDS + 1;
--int pid_max_max = PID_MAX_LIMIT;
-+const int pid_max_max = PID_MAX_LIMIT;
- /*
-  * Pseudo filesystems start inode numbering after one. We use Reserved
-  * PIDs as a natural offset.
-@@ -652,9 +652,7 @@ void __init pid_idr_init(void)
- 	/* Verify no one has done anything silly: */
- 	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
- 
--	/* bump default and minimum pid_max based on number of cpus */
--	pid_max = min(pid_max_max, max_t(int, pid_max,
--				PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
-+	/* bump minimum pid_max based on number of cpus */
- 	pid_max_min = max_t(int, pid_max_min,
- 				PIDS_PER_CPU_MIN * num_possible_cpus());
- 	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
--- 
-2.44.0
-
+Thanks!
