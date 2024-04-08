@@ -1,159 +1,155 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DCE41AAB
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291D44C62E
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712566970; cv=none; b=iPUMDMWWC2ZWDUD8bFa0ZHX3JtD4f7wVe5gLZUct3StRC5e50n2ZY5fnSD3hniNqCi8AJTYwm+1lY6xoLzCLd+zLzpeVu2fWQugCqZVjHjZ19nKa0dxxXS85z0/5kdL7fO6NtuNz4P4fNgswfdEMwHcgAwlaTYEbovs5VZNrRlI=
+	t=1712568652; cv=none; b=Ync7i3ztqYB91Ao/vJy8KF2U5rqAFGa1wbqgHQ7cPH2BBhIe1aXjwrjhXh5HXad1tAB50VzmPDdWFhwbYkyfXxaJni8bbgxjDyrILb9vAGC1KMsvC+WkAHPNVKrKJQK7KdOPg4c3XWG80TOzZiZPUWOXgv2hAMNE9nfJHsYucNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712566970; c=relaxed/simple;
-	bh=aVuKcbnpYY4FjU+CNW2JrarqfTioWso04jtw3oU+lTI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qVqgmymIk4dxMnNhTPJEWhe1zJUvWRFJhD7Hkbj4oRiIkMWM0fT0GJ1RAwkgx3n4huBqZivFIJsH0UtfdVLz7IZHABbn5uQT/1n9EfzIE+fUotxKf0YPUvx1x7TiTxgzh/VJ8lVM9aPFWuqWad6xs3CGMW4/Cx3KxBT6b+RE/qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LTzLQuKB; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1712568652; c=relaxed/simple;
+	bh=mXGVh5sNg5jlDv7GLXUH38FmV/TKaLl65KjI3d2PhLA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PIo81EeGB6yUOtL4NGjAgrHvw1nB/b/gpHherD/61laAvdfqhMaz4/mt7O1xfXRi6zw248ZhqLY02zB0Y/joN31fd5p2whBC6+APFROouZdljXEoUtkN4RAX680tuTxkLg40AC8Z/Wu3outv2Gu1dxoPKCWupZZuzkD9nH0/458=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tYdxR0tp; arc=none smtp.client-ip=209.85.222.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LTzLQuKB"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de0b4063e59so2564321276.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:02:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tYdxR0tp"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7e66423aa72so206612241.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712566967; x=1713171767; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dRUfOG22gFtzSxXckMYpwWSYVbuVuH++MvjmfSoLS8Y=;
-        b=LTzLQuKBm8g7OHxnQdc0+7vk/JxEO9pIvGEIpIY9Qv3Pp4ikHBvaIYm6Cy7ggG0/92
-         kzxeF7ctzHX+UrhFvnfBx0ik7SAEvAFpNyR6JiJGArUqqx6WvHytqCRKvJuGFxbvA9Cv
-         NcOmnj3cWGsroecHaTyDmKfk8c9OXiwR0bOeW9n1nkf16P6qJ0y4B5+yZMzUtHoeyvsZ
-         uZ0/FQQw3URmaL3m4LsZgzl+WhkOCcix74EGIlvZeTBClEeBqyfKg7PJVksc229yhln5
-         el3atGe0wU2ZuH2FlKwnJC7EJ8cl0hMGgobLV81DCEBR+F0W2EIslSTcBBjewRMJy7xh
-         IMQg==
+        d=google.com; s=20230601; t=1712568650; x=1713173450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dt4+ZQSYRlcSKRtpx5FfFY83qCQMJSz/0ZWKLb2RT/U=;
+        b=tYdxR0tpqgRQdqvSM4RNMxGHia5crMBau46tsOiIcKjdtVbCT4K13ru+f5WE8XC1bh
+         B7YwXtL91oF2iNLn9UaeCZfrzY+sAEq+GdMqtwplT+9VQTiJ725Aq6jAIqE6enS7bgae
+         k9vanfSq2ki08grr8e46v53qMNbtproXy/GX53S6Y2pqI2nJHMkNF8rHG1bNnsGGVnUj
+         /ciWJ04t1JSnrDacUmnEn1JO5oVpwYyYw14yK5gJlK5O2FgrrRbAUrOOj1QUukgmhBrm
+         Om3orNRrLcMBYIlviJidFLuB8H/Mykav0I2uXlb1f2QOBGRnAexJTAsXlHuu3mtMlHEn
+         QpqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712566967; x=1713171767;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dRUfOG22gFtzSxXckMYpwWSYVbuVuH++MvjmfSoLS8Y=;
-        b=Rsc1gStOiC6chsSkv5fvx9GsHwbcERRkj9BmXRkiD2HEQFJQmAe4jFZTuLnnekz3Gu
-         +lIH8FaHzSNtzcEZbS5xKuMpfziitSgUU/32yG1rXneX07wkK2dstCEwHlsvpPWahaCJ
-         yO0y2Ux69pPMZlN/o3EmFB/QQe/nHGeMb5ooMWTrsSDR+lxzP8mMleLBr7jVVjWZl7fy
-         EmZAVpNqvCzka3ieiAHHiMt5M9f7S+B8y1dOE0JTrlmXQPw1XdMnJ9w6JkpM/kdQux9J
-         VxXM3EABGjXdb2tw0nWo3zUXGixq3ShLMPmFwV5xoeKB9ZZV0NmH/3KN/DpkPWBp32dd
-         Xfig==
-X-Forwarded-Encrypted: i=1; AJvYcCVSP1dRc9+GSvMA3PURVlNFUpcFFxNvA60TJ/nkHQyoA8nFuLj5QNHpa/aFa9ubk27SwEYIoaAFrk1pf6xQ+24xYBqxnyQLQNOj+my0CgInImgF
-X-Gm-Message-State: AOJu0YzT/zA0KIdpItha4Z2l2e+m7xGWv1AevWUqqsrpuGn6EfIYyzRb
-	rd7RuAeOgikBMncRqTw0a/mIQlCKEOmEQub2eDzsFeuD/d39dnLmKhaACIxaivpzd40kzI3sAg=
-	=
-X-Google-Smtp-Source: AGHT+IF7fNc9CfA3rN0FPE5cCB/FJRCFpa71D/Uyw6NdHdjHjjwDmKUZCoP0gpqMqi3bqfDBxO1+PAF/cA==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:ea4d:dc81:62c5:eeb9])
- (user=elver job=sendgmr) by 2002:a05:6902:c09:b0:dcd:b431:7f5b with SMTP id
- fs9-20020a0569020c0900b00dcdb4317f5bmr2823872ybb.0.1712566967683; Mon, 08 Apr
- 2024 02:02:47 -0700 (PDT)
-Date: Mon,  8 Apr 2024 11:01:54 +0200
+        d=1e100.net; s=20230601; t=1712568650; x=1713173450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dt4+ZQSYRlcSKRtpx5FfFY83qCQMJSz/0ZWKLb2RT/U=;
+        b=WtaUuOxun0kCSWk90iQ1lssBsH4DswTGAzW+qiLGAB5vAhZV19Rv5oXdoiTi9nyDZm
+         16Wt55GICo065GmzEVuA8MGilu+m9oB8ZFDMPIlU/0Vj98aN71mPWJL4BY7G2gSvv2TZ
+         mZGjyKSab3HaLrlhXwYoHKKRmancl7224/u0TChLyfE+74Z7oHbOiZ9H80sMTzfwAyPf
+         7kbsApzKrFIu8cgbr/hQ7w9dmosi7JfNFyo0FMLEwK8ov/hW62UWeYqxd3q4qgaqqGAF
+         rLyRB1EerWdHp6RaYopR1dbROQhYFEAfYt/OKz7i1WnEW5FCXNLeC/UV4C/bVEWnE2/g
+         lEKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9/00OiKcboYWS1W3f40JRk4S8oRYeY8DBWCKgn2y9YWr8sRUUZq+BaOXIST4DCl0PFbYEuTrwdyHpFjzIEVq9IQJ5hmjJzM0Mo8hx2MiS2pPB
+X-Gm-Message-State: AOJu0YyCJcfWgM5VwudEM+ZYeHYTigdX7IMU0dH8PDK7Siv6sPdG5cIC
+	2nYfuI/xvQjIoOf/xwUWOt25+wCe4YzsNsPIosQq5HtSv0cFWFU1Pw31e8gUaDCpF+3JjA29I9c
+	STpYtC56s6dtryIj03LTXMMX2C01BuYsfGF4k
+X-Google-Smtp-Source: AGHT+IHSc19HHK4rnD0e2MMJb+xfvoOodNgWrEhdPc+rpnJPoknruG/+MFwgowFZx5LQFPKVgH6cfOCOFZ1VGo3iO1E=
+X-Received: by 2002:a05:6102:509f:b0:47a:66a:189f with SMTP id
+ bl31-20020a056102509f00b0047a066a189fmr883424vsb.19.1712568649739; Mon, 08
+ Apr 2024 02:30:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240408090205.3714934-1-elver@google.com>
-Subject: [PATCH] tracing: Add new_exec tracepoint
+MIME-Version: 1.0
+References: <20240404190146.1898103-1-elver@google.com> <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
+ <CANpmjNN+rR1PWKbx6RBWhOjnmAP+jUDzc3TLcwTnmfd=ft03dg@mail.gmail.com> <CAEf4BzZCj=3hevf+Je=oed9Nisctotp_CX00NrLaO6_7+-0LSQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzZCj=3hevf+Je=oed9Nisctotp_CX00NrLaO6_7+-0LSQ@mail.gmail.com>
 From: Marco Elver <elver@google.com>
-To: elver@google.com, Steven Rostedt <rostedt@goodmis.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Date: Mon, 8 Apr 2024 11:30:11 +0200
+Message-ID: <CANpmjNMCJwCaGiUpMCukgruNJ9k120sJ8pVkrdpyo-Tonve2Sw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Introduce bpf_probe_write_user_registered()
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add "new_exec" tracepoint, which is run right after the point of no
-return but before the current task assumes its new exec identity.
+On Fri, 5 Apr 2024 at 22:28, Andrii Nakryiko <andrii.nakryiko@gmail.com> wr=
+ote:
+>
+> On Fri, Apr 5, 2024 at 1:28=E2=80=AFAM Marco Elver <elver@google.com> wro=
+te:
+> >
+> > On Fri, 5 Apr 2024 at 01:23, Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+[...]
+> > > and the tasks can use mmaped array shared across all or unique to eac=
+h
+> > > process.
+> > > And both bpf and user space can read/write them with a single instruc=
+tion.
+> >
+> > That's BPF_F_MMAPABLE, right?
+> >
+> > That does not work because the mmapped region is global. Our requiremen=
+ts are:
+> >
+> > 1. Single tracing BPF program.
+> >
+> > 2. Per-process (per VM) memory region (here it's per-thread, but each
+> > thread just registers the same process-wide region).  No sharing
+> > between processes.
+> >
+> > 3. From #2 it follows: exec unregisters the registered memory region;
+> > fork gets a cloned region.
+> >
+> > 4. Unprivileged processes can do prctl(REGISTER). Some of them might
+> > not be able to use the bpf syscall.
+> >
+> > The reason for #2 is that each user space process also writes to the
+> > memory region (read by the BPF program to make updates depending on
+> > what state it finds), and having shared state between processes
+> > doesn't work here.
+> >
+> > Is there any reasonable BPF facility that can do this today? (If
+> > BPF_F_MMAPABLE could do it while satisfying requirements 2-4, I'd be a
+> > happy camper.)
+>
+> You could simulate something like this with multi-element ARRAY +
+> BPF_F_MMAPABLE, though you'd need to pre-allocate up to max number of
+> processes, so it's not an exact fit.
 
-Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
-runs before flushing the old exec, i.e. while the task still has the
-original state (such as original MM), but when the new exec either
-succeeds or crashes (but never returns to the original exec).
+Right, for production use this is infeasible.
 
-Being able to trace this event can be helpful in a number of use cases:
+> But what seems to be much closer is using BPF task-local storage, if
+> we support mmap()'ing its memory into user-space. We've had previous
+> discussions on how to achieve this (the simplest being that
+> mmap(task_local_map_fd, ...) maps current thread's part of BPF task
+> local storage). You won't get automatic cloning (you'd have to do that
+> from the BPF program on fork/exec tracepoint, for example), and within
+> the process you'd probably want to have just one thread (main?) to
+> mmap() initially and just share the pointer across all relevant
+> threads.
 
-  * allowing tracing eBPF programs access to the original MM on exec,
-    before current->mm is replaced;
-  * counting exec in the original task (via perf event);
-  * profiling flush time ("new_exec" to "sched_process_exec").
+In the way you imagine it, would that allow all threads sharing the
+same memory, despite it being task-local? Presumably each task's local
+storage would be mapped to just point to the same memory?
 
-Example of tracing output ("new_exec" and "sched_process_exec"):
+> But this is a more generic building block, IMO. This relying
+> on BPF map also means pinning is possible and all the other BPF map
+> abstraction benefits.
 
-  $ cat /sys/kernel/debug/tracing/trace_pipe
-      <...>-379     [003] .....   179.626921: new_exec: filename=/usr/bin/sshd pid=379 comm=sshd
-      <...>-379     [003] .....   179.629131: sched_process_exec: filename=/usr/bin/sshd pid=379 old_pid=379
-      <...>-381     [002] .....   180.048580: new_exec: filename=/bin/bash pid=381 comm=sshd
-      <...>-381     [002] .....   180.053122: sched_process_exec: filename=/bin/bash pid=381 old_pid=381
-      <...>-385     [001] .....   180.068277: new_exec: filename=/usr/bin/tty pid=385 comm=bash
-      <...>-385     [001] .....   180.069485: sched_process_exec: filename=/usr/bin/tty pid=385 old_pid=385
-      <...>-389     [006] .....   192.020147: new_exec: filename=/usr/bin/dmesg pid=389 comm=bash
-       bash-389     [006] .....   192.021377: sched_process_exec: filename=/usr/bin/dmesg pid=389 old_pid=389
+Deployment-wise it will make things harder because unprivileged
+processes still have to somehow get the map's shared fd somehow to
+mmap() it. Not unsolvable, and in general what you describe looks
+interesting, but I currently can't see how it will be simpler.
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- fs/exec.c                   |  2 ++
- include/trace/events/task.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+In absence of all that, is a safer "bpf_probe_write_user()" like I
+proposed in this patch ("bpf_probe_write_user_registered()") at all
+appealing?
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 38bf71cbdf5e..ab778ae1fc06 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1268,6 +1268,8 @@ int begin_new_exec(struct linux_binprm * bprm)
- 	if (retval)
- 		return retval;
- 
-+	trace_new_exec(current, bprm);
-+
- 	/*
- 	 * Ensure all future errors are fatal.
- 	 */
-diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-index 47b527464d1a..8853dc44783d 100644
---- a/include/trace/events/task.h
-+++ b/include/trace/events/task.h
-@@ -56,6 +56,36 @@ TRACE_EVENT(task_rename,
- 		__entry->newcomm, __entry->oom_score_adj)
- );
- 
-+/**
-+ * new_exec - called before setting up new exec
-+ * @task:	pointer to the current task
-+ * @bprm:	pointer to linux_binprm used for new exec
-+ *
-+ * Called before flushing the old exec, but at the point of no return during
-+ * switching to the new exec.
-+ */
-+TRACE_EVENT(new_exec,
-+
-+	TP_PROTO(struct task_struct *task, struct linux_binprm *bprm),
-+
-+	TP_ARGS(task, bprm),
-+
-+	TP_STRUCT__entry(
-+		__string(	filename,	bprm->filename	)
-+		__field(	pid_t,		pid		)
-+		__string(	comm,		task->comm	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(filename, bprm->filename);
-+		__entry->pid = task->pid;
-+		__assign_str(comm, task->comm);
-+	),
-+
-+	TP_printk("filename=%s pid=%d comm=%s",
-+		  __get_str(filename), __entry->pid, __get_str(comm))
-+);
-+
- #endif
- 
- /* This part must be outside protection */
--- 
-2.44.0.478.gd926399ef9-goog
-
+Thanks,
+-- Marco
