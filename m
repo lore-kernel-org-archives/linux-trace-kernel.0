@@ -1,41 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D384AEDF;
-	Mon,  8 Apr 2024 02:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9BB6FA8;
+	Mon,  8 Apr 2024 03:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712544642; cv=none; b=HriD94tJC4DGe2jNjlBVJOmtoV+mmP9sIg0uS3+h9Wu7vhv4CO0x10zKurzJ4n1AkHLYjqh0CQ+LZty2NWnTLLkn4U+inKRRFfHgl5NpXa5ymSzjZwTzHyAzOf3cN2vGJd5SWvY/UfvOq2G/G7gqpHPWjIxK+uVZQ9zXxZNpPgQ=
+	t=1712546224; cv=none; b=tYVArEFvIjb9BxOJeej0SG4DkBmoury+EqI3cpEGWh4M9JEkLAF1xIAMZoI19zR3xffVPq8hqtFYLptwaaN9U8VKIGud+KQAQZiYRofxSbf/jouhVgR+6vs8oCnx3W0k/VethtUL62oazUNiS5ZZewk7l8o1NrII12vAOsDmiq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712544642; c=relaxed/simple;
-	bh=09KpA1PzryBcQ7Vz+5NdiCGj4r5ml+5yka4hoPNR+eg=;
+	s=arc-20240116; t=1712546224; c=relaxed/simple;
+	bh=88xy5ncDJIYZXTN7bl3r8g56wJn0PxbweOPTs/roHCw=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EH32+tmKwym1e+kTUIS28NAXa4tKYz+alYIhiFTV0qI9vPfF+GmWSeDw9/sJFNJpYBupTv+wgxD5Jy8llAT22AUE1euhXRSHUUx98UAIeaPf3U2xqv3nkPMmmkIpZXm4AMNPqMwVddVMhqRYlTOBOb4o/rugr8LvybWdD/Rv4Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owowCrq2; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=UcZuCi6fTHrFAo9WkRiC1h+Rbp9s98vYQ9VszgNMdaCLnUvBKGnppPo6MwIrjTGcc8fQHh7OM/UQWaj79YLVWrrykYjFpNjHFzjSJkIVxqDSA4uvCYBRNUkJR6j44AQTwPAreTSEv18TnR+Y/+IwJug3H+b2CIaN4FLuBcBi+70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyUYHtHT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owowCrq2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36112C433C7;
-	Mon,  8 Apr 2024 02:50:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyUYHtHT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F18CFC433C7;
+	Mon,  8 Apr 2024 03:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712544641;
-	bh=09KpA1PzryBcQ7Vz+5NdiCGj4r5ml+5yka4hoPNR+eg=;
+	s=k20201202; t=1712546224;
+	bh=88xy5ncDJIYZXTN7bl3r8g56wJn0PxbweOPTs/roHCw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=owowCrq28PiI61ex81LrhSq7vcjQjvac81F9JFRGeVqo2cmd7s5fHpGiESEGKsOR6
-	 bFKqzrCD7fmPbbYoTneCtw5g6NwATKj0OxrgwZNVWXg9AmjBsQmQ1u0RRDci4Rr7e5
-	 lPHHN3jXAZYpy0M3FOXEJGLE6MoXqBoOd1EcJdud69V/8EHo9FHZRfcilp3AzeqvmT
-	 YEZqNmVbhjq1SnajkBw/VzH07Wq7K9paIIbc5yIRLzxnjlBSwi1UjwzvU7z6Wzi3ma
-	 hi6hBmMqsoTlYS0Au3a1WB/idmT2Vh5XTICii6ryL9lzUg0keZLK+P8b/4tjfep1PK
-	 wzQobv3OvQOzw==
-Date: Mon, 8 Apr 2024 11:50:38 +0900
+	b=ZyUYHtHTQhKODKjnshXcOh/ThkToFRTSnqBmTTyiXmfdqVvUGvDpFgtFv6y0CX0i2
+	 N+uf4vuOTZqzxAAvYglXPWOiWX7Tm+xP7RdhHcU8+vfaxRLIWBBJGR72blU3qHKrmZ
+	 UR6eb37f4kkGT8pkfjWoiQPXUVYobVQWTY32f171Dbtql4XC3LvYqLkfNefKr3TWdn
+	 GZin3RVDKASvgMnXdND7GADgx0SxhLAR8If7Q89aua45ku3iFhqkAHBYrQYiCjNK8c
+	 jH8BkDVU1shiWB+keBsxv3JFuZS3F6Gc9bGhE02ZZrjaA5gAli5PCr5cDBRCqTzsvk
+	 LD3bvQZJCP3UA==
+Date: Mon, 8 Apr 2024 12:16:57 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Zheng Yejian <zhengyejian1@huawei.com>
-Cc: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
- <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kprobes: Fix possible warn in __arm_kprobe_ftrace()
-Message-Id: <20240408115038.b0c85767bf1f249eccc32fff@kernel.org>
-In-Reply-To: <20240407035904.2556645-1-zhengyejian1@huawei.com>
-References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Song Liu
+ <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
+ <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-Id: <20240408121657.5603eb93a55ba22a29b0c24b@kernel.org>
+In-Reply-To: <Zg-8r63tPSkuhN7p@krava>
+References: <20240402093302.2416467-2-jolsa@kernel.org>
+	<20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+	<Zg0lvUIB4WdRUGw_@krava>
+	<20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+	<CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+	<20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+	<CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+	<20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+	<20240404161108.GG7153@redhat.com>
+	<20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+	<Zg-8r63tPSkuhN7p@krava>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,102 +63,44 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 7 Apr 2024 11:59:04 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Fri, 5 Apr 2024 10:56:15 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> There is once warn in __arm_kprobe_ftrace() on:
+> > 
+> > Can we avoid this with below strict check?
+> > 
+> > if (ri->stack != regs->sp + expected_offset)
+> > 	goto sigill;
 > 
->  ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
->  if (WARN_ONCE(..., "Failed to arm kprobe-ftrace at %pS (error %d)\n", ...)
->    return ret;
+> hm the current uprobe 'alive' check makes sure the return_instance is above
+> or at the same stack address, not sure we can match it exactly, need to think
+> about that more
 > 
-> This warning is due to 'p->addr' is not a valid ftrace_location and
-> that invalid 'p->addr' was bypassed in check_kprobe_address_safe():
-
-Ah, this is a guard warning to detect changes on ftrace_set_filter() and/or
-preparation steps. (A kind of debug message.)
-The ftrace address check is done by check_ftrace_location() at the beginning of
-check_kprobe_address_safe(). At that point, ftrace_location(addr) == addr should
-return true if the module is loaded. But there is a small window that we check
-the ftrace_location() and get the module refcount, even if the "addr" was ftrace
-location, the module is unloaded and failed to get the module refcount and fail
-to register the kprobe.
-
->    check_kprobe_address_safe() {
->      ...
->      // 1. p->addr is in some module, this check passed
->      is_module_text_address((unsigned long) p->addr)
->      ...
->      // 2. If the moudle is removed, the *probed_mod is NULL, but then
->      //    the return value would still be 0 !!!
->      *probed_mod = __module_text_address((unsigned long) p->addr);
->      ...
->    }
+> > 
+> > expected_offset should be 16 (push * 3 - ret) on x64 if we ri->stack is the
+> > regs->sp right after call.
 > 
-> So adjust the module text check to fix it.
-
-This seems just optimizing code (skip the 2nd module search), right?
-Also some comments needs to be updated.
-
+> the syscall trampoline already updates the regs->sp before calling
+> handle_trampoline
 > 
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/kprobes.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9d9095e81792..e0612cc3e2a3 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1567,10 +1567,16 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  	jump_label_lock();
->  	preempt_disable();
->
+>         regs->sp += sizeof(r11_cx_ax);
 
-	/* Ensure the address is in a text area, and find a module if exists. */
-  
-> +	*probed_mod = NULL;
-> +	if (!core_kernel_text((unsigned long) p->addr)) {
-> +		*probed_mod = __module_text_address((unsigned long) p->addr);
-> +		if (!(*probed_mod)) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
+Yes, that is "push * 3" part. And "- ret"  is that the stack entry is consumed
+by the "ret", which is stored by call.
 
-nit: this should get the module refcount soon after getting probed_mod.
-(I think this should be an atomic operation, but we don't have such interface.)
+1: |--------| <- sp at function entry == ri->stack
+0: |ret-addr| <- call pushed it
 
-> +	}
+0: |ret-addr| <- sp at return trampoline
 
->  	/* Ensure it is not in reserved area nor out of text */
+3: |r11     | <- regs->sp at syscall
+2: |rcx     |
+1: |rax     | <- ri->stack
+0: |ret-addr|
 
-	/* Ensure it is not in reserved area. */
+(Note: The lower the line, the larger the address.)
 
-> -	if (!(core_kernel_text((unsigned long) p->addr) ||
-> -	    is_module_text_address((unsigned long) p->addr)) ||
-
-Note that this part is doing same thing. If the probe address is !kernel_text
-and !module_text, it will be rejected.
-
-> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
-> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
->  	    within_kprobe_blacklist((unsigned long) p->addr) ||
->  	    jump_label_text_reserved(p->addr, p->addr) ||
->  	    static_call_text_reserved(p->addr, p->addr) ||
-> @@ -1581,7 +1587,6 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  	}
->  
->  	/* Check if 'p' is probing a module. */
-
-	/* Get module refcount and reject __init functions for loaded modules. */
-
-> -	*probed_mod = __module_text_address((unsigned long) p->addr);
->  	if (*probed_mod) {
->  		/*
->  		 * We must hold a refcount of the probed module while updating
-> -- 
-> 2.25.1
-> 
+Thus, we can check the stack address by (regs->sp + 16 == ri->stack).
 
 Thank you,
 
