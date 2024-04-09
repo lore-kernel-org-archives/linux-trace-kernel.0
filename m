@@ -1,108 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3651157E9F;
-	Tue,  9 Apr 2024 19:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA48D153574
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712689836; cv=none; b=oc2pJ9WBx9bo83+blcBgxhFfL4eDUiLD8D5+CLRkEB6nDKWP3hC4QqvG9ggwlgeOfKYJgyw45/FgCg1Xhq0aU7YaO9o/V3bkefsY8Tl6c5JW6LxLcPRApgrywNFYYyiLluIB1QTnMxuKBS1XX1faE2FQQW1H+XfJGWvC1InNRIY=
+	t=1712690620; cv=none; b=h8nkjukZXk+YcD5G+H26i+tEa3K4iQzlv7bOCtIMXMVjeo2RdXvYuY9Hii62VLhnHTMvHOL4HLAosLGM3Rbf45QT6ZtLeLPYZUMq+QsshfXTKa/KFflu+Gcw3FnIl48AcjKwbfyVqv03LtksQ9e6BNPJGP3eQysDXcAN6/ipBwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712689836; c=relaxed/simple;
-	bh=40pMLAjuY85R1jd9YK3z5hduTrwij5o0IKhxYs6j88A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gRLGQn0wrGU8YEcTFXQTV9dOW20uT6SVU6bnqB4GUnR+93/iYs3Hlu/zyLPL0UTcLvep/SxoHT+Osr553RtM8TqaE6yL1adLoGW0kn5NR10jjNXCZv6SqcdfdDziDpoddoyUsXj+OlT420ZNerhQ25fTtYuCIxnmAio9+zhuZ0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC73C43390;
-	Tue,  9 Apr 2024 19:10:35 +0000 (UTC)
-Date: Tue, 9 Apr 2024 15:13:09 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, rsavitski@google.com
-Subject: [PATCH] ring-buffer: Only update pages_touched when a new page is
- touched
-Message-ID: <20240409151309.0d0e5056@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712690620; c=relaxed/simple;
+	bh=7q15DdmyUVZxJOE4lhL7AMeazKQwnySJ3OuJZt7ZlpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cAv4GJPJo8yV0B3Slt53EaOhR//opT7ySg19HY9CAMpFevTqK2+nabMmfURnhsX8BnWEfUeAgt0mLQGyvNhtMxS/bvB/gvHBoCus3cq5nrBBakc0ngeMA+liM7e0Q551NS3nf/z/9h3IoZH1Py03X9E/y/01HFrN0P/NUJlNQ9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S0pg5XIR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S0pg5XIR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712690616;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TMgTsHOMAcz2aHp/mH0puI+1mQGKc2ZZZ7iHFFMIZj4=;
+	b=S0pg5XIRCB2kVLgmcaFlK4DcQ4h7WKRdhasQaJKE7vnA3gSZ3qDSjfi/ge1QtVICZ8kNLP
+	XLxCc/fqmAseS4bW00kU5HWoXhc6UXW2AqwDxuU4GDoejwkXHHggvxFz9PWvzHvjqwXrd6
+	GrKdg/vC8xl73wLBvek8QUNW7so7yxo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-694-RG_wslZHPLGPeceHYFOmDw-1; Tue,
+ 09 Apr 2024 15:23:33 -0400
+X-MC-Unique: RG_wslZHPLGPeceHYFOmDw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 397963C100CD;
+	Tue,  9 Apr 2024 19:23:32 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.192.106])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 43E8F40AE787;
+	Tue,  9 Apr 2024 19:23:22 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Peter Xu <peterx@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Yin Fengwei <fengwei.yin@intel.com>,
+	Yang Shi <shy828301@gmail.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Hugh Dickins <hughd@google.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <naoya.horiguchi@nec.com>,
+	Richard Chang <richardycc@google.com>
+Subject: [PATCH v1 00/18] mm: mapcount for large folios + page_mapcount() cleanups
+Date: Tue,  9 Apr 2024 21:22:43 +0200
+Message-ID: <20240409192301.907377-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+This series tracks the mapcount of large folios in a single value, so
+it can be read efficiently and atomically, just like the mapcount of
+small folios.
 
-The "buffer_percent" logic that is used by the ring buffer splice code to
-only wake up the tasks when there's no data after the buffer is filled to
-the percentage of the "buffer_percent" file is dependent on three
-variables that determine the amount of data that is in the ring buffer:
+folio_mapcount() is then used in a couple more places, most notably to
+reduce false negatives in folio_likely_mapped_shared(), and many users of
+page_mapcount() are cleaned up (that's maybe why you got CCed on the
+full series, sorry sh+xtensa folks! :) ).
 
- 1) pages_read - incremented whenever a new sub-buffer is consumed
- 2) pages_lost - incremented every time a writer overwrites a sub-buffer
- 3) pages_touched - incremented when a write goes to a new sub-buffer
+The remaining s390x user and one KSM user of page_mapcount() are getting
+removed separately on the list right now. I have patches to handle the
+other KSM one, the khugepaged one and the kpagecount one; as they are not
+as "obvious", I will send them out separately in the future. Once that is
+all in place, I'm planning on moving page_mapcount() into
+fs/proc/task_mmu.c, the remaining user for the time being (and we can
+discuss at LSF/MM details on that :) ).
 
-The percentage is the calculation of:
+I proposed the mapcount for large folios (previously called total
+mapcount) originally in part of [1] and I later included it in [2] where
+it is a requirement. In the meantime, I changed the patch a bit so I
+dropped all RB's. During the discussion of [1], Peter Xu correctly raised
+that this additional tracking might affect the performance when
+PMD->PTE remapping THPs. In the meantime. I addressed that by batching RMAP
+operations during fork(), unmap/zap and when PMD->PTE remapping THPs.
 
-  (pages_touched - (pages_lost + pages_read)) / nr_pages
+Running some of my micro-benchmarks [3] (fork,munmap,cow-byte,remap) on 1
+GiB of memory backed by folios with the same order, I observe the following
+on an Intel(R) Xeon(R) Silver 4210R CPU @ 2.40GHz tuned for reproducible
+results as much as possible:
 
-Basically, the amount of data is the total number of sub-bufs that have been
-touched, minus the number of sub-bufs lost and sub-bufs consumed. This is
-divided by the total count to give the buffer percentage. When the
-percentage is greater than the value in the "buffer_percent" file, it
-wakes up splice readers waiting for that amount.
+Standard deviation is mostly < 1%, except for order-9, where it's < 2% for
+fork() and munmap().
 
-It was observed that over time, the amount read from the splice was
-constantly decreasing the longer the trace was running. That is, if one
-asked for 60%, it would read over 60% when it first starts tracing, but
-then it would be woken up at under 60% and would slowly decrease the
-amount of data read after being woken up, where the amount becomes much
-less than the buffer percent.
+(1) Small folios are not affected (< 1%) in all 4 microbenchmarks.
+(2) Order-4 folios are not affected (< 1%) in all 4 microbenchmarks. A bit
+    weird comapred to the other orders ...
+(3) PMD->PTE remapping of order-9 THPs is not affected (< 1%)
+(4) COW-byte (COWing a single page by writing a single byte) is not
+    affected for any order (< 1 %). The page copy_fault overhead dominates
+    everything.
+(5) fork() is mostly not affected (< 1%), except order-2, where we have
+    a slowdown of ~4%. Already for order-3 folios, we're down to a slowdown
+    of < 1%.
+(6) munmap() sees a slowdown by < 3% for some orders (order-5,
+    order-6, order-9), but less for others (< 1% for order-4 and order-8,
+    < 2% for order-2, order-3, order-7).
 
-This was due to an accounting of the pages_touched incrementation. This
-value is incremented whenever a writer transfers to a new sub-buffer. But
-the place where it was incremented was incorrect. If a writer overflowed
-the current sub-buffer it would go to the next one. If it gets preempted
-by an interrupt at that time, and the interrupt performs a trace, it too
-will end up going to the next sub-buffer. But only one should increment
-the counter. Unfortunately, that was not the case.
+Especially the fork() and munmap() benchmark are sensitive to each added
+instruction and other system noise, so I suspect some of the change and
+observed weirdness (order-4) is due to code layout changes and other
+factors, but not really due to the added atomics.
 
-Change the cmpxchg() that does the real switch of the tail-page into a
-try_cmpxchg(), and on success, perform the increment of pages_touched. This
-will only increment the counter once for when the writer moves to a new
-sub-buffer, and not when there's a race and is incremented for when a
-writer and its preempting writer both move to the same new sub-buffer.
+So in the common case where we can batch, the added atomics don't really
+make a big difference, especially in light of the recent improvements for
+large folios that we recently gained due to batching. Surprisingly, for
+some cases where we cannot batch (e.g., COW), the added atomics don't seem
+to matter, because other overhead dominates.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+My fork and munmap micro-benchmarks don't cover cases where we cannot
+batch-process bigger parts of large folios. As this is not the common case,
+I'm not worrying about that right now.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 25476ead681b..6511dc3a00da 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1393,7 +1393,6 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
- 	old_write = local_add_return(RB_WRITE_INTCNT, &next_page->write);
- 	old_entries = local_add_return(RB_WRITE_INTCNT, &next_page->entries);
- 
--	local_inc(&cpu_buffer->pages_touched);
- 	/*
- 	 * Just make sure we have seen our old_write and synchronize
- 	 * with any interrupts that come in.
-@@ -1430,8 +1429,9 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
- 		 */
- 		local_set(&next_page->page->commit, 0);
- 
--		/* Again, either we update tail_page or an interrupt does */
--		(void)cmpxchg(&cpu_buffer->tail_page, tail_page, next_page);
-+		/* Either we update tail_page or an interrupt does */
-+		if (try_cmpxchg(&cpu_buffer->tail_page, &tail_page, next_page))
-+			local_inc(&cpu_buffer->pages_touched);
- 	}
- }
- 
+Future work is batching RMAP operations during swapout and folio
+migration.
+
+Not CCing everybody (e.g., cgroups folks just because of the doc
+updated) recommended by get_maintainers, to reduce noise. Tested on
+x86-64, compile-tested on a bunch of other archs. Will do more testing
+in the upcoming days.
+
+[1] https://lore.kernel.org/all/20230809083256.699513-1-david@redhat.com/
+[2] https://lore.kernel.org/all/20231124132626.235350-1-david@redhat.com/
+[3] https://gitlab.com/davidhildenbrand/scratchspace/-/raw/main/pte-mapped-folio-benchmarks.c?ref_type=heads
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Yin Fengwei <fengwei.yin@intel.com>
+Cc: Yang Shi <shy828301@gmail.com>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Muchun Song <muchun.song@linux.dev>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Naoya Horiguchi <naoya.horiguchi@nec.com>
+Cc: Richard Chang <richardycc@google.com>
+
+David Hildenbrand (18):
+  mm: allow for detecting underflows with page_mapcount() again
+  mm/rmap: always inline anon/file rmap duplication of a single PTE
+  mm/rmap: add fast-path for small folios when
+    adding/removing/duplicating
+  mm: track mapcount of large folios in single value
+  mm: improve folio_likely_mapped_shared() using the mapcount of large
+    folios
+  mm: make folio_mapcount() return 0 for small typed folios
+  mm/memory: use folio_mapcount() in zap_present_folio_ptes()
+  mm/huge_memory: use folio_mapcount() in zap_huge_pmd() sanity check
+  mm/memory-failure: use folio_mapcount() in hwpoison_user_mappings()
+  mm/page_alloc: use folio_mapped() in __alloc_contig_migrate_range()
+  mm/migrate: use folio_likely_mapped_shared() in
+    add_page_for_migration()
+  sh/mm/cache: use folio_mapped() in copy_from_user_page()
+  mm/filemap: use folio_mapcount() in filemap_unaccount_folio()
+  mm/migrate_device: use folio_mapcount() in migrate_vma_check_page()
+  trace/events/page_ref: trace the raw page mapcount value
+  xtensa/mm: convert check_tlb_entry() to sanity check folios
+  mm/debug: print only page mapcount (excluding folio entire mapcount)
+    in __dump_folio()
+  Documentation/admin-guide/cgroup-v1/memory.rst: don't reference
+    page_mapcount()
+
+ .../admin-guide/cgroup-v1/memory.rst          |  4 +-
+ Documentation/mm/transhuge.rst                | 12 +--
+ arch/sh/mm/cache.c                            |  2 +-
+ arch/xtensa/mm/tlb.c                          | 11 +--
+ include/linux/mm.h                            | 77 +++++++++++--------
+ include/linux/mm_types.h                      |  5 +-
+ include/linux/rmap.h                          | 40 +++++++++-
+ include/trace/events/page_ref.h               |  4 +-
+ mm/debug.c                                    | 12 +--
+ mm/filemap.c                                  |  2 +-
+ mm/huge_memory.c                              |  2 +-
+ mm/hugetlb.c                                  |  4 +-
+ mm/internal.h                                 |  3 +
+ mm/khugepaged.c                               |  2 +-
+ mm/memory-failure.c                           |  4 +-
+ mm/memory.c                                   |  3 +-
+ mm/migrate.c                                  |  2 +-
+ mm/migrate_device.c                           | 12 +--
+ mm/page_alloc.c                               | 12 ++-
+ mm/rmap.c                                     | 60 +++++++--------
+ 20 files changed, 163 insertions(+), 110 deletions(-)
+
 -- 
-2.43.0
+2.44.0
 
