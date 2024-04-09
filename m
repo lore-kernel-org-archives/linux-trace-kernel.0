@@ -1,121 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EADB131E3C;
-	Tue,  9 Apr 2024 15:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A30A135A67;
+	Tue,  9 Apr 2024 15:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675128; cv=none; b=E+5Z0oF7LDb5rnd6FRQ6Fa/NdB/6RPfPiKGvuj398IMcizrSWDAf+6MdO6y5h5fOS/lGf1rs/ZPZdafc0KcczOkP+J1uWN076xmuccB6oIvSy6qEWIvs0bADf+BffreY2M3OPkwztH6wg06ceOaa3KRV0zy0y5SVAuNAE9XES+g=
+	t=1712676974; cv=none; b=GXGRlSRbVKerSDrf91RfUTm0sesZn5ChDuFXPjrf4ZYhm1caeBrC1VE6vrujVBcFXZuTEtJ0wGyHW9gWWUeMm6rvRPuiiElIFNuKX2GXODDx5Ts9WilPOOZHHwyIfBWv04A4LmTLDdhYIDhJiZyx5S34CiKVAWJDXfD7+oum+VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675128; c=relaxed/simple;
-	bh=mJt7v6CLSOYzx1gtAyi5VoQyh9G4Ztq0Q2FlAeZxZmo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e1aqm2m+l4Gkkh2D2ipZD/X4Jfdl/+VZEj9G80D11DeK4yuzNGIrpVtkiWF09QWSgLCOEYb2eExLYQFXXfs6BMufTK72TaO3o8FhtGdeX6GtJ2gP2sZH1bdbu0kOC3qWAGohvbTkvBFG1RKSuozlS+rKuYJvO/BPk18QYaKoaQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCn2zHwP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCn2zHwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D441C43394;
-	Tue,  9 Apr 2024 15:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712675128;
-	bh=mJt7v6CLSOYzx1gtAyi5VoQyh9G4Ztq0Q2FlAeZxZmo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fCn2zHwPhopHz3aJMqQuvT0XcsT7uQACdH7RpIfWCKsUDLkk3gf5FGDw4zWpYrgvD
-	 uHsoSSt5qLptwNNbfqus0tnv+lz8+j1GLA7xNJuWdgoxedmWIxOy1qpgIkLedk9xDZ
-	 Tk/2gjwceeSc1HSDRiACiU5Lt1elWa15BD6BnZoSUoi2ONmiPBp5pZJ4PFLwkkq164
-	 yQAbCmUhBIsj30JKInNCV4w8feoC9IBwwj2hTtDSdwUhcdDk808VmE/4jVrvoWs8eH
-	 2mdyLkcgR2mZGl6rkNdcwmbWQYw5RmNuI3DaQ9sgQ+yZZNlJVIt3ARO7x5S0Mba2We
-	 Bx23czV4vYapQ==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-22ec8db3803so401636fac.1;
-        Tue, 09 Apr 2024 08:05:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1ZpLlplzyjSp+xywErsTXtkV+AFugDo9gIIux1ycBbSUIjzE3xViy7vCqYCjcreUuhgkXrog87BDsc7Yo0TtOfiKeV1iKm8X0hVJg/NiV6Lq2bvqtz2+l07rS18EfVl2cMmQjokreUAxXEr28sehtG+V4wb+MlOSp/TFENIYxDVyjoAemHNj5twUWhrNdDmdllpklEqFtzJnRKLQ/cFY47+qbc8eXY1Iv
-X-Gm-Message-State: AOJu0YxrwQXJcPZA9b4blDwM01TCYyX+6S7pznTfEdQ9VBFDQU7+qe7U
-	ew8hrKnpC98nOiJb9vYwchZMbANWwJhLD4tboQ79vwkrGMZCyw49grLn0IdKM4nbIen6xJPJDO8
-	q3jPzUFH+pMZ9PPDCdPDOSY+pVho=
-X-Google-Smtp-Source: AGHT+IGDUO0rZ4GKVyVieaHSmKzYKqNHjEuMKn4kB8H+BP9iyv6DlSuHKVlwMC/rIyJebF0i0bhH71zkmEuwl5+N0cA=
-X-Received: by 2002:a05:6870:f727:b0:222:81cc:ac9c with SMTP id
- ej39-20020a056870f72700b0022281ccac9cmr12216666oab.5.1712675127270; Tue, 09
- Apr 2024 08:05:27 -0700 (PDT)
+	s=arc-20240116; t=1712676974; c=relaxed/simple;
+	bh=ZllP92/rBztqSQFwtsA/VIM+vevUvKCza45kq5uSvXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mNxjKP0tDV2jEFDcRCZYNHgVLwy9krwJw2CXB6kxu2l8BTxnd9Zm0Rv4logCQxAUIgNPTznseTKgaYNtN38HZTtgeJCgxYFdXnlSRdDHvDk94qwN1cra8DhbYduPOwQ7ccxBCOesL7c6YG8nxrpoHKYs/5JRY1rujbQ3JaZcOP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75864C433C7;
+	Tue,  9 Apr 2024 15:36:12 +0000 (UTC)
+Date: Tue, 9 Apr 2024 11:38:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, mptcp@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>
+Subject: Re: [PATCH net-next v3 6/6] rstreason: make it work in trace world
+Message-ID: <20240409113846.5559359a@gandalf.local.home>
+In-Reply-To: <20240409100934.37725-7-kerneljasonxing@gmail.com>
+References: <20240409100934.37725-1-kerneljasonxing@gmail.com>
+	<20240409100934.37725-7-kerneljasonxing@gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409140059.3806717-1-arnd@kernel.org> <20240409140059.3806717-3-arnd@kernel.org>
-In-Reply-To: <20240409140059.3806717-3-arnd@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 9 Apr 2024 17:05:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h7XEV__S4pvQJt54Ab832z6PZFTNTRspfLF507MNo9Og@mail.gmail.com>
-Message-ID: <CAJZ5v0h7XEV__S4pvQJt54Ab832z6PZFTNTRspfLF507MNo9Og@mail.gmail.com>
-Subject: Re: [PATCH 2/5] [v2] acpi: disable -Wstringop-truncation
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Richard Russon <ldm@flatcap.org>, Jens Axboe <axboe@kernel.dk>, Robert Moore <robert.moore@intel.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Lin Ming <ming.m.lin@intel.com>, 
-	Alexey Starikovskiy <astarikovskiy@suse.de>, linux-ntfs-dev@lists.sourceforge.net, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 9, 2024 at 4:01=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wrot=
-e:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> gcc -Wstringop-truncation warns about copying a string that results in a
-> missing nul termination:
->
-> drivers/acpi/acpica/tbfind.c: In function 'acpi_tb_find_table':
-> drivers/acpi/acpica/tbfind.c:60:9: error: 'strncpy' specified bound 6 equ=
-als destination size [-Werror=3Dstringop-truncation]
->    60 |         strncpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/acpi/acpica/tbfind.c:61:9: error: 'strncpy' specified bound 8 equ=
-als destination size [-Werror=3Dstringop-truncation]
->    61 |         strncpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE=
-_ID_SIZE);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~
->
-> The code works as intended, and the warning could be addressed by using
-> a memcpy(), but turning the warning off for this file works equally well
-> and may be easir to merge.
+On Tue,  9 Apr 2024 18:09:34 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-"easier" (fixed up).
+>  /*
+>   * tcp event with arguments sk and skb
+> @@ -74,20 +75,38 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
+>  	TP_ARGS(sk, skb)
+>  );
+>  
+> +#undef FN1
+> +#define FN1(reason)	TRACE_DEFINE_ENUM(SK_RST_REASON_##reason);
+> +#undef FN2
+> +#define FN2(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
+> +DEFINE_RST_REASON(FN1, FN1)
 
-Tricky that, but OK.let's get the warning off the table.
+Interesting. I've never seen the passing of the internal macros to the main
+macro before. I see that you are using it for handling both the
+SK_RST_REASON and the SK_DROP_REASON.
 
-Applied as 6.10 material, thanks!
+> +
+> +#undef FN1
+> +#undef FNe1
+> +#define FN1(reason)	{ SK_RST_REASON_##reason, #reason },
+> +#define FNe1(reason)	{ SK_RST_REASON_##reason, #reason }
+> +
+> +#undef FN2
+> +#undef FNe2
+> +#define FN2(reason)	{ SKB_DROP_REASON_##reason, #reason },
+> +#define FNe2(reason)	{ SKB_DROP_REASON_##reason, #reason }
 
-> Fixes: 47c08729bf1c ("ACPICA: Fix for LoadTable operator, input strings")
-> Link: https://lore.kernel.org/lkml/CAJZ5v0hoUfv54KW7y4223Mn9E7D4xvR7whRFN=
-LTBqCZMUxT50Q@mail.gmail.com/#t
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/acpi/acpica/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/acpi/acpica/Makefile b/drivers/acpi/acpica/Makefile
-> index 30f3fc13c29d..8d18af396de9 100644
-> --- a/drivers/acpi/acpica/Makefile
-> +++ b/drivers/acpi/acpica/Makefile
-> @@ -5,6 +5,7 @@
->
->  ccflags-y                      :=3D -D_LINUX -DBUILDING_ACPICA
->  ccflags-$(CONFIG_ACPI_DEBUG)   +=3D -DACPI_DEBUG_OUTPUT
-> +CFLAGS_tbfind.o                +=3D $(call cc-disable-warning, stringop-=
-truncation)
->
->  # use acpi.o to put all files here into acpi.o modparam namespace
->  obj-y  +=3D acpi.o
-> --
-> 2.39.2
->
->
+Anyway, from a tracing point of view, as it looks like it would work
+(I haven't tested it).
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
