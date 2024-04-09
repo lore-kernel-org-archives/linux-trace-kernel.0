@@ -1,48 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2084A19A;
-	Tue,  9 Apr 2024 00:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C272A934;
+	Tue,  9 Apr 2024 00:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712622345; cv=none; b=VA5/tG+PopNwTW9kFRn2QVm7sfX+fE6tMCAqTiuJd1KAuBWV/l6gFg1xEzKTVeiDalW6UyyvMkpPKfGivCqNZMRnIGxJvntO0/YDc5UHo4RCRsTdm+/nHM/i2HikG1L3I5y+fKG47u/EKzewDf5tpk4nNctVSH2/t03Wk1CIlW4=
+	t=1712622885; cv=none; b=eliMdUXuj1ZOun4KcqP2pyXlVuTvP4jLTHbiDOpwCEq5a9/QzXW208O4RXCj5avobDLMmJ4dFN7EGBKcll4MkXAHgrmzmz6xN+NyxTMSUCLRJxfej2B9ALuzP+EAT7uPV9ODRTfdLcX3DjXnk0gJuCAn4qUtxBGc7cRMW87fJ4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712622345; c=relaxed/simple;
-	bh=StywMEHp3lZTMhB3jfxFcM+oYwhQGtJHvMJQGNcUSMk=;
+	s=arc-20240116; t=1712622885; c=relaxed/simple;
+	bh=6KWBXWrsN0Smo6wkHN8i3FqroEDuIHPvzii2D1XYW/8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FiJfuMH4AcPI/VlJQNnTHjTYSKkuSXZ9R262PkdzZJjudeozmwLpagIELOPP+3Lyav5V9RHt3eoRr29pBf/zCgQBtLrGNiCVCKvETktL2IQ4hKABh6/Ae3wWPDdVgojMyIaULvS85vQpqhNe/Pj+6ojtXl7E+g9n56iT1Vfi2kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YI+Y0uI9; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ViVFTSchiKOgJgo5I/YCc1zUVdE3eKIJDVsdqACjDIlAHELQgqBBFEhOIudaKP1PAqCHee6obX/ZoUylvNXE1LoP3tqeb1RRkr904xY66zRNIZivdLnW+GGNv0JRo1eIA++duxeudugBtc8bbclfJjRimJElo/DfkEI92lEP9Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4xZ/DCy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YI+Y0uI9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D9CC433F1;
-	Tue,  9 Apr 2024 00:25:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4xZ/DCy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EBFC43390;
+	Tue,  9 Apr 2024 00:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712622344;
-	bh=StywMEHp3lZTMhB3jfxFcM+oYwhQGtJHvMJQGNcUSMk=;
+	s=k20201202; t=1712622885;
+	bh=6KWBXWrsN0Smo6wkHN8i3FqroEDuIHPvzii2D1XYW/8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YI+Y0uI9cO2v2jtxfuMsDQd8VlE56H1doSY12GhSc24kLaHXhH7V31h4fWLEfZwye
-	 oCPgxditqBeF8Mb/pJkgV4j/Cmidk1yXRRl+5Bz1vmda8ZIp80F0r5mpNgedPJ+K98
-	 YnBKTBXmKQo4U6YWMlrQ0VwtAdmToLsCteVmFUWR9YuA4n6OvG1aCPTlyLkWMXC2ZG
-	 IxoUfNqsp8YjITzl0wdxECG4w+xxlStWKU7wFzLByUKavGK4NuXnVBRViCNpMlKdwN
-	 iIto5bd/vrT07Lz3Fcs4DG61gOsY6pb42F6EMtm0rmkESw7BqTZBVeFO3+NZdAnUY3
-	 vSfm/kIIxZEEA==
-Date: Tue, 9 Apr 2024 09:25:40 +0900
+	b=X4xZ/DCyG/081aBtw0KeHHzb01Qn/FrvDbzH0uG0KgXH8TGJPjfqlM9e1csL16R8a
+	 tzwcV2I8Xp9BXsh7zbN7ZkYszRKkpOlpV+MjRjtGIZJEPORDJCrNB8u/FtxxhafWE3
+	 D7U5f43UojQDsJa+kFdGmOwbQdstenO7G6T7L0xBd43ingrG1FZS2ArlVuzTFjktSn
+	 zsfM98Tb2qjqBACkUQ5jS73wdwwFlt1kRHZFp6OFpE6/rEXz0cSGlZk/6vGGcVECP5
+	 oJBKjqKJ1f+G0/rF+DYMf+VHwaVkDyHKIJKu1DavcIaAgBYomCvvhJxERjwfVP9C8G
+	 h4ALSHHDYNufw==
+Date: Tue, 9 Apr 2024 09:34:39 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH fs/proc/bootconfig] remove redundant comments from
- /proc/bootconfig
-Message-Id: <20240409092540.44cadc511429545d3052fe79@kernel.org>
-In-Reply-To: <bacfd3b9-5a2a-43ee-8169-4d8bf5a3ddc8@paulmck-laptop>
-References: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
-	<20240404085522.63bf8cce6f961c07c8ce3f17@kernel.org>
-	<26d56fa5-2c95-46da-8268-35642f857d6d@paulmck-laptop>
-	<20240405102324.b7bb9fa052754d352cd2708e@kernel.org>
-	<20240405115745.9b95679aa3ac516995d4d885@kernel.org>
-	<ef8cf3e7-9684-4495-a70e-c8f13ad188c5@paulmck-laptop>
-	<20240406111108.e9a8b8c4cb8f44a8fb95b541@kernel.org>
-	<bacfd3b9-5a2a-43ee-8169-4d8bf5a3ddc8@paulmck-laptop>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-Id: <20240409093439.3906e3783ab1f5280146934e@kernel.org>
+In-Reply-To: <ZhQVBYQYr5ph33Uu@krava>
+References: <Zg0lvUIB4WdRUGw_@krava>
+	<20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+	<CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+	<20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+	<CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+	<20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+	<20240404161108.GG7153@redhat.com>
+	<20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+	<Zg-8r63tPSkuhN7p@krava>
+	<20240405110230.GA22839@redhat.com>
+	<ZhQVBYQYr5ph33Uu@krava>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,234 +64,126 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 8 Apr 2024 12:18:19 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+On Mon, 8 Apr 2024 18:02:13 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> On Sat, Apr 06, 2024 at 11:11:08AM +0900, Masami Hiramatsu wrote:
-> > On Thu, 4 Apr 2024 21:25:41 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> On Fri, Apr 05, 2024 at 01:02:30PM +0200, Oleg Nesterov wrote:
+> > On 04/05, Jiri Olsa wrote:
+> > >
+> > > On Fri, Apr 05, 2024 at 10:22:03AM +0900, Masami Hiramatsu wrote:
+> > > >
+> > > > I think this expects setjmp/longjmp as below
+> > > >
+> > > > foo() { <- retprobe1
+> > > > 	setjmp()
+> > > > 	bar() { <- retprobe2
+> > > > 		longjmp()
+> > > > 	}
+> > > > } <- return to trampoline
+> > > >
+> > > > In this case, we need to skip retprobe2's instance.
 > > 
-> > > On Fri, Apr 05, 2024 at 11:57:45AM +0900, Masami Hiramatsu wrote:
-> > > > On Fri, 5 Apr 2024 10:23:24 +0900
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > > 
-> > > > > On Thu, 4 Apr 2024 10:43:14 -0700
-> > > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > 
-> > > > > > On Thu, Apr 04, 2024 at 08:55:22AM +0900, Masami Hiramatsu wrote:
-> > > > > > > On Wed, 3 Apr 2024 12:16:28 -0700
-> > > > > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > > > 
-> > > > > > > > commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
-> > > > > > > > /proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
-> > > > > > > > 
-> > > > > > > > /proc/bootconfig shows boot_command_line[] multiple times following
-> > > > > > > > every xbc key value pair, that's duplicated and not necessary.
-> > > > > > > > Remove redundant ones.
-> > > > > > > > 
-> > > > > > > > Output before and after the fix is like:
-> > > > > > > > key1 = value1
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > key2 = value2
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > key3 = value3
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > ...
-> > > > > > > > 
-> > > > > > > > key1 = value1
-> > > > > > > > key2 = value2
-> > > > > > > > key3 = value3
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > ...
-> > > > > > > > 
-> > > > > > > > Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
-> > > > > > > > Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-> > > > > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > > > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > > > > > Cc: <linux-trace-kernel@vger.kernel.org>
-> > > > > > > > Cc: <linux-fsdevel@vger.kernel.org>
-> > > > > > > 
-> > > > > > > OOps, good catch! Let me pick it.
-> > > > > > > 
-> > > > > > > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > > 
-> > > > > > Thank you, and I have applied your ack and pulled this into its own
-> > > > > > bootconfig.2024.04.04a.
-> > > > > > 
-> > > > > > My guess is that you will push this via your own tree, and so I will
-> > > > > > drop my copy as soon as yours hits -next.
-> > > > > 
-> > > > > Thanks! I would like to make PR this soon as bootconfig fixes for v6.9-rc2.
-> > > > 
-> > > > Hmm I found that this always shows the command line comment in
-> > > > /proc/bootconfig even without "bootconfig" option.
-> > > > I think that is easier for user-tools but changes the behavior and
-> > > > a bit redundant.
-> > > > 
-> > > > We should skip showing this original argument comment if bootconfig is
-> > > > not initialized (no "bootconfig" in cmdline) as it is now.
-> > > 
-> > > So something like this folded into that patch?
+> > Yes,
 > > 
-> > Hm, I expected just checking it in the loop as below.
+> > > > My concern is, if we can not find appropriate return instance, what happen?
+> > > > e.g.
+> > > >
+> > > > foo() { <-- retprobe1
+> > > >    bar() { # sp is decremented
+> > > >        sys_uretprobe() <-- ??
+> > > >     }
+> > > > }
+> > > >
+> > > > It seems sys_uretprobe() will handle retprobe1 at that point instead of
+> > > > SIGILL.
+> > >
+> > > yes, and I think it's fine, you get the consumer called in wrong place,
+> > > but it's your fault and kernel won't crash
 > > 
-> > ------------------------------------------------------------------------
-> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> > index e5635a6b127b..98e0780f7e07 100644
-> > --- a/fs/proc/bootconfig.c
-> > +++ b/fs/proc/bootconfig.c
-> > @@ -27,6 +27,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  {
-> >  	struct xbc_node *leaf, *vnode;
-> >  	char *key, *end = dst + size;
-> > +	bool empty = true;
-> >  	const char *val;
-> >  	char q;
-> >  	int ret = 0;
-> > @@ -62,8 +63,9 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  				break;
-> >  			dst += ret;
-> >  		}
-> > +		empty = false;
-> >  	}
-> > -	if (ret >= 0 && boot_command_line[0]) {
-> > +	if (!empty && ret >= 0 && boot_command_line[0]) {
-> >  		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> >  			       boot_command_line);
-> >  		if (ret > 0)
+> > Agreed.
 > > 
-> > ------------------------------------------------------------------------
+> > With or without this patch userpace can also do
 > > 
-> > The difference is checking "bootconfig" cmdline option or checking
-> > the "bootconfig" is actually empty. So the behaviors are different
-> > when the "bootconfig" is specified but there is no bootconfig data.
+> > 	foo() { <-- retprobe1
+> > 		bar() {
+> > 			jump to xol_area
+> > 		}
+> > 	}
+> > 
+> > handle_trampoline() will handle retprobe1.
+> > 
+> > > this can be fixed by checking the syscall is called from the trampoline
+> > > and prevent handle_trampoline call if it's not
+> > 
+> > Yes, but I still do not think this makes a lot of sense. But I won't argue.
+> > 
+> > And what should sys_uretprobe() do if it is not called from the trampoline?
+> > I'd prefer force_sig(SIGILL) to punish the abuser ;) OK, OK, EINVAL.
 > 
-> Ah, understood, the point is to avoid the comment in cases where its
-> content would be identical to /proc/cmdline.
+> so the similar behaviour with int3 ends up with immediate SIGTRAP
+> and not invoking pending uretprobe consumers, like:
 > 
-> > Another idea is to check whether the cmdline is actually updated by
-> > bootconfig and show original one only if it is updated.
-> > (I think this fits the purpose of the original patch better.)
-> > 
-> > ------------------------------------------------------------------------
-> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> > index e5635a6b127b..95d6a231210c 100644
-> > --- a/fs/proc/bootconfig.c
-> > +++ b/fs/proc/bootconfig.c
-> > @@ -10,6 +10,9 @@
-> >  #include <linux/bootconfig.h>
-> >  #include <linux/slab.h>
-> >  
-> > +/* defined in main/init.c */
-> > +bool __init cmdline_has_extra_options(void);
-> > +
-> >  static char *saved_boot_config;
-> >  
-> >  static int boot_config_proc_show(struct seq_file *m, void *v)
-> > @@ -63,7 +66,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  			dst += ret;
-> >  		}
-> >  	}
-> > -	if (ret >= 0 && boot_command_line[0]) {
-> > +	if (cmdline_has_extra_options() && ret >= 0 && boot_command_line[0]) {
-> >  		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> >  			       boot_command_line);
-> >  		if (ret > 0)
-> > diff --git a/init/main.c b/init/main.c
-> > index 2ca52474d0c3..881f6230ee59 100644
-> > --- a/init/main.c
-> > +++ b/init/main.c
-> > @@ -487,6 +487,11 @@ static int __init warn_bootconfig(char *str)
-> >  
-> >  early_param("bootconfig", warn_bootconfig);
-> >  
-> > +bool __init cmdline_has_extra_options(void)
-> > +{
-> > +	return extra_command_line || extra_init_args;
-> > +}
-> > +
-> >  /* Change NUL term back to "=", to make "param" the whole string. */
-> >  static void __init repair_env_string(char *param, char *val)
-> >  {
-> > ------------------------------------------------------------------------
+>   - setup uretprobe for foo
+>   - foo() {
+>       executes int 3 -> sends SIGTRAP
+>     }
 > 
-> This one looks good to me!
-> 
-> I had to move the declaration from /fs/proc/bootconfig.c to
-> include/linux/bootconfig.h in order to avoid a build error.  (The
-> build system wants the declaration and definition to be visible as
-> a cross-check.)
-> 
-> Does the resulting patch below work for you?
+> because the int3 handler checks if it got executed from the uretprobe's
+> trampoline.. if not it treats that int3 as regular trap
 
-Yes, this looks good to me. BTW, shouldn't we push this with the
-previous fix (from the viewpoint of memory usage, this is a kind
-of fix for redundant memory usage)?
+Yeah, that is consistent behavior. Sounds good to me.
+
+> 
+> while for uretprobe syscall we have at the moment following behaviour:
+> 
+>   - setup uretprobe for foo
+>   - foo() {
+>      uretprobe_syscall -> executes foo's uretprobe consumers
+>     }
+>   - at some point we get to the 'ret' instruction that jump into uretprobe
+>     trampoline and the uretprobe_syscall won't find pending uretprobe and
+>     will send SIGILL
+> 
+> 
+> so I think we should mimic int3 behaviour and:
+> 
+>   - setup uretprobe for foo
+>   - foo() {
+>      uretprobe_syscall -> check if we got executed from uretprobe's
+>      trampoline and send SIGILL if that's not the case
+
+OK, this looks good to me.
+
+> 
+> I think it's better to have the offending process killed right away,
+> rather than having more undefined behaviour, waiting for final 'ret'
+> instruction that jumps to uretprobe trampoline and causes SIGILL
+> 
+> > 
+> > I agree very much with Andrii,
+> > 
+> >        sigreturn()  exists only to allow the implementation of signal handlers.  It should never be
+> >        called directly.  Details of the arguments (if any) passed to sigreturn() vary depending  on
+> >        the architecture.
+> > 
+> > this is how sys_uretprobe() should be treated/documented.
+> 
+> yes, will include man page patch in new version
+
+And please follow Documentation/process/adding-syscalls.rst in new version,
+then we can avoid repeating the same discussion :-)
 
 Thank you!
 
 > 
-> 							Thanx, Paul
+> jirka
 > 
-> ------------------------------------------------------------------------
-> 
-> commit 8d95b50c523fba7133368650b3b5f71b169c76b5
-> Author: Masami Hiramatsu <mhiramat@kernel.org>
-> Date:   Mon Apr 8 12:10:38 2024 -0700
-> 
->     fs/proc: Skip bootloader comment if no embedded kernel parameters
->     
->     If the "bootconfig" kernel command-line argument was specified or if
->     the kernel was built with CONFIG_BOOT_CONFIG_FORCE, but if there are
->     no embedded kernel parameter, omit the "# Parameters from bootloader:"
->     comment from the /proc/bootconfig file.  This will cause automation
->     to fall back to the /proc/cmdline file, which will be identical to the
->     comment in this no-embedded-kernel-parameters case.
->     
->     Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> index e5635a6b127b0..87dcaae32ff87 100644
-> --- a/fs/proc/bootconfig.c
-> +++ b/fs/proc/bootconfig.c
-> @@ -63,7 +63,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
->  			dst += ret;
->  		}
->  	}
-> -	if (ret >= 0 && boot_command_line[0]) {
-> +	if (cmdline_has_extra_options() && ret >= 0 && boot_command_line[0]) {
->  		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
->  			       boot_command_line);
->  		if (ret > 0)
-> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-> index ca73940e26df8..e5ee2c694401e 100644
-> --- a/include/linux/bootconfig.h
-> +++ b/include/linux/bootconfig.h
-> @@ -10,6 +10,7 @@
->  #ifdef __KERNEL__
->  #include <linux/kernel.h>
->  #include <linux/types.h>
-> +bool __init cmdline_has_extra_options(void);
->  #else /* !__KERNEL__ */
->  /*
->   * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
-> diff --git a/init/main.c b/init/main.c
-> index 2ca52474d0c30..881f6230ee59e 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -487,6 +487,11 @@ static int __init warn_bootconfig(char *str)
->  
->  early_param("bootconfig", warn_bootconfig);
->  
-> +bool __init cmdline_has_extra_options(void)
-> +{
-> +	return extra_command_line || extra_init_args;
-> +}
-> +
->  /* Change NUL term back to "=", to make "param" the whole string. */
->  static void __init repair_env_string(char *param, char *val)
->  {
+> > 
+> > sigreturn() can be "improved" too. Say, it could validate sigcontext->ip
+> > and return -EINVAL if this addr is not valid. But why?
+> > 
+> > Oleg.
+> > 
 
 
 -- 
