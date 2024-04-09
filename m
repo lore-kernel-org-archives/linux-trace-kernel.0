@@ -1,204 +1,123 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2132.outbound.protection.outlook.com [40.107.94.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8505157E97;
-	Tue,  9 Apr 2024 20:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.132
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712693624; cv=fail; b=Iny44OQedwREuFxgnVjsrrm9dH5nPpMpvBtB/4GxNrEEBeI2qNcP/iCMuf4WLAE0BhKessPsALVsJekhRco0Tv5hZvFqVlRYMomx0D68MgRXpsoSDZeKI9bPrgj7b3E0ZXQt/RaRjaEHI1F3y1CmNwSqZXw9WPz6XD3rTmw2ZVE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712693624; c=relaxed/simple;
-	bh=bY/7XF4fYKg1iIDZsuoM83h7Xt+Qw+iCZNEwX7vjaS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XkCbnTpn5BmzzN2aFoVgCgp99WXo1iY+e0pTzeZ0OkRJSebh5aTRxDhwDC9r1d+IwfRWe7WhhO0kfaFXQ2SKH+RcrMLT6lkJLcJyFm4DJyXsaTwa1xUjFAdJiT+TEgIo2P4ifk9YSSAfdy8tUMx399+6IYx6Js6eu9iKmYuod2w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PKVBky+g; arc=fail smtp.client-ip=40.107.94.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PKVBky+g"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fdEAF/WyquHhvLsIt18O/OkFmpdEd7Eb4Y/KmanLrV5QQ1+TyzLKqxyaEwzuqmWdT+c/5pxg/SLEZPZfqDKJXfisikQ3efjLG5Pl8eU2J34xS0QUVyvDx+eVyG20XlTUc0wj2eCcnrW0JQ0m8D9rPHu9o/aKXBz2DVZL/Eh5Nygmke4DDT4CG1LGIJH44OiywrdvZBrqrA4FnMX8eo/tuk3QdlQL6F1imYY8aZ1OU+dG1mbCBfuTcezf3H6P7sd1JyIApnKWxPWtZBX2OQES6DJkE05QczmxmNleLDz5Mz0QBdH/Jem1suWIeexZF6UFH/DDbFiHAEg9od2mjdkuBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t3aKznSpJIS8+lbXD+3mbKkR6MzyzF2lQs28LZ2Hysg=;
- b=XRXxTyBHV0VG94QKqYC7qwkgZKgz59DvlVwwJrcsV1/uErJZhj/nTGQ1OGw0lD4qGfR29bTeQHugZLA9mqp8dZ2q7S3FQK1gbkuosfcqul2WvmY0F+uuLSYNkLeUT+z5ref4V5dX59oRyqREtSBcgjjeugOjIN0Ni22E6Rshlz0bifpZK/wkruNS8CG5Jc9SHoECubNZmCmxjuN+nTyvseKJSvinrrwq90+zb47KmDlqMDChIEsdWZif6Pzrf6tUjfkd8bckvhI9V5lbioaAsC2DJoouOSHmF2iU+LmDsNHmmKb0bZJyrjwxjtjkJXMU0LJJUwvrQ4xj7Qs/oWpYXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t3aKznSpJIS8+lbXD+3mbKkR6MzyzF2lQs28LZ2Hysg=;
- b=PKVBky+gwN13Oyrdo9O85SZnqJ68v2jyCu7Qqa+elQo/SsU+TsB0qIyBz2t+6dH9/5GQ5dM1wlS8AWcwuDHEZYCLSrDB6pvt8gjWtp2ODuAaz7rVk8bKbXHRuguHLri6Mi2Moh23skJAhogcsCPVuCE55BVOQp8Z2beJrbNTqT9rIvECDy/66yhjmjtmyEfmUsUXbc6tmFyD+UQnxIPRLT6Hf1+nO0HtahcoIPx48wD8m6PfF0oR/G60fX3gRpc4pKT3HcuYJoz9luV46Fu+Bm7kfSriQB+fkA1MH6mUJaAYJTdUGtV8s+tM0MsPp3NXp+pjE2pEEfY1jsYIxHiWhw==
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- SN7PR12MB7250.namprd12.prod.outlook.com (2603:10b6:806:2aa::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.53; Tue, 9 Apr
- 2024 20:13:38 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753%6]) with mapi id 15.20.7409.053; Tue, 9 Apr 2024
- 20:13:38 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, cgroups@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D982905;
+	Tue,  9 Apr 2024 21:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712697075; cv=none; b=CLii9lW3Z3MTOFyLAE96hkSgzG2lLA0GW08xdMHN3LBOYGkJJdCnI93N7sFartalOzomy87K2fj+1Q05EFEIf60hOQpOxGDnrVnzvurV5c3gBsKlaMuKyIsH7cp8hnRRt7to6kGzO+0fPszx5/rPPA/1gt69DeO4Rx5BnSPOShI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712697075; c=relaxed/simple;
+	bh=ElVDNmYvP/wbcQKWFCeHfImQrTWe9WSMoe1E90/HAHY=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=rOqHv2AXLYXo1rmjNx5BMSAUPxTUBtn/9uIR9lgLUHj8IJ/k/zV0v/cob4CnL3uob4yVpCKOhe6xsa3Yp86w3EP7A7hGN2TX+ngPqQhnPb+TlNFVgKnNfzeS7yrAYSjjfCuXH3qCkbZ+l1ow++zdqhdpFktLViQGFFopA9Yg2KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB506C43399;
+	Tue,  9 Apr 2024 21:11:15 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1ruImt-00000000d2d-1ZXv;
+	Tue, 09 Apr 2024 17:13:51 -0400
+Message-ID: <20240409211351.234897475@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 09 Apr 2024 17:02:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Peter Xu <peterx@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Yin Fengwei <fengwei.yin@intel.com>,
- Yang Shi <shy828301@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Hugh Dickins <hughd@google.com>, Yoshinori Sato <ysato@users.sourceforge.jp>,
- Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
- Muchun Song <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <naoya.horiguchi@nec.com>,
- Richard Chang <richardycc@google.com>
-Subject: Re: [PATCH v1 04/18] mm: track mapcount of large folios in single
- value
-Date: Tue, 09 Apr 2024 16:13:35 -0400
-X-Mailer: MailMate (1.14r6028)
-Message-ID: <1DFEC99F-6BCE-4E6D-9EF2-267E8A94A705@nvidia.com>
-In-Reply-To: <20240409192301.907377-5-david@redhat.com>
-References: <20240409192301.907377-1-david@redhat.com>
- <20240409192301.907377-5-david@redhat.com>
-Content-Type: multipart/signed;
- boundary="=_MailMate_BEDB01A4-F93C-4BEA-B07C-1B36C5E3E053_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: MN2PR20CA0012.namprd20.prod.outlook.com
- (2603:10b6:208:e8::25) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>,
+ Ross Zwisler <zwisler@google.com>,
+ wklin@google.com,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: [POC][RFC][PATCH 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+References: <20240409210254.660888920@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|SN7PR12MB7250:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	03dWxGOnOSw7BXDnP1YUe51NAfMuPaIDyDl2/f4OeGL13NteiKVDdnCUkVgaf2FTrWYo7lWl/JQZeMsUJ8OCoo21QfuVvoi80piGrPzGj1dYYY8DmZRTlZLIpbc9husJ4ScL1wOwGySAmaYulG+SUiTTWtaDIFysvBZT78MJ01uA98etLSy9UPGTX0QpGRLGZaUYp0wc5x5KUF8fqlCwwWscHKMlZGenCNJAtsZP80y2KRN4Ab0ZuEylXSNzQ5deHfhD9GUI0kcL2OBipGIV8pK9CdfA2TvhMhQ75zV40mXGQ66Q1ZgUW2uypKlOZ6aNP4hH/+SI8MXgipRb1kK5zQCzL6kiFdalWFKYd8GOmOSqnbQh9OZG1x+X+D/GGU40Hnqq4eWFugAPmS/8jhag3XlzXIAJKAQc100kUsOJ7iQYuDiyH8iCAg16JvwpCHtY31FQ7h0pkDje7Hf2kxQ88g8e6hOPHtX72Kbbn56X50NaXfPR6ObcshGyW8CLdnAvsrNRPMAMb7KxJ20iZnRP0jNdIJl2pTtqrHsyP6+NEgmZRq0v4/Lcqzw3I3lTEEls2aE87oYivYIR+SIn2y3QBJzRD1ovImyQyCh3fnYYxD+GapswEfwIcEq5LoEjDmHjFPZNJ3KQmARD9TyhcYh3ua1s9I1OyZdHlKozzM7muwk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9FaQrJcpl757G7MAChdYV4rCY/0IifCZ/Uhgwt/qZmWaK1cse9a9l5JTkEr5?=
- =?us-ascii?Q?ixe2d5otq5Vgx58izMOn+13d2vAqBE/wQyPJNC8eNWL4s2iIXLRo6zaWhKHu?=
- =?us-ascii?Q?3CrEcBrTMu1lnmwLJhN8UHoK7SN/mfuzsVvgNAmymilYoyL8OLYL2cuwXfSg?=
- =?us-ascii?Q?Nrq88CZmzJI9mtZxt4z4UCuJt+Fb8cHa9zxaE2fg2TPYv+4EeB414nh31EW7?=
- =?us-ascii?Q?1h+UY+qUeI5XTF41ALk4Xt85VGZAoMO+UwT3tE8BkbvLJo4ch5HL9Vas+yC8?=
- =?us-ascii?Q?P2tlA7ZrpyfnynzcBDXU4BjKZypsWvwKIaCTlpbFqCwkRhvoxnj7H/r5SgKY?=
- =?us-ascii?Q?VzAO/qFym/NPpZVczHDXyivjxBcU5SvT1fARON7L5IdRu8hyioUQV+ESz35P?=
- =?us-ascii?Q?lQTpi+UQtdRjvo0EtG1iii7bRxtjF2ymCI4/0+SL2fMR4JdsVyUmXnC1z6ng?=
- =?us-ascii?Q?iFIYKrhAC8dWkHllkTi6kyBUv4wvx09eD1hQT+8Dp7Ks31xPu8RSPqtnDPil?=
- =?us-ascii?Q?Palx9nT4oJwolboyHZiFs3e/LZ6UbEqbmWPwGWlQxeH1q49lTQsMJPDGPlj2?=
- =?us-ascii?Q?kQtG6H0hbXABTN43zEmirXLqNfpanMuXYL3qwwiuFAgRPvLrrG76wIqR7cM6?=
- =?us-ascii?Q?rOQUawnvo5j1f6QybwRwvR0E86X1ef7LjBWV4rEeAOo7/pgA+py+N8n1RVTc?=
- =?us-ascii?Q?0R2RGtvoOkCFz3k5rcOh/o+NPqHtkrZiwfmO0noQ4Qgek34mR6MMx2GFif8F?=
- =?us-ascii?Q?0ZZ6+XDphw1f7e3umTJ+zIIPQXKhauxvLyZNv3x8nPLnTSAnBU0tNwvMnYoz?=
- =?us-ascii?Q?M+OjoTP54aS3M5tvGjl+7VDjolkC4GYXgpQmR3xu51hI6kqafWCUkj5PtGPc?=
- =?us-ascii?Q?sTf/OOYHbQ+6+EDUFGRwJC2FzBxofqd3QHyrop3Yuyrnznr3vRA0oPIXpP1S?=
- =?us-ascii?Q?+U2KWnKYqgzgtUXyM9XMtpyDsCDxnTWHIM/lsrijrYDNb25b3+RyHCpY664z?=
- =?us-ascii?Q?ZNYlUmqdDSI3I62kMgDOv/GYimt0+7bwaQTktC4EKVLfD05qv1qzesRx2st8?=
- =?us-ascii?Q?tvFrWxB+QLYI6IfEeI677wzOpKEntFxOtavemFV4M30d9zpdVBTZMkbHp0Mc?=
- =?us-ascii?Q?Kt/a+mpFt4E/O6E+hy0qjlRqtz+aF8g1QLzhUa7V4xDzMkc+oWGOOKaGpOJv?=
- =?us-ascii?Q?vQqCT3I5eu3Sekg1txy81WuL0sreJUwwoVrHpR2Z9w6vzbWQWok8h0V2g50M?=
- =?us-ascii?Q?C2LRldpkCqfMXbbssXmXVl3S18jBMOinJ8BGL2geLSqNLjTqZRzLa8M6sPfg?=
- =?us-ascii?Q?osO+TZ9porv+SDbiyktf8Zp08dON6QbbHtfAg3eUBpqt9qAyNs/ZPBAzEjMw?=
- =?us-ascii?Q?3OgN6AAWQtzcpLO/gL56SWYTOVuSH2GGnNxJzcsl7pkPBbt1PqjT10Ovl+W0?=
- =?us-ascii?Q?iz9rRCCkOoCcGSCSfhWgK2YmXBLZ0B8rHjFx5mUaenZPUW+sZ9tNbPJPVVn9?=
- =?us-ascii?Q?JmMF/3mbpCA/IU/CGbfFjD+rO+dj7YNNw8x0OMbQ8ctVG7y0h/LMmVgtNWn1?=
- =?us-ascii?Q?xCvbY2KD1T8RNyfpOWE=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0279c3b0-15fe-42bf-004f-08dc58d18aee
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 20:13:38.3155
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o60nxdNgny3CyCA2LbemLoJ8Vwc90fST6u0v7142k9iTvCQBwWs9MtnaCkgj99UE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7250
+Content-Type: text/plain; charset=UTF-8
 
---=_MailMate_BEDB01A4-F93C-4BEA-B07C-1B36C5E3E053_=
-Content-Type: text/plain
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-On 9 Apr 2024, at 15:22, David Hildenbrand wrote:
+Add a method to find a region specified by memmap=nn*align:name for
+ramoops. Adding a kernel command line parameter:
 
-> Let's track the mapcount of large folios in a single value. The mapcount of
-> a large folio currently corresponds to the sum of the entire mapcount and
-> all page mapcounts.
->
-> This sum is what we actually want to know in folio_mapcount() and it is
-> also sufficient for implementing folio_mapped().
->
-> With PTE-mapped THP becoming more important and more widely used, we want
-> to avoid looping over all pages of a folio just to obtain the mapcount
-> of large folios. The comment "In the common case, avoid the loop when no
-> pages mapped by PTE" in folio_total_mapcount() does no longer hold for
-> mTHP that are always mapped by PTE.
->
-> Further, we are planning on using folio_mapcount() more
-> frequently, and might even want to remove page mapcounts for large
-> folios in some kernel configs. Therefore, allow for reading the mapcount of
-> large folios efficiently and atomically without looping over any pages.
->
-> Maintain the mapcount also for hugetlb pages for simplicity. Use the new
-> mapcount to implement folio_mapcount() and folio_mapped(). Make
-> page_mapped() simply call folio_mapped(). We can now get rid of
-> folio_large_is_mapped().
->
-> _nr_pages_mapped is now only used in rmap code and for debugging
-> purposes. Keep folio_nr_pages_mapped() around, but document that its use
-> should be limited to rmap internals and debugging purposes.
->
-> This change implies one additional atomic add/sub whenever
-> mapping/unmapping (parts of) a large folio.
->
-> As we now batch RMAP operations for PTE-mapped THP during fork(),
-> during unmap/zap, and when PTE-remapping a PMD-mapped THP, and we adjust
-> the large mapcount for a PTE batch only once, the added overhead in the
-> common case is small. Only when unmapping individual pages of a large folio
-> (e.g., during COW), the overhead might be bigger in comparison, but it's
-> essentially one additional atomic operation.
->
-> Note that before the new mapcount would overflow, already our refcount
-> would overflow: each mapping requires a folio reference. Extend the
-> focumentation of folio_mapcount().
+  memmap=12M*4096:oops ramoops.mem_name=oops
 
-s/focumentation/documentation/  ;)
+Will use the size and location defined by the memmap parameter where it
+finds the memory and labels it "oops". The "oops" in the ramoops option
+is used to search for it.
 
---
-Best Regards,
-Yan, Zi
+This allows for arbitrary RAM to be used for ramoops if it is known that
+the memory is not cleared on kernel crashes or soft reboots.
 
---=_MailMate_BEDB01A4-F93C-4BEA-B07C-1B36C5E3E053_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/pstore/ram.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index b1a455f42e93..c200388399fb 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -50,6 +50,11 @@ module_param_hw(mem_address, ullong, other, 0400);
+ MODULE_PARM_DESC(mem_address,
+ 		"start of reserved RAM used to store oops/panic logs");
+ 
++static char *mem_name;
++module_param_named(mem_name, mem_name, charp, 0400);
++MODULE_PARM_DESC(mem_name,
++		"name of kernel param that holds addr (builtin only)");
++
+ static ulong mem_size;
+ module_param(mem_size, ulong, 0400);
+ MODULE_PARM_DESC(mem_size,
+@@ -914,6 +919,19 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
+ 
++#ifndef MODULE
++	/* Only allowed when builtin */
++	if (mem_name) {
++		u64 start;
++		u64 size;
++
++		if (memmap_named(mem_name, &start, &size)) {
++			mem_address = start;
++			mem_size = size;
++		}
++	}
++#endif
++
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+ 	 * parameters. If mem_size isn't set, then there are no module
+-- 
+2.43.0
 
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmYVoXAPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUkTEP+wVZyjGvJVuk2NJsfh3tHj3THhkXQT6JLg4f
-Z9ZEUxFY+Qi7f5ZNZtEt+B1Z98we+bRmjTBwplbnuU7gEUOe2s6yJy2INH1PV0LU
-8bABPSURC+R1/F2lVj+2SAMk3Zwahv4YtsDfQrtCgcQpAXVXgyAoknMNewoUPy76
-ZjwHSn7f0eg/CNCuSvr8usVjicaCkritgN/LFY93RylidI4ySjA0fWIkD9aQLtMI
-ykZKxilaqW1PqmYHxDrUPQJpQMyrbnu1HWe6WFHpM+C2KRb7zdc4R+zDAvRwtw9B
-Dn4aTB38JhsCCgO6pudcDLXb8UKe9UY5q4wzCtrtKi4qmduN+hxa9Sv7RNYA0AYM
-TXaKTst8zlpXPw/dg/TJejbHepwRwmAYHqX0Ks5Nz4PocJv52kfwG4zm7eDFNmAq
-4SU2kg9JrkJn5ysPmLTVOVKNd/b+I4ry2PEcAroJfIMkceT4XkPz6Qlb5eQ5/K8O
-z2nY4sU7sm8a8hRMq5WrYaIyGoOaCx2mcXFvr1P/Tb0Di0wnCyB6skcp+Ct8lLqh
-BaP0k9trLzItOdPYEO94hrBBxODkYb/kpPfmbRCS3S+ONZ44Ji7V4s+Wr+It+ydD
-O/YZ8jEqwHJWHNbtiiNJ3D6iJ8EKA9+SaHs0Hyxbb3D9M+5DBeUgBG4m3k3ggR6f
-mCcBQLZZ
-=1QcW
------END PGP SIGNATURE-----
 
---=_MailMate_BEDB01A4-F93C-4BEA-B07C-1B36C5E3E053_=--
