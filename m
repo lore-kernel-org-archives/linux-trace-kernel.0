@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F18157E76
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F158D157E8D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712690761; cv=none; b=XYGFYuMg8gSyckLNImnP+DvgKSFzFkDSBauzTBGrmZqimcpz42GSsH19QBeEKVsa9k0MN6W1pRDbO1F1+wZhBDnzMSkONLvtFWXtWWJfzGPYjoGZP6DwkMn7Cs5sIoMHCbb4unKJQUch6V9nHuLYBp8M4OwjK5cIjsVU3LkVLDU=
+	t=1712690776; cv=none; b=rSV6lyZiB6B5zxI3baZ4Son4BfoH8MAcQe1g18CGDDYoRZcRP0W2ZI1QZKHXLjw3mT+5VnIYsyVmB6WffJ8tQWodDRuZch0ziKNGxWctuu+bfD/lR36t3ceOpDBQLq6kS5Drm4JDjmNtwIjowkV4WMumTYz0OHVFovykzuJKyXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712690761; c=relaxed/simple;
-	bh=B9VW3LrHsx1zgfIxNNfkZUFwrAR512abN6D1CTPxM7s=;
+	s=arc-20240116; t=1712690776; c=relaxed/simple;
+	bh=omqhDgTrChEETgeMiUUkVBBhOlzU6W6WQjgKatIId+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hEoYJnzFnzwzRcskO+5XMTlrJ4gqtUvUZEaa631gOii4ebZQFT6NPDCKJymL7Oms53hKm95ODsHg6QtrBs7NSgUFAAa2tnectY6vcCFgB7CAOki9lUhtlXtL46WzoVJQSIE3I0YlkpwbcJUSpwQ1u8Pbs0UvE6+2DVxEqPebTRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eu34k+Kh; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=TBOw6bJ+5FDfWOE7r+XFPaIxmZdoCCT/4ks5ypzbuJSBEDbuwXRVtnpDBAy6t1xeGFJgehi1bjPj8qxqN0x5/ipx1EdSVwY14TzaEosWdmCRk+FnhWKN3Z6RbURWVlwquU315Xx5Wc9IFzXiAWFz+zO7NRqvt+kpGfmdKmmpNpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hy2jgp6a; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eu34k+Kh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hy2jgp6a"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712690758;
+	s=mimecast20190719; t=1712690773;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oja6emUhi7xfrQgd9sof78Ea2rpQTjm332kNskpFfoE=;
-	b=Eu34k+KhCD4/OBuEsSgJgGNmJcFNaG5UkX52f9G36o5DX3GZxc7ZK52hFbT0akfGRV4Vkc
-	qhRP9ITKHYlF9RfAGIKDm6BGOfig3rMB08lNbdD6mzXJ5b4zCp3uY3e2ZVgKlTScpymjfO
-	BvSAJ3lBUkKVHBRNojH9j7/iiyhd4RA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-216-euyj5-iiOp6e2NecV838wQ-1; Tue, 09 Apr 2024 15:25:57 -0400
-X-MC-Unique: euyj5-iiOp6e2NecV838wQ-1
+	bh=z56f15PtBl+UvHHvSB3Qx1+Za4NemO81qqaBL/Rijfc=;
+	b=Hy2jgp6a9WdBLZx94x/do/sXJcDdjtSmkgjijMm0Dt9pBRzLptKfB57QuYJWVyIkz2JBPY
+	uoxrgBWxk4JGa/ImnXDq13F/vxBx7QhL/24pOL0gWI7pcL7mkFfPFUgBeUicsFL+77xuDC
+	qdVqsreswdNdm33KiSUe89WsK9yk/SU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-14-Ea0Nh1k0ME2JTUIPiSiprg-1; Tue,
+ 09 Apr 2024 15:26:09 -0400
+X-MC-Unique: Ea0Nh1k0ME2JTUIPiSiprg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 262C9800198;
-	Tue,  9 Apr 2024 19:25:56 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3DD5B3C3D0CD;
+	Tue,  9 Apr 2024 19:26:08 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.39.192.106])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0B6EB40B497D;
-	Tue,  9 Apr 2024 19:25:43 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6B0B440C6DAE;
+	Tue,  9 Apr 2024 19:25:56 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -67,9 +67,9 @@ Cc: linux-mm@kvack.org,
 	Miaohe Lin <linmiaohe@huawei.com>,
 	Naoya Horiguchi <naoya.horiguchi@nec.com>,
 	Richard Chang <richardycc@google.com>
-Subject: [PATCH v1 12/18] sh/mm/cache: use folio_mapped() in copy_from_user_page()
-Date: Tue,  9 Apr 2024 21:22:55 +0200
-Message-ID: <20240409192301.907377-13-david@redhat.com>
+Subject: [PATCH v1 13/18] mm/filemap: use folio_mapcount() in filemap_unaccount_folio()
+Date: Tue,  9 Apr 2024 21:22:56 +0200
+Message-ID: <20240409192301.907377-14-david@redhat.com>
 In-Reply-To: <20240409192301.907377-1-david@redhat.com>
 References: <20240409192301.907377-1-david@redhat.com>
 Precedence: bulk
@@ -84,31 +84,29 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 We want to limit the use of page_mapcount() to the places where it is
 absolutely necessary.
 
-We're already using folio_mapped in copy_user_highpage() and
-copy_to_user_page() for a similar purpose so ... let's also simply use
-it for copy_from_user_page().
+Let's use folio_mapcount() instead of filemap_unaccount_folio().
 
-There is no change for small folios. Likely we won't stumble over many
-large folios on sh in that code either way.
+No functional change intended, because we're only dealing with small
+folios.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/sh/mm/cache.c | 2 +-
+ mm/filemap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/mm/cache.c b/arch/sh/mm/cache.c
-index 9bcaa5619eab..d8be352e14d2 100644
---- a/arch/sh/mm/cache.c
-+++ b/arch/sh/mm/cache.c
-@@ -84,7 +84,7 @@ void copy_from_user_page(struct vm_area_struct *vma, struct page *page,
- {
- 	struct folio *folio = page_folio(page);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index c668e11cd6ef..d4aa82ad5b59 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -168,7 +168,7 @@ static void filemap_unaccount_folio(struct address_space *mapping,
+ 		add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
  
--	if (boot_cpu_data.dcache.n_aliases && page_mapcount(page) &&
-+	if (boot_cpu_data.dcache.n_aliases && folio_mapped(folio) &&
- 	    test_bit(PG_dcache_clean, &folio->flags)) {
- 		void *vfrom = kmap_coherent(page, vaddr) + (vaddr & ~PAGE_MASK);
- 		memcpy(dst, vfrom, len);
+ 		if (mapping_exiting(mapping) && !folio_test_large(folio)) {
+-			int mapcount = page_mapcount(&folio->page);
++			int mapcount = folio_mapcount(folio);
+ 
+ 			if (folio_ref_count(folio) >= mapcount + 2) {
+ 				/*
 -- 
 2.44.0
 
