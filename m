@@ -1,276 +1,163 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C46524AF;
-	Tue,  9 Apr 2024 06:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596F77D09F;
+	Tue,  9 Apr 2024 07:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712643650; cv=none; b=B7AOASd6kette3/EtqGrYsEdugPKh7bLza9/dCdbpaCPqb7clOnGxx+owv0ToL7V6fNZqJATasGwAgCS5fE5ofFwjqV2Z9HvdvmnHuR7tc8poGrLlbTn7PyFiswVP4DhGYWf7GoJ9fB7FToaQ9nLDP9lxFGFZc9nRsjiZM+u+yY=
+	t=1712649480; cv=none; b=qRpjrwbdVrEumEpvY2TBW62uOebCC3rCfiA367qToETq4qyyla56e6vzuKkVX08tkm0KtPH36AhKDsJPGMdjuvSUDGk4EAi7540jITqogw+OVeehhFhRZWexwmKrb3lVMwD1eW+iYFckW86A7UZgsbiVuy6QGQiE8no9FmxDWbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712643650; c=relaxed/simple;
-	bh=pOzVOIOfglB9B7nvykspsv2EL3wp9Zsg+kLK5u1kF2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Z27DALpsth0Oidpfp50jyYr45sc1kUia+cwIZHivhmi6pnVEwAEXigSpCxVP9xyII3TmXr7zXb0zTu19EjbQDFw3DkoKkaMc7lOh4ru3kVa/rpCFv5rFHBzevGN2ZjSMU7cmpJzLGQfM6RqvrVG0AtBXRXb7FY7v0UVD4+moOJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VDG3Q27MJz1R88n;
-	Tue,  9 Apr 2024 14:17:54 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7A64018002D;
-	Tue,  9 Apr 2024 14:20:45 +0800 (CST)
-Received: from [10.67.111.172] (10.67.111.172) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 9 Apr 2024 14:20:45 +0800
-Message-ID: <a8cf7252-4d67-fb8c-6c3e-77f7a1c66dee@huawei.com>
-Date: Tue, 9 Apr 2024 14:20:45 +0800
+	s=arc-20240116; t=1712649480; c=relaxed/simple;
+	bh=+96kTkCYzibKfYMPaLZoRN4b2dBphMs9/4tzob3I6KM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TyKFBZiy1s/8I89CzrkDiSQvO6mc6vKMxfUJNlKJE6eKb42r47JPZdsJUvXbTmOyhc5y20+C0p2Yq68ZT6tCc8sH7aCfkrmAj+f7wgNDTRGLne3Xmr6+x5Gu25WvZ0DcISTv3gf3v6e3/DFG6PhUt603TopVgqmPLCPGNOtthcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cgfalYQU; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgfalYQU"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4155819f710so41360385e9.2;
+        Tue, 09 Apr 2024 00:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712649477; x=1713254277; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A9YXgPNf4gqlB56sgUucCnlcjmHfsJoKI/6vQ+DJBgs=;
+        b=cgfalYQU5jiklB12MFso7LgZ48CDHni5bJNH0gm/bkzMZkFD42R3i1cBnzwWKdMk/X
+         RcJgbskjwHR2BvhRtCoULqXSOjskzBy+gto8dAxqNhv4T/WKTbVGVNZ7iR7907MazEIa
+         3R4UgroyfgKIRNYCJUnui5Um6WFMirREltu72ywCChYh4vo92NYRF7Zwrlz5uM9bya3G
+         Pr+1jpPEnTKCx+jyjpqWViMs/urrjUZAszvy7NMxbvl5a+GDR8xddwiES6TTEtmLbKc1
+         eBSzpEsfjcPpZQM6nLaVykVuQfSKS+88yQFowSSczLG5HSS8TywkP2tEtcsPDUfd3Noq
+         V3jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712649477; x=1713254277;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A9YXgPNf4gqlB56sgUucCnlcjmHfsJoKI/6vQ+DJBgs=;
+        b=gs+mELdQTZZGjM+1pfe0yiESxp8Fqa+XG/Vc7o80MmuKmn3A1Cu7QqQRLARcX+FzDp
+         ZwQ6cG+103SYxxeB799wedHF0AfG05+xb3KpFHvk4pcWxo/MOnwySPZ1m/VcK5Jf+v8j
+         oJDchrYQpKW1EI6UQMn8g8SENPn3CQHEMtWSSp0hajYVz2LUGbfbbKNLHDCZ21YmtVan
+         INLyca8McfsJfxeH4quYWIqIOON7dPd4dd0oOVZWcYNqfVbththCKbecWJ7tiBIR82DK
+         BgB3rNrXX5O1VRqns7IQEl/fjfA/MK2iAWZ8iyuXbwEYyfkNZMqCzN4c2IR2i2rBVAx7
+         mV9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWcX+GgfxFLr8h9LXRC5Ihyzole7M7hVeIOWpGkPKYIGKAmAACx96IY9tSYkRRoFPDUiSzFS8DsWvhB3BsnocSExj8VdTdj96KKc39zt4hHgoxo8EQSo/zNDZtELJ7aok6EtZv6bo9swV60Ik0jm2X2GphW0ZOnrZFmj7EHrG0R6X7gzTKUi5TVU/B1UilY9bBirLO0hb8pMAoAbuADNatQ
+X-Gm-Message-State: AOJu0YwL8a5ae+taiZDxKD9wZs+79suTuUT9HuxVryr3Slobtb3t8muG
+	UyHV5SA7Gs+WKoSI+RuyePE1h+nrmqqSosiNoPS11SpD5oKLbiiA
+X-Google-Smtp-Source: AGHT+IGfcRPUdOU4LdcmKZhc/BCzg5//3D6sVRaofs9HaPUsmttu7vgsDhJ+E46cqaYgpIyD4IaWQQ==
+X-Received: by 2002:a05:600c:4708:b0:414:95e0:388c with SMTP id v8-20020a05600c470800b0041495e0388cmr8811472wmo.8.1712649476445;
+        Tue, 09 Apr 2024 00:57:56 -0700 (PDT)
+Received: from krava ([81.6.34.132])
+        by smtp.gmail.com with ESMTPSA id n11-20020a05600c3b8b00b00416aca5ff66sm970839wms.19.2024.04.09.00.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 00:57:56 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 9 Apr 2024 09:57:54 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <ZhT1AqFmo3jwOrzC@krava>
+References: <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+ <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+ <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+ <20240404161108.GG7153@redhat.com>
+ <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+ <Zg-8r63tPSkuhN7p@krava>
+ <20240405110230.GA22839@redhat.com>
+ <ZhQVBYQYr5ph33Uu@krava>
+ <20240409093439.3906e3783ab1f5280146934e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2] kprobes: Avoid possible warn in __arm_kprobe_ftrace()
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-CC: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
- <20240408083403.3302274-1-zhengyejian1@huawei.com>
- <20240408214102.be792c5cefd5ab757ef32a14@kernel.org>
-From: Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <20240408214102.be792c5cefd5ab757ef32a14@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240409093439.3906e3783ab1f5280146934e@kernel.org>
 
-On 2024/4/8 20:41, Masami Hiramatsu (Google) wrote:
-> Hi Zheng,
-> 
-> On Mon, 8 Apr 2024 16:34:03 +0800
-> Zheng Yejian <zhengyejian1@huawei.com> wrote:
-> 
->> There is once warn in __arm_kprobe_ftrace() on:
->>
->>   ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
->>   if (WARN_ONCE(..., "Failed to arm kprobe-ftrace at %pS (error %d)\n", ...)
->>     return ret;
->>
->> This warning is generated because 'p->addr' is detected to be not a valid
->> ftrace location in ftrace_set_filter_ip(). The ftrace address check is done
->> by check_ftrace_location() at the beginning of check_kprobe_address_safe().
->> At that point, ftrace_location(addr) == addr should return true if the
->> module is loaded. Then the module is searched twice:
->>    1. in is_module_text_address(), we find that 'p->addr' is in a module;
->>    2. in __module_text_address(), we find the module;
->>
->> If the module has just been unloaded before the second search, then
->> '*probed_mod' is NULL and we would not go to get the module refcount,
->> then the return value of check_kprobe_address_safe() would be 0, but
->> actually we need to return -EINVAL.
-> 
-> OK, so you found a race window in check_kprobe_address_safe().
-> 
-> It does something like below.
-> 
-> check_kprobe_address_safe() {
-> 	...
-> 
-> 	/* Timing [A] */
-> 
-> 	if (!(core_kernel_text(p->addr) ||
-> 		is_module_text_address(p->addr)) ||
-> 		...(other reserved address check)) {
-> 		return -EINVAL;
-> 	}
-> 
-> 	/* Timing [B] */
-> 
-> 	*probed_mod = __module_text_address(p->addr):
-> 	if (*probe_mod) {
-> 		if (!try_module_get(*probed_mod)) {
-> 			return -ENOENT;
-> 		}
-> 		...	
-> 	}
-> }
-> 
-> So, if p->addr is in a module which is alive at the timing [A], but
-> unloaded at timing [B], 'p->addr' is passed the
-> 'is_module_text_address(p->addr)' check, but *probed_mod becomes NULL.
-> Thus the corresponding module is not referenced and kprobe_arm(p) will
-> access a wrong address (use after free).
-> This happens either kprobe on ftrace is enabled or not.
+On Tue, Apr 09, 2024 at 09:34:39AM +0900, Masami Hiramatsu wrote:
 
-Yes, This is the problem. And for this case, check_kprobe_address_safe() 
-still return 0, and then going on to arm kprobe may cause problems. So
-we should make check_kprobe_address_safe() return -EINVAL when refcount
-of the module is not got.
+SNIP
 
+> > > 
+> > > > this can be fixed by checking the syscall is called from the trampoline
+> > > > and prevent handle_trampoline call if it's not
+> > > 
+> > > Yes, but I still do not think this makes a lot of sense. But I won't argue.
+> > > 
+> > > And what should sys_uretprobe() do if it is not called from the trampoline?
+> > > I'd prefer force_sig(SIGILL) to punish the abuser ;) OK, OK, EINVAL.
+> > 
+> > so the similar behaviour with int3 ends up with immediate SIGTRAP
+> > and not invoking pending uretprobe consumers, like:
+> > 
+> >   - setup uretprobe for foo
+> >   - foo() {
+> >       executes int 3 -> sends SIGTRAP
+> >     }
+> > 
+> > because the int3 handler checks if it got executed from the uretprobe's
+> > trampoline.. if not it treats that int3 as regular trap
 > 
-> To fix this problem, we should move the mutex_lock(kprobe_mutex) before
-> check_kprobe_address_safe() because kprobe_module_callback() also lock it
-> so it can stop module unloading.
+> Yeah, that is consistent behavior. Sounds good to me.
 > 
-> Can you ensure this will fix your problem?
-
-It seems not, the warning in __arm_kprobe_ftrace() still occurs. I
-contrived following simple test:
-
-     #!/bin/bash
-     sysctl -w kernel.panic_on_warn=1
-     while [ True ]; do
-         insmod mod.ko    # contain function 'foo'
-         rmmod mod.ko
-     done &
-     while [ True ]; do
-         insmod kprobe.ko  # register kprobe on function 'foo'
-         rmmod kprobe.ko
-     done &
-
-I think holding kprobe_mutex cannot make sure we get the refcount of the
-module.
-
-> I think your patch is just optimizing but not fixing the fundamental
-> problem, which is we don't have an atomic search symbol and get module
-
-Sorry, this patch is a little confusing, but it is not just optimizing :)
-
-As shown below, after my patch, if p->addr is in a module which is alive
-at the timing [A'] but unloaded at timing [B'], then *probed_mod must
-not be NULL. Then after timing [B'], it will go to try_module_get() and
-expected to fail and return -ENOENT. So this is the different.
-
-     check_kprobe_address_safe() {
-         ...
-         *probed_mod = NULL;
-         if (!core_kernel_text((unsigned long) p->addr)) {
-
-             /* Timing [A'] */
-
-             *probed_mod = __module_text_address((unsigned long) p->addr);
-             if (!(*probed_mod)) {
-                 return -EINVAL;
-             }
-         }
-         ...
-
-         /* Timing [B'] */
-
-         if (*probed_mod) {
-             if (!try_module_get(*probed_mod)) {
-                 return -ENOENT;
-             }
-             ...
-         }
-
-> API. In that case, we should stop a whole module unloading system until
-> registering a new kprobe on a module. (After registering the kprobe,
-> the callback can mark it gone and disarm_kprobe does not work anymore.)
+> > 
+> > while for uretprobe syscall we have at the moment following behaviour:
+> > 
+> >   - setup uretprobe for foo
+> >   - foo() {
+> >      uretprobe_syscall -> executes foo's uretprobe consumers
+> >     }
+> >   - at some point we get to the 'ret' instruction that jump into uretprobe
+> >     trampoline and the uretprobe_syscall won't find pending uretprobe and
+> >     will send SIGILL
+> > 
+> > 
+> > so I think we should mimic int3 behaviour and:
+> > 
+> >   - setup uretprobe for foo
+> >   - foo() {
+> >      uretprobe_syscall -> check if we got executed from uretprobe's
+> >      trampoline and send SIGILL if that's not the case
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9d9095e81792..94eaefd1bc51 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1633,11 +1633,11 @@ int register_kprobe(struct kprobe *p)
->   	p->nmissed = 0;
->   	INIT_LIST_HEAD(&p->list);
->   
-> +	mutex_lock(&kprobe_mutex);
-> +
->   	ret = check_kprobe_address_safe(p, &probed_mod);
->   	if (ret)
-> -		return ret;
-> -
-> -	mutex_lock(&kprobe_mutex);
-> +		goto out;
->   
->   	if (on_func_entry)
->   		p->flags |= KPROBE_FLAG_ON_FUNC_ENTRY;
+> OK, this looks good to me.
 > 
-> ----
+> > 
+> > I think it's better to have the offending process killed right away,
+> > rather than having more undefined behaviour, waiting for final 'ret'
+> > instruction that jumps to uretprobe trampoline and causes SIGILL
+> > 
+> > > 
+> > > I agree very much with Andrii,
+> > > 
+> > >        sigreturn()  exists only to allow the implementation of signal handlers.  It should never be
+> > >        called directly.  Details of the arguments (if any) passed to sigreturn() vary depending  on
+> > >        the architecture.
+> > > 
+> > > this is how sys_uretprobe() should be treated/documented.
+> > 
+> > yes, will include man page patch in new version
 > 
-> Thank you,
-> 
->>
->> To fix it, originally we can simply check 'p->addr' is out of text again,
->> like below. But that would check twice respectively in kernel text and
->> module text, so finally I reduce them to be once.
->>
->>    if (!(core_kernel_text((unsigned long) p->addr) ||
->>        is_module_text_address((unsigned long) p->addr)) || ...) {
->> 	ret = -EINVAL;
->> 	goto out;
->>    }
->>    ...
->>    *probed_mod = __module_text_address((unsigned long) p->addr);
->>    if (*probed_mod) {
->> 	...
->>    } else if (!core_kernel_text((unsigned long) p->addr)) { // check again!
->> 	ret = -EINVAL;
->> 	goto out;
->>    }
->>
->> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
->> ---
->>   kernel/kprobes.c | 18 ++++++++++++------
->>   1 file changed, 12 insertions(+), 6 deletions(-)
->>
->> v2:
->>   - Update commit messages and comments as suggested by Masami.
->>     Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
->>
->> v1:
->>   - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
->>
->> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
->> index 9d9095e81792..65adc815fc6e 100644
->> --- a/kernel/kprobes.c
->> +++ b/kernel/kprobes.c
->> @@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
->>   	jump_label_lock();
->>   	preempt_disable();
->>   
->> -	/* Ensure it is not in reserved area nor out of text */
->> -	if (!(core_kernel_text((unsigned long) p->addr) ||
->> -	    is_module_text_address((unsigned long) p->addr)) ||
->> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
->> +	/* Ensure the address is in a text area, and find a module if exists. */
->> +	*probed_mod = NULL;
->> +	if (!core_kernel_text((unsigned long) p->addr)) {
->> +		*probed_mod = __module_text_address((unsigned long) p->addr);
->> +		if (!(*probed_mod)) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +	}
->> +	/* Ensure it is not in reserved area. */
->> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
->>   	    within_kprobe_blacklist((unsigned long) p->addr) ||
->>   	    jump_label_text_reserved(p->addr, p->addr) ||
->>   	    static_call_text_reserved(p->addr, p->addr) ||
->> @@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
->>   		goto out;
->>   	}
->>   
->> -	/* Check if 'p' is probing a module. */
->> -	*probed_mod = __module_text_address((unsigned long) p->addr);
->> +	/* Get module refcount and reject __init functions for loaded modules. */
->>   	if (*probed_mod) {
->>   		/*
->>   		 * We must hold a refcount of the probed module while updating
->> -- 
->> 2.25.1
->>
->
---
-Thanks
-Zheng Yejian
-> 
+> And please follow Documentation/process/adding-syscalls.rst in new version,
+> then we can avoid repeating the same discussion :-)
 
+yep, will do
+
+thanks,
+jirka
