@@ -1,92 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950DD12FF72;
-	Tue,  9 Apr 2024 14:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EF2101EC;
+	Tue,  9 Apr 2024 14:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712671293; cv=none; b=qAfGlXafydH+9QFUKmeB6V/VJ2E9YJnOxjbuEqeyM6LZtgJcM7OhpDeaq+1Fpr4C67+mbefUA3KSkobN0Xx4flVl1ypGwkUTrykKismsrLCo9IFMLeGj4G7GHGHftGdx8Z1skysr2OZZ/SXJDLGhb3cLggibIYnN/TCYmPIejR4=
+	t=1712673055; cv=none; b=gfARgFd+/s7KkoH74eiWA0Rk7u1/fRFhDcO01ZKqZJy54FPSFQIqZIcCa0vWn1jCTMDwveount5kvl/SRfjN6xjgp1l8L27E8dFUNq/TSlx4a3w/xZ7KisxHsfSQE9wYRYCfmuFQvn+WBVqHnBjxnmvKseHWRQ2MUGSqTaA5y0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712671293; c=relaxed/simple;
-	bh=KBapuCoet5kfjziaVWML59WbPosua5uheV6EN7HL7cc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m/G94JFVwccTPueFjzUZp8PSydKD5IGEKTnAC1OIDaIqqYIPW5JQXWt5EXFX/i+SI9fixpv9VMuoKMZnXnmfIyFafDfwvBjEpTR8A/j/NndDQ53fMM87KLB/h8vpsasSqEDYVpGGBlWfaqmUA5nKKKvEN0tGfSx8JDydRXvbNJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CI+tE9nq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CI+tE9nq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5330C43390;
-	Tue,  9 Apr 2024 14:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712671293;
-	bh=KBapuCoet5kfjziaVWML59WbPosua5uheV6EN7HL7cc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CI+tE9nqa8mKqJOIqe+CfUonGLG1fsbzMR/Wd7a5I1Vi2laBO5bxr2CoMJV9PXJmW
-	 l3B5LTh7o9wALv4UUWeYM/t6wiBxQSugqqL1qMaxru2tX3syz5zQ1dsosUQsa29l8T
-	 p7IjRvBsv+ejS31ytc4jFbGqhglSJWpDfeCARtT2DuJQwR0l7vlr6MAVUGv1hn/+RL
-	 LYOEYFvgKimhfwTM29K1/o3+OR9G+feE3zRGY+tAuvl6i500jl0QwnR+iS9P/aFQXM
-	 zLfT5yP+z3QnvGF/tWNTahJ46H894mg0QFW7RX22FGXq0UqZrFoQ1e9EbWlVu3+fcI
-	 vfZrusQ178Ykg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"Richard Russon" <ldm@flatcap.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Robert Moore <robert.moore@intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Lin Ming <ming.m.lin@intel.com>,
-	Alexey Starikovskiy <astarikovskiy@suse.de>,
-	linux-ntfs-dev@lists.sourceforge.net,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 5/5] [v2] kbuild: enable -Wstringop-truncation globally
-Date: Tue,  9 Apr 2024 16:00:58 +0200
-Message-Id: <20240409140059.3806717-6-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240409140059.3806717-1-arnd@kernel.org>
-References: <20240409140059.3806717-1-arnd@kernel.org>
+	s=arc-20240116; t=1712673055; c=relaxed/simple;
+	bh=Jc48hF8Bi2QJFLufyPe696cWZVDXbPnfhf6kpwJkW9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IL0rrqes6PwpjaLbJMHk6jcTT5txbXosW7qi4dHEHnO9LhtCoMEh4cX9N7FB8CE0+zxwIG1pL/OVJ7aAQA/rNvdEWlpG0y/nf+C2IhfR+RUWhCU2Lfwp3Kim/TtjM9dsGlETlZPWSWZowzm5yaz5tP/vJ+r82kCOzhU534cz3+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54BCC433C7;
+	Tue,  9 Apr 2024 14:30:53 +0000 (UTC)
+Date: Tue, 9 Apr 2024 10:33:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Marco Elver <elver@google.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook
+ <keescook@chromium.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] tracing: Add new_exec tracepoint
+Message-ID: <20240409103327.7a9012fa@gandalf.local.home>
+In-Reply-To: <20240408090205.3714934-1-elver@google.com>
+References: <20240408090205.3714934-1-elver@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon,  8 Apr 2024 11:01:54 +0200
+Marco Elver <elver@google.com> wrote:
 
-The remaining warnings of this type have been addressed, so it can
-now be enabled by default, rather than only for W=1.
+> Add "new_exec" tracepoint, which is run right after the point of no
+> return but before the current task assumes its new exec identity.
+> 
+> Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
+> runs before flushing the old exec, i.e. while the task still has the
+> original state (such as original MM), but when the new exec either
+> succeeds or crashes (but never returns to the original exec).
+> 
+> Being able to trace this event can be helpful in a number of use cases:
+> 
+>   * allowing tracing eBPF programs access to the original MM on exec,
+>     before current->mm is replaced;
+>   * counting exec in the original task (via perf event);
+>   * profiling flush time ("new_exec" to "sched_process_exec").
+> 
+> Example of tracing output ("new_exec" and "sched_process_exec"):
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: no changes
----
- scripts/Makefile.extrawarn | 1 -
- 1 file changed, 1 deletion(-)
+How common is this? And can't you just do the same with adding a kprobe?
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 57edc80661fd..f4d69092698b 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -107,7 +107,6 @@ else
- KBUILD_CFLAGS += $(call cc-disable-warning, format-overflow-non-kprintf)
- KBUILD_CFLAGS += $(call cc-disable-warning, format-truncation-non-kprintf)
- endif
--KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- 
- KBUILD_CFLAGS += -Wno-override-init # alias for -Wno-initializer-overrides in clang
- 
--- 
-2.39.2
-
+-- Steve
