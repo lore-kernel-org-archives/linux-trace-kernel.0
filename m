@@ -1,60 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC86685276;
-	Tue,  9 Apr 2024 14:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EADB131E3C;
+	Tue,  9 Apr 2024 15:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712674733; cv=none; b=Jv06jEx6oeTzCR0A014YJ2xFrREbsHV3CTsrEbGr2EIG5+aEnIqee0iecEnG5qN9JRxERzlBOziMmJkHRqkfvQK8h3vowNLtq9MRZ6vbD369FfR5K+DMhcDthh2C6E1TmqwoK7DOXXuZwz/qYmrXA79HWSyen61sDM1/S33B5ow=
+	t=1712675128; cv=none; b=E+5Z0oF7LDb5rnd6FRQ6Fa/NdB/6RPfPiKGvuj398IMcizrSWDAf+6MdO6y5h5fOS/lGf1rs/ZPZdafc0KcczOkP+J1uWN076xmuccB6oIvSy6qEWIvs0bADf+BffreY2M3OPkwztH6wg06ceOaa3KRV0zy0y5SVAuNAE9XES+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712674733; c=relaxed/simple;
-	bh=wGwVQPo5a62UbnM0Pfv8vXp1bEYX3+DG+IPrfybv2w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rwVViOyIDbjjzGdlx2eTmn98/qbKyTCuRfJfo8dGXPatkArpDLqZ0Lz+DwIs7xGBksJtxPZgX4XES+vFUf3ZJf+QAMzBW11DSa27w06igKawH3fxgTWWfndy3gZGJ6z3UkB1i0DMGeAD0UIPVZIjSwn81hdGREKA9jKLB17kks8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E417AC433C7;
-	Tue,  9 Apr 2024 14:58:51 +0000 (UTC)
-Date: Tue, 9 Apr 2024 11:01:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Kent Overstreet
- <kent.overstreet@linux.dev>, Kees Cook <keescook@chromium.org>, Andrew
- Morton <akpm@linux-foundation.org>, Tycho Andersen <tandersen@netflix.com>,
- Jens Axboe <axboe@kernel.dk>, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH 1/3] tracing: Remove dependency of saved_cmdlines_buffer
- on PID_MAX_DEFAULT
-Message-ID: <20240409110126.651e94cb@gandalf.local.home>
-In-Reply-To: <20240408145819.8787-2-mkoutny@suse.com>
-References: <20240408145819.8787-1-mkoutny@suse.com>
-	<20240408145819.8787-2-mkoutny@suse.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712675128; c=relaxed/simple;
+	bh=mJt7v6CLSOYzx1gtAyi5VoQyh9G4Ztq0Q2FlAeZxZmo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e1aqm2m+l4Gkkh2D2ipZD/X4Jfdl/+VZEj9G80D11DeK4yuzNGIrpVtkiWF09QWSgLCOEYb2eExLYQFXXfs6BMufTK72TaO3o8FhtGdeX6GtJ2gP2sZH1bdbu0kOC3qWAGohvbTkvBFG1RKSuozlS+rKuYJvO/BPk18QYaKoaQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCn2zHwP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCn2zHwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D441C43394;
+	Tue,  9 Apr 2024 15:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712675128;
+	bh=mJt7v6CLSOYzx1gtAyi5VoQyh9G4Ztq0Q2FlAeZxZmo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fCn2zHwPhopHz3aJMqQuvT0XcsT7uQACdH7RpIfWCKsUDLkk3gf5FGDw4zWpYrgvD
+	 uHsoSSt5qLptwNNbfqus0tnv+lz8+j1GLA7xNJuWdgoxedmWIxOy1qpgIkLedk9xDZ
+	 Tk/2gjwceeSc1HSDRiACiU5Lt1elWa15BD6BnZoSUoi2ONmiPBp5pZJ4PFLwkkq164
+	 yQAbCmUhBIsj30JKInNCV4w8feoC9IBwwj2hTtDSdwUhcdDk808VmE/4jVrvoWs8eH
+	 2mdyLkcgR2mZGl6rkNdcwmbWQYw5RmNuI3DaQ9sgQ+yZZNlJVIt3ARO7x5S0Mba2We
+	 Bx23czV4vYapQ==
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-22ec8db3803so401636fac.1;
+        Tue, 09 Apr 2024 08:05:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV1ZpLlplzyjSp+xywErsTXtkV+AFugDo9gIIux1ycBbSUIjzE3xViy7vCqYCjcreUuhgkXrog87BDsc7Yo0TtOfiKeV1iKm8X0hVJg/NiV6Lq2bvqtz2+l07rS18EfVl2cMmQjokreUAxXEr28sehtG+V4wb+MlOSp/TFENIYxDVyjoAemHNj5twUWhrNdDmdllpklEqFtzJnRKLQ/cFY47+qbc8eXY1Iv
+X-Gm-Message-State: AOJu0YxrwQXJcPZA9b4blDwM01TCYyX+6S7pznTfEdQ9VBFDQU7+qe7U
+	ew8hrKnpC98nOiJb9vYwchZMbANWwJhLD4tboQ79vwkrGMZCyw49grLn0IdKM4nbIen6xJPJDO8
+	q3jPzUFH+pMZ9PPDCdPDOSY+pVho=
+X-Google-Smtp-Source: AGHT+IGDUO0rZ4GKVyVieaHSmKzYKqNHjEuMKn4kB8H+BP9iyv6DlSuHKVlwMC/rIyJebF0i0bhH71zkmEuwl5+N0cA=
+X-Received: by 2002:a05:6870:f727:b0:222:81cc:ac9c with SMTP id
+ ej39-20020a056870f72700b0022281ccac9cmr12216666oab.5.1712675127270; Tue, 09
+ Apr 2024 08:05:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240409140059.3806717-1-arnd@kernel.org> <20240409140059.3806717-3-arnd@kernel.org>
+In-Reply-To: <20240409140059.3806717-3-arnd@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 9 Apr 2024 17:05:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h7XEV__S4pvQJt54Ab832z6PZFTNTRspfLF507MNo9Og@mail.gmail.com>
+Message-ID: <CAJZ5v0h7XEV__S4pvQJt54Ab832z6PZFTNTRspfLF507MNo9Og@mail.gmail.com>
+Subject: Re: [PATCH 2/5] [v2] acpi: disable -Wstringop-truncation
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Richard Russon <ldm@flatcap.org>, Jens Axboe <axboe@kernel.dk>, Robert Moore <robert.moore@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Lin Ming <ming.m.lin@intel.com>, 
+	Alexey Starikovskiy <astarikovskiy@suse.de>, linux-ntfs-dev@lists.sourceforge.net, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon,  8 Apr 2024 16:58:17 +0200
-Michal Koutn=C3=BD <mkoutny@suse.com> wrote:
+On Tue, Apr 9, 2024 at 4:01=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wrot=
+e:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> gcc -Wstringop-truncation warns about copying a string that results in a
+> missing nul termination:
+>
+> drivers/acpi/acpica/tbfind.c: In function 'acpi_tb_find_table':
+> drivers/acpi/acpica/tbfind.c:60:9: error: 'strncpy' specified bound 6 equ=
+als destination size [-Werror=3Dstringop-truncation]
+>    60 |         strncpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/acpi/acpica/tbfind.c:61:9: error: 'strncpy' specified bound 8 equ=
+als destination size [-Werror=3Dstringop-truncation]
+>    61 |         strncpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE=
+_ID_SIZE);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~~~~~
+>
+> The code works as intended, and the warning could be addressed by using
+> a memcpy(), but turning the warning off for this file works equally well
+> and may be easir to merge.
 
-> @@ -294,7 +295,7 @@ static void __trace_find_cmdline(int pid, char comm[])
->  		return;
->  	}
-> =20
-> -	tpid =3D pid & (PID_MAX_DEFAULT - 1);
-> +	tpid =3D pid % PID_MAP_SIZE;
+"easier" (fixed up).
 
-Does that compile to the same? This is a fast path.
+Tricky that, but OK.let's get the warning off the table.
 
--- Steve
+Applied as 6.10 material, thanks!
 
-
->  	map =3D savedcmd->map_pid_to_cmdline[tpid];
->  	if (map !=3D NO_CMDLINE_MAP) {
->  		tpid =3D savedcmd->map_cmdline_to_pid[map];
+> Fixes: 47c08729bf1c ("ACPICA: Fix for LoadTable operator, input strings")
+> Link: https://lore.kernel.org/lkml/CAJZ5v0hoUfv54KW7y4223Mn9E7D4xvR7whRFN=
+LTBqCZMUxT50Q@mail.gmail.com/#t
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/acpi/acpica/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/acpica/Makefile b/drivers/acpi/acpica/Makefile
+> index 30f3fc13c29d..8d18af396de9 100644
+> --- a/drivers/acpi/acpica/Makefile
+> +++ b/drivers/acpi/acpica/Makefile
+> @@ -5,6 +5,7 @@
+>
+>  ccflags-y                      :=3D -D_LINUX -DBUILDING_ACPICA
+>  ccflags-$(CONFIG_ACPI_DEBUG)   +=3D -DACPI_DEBUG_OUTPUT
+> +CFLAGS_tbfind.o                +=3D $(call cc-disable-warning, stringop-=
+truncation)
+>
+>  # use acpi.o to put all files here into acpi.o modparam namespace
+>  obj-y  +=3D acpi.o
+> --
+> 2.39.2
+>
+>
