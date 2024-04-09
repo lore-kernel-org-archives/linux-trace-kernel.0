@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9759B157A66
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1D415820A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712690683; cv=none; b=C4m0v06aRR+SEP+LMRqgeLIyEtsm8KjYbVRad6haJHnUk+j7vBDLdI+CvF7Y5UQ1LB4VcMmgJxVZvHuI+qHGCdtCQs/rUzsTGmTV2BTPlRcZKQnap9XyQK+0mlc3gLIi8SJ/mI7dfdQrtVwCvkLnN3t7FMjfDi6iSm5TsfdMook=
+	t=1712690692; cv=none; b=NGkB0g1rtKh4bJWG1W1sJstrrCXKXaRvppqM8OPn0w7IANxO2QwYcBxcBh7KYyt37ZZqc1x/wiivb1RV0R8kTCBrUwlxfnAsuHaW6DYAyTrW63bnLoJNVAGTKN49lC7Guz+hLkApYNiR3qSWOIr21eL5orsz4e/d0ZjJ3IksZpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712690683; c=relaxed/simple;
-	bh=6G3a0Az5RUxYjW0MeAONrOSx900CkrCCjkjSacXNONc=;
+	s=arc-20240116; t=1712690692; c=relaxed/simple;
+	bh=f2r6XGWVgx08KSMlFSZ6qHtz58Yi8+jxNoK6fRu4Nds=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p5xUzeMdmRhCzmOYF3ZvCweYJ/kx3jIi/q4iE40MIFYDmQj0xZjeYuO12wbldV9lsVy8TvHy2xRpTZLJqV+uDIHe73SlkNWjQegihs3p4REIkTjL6s98rWMJRaU6JboAUkvcY2rthDuDOXfhOh1JLPBrJoCI1N17Igq8fXR0on0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AGaeMGsV; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=cGHmpAku06njxg7qsVXA/2XGpZzZvm+dbn/jHcOaP6DrkoPyZQWDIS3Cx+wad1RmeyhoANgMHMmEQ/xrpyc/TFhkw7/XCEGS0jA9exFt2yQOyr+z2zENKaIWykbP7ptSXKYGZOTVflNHEcFl6TO2tkK3WFL3nY/DavHzyNCFze4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O9vD3Zya; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AGaeMGsV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9vD3Zya"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712690680;
+	s=mimecast20190719; t=1712690689;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Uy2oRB9rRnFFfSxz/BmLFL5vpaMUgfQlIINZ/k73n3E=;
-	b=AGaeMGsV7044dtgbDXM7W4kg6MCu4pxSitZzG06rpN/NNR99Xz4HEyBZExE1FCSQxk9u0f
-	q3ayjbugyt61H/Q8bDxpdPsVjWvtOkQJr0S+Or8p6AJD4kbo/S/nZ1d2m7BSOrCvcNt46I
-	WilM2XIeESYXG+/UOkdGbcdB2K3gids=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-294-y1kOx-irPBuEYteLZHDYxQ-1; Tue,
- 09 Apr 2024 15:24:35 -0400
-X-MC-Unique: y1kOx-irPBuEYteLZHDYxQ-1
+	bh=kfmOqlR3LeI6JA5XUUI6YoG07vX8W74qIyKiUchjaJU=;
+	b=O9vD3ZyaUBaIrZbiSV80Vt6m2bTKwKi/KMR88KN3Miq3IgK1G8hdCFed3nDh9REmSvu/Wj
+	f8YaNdEOi99DPgEq2zCbrxCtaazNog44/o5DnAEcgu0Yhj6yFOYQeuBR1MZckZn2P+zZzt
+	94zjHOYO+ED/6LPjXSHUGRJVc/wk2sw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-97-N-WWN3PRODGQvvQK2vZjIQ-1; Tue, 09 Apr 2024 15:24:44 -0400
+X-MC-Unique: N-WWN3PRODGQvvQK2vZjIQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8046C380009F;
-	Tue,  9 Apr 2024 19:24:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B730680B51A;
+	Tue,  9 Apr 2024 19:24:42 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.39.192.106])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1167E40B4979;
-	Tue,  9 Apr 2024 19:24:22 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DCED040B4979;
+	Tue,  9 Apr 2024 19:24:33 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -67,9 +67,9 @@ Cc: linux-mm@kvack.org,
 	Miaohe Lin <linmiaohe@huawei.com>,
 	Naoya Horiguchi <naoya.horiguchi@nec.com>,
 	Richard Chang <richardycc@google.com>
-Subject: [PATCH v1 05/18] mm: improve folio_likely_mapped_shared() using the mapcount of large folios
-Date: Tue,  9 Apr 2024 21:22:48 +0200
-Message-ID: <20240409192301.907377-6-david@redhat.com>
+Subject: [PATCH v1 06/18] mm: make folio_mapcount() return 0 for small typed folios
+Date: Tue,  9 Apr 2024 21:22:49 +0200
+Message-ID: <20240409192301.907377-7-david@redhat.com>
 In-Reply-To: <20240409192301.907377-1-david@redhat.com>
 References: <20240409192301.907377-1-david@redhat.com>
 Precedence: bulk
@@ -81,59 +81,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-We can now read the mapcount of large folios very efficiently. Use it to
-improve our handling of partially-mappable folios, falling back
-to making a guess only in case the folio is not "obviously mapped shared".
+We already handle it properly for large folios. Let's also return "0"
+for small typed folios, like page_mapcount() currently would.
 
-We can now better detect partially-mappable folios where the first page is
-not mapped as "mapped shared", reducing "false negatives"; but false
-negatives are still possible.
-
-While at it, fixup a wrong comment (false positive vs. false negative)
-for KSM folios.
+Consequently, folio_mapcount() will never return negative values for
+typed folios, but may return negative values for underflows.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/mm.h | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ include/linux/mm.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1862a216af15..daf687f0e8e5 100644
+index daf687f0e8e5..d453232bba62 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2183,7 +2183,7 @@ static inline size_t folio_size(struct folio *folio)
-  *       indicate "mapped shared" (false positive) when two VMAs in the same MM
-  *       cover the same file range.
-  *    #. For (small) KSM folios, the return value can wrongly indicate "mapped
-- *       shared" (false negative), when the folio is mapped multiple times into
-+ *       shared" (false positive), when the folio is mapped multiple times into
-  *       the same MM.
+@@ -1260,12 +1260,19 @@ static inline int folio_large_mapcount(const struct folio *folio)
+  * references the entire folio counts exactly once, even when such special
+  * page table entries are comprised of multiple ordinary page table entries.
   *
-  * Further, this function only considers current page table mappings that
-@@ -2200,7 +2200,22 @@ static inline size_t folio_size(struct folio *folio)
++ * Will report 0 for pages which cannot be mapped into userspace, such as
++ * slab, page tables and similar.
++ *
+  * Return: The number of times this folio is mapped.
   */
- static inline bool folio_likely_mapped_shared(struct folio *folio)
+ static inline int folio_mapcount(const struct folio *folio)
  {
--	return page_mapcount(folio_page(folio, 0)) > 1;
-+	int mapcount = folio_mapcount(folio);
+-	if (likely(!folio_test_large(folio)))
+-		return atomic_read(&folio->_mapcount) + 1;
++	int mapcount;
 +
-+	/* Only partially-mappable folios require more care. */
-+	if (!folio_test_large(folio) || unlikely(folio_test_hugetlb(folio)))
-+		return mapcount > 1;
-+
-+	/* A single mapping implies "mapped exclusively". */
-+	if (mapcount <= 1)
-+		return false;
-+
-+	/* If any page is mapped more than once we treat it "mapped shared". */
-+	if (folio_entire_mapcount(folio) || mapcount > folio_nr_pages(folio))
-+		return true;
-+
-+	/* Let's guess based on the first subpage. */
-+	return atomic_read(&folio->_mapcount) > 0;
++	if (likely(!folio_test_large(folio))) {
++		mapcount = atomic_read(&folio->_mapcount);
++		return page_type_has_type(mapcount) ? 0 : mapcount + 1;
++	}
+ 	return folio_large_mapcount(folio);
  }
  
- #ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
 -- 
 2.44.0
 
