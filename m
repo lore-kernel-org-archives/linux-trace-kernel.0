@@ -1,110 +1,141 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AB41586C6
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Apr 2024 23:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467571591F1;
+	Tue,  9 Apr 2024 23:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712706088; cv=none; b=NPmRmPk1J0m+JFhdUqqlYW6kVO44/z7SA1OwN6x7gliEkGsilX4SuCKdMxlRKrhGAz7Ct9UD8yKHOs2o/zJ3u2bfeBzWh6Jj24AoEde1E8VrZEmr8JLjuQVtNuLpirjTdZH62LaieYV743Wtgy3MmOBDhTO/+vhnZ9zdG4z9IUQ=
+	t=1712706244; cv=none; b=JK2/CouzBU0oHG6CHvxDy73yoGH9sQ0CzCxtmD9MUX6Cj/d+NM7QWJnrHaDg//Jxa4+98YT2EAInH7Fe711KNAVWlCuYJu4qoE1v8aHIEUqHOfIWvhksykG6FJS98C5ue4w4e7inh62Q5cVIXJD1g1ONGApIZNllEiJn6adMKu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712706088; c=relaxed/simple;
-	bh=PNy0mBQjw8E74b5RpE2uI+eSralfxKJ9opohJxEN5zs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AR1DLcAJBR0rjIw/iOx3lEYAgc48lt4GhE1ZzJmRjrHIYKhYUuBI9AB6oQbnWUfkXEELmwbYK88G1FHDeTZhy2yj+Kat+gpij5pFQdNFN2uIC2/4BrpArGYsEYQI69JdISfu40lkwWOv+UdEtTgc6L1czkDxuCKU96nDZ3pgrnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hqexQfx3; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712706244; c=relaxed/simple;
+	bh=v4Esx9cF4KlSWIcQ2kqz/TpABAeRs6jtLpyXFM7NH+w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=B8OaW/ka7MIbTiqS/+BCZ/0WseXzF4kZeF9LJCAcdqxd7I+P9xzB7EjWiMQ0C273j43gdIoudtqL51FqdnjUthcOsCqF4HoLyaj2NYNWfaVb1xQDaSPKTeQuydBUwtND1qkJgIZs7ehBHyiAXxXO1cjLYxqKHHAp/S8gw3FmyYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRkTDG+8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hqexQfx3"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1dff837d674so52570325ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Apr 2024 16:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712706085; x=1713310885; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=az80y3cRpLeKTQubgh3fpGGNWsXUAJ+YmKoEHWsOqi0=;
-        b=hqexQfx3TXWIybb0PG+TlGC4BL56oWeQxCwLNoaRJrD358ZJ+3Dg+rn3/l2g0wGHT3
-         VaJ2nI6OucpsafkPcxU9dQb912NbDVISiC6YWdcvhFwsHK4mRXWuVPXv/0fnjxklBUEh
-         z/Xn5agxzzBNh29ohDarnfTFTm/D4/25nUGwU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712706085; x=1713310885;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=az80y3cRpLeKTQubgh3fpGGNWsXUAJ+YmKoEHWsOqi0=;
-        b=biD236iOwQhvVzFB411/OKCSuCnmG/zHj5qC3tr0oyQclmEjhpLuJugo3D/+0KfGtJ
-         eV+kc1vibRRrwrkglb9qJmmo/+zOCiCZUi2hRAnW3Wv+/W7UZA3huX1fhv1wuwXL/h4z
-         J6wdSK4tmNAkUGst7eJyRWDnBnWcT2hfAOukHH6hiQ+56IR+BOCWRMRU8ofU3CIJrPx7
-         U74ZByfk3QSMymuYUquU1ohKSugUL0pbZqlQHWbcR7ZrmeLtd1k03QLh55Yop++w5Nqd
-         eOznXV2MelKIkro/abfZazxdWbI3+97fe3oTdoecC7iAS+5W8B80jJ+4Eyeb6hY7MKJ5
-         afrA==
-X-Forwarded-Encrypted: i=1; AJvYcCViKcEy3klpu/jFgAkMH8EFCInY8R/42YknK6S0IGtTvwB56JpByxWV9EIXqczEDnEYkhpRKrKkiBAfXP3QNSud4FBpW1e7u3XTfsbnnNQY/rwF
-X-Gm-Message-State: AOJu0YynA2+vckaFwpddp+D85sa4Ni5a3eOnzx0kBA0rpJ8CjU3y4Wmz
-	hsoSaiLpDDJ9NU6b/85LaiYHS+YuLMT2Nweac29Ms21PJWq8W+0abLJnIw0IqA==
-X-Google-Smtp-Source: AGHT+IHGg8Oq0FNDCNnUG12+MIKam5JOLm5lHVx4R8foCcBX//m7saHYLKuLVznN3ilAFFW+PI4EXA==
-X-Received: by 2002:a17:903:98d:b0:1e1:214:1b7d with SMTP id mb13-20020a170903098d00b001e102141b7dmr1718191plb.61.1712706085513;
-        Tue, 09 Apr 2024 16:41:25 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e6-20020a17090301c600b001e43a00ee07sm4255351plh.211.2024.04.09.16.41.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 16:41:25 -0700 (PDT)
-Date: Tue, 9 Apr 2024 16:41:24 -0700
-From: Kees Cook <keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRkTDG+8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1334BC43390;
+	Tue,  9 Apr 2024 23:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712706243;
+	bh=v4Esx9cF4KlSWIcQ2kqz/TpABAeRs6jtLpyXFM7NH+w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MRkTDG+8qYVtJprKDkKROpi+qmMYRDozGGUHK/ANM3jblCM+04FmSYPNSJqxOPy0f
+	 3AibsMXWDJLkq5lIJhLOnniO1RXbiqfoG9VxeMOTZnhp/ZW5ip/hqorJd5nJK7xnAu
+	 9BE/9VrovpSZM2DwXg2ubmBAqni6ooUrfj00SJwVBnU1Bll4Z2tepkwsjQ37kbvR82
+	 7/J/XexNSvWH9kw+t7/KGyzDm9OJXbTnlXFS3ZZ0OK8QHRG/93tgRNeiTrAFJR4Gtc
+	 4suJPDU95W2D8i+SXtP5OXGYHZlvsSXF6Yekr58Kg5B4QoPxMf79wpTD3rpOR/IqCq
+	 +HsV3zP8Qg5WQ==
+Date: Wed, 10 Apr 2024 08:44:00 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>, wklin@google.com,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
- memmap=nn*align:name
-Message-ID: <202404091638.2F98764A41@keescook>
-References: <20240409210254.660888920@goodmis.org>
- <20240409211351.075320273@goodmis.org>
- <202404091521.B63E85D@keescook>
- <20240409191156.5f92a15c@gandalf.local.home>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ rsavitski@google.com
+Subject: Re: [PATCH] ring-buffer: Only update pages_touched when a new page
+ is touched
+Message-Id: <20240410084400.d08b17cc846c233619e3c9fd@kernel.org>
+In-Reply-To: <20240409151309.0d0e5056@gandalf.local.home>
+References: <20240409151309.0d0e5056@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409191156.5f92a15c@gandalf.local.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:
-> On Tue, 9 Apr 2024 15:23:07 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > Do we need to involve e820 at all? I think it might be possible to just
-> > have pstore call request_mem_region() very early? Or does KASLR make
-> > that unstable?
-> 
-> Yeah, would that give the same physical memory each boot, and can we
-> guarantee that KASLR will not map the kernel over the previous location?
+On Tue, 9 Apr 2024 15:13:09 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Hm, no, for physical memory it needs to get excluded very early, which
-means e820. So, yeah, your proposal makes sense. I'm not super excited
-about this be x86-only though. What does arm64 for for memmap?
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The "buffer_percent" logic that is used by the ring buffer splice code to
+> only wake up the tasks when there's no data after the buffer is filled to
+> the percentage of the "buffer_percent" file is dependent on three
+> variables that determine the amount of data that is in the ring buffer:
+> 
+>  1) pages_read - incremented whenever a new sub-buffer is consumed
+>  2) pages_lost - incremented every time a writer overwrites a sub-buffer
+>  3) pages_touched - incremented when a write goes to a new sub-buffer
+> 
+> The percentage is the calculation of:
+> 
+>   (pages_touched - (pages_lost + pages_read)) / nr_pages
+> 
+> Basically, the amount of data is the total number of sub-bufs that have been
+> touched, minus the number of sub-bufs lost and sub-bufs consumed. This is
+> divided by the total count to give the buffer percentage. When the
+> percentage is greater than the value in the "buffer_percent" file, it
+> wakes up splice readers waiting for that amount.
+> 
+> It was observed that over time, the amount read from the splice was
+> constantly decreasing the longer the trace was running. That is, if one
+> asked for 60%, it would read over 60% when it first starts tracing, but
+> then it would be woken up at under 60% and would slowly decrease the
+> amount of data read after being woken up, where the amount becomes much
+> less than the buffer percent.
+> 
+> This was due to an accounting of the pages_touched incrementation. This
+> value is incremented whenever a writer transfers to a new sub-buffer. But
+> the place where it was incremented was incorrect. If a writer overflowed
+> the current sub-buffer it would go to the next one. If it gets preempted
+> by an interrupt at that time, and the interrupt performs a trace, it too
+> will end up going to the next sub-buffer. But only one should increment
+> the counter. Unfortunately, that was not the case.
+> 
+> Change the cmpxchg() that does the real switch of the tail-page into a
+> try_cmpxchg(), and on success, perform the increment of pages_touched. This
+> will only increment the counter once for when the writer moves to a new
+> sub-buffer, and not when there's a race and is incremented for when a
+> writer and its preempting writer both move to the same new sub-buffer.
+> 
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+BTW, isn't this a real bugfix, because the page_touched can be
+bigger than nr_pages without this fix?
+
+Thank you,
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 25476ead681b..6511dc3a00da 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1393,7 +1393,6 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+>  	old_write = local_add_return(RB_WRITE_INTCNT, &next_page->write);
+>  	old_entries = local_add_return(RB_WRITE_INTCNT, &next_page->entries);
+>  
+> -	local_inc(&cpu_buffer->pages_touched);
+>  	/*
+>  	 * Just make sure we have seen our old_write and synchronize
+>  	 * with any interrupts that come in.
+> @@ -1430,8 +1429,9 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+>  		 */
+>  		local_set(&next_page->page->commit, 0);
+>  
+> -		/* Again, either we update tail_page or an interrupt does */
+> -		(void)cmpxchg(&cpu_buffer->tail_page, tail_page, next_page);
+> +		/* Either we update tail_page or an interrupt does */
+> +		if (try_cmpxchg(&cpu_buffer->tail_page, &tail_page, next_page))
+> +			local_inc(&cpu_buffer->pages_touched);
+>  	}
+>  }
+>  
+> -- 
+> 2.43.0
+> 
+
 
 -- 
-Kees Cook
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
