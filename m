@@ -1,29 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B95416E878;
-	Wed, 10 Apr 2024 15:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F316EBE4;
+	Wed, 10 Apr 2024 15:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762748; cv=none; b=uPwaDEWyFi1isjHGv10w0NB1c3pkI78rDXLmG74/9d3XRmof1E5LQlvpCCwcUlRU7Z7Vj6cMo66l6pm1jNeYDs1QGagOCS0GxDxeBKKs3c7ycJRYeKrt1LAWXAIPARWxweu5eTQejArS3/eDIMKc3Q2gum4VqAUHhrOVFsuaBrM=
+	t=1712763220; cv=none; b=UtQIH4EOPcWFxD7STJgNk3kITCA39X/7Mb/0BBUV5vKtnUzBzMfgWLZJq34PzZgXSAEYKv/eDSXHLKcCAJjbrR4cev93+Muy4BOnjoRttj1OYej6UhR2Tzn7f9AS/yF+t7aw35m6Kt1D0IUM6mkkVkSBTj870l/ImWG0Dsfv0VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762748; c=relaxed/simple;
-	bh=Pk0thEfc+DKwTeAkAv2HFqvGA8+fNmNFZy9Fw5oWnfU=;
+	s=arc-20240116; t=1712763220; c=relaxed/simple;
+	bh=92ZRImfzi1uBmz5wPYU8Kbhx0TjrM28aNmBdmI8IclA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u1SCwxMHNd6eWvwF+sklaMbhiPGIQbhF0oNp2of8oR1SEKuBxJ++fHSe1xkFiISXmaKezFKXphuonpUKFdCg4kUxIOKw1dStzBr0tt1FD6oy3YJ44FIFYOoLGxQYoerTkE7ikwnuFGhx7Bz1BwaQvPKpXr4tAXJrH0QmG6V56Bs=
+	 MIME-Version:Content-Type; b=XWv2xAQMoBUGG4DOEnd/bI3AF+K+3MlVZM+mjtNX6XSgx8Vtt5peScEBb/+dKvS7RkkGxNNl5plx3PO5yjrFanPf9GQjzMWuUrp3J+gfnGxywrSLuGQrWxZGcPo/fxwXspG7Hw6s9OB9GVFNpRb/FdpNB6dvrc4Eg56tnLbnwZA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F05C433F1;
-	Wed, 10 Apr 2024 15:25:47 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:28:23 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9A4C433F1;
+	Wed, 10 Apr 2024 15:33:37 +0000 (UTC)
+Date: Wed, 10 Apr 2024 11:36:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Zheng Yejian <zhengyejian1@huawei.com>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: Fix use-after-free issue in ftrace_location()
-Message-ID: <20240410112823.1d084c8f@gandalf.local.home>
-In-Reply-To: <20240401125543.1282845-1-zhengyejian1@huawei.com>
-References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
+Message-ID: <20240410113614.39b61b0d@gandalf.local.home>
+In-Reply-To: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
+References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,142 +39,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 1 Apr 2024 20:55:43 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Mon, 01 Apr 2024 23:48:52 +0000
+Justin Stitt <justinstitt@google.com> wrote:
 
-> KASAN reports a bug:
-> 
->   BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
->   Read of size 8 at addr ffff888141d40010 by task insmod/424
->   CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+ #213
->   [...]
->   Call Trace:
->    <TASK>
->    dump_stack_lvl+0x68/0xa0
->    print_report+0xcf/0x610
->    kasan_report+0xb5/0xe0
->    ftrace_location+0x90/0x120
->    register_kprobe+0x14b/0xa40
->    kprobe_init+0x2d/0xff0 [kprobe_example]
->    do_one_initcall+0x8f/0x2d0
->    do_init_module+0x13a/0x3c0
->    load_module+0x3082/0x33d0
->    init_module_from_file+0xd2/0x130
->    __x64_sys_finit_module+0x306/0x440
->    do_syscall_64+0x68/0x140
->    entry_SYSCALL_64_after_hwframe+0x71/0x79
-> 
-> The root cause is that when lookup_rec() is lookuping ftrace record of
-> an address in some module, and at the same time in ftrace_release_mod(),
-> the memory that saving ftrace records has been freed as that module is
-> being deleted.
-> 
->   register_kprobes() {
->     check_kprobe_address_safe() {
->       arch_check_ftrace_location() {
->         ftrace_location() {
->           lookup_rec()  // access memory that has been freed by
->                         // ftrace_release_mod() !!!
-> 
-> It seems that the ftrace_lock is required when lookuping records in
-> ftrace_location(), so is ftrace_location_range().
-> 
-> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/trace/ftrace.c | 28 ++++++++++++++++++----------
->  1 file changed, 18 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index da1710499698..838d175709c1 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
->  }
+> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
+> index ba2d96a1bc2f..274c297f1b15 100644
+> --- a/include/trace/events/rpcgss.h
+> +++ b/include/trace/events/rpcgss.h
+> @@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
+>  		__entry->timeout = timeout;
+>  		__entry->window_size = window_size;
+>  		__entry->len = len;
+> -		strncpy(__get_str(acceptor), data, len);
+> +		memcpy(__get_str(acceptor), data, len);
+>  	),
 >  
->  /**
-> - * ftrace_location_range - return the first address of a traced location
-> + * ftrace_location_range_locked - return the first address of a traced location
->   *	if it touches the given ip range
->   * @start: start of range to search.
->   * @end: end of range to search (inclusive). @end points to the last byte
-> @@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
->   * that is either a NOP or call to the function tracer. It checks the ftrace
->   * internal tables to determine if the address belongs or not.
->   */
-> -unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-> +static unsigned long ftrace_location_range_locked(unsigned long start, unsigned long end)
->  {
->  	struct dyn_ftrace *rec;
->  
-> @@ -1603,6 +1603,17 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
->  	return 0;
->  }
->  
-> +unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-> +{
-> +	unsigned long loc;
-> +
-> +	mutex_lock(&ftrace_lock);
-> +	loc = ftrace_location_range_locked(start, end);
-> +	mutex_unlock(&ftrace_lock);
+>  	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
 
-I'm not so sure we can take a mutex in all places that call this function.
+WTF, that code is just buggy. Looking at the rpcgss_context event we have:
 
-What about using RCU?
+> TRACE_EVENT(rpcgss_context,
+>         TP_PROTO(
+>                 u32 window_size,
+>                 unsigned long expiry,
+>                 unsigned long now,
+>                 unsigned int timeout,
+>                 unsigned int len,
+>                 const u8 *data
+>         ),
+> 
+>         TP_ARGS(window_size, expiry, now, timeout, len, data),
+> 
+>         TP_STRUCT__entry(
+>                 __field(unsigned long, expiry)
+>                 __field(unsigned long, now)
+>                 __field(unsigned int, timeout)
+>                 __field(u32, window_size)
+>                 __field(int, len)
+>                 __string(acceptor, data)
 
-	rcu_read_lock();
-	loc = ftrace_location_range_rcu(start, end);
-	rcu_read_unlock();
+The __string() macro expects "data" to be a string and does *not* check
+length when copying.
 
-Then in ftrace_release_mod() we can have:
+If anything, it needs to be:
 
- out_unlock:
-	mutex_unlock();
+		__string_len(acceptor, data, len)
 
-	/* Need to synchronize with ftrace_location() */
-	if (tmp_pages)
-		synchronize_rcu();
+as the macro code has changed recently, and the current code will crash!
+
+>         ),
+> 
+>         TP_fast_assign(
+>                 __entry->expiry = expiry;
+>                 __entry->now = now;
+>                 __entry->timeout = timeout;
+>                 __entry->window_size = window_size;
+>                 __entry->len = len;
+>                 strncpy(__get_str(acceptor), data, len);
+
+Then this needs to be:
+
+		__assign_str(acceptor, data);
+
+Note, the length is now saved via __string_len() and not needed here.
+
+I'll go send a patch to fix this.
 
 -- Steve
 
 
-> +
-> +	return loc;
-> +}
-> +
->  /**
->   * ftrace_location - return the ftrace location
->   * @ip: the instruction pointer to check
-> @@ -1614,25 +1625,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
->   */
->  unsigned long ftrace_location(unsigned long ip)
->  {
-> -	struct dyn_ftrace *rec;
-> +	unsigned long loc;
->  	unsigned long offset;
->  	unsigned long size;
->  
-> -	rec = lookup_rec(ip, ip);
-> -	if (!rec) {
-> +	loc = ftrace_location_range(ip, ip);
-> +	if (!loc) {
->  		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
->  			goto out;
->  
->  		/* map sym+0 to __fentry__ */
->  		if (!offset)
-> -			rec = lookup_rec(ip, ip + size - 1);
-> +			loc = ftrace_location_range(ip, ip + size - 1);
->  	}
->  
-> -	if (rec)
-> -		return rec->ip;
-> -
->  out:
-> -	return 0;
-> +	return loc;
->  }
->  
->  /**
-
+>         ),
