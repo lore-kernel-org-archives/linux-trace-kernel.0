@@ -1,142 +1,175 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859C716F90A;
-	Wed, 10 Apr 2024 14:03:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B95416E878;
+	Wed, 10 Apr 2024 15:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757820; cv=none; b=kb5z7MGo37t2hpluFgC+SQzM9m4Pl7kRnLEt69h/xPM+qdMAELipKANvlW9GwZ8i1CrolaXSW30K3+cH5y104BgtybPPHp6V+fqcK7CPOqfbGLvWvlEheaWWgJKGl8wE4yYOyrZCpMI1PbgW/Lw3/hwhvJEeZEFr2WBGfchyjNA=
+	t=1712762748; cv=none; b=uPwaDEWyFi1isjHGv10w0NB1c3pkI78rDXLmG74/9d3XRmof1E5LQlvpCCwcUlRU7Z7Vj6cMo66l6pm1jNeYDs1QGagOCS0GxDxeBKKs3c7ycJRYeKrt1LAWXAIPARWxweu5eTQejArS3/eDIMKc3Q2gum4VqAUHhrOVFsuaBrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757820; c=relaxed/simple;
-	bh=YJVg15asCDUWzkyyR8ToaYmqFAys5qM4yXSLrQA/+80=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rIp1/YhvoCkHDG32oMHEbf0c2yWIj8Mwywg9TtV4ZK08VMfDdLwPOvmmkGy78wmfZwutYBfreZS7ZJNPEbGdHYK2k2LGCxEP7h7ijvLWjsb/6KuKJzT96dK1gu33T35lziKuOhG6SEIaI+CUE+RGPmK5bGGGUWzQA78b3KaixwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLywsviC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLywsviC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61829C433F1;
-	Wed, 10 Apr 2024 14:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712757820;
-	bh=YJVg15asCDUWzkyyR8ToaYmqFAys5qM4yXSLrQA/+80=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jLywsviC5iixRQ/Vh5FfpPD5jeOMgc2lbpP/jYlJPAq0j76LZP9AwOuf3RqEWWpII
-	 2/sUR/JppzslVYvydEw3/QLOs5KW35efGANvBEVeEs0thqCAHwLsGGrczjq2tVrykV
-	 H44pZxwY1qvvtnnkKuxrEYfYkp83dLSa7CHJo6MifOJLbZBaq28eWcJgHwFsW8eYGC
-	 YnxHE2aSa6vhwul8EwFqski13lt7FWUsQG1m4+NEYYyYaN5RjKCBkvuVd0fR/L5t56
-	 AkmRE7KPX4IO36/MzikgjhBJLFAF9+rGKVgl+Er4RqGd0cw3daxZa1pHi1r/sQdn0b
-	 Lf7PmRXCybBdg==
-Date: Wed, 10 Apr 2024 23:03:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	s=arc-20240116; t=1712762748; c=relaxed/simple;
+	bh=Pk0thEfc+DKwTeAkAv2HFqvGA8+fNmNFZy9Fw5oWnfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u1SCwxMHNd6eWvwF+sklaMbhiPGIQbhF0oNp2of8oR1SEKuBxJ++fHSe1xkFiISXmaKezFKXphuonpUKFdCg4kUxIOKw1dStzBr0tt1FD6oy3YJ44FIFYOoLGxQYoerTkE7ikwnuFGhx7Bz1BwaQvPKpXr4tAXJrH0QmG6V56Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F05C433F1;
+	Wed, 10 Apr 2024 15:25:47 +0000 (UTC)
+Date: Wed, 10 Apr 2024 11:28:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Zheng Yejian <zhengyejian1@huawei.com>
-Cc: <anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
- <naveen.n.rao@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+ <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
  <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] kprobes: Fix possible use-after-free issue on kprobe
- registration
-Message-Id: <20240410230336.8ef84251c45ef363f3f1ff6f@kernel.org>
-In-Reply-To: <20240410015802.265220-1-zhengyejian1@huawei.com>
-References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
-	<20240410015802.265220-1-zhengyejian1@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH] ftrace: Fix use-after-free issue in ftrace_location()
+Message-ID: <20240410112823.1d084c8f@gandalf.local.home>
+In-Reply-To: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Apr 2024 09:58:02 +0800
+On Mon, 1 Apr 2024 20:55:43 +0800
 Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-> When unloading a module, its state is changing MODULE_STATE_LIVE ->
->  MODULE_STATE_GOING -> MODULE_STATE_UNFORMED. Each change will take
-> a time. `is_module_text_address()` and `__module_text_address()`
-> works with MODULE_STATE_LIVE and MODULE_STATE_GOING.
-> If we use `is_module_text_address()` and `__module_text_address()`
-> separately, there is a chance that the first one is succeeded but the
-> next one is failed because module->state becomes MODULE_STATE_UNFORMED
-> between those operations.
+> KASAN reports a bug:
 > 
-> In `check_kprobe_address_safe()`, if the second `__module_text_address()`
-> is failed, that is ignored because it expected a kernel_text address.
-> But it may have failed simply because module->state has been changed
-> to MODULE_STATE_UNFORMED. In this case, arm_kprobe() will try to modify
-> non-exist module text address (use-after-free).
+>   BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
+>   Read of size 8 at addr ffff888141d40010 by task insmod/424
+>   CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+ #213
+>   [...]
+>   Call Trace:
+>    <TASK>
+>    dump_stack_lvl+0x68/0xa0
+>    print_report+0xcf/0x610
+>    kasan_report+0xb5/0xe0
+>    ftrace_location+0x90/0x120
+>    register_kprobe+0x14b/0xa40
+>    kprobe_init+0x2d/0xff0 [kprobe_example]
+>    do_one_initcall+0x8f/0x2d0
+>    do_init_module+0x13a/0x3c0
+>    load_module+0x3082/0x33d0
+>    init_module_from_file+0xd2/0x130
+>    __x64_sys_finit_module+0x306/0x440
+>    do_syscall_64+0x68/0x140
+>    entry_SYSCALL_64_after_hwframe+0x71/0x79
 > 
-> To fix this problem, we should not use separated `is_module_text_address()`
-> and `__module_text_address()`, but use only `__module_text_address()`
-> once and do `try_module_get(module)` which is only available with
-> MODULE_STATE_LIVE.
+> The root cause is that when lookup_rec() is lookuping ftrace record of
+> an address in some module, and at the same time in ftrace_release_mod(),
+> the memory that saving ftrace records has been freed as that module is
+> being deleted.
 > 
+>   register_kprobes() {
+>     check_kprobe_address_safe() {
+>       arch_check_ftrace_location() {
+>         ftrace_location() {
+>           lookup_rec()  // access memory that has been freed by
+>                         // ftrace_release_mod() !!!
+> 
+> It seems that the ftrace_lock is required when lookuping records in
+> ftrace_location(), so is ftrace_location_range().
+> 
+> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
 > Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-
-Looks good to me. Let me pick this version, and it should be a bugfix.
-
-Fixes: 28f6c37a2910 ("kprobes: Forbid probing on trampoline and BPF code areas")
-Cc: stable@vger.kernel.org
-
-Thank you!
-
 > ---
->  kernel/kprobes.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+>  kernel/trace/ftrace.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
 > 
-> v3:
->  - Update commit messages as suggested by Masami.
->    Link: https://lore.kernel.org/all/20240409224922.5f192e8ace5f7a90937bfa69@kernel.org/
->  - Also change to a more appropriate title.
-> 
-> v2:
->  - Update commit messages and comments as suggested by Masami.
->    Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
->  - Link: https://lore.kernel.org/all/20240408083403.3302274-1-zhengyejian1@huawei.com/
-> 
-> v1:
->  - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9d9095e81792..65adc815fc6e 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  	jump_label_lock();
->  	preempt_disable();
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index da1710499698..838d175709c1 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>  }
 >  
-> -	/* Ensure it is not in reserved area nor out of text */
-> -	if (!(core_kernel_text((unsigned long) p->addr) ||
-> -	    is_module_text_address((unsigned long) p->addr)) ||
-> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
-> +	/* Ensure the address is in a text area, and find a module if exists. */
-> +	*probed_mod = NULL;
-> +	if (!core_kernel_text((unsigned long) p->addr)) {
-> +		*probed_mod = __module_text_address((unsigned long) p->addr);
-> +		if (!(*probed_mod)) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +	}
-> +	/* Ensure it is not in reserved area. */
-> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
->  	    within_kprobe_blacklist((unsigned long) p->addr) ||
->  	    jump_label_text_reserved(p->addr, p->addr) ||
->  	    static_call_text_reserved(p->addr, p->addr) ||
-> @@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  		goto out;
+>  /**
+> - * ftrace_location_range - return the first address of a traced location
+> + * ftrace_location_range_locked - return the first address of a traced location
+>   *	if it touches the given ip range
+>   * @start: start of range to search.
+>   * @end: end of range to search (inclusive). @end points to the last byte
+> @@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>   * that is either a NOP or call to the function tracer. It checks the ftrace
+>   * internal tables to determine if the address belongs or not.
+>   */
+> -unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+> +static unsigned long ftrace_location_range_locked(unsigned long start, unsigned long end)
+>  {
+>  	struct dyn_ftrace *rec;
+>  
+> @@ -1603,6 +1603,17 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>  	return 0;
+>  }
+>  
+> +unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+> +{
+> +	unsigned long loc;
+> +
+> +	mutex_lock(&ftrace_lock);
+> +	loc = ftrace_location_range_locked(start, end);
+> +	mutex_unlock(&ftrace_lock);
+
+I'm not so sure we can take a mutex in all places that call this function.
+
+What about using RCU?
+
+	rcu_read_lock();
+	loc = ftrace_location_range_rcu(start, end);
+	rcu_read_unlock();
+
+Then in ftrace_release_mod() we can have:
+
+ out_unlock:
+	mutex_unlock();
+
+	/* Need to synchronize with ftrace_location() */
+	if (tmp_pages)
+		synchronize_rcu();
+
+-- Steve
+
+
+> +
+> +	return loc;
+> +}
+> +
+>  /**
+>   * ftrace_location - return the ftrace location
+>   * @ip: the instruction pointer to check
+> @@ -1614,25 +1625,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>   */
+>  unsigned long ftrace_location(unsigned long ip)
+>  {
+> -	struct dyn_ftrace *rec;
+> +	unsigned long loc;
+>  	unsigned long offset;
+>  	unsigned long size;
+>  
+> -	rec = lookup_rec(ip, ip);
+> -	if (!rec) {
+> +	loc = ftrace_location_range(ip, ip);
+> +	if (!loc) {
+>  		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
+>  			goto out;
+>  
+>  		/* map sym+0 to __fentry__ */
+>  		if (!offset)
+> -			rec = lookup_rec(ip, ip + size - 1);
+> +			loc = ftrace_location_range(ip, ip + size - 1);
 >  	}
 >  
-> -	/* Check if 'p' is probing a module. */
-> -	*probed_mod = __module_text_address((unsigned long) p->addr);
-> +	/* Get module refcount and reject __init functions for loaded modules. */
->  	if (*probed_mod) {
->  		/*
->  		 * We must hold a refcount of the probed module while updating
-> -- 
-> 2.25.1
-> 
+> -	if (rec)
+> -		return rec->ip;
+> -
+>  out:
+> -	return 0;
+> +	return loc;
+>  }
+>  
+>  /**
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
