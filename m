@@ -1,125 +1,119 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7718A1C2D;
-	Wed, 10 Apr 2024 01:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F3013D292
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712714249; cv=none; b=ILD8sfEjznHLVuKKGlD+IRW8LLQOOJlo/RuFhFFTdFgv68ziYMaPHpJu6pyUauCYrwqFqsMWwrOwIGhY0agKz8YhXROk7tJTbXn/kWVnIuGU8PC8gjMR20IKSloOGVO9slLqtgcjTglCTOIFMfXg+OfGmTND9M8nrViqGZ0SA4E=
+	t=1712735731; cv=none; b=smgQVAqSqVkHUaeg39T6pnkuW0YQJw5oTQvjFJUteMqinph7dsH56RPppFW+QpRJML/TWF4nDkB7hteKq7iYigq/EoLwUtOzB/OZUOYQAc/XPsgOtJ2ci3Bb85IJTSaoKfowIIwmUsBl5J4PzIHrB23GatG9BUFzQ1vtrqTE3zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712714249; c=relaxed/simple;
-	bh=9cgwPmb8EOYreT5OW6HYIHKNYI4ODMVvRnFtVH07r+g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SJno9v8zHEgob2Vvh67o3pN/dX3h/MrC5cIkXpFuowcwu7Yt1jg2m31KPOt/53wFWGwO5kjcXMoZIiMqrCASare1RFPkpNPJ0RGaZaGsz5tG56RclzrAPHfU3mbfhzPdvqMz9bZW2U3KHjbqDam6vNur2LmWaikhTYgKTipzlvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VDmCJ0WNqz21kcl;
-	Wed, 10 Apr 2024 09:56:28 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5A1A2180063;
-	Wed, 10 Apr 2024 09:57:23 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 10 Apr 2024 09:57:23 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <mhiramat@kernel.org>
-CC: <anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
-	<naveen.n.rao@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH v3] kprobes: Fix possible use-after-free issue on kprobe registration
-Date: Wed, 10 Apr 2024 09:58:02 +0800
-Message-ID: <20240410015802.265220-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240407035904.2556645-1-zhengyejian1@huawei.com>
-References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
+	s=arc-20240116; t=1712735731; c=relaxed/simple;
+	bh=pqNpgX0qoIwqOLBxtS6tCaDOhmohIYoLpcCRM8mEwhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lhc7KCKs0m4bGRhXUUWDumJRNQsj2PU++aFhTISJq7JgRKBhAmoeF8//EWzEeOWyzcWJ37YokSKhyQCPFqYJ4IJwMVUl+yOPuhagYJ2xUdO0zPjPXA9mB4CjK3KkrMLr7qd9RwK9KuFTOJHNqVJTkLN5hqtGqXRL9vDZrI19+9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pp2on71+; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pp2on71+"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4dac19aa9b5so1334601e0c.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712735728; x=1713340528; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uS3BUxF5qCtTkHZxGjFabw9iVy7E/k2BpkwDClQgffY=;
+        b=Pp2on71+qqigOyfK8fY6ZwAiE6cGgA8rqmzLyxLgazsODDcBLbsho68U3SYPE097d1
+         IBLIhoq0XDwhRnhd+PPMKHv7E8UDd6wuHrZ0GI5hpW6dmznVd8hutfrhCu+zDBvkfKbR
+         1PUXp8NNNqysNKrX1T2I8mAx+O8gcvUx/AHwheNDY4Cju+yyrwVTri+A5K4MOhxLgvH4
+         WkvWWxaAb/Sd6gKGaAWbwUIpkdDudneQAOkjmRAS1yZpfnDgAcaGBVXWpbW6CqLyHnuD
+         B/l9jA4YrHKgyb/g+CLKY89x9b8HBQv4SNIHuec2eAxN4D38V0G2NgmFLDtMAQI46ljv
+         yiCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712735728; x=1713340528;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uS3BUxF5qCtTkHZxGjFabw9iVy7E/k2BpkwDClQgffY=;
+        b=HTlgV2vyNTdzpPxAJzSHNpuuu42mqmDNrxNkxelo+7uJ+VmB5xnIze3JZ/uS69EbZG
+         urQZV+qeXkhpTU1JEfW1Cc6/32C7O2RHYuhXebk8ZTZp7TEK/AJOK8wTEJrYBxFDQEig
+         LZ+92IWp9+t5OZrqs2YQ3ByLz8YvbWzX1VQTsmt6XhJp6i3U8CXer8t/EPefARHpwu8H
+         pQQSL3CMzIAbX2EXyfwAWnySRyZqjR0QY50d/xmhu3Ru0VwHp+tSE4ZVTYttZad+U09W
+         50t2gW/1D862O6+jccYs9Qh4QgSkFxaJRu11u5O3A71S8nQbdqFpt8wiB5cS8f39HW1Z
+         Ix9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVnaBcXIj1bC50dQmsAS6Ygaxrm9KnwuQ7hTx13NrjxnDsEF7tby/+F3bRruzwz5Fl2rr0a/OFYbgWHGbpytEEXkKDM4lhA3GfqsUt5mkfrSg18
+X-Gm-Message-State: AOJu0Yz66UmcwSuTRhsVkgPK1VZVQslpEvLeJXXoT34H15qwLWNBNYIq
+	PUGSM8nW+Gx44fJeCd6JyHjHlMQBPUyyoVJg1bX7hrhEaRSv8T+C2vLIbWSOBoQJJYgFHUcfqu1
+	eOM6J1qiMmQCCEGmwj/mGq2tUilpUDbYw6Dxo
+X-Google-Smtp-Source: AGHT+IFzeD+gUEtV1nuDqVBhWDhR3c8rh+fHfgbCTEvNgaxLAeR6T5heeQ/A7dsx9xLWrUTVzlCnXl+91EEnZ3Eql3Q=
+X-Received: by 2002:a05:6122:251f:b0:4d8:7443:bca7 with SMTP id
+ cl31-20020a056122251f00b004d87443bca7mr2070748vkb.6.1712735728391; Wed, 10
+ Apr 2024 00:55:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+References: <20240408090205.3714934-1-elver@google.com> <20240409103327.7a9012fa@gandalf.local.home>
+ <CANpmjNOv=8VBvbKBQbsBdg9y2pNsfdaA-46QB53NY-Ddmq3tmA@mail.gmail.com> <20240410085428.53093333cf4d768d6b420a11@kernel.org>
+In-Reply-To: <20240410085428.53093333cf4d768d6b420a11@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Wed, 10 Apr 2024 09:54:50 +0200
+Message-ID: <CANpmjNOXbWM6seCS9728D+ZXUrF2u+YTCaC7q4ZkHFVM2P+t7Q@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Add new_exec tracepoint
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Kees Cook <keescook@chromium.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-When unloading a module, its state is changing MODULE_STATE_LIVE ->
- MODULE_STATE_GOING -> MODULE_STATE_UNFORMED. Each change will take
-a time. `is_module_text_address()` and `__module_text_address()`
-works with MODULE_STATE_LIVE and MODULE_STATE_GOING.
-If we use `is_module_text_address()` and `__module_text_address()`
-separately, there is a chance that the first one is succeeded but the
-next one is failed because module->state becomes MODULE_STATE_UNFORMED
-between those operations.
+On Wed, 10 Apr 2024 at 01:54, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> On Tue, 9 Apr 2024 16:45:47 +0200
+> Marco Elver <elver@google.com> wrote:
+>
+> > On Tue, 9 Apr 2024 at 16:31, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > >
+> > > On Mon,  8 Apr 2024 11:01:54 +0200
+> > > Marco Elver <elver@google.com> wrote:
+> > >
+> > > > Add "new_exec" tracepoint, which is run right after the point of no
+> > > > return but before the current task assumes its new exec identity.
+> > > >
+> > > > Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
+> > > > runs before flushing the old exec, i.e. while the task still has the
+> > > > original state (such as original MM), but when the new exec either
+> > > > succeeds or crashes (but never returns to the original exec).
+> > > >
+> > > > Being able to trace this event can be helpful in a number of use cases:
+> > > >
+> > > >   * allowing tracing eBPF programs access to the original MM on exec,
+> > > >     before current->mm is replaced;
+> > > >   * counting exec in the original task (via perf event);
+> > > >   * profiling flush time ("new_exec" to "sched_process_exec").
+> > > >
+> > > > Example of tracing output ("new_exec" and "sched_process_exec"):
+> > >
+> > > How common is this? And can't you just do the same with adding a kprobe?
+> >
+> > Our main use case would be to use this in BPF programs to become
+> > exec-aware, where using the sched_process_exec hook is too late. This
+> > is particularly important where the BPF program must stop inspecting
+> > the user space's VM when the task does exec to become a new process.
+>
+> Just out of curiousity, would you like to audit that the user-program
+> is not malformed? (security tracepoint?) I think that is an interesting
+> idea. What kind of information you need?
 
-In `check_kprobe_address_safe()`, if the second `__module_text_address()`
-is failed, that is ignored because it expected a kernel_text address.
-But it may have failed simply because module->state has been changed
-to MODULE_STATE_UNFORMED. In this case, arm_kprobe() will try to modify
-non-exist module text address (use-after-free).
-
-To fix this problem, we should not use separated `is_module_text_address()`
-and `__module_text_address()`, but use only `__module_text_address()`
-once and do `try_module_get(module)` which is only available with
-MODULE_STATE_LIVE.
-
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/kprobes.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-v3:
- - Update commit messages as suggested by Masami.
-   Link: https://lore.kernel.org/all/20240409224922.5f192e8ace5f7a90937bfa69@kernel.org/
- - Also change to a more appropriate title.
-
-v2:
- - Update commit messages and comments as suggested by Masami.
-   Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
- - Link: https://lore.kernel.org/all/20240408083403.3302274-1-zhengyejian1@huawei.com/
-
-v1:
- - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 9d9095e81792..65adc815fc6e 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	jump_label_lock();
- 	preempt_disable();
- 
--	/* Ensure it is not in reserved area nor out of text */
--	if (!(core_kernel_text((unsigned long) p->addr) ||
--	    is_module_text_address((unsigned long) p->addr)) ||
--	    in_gate_area_no_mm((unsigned long) p->addr) ||
-+	/* Ensure the address is in a text area, and find a module if exists. */
-+	*probed_mod = NULL;
-+	if (!core_kernel_text((unsigned long) p->addr)) {
-+		*probed_mod = __module_text_address((unsigned long) p->addr);
-+		if (!(*probed_mod)) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+	/* Ensure it is not in reserved area. */
-+	if (in_gate_area_no_mm((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
- 	    jump_label_text_reserved(p->addr, p->addr) ||
- 	    static_call_text_reserved(p->addr, p->addr) ||
-@@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 		goto out;
- 	}
- 
--	/* Check if 'p' is probing a module. */
--	*probed_mod = __module_text_address((unsigned long) p->addr);
-+	/* Get module refcount and reject __init functions for loaded modules. */
- 	if (*probed_mod) {
- 		/*
- 		 * We must hold a refcount of the probed module while updating
--- 
-2.25.1
-
+I didn't have that in mind. If the BPF program reads (or even writes)
+to user space memory, it must stop doing so before current->mm is
+switched, otherwise it will lead to random results or memory
+corruption. The new process may reallocate the memory that we want to
+inspect, but the user space process must explicitly opt in to being
+inspected or being manipulated. Just like the kernel "flushes" various
+old state on exec since it's becoming a new process, a BPF program
+that has per-process state needs to do the same.
