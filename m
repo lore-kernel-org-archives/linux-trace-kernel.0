@@ -1,37 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97781156C67;
-	Wed, 10 Apr 2024 15:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EA315444A;
+	Wed, 10 Apr 2024 16:35:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712764422; cv=none; b=X7MjGwJ3nW87M/fh0Iu7JnpcCedf1kOUKN6z0W2qEOpGJqHiKIwvNS0yi5suUC3d0qAzaCoIju7RpYjhwPf3XfRNaHMj8cwPlj3YWku6zbgzhAWMU3SRs8s6wSYIn3MZDbpTB16b47yfM0ubgWHMzec5QB9eOajroCxCmJZxqws=
+	t=1712766938; cv=none; b=IygiXPSvFsPGlHqzLaEJeOm5Mh2kTmqi/2uoCgfPThmP4YbIWRfGB8PaO9oLxCzxy2gHq+GuffSIVuMqWVoVVd5ubj1vidw5+jbqHK7sFkOWmLZKhn5dgTgpZdQQwMnqWFKn1ESygx1yfPI+LiNfHgLoW5caHhsQqEQMA0gowCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712764422; c=relaxed/simple;
-	bh=Yj2mjB7xGY/t85UZ8jq4NsVg3CMycDTWl975T4rbgkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZwmWoZmQFVDAGO02ysKpSCNcLuR3WNGqdqZ3QCAKXEIK+iFbbAtW4fUYGwJ1ejXV+jPXX6qxgWqJComEEoe0hp2a324sv9lsqxsaiAFZgk6NWBTWIRMskoAw6aI+DpRK7Ng2l/jebs/LFKffHHXV+L044vfxFo8cSlcwvx6ONis=
+	s=arc-20240116; t=1712766938; c=relaxed/simple;
+	bh=Wr2v7oPzKVYPKYtdpNS5Yk5ayJokTx7rSACaIZwFBe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lOQvsLo6u/r6Bet6/BUEEgGqhzeXqY4wcfO+lvV2A5kIQu5ITtXMj3uZcTSTeTrMOD336I2F9i+UlwhW8hQKnd4W4VyxssQnj28LuSDvWghjuGgQZEF1AnK27Fkg5hShV0oIjHb8OjIF7w4+Rr21UYEpyBRwT3T9xVWV3k52daU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E3CC433F1;
-	Wed, 10 Apr 2024 15:53:40 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:56:17 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3395BC433F1;
+	Wed, 10 Apr 2024 16:35:37 +0000 (UTC)
+Date: Wed, 10 Apr 2024 12:38:13 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Jeff Layton
- <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
-Message-ID: <20240410115617.14804133@gandalf.local.home>
-In-Reply-To: <ZhazHrz4SxBs+BFD@tissot.1015granger.net>
-References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-	<20240410113614.39b61b0d@gandalf.local.home>
-	<ZhazHrz4SxBs+BFD@tissot.1015granger.net>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Chuck Lever <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>, Anna Schumaker
+ <Anna.Schumaker@Netapp.com>, linux-nfs@vger.kernel.org
+Subject: [PATCH] SUNRPC: Fix rpcgss_context trace event acceptor field
+Message-ID: <20240410123813.2b109227@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,41 +33,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Apr 2024 11:41:18 -0400
-Chuck Lever <chuck.lever@oracle.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> > If anything, it needs to be:
-> > 
-> > 		__string_len(acceptor, data, len)
-> > 
-> > as the macro code has changed recently, and the current code will crash!  
-> 
-> A general question:
-> 
-> Is there a test suite we should run regularly to build some
-> confidence in the kernel's observability apparatus? We're building
-> a menagerie of tests around kdevops, and one area where we know
-> there is a testing gap is the tracepoints in NFSD and SunRPC.
+The rpcgss_context trace event acceptor field is a dynamically sized
+string that records the "data" parameter. But this parameter is also
+dependent on the "len" field to determine the size of the data.
 
-I try to add self tests within the macros. As __assign_str() is going to
-turn into just __assign_str(field) (instead of __assign_str(field, src)), I
-added a test to make sure what was passed to __string() is also what
-__assign_str() gets. But using strcpy() in place of __assign_str() really
-is doing something that one should not be doing.
+It needs to use __string_len() helper macro where the length can be passed
+in. It also incorrectly uses strncpy() to save it instead of
+__assign_str(). As these macros can change, it is not wise to open code
+them in trace events.
 
-There's checks in the tracepoint code as well for things like referencing a
-pointer that was not saved in the event, and other things. But a generic
-test on a custom trace event, I don't really have.
+As of commit c759e609030c ("tracing: Remove __assign_str_len()"),
+__assign_str() can be used for both __string() and __string_len() fields.
+Before that commit, __assign_str_len() is required to be used. This needs
+to be noted for backporting. (In actuality, commit c1fa617caeb0 ("tracing:
+Rework __assign_str() and __string() to not duplicate getting the string")
+is the commit that makes __string_str_len() obsolete).
 
-Note, you could enable CONFIG_TRACE_EVENT_INJECT where an "inject" file is
-created, and you can write into it:
+Cc: stable@vger.kernel.org
+Fixes: 0c77668ddb4e7 ("SUNRPC: Introduce trace points in rpc_auth_gss.ko")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/events/rpcgss.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- # cd /sys/kernel/tracing
- # echo 1 > events/rpcgss/rpcgss_context/enable
- # echo 'expiry=123456 now=222' > events/rpcgss/rpcgss_context/inject
- # cat trace
-bash-843     [001] .....   720.083189: rpcgss_context: win_size=0 expiry=123456 now=222 timeout=0 acceptor=
+diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
+index ba2d96a1bc2f..f50fcafc69de 100644
+--- a/include/trace/events/rpcgss.h
++++ b/include/trace/events/rpcgss.h
+@@ -609,7 +609,7 @@ TRACE_EVENT(rpcgss_context,
+ 		__field(unsigned int, timeout)
+ 		__field(u32, window_size)
+ 		__field(int, len)
+-		__string(acceptor, data)
++		__string_len(acceptor, data, len)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
+ 		__entry->timeout = timeout;
+ 		__entry->window_size = window_size;
+ 		__entry->len = len;
+-		strncpy(__get_str(acceptor), data, len);
++		__assign_str(acceptor, data);
+ 	),
+ 
+ 	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
+-- 
+2.43.0
 
-And you could use that for testing.
-
--- Steve
