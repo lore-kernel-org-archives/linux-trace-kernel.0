@@ -1,111 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F316EBE4;
-	Wed, 10 Apr 2024 15:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47254177995;
+	Wed, 10 Apr 2024 15:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763220; cv=none; b=UtQIH4EOPcWFxD7STJgNk3kITCA39X/7Mb/0BBUV5vKtnUzBzMfgWLZJq34PzZgXSAEYKv/eDSXHLKcCAJjbrR4cev93+Muy4BOnjoRttj1OYej6UhR2Tzn7f9AS/yF+t7aw35m6Kt1D0IUM6mkkVkSBTj870l/ImWG0Dsfv0VY=
+	t=1712763353; cv=none; b=KddNQ+ZX9bnYAPWjftFKOcQ4DY64p7tHndhQU8bMQW69uiKr9LRJNW6VgW9Muv/mmyctjGwdE4I5WvSC5ZUeBcCZ4JFuTqIwpvduSqcCCXamPE1EfwoG4aMK7+epzW/5yiRkP10x2+drQpMBUzbdfudPAV0s3M0ql5/aMZ2Hu3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763220; c=relaxed/simple;
-	bh=92ZRImfzi1uBmz5wPYU8Kbhx0TjrM28aNmBdmI8IclA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XWv2xAQMoBUGG4DOEnd/bI3AF+K+3MlVZM+mjtNX6XSgx8Vtt5peScEBb/+dKvS7RkkGxNNl5plx3PO5yjrFanPf9GQjzMWuUrp3J+gfnGxywrSLuGQrWxZGcPo/fxwXspG7Hw6s9OB9GVFNpRb/FdpNB6dvrc4Eg56tnLbnwZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9A4C433F1;
-	Wed, 10 Apr 2024 15:33:37 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:36:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
-Message-ID: <20240410113614.39b61b0d@gandalf.local.home>
-In-Reply-To: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712763353; c=relaxed/simple;
+	bh=Gdwx8yZRZj6Xj145JSccLxJSMCvweFeMJVNpP4sRXA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQXWM1kOyZwyL3UdgIn9ms3pQ5fb6EyrXF4wn053Ch8kn6mPLEirfhji6WILKqew1EW8oiPU5c4bEpegsVR3eoqVLzrS1nN9EtLr+8Y0NJTtuhz/l0UtXcg92cf/Ap9iD+srOqFokc+vDIkJx4uoQvgR+jyK/9j6aOYBxD/+lV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bHLB/6cn; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bHLB/6cn"
+Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8F6E820EB20C;
+	Wed, 10 Apr 2024 08:35:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8F6E820EB20C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712763346;
+	bh=tPtZMeNBCte4wE3bMMofWj0DqzQpX7MSpdwNaHx0eso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bHLB/6cnRnj8aYZfK4ctoYoRwHFeLbTtFypvxLI60VvmvXAUUzb8jdijCDwuY9cTw
+	 uDNFajMA2ijDgaD6x2yiZIG2S9IPgO2KPbq32Cbx7CqYm532M40HeBGjE5fXnywVqF
+	 NVJAAMC3Ir8Tz3SbFL/St7YelIZS9UO1ASwg8y0w=
+Date: Wed, 10 Apr 2024 08:35:42 -0700
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Copying TLS/user register data per perf-sample?
+Message-ID: <20240410153542.GA460-beaub@linux.microsoft.com>
+References: <20240404192641.GA2628-beaub@linux.microsoft.com>
+ <20240410220628.609188857f8c93e33e48d12a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410220628.609188857f8c93e33e48d12a@kernel.org>
 
-On Mon, 01 Apr 2024 23:48:52 +0000
-Justin Stitt <justinstitt@google.com> wrote:
-
-> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
-> index ba2d96a1bc2f..274c297f1b15 100644
-> --- a/include/trace/events/rpcgss.h
-> +++ b/include/trace/events/rpcgss.h
-> @@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
->  		__entry->timeout = timeout;
->  		__entry->window_size = window_size;
->  		__entry->len = len;
-> -		strncpy(__get_str(acceptor), data, len);
-> +		memcpy(__get_str(acceptor), data, len);
->  	),
->  
->  	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
-
-WTF, that code is just buggy. Looking at the rpcgss_context event we have:
-
-> TRACE_EVENT(rpcgss_context,
->         TP_PROTO(
->                 u32 window_size,
->                 unsigned long expiry,
->                 unsigned long now,
->                 unsigned int timeout,
->                 unsigned int len,
->                 const u8 *data
->         ),
+On Wed, Apr 10, 2024 at 10:06:28PM +0900, Masami Hiramatsu wrote:
+> On Thu, 4 Apr 2024 12:26:41 -0700
+> Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > 
->         TP_ARGS(window_size, expiry, now, timeout, len, data),
+> > Hello,
+> > 
+> > I'm looking into the possibility of capturing user data that is pointed
+> > to by a user register (IE: fs/gs for TLS on x86/64) for each sample via
+> > perf_events.
+> > 
+> > I was hoping to find a way to do this similar to PERF_SAMPLE_STACK_USER.
+> > I think it could even use roughly the same ABI in the perf ring buffer.
+> > Or it may be possible by some kprobe linked to the perf sample function.
+> > 
+> > This would allow a profiler to collect TLS (or other values) on x64. In
+> > the Open Telemetry profiling SIG [1], we are trying to find a fast way
+> > to grab a tracing association quickly on a per-thread basis. The team
+> > at Elastic has a bespoke way to do this [2], however, I'd like to see a
+> > more general way to achieve this. The folks I've been talking with seem
+> > open to the idea of just having a TLS value for this we could capture
+> > upon each sample. We could then just state, Open Telemetry SDKs should
+> > have a TLS value for span correlation. However, we need a way to sample
+> > the TLS value(s) when a sampling event is generated.
+> > 
+> > Is this already possible via some other means? It'd be great to be able
+> > to do this directly at the perf_event sample via the ABI or a probe.
+> > 
 > 
->         TP_STRUCT__entry(
->                 __field(unsigned long, expiry)
->                 __field(unsigned long, now)
->                 __field(unsigned int, timeout)
->                 __field(u32, window_size)
->                 __field(int, len)
->                 __string(acceptor, data)
-
-The __string() macro expects "data" to be a string and does *not* check
-length when copying.
-
-If anything, it needs to be:
-
-		__string_len(acceptor, data, len)
-
-as the macro code has changed recently, and the current code will crash!
-
->         ),
+> Have you tried to use uprobes? It should be able to access user-space
+> registers including fs/gs.
 > 
->         TP_fast_assign(
->                 __entry->expiry = expiry;
->                 __entry->now = now;
->                 __entry->timeout = timeout;
->                 __entry->window_size = window_size;
->                 __entry->len = len;
->                 strncpy(__get_str(acceptor), data, len);
 
-Then this needs to be:
+We need to get fs/gs during a sample interrupt from perf. If the sample
+interrupt lands during kernel code (IE: syscall) we would also like to
+get these TLS values when in process context.
 
-		__assign_str(acceptor, data);
+I have some patches into the kernel to make this possible via
+perf_events that works well, however, I don't want to reinvent the wheel
+if there is some way to get these via perf samples already.
 
-Note, the length is now saved via __string_len() and not needed here.
+In OTel, we are trying to attribute samples to transactions that are
+occurring. So the TLS fetch has to be aligned exactly with the sample.
+You can do this via eBPF when it's available, however, we have
+environments where eBPF is not available.
 
-I'll go send a patch to fix this.
+It's sounding like to do this properly without eBPF a new feature would
+be required. If so, I do have some patches I can share in a bit as an
+RFC.
 
--- Steve
+Thanks,
+-Beau
 
-
->         ),
+> Thank you,
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
