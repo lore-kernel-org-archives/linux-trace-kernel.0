@@ -1,102 +1,142 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C1215F3EC
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859C716F90A;
+	Wed, 10 Apr 2024 14:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757588; cv=none; b=dXutVLRMFFQAxpHP0DrZN6tzFTBsomOiuJKsHMgVwEv6J3d8J5l7vsT1Sh/Fts87H0HJtfct9iSy798He75e/cJqxDA0sRARjGDRIb2yiFONAy8NGNvxXvEHNulBjz3/n5o8koX9xN/VP7i5OdKeGzEdSVh1IiNXXfKWUA+fE1w=
+	t=1712757820; cv=none; b=kb5z7MGo37t2hpluFgC+SQzM9m4Pl7kRnLEt69h/xPM+qdMAELipKANvlW9GwZ8i1CrolaXSW30K3+cH5y104BgtybPPHp6V+fqcK7CPOqfbGLvWvlEheaWWgJKGl8wE4yYOyrZCpMI1PbgW/Lw3/hwhvJEeZEFr2WBGfchyjNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757588; c=relaxed/simple;
-	bh=6Uqwnw302suIzBJiIBQsZeD3y2gKWEdgNhICFPWo1MY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fXYTFb3D/3IuO4K/rwO7mQ1tQ0YPDlP9IG/1DQFMl3eoeOyYmk9aFJARafwMfWDtERTbF6LjYE3kayT0+TNzq7W7rICxDfoE0Ie3ZPeJtOLdr4Bmi951JFYpfZcbWwbFpedT6NoLrTHXDI26hrzeCpYvFSOkhm6CV+/iO6c31L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=33iofNrw; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712757820; c=relaxed/simple;
+	bh=YJVg15asCDUWzkyyR8ToaYmqFAys5qM4yXSLrQA/+80=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rIp1/YhvoCkHDG32oMHEbf0c2yWIj8Mwywg9TtV4ZK08VMfDdLwPOvmmkGy78wmfZwutYBfreZS7ZJNPEbGdHYK2k2LGCxEP7h7ijvLWjsb/6KuKJzT96dK1gu33T35lziKuOhG6SEIaI+CUE+RGPmK5bGGGUWzQA78b3KaixwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLywsviC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="33iofNrw"
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-479e57ff63bso1757225137.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712757586; x=1713362386; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5aa3hIWZtOiM9o7F/Dz6DxBBPY3BgmfWmAFxkVrBHd8=;
-        b=33iofNrwnfNauxs8afLTgJHKp+9p4CPgdTobmG0+vYEc6KZmX6vufTcD0bPXCZjdox
-         wXfy76V/viBwIUp7/KscRduZtTKbddgDkdfBjMR+u+DR+jmnHOdYY8wv0+i8TrofTZPg
-         bYBjfuC4Emao2Q1oguAgL/tYrqse0VYyDntA4GbnLyZvoIHhiV/U2etAxX53MTcP0RAw
-         hHI23PTSvu/DcUIK+KOrjgP3XOrNmaNO0Ri+djkKxpspJ4yyRbtA5ti+oMlTzNT8O2hW
-         DO0VcYQpQUJ6JbgtemPCEAdyGV4A+9/RarTwbTGyNl0o8WAqaU7OwYPiO9b2fvXyGss+
-         03eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712757586; x=1713362386;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5aa3hIWZtOiM9o7F/Dz6DxBBPY3BgmfWmAFxkVrBHd8=;
-        b=FbPnyHmIdQipPrREg8nC1pakwgtb1tYgdUpIS8xeGYIVstGJO6ovBbIu/2wxEExefs
-         X5w7tfHSVasHsceeDNEclnKAB81bVKkzSj8i+5dB9Ls87NhM7VzNG98Qezu0NcO6GWU4
-         DCzYk82fdWeSpMlhJ9tnzqbN8TQq2R0rhiI18N/6TM1eqONZWxYRpjGUa+5eiWJ6SWHJ
-         mHKuDMuFE67pOnSvk927EPlKxr6nB4muM3jCTPtSGeq3/XiLn1MdQsrY+hG6XmUmmCKQ
-         0h8rPOM0rvfEii3IJgKIv4SgWMZibeepgi5IC63H5RjVWwiP53jP+9jtovk3PmGVyyek
-         WVgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi/nSTgUgFZzDxKwysw0xEiOLpJ/RFcDabmMuWOTB8Q9kygefUwFx6QjKh8dKx/oOeWzSNhhA1VpfeqtE3xlCroLa3S3u5CueOzvvRTY/66Y3y
-X-Gm-Message-State: AOJu0YwnA4O4yTw6nEfJvuqEwg03r8ZYysCAAtIZkkokn/5Cps+R8hfF
-	UVJVO5mqvuiExe17GSUFDAx+IisCCD0f2FzidyeCY3MQ7uXcKxi17CeDye3bssu4phji3DokDdN
-	6qXWlogpZymNw3V83/Z6p1XHp2S2Dg3gNrKa8
-X-Google-Smtp-Source: AGHT+IEpsiKA9Ha0aSj78Js7MGsZu+xSPo2OOybBgeVcNcg20IWc+marqLN4JEtWyhh8Xzl0ENJq8kVbtbfz5TbqHoU=
-X-Received: by 2002:a05:6102:1593:b0:47a:248b:6846 with SMTP id
- g19-20020a056102159300b0047a248b6846mr2424398vsv.16.1712757585948; Wed, 10
- Apr 2024 06:59:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLywsviC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61829C433F1;
+	Wed, 10 Apr 2024 14:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712757820;
+	bh=YJVg15asCDUWzkyyR8ToaYmqFAys5qM4yXSLrQA/+80=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jLywsviC5iixRQ/Vh5FfpPD5jeOMgc2lbpP/jYlJPAq0j76LZP9AwOuf3RqEWWpII
+	 2/sUR/JppzslVYvydEw3/QLOs5KW35efGANvBEVeEs0thqCAHwLsGGrczjq2tVrykV
+	 H44pZxwY1qvvtnnkKuxrEYfYkp83dLSa7CHJo6MifOJLbZBaq28eWcJgHwFsW8eYGC
+	 YnxHE2aSa6vhwul8EwFqski13lt7FWUsQG1m4+NEYYyYaN5RjKCBkvuVd0fR/L5t56
+	 AkmRE7KPX4IO36/MzikgjhBJLFAF9+rGKVgl+Er4RqGd0cw3daxZa1pHi1r/sQdn0b
+	 Lf7PmRXCybBdg==
+Date: Wed, 10 Apr 2024 23:03:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Zheng Yejian <zhengyejian1@huawei.com>
+Cc: <anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
+ <naveen.n.rao@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] kprobes: Fix possible use-after-free issue on kprobe
+ registration
+Message-Id: <20240410230336.8ef84251c45ef363f3f1ff6f@kernel.org>
+In-Reply-To: <20240410015802.265220-1-zhengyejian1@huawei.com>
+References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
+	<20240410015802.265220-1-zhengyejian1@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240408090205.3714934-1-elver@google.com> <20240410225648.7a815ba873c8d55c44385c24@kernel.org>
-In-Reply-To: <20240410225648.7a815ba873c8d55c44385c24@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 10 Apr 2024 15:59:07 +0200
-Message-ID: <CANpmjNNFcHp0n5J5XWMb=3cpa+FT5V1xeev5dFZCC7SknPBkOA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Add new_exec tracepoint
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Kees Cook <keescook@chromium.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Apr 2024 at 15:56, Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Mon,  8 Apr 2024 11:01:54 +0200
-> Marco Elver <elver@google.com> wrote:
->
-> > Add "new_exec" tracepoint, which is run right after the point of no
-> > return but before the current task assumes its new exec identity.
-> >
-> > Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
-> > runs before flushing the old exec, i.e. while the task still has the
-> > original state (such as original MM), but when the new exec either
-> > succeeds or crashes (but never returns to the original exec).
-> >
-> > Being able to trace this event can be helpful in a number of use cases:
-> >
-> >   * allowing tracing eBPF programs access to the original MM on exec,
-> >     before current->mm is replaced;
-> >   * counting exec in the original task (via perf event);
-> >   * profiling flush time ("new_exec" to "sched_process_exec").
-> >
-> > Example of tracing output ("new_exec" and "sched_process_exec"):
->
-> nit: "new_exec" name a bit stands out compared to other events, and hard to
-> expect it comes before or after "sched_process_exec". Since "begin_new_exec"
-> is internal implementation name, IMHO, it should not exposed to user.
-> What do you think about calling this "sched_prepare_exec" ?
+On Wed, 10 Apr 2024 09:58:02 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-I like it, I'll rename it to sched_prepare_exec.
+> When unloading a module, its state is changing MODULE_STATE_LIVE ->
+>  MODULE_STATE_GOING -> MODULE_STATE_UNFORMED. Each change will take
+> a time. `is_module_text_address()` and `__module_text_address()`
+> works with MODULE_STATE_LIVE and MODULE_STATE_GOING.
+> If we use `is_module_text_address()` and `__module_text_address()`
+> separately, there is a chance that the first one is succeeded but the
+> next one is failed because module->state becomes MODULE_STATE_UNFORMED
+> between those operations.
+> 
+> In `check_kprobe_address_safe()`, if the second `__module_text_address()`
+> is failed, that is ignored because it expected a kernel_text address.
+> But it may have failed simply because module->state has been changed
+> to MODULE_STATE_UNFORMED. In this case, arm_kprobe() will try to modify
+> non-exist module text address (use-after-free).
+> 
+> To fix this problem, we should not use separated `is_module_text_address()`
+> and `__module_text_address()`, but use only `__module_text_address()`
+> once and do `try_module_get(module)` which is only available with
+> MODULE_STATE_LIVE.
+> 
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
 
-Thanks!
+Looks good to me. Let me pick this version, and it should be a bugfix.
+
+Fixes: 28f6c37a2910 ("kprobes: Forbid probing on trampoline and BPF code areas")
+Cc: stable@vger.kernel.org
+
+Thank you!
+
+> ---
+>  kernel/kprobes.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> v3:
+>  - Update commit messages as suggested by Masami.
+>    Link: https://lore.kernel.org/all/20240409224922.5f192e8ace5f7a90937bfa69@kernel.org/
+>  - Also change to a more appropriate title.
+> 
+> v2:
+>  - Update commit messages and comments as suggested by Masami.
+>    Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
+>  - Link: https://lore.kernel.org/all/20240408083403.3302274-1-zhengyejian1@huawei.com/
+> 
+> v1:
+>  - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 9d9095e81792..65adc815fc6e 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
+>  	jump_label_lock();
+>  	preempt_disable();
+>  
+> -	/* Ensure it is not in reserved area nor out of text */
+> -	if (!(core_kernel_text((unsigned long) p->addr) ||
+> -	    is_module_text_address((unsigned long) p->addr)) ||
+> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
+> +	/* Ensure the address is in a text area, and find a module if exists. */
+> +	*probed_mod = NULL;
+> +	if (!core_kernel_text((unsigned long) p->addr)) {
+> +		*probed_mod = __module_text_address((unsigned long) p->addr);
+> +		if (!(*probed_mod)) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +	}
+> +	/* Ensure it is not in reserved area. */
+> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
+>  	    within_kprobe_blacklist((unsigned long) p->addr) ||
+>  	    jump_label_text_reserved(p->addr, p->addr) ||
+>  	    static_call_text_reserved(p->addr, p->addr) ||
+> @@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+>  		goto out;
+>  	}
+>  
+> -	/* Check if 'p' is probing a module. */
+> -	*probed_mod = __module_text_address((unsigned long) p->addr);
+> +	/* Get module refcount and reject __init functions for loaded modules. */
+>  	if (*probed_mod) {
+>  		/*
+>  		 * We must hold a refcount of the probed module while updating
+> -- 
+> 2.25.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
