@@ -1,113 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC6915ECED;
-	Wed, 10 Apr 2024 13:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B5D15E5B1;
+	Wed, 10 Apr 2024 13:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712755275; cv=none; b=OyN/S2Dmnr4l9Eno62bt7tl6QUeZKSlGZa5YJG+dkBxeTzfMvx1fMH7qZ6lOPXKn+mRTWDGaQ8mcGZuLNXnhbxr0u/Cm71AZj/FwkTyUTWylEZeQzrrbJ1xwtHNob3grCT1F+Tx2N/o8U4JwgFByU/x5SoeX8+zLJA21EPPH5Ok=
+	t=1712757361; cv=none; b=eQpsKCZsY6YlYJd01GgdmvE6XffJO0TqfRnmWLFatcDjMz+6nHLX1H6wGP8OW+WalNDC+OfZwJaxmA//+YSV37bipfafNzmc16XeMZLBESsiCgMgLN9nq0sA0OC4myaw5nFpzAOrdzCBQR1kOrIcyfr80PN3hNp+Nr6+hvbw1uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712755275; c=relaxed/simple;
-	bh=YAzgDCWdkIBsZ1fHAcolnRWmStXC86uj6PdEJXdnM9U=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=vAB4A5IA/wjQr5wdQGNk+E6q45q6wJUObxaUOl3tqBMJ/qyxDuJsnkizDmzJBOtTPTnIeEKqrAeyiOJsndeXN9le0WruS1B9u/9RZJBis45h/5BMf1OQZlws6TmTnewoxfqbDam/5t2vfyswnW1YJY1Y4JmyhAbM2cXty987nc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mudwSMDD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712757361; c=relaxed/simple;
+	bh=2itrPDvQqyqeFaRt8NzSdpPSErUeSETmFVRFFPor3nM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CU2fLXInLjPJiD+znsdyfery0mb8w64D7E7eduvSjmV7M5ZE7uGjwtoLgW9uOVxhaZXc+p48bCF9Xb7Wq0dc/y1LT+zJNquPce2WJUwyCHDnCTvzOx8lu1sY4HKc3PZDM0aWEyS9b1VveKZhEQzQi1IDHtUt7mj2DOm3COlsSFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CHd8WYs6; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mudwSMDD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1354C433F1;
-	Wed, 10 Apr 2024 13:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712755275;
-	bh=YAzgDCWdkIBsZ1fHAcolnRWmStXC86uj6PdEJXdnM9U=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=mudwSMDDJ5SIHutOBL1WqNRiDYh2j2LbLb2wv0kUcSkdE8FP/01uf/hi8QOKw4XCI
-	 JzSrh6KcJqo6iJb/mBy7JkMPNHY5HRcEaW1TmwlrJXdFmJNgmTIvxaDQacI8Td3mKr
-	 lrzYZx1ooXcfTZHxOIK8FvRcuGYuiXuYwKSGpG2dPX5zdu7iI1KQ4fycVYpdS+JDI9
-	 Cc1u5VyVgmxSRN2fHgcqnR0CkTdds/QOuCz62WmNjvR5pXaffY5CO0ERWdgqe7ycga
-	 WMjNElgGr9D6rrAh5MQQ82oB0dkG2HtFpHGuwm4OoAqwgQYgd9FkFeL9lzlz+WygeF
-	 d8xHGI31pRrmw==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHd8WYs6"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a51c8274403so480979466b.1;
+        Wed, 10 Apr 2024 06:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712757358; x=1713362158; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QWQlsDTYX7kv+ayRisA7/g7aN7I7JCIFXwuugQXW9Og=;
+        b=CHd8WYs6Ro+q9v9z+VX7FL8HXhr96QPA3+Wh2yLaNKH1g2CfP+FUfUIslGJmvtJrnX
+         IQxJ2OG7fm+q6pbtCk1iEY3suJSLiE6G71tAmBM+yVJnoyJ5k9O33yfUBUBETxeeUHIk
+         jYowLTPTaIaL8WidmD5q9doFh5FLSIecEeyqxLWQcyMmXYD2wDrSugAXfWZcdevyCFGN
+         JKa45mQtr1wrSqIzwF04/e/J3h3FDoqcyF95UT6zKSgCP15lY5ScQqvGY/JugUhteI3C
+         s+0JyqNCrXC/WQsr2YSMk1SGUmTOmGehC572B4pWzYtVdB5mQcvAHa/VCc3itPhqmy75
+         qq7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712757358; x=1713362158;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QWQlsDTYX7kv+ayRisA7/g7aN7I7JCIFXwuugQXW9Og=;
+        b=lJbU935UyOX2LWjUVmpqE/lR9vdgCluGTELZIVHeP0lQJO988JfrIv6i/RYALjtace
+         F3rFceDTvX/ODjwr8m99bE+raksqa87B8OBeDqBTfD0yyeITwcIwSi5HMd0gwLmby0ey
+         I/hpdpXeh8XZHQnYrex3Vc51lp3fpDxJvg7FjcAjG7SOLLtBq4Lg1ZxJPtJGXbZYkm3T
+         id8S7Zc30hKlpL82ZVKFcgtREuMWZuoPAwF1vGh/CoKuHnaOqjrTQeRDcFa9Ufs8fzeW
+         pRpj2/yJon9vo0buKSt+I6cOmhnY4EHMFIYPvFfDAEk1boC0kCD9tChMEG8SqgEc5ChA
+         Ezbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYcdaNd7Id8/SWPATAGWRYti6Uf5wb+SoaMGTFtrofbfgbRh9lT1ps2WQ2B0uvYOOAZM/Aav6wWqEbYMn4u7q7by3FcBllcoJ/a/Uidemms+xbTnpNiNyRp0U4Ugdh1ufQJdTe6SBnGJdz
+X-Gm-Message-State: AOJu0YwJlualjYCPQ2b1F6YxwvdysnbIMyhWBL8k7IVPwK8BwMALN4nn
+	NWPXqGmxDzIpKQRZ2JYvG1A1pO7Q7AYBC+T3eAKhNC2xiooXqfHiktqZwqSJe+vfW+kS+9mFZNM
+	sttJvT6Y0gzsAtGK5AQNNgXBAl2c=
+X-Google-Smtp-Source: AGHT+IENVXsgKB+31fO+svP4FXBa8f0BYNY349jc/+9Z5zgvSx/G+YkJ/+z+Q4TwbSXYF7YRjy0MwLX/L1AUCXb3Tl8=
+X-Received: by 2002:a17:906:1b4a:b0:a51:dc1f:a44b with SMTP id
+ p10-20020a1709061b4a00b00a51dc1fa44bmr1604044ejg.29.1712757358225; Wed, 10
+ Apr 2024 06:55:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAL+tcoCk_RTp6EBiRQ96nrdN7cuY1z+zxzxepyar4nXEJkAB9A@mail.gmail.com>
-References: <20240409100934.37725-1-kerneljasonxing@gmail.com> <20240409100934.37725-3-kerneljasonxing@gmail.com> <171275126085.4303.2994301700079496197@kwain> <CAL+tcoCk_RTp6EBiRQ96nrdN7cuY1z+zxzxepyar4nXEJkAB9A@mail.gmail.com>
+References: <20240409100934.37725-1-kerneljasonxing@gmail.com>
+ <20240409100934.37725-3-kerneljasonxing@gmail.com> <171275126085.4303.2994301700079496197@kwain>
+ <CAL+tcoCk_RTp6EBiRQ96nrdN7cuY1z+zxzxepyar4nXEJkAB9A@mail.gmail.com> <171275527215.4303.17205725451869291289@kwain>
+In-Reply-To: <171275527215.4303.17205725451869291289@kwain>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Wed, 10 Apr 2024 21:55:21 +0800
+Message-ID: <CAL+tcoBpAOhbLC5TqwMBG6Q3hgiJYSV+ZAkZfLPNmG_OK22r1A@mail.gmail.com>
 Subject: Re: [PATCH net-next v3 2/6] rstreason: prepare for passive reset
-From: Antoine Tenart <atenart@kernel.org>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, geliang@kernel.org, kuba@kernel.org, martineau@kernel.org, mathieu.desnoyers@efficios.com, matttbe@kernel.org, mhiramat@kernel.org, pabeni@redhat.com, rostedt@goodmis.org, mptcp@lists.linux.dev, linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Date: Wed, 10 Apr 2024 15:21:12 +0200
-Message-ID: <171275527215.4303.17205725451869291289@kwain>
+To: Antoine Tenart <atenart@kernel.org>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	geliang@kernel.org, kuba@kernel.org, martineau@kernel.org, 
+	mathieu.desnoyers@efficios.com, matttbe@kernel.org, mhiramat@kernel.org, 
+	pabeni@redhat.com, rostedt@goodmis.org, mptcp@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Quoting Jason Xing (2024-04-10 14:54:51)
-> Hi Antoine,
->=20
-> On Wed, Apr 10, 2024 at 8:14=E2=80=AFPM Antoine Tenart <atenart@kernel.or=
-g> wrote:
+On Wed, Apr 10, 2024 at 9:21=E2=80=AFPM Antoine Tenart <atenart@kernel.org>=
+ wrote:
+>
+> Quoting Jason Xing (2024-04-10 14:54:51)
+> > Hi Antoine,
 > >
-> > Quoting Jason Xing (2024-04-09 12:09:30)
-> > >         void            (*send_reset)(const struct sock *sk,
-> > > -                                     struct sk_buff *skb);
-> > > +                                     struct sk_buff *skb,
-> > > +                                     int reason);
->=20
-> > what should be 'reason' harder. Eg. when looking at the code or when
-> > using BTF (to then install debugging probes with BPF) this is not
-> > obvious.
->=20
-> Only one number if we want to extract the reason with BPF, right? I
-> haven't tried it.
+> > On Wed, Apr 10, 2024 at 8:14=E2=80=AFPM Antoine Tenart <atenart@kernel.=
+org> wrote:
+> > >
+> > > Quoting Jason Xing (2024-04-09 12:09:30)
+> > > >         void            (*send_reset)(const struct sock *sk,
+> > > > -                                     struct sk_buff *skb);
+> > > > +                                     struct sk_buff *skb,
+> > > > +                                     int reason);
+> >
+> > > what should be 'reason' harder. Eg. when looking at the code or when
+> > > using BTF (to then install debugging probes with BPF) this is not
+> > > obvious.
+> >
+> > Only one number if we want to extract the reason with BPF, right? I
+> > haven't tried it.
+>
+> Yes, we can get 'reason'. Knowing the type helps.
+>
+> > > A similar approach could be done as the one used for drop reasons: en=
+um
+> > > skb_drop_reason is used for parameters (eg. kfree_skb_reason) but oth=
+er
+> > > valid values (subsystem drop reasons) can be used too if casted (to
+> > > u32). We could use 'enum sk_rst_reason' and cast the other values. WD=
+YT?
+> >
+> > I have been haunted by this 'issue' for a long time...
+> >
+> > Are you suggesting doing so as below for readability:
+> > 1) replace the reason parameter in all the related functions (like
+> > .send_reset(), tcp_v4_send_reset(), etc) by using 'enum sk_rst_reason'
+> > type?
+> > 2) in patch [4/6], when it needs to pass the specific reason in those
+> > functions, we can cast it to 'enum sk_rst_reason'?
+> >
+> > One modification I just made based on this patchset if I understand cor=
+rectly:
+> > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> > index 4889fccbf754..e0419b8496b5 100644
+> > --- a/net/ipv4/tcp_ipv4.c
+> > +++ b/net/ipv4/tcp_ipv4.c
+> > @@ -725,7 +725,7 @@ static bool tcp_v4_ao_sign_reset(const struct sock
+> > *sk, struct sk_buff *skb,
+> >   */
+> >
+> >  static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *s=
+kb,
+> > -                             int reason)
+> > +                             enum sk_rst_reason reason)
+> >  {
+> >         const struct tcphdr *th =3D tcp_hdr(skb);
+> >         struct {
+> > @@ -1935,7 +1935,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff=
+ *skb)
+> >         return 0;
+> >
+> >  reset:
+> > -       tcp_v4_send_reset(rsk, skb, reason);
+> > +       tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
+> >  discard:
+> >         kfree_skb_reason(skb, reason);
+> >         /* Be careful here. If this function gets more complicated and
+> >
+>
+> That's right. I think (u32) can also be used for the cast to make the
+> compiler happy in 2), but the above makes sense.
 
-Yes, we can get 'reason'. Knowing the type helps.
+Got it :) Will update soon.
 
-> > A similar approach could be done as the one used for drop reasons: enum
-> > skb_drop_reason is used for parameters (eg. kfree_skb_reason) but other
-> > valid values (subsystem drop reasons) can be used too if casted (to
-> > u32). We could use 'enum sk_rst_reason' and cast the other values. WDYT?
->=20
-> I have been haunted by this 'issue' for a long time...
->=20
-> Are you suggesting doing so as below for readability:
-> 1) replace the reason parameter in all the related functions (like
-> .send_reset(), tcp_v4_send_reset(), etc) by using 'enum sk_rst_reason'
-> type?
-> 2) in patch [4/6], when it needs to pass the specific reason in those
-> functions, we can cast it to 'enum sk_rst_reason'?
->=20
-> One modification I just made based on this patchset if I understand corre=
-ctly:
-> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> index 4889fccbf754..e0419b8496b5 100644
-> --- a/net/ipv4/tcp_ipv4.c
-> +++ b/net/ipv4/tcp_ipv4.c
-> @@ -725,7 +725,7 @@ static bool tcp_v4_ao_sign_reset(const struct sock
-> *sk, struct sk_buff *skb,
->   */
->=20
->  static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb,
-> -                             int reason)
-> +                             enum sk_rst_reason reason)
->  {
->         const struct tcphdr *th =3D tcp_hdr(skb);
->         struct {
-> @@ -1935,7 +1935,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *=
-skb)
->         return 0;
->=20
->  reset:
-> -       tcp_v4_send_reset(rsk, skb, reason);
-> +       tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
->  discard:
->         kfree_skb_reason(skb, reason);
->         /* Be careful here. If this function gets more complicated and
->=20
-
-That's right. I think (u32) can also be used for the cast to make the
-compiler happy in 2), but the above makes sense.
-
-Thanks!
-Antoine
+Thanks,
+Jason
