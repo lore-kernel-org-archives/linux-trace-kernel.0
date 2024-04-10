@@ -1,196 +1,251 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0333E13D529
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B00F158206;
+	Wed, 10 Apr 2024 10:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712737256; cv=none; b=CDwTpkeXxTrt5evjgbutfsqMNX8L4vPf4zmdoGJNorX9Nmoj85haaDTAcYqDu+4PNeMPhQke9/Drf6JynWIMuaUornZlQUVN2QzGLdvcwew5apUFvwQRDlQtgfKMuYL/5rAA5aaXwKoRWyp8hPvD1mIHDvlYDH+0sfxxgGAHGDA=
+	t=1712744159; cv=none; b=mGSdIO0/qfTlCnZuA9KboFDAZ+RFmHOq0YpE3rJ+9Nytpu8CLodW/ACeSV4e1yT0VzOT66u4fAHI5Q8zFroydSiipumq2D4zi5ggstSYJ9kyjN0ymMzhf1aK5UKYzjT/WmhmfQNlHEzrfi9U3MbdIA/kt5ZWt/j9UTOrRguw9tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712737256; c=relaxed/simple;
-	bh=PnYCXwqQXwIuIUdDv2sTWF+OEhZuSBXw+2zwh+CpxY0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dEW+bgTMICRjIc8l8od47heEdv3XwJExX7YXixw7VuC/kdyqO9hu65nmQ8WhoX3Pkmn1DgZxcG23mF+m9zAo5/gBngBD3oElx2TDZ0yaBiaYWgEsYvImAs4kt8btU5YvquSRFpob8IeYhPggDbQR4mwLq05kag0qrByTnzyTVbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=URbQfQ8y; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URbQfQ8y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712737254;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nXt9QgBL5KsCTsMhUv7LoBmgAUYvhj/Ac6lKPs0TUWs=;
-	b=URbQfQ8yN7KWoTPLa4pr6Sew5CBB0380BySkFWnWw7GCZNNQz17IlCRFiIIx1qqx/7msV/
-	zKM/ytAiqIUy2xzPwc0frtyfMyP6WchSV8CMUPLI9ZN1GH2Kt0e0YeQtOS6GRx+/4R3J/c
-	NUTJRZDVoOuMZyctM9YDfz6qPoQo+Lg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-mpeGpzgvNhWGqA0JdQKudg-1; Wed, 10 Apr 2024 04:20:49 -0400
-X-MC-Unique: mpeGpzgvNhWGqA0JdQKudg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-343c6a990dbso2737764f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Apr 2024 01:20:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712737248; x=1713342048;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nXt9QgBL5KsCTsMhUv7LoBmgAUYvhj/Ac6lKPs0TUWs=;
-        b=k1Iaz7UMhSgIz5hFRw62UcVA+Q/2yB7Ax3/hqnFEVlJmj+ATwtd6VOVYWtzr29Fxyc
-         E9aTEM8RwEvsYgOXsXuarqX8LMZIjjB6oHXLx/oTXLVYiAHJ75AKSgchEJ8xsE2TRXku
-         SqVwyeIDpY4SPu891tEYkmQq0f2VCt98XoEE7dOkLpOVbQdiC6HQND5ulC+WrXvh4xRx
-         dHkT0o9AwJtuxx75MjcO+PLwDJwEncFDGbg9OUjPHNgh7e6Rk0749KQyMSDhkJh2/+qa
-         ivwOuj+5CyWazthrNdHENcCcpJwVQWvM9dGtla+69yaMYq8vgrQQnSLU7dZfi3JAgAVm
-         jmrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlR1QCPOFwvxETxxiabcclNi4LBOBcmvayQgOLfVZKBwp/bC9Gn+66NPpgLPDz+0sKvyV1tkLmBJc1rkPkD5dXJ5Zdx7TSYkShQa9avdWzBrci
-X-Gm-Message-State: AOJu0YyNJVt1uM5UZEzFFuTlEAJRTPFIQ51bYRv0n6ezOMGVk/VToxc6
-	X8hmN8BTCZmMlknIHDDsmwEWWmLiDs/2TZ1YbhyDWm0K+UQfiG6IfVxNRhMkPQ/v9/dM/H/qX1E
-	DHSok/eZe28/jJRJMXdQUxbnajvJ7qgWCeh8WU6Q8t+Qy+45F50vgoClIN3QhuNgFwqQKsw==
-X-Received: by 2002:a05:6000:4595:b0:343:b5dd:fe1d with SMTP id gb21-20020a056000459500b00343b5ddfe1dmr3947588wrb.28.1712737248332;
-        Wed, 10 Apr 2024 01:20:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMO7YVGXMtdwn7qyE6J9DfN53segr8TeIXW6v8wiHYh+AtmrCV1qpZvYljAfNwPFGdHoDF0A==
-X-Received: by 2002:a05:6000:4595:b0:343:b5dd:fe1d with SMTP id gb21-20020a056000459500b00343b5ddfe1dmr3947569wrb.28.1712737247924;
-        Wed, 10 Apr 2024 01:20:47 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c712:fa00:38eb:93ad:be38:d469? (p200300cbc712fa0038eb93adbe38d469.dip0.t-ipconnect.de. [2003:cb:c712:fa00:38eb:93ad:be38:d469])
-        by smtp.gmail.com with ESMTPSA id e27-20020a5d595b000000b003445bb2362esm10674889wri.65.2024.04.10.01.20.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 01:20:47 -0700 (PDT)
-Message-ID: <0e829c08-74f5-4487-97bd-4f81d8b70a2f@redhat.com>
-Date: Wed, 10 Apr 2024 10:20:45 +0200
+	s=arc-20240116; t=1712744159; c=relaxed/simple;
+	bh=bPj6QlcLi4XrRHYufTRYNiCGvg+NUZoj2xCvdt9IAsc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RJJXqJoxUxe/+SMKuJTg3unx9P4v7EUP+8xssjef5QQiZfWGNb/nJD7u4OJZvlqEWIAGMjO090yDkm/yeO3fluTwQ8xGRX3geQjwYaJy81RTWTnVeD21+lUbFVlMhvm23GlGKi6APZdxeqqOppKBUCT5KFFKbscekotP7MgrwLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 43AAElCp055314;
+	Wed, 10 Apr 2024 18:14:48 +0800 (+08)
+	(envelope-from Dongliang.Cui@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VDzCn4321z2K5bqN;
+	Wed, 10 Apr 2024 18:12:37 +0800 (CST)
+Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 10 Apr 2024 18:14:45 +0800
+From: Dongliang Cui <dongliang.cui@unisoc.com>
+To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mathieu.desnoyers@efficios.com>
+CC: <ke.wang@unisoc.com>, <hongyu.jin.cn@gmail.com>, <niuzhiguo84@gmail.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <cuidongliang390@gmail.com>,
+        Dongliang
+ Cui <dongliang.cui@unisoc.com>
+Subject: [PATCH] block: Add ioprio to block_rq tracepoint
+Date: Wed, 10 Apr 2024 18:14:36 +0800
+Message-ID: <20240410101436.1148905-1-dongliang.cui@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/18] mm: track mapcount of large folios in single
- value
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, cgroups@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Peter Xu <peterx@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Yin Fengwei <fengwei.yin@intel.com>,
- Yang Shi <shy828301@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Hugh Dickins <hughd@google.com>, Yoshinori Sato
- <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
- Muchun Song <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <naoya.horiguchi@nec.com>,
- Richard Chang <richardycc@google.com>
-References: <20240409192301.907377-1-david@redhat.com>
- <20240409192301.907377-5-david@redhat.com>
- <1DFEC99F-6BCE-4E6D-9EF2-267E8A94A705@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <1DFEC99F-6BCE-4E6D-9EF2-267E8A94A705@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 43AAElCp055314
 
-On 09.04.24 22:13, Zi Yan wrote:
-> On 9 Apr 2024, at 15:22, David Hildenbrand wrote:
-> 
->> Let's track the mapcount of large folios in a single value. The mapcount of
->> a large folio currently corresponds to the sum of the entire mapcount and
->> all page mapcounts.
->>
->> This sum is what we actually want to know in folio_mapcount() and it is
->> also sufficient for implementing folio_mapped().
->>
->> With PTE-mapped THP becoming more important and more widely used, we want
->> to avoid looping over all pages of a folio just to obtain the mapcount
->> of large folios. The comment "In the common case, avoid the loop when no
->> pages mapped by PTE" in folio_total_mapcount() does no longer hold for
->> mTHP that are always mapped by PTE.
->>
->> Further, we are planning on using folio_mapcount() more
->> frequently, and might even want to remove page mapcounts for large
->> folios in some kernel configs. Therefore, allow for reading the mapcount of
->> large folios efficiently and atomically without looping over any pages.
->>
->> Maintain the mapcount also for hugetlb pages for simplicity. Use the new
->> mapcount to implement folio_mapcount() and folio_mapped(). Make
->> page_mapped() simply call folio_mapped(). We can now get rid of
->> folio_large_is_mapped().
->>
->> _nr_pages_mapped is now only used in rmap code and for debugging
->> purposes. Keep folio_nr_pages_mapped() around, but document that its use
->> should be limited to rmap internals and debugging purposes.
->>
->> This change implies one additional atomic add/sub whenever
->> mapping/unmapping (parts of) a large folio.
->>
->> As we now batch RMAP operations for PTE-mapped THP during fork(),
->> during unmap/zap, and when PTE-remapping a PMD-mapped THP, and we adjust
->> the large mapcount for a PTE batch only once, the added overhead in the
->> common case is small. Only when unmapping individual pages of a large folio
->> (e.g., during COW), the overhead might be bigger in comparison, but it's
->> essentially one additional atomic operation.
->>
->> Note that before the new mapcount would overflow, already our refcount
->> would overflow: each mapping requires a folio reference. Extend the
->> focumentation of folio_mapcount().
-> 
-> s/focumentation/documentation/  ;)
+Sometimes we need to track the processing order of requests with
+ioprio set. So the ioprio of request can be useful information.
 
-Thanks! :)
+Example：
 
+block_rq_insert: 8,0 WS 4096 () 16573296 + 8 rt,4 [highpool[1]]
+block_rq_issue: 8,0 WS 4096 () 16573296 + 8 rt,4 [kworker/7:0H]
+block_rq_complete: 8,0 WS () 16573296 + 8 rt,4 [0]
+
+Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
+---
+ include/linux/blktrace_api.h |  2 ++
+ include/trace/events/block.h | 63 ++++++++++++++++++++++--------------
+ kernel/trace/blktrace.c      | 11 +++++++
+ 3 files changed, 51 insertions(+), 25 deletions(-)
+
+diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
+index 122c62e561fc..adb0333efbdb 100644
+--- a/include/linux/blktrace_api.h
++++ b/include/linux/blktrace_api.h
+@@ -112,6 +112,8 @@ struct compat_blk_user_trace_setup {
+ 
+ void blk_fill_rwbs(char *rwbs, blk_opf_t opf);
+ 
++void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value);
++
+ static inline sector_t blk_rq_trace_sector(struct request *rq)
+ {
+ 	/*
+diff --git a/include/trace/events/block.h b/include/trace/events/block.h
+index 0e128ad51460..1d41fade160a 100644
+--- a/include/trace/events/block.h
++++ b/include/trace/events/block.h
+@@ -10,7 +10,8 @@
+ #include <linux/buffer_head.h>
+ #include <linux/tracepoint.h>
+ 
+-#define RWBS_LEN	8
++#define RWBS_LEN		8
++#define IOPRIO_CLASS_LEN	8
+ 
+ #ifdef CONFIG_BUFFER_HEAD
+ DECLARE_EVENT_CLASS(block_buffer,
+@@ -79,11 +80,13 @@ TRACE_EVENT(block_rq_requeue,
+ 	TP_ARGS(rq),
+ 
+ 	TP_STRUCT__entry(
+-		__field(  dev_t,	dev			)
+-		__field(  sector_t,	sector			)
+-		__field(  unsigned int,	nr_sector		)
+-		__array(  char,		rwbs,	RWBS_LEN	)
+-		__dynamic_array( char,	cmd,	1		)
++		__field(  dev_t,	dev				)
++		__field(  sector_t,	sector				)
++		__field(  unsigned int,	nr_sector			)
++		__array(  char,		rwbs,	RWBS_LEN		)
++		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
++		__field(  unsigned int, ioprio_value			)
++		__dynamic_array( char,	cmd,	1			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -92,14 +95,16 @@ TRACE_EVENT(block_rq_requeue,
+ 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
++		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
+ 		__get_str(cmd)[0] = '\0';
+ 	),
+ 
+-	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
++	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, 0)
++		  __entry->nr_sector, __entry->ioprio_class,
++		  __entry->ioprio_value, 0)
+ );
+ 
+ DECLARE_EVENT_CLASS(block_rq_completion,
+@@ -109,12 +114,14 @@ DECLARE_EVENT_CLASS(block_rq_completion,
+ 	TP_ARGS(rq, error, nr_bytes),
+ 
+ 	TP_STRUCT__entry(
+-		__field(  dev_t,	dev			)
+-		__field(  sector_t,	sector			)
+-		__field(  unsigned int,	nr_sector		)
+-		__field(  int	,	error			)
+-		__array(  char,		rwbs,	RWBS_LEN	)
+-		__dynamic_array( char,	cmd,	1		)
++		__field(  dev_t,	dev				)
++		__field(  sector_t,	sector				)
++		__field(  unsigned int,	nr_sector			)
++		__field(  int,		error				)
++		__array(  char,		rwbs,	RWBS_LEN		)
++		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
++		__field(  unsigned int,	ioprio_value			)
++		__dynamic_array( char,	cmd,	1			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -124,14 +131,16 @@ DECLARE_EVENT_CLASS(block_rq_completion,
+ 		__entry->error     = blk_status_to_errno(error);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
++		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
+ 		__get_str(cmd)[0] = '\0';
+ 	),
+ 
+-	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
++	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, __entry->error)
++		  __entry->nr_sector, __entry->ioprio_class,
++		  __entry->ioprio_value, __entry->error)
+ );
+ 
+ /**
+@@ -176,13 +185,15 @@ DECLARE_EVENT_CLASS(block_rq,
+ 	TP_ARGS(rq),
+ 
+ 	TP_STRUCT__entry(
+-		__field(  dev_t,	dev			)
+-		__field(  sector_t,	sector			)
+-		__field(  unsigned int,	nr_sector		)
+-		__field(  unsigned int,	bytes			)
+-		__array(  char,		rwbs,	RWBS_LEN	)
+-		__array(  char,         comm,   TASK_COMM_LEN   )
+-		__dynamic_array( char,	cmd,	1		)
++		__field(  dev_t,	dev				)
++		__field(  sector_t,	sector				)
++		__field(  unsigned int,	nr_sector			)
++		__field(  unsigned int,	bytes				)
++		__array(  char,		rwbs,	RWBS_LEN		)
++		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
++		__field(  unsigned int,	ioprio_value			)
++		__array(  char,		comm,   TASK_COMM_LEN		)
++		__dynamic_array( char,	cmd,	1			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -192,15 +203,17 @@ DECLARE_EVENT_CLASS(block_rq,
+ 		__entry->bytes     = blk_rq_bytes(rq);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
++		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
+ 		__get_str(cmd)[0] = '\0';
+ 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
+ 	),
+ 
+-	TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
++	TP_printk("%d,%d %s %u (%s) %llu + %u %s,%u [%s]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __entry->bytes, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, __entry->comm)
++		  __entry->nr_sector, __entry->ioprio_class,
++		  __entry->ioprio_value, __entry->comm)
+ );
+ 
+ /**
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index d5d94510afd3..e55aa49f94db 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -19,6 +19,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/list.h>
+ #include <linux/blk-cgroup.h>
++#include <linux/ioprio.h>
+ 
+ #include "../../block/blk.h"
+ 
+@@ -26,6 +27,9 @@
+ 
+ #include "trace_output.h"
+ 
++/* Type of ioprio */
++static char *classes[] = {"none", "rt", "be", "idle"};
++
+ #ifdef CONFIG_BLK_DEV_IO_TRACE
+ 
+ static unsigned int blktrace_seq __read_mostly = 1;
+@@ -1914,5 +1918,12 @@ void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
+ }
+ EXPORT_SYMBOL_GPL(blk_fill_rwbs);
+ 
++void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value)
++{
++	memcpy(ioprio_class, classes[(ioprio >> IOPRIO_CLASS_SHIFT) & 0x3], IOPRIO_CLASS_LEN);
++	*ioprio_value = ioprio & 0xff;
++}
++EXPORT_SYMBOL_GPL(blk_fill_ioprio);
++
+ #endif /* CONFIG_EVENT_TRACING */
+ 
 -- 
-Cheers,
-
-David / dhildenb
+2.25.1
 
