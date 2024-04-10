@@ -1,251 +1,259 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B00F158206;
-	Wed, 10 Apr 2024 10:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781FD1598E3;
+	Wed, 10 Apr 2024 10:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712744159; cv=none; b=mGSdIO0/qfTlCnZuA9KboFDAZ+RFmHOq0YpE3rJ+9Nytpu8CLodW/ACeSV4e1yT0VzOT66u4fAHI5Q8zFroydSiipumq2D4zi5ggstSYJ9kyjN0ymMzhf1aK5UKYzjT/WmhmfQNlHEzrfi9U3MbdIA/kt5ZWt/j9UTOrRguw9tQ=
+	t=1712745499; cv=none; b=SKsmZ9PmFBsXiguF140GK5V6cRH1Iu8zliw2bt/MN7DT9N6CcRw6hRNiZI1zWnr8uVa21cuwtrGXS4/ZfYbQM9I5O+ouqesBpn9tI4AFf3zL+Hb1QTOk9M/01HhGEaohkgATfOJmfnl96hm4KEFLj0YB4aDcSapQHQi3xY7wwrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712744159; c=relaxed/simple;
-	bh=bPj6QlcLi4XrRHYufTRYNiCGvg+NUZoj2xCvdt9IAsc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RJJXqJoxUxe/+SMKuJTg3unx9P4v7EUP+8xssjef5QQiZfWGNb/nJD7u4OJZvlqEWIAGMjO090yDkm/yeO3fluTwQ8xGRX3geQjwYaJy81RTWTnVeD21+lUbFVlMhvm23GlGKi6APZdxeqqOppKBUCT5KFFKbscekotP7MgrwLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 43AAElCp055314;
-	Wed, 10 Apr 2024 18:14:48 +0800 (+08)
-	(envelope-from Dongliang.Cui@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VDzCn4321z2K5bqN;
-	Wed, 10 Apr 2024 18:12:37 +0800 (CST)
-Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 10 Apr 2024 18:14:45 +0800
-From: Dongliang Cui <dongliang.cui@unisoc.com>
-To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>
-CC: <ke.wang@unisoc.com>, <hongyu.jin.cn@gmail.com>, <niuzhiguo84@gmail.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <cuidongliang390@gmail.com>,
-        Dongliang
- Cui <dongliang.cui@unisoc.com>
-Subject: [PATCH] block: Add ioprio to block_rq tracepoint
-Date: Wed, 10 Apr 2024 18:14:36 +0800
-Message-ID: <20240410101436.1148905-1-dongliang.cui@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712745499; c=relaxed/simple;
+	bh=MU97HWzzufib2i+BTEe30Fyq72OAe6GNJD9wg7v4RMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CtfGbvh0J8zk9/IqUEosTW6tWtMKURcSXBIu3R0Hjy10v2CgOmXnWgMW09VaD9H6nwzceW71RLnYaYByZM7tQiA+x1DtHbEZyStgSAWh90NQSyq9DD/LPdecYglEODsXmWmRt3Zcsx1RofJBnYePX378myXaxFRw1nvtVrf5Cws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cub5Yho1; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cub5Yho1"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so1087646966b.1;
+        Wed, 10 Apr 2024 03:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712745496; x=1713350296; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U50Al2xpMhqhfVIBtuFt5jjA3qV5pu0Q+vEvtqqKYBA=;
+        b=Cub5Yho138qWP13ChK40+3DqWO3aJsDva/Jz/scBjoYLmz83k9miUYIZM40EO1E7WY
+         jMnSfaH2SRwS0NH6O9+5+tLbhpP/5C2C7Wa8w5mV5a2VYGkDbR74C/BEHARIVbNNALt2
+         sT9Ko1YzYs/Gw8xj7Pc4zEci2Zf7BNOhlSmoL1QPp48lV7HNn6eCgroiJhQdVveS84kg
+         ZQQXFbnSeyOMoaBys8DWzLi+hjs/kUdj0che7L2iykQAC0iK8sUkod1ROUbkxu6R/Jql
+         cm9GJlC5bqEK3X8BBIH3+8ME8DeUe25clENaND/AG6XD60aO3VdYjRk3GQe4BCMOi3qy
+         046Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712745496; x=1713350296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U50Al2xpMhqhfVIBtuFt5jjA3qV5pu0Q+vEvtqqKYBA=;
+        b=r49RMxBlLiPLsvZRWerxZDKEMGxhvPV/5eQZeLSV66+qntWP+DDx8syNeKN5fpwRW4
+         Pg3QkfrB3cK+yIvrc4ZhrjxQbT3Yet+r6xgFuYyrcDsN74skPqvh5OwwHCGo3REoeNyp
+         vRkaBdOPpWHQd23IN6PDd6kTvjorFm+UO574UhNd5//SQkGJmktHZxtLLz21pTAl4aRD
+         k7wDfolORj5LmymXYsd6RsruOfl9FriVXaxQAzTXJUd4BnqK57rVkq5ltE3gjdXWP7La
+         Ki1MX7KCpe0v39Q7H7AxaWl/swAGzaecjrUPv5BdxVq0mVS01+D4DQ4kGckCSy9aFE/X
+         IteA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7vF68sCxLN7BJSe6FRul43LX+kGj4Ls7xrNBbTxk+SILm0UWP2o5hF4kh95iAG+MNgSYZ/2H5Sd/lEHvWb2B2ZMO51AMHAo77maDyY4LBRCgCLl7BenQkNhstE1HYYD59mHD1viZAZShbJ2Fb+KlMEDJGD2r0wCxZIJRLlTyCnmB4TvMF6VpFiSQ715jMn57/wdZPQ+dB8dsJgLDNA5WpZ6KgxSZWlw==
+X-Gm-Message-State: AOJu0Yxob5PBSnOPlhVX6v4XdPBmlmwBqAt98CMv7Z1CXdDHsACZB4/T
+	99O6vQtS9hnIVTa8Nk3Eq9rBLbc255hzIP3kH5+Ex7FfP2DwsJXZ/tAqohJgogI=
+X-Google-Smtp-Source: AGHT+IFwLjKjWVfy1fTAk3eO+Dlpfj9SGsTOE9DETZJW8nYLdZEvisol9IihxQ+jq8jG7jUIa6NRyw==
+X-Received: by 2002:a17:907:7d8f:b0:a52:68f:d141 with SMTP id oz15-20020a1709077d8f00b00a52068fd141mr2419289ejc.4.1712745495515;
+        Wed, 10 Apr 2024 03:38:15 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:500::5:e0d6])
+        by smtp.gmail.com with ESMTPSA id se1-20020a170906ce4100b00a51a9d87570sm6530946ejb.17.2024.04.10.03.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 03:38:14 -0700 (PDT)
+Date: Wed, 10 Apr 2024 11:38:11 +0100
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <lcc6lnkbfnyr6yjvybckevhzaafvh7jmpse6tnviq5bjar3y6z@yvz6cuzjzrky>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
+ <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+ <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+ <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+ <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+ <20240328091841.ce9cc613db375536de843cfb@kernel.org>
+ <CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
+ <CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
+ <20240330093631.72273967ba818cb16aeb58b6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 43AAElCp055314
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240330093631.72273967ba818cb16aeb58b6@kernel.org>
 
-Sometimes we need to track the processing order of requests with
-ioprio set. So the ioprio of request can be useful information.
+Hi Masami,
 
-Example：
+> > > Which is why I was asking to land this patch as is, as it relieves the
+> > > scalability pains in production and is easy to backport to old
+> > > kernels. And then we can work on batched APIs and switch to per-CPU rw
+> > > semaphore.
+> 
+> OK, then I'll push this to for-next at this moment.
+> Please share if you have a good idea for the batch interface which can be
+> backported. I guess it should involve updating userspace changes too.
 
-block_rq_insert: 8,0 WS 4096 () 16573296 + 8 rt,4 [highpool[1]]
-block_rq_issue: 8,0 WS 4096 () 16573296 + 8 rt,4 [kworker/7:0H]
-block_rq_complete: 8,0 WS () 16573296 + 8 rt,4 [0]
+Did you (or anyone else) need anything more from me on this one so that it
+can be pushed? I provided some benchmark numbers but happy to provide
+anything else that may be required.
 
-Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
----
- include/linux/blktrace_api.h |  2 ++
- include/trace/events/block.h | 63 ++++++++++++++++++++++--------------
- kernel/trace/blktrace.c      | 11 +++++++
- 3 files changed, 51 insertions(+), 25 deletions(-)
+Thanks!
 
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 122c62e561fc..adb0333efbdb 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -112,6 +112,8 @@ struct compat_blk_user_trace_setup {
- 
- void blk_fill_rwbs(char *rwbs, blk_opf_t opf);
- 
-+void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value);
-+
- static inline sector_t blk_rq_trace_sector(struct request *rq)
- {
- 	/*
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 0e128ad51460..1d41fade160a 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -10,7 +10,8 @@
- #include <linux/buffer_head.h>
- #include <linux/tracepoint.h>
- 
--#define RWBS_LEN	8
-+#define RWBS_LEN		8
-+#define IOPRIO_CLASS_LEN	8
- 
- #ifdef CONFIG_BUFFER_HEAD
- DECLARE_EVENT_CLASS(block_buffer,
-@@ -79,11 +80,13 @@ TRACE_EVENT(block_rq_requeue,
- 	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
--		__field(  dev_t,	dev			)
--		__field(  sector_t,	sector			)
--		__field(  unsigned int,	nr_sector		)
--		__array(  char,		rwbs,	RWBS_LEN	)
--		__dynamic_array( char,	cmd,	1		)
-+		__field(  dev_t,	dev				)
-+		__field(  sector_t,	sector				)
-+		__field(  unsigned int,	nr_sector			)
-+		__array(  char,		rwbs,	RWBS_LEN		)
-+		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
-+		__field(  unsigned int, ioprio_value			)
-+		__dynamic_array( char,	cmd,	1			)
- 	),
- 
- 	TP_fast_assign(
-@@ -92,14 +95,16 @@ TRACE_EVENT(block_rq_requeue,
- 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
-+		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
--	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-+	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, 0)
-+		  __entry->nr_sector, __entry->ioprio_class,
-+		  __entry->ioprio_value, 0)
- );
- 
- DECLARE_EVENT_CLASS(block_rq_completion,
-@@ -109,12 +114,14 @@ DECLARE_EVENT_CLASS(block_rq_completion,
- 	TP_ARGS(rq, error, nr_bytes),
- 
- 	TP_STRUCT__entry(
--		__field(  dev_t,	dev			)
--		__field(  sector_t,	sector			)
--		__field(  unsigned int,	nr_sector		)
--		__field(  int	,	error			)
--		__array(  char,		rwbs,	RWBS_LEN	)
--		__dynamic_array( char,	cmd,	1		)
-+		__field(  dev_t,	dev				)
-+		__field(  sector_t,	sector				)
-+		__field(  unsigned int,	nr_sector			)
-+		__field(  int,		error				)
-+		__array(  char,		rwbs,	RWBS_LEN		)
-+		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
-+		__field(  unsigned int,	ioprio_value			)
-+		__dynamic_array( char,	cmd,	1			)
- 	),
- 
- 	TP_fast_assign(
-@@ -124,14 +131,16 @@ DECLARE_EVENT_CLASS(block_rq_completion,
- 		__entry->error     = blk_status_to_errno(error);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
-+		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
--	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-+	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, __entry->error)
-+		  __entry->nr_sector, __entry->ioprio_class,
-+		  __entry->ioprio_value, __entry->error)
- );
- 
- /**
-@@ -176,13 +185,15 @@ DECLARE_EVENT_CLASS(block_rq,
- 	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
--		__field(  dev_t,	dev			)
--		__field(  sector_t,	sector			)
--		__field(  unsigned int,	nr_sector		)
--		__field(  unsigned int,	bytes			)
--		__array(  char,		rwbs,	RWBS_LEN	)
--		__array(  char,         comm,   TASK_COMM_LEN   )
--		__dynamic_array( char,	cmd,	1		)
-+		__field(  dev_t,	dev				)
-+		__field(  sector_t,	sector				)
-+		__field(  unsigned int,	nr_sector			)
-+		__field(  unsigned int,	bytes				)
-+		__array(  char,		rwbs,	RWBS_LEN		)
-+		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
-+		__field(  unsigned int,	ioprio_value			)
-+		__array(  char,		comm,   TASK_COMM_LEN		)
-+		__dynamic_array( char,	cmd,	1			)
- 	),
- 
- 	TP_fast_assign(
-@@ -192,15 +203,17 @@ DECLARE_EVENT_CLASS(block_rq,
- 		__entry->bytes     = blk_rq_bytes(rq);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
-+		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
- 		__get_str(cmd)[0] = '\0';
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
--	TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
-+	TP_printk("%d,%d %s %u (%s) %llu + %u %s,%u [%s]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __entry->bytes, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, __entry->comm)
-+		  __entry->nr_sector, __entry->ioprio_class,
-+		  __entry->ioprio_value, __entry->comm)
- );
- 
- /**
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d5d94510afd3..e55aa49f94db 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -19,6 +19,7 @@
- #include <linux/uaccess.h>
- #include <linux/list.h>
- #include <linux/blk-cgroup.h>
-+#include <linux/ioprio.h>
- 
- #include "../../block/blk.h"
- 
-@@ -26,6 +27,9 @@
- 
- #include "trace_output.h"
- 
-+/* Type of ioprio */
-+static char *classes[] = {"none", "rt", "be", "idle"};
-+
- #ifdef CONFIG_BLK_DEV_IO_TRACE
- 
- static unsigned int blktrace_seq __read_mostly = 1;
-@@ -1914,5 +1918,12 @@ void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
- }
- EXPORT_SYMBOL_GPL(blk_fill_rwbs);
- 
-+void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value)
-+{
-+	memcpy(ioprio_class, classes[(ioprio >> IOPRIO_CLASS_SHIFT) & 0x3], IOPRIO_CLASS_LEN);
-+	*ioprio_value = ioprio & 0xff;
-+}
-+EXPORT_SYMBOL_GPL(blk_fill_ioprio);
-+
- #endif /* CONFIG_EVENT_TRACING */
- 
--- 
-2.25.1
+Jon.
 
+> 
+> Thank you!
+> 
+> > >
+> > > So I hope you can reconsider and accept improvements in this patch,
+> > > while Jonathan will keep working on even better final solution.
+> > > Thanks!
+> > >
+> > > > I look forward to your formalized results :)
+> > > >
+> > 
+> > BTW, as part of BPF selftests, we have a multi-attach test for uprobes
+> > and USDTs, reporting attach/detach timings:
+> > $ sudo ./test_progs -v -t uprobe_multi_test/bench
+> > bpf_testmod.ko is already unloaded.
+> > Loading bpf_testmod.ko...
+> > Successfully loaded bpf_testmod.ko.
+> > test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
+> > test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
+> > test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
+> > test_bench_attach_uprobe: attached in   0.120s
+> > test_bench_attach_uprobe: detached in   0.092s
+> > #400/5   uprobe_multi_test/bench_uprobe:OK
+> > test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
+> > test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
+> > test_bench_attach_usdt:PASS:usdt_count 0 nsec
+> > test_bench_attach_usdt: attached in   0.124s
+> > test_bench_attach_usdt: detached in   0.064s
+> > #400/6   uprobe_multi_test/bench_usdt:OK
+> > #400     uprobe_multi_test:OK
+> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> > Successfully unloaded bpf_testmod.ko.
+> > 
+> > So it should be easy for Jonathan to validate his changes with this.
+> > 
+> > > > Thank you,
+> > > >
+> > > > >
+> > > > > Jon.
+> > > > >
+> > > > > >
+> > > > > > Thank you,
+> > > > > >
+> > > > > > >
+> > > > > > > >
+> > > > > > > > BTW, how did you measure the overhead? I think spinlock overhead
+> > > > > > > > will depend on how much lock contention happens.
+> > > > > > > >
+> > > > > > > > Thank you,
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > > > > > > > > ---
+> > > > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> > > > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
+> > > > > > > > > --- a/kernel/events/uprobes.c
+> > > > > > > > > +++ b/kernel/events/uprobes.c
+> > > > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> > > > > > > > >   */
+> > > > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
+> > > > > > > > >
+> > > > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
+> > > > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
+> > > > > > > > >
+> > > > > > > > >  #define UPROBES_HASH_SZ      13
+> > > > > > > > >  /* serialize uprobe->pending_list */
+> > > > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> > > > > > > > >  {
+> > > > > > > > >       struct uprobe *uprobe;
+> > > > > > > > >
+> > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > +     read_lock(&uprobes_treelock);
+> > > > > > > > >       uprobe = __find_uprobe(inode, offset);
+> > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > > > > >
+> > > > > > > > >       return uprobe;
+> > > > > > > > >  }
+> > > > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> > > > > > > > >  {
+> > > > > > > > >       struct uprobe *u;
+> > > > > > > > >
+> > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > +     write_lock(&uprobes_treelock);
+> > > > > > > > >       u = __insert_uprobe(uprobe);
+> > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > +     write_unlock(&uprobes_treelock);
+> > > > > > > > >
+> > > > > > > > >       return u;
+> > > > > > > > >  }
+> > > > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> > > > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
+> > > > > > > > >               return;
+> > > > > > > > >
+> > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > +     write_lock(&uprobes_treelock);
+> > > > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > +     write_unlock(&uprobes_treelock);
+> > > > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> > > > > > > > >       put_uprobe(uprobe);
+> > > > > > > > >  }
+> > > > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> > > > > > > > >       min = vaddr_to_offset(vma, start);
+> > > > > > > > >       max = min + (end - start) - 1;
+> > > > > > > > >
+> > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > +     read_lock(&uprobes_treelock);
+> > > > > > > > >       n = find_node_in_range(inode, min, max);
+> > > > > > > > >       if (n) {
+> > > > > > > > >               for (t = n; t; t = rb_prev(t)) {
+> > > > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> > > > > > > > >                       get_uprobe(u);
+> > > > > > > > >               }
+> > > > > > > > >       }
+> > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > >  /* @vma contains reference counter, not the probed instruction. */
+> > > > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> > > > > > > > >       min = vaddr_to_offset(vma, start);
+> > > > > > > > >       max = min + (end - start) - 1;
+> > > > > > > > >
+> > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > +     read_lock(&uprobes_treelock);
+> > > > > > > > >       n = find_node_in_range(inode, min, max);
+> > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > > > > >
+> > > > > > > > >       return !!n;
+> > > > > > > > >  }
+> > > > > > > > > --
+> > > > > > > > > 2.43.0
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > >
+> > > >
+> > > > --
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
