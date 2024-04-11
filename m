@@ -1,69 +1,73 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A6516415
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797791758E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712848509; cv=none; b=YxDltkiCER5+D0HiHN/r2JrqSzlwyDFehL0JsWh5vvjTC6QVRmqR5BeAi4yMwlk+u7+o9xolf5mn+8lt+NchiPBMcqEinog+sBCrXDc/E2nQYDdm+C/1PR+XdpNdCxKiCOtIMEeUqzl1sna5NV/pfNNjm6zd96o3d1mQDsc3WiU=
+	t=1712849141; cv=none; b=hzyU+nC6smh3fW9WEksD/9ln+5JCZRlerf6lkhyJ278tnp3zxjaPQ3sVXwGk8NCKI5MF4hY/oCukC/uVCJnAHykE91EcOHQ2xrWXF7OiX5cL6xeyrV4bGvWCO3QpAjoDaIscrcTUrArJMPGdtqPHUTBQtaNd9/4v7eaOJUkSyuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712848509; c=relaxed/simple;
-	bh=ykrCsBxsPgKhyE3GYL+XJuoXa3s/bXlZI1ZvQ8tnwOY=;
+	s=arc-20240116; t=1712849141; c=relaxed/simple;
+	bh=S0tSkli8JleHY8iE9O2afY6bV3mjLC/eVHPCMEho8Ww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TCW/wfcPw4xLu91Vl96fTN6Cca6+8hdpy1nAp/yI4qZhVhYzMVjY7krQgI/ObVyQnfMLMPbqBDunfZXok9e3reYGdTami5bQVkxSKx1aPiSags8WRryrjfc/qw4jtSu+jRdtRM0kKd3ia+jjBh6bz5DI5/8ciuVre+J+5klGsFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RhcAV1jX; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=p4MGeXB5ZJu8SyaVG4mmzetcyoZo97xSFgBibT3pDVz0L7Vbp7CmN46IX8Ui2ZF/OKF+aB7tRpXSFeI0vp3vyjmi7HJyo2KTcIt8VfJielRLZd5Tkchu67ESbwew7qOY+SL8YLagS0zC8dtPj5epNtCThYFAvNKHguX6nxjHdyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U5YRkVIs; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RhcAV1jX"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so6266131a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:15:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U5YRkVIs"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e2ac1c16aso8414201a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712848507; x=1713453307; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712849138; x=1713453938; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y27o1QGaPj1N7cZ8H8ZqjEg3waA9EItOMXyHWJlIzfk=;
-        b=RhcAV1jXYquKsfeQAGdwKyX38/JQZ67w2RROeMkzd00GXyVUy2w5m1/NQ0vT9LdD6r
-         /xuwKZO/e2OD64H8Zx8VoRJSgpf8TYgtH6sFlO0XZrb2Sbrf3yQFdFO+i3tzdGmE7Lx3
-         zQxjiiydx/fkL1xsUzNnsU4dyOiRUq+Qfa+HE=
+        bh=CABfqMACNUngHNLxS+WM0hHJ1yaxWLelGbJxYjHioD0=;
+        b=U5YRkVIsfjsdxYrqviqFldW3aGgJpxI95Xx9WtuZtRE4oGNUou/5vryJRC9Fm9mbWI
+         0oW0BHPWPWBNjOdKKZtlJlPuSTA7JCxqdpogQMFdoBWF1OD3kPk3rs7hdHqbvgvZDg0g
+         FPiIFMNvhw/PbASOX8xkWBMy8iKmqHbZbXdnniQgC1etonGUdgwPRRGtUD4z+eu6vlgb
+         Hnq5Ee+6VznM1khG44NboOAIt8kYqj5Q2zDb+onyXfL4pNnVpUZMlB7sfzDCSNFLZ1Ss
+         C8s8Fb2FJ1eVCLip9agNb+b1Vd0rUZFWc6akd2nrOheBpdsw0oUWp/Fy5ElLUlEqV/k0
+         LcXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712848507; x=1713453307;
+        d=1e100.net; s=20230601; t=1712849138; x=1713453938;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y27o1QGaPj1N7cZ8H8ZqjEg3waA9EItOMXyHWJlIzfk=;
-        b=REptnrbnTJ8WESqBjXEjqEXVyrJQ3uvivzxUiJSNNvS0DSlN+rNEvLFxh/4VhoD3jV
-         DG7YJ7kvQGfQX9iU46dGpLYuNGEYrd5uQFD7XVyzoJWKzUrq3sP1pU9tnnw6ax5t3DvK
-         m7z83FDCS8Q0XELa8EsnFNVGlAfFkAsVvErZXtr9bfu2ca7hk62qsVCUy4hrNCvZkLzm
-         loXgzJdnvxxsdsJwQbOArPJqlvfH7nWN+bVhNi232NaLmokM5S4aCN4YXqxIoHjCcY1y
-         9SbouQLaSAk4YxdfSkyYqTg8J0f+JqQCxVqUq8CFvuEnnNsJH0BkFxRiHrMgW1wxlbS7
-         YGLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeI82yzxZOKDQGyMYXNN8o0AUxYyAtWVNgw6lnllwxGmM10AikXLYnns6a1ck2VXv+stzRKQlID+DkqqDqjZMo/EYO0iMXXSNPkL2NcrUYOSD3
-X-Gm-Message-State: AOJu0YzQqTkAZyyZEVTqKNm0zTmAuJ9Ax1Q7vcPNnqzxxCnXP+gDaJ5i
-	O2lkENgdjKvuT8iOnU9k+b/N0sQfm9vvp0kbcQrdr9MntZO7eY+UdzNlUywVFQ==
-X-Google-Smtp-Source: AGHT+IFXnLf46pENpWqaLeFh27xQfZIeEOpHx3elub8SYDi07FpFtNbcgpbZ5CexGlBw+CMhsVGm7Q==
-X-Received: by 2002:a17:90a:bd8e:b0:29f:7fad:ba50 with SMTP id z14-20020a17090abd8e00b0029f7fadba50mr5988643pjr.8.1712848506772;
-        Thu, 11 Apr 2024 08:15:06 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e6-20020a17090ac20600b0029bf9969afbsm2963349pjt.53.2024.04.11.08.15.06
+        bh=CABfqMACNUngHNLxS+WM0hHJ1yaxWLelGbJxYjHioD0=;
+        b=a1YfK5MvUQbvZ1oe4PgzRAECEgLeiRdjHPTtPsZ7JLUUKCRwWbbjvtlqzdjAw7N8qn
+         8WESBUIgRhPu5GvtXn1Oye3+zUNdScIvw+BdwlX0wi+ItzUmpCPNsLDhej5TBgmcM9P5
+         9EdhwdJNmfMR5cfOZIJdIB8DgRbnmoIOTzXAAqQfXB1SPu9DrESHmhHEnQgLPp4Ifs9w
+         IsJFKqSOJeEh+6HAidmz9WCXJav7iZ7FSaHx5E/4KHhxkHxXPCDnyKJkpq9hUNCmo3bN
+         SKSdlFncHsTW99sLO27Kudvi/W/Q/OVU8wJUyxgJ79DbNZwTcOKsmyiwvDVhR+rntg0a
+         bEiw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/b1EVx5LeyCVQtLpPf8ZKZQlKt5/n8F+ikgUVy6doRRRLk/d0emXd42gHrnZ01io/xMLi9b/elVvPesi5Trpdb5hiz2ZcFSKMW4vgLy7KvQ6z
+X-Gm-Message-State: AOJu0YzBCT6wk8Q4e6ukQnafDUKVUnArgnqddXr5Ps3JhMdLVwqZhmhs
+	NiL4VMyjW3CuBSc1p3kFcGyLS3oJ4DAnDjQF5eVA6oG3F7mLEakSfBMxbURvhcA=
+X-Google-Smtp-Source: AGHT+IEEewk7llSPmgrxe/7mA2rySV/OUDonUpYE2d0l2M0z39pI2HKiyjdOd8AbAw/PCbmxmW//Bg==
+X-Received: by 2002:a17:906:4f06:b0:a52:3d1:6769 with SMTP id t6-20020a1709064f0600b00a5203d16769mr44591eju.14.1712849137563;
+        Thu, 11 Apr 2024 08:25:37 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id r3-20020a170906350300b00a522c69f28asm225076eja.216.2024.04.11.08.25.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:15:06 -0700 (PDT)
-Date: Thu, 11 Apr 2024 08:15:05 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Marco Elver <elver@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v2] tracing: Add sched_prepare_exec tracepoint
-Message-ID: <202404110814.B219872F76@keescook>
-References: <20240411102158.1272267-1-elver@google.com>
+        Thu, 11 Apr 2024 08:25:36 -0700 (PDT)
+Date: Thu, 11 Apr 2024 18:25:32 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+	speakup@linux-speakup.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-afs@lists.infradead.org, ecryptfs@vger.kernel.org,
+	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org, linux-arch@vger.kernel.org,
+	io-uring@vger.kernel.org, cocci@inria.fr,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] treewide: Fix common grammar mistake "the the"
+Message-ID: <0bd7ccc2-4d8c-455b-a6c2-972ebe1fcb08@moroto.mountain>
+References: <20240411150437.496153-4-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -72,41 +76,22 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240411102158.1272267-1-elver@google.com>
+In-Reply-To: <20240411150437.496153-4-thorsten.blum@toblux.com>
 
-On Thu, Apr 11, 2024 at 12:20:57PM +0200, Marco Elver wrote:
-> Add "sched_prepare_exec" tracepoint, which is run right after the point
-> of no return but before the current task assumes its new exec identity.
+On Thu, Apr 11, 2024 at 05:04:40PM +0200, Thorsten Blum wrote:
+> Use `find . -type f -exec sed -i 's/\<the the\>/the/g' {} +` to find all
+> occurrences of "the the" and replace them with a single "the".
 > 
-> Unlike the tracepoint "sched_process_exec", the "sched_prepare_exec"
-> tracepoint runs before flushing the old exec, i.e. while the task still
-> has the original state (such as original MM), but when the new exec
-> either succeeds or crashes (but never returns to the original exec).
+> Changes only comments and documentation - no code changes.
 > 
-> Being able to trace this event can be helpful in a number of use cases:
-> 
->   * allowing tracing eBPF programs access to the original MM on exec,
->     before current->mm is replaced;
->   * counting exec in the original task (via perf event);
->   * profiling flush time ("sched_prepare_exec" to "sched_process_exec").
-> 
-> Example of tracing output:
-> 
->  $ cat /sys/kernel/debug/tracing/trace_pipe
->     <...>-379  [003] .....  179.626921: sched_prepare_exec: interp=/usr/bin/sshd filename=/usr/bin/sshd pid=379 comm=sshd
->     <...>-381  [002] .....  180.048580: sched_prepare_exec: interp=/bin/bash filename=/bin/bash pid=381 comm=sshd
->     <...>-385  [001] .....  180.068277: sched_prepare_exec: interp=/usr/bin/tty filename=/usr/bin/tty pid=385 comm=bash
->     <...>-389  [006] .....  192.020147: sched_prepare_exec: interp=/usr/bin/dmesg filename=/usr/bin/dmesg pid=389 comm=bash
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
 
-This looks good to me. If tracing wants to take it:
+It's tricky to know which tree a patch like this would go through.  We
+used to have a trivial tree for this stuff but I guess that didn't work.
+It's possible that it could go through linux-doc, but probably it has to
+go as a set of patches through each of the trees in the CC list.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+regards,
+dan carpenter
 
-If not, I can take it in my tree if I get a tracing Ack. :)
-
--Kees
-
--- 
-Kees Cook
