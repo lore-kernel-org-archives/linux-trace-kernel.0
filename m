@@ -1,228 +1,172 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5A8145B26;
-	Thu, 11 Apr 2024 10:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5C6140E3D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712830243; cv=none; b=CwuwJT5mM+RI0UfZ0lplnBwHb7vUvJnRJSKHFhAb36H0igR75x4HGbzGFclcOUUTE8vVZrGOBDD2I08KC3+Ikmg4BOfz/O+MzgA2lJOWZoPyxVly6ebeGoqyi/cdR+AvwG7EP0/wzjdh5mbF8ZIoGFtPp+igOlNDqSQc/aodc9M=
+	t=1712830926; cv=none; b=kzj0TKROSIbaoGraXNuYXmdzC8iAfdmXuMXf+I7CNLL3CfpfH6KE5402e22PvIcZwVpzqyR6nP3oNCSNohfB7qFtVYS8P2Nd+NaA8QzOarxNH4/HJ6vbKQ/H6UDzGvrpKOqYlUGsjUtassO6ZSlz+WamaR1WIinsIKvQcTEpA14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712830243; c=relaxed/simple;
-	bh=lFToQwuD0CN2lHHGhV5ThRLUedjbbjOz8kojfzH5ZY8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=RMr9OqfNpu/uLgS+wZJrbRPe6qV0lkEqwZiE7YJWFR5wgDx6UAaNw1CopavCGUNxOpUDhygsjmIKf1QecrPjzyP0ZcgSg1grLslJOI+gI1ejqqKhnNXH15RnSxbh732c0IOVABxNdFAHlkjwVGbLxaZKKKhcIUHngesWYvqwQYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VFZxL1t7mzBmrW;
-	Thu, 11 Apr 2024 18:02:14 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VFZxF0sXYz63t5D;
-	Thu, 11 Apr 2024 18:02:09 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VFZx42y5Nz6G42d;
-	Thu, 11 Apr 2024 18:02:00 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-	by mse-fl2.zte.com.cn with SMTP id 43BA1qk5093269;
-	Thu, 11 Apr 2024 18:01:52 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 11 Apr 2024 18:01:54 +0800 (CST)
-Date: Thu, 11 Apr 2024 18:01:54 +0800 (CST)
-X-Zmail-TransId: 2afa6617b512ffffffffdde-7c4e3
-X-Mailer: Zmail v1.0
-Message-ID: <20240411180154691lpBFKqpsU4tf1vugPPIqq@zte.com.cn>
+	s=arc-20240116; t=1712830926; c=relaxed/simple;
+	bh=kwjGtNvLpK325ZnrzYNhpHBo59AhLmuaGY0i7QoIDKs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HFj8ezUafP3jPxzlyw3ITRA2xdvhQvrPL+aPLWRlhDJULJevqpa0kzdDESfq+8HovRjHJ8/FLl5ldO/yIgbLnAI5Gamc19TNygCUyBxaYLbNb8TF5Jz3ukAFWBHRuNWzr9v5TGE9xqbeQ1hqIGp2Umm6Usa5EnqJ36iuMChGPro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UJtvKh72; arc=none smtp.client-ip=209.85.218.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJtvKh72"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-a51a2113040so343164466b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:22:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712830923; x=1713435723; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+rR9HIwFgg/0oSpb0w3lX+KECeC+/l7rF3yPb/nkNJ0=;
+        b=UJtvKh72FY0JKCgLC7XKqPpkHTMXqKfhlej8TUr/dhEtFPjcok9sFMi9wKlnSjq22R
+         ln/b+k57z8Bu3tY0f+fPiD1lL0dZy7xC9X4ZGR1/wzB0NJ85KsOFkF7cSMnzscYKYk4F
+         G5ODG9kH3ZWjiMQUaQ0ZE1UO5Lqds5ayLc/ZRw+pIJGJREiO5/4pfVkZM0Ycg2M2oD+w
+         IvAhTVZj5B5TxBUEZz56oarrEvmF0+VQo4uIi331EFsJA2E0D/2VWVjv85Cy2SMQi7R7
+         qLY1xMDZpb0sN3VS+jICF/jcw8tDXMRdFjKRnoHf9ETOyMAEP/m6XCKaVFJ6aYg9v0xk
+         i2yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712830923; x=1713435723;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+rR9HIwFgg/0oSpb0w3lX+KECeC+/l7rF3yPb/nkNJ0=;
+        b=k6JVVLdCpRVxWGNcoLgMJEHosG/EYpmW05JdFcKAawStG76Ao1dos/QJuomaELkh51
+         by2z2bPYOHrwxKv3c3JWAK6e8N9Tjccaha+LPU3WpR1OKCgjKICznkC8vgWatfadXqVf
+         7+/W0vLT95o5QiqgjQdCuMt2JPBHKik8v1YfoxEvxG28M6R5xdK8HhnMWA6x8XoMSpyE
+         9Pj7npo6cAGbnpuI/ZNduHV1qTjQ4XWYVqNlRme9frKC2R63bBHsC/hUPFexDDp7a1gi
+         w0zIfIyvEEq8jUyP67Bl6W7mN4DGdizc27wKvPjdULlNZ0iTJDsPbihLEtK7+aKHmyTJ
+         K52g==
+X-Forwarded-Encrypted: i=1; AJvYcCXuE2H0ATsNvkc6DAsv9bmBFL5hXoQP30USeKIkEI9KAI67Zr/fcYLc7dkb4heb6KIF7is6F7hPyMOBdS9Z5kHGfQfgio/NQklLKlbnhrqOUHVQ
+X-Gm-Message-State: AOJu0YxHO//y0I2LONU/+Hey/uGF5FRtKfEZFtQIeN4gjGN4li/ORSRf
+	llwUcaeA1kbi/6ftY8DpXFaVOmPZ+ASXGNOBXTfTOy5LltE6pNCPfJ9H6la2X00LPJtxzxZnvg=
+	=
+X-Google-Smtp-Source: AGHT+IFXG6iOFjgVBIzBx0eWBP5cDueeQuL6me8jmVrtbOPiz1Cb0gwJMrq43P1HgLFWtX3oaOdfw2/1NQ==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:5b29:b86f:ece8:1df5])
+ (user=elver job=sendgmr) by 2002:a17:906:857:b0:a51:abd7:85a5 with SMTP id
+ f23-20020a170906085700b00a51abd785a5mr4613ejd.15.1712830922433; Thu, 11 Apr
+ 2024 03:22:02 -0700 (PDT)
+Date: Thu, 11 Apr 2024 12:20:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <edumazet@google.com>, <davem@davemloft.net>, <kuba@kernel.org>
-Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY1XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 43BA1qk5093269
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6617B525.000/4VFZxL1t7mzBmrW
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <20240411102158.1272267-1-elver@google.com>
+Subject: [PATCH v2] tracing: Add sched_prepare_exec tracepoint
+From: Marco Elver <elver@google.com>
+To: elver@google.com, Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Azeem Shaikh <azeemshaikh38@gmail.com>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: hepeilin <he.peilin@zte.com.cn>
-Introduce a tracepoint for icmp_send, which can help users to get more
-detail information conveniently when icmp abnormal events happen.
+Add "sched_prepare_exec" tracepoint, which is run right after the point
+of no return but before the current task assumes its new exec identity.
 
-1. Giving an usecase example:
-=============================
-When an application experiences packet loss due to an unreachable UDP
-destination port, the kernel will send an exception message through the
-icmp_send function. By adding a trace point for icmp_send, developers or
-system administrators can obtain detailed information about the UDP
-packet loss, including the type, code, source address, destination address,
-source port, and destination port. This facilitates the trouble-shooting
-of UDP packet loss issues especially for those network-service
-applications.
+Unlike the tracepoint "sched_process_exec", the "sched_prepare_exec"
+tracepoint runs before flushing the old exec, i.e. while the task still
+has the original state (such as original MM), but when the new exec
+either succeeds or crashes (but never returns to the original exec).
 
-2. Operation Instructions:
-==========================
-Switch to the tracing directory.
-        cd /sys/kernel/tracing
-Filter for destination port unreachable.
-        echo "type==3 && code==3" > events/icmp/icmp_send/filter
-Enable trace event.
-        echo 1 > events/icmp/icmp_send/enable
+Being able to trace this event can be helpful in a number of use cases:
 
-3. Result View:
-================
- udp_client_erro-11370   [002] ...s.12   124.728002:
- icmp_send: icmp_send: type=3, code=3.
- From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
- skbaddr=00000000589b167a
+  * allowing tracing eBPF programs access to the original MM on exec,
+    before current->mm is replaced;
+  * counting exec in the original task (via perf event);
+  * profiling flush time ("sched_prepare_exec" to "sched_process_exec").
 
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
-1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
+Example of tracing output:
 
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
-1.Add legality check for UDP header in SKB.
-2.Target this patch for net-next.
+ $ cat /sys/kernel/debug/tracing/trace_pipe
+    <...>-379  [003] .....  179.626921: sched_prepare_exec: interp=/usr/bin/sshd filename=/usr/bin/sshd pid=379 comm=sshd
+    <...>-381  [002] .....  180.048580: sched_prepare_exec: interp=/bin/bash filename=/bin/bash pid=381 comm=sshd
+    <...>-385  [001] .....  180.068277: sched_prepare_exec: interp=/usr/bin/tty filename=/usr/bin/tty pid=385 comm=bash
+    <...>-389  [006] .....  192.020147: sched_prepare_exec: interp=/usr/bin/dmesg filename=/usr/bin/dmesg pid=389 comm=bash
 
-Changelog
-========
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-1. Change the tracking directory to/sys/kernel/tracking.
-2. Adjust the layout of the TP-STRUCT_entry parameter structure.
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
-1. adjust the trace_icmp_send() to more protocols than UDP.
-2. move the calling of trace_icmp_send after sanity checks
-in __icmp_send().
-
-Signed-off-by: Peilin He<he.peilin@zte.com.cn>
-Reviewed-by: xu xin <xu.xin16@zte.com.cn>
-Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
-Cc: Liu Chun <liu.chun2@zte.com.cn>
-Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+Signed-off-by: Marco Elver <elver@google.com>
 ---
- include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
- net/ipv4/icmp.c             |  4 +++
- 2 files changed, 69 insertions(+)
- create mode 100644 include/trace/events/icmp.h
+v2:
+* Add more documentation.
+* Also show bprm->interp in trace.
+* Rename to sched_prepare_exec.
+---
+ fs/exec.c                    |  8 ++++++++
+ include/trace/events/sched.h | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-new file mode 100644
-index 000000000..7d5190f48
---- /dev/null
-+++ b/include/trace/events/icmp.h
-@@ -0,0 +1,65 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM icmp
+diff --git a/fs/exec.c b/fs/exec.c
+index 38bf71cbdf5e..57fee729dd92 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1268,6 +1268,14 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	if (retval)
+ 		return retval;
+ 
++	/*
++	 * This tracepoint marks the point before flushing the old exec where
++	 * the current task is still unchanged, but errors are fatal (point of
++	 * no return). The later "sched_process_exec" tracepoint is called after
++	 * the current task has successfully switched to the new exec.
++	 */
++	trace_sched_prepare_exec(current, bprm);
 +
-+#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ICMP_H
+ 	/*
+ 	 * Ensure all future errors are fatal.
+ 	 */
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index dbb01b4b7451..226f47c6939c 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -420,6 +420,41 @@ TRACE_EVENT(sched_process_exec,
+ 		  __entry->pid, __entry->old_pid)
+ );
+ 
++/**
++ * sched_prepare_exec - called before setting up new exec
++ * @task:	pointer to the current task
++ * @bprm:	pointer to linux_binprm used for new exec
++ *
++ * Called before flushing the old exec, where @task is still unchanged, but at
++ * the point of no return during switching to the new exec. At the point it is
++ * called the exec will either succeed, or on failure terminate the task. Also
++ * see the "sched_process_exec" tracepoint, which is called right after @task
++ * has successfully switched to the new exec.
++ */
++TRACE_EVENT(sched_prepare_exec,
 +
-+#include <linux/icmp.h>
-+#include <linux/tracepoint.h>
++	TP_PROTO(struct task_struct *task, struct linux_binprm *bprm),
 +
-+TRACE_EVENT(icmp_send,
++	TP_ARGS(task, bprm),
 +
-+		TP_PROTO(const struct sk_buff *skb, int type, int code),
++	TP_STRUCT__entry(
++		__string(	interp,		bprm->interp	)
++		__string(	filename,	bprm->filename	)
++		__field(	pid_t,		pid		)
++		__string(	comm,		task->comm	)
++	),
 +
-+		TP_ARGS(skb, type, code),
++	TP_fast_assign(
++		__assign_str(interp, bprm->interp);
++		__assign_str(filename, bprm->filename);
++		__entry->pid = task->pid;
++		__assign_str(comm, task->comm);
++	),
 +
-+		TP_STRUCT__entry(
-+			__field(const void *, skbaddr)
-+			__field(int, type)
-+			__field(int, code)
-+			__array(__u8, saddr, 4)
-+			__array(__u8, daddr, 4)
-+			__field(__u16, sport)
-+			__field(__u16, dport)
-+			__field(unsigned short, ulen)
-+		),
-+
-+		TP_fast_assign(
-+			struct iphdr *iph = ip_hdr(skb);
-+			int proto_4 = iph->protocol;
-+			__be32 *p32;
-+
-+			__entry->skbaddr = skb;
-+			__entry->type = type;
-+			__entry->code = code;
-+
-+			struct udphdr *uh = udp_hdr(skb);
-+			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-+				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
-+				__entry->sport = 0;
-+				__entry->dport = 0;
-+				__entry->ulen = 0;
-+			} else {
-+				__entry->sport = ntohs(uh->source);
-+				__entry->dport = ntohs(uh->dest);
-+				__entry->ulen = ntohs(uh->len);
-+			}
-+
-+			p32 = (__be32 *) __entry->saddr;
-+			*p32 = iph->saddr;
-+
-+			p32 = (__be32 *) __entry->daddr;
-+			*p32 = iph->daddr;
-+		),
-+
-+		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-+			__entry->type, __entry->code,
-+			__entry->saddr, __entry->sport, __entry->daddr,
-+			__entry->dport, __entry->ulen, __entry->skbaddr)
++	TP_printk("interp=%s filename=%s pid=%d comm=%s",
++		  __get_str(interp), __get_str(filename),
++		  __entry->pid, __get_str(comm))
 +);
-+
-+#endif /* _TRACE_ICMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-\ No newline at end of file
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index b71b836cc..2081fee18 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -92,6 +92,8 @@
- #include <net/inet_common.h>
- #include <net/ip_fib.h>
- #include <net/l3mdev.h>
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/icmp.h>
-
- /*
-  *	Build xmit assembly blocks
-@@ -766,6 +768,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (!fl4.saddr)
- 		fl4.saddr = htonl(INADDR_DUMMY);
-
-+	trace_icmp_send(skb_in, type, code);
-+
- 	icmp_push_reply(&icmp_param, &fl4, &ipc, &rt);
- ende:
- 	ip_rt_put(rt);
+ 
+ #ifdef CONFIG_SCHEDSTATS
+ #define DEFINE_EVENT_SCHEDSTAT DEFINE_EVENT
 -- 
-2.17.1
+2.44.0.478.gd926399ef9-goog
+
