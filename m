@@ -1,268 +1,228 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718FF140365;
-	Thu, 11 Apr 2024 08:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5A8145B26;
+	Thu, 11 Apr 2024 10:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712824920; cv=none; b=qtWzUsSX+HpwKB0IC1x5A1DkO6m2u8UWADK4to95FDyeJAwmic14nYG4eyGl7SpgnhVmwSe4DVDC54NJtst0rfvVIF/wpA62z5xKtadWg3joQ31EsLBgzj69h2/cfrGvyV2u9JrA0swLkN/bssGP/rBa8oifzQ4+7SL3R8xThPg=
+	t=1712830243; cv=none; b=CwuwJT5mM+RI0UfZ0lplnBwHb7vUvJnRJSKHFhAb36H0igR75x4HGbzGFclcOUUTE8vVZrGOBDD2I08KC3+Ikmg4BOfz/O+MzgA2lJOWZoPyxVly6ebeGoqyi/cdR+AvwG7EP0/wzjdh5mbF8ZIoGFtPp+igOlNDqSQc/aodc9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712824920; c=relaxed/simple;
-	bh=6DLQjsDEoSjNb9shH07V2fDjm+hPN7/FwwywkB/Dbs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AsOzC6UD7nCrNP0Yw4XwLPdqo7owpfJssYSnsZMQ9HFe0oW4Ob59sy4HUoavfpu4StGWPska0camzyz0Ygf71fiwn4l10+Zi+TQNejkZhLwYZDK9yk2PNdP2B98ZzAqsJ+jEN48OyUK07H4EbM2NexkwtueiSN9Koa5mrf7p88Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSpXMg93; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSpXMg93"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a44ad785a44so877089466b.3;
-        Thu, 11 Apr 2024 01:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712824917; x=1713429717; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r//gg2KSb9Ti8gfST7aix5NRc6L6yFLnnGwq82C2L10=;
-        b=nSpXMg93imPAXb07HTeBndHBTn+xLMUmxEP9WutFbfIoDtI+nZhUxPXEMkE0b4AkCo
-         rsxszotnlAImLoye80yoeiJ8Lx3qsp+stgyrzV+hTYQKdtiL4yj399tCBOxhxe+1EQqG
-         Tw9ZYw+gkbViU4a0SUl7W/8IMuLnOtOOAOTLPKB+kLrLjINya3R2jHh9tPgMy5EnSdeL
-         7VtAuGfQg+R8bACOiEIWZB37+L4y/0OKViBNqt7LtcRMSzGplRl+9IJU/PEGgNEA62hq
-         p5GjAtSWjnSCCZddzRAvU4HLTzzVt543q4AyOWDszfgGH1KoyJ2Q2WGFH7AcJY8U3F8F
-         bCjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712824917; x=1713429717;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r//gg2KSb9Ti8gfST7aix5NRc6L6yFLnnGwq82C2L10=;
-        b=vCtrcRCdXKOXnTGQeplHbwS/jSzix43QBOf18E6QI/ieXXNY/r38gyTUjZx3PfVCgU
-         tcDt91kEe7NTlJ1I2nbfdcKLkjYOKz4cR2dcgGSdNy1fHPYpx8NLYekYLVkzHvG0yEVF
-         99v855UeRfFcMaS6J/HUYx4kbj0zLES5ByfpYlL012EJS2UMPMTgEwJ32iBTyE9s7M30
-         P6gIYSBrYAt2Em5lR4zOczxsfhp1kHBghYKwZFB5CHwWnTetlkNQfW7QZZXSevtKRqd5
-         sPkUEdb+wSEmoINfgxQi3iG7t2Dd7jdAHaCgikVs9I2bINxkALAXldJtm9mtS/k95803
-         8kSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhZeWkY3AYxk+d0DBs5E12q1qb+cB6OUWpcP0QQ8IiqO7bofV6xCmAirO/dr1QuDkrWqxHG3JpxKJcX82ydDUvnBEZoNwp7Shg9X+TyRAL7eVtNWg/oseWBYoMQ8I7dAjiIFgCmwJCOGvqPPr+dx3ONWPN1l80pCfjHl1p75U2ucCD9gMS2azANnVhHSXOYqW1BU6Sjb89FKuZMTz51GDXstWn6sUJ1w==
-X-Gm-Message-State: AOJu0YyovyEBl7kAO3pTP+va/bo7oRId66VqEGvW4gWBbq66wJmnj/vp
-	ly7kzqSmfQAg2trJ/sybj0/YYGyCnO+HOPF5K+T7Kx4FHgm0kKAK
-X-Google-Smtp-Source: AGHT+IGqGgVnhw9T3C2cjrpjiSkw1plCEeVAAkZFNqECee+J0+pkm8IWce7nSX0D0vzHz9Ua82AKyw==
-X-Received: by 2002:a17:906:af1b:b0:a51:9304:19fa with SMTP id lx27-20020a170906af1b00b00a51930419famr2655626ejb.70.1712824916519;
-        Thu, 11 Apr 2024 01:41:56 -0700 (PDT)
-Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:400::5:8908])
-        by smtp.gmail.com with ESMTPSA id x26-20020a170906711a00b00a521591ffacsm538312ejj.34.2024.04.11.01.41.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 01:41:55 -0700 (PDT)
-Date: Thu, 11 Apr 2024 09:41:54 +0100
-From: Jonthan Haslam <jonathan.haslam@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-Message-ID: <cxm3f7buumd3vfybbd436zkroskecvyn46rm6pqtdad6rayeog@zzn2u6irogi7>
-References: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
- <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
- <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
- <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
- <20240328091841.ce9cc613db375536de843cfb@kernel.org>
- <CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
- <CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
- <20240330093631.72273967ba818cb16aeb58b6@kernel.org>
- <lcc6lnkbfnyr6yjvybckevhzaafvh7jmpse6tnviq5bjar3y6z@yvz6cuzjzrky>
- <20240411082156.6613cf4dc03129ea1183ab88@kernel.org>
+	s=arc-20240116; t=1712830243; c=relaxed/simple;
+	bh=lFToQwuD0CN2lHHGhV5ThRLUedjbbjOz8kojfzH5ZY8=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=RMr9OqfNpu/uLgS+wZJrbRPe6qV0lkEqwZiE7YJWFR5wgDx6UAaNw1CopavCGUNxOpUDhygsjmIKf1QecrPjzyP0ZcgSg1grLslJOI+gI1ejqqKhnNXH15RnSxbh732c0IOVABxNdFAHlkjwVGbLxaZKKKhcIUHngesWYvqwQYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mxde.zte.com.cn (unknown [10.35.20.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VFZxL1t7mzBmrW;
+	Thu, 11 Apr 2024 18:02:14 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VFZxF0sXYz63t5D;
+	Thu, 11 Apr 2024 18:02:09 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VFZx42y5Nz6G42d;
+	Thu, 11 Apr 2024 18:02:00 +0800 (CST)
+Received: from xaxapp03.zte.com.cn ([10.88.97.17])
+	by mse-fl2.zte.com.cn with SMTP id 43BA1qk5093269;
+	Thu, 11 Apr 2024 18:01:52 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 11 Apr 2024 18:01:54 +0800 (CST)
+Date: Thu, 11 Apr 2024 18:01:54 +0800 (CST)
+X-Zmail-TransId: 2afa6617b512ffffffffdde-7c4e3
+X-Mailer: Zmail v1.0
+Message-ID: <20240411180154691lpBFKqpsU4tf1vugPPIqq@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411082156.6613cf4dc03129ea1183ab88@kernel.org>
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <edumazet@google.com>, <davem@davemloft.net>, <kuba@kernel.org>
+Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY1XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 43BA1qk5093269
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6617B525.000/4VFZxL1t7mzBmrW
 
-> > > OK, then I'll push this to for-next at this moment.
-> > > Please share if you have a good idea for the batch interface which can be
-> > > backported. I guess it should involve updating userspace changes too.
-> > 
-> > Did you (or anyone else) need anything more from me on this one so that it
-> > can be pushed? I provided some benchmark numbers but happy to provide
-> > anything else that may be required.
-> 
-> Yeah, if you can update with the result, it looks better to me.
-> Or, can I update the description?
+From: hepeilin <he.peilin@zte.com.cn>
+Introduce a tracepoint for icmp_send, which can help users to get more
+detail information conveniently when icmp abnormal events happen.
 
-Sure, please feel free to update the description yourself.
+1. Giving an usecase example:
+=============================
+When an application experiences packet loss due to an unreachable UDP
+destination port, the kernel will send an exception message through the
+icmp_send function. By adding a trace point for icmp_send, developers or
+system administrators can obtain detailed information about the UDP
+packet loss, including the type, code, source address, destination address,
+source port, and destination port. This facilitates the trouble-shooting
+of UDP packet loss issues especially for those network-service
+applications.
 
-Jon.
+2. Operation Instructions:
+==========================
+Switch to the tracing directory.
+        cd /sys/kernel/tracing
+Filter for destination port unreachable.
+        echo "type==3 && code==3" > events/icmp/icmp_send/filter
+Enable trace event.
+        echo 1 > events/icmp/icmp_send/enable
 
-> 
-> Thank you,
-> 
-> > 
-> > Thanks!
-> > 
-> > Jon.
-> > 
-> > > 
-> > > Thank you!
-> > > 
-> > > > >
-> > > > > So I hope you can reconsider and accept improvements in this patch,
-> > > > > while Jonathan will keep working on even better final solution.
-> > > > > Thanks!
-> > > > >
-> > > > > > I look forward to your formalized results :)
-> > > > > >
-> > > > 
-> > > > BTW, as part of BPF selftests, we have a multi-attach test for uprobes
-> > > > and USDTs, reporting attach/detach timings:
-> > > > $ sudo ./test_progs -v -t uprobe_multi_test/bench
-> > > > bpf_testmod.ko is already unloaded.
-> > > > Loading bpf_testmod.ko...
-> > > > Successfully loaded bpf_testmod.ko.
-> > > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
-> > > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
-> > > > test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
-> > > > test_bench_attach_uprobe: attached in   0.120s
-> > > > test_bench_attach_uprobe: detached in   0.092s
-> > > > #400/5   uprobe_multi_test/bench_uprobe:OK
-> > > > test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
-> > > > test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
-> > > > test_bench_attach_usdt:PASS:usdt_count 0 nsec
-> > > > test_bench_attach_usdt: attached in   0.124s
-> > > > test_bench_attach_usdt: detached in   0.064s
-> > > > #400/6   uprobe_multi_test/bench_usdt:OK
-> > > > #400     uprobe_multi_test:OK
-> > > > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > > > Successfully unloaded bpf_testmod.ko.
-> > > > 
-> > > > So it should be easy for Jonathan to validate his changes with this.
-> > > > 
-> > > > > > Thank you,
-> > > > > >
-> > > > > > >
-> > > > > > > Jon.
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Thank you,
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > BTW, how did you measure the overhead? I think spinlock overhead
-> > > > > > > > > > will depend on how much lock contention happens.
-> > > > > > > > > >
-> > > > > > > > > > Thank you,
-> > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
-> > > > > > > > > > >
-> > > > > > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > > > > > > > > > > ---
-> > > > > > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> > > > > > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > > > > > > > > > >
-> > > > > > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > > > > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
-> > > > > > > > > > > --- a/kernel/events/uprobes.c
-> > > > > > > > > > > +++ b/kernel/events/uprobes.c
-> > > > > > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-> > > > > > > > > > >   */
-> > > > > > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> > > > > > > > > > >
-> > > > > > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
-> > > > > > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
-> > > > > > > > > > >
-> > > > > > > > > > >  #define UPROBES_HASH_SZ      13
-> > > > > > > > > > >  /* serialize uprobe->pending_list */
-> > > > > > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> > > > > > > > > > >  {
-> > > > > > > > > > >       struct uprobe *uprobe;
-> > > > > > > > > > >
-> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > > >       uprobe = __find_uprobe(inode, offset);
-> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > > >
-> > > > > > > > > > >       return uprobe;
-> > > > > > > > > > >  }
-> > > > > > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
-> > > > > > > > > > >  {
-> > > > > > > > > > >       struct uprobe *u;
-> > > > > > > > > > >
-> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > > > > >       u = __insert_uprobe(uprobe);
-> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > > > > >
-> > > > > > > > > > >       return u;
-> > > > > > > > > > >  }
-> > > > > > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> > > > > > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> > > > > > > > > > >               return;
-> > > > > > > > > > >
-> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > +     write_lock(&uprobes_treelock);
-> > > > > > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > +     write_unlock(&uprobes_treelock);
-> > > > > > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> > > > > > > > > > >       put_uprobe(uprobe);
-> > > > > > > > > > >  }
-> > > > > > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > > > > >
-> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > > > >       if (n) {
-> > > > > > > > > > >               for (t = n; t; t = rb_prev(t)) {
-> > > > > > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> > > > > > > > > > >                       get_uprobe(u);
-> > > > > > > > > > >               }
-> > > > > > > > > > >       }
-> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > > >  }
-> > > > > > > > > > >
-> > > > > > > > > > >  /* @vma contains reference counter, not the probed instruction. */
-> > > > > > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
-> > > > > > > > > > >       min = vaddr_to_offset(vma, start);
-> > > > > > > > > > >       max = min + (end - start) - 1;
-> > > > > > > > > > >
-> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
-> > > > > > > > > > > +     read_lock(&uprobes_treelock);
-> > > > > > > > > > >       n = find_node_in_range(inode, min, max);
-> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
-> > > > > > > > > > > +     read_unlock(&uprobes_treelock);
-> > > > > > > > > > >
-> > > > > > > > > > >       return !!n;
-> > > > > > > > > > >  }
-> > > > > > > > > > > --
-> > > > > > > > > > > 2.43.0
-> > > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > --
-> > > > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+3. Result View:
+================
+ udp_client_erro-11370   [002] ...s.12   124.728002:
+ icmp_send: icmp_send: type=3, code=3.
+ From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+ skbaddr=00000000589b167a
+
+v4->v5:
+Some fixes according to
+https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
+1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
+
+v3->v4:
+Some fixes according to
+https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
+1.Add legality check for UDP header in SKB.
+2.Target this patch for net-next.
+
+Changelog
+========
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
+1. Change the tracking directory to/sys/kernel/tracking.
+2. Adjust the layout of the TP-STRUCT_entry parameter structure.
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
+1. adjust the trace_icmp_send() to more protocols than UDP.
+2. move the calling of trace_icmp_send after sanity checks
+in __icmp_send().
+
+Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
+Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+---
+ include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
+ net/ipv4/icmp.c             |  4 +++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 include/trace/events/icmp.h
+
+diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+new file mode 100644
+index 000000000..7d5190f48
+--- /dev/null
++++ b/include/trace/events/icmp.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icmp
++
++#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICMP_H
++
++#include <linux/icmp.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(icmp_send,
++
++		TP_PROTO(const struct sk_buff *skb, int type, int code),
++
++		TP_ARGS(skb, type, code),
++
++		TP_STRUCT__entry(
++			__field(const void *, skbaddr)
++			__field(int, type)
++			__field(int, code)
++			__array(__u8, saddr, 4)
++			__array(__u8, daddr, 4)
++			__field(__u16, sport)
++			__field(__u16, dport)
++			__field(unsigned short, ulen)
++		),
++
++		TP_fast_assign(
++			struct iphdr *iph = ip_hdr(skb);
++			int proto_4 = iph->protocol;
++			__be32 *p32;
++
++			__entry->skbaddr = skb;
++			__entry->type = type;
++			__entry->code = code;
++
++			struct udphdr *uh = udp_hdr(skb);
++			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
++				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
++				__entry->sport = 0;
++				__entry->dport = 0;
++				__entry->ulen = 0;
++			} else {
++				__entry->sport = ntohs(uh->source);
++				__entry->dport = ntohs(uh->dest);
++				__entry->ulen = ntohs(uh->len);
++			}
++
++			p32 = (__be32 *) __entry->saddr;
++			*p32 = iph->saddr;
++
++			p32 = (__be32 *) __entry->daddr;
++			*p32 = iph->daddr;
++		),
++
++		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
++			__entry->type, __entry->code,
++			__entry->saddr, __entry->sport, __entry->daddr,
++			__entry->dport, __entry->ulen, __entry->skbaddr)
++);
++
++#endif /* _TRACE_ICMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+\ No newline at end of file
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index b71b836cc..2081fee18 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -92,6 +92,8 @@
+ #include <net/inet_common.h>
+ #include <net/ip_fib.h>
+ #include <net/l3mdev.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/icmp.h>
+
+ /*
+  *	Build xmit assembly blocks
+@@ -766,6 +768,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+ 	if (!fl4.saddr)
+ 		fl4.saddr = htonl(INADDR_DUMMY);
+
++	trace_icmp_send(skb_in, type, code);
++
+ 	icmp_push_reply(&icmp_param, &fl4, &ipc, &rt);
+ ende:
+ 	ip_rt_put(rt);
+-- 
+2.17.1
