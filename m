@@ -1,108 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214E969D31;
-	Thu, 11 Apr 2024 01:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3AE23BF;
+	Thu, 11 Apr 2024 01:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712798788; cv=none; b=MQx65/s/1ZtBIQdKMnu37gCx9s34w29b70KOMR0JPheoqJZ5SU9lE7wlbAu5AmgpDn7YhaPhqE8ZxT616HmuNUrUt1DtXxXDFZJ/SZlkLmi561fIclE2ELoSNub4Hro9OeU5tdKOW7JnONLx2iR3kjJ3m1LKdI9ecJ/DVxiVxDM=
+	t=1712800128; cv=none; b=WwKB0axrncp5Yy4CaMwP7omrwzc7mYSVjN4CvpUQ86ner7DVvHzduHmC68jj9aZB4gK/409GhKNOgylWpKQnhiPH6ICu7BWM+y3LqV1SS8o0Hqo+kZnWGpDSsFK4TPTJF4Q7Iv3Lxk/LKZD5056o9ZMAqI17I/O3cqMTosBnmQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712798788; c=relaxed/simple;
-	bh=IE1IK2OKn7/pafSQ0ncO+HLzuopsT1q+/33iYZS7wTg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=nYEiH7bqDkmi89z1AEDMBS5Ho34ySH9sphhp9CJQyu94F+Pb5QT+y096ijZZJIfpzsCWA9wAdeT8twgVOmjoRkXJs0LAd+ZcyePm69EJPey54Rni3sJPfuFS7mWGEtJ0z2WEy/hqkS2FVU4MCNTQ2O2zsgdI7drKUbwgNnrLA78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864EEC32796;
-	Thu, 11 Apr 2024 01:26:27 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rujFR-00000000nZP-43Mh;
-	Wed, 10 Apr 2024 21:29:05 -0400
-Message-ID: <20240411012905.828215645@goodmis.org>
-User-Agent: quilt/0.67
-Date: Wed, 10 Apr 2024 21:25:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>
-Subject: [PATCH v2 11/11] tracing: Update function tracing output for previous boot buffer
-References: <20240411012541.285904543@goodmis.org>
+	s=arc-20240116; t=1712800128; c=relaxed/simple;
+	bh=N4j2LsCt6jsQg4mJYqpEIoEwMWFBhNHEMtvgTrBl+5Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dRcdEL206CR4Dk8kzewb9FamkMhVhEP/t4TuwC3TnuBfindg0hTkmFxDWGg2bY1QUmLSa9W8sNu24q7dQaI1+XXTJ7XZl5wJ+R5DaFDbGmJwD9gd+HDnsYVExVIMr/9Z+o+8cZr3HstyWxcZrRZxw2mdlPRFaaFOMCRS8UNi7wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VFMyj57fzz1wr2Z;
+	Thu, 11 Apr 2024 09:47:41 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6F44C1400D9;
+	Thu, 11 Apr 2024 09:48:37 +0800 (CST)
+Received: from [10.67.111.172] (10.67.111.172) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 11 Apr 2024 09:48:37 +0800
+Message-ID: <781a6c75-2783-c459-1b82-c85419898a17@huawei.com>
+Date: Thu, 11 Apr 2024 09:48:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] ftrace: Fix use-after-free issue in ftrace_location()
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+	<mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+ <20240410112823.1d084c8f@gandalf.local.home>
+From: Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20240410112823.1d084c8f@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 2024/4/10 23:28, Steven Rostedt wrote:
+> On Mon, 1 Apr 2024 20:55:43 +0800
+> Zheng Yejian <zhengyejian1@huawei.com> wrote:
+> 
+>> KASAN reports a bug:
+>>
+>>    BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
+>>    Read of size 8 at addr ffff888141d40010 by task insmod/424
+>>    CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+ #213
+>>    [...]
+>>    Call Trace:
+>>     <TASK>
+>>     dump_stack_lvl+0x68/0xa0
+>>     print_report+0xcf/0x610
+>>     kasan_report+0xb5/0xe0
+>>     ftrace_location+0x90/0x120
+>>     register_kprobe+0x14b/0xa40
+>>     kprobe_init+0x2d/0xff0 [kprobe_example]
+>>     do_one_initcall+0x8f/0x2d0
+>>     do_init_module+0x13a/0x3c0
+>>     load_module+0x3082/0x33d0
+>>     init_module_from_file+0xd2/0x130
+>>     __x64_sys_finit_module+0x306/0x440
+>>     do_syscall_64+0x68/0x140
+>>     entry_SYSCALL_64_after_hwframe+0x71/0x79
+>>
+>> The root cause is that when lookup_rec() is lookuping ftrace record of
+>> an address in some module, and at the same time in ftrace_release_mod(),
+>> the memory that saving ftrace records has been freed as that module is
+>> being deleted.
+>>
+>>    register_kprobes() {
+>>      check_kprobe_address_safe() {
+>>        arch_check_ftrace_location() {
+>>          ftrace_location() {
+>>            lookup_rec()  // access memory that has been freed by
+>>                          // ftrace_release_mod() !!!
+>>
+>> It seems that the ftrace_lock is required when lookuping records in
+>> ftrace_location(), so is ftrace_location_range().
+>>
+>> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+>> ---
+>>   kernel/trace/ftrace.c | 28 ++++++++++++++++++----------
+>>   1 file changed, 18 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>> index da1710499698..838d175709c1 100644
+>> --- a/kernel/trace/ftrace.c
+>> +++ b/kernel/trace/ftrace.c
+>> @@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>>   }
+>>   
+>>   /**
+>> - * ftrace_location_range - return the first address of a traced location
+>> + * ftrace_location_range_locked - return the first address of a traced location
+>>    *	if it touches the given ip range
+>>    * @start: start of range to search.
+>>    * @end: end of range to search (inclusive). @end points to the last byte
+>> @@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>>    * that is either a NOP or call to the function tracer. It checks the ftrace
+>>    * internal tables to determine if the address belongs or not.
+>>    */
+>> -unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>> +static unsigned long ftrace_location_range_locked(unsigned long start, unsigned long end)
+>>   {
+>>   	struct dyn_ftrace *rec;
+>>   
+>> @@ -1603,6 +1603,17 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>>   	return 0;
+>>   }
+>>   
+>> +unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>> +{
+>> +	unsigned long loc;
+>> +
+>> +	mutex_lock(&ftrace_lock);
+>> +	loc = ftrace_location_range_locked(start, end);
+>> +	mutex_unlock(&ftrace_lock);
+> 
+> I'm not so sure we can take a mutex in all places that call this function.
+> 
+> What about using RCU?
+> 
+> 	rcu_read_lock();
+> 	loc = ftrace_location_range_rcu(start, end);
+> 	rcu_read_unlock();
+> 
+> Then in ftrace_release_mod() we can have:
+> 
+>   out_unlock:
+> 	mutex_unlock();
+> 
+> 	/* Need to synchronize with ftrace_location() */
+> 	if (tmp_pages)
+> 		synchronize_rcu();
+> 
+> -- Steve
 
-For a persistent ring buffer that is saved across boots, if function
-tracing was performed in the previous boot, it only saves the address of
-the functions and uses "%pS" to print their names. But the current boot,
-those functions may be in different locations. The persistent meta-data
-saves the text delta between the two boots and can be used to find the
-address of the saved function of where it is located in the current boot.
+Yes, it is better to use RCU, I'll do it in v2.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+--
+Thanks
+Zheng Yejian
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index d8b302d01083..b9d2c64c0648 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -990,8 +990,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
- }
- 
- static void print_fn_trace(struct trace_seq *s, unsigned long ip,
--			   unsigned long parent_ip, int flags)
-+			   unsigned long parent_ip, long delta, int flags)
- {
-+	ip += delta;
-+	parent_ip += delta;
-+
- 	seq_print_ip_sym(s, ip, flags);
- 
- 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
-@@ -1009,7 +1012,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, iter->ent);
- 
--	print_fn_trace(s, field->ip, field->parent_ip, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
- 	trace_seq_putc(s, '\n');
- 
- 	return trace_handle_return(s);
-@@ -1674,7 +1677,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, iter->ent);
- 
--	print_fn_trace(s, field->ip, field->parent_ip, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
- 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
- 	trace_print_time(s, iter,
- 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
--- 
-2.43.0
-
+> 
+> 
+>> +
+>> +	return loc;
+>> +}
+>> +
+>>   /**
+>>    * ftrace_location - return the ftrace location
+>>    * @ip: the instruction pointer to check
+>> @@ -1614,25 +1625,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>>    */
+>>   unsigned long ftrace_location(unsigned long ip)
+>>   {
+>> -	struct dyn_ftrace *rec;
+>> +	unsigned long loc;
+>>   	unsigned long offset;
+>>   	unsigned long size;
+>>   
+>> -	rec = lookup_rec(ip, ip);
+>> -	if (!rec) {
+>> +	loc = ftrace_location_range(ip, ip);
+>> +	if (!loc) {
+>>   		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
+>>   			goto out;
+>>   
+>>   		/* map sym+0 to __fentry__ */
+>>   		if (!offset)
+>> -			rec = lookup_rec(ip, ip + size - 1);
+>> +			loc = ftrace_location_range(ip, ip + size - 1);
+>>   	}
+>>   
+>> -	if (rec)
+>> -		return rec->ip;
+>> -
+>>   out:
+>> -	return 0;
+>> +	return loc;
+>>   }
+>>   
+>>   /**
+> 
 
