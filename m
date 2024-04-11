@@ -1,139 +1,274 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 404BF79B8E;
-	Thu, 11 Apr 2024 15:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3538F13FF6;
+	Thu, 11 Apr 2024 16:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712851150; cv=none; b=aFVyLzOu67pqCFFqm//MCIPBlBsDM9ms224SmMfU/n26eXQGeQtVQ8r45+5RoMY8CranyffVmnjjRUyTOwevk3C0PPQtaRagwH6R5e7xCwkRYKf/bedfkhstyPYYQg1sUdZluZVUnHSebUYKgOlGtoqxeufkwkXcWLiHlZodP1c=
+	t=1712851307; cv=none; b=db/Jd2MZXkzMYwRYk/OubYRlhFZPo7kGeTnHDDIizJxboHWEWI9orsm6Ia8zkLgkfOo3P+v287X3mNAUtKARSI+IynsvniReWrSYc+b5+FAmwKmB1RjXD+aMykgw3IbQi2XN6wh/f1obEGNHpEVZO3sL6QWm1GHH+IwNdBENCQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712851150; c=relaxed/simple;
-	bh=1cxH4Uf9JTRKo/wgayt4O34eDNtZBOzBmCb5Kc5mcNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XBUaeA0fzNc1t+F1pwJOanbSyCAsMpXXo/nnqJwqRg++TvOTOVDs6PRY/TCPwdjFUES6v2qWOWyxVtNixmqiyQXFnKjOelCb8aL5mj5GuEm/0rV1QytS7dlgcrkfwMJjNOWzmRl7DtCa5EiG5ZB653TzGjrXCJ5yLyHunZo5ltQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DQYh+KCS; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1712851307; c=relaxed/simple;
+	bh=VM+mAcmUT4ST1GIPe3Ume4vUEU6bbRVCEENqNvTxra8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iT1AvsA0wHG4e4fZzz39LTA9QFFV48/19qrNo2ST+HKepQXGDWkeUYnECDLvHigzNWBy66101LUywjlJmi3nEMlBFd2FSvKv61D4mP2T6keFAlDcCNgTdaUPoByr7wwfaZsS/AHIM/7iIohJDlnimixSirBoHB35swgs4pTfL8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5KB0xj3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DQYh+KCS"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4233720EB6E9;
-	Thu, 11 Apr 2024 08:59:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4233720EB6E9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1712851143;
-	bh=PV+e+azs9UB18fleivcFVR2+EgH1ys27iJCSFmbhMV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DQYh+KCScm5LH79cKmU6VK0GpxFKMMOCVkEz0xOU31E0GX3CUgqYhED9dRIO7LnTw
-	 ZO+DchNbeF+qd6Eor07hhGx17Fm7Sz3cMpXDbiDSxg+orssHXez80nMZLl+leMWGzY
-	 /fAQWr/7GjCeH+dV/O92Xj5kNTPgZOAcElXGUX7Y=
-Date: Thu, 11 Apr 2024 08:58:58 -0700
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Copying TLS/user register data per perf-sample?
-Message-ID: <20240411155858.GA452-beaub@linux.microsoft.com>
-References: <20240404192641.GA2628-beaub@linux.microsoft.com>
- <20240410220628.609188857f8c93e33e48d12a@kernel.org>
- <20240410153542.GA460-beaub@linux.microsoft.com>
- <20240412005519.e7b664950ac776993da348bd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5KB0xj3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01453C072AA;
+	Thu, 11 Apr 2024 16:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712851305;
+	bh=VM+mAcmUT4ST1GIPe3Ume4vUEU6bbRVCEENqNvTxra8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=T5KB0xj3HoFt9efx6BzndmtI3wUUVJ9ztI+I33npb3JgsK1m3GQjgUJO6fe/2R1wU
+	 FuB2asS6mrBhxBwPzy5htiS2m2wnv8eqma76LMzVwKISSrCK3Xg/d5S95sPkEa9qP7
+	 MXdL8lqp730Eiez5zMg9oq9NYYTmlxQMyXoc24NqmjGwBNdRdxHwvCGtqJxBIUl2gd
+	 pKJMq2ohY0+FBwK5EzR5wecUfcrhOTRUjZcd13mr7RitGEoeHuc3D3av9oQx8+cm0K
+	 5qrVmeyilIq0VolT6GkIVKnWLkKVZyNdh9/yups4+lotbZFfNI7xkVBG42jxuPH+iF
+	 iuvzyfbgeFS+w==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v4 00/15] mm: jit/text allocator
+Date: Thu, 11 Apr 2024 19:00:36 +0300
+Message-ID: <20240411160051.2093261-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412005519.e7b664950ac776993da348bd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 12, 2024 at 12:55:19AM +0900, Masami Hiramatsu wrote:
-> On Wed, 10 Apr 2024 08:35:42 -0700
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > On Wed, Apr 10, 2024 at 10:06:28PM +0900, Masami Hiramatsu wrote:
-> > > On Thu, 4 Apr 2024 12:26:41 -0700
-> > > Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> > > 
-> > > > Hello,
-> > > > 
-> > > > I'm looking into the possibility of capturing user data that is pointed
-> > > > to by a user register (IE: fs/gs for TLS on x86/64) for each sample via
-> > > > perf_events.
-> > > > 
-> > > > I was hoping to find a way to do this similar to PERF_SAMPLE_STACK_USER.
-> > > > I think it could even use roughly the same ABI in the perf ring buffer.
-> > > > Or it may be possible by some kprobe linked to the perf sample function.
-> > > > 
-> > > > This would allow a profiler to collect TLS (or other values) on x64. In
-> > > > the Open Telemetry profiling SIG [1], we are trying to find a fast way
-> > > > to grab a tracing association quickly on a per-thread basis. The team
-> > > > at Elastic has a bespoke way to do this [2], however, I'd like to see a
-> > > > more general way to achieve this. The folks I've been talking with seem
-> > > > open to the idea of just having a TLS value for this we could capture
-> > > > upon each sample. We could then just state, Open Telemetry SDKs should
-> > > > have a TLS value for span correlation. However, we need a way to sample
-> > > > the TLS value(s) when a sampling event is generated.
-> > > > 
-> > > > Is this already possible via some other means? It'd be great to be able
-> > > > to do this directly at the perf_event sample via the ABI or a probe.
-> > > > 
-> > > 
-> > > Have you tried to use uprobes? It should be able to access user-space
-> > > registers including fs/gs.
-> > > 
-> > 
-> > We need to get fs/gs during a sample interrupt from perf. If the sample
-> > interrupt lands during kernel code (IE: syscall) we would also like to
-> > get these TLS values when in process context.
-> 
-> OK, those are not directly accessible from pt_regs.
-> 
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-Yeah, it's a per-arch thread attribute.
+Hi,
 
-> > 
-> > I have some patches into the kernel to make this possible via
-> > perf_events that works well, however, I don't want to reinvent the wheel
-> > if there is some way to get these via perf samples already.
-> 
-> I would like to see it. I think it is possible to introduce a helper
-> to get a base address of user TLS for probe events, and start supporting
-> from x86.
-> 
+Since v3 I looked into making execmem more of an utility toolbox, as we
+discussed at LPC with Mark Rutland, but it was getting more hairier than
+having a struct describing architecture constraints and a type identifying
+the consumer of execmem.
 
-For sure, I'm hoping the patches start the right conversations.
+And I do think that having the description of architecture constraints for
+allocations of executable memory in a single place is better that having it
+spread all over the place.
 
-> > 
-> > In OTel, we are trying to attribute samples to transactions that are
-> > occurring. So the TLS fetch has to be aligned exactly with the sample.
-> > You can do this via eBPF when it's available, however, we have
-> > environments where eBPF is not available.
-> > 
-> > It's sounding like to do this properly without eBPF a new feature would
-> > be required. If so, I do have some patches I can share in a bit as an
-> > RFC.
-> 
-> It is better to be shared in RFC stage, so that we can discuss it from
-> the direction level.
-> 
+The patches available via git:
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v4
 
-Agree, it could be that having the ability to run a probe on sample may
-be a better option. Not sure.
+v4 changes:
+* rebase on v6.9-rc2
+* rename execmem_params to execmem_info and execmem_arch_params() to
+  execmem_arch_setup()
+* use single execmem_alloc() API instead of execmem_{text,data}_alloc() (Song)
+* avoid extra copy of execmem parameters (Rick)
+* run execmem_init() as core_initcall() except for the architectures that
+  may allocated text really early (currently only x86) (Will)
+* add acks for some of arm64 and riscv changes, thanks Will and Alexandre
+* new commits:
+  - drop call to kasan_alloc_module_shadow() on arm64 because it's not
+    needed anymore
+  - rename MODULE_START to MODULES_VADDR on MIPS
+  - use CONFIG_EXECMEM instead of CONFIG_MODULES on powerpc as per Christophe:
+    https://lore.kernel.org/all/79062fa3-3402-47b3-8920-9231ad05e964@csgroup.eu/
 
-Thanks,
--Beau
+v3: https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org
+* add type parameter to execmem allocation APIs
+* remove BPF dependency on modules
 
-> Thank you,
-> 
-> > 
-> > Thanks,
-> > -Beau
-> > 
-> > > Thank you,
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+v2: https://lore.kernel.org/all/20230616085038.4121892-1-rppt@kernel.org
+* Separate "module" and "others" allocations with execmem_text_alloc()
+and jit_text_alloc()
+* Drop ROX entailment on x86
+* Add ack for nios2 changes, thanks Dinh Nguyen
+
+v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
+
+= Cover letter from v1 (sligtly updated) =
+
+module_alloc() is used everywhere as a mean to allocate memory for code.
+
+Beside being semantically wrong, this unnecessarily ties all subsystmes
+that need to allocate code, such as ftrace, kprobes and BPF to modules and
+puts the burden of code allocation to the modules code.
+
+Several architectures override module_alloc() because of various
+constraints where the executable memory can be located and this causes
+additional obstacles for improvements of code allocation.
+
+A centralized infrastructure for code allocation allows allocations of
+executable memory as ROX, and future optimizations such as caching large
+pages for better iTLB performance and providing sub-page allocations for
+users that only need small jit code snippets.
+
+Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
+proposed execmem_alloc [2], but both these approaches were targeting BPF
+allocations and lacked the ground work to abstract executable allocations
+and split them from the modules core.
+
+Thomas Gleixner suggested to express module allocation restrictions and
+requirements as struct mod_alloc_type_params [3] that would define ranges,
+protections and other parameters for different types of allocations used by
+modules and following that suggestion Song separated allocations of
+different types in modules (commit ac3b43283923 ("module: replace
+module_layout with module_memory")) and posted "Type aware module
+allocator" set [4].
+
+I liked the idea of parametrising code allocation requirements as a
+structure, but I believe the original proposal and Song's module allocator
+was too module centric, so I came up with these patches.
+
+This set splits code allocation from modules by introducing execmem_alloc()
+and and execmem_free(), APIs, replaces call sites of module_alloc() and
+module_memfree() with the new APIs and implements core text and related
+allocations in a central place.
+
+Instead of architecture specific overrides for module_alloc(), the
+architectures that require non-default behaviour for text allocation must
+fill execmem_info structure and implement execmem_arch_setup() that returns
+a pointer to that structure. If an architecture does not implement
+execmem_arch_setup(), the defaults compatible with the current
+modules::module_alloc() are used.
+
+Since architectures define different restrictions on placement,
+permissions, alignment and other parameters for memory that can be used by
+different subsystems that allocate executable memory, execmem APIs
+take a type argument, that will be used to identify the calling subsystem
+and to allow architectures to define parameters for ranges suitable for that
+subsystem.
+
+The new infrastructure allows decoupling of BPF, kprobes and ftrace from
+modules, and most importantly it paves the way for ROX allocations for
+executable memory.
+
+[1] https://lore.kernel.org/lkml/20201120202426.18009-1-rick.p.edgecombe@intel.com/
+[2] https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
+[3] https://lore.kernel.org/all/87v8mndy3y.ffs@tglx/
+[4] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
+
+
+Mike Rapoport (IBM) (15):
+  arm64: module: remove uneeded call to kasan_alloc_module_shadow()
+  mips: module: rename MODULE_START to MODULES_VADDR
+  nios2: define virtual address space for modules
+  module: make module_memory_{alloc,free} more self-contained
+  mm: introduce execmem_alloc() and execmem_free()
+  mm/execmem, arch: convert simple overrides of module_alloc to execmem
+  mm/execmem, arch: convert remaining overrides of module_alloc to
+    execmem
+  arm64: extend execmem_info for generated code allocations
+  riscv: extend execmem_params for generated code allocations
+  powerpc: extend execmem_params for kprobes allocations
+  arch: make execmem setup available regardless of CONFIG_MODULES
+  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
+  powerpc: use CONFIG_EXECMEM instead of CONFIG_MODULES where appropiate
+  kprobes: remove dependency on CONFIG_MODULES
+  bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
+
+ arch/Kconfig                         |   8 +-
+ arch/arm/kernel/module.c             |  34 -------
+ arch/arm/mm/init.c                   |  40 ++++++++
+ arch/arm64/kernel/module.c           | 126 ------------------------
+ arch/arm64/kernel/probes/kprobes.c   |   7 --
+ arch/arm64/mm/init.c                 | 136 ++++++++++++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c        |  11 ---
+ arch/loongarch/kernel/module.c       |   6 --
+ arch/loongarch/mm/init.c             |  20 ++++
+ arch/mips/include/asm/pgtable-64.h   |   4 +-
+ arch/mips/kernel/module.c            |  10 --
+ arch/mips/mm/fault.c                 |   4 +-
+ arch/mips/mm/init.c                  |  22 +++++
+ arch/nios2/include/asm/pgtable.h     |   5 +-
+ arch/nios2/kernel/module.c           |  20 ----
+ arch/nios2/mm/init.c                 |  19 ++++
+ arch/parisc/kernel/module.c          |  12 ---
+ arch/parisc/mm/init.c                |  22 ++++-
+ arch/powerpc/Kconfig                 |   2 +-
+ arch/powerpc/include/asm/kasan.h     |   2 +-
+ arch/powerpc/kernel/head_8xx.S       |   4 +-
+ arch/powerpc/kernel/head_book3s_32.S |   6 +-
+ arch/powerpc/kernel/kprobes.c        |  22 +----
+ arch/powerpc/kernel/module.c         |  38 --------
+ arch/powerpc/lib/code-patching.c     |   2 +-
+ arch/powerpc/mm/book3s32/mmu.c       |   2 +-
+ arch/powerpc/mm/mem.c                |  64 ++++++++++++
+ arch/riscv/kernel/module.c           |  12 ---
+ arch/riscv/kernel/probes/kprobes.c   |  10 --
+ arch/riscv/mm/init.c                 |  41 ++++++++
+ arch/riscv/net/bpf_jit_core.c        |  13 ---
+ arch/s390/kernel/ftrace.c            |   4 +-
+ arch/s390/kernel/kprobes.c           |   4 +-
+ arch/s390/kernel/module.c            |  42 +-------
+ arch/s390/mm/init.c                  |  28 ++++++
+ arch/sparc/kernel/module.c           |  30 ------
+ arch/sparc/mm/Makefile               |   2 +
+ arch/sparc/mm/execmem.c              |  25 +++++
+ arch/sparc/net/bpf_jit_comp_32.c     |   8 +-
+ arch/x86/Kconfig                     |   2 +
+ arch/x86/kernel/ftrace.c             |  16 +--
+ arch/x86/kernel/kprobes/core.c       |   4 +-
+ arch/x86/kernel/module.c             |  51 ----------
+ arch/x86/mm/init.c                   |  27 ++++++
+ include/linux/execmem.h              | 132 +++++++++++++++++++++++++
+ include/linux/moduleloader.h         |  15 ---
+ kernel/bpf/Kconfig                   |   2 +-
+ kernel/bpf/core.c                    |   6 +-
+ kernel/kprobes.c                     |  51 +++++-----
+ kernel/module/Kconfig                |   1 +
+ kernel/module/main.c                 | 105 +++++++++-----------
+ kernel/trace/trace_kprobe.c          |  11 +++
+ mm/Kconfig                           |   3 +
+ mm/Makefile                          |   1 +
+ mm/execmem.c                         | 139 +++++++++++++++++++++++++++
+ mm/mm_init.c                         |   2 +
+ 56 files changed, 858 insertions(+), 577 deletions(-)
+ create mode 100644 arch/sparc/mm/execmem.c
+ create mode 100644 include/linux/execmem.h
+ create mode 100644 mm/execmem.c
+
+
+base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+-- 
+2.43.0
