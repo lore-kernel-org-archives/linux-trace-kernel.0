@@ -1,101 +1,118 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E14179AB;
-	Thu, 11 Apr 2024 19:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0B817C6A;
+	Thu, 11 Apr 2024 20:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712864734; cv=none; b=eMYMe8p8esrOaDfeQjvfasmmELdh2rw3euMQiVNqdNwWNvCa/I7E8K5pMAf3uDTVwxtwi7fBETM9Uju/VEfGeVAH4Keob9TkcTmcH3Y1Lf8XdMqXM5EhkDlD+/Nei12RjMF2Um7BOmH6uVZyD2P6df03AZncTXICx0VEN5Nj2ik=
+	t=1712867046; cv=none; b=IIMQHyOHU10964xjmyecUxwErI9ZpY/eI91Ixot2UDdSFdpv7jHg7H1EVzisTVU/dYlZ40M2o8xsbgGbKodzMmeTnLiqtJ82jfN9l8HVZfFgfjUEfZnGvQilGro0G5ufYaRytnNVDDzWRvtSeKYprFsYRKYgXVoIOreu3gtWaPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712864734; c=relaxed/simple;
-	bh=v/kg2zBgjouqNayyfTZ1gQRpaCtsWdHXcAeRYRi8jSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/C0StsHFU9gn6cbnUAiuarWHeNJKZHzZh0nh5/YlN/wuYIJaD0LreWV64zvda5Cp6RcZNbWVKl7kdEATl7Y/cqTC8udR0Mh6ONJkAOQmyEnH3+1Jxv1UCPEqV1sWl+Ui4cxqwfwDmp1uUvG7UiYuWqrPIqlY6J9sYVRCwuaSko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LW4B+RA/; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712867046; c=relaxed/simple;
+	bh=QhmZqca6i4GwVv1XAcc9IrrgLk4abiFm/4Wl1hb/8sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R+q9P76gGpRrO7rGHoG85kD3J5l/gsvHfEkVuueG62aNA6G1C4zDdkYK28ZIkguOhiKEKe/L2kRBWoXddGR7JsHx1jNhYT+6BVMJYCmuyDQLzw+N6Ezu3T5JAWXyM4XpHlGlQ6qQFE41Np724XIXvcodmv8Wzc+ZTMPSxT9ESbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QMCudDh1; arc=none smtp.client-ip=80.12.242.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LW4B+RA/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mF3LgyonzoPiLPggKtlEjI/RAYj7UYB9rpei5Ud65w4=; b=LW4B+RA/mLBikoIkjpMDpYn9oP
-	u2YAB5xmL1D4XkoUv1Ve9gQEIQ0TAvvtWmZldKRQqHURClp6PnA6zwtnlpDI5YcucnvadEV7WunWR
-	b/1Iq8vVt1oArh5tcqicc9Z63IyQeyuWCw9WE0oR/Ok86B2YT082t2bjkyb27tRD8lbretuG1UYwR
-	NEF+joRqo6rwX3adbENZeQaNQlnWdEzjPCwZa5i/q7E286YXArA3Jy82X/wR+QDg69SZaiPqn91EB
-	VhUQK10NXrl7tuNE0LjnU4cJYOYOYsXm/2EOsZ/Hcy9WT5WMB3gVzJ0tiJjB3LXt+twOTdZqPWpdj
-	bhUwFHXw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rv0MS-0000000DwB9-3meA;
-	Thu, 11 Apr 2024 19:45:28 +0000
-Date: Thu, 11 Apr 2024 12:45:28 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 00/15] mm: jit/text allocator
-Message-ID: <Zhg92CoCZmxC5ORi@bombadil.infradead.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QMCudDh1"
+Received: from [192.168.1.18] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id v0xXr4JUAqkPUv0xYrdLi7; Thu, 11 Apr 2024 22:23:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1712867034;
+	bh=v4sYyES8feRyP/YNHQ4HOBPVocESBHJ4p6aCiQtSavI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=QMCudDh14uA+N4VCUkUhGD3njd4hP+Nm+dZR+AHIvomm17cl8lhe+OEOieTe2tfCd
+	 CSwaIP3rEU56ONRmKGTfz4ao9J8mzI9LnAVCKVmuUmS//1uy7UrVyFnucM+4esuv/T
+	 oo+W9WibJxCGBDkR1ETwHvYgNw2WqclnTcAwFFkQCDIl+7Og0xYMtfR6Ce6O1eg8Xj
+	 TprE9TDFAvWBbHv9DdeSW7gw0cL9SbIVgyxiFM+NCmvp8psAM0yRbsFF/z/qBtmvhS
+	 tk8PC6grRGcBt957JhfI8k8joswKv/XfbhH8qO5/V5krr5vlKn6DDKJ1S1Ygk95Ha3
+	 gYl5m7R2w2/OA==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 11 Apr 2024 22:23:54 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <da50e56a-cb59-4815-800d-81742e5294df@wanadoo.fr>
+Date: Thu, 11 Apr 2024 22:23:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411160051.2093261-1-rppt@kernel.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] treewide: Fix common grammar mistake "the the"
+To: Thorsten Blum <thorsten.blum@toblux.com>, robin.murphy@arm.com
+Cc: cocci@inria.fr, dri-devel@lists.freedesktop.org,
+ ecryptfs@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, io-uring@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-afs@lists.infradead.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+ linux-wireless@vger.kernel.org, netfs@lists.linux.dev,
+ speakup@linux-speakup.org, Randy Dunlap <rdunlap@infradead.org>,
+ Tyler Hicks <code@tyhicks.com>
+References: <f2d1bb68-7ab7-4bbf-a1b1-88334ba52bab@arm.com>
+ <20240411171145.535123-3-thorsten.blum@toblux.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240411171145.535123-3-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 07:00:36PM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Le 11/04/2024 à 19:11, Thorsten Blum a écrit :
+> Use `find . -type f -exec sed -i 's/\<the the\>/the/g' {} +` to find all
+> occurrences of "the the" and replace them with a single "the".
 > 
-> Hi,
+> In arch/arm/include/asm/unwind.h replace "the the" with "to the".
 > 
-> Since v3 I looked into making execmem more of an utility toolbox, as we
-> discussed at LPC with Mark Rutland, but it was getting more hairier than
-> having a struct describing architecture constraints and a type identifying
-> the consumer of execmem.
+> Changes only comments and documentation - no code changes.
 > 
-> And I do think that having the description of architecture constraints for
-> allocations of executable memory in a single place is better that having it
-> spread all over the place.
-> 
-> The patches available via git:
-> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v4
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> Reviewed-by: Tyler Hicks <code@tyhicks.com>
 
-I've taken the first 5 patches through modules-next for now to get early
-exposure to testing. Of those I just had minor nit feedback on the 5th,
-but the rest look good.
+...
 
-Let's wait for review for the rest of the patches 6-15.
+> --- a/drivers/scsi/isci/host.h
+> +++ b/drivers/scsi/isci/host.h
+> @@ -244,7 +244,7 @@ enum sci_controller_states {
+>   	SCIC_INITIALIZED,
+>   
+>   	/**
+> -	 * This state indicates the the controller is in the process of becoming
 
-  Luis
+maybe: that the?
+
+> +	 * This state indicates the controller is in the process of becoming
+>   	 * ready (i.e. starting).  In this state no new IO operations are permitted.
+>   	 * This state is entered from the INITIALIZED state.
+>   	 */
+
+...
+
+> diff --git a/io_uring/kbuf.c b/io_uring/kbuf.c
+> index 3aa16e27f509..503244e8470a 100644
+> --- a/io_uring/kbuf.c
+> +++ b/io_uring/kbuf.c
+> @@ -731,7 +731,7 @@ struct io_buffer_list *io_pbuf_get_bl(struct io_ring_ctx *ctx,
+>   	 * going away, if someone is trying to be sneaky. Look it up under rcu
+>   	 * so we know it's not going away, and attempt to grab a reference to
+>   	 * it. If the ref is already zero, then fail the mapping. If successful,
+> -	 * the caller will call io_put_bl() to drop the the reference at at the
+> +	 * the caller will call io_put_bl() to drop the reference at at the
+
+Not strictly related to your patch, but "at at".
+
+>   	 * end. This may then safely free the buffer_list (and drop the pages)
+>   	 * at that point, vm_insert_pages() would've already grabbed the
+>   	 * necessary vma references.
+
+...
+
+CJ
+
