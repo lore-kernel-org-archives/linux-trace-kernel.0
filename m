@@ -1,352 +1,268 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89932032C;
-	Thu, 11 Apr 2024 07:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718FF140365;
+	Thu, 11 Apr 2024 08:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820195; cv=none; b=uw8+Y9hc47K0O6npdT6uYcmfDT2WOvhNIonA4c8ubjQMJe/N5gtlCwNEPv1tUSAf/IjA9BxzZbz/JoYcAerwZ4R9TwBIM242RigMAM2oZxHATBfFmHIi+luaBEzJNMxJkIkUeBL3huB1AgXKo+KItx8DFQ2GWb/Zp3RBpXlzsdk=
+	t=1712824920; cv=none; b=qtWzUsSX+HpwKB0IC1x5A1DkO6m2u8UWADK4to95FDyeJAwmic14nYG4eyGl7SpgnhVmwSe4DVDC54NJtst0rfvVIF/wpA62z5xKtadWg3joQ31EsLBgzj69h2/cfrGvyV2u9JrA0swLkN/bssGP/rBa8oifzQ4+7SL3R8xThPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820195; c=relaxed/simple;
-	bh=WSFjSWgl5KqDN5ZgZyPgBqGx2lcCJ9WviU1dVscXejs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B6XDUvMd5E8RznCvJLLDxjo0+ILnsPY5KnFI3YVWJ2OvQLYTQQdUU1mM+/3VRCSrZjNGFZ82ihVDU2Yr8f7N2moHYDbX3fhNh7N1sNURlvQwmItZb16uI0F+Og/K1et5UvafUw72xhd4V+lcN2ydBpTgjov17Vzuz2S7THa+V4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VgLA5OMt; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1712824920; c=relaxed/simple;
+	bh=6DLQjsDEoSjNb9shH07V2fDjm+hPN7/FwwywkB/Dbs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AsOzC6UD7nCrNP0Yw4XwLPdqo7owpfJssYSnsZMQ9HFe0oW4Ob59sy4HUoavfpu4StGWPska0camzyz0Ygf71fiwn4l10+Zi+TQNejkZhLwYZDK9yk2PNdP2B98ZzAqsJ+jEN48OyUK07H4EbM2NexkwtueiSN9Koa5mrf7p88Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSpXMg93; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VgLA5OMt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=fDUwX
-	lrxdpRdpXHmYA1WyCLe3YE4/+fYtphjBIyd0ik=; b=VgLA5OMt4ItPCxhBuZfmX
-	OBpKROPpgs8l2iqSg8B5l6lr+z0hXRtO9xf0G2c56aXtJiK0Hjb5CP78Hps3w/4j
-	tfuyzOKXy40Gqztle9CbsuQVsh/i6D53pvUjhHXp6LBuP8ll5bg+7wmxs7dZQvmr
-	t5WmvZQUnQcSFaqxkw74aw=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wD3fzKujxdmbtAdAw--.22897S2;
-	Thu, 11 Apr 2024 15:22:24 +0800 (CST)
-From: Peilin He <peilinhe2020@163.com>
-To: kerneljasonxing@gmail.com
-Cc: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	fan.yu9@zte.com.cn,
-	he.peilin@zte.com.cn,
-	jiang.xuexin@zte.com.cn,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	liu.chun2@zte.com.cn,
-	mhiramat@kernel.org,
-	netdev@vger.kernel.org,
-	peilinhe2020@163.com,
-	qiu.yutan@zte.com.cn,
-	rostedt@goodmis.org,
-	xu.xin16@zte.com.cn,
-	yang.yang29@zte.com.cn,
-	zhang.yunkai@zte.com.cn
-Subject: Re: Re: Re: Subject: [PATCH net-next v4] net/ipv4: add tracepoint for icmp_send
-Date: Thu, 11 Apr 2024 07:22:22 +0000
-Message-Id: <20240411072222.140326-1-peilinhe2020@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com>
-References: <CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSpXMg93"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a44ad785a44so877089466b.3;
+        Thu, 11 Apr 2024 01:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712824917; x=1713429717; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=r//gg2KSb9Ti8gfST7aix5NRc6L6yFLnnGwq82C2L10=;
+        b=nSpXMg93imPAXb07HTeBndHBTn+xLMUmxEP9WutFbfIoDtI+nZhUxPXEMkE0b4AkCo
+         rsxszotnlAImLoye80yoeiJ8Lx3qsp+stgyrzV+hTYQKdtiL4yj399tCBOxhxe+1EQqG
+         Tw9ZYw+gkbViU4a0SUl7W/8IMuLnOtOOAOTLPKB+kLrLjINya3R2jHh9tPgMy5EnSdeL
+         7VtAuGfQg+R8bACOiEIWZB37+L4y/0OKViBNqt7LtcRMSzGplRl+9IJU/PEGgNEA62hq
+         p5GjAtSWjnSCCZddzRAvU4HLTzzVt543q4AyOWDszfgGH1KoyJ2Q2WGFH7AcJY8U3F8F
+         bCjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712824917; x=1713429717;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r//gg2KSb9Ti8gfST7aix5NRc6L6yFLnnGwq82C2L10=;
+        b=vCtrcRCdXKOXnTGQeplHbwS/jSzix43QBOf18E6QI/ieXXNY/r38gyTUjZx3PfVCgU
+         tcDt91kEe7NTlJ1I2nbfdcKLkjYOKz4cR2dcgGSdNy1fHPYpx8NLYekYLVkzHvG0yEVF
+         99v855UeRfFcMaS6J/HUYx4kbj0zLES5ByfpYlL012EJS2UMPMTgEwJ32iBTyE9s7M30
+         P6gIYSBrYAt2Em5lR4zOczxsfhp1kHBghYKwZFB5CHwWnTetlkNQfW7QZZXSevtKRqd5
+         sPkUEdb+wSEmoINfgxQi3iG7t2Dd7jdAHaCgikVs9I2bINxkALAXldJtm9mtS/k95803
+         8kSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhZeWkY3AYxk+d0DBs5E12q1qb+cB6OUWpcP0QQ8IiqO7bofV6xCmAirO/dr1QuDkrWqxHG3JpxKJcX82ydDUvnBEZoNwp7Shg9X+TyRAL7eVtNWg/oseWBYoMQ8I7dAjiIFgCmwJCOGvqPPr+dx3ONWPN1l80pCfjHl1p75U2ucCD9gMS2azANnVhHSXOYqW1BU6Sjb89FKuZMTz51GDXstWn6sUJ1w==
+X-Gm-Message-State: AOJu0YyovyEBl7kAO3pTP+va/bo7oRId66VqEGvW4gWBbq66wJmnj/vp
+	ly7kzqSmfQAg2trJ/sybj0/YYGyCnO+HOPF5K+T7Kx4FHgm0kKAK
+X-Google-Smtp-Source: AGHT+IGqGgVnhw9T3C2cjrpjiSkw1plCEeVAAkZFNqECee+J0+pkm8IWce7nSX0D0vzHz9Ua82AKyw==
+X-Received: by 2002:a17:906:af1b:b0:a51:9304:19fa with SMTP id lx27-20020a170906af1b00b00a51930419famr2655626ejb.70.1712824916519;
+        Thu, 11 Apr 2024 01:41:56 -0700 (PDT)
+Received: from jonhaslam-mbp.dhcp.thefacebook.com ([2620:10d:c092:400::5:8908])
+        by smtp.gmail.com with ESMTPSA id x26-20020a170906711a00b00a521591ffacsm538312ejj.34.2024.04.11.01.41.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 01:41:55 -0700 (PDT)
+Date: Thu, 11 Apr 2024 09:41:54 +0100
+From: Jonthan Haslam <jonathan.haslam@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	linux-trace-kernel@vger.kernel.org, andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <cxm3f7buumd3vfybbd436zkroskecvyn46rm6pqtdad6rayeog@zzn2u6irogi7>
+References: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+ <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+ <20240327084245.a890ae12e579f0be1902ae4a@kernel.org>
+ <54jakntmdyedadce7yrf6kljcjapbwyoqqt26dnllrqvs3pg7x@itra4a2ikgqw>
+ <20240328091841.ce9cc613db375536de843cfb@kernel.org>
+ <CAEf4BzYCJWXAzdV3q5ex+8hj5ZFCnu5CT=w8eDbZCGqm+CGYOQ@mail.gmail.com>
+ <CAEf4BzbSvMa2+hdTifMKTsNiOL6X=P7eor4LpPKfHM=Y9-71fw@mail.gmail.com>
+ <20240330093631.72273967ba818cb16aeb58b6@kernel.org>
+ <lcc6lnkbfnyr6yjvybckevhzaafvh7jmpse6tnviq5bjar3y6z@yvz6cuzjzrky>
+ <20240411082156.6613cf4dc03129ea1183ab88@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3fzKujxdmbtAdAw--.22897S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWfGFWDJw13Jr1fKrWrJFW8WFg_yoWDXw15pF
-	yUAF1UCr1DJr4UAr1I9w1YqFnFqry8JryUWr1UXw13Cw1Dtr17JFyxtr15Cry8Ar45Krya
-	qF1Ut343Gr15JrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR7rcsUUUUU=
-X-CM-SenderInfo: xshlzxhqkhjiisq6il2tof0z/1tbiYxG9sWV4Hr8W7gAAs6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411082156.6613cf4dc03129ea1183ab88@kernel.org>
 
->> >> >[...]
->> >> >> >I think my understanding based on what Eric depicted differs from =
->you:
->> >> >> >we're supposed to filter out those many invalid cases and only tra=
->ce
->> >> >> >the valid action of sending a icmp, so where to add a new tracepoi=
->nt
->> >> >> >is important instead of adding more checks in the tracepoint itsel=
->f.
->> >> >> >Please refer to what trace_tcp_retransmit_skb() does :)
->> >> >> >
->> >> >> >Thanks,
->> >> >> >Jason
->> >> >> Okay, thank you for your suggestion. In order to avoid filtering ou=
->t
->> >> >> those many invalid cases and only tracing the valid action of sendi=
->ng
->> >> >> a icmp, the next patch will add udd_fail_no_port trancepoint to the
->> >> >> include/trace/events/udp.h. This will solve the problem you mention=
->ed
->> >> >> very well. At this point, only UDP protocol exceptions will be trac=
->ked,
->> >> >> without the need to track them in icmp_send.
->> >> >
->> >> >I'm not against what you did (tracing all the icmp_send() for UDP) in
->> >> >your original patch. I was suggesting that you could put
->> >> >trace_icmp_send() in the right place, then you don't have to check th=
->e
->> >> >possible error condition (like if the skb->head is valid or not, ...)
->> >> >in your trace function.
->> >> >
->> >> >One example that can avoid various checks existing in the
->> >> >__icmp_send() function:
->> >> >diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
->> >> >index e63a3bf99617..2c9f7364de45 100644
->> >> >--- a/net/ipv4/icmp.c
->> >> >+++ b/net/ipv4/icmp.c
->> >> >@@ -767,6 +767,7 @@ void __icmp_send(struct sk_buff *skb_in, int type=
->,
->> >> >int code, __be32 info,
->> >> >        if (!fl4.saddr)
->> >> >                fl4.saddr =3D htonl(INADDR_DUMMY);
->> >> >
->> >> >+       trace_icmp_send(skb_in, type, code);
->> >> >        icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
->> >> > ende
->> >> >        ip_rt_put(rt);
->> >> >
->> >> >If we go here, it means we are ready to send the ICMP skb because
->> >> >we're done extracting the right information in the 'struct sk_buff
->> >> >skb_in'. Simpler and easier, right?
->> >> >
->> >> >Thanks,
->> >> >Jason
->> >>
->> >> I may not fully agree with this viewpoint. When trace_icmp_send is pla=
->ced
->> >> in this position, it cannot guarantee that all skbs in icmp are UDP pr=
->otocols
->> >> (UDP needs to be distinguished based on the proto_4!=3DIPPROTO_UDP con=
->dition),
->> >> nor can it guarantee the legitimacy of udphdr (*uh legitimacy check is=
-> required).
->> >
->> >Of course, the UDP test statement is absolutely needed! Eric
->> >previously pointed this out in the V1 patch thread. I'm not referring
->> >to this one but like skb->head check something like this which exists
->> >in __icmp_send() function. You can see there are so many checks in it
->> >before sending.
->> >
->> >So only keeping the UDP check is enough, I think.
->>
->> The __icmp_send function only checks the IP header, but does not check
->> the UDP header, as shown in the following code snippet:
->>
->> if ((u8 *)iph < skb_in->head ||
->>             (skb_network_header(skb_in) + sizeof(*iph)) >
->>             skb_tail_pointer(skb_in))
->>                 goto out;
->>
->> There is no problem with the IP header check, which does not mean that
->> the UDP header is correct. Therefore, I believe that it is essential to
->> include a legitimacy judgment for the UDP header.
->>
->> Here is an explanation of this code:
->> Firstly, the UDP header (*uh) is extracted from the skb.
->> Then, if the current protocol of the skb is not UDP, or if the address of
->> uh is outside the range of the skb, the source port and destination port
->> will not be resolved, and 0 will be filled in directly.Otherwise,
->> the source port and destination port of the UDP header will be resolved.
->>
->> +       struct udphdr *uh =3D udp_hdr(skb);
->> +       if (proto_4 !=3D IPPROTO_UDP || (u8 *)uh < skb->head ||
->> +           (u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
->
->>From the beginning, I always agree with the UDP check. I was saying if
->you can put the trace_icmp_send() just before icmp_push_reply()[1],
->you could avoid those kinds of checks.
->As I said in the previous email, "only keeping the UDP check is
->enough". So you are right.
->
->[1]
->diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
->index e63a3bf99617..2c9f7364de45 100644
->--- a/net/ipv4/icmp.c
->+++ b/net/ipv4/icmp.c
->@@ -767,6 +767,7 @@ void __icmp_send(struct sk_buff *skb_in, int type,
->int code, __be32 info,
->        if (!fl4.saddr)
->                fl4.saddr =3D htonl(INADDR_DUMMY);
->
->+       trace_icmp_send(skb_in, type, code);
->        icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
-> ende:
->        ip_rt_put(rt);
->
->If we're doing this, trace_icmp_send() can reflect the real action of
->sending an ICMP like trace_tcp_retransmit_skb(). Or else, the trace
->could print some messages but no real ICMP is sent (see those error
->checks). WDYT?
->
->Thanks,
->Jasoin
+> > > OK, then I'll push this to for-next at this moment.
+> > > Please share if you have a good idea for the batch interface which can be
+> > > backported. I guess it should involve updating userspace changes too.
+> > 
+> > Did you (or anyone else) need anything more from me on this one so that it
+> > can be pushed? I provided some benchmark numbers but happy to provide
+> > anything else that may be required.
+> 
+> Yeah, if you can update with the result, it looks better to me.
+> Or, can I update the description?
 
-Yeah, placing trace_icmp_send() before icmp_push_reply() will ensure
-that tracking starts when ICMP messages are sent. The next patch will
-adjust the position of trace_icmp_send() to before icmp_push_reply().
+Sure, please feel free to update the description yourself.
 
-With best wishes
-Peilin He
->
->>
->> With best wishes
->> Peilin He
->>
->> >Thanks,
->> >Jason
->> >
->> >>
->> >> With best wishes
->> >> Peilin He
->> >>
->> >> >>
->> >> >> >> 2.Target this patch for net-next.
->> >> >> >>
->> >> >> >> v2->v3:
->> >> >> >> Some fixes according to
->> >> >> >> https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.loca=
->l.home/
->> >> >> >> 1. Change the tracking directory to/sys/kernel/tracking.
->> >> >> >> 2. Adjust the layout of the TP-STRUCT_entry parameter structure.
->> >> >> >>
->> >> >> >> v1->v2:
->> >> >> >> Some fixes according to
->> >> >> >> https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=3D3DsZtRnKRu_tnUw=
->qHuFQTJvJsv=3D
->> >> >> >-nz1xPDw@mail.gmail.com/
->> >> >> >> 1. adjust the trace_icmp_send() to more protocols than UDP.
->> >> >> >> 2. move the calling of trace_icmp_send after sanity checks
->> >> >> >> in __icmp_send().
->> >> >> >>
->> >> >> >> Signed-off-by: Peilin He<he.peilin@zte.com.cn>
->> >> >> >> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
->> >> >> >> Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
->> >> >> >> Cc: Yang Yang <yang.yang29@zte.com.cn>
->> >> >> >> Cc: Liu Chun <liu.chun2@zte.com.cn>
->> >> >> >> Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
->> >> >> >> ---
->> >> >> >>  include/trace/events/icmp.h | 65 ++++++++++++++++++++++++++++++=
->+++++++
->> >> >> >>  net/ipv4/icmp.c             |  4 +++
->> >> >> >>  2 files changed, 69 insertions(+)
->> >> >> >>  create mode 100644 include/trace/events/icmp.h
->> >> >> >>
->> >> >> >> diff --git a/include/trace/events/icmp.h b/include/trace/events/=
->icmp.h
->> >> >> >> new file mode 100644
->> >> >> >> index 000000000000..7d5190f48a28
->> >> >> >> --- /dev/null
->> >> >> >> +++ b/include/trace/events/icmp.h
->> >> >> >> @@ -0,0 +1,65 @@
->> >> >> >> +/* SPDX-License-Identifier: GPL-2.0 */
->> >> >> >> +#undef TRACE_SYSTEM
->> >> >> >> +#define TRACE_SYSTEM icmp
->> >> >> >> +
->> >> >> >> +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
->> >> >> >> +#define _TRACE_ICMP_H
->> >> >> >> +
->> >> >> >> +#include <linux/icmp.h>
->> >> >> >> +#include <linux/tracepoint.h>
->> >> >> >> +
->> >> >> >> +TRACE_EVENT(icmp_send,
->> >> >> >> +
->> >> >> >> +               TP_PROTO(const struct sk_buff *skb, int type, in=
->t code),
->> >> >> >> +
->> >> >> >> +               TP_ARGS(skb, type, code),
->> >> >> >> +
->> >> >> >> +               TP_STRUCT__entry(
->> >> >> >> +                       __field(const void *, skbaddr)
->> >> >> >> +                       __field(int, type)
->> >> >> >> +                       __field(int, code)
->> >> >> >> +                       __array(__u8, saddr, 4)
->> >> >> >> +                       __array(__u8, daddr, 4)
->> >> >> >> +                       __field(__u16, sport)
->> >> >> >> +                       __field(__u16, dport)
->> >> >> >> +                       __field(unsigned short, ulen)
->> >> >> >> +               ),
->> >> >> >> +
->> >> >> >> +               TP_fast_assign(
->> >> >> >> +                       struct iphdr *iph =3D3D ip_hdr(skb);
->> >> >> >> +                       int proto_4 =3D3D iph->protocol;
->> >> >> >> +                       __be32 *p32;
->> >> >> >> +
->> >> >> >> +                       __entry->skbaddr =3D3D skb;
->> >> >> >> +                       __entry->type =3D3D type;
->> >> >> >> +                       __entry->code =3D3D code;
->> >> >> >> +
->> >> >> >> +                       struct udphdr *uh =3D3D udp_hdr(skb);
->> >> >> >> +                       if (proto_4 !=3D3D IPPROTO_UDP || (u8 *)=
->uh < skb->h=3D
->> >> >> >ead ||
->> >> >> >> +                               (u8 *)uh + sizeof(struct udphdr)=
-> > skb_ta=3D
->> >> >> >il_pointer(skb)) {
->> >> >> >> +                               __entry->sport =3D3D 0;
->> >> >> >> +                               __entry->dport =3D3D 0;
->> >> >> >> +                               __entry->ulen =3D3D 0;
->> >> >> >> +                       } else {
->> >> >> >> +                               __entry->sport =3D3D ntohs(uh->s=
->ource);
->> >> >> >> +                               __entry->dport =3D3D ntohs(uh->d=
->est);
->> >> >> >> +                               __entry->ulen =3D3D ntohs(uh->le=
->n);
->> >> >> >> +                       }
->> >> >> >> +
->> >> >> >> +                       p32 =3D3D (__be32 *) __entry->saddr;
->> >> >> >> +                       *p32 =3D3D iph->saddr;
->> >> >> >> +
->> >> >> >> +                       p32 =3D3D (__be32 *) __entry->daddr;
->> >> >> >> +                       *p32 =3D3D iph->daddr;
->> >> >> >> +               ),
->> >> >> >> +
->> >> >> >> +               TP_printk("icmp_send: type=3D3D%d, code=3D3D%d. =
->>From %pI4:%u =3D
->> >> >> >to %pI4:%u ulen=3D3D%d skbaddr=3D3D%p",
->> >> >> >> +                       __entry->type, __entry->code,
->> >> >> >> +                       __entry->saddr, __entry->sport, __entry-=
->>daddr,
->> >> >> >> +                       __entry->dport, __entry->ulen, __entry->=
->skbaddr)
->> >> >> >> +);
->> >> >> >> +
->> >> >> >> +#endif /* _TRACE_ICMP_H */
->> >> >> >> +
->> >> >> >> +/* This part must be outside protection */
->> >> >> >> +#include <trace/define_trace.h>
->> >> >> >> \ No newline at end of file
->> >> >> >> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
->> >> >> >> index 8cebb476b3ab..224551d75c02 100644
->> >> >> >> --- a/net/ipv4/icmp.c
->> >> >> >> +++ b/net/ipv4/icmp.c
->> >> >> >> @@ -92,6 +92,8 @@
->> >> >> >>  #include <net/inet_common.h>
->> >> >> >>  #include <net/ip_fib.h>
->> >> >> >>  #include <net/l3mdev.h>
->> >> >> >> +#define CREATE_TRACE_POINTS
->> >> >> >> +#include <trace/events/icmp.h>
->> >> >> >>
->> >> >> >>  /*
->> >> >> >>   *     Build xmit assembly blocks
->> >> >> >> @@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int=
-> type, in=3D
->> >> >> >t code, __be32 info,
->> >> >> >>                 }
->> >> >> >>         }
->> >> >> >>
->> >> >> >> +       trace_icmp_send(skb_in, type, code);
->> >> >> >> +
->> >> >> >>         /* Needed by both icmp_global_allow and icmp_xmit_lock *=
->/
->> >> >> >>         local_bh_disable();
->> >> >> >>
->> >> >> >> --
->> >> >> >> 2.25.1
+Jon.
 
+> 
+> Thank you,
+> 
+> > 
+> > Thanks!
+> > 
+> > Jon.
+> > 
+> > > 
+> > > Thank you!
+> > > 
+> > > > >
+> > > > > So I hope you can reconsider and accept improvements in this patch,
+> > > > > while Jonathan will keep working on even better final solution.
+> > > > > Thanks!
+> > > > >
+> > > > > > I look forward to your formalized results :)
+> > > > > >
+> > > > 
+> > > > BTW, as part of BPF selftests, we have a multi-attach test for uprobes
+> > > > and USDTs, reporting attach/detach timings:
+> > > > $ sudo ./test_progs -v -t uprobe_multi_test/bench
+> > > > bpf_testmod.ko is already unloaded.
+> > > > Loading bpf_testmod.ko...
+> > > > Successfully loaded bpf_testmod.ko.
+> > > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__open_and_load 0 nsec
+> > > > test_bench_attach_uprobe:PASS:uprobe_multi_bench__attach 0 nsec
+> > > > test_bench_attach_uprobe:PASS:uprobes_count 0 nsec
+> > > > test_bench_attach_uprobe: attached in   0.120s
+> > > > test_bench_attach_uprobe: detached in   0.092s
+> > > > #400/5   uprobe_multi_test/bench_uprobe:OK
+> > > > test_bench_attach_usdt:PASS:uprobe_multi__open 0 nsec
+> > > > test_bench_attach_usdt:PASS:bpf_program__attach_usdt 0 nsec
+> > > > test_bench_attach_usdt:PASS:usdt_count 0 nsec
+> > > > test_bench_attach_usdt: attached in   0.124s
+> > > > test_bench_attach_usdt: detached in   0.064s
+> > > > #400/6   uprobe_multi_test/bench_usdt:OK
+> > > > #400     uprobe_multi_test:OK
+> > > > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> > > > Successfully unloaded bpf_testmod.ko.
+> > > > 
+> > > > So it should be easy for Jonathan to validate his changes with this.
+> > > > 
+> > > > > > Thank you,
+> > > > > >
+> > > > > > >
+> > > > > > > Jon.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Thank you,
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > BTW, how did you measure the overhead? I think spinlock overhead
+> > > > > > > > > > will depend on how much lock contention happens.
+> > > > > > > > > >
+> > > > > > > > > > Thank you,
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > [0] https://docs.kernel.org/locking/spinlocks.html
+> > > > > > > > > > >
+> > > > > > > > > > > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > > > > > > > > > > ---
+> > > > > > > > > > >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> > > > > > > > > > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > > > > > > > > >
+> > > > > > > > > > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > > > > > > > > > index 929e98c62965..42bf9b6e8bc0 100644
+> > > > > > > > > > > --- a/kernel/events/uprobes.c
+> > > > > > > > > > > +++ b/kernel/events/uprobes.c
+> > > > > > > > > > > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+> > > > > > > > > > >   */
+> > > > > > > > > > >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
+> > > > > > > > > > >
+> > > > > > > > > > > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree access */
+> > > > > > > > > > > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree access */
+> > > > > > > > > > >
+> > > > > > > > > > >  #define UPROBES_HASH_SZ      13
+> > > > > > > > > > >  /* serialize uprobe->pending_list */
+> > > > > > > > > > > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> > > > > > > > > > >  {
+> > > > > > > > > > >       struct uprobe *uprobe;
+> > > > > > > > > > >
+> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > > > +     read_lock(&uprobes_treelock);
+> > > > > > > > > > >       uprobe = __find_uprobe(inode, offset);
+> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > > > > > > >
+> > > > > > > > > > >       return uprobe;
+> > > > > > > > > > >  }
+> > > > > > > > > > > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+> > > > > > > > > > >  {
+> > > > > > > > > > >       struct uprobe *u;
+> > > > > > > > > > >
+> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > > > +     write_lock(&uprobes_treelock);
+> > > > > > > > > > >       u = __insert_uprobe(uprobe);
+> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > > > +     write_unlock(&uprobes_treelock);
+> > > > > > > > > > >
+> > > > > > > > > > >       return u;
+> > > > > > > > > > >  }
+> > > > > > > > > > > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> > > > > > > > > > >       if (WARN_ON(!uprobe_is_active(uprobe)))
+> > > > > > > > > > >               return;
+> > > > > > > > > > >
+> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > > > +     write_lock(&uprobes_treelock);
+> > > > > > > > > > >       rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > > > +     write_unlock(&uprobes_treelock);
+> > > > > > > > > > >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> > > > > > > > > > >       put_uprobe(uprobe);
+> > > > > > > > > > >  }
+> > > > > > > > > > > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> > > > > > > > > > >       min = vaddr_to_offset(vma, start);
+> > > > > > > > > > >       max = min + (end - start) - 1;
+> > > > > > > > > > >
+> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > > > +     read_lock(&uprobes_treelock);
+> > > > > > > > > > >       n = find_node_in_range(inode, min, max);
+> > > > > > > > > > >       if (n) {
+> > > > > > > > > > >               for (t = n; t; t = rb_prev(t)) {
+> > > > > > > > > > > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> > > > > > > > > > >                       get_uprobe(u);
+> > > > > > > > > > >               }
+> > > > > > > > > > >       }
+> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > > > > > > >  }
+> > > > > > > > > > >
+> > > > > > > > > > >  /* @vma contains reference counter, not the probed instruction. */
+> > > > > > > > > > > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+> > > > > > > > > > >       min = vaddr_to_offset(vma, start);
+> > > > > > > > > > >       max = min + (end - start) - 1;
+> > > > > > > > > > >
+> > > > > > > > > > > -     spin_lock(&uprobes_treelock);
+> > > > > > > > > > > +     read_lock(&uprobes_treelock);
+> > > > > > > > > > >       n = find_node_in_range(inode, min, max);
+> > > > > > > > > > > -     spin_unlock(&uprobes_treelock);
+> > > > > > > > > > > +     read_unlock(&uprobes_treelock);
+> > > > > > > > > > >
+> > > > > > > > > > >       return !!n;
+> > > > > > > > > > >  }
+> > > > > > > > > > > --
+> > > > > > > > > > > 2.43.0
+> > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > --
+> > > > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > 
+> > > -- 
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
