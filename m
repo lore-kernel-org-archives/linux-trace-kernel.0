@@ -1,97 +1,165 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797791758E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D3117548;
+	Thu, 11 Apr 2024 15:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849141; cv=none; b=hzyU+nC6smh3fW9WEksD/9ln+5JCZRlerf6lkhyJ278tnp3zxjaPQ3sVXwGk8NCKI5MF4hY/oCukC/uVCJnAHykE91EcOHQ2xrWXF7OiX5cL6xeyrV4bGvWCO3QpAjoDaIscrcTUrArJMPGdtqPHUTBQtaNd9/4v7eaOJUkSyuY=
+	t=1712849395; cv=none; b=mhGxppWH1hsZiYmXp5UVX/e2p4/++HdxOoXnxJsv5ReTaR5HOWJ/ZIlGOUY5tUSj9xpdq1YNZwOd/rJTY+kmGlvJIV13WeDN0LQDjRwrm8SAQsAG8Q7ztS0IBMTL+EwEAYvO6gC+QdXLC4WbIQFc3Ev/Gn2YTegiL53pOHTNVc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849141; c=relaxed/simple;
-	bh=S0tSkli8JleHY8iE9O2afY6bV3mjLC/eVHPCMEho8Ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p4MGeXB5ZJu8SyaVG4mmzetcyoZo97xSFgBibT3pDVz0L7Vbp7CmN46IX8Ui2ZF/OKF+aB7tRpXSFeI0vp3vyjmi7HJyo2KTcIt8VfJielRLZd5Tkchu67ESbwew7qOY+SL8YLagS0zC8dtPj5epNtCThYFAvNKHguX6nxjHdyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U5YRkVIs; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712849395; c=relaxed/simple;
+	bh=Zm/vcpuplR7w6S6FRhzsBkm9DUzxgScoWkdpSq0iFho=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vA6RcGI3fRIgYLSj6C+dPcjm/XHEW3rq+c/kjR/VywBghP0yM+XSyNkna4iIwomR0I/KhZvQNtoJZhEv0o7UNJOg20LGIpKCKxZw4K5emoBpZwod/8dN1IklzNnhkS3jQH3sI0llYmSxV5FFy+mA0ed/RSKd1wBPOAxpfvDSy3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2AIrLuq; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U5YRkVIs"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e2ac1c16aso8414201a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:25:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2AIrLuq"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ecee1f325bso7073856b3a.2;
+        Thu, 11 Apr 2024 08:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712849138; x=1713453938; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CABfqMACNUngHNLxS+WM0hHJ1yaxWLelGbJxYjHioD0=;
-        b=U5YRkVIsfjsdxYrqviqFldW3aGgJpxI95Xx9WtuZtRE4oGNUou/5vryJRC9Fm9mbWI
-         0oW0BHPWPWBNjOdKKZtlJlPuSTA7JCxqdpogQMFdoBWF1OD3kPk3rs7hdHqbvgvZDg0g
-         FPiIFMNvhw/PbASOX8xkWBMy8iKmqHbZbXdnniQgC1etonGUdgwPRRGtUD4z+eu6vlgb
-         Hnq5Ee+6VznM1khG44NboOAIt8kYqj5Q2zDb+onyXfL4pNnVpUZMlB7sfzDCSNFLZ1Ss
-         C8s8Fb2FJ1eVCLip9agNb+b1Vd0rUZFWc6akd2nrOheBpdsw0oUWp/Fy5ElLUlEqV/k0
-         LcXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849138; x=1713453938;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712849393; x=1713454193; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CABfqMACNUngHNLxS+WM0hHJ1yaxWLelGbJxYjHioD0=;
-        b=a1YfK5MvUQbvZ1oe4PgzRAECEgLeiRdjHPTtPsZ7JLUUKCRwWbbjvtlqzdjAw7N8qn
-         8WESBUIgRhPu5GvtXn1Oye3+zUNdScIvw+BdwlX0wi+ItzUmpCPNsLDhej5TBgmcM9P5
-         9EdhwdJNmfMR5cfOZIJdIB8DgRbnmoIOTzXAAqQfXB1SPu9DrESHmhHEnQgLPp4Ifs9w
-         IsJFKqSOJeEh+6HAidmz9WCXJav7iZ7FSaHx5E/4KHhxkHxXPCDnyKJkpq9hUNCmo3bN
-         SKSdlFncHsTW99sLO27Kudvi/W/Q/OVU8wJUyxgJ79DbNZwTcOKsmyiwvDVhR+rntg0a
-         bEiw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/b1EVx5LeyCVQtLpPf8ZKZQlKt5/n8F+ikgUVy6doRRRLk/d0emXd42gHrnZ01io/xMLi9b/elVvPesi5Trpdb5hiz2ZcFSKMW4vgLy7KvQ6z
-X-Gm-Message-State: AOJu0YzBCT6wk8Q4e6ukQnafDUKVUnArgnqddXr5Ps3JhMdLVwqZhmhs
-	NiL4VMyjW3CuBSc1p3kFcGyLS3oJ4DAnDjQF5eVA6oG3F7mLEakSfBMxbURvhcA=
-X-Google-Smtp-Source: AGHT+IEEewk7llSPmgrxe/7mA2rySV/OUDonUpYE2d0l2M0z39pI2HKiyjdOd8AbAw/PCbmxmW//Bg==
-X-Received: by 2002:a17:906:4f06:b0:a52:3d1:6769 with SMTP id t6-20020a1709064f0600b00a5203d16769mr44591eju.14.1712849137563;
-        Thu, 11 Apr 2024 08:25:37 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id r3-20020a170906350300b00a522c69f28asm225076eja.216.2024.04.11.08.25.36
+        bh=dAlR7G4/I/wq7zvBwkr4mw2FcueO9c+kMR0wO3p0h8c=;
+        b=J2AIrLuqMFMqcpU7R5D2ElcO7MANlOKTm7lbp1F3SuB5s3ReFNwuO/MZoXmGs3vylg
+         dJ/3BCP/+/uCfb8soIGmUnhZfQRdU+Y2N4lYzJoeWkXX/JvfgdXR6dr2NDzxaSM0PKVV
+         lwCsRM7NNmRo8dtTaybKEyeIKexUbLhAHXnYHmvDEPKylTNrQ334gtcEBqHxWtTbvO3Y
+         iw0FtHY5Gk+4ltOgBh+eorskVG3rLJWbOlt5DyZnAq5YYnpqzPmczjvkqefm2hLLpdEW
+         +6bFqZJPUMrwNrWJ7TAfkAIUOPJWs9zXkYzoy11qOrCF82xbIH/Pi8wtN2iNbGNrbDXH
+         umBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712849393; x=1713454193;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dAlR7G4/I/wq7zvBwkr4mw2FcueO9c+kMR0wO3p0h8c=;
+        b=VBQpeeQmQ05YN/nf6ZiUwRjw3nVVYFs6VZuchAcXG3Z0XpaEorxi2132ncXT5+kxqD
+         YsgPwWGQtSgr1tXygSopEle9BidaDs1+cOp3S7M06LpX1k7nnKwINa7HyhGOQtGIZ6e0
+         6zsqXX7w4vFoCAc2H21MY385Wp880DduLi266n8GUlmsMd3baoYRmTOnlO8S4KBlYjdI
+         KuqRkkZK5lzMOuAwP0xACP8crxycJPiHeZZHZmTwFB+G6I+eyuQZfSHiR7uYuBQmFNUS
+         CbEDfVzvYuAhmX17Vj1CjYJRd1EJCHA6F+5Y07skat6KNBZt5mH1+CTgj0RpgiT7bS9J
+         Hhkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0vrF8hTsfaMdIuNaOC92SotqPfClQRcYC17Zlm46ly6uozqQHF/opFX6FXQH8gX5UQui0UznsmiOjszLu5BBEdvhE/Jx6425xcbnM/2kxSoN0tpFbsl6bcZFvvlCOZStrkl6sCd6kVeAex0I1NOZn
+X-Gm-Message-State: AOJu0YzBHoVGjAaIaI/pHiVDCyTv3cnl+EjLwvz7LWxJ1nI53sSsgkYG
+	IEP2AM4p26Dt/4rXydgv9Rp+mZXZqifJSSpTh29MvnrW6Kq5mt+7
+X-Google-Smtp-Source: AGHT+IHga0oebP9bS/ubJI1wSs/FmQSHMr+qoybPPWro18uXOk2Kq+Db6uYM70JTN7Cb8NAsnmJVKw==
+X-Received: by 2002:a05:6a20:918a:b0:1a3:cb50:b52d with SMTP id v10-20020a056a20918a00b001a3cb50b52dmr190568pzd.31.1712849392951;
+        Thu, 11 Apr 2024 08:29:52 -0700 (PDT)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id n3-20020aa78a43000000b006ed0d0307aasm1305480pfa.70.2024.04.11.08.29.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:25:36 -0700 (PDT)
-Date: Thu, 11 Apr 2024 18:25:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-	speakup@linux-speakup.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-afs@lists.infradead.org, ecryptfs@vger.kernel.org,
-	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-unionfs@vger.kernel.org, linux-arch@vger.kernel.org,
-	io-uring@vger.kernel.org, cocci@inria.fr,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] treewide: Fix common grammar mistake "the the"
-Message-ID: <0bd7ccc2-4d8c-455b-a6c2-972ebe1fcb08@moroto.mountain>
-References: <20240411150437.496153-4-thorsten.blum@toblux.com>
+        Thu, 11 Apr 2024 08:29:52 -0700 (PDT)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: mhiramat@kernel.org
+Cc: akpm@linux-foundation.org,
+	arnd@arndb.de,
+	changbin.du@huawei.com,
+	christophe.leroy@csgroup.eu,
+	geert@linux-m68k.org,
+	jpoimboe@kernel.org,
+	kjlx@templeofstupid.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	ndesaulniers@google.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	tj@kernel.org,
+	ytcoode@gmail.com
+Subject: Re: [PATCH] init/main.c: Remove redundant space from saved_command_line
+Date: Thu, 11 Apr 2024 23:29:40 +0800
+Message-ID: <20240411152941.256666-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240411230745.dba6cfa97ec068d909550fd5@kernel.org>
+References: <20240411230745.dba6cfa97ec068d909550fd5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411150437.496153-4-thorsten.blum@toblux.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 05:04:40PM +0200, Thorsten Blum wrote:
-> Use `find . -type f -exec sed -i 's/\<the the\>/the/g' {} +` to find all
-> occurrences of "the the" and replace them with a single "the".
+On Thu, 11 Apr 2024 23:07:45 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> On Thu, 11 Apr 2024 09:19:32 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 > 
-> Changes only comments and documentation - no code changes.
+> > CC Hiramatsu-san (now for real :-)
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
+> Thanks!
+> 
+> > 
+> > On Thu, Apr 11, 2024 at 6:13 AM Yuntao Wang <ytcoode@gmail.com> wrote:
+> > > extra_init_args ends with a space, so when concatenating extra_init_args
+> > > to saved_command_line, be sure to remove the extra space.
+> 
+> Hi Yuntao,
+> 
+> Hmm, if you want to trim the end space, you should trim extra_init_args
+> itself instead of this adjustment. Also, can you share the example?
+> 
+> Thank you,
 
-It's tricky to know which tree a patch like this would go through.  We
-used to have a trivial tree for this stuff but I guess that didn't work.
-It's possible that it could go through linux-doc, but probably it has to
-go as a set of patches through each of the trees in the CC list.
+At first, I also intended to fix this issue as you suggested. However,
+because both extra_command_line and extra_init_args end with a space,
+making such a change would require modifications in many places.
+That's why I chose this approach instead.
 
-regards,
-dan carpenter
+Here are some examples before and after modification:
 
+Before: [    0.829179] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 '
+After:  [    0.032648] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1'
+
+Before: [    0.757217] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1  arg1'
+After:  [    0.068184] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 arg1'
+
+In order to make it easier to observe spaces, I added quotes when outputting saved_command_line.
+
+Note that the first 'before' ends with a space, and there are two spaces between
+'bootconfig_arg1' and 'arg1' in the second 'before'.
+
+> > >
+> > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> > > ---
+> > >  init/main.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/init/main.c b/init/main.c
+> > > index 2ca52474d0c3..cf2c22aa0e8c 100644
+> > > --- a/init/main.c
+> > > +++ b/init/main.c
+> > > @@ -660,12 +660,14 @@ static void __init setup_command_line(char *command_line)
+> > >                         strcpy(saved_command_line + len, extra_init_args);
+> > >                         len += ilen - 4;        /* strlen(extra_init_args) */
+> > >                         strcpy(saved_command_line + len,
+> > > -                               boot_command_line + initargs_offs - 1);
+> > > +                               boot_command_line + initargs_offs);
+> > >                 } else {
+> > >                         len = strlen(saved_command_line);
+> > >                         strcpy(saved_command_line + len, " -- ");
+> > >                         len += 4;
+> > >                         strcpy(saved_command_line + len, extra_init_args);
+> > > +                       len += ilen - 4; /* strlen(extra_init_args) */
+> > > +                       saved_command_line[len-1] = '\0'; /* remove trailing space */
+> > >                 }
+> > >         }
+> > 
+> > Gr{oetje,eeting}s,
+> > 
+> >                         Geert
+> > 
+> > -- 
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68korg
+> > 
+> > In personal conversations with technical people, I call myself a hacker. But
+> > when I'm talking to journalists I just say "programmer" or something like that.
+> >                                 -- Linus Torvalds
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
