@@ -1,194 +1,137 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38334C8E;
-	Fri, 12 Apr 2024 01:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDDE525D;
+	Fri, 12 Apr 2024 02:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712886415; cv=none; b=sSKZIXfvT2ob6OcdqwC94Cs/rAz+V8kgiyEOL0kLfoYS4tm4DK3MfsXLU9BZ0a5dqClXI+Imz849wqHHyIVsWJVfRGpZpI0UqWCvEPDgR+H85SyhS8uN5mjr6K1DtfhvwuAtA5T0+C33XQ1H65UY5TqoqoxHrg40d3x+7A8evwo=
+	t=1712887422; cv=none; b=kyaIlK5Uu8GMZG4JEhlFQ0JUxKnQzLMqGq8Ldxf2q7b7sq10qMlslsjLSTQf0sq/aKpMFvThGAgDgG6oy/xfkWKrs0Ks22jthwSqsbuQqtK8/l1Kn5CSOA4BalooiPNyfr3Fbs5nZ2rjZ8OlI6lRZfEA4my00rnio8Cq1nvcLuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712886415; c=relaxed/simple;
-	bh=FP/Afpm40jBtMSr+7mRP+khV1HHCSLPWOtraxZmTWng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SiOhgMHD23ECjOPTvMNzU9wDCy5ZkMTVPMJ995o+Hqy6RDz/gSi2mBY6fV6hfTlpb3K8Ahd2WlNiD6cfxZNHxhBDS6fVE2AAR/1qfP2G/MZnLkBejHZ4cCoT/Cqf1WOs1pfw5MPzLQazkqDHU4DGg0rPMCnx77DVGTYKKgXr2Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsyRmwQT; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712887422; c=relaxed/simple;
+	bh=32I00JzTHxnizPyNO+FSMhrceoVRAWHSz7lsTnztRjg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gayD2mp30Eg4I2F7lVxzICFES/UHuTtDCNJJE2AX74DLgDtxHgW5Qwbmj25h8yoDNc4TVVAWoddiRdJT2g8uYcPe1Ah1ZQaLmSuMRGrAWHghnIHRWLQ74vHY9swa/B8+BtryF+Xfl+cnh5DYn+EATM8if3lCc9IEwP/9XqQcV6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWPKjqS+; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsyRmwQT"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e4149e7695so3646625ad.0;
-        Thu, 11 Apr 2024 18:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712886413; x=1713491213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LTNINKBvYGsXPh2qmr+1Mo5tVIYZJuJC9faeb17b8gA=;
-        b=gsyRmwQTomnmPr6c+jRZMtkmZxw+EC/mMQcsTubTHEs3OyEgz3kpqqCQm9N62npJMA
-         JhG9JyhjHbDJJABucdM3DOa/8wqZXv/a52+yJ9eJFrG6jTSJPyWYRhz6caODOMtfHKvI
-         dLX0xvx5NX/5lS9nTj7x5pBpeCkH2QYyzmRiWJnv3sZUUOfHdNOU+1/8NqOK0qil+2IL
-         ja1ePXgoYEVQqyg/EbJRq7OiCmG3iaOBqO1wSyEZz7XNHZAjxgTY4v9nYO8uRqTwrbZ8
-         PdEJASI36NjK5IpjeX0udkCcSskMDgDbjYaGDvsTtBJMHJsZAeqvRrQxVZp0fdZXSLas
-         LMFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712886413; x=1713491213;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LTNINKBvYGsXPh2qmr+1Mo5tVIYZJuJC9faeb17b8gA=;
-        b=XzGWnHYdVbyGiVRgUbCqzYiw0AhB0PpLli3AAFm9KmeBkaO+2fwOOV5/8MyDk7ja4d
-         Kimf5fU5cJYK96XKtJRJ2cpo9FeuseHWaS2SoDQElewhnVUf8C6qY1FKcG0l3FzO2CeG
-         Zs1ZALdUOY7KS960kRNJBm+wVAIMYdPT1phoTdXFSy13N6WX0PoUPdGi69tC4jQ0b0yC
-         UPSteTkz5bQwHjxYr2I2QmebNkvo2UFUsToSLtrUSr8IXFcYP/u3k4XhKEc/pGkUkRgw
-         xhQloAfeM0dy9DyXRa8q+Jqowd4GC8QJb83aC+7Lzg85M53HwxK0cR4aA6fhY24Gv+AF
-         tVYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXBDBNt6+2D/zmxsEOQMp/dileH9Y4vGGvYD7JcO4uciG6xMpUw7V5Mj2Inb2Boit3AFXjMyeW2cIgf9q3jnr1oNNRuGQeisbxJmq3xZSzxGM4gk5Xx6IGmacQPeNymy0OTBpzlvH1WHyXtiolo1OBw
-X-Gm-Message-State: AOJu0YwJGIj12JRts3HzB/jGC27qTqHGkIQ1PS8D/mHCVwCVJjk8b3/A
-	czX2L/JuxSLtikVGyDEYPZJxqYk5t6+1n98LGGNOiv1M+M/ADLp6
-X-Google-Smtp-Source: AGHT+IGKkscy7aoUv+qJZqUTTamPos4GYD3Z5IltXF6F/wYw6XZvZsafjUTFYKbNNYBQ3TrLqtEPgA==
-X-Received: by 2002:a17:902:c94c:b0:1e4:fd4:48d4 with SMTP id i12-20020a170902c94c00b001e40fd448d4mr1479843pla.32.1712886412825;
-        Thu, 11 Apr 2024 18:46:52 -0700 (PDT)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id c6-20020a170903234600b001e0c91d448fsm675904plh.112.2024.04.11.18.46.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 18:46:52 -0700 (PDT)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: mhiramat@kernel.org
-Cc: akpm@linux-foundation.org,
-	arnd@arndb.de,
-	changbin.du@huawei.com,
-	christophe.leroy@csgroup.eu,
-	geert@linux-m68k.org,
-	jpoimboe@kernel.org,
-	kjlx@templeofstupid.com,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWPKjqS+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712887421; x=1744423421;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=32I00JzTHxnizPyNO+FSMhrceoVRAWHSz7lsTnztRjg=;
+  b=AWPKjqS+hoGmwW8TYosCncF9pA6WH99+//iZ7EPqSfi+ylLMdXh8mln/
+   onVQ7dLHWI51KYXKui5EJjMoAgcQF9lYLY0ejTXDF+sO6PpqtDaK3qhSn
+   sUrw4pC06q0OisjeRgkT+Z2vE32a4MjE/6FXUW+Ffow0kTGEEM0IqhBKA
+   0l8GT3FMlfXY1eUCO3KOD3ws435MG5oSsVWxF5WV5UGEYBiu5w5sdxR9t
+   TKIPJOmI/werEgAogrq7obeTbSSZYg9jeFj60DMx3fNbq3rzH49AD2R9k
+   kqzmW0KsPGChdE3WgTZ+tngmmxL5eYfLclMG3JSgm6MF8gT/bvHNvEq3B
+   w==;
+X-CSE-ConnectionGUID: +vN4tx8PQAiAJSgB3asmNQ==
+X-CSE-MsgGUID: 1FcdDa8oRo6U/k/IOXfGaA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8191586"
+X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
+   d="scan'208";a="8191586"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 19:03:40 -0700
+X-CSE-ConnectionGUID: 2IfnSC7USKmo2w+IHmccLw==
+X-CSE-MsgGUID: Tx0EYjaaR6OltRqbP5cKTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
+   d="scan'208";a="21001354"
+Received: from dev-qz.sh.intel.com (HELO localhost) ([10.239.147.89])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 19:03:38 -0700
+From: qiang4.zhang@linux.intel.com
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	ndesaulniers@google.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	tj@kernel.org,
-	ytcoode@gmail.com
-Subject: Re: [PATCH] init/main.c: Remove redundant space from saved_command_line
-Date: Fri, 12 Apr 2024 09:46:34 +0800
-Message-ID: <20240412014642.290764-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240412080839.c903a0058bd6594d31bc1d3e@kernel.org>
-References: <20240412080839.c903a0058bd6594d31bc1d3e@kernel.org>
+	Qiang Zhang <qiang4.zhang@intel.com>
+Subject: [PATCH] bootconfig: use memblock_free_late to free xbc memory to buddy
+Date: Fri, 12 Apr 2024 10:03:26 +0800
+Message-Id: <20240412020325.290330-1-qiang4.zhang@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Fri, 12 Apr 2024 08:08:39 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Qiang Zhang <qiang4.zhang@intel.com>
 
-> On Thu, 11 Apr 2024 23:29:40 +0800
-> Yuntao Wang <ytcoode@gmail.com> wrote:
-> 
-> > On Thu, 11 Apr 2024 23:07:45 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > 
-> > > On Thu, 11 Apr 2024 09:19:32 +0200
-> > > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > 
-> > > > CC Hiramatsu-san (now for real :-)
-> > > 
-> > > Thanks!
-> > > 
-> > > > 
-> > > > On Thu, Apr 11, 2024 at 6:13 AM Yuntao Wang <ytcoode@gmail.com> wrote:
-> > > > > extra_init_args ends with a space, so when concatenating extra_init_args
-> > > > > to saved_command_line, be sure to remove the extra space.
-> > > 
-> > > Hi Yuntao,
-> > > 
-> > > Hmm, if you want to trim the end space, you should trim extra_init_args
-> > > itself instead of this adjustment. Also, can you share the example?
-> > > 
-> > > Thank you,
-> > 
-> > At first, I also intended to fix this issue as you suggested. However,
-> > because both extra_command_line and extra_init_args end with a space,
-> > making such a change would require modifications in many places.
-> 
-> You may just need:
-> 
-> if (extra_init_args)
-> 	strim(extra_init_args);
+On the time to free xbc memory, memblock has handed over memory to buddy
+allocator. So it doesn't make sense to free memory back to memblock.
+memblock_free() called by xbc_exit() even causes UAF bugs on architectures
+with CONFIG_ARCH_KEEP_MEMBLOCK disabled like x86. Following KASAN logs
+shows this case.
 
-Okay, I'll post another patch, making the changes as you suggested.
+[    9.410890] ==================================================================
+[    9.418962] BUG: KASAN: use-after-free in memblock_isolate_range+0x12d/0x260
+[    9.426850] Read of size 8 at addr ffff88845dd30000 by task swapper/0/1
 
-> > That's why I chose this approach instead.
-> > 
-> > Here are some examples before and after modification:
-> > 
-> > Before: [    0.829179] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 '
-> > After:  [    0.032648] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1'
-> > 
-> > Before: [    0.757217] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1  arg1'
-> > After:  [    0.068184] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 arg1'
-> > 
-> > In order to make it easier to observe spaces, I added quotes when outputting saved_command_line.
-> 
-> BTW, is this tailing space harm anything? I don't like a cosmetic change.
-> 
-> Thank you,
+[    9.435901] CPU: 9 PID: 1 Comm: swapper/0 Tainted: G     U             6.9.0-rc3-00208-g586b5dfb51b9 #5
+[    9.446403] Hardware name: Intel Corporation RPLP LP5 (CPU:RaptorLake)/RPLP LP5 (ID:13), BIOS IRPPN02.01.01.00.00.19.015.D-00000000 Dec 28 2023
+[    9.460789] Call Trace:
+[    9.463518]  <TASK>
+[    9.465859]  dump_stack_lvl+0x53/0x70
+[    9.469949]  print_report+0xce/0x610
+[    9.473944]  ? __virt_addr_valid+0xf5/0x1b0
+[    9.478619]  ? memblock_isolate_range+0x12d/0x260
+[    9.483877]  kasan_report+0xc6/0x100
+[    9.487870]  ? memblock_isolate_range+0x12d/0x260
+[    9.493125]  memblock_isolate_range+0x12d/0x260
+[    9.498187]  memblock_phys_free+0xb4/0x160
+[    9.502762]  ? __pfx_memblock_phys_free+0x10/0x10
+[    9.508021]  ? mutex_unlock+0x7e/0xd0
+[    9.512111]  ? __pfx_mutex_unlock+0x10/0x10
+[    9.516786]  ? kernel_init_freeable+0x2d4/0x430
+[    9.521850]  ? __pfx_kernel_init+0x10/0x10
+[    9.526426]  xbc_exit+0x17/0x70
+[    9.529935]  kernel_init+0x38/0x1e0
+[    9.533829]  ? _raw_spin_unlock_irq+0xd/0x30
+[    9.538601]  ret_from_fork+0x2c/0x50
+[    9.542596]  ? __pfx_kernel_init+0x10/0x10
+[    9.547170]  ret_from_fork_asm+0x1a/0x30
+[    9.551552]  </TASK>
 
-I think this modification is necessary.
+[    9.555649] The buggy address belongs to the physical page:
+[    9.561875] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x45dd30
+[    9.570821] flags: 0x200000000000000(node=0|zone=2)
+[    9.576271] page_type: 0xffffffff()
+[    9.580167] raw: 0200000000000000 ffffea0011774c48 ffffea0012ba1848 0000000000000000
+[    9.588823] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+[    9.597476] page dumped because: kasan: bad access detected
 
-If saved_command_line is only used internally in the kernel, having extra
-spaces, while not perfect, is acceptable to me. However, since saved_command_line
-can be accessed by users through the /proc/cmdline file, having these extra
-spaces here and there makes it look too casual.
+[    9.605362] Memory state around the buggy address:
+[    9.610714]  ffff88845dd2ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    9.618786]  ffff88845dd2ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    9.626857] >ffff88845dd30000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+[    9.634930]                    ^
+[    9.638534]  ffff88845dd30080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+[    9.646605]  ffff88845dd30100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+[    9.654675] ==================================================================
 
-> > 
-> > Note that the first 'before' ends with a space, and there are two spaces between
-> > 'bootconfig_arg1' and 'arg1' in the second 'before'.
-> > 
-> > > > >
-> > > > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-> > > > > ---
-> > > > >  init/main.c | 4 +++-
-> > > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/init/main.c b/init/main.c
-> > > > > index 2ca52474d0c3..cf2c22aa0e8c 100644
-> > > > > --- a/init/main.c
-> > > > > +++ b/init/main.c
-> > > > > @@ -660,12 +660,14 @@ static void __init setup_command_line(char *command_line)
-> > > > >                         strcpy(saved_command_line + len, extra_init_args);
-> > > > >                         len += ilen - 4;        /* strlen(extra_init_args) */
-> > > > >                         strcpy(saved_command_line + len,
-> > > > > -                               boot_command_line + initargs_offs - 1);
-> > > > > +                               boot_command_line + initargs_offs);
-> > > > >                 } else {
-> > > > >                         len = strlen(saved_command_line);
-> > > > >                         strcpy(saved_command_line + len, " -- ");
-> > > > >                         len += 4;
-> > > > >                         strcpy(saved_command_line + len, extra_init_args);
-> > > > > +                       len += ilen - 4; /* strlen(extra_init_args) */
-> > > > > +                       saved_command_line[len-1] = '\0'; /* remove trailing space */
-> > > > >                 }
-> > > > >         }
-> > > > 
-> > > > Gr{oetje,eeting}s,
-> > > > 
-> > > >                         Geert
-> > > > 
-> > > > -- 
-> > > > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68korg
-> > > > 
-> > > > In personal conversations with technical people, I call myself a hacker. But
-> > > > when I'm talking to journalists I just say "programmer" or something like that.
-> > > >                                 -- Linus Torvalds
-> > > > 
-> > > 
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Qiang Zhang <qiang4.zhang@intel.com>
+---
+ lib/bootconfig.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index c59d26068a64..4524ee944df0 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -63,7 +63,7 @@ static inline void * __init xbc_alloc_mem(size_t size)
+ 
+ static inline void __init xbc_free_mem(void *addr, size_t size)
+ {
+-	memblock_free(addr, size);
++	memblock_free_late(__pa(addr), size);
+ }
+ 
+ #else /* !__KERNEL__ */
+-- 
+2.39.2
+
