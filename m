@@ -1,140 +1,197 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0F2146D71
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F9153811;
+	Fri, 12 Apr 2024 16:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712933666; cv=none; b=ZPOtBwBt9AmSv/TGPkt94mCX9/GOnXlyN9LtYhA9IVzGuUFHYWYa8Ie5iBBY+JSUim4UeZak2DM+E1HFuwnuc0JEKn6CV4XBnyh2AOEU8h8rWsc1Y0p9gfKHJJG69WDsqJmieiCII8IKbPf1jMNJoWfdodTQyZZVkLpisvY6PFc=
+	t=1712939343; cv=none; b=LN2hHbTxqosScJSuYWtTEfXOKqT6pLHox+xNRk7ERzGq0srWgBYzeXG9c5wLCTtKHAT7pmJDOM843GgR6ry4/j9b9NQS69JZNtjamsUza9B7T7oDeUF9xj0OdxV/1XbMAbPhZqOOtjwplT4j++BIJd4ih3U3u9yetxIQV8bSV3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712933666; c=relaxed/simple;
-	bh=ZtUMxIcPii7SYptK1bsvjnMTv2XY+8o/C+H99TV4mko=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HIXOA/KRT2CZIZmBrbTz/+pjgNy6r3I0elDpFHaq9urgmbQT+n9lyckIhuIYmTEhESe/viuczcQAUMz+PDLfCn+KhzD77rOooVQmbPk/XjyOgl6ePE8qajIytEORDaG8wAli6h6y04X+5N6HciwlnEZqpgi3dTf/zG1+p01xlR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jZMOLO9M; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712939343; c=relaxed/simple;
+	bh=Nw76s36euEpvCv3rVMgFKiDKHwOrD8yGqXcaYuU/bQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJ+knEVh7O23ZlS4NvdVj5mKnFyDRlomntfpXc46gt8Xd7v05zgn7HteJbH3SC4ED3NpTn3K4tYKlpvjK0/h7NngPv0iZ52pHUbmb6wH+4diWvWeiCfL8OwrV79Kict1BsUyzdlDLd1EgH/fcsEGu640cYtRQEnIbJNfnJJFeH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rCHtAbCw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jZMOLO9M"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6edddd0375fso809942b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712933664; x=1713538464; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrmdCrVWtwb7lFW6AyHWbgOgdloa5ymd2fy0iQuLqTo=;
-        b=jZMOLO9Mr0xDTGxrxV8mIoSXOfsy0NmwYQW0zI/ASTTgNcMfwZ1UQ+4+EWeTJclvO0
-         Taso9FlZRd68oNAXtsEXqF+Zh6esim3EnEM79tEAtREazLVZQ6C9RcZr2bB6YXUecyGS
-         i7mCDGukKBi1YWkZxqotQaPbtcMhvIO0ZTKV6N8znDXDGxWCjC5OU7bIOqzfxP3fuG1U
-         E2JP1zqWTjEE923qoZFUYQEtzonrgr20LU+ra6Rlt0Z1LsoznWEvbR4GBs+l5h7rbR0e
-         cIJ7OWbCRDSO7twJVl7NouedyjTGtc284+QIYkl4d3Zq7NLXu8Bt0ccYTnihc37Pwxpl
-         yNYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712933664; x=1713538464;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrmdCrVWtwb7lFW6AyHWbgOgdloa5ymd2fy0iQuLqTo=;
-        b=Sk+aF174J7qqGUTdkZo7gdOF8uE2iutYg/5qiXk3CYaz/N/bvKUovpJxh8AUywJ/QE
-         bw8a1NgVHElwZC8DF6FBFDNGFjaVlDotO3cibWth5QC1G64TphKSIqolfxnl5W00M2Ys
-         Vvx6Z4A7KYjlzVn5KzOkIRXDOiCSCF6HF87+apiGjy7XGZcqsks4Uu/P/BnBCDFp6iQN
-         Hq4VnAkOuAh8qLg6ISLqswV7n6J1gwYtkkSIJt0pu0BQT2zKziJApM6irJaVp9spxJum
-         Pf5U2XcdYxgFHXJoyFoAFZv/3kec9pKDvTx2QnLFvxiQRkm5u8WSQXqoWFvap1OZu6xy
-         rYRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ/6jloQU4PimnKn+nU7AmhZn4LT376+QQdAgNhjSylD/KJAlR7424VPg/O1cMR5IVFEXZUWC7a9Zg1eHGyaUlLKK1eFx14zOUKV8u1cuLaFza
-X-Gm-Message-State: AOJu0YxtM8eEYDBo1An4zFiIvbL79xzlfObRwA5wA4JI9G1NsB741m2E
-	i4iGpcZGycHmAncHfhcEN4UT+zR4xqIlH23wYmHJJDO1HXKl6UgXXwT3wCQZZk/ke/N4xVFIfpf
-	MZA==
-X-Google-Smtp-Source: AGHT+IE8CrGE6yHurBu6oRRUdhNStzcxsQMqGws9O1toyt+VIrjo1lbnGIr3E72VqB9zErBllk+K4v4iLAw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2d94:b0:6ed:95ce:3417 with SMTP id
- fb20-20020a056a002d9400b006ed95ce3417mr191844pfb.5.1712933663717; Fri, 12 Apr
- 2024 07:54:23 -0700 (PDT)
-Date: Fri, 12 Apr 2024 07:54:22 -0700
-In-Reply-To: <86jzl2sovz.wl-maz@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rCHtAbCw"
+Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4B1FE20EBE27;
+	Fri, 12 Apr 2024 09:28:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4B1FE20EBE27
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712939336;
+	bh=aPNAajPgfa9tLlbi4R+vTG3tD1EMXPgxv/2aSoOWXiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rCHtAbCw94qufrUR+oDW0j7orn9yDy95q/+KzGcXHgvCdFkT8odTWCYYEqR3Xr71Q
+	 bQpRy1gVabzD6DDvkPbmutCYQpgXPFRnHU4Ep1i5dW6CWdBtDKTA5OCnStkcHXuB1g
+	 0RgMJe948AXGBvFi0KmgZi+0GjyReGjB2bUzpwOY=
+Date: Fri, 12 Apr 2024 09:28:48 -0700
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, primiano@google.com, aahringo@redhat.com,
+	dcook@linux.microsoft.com
+Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
+Message-ID: <20240412162848.GA467-beaub@linux.microsoft.com>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
+ <CAP-5=fVVQ5RGqEQo596to_3BYZ6vNFC_DR1nnunH_-Bb6bdpVg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
-Message-ID: <ZhlLHtfeSHk9gRRO@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVVQ5RGqEQo596to_3BYZ6vNFC_DR1nnunH_-Bb6bdpVg@mail.gmail.com>
 
-On Fri, Apr 12, 2024, Marc Zyngier wrote:
-> On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
-> > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> > Also, if you're in the business of hacking the MMU notifier code, it
-> > would be really great to change the .clear_flush_young() callback so
-> > that the architecture could handle the TLB invalidation. At the moment,
-> > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
-> > being set by kvm_handle_hva_range(), whereas we could do a much
-> > lighter-weight and targetted TLBI in the architecture page-table code
-> > when we actually update the ptes for small ranges.
+On Thu, Apr 11, 2024 at 09:52:22PM -0700, Ian Rogers wrote:
+> On Thu, Apr 11, 2024 at 5:17 PM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> >
+> > In the Open Telemetry profiling SIG [1], we are trying to find a way to
+> > grab a tracing association quickly on a per-sample basis. The team at
+> > Elastic has a bespoke way to do this [2], however, I'd like to see a
+> > more general way to achieve this. The folks I've been talking with seem
+> > open to the idea of just having a TLS value for this we could capture
 > 
-> Indeed, and I was looking at this earlier this week as it has a pretty
-> devastating effect with NV (it blows the shadow S2 for that VMID, with
-> costly consequences).
+> Presumably TLS == Thread Local Storage.
 > 
-> In general, it feels like the TLB invalidation should stay with the
-> code that deals with the page tables, as it has a pretty good idea of
-> what needs to be invalidated and how -- specially on architectures
-> that have a HW-broadcast facility like arm64.
 
-Would this be roughly on par with an in-line flush on arm64?  The simpler, more
-straightforward solution would be to let architectures override flush_on_ret,
-but I would prefer something like the below as x86 can also utilize a range-based
-flush when running as a nested hypervisor.
+Yes, the initial idea is to use thread local storage (TLS). It seems to
+be the fastest option to save a per-thread value that changes at a fast
+rate.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index ff0a20565f90..b65116294efe 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -601,6 +601,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
-        struct kvm_gfn_range gfn_range;
-        struct kvm_memory_slot *slot;
-        struct kvm_memslots *slots;
-+       bool need_flush = false;
-        int i, idx;
- 
-        if (WARN_ON_ONCE(range->end <= range->start))
-@@ -653,10 +654,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
-                                        break;
-                        }
-                        r.ret |= range->handler(kvm, &gfn_range);
-+
-+                       /*
-+                        * Use a precise gfn-based TLB flush when possible, as
-+                        * most mmu_notifier events affect a small-ish range.
-+                        * Fall back to a full TLB flush if the gfn-based flush
-+                        * fails, and don't bother trying the gfn-based flush
-+                        * if a full flush is already pending.
-+                        */
-+                       if (range->flush_on_ret && !need_flush && r.ret &&
-+                           kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start
-+                                                            gfn_range.end - gfn_range.start + 1))
-+                               need_flush = true;
-                }
-        }
- 
--       if (range->flush_on_ret && r.ret)
-+       if (need_flush)
-                kvm_flush_remote_tlbs(kvm);
- 
-        if (r.found_memslot)
+> > upon each sample. We could then just state, Open Telemetry SDKs should
+> > have a TLS value for span correlation. However, we need a way to sample
+> > the TLS or other value(s) when a sampling event is generated. This is
+> > supported today on Windows via EventActivityIdControl() [3]. Since
+> > Open Telemetry works on both Windows and Linux, ideally we can do
+> > something as efficient for Linux based workloads.
+> >
+> > This series is to explore how it would be best possible to collect
+> > supporting data from a user process when a profile sample is collected.
+> > Having a value stored in TLS makes a lot of sense for this however
+> > there are other ways to explore. Whatever is chosen, kernel samples
+> > taken in process context should be able to get this supporting data.
+> > In these patches on X64 the fsbase and gsbase are used for this.
+> >
+> > An option to explore suggested by Mathieu Desnoyers is to utilize rseq
+> > for processes to register a value location that can be included when
+> > profiling if desired. This would allow a tighter contract between user
+> > processes and a profiler.  It would allow better labeling/categorizing
+> > the correlation values.
+> 
+> It is hard to understand this idea. Are you saying stash a cookie in
+> TLS for samples to capture to indicate an activity? Restartable
+> sequences are about preemption on a CPU not of a thread, so at least
+> my intuition is that they feel different. You could stash information
+> like this today by changing the thread name which generates comm
+> events. I've wondered about having similar information in some form of
+> reserved for profiling stack slot, for example, to stash a pointer to
+> the name of a function being interpreted. Snapshotting all of a stack
+> is bad performance wise and for security. A stack slot would be able
+> to deal with nesting.
+> 
 
+You are getting the idea. A slot or tag for a thread would be great! I'm
+not a fan of overriding the thread comm name (as that already has a
+use). TLS would be fine, if we could also pass an offset + size + type.
+
+Maybe a stack slot that just points to parts of TLS? That way you could
+have a set of slots that don't require much memory and selectively copy
+them out of TLS (or where ever those slots point to in user memory).
+
+When I was talking to Mathieu about this, it seems that rseq already had
+a place to potentially put these slots. I'm unsure though how the per
+thread aspects would work.
+
+Mathieu, can you post your ideas here about that?
+
+> > An idea flow would look like this:
+> > User Task               Profile
+> > do_work();              sample() -> IP + No activity
+> > ...
+> > set_activity(123);
+> > ...
+> > do_work();              sample() -> IP + activity (123)
+> > ...
+> > set_activity(124);
+> > ...
+> > do_work();              sample() -> IP + activity (124)
+> >
+> > Ideally, the set_activity() method would not be a syscall. It needs to
+> > be very cheap as this should not bottleneck work. Ideally this is just
+> > a memcpy of 16-20 bytes as it is on Windows via EventActivityIdControl()
+> > using EVENT_ACTIVITY_CTRL_SET_ID.
+> >
+> > For those not aware, Open Telemetry allows collecting data from multiple
+> > machines and show where time was spent. The tracing context is already
+> > available for logs, but not for profiling samples. The idea is to show
+> > where slowdowns occur and have profile samples to explain why they
+> > slowed down. This must be possible without having to track context
+> > switches to do this correlation. This is because the profiling rates
+> > are typically 20hz - 1Khz, while the context switching rates are much
+> > higher. We do not want to have to consume high context switch rates
+> > just to know a correlation for a 20hz signal. Often these 20hz signals
+> > are always enabled in some environments.
+> >
+> > Regardless if TLS, rseq, or other source is used I believe we will need
+> > a way for perf_events to include it within a sample. The changes in this
+> > series show how it could be done with TLS. There is some factoring work
+> > under perf to make it easier to add more dump types using the existing
+> > ABI. This is mostly to make the patches clearer, certainly the refactor
+> > parts could get dropped and we could have duplicated/specialized paths.
+> 
+> fs and gs may be used for more than just the C runtime's TLS. For
+> example, they may be used by emulators or managed runtimes. I'm not
+> clear why this specific case couldn't be handled through BPF.
+> 
+
+Agree about the fs/gs possibly being used for other things. If we had a
+stack slot we could avoid the confusion and have tighter couplings.
+
+You can do this in eBPF (see [2]). However, it's very clunky and depends
+on specific SDKs per-language/runtime. We ourselves don't run our profilers
+with anything other than CAP_PERFMON, and also have environments without
+BPF enabled due to various reasons. It'd be great if we could get this data
+directly from perf. At the very least, I'd love to get a standardized
+way to attribute thread values accessible to other performance systems
+(like eBPF and perf).
+
+Thanks,
+-Beau
+
+> Thanks,
+> Ian
+> 
+> > 1. https://opentelemetry.io/blog/2024/profiling/
+> > 2. https://www.elastic.co/blog/continuous-profiling-distributed-tracing-correlation
+> > 3. https://learn.microsoft.com/en-us/windows/win32/api/evntprov/nf-evntprov-eventactivityidcontrol
+> >
+> > Beau Belgrave (4):
+> >   perf/core: Introduce perf_prepare_dump_data()
+> >   perf: Introduce PERF_SAMPLE_TLS_USER sample type
+> >   perf/core: Factor perf_output_sample_udump()
+> >   perf/x86/core: Add tls dump support
+> >
+> >  arch/Kconfig                      |   7 ++
+> >  arch/x86/Kconfig                  |   1 +
+> >  arch/x86/events/core.c            |  14 +++
+> >  arch/x86/include/asm/perf_event.h |   5 +
+> >  include/linux/perf_event.h        |   7 ++
+> >  include/uapi/linux/perf_event.h   |   5 +-
+> >  kernel/events/core.c              | 166 +++++++++++++++++++++++-------
+> >  kernel/events/internal.h          |  16 +++
+> >  8 files changed, 180 insertions(+), 41 deletions(-)
+> >
+> >
+> > base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+> > --
+> > 2.34.1
+> >
