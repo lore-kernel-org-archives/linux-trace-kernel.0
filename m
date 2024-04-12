@@ -1,99 +1,300 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE96B54F87;
-	Fri, 12 Apr 2024 16:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A83C1E53A;
+	Fri, 12 Apr 2024 17:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712939848; cv=none; b=h3j1fjPByaD7r42I7XOziFaC2f/SdWnGKLYZQa1fP7K/8vWPPyI+HwuaqeoLSTtwePjxvkBbjY3EeOt0eBcqySiK9Znudouz7QUtqsxMyQG85SasvfKN+rvLOYxPnV8UiITh3NAwX4g8VJECY/mJcN+vr+eAIssRRebpR4dDYkM=
+	t=1712942568; cv=none; b=dJabSdDKL63Wq4w7UKKkUU1k6RBekcXX45Gx4PJMaMIBeVSpNddoqlMjQK9BQpLiFRyhCmopylLxrRS43DP48/+vv/iPEYqkdWC48dOV7xWGDwieSXwmcJWvXUil3HaFGU5FIERMrkFfkAFJPTImLCfoajc7nF/6T+QYUSxIjaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712939848; c=relaxed/simple;
-	bh=eL+ycS6nm/gRr9yhEhYX/pOUHc+TkWYvKl79Vg5f0UY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmR+xFzVFprOGHUXHvnjmopCirrDay0ZRli9Y59au84T/5DK3i1Q8lqgfn+9IXN6tCEi4+4q42+ICc1/gbsbc0KXO4HDcfeUxfXk69AoO+7+wUWHeH6PmPTtc4D8uuMGWtA5DUycHmL1b9R9QHz6Q4YgrNCE9To134/fE78vNd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kSFk5pfr; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kSFk5pfr"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1A58820EB6FE;
-	Fri, 12 Apr 2024 09:37:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1A58820EB6FE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1712939846;
-	bh=F8k2W578S74gEQH7nGfTYFa4dfuC5RV0P7eTtRq6MY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kSFk5pfrvg55LjL3zroE9m99IK/0FdkTymKgUmYyJSEcxiagBsbhgKXErbzvVv4sf
-	 24bgyXCauiYLXXjX3Ews6tPGFsxWvo/vD3mZ7rIsymplry2uUWjA7agDHcUyI8lgYT
-	 kOFAgjP9DrpLPbkoXPaNYX05bA5jIvtezCBUb5d8=
-Date: Fri, 12 Apr 2024 09:37:24 -0700
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, primiano@google.com,
-	aahringo@redhat.com, dcook@linux.microsoft.com
-Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
-Message-ID: <20240412163724.GB467-beaub@linux.microsoft.com>
-References: <20240412001732.475-1-beaub@linux.microsoft.com>
- <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1712942568; c=relaxed/simple;
+	bh=O92YTgEoikgZ6iz+Dkm9PvGOpbulKCx8UBawRe5N7iM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QlN1Gzcon8ig3UODl8UBUX2hPZFcbp4672Q2EIUCHfuoe8rrz4/Fs4hseKDER7a1pEK40qP66CcX1T63z+AZlMu9HCUVIuaezzxsaaRrPWwIjjGbC/6DXulblMkECeiawTKWTtHMiOtKDXfgibtx4NGauIscoO7w0j2uAIzPUDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF76AC2BD11;
+	Fri, 12 Apr 2024 17:22:44 +0000 (UTC)
+Date: Fri, 12 Apr 2024 13:22:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>,
+ Joel Fernandes <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
+ <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
+ <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+Message-ID: <20240412132243.053ad096@gandalf.local.home>
+In-Reply-To: <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
+References: <20240409210254.660888920@goodmis.org>
+	<20240409172358.34ea19f0@gandalf.local.home>
+	<202404091519.B7B2221@keescook>
+	<SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
+	<20240411154007.5bdf8d95@gandalf.local.home>
+	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 12, 2024 at 09:12:45AM +0200, Peter Zijlstra wrote:
-> 
-> On Fri, Apr 12, 2024 at 12:17:28AM +0000, Beau Belgrave wrote:
-> 
-> > An idea flow would look like this:
-> > User Task		Profile
-> > do_work();		sample() -> IP + No activity
-> > ...
-> > set_activity(123);
-> > ...
-> > do_work();		sample() -> IP + activity (123)
-> > ...
-> > set_activity(124);
-> > ...
-> > do_work();		sample() -> IP + activity (124)
-> 
-> This, start with this, because until I saw this, I was utterly confused
-> as to what the heck you were on about.
-> 
+On Fri, 12 Apr 2024 09:17:18 -0300
+"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
 
-Will do.
+> Thanks Steve, seems a good idea. With that, I could test on kdumpst (the
+> tool used on Steam Deck), since it relies on modular pstore/ram.
 
-> I started by thinking we already have TID in samples so you can already
-> associate back to user processes and got increasingly confused the
-> further I went.
-> 
-> What you seem to want to do however is have some task-state included so
-> you can see what the thread is doing.
-> 
+Something like this could work.
 
-Yeah, there is typically an external context (not on the machine) that
-wants to be tied to each sample. The context could be a simple integer,
-UUID, or something else entirely. For OTel, this is a 16-byte array [1].
+-- Steve
 
-> Anyway, since we typically run stuff from NMI context, accessing user
-> data is 'interesting'. As such I would really like to make this work
-> depend on the call-graph rework that pushes all the user access bits
-> into return-to-user.
-
-Cool, I assume that's the SFRAME work? Are there pointers to work I
-could look at and think about what a rebase looks like? Or do you have
-someone in mind I should work with for this?
-
-Thanks,
--Beau
-
-1. https://www.w3.org/TR/trace-context/#version-format
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index a8831ef30c73..878aee8b2399 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -16,6 +16,7 @@
+ #include <linux/firmware-map.h>
+ #include <linux/sort.h>
+ #include <linux/memory_hotplug.h>
++#include <linux/mm.h>
+ 
+ #include <asm/e820/api.h>
+ #include <asm/setup.h>
+@@ -64,61 +65,6 @@ struct e820_table *e820_table __refdata			= &e820_table_init;
+ struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
+ struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
+ 
+-/* For wildcard memory requests, have a table to find them later */
+-#define E820_MAX_MAPS		8
+-#define E820_MAP_NAME_SIZE	16
+-struct e820_mmap_map {
+-	char			name[E820_MAP_NAME_SIZE];
+-	u64			start;
+-	u64			size;
+-};
+-static struct e820_mmap_map e820_mmap_list[E820_MAX_MAPS] __initdata;
+-static int e820_mmap_size				__initdata;
+-
+-/* Add wildcard region with a lookup name */
+-static int __init e820_add_mmap(u64 start, u64 size, const char *name)
+-{
+-	struct e820_mmap_map *map;
+-
+-	if (!name || !name[0] || strlen(name) >= E820_MAP_NAME_SIZE)
+-		return -EINVAL;
+-
+-	if (e820_mmap_size >= E820_MAX_MAPS)
+-		return -1;
+-
+-	map = &e820_mmap_list[e820_mmap_size++];
+-	map->start = start;
+-	map->size = size;
+-	strcpy(map->name, name);
+-	return 0;
+-}
+-
+-/**
+- * memmap_named - Find a wildcard region with a given name
+- * @name: The name that is attached to a wildcard region
+- * @start: If found, holds the start address
+- * @size: If found, holds the size of the address.
+- *
+- * Returns: 1 if found or 0 if not found.
+- */
+-int __init memmap_named(const char *name, u64 *start, u64 *size)
+-{
+-	struct e820_mmap_map *map;
+-	int i;
+-
+-	for (i = 0; i < e820_mmap_size; i++) {
+-		map = &e820_mmap_list[i];
+-		if (!map->size)
+-			continue;
+-		if (strcmp(name, map->name) == 0) {
+-			*start = map->start;
+-			*size = map->size;
+-			return 1;
+-		}
+-	}
+-	return 0;
+-}
+-
+ /* For PCI or other memory-mapped resources */
+ unsigned long pci_mem_start = 0xaeedbabe;
+ #ifdef CONFIG_PCI
+@@ -1024,6 +970,8 @@ static int __init parse_memmap_one(char *p)
+ 		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
+ 	} else if (*p == '*') {
+ 		u64 align;
++		int ret;
++
+ 		/* Followed by alignment and ':' then the name */
+ 		align = memparse(p+1, &p);
+ 		start_at = e820__region(mem_size, align);
+@@ -1032,9 +980,10 @@ static int __init parse_memmap_one(char *p)
+ 		if (*p != ':')
+ 			return -EINVAL;
+ 		p++;
+-		e820_add_mmap(start_at, mem_size, p);
++		ret = memmap_add(start_at, mem_size, p);
+ 		p += strlen(p);
+-		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
++		if (!ret)
++			e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
+ 	} else if (*p == '!') {
+ 		start_at = memparse(p+1, &p);
+ 		e820__range_add(start_at, mem_size, E820_TYPE_PRAM);
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index c200388399fb..22d2e2731dc2 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -919,7 +919,6 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
+ 
+-#ifndef MODULE
+ 	/* Only allowed when builtin */
+ 	if (mem_name) {
+ 		u64 start;
+@@ -930,7 +929,6 @@ static void __init ramoops_register_dummy(void)
+ 			mem_size = size;
+ 		}
+ 	}
+-#endif
+ 
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index cf9b34454c6f..6ce1c6929d1f 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -4203,5 +4203,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
+ }
+ 
+ int memmap_named(const char *name, u64 *start, u64 *size);
++int memmap_add(long start, long size, const char *name);
+ 
+ #endif /* _LINUX_MM_H */
+diff --git a/mm/memory.c b/mm/memory.c
+index 7a29f17df7c1..fe054e1bb678 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -120,12 +120,6 @@ static bool vmf_orig_pte_uffd_wp(struct vm_fault *vmf)
+ 	return pte_marker_uffd_wp(vmf->orig_pte);
+ }
+ 
+-int __init __weak memmap_named(const char *name, u64 *start, u64 *size)
+-{
+-	pr_info("Kernel command line: memmap=nn*align:name not supported on this kernel");
+-	/* zero means not found */
+-	return 0;
+-}
+ 
+ /*
+  * A number of key systems in x86 including ioremap() rely on the assumption
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 549e76af8f82..e5b729b83fdc 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -154,6 +154,77 @@ static __init int set_mminit_loglevel(char *str)
+ early_param("mminit_loglevel", set_mminit_loglevel);
+ #endif /* CONFIG_DEBUG_MEMORY_INIT */
+ 
++/* For wildcard memory requests, have a table to find them later */
++#define MAX_MAPS		8
++#define MAP_NAME_SIZE	16
++struct mmap_map {
++	char			name[MAP_NAME_SIZE];
++	long			start;
++	long			size;
++};
++static struct mmap_map early_mmap_list[MAX_MAPS] __initdata;
++static int early_mmap_size			__initdata;
++static struct mmap_map *mmap_list;
++
++/* Add wildcard region with a lookup name */
++int memmap_add(long start, long size, const char *name)
++{
++	struct mmap_map *map;
++
++	if (!name || !name[0] || strlen(name) >= MAP_NAME_SIZE)
++		return -EINVAL;
++
++	if (early_mmap_size >= MAX_MAPS)
++		return -1;
++
++	map = &early_mmap_list[early_mmap_size++];
++	map->start = start;
++	map->size = size;
++	strcpy(map->name, name);
++	return 0;
++}
++
++static void __init memmap_copy(void)
++{
++	if (!early_mmap_size)
++		return;
++
++	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);
++	if (!mmap_list)
++		return;
++
++	for (int i = 0; i < early_mmap_size; i++)
++		mmap_list[i] = early_mmap_list[i];
++}
++
++/**
++ * memmap_named - Find a wildcard region with a given name
++ * @name: The name that is attached to a wildcard region
++ * @start: If found, holds the start address
++ * @size: If found, holds the size of the address.
++ *
++ * Returns: 1 if found or 0 if not found.
++ */
++int memmap_named(const char *name, u64 *start, u64 *size)
++{
++	struct mmap_map *map;
++
++	if (!mmap_list)
++		return 0;
++
++	for (int i = 0; mmap_list[i].name[0]; i++) {
++		map = &mmap_list[i];
++		if (!map->size)
++			continue;
++		if (strcmp(name, map->name) == 0) {
++			*start = map->start;
++			*size = map->size;
++			return 1;
++		}
++	}
++	return 0;
++}
++
+ struct kobject *mm_kobj;
+ 
+ #ifdef CONFIG_SMP
+@@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
+ 	pti_init();
+ 	kmsan_init_runtime();
+ 	mm_cache_init();
++	memmap_copy();
+ }
