@@ -1,98 +1,147 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCDF5028B;
-	Fri, 12 Apr 2024 12:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC854224D8;
+	Fri, 12 Apr 2024 13:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712924275; cv=none; b=nVPSu5s5uKnaas+vl5aYZn/MQe3yBQ6EeEJV/7auRuO83G3mnlKmfuijxB2bF5bFN3+NpkuW91tfyi6DcivZv9lwayQF66wyEU7Uxo5kH7jMlngsyeCluOmUFbbb2Jfv3f6jp1ub08qu6NLXXo2SiaLbLVoJHpFGBRwXRgA4V/g=
+	t=1712927263; cv=none; b=iH/E8a1bESxvMQRDDxc6HNPMm7+uaZWyuN682tWdbBBlgbz0PMwe8aweteOrMqpEIGDun7r2xAlprMXCn9+/4muIxBZmvTqs0TRR5b4bTkxjJvOWHJ0WZC9MgTB1Qyl+qjA0ZjVSXRqNhDaqAWmCmk73PwhXx5a7GL/uhshW2h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712924275; c=relaxed/simple;
-	bh=+U1LtVXjMahjN6b1v2hm6FPO3zfnpU3872uUOrfXgew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NPu7Kr9xqcbQmroxkiPXJoO8czU+p9nTsP+2VdxofFHPa/Uf2LpvS0Pql+ycfOqF4sgut+FC3j++98pe2qWB/Bitnk60RotYgAQNdKA+9Mll3BSy5QmyBJLp1MHkxzxFlMLb1X+7PMbbpTdpjRrEKH/FD7FAYuYzQkCiod4HQ+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=NtAt7AQI; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1712927263; c=relaxed/simple;
+	bh=WXXIdGk+X4xSO8A0Mdd/JdZXvSOz7cKKHzKcx7zp/e4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YmMAEgkC1dkAh6rJCF1JtWJEJT8jcU3rBhxyMeJizZ9bzyWivMdqYo5cBR3krZC+zaZcugYMRGftcokw8uTEplW+tMQXCQZf6D02vbrI0o7tX6vGcpmXnBHpZam62Tn42chkWaa49jh3NEmRa3Zz9ISBkqapBmvDp7JYsPNO/AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlWYRY6R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="NtAt7AQI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=fK3CUsnE2KS17+ZVqrhoIng6qc6MzqyQJVHWjI4HNs0=; b=NtAt7AQID+2XDIlh/uCByo3tkv
-	Gw1oyQ24Jr526Oylb4rmcmdCH0y5lMolTcl0LRahNZmn+YmwQZNwjfCUoAAxo7YhUd190xzj9lDFv
-	rAjnxSHc3FIlFwUcnX30R3EEd7xPkUG6fpkbLBiSxeG4RMHwb3IrJy5vqUG18396hMWPwgbO8uitq
-	hR6XyKq1AoNiH1KpJq1TdtshoH4MvU2qa08F/XVD/servFRIORylGeaMniTz2VGgKgsii/Igdv5oJ
-	hNNuMXvYJUAm6O6wccu9MUw28vxK1AJr1OgrQLZm5/okG7XClgj4mun66yg5l0V+uoWrGWKN6HsYf
-	vn/DYpcw==;
-Received: from [189.111.43.233] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rvFqT-003tEf-Pd; Fri, 12 Apr 2024 14:17:30 +0200
-Message-ID: <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-Date: Fri, 12 Apr 2024 09:17:18 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlWYRY6R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C47CC113CC;
+	Fri, 12 Apr 2024 13:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712927262;
+	bh=WXXIdGk+X4xSO8A0Mdd/JdZXvSOz7cKKHzKcx7zp/e4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mlWYRY6R+uO4KNbt8cIf64MguVd8/GHUg7jqEfibnb2j2yYOr842hoff3W6jZ2W6Q
+	 BRWCuZA/oNlXy6/0CFH3viAXrc8qD5Z1kg2VqyfMrkRlL0GkKt6FGGkq7vjol+/rWf
+	 xhKn1pcS/RFNPqEmpu+De8hHFtcOYW9290Q6wreBB+LuxJjv7MvmphVuMNI5yVeK6v
+	 8LwCZ6+IMlvHhnGCu56SknAEpcfLvStMVcRpKtbhCnCjRQrnLJanixlnZPvxJPcLtA
+	 DyvXUuh5xMgv1rPhe/ETCYBkM2o42kXk36Yi7g8UEQFJ2zPIyYqG+w5RiuGqXWqE3I
+	 xnLxdM3U5CxIw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rvGd1-003tLC-MV;
+	Fri, 12 Apr 2024 14:07:39 +0100
+Date: Fri, 12 Apr 2024 14:07:38 +0100
+Message-ID: <86le5isp9h.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] KVM, mm: remove the .change_pte() MMU notifier and set_pte_at_notify()
+In-Reply-To: <20240405115815.3226315-1-pbonzini@redhat.com>
+References: <20240405115815.3226315-1-pbonzini@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Luck, Tony" <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
- Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
- "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-References: <20240409210254.660888920@goodmis.org>
- <20240409172358.34ea19f0@gandalf.local.home> <202404091519.B7B2221@keescook>
- <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
- <20240411154007.5bdf8d95@gandalf.local.home>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20240411154007.5bdf8d95@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pbonzini@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, oliver.upton@linux.dev, zhaotianrui@loongson.cn, maobibo@loongson.cn, tsbogend@alpha.franken.de, npiggin@gmail.com, anup@brainfault.org, atishp@atishpatra.org, seanjc@google.com, akpm@linux-foundation.org, david@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 11/04/2024 16:40, Steven Rostedt wrote:
-> [...]
-> What I think I could do is to have a check after memory is allocated to
-> copy the table mapping (in the heap) if it is filled. The reason I did it
-> this way was because it was the easiest way to save the label to address
-> memory before memory is initialized. I use a __initdata array (why waste
-> memory if it's hardly ever used).
+On Fri, 05 Apr 2024 12:58:11 +0100,
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 > 
-> But, after memory is initialized, we can check if the table has content,
-> and if so allocate a copy and store it there and use that table instead.
-> That would give modules a way to find the address as well.
+> The .change_pte() MMU notifier callback was intended as an optimization
+> and for this reason it was initially called without a surrounding
+> mmu_notifier_invalidate_range_{start,end}() pair.  It was only ever
+> implemented by KVM (which was also the original user of MMU notifiers)
+> and the rules on when to call set_pte_at_notify() rather than set_pte_at()
+> have always been pretty obscure.
 > 
-> -- Steve
+> It may seem a miracle that it has never caused any hard to trigger
+> bugs, but there's a good reason for that: KVM's implementation has
+> been nonfunctional for a good part of its existence.  Already in
+> 2012, commit 6bdb913f0a70 ("mm: wrap calls to set_pte_at_notify with
+> invalidate_range_start and invalidate_range_end", 2012-10-09) changed the
+> .change_pte() callback to occur within an invalidate_range_start/end()
+> pair; and because KVM unmaps the sPTEs during .invalidate_range_start(),
+> .change_pte() has no hope of finding a sPTE to change.
+> 
+> Therefore, all the code for .change_pte() can be removed from both KVM
+> and mm/, and set_pte_at_notify() can be replaced with just set_pte_at().
+> 
+> Please review!  Also feel free to take the KVM patches through the mm
+> tree, as I don't expect any conflicts.
+> 
+> Thanks,
+> 
+> Paolo
+> 
+> Paolo Bonzini (4):
+>   KVM: delete .change_pte MMU notifier callback
+>   KVM: remove unused argument of kvm_handle_hva_range()
+>   mmu_notifier: remove the .change_pte() callback
+>   mm: replace set_pte_at_notify() with just set_pte_at()
+> 
+>  arch/arm64/kvm/mmu.c                  | 34 -----------------
+>  arch/loongarch/include/asm/kvm_host.h |  1 -
+>  arch/loongarch/kvm/mmu.c              | 32 ----------------
+>  arch/mips/kvm/mmu.c                   | 30 ---------------
+>  arch/powerpc/include/asm/kvm_ppc.h    |  1 -
+>  arch/powerpc/kvm/book3s.c             |  5 ---
+>  arch/powerpc/kvm/book3s.h             |  1 -
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c   | 12 ------
+>  arch/powerpc/kvm/book3s_hv.c          |  1 -
+>  arch/powerpc/kvm/book3s_pr.c          |  7 ----
+>  arch/powerpc/kvm/e500_mmu_host.c      |  6 ---
+>  arch/riscv/kvm/mmu.c                  | 20 ----------
+>  arch/x86/kvm/mmu/mmu.c                | 54 +--------------------------
+>  arch/x86/kvm/mmu/spte.c               | 16 --------
+>  arch/x86/kvm/mmu/spte.h               |  2 -
+>  arch/x86/kvm/mmu/tdp_mmu.c            | 46 -----------------------
+>  arch/x86/kvm/mmu/tdp_mmu.h            |  1 -
+>  include/linux/kvm_host.h              |  2 -
+>  include/linux/mmu_notifier.h          | 44 ----------------------
+>  include/trace/events/kvm.h            | 15 --------
+>  kernel/events/uprobes.c               |  5 +--
+>  mm/ksm.c                              |  4 +-
+>  mm/memory.c                           |  7 +---
+>  mm/migrate_device.c                   |  8 +---
+>  mm/mmu_notifier.c                     | 17 ---------
+>  virt/kvm/kvm_main.c                   | 50 +------------------------
+>  26 files changed, 10 insertions(+), 411 deletions(-)
 > 
 
-Thanks Steve, seems a good idea. With that, I could test on kdumpst (the
-tool used on Steam Deck), since it relies on modular pstore/ram.
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-Cheers!
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
