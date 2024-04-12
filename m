@@ -1,300 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A83C1E53A;
-	Fri, 12 Apr 2024 17:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5379223778;
+	Fri, 12 Apr 2024 18:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712942568; cv=none; b=dJabSdDKL63Wq4w7UKKkUU1k6RBekcXX45Gx4PJMaMIBeVSpNddoqlMjQK9BQpLiFRyhCmopylLxrRS43DP48/+vv/iPEYqkdWC48dOV7xWGDwieSXwmcJWvXUil3HaFGU5FIERMrkFfkAFJPTImLCfoajc7nF/6T+QYUSxIjaA=
+	t=1712946785; cv=none; b=PFEOGl+cv5kbNOXUGCNm46jpSDRto0jqGPCAeBtWnxV+xovVw1MK4Rqxq0mpG9yNr71TM2+R6rCQ5Wnsuus1NKgsv2cX3JjzfTC1e28Rp5c02gK/rcuOhTKSg3vzmHx+7OnnS9XZFLjqqLxRyfUYR9xEAas1ipehheN1qDFIuRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712942568; c=relaxed/simple;
-	bh=O92YTgEoikgZ6iz+Dkm9PvGOpbulKCx8UBawRe5N7iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QlN1Gzcon8ig3UODl8UBUX2hPZFcbp4672Q2EIUCHfuoe8rrz4/Fs4hseKDER7a1pEK40qP66CcX1T63z+AZlMu9HCUVIuaezzxsaaRrPWwIjjGbC/6DXulblMkECeiawTKWTtHMiOtKDXfgibtx4NGauIscoO7w0j2uAIzPUDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF76AC2BD11;
-	Fri, 12 Apr 2024 17:22:44 +0000 (UTC)
-Date: Fri, 12 Apr 2024 13:22:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>,
- Joel Fernandes <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
- <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <20240412132243.053ad096@gandalf.local.home>
-In-Reply-To: <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-References: <20240409210254.660888920@goodmis.org>
-	<20240409172358.34ea19f0@gandalf.local.home>
-	<202404091519.B7B2221@keescook>
-	<SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
-	<20240411154007.5bdf8d95@gandalf.local.home>
-	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712946785; c=relaxed/simple;
+	bh=6PZjSZxH3ze16qNj6YeC71CtMpEKbPJQmh6JdIimg3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lEttxEDfWcnELRHXoODZcYdBmdo95a4pAUP+AggYufgb1eXJAQOpUK/6j0ikhHRTA0WwRBGg06CblIuZ97fNeHPT76D3qSHiDfbh+EG/xnnzgLYcfEcYXn53SkQIh136FMuu6osVI7Z9fvj5uHolw5yPbOCtOwJ1HGQpZtleFaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=hUOdDtcE; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="hUOdDtcE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1712946776;
+	bh=6PZjSZxH3ze16qNj6YeC71CtMpEKbPJQmh6JdIimg3Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hUOdDtcErpwhHj+e9zu1sVwafgvSpe2+j477adeZZ7ojCHUe2DtHfqxMS+m/mfia4
+	 /hPW6eJeIU397pCd2BIyi8uK9ttdUobUxxUj4S4Wsd8hlDRZlZrkCm99QumWWQ+EX3
+	 vAeAvl0q2roNcFXo6T6y4p6Bnl0MCPBAIZnHC2s09eyFPIyJxJqRyMuaq81dIlf5gL
+	 QNMcKxVFOyGvNAZTfg3/GUldp3rmaUM+gg3Fza/UWaXIZmQIqkt2Vjpbv13YWLmFVB
+	 KaYzz+VjAmdoM7VQSTwuyDi0a0l8gKDIRShoceKZFnJDtBsO0h0DW8HvDVquSu46wk
+	 +BvX927LIOLCg==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4VGQD75m7JzvNN;
+	Fri, 12 Apr 2024 14:32:55 -0400 (EDT)
+Message-ID: <8568ab4f-5015-4aef-b011-190e4eb519a5@efficios.com>
+Date: Fri, 12 Apr 2024 14:32:56 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
+To: Beau Belgrave <beaub@linux.microsoft.com>, Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, primiano@google.com, aahringo@redhat.com,
+ dcook@linux.microsoft.com
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
+ <CAP-5=fVVQ5RGqEQo596to_3BYZ6vNFC_DR1nnunH_-Bb6bdpVg@mail.gmail.com>
+ <20240412162848.GA467-beaub@linux.microsoft.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20240412162848.GA467-beaub@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 12 Apr 2024 09:17:18 -0300
-"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+On 2024-04-12 12:28, Beau Belgrave wrote:
+> On Thu, Apr 11, 2024 at 09:52:22PM -0700, Ian Rogers wrote:
+>> On Thu, Apr 11, 2024 at 5:17 PM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+>>>
+>>> In the Open Telemetry profiling SIG [1], we are trying to find a way to
+>>> grab a tracing association quickly on a per-sample basis. The team at
+>>> Elastic has a bespoke way to do this [2], however, I'd like to see a
+>>> more general way to achieve this. The folks I've been talking with seem
+>>> open to the idea of just having a TLS value for this we could capture
+>>
+>> Presumably TLS == Thread Local Storage.
+>>
+> 
+> Yes, the initial idea is to use thread local storage (TLS). It seems to
+> be the fastest option to save a per-thread value that changes at a fast
+> rate.
+> 
+>>> upon each sample. We could then just state, Open Telemetry SDKs should
+>>> have a TLS value for span correlation. However, we need a way to sample
+>>> the TLS or other value(s) when a sampling event is generated. This is
+>>> supported today on Windows via EventActivityIdControl() [3]. Since
+>>> Open Telemetry works on both Windows and Linux, ideally we can do
+>>> something as efficient for Linux based workloads.
+>>>
+>>> This series is to explore how it would be best possible to collect
+>>> supporting data from a user process when a profile sample is collected.
+>>> Having a value stored in TLS makes a lot of sense for this however
+>>> there are other ways to explore. Whatever is chosen, kernel samples
+>>> taken in process context should be able to get this supporting data.
+>>> In these patches on X64 the fsbase and gsbase are used for this.
+>>>
+>>> An option to explore suggested by Mathieu Desnoyers is to utilize rseq
+>>> for processes to register a value location that can be included when
+>>> profiling if desired. This would allow a tighter contract between user
+>>> processes and a profiler.  It would allow better labeling/categorizing
+>>> the correlation values.
+>>
+>> It is hard to understand this idea. Are you saying stash a cookie in
+>> TLS for samples to capture to indicate an activity? Restartable
+>> sequences are about preemption on a CPU not of a thread, so at least
+>> my intuition is that they feel different. You could stash information
+>> like this today by changing the thread name which generates comm
+>> events. I've wondered about having similar information in some form of
+>> reserved for profiling stack slot, for example, to stash a pointer to
+>> the name of a function being interpreted. Snapshotting all of a stack
+>> is bad performance wise and for security. A stack slot would be able
+>> to deal with nesting.
+>>
+> 
+> You are getting the idea. A slot or tag for a thread would be great! I'm
+> not a fan of overriding the thread comm name (as that already has a
+> use). TLS would be fine, if we could also pass an offset + size + type.
+> 
+> Maybe a stack slot that just points to parts of TLS? That way you could
+> have a set of slots that don't require much memory and selectively copy
+> them out of TLS (or where ever those slots point to in user memory).
+> 
+> When I was talking to Mathieu about this, it seems that rseq already had
+> a place to potentially put these slots. I'm unsure though how the per
+> thread aspects would work.
+> 
+> Mathieu, can you post your ideas here about that?
 
-> Thanks Steve, seems a good idea. With that, I could test on kdumpst (the
-> tool used on Steam Deck), since it relies on modular pstore/ram.
+Sure. I'll try to summarize my thoughts here. By all means, let me
+know if I'm missing important pieces of the puzzle.
 
-Something like this could work.
+First of all, here is my understanding of what information we want to
+share between userspace and kernel.
 
--- Steve
+A 128-bit activity ID identifies "uniquely" (as far as a 128-bit random
+UUID allows) a portion of the dependency chain involved in doing some
+work (e.g. answer a HTTP request) across one or many participating hosts.
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index a8831ef30c73..878aee8b2399 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -16,6 +16,7 @@
- #include <linux/firmware-map.h>
- #include <linux/sort.h>
- #include <linux/memory_hotplug.h>
-+#include <linux/mm.h>
- 
- #include <asm/e820/api.h>
- #include <asm/setup.h>
-@@ -64,61 +65,6 @@ struct e820_table *e820_table __refdata			= &e820_table_init;
- struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
- struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
- 
--/* For wildcard memory requests, have a table to find them later */
--#define E820_MAX_MAPS		8
--#define E820_MAP_NAME_SIZE	16
--struct e820_mmap_map {
--	char			name[E820_MAP_NAME_SIZE];
--	u64			start;
--	u64			size;
--};
--static struct e820_mmap_map e820_mmap_list[E820_MAX_MAPS] __initdata;
--static int e820_mmap_size				__initdata;
--
--/* Add wildcard region with a lookup name */
--static int __init e820_add_mmap(u64 start, u64 size, const char *name)
--{
--	struct e820_mmap_map *map;
--
--	if (!name || !name[0] || strlen(name) >= E820_MAP_NAME_SIZE)
--		return -EINVAL;
--
--	if (e820_mmap_size >= E820_MAX_MAPS)
--		return -1;
--
--	map = &e820_mmap_list[e820_mmap_size++];
--	map->start = start;
--	map->size = size;
--	strcpy(map->name, name);
--	return 0;
--}
--
--/**
-- * memmap_named - Find a wildcard region with a given name
-- * @name: The name that is attached to a wildcard region
-- * @start: If found, holds the start address
-- * @size: If found, holds the size of the address.
-- *
-- * Returns: 1 if found or 0 if not found.
-- */
--int __init memmap_named(const char *name, u64 *start, u64 *size)
--{
--	struct e820_mmap_map *map;
--	int i;
--
--	for (i = 0; i < e820_mmap_size; i++) {
--		map = &e820_mmap_list[i];
--		if (!map->size)
--			continue;
--		if (strcmp(name, map->name) == 0) {
--			*start = map->start;
--			*size = map->size;
--			return 1;
--		}
--	}
--	return 0;
--}
--
- /* For PCI or other memory-mapped resources */
- unsigned long pci_mem_start = 0xaeedbabe;
- #ifdef CONFIG_PCI
-@@ -1024,6 +970,8 @@ static int __init parse_memmap_one(char *p)
- 		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
- 	} else if (*p == '*') {
- 		u64 align;
-+		int ret;
-+
- 		/* Followed by alignment and ':' then the name */
- 		align = memparse(p+1, &p);
- 		start_at = e820__region(mem_size, align);
-@@ -1032,9 +980,10 @@ static int __init parse_memmap_one(char *p)
- 		if (*p != ':')
- 			return -EINVAL;
- 		p++;
--		e820_add_mmap(start_at, mem_size, p);
-+		ret = memmap_add(start_at, mem_size, p);
- 		p += strlen(p);
--		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
-+		if (!ret)
-+			e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
- 	} else if (*p == '!') {
- 		start_at = memparse(p+1, &p);
- 		e820__range_add(start_at, mem_size, E820_TYPE_PRAM);
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index c200388399fb..22d2e2731dc2 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -919,7 +919,6 @@ static void __init ramoops_register_dummy(void)
- {
- 	struct ramoops_platform_data pdata;
- 
--#ifndef MODULE
- 	/* Only allowed when builtin */
- 	if (mem_name) {
- 		u64 start;
-@@ -930,7 +929,6 @@ static void __init ramoops_register_dummy(void)
- 			mem_size = size;
- 		}
- 	}
--#endif
- 
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cf9b34454c6f..6ce1c6929d1f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4203,5 +4203,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- }
- 
- int memmap_named(const char *name, u64 *start, u64 *size);
-+int memmap_add(long start, long size, const char *name);
- 
- #endif /* _LINUX_MM_H */
-diff --git a/mm/memory.c b/mm/memory.c
-index 7a29f17df7c1..fe054e1bb678 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -120,12 +120,6 @@ static bool vmf_orig_pte_uffd_wp(struct vm_fault *vmf)
- 	return pte_marker_uffd_wp(vmf->orig_pte);
- }
- 
--int __init __weak memmap_named(const char *name, u64 *start, u64 *size)
--{
--	pr_info("Kernel command line: memmap=nn*align:name not supported on this kernel");
--	/* zero means not found */
--	return 0;
--}
- 
- /*
-  * A number of key systems in x86 including ioremap() rely on the assumption
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 549e76af8f82..e5b729b83fdc 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -154,6 +154,77 @@ static __init int set_mminit_loglevel(char *str)
- early_param("mminit_loglevel", set_mminit_loglevel);
- #endif /* CONFIG_DEBUG_MEMORY_INIT */
- 
-+/* For wildcard memory requests, have a table to find them later */
-+#define MAX_MAPS		8
-+#define MAP_NAME_SIZE	16
-+struct mmap_map {
-+	char			name[MAP_NAME_SIZE];
-+	long			start;
-+	long			size;
-+};
-+static struct mmap_map early_mmap_list[MAX_MAPS] __initdata;
-+static int early_mmap_size			__initdata;
-+static struct mmap_map *mmap_list;
-+
-+/* Add wildcard region with a lookup name */
-+int memmap_add(long start, long size, const char *name)
-+{
-+	struct mmap_map *map;
-+
-+	if (!name || !name[0] || strlen(name) >= MAP_NAME_SIZE)
-+		return -EINVAL;
-+
-+	if (early_mmap_size >= MAX_MAPS)
-+		return -1;
-+
-+	map = &early_mmap_list[early_mmap_size++];
-+	map->start = start;
-+	map->size = size;
-+	strcpy(map->name, name);
-+	return 0;
-+}
-+
-+static void __init memmap_copy(void)
-+{
-+	if (!early_mmap_size)
-+		return;
-+
-+	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);
-+	if (!mmap_list)
-+		return;
-+
-+	for (int i = 0; i < early_mmap_size; i++)
-+		mmap_list[i] = early_mmap_list[i];
-+}
-+
-+/**
-+ * memmap_named - Find a wildcard region with a given name
-+ * @name: The name that is attached to a wildcard region
-+ * @start: If found, holds the start address
-+ * @size: If found, holds the size of the address.
-+ *
-+ * Returns: 1 if found or 0 if not found.
-+ */
-+int memmap_named(const char *name, u64 *start, u64 *size)
-+{
-+	struct mmap_map *map;
-+
-+	if (!mmap_list)
-+		return 0;
-+
-+	for (int i = 0; mmap_list[i].name[0]; i++) {
-+		map = &mmap_list[i];
-+		if (!map->size)
-+			continue;
-+		if (strcmp(name, map->name) == 0) {
-+			*start = map->start;
-+			*size = map->size;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
- struct kobject *mm_kobj;
- 
- #ifdef CONFIG_SMP
-@@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
- 	pti_init();
- 	kmsan_init_runtime();
- 	mm_cache_init();
-+	memmap_copy();
- }
+Activity IDs have a parent/child relationship: a parent activity ID can
+create children activity IDs.
+
+For instance, if one host has the service "dispatch", another host
+has a "web server", and a third host has a SQL database, we should
+be able to follow the chain of activities needed to answer a web
+query by following those activity IDs, linking them together
+through parent/child relationships. This usually requires the
+communication protocols to convey those activity IDs across hosts.
+
+The reason why this information must be provided from userspace is
+because it's userspace that knows where to find those activity IDs
+within its application-layer communication protocols.
+
+With tracing, taking a full trace of the activity ID spans begin/end
+from all hosts allow reconstructing the activity IDs parent/child
+relationships, so we typically only need to extract information about
+activity ID span begin/end with parent/child info to a tracer.
+
+Using activity IDs from a kernel profiler is trickier, because
+we do not have access to the complete span begin/end trace to
+reconstruct the activity ID parent/child relationship. This is
+where I suspect we'd want to introduce a notion of "activity ID
+stack", so a profiler could reconstruct the currently active
+stack of activity IDs for the current thread by walking that
+stack.
+
+This profiling could be triggered either from an interrupt
+(sampling use-case), which would then walk the user-space data
+on return-to-userspace as noted by Peter, or it could also be
+triggered from a system call return to userspace. This latter
+option would make it possible to correlate system calls with
+their associated activity ID stacks.
+
+The basic scenario is simple enough: a thread pushes a new
+current activity ID (starts a span), possibly nests other
+spans, and ends them. It all happens neatly within a single
+thread.
+
+More advanced scenarios require more thoughts:
+
+- non-blocking communication, where a thread can hop between
+   different requests. Technically, it should be able to swap
+   its current activity ID stack as it swaps handled requests.
+
+- green threads (userspace scheduler): the userspace scheduler
+   should be able to swap the activity ID stack of the current
+   thread when swapping between user level threads.
+
+- task "posting" (e.g. work queues types of work dispatch):
+   the activity ID stacks should probably be handed over with
+   the work item, and set as current activity ID stack by the
+   worker thread.
+
+- exceptions should be able to restore the activity ID stack
+   from a previously saved state.
+
+- Interpreters, JITs. Not sure about the constraints there, we
+   may need support from the runtimes.
+
+Those activity IDs are frequently updated, so going through a
+system call each time would be a non-starter. This is where
+thinking in terms of sharing a per-thread data structure
+(populated by user-space, read by the kernel) becomes relevant.
+
+A few words about how the rseq(2) system call could help: the
+main building block of rseq is a per-thread "struct rseq" ABI,
+which is registered by libc on thread creation, and is guaranteed
+to be accessible at an offset from the thread pointer in
+userspace, and can be accessed using the task struct "rseq" pointer
+from the kernel (in contexts that can handle page faults).
+
+Since Linux v6.3 the rseq structure becomes extensible, and we're
+working with GNU libc to add support for this extension scheme [1].
+So even though the primary use-case for rseq was to enable per-cpu
+data structures in user-space, it can be used for other purposes
+where shared per-thread data is needed between kernel and userspace.
+
+We could envision adding a new field to struct rseq which would contain
+the top level pointer to the current "activity ID stack". The layout
+of this stack would have to be defined as a kernel ABI. We'd want
+to support push/pop of activity IDs from that stack, as well as
+moving all of or portions of the activity ID stack somewhere else,
+as well as saving/recovering the stack from a saved state to accommodate
+the "advanced" scenarios described above (and probably other scenarios
+I'm missing).
+
+rseq(2) could also play a role in letting the kernel expose a seed to
+be used for generation of random activity IDs through yet another new
+struct rseq field if this happens to be relevant. It could either be
+a seed, or just a generation counter to be used to check whether the
+seed needs to be regenerated after sleep/hibernate/fork/clone [2].
+
+I'm hoping all this makes some sense, or at least highlights holes
+in my understanding. Feedback is welcome!
+
+Thanks,
+
+Mathieu
+
+[1] https://sourceware.org/pipermail/libc-alpha/2024-March/155587.html
+[2] https://sourceware.org/pipermail/libc-alpha/2024-March/155577.html
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
