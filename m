@@ -1,343 +1,194 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE3FF360;
-	Fri, 12 Apr 2024 00:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38334C8E;
+	Fri, 12 Apr 2024 01:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712881073; cv=none; b=PCBdLsUqbvn266RED+NtjxY0n7Invcas8sB7/Fsu0iufKLKTvNxTbsX0PW4hSJP9fyL7i9/3tBxjabAAoMsjhmyy/17TUZ+6PYv+uCa/i9NePi2IbRfKCXqddf9PpJaQMkfi45rzNn51K+dbxDyv0QCJsSSuHsUsQ32wQN/C+dU=
+	t=1712886415; cv=none; b=sSKZIXfvT2ob6OcdqwC94Cs/rAz+V8kgiyEOL0kLfoYS4tm4DK3MfsXLU9BZ0a5dqClXI+Imz849wqHHyIVsWJVfRGpZpI0UqWCvEPDgR+H85SyhS8uN5mjr6K1DtfhvwuAtA5T0+C33XQ1H65UY5TqoqoxHrg40d3x+7A8evwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712881073; c=relaxed/simple;
-	bh=xj6QGik4xvsN4lQj/YHP4pSr4CLFuW5i5RgEQz//Dw4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oNDSycgUuKE+HPokBPUGpbH/R887E1Yw5tWC4NVbONwjZFCM673Eh0C1g8L7+Hyxj+/XlRV4soge8IR1kCeOrlUMislPz/JRBAofUFFfGgwgKvv9/tmZ7RGTO3IcBkffXK5Sqr9PbaiHeADw3aDvZlb50RSvTz+AIbHk48O9ZNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ddlglKL+; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1712886415; c=relaxed/simple;
+	bh=FP/Afpm40jBtMSr+7mRP+khV1HHCSLPWOtraxZmTWng=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SiOhgMHD23ECjOPTvMNzU9wDCy5ZkMTVPMJ995o+Hqy6RDz/gSi2mBY6fV6hfTlpb3K8Ahd2WlNiD6cfxZNHxhBDS6fVE2AAR/1qfP2G/MZnLkBejHZ4cCoT/Cqf1WOs1pfw5MPzLQazkqDHU4DGg0rPMCnx77DVGTYKKgXr2Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsyRmwQT; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ddlglKL+"
-Received: from localhost.localdomain (unknown [4.155.48.125])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 715BA20EC327;
-	Thu, 11 Apr 2024 17:17:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 715BA20EC327
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1712881070;
-	bh=eaw3h+lPrjxdh5uerWDCtaQEhq8uGqBARjhEDVRDDbg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ddlglKL+mK3nW5AG9GRMnLlhSlx6QEDk+w8xDhRnmmbAADOfnyFJQOkAooA3UJyvZ
-	 kSB6XMtc7zEAhVPoP+1Yha/hP09gMN5n7jqika65Cgi79T/vIKnfvt6AZw/Nghn2HW
-	 WALVmt3n5eEHbTX5ZLKQ67/wnJPWIlW1n8Uz4T1Q=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsyRmwQT"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e4149e7695so3646625ad.0;
+        Thu, 11 Apr 2024 18:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712886413; x=1713491213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LTNINKBvYGsXPh2qmr+1Mo5tVIYZJuJC9faeb17b8gA=;
+        b=gsyRmwQTomnmPr6c+jRZMtkmZxw+EC/mMQcsTubTHEs3OyEgz3kpqqCQm9N62npJMA
+         JhG9JyhjHbDJJABucdM3DOa/8wqZXv/a52+yJ9eJFrG6jTSJPyWYRhz6caODOMtfHKvI
+         dLX0xvx5NX/5lS9nTj7x5pBpeCkH2QYyzmRiWJnv3sZUUOfHdNOU+1/8NqOK0qil+2IL
+         ja1ePXgoYEVQqyg/EbJRq7OiCmG3iaOBqO1wSyEZz7XNHZAjxgTY4v9nYO8uRqTwrbZ8
+         PdEJASI36NjK5IpjeX0udkCcSskMDgDbjYaGDvsTtBJMHJsZAeqvRrQxVZp0fdZXSLas
+         LMFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712886413; x=1713491213;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LTNINKBvYGsXPh2qmr+1Mo5tVIYZJuJC9faeb17b8gA=;
+        b=XzGWnHYdVbyGiVRgUbCqzYiw0AhB0PpLli3AAFm9KmeBkaO+2fwOOV5/8MyDk7ja4d
+         Kimf5fU5cJYK96XKtJRJ2cpo9FeuseHWaS2SoDQElewhnVUf8C6qY1FKcG0l3FzO2CeG
+         Zs1ZALdUOY7KS960kRNJBm+wVAIMYdPT1phoTdXFSy13N6WX0PoUPdGi69tC4jQ0b0yC
+         UPSteTkz5bQwHjxYr2I2QmebNkvo2UFUsToSLtrUSr8IXFcYP/u3k4XhKEc/pGkUkRgw
+         xhQloAfeM0dy9DyXRa8q+Jqowd4GC8QJb83aC+7Lzg85M53HwxK0cR4aA6fhY24Gv+AF
+         tVYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBDBNt6+2D/zmxsEOQMp/dileH9Y4vGGvYD7JcO4uciG6xMpUw7V5Mj2Inb2Boit3AFXjMyeW2cIgf9q3jnr1oNNRuGQeisbxJmq3xZSzxGM4gk5Xx6IGmacQPeNymy0OTBpzlvH1WHyXtiolo1OBw
+X-Gm-Message-State: AOJu0YwJGIj12JRts3HzB/jGC27qTqHGkIQ1PS8D/mHCVwCVJjk8b3/A
+	czX2L/JuxSLtikVGyDEYPZJxqYk5t6+1n98LGGNOiv1M+M/ADLp6
+X-Google-Smtp-Source: AGHT+IGKkscy7aoUv+qJZqUTTamPos4GYD3Z5IltXF6F/wYw6XZvZsafjUTFYKbNNYBQ3TrLqtEPgA==
+X-Received: by 2002:a17:902:c94c:b0:1e4:fd4:48d4 with SMTP id i12-20020a170902c94c00b001e40fd448d4mr1479843pla.32.1712886412825;
+        Thu, 11 Apr 2024 18:46:52 -0700 (PDT)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id c6-20020a170903234600b001e0c91d448fsm675904plh.112.2024.04.11.18.46.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 18:46:52 -0700 (PDT)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: mhiramat@kernel.org
+Cc: akpm@linux-foundation.org,
+	arnd@arndb.de,
+	changbin.du@huawei.com,
+	christophe.leroy@csgroup.eu,
+	geert@linux-m68k.org,
+	jpoimboe@kernel.org,
+	kjlx@templeofstupid.com,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	primiano@google.com,
-	aahringo@redhat.com,
-	dcook@linux.microsoft.com
-Subject: [RFC PATCH 2/4] perf: Introduce PERF_SAMPLE_TLS_USER sample type
-Date: Fri, 12 Apr 2024 00:17:30 +0000
-Message-Id: <20240412001732.475-3-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240412001732.475-1-beaub@linux.microsoft.com>
-References: <20240412001732.475-1-beaub@linux.microsoft.com>
+	ndesaulniers@google.com,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	tj@kernel.org,
+	ytcoode@gmail.com
+Subject: Re: [PATCH] init/main.c: Remove redundant space from saved_command_line
+Date: Fri, 12 Apr 2024 09:46:34 +0800
+Message-ID: <20240412014642.290764-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240412080839.c903a0058bd6594d31bc1d3e@kernel.org>
+References: <20240412080839.c903a0058bd6594d31bc1d3e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When samples are generated, there is no way via the perf_event ABI to
-fetch per-thread data. This data is very useful in tracing scenarios
-that involve correlation IDs, such as OpenTelemetry. They are also
-useful for tracking per-thread performance details directly within a
-cooperating user process.
+On Fri, 12 Apr 2024 08:08:39 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-The newly establish OpenTelemetry profiling group requires a way to get
-tracing correlations on both Linux and Windows. On Windows this
-correlation is on a per-thread basis directly via ETW. On Linux we need
-a fast mechanism to store these details and TLS seems like the best
-option, see links for more details.
+> On Thu, 11 Apr 2024 23:29:40 +0800
+> Yuntao Wang <ytcoode@gmail.com> wrote:
+> 
+> > On Thu, 11 Apr 2024 23:07:45 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > 
+> > > On Thu, 11 Apr 2024 09:19:32 +0200
+> > > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > 
+> > > > CC Hiramatsu-san (now for real :-)
+> > > 
+> > > Thanks!
+> > > 
+> > > > 
+> > > > On Thu, Apr 11, 2024 at 6:13 AM Yuntao Wang <ytcoode@gmail.com> wrote:
+> > > > > extra_init_args ends with a space, so when concatenating extra_init_args
+> > > > > to saved_command_line, be sure to remove the extra space.
+> > > 
+> > > Hi Yuntao,
+> > > 
+> > > Hmm, if you want to trim the end space, you should trim extra_init_args
+> > > itself instead of this adjustment. Also, can you share the example?
+> > > 
+> > > Thank you,
+> > 
+> > At first, I also intended to fix this issue as you suggested. However,
+> > because both extra_command_line and extra_init_args end with a space,
+> > making such a change would require modifications in many places.
+> 
+> You may just need:
+> 
+> if (extra_init_args)
+> 	strim(extra_init_args);
 
-Add a new sample type (PERF_SAMPLE_TLS_USER) that fetches TLS data up to
-X bytes per-sample. Use the existing PERF_SAMPLE_STACK_USER ABI for
-outputting data out to consumers. Store requested data size by the user
-in the previously reserved u16 (__reserved_2) within perf_event_attr.
+Okay, I'll post another patch, making the changes as you suggested.
 
-Add tls_addr and tls_user_size to perf_sample_data and calculate them
-during sample preparation. This allows the output side to know if
-truncation is going to occur and not having to re-fetch the TLS value
-from the user process a second time.
+> > That's why I chose this approach instead.
+> > 
+> > Here are some examples before and after modification:
+> > 
+> > Before: [    0.829179] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 '
+> > After:  [    0.032648] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1'
+> > 
+> > Before: [    0.757217] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1  arg1'
+> > After:  [    0.068184] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 arg1'
+> > 
+> > In order to make it easier to observe spaces, I added quotes when outputting saved_command_line.
+> 
+> BTW, is this tailing space harm anything? I don't like a cosmetic change.
+> 
+> Thank you,
 
-Add CONFIG_HAVE_PERF_USER_TLS_DUMP so that architectures can specify if
-they have a TLS specific register (or other logic) that can be used for
-dumping. This does not yet enable any architecture to do TLS dump, it
-simply makes it possible by allowing a arch defined method named
-arch_perf_user_tls_pointer().
+I think this modification is necessary.
 
-Add perf_tls struct that arch_perf_user_tls_pointer() utilizes to set
-TLS details of the address and size (for 32bit on 64bit compat cases).
+If saved_command_line is only used internally in the kernel, having extra
+spaces, while not perfect, is acceptable to me. However, since saved_command_line
+can be accessed by users through the /proc/cmdline file, having these extra
+spaces here and there makes it look too casual.
 
-Link: https://opentelemetry.io/blog/2024/profiling/
-Link: https://www.elastic.co/blog/continuous-profiling-distributed-tracing-correlation
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- arch/Kconfig                    |   7 +++
- include/linux/perf_event.h      |   7 +++
- include/uapi/linux/perf_event.h |   5 +-
- kernel/events/core.c            | 105 +++++++++++++++++++++++++++++++-
- kernel/events/internal.h        |  16 +++++
- 5 files changed, 137 insertions(+), 3 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 9f066785bb71..6afaf5f46e2f 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -430,6 +430,13 @@ config HAVE_PERF_USER_STACK_DUMP
- 	  access to the user stack pointer which is not unified across
- 	  architectures.
- 
-+config HAVE_PERF_USER_TLS_DUMP
-+	bool
-+	help
-+	  Support user tls dumps for perf event samples. This needs
-+	  access to the user tls pointer which is not unified across
-+	  architectures.
-+
- config HAVE_ARCH_JUMP_LABEL
- 	bool
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index d2a15c0c6f8a..7fac81929eed 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1202,8 +1202,15 @@ struct perf_sample_data {
- 	u64				data_page_size;
- 	u64				code_page_size;
- 	u64				aux_size;
-+	u64				tls_addr;
-+	u64				tls_user_size;
- } ____cacheline_aligned;
- 
-+struct perf_tls {
-+	unsigned long base; /* Base address for TLS */
-+	unsigned long size; /* Size of base address */
-+};
-+
- /* default value for data source */
- #define PERF_MEM_NA (PERF_MEM_S(OP, NA)   |\
- 		    PERF_MEM_S(LVL, NA)   |\
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 3a64499b0f5d..b62669cfe581 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -162,8 +162,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_DATA_PAGE_SIZE		= 1U << 22,
- 	PERF_SAMPLE_CODE_PAGE_SIZE		= 1U << 23,
- 	PERF_SAMPLE_WEIGHT_STRUCT		= 1U << 24,
-+	PERF_SAMPLE_TLS_USER			= 1U << 25,
- 
--	PERF_SAMPLE_MAX = 1U << 25,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 26,		/* non-ABI */
- };
- 
- #define PERF_SAMPLE_WEIGHT_TYPE	(PERF_SAMPLE_WEIGHT | PERF_SAMPLE_WEIGHT_STRUCT)
-@@ -509,7 +510,7 @@ struct perf_event_attr {
- 	 */
- 	__u32	aux_watermark;
- 	__u16	sample_max_stack;
--	__u16	__reserved_2;
-+	__u16	sample_tls_user; /* Size of TLS data to dump on samples */
- 	__u32	aux_sample_size;
- 	__u32	__reserved_3;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 07de5cc2aa25..f848bf4be9bd 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6926,6 +6926,45 @@ static u64 perf_ustack_task_size(struct pt_regs *regs)
- 	return TASK_SIZE - addr;
- }
- 
-+/*
-+ * Get remaining task size from user tls pointer.
-+ *
-+ * Outputs the address to use for the dump to avoid doing
-+ * this twice (prepare and output).
-+ */
-+static u64
-+perf_utls_task_size(struct pt_regs *regs, u64 dump_size, u64 *tls_addr)
-+{
-+	struct perf_tls tls;
-+	unsigned long addr;
-+
-+	*tls_addr = 0;
-+
-+	/* No regs, no tls pointer, no dump. */
-+	if (!regs)
-+		return 0;
-+
-+	perf_user_tls_pointer(&tls);
-+
-+	if (WARN_ONCE(tls.size > sizeof(addr), "perf: Bad TLS size.\n"))
-+		return 0;
-+
-+	addr = 0;
-+	arch_perf_out_copy_user(&addr, (void *)tls.base, tls.size);
-+
-+	if (addr < dump_size)
-+		return 0;
-+
-+	addr -= dump_size;
-+
-+	if (!addr || addr >= TASK_SIZE)
-+		return 0;
-+
-+	*tls_addr = addr;
-+
-+	return TASK_SIZE - addr;
-+}
-+
- static u16
- perf_sample_dump_size(u16 dump_size, u16 header_size, u64 task_size)
- {
-@@ -6997,6 +7036,43 @@ perf_output_sample_ustack(struct perf_output_handle *handle, u64 dump_size,
- 	}
- }
- 
-+static void
-+perf_output_sample_utls(struct perf_output_handle *handle, u64 addr,
-+			u64 dump_size, struct pt_regs *regs)
-+{
-+	/* Case of a kernel thread, nothing to dump */
-+	if (!regs) {
-+		u64 size = 0;
-+		perf_output_put(handle, size);
-+	} else {
-+		unsigned int rem;
-+		u64 dyn_size;
-+
-+		/*
-+		 * We dump:
-+		 * static size
-+		 *   - the size requested by user or the best one we can fit
-+		 *     in to the sample max size
-+		 * data
-+		 *   - user tls dump data
-+		 * dynamic size
-+		 *   - the actual dumped size
-+		 */
-+
-+		/* Static size. */
-+		perf_output_put(handle, dump_size);
-+
-+		/* Data. */
-+		rem = __output_copy_user(handle, (void *)addr, dump_size);
-+		dyn_size = dump_size - rem;
-+
-+		perf_output_skip(handle, rem);
-+
-+		/* Dynamic size. */
-+		perf_output_put(handle, dyn_size);
-+	}
-+}
-+
- static unsigned long perf_prepare_sample_aux(struct perf_event *event,
- 					  struct perf_sample_data *data,
- 					  size_t size)
-@@ -7474,6 +7550,13 @@ void perf_output_sample(struct perf_output_handle *handle,
- 	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
- 		perf_output_put(handle, data->code_page_size);
- 
-+	if (sample_type & PERF_SAMPLE_TLS_USER) {
-+		perf_output_sample_utls(handle,
-+					data->tls_addr,
-+					data->tls_user_size,
-+					data->regs_user.regs);
-+	}
-+
- 	if (sample_type & PERF_SAMPLE_AUX) {
- 		perf_output_put(handle, data->aux_size);
- 
-@@ -7759,6 +7842,19 @@ void perf_prepare_sample(struct perf_sample_data *data,
- 		data->sample_flags |= PERF_SAMPLE_STACK_USER;
- 	}
- 
-+	if (filtered_sample_type & PERF_SAMPLE_TLS_USER) {
-+		u16 tls_size = event->attr.sample_tls_user;
-+		u64 task_size = perf_utls_task_size(data->regs_user.regs,
-+						    tls_size,
-+						    &data->tls_addr);
-+
-+		tls_size = perf_prepare_dump_data(data, event, regs,
-+						  tls_size, task_size);
-+
-+		data->tls_user_size = tls_size;
-+		data->sample_flags |= PERF_SAMPLE_TLS_USER;
-+	}
-+
- 	if (filtered_sample_type & PERF_SAMPLE_WEIGHT_TYPE) {
- 		data->weight.full = 0;
- 		data->sample_flags |= PERF_SAMPLE_WEIGHT_TYPE;
-@@ -12159,7 +12255,7 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 
- 	attr->size = size;
- 
--	if (attr->__reserved_1 || attr->__reserved_2 || attr->__reserved_3)
-+	if (attr->__reserved_1 || attr->__reserved_3)
- 		return -EINVAL;
- 
- 	if (attr->sample_type & ~(PERF_SAMPLE_MAX-1))
-@@ -12225,6 +12321,13 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 			return -EINVAL;
- 	}
- 
-+	if (attr->sample_type & PERF_SAMPLE_TLS_USER) {
-+		if (!arch_perf_have_user_tls_dump())
-+			return -ENOSYS;
-+		else if (!IS_ALIGNED(attr->sample_tls_user, sizeof(u64)))
-+			return -EINVAL;
-+	}
-+
- 	if (!attr->sample_max_stack)
- 		attr->sample_max_stack = sysctl_perf_event_max_stack;
- 
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index 5150d5f84c03..b42747b1eb04 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -243,4 +243,20 @@ static inline bool arch_perf_have_user_stack_dump(void)
- #define perf_user_stack_pointer(regs) 0
- #endif /* CONFIG_HAVE_PERF_USER_STACK_DUMP */
- 
-+#ifdef CONFIG_HAVE_PERF_USER_TLS_DUMP
-+static inline bool arch_perf_have_user_tls_dump(void)
-+{
-+	return true;
-+}
-+
-+#define perf_user_tls_pointer(tls) arch_perf_user_tls_pointer(tls)
-+#else
-+static inline bool arch_perf_have_user_tls_dump(void)
-+{
-+	return false;
-+}
-+
-+#define perf_user_tls_pointer(tls) memset(tls, 0, sizeof(*tls))
-+#endif /* CONFIG_HAVE_PERF_USER_TLS_DUMP */
-+
- #endif /* _KERNEL_EVENTS_INTERNAL_H */
--- 
-2.34.1
-
+> > 
+> > Note that the first 'before' ends with a space, and there are two spaces between
+> > 'bootconfig_arg1' and 'arg1' in the second 'before'.
+> > 
+> > > > >
+> > > > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> > > > > ---
+> > > > >  init/main.c | 4 +++-
+> > > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/init/main.c b/init/main.c
+> > > > > index 2ca52474d0c3..cf2c22aa0e8c 100644
+> > > > > --- a/init/main.c
+> > > > > +++ b/init/main.c
+> > > > > @@ -660,12 +660,14 @@ static void __init setup_command_line(char *command_line)
+> > > > >                         strcpy(saved_command_line + len, extra_init_args);
+> > > > >                         len += ilen - 4;        /* strlen(extra_init_args) */
+> > > > >                         strcpy(saved_command_line + len,
+> > > > > -                               boot_command_line + initargs_offs - 1);
+> > > > > +                               boot_command_line + initargs_offs);
+> > > > >                 } else {
+> > > > >                         len = strlen(saved_command_line);
+> > > > >                         strcpy(saved_command_line + len, " -- ");
+> > > > >                         len += 4;
+> > > > >                         strcpy(saved_command_line + len, extra_init_args);
+> > > > > +                       len += ilen - 4; /* strlen(extra_init_args) */
+> > > > > +                       saved_command_line[len-1] = '\0'; /* remove trailing space */
+> > > > >                 }
+> > > > >         }
+> > > > 
+> > > > Gr{oetje,eeting}s,
+> > > > 
+> > > >                         Geert
+> > > > 
+> > > > -- 
+> > > > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68korg
+> > > > 
+> > > > In personal conversations with technical people, I call myself a hacker. But
+> > > > when I'm talking to journalists I just say "programmer" or something like that.
+> > > >                                 -- Linus Torvalds
+> > > > 
+> > > 
+> > > 
+> > > -- 
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
