@@ -1,150 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F4847768;
-	Thu, 11 Apr 2024 23:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89E2195;
+	Fri, 12 Apr 2024 00:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712876925; cv=none; b=hG6hjEzIAf2YedLd8WT+YdXYjgVILWa/7OrwJaGB4W/g8zNeecSIuraYQve69NXZt0ruzm6tf3R1XuZyI4/QAfCRQFhmniLZoXJMfgEkkdu5WHjBL3zz9jdQ3eMKpXLR84XDft320rK1LER9LBpwcgzw05azCnh6XOMIp8QbMw4=
+	t=1712881072; cv=none; b=g8Jpq5cefJTleJc2XmoRcNKJrOWEzrfjfYLIgQ9xIxvZptVxi9aMjmUiRIETjNXLh1hOP7r3prQdxvR7YfxeP0TjAm4HgPLlTb2hYHaBEhA+tSR3R7zd5/8GCTMKjG+QSKHOUnhAs2yeOQPjKLgKyRGnq73VqjUY7vOBc2YcR8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712876925; c=relaxed/simple;
-	bh=9Be3q6JYHjv6MccnxSgMKyVuxFPrHvQDF/b6XL6yv+4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gqAOLdvoTmdfkPATTQJhTY7E/g2ElDYgYp32tf/Pdy36N6eh6V11yxzAhPCcfWcnB/obxuggAllklGEycKgYf6eMdBv1guKIgNFpr7q3cPSHiY+zjUawY2cRByBS3drd7v64AEIkoHgVyEvolgEaNPCiQzPY11JSptJgyaXzqWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmDNdbLn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712881072; c=relaxed/simple;
+	bh=BNNGY5+CHDXfjGHZyVuZHwM0zX798QLsj57JCFZBkCM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IQReKa6HK1StAH/phDzT44cvYnP9GFLVYEMHFUqMwV/16R8U17aKrPN92rjcWyPPpeCQGzSCC16R0KjQ1Qk3Fh8yob/sAilomF2oiqFePXq4xqIlAWxd7EoJojanDkChP0Mx8haLDdFz3uk/P7FNPJpKkGoWguqrGyjRWXSJ/gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pHbs6rc2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmDNdbLn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53F9C072AA;
-	Thu, 11 Apr 2024 23:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712876924;
-	bh=9Be3q6JYHjv6MccnxSgMKyVuxFPrHvQDF/b6XL6yv+4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cmDNdbLnPV87ajGBPNUro9DeMRZXbKxg7Wz+kQadT70xWwn7eOKrD8ctGTrBs2tEd
-	 BpZHZNTK1BVLwfiOzjvQz88Piqpv3Gr7D3rkcdr8lSVFs6RM5pBzKNLJjiB8ZlDEkq
-	 fv8AF8uDhMqQ/n17o6Ktst2/vjHLZWmThH4cpARc3bGP5xJQeCoaTzHq1BCcA/0nEP
-	 2K8h+QD885Ys0FyDjZxRgldz5hnmdtpl/2LThnQplOaATtf0SeJu/6pTnE3AHXIR86
-	 qjF9hR6VSIORHVizuWpGcQNXCEaAhCRT1SRFhQ743rw3iBU6Fmjt+J1N26GM+Eob8Y
-	 t14TcyC8lnEug==
-Date: Fri, 12 Apr 2024 08:08:39 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, changbin.du@huawei.com,
- christophe.leroy@csgroup.eu, geert@linux-m68k.org, jpoimboe@kernel.org,
- kjlx@templeofstupid.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, ndesaulniers@google.com,
- peterz@infradead.org, tglx@linutronix.de, tj@kernel.org
-Subject: Re: [PATCH] init/main.c: Remove redundant space from
- saved_command_line
-Message-Id: <20240412080839.c903a0058bd6594d31bc1d3e@kernel.org>
-In-Reply-To: <20240411152941.256666-1-ytcoode@gmail.com>
-References: <20240411230745.dba6cfa97ec068d909550fd5@kernel.org>
-	<20240411152941.256666-1-ytcoode@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pHbs6rc2"
+Received: from localhost.localdomain (unknown [4.155.48.125])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5443720EC323;
+	Thu, 11 Apr 2024 17:17:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5443720EC323
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712881070;
+	bh=FcYc71XiBGnC8Gok9z2Cask+yzIzGSZjKrNW1Wp57BQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pHbs6rc2Hz4XH0t/RUJ0X9ZWZ6aQbFRsQqZM5mwhNekKT53ImaIjfq95Y5xTO5kAK
+	 rdf/MPPBiFUU0FLQXoP2tbi+vFFmc4bTtM3ui0v5lFV6IIFezUdGQrERlGTlzCajVc
+	 fP+hQStG4MLRgUfOAtKCdwUC/YAqSKLjDlBC+di4=
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	primiano@google.com,
+	aahringo@redhat.com,
+	dcook@linux.microsoft.com
+Subject: [RFC PATCH 1/4] perf/core: Introduce perf_prepare_dump_data()
+Date: Fri, 12 Apr 2024 00:17:29 +0000
+Message-Id: <20240412001732.475-2-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240412001732.475-1-beaub@linux.microsoft.com>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 11 Apr 2024 23:29:40 +0800
-Yuntao Wang <ytcoode@gmail.com> wrote:
+Factor out perf_prepare_dump_data() so that the same logic is used for
+dumping stack data as other types, such as TLS.
 
-> On Thu, 11 Apr 2024 23:07:45 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Thu, 11 Apr 2024 09:19:32 +0200
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > 
-> > > CC Hiramatsu-san (now for real :-)
-> > 
-> > Thanks!
-> > 
-> > > 
-> > > On Thu, Apr 11, 2024 at 6:13 AM Yuntao Wang <ytcoode@gmail.com> wrote:
-> > > > extra_init_args ends with a space, so when concatenating extra_init_args
-> > > > to saved_command_line, be sure to remove the extra space.
-> > 
-> > Hi Yuntao,
-> > 
-> > Hmm, if you want to trim the end space, you should trim extra_init_args
-> > itself instead of this adjustment. Also, can you share the example?
-> > 
-> > Thank you,
-> 
-> At first, I also intended to fix this issue as you suggested. However,
-> because both extra_command_line and extra_init_args end with a space,
-> making such a change would require modifications in many places.
+Slightly refactor perf_sample_ustack_size() to perf_sample_dump_size().
+Move reg checks up into perf_ustack_task_size() since the task size
+must now be calculated before preparing dump data.
 
-You may just need:
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
+ kernel/events/core.c | 79 ++++++++++++++++++++++++++------------------
+ 1 file changed, 47 insertions(+), 32 deletions(-)
 
-if (extra_init_args)
-	strim(extra_init_args);
-
-> That's why I chose this approach instead.
-> 
-> Here are some examples before and after modification:
-> 
-> Before: [    0.829179] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 '
-> After:  [    0.032648] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1'
-> 
-> Before: [    0.757217] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1  arg1'
-> After:  [    0.068184] Kernel command line: 'console=ttyS0 debug -- bootconfig_arg1 arg1'
-> 
-> In order to make it easier to observe spaces, I added quotes when outputting saved_command_line.
-
-BTW, is this tailing space harm anything? I don't like a cosmetic change.
-
-Thank you,
-
-> 
-> Note that the first 'before' ends with a space, and there are two spaces between
-> 'bootconfig_arg1' and 'arg1' in the second 'before'.
-> 
-> > > >
-> > > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-> > > > ---
-> > > >  init/main.c | 4 +++-
-> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/init/main.c b/init/main.c
-> > > > index 2ca52474d0c3..cf2c22aa0e8c 100644
-> > > > --- a/init/main.c
-> > > > +++ b/init/main.c
-> > > > @@ -660,12 +660,14 @@ static void __init setup_command_line(char *command_line)
-> > > >                         strcpy(saved_command_line + len, extra_init_args);
-> > > >                         len += ilen - 4;        /* strlen(extra_init_args) */
-> > > >                         strcpy(saved_command_line + len,
-> > > > -                               boot_command_line + initargs_offs - 1);
-> > > > +                               boot_command_line + initargs_offs);
-> > > >                 } else {
-> > > >                         len = strlen(saved_command_line);
-> > > >                         strcpy(saved_command_line + len, " -- ");
-> > > >                         len += 4;
-> > > >                         strcpy(saved_command_line + len, extra_init_args);
-> > > > +                       len += ilen - 4; /* strlen(extra_init_args) */
-> > > > +                       saved_command_line[len-1] = '\0'; /* remove trailing space */
-> > > >                 }
-> > > >         }
-> > > 
-> > > Gr{oetje,eeting}s,
-> > > 
-> > >                         Geert
-> > > 
-> > > -- 
-> > > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68korg
-> > > 
-> > > In personal conversations with technical people, I call myself a hacker. But
-> > > when I'm talking to journalists I just say "programmer" or something like that.
-> > >                                 -- Linus Torvalds
-> > > 
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 724e6d7e128f..07de5cc2aa25 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6912,7 +6912,13 @@ static void perf_sample_regs_intr(struct perf_regs *regs_intr,
+  */
+ static u64 perf_ustack_task_size(struct pt_regs *regs)
+ {
+-	unsigned long addr = perf_user_stack_pointer(regs);
++	unsigned long addr;
++
++	/* No regs, no stack pointer, no dump. */
++	if (!regs)
++		return 0;
++
++	addr = perf_user_stack_pointer(regs);
+ 
+ 	if (!addr || addr >= TASK_SIZE)
+ 		return 0;
+@@ -6921,42 +6927,35 @@ static u64 perf_ustack_task_size(struct pt_regs *regs)
+ }
+ 
+ static u16
+-perf_sample_ustack_size(u16 stack_size, u16 header_size,
+-			struct pt_regs *regs)
++perf_sample_dump_size(u16 dump_size, u16 header_size, u64 task_size)
+ {
+-	u64 task_size;
+-
+-	/* No regs, no stack pointer, no dump. */
+-	if (!regs)
+-		return 0;
+-
+ 	/*
+-	 * Check if we fit in with the requested stack size into the:
++	 * Check if we fit in with the requested dump size into the:
+ 	 * - TASK_SIZE
+ 	 *   If we don't, we limit the size to the TASK_SIZE.
+ 	 *
+ 	 * - remaining sample size
+-	 *   If we don't, we customize the stack size to
++	 *   If we don't, we customize the dump size to
+ 	 *   fit in to the remaining sample size.
+ 	 */
+ 
+-	task_size  = min((u64) USHRT_MAX, perf_ustack_task_size(regs));
+-	stack_size = min(stack_size, (u16) task_size);
++	task_size  = min((u64) USHRT_MAX, task_size);
++	dump_size = min(dump_size, (u16) task_size);
+ 
+ 	/* Current header size plus static size and dynamic size. */
+ 	header_size += 2 * sizeof(u64);
+ 
+-	/* Do we fit in with the current stack dump size? */
+-	if ((u16) (header_size + stack_size) < header_size) {
++	/* Do we fit in with the current dump size? */
++	if ((u16) (header_size + dump_size) < header_size) {
+ 		/*
+ 		 * If we overflow the maximum size for the sample,
+-		 * we customize the stack dump size to fit in.
++		 * we customize the dump size to fit in.
+ 		 */
+-		stack_size = USHRT_MAX - header_size - sizeof(u64);
+-		stack_size = round_up(stack_size, sizeof(u64));
++		dump_size = USHRT_MAX - header_size - sizeof(u64);
++		dump_size = round_up(dump_size, sizeof(u64));
+ 	}
+ 
+-	return stack_size;
++	return dump_size;
+ }
+ 
+ static void
+@@ -7648,6 +7647,32 @@ static __always_inline u64 __cond_set(u64 flags, u64 s, u64 d)
+ 	return d * !!(flags & s);
+ }
+ 
++static inline u16
++perf_prepare_dump_data(struct perf_sample_data *data,
++		       struct perf_event *event,
++		       struct pt_regs *regs,
++		       u16 dump_size,
++		       u64 task_size)
++{
++	u16 header_size = perf_sample_data_size(data, event);
++	u16 size = sizeof(u64);
++
++	dump_size = perf_sample_dump_size(dump_size, header_size,
++					  task_size);
++
++	/*
++	 * If there is something to dump, add space for the dump
++	 * itself and for the field that tells the dynamic size,
++	 * which is how many have been actually dumped.
++	 */
++	if (dump_size)
++		size += sizeof(u64) + dump_size;
++
++	data->dyn_size += size;
++
++	return dump_size;
++}
++
+ void perf_prepare_sample(struct perf_sample_data *data,
+ 			 struct perf_event *event,
+ 			 struct pt_regs *regs)
+@@ -7725,22 +7750,12 @@ void perf_prepare_sample(struct perf_sample_data *data,
+ 		 * up the rest of the sample size.
+ 		 */
+ 		u16 stack_size = event->attr.sample_stack_user;
+-		u16 header_size = perf_sample_data_size(data, event);
+-		u16 size = sizeof(u64);
+-
+-		stack_size = perf_sample_ustack_size(stack_size, header_size,
+-						     data->regs_user.regs);
++		u64 task_size = perf_ustack_task_size(regs);
+ 
+-		/*
+-		 * If there is something to dump, add space for the dump
+-		 * itself and for the field that tells the dynamic size,
+-		 * which is how many have been actually dumped.
+-		 */
+-		if (stack_size)
+-			size += sizeof(u64) + stack_size;
++		stack_size = perf_prepare_dump_data(data, event, regs,
++						    stack_size, task_size);
+ 
+ 		data->stack_user_size = stack_size;
+-		data->dyn_size += size;
+ 		data->sample_flags |= PERF_SAMPLE_STACK_USER;
+ 	}
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
