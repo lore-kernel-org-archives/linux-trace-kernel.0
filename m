@@ -1,148 +1,165 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA55101D5;
-	Sat, 13 Apr 2024 02:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F4B3DBB7;
+	Sat, 13 Apr 2024 09:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712976446; cv=none; b=pvy2jMc2oc10XUCqEmPSjANhZ42fu/8hiljPkU52dNBj81fGPympoTgvNck6yfxPBZ65MSoIcprlJa8d1uwNPykMipKfooUf5kt5jzpoGp8GB9qttS1r4uPm+G2z8Jh1flPxd6B/51kiHNUYKdkmhoKMJpH/FMJtE5DyEwXJJMg=
+	t=1713002189; cv=none; b=dNznbpcJ5iZs5l+Cik4vKLdHuBLqxBNH4tZzD2C7HJxzN0tQNEBEWwFixIQu79RwnrK9hbVCnB4FaOHpSPe+xr6ZDrgJ52rw+4YSTK30dQeVKfEkLzC4mnjC63qW3ri3FfXgdnwizveCHGthe92JcF2xZ5twOpER3NuQRdLp+VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712976446; c=relaxed/simple;
-	bh=4IWaTwtyOQ2skuNnfQppbzaME0kK8u+dyItDzAgSiJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=doWoCJpgAkoKMqyQa0d3DTDKM4mLiuZ7Gj80tYxRuAKJF9g+PwrQAYYYW8XcydxgcC9vEdpR6xN6sYGVEsv1FRe8lb6bcUc1Cnjxi39Jo6Iqa/aJNO5cIPsYoj/sfL092GNtOlBFmINXuls5L7KedQUPLsCbri3QfUln/roowJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VGd7H6Bw8ztSkM;
-	Sat, 13 Apr 2024 10:44:27 +0800 (CST)
-Received: from canpemm500008.china.huawei.com (unknown [7.192.105.151])
-	by mail.maildlp.com (Postfix) with ESMTPS id C304F140157;
-	Sat, 13 Apr 2024 10:47:14 +0800 (CST)
-Received: from [10.67.111.115] (10.67.111.115) by
- canpemm500008.china.huawei.com (7.192.105.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sat, 13 Apr 2024 10:47:14 +0800
-Message-ID: <33503bb2-6248-426b-a614-9f0f92899d70@huawei.com>
-Date: Sat, 13 Apr 2024 10:47:14 +0800
+	s=arc-20240116; t=1713002189; c=relaxed/simple;
+	bh=QDdFeOtdYZxjp46RxGOVjOsa4iTVpoIZG/FPIUq7PkU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k4sb9BW3qRClr6agh2lOEc+GAWDMbBtdlx5PmfUjlVAuvD6YKQoFn9CuJfcESE+aYsJLN3ZK4NsGqku47mN4dWdTvbgvPruaSZpu3wOUYr5UG6wVEp43cieghAV2zGliEDhPZPVMKjb00GpIaObQAXTRS8P6zHIHFMSHtylKVp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFZQ2ioQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFZQ2ioQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB85C4AF55;
+	Sat, 13 Apr 2024 09:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713002188;
+	bh=QDdFeOtdYZxjp46RxGOVjOsa4iTVpoIZG/FPIUq7PkU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mFZQ2ioQYI4SPEajzb0CoDJ+DBpEtqV/6Z/BFQ4PKiYU1objwuCL1h0YEV5wVvaaV
+	 CStVGbxbg2PLEvUpiruu3vkH/y4cM4+cyaR6uTFrqiuCgSAt4YmdU+kQNO4mhteYE5
+	 q333pUGrVdvWTX2jJozMVr1WfreRxN9CZWgNdxAf4RoHKNGu901fhZ7/hHch++3d1I
+	 m2eFAZSX3y2YCFXBDOjGGbQYp+igVsDeuNqTryAXEm0o7f2cHg2zXaMLKr1soTFZ2j
+	 ofMp5Ohw4rwS2q0YaHgiHwMQ7+YkitOG5MjuKApjtCEFb8HYoNf/A99GWK9EyWwGw/
+	 8+Y5NXUY8UrNA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rva7W-0047Ih-AA;
+	Sat, 13 Apr 2024 10:56:26 +0100
+Date: Sat, 13 Apr 2024 10:56:25 +0100
+Message-ID: <86h6g5si0m.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Will Deacon <will@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+In-Reply-To: <ZhlLHtfeSHk9gRRO@google.com>
+References: <20240405115815.3226315-1-pbonzini@redhat.com>
+	<20240405115815.3226315-2-pbonzini@redhat.com>
+	<20240412104408.GA27645@willie-the-truck>
+	<86jzl2sovz.wl-maz@kernel.org>
+	<ZhlLHtfeSHk9gRRO@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] selftests/ftrace: traceonoff_triggers: strip off names
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, <shuah@kernel.org>
-CC: <mhiramat@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20230818013226.2182299-1-zouyipeng@huawei.com>
- <20230821111358.7540bdc9@gandalf.local.home>
-From: Yipeng Zou <zouyipeng@huawei.com>
-In-Reply-To: <20230821111358.7540bdc9@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500008.china.huawei.com (7.192.105.151)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: seanjc@google.com, will@kernel.org, pbonzini@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, oliver.upton@linux.dev, zhaotianrui@loongson.cn, maobibo@loongson.cn, tsbogend@alpha.franken.de, npiggin@gmail.com, anup@brainfault.org, atishp@atishpatra.org, akpm@linux-foundation.org, david@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Fri, 12 Apr 2024 15:54:22 +0100,
+Sean Christopherson <seanjc@google.com> wrote:
+> 
+> On Fri, Apr 12, 2024, Marc Zyngier wrote:
+> > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
+> > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
+> > > Also, if you're in the business of hacking the MMU notifier code, it
+> > > would be really great to change the .clear_flush_young() callback so
+> > > that the architecture could handle the TLB invalidation. At the moment,
+> > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
+> > > being set by kvm_handle_hva_range(), whereas we could do a much
+> > > lighter-weight and targetted TLBI in the architecture page-table code
+> > > when we actually update the ptes for small ranges.
+> > 
+> > Indeed, and I was looking at this earlier this week as it has a pretty
+> > devastating effect with NV (it blows the shadow S2 for that VMID, with
+> > costly consequences).
+> > 
+> > In general, it feels like the TLB invalidation should stay with the
+> > code that deals with the page tables, as it has a pretty good idea of
+> > what needs to be invalidated and how -- specially on architectures
+> > that have a HW-broadcast facility like arm64.
+> 
+> Would this be roughly on par with an in-line flush on arm64?  The simpler, more
+> straightforward solution would be to let architectures override flush_on_ret,
+> but I would prefer something like the below as x86 can also utilize a range-based
+> flush when running as a nested hypervisor.
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index ff0a20565f90..b65116294efe 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -601,6 +601,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
+>         struct kvm_gfn_range gfn_range;
+>         struct kvm_memory_slot *slot;
+>         struct kvm_memslots *slots;
+> +       bool need_flush = false;
+>         int i, idx;
+>  
+>         if (WARN_ON_ONCE(range->end <= range->start))
+> @@ -653,10 +654,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
+>                                         break;
+>                         }
+>                         r.ret |= range->handler(kvm, &gfn_range);
+> +
+> +                       /*
+> +                        * Use a precise gfn-based TLB flush when possible, as
+> +                        * most mmu_notifier events affect a small-ish range.
+> +                        * Fall back to a full TLB flush if the gfn-based flush
+> +                        * fails, and don't bother trying the gfn-based flush
+> +                        * if a full flush is already pending.
+> +                        */
+> +                       if (range->flush_on_ret && !need_flush && r.ret &&
+> +                           kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start
+> +                                                            gfn_range.end - gfn_range.start + 1))
+> +                               need_flush = true;
+>                 }
+>         }
+>  
+> -       if (range->flush_on_ret && r.ret)
+> +       if (need_flush)
+>                 kvm_flush_remote_tlbs(kvm);
+>  
+>         if (r.found_memslot)
 
-在 2023/8/21 23:13, Steven Rostedt 写道:
-> On Fri, 18 Aug 2023 09:32:26 +0800
-> Yipeng Zou <zouyipeng@huawei.com> wrote:
->
->> The func_traceonoff_triggers.tc sometimes goes to fail
->> on my board, Kunpeng-920.
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->
-> Shuah, can you take this through your tree?
->
-> -- Steve
+I think this works for us on HW that has range invalidation, which
+would already be a positive move.
 
-Hi:
+For the lesser HW that isn't range capable, it also gives the
+opportunity to perform the iteration ourselves or go for the nuclear
+option if the range is larger than some arbitrary constant (though
+this is additional work).
 
-     I just notice that it haven't been picked in Linux-next.
+But this still considers the whole range as being affected by
+range->handler(). It'd be interesting to try and see whether more
+precise tracking is (or isn't) generally beneficial.
 
-     It's there other issue about this patch?
+Thanks,
 
->> [root@localhost]# ./ftracetest ./test.d/ftrace/func_traceonoff_triggers.tc -l fail.log
->> === Ftrace unit tests ===
->> [1] ftrace - test for function traceon/off triggers     [FAIL]
->> [2] (instance)  ftrace - test for function traceon/off triggers [UNSUPPORTED]
->>
->> I look up the log, and it shows that the md5sum is different between csum1 and csum2.
->>
->> ++ cnt=611
->> ++ sleep .1
->> +++ cnt_trace
->> +++ grep -v '^#' trace
->> +++ wc -l
->> ++ cnt2=611
->> ++ '[' 611 -ne 611 ']'
->> +++ cat tracing_on
->> ++ on=0
->> ++ '[' 0 '!=' 0 ']'
->> +++ md5sum trace
->> ++ csum1='76896aa74362fff66a6a5f3cf8a8a500  trace'
->> ++ sleep .1
->> +++ md5sum trace
->> ++ csum2='ee8625a21c058818fc26e45c1ed3f6de  trace'
->> ++ '[' '76896aa74362fff66a6a5f3cf8a8a500  trace' '!=' 'ee8625a21c058818fc26e45c1ed3f6de  trace' ']'
->> ++ fail 'Tracing file is still changing'
->> ++ echo Tracing file is still changing
->> Tracing file is still changing
->> ++ exit_fail
->> ++ exit 1
->>
->> So I directly dump the trace file before md5sum, the diff shows that:
->>
->> [root@localhost]# diff trace_1.log trace_2.log -y --suppress-common-lines
->> dockerd-12285   [036] d.... 18385.510290: sched_stat | <...>-12285   [036] d.... 18385.510290: sched_stat
->> dockerd-12285   [036] d.... 18385.510291: sched_swit | <...>-12285   [036] d.... 18385.510291: sched_swit
->> <...>-740       [044] d.... 18385.602859: sched_stat | kworker/44:1-740 [044] d.... 18385.602859: sched_stat
->> <...>-740       [044] d.... 18385.602860: sched_swit | kworker/44:1-740 [044] d.... 18385.602860: sched_swit
->>
->> And we can see that <...> filed be filled with names.
->>
->> We can strip off the names there to fix that.
->>
->> After strip off the names:
->>
->> kworker/u257:0-12 [019] d..2.  2528.758910: sched_stat | -12 [019] d..2.  2528.758910: sched_stat_runtime: comm=k
->> kworker/u257:0-12 [019] d..2.  2528.758912: sched_swit | -12 [019] d..2.  2528.758912: sched_switch: prev_comm=kw
->> <idle>-0          [000] d.s5.  2528.762318: sched_waki | -0  [000] d.s5.  2528.762318: sched_waking: comm=sshd pi
->> <idle>-0          [037] dNh2.  2528.762326: sched_wake | -0  [037] dNh2.  2528.762326: sched_wakeup: comm=sshd pi
->> <idle>-0          [037] d..2.  2528.762334: sched_swit | -0  [037] d..2.  2528.762334: sched_switch: prev_comm=sw
->>
->> Fixes: d87b29179aa0 ("selftests: ftrace: Use md5sum to take less time of checking logs")
->> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> Signed-off-by: Yipeng Zou <zouyipeng@huawei.com>
->> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> ---
->>   .../ftrace/test.d/ftrace/func_traceonoff_triggers.tc         | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
->> index aee22289536b..1b57771dbfdf 100644
->> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
->> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
->> @@ -90,9 +90,10 @@ if [ $on != "0" ]; then
->>       fail "Tracing is not off"
->>   fi
->>   
->> -csum1=`md5sum trace`
->> +# Cannot rely on names being around as they are only cached, strip them
->> +csum1=`cat trace | sed -e 's/^ *[^ ]*\(-[0-9][0-9]*\)/\1/' | md5sum`
->>   sleep $SLEEP_TIME
->> -csum2=`md5sum trace`
->> +csum2=`cat trace | sed -e 's/^ *[^ ]*\(-[0-9][0-9]*\)/\1/' | md5sum`
->>   
->>   if [ "$csum1" != "$csum2" ]; then
->>       fail "Tracing file is still changing"
->
+	M.
+
 -- 
-Regards,
-Yipeng Zou
-
+Without deviation from the norm, progress is not possible.
