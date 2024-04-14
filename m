@@ -1,368 +1,330 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382373E470
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 14 Apr 2024 11:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A0E1F941;
+	Sun, 14 Apr 2024 11:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713093029; cv=none; b=hAltIDeV8brOd7zVGL/3iheiZWvXKbqbeesqSlj7P0qeAgLzAe5l6bpLR0j94yWgSbhEPpzktj3DV32qd6b9YsfWvDxhgDZrR6/TuiZUBQ/DsxTWwF4uNwdppmMdokMWqE8K+X/yufy2ulwkNhSIGZksYq1NwKje6t/SPAnqF0w=
+	t=1713095103; cv=none; b=lSqNBo/IpmOQe28keqWRR24RrjO8b5PsUzzlKw2OyIgw2T1iiRJat0Qc3WCKuc2pMSiXtWAXh6JofvOjDHoOE0PL2E46xOGLXFrbetO7Y4UW6UmwyhtJF470ChMANwIw4KiHJ7lZwnmNG3+Dz6EdfTpQJ15TuAYSOZI5HdTXzQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713093029; c=relaxed/simple;
-	bh=qvd50bIW2K89HrkwWcYADWefd+FwjjTWI9n6PEMNUlY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=r8NyW7XB0ehkPIl3pzFdlgH9Q5TI9EbHZU/3N4JvR4RG25kJJ6+pWHwKM7TZuMP+tUaWP5EP26x9HX0Zr4x3kqbQ9b8CkXFddALCBTJNW+CHCCKYelW+z+Ie5qVM1gOCBjh7udDzvdGGFOhkUdFYgkfPqCJlaF3Z8Hfp/GFK4YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5f987a9f9so256641839f.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 14 Apr 2024 04:10:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713093026; x=1713697826;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=78bFKjy6MAU/rC/KItiXm1aephiJ350tFC9EFuIL4DQ=;
-        b=dfdCuLfoOAsomS3zwqfNN8nog3nF8IA+LDHXTymNExWwU6Tf80aQLMURHfg1KaK04k
-         ptxKoUV9uBnyrmLgIiL6qhlGLf3QMW3UOTCF5kxdqNqInmsam8k6aCLX60wuhsPiXUoM
-         l/6nbEtARcjvVpDaIZmOyClyiu5qQQFppcDOpRWoXL3m8ScFajII1qeTKWgm/zFTHmmN
-         4VdrnUNhkZtT+EmB1ekGy/72T9FxSrn7a52D6DD/OHogQ7VIehLY2XPgc351t0l0vZx4
-         r/BOOZbHC8n1aRpxjzztGSx5fS9WxiGdeYH/Gyskp7y8xr4E0u6soOnj/aP9/TVpYycy
-         UwOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfp1w/jqSdl8awZBrPZkNY+ofs9HbnZtCEPrUIdauyGnCtB0aXrLYKaOWGlgrx2NSFK+l8V5+YoOFrGxO+d2DCvAPXZ9au5Mj+9XFrUPja8mUB
-X-Gm-Message-State: AOJu0Yydzh2pSMbJMgaXzWxzY+GqdSVxrLOhz2NtojyYsWnsRdaWcjf2
-	mfZfuWKhDysvyK6ZkCHTSPmtug/vvvBE+Oub4gKifB/qKWqJxGgsrmitwIMtZxArGMqo8R6Z2UI
-	giYTRw75AnqVYgxDKDbw05tonG/koackfpTcCgAWXHg3Yvog4d1J/12E=
-X-Google-Smtp-Source: AGHT+IFBWKLs+rhqH09lDjJIEqciCdDj6ibDR/ucCXpul1EFXFnVbM9zeYerPt681Klks4It4lGaLcQq3wRZOB7g/G70J5oK+7bh
+	s=arc-20240116; t=1713095103; c=relaxed/simple;
+	bh=WjvkBUbahfC9bxfG1vmHtWfmzLOT8CFddXo88VB0ciA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sA3cTlXa4Op031Oxh91qieSPuvD8JO0ScNubpC+hMRQwG74Nwh3UNJZXh/Ly9hJQ83i+qh5fom/1iDEVghTn9HkXLg+5AYg46Zz/14SUELomesEXUz7UaGPEjjjkqufK2iGlaOrVVBWiIxp+D3drIb5azBRRWTaZAbC+x5pekF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WuK7C6XT; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WuK7C6XT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713095101; x=1744631101;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WjvkBUbahfC9bxfG1vmHtWfmzLOT8CFddXo88VB0ciA=;
+  b=WuK7C6XTy3nUcGy2gDPNNs5faQUgDLwaEjuYXuCHUE1GY7luWq5KysjR
+   Aq8uO9MHySjRFIzRU2RpmzBqLdDv9P0PA9K+vLb6Yy4/suXAQN76bhxcl
+   3Li9i+KkT2Rbyk5i9xcsZ8WQZLsbFkA+lZh+KbgPIkqnqIxLXHZ2+ugO2
+   xgYpfNOSgi986EeYC9YPeLL/vQ2jOFXsOFiEm1RwiQ254j+zevmlYgU3x
+   Oi3u9hMWTtqZrjQQSqZjNQsbVjHyoxXIbJUmHNFTktqrlr1wKV7zAyE3c
+   m8S4eKnUKYdicqEw+7gWNRG7X+Q4CwwSFHpHfO56utYMpn9e/X5wEFii9
+   g==;
+X-CSE-ConnectionGUID: fTK4boLTQNymucEGQULGQQ==
+X-CSE-MsgGUID: Sfq1dB0PQK+Tx4h0C8Ax0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11043"; a="8599818"
+X-IronPort-AV: E=Sophos;i="6.07,201,1708416000"; 
+   d="scan'208";a="8599818"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 04:45:00 -0700
+X-CSE-ConnectionGUID: IAJQZILDSfaCcJzV8p24rQ==
+X-CSE-MsgGUID: B7yeQvc3R+qA9WAQ5JmrDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,201,1708416000"; 
+   d="scan'208";a="26192173"
+Received: from dev-qz.sh.intel.com (HELO localhost) ([10.239.147.89])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 04:44:58 -0700
+Date: Sun, 14 Apr 2024 19:45:12 +0800
+From: Qiang Zhang <qiang4.zhang@linux.intel.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Qiang Zhang <qiang4.zhang@intel.com>, Stable@vger.kernel.org
+Subject: Re: [PATCH v2] bootconfig: use memblock_free_late to free xbc memory
+ to buddy
+Message-ID: <ZhvByM7i03H8FiM6@dev-qz>
+References: <20240412104940.456257-1-qiang4.zhang@linux.intel.com>
+ <20240412221820.852abeb57feceec893ca0dad@kernel.org>
+ <20240413212138.26726485be53bec3009452d7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:34a2:b0:47e:c0f8:75b3 with SMTP id
- t34-20020a05663834a200b0047ec0f875b3mr417085jal.2.1713093026592; Sun, 14 Apr
- 2024 04:10:26 -0700 (PDT)
-Date: Sun, 14 Apr 2024 04:10:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005143c806160c8d98@google.com>
-Subject: [syzbot] [trace?] [bpf?] possible deadlock in pwq_dec_nr_in_flight
-From: syzbot <syzbot+92438ab91cb6348b16fa@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	rostedt@goodmis.org, sdf@google.com, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240413212138.26726485be53bec3009452d7@kernel.org>
 
-Hello,
+On Sat, Apr 13, 2024 at 09:21:38PM +0900, Masami Hiramatsu wrote:
+>Hi Qiang,
+>
+>I found xbc_free_mem() missed to check !addr. When I booted kernel without
+>bootconfig data but with "bootconfig" cmdline, I got a kernel crash below;
+>
+>
+>[    2.394904] ------------[ cut here ]------------
+>[    2.396490] kernel BUG at arch/x86/mm/physaddr.c:28!
+>[    2.398176] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+>[    2.399388] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G                 N 6.9.0-rc3-00004-g121fbb463836 #10
+>[    2.401579] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+>[    2.403247] RIP: 0010:__phys_addr+0x40/0x60
+>[    2.404196] Code: 48 2b 05 fb a4 3d 01 48 05 00 00 00 80 48 39 c7 72 17 0f b6 0d ee 9e c0 01 48 89 c2 48 d3 ea 48 85 d2 75 05 c3 cc cc cc cc 90 <0f> 0b 48 03 05 e7 e2 9d 01 48 81 ff ff ff ff 1f 76 e8 90 0f6
+>[    2.407250] RSP: 0000:ffffc90000013f18 EFLAGS: 00010287
+>[    2.407991] RAX: 0000778000000000 RBX: ffffffff81c17940 RCX: 000000000080000a
+>[    2.408891] RDX: 000000000080000b RSI: ffff88800775f320 RDI: 0000000080000000
+>[    2.409727] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+>[    2.410555] R10: ffff888005028a60 R11: 000000000080000a R12: 0000000000000000
+>[    2.411423] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>[    2.412155] FS:  0000000000000000(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
+>[    2.412970] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>[    2.413550] CR2: 0000000000000000 CR3: 0000000002a48000 CR4: 00000000000006b0
+>[    2.414264] Call Trace:
+>[    2.414520]  <TASK>
+>[    2.414755]  ? die+0x37/0x90
+>[    2.415062]  ? do_trap+0xe3/0x110
+>[    2.415451]  ? __phys_addr+0x40/0x60
+>[    2.415822]  ? do_error_trap+0x9c/0x120
+>[    2.416215]  ? __phys_addr+0x40/0x60
+>[    2.416573]  ? __phys_addr+0x40/0x60
+>[    2.416968]  ? exc_invalid_op+0x53/0x70
+>[    2.417358]  ? __phys_addr+0x40/0x60
+>[    2.417709]  ? asm_exc_invalid_op+0x1a/0x20
+>[    2.418122]  ? __pfx_kernel_init+0x10/0x10
+>[    2.418569]  ? __phys_addr+0x40/0x60
+>[    2.418960]  _xbc_exit+0x74/0xc0
+>[    2.419374]  kernel_init+0x3a/0x1c0
+>[    2.419764]  ret_from_fork+0x34/0x50
+>[    2.420132]  ? __pfx_kernel_init+0x10/0x10
+>[    2.420578]  ret_from_fork_asm+0x1a/0x30
+>[    2.420973]  </TASK>
+>[    2.421200] Modules linked in:
+>[    2.421598] ---[ end trace 0000000000000000 ]---
+>[    2.422053] RIP: 0010:__phys_addr+0x40/0x60
+>[    2.422484] Code: 48 2b 05 fb a4 3d 01 48 05 00 00 00 80 48 39 c7 72 17 0f b6 0d ee 9e c0 01 48 89 c2 48 d3 ea 48 85 d2 75 05 c3 cc cc cc cc 90 <0f> 0b 48 03 05 e7 e2 9d 01 48 81 ff ff ff ff 1f 76 e8 90 0f6
+>[    2.424294] RSP: 0000:ffffc90000013f18 EFLAGS: 00010287
+>[    2.424769] RAX: 0000778000000000 RBX: ffffffff81c17940 RCX: 000000000080000a
+>[    2.425378] RDX: 000000000080000b RSI: ffff88800775f320 RDI: 0000000080000000
+>[    2.425993] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+>[    2.426589] R10: ffff888005028a60 R11: 000000000080000a R12: 0000000000000000
+>[    2.427156] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>[    2.427746] FS:  0000000000000000(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
+>[    2.428368] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>[    2.428820] CR2: 0000000000000000 CR3: 0000000002a48000 CR4: 00000000000006b0
+>[    2.429373] Kernel panic - not syncing: Fatal exception
+>[    2.429982] Kernel Offset: disabled
+>[    2.430261] ---[ end Kernel panic - not syncing: Fatal exception ]---
+>
+>Adding below patch fixed it.
+>
+>diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+>index f9a45adc6307..8841554432d5 100644
+>--- a/lib/bootconfig.c
+>+++ b/lib/bootconfig.c
+>@@ -65,7 +65,7 @@ static inline void __init xbc_free_mem(void *addr, size_t size, bool early)
+> {
+> 	if (early)
+> 		memblock_free(addr, size);
+>-	else
+>+	else if (addr)
+> 		memblock_free_late(__pa(addr), size);
+> }
+> 
+>Can you update with this fix?
 
-syzbot found the following issue on:
+Sure.
 
-HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d25599180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
-dashboard link: https://syzkaller.appspot.com/bug?extid=92438ab91cb6348b16fa
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f6c04726a2ae/disk-fe46a7dd.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/09c26ce901ea/vmlinux-fe46a7dd.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/134acf7f5322/bzImage-fe46a7dd.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+92438ab91cb6348b16fa@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-======================================================
-WARNING: possible circular locking dependency detected
-6.8.0-syzkaller-08951-gfe46a7dd189e #0 Not tainted
-------------------------------------------------------
-kworker/u8:5/987 is trying to acquire lock:
-ffffffff8e126300 (console_owner){....}-{0:0}, at: console_trylock_spinning kernel/printk/printk.c:1997 [inline]
-ffffffff8e126300 (console_owner){....}-{0:0}, at: vprintk_emit+0x3d6/0x770 kernel/printk/printk.c:2341
-
-but task is already holding lock:
-ffff8881483629a0 (&nna->lock){..-.}-{2:2}, at: node_activate_pending_pwq kernel/workqueue.c:1882 [inline]
-ffff8881483629a0 (&nna->lock){..-.}-{2:2}, at: pwq_dec_nr_active kernel/workqueue.c:1993 [inline]
-ffff8881483629a0 (&nna->lock){..-.}-{2:2}, at: pwq_dec_nr_in_flight+0x32a/0xd60 kernel/workqueue.c:2017
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #4 (&nna->lock){..-.}-{2:2}:
-       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       pwq_tryinc_nr_active+0x2ef/0x720 kernel/workqueue.c:1774
-       __queue_work+0xa9d/0xec0 kernel/workqueue.c:2395
-       queue_work_on+0x14f/0x250 kernel/workqueue.c:2435
-       queue_work include/linux/workqueue.h:605 [inline]
-       call_usermodehelper_exec+0x286/0x4a0 kernel/umh.c:434
-       kobject_uevent_env+0x6b5/0x8f0 lib/kobject_uevent.c:618
-       driver_register+0x2d6/0x320 drivers/base/driver.c:254
-       pcie_init_services+0xa/0x20 drivers/pci/pcie/portdrv.c:828
-       pcie_portdrv_init+0x38/0x60 drivers/pci/pcie/portdrv.c:839
-       do_one_initcall+0x238/0x830 init/main.c:1241
-       do_initcall_level+0x157/0x210 init/main.c:1303
-       do_initcalls+0x3f/0x80 init/main.c:1319
-       kernel_init_freeable+0x435/0x5d0 init/main.c:1550
-       kernel_init+0x1d/0x2a0 init/main.c:1439
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
-
--> #3 (&pool->lock){-.-.}-{2:2}:
-       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       __queue_work+0x6ec/0xec0
-       queue_work_on+0x14f/0x250 kernel/workqueue.c:2435
-       queue_work include/linux/workqueue.h:605 [inline]
-       rpm_suspend+0xe99/0x1780 drivers/base/power/runtime.c:662
-       __pm_runtime_idle+0x131/0x1a0 drivers/base/power/runtime.c:1104
-       pm_runtime_put include/linux/pm_runtime.h:448 [inline]
-       __device_attach+0x3e5/0x520 drivers/base/dd.c:1048
-       bus_probe_device+0x189/0x260 drivers/base/bus.c:532
-       device_add+0x8ff/0xca0 drivers/base/core.c:3639
-       serial_base_port_add+0x2b6/0x3f0 drivers/tty/serial/serial_base_bus.c:178
-       serial_core_port_device_add drivers/tty/serial/serial_core.c:3353 [inline]
-       serial_core_register_port+0x393/0x1e30 drivers/tty/serial/serial_core.c:3394
-       serial8250_register_8250_port+0x1433/0x1cd0 drivers/tty/serial/8250/8250_core.c:1138
-       serial_pnp_probe+0x7d5/0xa20 drivers/tty/serial/8250/8250_pnp.c:478
-       pnp_device_probe+0x2ba/0x460 drivers/pnp/driver.c:111
-       really_probe+0x29e/0xc50 drivers/base/dd.c:658
-       __driver_probe_device+0x1a2/0x3e0 drivers/base/dd.c:800
-       driver_probe_device+0x50/0x430 drivers/base/dd.c:830
-       __driver_attach+0x45f/0x710 drivers/base/dd.c:1216
-       bus_for_each_dev+0x239/0x2b0 drivers/base/bus.c:368
-       bus_add_driver+0x347/0x620 drivers/base/bus.c:673
-       driver_register+0x23a/0x320 drivers/base/driver.c:246
-       serial8250_init+0x9e/0x170 drivers/tty/serial/8250/8250_core.c:1239
-       do_one_initcall+0x238/0x830 init/main.c:1241
-       do_initcall_level+0x157/0x210 init/main.c:1303
-       do_initcalls+0x3f/0x80 init/main.c:1319
-       kernel_init_freeable+0x435/0x5d0 init/main.c:1550
-       kernel_init+0x1d/0x2a0 init/main.c:1439
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
-
--> #2 (&dev->power.lock){-...}-{2:2}:
-       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
-       __pm_runtime_resume+0x112/0x180 drivers/base/power/runtime.c:1171
-       pm_runtime_get include/linux/pm_runtime.h:396 [inline]
-       __uart_start+0x17a/0x3c0 drivers/tty/serial/serial_core.c:148
-       uart_write+0x427/0x5c0 drivers/tty/serial/serial_core.c:615
-       process_output_block drivers/tty/n_tty.c:574 [inline]
-       n_tty_write+0xd6a/0x1230 drivers/tty/n_tty.c:2379
-       iterate_tty_write drivers/tty/tty_io.c:1021 [inline]
-       file_tty_write+0x54f/0x9b0 drivers/tty/tty_io.c:1096
-       call_write_iter include/linux/fs.h:2108 [inline]
-       new_sync_write fs/read_write.c:497 [inline]
-       vfs_write+0xa84/0xcb0 fs/read_write.c:590
-       ksys_write+0x1a0/0x2c0 fs/read_write.c:643
-       do_syscall_64+0xfb/0x240
-       entry_SYSCALL_64_after_hwframe+0x6d/0x75
-
--> #1 (&port_lock_key){-.-.}-{2:2}:
-       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
-       uart_port_lock_irqsave include/linux/serial_core.h:616 [inline]
-       serial8250_console_write+0x1a8/0x1840 drivers/tty/serial/8250/8250_port.c:3403
-       console_emit_next_record kernel/printk/printk.c:2907 [inline]
-       console_flush_all+0x867/0xfd0 kernel/printk/printk.c:2973
-       console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3042
-       vprintk_emit+0x5a6/0x770 kernel/printk/printk.c:2342
-       _printk+0xd5/0x120 kernel/printk/printk.c:2367
-       register_console+0x70a/0xcd0 kernel/printk/printk.c:3548
-       univ8250_console_init+0x49/0x50 drivers/tty/serial/8250/8250_core.c:717
-       console_init+0x198/0x680 kernel/printk/printk.c:3694
-       start_kernel+0x2d3/0x500 init/main.c:1012
-       x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:509
-       x86_64_start_kernel+0x99/0xa0 arch/x86/kernel/head64.c:490
-       common_startup_64+0x13e/0x147
-
--> #0 (console_owner){....}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
-       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
-       console_trylock_spinning kernel/printk/printk.c:1997 [inline]
-       vprintk_emit+0x3f3/0x770 kernel/printk/printk.c:2341
-       _printk+0xd5/0x120 kernel/printk/printk.c:2367
-       __report_bug lib/bug.c:195 [inline]
-       report_bug+0x346/0x500 lib/bug.c:219
-       handle_bug+0x3e/0x70 arch/x86/kernel/traps.c:239
-       exc_invalid_op+0x1a/0x50 arch/x86/kernel/traps.c:260
-       asm_exc_invalid_op+0x1a/0x20 arch/x86/include/asm/idtentry.h:621
-       __local_bh_enable_ip+0x1be/0x200 kernel/softirq.c:362
-       spin_unlock_bh include/linux/spinlock.h:396 [inline]
-       __sock_map_delete net/core/sock_map.c:424 [inline]
-       sock_map_delete_elem+0xca/0x140 net/core/sock_map.c:446
-       bpf_prog_f4780399ec52412a+0x45/0x49
-       bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-       __bpf_prog_run include/linux/filter.h:650 [inline]
-       bpf_prog_run include/linux/filter.h:664 [inline]
-       __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-       bpf_trace_run1+0x336/0x3f0 kernel/trace/bpf_trace.c:2419
-       trace_workqueue_activate_work+0x161/0x1d0 include/trace/events/workqueue.h:59
-       __pwq_activate_work+0x61/0x340 kernel/workqueue.c:1675
-       node_activate_pending_pwq kernel/workqueue.c:1926 [inline]
-       pwq_dec_nr_active kernel/workqueue.c:1993 [inline]
-       pwq_dec_nr_in_flight+0x679/0xd60 kernel/workqueue.c:2017
-       process_one_work kernel/workqueue.c:3309 [inline]
-       process_scheduled_works+0xec5/0x1770 kernel/workqueue.c:3335
-       worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
-       kthread+0x2f0/0x390 kernel/kthread.c:388
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
-
-other info that might help us debug this:
-
-Chain exists of:
-  console_owner --> &pool->lock --> &nna->lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&nna->lock);
-                               lock(&pool->lock);
-                               lock(&nna->lock);
-  lock(console_owner);
-
- *** DEADLOCK ***
-
-3 locks held by kworker/u8:5/987:
- #0: ffff888014ca0018 (&pool->lock){-.-.}-{2:2}, at: process_one_work kernel/workqueue.c:3289 [inline]
- #0: ffff888014ca0018 (&pool->lock){-.-.}-{2:2}, at: process_scheduled_works+0xc90/0x1770 kernel/workqueue.c:3335
- #1: ffff8881483629a0 (&nna->lock){..-.}-{2:2}, at: node_activate_pending_pwq kernel/workqueue.c:1882 [inline]
- #1: ffff8881483629a0 (&nna->lock){..-.}-{2:2}, at: pwq_dec_nr_active kernel/workqueue.c:1993 [inline]
- #1: ffff8881483629a0 (&nna->lock){..-.}-{2:2}, at: pwq_dec_nr_in_flight+0x32a/0xd60 kernel/workqueue.c:2017
- #2: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
- #2: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:750 [inline]
- #2: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
- #2: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run1+0xf0/0x3f0 kernel/trace/bpf_trace.c:2419
-
-stack backtrace:
-CPU: 0 PID: 987 Comm: kworker/u8:5 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Workqueue:  0x0 (bat_events)
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- console_trylock_spinning kernel/printk/printk.c:1997 [inline]
- vprintk_emit+0x3f3/0x770 kernel/printk/printk.c:2341
- _printk+0xd5/0x120 kernel/printk/printk.c:2367
- __report_bug lib/bug.c:195 [inline]
- report_bug+0x346/0x500 lib/bug.c:219
- handle_bug+0x3e/0x70 arch/x86/kernel/traps.c:239
- exc_invalid_op+0x1a/0x50 arch/x86/kernel/traps.c:260
- asm_exc_invalid_op+0x1a/0x20 arch/x86/include/asm/idtentry.h:621
-RIP: 0010:__local_bh_enable_ip+0x1be/0x200 kernel/softirq.c:362
-Code: 3b 44 24 60 75 52 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc 90 0f 0b 90 e9 ca fe ff ff e8 55 00 00 00 eb 9c 90 <0f> 0b 90 e9 fa fe ff ff 48 c7 c1 0c 41 86 8f 80 e1 07 80 c1 03 38
-RSP: 0018:ffffc9000404f8c0 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 1ffff92000809f1c RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000201 RDI: ffffffff895b48fa
-RBP: ffffc9000404f980 R08: ffff88805c7049eb R09: 1ffff1100b8e093d
-R10: dffffc0000000000 R11: ffffed100b8e093e R12: dffffc0000000000
-R13: ffff88807ca940c0 R14: ffffc9000404f900 R15: 0000000000000201
- spin_unlock_bh include/linux/spinlock.h:396 [inline]
- __sock_map_delete net/core/sock_map.c:424 [inline]
- sock_map_delete_elem+0xca/0x140 net/core/sock_map.c:446
- bpf_prog_f4780399ec52412a+0x45/0x49
- bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
- __bpf_prog_run include/linux/filter.h:650 [inline]
- bpf_prog_run include/linux/filter.h:664 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
- bpf_trace_run1+0x336/0x3f0 kernel/trace/bpf_trace.c:2419
- trace_workqueue_activate_work+0x161/0x1d0 include/trace/events/workqueue.h:59
- __pwq_activate_work+0x61/0x340 kernel/workqueue.c:1675
- node_activate_pending_pwq kernel/workqueue.c:1926 [inline]
- pwq_dec_nr_active kernel/workqueue.c:1993 [inline]
- pwq_dec_nr_in_flight+0x679/0xd60 kernel/workqueue.c:2017
- process_one_work kernel/workqueue.c:3309 [inline]
- process_scheduled_works+0xec5/0x1770 kernel/workqueue.c:3335
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
- kthread+0x2f0/0x390 kernel/kthread.c:388
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
- </TASK>
-WARNING: CPU: 0 PID: 987 at kernel/softirq.c:362 __local_bh_enable_ip+0x1be/0x200 kernel/softirq.c:362
-Modules linked in:
-CPU: 0 PID: 987 Comm: kworker/u8:5 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Workqueue:  0x0 (bat_events)
-RIP: 0010:__local_bh_enable_ip+0x1be/0x200 kernel/softirq.c:362
-Code: 3b 44 24 60 75 52 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc 90 0f 0b 90 e9 ca fe ff ff e8 55 00 00 00 eb 9c 90 <0f> 0b 90 e9 fa fe ff ff 48 c7 c1 0c 41 86 8f 80 e1 07 80 c1 03 38
-RSP: 0018:ffffc9000404f8c0 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 1ffff92000809f1c RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000201 RDI: ffffffff895b48fa
-RBP: ffffc9000404f980 R08: ffff88805c7049eb R09: 1ffff1100b8e093d
-R10: dffffc0000000000 R11: ffffed100b8e093e R12: dffffc0000000000
-R13: ffff88807ca940c0 R14: ffffc9000404f900 R15: 0000000000000201
-FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc8ff1abf84 CR3: 0000000062f64000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- spin_unlock_bh include/linux/spinlock.h:396 [inline]
- __sock_map_delete net/core/sock_map.c:424 [inline]
- sock_map_delete_elem+0xca/0x140 net/core/sock_map.c:446
- bpf_prog_f4780399ec52412a+0x45/0x49
- bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
- __bpf_prog_run include/linux/filter.h:650 [inline]
- bpf_prog_run include/linux/filter.h:664 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
- bpf_trace_run1+0x336/0x3f0 kernel/trace/bpf_trace.c:2419
- trace_workqueue_activate_work+0x161/0x1d0 include/trace/events/workqueue.h:59
- __pwq_activate_work+0x61/0x340 kernel/workqueue.c:1675
- node_activate_pending_pwq kernel/workqueue.c:1926 [inline]
- pwq_dec_nr_active kernel/workqueue.c:1993 [inline]
- pwq_dec_nr_in_flight+0x679/0xd60 kernel/workqueue.c:2017
- process_one_work kernel/workqueue.c:3309 [inline]
- process_scheduled_works+0xec5/0x1770 kernel/workqueue.c:3335
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
- kthread+0x2f0/0x390 kernel/kthread.c:388
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>
+>Thank you,
+>
+>
+>On Fri, 12 Apr 2024 22:18:20 +0900
+>Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>
+>> On Fri, 12 Apr 2024 18:49:41 +0800
+>> qiang4.zhang@linux.intel.com wrote:
+>> 
+>> > From: Qiang Zhang <qiang4.zhang@intel.com>
+>> > 
+>> > On the time to free xbc memory in xbc_exit(), memblock may has handed
+>> > over memory to buddy allocator. So it doesn't make sense to free memory
+>> > back to memblock. memblock_free() called by xbc_exit() even causes UAF bugs
+>> > on architectures with CONFIG_ARCH_KEEP_MEMBLOCK disabled like x86.
+>> > Following KASAN logs shows this case.
+>> > 
+>> > This patch fixes the xbc memory free problem by calling memblock_free()
+>> > in early xbc init error rewind path and calling memblock_free_late() in
+>> > xbc exit path to free memory to buddy allocator.
+>> > 
+>> > [    9.410890] ==================================================================
+>> > [    9.418962] BUG: KASAN: use-after-free in memblock_isolate_range+0x12d/0x260
+>> > [    9.426850] Read of size 8 at addr ffff88845dd30000 by task swapper/0/1
+>> > 
+>> > [    9.435901] CPU: 9 PID: 1 Comm: swapper/0 Tainted: G     U             6.9.0-rc3-00208-g586b5dfb51b9 #5
+>> > [    9.446403] Hardware name: Intel Corporation RPLP LP5 (CPU:RaptorLake)/RPLP LP5 (ID:13), BIOS IRPPN02.01.01.00.00.19.015.D-00000000 Dec 28 2023
+>> > [    9.460789] Call Trace:
+>> > [    9.463518]  <TASK>
+>> > [    9.465859]  dump_stack_lvl+0x53/0x70
+>> > [    9.469949]  print_report+0xce/0x610
+>> > [    9.473944]  ? __virt_addr_valid+0xf5/0x1b0
+>> > [    9.478619]  ? memblock_isolate_range+0x12d/0x260
+>> > [    9.483877]  kasan_report+0xc6/0x100
+>> > [    9.487870]  ? memblock_isolate_range+0x12d/0x260
+>> > [    9.493125]  memblock_isolate_range+0x12d/0x260
+>> > [    9.498187]  memblock_phys_free+0xb4/0x160
+>> > [    9.502762]  ? __pfx_memblock_phys_free+0x10/0x10
+>> > [    9.508021]  ? mutex_unlock+0x7e/0xd0
+>> > [    9.512111]  ? __pfx_mutex_unlock+0x10/0x10
+>> > [    9.516786]  ? kernel_init_freeable+0x2d4/0x430
+>> > [    9.521850]  ? __pfx_kernel_init+0x10/0x10
+>> > [    9.526426]  xbc_exit+0x17/0x70
+>> > [    9.529935]  kernel_init+0x38/0x1e0
+>> > [    9.533829]  ? _raw_spin_unlock_irq+0xd/0x30
+>> > [    9.538601]  ret_from_fork+0x2c/0x50
+>> > [    9.542596]  ? __pfx_kernel_init+0x10/0x10
+>> > [    9.547170]  ret_from_fork_asm+0x1a/0x30
+>> > [    9.551552]  </TASK>
+>> > 
+>> > [    9.555649] The buggy address belongs to the physical page:
+>> > [    9.561875] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x45dd30
+>> > [    9.570821] flags: 0x200000000000000(node=0|zone=2)
+>> > [    9.576271] page_type: 0xffffffff()
+>> > [    9.580167] raw: 0200000000000000 ffffea0011774c48 ffffea0012ba1848 0000000000000000
+>> > [    9.588823] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+>> > [    9.597476] page dumped because: kasan: bad access detected
+>> > 
+>> > [    9.605362] Memory state around the buggy address:
+>> > [    9.610714]  ffff88845dd2ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> > [    9.618786]  ffff88845dd2ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> > [    9.626857] >ffff88845dd30000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>> > [    9.634930]                    ^
+>> > [    9.638534]  ffff88845dd30080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>> > [    9.646605]  ffff88845dd30100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>> > [    9.654675] ==================================================================
+>> > 
+>> > Cc: Stable@vger.kernel.org
+>> > Signed-off-by: Qiang Zhang <qiang4.zhang@intel.com>
+>> 
+>> Looks good to me.
+>> 
+>> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>> 
+>> Also,
+>> 
+>> Fixes: 40caa127f3c7 ("init: bootconfig: Remove all bootconfig data when the init memory is removed")
+>> 
+>> Let me pick this for bootconfig/fixes.
+>> 
+>> Thanks!
+>> 
+>> > ---
+>> > v2:
+>> > - add an early flag in xbc_free_mem() to free memory back to memblock in
+>> >   xbc_init error path or put memory to buddy allocator in normal xbc_exit.
+>> > 
+>> > ---
+>> >  include/linux/bootconfig.h |  7 ++++++-
+>> >  lib/bootconfig.c           | 19 +++++++++++--------
+>> >  2 files changed, 17 insertions(+), 9 deletions(-)
+>> > 
+>> > diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
+>> > index e5ee2c694401..3f4b4ac527ca 100644
+>> > --- a/include/linux/bootconfig.h
+>> > +++ b/include/linux/bootconfig.h
+>> > @@ -288,7 +288,12 @@ int __init xbc_init(const char *buf, size_t size, const char **emsg, int *epos);
+>> >  int __init xbc_get_info(int *node_size, size_t *data_size);
+>> >  
+>> >  /* XBC cleanup data structures */
+>> > -void __init xbc_exit(void);
+>> > +void __init _xbc_exit(bool early);
+>> > +
+>> > +static inline void xbc_exit(void)
+>> > +{
+>> > +	_xbc_exit(false);
+>> > +}
+>> >  
+>> >  /* XBC embedded bootconfig data in kernel */
+>> >  #ifdef CONFIG_BOOT_CONFIG_EMBED
+>> > diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+>> > index c59d26068a64..f9a45adc6307 100644
+>> > --- a/lib/bootconfig.c
+>> > +++ b/lib/bootconfig.c
+>> > @@ -61,9 +61,12 @@ static inline void * __init xbc_alloc_mem(size_t size)
+>> >  	return memblock_alloc(size, SMP_CACHE_BYTES);
+>> >  }
+>> >  
+>> > -static inline void __init xbc_free_mem(void *addr, size_t size)
+>> > +static inline void __init xbc_free_mem(void *addr, size_t size, bool early)
+>> >  {
+>> > -	memblock_free(addr, size);
+>> > +	if (early)
+>> > +		memblock_free(addr, size);
+>> > +	else
+>> > +		memblock_free_late(__pa(addr), size);
+>> >  }
+>> >  
+>> >  #else /* !__KERNEL__ */
+>> > @@ -73,7 +76,7 @@ static inline void *xbc_alloc_mem(size_t size)
+>> >  	return malloc(size);
+>> >  }
+>> >  
+>> > -static inline void xbc_free_mem(void *addr, size_t size)
+>> > +static inline void xbc_free_mem(void *addr, size_t size, bool early)
+>> >  {
+>> >  	free(addr);
+>> >  }
+>> > @@ -904,13 +907,13 @@ static int __init xbc_parse_tree(void)
+>> >   * If you need to reuse xbc_init() with new boot config, you can
+>> >   * use this.
+>> >   */
+>> > -void __init xbc_exit(void)
+>> > +void __init _xbc_exit(bool early)
+>> >  {
+>> > -	xbc_free_mem(xbc_data, xbc_data_size);
+>> > +	xbc_free_mem(xbc_data, xbc_data_size, early);
+>> >  	xbc_data = NULL;
+>> >  	xbc_data_size = 0;
+>> >  	xbc_node_num = 0;
+>> > -	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX);
+>> > +	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX, early);
+>> >  	xbc_nodes = NULL;
+>> >  	brace_index = 0;
+>> >  }
+>> > @@ -963,7 +966,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
+>> >  	if (!xbc_nodes) {
+>> >  		if (emsg)
+>> >  			*emsg = "Failed to allocate bootconfig nodes";
+>> > -		xbc_exit();
+>> > +		_xbc_exit(true);
+>> >  		return -ENOMEM;
+>> >  	}
+>> >  	memset(xbc_nodes, 0, sizeof(struct xbc_node) * XBC_NODE_MAX);
+>> > @@ -977,7 +980,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
+>> >  			*epos = xbc_err_pos;
+>> >  		if (emsg)
+>> >  			*emsg = xbc_err_msg;
+>> > -		xbc_exit();
+>> > +		_xbc_exit(true);
+>> >  	} else
+>> >  		ret = xbc_node_num;
+>> >  
+>> > -- 
+>> > 2.39.2
+>> > 
+>> 
+>> 
+>> -- 
+>> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+>
+>-- 
+>Masami Hiramatsu (Google) <mhiramat@kernel.org>
