@@ -1,44 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE504D9F4;
-	Sat, 13 Apr 2024 16:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA01028E8
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 14 Apr 2024 04:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713024898; cv=none; b=Wr99eAF7IbVxZw5PS3D421nJvhqZy1gqbpGSdqh8Ek3JLB94Id1vlFJnc57W6+dYsjaiugA/YnHFks0kxQU+AvYw3H+IvHg/ubWHukxIHDIhUzv0H0RmmiGy+izTD3u96TjOGu6fLHMduAoCjSbxJHq7pBUrprfssiHdqCsgXBI=
+	t=1713068403; cv=none; b=Mozu7Vyh4oxS7ECsghAGpq8oS6V4TjN/Wx8JN4tJ12BKiwRdnDvsu5gyFCUYi2J16zz0lyV5s2trp6Yx3lAGOz74v0jRkb5PfnLCRo+X1NKszu1B2FMSlfuK9vRTW8YprjRvOHM9OT6AwK4iZ3cUi3T6hzx1NeI3K01znKqGMsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713024898; c=relaxed/simple;
-	bh=rACH4h0q/gLqvy6sOfXp3B7RvEQ9zv1cEYzOwBCoKTQ=;
+	s=arc-20240116; t=1713068403; c=relaxed/simple;
+	bh=SB6ARZOhTMvrXawsmySuOnOm8Vrvme3M5GU3snPF6eA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MPvIiZamFyohIwljukbPvU9y+a95hLF87qdR0F+MnyQgkNDc3OprMoWNchwnFsGNob6alVVIL2wpksNbd3MxmbEYezZ0KTIUslc0m7tdhXtnvS8Ici/MPtzTGt0GEmsw2fbg4Ipfed1cUjoIbnA4HFtOn7y4TLhmqPejhVXhU40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoxqaL7x; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLsMfkdjLye7ZmiMYih/aTH2WuJJECEfOijELB21dgTDJK+HARTXA7sZ3ejXHdtgpMhnJwVaKqkbme6CaSP5cpcKgMk1zYvkYsC9jZuG7l93ytPgCrEQ1ksw/BbbqUqVspzo8CIBKeVvJhlpgb4bu9nGK1RBoCUEpSRrgg0XT9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EYzihtcP; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoxqaL7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B9F3C113CD;
-	Sat, 13 Apr 2024 16:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713024897;
-	bh=rACH4h0q/gLqvy6sOfXp3B7RvEQ9zv1cEYzOwBCoKTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eoxqaL7xcOmM7kD8ONQ9B+JkGE9qhTMTuIeAbJofmSiPezG+yqcY18CLoCEd46obc
-	 n3ax4TXEHlBmNWXOO49CHX5RDKkrCXyYly/snPELH6aGTO26i1UsHXMCd4BUw2sBtm
-	 5xKyPbBrHllzjRvVCcEDJFhdck/waE5cjg/lcgbbwxeHKP6sAXEXIS1dY4A7dzyTi/
-	 QPjBiE2BymtZXWBbCkNIFBNaoHn6lxoIX/EnFOExgaB60c64T9arS4xtnharStrT2+
-	 jv6U9/3/grvRRVLs3kCy+zhA9aVjZy7moF1NyVaF+e/uNnXJMB/7r1bVrO77X1Nn96
-	 kRvOb1Fruaj9Q==
-Date: Sat, 13 Apr 2024 17:13:19 +0100
-From: Simon Horman <horms@kernel.org>
-To: xu.xin16@zte.com.cn
-Cc: edumazet@google.com, davem@davemloft.net, kuba@kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, dsahern@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, yang.yang29@zte.com.cn,
-	he.peilin@zte.com.cn, liu.chun2@zte.com.cn, jiang.xuexin@zte.com.cn,
-	zhang.yunkai@zte.com.cn, kerneljasonxing@gmail.com,
-	fan.yu9@zte.com.cn, qiu.yutan@zte.com.cn
-Subject: Re: [PATCH net-next v5] net/ipv4: add tracepoint for icmp_send
-Message-ID: <20240413161319.GA853376@kernel.org>
-References: <20240411180154691lpBFKqpsU4tf1vugPPIqq@zte.com.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EYzihtcP"
+Date: Sat, 13 Apr 2024 21:19:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1713068399;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eh56ZyGbJGY/OXd/Aimq36lBQCcFbETossv2eMfjYH4=;
+	b=EYzihtcPurjyOYM4mJrGzV3H6XjkCbnOgayvGXbdYwLOu6YGT/ZZSArVVcKAx7hu1DWjnO
+	GfTkociOsmt/cruykfhG6lSXruJuco0v+DxB6kp5XMrVIPStTje1d199pE8N+eDzpAVvrM
+	TYNKOc2VDSLNVWQEXY3C4B+f3XU01GA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Ubisectech Sirius <bugreport@ubisectech.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	hannes <hannes@cmpxchg.org>, mhocko <mhocko@kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSN77yaZ2VuZXJh?= =?utf-8?Q?l?= protection fault
+ in refill_obj_stock
+Message-ID: <y5pnw2czcfkgb427vjyv5jwjvafvl4zo7elja2rjtdsppuxsy4@oshxnaik44kp>
+References: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
+ <ZgtIuBlUVE1Lj_Tc@P9FQF9L96D>
+ <a6b8148d-10b9-4fae-a987-39ae62bad0cb.bugreport@ubisectech.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,195 +46,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240411180154691lpBFKqpsU4tf1vugPPIqq@zte.com.cn>
+In-Reply-To: <a6b8148d-10b9-4fae-a987-39ae62bad0cb.bugreport@ubisectech.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 11, 2024 at 06:01:54PM +0800, xu.xin16@zte.com.cn wrote:
-> From: hepeilin <he.peilin@zte.com.cn>
-
-nit: it's nicer if this From line matches one of the Signed-off-by lines
-
-     From: Peilin He <he.peilin@zte.com.cn>
-
-
-> Introduce a tracepoint for icmp_send, which can help users to get more
-> detail information conveniently when icmp abnormal events happen.
+On Tue, Apr 02, 2024 at 09:50:54AM +0800, Ubisectech Sirius wrote:
+> > On Mon, Apr 01, 2024 at 03:04:46PM +0800, Ubisectech Sirius wrote:
+> > Hello.
+> > We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
 > 
-> 1. Giving an usecase example:
-> =============================
-> When an application experiences packet loss due to an unreachable UDP
-> destination port, the kernel will send an exception message through the
-> icmp_send function. By adding a trace point for icmp_send, developers or
-> system administrators can obtain detailed information about the UDP
-> packet loss, including the type, code, source address, destination address,
-> source port, and destination port. This facilitates the trouble-shooting
-> of UDP packet loss issues especially for those network-service
-> applications.
+> > Thank you for the report!
 > 
-> 2. Operation Instructions:
-> ==========================
-> Switch to the tracing directory.
->         cd /sys/kernel/tracing
-> Filter for destination port unreachable.
->         echo "type==3 && code==3" > events/icmp/icmp_send/filter
-> Enable trace event.
->         echo 1 > events/icmp/icmp_send/enable
+> > I tried to compile and run your test program for about half an hour
+> > on a virtual machine running 6.7 with enabled KASAN, but wasn't able
+> > to reproduce the problem.
 > 
-> 3. Result View:
-> ================
->  udp_client_erro-11370   [002] ...s.12   124.728002:
->  icmp_send: icmp_send: type=3, code=3.
->  From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
->  skbaddr=00000000589b167a
+> > Can you, please, share a bit more information? How long does it take
+> > to reproduce? Do you mind sharing your kernel config? Is there anything special
+> > about your setup? What are exact steps to reproduce the problem?
+> > Is this problem reproducible on 6.6?
 > 
-> v4->v5:
-> Some fixes according to
-> https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
-> 1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
-> 
-> v3->v4:
-> Some fixes according to
-> https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
-> 1.Add legality check for UDP header in SKB.
-> 2.Target this patch for net-next.
-> 
-> Changelog
-> ========
-> v2->v3:
-> Some fixes according to
-> https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-> 1. Change the tracking directory to/sys/kernel/tracking.
-> 2. Adjust the layout of the TP-STRUCT_entry parameter structure.
-> 
-> v1->v2:
-> Some fixes according to
-> https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
-> 1. adjust the trace_icmp_send() to more protocols than UDP.
-> 2. move the calling of trace_icmp_send after sanity checks
-> in __icmp_send().
-> 
-> Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+> Hi. 
+>    The .config of linux kernel 6.7 has send to you as attachment. And The problem is reproducible on 6.6.
 
-nit: There should be a space between 'He' and '<'
+Can you please share the reproducer of this issue?
 
-> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
-
-This has been posted by xu xin, thus it is appropriate for
-a Signed-off-by line from xu xin to be present.
-
-> Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-> Cc: Yang Yang <yang.yang29@zte.com.cn>
-> Cc: Liu Chun <liu.chun2@zte.com.cn>
-> Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
-
-Hi,
-
-Unfortunately this patch does not apply to next-next.
-Please rebase and repost after waiting a suitable time for
-other review.
-
--- 
-pw-bot: changes-requested
-
-> ---
->  include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
->  net/ipv4/icmp.c             |  4 +++
->  2 files changed, 69 insertions(+)
->  create mode 100644 include/trace/events/icmp.h
 > 
-> diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-> new file mode 100644
-> index 000000000..7d5190f48
-> --- /dev/null
-> +++ b/include/trace/events/icmp.h
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM icmp
-> +
-> +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_ICMP_H
-> +
-> +#include <linux/icmp.h>
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(icmp_send,
-> +
-> +		TP_PROTO(const struct sk_buff *skb, int type, int code),
-> +
-> +		TP_ARGS(skb, type, code),
-> +
-> +		TP_STRUCT__entry(
-> +			__field(const void *, skbaddr)
-> +			__field(int, type)
-> +			__field(int, code)
-> +			__array(__u8, saddr, 4)
-> +			__array(__u8, daddr, 4)
-> +			__field(__u16, sport)
-> +			__field(__u16, dport)
-> +			__field(unsigned short, ulen)
-> +		),
-> +
-> +		TP_fast_assign(
-> +			struct iphdr *iph = ip_hdr(skb);
-> +			int proto_4 = iph->protocol;
-> +			__be32 *p32;
-> +
-> +			__entry->skbaddr = skb;
-> +			__entry->type = type;
-> +			__entry->code = code;
-> +
-> +			struct udphdr *uh = udp_hdr(skb);
-> +			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-> +				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
-> +				__entry->sport = 0;
-> +				__entry->dport = 0;
-> +				__entry->ulen = 0;
-> +			} else {
-> +				__entry->sport = ntohs(uh->source);
-> +				__entry->dport = ntohs(uh->dest);
-> +				__entry->ulen = ntohs(uh->len);
-> +			}
-> +
-> +			p32 = (__be32 *) __entry->saddr;
-> +			*p32 = iph->saddr;
-> +
-> +			p32 = (__be32 *) __entry->daddr;
-> +			*p32 = iph->daddr;
-> +		),
-> +
-> +		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-> +			__entry->type, __entry->code,
-> +			__entry->saddr, __entry->sport, __entry->daddr,
-> +			__entry->dport, __entry->ulen, __entry->skbaddr)
-> +);
-> +
-> +#endif /* _TRACE_ICMP_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> \ No newline at end of file
-> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-> index b71b836cc..2081fee18 100644
-> --- a/net/ipv4/icmp.c
-> +++ b/net/ipv4/icmp.c
-> @@ -92,6 +92,8 @@
->  #include <net/inet_common.h>
->  #include <net/ip_fib.h>
->  #include <net/l3mdev.h>
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/icmp.h>
+> > It's interesting that the problem looks like use-after-free for the objcg pointer
+> > but happens in the context of udev-systemd, which I believe should be fairly stable
+> > and it's cgroup is not going anywhere.
 > 
->  /*
->   *	Build xmit assembly blocks
-> @@ -766,6 +768,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
->  	if (!fl4.saddr)
->  		fl4.saddr = htonl(INADDR_DUMMY);
+> > Thanks!
 > 
-> +	trace_icmp_send(skb_in, type, code);
-> +
->  	icmp_push_reply(&icmp_param, &fl4, &ipc, &rt);
->  ende:
->  	ip_rt_put(rt);
-> -- 
-> 2.17.1
-> 
+
+
