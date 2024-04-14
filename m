@@ -1,43 +1,68 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA01028E8
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 14 Apr 2024 04:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0E2208A4;
+	Sun, 14 Apr 2024 06:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713068403; cv=none; b=Mozu7Vyh4oxS7ECsghAGpq8oS6V4TjN/Wx8JN4tJ12BKiwRdnDvsu5gyFCUYi2J16zz0lyV5s2trp6Yx3lAGOz74v0jRkb5PfnLCRo+X1NKszu1B2FMSlfuK9vRTW8YprjRvOHM9OT6AwK4iZ3cUi3T6hzx1NeI3K01znKqGMsI=
+	t=1713077714; cv=none; b=sNgAbe44+8KCXVOMWnMyi3DTHTI2GzrsliFL/yMDRAQman10MDCOo+8UyosQECDl15n3W42EL1MubMaZWfWAvmNw69CRTvr0KKPrDgHD7jdgqCMb0jZusTw7o1TyqVYG0CdSmXsL40esGjbtG5sJAsPZx42TwTvEy/MpG6axTCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713068403; c=relaxed/simple;
-	bh=SB6ARZOhTMvrXawsmySuOnOm8Vrvme3M5GU3snPF6eA=;
+	s=arc-20240116; t=1713077714; c=relaxed/simple;
+	bh=yXFVMzCDhJLeup5ZM/cl95e9uW89yN9aiaOn424Za9g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLsMfkdjLye7ZmiMYih/aTH2WuJJECEfOijELB21dgTDJK+HARTXA7sZ3ejXHdtgpMhnJwVaKqkbme6CaSP5cpcKgMk1zYvkYsC9jZuG7l93ytPgCrEQ1ksw/BbbqUqVspzo8CIBKeVvJhlpgb4bu9nGK1RBoCUEpSRrgg0XT9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EYzihtcP; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfoccgObn9EnkjBv9/uDVMKczF511MmardP1KOfr21WJgoPvmo8sVA34vRS8OMzYum+fhe6jGjiSTws1TwWKbRgww6+PFulfm8skHJk3rhZ/zFjYIHCKpWfGMtMSC2JRE+h/KCm4r53wL/+QJbJSwRjVrAGaJRfGBJ0ut2PPIoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExCk/4I4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EYzihtcP"
-Date: Sat, 13 Apr 2024 21:19:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713068399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eh56ZyGbJGY/OXd/Aimq36lBQCcFbETossv2eMfjYH4=;
-	b=EYzihtcPurjyOYM4mJrGzV3H6XjkCbnOgayvGXbdYwLOu6YGT/ZZSArVVcKAx7hu1DWjnO
-	GfTkociOsmt/cruykfhG6lSXruJuco0v+DxB6kp5XMrVIPStTje1d199pE8N+eDzpAVvrM
-	TYNKOc2VDSLNVWQEXY3C4B+f3XU01GA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Ubisectech Sirius <bugreport@ubisectech.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	hannes <hannes@cmpxchg.org>, mhocko <mhocko@kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN77yaZ2VuZXJh?= =?utf-8?Q?l?= protection fault
- in refill_obj_stock
-Message-ID: <y5pnw2czcfkgb427vjyv5jwjvafvl4zo7elja2rjtdsppuxsy4@oshxnaik44kp>
-References: <91e1389e-0723-42e7-9ea4-396ec6b54e49.bugreport@ubisectech.com>
- <ZgtIuBlUVE1Lj_Tc@P9FQF9L96D>
- <a6b8148d-10b9-4fae-a987-39ae62bad0cb.bugreport@ubisectech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExCk/4I4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6995FC072AA;
+	Sun, 14 Apr 2024 06:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713077713;
+	bh=yXFVMzCDhJLeup5ZM/cl95e9uW89yN9aiaOn424Za9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ExCk/4I4W5Phef5aKaCHl7yCjGPCdhEDo2t4j5gOOcRyNoNKAWaoFjcjUPNV/ZDjL
+	 NgPGAZFKEHXGgq8aJVi8Z2vvDSoVvCAV16D5jLcPzItS86EojO+p5yw5DDCakIbCdC
+	 uDA7f0oS8i29LKJV724dmx85sHqKA14tjFqITDp8vRb8dfZu8WBgwU1FYXq0TYmRGR
+	 7tSa/jZjNfXa/T7/J/CXr2wjq9OOfmF2PhtvRmpH6VXO/pNGCEo0ysFPCgbJcswH3+
+	 8pSQxW9Jh3lYLdHalhcMBeJUrFP7jE5aNtiOQBUuA7scvpAOHZqdofUGHWY2VvqQnF
+	 hEcRjO6WYTf+Q==
+Date: Sun, 14 Apr 2024 09:53:59 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <Zht9hw_DhDsaTuEP@kernel.org>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-6-rppt@kernel.org>
+ <Zhg9DXzagPbpNGH1@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -46,36 +71,57 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a6b8148d-10b9-4fae-a987-39ae62bad0cb.bugreport@ubisectech.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <Zhg9DXzagPbpNGH1@bombadil.infradead.org>
 
-On Tue, Apr 02, 2024 at 09:50:54AM +0800, Ubisectech Sirius wrote:
-> > On Mon, Apr 01, 2024 at 03:04:46PM +0800, Ubisectech Sirius wrote:
-> > Hello.
-> > We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
+On Thu, Apr 11, 2024 at 12:42:05PM -0700, Luis Chamberlain wrote:
+> On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > module_alloc() is used everywhere as a mean to allocate memory for code.
+> > 
+> > Beside being semantically wrong, this unnecessarily ties all subsystems
+> > that need to allocate code, such as ftrace, kprobes and BPF to modules and
+> > puts the burden of code allocation to the modules code.
+> > 
+> > Several architectures override module_alloc() because of various
+> > constraints where the executable memory can be located and this causes
+> > additional obstacles for improvements of code allocation.
+> > 
+> > Start splitting code allocation from modules by introducing execmem_alloc()
+> > and execmem_free() APIs.
+> > 
+> > Initially, execmem_alloc() is a wrapper for module_alloc() and
+> > execmem_free() is a replacement of module_memfree() to allow updating all
+> > call sites to use the new APIs.
+> > 
+> > Since architectures define different restrictions on placement,
+> > permissions, alignment and other parameters for memory that can be used by
+> > different subsystems that allocate executable memory, execmem_alloc() takes
+> > a type argument, that will be used to identify the calling subsystem and to
+> > allow architectures define parameters for ranges suitable for that
+> > subsystem.
 > 
-> > Thank you for the report!
-> 
-> > I tried to compile and run your test program for about half an hour
-> > on a virtual machine running 6.7 with enabled KASAN, but wasn't able
-> > to reproduce the problem.
-> 
-> > Can you, please, share a bit more information? How long does it take
-> > to reproduce? Do you mind sharing your kernel config? Is there anything special
-> > about your setup? What are exact steps to reproduce the problem?
-> > Is this problem reproducible on 6.6?
-> 
-> Hi. 
->    The .config of linux kernel 6.7 has send to you as attachment. And The problem is reproducible on 6.6.
+> It would be good to describe this is a non-fuctional change.
 
-Can you please share the reproducer of this issue?
-
+Ok.
+ 
+> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > ---
 > 
-> > It's interesting that the problem looks like use-after-free for the objcg pointer
-> > but happens in the context of udev-systemd, which I believe should be fairly stable
-> > and it's cgroup is not going anywhere.
+> > diff --git a/mm/execmem.c b/mm/execmem.c
+> > new file mode 100644
+> > index 000000000000..ed2ea41a2543
+> > --- /dev/null
+> > +++ b/mm/execmem.c
+> > @@ -0,0 +1,26 @@
+> > +// SPDX-License-Identifier: GPL-2.0
 > 
-> > Thanks!
-> 
+> And this just needs to copy over the copyright notices from the main.c file.
 
+Will do.
+ 
+>   Luis
 
+-- 
+Sincerely yours,
+Mike.
