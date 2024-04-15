@@ -1,60 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAACB83CD8;
-	Mon, 15 Apr 2024 17:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29588BEF
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713200726; cv=none; b=D4vR0jY7jASS66cIUiPvhMUynlacCLw48FpDomi3EDrtjqnh92neyxuBDFy+fzANysgZodViBbPfK6h/M+e/GK5gjOZhf1KdbtDMrGyuVQl9wYPXcB6Afs1PLIg2PrGmcGtRv63QvWGUGYI6dT1+AzPvetFtgaARQ1z4mwOZwvU=
+	t=1713201777; cv=none; b=tdtRbI7zK3mPOFDa194Oai3Ir+Vdi+KzqC5lbRXzgbAAP3drrJxb6M7lwfDDpG6/oU8ZDZykrYrAbnrwugbk+m603kp09+rkToJFj6bf1CFebGodffdBqxcq+LsEiCbDHHcYBPTRXBAmqWrkGFXt2ZsOC2NSVQlwv72qZunyQcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713200726; c=relaxed/simple;
-	bh=brTfnO2VyUJAmFmt0xYsxELn1GfIqBydjJY5MAA2GwI=;
+	s=arc-20240116; t=1713201777; c=relaxed/simple;
+	bh=cVYE2ehOGt9AZu4lK44Xq/DDtOiFLWELDzP2xoxBwKk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AZJ85qC0HBDw3r8J0cbDsDD19Con1J0u4NqUej0Xl7wSVVGFmg2MnW/4izSnPX2CceHFQUwIrH3CK8Bw518QCYq55bFdV8XkkH26qSJK/GGc8rwELB/XLp19CRGemip2i30yBHN1z9K2+/8jXI6HXkr3YQYqPK5KVKouSBNu15w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eA4Y4x6L; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=USS22RqUP7ZHpcT/VycsShzPIHhOOrCYjprYyKUpVXqshtaKlj/XUpDdxORin/bfMbNP1iD7hsr3eP76TYBbt0feI5v8AYJIpnhGMEPcfnEdOyxUhySuGT+ysGn8dRHX5vP6OL+KaINESnP/mSaDL6SQVjpzExH2V3zj4Hsl/58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n1/7fwws; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eA4Y4x6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9EB7C2BD10;
-	Mon, 15 Apr 2024 17:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713200726;
-	bh=brTfnO2VyUJAmFmt0xYsxELn1GfIqBydjJY5MAA2GwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eA4Y4x6LpKDmJlhsFuCKUKDWszVPc0aMol9ibBC4zWuhXiukyHzmx+wctUQDy9YcO
-	 SgrxzhBVYrKzoib5nD4pxj58Yru3AKozTZkN+TvcG/88RKgokKwWdJ7ot3KrqKc7Eq
-	 DUMXngRm3Kt+F/W7nD5rsdsyrXI/SKwSE27eJw0RyuFsxXe2CY8Th13OWBhzodIeFI
-	 g3IfMeClHVfNPTzOpcIibEz/rTBRU3MdIzMovL+lADX98nFVYDJgBcU0E0gUS/Sp3y
-	 NkyrAJJ3bphAZ5D3Vr/0URqS2QdYx5P8qEukDaFoUJqWeYw/1mketQaU4aGKwRL5Ma
-	 kNnuFlXqLWYaw==
-Date: Mon, 15 Apr 2024 20:04:13 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>, Helge Deller <deller@gmx.de>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n1/7fwws"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so35483145ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713201775; x=1713806575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
+        b=n1/7fwwsz1foICewoRUWdT5xs8fB6NPWFGr0ktjY/VuOuhmhiUJFzqUk7Hh0CxPvax
+         E5YisngVBin3djrd6DDhs4QCGQ3QzkFrCWfEDkLyfrJo6Rw1syIkQ4vSTaxW32o1JVNp
+         BsyNyTkN7IyXA2SxPVivq380Pagf5FO7bMGXs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713201775; x=1713806575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
+        b=oZbHMk6eizJ6qIX55/HSUIyVEugp2gJhsh8jXng6VNP+yl3sn1B5t5XJNHjvLr3l0T
+         9ZgpFSnlIV8TlQCnXK33m1rDPCTupoJ2ehgT7hzHFHSw5h+OBOZUud4BwmogUk4EEWDp
+         eCtbDJBtLBH8Hz4JyNLLnk5fWKvc0bJ49h/con8feV5Yb6rqCpiCWsNhAt5PLm8P6PnG
+         oF5ig9SkzarMQABJszyroi/qEX+u3zDQDEZkaYxyPLcJuAh1Mqf7qs3mFssOGwEAnxCO
+         BWEcirKlAOtBNqwgkR6RB14fcGgXkhgZoomnTrAyIzK55smK2V7T5Em/OdB8WRUUZqwF
+         EmFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIN+wHxPk2llxVhYLAEi0X5ZuSXkZTLMMWco8ESXP4HzZHWDKb7EgX56VavivwxAI5fD6YCLfAh/EpMQ8RHPb+ZJbGz9wK5PaGO8buORIJ1kXX
+X-Gm-Message-State: AOJu0Yx0l/rq2vaGHKZOJe7Zf73qOyZjKXVuSajzvxRwZ+0+A8uRQPzW
+	5a5sRVrKsFADkKLEaoM5BBKQOG/7peE/R9S6FElnAgBarBDwgZ/u6Vcc2P2FGw==
+X-Google-Smtp-Source: AGHT+IGecUmEOfE36Uzb8gHIAKlLpWNf+xF3BoTR88anSiFWvmiZTMlAPARou5mOFCGqDFBXXAVwXQ==
+X-Received: by 2002:a17:902:e807:b0:1e4:1eea:a3ae with SMTP id u7-20020a170902e80700b001e41eeaa3aemr13173797plg.5.1713201775022;
+        Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b9-20020a170902d50900b001dee4a22c2bsm8144525plg.34.2024.04.15.10.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 10:22:54 -0700 (PDT)
+Date: Mon, 15 Apr 2024 10:22:53 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
 	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [RFC PATCH 5/7] x86/module: perpare module loading for ROX
- allocations of text
-Message-ID: <Zh1eDU1L1FbFwZzT@kernel.org>
-References: <20240411160526.2093408-1-rppt@kernel.org>
- <20240411160526.2093408-6-rppt@kernel.org>
- <20240415104316.GI40213@noisy.programming.kicks-ass.net>
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
+ memmap=nn*align:name
+Message-ID: <202404151017.FC002AA5@keescook>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409211351.075320273@goodmis.org>
+ <202404091521.B63E85D@keescook>
+ <20240409191156.5f92a15c@gandalf.local.home>
+ <202404091638.2F98764A41@keescook>
+ <Zhmgm86tzpanoweB@kernel.org>
+ <20240412181940.3e1d99f7@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,71 +93,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240415104316.GI40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240412181940.3e1d99f7@gandalf.local.home>
 
-On Mon, Apr 15, 2024 at 12:43:16PM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 11, 2024 at 07:05:24PM +0300, Mike Rapoport wrote:
-> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> > index 45a280f2161c..b4d6868df573 100644
-> > --- a/arch/x86/kernel/alternative.c
-> > +++ b/arch/x86/kernel/alternative.c
+On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
+> On Fri, 12 Apr 2024 23:59:07 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> > @@ -504,17 +513,17 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
-> >  		 *   patch if feature is *NOT* present.
-> >  		 */
-> >  		if (!boot_cpu_has(a->cpuid) == !(a->flags & ALT_FLAG_NOT)) {
-> > -			optimize_nops_inplace(instr, a->instrlen);
-> > +			optimize_nops_inplace(wr_instr, a->instrlen);
-> >  			continue;
-> >  		}
-> >  
-> > -		DPRINTK(ALT, "feat: %d*32+%d, old: (%pS (%px) len: %d), repl: (%px, len: %d) flags: 0x%x",
-> > +		DPRINTK(ALT, "feat: %d*32+%d, old: (%px (%px) len: %d), repl: (%px (%px), len: %d) flags: 0x%x",
-> >  			a->cpuid >> 5,
-> >  			a->cpuid & 0x1f,
-> > -			instr, instr, a->instrlen,
-> > -			replacement, a->replacementlen, a->flags);
-> > +			instr, wr_instr, a->instrlen,
-> > +			replacement, wr_replacement, a->replacementlen, a->flags);
+> > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
+> > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:  
+> > > > On Tue, 9 Apr 2024 15:23:07 -0700
+> > > > Kees Cook <keescook@chromium.org> wrote:
+> > > >   
+> > > > > Do we need to involve e820 at all? I think it might be possible to just
+> > > > > have pstore call request_mem_region() very early? Or does KASLR make
+> > > > > that unstable?  
+> > > > 
+> > > > Yeah, would that give the same physical memory each boot, and can we
+> > > > guarantee that KASLR will not map the kernel over the previous location?  
+> > > 
+> > > Hm, no, for physical memory it needs to get excluded very early, which
+> > > means e820.  
+> > 
+> > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
+> > kaslr, so to begin with, a new memmap parameter should be also added to
+> > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
+> > physical address will be available after KASLR.
 > 
-> I think this, and
+> But doesn't KASLR only affect virtual memory not physical memory?
 
-I've found printing both address handy when I debugged it, but no strong
-feelings here.
- 
-> >  
-> > -		memcpy(insn_buff, replacement, a->replacementlen);
-> > +		memcpy(insn_buff, wr_replacement, a->replacementlen);
-> >  		insn_buff_sz = a->replacementlen;
-> >  
-> >  		if (a->flags & ALT_FLAG_DIRECT_CALL) {
-> > @@ -528,11 +537,11 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
-> >  
-> >  		apply_relocation(insn_buff, a->instrlen, instr, replacement, a->replacementlen);
-> >  
-> > -		DUMP_BYTES(ALT, instr, a->instrlen, "%px:   old_insn: ", instr);
-> > +		DUMP_BYTES(ALT, wr_instr, a->instrlen, "%px:   old_insn: ", instr);
-> 
-> this, want to remain as is. 
+KASLR for x86 (and other archs, like arm64) do both physical and virtual
+base randomization.
 
-here wr_instr is the buffer to dump:
+> This just makes sure the physical memory it finds will not be used by the
+> system. Then ramoops does the mapping via vmap() I believe, to get a
+> virtual address to access the physical address.
 
-DUMP_BYTES(type, buf, len, fmt, args...)
-
-rather than an address, which remained 'instr'.
- 
-> >  		DUMP_BYTES(ALT, replacement, a->replacementlen, "%px:   rpl_insn: ", replacement);
-> >  		DUMP_BYTES(ALT, insn_buff, insn_buff_sz, "%px: final_insn: ", instr);
-> >  
-> > -		text_poke_early(instr, insn_buff, insn_buff_sz);
-> > +		text_poke_early(wr_instr, insn_buff, insn_buff_sz);
-> >  	}
-> >  
-> >  	kasan_enable_current();
-> 
-> The rationale being that we then print an address that can be correlated
-> to the kernel image (provided one either kills kaslr or adjusts for it).
+I was assuming, since you were in the e820 code, that it was
+manipulating that before KASLR chose a location. But if not, yeah, Mike
+is right -- you need to make sure this is getting done before
+decompress_kernel().
 
 -- 
-Sincerely yours,
-Mike.
+Kees Cook
