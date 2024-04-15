@@ -1,124 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F8F80C1D;
-	Mon, 15 Apr 2024 14:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4233642072;
+	Mon, 15 Apr 2024 16:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713191353; cv=none; b=q4vR2aixvmncfI3vsQ2rk+MnkleUa5ozWClosPHwulJyML3SiK/jcJ6XteAFG/Mj8G+K5Boidm+YFlITk+ll22NB75qzZi/HdCwECaUH7xR0jXB2dhPtenkSt+o5DOvZytWQmdEfbZexIWHnGyeZROX27VUMjqw3nhbC9BB5LUc=
+	t=1713199990; cv=none; b=Pci6F4BLaJbSnJCtfw0RQXSH2KUYyJg/21lTO4yrsWcG4PdkgGnPEYvuP/+7j09E07wDZ84S9ar0J8YslP2ZbZQHybKPSQPPcUvPo/j63eT8EdmWnlPjt3bi/NI9ZzQg/Bhp67eBLEvWNwstM+aRtMBsUtj0mcQORNPx13B7OsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713191353; c=relaxed/simple;
-	bh=8sb7TK+lrIcWs9R2APPbPPRQpoTDuiDeqYNL9OCdmAk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pcqkvLg54qK6Wvn2CUGIBS7XIVorWEwd6V0sfYlk//HcZH3SWR2tsdHtENC6KvtB152xY7g4YSU5x/lGEF+vySgWJAYINnsWyOlplKL6yxwJiskkdoJlVsfhgazzMNlB0e8i1HOnk2+BvZcYxktTxB3n8yMwnNPtvkKUJmFWhyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dd7ZzrxX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713199990; c=relaxed/simple;
+	bh=xJZBsBz/ovkewwHaqkWgEKUCLl3sCJ9igaEyaiYi248=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B+zQfhfRZUb683zSkhUtYDFDYn/bvHU6nvLZL6TLONTpV6+GTMtmLFwd9AK3LXvJ/wftAN3INL5I7WnAwUHy3VrvCfdXfEevTnNX4gH3SB+26f0OIpvHNk+s8Lk0xxcKmRCR/73S+WrBh2Rw8+05OleT1cTD3y6Eju4ShGk44SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9583Q6y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dd7ZzrxX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D9C9C113CC;
-	Mon, 15 Apr 2024 14:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713191353;
-	bh=8sb7TK+lrIcWs9R2APPbPPRQpoTDuiDeqYNL9OCdmAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dd7ZzrxXKXPK17FXtJLFUpwaFw/PljDKeZc/4rr0VW1dY5zAM809z8obMdEbkijMf
-	 /NlfDYpNSGN12Iplc+7c2peC5M5ldGKmiP9n0cnMpLUqmXa1nsSCQj7hAI8pRogz10
-	 3ZJrV9bF0QOft80l0Qc+6G5Sw6QOlXmShlDVLpas=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Zhenhua Huang <quic_zhenhuah@quicinc.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Subject: [PATCH 6.8 114/172] fs/proc: remove redundant comments from /proc/bootconfig
-Date: Mon, 15 Apr 2024 16:20:13 +0200
-Message-ID: <20240415142003.855718755@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240415141959.976094777@linuxfoundation.org>
-References: <20240415141959.976094777@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9583Q6y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57527C113CC;
+	Mon, 15 Apr 2024 16:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713199989;
+	bh=xJZBsBz/ovkewwHaqkWgEKUCLl3sCJ9igaEyaiYi248=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n9583Q6y/kVDUsC/Sk35DHsUlzQxomP4brOeJWEqMK5tTGdFfL5yXDBwNh/dc1R8t
+	 OnTvm1XERGxz1JxTUG2JWpufMQFhEpCf0upLztHBi97mz83HQzMB81Cj+bMHmQeLrO
+	 vdSyDt4foue7u5p0z1MAb6dHJ1a7FzO8x/EelybB33sZUvBK4gAoiim0DQVOThRBq2
+	 3ERPw7wOWw5Nw3DB6b+PtiKpkHgDPedzRaGZsUTWRIfT1yQsmJ+qNm4oAZ/M1rF747
+	 dHBdlhRGfIq7wIyTjPR6B4GdpTUD5V0JGj4lcLZS8oQu4cdKYlcTv5ldjuZ1AicK/r
+	 qCFC3y/AMEfuA==
+Date: Mon, 15 Apr 2024 19:51:52 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <Zh1bKAaD7nLyJ9ya@kernel.org>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-6-rppt@kernel.org>
+ <20240415075241.GF40213@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415075241.GF40213@noisy.programming.kicks-ass.net>
 
-6.8-stable review patch.  If anyone has any objections, please let me know.
+On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
+> > +/**
+> > + * enum execmem_type - types of executable memory ranges
+> > + *
+> > + * There are several subsystems that allocate executable memory.
+> > + * Architectures define different restrictions on placement,
+> > + * permissions, alignment and other parameters for memory that can be used
+> > + * by these subsystems.
+> > + * Types in this enum identify subsystems that allocate executable memory
+> > + * and let architectures define parameters for ranges suitable for
+> > + * allocations by each subsystem.
+> > + *
+> > + * @EXECMEM_DEFAULT: default parameters that would be used for types that
+> > + * are not explcitly defined.
+> > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
+> > + * @EXECMEM_KPROBES: parameters for kprobes
+> > + * @EXECMEM_FTRACE: parameters for ftrace
+> > + * @EXECMEM_BPF: parameters for BPF
+> > + * @EXECMEM_TYPE_MAX:
+> > + */
+> > +enum execmem_type {
+> > +	EXECMEM_DEFAULT,
+> > +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
+> > +	EXECMEM_KPROBES,
+> > +	EXECMEM_FTRACE,
+> > +	EXECMEM_BPF,
+> > +	EXECMEM_TYPE_MAX,
+> > +};
+> 
+> Can we please get a break-down of how all these types are actually
+> different from one another?
+> 
+> I'm thinking some platforms have a tiny immediate space (arm64 comes to
+> mind) and has less strict placement constraints for some of them?
 
-------------------
+loongarch, mips, nios2 and sparc define modules address space different
+from vmalloc and use that for modules, kprobes and bpf (where supported).
 
-From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+parisc uses vmalloc range for everything, but it sets permissions to
+PAGE_KERNEL_RWX because it's PAGE_KERNEL_EXEC is read only and it lacks
+set_memory_* APIs.
 
-commit fbbdc255fbee59b4207a5398fdb4f04590681a79 upstream.
+arm has an address space for modules, but it fall back to the entire
+vmalloc with CONFIG_ARM_MODULE_PLTS=y.
 
-commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
-/proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
+arm64 uses different ranges for modules and bpf/kprobes. For kprobes it
+does vmalloc(PAGE_KERNEL_ROX) and for bpf just plain vmalloc().
+For modules arm64 first tries to allocated from 128M below kernel_end and
+if that fails it uses 2G below kernel_end as a fallback.
 
-/proc/bootconfig shows boot_command_line[] multiple times following
-every xbc key value pair, that's duplicated and not necessary.
-Remove redundant ones.
+powerpc uses vmalloc space for everything for some configurations. For
+book3s-32 and 8xx it defines two ranges that are used for module text,
+kprobes and bpf and the module data can be allocated anywhere in vmalloc.
 
-Output before and after the fix is like:
-key1 = value1
-*bootloader argument comments*
-key2 = value2
-*bootloader argument comments*
-key3 = value3
-*bootloader argument comments*
-...
+riscv has an address space for modules, a different address space for bpf
+and uses vmalloc space for kprobes.
 
-key1 = value1
-key2 = value2
-key3 = value3
-*bootloader argument comments*
-...
+s390 and x86 have modules address space and use that space for all
+executable allocations.
 
-Link: https://lore.kernel.org/all/20240409044358.1156477-1-paulmck@kernel.org/
+The EXECMEM_FTRACE type is only used on s390 and x86 and for now it's there
+more for completeness rather to denote special constraints or properties.
 
-Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
-Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: <linux-trace-kernel@vger.kernel.org>
-Cc: <linux-fsdevel@vger.kernel.org>
-Cc: stable@vger.kernel.org
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/proc/bootconfig.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-index 902b326e1e56..e5635a6b127b 100644
---- a/fs/proc/bootconfig.c
-+++ b/fs/proc/bootconfig.c
-@@ -62,12 +62,12 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
- 				break;
- 			dst += ret;
- 		}
--		if (ret >= 0 && boot_command_line[0]) {
--			ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
--				       boot_command_line);
--			if (ret > 0)
--				dst += ret;
--		}
-+	}
-+	if (ret >= 0 && boot_command_line[0]) {
-+		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-+			       boot_command_line);
-+		if (ret > 0)
-+			dst += ret;
- 	}
- out:
- 	kfree(key);
 -- 
-2.44.0
-
-
-
+Sincerely yours,
+Mike.
