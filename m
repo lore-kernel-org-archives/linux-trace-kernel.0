@@ -1,90 +1,61 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29588BEF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A082386630;
+	Mon, 15 Apr 2024 17:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713201777; cv=none; b=tdtRbI7zK3mPOFDa194Oai3Ir+Vdi+KzqC5lbRXzgbAAP3drrJxb6M7lwfDDpG6/oU8ZDZykrYrAbnrwugbk+m603kp09+rkToJFj6bf1CFebGodffdBqxcq+LsEiCbDHHcYBPTRXBAmqWrkGFXt2ZsOC2NSVQlwv72qZunyQcE=
+	t=1713202626; cv=none; b=m4eQ6SR7zHQL4WMM4wt71bfbtg7jo/Nqpnf9N+UnsMU++KZn/GzVMkT66KfZBqWD2R1kfNbFDg1ajhqrM9kViSwB8NcxE0zfNA92aoN8CeS7Do6fD5QeYXVm9s2fUtYtH7hhMXxexxko83dtLQypF29BEXr3mkqB5jwnxud3W4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713201777; c=relaxed/simple;
-	bh=cVYE2ehOGt9AZu4lK44Xq/DDtOiFLWELDzP2xoxBwKk=;
+	s=arc-20240116; t=1713202626; c=relaxed/simple;
+	bh=ugJ7VhityyPTecy8wf9JRI9YbfU9MGW+oLb8yf0nono=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=USS22RqUP7ZHpcT/VycsShzPIHhOOrCYjprYyKUpVXqshtaKlj/XUpDdxORin/bfMbNP1iD7hsr3eP76TYBbt0feI5v8AYJIpnhGMEPcfnEdOyxUhySuGT+ysGn8dRHX5vP6OL+KaINESnP/mSaDL6SQVjpzExH2V3zj4Hsl/58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n1/7fwws; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n1/7fwws"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so35483145ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713201775; x=1713806575; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
-        b=n1/7fwwsz1foICewoRUWdT5xs8fB6NPWFGr0ktjY/VuOuhmhiUJFzqUk7Hh0CxPvax
-         E5YisngVBin3djrd6DDhs4QCGQ3QzkFrCWfEDkLyfrJo6Rw1syIkQ4vSTaxW32o1JVNp
-         BsyNyTkN7IyXA2SxPVivq380Pagf5FO7bMGXs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713201775; x=1713806575;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
-        b=oZbHMk6eizJ6qIX55/HSUIyVEugp2gJhsh8jXng6VNP+yl3sn1B5t5XJNHjvLr3l0T
-         9ZgpFSnlIV8TlQCnXK33m1rDPCTupoJ2ehgT7hzHFHSw5h+OBOZUud4BwmogUk4EEWDp
-         eCtbDJBtLBH8Hz4JyNLLnk5fWKvc0bJ49h/con8feV5Yb6rqCpiCWsNhAt5PLm8P6PnG
-         oF5ig9SkzarMQABJszyroi/qEX+u3zDQDEZkaYxyPLcJuAh1Mqf7qs3mFssOGwEAnxCO
-         BWEcirKlAOtBNqwgkR6RB14fcGgXkhgZoomnTrAyIzK55smK2V7T5Em/OdB8WRUUZqwF
-         EmFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIN+wHxPk2llxVhYLAEi0X5ZuSXkZTLMMWco8ESXP4HzZHWDKb7EgX56VavivwxAI5fD6YCLfAh/EpMQ8RHPb+ZJbGz9wK5PaGO8buORIJ1kXX
-X-Gm-Message-State: AOJu0Yx0l/rq2vaGHKZOJe7Zf73qOyZjKXVuSajzvxRwZ+0+A8uRQPzW
-	5a5sRVrKsFADkKLEaoM5BBKQOG/7peE/R9S6FElnAgBarBDwgZ/u6Vcc2P2FGw==
-X-Google-Smtp-Source: AGHT+IGecUmEOfE36Uzb8gHIAKlLpWNf+xF3BoTR88anSiFWvmiZTMlAPARou5mOFCGqDFBXXAVwXQ==
-X-Received: by 2002:a17:902:e807:b0:1e4:1eea:a3ae with SMTP id u7-20020a170902e80700b001e41eeaa3aemr13173797plg.5.1713201775022;
-        Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b9-20020a170902d50900b001dee4a22c2bsm8144525plg.34.2024.04.15.10.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:22:54 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:22:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lz398WWt3ASiObpqk1Z5cKfqqu9lzTk6vRmdOAFSzKUdkrUjXW7A99sMSDWgXkhb/WbdGPpGOV4HO4VOEtytUzYkyJL2VTeuFJWzpqgJbnt7xnGyy5Bt98pl8+nOQ+SpNYhzDXIQrbaUNXWMDOuS4D7dK4DnRuoS8T6E/JGVY/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30ED11515;
+	Mon, 15 Apr 2024 10:37:23 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.38.162])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6579A3F64C;
+	Mon, 15 Apr 2024 10:36:49 -0700 (PDT)
+Date: Mon, 15 Apr 2024 18:36:39 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>, wklin@google.com,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
+	"Bj\"orn T\"opel" <bjorn@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
- memmap=nn*align:name
-Message-ID: <202404151017.FC002AA5@keescook>
-References: <20240409210254.660888920@goodmis.org>
- <20240409211351.075320273@goodmis.org>
- <202404091521.B63E85D@keescook>
- <20240409191156.5f92a15c@gandalf.local.home>
- <202404091638.2F98764A41@keescook>
- <Zhmgm86tzpanoweB@kernel.org>
- <20240412181940.3e1d99f7@gandalf.local.home>
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-6-rppt@kernel.org>
+ <20240415075241.GF40213@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -93,45 +64,77 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240412181940.3e1d99f7@gandalf.local.home>
+In-Reply-To: <20240415075241.GF40213@noisy.programming.kicks-ass.net>
 
-On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
-> On Fri, 12 Apr 2024 23:59:07 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
+On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
+> > +/**
+> > + * enum execmem_type - types of executable memory ranges
+> > + *
+> > + * There are several subsystems that allocate executable memory.
+> > + * Architectures define different restrictions on placement,
+> > + * permissions, alignment and other parameters for memory that can be used
+> > + * by these subsystems.
+> > + * Types in this enum identify subsystems that allocate executable memory
+> > + * and let architectures define parameters for ranges suitable for
+> > + * allocations by each subsystem.
+> > + *
+> > + * @EXECMEM_DEFAULT: default parameters that would be used for types that
+> > + * are not explcitly defined.
+> > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
+> > + * @EXECMEM_KPROBES: parameters for kprobes
+> > + * @EXECMEM_FTRACE: parameters for ftrace
+> > + * @EXECMEM_BPF: parameters for BPF
+> > + * @EXECMEM_TYPE_MAX:
+> > + */
+> > +enum execmem_type {
+> > +	EXECMEM_DEFAULT,
+> > +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
+> > +	EXECMEM_KPROBES,
+> > +	EXECMEM_FTRACE,
+> > +	EXECMEM_BPF,
+> > +	EXECMEM_TYPE_MAX,
+> > +};
 > 
-> > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
-> > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:  
-> > > > On Tue, 9 Apr 2024 15:23:07 -0700
-> > > > Kees Cook <keescook@chromium.org> wrote:
-> > > >   
-> > > > > Do we need to involve e820 at all? I think it might be possible to just
-> > > > > have pstore call request_mem_region() very early? Or does KASLR make
-> > > > > that unstable?  
-> > > > 
-> > > > Yeah, would that give the same physical memory each boot, and can we
-> > > > guarantee that KASLR will not map the kernel over the previous location?  
-> > > 
-> > > Hm, no, for physical memory it needs to get excluded very early, which
-> > > means e820.  
-> > 
-> > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
-> > kaslr, so to begin with, a new memmap parameter should be also added to
-> > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
-> > physical address will be available after KASLR.
+> Can we please get a break-down of how all these types are actually
+> different from one another?
 > 
-> But doesn't KASLR only affect virtual memory not physical memory?
+> I'm thinking some platforms have a tiny immediate space (arm64 comes to
+> mind) and has less strict placement constraints for some of them?
 
-KASLR for x86 (and other archs, like arm64) do both physical and virtual
-base randomization.
+Yeah, and really I'd *much* rather deal with that in arch code, as I have said
+several times.
 
-> This just makes sure the physical memory it finds will not be used by the
-> system. Then ramoops does the mapping via vmap() I believe, to get a
-> virtual address to access the physical address.
+For arm64 we have two bsaic restrictions: 
 
-I was assuming, since you were in the e820 code, that it was
-manipulating that before KASLR chose a location. But if not, yeah, Mike
-is right -- you need to make sure this is getting done before
-decompress_kernel().
+1) Direct branches can go +/-128M
+   We can expand this range by having direct branches go to PLTs, at a
+   performance cost.
 
--- 
-Kees Cook
+2) PREL32 relocations can go +/-2G
+   We cannot expand this further.
+
+* We don't need to allocate memory for ftrace. We do not use trampolines.
+
+* Kprobes XOL areas don't care about either of those; we don't place any
+  PC-relative instructions in those. Maybe we want to in future.
+
+* Modules care about both; we'd *prefer* to place them within +/-128M of all
+  other kernel/module code, but if there's no space we can use PLTs and expand
+  that to +/-2G. Since modules can refreence other modules, that ends up
+  actually being halved, and modules have to fit within some 2G window that
+  also covers the kernel.
+
+* I'm not sure about BPF's requirements; it seems happy doing the same as
+  modules.
+
+So if we *must* use a common execmem allocator, what we'd reall want is our own
+types, e.g.
+
+	EXECMEM_ANYWHERE
+	EXECMEM_NOPLT
+	EXECMEM_PREL32
+
+... and then we use those in arch code to implement module_alloc() and friends.
+
+Mark.
