@@ -1,28 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C42D512;
-	Tue, 16 Apr 2024 04:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A2239FD0;
+	Tue, 16 Apr 2024 04:47:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713240187; cv=none; b=cBq/D+wp7xEx+8qr6qd9F5iMdEaGokeQBOFghONsaWmzsQNtzB/XLxzKu7KM/JrKv7agZnKFPCnC9Pdg9THIpjwW1jelhWlMu3amDRdu9WJd1m5lXORa2mVGUmN/1IlvVeWIKepM04KKyhVUTISvJPINI6e2ySubab+1XUQLglA=
+	t=1713242853; cv=none; b=SC4zODg1lbcFcfDN4diEa6naee9wUFu/Bbs1J2U4nMOn1V5d8wgI5HdNGKltqaha9PH0EDGjl3vwqlAgi9o5/Tfl0QokUzT+VRNT4yXnO8EtroND3Vr0VcCC0cBCyGVhoTfmaE7kxgJX/9BVCqIV8CUnEdK2KeNndUU4KFMbbEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713240187; c=relaxed/simple;
-	bh=tOJZOL1oQNa5yFnF6zjxSaef37t70hI0cdfYFqAe32s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=HyNrraz3BWj6uZA7wOYyQ359KG5pX691CdlxqYpt9HuBmFVET9sX+v5D53x74sd+cQpadSH+YG7UFLQiXH/St6jzBcBIuaJWJ3pA7KL3GDHiqQyI6FEtpObmzh94hsTZbkJbHzlt0+zDSRgDmY8mypwwJ2potnr+2Ux/qQnWs+8=
+	s=arc-20240116; t=1713242853; c=relaxed/simple;
+	bh=TeLoISl2F+4ryxFAdG4SfJT5pi3IscEEiknzA03nl3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=riCvH3Vtf4Qqv4OAsUjcLCGSnKrWczb5cavHxErJzkkqBBgnyj9kzt2yQ0P3n2HtN5ywXwKu7a7u5sDLV+CGAzDeX9xWh6bhQ5Up2ha/8/pQxnS/6Z1NYpAtjAtXVAtN8hTNNT5j+Qq4aV+x30+vN19CPsuQn22jMMNz6xxngMo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A04AEC113CE;
-	Tue, 16 Apr 2024 04:03:05 +0000 (UTC)
-Date: Tue, 16 Apr 2024 00:03:03 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9FCC113CE;
+	Tue, 16 Apr 2024 04:47:31 +0000 (UTC)
+Date: Tue, 16 Apr 2024 00:47:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Mark Brown <broonie@kernel.org>, Lars-Peter
- Clausen <lars@metafoo.de>
-Subject: [PATCH] ASoC: tracing: Export SND_SOC_DAPM_DIR_OUT to its value
-Message-ID: <20240416000303.04670cdf@rorschach.local.home>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Francis Laniel <flaniel@linux.microsoft.com>
+Subject: Re: [PATCH for-next v2] tracing/kprobes: Add symbol counting check
+ when module loads
+Message-ID: <20240416004726.792b8158@rorschach.local.home>
+In-Reply-To: <171317402290.228024.13465974857683559752.stgit@devnote2>
+References: <171317402290.228024.13465974857683559752.stgit@devnote2>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -33,40 +35,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Mon, 15 Apr 2024 18:40:23 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-The string SND_SOC_DAPM_DIR_OUT is printed in the snd_soc_dapm_path trace
-event instead of its value:
+> Check the number of probe target symbols in the target module when
+> the module is loaded. If the probe is not on the unique name symbols
+> in the module, it will be rejected at that point.
+> 
+> Note that the symbol which has a unique name in the target module,
+> it will be accepted even if there are same-name symbols in the
+> kernel or other modules,
 
-   (((REC->path_dir) == SND_SOC_DAPM_DIR_OUT) ? "->" : "<-")
+This says what it does, but doesn't explain why it is doing it.
+What's the purpose of this patch?
 
-User space cannot parse this, as it has no idea what SND_SOC_DAPM_DIR_OUT
-is. Use TRACE_DEFINE_ENUM() to convert it to its value:
-
-   (((REC->path_dir) == 1) ? "->" : "<-")
-
-So that user space tools, such as perf and trace-cmd, can parse it
-correctly.
-
-Reported-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Fixes: 6e588a0d839b5 ("ASoC: dapm: Consolidate path trace events")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/asoc.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/trace/events/asoc.h b/include/trace/events/asoc.h
-index 4eed9028bb11..517015ef36a8 100644
---- a/include/trace/events/asoc.h
-+++ b/include/trace/events/asoc.h
-@@ -12,6 +12,8 @@
- #define DAPM_DIRECT "(direct)"
- #define DAPM_ARROW(dir) (((dir) == SND_SOC_DAPM_DIR_OUT) ? "->" : "<-")
- 
-+TRACE_DEFINE_ENUM(SND_SOC_DAPM_DIR_OUT);
-+
- struct snd_soc_jack;
- struct snd_soc_card;
- struct snd_soc_dapm_widget;
--- 
-2.43.0
-
+-- Steve
