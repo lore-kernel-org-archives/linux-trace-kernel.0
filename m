@@ -1,29 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14483B185;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F98137929;
 	Tue, 16 Apr 2024 22:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713307270; cv=none; b=ZpY+hXDRQ9SU3HRbGMmcoJVbHnJZrU9dZhpVy8abhmY/DZVkV/3vQVXLLKsRI05sg+qUsAPN3zG3X0fidPRomrhF+ltHes5QIFtWwD5UNXT+1Do/bETUUDEwqydgp9afv3bEL6BakjUjgPmjO4v3oxeLRrdrD+OKwQr6+jzlLls=
+	t=1713307270; cv=none; b=A9UNa6BGW4lSJ+p4p9MwFgeh4TdGtzGfifEwHovinbzeFuCX849sCHBNsEHuuuC/mJrsgLZ65DeDdSybTO38alQ2fcsNzjZ1urZn0pJgq+SI3FtkMlMAq6Im6AhNgR3zSQCZSw69dzph8IfceGaazCOiTH8BnlD9bk0gsUwLjsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713307270; c=relaxed/simple;
-	bh=SdGKTCvRowhNJxr+bzEZa+IlrhiheIS8euVQLtIw0Qo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vu3YXD2w4yWs2oZwYu/OodGFsuSocKRwnVrnT37Vp25TO7kUpg7HUR6QzYG8WR/i9c5EvdUByOVi9pdVPH5e5/JvoXQ0utQge4zTFW7fx4ELIj6NjLDhiUxyio2alDAznbvxBFnyDzP4MO2swAJyfMo/VhPv/11UqqtyJ2K8+do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lNSjLpRh; arc=none smtp.client-ip=13.77.154.182
+	bh=y1wrF17AgEHKJmFGNE7yGIyl4eKYJ5YVmr3GJsXkZys=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nbHHOUTQP466dyhcsIn0/H8VqUmwq/x7VH1v8c2b8qx5+IgIU+wrF2vyHz7EG+a1jQ3b2ujNZGAohovnC7sHmG6dvHHDOCZJNgybeup+VdmEakCLD/JHqooP3LB+LbFakgRBBCpajbiCX1xfg4Pw65ougVO75vLH2J1TTYwhuKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hCCddQzo; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lNSjLpRh"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hCCddQzo"
 Received: from localhost.localdomain (unknown [4.155.48.117])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2CF8620FD422;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5F53120FD47C;
 	Tue, 16 Apr 2024 15:41:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CF8620FD422
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F53120FD47C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1713307269;
-	bh=+sP+L3AzA/ELT2/LLBPfQCFsuQ9bBl7MY+RkhoYAtDA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lNSjLpRhqUiV9VRg2ydcMf4diFtWXzGGV9QAVCXVmCfoPsSmWtJGvdNCFCvdmKmTZ
-	 pVNZO6eFDehbOUpHs7SfLdsgwlWfHSZRIfSsVtU22RPCpbXjgQQChm2nGqIPs3Ockc
-	 mHHZJi0L0vTWXHYBy4a0txjhU1pl+O+tIVTRaCfY=
+	bh=Qzj7PgGGTTDfdmHHRJjNMrG5XlDt+SDkey8oIImgtmw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hCCddQzo+9qG2QP70nsDMYCY4q+3KgJCJjOuJ0evtKrz2SW0DO1KGx7bmxSjDAE3U
+	 0qVagCv3Z8lBrSj/k+CzCpHnD7MtdNvr0AS8LwGexopXkwJVdwkDoepjbtYz75dSg8
+	 lCeLVx8YiqwFwmYy8qB1jOPm/mqDjyV+q5cK/lN4=
 From: Beau Belgrave <beaub@linux.microsoft.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
@@ -31,10 +32,12 @@ To: rostedt@goodmis.org,
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	dcook@linux.microsoft.com
-Subject: [PATCH 0/2] tracing/user_events: Fix non-spaced field matching
-Date: Tue, 16 Apr 2024 22:41:00 +0000
-Message-Id: <20240416224102.734-1-beaub@linux.microsoft.com>
+Subject: [PATCH 2/2] selftests/user_events: Add non-spacing separator check
+Date: Tue, 16 Apr 2024 22:41:02 +0000
+Message-Id: <20240416224102.734-3-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240416224102.734-1-beaub@linux.microsoft.com>
+References: <20240416224102.734-1-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,45 +46,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the ABI was updated to prevent same name w/different args, it
-missed an important corner case when fields don't end with a space.
-Typically, space is used for fields to help separate them, like
-"u8 field1; u8 field2". If no spaces are used, like
-"u8 field1;u8 field2", then the parsing works for the first time.
-However, the match check fails on a subsequent register, leading to
-confusion.
+The ABI documentation indicates that field separators do not need a
+space between them, only a ';'. When no spacing is used, the register
+must work. Any subsequent register, with or without spaces, must match
+and not return -EADDRINUSE.
 
-This is because the match check uses argv_split() and assumes that all
-fields will be split upon the space. When spaces are used, we get back
-{ "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
-This causes a mismatch, and the user program gets back -EADDRINUSE.
+Add a non-spacing separator case to our self-test register case to ensure
+it works going forward.
 
-Add a method to detect this case before calling argv_split(). If found
-force a space after the field separator character ';'. This ensures all
-cases work properly for matching.
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
+ tools/testing/selftests/user_events/ftrace_test.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I could not find an existing function to accomplish this, so I had to
-hand code a copy with this logic. If there is a better way to achieve
-this, I'm all ears.
-
-This series also adds a selftest to ensure this doesn't break again.
-
-With this fix, the following are all treated as matching:
-u8 field1;u8 field2
-u8 field1; u8 field2
-u8 field1;\tu8 field2
-u8 field1;\nu8 field2
-
-Beau Belgrave (2):
-  tracing/user_events: Fix non-spaced field matching
-  selftests/user_events: Add non-spacing separator check
-
- kernel/trace/trace_events_user.c              | 88 ++++++++++++++++++-
- .../selftests/user_events/ftrace_test.c       |  8 ++
- 2 files changed, 95 insertions(+), 1 deletion(-)
-
-
-base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index dcd7509fe2e0..0bb46793dcd4 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -261,6 +261,12 @@ TEST_F(user, register_events) {
+ 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
+ 	ASSERT_EQ(0, reg.write_index);
+ 
++	/* Register without separator spacing should still match */
++	reg.enable_bit = 29;
++	reg.name_args = (__u64)"__test_event u32 field1;u32 field2";
++	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
++	ASSERT_EQ(0, reg.write_index);
++
+ 	/* Multiple registers to same name but different args should fail */
+ 	reg.enable_bit = 29;
+ 	reg.name_args = (__u64)"__test_event u32 field1;";
+@@ -288,6 +294,8 @@ TEST_F(user, register_events) {
+ 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
+ 	unreg.disable_bit = 30;
+ 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
++	unreg.disable_bit = 29;
++	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
+ 
+ 	/* Delete should have been auto-done after close and unregister */
+ 	close(self->data_fd);
 -- 
 2.34.1
 
