@@ -1,222 +1,85 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F43B128828;
-	Tue, 16 Apr 2024 11:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4D313698D;
+	Tue, 16 Apr 2024 15:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713266659; cv=none; b=uKyOWugpAB9N92XNgsKPjUk0HPx/zSoc/E9MUHPdifDY+iI/m9Xdz9+RSWt3CwaUemi3EA74JRGm1UVdP/TpJbjwA1ePt3CrE3x08q/qTl3+kgJDImqZMAqwis+h76gTz8Q1LwuUw4PtFXrNaSEHm7ZsDbmWdlh142Mz/iTYZxs=
+	t=1713283099; cv=none; b=DhH2NdzD+y/Uryn0bwb8REObzmx+03pTe/fX3cPJKIlq3ALpC/52EFfhrNcf4whR1rHkb7JrOMQ98jsk5JHugCftX23mo8zQzleZZ1ipDF+6hwM+zyFvsJkrbgNE2uLaEfWNYmVa4V/huaEDCAtlIconPatADvelX2YPdghnwUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713266659; c=relaxed/simple;
-	bh=sBjv/qwRLtegjlxLd5y3j7HuvcFzTXceeLcLshqbaac=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LluLC+E+pWC2fXlJb0OJXUeviNngjliw6p5BPhHclziRT3Xrlf92x+E5up6wfC1j5LUxdjcTRfL8WzEBp3kYp19sY65zijbZA3mBRGCRB9lDeoyA+kfTbc+S1a8txLvEn6rWnnlUjAC1RPruUSCJvldTuys6c98WU1Q6JT83jNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VJhS73dSxzwS0s;
-	Tue, 16 Apr 2024 19:21:11 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8BEE9180032;
-	Tue, 16 Apr 2024 19:24:13 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 16 Apr 2024 19:24:13 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-	<mathieu.desnoyers@efficios.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<zhengyejian1@huawei.com>
-Subject: [PATCH v2] ftrace: Fix possible use-after-free issue in ftrace_location()
-Date: Tue, 16 Apr 2024 19:24:59 +0800
-Message-ID: <20240416112459.1444612-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240401125543.1282845-1-zhengyejian1@huawei.com>
-References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+	s=arc-20240116; t=1713283099; c=relaxed/simple;
+	bh=nllEtvvs6NqH5k5GLLTv3RLRUZlAuaXj2VxYKEvp3tQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=dvHtkXYKRwMpdob7SfRgd0Bzdg2qPP7Pe+XGeGX7t4f1pPDPqGWsXgaGnMLppBwoV4WfKYRJo0A3hXcbwdlPn2QyxY4O0fb+n1zW5BouAVmY2gqxWc9UP+y+8xF6yolxEIs/Jh268DC976iwTeO4PecoBG7U2H6fuQxiLRsbaHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PqsFQpc8; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PqsFQpc8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713283065; x=1713887865; i=markus.elfring@web.de;
+	bh=nllEtvvs6NqH5k5GLLTv3RLRUZlAuaXj2VxYKEvp3tQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PqsFQpc86gZnr20gXM0/CJH7lVBimxXIBRX8EskPX++2UUrD8+/3lDvtgYLPahLk
+	 FIF6KdHEOTrUTt9+UR0SUWv883QxV3d2STeApsWdWfG2mS0IwP+NxEUWKAzs9B+IE
+	 9IX3JTP+5+NEYn6VTfiwX4u1uRl+0845Rixknl+wNbnfA4CTq7sC0QQWOf40q3cdt
+	 ti0qNhF9FiEiJp9r8PrmDziND6XYHrQtIf6YC1399lFHisgsAVeuejkSZvFbnk1RR
+	 gbCApXWzzotEOwg/v5c/JQiuUcTV4IOhrv6+6fw/w9aPOItUbe8Qb8gAAU49BIbCJ
+	 IaIT61ZxYTQ5g/hEmg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MJnvf-1sCUca0uxV-00K5DT; Tue, 16
+ Apr 2024 17:57:45 +0200
+Message-ID: <bf870914-3845-4d2a-b7cf-d7f9ef28e0b9@web.de>
+Date: Tue, 16 Apr 2024 17:57:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+User-Agent: Mozilla Thunderbird
+To: Zheng Yejian <zhengyejian1@huawei.com>,
+ linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240416112459.1444612-1-zhengyejian1@huawei.com>
+Subject: Re: [PATCH v2] ftrace: Fix possible use-after-free issue in
+ ftrace_location()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240416112459.1444612-1-zhengyejian1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FFYeLD5kLXfbghX3LoP20kT5Jkoa52aNgyc4iVwSdKGw/0O7uyU
+ qwv41NCR+Leot8428I/N1AGO/pXqoDpGaGutf3arxyq2WNvT//+LZxsdqEHovX0tzgxaM4t
+ JGUclvFoGfsardn6fRzjqkh1Vj55sv0iYc1pXSEbWgqvFVd8ePKsMxbMomBQEx1ArU9vk0B
+ Wluy8K0lUz00e6SMe4rJA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1fbYECY+dng=;+1DYhBjlCdbR2Vf5//lqiN4Yw3R
+ gNcEV/8sH0uXm44607oje8/jq9JLdXYw4Xe95o1zObM+k+7+0qaztqAGjgIychDdbU3x22SVo
+ irESF06Lp4g/5+5RNK79CExkXtcXgZcUezK/62FDoRmI6d2W0J9QQRXKYta7wYbiqWZ3oSlYl
+ FAzozpHm5bOnkhUGgZ1Un2yBujACqHbvhXSqY5UOLyF3oszp8PGdxj+F6+bx1Vr7jPzcdeNyi
+ npHhH2KIHpfwCujIDx+uLJdAvPWLleA35IhjlydlWNBzl4UtY39BBT63gTUfV49Ir+9AgY9j9
+ 9UgG+hI3AjoBGjc3keSsS7a8xhmxT2ZJ3yut5gI6Rr1TzeSqm/n1Sk4/weli/ujGgMokrd1kc
+ XscO/DNqhvXHSKRyQdcwjdA0Ww/DYPZE4k9hba/0H6uPf+1VMF41XZugCHLMFq1Q4moxoDcAl
+ HGGY+KAdh73GUDeadhB9smvRhMBpg8S5yXCEXnzu+QFMh+BJEcWQL+TFpWVL3Moz2b9pFYP+n
+ KaMBJYrRmHcOcBW6+GT1slz0ze0vr6ThTvykO6y/welS9yT2kM2T2H3tQKGhC3qW3r28xweYl
+ 2VQAJi/deb+TRNcURXJJ7vVbywo/tDW53wI4wN+3C90/eV9mr3GhceMNU4NY/FsnnX+ucXlqk
+ ADGb+GVVmq5KAvcSfMzAcTgMsT6KHoBxQmlPwxYc6l3tJH6D6AXuI0Yc0EH927vWLIqFO/ubb
+ B2ug/kiuhb3HjPxAYMyVs9WMjHk+fJ0rs9qxo0UNdeUx1/5h2WHuwLN5toOGr2GmJLuygsTr9
+ G0f+3yWUUE0x99PN+ETGwDaTfYddLkaVplER19FeRlQQs=
 
-KASAN reports a bug:
+=E2=80=A6
+> To fix it, we hold rcu lock as lookuping ftrace record, and call
+> synchronize_rcu() before freeing any ftrace pages.
 
-  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
-  Read of size 8 at addr ffff888141d40010 by task insmod/424
-  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+
-  [...]
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x68/0xa0
-   print_report+0xcf/0x610
-   kasan_report+0xb5/0xe0
-   ftrace_location+0x90/0x120
-   register_kprobe+0x14b/0xa40
-   kprobe_init+0x2d/0xff0 [kprobe_example]
-   do_one_initcall+0x8f/0x2d0
-   do_init_module+0x13a/0x3c0
-   load_module+0x3082/0x33d0
-   init_module_from_file+0xd2/0x130
-   __x64_sys_finit_module+0x306/0x440
-   do_syscall_64+0x68/0x140
-   entry_SYSCALL_64_after_hwframe+0x71/0x79
+I suggest to convert this description into an imperative wording.
 
-The root cause is that when lookup_rec() is lookuping ftrace record of
-an address in ftrace pages of some module, and those ftrace pages may
-at the same time being freed in ftrace_release_mod() as the corresponding
-module is being deleted:
-
-  register_kprobes() {
-    check_kprobe_address_safe() {
-      arch_check_ftrace_location() {
-        ftrace_location() {
-          lookup_rec()  // access memory that has been freed by
-                        // ftrace_release_mod() !!!
-
-To fix it, we hold rcu lock as lookuping ftrace record, and call
-synchronize_rcu() before freeing any ftrace pages.
-
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ftrace.c | 43 +++++++++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 16 deletions(-)
-
-v2:
- - Use RCU lock instead of holding ftrace_lock as suggested by Steve.
-   Link: https://lore.kernel.org/all/20240410112823.1d084c8f@gandalf.local.home/
-
-v1:
- - Link: https://lore.kernel.org/all/20240401125543.1282845-1-zhengyejian1@huawei.com/
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index da1710499698..2b41837a2fac 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
- }
- 
- /**
-- * ftrace_location_range - return the first address of a traced location
-+ * ftrace_location_range_rcu - return the first address of a traced location
-  *	if it touches the given ip range
-  * @start: start of range to search.
-  * @end: end of range to search (inclusive). @end points to the last byte
-@@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
-  * that is either a NOP or call to the function tracer. It checks the ftrace
-  * internal tables to determine if the address belongs or not.
-  */
--unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-+static unsigned long ftrace_location_range_rcu(unsigned long start, unsigned long end)
- {
- 	struct dyn_ftrace *rec;
- 
-@@ -1603,6 +1603,16 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
- 	return 0;
- }
- 
-+unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-+{
-+	unsigned long loc;
-+
-+	rcu_read_lock();
-+	loc = ftrace_location_range_rcu(start, end);
-+	rcu_read_unlock();
-+	return loc;
-+}
-+
- /**
-  * ftrace_location - return the ftrace location
-  * @ip: the instruction pointer to check
-@@ -1614,25 +1624,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-  */
- unsigned long ftrace_location(unsigned long ip)
- {
--	struct dyn_ftrace *rec;
-+	unsigned long loc;
- 	unsigned long offset;
- 	unsigned long size;
- 
--	rec = lookup_rec(ip, ip);
--	if (!rec) {
-+	loc = ftrace_location_range(ip, ip);
-+	if (!loc) {
- 		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
- 			goto out;
- 
- 		/* map sym+0 to __fentry__ */
- 		if (!offset)
--			rec = lookup_rec(ip, ip + size - 1);
-+			loc = ftrace_location_range(ip, ip + size - 1);
- 	}
- 
--	if (rec)
--		return rec->ip;
--
- out:
--	return 0;
-+	return loc;
- }
- 
- /**
-@@ -6596,6 +6603,7 @@ static int ftrace_process_locs(struct module *mod,
- 	/* We should have used all pages unless we skipped some */
- 	if (pg_unuse) {
- 		WARN_ON(!skipped);
-+		synchronize_rcu();
- 		ftrace_free_pages(pg_unuse);
- 	}
- 	return ret;
-@@ -6809,6 +6817,8 @@ void ftrace_release_mod(struct module *mod)
-  out_unlock:
- 	mutex_unlock(&ftrace_lock);
- 
-+	if (tmp_page)
-+		synchronize_rcu();
- 	for (pg = tmp_page; pg; pg = tmp_page) {
- 
- 		/* Needs to be called outside of ftrace_lock */
-@@ -7142,6 +7152,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 	unsigned long start = (unsigned long)(start_ptr);
- 	unsigned long end = (unsigned long)(end_ptr);
- 	struct ftrace_page **last_pg = &ftrace_pages_start;
-+	struct ftrace_page *tmp_page = NULL;
- 	struct ftrace_page *pg;
- 	struct dyn_ftrace *rec;
- 	struct dyn_ftrace key;
-@@ -7183,12 +7194,8 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 		ftrace_update_tot_cnt--;
- 		if (!pg->index) {
- 			*last_pg = pg->next;
--			if (pg->records) {
--				free_pages((unsigned long)pg->records, pg->order);
--				ftrace_number_of_pages -= 1 << pg->order;
--			}
--			ftrace_number_of_groups--;
--			kfree(pg);
-+			pg->next = tmp_page;
-+			tmp_page = pg;
- 			pg = container_of(last_pg, struct ftrace_page, next);
- 			if (!(*last_pg))
- 				ftrace_pages = pg;
-@@ -7205,6 +7212,10 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 		clear_func_from_hashes(func);
- 		kfree(func);
- 	}
-+	if (tmp_page) {
-+		synchronize_rcu();
-+		ftrace_free_pages(tmp_page);
-+	}
- }
- 
- void __init ftrace_free_init_mem(void)
--- 
-2.25.1
-
+Regards,
+Markus
