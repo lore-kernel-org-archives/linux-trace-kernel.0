@@ -1,108 +1,143 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FC27FBBA;
-	Tue, 16 Apr 2024 07:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E7D2745D;
+	Tue, 16 Apr 2024 09:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713253978; cv=none; b=VMOUCcfMZ/8ldRjdrvv5QxazZlhRcEwZMaZFpUVUfH3blcbyp/HEASK2hUP/+/RksSmf6UlDT0INiFVDcEplNgx/ig+tR7peuFgm9nzHgEAFcVwZqDB3l+n8FOB01+c0Sf15rmWW9U3Pz0Spe5h7HEMOjBIIxeiRmkSWbR+ufUU=
+	t=1713260186; cv=none; b=Nax/Ub7MFbR0l3URmcZs+m/NaMA7gLK21ELohNzgmvzn/8gRTlMCxFPU4Mi7wVLQ71SOCPkcXmURlQT9AGSMZB0Ytt1DySEJOiQe/cNN7hSuX0+tl2Qx7NT+823M1rLWuK4CXpykF/3914SDQhGUwr5MUi5J4KSzvyFdSqIgInU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713253978; c=relaxed/simple;
-	bh=i4wZ/rKAd8t/gotjo/bAEFp0Lbj6N0UFOKrt5kXOcq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ougX+RgZQZXSIA5SuCZrgrp6r79/skGa4vJcoqNMQDYUWvrx5tWvCZSSghcGpGGO1yIMEffDrQS6JIGAfBgonhaI1Jgtt8/rLr0vCSBs1iPwcWqcaZn6ZFbuN/XlLhwCcq26uDDB5qW+zwAT1FmvVcFbCTCsD3sf4VVkHVIFfW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fU/cNEu5; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713260186; c=relaxed/simple;
+	bh=l9FdnEEzXGJIzRW8tkjLLu40rBvwdGZ+3HuMYVnHV0c=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gi/2OuQYBCmV05ePn4cAIInDvNV+FWJzm43X/JfjHHSt/wl0wYZkWYfUPbpNNPCsfsR5RymN8YXKWfyYiphwj+YjObyNSRU5JJfCbr46GytXDlO4La/4lkn7TUr22PC+jISErc0cE4yJ/wXfsg1IQIq2V+rjB4fOO8yUIvs/Zl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lY0PfPTE; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fU/cNEu5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=507ZBsLeuCe8QOYcleBeRL5NXt96hdJ7/5G0PziK1K0=; b=fU/cNEu5qw/O2Klf8s6HCr+ThI
-	AhpI1nEs4Up9XFmJBI03cktnXOkGdoRbOvIZzjK48ok45c2JILgNd4BIrGYsKyEjDF0eQQL+HYJwR
-	Yiyrnny32/na/Ys3afDWWVnk61J34su4s2sCj0Ub01AHgZcx+Fsp5j+qrF1A8v0sYzXZMlCD5kjBk
-	s3viP3O4TygKJJxdljC/ZTymqUoM44K9+R+bQ//RVwqZYO5nBn5merN0aN+obc8V8nFi/A7z6wGAX
-	iEjE6w/enUoiPeoQuWrQTmG1HLtwkxvfU1NO54vIH5bCDXvS5cudA99gRVmIMYwS4kC9jIInm3J/Z
-	dg+Vrz+Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwdcJ-0000000HZIl-1TGs;
-	Tue, 16 Apr 2024 07:52:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0630E30040C; Tue, 16 Apr 2024 09:52:35 +0200 (CEST)
-Date: Tue, 16 Apr 2024 09:52:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>, Helge Deller <deller@gmx.de>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [RFC PATCH 6/7] execmem: add support for cache of large ROX pages
-Message-ID: <20240416075234.GA31647@noisy.programming.kicks-ass.net>
-References: <20240411160526.2093408-1-rppt@kernel.org>
- <20240411160526.2093408-7-rppt@kernel.org>
- <20240415104750.GJ40213@noisy.programming.kicks-ass.net>
- <Zh1dKkFr6zdBh2Kz@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lY0PfPTE"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5176f217b7bso7188508e87.0;
+        Tue, 16 Apr 2024 02:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713260183; x=1713864983; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DOrASS+GeLuk5Z7lZoVL6cbT4rY+jK9WGpd682BgxR8=;
+        b=lY0PfPTEYWx3kcy2BvEf2g5YMEzaGgaTXXscB3duP5LLocYwbs/wRAqP1+deCYH9pR
+         +zL2SxHo3E6ldkUb14EQ62dYeTMeR/P5l69Gjn2zuyJqCIMMjNf8LPfVoFnNBVYpZO0d
+         MnJ523yzptpiM2/ZTkl2bScF+xf7FNF9ypC1GUaXqzGjV7kQJeglZAHB01M255jeXuAY
+         yYZRlGRKIuxGLL9QujbL9J0t2zVTYPcaUr2lSoonopqw7VUMfemUuP/gvhLOWbQdHEEZ
+         rLvws4WBTn5Z5p3tmgcUCc4KJsCF0mNS+COS885bkk3ZPYn0j0y3NoxSdyN1mmobqNAv
+         0ppA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713260183; x=1713864983;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DOrASS+GeLuk5Z7lZoVL6cbT4rY+jK9WGpd682BgxR8=;
+        b=GUK604r5I4/tA4CSSc4vKPk+L1QZ19ghDuz9zjMdR24Bp03H/pg6nQKv8ger6/phhE
+         7TDoD+BSzoOkX8NQ2GyG9T5mchLKb5yC9w1jGVsPFFifOx+UAYABXKbRmVcvzYfPUnMw
+         GMvA/5Zjr2PDkV1FDH2Cm/GZi8zCoV9BnJ5498wD96e060q02hKxucJVGr50rL8piZ6g
+         1oQttefWlUIjrz85GGt6jZFrp+BFYquy0z79pbPdJVlb3wCruNRQicpQqkCVGRp7aRmI
+         suJuV+fuRxczzlrb46ifpovXnhmZUTgF6G1fsQcMJVmDmOC61XGTnlSMiJCgLUbf2RET
+         RCXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNJR3QS16A+E0K8Og7D5PFU1MuE5YpVw7LVXgTX4cDPvfPo3MuM/X+Cp2OwhLHyQT1IORXfvslO7weWU8lzL6zxG6dvApMGiQMiLN1W+KsN+i2ShMrzxBdecXYgMlmpGAr+VHlSOZ+Nb2zV3sg0IjX1t2UJC16fUYDWeTa6MaFwBDOjc+gn/07mk2q3CE5e/KPdKp1+7E4j93WULIfvrsYKLdGhxvhZK7awVKwZvyL0ToidOKjHdRAgVE3AYzmk0U=
+X-Gm-Message-State: AOJu0YzJ/65ENuD+3nZxwQf/hFuV14ifrxVPvwnxG9NjZ/rqCi/0c6Dz
+	WR9sXYMJp85WcmX26ygXPZe2Hlu+91+oW6n3yUboaRO/QdxTQd3O
+X-Google-Smtp-Source: AGHT+IHJL+kGebuWf568L4j1/19JnbEd5orWvCbxsHgvPeVxrnDNkney9hr1xgtB5xtFbL8mR9qM0Q==
+X-Received: by 2002:ac2:5f87:0:b0:516:cdfa:1802 with SMTP id r7-20020ac25f87000000b00516cdfa1802mr9934425lfe.63.1713260182555;
+        Tue, 16 Apr 2024 02:36:22 -0700 (PDT)
+Received: from smtpclient.apple ([132.68.46.107])
+        by smtp.gmail.com with ESMTPSA id l1-20020a17090615c100b00a524e3f2f9esm4249223ejd.98.2024.04.16.02.36.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2024 02:36:22 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh1dKkFr6zdBh2Kz@kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [RFC PATCH 3/7] module: prepare to handle ROX allocations for
+ text
+From: Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <20240411160526.2093408-4-rppt@kernel.org>
+Date: Tue, 16 Apr 2024 12:36:08 +0300
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Helge Deller <deller@gmx.de>,
+ Lorenzo Stoakes <lstoakes@gmail.com>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Song Liu <song@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org,
+ linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+ linux-modules@vger.kernel.org,
+ linux-parisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org,
+ the arch/x86 maintainers <x86@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0C4B9C1A-97DE-4798-8256-158369AF42A4@gmail.com>
+References: <20240411160526.2093408-1-rppt@kernel.org>
+ <20240411160526.2093408-4-rppt@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-On Mon, Apr 15, 2024 at 08:00:26PM +0300, Mike Rapoport wrote:
-> On Mon, Apr 15, 2024 at 12:47:50PM +0200, Peter Zijlstra wrote:
-> > On Thu, Apr 11, 2024 at 07:05:25PM +0300, Mike Rapoport wrote:
-> > 
-> > > To populate the cache, a writable large page is allocated from vmalloc with
-> > > VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
-> > > ROX.
-> > 
-> > > +static void execmem_invalidate(void *ptr, size_t size, bool writable)
-> > > +{
-> > > +	if (execmem_info->invalidate)
-> > > +		execmem_info->invalidate(ptr, size, writable);
-> > > +	else
-> > > +		memset(ptr, 0, size);
-> > > +}
-> > 
-> > +static void execmem_invalidate(void *ptr, size_t size, bool writeable)
-> > +{
-> > +       /* fill memory with INT3 instructions */
-> > +       if (writeable)
-> > +               memset(ptr, 0xcc, size);
-> > +       else
-> > +               text_poke_set(ptr, 0xcc, size);
-> > +}
-> > 
-> > Thing is, 0xcc (aka INT3_INSN_OPCODE) is not an invalid instruction.
-> > It raises #BP not #UD.
-> 
-> Do you mean that _invalidate is a poor name choice or that it's necessary
-> to use an instruction that raises #UD?
 
-Poor naming, mostly. #BP handler will still scream bloody murder if the
-site is otherwise unclaimed.
 
-It just isn't an invalid instruction.
+> On 11 Apr 2024, at 19:05, Mike Rapoport <rppt@kernel.org> wrote:
+>=20
+> @@ -2440,7 +2479,24 @@ static int post_relocation(struct module *mod, =
+const struct load_info *info)
+> 	add_kallsyms(mod, info);
+>=20
+> 	/* Arch-specific module finalizing. */
+> -	return module_finalize(info->hdr, info->sechdrs, mod);
+> +	ret =3D module_finalize(info->hdr, info->sechdrs, mod);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for_each_mod_mem_type(type) {
+> +		struct module_memory *mem =3D &mod->mem[type];
+> +
+> +		if (mem->is_rox) {
+> +			if (!execmem_update_copy(mem->base, =
+mem->rw_copy,
+> +						 mem->size))
+> +				return -ENOMEM;
+> +
+> +			vfree(mem->rw_copy);
+> +			mem->rw_copy =3D NULL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> }
+
+I might be missing something, but it seems a bit racy.
+
+IIUC, module_finalize() calls alternatives_smp_module_add(). At this
+point, since you don=E2=80=99t hold the text_mutex, some might do =
+text_poke(),
+e.g., by enabling/disabling static-key, and the update would be
+overwritten. No?=
