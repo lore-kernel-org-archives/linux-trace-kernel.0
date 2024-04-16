@@ -1,85 +1,87 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4D313698D;
-	Tue, 16 Apr 2024 15:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14483B185;
+	Tue, 16 Apr 2024 22:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283099; cv=none; b=DhH2NdzD+y/Uryn0bwb8REObzmx+03pTe/fX3cPJKIlq3ALpC/52EFfhrNcf4whR1rHkb7JrOMQ98jsk5JHugCftX23mo8zQzleZZ1ipDF+6hwM+zyFvsJkrbgNE2uLaEfWNYmVa4V/huaEDCAtlIconPatADvelX2YPdghnwUg=
+	t=1713307270; cv=none; b=ZpY+hXDRQ9SU3HRbGMmcoJVbHnJZrU9dZhpVy8abhmY/DZVkV/3vQVXLLKsRI05sg+qUsAPN3zG3X0fidPRomrhF+ltHes5QIFtWwD5UNXT+1Do/bETUUDEwqydgp9afv3bEL6BakjUjgPmjO4v3oxeLRrdrD+OKwQr6+jzlLls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283099; c=relaxed/simple;
-	bh=nllEtvvs6NqH5k5GLLTv3RLRUZlAuaXj2VxYKEvp3tQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=dvHtkXYKRwMpdob7SfRgd0Bzdg2qPP7Pe+XGeGX7t4f1pPDPqGWsXgaGnMLppBwoV4WfKYRJo0A3hXcbwdlPn2QyxY4O0fb+n1zW5BouAVmY2gqxWc9UP+y+8xF6yolxEIs/Jh268DC976iwTeO4PecoBG7U2H6fuQxiLRsbaHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PqsFQpc8; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713307270; c=relaxed/simple;
+	bh=SdGKTCvRowhNJxr+bzEZa+IlrhiheIS8euVQLtIw0Qo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vu3YXD2w4yWs2oZwYu/OodGFsuSocKRwnVrnT37Vp25TO7kUpg7HUR6QzYG8WR/i9c5EvdUByOVi9pdVPH5e5/JvoXQ0utQge4zTFW7fx4ELIj6NjLDhiUxyio2alDAznbvxBFnyDzP4MO2swAJyfMo/VhPv/11UqqtyJ2K8+do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lNSjLpRh; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PqsFQpc8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713283065; x=1713887865; i=markus.elfring@web.de;
-	bh=nllEtvvs6NqH5k5GLLTv3RLRUZlAuaXj2VxYKEvp3tQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=PqsFQpc86gZnr20gXM0/CJH7lVBimxXIBRX8EskPX++2UUrD8+/3lDvtgYLPahLk
-	 FIF6KdHEOTrUTt9+UR0SUWv883QxV3d2STeApsWdWfG2mS0IwP+NxEUWKAzs9B+IE
-	 9IX3JTP+5+NEYn6VTfiwX4u1uRl+0845Rixknl+wNbnfA4CTq7sC0QQWOf40q3cdt
-	 ti0qNhF9FiEiJp9r8PrmDziND6XYHrQtIf6YC1399lFHisgsAVeuejkSZvFbnk1RR
-	 gbCApXWzzotEOwg/v5c/JQiuUcTV4IOhrv6+6fw/w9aPOItUbe8Qb8gAAU49BIbCJ
-	 IaIT61ZxYTQ5g/hEmg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MJnvf-1sCUca0uxV-00K5DT; Tue, 16
- Apr 2024 17:57:45 +0200
-Message-ID: <bf870914-3845-4d2a-b7cf-d7f9ef28e0b9@web.de>
-Date: Tue, 16 Apr 2024 17:57:33 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lNSjLpRh"
+Received: from localhost.localdomain (unknown [4.155.48.117])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2CF8620FD422;
+	Tue, 16 Apr 2024 15:41:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CF8620FD422
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1713307269;
+	bh=+sP+L3AzA/ELT2/LLBPfQCFsuQ9bBl7MY+RkhoYAtDA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lNSjLpRhqUiV9VRg2ydcMf4diFtWXzGGV9QAVCXVmCfoPsSmWtJGvdNCFCvdmKmTZ
+	 pVNZO6eFDehbOUpHs7SfLdsgwlWfHSZRIfSsVtU22RPCpbXjgQQChm2nGqIPs3Ockc
+	 mHHZJi0L0vTWXHYBy4a0txjhU1pl+O+tIVTRaCfY=
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	dcook@linux.microsoft.com
+Subject: [PATCH 0/2] tracing/user_events: Fix non-spaced field matching
+Date: Tue, 16 Apr 2024 22:41:00 +0000
+Message-Id: <20240416224102.734-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zheng Yejian <zhengyejian1@huawei.com>,
- linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240416112459.1444612-1-zhengyejian1@huawei.com>
-Subject: Re: [PATCH v2] ftrace: Fix possible use-after-free issue in
- ftrace_location()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240416112459.1444612-1-zhengyejian1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FFYeLD5kLXfbghX3LoP20kT5Jkoa52aNgyc4iVwSdKGw/0O7uyU
- qwv41NCR+Leot8428I/N1AGO/pXqoDpGaGutf3arxyq2WNvT//+LZxsdqEHovX0tzgxaM4t
- JGUclvFoGfsardn6fRzjqkh1Vj55sv0iYc1pXSEbWgqvFVd8ePKsMxbMomBQEx1ArU9vk0B
- Wluy8K0lUz00e6SMe4rJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1fbYECY+dng=;+1DYhBjlCdbR2Vf5//lqiN4Yw3R
- gNcEV/8sH0uXm44607oje8/jq9JLdXYw4Xe95o1zObM+k+7+0qaztqAGjgIychDdbU3x22SVo
- irESF06Lp4g/5+5RNK79CExkXtcXgZcUezK/62FDoRmI6d2W0J9QQRXKYta7wYbiqWZ3oSlYl
- FAzozpHm5bOnkhUGgZ1Un2yBujACqHbvhXSqY5UOLyF3oszp8PGdxj+F6+bx1Vr7jPzcdeNyi
- npHhH2KIHpfwCujIDx+uLJdAvPWLleA35IhjlydlWNBzl4UtY39BBT63gTUfV49Ir+9AgY9j9
- 9UgG+hI3AjoBGjc3keSsS7a8xhmxT2ZJ3yut5gI6Rr1TzeSqm/n1Sk4/weli/ujGgMokrd1kc
- XscO/DNqhvXHSKRyQdcwjdA0Ww/DYPZE4k9hba/0H6uPf+1VMF41XZugCHLMFq1Q4moxoDcAl
- HGGY+KAdh73GUDeadhB9smvRhMBpg8S5yXCEXnzu+QFMh+BJEcWQL+TFpWVL3Moz2b9pFYP+n
- KaMBJYrRmHcOcBW6+GT1slz0ze0vr6ThTvykO6y/welS9yT2kM2T2H3tQKGhC3qW3r28xweYl
- 2VQAJi/deb+TRNcURXJJ7vVbywo/tDW53wI4wN+3C90/eV9mr3GhceMNU4NY/FsnnX+ucXlqk
- ADGb+GVVmq5KAvcSfMzAcTgMsT6KHoBxQmlPwxYc6l3tJH6D6AXuI0Yc0EH927vWLIqFO/ubb
- B2ug/kiuhb3HjPxAYMyVs9WMjHk+fJ0rs9qxo0UNdeUx1/5h2WHuwLN5toOGr2GmJLuygsTr9
- G0f+3yWUUE0x99PN+ETGwDaTfYddLkaVplER19FeRlQQs=
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> To fix it, we hold rcu lock as lookuping ftrace record, and call
-> synchronize_rcu() before freeing any ftrace pages.
+When the ABI was updated to prevent same name w/different args, it
+missed an important corner case when fields don't end with a space.
+Typically, space is used for fields to help separate them, like
+"u8 field1; u8 field2". If no spaces are used, like
+"u8 field1;u8 field2", then the parsing works for the first time.
+However, the match check fails on a subsequent register, leading to
+confusion.
 
-I suggest to convert this description into an imperative wording.
+This is because the match check uses argv_split() and assumes that all
+fields will be split upon the space. When spaces are used, we get back
+{ "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
+This causes a mismatch, and the user program gets back -EADDRINUSE.
 
-Regards,
-Markus
+Add a method to detect this case before calling argv_split(). If found
+force a space after the field separator character ';'. This ensures all
+cases work properly for matching.
+
+I could not find an existing function to accomplish this, so I had to
+hand code a copy with this logic. If there is a better way to achieve
+this, I'm all ears.
+
+This series also adds a selftest to ensure this doesn't break again.
+
+With this fix, the following are all treated as matching:
+u8 field1;u8 field2
+u8 field1; u8 field2
+u8 field1;\tu8 field2
+u8 field1;\nu8 field2
+
+Beau Belgrave (2):
+  tracing/user_events: Fix non-spaced field matching
+  selftests/user_events: Add non-spacing separator check
+
+ kernel/trace/trace_events_user.c              | 88 ++++++++++++++++++-
+ .../selftests/user_events/ftrace_test.c       |  8 ++
+ 2 files changed, 95 insertions(+), 1 deletion(-)
+
+
+base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
+-- 
+2.34.1
+
