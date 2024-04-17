@@ -1,249 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8201623D2;
-	Wed, 17 Apr 2024 04:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4257E0E4;
+	Wed, 17 Apr 2024 08:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713329795; cv=none; b=TJPWAJ93ZKWRABuhlIZu5crPA5Oz74A8taVM9V7T9xB+Kad4lwaxdYleiIYk4x33m/OZ/c4uVs3H4/9LJknCd77jiZNHUr1SSGbUG6VK+1QrOoCecIffvjcWX52dllMR6SKOrzlb+2oVD2Y1vodNazlwY3qS4E+Eqfvum1nWKlM=
+	t=1713343913; cv=none; b=smDUSrVf2QcRzdGMAOh5o+3f0YLOKe+L15NRwbA6SGVjbUhdR2rBIA7q2PZ346ppDe0j4znoO2uhK29P/bsVzfsWT6+KHVFBnRTxbD5Egiiky5YiE7FOwqcRe/7SAaZmZeynkSC+z5ox/5ClfkYGt5SMrN+UiOPJzLMZuLUK81g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713329795; c=relaxed/simple;
-	bh=BuZ8P8XoiIAM75OqFsQnPajzoPmLzP8HTuZmoXwmL78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fq1CJ5pvaY9o42YSGyWJ6f09wFAuhhxXBxNF6Vq2pvW/z3vgJxy4PzFoQQLkE83/QO0bCUdMAReNTXjYkcARvM24qv2FhwO9OtlnpWSTr0+lNmhYu8YQKUe46LtbLBPsgQ5/nhf+vV5qhtkjjZ4DExkDuMVHH/yaj79CvG795sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkYMqRX4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713343913; c=relaxed/simple;
+	bh=NgyKHTOEFBJXVFGLR/rWuf+lbBUP8ErMGBd3Y6OKmbA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oFkXRggXG1dRakTj1KlOxeXNfhYzEdRM2wHUzH/Oj0TFd0N5GBs3Y7a3vylawYrtdaG0Wz67WSCJiMI0Sgyq6YLCvr0gt1Pi7gG4XRBxW5+u3AtZlCKONb1YZyatEKU3ku0amrgzbh2Hk6Ri9PTSYdCD5+o24twUwjmrM7et9Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yz0VQ18L; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkYMqRX4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB4E5C072AA;
-	Wed, 17 Apr 2024 04:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713329794;
-	bh=BuZ8P8XoiIAM75OqFsQnPajzoPmLzP8HTuZmoXwmL78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NkYMqRX4lxFl4iWw0gcq2nChoo1XR/daM/2LKLMu4C1jUMDgQo8tyhr2G7YUjhKdS
-	 pLuanq23TlmLnRE6dzcC/2cCNh14Yqo7L88QkiEX1F9hv8l1pwStoZ+rouh/CzhNtI
-	 NNON0hzCsUKBJj9TI0Dk6NIKjn7PwvJU47ZEomLcLk+T5rJZqeK2QlZPGOo1IsNYoF
-	 oXqKT6dxgjhtUGLq8ChmriPA53H09h3zXaNuQx30NVQu1Tn3D3o2yWH5IR6AmQyLhE
-	 r6sb0+maeAgcgaWLW4w1wRMOEQsutwcvfjlnAa2eit0pUXHGrrLXdl9l4jy0eKigSK
-	 EzeMlT+16fzwA==
-Date: Wed, 17 Apr 2024 07:55:23 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	rdunlap@infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH v20 0/5] Introducing trace buffer mapping by user-space
-Message-ID: <Zh9WO1p7fzGHvKv5@kernel.org>
-References: <20240406173649.3210836-1-vdonnefort@google.com>
- <20240410135612.5dc362e3@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yz0VQ18L"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e3c9300c65so46453285ad.0;
+        Wed, 17 Apr 2024 01:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713343911; x=1713948711; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OvmW+VBePs02RkEsQuZab+/Oqh+Lls5Zc4vbzJd9eTQ=;
+        b=Yz0VQ18LXy/drA3I84xEn9HsmJ0FfstI/inQrPj8en/eVZDf4EMqcizfngfdas1+91
+         TXjg6AAOKKKBOAo3m/fyEptCLDD84i65t7IDx3J1GrbCSX4pzcVpaAyoA28M70hX8G0n
+         XL09eeq5+K6nSdDNNDi2gIg4oP2IfU1vDjZrbbWSlqm7+MxdxsfQJPQa1tND1HKyhgbC
+         JrPx3109omcCtHI+gE6PXCH2T17eevahe7XHccNOKICPF4FyrbJ1Rd4z/J+kmz6Z4tP0
+         1tFpFtf2xUexE8mne60obu6wq7oQr443y7SLBlzvvJH5PHGDbXmukeLM+00G1K1Fr8J3
+         MiOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713343911; x=1713948711;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OvmW+VBePs02RkEsQuZab+/Oqh+Lls5Zc4vbzJd9eTQ=;
+        b=j8Vu676OB361zDu1jj8ajRFwURxFmIT6tETQOM1jq7WV8ouyS5f14gdDVGmo7/Bf4j
+         Rg5/zj5sv5aI9U/MJPg5qs96qrg0lFVOauWN8WaNyZqrevUN2ANkZkc6tAeum3R6djCY
+         LfgsBAePiz+Rp+tlBq7SDgQ9IY5jzVJmzX577iKGYTqihPNcfxyHcfF5dSajgT6ZH6KD
+         M/grN2C+oyQH6E61MHJG1jdpfipgSGLzeHQgQPCONZ04v2wfgKVsKlGOlcBUiNX8wV/j
+         w6erb0+H5TXOgEPHiRqjIiHOKK2hSfi9YmYXj0K7iCD+Nxmh2yFTZ2Tr6T3oejQ9ajH1
+         sDvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpJB2FmHZq2Eepzce/QthJUkc1/5QQS9yyuksOtp/e+oXUBk9IZ9n8ilFfEpQdBrr41Fz3zDya34WUp6fZRAcT38gbGx8LPGV+v3ngkbQq8Bi79p5GwAJX3bhp2viNDazNhEcGAzUUjh2E
+X-Gm-Message-State: AOJu0YyEQ1E5tqFmVYGwxWnVRk0sK34Y+fi4XCvwewn5eSFBTKkujFnA
+	BhKU6zTXLvXKZC9zYckUeFYQrPHuHOKYR95UdpeHGBmDoW7w0p4c
+X-Google-Smtp-Source: AGHT+IHuLKY1a7HsVvEY5xQE/35OD+dmhreFwJA/hjEl4umoxJx0PFFkc1WIiYEP/d051p+T0bBgfg==
+X-Received: by 2002:a17:902:eb81:b0:1e4:4125:806f with SMTP id q1-20020a170902eb8100b001e44125806fmr17993764plg.11.1713343910743;
+        Wed, 17 Apr 2024 01:51:50 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id y16-20020a17090264d000b001e452f47ba1sm11348611pli.173.2024.04.17.01.51.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 01:51:50 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	dsahern@kernel.org,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	atenart@kernel.org
+Cc: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
+Date: Wed, 17 Apr 2024 16:51:36 +0800
+Message-Id: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410135612.5dc362e3@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-(added linux-mm)
+From: Jason Xing <kernelxing@tencent.com>
 
-On Wed, Apr 10, 2024 at 01:56:12PM -0400, Steven Rostedt wrote:
-> 
-> Hi Andrew, et.al.
-> 
-> Linus said it's a hard requirement that this code gets an Acked-by (or
-> Reviewed-by) from the memory sub-maintainers before he will accept it.
-> He was upset that we faulted in pages one at a time instead of mapping it
-> in one go:
-> 
->   https://lore.kernel.org/all/CAHk-=wh5wWeib7+kVHpBVtUn7kx7GGadWqb5mW5FYTdewEfL=w@mail.gmail.com/
-> 
-> Could you take a look at patches 1-3 to make sure they look sane from a
-> memory management point of view?
-> 
-> I really want this applied in the next merge window.
-> 
-> Thanks!
-> 
-> -- Steve
-> 
-> 
-> On Sat,  6 Apr 2024 18:36:44 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > The tracing ring-buffers can be stored on disk or sent to network
-> > without any copy via splice. However the later doesn't allow real time
-> > processing of the traces. A solution is to give userspace direct access
-> > to the ring-buffer pages via a mapping. An application can now become a
-> > consumer of the ring-buffer, in a similar fashion to what trace_pipe
-> > offers.
-> > 
-> > Support for this new feature can already be found in libtracefs from
-> > version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
-> > 
-> > Vincent
-> > 
-> > v19 -> v20:
-> >   * Fix typos in documentation.
-> >   * Remove useless mmap open and fault callbacks.
-> >   * add mm.h include for vm_insert_pages
-> > 
-> > v18 -> v19:
-> >   * Use VM_PFNMAP and vm_insert_pages
-> >   * Allocate ring-buffer subbufs with __GFP_COMP
-> >   * Pad the meta-page with the zero-page to align on the subbuf_order
-> >   * Extend the ring-buffer test with mmap() dedicated suite
-> > 
-> > v17 -> v18:
-> >   * Fix lockdep_assert_held
-> >   * Fix spin_lock_init typo
-> >   * Fix CONFIG_TRACER_MAX_TRACE typo
-> > 
-> > v16 -> v17:
-> >   * Documentation and comments improvements.
-> >   * Create get/put_snapshot_map() for clearer code.
-> >   * Replace kzalloc with kcalloc.
-> >   * Fix -ENOMEM handling in rb_alloc_meta_page().
-> >   * Move flush(cpu_buffer->reader_page) behind the reader lock.
-> >   * Move all inc/dec of cpu_buffer->mapped behind reader lock and buffer
-> >     mutex. (removes READ_ONCE/WRITE_ONCE accesses).
-> > 
-> > v15 -> v16:
-> >   * Add comment for the dcache flush.
-> >   * Remove now unnecessary WRITE_ONCE for the meta-page.
-> > 
-> > v14 -> v15:
-> >   * Add meta-page and reader-page flush. Intends to fix the mapping
-> >     for VIVT and aliasing-VIPT data caches.
-> >   * -EPERM on VM_EXEC.
-> >   * Fix build warning !CONFIG_TRACER_MAX_TRACE.
-> > 
-> > v13 -> v14:
-> >   * All cpu_buffer->mapped readers use READ_ONCE (except for swap_cpu)
-> >   * on unmap, sync meta-page teardown with the reader_lock instead of
-> >     the synchronize_rcu.
-> >   * Add a dedicated spinlock for trace_array ->snapshot and ->mapped.
-> >     (intends to fix a lockdep issue)
-> >   * Add kerneldoc for flags and Reserved fields.
-> >   * Add kselftest for snapshot/map mutual exclusion.
-> > 
-> > v12 -> v13:
-> >   * Swap subbufs_{touched,lost} for Reserved fields.
-> >   * Add a flag field in the meta-page.
-> >   * Fix CONFIG_TRACER_MAX_TRACE.
-> >   * Rebase on top of trace/urgent.
-> >   * Add a comment for try_unregister_trigger()
-> > 
-> > v11 -> v12:
-> >   * Fix code sample mmap bug.
-> >   * Add logging in sample code.
-> >   * Reset tracer in selftest.
-> >   * Add a refcount for the snapshot users.
-> >   * Prevent mapping when there are snapshot users and vice versa.
-> >   * Refine the meta-page.
-> >   * Fix types in the meta-page.
-> >   * Collect Reviewed-by.
-> > 
-> > v10 -> v11:
-> >   * Add Documentation and code sample.
-> >   * Add a selftest.
-> >   * Move all the update to the meta-page into a single
-> >     rb_update_meta_page().
-> >   * rb_update_meta_page() is now called from
-> >     ring_buffer_map_get_reader() to fix NOBLOCK callers.
-> >   * kerneldoc for struct trace_meta_page.
-> >   * Add a patch to zero all the ring-buffer allocations.
-> > 
-> > v9 -> v10:
-> >   * Refactor rb_update_meta_page()
-> >   * In-loop declaration for foreach_subbuf_page()
-> >   * Check for cpu_buffer->mapped overflow
-> > 
-> > v8 -> v9:
-> >   * Fix the unlock path in ring_buffer_map()
-> >   * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
-> >   * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
-> > 
-> > v7 -> v8:
-> >   * Drop the subbufs renaming into bpages
-> >   * Use subbuf as a name when relevant
-> > 
-> > v6 -> v7:
-> >   * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
-> >   * Support for subbufs
-> >   * Rename subbufs into bpages
-> > 
-> > v5 -> v6:
-> >   * Rebase on next-20230802.
-> >   * (unsigned long) -> (void *) cast for virt_to_page().
-> >   * Add a wait for the GET_READER_PAGE ioctl.
-> >   * Move writer fields update (overrun/pages_lost/entries/pages_touched)
-> >     in the irq_work.
-> >   * Rearrange id in struct buffer_page.
-> >   * Rearrange the meta-page.
-> >   * ring_buffer_meta_page -> trace_buffer_meta_page.
-> >   * Add meta_struct_len into the meta-page.
-> > 
-> > v4 -> v5:
-> >   * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
-> > 
-> > v3 -> v4:
-> >   * Add to the meta-page:
-> >        - pages_lost / pages_read (allow to compute how full is the
-> > 	 ring-buffer)
-> >        - read (allow to compute how many entries can be read)
-> >        - A reader_page struct.
-> >   * Rename ring_buffer_meta_header -> ring_buffer_meta
-> >   * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
-> >   * Properly consume events on ring_buffer_map_get_reader_page() with
-> >     rb_advance_reader().
-> > 
-> > v2 -> v3:
-> >   * Remove data page list (for non-consuming read)
-> >     ** Implies removing order > 0 meta-page
-> >   * Add a new meta page field ->read
-> >   * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
-> > 
-> > v1 -> v2:
-> >   * Hide data_pages from the userspace struct
-> >   * Fix META_PAGE_MAX_PAGES
-> >   * Support for order > 0 meta-page
-> >   * Add missing page->mapping.
-> > 
-> > Vincent Donnefort (5):
-> >   ring-buffer: allocate sub-buffers with __GFP_COMP
-> >   ring-buffer: Introducing ring-buffer mapping functions
-> >   tracing: Allow user-space mapping of the ring-buffer
-> >   Documentation: tracing: Add ring-buffer mapping
-> >   ring-buffer/selftest: Add ring-buffer mapping test
-> > 
-> >  Documentation/trace/index.rst                 |   1 +
-> >  Documentation/trace/ring-buffer-map.rst       | 106 +++++
-> >  include/linux/ring_buffer.h                   |   6 +
-> >  include/uapi/linux/trace_mmap.h               |  48 +++
-> >  kernel/trace/ring_buffer.c                    | 403 +++++++++++++++++-
-> >  kernel/trace/trace.c                          | 113 ++++-
-> >  kernel/trace/trace.h                          |   1 +
-> >  tools/testing/selftests/ring-buffer/Makefile  |   8 +
-> >  tools/testing/selftests/ring-buffer/config    |   2 +
-> >  .../testing/selftests/ring-buffer/map_test.c  | 302 +++++++++++++
-> >  10 files changed, 979 insertions(+), 11 deletions(-)
-> >  create mode 100644 Documentation/trace/ring-buffer-map.rst
-> >  create mode 100644 include/uapi/linux/trace_mmap.h
-> >  create mode 100644 tools/testing/selftests/ring-buffer/Makefile
-> >  create mode 100644 tools/testing/selftests/ring-buffer/config
-> >  create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
-> > 
-> > 
-> > base-commit: 7604256cecef34a82333d9f78262d3180f4eb525
-> 
+In production, there are so many cases about why the RST skb is sent but
+we don't have a very convenient/fast method to detect the exact underlying
+reasons.
+
+RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+and active kind (like tcp_send_active_reset()). The former can be traced
+carefully 1) in TCP, with the help of drop reasons, which is based on
+Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+RFC 8684. The latter is relatively independent, which should be
+implemented on our own.
+
+In this series, I focus on the fundamental implement mostly about how
+the rstreason mechnism works and give the detailed passive part as an
+example, not including the active reset part. In future, we can go
+further and refine those NOT_SPECIFIED reasons.
+
+Here are some examples when tracing:
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NOT_SPECIFIED
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NO_SOCKET
+
+[1]
+Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com/
+
+v6
+1. add back casts, or else they are treated as error.
+
+v5
+Link: https://lore.kernel.org/all/20240411115630.38420-1-kerneljasonxing@gmail.com/
+1. address format issue (like reverse xmas tree) (Eric, Paolo)
+2. remove unnecessary casts. (Eric)
+3. introduce a helper used in mptcp active reset. See patch 6. (Paolo)
+
+v4
+Link: https://lore.kernel.org/all/20240409100934.37725-1-kerneljasonxing@gmail.com/
+1. passing 'enum sk_rst_reason' for readability when tracing (Antoine)
+
+v3
+Link: https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@gmail.com/
+1. rebase (mptcp part) and address what Mat suggested.
+
+v2
+Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
+1. rebase against the latest net-next tree
+
+
+
+Jason Xing (7):
+  net: introduce rstreason to detect why the RST is sent
+  rstreason: prepare for passive reset
+  rstreason: prepare for active reset
+  tcp: support rstreason for passive reset
+  mptcp: support rstreason for passive reset
+  mptcp: introducing a helper into active reset logic
+  rstreason: make it work in trace world
+
+ include/net/request_sock.h |  4 +-
+ include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
+ include/net/tcp.h          |  3 +-
+ include/trace/events/tcp.h | 37 +++++++++++++--
+ net/dccp/ipv4.c            | 10 ++--
+ net/dccp/ipv6.c            | 10 ++--
+ net/dccp/minisocks.c       |  3 +-
+ net/ipv4/tcp.c             | 15 ++++--
+ net/ipv4/tcp_ipv4.c        | 14 +++---
+ net/ipv4/tcp_minisocks.c   |  3 +-
+ net/ipv4/tcp_output.c      |  5 +-
+ net/ipv4/tcp_timer.c       |  9 ++--
+ net/ipv6/tcp_ipv6.c        | 17 ++++---
+ net/mptcp/protocol.c       |  2 +-
+ net/mptcp/protocol.h       | 11 +++++
+ net/mptcp/subflow.c        | 27 ++++++++---
+ 16 files changed, 216 insertions(+), 47 deletions(-)
+ create mode 100644 include/net/rstreason.h
 
 -- 
-Sincerely yours,
-Mike.
+2.37.3
+
