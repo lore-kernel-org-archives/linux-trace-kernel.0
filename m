@@ -1,186 +1,91 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14E313777C;
-	Tue, 16 Apr 2024 22:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD11ECC;
+	Wed, 17 Apr 2024 00:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713307271; cv=none; b=GsOYRu35QJnumOaK+ADDFr4IPuWId7cyPz6pZMk3H8qHTV64vDa24GcTJgD4H1Qv8nP4XebQujrt1PoFYpmdTWhYtPHKSltYIicE0JWs+yt8vdMdra7P00mxmwUvVB36Wsm0cB+y3dhUVrm9FC8WRoVRpRt+vPMs9mIMarXp2dg=
+	t=1713312727; cv=none; b=RBf8SERhqfyp+cX3beePfsPmnSQ/FJYGamnservQGDu+a7MAy4mEqgiE9FFkeWyt2kKasAbz/kC6N4kv8AQTVbYeNrGpGR6bPP+sY3UCVp5R7bIpHjgddNsGAbfA5G8pXDhcUEMYVAcjN6VFljLz4nFgbMmJEmnzVcijZ/ENbe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713307271; c=relaxed/simple;
-	bh=dEMeNbiGcJkTmHBlkEheKf/NQ6fLQMhVAPpQ+UzB0yU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R9RHUHGcJAOl+ZsR6MRiHj9Bp0MmHPOzZiyEr3OpGbnht2gtvOc8Kc9oqVR1h0LeXxr9TX8WxiDca4ePk0fFro0fBIQf/r9tLG5m7UB7hhNl2bXF7Hfs3sUmjWU31ryZH3idwfW9PduS4Rpk1AgL6IIKKTKQrr19cOwIpatRmdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZBe7aqK7; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1713312727; c=relaxed/simple;
+	bh=uT0LZ0+w9TZK/EkJyb0TyHCOhtw73KC9C4PnOud+t5U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iTz9sPJ7v5DWwokl224xl29KYf5oby5qnVXSP7w2MU/iCRgrw74Mjl/zaEJFjedmux6u11jYV2NvBhulvn2R4MHvVUt/ElTLZnxRZdOrWFU6aVgm8W7/v+OLq6r8AuUHNMjESIT4vdmpe+0dFylWavjlQmhR1+ES0Ed0syt3/d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6ppK5WW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZBe7aqK7"
-Received: from localhost.localdomain (unknown [4.155.48.117])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4647D20FD479;
-	Tue, 16 Apr 2024 15:41:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4647D20FD479
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1713307269;
-	bh=dSrv7BpYFAq4ZUURseFkXOC1yBAm1YhNBa+55AKOBxI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZBe7aqK7rnOawlKCwF5mfw4bZAIzGbU3nYGowjR4CLM49RBaZcOWGZz1O6uQrJXBc
-	 K2IWl5I0mFCynJAziQbSeuH1UgUMg8Owo9d5dTNm+/04ah+A6Ie0vMvov+BkzC5zXc
-	 RwFI9qlfa+HJeQGQO155mQeerk4GxeL01pJuyMS4=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	dcook@linux.microsoft.com
-Subject: [PATCH 1/2] tracing/user_events: Fix non-spaced field matching
-Date: Tue, 16 Apr 2024 22:41:01 +0000
-Message-Id: <20240416224102.734-2-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240416224102.734-1-beaub@linux.microsoft.com>
-References: <20240416224102.734-1-beaub@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6ppK5WW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A26C3277B;
+	Wed, 17 Apr 2024 00:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713312727;
+	bh=uT0LZ0+w9TZK/EkJyb0TyHCOhtw73KC9C4PnOud+t5U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=b6ppK5WWL0xFm8r8z0bGxuZMOmg31qjOIHVgZ7ijrzLlH+tecFGaJsdux3lc4oGnL
+	 /HzKAjVYaI6zYSBG3rLngCpMeojEXdU/KOqb/vurAzQm5xFZyialRBhda9bH45C8hI
+	 jeJa6FqPNAOBon6Cl9NnJVoOM3VcfgeUjivkAjcH7LsaKGu37tJ9Sn9XR0J6zOob2K
+	 0mm00ziCVfAiJyUQ5xKbdb+UwhHhbO37jejucGJVMprNRNyUIzhM7npFkkJgDokc7V
+	 rmrotJriSGYM9RcNxB00z83ugKlYpVB13mJUwT9xcwgtZ39W+30B6/Wh05uZoO7YlL
+	 P8zxNQUCkoaaA==
+From: Mark Brown <broonie@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, 
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Lars-Peter Clausen <lars@metafoo.de>
+In-Reply-To: <20240416000303.04670cdf@rorschach.local.home>
+References: <20240416000303.04670cdf@rorschach.local.home>
+Subject: Re: [PATCH] ASoC: tracing: Export SND_SOC_DAPM_DIR_OUT to its
+ value
+Message-Id: <171331272553.1685717.8409632223960307327.b4-ty@kernel.org>
+Date: Wed, 17 Apr 2024 09:12:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-When the ABI was updated to prevent same name w/different args, it
-missed an important corner case when fields don't end with a space.
-Typically, space is used for fields to help separate them, like
-"u8 field1; u8 field2". If no spaces are used, like
-"u8 field1;u8 field2", then the parsing works for the first time.
-However, the match check fails on a subsequent register, leading to
-confusion.
+On Tue, 16 Apr 2024 00:03:03 -0400, Steven Rostedt wrote:
+> The string SND_SOC_DAPM_DIR_OUT is printed in the snd_soc_dapm_path trace
+> event instead of its value:
+> 
+>    (((REC->path_dir) == SND_SOC_DAPM_DIR_OUT) ? "->" : "<-")
+> 
+> User space cannot parse this, as it has no idea what SND_SOC_DAPM_DIR_OUT
+> is. Use TRACE_DEFINE_ENUM() to convert it to its value:
+> 
+> [...]
 
-This is because the match check uses argv_split() and assumes that all
-fields will be split upon the space. When spaces are used, we get back
-{ "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
-This causes a mismatch, and the user program gets back -EADDRINUSE.
+Applied to
 
-Add a method to detect this case before calling argv_split(). If found
-force a space after the field separator character ';'. This ensures all
-cases work properly for matching.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-With this fix, the following are all treated as matching:
-u8 field1;u8 field2
-u8 field1; u8 field2
-u8 field1;\tu8 field2
-u8 field1;\nu8 field2
+Thanks!
 
-Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- kernel/trace/trace_events_user.c | 88 +++++++++++++++++++++++++++++++-
- 1 file changed, 87 insertions(+), 1 deletion(-)
+[1/1] ASoC: tracing: Export SND_SOC_DAPM_DIR_OUT to its value
+      commit: 58300f8d6a48e58d1843199be743f819e2791ea3
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 70d428c394b6..9184d3962b2a 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1989,6 +1989,92 @@ static int user_event_set_tp_name(struct user_event *user)
- 	return 0;
- }
- 
-+/*
-+ * Counts how many ';' without a trailing space are in the args.
-+ */
-+static int count_semis_no_space(char *args)
-+{
-+	int count = 0;
-+
-+	while ((args = strchr(args, ';'))) {
-+		args++;
-+
-+		if (!isspace(*args))
-+			count++;
-+	}
-+
-+	return count;
-+}
-+
-+/*
-+ * Copies the arguments while ensuring all ';' have a trailing space.
-+ */
-+static char *fix_semis_no_space(char *args, int count)
-+{
-+	char *fixed, *pos;
-+	char c, last;
-+	int len;
-+
-+	len = strlen(args) + count;
-+	fixed = kmalloc(len + 1, GFP_KERNEL);
-+
-+	if (!fixed)
-+		return NULL;
-+
-+	pos = fixed;
-+	last = '\0';
-+
-+	while (len > 0) {
-+		c = *args++;
-+
-+		if (last == ';' && !isspace(c)) {
-+			*pos++ = ' ';
-+			len--;
-+		}
-+
-+		if (len > 0) {
-+			*pos++ = c;
-+			len--;
-+		}
-+
-+		last = c;
-+	}
-+
-+	/*
-+	 * len is the length of the copy excluding the null.
-+	 * This ensures we always have room for a null.
-+	 */
-+	*pos = '\0';
-+
-+	return fixed;
-+}
-+
-+static char **user_event_argv_split(char *args, int *argc)
-+{
-+	/* Count how many ';' without a trailing space */
-+	int count = count_semis_no_space(args);
-+
-+	if (count) {
-+		/* We must fixup 'field;field' to 'field; field' */
-+		char *fixed = fix_semis_no_space(args, count);
-+		char **split;
-+
-+		if (!fixed)
-+			return NULL;
-+
-+		/* We do a normal split afterwards */
-+		split = argv_split(GFP_KERNEL, fixed, argc);
-+
-+		/* We can free since argv_split makes a copy */
-+		kfree(fixed);
-+
-+		return split;
-+	}
-+
-+	/* No fixup is required */
-+	return argv_split(GFP_KERNEL, args, argc);
-+}
-+
- /*
-  * Parses the event name, arguments and flags then registers if successful.
-  * The name buffer lifetime is owned by this method for success cases only.
-@@ -2012,7 +2098,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 		return -EPERM;
- 
- 	if (args) {
--		argv = argv_split(GFP_KERNEL, args, &argc);
-+		argv = user_event_argv_split(args, &argc);
- 
- 		if (!argv)
- 			return -ENOMEM;
--- 
-2.34.1
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
