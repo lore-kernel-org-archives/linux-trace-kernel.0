@@ -1,287 +1,86 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D890133987
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811F713F451;
+	Wed, 17 Apr 2024 13:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713347242; cv=none; b=NEgf05GkuDNRu36sUR7VqcsLohTPmtzD6EVfCnsLClWlobtPJ0/idCYDF8eaXJ9QO3/IKfoaUhN3LgpZASLPoImFc4JFyf3gqAIEi3+f1aD5e7A6GjU/+nTgE449WGEQ27v9nPNXgYtV8Jh3rzimJzL4uBGOTpaEhdwR5AZPWNg=
+	t=1713361627; cv=none; b=GIBIJNmiat3aUACh/BIsSFhGty2SwETZQjD6Zk8I3iQ3SIjq/iu8XVElONWMkZdeBGRyln38Tn7fGlr8mK1M4w40AK71i7S0EzuyWxSib+SVcghKp7sBY5uyjfnPNEACKCPdvr4wrjsd1/mBrGwUOwuxWYn8Qxy4z6zi/A+4TA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713347242; c=relaxed/simple;
-	bh=H1kSTITm9Nr16eIMTgiZuze+axHDcvVmad0OKfmCM90=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ah9WV2UDavJGqmYrMwRsc4xchmJwpranNe/2To+txlLMU9AGqVWaZgvFlsLk9wvheI3qMILuMlks6psE1ts5D5Fumx3zI9dqEcDKPSk3GrSx1hwIjcbFHOxq6qgGNXJEzSCSpNaYUjPbwKTD3EA8G4tFBG/nC5kPfW9/2RPyFp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5e2b1d05aso615314239f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 Apr 2024 02:47:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713347240; x=1713952040;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BiDd+kXH+Cj51BIsV6pHfTEfpKsHr45XJoqpvB13TaE=;
-        b=Haftgl8jhJqfwExtoqBSB/WY3B8f3YWuGagGLhfFLa+ESASikJF1sPktjrdL8E87bJ
-         p1fPyzvuAwPvVWHkh0gaE8iMPmqmrX/INmPMNgvGfkgSYDlvvxT/2kCr/fNFWlQKm0ds
-         LDqsTOFHiokGCQzNHailg3ZYzJzf6nDcxAY0lYctdUNzJUvVYbGyj7cvNmE6gu1DNDIP
-         ll/BHuxy1exZnQRUhlo8YleDZ/8vxiBJ5f95TjuSiqJOfmqsS1qFiT9y6OrTPT7m0/Wb
-         rMqo6buioT5FCXKyALt2S/8Tigxvw7pHKWYQGjBDPp516FISek1MRlOePFpJ5pxhlmC6
-         8/7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXxawznRPLxEPQn127JUZOUvkWLKxGp8+UwiXHt7NuV9H98+8nM5BRax+4MdSn6nVA2CkeFEXU6VXuKn0+D5g/Kw8XXsmR3t5W/0WjssSMwATIc
-X-Gm-Message-State: AOJu0YxGSuJ3fHCXMpDpPwOwAswj2ughsaJUoLwKid3BOJv3GXTtMoFm
-	XLBX6wnYWHLce8wK3IUe663qFLsoJ3V6VZ3UWkLDqRwbuYkGQ5Zu3WZMzNYjKAnWzDHX65eRPgA
-	qlxxOeEVAX+xlBwFTJ693oVqjVSYKt2VV4flrxR1LmgmCicc3thR5gjQ=
-X-Google-Smtp-Source: AGHT+IFQqTZn2ihU3vI9xi2nIagZdslebwhIF5ml68kmnD4sfN6aAguFLX5w9t/Qi9pFNmR8FImkh9XC+byV+RqOCIa95mlKtzy7
+	s=arc-20240116; t=1713361627; c=relaxed/simple;
+	bh=DUxy/imxBqBdg5Gh+AUaXN8SG6ZWyJhrBrb/iBQMZTQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Qpnlc/rrNCWzP/eF8RnwyOskHIcVz5LsB9HeIJ2lawJwMOr3myD2qZSfZjllgKcZ3MraUPIlyIs+grz1ATnjdhYjWHf7DdQnyZCi5W4pmcv/opL/zzvMDqPzamxnpwgxW92uap0GooZaxmNMVz49zdPj/emugxgO2lhjab3cnHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XD0fiL0X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XD0fiL0X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E54EC072AA;
+	Wed, 17 Apr 2024 13:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713361626;
+	bh=DUxy/imxBqBdg5Gh+AUaXN8SG6ZWyJhrBrb/iBQMZTQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XD0fiL0XH29HnulrmqFq6SVORlyGrEz/tTMwd+xV6QuU3Ee/LBgDmXvaAo90Aljrr
+	 r0oLGrfUAGII7kW5VrRQJH+T2iZMLARbz/p5Lgvqs7A11VS2ClCKlPmB8HPcBE+06D
+	 amz20Qoa2QHYRVGvWrm/ywKSYkGvZIIrK9LK8PhXeq6sJy1KNXEo7bbaLso+mNZ+OX
+	 2z7y69RQtjRwJKdDJelgyzXx/MY/pz5/KD1HRtR+U9T6hSjkzc/fa/TUeHoTOFHm7X
+	 dXj8RAXPPRFRH4VvJ9m/BC6kM8+BaiygE3e3bDTkqYxyXqUJPu0jh0mQo9jTgWeaBk
+	 ivVQd3hCZEZ8A==
+Date: Wed, 17 Apr 2024 22:47:03 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Francis Laniel <flaniel@linux.microsoft.com>
+Subject: Re: [PATCH for-next v2] tracing/kprobes: Add symbol counting check
+ when module loads
+Message-Id: <20240417224703.c011b4ebbef9e8375450dd39@kernel.org>
+In-Reply-To: <20240416004726.792b8158@rorschach.local.home>
+References: <171317402290.228024.13465974857683559752.stgit@devnote2>
+	<20240416004726.792b8158@rorschach.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8929:b0:482:c7c8:5019 with SMTP id
- jc41-20020a056638892900b00482c7c85019mr927316jab.0.1713347240339; Wed, 17 Apr
- 2024 02:47:20 -0700 (PDT)
-Date: Wed, 17 Apr 2024 02:47:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a33584061647bdef@google.com>
-Subject: [syzbot] [bpf?] [trace?] possible deadlock in __send_signal_locked
-From: syzbot <syzbot+6e3b6eab5bd4ed584a38@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	rostedt@goodmis.org, sdf@google.com, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Tue, 16 Apr 2024 00:47:26 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-syzbot found the following issue on:
+> On Mon, 15 Apr 2024 18:40:23 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > Check the number of probe target symbols in the target module when
+> > the module is loaded. If the probe is not on the unique name symbols
+> > in the module, it will be rejected at that point.
+> > 
+> > Note that the symbol which has a unique name in the target module,
+> > it will be accepted even if there are same-name symbols in the
+> > kernel or other modules,
+> 
+> This says what it does, but doesn't explain why it is doing it.
+> What's the purpose of this patch?
 
-HEAD commit:    96fca68c4fbf Merge tag 'nfsd-6.9-3' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13967bb3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=85dbe39cf8e4f599
-dashboard link: https://syzkaller.appspot.com/bug?extid=6e3b6eab5bd4ed584a38
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Thank you for pointing it out, I just reused the description which I
+sent last year. It needs to be updated.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+-----
+Currently, kprobe event checks whether the target symbol name is
+unique, so that it does not put a probe on unexpected place. But this
+skips the check if the target is on a module. This fixes the issue
+by checking the symbol is unique in the target module if the target
+is on a module.
+-----
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-96fca68c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d6d7a71ca443/vmlinux-96fca68c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/accb76ce6c9c/bzImage-96fca68c.xz
+Thanks!
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6e3b6eab5bd4ed584a38@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-rc4-syzkaller-00031-g96fca68c4fbf #0 Not tainted
-------------------------------------------------------
-syz-executor.0/7699 is trying to acquire lock:
-ffff88806b53d998 (&pool->lock){-.-.}-{2:2}, at: __queue_work+0x23a/0x1020 kernel/workqueue.c:2346
-
-but task is already holding lock:
-ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up_common_lock kernel/sched/wait.c:105 [inline]
-ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up+0x1c/0x60 kernel/sched/wait.c:127
-
-which lock already depends on the new lock.
+> 
+> -- Steve
 
 
-the existing dependency chain (in reverse order) is:
-
--> #3 (&sighand->signalfd_wqh){....}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
-       __wake_up_common_lock kernel/sched/wait.c:105 [inline]
-       __wake_up+0x1c/0x60 kernel/sched/wait.c:127
-       signalfd_notify include/linux/signalfd.h:22 [inline]
-       __send_signal_locked+0x951/0x11c0 kernel/signal.c:1168
-       do_notify_parent+0xeb4/0x1040 kernel/signal.c:2143
-       exit_notify kernel/exit.c:754 [inline]
-       do_exit+0x1369/0x2c10 kernel/exit.c:898
-       do_group_exit+0xd3/0x2a0 kernel/exit.c:1027
-       __do_sys_exit_group kernel/exit.c:1038 [inline]
-       __se_sys_exit_group kernel/exit.c:1036 [inline]
-       __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1036
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&sighand->siglock){-...}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
-       __lock_task_sighand+0xc2/0x340 kernel/signal.c:1414
-       lock_task_sighand include/linux/sched/signal.h:746 [inline]
-       do_send_sig_info kernel/signal.c:1300 [inline]
-       group_send_sig_info+0x290/0x300 kernel/signal.c:1453
-       bpf_send_signal_common+0x2e8/0x3a0 kernel/trace/bpf_trace.c:881
-       ____bpf_send_signal_thread kernel/trace/bpf_trace.c:898 [inline]
-       bpf_send_signal_thread+0x16/0x20 kernel/trace/bpf_trace.c:896
-       ___bpf_prog_run+0x3e51/0xabd0 kernel/bpf/core.c:1997
-       __bpf_prog_run32+0xc1/0x100 kernel/bpf/core.c:2236
-       bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-       __bpf_prog_run include/linux/filter.h:657 [inline]
-       bpf_prog_run include/linux/filter.h:664 [inline]
-       __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-       bpf_trace_run4+0x176/0x460 kernel/trace/bpf_trace.c:2422
-       __bpf_trace_mmap_lock_acquire_returned+0x134/0x180 include/trace/events/mmap_lock.h:52
-       trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
-       __mmap_lock_do_trace_acquire_returned+0x456/0x790 mm/mmap_lock.c:237
-       __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
-       mmap_write_lock include/linux/mmap_lock.h:109 [inline]
-       __do_sys_set_mempolicy_home_node+0x574/0x860 mm/mempolicy.c:1568
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (lock#11){+.+.}-{2:2}:
-       local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-       __mmap_lock_do_trace_acquire_returned+0x97/0x790 mm/mmap_lock.c:237
-       __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
-       mmap_read_trylock include/linux/mmap_lock.h:166 [inline]
-       stack_map_get_build_id_offset+0x5df/0x7d0 kernel/bpf/stackmap.c:141
-       __bpf_get_stack+0x6bf/0x700 kernel/bpf/stackmap.c:449
-       ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1985 [inline]
-       bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1975
-       ___bpf_prog_run+0x3e51/0xabd0 kernel/bpf/core.c:1997
-       __bpf_prog_run32+0xc1/0x100 kernel/bpf/core.c:2236
-       bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-       __bpf_prog_run include/linux/filter.h:657 [inline]
-       bpf_prog_run include/linux/filter.h:664 [inline]
-       __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-       bpf_trace_run3+0x167/0x440 kernel/trace/bpf_trace.c:2421
-       __bpf_trace_workqueue_queue_work+0x101/0x140 include/trace/events/workqueue.h:23
-       trace_workqueue_queue_work include/trace/events/workqueue.h:23 [inline]
-       __queue_work+0x627/0x1020 kernel/workqueue.c:2382
-       queue_work_on+0xf4/0x120 kernel/workqueue.c:2435
-       bpf_prog_load+0x19bb/0x2660 kernel/bpf/syscall.c:2944
-       __sys_bpf+0x9b4/0x4b40 kernel/bpf/syscall.c:5660
-       __do_sys_bpf kernel/bpf/syscall.c:5767 [inline]
-       __se_sys_bpf kernel/bpf/syscall.c:5765 [inline]
-       __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5765
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&pool->lock){-.-.}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       __queue_work+0x23a/0x1020 kernel/workqueue.c:2346
-       queue_work_on+0xf4/0x120 kernel/workqueue.c:2435
-       queue_work include/linux/workqueue.h:605 [inline]
-       schedule_work include/linux/workqueue.h:666 [inline]
-       p9_pollwake+0xc1/0x1d0 net/9p/trans_fd.c:538
-       __wake_up_common+0x131/0x1e0 kernel/sched/wait.c:89
-       __wake_up_common_lock kernel/sched/wait.c:106 [inline]
-       __wake_up+0x31/0x60 kernel/sched/wait.c:127
-       signalfd_notify include/linux/signalfd.h:22 [inline]
-       __send_signal_locked+0x951/0x11c0 kernel/signal.c:1168
-       force_sig_info_to_task+0x31d/0x660 kernel/signal.c:1352
-       force_sig_fault_to_task kernel/signal.c:1733 [inline]
-       force_sig_fault+0xc5/0x110 kernel/signal.c:1738
-       __bad_area_nosemaphore+0x30d/0x6b0 arch/x86/mm/fault.c:854
-       bad_area_access_error+0xc1/0x260 arch/x86/mm/fault.c:931
-       do_user_addr_fault+0xa2a/0x1080 arch/x86/mm/fault.c:1396
-       handle_page_fault arch/x86/mm/fault.c:1505 [inline]
-       exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1563
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
-other info that might help us debug this:
-
-Chain exists of:
-  &pool->lock --> &sighand->siglock --> &sighand->signalfd_wqh
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&sighand->signalfd_wqh);
-                               lock(&sighand->siglock);
-                               lock(&sighand->signalfd_wqh);
-  lock(&pool->lock);
-
- *** DEADLOCK ***
-
-3 locks held by syz-executor.0/7699:
- #0: ffff8880234465d8 (&sighand->siglock){-...}-{2:2}, at: force_sig_info_to_task+0x7a/0x660 kernel/signal.c:1334
- #1: ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up_common_lock kernel/sched/wait.c:105 [inline]
- #1: ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up+0x1c/0x60 kernel/sched/wait.c:127
- #2: ffffffff8d7b0e20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #2: ffffffff8d7b0e20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #2: ffffffff8d7b0e20 (rcu_read_lock){....}-{1:2}, at: __queue_work+0xf2/0x1020 kernel/workqueue.c:2324
-
-stack backtrace:
-CPU: 2 PID: 7699 Comm: syz-executor.0 Not tainted 6.9.0-rc4-syzkaller-00031-g96fca68c4fbf #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
- __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
- _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
- __queue_work+0x23a/0x1020 kernel/workqueue.c:2346
- queue_work_on+0xf4/0x120 kernel/workqueue.c:2435
- queue_work include/linux/workqueue.h:605 [inline]
- schedule_work include/linux/workqueue.h:666 [inline]
- p9_pollwake+0xc1/0x1d0 net/9p/trans_fd.c:538
- __wake_up_common+0x131/0x1e0 kernel/sched/wait.c:89
- __wake_up_common_lock kernel/sched/wait.c:106 [inline]
- __wake_up+0x31/0x60 kernel/sched/wait.c:127
- signalfd_notify include/linux/signalfd.h:22 [inline]
- __send_signal_locked+0x951/0x11c0 kernel/signal.c:1168
- force_sig_info_to_task+0x31d/0x660 kernel/signal.c:1352
- force_sig_fault_to_task kernel/signal.c:1733 [inline]
- force_sig_fault+0xc5/0x110 kernel/signal.c:1738
- __bad_area_nosemaphore+0x30d/0x6b0 arch/x86/mm/fault.c:854
- bad_area_access_error+0xc1/0x260 arch/x86/mm/fault.c:931
- do_user_addr_fault+0xa2a/0x1080 arch/x86/mm/fault.c:1396
- handle_page_fault arch/x86/mm/fault.c:1505 [inline]
- exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1563
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7f809a860675
-Code: fe 28 6f 06 48 83 fa 40 0f 87 a7 00 00 00 62 e1 fe 28 6f 4c 16 ff 62 e1 fe 28 7f 07 62 e1 fe 28 7f 4c 17 ff c3 8b 0e 8b 34 16 <89> 0f 89 34 17 c3 0f 1f 44 00 00 83 fa 10 73 21 83 fa 08 73 36 48
-RSP: 002b:00007fff068363a8 EFLAGS: 00010202
-RAX: 0000000020000080 RBX: 0000000000000004 RCX: 0000000034747865
-RDX: 0000000000000001 RSI: 0000000000347478 RDI: 0000000020000080
-RBP: 00007f809a9ad980 R08: 00007f809a800000 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000009 R12: 0000000000018980
-R13: 000000000001894e R14: 00007fff06836550 R15: 00007f809a834cb0
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
