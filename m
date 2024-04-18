@@ -1,173 +1,221 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADCA4F5EC;
-	Thu, 18 Apr 2024 03:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513B82E3F7;
+	Thu, 18 Apr 2024 06:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713411045; cv=none; b=Egjc+dZEpdeG0wzlMQEtCJZo8X3prkfTT2TZifRcW6KVICK4dw0PcdYETbmhA6hDTu6xNcpUli42P47vshjMPdNcAkss0MT8z6p5qNSYfmUGPSIjG3/oQ5W+9QKbSLsfENPbGj330iduQ8ssngXGGIuhVfCLCa8WN+1uzd7hS9Q=
+	t=1713423426; cv=none; b=DkcfxEVaqmSKg6ctcmdDB09LLyoth0YBYuyodtw0PcxHB4OEh7ARY3fiXd7k7JICs85sQvNmMKvrj0iFW4uC7RogLE7zFIXL1JYr+kmq5n2dvEAdnpTPpRlkltB6x6+7rzbI1YqZT6jhpaaXahYAkSKmUu23Lm35x/Bk6E5CTXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713411045; c=relaxed/simple;
-	bh=DCA4ZXGfA6CF2fRmBG48aqBKpyuyrXsqeWgyw2L4DBE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TBzOCFngbdT3+VKdmRx9ZyoEsA1QVR17mNpv+6g/OBFLtyGsdlVdaSegOr11+gWb1EIB8Ao4ut6twJYEFgp0lzYQr8vcLu7xFmq9Qh3CJ555DURXoEV41V7lI8fUM+9xzn1+TODTBPUae3g89vOPGMdbgfRn9sYm5JrDG64GuVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JXKChITZ; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713423426; c=relaxed/simple;
+	bh=CSDFagkcXxGKH8tnkyXtN1wJJsUiCZ1G3ZjHZ+/sC+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ap4TCRwNXq3pDWSb4yjFhfgpsKuoanNZ60wZzlvDb1tRamHhMhTv/7FBBwgXfnUW6Cp5DT+g809vmUxCqLxVngz9FGPORdTvvMvPMw2g3Emkwy84NoAQ+9WigDU4zVHFhUfI1GqAqBMXwzjTCni+yqQX7VidA6lQ5erGVR1BRs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivEC5vxq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXKChITZ"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a526d381d2fso264752466b.0;
-        Wed, 17 Apr 2024 20:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713411040; x=1714015840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XxhTyKTIE0qzJxTrsheENDHgXb5i9dLfwKH5M/LulNs=;
-        b=JXKChITZq54ScND8V1QSFSO6GAlMTI2GK0F7Q6en48PQH6INBGFDcQadaAJmc4yYJQ
-         SK1wd7sWtO7cuYIxG8/QiDKXOEC3FVS0uSFhS9lKf8zVroyawGKFQ0zOMxjytBctBNF4
-         UFpXlFpx8t+fRaNN2MBzy+Yaiu1gQHuFg6QOhUsAvMoU5APP5E8NDK44KN7tj1qsXCpB
-         IIdPhFpnIvthTQsT/A3A0tqWh+ZUQyEDiVcBWAn3TpFU50mXVPK/udLYP0cprHFkIHcz
-         zGqWOJi1Va7AcmAYDbI/aMoIhf+k7phUWRtA2CHvcuARpNVaw9AUPRto1IctfkdGVyVM
-         /TIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713411040; x=1714015840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XxhTyKTIE0qzJxTrsheENDHgXb5i9dLfwKH5M/LulNs=;
-        b=tuInIPHS2MiEK1VLBz4JFnOKMFY2HXnN2wBg/hQx7U+PzgdyXQjn1LZfGsfXil+5t5
-         OmxYWsx1Pv7rA1Tl0knk0iBxGniRk49Pm6GJqZ1NzMtRifZOV6gYtnYPM7oIMhx+4r3M
-         oscCJZBN8j7563/8VeTLMkuFV7RsWiG1rRjGqOtEckKF188GTDW32A5UWF5+3qpvlLnt
-         U9c4g2ZzAToh1jh67UHVce6vo3/z1YDhSUdXWMO40RUI9Nh7s6J4wrRP93BlQWBJ8Gep
-         WCZu+9PljZTtEkIN91X+49OzfWjXtX6kPSz9qiehr7H5Hw9ditYGbarlcxpstJ+xWD5Y
-         J7JA==
-X-Forwarded-Encrypted: i=1; AJvYcCWavmhrtx+SaSEKllkJSlF7OpG+rClhDzJ5I6jUbn8WY1Xn9+zRaXUv9Z07VBU2DuPn65R0kChmBBPyjCx1HpLq3vk+2Usv5AaJ9McLjMD2bfa2sROq1nXqqGghA92Bz3IvrL9sXHyfKMAU
-X-Gm-Message-State: AOJu0Yxo4lQjJt4B9m9vBvlEC8IbRonIsLkkSyuX+hfkMLIeL3NjZjLh
-	O8BJrdtvYapJR8ilD2O3yZ1RDW+Ty3dbTzYV1y6lJFUrhdU7ByEEKqglKzJOPCOW4HAJERuAd89
-	TPUBKknAQmvKpHxpnzF52VG9T0ABadvWhqv8=
-X-Google-Smtp-Source: AGHT+IHIXEmxxBrJTy9464N8x83VfqQQwELj66FQKhLRL51cqDV42VJTFPlEdcZJ6x4RQa4TVQPrGaadlUpan2ko3zc=
-X-Received: by 2002:a17:906:161a:b0:a52:3984:148f with SMTP id
- m26-20020a170906161a00b00a523984148fmr686853ejd.36.1713411040348; Wed, 17 Apr
- 2024 20:30:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivEC5vxq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 011FAC113CC;
+	Thu, 18 Apr 2024 06:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713423426;
+	bh=CSDFagkcXxGKH8tnkyXtN1wJJsUiCZ1G3ZjHZ+/sC+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ivEC5vxqWrqfqt2Hm6Hn6iCeYNnzu7EovJKwwBeq+v6JmKEyBu07DwpmPD4RNFYKf
+	 5IVcVvYCv+gDC3NlAZ6b6JJhWN6sIAIPrnWASwRu5O9CUGrD67PEcXoi4+wkw1Lpcj
+	 8aVn2Scis3niA+iuLVqchYQlqtOaBv0PCWgjCLLPtzpU5J8jGyfv+Ehvt2mS/gxu9p
+	 2sIPETtaHYjWpUb/R88DlxAWD0aaklYU8WnZnSPW33R4FCflNEQCzyzFH4L7ihkPJ8
+	 oAFO9etY44YihR6fjnVF/SbJlRy5luMG4oD1RAzLE8X2lUDWAm/wl5MKj/ZHbD3nL/
+	 CGXCDNI9sT8UQ==
+Date: Thu, 18 Apr 2024 09:55:55 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, rdunlap@infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <ZiDD-wdGIjOBcQ2U@kernel.org>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+ <20240406173649.3210836-3-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20240417085143.69578-1-kerneljasonxing@gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 18 Apr 2024 11:30:02 +0800
-Message-ID: <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
-To: edumazet@google.com, dsahern@kernel.org, matttbe@kernel.org, 
-	martineau@kernel.org, geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
-	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, atenart@kernel.org
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240406173649.3210836-3-vdonnefort@google.com>
 
-On Wed, Apr 17, 2024 at 4:51=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
->
-> From: Jason Xing <kernelxing@tencent.com>
->
-> In production, there are so many cases about why the RST skb is sent but
-> we don't have a very convenient/fast method to detect the exact underlyin=
-g
-> reasons.
->
-> RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
-> and active kind (like tcp_send_active_reset()). The former can be traced
-> carefully 1) in TCP, with the help of drop reasons, which is based on
-> Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
-> RFC 8684. The latter is relatively independent, which should be
-> implemented on our own.
->
-> In this series, I focus on the fundamental implement mostly about how
-> the rstreason mechnism works and give the detailed passive part as an
-> example, not including the active reset part. In future, we can go
-> further and refine those NOT_SPECIFIED reasons.
->
-> Here are some examples when tracing:
-> <idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=3Dx
->         skaddr=3Dx src=3Dx dest=3Dx state=3Dx reason=3DNOT_SPECIFIED
-> <idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=3Dx
->         skaddr=3Dx src=3Dx dest=3Dx state=3Dx reason=3DNO_SOCKET
->
-> [1]
-> Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10Q=
-N2WBdr+X4k=3Dw@mail.gmail.com/
->
-> v6
-> 1. add back casts, or else they are treated as error.
->
-> v5
-> Link: https://lore.kernel.org/all/20240411115630.38420-1-kerneljasonxing@=
-gmail.com/
-> 1. address format issue (like reverse xmas tree) (Eric, Paolo)
-> 2. remove unnecessary casts. (Eric)
-> 3. introduce a helper used in mptcp active reset. See patch 6. (Paolo)
->
-> v4
-> Link: https://lore.kernel.org/all/20240409100934.37725-1-kerneljasonxing@=
-gmail.com/
-> 1. passing 'enum sk_rst_reason' for readability when tracing (Antoine)
->
-> v3
-> Link: https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@=
-gmail.com/
-> 1. rebase (mptcp part) and address what Mat suggested.
->
-> v2
-> Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
-> 1. rebase against the latest net-next tree
->
->
->
-> Jason Xing (7):
->   net: introduce rstreason to detect why the RST is sent
->   rstreason: prepare for passive reset
->   rstreason: prepare for active reset
->   tcp: support rstreason for passive reset
->   mptcp: support rstreason for passive reset
->   mptcp: introducing a helper into active reset logic
->   rstreason: make it work in trace world
->
->  include/net/request_sock.h |  4 +-
->  include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
->  include/net/tcp.h          |  3 +-
->  include/trace/events/tcp.h | 37 +++++++++++++--
->  net/dccp/ipv4.c            | 10 ++--
->  net/dccp/ipv6.c            | 10 ++--
->  net/dccp/minisocks.c       |  3 +-
->  net/ipv4/tcp.c             | 15 ++++--
->  net/ipv4/tcp_ipv4.c        | 14 +++---
->  net/ipv4/tcp_minisocks.c   |  3 +-
->  net/ipv4/tcp_output.c      |  5 +-
->  net/ipv4/tcp_timer.c       |  9 ++--
->  net/ipv6/tcp_ipv6.c        | 17 ++++---
->  net/mptcp/protocol.c       |  2 +-
->  net/mptcp/protocol.h       | 11 +++++
->  net/mptcp/subflow.c        | 27 ++++++++---
->  16 files changed, 216 insertions(+), 47 deletions(-)
->  create mode 100644 include/net/rstreason.h
->
-> --
-> 2.37.3
->
+On Sat, Apr 06, 2024 at 06:36:46PM +0100, Vincent Donnefort wrote:
+> In preparation for allowing the user-space to map a ring-buffer, add
+> a set of mapping functions:
+> 
+>   ring_buffer_{map,unmap}()
+> 
+> And controls on the ring-buffer:
+> 
+>   ring_buffer_map_get_reader()  /* swap reader and head */
+> 
+> Mapping the ring-buffer also involves:
+> 
+>   A unique ID for each subbuf of the ring-buffer, currently they are
+>   only identified through their in-kernel VA.
+> 
+>   A meta-page, where are stored ring-buffer statistics and a
+>   description for the current reader
+> 
+> The linear mapping exposes the meta-page, and each subbuf of the
+> ring-buffer, ordered following their unique ID, assigned during the
+> first mapping.
+> 
+> Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
+> size will remain unmodified and the splice enabling functions will in
+> reality simply memcpy the data instead of swapping subbufs.
+> 
+> CC: <linux-mm@kvack.org>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index dc5ae4e96aee..96d2140b471e 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+> @@ -6,6 +6,8 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/poll.h>
+>  
+> +#include <uapi/linux/trace_mmap.h>
+> +
+>  struct trace_buffer;
+>  struct ring_buffer_iter;
+>  
+> @@ -223,4 +225,8 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
+>  #define trace_rb_cpu_prepare	NULL
+>  #endif
+>  
+> +int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+> +		    struct vm_area_struct *vma);
+> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
+> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
+>  #endif /* _LINUX_RING_BUFFER_H */
+> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+> new file mode 100644
+> index 000000000000..ffcd8dfcaa4f
+> --- /dev/null
+> +++ b/include/uapi/linux/trace_mmap.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _TRACE_MMAP_H_
+> +#define _TRACE_MMAP_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct trace_buffer_meta - Ring-buffer Meta-page description
+> + * @meta_page_size:	Size of this meta-page.
+> + * @meta_struct_len:	Size of this structure.
+> + * @subbuf_size:	Size of each sub-buffer.
+> + * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
+> + * @reader.lost_events:	Number of events lost at the time of the reader swap.
+> + * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
+> + * @reader.read:	Number of bytes read on the reader subbuf.
+> + * @flags:		Placeholder for now, 0 until new features are supported.
+> + * @entries:		Number of entries in the ring-buffer.
+> + * @overrun:		Number of entries lost in the ring-buffer.
+> + * @read:		Number of entries that have been read.
+> + * @Reserved1:		Reserved for future use.
+> + * @Reserved2:		Reserved for future use.
+> + */
+> +struct trace_buffer_meta {
+> +	__u32		meta_page_size;
+> +	__u32		meta_struct_len;
+> +
+> +	__u32		subbuf_size;
+> +	__u32		nr_subbufs;
+> +
+> +	struct {
+> +		__u64	lost_events;
+> +		__u32	id;
+> +		__u32	read;
+> +	} reader;
+> +
+> +	__u64	flags;
+> +
+> +	__u64	entries;
+> +	__u64	overrun;
+> +	__u64	read;
+> +
+> +	__u64	Reserved1;
+> +	__u64	Reserved2;
 
-Hello maintainers,
+Why do you need reserved fields? This structure always resides in the
+beginning of a page and the rest of the page is essentially "reserved".
 
-I'm not sure why the patch series has been changed to 'Changes
-Requested', until now I don't think I need to change something.
+> +};
+> +
+> +#endif /* _TRACE_MMAP_H_ */
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index cc9ebe593571..793ecc454039 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
 
-Should I repost this series (keeping the v6 tag) and then wait for
-more comments?
+... 
 
-Thanks,
-Jason
+> +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+> +				   unsigned long *subbuf_ids)
+> +{
+> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+> +	struct buffer_page *first_subbuf, *subbuf;
+> +	int id = 0;
+> +
+> +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+> +	cpu_buffer->reader_page->id = id++;
+> +
+> +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+> +	do {
+> +		if (WARN_ON(id >= nr_subbufs))
+> +			break;
+> +
+> +		subbuf_ids[id] = (unsigned long)subbuf->page;
+> +		subbuf->id = id;
+> +
+> +		rb_inc_page(&subbuf);
+> +		id++;
+> +	} while (subbuf != first_subbuf);
+> +
+> +	/* install subbuf ID to kern VA translation */
+> +	cpu_buffer->subbuf_ids = subbuf_ids;
+> +
+> +	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
+> +	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;
+
+Isn't this a single page?
+
+> +	meta->meta_struct_len = sizeof(*meta);
+> +	meta->nr_subbufs = nr_subbufs;
+> +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> +
+> +	rb_update_meta_page(cpu_buffer);
+> +}
+
+...
+
+> +#define subbuf_page(off, start) \
+> +	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
+> +
+> +#define foreach_subbuf_page(sub_order, start, page)		\
+
+Nit: usually iterators in kernel use for_each
+
+> +	page = subbuf_page(0, (start));				\
+> +	for (int __off = 0; __off < (1 << (sub_order));		\
+> +	     __off++, page = subbuf_page(__off, (start)))
+
+The pages are allocated with alloc_pages_node(.. subbuf_order) are
+physically contiguous and struct pages for them are also contiguous, so
+inside a subbuf_order allocation you can just do page++.
+
+-- 
+Sincerely yours,
+Mike.
