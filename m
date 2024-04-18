@@ -1,120 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0957416EBEA;
-	Thu, 18 Apr 2024 15:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F9116F855;
+	Thu, 18 Apr 2024 15:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713454752; cv=none; b=fKijyL+YYIiI+2sHng86TTZ55fJqZJEsIPnOrNa4VH5pEC0ALjUcIWO6jNfKcRswB+TWwcZ3gjiGeW69Z6Un9wnv2gaRXQHO0xp20ZZ+MfVJuSgbmwX8IoZRr1VGS9aId5sbF1pr2+O8Q6IroJUNnZtLzal/6hj31YzYzxNDBFE=
+	t=1713455209; cv=none; b=HYAzcQgPjVyKlU4dxap2AOd1ZvC3QRfVSo4tQ2II12AGbK+yM52tj5ipla7ggMUc5RTFqk/v8M4gufLwyFXNt/eTZEwEaf8w9RfwBWDQJaCJVtJAwjqpGktZnrRmheC1gSOS+TZTeZGA2KLqu2TTtDNYoGXs21J/DVjX1acnpF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713454752; c=relaxed/simple;
-	bh=poikjUesrlZvYhdkYUVTGKAXtyh6o27VwcY88bzAEGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgUz23QpKjmd6XW7OENeB6X87D6AebhPYH9qWBnL7uAo2vMfbECw0MbCyKL/bAz6SZfNYydUEIia4+9G0e68sWR7lR9uZdZZ7t2yDDzxkdxpydxE/fi3zCEWwMLyyO25ow7PUeEIAXZKMJOH/b+5mEmgIoyjWss3DYxy82O3aqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dhagt/Ds; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713455209; c=relaxed/simple;
+	bh=verQNNpe340ndgNeK05Wz0xIjEug33vCQbOW6oRZGxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sLSDR/kj+6SEwp8o1mLu0N6aaukRBGM2gutVBh5R8I77qFEN5/xPeEgfHTvvyk0vx53MfjDt9o3vlvVXCTJOrLaPzRm/2CIAloUWXBvXCN7DbkrLC3+xLF4QYztOfGTtzRtCErqSyvnNI4h+3HZCjBghY+Fb2c6mCgbunYo+XQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcT6d1KT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dhagt/Ds"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB10C113CC;
-	Thu, 18 Apr 2024 15:38:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcT6d1KT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AE6C32783;
+	Thu, 18 Apr 2024 15:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713454751;
-	bh=poikjUesrlZvYhdkYUVTGKAXtyh6o27VwcY88bzAEGE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dhagt/DsCV508bBCSM8PQFh0KZ4ChVYVPTqwgApoowoaluDog1pdK/qIVJU1bAfJ1
-	 yTHdqpTqCwsTRyfpVzaQYmToVgTGF005G8P5bcBRn51+TfjO6upp0QzeXZdpRVmP9T
-	 DyDQSEZc+G77sXhvEvzJVgEwHd81+hiEegtvxJRrNRYHrUsgJx5AWmHmLJX+3OoPI9
-	 DgUEekwf3Gv6AvfsAJ1j1lmBPCAVlRdxF5BEqB76VwjdS5tGiPR4UhLWWIRbIEiDfd
-	 AIVB7M07XTdJ0VLvAnDkmSjg91AV2IlHsKb94RwxZ2UFTajWhnfg+q+QMNKv4wdsDX
-	 0LvSLkPCKaqng==
-Date: Thu, 18 Apr 2024 18:37:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 14/15] kprobes: remove dependency on CONFIG_MODULES
-Message-ID: <ZiE-UE27NalI-IeW@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-15-rppt@kernel.org>
- <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
+	s=k20201202; t=1713455208;
+	bh=verQNNpe340ndgNeK05Wz0xIjEug33vCQbOW6oRZGxo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QcT6d1KTjOKeLFBLwVPM/bZbFSdxdbXNirDN7fa7fx3MrAzgDpfp2RfJ7cEzjak0v
+	 3+IDFLXN6W39mLdPYM1QpEqdtOrHlsjvjaoYZC0eERMC1WEHxux87Jp3ec8ce9duuz
+	 v2VCfkzCuxzdmUmf6T8M+n+/WhGdj2hhJTCrwWKgKS+EaItPlqYoFMYfmLk5MVn9CG
+	 mp1XCHDClsibGTR43GfnYH+BWnxBWRMOvMM5pwEspmTsPqTfUIYAMHsv4znDQDVySx
+	 0FbxucJVMaNBnVxl03IErtOcR5wBZ5ALxp5o8lHHuZHRYwLjN6lbwQiN8ioauhOBZi
+	 Q3q4bsTvXMirw==
+Date: Thu, 18 Apr 2024 08:46:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: edumazet@google.com, dsahern@kernel.org, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com,
+ davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev,
+ netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>
+Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to
+ detect
+Message-ID: <20240418084646.68713c42@kernel.org>
+In-Reply-To: <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
+References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+	<CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Masami,
+On Thu, 18 Apr 2024 11:30:02 +0800 Jason Xing wrote:
+> I'm not sure why the patch series has been changed to 'Changes
+> Requested', until now I don't think I need to change something.
+> 
+> Should I repost this series (keeping the v6 tag) and then wait for
+> more comments?
 
-On Thu, Apr 18, 2024 at 06:16:15AM +0900, Masami Hiramatsu wrote:
-> Hi Mike,
-> 
-> On Thu, 11 Apr 2024 19:00:50 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> > 
-> > kprobes depended on CONFIG_MODULES because it has to allocate memory for
-> > code.
-> > 
-> > Since code allocations are now implemented with execmem, kprobes can be
-> > enabled in non-modular kernels.
-> > 
-> > Add #ifdef CONFIG_MODULE guards for the code dealing with kprobes inside
-> > modules, make CONFIG_KPROBES select CONFIG_EXECMEM and drop the
-> > dependency of CONFIG_KPROBES on CONFIG_MODULES.
-> 
-> Thanks for this work, but this conflicts with the latest fix in v6.9-rc4.
-> Also, can you use IS_ENABLED(CONFIG_MODULES) instead of #ifdefs in
-> function body? We have enough dummy functions for that, so it should
-> not make a problem.
-
-I'll rebase and will try to reduce ifdefery where possible.
-
-> Thank you,
-> 
-> > 
-> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> > ---
-> >  arch/Kconfig                |  2 +-
-> >  kernel/kprobes.c            | 43 +++++++++++++++++++++----------------
-> >  kernel/trace/trace_kprobe.c | 11 ++++++++++
-> >  3 files changed, 37 insertions(+), 19 deletions(-)
-> > 
-> 
-> -- 
-> Masami Hiramatsu
-
--- 
-Sincerely yours,
-Mike.
+If Eric doesn't like it - it's not getting merged.
