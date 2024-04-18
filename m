@@ -1,125 +1,112 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022B417335B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Apr 2024 18:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A46917A93E;
+	Thu, 18 Apr 2024 19:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713466291; cv=none; b=QPLWtdIfS1dTBit7mWKnDPqKrocQT4ystnW7qGMaOPzlitHDOWS+9b84JvOvTC79Ue8IDtR/BDcWCzhOWzONOxOA7Ria/5rDlIb8ttpxDtI4FdR+P72Wvd37ubcu9bUpcV58hZ52HclhtcLPqqEoM8QCFUFZb57U7PRHHexZFXI=
+	t=1713467354; cv=none; b=FAhQtRrEHx7pCIRPASoCUmTyWYDSiniq/S10dX7QPundmiwwKS7vbADxtI2YgdNLbziIorYGaOGNuKcUHllcUs+U3URirfxhEaDHWccr3vKrgIknAVg9JKguKkynjkJY58t6NUl2oImUJJXW5P9F/skyC4zAtgxTvgXfb38Sd1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713466291; c=relaxed/simple;
-	bh=jvW7hMCjwo7CN/K5mcq8Qwa/N6UV2QWPgKjq0AlxuMk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xj7E7SjZKv+BRZ3gfhhMMqPl2X6DhnS1o5zzJMmyEMSchy6SXGikz3qYHXR5rL2siKYUv2GBD6kmbB2fy94AxVCJrVcnKBfLQAeWmquZXmVX+NdovdRCRT03ariGNHe/30FZTG07AOyUfuJMbl+b+f+mrmA1xDCdmQZynbbxNM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iTi9F3JX; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713467354; c=relaxed/simple;
+	bh=o+p+igQ4FBx5KCCF7nvkKmVDm0IeVUjotiEU4ySmHYw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xtcp05GxZwCk8hEHQIMcwVbJ6PxtT34fC63JvzubOVGxMdV617RQhfSQoVhNm8fZ/MCG3g0mRgddFNNLbbYo726eQuRkMkqQuKR57Z0i5G24izu5YQ/M6BtrNCcPLwJq9paR/qWyuLDbNuBExmlbad6rzOfvwQ43+wuudSGCSOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTTVatkm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iTi9F3JX"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e5174ffc2so2093a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713466288; x=1714071088; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jvW7hMCjwo7CN/K5mcq8Qwa/N6UV2QWPgKjq0AlxuMk=;
-        b=iTi9F3JXHrojVU1jE8kISEVZER9OuO8CjI52oWkscOGq6BvNtxG9pJBhZGDbBDJLEK
-         tvoSzkcsy1SysuqgXiywcxJRQ4JfVEMw4Hf/jR9cnZeVRugasLKPl+i51QZm7Dnu3W0B
-         J0t+0WUwo42M/Czr8rsJnFgC6HC5ueAlcH65OMqyINOkFX6UhVvrSxiMvtayiClguw3p
-         M+5H57d3Ri74ltIeC7ahqDl6eydrNocoC2NadIxARXdCK6UdsTVTjpge8dsZbzzYkzJX
-         UjX4HLofxVY516QmJrsZ5zEx3kOSRs/sO6LMfpjG3Vb4mzKwaEGA6T6QJRqql9U1v3Wb
-         TG4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713466288; x=1714071088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jvW7hMCjwo7CN/K5mcq8Qwa/N6UV2QWPgKjq0AlxuMk=;
-        b=C9xn4aUbCZXj57yHc6BbfghF6dtTcenB1eeLihTTYqUZC7x9aXgs3Rqce5sE/UrFe7
-         AkhmP/terautwpcw/aZWxEC+t0/Is4RGDQIkj2FC/J83Awj66ddYBNTSdQIZa4M23xFQ
-         xlYLqaVNFfo7KA+mOwgbxGRwvvpWiFu6W2/vbOZXukIBPMtkE6JVKtop68qv926fmctZ
-         uEGmRhPQh8+Dauvys2ZVYFnU+F964zpnZ9dit7EG4Su6Y0d3IK5N5G2LerjU0kMSGnHy
-         26Lj1nInvp6/oH9llf5eSzC64aa4mJC7PIJkDvhcGeXBYbtgB+7pnQqawmN23cTEUi7l
-         UAmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWC8J/bAviv0qo9NuXVp1yjmYcl9QigFr5H7Lwn9vQfzziM8bEXFZczakykRzmvMsT4GFfyIS56YF5iQ+UJ7vr94K0yy5m3u0qrJeMZHe1W2ERo
-X-Gm-Message-State: AOJu0YxbuMiYn8rV8D+VzfcEa8WJxIJsJMQFvhLYiDe9ei1AQKYZlD2N
-	7oe4pIN/PE68Y1ekLWxiEo2wIsj3K0HlhwMmug2Ey1AqyfOnvL+sj8XZAX5Bxgu8dW2t9xunXDr
-	UdioKTl5Axj1h0TN/adAuLscDlf3bLqRI7TmU
-X-Google-Smtp-Source: AGHT+IG0nwF2sPAth0hGe1xE3k7qAAwtmvw2rthCZWtTHFJ8+eKzu9jlzZvyi0B1H3T1RgbsUYyxF016Rx65y43XYBM=
-X-Received: by 2002:aa7:d04f:0:b0:571:b8c4:bcc with SMTP id
- n15-20020aa7d04f000000b00571b8c40bccmr16051edo.6.1713466288126; Thu, 18 Apr
- 2024 11:51:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTTVatkm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7ACEC113CC;
+	Thu, 18 Apr 2024 19:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713467354;
+	bh=o+p+igQ4FBx5KCCF7nvkKmVDm0IeVUjotiEU4ySmHYw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QTTVatkmL5i3GCPN0BJ1MR+6XPFv7f7hE5mKDU0Gk9O16IXDL8/QZ1vHtQtvmG2Kf
+	 jYIZcRpv8P9Nv5ELcIsdfnAPU+IVs/Ti4g7WsjWA5Qr3K7C6mrMuZMQTtozecRBqZI
+	 jIQQbZNp2dJe/hezZJ2eeuK2e9Xh5dca5zVeJ3JSf54FeRVFfLLmns7v1LqYupRS4U
+	 PtGAtZthaaJ17fdPKhrblEmSG5eP3y2B/6GOVGSuaWqE/NgQmJjRAznTS/Gf8GxjRu
+	 +24y0eLIYHV77CextfNzqg9dX7BAYDljHO4AM6+4eUSV4w2gMg7du7tZ8rmdUdqtIh
+	 DmLfazQANKukA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: bpf@vger.kernel.org,
+	jolsa@kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH v4 1/2] ftrace: make extra rcu_is_watching() validation check optional
+Date: Thu, 18 Apr 2024 12:09:08 -0700
+Message-ID: <20240418190909.704286-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
- <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
- <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
-In-Reply-To: <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 18 Apr 2024 20:51:14 +0200
-Message-ID: <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org, 
-	martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com, 
-	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 6:24=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
->
-> On Thu, Apr 18, 2024 at 11:46=E2=80=AFPM Jakub Kicinski <kuba@kernel.org>=
- wrote:
-> >
-> > On Thu, 18 Apr 2024 11:30:02 +0800 Jason Xing wrote:
-> > > I'm not sure why the patch series has been changed to 'Changes
-> > > Requested', until now I don't think I need to change something.
-> > >
-> > > Should I repost this series (keeping the v6 tag) and then wait for
-> > > more comments?
-> >
-> > If Eric doesn't like it - it's not getting merged.
->
-> I'm not a English native speaker. If I understand correctly, it seems
-> that Eric doesn't object to the patch series. Here is the quotation
-> [1]:
-> "If you feel the need to put them in a special group, this is fine by me.=
-"
->
-> This rst reason mechanism can cover all the possible reasons for both
-> TCP and MPTCP. We don't need to reinvent some definitions of reset
-> reasons which are totally the same as drop reasons. Also, we don't
-> need to reinvent something to cover MPTCP. If people are willing to
-> contribute more rst reasons, they can find a good place.
->
-> Reset is one big complicated 'issue' in production. I spent a lot of
-> time handling all kinds of reset reasons daily. I'm apparently not the
-> only one. I just want to make admins' lives easier, including me. This
-> special/separate reason group is important because we can extend it in
-> the future, which will not get confused.
->
-> I hope it can have a chance to get merged :) Thank you.
->
-> [1]: https://lore.kernel.org/all/CANn89i+aLO_aGYC8dr8dkFyi+6wpzCGrogysvgR=
-8FrfRvaa-Vg@mail.gmail.com/
->
-> Thanks,
-> Jason
+Introduce CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING config option to
+control whether ftrace low-level code performs additional
+rcu_is_watching()-based validation logic in an attempt to catch noinstr
+violations.
 
-My objection was these casts between enums. Especially if hiding with (u32)
+This check is expected to never be true and is mostly useful for
+low-level validation of ftrace subsystem invariants. For most users it
+should probably be kept disabled to eliminate unnecessary runtime
+overhead.
 
-I see no reason for adding these casts in TCP stack.
+This improves BPF multi-kretprobe (relying on ftrace and rethook
+infrastructure) runtime throughput by 2%, according to BPF benchmarks ([0]).
 
-When I said "If you feel the need to put them in a special group, this
-is fine by me.",
-this was really about partitioning the existing enum into groups, if
-you prefer having a group of 'RES reasons'
+  [0] https://lore.kernel.org/bpf/CAEf4BzauQ2WKMjZdc9s0rBWa01BYbgwHN6aNDXQSHYia47pQ-w@mail.gmail.com/
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ include/linux/trace_recursion.h |  2 +-
+ kernel/trace/Kconfig            | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
+index d48cd92d2364..24ea8ac049b4 100644
+--- a/include/linux/trace_recursion.h
++++ b/include/linux/trace_recursion.h
+@@ -135,7 +135,7 @@ extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
+ # define do_ftrace_record_recursion(ip, pip)	do { } while (0)
+ #endif
+ 
+-#ifdef CONFIG_ARCH_WANTS_NO_INSTR
++#ifdef CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
+ # define trace_warn_on_no_rcu(ip)					\
+ 	({								\
+ 		bool __ret = !rcu_is_watching();			\
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..7aebd1b8f93e 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -974,6 +974,19 @@ config FTRACE_RECORD_RECURSION_SIZE
+ 	  This file can be reset, but the limit can not change in
+ 	  size at runtime.
+ 
++config FTRACE_VALIDATE_RCU_IS_WATCHING
++	bool "Validate RCU is on during ftrace execution"
++	depends on FUNCTION_TRACER
++	depends on ARCH_WANTS_NO_INSTR
++	help
++	  All callbacks that attach to the function tracing have some sort of
++	  protection against recursion. This option is only to verify that
++	  ftrace (and other users of ftrace_test_recursion_trylock()) are not
++	  called outside of RCU, as if they are, it can cause a race. But it
++	  also has a noticeable overhead when enabled.
++
++	  If unsure, say N
++
+ config RING_BUFFER_RECORD_RECURSION
+ 	bool "Record functions that recurse in the ring buffer"
+ 	depends on FTRACE_RECORD_RECURSION
+-- 
+2.43.0
+
