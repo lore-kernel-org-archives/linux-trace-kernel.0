@@ -1,199 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AE38004A;
-	Wed, 17 Apr 2024 23:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADCA4F5EC;
+	Thu, 18 Apr 2024 03:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713396784; cv=none; b=tStEU1qZ3kPrUPt4zO2FXdihlFei6FjD0B7bp6AF4aFqa8loJsyyEiDZ9bwaVQizWc+Gyn9cZudEgKIXgJFKeLBxr4gm9+zCi8JB/wmFRXpVNXDYKJ3Fa8RUol4F1DJw95aPiD4F4oGxI3DN0un9ZLK8sxda7khEFwYtjY9R0/8=
+	t=1713411045; cv=none; b=Egjc+dZEpdeG0wzlMQEtCJZo8X3prkfTT2TZifRcW6KVICK4dw0PcdYETbmhA6hDTu6xNcpUli42P47vshjMPdNcAkss0MT8z6p5qNSYfmUGPSIjG3/oQ5W+9QKbSLsfENPbGj330iduQ8ssngXGGIuhVfCLCa8WN+1uzd7hS9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713396784; c=relaxed/simple;
-	bh=UVEJ59zmDjoboUO24xHkWUbtsfOaV4nMW96i+du0QWo=;
+	s=arc-20240116; t=1713411045; c=relaxed/simple;
+	bh=DCA4ZXGfA6CF2fRmBG48aqBKpyuyrXsqeWgyw2L4DBE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hD+sh86VP2lCUppSurKD/L+rUY8cfZvRrMZUmdGsKcHdRpy92xeEQMLXVngZYg1M372dbwOIOli+rjcX/qwOmPWC2CXT2pbmYmwkMbf/QVmu408XchGLSPtmJSX1h7DzIPdWLqPzu5msbdk/LP1Tims5JIGYosyhge3mjQMIvGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9dcUgih; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=TBzOCFngbdT3+VKdmRx9ZyoEsA1QVR17mNpv+6g/OBFLtyGsdlVdaSegOr11+gWb1EIB8Ao4ut6twJYEFgp0lzYQr8vcLu7xFmq9Qh3CJ555DURXoEV41V7lI8fUM+9xzn1+TODTBPUae3g89vOPGMdbgfRn9sYm5JrDG64GuVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JXKChITZ; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9dcUgih"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E66C2BD11;
-	Wed, 17 Apr 2024 23:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713396782;
-	bh=UVEJ59zmDjoboUO24xHkWUbtsfOaV4nMW96i+du0QWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g9dcUgihUruqLdH2UkphJBhOp4CI2upjvdLl3d3rVz9siUPLfDQYchyou7LXngIUI
-	 cWzssC+Ais5exj0vlxdgkfD0UISDabYE9ps2nLAsnUvPuJqZuWrDEKlEQm/130dxlJ
-	 TrDcK7sck1xghtXie5KS50aVdgaMGiZE0PmL7090xIdMdRRtto0B1IoLe8MFPUV77p
-	 MjHgPTklEJZLkSAT7P4KNSPweSGMUIkieLAdyvPoe4eF1OoYaNQIWGFhr3Y6mGm6h+
-	 jJ7M8h436v/tDSG5Z2WP2ZPQpJ7Xt9Fh8ZQRH+KDS3CTVxJrkYmgSzmsULNtE2/7ia
-	 VcpAfL6YqmCUQ==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-518931f8d23so181559e87.3;
-        Wed, 17 Apr 2024 16:33:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWU+Mf3njgqRifWxHNpROfCS/UruBBh8dyGnOStdbmcfQ1BA9TTxFeQZdcP/NktvCH9tRvk1GBXhEnQ2/Id0n1nOAs1N5KzdtGf38Ohka637wbiMGMiwxcUEx8ULsm3PjZvZ7PEP7eR5MfYnqTqQnCJxSJMNOZjKdGP7f21H7fJENmcgHGWiTS+nQor5G1Zoydv+JRjRyXK3Y+sniFHtakwH+szWz+/xo7xbh5c2S+4XHf/8ERz1U6Viutvs1sSGfogDyA5Ugcu0XyAcMAOZd63H5JW3JkcosODo9URBruOpi9rnIJON0yn5nwZtipqIcfT1wqJ5XRDtBfCsSi4FRjbvwoox2BI/7N5bh8SRp4o5AEvUvIewouxPYy0FxtwnBdtn9/ju33Cc+RjExNDt6BocTVAmFtotyjmzPDTICgvOabDu1BU1vVbUWk=
-X-Gm-Message-State: AOJu0Yxp3ZJcwr3NGUg945EqKE2eQ6SFNdNTi+8iMeKrnZK6kQzGpujY
-	QXpq+nG8gzn9qAhGZ/VNMh1jqtO+K9ut5wM42wMW9u9csx75aIvPH9fMyD7Oy7nwS3xLPFU3Qw6
-	8AfGAYq/KVgTrYxBdx/hr/fFXt98=
-X-Google-Smtp-Source: AGHT+IEHuhOgcI3i5xgKWDt/RXWKyZ/pV78ei3ikSzZKT8X4nbojHe59GGn0FqOU5qFFQVvC8y10X+N0SPB8sxHbE0Q=
-X-Received: by 2002:a05:6512:3184:b0:519:b95:22b5 with SMTP id
- i4-20020a056512318400b005190b9522b5mr446945lfe.51.1713396780753; Wed, 17 Apr
- 2024 16:33:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXKChITZ"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a526d381d2fso264752466b.0;
+        Wed, 17 Apr 2024 20:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713411040; x=1714015840; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XxhTyKTIE0qzJxTrsheENDHgXb5i9dLfwKH5M/LulNs=;
+        b=JXKChITZq54ScND8V1QSFSO6GAlMTI2GK0F7Q6en48PQH6INBGFDcQadaAJmc4yYJQ
+         SK1wd7sWtO7cuYIxG8/QiDKXOEC3FVS0uSFhS9lKf8zVroyawGKFQ0zOMxjytBctBNF4
+         UFpXlFpx8t+fRaNN2MBzy+Yaiu1gQHuFg6QOhUsAvMoU5APP5E8NDK44KN7tj1qsXCpB
+         IIdPhFpnIvthTQsT/A3A0tqWh+ZUQyEDiVcBWAn3TpFU50mXVPK/udLYP0cprHFkIHcz
+         zGqWOJi1Va7AcmAYDbI/aMoIhf+k7phUWRtA2CHvcuARpNVaw9AUPRto1IctfkdGVyVM
+         /TIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713411040; x=1714015840;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XxhTyKTIE0qzJxTrsheENDHgXb5i9dLfwKH5M/LulNs=;
+        b=tuInIPHS2MiEK1VLBz4JFnOKMFY2HXnN2wBg/hQx7U+PzgdyXQjn1LZfGsfXil+5t5
+         OmxYWsx1Pv7rA1Tl0knk0iBxGniRk49Pm6GJqZ1NzMtRifZOV6gYtnYPM7oIMhx+4r3M
+         oscCJZBN8j7563/8VeTLMkuFV7RsWiG1rRjGqOtEckKF188GTDW32A5UWF5+3qpvlLnt
+         U9c4g2ZzAToh1jh67UHVce6vo3/z1YDhSUdXWMO40RUI9Nh7s6J4wrRP93BlQWBJ8Gep
+         WCZu+9PljZTtEkIN91X+49OzfWjXtX6kPSz9qiehr7H5Hw9ditYGbarlcxpstJ+xWD5Y
+         J7JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWavmhrtx+SaSEKllkJSlF7OpG+rClhDzJ5I6jUbn8WY1Xn9+zRaXUv9Z07VBU2DuPn65R0kChmBBPyjCx1HpLq3vk+2Usv5AaJ9McLjMD2bfa2sROq1nXqqGghA92Bz3IvrL9sXHyfKMAU
+X-Gm-Message-State: AOJu0Yxo4lQjJt4B9m9vBvlEC8IbRonIsLkkSyuX+hfkMLIeL3NjZjLh
+	O8BJrdtvYapJR8ilD2O3yZ1RDW+Ty3dbTzYV1y6lJFUrhdU7ByEEKqglKzJOPCOW4HAJERuAd89
+	TPUBKknAQmvKpHxpnzF52VG9T0ABadvWhqv8=
+X-Google-Smtp-Source: AGHT+IHIXEmxxBrJTy9464N8x83VfqQQwELj66FQKhLRL51cqDV42VJTFPlEdcZJ6x4RQa4TVQPrGaadlUpan2ko3zc=
+X-Received: by 2002:a17:906:161a:b0:a52:3984:148f with SMTP id
+ m26-20020a170906161a00b00a523984148fmr686853ejd.36.1713411040348; Wed, 17 Apr
+ 2024 20:30:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411160051.2093261-1-rppt@kernel.org> <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net> <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
- <Zh4nJp8rv1qRBs8m@kernel.org>
-In-Reply-To: <Zh4nJp8rv1qRBs8m@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Wed, 17 Apr 2024 16:32:49 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
-Message-ID: <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+In-Reply-To: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Thu, 18 Apr 2024 11:30:02 +0800
+Message-ID: <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
+To: edumazet@google.com, dsahern@kernel.org, matttbe@kernel.org, 
+	martineau@kernel.org, geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
+	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, atenart@kernel.org
+Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 12:23=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
+On Wed, Apr 17, 2024 at 4:51=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
 >
-> On Mon, Apr 15, 2024 at 06:36:39PM +0100, Mark Rutland wrote:
-> > On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
-> > > On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
-> > > > +/**
-> > > > + * enum execmem_type - types of executable memory ranges
-> > > > + *
-> > > > + * There are several subsystems that allocate executable memory.
-> > > > + * Architectures define different restrictions on placement,
-> > > > + * permissions, alignment and other parameters for memory that can=
- be used
-> > > > + * by these subsystems.
-> > > > + * Types in this enum identify subsystems that allocate executable=
- memory
-> > > > + * and let architectures define parameters for ranges suitable for
-> > > > + * allocations by each subsystem.
-> > > > + *
-> > > > + * @EXECMEM_DEFAULT: default parameters that would be used for typ=
-es that
-> > > > + * are not explcitly defined.
-> > > > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
-> > > > + * @EXECMEM_KPROBES: parameters for kprobes
-> > > > + * @EXECMEM_FTRACE: parameters for ftrace
-> > > > + * @EXECMEM_BPF: parameters for BPF
-> > > > + * @EXECMEM_TYPE_MAX:
-> > > > + */
-> > > > +enum execmem_type {
-> > > > + EXECMEM_DEFAULT,
-> > > > + EXECMEM_MODULE_TEXT =3D EXECMEM_DEFAULT,
-> > > > + EXECMEM_KPROBES,
-> > > > + EXECMEM_FTRACE,
-> > > > + EXECMEM_BPF,
-> > > > + EXECMEM_TYPE_MAX,
-> > > > +};
-> > >
-> > > Can we please get a break-down of how all these types are actually
-> > > different from one another?
-> > >
-> > > I'm thinking some platforms have a tiny immediate space (arm64 comes =
-to
-> > > mind) and has less strict placement constraints for some of them?
-> >
-> > Yeah, and really I'd *much* rather deal with that in arch code, as I ha=
-ve said
-> > several times.
-> >
-> > For arm64 we have two bsaic restrictions:
-> >
-> > 1) Direct branches can go +/-128M
-> >    We can expand this range by having direct branches go to PLTs, at a
-> >    performance cost.
-> >
-> > 2) PREL32 relocations can go +/-2G
-> >    We cannot expand this further.
-> >
-> > * We don't need to allocate memory for ftrace. We do not use trampoline=
-s.
-> >
-> > * Kprobes XOL areas don't care about either of those; we don't place an=
-y
-> >   PC-relative instructions in those. Maybe we want to in future.
-> >
-> > * Modules care about both; we'd *prefer* to place them within +/-128M o=
-f all
-> >   other kernel/module code, but if there's no space we can use PLTs and=
- expand
-> >   that to +/-2G. Since modules can refreence other modules, that ends u=
-p
-> >   actually being halved, and modules have to fit within some 2G window =
-that
-> >   also covers the kernel.
-
-Is +/- 2G enough for all realistic use cases? If so, I guess we don't
-really need
-EXECMEM_ANYWHERE below?
-
-> >
-> > * I'm not sure about BPF's requirements; it seems happy doing the same =
-as
-> >   modules.
+> From: Jason Xing <kernelxing@tencent.com>
 >
-> BPF are happy with vmalloc().
+> In production, there are so many cases about why the RST skb is sent but
+> we don't have a very convenient/fast method to detect the exact underlyin=
+g
+> reasons.
 >
-> > So if we *must* use a common execmem allocator, what we'd reall want is=
- our own
-> > types, e.g.
-> >
-> >       EXECMEM_ANYWHERE
-> >       EXECMEM_NOPLT
-> >       EXECMEM_PREL32
-> >
-> > ... and then we use those in arch code to implement module_alloc() and =
-friends.
+> RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+> and active kind (like tcp_send_active_reset()). The former can be traced
+> carefully 1) in TCP, with the help of drop reasons, which is based on
+> Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+> RFC 8684. The latter is relatively independent, which should be
+> implemented on our own.
 >
-> I'm looking at execmem_types more as definition of the consumers, maybe I
-> should have named the enum execmem_consumer at the first place.
+> In this series, I focus on the fundamental implement mostly about how
+> the rstreason mechnism works and give the detailed passive part as an
+> example, not including the active reset part. In future, we can go
+> further and refine those NOT_SPECIFIED reasons.
+>
+> Here are some examples when tracing:
+> <idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=3Dx
+>         skaddr=3Dx src=3Dx dest=3Dx state=3Dx reason=3DNOT_SPECIFIED
+> <idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=3Dx
+>         skaddr=3Dx src=3Dx dest=3Dx state=3Dx reason=3DNO_SOCKET
+>
+> [1]
+> Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10Q=
+N2WBdr+X4k=3Dw@mail.gmail.com/
+>
+> v6
+> 1. add back casts, or else they are treated as error.
+>
+> v5
+> Link: https://lore.kernel.org/all/20240411115630.38420-1-kerneljasonxing@=
+gmail.com/
+> 1. address format issue (like reverse xmas tree) (Eric, Paolo)
+> 2. remove unnecessary casts. (Eric)
+> 3. introduce a helper used in mptcp active reset. See patch 6. (Paolo)
+>
+> v4
+> Link: https://lore.kernel.org/all/20240409100934.37725-1-kerneljasonxing@=
+gmail.com/
+> 1. passing 'enum sk_rst_reason' for readability when tracing (Antoine)
+>
+> v3
+> Link: https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@=
+gmail.com/
+> 1. rebase (mptcp part) and address what Mat suggested.
+>
+> v2
+> Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
+> 1. rebase against the latest net-next tree
+>
+>
+>
+> Jason Xing (7):
+>   net: introduce rstreason to detect why the RST is sent
+>   rstreason: prepare for passive reset
+>   rstreason: prepare for active reset
+>   tcp: support rstreason for passive reset
+>   mptcp: support rstreason for passive reset
+>   mptcp: introducing a helper into active reset logic
+>   rstreason: make it work in trace world
+>
+>  include/net/request_sock.h |  4 +-
+>  include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
+>  include/net/tcp.h          |  3 +-
+>  include/trace/events/tcp.h | 37 +++++++++++++--
+>  net/dccp/ipv4.c            | 10 ++--
+>  net/dccp/ipv6.c            | 10 ++--
+>  net/dccp/minisocks.c       |  3 +-
+>  net/ipv4/tcp.c             | 15 ++++--
+>  net/ipv4/tcp_ipv4.c        | 14 +++---
+>  net/ipv4/tcp_minisocks.c   |  3 +-
+>  net/ipv4/tcp_output.c      |  5 +-
+>  net/ipv4/tcp_timer.c       |  9 ++--
+>  net/ipv6/tcp_ipv6.c        | 17 ++++---
+>  net/mptcp/protocol.c       |  2 +-
+>  net/mptcp/protocol.h       | 11 +++++
+>  net/mptcp/subflow.c        | 27 ++++++++---
+>  16 files changed, 216 insertions(+), 47 deletions(-)
+>  create mode 100644 include/net/rstreason.h
+>
+> --
+> 2.37.3
+>
 
-I think looking at execmem_type from consumers' point of view adds
-unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kprobe,
-and bpf (and maybe also module text) all have the same requirements.
-Did I miss something?
+Hello maintainers,
 
-IOW, we have
+I'm not sure why the patch series has been changed to 'Changes
+Requested', until now I don't think I need to change something.
 
-enum execmem_type {
-        EXECMEM_DEFAULT,
-        EXECMEM_TEXT,
-        EXECMEM_KPROBES =3D EXECMEM_TEXT,
-        EXECMEM_FTRACE =3D EXECMEM_TEXT,
-        EXECMEM_BPF =3D EXECMEM_TEXT,      /* we may end up without
-_KPROBE, _FTRACE, _BPF */
-        EXECMEM_DATA,  /* rw */
-        EXECMEM_RO_DATA,
-        EXECMEM_RO_AFTER_INIT,
-        EXECMEM_TYPE_MAX,
-};
-
-Does this make sense?
+Should I repost this series (keeping the v6 tag) and then wait for
+more comments?
 
 Thanks,
-Song
+Jason
