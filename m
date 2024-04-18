@@ -1,50 +1,77 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DC71E4AD;
-	Thu, 18 Apr 2024 13:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C22C14535E;
+	Thu, 18 Apr 2024 13:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713446906; cv=none; b=R/k8je7uEoHLazhZiBDysTYzWLFZKWbHNBqK3voRV2/jXgzXs1ZiiV+pSiWzPYkl03nhiwjPZAOCwcA3OointDT3dJVo4udYs5H5Tar8c2UduFFF8k2PCGiEYvgOCuI0JryTPuuYEE8UEta4sN7lf45a5wRQIpLqfkeMgzSRPis=
+	t=1713447180; cv=none; b=i8w3jvZ789+c5cTwm2cjRnhbPtxxDqPiS+WK4L+uW3pp5N8KqC+c6m4vqMz+OIisqiUb+PfvyUoczjkPqIvlqKwDWahC+75gAlihg+PnqbZ7rUFotkjixH4nG7uKRcM+UP2JIT12XGEnTEEi0JefwP4yCJ0WonGeDIPADE1gXIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713446906; c=relaxed/simple;
-	bh=15LPlCyRM81vOGjzDxrl6KXHOHp5iqRPEIb9hDh66tU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hh3QBq9MzcB0NM3qWTB6m5ue01yuA+F+XteRaTfnY7K9DHPKpVzXZ0ifFX+5cHC+1tLhuX+CrSWAfMmOsULFnzL9JR74/AYKuxqgGTIo0/b7Xzistiq2FXpS0L7il2ok4xaMH+i/HPM6EGqoGumowOZe0LztRMwi59RtqK0jq/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SgP7+cyG; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1713447180; c=relaxed/simple;
+	bh=iYR1OrxPk3A1vKJQVSmt7cNExAjBfIB5lBVL9JnMP68=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZSa28NWh+B26XcQ50iePraZZHKV4AY52sN1W+7iRq3WHM34od3pk/625z1W/YNuT2KFZEh+Bho5SgrvXdACpLZW1DIgANrr6wqdm9VlMMYLxGUoksDb1qXCOw3ly7iLh6+2ISPugIVG2QhVhfGxgVbqK3TvqjB7+0HuDevzFiQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQi1A4EG; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SgP7+cyG"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43ICItAm016003;
-	Thu, 18 Apr 2024 13:28:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=/rQLjm77xGR+HZhohR1S8rUegbh2eDq/nXt99qYuhCo=;
- b=SgP7+cyG+MSVKUL0DW5IHlD5PlpRhryMrsQhnunJqiDNzNaxtgSPOTz6k5qUUHNOcJIg
- gWbnvl1AmnQ6hwBteREXPyLdhD0HQonmHUKeYNGTBEq1Q8E/2f42ZrFsFB60GtK+ibJC
- BwhZvFUpR2bLX1Awy7Ht4zaTzTtlHmVy+npC5ostl2at8L6VhogjBpbd8J3IDSQwCrRx
- XXX9pVb6nEKR3X4zYD5Hs6zZPrPtdsqoBcqgayvMF2T7LqVbCOmf5V6kmLX9vWN5bRom
- OP7DhNypfwr6rFv70QXaocLuDTaJcmKUzp5sZOzrfsz1FBe6NCQQpSE54PWoYpDm/bQE qw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfgujtmq9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Apr 2024 13:28:18 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43IC0h1c004339;
-	Thu, 18 Apr 2024 13:28:18 GMT
-Received: from localhost.uk.oracle.com (dhcp-10-175-207-172.vpn.oracle.com [10.175.207.172])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xfgggp2x3-1;
-	Thu, 18 Apr 2024 13:28:17 +0000
-From: Siddh Raman Pant <siddh.raman.pant@oracle.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>
-Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, stable@kernel.org
-Subject: [PATCH] Revert "tracing/trigger: Fix to return error if failed to alloc snapshot"
-Date: Thu, 18 Apr 2024 18:58:06 +0530
-Message-ID: <20240418132806.159307-1-siddh.raman.pant@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQi1A4EG"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d4a1e66750so618668a12.0;
+        Thu, 18 Apr 2024 06:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713447177; x=1714051977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L5fDxSBarwXqYnNyE9xgBbxngQ2AUEwn3Wxv/dS4CR0=;
+        b=dQi1A4EGiBQDx+a2qXQRVoU9iHNj27/AYIiCEste3hTOUDGcR/OrJg9l1JBUJo3mdU
+         4NvY4/d1Xar1o4FzRY9iyZ3SP25/8RhLrxSUdBB/UE9ZtS9o2+brb2dVWwIftlz3/nsn
+         7OWd5FBiAdXyAaf5KBJL50viBtHlLgShN91BTXTkSdEL8aAW/WZumGEjiDtAiYyuslS5
+         982ZYf/bFMgdWceL0aAMceB1B7lMe7WQPUkjh0+K5JKpB98a9fB2YRh0qHMOahn5cxCn
+         o6ZYYkmmveMv109puH2tTYa78XrfsxNdiH7cV9SXkmbZv+8PpUI8oVPfu/oOIA0OfNLr
+         Epjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713447177; x=1714051977;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L5fDxSBarwXqYnNyE9xgBbxngQ2AUEwn3Wxv/dS4CR0=;
+        b=V5ocy3zID7g5OWtWYHH9nIPmvxHCsxnHGf7oIU+Epyy9RzYfgLTVtqwG8VR9FpDZHM
+         FIqP2fmU1wSy5GkVWd+RKLyJvbt/+oL+EMQcPdMIY2VsYsdw03hi8OHypo8LzA9/sQzY
+         iATPGVI6xjJyFBrZXgjACohtJznPCyZCMqEeAXg35sdp5I9W2WFHnlzbR0c+drCMgION
+         mJZwtoq5tyMthZ0EvqM5miikbCTU1Fb1z3rdPSIwJfJXmwYcheZbTdv5d/QJfAC9SMtS
+         zyl+pa/EwFYZgfts8QTZd6oSp1gFaEQ9Fb0n1AHzLHuPhNPrZBadLdI8JiA8LA08tqnj
+         oQFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVE6niDbODuaQ4ax9fsW/1UpkBPWn6cRiAidhhjgW8Z7TAIeaTUFagGWxEm62ZScBwaTWQjZKgkQlcSebrfJUKu6+jGzKK6to69sJRzkMUAatEE4BenXivgy62zzknlfLTkvd+vbEHCkIq
+X-Gm-Message-State: AOJu0YwyQLpI9pYdKTFdnjQ1Kzvimn4YoIk1RP7dHNgDVVb4cCdruXvS
+	PCfHuwari9JCLKqIEURhhYsR3AumEaeK1wcNuErLkCmyehxDAQl6
+X-Google-Smtp-Source: AGHT+IGAk75lhjyuWo4eZLtm2wg4+N/OO1aSFQFnDqUzCdCi4+ZZ0gNj+YggQD2SQ7R1+s/su9165g==
+X-Received: by 2002:a05:6a20:748a:b0:1aa:14a1:e5ef with SMTP id p10-20020a056a20748a00b001aa14a1e5efmr4072308pzd.38.1713447177414;
+        Thu, 18 Apr 2024 06:32:57 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id bt19-20020a17090af01300b002a2b06cbe46sm1448819pjb.22.2024.04.18.06.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 06:32:56 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	dsahern@kernel.org,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	atenart@kernel.org
+Cc: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next RESEND v6 0/7] Implement reset reason mechanism to detect
+Date: Thu, 18 Apr 2024 21:32:41 +0800
+Message-Id: <20240418133248.56378-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,59 +79,86 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_11,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404180096
-X-Proofpoint-ORIG-GUID: Wapcbe12npm_BidS0zFgRethTNsYNxOn
-X-Proofpoint-GUID: Wapcbe12npm_BidS0zFgRethTNsYNxOn
 
-This reverts commit b5085b5ac1d96ea2a8a6240f869655176ce44197.
+From: Jason Xing <kernelxing@tencent.com>
 
-The change has an incorrect assumption about the return value because
-in the current stable trees for versions 5.15 and before, the following
-commit responsible for making 0 a success value is not present:
-b8cc44a4d3c1 ("tracing: Remove logic for registering multiple event triggers at a time")
+In production, there are so many cases about why the RST skb is sent but
+we don't have a very convenient/fast method to detect the exact underlying
+reasons.
 
-The return value should be 0 on failure in the current tree, because in
-the functions event_trigger_callback() and event_enable_trigger_func(),
-we have:
+RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+and active kind (like tcp_send_active_reset()). The former can be traced
+carefully 1) in TCP, with the help of drop reasons, which is based on
+Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+RFC 8684. The latter is relatively independent, which should be
+implemented on our own.
 
-	ret = cmd_ops->reg(glob, trigger_ops, trigger_data, file);
-	/*
-	 * The above returns on success the # of functions enabled,
-	 * but if it didn't find any functions it returns zero.
-	 * Consider no functions a failure too.
-	 */
-	if (!ret) {
-		ret = -ENOENT;
+In this series, I focus on the fundamental implement mostly about how
+the rstreason mechnism works and give the detailed passive part as an
+example, not including the active reset part. In future, we can go
+further and refine those NOT_SPECIFIED reasons.
 
-Cc: stable@kernel.org # 5.15, 5.10, 5.4, 4.19
-Signed-off-by: Siddh Raman Pant <siddh.raman.pant@oracle.com>
----
- kernel/trace/trace_events_trigger.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Here are some examples when tracing:
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NOT_SPECIFIED
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NO_SOCKET
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index dfdbcf1da216..106f9813841a 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1161,10 +1161,8 @@ register_snapshot_trigger(char *glob, struct event_trigger_ops *ops,
- 			  struct event_trigger_data *data,
- 			  struct trace_event_file *file)
- {
--	int ret = tracing_alloc_snapshot_instance(file->tr);
--
--	if (ret < 0)
--		return ret;
-+	if (tracing_alloc_snapshot_instance(file->tr) != 0)
-+		return 0;
- 
- 	return register_trigger(glob, ops, data, file);
- }
+[1]
+Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com/
+
+v6
+1. add back casts, or else they are treated as error.
+2. RESEND because the status of patchwork changed.
+
+v5
+Link: https://lore.kernel.org/all/20240411115630.38420-1-kerneljasonxing@gmail.com/
+1. address format issue (like reverse xmas tree) (Eric, Paolo)
+2. remove unnecessary casts. (Eric)
+3. introduce a helper used in mptcp active reset. See patch 6. (Paolo)
+
+v4
+Link: https://lore.kernel.org/all/20240409100934.37725-1-kerneljasonxing@gmail.com/
+1. passing 'enum sk_rst_reason' for readability when tracing (Antoine)
+
+v3
+Link: https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@gmail.com/
+1. rebase (mptcp part) and address what Mat suggested.
+
+v2
+Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
+1. rebase against the latest net-next tree
+
+
+
+Jason Xing (7):
+  net: introduce rstreason to detect why the RST is sent
+  rstreason: prepare for passive reset
+  rstreason: prepare for active reset
+  tcp: support rstreason for passive reset
+  mptcp: support rstreason for passive reset
+  mptcp: introducing a helper into active reset logic
+  rstreason: make it work in trace world
+
+ include/net/request_sock.h |  4 +-
+ include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
+ include/net/tcp.h          |  3 +-
+ include/trace/events/tcp.h | 37 +++++++++++++--
+ net/dccp/ipv4.c            | 10 ++--
+ net/dccp/ipv6.c            | 10 ++--
+ net/dccp/minisocks.c       |  3 +-
+ net/ipv4/tcp.c             | 15 ++++--
+ net/ipv4/tcp_ipv4.c        | 14 +++---
+ net/ipv4/tcp_minisocks.c   |  3 +-
+ net/ipv4/tcp_output.c      |  5 +-
+ net/ipv4/tcp_timer.c       |  9 ++--
+ net/ipv6/tcp_ipv6.c        | 17 ++++---
+ net/mptcp/protocol.c       |  2 +-
+ net/mptcp/protocol.h       | 11 +++++
+ net/mptcp/subflow.c        | 27 ++++++++---
+ 16 files changed, 216 insertions(+), 47 deletions(-)
+ create mode 100644 include/net/rstreason.h
+
 -- 
-2.43.0
+2.37.3
 
