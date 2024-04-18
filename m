@@ -1,142 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2311442F4;
-	Thu, 18 Apr 2024 17:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B04438DF2;
+	Thu, 18 Apr 2024 18:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713462839; cv=none; b=i9w5i8935nPo1sdrS6/UQmSKRCap9P+Ga8M96m0Aa2f/AaDznnb7SrkKX6zzJPlkzGj83Owk1yKukmnFLuQFHgUBDKAeCJDUXlKZERBL97VW/vtESPO+UH/iOIi0RdTKmrDjokSBxgUbb1c47Q6ersSVFvKXv18DQNEr6rzQYDs=
+	t=1713465301; cv=none; b=SJCrWNYVAl80bHY2xlghTNUPQW/vSNoLR1b+rYkQLB2jXH6t6mt3jBiXdEjhjjgdpuGJEiknjO+vmTnKc0MPiOd8UpifBI/hvqlbrSlRH2XlZk274UTaPJwnZOm5shfVCC7NXnqIrc5EnyWK0W3IYsY6tg9GTeVZ7O4X8/5eJfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713462839; c=relaxed/simple;
-	bh=GVKHg9/GMb+Q7svthQO5bm+rPzNDL6zXlQZOsDeKWL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPDzZv5Y/UdvP5C0JHl0OsL2oiIyxexW4QoxqHuXhvBsKnOxQsbvnFrhuqK/y8RwqIwVgQLyace7C4RywoTWZIjx8w1Mvl2OrVeuA6YyeEuJdEVgz7BIGd8GYISmj1vCGm/Slf3tCd6PZdiqc/ocV0DX5HFZ9kCkgZCd25yjBMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qitx/umw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713465301; c=relaxed/simple;
+	bh=cPt44jxSVrdhZJrIQnC8pnx/xoLCJM42pv8YS2Rc51w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cER/LfvI0JymXpRjoS3r6FeNbQb/nQV9O4kFVFJaIW18MCXp05+VDeY4aiXK7dfWKJbwV8fD/e/s7FV76kMQjt/VST6LcKVRrAhvkeTtfYNPkWUKu2LzXQqwoII06mBZqX+VVLPQl1p0MSAcqw1ytz30lSW4kZjkQU+PxL3FgnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BmR2ROPf; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qitx/umw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F12DC3277B;
-	Thu, 18 Apr 2024 17:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713462839;
-	bh=GVKHg9/GMb+Q7svthQO5bm+rPzNDL6zXlQZOsDeKWL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qitx/umwjvXDKNme47QxvztrUiipBcKV2Lg0Yvd1RXezrm9EMN+zfFrxXb923+dxO
-	 AxZ6KgXvjlorR3mUIjvBXST4+3n8nelthPynguxJTOQoS9rNBrqZ+3MIlU37kTQ9FA
-	 a4e+nx+8unMMLT17+KcFFJ93DVlkbK2eXc4Av0nU3f2Yxj+rBXrkR0WI95IANr/7qX
-	 uZj4q1Xb4qjUIP87QNJk+Jgy4oid7eW9FtvEPOx7D0x1Tt1iXSqSWNLPcTP4XbQ2OW
-	 z8BEya9Rxr0dlQHlDm5T4jpRs2aqcA2Iy8EkKuiv4ehWjUKDt48ywWZ7K+xjdgeN4d
-	 Qxf4CJCyjHkiA==
-Date: Thu, 18 Apr 2024 20:52:39 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-Message-ID: <ZiFd567L4Zzm2okO@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net>
- <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
- <Zh4nJp8rv1qRBs8m@kernel.org>
- <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
- <ZiE91CJcNw7gBj9g@kernel.org>
- <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmR2ROPf"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed2170d89fso1560140b3a.1;
+        Thu, 18 Apr 2024 11:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713465299; x=1714070099; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/h/Do95bbYq5Tt0KYD+0H8my015G5GgNdhr/yLxS+rI=;
+        b=BmR2ROPfUHjXmPwg/lsQajN9js9jtNXfTQ2nNjlKZbWekzB+MHpuVHUnG8QKFj01ap
+         n5FPasCpfGLPnBMolNCSxx+l4j0MJRUULrLnkZ4lmHwLZYlJuygzaFrufrSwSs5T7k9G
+         9mR55GJCN68FIu/KaY5H14lfMWV2O3yIEbI9OawOgOpcdpgTaqFuNFZlaCqVpJzw1t6E
+         CQpjITTujxV+itZxY51zZ3EXQYLuV8Vk3+QSYeFA7tNcOibEYyw3D7mzVaEZFlGwDIfG
+         VbHnNpqGDVc0aMEAEf0Fj06w6lPiq3HWarAm498s1qHxOi0zRo398qZ2TTPCZGyDdd6e
+         rz9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713465299; x=1714070099;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/h/Do95bbYq5Tt0KYD+0H8my015G5GgNdhr/yLxS+rI=;
+        b=EB1iN+crgrVmjGy/Sjv5BhYo3oFuBsep4+DDRDISX6lGBeYLtDIetjDwCtsMdZtDej
+         Wbtmm2mXRnKhWbByKu7MCgYvDZAy7fwNR0Bk+3OuXjhfilfMCyUqAiYy6x3XLkaSjNqj
+         FgAHOefCB5D4+62fvcHgWeE+jy+oeejt/qyAP3bAaXz+VP+4gOCr6IPs24oG234VK3sE
+         scWgA9RnIOPg2fPE3Th57WEMuQtVj4urhspoQ6r6oHUl7uadYeP+qZsy+n0WEt6mLquP
+         3i3umhkDzDsmSow7UW2sgvrSFooT3r37EcsT8Es3Y/h925N/sKXNlA0jnmdWfNTzskgN
+         NxDA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8/J8YnNzUvaUfHw45Js1vTtgZR/Qgtnh/4QqKTiKJ/c1UTeMhKRX3p5rbG+qnRCDsraeLur6LgiJQHqh9T9cAWxarUTyvg6RvDtFHhpCHQCrLyHyppVWP3EfdUaZE04vEnyvAymQewjOOvugEDD6UxKSqqN+ORDjoA/oPHjkNVXlKEXTT
+X-Gm-Message-State: AOJu0YxfgJ7Dy8B9bWWf4sHofxnuf+DZxBMyVjUmcxOg+eqsUAQgZ1IF
+	yEKAaIvAupKOieTRUnXy6XaIlsxmtyqL0OL7sttL5rIbCy6niLLdhC0RVAg/bO9x6TxJZawr77L
+	yPWAEyf1b3LEmq7jMLSmTx4pVw4vgfQ==
+X-Google-Smtp-Source: AGHT+IEB3bUb0iplzA4oMVXjAhm6Bb8bKdPQg8QMrh0wepwiuAokgwg5qhBuLi7t8YCF8gknqnuogEna5gHrEuq+3oE=
+X-Received: by 2002:a05:6a21:2d8a:b0:1a7:53c1:ad8d with SMTP id
+ ty10-20020a056a212d8a00b001a753c1ad8dmr44266pzb.24.1713465299216; Thu, 18 Apr
+ 2024 11:34:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
+References: <20240402093302.2416467-1-jolsa@kernel.org> <20240402093302.2416467-2-jolsa@kernel.org>
+ <ZhzkbN7DWq6Tzp5G@krava>
+In-Reply-To: <ZhzkbN7DWq6Tzp5G@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 18 Apr 2024 11:34:46 -0700
+Message-ID: <CAEf4BzZ_en3hw72zqjW3tyn9M+Az069NXU3a3+hsn_k0T0TwnA@mail.gmail.com>
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return probe
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 09:13:27AM -0700, Song Liu wrote:
-> On Thu, Apr 18, 2024 at 8:37 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > I'm looking at execmem_types more as definition of the consumers, maybe I
-> > > > should have named the enum execmem_consumer at the first place.
-> > >
-> > > I think looking at execmem_type from consumers' point of view adds
-> > > unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kprobe,
-> > > and bpf (and maybe also module text) all have the same requirements.
-> > > Did I miss something?
+On Mon, Apr 15, 2024 at 1:25=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Tue, Apr 02, 2024 at 11:33:00AM +0200, Jiri Olsa wrote:
+>
+> SNIP
+>
+> >  #include <linux/kdebug.h>
+> >  #include <asm/processor.h>
+> > @@ -308,6 +309,88 @@ static int uprobe_init_insn(struct arch_uprobe *au=
+probe, struct insn *insn, bool
+> >  }
 > >
-> > It's enough to have one architecture with different constrains for kprobes
-> > and bpf to warrant a type for each.
-> 
-> AFAICT, some of these constraints can be changed without too much work.
+> >  #ifdef CONFIG_X86_64
+> > +
+> > +asm (
+> > +     ".pushsection .rodata\n"
+> > +     ".global uretprobe_syscall_entry\n"
+> > +     "uretprobe_syscall_entry:\n"
+> > +     "pushq %rax\n"
+> > +     "pushq %rcx\n"
+> > +     "pushq %r11\n"
+> > +     "movq $" __stringify(__NR_uretprobe) ", %rax\n"
+> > +     "syscall\n"
+> > +     "popq %r11\n"
+> > +     "popq %rcx\n"
+> > +
+> > +     /* The uretprobe syscall replaces stored %rax value with final
+> > +      * return address, so we don't restore %rax in here and just
+> > +      * call ret.
+> > +      */
+> > +     "retq\n"
+> > +     ".global uretprobe_syscall_end\n"
+> > +     "uretprobe_syscall_end:\n"
+> > +     ".popsection\n"
+> > +);
+> > +
+> > +extern u8 uretprobe_syscall_entry[];
+> > +extern u8 uretprobe_syscall_end[];
+> > +
+> > +void *arch_uprobe_trampoline(unsigned long *psize)
+> > +{
+> > +     *psize =3D uretprobe_syscall_end - uretprobe_syscall_entry;
+> > +     return uretprobe_syscall_entry;
+>
+> fyi I realized this screws 32-bit programs, we either need to add
+> compat trampoline, or keep the standard breakpoint for them:
+>
+> +       struct pt_regs *regs =3D task_pt_regs(current);
+> +       static uprobe_opcode_t insn =3D UPROBE_SWBP_INSN;
+> +
+> +       if (user_64bit_mode(regs)) {
+> +               *psize =3D uretprobe_syscall_end - uretprobe_syscall_entr=
+y;
+> +               return uretprobe_syscall_entry;
+> +       }
+> +
+> +       *psize =3D UPROBE_SWBP_INSN_SIZE;
+> +       return &insn;
+>
+>
+> not sure it's worth the effort to add the trampoline, I'll check
+>
 
-But why?
-I honestly don't understand what are you trying to optimize here. A few
-lines of initialization in execmem_info?
-What is the advantage in forcing architectures to have imposed limits on
-kprobes or bpf allocations?
+32-bit arch isn't a high-performance target anyways, so I'd probably
+not bother and prioritize simplicity and long term maintenance.
 
-> > Where do you see unnecessary complexity?
-> >
-> > > IOW, we have
-> > >
-> > > enum execmem_type {
-> > >         EXECMEM_DEFAULT,
-> > >         EXECMEM_TEXT,
-> > >         EXECMEM_KPROBES = EXECMEM_TEXT,
-> > >         EXECMEM_FTRACE = EXECMEM_TEXT,
-> > >         EXECMEM_BPF = EXECMEM_TEXT,      /* we may end up without
-> > > _KPROBE, _FTRACE, _BPF */
-> > >         EXECMEM_DATA,  /* rw */
-> > >         EXECMEM_RO_DATA,
-> > >         EXECMEM_RO_AFTER_INIT,
-> > >         EXECMEM_TYPE_MAX,
-> > > };
-> > >
-> > > Does this make sense?
-> >
-> > How do you suggest to deal with e.g. riscv that has separate address spaces
-> > for modules, kprobes and bpf?
-> 
-> IIUC, modules and bpf use the same address space on riscv
-
-Not exactly, bpf is a subset of modules on riscv.
-
-> while kprobes use vmalloc address.
-
-The whole point of using the entire vmalloc for kprobes is to avoid
-pollution of limited modules space.
- 
-> Thanks,
-> Song
-
--- 
-Sincerely yours,
-Mike.
+>
+> jirka
