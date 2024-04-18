@@ -1,155 +1,94 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F2F4C90;
-	Thu, 18 Apr 2024 22:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC68139855;
+	Thu, 18 Apr 2024 22:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713480069; cv=none; b=SE057sINPrK/VU1Pw6izA3TYM/CsT6YuUQiboLOKd/xOTWnKGVmFDEXleJFMpsaTuC9O4VVbzVL6IXQTy/XoUErhpDEKsTtO3Y4N/F0n23NwWy0kFSVHspXBtnTvqEjtNd0pMDNjLJohVNtLitMCT5k6YacMvexJCTYx2M7ciVM=
+	t=1713480798; cv=none; b=d3iKtg8+xMSu0JwU5kBL1sPJ9gQ30jktCMmWI52tSe+Y/Q5o6t1e93HbrlUliYxZW7TBeQJMg/tkNKIWKf4rFrC2eMtNE0B741332iluyH73UWab15sddr5jcVgKHHRZKaiC5k4BzaVwFGMFKrh/E8a5uITscQ0rzk5tRQ9Q5Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713480069; c=relaxed/simple;
-	bh=65s86Znh/TMncZbIbTs41iRh4/aQFdfmUg1K2q3PPuI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WM4lZHlCLZdPkQ+QUVMproA3HFFmw4vCNajEu9/MtA48S1bK7/7D3K1y3FxWccdfzN/lFFiDLuBSze6aOCTIkQgYsnuXTbNsCQIwfTt0wrPAzGKNdwOPd5EL5GsQ/BOjjY0QuHIseYssnaDKEUY66rZlW3iYJiG/nQM4TnAIOCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bOKgbCGc; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713480798; c=relaxed/simple;
+	bh=HFF4ul5e2v3wwoR8XKGER96ZYBoacAgLz1f7S8OlMp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYqbQzkm5NNUyWjxRZSVHFoxp0+Q5ShhGYhVqPXIwUC922y4Cc0tvcgE0gDbndi3vubwwRwiSTqG3+Q2+4MY2IvSCd/HtqDQjbUoFlN673BYa9Xp7+u1jxf9fWDE52lsRtvRDUSNdJSMnmr3PtcH/Z4vdwInrudcv/DQp7xf67Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2f1SG8l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOKgbCGc"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56e69a51a33so1467657a12.1;
-        Thu, 18 Apr 2024 15:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713480066; x=1714084866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=howsgI2I5TgSbulsoJY74muz5rwYbpEbVq7yZZ8cUrQ=;
-        b=bOKgbCGcUT1TXawEP8tQTNjxmcZvdeHnXxgfLkdP5NvWiGLPjj4temT1jPTkAQyYzo
-         tudIg/tQ8I7XmcyO8NkffJLNM9VlHpJTS+VLjWevuNdEGmnlHOE9K1CsVIonRlXbME9x
-         FB7AeNbQQVr1tVNe8sK1FVCqpNgHsSd2c8Wm7lJeUTBVYFWbos+vtLMux/Zlajr2Z4OO
-         Gc9EefKdZvxnuPUEY12YuKa5QQhvjpWLoAdGgqBCVkOastNa+Ufl/Xa8FkfjrKTqqXGR
-         QyHVmB+XbL7PSKIWQ9sDp5VpH7Lw541DzO1/m98XAJDjkxhA7ULTrebx5XVeQDUWUWGR
-         qKHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713480066; x=1714084866;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=howsgI2I5TgSbulsoJY74muz5rwYbpEbVq7yZZ8cUrQ=;
-        b=oXuoh/fpUNAfhcGB8XQGev8P98KgPJNbGseEZW2EAVRA2e4lM8jztALZmO4+671mK1
-         oNYE9J+uX2qoUzIfAnUF6wm0OyaLWWsi+HsXehftGAyXhJ7j3RLBdvrrHgPaORJpVR48
-         yZPZZBexUvmdd87NiHWq86KN5AgWI4FfBM37fP/XLYyOZktxg+Xh7SvuXZa6v26dMCXT
-         BbLRunI139l1egys+KCPi06dHYwphroHbNUc8wDEXFNEmttABZ7Fow5gpNj6QFELgSny
-         z0DoUV1Ojf6/fZ41XBhb9Qhvu4b/ttIHiNsM9LoqMSKZ8WwAQtj2kFoSjrtEybsnqyVH
-         /iAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGdnix5T6uz3Rzr/sQwwBYdAIuFzKSdbPZwyXCl//EKsWaYhxHlFF+RWgESjHE/qAUg1mTp+jk1LlfgMeo0Bm5KgmgET0lpRlPgzhZVtiYK6eUdzT+R2Xohqs6SWyMO5DivZu0zpZlZX2V
-X-Gm-Message-State: AOJu0Yyx4U+JfgG0QW3SUto3+PzL2bvRfYm1zOKXob9c9kLGC088saAu
-	hoIYZDOEjWMTvlJWrInCRceAsoMgpuiDu2FHBdkoo0WhrKneROGe/GMh+PUeby49AeeRxDIdKjb
-	ViHLaoebXTmeK8bXgYQ4mW7xuw48=
-X-Google-Smtp-Source: AGHT+IEorWWwe9wcnoC67rKnLRUtqIhI+AMU8yxRVsVBFpVA+Ddweue41FpISTjMrE1QdfifAT5IrJdi8h4xVrgGOrk=
-X-Received: by 2002:a17:906:1f52:b0:a51:95f1:4308 with SMTP id
- d18-20020a1709061f5200b00a5195f14308mr283870ejk.51.1713480065488; Thu, 18 Apr
- 2024 15:41:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2f1SG8l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A93C113CC;
+	Thu, 18 Apr 2024 22:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713480797;
+	bh=HFF4ul5e2v3wwoR8XKGER96ZYBoacAgLz1f7S8OlMp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D2f1SG8lCa6blXcpsdIZTtO0+7BojWCA9IOcR05QReQ4ZVGaXCVUm0oJNkbBgr+8X
+	 1ig+1scVjgZYKkw0Ak33XcuhRrdGzXI18rDJ5IehHxyv53jwGmMK2X/t6ZLM6RqUTw
+	 PulWa7VN+97ABrIMFnuI3YnFyMPNQyrxLFRWm4pWi3781Sagm9DrSBSHU/XpC/iLyk
+	 F2ilZgbYAZNLV2e5TOo30I3cYc7uf8xtzStU37d1aal3uxM9rA+IwnzdzzeBDjmPie
+	 qfbjjhiL/v/iMK+wLue5QcjY+BFKMP/JA2Z+zlp5laT4+th1/+zuDFxaab7TuNZAF+
+	 wZvGplm/Xep8Q==
+Date: Thu, 18 Apr 2024 15:53:14 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, primiano@google.com,
+	aahringo@redhat.com, dcook@linux.microsoft.com,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC PATCH 0/4] perf: Correlating user process data to samples
+Message-ID: <20240418225314.rbg7qwszbsvezz76@treble>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
+ <20240412071245.GD30852@noisy.programming.kicks-ass.net>
+ <20240412163724.GB467-beaub@linux.microsoft.com>
+ <20240413105338.GD40213@noisy.programming.kicks-ass.net>
+ <20240413084857.147c6f40@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
- <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
- <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
- <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com> <CAL+tcoBVYWaMAYRdBC6UKiNuhdR7cK+570=0Kw1MKEhPhBL_AA@mail.gmail.com>
-In-Reply-To: <CAL+tcoBVYWaMAYRdBC6UKiNuhdR7cK+570=0Kw1MKEhPhBL_AA@mail.gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 19 Apr 2024 06:40:28 +0800
-Message-ID: <CAL+tcoCyuOsNyuuHZG_BBZ5YPNcXHu4v-3Zv4a7JMpLFWwCX5g@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
-To: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org, 
-	martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com, 
-	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240413084857.147c6f40@rorschach.local.home>
 
-On Fri, Apr 19, 2024 at 6:29=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
->
-> On Fri, Apr 19, 2024 at 2:51=E2=80=AFAM Eric Dumazet <edumazet@google.com=
-> wrote:
-> >
-> > On Thu, Apr 18, 2024 at 6:24=E2=80=AFPM Jason Xing <kerneljasonxing@gma=
-il.com> wrote:
-> > >
-> > > On Thu, Apr 18, 2024 at 11:46=E2=80=AFPM Jakub Kicinski <kuba@kernel.=
-org> wrote:
-> > > >
-> > > > On Thu, 18 Apr 2024 11:30:02 +0800 Jason Xing wrote:
-> > > > > I'm not sure why the patch series has been changed to 'Changes
-> > > > > Requested', until now I don't think I need to change something.
-> > > > >
-> > > > > Should I repost this series (keeping the v6 tag) and then wait fo=
-r
-> > > > > more comments?
-> > > >
-> > > > If Eric doesn't like it - it's not getting merged.
-> > >
-> > > I'm not a English native speaker. If I understand correctly, it seems
-> > > that Eric doesn't object to the patch series. Here is the quotation
-> > > [1]:
-> > > "If you feel the need to put them in a special group, this is fine by=
- me."
-> > >
-> > > This rst reason mechanism can cover all the possible reasons for both
-> > > TCP and MPTCP. We don't need to reinvent some definitions of reset
-> > > reasons which are totally the same as drop reasons. Also, we don't
-> > > need to reinvent something to cover MPTCP. If people are willing to
-> > > contribute more rst reasons, they can find a good place.
-> > >
-> > > Reset is one big complicated 'issue' in production. I spent a lot of
-> > > time handling all kinds of reset reasons daily. I'm apparently not th=
-e
-> > > only one. I just want to make admins' lives easier, including me. Thi=
-s
-> > > special/separate reason group is important because we can extend it i=
-n
-> > > the future, which will not get confused.
-> > >
-> > > I hope it can have a chance to get merged :) Thank you.
-> > >
-> > > [1]: https://lore.kernel.org/all/CANn89i+aLO_aGYC8dr8dkFyi+6wpzCGrogy=
-svgR8FrfRvaa-Vg@mail.gmail.com/
-> > >
-> > > Thanks,
-> > > Jason
-> >
-> > My objection was these casts between enums. Especially if hiding with (=
-u32)
->
-> So I should explicitly cast it like this:
->     tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
-> ?
->
-> >
-> > I see no reason for adding these casts in TCP stack.
->
-> Sorry, I don't know why the casts really make you so annoyed. But I
-> still think it's not a bad way to handle all the cases for RST.
->
-> Supposing not to add a enum sk_rst_reason{}, passing drop reasons only
-> works well in TCP for passive rests. For active reset cases (in the
-> tcp_send_active_reset()), it's meaningless/confusing to insist on
-> reusing the drop reason because I have to add some reset reasons (that
-> are only used in RST cases) in the enum skb_drop_reason{}, which is
-> really weird, in my view. The same problem exists in how to handle
-> MPTCP. So I prefer putting them in a separate group like now. What do
-> you think about it, right now?
+On Sat, Apr 13, 2024 at 08:48:57AM -0400, Steven Rostedt wrote:
+> On Sat, 13 Apr 2024 12:53:38 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Fri, Apr 12, 2024 at 09:37:24AM -0700, Beau Belgrave wrote:
+> > 
+> > > > Anyway, since we typically run stuff from NMI context, accessing user
+> > > > data is 'interesting'. As such I would really like to make this work
+> > > > depend on the call-graph rework that pushes all the user access bits
+> > > > into return-to-user.  
+> > > 
+> > > Cool, I assume that's the SFRAME work? Are there pointers to work I
+> > > could look at and think about what a rebase looks like? Or do you have
+> > > someone in mind I should work with for this?  
+> > 
+> > I've been offline for a little while and still need to catch up with
+> > things myself.
+> > 
+> > Josh was working on that when I dropped off IIRC, I'm not entirely sure
+> > where things are at currently (and there is no way I can ever hope to
+> > process the backlog).
+> > 
+> > Anybody know where we are with that?
+> 
+> It's still very much on my RADAR, but with layoffs and such, my
+> priorities have unfortunately changed. I'm hoping to start helping out
+> in the near future though (in a month or two).
+> 
+> Josh was working on it, but I think he got pulled off onto other
+> priorities too :-p
 
-The description in the previous email may be too long. The key point
-is that we're not supporting only for passive resets, right?
+Yeah, this is still a priority for me and I hope to get back to it over
+the next few weeks (crosses fingers).
 
-Thanks,
-Jason
+-- 
+Josh
