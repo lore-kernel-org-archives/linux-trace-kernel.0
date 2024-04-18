@@ -1,226 +1,127 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B6315FD07;
-	Thu, 18 Apr 2024 13:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF921635C8;
+	Thu, 18 Apr 2024 14:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713447216; cv=none; b=KfGRxPI/aWSonp8WwoWvH+SBccx2TnnB/ulU1npXN5UcLm/5DgvTJCmcP//VAlXsoabAU4IiIm2zY+7HX8fQHi3wmWdI3spPP+kqBXGjfchsBkJ8zeGqVAMHjR4jWfK3cCuqgITEo3pUxxhXabiHRoQ+laxXq7dgnb190XPwKNU=
+	t=1713449980; cv=none; b=VK+zdNN+9gG4MnwGWVWkh6fw8mulMI9fIbD/YVff/D8vuFEJorj+KlP1fxSkB7ZVwZd0U7epelTj1OEO5BBG2OyVArhx4Ivl63HGJnegazSRmKUJ4X82X+p88oQW1SuSHQGmbhu2Hx1dU7cfx1SHL3kgC59V8is+gUj3lsdYgow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713447216; c=relaxed/simple;
-	bh=q17+eiBDR0DgFqyxPXeONHoIKxe8kexOIMtkii2kvZE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tFZD9P7Fvw+dgvlkaBg1Cxz75COT1T2E/tw39lXsJFDrQgI/f5i82dTmypeTocR7FzzaRXssu0hvqlUcSqWM9ZPJIfFX80QtdeffG4IrVUTP/l2L7ZnNNWOttg91ii2vRP1ttnzy54TlduroJn8x1yXlJ7RgOlAlwS2YbXRS4v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SD9wZzNK; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713449980; c=relaxed/simple;
+	bh=AUt0AvjyUjML6ZxpdeebsS26lKqvFMfvN3N/sVPtRcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fD6ZJUe5UvWgYnHyQmPd8l8WrJ9o2nHqnHqI+A4xy9v+/+OC85Z2YOlzElmR6jEvbEEXbgqz4xnn5Gv7S7v4eHL6DxFKuYY9X7PEoEjCGk31B6lPaESl9jxdajBoLf6OI9TkYmcTHCUd3ZneBtlTkuXbP8W78XhIya5ZEVocnk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2pNwg/h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SD9wZzNK"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ed04c91c46so893407b3a.0;
-        Thu, 18 Apr 2024 06:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713447210; x=1714052010; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nbTdoFGMHr4Ez1m/vmUSTKaFcp5fzzwJCu0rbQEYdiA=;
-        b=SD9wZzNKsGoqBqZelM+2povxJhMpzV8DLTEMptJfL2ANeF+zHzOGmgGEFtL2mMmi82
-         mVUlfZxX/ilAQDfzaTCfAYVO1rqHIUy2dj+UKQRV5z3ExPEEu2WUNXey+fIWr3/fRPGg
-         f9n7SgESmNuKCiwFIapXOHU3Ih2W+0GMn5+h8/873I8SXqDlcQJyfIlORLz3g05SbcZ8
-         wnZ9FK9bCLCLCLIy58fazbuNTQFW8lFH3G85NbAlGxwvk6PCwKw7ccizVxcf6gg/HHwg
-         op37Bm/xnDTD/eWdSnqh3K/pokEukmCiJokN4BWrzlpfEHiIipzUeT8gUNftJU9bI9Ur
-         zWXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713447210; x=1714052010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nbTdoFGMHr4Ez1m/vmUSTKaFcp5fzzwJCu0rbQEYdiA=;
-        b=Gt4DZAoWp0o9on1v+VT//z2DwEQB6xd2RaosYS7F4FHBvZPLAA1lb5IBfiBezW4rHT
-         vjW2ZpHBdm1X6vBEm2Lgj82Ots+K/kQUxWor0JmtpOr61EcPJ+W2cWbYANSFQ3uOWtN1
-         MmLvPpnsT0kn51kl9I/4yl9Ap/ggX7ZBDtEUCC/yL64eWv8F2UfCVvuIsBhYR8NM4Kr5
-         J7S6dwWF1kS+D162qULmj+DtH451kc0ykOm5W9vh+IAVxYk9UU5J4Ygh+reRhJ5s6fSf
-         LD+2cW1zvglI5fZ86aiDlM566RJK8J6DAo4JeO4J04RZ1gD85H0QAG9TVrM7Fhh8s+LT
-         P+vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsPYdWLXg4qSKiCvfLTemTyLm9OV/+x4pSed0T0EbOvqITFONHbIVEmCSIy2aOR8LTypPLp0Kb7NvKDedkhh9YTY32PhQ0TG0YXeOCviGBrCU1FCtUyb0zW35/NrTmObhfIRU78rUPt1go
-X-Gm-Message-State: AOJu0YxtAY2q3PNGHv9b5YI/DnDODqOc3IXq7LoxBRKzGPTUrorXs78O
-	ETXk8PJs1FXlpLD8BvQzVTsgy8qqjJ767LlbnsVU3E6eBoSw1oxH
-X-Google-Smtp-Source: AGHT+IHnJC9OIvAqrWn1Z5E/cKz+YQingx6XOsiWdipgdm/6nWbpZvteqxs3XHxi3Y42ZWqo2/HoBw==
-X-Received: by 2002:a05:6a20:748a:b0:1a7:c67:82ff with SMTP id p10-20020a056a20748a00b001a70c6782ffmr3984712pzd.13.1713447210250;
-        Thu, 18 Apr 2024 06:33:30 -0700 (PDT)
-Received: from KERNELXING-MB0.tencent.com ([43.132.141.21])
-        by smtp.gmail.com with ESMTPSA id bt19-20020a17090af01300b002a2b06cbe46sm1448819pjb.22.2024.04.18.06.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 06:33:29 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: edumazet@google.com,
-	dsahern@kernel.org,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	atenart@kernel.org
-Cc: mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v6 7/7] rstreason: make it work in trace world
-Date: Thu, 18 Apr 2024 21:32:48 +0800
-Message-Id: <20240418133248.56378-8-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240418133248.56378-1-kerneljasonxing@gmail.com>
-References: <20240418133248.56378-1-kerneljasonxing@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2pNwg/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03DADC32781;
+	Thu, 18 Apr 2024 14:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713449980;
+	bh=AUt0AvjyUjML6ZxpdeebsS26lKqvFMfvN3N/sVPtRcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B2pNwg/hwD4GFU+j3nK1XWEUYARxusswHne4K6Z5OpMVZCZ5ULburdPwHrZg5I4iu
+	 U/y9G2YsiGlibZSfkHi7l9Xc1A1byzgoT5FVOk+X4RFIoKyf/9F5r8tzdINa6Ps8CK
+	 NPuSjycgX6VTiF+iVSS1slG1ZPMnyNtYdJWJVNkY44ow8evHMgw76zaMNBUTb1gBOc
+	 nj3GHa4KAPMpDuvEycIrwcKhHJVzFpCFK7p7pG+gbOJbi5QsNN4n2gti59vuYtfqHK
+	 aaq8X28NwfZ8l26T0x1HIRhf7nZrUbo6m75mqZ305iGTMgwp0/oNpia09G3VtqBot9
+	 UR6a8YKfras6w==
+Date: Thu, 18 Apr 2024 15:19:32 +0100
+From: Will Deacon <will@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+Message-ID: <20240418141932.GA1855@willie-the-truck>
+References: <20240405115815.3226315-1-pbonzini@redhat.com>
+ <20240405115815.3226315-2-pbonzini@redhat.com>
+ <20240412104408.GA27645@willie-the-truck>
+ <86jzl2sovz.wl-maz@kernel.org>
+ <ZhlLHtfeSHk9gRRO@google.com>
+ <86h6g5si0m.wl-maz@kernel.org>
+ <Zh1d94Pl6gneVoDd@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zh1d94Pl6gneVoDd@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Jason Xing <kernelxing@tencent.com>
+On Mon, Apr 15, 2024 at 10:03:51AM -0700, Sean Christopherson wrote:
+> On Sat, Apr 13, 2024, Marc Zyngier wrote:
+> > On Fri, 12 Apr 2024 15:54:22 +0100, Sean Christopherson <seanjc@google.com> wrote:
+> > > 
+> > > On Fri, Apr 12, 2024, Marc Zyngier wrote:
+> > > > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
+> > > > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
+> > > > > Also, if you're in the business of hacking the MMU notifier code, it
+> > > > > would be really great to change the .clear_flush_young() callback so
+> > > > > that the architecture could handle the TLB invalidation. At the moment,
+> > > > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
+> > > > > being set by kvm_handle_hva_range(), whereas we could do a much
+> > > > > lighter-weight and targetted TLBI in the architecture page-table code
+> > > > > when we actually update the ptes for small ranges.
+> > > > 
+> > > > Indeed, and I was looking at this earlier this week as it has a pretty
+> > > > devastating effect with NV (it blows the shadow S2 for that VMID, with
+> > > > costly consequences).
+> > > > 
+> > > > In general, it feels like the TLB invalidation should stay with the
+> > > > code that deals with the page tables, as it has a pretty good idea of
+> > > > what needs to be invalidated and how -- specially on architectures
+> > > > that have a HW-broadcast facility like arm64.
+> > > 
+> > > Would this be roughly on par with an in-line flush on arm64?  The simpler, more
+> > > straightforward solution would be to let architectures override flush_on_ret,
+> > > but I would prefer something like the below as x86 can also utilize a range-based
+> > > flush when running as a nested hypervisor.
+> 
+> ...
+> 
+> > I think this works for us on HW that has range invalidation, which
+> > would already be a positive move.
+> > 
+> > For the lesser HW that isn't range capable, it also gives the
+> > opportunity to perform the iteration ourselves or go for the nuclear
+> > option if the range is larger than some arbitrary constant (though
+> > this is additional work).
+> > 
+> > But this still considers the whole range as being affected by
+> > range->handler(). It'd be interesting to try and see whether more
+> > precise tracking is (or isn't) generally beneficial.
+> 
+> I assume the idea would be to let arch code do single-page invalidations of
+> stage-2 entries for each gfn?
 
-At last, we should let it work by introducing this reset reason in
-trace world.
+Right, as it's the only code which knows which ptes actually ended up
+being aged.
 
-One of the possible expected outputs is:
-... tcp_send_reset: skbaddr=xxx skaddr=xxx src=xxx dest=xxx
-state=TCP_ESTABLISHED reason=NOT_SPECIFIED
+> Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
+> doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
+> provides an instruction to do broadcast invalidations, but it takes a virtual
+> address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
+> a guest virtual address, but it's a moot point because KVM doen't have the guest
+> virtual address, and if it's a host virtual address, there would need to be valid
+> mappings in the host page tables for it to work, which KVM can't guarantee.
 
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/tcp.h | 37 +++++++++++++++++++++++++++++++++----
- net/ipv4/tcp_ipv4.c        |  2 +-
- net/ipv4/tcp_output.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  2 +-
- 4 files changed, 36 insertions(+), 7 deletions(-)
+Ah, so it sounds like it would need to be an arch opt-in then.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 5c04a61a11c2..b1455cbc0634 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -11,6 +11,7 @@
- #include <net/ipv6.h>
- #include <net/tcp.h>
- #include <linux/sock_diag.h>
-+#include <net/rstreason.h>
- 
- /*
-  * tcp event with arguments sk and skb
-@@ -74,20 +75,38 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
- 	TP_ARGS(sk, skb)
- );
- 
-+#undef FN1
-+#define FN1(reason)	TRACE_DEFINE_ENUM(SK_RST_REASON_##reason);
-+#undef FN2
-+#define FN2(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
-+DEFINE_RST_REASON(FN1, FN1)
-+
-+#undef FN1
-+#undef FNe1
-+#define FN1(reason)	{ SK_RST_REASON_##reason, #reason },
-+#define FNe1(reason)	{ SK_RST_REASON_##reason, #reason }
-+
-+#undef FN2
-+#undef FNe2
-+#define FN2(reason)	{ SKB_DROP_REASON_##reason, #reason },
-+#define FNe2(reason)	{ SKB_DROP_REASON_##reason, #reason }
- /*
-  * skb of trace_tcp_send_reset is the skb that caused RST. In case of
-  * active reset, skb should be NULL
-  */
- TRACE_EVENT(tcp_send_reset,
- 
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk,
-+		 const struct sk_buff *skb,
-+		 const enum sk_rst_reason reason),
- 
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, reason),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
- 		__field(const void *, skaddr)
- 		__field(int, state)
-+		__field(enum sk_rst_reason, reason)
- 		__array(__u8, saddr, sizeof(struct sockaddr_in6))
- 		__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 	),
-@@ -113,14 +132,24 @@ TRACE_EVENT(tcp_send_reset,
- 			 */
- 			TP_STORE_ADDR_PORTS_SKB(skb, th, entry->daddr, entry->saddr);
- 		}
-+		__entry->reason = reason;
- 	),
- 
--	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s reason=%s",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  __entry->saddr, __entry->daddr,
--		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN")
-+		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN",
-+		  __entry->reason < RST_REASON_START ?
-+			__print_symbolic(__entry->reason, DEFINE_DROP_REASON(FN2, FNe2)) :
-+			__print_symbolic(__entry->reason, DEFINE_RST_REASON(FN1, FNe1)))
- );
- 
-+#undef FN1
-+#undef FNe1
-+
-+#undef FN2
-+#undef FNe2
-+
- /*
-  * tcp event with arguments sk
-  *
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index d78412cf8566..461b4d2b7cfe 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -871,7 +871,7 @@ static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb,
- 	if (sk)
- 		arg.bound_dev_if = sk->sk_bound_dev_if;
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	BUILD_BUG_ON(offsetof(struct sock, sk_bound_dev_if) !=
- 		     offsetof(struct inet_timewait_sock, tw_bound_dev_if));
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 276d9d541b01..b08ffb17d5a0 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3612,7 +3612,7 @@ void tcp_send_active_reset(struct sock *sk, gfp_t priority,
- 	/* skb of trace_tcp_send_reset() keeps the skb that caused RST,
- 	 * skb here is different to the troublesome skb, so use NULL
- 	 */
--	trace_tcp_send_reset(sk, NULL);
-+	trace_tcp_send_reset(sk, NULL, SK_RST_REASON_NOT_SPECIFIED);
- }
- 
- /* Send a crossed SYN-ACK during socket establishment.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index c46095fb596c..6a4736ec3df0 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1133,7 +1133,7 @@ static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb,
- 			label = ip6_flowlabel(ipv6h);
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1,
- 			     ipv6_get_dsfield(ipv6h), label, priority, txhash,
--- 
-2.37.3
-
+Will
