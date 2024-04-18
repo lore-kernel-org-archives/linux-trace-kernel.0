@@ -1,145 +1,125 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA55816F919;
-	Thu, 18 Apr 2024 18:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022B417335B
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Apr 2024 18:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713465716; cv=none; b=eo7kTr1xCeDdKyvjtu+7hDbmBo2t/tMYuWx2+HYehHGmLKiFmu+yDt3KJ32wwlHcUWGmZNYB5AGkiy0eXRrfF51VlcsUJIIhJcTwjwBcPP89LmFFhvQOCrZZVAQ8vVOKikQqKVu6yWzzisCTWDnXhzW62KBUL5Eh24Zm90MKwtc=
+	t=1713466291; cv=none; b=QPLWtdIfS1dTBit7mWKnDPqKrocQT4ystnW7qGMaOPzlitHDOWS+9b84JvOvTC79Ue8IDtR/BDcWCzhOWzONOxOA7Ria/5rDlIb8ttpxDtI4FdR+P72Wvd37ubcu9bUpcV58hZ52HclhtcLPqqEoM8QCFUFZb57U7PRHHexZFXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713465716; c=relaxed/simple;
-	bh=jjzIel/0iYgUq+MHzf/g/Bl4Dpu8TgcfIH+ll9wVj5E=;
+	s=arc-20240116; t=1713466291; c=relaxed/simple;
+	bh=jvW7hMCjwo7CN/K5mcq8Qwa/N6UV2QWPgKjq0AlxuMk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mm7/y4Fibhyn5JygpE2ex7T8GGF4sCOvOVAjdDPcAaAOe9m8/Kah2DF6Z8dgC7nCDjeM+ajsEAQ7dQYNedO0SUTSkD6fga+fksouxzk8jUg02sdGK0yPGJyve6pbKA1HbWwNifgcx4y7oHGtE54oaEIY7hAES9/Vloz6FFgdmtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGlPpFMl; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Xj7E7SjZKv+BRZ3gfhhMMqPl2X6DhnS1o5zzJMmyEMSchy6SXGikz3qYHXR5rL2siKYUv2GBD6kmbB2fy94AxVCJrVcnKBfLQAeWmquZXmVX+NdovdRCRT03ariGNHe/30FZTG07AOyUfuJMbl+b+f+mrmA1xDCdmQZynbbxNM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iTi9F3JX; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGlPpFMl"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6eff2be3b33so1267779b3a.2;
-        Thu, 18 Apr 2024 11:41:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iTi9F3JX"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e5174ffc2so2093a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713465714; x=1714070514; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1713466288; x=1714071088; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S8C8IikmJy8uyY+XBYNIZBe+JCpoTPr1zzk9t3ER+z8=;
-        b=NGlPpFMl94d/84zUSavJrv0jyVbQJxlLYbcVZdHTNuGL+8zE686wNkrPu61Q+bRGp/
-         aqwgUgUQLUekNrD+2Pm2zu3tgCPd+Wu9KwBytf2YLig1mQY2RBT0DjHFeVRmvJhN91Q3
-         h7dW1lDgEG5Jp9OeVA2p7wRgox7+O2+tfJvdmk1bfV/n3bi0O1O5/zVSdhhLDilpPor5
-         Gf8hMJl8swmFhd/QkznVypaGgIROHKMZDiI3JOc7k7nyOHCLSfS1RDQe1mLQsYeE6IvO
-         LVI2ioOsNtHTkztCmhczLyIUUwlFMEgAtbxQ+2qxfQ1AAGMwT/4Jb8IUyZG/XxsUPM3U
-         KuOA==
+        bh=jvW7hMCjwo7CN/K5mcq8Qwa/N6UV2QWPgKjq0AlxuMk=;
+        b=iTi9F3JXHrojVU1jE8kISEVZER9OuO8CjI52oWkscOGq6BvNtxG9pJBhZGDbBDJLEK
+         tvoSzkcsy1SysuqgXiywcxJRQ4JfVEMw4Hf/jR9cnZeVRugasLKPl+i51QZm7Dnu3W0B
+         J0t+0WUwo42M/Czr8rsJnFgC6HC5ueAlcH65OMqyINOkFX6UhVvrSxiMvtayiClguw3p
+         M+5H57d3Ri74ltIeC7ahqDl6eydrNocoC2NadIxARXdCK6UdsTVTjpge8dsZbzzYkzJX
+         UjX4HLofxVY516QmJrsZ5zEx3kOSRs/sO6LMfpjG3Vb4mzKwaEGA6T6QJRqql9U1v3Wb
+         TG4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713465714; x=1714070514;
+        d=1e100.net; s=20230601; t=1713466288; x=1714071088;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S8C8IikmJy8uyY+XBYNIZBe+JCpoTPr1zzk9t3ER+z8=;
-        b=gxghT/+YX6oQv+dK9KW732koNur/wK4ZdXEIhLBxl2jgnm/owck6V80D7+/Is+8HIb
-         ySc211Oi4t/bOFOmZMVKIy2dBdjTX2+3y9AB/a4WADQwYS3GtkpiTsAFDVJoHqHaXgtU
-         08j0YC3uPiqGqpGSCrkZhPMaEp5hSa3tDdavs+sWdAPUFMCD3y3QQSm1F7vv1Elx9CfC
-         qw2K25dobS7bvq3Bwtmkx2xNtjHrPUi4BmYgsE0ito988aX19H5F9bLF/dtp/A+N/Kmo
-         OdasvCXQVgqIf58G3sYCHO3shfbafhzdQDiDVkEeOpRwK2SdlfKsLytPKQw5ths2vCys
-         72vw==
-X-Forwarded-Encrypted: i=1; AJvYcCXduCT7NtvYr8+XzlbT2CwyCCf1W9HgF7Xd+ck1z8MZ47mTmeoSLl3oxx4lAgnCPkgU+V4BMnBx6B2OrWYD/1UD5V40C2MutNTBSsDxOGhukZ9JYeBSmL7B3kaY4EnLDnB2TYp7hx6Q
-X-Gm-Message-State: AOJu0YwW1VfX8AHqE6+6n/rLKyubSE8zZoayyZg+aONNsYvcxVFXFDGh
-	KZJwSm9+nfNyJovts4qKlJL/nBck73KLi1h1sumWrHvkPLiH4V6LL65sB95oyzUzp5e6/K87vYt
-	LhiEoTbw0NmD0M/QIr7MDBePw4jomUVtU
-X-Google-Smtp-Source: AGHT+IFlliZAatUTLAv/zRtbDtIqyF0Sabqyl/u2IqjJWTpJtmOaRa/M0PgvbI7xS6Z1eBVdXqSrUMQ9ZOqGZ9sLUcA=
-X-Received: by 2002:a05:6a20:da81:b0:1aa:a6cc:39c1 with SMTP id
- iy1-20020a056a20da8100b001aaa6cc39c1mr71577pzb.3.1713465714154; Thu, 18 Apr
- 2024 11:41:54 -0700 (PDT)
+        bh=jvW7hMCjwo7CN/K5mcq8Qwa/N6UV2QWPgKjq0AlxuMk=;
+        b=C9xn4aUbCZXj57yHc6BbfghF6dtTcenB1eeLihTTYqUZC7x9aXgs3Rqce5sE/UrFe7
+         AkhmP/terautwpcw/aZWxEC+t0/Is4RGDQIkj2FC/J83Awj66ddYBNTSdQIZa4M23xFQ
+         xlYLqaVNFfo7KA+mOwgbxGRwvvpWiFu6W2/vbOZXukIBPMtkE6JVKtop68qv926fmctZ
+         uEGmRhPQh8+Dauvys2ZVYFnU+F964zpnZ9dit7EG4Su6Y0d3IK5N5G2LerjU0kMSGnHy
+         26Lj1nInvp6/oH9llf5eSzC64aa4mJC7PIJkDvhcGeXBYbtgB+7pnQqawmN23cTEUi7l
+         UAmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWC8J/bAviv0qo9NuXVp1yjmYcl9QigFr5H7Lwn9vQfzziM8bEXFZczakykRzmvMsT4GFfyIS56YF5iQ+UJ7vr94K0yy5m3u0qrJeMZHe1W2ERo
+X-Gm-Message-State: AOJu0YxbuMiYn8rV8D+VzfcEa8WJxIJsJMQFvhLYiDe9ei1AQKYZlD2N
+	7oe4pIN/PE68Y1ekLWxiEo2wIsj3K0HlhwMmug2Ey1AqyfOnvL+sj8XZAX5Bxgu8dW2t9xunXDr
+	UdioKTl5Axj1h0TN/adAuLscDlf3bLqRI7TmU
+X-Google-Smtp-Source: AGHT+IG0nwF2sPAth0hGe1xE3k7qAAwtmvw2rthCZWtTHFJ8+eKzu9jlzZvyi0B1H3T1RgbsUYyxF016Rx65y43XYBM=
+X-Received: by 2002:aa7:d04f:0:b0:571:b8c4:bcc with SMTP id
+ n15-20020aa7d04f000000b00571b8c40bccmr16051edo.6.1713466288126; Thu, 18 Apr
+ 2024 11:51:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403220328.455786-1-andrii@kernel.org> <20240403220328.455786-2-andrii@kernel.org>
- <20240410074819.9b3a9a6d6a53d534b9915dc8@kernel.org>
-In-Reply-To: <20240410074819.9b3a9a6d6a53d534b9915dc8@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 18 Apr 2024 11:41:42 -0700
-Message-ID: <CAEf4BzbPk+kzXV7KVUzeA=Okbe+kvCNYEoYEOYPEu_QFVKTRUg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] rethook: honor CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
- in rethook_try_get()
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, bpf@vger.kernel.org, jolsa@kernel.org, 
-	"Paul E . McKenney" <paulmck@kernel.org>
+References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+ <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
+ <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
+In-Reply-To: <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 18 Apr 2024 20:51:14 +0200
+Message-ID: <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org, 
+	martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com, 
+	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 9, 2024 at 3:48=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
+On Thu, Apr 18, 2024 at 6:24=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
 >
-> On Wed,  3 Apr 2024 15:03:28 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
->
-> > Take into account CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING when validatin=
-g
-> > that RCU is watching when trying to setup rethooko on a function entry.
+> On Thu, Apr 18, 2024 at 11:46=E2=80=AFPM Jakub Kicinski <kuba@kernel.org>=
+ wrote:
 > >
-> > This further (in addition to improvements in the previous patch)
-> > improves BPF multi-kretprobe (which rely on rethook) runtime throughput
-> > by 2.3%, according to BPF benchmarks ([0]).
+> > On Thu, 18 Apr 2024 11:30:02 +0800 Jason Xing wrote:
+> > > I'm not sure why the patch series has been changed to 'Changes
+> > > Requested', until now I don't think I need to change something.
+> > >
+> > > Should I repost this series (keeping the v6 tag) and then wait for
+> > > more comments?
 > >
-> >   [0] https://lore.kernel.org/bpf/CAEf4BzauQ2WKMjZdc9s0rBWa01BYbgwHN6aN=
-DXQSHYia47pQ-w@mail.gmail.com/
-> >
+> > If Eric doesn't like it - it's not getting merged.
 >
-> Hi Andrii,
+> I'm not a English native speaker. If I understand correctly, it seems
+> that Eric doesn't object to the patch series. Here is the quotation
+> [1]:
+> "If you feel the need to put them in a special group, this is fine by me.=
+"
 >
-> Can you make this part depends on !KPROBE_EVENTS_ON_NOTRACE (with this
-> option, kretprobes can be used without ftrace, but with original int3) ?
+> This rst reason mechanism can cover all the possible reasons for both
+> TCP and MPTCP. We don't need to reinvent some definitions of reset
+> reasons which are totally the same as drop reasons. Also, we don't
+> need to reinvent something to cover MPTCP. If people are willing to
+> contribute more rst reasons, they can find a good place.
+>
+> Reset is one big complicated 'issue' in production. I spent a lot of
+> time handling all kinds of reset reasons daily. I'm apparently not the
+> only one. I just want to make admins' lives easier, including me. This
+> special/separate reason group is important because we can extend it in
+> the future, which will not get confused.
+>
+> I hope it can have a chance to get merged :) Thank you.
+>
+> [1]: https://lore.kernel.org/all/CANn89i+aLO_aGYC8dr8dkFyi+6wpzCGrogysvgR=
+8FrfRvaa-Vg@mail.gmail.com/
+>
+> Thanks,
+> Jason
 
-Sorry for the late response, I was out on vacation. Makes sense about
-KPROBE_EVENTS_ON_NOTRACE, I went with this condition:
+My objection was these casts between enums. Especially if hiding with (u32)
 
-#if defined(CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING) ||
-defined(CONFIG_KPROBE_EVENTS_ON_NOTRACE)
+I see no reason for adding these casts in TCP stack.
 
-Will send an updated revision shortly.
-
-> This option should be set N on production system because of safety,
-> just for testing raw kretprobes.
->
-> Thank you,
->
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  kernel/trace/rethook.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> > index fa03094e9e69..15b8aa4048d9 100644
-> > --- a/kernel/trace/rethook.c
-> > +++ b/kernel/trace/rethook.c
-> > @@ -166,6 +166,7 @@ struct rethook_node *rethook_try_get(struct rethook=
- *rh)
-> >       if (unlikely(!handler))
-> >               return NULL;
-> >
-> > +#ifdef CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
-> >       /*
-> >        * This expects the caller will set up a rethook on a function en=
-try.
-> >        * When the function returns, the rethook will eventually be recl=
-aimed
-> > @@ -174,6 +175,7 @@ struct rethook_node *rethook_try_get(struct rethook=
- *rh)
-> >        */
-> >       if (unlikely(!rcu_is_watching()))
-> >               return NULL;
-> > +#endif
-> >
-> >       return (struct rethook_node *)objpool_pop(&rh->pool);
-> >  }
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+When I said "If you feel the need to put them in a special group, this
+is fine by me.",
+this was really about partitioning the existing enum into groups, if
+you prefer having a group of 'RES reasons'
