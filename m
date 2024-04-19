@@ -1,209 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DF980029;
-	Fri, 19 Apr 2024 11:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713525880; cv=none; b=cu/pZXDGLfyPbrVpefNCRo3buAfVKfsbJVOnfWHSrza4ODBz0FnxBToz3eRbwnEOn/fYrQfi0PJt8I1pB1ucC7fmRRT4BRBuTvjK4eCo4ihjLg4UF7w+JPzMqzjt8ocN9v/oAb4693k0eW6Q6M6vxxzt3iDCIZNGQcVLohEdZzs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713525880; c=relaxed/simple;
-	bh=seRCd4clFxTtL6vDMULl2f9q6ycCa2mn5kfveiu4RD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bvv3ScEL4XGdZvyW1xxgkn01Mv/gzEaS/BDzJQqGN4oB6HD8R32syr5DPoW6tKAJHaD4/EBdKW8Lp6Z8NHBdf4olO3AvnP8O9srZP5xdBxNt+OyQXvgQqUPJ4474Grjs99Z5YIb0N0t930QCtQofDkINV/7y0l6lrH+0Kgi55K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUooDE5x; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C07BE66;
+	Fri, 19 Apr 2024 13:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713534469; cv=fail; b=F5LhzAYFON6QDJfpQX9MOj53zVUEB69t/DjocPcn1X+Gbe0svyNCC4m+vkkNTS3UbwOlGC5e9TVX05TWK6Uha0R2I2iz8rjSVoMzf5UVXO6puvDF3tMqVs4wEiRADe6yIO3d9TXqq+dvH/eGmQsP5MdrbC6Hax3pAh/fRUXtgEA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713534469; c=relaxed/simple;
+	bh=Bn+g8RbWmto8aqbTTYM3QjT/t8xRB8bEzlUUSLiGpRE=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=D7R9ocfpKqZW/M5HIWT6/jIeqIfs7rhqo/BgeHBtZVeJBVGCWbiV0Wm8kAiIuDZKzGX1C10RrA+ShFunUJVLX0sybaMSwNGB2j297/1HX2oYPtE0cHv9aZRiNsxTsuKAIp4j2YLs69e6G4S3S5Es/JR98oU22YA/MNDEwGrkipE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbUwI2Jj; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUooDE5x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7323C072AA;
-	Fri, 19 Apr 2024 11:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713525880;
-	bh=seRCd4clFxTtL6vDMULl2f9q6ycCa2mn5kfveiu4RD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fUooDE5xzZcwoxp6cnIxa6nSjyz1WVMPciR6eMgeZnScdWtd6RHnirzVrYzahjF7o
-	 0Rhf5JDQK6Bbi//FiWWYsQhmxdD2E7SdEerccUuWi7NIJjAe8/oEc+JTPgi97aEKCx
-	 1qr1ylbc2JY3/PXoVlXnIjiywl20S1TiLXHN1Go61pGazmBK5iADoaJAlP4Oea0qxL
-	 4yJjj/ACTYEPqM9xhtpaqk87AOhVlC9pbpwjwCQyrrBWvF45vcjP2LjfAQa/iqIMmX
-	 0M2vJIj9IINojXoqhh6KBgTnklOD9tdz9Fd6A0k9WyLbzTHYn8x5INZivUwtKZ68Bq
-	 aiK1U7erJiBgQ==
-Date: Fri, 19 Apr 2024 12:24:32 +0100
-From: Will Deacon <will@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-Message-ID: <20240419112432.GB2972@willie-the-truck>
-References: <20240405115815.3226315-1-pbonzini@redhat.com>
- <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck>
- <86jzl2sovz.wl-maz@kernel.org>
- <ZhlLHtfeSHk9gRRO@google.com>
- <86h6g5si0m.wl-maz@kernel.org>
- <Zh1d94Pl6gneVoDd@google.com>
- <20240418141932.GA1855@willie-the-truck>
- <ZiF6NgGYLSsPNEOg@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbUwI2Jj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713534467; x=1745070467;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Bn+g8RbWmto8aqbTTYM3QjT/t8xRB8bEzlUUSLiGpRE=;
+  b=GbUwI2JjWHemJVH80Q70K4Wqk63xC2CT+AsHVp9a1uYfMVX8D69Z7w0P
+   ZF4h4FSWvHfJ1OT9/GPc0RhwlHszAdzn6WPjGol9ccGGcu3pAwBTeQIM7
+   2t8nAXiLOfq++PLsa5oaULWKKKKOLWyD3ibWlEz517M2pJWCzDvtRJZKM
+   HrBA4Jmr6n0N/U+B8gOWTDHrktATJlB/Kbs0ESsVpspKcAe/bCgjGiWpq
+   wZ3SZJUiXbubwf1ekLWiy2k5sHYxzbhKcxB+rQjLmWVDdNYXqn0FrKqTy
+   wSKGAx/1+Mj9yN0ccZDbXVDutrmy13e0N0ik6Cl/lBBGBF4chT6mj5daE
+   Q==;
+X-CSE-ConnectionGUID: tzeKkEtVSyiAFi4MwMzSFw==
+X-CSE-MsgGUID: RXHMX6O0Qn6X9WA66JDAzg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="31617651"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="31617651"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:47:47 -0700
+X-CSE-ConnectionGUID: C5jaKtuEQoii+6nMaNlbVg==
+X-CSE-MsgGUID: V2Xqs5cxRJWxUL8f7hje2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="23393679"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Apr 2024 06:47:46 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Apr 2024 06:47:46 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Apr 2024 06:47:45 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 19 Apr 2024 06:47:45 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 06:47:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B14KeDolmdLo7JjZBMb5qz42jb8Qwt2jRXb4/Rd02/A7ShQyyqQEyTSIH1nQKq6keazbK3UaHImZes3rEmuLmoZYF/H+qhrmxmU/NvyPbE/+zLR32nMN7J25gk63NsDF4VydQH7/xHVpj49r5SenJPQRhnjDv9Etrld2ZZgjzIi8YbAdT8Zfuf9y44c8xigwr5t2LPWKuosBnB7+BFB7QWZkOIDLgcHRitIjfBMrQG8Ab3E4FuoqY4Iou9LNgZkWSBs335dDnFq9KPPMChWxp/eApJyMc+WUH7RmeJksrDYhRrFk7mQS0BLjTPOfTMDxxACZGVyJvK9Tqs/UDNaKsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7aUfhomKlQCqaPylFPObE8eG8DYwRwntHauFYQS+hLM=;
+ b=Q5rko2Skdgkcm06J907YZ7ksG4vpqDBut8BxlLeAl3VxWHzeE/L1UdBFdIFAb3SEdvzM9VZKF6HQAgY5FtfJ/D7tcnqqMbprNrLnJBCw/5YoJEkR0B+1WhOtW4Ipx02IllNEkop2Qr6JQr/JmIgK0I4Is5KyOUK14wniSefbdNL5dzujFwIZp7DAm3Jdlh/+UcbCuk5otiAlmE66Y7EyvPuolBBGTfUh6K8d3sAM71lze2TT2mwQ9Pesuxt9RZVGSvUErWXuBFiNIox5/C5vdgOn33M3FZoocOGW1J4q/4BWRUiB6HoXBzQa/OrtflzlfNxZOs36WLeGN0pnJF3GZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8)
+ by PH8PR11MB6707.namprd11.prod.outlook.com (2603:10b6:510:1c6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Fri, 19 Apr
+ 2024 13:47:43 +0000
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::65ce:9835:2c02:b61b]) by CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::65ce:9835:2c02:b61b%7]) with mapi id 15.20.7472.025; Fri, 19 Apr 2024
+ 13:47:43 +0000
+Message-ID: <17c68728-9125-4597-9e3e-764b209edcd7@intel.com>
+Date: Fri, 19 Apr 2024 21:47:34 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/18] mm: improve folio_likely_mapped_shared() using
+ the mapcount of large folios
+To: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+	<cgroups@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)"
+	<willy@infradead.org>, Peter Xu <peterx@redhat.com>, Ryan Roberts
+	<ryan.roberts@arm.com>, Yang Shi <shy828301@gmail.com>, Zi Yan
+	<ziy@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Hugh Dickins
+	<hughd@google.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
+	<dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, "Muchun
+ Song" <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, "Naoya
+ Horiguchi" <naoya.horiguchi@nec.com>, Richard Chang <richardycc@google.com>
+References: <20240409192301.907377-1-david@redhat.com>
+ <20240409192301.907377-6-david@redhat.com>
+ <b05cdac2-84f2-4727-af6c-3b666e6add14@intel.com>
+ <7a8eb8c0-35e5-4f45-bdd5-11a775ae752d@redhat.com>
+Content-Language: en-US
+From: "Yin, Fengwei" <fengwei.yin@intel.com>
+In-Reply-To: <7a8eb8c0-35e5-4f45-bdd5-11a775ae752d@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYCP286CA0325.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3b7::8) To CO1PR11MB4820.namprd11.prod.outlook.com
+ (2603:10b6:303:6f::8)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiF6NgGYLSsPNEOg@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB4820:EE_|PH8PR11MB6707:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ea7e921-2cc8-402d-4a35-08dc6077493a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: B095LejE0P1j7I/ha2MObppl9hghkYYrs5gfhdjD1wK4aOsiPvIBeQrLJ2OD9TnrCd+XZ+3sU3RLYJX2jed/DqmmTougFETP9FKCZg+upDBOX4Vnns4z8H+9G7vaRJlDi5nEboYXlJnQl6J3pffsrxwtp77GNSjHW1AzalGsbMQtt44UN3DcnRULNjPZSjphskf3fZNUfIj1QVg/3XpFO+0FPC0WGa6qYNJ8vXq09VEt2e5o5cDMALfSmto8uRXskm3/E1XJI83QYyLd9tqB6r8zESDqXFZw/FUXTGxG3C52SHuya0KcyaRD4N8EoU1feCMQwlm+mbYr5Nj6wO4b0NSjuoUHqgy8g166Wt69i9s5J1E0Owc0T79okLEwcZdM9E2bwomvTqt4Ws3q3z5D0mMqFituq/AeUhJ1l7aQttqG4y4ttnFihdcmxNdLUUYF469IstfPMmYZKpqen2aONOUIY+Z8aygrYRln2owLG4JmXd9DxdGAGUywbKUEnxr4Upj7QcShQ+ElDjP8+We53Uo+WFDhlqvHxFGllnmf0yM1Spynd+7dZjjIOjJYzn59NCAIN6RIc3IakHknhtaEzyaws4w9ZbU7Z3Pu8Jxn2vm7AcPmr+AhEdVCcQZJ0aLjqGJ5sChyrUyVZIJ5t+2pCOdfqVFtWKXD4zRNxX1i2dA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4820.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MGlPdXFWMmoxYVlMMHM5cm9ocWFLQTFiQnlJcG1Na2tOY2Z0RGF6MFNCL0lq?=
+ =?utf-8?B?aHFjb3pUbVo3ZDQ3bW1SRUZ4SEdKbzVRUGtMQ0V4b09OVlVpeVJEWXdLNlBY?=
+ =?utf-8?B?T2xjckltcGN2bXJkNEpLWm5uWDZwUkNZRCtQME9LN0FHeTFwV04wUXpWeVRo?=
+ =?utf-8?B?UGtaWHlHRTcvQVdBNXphVEdKdHVvRXRiUVpnQ0hzOXB6MWlxRFpWcGxzSm1U?=
+ =?utf-8?B?UGFZSEx1WHhaYU9tWkxGbjVrenpHME9wclZxd3ppbll0VkhQWWdjanh3T0pW?=
+ =?utf-8?B?Nm9sSFRnRzV6SVYwTDl0OGpwdy84WHpGWTNSWXpPZzdlb1JTZm1ScGFWTXhY?=
+ =?utf-8?B?akVMWldMS08xM2h0TktUdFJGSEp1dDBTQkNOZ2QybjFJTVJZSkF3OUpoUzIy?=
+ =?utf-8?B?SXlKVTlKUTlLc3liSHZ6aHVmRU0rWnFoSjBiTnZwQkVTOGx5Y2w4ZnVEeSs3?=
+ =?utf-8?B?WjhkL2Z6V1FTWk85Uy9OWGlqOVN6akRsc0FQVFREZG9WTlI0RlhFR1ZoUGNj?=
+ =?utf-8?B?ajJmNDZ0VjlFSS82Mmg4SGwwQnJFVEhpMjlPY09NT2JqWDFMekpXR1l1R2hQ?=
+ =?utf-8?B?Zk9aTFhSU2EwTGY2eC8ybEd1L096ME9PdzdTNFRXU2lPNmJYeWlHd0lJdUlI?=
+ =?utf-8?B?enErMk42UjZOQ3NVZHNlSkdmZkM0dy85OWZ3UG9sVFRsYTlCbjJkYWl0cHBQ?=
+ =?utf-8?B?dEp4WFk3VDRkN1E5Wk9VYTRmUEMrRzJWajNReWJtdjJCSDFhemVMQ2Y5Mkhw?=
+ =?utf-8?B?bEZ5U1NhV0lUaHpqS3cxcTRzcndKVzBBWmk2bE8wVGpDZmNMQnkreEdsaUZy?=
+ =?utf-8?B?dmtFY0RVeVlyTnVCQi8reEVaQVhSTktpSVhWNWY1a0VkMHJFNWFMKzBuNHpP?=
+ =?utf-8?B?dFZGUzY5OGhpMEpRRGhVYU1Wa0k1RjhZUUJmLytvOW5JVlpQcjA5Z1R0NzZX?=
+ =?utf-8?B?VnNET0J3VDhUem4rRlRDMUFmMmpsUVlwbGVpdlhvQjVzSTlTaHFzdDBlMDlO?=
+ =?utf-8?B?UVY0WExGZ2Nra0xxMnlodlVkVW5SeGI1cy9NZXVVU0g1Yk1EOXJyRDJCSWJw?=
+ =?utf-8?B?Y0xpQmo5b2puLzViaHM1TXI1NU41ZHhJUDU2cTE1ei9Ld1YyOStzQzJTZVBp?=
+ =?utf-8?B?d3dkcXNiVjh5cWs1azVlbFh4Mkpaa2s0MXBmekRLRmRTRGp0LzdFcjZTSDFp?=
+ =?utf-8?B?MlM2K1N4WlNDSGNpZnVuSFRtMXlQNXVRdGo3ejFXQVJoSEIvZnk0NDlXUk82?=
+ =?utf-8?B?cThxT2VuWkQwVUFFVUJwUkpMNE9pek9aaFVGbkM2RjRDN3NUWTFZejBhUzRk?=
+ =?utf-8?B?S3d0aExwVTBmSGtOQ3RneXNlSDRqWGlPVDVZN1h0OW9ZSGlCRFlNSXhyRENp?=
+ =?utf-8?B?ZnR6cEg5VkRSRzU4dFVMZWtDUko5TlQ3VThPK3VSN05HYVNiYjkwK1FGeCti?=
+ =?utf-8?B?SFpjNFJVVGIxQmhselhpejN2WCtya2gxWTlHQ1N5OG9PakgyUUV0TFZjMzJ5?=
+ =?utf-8?B?c3dsbVlrWHhyRDRjSWs5d2hQb1lETzB3NXdKQk5zcHhHTy9wcnoxYXIwTEJ6?=
+ =?utf-8?B?Q1RxUWRCSWduQXVSQitOekNmRGdlTXpQT0FTaFBoYk9iV3JlQkl0MGNicUJ0?=
+ =?utf-8?B?NmxkeG8wVjVEWmttVHIzcXVtc2tVcTF6UVhCTWp3RTJGaDRKTE9hNkR6NGUv?=
+ =?utf-8?B?cGo3RWdEQU0wOUV4SzkzL3c0MHhOWjNOdUhkOElKVEQwcHQyZHVqbWZVcURL?=
+ =?utf-8?B?TkpIUFpJcTlPVUhHNmJBMmdodnZHZlNsSUZiRFR0MGpOVUpCNzVITk9JcjJi?=
+ =?utf-8?B?ei9JSEl2V2J3dTVlTHltNE1QMUZ5MWZ5RHB0RUR2cHU4YTdNTkd6clVCTHVv?=
+ =?utf-8?B?b1NGWFAvbXNWRzUrQ3hUY1lYRkxXT3M0ZWJKcUprVTNTTWpFUEhFT25NRTBZ?=
+ =?utf-8?B?T0VHcXJ4V3ZReDlWZlFHTTV3ZGM5M2xHTlorWjVSR0dMUTRoNk40SEF0RWd2?=
+ =?utf-8?B?QzFjVjU5OU5lNDR0azFXelJ2VUtIRzVWOHppTnFobFVoYVhXMnR2dkFsRDZr?=
+ =?utf-8?B?eFNCc1NzcEMzOHAxUTBkc1lRMTVuMDhSOGR5WEV5ZEVBa01sbjc2SVBHRW1U?=
+ =?utf-8?Q?A8DkF2WtxYVo3nfBV/31Y1/RX?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ea7e921-2cc8-402d-4a35-08dc6077493a
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4820.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 13:47:43.2617
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 31PNlTsF/DvDgVBO60eYNKKRMLIdFkH8JxkDtqzY7jp6zy3vBfznMnutp1BImUrEMmidVzgzLZeMAxZTwKCaPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6707
+X-OriginatorOrg: intel.com
 
-On Thu, Apr 18, 2024 at 12:53:26PM -0700, Sean Christopherson wrote:
-> On Thu, Apr 18, 2024, Will Deacon wrote:
-> > On Mon, Apr 15, 2024 at 10:03:51AM -0700, Sean Christopherson wrote:
-> > > On Sat, Apr 13, 2024, Marc Zyngier wrote:
-> > > > On Fri, 12 Apr 2024 15:54:22 +0100, Sean Christopherson <seanjc@google.com> wrote:
-> > > > > 
-> > > > > On Fri, Apr 12, 2024, Marc Zyngier wrote:
-> > > > > > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
-> > > > > > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> > > > > > > Also, if you're in the business of hacking the MMU notifier code, it
-> > > > > > > would be really great to change the .clear_flush_young() callback so
-> > > > > > > that the architecture could handle the TLB invalidation. At the moment,
-> > > > > > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
-> > > > > > > being set by kvm_handle_hva_range(), whereas we could do a much
-> > > > > > > lighter-weight and targetted TLBI in the architecture page-table code
-> > > > > > > when we actually update the ptes for small ranges.
-> > > > > > 
-> > > > > > Indeed, and I was looking at this earlier this week as it has a pretty
-> > > > > > devastating effect with NV (it blows the shadow S2 for that VMID, with
-> > > > > > costly consequences).
-> > > > > > 
-> > > > > > In general, it feels like the TLB invalidation should stay with the
-> > > > > > code that deals with the page tables, as it has a pretty good idea of
-> > > > > > what needs to be invalidated and how -- specially on architectures
-> > > > > > that have a HW-broadcast facility like arm64.
-> > > > > 
-> > > > > Would this be roughly on par with an in-line flush on arm64?  The simpler, more
-> > > > > straightforward solution would be to let architectures override flush_on_ret,
-> > > > > but I would prefer something like the below as x86 can also utilize a range-based
-> > > > > flush when running as a nested hypervisor.
-> > > 
-> > > ...
-> > > 
-> > > > I think this works for us on HW that has range invalidation, which
-> > > > would already be a positive move.
-> > > > 
-> > > > For the lesser HW that isn't range capable, it also gives the
-> > > > opportunity to perform the iteration ourselves or go for the nuclear
-> > > > option if the range is larger than some arbitrary constant (though
-> > > > this is additional work).
-> > > > 
-> > > > But this still considers the whole range as being affected by
-> > > > range->handler(). It'd be interesting to try and see whether more
-> > > > precise tracking is (or isn't) generally beneficial.
-> > > 
-> > > I assume the idea would be to let arch code do single-page invalidations of
-> > > stage-2 entries for each gfn?
-> > 
-> > Right, as it's the only code which knows which ptes actually ended up
-> > being aged.
-> > 
-> > > Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
-> > > doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
-> > > provides an instruction to do broadcast invalidations, but it takes a virtual
-> > > address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
-> > > a guest virtual address, but it's a moot point because KVM doen't have the guest
-> > > virtual address, and if it's a host virtual address, there would need to be valid
-> > > mappings in the host page tables for it to work, which KVM can't guarantee.
-> > 
-> > Ah, so it sounds like it would need to be an arch opt-in then.
+
+
+On 4/19/2024 5:19 PM, David Hildenbrand wrote:
+> On 19.04.24 04:29, Yin, Fengwei wrote:
+>>
+>>
+>> On 4/10/2024 3:22 AM, David Hildenbrand wrote:
+>>> @@ -2200,7 +2200,22 @@ static inline size_t folio_size(struct folio 
+>>> *folio)
+>>>     */
+>>>    static inline bool folio_likely_mapped_shared(struct folio *folio)
+>>>    {
+>>> -    return page_mapcount(folio_page(folio, 0)) > 1;
+>>> +    int mapcount = folio_mapcount(folio);
+>>> +
+>>> +    /* Only partially-mappable folios require more care. */
+>>> +    if (!folio_test_large(folio) || 
+>>> unlikely(folio_test_hugetlb(folio)))
+>>> +        return mapcount > 1;
+>> My understanding is that mapcount > folio_nr_pages(folio) can cover
+>> order 0 folio. And also folio_entire_mapcount() can cover hugetlb (I am
+>> not 100% sure for this one).  I am wondering whether we can drop above
+>> two lines? Thanks.
 > 
-> Even if x86 (or some other arch code) could use the precise tracking, I think it
-> would make sense to have the behavior be arch specific.  Adding infrastructure
-> to get information from arch code, only to turn around and give it back to arch
-> code would be odd.
+> folio_entire_mapcount() does not apply to small folios, so we must not 
+> call that for small folios.
+Right. I missed this part. Thanks for clarification.
 
-Sorry, yes, that's what I had in mind. Basically, a way for the arch code
-to say "I've handled the TLBI, don't worry about it."
 
-> Unless arm64 can't do the invalidation immediately after aging the stage-2 PTE,
-> the best/easiest solution would be to let arm64 opt out of the common TLB flush
-> when a SPTE is made young.
+Regards
+Yin, Fengwei
+
 > 
-> With the range-based flushing bundled in, this?
+> Regarding hugetlb, subpage mapcounts are completely unused, except 
+> subpage 0 mapcount, which is now *always* negative (storing a page type) 
+> -- so there is no trusting on that value at all.
 > 
-> ---
->  include/linux/kvm_host.h |  2 ++
->  virt/kvm/kvm_main.c      | 40 +++++++++++++++++++++++++---------------
->  2 files changed, 27 insertions(+), 15 deletions(-)
+> So in the end, it all looked cleanest when only special-casing on 
+> partially-mappable folios where we know the entire mapcount exists and 
+> we know that subapge mapcount 0 actually stores something reasonable 
+> (not a type).
 > 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index afbc99264ffa..8fe5f5e16919 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2010,6 +2010,8 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
->  extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
->  
->  #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
-> +int kvm_arch_flush_tlb_if_young(void);
-> +
->  static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
->  {
->  	if (unlikely(kvm->mmu_invalidate_in_progress))
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 38b498669ef9..5ebef8ef239c 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -595,6 +595,11 @@ static void kvm_null_fn(void)
->  }
->  #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
->  
-> +int __weak kvm_arch_flush_tlb_if_young(void)
-> +{
-> +	return true;
-> +}
-
-I tend to find __weak functions a little ugly, but I think the gist of the
-diff looks good to me. Thanks for putting it together!
-
-> +
->  /* Iterate over each memslot intersecting [start, last] (inclusive) range */
->  #define kvm_for_each_memslot_in_hva_range(node, slots, start, last)	     \
->  	for (node = interval_tree_iter_first(&slots->hva_tree, start, last); \
-> @@ -611,6 +616,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
->  	struct kvm_gfn_range gfn_range;
->  	struct kvm_memory_slot *slot;
->  	struct kvm_memslots *slots;
-> +	bool need_flush = false;
->  	int i, idx;
->  
->  	if (WARN_ON_ONCE(range->end <= range->start))
-> @@ -663,10 +669,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
->  					break;
->  			}
->  			r.ret |= range->handler(kvm, &gfn_range);
-> +
-> +		       /*
-> +			* Use a precise gfn-based TLB flush when possible, as
-> +			* most mmu_notifier events affect a small-ish range.
-> +			* Fall back to a full TLB flush if the gfn-based flush
-> +			* fails, and don't bother trying the gfn-based flush
-> +			* if a full flush is already pending.
-> +			*/
-> +		       if (range->flush_on_ret && !need_flush && r.ret &&
-> +			   kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start,
-> +							    gfn_range.end - gfn_range.start + 1))
-
-What's that '+ 1' needed for here?
-
-Will
+> Thanks!
+> 
