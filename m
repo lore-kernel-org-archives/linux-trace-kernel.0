@@ -1,223 +1,205 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9138137E;
-	Fri, 19 Apr 2024 02:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3276110;
+	Fri, 19 Apr 2024 03:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713493990; cv=none; b=HXG2IloqH5+25w5BOfzWsQomT6t3H34JmvPNJEbt0Sklqy8IcsOXyu1Qbxqbd0d0IyfDi/IRAxNVHzZV+79irS2ERC+SN6ccqZGXxadBdzU/dMcH7lmcTNcnKByTeIF+8GxRp/IFO+0ijUKolQMAcjIk2WL9WHv40tEft+E+twc=
+	t=1713498232; cv=none; b=QGwZaUUh05uE++RXDrANfzf0MDJgvnqCWgQCBWzt2xebqu4KF3sW5aXrQBNO0lGtC3g5XkIOnVv13Kb3twW5qBSJfOP3kKl/GqqtIOpGPtg3EulhD/MpUyHHV/+uuwiJeddmfS2lDqBF9AqsNdmJQYK/htEbN92E3szN2ML311s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713493990; c=relaxed/simple;
-	bh=b32gB5mmLTgH83geBuB0IJ9qfWDbzBC9We7CLDKlGIM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=itdlSTXOs2Er29+/3+OHmRW53LEMP2qOmWOGh8j2AG1YugCw7/nsFMRrGEETsCf6w0oMq8ba9Tj2O5LbT6h/HsjVmmqt0/dIHYNtIchHH4n+c5Cn6zSazKzlZzzBHGY14StKNTkwG/82t/R9e16BcZiKu5LMA3JzsQoBEU3yZro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHVjW4vq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHVjW4vq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85116C113CC;
-	Fri, 19 Apr 2024 02:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713493989;
-	bh=b32gB5mmLTgH83geBuB0IJ9qfWDbzBC9We7CLDKlGIM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JHVjW4vqRTa3mRYpGwC6FQY2ORkbGjTCr7HbIXGGBUW1ojkPxX6skMIscw7qEseuy
-	 XGlOc+8YwbJ4pmfanEkIkj0oIYJBI+8FC2DkViIBmT9eU//SmlEpLvgvpnTSHBouBK
-	 pETj3z8khr4MzG+l35+wDVqEUbr7XOeesa/1L5A+jFQX2GsDnPoQyfGaKxEirF9AzO
-	 DPsIpT3l2aKV26vw1iQQjftLL2Gq5qAxcmY3PUKzoVAabkMWtFc6bTqaDwpQgcl888
-	 pMSktzgnrwCTb58Nb2g7XFZCSa+aEyDZJXkbyVUpESTkPPKKVqBPmNVZ12XFGKPvBO
-	 YiZEH2D5zwq5g==
-Date: Fri, 19 Apr 2024 11:33:05 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+	s=arc-20240116; t=1713498232; c=relaxed/simple;
+	bh=kBSqFsxANvvOgLqNo4dWQl2Wu6CSlvQdnMTIb0lxZk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bCKF70bhL30jIN7QtZvYU0aw08/z04QAxGjhoFSBycHaFvKQv/e7SZD2/tvljSgR0pUgp6SwIajtrbu4jTQ/zRt+jXByIiZqUhKsN15SHT4nTRntJquAGPL+vN2V0M5uM4HDnvZntvOg0UYRltiiHPdq0iSY1j6ehPBEfdQTNYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F217FC072AA;
+	Fri, 19 Apr 2024 03:43:49 +0000 (UTC)
+Date: Thu, 18 Apr 2024 23:43:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- dcook@linux.microsoft.com
-Subject: Re: [PATCH 1/2] tracing/user_events: Fix non-spaced field matching
-Message-Id: <20240419113305.7b0ae2b11395eec16b5c15b6@kernel.org>
-In-Reply-To: <20240416224102.734-2-beaub@linux.microsoft.com>
-References: <20240416224102.734-1-beaub@linux.microsoft.com>
-	<20240416224102.734-2-beaub@linux.microsoft.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ rdunlap@infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240418234346.4b4cb4dc@rorschach.local.home>
+In-Reply-To: <ZiDD-wdGIjOBcQ2U@kernel.org>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+ <20240406173649.3210836-3-vdonnefort@google.com>
+ <ZiDD-wdGIjOBcQ2U@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 16 Apr 2024 22:41:01 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+On Thu, 18 Apr 2024 09:55:55 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-> When the ABI was updated to prevent same name w/different args, it
-> missed an important corner case when fields don't end with a space.
-> Typically, space is used for fields to help separate them, like
-> "u8 field1; u8 field2". If no spaces are used, like
-> "u8 field1;u8 field2", then the parsing works for the first time.
-> However, the match check fails on a subsequent register, leading to
-> confusion.
+Hi Mike,
+
+Thanks for doing this review!
+
+> > +/**
+> > + * struct trace_buffer_meta - Ring-buffer Meta-page description
+> > + * @meta_page_size:	Size of this meta-page.
+> > + * @meta_struct_len:	Size of this structure.
+> > + * @subbuf_size:	Size of each sub-buffer.
+> > + * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
+> > + * @reader.lost_events:	Number of events lost at the time of the reader swap.
+> > + * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
+> > + * @reader.read:	Number of bytes read on the reader subbuf.
+> > + * @flags:		Placeholder for now, 0 until new features are supported.
+> > + * @entries:		Number of entries in the ring-buffer.
+> > + * @overrun:		Number of entries lost in the ring-buffer.
+> > + * @read:		Number of entries that have been read.
+> > + * @Reserved1:		Reserved for future use.
+> > + * @Reserved2:		Reserved for future use.
+> > + */
+> > +struct trace_buffer_meta {
+> > +	__u32		meta_page_size;
+> > +	__u32		meta_struct_len;
+> > +
+> > +	__u32		subbuf_size;
+> > +	__u32		nr_subbufs;
+> > +
+> > +	struct {
+> > +		__u64	lost_events;
+> > +		__u32	id;
+> > +		__u32	read;
+> > +	} reader;
+> > +
+> > +	__u64	flags;
+> > +
+> > +	__u64	entries;
+> > +	__u64	overrun;
+> > +	__u64	read;
+> > +
+> > +	__u64	Reserved1;
+> > +	__u64	Reserved2;  
 > 
-> This is because the match check uses argv_split() and assumes that all
-> fields will be split upon the space. When spaces are used, we get back
-> { "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
-> This causes a mismatch, and the user program gets back -EADDRINUSE.
-> 
-> Add a method to detect this case before calling argv_split(). If found
-> force a space after the field separator character ';'. This ensures all
-> cases work properly for matching.
-> 
-> With this fix, the following are all treated as matching:
-> u8 field1;u8 field2
-> u8 field1; u8 field2
-> u8 field1;\tu8 field2
-> u8 field1;\nu8 field2
+> Why do you need reserved fields? This structure always resides in the
+> beginning of a page and the rest of the page is essentially "reserved".
 
-Sounds good to me. I just have some nits.
+So this code is also going to be used in arm's pkvm hypervisor code,
+where it will be using these fields, but since we are looking at
+keeping the same interface between the two, we don't want these used by
+this interface.
+
+We probably should add a comment about that.
 
 > 
-> Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
-> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> ---
->  kernel/trace/trace_events_user.c | 88 +++++++++++++++++++++++++++++++-
->  1 file changed, 87 insertions(+), 1 deletion(-)
+> > +};
+> > +
+> > +#endif /* _TRACE_MMAP_H_ */
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index cc9ebe593571..793ecc454039 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c  
 > 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 70d428c394b6..9184d3962b2a 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -1989,6 +1989,92 @@ static int user_event_set_tp_name(struct user_event *user)
->  	return 0;
->  }
->  
-> +/*
-> + * Counts how many ';' without a trailing space are in the args.
-> + */
-> +static int count_semis_no_space(char *args)
-> +{
-> +	int count = 0;
-> +
-> +	while ((args = strchr(args, ';'))) {
-> +		args++;
-> +
-> +		if (!isspace(*args))
-> +			count++;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +/*
-> + * Copies the arguments while ensuring all ';' have a trailing space.
-> + */
-> +static char *fix_semis_no_space(char *args, int count)
+> ... 
+> 
+> > +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+> > +				   unsigned long *subbuf_ids)
+> > +{
+> > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> > +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+> > +	struct buffer_page *first_subbuf, *subbuf;
+> > +	int id = 0;
+> > +
+> > +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+> > +	cpu_buffer->reader_page->id = id++;
+> > +
+> > +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+> > +	do {
+> > +		if (WARN_ON(id >= nr_subbufs))
+> > +			break;
+> > +
+> > +		subbuf_ids[id] = (unsigned long)subbuf->page;
+> > +		subbuf->id = id;
+> > +
+> > +		rb_inc_page(&subbuf);
+> > +		id++;
+> > +	} while (subbuf != first_subbuf);
+> > +
+> > +	/* install subbuf ID to kern VA translation */
+> > +	cpu_buffer->subbuf_ids = subbuf_ids;
+> > +
+> > +	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
+> > +	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;  
+> 
+> Isn't this a single page?
 
-nit: This name does not represent what it does. 'insert_space_after_semis()'
-is more self-described.
+One thing we are doing is to make sure that the subbuffers are aligned
+by their size. If a subbuffer is 3 pages, it should be aligned on 3
+page boundaries. This was something that Linus suggested.
 
-> +{
-> +	char *fixed, *pos;
-> +	char c, last;
-> +	int len;
-> +
-> +	len = strlen(args) + count;
-> +	fixed = kmalloc(len + 1, GFP_KERNEL);
-> +
-> +	if (!fixed)
-> +		return NULL;
-> +
-> +	pos = fixed;
-> +	last = '\0';
-> +
-> +	while (len > 0) {
-> +		c = *args++;
-> +
-> +		if (last == ';' && !isspace(c)) {
-> +			*pos++ = ' ';
-> +			len--;
-> +		}
-> +
-> +		if (len > 0) {
-> +			*pos++ = c;
-> +			len--;
-> +		}
-> +
-> +		last = c;
-> +	}
+> 
+> > +	meta->meta_struct_len = sizeof(*meta);
+> > +	meta->nr_subbufs = nr_subbufs;
+> > +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> > +
+> > +	rb_update_meta_page(cpu_buffer);
+> > +}  
+> 
+> ...
+> 
+> > +#define subbuf_page(off, start) \
+> > +	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
+> > +
+> > +#define foreach_subbuf_page(sub_order, start, page)		\  
+> 
+> Nit: usually iterators in kernel use for_each
 
-nit: This loop can be simpler, because we are sure fixed has enough length;
+Ah, good catch. Yeah, that should be changed. But then ...
 
-/* insert a space after ';' if there is no space. */
-while(*args) {
-	*pos = *args++;
-	if (*pos++ == ';' && !isspace(*args))
-		*pos++ = ' ';
-}
-
-> +
-> +	/*
-> +	 * len is the length of the copy excluding the null.
-> +	 * This ensures we always have room for a null.
-> +	 */
-> +	*pos = '\0';
-> +
-> +	return fixed;
-> +}
-> +
-> +static char **user_event_argv_split(char *args, int *argc)
-> +{
-> +	/* Count how many ';' without a trailing space */
-> +	int count = count_semis_no_space(args);
-> +
-> +	if (count) {
-
-nit: it is better to exit fast, so 
-
-	if (!count)
-		return argv_split(GFP_KERNEL, args, argc);
-
-	...
-
-Thank you,
-
-OT: BTW, can this also simplify synthetic events?
-
-> +		/* We must fixup 'field;field' to 'field; field' */
-> +		char *fixed = fix_semis_no_space(args, count);
-> +		char **split;
-> +
-> +		if (!fixed)
-> +			return NULL;
-> +
-> +		/* We do a normal split afterwards */
-> +		split = argv_split(GFP_KERNEL, fixed, argc);
-> +
-> +		/* We can free since argv_split makes a copy */
-> +		kfree(fixed);
-> +
-> +		return split;
-> +	}
-> +
-> +	/* No fixup is required */
-> +	return argv_split(GFP_KERNEL, args, argc);
-> +}
-> +
->  /*
->   * Parses the event name, arguments and flags then registers if successful.
->   * The name buffer lifetime is owned by this method for success cases only.
-> @@ -2012,7 +2098,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
->  		return -EPERM;
->  
->  	if (args) {
-> -		argv = argv_split(GFP_KERNEL, args, &argc);
-> +		argv = user_event_argv_split(args, &argc);
->  
->  		if (!argv)
->  			return -ENOMEM;
-> -- 
-> 2.34.1
+> 
+> > +	page = subbuf_page(0, (start));				\
+> > +	for (int __off = 0; __off < (1 << (sub_order));		\
+> > +	     __off++, page = subbuf_page(__off, (start)))  
+> 
+> The pages are allocated with alloc_pages_node(.. subbuf_order) are
+> physically contiguous and struct pages for them are also contiguous, so
+> inside a subbuf_order allocation you can just do page++.
 > 
 
+I'm wondering if we should just nuke the macro. It was there because of
+the previous implementation did things twice. But now it's just done
+once here:
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
++	while (s < nr_subbufs && p < nr_pages) {
++		struct page *page;
++
++		foreach_subbuf_page(subbuf_order, cpu_buffer->subbuf_ids[s], page) {
++			if (p >= nr_pages)
++				break;
++
++			pages[p++] = page;
++		}
++		s++;
++	}
+
+Perhaps that should just be:
+
+	while (s < nr_subbufs && p < nr_pages) {
+		struct page *page;
+		int off;
+
+		page = subbuf_page(0, cpu_buffer->subbuf_ids[s]);
+		for (off = 0; off < (1 << subbuf_order); off++, page++, p++) {
+			if (p >= nr_pages)
+				break;
+
+			pages[p] = page;
+		}
+		s++;
+	}
+
+ ?
+
+-- Steve
