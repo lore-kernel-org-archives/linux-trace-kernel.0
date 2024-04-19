@@ -1,141 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFA213CF83;
-	Fri, 19 Apr 2024 21:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B9F13D280
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 21:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713562951; cv=none; b=cazohCjQntChEdyj2M3HDCzuE4mejGNeXiLENMWI0fTKFEXIicbvWKO+4LCZiKoZkunO5/3kH5JOIZSQ8oSkFUwFwmuQ1VI1yC/hahrR5CRXgxQ0RNkw+Vb56AHU3s/gXeqcM0OJllVUTvMaf+V7h/Za5sIXn+tVWKHX9MGaePw=
+	t=1713563320; cv=none; b=k7+ndKCppOGpuDsXR5kyzO+cw2FPa1D2HMs6Habte/sruWVgQfbvzXVeBqrKGrQcMYC9NS2Xx/jmx47BIRVLJC4WeJPaDy/1BaQ0RFdwweBOhYQ7Rju1LNT1fgY9N+eJCWWmbffOq1QmGO+VRu+7KWpF9qQPGRXAcL3xYkykf30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713562951; c=relaxed/simple;
-	bh=TCFccoU0QynIlhNVSwfE9PBflv6m2g3eer2smjEjHo0=;
+	s=arc-20240116; t=1713563320; c=relaxed/simple;
+	bh=jC2wl+OKojvmxomsUcue2OmqxcTv0WGwNmMswaqTDxQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EH/PPm6n+1GFffV4eCyFCu44GODztqpIPITkiLlC0LPGtDxEdKTuFjMJWnlratHLjsmHJ3aU2Px4aVuB11bHa64vUhcVb4tzbEVj5aRsLsc8LZ283MuQwF/PRoy+5jkPpykqJyyl/RiytDZjQMM+Upq2MSTywuXs9kXQgeCx4xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3GIF3P/; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=fjxT8FcwoICVM/NJVT65ghI5Ar0u41LIe2+vDNxRAwqZu4rKnXj3Zc3QOeTmvENWcPFRLd4A45de0zJLuT0lVoEMxz6oZYqudbu5vGL3H7DaqHYwrPl6RkssZ/VKAs4gRl6DIF94ZRSU05sy0lID/9lmjPTIwHIXCx+pfNXNA10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tk+gsVEe; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3GIF3P/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37403C4AF0B;
-	Fri, 19 Apr 2024 21:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713562950;
-	bh=TCFccoU0QynIlhNVSwfE9PBflv6m2g3eer2smjEjHo0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S3GIF3P/lDyeKxFIF4pk3NB4voyc3jDBvrFx7J4R0RQPC7qB48PFG4JdR+LWTb5VG
-	 TVulfp4sZtTnavHG7YfjZx+qr0QC9dnKVswTmcKFscRs89DTdJ23BJZNcgr5rE8cTP
-	 GCYa7AVlhR6m2vNKGUfB4+E4ZP2+XMRA/mcbxKvZziVuxteHhStK2mndLtDfNVjE2Q
-	 rzZN4Ndc6tabVJQRtfseS5l8TWvfuyZ7Mgpj8k3neEzSInMxgygeIakC9HPWB8pW1A
-	 KTMwYXzpirJYjOMMHMhlNA3kWiCrgIQzk8AyhFrzS/yZyyqTAd0BMIA4fStLj4N5Cc
-	 q3NQekhLjCLew==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so3034818e87.2;
-        Fri, 19 Apr 2024 14:42:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUU60prFRWB6VKhtng5Uq8uprJ4pnlQJhq3BvWZPthcxwoC5zi3YZYEIJIsORsFh4uUQno3c2ENqcb3GO0BnMJy3U5bIsD0oFJdLBCv/gkEyxKfty0MTukwGUPq5VRA5HqPYsOrot0jkgfXjYjXOsKXH13B9hlzi91guyoB4neAm7It/gloqfGWsOS4Zw/ZqSPO2b6PobgniVy2ZkYB53tzvCNj8CBI7yT6eKS50pkeLeBQi78GKGSAAEsNxKgPpRmt55aovdklsaMpUz8XNUwWqr2M4D0ux8G+xi7oB0cxhLEy60udwNwUtOGmaMb1PysHr1HPj4X5IIuMg8MlqdRwsOWKlRF6r2sFZe0QTtwVZl5RB45w1RKWZRvGV1DLweFCgYKdptzeRflh3rvDugEJNkWTubWBPLahdnQUho2TD2rQydosGIksvZo=
-X-Gm-Message-State: AOJu0YzFFLhSlRvGvDmc/YE9tvA6UFuX3e5OXU47SvW8ghwd9J4HiLEB
-	pTTy74IhfnHLOGIPqkeXeyQ6DBytR2hq1uL/xmxlKaMwiW+63Q5DTLwdYX3OmsyxwSahBSzT0NN
-	7h4SOseSPZTrCdyUXhH9Lcny4RYg=
-X-Google-Smtp-Source: AGHT+IH4AnwX5zN14P6kYOA/5jMldeW1Bv8FPwjpWGtVTE89ihBaxTYgE7/68A2MjqxVZZCm/ny8Sr/SdDVp6qchZyo=
-X-Received: by 2002:a19:5f4d:0:b0:519:5b84:1038 with SMTP id
- a13-20020a195f4d000000b005195b841038mr1897119lfj.20.1713562948432; Fri, 19
- Apr 2024 14:42:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tk+gsVEe"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-434b5abbb0dso101961cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 14:48:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713563317; x=1714168117; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7WUgfQpxFSi9OMu/BLbxS5EwXbfPHvR9Oq0TsJVDLS8=;
+        b=tk+gsVEeTrSVgmI7Krm/vOlN1J2mvZfTGaA8gJNXl+CwJn9QHdJaXyg44s1wPkN/HP
+         70gDF+oksqTauuxr3ksVWW3n6vZT1Ase+8qpT8hZo4xaT3/PZqQ3BIrg5D8BT9Y66RQv
+         3M2JJzB5AVrDSg5J4L9c8WPHCOudqlOUxeHFUO1qpTuwFcfQk8Roxhy00rL99EoyTuUg
+         VWbjvOQ8MjhhLTw+rm2NV9IjEdPD5ck6i1I9sOSa0ZupKFuwgl2d7a0iSUrkFmhihdHs
+         GrVLogWHDHPt9NEuQ/VbC8CLSRsD04DUIQFuHGnWqWYcEE+BzU8wKWTscndtFeJ+mGq+
+         5J3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713563317; x=1714168117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7WUgfQpxFSi9OMu/BLbxS5EwXbfPHvR9Oq0TsJVDLS8=;
+        b=lvN4JoOTE2vdXSCDeZABsY02CQqqr5WXtMVOIXY7ZMwyFHPvhVJaP9Y4xIb5rprW4G
+         avsTd/MyI2Ko+/zsUBWFqCkrJ3JrJ5Ain7BHXmj/D966UGK4BVYhoz8cYWA6BZneG1cT
+         mRRLTjP7qdpAdhsorXcLeglEmwNUkXeBzBrCOp0l6W0yrW0n89tjKNqpL8L4Dg83lJ/r
+         brhjO/VaZM0Myovm+sMduhBM37ElyXqKViOP5M9nz4IHsvyohQ+j7MTmWbW80walmOpx
+         84AMGthBq+eOByT5kezLiYAvSHa2h0DZdulUmsMltRu+Z1nYJ44Imvx/sDiUsRAzTwh6
+         xfQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSnqzb4S+Zu+60+cQZk53FDRjkUJF0HkZoxuPsgFwgkgs/IsMzlKhvOWFJScKb7+4w9tgjAPtmtpswhnFTvHsJXXngJMVJfIlNQZELQjN5VrQ6
+X-Gm-Message-State: AOJu0Yxh2z2W5ccHQKcjtEPxN0K6qrse1T7FvYkN15OJibq5uWabH842
+	BNRT4Xrk1FUJlwDkRkHZ1Dy2GxNije5PJf5aPJ/SgMEgbmiYSJyKMn8ISC1992leY/YKSf5y2kx
+	ud9McGSHPwKJqy7dZlGJrS9+XvZjqJ7xOP+uo
+X-Google-Smtp-Source: AGHT+IF/+KLjCOKrIy86O0ywp9xXyAU+ULEISk31UACWIOy8xyUI4tOEo7+H8GJqqYX/DI/5Jm7Jn6Bxyh5mWp8jmOE=
+X-Received: by 2002:a05:622a:600f:b0:431:8176:e4e5 with SMTP id
+ he15-20020a05622a600f00b004318176e4e5mr25735qtb.13.1713563317426; Fri, 19 Apr
+ 2024 14:48:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zh4nJp8rv1qRBs8m@kernel.org> <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
- <ZiE91CJcNw7gBj9g@kernel.org> <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
- <ZiFd567L4Zzm2okO@kernel.org> <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
- <ZiIVVBgaDN4RsroT@kernel.org> <CAPhsuW7WoU+a46FhqqH8f-3=ehxeD4wSgKDWegMin1pT49OSWw@mail.gmail.com>
- <ZiKjmaDgz_56ovbv@kernel.org> <CAPhsuW7Nj1Sa_9xQtTgHz9AmX39zdh2x2COqA-qmkfpfX9hNWw@mail.gmail.com>
- <ZiLNGgVSQ7_cg58y@kernel.org>
-In-Reply-To: <ZiLNGgVSQ7_cg58y@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Fri, 19 Apr 2024 14:42:16 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4KRM4O4RFbYQrt=Coqyh9w29WiF2YF=8soDfauLFsKBA@mail.gmail.com>
-Message-ID: <CAPhsuW4KRM4O4RFbYQrt=Coqyh9w29WiF2YF=8soDfauLFsKBA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <20240401232946.1837665-1-jthoughton@google.com>
+ <20240401232946.1837665-6-jthoughton@google.com> <ZhgZHJH3c5Lb5SBs@google.com>
+ <Zhgdw8mVNYZvzgWH@google.com> <CADrL8HUpHQQbQCxd8JGVRr=eT6e4SYyfYZ7eTDsv8PK44FYV_A@mail.gmail.com>
+ <ZiLc8OfXxc9QWxtg@google.com>
+In-Reply-To: <ZiLc8OfXxc9QWxtg@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Fri, 19 Apr 2024 14:48:00 -0700
+Message-ID: <CADrL8HUmGFP=w5COnJzyJ+2a2gjCugqQg9WDXQ2ZAK7B9gJThA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] KVM: x86: Participate in bitmap-based PTE aging
+To: David Matlack <dmatlack@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Yu Zhao <yuzhao@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shaoqin Huang <shahuang@redhat.com>, 
+	Gavin Shan <gshan@redhat.com>, Ricardo Koller <ricarkol@google.com>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	David Rientjes <rientjes@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024 at 1:00=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
-te:
+On Fri, Apr 19, 2024 at 2:07=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
 >
-> On Fri, Apr 19, 2024 at 10:32:39AM -0700, Song Liu wrote:
-> > On Fri, Apr 19, 2024 at 10:03=E2=80=AFAM Mike Rapoport <rppt@kernel.org=
-> wrote:
-> > [...]
-> > > > >
-> > > > > [1] https://lore.kernel.org/all/20240411160526.2093408-1-rppt@ker=
-nel.org
-> > > >
-> > > > For the ROX to work, we need different users (module text, kprobe, =
-etc.) to have
-> > > > the same execmem_range. From [1]:
-> > > >
-> > > > static void *execmem_cache_alloc(struct execmem_range *range, size_=
-t size)
-> > > > {
-> > > > ...
-> > > >        p =3D __execmem_cache_alloc(size);
-> > > >        if (p)
-> > > >                return p;
-> > > >       err =3D execmem_cache_populate(range, size);
-> > > > ...
-> > > > }
-> > > >
-> > > > We are calling __execmem_cache_alloc() without range. For this to w=
-ork,
-> > > > we can only call execmem_cache_alloc() with one execmem_range.
+> On 2024-04-19 01:47 PM, James Houghton wrote:
+> > On Thu, Apr 11, 2024 at 10:28=E2=80=AFAM David Matlack <dmatlack@google=
+.com> wrote:
+> > > On 2024-04-11 10:08 AM, David Matlack wrote:
+> > > bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> > > {
+> > >         bool young =3D false;
 > > >
-> > > Actually, on x86 this will "just work" because everything shares the =
-same
-> > > address space :)
+> > >         if (!range->arg.metadata->bitmap && kvm_memslots_have_rmaps(k=
+vm))
+> > >                 young =3D kvm_handle_gfn_range(kvm, range, kvm_age_rm=
+ap);
 > > >
-> > > The 2M pages in the cache will be in the modules space, so
-> > > __execmem_cache_alloc() will always return memory from that address s=
-pace.
+> > >         if (tdp_mmu_enabled)
+> > >                 young |=3D kvm_tdp_mmu_age_gfn_range(kvm, range);
 > > >
-> > > For other architectures this indeed needs to be fixed with passing th=
-e
-> > > range to __execmem_cache_alloc() and limiting search in the cache for=
- that
-> > > range.
+> > >         return young;
+> > > }
+> > >
+> > > bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> > > {
+> > >         bool young =3D false;
+> > >
+> > >         if (!range->arg.metadata->bitmap && kvm_memslots_have_rmaps(k=
+vm))
+> > >                 young =3D kvm_handle_gfn_range(kvm, range, kvm_test_a=
+ge_rmap);
+> > >
+> > >         if (tdp_mmu_enabled)
+> > >                 young |=3D kvm_tdp_mmu_test_age_gfn(kvm, range);
+> > >
+> > >         return young;
 > >
-> > I think we at least need the "map to" concept (initially proposed by Th=
-omas)
-> > to get this work. For example, EXECMEM_BPF and EXECMEM_KPROBE
-> > maps to EXECMEM_MODULE_TEXT, so that all these actually share
-> > the same range.
+> >
+> > Yeah I think this is the right thing to do. Given your other
+> > suggestions (on patch 3), I think this will look something like this
+> > -- let me know if I've misunderstood something:
+> >
+> > bool check_rmap =3D !bitmap && kvm_memslot_have_rmaps(kvm);
+> >
+> > if (check_rmap)
+> >   KVM_MMU_LOCK(kvm);
+> >
+> > rcu_read_lock(); // perhaps only do this when we don't take the MMU loc=
+k?
+> >
+> > if (check_rmap)
+> >   kvm_handle_gfn_range(/* ... */ kvm_test_age_rmap)
+> >
+> > if (tdp_mmu_enabled)
+> >   kvm_tdp_mmu_test_age_gfn() // modified to be RCU-safe
+> >
+> > rcu_read_unlock();
+> > if (check_rmap)
+> >   KVM_MMU_UNLOCK(kvm);
 >
-> Why?
+> I was thinking a little different. If you follow my suggestion to first
+> make the TDP MMU aging lockless, you'll end up with something like this
+> prior to adding bitmap support (note: the comments are just for
+> demonstrative purposes):
+>
+> bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> {
+>         bool young =3D false;
+>
+>         /* Shadow MMU aging holds write-lock. */
+>         if (kvm_memslots_have_rmaps(kvm)) {
+>                 write_lock(&kvm->mmu_lock);
+>                 young =3D kvm_handle_gfn_range(kvm, range, kvm_age_rmap);
+>                 write_unlock(&kvm->mmu_lock);
+>         }
+>
+>         /* TDM MMU aging is lockless. */
+>         if (tdp_mmu_enabled)
+>                 young |=3D kvm_tdp_mmu_age_gfn_range(kvm, range);
+>
+>         return young;
+> }
+>
+> Then when you add bitmap support it would look something like this:
+>
+> bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> {
+>         unsigned long *bitmap =3D range->arg.metadata->bitmap;
+>         bool young =3D false;
+>
+>         /* SHadow MMU aging holds write-lock and does not support bitmap.=
+ */
+>         if (kvm_memslots_have_rmaps(kvm) && !bitmap) {
+>                 write_lock(&kvm->mmu_lock);
+>                 young =3D kvm_handle_gfn_range(kvm, range, kvm_age_rmap);
+>                 write_unlock(&kvm->mmu_lock);
+>         }
+>
+>         /* TDM MMU aging is lockless and supports bitmap. */
+>         if (tdp_mmu_enabled)
+>                 young |=3D kvm_tdp_mmu_age_gfn_range(kvm, range);
+>
+>         return young;
+> }
+>
+> rcu_read_lock/unlock() would be called in kvm_tdp_mmu_age_gfn_range().
 
-IIUC, we need to update __execmem_cache_alloc() to take a range pointer as
-input. module text will use "range" for EXECMEM_MODULE_TEXT, while kprobe
-will use "range" for EXECMEM_KPROBE. Without "map to" concept or sharing
-the "range" object, we will have to compare different range parameters to c=
-heck
-we can share cached pages between module text and kprobe, which is not
-efficient. Did I miss something?
+Oh yes this is a lot better. I hope I would have seen this when it
+came time to actually update this patch. Thanks.
 
-Thanks,
-Song
+>
+> That brings up a question I've been wondering about. If KVM only
+> advertises support for the bitmap lookaround when shadow roots are not
+> allocated, does that mean MGLRU will be blind to accesses made by L2
+> when nested virtualization is enabled? And does that mean the Linux MM
+> will think all L2 memory is cold (i.e. good candidate for swapping)
+> because it isn't seeing accesses made by L2?
+
+Yes, I think so (for both questions). That's better than KVM not
+participating in MGLRU aging at all, which is the case today (IIUC --
+also ignoring the case where KVM accesses guest memory directly). We
+could have MGLRU always invoke the mmu notifiers, but frequently
+taking the MMU lock for writing might be worse than evicting when we
+shouldn't. Maybe Yu tried this at some point, but I can't find any
+results for this.
