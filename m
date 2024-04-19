@@ -1,205 +1,276 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3276110;
-	Fri, 19 Apr 2024 03:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1008F5B;
+	Fri, 19 Apr 2024 05:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713498232; cv=none; b=QGwZaUUh05uE++RXDrANfzf0MDJgvnqCWgQCBWzt2xebqu4KF3sW5aXrQBNO0lGtC3g5XkIOnVv13Kb3twW5qBSJfOP3kKl/GqqtIOpGPtg3EulhD/MpUyHHV/+uuwiJeddmfS2lDqBF9AqsNdmJQYK/htEbN92E3szN2ML311s=
+	t=1713504985; cv=none; b=TcjFwjOWo+dZnJ5i3yfaIyZEeJIEKgN5YTGusKM3NsMKX8VW6tJEegocOKrUcrqG2ybNpQJm9CsnDIZ63eUwqcRMRRKbTxDswWBh/fMpfnGNnmF7yoOls6MtRDlZtnzg4eaV52tfwe+D/Lo3pn0DUJ44X8Ox6rMmZ70QHWb1c5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713498232; c=relaxed/simple;
-	bh=kBSqFsxANvvOgLqNo4dWQl2Wu6CSlvQdnMTIb0lxZk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bCKF70bhL30jIN7QtZvYU0aw08/z04QAxGjhoFSBycHaFvKQv/e7SZD2/tvljSgR0pUgp6SwIajtrbu4jTQ/zRt+jXByIiZqUhKsN15SHT4nTRntJquAGPL+vN2V0M5uM4HDnvZntvOg0UYRltiiHPdq0iSY1j6ehPBEfdQTNYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F217FC072AA;
-	Fri, 19 Apr 2024 03:43:49 +0000 (UTC)
-Date: Thu, 18 Apr 2024 23:43:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- rdunlap@infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20240418234346.4b4cb4dc@rorschach.local.home>
-In-Reply-To: <ZiDD-wdGIjOBcQ2U@kernel.org>
-References: <20240406173649.3210836-1-vdonnefort@google.com>
- <20240406173649.3210836-3-vdonnefort@google.com>
- <ZiDD-wdGIjOBcQ2U@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1713504985; c=relaxed/simple;
+	bh=3TdyFA3hyHOlxjWLYHwX0SH35loWRhAXSuWeI08Kwgk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=t54SjrjvX4yBXaAtF1Nd9TlsmFaj/iXhmvNfWb1y64ngjIsKTMGOv++hMJufemT5bOLH7ZyfYzmftt+sifc4A+riSrBTXydh1EQ2oOFfJ6bU/QBwrHw1mc1rqXw1jA+jBSBemCbGzWjhhCmDwjQffNPpRy1f6pvUguMCUie7gJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DW3qNCZF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DW3qNCZF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 948B5C072AA;
+	Fri, 19 Apr 2024 05:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713504984;
+	bh=3TdyFA3hyHOlxjWLYHwX0SH35loWRhAXSuWeI08Kwgk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DW3qNCZF0nlSMG6IrO40/xUGCFw7GlQgT8+VWYZw4BGpjADkXAbQH2uUs4f/lteky
+	 tDUiUigc+2l1tiMxg5K9X9YwUF89W5rUEros5wAEFukoPVWwiVJmv2m8Emcaw4R59F
+	 mJ41L6ioPng4hcccHPhe42akparPkrIxLTyHGJwTss5Cw3d2kkKTQfUNkvvefKwI3G
+	 dWympRDamkU2E9X6Uo+11nWiCE8J2dLqoXVlFPb01BBqsOcvMI3D7LsxO6lYrUMgy6
+	 rgk+k6bAdaA8V3+hDjKr6Z/AbeNwzX0EDbSQl0NWK5DJm+WaxXQ5n2favhgfpKmanJ
+	 KF4aqp7Z3/BUg==
+Date: Fri, 19 Apr 2024 14:36:18 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v9 00/36] tracing: fprobe: function_graph:
+ Multi-function graph and fprobe on fgraph
+Message-Id: <20240419143618.aa5064d764094ed926b0f04e@kernel.org>
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 18 Apr 2024 09:55:55 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+Hi Steve,
 
-Hi Mike,
+Can you review this series? Especially, [07/36] and [12/36] has been changed
+a lot from your original patch.
 
-Thanks for doing this review!
+Thank you,
 
-> > +/**
-> > + * struct trace_buffer_meta - Ring-buffer Meta-page description
-> > + * @meta_page_size:	Size of this meta-page.
-> > + * @meta_struct_len:	Size of this structure.
-> > + * @subbuf_size:	Size of each sub-buffer.
-> > + * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
-> > + * @reader.lost_events:	Number of events lost at the time of the reader swap.
-> > + * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
-> > + * @reader.read:	Number of bytes read on the reader subbuf.
-> > + * @flags:		Placeholder for now, 0 until new features are supported.
-> > + * @entries:		Number of entries in the ring-buffer.
-> > + * @overrun:		Number of entries lost in the ring-buffer.
-> > + * @read:		Number of entries that have been read.
-> > + * @Reserved1:		Reserved for future use.
-> > + * @Reserved2:		Reserved for future use.
-> > + */
-> > +struct trace_buffer_meta {
-> > +	__u32		meta_page_size;
-> > +	__u32		meta_struct_len;
-> > +
-> > +	__u32		subbuf_size;
-> > +	__u32		nr_subbufs;
-> > +
-> > +	struct {
-> > +		__u64	lost_events;
-> > +		__u32	id;
-> > +		__u32	read;
-> > +	} reader;
-> > +
-> > +	__u64	flags;
-> > +
-> > +	__u64	entries;
-> > +	__u64	overrun;
-> > +	__u64	read;
-> > +
-> > +	__u64	Reserved1;
-> > +	__u64	Reserved2;  
+On Mon, 15 Apr 2024 21:48:59 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> Hi,
 > 
-> Why do you need reserved fields? This structure always resides in the
-> beginning of a page and the rest of the page is essentially "reserved".
-
-So this code is also going to be used in arm's pkvm hypervisor code,
-where it will be using these fields, but since we are looking at
-keeping the same interface between the two, we don't want these used by
-this interface.
-
-We probably should add a comment about that.
-
+> Here is the 9th version of the series to re-implement the fprobe on
+> function-graph tracer. The previous version is;
 > 
-> > +};
-> > +
-> > +#endif /* _TRACE_MMAP_H_ */
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index cc9ebe593571..793ecc454039 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c  
+> https://lore.kernel.org/all/170887410337.564249.6360118840946697039.stgit@devnote2/
 > 
-> ... 
+> This version is ported on the latest kernel (v6.9-rc3 + probes/for-next)
+> and fixed some bugs + performance optimization patch[36/36].
+>  - [12/36] Fix to clear fgraph_array entry in registration failure, also
+>            return -ENOSPC when fgraph_array is full.
+>  - [28/36] Add new store_fprobe_entry_data() for fprobe.
+>  - [31/36] Remove DIV_ROUND_UP() and fix entry data address calculation.
+>  - [36/36] Add new flag to skip timestamp recording.
 > 
-> > +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
-> > +				   unsigned long *subbuf_ids)
-> > +{
-> > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> > +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-> > +	struct buffer_page *first_subbuf, *subbuf;
-> > +	int id = 0;
-> > +
-> > +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
-> > +	cpu_buffer->reader_page->id = id++;
-> > +
-> > +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
-> > +	do {
-> > +		if (WARN_ON(id >= nr_subbufs))
-> > +			break;
-> > +
-> > +		subbuf_ids[id] = (unsigned long)subbuf->page;
-> > +		subbuf->id = id;
-> > +
-> > +		rb_inc_page(&subbuf);
-> > +		id++;
-> > +	} while (subbuf != first_subbuf);
-> > +
-> > +	/* install subbuf ID to kern VA translation */
-> > +	cpu_buffer->subbuf_ids = subbuf_ids;
-> > +
-> > +	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
-> > +	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;  
+> Overview
+> --------
+> This series does major 2 changes, enable multiple function-graphs on
+> the ftrace (e.g. allow function-graph on sub instances) and rewrite the
+> fprobe on this function-graph.
 > 
-> Isn't this a single page?
-
-One thing we are doing is to make sure that the subbuffers are aligned
-by their size. If a subbuffer is 3 pages, it should be aligned on 3
-page boundaries. This was something that Linus suggested.
-
+> The former changes had been sent from Steven Rostedt 4 years ago (*),
+> which allows users to set different setting function-graph tracer (and
+> other tracers based on function-graph) in each trace-instances at the
+> same time.
 > 
-> > +	meta->meta_struct_len = sizeof(*meta);
-> > +	meta->nr_subbufs = nr_subbufs;
-> > +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-> > +
-> > +	rb_update_meta_page(cpu_buffer);
-> > +}  
+> (*) https://lore.kernel.org/all/20190525031633.811342628@goodmis.org/
 > 
-> ...
+> The purpose of latter change are;
 > 
-> > +#define subbuf_page(off, start) \
-> > +	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
-> > +
-> > +#define foreach_subbuf_page(sub_order, start, page)		\  
+>  1) Remove dependency of the rethook from fprobe so that we can reduce
+>    the return hook code and shadow stack.
 > 
-> Nit: usually iterators in kernel use for_each
-
-Ah, good catch. Yeah, that should be changed. But then ...
-
+>  2) Make 'ftrace_regs' the common trace interface for the function
+>    boundary.
 > 
-> > +	page = subbuf_page(0, (start));				\
-> > +	for (int __off = 0; __off < (1 << (sub_order));		\
-> > +	     __off++, page = subbuf_page(__off, (start)))  
+> 1) Currently we have 2(or 3) different function return hook codes,
+>  the function-graph tracer and rethook (and legacy kretprobe).
+>  But since this  is redundant and needs double maintenance cost,
+>  I would like to unify those. From the user's viewpoint, function-
+>  graph tracer is very useful to grasp the execution path. For this
+>  purpose, it is hard to use the rethook in the function-graph
+>  tracer, but the opposite is possible. (Strictly speaking, kretprobe
+>  can not use it because it requires 'pt_regs' for historical reasons.)
 > 
-> The pages are allocated with alloc_pages_node(.. subbuf_order) are
-> physically contiguous and struct pages for them are also contiguous, so
-> inside a subbuf_order allocation you can just do page++.
+> 2) Now the fprobe provides the 'pt_regs' for its handler, but that is
+>  wrong for the function entry and exit. Moreover, depending on the
+>  architecture, there is no way to accurately reproduce 'pt_regs'
+>  outside of interrupt or exception handlers. This means fprobe should
+>  not use 'pt_regs' because it does not use such exceptions.
+>  (Conversely, kprobe should use 'pt_regs' because it is an abstract
+>   interface of the software breakpoint exception.)
+> 
+> This series changes fprobe to use function-graph tracer for tracing
+> function entry and exit, instead of mixture of ftrace and rethook.
+> Unlike the rethook which is a per-task list of system-wide allocated
+> nodes, the function graph's ret_stack is a per-task shadow stack.
+> Thus it does not need to set 'nr_maxactive' (which is the number of
+> pre-allocated nodes).
+> Also the handlers will get the 'ftrace_regs' instead of 'pt_regs'.
+> Since eBPF mulit_kprobe/multi_kretprobe events still use 'pt_regs' as
+> their register interface, this changes it to convert 'ftrace_regs' to
+> 'pt_regs'. Of course this conversion makes an incomplete 'pt_regs',
+> so users must access only registers for function parameters or
+> return value. 
+> 
+> Design
+> ------
+> Instead of using ftrace's function entry hook directly, the new fprobe
+> is built on top of the function-graph's entry and return callbacks
+> with 'ftrace_regs'.
+> 
+> Since the fprobe requires access to 'ftrace_regs', the architecture
+> must support CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS and
+> CONFIG_HAVE_FTRACE_GRAPH_FUNC, which enables to call function-graph
+> entry callback with 'ftrace_regs', and also
+> CONFIG_HAVE_FUNCTION_GRAPH_FREGS, which passes the ftrace_regs to
+> return_to_handler.
+> 
+> All fprobes share a single function-graph ops (means shares a common
+> ftrace filter) similar to the kprobe-on-ftrace. This needs another
+> layer to find corresponding fprobe in the common function-graph
+> callbacks, but has much better scalability, since the number of
+> registered function-graph ops is limited.
+> 
+> In the entry callback, the fprobe runs its entry_handler and saves the
+> address of 'fprobe' on the function-graph's shadow stack as data. The
+> return callback decodes the data to get the 'fprobe' address, and runs
+> the exit_handler.
+> 
+> The fprobe introduces two hash-tables, one is for entry callback which
+> searches fprobes related to the given function address passed by entry
+> callback. The other is for a return callback which checks if the given
+> 'fprobe' data structure pointer is still valid. Note that it is
+> possible to unregister fprobe before the return callback runs. Thus
+> the address validation must be done before using it in the return
+> callback.
+> 
+> This series can be applied against the probes/for-next branch, which
+> is based on v6.9-rc3.
+> 
+> This series can also be found below branch.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/fprobe-on-fgraph
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (21):
+>       tracing: Add a comment about ftrace_regs definition
+>       tracing: Rename ftrace_regs_return_value to ftrace_regs_get_return_value
+>       x86: tracing: Add ftrace_regs definition in the header
+>       function_graph: Use a simple LRU for fgraph_array index number
+>       ftrace: Add multiple fgraph storage selftest
+>       function_graph: Pass ftrace_regs to entryfunc
+>       function_graph: Replace fgraph_ret_regs with ftrace_regs
+>       function_graph: Pass ftrace_regs to retfunc
+>       fprobe: Use ftrace_regs in fprobe entry handler
+>       fprobe: Use ftrace_regs in fprobe exit handler
+>       tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs
+>       tracing: Add ftrace_fill_perf_regs() for perf event
+>       tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+>       bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
+>       ftrace: Add CONFIG_HAVE_FTRACE_GRAPH_FUNC
+>       fprobe: Rewrite fprobe on function-graph tracer
+>       tracing/fprobe: Remove nr_maxactive from fprobe
+>       selftests: ftrace: Remove obsolate maxactive syntax check
+>       selftests/ftrace: Add a test case for repeating register/unregister fprobe
+>       Documentation: probes: Update fprobe on function-graph tracer
+>       fgraph: Skip recording calltime/rettime if it is not nneeded
+> 
+> Steven Rostedt (VMware) (15):
+>       function_graph: Convert ret_stack to a series of longs
+>       fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+>       function_graph: Add an array structure that will allow multiple callbacks
+>       function_graph: Allow multiple users to attach to function graph
+>       function_graph: Remove logic around ftrace_graph_entry and return
+>       ftrace/function_graph: Pass fgraph_ops to function graph callbacks
+>       ftrace: Allow function_graph tracer to be enabled in instances
+>       ftrace: Allow ftrace startup flags exist without dynamic ftrace
+>       function_graph: Have the instances use their own ftrace_ops for filtering
+>       function_graph: Add "task variables" per task for fgraph_ops
+>       function_graph: Move set_graph_function tests to shadow stack global var
+>       function_graph: Move graph depth stored data to shadow stack global var
+>       function_graph: Move graph notrace bit to shadow stack global var
+>       function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
+>       function_graph: Add selftest for passing local variables
+> 
+> 
+>  Documentation/trace/fprobe.rst                     |   42 +
+>  arch/arm64/Kconfig                                 |    3 
+>  arch/arm64/include/asm/ftrace.h                    |   47 +
+>  arch/arm64/kernel/asm-offsets.c                    |   12 
+>  arch/arm64/kernel/entry-ftrace.S                   |   32 -
+>  arch/arm64/kernel/ftrace.c                         |   21 
+>  arch/loongarch/Kconfig                             |    4 
+>  arch/loongarch/include/asm/ftrace.h                |   32 -
+>  arch/loongarch/kernel/asm-offsets.c                |   12 
+>  arch/loongarch/kernel/ftrace_dyn.c                 |   15 
+>  arch/loongarch/kernel/mcount.S                     |   17 
+>  arch/loongarch/kernel/mcount_dyn.S                 |   14 
+>  arch/powerpc/Kconfig                               |    1 
+>  arch/powerpc/include/asm/ftrace.h                  |   15 
+>  arch/powerpc/kernel/trace/ftrace.c                 |    3 
+>  arch/powerpc/kernel/trace/ftrace_64_pg.c           |   10 
+>  arch/riscv/Kconfig                                 |    3 
+>  arch/riscv/include/asm/ftrace.h                    |   21 
+>  arch/riscv/kernel/ftrace.c                         |   15 
+>  arch/riscv/kernel/mcount.S                         |   24 
+>  arch/s390/Kconfig                                  |    3 
+>  arch/s390/include/asm/ftrace.h                     |   39 -
+>  arch/s390/kernel/asm-offsets.c                     |    6 
+>  arch/s390/kernel/mcount.S                          |    9 
+>  arch/x86/Kconfig                                   |    4 
+>  arch/x86/include/asm/ftrace.h                      |   43 -
+>  arch/x86/kernel/ftrace.c                           |   51 +
+>  arch/x86/kernel/ftrace_32.S                        |   15 
+>  arch/x86/kernel/ftrace_64.S                        |   17 
+>  include/linux/fprobe.h                             |   57 +
+>  include/linux/ftrace.h                             |  170 +++
+>  include/linux/sched.h                              |    2 
+>  include/linux/trace_recursion.h                    |   39 -
+>  kernel/trace/Kconfig                               |   23 
+>  kernel/trace/bpf_trace.c                           |   14 
+>  kernel/trace/fgraph.c                              | 1005 ++++++++++++++++----
+>  kernel/trace/fprobe.c                              |  637 +++++++++----
+>  kernel/trace/ftrace.c                              |   13 
+>  kernel/trace/ftrace_internal.h                     |    2 
+>  kernel/trace/trace.h                               |   96 ++
+>  kernel/trace/trace_fprobe.c                        |  147 ++-
+>  kernel/trace/trace_functions.c                     |    8 
+>  kernel/trace/trace_functions_graph.c               |   98 +-
+>  kernel/trace/trace_irqsoff.c                       |   12 
+>  kernel/trace/trace_probe_tmpl.h                    |    2 
+>  kernel/trace/trace_sched_wakeup.c                  |   12 
+>  kernel/trace/trace_selftest.c                      |  262 +++++
+>  lib/test_fprobe.c                                  |   51 -
+>  samples/fprobe/fprobe_example.c                    |    4 
+>  .../test.d/dynevent/add_remove_fprobe_repeat.tc    |   19 
+>  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
+>  51 files changed, 2325 insertions(+), 882 deletions(-)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_repeat.tc
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
 
-I'm wondering if we should just nuke the macro. It was there because of
-the previous implementation did things twice. But now it's just done
-once here:
 
-+	while (s < nr_subbufs && p < nr_pages) {
-+		struct page *page;
-+
-+		foreach_subbuf_page(subbuf_order, cpu_buffer->subbuf_ids[s], page) {
-+			if (p >= nr_pages)
-+				break;
-+
-+			pages[p++] = page;
-+		}
-+		s++;
-+	}
-
-Perhaps that should just be:
-
-	while (s < nr_subbufs && p < nr_pages) {
-		struct page *page;
-		int off;
-
-		page = subbuf_page(0, cpu_buffer->subbuf_ids[s]);
-		for (off = 0; off < (1 << subbuf_order); off++, page++, p++) {
-			if (p >= nr_pages)
-				break;
-
-			pages[p] = page;
-		}
-		s++;
-	}
-
- ?
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
