@@ -1,258 +1,170 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1968E4D131;
-	Fri, 19 Apr 2024 08:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1B57A15C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713514001; cv=none; b=fbmTEmRU3bOWuuVgqK7GTEWMZpBcc/IclZanyxBPbEwVcykV6NiyZq6wWOwrcQkGAvoI6MHMHjN53LW9gF058MJV/A0Vj3gcYpWrxDprsM7IEjq5lpt6tyL/y9ldLks7qCAeVH2NmKvSdbB3Cp4QqautZV+eG4x2DvLU7l4ZSmo=
+	t=1713518067; cv=none; b=cgemkoB/rqkzhqFwBPQ/yey8DroAMy6werMVifoMiwDY6FZYTWXDoUtUFeIAU6bw+NMNJg8acC5CcAK7KUMCIJpNbaVcKBuVf10OqgqTLY0tbh/uZtJ8Qv0DaNktS7yNJl2v3eOyGizWlg8JjkE3DG2smaewA+0tpfsyiHRpGlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713514001; c=relaxed/simple;
-	bh=XTwnfm/sqlaZlJxN/MVFbKE3NWBojOwpSvveKtQy2Zs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f42TQ4KAywuQvG1m1zWI3uMR6wxUYt8N9cGausRMaWxw5buCpLznSfiaxaTwuBXWj1MSZH0t02y281Q2M8sdydGl/O5DV1qYmLd8OCNwrskAaHee4kFA6Sg3K0qgHS06k7BgxNSK0Sal0H2rzGCC01dX7iPvQkCfneZSGuYoajg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IjRue/0A; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713518067; c=relaxed/simple;
+	bh=Xp2EiSEdIviNVxs+Qz+eQmTpkeDvxnaGWVXfC1igFFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nNS3XdrCtre+R4OTUuougORaLNquU/BOkXPqCbzJyn668AErleFGn0FtHmM6JrEOYO3jL3k1nZyrtI/TykCr5RQDG/+BmRY5RUuMi3/MpFL4X5MD88C3gps+Lr73D0EGby6RvLyOkNm79c9EHnz2db6fEC6Kl9X1AyjLsIUrWPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OMXjs/Ac; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjRue/0A"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a519e1b0e2dso179923866b.2;
-        Fri, 19 Apr 2024 01:06:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713513998; x=1714118798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hpH8yxR1dAAX8kI+0z0hIiJFPsZI7NQtWK4IOvFZ1C4=;
-        b=IjRue/0AHx1i5dnledMugyFdFXAq+miK2zYxDwQrdWfAvg+0RYoeRhZMFuRoQjaZ2y
-         gxXuJvj60AMvIt9XtSEkh9gTUa4zdYNEQs5/LJKH1uSS53c1KHyUzMIA03FmIn+61wFV
-         3R8RA/UkJ5Xr1k3+ec9wH+gHEn6nQKdSp4Uxxp1GuN59TNBuiqwpcnEJkM+9hwRAiqE2
-         qB+fWdte+8ehmvoWnSMWB0H8TOA+fm9isgd2ViNh1DyKvbfEBYTWKkrXR4D7VKRpffGt
-         PxBE1g94aMkhpZxow2PKbxcsoFSkJODLxHQQCGI7D5ehP8mX94ZlSdcfrdwVAUziYQrK
-         ogdQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OMXjs/Ac"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713518063;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EqwO0572yowA0TBakaonePZNHGnWtzDXOOjoM1DutVs=;
+	b=OMXjs/AcDnlzE8Fg8DdXZdl/HWq3t1iz+OHCSaTzsdNSjvpw+ReyEa4elfLS8gVoHxamBM
+	bxX8WVNZrSjoICtNaeZT6KZwLen96xnoIzWRiKhGqKTmKd4862j6oaUiRogyIWty/G+Zcg
+	D9tvYE9beibbK1WIfNe7oRBjGZGwCFc=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-540-aVbuRlY_ONa5LG1Q5CEbjw-1; Fri, 19 Apr 2024 05:14:21 -0400
+X-MC-Unique: aVbuRlY_ONa5LG1Q5CEbjw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-417de456340so10314195e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 02:14:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713513998; x=1714118798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hpH8yxR1dAAX8kI+0z0hIiJFPsZI7NQtWK4IOvFZ1C4=;
-        b=xNHCsCQGt0LHiRsyVbvUnJ8a1iBIBgW1qo94JiyRic8fTs95zsfQwiMQCKj7BkmMbp
-         j49nhWP/moQoGFtGUKgjSNtQsV51IumnfXnmrMtPKUxPqVXX39ogx2F+pL1Ne6petMx2
-         oqEPrGKePhsTUnFFPS3Ezwxtib6GK5WZPhtRRVuBr6SXq6Uw9PBCGMqG3kAIzxWe7uzr
-         A80OwC3txUx+2WfAI+ZA4xJdPwb8jiXkdKxqx8/jd+2iE4bNAF8eV73ysQBGyIeGbeVR
-         TK7BlRg85Gd8YQSmVgx6uA+H7EXTLWUyI1d39erxnmh3W+4LgdrzFjHpRjQYa6PJ8rWz
-         IsIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHaRJVwTn0dizVOYhoEsfxjiQpHnyGHSSrx96CJAcNwPEtldYvaqMCOD9EfJmTXf8iXTsyXhsA0lxIP1kPaixCQD5c/sWowSRMIBuefvpBQ6GDS6caUGNRUU1w/4bZU60xShzOyG44c9vP
-X-Gm-Message-State: AOJu0YwkYiU3mZBiyoR1ef0GaLp9+42nVFLQK1bpcP9Tb0VQHQX4qt95
-	YL18BhhwxIEMzGLbB+1s3Gqr9WyDwCoD5FIILs43JSHKDCjJWjMj2Du+bj6d9P+98kFfravPhRj
-	mehWite7UirRUoEpl2zQgo+148bs=
-X-Google-Smtp-Source: AGHT+IFRBMQlloUTfaYbb2pImPH7ZlqroFysI+85pcZQ+0mk5gExk9aUl4Lr0bVlfcQ/9FCBkFh0RulSz3HIbWUj6+4=
-X-Received: by 2002:a17:906:584e:b0:a51:e05f:2455 with SMTP id
- h14-20020a170906584e00b00a51e05f2455mr981297ejs.48.1713513998324; Fri, 19 Apr
- 2024 01:06:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713518060; x=1714122860;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EqwO0572yowA0TBakaonePZNHGnWtzDXOOjoM1DutVs=;
+        b=QiODqnljPgUOZ1RL28/6Ad9DCV9fEq8l7ethQcZN7IOTAxv3Ds7wlzsE6zrZtQ0aOx
+         y8zzfkEhEqSchmf0Vt9Ht0lQDAdTnYD8/M4jsTwKea/qqvq8pZDx3kI3v5S/bmrA1miP
+         5RhOJoSR76ErrN3ifzgL+SJzNc11AreVmBGIEZDtZw1e6Fxf7DihQJORvqnhior2pBCg
+         rWFa2NCqgERq0FcVxgxQj5ytskbGiDtan7BJgvW6mC3FeZTSNeDgJsszJOoOo6hLf0pH
+         0D4Ddbat6VFnZoppdX/8ZIXY3Rr1bfCdwz8X/xg5wkEcO+LMu7YdF90INMGJnO4Uaytm
+         cf3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUZQFl/6+QffarJE0f++yigC84GEBITj+3obIvXZvXlE8XaoUpe5a6e1pJoJnuikxX9kxZqlL/bklKHs1gPKpsEsTOjqOgEfvHdWGDS29HGV5Vk
+X-Gm-Message-State: AOJu0YxWK42b2zuo3SqmvcmiRSdO5YJHB/dJd7hOrTHc1XrScHTychF4
+	G10B/9KBLV8NZlnbANOob9IeY6uElDJYI84xdXSoO+nYlZP5EWngsRPlV23ERYUSoPoDxy5qNUh
+	nTH8I85aZOZvJyHI21EUznxbns8ZSd07tkAPpAhVM1Wtb6iOEdLwQ+DIRXrAVbry6aaYQAQ==
+X-Received: by 2002:a05:600c:c16:b0:418:fdcc:7080 with SMTP id fm22-20020a05600c0c1600b00418fdcc7080mr1087546wmb.12.1713518060732;
+        Fri, 19 Apr 2024 02:14:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE5KCUiiuZF9OZuh6RkThz19zIB1mi9FMS0XWUZ94xu1t5eHJnPpGKa3Ly3AFrnJLxt6FqYug==
+X-Received: by 2002:a05:600c:c16:b0:418:fdcc:7080 with SMTP id fm22-20020a05600c0c1600b00418fdcc7080mr1087525wmb.12.1713518060295;
+        Fri, 19 Apr 2024 02:14:20 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c716:f300:c9f0:f643:6aa2:16? (p200300cbc716f300c9f0f6436aa20016.dip0.t-ipconnect.de. [2003:cb:c716:f300:c9f0:f643:6aa2:16])
+        by smtp.gmail.com with ESMTPSA id p15-20020a05600c358f00b00418ef96472asm4398962wmq.0.2024.04.19.02.14.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 02:14:19 -0700 (PDT)
+Message-ID: <bcd887c8-9830-42ed-b43a-2fdaa11dc837@redhat.com>
+Date: Fri, 19 Apr 2024 11:14:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
- <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
- <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
- <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
- <CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com>
- <CAL+tcoAEN-OQeqn3m3zLGUiPZEaoTjz0WHaNL-xm702aot_m-g@mail.gmail.com>
- <CANn89iL9OzD5+Y56F_8Jqyxwa5eDQPaPjhX9Y-Y_b9+bcQE08Q@mail.gmail.com>
- <CAL+tcoBn8RHm8AbwMBJ6FM6PMLLotCwTxSgPS1ABd-_D7uBSxw@mail.gmail.com>
- <CANn89iJ4a5VE-_AV-wVrh9Zpu0yS=jtwJaR_s2cBX7pP_QGQXQ@mail.gmail.com> <CAL+tcoA_eU98hMoWA2UM2LD_fNp=geY0uUfc+4pDnbUCKK6=Ew@mail.gmail.com>
-In-Reply-To: <CAL+tcoA_eU98hMoWA2UM2LD_fNp=geY0uUfc+4pDnbUCKK6=Ew@mail.gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 19 Apr 2024 16:06:01 +0800
-Message-ID: <CAL+tcoBiJgOcVirH1O9Yn0B_4RqCj+e4735wf7uxse57Kqc_vQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
-To: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org, 
-	martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com, 
-	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/18] mm/rmap: always inline anon/file rmap
+ duplication of a single PTE
+To: "Yin, Fengwei" <fengwei.yin@intel.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Peter Xu
+ <peterx@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Yang Shi <shy828301@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ Jonathan Corbet <corbet@lwn.net>, Hugh Dickins <hughd@google.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+ Muchun Song <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <naoya.horiguchi@nec.com>,
+ Richard Chang <richardycc@google.com>
+References: <20240409192301.907377-1-david@redhat.com>
+ <20240409192301.907377-3-david@redhat.com>
+ <c5c2ae26-d405-4b0f-8bf6-281abcdb3239@intel.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <c5c2ae26-d405-4b0f-8bf6-281abcdb3239@intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 19, 2024 at 4:00=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
->
-> On Fri, Apr 19, 2024 at 3:44=E2=80=AFPM Eric Dumazet <edumazet@google.com=
-> wrote:
-> >
-> > On Fri, Apr 19, 2024 at 9:29=E2=80=AFAM Jason Xing <kerneljasonxing@gma=
-il.com> wrote:
-> > >
-> > > On Fri, Apr 19, 2024 at 3:02=E2=80=AFPM Eric Dumazet <edumazet@google=
-.com> wrote:
-> > > >
-> > > > On Fri, Apr 19, 2024 at 4:31=E2=80=AFAM Jason Xing <kerneljasonxing=
-@gmail.com> wrote:
-> > > > >
-> > > > > On Fri, Apr 19, 2024 at 7:26=E2=80=AFAM Jason Xing <kerneljasonxi=
-ng@gmail.com> wrote:
-> > > > > >
-> > > > > > > When I said "If you feel the need to put them in a special gr=
-oup, this
-> > > > > > > is fine by me.",
-> > > > > > > this was really about partitioning the existing enum into gro=
-ups, if
-> > > > > > > you prefer having a group of 'RES reasons'
-> > > > > >
-> > > > > > Are you suggesting copying what we need from enum skb_drop_reas=
-on{} to
-> > > > > > enum sk_rst_reason{}? Why not reusing them directly. I have no =
-idea
-> > > > > > what the side effect of cast conversion itself is?
-> > > > >
-> > > > > Sorry that I'm writing this email. I'm worried my statement is no=
-t
-> > > > > that clear, so I write one simple snippet which can help me expla=
-in
-> > > > > well :)
-> > > > >
-> > > > > Allow me give NO_SOCKET as an example:
-> > > > > diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-> > > > > index e63a3bf99617..2c9f7364de45 100644
-> > > > > --- a/net/ipv4/icmp.c
-> > > > > +++ b/net/ipv4/icmp.c
-> > > > > @@ -767,6 +767,7 @@ void __icmp_send(struct sk_buff *skb_in, int =
-type,
-> > > > > int code, __be32 info,
-> > > > >         if (!fl4.saddr)
-> > > > >                 fl4.saddr =3D htonl(INADDR_DUMMY);
-> > > > >
-> > > > > +       trace_icmp_send(skb_in, type, code);
-> > > > >         icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
-> > > > >  ende:
-> > > > >         ip_rt_put(rt);
-> > > > > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> > > > > index 1e650ec71d2f..d5963831280f 100644
-> > > > > --- a/net/ipv4/tcp_ipv4.c
-> > > > > +++ b/net/ipv4/tcp_ipv4.c
-> > > > > @@ -2160,6 +2160,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> > > > >  {
-> > > > >         struct net *net =3D dev_net(skb->dev);
-> > > > >         enum skb_drop_reason drop_reason;
-> > > > > +       enum sk_rst_reason rst_reason;
-> > > > >         int sdif =3D inet_sdif(skb);
-> > > > >         int dif =3D inet_iif(skb);
-> > > > >         const struct iphdr *iph;
-> > > > > @@ -2355,7 +2356,8 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> > > > >  bad_packet:
-> > > > >                 __TCP_INC_STATS(net, TCP_MIB_INERRS);
-> > > > >         } else {
-> > > > > -               tcp_v4_send_reset(NULL, skb);
-> > > > > +               rst_reason =3D RST_REASON_NO_SOCKET;
-> > > > > +               tcp_v4_send_reset(NULL, skb, rst_reason);
-> > > > >         }
-> > > > >
-> > > > >  discard_it:
-> > > > >
-> > > > > As you can see, we need to add a new 'rst_reason' variable which
-> > > > > actually is the same as drop reason. They are the same except for=
- the
-> > > > > enum type... Such rst_reasons/drop_reasons are all over the place=
-.
-> > > > >
-> > > > > Eric, if you have a strong preference, I can do it as you said.
-> > > > >
-> > > > > Well, how about explicitly casting them like this based on the cu=
-rrent
-> > > > > series. It looks better and clearer and more helpful to people wh=
-o is
-> > > > > reading codes to understand:
-> > > > > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> > > > > index 461b4d2b7cfe..eb125163d819 100644
-> > > > > --- a/net/ipv4/tcp_ipv4.c
-> > > > > +++ b/net/ipv4/tcp_ipv4.c
-> > > > > @@ -1936,7 +1936,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct s=
-k_buff *skb)
-> > > > >         return 0;
-> > > > >
-> > > > >  reset:
-> > > > > -       tcp_v4_send_reset(rsk, skb, (u32)reason);
-> > > > > +       tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
-> > > > >  discard:
-> > > > >         kfree_skb_reason(skb, reason);
-> > > > >         /* Be careful here. If this function gets more complicate=
-d and
-> > > >
-> > > > It makes no sense to declare an enum sk_rst_reason and then convert=
- it
-> > > > to drop_reason
-> > > > or vice versa.
-> > > >
-> > > > Next thing you know, compiler guys will add a new -Woption that wil=
-l
-> > > > forbid such conversions.
-> > > >
-> > > > Please add to tcp_v4_send_reset() an skb_drop_reason, not a new enu=
-m.
-> > >
-> > > Ah... It looks like I didn't make myself clear again. Sorry...
-> > > Actually I wrote this part many times. My conclusion is that It's not
-> > > feasible to do this.
-> > >
-> > > REASONS:
-> > > If we __only__ need to deal with this passive reset in TCP, it's fine=
-.
-> > > We pass a skb_drop_reason which should also be converted to u32 type
-> > > in tcp_v4_send_reset() as you said, it can work. People who use the
-> > > trace will see the reason with the 'SKB_DROP_REASON' prefix stripped.
-> > >
-> > > But we have to deal with other cases. A few questions are listed here=
-:
-> > > 1) What about tcp_send_active_reset() in TCP/MPTCP? Passing weird dro=
-p
-> > > reasons? There is no drop reason at all. I think people will get
-> > > confused. So I believe we should invent new definitions to cope with
-> > > it.
-> > > 2) What about the .send_reset callback in the subflow_syn_recv_sock()
-> > > in MPTCP? The reasons in MPTCP are only definitions (such as
-> > > MPTCP_RST_EUNSPEC). I don't think we can convert them into the enum
-> > > skb_drop_reason type.
-> > >
-> > > So where should we group those various reasons?
-> > >
-> > > Introducing a new enum is for extension and compatibility for all
-> > > kinds of reset reasons.
-> > >
-> > > What do you think?
-> >
-> > I will stop repeating myself.
-> >
-> > enums are not what you think.
-> >
-> > type safety is there for a reason.
-> >
-> > Can you show me another place in networking stacks where we cast enums
-> > to others ?
->
-> No, I've checked this a month ago.
->
-> BTW, I don't know the dangers of casting enum types. I know you will
+On 19.04.24 04:25, Yin, Fengwei wrote:
+> 
+> 
+> On 4/10/2024 3:22 AM, David Hildenbrand wrote:
+>> As we grow the code, the compiler might make stupid decisions and
+>> unnecessarily degrade fork() performance. Let's make sure to always inline
+>> functions that operate on a single PTE so the compiler will always
+>> optimize out the loop and avoid a function call.
+>>
+>> This is a preparation for maintining a total mapcount for large folios.
+>>
+>> Signed-off-by: David Hildenbrand<david@redhat.com>
+> The patch looks good to me. Just curious: Is this change driven by code
+> reviewing or performance data profiling? Thanks.
 
-s/will/won't/
+It was identified while observing an performance degradation with small 
+folios in the fork() microbenchmark discussed in the cover letter 
+(mentioned here as "unnecessarily degrade fork() performance").
 
-> answer it, but I still insist on asking, hoping someone seeing this
-> will help me.
->
-> Using skb_drop_reason can only deal with the passive reset in TCP. It
-> is just one of all kinds of reset cases :(
->
-> Forgive me, I cannot come up with a good way to cover all the cases TT
->
-> I've tried..Sorry...
->
-> If other experts see this thread, please help me. I would appreciate
-> it. I have strong interests and feel strong responsibility to
-> implement something like this patch series. It can be very useful!!
->
-> Thanks again.
+The added atomic_add() was sufficient for the compiler not inline and 
+optimize-out nr_pages, inserting a function call to a function where 
+nr_pages is not optimized out.
+
+-- 
+Cheers,
+
+David / dhildenb
+
