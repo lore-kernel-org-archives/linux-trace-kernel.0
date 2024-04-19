@@ -1,128 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77DA63E;
-	Fri, 19 Apr 2024 06:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13103B298
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 07:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713509798; cv=none; b=uSluC9zo28vHSoNgnpCTH08/ccnBLEO8gH6TK5xWBiFM5Mj2WodUMDcTCP+DgAZvoSe/JFTO7t0wTfWMQxTdeY+XuOSCRP+QGzcwAi1XwGisjgI+chvmpjnSOeV7+zLindn5TMjqfqYWoRFBugF/QePjG3f07+1kKDwNSJ20dLU=
+	t=1713510153; cv=none; b=piZRPBjBnKOH6TSjn21Uh+xEUoWysBg3OpY2xKVYRmaznWWiKlRQBD5np+QTxKdJQ0ZUFLmF4hTBsP+pW260UrYFwW8HjNGOiYHRBZ9xAcH0txNQ/nnowNwflNPeRnFzFuc7XUdoNuTuCk9aPq3wdusP3vMEtsM+7wIVyLIvrqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713509798; c=relaxed/simple;
-	bh=QyMnC6yNCYeGf0vrwo+bvOEGlhU1enTkpEMS1UdTz3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nfeXrSOHRfzoP83QFoYBbmVcyWej2sBnyV6u8bkYQKL4THyJKWx3Lf+tKiXXLWm+KPl3tx31E9mwK1BP+kQCHb38y9WM8sYfUi+nPCaL24bUDc5/YYAghrAP3yqhqoIAzAMprsIP3bJUFivCquJ9mBFkvBGfLUPa1kXva/J6dFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGPxC8PC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713510153; c=relaxed/simple;
+	bh=9gbg/ehbV8yzIMt+Gr3oETkExUgyAVE3H7ltyX1nDx0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uX+qd8AicPv8k4HQq8pYdUwhDub/WRt0k29Ko43XCHEe5RWb90DvwBefaWBXGlMCdALyLtNIJuBur3HnwicBpAdrJ6r5fBCIzB/Fij2FoXhHLaqYu1VGAUcmFgzQDZsJPPMLoNhB8HOiFRBRlungMK9l1bZUYeta9vIP6VivQ+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rEVqBjaC; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGPxC8PC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5881C072AA;
-	Fri, 19 Apr 2024 06:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713509797;
-	bh=QyMnC6yNCYeGf0vrwo+bvOEGlhU1enTkpEMS1UdTz3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGPxC8PCY8SnZrF0RCOMbIgSLrKy8hMUcTwQhGg04AArCCIqcrHmv5Ozj+/15Mxmb
-	 Z5tAH7Vdwb4CwNtAt3c/UrCpMIZJPngEV7ak2csa/7FlHToGNqqaiOtjXXYFiXJWt3
-	 6ObsP+646nnF8SnH5skC5WEdWELGtHSHzBDWXZqXYwBofamn2QdDvdgy5CTKGNpPOO
-	 1v84dtOt7AKF4KxvZWU3TOdBN2g9tkVxrJyakFg/qwL0NKQfGsXLfFOWV0O05jtLTZ
-	 wM29U64qOuZV772RLQ5j7ljjoO+qx0/azdfHFMH7xioH9AhimXQ/fqnfmBiI3Sy0+P
-	 8Za6g/P3pUaVg==
-Date: Fri, 19 Apr 2024 09:55:16 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-Message-ID: <ZiIVVBgaDN4RsroT@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net>
- <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
- <Zh4nJp8rv1qRBs8m@kernel.org>
- <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
- <ZiE91CJcNw7gBj9g@kernel.org>
- <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
- <ZiFd567L4Zzm2okO@kernel.org>
- <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEVqBjaC"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-571b5fba660so6318a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 00:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713510150; x=1714114950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wLHkiHrTlpdTps6ysTqOAyZCrLwQiuSrdW4pKXYb6fg=;
+        b=rEVqBjaCesj8P2cmxVn5vKk6ufkhXfxstNtNDjeUrbBqjDON4xhSTewjAG/I9L8nZF
+         qtSj2dApwZjFvEcA0PGN+a790Fq/xWaA0egq5ByHor/hSQr8g/YIkDeXkN+FvOr4aoeS
+         BGF2KOxXAeT7NImMQwP+91r5+MTOlnYOR+PTLW8djaUw7c5bShBv/o6NymwjLckwLu8W
+         dDFk1Yk9PLPf5dGOBBew44XVkv9DW5pJbRqPXHxrMA8RHxszWgbjaLwWd/YVSg/EL6ze
+         8A2qjaIAFmVvdYanXSHs86Fcc2lxHpV/hd0RL8RQAQf0wxFD7oKPLMDpH2RvE6uLr/k1
+         ah9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713510150; x=1714114950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wLHkiHrTlpdTps6ysTqOAyZCrLwQiuSrdW4pKXYb6fg=;
+        b=R2/CBT5VgJw6GRLH4GmoMXzkeQzTdHyjeW8WVnFVVTsEbWa1NfTKd4l38HDzY1vvcH
+         2+fqurGoPWnhQDmS9fC+yi7v6dLvkwNS5pH3m5knuQ5Hh4PaNcIkBkcctKK3Di4NbcV3
+         Lxd5nCQZazAQj0GLyZZ3H0Ko/Z5MYyoF96M+uel1rFXnRYR7FGeHIi7AC94of5xIM0E1
+         WCWAsYEIZ3LT4IYiLI45G6da9HgUHwuLzP9SvZjMzc+ytP/55ynNwlWcbt+1QftmDXzQ
+         BUXtfyUz0q3K7BsFk4JosMQI2CnWwLJWGdlrUBsBW/rQkW9h0XoI/gfrIbgx/to/2MCh
+         sinQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsSacULQPiAhkY++cOWSjQEPySA/ytG4hCilfGD7YVkmPEUsaP4wZBod7RfBVvm/0O7OjNMTfP6UPU4TT6+FbULYGxk1v7YOU9aa3zaqSFDgk5
+X-Gm-Message-State: AOJu0YyF4Lb+MdtuhMAKSep5zTvHmmhskWDQOfpAQ9pfpWzD6UVv9SX5
+	TtSxF9OHOEyJAcJj/KadSbImfonaMj2zZPqO7WAvEaQeCa/8/I1JL6EhGrUzjBKSdqjZz/X6o7x
+	20tlGOanT6T1mZti9qP328SoGup9+5ZaYx4Nu
+X-Google-Smtp-Source: AGHT+IFssgbt19Ud0j5wzyljXYaHnnidj4QCzNardhDoOQfW9g1s5Wv2bsNy8dfFKGX1BmofOHebjOwN7xzVqHIEaFM=
+X-Received: by 2002:a50:fc18:0:b0:571:b2c2:5c3e with SMTP id
+ i24-20020a50fc18000000b00571b2c25c3emr65390edr.1.1713510149689; Fri, 19 Apr
+ 2024 00:02:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5SL4_=ZXdHZV8o0KS+5Vf25UMvEKhRgFQLioFtf2pgoQ@mail.gmail.com>
+References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+ <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
+ <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
+ <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
+ <CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com> <CAL+tcoAEN-OQeqn3m3zLGUiPZEaoTjz0WHaNL-xm702aot_m-g@mail.gmail.com>
+In-Reply-To: <CAL+tcoAEN-OQeqn3m3zLGUiPZEaoTjz0WHaNL-xm702aot_m-g@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 19 Apr 2024 09:02:18 +0200
+Message-ID: <CANn89iL9OzD5+Y56F_8Jqyxwa5eDQPaPjhX9Y-Y_b9+bcQE08Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org, 
+	martineau@kernel.org, geliang@kernel.org, pabeni@redhat.com, 
+	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 02:01:22PM -0700, Song Liu wrote:
-> On Thu, Apr 18, 2024 at 10:54 AM Mike Rapoport <rppt@kernel.org> wrote:
+On Fri, Apr 19, 2024 at 4:31=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
+>
+> On Fri, Apr 19, 2024 at 7:26=E2=80=AFAM Jason Xing <kerneljasonxing@gmail=
+.com> wrote:
 > >
-> > On Thu, Apr 18, 2024 at 09:13:27AM -0700, Song Liu wrote:
-> > > On Thu, Apr 18, 2024 at 8:37 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > > > >
-> > > > > > I'm looking at execmem_types more as definition of the consumers, maybe I
-> > > > > > should have named the enum execmem_consumer at the first place.
-> > > > >
-> > > > > I think looking at execmem_type from consumers' point of view adds
-> > > > > unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kprobe,
-> > > > > and bpf (and maybe also module text) all have the same requirements.
-> > > > > Did I miss something?
-> > > >
-> > > > It's enough to have one architecture with different constrains for kprobes
-> > > > and bpf to warrant a type for each.
-> > >
-> > > AFAICT, some of these constraints can be changed without too much work.
+> > > When I said "If you feel the need to put them in a special group, thi=
+s
+> > > is fine by me.",
+> > > this was really about partitioning the existing enum into groups, if
+> > > you prefer having a group of 'RES reasons'
 > >
-> > But why?
-> > I honestly don't understand what are you trying to optimize here. A few
-> > lines of initialization in execmem_info?
-> 
-> IIUC, having separate EXECMEM_BPF and EXECMEM_KPROBE makes it
-> harder for bpf and kprobe to share the same ROX page. In many use cases,
-> a 2MiB page (assuming x86_64) is enough for all BPF, kprobe, ftrace, and
-> module text. It is not efficient if we have to allocate separate pages for each
-> of these use cases. If this is not a problem, the current approach works.
+> > Are you suggesting copying what we need from enum skb_drop_reason{} to
+> > enum sk_rst_reason{}? Why not reusing them directly. I have no idea
+> > what the side effect of cast conversion itself is?
+>
+> Sorry that I'm writing this email. I'm worried my statement is not
+> that clear, so I write one simple snippet which can help me explain
+> well :)
+>
+> Allow me give NO_SOCKET as an example:
+> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+> index e63a3bf99617..2c9f7364de45 100644
+> --- a/net/ipv4/icmp.c
+> +++ b/net/ipv4/icmp.c
+> @@ -767,6 +767,7 @@ void __icmp_send(struct sk_buff *skb_in, int type,
+> int code, __be32 info,
+>         if (!fl4.saddr)
+>                 fl4.saddr =3D htonl(INADDR_DUMMY);
+>
+> +       trace_icmp_send(skb_in, type, code);
+>         icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
+>  ende:
+>         ip_rt_put(rt);
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index 1e650ec71d2f..d5963831280f 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -2160,6 +2160,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
+>  {
+>         struct net *net =3D dev_net(skb->dev);
+>         enum skb_drop_reason drop_reason;
+> +       enum sk_rst_reason rst_reason;
+>         int sdif =3D inet_sdif(skb);
+>         int dif =3D inet_iif(skb);
+>         const struct iphdr *iph;
+> @@ -2355,7 +2356,8 @@ int tcp_v4_rcv(struct sk_buff *skb)
+>  bad_packet:
+>                 __TCP_INC_STATS(net, TCP_MIB_INERRS);
+>         } else {
+> -               tcp_v4_send_reset(NULL, skb);
+> +               rst_reason =3D RST_REASON_NO_SOCKET;
+> +               tcp_v4_send_reset(NULL, skb, rst_reason);
+>         }
+>
+>  discard_it:
+>
+> As you can see, we need to add a new 'rst_reason' variable which
+> actually is the same as drop reason. They are the same except for the
+> enum type... Such rst_reasons/drop_reasons are all over the place.
+>
+> Eric, if you have a strong preference, I can do it as you said.
+>
+> Well, how about explicitly casting them like this based on the current
+> series. It looks better and clearer and more helpful to people who is
+> reading codes to understand:
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index 461b4d2b7cfe..eb125163d819 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -1936,7 +1936,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *=
+skb)
+>         return 0;
+>
+>  reset:
+> -       tcp_v4_send_reset(rsk, skb, (u32)reason);
+> +       tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
+>  discard:
+>         kfree_skb_reason(skb, reason);
+>         /* Be careful here. If this function gets more complicated and
 
-The caching of large ROX pages does not need to be per type. 
+It makes no sense to declare an enum sk_rst_reason and then convert it
+to drop_reason
+or vice versa.
 
-In the POC I've posted for caching of large ROX pages on x86 [1], the cache is
-global and to make kprobes and bpf use it it's enough to set a flag in
-execmem_info.
+Next thing you know, compiler guys will add a new -Woption that will
+forbid such conversions.
 
-[1] https://lore.kernel.org/all/20240411160526.2093408-1-rppt@kernel.org
+Please add to tcp_v4_send_reset() an skb_drop_reason, not a new enum.
 
-> Thanks,
-> Song
+skb_drop_reason are simply values that are later converted to strings...
 
--- 
-Sincerely yours,
-Mike.
+So : Do not declare a new enum.
