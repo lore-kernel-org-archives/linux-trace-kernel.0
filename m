@@ -1,111 +1,68 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA5813D294
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Apr 2024 22:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E59439B
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 20 Apr 2024 01:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713565436; cv=none; b=btrZNGmp3b56+ZJu/9nkJFX1ntmQP+ZEztAzGdbi62wjXvW0oy/GBY9TFa15mhPG9fTmWQP8voi2meFfRVhuT3DEya8CMFPHRmcIwm7t7HRhhovYD4SQgEi9vtMnCKWo4a/gualPhNeKV04r3BgsCtsGK+Lkt1MhPVfpwYuyuFw=
+	t=1713577260; cv=none; b=ByhJvbeevLoMGOkJW67nMEgKca+0vvgOKr2bkOZSRI+AglKZp1MURL0mHt456vLicyWwCkYEoT5Woh57HMY+iDIUrr/YwihevBH8O8+PryJYCH2upO6PnigGSxzsvYF2TXc2jKjOltY23oaNWqj3OJWosfYZR4sE2pYMhq3mJP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713565436; c=relaxed/simple;
-	bh=VD6QFxX1Xd3DNVIOsaev//o7h4mZlv5eWXjCnxaWhik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsi+FGgJkE9C03Yx1QJ628FHssX//QOEHsMGcvI1EzYBGk2AyFG7zgZ2qaQLT0+B+OKpvjWKbewBNzdoHhpx+aCZAShhZKb33YEJKJR5QO/ES7ubzCRctdBJL3zJ/CsUZvNM0HlVVRNjWb2WKO0rUW3lKf5GsY3YwUe/Ldz9qfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P8isnNkf; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P8isnNkf"
-Date: Fri, 19 Apr 2024 22:23:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713565432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mthBWOOhcNSWoMZhMTAfzR7XGep2Qks53Rpg12wvEhs=;
-	b=P8isnNkfBYXWB0pGZ4e76KozKbuIPo6rHG7Ox+d9b31tlskAlwzX5Fiy922x3848sQHdds
-	2boqaE4bF1mMbPeod2X267+67KV2A02qKBDa6v3fbd7lZbgPblznjJvZe8hzyomSxDd6nH
-	88u9gjkSLzKAR6O3WgIDpbW6x4ZMNao=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: James Houghton <jthoughton@google.com>
-Cc: David Matlack <dmatlack@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Yu Zhao <yuzhao@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shaoqin Huang <shahuang@redhat.com>, Gavin Shan <gshan@redhat.com>,
-	Ricardo Koller <ricarkol@google.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	David Rientjes <rientjes@google.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] mm/kvm: Improve parallelism for access bit
- harvesting
-Message-ID: <ZiLu72SZ3tl_Cdvm@linux.dev>
-References: <20240401232946.1837665-1-jthoughton@google.com>
- <ZhmAR1akBHjvZ9_4@google.com>
- <CADrL8HW+4Yq-wBr1+DzJvSwRRL_hqt5RaCCLgOQndPGUqoX+Rg@mail.gmail.com>
+	s=arc-20240116; t=1713577260; c=relaxed/simple;
+	bh=DsGeZs4RjAQkK+rxQXK9DtMDsEc3sAc28gxsRD41EuE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U/xReI6blANniqvcWF9NUHCoAGLbaEe6mQ8rTzoAS60W+BkjzqZ0VsdLPcsD4VmyZ8Gg5hmj/GojqBHZSpui5ZrQifq4zOVNb1RKW+7RueDh38WV7n3fh66a4/r/TBmg07lMp0wIEZm5scelpJDrUDFweZ4u61y1r0i0pu6RNdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05D4C072AA;
+	Sat, 20 Apr 2024 01:40:58 +0000 (UTC)
+Date: Fri, 19 Apr 2024 21:40:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Bang Li" <libang.li@antgroup.com>
+Cc: mhiramat@kernel.org, <mark.rutland@arm.com>,
+ <mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>,
+ <libang.linux@gmail.com>
+Subject: Re: [PATCH] ftrace: Replace ftrace_disabled variable with
+ ftrace_is_dead function
+Message-ID: <20240419214054.688d624e@rorschach.local.home>
+In-Reply-To: <20240419143844.97847-1-libang.li@antgroup.com>
+References: <20240419143844.97847-1-libang.li@antgroup.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADrL8HW+4Yq-wBr1+DzJvSwRRL_hqt5RaCCLgOQndPGUqoX+Rg@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 19, 2024 at 01:57:03PM -0700, James Houghton wrote:
-> On Fri, Apr 12, 2024 at 11:41 AM David Matlack <dmatlack@google.com> wrote:
-> >
-> > On 2024-04-01 11:29 PM, James Houghton wrote:
-> > > This patchset adds a fast path in KVM to test and clear access bits on
-> > > sptes without taking the mmu_lock. It also adds support for using a
-> > > bitmap to (1) test the access bits for many sptes in a single call to
-> > > mmu_notifier_test_young, and to (2) clear the access bits for many ptes
-> > > in a single call to mmu_notifier_clear_young.
-> >
-> > How much improvement would we get if we _just_ made test/clear_young
-> > lockless on x86 and hold the read-lock on arm64? And then how much
-> > benefit does the bitmap look-around add on top of that?
+On Fri, 19 Apr 2024 22:38:44 +0800
+"Bang Li" <libang.li@antgroup.com> wrote:
 
-Thanks David for providing the suggestion.
+> Use the existing function ftrace_is_dead to replace the variable to make
+> the code clearer.
+> 
+> Signed-off-by: Bang Li <libang.li@antgroup.com>
+> ---
+>  kernel/trace/ftrace.c | 46 +++++++++++++++++++++----------------------
+>  1 file changed, 23 insertions(+), 23 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 50ca4d4f8840..4a08c79db677 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2693,7 +2693,7 @@ void __weak ftrace_replace_code(int mod_flags)
+>  	int schedulable = mod_flags & FTRACE_MODIFY_MAY_SLEEP_FL;
+>  	int failed;
+>  
+> -	if (unlikely(ftrace_disabled))
+> +	if (unlikely(ftrace_is_dead()))
+>  		return;
+>  
 
-> I don't have these results right now. For the next version I will (1)
-> separate the series into the locking change and the bitmap change, and
-> I will (2) have performance data for each change separately. It is
-> conceivable that the bitmap change should just be considered as a
-> completely separate patchset.
+NACK!
 
-That'd be great. Having the performance numbers will make it even more
-compelling, but I'd be tempted to go for the lock improvement just
-because it doesn't add any new complexity and leverages existing patterns
-in the architectures that people seem to want improvements for.
+ftrace_is_dead() is only there to make the static variable
+"ftrace_disabled" available for code outside of ftrace.c. In ftrace.c,
+it is perfectly fine to use ftrace_disabled.
 
-The bitmap interface, OTOH, is rather complex. At least the current
-implementation breaks some of the isolation we have between the MMU code
-and the page table walker library on arm64, which I'm not ecstatic about.
-It _could_ be justified by a massive performance uplift over locking, but
-it'd have to be a sizable win.
-
--- 
-Thanks,
-Oliver
+-- Steve
