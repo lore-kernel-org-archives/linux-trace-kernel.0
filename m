@@ -1,167 +1,265 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676CC14273;
-	Sat, 20 Apr 2024 10:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DC0625;
+	Sat, 20 Apr 2024 12:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713610428; cv=none; b=dhiY3/x0/9/8c2XF3wZ3TuyZQtQSeoHqlsIJIg/Hgw9p3R4PBClSUWy2l0eIP2ae8MC5Y5E2CmmKKfdMzSSd0l7HaFbQMyvUaF2IxqBx1YPh/9YevN9N/+D6BvVZ9d9/aHcKceuFFeBOa1zEn/loWPRDysDt549816haSrqwOKI=
+	t=1713617456; cv=none; b=kNOQ2QB30uCfT45LTjOOsM/mMVqDZG2zN8m545pAfMF1PJ4lXYPL/0vfnb611S1QhnwBzvEWG0C7Bfj/lfxSjOkvSASCzYc+hQizGbD0MUgr5rDJyLSW0K3H57rt3PWvWH8N18Pva+zdhSqJVX5g3i9Qk9Lqv5sFN/yUbukFL/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713610428; c=relaxed/simple;
-	bh=SM7VfRahGBLcoMQTiuF9XwON0oAIQm3UPvX2eiqyDXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B379p1/kc4juQFlkHH+3LJhZad49RSBm76RIHBkLVYifKzVKHEa96448eyXSnKi4w/TAZFTFpNipR/I9vPkm5C2+2oR/halV7ENDHl6/5mlL/V/TweTfv1cOIZGDJczKd52N/dDx8B+KIueL4VTLH5Jp94MLgvJcranozjJ/qiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3eyeiLy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713617456; c=relaxed/simple;
+	bh=289IG/8ie1lhiRC5p5kwvp2q+FCe7+CmmeFkid4uKM0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=J8gBJhgreDwTr9oi8Bks1TlxKUz55AKTVjqXyTD+oOxHCj51f5/NGceEOCPnV7i7rPZSpB2YR4TOlLcQbGeiEOvxQeCaBeUU96KYIyObAbN/xYr4Uy69Emndjfh43KA7410xEGvJeqFeZuDQNNfyFa7ZDnrfwBEY7HDiW7IBo9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWiV0WbE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3eyeiLy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F744C072AA;
-	Sat, 20 Apr 2024 10:53:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWiV0WbE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52EF9C072AA;
+	Sat, 20 Apr 2024 12:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713610427;
-	bh=SM7VfRahGBLcoMQTiuF9XwON0oAIQm3UPvX2eiqyDXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X3eyeiLylPAUkLSbyyrlGHXzvYV/bgYpLPhV7vw8xijwr2D1MExbuRdRactesAT8X
-	 zdt7h71F5DqBQu/eRbhv/5Y0Rre5yGM+3/QnKDXleUxYNRTZmWf1Vo3WU+1+o9lafL
-	 JRP9zqL5lB14IFxVzQv/2Y2x11fPGHO1UTIDooMmj7MCyEzwQSZ7FSoL/8Q352iA+B
-	 xJtavt8SFXQQ13eBr6UXoSA7CP3oDA+2zBywG990wKdhsiRvE/zNe3PUQwDEQ+0Y6e
-	 BUuBnLZ3CWf9tTcjXso+bnm9SeKBHDu3KkkjgF+H+J+dCs6K3ICndd93HsxM2BWoMW
-	 e8kLY5pax56uw==
-Date: Sat, 20 Apr 2024 13:52:27 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v4 14/15] kprobes: remove dependency on CONFIG_MODULES
-Message-ID: <ZiOea81saMutayxt@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-15-rppt@kernel.org>
- <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
- <ZiKSffcTiP2c6fbs@kernel.org>
- <321def3e-8bf1-4920-92dd-037b20f1272d@csgroup.eu>
- <ZiNv0jY7Ebw75iQl@kernel.org>
- <20240420181500.07b39c77f1ca086e8a5161b4@kernel.org>
+	s=k20201202; t=1713617455;
+	bh=289IG/8ie1lhiRC5p5kwvp2q+FCe7+CmmeFkid4uKM0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZWiV0WbEPE20fapCabZLXpoPHMdlaE5IgIOh+Ck36yRWt+qtmO+zwqLRHoAAGLSYk
+	 f+gdziBs0V+HxyWLlzPgQSBSHa+S7dHnD172p5cEka1ICZe89FiMsHP/cQ2HpSuQ2S
+	 PBz8NrHCoKV+7+TnJXCD4e6gawRah21Kww1JroVl6ORRjTllqiZbmaMmItzXdxcLGi
+	 NjArU+gR7QHSNgoQ0ZiZB9j/dpjIU16VeF74ReuvHhUXShP2+/quVK3NUDKkl9LjOr
+	 Fo4GIQJgZNZx/Rl+KuvkqG5ILIOO2+cyXGqM+rLYSYjhH9yrOomZGy1jEuttr14Mmg
+	 jWQ7PM2odQSgw==
+Date: Sat, 20 Apr 2024 21:50:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ dcook@linux.microsoft.com
+Subject: Re: [PATCH 1/2] tracing/user_events: Fix non-spaced field matching
+Message-Id: <20240420215052.1f806c8acb5f99ec2f63945c@kernel.org>
+In-Reply-To: <20240419211334.GA7774-beaub@linux.microsoft.com>
+References: <20240416224102.734-1-beaub@linux.microsoft.com>
+	<20240416224102.734-2-beaub@linux.microsoft.com>
+	<20240419113305.7b0ae2b11395eec16b5c15b6@kernel.org>
+	<20240419211334.GA7774-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240420181500.07b39c77f1ca086e8a5161b4@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 20, 2024 at 06:15:00PM +0900, Masami Hiramatsu wrote:
-> On Sat, 20 Apr 2024 10:33:38 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > On Fri, Apr 19, 2024 at 03:59:40PM +0000, Christophe Leroy wrote:
-> > > 
-> > > 
-> > > Le 19/04/2024 à 17:49, Mike Rapoport a écrit :
-> > > > Hi Masami,
-> > > > 
-> > > > On Thu, Apr 18, 2024 at 06:16:15AM +0900, Masami Hiramatsu wrote:
-> > > >> Hi Mike,
-> > > >>
-> > > >> On Thu, 11 Apr 2024 19:00:50 +0300
-> > > >> Mike Rapoport <rppt@kernel.org> wrote:
-> > > >>
-> > > >>> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> > > >>>
-> > > >>> kprobes depended on CONFIG_MODULES because it has to allocate memory for
-> > > >>> code.
-> > > >>>
-> > > >>> Since code allocations are now implemented with execmem, kprobes can be
-> > > >>> enabled in non-modular kernels.
-> > > >>>
-> > > >>> Add #ifdef CONFIG_MODULE guards for the code dealing with kprobes inside
-> > > >>> modules, make CONFIG_KPROBES select CONFIG_EXECMEM and drop the
-> > > >>> dependency of CONFIG_KPROBES on CONFIG_MODULES.
-> > > >>
-> > > >> Thanks for this work, but this conflicts with the latest fix in v6.9-rc4.
-> > > >> Also, can you use IS_ENABLED(CONFIG_MODULES) instead of #ifdefs in
-> > > >> function body? We have enough dummy functions for that, so it should
-> > > >> not make a problem.
-> > > > 
-> > > > The code in check_kprobe_address_safe() that gets the module and checks for
-> > > > __init functions does not compile with IS_ENABLED(CONFIG_MODULES).
-> > > > I can pull it out to a helper or leave #ifdef in the function body,
-> > > > whichever you prefer.
-> > > 
-> > > As far as I can see, the only problem is MODULE_STATE_COMING.
-> > > Can we move 'enum module_state' out of #ifdef CONFIG_MODULES in module.h  ?
+On Fri, 19 Apr 2024 14:13:34 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
+
+> On Fri, Apr 19, 2024 at 11:33:05AM +0900, Masami Hiramatsu wrote:
+> > On Tue, 16 Apr 2024 22:41:01 +0000
+> > Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > > 
-> > There's dereference of 'struct module' there:
-> >  
-> > 		(*probed_mod)->state != MODULE_STATE_COMING) {
-> > 			...
-> > 		}
+> > > When the ABI was updated to prevent same name w/different args, it
+> > > missed an important corner case when fields don't end with a space.
+> > > Typically, space is used for fields to help separate them, like
+> > > "u8 field1; u8 field2". If no spaces are used, like
+> > > "u8 field1;u8 field2", then the parsing works for the first time.
+> > > However, the match check fails on a subsequent register, leading to
+> > > confusion.
+> > > 
+> > > This is because the match check uses argv_split() and assumes that all
+> > > fields will be split upon the space. When spaces are used, we get back
+> > > { "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
+> > > This causes a mismatch, and the user program gets back -EADDRINUSE.
+> > > 
+> > > Add a method to detect this case before calling argv_split(). If found
+> > > force a space after the field separator character ';'. This ensures all
+> > > cases work properly for matching.
+> > > 
+> > > With this fix, the following are all treated as matching:
+> > > u8 field1;u8 field2
+> > > u8 field1; u8 field2
+> > > u8 field1;\tu8 field2
+> > > u8 field1;\nu8 field2
 > > 
-> > so moving out 'enum module_state' won't be enough.
+> > Sounds good to me. I just have some nits.
+> > 
+> > > 
+> > > Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
+> > > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> > > ---
+> > >  kernel/trace/trace_events_user.c | 88 +++++++++++++++++++++++++++++++-
+> > >  1 file changed, 87 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> > > index 70d428c394b6..9184d3962b2a 100644
+> > > --- a/kernel/trace/trace_events_user.c
+> > > +++ b/kernel/trace/trace_events_user.c
+> > > @@ -1989,6 +1989,92 @@ static int user_event_set_tp_name(struct user_event *user)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +/*
+> > > + * Counts how many ';' without a trailing space are in the args.
+> > > + */
+> > > +static int count_semis_no_space(char *args)
+> > > +{
+> > > +	int count = 0;
+> > > +
+> > > +	while ((args = strchr(args, ';'))) {
+> > > +		args++;
+> > > +
+> > > +		if (!isspace(*args))
+> > > +			count++;
+> > > +	}
+> > > +
+> > > +	return count;
+> > > +}
+> > > +
+> > > +/*
+> > > + * Copies the arguments while ensuring all ';' have a trailing space.
+> > > + */
+> > > +static char *fix_semis_no_space(char *args, int count)
+> > 
+> > nit: This name does not represent what it does. 'insert_space_after_semis()'
+> > is more self-described.
+> > 
 > 
-> Hmm, this part should be inline functions like;
+> Sure, will fix in a v2.
 > 
-> #ifdef CONFIG_MODULES
-> static inline bool module_is_coming(struct module *mod)
-> {
-> 	return mod->state == MODULE_STATE_COMING;
-> }
-> #else
-> #define module_is_coming(mod) (false)
-
-I'd prefer
-
-static inline module_is_coming(struct module *mod)
-{
-	return false;
-}
-
-> #endif
->
-> Then we don't need the enum.
-> Thank you,
+> > > +{
+> > > +	char *fixed, *pos;
+> > > +	char c, last;
+> > > +	int len;
+> > > +
+> > > +	len = strlen(args) + count;
+> > > +	fixed = kmalloc(len + 1, GFP_KERNEL);
+> > > +
+> > > +	if (!fixed)
+> > > +		return NULL;
+> > > +
+> > > +	pos = fixed;
+> > > +	last = '\0';
+> > > +
+> > > +	while (len > 0) {
+> > > +		c = *args++;
+> > > +
+> > > +		if (last == ';' && !isspace(c)) {
+> > > +			*pos++ = ' ';
+> > > +			len--;
+> > > +		}
+> > > +
+> > > +		if (len > 0) {
+> > > +			*pos++ = c;
+> > > +			len--;
+> > > +		}
+> > > +
+> > > +		last = c;
+> > > +	}
+> > 
+> > nit: This loop can be simpler, because we are sure fixed has enough length;
+> > 
+> > /* insert a space after ';' if there is no space. */
+> > while(*args) {
+> > 	*pos = *args++;
+> > 	if (*pos++ == ';' && !isspace(*args))
+> > 		*pos++ = ' ';
+> > }
+> > 
 > 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I was worried that if count_semis_no_space() ever had different logic
+> (maybe after this commit) that it could cause an overflow if the count
+> was wrong, etc.
+> 
+> I don't have an issue making it shorter, but I was trying to be more on
+> the safe side, since this isn't a fast path (event register).
+
+OK, anyway current code looks correct. But note that I don't think
+"pos++; len--;" is safer, since it is not atomic. This pattern
+easily loose "len--;" in my experience. So please carefully use it ;)
+
+> 
+> > > +
+> > > +	/*
+> > > +	 * len is the length of the copy excluding the null.
+> > > +	 * This ensures we always have room for a null.
+> > > +	 */
+> > > +	*pos = '\0';
+> > > +
+> > > +	return fixed;
+> > > +}
+> > > +
+> > > +static char **user_event_argv_split(char *args, int *argc)
+> > > +{
+> > > +	/* Count how many ';' without a trailing space */
+> > > +	int count = count_semis_no_space(args);
+> > > +
+> > > +	if (count) {
+> > 
+> > nit: it is better to exit fast, so 
+> > 
+> > 	if (!count)
+> > 		return argv_split(GFP_KERNEL, args, argc);
+> > 
+> > 	...
+> 
+> Sure, will fix in a v2.
+> 
+> > 
+> > Thank you,
+> > 
+> > OT: BTW, can this also simplify synthetic events?
+> > 
+> 
+> I'm not sure, I'll check when I have some time. I want to get this fix
+> in sooner rather than later.
+
+Ah, nevermind. Synthetic event parses the field by strsep(';') first
+and argv_split(). So it does not have this issue.
+
+Thank you,
+
+> 
+> Thanks,
+> -Beau
+> 
+> > > +		/* We must fixup 'field;field' to 'field; field' */
+> > > +		char *fixed = fix_semis_no_space(args, count);
+> > > +		char **split;
+> > > +
+> > > +		if (!fixed)
+> > > +			return NULL;
+> > > +
+> > > +		/* We do a normal split afterwards */
+> > > +		split = argv_split(GFP_KERNEL, fixed, argc);
+> > > +
+> > > +		/* We can free since argv_split makes a copy */
+> > > +		kfree(fixed);
+> > > +
+> > > +		return split;
+> > > +	}
+> > > +
+> > > +	/* No fixup is required */
+> > > +	return argv_split(GFP_KERNEL, args, argc);
+> > > +}
+> > > +
+> > >  /*
+> > >   * Parses the event name, arguments and flags then registers if successful.
+> > >   * The name buffer lifetime is owned by this method for success cases only.
+> > > @@ -2012,7 +2098,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
+> > >  		return -EPERM;
+> > >  
+> > >  	if (args) {
+> > > -		argv = argv_split(GFP_KERNEL, args, &argc);
+> > > +		argv = user_event_argv_split(args, &argc);
+> > >  
+> > >  		if (!argv)
+> > >  			return -ENOMEM;
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 
 -- 
-Sincerely yours,
-Mike.
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
