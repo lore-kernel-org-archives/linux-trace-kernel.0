@@ -1,57 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03523FE4B;
-	Sun, 21 Apr 2024 19:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C704C97;
+	Mon, 22 Apr 2024 03:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713728620; cv=none; b=u490vPHZW1I1WmbaHw8rqyp9+/N6Ofljn3x1kHJZicPA6KnvRo8vCSjVCevn8xWYRGe54jJUOFGZw34joy1TBudQYHelcVhgwB5Qv3MIyeQ65qBpqHSyUgJt4DEtQfCWNIkbNZj9rvMNxgpACDuBXNUKz4f1Je24OkiyxjSfVVc=
+	t=1713754880; cv=none; b=DWJY/b5zd3qK1kZ4zs2f/ZCfBc4AG3CzdTunfENdO/mTTS5G37va+ZQFwdxb3aryRBjeSH7mT4uoG+TqgTOTJGDG9HUBX7CF0KQRiYEmamYCQpQ686zpGVq7OQoYOzGJbOLxvK62YmAGrqFly/oP1qNhdyhp0+5X0bNenG/Lyeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713728620; c=relaxed/simple;
-	bh=iIPEN5LzK/t1QT6usY68cfJg0ttPxsTTf/Tw7WiSAXk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=svfAwqnSzm64RBD601b3R1oE+maLgdRqw+cnwGOlV7vQaN6XnNFJMxVN0/Fjecgr+uWlsNpcl8GH+5iDy6giAMfYM3mYg1pVNUbpGBUgHx55NFoZ1dARjcjJxnkLfMvMmsIo7qofcJ12Yif2mV4KOxUhOlBJbWtz5AH7hBanE3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpN+maUP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713754880; c=relaxed/simple;
+	bh=0KtavVRG3hlUNjZicNl7ABD032zI5PIuaPRFjowr1nc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F9zhsyMcRUu438n1NjeSNU5Sm0QAugQ8onEM2U6nXBtD2kcyr7tiB2Bq8ABoV5X5aiZZxTde7lO64vJUMaXeayXqjlSazWNhMYPW4X8W95r0k+fPNfbSvFJK6Vnti40sVewB/00djFYW0h8ugvmL/d9+rKPY9C/cl7BvVS5JShk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E39za2Ps; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpN+maUP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1710C113CE;
-	Sun, 21 Apr 2024 19:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713728620;
-	bh=iIPEN5LzK/t1QT6usY68cfJg0ttPxsTTf/Tw7WiSAXk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QpN+maUPquceVNspLlWizuG9q7VdrvDmDtuZbIYKsEnKOWuvxtDxJqolXNmn7FF0U
-	 Cx2E5dlNsZ0S+S2/NCYWFZatGuz3DQyt6yVPBN/MLrohxXEe/lA/K3CuZN9mo5MZLs
-	 KdAS3yxsbnvWfzhWJ5N7tf88Z7BG1wlTbJ6QHI/G2p8EeWCnXcprJGrZK4LilrYzDS
-	 ybOP9AUBOLIS0R/kG7x6aOtnRqR5Mx9jDLVjTw1MPKGUUUJzxsCFY7qSyEDGmV4MtX
-	 O4ExJ1o8TcmhuAi/87nfPyaDrbsotAjJuhdET/fwVGTf8XKCOjoLL+P2DlUGLUZ7qH
-	 L6whLvqu6lkog==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E39za2Ps"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so2904339a12.3;
+        Sun, 21 Apr 2024 20:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713754878; x=1714359678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5XljG5YRDxxuTbg/PB8CT6pUwK7ZygQaCcZH+FSSuM8=;
+        b=E39za2PsXiPu6m6UlCsQlvkC2ngzZpZgOXAjf2AV/G4KdHwG3Rj8h3t634x5dWuDip
+         wiGdWbWtbQ5SUEl9AdibSOXqnnTfrDVCEgwIvq6lgK1aOatRxMI7JPk+WNm347OjGcnW
+         /WWJBVJOHS6SJ19CPhBtrJOBaFt5JqwWUkD3QfYszyr2CBdkL+3WEdDxreV6RL7nFt76
+         PZ54MOg0E8vDBIT7+XbgfAy8RBtSTBj2eUZvpb0lZCIyhTUsHevO1OfKIFXLN0ljngO4
+         zlXyUhwwWOvf+5nhS+L5L1oqw6s9fSMLpf1R+hSRvkEV1eTGiy8tY38ph0UfV7zTAABR
+         PGIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713754878; x=1714359678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5XljG5YRDxxuTbg/PB8CT6pUwK7ZygQaCcZH+FSSuM8=;
+        b=g2onAMIW3q40MXdKPU/jt/+002/7opLE2RmYYqCpk/XrZA6FbyKGDKoo03r8aXGgDw
+         euT+kTanhPSZoFTm1jrOKbx05Ww9lbV48CdZSL0eAEx6mjlH5EYvPNJ0QxVkybPZRpjr
+         XnIk3yKQ3N8i4u64Md4gpg2w+6JwBlscWcchBXsZZBQ65CtL12gB/gZCFz3RIq2Kf9AJ
+         CPOqO3bVIc9kmrnQh//YXfTOXRHbzZivgw6Iil/vb1NbLosdOsVpxJiGWKMMHGqh9cB+
+         spVJkGhQqOkM790OD3yCQfdFbNTMcXxhhiuZeacj3xrju+JcYcfVS6pJxgTByULvLJy4
+         TpZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVO22Nm4+PS5NjQNpQY+V8OyUPi9C8DXpMCuUxf62anBpiOryGDkHMmsd6s/2FVcU9kG9F7cec8Znun9tFTqmOnc0rNAKGdsAK4ZJErSLA+e3/mP+zgw6fve/6trqFOXj6DXQ4/1gJaZW6m
+X-Gm-Message-State: AOJu0YwiKOdSGBNZBiY6fx8ek4FWtetzVY9DTfSR/ywKLpDXYkzyN4o4
+	dCb+cX5vpJFd6Z+N/A+1ZOok91yMCe/Tn/35oys0EwV+zfIKaO3frto+Fnq3
+X-Google-Smtp-Source: AGHT+IFcDVA4AS/+M1qBmfi/G7Sn24v8ZXC4grTDTYRt3A28mIGhXAJhQdX7Heoup0onIKOJeZljEA==
+X-Received: by 2002:a17:902:f644:b0:1e8:c995:4135 with SMTP id m4-20020a170902f64400b001e8c9954135mr9985227plg.56.1713754878155;
+        Sun, 21 Apr 2024 20:01:18 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id b5-20020a170902d60500b001e421f98ebdsm6966009plp.280.2024.04.21.20.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Apr 2024 20:01:17 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	dsahern@kernel.org,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	atenart@kernel.org
+Cc: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 7/7] man2: Add uretprobe syscall page
-Date: Sun, 21 Apr 2024 21:42:06 +0200
-Message-ID: <20240421194206.1010934-8-jolsa@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240421194206.1010934-1-jolsa@kernel.org>
-References: <20240421194206.1010934-1-jolsa@kernel.org>
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next v7 0/7] Implement reset reason mechanism to detect
+Date: Mon, 22 Apr 2024 11:01:02 +0800
+Message-Id: <20240422030109.12891-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,60 +80,92 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adding man page for new uretprobe syscall.
+From: Jason Xing <kernelxing@tencent.com>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- man2/uretprobe.2 | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 man2/uretprobe.2
+In production, there are so many cases about why the RST skb is sent but
+we don't have a very convenient/fast method to detect the exact underlying
+reasons.
 
-diff --git a/man2/uretprobe.2 b/man2/uretprobe.2
-new file mode 100644
-index 000000000000..c0343a88bb57
---- /dev/null
-+++ b/man2/uretprobe.2
-@@ -0,0 +1,40 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+On x86_64 architecture the kernel is using uretprobe syscall to trigger
-+uprobe return probe consumers instead of using standard breakpoint instruction.
-+The reason is that it's much faster to do syscall than breakpoint trap
-+on x86_64 architecture.
-+
-+The uretprobe syscall is not supposed to be called directly by user, it's allowed
-+to be invoked only through user space trampoline provided by kernel.
-+When called from outside of this trampoline, the calling process will receive
-+.BR SIGILL .
-+
-+.SH RETURN VALUE
-+.BR uretprobe()
-+return value is specific for given architecture.
-+
-+.SH VERSIONS
-+This syscall is not specified in POSIX,
-+and details of its behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH NOTES
-+.BR uretprobe()
-+exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are specific for given architecture.
+RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+and active kind (like tcp_send_active_reset()). The former can be traced
+carefully 1) in TCP, with the help of drop reasons, which is based on
+Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+RFC 8684. The latter is relatively independent, which should be
+implemented on our own, such as active reset reasons which can not be
+replace by skb drop reason or something like this.
+
+In this series, I focus on the fundamental implement mostly about how
+the rstreason mechnism works and give the detailed passive part as an
+example, not including the active reset part. In future, we can go
+further and refine those NOT_SPECIFIED reasons.
+
+Here are some examples when tracing:
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NOT_SPECIFIED
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NO_SOCKET
+
+[1]
+Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com/
+
+v7
+Link: https://lore.kernel.org/all/20240417085143.69578-1-kerneljasonxing@gmail.com/
+1. get rid of enum casts which could bring potential issues (Eric)
+2. use switch-case method to map between reset reason in MPTCP and sk reset
+reason (Steven)
+3. use switch-case method to map between skb drop reason and sk reset
+reason
+
+v6
+1. add back casts, or else they are treated as error.
+
+v5
+Link: https://lore.kernel.org/all/20240411115630.38420-1-kerneljasonxing@gmail.com/
+1. address format issue (like reverse xmas tree) (Eric, Paolo)
+2. remove unnecessary casts. (Eric)
+3. introduce a helper used in mptcp active reset. See patch 6. (Paolo)
+
+v4
+Link: https://lore.kernel.org/all/20240409100934.37725-1-kerneljasonxing@gmail.com/
+1. passing 'enum sk_rst_reason' for readability when tracing (Antoine)
+
+v3
+Link: https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@gmail.com/
+1. rebase (mptcp part) and address what Mat suggested.
+
+v2
+Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
+1. rebase against the latest net-next tree
+
+
+Jason Xing (7):
+  net: introduce rstreason to detect why the RST is sent
+  rstreason: prepare for passive reset
+  rstreason: prepare for active reset
+  tcp: support rstreason for passive reset
+  mptcp: support rstreason for passive reset
+  mptcp: introducing a helper into active reset logic
+  rstreason: make it work in trace world
+
+ include/net/request_sock.h |   4 +-
+ include/net/rstreason.h    | 144 +++++++++++++++++++++++++++++++++++++
+ include/net/tcp.h          |   3 +-
+ include/trace/events/tcp.h |  26 +++++--
+ net/dccp/ipv4.c            |  10 +--
+ net/dccp/ipv6.c            |  10 +--
+ net/dccp/minisocks.c       |   3 +-
+ net/ipv4/tcp.c             |  15 ++--
+ net/ipv4/tcp_ipv4.c        |  15 ++--
+ net/ipv4/tcp_minisocks.c   |   3 +-
+ net/ipv4/tcp_output.c      |   5 +-
+ net/ipv4/tcp_timer.c       |   9 ++-
+ net/ipv6/tcp_ipv6.c        |  18 +++--
+ net/mptcp/protocol.c       |   2 +-
+ net/mptcp/protocol.h       |  11 +++
+ net/mptcp/subflow.c        |  27 +++++--
+ 16 files changed, 258 insertions(+), 47 deletions(-)
+ create mode 100644 include/net/rstreason.h
+
 -- 
-2.44.0
+2.37.3
 
