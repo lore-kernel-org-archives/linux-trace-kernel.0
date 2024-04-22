@@ -1,70 +1,47 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFE21509AB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Apr 2024 18:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1E9154427;
+	Mon, 22 Apr 2024 18:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713808904; cv=none; b=lVKIifjfvZAluUyiTyrNRTx55WEo3ri6dra4Qzt8WoPUpeOqShJ5+i63TNak+zcsP2cJuAuZ1UI0dUTi87goVtaYjbPEPEYoxWYCPWhi/kfEZayy7Qmo/z2XYPKYGPHocdwUQg7pwMqXpk+UCgYhwWHPYBgUS8NIE99oHL2639I=
+	t=1713809527; cv=none; b=denn9etGOC0BQegSueZwSvjWtg5Ig6bf+GEB2j/PdLveZtvLe9GTO/MrT3ChFTlpDGIdfyU5dwS1nCHeKPwOZywkXa0DAFn38r3/YKhyVx274jCoJIFXfXIP8oM9lnXbem8YeouFT5AdI60ol39frkSqINH+f7BAnTOmhqoJzBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713808904; c=relaxed/simple;
-	bh=YSfN8ueuyYYuzCX4lRljyWkmazGxEEUK3JL99PpNfEY=;
+	s=arc-20240116; t=1713809527; c=relaxed/simple;
+	bh=1MNA6BD/wkkFyMR6iFDbhB+dKlSGnsGlINodyvEQKg0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A74Yr+D5BeiuCTBtpcGoaT/3+sKjaHvrbi6MpsZMcW98+0oCDxO/0PCss/gNuFcofW/tnEiRW3puiZ9muD0VcEgmaJtBFLyPOxog0gFTfNtcdvnzwMDakfbEjxP3y1Y/y419SXCjeZ0fpUZXLVLVMPzc8M4GaLASTUewj+o4nVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eLFFJzKC; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SqCMB+r0Toooh88mRRFehLg/AdShgB9jMXcmYaRdCLYRn0acfyw3GW2z5XyOhaOuw7juk/xpACRzv2GJ+ADjBmaVBPB+CzoZ7HsSTcHAV4LkCPC33MUhG0PyH+HaXY4e8e/P3Ti56QNDZQnHFyB/o8IEDLERpj/MnYHSngL4Vew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=JqvJugGk; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eLFFJzKC"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3465921600dso4255558f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Apr 2024 11:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713808901; x=1714413701; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=shgVcXlk+FVX+bp2BEEUZI/jQ7HfqPQxw3MBWT1z4eE=;
-        b=eLFFJzKCJrQ+suKulS+eGKgZIzzUZmA4Bg79y4H7cF8wS8qN9fny9QikCEpVr0c8MT
-         OJ6kw4bu/PYUZUD1EsyaV+LKU1oOkvzG3bBDq5V7GMBhn7s5ykZtAoFiwKw4Rg/JROQf
-         Cf2RIo+vvPmbeItX5/cE4kuMWuYVnYjttZwnYqiCZMEX7dUXCK3NzdEW+ccbkeEXa8vZ
-         +7bNVOKrVTZyhaY1ViHRBdaj1hmJiAU40xwaqwG7ngzVDtVMqtpGlFUb3YhLYLBhNPF2
-         x68P3P9BcQnHeqG6hMfh/Y6br4hk7zZFcR9WgXLSNNLs/mCvqB5/7XpON1/2XlLxK9Lo
-         YGHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713808901; x=1714413701;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=shgVcXlk+FVX+bp2BEEUZI/jQ7HfqPQxw3MBWT1z4eE=;
-        b=HF/bbYxQhXuA+2t89B0+9C7EZxa5wfVT1ZJHDI7iVwEA+DWfd55r3+uZenn4KfnSX/
-         HmZr0TnsX1R/nsr2pKSpcRWr5K4pu3cietlIpyd2Mm2l59MGZ9QwiAyCivyTdl0kLD8+
-         amYNFerVJKjuwZd3dYSWvTn0gKek5syHi8gQK95Ez/EuJpwLf0IGwcf+c4jqbnYiuchG
-         O8g1bvOFlm/r2sYATm1mybo6tLE8oQxcso/cyw+OdbOoj5uDcXW583/Z73D1uaSNhWmj
-         qTjntpF4o6mZsb+YJ+C2eE+wK9r5JKgY8hVJzbBhkf8i4IjlvZXfu+l4fC1QcbAyaexC
-         W9DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaElJMQjv+NEcyB2ZwoEQgbmPGo9a9vznY2wOg0wGu7VUQWcHYawgYRb/HMuReDSmSmja7kZzmovRe0rC9j5W0tCnZ8VVgFBGwcZnisWWkfds/
-X-Gm-Message-State: AOJu0YyuGZ+TFwQDFU18aGp1SkY/G3E+KbU5fvXV4NiX3NowFT60eNmq
-	WfazwNUOONmuybWjoSw+Ccia0RdTLB+RD2yZF2SHyCzyJbdxbeL2WKArxx+2cQ==
-X-Google-Smtp-Source: AGHT+IE1x5f0XDD/zKcEj2pcGFDgnFjkg4FljkbTL4ZetbAyg3XH2QZFW68srkdrdsyfH3ihUuN/4w==
-X-Received: by 2002:adf:e392:0:b0:34a:7066:d2c6 with SMTP id e18-20020adfe392000000b0034a7066d2c6mr5764355wrm.50.1713808900564;
-        Mon, 22 Apr 2024 11:01:40 -0700 (PDT)
-Received: from google.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id f9-20020a0560001b0900b003456c693fa4sm12540223wrz.93.2024.04.22.11.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 11:01:40 -0700 (PDT)
-Date: Mon, 22 Apr 2024 19:01:36 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mike Rapoport <rppt@kernel.org>, mhiramat@kernel.org,
+	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="JqvJugGk"
+Received: from bender.morinfr.org (unknown [82.66.66.112])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id 6B5772003CC;
+	Mon, 22 Apr 2024 20:11:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
+	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=mmoOHxOmhH8xOg3t9ZcJpcTIHR4KgHsjfCJHduRGVbI=; b=JqvJugGk8i1bs0KPI3j4zKhZue
+	xw/nwMLl2RE2g6vM4gqUxnxI/VxJdDYNoidbzy79Bfm9wwUJqFmeDzfj8dlstX8cfQfqNDGTnHf/5
+	0BUf8pldaaW9psL2HSiiiYfL+m29Zu4rB/l1thm05wYgzpJm11H17gcmgMipfghQOYcI=;
+Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
+	(envelope-from <guillaume@morinfr.org>)
+	id 1ryy8s-0056Nh-26;
+	Mon, 22 Apr 2024 20:11:50 +0200
+Date: Mon, 22 Apr 2024 20:11:50 +0200
+From: Guillaume Morin <guillaume@morinfr.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Guillaume Morin <guillaume@morinfr.org>, oleg@redhat.com,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	rdunlap@infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <ZiamAPliL82FU-hC@google.com>
-References: <20240406173649.3210836-1-vdonnefort@google.com>
- <20240406173649.3210836-3-vdonnefort@google.com>
- <ZiDD-wdGIjOBcQ2U@kernel.org>
- <20240418234346.4b4cb4dc@rorschach.local.home>
+	muchun.song@linux.dev
+Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
+Message-ID: <ZiaoZlGc_8ZV3736@bender.morinfr.org>
+References: <ZiK50qob9yl5e0Xz@bender.morinfr.org>
+ <b70a3d3a-ea8b-4b20-964b-b019c146945a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -73,175 +50,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418234346.4b4cb4dc@rorschach.local.home>
+In-Reply-To: <b70a3d3a-ea8b-4b20-964b-b019c146945a@redhat.com>
 
-On Thu, Apr 18, 2024 at 11:43:46PM -0400, Steven Rostedt wrote:
-> On Thu, 18 Apr 2024 09:55:55 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> Hi Mike,
-> 
-> Thanks for doing this review!
-> 
-> > > +/**
-> > > + * struct trace_buffer_meta - Ring-buffer Meta-page description
-> > > + * @meta_page_size:	Size of this meta-page.
-> > > + * @meta_struct_len:	Size of this structure.
-> > > + * @subbuf_size:	Size of each sub-buffer.
-> > > + * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
-> > > + * @reader.lost_events:	Number of events lost at the time of the reader swap.
-> > > + * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
-> > > + * @reader.read:	Number of bytes read on the reader subbuf.
-> > > + * @flags:		Placeholder for now, 0 until new features are supported.
-> > > + * @entries:		Number of entries in the ring-buffer.
-> > > + * @overrun:		Number of entries lost in the ring-buffer.
-> > > + * @read:		Number of entries that have been read.
-> > > + * @Reserved1:		Reserved for future use.
-> > > + * @Reserved2:		Reserved for future use.
-> > > + */
-> > > +struct trace_buffer_meta {
-> > > +	__u32		meta_page_size;
-> > > +	__u32		meta_struct_len;
-> > > +
-> > > +	__u32		subbuf_size;
-> > > +	__u32		nr_subbufs;
-> > > +
-> > > +	struct {
-> > > +		__u64	lost_events;
-> > > +		__u32	id;
-> > > +		__u32	read;
-> > > +	} reader;
-> > > +
-> > > +	__u64	flags;
-> > > +
-> > > +	__u64	entries;
-> > > +	__u64	overrun;
-> > > +	__u64	read;
-> > > +
-> > > +	__u64	Reserved1;
-> > > +	__u64	Reserved2;  
-> > 
-> > Why do you need reserved fields? This structure always resides in the
-> > beginning of a page and the rest of the page is essentially "reserved".
-> 
-> So this code is also going to be used in arm's pkvm hypervisor code,
-> where it will be using these fields, but since we are looking at
-> keeping the same interface between the two, we don't want these used by
-> this interface.
-> 
-> We probably should add a comment about that.
-> 
-> > 
-> > > +};
-> > > +
-> > > +#endif /* _TRACE_MMAP_H_ */
-> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > index cc9ebe593571..793ecc454039 100644
-> > > --- a/kernel/trace/ring_buffer.c
-> > > +++ b/kernel/trace/ring_buffer.c  
-> > 
-> > ... 
-> > 
-> > > +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
-> > > +				   unsigned long *subbuf_ids)
-> > > +{
-> > > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> > > +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-> > > +	struct buffer_page *first_subbuf, *subbuf;
-> > > +	int id = 0;
-> > > +
-> > > +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
-> > > +	cpu_buffer->reader_page->id = id++;
-> > > +
-> > > +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
-> > > +	do {
-> > > +		if (WARN_ON(id >= nr_subbufs))
-> > > +			break;
-> > > +
-> > > +		subbuf_ids[id] = (unsigned long)subbuf->page;
-> > > +		subbuf->id = id;
-> > > +
-> > > +		rb_inc_page(&subbuf);
-> > > +		id++;
-> > > +	} while (subbuf != first_subbuf);
-> > > +
-> > > +	/* install subbuf ID to kern VA translation */
-> > > +	cpu_buffer->subbuf_ids = subbuf_ids;
-> > > +
-> > > +	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
-> > > +	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;  
-> > 
-> > Isn't this a single page?
-> 
-> One thing we are doing is to make sure that the subbuffers are aligned
-> by their size. If a subbuffer is 3 pages, it should be aligned on 3
-> page boundaries. This was something that Linus suggested.
-> 
-> > 
-> > > +	meta->meta_struct_len = sizeof(*meta);
-> > > +	meta->nr_subbufs = nr_subbufs;
-> > > +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-> > > +
-> > > +	rb_update_meta_page(cpu_buffer);
-> > > +}  
-> > 
-> > ...
-> > 
-> > > +#define subbuf_page(off, start) \
-> > > +	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
-> > > +
-> > > +#define foreach_subbuf_page(sub_order, start, page)		\  
-> > 
-> > Nit: usually iterators in kernel use for_each
-> 
-> Ah, good catch. Yeah, that should be changed. But then ...
-> 
-> > 
-> > > +	page = subbuf_page(0, (start));				\
-> > > +	for (int __off = 0; __off < (1 << (sub_order));		\
-> > > +	     __off++, page = subbuf_page(__off, (start)))  
-> > 
-> > The pages are allocated with alloc_pages_node(.. subbuf_order) are
-> > physically contiguous and struct pages for them are also contiguous, so
-> > inside a subbuf_order allocation you can just do page++.
-> > 
-> 
-> I'm wondering if we should just nuke the macro. It was there because of
-> the previous implementation did things twice. But now it's just done
-> once here:
-> 
-> +	while (s < nr_subbufs && p < nr_pages) {
-> +		struct page *page;
-> +
-> +		foreach_subbuf_page(subbuf_order, cpu_buffer->subbuf_ids[s], page) {
-> +			if (p >= nr_pages)
-> +				break;
-> +
-> +			pages[p++] = page;
-> +		}
-> +		s++;
-> +	}
-> 
-> Perhaps that should just be:
-> 
-> 	while (s < nr_subbufs && p < nr_pages) {
-> 		struct page *page;
-> 		int off;
-> 
-> 		page = subbuf_page(0, cpu_buffer->subbuf_ids[s]);
-> 		for (off = 0; off < (1 << subbuf_order); off++, page++, p++) {
-> 			if (p >= nr_pages)
-> 				break;
-> 
-> 			pages[p] = page;
-> 		}
-> 		s++;
-> 	}
-> 
->  ?
+(Dropping Mike Kravetz as CC since he has retired and his email is no
+longer valid, adding Muchun since he's the current hugetlb maintainer,
+as well as linux-trace-kernel)
 
-Yeah, was hesitating to kill it with the last version. Happy to do it for the
-next one.
-
+On 22 Apr 11:39, David Hildenbrand wrote:
+>
+> On 19.04.24 20:37, Guillaume Morin wrote:
+> > libhugetlbfs, the Intel iodlr code both allow to remap .text onto a
+> > hugetlb private mapping. It's also pretty easy to do it manually.
+> > One drawback of using this functionality is the lack of support for
+> > uprobes (NOTE uprobe ignores shareable vmas)
+> > 
+> > This patch adds support for private hugetlb mappings.  It does require exposing
+> > some hugetlbfs innards and relies on copy_user_large_folio which is only
+> > available when CONFIG_HUGETLBFS is used so I had to use an ugly #ifdef
+> > 
+> > If there is some interest in applying this patch in some form or
+> > another, I am open to any refactoring suggestions (esp getting rid the
+> > #ifdef in uprobes.c) . I tried to limit the
+> > amount of branching.
 > 
-> -- Steve
+> All that hugetlb special casing .... oh my. What's the benefit why we should
+> be interested in making that code less clean -- to phrase it in a nice way
+> ;) ?
+
+I do appreciate the nice phrasing. Believe me, I did try to limit the
+special casing to a minimum :-).
+
+Outside of __replace_page, I added only 3-ish branches so I do not think
+it's *too* bad. The uprobe code is using PAGE_{SHIFT,MASK} quite liberally so I
+had to add calls to retrieve these for the hugetlb vmas.
+
+__replace_page has a lot of special casing. I certainly agree (and
+unfortunately for me it's at the beginning of the patch :)).  It's doing
+something pretty uncommon outside of the mm code so it has to make a
+bunch of specific hugetlb calls. I am not quite sure how to improve it
+but if you have suggestions, I'd be happy to refactor.
+
+The benefit - to me - is very clear. People do use hugetlb mappings to
+run code in production environments. The perf benefits are there for some
+workloads. Intel has published a whitepaper about it etc.
+Uprobes are a very good tool to do live tracing. If you can restart the
+process and reproduce, you should be able to disable hugetlb remapping
+but if you need to look at a live process, there are not many options.
+Not being able to use uprobes is crippling.
+
+> Yes, libhugetlbfs exists. But why do we have to support uprobes with it?
+> Nobody cared until now, why care now?
+
+I think you could ask the same question for every new feature patch :)
+
+Since the removal a few releases ago of the __morecore() hook in glibc,
+the main feature of libhugetlbfs is ELF segments remapping. I think
+there are definitely a lot of users that simply deal with this
+unnecessary limitation.
+
+I am certainly not shoving this patch through anyone's throat if there
+is no interest. But we definitely find it a very useful feature ...
+
+Guillaume.
+
+-- 
+Guillaume Morin <guillaume@morinfr.org>
