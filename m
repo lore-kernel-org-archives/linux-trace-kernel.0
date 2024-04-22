@@ -1,76 +1,71 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FD415535D;
-	Mon, 22 Apr 2024 20:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF851BC44
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Apr 2024 20:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713817533; cv=none; b=rQzqJEhOmB2XF8Idd2UTDTSfmp5esBsAWqX0qAJMtrirdq9nkxysTBkfx+hGGzh8l8qEvSe9Dk6o75LgIHiASxZiJ/OIk66S52wt/JiRE/gEDxc+R5StAcLpvmoVfCOf6Km+XqzmYmllmB7ASgetMg3YecUkkHSCVLh3DH+6aZ0=
+	t=1713817909; cv=none; b=WcjveWdriD+5ofZOHT+V1VwgwF/WLprx+Jza7hcDifJ0EnJHEeQy3MhiQbDsY+7nbCT78pvReb04nosqWnXUGH+F0GeTHk6RdOv7e5rMST/3k2bhjhTApfK2J0HwGc7jpfM0FjCGf4cF0h7iLD4MDoYj7ueHnuCwu7K7IDWxKCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713817533; c=relaxed/simple;
-	bh=YjFau6lGb9LTELqCEb2X2127G9ZwnIlW8kYv21dRJJA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uz01MX3q+BR9HA7r0Met38v4BJEZfYKwZtaPZILQRbyuvEmv4jyvytVUBFoUIHrpNO3GGGoq4H+XoJU17oZwRJzvFZltmJIuyz/XKdCi5cqclctYDD6kqtKFBIZUOTkb7ijgnvWr8KC2R94joC+I6gwMFpXCwdb+M+YgdxldpH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gh0PyTvB; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713817909; c=relaxed/simple;
+	bh=tH8f7QPR5004yprLGXh0RuKw5AU+LGbys3PGVD8gtpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5V2MoFLSrHOji1RFuwTH+VoOSDxsl0plRv0AiWb3uTsDKUy5hn69zM2mPEBJomkUj+J8XgGFjaeN+BitSEYBOJpK9b7SgBrCEI7l+1NanXaby8FTSiUzhlAeo8r4uX69XF4rUrimvnE+DLGvwwIBmt/ZTkaQFIsoMrwFSjkmtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NsLOIHe9; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh0PyTvB"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41aa21b06b3so4139585e9.0;
-        Mon, 22 Apr 2024 13:25:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NsLOIHe9"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-346b146199eso3720405f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Apr 2024 13:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713817529; x=1714422329; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1713817905; x=1714422705; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xLiWlfsmSMobonfpzJOKL/uqlF5pCv8voW0Gv0gZ6Xg=;
-        b=Gh0PyTvBauqIoQuzFwPzAT9cIllRID2jLxH/W8N+oJUukbTuuXgj+iNlz/R5uH2162
-         O3Fl7cdKLs540cAgmrg5BIqjpTBnYz03oPE590YpFFgU5aaeps3Emef8r+ZblBPuqEMF
-         uMg42sbGgeDfa0VQG4ZjAEEa7q2azc8hjpXyX2N17u0UPNhhPngH1Ra+ZMD8G+IJ+W9B
-         aa+POBd78H1LoI5DNgjBpWs4wxeYu1Wd8jS3Etr4zKwnnP+WSuYwIFbzxWKTKUjhrSuZ
-         1yUDVEYT0oPvbYIWEF6Wvea8BTjnRq0pX1hjE0oYnKfgY2HyimlH8SuF0MOh/V/1BwjX
-         MftA==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LB3tL74SYOSKnC8JgrVn9834plSFpz7Dk972lSfKZSY=;
+        b=NsLOIHe9WIpa+9QOjA7grAHu7RjgYB6iwL9IxLcWGBe4XsU2TnRUIyTvI3zEYf+pV+
+         phsARAUaRvXy8Q/FycP9RZN7gt32OOw8LAWBZ1HcBp08IvejgKir4eNZ/1/Ao9qAljTn
+         HRg/FRQCWeNroBhG3lWSafBftSfP84FDgSgV1pf6JOPrRHaf4MVvAPPyI3ZaBEaAgR7O
+         UY+/tjQD43OA+/GAg/qmKQQTg63MGAzlFd45Ox095WkwZ0eXL0uTcIKY3M6ncXy42IpH
+         3ah6Rl+HE61CdMDkC6lwlYDJ1fd5i8WEZfbueuLRRYZVSV7Euq+7fz280zx/NGyPzfJH
+         yzQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713817529; x=1714422329;
+        d=1e100.net; s=20230601; t=1713817905; x=1714422705;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xLiWlfsmSMobonfpzJOKL/uqlF5pCv8voW0Gv0gZ6Xg=;
-        b=lzA32fT7e6IVhv98ah6lzfGzBq1ujzlLUNQKxCJ72UUHImZwCMmsy/sPqrVVLnJ2Mm
-         rwkgjtrE8d0jYn8gbxtk0xENqQoHvBCr49w7NX4rALMPdhvwescFiNbzY3nQ6JqBEoj1
-         mbMtHRm1FcRynnHiROR+BAI8v3YBlm39n63Nw2ZkVuiskxjf22qo/8db/pZmcbLhHQ34
-         YI79WLgSMRu5QixmfXAno0qrvLQ96jEH2HWExL2tWHWCssTh1jUIPokbAINHqz+bGH5r
-         9cK3Nuft1nDuVHrKM1EIw2XwULWH7xpIug6dLcG7tadLXxzbmUKUYmBiv7vWAgWT6rIj
-         87nA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEgou/2UoJKC2RJHvfiiYuKKJOaw/KMtTsq2DvHUctatnfGPCPQzWYIbPRBF53xG8JyHGnBeRlKWhT1dGX95kmH2yGdtEIzHFz1Wp8kfWR6heeDYmnMtwGV6zHC7qpEqA7UKTAdfWo9By+5wsbpcgx/dskr3s73eWa+hyZspxveVSVZ/WLmbqehHP1HgqDFhMq08MRRGjfS/3p91LOn/xZ
-X-Gm-Message-State: AOJu0YzYt9KRGFV3SsOmXtjiBWj8U3E6EtJTUdQ0HCzi/toCeYeJdWja
-	vpo2nlOhsKZhtWtkoXhwyQ7gdPFjC4FOEG2AlkQNC+ZCxCAuc+cS
-X-Google-Smtp-Source: AGHT+IFdhuSfTDsPTFsuDuTro4BCnnKCqf/kS6VlPXSQ+kB2rJD85vAd/+j/R7CUUdiaTnwaZ5wk8g==
-X-Received: by 2002:a05:600c:1c9b:b0:416:4641:5947 with SMTP id k27-20020a05600c1c9b00b0041646415947mr9806179wms.34.1713817528960;
-        Mon, 22 Apr 2024 13:25:28 -0700 (PDT)
-Received: from krava ([83.240.62.18])
-        by smtp.gmail.com with ESMTPSA id f17-20020a05600c4e9100b004182b87aaacsm17888971wmq.14.2024.04.22.13.25.27
+        bh=LB3tL74SYOSKnC8JgrVn9834plSFpz7Dk972lSfKZSY=;
+        b=JjdgqDUjDh3HVr9hkmk7O/86oOsGuGClGbkdaeip/eMxfEBBlpgvmFi1gLmOQBz9wL
+         gIR5k1D5ct4oqEEG6NdxW/YV9taCzbbREoNR6OZ54oMFfYxakc+XhC7z0+UFATqmB9hz
+         Ivra6M0N9yyGDxUfAjbZ2UhIQvgJYPimONru+Jfaebk69ui4KyjdtvImQcgvlvTqU4Xj
+         HHFDZgsLW4LecHBDsRmFp5oiE/sr/nEmHsC3G8NYMMHfOktjEjNVkvIEZY5ejirpSnhx
+         szNVvolppo52Pk5P1wD1w4vnN4urirtJxLHNNARGU6SWpflrwwF0TiqxKoloW3KecLjo
+         MOig==
+X-Forwarded-Encrypted: i=1; AJvYcCX/rlHDVtpfKJoKw25bWJCihAryGOsq5p3ErD5KwLMVBxWkCUL9iBtQvhJXuzA3+Zuuvw2yQ9SbKgxKqySuqP0U1Ep1i19Op0vbjOi1wYoirdN8
+X-Gm-Message-State: AOJu0Yzdvnx4jJRlrbSD3wliaGTessrFU1jx6WjPTbwdFjvZ0BIwN9t2
+	C5NYlI9uRpP046O34G097ltby3CINy0R9Ih8pkc2ZFK7sUvyntdwJ1EYE97mFw==
+X-Google-Smtp-Source: AGHT+IE9z46becKsP++66ak5ByR/x/FbkQcMGZbghA8QH5qzPZbQog93SWA80xnsluH8NonCimI51g==
+X-Received: by 2002:adf:f304:0:b0:34a:3e4a:7964 with SMTP id i4-20020adff304000000b0034a3e4a7964mr6801713wro.49.1713817905191;
+        Mon, 22 Apr 2024 13:31:45 -0700 (PDT)
+Received: from google.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id t4-20020a5d4604000000b00343826878e8sm12888207wrq.38.2024.04.22.13.31.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 13:25:28 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 22 Apr 2024 22:25:25 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	x86@kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCHv3 bpf-next 0/7] uprobe: uretprobe speed up
-Message-ID: <ZibHtXFcHr_sJdP9@krava>
-References: <20240421194206.1010934-1-jolsa@kernel.org>
- <20240423000943.478ccf1e735a63c6c1b4c66b@kernel.org>
+        Mon, 22 Apr 2024 13:31:44 -0700 (PDT)
+Date: Mon, 22 Apr 2024 21:31:41 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com, rdunlap@infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <ZibJLSdOlxZUGRBa@google.com>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+ <20240406173649.3210836-3-vdonnefort@google.com>
+ <9c553dae-5395-4ec9-b41c-a4decc37acf2@redhat.com>
+ <06c6b023-6cdc-430d-be0b-086fd6453aeb@redhat.com>
+ <ZiaqgNFLOwimE2Me@google.com>
+ <0283adf3-0295-4b2d-997e-befb02b1cc1a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,159 +74,533 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240423000943.478ccf1e735a63c6c1b4c66b@kernel.org>
+In-Reply-To: <0283adf3-0295-4b2d-997e-befb02b1cc1a@redhat.com>
 
-On Tue, Apr 23, 2024 at 12:09:43AM +0900, Masami Hiramatsu wrote:
-> Hi Jiri,
-> 
-> On Sun, 21 Apr 2024 21:41:59 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> > hi,
-> > as part of the effort on speeding up the uprobes [0] coming with
-> > return uprobe optimization by using syscall instead of the trap
-> > on the uretprobe trampoline.
+On Mon, Apr 22, 2024 at 08:27:17PM +0200, David Hildenbrand wrote:
+> On 22.04.24 20:20, Vincent Donnefort wrote:
+> > Hi David,
 > > 
-> > The speed up depends on instruction type that uprobe is installed
-> > and depends on specific HW type, please check patch 1 for details.
+> > Thanks for having a look, very much appreciated!
 > > 
-> > Patches 1-6 are based on bpf-next/master, but path 1 and 2 are
-> > apply-able on linux-trace.git tree probes/for-next branch.
-> > Patch 7 is based on man-pages master.
+> > On Mon, Apr 22, 2024 at 11:27:11AM +0200, David Hildenbrand wrote:
+> > > On 19.04.24 20:25, David Hildenbrand wrote:
+> > > > On 06.04.24 19:36, Vincent Donnefort wrote:
+> > > > > In preparation for allowing the user-space to map a ring-buffer, add
+> > > > > a set of mapping functions:
+> > > > > 
+> > > > >      ring_buffer_{map,unmap}()
+> > > > > 
+> > > > > And controls on the ring-buffer:
+> > > > > 
+> > > > >      ring_buffer_map_get_reader()  /* swap reader and head */
+> > > > > 
+> > > > > Mapping the ring-buffer also involves:
+> > > > > 
+> > > > >      A unique ID for each subbuf of the ring-buffer, currently they are
+> > > > >      only identified through their in-kernel VA.
+> > > > > 
+> > > > >      A meta-page, where are stored ring-buffer statistics and a
+> > > > >      description for the current reader
+> > > > > 
+> > > > > The linear mapping exposes the meta-page, and each subbuf of the
+> > > > > ring-buffer, ordered following their unique ID, assigned during the
+> > > > > first mapping.
+> > > > > 
+> > > > > Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
+> > > > > size will remain unmodified and the splice enabling functions will in
+> > > > > reality simply memcpy the data instead of swapping subbufs.
+> > > > > 
+> > > > > CC: <linux-mm@kvack.org>
+> > > > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > > > > 
+> > > > > diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> > > > > index dc5ae4e96aee..96d2140b471e 100644
+> > > > > --- a/include/linux/ring_buffer.h
+> > > > > +++ b/include/linux/ring_buffer.h
+> > > > > @@ -6,6 +6,8 @@
+> > > > >     #include <linux/seq_file.h>
+> > > > >     #include <linux/poll.h>
+> > > > > +#include <uapi/linux/trace_mmap.h>
+> > > > > +
+> > > > >     struct trace_buffer;
+> > > > >     struct ring_buffer_iter;
+> > > > > @@ -223,4 +225,8 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
+> > > > >     #define trace_rb_cpu_prepare	NULL
+> > > > >     #endif
+> > > > > +int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+> > > > > +		    struct vm_area_struct *vma);
+> > > > > +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
+> > > > > +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
+> > > > >     #endif /* _LINUX_RING_BUFFER_H */
+> > > > > diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..ffcd8dfcaa4f
+> > > > > --- /dev/null
+> > > > > +++ b/include/uapi/linux/trace_mmap.h
+> > > > > @@ -0,0 +1,46 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > > > > +#ifndef _TRACE_MMAP_H_
+> > > > > +#define _TRACE_MMAP_H_
+> > > > > +
+> > > > > +#include <linux/types.h>
+> > > > > +
+> > > > > +/**
+> > > > > + * struct trace_buffer_meta - Ring-buffer Meta-page description
+> > > > > + * @meta_page_size:	Size of this meta-page.
+> > > > > + * @meta_struct_len:	Size of this structure.
+> > > > > + * @subbuf_size:	Size of each sub-buffer.
+> > > > > + * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
+> > > > > + * @reader.lost_events:	Number of events lost at the time of the reader swap.
+> > > > > + * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
+> > > > > + * @reader.read:	Number of bytes read on the reader subbuf.
+> > > > > + * @flags:		Placeholder for now, 0 until new features are supported.
+> > > > > + * @entries:		Number of entries in the ring-buffer.
+> > > > > + * @overrun:		Number of entries lost in the ring-buffer.
+> > > > > + * @read:		Number of entries that have been read.
+> > > > > + * @Reserved1:		Reserved for future use.
+> > > > > + * @Reserved2:		Reserved for future use.
+> > > > > + */
+> > > > > +struct trace_buffer_meta {
+> > > > > +	__u32		meta_page_size;
+> > > > > +	__u32		meta_struct_len;
+> > > > > +
+> > > > > +	__u32		subbuf_size;
+> > > > > +	__u32		nr_subbufs;
+> > > > > +
+> > > > > +	struct {
+> > > > > +		__u64	lost_events;
+> > > > > +		__u32	id;
+> > > > > +		__u32	read;
+> > > > > +	} reader;
+> > > > > +
+> > > > > +	__u64	flags;
+> > > > > +
+> > > > > +	__u64	entries;
+> > > > > +	__u64	overrun;
+> > > > > +	__u64	read;
+> > > > > +
+> > > > > +	__u64	Reserved1;
+> > > > > +	__u64	Reserved2;
+> > > > > +};
+> > > > > +
+> > > > > +#endif /* _TRACE_MMAP_H_ */
+> > > > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > > > index cc9ebe593571..793ecc454039 100644
+> > > > > --- a/kernel/trace/ring_buffer.c
+> > > > > +++ b/kernel/trace/ring_buffer.c
+> > > > > @@ -9,6 +9,7 @@
+> > > > >     #include <linux/ring_buffer.h>
+> > > > >     #include <linux/trace_clock.h>
+> > > > >     #include <linux/sched/clock.h>
+> > > > > +#include <linux/cacheflush.h>
+> > > > >     #include <linux/trace_seq.h>
+> > > > >     #include <linux/spinlock.h>
+> > > > >     #include <linux/irq_work.h>
+> > > > > @@ -26,6 +27,7 @@
+> > > > >     #include <linux/list.h>
+> > > > >     #include <linux/cpu.h>
+> > > > >     #include <linux/oom.h>
+> > > > > +#include <linux/mm.h>
+> > > > >     #include <asm/local64.h>
+> > > > >     #include <asm/local.h>
+> > > > > @@ -338,6 +340,7 @@ struct buffer_page {
+> > > > >     	local_t		 entries;	/* entries on this page */
+> > > > >     	unsigned long	 real_end;	/* real end of data */
+> > > > >     	unsigned	 order;		/* order of the page */
+> > > > > +	u32		 id;		/* ID for external mapping */
+> > > > >     	struct buffer_data_page *page;	/* Actual data page */
+> > > > >     };
+> > > > > @@ -484,6 +487,12 @@ struct ring_buffer_per_cpu {
+> > > > >     	u64				read_stamp;
+> > > > >     	/* pages removed since last reset */
+> > > > >     	unsigned long			pages_removed;
+> > > > > +
+> > > > > +	unsigned int			mapped;
+> > > > > +	struct mutex			mapping_lock;
+> > > > > +	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
+> > > > > +	struct trace_buffer_meta	*meta_page;
+> > > > > +
+> > > > >     	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+> > > > >     	long				nr_pages_to_update;
+> > > > >     	struct list_head		new_pages; /* new pages to add */
+> > > > > @@ -1599,6 +1608,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+> > > > >     	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
+> > > > >     	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
+> > > > >     	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
+> > > > > +	mutex_init(&cpu_buffer->mapping_lock);
+> > > > >     	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
+> > > > >     			    GFP_KERNEL, cpu_to_node(cpu));
+> > > > > @@ -1789,8 +1799,6 @@ bool ring_buffer_time_stamp_abs(struct trace_buffer *buffer)
+> > > > >     	return buffer->time_stamp_abs;
+> > > > >     }
+> > > > > -static void rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer);
+> > > > > -
+> > > > >     static inline unsigned long rb_page_entries(struct buffer_page *bpage)
+> > > > >     {
+> > > > >     	return local_read(&bpage->entries) & RB_WRITE_MASK;
+> > > > > @@ -5211,6 +5219,22 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+> > > > >     	page->read = 0;
+> > > > >     }
+> > > > > +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > > > > +{
+> > > > > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> > > > > +
+> > > > > +	meta->reader.read = cpu_buffer->reader_page->read;
+> > > > > +	meta->reader.id = cpu_buffer->reader_page->id;
+> > > > > +	meta->reader.lost_events = cpu_buffer->lost_events;
+> > > > > +
+> > > > > +	meta->entries = local_read(&cpu_buffer->entries);
+> > > > > +	meta->overrun = local_read(&cpu_buffer->overrun);
+> > > > > +	meta->read = cpu_buffer->read;
+> > > > > +
+> > > > > +	/* Some archs do not have data cache coherency between kernel and user-space */
+> > > > > +	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
+> > > > > +}
+> > > > > +
+> > > > >     static void
+> > > > >     rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+> > > > >     {
+> > > > > @@ -5255,6 +5279,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+> > > > >     	cpu_buffer->lost_events = 0;
+> > > > >     	cpu_buffer->last_overrun = 0;
+> > > > > +	if (cpu_buffer->mapped)
+> > > > > +		rb_update_meta_page(cpu_buffer);
+> > > > > +
+> > > > >     	rb_head_page_activate(cpu_buffer);
+> > > > >     	cpu_buffer->pages_removed = 0;
+> > > > >     }
+> > > > > @@ -5469,6 +5496,12 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+> > > > >     	cpu_buffer_a = buffer_a->buffers[cpu];
+> > > > >     	cpu_buffer_b = buffer_b->buffers[cpu];
+> > > > > +	/* It's up to the callers to not try to swap mapped buffers */
+> > > > > +	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
+> > > > > +		ret = -EBUSY;
+> > > > > +		goto out;
+> > > > > +	}
+> > > > > +
+> > > > >     	/* At least make sure the two buffers are somewhat the same */
+> > > > >     	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+> > > > >     		goto out;
+> > > > > @@ -5733,7 +5766,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> > > > >     	 * Otherwise, we can simply swap the page with the one passed in.
+> > > > >     	 */
+> > > > >     	if (read || (len < (commit - read)) ||
+> > > > > -	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
+> > > > > +	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+> > > > > +	    cpu_buffer->mapped) {
+> > > > >     		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
+> > > > >     		unsigned int rpos = read;
+> > > > >     		unsigned int pos = 0;
+> > > > > @@ -5956,6 +5990,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+> > > > >     		cpu_buffer = buffer->buffers[cpu];
+> > > > > +		if (cpu_buffer->mapped) {
+> > > > > +			err = -EBUSY;
+> > > > > +			goto error;
+> > > > > +		}
+> > > > > +
+> > > > >     		/* Update the number of pages to match the new size */
+> > > > >     		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
+> > > > >     		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
+> > > > > @@ -6057,6 +6096,358 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+> > > > >     }
+> > > > >     EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
+> > > > > +static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > > > > +{
+> > > > > +	struct page *page;
+> > > > > +
+> > > > > +	if (cpu_buffer->meta_page)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	page = alloc_page(GFP_USER | __GFP_ZERO);
+> > > > > +	if (!page)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	cpu_buffer->meta_page = page_to_virt(page);
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > > > > +{
+> > > > > +	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
+> > > > > +
+> > > > > +	free_page(addr);
+> > > > > +	cpu_buffer->meta_page = NULL;
+> > > > > +}
+> > > > > +
+> > > > > +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+> > > > > +				   unsigned long *subbuf_ids)
+> > > > > +{
+> > > > > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> > > > > +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+> > > > > +	struct buffer_page *first_subbuf, *subbuf;
+> > > > > +	int id = 0;
+> > > > > +
+> > > > > +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+> > > > > +	cpu_buffer->reader_page->id = id++;
+> > > > > +
+> > > > > +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+> > > > > +	do {
+> > > > > +		if (WARN_ON(id >= nr_subbufs))
+> > > > > +			break;
+> > > > > +
+> > > > > +		subbuf_ids[id] = (unsigned long)subbuf->page;
+> > > > > +		subbuf->id = id;
+> > > > > +
+> > > > > +		rb_inc_page(&subbuf);
+> > > > > +		id++;
+> > > > > +	} while (subbuf != first_subbuf);
+> > > > > +
+> > > > > +	/* install subbuf ID to kern VA translation */
+> > > > > +	cpu_buffer->subbuf_ids = subbuf_ids;
+> > > > > +
+> > > > > +	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
+> > > > > +	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;
+> > > > > +	meta->meta_struct_len = sizeof(*meta);
+> > > > > +	meta->nr_subbufs = nr_subbufs;
+> > > > > +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> > > > > +
+> > > > > +	rb_update_meta_page(cpu_buffer);
+> > > > > +}
+> > > > > +
+> > > > > +static struct ring_buffer_per_cpu *
+> > > > > +rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
+> > > > > +{
+> > > > > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > > > > +
+> > > > > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > > > > +		return ERR_PTR(-EINVAL);
+> > > > > +
+> > > > > +	cpu_buffer = buffer->buffers[cpu];
+> > > > > +
+> > > > > +	mutex_lock(&cpu_buffer->mapping_lock);
+> > > > > +
+> > > > > +	if (!cpu_buffer->mapped) {
+> > > > > +		mutex_unlock(&cpu_buffer->mapping_lock);
+> > > > > +		return ERR_PTR(-ENODEV);
+> > > > > +	}
+> > > > > +
+> > > > > +	return cpu_buffer;
+> > > > > +}
+> > > > > +
+> > > > > +static void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+> > > > > +{
+> > > > > +	mutex_unlock(&cpu_buffer->mapping_lock);
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * Fast-path for rb_buffer_(un)map(). Called whenever the meta-page doesn't need
+> > > > > + * to be set-up or torn-down.
+> > > > > + */
+> > > > > +static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
+> > > > > +			       bool inc)
+> > > > > +{
+> > > > > +	unsigned long flags;
+> > > > > +
+> > > > > +	lockdep_assert_held(&cpu_buffer->mapping_lock);
+> > > > > +
+> > > > > +	if (inc && cpu_buffer->mapped == UINT_MAX)
+> > > > > +		return -EBUSY;
+> > > > > +
+> > > > > +	if (WARN_ON(!inc && cpu_buffer->mapped == 0))
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	mutex_lock(&cpu_buffer->buffer->mutex);
+> > > > > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> > > > > +
+> > > > > +	if (inc)
+> > > > > +		cpu_buffer->mapped++;
+> > > > > +	else
+> > > > > +		cpu_buffer->mapped--;
+> > > > > +
+> > > > > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> > > > > +	mutex_unlock(&cpu_buffer->buffer->mutex);
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +#define subbuf_page(off, start) \
+> > > > > +	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
+> > > > > +
+> > > > > +#define foreach_subbuf_page(sub_order, start, page)		\
+> > > > > +	page = subbuf_page(0, (start));				\
+> > > > > +	for (int __off = 0; __off < (1 << (sub_order));		\
+> > > > > +	     __off++, page = subbuf_page(__off, (start)))
+> > > > > +
+> > > > > +/*
+> > > > > + *   +--------------+  pgoff == 0
+> > > > > + *   |   meta page  |
+> > > > > + *   +--------------+  pgoff == 1
+> > > > > + *   |   000000000  |
+> > > > > + *   +--------------+  pgoff == (1 << subbuf_order)
+> > > > > + *   | subbuffer 0  |
+> > > > > + *   |              |
+> > > > > + *   +--------------+  pgoff == (2 * (1 << subbuf_order))
+> > > > > + *   | subbuffer 1  |
+> > > > > + *   |              |
+> > > > > + *         ...
+> > > > > + */
+> > > > > +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+> > > > > +			struct vm_area_struct *vma)
+> > > > > +{
+> > > > > +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
+> > > > > +	unsigned int subbuf_pages, subbuf_order;
+> > > > > +	struct page **pages;
+> > > > > +	int p = 0, s = 0;
+> > > > > +	int err;
+> > > > > +
+> > > > > +	lockdep_assert_held(&cpu_buffer->mapping_lock);
+> > > > > +
+> > > > > +	subbuf_order = cpu_buffer->buffer->subbuf_order;
+> > > > > +	subbuf_pages = 1 << subbuf_order;
+> > > > > +
+> > > > > +	if (subbuf_order && pgoff % subbuf_pages)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	nr_subbufs = cpu_buffer->nr_pages + 1;
+> > > > > +	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
+> > > > > +
+> > > > > +	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+> > > > > +	if (!vma_pages || vma_pages > nr_pages)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	nr_pages = vma_pages;
+> > > > > +
+> > > > > +	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
+> > > > > +	if (!pages)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	if (!pgoff) {
+> > > > > +		unsigned long meta_page_padding;
+> > > > > +
+> > > > > +		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+> > > > > +
+> > > > > +		/*
+> > > > > +		 * Pad with the zero-page to align the meta-page with the
+> > > > > +		 * sub-buffers.
+> > > > > +		 */
+> > > > > +		meta_page_padding = subbuf_pages - 1;
+> > > > > +		while (meta_page_padding-- && p < nr_pages)
+> > > > > +			pages[p++] = ZERO_PAGE(0);
+> > > > 
+> > > > Using the shared zeropage in a MAP_SHARED mapping that is neither VM_IO
+> > > > nor VM_PFNMAP can be problematic. So we really need patch #3 logic to
+> > > > use VM_PFNMAP.
+> > > > 
+> > > > It would be cleaner/more obvious if these VMA flag setting would reside
+> > 
+> > tracing_buffers_mmap() sets both VM_IO and VM_PFNMAP. But, yeah as vma is
+> > already passed to ring_buffer_map(). The flags could be set here as this
+> > function is what sets the requirements really.
+> > 
+> > > > here, if possible.
+> > > > 
+> > > > > +	} else {
+> > > > > +		/* Skip the meta-page */
+> > > > > +		pgoff -= subbuf_pages;
+> > > > > +
+> > > > > +		s += pgoff / subbuf_pages;
+> > > > > +	}
+> > > > > +
+> > > > > +	while (s < nr_subbufs && p < nr_pages) {
+> > > > > +		struct page *page;
+> > > > > +
+> > > > > +		foreach_subbuf_page(subbuf_order, cpu_buffer->subbuf_ids[s], page) {
+> > > > > +			if (p >= nr_pages)
+> > > > > +				break;
+> > > > > +
+> > > > > +			pages[p++] = page;
+> > > > > +		}
+> > > > > +		s++;
+> > > > > +	}
+> > > > > +
+> > > > > +	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
+> > > > 
+> > > > I think Linus suggested it ("avoid all the sub-page ref-counts entirely
+> > > > by using VM_PFNMAP, and use vm_insert_pages()"), but ...
+> > > > vm_insert_pages() will:
+> > > > * Mess with mapcounts
+> > > > * Mess with refcounts
+> > > > 
+> > > > See
+> > > > insert_pages()->insert_page_in_batch_locked()->insert_page_into_pte_locked().
+> > > > 
+> > > > So we'll mess with the mapcount and refcount of the shared zeropage ...
+> > > > hmmmm
+> > > > 
+> > > > If I am not wrong, vm_normal_page() would not return the shared zeropage
+> > > > in case we don't have CONFIG_ARCH_HAS_PTE_SPECIAL ... so
+> > > > unmap()->...->zap_present_ptes() would not decrement the refcount and we
+> > > > could overflow it. ... we also shouldn't ever mess with the mapcount of
+> > > > the shared zeropage in the first place.
+> > > > 
+> > > > vm_insert_page() is clearer on that: "This allows drivers to insert
+> > > > individual pages they've allocated into a user vma". You didn't allocate
+> > > > the shared zeropage.
+> > > > 
+> > > > I'm wondering if we even expect VM_MIXEDMAP and VM_PFNMAP to be set at
+> > > > the same time? vm_insert_pages() would BUG_ON in case VM_PFNMAP is
+> > > > already set and it would set VM_MIXEDMAP ... similarly
+> > > > vmf_insert_pfn_prot() would not be happy about that at all ...
+> > > > 
+> > > > BUG_ON((vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP)) ==
+> > > > (VM_PFNMAP|VM_MIXEDMAP));
+> > > > 
+> > > > ... remap_pfn_range() is used by io_uring_mmap for a similar purpose.
+> > > > But it only supports a single PFN range at a time and requires the
+> > > > caller to handle refcounting of pages.
+> > > > 
+> > > > It's getting late in Germany, so I might be missing something; but using
+> > > > the shared zeropage here might be a problem.
+> > > > 
+> > > 
+> > > I was just about to write code to cleanly support vm_insert_pages() to
+> > > consume zeropages ... when I started to wonder about something else:
+> > 
+> > Alternatively, we could at the moment allocate a meta-page of the same size than
+> > the subbufs? (of course the downside is to waste a bit of memory)
 > 
-> Thanks for updated! I reviewed the series and just except for the
-> manpage, it looks good to me.
+> Supporting the shared zeropage should be possible. We just have to be
+> careful that no other code can accidentially set it writable. I'll have to
+> further think about that (not just your user, but making it sane to use by
+> new code as well).
 > 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> So far, we primarily only have shared zeropages in the MAP_PRIVATE mappings.
+> Dax is a corner case where we have them in MAP_SHARED mappings. PFNMAP would
+> not be problematic, but MIXEDMAP is. (again, I am not 100% sure about
+> combining both ...)
 > 
-> for the series.
-> If Linux API maintainers are OK, I can pick this in probes/for-next.
+> I'll further think about that one, and try crafting a reasonable patch.
+> 
+> Could we start with no shared zeropage and implement that as an optimization
+> on top?
 
-great, thanks
+Of course, I'm happy to update this series without the zero-page and to bring it
+back later, in a separate patch, as soon as vm_insert_pages() is compatible.
 
-> (BTW, who will pick the manpage patch?)
-
-ugh, I cc-ed linux-api but not linux-man@vger.kernel.org
-I'll add that for new version
-
-jirka
+Thanks!
 
 > 
-> Thank you,
+> > 
+> > > 
+> > > 
+> > > +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
+> > > +	    !(vma->vm_flags & VM_MAYSHARE))
+> > > +		return -EPERM;
+> > > +
+> > > 
+> > > You disallow writable mappings. But what about using mprotect() afterwards
+> > > to allow for write permissions?
+> > > 
+> > > Likely you'd want to remove VM_MAYWRITE from the flags, otherwise mprotect()
+> > > might alter succeed.
+> > 
+> > The vm_flags_mod below is clearing VM_MAYWRITE already. Isn't it enough?
 > 
-> > 
-> > v3 changes:
-> >   - added source ip check if the uretprobe syscall is called from
-> >     trampoline and sending SIGILL to process if it's not
-> >   - keep x86 compat process to use standard breakpoint
-> >   - split syscall wiring into separate change
-> >   - ran ltp and syzkaller locally, no issues found [Masami]
-> >   - building uprobe_compat binary in selftests which breaks
-> >     CI atm because of missing 32-bit delve packages, I will
-> >     need to fix that in separate changes once this is acked
-> >   - added man page change
-> >   - there were several changes so I removed acks [Oleg Andrii]
-> > 
-> > Also available at:
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   uretprobe_syscall
-> > 
-> > thanks,
-> > jirka
-> > 
-> > 
-> > Notes to check list items in Documentation/process/adding-syscalls.rst:
-> > 
-> > - System Call Alternatives
-> >   New syscall seems like the best way in here, becase we need
-> >   just to quickly enter kernel with no extra arguments processing,
-> >   which we'd need to do if we decided to use another syscall.
-> > 
-> > - Designing the API: Planning for Extension
-> >   The uretprobe syscall is very specific and most likely won't be
-> >   extended in the future.
-> > 
-> >   At the moment it does not take any arguments and even if it does
-> >   in future, it's allowed to be called only from trampoline prepared
-> >   by kernel, so there'll be no broken user.
-> > 
-> > - Designing the API: Other Considerations
-> >   N/A because uretprobe syscall does not return reference to kernel
-> >   object.
-> > 
-> > - Proposing the API
-> >   Wiring up of the uretprobe system call si in separate change,
-> >   selftests and man page changes are part of the patchset.
-> > 
-> > - Generic System Call Implementation
-> >   There's no CONFIG option for the new functionality because it
-> >   keeps the same behaviour from the user POV.
-> > 
-> > - x86 System Call Implementation
-> >   It's 64-bit syscall only.
-> > 
-> > - Compatibility System Calls (Generic)
-> >   N/A uretprobe syscall has no arguments and is not supported
-> >   for compat processes.
-> > 
-> > - Compatibility System Calls (x86)
-> >   N/A uretprobe syscall is not supported for compat processes.
-> > 
-> > - System Calls Returning Elsewhere
-> >   N/A.
-> > 
-> > - Other Details
-> >   N/A.
-> > 
-> > - Testing
-> >   Adding new bpf selftests and ran ltp on top of this change.
-> > 
-> > - Man Page
-> >   Attached.
-> > 
-> > - Do not call System Calls in the Kernel
-> >   N/A.
-> > 
-> > 
-> > [0] https://lore.kernel.org/bpf/ZeCXHKJ--iYYbmLj@krava/
-> > ---
-> > Jiri Olsa (6):
-> >       uprobe: Wire up uretprobe system call
-> >       uprobe: Add uretprobe syscall to speed up return probe
-> >       selftests/bpf: Add uretprobe syscall test for regs integrity
-> >       selftests/bpf: Add uretprobe syscall test for regs changes
-> >       selftests/bpf: Add uretprobe syscall call from user space test
-> >       selftests/bpf: Add uretprobe compat test
-> > 
-> >  arch/x86/entry/syscalls/syscall_64.tbl                    |   1 +
-> >  arch/x86/kernel/uprobes.c                                 | 115 ++++++++++++++++++++++++++++++
-> >  include/linux/syscalls.h                                  |   2 +
-> >  include/linux/uprobes.h                                   |   3 +
-> >  include/uapi/asm-generic/unistd.h                         |   5 +-
-> >  kernel/events/uprobes.c                                   |  24 +++++--
-> >  kernel/sys_ni.c                                           |   2 +
-> >  tools/include/linux/compiler.h                            |   4 ++
-> >  tools/testing/selftests/bpf/.gitignore                    |   1 +
-> >  tools/testing/selftests/bpf/Makefile                      |   6 +-
-> >  tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c     | 123 +++++++++++++++++++++++++++++++-
-> >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c   | 362 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall.c        |  15 ++++
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall_call.c   |  15 ++++
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall_compat.c |  13 ++++
-> >  15 files changed, 681 insertions(+), 10 deletions(-)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_call.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_compat.c
-> > 
-> > 
-> > Jiri Olsa (1):
-> >       man2: Add uretprobe syscall page
-> > 
-> >  man2/uretprobe.2 | 40 ++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 man2/uretprobe.2
-> 
+> Oh, maybe I missed that!
 > 
 > -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Cheers,
+> 
+> David / dhildenb
+> 
