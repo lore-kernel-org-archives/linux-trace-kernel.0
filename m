@@ -1,235 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFBE152180;
-	Mon, 22 Apr 2024 15:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D17224D5
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Apr 2024 15:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799361; cv=none; b=BVuc+cTNms2lOpHRe1TjvFAzobvCXMtvCANZMQ99pMuUR8/hoyGGFVqOLmRh2252kGJ0ZCJIONIfgIQBIJk90NExcQlLyqOjQcuQDi0JBGTDXoj994eWCwrAqopi0ZLubaSNpZWgSnVllruqcwfW8Kb6Ca/p4YplDTahyO2o1cU=
+	t=1713801435; cv=none; b=FboSPriECmQUKzfucsdPvQ2jvroBzIZs8LV242YgfRHzVz0HsCmN0BOQKTxcb9fABfBtD33ZRtxssGm8etaTEUpP0DfbBsnVh8K6pdDegEzZLuD05UA2IVTj+bWDVkPBefw8hg1zjkl6WT6xdJVKvuhUEFhGOkEzFaSETeATH8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799361; c=relaxed/simple;
-	bh=//8KcpjpbvYDgi/6QOo9g1ClZ/5OAjmHm3CIAJSIR9w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Jv1HrTsSu3nCVhbKnfkoMG0tYiPWOv+S+Ih19fQlyoo/Xt8as2ZB9jvqRWOqGvOPIC2Q7QmLVrT/foytkrk1b8j1rluK9sRseKxPIxN5AsgEAYih7nctWiRmDUMnQWv99ysXQ6kXjTvgi9/42D5oQn2KdCgzauFcLGz9jeiYgz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4Y9gaGb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713801435; c=relaxed/simple;
+	bh=vOTtrQjeC7XaM50trnCEYdVH4ZodHQJt5bpJ/0mXWe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EVGfj+5ZtSwelJt+IFf4i3ARD6NcfLaaTnOgMy3eeSMPovTRq0OfyOQfSslsaUh3Ls+3rqEtathG/GL5rjSfF3lrD63fFRY1oNckqLy25mreQyeLj8zJSn1swSiGGiaib4yNkCb9XwvrbivAxX4GHxMtzPXVJNKKX2uiTRLFVFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QWzqoWyi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4Y9gaGb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE60CC113CC;
-	Mon, 22 Apr 2024 15:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713799360;
-	bh=//8KcpjpbvYDgi/6QOo9g1ClZ/5OAjmHm3CIAJSIR9w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=t4Y9gaGbcPig7Mdz+LEqNoPlC4cnjArOJwRu5PaTXNJM863eIgFwMZcNkZH2wD+xf
-	 kANHiNvsMwpyRee3B8kJFco0aLqPEj9cnwQ7bvQnl+Onc9cuuTAlN0EBqoYqG4GD1K
-	 Uq06fxqySyGqrw4bTCBBz3lxoCwSwvQ+w/Moka8jk6OisDm8TCmV1HFjPVLnqP3mM2
-	 m4DDvLwuDzyNTM3J4scNNiWJPH+u8HOSTYu7nSEa5MMiqTWBXnRO0Jt6kvr5vllvh8
-	 IiXT6yl9ZpmaE5gviSwAwoRJg9AYQFB9plw4gCzSY3pG/zlcO4UnIqAWMR7XdTop3i
-	 7X6EKYTKe0ZfQ==
-Date: Tue, 23 Apr 2024 00:22:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jonathan Haslam <jonathan.haslam@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
- bpf@vger.kernel.org, rostedt@goodmis.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: reduce contention on uprobes_tree access
-Message-Id: <20240423002234.6104df82cb3f96c9d485d5b1@kernel.org>
-In-Reply-To: <20240422102306.6026-1-jonathan.haslam@gmail.com>
-References: <20240422102306.6026-1-jonathan.haslam@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QWzqoWyi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713801433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Re0lafXu7wQslD0LP+mb5k+NPK2CcD7U/L0lGd24osU=;
+	b=QWzqoWyiQmF7oyoAHt2LdOiGNquPncApwK0JK2TFhF3LZI7O1KeobiztUNMHJf+5tOCDWS
+	KezRHztIyRiv7Fin1C7aHgdK6W5zT5PdaBe6ZdCkSGJnbz0C5Q8KlHiP/wbXKb5MeFaLeN
+	iH8OYn7gq3Z3olp93rljWF1I/5pLGk4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-488-oFXsibcKO8e3VSnl-i3laA-1; Mon, 22 Apr 2024 11:57:11 -0400
+X-MC-Unique: oFXsibcKO8e3VSnl-i3laA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 05B1E104B502;
+	Mon, 22 Apr 2024 15:57:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.205])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 954FD200E290;
+	Mon, 22 Apr 2024 15:57:06 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 22 Apr 2024 17:55:45 +0200 (CEST)
+Date: Mon, 22 Apr 2024 17:55:40 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv3 bpf-next 2/7] uprobe: Add uretprobe syscall to speed up
+ return probe
+Message-ID: <20240422155540.GA32422@redhat.com>
+References: <20240421194206.1010934-1-jolsa@kernel.org>
+ <20240421194206.1010934-3-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240421194206.1010934-3-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Mon, 22 Apr 2024 03:23:05 -0700
-Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
+On 04/21, Jiri Olsa wrote:
+>
+>  arch/x86/kernel/uprobes.c | 115 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/uprobes.h   |   3 +
+>  kernel/events/uprobes.c   |  24 +++++---
+>  3 files changed, 135 insertions(+), 7 deletions(-)
 
-> Active uprobes are stored in an RB tree and accesses to this tree are
-> dominated by read operations. Currently these accesses are serialized by
-> a spinlock but this leads to enormous contention when large numbers of
-> threads are executing active probes.
-> 
-> This patch converts the spinlock used to serialize access to the
-> uprobes_tree RB tree into a reader-writer spinlock. This lock type
-> aligns naturally with the overwhelmingly read-only nature of the tree
-> usage here. Although the addition of reader-writer spinlocks are
-> discouraged [0], this fix is proposed as an interim solution while an
-> RCU based approach is implemented (that work is in a nascent form). This
-> fix also has the benefit of being trivial, self contained and therefore
-> simple to backport.
-> 
-> We have used a uprobe benchmark from the BPF selftests [1] to estimate
-> the improvements. Each block of results below show 1 line per execution
-> of the benchmark ("the "Summary" line) and each line is a run with one
-> more thread added - a thread is a "producer". The lines are edited to
-> remove extraneous output.
-> 
-> The tests were executed with this driver script:
-> 
-> for num_threads in {1..20}
-> do
->   sudo ./bench -a -p $num_threads trig-uprobe-nop | grep Summary
-> done
-> 
-> SPINLOCK (BEFORE)
-> ==================
-> Summary: hits    1.396 ± 0.007M/s (  1.396M/prod)
-> Summary: hits    1.656 ± 0.016M/s (  0.828M/prod)
-> Summary: hits    2.246 ± 0.008M/s (  0.749M/prod)
-> Summary: hits    2.114 ± 0.010M/s (  0.529M/prod)
-> Summary: hits    2.013 ± 0.009M/s (  0.403M/prod)
-> Summary: hits    1.753 ± 0.008M/s (  0.292M/prod)
-> Summary: hits    1.847 ± 0.001M/s (  0.264M/prod)
-> Summary: hits    1.889 ± 0.001M/s (  0.236M/prod)
-> Summary: hits    1.833 ± 0.006M/s (  0.204M/prod)
-> Summary: hits    1.900 ± 0.003M/s (  0.190M/prod)
-> Summary: hits    1.918 ± 0.006M/s (  0.174M/prod)
-> Summary: hits    1.925 ± 0.002M/s (  0.160M/prod)
-> Summary: hits    1.837 ± 0.001M/s (  0.141M/prod)
-> Summary: hits    1.898 ± 0.001M/s (  0.136M/prod)
-> Summary: hits    1.799 ± 0.016M/s (  0.120M/prod)
-> Summary: hits    1.850 ± 0.005M/s (  0.109M/prod)
-> Summary: hits    1.816 ± 0.002M/s (  0.101M/prod)
-> Summary: hits    1.787 ± 0.001M/s (  0.094M/prod)
-> Summary: hits    1.764 ± 0.002M/s (  0.088M/prod)
-> 
-> RW SPINLOCK (AFTER)
-> ===================
-> Summary: hits    1.444 ± 0.020M/s (  1.444M/prod)
-> Summary: hits    2.279 ± 0.011M/s (  1.139M/prod)
-> Summary: hits    3.422 ± 0.014M/s (  1.141M/prod)
-> Summary: hits    3.565 ± 0.017M/s (  0.891M/prod)
-> Summary: hits    2.671 ± 0.013M/s (  0.534M/prod)
-> Summary: hits    2.409 ± 0.005M/s (  0.401M/prod)
-> Summary: hits    2.485 ± 0.008M/s (  0.355M/prod)
-> Summary: hits    2.496 ± 0.003M/s (  0.312M/prod)
-> Summary: hits    2.585 ± 0.002M/s (  0.287M/prod)
-> Summary: hits    2.908 ± 0.011M/s (  0.291M/prod)
-> Summary: hits    2.346 ± 0.016M/s (  0.213M/prod)
-> Summary: hits    2.804 ± 0.004M/s (  0.234M/prod)
-> Summary: hits    2.556 ± 0.001M/s (  0.197M/prod)
-> Summary: hits    2.754 ± 0.004M/s (  0.197M/prod)
-> Summary: hits    2.482 ± 0.002M/s (  0.165M/prod)
-> Summary: hits    2.412 ± 0.005M/s (  0.151M/prod)
-> Summary: hits    2.710 ± 0.003M/s (  0.159M/prod)
-> Summary: hits    2.826 ± 0.005M/s (  0.157M/prod)
-> Summary: hits    2.718 ± 0.001M/s (  0.143M/prod)
-> Summary: hits    2.844 ± 0.006M/s (  0.142M/prod)
-> 
-> The numbers in parenthesis give averaged throughput per thread which is
-> of greatest interest here as a measure of scalability. Improvements are
-> in the order of 22 - 68% with this particular benchmark (mean = 43%).
-> 
-> V2:
->  - Updated commit message to include benchmark results.
-> 
-> [0] https://docs.kernel.org/locking/spinlocks.html
-> [1] https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/benchs/bench_trigger.c
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-Thanks for update! This looks good to me.
-Let me pick this for probes/for-next.
-
-Thank you,
-
-> 
-> Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> ---
->  kernel/events/uprobes.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index e4834d23e1d1..8ae0eefc3a34 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
->   */
->  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
->  
-> -static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-> +static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
->  
->  #define UPROBES_HASH_SZ	13
->  /* serialize uprobe->pending_list */
-> @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
->  {
->  	struct uprobe *uprobe;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	uprobe = __find_uprobe(inode, offset);
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  
->  	return uprobe;
->  }
-> @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
->  {
->  	struct uprobe *u;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	write_lock(&uprobes_treelock);
->  	u = __insert_uprobe(uprobe);
-> -	spin_unlock(&uprobes_treelock);
-> +	write_unlock(&uprobes_treelock);
->  
->  	return u;
->  }
-> @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
->  	if (WARN_ON(!uprobe_is_active(uprobe)))
->  		return;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	write_lock(&uprobes_treelock);
->  	rb_erase(&uprobe->rb_node, &uprobes_tree);
-> -	spin_unlock(&uprobes_treelock);
-> +	write_unlock(&uprobes_treelock);
->  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
->  	put_uprobe(uprobe);
->  }
-> @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
->  	min = vaddr_to_offset(vma, start);
->  	max = min + (end - start) - 1;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	n = find_node_in_range(inode, min, max);
->  	if (n) {
->  		for (t = n; t; t = rb_prev(t)) {
-> @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
->  			get_uprobe(u);
->  		}
->  	}
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  }
->  
->  /* @vma contains reference counter, not the probed instruction. */
-> @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
->  	min = vaddr_to_offset(vma, start);
->  	max = min + (end - start) - 1;
->  
-> -	spin_lock(&uprobes_treelock);
-> +	read_lock(&uprobes_treelock);
->  	n = find_node_in_range(inode, min, max);
-> -	spin_unlock(&uprobes_treelock);
-> +	read_unlock(&uprobes_treelock);
->  
->  	return !!n;
->  }
-> -- 
-> 2.43.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
