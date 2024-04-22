@@ -1,377 +1,208 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CDA4CB2E;
-	Mon, 22 Apr 2024 08:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E29550A72;
+	Mon, 22 Apr 2024 08:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774400; cv=none; b=Vu9E1XHpGz0UoqDy0FMgZWLxEH9JuJC7nB0oxqQsrqSXsuDq3mFC5ZEuih0PmR0C5n92RgqoBcnD//vcfNxVGKtXHzXskoSsS05zP0ma6Okz7BVFC+F2XNatb092PrAWxSOCCgrVO+sD5C6fCu++IJccf7ufbdUdAgXjvU2RiE4=
+	t=1713775624; cv=none; b=bPbYMkzU5Ly9lw55tSG434gKYfI9lSrHoRmneiv51P20CpGFAISXeKV2zyIkUdI5uGpa29heAg8AT6sKHEl3Fo4uMFmBBcXHBRujIGALFeyGDIpw9ncBsNQ8TN7IdTNAm9kOER7jkJj8GqLwnRK68u7Xq2daSmhb+LkvTbRBVPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774400; c=relaxed/simple;
-	bh=TaKjak6gIBlraV8Mbmahr73OGfbuZErVxOcLmx3nWY4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cZPGl1FlXRSNVGr63JwcKnkJHTC1dpNA7+Mi3dsHuKJchAgN19TxhXAETb8IXST1ZbFMiGoNR1Zu9fXC/x4jSPaF8pb48vIKriEou9RDMr73RQSCpRYqJqvtyRnjrgIhdAQZ0TQe9OvdwkRMRrO0dlTV4IqnIpu3/LjIdfsr7KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WaTvZzJp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713775624; c=relaxed/simple;
+	bh=BPjsR/H4bAhpP8TjaRt6U4VR0hx9e8E2U+ccLfYrPTI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jaVjwErBNLpn254czA9fCHfJJdlJc9u8N8gNF2NQcwQEIYyzBqOhSQzBaMDJYJdrxTXYOY7ERmqE1PaGPyGjG9SVIKFxek8T5f+JDj/0IKrGezSW9/Vm24VdJk9dCaPat6CH/FMUY9I45A9MUGjn7MQ9DtmnwC/urGxqABHc6ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdH6kATk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaTvZzJp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422E5C113CC;
-	Mon, 22 Apr 2024 08:26:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdH6kATk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 417B7C32782;
+	Mon, 22 Apr 2024 08:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713774399;
-	bh=TaKjak6gIBlraV8Mbmahr73OGfbuZErVxOcLmx3nWY4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WaTvZzJpWUir1wNI+KEmdwFdGTrP4woDnA6LGEZoOZt9K9SJHNWhVjQhZIp1foQ9I
-	 yvqgbVpxTaHT6X7IPK2KW8B87G+8MOBHV9UCedKDJoV5rnS3tIgC825SBGDLnGsOkf
-	 REWQA9L8cquHDRJgyM1NKwJIO4wyYhNZ408Gxn8qURVHxvtJzFZLViRkYC28T0ur6Z
-	 ob0J5ShRKJwlmIcdV85po636NpkS8YJ2uP09HOTDsBaencLsUK2+eun1AoI1opu2gn
-	 4yL2tIktIDMd/sP1gDAH0thnB2WR+Xp0ogYlmicaad4vyYXV3m/rhG7JpfHmE8ny1C
-	 /wvz50x9pJH9w==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 00/15] mm: jit/text allocator
-Date: Mon, 22 Apr 2024 11:26:19 +0300
-Message-ID: <20240422082619.3509958-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1713775623;
+	bh=BPjsR/H4bAhpP8TjaRt6U4VR0hx9e8E2U+ccLfYrPTI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mdH6kATkYUmRLnW9kpZE73BhvAEaN1JH5KCWUcvVkSPjujoo1Ei1Ip+a5HPUaPj7s
+	 AaJGAPVVqkl9TNeCOgtmmBB92JvYjWV8f8AqG/sSFaXoJU1u1cGr8/xiIisUcRMr8f
+	 c4QegdrhrNS1jys1kk0GYpFlRZ1dEGkGf15s7vabwn0M86wu7ZzykQaK37uDPASZ/s
+	 02XSMZWP2W5Yif3e6LWwe3QQN+BzPohN7gcj8JhOyjzFFiNx/CcQAErXQG97lnzIsB
+	 yH6uR0hciUEEI+qFIKkn/WF4O5ST/BaEAXW+z0SXeSLv/b3II6piUSy9dxlpU1bYjl
+	 qTBo+pewtDB6g==
+Message-ID: <4f492445-1fe3-44af-bbaa-bb1fe281964e@kernel.org>
+Date: Mon, 22 Apr 2024 10:46:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v7 1/7] net: introduce rstreason to detect why
+ the RST is sent
+Content-Language: en-GB
+To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
+ dsahern@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ atenart@kernel.org
+Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+References: <20240422030109.12891-1-kerneljasonxing@gmail.com>
+ <20240422030109.12891-2-kerneljasonxing@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240422030109.12891-2-kerneljasonxing@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Hi Jason,
 
-Hi,
+On 22/04/2024 05:01, Jason Xing wrote:
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Add a new standalone file for the easy future extension to support
+> both active reset and passive reset in the TCP/DCCP/MPTCP protocols.
 
-Since v3 I looked into making execmem more of an utility toolbox, as we
-discussed at LPC with Mark Rutland, but it was getting more hairier than
-having a struct describing architecture constraints and a type identifying
-the consumer of execmem.
+Thank you for looking at that!
 
-And I do think that having the description of architecture constraints for
-allocations of executable memory in a single place is better than having it
-spread all over the place.
+(...)
 
-The patches available via git:
-https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v5
+> diff --git a/include/net/rstreason.h b/include/net/rstreason.h
+> new file mode 100644
+> index 000000000000..c57bc5413c17
+> --- /dev/null
+> +++ b/include/net/rstreason.h
+> @@ -0,0 +1,144 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +
+> +#ifndef _LINUX_RSTREASON_H
+> +#define _LINUX_RSTREASON_H
+> +#include <net/dropreason-core.h>
+> +#include <uapi/linux/mptcp.h>
+> +
+> +#define DEFINE_RST_REASON(FN, FNe)	\
+> +	FN(MPTCP_RST_EUNSPEC)		\
+> +	FN(MPTCP_RST_EMPTCP)		\
+> +	FN(MPTCP_RST_ERESOURCE)		\
+> +	FN(MPTCP_RST_EPROHIBIT)		\
+> +	FN(MPTCP_RST_EWQ2BIG)		\
+> +	FN(MPTCP_RST_EBADPERF)		\
+> +	FN(MPTCP_RST_EMIDDLEBOX)	\
 
-v5 changes:
-* rebase on v6.9-rc4 to avoid a conflict in kprobes
-* add copyrights to mm/execmem.c (Luis)
-* fix spelling (Ingo)
-* define MODULES_VADDDR for sparc (Sam)
-* consistently initialize struct execmem_info (Peter)
-* reduce #ifdefs in function bodies in kprobes (Masami) 
+Small detail: should it not make more sense to put the ones linked to
+MPTCP at the end? I mean I guess MPTCP should be treated in second
+priority: CONFIG_MPTCP could not be set, and the ones linked to TCP
+should be more frequent, etc.
 
-v4: https://lore.kernel.org/all/20240411160051.2093261-1-rppt@kernel.org
-* rebase on v6.9-rc2
-* rename execmem_params to execmem_info and execmem_arch_params() to
-  execmem_arch_setup()
-* use single execmem_alloc() API instead of execmem_{text,data}_alloc() (Song)
-* avoid extra copy of execmem parameters (Rick)
-* run execmem_init() as core_initcall() except for the architectures that
-  may allocated text really early (currently only x86) (Will)
-* add acks for some of arm64 and riscv changes, thanks Will and Alexandre
-* new commits:
-  - drop call to kasan_alloc_module_shadow() on arm64 because it's not
-    needed anymore
-  - rename MODULE_START to MODULES_VADDR on MIPS
-  - use CONFIG_EXECMEM instead of CONFIG_MODULES on powerpc as per Christophe:
-    https://lore.kernel.org/all/79062fa3-3402-47b3-8920-9231ad05e964@csgroup.eu/
+> +	FN(NOT_SPECIFIED)		\
+> +	FN(NO_SOCKET)			\
+> +	FNe(MAX)
 
-v3: https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org
-* add type parameter to execmem allocation APIs
-* remove BPF dependency on modules
+(...)
 
-v2: https://lore.kernel.org/all/20230616085038.4121892-1-rppt@kernel.org
-* Separate "module" and "others" allocations with execmem_text_alloc()
-and jit_text_alloc()
-* Drop ROX entailment on x86
-* Add ack for nios2 changes, thanks Dinh Nguyen
+> +/* Convert reset reasons in MPTCP to our own enum type */
+> +static inline enum sk_rst_reason convert_mptcpreason(u32 reason)
+> +{
+> +	switch (reason) {
+> +	case MPTCP_RST_EUNSPEC:
+> +		return SK_RST_REASON_MPTCP_RST_EUNSPEC;
+> +	case MPTCP_RST_EMPTCP:
+> +		return SK_RST_REASON_MPTCP_RST_EMPTCP;
+> +	case MPTCP_RST_ERESOURCE:
+> +		return SK_RST_REASON_MPTCP_RST_ERESOURCE;
+> +	case MPTCP_RST_EPROHIBIT:
+> +		return SK_RST_REASON_MPTCP_RST_EPROHIBIT;
+> +	case MPTCP_RST_EWQ2BIG:
+> +		return SK_RST_REASON_MPTCP_RST_EWQ2BIG;
+> +	case MPTCP_RST_EBADPERF:
+> +		return SK_RST_REASON_MPTCP_RST_EBADPERF;
+> +	case MPTCP_RST_EMIDDLEBOX:
+> +		return SK_RST_REASON_MPTCP_RST_EMIDDLEBOX;
+> +	default:
+> +		/**
+> +		 * It should not happen, or else errors may occur
+> +		 * in MPTCP layer
+> +		 */
+> +		return SK_RST_REASON_ERROR;
+> +	}
+> +}
 
-v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
+If this helper is only used on MPTCP, maybe better to move it to
+net/mptcp/protocol.h (and to patch 5/7?)? We tried to isolate MPTCP code.
 
-= Cover letter from v1 (sligtly updated) =
+Also, maybe it is just me, but I'm not a big fan of the helper name:
+convert_mptcpreason() (same for the "drop" one). I think it should at
+least mention its "origin" (rst reason): e.g. something like
+(sk_)rst_reason_convert_mptcp or (sk_)rst_convert_mptcp_reason() (or
+mptcp_to_rst_reason())?
 
-module_alloc() is used everywhere as a mean to allocate memory for code.
+And (sk_)rst_reason_convert_(skb_)drop() (or skb_drop_to_rst_reason())?
 
-Beside being semantically wrong, this unnecessarily ties all subsystmes
-that need to allocate code, such as ftrace, kprobes and BPF to modules and
-puts the burden of code allocation to the modules code.
+> +/* Convert reset reasons in MPTCP to our own enum type */
 
-Several architectures override module_alloc() because of various
-constraints where the executable memory can be located and this causes
-additional obstacles for improvements of code allocation.
+I don't think this part is linked to MPTCP, right?
 
-A centralized infrastructure for code allocation allows allocations of
-executable memory as ROX, and future optimizations such as caching large
-pages for better iTLB performance and providing sub-page allocations for
-users that only need small jit code snippets.
+> +static inline enum sk_rst_reason convert_dropreason(enum skb_drop_reason reason)
+> +{
+> +	switch (reason) {
+> +	case SKB_DROP_REASON_NOT_SPECIFIED:
+> +		return SK_RST_REASON_NOT_SPECIFIED;
+> +	case SKB_DROP_REASON_NO_SOCKET:
+> +		return SK_RST_REASON_NO_SOCKET;
+> +	default:
+> +		/* If we don't have our own corresponding reason */
+> +		return SK_RST_REASON_NOT_SPECIFIED;
+> +	}
+> +}
 
-Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
-proposed execmem_alloc [2], but both these approaches were targeting BPF
-allocations and lacked the ground work to abstract executable allocations
-and split them from the modules core.
+(This helper could be introduced in patch 4/7 because it is not used
+before, but I'm fine either ways.)
 
-Thomas Gleixner suggested to express module allocation restrictions and
-requirements as struct mod_alloc_type_params [3] that would define ranges,
-protections and other parameters for different types of allocations used by
-modules and following that suggestion Song separated allocations of
-different types in modules (commit ac3b43283923 ("module: replace
-module_layout with module_memory")) and posted "Type aware module
-allocator" set [4].
+> +#endif
 
-I liked the idea of parametrising code allocation requirements as a
-structure, but I believe the original proposal and Song's module allocator
-was too module centric, so I came up with these patches.
-
-This set splits code allocation from modules by introducing execmem_alloc()
-and and execmem_free(), APIs, replaces call sites of module_alloc() and
-module_memfree() with the new APIs and implements core text and related
-allocations in a central place.
-
-Instead of architecture specific overrides for module_alloc(), the
-architectures that require non-default behaviour for text allocation must
-fill execmem_info structure and implement execmem_arch_setup() that returns
-a pointer to that structure. If an architecture does not implement
-execmem_arch_setup(), the defaults compatible with the current
-modules::module_alloc() are used.
-
-Since architectures define different restrictions on placement,
-permissions, alignment and other parameters for memory that can be used by
-different subsystems that allocate executable memory, execmem APIs
-take a type argument, that will be used to identify the calling subsystem
-and to allow architectures to define parameters for ranges suitable for that
-subsystem.
-
-The new infrastructure allows decoupling of BPF, kprobes and ftrace from
-modules, and most importantly it paves the way for ROX allocations for
-executable memory.
-
-[1] https://lore.kernel.org/lkml/20201120202426.18009-1-rick.p.edgecombe@intel.com/
-[2] https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
-[3] https://lore.kernel.org/all/87v8mndy3y.ffs@tglx/
-[4] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
-
-
-Mike Rapoport (IBM) (17):
-  arm64: module: remove unneeded call to kasan_alloc_module_shadow()
-  mips: module: rename MODULE_START to MODULES_VADDR
-  nios2: define virtual address space for modules
-  sparc: simplify module_alloc()
-  module: make module_memory_{alloc,free} more self-contained
-  mm: introduce execmem_alloc() and execmem_free()
-  mm/execmem, arch: convert simple overrides of module_alloc to execmem
-  mm/execmem, arch: convert remaining overrides of module_alloc to execmem
-  riscv: extend execmem_params for generated code allocations
-  powerpc: extend execmem_params for kprobes allocations
-  arch: make execmem setup available regardless of CONFIG_MODULES
-  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
-  powerpc: use CONFIG_EXECMEM instead of CONFIG_MODULES where appropriate
-  kprobes: remove dependency on CONFIG_MODULES
-  bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-  fixup: kprobes without CONFIG_MODULES
-  fixup: kprobes without CONFIG_MODULES and with module_is_coming
-
- arch/Kconfig                         |   8 +-
- arch/arm/kernel/module.c             |  34 -------
- arch/arm/mm/init.c                   |  45 +++++++++
- arch/arm64/kernel/module.c           | 126 -----------------------
- arch/arm64/kernel/probes/kprobes.c   |   7 --
- arch/arm64/mm/init.c                 | 140 ++++++++++++++++++++++++++
- arch/arm64/net/bpf_jit_comp.c        |  11 --
- arch/loongarch/kernel/module.c       |   6 --
- arch/loongarch/mm/init.c             |  21 ++++
- arch/mips/include/asm/pgtable-64.h   |   4 +-
- arch/mips/kernel/module.c            |  10 --
- arch/mips/mm/fault.c                 |   4 +-
- arch/mips/mm/init.c                  |  23 +++++
- arch/nios2/include/asm/pgtable.h     |   5 +-
- arch/nios2/kernel/module.c           |  20 ----
- arch/nios2/mm/init.c                 |  21 ++++
- arch/parisc/kernel/module.c          |  12 ---
- arch/parisc/mm/init.c                |  23 ++++-
- arch/powerpc/Kconfig                 |   2 +-
- arch/powerpc/include/asm/kasan.h     |   2 +-
- arch/powerpc/kernel/head_8xx.S       |   4 +-
- arch/powerpc/kernel/head_book3s_32.S |   6 +-
- arch/powerpc/kernel/kprobes.c        |  22 +---
- arch/powerpc/kernel/module.c         |  38 -------
- arch/powerpc/lib/code-patching.c     |   2 +-
- arch/powerpc/mm/book3s32/mmu.c       |   2 +-
- arch/powerpc/mm/mem.c                |  64 ++++++++++++
- arch/riscv/kernel/module.c           |  12 ---
- arch/riscv/kernel/probes/kprobes.c   |  10 --
- arch/riscv/mm/init.c                 |  45 +++++++++
- arch/riscv/net/bpf_jit_core.c        |  13 ---
- arch/s390/kernel/ftrace.c            |   4 +-
- arch/s390/kernel/kprobes.c           |   4 +-
- arch/s390/kernel/module.c            |  42 +-------
- arch/s390/mm/init.c                  |  30 ++++++
- arch/sparc/include/asm/pgtable_32.h  |   2 +
- arch/sparc/kernel/module.c           |  30 ------
- arch/sparc/mm/Makefile               |   2 +
- arch/sparc/mm/execmem.c              |  21 ++++
- arch/sparc/net/bpf_jit_comp_32.c     |   8 +-
- arch/x86/Kconfig                     |   2 +
- arch/x86/kernel/ftrace.c             |  16 +--
- arch/x86/kernel/kprobes/core.c       |   4 +-
- arch/x86/kernel/module.c             |  51 ----------
- arch/x86/mm/init.c                   |  29 ++++++
- include/linux/execmem.h              | 132 ++++++++++++++++++++++++
- include/linux/module.h               |   9 ++
- include/linux/moduleloader.h         |  15 ---
- kernel/bpf/Kconfig                   |   2 +-
- kernel/bpf/core.c                    |   6 +-
- kernel/kprobes.c                     |  63 +++++++-----
- kernel/module/Kconfig                |   1 +
- kernel/module/main.c                 | 105 +++++++++----------
- kernel/trace/trace_kprobe.c          |  20 +++-
- mm/Kconfig                           |   3 +
- mm/Makefile                          |   1 +
- mm/execmem.c                         | 145 +++++++++++++++++++++++++++
- mm/mm_init.c                         |   2 +
- 58 files changed, 910 insertions(+), 581 deletions(-)
- create mode 100644 arch/sparc/mm/execmem.c
- create mode 100644 include/linux/execmem.h
- create mode 100644 mm/execmem.c
-
-
-base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
+Cheers,
+Matt
 -- 
-2.43.0
-
-*** BLURB HERE ***
-
-Mike Rapoport (IBM) (15):
-  arm64: module: remove unneeded call to kasan_alloc_module_shadow()
-  mips: module: rename MODULE_START to MODULES_VADDR
-  nios2: define virtual address space for modules
-  sparc: simplify module_alloc()
-  module: make module_memory_{alloc,free} more self-contained
-  mm: introduce execmem_alloc() and execmem_free()
-  mm/execmem, arch: convert simple overrides of module_alloc to execmem
-  mm/execmem, arch: convert remaining overrides of module_alloc to
-    execmem
-  riscv: extend execmem_params for generated code allocations
-  powerpc: extend execmem_params for kprobes allocations
-  arch: make execmem setup available regardless of CONFIG_MODULES
-  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
-  powerpc: use CONFIG_EXECMEM instead of CONFIG_MODULES where
-    appropriate
-  kprobes: remove dependency on CONFIG_MODULES
-  bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-
- arch/Kconfig                         |   8 +-
- arch/arm/kernel/module.c             |  34 -------
- arch/arm/mm/init.c                   |  45 +++++++++
- arch/arm64/kernel/module.c           | 126 -----------------------
- arch/arm64/kernel/probes/kprobes.c   |   7 --
- arch/arm64/mm/init.c                 | 140 ++++++++++++++++++++++++++
- arch/arm64/net/bpf_jit_comp.c        |  11 --
- arch/loongarch/kernel/module.c       |   6 --
- arch/loongarch/mm/init.c             |  21 ++++
- arch/mips/include/asm/pgtable-64.h   |   4 +-
- arch/mips/kernel/module.c            |  10 --
- arch/mips/mm/fault.c                 |   4 +-
- arch/mips/mm/init.c                  |  23 +++++
- arch/nios2/include/asm/pgtable.h     |   5 +-
- arch/nios2/kernel/module.c           |  20 ----
- arch/nios2/mm/init.c                 |  21 ++++
- arch/parisc/kernel/module.c          |  12 ---
- arch/parisc/mm/init.c                |  23 ++++-
- arch/powerpc/Kconfig                 |   2 +-
- arch/powerpc/include/asm/kasan.h     |   2 +-
- arch/powerpc/kernel/head_8xx.S       |   4 +-
- arch/powerpc/kernel/head_book3s_32.S |   6 +-
- arch/powerpc/kernel/kprobes.c        |  22 +---
- arch/powerpc/kernel/module.c         |  38 -------
- arch/powerpc/lib/code-patching.c     |   2 +-
- arch/powerpc/mm/book3s32/mmu.c       |   2 +-
- arch/powerpc/mm/mem.c                |  64 ++++++++++++
- arch/riscv/kernel/module.c           |  12 ---
- arch/riscv/kernel/probes/kprobes.c   |  10 --
- arch/riscv/mm/init.c                 |  45 +++++++++
- arch/riscv/net/bpf_jit_core.c        |  13 ---
- arch/s390/kernel/ftrace.c            |   4 +-
- arch/s390/kernel/kprobes.c           |   4 +-
- arch/s390/kernel/module.c            |  42 +-------
- arch/s390/mm/init.c                  |  30 ++++++
- arch/sparc/include/asm/pgtable_32.h  |   2 +
- arch/sparc/kernel/module.c           |  30 ------
- arch/sparc/mm/Makefile               |   2 +
- arch/sparc/mm/execmem.c              |  21 ++++
- arch/sparc/net/bpf_jit_comp_32.c     |   8 +-
- arch/x86/Kconfig                     |   2 +
- arch/x86/kernel/ftrace.c             |  16 +--
- arch/x86/kernel/kprobes/core.c       |   4 +-
- arch/x86/kernel/module.c             |  51 ----------
- arch/x86/mm/init.c                   |  29 ++++++
- include/linux/execmem.h              | 132 ++++++++++++++++++++++++
- include/linux/module.h               |   9 ++
- include/linux/moduleloader.h         |  15 ---
- kernel/bpf/Kconfig                   |   2 +-
- kernel/bpf/core.c                    |   6 +-
- kernel/kprobes.c                     |  63 +++++++-----
- kernel/module/Kconfig                |   1 +
- kernel/module/main.c                 | 105 +++++++++----------
- kernel/trace/trace_kprobe.c          |  20 +++-
- mm/Kconfig                           |   3 +
- mm/Makefile                          |   1 +
- mm/execmem.c                         | 145 +++++++++++++++++++++++++++
- mm/mm_init.c                         |   2 +
- 58 files changed, 910 insertions(+), 581 deletions(-)
- create mode 100644 arch/sparc/mm/execmem.c
- create mode 100644 include/linux/execmem.h
- create mode 100644 mm/execmem.c
-
-
-base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
--- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
