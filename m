@@ -1,119 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFACC58AB4;
-	Mon, 22 Apr 2024 09:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964CF13C677;
+	Mon, 22 Apr 2024 10:05:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713779274; cv=none; b=Ob02jccq4x9SONeKb6v+uYLnqgiQKxdx/SQ6rfkGXh7dMm4b6Wup8QmAGiGch4MNTdT2hfpuzHFnhOFMokH4AeALS4eycoQBf8angGKhSKhvCxHKRyHa2ecYuKa8nAFKUEAEehuOd++vGw+zNj2dD9YaArPbnfjs/a9L75GhWUQ=
+	t=1713780345; cv=none; b=pFu7AxKjDJeQQbJdjVX6y8MidH9WfxqQxGpasdRu/RvC/ATtI8e+7nyKPHB58uPfQ9TK1H8/tSdGdAr4uLxUCuEHxXG1RTzJXY6XQwPw48gPZbs+hq0fUbCBTSkS5/RqFWTpRRNC1bKKaCY7gKwBqbL8bjPaOYW67vvcCjvcGwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713779274; c=relaxed/simple;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=krOx7C/jlXcWGJUK1eJ9WP+Nm9m6fARnY2L8eJUrzsI+Gi1aquhyIaL5A7sVm3Ul6/J/hxt+EvrS/tthTtFcQrPT0PjqM7LaeIFi+mvAE7k1GeBONEsPnK1vj2EtxWnSlve508zaeq5MaUm/2jpmcRoQUdKi494RyYe5ORftv0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZG8pQfl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713780345; c=relaxed/simple;
+	bh=WPTWdTvATvp/Jc2ILqq8RbsICHapQ9gBhIDKHIKQg0g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZNR1Ey6d5Y2NIRL5WG0hg+0MLTlwY6OQbTIJu7yK/AFccJeLWbW1+GNqI4HljbXh7NLg1t/MfCSasGxEgwkMabXXVnyQgvZqsuhblwCbzpHd0jZbOFMoMQyEWViAaIboS/lTWE+cqhPbiLN02IjCFa/LftbWoTSDgGwV4KCIuxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAniB5Js; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZG8pQfl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05CA2C32782;
-	Mon, 22 Apr 2024 09:47:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAniB5Js"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA6CC113CC;
+	Mon, 22 Apr 2024 10:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713779274;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pZG8pQflxLsEuJFglVKqJVh1hzZ6znU6by6zRe6CVzeVYUIAfkP3KeqnCBd341Ok/
-	 ZOAQMatwn0MrxZV/qFh9l15DBEe/HrHpyTAZh+pCjnAzVTpL1PuxwVZAPTWRbs8388
-	 FPoIBbcENyioCyFjKvGfWLnYLQ0jPXxHWcvQyPbJW6HlNu8cDhOXh9/zSaqXxmP2a1
-	 ZQc+c66AbHHonWEZ0/NqO/wG1tPBotsJEOtsMluC1yKGZFNE6ftrfpAJMvXH8VQJx2
-	 UifyO8EHPM4iUUB2xtq07CReWxKqTAgWKsDzYr0X0ychttFdDC3QIMNctMPSzamCNs
-	 t1CDFLgjmIpAA==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 15/15] bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-Date: Mon, 22 Apr 2024 12:44:36 +0300
-Message-ID: <20240422094436.3625171-16-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422094436.3625171-1-rppt@kernel.org>
-References: <20240422094436.3625171-1-rppt@kernel.org>
+	s=k20201202; t=1713780345;
+	bh=WPTWdTvATvp/Jc2ILqq8RbsICHapQ9gBhIDKHIKQg0g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dAniB5Jsq/cAUYner1B86ic2vrrL731C8vhtTKZw0rc1uQ+S3NC/lrsp9sVE7Oj9l
+	 JRDSKNaB3Jh/ud4alrjEr32BST067vcCTQVK3dofx9+p+axKXAH+Rn4A4r1lM7fukd
+	 LUEsc4Qu0kgyagzUl9YXttTHgylXLOBIbBnGgrhFwz52ZFUSm8z9f0F5G9JNtLS70q
+	 HY6vn+f4GW1/AjosvWx5kFe/mZ6seAfwl/qZVbccuYVNkH+z9E/outNlR67+iB8/uJ
+	 IJ8rU/0cJRIKpoF1lczjhBvcEyUoxcCHfTZs6I6+VvfDmI8myZHvJ9nQYWnQ6hip/d
+	 ujdirnxpi+7sA==
+Message-ID: <70184416-344f-4e03-bfb7-0626ff845fe0@kernel.org>
+Date: Mon, 22 Apr 2024 12:05:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v7 1/7] net: introduce rstreason to detect why
+ the RST is sent
+Content-Language: en-GB
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: edumazet@google.com, dsahern@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ atenart@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+References: <20240422030109.12891-1-kerneljasonxing@gmail.com>
+ <20240422030109.12891-2-kerneljasonxing@gmail.com>
+ <4f492445-1fe3-44af-bbaa-bb1fe281964e@kernel.org>
+ <CAL+tcoBRtE0ikv9xiUoWq66_WcysF7QwGggTMwiw793qXxKH8g@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CAL+tcoBRtE0ikv9xiUoWq66_WcysF7QwGggTMwiw793qXxKH8g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On 22/04/2024 11:17, Jason Xing wrote:> On Mon, Apr 22, 2024 at 4:47 PM
+Matthieu Baerts <matttbe@kernel.org> wrote:
+>> On 22/04/2024 05:01, Jason Xing wrote:
+>>> From: Jason Xing <kernelxing@tencent.com>
 
-BPF just-in-time compiler depended on CONFIG_MODULES because it used
-module_alloc() to allocate memory for the generated code.
+(...)
 
-Since code allocations are now implemented with execmem, drop dependency of
-CONFIG_BPF_JIT on CONFIG_MODULES and make it select CONFIG_EXECMEM.
+>>> diff --git a/include/net/rstreason.h b/include/net/rstreason.h
+>>> new file mode 100644
+>>> index 000000000000..c57bc5413c17
+>>> --- /dev/null
+>>> +++ b/include/net/rstreason.h
+>>> @@ -0,0 +1,144 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>>> +
+>>> +#ifndef _LINUX_RSTREASON_H
+>>> +#define _LINUX_RSTREASON_H
+>>> +#include <net/dropreason-core.h>
+>>> +#include <uapi/linux/mptcp.h>
+>>> +
+>>> +#define DEFINE_RST_REASON(FN, FNe)   \
+>>> +     FN(MPTCP_RST_EUNSPEC)           \
+>>> +     FN(MPTCP_RST_EMPTCP)            \
+>>> +     FN(MPTCP_RST_ERESOURCE)         \
+>>> +     FN(MPTCP_RST_EPROHIBIT)         \
+>>> +     FN(MPTCP_RST_EWQ2BIG)           \
+>>> +     FN(MPTCP_RST_EBADPERF)          \
+>>> +     FN(MPTCP_RST_EMIDDLEBOX)        \
+>>
+>> Small detail: should it not make more sense to put the ones linked to
+>> MPTCP at the end? I mean I guess MPTCP should be treated in second
+>> priority: CONFIG_MPTCP could not be set, and the ones linked to TCP
+>> should be more frequent, etc.
+> 
+> Do you mean that I need to adjust the order: 1) tcp reasons first, 2)
+> independent reasons, 3) mptcp reasons ?
 
-Suggested-by: Björn Töpel <bjorn@kernel.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- kernel/bpf/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Correct, it looks like it is a more "natural" order.
 
-diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
-index bc25f5098a25..f999e4e0b344 100644
---- a/kernel/bpf/Kconfig
-+++ b/kernel/bpf/Kconfig
-@@ -43,7 +43,7 @@ config BPF_JIT
- 	bool "Enable BPF Just In Time compiler"
- 	depends on BPF
- 	depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
--	depends on MODULES
-+	select EXECMEM
- 	help
- 	  BPF programs are normally handled by a BPF interpreter. This option
- 	  allows the kernel to generate native code when a program is loaded
+> Reasonable. I will do it :)
+
+Thanks!
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
