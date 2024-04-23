@@ -1,647 +1,254 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FC313B7A3
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Apr 2024 15:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885540; cv=none; b=aAncUMNTMv/yNcQJHfpwyRVSHByINUzDh1KCXhdbrYjYPSbPzP475jfRVo/5kJGoqXnWq2a/yiaBRi3UF7kYBJ3HDmtbT3atSyp2IYKOquMSala7ZbonrpoWxUqYY7i6MXg4hNBUBtBhE79WnZfi5U9PJx/1oBt4XkB+TMirbRM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885540; c=relaxed/simple;
-	bh=oVaDmsDL6pbOGstGGNwIRlt3eAt8QlSYJGDN+v5bRKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pc3+sCeGNZFDxxCoWf4dgsvgJMPXlrXZnt7VTki+2ksqErWCYBUG7UsJN+tqewYR4sFPfWPRUwUr3l+NnlId3hbFSe87VS5gqMReh20doYC+6qvaDTwGFa0X4XR/96V1ZJI5D8YDncQHDhc+pRGs3F9mJhzyfWM42XkRKpxsvJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Imnox7yZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6B81BC23;
+	Tue, 23 Apr 2024 16:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713888287; cv=fail; b=fra9pcMbRbwrNJ1Ge6YyV+fGcSu3EhaywE0etdxOEhTuPLIMj8UKqNqGpy/qI5dRojp44OWUE77KWIj5yT5Xx22lwdvi4j+mhW9eLmPF5sFVh5iF7ztDj+hgYVIJVhI14E37rrbgWVSKj82imbIkqmQK1/GA4mZWYkrNmU7exD0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713888287; c=relaxed/simple;
+	bh=LqRggzY/nmtmqjpfV+LrAjwVFrAv7mJZhFGIrIJrZh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rG048qEE2fZnoS01Z6jd1xrzYjVO7+gwmdkj78/y+auJsN6Y8yjKUUqrAvfitOszun7nukakFUMFELAAPCYSCRN7C2hlBbk3vTjyXKshvtXzj154b3765hMJ7zyAhR/UqngHYRn+5KpY39OY16WSWaSFhjfP7Sx5vkb8AtFWRQY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=k3rZEn+o; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NJcreLHr; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Imnox7yZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713885536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1//G2apB5e6xOK0fMlwdOHS94yS2AW5Xhdqiqal+aJQ=;
-	b=Imnox7yZZZifeeioCST4crf1B9yYnQuMucmWlIni63DtefAUO7Hohe7wsAAN6LlsRjuxLe
-	bL05khxErKSQLeD+rZX8Zk8KP8qxXBPEV6lhP2qH3DIE4naT2MqrzQeoqA2v/ac392P5WA
-	ylf0YxZ0S0EFWGtFOSXoyUO5AgWw+B8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-XiXxiLzWM-ScCmuw5qEUnA-1; Tue, 23 Apr 2024 11:18:53 -0400
-X-MC-Unique: XiXxiLzWM-ScCmuw5qEUnA-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-343da0a889dso5242952f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Apr 2024 08:18:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713885532; x=1714490332;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1//G2apB5e6xOK0fMlwdOHS94yS2AW5Xhdqiqal+aJQ=;
-        b=YJzdTQ5w7NPzipvRZ+PTHHba382vCc9RBDEp7e6HkrfpmCVVxqpEye/pSQsW8B3/TU
-         6oVBK0hWO8+HJfDmLIo7wyQOjW1dKi/8sYzy9mLHH6gNOosgTGk6YYyaSqqYoEfeA26K
-         031MVMIApTuPVT4367QVTxWcn9lT8nnuEqdu9GLNFtyupzppvxGxzVV3idtzh7Mx+2Ge
-         y856w5a9mXM79xnNvVCV32DD3UaKdWiy2WqovpIsQrEhgcCEagjiUW4oQ0diz0keMmhk
-         Tc+e32ClXsfXraXa2rOY0EwQRSfUUn8594if2ildDqVgtx2Fa1mEMxyGkSb9Y8C1KS5N
-         laPA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2GI274Cd/eUpa/Jspq/4/j0y5/5Y2k5FuU2BpHU1LWz2vK4h77EicyHE5YeA76X81mKix3YEoxzy8QbCZp5Kp29mKBcUlJqLmbFykyW/C8IdJ
-X-Gm-Message-State: AOJu0Yx4eqdPU5L6uTL7BIB+roNzLyRZ/YnjR/V0uQCChHOiAhZK70Uc
-	mqJEqICAlswdlA/6XBtJGl5sUAKOE3nW6vxrG6KmDnVpo2I7EEqV75DKa5uEv0CRorcLMbTZjvw
-	kWhsjhCDyAZbj8EiGDLqYdv26DN+fFvUnJVjJ6E0Pb43oGPH1LMwGy4aMAxarPOdfi0e70Q==
-X-Received: by 2002:a5d:4e08:0:b0:343:b942:3430 with SMTP id p8-20020a5d4e08000000b00343b9423430mr11034980wrt.17.1713885532188;
-        Tue, 23 Apr 2024 08:18:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0oJ67oCLXe6CJ4NK827JaF/R/fYzxs/6dNXtzUR9Ro/CqZVvcLFOi2ryPuJwyuy0jA15m7g==
-X-Received: by 2002:a5d:4e08:0:b0:343:b942:3430 with SMTP id p8-20020a5d4e08000000b00343b9423430mr11034943wrt.17.1713885531593;
-        Tue, 23 Apr 2024 08:18:51 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:fd00:fb07:92f8:8f0c:6a08? (p200300cbc706fd00fb0792f88f0c6a08.dip0.t-ipconnect.de. [2003:cb:c706:fd00:fb07:92f8:8f0c:6a08])
-        by smtp.gmail.com with ESMTPSA id g2-20020a5d5542000000b0034720354152sm14797500wrw.117.2024.04.23.08.18.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 08:18:51 -0700 (PDT)
-Message-ID: <ba9df085-a3ff-42ab-bc9b-567b2d7cb983@redhat.com>
-Date: Tue, 23 Apr 2024 17:18:50 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k3rZEn+o";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NJcreLHr"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43NFT06I031599;
+	Tue, 23 Apr 2024 16:04:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=oW3zeCrR7RB0OB/C2DCljWKItiQROthRUK3g0bjvuqo=;
+ b=k3rZEn+o38P9PW3Lddttf93N/9FAm55Xy5+WCtv1ndIXAZ+5kxOCM9tCccc3anMhQC+x
+ DYES6T1DQdAvKXbgzuvAd2dO1YmU40MnXVgie2/F05PijvO9wyoe5LZMbJdKcYFP5rKt
+ LrAiQuFPghChWSLhEGl11RyekU5JlJhSllW394g8j2T6JyGuXEpJ5LaCM208a3D6gGmt
+ f2icRR0TygxQbm/w1Wg/LkhIhQFc6LL5SMWdxVPqBKssbFYdQNZbgMtIfG8bjYZSH2dc
+ 0F5F63dGzdAsn5rHpkUnqRKvO/Z+rVqvJabprjBEzZ0ERJxnPaFVneF9ixiXBWiLag48 ag== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xm4g4ds1a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Apr 2024 16:04:20 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43NF367e030797;
+	Tue, 23 Apr 2024 16:04:19 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xm457f25u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Apr 2024 16:04:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WUJPl/EpMxtc9WB60e827/FS1aWgYEPBrWC6hCOWzw1tFNtgWYect/OjMYHf8CPquxiOlReu5QLE2TXX1s7r8mmtNdDsnfF9HIvvYSNOcAZ3KVflAE7mD2Cfa5fmBQa1inHCyYS19+jGBrs7MExdTyBwQgejZenBUQE/E3/ITQb3CNg32KHUJvewih46NTShxaSytSeUbgYjGbZXR5LbOc6LeYoynZWxzxDAW1+mVbqx90li0mdAsDGHmWMTqDWfZT9ZJL0dtwC4zh9LZhwL9T+WfIQTHXw172tw0OX3/NzgPTfKgvzAchC0TEJlaYEmNYN0QLhIdo/EKOozjnCfgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oW3zeCrR7RB0OB/C2DCljWKItiQROthRUK3g0bjvuqo=;
+ b=SVZSA+ysBNZAH9cJ3GJbJk3hceKMViQtxqAhae+1T/iX09Tio1hWx1NE5/K3xE7Nh3bCDPU1zmWJEG1sxw+BYn6pwtmi1K+yDDc5PGvDBlbgbvHwKOhmWwgnSaBQ200fQqw0UbXHt+BG2AA47AkrgLEs6OLKfHiwkplCR6qWpi7eKIDNcxOhxAlV1Hn+i88uI2vbIHTcmaF2PSB3jqYHrICqgw0vV4cPsO9iOOjN/4DjBTfn/Cp8rusL0m8KwYf7QSiLHBiOKy7m9wWf5IYbPipYLE3+99ID1syfy6ncTPb6qecF73UwVJIPrABnIlxgkmrjOKLBI5t+20hAPCGNCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oW3zeCrR7RB0OB/C2DCljWKItiQROthRUK3g0bjvuqo=;
+ b=NJcreLHr445huoxl3KtLmRbNYlHtbJKzqYBbLaKW7l1c5TqukbClZMmNVwbbk6CxPfxHuPf1mIAlqzvJz+AYDbIYnvzrCk7/Y9YpM9oSmSoMFg5k6RgPbq4SrL8+3BwWu4DdUbaSssS7DrOMxoUziMqEsBQgSiPlHLIQg/MdHes=
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
+ by CY5PR10MB6263.namprd10.prod.outlook.com (2603:10b6:930:41::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
+ 2024 16:04:17 +0000
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490%6]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
+ 16:04:17 +0000
+Date: Tue, 23 Apr 2024 12:04:15 -0400
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        mathieu.desnoyers@efficios.com, kernel-team@android.com,
+        rdunlap@infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <6apbwt27afeercymrjsulrgyv4c2pj2tzqdllukf4czsbfifqo@6p23uqdjqtu7>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, kernel-team@android.com, rdunlap@infradead.org, 
+	linux-mm@kvack.org
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+ <20240406173649.3210836-3-vdonnefort@google.com>
+ <20240410134352.66d35fbc@gandalf.local.home>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410134352.66d35fbc@gandalf.local.home>
+User-Agent: NeoMutt/20231103
+X-ClientProxiedBy: YT3PR01CA0086.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:84::34) To DS0PR10MB7933.namprd10.prod.outlook.com
+ (2603:10b6:8:1b8::15)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com, rdunlap@infradead.org, linux-mm@kvack.org
-References: <20240406173649.3210836-1-vdonnefort@google.com>
- <20240406173649.3210836-3-vdonnefort@google.com>
- <9c553dae-5395-4ec9-b41c-a4decc37acf2@redhat.com>
- <06c6b023-6cdc-430d-be0b-086fd6453aeb@redhat.com>
- <ZiaqgNFLOwimE2Me@google.com>
- <0283adf3-0295-4b2d-997e-befb02b1cc1a@redhat.com>
- <ZibJLSdOlxZUGRBa@google.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZibJLSdOlxZUGRBa@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|CY5PR10MB6263:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6dffd1a2-4a7e-49c9-647e-08dc63af071d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?9XgmBXK9eWMvlnru8/cvIg2wdK7er7C6bpKwRrJbt795eU9UlDfZZR/aFDs2?=
+ =?us-ascii?Q?9DDjrV4MNOOewiP2GN4sbXgeF6XE86CnEyuMy/OTxXa90WAmA4HtOhPBep9g?=
+ =?us-ascii?Q?1AxYY+c+slnH8quFjMVk9GodMzqympVHBoIk2gel+F/fOuaXADVuMfYNM/Gr?=
+ =?us-ascii?Q?ySwcQF7UM919Z/Oqn4dpX86lwHWRKd8a7FoQVmL3rU+J+cLh8aSnrB/tgDeS?=
+ =?us-ascii?Q?qNj30pDFdsPcXV6ACTLRSaq6nppkn1okEOijBbYRxev4V/K6KPjM472sjJ2e?=
+ =?us-ascii?Q?2E4aO2NnUQVMgXtMuh/wGUAiY3LJEZq0Tl2Haqxf+4BA/3jtJZE3TGewgRHS?=
+ =?us-ascii?Q?yAl9iGxdEdQ+PCTmh2xIMZoyqvFVdGjWhdiIV6EhL8ORbyBuLJryoxk/bUHX?=
+ =?us-ascii?Q?/5kwPcVvHwPtaMX06iWu22MTGjnh6a7ugcfKpUC2rNRmChCRowS3nUzCiwA9?=
+ =?us-ascii?Q?CLsEfYglH3hF4uLMYRXCQe0sXvi/51qFDGH5Ci0eE/pan9sBo9zwNS/vewrj?=
+ =?us-ascii?Q?Axt9BhNhyGi83HFWbEFhZOpx7GOA94m9kF9cO5Pk/5hrYjFzMfmniYqe0Gpj?=
+ =?us-ascii?Q?6GYLFpPfahR9IVF2CPXBca1q6UR4PJTbwgraN6v1PcpWoVFZGvKQPKyPpLrk?=
+ =?us-ascii?Q?/xOuIMpmFWrBmbNZaoEoDuK82NP13E/d5GPmZCfJ/nnLVP73mFd7oEhOEUt5?=
+ =?us-ascii?Q?G9N5raYi56OUU9XzPpnZuHmbCZc85zFnYuvtndQSfJW+DMvIM9npZthDNjrH?=
+ =?us-ascii?Q?ob7A7WBY4w0/xHYcnzf7qKiVmIiSlD5BzujYk5oAOIlD5GnhfSAZc3f35fR7?=
+ =?us-ascii?Q?p09gC1deJgkGgnROySiogSvKwawhZxqjTpW9tdBYIPbuAICWyMJHBmxzAa2M?=
+ =?us-ascii?Q?PhGF07TS67cwBTuvX18JNrOPnsrSQpliXWaMM1S1XYiPSJAuwYMuLIzc9Pkx?=
+ =?us-ascii?Q?hLgDpp+DhC1OVDHJs/h9nx36aN8S2LF1pq0s3io5jXzr/b0mTS8w51BzVkRd?=
+ =?us-ascii?Q?h4TkG0l8NSw5fcf+HHGxC0ZBwcv8TVOh13ar5Su6Qa1cHVQl8N+hVnpDDu4C?=
+ =?us-ascii?Q?0la9rKl8NKmgAcwKXxW7W60goFM8/ww2eelbNOae1qeEsSoHtcC7Tkt1FhWJ?=
+ =?us-ascii?Q?zJXMi77ncd891jc0dgZtotmvcwozeOiDWZQQZ8TB4wO6IAw+OyfQwFrws7br?=
+ =?us-ascii?Q?ycDsVkLTORESntFfG2zXdxz/C1EWShuwlDWR4iqkyJSI26qpy8SJrXR8GbTW?=
+ =?us-ascii?Q?hI+jpVV5pSXmJ0+5aPjlffOeLU7vQW0xb+3Uw0WEww=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?HfVwcDFGpXLR6jroOobFFiufmp+Vq/Finv7BvHzmI/lvA2EKV3vVaUXi+rcM?=
+ =?us-ascii?Q?MLlsIUvquqG2bXVRyIs3+RuCRakM8Hukd08TImnD46I87Ma8nPyLNDnTMSEQ?=
+ =?us-ascii?Q?r31H0tQB5N3DWWVsKjO03qO2kf6Ta8mN99dOEhLYM34dJVpGxixq4PGFxaAW?=
+ =?us-ascii?Q?6o8Dc/LiHdO8IAcHMKT5uBdDoMeiBwkfepKUf9Ea5Mr8xOxJBR0wTnoiZ52h?=
+ =?us-ascii?Q?up03jWD8ERta9ONpwwsCGJTNhpoVZwQ0SGek2DLJJBpUcNTsP2u6Tb8Gq774?=
+ =?us-ascii?Q?iAuL71h87PWQUdA2ffZSJAtS3NIhkgj4W4YFD666Ahm+zhHSMIJdp+PbRjEI?=
+ =?us-ascii?Q?eEdfQLMbSlKtzTh3ku0p1FTNnjHg7H6kegF3bBMWdBhjYb2uWmgkKZ8G3GSZ?=
+ =?us-ascii?Q?lw1IibsVABWrbWzePTrHlwKJV7o73/wYZ1fFZ6ocCgbgWZhVMsayGPePvdZd?=
+ =?us-ascii?Q?AivpML+o8K1TuTF1utiyhoVsL8wWdoYwqt8FFdSaRToVQKgc7R1lbMCsf+Wq?=
+ =?us-ascii?Q?QkAFK2IfNlsm6Ug6gXYEAtHII18ZGVVjlkaJHyiyLVzjZWTaIeGQXRuyWsQt?=
+ =?us-ascii?Q?g2EhvH4k+TMvjic41z1Kn3ke9ak1EMQgifVCh4t29Ts0pkAF6zsfJVeFs9zG?=
+ =?us-ascii?Q?qYyJQe7rVtxGTsMh/AdtvDHquzaSpawBx/Gw1tJJD/jy/Djit+L9jw5A3Veb?=
+ =?us-ascii?Q?48LWYlr5C1z9i4KjEnaT6XvsNeDp2vLEGUPfZx4EXQmVZ1GIGbx1gURoc9KG?=
+ =?us-ascii?Q?tJ9FtWD8z4YigznN4aOLyZY2o7hLNFaO506ilNt8e7ppmRDiDUPfEO586dqK?=
+ =?us-ascii?Q?UEeGhnPuS/PTGkSWoBVC7ZmLkjDPfAMl5m8SxpYcWFq1nZ+vuJfNXJ+UUfYn?=
+ =?us-ascii?Q?bcEQOFE68phXa81+aPGaM6+gc3Gc2KxI5+kX7/n+HpPN2xqq/LcZVKSr4KBR?=
+ =?us-ascii?Q?LDuW4ntu2uYVKGVe25bJbRR2sF4fq/7Ljo0sbM1gOMFh+KUay4nLO+HhjZFb?=
+ =?us-ascii?Q?dVCoE6VHWEOhRJMMgI/ZroqzwcETbANO9KOF8XVmh7ZW/tyQ16epMjGaOC1T?=
+ =?us-ascii?Q?A+XiZyrliadCqe/pp2182xsE3P/un9IAal9tzAhcSHkkvrRf04zqX8MeNgVZ?=
+ =?us-ascii?Q?bhd5YOqputbQhg0E7MSDD8UbluDtzw8kIlPMnQ0X83cgpnGEBry3AJAm6yis?=
+ =?us-ascii?Q?KEQU0MUKT0WT9TYcCRPi88eOe5WQri7AxCo9YFvOxqAvF160hZ5nfZ13jDsV?=
+ =?us-ascii?Q?BVDxeKhRNocX6vnN5WZhM2J8/QtIs0giECsUSjypsQnx/y2sk5EJPOle/5C0?=
+ =?us-ascii?Q?KXI2BaLwBNP0zZimqHvZCiM+V5yQfm9f6jwZ3MgskDmxWjfgi2xkwVDxiMSY?=
+ =?us-ascii?Q?nirr4tVk6sb1hnVH4cDtEuLJw2N+1+phi2pDCNIcnPjJs/3IbpXAmN+Gz2qa?=
+ =?us-ascii?Q?B/2VsA/+kC42gKxumaymXPdNCBapd3BdCxzSLDUIdvQkbwAr+UbreJMy/jX5?=
+ =?us-ascii?Q?2XnX1m17sYBRMKwY1Yu4WjRpV1tNJOLQNLAyH9BfEKSvYTotEcJvKIbUoJFG?=
+ =?us-ascii?Q?FgqSMVxauHmXKoBFKQ+JqX7biBzkzww9Gj30qvcB?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	DpOOemRz+Stl37JzvpNiqLLxwlQfU7D1IoeVJPDHfeGEg8tBxXzw3KwK8OW7NPyDu3cUcTFlZhMJw0vvrLnr53WvPZtxrTmAgJKnv8MYLNPwM/ha6DmHiuia+lEQ3BCbT0jnqTYFbdiE6qnklSKyFHU2uczTWTkPYGGgQgSnWQ9P5C6LlYC6gF8fHZoeN41YhQqhGpN7vGO/ZwJ5Fz5QuRSxqlN/Urc1mt1D8jLbYKdt++Zg9ggvull6Pxxp1gvj/eWzwyhNPxPFDk6meTxiNjXhj2w4MPahVGgplXOsKiP4vLPNVKGonW4biZxR4BYCE0yZVRBOU+BOWkIuPDtgXP/dw5XAaZrVc+buM/I4tNVge3BENUAxtVQhdZ+MvBGf3AHHdxqbAEpFOALyAmdgmltiNrXwKoEmygctHUuPS39hO3rO+0no/kHRYwg+09r1BMPV1ghYw2Q/XxD9t5EhIerlkFX3tg8y75tDhRZY5DTNFVPyVodS8AvJy+CIUDMoZ7GdvjtMv35xNpK/yFCm2JWeNhiDtjFFgm9bqgX1s3VkKVtofnyu8yuM/1+T5H1eAbk48XyPbAhgLbtSd7qHFL4SOAuQkXlgfF8o0LH4azY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dffd1a2-4a7e-49c9-647e-08dc63af071d
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 16:04:17.0614
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UIWPL8wpCyHeJWeBmb4Ow+p9YLq7DsCfed9qIYfdu1V9o8gtF68+c1L/jL2T+RaGZqqrpcc9e5C82eIJMqJ4yQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR10MB6263
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-23_12,2024-04-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 mlxscore=0
+ mlxlogscore=946 bulkscore=0 malwarescore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404230037
+X-Proofpoint-GUID: enlZ7Klzyz2zqMbWVyfbSd6Pct6a2-5v
+X-Proofpoint-ORIG-GUID: enlZ7Klzyz2zqMbWVyfbSd6Pct6a2-5v
 
-On 22.04.24 22:31, Vincent Donnefort wrote:
-> On Mon, Apr 22, 2024 at 08:27:17PM +0200, David Hildenbrand wrote:
->> On 22.04.24 20:20, Vincent Donnefort wrote:
->>> Hi David,
->>>
->>> Thanks for having a look, very much appreciated!
->>>
->>> On Mon, Apr 22, 2024 at 11:27:11AM +0200, David Hildenbrand wrote:
->>>> On 19.04.24 20:25, David Hildenbrand wrote:
->>>>> On 06.04.24 19:36, Vincent Donnefort wrote:
->>>>>> In preparation for allowing the user-space to map a ring-buffer, add
->>>>>> a set of mapping functions:
->>>>>>
->>>>>>       ring_buffer_{map,unmap}()
->>>>>>
->>>>>> And controls on the ring-buffer:
->>>>>>
->>>>>>       ring_buffer_map_get_reader()  /* swap reader and head */
->>>>>>
->>>>>> Mapping the ring-buffer also involves:
->>>>>>
->>>>>>       A unique ID for each subbuf of the ring-buffer, currently they are
->>>>>>       only identified through their in-kernel VA.
->>>>>>
->>>>>>       A meta-page, where are stored ring-buffer statistics and a
->>>>>>       description for the current reader
->>>>>>
->>>>>> The linear mapping exposes the meta-page, and each subbuf of the
->>>>>> ring-buffer, ordered following their unique ID, assigned during the
->>>>>> first mapping.
->>>>>>
->>>>>> Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
->>>>>> size will remain unmodified and the splice enabling functions will in
->>>>>> reality simply memcpy the data instead of swapping subbufs.
->>>>>>
->>>>>> CC: <linux-mm@kvack.org>
->>>>>> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
->>>>>>
->>>>>> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
->>>>>> index dc5ae4e96aee..96d2140b471e 100644
->>>>>> --- a/include/linux/ring_buffer.h
->>>>>> +++ b/include/linux/ring_buffer.h
->>>>>> @@ -6,6 +6,8 @@
->>>>>>      #include <linux/seq_file.h>
->>>>>>      #include <linux/poll.h>
->>>>>> +#include <uapi/linux/trace_mmap.h>
->>>>>> +
->>>>>>      struct trace_buffer;
->>>>>>      struct ring_buffer_iter;
->>>>>> @@ -223,4 +225,8 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
->>>>>>      #define trace_rb_cpu_prepare	NULL
->>>>>>      #endif
->>>>>> +int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->>>>>> +		    struct vm_area_struct *vma);
->>>>>> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
->>>>>> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
->>>>>>      #endif /* _LINUX_RING_BUFFER_H */
->>>>>> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
->>>>>> new file mode 100644
->>>>>> index 000000000000..ffcd8dfcaa4f
->>>>>> --- /dev/null
->>>>>> +++ b/include/uapi/linux/trace_mmap.h
->>>>>> @@ -0,0 +1,46 @@
->>>>>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->>>>>> +#ifndef _TRACE_MMAP_H_
->>>>>> +#define _TRACE_MMAP_H_
->>>>>> +
->>>>>> +#include <linux/types.h>
->>>>>> +
->>>>>> +/**
->>>>>> + * struct trace_buffer_meta - Ring-buffer Meta-page description
->>>>>> + * @meta_page_size:	Size of this meta-page.
->>>>>> + * @meta_struct_len:	Size of this structure.
->>>>>> + * @subbuf_size:	Size of each sub-buffer.
->>>>>> + * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
->>>>>> + * @reader.lost_events:	Number of events lost at the time of the reader swap.
->>>>>> + * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
->>>>>> + * @reader.read:	Number of bytes read on the reader subbuf.
->>>>>> + * @flags:		Placeholder for now, 0 until new features are supported.
->>>>>> + * @entries:		Number of entries in the ring-buffer.
->>>>>> + * @overrun:		Number of entries lost in the ring-buffer.
->>>>>> + * @read:		Number of entries that have been read.
->>>>>> + * @Reserved1:		Reserved for future use.
->>>>>> + * @Reserved2:		Reserved for future use.
->>>>>> + */
->>>>>> +struct trace_buffer_meta {
->>>>>> +	__u32		meta_page_size;
->>>>>> +	__u32		meta_struct_len;
->>>>>> +
->>>>>> +	__u32		subbuf_size;
->>>>>> +	__u32		nr_subbufs;
->>>>>> +
->>>>>> +	struct {
->>>>>> +		__u64	lost_events;
->>>>>> +		__u32	id;
->>>>>> +		__u32	read;
->>>>>> +	} reader;
->>>>>> +
->>>>>> +	__u64	flags;
->>>>>> +
->>>>>> +	__u64	entries;
->>>>>> +	__u64	overrun;
->>>>>> +	__u64	read;
->>>>>> +
->>>>>> +	__u64	Reserved1;
->>>>>> +	__u64	Reserved2;
->>>>>> +};
->>>>>> +
->>>>>> +#endif /* _TRACE_MMAP_H_ */
->>>>>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
->>>>>> index cc9ebe593571..793ecc454039 100644
->>>>>> --- a/kernel/trace/ring_buffer.c
->>>>>> +++ b/kernel/trace/ring_buffer.c
->>>>>> @@ -9,6 +9,7 @@
->>>>>>      #include <linux/ring_buffer.h>
->>>>>>      #include <linux/trace_clock.h>
->>>>>>      #include <linux/sched/clock.h>
->>>>>> +#include <linux/cacheflush.h>
->>>>>>      #include <linux/trace_seq.h>
->>>>>>      #include <linux/spinlock.h>
->>>>>>      #include <linux/irq_work.h>
->>>>>> @@ -26,6 +27,7 @@
->>>>>>      #include <linux/list.h>
->>>>>>      #include <linux/cpu.h>
->>>>>>      #include <linux/oom.h>
->>>>>> +#include <linux/mm.h>
->>>>>>      #include <asm/local64.h>
->>>>>>      #include <asm/local.h>
->>>>>> @@ -338,6 +340,7 @@ struct buffer_page {
->>>>>>      	local_t		 entries;	/* entries on this page */
->>>>>>      	unsigned long	 real_end;	/* real end of data */
->>>>>>      	unsigned	 order;		/* order of the page */
->>>>>> +	u32		 id;		/* ID for external mapping */
->>>>>>      	struct buffer_data_page *page;	/* Actual data page */
->>>>>>      };
->>>>>> @@ -484,6 +487,12 @@ struct ring_buffer_per_cpu {
->>>>>>      	u64				read_stamp;
->>>>>>      	/* pages removed since last reset */
->>>>>>      	unsigned long			pages_removed;
->>>>>> +
->>>>>> +	unsigned int			mapped;
->>>>>> +	struct mutex			mapping_lock;
->>>>>> +	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
->>>>>> +	struct trace_buffer_meta	*meta_page;
->>>>>> +
->>>>>>      	/* ring buffer pages to update, > 0 to add, < 0 to remove */
->>>>>>      	long				nr_pages_to_update;
->>>>>>      	struct list_head		new_pages; /* new pages to add */
->>>>>> @@ -1599,6 +1608,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->>>>>>      	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
->>>>>>      	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
->>>>>>      	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
->>>>>> +	mutex_init(&cpu_buffer->mapping_lock);
->>>>>>      	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
->>>>>>      			    GFP_KERNEL, cpu_to_node(cpu));
->>>>>> @@ -1789,8 +1799,6 @@ bool ring_buffer_time_stamp_abs(struct trace_buffer *buffer)
->>>>>>      	return buffer->time_stamp_abs;
->>>>>>      }
->>>>>> -static void rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer);
->>>>>> -
->>>>>>      static inline unsigned long rb_page_entries(struct buffer_page *bpage)
->>>>>>      {
->>>>>>      	return local_read(&bpage->entries) & RB_WRITE_MASK;
->>>>>> @@ -5211,6 +5219,22 @@ static void rb_clear_buffer_page(struct buffer_page *page)
->>>>>>      	page->read = 0;
->>>>>>      }
->>>>>> +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
->>>>>> +{
->>>>>> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
->>>>>> +
->>>>>> +	meta->reader.read = cpu_buffer->reader_page->read;
->>>>>> +	meta->reader.id = cpu_buffer->reader_page->id;
->>>>>> +	meta->reader.lost_events = cpu_buffer->lost_events;
->>>>>> +
->>>>>> +	meta->entries = local_read(&cpu_buffer->entries);
->>>>>> +	meta->overrun = local_read(&cpu_buffer->overrun);
->>>>>> +	meta->read = cpu_buffer->read;
->>>>>> +
->>>>>> +	/* Some archs do not have data cache coherency between kernel and user-space */
->>>>>> +	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
->>>>>> +}
->>>>>> +
->>>>>>      static void
->>>>>>      rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->>>>>>      {
->>>>>> @@ -5255,6 +5279,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->>>>>>      	cpu_buffer->lost_events = 0;
->>>>>>      	cpu_buffer->last_overrun = 0;
->>>>>> +	if (cpu_buffer->mapped)
->>>>>> +		rb_update_meta_page(cpu_buffer);
->>>>>> +
->>>>>>      	rb_head_page_activate(cpu_buffer);
->>>>>>      	cpu_buffer->pages_removed = 0;
->>>>>>      }
->>>>>> @@ -5469,6 +5496,12 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
->>>>>>      	cpu_buffer_a = buffer_a->buffers[cpu];
->>>>>>      	cpu_buffer_b = buffer_b->buffers[cpu];
->>>>>> +	/* It's up to the callers to not try to swap mapped buffers */
->>>>>> +	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
->>>>>> +		ret = -EBUSY;
->>>>>> +		goto out;
->>>>>> +	}
->>>>>> +
->>>>>>      	/* At least make sure the two buffers are somewhat the same */
->>>>>>      	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
->>>>>>      		goto out;
->>>>>> @@ -5733,7 +5766,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->>>>>>      	 * Otherwise, we can simply swap the page with the one passed in.
->>>>>>      	 */
->>>>>>      	if (read || (len < (commit - read)) ||
->>>>>> -	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
->>>>>> +	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
->>>>>> +	    cpu_buffer->mapped) {
->>>>>>      		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
->>>>>>      		unsigned int rpos = read;
->>>>>>      		unsigned int pos = 0;
->>>>>> @@ -5956,6 +5990,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
->>>>>>      		cpu_buffer = buffer->buffers[cpu];
->>>>>> +		if (cpu_buffer->mapped) {
->>>>>> +			err = -EBUSY;
->>>>>> +			goto error;
->>>>>> +		}
->>>>>> +
->>>>>>      		/* Update the number of pages to match the new size */
->>>>>>      		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
->>>>>>      		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
->>>>>> @@ -6057,6 +6096,358 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
->>>>>>      }
->>>>>>      EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
->>>>>> +static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
->>>>>> +{
->>>>>> +	struct page *page;
->>>>>> +
->>>>>> +	if (cpu_buffer->meta_page)
->>>>>> +		return 0;
->>>>>> +
->>>>>> +	page = alloc_page(GFP_USER | __GFP_ZERO);
->>>>>> +	if (!page)
->>>>>> +		return -ENOMEM;
->>>>>> +
->>>>>> +	cpu_buffer->meta_page = page_to_virt(page);
->>>>>> +
->>>>>> +	return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
->>>>>> +{
->>>>>> +	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
->>>>>> +
->>>>>> +	free_page(addr);
->>>>>> +	cpu_buffer->meta_page = NULL;
->>>>>> +}
->>>>>> +
->>>>>> +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
->>>>>> +				   unsigned long *subbuf_ids)
->>>>>> +{
->>>>>> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
->>>>>> +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
->>>>>> +	struct buffer_page *first_subbuf, *subbuf;
->>>>>> +	int id = 0;
->>>>>> +
->>>>>> +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
->>>>>> +	cpu_buffer->reader_page->id = id++;
->>>>>> +
->>>>>> +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
->>>>>> +	do {
->>>>>> +		if (WARN_ON(id >= nr_subbufs))
->>>>>> +			break;
->>>>>> +
->>>>>> +		subbuf_ids[id] = (unsigned long)subbuf->page;
->>>>>> +		subbuf->id = id;
->>>>>> +
->>>>>> +		rb_inc_page(&subbuf);
->>>>>> +		id++;
->>>>>> +	} while (subbuf != first_subbuf);
->>>>>> +
->>>>>> +	/* install subbuf ID to kern VA translation */
->>>>>> +	cpu_buffer->subbuf_ids = subbuf_ids;
->>>>>> +
->>>>>> +	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
->>>>>> +	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;
->>>>>> +	meta->meta_struct_len = sizeof(*meta);
->>>>>> +	meta->nr_subbufs = nr_subbufs;
->>>>>> +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
->>>>>> +
->>>>>> +	rb_update_meta_page(cpu_buffer);
->>>>>> +}
->>>>>> +
->>>>>> +static struct ring_buffer_per_cpu *
->>>>>> +rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
->>>>>> +{
->>>>>> +	struct ring_buffer_per_cpu *cpu_buffer;
->>>>>> +
->>>>>> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
->>>>>> +		return ERR_PTR(-EINVAL);
->>>>>> +
->>>>>> +	cpu_buffer = buffer->buffers[cpu];
->>>>>> +
->>>>>> +	mutex_lock(&cpu_buffer->mapping_lock);
->>>>>> +
->>>>>> +	if (!cpu_buffer->mapped) {
->>>>>> +		mutex_unlock(&cpu_buffer->mapping_lock);
->>>>>> +		return ERR_PTR(-ENODEV);
->>>>>> +	}
->>>>>> +
->>>>>> +	return cpu_buffer;
->>>>>> +}
->>>>>> +
->>>>>> +static void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
->>>>>> +{
->>>>>> +	mutex_unlock(&cpu_buffer->mapping_lock);
->>>>>> +}
->>>>>> +
->>>>>> +/*
->>>>>> + * Fast-path for rb_buffer_(un)map(). Called whenever the meta-page doesn't need
->>>>>> + * to be set-up or torn-down.
->>>>>> + */
->>>>>> +static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
->>>>>> +			       bool inc)
->>>>>> +{
->>>>>> +	unsigned long flags;
->>>>>> +
->>>>>> +	lockdep_assert_held(&cpu_buffer->mapping_lock);
->>>>>> +
->>>>>> +	if (inc && cpu_buffer->mapped == UINT_MAX)
->>>>>> +		return -EBUSY;
->>>>>> +
->>>>>> +	if (WARN_ON(!inc && cpu_buffer->mapped == 0))
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	mutex_lock(&cpu_buffer->buffer->mutex);
->>>>>> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->>>>>> +
->>>>>> +	if (inc)
->>>>>> +		cpu_buffer->mapped++;
->>>>>> +	else
->>>>>> +		cpu_buffer->mapped--;
->>>>>> +
->>>>>> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->>>>>> +	mutex_unlock(&cpu_buffer->buffer->mutex);
->>>>>> +
->>>>>> +	return 0;
->>>>>> +}
->>>>>> +
->>>>>> +#define subbuf_page(off, start) \
->>>>>> +	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
->>>>>> +
->>>>>> +#define foreach_subbuf_page(sub_order, start, page)		\
->>>>>> +	page = subbuf_page(0, (start));				\
->>>>>> +	for (int __off = 0; __off < (1 << (sub_order));		\
->>>>>> +	     __off++, page = subbuf_page(__off, (start)))
->>>>>> +
->>>>>> +/*
->>>>>> + *   +--------------+  pgoff == 0
->>>>>> + *   |   meta page  |
->>>>>> + *   +--------------+  pgoff == 1
->>>>>> + *   |   000000000  |
->>>>>> + *   +--------------+  pgoff == (1 << subbuf_order)
->>>>>> + *   | subbuffer 0  |
->>>>>> + *   |              |
->>>>>> + *   +--------------+  pgoff == (2 * (1 << subbuf_order))
->>>>>> + *   | subbuffer 1  |
->>>>>> + *   |              |
->>>>>> + *         ...
->>>>>> + */
->>>>>> +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->>>>>> +			struct vm_area_struct *vma)
->>>>>> +{
->>>>>> +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
->>>>>> +	unsigned int subbuf_pages, subbuf_order;
->>>>>> +	struct page **pages;
->>>>>> +	int p = 0, s = 0;
->>>>>> +	int err;
->>>>>> +
->>>>>> +	lockdep_assert_held(&cpu_buffer->mapping_lock);
->>>>>> +
->>>>>> +	subbuf_order = cpu_buffer->buffer->subbuf_order;
->>>>>> +	subbuf_pages = 1 << subbuf_order;
->>>>>> +
->>>>>> +	if (subbuf_order && pgoff % subbuf_pages)
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	nr_subbufs = cpu_buffer->nr_pages + 1;
->>>>>> +	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
->>>>>> +
->>>>>> +	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
->>>>>> +	if (!vma_pages || vma_pages > nr_pages)
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	nr_pages = vma_pages;
->>>>>> +
->>>>>> +	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
->>>>>> +	if (!pages)
->>>>>> +		return -ENOMEM;
->>>>>> +
->>>>>> +	if (!pgoff) {
->>>>>> +		unsigned long meta_page_padding;
->>>>>> +
->>>>>> +		pages[p++] = virt_to_page(cpu_buffer->meta_page);
->>>>>> +
->>>>>> +		/*
->>>>>> +		 * Pad with the zero-page to align the meta-page with the
->>>>>> +		 * sub-buffers.
->>>>>> +		 */
->>>>>> +		meta_page_padding = subbuf_pages - 1;
->>>>>> +		while (meta_page_padding-- && p < nr_pages)
->>>>>> +			pages[p++] = ZERO_PAGE(0);
->>>>>
->>>>> Using the shared zeropage in a MAP_SHARED mapping that is neither VM_IO
->>>>> nor VM_PFNMAP can be problematic. So we really need patch #3 logic to
->>>>> use VM_PFNMAP.
->>>>>
->>>>> It would be cleaner/more obvious if these VMA flag setting would reside
->>>
->>> tracing_buffers_mmap() sets both VM_IO and VM_PFNMAP. But, yeah as vma is
->>> already passed to ring_buffer_map(). The flags could be set here as this
->>> function is what sets the requirements really.
->>>
->>>>> here, if possible.
->>>>>
->>>>>> +	} else {
->>>>>> +		/* Skip the meta-page */
->>>>>> +		pgoff -= subbuf_pages;
->>>>>> +
->>>>>> +		s += pgoff / subbuf_pages;
->>>>>> +	}
->>>>>> +
->>>>>> +	while (s < nr_subbufs && p < nr_pages) {
->>>>>> +		struct page *page;
->>>>>> +
->>>>>> +		foreach_subbuf_page(subbuf_order, cpu_buffer->subbuf_ids[s], page) {
->>>>>> +			if (p >= nr_pages)
->>>>>> +				break;
->>>>>> +
->>>>>> +			pages[p++] = page;
->>>>>> +		}
->>>>>> +		s++;
->>>>>> +	}
->>>>>> +
->>>>>> +	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
->>>>>
->>>>> I think Linus suggested it ("avoid all the sub-page ref-counts entirely
->>>>> by using VM_PFNMAP, and use vm_insert_pages()"), but ...
->>>>> vm_insert_pages() will:
->>>>> * Mess with mapcounts
->>>>> * Mess with refcounts
->>>>>
->>>>> See
->>>>> insert_pages()->insert_page_in_batch_locked()->insert_page_into_pte_locked().
->>>>>
->>>>> So we'll mess with the mapcount and refcount of the shared zeropage ...
->>>>> hmmmm
->>>>>
->>>>> If I am not wrong, vm_normal_page() would not return the shared zeropage
->>>>> in case we don't have CONFIG_ARCH_HAS_PTE_SPECIAL ... so
->>>>> unmap()->...->zap_present_ptes() would not decrement the refcount and we
->>>>> could overflow it. ... we also shouldn't ever mess with the mapcount of
->>>>> the shared zeropage in the first place.
->>>>>
->>>>> vm_insert_page() is clearer on that: "This allows drivers to insert
->>>>> individual pages they've allocated into a user vma". You didn't allocate
->>>>> the shared zeropage.
->>>>>
->>>>> I'm wondering if we even expect VM_MIXEDMAP and VM_PFNMAP to be set at
->>>>> the same time? vm_insert_pages() would BUG_ON in case VM_PFNMAP is
->>>>> already set and it would set VM_MIXEDMAP ... similarly
->>>>> vmf_insert_pfn_prot() would not be happy about that at all ...
->>>>>
->>>>> BUG_ON((vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP)) ==
->>>>> (VM_PFNMAP|VM_MIXEDMAP));
->>>>>
->>>>> ... remap_pfn_range() is used by io_uring_mmap for a similar purpose.
->>>>> But it only supports a single PFN range at a time and requires the
->>>>> caller to handle refcounting of pages.
->>>>>
->>>>> It's getting late in Germany, so I might be missing something; but using
->>>>> the shared zeropage here might be a problem.
->>>>>
->>>>
->>>> I was just about to write code to cleanly support vm_insert_pages() to
->>>> consume zeropages ... when I started to wonder about something else:
->>>
->>> Alternatively, we could at the moment allocate a meta-page of the same size than
->>> the subbufs? (of course the downside is to waste a bit of memory)
->>
->> Supporting the shared zeropage should be possible. We just have to be
->> careful that no other code can accidentially set it writable. I'll have to
->> further think about that (not just your user, but making it sane to use by
->> new code as well).
->>
->> So far, we primarily only have shared zeropages in the MAP_PRIVATE mappings.
->> Dax is a corner case where we have them in MAP_SHARED mappings. PFNMAP would
->> not be problematic, but MIXEDMAP is. (again, I am not 100% sure about
->> combining both ...)
->>
->> I'll further think about that one, and try crafting a reasonable patch.
->>
->> Could we start with no shared zeropage and implement that as an optimization
->> on top?
+* Steven Rostedt <rostedt@goodmis.org> [240410 13:41]:
+> On Sat,  6 Apr 2024 18:36:46 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Of course, I'm happy to update this series without the zero-page and to bring it
-> back later, in a separate patch, as soon as vm_insert_pages() is compatible.
+> > +int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+> > +		    struct vm_area_struct *vma)
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +	unsigned long flags, *subbuf_ids;
+> > +	int err = 0;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > +		return -EINVAL;
+> > +
+> > +	cpu_buffer = buffer->buffers[cpu];
+> > +
+> > +	mutex_lock(&cpu_buffer->mapping_lock);
+> > +
+> > +	if (cpu_buffer->mapped) {
+> > +		err = __rb_map_vma(cpu_buffer, vma);
+> > +		if (!err)
+> > +			err = __rb_inc_dec_mapped(cpu_buffer, true);
+> > +		mutex_unlock(&cpu_buffer->mapping_lock);
+> > +		return err;
+> > +	}
+> > +
+> > +	/* prevent another thread from changing buffer/sub-buffer sizes */
+> > +	mutex_lock(&buffer->mutex);
+> > +
+> > +	err = rb_alloc_meta_page(cpu_buffer);
+> > +	if (err)
+> > +		goto unlock;
+> > +
+> > +	/* subbuf_ids include the reader while nr_pages does not */
+> > +	subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1, sizeof(*subbuf_ids), GFP_KERNEL);
+> > +	if (!subbuf_ids) {
+> > +		rb_free_meta_page(cpu_buffer);
+> > +		err = -ENOMEM;
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	atomic_inc(&cpu_buffer->resize_disabled);
+> > +
+> > +	/*
+> > +	 * Lock all readers to block any subbuf swap until the subbuf IDs are
+> > +	 * assigned.
+> > +	 */
+> > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> > +	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+> > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> > +
+> > +	err = __rb_map_vma(cpu_buffer, vma);
+> > +	if (!err) {
+> > +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> > +		cpu_buffer->mapped = 1;
+> > +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> > +	} else {
+> > +		kfree(cpu_buffer->subbuf_ids);
+> > +		cpu_buffer->subbuf_ids = NULL;
+> > +		rb_free_meta_page(cpu_buffer);
+> > +	}
+> > +unlock:
+> 
+> Nit: For all labels, please add a space before them. Otherwise, diffs will
+> show "unlock" as the function and not "ring_buffer_map", making it harder
+> to find where the change is.
 > 
 
-Good, let's explore that path first!
+Isn't the inclusion of a space before labels outdate since 'git diff'
+superseds 'diff' and fixed this issue?
 
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks,
+Liam
