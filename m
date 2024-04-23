@@ -1,174 +1,108 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9BD13CF83;
-	Tue, 23 Apr 2024 16:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mailrelay5-1.pub.mailoutpod2-cph3.one.com (mailrelay5-1.pub.mailoutpod2-cph3.one.com [46.30.211.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F0B13D27E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713889427; cv=none; b=KSNfte7kqObAcCkFL7t60c2KqXZJjOybRuvEyX1Y1+n5Ml79DfONCqdNen0DvoKl14GBVlNgj274sGpgNfzgibrAhxwmi2tB6jwCPrV3Pq0csDUihGLEhArtECtGNUKd1aDYy3zurqNvY7/hIYYTRvHL8oq3nFDG2IbsmQc9DdE=
+	t=1713890495; cv=none; b=YzaStUnE5voES/NInIUgjaM1N0nJYXeCq7uQaM8/4+kPchOBLhB/5aw8aYQPvGdamvgtdJCNHliFMPsY9+uZNDBIHhnG6fmJ5jtX9BAjcVd5IAOHYS4GWu44jqNf4EEKC4nZX56fZnsd3HBk0nOMxDj0udfJVFUAc3TeUvlx8IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713889427; c=relaxed/simple;
-	bh=fKYVuUYF5edyTftSCxz7zqctoDERM/BF//4XAvd9R4g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=on9NWCqwRA9XrEF0mzXCGASByURT9QEnp/UvaRB4E5gmCiSfB5FT+RuFI5Yvbie1CvPhzhX6KCv0JCJVfQMMZsrfRYnBgjKpbu9a0S/Hr1FvwrmQFp876TTSRq79fq8mDGfsc7f6IR+zFCCzeuUp8d0H7a2wyObkdF5LIRztxfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sBFlWpa0; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1713890495; c=relaxed/simple;
+	bh=Ew4ZwP340aTNrveQuDNc86ipPLYtcqn5HIz7uAO7cFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gSnoMZnQxlodf7ur5ISqi5C1QTwZxqeLY7xSexoOwXN/g6D4iHKsx8Qzl11DlgWcovtkf3OdrnOnmADufe2A+KKFf0ATg0eSD2HtpGzsXYYEAuPQwoXPJLThSUQtBxh2g/Dyx+5B/wsiXbbUyWvpSTIuGpwykJ/kjVXMPuOnOhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=Tw8FQkWz; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=MCt7cKSc; arc=none smtp.client-ip=46.30.211.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sBFlWpa0"
-Received: from localhost.localdomain (unknown [4.155.48.122])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0A92020FFC2A;
-	Tue, 23 Apr 2024 09:23:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A92020FFC2A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1713889424;
-	bh=771h4bXVshWzVkVXlBvpLqIM/IohUjbVJYAEkUl/tJs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sBFlWpa0ejJOLc1xqCRwBdC4HduVSIpzO98wIKIjBklTG7X4WTfvKn5dSpyn2G7qR
-	 JjuwElkEXl627fAWqnWEGgGCXEQBCo7xlTfDFP4FZrOabq5oNL0BGi+6k+ISD/hp5k
-	 V3ZjSDawaM5czwOedMuV+soTG6+bxy02KRrIbJzI=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	dcook@linux.microsoft.com
-Subject: [PATCH v2 1/2] tracing/user_events: Fix non-spaced field matching
-Date: Tue, 23 Apr 2024 16:23:37 +0000
-Message-Id: <20240423162338.292-2-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423162338.292-1-beaub@linux.microsoft.com>
-References: <20240423162338.292-1-beaub@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="Tw8FQkWz";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="MCt7cKSc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=ce+ZqFlarA8IAt5zfwbr2hxRLFQAtI7f0O/GFL7QRfQ=;
+	b=Tw8FQkWzueJByde49pf2Etw1JNd+9Cs/a8VSdP4sAjZamDT998lpGJ8OUSXZPgdnq9YK80Ld79By0
+	 E1ZePxzkIVPPM3w68Ti2ki86ZQSTo/Qengh+ox/5EsZdMfGxT/LtyRbZzNkl+eBPCbtoD00qByBVfh
+	 QlogVQorbOUCuNhfuDWjsPIOEK757mimusKghDsKCrDlzJS1s6Psw/PaVE8r407gkh53FMLrF7D1dO
+	 uDYiPtxot3rmREDV43Zw4JTzOwK/+pqOJcBE6+tKyTzcGurjSzSuf0Roh28MmUDSp64HXkjpWwAEu0
+	 fCub6cvUfUdVz3Rx5TFyQR6t2+r0Tlw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=ce+ZqFlarA8IAt5zfwbr2hxRLFQAtI7f0O/GFL7QRfQ=;
+	b=MCt7cKScu1j54dhTCuf6RoKzDR6Pxv4AhcExl3aouinnY7Cygl2lgVcGjoVORGMB/icOvVzGnLV0S
+	 zdG43KuBQ==
+X-HalOne-ID: 4e317c2c-0190-11ef-8c96-edf132814434
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 4e317c2c-0190-11ef-8c96-edf132814434;
+	Tue, 23 Apr 2024 16:41:22 +0000 (UTC)
+Date: Tue, 23 Apr 2024 18:41:17 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 04/15] sparc: simplify module_alloc()
+Message-ID: <20240423164117.GA897977@ravnborg.org>
+References: <20240422094436.3625171-1-rppt@kernel.org>
+ <20240422094436.3625171-5-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240422094436.3625171-5-rppt@kernel.org>
 
-When the ABI was updated to prevent same name w/different args, it
-missed an important corner case when fields don't end with a space.
-Typically, space is used for fields to help separate them, like
-"u8 field1; u8 field2". If no spaces are used, like
-"u8 field1;u8 field2", then the parsing works for the first time.
-However, the match check fails on a subsequent register, leading to
-confusion.
+Hi Mike,
+On Mon, Apr 22, 2024 at 12:44:25PM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> 
+> Define MODULES_VADDR and MODULES_END as VMALLOC_START and VMALLOC_END
+> for 32-bit and reduce module_alloc() to
+> 
+> 	__vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END, ...)
+> 
+> as with the new defines the allocations becames identical for both 32
+> and 64 bits.
+> 
+> While on it, drop unsed include of <linux/jump_label.h>
+> 
+> Suggested-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-This is because the match check uses argv_split() and assumes that all
-fields will be split upon the space. When spaces are used, we get back
-{ "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
-This causes a mismatch, and the user program gets back -EADDRINUSE.
-
-Add a method to detect this case before calling argv_split(). If found
-force a space after the field separator character ';'. This ensures all
-cases work properly for matching.
-
-With this fix, the following are all treated as matching:
-u8 field1;u8 field2
-u8 field1; u8 field2
-u8 field1;\tu8 field2
-u8 field1;\nu8 field2
-
-Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- kernel/trace/trace_events_user.c | 76 +++++++++++++++++++++++++++++++-
- 1 file changed, 75 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 70d428c394b6..82b191f33a28 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1989,6 +1989,80 @@ static int user_event_set_tp_name(struct user_event *user)
- 	return 0;
- }
- 
-+/*
-+ * Counts how many ';' without a trailing space are in the args.
-+ */
-+static int count_semis_no_space(char *args)
-+{
-+	int count = 0;
-+
-+	while ((args = strchr(args, ';'))) {
-+		args++;
-+
-+		if (!isspace(*args))
-+			count++;
-+	}
-+
-+	return count;
-+}
-+
-+/*
-+ * Copies the arguments while ensuring all ';' have a trailing space.
-+ */
-+static char *insert_space_after_semis(char *args, int count)
-+{
-+	char *fixed, *pos;
-+	int len;
-+
-+	len = strlen(args) + count;
-+	fixed = kmalloc(len + 1, GFP_KERNEL);
-+
-+	if (!fixed)
-+		return NULL;
-+
-+	pos = fixed;
-+
-+	/* Insert a space after ';' if there is no trailing space. */
-+	while (*args) {
-+		*pos = *args++;
-+
-+		if (*pos++ == ';' && !isspace(*args))
-+			*pos++ = ' ';
-+	}
-+
-+	*pos = '\0';
-+
-+	return fixed;
-+}
-+
-+static char **user_event_argv_split(char *args, int *argc)
-+{
-+	char **split;
-+	char *fixed;
-+	int count;
-+
-+	/* Count how many ';' without a trailing space */
-+	count = count_semis_no_space(args);
-+
-+	/* No fixup is required */
-+	if (!count)
-+		return argv_split(GFP_KERNEL, args, argc);
-+
-+	/* We must fixup 'field;field' to 'field; field' */
-+	fixed = insert_space_after_semis(args, count);
-+
-+	if (!fixed)
-+		return NULL;
-+
-+	/* We do a normal split afterwards */
-+	split = argv_split(GFP_KERNEL, fixed, argc);
-+
-+	/* We can free since argv_split makes a copy */
-+	kfree(fixed);
-+
-+	return split;
-+}
-+
- /*
-  * Parses the event name, arguments and flags then registers if successful.
-  * The name buffer lifetime is owned by this method for success cases only.
-@@ -2012,7 +2086,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 		return -EPERM;
- 
- 	if (args) {
--		argv = argv_split(GFP_KERNEL, args, &argc);
-+		argv = user_event_argv_split(args, &argc);
- 
- 		if (!argv)
- 			return -ENOMEM;
--- 
-2.34.1
-
+Looks good.
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
