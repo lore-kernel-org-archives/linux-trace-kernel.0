@@ -1,235 +1,124 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACD358231;
-	Tue, 23 Apr 2024 09:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A920F56772;
+	Tue, 23 Apr 2024 09:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713864647; cv=none; b=FFlr2fxVcgtifjq1Wo/SPiv00newFbn3mSYox6nlscudNhymmmDTTC+i8/vjwgU8lI2RXW2iZJdy3fC+YaI0ju0d1XLDsqqRFvV2x+ycXkwMBf3UbCk/n+FBtWLd+eWBkeC5ym1UwlMmVBga2m+kPOdi87dJZdxy2CAct61ynH4=
+	t=1713866396; cv=none; b=YRcu74zRXHuevpDVBEA01hxgWmnh+B4saku9rWE2tg8KyLjy5uyerhE02eAO/iC/91+Nb6zYsUCyjgY+aCz+iVbrCZ1r78uEqCzJ0zjEp5sJqNxekLHktiUm077AoQ6g7BjZ4530TL8LdV0+POAXXmK1VJ52xR5yWIDvQr7Mv98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713864647; c=relaxed/simple;
-	bh=ig3gdWUIA4c/gij5+4IFxL8mX9LSwR8d7bXH682mwvg=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=D3PN8ARmsqIN1Pb5VhWO2dHTLFW5hbeF1J0/6LEUtiHRjvJq7XnQKxeU7iyIoRr1dnJbIIyg7r/q2y4vnCEs0h8M2kiFkcW/8u6GVZqmswkapDEzlCnWN6IHOqMe+9uYsePwokz22T+yuA8Q6sV87LxO1338TRlP6Rx92tUoKN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VNxWm6shTz9yVJ;
-	Tue, 23 Apr 2024 17:24:04 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VNxWf09Lhz5TCGC;
-	Tue, 23 Apr 2024 17:23:58 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VNxWP1rqSz8XrS7;
-	Tue, 23 Apr 2024 17:23:45 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-	by mse-fl2.zte.com.cn with SMTP id 43N9NbrR064067;
-	Tue, 23 Apr 2024 17:23:37 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 23 Apr 2024 17:23:39 +0800 (CST)
-Date: Tue, 23 Apr 2024 17:23:39 +0800 (CST)
-X-Zmail-TransId: 2afb66277e1b0ee-a7f29
-X-Mailer: Zmail v1.0
-Message-ID: <20240423172339974p6mbS7jpKDyLRbzUZSpAn@zte.com.cn>
+	s=arc-20240116; t=1713866396; c=relaxed/simple;
+	bh=z/0Tm2fd0f/5llqNaBgtA2HnRKEy713NEreYD+bpiOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JzJokSj1gsHJ3M+EfzwSBSHfGTSdUIGMzTh/0+wHmteLl+iX3gfCyq/dDuf9ebsbC8guB+VvEoTeAJQsl2BnojIOkJhsT5ZqtfJI3P3wFV5xh4ZPYTLWTD4EuRozF4TB+BGFZnY9xTfwqDDrSr5kf4a35hot/p/nTb+VPHZ0I4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxLfbHBc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxLfbHBc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECCFC116B1;
+	Tue, 23 Apr 2024 09:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713866396;
+	bh=z/0Tm2fd0f/5llqNaBgtA2HnRKEy713NEreYD+bpiOk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nxLfbHBcjyGweAJGedGEl+549+8whzVN7gTX32SEUv99vdMtn9nUYuQmaoqkWropC
+	 RX22sqgdnSmZ/MOwjPnbR6sd3fC1hSDMEdingO6sW/YLPsS93XRjQOjfjTbr1qHrPu
+	 26+hL6y3oSVwj9tC3hl8dbcaIs+uKTtAZ/zGdCgMaKqMs9JRgkO+nDaHGjnHDrjc8X
+	 wLETRBJM/a6X5O/bqRSKs+tRWWNj9A9iXblrnuz0wtG0RNxxL3JijbYBHv94IWu9Rs
+	 ePqT9mvyUJcySAYxv1m0hVPpMLn/3UvCYOso+40HI44mz3vFsWAxoYP1iEQPPZSseJ
+	 s3V6abtXoBhdg==
+Message-ID: <664d6721-43b7-485b-b864-6ebc212305b6@kernel.org>
+Date: Tue, 23 Apr 2024 11:59:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <horms@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY2XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 43N9NbrR064067
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 66277E33.000/4VNxWm6shTz9yVJ
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v8 1/7] net: introduce rstreason to detect why
+ the RST is sent
+Content-Language: en-GB
+To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
+ dsahern@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ atenart@kernel.org, horms@kernel.org
+Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+References: <20240423072137.65168-1-kerneljasonxing@gmail.com>
+ <20240423072137.65168-2-kerneljasonxing@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240423072137.65168-2-kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Peilin He <he.peilin@zte.com.cn>
+Hi Jason,
 
-Introduce a tracepoint for icmp_send, which can help users to get more
-detail information conveniently when icmp abnormal events happen.
+On 23/04/2024 09:21, Jason Xing wrote:
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Add a new standalone file for the easy future extension to support
+> both active reset and passive reset in the TCP/DCCP/MPTCP protocols.
+> 
+> This patch only does the preparations for reset reason mechanism,
+> nothing else changes.
+> 
+> The reset reasons are divided into three parts:
+> 1) reuse drop reasons for passive reset in TCP
+> 2) our own independent reasons which aren't relying on other reasons at all
+> 3) reuse MP_TCPRST option for MPTCP
 
-1. Giving an usecase example:
-=============================
-When an application experiences packet loss due to an unreachable UDP
-destination port, the kernel will send an exception message through the
-icmp_send function. By adding a trace point for icmp_send, developers or
-system administrators can obtain detailed information about the UDP
-packet loss, including the type, code, source address, destination address,
-source port, and destination port. This facilitates the trouble-shooting
-of UDP packet loss issues especially for those network-service
-applications.
+Thank you for the v8, it looks good to me regarding the modifications
+linked to MPTCP.
 
-2. Operation Instructions:
-==========================
-Switch to the tracing directory.
-        cd /sys/kernel/tracing
-Filter for destination port unreachable.
-        echo "type==3 && code==3" > events/icmp/icmp_send/filter
-Enable trace event.
-        echo 1 > events/icmp/icmp_send/enable
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-3. Result View:
-================
- udp_client_erro-11370   [002] ...s.12   124.728002:
- icmp_send: icmp_send: type=3, code=3.
- From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
- skbaddr=00000000589b167a
-
-Change log
-==========
-v5->v6:
-Some fixes according to
-https://lore.kernel.org/all/20240413161319.GA853376@kernel.org/
-1.Resubmit patches based on the latest net-next code.
-
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
-1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
-
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
-1.Add legality check for UDP header in SKB.
-2.Target this patch for net-next.
-
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-1. Change the tracking directory to/sys/kernel/tracking.
-2. Adjust the layout of the TP-STRUCT_entry parameter structure.
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
-1. adjust the trace_icmp_send() to more protocols than UDP.
-2. move the calling of trace_icmp_send after sanity checks
-in __icmp_send().
-
-Signed-off-by: Peilin He <he.peilin@zte.com.cn>
-Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
-Cc: Liu Chun <liu.chun2@zte.com.cn>
-Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
----
- include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
- net/ipv4/icmp.c             |  4 +++
- 2 files changed, 69 insertions(+)
- create mode 100644 include/trace/events/icmp.h
-
-diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-new file mode 100644
-index 000000000000..7d5190f48a28
---- /dev/null
-+++ b/include/trace/events/icmp.h
-@@ -0,0 +1,65 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM icmp
-+
-+#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ICMP_H
-+
-+#include <linux/icmp.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(icmp_send,
-+
-+		TP_PROTO(const struct sk_buff *skb, int type, int code),
-+
-+		TP_ARGS(skb, type, code),
-+
-+		TP_STRUCT__entry(
-+			__field(const void *, skbaddr)
-+			__field(int, type)
-+			__field(int, code)
-+			__array(__u8, saddr, 4)
-+			__array(__u8, daddr, 4)
-+			__field(__u16, sport)
-+			__field(__u16, dport)
-+			__field(unsigned short, ulen)
-+		),
-+
-+		TP_fast_assign(
-+			struct iphdr *iph = ip_hdr(skb);
-+			int proto_4 = iph->protocol;
-+			__be32 *p32;
-+
-+			__entry->skbaddr = skb;
-+			__entry->type = type;
-+			__entry->code = code;
-+
-+			struct udphdr *uh = udp_hdr(skb);
-+			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-+				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
-+				__entry->sport = 0;
-+				__entry->dport = 0;
-+				__entry->ulen = 0;
-+			} else {
-+				__entry->sport = ntohs(uh->source);
-+				__entry->dport = ntohs(uh->dest);
-+				__entry->ulen = ntohs(uh->len);
-+			}
-+
-+			p32 = (__be32 *) __entry->saddr;
-+			*p32 = iph->saddr;
-+
-+			p32 = (__be32 *) __entry->daddr;
-+			*p32 = iph->daddr;
-+		),
-+
-+		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-+			__entry->type, __entry->code,
-+			__entry->saddr, __entry->sport, __entry->daddr,
-+			__entry->dport, __entry->ulen, __entry->skbaddr)
-+);
-+
-+#endif /* _TRACE_ICMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-\ No newline at end of file
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 8cebb476b3ab..30b302492613 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -92,6 +92,8 @@
- #include <net/inet_common.h>
- #include <net/ip_fib.h>
- #include <net/l3mdev.h>
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/icmp.h>
-
- /*
-  *	Build xmit assembly blocks
-@@ -762,6 +764,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (!fl4.saddr)
- 		fl4.saddr = htonl(INADDR_DUMMY);
-
-+	trace_icmp_send(skb_in, type, code);
-+
- 	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
- ende:
- 	ip_rt_put(rt);
+Cheers,
+Matt
 -- 
-2.17.1
+Sponsored by the NGI0 Core fund.
+
