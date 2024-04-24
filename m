@@ -1,69 +1,51 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D738414C595
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Apr 2024 20:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FEB1772F;
+	Wed, 24 Apr 2024 20:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713990696; cv=none; b=S9SBbcKVURncs8dNss3TcgiVxrZ6joHFtaln4HSUpzQn3us8eYIq6Kywn6NPspJ/OQC5Ga0Cy6cwx4F5qI54zFH745NcfMYXmjIxDQfZjYOm1ba4A0OAqjhnB9Bgdaedrno7m1iU1QoLhyLi5/RuL8/WlquXXuWTCsWYfcLNE90=
+	t=1713991499; cv=none; b=aZPMkRMmpUB50zOg+UUW7VutS3tdQtjh+Hjy0DMmjU4dNHkRf3/2QL0xvmWIPwrCRizcNQ3MfgjRHvRQwm0EHQfEdDyZVQrm6jrhuos95Pq3Z6P4tFSML24YZLGCDmx/5GP5oKrcHrqiLA8LIa96RuQplmgYJgRfiKdr0DcM050=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713990696; c=relaxed/simple;
-	bh=CtKCUQB4Kql7tmaWP27sTCH5+nmqkV3XR81u4Dirqt4=;
+	s=arc-20240116; t=1713991499; c=relaxed/simple;
+	bh=nTEIRGVB1/SHv/Q71QQx9mQDZjVkaFHXUQ2ixRjCj+A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HJOrI7geH68gYNdd4TygrxHT8Ggfp6ntymtMV70nBkl9+6MUkKr4qItzyOwYz435/HQmCC5Juxp0FDA5Da0z2A1465kwo6jLJDIFRAftnwq3XirVat1TxP9cKbQ78OnkK6RJob7shAzhHhbHk/HbiArZN7Cua/y2pOYbhS9u82o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vYv5SZQr; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZHe45oxSFpIFkDa1RAbq4CxEtRCs7nP61mLe3qINMea7lCEVR8pWjhn1KHY7NyR0WmqewahD4t3I8/8XR+U0O/5M/z1fW+sZ15eZvQYHKWuJBXjxv4Eh6w4bL/EfiqCaz5PmpB3MAfocfKGbq8owDKtXd/nWHu5IDJ5J+yBivU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=r1UM6bc8; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vYv5SZQr"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41b1ed3ff43so2731305e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Apr 2024 13:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713990693; x=1714595493; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+e+2WTr+55fMN46zgpBMyY5FEksh29xdSRSoFD8QA8=;
-        b=vYv5SZQr4ZmBL4R7NDR/iUpjAIoLvukjMu3HB/xnTTdJcAftLO9uEraM8nj9Eki8XI
-         jvmQownnfIx0EsPiElD5QXKC2jx+8bm/+nugeY/9ZPno6EoysJL+GGcQL5Fai5h0z5Bt
-         5J8uImkvpqXVhrcvXNEysMb8tlLinyJcr+CirU7vflV8/gB0R6q3UtShTSJKjjdav8uF
-         D6ADHWhIIIbO3Q+FruvDgALEmdGJeDWBzIgc49JlbUN/zSAK+mMS7eG88qHB0wAtOzkx
-         Ml6rTYSkunFa4ke52Fqn78iPR7AZpmQbmWQq5XLmNYKPyxIqrwITyLkdJMewQH3+MAUk
-         +oGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713990693; x=1714595493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z+e+2WTr+55fMN46zgpBMyY5FEksh29xdSRSoFD8QA8=;
-        b=UDVnGZmrD083gSTt48aFSQj5POw0+5maI7jgxeRLuY63xJob4cxthUdvfc98B+gjBG
-         OE6h6EkZlyh6MwsaZu/LCcsUJjT3pUON4rBylpPpwXkHpevzVKlXFj9q5LQCXcSFrjlV
-         UJZslDF+OmmTGbnYnmS3DRZu/aoPaywkDXizetrt1L+SilgzLx7MLPeVphlirWoP0iav
-         xyGKfA7QXEC3I/HRzr73UUgDP0hwzqxDQuPhXGZ8S3gjS0LNmiu2+kIHXaeevPBHoSB+
-         99zCCAvJpA59HGyRGYhheGgpAaySw3roGVq77DHrPm8wok0ctYZ68wEswmG6Sy+xoY+x
-         xFFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwbCI5rL4Nad1w+oLrq4lK2Q5YRgqOdvO4/K34q4G94snmF0JG+dRJvcvQHwagGd/mRwJkmLlvTMNicv23YzKSiZehmBzMYEXQ5CRrPJLIDb8e
-X-Gm-Message-State: AOJu0YyEO+yLtu1/s4Hv9tyKSE5Z7F/Z+upgaf9ZTpBRlDbhQJveRNPX
-	OnNmvCuXvlw4eGacialFt42tcMWAsAO/tra95I9c7cnEWQJbCVw/2ubEKfkhsQ==
-X-Google-Smtp-Source: AGHT+IEGKcbjUU7gQUoARxLVWBP0bJ54qDWMxcamBa/BNEqC2QN8trrUllxOuvopFvTPyhfU9aNJYA==
-X-Received: by 2002:a05:600c:3b26:b0:418:a706:3209 with SMTP id m38-20020a05600c3b2600b00418a7063209mr3509802wms.31.1713990693060;
-        Wed, 24 Apr 2024 13:31:33 -0700 (PDT)
-Received: from google.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id v18-20020a5d43d2000000b0034a25339e47sm17107793wrr.69.2024.04.24.13.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 13:31:32 -0700 (PDT)
-Date: Wed, 24 Apr 2024 21:31:28 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="r1UM6bc8"
+Received: from bender.morinfr.org (unknown [82.66.66.112])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id AB10A20039E;
+	Wed, 24 Apr 2024 22:44:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
+	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=boX5e3fERJr2J8mbEA/m2P9U1AgJpSWICBhdrIjzhpw=; b=r1UM6bc8SMuhuUFYDvHlZ14NmL
+	36/h5ZaIIB1L62WGFhmdXCSjO1o2EeYOMiD6hBZHfSj1PJsTKtIeHMrIttl8uxREy2Smk45KacF98
+	axn+7NXEQtnT4z+ebKjhiABMxef4q3jR+KAqRPFcPBhNunMdQrYdhyNlkc6uELWLUjd8=;
+Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
+	(envelope-from <guillaume@morinfr.org>)
+	id 1rzjTv-000nug-03;
+	Wed, 24 Apr 2024 22:44:43 +0200
+Date: Wed, 24 Apr 2024 22:44:42 +0200
+From: Guillaume Morin <guillaume@morinfr.org>
 To: David Hildenbrand <david@redhat.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v21 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <ZilsIJYbJ-JN4elq@google.com>
-References: <20240423232728.1492340-1-vdonnefort@google.com>
- <20240423232728.1492340-3-vdonnefort@google.com>
- <f972ce5a-0351-450c-98a2-38188eae5001@redhat.com>
+Cc: Guillaume Morin <guillaume@morinfr.org>, oleg@redhat.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	muchun.song@linux.dev
+Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
+Message-ID: <ZilvOi7ceSXmwkNq@bender.morinfr.org>
+References: <ZiK50qob9yl5e0Xz@bender.morinfr.org>
+ <b70a3d3a-ea8b-4b20-964b-b019c146945a@redhat.com>
+ <ZiaoZlGc_8ZV3736@bender.morinfr.org>
+ <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
+ <ZibOQI9kwzE98n12@bender.morinfr.org>
+ <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -72,169 +54,57 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f972ce5a-0351-450c-98a2-38188eae5001@redhat.com>
+In-Reply-To: <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
 
-Hi David,
+On 24 Apr 22:09, David Hildenbrand wrote:
+> > > Let me try to see if we can get this done cleaner.
+> > > 
+> > > One ugly part (in general here) is the custom page replacement in the
+> > > registration part.
+> > > 
+> > > We are guaranteed to have a MAP_PRIVATE mapping. Instead of replacing pages
+> > > ourselves (which we likely shouldn't do ...) ... maybe we could use
+> > > FAULT_FLAG_UNSHARE faults such that we will get an anonymous folio
+> > > populated. (like KSM does nowadays)
+> > > 
+> > > Punching FOLL_PIN|FOLL_LONGTERM into GUP would achieve the same thing, but
+> > > using FOLL_WRITE would not work on many file systems. So maybe we have to
+> > > trigger an unsharing fault ourselves.
+> 
+> ^ realizing that we already use FOLL_FORCE, so we can just use FOLL_WRITE to
+> break COW.
 
-Thanks for your quick response.
+It was never clear to me why uprobes was not doing FOLL_WRITE in the
+first place, I must say.
 
-On Wed, Apr 24, 2024 at 05:26:39PM +0200, David Hildenbrand wrote:
-> 
-> I gave it some more thought, and I think we are still missing something (I
-> wish PFNMAP/MIXEDMAP wouldn't be that hard).
-> 
-> > +
-> > +/*
-> > + *   +--------------+  pgoff == 0
-> > + *   |   meta page  |
-> > + *   +--------------+  pgoff == 1
-> > + *   | subbuffer 0  |
-> > + *   |              |
-> > + *   +--------------+  pgoff == (1 + (1 << subbuf_order))
-> > + *   | subbuffer 1  |
-> > + *   |              |
-> > + *         ...
-> > + */
-> > +#ifdef CONFIG_MMU
-> > +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
-> > +			struct vm_area_struct *vma)
-> > +{
-> > +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
-> > +	unsigned int subbuf_pages, subbuf_order;
-> > +	struct page **pages;
-> > +	int p = 0, s = 0;
-> > +	int err;
-> > +
-> 
-> I'd add some comments here like
-> 
-> /* Refuse any MAP_PRIVATE or writable mappings. */
-> > +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
-> > +	    !(vma->vm_flags & VM_MAYSHARE))
-> > +		return -EPERM;
-> > +
-> 
-> /*
->  * Make sure the mapping cannot become writable later. Also, tell the VM
->  * to not touch these pages pages (VM_DONTCOPY | VM_DONTDUMP) and tell
->  * GUP to leave them alone as well (VM_IO).
->  */
-> > +	vm_flags_mod(vma,
-> > +		     VM_MIXEDMAP | VM_PFNMAP |
-> > +		     VM_DONTCOPY | VM_DONTDUMP | VM_DONTEXPAND | VM_IO,
-> > +		     VM_MAYWRITE);
-> 
-> I am still really unsure about VM_PFNMAP ... it's not a PFNMAP at all and,
-> as stated, vm_insert_pages() even complains quite a lot when it would have
-> to set VM_MIXEDMAP and VM_PFNMAP is already set, likely for a very good
-> reason.
-> 
-> Can't we limit ourselves to VM_IO?
-> 
-> But then, I wonder if it really helps much regarding GUP: yes, it blocks
-> ordinary GUP (see check_vma_flags()) but as insert_page_into_pte_locked()
-> does *not* set pte_special(), GUP-fast (gup_fast_pte_range()) will not
-> reject it.
-> 
-> Really, if you want GUP-fast to reject it, remap_pfn_range() and friends are
-> the way to go, that will set pte_special() such that also GUP-fast will
-> leave it alone, just like vm_normal_page() would.
-> 
-> So ... I know Linus recommended VM_PFNMAP/VM_IO to stop GUP, but it alone
-> won't stop all of GUP. We really have to mark the PTE as special, which
-> vm_insert_page() must not do (because it is refcounted!).
-
-Hum, apologies, I am not sure to follow the connection here. Why do you think
-the recommendation was to prevent GUP?
+One issue here is that FOLL_FORCE|FOLL_WRITE is not implemented for
+hugetlb mappings. However this was also on my TODO and I have a draft
+patch that implements it.
 
 > 
-> Which means: do we really have to stop GUP from grabbing that page?
+> > > 
+> > > That would do the page replacement for us and we "should" be able to lookup
+> > > an anonymous folio that we can then just modify, like ptrace would.
+> > > 
+> > > But then, there is also unregistration part, with weird conditional page
+> > > replacement. Zapping the anon page if the content matches the content of the
+> > > original page is one thing. But why are we placing an existing anonymous
+> > > page by a new anonymous page when the content from the original page differs
+> > > (but matches the one from the just copied page?)?
+> > > 
+> > > I'll have to further think about that one. It's all a bit nasty.
+> > 
+> > Sounds good to me. I am willing to help with the code when you have a
+> > plan or testing as you see fit. Let me know.
 > 
-> Using vm_insert_page() only with VM_MIXEDMAP (and without VM_PFNMAP|VM_IO)
-> would be better.
+> I'm hacking on a redesign that removes the manual COW breaking logic and
+> *might* make it easier to integrate hugetlb. (very likely, but until I have
+> the redesign running I cannot promise anything :) )
+> 
+> I'll let you know once I have something ready so you could integrate the
+> hugetlb portion.
 
-Under the assumption we do not want to stop all GUP, why not using VM_IO over
-VM_MIXEDMAP which is I believe more restrictive?
+Sounds good.
 
-> 
-> If we want to stop all of GUP, remap_pfn_range() currently seems unavoidable
-> :(
-> 
-> 
-> > +
-> > +	lockdep_assert_held(&cpu_buffer->mapping_lock);
-> > +
-> > +	subbuf_order = cpu_buffer->buffer->subbuf_order;
-> > +	subbuf_pages = 1 << subbuf_order;
-> > +
-> > +	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
-> > +	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
-> > +
-> > +	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
-> > +	if (!vma_pages || vma_pages > nr_pages)
-> > +		return -EINVAL;
-> > +
-> > +	nr_pages = vma_pages;
-> > +
-> > +	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
-> > +	if (!pages)
-> > +		return -ENOMEM;
-> > +
-> > +	if (!pgoff) {
-> > +		pages[p++] = virt_to_page(cpu_buffer->meta_page);
-> > +
-> > +		/*
-> > +		 * TODO: Align sub-buffers on their size, once
-> > +		 * vm_insert_pages() supports the zero-page.
-> > +		 */
-> > +	} else {
-> > +		/* Skip the meta-page */
-> > +		pgoff--;
-> > +
-> > +		if (pgoff % subbuf_pages) {
-> > +			err = -EINVAL;
-> > +			goto out;
-> > +		}
-> > +
-> > +		s += pgoff / subbuf_pages;
-> > +	}
-> > +
-> > +	while (s < nr_subbufs && p < nr_pages) {
-> > +		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-> > +		int off = 0;
-> > +
-> > +		for (; off < (1 << (subbuf_order)); off++, page++) {
-> > +			if (p >= nr_pages)
-> > +				break;
-> > +
-> > +			pages[p++] = page;
-> > +		}
-> > +		s++;
-> > +	}
-> > +
-> > +	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
-> 
-> vm_insert_pages() documents: "In case of error, we may have mapped a subset
-> of the provided pages. It is the caller's responsibility to account for this
-> case."
-> 
-> Which could for example happen, when allocating a page table fails.
-> 
-> Would we able to deal with that here?
-
-As we are in the mmap path, on an error, I would expect the vma to be destroyed
-and those pages whom insertion succeeded to be unmapped?
-
-But perhaps shall we proactively zap_page_range_single()?
-
-> 
-> 
-> Again, I wish it would all be easier ...
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> 
+-- 
+Guillaume Morin <guillaume@morinfr.org>
