@@ -1,134 +1,62 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31E113B5B4
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Apr 2024 22:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2ECD16D4CA;
+	Wed, 24 Apr 2024 22:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713996680; cv=none; b=FNfRlQ6J89lXLkeBH7zzuwM4rOkucpmegzr+0mSDt2I0z8YB0lR6vYoyAbp5qruDz2oOZpU5psFAmKT7SOOtMAPvxGo14ss7UvBAtMf+C7vY+c1DHQXX8Qc0EVEWdgAiMpdpeAY+H1Y4GPuPSsiUiKDpRCudLnSu7S+d86IiMos=
+	t=1713997303; cv=none; b=HyJeRmAFCs2Y8JeAQlNSnOwKSKWObBJAP5Kt/Uhc3bN2NUwiTuZ4f653w5/m+vT4/ZCpiyKbcpgRQX9vfFA81dvnRlv80N5vecBLalXKHU2v6cIQ2CUvrMU3JnrMGsRS1w5ODCRS56LRjejI7HbqibH4gYu7nYzy2LixpAwPD08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713996680; c=relaxed/simple;
-	bh=pxhvcjOGdzqPJKU0g6cyW3p8OljKVeVIwlTbmM5Usw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sYOVlDDXSrd7fvsP0NhHEYf7M8LpZto2mZ0ffFxQ7AkAOovB6JNfCLhlj5VzM9ADxEr8m2lPcqm8pwqvtYwNSoUPYbRgpjtY81ogXa/F6uJmv2nprgqYLfI/PlZl3oPTEcEZk7LymSKHkwSzh1nhyMkp4ydaaWlZB1nk2Nojlpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bgLn94E/; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713997303; c=relaxed/simple;
+	bh=ypoBNr5DO1Bo5ABHHdt/O0fZK1yh/4/Xe2ztB9x6jWk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hWC+zUcErc4l3I1o9+uxzkLjdFtgZtYQKmmlzEiBZIMikTJJZL0HSclGZ1DQd4CCCEFtnaily3chpAWBeJLYOFZ9OXAOFBDQdnGlRkmpcZ0Z8eaTvnyYHvh/QxlI5swD8Dajem7/4cbTJ7wZ/UbaZY+Zf7KZLIGNQ1N/PUvnT1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=oR/wKDKB; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bgLn94E/"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so365205e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 24 Apr 2024 15:11:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713996677; x=1714601477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nrt9xX8+bezTu6PJtCUFo83NI4xccREO2afrxNR68uc=;
-        b=bgLn94E/CBQ884LE+ijvvnf0wc5fCnOBsuVQwf0kdx5Tvu1MsMwCy/ZgLXEf+zLMzy
-         Y507Bu7nMKmO0V1fYKsC7auy9IwFF0mRCuD0CtU2NdBuVX/7ke4VZCpXuPnu2jcqigmW
-         1lNkpky8mr6qNJ76t2uOjHa+MK9zHbnfuXkn63hLgVaEqnd5IDrHwq7hgNSRMWrf9Dr3
-         /ZBYM0OTowmJzbPzN0r9KMiLLRL06LRVo9PhZ47ZWi0o1ozpbHsShOnIxucAQ2z4p4wp
-         GjMIJC99e7lgk0nAB7lCGi6BfmMDlIC9A+L8KwGYMM6cZT8U6+3B5TAvSabm+oC/eT+s
-         Yf8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713996677; x=1714601477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nrt9xX8+bezTu6PJtCUFo83NI4xccREO2afrxNR68uc=;
-        b=kWDC21StoZWxk6LPru+o/jFpP+G7aempn/d2268rH4uqyqi0f3fbM2UD31+HXi6OFr
-         SuNZlGJIw+njtHImfufPRwGE7MKhwg0mcp/1o0+lNTeU3px9YBGKiJdAW96AIlrJ0HO4
-         AIjjh3VIkergRC4nfc7nlOLTUanDJRWw7FYjkrmun0gxxUBUvgWzVaPN3jDMTGjDCuGv
-         VsvgrvqPuFy95DEvFD5ux/3RsIyKETOAAlg4boSP2Tn98yxvMaYswuUGvsHllt8ylU8A
-         EitWbhV+nPKq0MlsuYJGA9F0aXXY+DuDyptXqDdY8ZOib3oc0OyX1Ms9sL0rQU2rOdVT
-         xGbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGPMzDaw7YL1cmy4bRjUz882y0AxzNgkBgE0oowyiK0KD6aMVlyf56yB99UMT0eEPhcmU6H7eJo5+wnakobQIoB9jDADbcfRCzvrfCC4/IdeFC
-X-Gm-Message-State: AOJu0YycqT4zrZc38h3tSry/2aOoj2BvxZTgqkHSbtST3TM7RwsC3cb7
-	XOR+DyP8xZ5ZTG0RIJG82ZrchC3j37GqGxcuAhaq55L2olIO7CuelHPNUcM71aAYelV0mJsTCNg
-	3GhLWE5tVfag+dEEOpexjLCV7+Ye8Eo/gwFzo
-X-Google-Smtp-Source: AGHT+IED2HbFEA0ewLNL7QH6VWfyVpE66498USZfd4zxtqZP/+CZ2KiwNYrpEZU2PM0GAlsCBDXy7oQT2HUG8Bnws0w=
-X-Received: by 2002:a05:6512:1315:b0:51c:15fa:985 with SMTP id
- x21-20020a056512131500b0051c15fa0985mr1591764lfu.15.1713996676557; Wed, 24
- Apr 2024 15:11:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="oR/wKDKB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=rCY6b8Hqgt+J1IU1JUohIhVbnS/F8XQ8nx3RmxOLXK4=; b=oR/wKDKB7WSnTCM67FwqHelnP0
+	f9ubAqWLZ8asqhcWHrRg6pyR+UQJiUJCm0wlwuVwpbrg2m1S0OU6qIzESeXkipODozx1+BJu52ur/
+	prRRpdQXe3TlIk6/8pYac7Bjkt6jmu7Xvo7rZW9UYyUAcUu7miEQsPPU7VkoQe4yhBHkExhOgbDx8
+	OvaqUZxWI88p0yRm2V9P6Tl/TQlnjr6ZUBg4BjtxwwAJ8EdjePq998Az7KUttXf7194pwAJk5ZghD
+	Jh0Gerj+q4PT/l6HC8MFi7YFEwmLPA9kmoefS98a0wIAfo8yU7rPQGVSgnGATxXZjaO/NT/yZ1Mc8
+	HJZZ/S4A==;
+Received: from 179-125-71-233-dinamico.pombonet.net.br ([179.125.71.233] helo=quatroqueijos.lan)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1rzkza-008LGq-Pz; Thu, 25 Apr 2024 00:21:31 +0200
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+To: stable@vger.kernel.org
+Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 5.15,5.10,5.4,4.19 0/2] Fix warning when tracing with large filenames
+Date: Wed, 24 Apr 2024 19:20:07 -0300
+Message-Id: <20240424222010.2547286-1-cascardo@igalia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-5-almasrymina@google.com> <b30cb265-26ee-40f9-a25b-6c909e63fc79@davidwei.uk>
-In-Reply-To: <b30cb265-26ee-40f9-a25b-6c909e63fc79@davidwei.uk>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 24 Apr 2024 15:11:04 -0700
-Message-ID: <CAHS8izPf5ZnpUw9o6Oo-iTdoKkOEzerobP0Vkq7KZQOab2+_LQ@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v8 04/14] netdev: support binding dma-buf to netdevice
-To: David Wei <dw@davidwei.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Amritha Nambiar <amritha.nambiar@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Kaiyuan Zhang <kaiyuanz@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Simon Horman <horms@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Florian Westphal <fw@strlen.de>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>, 
-	Arseniy Krasnov <avkrasnov@salutedevices.com>, 
-	Aleksander Lobakin <aleksander.lobakin@intel.com>, Michael Lass <bevan@bi-co.net>, 
-	Jiri Pirko <jiri@resnulli.us>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Richard Gobert <richardbgobert@gmail.com>, 
-	Sridhar Samudrala <sridhar.samudrala@intel.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>, 
-	Breno Leitao <leitao@debian.org>, Pavel Begunkov <asml.silence@gmail.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 24, 2024 at 10:36=E2=80=AFAM David Wei <dw@davidwei.uk> wrote:
->
-> On 2024-04-02 5:20 pm, Mina Almasry wrote:
-> > +     /* We hold the rtnl_lock while binding/unbinding dma-buf, so we c=
-an't
-> > +      * race with another thread that is also modifying this value. Ho=
-wever,
-> > +      * the driver may read this config while it's creating its * rx-q=
-ueues.
-> > +      * WRITE_ONCE() here to match the READ_ONCE() in the driver.
-> > +      */
-> > +     WRITE_ONCE(rxq->mp_params.mp_priv, binding);
->
-> Is the mp_ops update missing here?
->
+The warning described on patch "tracing: Increase PERF_MAX_TRACE_SIZE to
+handle Sentinel1 and docker together" can be triggered with a perf probe on
+do_execve with a large path. As PATH_MAX is larger than PERF_MAX_TRACE_SIZE
+(2048 before the patch), the warning will trigger.
 
-I  do it in this patch, because it's the one that introduces mp_ops:
-https://patchwork.kernel.org/project/netdevbpf/patch/20240403002053.2376017=
--9-almasrymina@google.com/
+The fix was included in 5.16, so backporting to 5.15 and earlier LTS
+kernels. Also included is a patch that better describes the attempted
+allocation size.
 
+-- 
+2.34.1
 
---=20
-Thanks,
-Mina
