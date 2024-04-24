@@ -1,408 +1,209 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9915354666
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Apr 2024 23:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ADE1534E0;
+	Wed, 24 Apr 2024 07:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713914874; cv=none; b=KymsG0V1gS3P/llIqOKOMGlX+crV+iAnpNBPmssj3eAsxhtNhCGcoR/HnwcGjzibcs9DTA89TQYn7Q0vjQkfbRoWlVX2Xw3iKvMc5BvWNz7V6qKyxxw+9jrSE2Bl0VjnVQ6Z4ttcZ9BEwbw8h+A7X8ux3Zf6FcIMqwsx7YLVvAM=
+	t=1713944479; cv=none; b=rwtqNlGSS/M0+Q/GBE4K6DP5dZWqzllX1yRhhBKwwtwFPsCHdm9OkRtF2DX7JdTacKIAdMPPqFCqxfaikmu5YyUjt6LswKhecTj4UsuwY77+KZo13/7jEaDdONuOa8O2vvpd8d0SmJV1iQgoMsOYpcWnm/dv9POAEAggLM0enPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713914874; c=relaxed/simple;
-	bh=O+d59qShzTvBafQqHxGHCWx9WOV1oznH7Tjy6QhzJ58=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EKRFKBkxu6TK0oPMtB0roY6IMxpE1bovAwsIOQXDOUWcSHaLwW8kPcqglDa64PxvEuTF6HRvvPFsQIpLPWOi7eIOYm1d4A9WVo6ptdotZWphRAFW5Xp6vSZVxm0PtoiX36ryM/HEHwF+sY7dGXXJRUJfbB99BBtcTPwrrUecGi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iGdBF4WA; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1713944479; c=relaxed/simple;
+	bh=euFLyW2mUNGGgNiXwy0oljlRB8crL8I7b65VqKg3OEE=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=EDO7O91hdmvfWenG4+uH9aHIGw6APOiLZOeL5dJUEE76MZofw+p90bougVtflkY8yAeO3RWe0d/7CHZabKvVevCVn6EQOftVtUMPzG/J9hXbwLfzk9mDQ7eL3/xpawla7FzJmBtfMkpSoYJHryKTFOKRWeB2900X27JlNN1JG68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=H9R2Uiqz; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iGdBF4WA"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61b2abd30f9so102581357b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Apr 2024 16:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713914872; x=1714519672; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZdtNgS1ADfpekPvRs2FP/KMWugpYNDTTPI4F/Zzcws=;
-        b=iGdBF4WADy66ubK97qz5M9irhx2m11xFzWTb1LUPY05WcMrZachbRHxRJtBGk/qPEi
-         AbPaSmDZLBCGMjUGCQjUMpMpHAupLK9cSINkLhdBIHADjRlUCgs2mQ/2dWPvb70f/cwL
-         n1+4C6qUHtlD87gUJvUuAC1dq+wwofzcvMUqsw2ylJsYDStVjcKcryxxgs5aKThrGSj8
-         VAcFvjh+1vvyHCjmIJrF1pkEKXRQ2UhXqT6fF78sbXU9kNMePNhujXVTtemhu2HvAv8S
-         OKzwMBcVLqGagGnr4IjjY36fqL5Ysp2YP+AJfBSUoPwQ3lJssWcAoGrpjsiaXwTa0O28
-         RLkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713914872; x=1714519672;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZdtNgS1ADfpekPvRs2FP/KMWugpYNDTTPI4F/Zzcws=;
-        b=DcH320FFMgegyJvDCdQekc7iUd9iMf+j0PFoyAon1/2WJu4lNucGW7jy7IQ3O7KRTI
-         Bo8/MZZp5/9RWqP9Z3zWSNukrLfAwfNXNbmEkTtzcLCT5nWkFzGgU1t4ggDilyrxPJgA
-         Ou9jY2G8ypS7+1FQvhb3DSXnBjPUQm0a+xJK3qpIftpqUkZxTXPcJgdCGZgcCXTFtpGD
-         T8P6gID17RzOo2FQaTu1Do0fVadqkFZjhTJ+xHU7UA0/UQdxCkMJlUztkxTFgAi7tleK
-         dbTHcKObS3KrGTfRLMSIsOGJZeoGfdSPe9ZICFcYCGRL3sYUVRi7HuLqIUg0C1LKsfSt
-         pCQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgeJhrq/jYvXu/QWVZgaAGeVlZAuuXbnI83l5gp0rfHCy8fZd0YkV/vO827vLy5iuZSLFbuL3pmf53sERJ95xezL1FCKVXPg2DNBPewF0GHDsM
-X-Gm-Message-State: AOJu0YzY2Xpxe1DY4sZBH+tba2jiTRCVSRGDxsXc2SjBQ9axZlEKE6MU
-	NWhQrycNLs8mjdTnRdIcdJsQDRvhzVNiu1r2AEP3mfB2wRTCN0ZXtJMKStF0ja5tfeEsn74mwIQ
-	SabCc6M1auzmPkQ32Lg==
-X-Google-Smtp-Source: AGHT+IH4/mAx1hYl3afF7Qar39Gq1rc/svAz1+g2LLqjYvaMe23uDdtQOlrMd2cLvxAmncxfRuv3qRqHypQexyVI
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a0d:d6d5:0:b0:61b:1722:cbfd with SMTP
- id y204-20020a0dd6d5000000b0061b1722cbfdmr205760ywd.7.1713914871746; Tue, 23
- Apr 2024 16:27:51 -0700 (PDT)
-Date: Wed, 24 Apr 2024 00:27:28 +0100
-In-Reply-To: <20240423232728.1492340-1-vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H9R2Uiqz"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240424074112euoutp028d29c7710f7c087eee559032f3e46581~JJ2rVDMWA1064410644euoutp02g;
+	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240424074112euoutp028d29c7710f7c087eee559032f3e46581~JJ2rVDMWA1064410644euoutp02g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1713944473;
+	bh=euFLyW2mUNGGgNiXwy0oljlRB8crL8I7b65VqKg3OEE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=H9R2Uiqzrt7iYZRpYqEZMkbiPnTuybjRTzu+swHRR1ZJ4BrcX0oY35veJwuuxeUbe
+	 aQNHO5P1fZmCdsoUmq/bALd65Xw085eBa9TR0A393uOoRtf/89Do7uA+lBbj+qgbLT
+	 EkZRQaeydvBr0L76NbpRUCNNIdiNInkF6mPfy4ok=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240424074112eucas1p1863d3d7b98e0dbe97dd21ee66730e62b~JJ2rICFNZ0760407604eucas1p1p;
+	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 1E.7D.09624.897B8266; Wed, 24
+	Apr 2024 08:41:12 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240424074112eucas1p259a4acc486ca5f8c6cbb4f736f2f984b~JJ2qnrul33139631396eucas1p2L;
+	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240424074112eusmtrp12bcebea7847b59366df6dd19bb3a048e~JJ2qmXIIM2835628356eusmtrp1k;
+	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-08-6628b798d2b4
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id BC.B0.08810.797B8266; Wed, 24
+	Apr 2024 08:41:12 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240424074111eusmtip1681f98af2abf64a19d66d0e7ab3c9e0d~JJ2qThM-V2991229912eusmtip1-;
+	Wed, 24 Apr 2024 07:41:11 +0000 (GMT)
+Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 24 Apr 2024 08:41:11 +0100
+Date: Wed, 24 Apr 2024 09:41:06 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Luis Chamberlain <mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
+	<keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
+	Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
+	Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas
+	Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
+	Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
+	<wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
+	Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
+	<vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
+	<john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+	KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
+	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <tools@kernel.org>
+Subject: Re: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel
+ dir
+Message-ID: <20240424074106.c3dojqvobepifrut@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240423232728.1492340-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240423232728.1492340-6-vdonnefort@google.com>
-Subject: [PATCH v21 5/5] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	rdunlap@infradead.org, rppt@kernel.org, david@redhat.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="3ox4bgvwus4z6gtg"
+Content-Disposition: inline
+In-Reply-To: <36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzOuff23sJSdik4T3DBiKJMBWTO5CxOIhsxN3FjbmZLYFu2Ri7g
+	gEJaq25mCTJAqLKhUNHyKhKe5SEtgvJeBxR5lFEYVt4KruMhiDwE5THqxc1k/32/73HyfX8c
+	Pi5sphz4J8WnWIlYFOJEWhPlTUsG12sVLgH7Litc0LMXKTiq+ruPQHNLfRSabdCTyDjyJ4mS
+	x84TKHWsjUJZmQs4Su2IItCjhFs4WiuPopBOX0ehyNt5GCrvzgCoIUm5LqjC0HJzKYkGflUQ
+	qO1iKKpqncdQbGIFgcy18RiqrrlLoK7KVBI1lLQTSF0UwUPZ9zoxVBiXz0OmhEcAJU79BVBW
+	7k5krFdhSJ20QiF9fD2G1kbmeag2dhhDqz2lBDIuThCoqvQGifS5KyTSahQ4MpQ+wFFsw3rX
+	W43PKNQnX6PQsLqch3Lu+Bx2Z4YmVwimML0QMCkRnQRTln8fY+4oBygmqraXYlQaGaPN281k
+	VY9hjNxkxJneiUOMpiCOZPp7qklmymCgmMwIBc4k3KgHx97ys/7Anw05eZqVuHt+Zx20ptGQ
+	4UX02eYX02QESLSRAys+pN+D8pl0TA6s+UI6D8DkOiPJHXMATs0lE9wxC+Biiw68ijRl5+Oc
+	kAtgz83r1L+u+ZKoDUULoLImjmeJELQzrI7Ixi2YpPfCjsn+dczn26/jOIXU4sfpRgHsSOog
+	LB47+hhU9BgpCxbQh2F7SwbGYVt49/roSw9On4VdI1rK8g5Ob4G5q3wLbUV7wiVVN8E13Qbn
+	swY38E+wpaz35VBIL7wBpysXME7whpd+NmyY7OC4vozi8NuwNfESwQUSAaxbfUJxhxrAnPPz
+	G+mDMKp7dCPhBWMGpwlLI0jbQNNjW66oDbxSnoxztADGxgg5906oHpwkEsB25WvTlK9NU/43
+	jaP3QlXVU/J/9B6YkzmBc/gQLC6eJlSAKgCbWZk0NJCVeojZM25SUahUJg50OxEWqgHrH6x1
+	Vf/0Nkgbn3HTAYwPdGDHevjhTfUfwIEQh4lZJ3vB8+UdAUKBv+iHH1lJ2LcSWQgr1YEtfMJp
+	s8DZfysrpANFp9hglg1nJa9UjG/lEIHZ1Q/7ms7ZbM++ag6TFadmRuZsPd72xKcy3LvnmtlH
+	EUOvfEqdc3/zq6N+XgcuD+TrPrw6Mdq/z/hNipjnmuRY6Wagl02nJ/2HG1V+j6NN2xodH9iF
+	jzSbJ++bQ+0lQ0JvW9GopyTJmq9zRMtMbFrtpgnF8Tyv1hmbCvsEh4NKk94GP+JVEx9Y2zJz
+	r73YNZt34oLT+Ged8oCgdxxxSfSXwd06l5KLbZOJCqSl9tR+f/R5u7mrIDh8MYP9On1Xmr/s
+	SPTRsc/Z0f3vhgwp85tDK4u+uKD/KDLFy/eXKwVMn2/8x86/eYwtag7Yn5n1GHl/U/L4J2RT
+	1P6H6hVDl3bX7wNOhDRI5LEbl0hF/wACtOw12wQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTVxzHdx+992LsdlcQb8AsG8qC4ApFYAcGjMyEXJw4lrlk02xa4fLY
+	oMU+BJdhCnQGSpyo4EZhUOh4WawWtIAwRAZWJiAgreW1gYisA0QnD5k81totM9l/n/P9fn/f
+	/HJyDoFwJjAXIkEgYUQCfqIbtgG9tWYYfev7eo9Yn6eLEFh6VoiApt+HUTC/PIyDJ+0GDPRP
+	GDHwnSUdBUWWLhyoSxcRUHRbjoLJ3CsIWNfLcdBmuIaDjIYqGOgHSiDQnqe0GiohWLmpw8Do
+	qXwUdOUkgaZbCzDIOluPgqmWkzBo/qkTBXeuFmGg/WI3CjQXZCxQfrcPBjXZ1Sxgzp2EwNmH
+	DyCgrnwT9LeqYKDJW8WB4WQrDNYnFligJWsMBmsmHQr6n06joElXhgFD5SoG6mrzEdCjG0dA
+	Vrt11ysdSzgYVqzjYEyjZ4GKxr1h3vRvM6soXVNcA9GFsj6Uvlw9CNONylGclrcM4bSqVkrX
+	VXnS6mYLTCvM/Qg9NB1C157PxugRUzNGP+zpwelSWT5C55a1QlHO+7nBIqFUwrweLxRLQtwO
+	8IAvlxcIuL5+gVzezrc/C/L1d/MODY5hEhOOMiLv0EPc+GXdB8kaMvX+nXOIDDr9sgJyICjS
+	j7pRXo0ooA0EhyyHqKLCLtxubKF080aWnR2pFZMCs4ceQ9TsvBq1H+ogSq/MfJ5CSXeqWVaO
+	2Bgjd1C3Z0asTBBOVs7OF9vyCNnBpsxTJZgt40jupUbOtKI2ZpNhVPcvJbC9dAyiBmtPsezG
+	q1Rnwf3nIYQ8SukX0lm2UoR0pSrXCJvsQIZSy6oB1L7pG9SC+td/OI16svoAyoUclS80KV9o
+	Uv7XZJc9KfOaBf6f7EVVlE4jdg6htNo5VAXh5yEnRipOiksS87hifpJYKojjRguTaiHrC9ff
+	WK5rgIr/eMxtg2ACaoO2WSfvXdL0Qi6oQChg3JzYf61si+WwY/jHvmJEwoMiaSIjboP8rbd4
+	GnHZFC20fheB5CAvwMef5xcQ6OMfGLDTbTM7IjmLzyHj+BLmS4ZJZkT/zsGEg4sMThEvFTj7
+	GfUNQ84drl5yzRx+Ziv9/sjx4YiV8Cl5sCLUHHmuryucXrpmzPn0Zspg/icbhxzKduX+aB42
+	TqaPawP93bsnX6l/1ze16zXRoz1+u6pUf7704aETKY/G1YQ2fJrp/Tgh0aNC/nXI2Im5sN5n
+	jdc528MlxjwTPx1eL/jWsLq7u3L2WDeRlhOdESnaav5hn/uAKT7ivR0VUn4kW1t6t1L7ec5H
+	QccPz+atR7GL245s8VYsemVuzxgw44uj+zsXNqceCN74hUU6c5m4lOD68zs997wsIr1HX0co
+	E4SUxHof3nT9m+C+tDBOpulIzFXdnn3OF8zi5DCDS91o1Ap50Q0Vx/N5nohIzP8b8evTHXYE
+	AAA=
+X-CMS-MailID: 20240424074112eucas1p259a4acc486ca5f8c6cbb4f736f2f984b
+X-Msg-Generator: CA
+X-RootMTR: 20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41
+References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
+	<CGME20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41@eucas1p2.samsung.com>
+	<36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+--3ox4bgvwus4z6gtg
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Acked-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+On Mon, Apr 22, 2024 at 04:27:47PM +0200, Konrad Dybcio wrote:
+>=20
+>=20
+> On 3/28/24 16:44, Joel Granados wrote:
+> > What?
+> > These commits remove the sentinel element (last empty element) from the
+> > sysctl arrays of all the files under the "kernel/" directory that use a
+> > sysctl array for registration. The merging of the preparation patches
+> > [1] to mainline allows us to remove sentinel elements without changing
+> > behavior. This is safe because the sysctl registration code
+> > (register_sysctl() and friends) use the array size in addition to
+> > checking for a sentinel [2].
+>=20
+> Hi,
+>=20
+> looks like *this* "patch" made it to the sysctl tree [1], breaking b4
+> for everyone else (as there's a "--- b4-submit-tracking ---" magic in
+> the tree history now) on next-20240422
+>=20
+> Please drop it (again, I'm only talking about this empty cover letter).
+I see it. Will remove it from sysctl-next
 
-diff --git a/tools/testing/selftests/ring-buffer/.gitignore b/tools/testing/selftests/ring-buffer/.gitignore
-new file mode 100644
-index 000000000000..3aed1a2a6c67
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/.gitignore
-@@ -0,0 +1 @@
-+map_test
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..b95eedddbb8c
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,288 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+TEST_F(map, data_mmap)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	unsigned long meta_len, data_len;
-+	void *data;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	/* Map all the available subbufs */
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_NE(data, MAP_FAILED);
-+	munmap(data, data_len);
-+
-+	/* Map all the available subbufs - 1 */
-+	data_len -= desc->meta->subbuf_size;
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_NE(data, MAP_FAILED);
-+	munmap(data, data_len);
-+
-+	/* Overflow the available subbufs by 1 */
-+	meta_len += desc->meta->subbuf_size * 2;
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_EQ(data, MAP_FAILED);
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.44.0.769.g3c40516874-goog
+Thx for pointing it out.
 
+Best
+
+>=20
+> Konrad
+>=20
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/com=
+mit/?h=3Dsysctl-next&id=3Dec04a7fa09ddedc1d6c8b86ae281897256c7fdf0
+
+--=20
+
+Joel Granados
+
+--3ox4bgvwus4z6gtg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYot5IACgkQupfNUreW
+QU9JLgv/Xk/varStEW5HfSJDViPIf/SWclVUTpImKj1IK/P76DyvjPdXaekBKiYf
+iwRRN/qqbvDCYp9Hu3nOT5Pp6+kRDKIsMAhz0S+74V6N6kmYo+zuomJ6B5xYE5v/
+lBK2Pecvdic/IhnaYYJrr0kfNFfDpFNnZLEkI+Ao+u9Qho5sXoQqMzB0gdhGNBsA
+sg3tHBk72GQoBtnXD0vAgLe1a3nMIX58N5U8If5nMIY24dk5WDqk4uF+VeKuWoql
+bgEeNHnxrgX+7o65CXUKl3Y5P2r35p4lZ26nSKxUcy9rxCVluyqvcjOWKegC2RHc
+BsPdxqlq+sCS+Jl8GvV9RodvW+TseL8sYbm78PuhrBLmME46zyw8hMOIe9KTQGKz
+PL13bLzLyQ3kHjVyngfEnrobUBJWTO0wSEroqttx/GoKMeFBBubPV9DFnlYmt8qN
++q1wOQc7/yuDYZHNo272pNOPnLogsjiXUihpXna2l3vN3L8QPb7v52yQHToJeDiK
+RZTL83Ww
+=o7gc
+-----END PGP SIGNATURE-----
+
+--3ox4bgvwus4z6gtg--
