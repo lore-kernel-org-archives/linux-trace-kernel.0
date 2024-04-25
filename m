@@ -1,216 +1,89 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF551AACB;
-	Thu, 25 Apr 2024 03:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265FC6CDA5;
+	Thu, 25 Apr 2024 07:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714014863; cv=none; b=o2SNO6s6TIQcK/oeHEuTTP5o31U+mPiarGYccFjertnBPKtS/Jd/IhAaB9ID6SLLyKTeKnrduJolNzIMd/lvGr8bTf/etQ5Vnh7oGFbi9tNeAZRejSvWSzbTAME4XGA9ghmqbJ9oHgYNjXhA6FQdqATUHR+F0G+hj4qrApXfJsg=
+	t=1714029040; cv=none; b=uZlhU/LfITufdr6wUyubmn7V68w/ZlTtzgNBBFxXy8bUwO01JD1et/nSI0mp7VLDgueIne3fITim+YnlqFAhs+pEgdNN6rxk/Zj2zxO9lJq1zbr3218wWdisDtRsno2+CyirAzvAvpVOwdFPn2Nmhvjdz3kt18Hz7V5BGdSQI2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714014863; c=relaxed/simple;
-	bh=Su8k9rAmiQpz0eW3uCuyH9NG8vZCEsJsTNrN5666vjo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tsjAGsWLauSl/m4RgapJUoSK/sGpfjUCFvjIISYA0JsW/VFp+/ZtJPrGt7X+cSQiGj+ISMcFNHSG2gmazwxMwE6e438s52D1DCk1JS3g3mpoWQkduFsDDYYPi2eVsCpb5uX38uFE0/NImJD+fs3TZ3EkCud7Zs/YMx/gjuxxsG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1ffMgJ7; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714029040; c=relaxed/simple;
+	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gieOt1pLr+D0qMK4OYcfBKCyFuFyZJ7Do7RWMt3ayutKnlctUSr2Giaov9NdiRm4Za70PQzA3qkWCBKWf1/H9AA4Nu5ldrBgQ/XdgGVcB+r1Ht+ee3gDsTp/K9jbn607DyqrWZKqMU3wvsVD4YOAM1Fwrm2yuESrIdV3F2KqHVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MmasBUph; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1ffMgJ7"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed9fc77bbfso462718b3a.1;
-        Wed, 24 Apr 2024 20:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714014861; x=1714619661; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eoNx1z39dGPPZ78bCeD3rHzBhVr78CiU8JLx1x2utLk=;
-        b=K1ffMgJ7SPXqqTwktMKxA53h2BvkYsSaatZPQfdjlHCvLBxFRC2y9DWcXCGacYZhLG
-         J8V4YCAxcsZiqUXqTH0i7MN2cAknetQFLffLHO2aX1Q0ZF0qRDTISvSUoZcud8pA/cag
-         WoSLsudVNbLhqdOVwiIMXvsX/+LPpzTkBZLHzxf/Eemtz+GQmRWo8uhmFBc0y3+Ye3s4
-         fncbbPIDxuvC9T8e2LqECb9CYR8DLaQAiIL7j2MUS1KcpZxPRHeeDaqme9qi4yaxG/Jm
-         iSanWE7bGE6x7A7QbowXsjatFR5rmbdVaHoKdlRmWNcZ6ya++qYTJMf5/XgMLoyIV9Z4
-         SUiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714014861; x=1714619661;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eoNx1z39dGPPZ78bCeD3rHzBhVr78CiU8JLx1x2utLk=;
-        b=df0lHuUe6HnHFeAwWi0TJK6a5MpnTe9qcktF7qFoKbD3eVV2Ndihd2kfyhPrMFePir
-         9yOWQqEMZ1sMdt9LFdHsonSNjRRZHGKtG5qP9WyulTZf9izWFAFkZH3tNCWKEaz4fdmG
-         16kodNybVg45HELc7kW9SAI733EtRDv/Oiln4JvHlhZK0hlbNSrkGtS0KLCaMfQew0nr
-         e8R1iFrqcb+ohJAc88m791rFLZS6fMJFVvK9fFgs1s54YVIy8A6TZOU+iF0KCJ6lUo0G
-         oGA8xpn4Fd/FciJGEhoTLfNL8rSXSKcQLI2xqYx1+qfWA/+taJM/tkoSQ+bmlXWZoAlg
-         kZQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxLAvoNqhmfVWjZnPbNH7bAJzpK8kb1JIjz5InXTVKwjdSrktBuCZ9+04oz3Kq0ZYENwHjWhlc1GKeXWofpyz0lP6a/BplF7aspN8p/WdE9yzhwO3R1YomeEAFY5vOX0Fhd9ui8TUOFftz
-X-Gm-Message-State: AOJu0Yx2PbwargqeWYic8oTZAVfGAPNLMqgcXAPnAp8i3gHq8rZzkLyk
-	8+nhDcQ3jZ6rSw4WEzG8CuMbSmRUPMyoMeKCATXYbUYyUyRsxXag
-X-Google-Smtp-Source: AGHT+IFYaBM1zVxSogGDuroOQcY0k8FNcX9L+oQEQWL9Yqbgf12ULz5XXVjMcB/LGl8/XCTTSuPxZw==
-X-Received: by 2002:a05:6a00:189b:b0:6ed:d3af:1070 with SMTP id x27-20020a056a00189b00b006edd3af1070mr5786765pfh.32.1714014860870;
-        Wed, 24 Apr 2024 20:14:20 -0700 (PDT)
-Received: from KERNELXING-MB0.tencent.com ([43.132.141.24])
-        by smtp.gmail.com with ESMTPSA id gm8-20020a056a00640800b006e740d23674sm12588884pfb.140.2024.04.24.20.14.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 20:14:20 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: edumazet@google.com,
-	dsahern@kernel.org,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	atenart@kernel.org,
-	horms@kernel.org
-Cc: mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v9 7/7] rstreason: make it work in trace world
-Date: Thu, 25 Apr 2024 11:13:40 +0800
-Message-Id: <20240425031340.46946-8-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240425031340.46946-1-kerneljasonxing@gmail.com>
-References: <20240425031340.46946-1-kerneljasonxing@gmail.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MmasBUph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714029027;
+	bh=rmNCwj/QZXocvFu/SV+UsAbq1yc1Onrw5e/MM6tpI4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MmasBUphC0hDmcDselWsqNDchcFNLbtyyIXYaTEfQv4BLOsVbY80KeyHb5BvHn9uV
+	 mXfX+53b9fklgAHnv4JHOlIL0SSIIXm5AmCALLJVlcCrmQacW/Cc+9xB5aBl8A7Dwb
+	 B9LRLV8RKBn3hp3tvoCofURazzoY7NMe3hrGTd84=
+Date: Thu, 25 Apr 2024 09:10:27 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>, 
+	Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
+	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-mm@kvack.org, linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	kexec@lists.infradead.org, linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
+	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, 
+	linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240424201234.3cc2b509@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240424201234.3cc2b509@kernel.org>
 
-From: Jason Xing <kernelxing@tencent.com>
+On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
+> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > The series was split from my larger series sysctl-const series [0].
+> > It only focusses on the proc_handlers but is an important step to be
+> > able to move all static definitions of ctl_table into .rodata.
+> 
+> Split this per subsystem, please.
 
-At last, we should let it work by introducing this reset reason in
-trace world.
+Unfortunately this would introduce an enormous amount of code churn.
 
-One of the possible expected outputs is:
-... tcp_send_reset: skbaddr=xxx skaddr=xxx src=xxx dest=xxx
-state=TCP_ESTABLISHED reason=NOT_SPECIFIED
+The function prototypes for each callback have to stay consistent.
+So a another callback member ("proc_handler_new") is needed and users
+would be migrated to it gradually.
 
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/tcp.h | 26 ++++++++++++++++++++++----
- net/ipv4/tcp_ipv4.c        |  2 +-
- net/ipv4/tcp_output.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  2 +-
- 4 files changed, 25 insertions(+), 7 deletions(-)
+But then *all* definitions of "struct ctl_table" throughout the tree need to
+be touched.
+In contrast, the proposed series only needs to change the handler
+implementations, not their usage sites.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 5c04a61a11c2..49b5ee091cf6 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -11,6 +11,7 @@
- #include <net/ipv6.h>
- #include <net/tcp.h>
- #include <linux/sock_diag.h>
-+#include <net/rstreason.h>
- 
- /*
-  * tcp event with arguments sk and skb
-@@ -74,20 +75,32 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
- 	TP_ARGS(sk, skb)
- );
- 
-+#undef FN
-+#define FN(reason)	TRACE_DEFINE_ENUM(SK_RST_REASON_##reason);
-+DEFINE_RST_REASON(FN, FN)
-+
-+#undef FN
-+#undef FNe
-+#define FN(reason)	{ SK_RST_REASON_##reason, #reason },
-+#define FNe(reason)	{ SK_RST_REASON_##reason, #reason }
-+
- /*
-  * skb of trace_tcp_send_reset is the skb that caused RST. In case of
-  * active reset, skb should be NULL
-  */
- TRACE_EVENT(tcp_send_reset,
- 
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk,
-+		 const struct sk_buff *skb,
-+		 const enum sk_rst_reason reason),
- 
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, reason),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
- 		__field(const void *, skaddr)
- 		__field(int, state)
-+		__field(enum sk_rst_reason, reason)
- 		__array(__u8, saddr, sizeof(struct sockaddr_in6))
- 		__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 	),
-@@ -113,14 +126,19 @@ TRACE_EVENT(tcp_send_reset,
- 			 */
- 			TP_STORE_ADDR_PORTS_SKB(skb, th, entry->daddr, entry->saddr);
- 		}
-+		__entry->reason = reason;
- 	),
- 
--	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s reason=%s",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  __entry->saddr, __entry->daddr,
--		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN")
-+		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN",
-+		  __print_symbolic(__entry->reason, DEFINE_RST_REASON(FN, FNe)))
- );
- 
-+#undef FN
-+#undef FNe
-+
- /*
-  * tcp event with arguments sk
-  *
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 6bd3a0fb9439..6096ac7a3a02 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -871,7 +871,7 @@ static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb,
- 	if (sk)
- 		arg.bound_dev_if = sk->sk_bound_dev_if;
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	BUILD_BUG_ON(offsetof(struct sock, sk_bound_dev_if) !=
- 		     offsetof(struct inet_timewait_sock, tw_bound_dev_if));
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index e4f5c8b5172a..a8d5f22c079b 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3640,7 +3640,7 @@ void tcp_send_active_reset(struct sock *sk, gfp_t priority,
- 	/* skb of trace_tcp_send_reset() keeps the skb that caused RST,
- 	 * skb here is different to the troublesome skb, so use NULL
- 	 */
--	trace_tcp_send_reset(sk, NULL);
-+	trace_tcp_send_reset(sk, NULL, SK_RST_REASON_NOT_SPECIFIED);
- }
- 
- /* Send a crossed SYN-ACK during socket establishment.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 317d7a6e6b01..77958adf2e16 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1133,7 +1133,7 @@ static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb,
- 			label = ip6_flowlabel(ipv6h);
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1,
- 			     ipv6_get_dsfield(ipv6h), label, priority, txhash,
--- 
-2.37.3
+There are many, many more usage sites than handler implementations.
 
+Especially, as the majority of sysctl tables use the standard handlers
+(proc_dostring, proc_dobool, ...) and are not affected by the proposed
+aproach at all.
+
+And then we would have introduced a new handler name "proc_handler_new"
+and maybe have to do the whole thing again to rename it back to
+the original and well-known "proc_handler".
+
+
+Of course if somebody has a better aproach, I'm all ears.
+
+
+Thomas
