@@ -1,269 +1,182 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D42314E2F8;
-	Thu, 25 Apr 2024 17:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE18915250B
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714067672; cv=none; b=QaCOduFLmG15PwKtOG+k9G1Wgi55LUTK3nWRrjiL6O/9DebgUqyjmlllT0UCmBlHDCt9L2IFD/Qdu+WKzEMPyTKmkgbywUnnnP5SJfzdmIXRWwsZXMQ8fd/PyCqWwozMy9SFbpO6q1e8h4T2h6QWwJM49pxwAXmbyqEoQufbp0w=
+	t=1714074970; cv=none; b=L+QYYxMFKTdzkeMpYa1aWLjNGTwOGSBRwwTFR3XQM/uXdhVfLnrsRsugPDyM1i5rDr2wHta1ltqVM4F2V78ec7vH/83SkbYu2L1gcQ8yMgPsbtUVX/zZLM4LHIU5a/NZyl4t48vcFyy9csRByINoF162edeOOMlkITM4nrXqouw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714067672; c=relaxed/simple;
-	bh=yVpjVKkZIJRfENJCjZjedcvfBPVyt4aQA7kriye5zPM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fofV7kYtpRvhewlw0EKEhmDJO8Ujo20yXZocqk/klM/O3eMe0E11/yjcfdhFUlhsQjPIE2AT/cEz/qpV34D9NNFGH3cAltgaQ+OhK5lJ79lsklwGcn+koRYpq4aGHuxpdvi8R6UJHj7uWuGYjM9ScuDV6paaV4rL9bAhjj3499M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=giFL9PJq; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714074970; c=relaxed/simple;
+	bh=mlCtUyjlYwpG8XC2M8PhO0swx9DedcqDZRTkR7ZAUSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YTyhb6UruwSm2GIFZ7YxScdz7pbzl3Qi4OCSt79zzsnvJm+m9UcATlesT9AuJEAqXToCtzS/7DklcIKjcIBJXrGvBRz1ejSfEpr0LvmaKc/quWtuv1d60AJTn/P1En7uBKtm8YN2+KKuoqqQoDPKjywU0K2pBakiUUAmu0klvIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OLvFUpqd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giFL9PJq"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so1587192a12.1;
-        Thu, 25 Apr 2024 10:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714067669; x=1714672469; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ejeP9dXrfzEo4Kz+4ZR1u+AqeitnQxmje6orllnw+G0=;
-        b=giFL9PJqEXYZAzooWANW5E3gygHG+Tbj/2eEJXPsQI47/zZAQV4fFWWNPRSvOe2zqa
-         4JuMMx7uLH8VrqdyJVRLbiW+nNDf2Th1N1LWwJ42KVhdTTH3NxJV1iq/VhCdldw5BctZ
-         +AJsYx36SD3DN5/WKWZcs3INp1wTk0PXATrRF8/LFhkfa7oDWOrrkNorEYZlUAhgTtDq
-         n8WCs6Un+opg+8caMiWizaMMgbAcqp0yxahRsQuQAQ5rS4Grv4FP3MAqV0MXKHczPns7
-         mgszo8CIHMxHRQ6BYCZuB3wJhKnmtBsM7GWy/nBUpZRet5eykmVhbas12paIx74Y/ATf
-         vbbQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OLvFUpqd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714074967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZvSvuTa9yGOG0wcjFccGcQ0zAW5oxbiOm14qIn43U44=;
+	b=OLvFUpqdojnvZax8x3IT6Qrh47u5v2Vz0Qs/no7w8TaLeW+IXra1ZlWFly3Df5hLjadIza
+	4wTPyYVYvvDlfy3BfEOCNBHm7z9jalgfGadfsybO4Obh3PunxM4qmPKTtJkDPT5cFHRj5C
+	jmnjYmHuvvpTy6Rh7cE0eoz5QRK0jdo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-90-hfJvna6JOYexNrnWhGeVeg-1; Thu, 25 Apr 2024 15:56:06 -0400
+X-MC-Unique: hfJvna6JOYexNrnWhGeVeg-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-343ee356227so846070f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:56:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714067669; x=1714672469;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1714074964; x=1714679764;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ejeP9dXrfzEo4Kz+4ZR1u+AqeitnQxmje6orllnw+G0=;
-        b=QXxzSKhtdPvTqIeH21JhYm0GmWOI824opEdX/6JLva/Jg75anNr1Y1Db1wHvVLgfb9
-         kHoKEKqNB7QTXvvDC6E044+tlkYo5kd6CRkA8poJdOd9I+LrK9Bx6Zwt4OlQfTCw+lEb
-         jngan8MaNaAe8t/q1+ulTPDAr72Recgjpnz+th3I6nBscM9z8qndT8Dc7Brhr2z7VyIC
-         r/Yw+BU2bGqUxQvwrJW6GQOYAahyhAx6jyeA1r6TTCYWkHOewlAbgyUKeTyZuuoCStIx
-         R0+aLH0+PIsbnegtxvwvtAlqn3py8OSyQPtGibu3momK7PX/2zEdW3O+PClxRJqPSgYh
-         FI8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXYVYnZDJDQs8EHHS66nH1Ul/I06hBUvnFaD7/0NHRKgpZdfSVCP7ja2llm6dyaGT4ndxUAfSef0FAx5XA3IK4DFYfMWb1wquxIsxDQ4DfLh9muxcz+HFI3AibG2fNO3T9/zJwX0FbscgjU2K53ocMPiTbTwblmJusXPkjlrPus79UcShxC
-X-Gm-Message-State: AOJu0Yy5eskNLz/K4exgA2vOgrKAQo2QguNQSCOPjiS/+8MyFhIX7Q93
-	xvvoYsTeyhfOtJ3d66anuKy691UAKIrj74PqkdhoLipjZFoIta5N
-X-Google-Smtp-Source: AGHT+IECqaSSIV584frzrNrjTkUNt1d9IsYBrcrMa++x9CGGvnoHlQfzWYQitSlVi3nFIjEAaz+sPA==
-X-Received: by 2002:a17:906:4bd0:b0:a56:ee1:5695 with SMTP id x16-20020a1709064bd000b00a560ee15695mr332036ejv.19.1714067668301;
-        Thu, 25 Apr 2024 10:54:28 -0700 (PDT)
-Received: from krava ([2a00:102a:4022:13b8:3d99:aea7:b18a:a8d7])
-        by smtp.gmail.com with ESMTPSA id b10-20020a1709062b4a00b00a58b1cf96bbsm1032475ejg.179.2024.04.25.10.54.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Apr 2024 10:54:27 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 25 Apr 2024 19:54:24 +0200
-To: syzbot <syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com,
-	john.fastabend@gmail.com, kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org, rostedt@goodmis.org, sdf@google.com,
-	song@kernel.org, syzkaller-bugs@googlegroups.com,
-	yonghong.song@linux.dev
-Subject: Re: [syzbot] [bpf?] [trace?] possible deadlock in
- force_sig_info_to_task
-Message-ID: <ZiqY0OAHQlNUIrbD@krava>
-References: <000000000000d5f4fc0616e816d4@google.com>
+        bh=ZvSvuTa9yGOG0wcjFccGcQ0zAW5oxbiOm14qIn43U44=;
+        b=c3zfkQPJfb/TTRlv3YE3EbiYAJV6AugKstqnv5tPpngASDnvrasr446IxMF7zh3TEq
+         sVHIIidfDKm3kIgKUg3/gu9DPbw9S1o+gw149VzNZir7CukMvOjzJc7zxdQ7V29AHYRR
+         2usBfgDkDlM3XgZyCb8NQkf0B0kQ/DWaIOe2E702dHM74N3PlelvZjP8ut2DEeYalRHi
+         WybFcj1yxjgoVCjI9lwG9vZP6HS1L8yTBGN4+Okk5wJslEkua4DVQJcMb9qaUPbxlZP+
+         mCIBwHQR5PwSFEbtAA6rtFW9VY09A/DsLqA31cbpZYDOtAOT9ccIYIUS4nKXeaORKUxf
+         VS3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV/0V1nc2C73Jc4+WhVwqz8Y/30AEdE/O7LCd/zwv+XW8MDpfJ5FbsKDXuQC+JEh8G/dUCCLLA5Z5/QK+MuPW9k/NkoaLEKYrOKWvVh/ZWa3qcO
+X-Gm-Message-State: AOJu0YzT35lbWN643HO1KFTEVEPls3IdOM58Eteip4P9yhpyLSXPd0ia
+	ZLvdDsL8Xr1WVXtrEN8hf4hByPZQHs1RQpeMXc2lycd4rkb/hGzUZDDZiz+WGoEkiBDdo1043bk
+	/cn5b3x2ib4Ozr2jn6RsStvmezd7pM8odKpQ9hW2dQNLXUGi8wYmIke9U4c0h13O0r+J1/Q==
+X-Received: by 2002:a5d:4acd:0:b0:345:edfd:9529 with SMTP id y13-20020a5d4acd000000b00345edfd9529mr324847wrs.29.1714074964127;
+        Thu, 25 Apr 2024 12:56:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYgkFWz3TXjmB86O/65fQH0zQ4HG8R+cNsPwBs/sONCBKrv9FwbEKHPLsZW9SmepLzO1jxwQ==
+X-Received: by 2002:a5d:4acd:0:b0:345:edfd:9529 with SMTP id y13-20020a5d4acd000000b00345edfd9529mr324832wrs.29.1714074963663;
+        Thu, 25 Apr 2024 12:56:03 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c719:8200:487a:3426:a17e:d7b7? (p200300cbc7198200487a3426a17ed7b7.dip0.t-ipconnect.de. [2003:cb:c719:8200:487a:3426:a17e:d7b7])
+        by smtp.gmail.com with ESMTPSA id cs7-20020a056000088700b00346cdf48262sm20812230wrb.2.2024.04.25.12.56.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Apr 2024 12:56:03 -0700 (PDT)
+Message-ID: <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
+Date: Thu, 25 Apr 2024 21:56:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000d5f4fc0616e816d4@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
+To: Guillaume Morin <guillaume@morinfr.org>
+Cc: oleg@redhat.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, muchun.song@linux.dev
+References: <ZiK50qob9yl5e0Xz@bender.morinfr.org>
+ <b70a3d3a-ea8b-4b20-964b-b019c146945a@redhat.com>
+ <ZiaoZlGc_8ZV3736@bender.morinfr.org>
+ <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
+ <ZibOQI9kwzE98n12@bender.morinfr.org>
+ <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
+ <ZilvOi7ceSXmwkNq@bender.morinfr.org>
+ <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
+ <Zip0fEliGeL0qmID@bender.morinfr.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Zip0fEliGeL0qmID@bender.morinfr.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 25, 2024 at 02:05:31AM -0700, syzbot wrote:
-> Hello,
+On 25.04.24 17:19, Guillaume Morin wrote:
+> On 24 Apr 23:00, David Hildenbrand wrote:
+>>> One issue here is that FOLL_FORCE|FOLL_WRITE is not implemented for
+>>> hugetlb mappings. However this was also on my TODO and I have a draft
+>>> patch that implements it.
+>>
+>> Yes, I documented it back then and added sanity checks in GUP code to fence
+>> it off. Shouldn't be too hard to implement (famous last words) and would be
+>> the cleaner thing to use here once I manage to switch over to
+>> FOLL_WRITE|FOLL_FORCE to break COW.
 > 
-> syzbot found the following issue on:
+> Yes, my patch seems to be working. The hugetlb code is pretty simple.
+> And it allows ptrace and the proc pid mem file to work on the executable
+> private hugetlb mappings.
 > 
-> HEAD commit:    977b1ef51866 Merge tag 'block-6.9-20240420' of git://git.k..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17080d20980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f47e5e015c177e57
-> dashboard link: https://syzkaller.appspot.com/bug?extid=83e7f982ca045ab4405c
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> There is one thing I am unclear about though. hugetlb enforces that
+> huge_pte_write() is true on FOLL_WRITE in both the fault and
+> follow_page_mask paths. I am not sure if we can simply assume in the
+> hugetlb code that if the pte is not writable and this is a write fault
+> then we're in the FOLL_FORCE|FOLL_WRITE case.  Or do we want to keep the
+> checks simply not enforce it for FOLL_FORCE|FOLL_WRITE?
 > 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/549d1add1da9/disk-977b1ef5.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/3e8e501c8aa2/vmlinux-977b1ef5.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/d02f7cb905b8/bzImage-977b1ef5.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+83e7f982ca045ab4405c@syzkaller.appspotmail.com
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 6.9.0-rc4-syzkaller-00266-g977b1ef51866 #0 Not tainted
-> ------------------------------------------------------
-> syz-executor.0/11241 is trying to acquire lock:
-> ffff888020a2c0d8 (&sighand->siglock){-.-.}-{2:2}, at: force_sig_info_to_task+0x68/0x580 kernel/signal.c:1334
-> 
-> but task is already holding lock:
-> ffff8880b943e658 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
-> 
-> which lock already depends on the new lock.
-> 
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #1 (&rq->__lock){-.-.}-{2:2}:
->        lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
->        _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
->        raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
->        raw_spin_rq_lock kernel/sched/sched.h:1385 [inline]
->        _raw_spin_rq_lock_irqsave kernel/sched/sched.h:1404 [inline]
->        rq_lock_irqsave kernel/sched/sched.h:1683 [inline]
->        class_rq_lock_irqsave_constructor kernel/sched/sched.h:1737 [inline]
->        sched_mm_cid_exit_signals+0x17b/0x4b0 kernel/sched/core.c:12005
->        exit_signals+0x2a1/0x5c0 kernel/signal.c:3016
->        do_exit+0x6a8/0x27e0 kernel/exit.c:837
->        __do_sys_exit kernel/exit.c:994 [inline]
->        __se_sys_exit kernel/exit.c:992 [inline]
->        __pfx___ia32_sys_exit+0x0/0x10 kernel/exit.c:992
->        do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->        do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
->        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> -> #0 (&sighand->siglock){-.-.}-{2:2}:
->        check_prev_add kernel/locking/lockdep.c:3134 [inline]
->        check_prevs_add kernel/locking/lockdep.c:3253 [inline]
->        validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
->        __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
->        lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
->        __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
->        _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
->        force_sig_info_to_task+0x68/0x580 kernel/signal.c:1334
->        force_sig_fault_to_task kernel/signal.c:1733 [inline]
->        force_sig_fault+0x12c/0x1d0 kernel/signal.c:1738
->        __bad_area_nosemaphore+0x127/0x780 arch/x86/mm/fault.c:814
->        handle_page_fault arch/x86/mm/fault.c:1505 [inline]
->        exc_page_fault+0x612/0x8e0 arch/x86/mm/fault.c:1563
->        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
->        strncpy_from_user+0x2c6/0x2f0 lib/strncpy_from_user.c:138
->        strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
->        bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:216 [inline]
->        ____bpf_probe_read_compat_str kernel/trace/bpf_trace.c:311 [inline]
->        bpf_probe_read_compat_str+0xe9/0x180 kernel/trace/bpf_trace.c:307
->        bpf_prog_e42f6260c1b72fb3+0x3d/0x3f
->        bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
->        __bpf_prog_run include/linux/filter.h:657 [inline]
->        bpf_prog_run include/linux/filter.h:664 [inline]
->        __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
->        bpf_trace_run4+0x25a/0x490 kernel/trace/bpf_trace.c:2422
->        __traceiter_sched_switch+0x98/0xd0 include/trace/events/sched.h:222
->        trace_sched_switch include/trace/events/sched.h:222 [inline]
->        __schedule+0x2535/0x4a00 kernel/sched/core.c:6743
->        preempt_schedule_irq+0xfb/0x1c0 kernel/sched/core.c:7068
->        irqentry_exit+0x5e/0x90 kernel/entry/common.c:354
->        asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
->        force_sig_fault+0x0/0x1d0
->        __bad_area_nosemaphore+0x127/0x780 arch/x86/mm/fault.c:814
->        handle_page_fault arch/x86/mm/fault.c:1505 [inline]
->        exc_page_fault+0x612/0x8e0 arch/x86/mm/fault.c:1563
->        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
->        __put_user_handle_exception+0x0/0x10
->        __do_sys_gettimeofday kernel/time/time.c:147 [inline]
->        __se_sys_gettimeofday+0xd9/0x240 kernel/time/time.c:140
->        emulate_vsyscall+0xe23/0x1290 arch/x86/entry/vsyscall/vsyscall_64.c:247
->        do_user_addr_fault arch/x86/mm/fault.c:1346 [inline]
->        handle_page_fault arch/x86/mm/fault.c:1505 [inline]
->        exc_page_fault+0x160/0x8e0 arch/x86/mm/fault.c:1563
->        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
->        _end+0x6a9da000/0x0
+> The latter is more complicated in the fault path because there is no
+> FAULT_FLAG_FORCE flag.
 > 
 
-I tried and I can reproduce similar splat below, but no clue yet ;-)
-I wonder the current->thread.sig_on_uaccess_err flag might affect the
-second bpf fault behaviour
+I just pushed something to
+	https://github.com/davidhildenbrand/linux/tree/uprobes_cow
 
-jirka
+Only very lightly tested so far. Expect the worst :)
+
+I still detest having the zapping logic there, but to get it all right I 
+don't see a clean way around that.
 
 
----
-[  315.747916] [ BUG: Invalid wait context ]
-[  315.748511] 6.9.0-rc1+ #60 Tainted: G           OE
-[  315.749227] -----------------------------
-[  315.749820] test_progs/1263 is trying to lock:
-[  315.750463][ T1263] ffff888109f06f58 (&sighand->siglock){....}-{3:3}, at: force_sig_info_to_task+0x25/0x140
-[  315.751630][ T1263] other info that might help us debug this:
-[  315.752337][ T1263] context-{5:5}
-[  315.752796][ T1263] 2 locks held by test_progs/1263:
-[  315.753426][ T1263]  #0: ffff88846d808918 (&rq->__lock){-.-.}-{2:2}, at: __schedule+0x11b/0x1040
-[  315.754531][ T1263]  #1: ffffffff839a3700 (rcu_read_lock){....}-{1:3}, at: trace_call_bpf+0x6d/0x4a0
-[  315.755630][ T1263] stack backtrace: 
-[  315.756133][ T1263] CPU: 2 PID: 1263 Comm: test_progs Tainted: G           OE      6.9.0-rc1+ #60 e3139236695c37204e0f43029c0efe69ab334496
-[  315.757607][ T1263] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
-[  315.758741][ T1263] Call Trace:
-[  315.759208][ T1263]  <TASK>
-[  315.759631][ T1263]  dump_stack_lvl+0x133/0x150
-[  315.760252][ T1263]  __lock_acquire+0x98a/0x2420
-[  315.760876][ T1263]  ? ring_buffer_lock_reserve+0x126/0x410
-[  315.761623][ T1263]  lock_acquire+0x105/0x380
-[  315.762216][ T1263]  ? force_sig_info_to_task+0x25/0x140
-[  315.762892][ T1263]  ? kernelmode_fixup_or_oops+0x42/0x170
-[  315.763577][ T1263]  ? trace_vbprintk+0x173/0x260
-[  315.764191][ T1263]  _raw_spin_lock_irqsave+0x69/0xc0
-[  315.764842][ T1263]  ? force_sig_info_to_task+0x25/0x140
-[  315.765519][ T1263]  force_sig_info_to_task+0x25/0x140
-[  315.766182][ T1263]  force_sig_fault+0x5a/0x80
-[  315.766767][ T1263]  exc_page_fault+0x82/0x2a0
-[  315.767382][ T1263]  asm_exc_page_fault+0x22/0x30
-[  315.768018][ T1263] RIP: 0010:strncpy_from_user+0xe5/0x140 
-[  315.768713][ T1263] Code: d8 48 89 44 15 00 48 b8 08 06 05 04 03 02 01 00 48 0f af d8 48 c1 eb 38 48 8d 04 13 0f 01 ca 5b 5d 41 5c 41 5d c3 cc cc cc cc <48> 85 db 74 20 48 01 d3 eb 09 48 83 c2 01 48 39 da 74 15 41 8a 44
-[  315.770996][ T1263] RSP: 0000:ffffc90001947a40 EFLAGS: 00050002 
-[  315.771780][ T1263] RAX: 0000000000000001 RBX: 0000000000000008 RCX: 0000000000000004
-[  315.772834][ T1263] RDX: 0000000000000000 RSI: 8080808080808080 RDI: ffffc90001947aa8
-[  315.773880][ T1263] RBP: ffffc90001947aa8 R08: fefefefefefefeff R09: 0000000000008a47
-[  315.774965][ T1263] R10: 0000000000000011 R11: 000000000001600b R12: 0000000000000008
-[  315.775830][ T1263] R13: 0000000000000001 R14: 0000000000000001 R15: ffffc90001633000
-[  315.776698][ T1263]  strncpy_from_user_nofault+0x28/0x70
-[  315.778139][ T1263]  bpf_probe_read_compat_str+0x51/0x90
-[  315.778707][ T1263]  bpf_prog_9199568cec6305d9_krava+0x3c/0x40
-[  315.779314][ T1263]  trace_call_bpf+0x127/0x4a0
-[  315.779801][ T1263]  perf_trace_run_bpf_submit+0x4f/0xd0
-[  315.786332][ T1263]  perf_trace_sched_switch+0x163/0x1a0
-[  315.786885][ T1263]  __traceiter_sched_switch+0x3e/0x60
-[  315.787427][ T1263]  __schedule+0x5eb/0x1040
-[  315.787891][ T1263]  ? asm_sysvec_call_function_single+0x16/0x20
-[  315.788503][ T1263]  ? preempt_schedule_thunk+0x16/0x30
-[  315.789041][ T1263]  preempt_schedule_common+0x2c/0x70
-[  315.789568][ T1263]  preempt_schedule_thunk+0x16/0x30
-[  315.790096][ T1263]  _raw_spin_unlock_irqrestore+0x8e/0xa0
-[  315.790654][ T1263]  force_sig_info_to_task+0xf3/0x140
-[  315.791174][ T1263]  force_sig_fault+0x5a/0x80
-[  315.791642][ T1263]  exc_page_fault+0x82/0x2a0
-[  315.792108][ T1263]  asm_exc_page_fault+0x22/0x30
-[  315.792589][ T1263] RIP: 0010:_copy_to_user+0x45/0x60
-[  315.793116][ T1263] Code: 1b 9a ff 48 89 d8 48 01 e8 0f 92 c2 48 85 c0 78 28 0f b6 d2 48 85 d2 75 20 0f 01 cb 48 89 d9 48 89 ef 4c 89 e6 f3 a4 0f 1f 00 <0f> 01 ca 5b 48 89 c8 5d 41 5c c3 cc cc cc cc 48 89 d8 5b 5d 41 5c
-[  315.794884][ T1263] RSP: 0000:ffffc90001947e50 EFLAGS: 00050246 
-[  315.795476][ T1263] RAX: 0000000000000009 RBX: 0000000000000008 RCX: 0000000000000008
-[  315.796256][ T1263] RDX: 0000000000000000 RSI: ffffffff85577050 RDI: 0000000000000001
-[  315.797012][ T1263] RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000001
-[  315.797753][ T1263] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff85577050
-[  315.798518][ T1263] R13: ffffc90001947f58 R14: ffff88817d51b6c0 R15: 0000000000000060
-[  315.799287][ T1263]  __x64_sys_gettimeofday+0xc9/0xe0
-[  315.799801][ T1263]  ? 0xffffffffff600000
-[  315.800241][ T1263]  emulate_vsyscall+0x1be/0x420
-[  315.800732][ T1263]  ? 0xffffffffff600000
-[  315.801168][ T1263]  do_user_addr_fault+0x4d3/0x8b0
-[  315.801651][ T1263]  ? 0xffffffffff600000
-[  315.802067][ T1263]  ? 0xffffffffff600000
-[  315.802460][ T1263]  exc_page_fault+0x82/0x2a0
-[  315.802908][ T1263]  asm_exc_page_fault+0x22/0x30
-[  315.803389][ T1263] RIP: 0033:__init_scratch_end+0x79200000/0xffffffffffa26000
-[  315.804112][ T1263] Code: Unable to access opcode bytes at 0xffffffffff5fffd6.
-[  315.804802][ T1263] RSP: 002b:00007ffc2bdaee98 EFLAGS: 00010246 
-[  315.805352][ T1263] RAX: ffffffffffffffda RBX: 00007ffc2bdaf138 RCX: 0000000000000000
-[  315.806099][ T1263] RDX: 0000000000000002 RSI: 0000000000000001 RDI: 0000000000000000
-[  315.806863][ T1263] RBP: 00007ffc2bdaeef0 R08: 0000000000000064 R09: 0000000000000000
-[  315.808206][ T1263] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000004
-[  315.808929][ T1263] R13: 0000000000000000 R14: 00007f7ef5921000 R15: 0000000001402db0
-[  315.809628][ T1263]  </TASK>
+For hugetlb, we'd primarily have to implement the 
+mm_walk_ops->hugetlb_entry() callback (well, and FOLL_FORCE).
+
+Likely vaddr and PAGE_SIZE in uprobe_write_opcode() would have to be 
+expanded to cover the full hugetlb page.
+
+-- 
+Cheers,
+
+David / dhildenb
+
