@@ -1,182 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE18915250B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Apr 2024 19:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1DA21101;
+	Thu, 25 Apr 2024 20:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714074970; cv=none; b=L+QYYxMFKTdzkeMpYa1aWLjNGTwOGSBRwwTFR3XQM/uXdhVfLnrsRsugPDyM1i5rDr2wHta1ltqVM4F2V78ec7vH/83SkbYu2L1gcQ8yMgPsbtUVX/zZLM4LHIU5a/NZyl4t48vcFyy9csRByINoF162edeOOMlkITM4nrXqouw=
+	t=1714075787; cv=none; b=bnejczjfLaC/BmXXegNiW2sV+PRlNeexE+uB+cnSDz85I9QpoceWt1FBlJMmQW+A6CC0/K2CgNKFzIq3yzo6FAgM9fuVvKzMDu3zbOXM5Jl/IXg1rmNt69HHzpjnlQCz+dc0y1sCitW1hwKT3A+UH7gS+gmxpGF2so4MvYjXpVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714074970; c=relaxed/simple;
-	bh=mlCtUyjlYwpG8XC2M8PhO0swx9DedcqDZRTkR7ZAUSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YTyhb6UruwSm2GIFZ7YxScdz7pbzl3Qi4OCSt79zzsnvJm+m9UcATlesT9AuJEAqXToCtzS/7DklcIKjcIBJXrGvBRz1ejSfEpr0LvmaKc/quWtuv1d60AJTn/P1En7uBKtm8YN2+KKuoqqQoDPKjywU0K2pBakiUUAmu0klvIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OLvFUpqd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714075787; c=relaxed/simple;
+	bh=xPLDSjTkA2X2khRH8zUFP+319KpCzP+c/rPSDRVa9sc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uivo4djb3P7Y6KEFB5zfg0mnXMoFjECSlGO0Xfr7ok+li0VylZT6/xfHr5ejZMyk7mtpB3+ZpdAGPbvR/GzQ5Xg24EqWVkEq1Y4UQv+7c6Y5aCl5Jl9hXcfqy/JooFPF0/1A/WgcTJTIvCE1NdKifIv4N01sEW5lvX/Kx5acb+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZSYjDI4I; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OLvFUpqd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714074967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZvSvuTa9yGOG0wcjFccGcQ0zAW5oxbiOm14qIn43U44=;
-	b=OLvFUpqdojnvZax8x3IT6Qrh47u5v2Vz0Qs/no7w8TaLeW+IXra1ZlWFly3Df5hLjadIza
-	4wTPyYVYvvDlfy3BfEOCNBHm7z9jalgfGadfsybO4Obh3PunxM4qmPKTtJkDPT5cFHRj5C
-	jmnjYmHuvvpTy6Rh7cE0eoz5QRK0jdo=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-90-hfJvna6JOYexNrnWhGeVeg-1; Thu, 25 Apr 2024 15:56:06 -0400
-X-MC-Unique: hfJvna6JOYexNrnWhGeVeg-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-343ee356227so846070f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Apr 2024 12:56:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714074964; x=1714679764;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSYjDI4I"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ac1674d890so1283556a91.3;
+        Thu, 25 Apr 2024 13:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714075786; x=1714680586; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZvSvuTa9yGOG0wcjFccGcQ0zAW5oxbiOm14qIn43U44=;
-        b=c3zfkQPJfb/TTRlv3YE3EbiYAJV6AugKstqnv5tPpngASDnvrasr446IxMF7zh3TEq
-         sVHIIidfDKm3kIgKUg3/gu9DPbw9S1o+gw149VzNZir7CukMvOjzJc7zxdQ7V29AHYRR
-         2usBfgDkDlM3XgZyCb8NQkf0B0kQ/DWaIOe2E702dHM74N3PlelvZjP8ut2DEeYalRHi
-         WybFcj1yxjgoVCjI9lwG9vZP6HS1L8yTBGN4+Okk5wJslEkua4DVQJcMb9qaUPbxlZP+
-         mCIBwHQR5PwSFEbtAA6rtFW9VY09A/DsLqA31cbpZYDOtAOT9ccIYIUS4nKXeaORKUxf
-         VS3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV/0V1nc2C73Jc4+WhVwqz8Y/30AEdE/O7LCd/zwv+XW8MDpfJ5FbsKDXuQC+JEh8G/dUCCLLA5Z5/QK+MuPW9k/NkoaLEKYrOKWvVh/ZWa3qcO
-X-Gm-Message-State: AOJu0YzT35lbWN643HO1KFTEVEPls3IdOM58Eteip4P9yhpyLSXPd0ia
-	ZLvdDsL8Xr1WVXtrEN8hf4hByPZQHs1RQpeMXc2lycd4rkb/hGzUZDDZiz+WGoEkiBDdo1043bk
-	/cn5b3x2ib4Ozr2jn6RsStvmezd7pM8odKpQ9hW2dQNLXUGi8wYmIke9U4c0h13O0r+J1/Q==
-X-Received: by 2002:a5d:4acd:0:b0:345:edfd:9529 with SMTP id y13-20020a5d4acd000000b00345edfd9529mr324847wrs.29.1714074964127;
-        Thu, 25 Apr 2024 12:56:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEYgkFWz3TXjmB86O/65fQH0zQ4HG8R+cNsPwBs/sONCBKrv9FwbEKHPLsZW9SmepLzO1jxwQ==
-X-Received: by 2002:a5d:4acd:0:b0:345:edfd:9529 with SMTP id y13-20020a5d4acd000000b00345edfd9529mr324832wrs.29.1714074963663;
-        Thu, 25 Apr 2024 12:56:03 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c719:8200:487a:3426:a17e:d7b7? (p200300cbc7198200487a3426a17ed7b7.dip0.t-ipconnect.de. [2003:cb:c719:8200:487a:3426:a17e:d7b7])
-        by smtp.gmail.com with ESMTPSA id cs7-20020a056000088700b00346cdf48262sm20812230wrb.2.2024.04.25.12.56.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 12:56:03 -0700 (PDT)
-Message-ID: <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
-Date: Thu, 25 Apr 2024 21:56:02 +0200
+        bh=JrZK6ml6rEEwBTrQjJ1G9DmN6BYGfMleWCxQeuJAdjk=;
+        b=ZSYjDI4IE6m5+CtzHV+hOLd440FjS4HhuSAeKrKbJe1isDhuAuT1LAmAYaLeXmHsBr
+         Iaj+z+jAXAgMPoy5acg0RxxSEGrvqH25+8YNZoK4Lpo910UkLJ1K8tdRoXxl6SUUkJdV
+         8JeewVS4DmK6CtBSsImNQp3+t8nPCFdXEnBd8liv2jfVx9o87/o4RyK7HxubIWJYLOUI
+         31ynJ6ui8Br2iPyt0Hg/Mu4XlguXR6H6ZC21uR33cVP1pILvvaGNJa79T6kk+PTgn8Py
+         /3b4mms1q+wP9S4FN01UZpyhUibmsWg/QH4gEewMLyaV2FL46AcJAqb3DAHjqkaAromV
+         gXdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714075786; x=1714680586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JrZK6ml6rEEwBTrQjJ1G9DmN6BYGfMleWCxQeuJAdjk=;
+        b=uTmJYxBZ5q3khiLI4WT2ZSXcQBDKQQ9aHKfQjxOiol3EM7aWtyJ8ne2AZekZ9Ehb7n
+         1pM03zPJ78nWSTZ9vwr2GWbtxzWJNOtvkp2mmq1VIuerRm2H+2Fr8LolrqW6NBkvZWag
+         SrT0bWYvVtf3sY7seickf0mJxEBgj7pkejvYecRoisGYIi3JBoPpOp3OmKV/HjsbFYt8
+         T+qsV4UVE6iS8JD8o8O/Mfn2i5goXm6OZ2YVZ+XWLAUE5/C43l/z/IYPYlbHuyfINf67
+         fZWg0kdHMnktdHe3VtBgxcbzPbsf+kIBeyOD+iS9pXWS0tX9vmClnhS5cuaQNBubSn05
+         nCvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFrOq6VHneE/8lZhjNd6RwduUtFvaZ0+49PXurGy88Tj4L85LxupysFhdFFMgih793bciPg9n5/o+yCX3jwZiUSLQfgaaTUoCEFTH6JUcWW4aUNGhNFDnLjIV3a6hx6NL+2Dxm5rZj36JtaXkTU/Xqgn6qc4I+7rdiex1GY7XThnu+x2RR
+X-Gm-Message-State: AOJu0Yy5UCpqweaLAM4UVHwFPIc0yL9HgEMHkgsYXTtSMRbLuWGfHCV3
+	nNQfpRtUeiNlPtLACFOzKH0o+gNBpphQuSw9VXb1AiwlPfeWtjWOzx5z/yWKws4QdusuzCY1BtU
+	ANzfRwtWmGekuqINGZStqTOz3lpU=
+X-Google-Smtp-Source: AGHT+IE3OQFaRFBXI+TTmzwcYdZjuFxXeDuWKrteCad+6nEZ37NhTIA62QLGaQV3Q8yq0/XWoJi4RNSi4LHW6O7YggM=
+X-Received: by 2002:a17:90b:1208:b0:2a0:9b18:daf with SMTP id
+ gl8-20020a17090b120800b002a09b180dafmr647610pjb.42.1714075784821; Thu, 25 Apr
+ 2024 13:09:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
-To: Guillaume Morin <guillaume@morinfr.org>
-Cc: oleg@redhat.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, muchun.song@linux.dev
-References: <ZiK50qob9yl5e0Xz@bender.morinfr.org>
- <b70a3d3a-ea8b-4b20-964b-b019c146945a@redhat.com>
- <ZiaoZlGc_8ZV3736@bender.morinfr.org>
- <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
- <ZibOQI9kwzE98n12@bender.morinfr.org>
- <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
- <ZilvOi7ceSXmwkNq@bender.morinfr.org>
- <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
- <Zip0fEliGeL0qmID@bender.morinfr.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Zip0fEliGeL0qmID@bender.morinfr.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <171318533841.254850.15841395205784342850.stgit@devnote2> <171318568081.254850.16193015880509111721.stgit@devnote2>
+In-Reply-To: <171318568081.254850.16193015880509111721.stgit@devnote2>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 25 Apr 2024 13:09:32 -0700
+Message-ID: <CAEf4BzZ2cZ-jJDj3Qdc4T_9FmCK21Ae-mr-d2RJRMtdUK8HOjQ@mail.gmail.com>
+Subject: Re: [PATCH v9 29/36] bpf: Enable kprobe_multi feature if
+ CONFIG_FPROBE is enabled
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Florent Revest <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25.04.24 17:19, Guillaume Morin wrote:
-> On 24 Apr 23:00, David Hildenbrand wrote:
->>> One issue here is that FOLL_FORCE|FOLL_WRITE is not implemented for
->>> hugetlb mappings. However this was also on my TODO and I have a draft
->>> patch that implements it.
->>
->> Yes, I documented it back then and added sanity checks in GUP code to fence
->> it off. Shouldn't be too hard to implement (famous last words) and would be
->> the cleaner thing to use here once I manage to switch over to
->> FOLL_WRITE|FOLL_FORCE to break COW.
-> 
-> Yes, my patch seems to be working. The hugetlb code is pretty simple.
-> And it allows ptrace and the proc pid mem file to work on the executable
-> private hugetlb mappings.
-> 
-> There is one thing I am unclear about though. hugetlb enforces that
-> huge_pte_write() is true on FOLL_WRITE in both the fault and
-> follow_page_mask paths. I am not sure if we can simply assume in the
-> hugetlb code that if the pte is not writable and this is a write fault
-> then we're in the FOLL_FORCE|FOLL_WRITE case.  Or do we want to keep the
-> checks simply not enforce it for FOLL_FORCE|FOLL_WRITE?
-> 
-> The latter is more complicated in the fault path because there is no
-> FAULT_FLAG_FORCE flag.
-> 
+On Mon, Apr 15, 2024 at 6:22=E2=80=AFAM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
+>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Enable kprobe_multi feature if CONFIG_FPROBE is enabled. The pt_regs is
+> converted from ftrace_regs by ftrace_partial_regs(), thus some registers
+> may always returns 0. But it should be enough for function entry (access
+> arguments) and exit (access return value).
+>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-by: Florent Revest <revest@chromium.org>
+> ---
+>  Changes from previous series: NOTHING, Update against the new series.
+> ---
+>  kernel/trace/bpf_trace.c |   22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index e51a6ef87167..57b1174030c9 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2577,7 +2577,7 @@ static int __init bpf_event_init(void)
+>  fs_initcall(bpf_event_init);
+>  #endif /* CONFIG_MODULES */
+>
+> -#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
+> +#ifdef CONFIG_FPROBE
+>  struct bpf_kprobe_multi_link {
+>         struct bpf_link link;
+>         struct fprobe fp;
+> @@ -2600,6 +2600,8 @@ struct user_syms {
+>         char *buf;
+>  };
+>
+> +static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
 
-I just pushed something to
-	https://github.com/davidhildenbrand/linux/tree/uprobes_cow
-
-Only very lightly tested so far. Expect the worst :)
-
-I still detest having the zapping logic there, but to get it all right I 
-don't see a clean way around that.
+this is a waste if CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST=3Dy, right?
+Can we guard it?
 
 
-For hugetlb, we'd primarily have to implement the 
-mm_walk_ops->hugetlb_entry() callback (well, and FOLL_FORCE).
+> +
+>  static int copy_user_syms(struct user_syms *us, unsigned long __user *us=
+yms, u32 cnt)
+>  {
+>         unsigned long __user usymbol;
+> @@ -2792,13 +2794,14 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_r=
+un_ctx *ctx)
+>
+>  static int
+>  kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+> -                          unsigned long entry_ip, struct pt_regs *regs)
+> +                          unsigned long entry_ip, struct ftrace_regs *fr=
+egs)
+>  {
+>         struct bpf_kprobe_multi_run_ctx run_ctx =3D {
+>                 .link =3D link,
+>                 .entry_ip =3D entry_ip,
+>         };
+>         struct bpf_run_ctx *old_run_ctx;
+> +       struct pt_regs *regs;
+>         int err;
+>
+>         if (unlikely(__this_cpu_inc_return(bpf_prog_active) !=3D 1)) {
+> @@ -2809,6 +2812,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_=
+link *link,
+>
+>         migrate_disable();
+>         rcu_read_lock();
+> +       regs =3D ftrace_partial_regs(fregs, this_cpu_ptr(&bpf_kprobe_mult=
+i_pt_regs));
 
-Likely vaddr and PAGE_SIZE in uprobe_write_opcode() would have to be 
-expanded to cover the full hugetlb page.
+and then pass NULL if defined(CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST)?
 
--- 
-Cheers,
 
-David / dhildenb
-
+>         old_run_ctx =3D bpf_set_run_ctx(&run_ctx.run_ctx);
+>         err =3D bpf_prog_run(link->link.prog, regs);
+>         bpf_reset_run_ctx(old_run_ctx);
+> @@ -2826,13 +2830,9 @@ kprobe_multi_link_handler(struct fprobe *fp, unsig=
+ned long fentry_ip,
+>                           void *data)
+>  {
+>         struct bpf_kprobe_multi_link *link;
+> -       struct pt_regs *regs =3D ftrace_get_regs(fregs);
+> -
+> -       if (!regs)
+> -               return 0;
+>
+>         link =3D container_of(fp, struct bpf_kprobe_multi_link, fp);
+> -       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
+> +       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
+>         return 0;
+>  }
+>
+> @@ -2842,13 +2842,9 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, =
+unsigned long fentry_ip,
+>                                void *data)
+>  {
+>         struct bpf_kprobe_multi_link *link;
+> -       struct pt_regs *regs =3D ftrace_get_regs(fregs);
+> -
+> -       if (!regs)
+> -               return;
+>
+>         link =3D container_of(fp, struct bpf_kprobe_multi_link, fp);
+> -       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
+> +       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
+>  }
+>
+>  static int symbols_cmp_r(const void *a, const void *b, const void *priv)
+> @@ -3107,7 +3103,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_at=
+tr *attr, struct bpf_prog *pr
+>         kvfree(cookies);
+>         return err;
+>  }
+> -#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+> +#else /* !CONFIG_FPROBE */
+>  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_=
+prog *prog)
+>  {
+>         return -EOPNOTSUPP;
+>
+>
