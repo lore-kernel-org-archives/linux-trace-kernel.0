@@ -1,137 +1,190 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D938A16DED8;
-	Wed, 24 Apr 2024 22:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7287B36E;
+	Thu, 25 Apr 2024 00:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713997308; cv=none; b=m71KB3mn0kRNnpWKmmWiffTYx6ny30VDXSIThdO5DJOWR5tBOM257PtkKw7rTeXkal5iOu0DhfJINk3dDeRREnaOGB5k2hZpz4ahxJGgKAGAQ7z6ViZjZVMIhVrT4uxmeIaspkJvp7TsEj87vRXvGXV7Fr3qkvC9fVcEgryEUEE=
+	t=1714003335; cv=none; b=dF7meUuSH7Ip2KFIMhyMY+hYxAKj0RvTXTwILH+JYxGPXXcy8Mk8w2PEvoh5ovkltGgxYbyeDaZ8ATzkiTG9YesOQcIpQoho4dKxxpF16gs/rBnYymOG+7rRYxcpzezYnCUZtQxK1K+ReRKt82dNkVmdVNfKkmH2kW1+0Hzq9yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713997308; c=relaxed/simple;
-	bh=8qPgc3v8RuswJLCSzEgGtV3nxpaoKNNEJkwFnsWfn9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Az+4xzuTgubAxIrD20Ht5yqiHh+DexZ0Q3QVhIf6SqZR6WzD73LC6BC4mZ+urj2YrKlDUZgFfyB4T/bykPmfsI4Th3n1Xp5k2DqHY5wOSMiz23UpXSsvSs50xPeyePrHvYl6kVOk4QogvMURrHKKcNKBCCc0+OOmM8k0BanEGVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=gbkKnOCb; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1714003335; c=relaxed/simple;
+	bh=uULInvgP4WaXTcpiN5zWSR1+1Q4u+PCE543FW+s4Ay8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XUhQG+jRleAUgiEG/sCHoaNuz4hBcYaGVoHegocYLfPRwqEI/FSF7CNZpYc6o8QgudhbsF2MniQ+6yiI/SwzJl9MqM70TKlh7PVBGvSIj2h/sxV8DwGwjvJ0/gNGxnc5rgdQbDZFnR98j/PL52F27+2Q/Ar1fSys5F8Z3Tpjm4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjK1Wv+h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="gbkKnOCb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=FAOVOJ9lAegQil3oaF8i8r4xm+u7aNVtl2W0t2hekxI=; b=gbkKnOCbPlbenoEs2DrK7co7Li
-	hM7LYlq43oc0V/np2nvJleA4az3PM+hlsxi+wn8Jrr5nW5y+WIY7T1iWSj3U+ihh4eGrSqpZpy4GU
-	wsqmT4Ge2fMX/daSdnRaIK+r7wLXt7KVdzvVXwqgSnSftBspY9GcOzk0xN8C67GQw5FCum7UMXeoD
-	SNIwVNZ6j8SF5G8kyGXS3Wj/l48nCvztHQZToyyRyDtRslV1hxKywzhJL2WcILusn174/x00h3ae1
-	tPPkfVVPb7hIoq0eJH1ypOEDb5gkaQT4UX/pW+P4ziG5SvNPK+yCWWCgnzH8/4Sb0CIcC6TybJgTd
-	pbLNgkrQ==;
-Received: from 179-125-71-233-dinamico.pombonet.net.br ([179.125.71.233] helo=quatroqueijos.lan)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1rzkzo-008LGq-KF; Thu, 25 Apr 2024 00:21:45 +0200
-From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-To: stable@vger.kernel.org
-Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 5.4,4.19 2/2] tracing: Increase PERF_MAX_TRACE_SIZE to handle Sentinel1 and docker together
-Date: Wed, 24 Apr 2024 19:20:10 -0300
-Message-Id: <20240424222010.2547286-4-cascardo@igalia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240424222010.2547286-1-cascardo@igalia.com>
-References: <20240424222010.2547286-1-cascardo@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjK1Wv+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C908DC113CD;
+	Thu, 25 Apr 2024 00:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714003335;
+	bh=uULInvgP4WaXTcpiN5zWSR1+1Q4u+PCE543FW+s4Ay8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cjK1Wv+hxver0lgHTavnio/dJ4YLpoY2QDDtcWxToW78W34ZRGE5oCDxvHZBpf4tR
+	 PL+36DOinzZOPugOqWk5Ay0SZBXl3ewXeCyCzSeneCvkAILBgUPQampH3XLhGIX5Zv
+	 PnQfym2nj02ss+3vJziAdEQg9b+rqiGGEbEMnhoXt0GKqDm3HDXEnqoz6hIAtwmYTd
+	 PLMySOgecRoisHvWvTwFha1AXe7cLoXkIvxy+asIzv14/AQkY2I2TTYsNdX74maPfq
+	 rIiLHurVsDFEFXeNRbZnJg9dVUtd/8AmJqEWTZrY62pngn3c0zj4AXZi28Ha9MCjlE
+	 dZOmfPf6Bl6LA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: bpf@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH RFC] rethook: inline arch_rethook_trampoline_callback() in assembly code
+Date: Wed, 24 Apr 2024 17:02:11 -0700
+Message-ID: <20240425000211.708557-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: "Robin H. Johnson" <robbat2@gentoo.org>
+At the lowest level, rethook-based kretprobes on x86-64 architecture go
+through arch_rethoook_trampoline() function, manually written in
+assembly, which calls into a simple arch_rethook_trampoline_callback()
+function, written in C, and only doing a few straightforward field
+assignments, before calling further into rethook_trampoline_handler(),
+which handles kretprobe callbacks generically.
 
-commit e531e90b5ab0f7ce5ff298e165214c1aec6ed187 upstream.
+Looking at simplicity of arch_rethook_trampoline_callback(), it seems
+not really worthwhile to spend an extra function call just to do 4 or
+5 assignments. As such, this patch proposes to "inline"
+arch_rethook_trampoline_callback() into arch_rethook_trampoline() by
+manually implementing it in an assembly code.
 
-Running endpoint security solutions like Sentinel1 that use perf-based
-tracing heavily lead to this repeated dump complaining about dockerd.
-The default value of 2048 is nowhere near not large enough.
+This has two motivations. First, we do get a bit of runtime speed up by
+avoiding function calls. Using BPF selftests's bench tool, we see
+0.6%-0.8% throughput improvement for kretprobe/multi-kretprobe
+triggering code path:
 
-Using the prior patch "tracing: show size of requested buffer", we get
-"perf buffer not large enough, wanted 6644, have 6144", after repeated
-up-sizing (I did 2/4/6/8K). With 8K, the problem doesn't occur at all,
-so below is the trace for 6K.
+BEFORE (latest probes/for-next)
+===============================
+kretprobe      :   10.455 ± 0.024M/s
+kretprobe-multi:   11.150 ± 0.012M/s
 
-I'm wondering if this value should be selectable at boot time, but this
-is a good starting point.
+AFTER (probes/for-next + this patch)
+====================================
+kretprobe      :   10.540 ± 0.009M/s (+0.8%)
+kretprobe-multi:   11.219 ± 0.042M/s (+0.6%)
 
-```
-------------[ cut here ]------------
-perf buffer not large enough, wanted 6644, have 6144
-WARNING: CPU: 1 PID: 4997 at kernel/trace/trace_event_perf.c:402 perf_trace_buf_alloc+0x8c/0xa0
-Modules linked in: [..]
-CPU: 1 PID: 4997 Comm: sh Tainted: G                T 5.13.13-x86_64-00039-gb3959163488e #63
-Hardware name: LENOVO 20KH002JUS/20KH002JUS, BIOS N23ET66W (1.41 ) 09/02/2019
-RIP: 0010:perf_trace_buf_alloc+0x8c/0xa0
-Code: 80 3d 43 97 d0 01 00 74 07 31 c0 5b 5d 41 5c c3 ba 00 18 00 00 89 ee 48 c7 c7 00 82 7d 91 c6 05 25 97 d0 01 01 e8 22 ee bc 00 <0f> 0b 31 c0 eb db 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 55 89
-RSP: 0018:ffffb922026b7d58 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff9da5ee012000 RCX: 0000000000000027
-RDX: ffff9da881657828 RSI: 0000000000000001 RDI: ffff9da881657820
-RBP: 00000000000019f4 R08: 0000000000000000 R09: ffffb922026b7b80
-R10: ffffb922026b7b78 R11: ffffffff91dda688 R12: 000000000000000f
-R13: ffff9da5ee012108 R14: ffff9da8816570a0 R15: ffffb922026b7e30
-FS:  00007f420db1a080(0000) GS:ffff9da881640000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000060 CR3: 00000002504a8006 CR4: 00000000003706e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- kprobe_perf_func+0x11e/0x270
- ? do_execveat_common.isra.0+0x1/0x1c0
- ? do_execveat_common.isra.0+0x5/0x1c0
- kprobe_ftrace_handler+0x10e/0x1d0
- 0xffffffffc03aa0c8
- ? do_execveat_common.isra.0+0x1/0x1c0
- do_execveat_common.isra.0+0x5/0x1c0
- __x64_sys_execve+0x33/0x40
- do_syscall_64+0x6b/0xc0
- ? do_syscall_64+0x11/0xc0
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f420dc1db37
-Code: ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00 00 f7 d8 64 41 89 00 eb dc 0f 1f 84 00 00 00 00 00 b8 3b 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 01 43 0f 00 f7 d8 64 89 01 48
-RSP: 002b:00007ffd4e8b4e38 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f420dc1db37
-RDX: 0000564338d1e740 RSI: 0000564338d32d50 RDI: 0000564338d28f00
-RBP: 0000564338d28f00 R08: 0000564338d32d50 R09: 0000000000000020
-R10: 00000000000001b6 R11: 0000000000000246 R12: 0000564338d28f00
-R13: 0000564338d32d50 R14: 0000564338d1e740 R15: 0000564338d28c60
----[ end trace 83ab3e8e16275e49 ]---
-```
+Second, and no less importantly for some specialized use cases, this
+avoids unnecessarily "polluting" LBR records with an extra function call
+(recorded as a jump by CPU). This is the case for the retsnoop ([0])
+tool, which relies havily on capturing LBR records to provide users with
+lots of insight into kernel internals.
 
-Link: https://lkml.kernel.org/r/20210831043723.13481-2-robbat2@gentoo.org
+This RFC patch is only inlining this function for x86-64, but it's
+possible to do that for 32-bit x86 arch as well and then remove
+arch_rethook_trampoline_callback() implementation altogether. Please let
+me know if this change is acceptable and whether I should complete it
+with 32-bit "inlining" as well. Thanks!
 
-Signed-off-by: Robin H. Johnson <robbat2@gentoo.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+  [0] https://nakryiko.com/posts/retsnoop-intro/#peering-deep-into-functions-with-lbr
+
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 ---
- include/linux/trace_events.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/asm-offsets_64.c |  4 ++++
+ arch/x86/kernel/rethook.c        | 37 +++++++++++++++++++++++++++-----
+ 2 files changed, 36 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index b8b87e7ba93f..12ee8973ea6f 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -427,7 +427,7 @@ struct trace_event_file {
- 	}								\
- 	early_initcall(trace_init_perf_perm_##name);
+diff --git a/arch/x86/kernel/asm-offsets_64.c b/arch/x86/kernel/asm-offsets_64.c
+index bb65371ea9df..5c444abc540c 100644
+--- a/arch/x86/kernel/asm-offsets_64.c
++++ b/arch/x86/kernel/asm-offsets_64.c
+@@ -42,6 +42,10 @@ int main(void)
+ 	ENTRY(r14);
+ 	ENTRY(r15);
+ 	ENTRY(flags);
++	ENTRY(ip);
++	ENTRY(cs);
++	ENTRY(ss);
++	ENTRY(orig_ax);
+ 	BLANK();
+ #undef ENTRY
  
--#define PERF_MAX_TRACE_SIZE	2048
-+#define PERF_MAX_TRACE_SIZE	8192
+diff --git a/arch/x86/kernel/rethook.c b/arch/x86/kernel/rethook.c
+index 8a1c0111ae79..3e1c01beebd1 100644
+--- a/arch/x86/kernel/rethook.c
++++ b/arch/x86/kernel/rethook.c
+@@ -6,6 +6,7 @@
+ #include <linux/rethook.h>
+ #include <linux/kprobes.h>
+ #include <linux/objtool.h>
++#include <asm/asm-offsets.h>
  
- #define MAX_FILTER_STR_VAL	256	/* Should handle KSYM_SYMBOL_LEN */
+ #include "kprobes/common.h"
  
+@@ -34,10 +35,36 @@ asm(
+ 	"	pushq %rsp\n"
+ 	"	pushfq\n"
+ 	SAVE_REGS_STRING
+-	"	movq %rsp, %rdi\n"
+-	"	call arch_rethook_trampoline_callback\n"
++	"	movq %rsp, %rdi\n" /* $rdi points to regs */
++	/* fixup registers */
++	/* regs->cs = __KERNEL_CS; */
++	"	movq $" __stringify(__KERNEL_CS) ", " __stringify(pt_regs_cs) "(%rdi)\n"
++	/* regs->ip = (unsigned long)&arch_rethook_trampoline; */
++	"	movq $arch_rethook_trampoline, " __stringify(pt_regs_ip) "(%rdi)\n"
++	/* regs->orig_ax = ~0UL; */
++	"	movq $0xffffffffffffffff, " __stringify(pt_regs_orig_ax) "(%rdi)\n"
++	/* regs->sp += 2*sizeof(long); */
++	"	addq $16, " __stringify(pt_regs_sp) "(%rdi)\n"
++	/* 2nd arg is frame_pointer = (long *)(regs + 1); */
++	"	lea " __stringify(PTREGS_SIZE) "(%rdi), %rsi\n"
++	/*
++	 * The return address at 'frame_pointer' is recovered by the
++	 * arch_rethook_fixup_return() which called from this
++	 * rethook_trampoline_handler().
++	 */
++	"	call rethook_trampoline_handler\n"
++	/*
++	 * Copy FLAGS to 'pt_regs::ss' so we can do RET right after POPF.
++	 *
++	 * We don't save/restore %rax below, because we ignore
++	 * rethook_trampoline_handler result.
++	 *
++	 * *(unsigned long *)&regs->ss = regs->flags;
++	 */
++	"	mov " __stringify(pt_regs_flags) "(%rsp), %rax\n"
++	"	mov %rax, " __stringify(pt_regs_ss) "(%rsp)\n"
+ 	RESTORE_REGS_STRING
+-	/* In the callback function, 'regs->flags' is copied to 'regs->ss'. */
++	/* We just copied 'regs->flags' into 'regs->ss'. */
+ 	"	addq $16, %rsp\n"
+ 	"	popfq\n"
+ #else
+@@ -61,6 +88,7 @@ asm(
+ );
+ NOKPROBE_SYMBOL(arch_rethook_trampoline);
+ 
++#ifdef CONFIG_X86_32
+ /*
+  * Called from arch_rethook_trampoline
+  */
+@@ -70,9 +98,7 @@ __used __visible void arch_rethook_trampoline_callback(struct pt_regs *regs)
+ 
+ 	/* fixup registers */
+ 	regs->cs = __KERNEL_CS;
+-#ifdef CONFIG_X86_32
+ 	regs->gs = 0;
+-#endif
+ 	regs->ip = (unsigned long)&arch_rethook_trampoline;
+ 	regs->orig_ax = ~0UL;
+ 	regs->sp += 2*sizeof(long);
+@@ -92,6 +118,7 @@ __used __visible void arch_rethook_trampoline_callback(struct pt_regs *regs)
+ 	*(unsigned long *)&regs->ss = regs->flags;
+ }
+ NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
++#endif
+ 
+ /*
+  * arch_rethook_trampoline() skips updating frame pointer. The frame pointer
 -- 
-2.34.1
+2.43.0
 
