@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1B915253B;
-	Fri, 26 Apr 2024 14:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB6158D93;
+	Fri, 26 Apr 2024 15:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714141544; cv=none; b=jlShXCLpMxx7Fyaohgq+uooiaVhfuA7y6uv8zpQeqjaNtnw6VcUWa/4rC0GQ0fIxNZv+8p5bSlFbbiAsWSx0LShxp/3I9XHtb9yJBlA8PLzW0VmtQ0ZpGh9cmDis0p6JzWRao+xGV+lI21ylDSsuPxBkDpLse1y6ri3iZuhhlIk=
+	t=1714144728; cv=none; b=IOxGYtk/r7jaVaixKz47+5rtP5GKrcHp2DFBtqzKwLezB2Hn9TyyIoQwVtqNQLjgX9kTSuQxe5pQVgnZ3pBDPIF+efKLD0w+cykSNbAn7QwJynCTpGQDNTPl+neWxzSalLuafyTlvCMTbz6HeL+jFeVy14FiNJqD22NVGnZK3ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714141544; c=relaxed/simple;
-	bh=9Jv2lMCoOjT7EeOuL6dC/ZsAnuxaNdyuZC9T66XtNpc=;
+	s=arc-20240116; t=1714144728; c=relaxed/simple;
+	bh=1UnZiC3comG4gnEVIiUSo4RJz2Uq3SHSFq173Rv99mU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CmGWm3YHou/3egOc51/cxP7HLPVPRorr0yfBgtbkyTeiSOCz3vdvHuphqNix+VkjD8ri1PbaZ+r6p48+CZ1KaJ9SneQ/iZbUesQiwa9lneuYvbWsbtdfEDpXHT6kHCvSWKMTEHflALjl4V535NIsybIIMXpyOperVXX7L+xjDCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2M9n8hF; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=sGB3K8KXCnlVDbdPjrq1sVsRlmGhBAsTR4CjVAgmemt6qEm3EZzNK4wBx5WwUdKApS8Y3yjb8o4S1l38I17iHa0hCX3rWzZc5hOhwFPpnlQL0wMAxIidhgwlimF3WnrWCVrL0VGIIDmqMs0OUL0NZI+zg4EOdlpIrPwCZX1tGng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNSqnhOC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2M9n8hF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3BFC113CD;
-	Fri, 26 Apr 2024 14:25:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNSqnhOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D63A7C2BD11;
+	Fri, 26 Apr 2024 15:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714141543;
-	bh=9Jv2lMCoOjT7EeOuL6dC/ZsAnuxaNdyuZC9T66XtNpc=;
+	s=k20201202; t=1714144727;
+	bh=1UnZiC3comG4gnEVIiUSo4RJz2Uq3SHSFq173Rv99mU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Y2M9n8hFUX4oPeHAJatqxUJCLDntUzc8cUJC/A34vi78H0byqEq3K88br+gCJkuoh
-	 1rHsxQY+xCetV+UVSKI7vg5O0S9ykbsqE8i8PcW2ZvYLSAridyYOeYF45GNnE3C7ER
-	 wFAF6dcFxG2ndqGNWygmnptFJlKsw9FOMIqgNCIT5mltfj1CXct3HnqMY/XOSqWI1u
-	 iiPFtCC0Ie9vxtLvJW/oU49/kdL33lWMv5aMTEAR5/gnDTssS3two0IbTww368dq2t
-	 EoC4qLs+UwCHi43OanjbxXEOZvpVzOlUTFxSq0JWfjsHTIdzSL1kJ8S7lqsdL+kCGP
-	 jL+ZEI65G/7EQ==
-Date: Fri, 26 Apr 2024 23:25:39 +0900
+	b=mNSqnhOCvVS96laJVrGaGieiyUBAaw7BIIZlQfWJmTtK+o3CRYgilXqax2Q6jFiHb
+	 Tkr6khA10hRkujz93BoR88ndIAwlrA0cIr29DtMM/oUSb4BbCWO2xFtmfLxyizgcCi
+	 4gZ/C5jQlPnsiBL0F0F4yvbOiva3OAJdCblKfHnnwiVKprBKA7nzRmDRSSlwlLtu64
+	 LN2KpL7Hy+MAZWbwNyKe863P9JI9g21F/w3YZn3KuPgVo0JCuXYwi5a9ah53d1KoFk
+	 t8qQpCyYncg1/PuC40GaaWT23jN9CdLc0JCAYfZzRsVwf+n9QaHNFcS74kWGCAaFff
+	 HgV2PKKVeTjpg==
+Date: Sat, 27 Apr 2024 00:18:43 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
- bpf@vger.kernel.org, wuqiang.matt <wuqiang.matt@bytedance.com>
-Subject: Re: [PATCH 0/2] Objpool performance improvements
-Message-Id: <20240426232539.faf453fb71e6af7017c7967b@kernel.org>
-In-Reply-To: <20240424215214.3956041-1-andrii@kernel.org>
-References: <20240424215214.3956041-1-andrii@kernel.org>
+To: lumingyindetect@126.com
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+Subject: Re: [PATCH] kernel/trace/trace_probe:Fixed memory leak issues in
+ trace_probe.c.
+Message-Id: <20240427001843.84a3d367d3654b624c09defe@kernel.org>
+In-Reply-To: <20240426091343.1222770-1-lumingyindetect@126.com>
+References: <20240426091343.1222770-1-lumingyindetect@126.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,45 +47,63 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Andrii,
+Hi LuMingYin,
 
-On Wed, 24 Apr 2024 14:52:12 -0700
-Andrii Nakryiko <andrii@kernel.org> wrote:
+Thanks for finding the problem! But please make a commit message
+following Documentation/process/submitting-patches.rst
 
-> Improve objpool (used heavily in kretprobe hot path) performance with two
-> improvements:
->   - inlining performance critical objpool_push()/objpool_pop() operations;
->   - avoiding re-calculating relatively expensive nr_possible_cpus().
 
-Thanks for optimizing objpool. Both looks good to me.
+On Fri, 26 Apr 2024 10:13:43 +0100
+lumingyindetect@126.com wrote:
 
-BTW, I don't intend to stop this short-term optimization attempts,
-but I would like to ask you check the new fgraph based fprobe 
-(kretprobe-multi)[1] instead of objpool/rethook.
+> From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+> 
+> At line 1408 of the file /linux/kernel/trace/trace_probe.c, pointer variables named code and tmp are defined. At line 1437, a new dynamic memory area is allocated using the function kcalloc. When the if statement at line 1467 evaluates to true, the program jumps to the out label at line 1469. Within this function, there are two labels: out and fail. The difference between these two labels is that fail additionally frees the dynamic memory area pointed to by the variable code. Therefore, the program should jump to the fail label instead of the out label. This commit fixes this bug.
+> 
 
-[1] https://lore.kernel.org/all/171318533841.254850.15841395205784342850.stgit@devnote2/
+For example, you must line break after about 70 characters. Also,
+please don't use the line number because the line number is easily
+changed (function name is OK). Since this bug is very clear mistake,
+so you can just explain that as following.
 
-I'm considering to obsolete the kretprobe (and rethook) with fprobe
-and eventually remove it. Those have similar feature and we should
-choose safer one.
+----
+ If traceprobe_parse_probe_arg_body() fails to allocate 'parg->fmt', it
+ jumps to 'out' instead of 'fail' by mistake. In the result, in this
+ case the 'tmp' buffer is not freed and leaks its memory.
+
+ Fix it by jumping to 'fail' in that case.
+----
+The first paragraph explains what happens, and second one to exaplain
+how to fix it.
+
+Also, please add this Fixes tag.
+
+Fixes: 032330abd08b ("tracing/probes: Cleanup probe argument parser")
+
+You can easily find this commit number with git blame.
 
 Thank you,
 
+> Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+> ---
+>  kernel/trace/trace_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> These opportunities were found when benchmarking and profiling kprobes and
-> kretprobes with BPF-based benchmarks. See individual patches for details and
-> results.
-> 
-> Andrii Nakryiko (2):
->   objpool: enable inlining objpool_push() and objpool_pop() operations
->   objpool: cache nr_possible_cpus() and avoid caching nr_cpu_ids
-> 
->  include/linux/objpool.h | 105 +++++++++++++++++++++++++++++++++++--
->  lib/objpool.c           | 112 +++-------------------------------------
->  2 files changed, 107 insertions(+), 110 deletions(-)
-> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index dfe3ee6035ec..42bc0f362226 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  		parg->fmt = kmalloc(len, GFP_KERNEL);
+>  		if (!parg->fmt) {
+>  			ret = -ENOMEM;
+> -			goto out;
+> +			goto fail;
+>  		}
+>  		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
+>  			 parg->count);
 > -- 
-> 2.43.0
+> 2.25.1
 > 
 
 
