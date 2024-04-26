@@ -1,157 +1,103 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BB6148FE6;
-	Fri, 26 Apr 2024 16:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06CB156864;
+	Fri, 26 Apr 2024 16:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714147535; cv=none; b=Oyn+kIazoRXlrhm8UJg+Z55hS4YbOrBBFbAWLvIa6KEB1PcAbZXYthuIPxTILVG+zHgm0hjO0QzC+OrTDPxACSUQl6D8WBaQ8lnrM87KomC8aawBLi8HwvJOXmtt5IQH705oX4SXIcOEONbxqa+wzE9gXfNtemmqPjI6g+OFTcI=
+	t=1714149944; cv=none; b=tx2JS0LUz4y/n7mJvH/FLxL+3zv17hsq7ByjKZm9ZZ9XfIPlJTq6UGEn0lvD3anLP6ha5qmlDX0uvY6b8zfnnHnGb49ue+Ex0sR6Y5gXbt6LKCRo6elgEOWOJDwcKr5c/1/sIJ/Ec9RnN41CJgS738xZK4M0m6O3mMsyqcuAi5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714147535; c=relaxed/simple;
-	bh=pCmo0dT/Gsu+6RLe7nZNoKJbxPJXRUw66bKGetjoYIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Exi5UIhIrMXz3rK+Fz+Ybdm8+stcHLVCvF6Bq72jt2UCF+Pk8moAD8rGfedV05HJI7OtLaSd8VG03ghGX2xM5+MpXM0T96OKVjx8TtprFBh4Q0B7j8v9ZoeeWXdEI/Ow9ft/Tw8GZrwuQQxzzEELA2m+Aw3IiECscLoXoo5ub3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPU4+B7W; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714149944; c=relaxed/simple;
+	bh=BWiNAQR0kk9MlwuLqlIFDUam7QNyQFdGCYiRzpErVZI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=iA35YmihamHJ+NdhtPjFmEv0yCZjoWNUODFKxn0uX6DI9HaOnp4IeYlTZlIGQsratGyAdwHyzkAiHv6pNPwR3bALiVyEX/s7FOu6Jq2tJXTXFZGHq5b9KtAPZJNJF2FqKCLAPR3JhY97OHGalm5ahki3909py9yQCSCmVgmVD/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=L9AWgeSI; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPU4+B7W"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so1665575a91.0;
-        Fri, 26 Apr 2024 09:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714147533; x=1714752333; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AyIMrxnja/Bg703ebPVu+Brz/SLHCcvD3Jb/4/FNiPU=;
-        b=TPU4+B7WYvpJMnXgmoMIoBaIvdwrGYarcFbXa+/hasklmGNCq5s8N9Nj9Tf2ukF6xs
-         g7l2QVR5pYjA+UCBo7K08PTBluRbHjSZdQxTp8I+3VSwtGso3Qf1UZpNyu+Sab2yqEE4
-         MwEilnkjesBjvu93sJ060xmh4ZkCgSZxJOlbNwesMiLxudBfQVdxbS3P9KiyxucywFu3
-         mbcRkN5GP3mkE3QqAt8WdIFplY1BZwH6ScFPIuNV0vHb6DsNLqvo2eZ91J6GkIv3E6Xb
-         U36vx/8JMXiUQmHRjT4DU/k0a5EAcAGerQ2qKG7qkt0VzTfB5R/3iQ+2MoKPwktWXSpd
-         0a1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714147533; x=1714752333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AyIMrxnja/Bg703ebPVu+Brz/SLHCcvD3Jb/4/FNiPU=;
-        b=lLVCCeuC0CKl4A0yrbXHbqJD+K68QMGD77an2tKeUSpPNA0gArVouk+Ci8muKC94Hx
-         gVnGeKqK0BqnMXEvY23EdkXERrgnKyfLUEn4xaD/8vZrBUKq3CRYbFyumA7xzmqYE1B+
-         oz98WR7GV/fLxFwbdjHgPrm4fqeSDXex9feyUJGdaQPKtK3Nzs+kRrzRL6GNtlOhkkbR
-         dQFTSZP6dveXW7cUj6pJ2fWmoaQMdsnueyBTnWHo1mvqTIZqbvNW0ERQC8JCyI6KZsJu
-         8LAz9GVWuIZMa4XIqLsuWvpHj2TONkQ+vcFywa/zssE676i714Hj0UQOF9jJbPX5E9pM
-         1CTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzxAkOtezQZqK6gprPUArK/qWuPpFCvhVSvFrXwsZhDHal6wVlhb+4QHyZbG/B3Rx/h+xVZPiCPs/giLw44FOwxl1vGyV1H5+n0Yl3/ozZHeKTpFwTUrniCMT9+uhokcTJKDfZuRGS
-X-Gm-Message-State: AOJu0YwbWrHLyl2jZpbpRPkR0fy2eiMhJlVSFILNSjgcEtQSkdtzpVZN
-	i5L6k5/tc3TrLXLvh4bgi3+VDzPyZZ6PHchSLSPRZLKf/kqGTQZJ8zZaCH1sWerS7KmR1t9VfB0
-	1GeFjckr9UW0LgndEoA7ITzD9bhw=
-X-Google-Smtp-Source: AGHT+IEHU2zZDgEuGFNLk6tA0ADcBtSjTNHwh8PQMPTnA+zJYoABysh6anb0FdLp0vLlKhPUxfTHV4bO+EQg3GE9uCM=
-X-Received: by 2002:a17:90b:1d01:b0:2af:4a3f:df62 with SMTP id
- on1-20020a17090b1d0100b002af4a3fdf62mr3474508pjb.6.1714147533391; Fri, 26 Apr
- 2024 09:05:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="L9AWgeSI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714149924; x=1714754724; i=markus.elfring@web.de;
+	bh=Ta7iapcZ4MAU6sUXpFC3J1kL+68fZ5RvxKZGHV8GWPU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=L9AWgeSIfNXg4w9sTuDvrY6R4FnGwhv97VenytR2x0iHXzTgyb4W0RL/Mo9JYaWW
+	 hOyqZY9Vg4DrsTZo3ROjpbW1YjpnPeLANIfAQvPounSAWV8sw4dz0t7/iqgN0J8hH
+	 N7Hypg+mBkbqGmLXZUW9Fzmb2PFpgOs/xf41Zzc8uCgxJY+yLeTz/eSHOmWhlyP6U
+	 Y0sI92flOjKmagOCHeQ13twmKtEXgJ9OjfZLfaI8sezWI2GUhxvslERltmnAYP9bk
+	 +lCcPw/Ju0dgE3JkIunFEWqoR9kdciEKxNDpKd2E+TwtdofSmMOhWv9aQ6gvxMZXe
+	 xyCAg4a0IwHNaZUcTA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mm9Zc-1sQh1g1LxA-00i8ug; Fri, 26
+ Apr 2024 18:45:24 +0200
+Message-ID: <77a68fbd-5675-45e7-b563-883e5c0643cb@web.de>
+Date: Fri, 26 Apr 2024 18:45:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424215214.3956041-1-andrii@kernel.org> <20240426232539.faf453fb71e6af7017c7967b@kernel.org>
-In-Reply-To: <20240426232539.faf453fb71e6af7017c7967b@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 26 Apr 2024 09:05:20 -0700
-Message-ID: <CAEf4Bza43G3Yk9fngeh3AmZpnOu_yjSMp3oJrqK22cvRU6=DYA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Objpool performance improvements
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, bpf@vger.kernel.org, 
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Masami Hiramatsu <mhiramat@kernel.org>, lumingyindetect@126.com,
+ linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <20240427001843.84a3d367d3654b624c09defe@kernel.org>
+Subject: Re: tracing/probes: Fix a memory leak in
+ traceprobe_parse_probe_arg_body()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240427001843.84a3d367d3654b624c09defe@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5tA2mW2BCdegRfc+c+UzeRIrphlRDEl2l46CUEVublPggoWf4Pt
+ 2Ss9IUGmd8vO4yvFmxu3X4nNe1AbONMMyfD7SIr3YQPeh3yYF8H4vvhfg1H/4Wb4PyWt8SE
+ 8OMWWbsCFpPVOfK7C7jWC7C+KIr2It2LrG8EN0bB/PJ6jZLsT9FHblpaVdphe/qfAeKhwI4
+ 9Et2Y0hyqRVyt9FfL2tIA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Hln/nMIYN3M=;yIlkHUwArz6DBu4ioTjjDvF5YLS
+ keoW/Tq4qS7IMfdbeK/33cTmWquD/F745hBhi9/YlVF2SvDuhtYTui4y7M7+FxFwkGIrbhC2I
+ lfhTqf1h55/ZjpQBVwD9tMQADD9arE2iY12z+rxqUdcibepGGjkuedYWAo4G43lzO/AFBR2Vm
+ r86NHVEY+WbHSzishInUgp51MI4KcRlVUoK//2aWCl2rUGT8m7kYFv80yw1epb+njgylCXesW
+ Kp8vAzO5J766VKhTnNCWp2p1anTKl0tfIOEzq5kaHnZqJSszITCPVuFrhhEJhkOZIVhd/c+ty
+ WXUWonX//OtOpnMxfH7bAkPJ8ZpUkuMZT9jrVWqT3ZhLqS3c3CsDVVx459E9VX8VxvYA/NlFt
+ pFe+0Oe9z+gMastLW/PX4ND0GBVfp0WnfnYjZyuKqF98d3YSsqRsaK/NNIdadZmwkgxTeCUow
+ ct4zaJhFjjZcb1pk89FzUFUaqUUqQwCdxQIagVFNrIl9oF4mNuIEdF1VyU2ZJDgH+oaPDD3OS
+ n6mhT65I+fI1NnXQjOstJAQ7eqdQQT9mai6yuPSDdakIcezCppY/w2sPmxHDtRVdwI0RwTora
+ JBNt8Uy9jcWrtYfNKDQbodDaG6eiMNSLMPZihn9FZ+Q3vF4ebX9wToudHEWjy0SNzRPZoU0E8
+ Fqgn0gC4IAGG5SgZIyOosd68z//+6Oa0lnTHB1NZTu9MI5joD8Wrg+42a3jqdaPsA/+STfQbc
+ CB9MOqZxtTj5rrbvpTZLOCurK95G5BM6BB0DWJump/uTKO65iqyUeAnwor+BvRMiO5zYaYP4p
+ WQsg7qATY++R+Pr0nejOcAWu9zJJTjCjm4LUAb6KURSgc=
 
-On Fri, Apr 26, 2024 at 7:25=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
+=E2=80=A6
+> ----
+>  If traceprobe_parse_probe_arg_body() fails to allocate 'parg->fmt', it
+>  jumps to 'out' instead of 'fail' by mistake. In the result, in this
+>  case the 'tmp' buffer is not freed and leaks its memory.
 >
-> Hi Andrii,
->
-> On Wed, 24 Apr 2024 14:52:12 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
->
-> > Improve objpool (used heavily in kretprobe hot path) performance with t=
-wo
-> > improvements:
-> >   - inlining performance critical objpool_push()/objpool_pop() operatio=
-ns;
-> >   - avoiding re-calculating relatively expensive nr_possible_cpus().
->
-> Thanks for optimizing objpool. Both looks good to me.
+>  Fix it by jumping to 'fail' in that case.
+> ----
+=E2=80=A6
 
-Great, thanks for applying.
+How do you think about another approach for a more desirable change descri=
+ption?
 
->
-> BTW, I don't intend to stop this short-term optimization attempts,
-> but I would like to ask you check the new fgraph based fprobe
-> (kretprobe-multi)[1] instead of objpool/rethook.
+   If traceprobe_parse_probe_arg_body() failed to allocate the object =E2=
+=80=9Cparg->fmt=E2=80=9D,
+   it jumps to the label =E2=80=9Cout=E2=80=9D instead of =E2=80=9Cfail=E2=
+=80=9D by mistake.
+   In the result, the buffer =E2=80=9Ctmp=E2=80=9D is not freed in this ca=
+se and leaks its memory.
 
-You can see that I did :) There is tons of code and I'm not familiar
-with internals of function_graph infra, but you can see I did run
-benchmarks, so I'm paying attention.
+   Thus jump to the label =E2=80=9Cfail=E2=80=9D in that case (so that the=
+ exception handling
+   will be improved another bit).
 
-But as for the objpool itself, I think it's a performant and useful
-internal building block, and we might use it outside of rethook as
-well, so I think making it as fast as possible is good regardless.
 
->
-> [1] https://lore.kernel.org/all/171318533841.254850.15841395205784342850.=
-stgit@devnote2/
->
-> I'm considering to obsolete the kretprobe (and rethook) with fprobe
-> and eventually remove it. Those have similar feature and we should
-> choose safer one.
->
-
-Yep, I had a few more semi-ready patches, but I'll hold off for now
-given this move to function graph, plus some of the changes that Jiri
-is making in multi-kprobe code. I'll wait for things to settle down a
-bit before looking again.
-
-But just to give you some context, I'm an author of retsnoop tool, and
-one of the killer features of it is LBR capture in kretprobes, which
-is a tremendous help in investigating kernel failures, especially in
-unfamiliar code (LBR allows to "look back" and figure out "how did we
-get to this condition" after the fact). And so it's important to
-minimize the amount of wasted LBR records between some kernel function
-returns error (and thus is "an interesting event" and BPF program that
-captures LBR is triggered). Big part of that is ftrace/fprobe/rethook
-infra, so I was looking into making that part as "minimal" as
-possible, in the sense of eliminating as many function calls and jump
-as possible. This has an added benefit of making this hot path faster,
-but my main motivation is LBR.
-
-Anyways, just a bit of context for some of the other patches (like
-inlining arch_rethook_trampoline_callback).
-
-> Thank you,
->
-> >
-> > These opportunities were found when benchmarking and profiling kprobes =
-and
-> > kretprobes with BPF-based benchmarks. See individual patches for detail=
-s and
-> > results.
-> >
-> > Andrii Nakryiko (2):
-> >   objpool: enable inlining objpool_push() and objpool_pop() operations
-> >   objpool: cache nr_possible_cpus() and avoid caching nr_cpu_ids
-> >
-> >  include/linux/objpool.h | 105 +++++++++++++++++++++++++++++++++++--
-> >  lib/objpool.c           | 112 +++-------------------------------------
-> >  2 files changed, 107 insertions(+), 110 deletions(-)
-> >
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Regards,
+Markus
