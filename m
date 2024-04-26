@@ -1,67 +1,67 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22DB13AD0E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE2042040
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714115438; cv=none; b=rcWVc1XgVCfHAyrlLzGF26Y8qp4nbftmzbd0AaNcwcixp1WxzsSdrHjPnUUzLRQwO+kl4ucMNBA1v57ham6ncpU9+9nKUpIacE2WYtVAigrUtcqsocDWx9XaCnOcjEb38Qv5uRvu27dQaeqZcHNBWNdfIlPXWwvKRAoUn42BE5U=
+	t=1714115471; cv=none; b=GHW/Qe54/RSHlNkEHwx8IACghb2aDdGxYzuo8gw0+iQPDgBmKJLD9GNoTN+TM00MXp9O1rdBrqcm0QAFUpAIfizbGhAg0vpIPdwWY6j2orCC5u7ilOJH9f/rwZVgYYdx5EHwridBdD1bzmJltxdTRxyOgeRMxv7e2oUW3LhoK5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714115438; c=relaxed/simple;
-	bh=1HdpD17zv53tya5nbRQzb37y9JH7H8Qt7TstbCf4e9M=;
+	s=arc-20240116; t=1714115471; c=relaxed/simple;
+	bh=DUhzpTck12VjCSqiHrdV6VqhVkIhc4yBLS1FXa70ffs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ULxN2U7DGvqJuAIMoqIpE0c5Im2RAGVnL+5H7641iuf8iIyQRmq/tiHFwpk2WfTGnayGHic6GPcwtUcfPHIJ5b29kEM5KXisr351zB60s6OhsSguXT4gdZWpnqmGUarl25BRLaWNgvp2dYcQgjpOwKer4RZAHPRpyRbAqBZH2qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V1nzFXP6; arc=none smtp.client-ip=209.85.167.41
+	 To:Cc:Content-Type; b=PJp+DJfUfbC+ly26Zj4k0kWnCj/Q1Lfr1Biw+U5DAeGbcP1ndd1KQEtPYJQpue/PctWjSfejjF7ogqMb6jDMfNlgwruJB4DHnYfLCIxxUaiIVoGHwkWnvmcKZvUoGw6QZWBafX9FD3Rg71QRSluxBJAVDpIEuc9VN2iLsNL6Cig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3bmjmWq6; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V1nzFXP6"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-518948e1ec8so2405e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3bmjmWq6"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso4972a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:11:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714115435; x=1714720235; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714115468; x=1714720268; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1HdpD17zv53tya5nbRQzb37y9JH7H8Qt7TstbCf4e9M=;
-        b=V1nzFXP6Qc8Ri5JkSMuMOxlH2DEcILCGuV7Z0Ip/YkwZCySI5Zv80HJ0CjS/iHLQ+s
-         yYzPRacuQUQZtbf26qcfbUjIK0IrBer7iXf1U1ZsUIu+XyC2+A4HDoVoUIdPBUkqg3mL
-         9IozcjxsJrmYxvpWclXpYqTYBOwAv1Mgw8qvwiX76Ih2SA/84dgxatUjI0nALUvYkWQb
-         D4uiJ3zWlCFtIjXo66VLxNkNWMcrb5o6ylN/yix/1fIXAfwKFLXjqFQg75WSEhaqPcuw
-         6m9i2ci1OiI2ozowsNmFLyiiu5bl79XbX/laruOuBQkR4bizk6U8ezBbpycO5TiSFk/Z
-         SdBA==
+        bh=DUhzpTck12VjCSqiHrdV6VqhVkIhc4yBLS1FXa70ffs=;
+        b=3bmjmWq6DISYF9inZpVLsB4bMiuDANchLyBWxi9n4RDfYxINBHdtK2i52SwjlKl2LQ
+         6S+a0zOalSrSe3U1Yq08YlNU38OsjLAGkwBSgiIqmz53WP8qQED/h9PvK0U9nwwe1UVZ
+         SIX3UsNA3TmsRMd2joW85wjdKx3aN0W6rRsClIM5hEUupCHMiMFf5JXRSgxUPOzxOwzp
+         B2IXVMw/UDKG1YnmC+Ee3/NEtAmkbHm0l/VKntqGO1kRCedEjudX7fr5GJme/ukEVYKM
+         JOh4CZlbF2s7cKKKn61c2lvo0Fmf6FwAuIZnJL52zKTMUZOH/3sfqPhgtaPf7w4o1RnX
+         asHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714115435; x=1714720235;
+        d=1e100.net; s=20230601; t=1714115468; x=1714720268;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1HdpD17zv53tya5nbRQzb37y9JH7H8Qt7TstbCf4e9M=;
-        b=pSLdF+yZdkyaZtRoXpF+AAbYpHbpGeR43kVGCe7bHBnA4uuAWu4lTQgEHQSLMu/lHa
-         nMQZsARLQ39RUdVgr5hLh2YiMJHP6PD4Q8nA/GQn/NSm05RAjlTlachrWcfXCAUGhuyU
-         MMUxU4UZ3UBMY7HxAJpOr093SiHep5EHODjhFYo5xgwh33JnZGecH5IIzuvtaxBsvwDF
-         3z0/XMTeZj+gXg49yJ4ItMgzWDM3ZYkGzDJtFt89oXnHnHJ86W1WTWtWFgloo3r5X2Id
-         jfED/MWRUP2jXAJ+jsgQtno9inFGp9m09wqktdub8neCgq4hkt7VzBk8rnSfGTILq7di
-         SLKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGGH84mupNAdjJwT2Q3iddeVTvs/iLfLVDFoVwOR1yjtOHz2FRaRooA+IVaSHC4AaXQZAGBN4iCJgiYRp5uy9+dsKmiLPDlH9dCRWa371bNots
-X-Gm-Message-State: AOJu0YzoEy4cFF1dAZ+oxm9fC39o65j+cu5vvfHlaUc6+8XSjkqKPYam
-	6p6CmisEaJ83iB2YNfuFYBD8Eaq49Dj3ZRUy7BoglJ49G6V91SQ61EufBS5CpK0VmT3P0zacdio
-	PKhW9kowSA7vQEauq1herf8xsBi8bp04K9xaS
-X-Google-Smtp-Source: AGHT+IFLgpcyXrDmw4mPYNfyBndZ+UooKXi1ffmkUY+z0h851PXJpHkoqiepekOpKxRIe7dBf7Vsq7Vu2v8cQmWJEz8=
-X-Received: by 2002:a19:384e:0:b0:51b:badf:a650 with SMTP id
- d14-20020a19384e000000b0051bbadfa650mr87566lfj.4.1714115434548; Fri, 26 Apr
- 2024 00:10:34 -0700 (PDT)
+        bh=DUhzpTck12VjCSqiHrdV6VqhVkIhc4yBLS1FXa70ffs=;
+        b=ZONgMsYrdEtnJK4td5jB2pCDVlCGToSDimQ4N9r9X1MbAu7CEtlCYp+R9UHgEelgxd
+         P4mU7RgquMJC3yaYAvZ0vxJGe/9izgZPoL5XEfnxP0QSiu8cKR8OWbe/Mwce4S+t0I26
+         DOxNh8Zsyhr/syUoecwSwePfPARZbncK5w9ImO3stvn8q2DHQBxwbUW2/AonYEXUSoNR
+         Gi63NozX7kiTVD/Y6D1/QtC9O1UIkQZFzddQXEHKwfyA6zNtelx/UT4aYJOQJrzBsDCi
+         Tm8U5M7BetwaIT1aBcXuC7XQnnaBhVq3rnOgKaxqX9xDVbyy+kBnIjbV/ZiVxRKNztCv
+         T2EA==
+X-Forwarded-Encrypted: i=1; AJvYcCVniwWS4lc1IFSyWZm1WxB2vGRofxSLqjuo44Qf503o22M0IvdfzmKuVndseV2tzQKl4+LPU3UUQ4V3LsKgIpGmz525XC/aZa+JKwp5VgN56uy8
+X-Gm-Message-State: AOJu0YyMSr4MEDo33iBEmcbmdqqyzFlTwDEPFacjFn/a1UgJ8Ld8A5lg
+	5wgrN2ezRJCTPztYTrY3/OadCBP34Bh3vDhCAegGzQs67/wctQlPK3gEcQlm+5SpAt6G067Fwww
+	ZUOYc+KFh2jHt+EkPMpQ0RehlruY6Yi8wwwIF
+X-Google-Smtp-Source: AGHT+IGT6onk+BwIZ+XI6s2mJnRWIfjrCN+NeywEu5zdlZD6o0AXsRSokjeE2Rw/pj9o3mnVZIxQInsQNxEXv0d0IcI=
+X-Received: by 2002:a05:6402:26cc:b0:572:57d8:4516 with SMTP id
+ x12-20020a05640226cc00b0057257d84516mr43968edd.2.1714115468235; Fri, 26 Apr
+ 2024 00:11:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-3-kerneljasonxing@gmail.com>
-In-Reply-To: <20240425031340.46946-3-kerneljasonxing@gmail.com>
+References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-4-kerneljasonxing@gmail.com>
+In-Reply-To: <20240425031340.46946-4-kerneljasonxing@gmail.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 26 Apr 2024 09:10:23 +0200
-Message-ID: <CANn89iKbzuPGN=M4YcE5gFGBXDR+DrDigf3E7FfGSr5ac8u=WQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 2/7] rstreason: prepare for passive reset
+Date: Fri, 26 Apr 2024 09:10:57 +0200
+Message-ID: <CANn89iKZV=jg0ebTW-c7uLJxurLd7VWo=3GAqrjpWzDEovResQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 3/7] rstreason: prepare for active reset
 To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org, 
 	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
@@ -77,8 +77,10 @@ om> wrote:
 >
 > From: Jason Xing <kernelxing@tencent.com>
 >
-> Adjust the parameter and support passing reason of reset which
-> is for now NOT_SPECIFIED. No functional changes.
+> Like what we did to passive reset:
+> only passing possible reset reason in each active reset path.
+>
+> No functional changes.
 >
 > Signed-off-by: Jason Xing <kernelxing@tencent.com>
 > Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
