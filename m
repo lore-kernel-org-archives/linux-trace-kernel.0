@@ -1,68 +1,67 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E475B823DC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34E913B798
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714115532; cv=none; b=szYZnpjk4yBdYdW9D6QPVnNbXEImIUijnU9joMT6zZkqSISO14gJxlRhGIZ19jaV2UNA8kZc/jUiqPLy7JYAbIQt+itT7bBToeAM3cGamf8D4GkBqA5rIw5KuAwThiLumtA72LgvX1D2WuAEglWnMHBYXK6QIs5Wgq1LV7qvAUE=
+	t=1714115563; cv=none; b=uu/iTd3cchFIRSBFvtMPKEjIwXwIlO66xZ7CAX+xyOxYNJjnX7h3XakA9TyKunvmm88MSnn7LdcKXhpANzF7VcEv9+3VOHtjsibWkGhIXu4W5q2BsssvXN8wX7bDgiju0mnrV3BKiDChxNO5QE9hYAJ0Jc7LHmFpoMx+pOLYsks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714115532; c=relaxed/simple;
-	bh=o4CijGE6DQCwbT0vcZY7rzU07Zixh1ND3g5gwlWNbNI=;
+	s=arc-20240116; t=1714115563; c=relaxed/simple;
+	bh=4seAV79ridn4oK7nRaqYqUH8RKW5l/spsnmRvibRiNs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AACXzG5bKBfYjeRXJGOxP8av+yp64QAEiwJe1RptfOtsqIIk2KWJYc4+zK6vzzFZa51+S49h7cQEaY54CqCdv7Kiwcg++BACfscziNNk1SngYokgRXiqXch4y9rAFJ2xT4PMd580TwalH4DwTt4+61BMztVv7IODxJK1EiMqLEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xERvQg0d; arc=none smtp.client-ip=209.85.208.45
+	 To:Cc:Content-Type; b=rzLf6eXaF5UZ+FQnZePp2ltd1axmEtyRHQlMZdObBoJ6tW+SQc7gYsnkMjPnbvHi66f0MgIREdqDJneqR2R3a3KKqP1SL/Yzcbykn4YwYawtMzJjlS3wA3WMCz6OZqYU0ldoCPt1uJy2qkPwM3O8V57C2HtfgVrlEgO5a2PoozM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GI+gF8vv; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xERvQg0d"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-571b5fba660so5912a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GI+gF8vv"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-571e13cd856so9079a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714115529; x=1714720329; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714115559; x=1714720359; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o4CijGE6DQCwbT0vcZY7rzU07Zixh1ND3g5gwlWNbNI=;
-        b=xERvQg0dQHwVLMvTbKEcVsRsYVGHJUrhY3px0prfFdQ52BjZjqjKk0WrDjxQ4a0Q78
-         XDl16DZH7QMVkZoqgFD72lCewV0jMapepCUhvO+ozyoMw/Ncxi1u2B352abx6wBapy0d
-         TTdKtWQ5GLS6JXJaWClfFvznhbhrtkxtolzCiy6HWDWVFsqyyJVLMwxWYYcoysyxt1EX
-         WuagN6wbgxiH0f/LCFRtFNbDJWYp0cdYW4sIJAuYVASPSv1ELCWc/wIdLeHP4Ws9g+mR
-         oY5VOPumjeWBC+Vpfj9DVwk2h1VHQ5LOJ4zpvV6PzcPxYzqwx+jBzCmGODgwAWgl0ttD
-         E7IQ==
+        bh=4seAV79ridn4oK7nRaqYqUH8RKW5l/spsnmRvibRiNs=;
+        b=GI+gF8vv/xhzBvU7ySvStn6LV0WkJml2LcVgOsLWDd6W/rxZEGYLnbAvC1cuuDHRrJ
+         wtcSGZg00sW/HPnlc5xUsdMfsWYCGw9p+Q0nyw0uvQLUlDfkys64cbgoe02DH4yiRmij
+         YFnnI365rem5AC3FVB26+APkkhLPqtWwCGHuNWwGt/oHCiiIkPjsXwtuZABPcG9t/Vkf
+         QoDF/v+m/dxbdyY/sMAzi7e+pNckBGh3MCICvxiW1itTMw9a/J8Mc3lksHWlkhiFvgul
+         M9C8znWyndq0jng6YTWaUv2P4oKLroHOsmezaxDDQ/lmWmUqbBtOxoNww2byOy4Rod0p
+         ditg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714115529; x=1714720329;
+        d=1e100.net; s=20230601; t=1714115559; x=1714720359;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o4CijGE6DQCwbT0vcZY7rzU07Zixh1ND3g5gwlWNbNI=;
-        b=vrDE4lOOs3/Avo8SVPSOkEZnSyER5vdZKq2QjNnkta428Ylhns0cG/XTKYIiKZ1f+y
-         XKQ/lO9yeHYCSgz+EgMnAsn5rT6OqmURQJFM31dMb8tck4A1XZbK62UeUJycreWapO+f
-         s9Z8jkt5jBc+OBhunBwNH01iacAKDTjs1zjE8s0+sj846MnjpsHMUY0Pz/fBMHurUTTp
-         Sx9HOCjesVrr9KMVv3vPMhV/CZQFF3PMATX5NYcOQZcKM/YiNSxU8kvbi256fFv266Xc
-         AvngawTRmt5EJHp9oqbKXTZV/iZ02pEN5bOF5j/1rGbNeAtpyqSnTQqA5zRCemqj2Jb2
-         CWQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsxgDHI/pNqCgMXVch+Ye+UJEwvGZy/7me1sbpYlSV3InQEdHmPgBDSuUb+v7AEf+WeL8V7hJ8+cXB/lJ04s2T3OvazpaJnLImk3rhj1/awqZn
-X-Gm-Message-State: AOJu0YxRwWIqCmk32NNfM8lN46Ie4j6eeJEnOpk4Yjseem6snRI+IAXH
-	9t90wAdQ9rBPlznzeaIFNgm95aCQt7MWqo01NEHzUtY7i38vjjEIF4g0HobqUaD8yu6GUhWE3RI
-	b90aRFndfW7CZp3EziERyFx4WK/7vnh0c0Qn/
-X-Google-Smtp-Source: AGHT+IFGK6axy8x4vSxxxy3Oh+3ntHHua1mtJilCxbRJCerWML/wCChAU9qlPo9HVLrAqSWMm+hZgH/UuWi5SnGwh08=
-X-Received: by 2002:aa7:d497:0:b0:572:25e4:26eb with SMTP id
- b23-20020aa7d497000000b0057225e426ebmr71684edr.7.1714115529122; Fri, 26 Apr
- 2024 00:12:09 -0700 (PDT)
+        bh=4seAV79ridn4oK7nRaqYqUH8RKW5l/spsnmRvibRiNs=;
+        b=UWUgBxRNJHrfoxQD8yRirH4+/T6Fz7x9ObReVQWfb/g7NkhuvMUzD/UzVwNLb6CUo+
+         64DjiOzwvWk4U/uCpgXTdhL6c7ENpI+cZQlkWM+GW6Wl0QOv5ocFTwnOH58APpsvFsRL
+         wq+4upatxU9m641QizxRrGgz1AJMVbWMi/L0Ze3EhCG0iNoqrdZcVWVDmavrCHH8ULjv
+         xSvbv941oeimE8aWv/X0bj3AJT0WsA411ucfo2l95XBS5/ApHGeDMdbygmygSjjMRTG7
+         OT1FnhAvLAB2jfm2Xqp4xYAVZUOUp61Si2uLppfkXlZUggpmFLkMl8YddjJszuluYKvc
+         2QUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6mn9pmbelArg1lub/EwWgnntTtyeAm5bxlzG3DbMRe2xZde1KGKUDwTEHA6e3lsmDTTOWhgDmCHYqLGEPlRZw2WT0TMgGuhxb1qbSwygIkxRX
+X-Gm-Message-State: AOJu0Yw3zILnZqjzuZXAG6YpihbbJhXUWJAcKP85wjRiIYRTkAJ1gqaj
+	EpNdX1BmC/gcSqRlDJyFLeuZJPhK+QfA90v3xalfuaegCwjRRRVOxibs6LswY6kfAGJN6jmZJ0C
+	b8QybeqSDQLt8KVcZVpjcidhEWpOAaxdhAoZk
+X-Google-Smtp-Source: AGHT+IExI6r1PzLpwM+kdZrqejtoIV/lrdCRc9hPnUboYdDZk61WahQ3oh9IdCqM9A4jm4HWv8p1C4wk/G0gLyWVjh0=
+X-Received: by 2002:a05:6402:26cc:b0:572:57d8:4516 with SMTP id
+ x12-20020a05640226cc00b0057257d84516mr44282edd.2.1714115558737; Fri, 26 Apr
+ 2024 00:12:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-7-kerneljasonxing@gmail.com>
-In-Reply-To: <20240425031340.46946-7-kerneljasonxing@gmail.com>
+References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-8-kerneljasonxing@gmail.com>
+In-Reply-To: <20240425031340.46946-8-kerneljasonxing@gmail.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 26 Apr 2024 09:11:58 +0200
-Message-ID: <CANn89iK9Nqug+X8fPzRQ49fu+AydSqb2Js2FggkOHNFdNEcfAw@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 6/7] mptcp: introducing a helper into active
- reset logic
+Date: Fri, 26 Apr 2024 09:12:27 +0200
+Message-ID: <CANn89i+oyLS8goc0oVEpDW+PR35q+BcSph0s31q3Lj-RwSRFVQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 7/7] rstreason: make it work in trace world
 To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org, 
 	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
@@ -78,16 +77,15 @@ om> wrote:
 >
 > From: Jason Xing <kernelxing@tencent.com>
 >
-> Since we have mapped every mptcp reset reason definition in enum
-> sk_rst_reason, introducing a new helper can cover some missing places
-> where we have already set the subflow->reset_reason.
+> At last, we should let it work by introducing this reset reason in
+> trace world.
 >
-> Note: using SK_RST_REASON_NOT_SPECIFIED is the same as
-> SK_RST_REASON_MPTCP_RST_EUNSPEC. They are both unknown. So we can convert
-> it directly.
+> One of the possible expected outputs is:
+> ... tcp_send_reset: skbaddr=3Dxxx skaddr=3Dxxx src=3Dxxx dest=3Dxxx
+> state=3DTCP_ESTABLISHED reason=3DNOT_SPECIFIED
 >
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Jason Xing <kernelxing@tencent.com>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
 
 Reviewed-by: Eric Dumazet <edumazet@google.com>
