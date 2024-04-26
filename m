@@ -1,103 +1,160 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06CB156864;
-	Fri, 26 Apr 2024 16:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84A413F434;
+	Fri, 26 Apr 2024 17:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714149944; cv=none; b=tx2JS0LUz4y/n7mJvH/FLxL+3zv17hsq7ByjKZm9ZZ9XfIPlJTq6UGEn0lvD3anLP6ha5qmlDX0uvY6b8zfnnHnGb49ue+Ex0sR6Y5gXbt6LKCRo6elgEOWOJDwcKr5c/1/sIJ/Ec9RnN41CJgS738xZK4M0m6O3mMsyqcuAi5E=
+	t=1714154178; cv=none; b=Tro+Dw16MRlNEx/Xdt8r5yjn3aTZ1r6IgkTK1GjHj6G6QOuf3Gn0wYE5ywuWQniG9+ATOcOeVDOti8NwCT1dn/KWUHkC9TjPdZP93ZBu1HgyLzIfgD+8k3LX4bWcQdCX+6EglxW9ctpdVcbuyvf3RMRt6GgxB57hAUD8ndNCLYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714149944; c=relaxed/simple;
-	bh=BWiNAQR0kk9MlwuLqlIFDUam7QNyQFdGCYiRzpErVZI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=iA35YmihamHJ+NdhtPjFmEv0yCZjoWNUODFKxn0uX6DI9HaOnp4IeYlTZlIGQsratGyAdwHyzkAiHv6pNPwR3bALiVyEX/s7FOu6Jq2tJXTXFZGHq5b9KtAPZJNJF2FqKCLAPR3JhY97OHGalm5ahki3909py9yQCSCmVgmVD/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=L9AWgeSI; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714154178; c=relaxed/simple;
+	bh=FS/fPeCZqM6uYcVwbstslOcRGuG+0rgrXoBJg8OYgtY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TuajmcVCsxMTH4zo5UYtbN+HwdNuT9mHsITs6qqWpsSZOq68Z8tvDGPHjLRklHJr8/XjOT05iHlJp+sY/GTa24R30QLsNyNuGBXHkCpNHrdwgpTN8v6WhGywGNyIqnUx+jd7PbOWh/ypTDRSqyCTrU41iZABWOR9yNuLz5TQfZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HWtO+qhu; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="L9AWgeSI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714149924; x=1714754724; i=markus.elfring@web.de;
-	bh=Ta7iapcZ4MAU6sUXpFC3J1kL+68fZ5RvxKZGHV8GWPU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=L9AWgeSIfNXg4w9sTuDvrY6R4FnGwhv97VenytR2x0iHXzTgyb4W0RL/Mo9JYaWW
-	 hOyqZY9Vg4DrsTZo3ROjpbW1YjpnPeLANIfAQvPounSAWV8sw4dz0t7/iqgN0J8hH
-	 N7Hypg+mBkbqGmLXZUW9Fzmb2PFpgOs/xf41Zzc8uCgxJY+yLeTz/eSHOmWhlyP6U
-	 Y0sI92flOjKmagOCHeQ13twmKtEXgJ9OjfZLfaI8sezWI2GUhxvslERltmnAYP9bk
-	 +lCcPw/Ju0dgE3JkIunFEWqoR9kdciEKxNDpKd2E+TwtdofSmMOhWv9aQ6gvxMZXe
-	 xyCAg4a0IwHNaZUcTA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mm9Zc-1sQh1g1LxA-00i8ug; Fri, 26
- Apr 2024 18:45:24 +0200
-Message-ID: <77a68fbd-5675-45e7-b563-883e5c0643cb@web.de>
-Date: Fri, 26 Apr 2024 18:45:21 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWtO+qhu"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2b07f6b38daso576501a91.1;
+        Fri, 26 Apr 2024 10:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714154176; x=1714758976; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+4911zvgelc4SShJz6n+xWo0jMkp/ZOOV95C3XRNtoY=;
+        b=HWtO+qhu1wPEiUJUYq8bUHAn74jw1id0Kos+x1fjgRvpSrB45LdWJ7WtIvC9yoqZA5
+         aUC7oCE9hSOG7N+J19vOJBzRe2cJ2dBDH1lFlkVamAlkf1UqQsFgwbNR/skvYyWufoyW
+         izg1IGy3Fq0r5FLBEtZ26iHsHmFeXtVHH8uCjs2lQgotxuKHNFYhqyRYfH/ynvcnCXH+
+         EJL18P/xkwhJQYykz+/MCawgH2/hCrSS9eYUjW7oyc6HavVaJs1p6yiSAtW/ibUgDRbZ
+         e9DHKRWttjAUXPkvi9T8fYT3NXCqZIB6O7Q6a1MJun06pCO5Ks3ZD7qL2V7s/zT0qkGq
+         DgEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714154176; x=1714758976;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+4911zvgelc4SShJz6n+xWo0jMkp/ZOOV95C3XRNtoY=;
+        b=m/+SP7EoDpHmoviQkK6AIFm/yoLo/f8dh0Y+U5EA2PaXVS6vnt2KxdvsH4HKfSYZ0N
+         ISkbVW0SWikQdvRsX8EQ7NyGnEOc6RboDh+a2JX9CpSXplyzUorMenmaN67cBqQLIdnI
+         vWqDGJAezz/QJt3UMHF3vJQwHppvZQg7m7Xdou+pEGLdmF2tI8QO5H7hKYTKPAaNalaQ
+         kkPyj40sUOv41ekMeDgKwDpajUUjFJEGCHUVkeOkmH7a7qYOzwxGNz0pZ9dogVUj5OO0
+         5Tmz5C/RlimCk+et8Pmrz3jMMBgMVUKiwxrkMo6NI4Z2QIk1anCnX6n+7V6YW9v22rNW
+         DQaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWErzeZpD7wl+HNgWsHcuWH8Yh9hPuY8CBGkVl1wjIAQBcqcFbpIE6K4il69MxJWi98pSJ14MtVLIyoDUE7RGB+/4oCbk2yeoJICbx9TdNumeNNYLP5f9hgwU7PGePZKzOmfIHJScB+OTmfTcJPZA4TiEnUgrElc+zN/JevRhVpj35lbT7VdJlv8OsLBzsykYOAO6PMMb1uR2ZBjfnloYKq
+X-Gm-Message-State: AOJu0YwWY4+zFKBTa8bgI8nRR15zhA89UaQcfbTRrtDCLxs0TfVjM+7p
+	Q7jQOZdud8dKWxgJbA71V+F5OAvITytvXV+910IU8DluvR4iF9Al/e2BLnvZ9RlQioFdnBpBjIH
+	TG/h/V+EPZeG7jJNnu/vZpnrEQ6E=
+X-Google-Smtp-Source: AGHT+IGO7AVMbaD5wNTcZh/Y39bj3rcX2MgtU982+y+WYhFBV1PzIPFWXwXyxF+cGlBEPZndB3YMRpAufQesQNlnGnM=
+X-Received: by 2002:a17:90a:134c:b0:2ad:9382:35be with SMTP id
+ y12-20020a17090a134c00b002ad938235bemr4847590pjf.16.1714154176018; Fri, 26
+ Apr 2024 10:56:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Masami Hiramatsu <mhiramat@kernel.org>, lumingyindetect@126.com,
- linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-References: <20240427001843.84a3d367d3654b624c09defe@kernel.org>
-Subject: Re: tracing/probes: Fix a memory leak in
- traceprobe_parse_probe_arg_body()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240427001843.84a3d367d3654b624c09defe@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+References: <20240421194206.1010934-1-jolsa@kernel.org> <20240421194206.1010934-2-jolsa@kernel.org>
+In-Reply-To: <20240421194206.1010934-2-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 26 Apr 2024 10:56:03 -0700
+Message-ID: <CAEf4BzZvp_Ka4dpzLzLpba5ks9bubnVWB=61A9qg8HpWf-GKeg@mail.gmail.com>
+Subject: Re: [PATCHv3 bpf-next 1/7] uprobe: Wire up uretprobe system call
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
+	bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5tA2mW2BCdegRfc+c+UzeRIrphlRDEl2l46CUEVublPggoWf4Pt
- 2Ss9IUGmd8vO4yvFmxu3X4nNe1AbONMMyfD7SIr3YQPeh3yYF8H4vvhfg1H/4Wb4PyWt8SE
- 8OMWWbsCFpPVOfK7C7jWC7C+KIr2It2LrG8EN0bB/PJ6jZLsT9FHblpaVdphe/qfAeKhwI4
- 9Et2Y0hyqRVyt9FfL2tIA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Hln/nMIYN3M=;yIlkHUwArz6DBu4ioTjjDvF5YLS
- keoW/Tq4qS7IMfdbeK/33cTmWquD/F745hBhi9/YlVF2SvDuhtYTui4y7M7+FxFwkGIrbhC2I
- lfhTqf1h55/ZjpQBVwD9tMQADD9arE2iY12z+rxqUdcibepGGjkuedYWAo4G43lzO/AFBR2Vm
- r86NHVEY+WbHSzishInUgp51MI4KcRlVUoK//2aWCl2rUGT8m7kYFv80yw1epb+njgylCXesW
- Kp8vAzO5J766VKhTnNCWp2p1anTKl0tfIOEzq5kaHnZqJSszITCPVuFrhhEJhkOZIVhd/c+ty
- WXUWonX//OtOpnMxfH7bAkPJ8ZpUkuMZT9jrVWqT3ZhLqS3c3CsDVVx459E9VX8VxvYA/NlFt
- pFe+0Oe9z+gMastLW/PX4ND0GBVfp0WnfnYjZyuKqF98d3YSsqRsaK/NNIdadZmwkgxTeCUow
- ct4zaJhFjjZcb1pk89FzUFUaqUUqQwCdxQIagVFNrIl9oF4mNuIEdF1VyU2ZJDgH+oaPDD3OS
- n6mhT65I+fI1NnXQjOstJAQ7eqdQQT9mai6yuPSDdakIcezCppY/w2sPmxHDtRVdwI0RwTora
- JBNt8Uy9jcWrtYfNKDQbodDaG6eiMNSLMPZihn9FZ+Q3vF4ebX9wToudHEWjy0SNzRPZoU0E8
- Fqgn0gC4IAGG5SgZIyOosd68z//+6Oa0lnTHB1NZTu9MI5joD8Wrg+42a3jqdaPsA/+STfQbc
- CB9MOqZxtTj5rrbvpTZLOCurK95G5BM6BB0DWJump/uTKO65iqyUeAnwor+BvRMiO5zYaYP4p
- WQsg7qATY++R+Pr0nejOcAWu9zJJTjCjm4LUAb6KURSgc=
 
-=E2=80=A6
-> ----
->  If traceprobe_parse_probe_arg_body() fails to allocate 'parg->fmt', it
->  jumps to 'out' instead of 'fail' by mistake. In the result, in this
->  case the 'tmp' buffer is not freed and leaks its memory.
+On Sun, Apr 21, 2024 at 12:42=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote=
+:
 >
->  Fix it by jumping to 'fail' in that case.
-> ----
-=E2=80=A6
+> Wiring up uretprobe system call, which comes in following changes.
+> We need to do the wiring before, because the uretprobe implementation
+> needs the syscall number.
+>
+> Note at the moment uretprobe syscall is supported only for native
+> 64-bit process.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/entry/syscalls/syscall_64.tbl | 1 +
+>  include/linux/syscalls.h               | 2 ++
+>  include/uapi/asm-generic/unistd.h      | 5 ++++-
+>  kernel/sys_ni.c                        | 2 ++
+>  4 files changed, 9 insertions(+), 1 deletion(-)
+>
 
-How do you think about another approach for a more desirable change descri=
-ption?
+LGTM
 
-   If traceprobe_parse_probe_arg_body() failed to allocate the object =E2=
-=80=9Cparg->fmt=E2=80=9D,
-   it jumps to the label =E2=80=9Cout=E2=80=9D instead of =E2=80=9Cfail=E2=
-=80=9D by mistake.
-   In the result, the buffer =E2=80=9Ctmp=E2=80=9D is not freed in this ca=
-se and leaks its memory.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-   Thus jump to the label =E2=80=9Cfail=E2=80=9D in that case (so that the=
- exception handling
-   will be improved another bit).
-
-
-Regards,
-Markus
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/sysc=
+alls/syscall_64.tbl
+> index 7e8d46f4147f..af0a33ab06ee 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -383,6 +383,7 @@
+>  459    common  lsm_get_self_attr       sys_lsm_get_self_attr
+>  460    common  lsm_set_self_attr       sys_lsm_set_self_attr
+>  461    common  lsm_list_modules        sys_lsm_list_modules
+> +462    64      uretprobe               sys_uretprobe
+>
+>  #
+>  # Due to a historical design error, certain syscalls are numbered differ=
+ently
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index e619ac10cd23..5318e0e76799 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -972,6 +972,8 @@ asmlinkage long sys_lsm_list_modules(u64 *ids, u32 *s=
+ize, u32 flags);
+>  /* x86 */
+>  asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int on=
+);
+>
+> +asmlinkage long sys_uretprobe(void);
+> +
+>  /* pciconfig: alpha, arm, arm64, ia64, sparc */
+>  asmlinkage long sys_pciconfig_read(unsigned long bus, unsigned long dfn,
+>                                 unsigned long off, unsigned long len,
+> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic=
+/unistd.h
+> index 75f00965ab15..8a747cd1d735 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -842,8 +842,11 @@ __SYSCALL(__NR_lsm_set_self_attr, sys_lsm_set_self_a=
+ttr)
+>  #define __NR_lsm_list_modules 461
+>  __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
+>
+> +#define __NR_uretprobe 462
+> +__SYSCALL(__NR_uretprobe, sys_uretprobe)
+> +
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 462
+> +#define __NR_syscalls 463
+>
+>  /*
+>   * 32 bit systems traditionally used different
+> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> index faad00cce269..be6195e0d078 100644
+> --- a/kernel/sys_ni.c
+> +++ b/kernel/sys_ni.c
+> @@ -391,3 +391,5 @@ COND_SYSCALL(setuid16);
+>
+>  /* restartable sequence */
+>  COND_SYSCALL(rseq);
+> +
+> +COND_SYSCALL(uretprobe);
+> --
+> 2.44.0
+>
