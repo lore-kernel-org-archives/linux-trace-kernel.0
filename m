@@ -1,68 +1,67 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3A213AD33
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22DB13AD0E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 07:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714115404; cv=none; b=qB26jWq8OuSA8dHVRpGZwTeoGxxssj88A5ZPKfMobHn+aw0AV+vH4UkdtIHgonL1EPPDXvxi8r6w2If6thLXSwLut3/cSiaoY+4+yxha6yCH+9ZN4CSsJuWdHUxhth1rgNp8zBCZgVDK4xeWpQ6yUj7dkOmYWy3m7OLdseCosKs=
+	t=1714115438; cv=none; b=rcWVc1XgVCfHAyrlLzGF26Y8qp4nbftmzbd0AaNcwcixp1WxzsSdrHjPnUUzLRQwO+kl4ucMNBA1v57ham6ncpU9+9nKUpIacE2WYtVAigrUtcqsocDWx9XaCnOcjEb38Qv5uRvu27dQaeqZcHNBWNdfIlPXWwvKRAoUn42BE5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714115404; c=relaxed/simple;
-	bh=p61/qeqHYLy5frKEp02v40mvBebGAAq99s5Dtut/6mA=;
+	s=arc-20240116; t=1714115438; c=relaxed/simple;
+	bh=1HdpD17zv53tya5nbRQzb37y9JH7H8Qt7TstbCf4e9M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u0whJatkKYh4FdR6Si1oBr5dGCH/ry7GpJ21WX4CeJfuTTa1AfJYXJigg1HlbZ4f06JqgYD+9b+o1h7dV0g72E67ZTNiKxAQNanTwWxTt1MkNMmMRNmY45vc5NmxdR1tsVI4wnDjTSpZepglHPvJurScfMkYpHXaT4ctOXbK9Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oa5yA3XN; arc=none smtp.client-ip=209.85.208.41
+	 To:Cc:Content-Type; b=ULxN2U7DGvqJuAIMoqIpE0c5Im2RAGVnL+5H7641iuf8iIyQRmq/tiHFwpk2WfTGnayGHic6GPcwtUcfPHIJ5b29kEM5KXisr351zB60s6OhsSguXT4gdZWpnqmGUarl25BRLaWNgvp2dYcQgjpOwKer4RZAHPRpyRbAqBZH2qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V1nzFXP6; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oa5yA3XN"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso4958a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:10:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V1nzFXP6"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-518948e1ec8so2405e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Apr 2024 00:10:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714115401; x=1714720201; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714115435; x=1714720235; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p61/qeqHYLy5frKEp02v40mvBebGAAq99s5Dtut/6mA=;
-        b=oa5yA3XNGEA7/sp6v1ZzotNVaGdxYHzAPJzWY5OpKCQY14XYljYQ5c7TXHJaR0eQBa
-         UsVv0v2t9JIGbcIfxyH+UaJrt7R3H4WzQ8cobxVkA+3yNeI1/QbMbu1Kjojwg8lGYrT4
-         u+ip1l2VPztZC1rjyC/n3ylajs2+xu+w7bjTrVajuFYkNwPQqjw3XqyBqUxImG1hMGTR
-         FZ/ptVr/+ZUzi/yW43m8CNtTOjJ2qwmtD4aAgM8SD9l0G2a7ktU/rUaw9yDNAALTiDcq
-         va5kddr4+8EdNLhij1Qwyw+HzgnZTI7lPK9sPmYzEFbBF88+JBCIZCCbpOVEKjDBcG6I
-         u0PQ==
+        bh=1HdpD17zv53tya5nbRQzb37y9JH7H8Qt7TstbCf4e9M=;
+        b=V1nzFXP6Qc8Ri5JkSMuMOxlH2DEcILCGuV7Z0Ip/YkwZCySI5Zv80HJ0CjS/iHLQ+s
+         yYzPRacuQUQZtbf26qcfbUjIK0IrBer7iXf1U1ZsUIu+XyC2+A4HDoVoUIdPBUkqg3mL
+         9IozcjxsJrmYxvpWclXpYqTYBOwAv1Mgw8qvwiX76Ih2SA/84dgxatUjI0nALUvYkWQb
+         D4uiJ3zWlCFtIjXo66VLxNkNWMcrb5o6ylN/yix/1fIXAfwKFLXjqFQg75WSEhaqPcuw
+         6m9i2ci1OiI2ozowsNmFLyiiu5bl79XbX/laruOuBQkR4bizk6U8ezBbpycO5TiSFk/Z
+         SdBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714115401; x=1714720201;
+        d=1e100.net; s=20230601; t=1714115435; x=1714720235;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p61/qeqHYLy5frKEp02v40mvBebGAAq99s5Dtut/6mA=;
-        b=PvMV4IMod7who6yJLU3GkZm7ukPzJWqE5SvRhKzzDC0m+lJRvDhG7RjScjTe0EtWIL
-         gI+jyAeU9coUp/UYWbdTmPqzFSLsjt3ZkLAE7AzaEgU/PWzwIZPQhqe1oeG1SSmG5suA
-         BhkjXaRwHGfhiEy2UJRaGXsC4Tl+vz660aLi3TgNnIC3YmIo6TapmDLT3to4/wt+eoAN
-         dV1IX/zfsZmjrBg3T5lmyTJKF6qm74GYSnFxEgWX8cZ7gZSvn6OCyQ3DsSAj+a0wB2jE
-         TVoqOVXvh4kE4+rh38K5Dh1iWY8aznvycFso2wJLalsdKhzBiRTPzWrad5qnrSPAUHyP
-         TYnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWn1JCdTMLfs5IAlW7yEtvQQzy4bV1ACcM5L8UR4IqLMB6sCsunm03rTGdZ4lMeW/wRsYwzLfU1y/QadwxOGpwOylErkkMWQaFDv6mdzaagAvEL
-X-Gm-Message-State: AOJu0YzcGoS4BlTN6jFEc4UAVxoPOhRrRY5fPdvaYi3i9Y3T4mSTyYwJ
-	TEv1IYtq1/xPs80asncPeMdQrW0+UPCSCqeCZqbMXytFwiSXk1K35EY5QZgzTZkQNRMKK90H8+r
-	Oq56psWi9IwbPjkBNShVL4Q2XGhTsEmpzEvdV
-X-Google-Smtp-Source: AGHT+IHuNHcmCc7KkZwueD0UdUaftzjxD3dk9jc98IZkb4WuQLZFgdRK+7VjwnLqz6wusyhUrr1e/xc5Q7Ih/J9/ANA=
-X-Received: by 2002:a05:6402:c6:b0:571:fee3:594c with SMTP id
- i6-20020a05640200c600b00571fee3594cmr83432edu.4.1714115400548; Fri, 26 Apr
- 2024 00:10:00 -0700 (PDT)
+        bh=1HdpD17zv53tya5nbRQzb37y9JH7H8Qt7TstbCf4e9M=;
+        b=pSLdF+yZdkyaZtRoXpF+AAbYpHbpGeR43kVGCe7bHBnA4uuAWu4lTQgEHQSLMu/lHa
+         nMQZsARLQ39RUdVgr5hLh2YiMJHP6PD4Q8nA/GQn/NSm05RAjlTlachrWcfXCAUGhuyU
+         MMUxU4UZ3UBMY7HxAJpOr093SiHep5EHODjhFYo5xgwh33JnZGecH5IIzuvtaxBsvwDF
+         3z0/XMTeZj+gXg49yJ4ItMgzWDM3ZYkGzDJtFt89oXnHnHJ86W1WTWtWFgloo3r5X2Id
+         jfED/MWRUP2jXAJ+jsgQtno9inFGp9m09wqktdub8neCgq4hkt7VzBk8rnSfGTILq7di
+         SLKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGGH84mupNAdjJwT2Q3iddeVTvs/iLfLVDFoVwOR1yjtOHz2FRaRooA+IVaSHC4AaXQZAGBN4iCJgiYRp5uy9+dsKmiLPDlH9dCRWa371bNots
+X-Gm-Message-State: AOJu0YzoEy4cFF1dAZ+oxm9fC39o65j+cu5vvfHlaUc6+8XSjkqKPYam
+	6p6CmisEaJ83iB2YNfuFYBD8Eaq49Dj3ZRUy7BoglJ49G6V91SQ61EufBS5CpK0VmT3P0zacdio
+	PKhW9kowSA7vQEauq1herf8xsBi8bp04K9xaS
+X-Google-Smtp-Source: AGHT+IFLgpcyXrDmw4mPYNfyBndZ+UooKXi1ffmkUY+z0h851PXJpHkoqiepekOpKxRIe7dBf7Vsq7Vu2v8cQmWJEz8=
+X-Received: by 2002:a19:384e:0:b0:51b:badf:a650 with SMTP id
+ d14-20020a19384e000000b0051bbadfa650mr87566lfj.4.1714115434548; Fri, 26 Apr
+ 2024 00:10:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-2-kerneljasonxing@gmail.com>
-In-Reply-To: <20240425031340.46946-2-kerneljasonxing@gmail.com>
+References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-3-kerneljasonxing@gmail.com>
+In-Reply-To: <20240425031340.46946-3-kerneljasonxing@gmail.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 26 Apr 2024 09:09:46 +0200
-Message-ID: <CANn89iJywTXfRdGLi1oMPwz4dVYbA5TewZC8-GiG=b7dNv9FOg@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 1/7] net: introduce rstreason to detect why
- the RST is sent
+Date: Fri, 26 Apr 2024 09:10:23 +0200
+Message-ID: <CANn89iKbzuPGN=M4YcE5gFGBXDR+DrDigf3E7FfGSr5ac8u=WQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 2/7] rstreason: prepare for passive reset
 To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org, 
 	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
@@ -73,38 +72,13 @@ Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 25, 2024 at 5:13=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
+On Thu, Apr 25, 2024 at 5:14=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
 om> wrote:
 >
 > From: Jason Xing <kernelxing@tencent.com>
 >
-> Add a new standalone file for the easy future extension to support
-> both active reset and passive reset in the TCP/DCCP/MPTCP protocols.
->
-> This patch only does the preparations for reset reason mechanism,
-> nothing else changes.
->
-> The reset reasons are divided into three parts:
-> 1) reuse drop reasons for passive reset in TCP
-> 2) our own independent reasons which aren't relying on other reasons at a=
-ll
-> 3) reuse MP_TCPRST option for MPTCP
->
-> The benefits of a standalone reset reason are listed here:
-> 1) it can cover more than one case, such as reset reasons in MPTCP,
-> active reset reasons.
-> 2) people can easily/fastly understand and maintain this mechanism.
-> 3) we get unified format of output with prefix stripped.
-> 4) more new reset reasons are on the way
-> ...
->
-> I will implement the basic codes of active/passive reset reason in
-> those three protocols, which are not complete for this moment. For
-> passive reset part in TCP, I only introduce the NO_SOCKET common case
-> which could be set as an example.
->
-> After this series applied, it will have the ability to open a new
-> gate to let other people contribute more reasons into it :)
+> Adjust the parameter and support passing reason of reset which
+> is for now NOT_SPECIFIED. No functional changes.
 >
 > Signed-off-by: Jason Xing <kernelxing@tencent.com>
 > Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
