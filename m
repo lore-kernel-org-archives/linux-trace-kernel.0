@@ -1,252 +1,287 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367FF13BAFA;
-	Fri, 26 Apr 2024 07:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F2F13C9BC;
+	Fri, 26 Apr 2024 08:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714116916; cv=none; b=q0vN9ZDMWnt9TqDhZulYn0igZhWKC1IcUImhmGtVL5M4WbxbQEBq+ncNLDmFZNBKCNAzcjXPNQfIuLnhOkLTz1h8IWxMEo4Z/zoDHmNjs6OGXamJa9nYN9Fe64XYKlWlR0YusaKrOycabutLoilOGGdZQ+C7PEMkBGnf9v6G1cc=
+	t=1714120155; cv=none; b=IBeX1d7ELZ29ufOOCL/b2h3TC0xRiekrKoBNfs2zE2FyFrrR+nqvh5LZIJdvJJAiZDAWpkVPxxsOkqoh45T8uKyWiYztMRajcvx07nBXTYrkiyEDNK1Gcnd2HUWqq7xSVxv88NkCl0c3rzs3rshtwG/c2fV5B7rbj/ipE8MSCUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714116916; c=relaxed/simple;
-	bh=JXfzjsVtiz3qoFfvvav2iH17WE6d3ogk5w4rd83YZ1Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W680PXLW2PpervRZ3nexUe0mTRA9pi1oXjyGh/69Jlx8kKou4m03rAozF3mvK+uUVlr1pmksn7vC2H6C3YhbhVM0UcUsiZQRb52Dqqr2c9No6Cr8ZX/OH8uFBkVocH5D0Os5LarVbPWQ2I39ew/LYOXOpp3q69md2YHaBNlXUnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=KyPuNyGq; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1714120155; c=relaxed/simple;
+	bh=bpZVCNetPyptINEqz5nCWQcjIsogDuW2407VcgZHC0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=otuWn4L0PUEOP86+aol6zjSYyvvr9+O4t5GRkD4xRZu3RlOcM8JiOBwQbD88y/ETVZIeDb78At085vd5J3thUKkBJ2I+dHpz5Gpz3orkYR81o4r6GTgmMcKAfiF7A2uBBSj5JxC3gYiUsuFOxdyE1EohHH3yQRrNmVxxsoHkJuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E44X2qyG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KyPuNyGq"
-X-UUID: 7f0b9038039f11ef8065b7b53f7091ad-20240426
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0VnSbfmRmPkE9Z6/xL87FEMZ2565KQXS7kXZBquQw44=;
-	b=KyPuNyGqJD8VkgPAo4mlBIWZoWzeSgaLMTnMYG8mc+B/aY+/P+zZLMCMpccL2wWplka0dGBrkTyenO2a8ZBX9XWo79Z0jJGRlIm+bC9hrzJv2K72dRX9stJ/RscQJ5DnCFQc2VwrmCsRZyanE5HNXLWm4LegkcPSdhhYf2qj73E=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:f34d56c5-3ce9-41bc-b10a-da6caca9e1eb,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:82c5f88,CLOUDID:a4612483-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 7f0b9038039f11ef8065b7b53f7091ad-20240426
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <tze-nan.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1723068776; Fri, 26 Apr 2024 15:35:03 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 26 Apr 2024 15:34:58 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 26 Apr 2024 15:34:58 +0800
-From: Tze-nan wu <Tze-nan.Wu@mediatek.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC: <bobule.chang@mediatek.com>, <wsd_upstream@mediatek.com>, Tze-nan wu
-	<Tze-nan.Wu@mediatek.com>, Cheng-Jui Wang <cheng-jui.wang@mediatek.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
-Date: Fri, 26 Apr 2024 15:34:08 +0800
-Message-ID: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E44X2qyG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C63C113CD;
+	Fri, 26 Apr 2024 08:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714120154;
+	bh=bpZVCNetPyptINEqz5nCWQcjIsogDuW2407VcgZHC0c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E44X2qyG2/tPBg7Ns9Pp27d8abTSd1/BDDwbCkeKJulUGHMsAqYEyRfC00z/x1rO7
+	 ZszG8GLXnQglIBQi8IQPPErabm6P7tCA8JwBkwZ/vfEdJz4OfetUOK19ZVQQ0nRst4
+	 vsjqQYS7pTankosz1dx1cr4jw7+3m7NeWFkmE2+xg5Q1f7VrQkzc98C7yOqJPulfLj
+	 OhFc7a4ZN72ewP9WixTiswpoW6Y899OMog1ge1uCePlSgcdMjUvYaR/bKGpJHiya6f
+	 o2EyJZGZ2FmGFIOqdlQ+J7zo101axix3gfHH3nWnh8JWL7BYuRgIz2Ok/p8N6Bj4Rs
+	 YAReSasOmax1Q==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mike Rapoport <rppt@kernel.org>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v6 00/16] mm: jit/text allocator
+Date: Fri, 26 Apr 2024 11:28:38 +0300
+Message-ID: <20240426082854.7355-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--6.709200-8.000000
-X-TMASE-MatchedRID: Oiwj9Z5zoYfBBfeYOfDzGeJmMZmLmwx5JNtuyL6mpIXnQ0faNr22ly2I
-	ryQ4sy22PluEU8uk8U1hIqZMefvkMYHcC7KYYAdEt1AhvyEKdj4Bmf/gD11vZLeKIZi8OZjkOXf
-	Z9OHyzWYYhA/yqU1gbudMv2hWHjOChrD3pNcSx1a4jAucHcCqnTGZtPrBBPZrYTBuC4I3GUdZcq
-	G2bJBnY63QzRpYhGSscAVxZL8H4DMWcPQGe3P9BFVN8laWo90MvtVce6w5+K+7+NPPxj+R6jEdc
-	33mv6D89ceA9hBhWDteGOFKwHTALzxmES9G+PPgr9glqbqf2bQsleOknNBI0+QydRUvl3QTuBsm
-	4LkLwbMLVCp/BGC7GAP5V3sWHZfiHG1zuzhqgWfAJnGRMfFxyY/8SyGg0rIRxN4K0DXKS1imRE7
-	f7OYxUiAgSuPJcYgLWKNxvq78azVveCKWtaLcaNcjCbPZgQnFEVhvB8sXyyPFas8s9VsawZXiR+
-	iW11ck6kLTNeJvUTbRY2ly55W2vj8J/1ZA8b0wJQI+kfsRJdrq0SQ1Mgx5CCow3ZvJGhxdo8WMk
-	QWv6iXBcIE78YqRWvcUt5lc1lLgoGRyAacnhaaD1+gJoH8joMuF7n2a4giCRdYztKQAnV318qCB
-	RlXuO37cGd19dSFd
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--6.709200-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: 1855CEFE36B23BD2996F096E4238EF6FD8DFFACC3453EFE8EB7A63622EEEA9672000:8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-"tracing_event_file" is at the risk of use-after-free due to the race of
-two functions "tracing_open_file_tr" and "synth_event_release".
-Specifically, it could be freed by synth_event_release before
-tracing_open_file_tr has the opportunity to access its members.
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-It's easy to reproduced by first executing script 'A' and then script 'B'
-in my environment.
+Hi,
 
-  Script 'A':
-    echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
-    while :
-    do
-      echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
-    done
+The patches are also available in git:
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v6
 
-  Script 'B':
-    echo > /sys/kernel/tracing/synthetic/events
+v6 changes:
+* restore patch "arm64: extend execmem_info for generated code
+  allocations" that disappeared in v5 rebase
+* update execmem initialization so that by default it will be
+  initialized early while late initialization will be an opt-in
 
-  My environment:
-    arm64 + generic and swtag based KASAN both enabled + kernel-6.6.18
+v5: https://lore.kernel.org/all/20240422094436.3625171-1-rppt@kernel.org
+* rebase on v6.9-rc4 to avoid a conflict in kprobes
+* add copyrights to mm/execmem.c (Luis)
+* fix spelling (Ingo)
+* define MODULES_VADDDR for sparc (Sam)
+* consistently initialize struct execmem_info (Peter)
+* reduce #ifdefs in function bodies in kprobes (Masami) 
 
-KASAN report
-==================================================================
-BUG: KASAN: slab-use-after-free in tracing_open_file_tr
-Read of size 8 at addr 9*ffff********** by task sh/3485
-Pointer tag: [9*], memory tag: [fe]
+v4: https://lore.kernel.org/all/20240411160051.2093261-1-rppt@kernel.org
+* rebase on v6.9-rc2
+* rename execmem_params to execmem_info and execmem_arch_params() to
+  execmem_arch_setup()
+* use single execmem_alloc() API instead of execmem_{text,data}_alloc() (Song)
+* avoid extra copy of execmem parameters (Rick)
+* run execmem_init() as core_initcall() except for the architectures that
+  may allocated text really early (currently only x86) (Will)
+* add acks for some of arm64 and riscv changes, thanks Will and Alexandre
+* new commits:
+  - drop call to kasan_alloc_module_shadow() on arm64 because it's not
+    needed anymore
+  - rename MODULE_START to MODULES_VADDR on MIPS
+  - use CONFIG_EXECMEM instead of CONFIG_MODULES on powerpc as per Christophe:
+    https://lore.kernel.org/all/79062fa3-3402-47b3-8920-9231ad05e964@csgroup.eu/
 
-CPU: * PID: 3485 Comm: sh Tainted: ****************
-Call trace:
- __hwasan_tag_mismatch
- tracing_open_file_tr
- do_dentry_open
- vfs_open
- path_openat
+v3: https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org
+* add type parameter to execmem allocation APIs
+* remove BPF dependency on modules
 
-Freed by task 3490:
- slab_free_freelist_hook
- kmem_cache_free
- event_file_put
- remove_event_file_dir
- __trace_remove_event_call
- trace_remove_event_call
- synth_event_release
- dyn_events_release_all
- synth_events_open
+v2: https://lore.kernel.org/all/20230616085038.4121892-1-rppt@kernel.org
+* Separate "module" and "others" allocations with execmem_text_alloc()
+and jit_text_alloc()
+* Drop ROX entailment on x86
+* Add ack for nios2 changes, thanks Dinh Nguyen
 
-page last allocated via order 0, migratetype Unmovable:
- __slab_alloc
- kmem_cache_alloc
- trace_create_new_event
- trace_add_event_call
- register_synth_event
- __create_synth_event
- create_or_delete_synth_event
- trace_parse_run_command
- synth_events_write
- vfs_write
+v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
 
-Based on the assumption that eventfs_inode will persist throughout the
-execution of the tracing_open_file_tr function,
-we can fix this issue by incrementing the reference count of
-trace_event_file once it is assigned to eventfs_inode->data.
-The reference count will then be decremented during the release phase of
-eventfs_inode.
+= Cover letter from v1 (sligtly updated) =
 
-This ensures that trace_event_file is not prematurely freed while the
-tracing_open_file_tr function is being called.
+module_alloc() is used everywhere as a mean to allocate memory for code.
 
-Fixes: bb32500fb9b7 ("tracing: Have trace_event_file have ref counters")
-Co-developed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-Signed-off-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-Signed-off-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
----
-BTW, I've also attempted to reproduce the same issue in another
-environment (described below).
-It's also reproducible but in a lower rate.
+Beside being semantically wrong, this unnecessarily ties all subsystmes
+that need to allocate code, such as ftrace, kprobes and BPF to modules and
+puts the burden of code allocation to the modules code.
 
-another environment:
-  x86 + ubuntu + generic kasan enabled + kernel-6.9-rc4
+Several architectures override module_alloc() because of various
+constraints where the executable memory can be located and this causes
+additional obstacles for improvements of code allocation.
 
-After applying the patch, KASAN no longer reports any issues when
-following the same reproduction steps in my arm64 environment. 
-However, I am concerned about potential side effects that the patch might introduce.
-Additionally, the newly added function "is_entry_event_callback" may not
-be reliable in my opinion,
-as the callback function used in the comparison could change in future. 
-Nonetheless, this is the best solution I can come up with now.
+A centralized infrastructure for code allocation allows allocations of
+executable memory as ROX, and future optimizations such as caching large
+pages for better iTLB performance and providing sub-page allocations for
+users that only need small jit code snippets.
 
-Looking for any suggestion or solution, appreciate.
+Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
+proposed execmem_alloc [2], but both these approaches were targeting BPF
+allocations and lacked the ground work to abstract executable allocations
+and split them from the modules core.
 
- fs/tracefs/event_inode.c     | 3 +++
- include/linux/trace_events.h | 4 ++++
- kernel/trace/trace_events.c  | 6 ++++++
- 3 files changed, 13 insertions(+)
+Thomas Gleixner suggested to express module allocation restrictions and
+requirements as struct mod_alloc_type_params [3] that would define ranges,
+protections and other parameters for different types of allocations used by
+modules and following that suggestion Song separated allocations of
+different types in modules (commit ac3b43283923 ("module: replace
+module_layout with module_memory")) and posted "Type aware module
+allocator" set [4].
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 894c6ca1e500..fd49c0f88500 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -20,6 +20,7 @@
- #include <linux/workqueue.h>
- #include <linux/security.h>
- #include <linux/tracefs.h>
-+#include <linux/trace_events.h>
- #include <linux/kref.h>
- #include <linux/delay.h>
- #include "internal.h"
-@@ -90,6 +91,8 @@ static void release_ei(struct kref *ref)
- 
- 	kfree(ei->entry_attrs);
- 	kfree_const(ei->name);
-+	if (ei->nr_entries && is_entry_event_callback(ei->entries[0]))
-+		event_file_put(ei->data);
- 	if (ei->is_events) {
- 		rei = get_root_inode(ei);
- 		kfree_rcu(rei, ei.rcu);
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 6f9bdfb09d1d..602e87682ee2 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -9,6 +9,7 @@
- #include <linux/hardirq.h>
- #include <linux/perf_event.h>
- #include <linux/tracepoint.h>
-+#include <linux/tracefs.h>
- 
- struct trace_array;
- struct array_buffer;
-@@ -505,6 +506,7 @@ extern struct trace_event_file *trace_get_event_file(const char *instance,
- 						     const char *system,
- 						     const char *event);
- extern void trace_put_event_file(struct trace_event_file *file);
-+bool is_entry_event_callback(struct eventfs_entry entry);
- 
- #define MAX_DYNEVENT_CMD_LEN	(2048)
- 
-@@ -731,6 +733,8 @@ extern void
- event_triggers_post_call(struct trace_event_file *file,
- 			 enum event_trigger_type tt);
- 
-+extern void event_file_put(struct trace_event_file *file);
-+
- bool trace_event_ignore_this_pid(struct trace_event_file *trace_file);
- 
- bool __trace_trigger_soft_disabled(struct trace_event_file *file);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 52f75c36bbca..de01676b59ff 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2626,6 +2626,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
- 		return -1;
- 	}
- 
-+	event_file_get(file);
- 	file->ei = ei;
- 
- 	ret = event_define_fields(call);
-@@ -3420,6 +3421,11 @@ void trace_put_event_file(struct trace_event_file *file)
- }
- EXPORT_SYMBOL_GPL(trace_put_event_file);
- 
-+bool is_entry_event_callback(struct eventfs_entry entry)
-+{
-+	return entry.callback == event_callback;
-+}
-+
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
- /* Avoid typos */
+I liked the idea of parametrising code allocation requirements as a
+structure, but I believe the original proposal and Song's module allocator
+was too module centric, so I came up with these patches.
+
+This set splits code allocation from modules by introducing execmem_alloc()
+and and execmem_free(), APIs, replaces call sites of module_alloc() and
+module_memfree() with the new APIs and implements core text and related
+allocations in a central place.
+
+Instead of architecture specific overrides for module_alloc(), the
+architectures that require non-default behaviour for text allocation must
+fill execmem_info structure and implement execmem_arch_setup() that returns
+a pointer to that structure. If an architecture does not implement
+execmem_arch_setup(), the defaults compatible with the current
+modules::module_alloc() are used.
+
+Since architectures define different restrictions on placement,
+permissions, alignment and other parameters for memory that can be used by
+different subsystems that allocate executable memory, execmem APIs
+take a type argument, that will be used to identify the calling subsystem
+and to allow architectures to define parameters for ranges suitable for that
+subsystem.
+
+The new infrastructure allows decoupling of BPF, kprobes and ftrace from
+modules, and most importantly it paves the way for ROX allocations for
+executable memory.
+
+[1] https://lore.kernel.org/lkml/20201120202426.18009-1-rick.p.edgecombe@intel.com/
+[2] https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
+[3] https://lore.kernel.org/all/87v8mndy3y.ffs@tglx/
+[4] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
+
+
+Mike Rapoport (IBM) (16):
+  arm64: module: remove unneeded call to kasan_alloc_module_shadow()
+  mips: module: rename MODULE_START to MODULES_VADDR
+  nios2: define virtual address space for modules
+  sparc: simplify module_alloc()
+  module: make module_memory_{alloc,free} more self-contained
+  mm: introduce execmem_alloc() and execmem_free()
+  mm/execmem, arch: convert simple overrides of module_alloc to execmem
+  mm/execmem, arch: convert remaining overrides of module_alloc to
+    execmem
+  riscv: extend execmem_params for generated code allocations
+  arm64: extend execmem_info for generated code allocations
+  powerpc: extend execmem_params for kprobes allocations
+  arch: make execmem setup available regardless of CONFIG_MODULES
+  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
+  powerpc: use CONFIG_EXECMEM instead of CONFIG_MODULES where
+    appropriate
+  kprobes: remove dependency on CONFIG_MODULES
+  bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
+
+ arch/Kconfig                         |  10 +-
+ arch/arm/kernel/module.c             |  34 -------
+ arch/arm/mm/init.c                   |  45 +++++++++
+ arch/arm64/Kconfig                   |   1 +
+ arch/arm64/kernel/module.c           | 126 -----------------------
+ arch/arm64/kernel/probes/kprobes.c   |   7 --
+ arch/arm64/mm/init.c                 | 140 ++++++++++++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c        |  11 --
+ arch/loongarch/kernel/module.c       |   6 --
+ arch/loongarch/mm/init.c             |  21 ++++
+ arch/mips/include/asm/pgtable-64.h   |   4 +-
+ arch/mips/kernel/module.c            |  10 --
+ arch/mips/mm/fault.c                 |   4 +-
+ arch/mips/mm/init.c                  |  23 +++++
+ arch/nios2/include/asm/pgtable.h     |   5 +-
+ arch/nios2/kernel/module.c           |  20 ----
+ arch/nios2/mm/init.c                 |  21 ++++
+ arch/parisc/kernel/module.c          |  12 ---
+ arch/parisc/mm/init.c                |  23 ++++-
+ arch/powerpc/Kconfig                 |   2 +-
+ arch/powerpc/include/asm/kasan.h     |   2 +-
+ arch/powerpc/kernel/head_8xx.S       |   4 +-
+ arch/powerpc/kernel/head_book3s_32.S |   6 +-
+ arch/powerpc/kernel/kprobes.c        |  22 +---
+ arch/powerpc/kernel/module.c         |  38 -------
+ arch/powerpc/lib/code-patching.c     |   2 +-
+ arch/powerpc/mm/book3s32/mmu.c       |   2 +-
+ arch/powerpc/mm/mem.c                |  64 ++++++++++++
+ arch/riscv/kernel/module.c           |  12 ---
+ arch/riscv/kernel/probes/kprobes.c   |  10 --
+ arch/riscv/mm/init.c                 |  45 +++++++++
+ arch/riscv/net/bpf_jit_core.c        |  13 ---
+ arch/s390/kernel/ftrace.c            |   4 +-
+ arch/s390/kernel/kprobes.c           |   4 +-
+ arch/s390/kernel/module.c            |  42 +-------
+ arch/s390/mm/init.c                  |  30 ++++++
+ arch/sparc/include/asm/pgtable_32.h  |   2 +
+ arch/sparc/kernel/module.c           |  30 ------
+ arch/sparc/mm/Makefile               |   2 +
+ arch/sparc/mm/execmem.c              |  21 ++++
+ arch/sparc/net/bpf_jit_comp_32.c     |   8 +-
+ arch/x86/Kconfig                     |   1 +
+ arch/x86/kernel/ftrace.c             |  16 +--
+ arch/x86/kernel/kprobes/core.c       |   4 +-
+ arch/x86/kernel/module.c             |  51 ----------
+ arch/x86/mm/init.c                   |  29 ++++++
+ include/linux/execmem.h              | 132 ++++++++++++++++++++++++
+ include/linux/module.h               |   9 ++
+ include/linux/moduleloader.h         |  15 ---
+ kernel/bpf/Kconfig                   |   2 +-
+ kernel/bpf/core.c                    |   6 +-
+ kernel/kprobes.c                     |  63 +++++++-----
+ kernel/module/Kconfig                |   1 +
+ kernel/module/main.c                 | 105 +++++++++----------
+ kernel/trace/trace_kprobe.c          |  20 +++-
+ mm/Kconfig                           |   3 +
+ mm/Makefile                          |   1 +
+ mm/execmem.c                         | 144 +++++++++++++++++++++++++++
+ mm/mm_init.c                         |   2 +
+ 59 files changed, 911 insertions(+), 581 deletions(-)
+ create mode 100644 arch/sparc/mm/execmem.c
+ create mode 100644 include/linux/execmem.h
+ create mode 100644 mm/execmem.c
+
+
+base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
 -- 
-2.18.0
+2.43.0
 
