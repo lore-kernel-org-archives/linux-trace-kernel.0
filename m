@@ -1,111 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB6158D93;
-	Fri, 26 Apr 2024 15:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D64114901C;
+	Fri, 26 Apr 2024 15:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714144728; cv=none; b=IOxGYtk/r7jaVaixKz47+5rtP5GKrcHp2DFBtqzKwLezB2Hn9TyyIoQwVtqNQLjgX9kTSuQxe5pQVgnZ3pBDPIF+efKLD0w+cykSNbAn7QwJynCTpGQDNTPl+neWxzSalLuafyTlvCMTbz6HeL+jFeVy14FiNJqD22NVGnZK3ig=
+	t=1714144774; cv=none; b=XQJKDZjRtqSB/1DX+bpgRsBWsUd91yS1+TZG2ZQ9toM6PkPBtA5FPjRkOXEYH61OfpYrLdu2as3DF/S4YjoAZOu8MgiIH23YB933fp0y45EJ8WuDymOt1eb44mSbIvmLdp+fRJ92ugwn4pHq7uh/U66bGfHl1L/D5H+S+8NpL+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714144728; c=relaxed/simple;
-	bh=1UnZiC3comG4gnEVIiUSo4RJz2Uq3SHSFq173Rv99mU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sGB3K8KXCnlVDbdPjrq1sVsRlmGhBAsTR4CjVAgmemt6qEm3EZzNK4wBx5WwUdKApS8Y3yjb8o4S1l38I17iHa0hCX3rWzZc5hOhwFPpnlQL0wMAxIidhgwlimF3WnrWCVrL0VGIIDmqMs0OUL0NZI+zg4EOdlpIrPwCZX1tGng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNSqnhOC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714144774; c=relaxed/simple;
+	bh=vxidtu2EwXjRXAhjK64ieOGkWMabWQIvC6Il/Dcmuwo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Ipnd2nqPKV818/4b2aW75Cmj8dLKjJzRwvQ6JUCAwBI1nW/2SJ8P6BAUd/D91PNajD9xQ4As6IY3XRXw3BTIbLgB/rhLiTKAK5P6S7W8ZBhjHcqwv6C/493ZhSSfVDnRjL1MOcfYNZ+HbuHxhQDYslseKD2JbDzKGfjWcapHl4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=mTCujyM0; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNSqnhOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D63A7C2BD11;
-	Fri, 26 Apr 2024 15:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714144727;
-	bh=1UnZiC3comG4gnEVIiUSo4RJz2Uq3SHSFq173Rv99mU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mNSqnhOCvVS96laJVrGaGieiyUBAaw7BIIZlQfWJmTtK+o3CRYgilXqax2Q6jFiHb
-	 Tkr6khA10hRkujz93BoR88ndIAwlrA0cIr29DtMM/oUSb4BbCWO2xFtmfLxyizgcCi
-	 4gZ/C5jQlPnsiBL0F0F4yvbOiva3OAJdCblKfHnnwiVKprBKA7nzRmDRSSlwlLtu64
-	 LN2KpL7Hy+MAZWbwNyKe863P9JI9g21F/w3YZn3KuPgVo0JCuXYwi5a9ah53d1KoFk
-	 t8qQpCyYncg1/PuC40GaaWT23jN9CdLc0JCAYfZzRsVwf+n9QaHNFcS74kWGCAaFff
-	 HgV2PKKVeTjpg==
-Date: Sat, 27 Apr 2024 00:18:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: lumingyindetect@126.com
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-Subject: Re: [PATCH] kernel/trace/trace_probe:Fixed memory leak issues in
- trace_probe.c.
-Message-Id: <20240427001843.84a3d367d3654b624c09defe@kernel.org>
-In-Reply-To: <20240426091343.1222770-1-lumingyindetect@126.com>
-References: <20240426091343.1222770-1-lumingyindetect@126.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="mTCujyM0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714144741; x=1714749541; i=markus.elfring@web.de;
+	bh=vxidtu2EwXjRXAhjK64ieOGkWMabWQIvC6Il/Dcmuwo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=mTCujyM0oewNuoXHvx7VcyZ//4b/QOs7jf8jIT8FQU8GhANIY/BzPbECljQmBWLB
+	 T0PacSl34ZmmdTKRWXxW4mhYiuYm6AyPC7P/jV/TVkhwLOnrYRQ0F6sKHHT46Bg5R
+	 NgeKkTE3WcbTVOS1vKLVgWuPwCa9j+2jVpzKoIuTx0ggIGKZOCwWZabMSVM1NXtgA
+	 edK2qlp9LoHEJQQdNcC5nhS3MoNqMwhSz34Xpm51oVV5idNov/46sW+m4l2qdOFcu
+	 6pTftFSwGD+P7MPlXFdP3YoOGa2DHk+d7aP7OjdX8SP5bry9/WOhe2my13dXenvTj
+	 UX5VIcKSU6DBpaw6gA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9431-1smtAA3783-0169wT; Fri, 26
+ Apr 2024 17:19:01 +0200
+Message-ID: <0c3cb2a1-a0b3-4a98-9bfc-3bf540c0eb78@web.de>
+Date: Fri, 26 Apr 2024 17:19:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: lumingyindetect@126.com, linux-trace-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <20240426091343.1222770-1-lumingyindetect@126.com>
+Subject: Re: [PATCH] tracing/probes: Fix memory leak issues in
+ traceprobe_parse_probe_arg_body()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240426091343.1222770-1-lumingyindetect@126.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:m6aIXWBUMnVwzLp30Zzzf9uS1KMKRZDZ4MzulBa72/k4CcmUebY
+ 4s0Ehh5JSYtre7wZPwQjFdzyTXr+67wIFXa7k1ZDRK+PY4TrcKtvVkNLVMOmjswV2tRKNCh
+ K+ubcsXJLD02iDZ+iyfxOHzVTCxPt4Ld1k2PB0cJS7eqrmvirwZqan9FNkjmUIJcn32bv4i
+ WcNpBo1+W8ledRrG34HTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ClBff8ldaUU=;MeOJKjlOUSdZ4oxpAHnlRDxBb2X
+ tgV7Dk6mq79k6D5LD/jIl3g5lsLcMGxX0Hxjhhasha2yrbmJNJrFSjg/VLaFJD/4YCufbmJAg
+ 4PlCKRNempEXpLyGzMRlNqobBRNXxOuNcY8L+UpUv0k5h67nQqkQ84o+ekHOGG3vMK2EbJrUj
+ zLA7ouqu0cEmvEEgvlparnWYPCBNNnC7xSqogsipjGtEXTDDdTNEvUF29gRZ1Ww9avIjZqmbL
+ B0Dvkn878Nj4DSKz2dncXqYNL09ZXkjiUnL+ypw6OzJD8J5zRNmYWYjeDDH8R4fx+WYVHyjTJ
+ 9LMLBV6MbtV4GuLHMInnFbujEk3CpDSTaA8j/0AvbqrhE7MPIu+/LDO28XKkLkTGZ+5GBLlNW
+ 6bGI1ZrKX1OET0B/j3X6Owkr1f9ClKA4+aySNudwBLgj6IAK9K6fSAzdtqyQPoU8vgkHjuwRz
+ hMrWv4/0tisuqRsRg8aRRWCjOU+tmUTxG36L9ppeMeH1x2KWGzXUOkTpQeJSwHh68Z5kr4tzx
+ B64HuMtnSCamrNNjhqAz0RvwdE/I03W/bMygxQJ2+lURV5zd8RDhOxhFviSsjdw501gy66Jq+
+ 6WLHB+xM7C3BoT4BI0252TXx9J0MSk6aOknKgriq4DWCONEvTOx7GKLffP7oiyNuMq0Z1E9c6
+ soPiX9UfIuG7zDMl30ncvQ07D/f/kNTBM0uCTWEgJdm71fMw9rBnE301MkVdydE0EJRh3D740
+ gEmn/oYu5G68awHk8wS0ef5vxBgjrF3627Exiy9Wk0f2kzilrtXMZ44CdiwCT7WzXsAgcwli2
+ 3vQ5PVqZsTU/vvJ65fQBfnaDDw0OhMlsaAGEKa/XdIaSw=
 
-Hi LuMingYin,
-
-Thanks for finding the problem! But please make a commit message
-following Documentation/process/submitting-patches.rst
-
-
-On Fri, 26 Apr 2024 10:13:43 +0100
-lumingyindetect@126.com wrote:
-
-> From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-> 
-> At line 1408 of the file /linux/kernel/trace/trace_probe.c, pointer variables named code and tmp are defined. At line 1437, a new dynamic memory area is allocated using the function kcalloc. When the if statement at line 1467 evaluates to true, the program jumps to the out label at line 1469. Within this function, there are two labels: out and fail. The difference between these two labels is that fail additionally frees the dynamic memory area pointed to by the variable code. Therefore, the program should jump to the fail label instead of the out label. This commit fixes this bug.
-> 
-
-For example, you must line break after about 70 characters. Also,
-please don't use the line number because the line number is easily
-changed (function name is OK). Since this bug is very clear mistake,
-so you can just explain that as following.
-
-----
- If traceprobe_parse_probe_arg_body() fails to allocate 'parg->fmt', it
- jumps to 'out' instead of 'fail' by mistake. In the result, in this
- case the 'tmp' buffer is not freed and leaks its memory.
-
- Fix it by jumping to 'fail' in that case.
-----
-The first paragraph explains what happens, and second one to exaplain
-how to fix it.
-
-Also, please add this Fixes tag.
-
-Fixes: 032330abd08b ("tracing/probes: Cleanup probe argument parser")
-
-You can easily find this commit number with git blame.
-
-Thank you,
-
+=E2=80=A6
+> Therefore, the program should jump to the fail label instead of the out =
+label. This commit fixes this bug.
+>
 > Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-> ---
->  kernel/trace/trace_probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index dfe3ee6035ec..42bc0f362226 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  		parg->fmt = kmalloc(len, GFP_KERNEL);
->  		if (!parg->fmt) {
->  			ret = -ENOMEM;
-> -			goto out;
-> +			goto fail;
->  		}
->  		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
->  			 parg->count);
-> -- 
-> 2.25.1
-> 
+
+Please improve your patch attempt considerably.
+
+See also:
+https://kernelnewbies.org/FirstKernelPatch
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Are there further change opportunities to take better into account?
+https://elixir.bootlin.com/linux/v6.9-rc5/source/kernel/trace/trace_probe.=
+c#L1403
+
+Regards,
+Markus
