@@ -1,38 +1,35 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A4313DDAB;
-	Fri, 26 Apr 2024 09:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F07B147C68;
+	Fri, 26 Apr 2024 13:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714122865; cv=none; b=B5xBhiSTWk90MciOnM5/rU+qXuiL6cpG2izgz6e/TC9Scd3/JwWcyPOANB8BKfNPgBxDIuxwSuRSH6AAyPp7uv0I+Gayod/nsmj2DdTvT7BYg//QkVu610Til0Rbv79iv12JhZ/q2mA8wNxTTdQ2tHbSg2CsA1ktCT/v1g8Znvo=
+	t=1714138830; cv=none; b=gWdZUygZieKC8FoWbRz9VPtXslTpRq7AqwjEoxGmNGfG2rk3J5bcFYBXUiunZJP/CE82WZUSYFF8yjHLN8IHtOTgH5uXsa4LAe3igM79OPZWB62ose9AiBZjQq6iixOoNr15QixbUkzGHoI9TeGCAhjXph4S9TIRHC+qXsYQzHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714122865; c=relaxed/simple;
-	bh=QgmigtmXco4RxQEQVpMpVYHseHWLekm+mdWA7DYsWXI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eDdavNAg2LgPrdPNP7ezrQyTQSl+cl3v+zA5Q4ylQ9ytidOZes1hNSGtQ9gp35zpdHlu5QYgdeIMF0vtVBo6FhJ3pUxYENTGIVlqorPP6PNg6e9Ei7g09nayghYjhMe4d0IZBd/CHIjG0jIcQZQYhfxm0V4ZvoVppCEk2aMf6Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=TMk4iRYq; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1714138830; c=relaxed/simple;
+	bh=nhB4NXO7zHABhS8SCCe4ML2meuKkfAn6VxcxMgKGh/g=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=UJ2ecDbs82FNq+wqVnpcYHqizdKX1iAh7VrsXxIZxYqVxrH1ksK7/MHwye2vTrbaHyH/AwaITJNrCHbzSe9cfTg7Ss+i6iELqFLmZfragveQEigLkr56GX5UlUDeJXMb3EaBSbUU035Yc77lhxMYXxuREey+lrjlRqOKXa8XdCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3CNOiYL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="TMk4iRYq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=TcFEL
-	qyJxandnRSS6nY1GKmZDqXb6wkOaasu1Qtucyg=; b=TMk4iRYqq4LSYL3hK5ziz
-	5jw29gHV65klbXxnBCWIqljAsrsxCaYo7qPfRiTjorOKnoGq0yjdvNYF/WZQuz5d
-	AflGDNTsSjehA85TpQzFQIkboJP74CmOrXB9+Ws4ls4jVSUXTYA1AUANFegeOXQD
-	pVbWiqAPsDyK2KyY0/6IIU=
-Received: from localhost.localdomain (unknown [111.198.54.11])
-	by gzga-smtp-mta-g0-5 (Coremail) with SMTP id _____wD3X1hJcCtmSu2aAw--.64553S2;
-	Fri, 26 Apr 2024 17:13:47 +0800 (CST)
-From: lumingyindetect@126.com
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
-Subject: [PATCH] kernel/trace/trace_probe:Fixed memory leak issues in trace_probe.c.
-Date: Fri, 26 Apr 2024 10:13:43 +0100
-Message-Id: <20240426091343.1222770-1-lumingyindetect@126.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3CNOiYL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E0982C116B1;
+	Fri, 26 Apr 2024 13:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714138830;
+	bh=nhB4NXO7zHABhS8SCCe4ML2meuKkfAn6VxcxMgKGh/g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=A3CNOiYLwPHAd4497FuR8Mq8LAbLeZyEOOqX0MVFqC0Kv7xXrtNEG7hTQ8enkNsPH
+	 iLS5LM46B34Oss/5gpz+NWY7QLTErT/xqToUJcwT4Jj7UYitoQxWLNBMkbnn8oKLzW
+	 MCHm3rcksjbAPJbRNe2IAKLNh3SSyU3HNth1VaBkHkdC2F7EUz+oDKllDHwXGQWeAf
+	 vmNd/LhWeu0Ob7VR7bCLKCfMd/AZUG6PMTfM+gjUNEtWMRVfR9GsH75RHERQUyKof9
+	 PzS2qc/0nBSFj5csZ32YFITOQlhoIveyLzU4NEN9U650/U+ff/8Hd5/okM/B1r7YCs
+	 awXXvE+XHu4/g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CD436DF3C9B;
+	Fri, 26 Apr 2024 13:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,35 +37,62 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3X1hJcCtmSu2aAw--.64553S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFykWr1fZw45ury8WF4kWFg_yoW8Jw48pF
-	s8Krnakr4kGF4IkFWfZr1kuFy8tanrJrW7KFykG34Fqwn8Jr1jvrZIgFsYq34rZrWSy34F
-	yFyjvr4qgay7ZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jR7K3UUUUU=
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbimgzM9mVLbFZInwAAsv
+Subject: Re: [PATCH net-next v9 0/7] Implement reset reason mechanism to detect
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171413882983.4140.2846723996331874537.git-patchwork-notify@kernel.org>
+Date: Fri, 26 Apr 2024 13:40:29 +0000
+References: <20240425031340.46946-1-kerneljasonxing@gmail.com>
+In-Reply-To: <20240425031340.46946-1-kerneljasonxing@gmail.com>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: edumazet@google.com, dsahern@kernel.org, matttbe@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com,
+ davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, atenart@kernel.org, horms@kernel.org,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernelxing@tencent.com
 
-From: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
+Hello:
 
-At line 1408 of the file /linux/kernel/trace/trace_probe.c, pointer variables named code and tmp are defined. At line 1437, a new dynamic memory area is allocated using the function kcalloc. When the if statement at line 1467 evaluates to true, the program jumps to the out label at line 1469. Within this function, there are two labels: out and fail. The difference between these two labels is that fail additionally frees the dynamic memory area pointed to by the variable code. Therefore, the program should jump to the fail label instead of the out label. This commit fixes this bug.
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Signed-off-by: LuMingYin <11570291+yin-luming@user.noreply.gitee.com>
----
- kernel/trace/trace_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 25 Apr 2024 11:13:33 +0800 you wrote:
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> In production, there are so many cases about why the RST skb is sent but
+> we don't have a very convenient/fast method to detect the exact underlying
+> reasons.
+> 
+> RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+> and active kind (like tcp_send_active_reset()). The former can be traced
+> carefully 1) in TCP, with the help of drop reasons, which is based on
+> Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+> RFC 8684. The latter is relatively independent, which should be
+> implemented on our own, such as active reset reasons which can not be
+> replace by skb drop reason or something like this.
+> 
+> [...]
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index dfe3ee6035ec..42bc0f362226 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 		parg->fmt = kmalloc(len, GFP_KERNEL);
- 		if (!parg->fmt) {
- 			ret = -ENOMEM;
--			goto out;
-+			goto fail;
- 		}
- 		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
- 			 parg->count);
+Here is the summary with links:
+  - [net-next,v9,1/7] net: introduce rstreason to detect why the RST is sent
+    https://git.kernel.org/netdev/net-next/c/5cb2cb3cb20c
+  - [net-next,v9,2/7] rstreason: prepare for passive reset
+    https://git.kernel.org/netdev/net-next/c/6be49deaa095
+  - [net-next,v9,3/7] rstreason: prepare for active reset
+    https://git.kernel.org/netdev/net-next/c/5691276b39da
+  - [net-next,v9,4/7] tcp: support rstreason for passive reset
+    https://git.kernel.org/netdev/net-next/c/120391ef9ca8
+  - [net-next,v9,5/7] mptcp: support rstreason for passive reset
+    https://git.kernel.org/netdev/net-next/c/3e140491dd80
+  - [net-next,v9,6/7] mptcp: introducing a helper into active reset logic
+    https://git.kernel.org/netdev/net-next/c/215d40248bde
+  - [net-next,v9,7/7] rstreason: make it work in trace world
+    https://git.kernel.org/netdev/net-next/c/b533fb9cf4f7
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
