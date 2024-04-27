@@ -1,103 +1,97 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38483376EC;
-	Sat, 27 Apr 2024 07:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F20C653;
+	Sat, 27 Apr 2024 09:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714203652; cv=none; b=UY1otfYt7LzaThluwcz4PqDrjfBzo61C7gJOuXywvhysJTpledZs9sAClSmpGbrhWsVaDYCRzEAtXTdjuME8dCcDRfEm/qFUQdGYxefw2bjVfD7emapmOtWMAuF3jXo1Vh2z/rLwUjLjEWcjSxcwFcRw3oXQR2lrYtRkq1/TDEk=
+	t=1714209152; cv=none; b=UmwRgF57Z73Xv7cKCqBU3VzMfaVML0g3f/7s/5+cQGHqxp1FwuRf1baqbs3VZogG/LQW047zyp3ZpG6eorKvLHm82+Xn/TWHjHB7eH/V9D4aTBMI672YOUATZ4Jl/ElRzZQUWIFkQUpSY91/QpEWeD00sus781YgEuzg+kS+YYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714203652; c=relaxed/simple;
-	bh=CzgUKxV1DiRGrX9zQXzZL6Gotui8EXJUqYQ3eQT9fT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EldON3TuhubwZAoNWjdObGunaICbj7oTMsx5nhciB0CMEiZ76f/cBRB9AJTeoRbsLyAv6WPgwpS4WlNdUhZ8IP6in0Aflo7GIy7d0cFxduAzBPcQ9JYnLlP5wI90lnkBr/+olVU+D5IPfDqqastftUc2DBKBdaTuhXzRdhnLui4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gEqEbcAY; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1714209152; c=relaxed/simple;
+	bh=/xUk67PN/piLmYuiK8bKqr13B/hDGBvoKwdPCUFkcB8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=tX8XI087iFbweLkiWII6G9eZQupzlzX/0o38XJ+ye1PdhV+7XGsePyxsViFfz3M3Dd5uPEfVctDgxHwwt12LSmVhjqGltqKhZP1DU6+aO/UrqpWj0pwKwZASYXZW7YqMhpgmjq/XHpp+T7U4YY+VSzQrZuIX/OgNIZtnuIaX31c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MTobUfBT; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gEqEbcAY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714203646;
-	bh=CzgUKxV1DiRGrX9zQXzZL6Gotui8EXJUqYQ3eQT9fT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gEqEbcAYbNH1Cl76LGX0IqteTFz6QZM2G7WkdPY5ve6JFJe7QvQdYePk2UkJVcvTR
-	 6u5FIHxh7+/FsU6vrbi0R0NpqVH+T4CvlFrv7BQ8Kzndu1PmGsnulYTnxUn5nJrEUi
-	 e3WiuV0em4CHQ+eAmWIJfWacyiMhggB7HEWeZqN8=
-Date: Sat, 27 Apr 2024 09:40:43 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Joel Granados <j.granados@samsung.com>
-Cc: Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <38a87a0f-02c7-4072-9342-8f6697ea1a17@t-8ch.de>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
- <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MTobUfBT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714209108; x=1714813908; i=markus.elfring@web.de;
+	bh=bGYRi4hDpraTh6L96Bqc9vwhRnZcF9ttS5i++hemawk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=MTobUfBTQdxdpqyAvUGudIE6VMHg9DZt/tMxsB8wNadfPrY9F2BHB5BYAEdxOHW8
+	 IYPpRculOWRjnbvIFaFzhPUUqeVC+1hugwQDyzATe5T/RS5ahMh5beezqX33PfpkF
+	 UNhQ5fptNUIqs/32PwHgk5t+ZDoZ7LOW+oBPvIJWC7Lf6JvWzEY3lHB25DoNhYMFd
+	 Y0jG32ei7EG34GbyIUK0opci/dpAx/jF2AW3gJaECaBwZOF/5ETCZ9FdirHYKv33x
+	 U7gOyRLVEP2Do15o/FcAhHtWlU3dnR0kX7lkY1um3z0PC+A3HzGz5viXIQA6+JjtM
+	 Cc0N1KgovzJL4HpVTQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MZSFY-1sDHfO0MTO-00Wnc6; Sat, 27
+ Apr 2024 11:11:48 +0200
+Message-ID: <d1ff7c50-7810-45ef-b31b-9189348fa09b@web.de>
+Date: Sat, 27 Apr 2024 11:11:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
+User-Agent: Mozilla Thunderbird
+To: LuMingYin <lumingyindetect@126.com>, linux-trace-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240427072347.1421053-1-lumingyindetect@126.com>
+Subject: Re: [PATCH v3] tracing/probes: Fix memory leak in
+ traceprobe_parse_probe_arg_body()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240427072347.1421053-1-lumingyindetect@126.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3aCTPfz1dpBnXB33+rL9kND9c3ORiQ5rZM12p8HdfHGENMgrPv+
+ Z+QTZVXdS+wyF1fOSJWBNa2GB/sHSPH/0fb0bBcwLdrYAYo1LsBxxoHByC+Ojl6tWNwz3ta
+ QEnqarjVscY5IRkqY072mGY9mYTSGDgxtDmnCfDdkwQ84HfYyV5hxFUQ6e9T+cEBa5LMfJ1
+ BStiO9P/ZyoXKLky245yA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:w7Cxg2AAj9I=;MwCHZFhO6hZnCo+5SjFy+Grky69
+ zp4OIak+X7dizzbj1m1mbD1CUlCo6ZqGbnsG9ama6+Pf56jZFiF3T37cqPFqsvmfqou51UCvp
+ J5ymLWIATymIUwb6JtMGyb9uHPxwJ9Twp6VqIVUVnbShFpo3jk/2/VinPzQ2+NzDA68RSyuEK
+ UQ2l10Rba3x7lqOZFpXMDqG9vlAxjF62pqlg8hAzguwHG5CQNKYIIKQYf9opCtUYREsLIZaVQ
+ ty9zGLC93kSX1E8vutKnhwzh+WW/wjj2revIx7Kf+8qthbCj3ypP6PC5N4yeSVSPheWmahQ7x
+ D1sN8hzkCmT8ShibGD2NNWAdbB9JLPJVJtjuqcH3eUzvtH7u15duTnsrfLdbEAjCditN9kHNW
+ rJezN9qa+mrqXqGh/I+XvnSjHmYks7kxJCYLQMP4yxZMx8N+/17vE4RWgi60RVjBwYXODl609
+ KU72gX5MSH7PFfdbHCWxx9uhHmEUUhAU0PNC1hfrmkb6yuIm5XHsItTsr38EIEA4pqenYF/dH
+ 8LOWOquyMGiAeAU2iJ/r3Im1Q4n9M7xrQKd/QggCOeUFf8bgOCY2kjrmbtfLwUlkEeSPQ8lkC
+ swE9PZjFcaR4OJALxRQwRcbUJ1pQje5Ub3Uy9mctMHb+ax7Aul8YfYQOnd7G1RaEeeVWcN4yv
+ Qcej+hpbvr93zbOrzVAGz3HKWiwSISlYgoncD70jJCBIDC35Bt3tVdJ3nsPdyXaAVGg/1EJ+h
+ X1ONviOAae0Zc2rwmlE6MoglMXvw3WHWuC3qjCGx2Fc+CqmEDvPgfgr/1Z2GNUqMABo4hxMRo
+ QpqD9UzJHsllNJ2i8kOeSZovJNaSGR58eSNYX8qN7O0ds=
 
-On 2024-04-25 09:10:27+0000, Thomas Weißschuh wrote:
-> On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
-> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > > The series was split from my larger series sysctl-const series [0].
-> > > It only focusses on the proc_handlers but is an important step to be
-> > > able to move all static definitions of ctl_table into .rodata.
-> > 
-> > Split this per subsystem, please.
-> 
-> Unfortunately this would introduce an enormous amount of code churn.
-> 
-> The function prototypes for each callback have to stay consistent.
-> So a another callback member ("proc_handler_new") is needed and users
-> would be migrated to it gradually.
-> 
-> But then *all* definitions of "struct ctl_table" throughout the tree need to
-> be touched.
-> In contrast, the proposed series only needs to change the handler
-> implementations, not their usage sites.
-> 
-> There are many, many more usage sites than handler implementations.
-> 
-> Especially, as the majority of sysctl tables use the standard handlers
-> (proc_dostring, proc_dobool, ...) and are not affected by the proposed
-> aproach at all.
-> 
-> And then we would have introduced a new handler name "proc_handler_new"
-> and maybe have to do the whole thing again to rename it back to
-> the original and well-known "proc_handler".
+>                                             =E2=80=A6 by mistake.In the =
+result,
+=E2=80=A6
 
-This aproach could be optimized by only migrating the usages of the
-custom handler implementations to "proc_handler_new".
-After this we could move over the core handlers and "proc_handler" in
-one small patch that does not need to touch the usages sites.
+I propose once more to start the second sentence of this change descriptio=
+n
+on a subsequent line.
 
-Afterwards all non-core usages would be migrated back from
-"proc_handler_new" to "proc_handler" and the _new variant could be
-dropped again.
+> ---
+> kernel/trace/trace_probe.c | 2 +-
+=E2=80=A6
 
-It would still be more than twice the churn of my current patch.
-And these patches would be more complex than the current
-"just add a bunch of consts, nothing else".
+Unfortunately, you overlooked to add patch version descriptions behind the=
+ marker line.
 
-Personally I still prefer the original aproach.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.9-rc5#n713
 
-
-Thomas
+Regards,
+Markus
