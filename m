@@ -1,101 +1,79 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17A039AF9;
-	Sat, 27 Apr 2024 06:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF1044C66;
+	Sat, 27 Apr 2024 07:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714199818; cv=none; b=LqwVQ9HSmzG5udYoeAVBy99DNyFx9aP/4E/cmc9kGpvmgjnfKteoHic0jU4VexMnw5oj06hVTKQqmjItAO7r7wKXja+wI/XAuacqfd2JChbakLO5V9HKHgAtRhb7iMgKjmlu0euMFQEAmUyLu+fK/nNv0u6HH2pm9eEIWULv6Vw=
+	t=1714202661; cv=none; b=GhDaDqVU1CTGq013RjbZLbyZ+bnGv5gGxBDVnVIu3ckoeII/GsLcjhc6v/RtARvDfeKbxC2PN+ebUezyY755dxrRIk8OQiMXLjvLxbRdBWL0HbVoQ/VwVosp2dKYRhdvFz4/owAmbIpik3tYberIo95Z3CGk+s9xaUd7rHLV62s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714199818; c=relaxed/simple;
-	bh=HSKhQc6ckcGem0dz8qIg/OUHhvnOqChu5U7keQ38ZIg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=XdvsgHbl8FFg6/VKTx9QFgS91ikxqdfaUzyDPzzAGJs9lUM8yb4VOjFdmyS250Dm4a3WdAyKf/aBgtWZTxVijuo8AmhmptIk4zHkCz2x7YaD4ILwUMR8OasP7XGg7sIZUOasoX+M5DX9QMflHbeYZ8O7fEvRFJ1oCkZXcEmIX0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tNag+jeM; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714202661; c=relaxed/simple;
+	bh=kVpt3QCfeLtXIelAdzKX2iKyg7vRXdCkERS8lVfaMMA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Znp7bzUyWqiPi1hvL7eOQ5jkeXZSXA7KtPzI0npT+sdYDQW9UvCZePriBOjCkJsRnsOgeb7vqqOT0/mSO9lzFrqSi3h35gFDZcyyTr2IOxYr7gbSXR7voy4OJrw3Iswmx7zHki44Gvn5+bKJjtRH0Nzoo55iAeu0jqWcqQkNFZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=QTYC1/4+; arc=none smtp.client-ip=117.135.210.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tNag+jeM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714199795; x=1714804595; i=markus.elfring@web.de;
-	bh=Yqjkf7H0JSFQpEQ4/+tdhmqoI63l4XI1RiiuG834KEA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tNag+jeMgnSNOhv6sovKbWDqS3fEQ/CQwTBgBSL0L43jHbzyFZSPtYXW2XX4qKQl
-	 NL4Y5ykom1G317bseGi/EL5Bqis8ugiLYTrgbMYSkKfmf2X8/Qmy6E4UlBBvrHuSv
-	 U1WGXZrqxbursuTWac+pse/ElyhsU0QJgZq8qPNDlL86xc2HfzikRq9FFBMauWrSh
-	 qVNBZ37FTuMtm7V+h3ULXFCgi3BLZUel+kEbvUnKYpp3SRqdLhEe+hZH8Hm9vkAgu
-	 0dO9JdzwmpM1IVRUVtwWbqUrxiC7fTqVvZesu29TQq7RxjTnDl9ypywDpkZ9/9X1a
-	 Ajf1t9SGoLAwOYhq2w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9LEG-1slqYp1hDg-00ri4O; Sat, 27
- Apr 2024 08:36:35 +0200
-Message-ID: <29b2bd7d-303c-4ac9-8638-38959f177316@web.de>
-Date: Sat, 27 Apr 2024 08:36:17 +0200
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="QTYC1/4+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=idpVf
+	whektHky8Wqw0Sjx7L9bi6195lOk5IVtrio3Ic=; b=QTYC1/4+/z+87vx6EwoRY
+	gybFcCijs1mUEnSOI6kHW/mwMrlXhX4jMu6196BiHtIvYoQ5ThTlR1lHSRhGmWwh
+	5RJy1OAIKthHwAsw6lE5YtcKvNgq9ZTLKirA0xamUiRMDIx5c1OspDYMEvaN7Vd3
+	jakqtpa8J/apTCmwI98guI=
+Received: from localhost.localdomain (unknown [111.198.54.11])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDX_7sEqCxm42oFBg--.44942S2;
+	Sat, 27 Apr 2024 15:23:49 +0800 (CST)
+From: lumingyindetect@126.com
+To: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	LuMingYin <lumingyindetect@126.com>
+Subject: [PATCH v3] tracing/probes: Fix memory leak in traceprobe_parse_probe_arg_body()
+Date: Sat, 27 Apr 2024 08:23:47 +0100
+Message-Id: <20240427072347.1421053-1-lumingyindetect@126.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: LuMingYin <lumingyindetect@126.com>, linux-trace-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240427025720.1321211-1-lumingyindetect@126.com>
-Subject: Re: [PATCH v2] tracing/probes: Fix memory leak in
- traceprobe_parse_probe_arg_body
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240427025720.1321211-1-lumingyindetect@126.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uGlf/lKNskOomISg1g58Lnnv79W7jHlElge4NaHOfwNxFN2r9yo
- HHeX3mGvqhirUz/XKB93Dqn97owdFV70XPcITcCT0rr7VuHp7j4THmyEatGl2ymCj1hjvy3
- Dv2m8ZF+S+cNPbHM/OT0taTlCguhNtVTgnI5Z1Jl4JTiaMwQN8SXeztkQkO5gZxu0LzkBhF
- qsNy+QMy+bDuV0S4X9Lew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LKMQUbkQfbc=;u43u9kSrPjt8jg0ya98W5ZyQT37
- UZ3hghvOW+2yrkFPx5LRpGz/Gz+OYLiwXtjR0QAGaBIhnqdoK3eREVPuRoJJ7FVq9/P+04WbT
- 6kZUIjACYlqoAPgYzLTa5Y79dirTWAqUNB4E5eZloQg2GpyTQGzVhOJghx7LSxq+NPcB2ND16
- lFffuWnmSYF6bqURjqQMMTFFcIFZV0B9uLryncE09Pvsz45iRtvpKN+xrBcRFAa6UxwaatMFD
- Az0Vm8/ZBnIV+E9d56Wo06mCFbyfq2vcbcPZCu/u8eLi9BnWMxTn2YLyx8EmEraZKiD/RaDxt
- T2sl95b/w8+DjFZv/OoWFFi05rOvOr6rnc7963dHBglnipgt3QflDAKEV7Zbi2O9PO3vAzHzG
- slweGmHo4OHyf30Cp8PyE633RqAC1vcJP3wg5eS5+OmVvv5x64t488BC8wTcSCt/gv5Bqsyro
- /GmjO2DUGbVwhIynTcYbcmz4iYODHNsTbP2lgVFIW4M6BGAhWkHGKnksuMNxnrMHiCYkTlhie
- 2syoLl9bmPk+0KOL2AsVPnPljVMjV7FNI+7iOhwe7W7zvgsxDHztgQZR2zfE8Kz+tjwAb8KzM
- an5YnGxL0Qpf1WtM0iBk0r2q15wljK/DyXfVtmI7hFr9L5f5zKs/gWbxPt4zYug6kfqlq7sk6
- YhAM/ksaHorpkvIjiUkKDiu+uOgbNdcqapiJbbkg/CK++13cuHhHFINTTN+xAyCVVALhzrQ9J
- Xw7eQfWQbR8EH0J69NdhPlCPXOd3h32d7BJULon3r3xjjeZrb4Rg/g6rHW1S1fMvhWnOL/AmB
- NrYRl2JaIvRf0Bn2W5kWYtTEB/iwC688C8CAthp6Hc908=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX_7sEqCxm42oFBg--.44942S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1DGF47KF48WryDCF45KFg_yoWDArcEya
+	ykG3WkJr4UCrsrurWfJrs2qrWqkF1rWrykuw12qFZ8J34UJr13W3Z8C3ZYqrZ5WFyqqF97
+	JwnxWr1kuF1rKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU01SoJUUUUU==
+X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbi6B-N9mVLbEsaYgABs8
 
-I suggest to append parentheses to the function name in the summary phrase=
-.
+From: LuMingYin <lumingyindetect@126.com>
 
+If traceprobe_parse_probe_arg_body() failed to allocate 'parg->fmt',
+it jumps to the label 'out' instead of 'fail' by mistake.In the result,
+the buffer 'tmp' is not freed in this case and leaks its memory.
 
-> If traceprobe_parse_probe_arg_body() fails to allocate 'parg->fmt', it
-> jumps to 'out' instead of 'fail' by mistake. In the result, in this
-> case the 'tmp' buffer is not freed and leaks its memory.
->
-> Fix it by jumping to 'fail' in that case.
+Thus jump to the label 'fail' in that error case.
 
-I propose to improve such a change description another bit like the follow=
-ing.
+Fixes: 032330abd08b ("tracing/probes: Cleanup probe argument parser")
+Signed-off-by: LuMingYin <lumingyindetect@126.com>
+---
+ kernel/trace/trace_probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-   If traceprobe_parse_probe_arg_body() failed to allocate the object =E2=
-=80=9Cparg->fmt=E2=80=9D,
-   it jumps to the label =E2=80=9Cout=E2=80=9D instead of =E2=80=9Cfail=E2=
-=80=9D by mistake.
-   In the result, the buffer =E2=80=9Ctmp=E2=80=9D is not freed in this ca=
-se and leaks its memory.
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index c09fa6fc636e..81c319b92038 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+ 		parg->fmt = kmalloc(len, GFP_KERNEL);
+ 		if (!parg->fmt) {
+ 			ret = -ENOMEM;
+-			goto out;
++			goto fail;
+ 		}
+ 		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
+ 			 parg->count);
+-- 
+2.25.1
 
-   Thus jump to the label =E2=80=9Cfail=E2=80=9D in that error case.
-
-
-Regards,
-Markus
