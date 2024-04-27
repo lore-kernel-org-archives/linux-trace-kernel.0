@@ -1,97 +1,122 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mx.der-flo.net (mx.der-flo.net [193.160.39.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F20C653;
-	Sat, 27 Apr 2024 09:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03158A934;
+	Sat, 27 Apr 2024 15:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.160.39.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714209152; cv=none; b=UmwRgF57Z73Xv7cKCqBU3VzMfaVML0g3f/7s/5+cQGHqxp1FwuRf1baqbs3VZogG/LQW047zyp3ZpG6eorKvLHm82+Xn/TWHjHB7eH/V9D4aTBMI672YOUATZ4Jl/ElRzZQUWIFkQUpSY91/QpEWeD00sus781YgEuzg+kS+YYo=
+	t=1714231675; cv=none; b=G4+muYL9GKqOcqwkG7O4zqLt8KJ3e2gejYOcSmhHZ5Y3UdiWMLbrJGldArUORY8DHvvNQMlGPWzAwSTmrsALlsr7nyNofPEkXuCKyU7sWLeBq+Rs7JrMr3i8+pn8x7Evs+vcK2TukM4sWlTKW6UtuM7+MksoBR6ykjWQZ6f8x2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714209152; c=relaxed/simple;
-	bh=/xUk67PN/piLmYuiK8bKqr13B/hDGBvoKwdPCUFkcB8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=tX8XI087iFbweLkiWII6G9eZQupzlzX/0o38XJ+ye1PdhV+7XGsePyxsViFfz3M3Dd5uPEfVctDgxHwwt12LSmVhjqGltqKhZP1DU6+aO/UrqpWj0pwKwZASYXZW7YqMhpgmjq/XHpp+T7U4YY+VSzQrZuIX/OgNIZtnuIaX31c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=MTobUfBT; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MTobUfBT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714209108; x=1714813908; i=markus.elfring@web.de;
-	bh=bGYRi4hDpraTh6L96Bqc9vwhRnZcF9ttS5i++hemawk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MTobUfBTQdxdpqyAvUGudIE6VMHg9DZt/tMxsB8wNadfPrY9F2BHB5BYAEdxOHW8
-	 IYPpRculOWRjnbvIFaFzhPUUqeVC+1hugwQDyzATe5T/RS5ahMh5beezqX33PfpkF
-	 UNhQ5fptNUIqs/32PwHgk5t+ZDoZ7LOW+oBPvIJWC7Lf6JvWzEY3lHB25DoNhYMFd
-	 Y0jG32ei7EG34GbyIUK0opci/dpAx/jF2AW3gJaECaBwZOF/5ETCZ9FdirHYKv33x
-	 U7gOyRLVEP2Do15o/FcAhHtWlU3dnR0kX7lkY1um3z0PC+A3HzGz5viXIQA6+JjtM
-	 Cc0N1KgovzJL4HpVTQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MZSFY-1sDHfO0MTO-00Wnc6; Sat, 27
- Apr 2024 11:11:48 +0200
-Message-ID: <d1ff7c50-7810-45ef-b31b-9189348fa09b@web.de>
-Date: Sat, 27 Apr 2024 11:11:44 +0200
+	s=arc-20240116; t=1714231675; c=relaxed/simple;
+	bh=+sN9NUCa3ushUzlEGn+2urtd+hdtrRzzNExlOeY09/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fqN2o1lLziiRBpC4DYhxnHwneZ+Kh00aFo3Bhswj+84Ii0wSe/pRODN+tTsmdmmMlOp43G1fpj+hfeplXSz8BBuAfmlOrlM/rxhe8qDhV3gyIw7tcLs9OAYNomSFjPdoXLbb7DcS0Ed+IriftKcMq+gBG+gJuqhbBvE7qCYg//E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=der-flo.net; spf=pass smtp.mailfrom=der-flo.net; arc=none smtp.client-ip=193.160.39.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=der-flo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=der-flo.net
+From: Florian Lehner <dev@der-flo.net>
+To: bpf@vger.kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	Florian Lehner <dev@der-flo.net>
+Subject: [PATCH bpf-next] bpf: add support to read cpu_entry in bpf program
+Date: Sat, 27 Apr 2024 17:18:25 +0200
+Message-ID: <20240427151825.174486-1-dev@der-flo.net>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: LuMingYin <lumingyindetect@126.com>, linux-trace-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240427072347.1421053-1-lumingyindetect@126.com>
-Subject: Re: [PATCH v3] tracing/probes: Fix memory leak in
- traceprobe_parse_probe_arg_body()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240427072347.1421053-1-lumingyindetect@126.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3aCTPfz1dpBnXB33+rL9kND9c3ORiQ5rZM12p8HdfHGENMgrPv+
- Z+QTZVXdS+wyF1fOSJWBNa2GB/sHSPH/0fb0bBcwLdrYAYo1LsBxxoHByC+Ojl6tWNwz3ta
- QEnqarjVscY5IRkqY072mGY9mYTSGDgxtDmnCfDdkwQ84HfYyV5hxFUQ6e9T+cEBa5LMfJ1
- BStiO9P/ZyoXKLky245yA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:w7Cxg2AAj9I=;MwCHZFhO6hZnCo+5SjFy+Grky69
- zp4OIak+X7dizzbj1m1mbD1CUlCo6ZqGbnsG9ama6+Pf56jZFiF3T37cqPFqsvmfqou51UCvp
- J5ymLWIATymIUwb6JtMGyb9uHPxwJ9Twp6VqIVUVnbShFpo3jk/2/VinPzQ2+NzDA68RSyuEK
- UQ2l10Rba3x7lqOZFpXMDqG9vlAxjF62pqlg8hAzguwHG5CQNKYIIKQYf9opCtUYREsLIZaVQ
- ty9zGLC93kSX1E8vutKnhwzh+WW/wjj2revIx7Kf+8qthbCj3ypP6PC5N4yeSVSPheWmahQ7x
- D1sN8hzkCmT8ShibGD2NNWAdbB9JLPJVJtjuqcH3eUzvtH7u15duTnsrfLdbEAjCditN9kHNW
- rJezN9qa+mrqXqGh/I+XvnSjHmYks7kxJCYLQMP4yxZMx8N+/17vE4RWgi60RVjBwYXODl609
- KU72gX5MSH7PFfdbHCWxx9uhHmEUUhAU0PNC1hfrmkb6yuIm5XHsItTsr38EIEA4pqenYF/dH
- 8LOWOquyMGiAeAU2iJ/r3Im1Q4n9M7xrQKd/QggCOeUFf8bgOCY2kjrmbtfLwUlkEeSPQ8lkC
- swE9PZjFcaR4OJALxRQwRcbUJ1pQje5Ub3Uy9mctMHb+ax7Aul8YfYQOnd7G1RaEeeVWcN4yv
- Qcej+hpbvr93zbOrzVAGz3HKWiwSISlYgoncD70jJCBIDC35Bt3tVdJ3nsPdyXaAVGg/1EJ+h
- X1ONviOAae0Zc2rwmlE6MoglMXvw3WHWuC3qjCGx2Fc+CqmEDvPgfgr/1Z2GNUqMABo4hxMRo
- QpqD9UzJHsllNJ2i8kOeSZovJNaSGR58eSNYX8qN7O0ds=
+Content-Transfer-Encoding: 8bit
 
->                                             =E2=80=A6 by mistake.In the =
-result,
-=E2=80=A6
+Add new field "cpu_entry" to bpf_perf_event_data which could be read by
+bpf programs attached to perf events. The value contains the CPU value
+recorded by specifying sample_type with PERF_SAMPLE_CPU when calling
+perf_event_open().
 
-I propose once more to start the second sentence of this change descriptio=
-n
-on a subsequent line.
+Signed-off-by: Florian Lehner <dev@der-flo.net>
+---
+ include/uapi/linux/bpf_perf_event.h       |  4 ++++
+ kernel/trace/bpf_trace.c                  | 13 +++++++++++++
+ tools/include/uapi/linux/bpf_perf_event.h |  4 ++++
+ 3 files changed, 21 insertions(+)
 
-> ---
-> kernel/trace/trace_probe.c | 2 +-
-=E2=80=A6
+diff --git a/include/uapi/linux/bpf_perf_event.h b/include/uapi/linux/bpf_perf_event.h
+index eb1b9d21250c..4856b4396ece 100644
+--- a/include/uapi/linux/bpf_perf_event.h
++++ b/include/uapi/linux/bpf_perf_event.h
+@@ -14,6 +14,10 @@ struct bpf_perf_event_data {
+ 	bpf_user_pt_regs_t regs;
+ 	__u64 sample_period;
+ 	__u64 addr;
++	struct {
++		u32	cpu;
++		u32	reserved;
++	}			cpu_entry;
+ };
+ 
+ #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index afb232b1d7c2..2b303221af5c 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2176,6 +2176,11 @@ static bool pe_prog_is_valid_access(int off, int size, enum bpf_access_type type
+ 		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
+ 			return false;
+ 		break;
++	case bpf_ctx_range(struct bpf_perf_event_data, cpu_entry):
++		bpf_ctx_record_field_size(info, size_u64);
++		if (!bpf_ctx_narrow_access_ok(off, size, size_u64))
++			return false;
++		break;
+ 	default:
+ 		if (size != sizeof(long))
+ 			return false;
+@@ -2208,6 +2213,14 @@ static u32 pe_prog_convert_ctx_access(enum bpf_access_type type,
+ 				      bpf_target_off(struct perf_sample_data, addr, 8,
+ 						     target_size));
+ 		break;
++	case offsetof(struct bpf_perf_event_data, cpu_entry):
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
++						       data), si->dst_reg, si->src_reg,
++				      offsetof(struct bpf_perf_event_data_kern, data));
++		*insn++ = BPF_LDX_MEM(BPF_DW, si->dst_reg, si->dst_reg,
++				      bpf_target_off(struct perf_sample_data, cpu_entry, 8,
++						     target_size));
++		break;
+ 	default:
+ 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct bpf_perf_event_data_kern,
+ 						       regs), si->dst_reg, si->src_reg,
+diff --git a/tools/include/uapi/linux/bpf_perf_event.h b/tools/include/uapi/linux/bpf_perf_event.h
+index eb1b9d21250c..4856b4396ece 100644
+--- a/tools/include/uapi/linux/bpf_perf_event.h
++++ b/tools/include/uapi/linux/bpf_perf_event.h
+@@ -14,6 +14,10 @@ struct bpf_perf_event_data {
+ 	bpf_user_pt_regs_t regs;
+ 	__u64 sample_period;
+ 	__u64 addr;
++	struct {
++		u32	cpu;
++		u32	reserved;
++	}			cpu_entry;
+ };
+ 
+ #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
+-- 
+2.44.0
 
-Unfortunately, you overlooked to add patch version descriptions behind the=
- marker line.
-
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc5#n713
-
-Regards,
-Markus
