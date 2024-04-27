@@ -1,79 +1,103 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF1044C66;
-	Sat, 27 Apr 2024 07:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38483376EC;
+	Sat, 27 Apr 2024 07:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714202661; cv=none; b=GhDaDqVU1CTGq013RjbZLbyZ+bnGv5gGxBDVnVIu3ckoeII/GsLcjhc6v/RtARvDfeKbxC2PN+ebUezyY755dxrRIk8OQiMXLjvLxbRdBWL0HbVoQ/VwVosp2dKYRhdvFz4/owAmbIpik3tYberIo95Z3CGk+s9xaUd7rHLV62s=
+	t=1714203652; cv=none; b=UY1otfYt7LzaThluwcz4PqDrjfBzo61C7gJOuXywvhysJTpledZs9sAClSmpGbrhWsVaDYCRzEAtXTdjuME8dCcDRfEm/qFUQdGYxefw2bjVfD7emapmOtWMAuF3jXo1Vh2z/rLwUjLjEWcjSxcwFcRw3oXQR2lrYtRkq1/TDEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714202661; c=relaxed/simple;
-	bh=kVpt3QCfeLtXIelAdzKX2iKyg7vRXdCkERS8lVfaMMA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Znp7bzUyWqiPi1hvL7eOQ5jkeXZSXA7KtPzI0npT+sdYDQW9UvCZePriBOjCkJsRnsOgeb7vqqOT0/mSO9lzFrqSi3h35gFDZcyyTr2IOxYr7gbSXR7voy4OJrw3Iswmx7zHki44Gvn5+bKJjtRH0Nzoo55iAeu0jqWcqQkNFZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=QTYC1/4+; arc=none smtp.client-ip=117.135.210.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1714203652; c=relaxed/simple;
+	bh=CzgUKxV1DiRGrX9zQXzZL6Gotui8EXJUqYQ3eQT9fT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EldON3TuhubwZAoNWjdObGunaICbj7oTMsx5nhciB0CMEiZ76f/cBRB9AJTeoRbsLyAv6WPgwpS4WlNdUhZ8IP6in0Aflo7GIy7d0cFxduAzBPcQ9JYnLlP5wI90lnkBr/+olVU+D5IPfDqqastftUc2DBKBdaTuhXzRdhnLui4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gEqEbcAY; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="QTYC1/4+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=idpVf
-	whektHky8Wqw0Sjx7L9bi6195lOk5IVtrio3Ic=; b=QTYC1/4+/z+87vx6EwoRY
-	gybFcCijs1mUEnSOI6kHW/mwMrlXhX4jMu6196BiHtIvYoQ5ThTlR1lHSRhGmWwh
-	5RJy1OAIKthHwAsw6lE5YtcKvNgq9ZTLKirA0xamUiRMDIx5c1OspDYMEvaN7Vd3
-	jakqtpa8J/apTCmwI98guI=
-Received: from localhost.localdomain (unknown [111.198.54.11])
-	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wDX_7sEqCxm42oFBg--.44942S2;
-	Sat, 27 Apr 2024 15:23:49 +0800 (CST)
-From: lumingyindetect@126.com
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	LuMingYin <lumingyindetect@126.com>
-Subject: [PATCH v3] tracing/probes: Fix memory leak in traceprobe_parse_probe_arg_body()
-Date: Sat, 27 Apr 2024 08:23:47 +0100
-Message-Id: <20240427072347.1421053-1-lumingyindetect@126.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gEqEbcAY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714203646;
+	bh=CzgUKxV1DiRGrX9zQXzZL6Gotui8EXJUqYQ3eQT9fT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gEqEbcAYbNH1Cl76LGX0IqteTFz6QZM2G7WkdPY5ve6JFJe7QvQdYePk2UkJVcvTR
+	 6u5FIHxh7+/FsU6vrbi0R0NpqVH+T4CvlFrv7BQ8Kzndu1PmGsnulYTnxUn5nJrEUi
+	 e3WiuV0em4CHQ+eAmWIJfWacyiMhggB7HEWeZqN8=
+Date: Sat, 27 Apr 2024 09:40:43 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>
+Cc: Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <38a87a0f-02c7-4072-9342-8f6697ea1a17@t-8ch.de>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240424201234.3cc2b509@kernel.org>
+ <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDX_7sEqCxm42oFBg--.44942S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1DGF47KF48WryDCF45KFg_yoWDArcEya
-	ykG3WkJr4UCrsrurWfJrs2qrWqkF1rWrykuw12qFZ8J34UJr13W3Z8C3ZYqrZ5WFyqqF97
-	JwnxWr1kuF1rKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU01SoJUUUUU==
-X-CM-SenderInfo: poxpx0hj1l0vphwhu3a6rslhhfrp/1tbi6B-N9mVLbEsaYgABs8
+In-Reply-To: <9e657181-866a-4626-82d0-e0030051b003@t-8ch.de>
 
-From: LuMingYin <lumingyindetect@126.com>
+On 2024-04-25 09:10:27+0000, Thomas Weißschuh wrote:
+> On 2024-04-24 20:12:34+0000, Jakub Kicinski wrote:
+> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
+> > > The series was split from my larger series sysctl-const series [0].
+> > > It only focusses on the proc_handlers but is an important step to be
+> > > able to move all static definitions of ctl_table into .rodata.
+> > 
+> > Split this per subsystem, please.
+> 
+> Unfortunately this would introduce an enormous amount of code churn.
+> 
+> The function prototypes for each callback have to stay consistent.
+> So a another callback member ("proc_handler_new") is needed and users
+> would be migrated to it gradually.
+> 
+> But then *all* definitions of "struct ctl_table" throughout the tree need to
+> be touched.
+> In contrast, the proposed series only needs to change the handler
+> implementations, not their usage sites.
+> 
+> There are many, many more usage sites than handler implementations.
+> 
+> Especially, as the majority of sysctl tables use the standard handlers
+> (proc_dostring, proc_dobool, ...) and are not affected by the proposed
+> aproach at all.
+> 
+> And then we would have introduced a new handler name "proc_handler_new"
+> and maybe have to do the whole thing again to rename it back to
+> the original and well-known "proc_handler".
 
-If traceprobe_parse_probe_arg_body() failed to allocate 'parg->fmt',
-it jumps to the label 'out' instead of 'fail' by mistake.In the result,
-the buffer 'tmp' is not freed in this case and leaks its memory.
+This aproach could be optimized by only migrating the usages of the
+custom handler implementations to "proc_handler_new".
+After this we could move over the core handlers and "proc_handler" in
+one small patch that does not need to touch the usages sites.
 
-Thus jump to the label 'fail' in that error case.
+Afterwards all non-core usages would be migrated back from
+"proc_handler_new" to "proc_handler" and the _new variant could be
+dropped again.
 
-Fixes: 032330abd08b ("tracing/probes: Cleanup probe argument parser")
-Signed-off-by: LuMingYin <lumingyindetect@126.com>
----
- kernel/trace/trace_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It would still be more than twice the churn of my current patch.
+And these patches would be more complex than the current
+"just add a bunch of consts, nothing else".
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index c09fa6fc636e..81c319b92038 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 		parg->fmt = kmalloc(len, GFP_KERNEL);
- 		if (!parg->fmt) {
- 			ret = -ENOMEM;
--			goto out;
-+			goto fail;
- 		}
- 		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
- 			 parg->count);
--- 
-2.25.1
+Personally I still prefer the original aproach.
 
+
+Thomas
