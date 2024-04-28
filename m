@@ -1,115 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DB6EED0;
-	Sun, 28 Apr 2024 06:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04929476;
+	Sun, 28 Apr 2024 21:24:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714287394; cv=none; b=ayp2SHFhmGd+wutBIzD6ayDbef85RnziqESmRg6c5gRUihh9nEzhXmNGTgUyFryj68TbWD3+ddD92gYmk0wesyaiAH28gSAxGUmNKMoSTESWOFVs2ebXHEgvsp8nx3l/yMXL6savh59lY49HDQkJSagBgnwuzDTl6K0KqWDqaIM=
+	t=1714339448; cv=none; b=J6J/aalKzeuoEg8Nc7IbuPuOIXqaM4BApXX90TWIIypsHSFz9N0MM+iKRVxSyV6/S3R5Rm7RnG6qI3RFSL5hUF4+WboruEG2tPz0iTHmRFbbV+nYgGprdaON0kEwC1c+GxqnmZWDAQXT+jyXhZRYagDWTJnZ2ylngMnCss3FrB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714287394; c=relaxed/simple;
-	bh=r0oXOuLVQhCBCby5vRLJpkXcTQDGNz/eiiiW5fCcIdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a3imFH0UThs4DbUDvBr+5fkIgB6IpQo/fUZaBMk5DDIGuu6KfBltQKm3BV26tnRVo16uOcU4DKhJnJ2I59yYqHD82Xet+D1osjE743YGS1JtVIrC8jKFmmvgoNfrgzmFOo9N7WUs7LKNGlDt0jRy5A0N7f5uPFo9yZE7c9o/NZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTZs9sEm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTZs9sEm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 702DBC113CC;
-	Sun, 28 Apr 2024 06:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714287393;
-	bh=r0oXOuLVQhCBCby5vRLJpkXcTQDGNz/eiiiW5fCcIdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XTZs9sEmm6/FaMuCbn9MAi43Dw5JaVHQ6Qo9kJKbgmQydz8t76xJqWvnLhWUbFuTg
-	 eamwTb265HrxR6LlvTN02ea5enG0DyL5UUA409iL+FIlWuV8f+cOfIaceW/tsQa49F
-	 k2+JGlrBeOuDTKAFlJG+dXckGS6E9qKllGv1lUiwvcOxOHi2PgVOFnk2K6JjT6mOLy
-	 8wMBJhYy7rqcZ88dgAjki/503FzqraXQOZ8LtGXr77oJlvx8mQlCJ0bpcLxvSbj8II
-	 FNv6UFgUz6gnk7tZPPzx3XToNx6Luyxbilf/EWAJ9azbxmvqxQI0iy3aMf/86QxAUL
-	 09CFFAwUkdXQQ==
-Date: Sun, 28 Apr 2024 09:55:02 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v6 08/16] mm/execmem, arch: convert remaining overrides
- of module_alloc to execmem
-Message-ID: <Zi3yxk_7rMEPp0lT@kernel.org>
-References: <20240426082854.7355-1-rppt@kernel.org>
- <20240426082854.7355-9-rppt@kernel.org>
- <CAPhsuW52MYy4Md5O=7XVGvkw395-LB+BiSadxoDdw8CrLw5t7A@mail.gmail.com>
+	s=arc-20240116; t=1714339448; c=relaxed/simple;
+	bh=kqv1IgIR76iRrqzwMb+SBclQzX24R1UAyDfTHDcutg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H4dOEM87gnYD8PC2D9gxc27z/MO+w7MAniBst8X1KXdgnY3hVkVIwpLCDp9fDHG5wrWgK7+hFZxxjxDNwkPtHiaH8f5KX3OnIatJceJ5DURJfFOxnJFqGcPZH/DpIOpnoF3xXF2gZrc4KziwyL1BmfzjhRPPkpKAXlq+Zq4vNBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C57F2C113CC;
+	Sun, 28 Apr 2024 21:24:07 +0000 (UTC)
+Date: Sun, 28 Apr 2024 17:24:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ rdunlap@infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240428172406.6eda8a17@rorschach.local.home>
+In-Reply-To: <6apbwt27afeercymrjsulrgyv4c2pj2tzqdllukf4czsbfifqo@6p23uqdjqtu7>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+	<20240406173649.3210836-3-vdonnefort@google.com>
+	<20240410134352.66d35fbc@gandalf.local.home>
+	<6apbwt27afeercymrjsulrgyv4c2pj2tzqdllukf4czsbfifqo@6p23uqdjqtu7>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW52MYy4Md5O=7XVGvkw395-LB+BiSadxoDdw8CrLw5t7A@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 26, 2024 at 12:01:34PM -0700, Song Liu wrote:
-> On Fri, Apr 26, 2024 at 1:30 AM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> >
-> > Extend execmem parameters to accommodate more complex overrides of
-> > module_alloc() by architectures.
-> >
-> > This includes specification of a fallback range required by arm, arm64
-> > and powerpc, EXECMEM_MODULE_DATA type required by powerpc, support for
-> > allocation of KASAN shadow required by s390 and x86 and support for
-> > late initialization of execmem required by arm64.
-> >
-> > The core implementation of execmem_alloc() takes care of suppressing
-> > warnings when the initial allocation fails but there is a fallback range
-> > defined.
-> >
-> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> > Acked-by: Will Deacon <will@kernel.org>
+On Tue, 23 Apr 2024 12:04:15 -0400
+"Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
+
+> > Nit: For all labels, please add a space before them. Otherwise, diffs will
+> > show "unlock" as the function and not "ring_buffer_map", making it harder
+> > to find where the change is.
+> >   
 > 
-> nit: We should probably move the logic for ARCH_WANTS_EXECMEM_LATE
-> to a separate patch.
+> Isn't the inclusion of a space before labels outdate since 'git diff'
+> superseds 'diff' and fixed this issue?
 
-This would require to split arm64 and I prefer to keep all these changes
-together. 
+I still use patch and quilt ;-) and that still suffers from that on
+reject files (used for backporting and such).
 
-> Otherwise,
-> 
-> Acked-by: Song Liu <song@kernel.org>
- 
-Thanks!
-
--- 
-Sincerely yours,
-Mike.
+-- Steve
