@@ -1,133 +1,205 @@
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9324E77F32
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Apr 2024 14:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C323C745C5;
+	Mon, 29 Apr 2024 14:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714401988; cv=none; b=lpvdb9kEBWXoAP0Vc17WCkd2p3g6usXBg2F3L7t8OLIvv86TzJb/R5S+lvDO1FPzzMhlqrjQD/Bx2kecLkJE5llipaW9xFLzOif0Ff0cfyXqxojqwnchfF8pqiKyvg5k+bIhe/G9n8sFJ/DLgiVxfN8DtSW3U8fYOOKyOCOQWjM=
+	t=1714402579; cv=none; b=i93Mn8Di+UeLNAUG6dMOHvDdBA++3xsEtbJbnLRKTmrRHV+n+8JoQUlXJ3g1IJ/oCeTzW9rWopzz/WfxRdemgZAtALblBHSGgv1LSJ5hG420Xrbn2OSeNKAS9tcCCZnsrvvMdSnzcEcoPNopE/SoucYRw+HiFUHPVG83/3GNp/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714401988; c=relaxed/simple;
-	bh=ZPYXNWtZgVhgJXwEodlMEK1xGAdzBeNDB4Dn1jTvHBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zs/jf91GyYoQdv38tgsbv0Q7nzJpCAN477M7MoHhpZ485zlKhHNrcMM85jmce/NcsafqtstDYhnkz8GsAtkX2WU18TwZJTVHoL7IZGNKDoLxWgDStTIdZVbPNuzPwGODrC94U5peZrW+VtaVfDpAlprx0VFKDpE4fZZCjvf9d9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=1vmX3/lo; arc=none smtp.client-ip=45.157.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1714402579; c=relaxed/simple;
+	bh=fCYjkbds6+k3U7rGawEZ2BQELDslwiIzCq0b1cVevoY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rjsw3FRb4qzUxMt2CaG8Mwk0XWJ8kdbtT1IbZTUJyun20WVcqGe/tSrcCE3RDGPdnbgq7GcC9H6wciKTMEP8PEp39JyslsYbdViV044tkypKp4M0ALB5D4++Lvt7ohY/k2cR4L1u0991cPG49R+PcNDMPFLCnD7LFedQmqDqTqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+p+QHU3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="1vmX3/lo"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VSmNs2sPczCVc;
-	Mon, 29 Apr 2024 16:46:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1714401981;
-	bh=ZPYXNWtZgVhgJXwEodlMEK1xGAdzBeNDB4Dn1jTvHBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1vmX3/lolLE2GryXLD5Hs8sDa+5RkY9f+2t2tMX3X8Sj73JCWdcxofA58YW4Ca/x/
-	 G5gOzMcK9hwKO/RRz0XkLpWUG23sL0s4+Uto2tnBN5meKCF/5xBuQP/nelUmAC0726
-	 TRgZvxv62ryr6+PsJDP9ESy1la6P8WDOtIptXfK0=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VSmNr6DWfzFnV;
-	Mon, 29 Apr 2024 16:46:20 +0200 (CEST)
-Date: Mon, 29 Apr 2024 16:46:19 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Ubisectech Sirius <bugreport@ubisectech.com>
-Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: =?utf-8?B?5Zue5aSN77yaV0FSTklO?= =?utf-8?Q?G?= in
- current_check_refer_path
-Message-ID: <20240429.ieR4Ajeitee5@digikod.net>
-References: <c426821d-8380-46c4-a494-7008bbd7dd13.bugreport@ubisectech.com>
- <20240429.Iyohkaimiep1@digikod.net>
- <d36cf38a-a22a-44ec-b606-b58ccc559a47.bugreport@ubisectech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+p+QHU3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D10C113CD;
+	Mon, 29 Apr 2024 14:56:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714402579;
+	bh=fCYjkbds6+k3U7rGawEZ2BQELDslwiIzCq0b1cVevoY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i+p+QHU3Yvn2nxaT5tP2uoTDxPHU1gIBRx2z8tmHGgbXJxhYr/uO/MFSS972M0lT+
+	 7XcC1A3MuPiAt5nCWDQDSqOAJZI8X76SieMpvJZ4Oey+fNANRjJMr9QhOSRtYy7srz
+	 iDQM6md2m5pNDLv1aJzmA724kLUWclE+Ih1L+lzqpgpmE/k3yDOqRP1PrOMNbNDmGf
+	 ObgZi5rTDRglasez2L9rpHn2y/6XJTwsa5YCtEAiYezewA0RXCTBpkyFbw5Ra3mOq2
+	 eP27rft7AYo4v1iw61sAvgex52Oe1bgORaJCRGZcyO4BdiAAkvq1cl2OYizlAMx755
+	 NsAwfiuVNLXVw==
+Date: Mon, 29 Apr 2024 23:56:13 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v9 36/36] fgraph: Skip recording calltime/rettime if it
+ is not nneeded
+Message-Id: <20240429235613.784fa3266d15047af3e467df@kernel.org>
+In-Reply-To: <CAEf4BzZz_4RGyam5GW6Do3Z-sCtk2Cj2D6rYyciYOcJihKdDww@mail.gmail.com>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+	<171318575984.254850.17464878774926779209.stgit@devnote2>
+	<CAEf4BzZz_4RGyam5GW6Do3Z-sCtk2Cj2D6rYyciYOcJihKdDww@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d36cf38a-a22a-44ec-b606-b58ccc559a47.bugreport@ubisectech.com>
-X-Infomaniak-Routing: alpha
 
-On Mon, Apr 29, 2024 at 05:16:57PM +0800, Ubisectech Sirius wrote:
-> > Hello,
-> 
-> > Thanks for the report.  Could you please provide a reproducer?
-> 
-> > Regards,
-> > Mickaël
-> 
-> Hi.
->   The Poc file has seed to you as attachment.
+On Thu, 25 Apr 2024 13:15:08 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-Indeed, but could you please trim down the file. There are 650 lines,
-most of them are irrelevant.
+> On Mon, Apr 15, 2024 at 6:25 AM Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
+> >
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > Skip recording calltime and rettime if the fgraph_ops does not need it.
+> > This is a kind of performance optimization for fprobe. Since the fprobe
+> > user does not use these entries, recording timestamp in fgraph is just
+> > a overhead (e.g. eBPF, ftrace). So introduce the skip_timestamp flag,
+> > and all fgraph_ops sets this flag, skip recording calltime and rettime.
+> >
+> > Suggested-by: Jiri Olsa <olsajiri@gmail.com>
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  Changes in v9:
+> >   - Newly added.
+> > ---
+> >  include/linux/ftrace.h |    2 ++
+> >  kernel/trace/fgraph.c  |   46 +++++++++++++++++++++++++++++++++++++++-------
+> >  kernel/trace/fprobe.c  |    1 +
+> >  3 files changed, 42 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index d845a80a3d56..06fc7cbef897 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -1156,6 +1156,8 @@ struct fgraph_ops {
+> >         struct ftrace_ops               ops; /* for the hash lists */
+> >         void                            *private;
+> >         int                             idx;
+> > +       /* If skip_timestamp is true, this does not record timestamps. */
+> > +       bool                            skip_timestamp;
+> >  };
+> >
+> >  void *fgraph_reserve_data(int idx, int size_bytes);
+> > diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> > index 7556fbbae323..a5722537bb79 100644
+> > --- a/kernel/trace/fgraph.c
+> > +++ b/kernel/trace/fgraph.c
+> > @@ -131,6 +131,7 @@ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+> >  int ftrace_graph_active;
+> >
+> >  static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+> > +static bool fgraph_skip_timestamp;
+> >
+> >  /* LRU index table for fgraph_array */
+> >  static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
+> > @@ -475,7 +476,7 @@ void ftrace_graph_stop(void)
+> >  static int
+> >  ftrace_push_return_trace(unsigned long ret, unsigned long func,
+> >                          unsigned long frame_pointer, unsigned long *retp,
+> > -                        int fgraph_idx)
+> > +                        int fgraph_idx, bool skip_ts)
+> >  {
+> >         struct ftrace_ret_stack *ret_stack;
+> >         unsigned long long calltime;
+> > @@ -498,8 +499,12 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+> >         ret_stack = get_ret_stack(current, current->curr_ret_stack, &index);
+> >         if (ret_stack && ret_stack->func == func &&
+> >             get_fgraph_type(current, index + FGRAPH_RET_INDEX) == FGRAPH_TYPE_BITMAP &&
+> > -           !is_fgraph_index_set(current, index + FGRAPH_RET_INDEX, fgraph_idx))
+> > +           !is_fgraph_index_set(current, index + FGRAPH_RET_INDEX, fgraph_idx)) {
+> > +               /* If previous one skips calltime, update it. */
+> > +               if (!skip_ts && !ret_stack->calltime)
+> > +                       ret_stack->calltime = trace_clock_local();
+> >                 return index + FGRAPH_RET_INDEX;
+> > +       }
+> >
+> >         val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_RET_INDEX;
+> >
+> > @@ -517,7 +522,10 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+> >                 return -EBUSY;
+> >         }
+> >
+> > -       calltime = trace_clock_local();
+> > +       if (skip_ts)
+> 
+> would it be ok to add likely() here to keep the least-overhead code path linear?
+
+It's not "likely", but hmm, yes as you said. We can keep the least overhead.
+OK, let me add likely. 
+
+Thank you,
 
 > 
-> > On Sun, Apr 28, 2024 at 10:47:02AM +0800, Ubisectech Sirius wrote:
-> >> Hello.
-> >> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
-> >> 
-> >> Stack dump:
-> >> 
-> > > loop3: detected capacity change from 0 to 1024
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 0 PID: 30368 at security/landlock/fs.c:598 get_mode_access security/landlock/fs.c:598 [inline]
-> > > WARNING: CPU: 0 PID: 30368 at security/landlock/fs.c:598 get_mode_access security/landlock/fs.c:578 [inline]
-> > > WARNING: CPU: 0 PID: 30368 at security/landlock/fs.c:598 current_check_refer_path+0x955/0xa60 security/landlock/fs.c:758
-> > > Modules linked in:
-> > > CPU: 0 PID: 30368 Comm: syz-executor.3 Not tainted 6.7.0 #2
-> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> > > RIP: 0010:get_mode_access security/landlock/fs.c:598 [inline]
-> > > RIP: 0010:get_mode_access security/landlock/fs.c:578 [inline]
-> > > RIP: 0010:current_check_refer_path+0x955/0xa60 security/landlock/fs.c:758
-> > > Code: e9 76 fb ff ff 41 bc fe ff ff ff e9 6b fb ff ff e8 00 99 77 fd 90 0f 0b 90 41 bc f3 ff ff ff e9 57 fb ff ff e8 ec 98 77 fd 90 <0f> 0b 90 31 db e9 86 f9 ff ff bb 00 08 00 00 e9 7c f9 ff ff 41 ba
-> > > RSP: 0018:ffffc90001fb7ba0 EFLAGS: 00010212
-> > > RAX: 0000000000000bc5 RBX: ffff88805feeb7b0 RCX: ffffc90006e15000
-> > > RDX: 0000000000040000 RSI: ffffffff84125d64 RDI: 0000000000000003
-> > > RBP: ffff8880123c5608 R08: 0000000000000003 R09: 000000000000c000
-> > > R10: 000000000000f000 R11: 0000000000000000 R12: ffff88805d32fc00
-> > > R13: ffff8880123c5608 R14: 0000000000000000 R15: 0000000000000001
-> > > FS:  00007fd70c4d8640(0000) GS:ffff88802c600000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000001b2c136000 CR3: 000000005b2a0000 CR4: 0000000000750ef0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > PKRU: 55555554
-> > > Call Trace:
-> > >  <TASK>
-> > >  security_path_rename+0x124/0x230 security/security.c:1828
-> > >  do_renameat2+0x9f6/0xd30 fs/namei.c:4983
-> > >  __do_sys_rename fs/namei.c:5042 [inline]
-> > >  __se_sys_rename fs/namei.c:5040 [inline]
-> > >  __x64_sys_rename+0x81/0xa0 fs/namei.c:5040
-> > >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> > >  do_syscall_64+0x43/0x120 arch/x86/entry/common.c:83
-> > >  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-> > > RIP: 0033:0x7fd70b6900ed
-> > > Code: c3 e8 97 2b 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> > > RSP: 002b:00007fd70c4d8028 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-> > > RAX: ffffffffffffffda RBX: 00007fd70b7cbf80 RCX: 00007fd70b6900ed
-> >>  RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000020000100
-> > > RBP: 00007fd70b6f14a6 R08: 0000000000000000 R09: 0000000000000000
-> > > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > > R13: 000000000000000b R14: 00007fd70b7cbf80 R15: 00007fd70c4b8000
-> > >  </TASK>
-> > > 
-> > > Thank you for taking the time to read this email and we look forward to working with you further.
-> > > 
-> > > 
-> > > 
-> > > 
-> > > 
-> > > 
-> > 
-> > 
-> > 
+> > +               calltime = 0LL;
+> > +       else
+> > +               calltime = trace_clock_local();
+> >
+> >         index = READ_ONCE(current->curr_ret_stack);
+> >         ret_stack = RET_STACK(current, index);
+> > @@ -601,7 +609,8 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
+> >         trace.func = func;
+> >         trace.depth = ++current->curr_ret_depth;
+> >
+> > -       index = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0);
+> > +       index = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0,
+> > +                                        fgraph_skip_timestamp);
+> >         if (index < 0)
+> >                 goto out;
+> >
+> > @@ -654,7 +663,8 @@ int function_graph_enter_ops(unsigned long ret, unsigned long func,
+> >                 return -ENODEV;
+> >
+> >         /* Use start for the distance to ret_stack (skipping over reserve) */
+> > -       index = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx);
+> > +       index = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx,
+> > +                                        gops->skip_timestamp);
+> >         if (index < 0)
+> >                 return index;
+> >         type = get_fgraph_type(current, index);
+> > @@ -732,6 +742,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+> >         *ret = ret_stack->ret;
+> >         trace->func = ret_stack->func;
+> >         trace->calltime = ret_stack->calltime;
+> > +       trace->rettime = 0;
+> >         trace->overrun = atomic_read(&current->trace_overrun);
+> >         trace->depth = current->curr_ret_depth;
+> >         /*
+> > @@ -792,7 +803,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+> >                 return (unsigned long)panic;
+> >         }
+> >
+> > -       trace.rettime = trace_clock_local();
+> >         if (fregs)
+> >                 ftrace_regs_set_instruction_pointer(fregs, ret);
+> >
+> > @@ -808,6 +818,8 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+> >                         continue;
+> >                 if (gops == &fgraph_stub)
+> >                         continue;
+> > +               if (!trace.rettime && !gops->skip_timestamp)
 > 
+> In addition to the above, do you mind adding unlikely() here as well?
 > 
+> > +                       trace.rettime = trace_clock_local();
+> >
+> >                 gops->retfunc(&trace, gops, fregs);
+> >         }
+> 
+> [...]
 
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
