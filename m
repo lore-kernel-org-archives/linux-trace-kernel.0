@@ -1,186 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79014745C5;
-	Mon, 29 Apr 2024 14:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A1D82881;
+	Mon, 29 Apr 2024 16:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714402641; cv=none; b=OtFiXc9MHab4IdbSfSwcrMeM12cIGv7EX6ixjfFo+KDpukTYuLsoQTEp3zRVW+R+ta92K4IgzuJida9IV5PrpszcHfTUluXrEBLaOW2Uw31onJRN85KPX29k0/EKl8AkTU5rZXI1Fk+qaeIrqF5gyTNfjsSv0ClP6Zrdi0pRhlk=
+	t=1714408168; cv=none; b=pwiPNM0dnd8a5olKvq6zlCrnLQ/ZJSnZX+wLMcxq6hOo7ZbXZ6ukZWBfPxK2Ne/34VzfZ37Y5Yv8WPYfnl3XZ1NsbnAu8eZ/jE2/1LOW59bYvPw8wVooiaa2qIu7XQ7j+Yqu4Ny7rsj4X4l/3eh7QAjFDv8J+Souq13vJCUP1ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714402641; c=relaxed/simple;
-	bh=hWivQfQuF0fT04SNK+ienLT/ACa8KyiRA5sWZVweDL0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=toco0n/mVdCQ8J7dD6upI4zaY1sMHhf5yDD8uezJ4oiHDCnMzsGUQkjNp8YHnThexxiQnud9uMJG1wwqRrLUdEAZ9aSlAdvKHyedmuxPY3S398UVtw1MdmzCFBkT50LcYyXN/8PYVAZWPRqGxVh63ObAO/r7hS2lIRszjlbNtFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=knUO9XcY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714408168; c=relaxed/simple;
+	bh=nYPavCCoxidSZbCRihx8B881f2cuJlxE/5foMBuO5Lc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxSGEYurpSFh7g0ZnhocmQfmGn6KTOTDr8X6IcILLXDqE9myECmUnm5g1PlD1nlXYh7uDaFaNiJjCc7d3ycXSrDFSB01cfGqJ4+jleC7fXABHMzBElanKBoI0gonu9N0b/VKdps6TiOj9voIg5tBLuzQrU17AzCJSyl3w3nS0g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WeJYpsdE; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="knUO9XcY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05D58C113CD;
-	Mon, 29 Apr 2024 14:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714402641;
-	bh=hWivQfQuF0fT04SNK+ienLT/ACa8KyiRA5sWZVweDL0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=knUO9XcY4eGnQctWABveJeL0qRZmdybzZ834JWlQaEIXJ+2ElpTriIqFU9x5Y8R+d
-	 30zsFdVFpC4mqRED4c3tkyQISWeOWgX42OSKkPZGlHoDtu82gNa8SxpmuG7hjYxC6t
-	 Cz/k3L5UAFdloPiRpd1r+EoaRLG8emYBjiS012e5+6L2M0ud1O4cy7IdpOP5a8e924
-	 10PdGhurGmH83ffIg5bJjYJUK3cgGllmHWeAQ6447ejo+RSme6Zfmi+fIwME8ulx1W
-	 OkcHGTFolS8rdOrRkHO5Gam0a+nganFmdEwPoJ8QML7UH5TzD5kte9J1B3l6oCBeTd
-	 54Sz03oE8dqoQ==
-Date: Mon, 29 Apr 2024 23:57:14 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v9 29/36] bpf: Enable kprobe_multi feature if
- CONFIG_FPROBE is enabled
-Message-Id: <20240429235714.54135bc2d6dfcf4d0e338c46@kernel.org>
-In-Reply-To: <CAEf4BzZ2cZ-jJDj3Qdc4T_9FmCK21Ae-mr-d2RJRMtdUK8HOjQ@mail.gmail.com>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-	<171318568081.254850.16193015880509111721.stgit@devnote2>
-	<CAEf4BzZ2cZ-jJDj3Qdc4T_9FmCK21Ae-mr-d2RJRMtdUK8HOjQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WeJYpsdE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KPqOap7oAAWDfgBIlLA+hhXhc3DGpgBlCQEjbi7Mkqg=; b=WeJYpsdE3pzRcYrUgXjXEHgq2F
+	Au0hu0pqNCFmhBhQ4KGrogKlFJGZwGMtM4SyFfUKNtbHcOXXep7Vnw+z0PRJndd8b2PkadZ7Zn3Ac
+	Bd44/JfmM5Zohl7D4h0zs8FSYQcvvYKs6qMG9ibpx1uCS9buAn8FVT19gnFMrXXiB2+gKId3huUSy
+	Z2Zftq+4UXv2spyyS8wfG+0A+n484k0N00StfXYvvfIeI6X9PrVp1Y56s2LcwAI5R44Jnehlf0rFO
+	PZ4u2QpnVH6ViWEp0fgDMWG03NWBmgbJMYFGUg1CJuVS0paDnd1njBSdL5tf7bYmwL6Z0+5iy1/L0
+	Lihz29cw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s1TsW-00000003aGE-0Yao;
+	Mon, 29 Apr 2024 16:29:20 +0000
+Date: Mon, 29 Apr 2024 09:29:20 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v7 00/16] mm: jit/text allocator
+Message-ID: <Zi_K4K-j-VB_WI4i@bombadil.infradead.org>
+References: <20240429121620.1186447-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240429121620.1186447-1-rppt@kernel.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Thu, 25 Apr 2024 13:09:32 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Mon, Apr 15, 2024 at 6:22 AM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Enable kprobe_multi feature if CONFIG_FPROBE is enabled. The pt_regs is
-> > converted from ftrace_regs by ftrace_partial_regs(), thus some registers
-> > may always returns 0. But it should be enough for function entry (access
-> > arguments) and exit (access return value).
-> >
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Acked-by: Florent Revest <revest@chromium.org>
-> > ---
-> >  Changes from previous series: NOTHING, Update against the new series.
-> > ---
-> >  kernel/trace/bpf_trace.c |   22 +++++++++-------------
-> >  1 file changed, 9 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index e51a6ef87167..57b1174030c9 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -2577,7 +2577,7 @@ static int __init bpf_event_init(void)
-> >  fs_initcall(bpf_event_init);
-> >  #endif /* CONFIG_MODULES */
-> >
-> > -#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
-> > +#ifdef CONFIG_FPROBE
-> >  struct bpf_kprobe_multi_link {
-> >         struct bpf_link link;
-> >         struct fprobe fp;
-> > @@ -2600,6 +2600,8 @@ struct user_syms {
-> >         char *buf;
-> >  };
-> >
-> > +static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
+On Mon, Apr 29, 2024 at 03:16:04PM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > 
-> this is a waste if CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST=y, right?
-> Can we guard it?
-
-Good catch! Yes, we can guard it.
-
+> Hi,
 > 
+> The patches are also available in git:
+> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v7
 > 
-> > +
-> >  static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
-> >  {
-> >         unsigned long __user usymbol;
-> > @@ -2792,13 +2794,14 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
-> >
-> >  static int
-> >  kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
-> > -                          unsigned long entry_ip, struct pt_regs *regs)
-> > +                          unsigned long entry_ip, struct ftrace_regs *fregs)
-> >  {
-> >         struct bpf_kprobe_multi_run_ctx run_ctx = {
-> >                 .link = link,
-> >                 .entry_ip = entry_ip,
-> >         };
-> >         struct bpf_run_ctx *old_run_ctx;
-> > +       struct pt_regs *regs;
-> >         int err;
-> >
-> >         if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
-> > @@ -2809,6 +2812,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
-> >
-> >         migrate_disable();
-> >         rcu_read_lock();
-> > +       regs = ftrace_partial_regs(fregs, this_cpu_ptr(&bpf_kprobe_multi_pt_regs));
-> 
-> and then pass NULL if defined(CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST)?
+> v7 changes:
+> * define MODULE_{VADDR,END} for riscv32 to fix the build and avoid
+>   #ifdefs in a function body
+> * add Acks, thanks everybody
 
-Indeed.
+Thanks, I've pushed this to modules-next for further exposure / testing.
+Given the status of testing so far with prior revisions, in that only a
+few issues were found and that those were fixed, and the status of
+reviews, this just might be ripe for v6.10.
 
-Thank you!
-
-> 
-> 
-> >         old_run_ctx = bpf_set_run_ctx(&run_ctx.run_ctx);
-> >         err = bpf_prog_run(link->link.prog, regs);
-> >         bpf_reset_run_ctx(old_run_ctx);
-> > @@ -2826,13 +2830,9 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
-> >                           void *data)
-> >  {
-> >         struct bpf_kprobe_multi_link *link;
-> > -       struct pt_regs *regs = ftrace_get_regs(fregs);
-> > -
-> > -       if (!regs)
-> > -               return 0;
-> >
-> >         link = container_of(fp, struct bpf_kprobe_multi_link, fp);
-> > -       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-> > +       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
-> >         return 0;
-> >  }
-> >
-> > @@ -2842,13 +2842,9 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
-> >                                void *data)
-> >  {
-> >         struct bpf_kprobe_multi_link *link;
-> > -       struct pt_regs *regs = ftrace_get_regs(fregs);
-> > -
-> > -       if (!regs)
-> > -               return;
-> >
-> >         link = container_of(fp, struct bpf_kprobe_multi_link, fp);
-> > -       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-> > +       kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
-> >  }
-> >
-> >  static int symbols_cmp_r(const void *a, const void *b, const void *priv)
-> > @@ -3107,7 +3103,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
-> >         kvfree(cookies);
-> >         return err;
-> >  }
-> > -#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> > +#else /* !CONFIG_FPROBE */
-> >  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
-> >  {
-> >         return -EOPNOTSUPP;
-> >
-> >
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+  Luis
