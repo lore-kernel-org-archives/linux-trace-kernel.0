@@ -1,121 +1,242 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F451805E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Apr 2024 09:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D8A17C79;
+	Mon, 29 Apr 2024 09:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714381572; cv=none; b=Ftj7keVdm76FzcDyvLGdQz24pOiyAMeH2fcbQtBJtyTBJe02Ij6yfqOneaLD69T+0s2aSpnV4eF0w1AlG9YZadLyIpdbPJ/pJroVvXzg+OK11wJgTQ9ZmFFXukjhRt1ueJADsJM2HJ6wWEvLQOVj7bX5QU5Vei6HdUWszP9EphI=
+	t=1714382194; cv=none; b=uI08aOqkLqLadBowdms7XiFgPh0ufp+7dg1FuovP8Kyg3UEEe9yu9ahEIZD8D4dswH1K7OVTbuJAjQmj1XRcdKXrRRg9rXg6HtcHa/FkPdwsJVog2xyORHq8aqKMS4p48/SG0s2VzJsxae1hNGMm9FrEd3ISNfDVeHUdXFX4ygQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714381572; c=relaxed/simple;
-	bh=6QSdsHqXmjiy2eCJHSMoPHbKVj1pDTBgIPAJiVpJaoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XPhNKEYPcKFBzIzeUXP6Ry/xKjLWICnIFLwqDmAPHLErOCLWvQuiAkUrISNY2OlTR+YxibVO4LJR52d7ZsXFiSfSK9ZNkcr2hbjJQp9/QJpAhfg41UI/bFtBVnaDstO3imE/p9KtGiHv6dfMCeaBFFXYDn6NkhcnoFfuYOWkPGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=I1FjnPc6; arc=none smtp.client-ip=45.157.188.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="I1FjnPc6"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VScr625p2zK7f;
-	Mon, 29 Apr 2024 11:05:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1714381558;
-	bh=6QSdsHqXmjiy2eCJHSMoPHbKVj1pDTBgIPAJiVpJaoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I1FjnPc6RJDkGPLvFVxfn7qitGFCSS6RhBo3HVRbbWJErHmjo/REgoHtFV0sCZT+B
-	 eQqlNp2GNc6YnAv2rqtDiYGDOzovhqd8eEfl9RQdPEeGaw5kjisj5MukCSfrTykWir
-	 g+jz50DRgB3DH8sYU4vDov8CjZ5IEM+DI7V98AOk=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VScr55fcbz4vX;
-	Mon, 29 Apr 2024 11:05:57 +0200 (CEST)
-Date: Mon, 29 Apr 2024 11:05:56 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Ubisectech Sirius <bugreport@ubisectech.com>
-Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-security-module@vger.kernel.org, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: WARNING in current_check_refer_path
-Message-ID: <20240429.Iyohkaimiep1@digikod.net>
-References: <c426821d-8380-46c4-a494-7008bbd7dd13.bugreport@ubisectech.com>
+	s=arc-20240116; t=1714382194; c=relaxed/simple;
+	bh=TZaXfDgPaZgcxEi+ra9/iPiMANbZYn4vjy5qATk3lbw=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=T9CIM7coBGpJkR7OauBS6TpKZcfsd6et+ZSTTFFak9jlAeHNVWEifk3cRS22ZJHmWl5dWvQdvNULJ3ztje2+0cSxHSo1eCmFOxQ+VEDp5p2OcXuARNrPksfBgOnjb7zsO83Yl8VnXXsxOwII+CJJpYIKuR/5zST5e7dqPzzU9ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VSd482mZtz4xPGH;
+	Mon, 29 Apr 2024 17:16:24 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl2.zte.com.cn with SMTP id 43T9Fti6063422;
+	Mon, 29 Apr 2024 17:15:55 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp03[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Mon, 29 Apr 2024 17:15:57 +0800 (CST)
+Date: Mon, 29 Apr 2024 17:15:57 +0800 (CST)
+X-Zmail-TransId: 2afb662f654d799-db7cc
+X-Mailer: Zmail v1.0
+Message-ID: <20240429171557482x0zswaWhCLkpHecR3bZqb@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c426821d-8380-46c4-a494-7008bbd7dd13.bugreport@ubisectech.com>
-X-Infomaniak-Routing: alpha
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <edumazet@google.com>, <kuba@kernel.org>
+Cc: <horms@kernel.org>, <davem@davemloft.net>, <rostedt@goodmis.org>,
+        <mhiramat@kernel.org>, <dsahern@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <ran.xiaokai@zte.com.cn>,
+        <zhang.run@zte.com.cn>, <wang.haoyi@zte.com.cn>, <si.hao@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY4XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZMKgwqA=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 43T9Fti6063422
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 662F6568.003/4VSd482mZtz4xPGH
 
-Hello,
+From: Peilin He <he.peilin@zte.com.cn>
 
-Thanks for the report.  Could you please provide a reproducer?
+Introduce a tracepoint for icmp_send, which can help users to get more
+detail information conveniently when icmp abnormal events happen.
 
-Regards,
- Mickaël
+1. Giving an usecase example:
+=============================
+When an application experiences packet loss due to an unreachable UDP
+destination port, the kernel will send an exception message through the
+icmp_send function. By adding a trace point for icmp_send, developers or
+system administrators can obtain detailed information about the UDP
+packet loss, including the type, code, source address, destination address,
+source port, and destination port. This facilitates the trouble-shooting
+of UDP packet loss issues especially for those network-service
+applications.
 
+2. Operation Instructions:
+==========================
+Switch to the tracing directory.
+        cd /sys/kernel/tracing
+Filter for destination port unreachable.
+        echo "type==3 && code==3" > events/icmp/icmp_send/filter
+Enable trace event.
+        echo 1 > events/icmp/icmp_send/enable
 
-On Sun, Apr 28, 2024 at 10:47:02AM +0800, Ubisectech Sirius wrote:
-> Hello.
-> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7. Attached to the email were a PoC file of the issue.
-> 
-> Stack dump:
-> 
-> loop3: detected capacity change from 0 to 1024
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 30368 at security/landlock/fs.c:598 get_mode_access security/landlock/fs.c:598 [inline]
-> WARNING: CPU: 0 PID: 30368 at security/landlock/fs.c:598 get_mode_access security/landlock/fs.c:578 [inline]
-> WARNING: CPU: 0 PID: 30368 at security/landlock/fs.c:598 current_check_refer_path+0x955/0xa60 security/landlock/fs.c:758
-> Modules linked in:
-> CPU: 0 PID: 30368 Comm: syz-executor.3 Not tainted 6.7.0 #2
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> RIP: 0010:get_mode_access security/landlock/fs.c:598 [inline]
-> RIP: 0010:get_mode_access security/landlock/fs.c:578 [inline]
-> RIP: 0010:current_check_refer_path+0x955/0xa60 security/landlock/fs.c:758
-> Code: e9 76 fb ff ff 41 bc fe ff ff ff e9 6b fb ff ff e8 00 99 77 fd 90 0f 0b 90 41 bc f3 ff ff ff e9 57 fb ff ff e8 ec 98 77 fd 90 <0f> 0b 90 31 db e9 86 f9 ff ff bb 00 08 00 00 e9 7c f9 ff ff 41 ba
-> RSP: 0018:ffffc90001fb7ba0 EFLAGS: 00010212
-> RAX: 0000000000000bc5 RBX: ffff88805feeb7b0 RCX: ffffc90006e15000
-> RDX: 0000000000040000 RSI: ffffffff84125d64 RDI: 0000000000000003
-> RBP: ffff8880123c5608 R08: 0000000000000003 R09: 000000000000c000
-> R10: 000000000000f000 R11: 0000000000000000 R12: ffff88805d32fc00
-> R13: ffff8880123c5608 R14: 0000000000000000 R15: 0000000000000001
-> FS:  00007fd70c4d8640(0000) GS:ffff88802c600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000001b2c136000 CR3: 000000005b2a0000 CR4: 0000000000750ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  security_path_rename+0x124/0x230 security/security.c:1828
->  do_renameat2+0x9f6/0xd30 fs/namei.c:4983
->  __do_sys_rename fs/namei.c:5042 [inline]
->  __se_sys_rename fs/namei.c:5040 [inline]
->  __x64_sys_rename+0x81/0xa0 fs/namei.c:5040
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0x43/0x120 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-> RIP: 0033:0x7fd70b6900ed
-> Code: c3 e8 97 2b 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fd70c4d8028 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-> RAX: ffffffffffffffda RBX: 00007fd70b7cbf80 RCX: 00007fd70b6900ed
-> RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000020000100
-> RBP: 00007fd70b6f14a6 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 000000000000000b R14: 00007fd70b7cbf80 R15: 00007fd70c4b8000
->  </TASK>
-> 
-> Thank you for taking the time to read this email and we look forward to working with you further.
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
+3. Result View:
+================
+ udp_client_erro-11370   [002] ...s.12   124.728002:
+ icmp_send: icmp_send: type=3, code=3.
+ From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+ skbaddr=00000000589b167a
 
+Change log
+=========
+v7->v8:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iKNtKmN5im8K4dSZGqAV8=e3bZb
+Z5AhxbcNbjFxk5V1Jw@mail.gmail.com/
+1.Combine all variable definitions together without mixing 
+code and variables.
 
+v6->v7:
+Some fixes according to
+https://lore.kernel.org/all/20240425081210.720a4cd9@kernel.org/
+1. Fix patch format issues.
+
+v5->v6:
+Some fixes according to
+https://lore.kernel.org/all/20240413161319.GA853376@kernel.org/
+1.Resubmit patches based on the latest net-next code.
+
+v4->v5:
+Some fixes according to
+https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pc
+Cqs7sFm0y9aK-Eehg@mail.gmail.com/
+1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
+
+v3->v4:
+Some fixes according to
+https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJz
+BzkJFVgCTdXBx=YBg@mail.gmail.com/
+1.Add legality check for UDP header in SKB.
+2.Target this patch for net-next.
+
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
+1. Change the tracking directory to/sys/kernel/tracking.
+2. Adjust the layout of the TP-STRUCT_entry parameter structure.
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHu
+FQTJvJsv-nz1xPDw@mail.gmail.com/
+1. adjust the trace_icmp_send() to more protocols than UDP.
+2. move the calling of trace_icmp_send after sanity checks
+in __icmp_send().
+
+Signed-off-by: Peilin He <he.peilin@zte.com.cn>
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
+Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+---
+ include/trace/events/icmp.h | 67 +++++++++++++++++++++++++++++++++++++
+ net/ipv4/icmp.c             |  4 +++
+ 2 files changed, 71 insertions(+)
+ create mode 100644 include/trace/events/icmp.h
+
+diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+new file mode 100644
+index 000000000000..31559796949a
+--- /dev/null
++++ b/include/trace/events/icmp.h
+@@ -0,0 +1,67 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icmp
++
++#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICMP_H
++
++#include <linux/icmp.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(icmp_send,
++
++		TP_PROTO(const struct sk_buff *skb, int type, int code),
++
++		TP_ARGS(skb, type, code),
++
++		TP_STRUCT__entry(
++			__field(const void *, skbaddr)
++			__field(int, type)
++			__field(int, code)
++			__array(__u8, saddr, 4)
++			__array(__u8, daddr, 4)
++			__field(__u16, sport)
++			__field(__u16, dport)
++			__field(unsigned short, ulen)
++		),
++
++		TP_fast_assign(
++			struct iphdr *iph = ip_hdr(skb);
++			struct udphdr *uh = udp_hdr(skb);
++			int proto_4 = iph->protocol;
++			__be32 *p32;
++
++			__entry->skbaddr = skb;
++			__entry->type = type;
++			__entry->code = code;
++
++			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
++				(u8 *)uh + sizeof(struct udphdr)
++				> skb_tail_pointer(skb)) {
++				__entry->sport = 0;
++				__entry->dport = 0;
++				__entry->ulen = 0;
++			} else {
++				__entry->sport = ntohs(uh->source);
++				__entry->dport = ntohs(uh->dest);
++				__entry->ulen = ntohs(uh->len);
++			}
++
++			p32 = (__be32 *) __entry->saddr;
++			*p32 = iph->saddr;
++
++			p32 = (__be32 *) __entry->daddr;
++			*p32 = iph->daddr;
++		),
++
++		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
++			__entry->type, __entry->code,
++			__entry->saddr, __entry->sport, __entry->daddr,
++			__entry->dport, __entry->ulen, __entry->skbaddr)
++);
++
++#endif /* _TRACE_ICMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
++
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index 8cebb476b3ab..30b302492613 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -92,6 +92,8 @@
+ #include <net/inet_common.h>
+ #include <net/ip_fib.h>
+ #include <net/l3mdev.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/icmp.h>
+
+ /*
+  *	Build xmit assembly blocks
+@@ -762,6 +764,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+ 	if (!fl4.saddr)
+ 		fl4.saddr = htonl(INADDR_DUMMY);
+
++	trace_icmp_send(skb_in, type, code);
++
+ 	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
+ ende:
+ 	ip_rt_put(rt);
+-- 
+2.17.1
