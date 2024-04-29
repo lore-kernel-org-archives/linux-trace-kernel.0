@@ -1,142 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E112A79950;
-	Mon, 29 Apr 2024 13:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB24B651B6;
+	Mon, 29 Apr 2024 13:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714398687; cv=none; b=tCrKyBjbWhBfNJMzSZgxOEBJxkk8q9Ip+DIKRZqVenaqbThaV5z0fC/NxPIhB2WYPEfWfARVlbBKYk6+H9hESLrlZoQ6TB4UPRZ/8M2HRf/wzOatIkacF0dmD/edcfy0EekmJDMNEqbY/3If+zNybHCecCES068RgFc5uvCFbHU=
+	t=1714398944; cv=none; b=fSK0XtiF1odeoLGO0IrJbeud5lxybakyJohiThX8KZ9kjTx0nd4qtEItTyxvVclHEEND0x+lKH9G2m0XAQmh/nrgzAkGOgE7anp6hFymK+uVVcYBKDtoeWSkKG3jlVFKE9REShV37haWnGD/HnVcNJDDOslG32oEn4/0z9QkARg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714398687; c=relaxed/simple;
-	bh=odyPaTA/NBNHAchzjVqJiP2jl0Yo6XGZMxvJSgkgKFc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=g8ctb78tfi21m7vlAcrHG4t++pja60ZAEvK9hOrpMMHGwVN2ufL4/nNf/nM3PNoAZkjtjuUQEC0E4X6H3XuIOqsozxEvzle0eHGm1ZaAowhN/veBw8wtDjmfktD9G46XVE+ky9hysArqGteqKXbrUuh5iGGkosVpBvlmMjGyxyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5c61wun; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714398944; c=relaxed/simple;
+	bh=XSJsf20eNnV7BEcDZzdsGnYbMkeK5RV0qpSiv7XC7ag=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=m0Yp386VGSHTKSY+NyKh3cHnMbnKb0eTtL2wfpUUmzwNbUvDdJ1sggG6ZKC3D9ij4TYfshkAA0nHI7SCNXpzgDasZcvQAf1NB0/OWc0BpDbMwdaukgR9lU3mMPCoU/rbGDsIchtkQBtSP+ULovO/3t+iLIjJb8v5PI8A7zZiagg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=h0/YhDaz; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5c61wun"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68756C4AF17;
-	Mon, 29 Apr 2024 13:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714398686;
-	bh=odyPaTA/NBNHAchzjVqJiP2jl0Yo6XGZMxvJSgkgKFc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h5c61wunqAacEMS3E6c8pNczBD1EAXrrSWT+ABXr2u4rRtaVqjCFUafYO5SbXFmxW
-	 Y5buu4FvNHaCyPhdBzpUso/RVCKbtdw4HqV6cN/z8KHV/EQx9G6ALNK/Hzd+kBad0w
-	 UU2XvMzysLvE3rbyR2yfbwooMG7W0tgXR4lsmkwLrh/mgnRxA0fYzSk9sK2lkbpZy0
-	 Dmw9lA+ExiYpXRJfxa0eHYG5dGPsM1Cm75UZwVdPwHL1p+tCApfzHQUdGGQipGLt60
-	 CZjwEEn7rgh6WjCPg0gwv/tRxfyl/y3DxJ99izTnj1eI3STNvt64Ah8GaT9xckdkH8
-	 f6rd46qSLti6w==
-Date: Mon, 29 Apr 2024 22:51:19 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v9 00/36] tracing: fprobe: function_graph:
- Multi-function graph and fprobe on fgraph
-Message-Id: <20240429225119.410833c12d9f6fbcce0a58db@kernel.org>
-In-Reply-To: <CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-	<CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="h0/YhDaz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714398913; x=1715003713; i=markus.elfring@web.de;
+	bh=XSJsf20eNnV7BEcDZzdsGnYbMkeK5RV0qpSiv7XC7ag=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=h0/YhDaz25fEFbtdMS26njkuwDuciPI8VpioSVHR0OOLexol0dsf2W4evlR46f9i
+	 Ac/7BlEqvcC7XKaCl43wsaZLJepSQA+CvlXe9zNbqg+yOvUhcRE6munMsq1WBVsBM
+	 DSjDZ9iTPiZ/JKlzOnWyWfaEIWoom2KPH4I1nIgAEqvblIEVHb914Q9TEUgwIDm5E
+	 +Xtu9zjSiJzCD6zzpZ31cdR79Qslo/vw+35K/O8X8vHChkyFZZ8qiCsmNN+NH6rID
+	 ToEzjXiMSnAW06nDozoY/m1s3SVxu+Yyst2f0uMpodcghDph7y2bB+HuLP6oO+/aM
+	 WrJykArcgmCmpS0CRw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M3m5B-1s0cGA0pLX-0013K7; Mon, 29
+ Apr 2024 15:55:13 +0200
+Message-ID: <909dde28-019e-4f53-b5d5-a5fe9956dfc4@web.de>
+Date: Mon, 29 Apr 2024 15:55:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+ LuMingYin <lumingyindetect@126.com>, linux-trace-kernel@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <20240429222941.12d3b774bebef484e605d095@kernel.org>
+Subject: Re: [v3] tracing/probes: Fix memory leak in
+ traceprobe_parse_probe_arg_body()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240429222941.12d3b774bebef484e605d095@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:V03fvnGC5qRcKCTwAHkHSloSGt/P+kbUlcDGh/owlakpddJI8KW
+ PSCqzuEGuuls4kplrjUM6rgYtAszRo2NZZ0c2vAt7kWPJLz/EB25IDC4Jasipa8nq8MQYml
+ 5wlZUDAsjEOsMKCJCPNXFEQM5yoqwLtc991q85X2YQx2Mq6Aj2aSVbaiLXFOQ61SQY82F4Z
+ k9ikhW+eOFzqTsqc3lWIg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:w3epDiW0+Bs=;8ajEl4URGqBFwrxqcgtygi59WkG
+ h2vjmIX2M85jI0nuBQMj43UTS+1lVrPOjDoO1j13mt29CKwrDIcGNDIqDbVM41u2/sI00zMGY
+ C5SVzRIldNurkZ4GElO/Uh8YM4HsBwl3PxnTPhSv7CWr2L2n2NGOXWq0MFfl6ybD/t6ZShXJP
+ 2LxUQhdaQL/jXaFaqYEM4CVoQcYXicuzOtm+bTmigdvvJVIvDWiSVrh6srO7wxlVg5syCOYXe
+ Ar6wwJvOkn97iEsj4FonuymwN2zk4LVeih/aHK/vN7lF+/XGhnt8lZJz6VaKlJKFl1baoTS9G
+ YFIShydCG3F6Dhqwrko6q9pQTQRqXDionRm4ajR/b8H03BXs1bDbssdg1OrJBqc+43s0irvld
+ 2a0z39JEqBbiYWUQAHxZxmJvQsCSrK8BXYROpJLvlyz/Pw60E4Q2+UYhdI2lbMVYlACxwtoJk
+ 5hQLREOebzA/YblpEKNyl+Ew7SG0j8hgBW9qD7AnYyQgNqeS0ZwfILXe3gXt0ARnkkUf92q3g
+ uvrz7T7gjgSXZA+zcaxw5tdbH05HCrc9krAIMiCbf1d03mw0bKh6ZsM9Eay61BxpvzZc2x5GN
+ NXa+lmt9ninWJHMpUIeHvcYS8cizkFf0hbtUFwL+I7oqfAb6XRGK5cuZjMThD0bq8WucQrVgk
+ ENdtDka22ZfY3Zx2VYnofmzNRlcFSo12+SzcD3m8933hBiFHX4pl4JoZVzc+CQZnGJzLIq6OH
+ vKpYfn1LnDITsmbMGrGKidKxtTFd+HJkzechuCcfcR4TGu0QJzrU+8sonsXqjE4S36jroX0Mj
+ Ju4wtuzY2lCeCRDwswSBvt52DMQsTtjajbP7cypjckr7c=
 
-Hi Andrii,
+=E2=80=A6
+> > it jumps to the label 'out' instead of 'fail' by mistake.In the result=
+,
+=E2=80=A6
+>
+> Looks good to me.
 
-On Thu, 25 Apr 2024 13:31:53 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+* Do you care for a typo in this change description?
 
-> Hey Masami,
-> 
-> I can't really review most of that code as I'm completely unfamiliar
-> with all those inner workings of fprobe/ftrace/function_graph. I left
-> a few comments where there were somewhat more obvious BPF-related
-> pieces.
-> 
-> But I also did run our BPF benchmarks on probes/for-next as a baseline
-> and then with your series applied on top. Just to see if there are any
-> regressions. I think it will be a useful data point for you.
+* Would you like to read any improved (patch) version descriptions (or cha=
+ngelogs)?
 
-Thanks for testing!
-
-> 
-> You should be already familiar with the bench tool we have in BPF
-> selftests (I used it on some other patches for your tree).
-
-What patches we need?
-
-> 
-> BASELINE
-> ========
-> kprobe         :   24.634 ± 0.205M/s
-> kprobe-multi   :   28.898 ± 0.531M/s
-> kretprobe      :   10.478 ± 0.015M/s
-> kretprobe-multi:   11.012 ± 0.063M/s
-> 
-> THIS PATCH SET ON TOP
-> =====================
-> kprobe         :   25.144 ± 0.027M/s (+2%)
-> kprobe-multi   :   28.909 ± 0.074M/s
-> kretprobe      :    9.482 ± 0.008M/s (-9.5%)
-> kretprobe-multi:   13.688 ± 0.027M/s (+24%)
-
-This looks good. Kretprobe should also use kretprobe-multi (fprobe)
-eventually because it should be a single callback version of
-kretprobe-multi.
-
-> 
-> These numbers are pretty stable and look to be more or less representative.
-> 
-> As you can see, kprobes got a bit faster, kprobe-multi seems to be
-> about the same, though.
-> 
-> Then (I suppose they are "legacy") kretprobes got quite noticeably
-> slower, almost by 10%. Not sure why, but looks real after re-running
-> benchmarks a bunch of times and getting stable results.
-
-Hmm, kretprobe on x86 should use ftrace + rethook even with my series.
-So nothing should be changed. Maybe cache access pattern has been
-changed?
-I'll check it with tracefs (to remove the effect from bpf related changes)
-
-> 
-> On the other hand, multi-kretprobes got significantly faster (+24%!).
-> Again, I don't know if it is expected or not, but it's a nice
-> improvement.
-
-Thanks!
-
-> 
-> If you have any idea why kretprobes would get so much slower, it would
-> be nice to look into that and see if you can mitigate the regression
-> somehow. Thanks!
-
-OK, let me check it.
-
-Thank you!
-
-> 
-> 
-> >  51 files changed, 2325 insertions(+), 882 deletions(-)
-> >  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_repeat.tc
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Regards,
+Markus
