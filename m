@@ -1,147 +1,98 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7CEAC2;
-	Mon, 29 Apr 2024 09:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD94219F0;
+	Mon, 29 Apr 2024 11:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714384117; cv=none; b=et4LcncpJLClI7XZP4GAY+YrXhU0IHVny5ZndivIfXoSyUhm6Hkt/CUAfqnqm0Z6znZoV8X6zMD14tvTY8JTmiGBBFsHkd9UjrdvOjfynNrR/HOa5UV2IsdowUSPQ5dVQBGBU7Hq1wCfSa7hgDrvtKJA7Dza6oJ+7e0xCUPEQic=
+	t=1714388797; cv=none; b=RG9+4mW/OE0honbA+dZBFePlGGe+Ta63TTgx9TJbAphpcPhGYT0ZLy86zQYghfpQrMRFREkeZVXgJ1c1ernlSwcBFdcGK5He0AAN3/kgvA6TMDu+40fRvI3GXuVISioyuCQWSnOGPqzj39dVYAuV4+P8/+1ENHRkf8kViF7xALI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714384117; c=relaxed/simple;
-	bh=eOQoFD2Q1RfOcsu5iO/K4iGBJCStR6G+ZsM+imLU3t4=;
+	s=arc-20240116; t=1714388797; c=relaxed/simple;
+	bh=luM5/kXPZHQ9rDYrFQm9TZ+QNnxpv3bxwRI9IfGI6Ew=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHlOSVCRZv8lmIgFhso1S12E/Dr61l2VU/aTPZf4gjg2fg+HXs0HnJQf/w1h9/a4dnOXS3tpyNZdknwiuh9Ggl2X/4VYA8IOnvWPl808vjn6iEsau1aV0ouD5tDMq/vTMpV5BZ9+HbJFmaUJl4ISFay+mBBHXH4aUdTwTQF6/Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kg9UUvOf; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3R7t/mBPlExv3wKsrQIH/esftAbYruUU3VtiGzatJgKD9CwA+xM13jkeI78JAwFxQpvTMi0veL6I8RoxFZ5D4yeEchZdhu6ASCSkhTkeqSmxg4FdDNEUhu7yKp/PFnNDZ7tQ9wmKTbSi683MejtDLbLt+0tzad6Qt/twnU/wUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=4eCUwqW6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=O7hDUeMh; arc=none smtp.client-ip=64.147.123.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kg9UUvOf"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43T9WcRr023175;
-	Mon, 29 Apr 2024 09:47:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=pp1;
- bh=Kn2/uMMJ4m7IZDO8WlgsPqO7vUsAlVouDdMvBgTuG6Q=;
- b=Kg9UUvOfIY+q0ndE7ZECmZZUdA61ZCkJRFtD9wLCjYzo6fe8LGiqgmj/OaQd5I/iEeGT
- h1W12UFRvhBs0Ojrxq2EVahg4SwzhBVbMh+nl7Xnt0KphpPc+1K4uJnLB1ltR+O9/J8Y
- xH2aBPNbeoLf7rIVjTmAK85pN4JRaPC9PScCooRYa7ChiJY29YfixJaL//aFd9303wQR
- GZQxdsEVeB2nF62y0IT3RUjuxSeOIjIAGLlEpPQHiihzSala+ltUzs1I4eJF+yCxcsu9
- xwGFkZf6AwHS79UZe7yymFDc9jL+Zte2Za8lJWgzOlYfHYZrwUSEHHijG4bCs204Im4A kw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:55 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43T9ltmx016519;
-	Mon, 29 Apr 2024 09:47:55 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:54 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43T7DaXf001450;
-	Mon, 29 Apr 2024 09:47:53 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsbptppem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43T9loYx26542522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 09:47:52 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0556520040;
-	Mon, 29 Apr 2024 09:47:50 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B4E6220043;
-	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.101])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
-Date: Mon, 29 Apr 2024 11:47:47 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-        Joel Granados <j.granados@samsung.com>,
-        Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>,
-        Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        bridge@lists.linux.dev, lvs-devel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org,
-        apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 11/11] sysctl: treewide: constify the ctl_table
- argument of handlers
-Message-ID: <20240429094747.29046-G-hca@linux.ibm.com>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="4eCUwqW6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O7hDUeMh"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.west.internal (Postfix) with ESMTP id D70221C0015E;
+	Mon, 29 Apr 2024 07:06:33 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Mon, 29 Apr 2024 07:06:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1714388793; x=1714475193; bh=BFh/0WAkDN
+	inkgfHuz+GwnSA+D62BZHCAFUB8hxtigY=; b=4eCUwqW6u/48l8LqV0csmNS8oa
+	whZA/uBnIxhHZDHrSvJxNGLS600/wNGdn++nYXsJhfyHtMODaW+cFrUcpr9K3u3+
+	CXTcY0FacZpMFp8xoFGCgRXdHezrSYqmZp+lUN4eYsbxWwA8ygBS/MiHGZt87s33
+	SpB6ns82lgwvTiuV1VRX8oEaAs6sOVCMttEk3H+apXIUxtJkottUsBvY2ut4nZUp
+	yLpT3apH4MbQMP6bcx9UYgqzfSF1lYc0do0071Q/WJ0MjUcIJ5wMAxlgKRK4Xxa5
+	ZfG1bV6HX6VXvznTGlaQFm1c/QLvUfLogzCOw8XAVLR5Y/NMrxXynQn0cy7g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714388793; x=1714475193; bh=BFh/0WAkDNinkgfHuz+GwnSA+D62
+	BZHCAFUB8hxtigY=; b=O7hDUeMh9B8i1lIPyAseVcz4l+6z+axaqdrJlJfpNDDu
+	gX7Tfo0Hxn5KJYISsgkFFrsFu8t7TfETpMxvjD6Mt2ZxO8mmNKIv8/Mb8JStuAmK
+	Ma5i6bqduwm9AIOUeO3Vfmh+O0ip2a1CD17TFrgX+qNI+C6ZiDOinRbdLo7YWleV
+	ZxFfdPSoN4RWNRmgGEQriAYsfgnHXj3SWZDpGxT7HoJYkju7kpjzRkOEXwhuKoJk
+	O2InexrfFqJX/0zFzic8+URTYGb6yCm43so/ylTosZFjxF1sjkoCXCfnYFLOEAka
+	Nio0WGrkXGhxdZoAvwRLJT0oSEYsUq+YPEqqCX5cnQ==
+X-ME-Sender: <xms:OX8vZqL4T8abPhSbQOdOd5uTOms0XKKTs2tyF7ShZBiNDD8mmGNmWg>
+    <xme:OX8vZiKFvEL0AG1W3TVVfNdCJpqT3qIn7ankNbYj4itOiwQa5mRBaqT-Zxjrj0ZEy
+    kKpZrauoATtMA>
+X-ME-Received: <xmr:OX8vZquTmfgaN1ZV_nIboHUJ7bljFK-va7aE6GwVX7hPpDVW73mrh1gdypAfSu_NKwdRZeSHvl2K9MrorW8OdjC9WyLcAco7jFYZEQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddgfeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvd
+    evvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
+    hhrdgtohhm
+X-ME-Proxy: <xmx:OX8vZvbtloTDjl1tNNmhDKM-gdOt5GCrammvLuYf1LlVEJvquDb4tQ>
+    <xmx:OX8vZhYaGv3yEeamcWY6UtWEwmqN59u8OaHF7ZiIMHLR_FxhKmkV5Q>
+    <xmx:OX8vZrB7u9jAqMGmoPn7Y49qXv2y2ywx7dhN3BxanagteI9kRd9_6Q>
+    <xmx:OX8vZnZb0dHt_5VZWi3jMw1wQaC8FKH8VOLK9AsipgIw_If4LuGfgw>
+    <xmx:OX8vZvO8UJPNOIIpfhwEWzIsGlNI1NwpbUEIEl8hjHzLG8q69OAC4W-g>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Apr 2024 07:06:32 -0400 (EDT)
+Date: Mon, 29 Apr 2024 13:06:29 +0200
+From: Greg KH <greg@kroah.com>
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5.15,5.10,5.4,4.19 0/2] Fix warning when tracing with
+ large filenames
+Message-ID: <2024042923-attribute-brunt-15b5@gregkh>
+References: <20240424222010.2547286-1-cascardo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dsJabyKjD5wmo-a4UVf9qexuuOQkOoCK
-X-Proofpoint-GUID: 7SlQVN0HjcUbQBl5eVSaH1VEy2oE_0-m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_07,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404290061
+In-Reply-To: <20240424222010.2547286-1-cascardo@igalia.com>
 
-On Tue, Apr 23, 2024 at 09:54:46AM +0200, Thomas Weiﬂschuh wrote:
-> Adapt the proc_hander function signature to make it clear that handlers
-> are not supposed to modify their ctl_table argument.
+On Wed, Apr 24, 2024 at 07:20:07PM -0300, Thadeu Lima de Souza Cascardo wrote:
+> The warning described on patch "tracing: Increase PERF_MAX_TRACE_SIZE to
+> handle Sentinel1 and docker together" can be triggered with a perf probe on
+> do_execve with a large path. As PATH_MAX is larger than PERF_MAX_TRACE_SIZE
+> (2048 before the patch), the warning will trigger.
 > 
-> This is a prerequisite to moving the static ctl_table structs into
-> rodata.
-> By migrating all handlers at once a lengthy transition can be avoided.
-> 
-> The patch was mostly generated by coccinelle with the following script:
-> 
->     @@
->     identifier func, ctl, write, buffer, lenp, ppos;
->     @@
-> 
->     int func(
->     - struct ctl_table *ctl,
->     + const struct ctl_table *ctl,
->       int write, void *buffer, size_t *lenp, loff_t *ppos)
->     { ... }
-> 
-> In addition to the scripted changes some other changes are done:
-> 
-> * the typedef proc_handler is adapted
-> 
-> * the prototypes of non-static handler are adapted
-> 
-> * kernel/seccomp.c:{read,write}_actions_logged() and
->   kernel/watchdog.c:proc_watchdog_common() are adapted as they need to
->   adapted together with the handlers for type-consistency reasons
-> 
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> The fix was included in 5.16, so backporting to 5.15 and earlier LTS
+> kernels. Also included is a patch that better describes the attempted
+> allocation size.
 
-...
+All now queued up, thanks.
 
->  arch/s390/appldata/appldata_base.c        | 10 ++---
->  arch/s390/kernel/debug.c                  |  2 +-
->  arch/s390/kernel/topology.c               |  2 +-
->  arch/s390/mm/cmm.c                        |  6 +--
-
-Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
+greg k-h
