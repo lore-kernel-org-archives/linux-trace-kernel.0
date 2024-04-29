@@ -1,120 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AEA76050;
-	Mon, 29 Apr 2024 12:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDD042055;
+	Mon, 29 Apr 2024 13:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714393180; cv=none; b=kHCMKOzRw8hy90oDdNSgr+HR/5MyBMnn6QbS7ukeUe5PBfZtlUaDvRM25P6QMW8Of6OE01AmFWCH0SAOMTEPALGL/Y00GdrlTurCz/gr8MA2r1I2b/iVSdrXDlplUCjQcsLuAuHQ4gL4qHjQjBhZNZrNEUBLefmDUDbzwQ8GRvo=
+	t=1714397386; cv=none; b=nvOlUoutiYpeGmU1L+DdLjMAiYv0hBJhDpiZj/SwMgMgyAS8wUYh9aIhl26sxm3toZGoN28zj8+pv+4GeSjBvLV/9GvR6q/tOK4RdMkpg0SdE24cRL2n0lhyl8Jo+BqDjLpsrvNw/ff4k9H3PJieS3DyiO6SQ7FiW4kyk2OnoYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714393180; c=relaxed/simple;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EhcfYpY4ZCfwVypE4QAAEviejzQJmV/49iFzPK9HzhYYaSV7IaeCVTdnQr67Q2Gg5tuFuOZIeEG4YvC6IiGs7L2rxd+bNrIPjwHQAIajg4OfmBh3Wg2TZj9A0OIXiV3rD3jYywtmrO/0jCYFaO2DYeK06oku7Z6dJKKKc5X9ylY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7f0wuVA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714397386; c=relaxed/simple;
+	bh=Kxu1E0Bn8QjLXrlB4tLuOInXoVo+nyGtr9YUAaoPRWI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UMpu2jxYe+U+9DQQw1VfH6A0pchiqTg7uCQyBcvOaeECYFI6bg+cfIfba0i8e76y7t3kiswNmMNALd2cg3JtqX/djl5kIH4SJF2tUM1NKZep40VHI7AY2wl3/XSM2FrL8xpewWMETeCaN6Sk/dyIViX9GwWvnFvszXV8UJW9zGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/zq4hR/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7f0wuVA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FDEC4AF1A;
-	Mon, 29 Apr 2024 12:19:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/zq4hR/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4207CC113CD;
+	Mon, 29 Apr 2024 13:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714393180;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X7f0wuVAWdgbS5Dnrk/8uxCz/WMBnwfIEbrYQjsFBoWK/NO+gFsetX++9RtisOg+R
-	 lyducI87XJq0Sa6/5knT2xgBqH7K2xW/qMnGa0g1XffUGK3v88+KqpLas4BZaDB8ho
-	 7TEZf3UWszPCEBdKLSl5tSKkPNsGUW+hGDbSDeQiXvAbbZQ7/jWj/FVqaI9aEzKfJ3
-	 n7rBw9DjLbVvNCoFkwi9pBCXtg9xh2adrE6zMXEpc+zsBt1S+VUeMtGvQpJ7f9J2+M
-	 Gqm1Q42MZd9YPy1rtpJAQ/o+FnD8mnYQVVTP4aKCUYjgJ2YMq1N1K7OajA96dLskDm
-	 vAoCNMH3V0h1Q==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v7 16/16] bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-Date: Mon, 29 Apr 2024 15:16:20 +0300
-Message-ID: <20240429121620.1186447-17-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240429121620.1186447-1-rppt@kernel.org>
-References: <20240429121620.1186447-1-rppt@kernel.org>
+	s=k20201202; t=1714397386;
+	bh=Kxu1E0Bn8QjLXrlB4tLuOInXoVo+nyGtr9YUAaoPRWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q/zq4hR/PmLGNo3ogSS4jdb5W08EpP8k/4gOgG4dcpMii/LyCbFTTTHgxTaVfi1k7
+	 tKb80RaPN4OcfK/as678HZsXCxEihhSksMHGW5GypsRBMdF7/Q0NxwEKRLWdSaiwf+
+	 d7hLvtK+UpZfPiQtO6ZC3FpgClRFrW6BaFytK5ugODAGwe+WmT5NE7XclugrmBoP+G
+	 qj41DcspcamTtJe3nvwHRdC9Swb6UisT/l6JG2Jri8lgtu25gjcH5r5zlFvD0TpW2c
+	 ajPJxyYbgs9JkhxGROdZN/t7m8y0+maiczNhp/yijdU3mfhqJoNkd0T8cgUkARiexr
+	 1sneGmDpJiI9w==
+Date: Mon, 29 Apr 2024 22:29:41 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: lumingyindetect@126.com
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v3] tracing/probes: Fix memory leak in
+ traceprobe_parse_probe_arg_body()
+Message-Id: <20240429222941.12d3b774bebef484e605d095@kernel.org>
+In-Reply-To: <20240427072347.1421053-1-lumingyindetect@126.com>
+References: <20240427072347.1421053-1-lumingyindetect@126.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Hi LuMing,
 
-BPF just-in-time compiler depended on CONFIG_MODULES because it used
-module_alloc() to allocate memory for the generated code.
+On Sat, 27 Apr 2024 08:23:47 +0100
+lumingyindetect@126.com wrote:
 
-Since code allocations are now implemented with execmem, drop dependency of
-CONFIG_BPF_JIT on CONFIG_MODULES and make it select CONFIG_EXECMEM.
+> From: LuMingYin <lumingyindetect@126.com>
+> 
+> If traceprobe_parse_probe_arg_body() failed to allocate 'parg->fmt',
+> it jumps to the label 'out' instead of 'fail' by mistake.In the result,
+> the buffer 'tmp' is not freed in this case and leaks its memory.
+> 
+> Thus jump to the label 'fail' in that error case.
+> 
 
-Suggested-by: Björn Töpel <bjorn@kernel.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- kernel/bpf/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks good to me.
 
-diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
-index bc25f5098a25..f999e4e0b344 100644
---- a/kernel/bpf/Kconfig
-+++ b/kernel/bpf/Kconfig
-@@ -43,7 +43,7 @@ config BPF_JIT
- 	bool "Enable BPF Just In Time compiler"
- 	depends on BPF
- 	depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
--	depends on MODULES
-+	select EXECMEM
- 	help
- 	  BPF programs are normally handled by a BPF interpreter. This option
- 	  allows the kernel to generate native code when a program is loaded
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+Thank you!
+
+> Fixes: 032330abd08b ("tracing/probes: Cleanup probe argument parser")
+> Signed-off-by: LuMingYin <lumingyindetect@126.com>
+> ---
+>  kernel/trace/trace_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index c09fa6fc636e..81c319b92038 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1466,7 +1466,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  		parg->fmt = kmalloc(len, GFP_KERNEL);
+>  		if (!parg->fmt) {
+>  			ret = -ENOMEM;
+> -			goto out;
+> +			goto fail;
+>  		}
+>  		snprintf(parg->fmt, len, "%s[%d]", parg->type->fmttype,
+>  			 parg->count);
+> -- 
+> 2.25.1
+> 
+> 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
