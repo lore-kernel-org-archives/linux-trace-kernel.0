@@ -1,37 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597781426C;
-	Sun, 28 Apr 2024 23:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B321638B;
+	Mon, 29 Apr 2024 00:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714346753; cv=none; b=AkUgfGuCqCVwpxYYtBKlUxRHF0pBJ50FsNNOjnfBtEjCmX31PByKKnuu04IBVptMa0VTrdeNf3cUPdas3GK5ljgZCbB2zGP5VINUv+IIIyULr6mHTDZ0MFKN3ucz+ZudxsqsBQbEkA22V+2C7n8lgFizQjgloBLAVkiYMB1cZ0U=
+	t=1714350520; cv=none; b=AGwLO63muEumiOBMXWIbBtT45ckNYGdtYK0PzdLDXoTYvU7gHpWclMII/Zch7JadOzgK697f9Yxa0rC13A/UYCBi2873c+NQRT2LcH7nciySCKZFcV4NIWcDcMjVONu1/ljb2FmYRM2gRAX9GP4+1DP3XGhk8FQBEtgrBf8MJ1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714346753; c=relaxed/simple;
-	bh=yDrUOwB6HaFx72kB39jjAMjhpY5LUydTGFTQOH7bIO0=;
+	s=arc-20240116; t=1714350520; c=relaxed/simple;
+	bh=Z5ik7Q4hz896X4CenAOKVNubLwUMayZQDBFuNNNZkfA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ayaZCymykBgm/dSJ4Hyj0KTxKrFJ3Lo9j49hyOr+jrgdr75T7f7olGsVOg4w2xvcvo6E4ZTMqynE34V78HoePfh6+RLNhxCHbOi7E7LdxuCcadTY3fl3KMaRjDuqTtclrUJqb2dFXH82MhWDY9MxWSbcAZfJkwnKYBVNuvdqajY=
+	 MIME-Version:Content-Type; b=YjXj7mKWkWIIkRu0WpuxXmrMbYb3VrYrFMAUpCbfIbOiDyYGoVbNmNFTFXnfcV5zpqNu6xsgBqCc4m3iTEDPOwn0b3mTZW5SZV4O9IKjCXFCudKjUdE1B/5a7bjOxJqdrYUwDY6nXipG4M0HEDzTZAhBCPl+YdlzhYsjFTPBbzw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF42C113CC;
-	Sun, 28 Apr 2024 23:25:51 +0000 (UTC)
-Date: Sun, 28 Apr 2024 19:25:49 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75705C113CC;
+	Mon, 29 Apr 2024 00:28:39 +0000 (UTC)
+Date: Sun, 28 Apr 2024 20:28:37 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v9 00/36] tracing: fprobe: function_graph:
- Multi-function graph and fprobe on fgraph
-Message-ID: <20240428192549.7898bf6b@rorschach.local.home>
-In-Reply-To: <CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-	<CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com>
+To: Tze-nan wu <Tze-nan.Wu@mediatek.com>
+Cc: <mhiramat@kernel.org>, <bobule.chang@mediatek.com>,
+ <wsd_upstream@mediatek.com>, Cheng-Jui Wang <cheng-jui.wang@mediatek.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
+Message-ID: <20240428202837.0cabca17@rorschach.local.home>
+In-Reply-To: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
+References: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,78 +34,116 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Apr 2024 13:31:53 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+On Fri, 26 Apr 2024 15:34:08 +0800
+Tze-nan wu <Tze-nan.Wu@mediatek.com> wrote:
 
-I'm just coming back from Japan (work and then a vacation), and
-catching up on my email during the 6 hour layover in Detroit.
+> "tracing_event_file" is at the risk of use-after-free due to the race of
+> two functions "tracing_open_file_tr" and "synth_event_release".
+> Specifically, it could be freed by synth_event_release before
+> tracing_open_file_tr has the opportunity to access its members.
+> 
+> It's easy to reproduced by first executing script 'A' and then script 'B'
+> in my environment.
+> 
+>   Script 'A':
+>     echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
+>     while :
+>     do
+>       echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
+>     done
+> 
+>   Script 'B':
+>     echo > /sys/kernel/tracing/synthetic/events
 
-> Hey Masami,
->=20
-> I can't really review most of that code as I'm completely unfamiliar
-> with all those inner workings of fprobe/ftrace/function_graph. I left
-> a few comments where there were somewhat more obvious BPF-related
-> pieces.
->=20
-> But I also did run our BPF benchmarks on probes/for-next as a baseline
-> and then with your series applied on top. Just to see if there are any
-> regressions. I think it will be a useful data point for you.
->=20
-> You should be already familiar with the bench tool we have in BPF
-> selftests (I used it on some other patches for your tree).
+I think you meant:
 
-I should get familiar with your tools too.
+      echo > /sys/kernel/tracing/synthetic_events
 
->=20
-> BASELINE
-> =3D=3D=3D=3D=3D=3D=3D=3D
-> kprobe         :   24.634 =C2=B1 0.205M/s
-> kprobe-multi   :   28.898 =C2=B1 0.531M/s
-> kretprobe      :   10.478 =C2=B1 0.015M/s
-> kretprobe-multi:   11.012 =C2=B1 0.063M/s
->=20
-> THIS PATCH SET ON TOP
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> kprobe         :   25.144 =C2=B1 0.027M/s (+2%)
-> kprobe-multi   :   28.909 =C2=B1 0.074M/s
-> kretprobe      :    9.482 =C2=B1 0.008M/s (-9.5%)
-> kretprobe-multi:   13.688 =C2=B1 0.027M/s (+24%)
->=20
-> These numbers are pretty stable and look to be more or less representativ=
-e.
+> 
+>   My environment:
+>     arm64 + generic and swtag based KASAN both enabled + kernel-6.6.18
+> 
+> KASAN report
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in tracing_open_file_tr
+> Read of size 8 at addr 9*ffff********** by task sh/3485
+> Pointer tag: [9*], memory tag: [fe]
+> 
+> CPU: * PID: 3485 Comm: sh Tainted: ****************
+> Call trace:
+>  __hwasan_tag_mismatch
+>  tracing_open_file_tr
+>  do_dentry_open
+>  vfs_open
+>  path_openat
+> 
+> Freed by task 3490:
+>  slab_free_freelist_hook
+>  kmem_cache_free
+>  event_file_put
+>  remove_event_file_dir
+>  __trace_remove_event_call
+>  trace_remove_event_call
+>  synth_event_release
+>  dyn_events_release_all
+>  synth_events_open
+> 
+> page last allocated via order 0, migratetype Unmovable:
+>  __slab_alloc
+>  kmem_cache_alloc
+>  trace_create_new_event
+>  trace_add_event_call
+>  register_synth_event
+>  __create_synth_event
+>  create_or_delete_synth_event
+>  trace_parse_run_command
+>  synth_events_write
+>  vfs_write
 
-Thanks for running this.
+Thanks for reporting this.
 
->=20
-> As you can see, kprobes got a bit faster, kprobe-multi seems to be
-> about the same, though.
->=20
-> Then (I suppose they are "legacy") kretprobes got quite noticeably
-> slower, almost by 10%. Not sure why, but looks real after re-running
-> benchmarks a bunch of times and getting stable results.
->=20
-> On the other hand, multi-kretprobes got significantly faster (+24%!).
-> Again, I don't know if it is expected or not, but it's a nice
-> improvement.
->=20
-> If you have any idea why kretprobes would get so much slower, it would
-> be nice to look into that and see if you can mitigate the regression
-> somehow. Thanks!
+> 
+> Based on the assumption that eventfs_inode will persist throughout the
+> execution of the tracing_open_file_tr function,
+> we can fix this issue by incrementing the reference count of
+> trace_event_file once it is assigned to eventfs_inode->data.
+> The reference count will then be decremented during the release phase of
+> eventfs_inode.
+> 
+> This ensures that trace_event_file is not prematurely freed while the
+> tracing_open_file_tr function is being called.
+> 
+> Fixes: bb32500fb9b7 ("tracing: Have trace_event_file have ref counters")
+> Co-developed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+> Signed-off-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+> Signed-off-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
+> ---
+> BTW, I've also attempted to reproduce the same issue in another
+> environment (described below).
+> It's also reproducible but in a lower rate.
+> 
+> another environment:
+>   x86 + ubuntu + generic kasan enabled + kernel-6.9-rc4
+> 
+> After applying the patch, KASAN no longer reports any issues when
+> following the same reproduction steps in my arm64 environment. 
+> However, I am concerned about potential side effects that the patch might introduce.
+> Additionally, the newly added function "is_entry_event_callback" may not
+> be reliable in my opinion,
+> as the callback function used in the comparison could change in future. 
+> Nonetheless, this is the best solution I can come up with now.
+> 
+> Looking for any suggestion or solution, appreciate.
 
-My guess is that this patch set helps generic use cases for tracing the
-return of functions, but will likely add more overhead for single use
-cases. That is, kretprobe is made to be specific for a single function,
-but kretprobe-multi is more generic. Hence the generic version will
-improve at the sacrifice of the specific function. I did expect as much.
+Yeah, I do not think eventfs should be involved in this. It needs to be
+protected at a higher level (in the synthetic/dynamic event code).
 
-That said, I think there's probably a lot of low hanging fruit that can
-be done to this series to help improve the kretprobe performance. I'm
-not sure we can get back to the baseline, but I'm hoping we can at
-least make it much better than that 10% slowdown.
+I'm just coming back from Japan, and I'll need to take a deeper look at
+this after I recover from my jetlag.
 
-I'll be reviewing this patch set this week as I recover from jetlag.
+Thanks,
 
 -- Steve
