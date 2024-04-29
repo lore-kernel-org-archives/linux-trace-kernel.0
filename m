@@ -1,260 +1,222 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7EF84D15;
-	Mon, 29 Apr 2024 16:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112A512839D;
+	Mon, 29 Apr 2024 17:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714409103; cv=none; b=hiGXx6WFcUTQ+l2uaJ0oTrPe+jYp03n06j/X9xnGZ7iDaS8K/LYjgLoEyujNi9/ghtfOuBqtNHGZJhp3F1wU8xbQAL/UQBPTvjOBVYJxNFvMowBe2nBJKhcxPThsCzwOHaANDKmz4AYlZc/TxPmI9RpxxnZhZqCUUqawX7stK2Q=
+	t=1714412758; cv=none; b=JYeA8rO2FlDU1UVA15CpcPPf7T9czzQGI7MDHnpxzc3u1slf+57MhFvTPra2eP/d+t6V0ZOwCwuRjkIxQGljY+VRAenRHXmurwX2/tpXMmiq0gfmfuniCfPEDilQmw94NJ6+jCHVAfw17fW4kAxBuOXfz0oXgYF7Ga/ZEJfUAYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714409103; c=relaxed/simple;
-	bh=zI0dXaWwW2H477UXrfRvW/LEn5xqCYL9yuMn0epTlnQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L6wX9n40Q34byiPLn3qbf4feYLQt7aOGvGl9PmlWKm4xBVRwngK6wNda1rn0thYrENHko9UFNpKJV/2cYfQJBVtxhAIqnr5xh6BBAIuFi2Tx1bFDSafIw1enisdhAAMFIAZ4S6VyGrfUeTepsJZICCtPQjC5Lmw9DlorAKN4Svw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bC2j9zaz; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714412758; c=relaxed/simple;
+	bh=lFxLGe1ug8Ra1SKtFkV6OMijDJZuGgOGdi/k0+rQBX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HpxaC1ISBfX/NIcDeEnjrrl88fqc3avGQRoCVxedalGABT5c0E5D1VyMIq5mZFSBY6jj8Fo+QurWQUx47WZapZ3MkH+L5WMUQo4cGJv+TrEBCyfj2I9iz1wA7Iku7IlLGB1UCluZuW4ppQMKWEoL/BXZWr4ClKIgPh2A4OnUtcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JtLSw0kt; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bC2j9zaz"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso3145793a12.3;
-        Mon, 29 Apr 2024 09:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714409102; x=1715013902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V+KuYncKCMIQks9fs4VyYRoQJJHDbH+WTIrj3yfpnG4=;
-        b=bC2j9zazdkM2QJZxDgAkKgtMBRn3WT/p5QUOMG/IAoQAkjCmNBrGJoxwy48ELUyz+N
-         +aZqi0n2Y5xfnIvgkZ6RR6ZOYF7vxBD6lADP65/9ZCf/vehFbWHRwv00ntPxJM1PtVbQ
-         7T5gAOXDKWZXCsWa1ppmV0aBP34AlB3LWd01BSzYmpQRYZmZPXJ/6kLkaQUZvjUyevjs
-         QMekB4kPY1gniiLvzOi6XIWdXk1Wc2k3H/w/EVqIJI/KXRdu+jDiLCYYAkSOF6TwBK0r
-         D3qSItEJk6RVuhkurXham9anF+hX7lech3TSFpzAqcYFpz5vl6CHhzbU2kxqgLV9IRLY
-         GOxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714409102; x=1715013902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V+KuYncKCMIQks9fs4VyYRoQJJHDbH+WTIrj3yfpnG4=;
-        b=pEGt0Djr6B7NYC6hAuOCGQwRjyMm9KEQ6TvM2NNABgMVo6O7pg6GexGwC+dhA1z13y
-         MuMuSi39EoZYpzR/NCC6ff/2Ac+XHyIMN6o/ujCImwDkOhMQqQKthcEZJqGGWHkS+rlU
-         9uIO41TrVZyuoi5LjSGKBfCCc83+B3kDOYYs1jVfEbXRuUo7lYwFoOiE4k8KtAQBkW4E
-         Dc4/WYpCA5Nk4LAeiUjarg8WtQO3cLI6l0soBLsgONSHstG0Qx5Tz60Ew7DXLCmJ0CFi
-         Lk+lPl3mZR4YLzYncvrljP36Iv9wL2fRLVl3JuzufyxviMtZBFQUVi5a3/RAYUkAiUZQ
-         ybmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUh3dQbbudMM1klOfgmLTWGdgpUhxYRRnKoLHd2UT6zvTjrjuns+F5Fxl8/2x5OshNCptpPERN0FjiS7YXvd26o0i5jM5++ePPXkdUrwDVbCsU9J/kN1LWaTZoYQ9ljP93CyLQHA8MY+GZSXb9qZ7aK/IlMLJQvJM4BcJpMbSBmqGB1CQyvRKK4oNghYSHiGbR1AfL5jdKXeQT9lBwW4d46
-X-Gm-Message-State: AOJu0YzzaZOKr3xVVpufanHcMMeLwn9/s6H3ORhYoaIcsQf67XgK/fgb
-	/p2V5s27iAO+/GJhcXWo/kkDbhiMbb3/eT7+Tw0ruudk1kDPV2a9nHqm0JoAKxNP6BpvAQpk4Yh
-	25Gc0WAeGwfqHezhysddd3/Ask5s=
-X-Google-Smtp-Source: AGHT+IFEBjjOgIZI69S9O+DPbxRJS29XWyaWX2RRt0TM1E47XRESlvdqoITxR7rPoljfCms3ptvnuElmViiIbq0BAf0=
-X-Received: by 2002:a17:90b:3e89:b0:2b0:d163:3131 with SMTP id
- rj9-20020a17090b3e8900b002b0d1633131mr6513981pjb.17.1714409101691; Mon, 29
- Apr 2024 09:45:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JtLSw0kt"
+Message-ID: <eeeac631-6495-4b4c-9423-490839397dd1@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714412754;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r7oFU2BoxCCtC1ccNHcqKzlkmI8ESHX9lPB03PGJn9w=;
+	b=JtLSw0ktJVMmaBbu6NfLE+Nn85jlnfqvxnNX9ctwmRVvOlVQ76zPhEb3KLuYPLINVhDyjC
+	D2VvztNkf47xQd6IvC8FZmJ2Lz8Daux/v/kPMKs8ooAmhCD/foy6zqxoxWiW3HUe10U1IV
+	YKYqsoVsy7jX3zgD+TvcLD7X3Bezbfw=
+Date: Mon, 29 Apr 2024 10:45:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240421194206.1010934-1-jolsa@kernel.org> <20240421194206.1010934-7-jolsa@kernel.org>
- <CAEf4BzYU-y+vptqXpuALYecJJgPt+CTcbo+=Q9QXnu4vNwem+g@mail.gmail.com> <Zi9OwCwluxTo-Azd@krava>
-In-Reply-To: <Zi9OwCwluxTo-Azd@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 29 Apr 2024 09:44:49 -0700
-Message-ID: <CAEf4Bzb6M=8x6=WMZq8GDB3gS4kejsB9QaVSNEc1MwWbX_vvUQ@mail.gmail.com>
-Subject: Re: [PATCHv3 bpf-next 6/7] selftests/bpf: Add uretprobe compat test
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
-	bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [syzbot] [bpf?] [trace?] WARNING in group_send_sig_info
+Content-Language: en-GB
+To: syzbot <syzbot+1902c6d326478ce2dfb0@syzkaller.appspotmail.com>,
+ andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com,
+ john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ martin.lau@linux.dev, mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+ netdev@vger.kernel.org, rostedt@goodmis.org, sdf@google.com,
+ song@kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000bc2d38061716975e@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <000000000000bc2d38061716975e@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 29, 2024 at 12:39=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
->
-> On Fri, Apr 26, 2024 at 11:06:53AM -0700, Andrii Nakryiko wrote:
-> > On Sun, Apr 21, 2024 at 12:43=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> w=
-rote:
-> > >
-> > > Adding test that adds return uprobe inside 32 bit task
-> > > and verify the return uprobe and attached bpf programs
-> > > get properly executed.
-> > >
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  tools/testing/selftests/bpf/.gitignore        |  1 +
-> > >  tools/testing/selftests/bpf/Makefile          |  6 ++-
-> > >  .../selftests/bpf/prog_tests/uprobe_syscall.c | 40 +++++++++++++++++=
-++
-> > >  .../bpf/progs/uprobe_syscall_compat.c         | 13 ++++++
-> > >  4 files changed, 59 insertions(+), 1 deletion(-)
-> > >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_=
-compat.c
-> > >
-> > > diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/s=
-elftests/bpf/.gitignore
-> > > index f1aebabfb017..69d71223c0dd 100644
-> > > --- a/tools/testing/selftests/bpf/.gitignore
-> > > +++ b/tools/testing/selftests/bpf/.gitignore
-> > > @@ -45,6 +45,7 @@ test_cpp
-> > >  /veristat
-> > >  /sign-file
-> > >  /uprobe_multi
-> > > +/uprobe_compat
-> > >  *.ko
-> > >  *.tmp
-> > >  xskxceiver
-> > > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/sel=
-ftests/bpf/Makefile
-> > > index edc73f8f5aef..d170b63eca62 100644
-> > > --- a/tools/testing/selftests/bpf/Makefile
-> > > +++ b/tools/testing/selftests/bpf/Makefile
-> > > @@ -134,7 +134,7 @@ TEST_GEN_PROGS_EXTENDED =3D test_sock_addr test_s=
-kb_cgroup_id_user \
-> > >         xskxceiver xdp_redirect_multi xdp_synproxy veristat xdp_hw_me=
-tadata \
-> > >         xdp_features bpf_test_no_cfi.ko
-> > >
-> > > -TEST_GEN_FILES +=3D liburandom_read.so urandom_read sign-file uprobe=
-_multi
-> > > +TEST_GEN_FILES +=3D liburandom_read.so urandom_read sign-file uprobe=
-_multi uprobe_compat
-> >
-> > you need to add uprobe_compat to TRUNNER_EXTRA_FILES as well, no?
->
-> ah right
->
-> > > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c =
-b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > > index 9233210a4c33..3770254d893b 100644
-> > > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > > @@ -11,6 +11,7 @@
-> > >  #include <sys/wait.h>
-> > >  #include "uprobe_syscall.skel.h"
-> > >  #include "uprobe_syscall_call.skel.h"
-> > > +#include "uprobe_syscall_compat.skel.h"
-> > >
-> > >  __naked unsigned long uretprobe_regs_trigger(void)
-> > >  {
-> > > @@ -291,6 +292,35 @@ static void test_uretprobe_syscall_call(void)
-> > >                  "read_trace_pipe_iter");
-> > >         ASSERT_EQ(found, 0, "found");
-> > >  }
-> > > +
-> > > +static void trace_pipe_compat_cb(const char *str, void *data)
-> > > +{
-> > > +       if (strstr(str, "uretprobe compat") !=3D NULL)
-> > > +               (*(int *)data)++;
-> > > +}
-> > > +
-> > > +static void test_uretprobe_compat(void)
-> > > +{
-> > > +       struct uprobe_syscall_compat *skel =3D NULL;
-> > > +       int err, found =3D 0;
-> > > +
-> > > +       skel =3D uprobe_syscall_compat__open_and_load();
-> > > +       if (!ASSERT_OK_PTR(skel, "uprobe_syscall_compat__open_and_loa=
-d"))
-> > > +               goto cleanup;
-> > > +
-> > > +       err =3D uprobe_syscall_compat__attach(skel);
-> > > +       if (!ASSERT_OK(err, "uprobe_syscall_compat__attach"))
-> > > +               goto cleanup;
-> > > +
-> > > +       system("./uprobe_compat");
-> > > +
-> > > +       ASSERT_OK(read_trace_pipe_iter(trace_pipe_compat_cb, &found, =
-1000),
-> > > +                "read_trace_pipe_iter");
-> >
-> > why so complicated? can't you just set global variable that it was call=
-ed
->
-> hm, we execute separate uprobe_compat (32bit) process that triggers the b=
-pf
-> program, so we can't use global variable.. using the trace_pipe was the o=
-nly
-> thing that was easy to do
 
-you need child process to trigger uprobe, but you could have installed
-BPF program from parent process (you'd need to make child wait for
-parent to be ready, with normal pipe() like we do in other places).
-
-I think generally the less work forked child process does, the better.
-All those ASSERT() failures won't produce any output in child process,
-unless you run tests in verbose mode, because we haven't implemented
-some form of sending all the logs back to the parent process and so
-they are completely lost. But that's a separate topic.
-
-Either way, consider using pipe() to coordinate waiting from child on
-parent being ready, but otherwise do all the BPF-related heavy lifting
-from parent (you can attach BPF programs to specific PID using
-bpf_program__attach_uprobe() easily, it's not declarative, but simple
-enough).
-
+On 4/27/24 9:34 AM, syzbot wrote:
+> Hello,
 >
-> jirka
+> syzbot found the following issue on:
 >
-> >
-> > > +       ASSERT_EQ(found, 1, "found");
-> > > +
-> > > +cleanup:
-> > > +       uprobe_syscall_compat__destroy(skel);
-> > > +}
-> > >  #else
-> > >  static void test_uretprobe_regs_equal(void)
-> > >  {
-> > > @@ -306,6 +336,11 @@ static void test_uretprobe_syscall_call(void)
-> > >  {
-> > >         test__skip();
-> > >  }
-> > > +
-> > > +static void test_uretprobe_compat(void)
-> > > +{
-> > > +       test__skip();
-> > > +}
-> > >  #endif
-> > >
-> > >  void test_uprobe_syscall(void)
-> > > @@ -320,3 +355,8 @@ void serial_test_uprobe_syscall_call(void)
-> > >  {
-> > >         test_uretprobe_syscall_call();
-> > >  }
-> > > +
-> > > +void serial_test_uprobe_syscall_compat(void)
-> >
-> > and then no need for serial_test?
-> >
-> > > +{
-> > > +       test_uretprobe_compat();
-> > > +}
-> > > diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall_compat.=
-c b/tools/testing/selftests/bpf/progs/uprobe_syscall_compat.c
-> > > new file mode 100644
-> > > index 000000000000..f8adde7f08e2
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/bpf/progs/uprobe_syscall_compat.c
-> > > @@ -0,0 +1,13 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +#include <linux/bpf.h>
-> > > +#include <bpf/bpf_helpers.h>
-> > > +#include <bpf/bpf_tracing.h>
-> > > +
-> > > +char _license[] SEC("license") =3D "GPL";
-> > > +
-> > > +SEC("uretprobe.multi/./uprobe_compat:main")
-> > > +int uretprobe_compat(struct pt_regs *ctx)
-> > > +{
-> > > +       bpf_printk("uretprobe compat\n");
-> > > +       return 0;
-> > > +}
-> > > --
-> > > 2.44.0
-> > >
+> HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+> git tree:       bpf
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11ca8fe7180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1902c6d326478ce2dfb0
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+1902c6d326478ce2dfb0@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> raw_local_irq_restore() called with IRQs enabled
+> WARNING: CPU: 1 PID: 7785 at kernel/locking/irqflag-debug.c:10 warn_bogus_irq_restore+0x29/0x40 kernel/locking/irqflag-debug.c:10
+> Modules linked in:
+> CPU: 1 PID: 7785 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+> RIP: 0010:warn_bogus_irq_restore+0x29/0x40 kernel/locking/irqflag-debug.c:10
+> Code: 90 f3 0f 1e fa 90 80 3d de 59 01 04 00 74 06 90 c3 cc cc cc cc c6 05 cf 59 01 04 01 90 48 c7 c7 20 ba aa 8b e8 f8 d5 e7 f5 90 <0f> 0b 90 90 90 c3 cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
+> RSP: 0018:ffffc9000399fbb8 EFLAGS: 00010246
+>
+> RAX: 4aede97b00455d00 RBX: 1ffff92000733f7c RCX: ffff88802a129e00
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffffc9000399fc50 R08: ffffffff8157cc12 R09: 1ffff110172a51a2
+> R10: dffffc0000000000 R11: ffffed10172a51a3 R12: dffffc0000000000
+> R13: 1ffff92000733f78 R14: ffffc9000399fbe0 R15: 0000000000000246
+> FS:  000055557ae76480(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ffc27e190f8 CR3: 000000006cb50000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   <TASK>
+>   __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
+>   _raw_spin_unlock_irqrestore+0x120/0x140 kernel/locking/spinlock.c:194
+>   spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+>   unlock_task_sighand include/linux/sched/signal.h:754 [inline]
+>   do_send_sig_info kernel/signal.c:1302 [inline]
+>   group_send_sig_info+0x2e0/0x310 kernel/signal.c:1453
+>   bpf_send_signal_common+0x2dd/0x430 kernel/trace/bpf_trace.c:881
+>   ____bpf_send_signal kernel/trace/bpf_trace.c:886 [inline]
+>   bpf_send_signal+0x19/0x30 kernel/trace/bpf_trace.c:884
+>   bpf_prog_8cc4ff36b5985b6a+0x1d/0x1f
+>   bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+>   __bpf_prog_run include/linux/filter.h:650 [inline]
+>   bpf_prog_run include/linux/filter.h:664 [inline]
+>   __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+>   bpf_trace_run2+0x375/0x420 kernel/trace/bpf_trace.c:2420
+>   trace_sys_exit include/trace/events/syscalls.h:44 [inline]
+>   syscall_exit_work+0x153/0x170 kernel/entry/common.c:163
+>   syscall_exit_to_user_mode_prepare kernel/entry/common.c:194 [inline]
+>   __syscall_exit_to_user_mode_work kernel/entry/common.c:199 [inline]
+>   syscall_exit_to_user_mode+0x273/0x360 kernel/entry/common.c:212
+>   do_syscall_64+0x10a/0x240 arch/x86/entry/common.c:89
+>   entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+The following are related functions.
+
+struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
+                                            unsigned long *flags)
+{
+         struct sighand_struct *sighand;
+
+         rcu_read_lock();
+         for (;;) {
+                 sighand = rcu_dereference(tsk->sighand);
+                 if (unlikely(sighand == NULL))
+                         break;
+
+                 /*
+                  * This sighand can be already freed and even reused, but
+                  * we rely on SLAB_TYPESAFE_BY_RCU and sighand_ctor() which
+                  * initializes ->siglock: this slab can't go away, it has
+                  * the same object type, ->siglock can't be reinitialized.
+                  *
+                  * We need to ensure that tsk->sighand is still the same
+                  * after we take the lock, we can race with de_thread() or
+                  * __exit_signal(). In the latter case the next iteration
+                  * must see ->sighand == NULL.
+                  */
+                 spin_lock_irqsave(&sighand->siglock, *flags);
+                 if (likely(sighand == rcu_access_pointer(tsk->sighand)))
+                         break;
+                 spin_unlock_irqrestore(&sighand->siglock, *flags);
+         }
+         rcu_read_unlock();
+
+         return sighand;
+}
+
+static inline struct sighand_struct *lock_task_sighand(struct task_struct *task,
+                                                        unsigned long *flags)
+{
+         struct sighand_struct *ret;
+
+         ret = __lock_task_sighand(task, flags);
+         (void)__cond_lock(&task->sighand->siglock, ret);
+         return ret;
+}
+
+
+static inline void unlock_task_sighand(struct task_struct *task,
+                                                 unsigned long *flags)
+{
+         spin_unlock_irqrestore(&task->sighand->siglock, *flags);
+}
+
+int do_send_sig_info(int sig, struct kernel_siginfo *info, struct task_struct *p,
+                         enum pid_type type)
+{
+         unsigned long flags;
+         int ret = -ESRCH;
+
+         if (lock_task_sighand(p, &flags)) {
+                 ret = send_signal_locked(sig, info, p, type);
+                 unlock_task_sighand(p, &flags);
+         }
+         
+         return ret;
+}
+
+If p->sighand changed between lock_task_sighand() and unlock_task_sighand(),
+the warning makes sense. But I am not sure whether and how this could happen.
+
+> RIP: 0033:0x7f8e47e7dc0b
+> Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+> RSP: 002b:00007ffd999e9950 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: fffffffffffffffa RBX: 0000000000000003 RCX: 00007f8e47e7dc0b
+> RDX: 0000000000000000 RSI: 0000000000004c01 RDI: 0000000000000003
+> RBP: 00007ffd999e9a0c R08: 0000000000000000 R09: 00007ffd999e96f7
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000032
+> R13: 000000000004757a R14: 000000000004754c R15: 000000000000000f
+>   </TASK>
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
