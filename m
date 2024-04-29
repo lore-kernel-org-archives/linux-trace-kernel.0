@@ -1,143 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A842A1BB;
-	Mon, 29 Apr 2024 18:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE5E1411DD;
+	Mon, 29 Apr 2024 20:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714416349; cv=none; b=hFAn9AhqaNZZ3STG2MDjpqhGWNGltHZQ4uyAwQDipGNTjiwueDmbZRhVWJqefY25ul1cEqx5hyC4k7ekXKsihkyUq7IV9gjb6odhfUk8g/4T524MIiqarzR/ZoPpNPRvE73d212SGqlzRW4C3TQlQ5wi4GRecfO1zO5PRG5jyog=
+	t=1714422318; cv=none; b=kthEZgimGAtLjNhXbgVjR4e0dr3UIBYbMIn3w4o8b3Cfdi2p9KyVkLDwQg6iDzi25td84ccMZuix6cDuACwYgc/InzVY7w6h7Lz28wVoRdWesndUMDbr/jInRM5/DS6/ncwKpzIwiaBUXhNyGlr5GZWRQjEmwPQzXizsg+nA0M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714416349; c=relaxed/simple;
-	bh=V6izb0GAHCGz5w8715/v5zNlGoTcwH585pHGUtYZwYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ob3I4IjUWGnzNZmulJhRK7DfBBllaVtWj9TDYaYJAC0tOCmVXuLnuoPB+B38GTag1FYpeucBDDRq9logF0Z005nkL/6P9vojZA5yoXgj/O4YFcHbYNoSWPLdXG08GV4KRjfdsZSLUZnEbJgJYZHOX2mFPFYoe5uDA5SJJqPgMUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A1FC113CD;
-	Mon, 29 Apr 2024 18:45:47 +0000 (UTC)
-Date: Mon, 29 Apr 2024 14:46:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tze-nan wu <Tze-nan.Wu@mediatek.com>
-Cc: <mhiramat@kernel.org>, <bobule.chang@mediatek.com>,
- <wsd_upstream@mediatek.com>, Cheng-Jui Wang <cheng-jui.wang@mediatek.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
-Message-ID: <20240429144626.7d868ad3@gandalf.local.home>
-In-Reply-To: <20240428202837.0cabca17@rorschach.local.home>
-References: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
-	<20240428202837.0cabca17@rorschach.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1714422318; c=relaxed/simple;
+	bh=pwghGgL6we/Ml2C/J3V6Adbah1A6tVb7wbS4TO2icFY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qNKQz/QkHJYGXyeKKZYMOd7NXs4+TP2p5+2RCDzkAg4ECvnsPhd6xCl9cBfA+kqPkinpKX03osu5gUxGFJ98O54pFAv4PfCA1GEO+/TKJCZXYWekmp5xTnNA1grgmfzX1NOEiw8Hl2g5L4OoRY7ODVMXX3hMENYIb5pl7Svq/y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4xufAP6; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4xufAP6"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso3502489a12.3;
+        Mon, 29 Apr 2024 13:25:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714422317; x=1715027117; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhvp4E4fp/vgpdAzYCAoNC2wEtSAZOXyDAc7Z10R4aM=;
+        b=b4xufAP6dL23XCJR9UBGVTYH4YoBExeL8FiFrcOizSZOEGLT4cOYeWRkgKh2nq9mSA
+         l2uq69OsZxATFdJeDuEN5TayfarL4eclLRZz/O9+ZMltYD433wBO11DV9Y93LXvDPQWd
+         CSPb8vq02ERAkFZ7WDcbn8L8TqRZ+4ibII3X2ikP6AbSp4CK0HEpbkBMzNwv8mOJ4U/N
+         K6wNyFu8doFJ2wmFtWLziOVSH+HsQF/4OC1uA1xpRsr8mELChzmLjLbIbL58ANcmIHUg
+         c+YEPp0Om0ousm9OJM0t/bxHDffTuC1+JDfsHObefTEpABg/RwfspG/OusA9TnKry8Fa
+         wRfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714422317; x=1715027117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bhvp4E4fp/vgpdAzYCAoNC2wEtSAZOXyDAc7Z10R4aM=;
+        b=fPtnjz/9lga3YyhPs2YFUwrNibJvME1Bxr7AlPswWwuw2YG+8XHA075xrBPNBHpBOk
+         RU7Kzo4AFDULLqyx5fZzeRIo5dqfT30gPliI+1VOxBsNiSRcT5lMV5jhBEIklXrbADvD
+         4qJkKFGBz+YwHSAc1i+sRbY0KZ2fFwOajIomxKZRkRHZ9axYmPpE7PpgZlFwa23m6wd5
+         fwMvhyXn1fVYcKHBUAdEgwcXKGyBYJZA5ZSQRJzax5Lgjpi2uDGxLYYXT4sIawG/b2dy
+         LHOPsa2uJ18Muin+c8PwrZ4amp60YgEJTZnWrjp663y0HRNdYAXOapOv6xSkzUYs16XU
+         Q68g==
+X-Forwarded-Encrypted: i=1; AJvYcCU43OM7GzWZbwt2lNVWU5vRJBkOEPldSNce06eVK1kTeaM1ukjVydb03i24UIgcuJ/ZeKm9QG9EbeKuChbpn8d7gP71/iMUFkzAkTggZ4z1by5GVQNk0y5HFkIP/TnS6KaRYLuoDncp2Lk7FDP2M1n5rpxIKC9hJYy+fde282cSzpbqf3yU
+X-Gm-Message-State: AOJu0YzIiZmV8e8Id2HnCble6rak1Q+GTjsYgYGAYVItWH+IHjY7JMqz
+	iQyPW468bZgqvAWZSavjk/p94zm5wbWNC4Qc9LX6xguRyjFUcNQyCPnwmmEXCGuHm/pWpkb8rmd
+	CKSprMBDv//LSGThvuGnwDunmprw=
+X-Google-Smtp-Source: AGHT+IGySLgDTP6dTrK6KqBdi2BSk+WMAzY8a8b3ch2XV4CNogHHJNZ0ZbejpB1apgT0HONLxS4ACmPNzQf3+Uy5sLI=
+X-Received: by 2002:a17:90a:4dc7:b0:2b1:782:8827 with SMTP id
+ r7-20020a17090a4dc700b002b107828827mr729722pjl.20.1714422316584; Mon, 29 Apr
+ 2024 13:25:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+ <CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com> <20240429225119.410833c12d9f6fbcce0a58db@kernel.org>
+In-Reply-To: <20240429225119.410833c12d9f6fbcce0a58db@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 29 Apr 2024 13:25:04 -0700
+Message-ID: <CAEf4BzZDqD4fyLpoq9r2M0HnES7aO7YW=ZNH-k8uPJWd_VbAJg@mail.gmail.com>
+Subject: Re: [PATCH v9 00/36] tracing: fprobe: function_graph: Multi-function
+ graph and fprobe on fgraph
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Florent Revest <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 28 Apr 2024 20:28:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Apr 29, 2024 at 6:51=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> Hi Andrii,
+>
+> On Thu, 25 Apr 2024 13:31:53 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > Hey Masami,
+> >
+> > I can't really review most of that code as I'm completely unfamiliar
+> > with all those inner workings of fprobe/ftrace/function_graph. I left
+> > a few comments where there were somewhat more obvious BPF-related
+> > pieces.
+> >
+> > But I also did run our BPF benchmarks on probes/for-next as a baseline
+> > and then with your series applied on top. Just to see if there are any
+> > regressions. I think it will be a useful data point for you.
+>
+> Thanks for testing!
+>
+> >
+> > You should be already familiar with the bench tool we have in BPF
+> > selftests (I used it on some other patches for your tree).
+>
+> What patches we need?
+>
 
-> > Looking for any suggestion or solution, appreciate.  
-> 
-> Yeah, I do not think eventfs should be involved in this. It needs to be
-> protected at a higher level (in the synthetic/dynamic event code).
-> 
-> I'm just coming back from Japan, and I'll need to take a deeper look at
-> this after I recover from my jetlag.
+You mean for this `bench` tool? They are part of BPF selftests (under
+tools/testing/selftests/bpf), you can build them by running:
 
-OK, so I guess the eventfs nodes need an optional release callback. Here's
-the right way to do that. I added a "release" function to the passed in
-entry array that allows for calling a release function when the
-eventfs_inode is freed. Then in code for creating events, I call
-event_file_get() on the file being assigned and have the freeing of the
-"enable" file have the release function that will call event_file_put() on
-that file structure.
+$ make RELEASE=3D1 -j$(nproc) bench
 
-Does this fix it for you?
+After that you'll get a self-container `bench` binary, which has all
+the self-contained benchmarks.
 
--- Steve
+You might also find a small script (benchs/run_bench_trigger.sh inside
+BPF selftests directory) helpful, it collects final summary of the
+benchmark run and optionally accepts a specific set of benchmarks. So
+you can use it like this:
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 894c6ca1e500..dc97c19f9e0a 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -84,10 +84,17 @@ enum {
- static void release_ei(struct kref *ref)
- {
- 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
-+	const struct eventfs_entry *entry;
- 	struct eventfs_root_inode *rei;
- 
- 	WARN_ON_ONCE(!ei->is_freed);
- 
-+	for (int i = 0; i < ei->nr_entries; i++) {
-+		entry = &ei->entries[i];
-+		if (entry->release)
-+			entry->release(entry->name, ei->data);
-+	}
-+
- 	kfree(ei->entry_attrs);
- 	kfree_const(ei->name);
- 	if (ei->is_events) {
-diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
-index 7a5fe17b6bf9..d03f74658716 100644
---- a/include/linux/tracefs.h
-+++ b/include/linux/tracefs.h
-@@ -62,6 +62,8 @@ struct eventfs_file;
- typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
- 				const struct file_operations **fops);
- 
-+typedef void (*eventfs_release)(const char *name, void *data);
-+
- /**
-  * struct eventfs_entry - dynamically created eventfs file call back handler
-  * @name:	Then name of the dynamic file in an eventfs directory
-@@ -72,6 +74,7 @@ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
- struct eventfs_entry {
- 	const char			*name;
- 	eventfs_callback		callback;
-+	eventfs_release			release;
- };
- 
- struct eventfs_inode;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 52f75c36bbca..d14c84281f2b 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2552,6 +2552,14 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- 	return 0;
- }
- 
-+/* The file is incremented on creation and freeing the enable file decrements it */
-+static void event_release(const char *name, void *data)
-+{
-+	struct trace_event_file *file = data;
-+
-+	event_file_put(file);
-+}
-+
- static int
- event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
- {
-@@ -2566,6 +2574,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
- 		{
- 			.name		= "enable",
- 			.callback	= event_callback,
-+			.release	= event_release,
- 		},
- 		{
- 			.name		= "filter",
-@@ -2634,6 +2643,9 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
- 		return ret;
- 	}
- 
-+	/* Gets decremented on freeing of the "enable" file */
-+	event_file_get(file);
-+
- 	return 0;
- }
- 
+$ benchs/run_bench_trigger.sh kprobe kprobe-multi
+kprobe         :   18.731 =C2=B1 0.639M/s
+kprobe-multi   :   23.938 =C2=B1 0.612M/s
+
+By default it will run a wider set of benchmarks (no uprobes, but a
+bunch of extra fentry/fexit tests and stuff like this).
+
+> >
+> > BASELINE
+> > =3D=3D=3D=3D=3D=3D=3D=3D
+> > kprobe         :   24.634 =C2=B1 0.205M/s
+> > kprobe-multi   :   28.898 =C2=B1 0.531M/s
+> > kretprobe      :   10.478 =C2=B1 0.015M/s
+> > kretprobe-multi:   11.012 =C2=B1 0.063M/s
+> >
+> > THIS PATCH SET ON TOP
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > kprobe         :   25.144 =C2=B1 0.027M/s (+2%)
+> > kprobe-multi   :   28.909 =C2=B1 0.074M/s
+> > kretprobe      :    9.482 =C2=B1 0.008M/s (-9.5%)
+> > kretprobe-multi:   13.688 =C2=B1 0.027M/s (+24%)
+>
+> This looks good. Kretprobe should also use kretprobe-multi (fprobe)
+> eventually because it should be a single callback version of
+> kretprobe-multi.
+>
+> >
+> > These numbers are pretty stable and look to be more or less representat=
+ive.
+> >
+> > As you can see, kprobes got a bit faster, kprobe-multi seems to be
+> > about the same, though.
+> >
+> > Then (I suppose they are "legacy") kretprobes got quite noticeably
+> > slower, almost by 10%. Not sure why, but looks real after re-running
+> > benchmarks a bunch of times and getting stable results.
+>
+> Hmm, kretprobe on x86 should use ftrace + rethook even with my series.
+> So nothing should be changed. Maybe cache access pattern has been
+> changed?
+> I'll check it with tracefs (to remove the effect from bpf related changes=
+)
+>
+> >
+> > On the other hand, multi-kretprobes got significantly faster (+24%!).
+> > Again, I don't know if it is expected or not, but it's a nice
+> > improvement.
+>
+> Thanks!
+>
+> >
+> > If you have any idea why kretprobes would get so much slower, it would
+> > be nice to look into that and see if you can mitigate the regression
+> > somehow. Thanks!
+>
+> OK, let me check it.
+>
+> Thank you!
+>
+> >
+> >
+> > >  51 files changed, 2325 insertions(+), 882 deletions(-)
+> > >  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/ad=
+d_remove_fprobe_repeat.tc
+> > >
+> > > --
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
