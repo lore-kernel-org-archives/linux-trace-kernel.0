@@ -1,149 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B321638B;
-	Mon, 29 Apr 2024 00:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91E9EED4;
+	Mon, 29 Apr 2024 07:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714350520; cv=none; b=AGwLO63muEumiOBMXWIbBtT45ckNYGdtYK0PzdLDXoTYvU7gHpWclMII/Zch7JadOzgK697f9Yxa0rC13A/UYCBi2873c+NQRT2LcH7nciySCKZFcV4NIWcDcMjVONu1/ljb2FmYRM2gRAX9GP4+1DP3XGhk8FQBEtgrBf8MJ1U=
+	t=1714376004; cv=none; b=GPdPlT3YOS44/f67sWmCqNoGaAk0EHUPvFrat26uiOnyESkpP9qugT4q+unYNna5EHuP3fmGzp98soDei5avXtdkL6IWwTM1/Z02JdxqNbrHAB8iai9V9CfML8cVJLqmy5sYjj+GFEJEja7+CDn1+eEFHQHc5z8AhxUQqyUqIIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714350520; c=relaxed/simple;
-	bh=Z5ik7Q4hz896X4CenAOKVNubLwUMayZQDBFuNNNZkfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YjXj7mKWkWIIkRu0WpuxXmrMbYb3VrYrFMAUpCbfIbOiDyYGoVbNmNFTFXnfcV5zpqNu6xsgBqCc4m3iTEDPOwn0b3mTZW5SZV4O9IKjCXFCudKjUdE1B/5a7bjOxJqdrYUwDY6nXipG4M0HEDzTZAhBCPl+YdlzhYsjFTPBbzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75705C113CC;
-	Mon, 29 Apr 2024 00:28:39 +0000 (UTC)
-Date: Sun, 28 Apr 2024 20:28:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tze-nan wu <Tze-nan.Wu@mediatek.com>
-Cc: <mhiramat@kernel.org>, <bobule.chang@mediatek.com>,
- <wsd_upstream@mediatek.com>, Cheng-Jui Wang <cheng-jui.wang@mediatek.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
-Message-ID: <20240428202837.0cabca17@rorschach.local.home>
-In-Reply-To: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
-References: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1714376004; c=relaxed/simple;
+	bh=xCAsyKsm0O2P5yVQziSDwhD1A5O80jRdVMDkGgybmbE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PQQW485q0b0MNh3nbe5NuIScGNTKYkJBC0pzZcwAXms+aXZv5APnyoZdlqRRN0qSPblN1iZpbFcrtI9CA+J+r3vVv2TgUVcuhn4F0+Ch/DoBpYlgyJzi2sStDpwlcQR8SdV8b8rpb5xza5VInuLfhPXCbL/p55gux4eU5wg/+rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TYkQM4bK; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYkQM4bK"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a52223e004dso432997166b.2;
+        Mon, 29 Apr 2024 00:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714376001; x=1714980801; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aP2AX+lZetOMlju+FKo5C17Zuw89jaRcaprqSG8AZqE=;
+        b=TYkQM4bKL04oKQXRb+jPZPWaY7FLsgEg8l8JaSEbHeF34gt/zthTHhRXZN1qiM3f97
+         j4Zd8V/8a/jXgYnKCOlvupsrgRU0DhGyz8zqGBs0ZTPn0pzWf8qi4Ps1N3jaNL7b8hiO
+         Q3L0fLcydElOsmzKA5FqzlpwP/bcfDoSObUTpvXz3cJo78li0w3H72F/TWjzk2zHJz9b
+         4/u2iHxWdLj83EZ3sRz40x4sHtRtylIhFeoQ/m7pLxG2amo+Nqjlozb2dIwgTvT5xX6p
+         FBbj3W06QWQuPuCLPzY17KWjVYTcwycMnMrLzHAhiLLtb2Fply1nwcXuAJubEyWNNRsq
+         Wp1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714376001; x=1714980801;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aP2AX+lZetOMlju+FKo5C17Zuw89jaRcaprqSG8AZqE=;
+        b=EUGpHkLGXPM2xoZQ9ssHfinRQSDCFYSA58/L+hkESQ91rcHmsSlMXHvcN0yQWVTxmN
+         wTi2yF805zDdpPpCkGXHBCoTdWoSyNinB9HexqKaE79a4anGE1vG4Gnt0/NB9ew6IVHo
+         Dz0EflDYSxn6VkHLokiGgef5UiRiv355QJ/lMrBeP8sZ1/LfgQEbFvCjpSKEhe+zYXEc
+         mY49XGyaT/vcpGER4eccVUhBnwvJgwFh6YeC/54h/LPENOvTdtFr+7xQ79fmwtq+wR95
+         lj7MkUjLNBDWW7zrm+JsVIvEmGcBaR9yifmQyGDtOPA/+EhWkNTCjYCrA0Zv6/Dq+kqJ
+         imKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWo1whroiDru7xHWDAeAak+VuLm92hlKmf+IJeXx02nFTtglZhYm+WXji2cwNi7U3STNk5hfxhAKp6/op/CJVcQzPTNG6VbpCQuUigkYBbfIleeoeSQW3BzUW95aTmO3C5ZBMH1q5ILyW8GT2PxooXZV6bZo84JVUVIr3Tl7GxNGt97+3G2TXBW97MXq8kpxfYKs+G+G6uS5zNBbkPE+FRS
+X-Gm-Message-State: AOJu0Yyistrf1R7HIVIAhSVqdIFCQuXttoBdR6pEtuTrl2fHl2RbZq3S
+	7lhWGsaPxNZ8cA+sTgyk16HJL5p/U4MCf9vGOBfRq+l3BUZU1TNa
+X-Google-Smtp-Source: AGHT+IGqylCf/ldo7kntYAX4/5eM2LWZUh5alQVvgKY0qk6DcwG4GzloggwFhM2IkqtpPIozmLqwoQ==
+X-Received: by 2002:a17:906:38c8:b0:a58:9707:685b with SMTP id r8-20020a17090638c800b00a589707685bmr8036509ejd.16.1714376000620;
+        Mon, 29 Apr 2024 00:33:20 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id er1-20020a170907738100b00a58bf5ebc68sm4416505ejc.146.2024.04.29.00.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Apr 2024 00:33:20 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 29 Apr 2024 09:33:17 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv3 bpf-next 5/7] selftests/bpf: Add uretprobe syscall call
+ from user space test
+Message-ID: <Zi9NPfII8I7nWz6O@krava>
+References: <20240421194206.1010934-1-jolsa@kernel.org>
+ <20240421194206.1010934-6-jolsa@kernel.org>
+ <CAEf4BzbWr9s2HiWU=7=okwH7PR8LHGFj2marmaOxKW61BWKHGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbWr9s2HiWU=7=okwH7PR8LHGFj2marmaOxKW61BWKHGg@mail.gmail.com>
 
-On Fri, 26 Apr 2024 15:34:08 +0800
-Tze-nan wu <Tze-nan.Wu@mediatek.com> wrote:
+On Fri, Apr 26, 2024 at 11:03:29AM -0700, Andrii Nakryiko wrote:
+> On Sun, Apr 21, 2024 at 12:43 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Adding test to verify that when called from outside of the
+> > trampoline provided by kernel, the uretprobe syscall will cause
+> > calling process to receive SIGILL signal and the attached bpf
+> > program is no executed.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  .../selftests/bpf/prog_tests/uprobe_syscall.c | 92 +++++++++++++++++++
+> >  .../selftests/bpf/progs/uprobe_syscall_call.c | 15 +++
+> >  2 files changed, 107 insertions(+)
+> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_call.c
+> >
+> 
+> See nits below, but overall LGTM
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> 
+> [...]
+> 
+> > @@ -219,6 +301,11 @@ static void test_uretprobe_regs_change(void)
+> >  {
+> >         test__skip();
+> >  }
+> > +
+> > +static void test_uretprobe_syscall_call(void)
+> > +{
+> > +       test__skip();
+> > +}
+> >  #endif
+> >
+> >  void test_uprobe_syscall(void)
+> > @@ -228,3 +315,8 @@ void test_uprobe_syscall(void)
+> >         if (test__start_subtest("uretprobe_regs_change"))
+> >                 test_uretprobe_regs_change();
+> >  }
+> > +
+> > +void serial_test_uprobe_syscall_call(void)
+> 
+> does it need to be serial? non-serial are still run sequentially
+> within a process (there is no multi-threading), it's more about some
+> global effects on system.
 
-> "tracing_event_file" is at the risk of use-after-free due to the race of
-> two functions "tracing_open_file_tr" and "synth_event_release".
-> Specifically, it could be freed by synth_event_release before
-> tracing_open_file_tr has the opportunity to access its members.
-> 
-> It's easy to reproduced by first executing script 'A' and then script 'B'
-> in my environment.
-> 
->   Script 'A':
->     echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
->     while :
->     do
->       echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
->     done
-> 
->   Script 'B':
->     echo > /sys/kernel/tracing/synthetic/events
-
-I think you meant:
-
-      echo > /sys/kernel/tracing/synthetic_events
-
-> 
->   My environment:
->     arm64 + generic and swtag based KASAN both enabled + kernel-6.6.18
-> 
-> KASAN report
-> ==================================================================
-> BUG: KASAN: slab-use-after-free in tracing_open_file_tr
-> Read of size 8 at addr 9*ffff********** by task sh/3485
-> Pointer tag: [9*], memory tag: [fe]
-> 
-> CPU: * PID: 3485 Comm: sh Tainted: ****************
-> Call trace:
->  __hwasan_tag_mismatch
->  tracing_open_file_tr
->  do_dentry_open
->  vfs_open
->  path_openat
-> 
-> Freed by task 3490:
->  slab_free_freelist_hook
->  kmem_cache_free
->  event_file_put
->  remove_event_file_dir
->  __trace_remove_event_call
->  trace_remove_event_call
->  synth_event_release
->  dyn_events_release_all
->  synth_events_open
-> 
-> page last allocated via order 0, migratetype Unmovable:
->  __slab_alloc
->  kmem_cache_alloc
->  trace_create_new_event
->  trace_add_event_call
->  register_synth_event
->  __create_synth_event
->  create_or_delete_synth_event
->  trace_parse_run_command
->  synth_events_write
->  vfs_write
-
-Thanks for reporting this.
+plz see below
 
 > 
-> Based on the assumption that eventfs_inode will persist throughout the
-> execution of the tracing_open_file_tr function,
-> we can fix this issue by incrementing the reference count of
-> trace_event_file once it is assigned to eventfs_inode->data.
-> The reference count will then be decremented during the release phase of
-> eventfs_inode.
+> > +{
+> > +       test_uretprobe_syscall_call();
+> > +}
+> > diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall_call.c b/tools/testing/selftests/bpf/progs/uprobe_syscall_call.c
+> > new file mode 100644
+> > index 000000000000..5ea03bb47198
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/bpf/progs/uprobe_syscall_call.c
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include "vmlinux.h"
+> > +#include <bpf/bpf_helpers.h>
+> > +#include <string.h>
+> > +
+> > +struct pt_regs regs;
+> > +
+> > +char _license[] SEC("license") = "GPL";
+> > +
+> > +SEC("uretprobe//proc/self/exe:uretprobe_syscall_call")
+> > +int uretprobe(struct pt_regs *regs)
+> > +{
+> > +       bpf_printk("uretprobe called");
 > 
-> This ensures that trace_event_file is not prematurely freed while the
-> tracing_open_file_tr function is being called.
-> 
-> Fixes: bb32500fb9b7 ("tracing: Have trace_event_file have ref counters")
-> Co-developed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-> Signed-off-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-> Signed-off-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
-> ---
-> BTW, I've also attempted to reproduce the same issue in another
-> environment (described below).
-> It's also reproducible but in a lower rate.
-> 
-> another environment:
->   x86 + ubuntu + generic kasan enabled + kernel-6.9-rc4
-> 
-> After applying the patch, KASAN no longer reports any issues when
-> following the same reproduction steps in my arm64 environment. 
-> However, I am concerned about potential side effects that the patch might introduce.
-> Additionally, the newly added function "is_entry_event_callback" may not
-> be reliable in my opinion,
-> as the callback function used in the comparison could change in future. 
-> Nonetheless, this is the best solution I can come up with now.
-> 
-> Looking for any suggestion or solution, appreciate.
+> debugging leftover? we probably don't want to pollute trace_pipe from test
 
-Yeah, I do not think eventfs should be involved in this. It needs to be
-protected at a higher level (in the synthetic/dynamic event code).
+the reason for this is to make sure the bpf program was not executed,
 
-I'm just coming back from Japan, and I'll need to take a deeper look at
-this after I recover from my jetlag.
+the test makes sure the child gets killed with SIGILL and also that
+the bpf program was not executed by checking the trace_pipe and
+making sure nothing was received
 
-Thanks,
+the trace_pipe reading is also why it's serial
 
--- Steve
+jirka
+
+> 
+> > +       return 0;
+> > +}
+> > --
+> > 2.44.0
+> >
