@@ -1,385 +1,269 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24ED143737;
-	Tue, 30 Apr 2024 15:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4F1175554;
+	Tue, 30 Apr 2024 16:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714490544; cv=none; b=eEfoYEUA9FdrljgAXE5IOYkAx4vb2nofV5Klu5K3X5OsiGNqMh1hsKSxbVu+As9oYPWKGXzPtuzP0NQJQqViBfqQeCbG+XksWE8LsXa8osKgtBFWFXB3BWAJwwuRUgL6ZZTZ1/s5BoWzvgsqEUimqtPnOhTVuCHDseqy8eVCUEI=
+	t=1714494594; cv=none; b=EJxTUj0LJzWCoxdgh4zCsDSZEINHJ13iI+o6YPA93bz0Ptuy8HFpxqjawDWKHxdyvzQy0Cgg3TWT4TC+HGt+6uYo6JONIzLG6RM6AtMKomLtmf3aamaZp5l2wDWX1E49No5bcOh8rj/GGnFpbGeWmgTvKrIFuoSiDpbP0bCG70I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714490544; c=relaxed/simple;
-	bh=xfSIlhknITm7Nn1Vpn8PZ3WraOqM67xMgM/4IKfddrY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u+9Sx/NfCEe9RZsOJiQotZHMHoi22wG/p5U+zchrUaZwvCrT1c/hMXeuzEnEocgLlJfV6WMlTDUA19cO4aiZFR7mHVp1knTm67qv5qQs5j6Z4vRUPqxGan59AbQPd0j/BLuGLrAxAskRWMVvjARm4aqdsvHVDZHbila1DAhu+yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=1TI+xOV3; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
+	s=arc-20240116; t=1714494594; c=relaxed/simple;
+	bh=nz+VaBU6RtPqdW451GEPI/aHEIuxOlomtq0gZmOR5zM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uo5gUCdvQVHqwBUMiKWxAEE0AAkRVcwkAQOHR7HSCR/4kQWccVVfKlXsby7iMYqpI0A+MzwrnLJ2/QeOUfvnQanrmDXiWO8fy6iO0mh2h1W0z8b8G+W08KemI9WYMkY5lSqhgUsr0SCXklVy5ytHXfvhf2iB6J/gp60cJ7q3kKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iTtPhhGV; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="1TI+xOV3"
-Received: from bender.morinfr.org (unknown [82.66.66.112])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 1A9182003E0;
-	Tue, 30 Apr 2024 17:22:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
-	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=dQM45eMyF7RJffXkEfhsLwlqWnYeFBAu+epsoydTVNw=; b=1TI+xOV3wyhVryjw+IYpNflVED
-	DYfMjcZBFudXQQQ53imVpl7FvtNGAdIPhaghOPg+Ty8Ox8VTM0O3KQsTV9oWnxeVUhsOlzLy5/gBH
-	Ha8zDn/nXWvevmbsFeFnCEEKHRU/XsZ1IaRrFGIDCgJ8LwWB/aRP77d93czL+DW2iT2E=;
-Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
-	(envelope-from <guillaume@morinfr.org>)
-	id 1s1pJ2-004apZ-1H;
-	Tue, 30 Apr 2024 17:22:08 +0200
-Date: Tue, 30 Apr 2024 17:22:08 +0200
-From: Guillaume Morin <guillaume@morinfr.org>
-To: David Hildenbrand <david@redhat.com>, oleg@redhat.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	muchun.song@linux.dev
-Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
-Message-ID: <ZjEMoHkbloHVeJ0h@bender.morinfr.org>
-References: <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
- <ZibOQI9kwzE98n12@bender.morinfr.org>
- <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
- <ZilvOi7ceSXmwkNq@bender.morinfr.org>
- <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
- <Zip0fEliGeL0qmID@bender.morinfr.org>
- <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
- <Zirw0uINbP6GxFiK@bender.morinfr.org>
- <385d3516-95bb-4ff9-9d60-ac4e46104130@redhat.com>
- <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTtPhhGV"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2a4b457769eso4920673a91.2;
+        Tue, 30 Apr 2024 09:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714494592; x=1715099392; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K9EaAPDvr92t3gXHQnvo1ngk0g+MSCmUHMmnShhgOnA=;
+        b=iTtPhhGV5fWEl7e+QKrwb/zJfHsEkjuZbAE9A+L6jVrKkpyZQfbWiykbg6bTabMaOv
+         zmvj8gZ2UXwZ/L3jESx1UGiF52Zv37uq9rj5TW+8VxgKBt6lUbxfPNpfack5Xpm+DjtO
+         ITP06sS/zbsQJhuMMSkHRogSoqTWxaMe7tIyE/C0v7X0/NJd+WoD+K06N82VXr8j6q9R
+         CbjEmx1bgJExO6QzenLrhQCJxTvONuPB8HYTghfVyw0ZEZ0a3S++v/LhzNxNQR0yKmKY
+         veA9RgfQX6AI+CbJ5BoR4p6TfLuhBZUFeGzqzuB+fLnWn6rPjgNH/G0nKO2BMcKSGyNM
+         tjdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714494592; x=1715099392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K9EaAPDvr92t3gXHQnvo1ngk0g+MSCmUHMmnShhgOnA=;
+        b=Kvkoh0uld4DeJaqEhtj9sbrogVOlYqvJQ0tDbnFYOnBd1zSkoiXJ4jtZbF489/ExXo
+         PXS/oPY2JbBA+QO+kaBISR3+MT1uP9kYhaYeQHlTVMXyM7r4pyAZiheqnt5V/2bexw0i
+         4NsO1dhE6SutQgtSPaKaoE424XN5sJR7dS2lFs/n1k4ZfIUbSVd0ynJq5Qddt1+BBvPt
+         oeUtvsfdDx1qRL4NuuKXRFwMtfRI3g4/BI805FKAs9j1/UZlFVtciq6kWMwX1SHR+KeE
+         7R+eRghinisSLd7vqydDl5EJAlMH2lz+c3FY+NkfN91sLNxJ9I5gzWfkmpbXYlGhpBCK
+         vp4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWlfmnY0vLMcgMT+yXLwPRDrW+xBIZAcBWk15XUq7jUCm+swuLiXnNB/sxSOOuXXp5TQJCuJ7R5LnVgyYLP+oOBOk5KfM21tjLMOvsCJ5EO/EdOS/IfOMQPnLk1GrDR0Yyfyh1fdLfsLiIMMmI3rmSdcSIqSfq/kcFrmzit7wTPgrOytcny
+X-Gm-Message-State: AOJu0YyJHMA/b71fWFV2rQ34AclWZqL+O3wqguWodsCaQ+1SnswhL5Iy
+	warAXXRonPBiacLcoFbGJE/QeVmCTfd53Wl3qbo5plU0eeH6rYhTKAbFncZrfFB5catSqY8jIj7
+	l6scmodYtq1HgODTk4Tg3qtadLUXpqqm/
+X-Google-Smtp-Source: AGHT+IG86XdZ6k/BeO+ngAp+nqWg9VwdFEyoOuJNHEuvGMjdevq6xJDE40lZ4lICPs2AgNN+c8w8m/aWm10nDV5tsbM=
+X-Received: by 2002:a17:90b:19d0:b0:2af:ff3:e14a with SMTP id
+ nm16-20020a17090b19d000b002af0ff3e14amr2988226pjb.16.1714494592488; Tue, 30
+ Apr 2024 09:29:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+ <CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com>
+ <20240429225119.410833c12d9f6fbcce0a58db@kernel.org> <CAEf4BzZDqD4fyLpoq9r2M0HnES7aO7YW=ZNH-k8uPJWd_VbAJg@mail.gmail.com>
+ <20240430223217.fd375d57d130a4207be18e94@kernel.org>
+In-Reply-To: <20240430223217.fd375d57d130a4207be18e94@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 30 Apr 2024 09:29:40 -0700
+Message-ID: <CAEf4BzZQLPL7419W1=yNw6gzB4gquiXfeANbUKbUL8bK+5if=w@mail.gmail.com>
+Subject: Re: [PATCH v9 00/36] tracing: fprobe: function_graph: Multi-function
+ graph and fprobe on fgraph
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Florent Revest <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26 Apr 21:55, Guillaume Morin wrote:
+On Tue, Apr 30, 2024 at 6:32=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
 >
-> On 26 Apr  9:19, David Hildenbrand wrote:
-> > A couple of points:
-> > 
-> > a) Don't use page_mapcount(). Either folio_mapcount(), but likely you want
-> > to check PageAnonExclusive.
-> > 
-> > b) If you're not following the can_follow_write_pte/_pmd model, you are
-> > doing something wrong :)
-> > 
-> > c) The code was heavily changed in mm/mm-unstable. It was merged with t
-> > the common code.
-> > 
-> > Likely, in mm/mm-unstable, the existing can_follow_write_pte and
-> > can_follow_write_pmd checks will already cover what you want in most cases.
-> > 
-> > We'd need a can_follow_write_pud() to cover follow_huge_pud() and
-> > (unfortunately) something to handle follow_hugepd() as well similarly.
-> > 
-> > Copy-pasting what we do in can_follow_write_pte() and adjusting for
-> > different PTE types is the right thing to do. Maybe now it's time to factor
-> > out the common checks into a separate helper.
-> 
-> I tried to get the hugepd stuff right but this was the first I heard
-> about it :-) Afaict follow_huge_pmd and friends were already DTRT
+> On Mon, 29 Apr 2024 13:25:04 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > On Mon, Apr 29, 2024 at 6:51=E2=80=AFAM Masami Hiramatsu <mhiramat@kern=
+el.org> wrote:
+> > >
+> > > Hi Andrii,
+> > >
+> > > On Thu, 25 Apr 2024 13:31:53 -0700
+> > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > > Hey Masami,
+> > > >
+> > > > I can't really review most of that code as I'm completely unfamilia=
+r
+> > > > with all those inner workings of fprobe/ftrace/function_graph. I le=
+ft
+> > > > a few comments where there were somewhat more obvious BPF-related
+> > > > pieces.
+> > > >
+> > > > But I also did run our BPF benchmarks on probes/for-next as a basel=
+ine
+> > > > and then with your series applied on top. Just to see if there are =
+any
+> > > > regressions. I think it will be a useful data point for you.
+> > >
+> > > Thanks for testing!
+> > >
+> > > >
+> > > > You should be already familiar with the bench tool we have in BPF
+> > > > selftests (I used it on some other patches for your tree).
+> > >
+> > > What patches we need?
+> > >
+> >
+> > You mean for this `bench` tool? They are part of BPF selftests (under
+> > tools/testing/selftests/bpf), you can build them by running:
+> >
+> > $ make RELEASE=3D1 -j$(nproc) bench
+> >
+> > After that you'll get a self-container `bench` binary, which has all
+> > the self-contained benchmarks.
+> >
+> > You might also find a small script (benchs/run_bench_trigger.sh inside
+> > BPF selftests directory) helpful, it collects final summary of the
+> > benchmark run and optionally accepts a specific set of benchmarks. So
+> > you can use it like this:
+> >
+> > $ benchs/run_bench_trigger.sh kprobe kprobe-multi
+> > kprobe         :   18.731 =C2=B1 0.639M/s
+> > kprobe-multi   :   23.938 =C2=B1 0.612M/s
+> >
+> > By default it will run a wider set of benchmarks (no uprobes, but a
+> > bunch of extra fentry/fexit tests and stuff like this).
+>
+> origin:
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.329 =C2=B1 0.007M/s
+> kretprobe-multi:    1.341 =C2=B1 0.004M/s
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.288 =C2=B1 0.014M/s
+> kretprobe-multi:    1.365 =C2=B1 0.002M/s
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.329 =C2=B1 0.002M/s
+> kretprobe-multi:    1.331 =C2=B1 0.011M/s
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.311 =C2=B1 0.003M/s
+> kretprobe-multi:    1.318 =C2=B1 0.002M/s s
+>
+> patched:
+>
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.274 =C2=B1 0.003M/s
+> kretprobe-multi:    1.397 =C2=B1 0.002M/s
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.307 =C2=B1 0.002M/s
+> kretprobe-multi:    1.406 =C2=B1 0.004M/s
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.279 =C2=B1 0.004M/s
+> kretprobe-multi:    1.330 =C2=B1 0.014M/s
+> # benchs/run_bench_trigger.sh
+> kretprobe :    1.256 =C2=B1 0.010M/s
+> kretprobe-multi:    1.412 =C2=B1 0.003M/s
+>
+> Hmm, in my case, it seems smaller differences (~3%?).
+> I attached perf report results for those, but I don't see large differenc=
+e.
 
-I got it working on top of your uprobes-cow branch with the foll force
-patch sent friday. Still pretty lightly tested
+I ran my benchmarks on bare metal machine (and quite powerful at that,
+you can see my numbers are almost 10x of yours), with mitigations
+disabled, no retpolines, etc. If you have any of those mitigations it
+might result in smaller differences, probably. If you are running
+inside QEMU/VM, the results might differ significantly as well.
 
-I went with using one write uprobe function with some additional
-branches. I went back and forth between that and making them 2 different
-functions.
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 2f4e88552d3f..8a33e380f7ea 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -83,6 +83,10 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
- 	{}
- };
- 
-+bool hugetlbfs_mapping(struct address_space *mapping) {
-+	return mapping->a_ops == &hugetlbfs_aops;
-+}
-+
- /*
-  * Mask used when checking the page offset value passed in via system
-  * calls.  This value will be converted to a loff_t which is signed.
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 68244bb3637a..66fdcc0b5db2 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -511,6 +511,8 @@ struct hugetlbfs_sb_info {
- 	umode_t mode;
- };
- 
-+bool hugetlbfs_mapping(struct address_space *mapping);
-+
- static inline struct hugetlbfs_sb_info *HUGETLBFS_SB(struct super_block *sb)
- {
- 	return sb->s_fs_info;
-@@ -557,6 +559,8 @@ static inline struct hstate *hstate_inode(struct inode *i)
- {
- 	return NULL;
- }
-+
-+static inline bool hugetlbfs_mapping(struct address_space *mapping) { return false; }
- #endif /* !CONFIG_HUGETLBFS */
- 
- #ifdef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4237a7477cca..e6e93a574c39 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/highmem.h>
-+#include <linux/hugetlb.h>
- #include <linux/pagemap.h>	/* read_mapping_page */
- #include <linux/slab.h>
- #include <linux/sched.h>
-@@ -120,7 +121,7 @@ struct xol_area {
-  */
- static bool valid_vma(struct vm_area_struct *vma, bool is_register)
- {
--	vm_flags_t flags = VM_HUGETLB | VM_MAYEXEC | VM_MAYSHARE;
-+	vm_flags_t flags = VM_MAYEXEC | VM_MAYSHARE;
- 
- 	if (is_register)
- 		flags |= VM_WRITE;
-@@ -163,21 +164,21 @@ bool __weak is_trap_insn(uprobe_opcode_t *insn)
- 	return is_swbp_insn(insn);
- }
- 
--static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
-+static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len, unsigned long page_mask)
- {
- 	void *kaddr = kmap_atomic(page);
--	memcpy(dst, kaddr + (vaddr & ~PAGE_MASK), len);
-+	memcpy(dst, kaddr + (vaddr & ~page_mask), len);
- 	kunmap_atomic(kaddr);
- }
- 
--static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len)
-+static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len, unsigned long page_mask)
- {
- 	void *kaddr = kmap_atomic(page);
--	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
-+	memcpy(kaddr + (vaddr & ~page_mask), src, len);
- 	kunmap_atomic(kaddr);
- }
- 
--static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode)
-+static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode, unsigned long page_mask)
- {
- 	uprobe_opcode_t old_opcode;
- 	bool is_swbp;
-@@ -191,7 +192,8 @@ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t
- 	 * is a trap variant; uprobes always wins over any other (gdb)
- 	 * breakpoint.
- 	 */
--	copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE);
-+	copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE,
-+		       page_mask);
- 	is_swbp = is_swbp_insn(&old_opcode);
- 
- 	if (is_swbp_insn(new_opcode)) {
-@@ -376,8 +378,8 @@ struct uwo_data {
- 	uprobe_opcode_t opcode;
- };
- 
--static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
--		unsigned long next, struct mm_walk *walk)
-+static int __write_opcode(pte_t *ptep, unsigned long vaddr,
-+			  unsigned long page_mask, struct mm_walk *walk)
- {
- 	struct uwo_data *data = walk->private;;
- 	const bool is_register = !!is_swbp_insn(&data->opcode);
-@@ -415,9 +417,12 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
- 
- 	/* Unmap + flush the TLB, such that we can write atomically .*/
- 	flush_cache_page(vma, vaddr, pte_pfn(pte));
--	pte = ptep_clear_flush(vma, vaddr, ptep);
-+	if (folio_test_hugetlb(folio))
-+		pte = huge_ptep_clear_flush(vma, vaddr, ptep);
-+	else
-+		pte = ptep_clear_flush(vma, vaddr, ptep);
- 	copy_to_page(page, data->opcode_vaddr, &data->opcode,
--		     UPROBE_SWBP_INSN_SIZE);
-+		     UPROBE_SWBP_INSN_SIZE, page_mask);
- 
- 	/* When unregistering, we may only zap a PTE if uffd is disabled ... */
- 	if (is_register || userfaultfd_missing(vma))
-@@ -443,13 +448,18 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
- 	if (!identical || folio_maybe_dma_pinned(folio))
- 		goto remap;
- 
--	/* Zap it and try to reclaim swap space. */
--	dec_mm_counter(mm, MM_ANONPAGES);
--	folio_remove_rmap_pte(folio, page, vma);
--	if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
--	     folio_trylock(folio)) {
--		folio_free_swap(folio);
--		folio_unlock(folio);
-+	if (folio_test_hugetlb(folio)) {
-+		hugetlb_remove_rmap(folio);
-+		large = false;
-+	} else {
-+		/* Zap it and try to reclaim swap space. */
-+		dec_mm_counter(mm, MM_ANONPAGES);
-+		folio_remove_rmap_pte(folio, page, vma);
-+		if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
-+		folio_trylock(folio)) {
-+			folio_free_swap(folio);
-+			folio_unlock(folio);
-+		}
- 	}
- 	folio_put(folio);
- 
-@@ -461,11 +471,29 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
- 	 */
- 	smp_wmb();
- 	/* We modified the page. Make sure to mark the PTE dirty. */
--	set_pte_at(mm, vaddr, ptep, pte_mkdirty(pte));
-+	if (folio_test_hugetlb(folio))
-+		set_huge_pte_at(mm , vaddr, ptep, huge_pte_mkdirty(pte),
-+				(~page_mask) + 1);
-+	else
-+		set_pte_at(mm, vaddr, ptep, pte_mkdirty(pte));
- 	return UWO_DONE;
- }
- 
-+static int __write_opcode_hugetlb(pte_t *ptep, unsigned long hmask,
-+		unsigned long vaddr,
-+		unsigned long next, struct mm_walk *walk)
-+{
-+	return __write_opcode(ptep, vaddr, hmask, walk);
-+}
-+
-+static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
-+		unsigned long next, struct mm_walk *walk)
-+{
-+	return __write_opcode(ptep, vaddr, PAGE_MASK, walk);
-+}
-+
- static const struct mm_walk_ops write_opcode_ops = {
-+	.hugetlb_entry		= __write_opcode_hugetlb,
- 	.pte_entry		= __write_opcode_pte,
- 	.walk_lock		= PGWALK_WRLOCK,
- };
-@@ -492,7 +520,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		unsigned long opcode_vaddr, uprobe_opcode_t opcode)
- {
- 	struct uprobe *uprobe = container_of(auprobe, struct uprobe, arch);
--	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
-+	unsigned long vaddr = opcode_vaddr & PAGE_MASK;
- 	const bool is_register = !!is_swbp_insn(&opcode);
- 	struct uwo_data data = {
- 		.opcode = opcode,
-@@ -503,6 +531,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 	struct mmu_notifier_range range;
- 	int ret, ref_ctr_updated = 0;
- 	struct page *page;
-+	unsigned long page_size = PAGE_SIZE;
- 
- 	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
- 		return -EINVAL;
-@@ -521,7 +550,14 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 	if (ret != 1)
- 		goto out;
- 
--	ret = verify_opcode(page, opcode_vaddr, &opcode);
-+
-+	if (is_vm_hugetlb_page(vma)) {
-+		struct hstate *h = hstate_vma(vma);
-+		page_size = huge_page_size(h);
-+		vaddr &= huge_page_mask(h);
-+		page = compound_head(page);
-+	}
-+	ret = verify_opcode(page, opcode_vaddr, &opcode, ~(page_size - 1));
- 	put_page(page);
- 	if (ret <= 0)
- 		goto out;
-@@ -541,12 +577,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 		 * be able to do it under PTL.
- 		 */
- 		mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
--					vaddr, vaddr + PAGE_SIZE);
-+					vaddr, vaddr + page_size);
- 		mmu_notifier_invalidate_range_start(&range);
- 	}
- 
- 	/* Walk the page tables and perform the actual magic. */
--	ret = walk_page_range_vma(vma, vaddr, vaddr + PAGE_SIZE,
-+	ret = walk_page_range_vma(vma, vaddr, vaddr + page_size,
- 				  &write_opcode_ops, &data);
- 
- 	if (!is_register)
-@@ -816,6 +852,7 @@ static int __copy_insn(struct address_space *mapping, struct file *filp,
- 			void *insn, int nbytes, loff_t offset)
- {
- 	struct page *page;
-+	unsigned long mask = PAGE_MASK;
- 	/*
- 	 * Ensure that the page that has the original instruction is populated
- 	 * and in page-cache. If ->read_folio == NULL it must be shmem_mapping(),
-@@ -823,12 +860,17 @@ static int __copy_insn(struct address_space *mapping, struct file *filp,
- 	 */
- 	if (mapping->a_ops->read_folio)
- 		page = read_mapping_page(mapping, offset >> PAGE_SHIFT, filp);
--	else
-+	else if (!is_file_hugepages(filp))
- 		page = shmem_read_mapping_page(mapping, offset >> PAGE_SHIFT);
-+	else {
-+		struct hstate *h = hstate_file(filp);
-+		mask = huge_page_mask(h);
-+		page = find_get_page(mapping, (offset & mask) >> PAGE_SHIFT);
-+	}
- 	if (IS_ERR(page))
- 		return PTR_ERR(page);
- 
--	copy_from_page(page, offset, insn, nbytes);
-+	copy_from_page(page, offset, insn, nbytes, mask);
- 	put_page(page);
- 
- 	return 0;
-@@ -1175,9 +1217,12 @@ static int __uprobe_register(struct inode *inode, loff_t offset,
- 	if (!uc->handler && !uc->ret_handler)
- 		return -EINVAL;
- 
--	/* copy_insn() uses read_mapping_page() or shmem_read_mapping_page() */
-+	/* copy_insn() uses read_mapping_page() or shmem/hugetlbfs specific
-+	 * logic
-+	 */
- 	if (!inode->i_mapping->a_ops->read_folio &&
--	    !shmem_mapping(inode->i_mapping))
-+	    !shmem_mapping(inode->i_mapping) &&
-+	    !hugetlbfs_mapping(inode->i_mapping))
- 		return -EIO;
- 	/* Racy, just to catch the obvious mistakes */
- 	if (offset > i_size_read(inode))
-@@ -1698,7 +1743,7 @@ void __weak arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 				  void *src, unsigned long len)
- {
- 	/* Initialize the slot */
--	copy_to_page(page, vaddr, src, len);
-+	copy_to_page(page, vaddr, src, len, PAGE_MASK);
- 
- 	/*
- 	 * We probably need flush_icache_user_page() but it needs vma.
-@@ -2062,7 +2107,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	if (result < 0)
- 		return result;
- 
--	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
-+	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE, PAGE_MASK);
- 	put_page(page);
-  out:
- 	/* This needs to return true for any variant of the trap insn */
-
--- 
-Guillaume Morin <guillaume@morinfr.org>
+>
+> > > >
+> > > > BASELINE
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D
+> > > > kprobe         :   24.634 =C2=B1 0.205M/s
+> > > > kprobe-multi   :   28.898 =C2=B1 0.531M/s
+> > > > kretprobe      :   10.478 =C2=B1 0.015M/s
+> > > > kretprobe-multi:   11.012 =C2=B1 0.063M/s
+> > > >
+> > > > THIS PATCH SET ON TOP
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > kprobe         :   25.144 =C2=B1 0.027M/s (+2%)
+> > > > kprobe-multi   :   28.909 =C2=B1 0.074M/s
+> > > > kretprobe      :    9.482 =C2=B1 0.008M/s (-9.5%)
+> > > > kretprobe-multi:   13.688 =C2=B1 0.027M/s (+24%)
+> > >
+> > > This looks good. Kretprobe should also use kretprobe-multi (fprobe)
+> > > eventually because it should be a single callback version of
+> > > kretprobe-multi.
+>
+> I ran another benchmark (prctl loop, attached), the origin kernel result =
+is here;
+>
+> # sh ./benchmark.sh
+> count =3D 10000000, took 6.748133 sec
+>
+> And the patched kernel result;
+>
+> # sh ./benchmark.sh
+> count =3D 10000000, took 6.644095 sec
+>
+> I confirmed that the parf result has no big difference.
+>
+> Thank you,
+>
+>
+> > >
+> > > >
+> > > > These numbers are pretty stable and look to be more or less represe=
+ntative.
+> > > >
+> > > > As you can see, kprobes got a bit faster, kprobe-multi seems to be
+> > > > about the same, though.
+> > > >
+> > > > Then (I suppose they are "legacy") kretprobes got quite noticeably
+> > > > slower, almost by 10%. Not sure why, but looks real after re-runnin=
+g
+> > > > benchmarks a bunch of times and getting stable results.
+> > >
+> > > Hmm, kretprobe on x86 should use ftrace + rethook even with my series=
+.
+> > > So nothing should be changed. Maybe cache access pattern has been
+> > > changed?
+> > > I'll check it with tracefs (to remove the effect from bpf related cha=
+nges)
+> > >
+> > > >
+> > > > On the other hand, multi-kretprobes got significantly faster (+24%!=
+).
+> > > > Again, I don't know if it is expected or not, but it's a nice
+> > > > improvement.
+> > >
+> > > Thanks!
+> > >
+> > > >
+> > > > If you have any idea why kretprobes would get so much slower, it wo=
+uld
+> > > > be nice to look into that and see if you can mitigate the regressio=
+n
+> > > > somehow. Thanks!
+> > >
+> > > OK, let me check it.
+> > >
+> > > Thank you!
+> > >
+> > > >
+> > > >
+> > > > >  51 files changed, 2325 insertions(+), 882 deletions(-)
+> > > > >  create mode 100644 tools/testing/selftests/ftrace/test.d/dyneven=
+t/add_remove_fprobe_repeat.tc
+> > > > >
+> > > > > --
+> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > >
+> > >
+> > >
+> > > --
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
