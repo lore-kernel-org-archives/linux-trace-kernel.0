@@ -1,201 +1,172 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A0B199E84
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 19:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DB8194C96
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 19:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714504776; cv=none; b=OfGKs2RQunXA8VVYuutWR2lJzDvFlXj1N6OWXmbT+KAI/jydwqtlklN5w5R2TsodaS1kfrf78qax52KF+nkaOga5EtBlJLMR4af4crG5eg8f55DwOS895kxkIZa0fyIgU9UCp472LXFho5rtuyQ0hTLzQhYNTbQKc/uyAgSWHc4=
+	t=1714505139; cv=none; b=RpJLwD2hVXE+VsQPVVSgWRDjQG7WDCT2pJx152hThtPOWWoTe0x7p0Nwn2loxIv2GhhG5Uo7IwFIPf7PkRqI4ezgSM0C4S/5LBP+6Wa8K3GG7i4RQ1Zbk8LjIZvoiXLT4UikSAjhhAAwWPJD60GVLC3FIqtvYk4lVWt1Lw0hdQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714504776; c=relaxed/simple;
-	bh=rXrYXwxz8utS37Zdd/NHXMvvYHT1Pko55fdXpz+a0f8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UrRyi0YYgk8iOvQXKLl5ppv8ejwhxfgYZVjAkwvG4vTusSW8Xq2c7VSY5C2QktbGxxMOxYrimo6uV56ByNrdCjI0yxOLpi+3g1D09wbGZJolfiasNfyVhqeL6egf4b7hZ4OLfc1+GazbDaK3zs+Vo+0cyPXn7Dk+ZWNzkojF8vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yhrCM4Yd; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1714505139; c=relaxed/simple;
+	bh=zmMxgervacDaHsVq7PofJWwKs+AoLNVMNCFfOexepAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h46FcoyobVE5KJKkC2uUTtfuugaiIbv2muVbNh+gekk/TnZ4ohyyZ3G+hjza9PEJAnO3RsEjZYsZD62UjK8qR3wqgzf/2yugUoJvdAL7osULMsxvpBn+0/FXmCblQjdjIhEJTnc5aX7ikEaQv+t6JZAfFEm50M8sZ1Zx6VlovF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HV1wMxQk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yhrCM4Yd"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so7388090e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714504773; x=1715109573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JBbLSd4KX1Ml6Kx/U9tspaOWXAez2c+6/7rMF07WiMA=;
-        b=yhrCM4YdS1mVSkC6dZlf25VsI6foSQBCk1DyesxJ/3Nf9GIMHy2gLaao5m1yno4E4y
-         LtG62zQbF9BTkR0aOMYlQm1EEMYIDUCq9PMx9uJmf3kKE2VKFDXgbV/etlhd83AV68Mw
-         q0LoGQlekuHwfa+7Hc6GI0DZ/Iir29gHWQ93YeFSVeB4ebbTLs1IPAMrizUw1zcYmLPc
-         dGrMy+HB86r/BLLws08RKvC1H2mXBtxc86+vZP7uOFNjHzPyfH/Yc46yDsB17PHHg3/8
-         cmY8hLG3CzLveY5qMgQT1zM60pq2ET0rzg8DrUA3vcerRTlTRWGeqNRVTZKVEPp06M3c
-         o+RQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HV1wMxQk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714505136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Sml+apiELoPNP3CvzMuGtYw372bsozMO9mfooXuYDlk=;
+	b=HV1wMxQkoMwMsbknI59XvgRNIC6Qv9Z48ENrbbxDQmD2QFXxfDQDyi2uEF6ro19YTNE7sF
+	0XuxGJN5cA4ybhSfw0RCL7M0j4Cg4Cm4E8DKvXUKZ4aJs3XoJJ6S9gPQdB7POnGOeVsnh9
+	W7x2Ixt4S5MI+mC/CJ/Mj/DdiFBrIwQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-94-_FH2UIrLNVe-zCfLF72e3Q-1; Tue, 30 Apr 2024 15:25:35 -0400
+X-MC-Unique: _FH2UIrLNVe-zCfLF72e3Q-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-34b5bece899so4223504f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:25:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714504773; x=1715109573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JBbLSd4KX1Ml6Kx/U9tspaOWXAez2c+6/7rMF07WiMA=;
-        b=WBw68oAxRvFJMBP3JVcUkpv0e6n8Qkh8iggjHsz6xIpAAaY1inO431HfultIZVk/NL
-         zRSJKnFoO1rBJr3YTlNnoPEM5aJdzXaU1UWiQPLAtjiPUjvp8nC60cHzrJV8on3sZDby
-         pafN9Nnyn0yEjdsZXmnl/dGTr1uiTrluF8Bjlxhc0o8QZcEyr1csAyPoP7Ps2LOBXS7k
-         S2OYa/p5skUMV7IaQWQ6bGByzAVIQLhvZOrQ3PiEvray+5Y0Inxq6D+IK0nvECg9k7wV
-         CEbWmufnsKPvWAI1SdHW1vO6jzZptWI7pELfZSjlMr8oJJFnNgStngs1qtVVPbxpJ8tP
-         jmvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXvVGOl6sXXUXlbabdfgVYp5Nczz2q+V01EOn4xOA1aaeF5WDJ/01Er3SbwqBxd26CjYG5tU/LNYS4PDrEQmIS6H3dR7bVB37Zp4gtv5Sqmurv
-X-Gm-Message-State: AOJu0YyWHo1lsi+hIS5myEoixmmih/L22oY9LxQIATBqcXWJ8FQlNV/G
-	bNKJB3K/NZ1mZVIx050JlrdIuI8fOTIDtqxHxFdcGN8r3GOOTPAXlVPYVQhz7m6sK/5YQ2s+eTF
-	3XfjeAccOPorsUSr3GW6Z01UvMmdeeZw5TGZl
-X-Google-Smtp-Source: AGHT+IEv1vAD5KmPx2DuK83e++oMbqGnWC2h94YZYICJhje+Ouaos+1vgy9d2n+Zn+VtRp04liNfK+AEGoM+Z6BbCWI=
-X-Received: by 2002:a05:6512:3492:b0:517:8ad8:c64 with SMTP id
- v18-20020a056512349200b005178ad80c64mr259130lfr.21.1714504772286; Tue, 30 Apr
- 2024 12:19:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714505134; x=1715109934;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Sml+apiELoPNP3CvzMuGtYw372bsozMO9mfooXuYDlk=;
+        b=ajZSl1pGaqOpvfEQ5N0gAko0cxbdAam8UeQeLMTM8bTqMI0v5bQzF2wEaJejhJxogm
+         rvnGRiVqAAKCWAV0UfibAag4TCzthHxs5gHhCY/qufBzU8gF9DnwHqTjc4Y2Kzyhftho
+         WWH52UCiMwVmKYF/rawR0t5OqvRej3J+s6naId3TVVY5nI3U3YrPwxBe+2jYgn14ysjs
+         JKKTPMuUrenmIRrNXEOoDHjRB3+TjwH6VOraRYTJKrhGY0GprHrfcI/74ggmqkSajjeH
+         yEYRsdQZ4M7P8XdiI+MgpfEGPxbE1kNA1pAnTYfO8Y11wuFqi9Nr4UkmJI9gJSHu+LdR
+         QTkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVO6kQ1T/pxtVw9lgq7tu6mlRF5mWuS/r4RsMEOYg6FFOI0Z/0ZNijrjkddWNRylJG6lMbV5VSXgRy/pQRfQW7Bh4d3DIu22xEeUKdTz4p20DFy
+X-Gm-Message-State: AOJu0YzarPnkvuMKQ/g46dhNJCDc6rHbYVbPtJDgaRtArL6YiSjobcxP
+	FBp6/XYqNK/8xzUTgKAqQUi2APoyuW8xON5lxrpRjs6SWZZIPx7R6FA4vmTOz2pxTFZNAubDuoT
+	gxVBlkLhN0IsuxHJOhxG4LcoMLyLnWyvUSwQsJClPV/2Axl7lPp521/MJ2/5XLApqaHpBEw==
+X-Received: by 2002:adf:ec4e:0:b0:34a:3f3d:bb14 with SMTP id w14-20020adfec4e000000b0034a3f3dbb14mr372798wrn.27.1714505133925;
+        Tue, 30 Apr 2024 12:25:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4uhEiExqEYYZxn/B7q0uI5d5m/WLmdfFl1SLcz2mLWdf0JRp3urAf+J6ZV+dZOqctYlmLZQ==
+X-Received: by 2002:adf:ec4e:0:b0:34a:3f3d:bb14 with SMTP id w14-20020adfec4e000000b0034a3f3dbb14mr372783wrn.27.1714505133499;
+        Tue, 30 Apr 2024 12:25:33 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:3d00:d57f:b4c9:850e:d0b8? (p200300cbc7073d00d57fb4c9850ed0b8.dip0.t-ipconnect.de. [2003:cb:c707:3d00:d57f:b4c9:850e:d0b8])
+        by smtp.gmail.com with ESMTPSA id bl2-20020adfe242000000b0034c71090653sm11135935wrb.57.2024.04.30.12.25.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 12:25:33 -0700 (PDT)
+Message-ID: <8a7b9e65-b073-4132-9680-efc2b3af6af0@redhat.com>
+Date: Tue, 30 Apr 2024 21:25:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-8-almasrymina@google.com> <8357256a-f0e9-4640-8fec-23341fc607db@davidwei.uk>
- <CAHS8izPeYryoLdCAQdGQU-wn7YVdtuofVKNvRFjFjhqTDsT7zA@mail.gmail.com>
- <aafbbf09-a33d-4e73-99c8-9ddab5910657@kernel.dk> <CAHS8izMKLYATo6g3xkj_thFo3whCfq6LSoex5s0m5XZd-U7SVQ@mail.gmail.com>
- <11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk>
-In-Reply-To: <11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 30 Apr 2024 12:19:17 -0700
-Message-ID: <CAHS8izP3KtH_CHyQKE+=vrY-yREq5Bb_Kd+KLyJ4j-_AdjNk-Q@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v8 07/14] page_pool: devmem support
-To: Jens Axboe <axboe@kernel.dk>
-Cc: David Wei <dw@davidwei.uk>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Amritha Nambiar <amritha.nambiar@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Kaiyuan Zhang <kaiyuanz@google.com>, 
-	Christian Brauner <brauner@kernel.org>, Simon Horman <horms@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Florian Westphal <fw@strlen.de>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Arseniy Krasnov <avkrasnov@salutedevices.com>, 
-	Aleksander Lobakin <aleksander.lobakin@intel.com>, Michael Lass <bevan@bi-co.net>, 
-	Jiri Pirko <jiri@resnulli.us>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Richard Gobert <richardbgobert@gmail.com>, 
-	Sridhar Samudrala <sridhar.samudrala@intel.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>, 
-	Breno Leitao <leitao@debian.org>, Pavel Begunkov <asml.silence@gmail.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
+To: Guillaume Morin <guillaume@morinfr.org>
+Cc: oleg@redhat.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, muchun.song@linux.dev
+References: <ZiaoZlGc_8ZV3736@bender.morinfr.org>
+ <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
+ <ZibOQI9kwzE98n12@bender.morinfr.org>
+ <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
+ <ZilvOi7ceSXmwkNq@bender.morinfr.org>
+ <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
+ <Zip0fEliGeL0qmID@bender.morinfr.org>
+ <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
+ <Zirw0uINbP6GxFiK@bender.morinfr.org>
+ <385d3516-95bb-4ff9-9d60-ac4e46104130@redhat.com>
+ <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZiwGovSHiVCF7z6y@bender.morinfr.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 30, 2024 at 11:55=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote=
-:
->
-> On 4/30/24 12:29 PM, Mina Almasry wrote:
-> > On Tue, Apr 30, 2024 at 6:46?AM Jens Axboe <axboe@kernel.dk> wrote:
-> >>
-> >> On 4/26/24 8:11 PM, Mina Almasry wrote:
-> >>> On Fri, Apr 26, 2024 at 5:18?PM David Wei <dw@davidwei.uk> wrote:
-> >>>>
-> >>>> On 2024-04-02 5:20 pm, Mina Almasry wrote:
-> >>>>> @@ -69,20 +106,26 @@ net_iov_binding(const struct net_iov *niov)
-> >>>>>   */
-> >>>>>  typedef unsigned long __bitwise netmem_ref;
-> >>>>>
-> >>>>> +static inline bool netmem_is_net_iov(const netmem_ref netmem)
-> >>>>> +{
-> >>>>> +#if defined(CONFIG_PAGE_POOL) && defined(CONFIG_DMA_SHARED_BUFFER)
-> >>>>
-> >>>> I am guessing you added this to try and speed up the fast path? It's
-> >>>> overly restrictive for us since we do not need dmabuf necessarily. I
-> >>>> spent a bit too much time wondering why things aren't working only t=
-o
-> >>>> find this :(
-> >>>
-> >>> My apologies, I'll try to put the changelog somewhere prominent, or
-> >>> notify you when I do something that I think breaks you.
-> >>>
-> >>> Yes, this is a by-product of a discussion with regards to the
-> >>> page_pool benchmark regressions due to adding devmem. There is some
-> >>> background on why this was added and the impact on the
-> >>> bench_page_pool_simple tests in the cover letter.
-> >>>
-> >>> For you, I imagine you want to change this to something like:
-> >>>
-> >>> #if defined(CONFIG_PAGE_POOL)
-> >>> #if defined(CONFIG_DMA_SHARED_BUFFER) || defined(CONFIG_IOURING)
-> >>>
-> >>> or something like that, right? Not sure if this is something I should
-> >>> do here or if something more appropriate to be in the patches you
-> >>> apply on top.
-> >>
-> >> In general, attempting to hide overhead behind config options is alway=
-s
-> >> a losing proposition. It merely serves to say "look, if these things
-> >> aren't enabled, the overhead isn't there", while distros blindly enabl=
-e
-> >> pretty much everything and then you're back where you started.
-> >>
-> >
-> > The history there is that this check adds 1 cycle regression to the
-> > page_pool fast path benchmark. The regression last I measured is 8->9
-> > cycles, so in % wise it's a quite significant 12.5% (more details in
-> > the cover letter[1]). I doubt I can do much better than that to be
-> > honest.
->
-> I'm all for cycle counting, and do it myself too, but is that even
-> measurable in anything that isn't a super targeted microbenchmark? Or
-> even in that?
->
+On 26.04.24 21:55, Guillaume Morin wrote:
+> On 26 Apr  9:19, David Hildenbrand wrote:
+>> A couple of points:
+>>
+>> a) Don't use page_mapcount(). Either folio_mapcount(), but likely you want
+>> to check PageAnonExclusive.
+>>
+>> b) If you're not following the can_follow_write_pte/_pmd model, you are
+>> doing something wrong :)
+>>
+>> c) The code was heavily changed in mm/mm-unstable. It was merged with t
+>> the common code.
+>>
+>> Likely, in mm/mm-unstable, the existing can_follow_write_pte and
+>> can_follow_write_pmd checks will already cover what you want in most cases.
+>>
+>> We'd need a can_follow_write_pud() to cover follow_huge_pud() and
+>> (unfortunately) something to handle follow_hugepd() as well similarly.
+>>
+>> Copy-pasting what we do in can_follow_write_pte() and adjusting for
+>> different PTE types is the right thing to do. Maybe now it's time to factor
+>> out the common checks into a separate helper.
+> 
+> I tried to get the hugepd stuff right but this was the first I heard
+> about it :-) Afaict follow_huge_pmd and friends were already DTRT
 
-Not as far as I can tell, no. This was purely to improve the page_pool
-benchmark.
+I'll have to have a closer look at some details (the hugepd writability 
+check looks a bit odd), but it's mostly what I would have expected!
 
-> > There was a desire not to pay this overhead in setups that will likely
-> > not care about devmem, like embedded devices maybe, or setups without
-> > GPUs. Adding a CONFIG check here seemed like very low hanging fruit,
-> > but yes it just hides the overhead in some configs, not really removes
-> > it.
-> >
-> > There was a discussion about adding this entire netmem/devmem work
-> > under a new CONFIG. There was pushback particularly from Willem that
-> > at the end of the day what is enabled on most distros is what matters
-> > and we added code churn and CONFIG churn for little value.
-> >
-> > If there is significant pushback to the CONFIG check I can remove it.
-> > I don't feel like it's critical, it just mirco-optimizes some setups
-> > that doesn't really care about this work area.
->
-> That is true, but in practice it'll be enabled anyway. Seems like it's
-> not really worth it in this scenario.
->
+-- 
+Cheers,
 
-OK, no pushback from me. I'll remove the CONFIG check in the next iteration=
-.
+David / dhildenb
 
---=20
-Thanks,
-Mina
