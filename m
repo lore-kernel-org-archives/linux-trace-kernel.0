@@ -1,408 +1,144 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6C912E1DF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B5912D209
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 11:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714475654; cv=none; b=E7+rF5jwCUdnXtkYOTyc/WNenCPJTNIBoXHjbcbVynLqbo18Vkp03ZBB8meQ3hh4zPDBV+kH+aHApF96nRLmBDrUiVXBdxviCan0Rk9HAYKstnadCd/ERQvwX+205orm1bnhTAGLHXhaN8T7qU4Oq/CF5Fvv6hCNcyKoXFkjdU8=
+	t=1714476241; cv=none; b=X84EA0JN918sJldV25eu8pk/nqwmezceOUnxbTLy9yjNRJjGCCZ+YNfQREtuw6AG2wF1+v7ywSJe2C21587rTNLHTrvc8rOoXZ6BXP7fMSVJJnNMdjS0+OWpqDt5gx0RCH1XCgse62ZY5kl6mzt19WX24OaLG9DTeI8pokwjcDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714475654; c=relaxed/simple;
-	bh=O+d59qShzTvBafQqHxGHCWx9WOV1oznH7Tjy6QhzJ58=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=q4B1kOjRqMUM9WLb4MPol0xxJBgDflamTeuqucyMMXGlNFDHEO0SC2gF55b4mi7zENI7obXquLN9bj3vhNbrEVdLbLShDwTwhw2+YIUP98Tr8AkGDkTHU2oIBXy2SAU6Qpugc6J1MftbZDl4aNiqaCmPdoaunpxGq+frOJR41/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XKybTU0c; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1714476241; c=relaxed/simple;
+	bh=Xc/E1muDcRTkULpV7kIzSbWB3pDGQ/49fUGW3LpDLU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eraxJ37BxS5AnKjZwv4JyG/knHtJDAiCCR2C8T23gf3if81O/WLGkcgGQABjMOwT2B1R8h8s3cYlL5SNjbPem/kTdKHx5gab4HXwc4gokXmZbcQL97jkSjM66etxRm+oaPHndARFJKzR1Mov5wXjY60t5SiSdi9Onx6S55e9SY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wteN+2xH; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XKybTU0c"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-349fbb7ab16so4045045f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 04:14:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wteN+2xH"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a4702457ccbso734809166b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 04:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714475650; x=1715080450; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZdtNgS1ADfpekPvRs2FP/KMWugpYNDTTPI4F/Zzcws=;
-        b=XKybTU0cxPM/E8VcOhImYdcxXmGcy1fFujR7X+nfuPdnPUrvR2YSt78OnvmYwt/ti5
-         vdrf/KqzxzfdnkRYWD55snhEkKIMUcqY2IY67koj1KxpQ29+wmcQEF4WUWHVoq+JWXLl
-         7Tz7F/oF/2I6HojWhQ6r07s6M9pBrdEk2A3mEBi3SbvsnLyJ7P0aN2pZTr/s/Ys3NURL
-         FCCjZ2PqO5i3PLMiaIP4qHYzrhn88aNwOsxwBlKQ3wgdnjFeJzdfli/yJo1zN+K9yD3M
-         3oKkZp2lAD5q6x1qy9+7KZzYJmpBMi00uz7yYHwbkYWOvS3GYph2qT/NQ92zqZTgnJcY
-         sdYA==
+        d=linaro.org; s=google; t=1714476238; x=1715081038; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=XWLp1lMkRn/z9F/qb1rRBcveVv86YGGLdJozbQqO3w4=;
+        b=wteN+2xHbalmfFAhfIYncc9nUNXG3OakploFfLqKyDj5sYIQ/2o1lJju8YtzVrq67t
+         yqG33atk6u7e9dj0XNA6S8yyN1dmmHtHJs2+HCrhMdn7AaU/LyleeU7FuSbNB8oJVmKS
+         8D8fpVzAscJEJPQpjk5gIu1u91kG3vEcdru2OtPicMawjpa85Tspdcm8WlgtLaYwNwx6
+         DobvZb7fQVrb+gp161Hu3EB9fmKTvNr7/LdXzWXMDdWdu0Kgw9QLL5bs1TGQJ83Wfknn
+         v1XUTx4gnMI/z/sx1+XpIN1Gi09NE1qFN7jbvY9a6COHxwYG3PtnMf2WyXfOoQiRvbV6
+         vODA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714475650; x=1715080450;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZdtNgS1ADfpekPvRs2FP/KMWugpYNDTTPI4F/Zzcws=;
-        b=FZjBpaxaIKqo7ssHCU5tdyQPUe1k6YGQDqExcE+9S3m6vJI0sHa6vheXI2jjbcldsy
-         x105+QCFSjhL0I3JnXwi2oG1dVbKV9caidnRcT7rwPZFJ8V9spYgz4cjzQ5pN9773mCi
-         BU9MyMhmEmcWF+hdqkE5q+g6X5DmzkEpRjQf33+oJt6h8/Pkic7ETyMVPHl7iKdzXucW
-         AJSERh+17ttUaWdB17EhwJFXzQB6qXvMP7CQGdByAdjEQovtZMchiKRJlHuAf86YQ8b0
-         5fNj4BWNDdM40zOE59diMTAMssSvNw7h8ahYSB0kF/NrmhihnpyYk64lAwqxAufBH5VB
-         sIDA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3n2KSjEjeV7j9qHFIPDevEAeuQWjtfZlPzXUTq//tPrjBK3tCw6iEp+GvOM4CTJnW6ghKr7AVC8v69Ob5c0x1YAxetsk2enuA+pNVoPKXmvc+
-X-Gm-Message-State: AOJu0YwLL460VnlDA/H0lLIcSdTSMSjfgJZGi+7cdufsDG29N62WY88C
-	E01XtT19D2EEaPoI9oqKIqARZdE4XhU+580L6qpEG9crgvnxhmHE8L0f6d6pGV6zY+heLLOgKjW
-	Lqf5NaOnDqTiQAH/51A==
-X-Google-Smtp-Source: AGHT+IEjaQoYqVbTdbjHpcIAJgUuhZa9Cbaa8gDrWXUzsTPJIAcWvjxTMvPyJ34sAGSs0Nys+0tnOp1CyXbv7JGa
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:adf:e0c1:0:b0:34d:713a:647e with SMTP
- id m1-20020adfe0c1000000b0034d713a647emr4531wri.13.1714475650590; Tue, 30 Apr
- 2024 04:14:10 -0700 (PDT)
-Date: Tue, 30 Apr 2024 12:13:54 +0100
-In-Reply-To: <20240430111354.637356-1-vdonnefort@google.com>
+        d=1e100.net; s=20230601; t=1714476238; x=1715081038;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XWLp1lMkRn/z9F/qb1rRBcveVv86YGGLdJozbQqO3w4=;
+        b=QwSZWpv64Hw4/Z2HVBH3nyHHD/0yYbLaTNCJqj3Kypfpi1UeFYVCNgMkkBGhszRdWD
+         cIkRQYXNy19FVrcbwjw4iQD7r0lg+N9XCB5WZejf2nD4D6YVTz4dwxigup4p1S7NDdzy
+         2IbEc6vE9LGFaps9Fd4gd1swxGNlByhWNzUs66EWUZwq7RLGhKbaOWXEDJRBnN+gcJs1
+         NJ0NE2/xnf+fQQOdv85k4iUM5LROSd9DqtX8WCILZaOKWLsgHkDovLrkbf0jELyx/Pi9
+         HdMW2uaKIzXh2VvS+AI9Vbh4GCTC0DbxeTzN4v0uq5CPYfyB47QgZpnhC6WFmtPkIrVI
+         fZBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVy2axkl0P2RnJhZjIqeSz+MVuRq9yI911KO8nWmwpcthTJhnm5jkRo06PJg6Gxf4XytXwvXvpftu2tDCmE49lA3nP2XRpY+5BI4UP/gfVdYH++
+X-Gm-Message-State: AOJu0Ywnqxo7lvvHO4bOAckyKPbBhgz2fh55Zpfxra/4OLIWL8O2rwDV
+	gjYPqf3SFo2pLSfxeRW+bRWIaRTF/9j3xhKkzXUat+JsVbzWV3jBbQkng2CF04s=
+X-Google-Smtp-Source: AGHT+IEDXRI6x5rnf8Dk6QVa3UjpA/rv05QLyf2+PdfnSyuNQlVzzUXFdifCUi0+BsM1CU66n5It8w==
+X-Received: by 2002:a17:906:1113:b0:a55:b7b2:2d42 with SMTP id h19-20020a170906111300b00a55b7b22d42mr8852366eja.24.1714476238348;
+        Tue, 30 Apr 2024 04:23:58 -0700 (PDT)
+Received: from [192.168.114.15] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id h6-20020a170906110600b00a5827d2f6f4sm9482718eja.115.2024.04.30.04.23.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Apr 2024 04:23:57 -0700 (PDT)
+Message-ID: <95760e2b-ec38-4f04-8f86-e4f935d24a83@linaro.org>
+Date: Tue, 30 Apr 2024 13:23:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240430111354.637356-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240430111354.637356-6-vdonnefort@google.com>
-Subject: [PATCH v22 5/5] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	rdunlap@infradead.org, rppt@kernel.org, david@redhat.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/5] sched: Rename arch_update_thermal_pressure into
+ arch_update_hw_pressure
+To: Vincent Guittot <vincent.guittot@linaro.org>, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com,
+ rafael@kernel.org, viresh.kumar@linaro.org, agross@kernel.org,
+ andersson@kernel.org, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com,
+ mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com,
+ corbet@lwn.net, gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Qais Yousef <qyousef@layalina.io>, Bjorn Andersson
+ <andersson@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20240326091616.3696851-1-vincent.guittot@linaro.org>
+ <20240326091616.3696851-5-vincent.guittot@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240326091616.3696851-5-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+On 26.03.2024 10:16 AM, Vincent Guittot wrote:
+> Now that cpufreq provides a pressure value to the scheduler, rename
+> arch_update_thermal_pressure into HW pressure to reflect that it returns
+> a pressure applied by HW (i.e. with a high frequency change) and not
+> always related to thermal mitigation but also generated by max current
+> limitation as an example. Such high frequency signal needs filtering to be
+> smoothed and provide an value that reflects the average available capacity
+> into the scheduler time scale.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Reviewed-by: Qais Yousef <qyousef@layalina.io>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Acked-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Hi, I'm not quite sure how, but this commit specifically breaks booting
+on Qualcomm platforms with EAS..
 
-diff --git a/tools/testing/selftests/ring-buffer/.gitignore b/tools/testing/selftests/ring-buffer/.gitignore
-new file mode 100644
-index 000000000000..3aed1a2a6c67
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/.gitignore
-@@ -0,0 +1 @@
-+map_test
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..b95eedddbb8c
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,288 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+TEST_F(map, data_mmap)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	unsigned long meta_len, data_len;
-+	void *data;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	/* Map all the available subbufs */
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_NE(data, MAP_FAILED);
-+	munmap(data, data_len);
-+
-+	/* Map all the available subbufs - 1 */
-+	data_len -= desc->meta->subbuf_size;
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_NE(data, MAP_FAILED);
-+	munmap(data, data_len);
-+
-+	/* Overflow the available subbufs by 1 */
-+	meta_len += desc->meta->subbuf_size * 2;
-+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
-+		    desc->cpu_fd, meta_len);
-+	ASSERT_EQ(data, MAP_FAILED);
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.44.0.769.g3c40516874-goog
+https://pastebin.com/raw/1Uh7u81x
 
+Konrad
