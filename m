@@ -1,172 +1,406 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DB8194C96
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 19:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714505139; cv=none; b=RpJLwD2hVXE+VsQPVVSgWRDjQG7WDCT2pJx152hThtPOWWoTe0x7p0Nwn2loxIv2GhhG5Uo7IwFIPf7PkRqI4ezgSM0C4S/5LBP+6Wa8K3GG7i4RQ1Zbk8LjIZvoiXLT4UikSAjhhAAwWPJD60GVLC3FIqtvYk4lVWt1Lw0hdQo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714505139; c=relaxed/simple;
-	bh=zmMxgervacDaHsVq7PofJWwKs+AoLNVMNCFfOexepAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h46FcoyobVE5KJKkC2uUTtfuugaiIbv2muVbNh+gekk/TnZ4ohyyZ3G+hjza9PEJAnO3RsEjZYsZD62UjK8qR3wqgzf/2yugUoJvdAL7osULMsxvpBn+0/FXmCblQjdjIhEJTnc5aX7ikEaQv+t6JZAfFEm50M8sZ1Zx6VlovF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HV1wMxQk; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F8117BB15;
+	Tue, 30 Apr 2024 23:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714518215; cv=fail; b=lxGQIfyNU8l55UgNoccWYJfC/Hq/H01KJtk+PqlIT3H2xirmjTZpQGaT6MqySskLlZ7gufDrQ3bsZEllkjzkfnLwNvHbUH1zOcS+O8qF/DsXftKJc2pb4WyzUmJ20VLMTvA8oR/RkDMAh+r/pQi7CqgV+zF1IVauKplNuvq8LZE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714518215; c=relaxed/simple;
+	bh=BWLENVfAJp/NmxdUga5uiEHqAJmVpotDNhuRXfbHJx4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=Seh+sCa5CBctea98k+ljTnkue3+648S1wdR+2i3TmuHxruZLboOvuwjiLZK4tZQo5gq+HFo47ritpZ4r8HZKoMkY6ktLs2ZSHIQv4iRMtZi66F8fVU//ZPCb2pehiOiAaaNMiLinVHsH4xOl2IIQME9P36aAGZs9QgK4RImubWM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dRmAXMM0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=y8TkkBM8; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HV1wMxQk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714505136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Sml+apiELoPNP3CvzMuGtYw372bsozMO9mfooXuYDlk=;
-	b=HV1wMxQkoMwMsbknI59XvgRNIC6Qv9Z48ENrbbxDQmD2QFXxfDQDyi2uEF6ro19YTNE7sF
-	0XuxGJN5cA4ybhSfw0RCL7M0j4Cg4Cm4E8DKvXUKZ4aJs3XoJJ6S9gPQdB7POnGOeVsnh9
-	W7x2Ixt4S5MI+mC/CJ/Mj/DdiFBrIwQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-94-_FH2UIrLNVe-zCfLF72e3Q-1; Tue, 30 Apr 2024 15:25:35 -0400
-X-MC-Unique: _FH2UIrLNVe-zCfLF72e3Q-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-34b5bece899so4223504f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:25:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714505134; x=1715109934;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Sml+apiELoPNP3CvzMuGtYw372bsozMO9mfooXuYDlk=;
-        b=ajZSl1pGaqOpvfEQ5N0gAko0cxbdAam8UeQeLMTM8bTqMI0v5bQzF2wEaJejhJxogm
-         rvnGRiVqAAKCWAV0UfibAag4TCzthHxs5gHhCY/qufBzU8gF9DnwHqTjc4Y2Kzyhftho
-         WWH52UCiMwVmKYF/rawR0t5OqvRej3J+s6naId3TVVY5nI3U3YrPwxBe+2jYgn14ysjs
-         JKKTPMuUrenmIRrNXEOoDHjRB3+TjwH6VOraRYTJKrhGY0GprHrfcI/74ggmqkSajjeH
-         yEYRsdQZ4M7P8XdiI+MgpfEGPxbE1kNA1pAnTYfO8Y11wuFqi9Nr4UkmJI9gJSHu+LdR
-         QTkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVO6kQ1T/pxtVw9lgq7tu6mlRF5mWuS/r4RsMEOYg6FFOI0Z/0ZNijrjkddWNRylJG6lMbV5VSXgRy/pQRfQW7Bh4d3DIu22xEeUKdTz4p20DFy
-X-Gm-Message-State: AOJu0YzarPnkvuMKQ/g46dhNJCDc6rHbYVbPtJDgaRtArL6YiSjobcxP
-	FBp6/XYqNK/8xzUTgKAqQUi2APoyuW8xON5lxrpRjs6SWZZIPx7R6FA4vmTOz2pxTFZNAubDuoT
-	gxVBlkLhN0IsuxHJOhxG4LcoMLyLnWyvUSwQsJClPV/2Axl7lPp521/MJ2/5XLApqaHpBEw==
-X-Received: by 2002:adf:ec4e:0:b0:34a:3f3d:bb14 with SMTP id w14-20020adfec4e000000b0034a3f3dbb14mr372798wrn.27.1714505133925;
-        Tue, 30 Apr 2024 12:25:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4uhEiExqEYYZxn/B7q0uI5d5m/WLmdfFl1SLcz2mLWdf0JRp3urAf+J6ZV+dZOqctYlmLZQ==
-X-Received: by 2002:adf:ec4e:0:b0:34a:3f3d:bb14 with SMTP id w14-20020adfec4e000000b0034a3f3dbb14mr372783wrn.27.1714505133499;
-        Tue, 30 Apr 2024 12:25:33 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:3d00:d57f:b4c9:850e:d0b8? (p200300cbc7073d00d57fb4c9850ed0b8.dip0.t-ipconnect.de. [2003:cb:c707:3d00:d57f:b4c9:850e:d0b8])
-        by smtp.gmail.com with ESMTPSA id bl2-20020adfe242000000b0034c71090653sm11135935wrb.57.2024.04.30.12.25.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Apr 2024 12:25:33 -0700 (PDT)
-Message-ID: <8a7b9e65-b073-4132-9680-efc2b3af6af0@redhat.com>
-Date: Tue, 30 Apr 2024 21:25:32 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dRmAXMM0";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="y8TkkBM8"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43UKTgld017528;
+	Tue, 30 Apr 2024 23:02:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : in-reply-to : references : date : message-id : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=EL/hN2kBBnpDCBhosmnxg3lDM1xxbhAS0BsL10gyA8k=;
+ b=dRmAXMM066dO7yPWz1iWMf4DG015ndRPVcX6yIZB1yi3NeYkfoT/6Y91ctD0VlApGTkr
+ 4kF9eOKAIImXsE9drKdlCyCzFIiL+/2bEP53L79YzRdW7LXJvSYvQtD+rZAjTVHLE9tm
+ fa8Pz6Kp/oHwnBPkd4lha9D0CPLTzI4kNzHOknFjzvpNl920fPzQhAeA19XxjSYlaVaf
+ amyoeP+azzjRv4nvj2xnfVoF5MMotlOStyXqNxdKyavws68FcnEVlWT675icSzh/CvM5
+ kR/wYjG65VKlQYkFT6abeWJ81wT9k2I77we+gU5DTgOr6urhw1O9cuBm9DgFqCFdTvyc 8A== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrswvpax9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Apr 2024 23:02:09 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43UMAgc7005069;
+	Tue, 30 Apr 2024 23:02:08 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xrqt85fwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Apr 2024 23:02:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZQwI9LnHQWce26XDNmjF/RFD1GyjbI2eAWUDMQzR2HJOg0/hqOZ9sufucnuNexB9cnGc+Y3ctUzks72A5+OmHvb3z01aEEo+SKH3xEn6MvdVQT3nIkPFMhj5Xvam/Z8T8gJQoqw9zVPCaEHO3J2tGwM8GRVCQCVSSfV5SbrY0KP3kfiSbENzAavdE4YDd2kkWK4ALZpsfrA/BWS2i4n+qaSUu1N+2xtb1zn5ouUc3X7awBwNKZ7yW1hxwmg8HOAoOts3CJIPb7lV3K64OKr+oylUEd0YkaWnGwSkYl3nh2lk7zCaW52bU7r0ccYy+NYhpszbCfNS7S05OFMTQPOx3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EL/hN2kBBnpDCBhosmnxg3lDM1xxbhAS0BsL10gyA8k=;
+ b=V5MBwoD6/kzan4WL/rS7iXv1bM65Ewq0Z8o8UxY2sl7CD3NVhILSCDl6CUM3GYZjWkuKwiZidxUT4B1MrYx0e5CcC+tMvIk8IQ59zftosedHdVmo5pbXTodNjRJb8qX7HWR2h7zwa2+VIHzp97EbTugRgaklV6GL6M8Ki4//Dmhj+O6HIKCC+3MI3gKQiOLploB0o2rW40XirkgHMByhGV2CxWGA9M4BhUZRqKyR0PB+5tS/MnlBLLnwqiB9n6bvXNqhtr3LNUnEd9NhfLLBS9jMFhnvQuDiiTMXFGLvjiQv9jOmznFtZ0kmVw7SeDwPSJEea3/ZrqUvaZPJKY80zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EL/hN2kBBnpDCBhosmnxg3lDM1xxbhAS0BsL10gyA8k=;
+ b=y8TkkBM85Xy9ONQ4/uLb7E48uPaF9Ht/Kh0X3ZoC4uuD9qJiF7hs4A6GZfbLEba7lUyD1KY0jAeQsjdZLcNpBshtibF2VebTMtMZ32xWVDCj/7tZUO1AUZlfAAWcvHXETQsyiSV/soy+fyiSL6ADZJvk9u5lqsisRLR91+GT/Lc=
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
+ by SA1PR10MB7853.namprd10.prod.outlook.com (2603:10b6:806:3ac::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Tue, 30 Apr
+ 2024 23:01:44 +0000
+Received: from PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
+ ([fe80::6874:4af6:bf0a:6ca%3]) with mapi id 15.20.7519.031; Tue, 30 Apr 2024
+ 23:01:44 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland
+ <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>,
+        Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller
+ <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin
+ <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav
+ Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2] kprobe/ftrace: bail out if ftrace was killed
+In-Reply-To: <20240429212933.327aae6e@gandalf.local.home>
+References: <20240426225834.993353-1-stephen.s.brennan@oracle.com>
+ <20240429174718.1347900-1-stephen.s.brennan@oracle.com>
+ <20240429212933.327aae6e@gandalf.local.home>
+Date: Tue, 30 Apr 2024 16:01:43 -0700
+Message-ID: <87r0emsbe0.fsf@oracle.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR05CA0105.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::46) To PH8PR10MB6597.namprd10.prod.outlook.com
+ (2603:10b6:510:226::20)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
-To: Guillaume Morin <guillaume@morinfr.org>
-Cc: oleg@redhat.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, muchun.song@linux.dev
-References: <ZiaoZlGc_8ZV3736@bender.morinfr.org>
- <22fcde31-16c4-42d0-ad99-568173ec4dd0@redhat.com>
- <ZibOQI9kwzE98n12@bender.morinfr.org>
- <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
- <ZilvOi7ceSXmwkNq@bender.morinfr.org>
- <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
- <Zip0fEliGeL0qmID@bender.morinfr.org>
- <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
- <Zirw0uINbP6GxFiK@bender.morinfr.org>
- <385d3516-95bb-4ff9-9d60-ac4e46104130@redhat.com>
- <ZiwGovSHiVCF7z6y@bender.morinfr.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZiwGovSHiVCF7z6y@bender.morinfr.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|SA1PR10MB7853:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f1c8aa0-cd97-450c-1fc7-08dc69698171
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|7416005|366007;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?r1K6VA0L6MsJHB0fa1/SMvct/u7qbLAcWiOWVCfhDecvfBiq/Tnk4ZZFWB8Q?=
+ =?us-ascii?Q?cj+znQX6zkeSQZ1qwjRjh0t3I3EP/KVvfmjaibsEP+dlHL9simsUs3EyzSXT?=
+ =?us-ascii?Q?ILz32+EEEQ3jL8AULOSdHjIToJYxfMHBmoQbnMEFCbd6LFvTEbnvcnbg8Hf3?=
+ =?us-ascii?Q?JyvNBcUHsHAzTybnLpprucuO2kUPBnC75OopwGh3DIOrhU7iSmSFSOhyJ4Iy?=
+ =?us-ascii?Q?RalaJb98DiMQgmZgQb93EDqmsalWhgqedrqg/+et6UNAST5hBwWQBjKhpF2I?=
+ =?us-ascii?Q?tvUcCKqe9KcLeCa6Rh9sJvRGm7qTtfcq2dEttNwvw7hAr5jWffDzk3rSTSJu?=
+ =?us-ascii?Q?14HWP95lN9uY6jwsE5aADA2dWpwFwV0w4mV1UErXHoQ5+e6C2Ezri7htBqbA?=
+ =?us-ascii?Q?HvFk++v3+ujA7trsvQyxl3mr5yunklqIF86IOGa1hz1TRInpQCvqhKIvkdyh?=
+ =?us-ascii?Q?W58MaWHcvcto+jd1CCSWCCSTrImz7PypfOHtO4xMa+YsooRlXyEXQXm2B5/b?=
+ =?us-ascii?Q?Xs0cyuaxMbmcmVnU2D6x+2FioztQz1cXkfVwcBlluN0m62Z/m/kvz4yWOmFf?=
+ =?us-ascii?Q?hG/2DZ07djjTD6hGNkbYa2HpYNRSDhULhiSWTRt7PE9RK3MDStOrf0b8GcRI?=
+ =?us-ascii?Q?go6tFyOLOMbRX+FoJnP+Pap9psO4OPsJnK+mM68bLT4ETD6RVMTJymedeMMt?=
+ =?us-ascii?Q?m8vttQiQGEY4ysR8dKCoMfrlyDVDhwigggkFHXYoCYeFVJHzgQ6YgIzDtRTF?=
+ =?us-ascii?Q?G1WGMxoMtw9x9r0wuNicOUZYrNnCvQit2weEK/lFz2UIxvpEi0hzg0fbgiTC?=
+ =?us-ascii?Q?m4oy5Tm2Pfdu242bOi8C2uM3lOazrDxr52mPKYH47oDb7WMuDduhvYOeQHwM?=
+ =?us-ascii?Q?vl+NCVAoIjp0jhwUWMBZ3C9Z1bZ5O5S3SyDouWOe+lohorwHPO1CWf3xwO7O?=
+ =?us-ascii?Q?RFla824/c6X3r5b+CgcBBTQg91delIOUN4vn6yoLyj06PU6Vlyh3HHxbJaSC?=
+ =?us-ascii?Q?KEe4BXjOSdbJAjhpRUdAQBTOXWnkVIEk9jXfQswwB9FGFMgGhhuiyZbxyLfv?=
+ =?us-ascii?Q?2YPBrLlsv38l3eOvfkFwuq3kkeEP91Q0hJHP63MpkR9e4trj8nLceCdMWvmI?=
+ =?us-ascii?Q?Mt2Jz+r/YJI8YrGikw6ObeIl94WnwGzX61aG5xZ0pE1zg/e4sEgtm5Ug+Xj+?=
+ =?us-ascii?Q?mSHXaH5XVwLhBzZVXFDFm40/NjN6tytGS0jf6f2W//kmCxyTtwJ+H7y9UwKb?=
+ =?us-ascii?Q?ceTGxh6xo+lNgvyHFezpxeVX/3vUWLkhEAyBy69ZsQ=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?pXo/huBOXaQoihrnZoR8TwBcl9H9LRDz4xSrRGZrSnOreJm4f/j4GlfZrxx/?=
+ =?us-ascii?Q?Tb+GsIHeko/GIEidkYmfUCYbl3zmppV8jYsSeQEGmYym6vJQm35vRBKdqgHU?=
+ =?us-ascii?Q?R6/PyolgvDIVZwaqAHMn0bkliwY6VZk7jX/muUVZupj4AoG8/94XU/+9r9wX?=
+ =?us-ascii?Q?IpZA5WSarcQ4xjqB947JGyy89KW5hudxDYRzm2TtEgubIqLSUa1ZLUi69NaH?=
+ =?us-ascii?Q?EO8ccoF+TetrN+gFpU1lr37AhsjgNXufs1FwIyuAY3X8Xj/EwGCllsm89LFc?=
+ =?us-ascii?Q?VFJc9k9Hai8eC0odF8LzC1Y+vdJNm3BozJ4gF1W4huZnzl03MKrUVdcNIa/A?=
+ =?us-ascii?Q?G3n/uK9UM5Sm3uNg5Wpoc5A1tDq2IptFAs7JWYK4rYSSrjXExJ9e12DUUh/M?=
+ =?us-ascii?Q?dR+mvsBlgEqV2tfY+NcJEhGrGX1DHvBDppcqrnHXFCborrysY/XjwFXUM0a0?=
+ =?us-ascii?Q?cbgJfTf4vaZ0U3T1pQNh1eHg7IJN1jH54n9siZAJ28Dp9v6ejYhXAmXOZbeW?=
+ =?us-ascii?Q?t3Iw4uDwoH4U53bOcCE+Y/QiHV9iRMU6JWHmdESsHm3Q7WeZUEcaIGSnX4ZU?=
+ =?us-ascii?Q?zxISLlltfZOCsaNzRxQqBXHamiF45iX9XZ+xv0fSj4xqusovABOH0cm5IP/q?=
+ =?us-ascii?Q?MB7KrANI0hpHY9Y4Qa9onyVS1vhhAHe7n5PM/2vWZrlIip7fZrO/hqkNeNWu?=
+ =?us-ascii?Q?cYUezi86d/nDBWgsAVBb1DeFJwQT3szwhpvl11DF8hnbG869SCCqsTe6n80k?=
+ =?us-ascii?Q?AgyuPoue9qIchQ9qFfHzgZkH6E8UKMl7uoZmIH+zZ8m6BRgscyzfRvWDhyaR?=
+ =?us-ascii?Q?Ok2V2pK+ZOl0wC2nWDfanmG3nVd0Zh3N7wMI3fWM+5Q7WE7DV7Fb8S2qzUgK?=
+ =?us-ascii?Q?2J2bWTNA38UA7TsGEuotYc7FB+++lTa0BucBy4KmnY4f25JDDkakXzB46oNX?=
+ =?us-ascii?Q?G0BLj/F4Pda/Ns7DBKtohU6gJ8ivjI+UO7y9eZRR1TwRSHMrDO+h7fHx5jgL?=
+ =?us-ascii?Q?LQggmob/sDt21n88JjLdblngQYY8GipiLPre4bqwwC8dV5xZ9wHpFgd+wVht?=
+ =?us-ascii?Q?Ok/kWlpV8OAjiXfNnRYyEaDZiSeVNbqqHZvlTQ6dddBzu2VYp0z2UMM2aLd3?=
+ =?us-ascii?Q?ZA3YHL67c64Ey9c7qLHw9x6mPQYCgwjOcjSa/hykSslNeGt0AHt2scaUKrnc?=
+ =?us-ascii?Q?mCC0pfCjhtfNcS7mPU2GcKO4NKBjh7LRWZammVsWX5kamGAnC54n6EMFQTNr?=
+ =?us-ascii?Q?VZgym9z/rLswPcwbbDbJH9UUXIBIp53Jc7l8+A2iJXV07eB1FtY88RvZw/pL?=
+ =?us-ascii?Q?8IqaPPwmmQNVVR458J+YPGPncOq46shPt8InLh+NkVFqMF9KHsK0bTA7h8rT?=
+ =?us-ascii?Q?IoZEkdN0+3OhO6uZXRb+mvDonJhPKoG5LWWMIYDyLsmmPjwbZ8FGJPH1X6b+?=
+ =?us-ascii?Q?J/ytXKuxxTlGoI7UBDOVqTPTUTUnjbXK2NFY+T0XW+8zOtNS+cmvVC8BJYhz?=
+ =?us-ascii?Q?NGcHVM9MoZaE0FsnMFYF4oHVVi7l9XDQ1I2V4fYLRfLeROoLYSg44lp/nfVz?=
+ =?us-ascii?Q?e7B4NJwTdBmJZQ/m8DzNtqEOXPDEZtJKAKqGI4BEbeRudqaTrJpLsUJzAuPG?=
+ =?us-ascii?Q?/d4oF7Q1BQHoR/06KtihGhM=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	ifUFJ7L2wQRApi6G/SvYgmyWfkEQWEqJ2mqmZvoRswNygqj0OXFXPVkG9TZPnBRDyUnAZoqd2WiD64SFFKfGX3iKZTh5jRBmGaxSy39CpdfZcvjgWPn9g1JG6k4rhZw+Iz7S1FoS2YlHuEYKeZO79Lc4naGaO+1fBnWm5WdB/UmS5SU0pH/hLnj+aw+Ct9EQ44Yf3jaD4rI6EajAHiW+8W4sNG7g7/JPZtKJ0dQejASQptqVa+6l64H3Vr/iqBBcjKENYRhERugVGLKqEI0KLfaTLPE17exHPIthtkxOK1tB3rADie+3hgCWi7gtyJyD648h0aiES62r+I7VhayPqG+vwlpkbq3Bb1qSdQfYmVlwMsaHSY11kTZC2QhM3jN1TodXqgS2hh12DP/G/kVaug0ABivTkgM5C/Qe5uoK0QVlz+Ud8bL8u6gb+z60vbCOxo/TmqQ5Jj/kUFnOFQ04PoSUmlQfvKvcK2rOYq7hTS6W6iOfRHBU+VS0UPT1YDMPSmmNUDRLkFh0u7GeJD3Uj0XMuMiOU0DaYfaQkXXXkhDCtlNQs/ze4fJ0jYiw4wvSQYyLNYfM54zlMzE+8sMRuu/TvKst/q/CbNTNXXLOJN0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f1c8aa0-cd97-450c-1fc7-08dc69698171
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2024 23:01:44.6215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MLWVJBuEBoY59icYc8TKxnePyI6NH9U5G/V8rNGFk7lTyXNpoeWSTQ825n75wT5STla3Gwg79dgkypgyXg5tOJb61XZk+DN5rGsSz6XI5c4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7853
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_14,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
+ phishscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404300163
+X-Proofpoint-GUID: -xZPmWW_3fkgZx_8ZuMwhJyzgCUF0MJH
+X-Proofpoint-ORIG-GUID: -xZPmWW_3fkgZx_8ZuMwhJyzgCUF0MJH
 
-On 26.04.24 21:55, Guillaume Morin wrote:
-> On 26 Apr  9:19, David Hildenbrand wrote:
->> A couple of points:
->>
->> a) Don't use page_mapcount(). Either folio_mapcount(), but likely you want
->> to check PageAnonExclusive.
->>
->> b) If you're not following the can_follow_write_pte/_pmd model, you are
->> doing something wrong :)
->>
->> c) The code was heavily changed in mm/mm-unstable. It was merged with t
->> the common code.
->>
->> Likely, in mm/mm-unstable, the existing can_follow_write_pte and
->> can_follow_write_pmd checks will already cover what you want in most cases.
->>
->> We'd need a can_follow_write_pud() to cover follow_huge_pud() and
->> (unfortunately) something to handle follow_hugepd() as well similarly.
->>
->> Copy-pasting what we do in can_follow_write_pte() and adjusting for
->> different PTE types is the right thing to do. Maybe now it's time to factor
->> out the common checks into a separate helper.
-> 
-> I tried to get the hugepd stuff right but this was the first I heard
-> about it :-) Afaict follow_huge_pmd and friends were already DTRT
+Steven Rostedt <rostedt@goodmis.org> writes:
+> On Mon, 29 Apr 2024 10:47:18 -0700
+> Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
+>
+>> If an error happens in ftrace, ftrace_kill() will prevent disarming
+>> kprobes. Eventually, the ftrace_ops associated with the kprobes will be
+>> freed, yet the kprobes will still be active, and when triggered, they
+>> will use the freed memory, likely resulting in a page fault and panic.
+>> 
+>> This behavior can be reproduced quite easily, by creating a kprobe and
+>> then triggering a ftrace_kill(). For simplicity, we can simulate an
+>> ftrace error with a kernel module like [1]:
+>> 
+>> [1]: https://github.com/brenns10/kernel_stuff/tree/master/ftrace_killer
+>> 
+>>   sudo perf probe --add commit_creds
+>>   sudo perf trace -e probe:commit_creds
+>>   # In another terminal
+>>   make
+>>   sudo insmod ftrace_killer.ko  # calls ftrace_kill(), simulating bug
+>>   # Back to perf terminal
+>>   # ctrl-c
+>>   sudo perf probe --del commit_creds
+>> 
+>> After a short period, a page fault and panic would occur as the kprobe
+>> continues to execute and uses the freed ftrace_ops. While ftrace_kill()
+>> is supposed to be used only in extreme circumstances, it is invoked in
+>> FTRACE_WARN_ON() and so there are many places where an unexpected bug
+>> could be triggered, yet the system may continue operating, possibly
+>> without the administrator noticing. If ftrace_kill() does not panic the
+>> system, then we should do everything we can to continue operating,
+>> rather than leave a ticking time bomb.
+>> 
+>> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+>> ---
+>> Difference from v1: removed both existing declarations of ftrace_is_dead()
+>> from kernel/trace/trace.h.
+>> 
+>>  arch/csky/kernel/probes/ftrace.c     | 3 +++
+>>  arch/loongarch/kernel/ftrace_dyn.c   | 3 +++
+>>  arch/parisc/kernel/ftrace.c          | 3 +++
+>>  arch/powerpc/kernel/kprobes-ftrace.c | 3 +++
+>>  arch/riscv/kernel/probes/ftrace.c    | 3 +++
+>>  arch/s390/kernel/ftrace.c            | 3 +++
+>>  arch/x86/kernel/kprobes/ftrace.c     | 3 +++
+>>  include/linux/ftrace.h               | 2 ++
+>>  kernel/trace/trace.h                 | 2 --
+>>  9 files changed, 23 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
+>> index 834cffcfbce3..3931bf9f707b 100644
+>> --- a/arch/csky/kernel/probes/ftrace.c
+>> +++ b/arch/csky/kernel/probes/ftrace.c
+>> @@ -12,6 +12,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe_ctlblk *kcb;
+>>  	struct pt_regs *regs;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+>> index 73858c9029cc..82c952cb5be0 100644
+>> --- a/arch/loongarch/kernel/ftrace_dyn.c
+>> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+>> @@ -287,6 +287,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe *p;
+>>  	struct kprobe_ctlblk *kcb;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
+>> index 621a4b386ae4..3660834f54c3 100644
+>> --- a/arch/parisc/kernel/ftrace.c
+>> +++ b/arch/parisc/kernel/ftrace.c
+>> @@ -206,6 +206,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe *p;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
+>> index 072ebe7f290b..85eb55aa1457 100644
+>> --- a/arch/powerpc/kernel/kprobes-ftrace.c
+>> +++ b/arch/powerpc/kernel/kprobes-ftrace.c
+>> @@ -21,6 +21,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
+>>  	struct pt_regs *regs;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(nip, parent_nip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/riscv/kernel/probes/ftrace.c b/arch/riscv/kernel/probes/ftrace.c
+>> index 7142ec42e889..8814fbe4c888 100644
+>> --- a/arch/riscv/kernel/probes/ftrace.c
+>> +++ b/arch/riscv/kernel/probes/ftrace.c
+>> @@ -11,6 +11,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe_ctlblk *kcb;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
+>> index c46381ea04ec..ccbe8ccf945b 100644
+>> --- a/arch/s390/kernel/ftrace.c
+>> +++ b/arch/s390/kernel/ftrace.c
+>> @@ -296,6 +296,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe *p;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
+>> index dd2ec14adb77..c73f9ab7ff50 100644
+>> --- a/arch/x86/kernel/kprobes/ftrace.c
+>> +++ b/arch/x86/kernel/kprobes/ftrace.c
+>> @@ -21,6 +21,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+>>  	struct kprobe_ctlblk *kcb;
+>>  	int bit;
+>>  
+>> +	if (unlikely(ftrace_is_dead()))
+>> +		return;
+>> +
+>>  	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>>  	if (bit < 0)
+>>  		return;
+>> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+>> index 54d53f345d14..ba83e99c1fbe 100644
+>> --- a/include/linux/ftrace.h
+>> +++ b/include/linux/ftrace.h
+>> @@ -399,6 +399,7 @@ int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *a
+>>  #define register_ftrace_function(ops) ({ 0; })
+>>  #define unregister_ftrace_function(ops) ({ 0; })
+>>  static inline void ftrace_kill(void) { }
+>> +static inline int ftrace_is_dead(void) { return 0; }
+>>  static inline void ftrace_free_init_mem(void) { }
+>>  static inline void ftrace_free_mem(struct module *mod, void *start, void *end) { }
+>>  static inline int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *addrs)
+>> @@ -914,6 +915,7 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
+>>  
+>>  /* totally disable ftrace - can not re-enable after this */
+>>  void ftrace_kill(void);
+>> +int ftrace_is_dead(void);
+>>  
+>>  static inline void tracer_disable(void)
+>>  {
+>> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+>> index 64450615ca0c..70a37ee41813 100644
+>> --- a/kernel/trace/trace.h
+>> +++ b/kernel/trace/trace.h
+>> @@ -1026,7 +1026,6 @@ static inline int ftrace_trace_task(struct trace_array *tr)
+>>  	return this_cpu_read(tr->array_buffer.data->ftrace_ignore_pid) !=
+>>  		FTRACE_PID_IGNORE;
+>>  }
+>> -extern int ftrace_is_dead(void);
+>
+> Honestly I rather not expose this function outside of the tracing
+> infrastructure. Instead, we should have a kprobe_ftrace_kill() function,
+> and have ftrace_kill() call that.
+>
+> Then kprobe_ftrace_kill() can set its own variable that is exposed to all
+> these functions and they can test that instead of adding the extra overhead
+> in the fast path of a function call to ftrace_is_dead()
+>
+> extern bool kprobes_ftrace_disabled __read_mostly;
+>
+> void kprobe_ftrace_kill(void)
+> {
+> 	kprobes_ftrace_disabled = true;
+> }
+>
+> And you can then replace all these with:
+>
+> 	if (kprobes_ftrace_disabled)
+> 		return;
+>
+> Which is faster.
 
-I'll have to have a closer look at some details (the hugepd writability 
-check looks a bit odd), but it's mostly what I would have expected!
+Thanks, that does make a lot more sense. It's faster, and doesn't
+involve exporting that function. I'll go ahead and use this approach.
 
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks,
+Stephen
