@@ -1,253 +1,201 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0962F172BD7;
-	Tue, 30 Apr 2024 18:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A0B199E84
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 19:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714503522; cv=none; b=hXZ77p/KDHHBC8Dhab6gx0bkgdJH5XoeaowFn5OeNzIQP0glQTIpydd0GxC3H4L8GSUwfLatouOK/1KPhUWO79ZPhGyltCO7LC2rcmZa1ZVGQlKsu4r23DagV+lA54qodzi8C0AkQwO70GJcqiKLsrsnLmY3Lm5eJZhTZ8I4vOc=
+	t=1714504776; cv=none; b=OfGKs2RQunXA8VVYuutWR2lJzDvFlXj1N6OWXmbT+KAI/jydwqtlklN5w5R2TsodaS1kfrf78qax52KF+nkaOga5EtBlJLMR4af4crG5eg8f55DwOS895kxkIZa0fyIgU9UCp472LXFho5rtuyQ0hTLzQhYNTbQKc/uyAgSWHc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714503522; c=relaxed/simple;
-	bh=SjoD3RHTmmZDzZCM8lZd9retaoQx53its6hidF7gw88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OmRkEAp9WIBicjuEJIpN74NjAwWb4IxxHQ7okGNIIuPm/rZeOYsFf8YmlMv+1dbM8uDf1RP+ayFlHYj2FMneZK1KgArDbrqlEuwAdZAj45MrbKo2ZexrAoVX0YJ0c2MbEsR/d+l9xoqRWankf+Fq/sSfZafpi8zrSMDYlHFrW6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=GBzs8RFd; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
+	s=arc-20240116; t=1714504776; c=relaxed/simple;
+	bh=rXrYXwxz8utS37Zdd/NHXMvvYHT1Pko55fdXpz+a0f8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UrRyi0YYgk8iOvQXKLl5ppv8ejwhxfgYZVjAkwvG4vTusSW8Xq2c7VSY5C2QktbGxxMOxYrimo6uV56ByNrdCjI0yxOLpi+3g1D09wbGZJolfiasNfyVhqeL6egf4b7hZ4OLfc1+GazbDaK3zs+Vo+0cyPXn7Dk+ZWNzkojF8vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yhrCM4Yd; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="GBzs8RFd"
-Received: from bender.morinfr.org (unknown [82.66.66.112])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 7FBF020039E;
-	Tue, 30 Apr 2024 20:58:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
-	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=HhSudDUSa3R+U3u8VO33W0XCYKfrmMlncMYuFLeBf+A=; b=GBzs8RFdCI2UkY8eb7smXBPhxE
-	+dJA4kENbq0FIv9Dygi4+I51i9W8VXH2X6Q46es+W5df9ZveIqiD1SLChOKqoQSCutBgKsgvhHjeT
-	kG3oQqqdKIBhqJ07K6HDEZAnbeIixzVKMrvhMlSGufC248AWZJzrHT78Kc2sovaS+u+8=;
-Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
-	(envelope-from <guillaume@morinfr.org>)
-	id 1s1sgR-004hBY-2u;
-	Tue, 30 Apr 2024 20:58:31 +0200
-Date: Tue, 30 Apr 2024 20:58:31 +0200
-From: Guillaume Morin <guillaume@morinfr.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Guillaume Morin <guillaume@morinfr.org>, oleg@redhat.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	muchun.song@linux.dev
-Subject: Re: [RFC][PATCH] uprobe: support for private hugetlb mappings
-Message-ID: <ZjE_V0j8mYpNaW8K@bender.morinfr.org>
-References: <8d5314ac-5afe-41d4-9d27-9512cd96d21c@redhat.com>
- <ZilvOi7ceSXmwkNq@bender.morinfr.org>
- <b1cf78f8-8480-4451-bbf8-78694ebd0438@redhat.com>
- <Zip0fEliGeL0qmID@bender.morinfr.org>
- <e84a82b8-b788-499c-be79-e6dcb64ac969@redhat.com>
- <Zirw0uINbP6GxFiK@bender.morinfr.org>
- <385d3516-95bb-4ff9-9d60-ac4e46104130@redhat.com>
- <ZiwGovSHiVCF7z6y@bender.morinfr.org>
- <ZjEMoHkbloHVeJ0h@bender.morinfr.org>
- <35c88b38-96e6-4092-a7e0-fd22f6d784cc@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yhrCM4Yd"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so7388090e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Apr 2024 12:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714504773; x=1715109573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JBbLSd4KX1Ml6Kx/U9tspaOWXAez2c+6/7rMF07WiMA=;
+        b=yhrCM4YdS1mVSkC6dZlf25VsI6foSQBCk1DyesxJ/3Nf9GIMHy2gLaao5m1yno4E4y
+         LtG62zQbF9BTkR0aOMYlQm1EEMYIDUCq9PMx9uJmf3kKE2VKFDXgbV/etlhd83AV68Mw
+         q0LoGQlekuHwfa+7Hc6GI0DZ/Iir29gHWQ93YeFSVeB4ebbTLs1IPAMrizUw1zcYmLPc
+         dGrMy+HB86r/BLLws08RKvC1H2mXBtxc86+vZP7uOFNjHzPyfH/Yc46yDsB17PHHg3/8
+         cmY8hLG3CzLveY5qMgQT1zM60pq2ET0rzg8DrUA3vcerRTlTRWGeqNRVTZKVEPp06M3c
+         o+RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714504773; x=1715109573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JBbLSd4KX1Ml6Kx/U9tspaOWXAez2c+6/7rMF07WiMA=;
+        b=WBw68oAxRvFJMBP3JVcUkpv0e6n8Qkh8iggjHsz6xIpAAaY1inO431HfultIZVk/NL
+         zRSJKnFoO1rBJr3YTlNnoPEM5aJdzXaU1UWiQPLAtjiPUjvp8nC60cHzrJV8on3sZDby
+         pafN9Nnyn0yEjdsZXmnl/dGTr1uiTrluF8Bjlxhc0o8QZcEyr1csAyPoP7Ps2LOBXS7k
+         S2OYa/p5skUMV7IaQWQ6bGByzAVIQLhvZOrQ3PiEvray+5Y0Inxq6D+IK0nvECg9k7wV
+         CEbWmufnsKPvWAI1SdHW1vO6jzZptWI7pELfZSjlMr8oJJFnNgStngs1qtVVPbxpJ8tP
+         jmvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXvVGOl6sXXUXlbabdfgVYp5Nczz2q+V01EOn4xOA1aaeF5WDJ/01Er3SbwqBxd26CjYG5tU/LNYS4PDrEQmIS6H3dR7bVB37Zp4gtv5Sqmurv
+X-Gm-Message-State: AOJu0YyWHo1lsi+hIS5myEoixmmih/L22oY9LxQIATBqcXWJ8FQlNV/G
+	bNKJB3K/NZ1mZVIx050JlrdIuI8fOTIDtqxHxFdcGN8r3GOOTPAXlVPYVQhz7m6sK/5YQ2s+eTF
+	3XfjeAccOPorsUSr3GW6Z01UvMmdeeZw5TGZl
+X-Google-Smtp-Source: AGHT+IEv1vAD5KmPx2DuK83e++oMbqGnWC2h94YZYICJhje+Ouaos+1vgy9d2n+Zn+VtRp04liNfK+AEGoM+Z6BbCWI=
+X-Received: by 2002:a05:6512:3492:b0:517:8ad8:c64 with SMTP id
+ v18-20020a056512349200b005178ad80c64mr259130lfr.21.1714504772286; Tue, 30 Apr
+ 2024 12:19:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35c88b38-96e6-4092-a7e0-fd22f6d784cc@redhat.com>
+References: <20240403002053.2376017-1-almasrymina@google.com>
+ <20240403002053.2376017-8-almasrymina@google.com> <8357256a-f0e9-4640-8fec-23341fc607db@davidwei.uk>
+ <CAHS8izPeYryoLdCAQdGQU-wn7YVdtuofVKNvRFjFjhqTDsT7zA@mail.gmail.com>
+ <aafbbf09-a33d-4e73-99c8-9ddab5910657@kernel.dk> <CAHS8izMKLYATo6g3xkj_thFo3whCfq6LSoex5s0m5XZd-U7SVQ@mail.gmail.com>
+ <11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk>
+In-Reply-To: <11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 30 Apr 2024 12:19:17 -0700
+Message-ID: <CAHS8izP3KtH_CHyQKE+=vrY-yREq5Bb_Kd+KLyJ4j-_AdjNk-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v8 07/14] page_pool: devmem support
+To: Jens Axboe <axboe@kernel.dk>
+Cc: David Wei <dw@davidwei.uk>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Amritha Nambiar <amritha.nambiar@intel.com>, 
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Kaiyuan Zhang <kaiyuanz@google.com>, 
+	Christian Brauner <brauner@kernel.org>, Simon Horman <horms@kernel.org>, 
+	David Howells <dhowells@redhat.com>, Florian Westphal <fw@strlen.de>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Arseniy Krasnov <avkrasnov@salutedevices.com>, 
+	Aleksander Lobakin <aleksander.lobakin@intel.com>, Michael Lass <bevan@bi-co.net>, 
+	Jiri Pirko <jiri@resnulli.us>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Richard Gobert <richardbgobert@gmail.com>, 
+	Sridhar Samudrala <sridhar.samudrala@intel.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>, 
+	Breno Leitao <leitao@debian.org>, Pavel Begunkov <asml.silence@gmail.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
+	Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30 Apr 20:21, David Hildenbrand wrote:
-> Sorry for not replying earlier, was busy with other stuff. I'll try getiing
-> that stuff into shape and send it out soonish.
+On Tue, Apr 30, 2024 at 11:55=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote=
+:
+>
+> On 4/30/24 12:29 PM, Mina Almasry wrote:
+> > On Tue, Apr 30, 2024 at 6:46?AM Jens Axboe <axboe@kernel.dk> wrote:
+> >>
+> >> On 4/26/24 8:11 PM, Mina Almasry wrote:
+> >>> On Fri, Apr 26, 2024 at 5:18?PM David Wei <dw@davidwei.uk> wrote:
+> >>>>
+> >>>> On 2024-04-02 5:20 pm, Mina Almasry wrote:
+> >>>>> @@ -69,20 +106,26 @@ net_iov_binding(const struct net_iov *niov)
+> >>>>>   */
+> >>>>>  typedef unsigned long __bitwise netmem_ref;
+> >>>>>
+> >>>>> +static inline bool netmem_is_net_iov(const netmem_ref netmem)
+> >>>>> +{
+> >>>>> +#if defined(CONFIG_PAGE_POOL) && defined(CONFIG_DMA_SHARED_BUFFER)
+> >>>>
+> >>>> I am guessing you added this to try and speed up the fast path? It's
+> >>>> overly restrictive for us since we do not need dmabuf necessarily. I
+> >>>> spent a bit too much time wondering why things aren't working only t=
+o
+> >>>> find this :(
+> >>>
+> >>> My apologies, I'll try to put the changelog somewhere prominent, or
+> >>> notify you when I do something that I think breaks you.
+> >>>
+> >>> Yes, this is a by-product of a discussion with regards to the
+> >>> page_pool benchmark regressions due to adding devmem. There is some
+> >>> background on why this was added and the impact on the
+> >>> bench_page_pool_simple tests in the cover letter.
+> >>>
+> >>> For you, I imagine you want to change this to something like:
+> >>>
+> >>> #if defined(CONFIG_PAGE_POOL)
+> >>> #if defined(CONFIG_DMA_SHARED_BUFFER) || defined(CONFIG_IOURING)
+> >>>
+> >>> or something like that, right? Not sure if this is something I should
+> >>> do here or if something more appropriate to be in the patches you
+> >>> apply on top.
+> >>
+> >> In general, attempting to hide overhead behind config options is alway=
+s
+> >> a losing proposition. It merely serves to say "look, if these things
+> >> aren't enabled, the overhead isn't there", while distros blindly enabl=
+e
+> >> pretty much everything and then you're back where you started.
+> >>
+> >
+> > The history there is that this check adds 1 cycle regression to the
+> > page_pool fast path benchmark. The regression last I measured is 8->9
+> > cycles, so in % wise it's a quite significant 12.5% (more details in
+> > the cover letter[1]). I doubt I can do much better than that to be
+> > honest.
+>
+> I'm all for cycle counting, and do it myself too, but is that even
+> measurable in anything that isn't a super targeted microbenchmark? Or
+> even in that?
+>
 
-No worries. Let me know what you think of the FOLL_FORCE patch when you
-have a sec.
+Not as far as I can tell, no. This was purely to improve the page_pool
+benchmark.
 
-> > I went with using one write uprobe function with some additional
-> > branches. I went back and forth between that and making them 2 different
-> > functions.
-> 
-> All the folio_test_hugetlb() special casing is a bit suboptimal. Likely we
-> want a separate variant, because we should be sing hugetlb PTE functions
-> consistently (e.g., huge_pte_uffd_wp() vs pte_uffd_wp(), softdirty does not
-> exist etc.)
+> > There was a desire not to pay this overhead in setups that will likely
+> > not care about devmem, like embedded devices maybe, or setups without
+> > GPUs. Adding a CONFIG check here seemed like very low hanging fruit,
+> > but yes it just hides the overhead in some configs, not really removes
+> > it.
+> >
+> > There was a discussion about adding this entire netmem/devmem work
+> > under a new CONFIG. There was pushback particularly from Willem that
+> > at the end of the day what is enabled on most distros is what matters
+> > and we added code churn and CONFIG churn for little value.
+> >
+> > If there is significant pushback to the CONFIG check I can remove it.
+> > I don't feel like it's critical, it just mirco-optimizes some setups
+> > that doesn't really care about this work area.
+>
+> That is true, but in practice it'll be enabled anyway. Seems like it's
+> not really worth it in this scenario.
+>
 
-Ok, I'll give this a whirl and send something probably tomorrow.
+OK, no pushback from me. I'll remove the CONFIG check in the next iteration=
+.
 
-> > diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> > index 2f4e88552d3f..8a33e380f7ea 100644
-> > --- a/fs/hugetlbfs/inode.c
-> > +++ b/fs/hugetlbfs/inode.c
-> > @@ -83,6 +83,10 @@ static const struct fs_parameter_spec hugetlb_fs_parameters[] = {
-> >   	{}
-> >   };
-> > +bool hugetlbfs_mapping(struct address_space *mapping) {
-> > +	return mapping->a_ops == &hugetlbfs_aops;
-> 
-> is_vm_hugetlb_page() might be what you are looking for.
-
-I use hugetlbfs_mapping() in __uprobe_register() which does an early
-return using the mapping only if it's not supported. There is no vma
-that I can get at this point (afaict).
-
-I could refactor so we check this when we have a vma but it looked
-cleaner to introduce it since there is already shmem_mapping()
-
-> >   }
-> > -static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
-> > +static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len, unsigned long page_mask)
-> >   {
-> >   	void *kaddr = kmap_atomic(page);
-> > -	memcpy(dst, kaddr + (vaddr & ~PAGE_MASK), len);
-> > +	memcpy(dst, kaddr + (vaddr & ~page_mask), len);
-> >   	kunmap_atomic(kaddr);
-> >   }
-> 
-> > -static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len)
-> > +static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len, unsigned long page_mask)
-> >   {
-> >   	void *kaddr = kmap_atomic(page);
-> > -	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
-> > +	memcpy(kaddr + (vaddr & ~page_mask), src, len);
-> >   	kunmap_atomic(kaddr);
-> >   }
-> 
-> These two changes really are rather ugly ...
-> 
-> An why are they even required? We get a PAGE_SIZED-based subpage of a
-> hugetlb page. We only kmap that one and copy within that one.
-> 
-> In other words, I don't think the copy_from_page() and copy_to_page()
-> changes are even required when we consistently work on subpages and not
-> suddenly on head pages.
-
-The main reason is that the previous __replace_page worked directly on the full
-HP page so adjusting after gup seemed to make more sense to me. But
-now I guess it's not that useful (esp we're going with a different
-version of write_uprobe). I'll fix
-
-(...)
-> >   {
-> >   	struct uwo_data *data = walk->private;;
-> >   	const bool is_register = !!is_swbp_insn(&data->opcode);
-> > @@ -415,9 +417,12 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
-> >   	/* Unmap + flush the TLB, such that we can write atomically .*/
-> >   	flush_cache_page(vma, vaddr, pte_pfn(pte));
-> > -	pte = ptep_clear_flush(vma, vaddr, ptep);
-> > +	if (folio_test_hugetlb(folio))
-> > +		pte = huge_ptep_clear_flush(vma, vaddr, ptep);
-> > +	else
-> > +		pte = ptep_clear_flush(vma, vaddr, ptep);
-> >   	copy_to_page(page, data->opcode_vaddr, &data->opcode,
-> > -		     UPROBE_SWBP_INSN_SIZE);
-> > +		     UPROBE_SWBP_INSN_SIZE, page_mask);
-> >   	/* When unregistering, we may only zap a PTE if uffd is disabled ... */
-> >   	if (is_register || userfaultfd_missing(vma))
-> > @@ -443,13 +448,18 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
-> >   	if (!identical || folio_maybe_dma_pinned(folio))
-> >   		goto remap;
-> > -	/* Zap it and try to reclaim swap space. */
-> > -	dec_mm_counter(mm, MM_ANONPAGES);
-> > -	folio_remove_rmap_pte(folio, page, vma);
-> > -	if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
-> > -	     folio_trylock(folio)) {
-> > -		folio_free_swap(folio);
-> > -		folio_unlock(folio);
-> > +	if (folio_test_hugetlb(folio)) {
-> > +		hugetlb_remove_rmap(folio);
-> > +		large = false;
-> > +	} else {
-> > +		/* Zap it and try to reclaim swap space. */
-> > +		dec_mm_counter(mm, MM_ANONPAGES);
-> > +		folio_remove_rmap_pte(folio, page, vma);
-> > +		if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
-> > +		folio_trylock(folio)) {
-> > +			folio_free_swap(folio);
-> > +			folio_unlock(folio);
-> > +		}
-> >   	}
-> >   	folio_put(folio);
-> > @@ -461,11 +471,29 @@ static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
-> >   	 */
-> >   	smp_wmb();
-> >   	/* We modified the page. Make sure to mark the PTE dirty. */
-> > -	set_pte_at(mm, vaddr, ptep, pte_mkdirty(pte));
-> > +	if (folio_test_hugetlb(folio))
-> > +		set_huge_pte_at(mm , vaddr, ptep, huge_pte_mkdirty(pte),
-> > +				(~page_mask) + 1);
-> > +	else
-> > +		set_pte_at(mm, vaddr, ptep, pte_mkdirty(pte));
-> >   	return UWO_DONE;
-> >   }
-> > +static int __write_opcode_hugetlb(pte_t *ptep, unsigned long hmask,
-> > +		unsigned long vaddr,
-> > +		unsigned long next, struct mm_walk *walk)
-> > +{
-> > +	return __write_opcode(ptep, vaddr, hmask, walk);
-> > +}
-> > +
-> > +static int __write_opcode_pte(pte_t *ptep, unsigned long vaddr,
-> > +		unsigned long next, struct mm_walk *walk)
-> > +{
-> > +	return __write_opcode(ptep, vaddr, PAGE_MASK, walk);
-> > +}
-> > +
-> >   static const struct mm_walk_ops write_opcode_ops = {
-> > +	.hugetlb_entry		= __write_opcode_hugetlb,
-> >   	.pte_entry		= __write_opcode_pte,
-> >   	.walk_lock		= PGWALK_WRLOCK,
-> >   };
-> > @@ -492,7 +520,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >   		unsigned long opcode_vaddr, uprobe_opcode_t opcode)
-> >   {
-> >   	struct uprobe *uprobe = container_of(auprobe, struct uprobe, arch);
-> > -	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
-> > +	unsigned long vaddr = opcode_vaddr & PAGE_MASK;
-> >   	const bool is_register = !!is_swbp_insn(&opcode);
-> >   	struct uwo_data data = {
-> >   		.opcode = opcode,
-> > @@ -503,6 +531,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >   	struct mmu_notifier_range range;
-> >   	int ret, ref_ctr_updated = 0;
-> >   	struct page *page;
-> > +	unsigned long page_size = PAGE_SIZE;
-> >   	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
-> >   		return -EINVAL;
-> > @@ -521,7 +550,14 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >   	if (ret != 1)
-> >   		goto out;
-> > -	ret = verify_opcode(page, opcode_vaddr, &opcode);
-> > +
-> > +	if (is_vm_hugetlb_page(vma)) {
-> > +		struct hstate *h = hstate_vma(vma);
-> > +		page_size = huge_page_size(h);
-> > +		vaddr &= huge_page_mask(h);
-> > +		page = compound_head(page);
-> 
-> I think we should only adjust the range we pass to the mmu notifier and for
-> walking the VMA range. But we should not adjust vaddr.
-> 
-> Further, we should not adjust the page if possible ... ideally, we'll treat
-> hugetlb folios just like large folios here and operate on subpages.
-> 
-> Inside __write_opcode(), we can derive the the page of interest from
-> data->opcode_vaddr.
-
-Here you mean __write_opcode_hugetlb(), right? Since we're going with
-the 2 independent variants. Just want to 100% sure I am following
-
-> find_get_page() might need some though, if it won't return a subpage of a
-> hugetlb folio. Should be solvable by a wrapper, though.
-
-We can zero out the subbits with the huge page mask in the
-vaddr_to_offset() in the hugetlb variant like I do in __copy_insn() and
-that should work, no? Or you prefer a wrapper?
-
-Guillaume.
-
--- 
-Guillaume Morin <guillaume@morinfr.org>
+--=20
+Thanks,
+Mina
