@@ -1,100 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B977B4D9EF;
-	Wed,  1 May 2024 23:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2DD43AC3;
+	Wed,  1 May 2024 23:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714605158; cv=none; b=P/71dKOmmEn+dvyQ5iep0xmuAeBYREaT5dfdnnLDqzxYLcyPROInyFbOZhSi07o6AFsth3b5shMz79LMizOpsKN9iTEeqkq9ynW03wSsyR/AKocsV+Zg0rJm3IifD/Saydy8oMUhHJu9vGf2bSId/A+dP4KPMb5bm9upnY6bAPo=
+	t=1714606633; cv=none; b=LiU/sefeT5hKB7ERyi9XT9qRp7JUh3E7cRAMrslq7Z58AHldMlcn59rE42NBSumKAulXRhUm5zQsmIlc1EHMazsqd6vz3J6yq8SUWkRzsldsLzjrbGDbSX8rjd/eut35ql1pbsy2pT77VlTJzXqiiqtH+g/yBov+NaNNCBOwmz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714605158; c=relaxed/simple;
-	bh=do+2ZH/19azdeCdNdYYL3AHNk8uPkdkkl2JCBaU1tK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QLxDGoMrVohRxbMtIpW11iMcDG25wfJEoeS5aY7JYgLjmnlrJix1TygtKJV0Gq/Ls+y1P17BU+ED9O+oMNoYWWWU0d3o3pNY/FagpdILQtKdwcQfu7y47CLHdWv6t/u1reOkUwUN8aEizNBV+6LTAXxNocmQ483uZnFNE7gy9dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVrs0N+9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714606633; c=relaxed/simple;
+	bh=rnl3c4G/tQscwHdO1WvhkGb3RuY0yplXQv/UgVy5H2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z3W4cClLWDvwRW1Hm/h8VY8mk9tIRbNDXfyNsWO5ACRsfeagu5guSLGC1NFxmHMDl0boqxIweHHzmvVbrvJ98NZVorvkW6wALh8cK4dryWoJ0gYTzcSalZwAVOIOYnIOZjpUU6wBtZLa0IhagGtA9ZQvdJZVTW6DwigFC1oehOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kuMxEqdL; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVrs0N+9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373BBC072AA;
-	Wed,  1 May 2024 23:12:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714605158;
-	bh=do+2ZH/19azdeCdNdYYL3AHNk8uPkdkkl2JCBaU1tK4=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=eVrs0N+9RpHN0X1elg9X2J1RPZxT0DIywBm+io97ufQZIMtzvK6Hc3MSS1maDwsMo
-	 ANz3NzQ01Xa019RNE/fKijiHbyqZAyvA5XnimJqnhYvMjuxzDvwKOCYoo96+cmKSBn
-	 PvrpClzZ8X8o7WKAKl+INf1tZFL0PSQIU6Rxy1Gbnl3z4g/SxTSs4CXSPtl2RboexA
-	 K/LCLjFim7eM+Lxzf90ABNi5QIsq/im7EfFsJHcOull4/+5nNWmD8DmJp9eeq0XHcd
-	 PkhEpoVA3PBpEv6AcysqcAnw6Gf3TdATBlZO387QkMSbFRU/w4+cQLqpzPBw7UOKLS
-	 HGTXl91GlY2Ww==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CF3BDCE1073; Wed,  1 May 2024 16:12:37 -0700 (PDT)
-Date: Wed, 1 May 2024 16:12:37 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: kuba@kernel.org, ast@kernel.org, clm@fb.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Subject: [PATCH resend ftrace] Asynchronous grace period for
- register_ftrace_direct()
-Message-ID: <ac05be77-2972-475b-9b57-56bef15aa00a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuMxEqdL"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f42924ca64so696020b3a.2;
+        Wed, 01 May 2024 16:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714606632; x=1715211432; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WKj4Cu5JwcGHu7MqkGml23dMliHgLjGgTV4e25b7pDA=;
+        b=kuMxEqdLpWUTtZrl5mL9DvNgY8qhPYD9aEWYf5yJdycT68THMNJ3zCTA4PUMhzaFDJ
+         C4wH/wZHkqDG8C4yJDxGLjjLnmHn1OqxxllWAYgA4sicUXSRnbzR486McM4uwUZbR6+7
+         K7gavl0PxqFTIF5Z8pJvP2OOs3cySXMqwS6lEVTfgoV+SwpHx1KFWI5Z4MAO5EPT1Zbe
+         Y1JOboj4I11nOOdtSlV6u0G6Py5/QYS6jIsyqXOz4OM9/j71Sxs5aHxAhw4/mgNvaogO
+         EzUfOb9c2VyomMGIaGIqITuvloQgQKa9M11eXDuWjw8eESBz2Lk2lNH1F6B/ypnlvXT4
+         fcgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714606632; x=1715211432;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WKj4Cu5JwcGHu7MqkGml23dMliHgLjGgTV4e25b7pDA=;
+        b=E+AgGiA/yTwJ2qCCjyYmQe9Ygr2FteIjkNVQhj1773xJ4M+pOav8PoLkvN85e1D01/
+         36SDmLzPoCpIOyujzsCZuPtY5VyfGl3RKVA5aLEOOqcQ15d1vzDRmV1N1pn8h18OUTst
+         oUyb4bEoN/hcfVjJ6RAJb5S5FcmEBgug/C1dPBKTaJ+ySdrsWEOjgYO/KNFn7+H2MBom
+         0rhsVaz00ZIElDj0LB8dWvPHbLVoIrZBXdhibEU2ml1h3mMOEiBssN3ReWvryqpAnGcr
+         2qVImwBsEYg83UoqNBRPC6LFN/meo8/MpNTfa7qSDV6gKdIcymrvxK63xTOgyufzUHwR
+         SJSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu2Pc2e+TS8j2WKc0MJ/uJR61mpT45wG6x3BFwEk+jNFaMzKgX0pf0LnGz/o7JOFfIoLCxwT+CYuFFe2HCRVvo/w4UkTPs6NFhXvnrZzrbtZF3oxY10c9KkMt9BqfsOZeyZM6OQ8Z47aISrYCgFE7ChkvV/O2Twl4J69eF2rJ7wvilPuKXqs1bCgBm
+X-Gm-Message-State: AOJu0Yw/CIR8V2iZTy+m//bQ9D7E1HrUZ+eMHjtRLXnxSDMstf13UFVv
+	gZEp9tm33VyzMwpwAGeLa6Pt+hW51ONv0SDllokmIdE4ufnBzMUZ
+X-Google-Smtp-Source: AGHT+IGFR8pm1CNFzIVNLm94eUZlW4x5k9oMkl+Qqu09gm0jdDYqmsno4wWdEkryf2l3k56EpgQfqA==
+X-Received: by 2002:a05:6a21:2d86:b0:1af:66e6:bfdf with SMTP id ty6-20020a056a212d8600b001af66e6bfdfmr5105308pzb.15.1714606631351;
+        Wed, 01 May 2024 16:37:11 -0700 (PDT)
+Received: from kerneldev.. ([171.76.83.90])
+        by smtp.gmail.com with ESMTPSA id r12-20020aa7988c000000b006f41798fde5sm3075463pfl.214.2024.05.01.16.37.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 16:37:10 -0700 (PDT)
+From: Saurav Shah <sauravshah.31@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mark.rutland@arm.com,
+	corbet@lwn.net
+Cc: Saurav Shah <sauravshah.31@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH] Documentation: tracing: Fix spelling mistakes
+Date: Thu,  2 May 2024 05:06:59 +0530
+Message-Id: <20240501233659.25441-1-sauravshah.31@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Note that the immediate pressure for this patch should be relieved by the
-NAPI patch series [1], but this sort of problem could easily arise again.
+Fix spelling mistakes in the documentation.
 
-When running heavy test workloads with KASAN enabled, RCU Tasks grace
-periods can extend for many tens of seconds, significantly slowing
-trace registration.  Therefore, make the registration-side RCU Tasks
-grace period be asynchronous via call_rcu_tasks().
+Signed-off-by: Saurav Shah <sauravshah.31@gmail.com>
+---
+ Documentation/trace/fprobetrace.rst | 4 ++--
+ Documentation/trace/ftrace.rst      | 2 +-
+ Documentation/trace/kprobetrace.rst | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-[1] https://lore.kernel.org/all/cover.1710877680.git.yan@cloudflare.com/
-
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Reported-by: Chris Mason <clm@fb.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: <linux-trace-kernel@vger.kernel.org>
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 6c96b30f3d63b..32ea92934268c 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5365,6 +5365,13 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
- 	}
- }
+diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
+index 0f187e3796e4..b4c2ca3d02c1 100644
+--- a/Documentation/trace/fprobetrace.rst
++++ b/Documentation/trace/fprobetrace.rst
+@@ -74,7 +74,7 @@ Function arguments at exit
+ --------------------------
+ Function arguments can be accessed at exit probe using $arg<N> fetcharg. This
+ is useful to record the function parameter and return value at once, and
+-trace the difference of structure fields (for debuging a function whether it
++trace the difference of structure fields (for debugging a function whether it
+ correctly updates the given data structure or not)
+ See the :ref:`sample<fprobetrace_exit_args_sample>` below for how it works.
  
-+static void register_ftrace_direct_cb(struct rcu_head *rhp)
-+{
-+	struct ftrace_hash *fhp = container_of(rhp, struct ftrace_hash, rcu);
-+
-+	free_ftrace_hash(fhp);
-+}
-+
- /**
-  * register_ftrace_direct - Call a custom trampoline directly
-  * for multiple functions registered in @ops
-@@ -5463,10 +5470,8 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-  out_unlock:
- 	mutex_unlock(&direct_mutex);
+@@ -248,4 +248,4 @@ mode. You can trace that changes with return probe.
+              cat-143     [007] ...1.  1945.720616: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
+              cat-143     [007] ...1.  1945.728263: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0xa800d inode=0xffff888004ada8d8
  
--	if (free_hash && free_hash != EMPTY_HASH) {
--		synchronize_rcu_tasks();
--		free_ftrace_hash(free_hash);
--	}
-+	if (free_hash && free_hash != EMPTY_HASH)
-+		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
+-You can see the `file::f_mode` and `file::f_inode` are upated in `vfs_open()`.
++You can see the `file::f_mode` and `file::f_inode` are updated in `vfs_open()`.
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 7e7b8ec17934..5aba74872ba7 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1968,7 +1968,7 @@ wakeup
+ One common case that people are interested in tracing is the
+ time it takes for a task that is woken to actually wake up.
+ Now for non Real-Time tasks, this can be arbitrary. But tracing
+-it none the less can be interesting. 
++it nonetheless can be interesting. 
  
- 	if (new_hash)
- 		free_ftrace_hash(new_hash);
+ Without function tracing::
+ 
+diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+index a49662ccd53c..69cb7776ae99 100644
+--- a/Documentation/trace/kprobetrace.rst
++++ b/Documentation/trace/kprobetrace.rst
+@@ -74,7 +74,7 @@ Function arguments at kretprobe
+ -------------------------------
+ Function arguments can be accessed at kretprobe using $arg<N> fetcharg. This
+ is useful to record the function parameter and return value at once, and
+-trace the difference of structure fields (for debuging a function whether it
++trace the difference of structure fields (for debugging a function whether it
+ correctly updates the given data structure or not).
+ See the :ref:`sample<fprobetrace_exit_args_sample>` in fprobe event for how
+ it works.
+-- 
+2.34.1
+
