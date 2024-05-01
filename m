@@ -1,211 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755BB1E87C;
-	Wed,  1 May 2024 14:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF9B5FBB1;
+	Wed,  1 May 2024 14:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714575390; cv=none; b=jBIW1dfDN+E5SCfEflQuXpXRuS4QSLikC/19LPGdx5i0rII5CIOEl1uQL3LYb3ts1gLuccTFP7mH7qsoU1Yp2SKJHIYE7HDWBesGk8ldEedwJ9cD/p91PnEPr34ol4ty+rTpjfzFQOhc0KkCs7McdogOpmiKy6biZSI/qrEt9Og=
+	t=1714575540; cv=none; b=XcGKMzGLsmEOqgq210NKp9iz0IkFMyc9Xs9NSuk88GJJYGALP8UriNvqTZ1D52+bwkGNfNXprBJTSI11IeIms0qrUTy2uEpDf/5do9PAP4C8l2nfzEqE1Bq1u8bn/sCMrjkQrNpeHBxDOIJJHfXp/u0rWs7Oo7F1dKVsHZRxyA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714575390; c=relaxed/simple;
-	bh=VHoAtVLPOx3zYSUeVy7+X3UHEdH8dcd9ZPPasKe0tk8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=uumtvMiZqdnke/qeQ8PtIdpHk69+ycxSLGfjxygEfLOX7koJ+BetxWzMxFEYQnmSec7IOKZ8t9VkhHvvKzwvDkAOJpf/vBkBzcwvemKIEEpRBGAmRY3bQl75uBRnjx8wNAoNaOVo3sfAMEwGsjREqkw5r1mRwlYhsLyLIw2FcpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fm2WbPJh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714575540; c=relaxed/simple;
+	bh=397yuEegza1YdxCHGmXo6Fr1V3efYfawXEgbly0+WSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKEKTi1cFHsQnK1Wb+WFhJw6Q00IgYivFww33zOIhZeiK1wazYBRCSsuCum37Rf6xYqsfMJgJ/ETysVqTT5RCUmNhAvxDgGW6dVOvH457TiPw0BdfPuaI3nYRAbwNpiyTa8t4rD0SVUIF2x6nl8VDGQbv/x0MZzJdhcvZdxp79I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYSPzSqH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fm2WbPJh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C9CC072AA;
-	Wed,  1 May 2024 14:56:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYSPzSqH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37583C4AF18;
+	Wed,  1 May 2024 14:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714575389;
-	bh=VHoAtVLPOx3zYSUeVy7+X3UHEdH8dcd9ZPPasKe0tk8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fm2WbPJhs0+4FoxG2fOfYLogVhy7Ss2BUVbT2dn7WfzG8hUdy72HvWVRNYf/6Mftv
-	 8LimdrFXO7n9g1a/3vdXBkKWeHmcurnWWUf8ykS0vZRSncJ6etvlwC24eaCWS7xgZX
-	 E+rxuqVxAZSdmObsxSW8ZZ+CSRm7JDhwHvSABvLflB+1RH9DGqnGvtwJWI/RIY/oMd
-	 +ZGK4FDpTPcKfDXzmbiAtBWeyVgbs+GPWfSZPUoSHho5DrgGnca0DBoM6muKNv8Q8J
-	 Z26VR5tsVtV7pkxeG6gBItBSfcsea2Dt+7kpGjOnx5TVOxvzapkrNZ3nPNG4sKlYbm
-	 5KqSH+t5HUAjw==
-Date: Wed, 1 May 2024 23:56:26 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tze-nan wu <Tze-nan.Wu@mediatek.com>
-Subject: Re: [PATCH] eventfs/tracing: Add callback for release of an
- eventfs_inode
-Message-Id: <20240501235626.81178236dc8826c038089c0c@kernel.org>
-In-Reply-To: <20240430142327.7bff81ba@gandalf.local.home>
-References: <20240430142327.7bff81ba@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1714575540;
+	bh=397yuEegza1YdxCHGmXo6Fr1V3efYfawXEgbly0+WSI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HYSPzSqHFLggbq/xDWYyuhjhUA3byLwI0cx20K+Ar9H0VFMume+4mA27mZufxXN/J
+	 VKgOoUDQemQOr7L3Ygs+Gga6YEZcBqDMORKkDNDsWFVWM6k74eSypUDVzcnPqME0d1
+	 On1AuvdGl3WZuSpo3YqkwaV3plOdeqN3b9AFy5bqX+qHtznRQtYeLOe4geDiyoj6Wr
+	 +pVoO67wG+b53CM0KBXBz45w+0LkBJMbzFSDEyL3EJ7qRUk97dtX9zUBeIueBeFdgN
+	 m92gi+XSOseCE6xMOh+VvwTCIDrfyAMnReFeSM0HHb1iBks0/k4qQowBV2E/n7X1od
+	 zuI3FXuNKBwMA==
+Date: Wed, 1 May 2024 17:57:27 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
+ memmap=nn*align:name
+Message-ID: <ZjJYV7ak5ApgNTBx@kernel.org>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409211351.075320273@goodmis.org>
+ <202404091521.B63E85D@keescook>
+ <20240409191156.5f92a15c@gandalf.local.home>
+ <202404091638.2F98764A41@keescook>
+ <Zhmgm86tzpanoweB@kernel.org>
+ <20240412181940.3e1d99f7@gandalf.local.home>
+ <202404151017.FC002AA5@keescook>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202404151017.FC002AA5@keescook>
 
-On Tue, 30 Apr 2024 14:23:27 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Apr 15, 2024 at 10:22:53AM -0700, Kees Cook wrote:
+> On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
+> > On Fri, 12 Apr 2024 23:59:07 +0300
+> > Mike Rapoport <rppt@kernel.org> wrote:
+> > 
+> > > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
+> > > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:  
+> > > > > On Tue, 9 Apr 2024 15:23:07 -0700
+> > > > > Kees Cook <keescook@chromium.org> wrote:
+> > > > >   
+> > > > > > Do we need to involve e820 at all? I think it might be possible to just
+> > > > > > have pstore call request_mem_region() very early? Or does KASLR make
+> > > > > > that unstable?  
+> > > > > 
+> > > > > Yeah, would that give the same physical memory each boot, and can we
+> > > > > guarantee that KASLR will not map the kernel over the previous location?  
+> > > > 
+> > > > Hm, no, for physical memory it needs to get excluded very early, which
+> > > > means e820.  
+> > > 
+> > > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
+> > > kaslr, so to begin with, a new memmap parameter should be also added to
+> > > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
+> > > physical address will be available after KASLR.
+> > 
+> > But doesn't KASLR only affect virtual memory not physical memory?
+> 
+> KASLR for x86 (and other archs, like arm64) do both physical and virtual
+> base randomization.
+> 
+> > This just makes sure the physical memory it finds will not be used by the
+> > system. Then ramoops does the mapping via vmap() I believe, to get a
+> > virtual address to access the physical address.
+> 
+> I was assuming, since you were in the e820 code, that it was
+> manipulating that before KASLR chose a location. But if not, yeah, Mike
+> is right -- you need to make sure this is getting done before
+> decompress_kernel().
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> Synthetic events create and destroy tracefs files when they are created
-> and removed. The tracing subsystem has its own file descriptor
-> representing the state of the events attached to the tracefs files.
-> There's a race between the eventfs files and this file descriptor of the
-> tracing system where the following can cause an issue:
-> 
-> With two scripts 'A' and 'B' doing:
-> 
->   Script 'A':
->     echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
->     while :
->     do
->       echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
->     done
-> 
->   Script 'B':
->     echo > /sys/kernel/tracing/synthetic_events
-> 
-> Script 'A' creates a synthetic event "hello" and then just writes zero
-> into its enable file.
-> 
-> Script 'B' removes all synthetic events (including the newly created
-> "hello" event).
-> 
-> What happens is that the opening of the "enable" file has:
-> 
->  {
-> 	struct trace_event_file *file = inode->i_private;
-> 	int ret;
-> 
-> 	ret = tracing_check_open_get_tr(file->tr);
->  [..]
-> 
-> But deleting the events frees the "file" descriptor, and a "use after
-> free" happens with the dereference at "file->tr".
-> 
-> The file descriptor does have a reference counter, but there needs to be a
-> way to decrement it from the eventfs when the eventfs_inode is removed
-> that represents this file descriptor.
-> 
-> Add an optional "release" callback to the eventfs_entry array structure,
-> that gets called when the eventfs file is about to be removed. This allows
-> for the creating on the eventfs file to increment the tracing file
-> descriptor ref counter. When the eventfs file is deleted, it can call the
-> release function that will call the put function for the tracing file
-> descriptor.
-> 
-> This will protect the tracing file from being freed while a eventfs file
-> that references it is being opened.
-> 
+Right now kaslr can handle up to 4 memmap regions and parse_memmap() in
+arch/x86/boot/compressed/kaslr.c should be updated for a new memmap type.
 
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Link: https://lore.kernel.org/linux-trace-kernel/20240426073410.17154-1-Tze-nan.Wu@mediatek.com/
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-> Reported-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  fs/tracefs/event_inode.c    |  7 +++++++
->  include/linux/tracefs.h     |  3 +++
->  kernel/trace/trace_events.c | 12 ++++++++++++
->  3 files changed, 22 insertions(+)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 894c6ca1e500..dc97c19f9e0a 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -84,10 +84,17 @@ enum {
->  static void release_ei(struct kref *ref)
->  {
->  	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
-> +	const struct eventfs_entry *entry;
->  	struct eventfs_root_inode *rei;
->  
->  	WARN_ON_ONCE(!ei->is_freed);
->  
-> +	for (int i = 0; i < ei->nr_entries; i++) {
-> +		entry = &ei->entries[i];
-> +		if (entry->release)
-> +			entry->release(entry->name, ei->data);
-> +	}
-> +
->  	kfree(ei->entry_attrs);
->  	kfree_const(ei->name);
->  	if (ei->is_events) {
-> diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
-> index 7a5fe17b6bf9..d03f74658716 100644
-> --- a/include/linux/tracefs.h
-> +++ b/include/linux/tracefs.h
-> @@ -62,6 +62,8 @@ struct eventfs_file;
->  typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
->  				const struct file_operations **fops);
->  
-> +typedef void (*eventfs_release)(const char *name, void *data);
-> +
->  /**
->   * struct eventfs_entry - dynamically created eventfs file call back handler
->   * @name:	Then name of the dynamic file in an eventfs directory
-> @@ -72,6 +74,7 @@ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
->  struct eventfs_entry {
->  	const char			*name;
->  	eventfs_callback		callback;
-> +	eventfs_release			release;
->  };
->  
->  struct eventfs_inode;
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 52f75c36bbca..6ef29eba90ce 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -2552,6 +2552,14 @@ static int event_callback(const char *name, umode_t *mode, void **data,
->  	return 0;
->  }
->  
-> +/* The file is incremented on creation and freeing the enable file decrements it */
-> +static void event_release(const char *name, void *data)
-> +{
-> +	struct trace_event_file *file = data;
-> +
-> +	event_file_put(file);
-> +}
-> +
->  static int
->  event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
->  {
-> @@ -2566,6 +2574,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
->  		{
->  			.name		= "enable",
->  			.callback	= event_callback,
-> +			.release	= event_release,
->  		},
->  		{
->  			.name		= "filter",
-> @@ -2634,6 +2643,9 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
->  		return ret;
->  	}
->  
-> +	/* Gets decremented on freeing of the "enable" file */
-> +	event_file_get(file);
-> +
->  	return 0;
->  }
->  
+But I think it's better to add a new kernel parameter as I suggested in
+another email and teach mem_avoid_memmap() in kaslr.c to deal with it, as
+well as with crashkernel=size@offset, btw.
+ 
 > -- 
-> 2.43.0
-> 
-
+> Kees Cook
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Sincerely yours,
+Mike.
