@@ -1,139 +1,380 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC09212C490;
-	Wed,  1 May 2024 13:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF78E219F9;
+	Wed,  1 May 2024 14:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714571957; cv=none; b=J3nv4JNhCH3zr/s7JdeCsI2Z5LuWf1arbxDg7Qyw7WRs8NW/s+Ms+ZHv1rgylDWWOPIEg7X1kQ0Ich2HQzQ+nboY35WZXfcQc7sKgsxTfa8x/5sXx2f+pVpQnKr9XRTaacybTZNig9nm+QFiRTEg5LGAeJjQFINFafgtD1bON2E=
+	t=1714574842; cv=none; b=fbH9C0xhvf272YA9+R+bBOpR6us/txaIZZk5xttUIzkBrJh+67xcYdfTTkAzzSUEyYEBVOl8HQtdfO02WjzH4vpeDhHnfeN3wDyaDF8m1f8QNEhLJDf2s528B5bfwL3Z0Vfzfk0BCmUN2YGhqNlichJ7A+JJjY2Zja9AAQ129Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714571957; c=relaxed/simple;
-	bh=Fi4PvMRZrF9DXNpSOwwia/BblzTiRO6iyf1z/eVq1XU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NbchjvG3iRoD7tZsVbSHBC2VDA1pFY2cj3SWAp5gw7+QlIJJAkkhCxOyXperwsUU5+WmLLsJDxONdC8ykFbY6y9qB9qCS+FG6ugqs8QH6pC8ieafJ/cFNzvbEp2j2Hhzi3kO26lzjrgh3dVTN/naxrWwGNw4DCa+GCEq30m/AXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCbrUaES; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714574842; c=relaxed/simple;
+	bh=CxsjO+HboT5eCDqADgM4r/KpEYfbC3WzDJ+JdCdDWXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CUpYBs0C+6IPu+z4v1m/E2hCt0LW9NSz5+GTA36Q8xl71LNLYEH2X8Da3CAmIKgP2lX0XAD1oH4i3vAJqEv39rtQ8MvX68tcOAMFhS6bFRMEYK2GPa2mFBCRlAd0Kn5JQ3uL7oLFCDT7qjWvgsVohtt/oAODNZM3uU5YPC1XV70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+JDvGWe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCbrUaES"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B3C7C072AA;
-	Wed,  1 May 2024 13:59:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+JDvGWe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C68DC072AA;
+	Wed,  1 May 2024 14:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714571956;
-	bh=Fi4PvMRZrF9DXNpSOwwia/BblzTiRO6iyf1z/eVq1XU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sCbrUaESax+zNwmTNdY7otL0UFOQLPT1tCLvxhS1E2UCWFKHW4CFOG8eHXGAPEzYV
-	 K59HSeGnESqWuVyypeDsfjxCGIwlrkTiIB8RtlSIeODJISpG+bjrjqgUZTNnVYoXFo
-	 0nAjOD3kay/wsGxmwOPaAc5VD0eUhuiBlauj3Z2WQisvO7reiDxOn7qiXguQyswbXz
-	 eGzZQLUgdh76hRrtTEFJVQdEHnMA2UjgtwHVl2z9L4Tsb3ZTSE/wBE57PdTiTs8Ocp
-	 FhNUI+PSuIOyAwwjpVUsbAi1uNR+QWMI+7HqtFjSwPStPFYwbkZKYGKHcbZk0YZOQW
-	 CZlqUKG4oenXA==
-Message-ID: <779b9542-4170-483a-af54-ca0dd471f774@kernel.org>
-Date: Wed, 1 May 2024 15:58:59 +0200
+	s=k20201202; t=1714574842;
+	bh=CxsjO+HboT5eCDqADgM4r/KpEYfbC3WzDJ+JdCdDWXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+JDvGWeiBPw+HG1hQllCw3rfJnF5mRHzQWJfYyVSdBnJeLo7AnBOHdKkuoGmKsHV
+	 qWzIyIOfihVax38aOS+SQFJCa04Pg6k/PKHdS78FnNhpPx0Q7h/4fdlmkbJQeszChb
+	 EIiTbSxcUuDz+zQZlfmHW/bzb18nVHNLU6E/IN359z2k0CYTIl1DLmdRTVH2RexV/9
+	 CPAhScPdfqxzR3mALBaqDIaoV4ebN/V38X67L1EqbysDjO6YW1JtrE90edXoZMLrm0
+	 XgonsNZ2vYedRTvQTybLYYZd23v2s7lXDWvCqz/E2oz/BXLCtP1sriqxNEltkCVH9w
+	 3GWsjlCazIa5A==
+Date: Wed, 1 May 2024 17:45:49 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	"Luck, Tony" <tony.luck@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>,
+	"wklin@google.com" <wklin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
+ pstore consistently
+Message-ID: <ZjJVnZUX3NZiGW6q@kernel.org>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409172358.34ea19f0@gandalf.local.home>
+ <202404091519.B7B2221@keescook>
+ <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
+ <20240411154007.5bdf8d95@gandalf.local.home>
+ <fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
+ <20240412132243.053ad096@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v8 07/14] page_pool: devmem support
-To: Jens Axboe <axboe@kernel.dk>, Mina Almasry <almasrymina@google.com>
-Cc: David Wei <dw@davidwei.uk>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Amritha Nambiar <amritha.nambiar@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Christian Brauner <brauner@kernel.org>,
- Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
- Florian Westphal <fw@strlen.de>, Yunsheng Lin <linyunsheng@huawei.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Arseniy Krasnov <avkrasnov@salutedevices.com>,
- Aleksander Lobakin <aleksander.lobakin@intel.com>,
- Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Richard Gobert <richardbgobert@gmail.com>,
- Sridhar Samudrala <sridhar.samudrala@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>,
- Breno Leitao <leitao@debian.org>, Pavel Begunkov <asml.silence@gmail.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-8-almasrymina@google.com>
- <8357256a-f0e9-4640-8fec-23341fc607db@davidwei.uk>
- <CAHS8izPeYryoLdCAQdGQU-wn7YVdtuofVKNvRFjFjhqTDsT7zA@mail.gmail.com>
- <aafbbf09-a33d-4e73-99c8-9ddab5910657@kernel.dk>
- <CAHS8izMKLYATo6g3xkj_thFo3whCfq6LSoex5s0m5XZd-U7SVQ@mail.gmail.com>
- <11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412132243.053ad096@gandalf.local.home>
 
+On Fri, Apr 12, 2024 at 01:22:43PM -0400, Steven Rostedt wrote:
+> On Fri, 12 Apr 2024 09:17:18 -0300
+> "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+> 
+> > Thanks Steve, seems a good idea. With that, I could test on kdumpst (the
+> > tool used on Steam Deck), since it relies on modular pstore/ram.
+> 
+> Something like this could work.
+> 
+> -- Steve
+> 
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index a8831ef30c73..878aee8b2399 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/firmware-map.h>
+>  #include <linux/sort.h>
+>  #include <linux/memory_hotplug.h>
+> +#include <linux/mm.h>
+>  
+>  #include <asm/e820/api.h>
+>  #include <asm/setup.h>
+> @@ -64,61 +65,6 @@ struct e820_table *e820_table __refdata			= &e820_table_init;
+>  struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
+>  struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
+>  
+> -/* For wildcard memory requests, have a table to find them later */
+> -#define E820_MAX_MAPS		8
+> -#define E820_MAP_NAME_SIZE	16
+> -struct e820_mmap_map {
+> -	char			name[E820_MAP_NAME_SIZE];
+> -	u64			start;
+> -	u64			size;
+> -};
+> -static struct e820_mmap_map e820_mmap_list[E820_MAX_MAPS] __initdata;
+> -static int e820_mmap_size				__initdata;
+> -
+> -/* Add wildcard region with a lookup name */
+> -static int __init e820_add_mmap(u64 start, u64 size, const char *name)
+> -{
+> -	struct e820_mmap_map *map;
+> -
+> -	if (!name || !name[0] || strlen(name) >= E820_MAP_NAME_SIZE)
+> -		return -EINVAL;
+> -
+> -	if (e820_mmap_size >= E820_MAX_MAPS)
+> -		return -1;
+> -
+> -	map = &e820_mmap_list[e820_mmap_size++];
+> -	map->start = start;
+> -	map->size = size;
+> -	strcpy(map->name, name);
+> -	return 0;
+> -}
+> -
+> -/**
+> - * memmap_named - Find a wildcard region with a given name
+> - * @name: The name that is attached to a wildcard region
+> - * @start: If found, holds the start address
+> - * @size: If found, holds the size of the address.
+> - *
+> - * Returns: 1 if found or 0 if not found.
+> - */
+> -int __init memmap_named(const char *name, u64 *start, u64 *size)
+> -{
+> -	struct e820_mmap_map *map;
+> -	int i;
+> -
+> -	for (i = 0; i < e820_mmap_size; i++) {
+> -		map = &e820_mmap_list[i];
+> -		if (!map->size)
+> -			continue;
+> -		if (strcmp(name, map->name) == 0) {
+> -			*start = map->start;
+> -			*size = map->size;
+> -			return 1;
+> -		}
+> -	}
+> -	return 0;
+> -}
+> -
+>  /* For PCI or other memory-mapped resources */
+>  unsigned long pci_mem_start = 0xaeedbabe;
+>  #ifdef CONFIG_PCI
+> @@ -1024,6 +970,8 @@ static int __init parse_memmap_one(char *p)
+>  		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
+>  	} else if (*p == '*') {
+>  		u64 align;
+> +		int ret;
+> +
+>  		/* Followed by alignment and ':' then the name */
+>  		align = memparse(p+1, &p);
+>  		start_at = e820__region(mem_size, align);
+> @@ -1032,9 +980,10 @@ static int __init parse_memmap_one(char *p)
+>  		if (*p != ':')
+>  			return -EINVAL;
+>  		p++;
+> -		e820_add_mmap(start_at, mem_size, p);
+> +		ret = memmap_add(start_at, mem_size, p);
+>  		p += strlen(p);
+> -		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
+> +		if (!ret)
+> +			e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
+>  	} else if (*p == '!') {
+>  		start_at = memparse(p+1, &p);
+>  		e820__range_add(start_at, mem_size, E820_TYPE_PRAM);
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index c200388399fb..22d2e2731dc2 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -919,7 +919,6 @@ static void __init ramoops_register_dummy(void)
+>  {
+>  	struct ramoops_platform_data pdata;
+>  
+> -#ifndef MODULE
+>  	/* Only allowed when builtin */
+>  	if (mem_name) {
+>  		u64 start;
+> @@ -930,7 +929,6 @@ static void __init ramoops_register_dummy(void)
+>  			mem_size = size;
+>  		}
+>  	}
+> -#endif
+>  
+>  	/*
+>  	 * Prepare a dummy platform data structure to carry the module
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index cf9b34454c6f..6ce1c6929d1f 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4203,5 +4203,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
+>  }
+>  
+>  int memmap_named(const char *name, u64 *start, u64 *size);
+> +int memmap_add(long start, long size, const char *name);
+>  
+>  #endif /* _LINUX_MM_H */
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 7a29f17df7c1..fe054e1bb678 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -120,12 +120,6 @@ static bool vmf_orig_pte_uffd_wp(struct vm_fault *vmf)
+>  	return pte_marker_uffd_wp(vmf->orig_pte);
+>  }
+>  
+> -int __init __weak memmap_named(const char *name, u64 *start, u64 *size)
+> -{
+> -	pr_info("Kernel command line: memmap=nn*align:name not supported on this kernel");
+> -	/* zero means not found */
+> -	return 0;
+> -}
+>  
+>  /*
+>   * A number of key systems in x86 including ioremap() rely on the assumption
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index 549e76af8f82..e5b729b83fdc 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -154,6 +154,77 @@ static __init int set_mminit_loglevel(char *str)
+>  early_param("mminit_loglevel", set_mminit_loglevel);
+>  #endif /* CONFIG_DEBUG_MEMORY_INIT */
+>  
+> +/* For wildcard memory requests, have a table to find them later */
+> +#define MAX_MAPS		8
+> +#define MAP_NAME_SIZE	16
+> +struct mmap_map {
+> +	char			name[MAP_NAME_SIZE];
+> +	long			start;
+> +	long			size;
+> +};
+> +static struct mmap_map early_mmap_list[MAX_MAPS] __initdata;
+> +static int early_mmap_size			__initdata;
+> +static struct mmap_map *mmap_list;
+> +
+> +/* Add wildcard region with a lookup name */
+> +int memmap_add(long start, long size, const char *name)
+> +{
+> +	struct mmap_map *map;
+> +
+> +	if (!name || !name[0] || strlen(name) >= MAP_NAME_SIZE)
+> +		return -EINVAL;
+> +
+> +	if (early_mmap_size >= MAX_MAPS)
+> +		return -1;
+> +
+> +	map = &early_mmap_list[early_mmap_size++];
+> +	map->start = start;
+> +	map->size = size;
+> +	strcpy(map->name, name);
+> +	return 0;
+> +}
+> +
+> +static void __init memmap_copy(void)
+> +{
+> +	if (!early_mmap_size)
+> +		return;
+> +
+> +	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);
 
+We can keep early_mmap_size after boot and then we don't need to allocate
+an extra element in the mmap_list. No strong feeling here, though.
 
-On 30/04/2024 20.55, Jens Axboe wrote:
-> On 4/30/24 12:29 PM, Mina Almasry wrote:
->> On Tue, Apr 30, 2024 at 6:46?AM Jens Axboe<axboe@kernel.dk>  wrote:
-[...]
->>> In general, attempting to hide overhead behind config options is always
->>> a losing proposition. It merely serves to say "look, if these things
->>> aren't enabled, the overhead isn't there", while distros blindly enable
->>> pretty much everything and then you're back where you started.
->>>
->> The history there is that this check adds 1 cycle regression to the
->> page_pool fast path benchmark. The regression last I measured is 8->9
->> cycles, so in % wise it's a quite significant 12.5% (more details in
->> the cover letter[1]). I doubt I can do much better than that to be
->> honest.
->
-> I'm all for cycle counting, and do it myself too, but is that even
-> measurable in anything that isn't a super targeted microbenchmark? Or
-> even in that?
+> +	if (!mmap_list)
+> +		return;
+> +
+> +	for (int i = 0; i < early_mmap_size; i++)
+> +		mmap_list[i] = early_mmap_list[i];
+> +}
 
-The reason for page_pool fast path being critical is that it is used for 
-the XDP_DROP use-case.
-E.g on Mellanox mlx5 driver we see 24 Mpps XDP_DROP, which is approx 42 
-nanosec per packet. Adding 9 nanosec will reduce this to 19.6 Mpps.
+With something like this
 
-   1/(42+9)*10^9 = 19607843
+/*
+ * Parse early_reserve_mem=nn:align:name
+ */
+static int __init early_reserve_mem(char *p)
+{
+	phys_addr_t start, size, align;
+	char *oldp;
+	int err;
 
---Jesper
+	if (!p)
+		return -EINVAL;
 
-p.s. Upstreaming my PP microbenchmark[1] is still at the bottom of my 
-todo-list.
-  [1] 
-https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/lib/bench_page_pool_simple.c
+	oldp = p;
+	size = memparse(p, &p);
+	if (p == oldp)
+		return -EINVAL;
+
+	if (*p != ':')
+		return -EINVAL;
+
+	align = memparse(p+1, &p);
+	if (*p != ':')
+		return -EINVAL;
+
+	start = memblock_phys_alloc(size, align);
+	if (!start)
+		return -ENOMEM;
+
+	p++;
+	err = memmap_add(start, size, p);
+	if (err) {
+		memblock_phys_free(start, size);
+		return err;
+	}
+
+	p += strlen(p);
+
+	return *p == '\0' ? 0: -EINVAL;
+}
+__setup("early_reserve_mem=", early_reserve_mem);
+
+you don't need to touch e820 and it will work the same for all
+architectures.
+
+We'd need a better naming, but I couldn't think of something better yet.
+
+> +
+> +/**
+> + * memmap_named - Find a wildcard region with a given name
+> + * @name: The name that is attached to a wildcard region
+> + * @start: If found, holds the start address
+> + * @size: If found, holds the size of the address.
+> + *
+> + * Returns: 1 if found or 0 if not found.
+> + */
+> +int memmap_named(const char *name, u64 *start, u64 *size)
+> +{
+> +	struct mmap_map *map;
+> +
+> +	if (!mmap_list)
+> +		return 0;
+> +
+> +	for (int i = 0; mmap_list[i].name[0]; i++) {
+> +		map = &mmap_list[i];
+> +		if (!map->size)
+> +			continue;
+> +		if (strcmp(name, map->name) == 0) {
+> +			*start = map->start;
+> +			*size = map->size;
+> +			return 1;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+>  struct kobject *mm_kobj;
+>  
+>  #ifdef CONFIG_SMP
+> @@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
+>  	pti_init();
+>  	kmsan_init_runtime();
+>  	mm_cache_init();
+> +	memmap_copy();
+>  }
+
+-- 
+Sincerely yours,
+Mike.
