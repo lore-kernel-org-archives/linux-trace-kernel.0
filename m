@@ -1,47 +1,47 @@
 Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837174E1A2;
-	Wed,  1 May 2024 09:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B589150292;
+	Wed,  1 May 2024 09:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714554738; cv=none; b=DHy6k6XYwnOn78ZZQWh+x53pZOTRqIx7raZk9Mu8jN/EAuGdbpRdgfnbH79Mr7jvRpAsCC8luxO13GTpgfkYCx8noMzgZ3sDxGeof9+PKABjC+8I7BVvPQhqU3Hq7V2DGhZ67NksvDjTixKMs7ueukbGbGDKwR/nbeMghU2AeSE=
+	t=1714554861; cv=none; b=j6RxaAdmssQGAiqypvcJbT48xmesLS0BTklWiNB5DMS4ZkumJ07cwN/6bzGmMIOetciPbqdAmBU+YJR0eu5uIhj4XOp0ATVwoANMsyecdUxfHJsMgJ1tHe2DXlh9zE0D48tK+jIJulQaIHmjT3vkAwGGYfZpLH/4N7tsQrZUe30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714554738; c=relaxed/simple;
-	bh=ik3cKsQFmZm1wVnX/z+CceXJKoZ7+NstRjCUq/nHkqA=;
+	s=arc-20240116; t=1714554861; c=relaxed/simple;
+	bh=7iwCUPmgbAilYH+cT6NBLywDyu+dsovWKl+e0m1QWu4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R8hq+t+wavvxPG6GNprmnsybq5fahQ5P1e16FSQKOBkUHXsKjJ0a8mueNKKwldOmdstMaGvpcq36cMd1TEeF5kXB966FZSqGa13aeuFHawMI+HWQWFuBfXHbpgd+oU5qfQtvmq26Trzy7O4fAI1He1rmnXRBb47QStSCLeh3pp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=p/R7rbGa; arc=none smtp.client-ip=130.133.4.66
+	 Content-Type:MIME-Version; b=Mx2JiYV5k9Rg+ztVmb79CpLIGn1LXuxzknEKnDgPpzhlv6uJuf3aZkdHpJQQfLRUcryxXwgE9z/XAk5B11kJczeqK6v30QKq3KlLH7Du9B8EzxgTum7WxpWHfxmkbnsd81cQc0yu7tVpJXG8uFfORjMpKPsUVMlz/XHOJ59LFoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=eMPiFVtn; arc=none smtp.client-ip=130.133.4.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="p/R7rbGa"
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="eMPiFVtn"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
 	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=TP9CBRyLdqebkmOML2U0Ql2UWKDyHOzWK2qXQvD4vNg=; t=1714554735; x=1715159535; 
-	b=p/R7rbGaGnB3ci4Z9slGkGvXSJ83oiIt6M/Ort0KyeTyncZVeEnJA8yJjYNST+xz8kRYVHmK87Z
-	hyupmMOJEM4N1GXmGGrh1wDGC5/kAe9FTdPwMQ8xiLcQ7lUyhe5yoi3hYmMfln6tfZYzCmAUV1uH1
-	hUFF49dSW2joqRn3UeMr+WB80oiZUj7jmH2G81UZyYH88IVfadwCvfAMFLV1s+2vNdkmQ7Ny0olA7
-	bLbVsCrkOav4nFspAIVY5lx43MX5OKSyS98GMfybJi58SFp63fMyjp+25lS+3GIg7JUxHww6QUS8N
-	ctVOsiZ4sD4a9w40Yyx/jq0MbZjPTzAD1/QQ==;
+	bh=XZgPAplKGsbYVTcUmYpJ5ug+4DYIsNnlBBZ+/UCzGHA=; t=1714554859; x=1715159659; 
+	b=eMPiFVtnxwm42yog2knNnBG2BuxV63hgLneJ05Zmj3n23rqCMYkOPqmzGxSK2wgldlYQZOV4KZY
+	tIfsBnN0SuxtI9RgwDXw3QDA09o1z5CAeuxNQZTu1jDv0AvM/YeJ80KS64OYb2Qzgp3rVV7vCr2RY
+	hheDbZ3PNaSZ29Pl2akwLkcXnH6dd8iC8+wJvOluy661hv/Opjn2tPhaVuyPUiuy+SW3HDZBowNP+
+	cDawmXGls1WaiXeeUH+QlUMEtN+/JsqbSx0hV+wdgvNCLJ9ciIBQgL90v3Y4SeeLsJEGTzs42SVte
+	DeUETjQSg2mz9GwA6ENhMtVDNnVqSi3EXMxA==;
 Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
           by outpost.zedat.fu-berlin.de (Exim 4.97)
           with esmtps (TLS1.3)
           tls TLS_AES_256_GCM_SHA384
           (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1s260X-000000004Bi-0A2O; Wed, 01 May 2024 11:12:09 +0200
+          id 1s262X-000000004uI-1wn8; Wed, 01 May 2024 11:14:13 +0200
 Received: from dynamic-078-054-136-214.78.54.pool.telefonica.de ([78.54.136.214] helo=[192.168.178.20])
           by inpost2.zedat.fu-berlin.de (Exim 4.97)
           with esmtpsa (TLS1.3)
           tls TLS_AES_256_GCM_SHA384
           (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1s260W-0000000065Z-3M2Z; Wed, 01 May 2024 11:12:08 +0200
-Message-ID: <4f302ebb109fb0528a7de4f552e78ee0dd9595c0.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH 20/20] [RFC] sh: dma: Remove unused functionality
+          id 1s262X-000000006ag-0xO0; Wed, 01 May 2024 11:14:13 +0200
+Message-ID: <952ee5e1f9492bc3f3799582ccc47c1f31d26fe8.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 00/20] sh: Fix missing prototypes
 From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 To: Geert Uytterhoeven <geert+renesas@glider.be>, Yoshinori Sato
 	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Arnd Bergmann
@@ -52,10 +52,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
  Andrew Morton <akpm@linux-foundation.org>,  Nick Piggin
  <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
  linux-sh@vger.kernel.org,  linux-trace-kernel@vger.kernel.org
-Date: Wed, 01 May 2024 11:12:08 +0200
-In-Reply-To: <2beb81fdd7592a94329e3c9a6ba56959f6094019.1709326528.git.geert+renesas@glider.be>
+Date: Wed, 01 May 2024 11:14:12 +0200
+In-Reply-To: <cover.1709326528.git.geert+renesas@glider.be>
 References: <cover.1709326528.git.geert+renesas@glider.be>
-	 <2beb81fdd7592a94329e3c9a6ba56959f6094019.1709326528.git.geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.0 
@@ -71,206 +70,87 @@ X-ZEDAT-Hint: PO
 Hi Geert,
 
 On Fri, 2024-03-01 at 22:02 +0100, Geert Uytterhoeven wrote:
-> dma_extend(), get_dma_info_by_name(), register_chan_caps(), and
-> request_dma_bycap() are unused.  Remove them, and all related code.
+> 	Hi all,
 >=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  arch/sh/drivers/dma/dma-api.c | 116 ----------------------------------
->  arch/sh/include/asm/dma.h     |   7 --
->  2 files changed, 123 deletions(-)
+> This patch series fixes several "no previous prototype for <foo>"
+> warnings when building a kernel for SuperH.
 >=20
-> diff --git a/arch/sh/drivers/dma/dma-api.c b/arch/sh/drivers/dma/dma-api.=
-c
-> index f49097fa634c36d4..87e5a892887360f5 100644
-> --- a/arch/sh/drivers/dma/dma-api.c
-> +++ b/arch/sh/drivers/dma/dma-api.c
-> @@ -41,21 +41,6 @@ struct dma_info *get_dma_info(unsigned int chan)
->  }
->  EXPORT_SYMBOL(get_dma_info);
-> =20
-> -struct dma_info *get_dma_info_by_name(const char *dmac_name)
-> -{
-> -	struct dma_info *info;
-> -
-> -	list_for_each_entry(info, &registered_dmac_list, list) {
-> -		if (dmac_name && (strcmp(dmac_name, info->name) !=3D 0))
-> -			continue;
-> -		else
-> -			return info;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -EXPORT_SYMBOL(get_dma_info_by_name);
-> -
->  static unsigned int get_nr_channels(void)
->  {
->  	struct dma_info *info;
-> @@ -101,66 +86,6 @@ int get_dma_residue(unsigned int chan)
->  }
->  EXPORT_SYMBOL(get_dma_residue);
-> =20
-> -static int search_cap(const char **haystack, const char *needle)
-> -{
-> -	const char **p;
-> -
-> -	for (p =3D haystack; *p; p++)
-> -		if (strcmp(*p, needle) =3D=3D 0)
-> -			return 1;
-> -
-> -	return 0;
-> -}
-> -
-> -/**
-> - * request_dma_bycap - Allocate a DMA channel based on its capabilities
-> - * @dmac: List of DMA controllers to search
-> - * @caps: List of capabilities
-> - *
-> - * Search all channels of all DMA controllers to find a channel which
-> - * matches the requested capabilities. The result is the channel
-> - * number if a match is found, or %-ENODEV if no match is found.
-> - *
-> - * Note that not all DMA controllers export capabilities, in which
-> - * case they can never be allocated using this API, and so
-> - * request_dma() must be used specifying the channel number.
-> - */
-> -int request_dma_bycap(const char **dmac, const char **caps, const char *=
-dev_id)
-> -{
-> -	unsigned int found =3D 0;
-> -	struct dma_info *info;
-> -	const char **p;
-> -	int i;
-> -
-> -	BUG_ON(!dmac || !caps);
-> -
-> -	list_for_each_entry(info, &registered_dmac_list, list)
-> -		if (strcmp(*dmac, info->name) =3D=3D 0) {
-> -			found =3D 1;
-> -			break;
-> -		}
-> -
-> -	if (!found)
-> -		return -ENODEV;
-> -
-> -	for (i =3D 0; i < info->nr_channels; i++) {
-> -		struct dma_channel *channel =3D &info->channels[i];
-> -
-> -		if (unlikely(!channel->caps))
-> -			continue;
-> -
-> -		for (p =3D caps; *p; p++) {
-> -			if (!search_cap(channel->caps, *p))
-> -				break;
-> -			if (request_dma(channel->chan, dev_id) =3D=3D 0)
-> -				return channel->chan;
-> -		}
-> -	}
-> -
-> -	return -EINVAL;
-> -}
-> -EXPORT_SYMBOL(request_dma_bycap);
-> -
->  int request_dma(unsigned int chan, const char *dev_id)
->  {
->  	struct dma_channel *channel =3D { 0 };
-> @@ -213,35 +138,6 @@ void dma_wait_for_completion(unsigned int chan)
->  }
->  EXPORT_SYMBOL(dma_wait_for_completion);
-> =20
-> -int register_chan_caps(const char *dmac, struct dma_chan_caps *caps)
-> -{
-> -	struct dma_info *info;
-> -	unsigned int found =3D 0;
-> -	int i;
-> -
-> -	list_for_each_entry(info, &registered_dmac_list, list)
-> -		if (strcmp(dmac, info->name) =3D=3D 0) {
-> -			found =3D 1;
-> -			break;
-> -		}
-> -
-> -	if (unlikely(!found))
-> -		return -ENODEV;
-> -
-> -	for (i =3D 0; i < info->nr_channels; i++, caps++) {
-> -		struct dma_channel *channel;
-> -
-> -		if ((info->first_channel_nr + i) !=3D caps->ch_num)
-> -			return -EINVAL;
-> -
-> -		channel =3D &info->channels[i];
-> -		channel->caps =3D caps->caplist;
-> -	}
-> -
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL(register_chan_caps);
-> -
->  void dma_configure_channel(unsigned int chan, unsigned long flags)
->  {
->  	struct dma_info *info =3D get_dma_info(chan);
-> @@ -267,18 +163,6 @@ int dma_xfer(unsigned int chan, unsigned long from,
->  }
->  EXPORT_SYMBOL(dma_xfer);
-> =20
-> -int dma_extend(unsigned int chan, unsigned long op, void *param)
-> -{
-> -	struct dma_info *info =3D get_dma_info(chan);
-> -	struct dma_channel *channel =3D get_dma_channel(chan);
-> -
-> -	if (info->ops->extend)
-> -		return info->ops->extend(channel, op, param);
-> -
-> -	return -ENOSYS;
-> -}
-> -EXPORT_SYMBOL(dma_extend);
-> -
->  static int dma_proc_show(struct seq_file *m, void *v)
->  {
->  	struct dma_info *info =3D v;
-> diff --git a/arch/sh/include/asm/dma.h b/arch/sh/include/asm/dma.h
-> index c8bee3f985a29393..6b6d409956d17f09 100644
-> --- a/arch/sh/include/asm/dma.h
-> +++ b/arch/sh/include/asm/dma.h
-> @@ -56,7 +56,6 @@ struct dma_ops {
->  	int (*get_residue)(struct dma_channel *chan);
->  	int (*xfer)(struct dma_channel *chan);
->  	int (*configure)(struct dma_channel *chan, unsigned long flags);
-> -	int (*extend)(struct dma_channel *chan, unsigned long op, void *param);
->  };
-> =20
->  struct dma_channel {
-> @@ -118,8 +117,6 @@ extern int dma_xfer(unsigned int chan, unsigned long =
-from,
->  #define dma_read_page(chan, from, to)	\
->  	dma_read(chan, from, to, PAGE_SIZE)
-> =20
-> -extern int request_dma_bycap(const char **dmac, const char **caps,
-> -			     const char *dev_id);
->  extern int get_dma_residue(unsigned int chan);
->  extern struct dma_info *get_dma_info(unsigned int chan);
->  extern struct dma_channel *get_dma_channel(unsigned int chan);
-> @@ -128,10 +125,6 @@ extern void dma_configure_channel(unsigned int chan,=
- unsigned long flags);
-> =20
->  extern int register_dmac(struct dma_info *info);
->  extern void unregister_dmac(struct dma_info *info);
-> -extern struct dma_info *get_dma_info_by_name(const char *dmac_name);
-> -
-> -extern int dma_extend(unsigned int chan, unsigned long op, void *param);
-> -extern int register_chan_caps(const char *dmac, struct dma_chan_caps *ca=
-pslist);
-> =20
->  /* arch/sh/drivers/dma/dma-sysfs.c */
->  extern int dma_create_sysfs_files(struct dma_channel *, struct dma_info =
-*);
+> Known issues:
+>   - The various warnings about cache functions are not yet fixed, but
+>     I didn't want to hold off the rest of this series,
+>   - sdk7786_defconfig needs "[PATCH/RFC] locking/spinlocks: Make __raw_*
+>     lock ops static" [1],
+>   - Probably there are more warnings to fix, I didn't build all
+>     defconfigs.
+>=20
+> This has been boot-tested on landisk and on qemu/rts7751r2d.
+>=20
+> Thanks for your comments!
+>=20
+> [1] https://lore.kernel.org/linux-sh/c395b02613572131568bc1fd1bc456d20d1a=
+5426.1709325647.git.geert+renesas@glider.be
+>=20
+> Geert Uytterhoeven (20):
+>   sh: pgtable: Fix missing prototypes
+>   sh: fpu: Add missing forward declarations
+>   sh: syscall: Add missing forward declaration for sys_cacheflush()
+>   sh: tlb: Add missing forward declaration for handle_tlbmiss()
+>   sh: return_address: Add missing #include <asm/ftrace.h>
+>   sh: traps: Add missing #include <asm/setup.h>
+>   sh: hw_breakpoint: Add missing forward declaration for
+>     arch_bp_generic_fields()
+>   sh: boot: Add proper forward declarations
+>   sh: ftrace: Fix missing prototypes
+>   sh: nommu: Add missing #include <asm/cacheflush.h>
+>   sh: math-emu: Add missing #include <asm/fpu.h>
+>   sh: dma: Remove unused dmac_search_free_channel()
+>   sh: sh2a: Add missing #include <asm/processor.h>
+>   sh: sh7786: Remove unused sh7786_usb_use_exclock()
+>   sh: smp: Fix missing prototypes
+>   sh: kprobes: Merge arch_copy_kprobe() into arch_prepare_kprobe()
+>   sh: kprobes: Make trampoline_probe_handler() static
+>   sh: kprobes: Remove unneeded kprobe_opcode_t casts
+>   sh: dwarf: Make dwarf_lookup_fde() static
+>   [RFC] sh: dma: Remove unused functionality
+>=20
+>  arch/sh/boot/compressed/cache.c         |   3 +
+>  arch/sh/boot/compressed/cache.h         |  10 ++
+>  arch/sh/boot/compressed/misc.c          |   8 +-
+>  arch/sh/boot/compressed/misc.h          |   9 ++
+>  arch/sh/drivers/dma/dma-api.c           | 143 ------------------------
+>  arch/sh/include/asm/dma.h               |   7 --
+>  arch/sh/include/asm/fpu.h               |   3 +
+>  arch/sh/include/asm/ftrace.h            |  10 ++
+>  arch/sh/include/asm/hw_breakpoint.h     |   2 +
+>  arch/sh/include/asm/syscalls.h          |   1 +
+>  arch/sh/include/asm/tlb.h               |   4 +
+>  arch/sh/kernel/cpu/sh2a/opcode_helper.c |   2 +
+>  arch/sh/kernel/cpu/sh4a/setup-sh7786.c  |  14 ---
+>  arch/sh/kernel/dwarf.c                  |   2 +-
+>  arch/sh/kernel/kprobes.c                |  13 +--
+>  arch/sh/kernel/return_address.c         |   2 +
+>  arch/sh/kernel/smp.c                    |   4 +-
+>  arch/sh/kernel/traps.c                  |  10 +-
+>  arch/sh/kernel/traps_32.c               |   1 +
+>  arch/sh/math-emu/math.c                 |   2 +
+>  arch/sh/mm/nommu.c                      |   2 +
+>  arch/sh/mm/pgtable.c                    |   4 +-
+>  arch/sh/mm/tlbex_32.c                   |   1 +
+>  23 files changed, 68 insertions(+), 189 deletions(-)
+>  create mode 100644 arch/sh/boot/compressed/cache.h
+>  create mode 100644 arch/sh/boot/compressed/misc.h
+>=20
 
-I assume we could re-add these again in case we need them, but it would be =
-good
-if Yoshinori could comment on whether we should keep these functions or not=
-.
+For the whole series:
+
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+I would still like to get feedback from Yoshinori on patch #20 though, i.e.
+
+	"sh: dma: Remove unused functionality".
+
+On the other hand, we could just merge this series and re-add the functions
+later if we decide they're still needed.
 
 Adrian
 
