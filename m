@@ -1,176 +1,211 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B2312E6A;
-	Wed,  1 May 2024 14:54:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755BB1E87C;
+	Wed,  1 May 2024 14:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714575255; cv=none; b=T9+smeqho1vhoq/Na6f6EOPC5pdietggFKCDzFSLz7SB5rdyyTtIuJyOeqJfNolUBW0f+5xa1tJJSccK1H0LzuIAYV5KyotyA0NqBEbS696IFQ7MBlBDCdh+YKNQIVhEmhj99EtUigFvPuJlWXwuWrWIRc/C5Spp3G1FVXlFa5Y=
+	t=1714575390; cv=none; b=jBIW1dfDN+E5SCfEflQuXpXRuS4QSLikC/19LPGdx5i0rII5CIOEl1uQL3LYb3ts1gLuccTFP7mH7qsoU1Yp2SKJHIYE7HDWBesGk8ldEedwJ9cD/p91PnEPr34ol4ty+rTpjfzFQOhc0KkCs7McdogOpmiKy6biZSI/qrEt9Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714575255; c=relaxed/simple;
-	bh=kh+wjNGTe3rkosFU5tIMQvZ6bZ/Ezmwl/V7rTuuidyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PWhH+HRD0AAZVDgvTPZqmmn+ZgWpydlRgySV4ZEl6NuRNCtm0JybYp+axPeLcy5eZxwg02Lyjxx+9GE37JovOMTH6hWtBDwsw4ulo5KQYQfZfS8h5M0b/4XW8AgmLWjOOGPHkCQ4nsuhjJZxXRlyu1Wvec5MayUTDoZ0MmJkQh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE7DC072AA;
-	Wed,  1 May 2024 14:54:11 +0000 (UTC)
-Date: Wed, 1 May 2024 10:54:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "Luck, Tony"
- <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Joel Fernandes
- <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+	s=arc-20240116; t=1714575390; c=relaxed/simple;
+	bh=VHoAtVLPOx3zYSUeVy7+X3UHEdH8dcd9ZPPasKe0tk8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uumtvMiZqdnke/qeQ8PtIdpHk69+ycxSLGfjxygEfLOX7koJ+BetxWzMxFEYQnmSec7IOKZ8t9VkhHvvKzwvDkAOJpf/vBkBzcwvemKIEEpRBGAmRY3bQl75uBRnjx8wNAoNaOVo3sfAMEwGsjREqkw5r1mRwlYhsLyLIw2FcpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fm2WbPJh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fm2WbPJh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C9CC072AA;
+	Wed,  1 May 2024 14:56:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714575389;
+	bh=VHoAtVLPOx3zYSUeVy7+X3UHEdH8dcd9ZPPasKe0tk8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fm2WbPJhs0+4FoxG2fOfYLogVhy7Ss2BUVbT2dn7WfzG8hUdy72HvWVRNYf/6Mftv
+	 8LimdrFXO7n9g1a/3vdXBkKWeHmcurnWWUf8ykS0vZRSncJ6etvlwC24eaCWS7xgZX
+	 E+rxuqVxAZSdmObsxSW8ZZ+CSRm7JDhwHvSABvLflB+1RH9DGqnGvtwJWI/RIY/oMd
+	 +ZGK4FDpTPcKfDXzmbiAtBWeyVgbs+GPWfSZPUoSHho5DrgGnca0DBoM6muKNv8Q8J
+	 Z26VR5tsVtV7pkxeG6gBItBSfcsea2Dt+7kpGjOnx5TVOxvzapkrNZ3nPNG4sKlYbm
+	 5KqSH+t5HUAjw==
+Date: Wed, 1 May 2024 23:56:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
- <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <20240501105455.42b78a0b@gandalf.local.home>
-In-Reply-To: <ZjJVnZUX3NZiGW6q@kernel.org>
-References: <20240409210254.660888920@goodmis.org>
-	<20240409172358.34ea19f0@gandalf.local.home>
-	<202404091519.B7B2221@keescook>
-	<SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
-	<20240411154007.5bdf8d95@gandalf.local.home>
-	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-	<20240412132243.053ad096@gandalf.local.home>
-	<ZjJVnZUX3NZiGW6q@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tze-nan wu <Tze-nan.Wu@mediatek.com>
+Subject: Re: [PATCH] eventfs/tracing: Add callback for release of an
+ eventfs_inode
+Message-Id: <20240501235626.81178236dc8826c038089c0c@kernel.org>
+In-Reply-To: <20240430142327.7bff81ba@gandalf.local.home>
+References: <20240430142327.7bff81ba@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 1 May 2024 17:45:49 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+On Tue, 30 Apr 2024 14:23:27 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > +static void __init memmap_copy(void)
-> > +{
-> > +	if (!early_mmap_size)
-> > +		return;
-> > +
-> > +	mmap_list = kcalloc(early_mmap_size + 1, sizeof(mmap_list), GFP_KERNEL);  
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> We can keep early_mmap_size after boot and then we don't need to allocate
-> an extra element in the mmap_list. No strong feeling here, though.
+> Synthetic events create and destroy tracefs files when they are created
+> and removed. The tracing subsystem has its own file descriptor
+> representing the state of the events attached to the tracefs files.
+> There's a race between the eventfs files and this file descriptor of the
+> tracing system where the following can cause an issue:
 > 
-> > +	if (!mmap_list)
-> > +		return;
-> > +
-> > +	for (int i = 0; i < early_mmap_size; i++)
-> > +		mmap_list[i] = early_mmap_list[i];
-> > +}  
+> With two scripts 'A' and 'B' doing:
 > 
-> With something like this
+>   Script 'A':
+>     echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
+>     while :
+>     do
+>       echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
+>     done
 > 
-> /*
->  * Parse early_reserve_mem=nn:align:name
->  */
-> static int __init early_reserve_mem(char *p)
-> {
-> 	phys_addr_t start, size, align;
-> 	char *oldp;
-> 	int err;
+>   Script 'B':
+>     echo > /sys/kernel/tracing/synthetic_events
 > 
-> 	if (!p)
-> 		return -EINVAL;
+> Script 'A' creates a synthetic event "hello" and then just writes zero
+> into its enable file.
 > 
-> 	oldp = p;
-> 	size = memparse(p, &p);
-> 	if (p == oldp)
-> 		return -EINVAL;
+> Script 'B' removes all synthetic events (including the newly created
+> "hello" event).
 > 
-> 	if (*p != ':')
-> 		return -EINVAL;
+> What happens is that the opening of the "enable" file has:
 > 
-> 	align = memparse(p+1, &p);
-> 	if (*p != ':')
-> 		return -EINVAL;
+>  {
+> 	struct trace_event_file *file = inode->i_private;
+> 	int ret;
 > 
-> 	start = memblock_phys_alloc(size, align);
-
-So this will allocate the same physical location for every boot, if booting
-the same kernel and having the same physical memory layout?
-
--- Steve
-
-
-> 	if (!start)
-> 		return -ENOMEM;
+> 	ret = tracing_check_open_get_tr(file->tr);
+>  [..]
 > 
-> 	p++;
-> 	err = memmap_add(start, size, p);
-> 	if (err) {
-> 		memblock_phys_free(start, size);
-> 		return err;
-> 	}
+> But deleting the events frees the "file" descriptor, and a "use after
+> free" happens with the dereference at "file->tr".
 > 
-> 	p += strlen(p);
+> The file descriptor does have a reference counter, but there needs to be a
+> way to decrement it from the eventfs when the eventfs_inode is removed
+> that represents this file descriptor.
 > 
-> 	return *p == '\0' ? 0: -EINVAL;
-> }
-> __setup("early_reserve_mem=", early_reserve_mem);
+> Add an optional "release" callback to the eventfs_entry array structure,
+> that gets called when the eventfs file is about to be removed. This allows
+> for the creating on the eventfs file to increment the tracing file
+> descriptor ref counter. When the eventfs file is deleted, it can call the
+> release function that will call the put function for the tracing file
+> descriptor.
 > 
-> you don't need to touch e820 and it will work the same for all
-> architectures.
-> 
-> We'd need a better naming, but I couldn't think of something better yet.
-> 
-> > +
-> > +/**
-> > + * memmap_named - Find a wildcard region with a given name
-> > + * @name: The name that is attached to a wildcard region
-> > + * @start: If found, holds the start address
-> > + * @size: If found, holds the size of the address.
-> > + *
-> > + * Returns: 1 if found or 0 if not found.
-> > + */
-> > +int memmap_named(const char *name, u64 *start, u64 *size)
-> > +{
-> > +	struct mmap_map *map;
-> > +
-> > +	if (!mmap_list)
-> > +		return 0;
-> > +
-> > +	for (int i = 0; mmap_list[i].name[0]; i++) {
-> > +		map = &mmap_list[i];
-> > +		if (!map->size)
-> > +			continue;
-> > +		if (strcmp(name, map->name) == 0) {
-> > +			*start = map->start;
-> > +			*size = map->size;
-> > +			return 1;
-> > +		}
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> >  struct kobject *mm_kobj;
-> >  
-> >  #ifdef CONFIG_SMP
-> > @@ -2793,4 +2864,5 @@ void __init mm_core_init(void)
-> >  	pti_init();
-> >  	kmsan_init_runtime();
-> >  	mm_cache_init();
-> > +	memmap_copy();
-> >  }  
+> This will protect the tracing file from being freed while a eventfs file
+> that references it is being opened.
 > 
 
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Link: https://lore.kernel.org/linux-trace-kernel/20240426073410.17154-1-Tze-nan.Wu@mediatek.com/
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+> Reported-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  fs/tracefs/event_inode.c    |  7 +++++++
+>  include/linux/tracefs.h     |  3 +++
+>  kernel/trace/trace_events.c | 12 ++++++++++++
+>  3 files changed, 22 insertions(+)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 894c6ca1e500..dc97c19f9e0a 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -84,10 +84,17 @@ enum {
+>  static void release_ei(struct kref *ref)
+>  {
+>  	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
+> +	const struct eventfs_entry *entry;
+>  	struct eventfs_root_inode *rei;
+>  
+>  	WARN_ON_ONCE(!ei->is_freed);
+>  
+> +	for (int i = 0; i < ei->nr_entries; i++) {
+> +		entry = &ei->entries[i];
+> +		if (entry->release)
+> +			entry->release(entry->name, ei->data);
+> +	}
+> +
+>  	kfree(ei->entry_attrs);
+>  	kfree_const(ei->name);
+>  	if (ei->is_events) {
+> diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+> index 7a5fe17b6bf9..d03f74658716 100644
+> --- a/include/linux/tracefs.h
+> +++ b/include/linux/tracefs.h
+> @@ -62,6 +62,8 @@ struct eventfs_file;
+>  typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+>  				const struct file_operations **fops);
+>  
+> +typedef void (*eventfs_release)(const char *name, void *data);
+> +
+>  /**
+>   * struct eventfs_entry - dynamically created eventfs file call back handler
+>   * @name:	Then name of the dynamic file in an eventfs directory
+> @@ -72,6 +74,7 @@ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+>  struct eventfs_entry {
+>  	const char			*name;
+>  	eventfs_callback		callback;
+> +	eventfs_release			release;
+>  };
+>  
+>  struct eventfs_inode;
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 52f75c36bbca..6ef29eba90ce 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -2552,6 +2552,14 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+>  	return 0;
+>  }
+>  
+> +/* The file is incremented on creation and freeing the enable file decrements it */
+> +static void event_release(const char *name, void *data)
+> +{
+> +	struct trace_event_file *file = data;
+> +
+> +	event_file_put(file);
+> +}
+> +
+>  static int
+>  event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+>  {
+> @@ -2566,6 +2574,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+>  		{
+>  			.name		= "enable",
+>  			.callback	= event_callback,
+> +			.release	= event_release,
+>  		},
+>  		{
+>  			.name		= "filter",
+> @@ -2634,6 +2643,9 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+>  		return ret;
+>  	}
+>  
+> +	/* Gets decremented on freeing of the "enable" file */
+> +	event_file_get(file);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
