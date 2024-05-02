@@ -1,125 +1,222 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4289D7F481;
-	Thu,  2 May 2024 12:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55106824A7;
+	Thu,  2 May 2024 13:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714652687; cv=none; b=Zk6ucTsmduAYMLNCwFfkdvN13YEmbWUQeGirSLhW6cDqfiAwEe0vXzVSMm1y9E4dDg+UZcdlyhQzm6dUd30QdpjJRjXcUYqc4c7yEdZKt1qpV6btmEdToWgzu1sLESwEju3siqD7FN+JB84eeXZqaPvIDDqfGW48vpkQgGaMIPQ=
+	t=1714654952; cv=none; b=N0W8oesObY5Xlk5b5vngpnC7qkbEu5WHRlG840haVl7NrUZ7q9+PQnUgy80WO2O3oPmAs2vEglOqICA1tU23JzCwMA/fXHCGqB+rDDNezaO5JFbEg3xIAyg0OeKAPLXnPlgyNT+idZD3qORitO0y1X91TWHnHRhd7oqz3LiUCac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714652687; c=relaxed/simple;
-	bh=IxSJTvmJyyluDOgbN3Qv5eq4m8dBC+x6ly4U5xSNfi8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BMRdLeshHT1NlQDhlNocuzxMiz6W63wJf7M5SBh3ilm0LGFbY4KoWpQ8KfomaGn19ECPu7BDXvUqccM4T33GREdN9oaCXzA4nlQtqSB8dT+XRTP1G8OOHwIwb9lgNreLCm5UT5tOZvu8rvI9BGKH/v9Ct9fvGewxZJWn7JuBpOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkiS0twE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkiS0twE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B3CC113CC;
-	Thu,  2 May 2024 12:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714652686;
-	bh=IxSJTvmJyyluDOgbN3Qv5eq4m8dBC+x6ly4U5xSNfi8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NkiS0twE1DcVIJty0dIiyfLue//ziLF3Br/jp/DRl4zBOr4neTnq8rTX1yTUdGXcB
-	 GEtXJnpJCRqAfn78vy1MPxMH2nr7ogcHv+OXLZTKquohizzO7Ma13iOiA/njI+AaCG
-	 wCi5qvXE2KpVNQ/FzlDGAqytSftpjCBpmDZhU6VxS9eGH1hJW5eFgy6/vIAfPSwUQc
-	 TwdkyCATEmtDutDB60ihVBEfqj64oiO3Qa4LcjPtR+VVU+1u6mQ7nz1ea7Zn7+E1BY
-	 sUrwuJjfyUFuRujYAOIelYTj3V1RLXNaiH7bBVdWvBR37I4c4UexTy9gctjYija7UE
-	 jKGmdjuy8XGtA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: [PATCHv4 7/7] man2: Add uretprobe syscall page
-Date: Thu,  2 May 2024 14:23:13 +0200
-Message-ID: <20240502122313.1579719-8-jolsa@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240502122313.1579719-1-jolsa@kernel.org>
-References: <20240502122313.1579719-1-jolsa@kernel.org>
+	s=arc-20240116; t=1714654952; c=relaxed/simple;
+	bh=XuDqN2clZKE8rpRfrTJJLt2NhYMUnJTCnv3AGJMBtO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nrTKqmDN4MWSQ10zbyM8ydPtFbHgJ7gZKFNxIiHWfdylC6yST7qLa9Rk2Fgs+1tAhlM+dJrTtSocUJTqkag3FVsl4viLyS4WnhHBbbungZ0qxOWzqKdlMRq6D1fusDoUJoe/q9+a/qHtSSg/4tGyIcBScc3nTOgXkwdRhFJDUl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D7AC113CC;
+	Thu,  2 May 2024 13:02:30 +0000 (UTC)
+Date: Thu, 2 May 2024 09:03:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tze-nan wu <Tze-nan.Wu@mediatek.com>
+Subject: [PATCH v2] eventfs/tracing: Add callback for release of an
+ eventfs_inode
+Message-ID: <20240502090315.448cba46@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Adding man page for new uretprobe syscall.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Synthetic events create and destroy tracefs files when they are created
+and removed. The tracing subsystem has its own file descriptor
+representing the state of the events attached to the tracefs files.
+There's a race between the eventfs files and this file descriptor of the
+tracing system where the following can cause an issue:
+
+With two scripts 'A' and 'B' doing:
+
+  Script 'A':
+    echo "hello int aaa" > /sys/kernel/tracing/synthetic_events
+    while :
+    do
+      echo 0 > /sys/kernel/tracing/events/synthetic/hello/enable
+    done
+
+  Script 'B':
+    echo > /sys/kernel/tracing/synthetic_events
+
+Script 'A' creates a synthetic event "hello" and then just writes zero
+into its enable file.
+
+Script 'B' removes all synthetic events (including the newly created
+"hello" event).
+
+What happens is that the opening of the "enable" file has:
+
+ {
+	struct trace_event_file *file = inode->i_private;
+	int ret;
+
+	ret = tracing_check_open_get_tr(file->tr);
+ [..]
+
+But deleting the events frees the "file" descriptor, and a "use after
+free" happens with the dereference at "file->tr".
+
+The file descriptor does have a reference counter, but there needs to be a
+way to decrement it from the eventfs when the eventfs_inode is removed
+that represents this file descriptor.
+
+Add an optional "release" callback to the eventfs_entry array structure,
+that gets called when the eventfs file is about to be removed. This allows
+for the creating on the eventfs file to increment the tracing file
+descriptor ref counter. When the eventfs file is deleted, it can call the
+release function that will call the put function for the tracing file
+descriptor.
+
+This will protect the tracing file from being freed while a eventfs file
+that references it is being opened.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240426073410.17154-1-Tze-nan.Wu@mediatek.com/
+
+Cc: stable@vger.kernel.org
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: Tze-nan wu <Tze-nan.Wu@mediatek.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- man2/uretprobe.2 | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 man2/uretprobe.2
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240430142327.7bff81ba@gandalf.local.home/
 
-diff --git a/man2/uretprobe.2 b/man2/uretprobe.2
-new file mode 100644
-index 000000000000..08fe6a670430
---- /dev/null
-+++ b/man2/uretprobe.2
-@@ -0,0 +1,45 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+Kernel is using
-+.BR uretprobe()
-+syscall to trigger uprobe return probe consumers instead of using
-+standard breakpoint instruction.
+- Do not call release function on error creating the eventfs_inode
+
+ fs/tracefs/event_inode.c    | 23 +++++++++++++++++++++--
+ include/linux/tracefs.h     |  3 +++
+ kernel/trace/trace_events.c | 12 ++++++++++++
+ 3 files changed, 36 insertions(+), 2 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 894c6ca1e500..f5510e26f0f6 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -84,10 +84,17 @@ enum {
+ static void release_ei(struct kref *ref)
+ {
+ 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
++	const struct eventfs_entry *entry;
+ 	struct eventfs_root_inode *rei;
+ 
+ 	WARN_ON_ONCE(!ei->is_freed);
+ 
++	for (int i = 0; i < ei->nr_entries; i++) {
++		entry = &ei->entries[i];
++		if (entry->release)
++			entry->release(entry->name, ei->data);
++	}
 +
-+The uretprobe syscall is not supposed to be called directly by user, it's allowed
-+to be invoked only through user space trampoline provided by kernel.
-+When called from outside of this trampoline, the calling process will receive
-+.BR SIGILL .
+ 	kfree(ei->entry_attrs);
+ 	kfree_const(ei->name);
+ 	if (ei->is_events) {
+@@ -112,6 +119,18 @@ static inline void free_ei(struct eventfs_inode *ei)
+ 	}
+ }
+ 
++/*
++ * Called when creation of an ei fails, do not call release() functions.
++ */
++static inline void cleanup_ei(struct eventfs_inode *ei)
++{
++	if (ei) {
++		/* Set nr_entries to 0 to prevent release() function being called */
++		ei->nr_entries = 0;
++		free_ei(ei);
++	}
++}
 +
-+.SH RETURN VALUE
-+.BR uretprobe()
-+return value is specific for given architecture.
+ static inline struct eventfs_inode *get_ei(struct eventfs_inode *ei)
+ {
+ 	if (ei)
+@@ -734,7 +753,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 
+ 	/* Was the parent freed? */
+ 	if (list_empty(&ei->list)) {
+-		free_ei(ei);
++		cleanup_ei(ei);
+ 		ei = NULL;
+ 	}
+ 	return ei;
+@@ -835,7 +854,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	return ei;
+ 
+  fail:
+-	free_ei(ei);
++	cleanup_ei(ei);
+ 	tracefs_failed_creating(dentry);
+ 	return ERR_PTR(-ENOMEM);
+ }
+diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+index 7a5fe17b6bf9..d03f74658716 100644
+--- a/include/linux/tracefs.h
++++ b/include/linux/tracefs.h
+@@ -62,6 +62,8 @@ struct eventfs_file;
+ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+ 				const struct file_operations **fops);
+ 
++typedef void (*eventfs_release)(const char *name, void *data);
 +
-+.SH VERSIONS
-+This syscall is not specified in POSIX,
-+and details of its behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH NOTES
-+.BR uretprobe()
-+syscall is initially introduced on x86-64 architecture, because doing syscall
-+is faster than doing breakpoint trap on it. It might be extended to other
-+architectures.
+ /**
+  * struct eventfs_entry - dynamically created eventfs file call back handler
+  * @name:	Then name of the dynamic file in an eventfs directory
+@@ -72,6 +74,7 @@ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+ struct eventfs_entry {
+ 	const char			*name;
+ 	eventfs_callback		callback;
++	eventfs_release			release;
+ };
+ 
+ struct eventfs_inode;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 52f75c36bbca..6ef29eba90ce 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2552,6 +2552,14 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+ 	return 0;
+ }
+ 
++/* The file is incremented on creation and freeing the enable file decrements it */
++static void event_release(const char *name, void *data)
++{
++	struct trace_event_file *file = data;
 +
-+.BR uretprobe()
-+syscall exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are specific for given architecture.
++	event_file_put(file);
++}
++
+ static int
+ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ {
+@@ -2566,6 +2574,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 		{
+ 			.name		= "enable",
+ 			.callback	= event_callback,
++			.release	= event_release,
+ 		},
+ 		{
+ 			.name		= "filter",
+@@ -2634,6 +2643,9 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 		return ret;
+ 	}
+ 
++	/* Gets decremented on freeing of the "enable" file */
++	event_file_get(file);
++
+ 	return 0;
+ }
+ 
 -- 
-2.44.0
+2.43.0
 
