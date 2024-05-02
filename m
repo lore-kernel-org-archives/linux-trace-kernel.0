@@ -1,66 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC2784A3F
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 May 2024 13:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F84131E38
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 May 2024 13:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714655939; cv=none; b=hHfvTRmo7OExY6YjKhmQupL2Bkwn3xeBxIAkEAL+TmJISTN3N8VIUBFB++c1nY3aZaxJjjNMWpGi6rfrrZUTE13oGHR5XODSkCaPSsFIXDKZjKmBNJsSjZdYjVGVmTAP7X6epChcCxmF8dBOn9MatzZUmeidH7MPopk4pTbG0Vo=
+	t=1714656640; cv=none; b=rZrqOaMWE6xFA90hRntqn5QEZ0NnMaqwx61sLlGjzJ0jgZ5ih3ZgnefCqSR11eJ2ud343TJD4tFCUwjGdzVfAVVGe2WtTiYGGAkw/NVQ4JQwk+3XBUEIMEXgsKErl/OWJYIe8KbHTDuzMF8+mwG8KdpRKIaFUm1nhmfblXSCYYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714655939; c=relaxed/simple;
-	bh=DMVru4iHMRJwA3MA08IKQpkHAhcOmFJx20VroT9z1cw=;
+	s=arc-20240116; t=1714656640; c=relaxed/simple;
+	bh=B/DmeFPPz25MgG9qZexokA0GXN9RdncFCYD8o+LPUtA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mNHron4g9Asv2R2EW2q+efkxb/Hntw0MtYWaXrbDErULLaWs27V9u8Q133oF5hHWyJWUrsfDgq19kzXUYEDEf+KUOlhdP85ySfmaXQH1BjCxXcLA7Eo1EPLC/qV0anmMD/kqJihnskJG+hzPhUufy2G3rqp23L18JZIs22OuppM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MGcYvTHL; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=WbSBcP3kgUa+6J6VZIb2h3JOe6DXtbbaO2YlHmC2O/CjqtqbYeZQlYYJZVcGEZMjz+xj7P5MOGiZJ7JfjVAqrdTFp5PF/MEUutgMkuxWx2sCM850RcjvzrEWNdS5XP45ZRnGZlngypUzHMudwugxxGEcxQWpkZT73A9GGkAxeu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Liin5OfD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGcYvTHL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Liin5OfD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714655936;
+	s=mimecast20190719; t=1714656637;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WAenIvJSBiSJOxHk0lkzJ2HHgC5rMnP/wGaQjLUg+90=;
-	b=MGcYvTHLtZTcN5io2789fKGfv14MMibQ6ZDvRtxgcvMCL8iqL1mC5Js5TsHSHBJ2cG90OD
-	L6bdHySNny+I0WhESBjkHTdJ61862fjNXpnirpvMvM2jYfcReETX5mA4l6SZGzqzsuMM42
-	P0RGQP9uaV8xzX2edsub2L4NRX8lON0=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=X7Kq5Ujhxuk+kuIhjuSbJ3IX8eWVN2D+4pn7W9pBvCE=;
+	b=Liin5OfDJrPPkh+lQg000Ba2muDUoC2hHxB3B+DgdySHF2YM5P2AgH5k6bGO28loamvWtX
+	N1e/mhWEGybBpJrIae9QUV2bEyc7RSDT2MvMd+pMt9vqm4wxhDe6cx7DjVV2Tha1J39WSy
+	tHQFzzmopH0QpWmdNAxBWzaboiLi5as=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-34-uZgBFk_lOquWA9UGrdUHcw-1; Thu, 02 May 2024 09:18:53 -0400
-X-MC-Unique: uZgBFk_lOquWA9UGrdUHcw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a5190b1453fso524987766b.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 May 2024 06:18:53 -0700 (PDT)
+ us-mta-388-AGT-Z8piMHOtVHBkt8NAJw-1; Thu, 02 May 2024 09:30:36 -0400
+X-MC-Unique: AGT-Z8piMHOtVHBkt8NAJw-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34e2ac93f8fso280955f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 May 2024 06:30:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714655932; x=1715260732;
+        d=1e100.net; s=20230601; t=1714656635; x=1715261435;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=WAenIvJSBiSJOxHk0lkzJ2HHgC5rMnP/wGaQjLUg+90=;
-        b=JfsfPkPfjtOX+cDDCLUiAmcwinVvE4DdZPOw9wGKB+WkHNGhUhGBC1dd2diHd2NjKf
-         QfjsIkQBaHrwXvrD1ictaQKWrJmx7+EWLHfLwHpXIAyZMx53H8x7vadYFAPCvZwNtgru
-         UQv++/txCp2OcmDnhcrNinMFU6mBsedfkJw9LhurHUEVb3r+Mpe0hlqLj9jEVbjoYeYb
-         5EbgC+JAUHS40l97WeahU6HiMp2U1qxm9aSO9w2WtYqwRyrmF9y8sqSsmPv2/ab7Q5Yk
-         L6kJiJoqRn0RryejwyYgsj3F8C2NoIJ9HffRRAjykEtknT5CR4ysUwf3oVz48UvOFNuT
-         OeGg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0M76OaxQm3JUUuiSL4BWCfaoBp41Xu0dVsH2HR5AiX65DGsUgF5E84CREc+ETPnGVtUqHYaf3CRf6ILT1OUPZb+b/VEUE3TkPU7Mp5hRwKOkR
-X-Gm-Message-State: AOJu0Yz2Xa1rB2J1AQ3PTZi/ykEWbj3WXdLFVhu3kFpt+rAdtJlo7Rif
-	2LqvO6qKBaJg3t1OZstvyO9dmqShNQlM0/7YcPRtP894J0kEqjEnHHEVfGqcMjlaSwimixWUdQC
-	7m3AwZk7bgc9X3rm+H5IXmW6DOlwY5/eVNyooegOWDZ3o9r39Tb0rBn43HxDm4Rk5zs4CrQ==
-X-Received: by 2002:a17:906:a299:b0:a52:6b12:3078 with SMTP id i25-20020a170906a29900b00a526b123078mr3658937ejz.55.1714655932109;
-        Thu, 02 May 2024 06:18:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFXZ0krbL1GKDnIwrF8YVx2p8EkgadJYoIBwVa1w9Sk98/seVuLSay0MT9Iphw5PkgQakBVg==
-X-Received: by 2002:a17:906:a299:b0:a52:6b12:3078 with SMTP id i25-20020a170906a29900b00a526b123078mr3658911ejz.55.1714655931654;
-        Thu, 02 May 2024 06:18:51 -0700 (PDT)
+        bh=X7Kq5Ujhxuk+kuIhjuSbJ3IX8eWVN2D+4pn7W9pBvCE=;
+        b=idMoS+Fr59E3PQos/fwjNkroghFBJtpCJE1rtjejoFpe549CayHD/tl2JcEz2zzMDs
+         gSNmEZCKkj9rPGwHrAUZEm+pvWybZVVBLMGZvGOSvP8J2CKQwCjBR+pw9pdzIXmschQb
+         zrIyZCNDNUdwst5u14bgpXHBCbAKhpgsK4WN3mZ+ayQKDrb+9w46J7ScRIkJr8rPScrf
+         tXOh+DPj/yWs6gUyb/rrIMhwg884s5k/0n3uK1Pw5ci2y3IY/tnuEue7jJY0D0FWCMWO
+         cnwFr/RdrHUje5pTZv3vxbum2QtlNn2+z97BEFTYiv41icdsJEU3u2KLOST7qevm5cN5
+         9t5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWyqROLMayNNV5KzRjoEe2n8ePzQf3L2nreeRbehA+ay7o7LBhMSTZBzHxHTWWL15cdFbfKKq7y+ZgwgEZn1S3XqXDSiESfwtY+nJomxf655w56
+X-Gm-Message-State: AOJu0YwZeM3uJEXZK69okKfyCtLzitp5xzIF78u4p/G94tmZrgDmyWxe
+	YwOjG8wtYm7mFVGPcGFHJir+TK7M8w4T1q+5pWqedZaFy0q+P79rPUSYRtOVhB6FWp+Oz0Gm7cf
+	jQFRfnwyXJ3fjkmeeRtlrqukEru/wBGmckFegmNqdKTaXluXQnqiIS3Z+47FkuF4HqXflag==
+X-Received: by 2002:a05:6000:232:b0:343:e52a:f51e with SMTP id l18-20020a056000023200b00343e52af51emr1485522wrz.47.1714656634776;
+        Thu, 02 May 2024 06:30:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHuB/S6CdTHsjsj9sh2DEbRbgk8zz7vRZcUdrWQc8Mdc4OSobjTIeLkqqGGRJ9qF+YC8CbSYA==
+X-Received: by 2002:a05:6000:232:b0:343:e52a:f51e with SMTP id l18-20020a056000023200b00343e52af51emr1485496wrz.47.1714656634271;
+        Thu, 02 May 2024 06:30:34 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c71e:bf00:eba1:3ab9:ab0f:d676? (p200300cbc71ebf00eba13ab9ab0fd676.dip0.t-ipconnect.de. [2003:cb:c71e:bf00:eba1:3ab9:ab0f:d676])
-        by smtp.gmail.com with ESMTPSA id br25-20020a170906d15900b00a57bf8305efsm550485ejb.152.2024.05.02.06.18.50
+        by smtp.gmail.com with ESMTPSA id n12-20020adfe34c000000b00343d6c7240fsm1288517wrj.35.2024.05.02.06.30.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 06:18:50 -0700 (PDT)
-Message-ID: <b3d29640-9a38-4d4e-a914-764832b219f4@redhat.com>
-Date: Thu, 2 May 2024 15:18:49 +0200
+        Thu, 02 May 2024 06:30:33 -0700 (PDT)
+Message-ID: <78e20e98-bdfc-4d7b-a59c-988b81fcc58b@redhat.com>
+Date: Thu, 2 May 2024 15:30:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,14 +68,15 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v22 1/5] ring-buffer: Allocate sub-buffers with __GFP_COMP
+Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
 To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
  mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
- rdunlap@infradead.org, rppt@kernel.org
+ rdunlap@infradead.org, rppt@kernel.org, linux-mm@kvack.org
 References: <20240430111354.637356-1-vdonnefort@google.com>
- <20240430111354.637356-2-vdonnefort@google.com>
+ <20240430111354.637356-3-vdonnefort@google.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -122,7 +123,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20240430111354.637356-2-vdonnefort@google.com>
+In-Reply-To: <20240430111354.637356-3-vdonnefort@google.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -130,13 +131,138 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 30.04.24 13:13, Vincent Donnefort wrote:
-> In preparation for the ring-buffer memory mapping, allocate compound
-> pages for the ring-buffer sub-buffers to enable us to map them to
-> user-space with vm_insert_pages().
+> In preparation for allowing the user-space to map a ring-buffer, add
+> a set of mapping functions:
 > 
+>    ring_buffer_{map,unmap}()
+> 
+> And controls on the ring-buffer:
+> 
+>    ring_buffer_map_get_reader()  /* swap reader and head */
+> 
+> Mapping the ring-buffer also involves:
+> 
+>    A unique ID for each subbuf of the ring-buffer, currently they are
+>    only identified through their in-kernel VA.
+> 
+>    A meta-page, where are stored ring-buffer statistics and a
+>    description for the current reader
+> 
+> The linear mapping exposes the meta-page, and each subbuf of the
+> ring-buffer, ordered following their unique ID, assigned during the
+> first mapping.
+> 
+> Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
+> size will remain unmodified and the splice enabling functions will in
+> reality simply memcpy the data instead of swapping subbufs.
+> 
+> CC: <linux-mm@kvack.org>
 > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index dc5ae4e96aee..96d2140b471e 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+
+[...]
+
+> +/*
+> + *   +--------------+  pgoff == 0
+> + *   |   meta page  |
+> + *   +--------------+  pgoff == 1
+> + *   | subbuffer 0  |
+> + *   |              |
+> + *   +--------------+  pgoff == (1 + (1 << subbuf_order))
+> + *   | subbuffer 1  |
+> + *   |              |
+> + *         ...
+> + */
+> +#ifdef CONFIG_MMU
+> +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+> +			struct vm_area_struct *vma)
+> +{
+> +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
+> +	unsigned int subbuf_pages, subbuf_order;
+> +	struct page **pages;
+> +	int p = 0, s = 0;
+> +	int err;
+> +
+> +	/* Refuse MP_PRIVATE or writable mappings */
+> +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
+> +	    !(vma->vm_flags & VM_MAYSHARE))
+> +		return -EPERM;
+> +
+> +	/*
+> +	 * Make sure the mapping cannot become writable later. Also tell the VM
+> +	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND). Finally,
+> +	 * prevent migration, GUP and dump (VM_IO).
+> +	 */
+> +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_IO, VM_MAYWRITE);
+> +
+> +	lockdep_assert_held(&cpu_buffer->mapping_lock);
+> +
+> +	subbuf_order = cpu_buffer->buffer->subbuf_order;
+> +	subbuf_pages = 1 << subbuf_order;
+> +
+> +	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
+> +	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
+> +
+> +	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+> +	if (!vma_pages || vma_pages > nr_pages)
+> +		return -EINVAL;
+> +
+> +	nr_pages = vma_pages;
+> +
+> +	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
+> +	if (!pages)
+> +		return -ENOMEM;
+> +
+> +	if (!pgoff) {
+> +		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+> +
+> +		/*
+> +		 * TODO: Align sub-buffers on their size, once
+> +		 * vm_insert_pages() supports the zero-page.
+> +		 */
+> +	} else {
+> +		/* Skip the meta-page */
+> +		pgoff--;
+> +
+> +		if (pgoff % subbuf_pages) {
+> +			err = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		s += pgoff / subbuf_pages;
+> +	}
+> +
+> +	while (s < nr_subbufs && p < nr_pages) {
+> +		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
+> +		int off = 0;
+> +
+> +		for (; off < (1 << (subbuf_order)); off++, page++) {
+> +			if (p >= nr_pages)
+> +				break;
+> +
+> +			pages[p++] = page;
+> +		}
+> +		s++;
+> +	}
+> +
+> +	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
+
+Nit: I did not immediately understand if we could end here with p < 
+nr_pages (IOW, pages[] not completely filled).
+
+One source of confusion is the "s < nr_subbufs" check in the while loop: 
+why is "p < nr_pages" insufficient?
+
+
+For the MM bits:
 
 Acked-by: David Hildenbrand <david@redhat.com>
+
+
 
 -- 
 Cheers,
