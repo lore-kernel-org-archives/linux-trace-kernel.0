@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F9515ADBF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9178415B141;
 	Thu,  2 May 2024 15:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714662934; cv=none; b=ee1eKrMEsweybu8w2X/8u9STIkCb7ETD1/M+0zOk6JY4Bt6c1zwHz1/1KJt73OiDsi3yXx5PtXWJ8q6424GVfJPSDrMqbQqym1K8OZ/78eyD8YV/UWCWpTURO1BAeff7mv/iFRHXA/0s+4ukwRsjfQhQDcrM66Hux1M9R7bB0l0=
+	t=1714662934; cv=none; b=OIPh0YhFe+yaQUjzrK4nLzm55QFgwm65U6wl9veXspZEiuEmhnlk4vUIXXeCiFwzs8XGNBiwjpQ4AlvqWcsAKrF9kuBT3DW7edk+zQ2dqlLJfkopfB3Hd5NqjqbIqmDo/vk4bKKXwSGwtaLDUgfqcq0yItndeaOwg5l1ape6K3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714662934; c=relaxed/simple;
-	bh=Zjm2gWdBScHrZHJ6OHWJqK9+Y6TkySrNHNWy7Q+/g+0=;
+	bh=i+Q36AjRIPs7Ry987XtuVA+g0h3Lg22zj9IHFjW5j1M=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=O/YgVGYPwadP9DBQU6La9t29ryRTEqTDjnShoATExOuGc8KdfmiSENdZ2otS8vS/ccwL30sSwIkdv4XIU/NKUwA6p7lFUIhf8P2lKaqQjLqfvl5t5cTUui+HVpnu56G1mNNKriVnIaLeYW+thMlDThS/wN/hTHIXVnKKwL+23iI=
+	 Content-Type; b=caoiMNtYht+Lb/j7iFBhQvUPGepsLXd++M4a9rhwyf4iRogkRXZPxCNmKE6NLynUmBE0nrdpBWRm796Y2GPXUv3KNFIo8sVFbwrZrC2A8s5t9O+MPN554DehmqkUH7cGJqTLu9FiKbimRVLulML/q6NNDNellyRs9Qlwq7/eWGE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A7AC4AF1A;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FF2C4AF18;
 	Thu,  2 May 2024 15:15:34 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s2YAW-00000003ITF-2uZX;
-	Thu, 02 May 2024 11:16:20 -0400
-Message-ID: <20240502151620.558412090@goodmis.org>
+	id 1s2YAX-00000003IUD-024u;
+	Thu, 02 May 2024 11:16:21 -0400
+Message-ID: <20240502151620.874018137@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 02 May 2024 11:15:49 -0400
+Date: Thu, 02 May 2024 11:15:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  stable@vger.kernel.org
-Subject: [PATCH v2 2/5] tracefs: Still use mount point as default permissions for instances
+Subject: [PATCH v2 4/5] eventfs: Do not treat events directory different than other
+ directories
 References: <20240502151547.973653253@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,109 +42,52 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-If the instances directory's permissions were never change, then have it
-and its children use the mount point permissions as the default.
+Treat the events directory the same as other directories when it comes to
+permissions. The events directory was considered different because it's
+dentry is persistent, whereas the other directory dentries are created
+when accessed. But the way tracefs now does its ownership by using the
+root dentry's permissions as the default permissions, the events directory
+can get out of sync when a remount is performed setting the group and user
+permissions.
 
-Currently, the permissions of instance directories are determined by the
-instance directory's permissions itself. But if the tracefs file system is
-remounted and changes the permissions, the instance directory and its
-children should use the new permission.
-
-But because both the instance directory and its children use the instance
-directory's inode for permissions, it misses the update.
-
-To demonstrate this:
-
-  # cd /sys/kernel/tracing/
-  # mkdir instances/foo
-  # ls -ld instances/foo
- drwxr-x--- 5 root root 0 May  1 19:07 instances/foo
-  # ls -ld instances
- drwxr-x--- 3 root root 0 May  1 18:57 instances
-  # ls -ld current_tracer
- -rw-r----- 1 root root 0 May  1 18:57 current_tracer
-
-  # mount -o remount,gid=1002 .
-  # ls -ld instances
- drwxr-x--- 3 root root 0 May  1 18:57 instances
-  # ls -ld instances/foo/
- drwxr-x--- 5 root root 0 May  1 19:07 instances/foo/
-  # ls -ld current_tracer
- -rw-r----- 1 root lkp 0 May  1 18:57 current_tracer
-
-Notice that changing the group id to that of "lkp" did not affect the
-instances directory nor its children. It should have been:
-
-  # ls -ld current_tracer
- -rw-r----- 1 root root 0 May  1 19:19 current_tracer
-  # ls -ld instances/foo/
- drwxr-x--- 5 root root 0 May  1 19:25 instances/foo/
-  # ls -ld instances
- drwxr-x--- 3 root root 0 May  1 19:19 instances
-
-  # mount -o remount,gid=1002 .
-  # ls -ld current_tracer
- -rw-r----- 1 root lkp 0 May  1 19:19 current_tracer
-  # ls -ld instances
- drwxr-x--- 3 root lkp 0 May  1 19:19 instances
-  # ls -ld instances/foo/
- drwxr-x--- 5 root lkp 0 May  1 19:25 instances/foo/
-
-Where all files were updated by the remount gid update.
+Remove the special case for the events directory on setting the
+attributes. This allows the updates caused by remount to work properly as
+well as simplifies the code.
 
 Cc: stable@vger.kernel.org
 Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/inode.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ fs/tracefs/event_inode.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 5f2417df1c43..e1bf65efdbb3 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -180,16 +180,39 @@ static void set_tracefs_inode_owner(struct inode *inode)
- {
- 	struct tracefs_inode *ti = get_tracefs(inode);
- 	struct inode *root_inode = ti->private;
-+	kuid_t uid;
-+	kgid_t gid;
-+
-+	uid = root_inode->i_uid;
-+	gid = root_inode->i_gid;
-+
-+	/*
-+	 * If the root is not the mount point, then check the root's
-+	 * permissions. If it was never set, then default to the
-+	 * mount point.
-+	 */
-+	if (root_inode != d_inode(root_inode->i_sb->s_root)) {
-+		struct tracefs_inode *rti;
-+
-+		rti = get_tracefs(root_inode);
-+		root_inode = d_inode(root_inode->i_sb->s_root);
-+
-+		if (!(rti->flags & TRACEFS_UID_PERM_SET))
-+			uid = root_inode->i_uid;
-+
-+		if (!(rti->flags & TRACEFS_GID_PERM_SET))
-+			gid = root_inode->i_gid;
-+	}
- 
- 	/*
- 	 * If this inode has never been referenced, then update
- 	 * the permissions to the superblock.
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 2971609946e5..ff4ee3dad56a 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -199,21 +199,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	 * determined by the parent directory.
  	 */
- 	if (!(ti->flags & TRACEFS_UID_PERM_SET))
--		inode->i_uid = root_inode->i_uid;
-+		inode->i_uid = uid;
+ 	if (dentry->d_inode->i_mode & S_IFDIR) {
+-		/*
+-		 * The events directory dentry is never freed, unless its
+-		 * part of an instance that is deleted. It's attr is the
+-		 * default for its child files and directories.
+-		 * Do not update it. It's not used for its own mode or ownership.
+-		 */
+-		if (ei->is_events) {
+-			/* But it still needs to know if it was modified */
+-			if (iattr->ia_valid & ATTR_UID)
+-				ei->attr.mode |= EVENTFS_SAVE_UID;
+-			if (iattr->ia_valid & ATTR_GID)
+-				ei->attr.mode |= EVENTFS_SAVE_GID;
+-		} else {
+-			update_attr(&ei->attr, iattr);
+-		}
++		update_attr(&ei->attr, iattr);
  
- 	if (!(ti->flags & TRACEFS_GID_PERM_SET))
--		inode->i_gid = root_inode->i_gid;
-+		inode->i_gid = gid;
- }
- 
- static int tracefs_permission(struct mnt_idmap *idmap,
+ 	} else {
+ 		name = dentry->d_name.name;
 -- 
 2.43.0
 
