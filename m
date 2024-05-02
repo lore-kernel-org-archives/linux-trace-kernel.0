@@ -1,223 +1,209 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C534A219F6
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 May 2024 13:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD097441E;
+	Thu,  2 May 2024 13:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714657120; cv=none; b=Fv75Hl6dmsMK2NT32p9SNMjCm+mQdxSuy5Xmp8ZEO86B0ZNWRZO8WFxUUyBOZkkS1f3UCGZPT+F4vpGp/QyFqAYu1c4JN/bCCERPWAWxwfqS9vbUrsoe416AhDwy7H/Zpe2x8P6SBBTYBar6IbrXnd2Ztv/nAVvZhiW4ZJsd754=
+	t=1714657420; cv=none; b=F2Jwh7xuFHgHlQujvmkmdcrUTgAQA5xHCZ3BV7beDvCXLeCPCrukpjbNDlFb2hEKHO/CsKiPY7RvF8Tk41+rokR1jgjw51AroBF2IA9qsPlVPIx+50Ahl9OTyR20ywzFkyEZXqjQzb+5LakT/KDi2gNeL8Y9nfHbzKR/jW6qfyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714657120; c=relaxed/simple;
-	bh=ZVLBKb/qfI6mje1+IuKXRZDIRVv/zAcr0IH3th4DjWo=;
+	s=arc-20240116; t=1714657420; c=relaxed/simple;
+	bh=HtGp1xU+30x0HMmW9Qu2geRr7bEsMJ+1LRzEdacgOZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C2axTHf3Fv2EgNjUq76P72ZOHrklTJ2N3f4mgTVWY2E0aAStMhWPiRj4KKysQSHSyRjsblKsFtW21TKPSo6nBa9iPekyKkKx4MzgeAmgkCQPnGs39MmeyvoCIwVFQpf7PPPiejSptgLnbSAvCpzKoW3U/y0CouRmG72rgwzV6mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nlv6ewbZ; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsjajTHohT57T7ByD2B/b+cg/pZ7xTmKiSRSXxAyFBcvwE8bZUbFg4SnHFnbuc0Iunw0YnbgowZizc3TOoIJV59U/iIPuBDnilo3lEAjA9UOtlNESn5JFCqTpKQpK902NV3jaAwSl8x4i/ddPP1kFh1WKjMX8g5aSAk5gQb+vXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRcwr4M1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nlv6ewbZ"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51f2ebbd8a7so729339e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 May 2024 06:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714657117; x=1715261917; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y19TweyZ1KjMmIo4xW3n0XYd8Twm3R3dqBl/XKJ2/GA=;
-        b=nlv6ewbZHBekushdOOyhFDEJEc9le+2MGpWHGjbESTQU2IeikuYvOQ580MuU3seGrG
-         lwlpF5yUeWL7NpK425O+qQsVkEW/cINZ+U8xaAhe5B0Zf1ehtHvc9L9YryZ+SceylwSH
-         nsvuKSwx/36R1xzj3GUcBxzEr2eirNgRbeLr0L67Ed43lilb9PRSLU53Tkdk0GcEM/dy
-         39LzfskehykVkpWpa1CsUpuTFyPdRWBCbg3j7H77xfsPFAlcXgxr7lN45G5JxPpxrNM8
-         9svdIm0AJS9V3ZtfoJ4ncdD7LlkpLLdsCaeqdHFPrM+sElWapr2/J1c+UweJofdHDqGa
-         Y6zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714657117; x=1715261917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y19TweyZ1KjMmIo4xW3n0XYd8Twm3R3dqBl/XKJ2/GA=;
-        b=qlcOIbEalNmkzaECu/JfSFo84hOQOolbA+kCpt/fLLeBG7Hst1CIEDjz/K+nYW2szx
-         luBpnecar10arG+hj5gj+lw2px2+5O3oXf245wzD/FiRCQa04J12X8o4LcEVfODpGkWg
-         BaEZIrwiSVQkDztzYVnqviIrevV6EMEoS1/0nVhuMX5crcwSM8hf8tbzXZiCj9F//CV2
-         VEee9H7KEsjBKRKNe4EPs3goVPQIXmqGtE7w3qNXMa3M39v2GNRgZpWNgJ9dkTtzM2yW
-         0VjQQDMidSHNaraB/VscMTPuFHCEm0nOZfy7RVbGC+UGEq9Ejm9qsoP2xwG0BLYtynqX
-         GwNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXnoPXyrjeuoBQyGztL1AyhJb430dNcw0SZBETvbSoIDe+16w1vqdocWdP+Gdr3mq8zOrJ3iheiCs7jDuHP92fT2m+JZGmR5KuDGSitsHQf5Ye
-X-Gm-Message-State: AOJu0YwXaHa/od1aQDZlgNsimqQb7ECn9ggVJYFFf4in1qsXtQLM4yX7
-	enT6SQwPnm+sVoOy5zwf7gEsbeIVU4yiNqcg3tmNokhjVeEmyDHAXtju8CkqTw==
-X-Google-Smtp-Source: AGHT+IG2RlbVsy/QxzmOQcZwMGxzJIvMVzR+A/xkThaRhY+BkG8J7xN8nSCssUzWHbF/M78GCwlHmQ==
-X-Received: by 2002:a05:6512:3c83:b0:51c:17d5:b56e with SMTP id h3-20020a0565123c8300b0051c17d5b56emr3948387lfv.11.1714657116382;
-        Thu, 02 May 2024 06:38:36 -0700 (PDT)
-Received: from google.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id m3-20020adffa03000000b0034db974d7a1sm1287085wrr.81.2024.05.02.06.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 May 2024 06:38:36 -0700 (PDT)
-Date: Thu, 2 May 2024 14:38:32 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <ZjOXWLfR7GpzE8H_@google.com>
-References: <20240430111354.637356-1-vdonnefort@google.com>
- <20240430111354.637356-3-vdonnefort@google.com>
- <78e20e98-bdfc-4d7b-a59c-988b81fcc58b@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRcwr4M1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD6CC113CC;
+	Thu,  2 May 2024 13:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714657420;
+	bh=HtGp1xU+30x0HMmW9Qu2geRr7bEsMJ+1LRzEdacgOZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QRcwr4M1hCYR/BY50XFObmHG8s43BYAUBcoEseJHA3vgZxK8Nff7R0AXErOKGxKRe
+	 tOsO6qL/BVFSeeWah0nHQke056L2xlMlQVLnEjMmK83xVdwqJ77ltNLJmKQcQJHVVr
+	 z1Fs2FhkoIj6uexh1YJoyxq7tZDgWQ/EUm7KbytdqhN9wdvvSZ6nlN2kGIdIUmuClc
+	 dWZRlHcxfLpDtVkyJ1tEqMGi/2aMY1dj39ZcNT2QYTvcdWWrS64zm3pela9U0GJIsp
+	 X6HKBOGe+5A96ULnlboZRRCBLiIYifxPXJYDIb2x4I9rcyLOB3qAhcC8oavkDW7q7J
+	 4qbUIiE1DcgiQ==
+Date: Thu, 2 May 2024 15:43:27 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv4 7/7] man2: Add uretprobe syscall page
+Message-ID: <ZjOYf_g2qRrhDoQD@debian>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
+ <20240502122313.1579719-8-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KBL3g/TAaXMZ7pyE"
 Content-Disposition: inline
-In-Reply-To: <78e20e98-bdfc-4d7b-a59c-988b81fcc58b@redhat.com>
+In-Reply-To: <20240502122313.1579719-8-jolsa@kernel.org>
 
-On Thu, May 02, 2024 at 03:30:32PM +0200, David Hildenbrand wrote:
-> On 30.04.24 13:13, Vincent Donnefort wrote:
-> > In preparation for allowing the user-space to map a ring-buffer, add
-> > a set of mapping functions:
-> > 
-> >    ring_buffer_{map,unmap}()
-> > 
-> > And controls on the ring-buffer:
-> > 
-> >    ring_buffer_map_get_reader()  /* swap reader and head */
-> > 
-> > Mapping the ring-buffer also involves:
-> > 
-> >    A unique ID for each subbuf of the ring-buffer, currently they are
-> >    only identified through their in-kernel VA.
-> > 
-> >    A meta-page, where are stored ring-buffer statistics and a
-> >    description for the current reader
-> > 
-> > The linear mapping exposes the meta-page, and each subbuf of the
-> > ring-buffer, ordered following their unique ID, assigned during the
-> > first mapping.
-> > 
-> > Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
-> > size will remain unmodified and the splice enabling functions will in
-> > reality simply memcpy the data instead of swapping subbufs.
-> > 
-> > CC: <linux-mm@kvack.org>
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> > index dc5ae4e96aee..96d2140b471e 100644
-> > --- a/include/linux/ring_buffer.h
-> > +++ b/include/linux/ring_buffer.h
-> 
-> [...]
-> 
-> > +/*
-> > + *   +--------------+  pgoff == 0
-> > + *   |   meta page  |
-> > + *   +--------------+  pgoff == 1
-> > + *   | subbuffer 0  |
-> > + *   |              |
-> > + *   +--------------+  pgoff == (1 + (1 << subbuf_order))
-> > + *   | subbuffer 1  |
-> > + *   |              |
-> > + *         ...
-> > + */
-> > +#ifdef CONFIG_MMU
-> > +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
-> > +			struct vm_area_struct *vma)
-> > +{
-> > +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
-> > +	unsigned int subbuf_pages, subbuf_order;
-> > +	struct page **pages;
-> > +	int p = 0, s = 0;
-> > +	int err;
-> > +
-> > +	/* Refuse MP_PRIVATE or writable mappings */
-> > +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
-> > +	    !(vma->vm_flags & VM_MAYSHARE))
-> > +		return -EPERM;
-> > +
-> > +	/*
-> > +	 * Make sure the mapping cannot become writable later. Also tell the VM
-> > +	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND). Finally,
-> > +	 * prevent migration, GUP and dump (VM_IO).
-> > +	 */
-> > +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_IO, VM_MAYWRITE);
-> > +
-> > +	lockdep_assert_held(&cpu_buffer->mapping_lock);
-> > +
-> > +	subbuf_order = cpu_buffer->buffer->subbuf_order;
-> > +	subbuf_pages = 1 << subbuf_order;
-> > +
-> > +	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
-> > +	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
-> > +
-> > +	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
-> > +	if (!vma_pages || vma_pages > nr_pages)
-> > +		return -EINVAL;
-> > +
-> > +	nr_pages = vma_pages;
-> > +
-> > +	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
-> > +	if (!pages)
-> > +		return -ENOMEM;
-> > +
-> > +	if (!pgoff) {
-> > +		pages[p++] = virt_to_page(cpu_buffer->meta_page);
-> > +
-> > +		/*
-> > +		 * TODO: Align sub-buffers on their size, once
-> > +		 * vm_insert_pages() supports the zero-page.
-> > +		 */
-> > +	} else {
-> > +		/* Skip the meta-page */
-> > +		pgoff--;
-> > +
-> > +		if (pgoff % subbuf_pages) {
-> > +			err = -EINVAL;
-> > +			goto out;
-> > +		}
-> > +
-> > +		s += pgoff / subbuf_pages;
-> > +	}
-> > +
-> > +	while (s < nr_subbufs && p < nr_pages) {
-> > +		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-> > +		int off = 0;
-> > +
-> > +		for (; off < (1 << (subbuf_order)); off++, page++) {
-> > +			if (p >= nr_pages)
-> > +				break;
-> > +
-> > +			pages[p++] = page;
-> > +		}
-> > +		s++;
-> > +	}
-> > +
-> > +	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
-> 
-> Nit: I did not immediately understand if we could end here with p < nr_pages
-> (IOW, pages[] not completely filled).
-> 
-> One source of confusion is the "s < nr_subbufs" check in the while loop: why
-> is "p < nr_pages" insufficient?
 
-Hum, indeed, the "s < nr_subbufs" check is superfluous, nr_pages, is already
-capped by the number of subbufs, there's no way we can overflow subbuf_ids[].
+--KBL3g/TAaXMZ7pyE
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 2 May 2024 15:43:27 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv4 7/7] man2: Add uretprobe syscall page
 
-> 
-> 
-> For the MM bits:
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
+Hi Jiri,
 
-Thanks a lot for having a look at the series, very much appreciated!
+On Thu, May 02, 2024 at 02:23:13PM +0200, Jiri Olsa wrote:
+> Adding man page for new uretprobe syscall.
+>=20
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  man2/uretprobe.2 | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 man2/uretprobe.2
+>=20
+> diff --git a/man2/uretprobe.2 b/man2/uretprobe.2
+> new file mode 100644
+> index 000000000000..08fe6a670430
+> --- /dev/null
+> +++ b/man2/uretprobe.2
+> @@ -0,0 +1,45 @@
+> +.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
+> +.\"
+> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
+> +.\"
+> +.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
+> +.SH NAME
+> +uretprobe \- execute pending return uprobes
+> +.SH SYNOPSIS
+> +.nf
+> +.B int uretprobe(void)
+> +.fi
+> +.SH DESCRIPTION
+> +Kernel is using
+> +.BR uretprobe()
+> +syscall to trigger uprobe return probe consumers instead of using
+> +standard breakpoint instruction.
+> +
 
-> 
-> 
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+Please use .P instead of a blank.  See man-pages(7):
+
+   Formatting conventions (general)
+     Paragraphs should be separated by suitable markers (usually either
+     .P or .IP).  Do not separate paragraphs using blank lines, as this
+     results in poor rendering in some output formats  (such  as  Post=E2=
+=80=90
+     Script and PDF).
+
+> +The uretprobe syscall is not supposed to be called directly by user, it'=
+s allowed
+
+s/by user/by the user/
+
+> +to be invoked only through user space trampoline provided by kernel.
+
+s/user space/user-space/
+
+Missing a few 'the' too, here and in the rest of the page.
+
+> +When called from outside of this trampoline, the calling process will re=
+ceive
+> +.BR SIGILL .
+> +
+> +.SH RETURN VALUE
+> +.BR uretprobe()
+
+You're missing a space here:
+
+=2EBR uretprobe ()
+
+> +return value is specific for given architecture.
+> +
+> +.SH VERSIONS
+> +This syscall is not specified in POSIX,
+> +and details of its behavior vary across systems.
+> +.SH STANDARDS
+> +None.
+
+You could add a HISTORY section.
+
+Have a lovely day!
+Alex
+
+> +.SH NOTES
+> +.BR uretprobe()
+> +syscall is initially introduced on x86-64 architecture, because doing sy=
+scall
+> +is faster than doing breakpoint trap on it. It might be extended to other
+> +architectures.
+> +
+> +.BR uretprobe()
+> +syscall exists only to allow the invocation of return uprobe consumers.
+> +It should
+> +.B never
+> +be called directly.
+> +Details of the arguments (if any) passed to
+> +.BR uretprobe ()
+> +and the return value are specific for given architecture.
+> --=20
+> 2.44.0
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+A client is hiring kernel driver, mm, and/or crypto developers;
+contact me if interested.
+
+--KBL3g/TAaXMZ7pyE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmYzmH8ACgkQnowa+77/
+2zImYBAAlwYZZzeDBdbX0PzV0n1M313n43ulhVURXdHBIIN6w+rRyt/SCAFYRGq7
+8qXhG38H0HX/vN/8pRUQ0r31xT7vlAYXllo9NKM/OOeiYdw48hOYWQuHNDqFAihd
+o3trVoKeLHc47boWpIUljBWjchbT89ik2bp/WwGLFvZJFFjy8CmWEhQqIpMDRnP4
+nfdTbhGb2GJLXy5FC7MO+oRn9uyOUEO+NTngNVduRpsWMYCZFEIKUdcMHJdFIROt
+mPB2s455mopPg7paOSiGZpxSIln9gKUUzzlbznh5Q9K0MOIAwdW6MMAo6tEcBwtw
+6mU67Q3plUykc3t43EpuDrlfKo3APtKIzSw5npSNOJ2p+XVqyB6rNGRPchB1yRNC
+Wyk5j/ZqEidg1inH2+sw/vyRakophCPJZTL8N4BUqaiJkmTgS2YixQNieuzFP0gy
+YHu9XCI/uu/tVJVCCSFT+PA/84WFr3uysyoGJKEtKAycBHLMdGFzU6xIj5I7PTwn
+vkTPj8p5sJ1kK2lPhLdRs2ofwPfOI0ZI7P8DjLu7vKiHslF/CilPu7HfdQ/1T+/w
+Z0MNCA2xPCClNJvIQGHF7ope0rhIGXHlHpFHaYa6nw+gCoJyStqR65zxvaptH0xK
+UKDxMqU0hh5i9kjTrSlm9vgzpRklyKYlh2D1YUugCvP+OoOk1t8=
+=gVaX
+-----END PGP SIGNATURE-----
+
+--KBL3g/TAaXMZ7pyE--
