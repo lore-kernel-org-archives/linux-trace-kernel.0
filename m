@@ -1,123 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA83A15B971;
-	Thu,  2 May 2024 21:30:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E74157C94;
+	Thu,  2 May 2024 22:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714685415; cv=none; b=Ayp9VkcJdk25x0R+U42DtsLN5du1l/ky1l47NLw+yzrAfZM3LnfIxKqL+y/rSQKrThicp4u8fuQGp1QbzFvw4i2ZRrsmhVhdMTfoxKnLdd3VtLZyysVWW7v2pKNXYiCnP0ihRsyF+2KKMtPNwGUG8dj5MOKPzv7+xTpHloWnbKw=
+	t=1714687593; cv=none; b=Q/d6tevbaxQ0RXEaOW6r+aEgMkMCl41WkP8JnRlk+6LIPgb02Q+m7raqHLL39hyyahSnbPJUuivUDIM7Iqucu8O4tNmRECMc638u9KVv1gWNbSV9Ltrn0hBbcxlkoMK/BJTfMqco07CLnmbU83+nIY/0yID4SoYet+6y4PmYucw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714685415; c=relaxed/simple;
-	bh=bcr0gKy5E9J7hxWXCHjgabXQssBB8UXIM4ou5rtgVsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qQ8QEIJWYVYopV85V//k5v06TNWhesruEd1GcvyOCgVlKAZewJ6yAw9DGvppYia2eBuCwsKfHK8f7EvlBP2w6sZ3FkP6osVTmDW+0XX5fmCG/owKVuz7LDMxk1I75teFZue64AMKPwKllnVel83eC2+PU4wi83MUXxHd0VQAsfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668AAC4AF14;
-	Thu,  2 May 2024 21:30:14 +0000 (UTC)
-Date: Thu, 2 May 2024 17:31:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kuba@kernel.org, ast@kernel.org,
- clm@fb.com, mark.rutland@arm.com, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH resend ftrace] Asynchronous grace period for
- register_ftrace_direct()
-Message-ID: <20240502173100.42c8a3f7@gandalf.local.home>
-In-Reply-To: <82ae8a24-f9cf-4730-b0d7-43fb3bca2917@paulmck-laptop>
-References: <ac05be77-2972-475b-9b57-56bef15aa00a@paulmck-laptop>
-	<20240502110501.772941f7fdbc1650a9a3bea4@kernel.org>
-	<82ae8a24-f9cf-4730-b0d7-43fb3bca2917@paulmck-laptop>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1714687593; c=relaxed/simple;
+	bh=syfFdI9oig8Vhc/96bXStdHXCWO+OS9oOsgISmm950E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZNboEo6gPpuGSJ0GI07n5TB3/gMmO5mRAWIcqAllAR3BnJVg3J8Y7oPhbnmAIZ8BxhxE3xYHVIAwq7qHUiNyZouf7tToxWhWUjQiyfP3cyiMpVxzdBshcN5tAuP52VJS/9VGLNGHS4puJoVOTtyzD2N2UWslaxt1dcAfrHSu2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xz2nzq1s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xz2nzq1s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5895EC113CC;
+	Thu,  2 May 2024 22:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714687592;
+	bh=syfFdI9oig8Vhc/96bXStdHXCWO+OS9oOsgISmm950E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xz2nzq1sLtikjGzD9kfULQLCNfapBQ+334N2Mm/AFOaoamdMN2HE2QKlgZF/Wy+aT
+	 A/6U4lFq4IFUwavZDkYghfgGykoX53x59pA38cbOKR3R3aE+73sZhDo7L2TA2WBA4c
+	 bLWkewleSRnC6e9iqv+nQ2MOILQD7sJ/rIadgVMoAXVVcC33HT0aktQCDr3IP1+/V8
+	 d7ytvO0sTGgQAqf2efFbjURfKbL0Zx7Veh0mgaTC/c4uatQrYN9TVWgegbVNNd8r9n
+	 BQ4UiOPNAEWdC2HZ/7rp2nF6VslyRk3IjgU4gjNz5K95oLKWli62UUwDrfZsb4DPnk
+	 Do6N+MA5bQwDQ==
+Date: Fri, 3 May 2024 00:06:25 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv4 7/7] man2: Add uretprobe syscall page
+Message-ID: <ZjQOYplF4EbsfQ0v@debian>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
+ <20240502122313.1579719-8-jolsa@kernel.org>
+ <ZjOYf_g2qRrhDoQD@debian>
+ <ZjPz2PWrW2BjXxlw@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Wed, 1 May 2024 20:31:06 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> On Thu, May 02, 2024 at 11:05:01AM +0900, Masami Hiramatsu wrote:
-> > On Wed, 1 May 2024 16:12:37 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> >   
-> > > Note that the immediate pressure for this patch should be relieved by the
-> > > NAPI patch series [1], but this sort of problem could easily arise again.
-> > > 
-> > > When running heavy test workloads with KASAN enabled, RCU Tasks grace
-> > > periods can extend for many tens of seconds, significantly slowing
-> > > trace registration.  Therefore, make the registration-side RCU Tasks
-> > > grace period be asynchronous via call_rcu_tasks().  
-> > 
-> > Good catch! AFAICS, there is no reason to wait for synchronization
-> > when adding a new direct trampoline.
-> > This looks good to me.
-> > 
-> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>  
-> 
-> Thank you very much!  I will apply this on my next rebase.
-
-I can take it.
-
-It's not a bug fix but just an performance improvement, so it can go into
-the next merge window.
-
--- Steve
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Ek6osrwvrJr1a4yE"
+Content-Disposition: inline
+In-Reply-To: <ZjPz2PWrW2BjXxlw@krava>
 
 
+--Ek6osrwvrJr1a4yE
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 3 May 2024 00:06:25 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv4 7/7] man2: Add uretprobe syscall page
 
-> 
-> > Thank you,
-> >   
-> > > [1]
-> > > https://lore.kernel.org/all/cover.1710877680.git.yan@cloudflare.com/
-> > > 
-> > > Reported-by: Jakub Kicinski <kuba@kernel.org>
-> > > Reported-by: Alexei Starovoitov <ast@kernel.org>
-> > > Reported-by: Chris Mason <clm@fb.com>
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > > Cc: <linux-trace-kernel@vger.kernel.org>
-> > > 
-> > > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > > index 6c96b30f3d63b..32ea92934268c 100644
-> > > --- a/kernel/trace/ftrace.c
-> > > +++ b/kernel/trace/ftrace.c
-> > > @@ -5365,6 +5365,13 @@ static void
-> > > remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long }
-> > >  }
-> > >  
-> > > +static void register_ftrace_direct_cb(struct rcu_head *rhp)
-> > > +{
-> > > +	struct ftrace_hash *fhp = container_of(rhp, struct
-> > > ftrace_hash, rcu); +
-> > > +	free_ftrace_hash(fhp);
-> > > +}
-> > > +
-> > >  /**
-> > >   * register_ftrace_direct - Call a custom trampoline directly
-> > >   * for multiple functions registered in @ops
-> > > @@ -5463,10 +5470,8 @@ int register_ftrace_direct(struct ftrace_ops
-> > > *ops, unsigned long addr) out_unlock:
-> > >  	mutex_unlock(&direct_mutex);
-> > >  
-> > > -	if (free_hash && free_hash != EMPTY_HASH) {
-> > > -		synchronize_rcu_tasks();
-> > > -		free_ftrace_hash(free_hash);
-> > > -	}
-> > > +	if (free_hash && free_hash != EMPTY_HASH)
-> > > +		call_rcu_tasks(&free_hash->rcu,
-> > > register_ftrace_direct_cb); 
-> > >  	if (new_hash)
-> > >  		free_ftrace_hash(new_hash);  
-> > 
-> > 
-> > -- 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>  
+Hi Jiri,
 
+On Thu, May 02, 2024 at 10:13:12PM +0200, Jiri Olsa wrote:
+> > You could add a HISTORY section.
+>=20
+> ok, IIUC for this syscall it should contain just kernel version where
+> it got merged, right?
+
+Yep.
+
+>=20
+> >=20
+> > Have a lovely day!
+>=20
+> thanks for review,
+> jirka
+
+Thanks for the page.
+
+Have a lovely night!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+A client is hiring kernel driver, mm, and/or crypto developers;
+contact me if interested.
+
+--Ek6osrwvrJr1a4yE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmY0DmEACgkQnowa+77/
+2zJBMg/+PU0T3fJzB+wZdvQff5c7oLjdndWW+DkZtasvCkeVOUiqBI7ePfBI7DXT
+VRFsrYMOoYnlTLS2suag2r0O/zf+QzvyRM83sp2l2/PqLBwHRWBVaDv2VEa/JBXf
+FrMaSI1BeRPpsdIJdOchHPzfbOB5Hlmqqyfc6tMJlffECGkcLIceZ1sE3U1lUWv5
+CBMOlzoWyB4wTUqUuHtgsxk2nChoH+oQ0xD00oY7GLHVkgjKIfTJGx78wsyBnFI6
+1kZ0xRoHKWBOzy/UHuR1A4vbcND0B2BxDPmgEUibAI4rrjsw1rpeDyXaamJA5HlT
+A33e4OVbJYXKl9lZjzBroY0knpZVpXltDCCAYcKGAtHeD1TDDF1581M7BZqDGTnQ
+o4MUIml7+pQQlFmwYKFiEIoHDpijlhf8m9rHI/kSrwtQO4t5ajyc3y86L4XzkYiG
+ENyMJ/VWE82qvv1WIW81xpsjA+3RA6cGLaLt8p6dEw5dD9PHDDl5KNHkypgviJEo
+oB3mN/1cNijOJ5I0vs5F2Wwm8CP1VGQQuCyeSanGeKcSBUksKvdQHuEMzcu2CRKP
+jqUYYbyqqGyrimuEeibJBqWGB3PtfMJNk6FNURQh8sKkJlrFzN7P3zhvWXViwzTJ
+oY2Bdz5wczHpsnj+9uqwvc0KTMW1GJHyXRHX79ztNxJIz9cFbjE=
+=Nvto
+-----END PGP SIGNATURE-----
+
+--Ek6osrwvrJr1a4yE--
