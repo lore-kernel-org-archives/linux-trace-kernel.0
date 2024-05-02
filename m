@@ -1,31 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008E3181BAF;
-	Thu,  2 May 2024 21:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA83A15B971;
+	Thu,  2 May 2024 21:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714684550; cv=none; b=l7GUI32PnrNVZeBbAGsVy4btkOWx+R7R1yWcRlc6DEbWrnW5wddcTb7ERwKpZpa/hO/6W7Vb+WsVSYg8HiW0K6Zac3cNicBzUgcHMoF9NqVheSL0jpVxgeKeYbejB76LrjfwLuqlw+lqtLa0t2jc/nVJf+7GYUAyo+g4tanmvL0=
+	t=1714685415; cv=none; b=Ayp9VkcJdk25x0R+U42DtsLN5du1l/ky1l47NLw+yzrAfZM3LnfIxKqL+y/rSQKrThicp4u8fuQGp1QbzFvw4i2ZRrsmhVhdMTfoxKnLdd3VtLZyysVWW7v2pKNXYiCnP0ihRsyF+2KKMtPNwGUG8dj5MOKPzv7+xTpHloWnbKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714684550; c=relaxed/simple;
-	bh=gBlUE5+Z1S21TQ+LKJ26JNh+iN6+3wT53AYZTaqpyZg=;
+	s=arc-20240116; t=1714685415; c=relaxed/simple;
+	bh=bcr0gKy5E9J7hxWXCHjgabXQssBB8UXIM4ou5rtgVsI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ujASGLNhTY+Oq/HQBu+F1uoN42RiWn0TQaP87630sR5M7P9lOdUO14To3G8gHahPRIoGLmCDjZvYCyo7JcLKpE58FDk1yTC8BIg+kJ0hKYhjStK3m/u31j5pSbjb64rz3oo8RHcWV1Fd51v32/4u897QAnXaJq4V3ZK9yFsnNEg=
+	 MIME-Version:Content-Type; b=qQ8QEIJWYVYopV85V//k5v06TNWhesruEd1GcvyOCgVlKAZewJ6yAw9DGvppYia2eBuCwsKfHK8f7EvlBP2w6sZ3FkP6osVTmDW+0XX5fmCG/owKVuz7LDMxk1I75teFZue64AMKPwKllnVel83eC2+PU4wi83MUXxHd0VQAsfM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36E3C113CC;
-	Thu,  2 May 2024 21:15:48 +0000 (UTC)
-Date: Thu, 2 May 2024 17:16:34 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668AAC4AF14;
+	Thu,  2 May 2024 21:30:14 +0000 (UTC)
+Date: Thu, 2 May 2024 17:31:00 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- dcook@linux.microsoft.com
-Subject: Re: [PATCH v2 1/2] tracing/user_events: Fix non-spaced field
- matching
-Message-ID: <20240502171634.7e2ac794@gandalf.local.home>
-In-Reply-To: <20240423162338.292-2-beaub@linux.microsoft.com>
-References: <20240423162338.292-1-beaub@linux.microsoft.com>
-	<20240423162338.292-2-beaub@linux.microsoft.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kuba@kernel.org, ast@kernel.org,
+ clm@fb.com, mark.rutland@arm.com, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH resend ftrace] Asynchronous grace period for
+ register_ftrace_direct()
+Message-ID: <20240502173100.42c8a3f7@gandalf.local.home>
+In-Reply-To: <82ae8a24-f9cf-4730-b0d7-43fb3bca2917@paulmck-laptop>
+References: <ac05be77-2972-475b-9b57-56bef15aa00a@paulmck-laptop>
+	<20240502110501.772941f7fdbc1650a9a3bea4@kernel.org>
+	<82ae8a24-f9cf-4730-b0d7-43fb3bca2917@paulmck-laptop>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,106 +37,87 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Apr 2024 16:23:37 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+On Wed, 1 May 2024 20:31:06 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-> When the ABI was updated to prevent same name w/different args, it
-> missed an important corner case when fields don't end with a space.
-> Typically, space is used for fields to help separate them, like
-> "u8 field1; u8 field2". If no spaces are used, like
-> "u8 field1;u8 field2", then the parsing works for the first time.
-> However, the match check fails on a subsequent register, leading to
-> confusion.
+> On Thu, May 02, 2024 at 11:05:01AM +0900, Masami Hiramatsu wrote:
+> > On Wed, 1 May 2024 16:12:37 -0700
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> >   
+> > > Note that the immediate pressure for this patch should be relieved by the
+> > > NAPI patch series [1], but this sort of problem could easily arise again.
+> > > 
+> > > When running heavy test workloads with KASAN enabled, RCU Tasks grace
+> > > periods can extend for many tens of seconds, significantly slowing
+> > > trace registration.  Therefore, make the registration-side RCU Tasks
+> > > grace period be asynchronous via call_rcu_tasks().  
+> > 
+> > Good catch! AFAICS, there is no reason to wait for synchronization
+> > when adding a new direct trampoline.
+> > This looks good to me.
+> > 
+> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>  
 > 
-> This is because the match check uses argv_split() and assumes that all
-> fields will be split upon the space. When spaces are used, we get back
-> { "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
-> This causes a mismatch, and the user program gets back -EADDRINUSE.
-> 
-> Add a method to detect this case before calling argv_split(). If found
-> force a space after the field separator character ';'. This ensures all
-> cases work properly for matching.
-> 
-> With this fix, the following are all treated as matching:
-> u8 field1;u8 field2
-> u8 field1; u8 field2
-> u8 field1;\tu8 field2
-> u8 field1;\nu8 field2
+> Thank you very much!  I will apply this on my next rebase.
 
-I'm curious, what happens if you have: "u8 field1; u8 field2;" ?
+I can take it.
 
-Do you care? As you will then create "u8 field1; u8 field2; "
-
-but I'm guessing the extra whitespace at the end doesn't affect anything.
-
-
-> 
-> Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
-> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> ---
->  kernel/trace/trace_events_user.c | 76 +++++++++++++++++++++++++++++++-
->  1 file changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 70d428c394b6..82b191f33a28 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -1989,6 +1989,80 @@ static int user_event_set_tp_name(struct user_event *user)
->  	return 0;
->  }
->  
-> +/*
-> + * Counts how many ';' without a trailing space are in the args.
-> + */
-> +static int count_semis_no_space(char *args)
-> +{
-> +	int count = 0;
-> +
-> +	while ((args = strchr(args, ';'))) {
-> +		args++;
-> +
-> +		if (!isspace(*args))
-> +			count++;
-
-This will count that "..;" 
-
-This is most likely not an issue, but since I didn't see this case
-anywhere, I figured I bring it up just to confirm that it's not an issue.
+It's not a bug fix but just an performance improvement, so it can go into
+the next merge window.
 
 -- Steve
 
 
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +/*
-> + * Copies the arguments while ensuring all ';' have a trailing space.
-> + */
-> +static char *insert_space_after_semis(char *args, int count)
-> +{
-> +	char *fixed, *pos;
-> +	int len;
-> +
-> +	len = strlen(args) + count;
-> +	fixed = kmalloc(len + 1, GFP_KERNEL);
-> +
-> +	if (!fixed)
-> +		return NULL;
-> +
-> +	pos = fixed;
-> +
-> +	/* Insert a space after ';' if there is no trailing space. */
-> +	while (*args) {
-> +		*pos = *args++;
-> +
-> +		if (*pos++ == ';' && !isspace(*args))
-> +			*pos++ = ' ';
-> +	}
-> +
-> +	*pos = '\0';
-> +
-> +	return fixed;
-> +}
-> +
+
+> 
+> > Thank you,
+> >   
+> > > [1]
+> > > https://lore.kernel.org/all/cover.1710877680.git.yan@cloudflare.com/
+> > > 
+> > > Reported-by: Jakub Kicinski <kuba@kernel.org>
+> > > Reported-by: Alexei Starovoitov <ast@kernel.org>
+> > > Reported-by: Chris Mason <clm@fb.com>
+> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: <linux-trace-kernel@vger.kernel.org>
+> > > 
+> > > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > > index 6c96b30f3d63b..32ea92934268c 100644
+> > > --- a/kernel/trace/ftrace.c
+> > > +++ b/kernel/trace/ftrace.c
+> > > @@ -5365,6 +5365,13 @@ static void
+> > > remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long }
+> > >  }
+> > >  
+> > > +static void register_ftrace_direct_cb(struct rcu_head *rhp)
+> > > +{
+> > > +	struct ftrace_hash *fhp = container_of(rhp, struct
+> > > ftrace_hash, rcu); +
+> > > +	free_ftrace_hash(fhp);
+> > > +}
+> > > +
+> > >  /**
+> > >   * register_ftrace_direct - Call a custom trampoline directly
+> > >   * for multiple functions registered in @ops
+> > > @@ -5463,10 +5470,8 @@ int register_ftrace_direct(struct ftrace_ops
+> > > *ops, unsigned long addr) out_unlock:
+> > >  	mutex_unlock(&direct_mutex);
+> > >  
+> > > -	if (free_hash && free_hash != EMPTY_HASH) {
+> > > -		synchronize_rcu_tasks();
+> > > -		free_ftrace_hash(free_hash);
+> > > -	}
+> > > +	if (free_hash && free_hash != EMPTY_HASH)
+> > > +		call_rcu_tasks(&free_hash->rcu,
+> > > register_ftrace_direct_cb); 
+> > >  	if (new_hash)
+> > >  		free_ftrace_hash(new_hash);  
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>  
+
