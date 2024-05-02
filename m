@@ -1,34 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A5E12DDBF;
-	Thu,  2 May 2024 13:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7808C8F3;
+	Thu,  2 May 2024 14:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714657527; cv=none; b=sqYzeVSoyeS685C8aRJ/yravFiKGq/hewj2Fw9g1lGzOV0Arc3kr9CFrbs8ZVXK/KUBbqqv/vBo6MHraz1/XWX5/ExYCbpk9vtBWQGJkDRNdhCMTEtApbv7mwFqOVZz21K7H3ZkpFfRpmLFVoipAN9lWIOdJPjW1j6Vd3sbPimw=
+	t=1714658911; cv=none; b=SsV3ghMZg/2b/T5uAwinjN7QDPyQasztNJEKEkPm6nGOLor+OGbEevtAFnGfj0/rGb160ObBVOPFKAnF3kmhznyT26I1VzJstL9n2kW5bmWxEgL+DoBbVW/VkJLRtLuTvYTH4/HWb8LqPq6qz+svlEZatOjw6v+80NE1enBVNNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714657527; c=relaxed/simple;
-	bh=0crVSpQ2cRq8IdCQmQ+23c21kGzUGsODa4EJXn+Y3sM=;
+	s=arc-20240116; t=1714658911; c=relaxed/simple;
+	bh=XuMKQ2Qkm26WTw4+HWU8N2CzQg4t42/Hg1SnHVp9fLE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q0KsdJbjg9i8lCfK58Y6IdBc4HZ1OV8bVIq0m9eF+db1+stfqAxDUJzJqaiqXWkE2zPlGKvMArhlGN5iyeshUsNQPrABlX/0qwiYeRa+4JUW42JV+4d5Fw5/bCxX880kL46KOWNk4mNtuG83pBt/0l7FVeh9vMka5BV1dJLEDsc=
+	 MIME-Version:Content-Type; b=ib6D5tVcIpSV5VOpNFXGF+0Pgq/I85LXnQ+3PZjcpUNKMdy+n1A+NDZ1tT+dbNreB+rYjPr2t57VHdfjt5brQAktJAaYhW7j664DyHhVseGku6in3Vs1ng83y6LxUZKSw4uNtmToVAty3tulqRGvW5Y+sjVOPGeDggPfDs0EgtQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F32CC113CC;
-	Thu,  2 May 2024 13:45:26 +0000 (UTC)
-Date: Thu, 2 May 2024 09:46:12 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EBCC113CC;
+	Thu,  2 May 2024 14:08:28 +0000 (UTC)
+Date: Thu, 2 May 2024 10:09:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: David Hildenbrand <david@redhat.com>, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com,
- rdunlap@infradead.org, rppt@kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20240502094612.7f92a3e4@gandalf.local.home>
-In-Reply-To: <ZjOXWLfR7GpzE8H_@google.com>
-References: <20240430111354.637356-1-vdonnefort@google.com>
-	<20240430111354.637356-3-vdonnefort@google.com>
-	<78e20e98-bdfc-4d7b-a59c-988b81fcc58b@redhat.com>
-	<ZjOXWLfR7GpzE8H_@google.com>
+To: "Tze-nan Wu (=?UTF-8?B?5ZCz5r6k5Y2X?=)" <Tze-nan.Wu@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "Cheng-Jui Wang (=?UTF-8?B?546L5q2j552/?=)" <Cheng-Jui.Wang@mediatek.com>,
+ wsd_upstream <wsd_upstream@mediatek.com>, "Bobule Chang (=?UTF-8?B?5by1?=
+ =?UTF-8?B?5byY576p?=)" <bobule.chang@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "mhiramat@kernel.org"
+ <mhiramat@kernel.org>, "mathieu.desnoyers@efficios.com"
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
+Message-ID: <20240502100914.33d6aa83@gandalf.local.home>
+In-Reply-To: <aac0a4cc0a12fc9593ab7de6c34836757e6814f3.camel@mediatek.com>
+References: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
+	<20240428202837.0cabca17@rorschach.local.home>
+	<20240429144626.7d868ad3@gandalf.local.home>
+	<661f101456506db945ccbd94700a0f47b95f91e5.camel@mediatek.com>
+	<20240501235044.12fa3297@gandalf.local.home>
+	<aac0a4cc0a12fc9593ab7de6c34836757e6814f3.camel@mediatek.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,55 +43,28 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2 May 2024 14:38:32 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Thu, 2 May 2024 06:49:18 +0000
+Tze-nan Wu (=E5=90=B3=E6=BE=A4=E5=8D=97) <Tze-nan.Wu@mediatek.com> wrote:
 
-> > > +	while (s < nr_subbufs && p < nr_pages) {
-> > > +		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-> > > +		int off = 0;
-> > > +
-> > > +		for (; off < (1 << (subbuf_order)); off++, page++) {
-> > > +			if (p >= nr_pages)
-> > > +				break;
-> > > +
-> > > +			pages[p++] = page;
-> > > +		}
-> > > +		s++;
-> > > +	}
-> > > +
-> > > +	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);  
-> > 
-> > Nit: I did not immediately understand if we could end here with p < nr_pages
-> > (IOW, pages[] not completely filled).
-> > 
-> > One source of confusion is the "s < nr_subbufs" check in the while loop: why
-> > is "p < nr_pages" insufficient?  
-> 
-> Hum, indeed, the "s < nr_subbufs" check is superfluous, nr_pages, is already
-> capped by the number of subbufs, there's no way we can overflow subbuf_ids[].
+> Good news, this patch works, the test has passed, no more Kasan report
+> in my environment.
 
-We can keep it as is, or perhaps change it to:
+Great to hear!
 
-	while (p < nr_pages) {
-		struct page *page;
-		int off = 0;
+>=20
+> my environment:
+>  arm64 + kasan + swtag based kasan + kernel-6.6.18
+>=20
+> Really appreciate, and learn a lot from the patch.
 
-		if (WARN_ON_ONCE(s >= nr_subbufs))
-			break;
+Can I add:
 
-		page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-		for (; off < (1 << (subbuf_order)); off++, page++) {
-			if (p >= nr_pages)
-				break;
+Tested-by: Tze-nan Wu (=E5=90=B3=E6=BE=A4=E5=8D=97) <Tze-nan.Wu@mediatek.co=
+m>
 
-			pages[p++] = page;
-		}
-		s++;
-	}
-
-I don't like having an unchecked dependency between s and p.
+?
 
 -- Steve
