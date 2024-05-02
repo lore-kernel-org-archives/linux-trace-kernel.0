@@ -1,134 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E74157C94;
-	Thu,  2 May 2024 22:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 132E08462;
+	Thu,  2 May 2024 22:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714687593; cv=none; b=Q/d6tevbaxQ0RXEaOW6r+aEgMkMCl41WkP8JnRlk+6LIPgb02Q+m7raqHLL39hyyahSnbPJUuivUDIM7Iqucu8O4tNmRECMc638u9KVv1gWNbSV9Ltrn0hBbcxlkoMK/BJTfMqco07CLnmbU83+nIY/0yID4SoYet+6y4PmYucw=
+	t=1714690739; cv=none; b=g5E0vMGTQiQkkxx3QIOUdSmWGUqLso0VnV83oooZm8ssrTc+8VzuWjqGl0C8iwuGFJqWRb6AKFKOUZjGtJ6UOZifzyEZWnEZ6nxiIyxYlAaNKsIckSsyZBOD8amN1bB9FSUomA07T4xOKawhH1JF1P4kq23vbVx12fEwfKWP3ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714687593; c=relaxed/simple;
-	bh=syfFdI9oig8Vhc/96bXStdHXCWO+OS9oOsgISmm950E=;
+	s=arc-20240116; t=1714690739; c=relaxed/simple;
+	bh=msiYPhRQUtilTo+LztaXAxLX2WPR5Z/zWMXsElHb7sc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EZNboEo6gPpuGSJ0GI07n5TB3/gMmO5mRAWIcqAllAR3BnJVg3J8Y7oPhbnmAIZ8BxhxE3xYHVIAwq7qHUiNyZouf7tToxWhWUjQiyfP3cyiMpVxzdBshcN5tAuP52VJS/9VGLNGHS4puJoVOTtyzD2N2UWslaxt1dcAfrHSu2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xz2nzq1s; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9lZogMEkUmcBtTiRk5G6LP+huit9kMf/ev0Lm7HDQ2+caX/Awlp0a6BrIKGB8ip3+9WDp1DT9j6K3RZvIi2mHfMHSZZAXlo/iqOWassvYnxNBWjqYLY4TmvQ0AEQW/RknHBK1CIYcev6suAV8+ST6yFBBRE0GJmMjEe9WDn2/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ikwLYOCy; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xz2nzq1s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5895EC113CC;
-	Thu,  2 May 2024 22:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714687592;
-	bh=syfFdI9oig8Vhc/96bXStdHXCWO+OS9oOsgISmm950E=;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ikwLYOCy"
+Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 894C320B2C80;
+	Thu,  2 May 2024 15:58:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 894C320B2C80
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1714690737;
+	bh=2AET+xUdNmbcmeb9M+8cahTXAm+h2fHVKotlqfP/yns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xz2nzq1sLtikjGzD9kfULQLCNfapBQ+334N2Mm/AFOaoamdMN2HE2QKlgZF/Wy+aT
-	 A/6U4lFq4IFUwavZDkYghfgGykoX53x59pA38cbOKR3R3aE+73sZhDo7L2TA2WBA4c
-	 bLWkewleSRnC6e9iqv+nQ2MOILQD7sJ/rIadgVMoAXVVcC33HT0aktQCDr3IP1+/V8
-	 d7ytvO0sTGgQAqf2efFbjURfKbL0Zx7Veh0mgaTC/c4uatQrYN9TVWgegbVNNd8r9n
-	 BQ4UiOPNAEWdC2HZ/7rp2nF6VslyRk3IjgU4gjNz5K95oLKWli62UUwDrfZsb4DPnk
-	 Do6N+MA5bQwDQ==
-Date: Fri, 3 May 2024 00:06:25 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCHv4 7/7] man2: Add uretprobe syscall page
-Message-ID: <ZjQOYplF4EbsfQ0v@debian>
-References: <20240502122313.1579719-1-jolsa@kernel.org>
- <20240502122313.1579719-8-jolsa@kernel.org>
- <ZjOYf_g2qRrhDoQD@debian>
- <ZjPz2PWrW2BjXxlw@krava>
+	b=ikwLYOCyD9f9Tzajwbed8pjsLgmHenZuAkIBXLuNw325n+JT4VZUwZYdz/EP+s8TB
+	 +GrQuqdUgIpQnceUJZ2S1fyPj+WctugwVDnZ/i9H9Yfx43lT/WdTbJCAHHQBk1RzZt
+	 dcBS0rK7D9MvVo4saK3e9VBW8Ih2BZe0u+fCdLCk=
+Date: Thu, 2 May 2024 15:58:53 -0700
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	dcook@linux.microsoft.com
+Subject: Re: [PATCH v2 1/2] tracing/user_events: Fix non-spaced field matching
+Message-ID: <20240502225853.GA412-beaub@linux.microsoft.com>
+References: <20240423162338.292-1-beaub@linux.microsoft.com>
+ <20240423162338.292-2-beaub@linux.microsoft.com>
+ <20240502171634.7e2ac794@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Ek6osrwvrJr1a4yE"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjPz2PWrW2BjXxlw@krava>
+In-Reply-To: <20240502171634.7e2ac794@gandalf.local.home>
 
+On Thu, May 02, 2024 at 05:16:34PM -0400, Steven Rostedt wrote:
+> On Tue, 23 Apr 2024 16:23:37 +0000
+> Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> 
+> > When the ABI was updated to prevent same name w/different args, it
+> > missed an important corner case when fields don't end with a space.
+> > Typically, space is used for fields to help separate them, like
+> > "u8 field1; u8 field2". If no spaces are used, like
+> > "u8 field1;u8 field2", then the parsing works for the first time.
+> > However, the match check fails on a subsequent register, leading to
+> > confusion.
+> > 
+> > This is because the match check uses argv_split() and assumes that all
+> > fields will be split upon the space. When spaces are used, we get back
+> > { "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
+> > This causes a mismatch, and the user program gets back -EADDRINUSE.
+> > 
+> > Add a method to detect this case before calling argv_split(). If found
+> > force a space after the field separator character ';'. This ensures all
+> > cases work properly for matching.
+> > 
+> > With this fix, the following are all treated as matching:
+> > u8 field1;u8 field2
+> > u8 field1; u8 field2
+> > u8 field1;\tu8 field2
+> > u8 field1;\nu8 field2
+> 
+> I'm curious, what happens if you have: "u8 field1; u8 field2;" ?
+> 
 
---Ek6osrwvrJr1a4yE
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 3 May 2024 00:06:25 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCHv4 7/7] man2: Add uretprobe syscall page
+You'll get an extra whitespace during the copy, assuming it was really:
+"u8 field1;u8 field2"
 
-Hi Jiri,
+If it had spaces, this code wouldn't run.
 
-On Thu, May 02, 2024 at 10:13:12PM +0200, Jiri Olsa wrote:
-> > You could add a HISTORY section.
->=20
-> ok, IIUC for this syscall it should contain just kernel version where
-> it got merged, right?
+> Do you care? As you will then create "u8 field1; u8 field2; "
+> 
+> but I'm guessing the extra whitespace at the end doesn't affect anything.
+> 
 
-Yep.
+Right, you get an extra byte allocated, but the argv_split() with ignore
+it. The compare will work correctly (I've verified this just now to
+double check).
 
->=20
-> >=20
-> > Have a lovely day!
->=20
-> thanks for review,
-> jirka
+IE these all match:
+"Test u8 a; u8 b; "
+"Test u8 a; u8 b;"
+"Test u8 a; u8 b"
 
-Thanks for the page.
+> 
+> > 
+> > Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
+> > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> > ---
+> >  kernel/trace/trace_events_user.c | 76 +++++++++++++++++++++++++++++++-
+> >  1 file changed, 75 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> > index 70d428c394b6..82b191f33a28 100644
+> > --- a/kernel/trace/trace_events_user.c
+> > +++ b/kernel/trace/trace_events_user.c
+> > @@ -1989,6 +1989,80 @@ static int user_event_set_tp_name(struct user_event *user)
+> >  	return 0;
+> >  }
+> >  
+> > +/*
+> > + * Counts how many ';' without a trailing space are in the args.
+> > + */
+> > +static int count_semis_no_space(char *args)
+> > +{
+> > +	int count = 0;
+> > +
+> > +	while ((args = strchr(args, ';'))) {
+> > +		args++;
+> > +
+> > +		if (!isspace(*args))
+> > +			count++;
+> 
+> This will count that "..;" 
+> 
+> This is most likely not an issue, but since I didn't see this case
+> anywhere, I figured I bring it up just to confirm that it's not an issue.
+> 
 
-Have a lovely night!
-Alex
+It's not an issue on the matching/logic. However, you do get an extra
+byte alloc (which doesn't bother me in this edge case).
 
---=20
-<https://www.alejandro-colomar.es/>
-A client is hiring kernel driver, mm, and/or crypto developers;
-contact me if interested.
+Thanks,
+-Beau
 
---Ek6osrwvrJr1a4yE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmY0DmEACgkQnowa+77/
-2zJBMg/+PU0T3fJzB+wZdvQff5c7oLjdndWW+DkZtasvCkeVOUiqBI7ePfBI7DXT
-VRFsrYMOoYnlTLS2suag2r0O/zf+QzvyRM83sp2l2/PqLBwHRWBVaDv2VEa/JBXf
-FrMaSI1BeRPpsdIJdOchHPzfbOB5Hlmqqyfc6tMJlffECGkcLIceZ1sE3U1lUWv5
-CBMOlzoWyB4wTUqUuHtgsxk2nChoH+oQ0xD00oY7GLHVkgjKIfTJGx78wsyBnFI6
-1kZ0xRoHKWBOzy/UHuR1A4vbcND0B2BxDPmgEUibAI4rrjsw1rpeDyXaamJA5HlT
-A33e4OVbJYXKl9lZjzBroY0knpZVpXltDCCAYcKGAtHeD1TDDF1581M7BZqDGTnQ
-o4MUIml7+pQQlFmwYKFiEIoHDpijlhf8m9rHI/kSrwtQO4t5ajyc3y86L4XzkYiG
-ENyMJ/VWE82qvv1WIW81xpsjA+3RA6cGLaLt8p6dEw5dD9PHDDl5KNHkypgviJEo
-oB3mN/1cNijOJ5I0vs5F2Wwm8CP1VGQQuCyeSanGeKcSBUksKvdQHuEMzcu2CRKP
-jqUYYbyqqGyrimuEeibJBqWGB3PtfMJNk6FNURQh8sKkJlrFzN7P3zhvWXViwzTJ
-oY2Bdz5wczHpsnj+9uqwvc0KTMW1GJHyXRHX79ztNxJIz9cFbjE=
-=Nvto
------END PGP SIGNATURE-----
-
---Ek6osrwvrJr1a4yE--
+> -- Steve
+> 
+> 
+> > +	}
+> > +
+> > +	return count;
+> > +}
+> > +
+> > +/*
+> > + * Copies the arguments while ensuring all ';' have a trailing space.
+> > + */
+> > +static char *insert_space_after_semis(char *args, int count)
+> > +{
+> > +	char *fixed, *pos;
+> > +	int len;
+> > +
+> > +	len = strlen(args) + count;
+> > +	fixed = kmalloc(len + 1, GFP_KERNEL);
+> > +
+> > +	if (!fixed)
+> > +		return NULL;
+> > +
+> > +	pos = fixed;
+> > +
+> > +	/* Insert a space after ';' if there is no trailing space. */
+> > +	while (*args) {
+> > +		*pos = *args++;
+> > +
+> > +		if (*pos++ == ';' && !isspace(*args))
+> > +			*pos++ = ' ';
+> > +	}
+> > +
+> > +	*pos = '\0';
+> > +
+> > +	return fixed;
+> > +}
+> > +
