@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216A115AAD3;
-	Thu,  2 May 2024 15:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FEA15B0E7;
+	Thu,  2 May 2024 15:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714662934; cv=none; b=ddI2wGpjjMg4bnw8VuA/4tVZkoKZI85Osu4hWo3/8QWEW/gv1T00YvZxePBCG/cKgdni3rXwl+6wQEC/ubK5VQENBCfIUK1DH881SCT72EUE2GqL3uRA3zD+pzCYMRe+M1cVIDgRw4X1/Nnm1J/itI/l6eQsdMf0Qo3P1MWcFVQ=
+	t=1714662934; cv=none; b=kUaTa6Qgo/ROGuffzDekM5xLj6XjpXL8lL6wTS31t8uJCmQIBe/tl+ff0/X7PiRyVSYU9XQVYkq3o3iwZwyz5hgXBFAaOlQCiB4mORg/WuQZSP+wo8MZnscGezY8LGmeAb8BSnjbiDNNHnvOrOzUCWkqFWLJkcy9oXsJpneSo4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714662934; c=relaxed/simple;
-	bh=blD4FyFN/Ay6kzfycDUilXFE+LDcgUi63fpEwEhTB5g=;
+	bh=/hEvsIWw8xq5n6yLQhKQJHjRomIpW/YtSsUGay22gSE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=B//93VC8EzhJ2ps2QDUa7F/yCu/RhLmBwN3oTsUAjbpzSDtYPn3BUBS46jctAXyxVUEAr/mLNi8+92odO8IrcrIN4MqRS0AXYVd8izyYaqw/R5xejF+U23fz4aSJ7iBCJ+s0qIYldsC/Z5G5bPTdhJQi2ZzcTMniatKZih/da78=
+	 Content-Type; b=ZMj2l4zrSlE0Js1u9qC3EfDs60o+ZnSG22kNMKPaQYMKjILsXS2BjIjGDXLKgof9VgRuaVlKxsFesN4H+82FjiW9wP2mZVO2hzByxpEWCzmE1XD6ofNTk93tl73Iy8dEJfoi/e9oedOMJjaiZKCZOBJbmdEJtBU/h/130U4Bs1k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0480C32789;
-	Thu,  2 May 2024 15:15:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B8AC4AF1B;
+	Thu,  2 May 2024 15:15:34 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s2YAW-00000003ISk-2GNt;
+	id 1s2YAW-00000003ITj-3ag4;
 	Thu, 02 May 2024 11:16:20 -0400
-Message-ID: <20240502151620.400578783@goodmis.org>
+Message-ID: <20240502151620.714547671@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 02 May 2024 11:15:48 -0400
+Date: Thu, 02 May 2024 11:15:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  stable@vger.kernel.org
-Subject: [PATCH v2 1/5] tracefs: Reset permissions on remount if permissions are options
+Subject: [PATCH v2 3/5] eventfs: Do not differentiate the toplevel events directory
 References: <20240502151547.973653253@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,219 +41,137 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-There's an inconsistency with the way permissions are handled in tracefs.
-Because the permissions are generated when accessed, they default to the
-root inode's permission if they were never set by the user. If the user
-sets the permissions, then a flag is set and the permissions are saved via
-the inode (for tracefs files) or an internal attribute field (for
-eventfs).
+The toplevel events directory is really no different than the events
+directory of instances. Having the two be different caused
+inconsistencies and made it harder to fix the permissions bugs.
 
-But if a remount happens that specify the permissions, all the files that
-were not changed by the user gets updated, but the ones that were are not.
-If the user were to remount the file system with a given permission, then
-all files and directories within that file system should be updated.
-
-This can cause security issues if a file's permission was updated but the
-admin forgot about it. They could incorrectly think that remounting with
-permissions set would update all files, but miss some.
-
-For example:
-
- # cd /sys/kernel/tracing
- # chgrp 1002 current_tracer
- # ls -l
-[..]
- -rw-r-----  1 root root 0 May  1 21:25 buffer_size_kb
- -rw-r-----  1 root root 0 May  1 21:25 buffer_subbuf_size_kb
- -r--r-----  1 root root 0 May  1 21:25 buffer_total_size_kb
- -rw-r-----  1 root lkp  0 May  1 21:25 current_tracer
- -rw-r-----  1 root root 0 May  1 21:25 dynamic_events
- -r--r-----  1 root root 0 May  1 21:25 dyn_ftrace_total_info
- -r--r-----  1 root root 0 May  1 21:25 enabled_functions
-
-Where current_tracer now has group "lkp".
-
- # mount -o remount,gid=1001 .
- # ls -l
- -rw-r-----  1 root tracing 0 May  1 21:25 buffer_size_kb
- -rw-r-----  1 root tracing 0 May  1 21:25 buffer_subbuf_size_kb
- -r--r-----  1 root tracing 0 May  1 21:25 buffer_total_size_kb
- -rw-r-----  1 root lkp     0 May  1 21:25 current_tracer
- -rw-r-----  1 root tracing 0 May  1 21:25 dynamic_events
- -r--r-----  1 root tracing 0 May  1 21:25 dyn_ftrace_total_info
- -r--r-----  1 root tracing 0 May  1 21:25 enabled_functions
-
-Everything changed but the "current_tracer".
-
-Add a new link list that keeps track of all the tracefs_inodes which has
-the permission flags that tell if the file/dir should use the root inode's
-permission or not. Then on remount, clear all the flags so that the
-default behavior of using the root inode's permission is done for all
-files and directories.
+Make all events directories act the same.
 
 Cc: stable@vger.kernel.org
 Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 29 +++++++++++++++++++++++
- fs/tracefs/inode.c       | 50 +++++++++++++++++++++++++++++++++++++++-
- fs/tracefs/internal.h    |  7 +++++-
- 3 files changed, 84 insertions(+), 2 deletions(-)
+ fs/tracefs/event_inode.c | 29 ++++++++---------------------
+ fs/tracefs/internal.h    |  7 +++----
+ 2 files changed, 11 insertions(+), 25 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index f5510e26f0f6..a754c6725a52 100644
+index a754c6725a52..2971609946e5 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -301,6 +301,35 @@ static const struct file_operations eventfs_file_operations = {
- 	.llseek		= generic_file_llseek,
+@@ -68,7 +68,6 @@ enum {
+ 	EVENTFS_SAVE_MODE	= BIT(16),
+ 	EVENTFS_SAVE_UID	= BIT(17),
+ 	EVENTFS_SAVE_GID	= BIT(18),
+-	EVENTFS_TOPLEVEL	= BIT(19),
  };
  
-+/*
-+ * On a remount of tracefs, if UID or GID options are set, then
-+ * the mount point inode permissions should be used.
-+ * Reset the saved permission flags appropriately.
-+ */
-+void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
-+{
-+	struct eventfs_inode *ei = ti->private;
-+
-+	if (!ei)
-+		return;
-+
-+	if (update_uid)
-+		ei->attr.mode &= ~EVENTFS_SAVE_UID;
-+
-+	if (update_gid)
-+		ei->attr.mode &= ~EVENTFS_SAVE_GID;
-+
-+	if (!ei->entry_attrs)
-+		return;
-+
-+	for (int i = 0; i < ei->nr_entries; i++) {
-+		if (update_uid)
-+			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_UID;
-+		if (update_gid)
-+			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_GID;
-+	}
-+}
-+
- /* Return the evenfs_inode of the "events" directory */
- static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- {
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 5545e6bf7d26..5f2417df1c43 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -30,20 +30,47 @@ static struct vfsmount *tracefs_mount;
- static int tracefs_mount_count;
- static bool tracefs_registered;
- 
-+/*
-+ * Keep track of all tracefs_inodes in order to update their
-+ * flags if necessary on a remount.
-+ */
-+static DEFINE_SPINLOCK(tracefs_inode_lock);
-+static LIST_HEAD(tracefs_inodes);
-+
- static struct inode *tracefs_alloc_inode(struct super_block *sb)
- {
- 	struct tracefs_inode *ti;
-+	unsigned long flags;
- 
- 	ti = kmem_cache_alloc(tracefs_inode_cachep, GFP_KERNEL);
- 	if (!ti)
- 		return NULL;
- 
-+	spin_lock_irqsave(&tracefs_inode_lock, flags);
-+	list_add_rcu(&ti->list, &tracefs_inodes);
-+	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
-+
- 	return &ti->vfs_inode;
+ #define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
+@@ -232,14 +231,10 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return ret;
  }
  
-+static void tracefs_free_inode_rcu(struct rcu_head *rcu)
-+{
-+	struct tracefs_inode *ti;
-+
-+	ti = container_of(rcu, struct tracefs_inode, rcu);
-+	kmem_cache_free(tracefs_inode_cachep, ti);
-+}
-+
- static void tracefs_free_inode(struct inode *inode)
+-static void update_top_events_attr(struct eventfs_inode *ei, struct super_block *sb)
++static void update_events_attr(struct eventfs_inode *ei, struct super_block *sb)
  {
--	kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
-+	struct tracefs_inode *ti = get_tracefs(inode);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&tracefs_inode_lock, flags);
-+	list_del_rcu(&ti->list);
-+	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
-+
-+	call_rcu(&ti->rcu, tracefs_free_inode_rcu);
+ 	struct inode *root;
+ 
+-	/* Only update if the "events" was on the top level */
+-	if (!ei || !(ei->attr.mode & EVENTFS_TOPLEVEL))
+-		return;
+-
+ 	/* Get the tracefs root inode. */
+ 	root = d_inode(sb->s_root);
+ 	ei->attr.uid = root->i_uid;
+@@ -252,10 +247,10 @@ static void set_top_events_ownership(struct inode *inode)
+ 	struct eventfs_inode *ei = ti->private;
+ 
+ 	/* The top events directory doesn't get automatically updated */
+-	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
++	if (!ei || !ei->is_events)
+ 		return;
+ 
+-	update_top_events_attr(ei, inode->i_sb);
++	update_events_attr(ei, inode->i_sb);
+ 
+ 	if (!(ei->attr.mode & EVENTFS_SAVE_UID))
+ 		inode->i_uid = ei->attr.uid;
+@@ -284,7 +279,7 @@ static int eventfs_permission(struct mnt_idmap *idmap,
+ 	return generic_permission(idmap, inode, mask);
  }
  
- static ssize_t default_read_file(struct file *file, char __user *buf,
-@@ -313,6 +340,8 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
- 	struct tracefs_fs_info *fsi = sb->s_fs_info;
- 	struct inode *inode = d_inode(sb->s_root);
- 	struct tracefs_mount_opts *opts = &fsi->mount_opts;
-+	struct tracefs_inode *ti;
-+	bool update_uid, update_gid;
- 	umode_t tmp_mode;
+-static const struct inode_operations eventfs_root_dir_inode_operations = {
++static const struct inode_operations eventfs_dir_inode_operations = {
+ 	.lookup		= eventfs_root_lookup,
+ 	.setattr	= eventfs_set_attr,
+ 	.getattr	= eventfs_get_attr,
+@@ -352,7 +347,7 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 		// Walk upwards until you find the events inode
+ 	} while (!ei->is_events);
  
- 	/*
-@@ -332,6 +361,25 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
- 	if (!remount || opts->opts & BIT(Opt_gid))
- 		inode->i_gid = opts->gid;
+-	update_top_events_attr(ei, dentry->d_sb);
++	update_events_attr(ei, dentry->d_sb);
  
-+	if (remount && (opts->opts & BIT(Opt_uid) || opts->opts & BIT(Opt_gid))) {
-+
-+		update_uid = opts->opts & BIT(Opt_uid);
-+		update_gid = opts->opts & BIT(Opt_gid);
-+
-+		rcu_read_lock();
-+		list_for_each_entry_rcu(ti, &tracefs_inodes, list) {
-+			if (update_uid)
-+				ti->flags &= ~TRACEFS_UID_PERM_SET;
-+
-+			if (update_gid)
-+				ti->flags &= ~TRACEFS_GID_PERM_SET;
-+
-+			if (ti->flags & TRACEFS_EVENT_INODE)
-+				eventfs_remount(ti, update_uid, update_gid);
-+		}
-+		rcu_read_unlock();
-+	}
-+
- 	return 0;
+ 	return ei;
  }
+@@ -458,7 +453,7 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
+ 	update_inode_attr(dentry, inode, &ei->attr,
+ 			  S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
  
+-	inode->i_op = &eventfs_root_dir_inode_operations;
++	inode->i_op = &eventfs_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+ 	/* All directories will have the same inode number */
+@@ -838,14 +833,6 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	uid = d_inode(dentry->d_parent)->i_uid;
+ 	gid = d_inode(dentry->d_parent)->i_gid;
+ 
+-	/*
+-	 * If the events directory is of the top instance, then parent
+-	 * is NULL. Set the attr.mode to reflect this and its permissions will
+-	 * default to the tracefs root dentry.
+-	 */
+-	if (!parent)
+-		ei->attr.mode = EVENTFS_TOPLEVEL;
+-
+ 	/* This is used as the default ownership of the files and directories */
+ 	ei->attr.uid = uid;
+ 	ei->attr.gid = gid;
+@@ -854,13 +841,13 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	INIT_LIST_HEAD(&ei->list);
+ 
+ 	ti = get_tracefs(inode);
+-	ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
++	ti->flags |= TRACEFS_EVENT_INODE;
+ 	ti->private = ei;
+ 
+ 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+ 	inode->i_uid = uid;
+ 	inode->i_gid = gid;
+-	inode->i_op = &eventfs_root_dir_inode_operations;
++	inode->i_op = &eventfs_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+ 	dentry->d_fsdata = get_ei(ei);
 diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 15c26f9aaad4..29f0c999975b 100644
+index 29f0c999975b..f704d8348357 100644
 --- a/fs/tracefs/internal.h
 +++ b/fs/tracefs/internal.h
-@@ -11,8 +11,12 @@ enum {
+@@ -4,10 +4,9 @@
+ 
+ enum {
+ 	TRACEFS_EVENT_INODE		= BIT(1),
+-	TRACEFS_EVENT_TOP_INODE		= BIT(2),
+-	TRACEFS_GID_PERM_SET		= BIT(3),
+-	TRACEFS_UID_PERM_SET		= BIT(4),
+-	TRACEFS_INSTANCE_INODE		= BIT(5),
++	TRACEFS_GID_PERM_SET		= BIT(2),
++	TRACEFS_UID_PERM_SET		= BIT(3),
++	TRACEFS_INSTANCE_INODE		= BIT(4),
  };
  
  struct tracefs_inode {
--	struct inode            vfs_inode;
-+	union {
-+		struct inode            vfs_inode;
-+		struct rcu_head		rcu;
-+	};
- 	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
-+	struct list_head	list;
- 	unsigned long           flags;
- 	void                    *private;
- };
-@@ -73,6 +77,7 @@ struct dentry *tracefs_end_creating(struct dentry *dentry);
- struct dentry *tracefs_failed_creating(struct dentry *dentry);
- struct inode *tracefs_get_inode(struct super_block *sb);
- 
-+void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid);
- void eventfs_d_release(struct dentry *dentry);
- 
- #endif /* _TRACEFS_INTERNAL_H */
 -- 
 2.43.0
 
