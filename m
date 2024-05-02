@@ -1,70 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7808C8F3;
-	Thu,  2 May 2024 14:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2165D15AACA;
+	Thu,  2 May 2024 15:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714658911; cv=none; b=SsV3ghMZg/2b/T5uAwinjN7QDPyQasztNJEKEkPm6nGOLor+OGbEevtAFnGfj0/rGb160ObBVOPFKAnF3kmhznyT26I1VzJstL9n2kW5bmWxEgL+DoBbVW/VkJLRtLuTvYTH4/HWb8LqPq6qz+svlEZatOjw6v+80NE1enBVNNA=
+	t=1714662934; cv=none; b=T3/ZMbvlY51AoCaa/Y0Arx0C5zWFrQXvVIJmUJj0qxUlS6SHzqaZGA1jyj4Qfw2Kluid3FNmb+hQsBVS5eIt0Pd5SoJI1/YI0iiWBeJQuI8rb4Tn46KVTMIrenarbjaAW4Ki45zKc+HcJoSZOsJNpyev/X7BfalAbqIC36P4syw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714658911; c=relaxed/simple;
-	bh=XuMKQ2Qkm26WTw4+HWU8N2CzQg4t42/Hg1SnHVp9fLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ib6D5tVcIpSV5VOpNFXGF+0Pgq/I85LXnQ+3PZjcpUNKMdy+n1A+NDZ1tT+dbNreB+rYjPr2t57VHdfjt5brQAktJAaYhW7j664DyHhVseGku6in3Vs1ng83y6LxUZKSw4uNtmToVAty3tulqRGvW5Y+sjVOPGeDggPfDs0EgtQ=
+	s=arc-20240116; t=1714662934; c=relaxed/simple;
+	bh=mn51M/aLYne7AuxEoxbC4ggK7clEUPSjzRG+mNeu3yI=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=HamstQ73OEG4+h9WV+JPm0ndoS1+QJ8o+OaRFUaFIiNnxKjPwYs/4ihzPCgeqJW+OVlZSzdZZgtm6sgRG2mxQzq3YH0/03crx/voTW4nbGruv1rgqqr/LlJf9gUzRHm8jjpd9y9VpPzQ33BqIYoSnpwGAyHNXPsLQe/wMReM2DE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EBCC113CC;
-	Thu,  2 May 2024 14:08:28 +0000 (UTC)
-Date: Thu, 2 May 2024 10:09:14 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE46C113CC;
+	Thu,  2 May 2024 15:15:33 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1s2YAW-00000003ISF-1Zdr;
+	Thu, 02 May 2024 11:16:20 -0400
+Message-ID: <20240502151547.973653253@goodmis.org>
+User-Agent: quilt/0.67
+Date: Thu, 02 May 2024 11:15:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Tze-nan Wu (=?UTF-8?B?5ZCz5r6k5Y2X?=)" <Tze-nan.Wu@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "Cheng-Jui Wang (=?UTF-8?B?546L5q2j552/?=)" <Cheng-Jui.Wang@mediatek.com>,
- wsd_upstream <wsd_upstream@mediatek.com>, "Bobule Chang (=?UTF-8?B?5by1?=
- =?UTF-8?B?5byY576p?=)" <bobule.chang@mediatek.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "mhiramat@kernel.org"
- <mhiramat@kernel.org>, "mathieu.desnoyers@efficios.com"
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Fix uaf issue in tracing_open_file_tr
-Message-ID: <20240502100914.33d6aa83@gandalf.local.home>
-In-Reply-To: <aac0a4cc0a12fc9593ab7de6c34836757e6814f3.camel@mediatek.com>
-References: <20240426073410.17154-1-Tze-nan.Wu@mediatek.com>
-	<20240428202837.0cabca17@rorschach.local.home>
-	<20240429144626.7d868ad3@gandalf.local.home>
-	<661f101456506db945ccbd94700a0f47b95f91e5.camel@mediatek.com>
-	<20240501235044.12fa3297@gandalf.local.home>
-	<aac0a4cc0a12fc9593ab7de6c34836757e6814f3.camel@mediatek.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 0/5] tracefs/eventfs: Fix inconsistent permissions
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2 May 2024 06:49:18 +0000
-Tze-nan Wu (=E5=90=B3=E6=BE=A4=E5=8D=97) <Tze-nan.Wu@mediatek.com> wrote:
 
-> Good news, this patch works, the test has passed, no more Kasan report
-> in my environment.
+The tracefs and eventfs permissions are created dynamically based
+on what the mount point inode has or the instances directory inode has.
+But the way it worked had some inconsistencies that could lead to
+security issues as the file system is not behaving like admins would
+expect.
 
-Great to hear!
+The files and directories could ignore the remount option that changes
+the gid or uid ownerships, leaving files susceptable to access that
+is not expected. This happens if a file had its value changed previously
+and then a remount changed all the files permissions. The one that
+was changed previously would not be affected.
 
->=20
-> my environment:
->  arm64 + kasan + swtag based kasan + kernel-6.6.18
->=20
-> Really appreciate, and learn a lot from the patch.
+This change set resolves these inconsistencies.
 
-Can I add:
+This also fixes the test_ownership.tc test as it would pass on the
+first time it is run, but fail on the second time, because of the
+inconsistant state of the permissions. Now you can run that test
+multiple times and it will always pass.
 
-Tested-by: Tze-nan Wu (=E5=90=B3=E6=BE=A4=E5=8D=97) <Tze-nan.Wu@mediatek.co=
-m>
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240502030024.062275408@goodmis.org/
 
-?
+- Testing showed that taking a mutex when freeing the tracefs_inode
+  caused a lockdep splat as it can happen in the RCU softirq context.
+  Convert the mutex to a spinlock for adding and removing the node
+  from the link list, and free the node via call_rcu() so that the
+  iteration of the list only needs to be protected by rcu_read_lock().
 
--- Steve
+
+Steven Rostedt (Google) (5):
+      tracefs: Reset permissions on remount if permissions are options
+      tracefs: Still use mount point as default permissions for instances
+      eventfs: Do not differentiate the toplevel events directory
+      eventfs: Do not treat events directory different than other directories
+      eventfs: Have "events" directory get permissions from its parent
+
+----
+ fs/tracefs/event_inode.c | 102 ++++++++++++++++++++++++++++-------------------
+ fs/tracefs/inode.c       |  77 +++++++++++++++++++++++++++++++++--
+ fs/tracefs/internal.h    |  14 ++++---
+ 3 files changed, 144 insertions(+), 49 deletions(-)
