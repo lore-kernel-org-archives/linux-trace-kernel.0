@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE8615B988;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71AD17BB1E;
 	Thu,  2 May 2024 20:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714680498; cv=none; b=n9cr/2Ddwy7HuUNg7H+wpqEbb1Jgfebq7yboIhuTLd8+Ek1VbGKc1nW3Jin3x3wzdDGZ+lfZN3joTKuAMUQJu2CKOCd7kYjj2PmPL18GsE244pv4ZeWEdI9D+9j2a26o7IO5A8h7eexReRqRPjCh90yGB+y/uNaw4nuViyUEeac=
+	t=1714680498; cv=none; b=hfJcOjyg2QBMjGK3ay89ktGf2bnbC6IPpckFof/IhYPrYfAQUEw+Py56QLr1NfLO66t1HQChUm0i/3P3jE433HIzZhi/d5S9uxyzgY+DAqsOFdSZ/6uz+WQEDa27Chrd3xHwygQhdHzolPZytFVaWOdoRVD46ouy0uecmzl4RVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714680498; c=relaxed/simple;
-	bh=MCakG2B6n4zjAvJKZ7YmI2VlY9h2ill9CPIR0VUB0P0=;
+	bh=BXI70jCOvD7RTkM+sMCT2dixj7pb508M6+wCZOAh60A=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=oZsDkibiF9t55Wt5FizN1rY1Rcrg26o+99/kcw5CRiF9Z844SFok0Vs0xmCCvuo0H4oVQr520uY5syVz/dSlo9Veq5Ggo/DRtMSJkvk2NuQeoH/H5L4FJFl9mvF/4dpTBidpemDGMhQfUfBxMvyeAmeh3eI6PYtoLpe3YJNLNlw=
+	 Content-Type; b=icZkx84PBMuFiAfeqMKq1/AWdQ/HcL1i8SdwrEdIlghiSQIGHLjck9tLJktswaDy0sFliRBlPlu4lph3gmDEuG1B02EtKNvbo9hJDCltkFz9fH+bSJY9+f7glu+N3DSaNCO/+6CqayPyaCZSiFzp1/ZIwK27a3QHSw4EGxFFtj8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7881CC4AF1A;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A37C4AF48;
 	Thu,  2 May 2024 20:08:18 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1s2cjp-00000003M3j-28cL;
+	id 1s2cjp-00000003M4i-3Spy;
 	Thu, 02 May 2024 16:09:05 -0400
-Message-ID: <20240502200905.370261163@goodmis.org>
+Message-ID: <20240502200905.686838327@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 02 May 2024 16:08:22 -0400
+Date: Thu, 02 May 2024 16:08:24 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  stable@vger.kernel.org
-Subject: [PATCH v3 1/6] eventfs: Free all of the eventfs_inode after RCU
+Subject: [PATCH v3 3/6] tracefs: Still use mount point as default permissions for instances
 References: <20240502200821.125580570@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,71 +41,109 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The freeing of eventfs_inode via a kfree_rcu() callback. But the content
-of the eventfs_inode was being freed after the last kref. This is
-dangerous, as changes are being made that can access the content of an
-eventfs_inode from an RCU loop.
+If the instances directory's permissions were never change, then have it
+and its children use the mount point permissions as the default.
 
-Instead of using kfree_rcu() use call_rcu() that calls a function to do
-all the freeing of the eventfs_inode after a RCU grace period has expired.
+Currently, the permissions of instance directories are determined by the
+instance directory's permissions itself. But if the tracefs file system is
+remounted and changes the permissions, the instance directory and its
+children should use the new permission.
+
+But because both the instance directory and its children use the instance
+directory's inode for permissions, it misses the update.
+
+To demonstrate this:
+
+  # cd /sys/kernel/tracing/
+  # mkdir instances/foo
+  # ls -ld instances/foo
+ drwxr-x--- 5 root root 0 May  1 19:07 instances/foo
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 18:57 instances
+  # ls -ld current_tracer
+ -rw-r----- 1 root root 0 May  1 18:57 current_tracer
+
+  # mount -o remount,gid=1002 .
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 18:57 instances
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root root 0 May  1 19:07 instances/foo/
+  # ls -ld current_tracer
+ -rw-r----- 1 root lkp 0 May  1 18:57 current_tracer
+
+Notice that changing the group id to that of "lkp" did not affect the
+instances directory nor its children. It should have been:
+
+  # ls -ld current_tracer
+ -rw-r----- 1 root root 0 May  1 19:19 current_tracer
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root root 0 May  1 19:25 instances/foo/
+  # ls -ld instances
+ drwxr-x--- 3 root root 0 May  1 19:19 instances
+
+  # mount -o remount,gid=1002 .
+  # ls -ld current_tracer
+ -rw-r----- 1 root lkp 0 May  1 19:19 current_tracer
+  # ls -ld instances
+ drwxr-x--- 3 root lkp 0 May  1 19:19 instances
+  # ls -ld instances/foo/
+ drwxr-x--- 5 root lkp 0 May  1 19:25 instances/foo/
+
+Where all files were updated by the remount gid update.
 
 Cc: stable@vger.kernel.org
-Fixes: 43aa6f97c2d03 ("eventfs: Get rid of dentry pointers without refcounts")
+Fixes: 8186fff7ab649 ("tracefs/eventfs: Use root and instance inodes as default ownership")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ fs/tracefs/inode.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index f5510e26f0f6..cc8b838bbe62 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -73,6 +73,21 @@ enum {
- 
- #define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
- 
-+static void free_ei_rcu(struct rcu_head *rcu)
-+{
-+	struct eventfs_inode *ei = container_of(rcu, struct eventfs_inode, rcu);
-+	struct eventfs_root_inode *rei;
-+
-+	kfree(ei->entry_attrs);
-+	kfree_const(ei->name);
-+	if (ei->is_events) {
-+		rei = get_root_inode(ei);
-+		kfree(rei);
-+	} else {
-+		kfree(ei);
-+	}
-+}
-+
- /*
-  * eventfs_inode reference count management.
-  *
-@@ -85,7 +100,6 @@ static void release_ei(struct kref *ref)
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 52aa14bd2994..417c840e6403 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -180,16 +180,39 @@ static void set_tracefs_inode_owner(struct inode *inode)
  {
- 	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
- 	const struct eventfs_entry *entry;
--	struct eventfs_root_inode *rei;
+ 	struct tracefs_inode *ti = get_tracefs(inode);
+ 	struct inode *root_inode = ti->private;
++	kuid_t uid;
++	kgid_t gid;
++
++	uid = root_inode->i_uid;
++	gid = root_inode->i_gid;
++
++	/*
++	 * If the root is not the mount point, then check the root's
++	 * permissions. If it was never set, then default to the
++	 * mount point.
++	 */
++	if (root_inode != d_inode(root_inode->i_sb->s_root)) {
++		struct tracefs_inode *rti;
++
++		rti = get_tracefs(root_inode);
++		root_inode = d_inode(root_inode->i_sb->s_root);
++
++		if (!(rti->flags & TRACEFS_UID_PERM_SET))
++			uid = root_inode->i_uid;
++
++		if (!(rti->flags & TRACEFS_GID_PERM_SET))
++			gid = root_inode->i_gid;
++	}
  
- 	WARN_ON_ONCE(!ei->is_freed);
+ 	/*
+ 	 * If this inode has never been referenced, then update
+ 	 * the permissions to the superblock.
+ 	 */
+ 	if (!(ti->flags & TRACEFS_UID_PERM_SET))
+-		inode->i_uid = root_inode->i_uid;
++		inode->i_uid = uid;
  
-@@ -95,14 +109,7 @@ static void release_ei(struct kref *ref)
- 			entry->release(entry->name, ei->data);
- 	}
- 
--	kfree(ei->entry_attrs);
--	kfree_const(ei->name);
--	if (ei->is_events) {
--		rei = get_root_inode(ei);
--		kfree_rcu(rei, ei.rcu);
--	} else {
--		kfree_rcu(ei, rcu);
--	}
-+	call_rcu(&ei->rcu, free_ei_rcu);
+ 	if (!(ti->flags & TRACEFS_GID_PERM_SET))
+-		inode->i_gid = root_inode->i_gid;
++		inode->i_gid = gid;
  }
  
- static inline void put_ei(struct eventfs_inode *ei)
+ static int tracefs_permission(struct mnt_idmap *idmap,
 -- 
 2.43.0
 
