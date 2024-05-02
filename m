@@ -1,175 +1,135 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 132E08462;
-	Thu,  2 May 2024 22:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.dudau.co.uk (dliviu.plus.com [80.229.23.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC341C6A7;
+	Thu,  2 May 2024 23:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.229.23.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714690739; cv=none; b=g5E0vMGTQiQkkxx3QIOUdSmWGUqLso0VnV83oooZm8ssrTc+8VzuWjqGl0C8iwuGFJqWRb6AKFKOUZjGtJ6UOZifzyEZWnEZ6nxiIyxYlAaNKsIckSsyZBOD8amN1bB9FSUomA07T4xOKawhH1JF1P4kq23vbVx12fEwfKWP3ZM=
+	t=1714690831; cv=none; b=MEPtpvDWf7s26QV4qi3UG6Yb3HPMrj3kQwkS2sKU1ctEjTEQ4PjDOUjmQAlQinX+k7Da7PMcbj+ejHm2pn7noKYCI+sFVKtnfZ9fn8O0mW8c5nBNQ7swkiaLqBy56f1/c3TNGPMbUaaM8jvVDf4HpL7aWAOyHLt681uQ+CzBwe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714690739; c=relaxed/simple;
-	bh=msiYPhRQUtilTo+LztaXAxLX2WPR5Z/zWMXsElHb7sc=;
+	s=arc-20240116; t=1714690831; c=relaxed/simple;
+	bh=RHdXinQzCxW7+a0qagt11WYAo+XBPVjylUdFscA6mww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F9lZogMEkUmcBtTiRk5G6LP+huit9kMf/ev0Lm7HDQ2+caX/Awlp0a6BrIKGB8ip3+9WDp1DT9j6K3RZvIi2mHfMHSZZAXlo/iqOWassvYnxNBWjqYLY4TmvQ0AEQW/RknHBK1CIYcev6suAV8+ST6yFBBRE0GJmMjEe9WDn2/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ikwLYOCy; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ikwLYOCy"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 894C320B2C80;
-	Thu,  2 May 2024 15:58:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 894C320B2C80
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1714690737;
-	bh=2AET+xUdNmbcmeb9M+8cahTXAm+h2fHVKotlqfP/yns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ikwLYOCyD9f9Tzajwbed8pjsLgmHenZuAkIBXLuNw325n+JT4VZUwZYdz/EP+s8TB
-	 +GrQuqdUgIpQnceUJZ2S1fyPj+WctugwVDnZ/i9H9Yfx43lT/WdTbJCAHHQBk1RzZt
-	 dcBS0rK7D9MvVo4saK3e9VBW8Ih2BZe0u+fCdLCk=
-Date: Thu, 2 May 2024 15:58:53 -0700
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	dcook@linux.microsoft.com
-Subject: Re: [PATCH v2 1/2] tracing/user_events: Fix non-spaced field matching
-Message-ID: <20240502225853.GA412-beaub@linux.microsoft.com>
-References: <20240423162338.292-1-beaub@linux.microsoft.com>
- <20240423162338.292-2-beaub@linux.microsoft.com>
- <20240502171634.7e2ac794@gandalf.local.home>
+	 Content-Type:Content-Disposition:In-Reply-To; b=A/OYe4MMAIuuc2PCNBkOIUadGm7kp9nWv566E9aEYEH5MHHTbX4fD+lZaZyf4kslCsCeSK1wuqXgGIyGR63jGo+2diDTfQs3pQDdDYgJa7cAgJ8OC/86iID/eAz0mdyx4KHz0CAyiNWs5wk85f+IQ+TYdXONA8+BttvakZwHnyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dudau.co.uk; spf=pass smtp.mailfrom=dudau.co.uk; arc=none smtp.client-ip=80.229.23.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dudau.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dudau.co.uk
+Received: from mail.dudau.co.uk (bart.dudau.co.uk [192.168.14.2])
+	by smtp.dudau.co.uk (Postfix) with SMTP id 557B041D12F3;
+	Thu, 02 May 2024 23:50:36 +0100 (BST)
+Received: by mail.dudau.co.uk (sSMTP sendmail emulation); Thu, 02 May 2024 23:50:36 +0100
+Date: Thu, 2 May 2024 23:50:36 +0100
+From: Liviu Dudau <liviu@dudau.co.uk>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v7 00/16] mm: jit/text allocator
+Message-ID: <ZjQYvOYgURx9/+d0@bart.dudau.co.uk>
+References: <20240429121620.1186447-1-rppt@kernel.org>
+ <Zi_K4K-j-VB_WI4i@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240502171634.7e2ac794@gandalf.local.home>
+In-Reply-To: <Zi_K4K-j-VB_WI4i@bombadil.infradead.org>
 
-On Thu, May 02, 2024 at 05:16:34PM -0400, Steven Rostedt wrote:
-> On Tue, 23 Apr 2024 16:23:37 +0000
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > When the ABI was updated to prevent same name w/different args, it
-> > missed an important corner case when fields don't end with a space.
-> > Typically, space is used for fields to help separate them, like
-> > "u8 field1; u8 field2". If no spaces are used, like
-> > "u8 field1;u8 field2", then the parsing works for the first time.
-> > However, the match check fails on a subsequent register, leading to
-> > confusion.
+On Mon, Apr 29, 2024 at 09:29:20AM -0700, Luis Chamberlain wrote:
+> On Mon, Apr 29, 2024 at 03:16:04PM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > > 
-> > This is because the match check uses argv_split() and assumes that all
-> > fields will be split upon the space. When spaces are used, we get back
-> > { "u8", "field1;" }, without spaces we get back { "u8", "field1;u8" }.
-> > This causes a mismatch, and the user program gets back -EADDRINUSE.
+> > Hi,
 > > 
-> > Add a method to detect this case before calling argv_split(). If found
-> > force a space after the field separator character ';'. This ensures all
-> > cases work properly for matching.
+> > The patches are also available in git:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v7
 > > 
-> > With this fix, the following are all treated as matching:
-> > u8 field1;u8 field2
-> > u8 field1; u8 field2
-> > u8 field1;\tu8 field2
-> > u8 field1;\nu8 field2
+> > v7 changes:
+> > * define MODULE_{VADDR,END} for riscv32 to fix the build and avoid
+> >   #ifdefs in a function body
+> > * add Acks, thanks everybody
 > 
-> I'm curious, what happens if you have: "u8 field1; u8 field2;" ?
+> Thanks, I've pushed this to modules-next for further exposure / testing.
+> Given the status of testing so far with prior revisions, in that only a
+> few issues were found and that those were fixed, and the status of
+> reviews, this just might be ripe for v6.10.
+
+Looks like there is still some work needed. I've picked up next-20240501
+and on arch/mips with CONFIG_MODULE_COMPRESS_XZ=y and CONFIG_MODULE_DECOMPRESS=y
+I fail to load any module:
+
+# modprobe rfkill
+[11746.539090] Invalid ELF header magic: != ELF
+[11746.587149] execmem: unable to allocate memory
+modprobe: can't load module rfkill (kernel/net/rfkill/rfkill.ko.xz): Out of memory
+
+The (hopefully) relevant parts of my .config:
+
+CONFIG_HAVE_KERNEL_XZ=y
+CONFIG_MIPS=y
+CONFIG_RALINK=y
+CONFIG_SOC_MT7621=y
+CONFIG_EXECMEM=y
+CONFIG_MODULES_USE_ELF_REL=y
+CONFIG_MODULES=y
+# CONFIG_MODULE_DEBUG is not set
+# CONFIG_MODULE_FORCE_LOAD is not set
+CONFIG_MODULE_UNLOAD=y
+# CONFIG_MODULE_FORCE_UNLOAD is not set
+# CONFIG_MODULE_UNLOAD_TAINT_TRACKING is not set
+# CONFIG_MODULE_SRCVERSION_ALL is not set
+# CONFIG_MODULE_SIG is not set
+# CONFIG_MODULE_COMPRESS_NONE is not set
+# CONFIG_MODULE_COMPRESS_GZIP is not set
+CONFIG_MODULE_COMPRESS_XZ=y
+# CONFIG_MODULE_COMPRESS_ZSTD is not set
+CONFIG_MODULE_DECOMPRESS=y
+# CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS is not set
+CONFIG_MODULES_TREE_LOOKUP=y
+
+
+Best regards,
+Liviu
+
+
+> 
+>   Luis
 > 
 
-You'll get an extra whitespace during the copy, assuming it was really:
-"u8 field1;u8 field2"
-
-If it had spaces, this code wouldn't run.
-
-> Do you care? As you will then create "u8 field1; u8 field2; "
-> 
-> but I'm guessing the extra whitespace at the end doesn't affect anything.
-> 
-
-Right, you get an extra byte allocated, but the argv_split() with ignore
-it. The compare will work correctly (I've verified this just now to
-double check).
-
-IE these all match:
-"Test u8 a; u8 b; "
-"Test u8 a; u8 b;"
-"Test u8 a; u8 b"
-
-> 
-> > 
-> > Fixes: ba470eebc2f6 ("tracing/user_events: Prevent same name but different args event")
-> > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> > ---
-> >  kernel/trace/trace_events_user.c | 76 +++++++++++++++++++++++++++++++-
-> >  1 file changed, 75 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> > index 70d428c394b6..82b191f33a28 100644
-> > --- a/kernel/trace/trace_events_user.c
-> > +++ b/kernel/trace/trace_events_user.c
-> > @@ -1989,6 +1989,80 @@ static int user_event_set_tp_name(struct user_event *user)
-> >  	return 0;
-> >  }
-> >  
-> > +/*
-> > + * Counts how many ';' without a trailing space are in the args.
-> > + */
-> > +static int count_semis_no_space(char *args)
-> > +{
-> > +	int count = 0;
-> > +
-> > +	while ((args = strchr(args, ';'))) {
-> > +		args++;
-> > +
-> > +		if (!isspace(*args))
-> > +			count++;
-> 
-> This will count that "..;" 
-> 
-> This is most likely not an issue, but since I didn't see this case
-> anywhere, I figured I bring it up just to confirm that it's not an issue.
-> 
-
-It's not an issue on the matching/logic. However, you do get an extra
-byte alloc (which doesn't bother me in this edge case).
-
-Thanks,
--Beau
-
-> -- Steve
-> 
-> 
-> > +	}
-> > +
-> > +	return count;
-> > +}
-> > +
-> > +/*
-> > + * Copies the arguments while ensuring all ';' have a trailing space.
-> > + */
-> > +static char *insert_space_after_semis(char *args, int count)
-> > +{
-> > +	char *fixed, *pos;
-> > +	int len;
-> > +
-> > +	len = strlen(args) + count;
-> > +	fixed = kmalloc(len + 1, GFP_KERNEL);
-> > +
-> > +	if (!fixed)
-> > +		return NULL;
-> > +
-> > +	pos = fixed;
-> > +
-> > +	/* Insert a space after ';' if there is no trailing space. */
-> > +	while (*args) {
-> > +		*pos = *args++;
-> > +
-> > +		if (*pos++ == ';' && !isspace(*args))
-> > +			*pos++ = ' ';
-> > +	}
-> > +
-> > +	*pos = '\0';
-> > +
-> > +	return fixed;
-> > +}
-> > +
+-- 
+Everyone who uses computers frequently has had, from time to time,
+a mad desire to attack the precocious abacus with an axe.
+       	   	      	     	  -- John D. Clark, Ignition!
