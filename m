@@ -1,202 +1,98 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BE31586C3;
-	Fri,  3 May 2024 18:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EBC57C9F
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 May 2024 19:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714759420; cv=none; b=B4E2TAHFWrGM9wzVU+O89lnncmu44BD7WZd1JQg6V0B06c6bZQyornyh4oDL29Ll+u2s12lh/lnnPlqAeIqW7BRJDWhqc6n6Te6CrLW8SqP5zN9yE0aLi9SxE2DcJ71lXVg9F9IMl6Y3hzqPEa11W/VUrdPJDyO6XPVWvH97vlw=
+	t=1714763579; cv=none; b=r0iSd3mLuDMz0tBBT2KlXAEzGN3l08SxG10L4ZI5LJFCHM7K/neYxYTSO0n3hIeQLx9agMP4m5h0NEHjR+z9Qui9H/Yke2b7RBpxuRLhJ5fIWjJjt8HgFzVWzEnuyci/uy835Dmiqs3HNNYt/iuUYQ0BKqc/gdlBC3gfo7Au1Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714759420; c=relaxed/simple;
-	bh=ybBnohGJ7OCPoSTxetQTUQLupbXJ1oRN8/fNm62kyjs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DMTr/Bw4NRvCuMJMYbFW5Gr557LTWKX3VUeyHwKtwVrANHhaeTKbwwzBHQfSahyOhDh1yTn8mONM7gzS9iERzQu5RZTx9bgdjfz/sQX/x3VWcGXMkFKDnyJYrkWpgOHmqrYALcKMQ2xk07KxlGGzmxjTN6VCldZBYCkUiP+Ff8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2KjVBTL; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714763579; c=relaxed/simple;
+	bh=IKLI/Q78RF9vVx/YNe7wLdlLEK7x6bEXRB/vPUdT3wY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LkHk8O+tpGnsjXbEDGnhu8Q7X8PH9KoKVBXcmZpGc5dY+fChNUX28XwFIp8MKOFoSGMT0PPu5XFAtweuwqEly1gmLs9MXneTlx3nzyBer5y82tgw+q97vgMuyZa6jhOb+hkTfENnKHKalDO7v1KHGOTSK3fOEInA8Yo92kzNwzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FqSlnwW0; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2KjVBTL"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2b2bc7b37bcso3326512a91.2;
-        Fri, 03 May 2024 11:03:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FqSlnwW0"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7decb824727so95239f.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 May 2024 12:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714759417; x=1715364217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FJBP6tJNRliKd9d9ij7Yg8o1fHkwrBen/j2P4vsQ2FA=;
-        b=T2KjVBTL9ReFjdG0/E40kovejNXoegh5Vk1pQPJCBcf+bqBYJ8hlaC8BF8vecNEjnE
-         qPL0ocjPb4HZYwOGPtNfIrPhCNXqCbceZs2yUxFE3fiChRDKne4fhcYLnAdC/LT9FItQ
-         8X24X5PZYLXA6iYybafkB9RGEaWRh+USb3VxsX2N9snE4L0cx8SScovErk50lJO9a/Lh
-         mpqLf3gqYU5AR/ZayBP69rAclid7cKQ8/uExWEsnHzyzApUD2l25jqyMWQXG7dxyO+EQ
-         wjIZE2X465LLuEOM4mR20ATrneGmPKOQzM1ZEsKJpLEN42kRP65zT3vuE1z33AGrH5Jk
-         gLOQ==
+        d=linuxfoundation.org; s=google; t=1714763577; x=1715368377; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oRFjxSyK4Qq5KgEaM3tSc2tgl3ftVperAuW9pNscAzY=;
+        b=FqSlnwW0XPXoF59LD+Sgdo5WKNnTnvh3nx7Hirad8Vwmjb9gkuBEYSHDeimXi8zpNb
+         Uhf4Nms/vy+JgftFkQzelYUkvbx3IP0cqmVeTuIHLkd5oMY6kc8tSJfE12xn5/gU39cc
+         QM4d7a2NXO7zlYBJzCBDnqjhXs65Yif01xrSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714759417; x=1715364217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FJBP6tJNRliKd9d9ij7Yg8o1fHkwrBen/j2P4vsQ2FA=;
-        b=XU/578osZCzLa0VrdJd2oGmy48I3gTG2g3ypM7PBqFY4e0MJoGRtSQznWZ2vx+izuK
-         9r5BQevFm3z1Ohy4simTbBRC5QDHosODN2ieafqsbYPLzYJny8Ksh95h55r6tkwvxWIN
-         6Z/ySuVnVRLsJKXq+eSUTu5RDgoNhrRZMbWJ5VWRJl1dD2UCc10jf9mghTdrerBumvQu
-         yFpSek+CeVD1C+ksH84rw+BWfncejWN4uwc3MHrUPD7jVymmWNk0s/YnTjq0mzyIdI8Y
-         P5sjsmxXZca6dkJbzFOl20eg+DPt/yACG2BaUU3sXmclnSFVo5/+8H8TWpWFyeyb7P3W
-         YhFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyN46Sv/hZptaxwX1RDiQpNQgknnWo7FjNZ1qx/T6C4AYQAudVN8aL7+am6EiOmtgfeThc5fx2GaY+QzJ5HgWrBl+SiWK7n5garZ46JT/tAKzc/fF/2z56w3nAH8W0I8jriL2LStp7hX86PpyFaZDbkXNc5hx4rEQQMIyEro2WvCHPl+mdqKBkY3NQ2CndMIx57bwIu090NynqLEhIZsdODyIqtAzYKRV7enXUlH+dZC7ZVIdcz67Fx6Ge
-X-Gm-Message-State: AOJu0YyCuEdR4OLYsLQF+X5wvQDf+KKlNHTnI0nNWzWvQRQ83vkykWul
-	1JbVcj5IMikeP2o39exjcky1yCGc4xgxlien5ua9uLXs0ei3/TbvCmt/Zzf/G8iGckvyJ+ts0+W
-	EymyAMCoH22ehecvBgjtUcBJo0+s=
-X-Google-Smtp-Source: AGHT+IHGv2AfdGlWnLUJO3nFJ39n5eguagCUVgfAL/9b1Z8ZReC8l08QWuqFwk87+N9AlG6CBDQe1aHE2ylNhbCRhIw=
-X-Received: by 2002:a17:90b:158:b0:2a0:9b18:daf with SMTP id
- em24-20020a17090b015800b002a09b180dafmr4011307pjb.42.1714759417151; Fri, 03
- May 2024 11:03:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714763577; x=1715368377;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oRFjxSyK4Qq5KgEaM3tSc2tgl3ftVperAuW9pNscAzY=;
+        b=Vn+HCw2bEdehDF4ZyFXwSUEQ6dh86m+W5MXbWCHGoaBfg1sCecqTQTjq3dEdHbOC/R
+         1YGrRpM2U2NYRA6z3lKOYxKXTOnuuNRWcWgmsJOKljY8+u4SwIvPMePzPVwBnhbOg0Jp
+         akV2m9GkKwC7vf7tIMcNqIriD7rPBATkvZNwqpoQtgMcZBjLmL6KHMU3nBbRFPZF/Nci
+         X+ODx9RbO3t92aihmMGVKSnZ5+o4tVH340TPSj4nRlls0KHzOB6zkVSf/oVioVPVdoGB
+         bP3zWb+cdkPO45R0h0fLkv6fWePNx6PtJO3zCXqkhWEAgR5YYPI/C6ULsmIHWWQzqIns
+         t8aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiOt0pljqf3EGKJnHWoaoYgb47vhLBuviSybNJCVECukBwSLVVGTHL+S5HSrBWp1CmjWFt/ftzLwDo0rcebX7yJBJpYdve65CFrF/XdBr7GXTy
+X-Gm-Message-State: AOJu0YymXN58eV+VPu/3VWwKpGEOxyZ4pPLMMoB/hBgrL6nZnqYpsN9i
+	U0zRsZc4sgmyjzl51MdK9nTtJU84dUVaM+0bFOki1pVwxaPe1Xcj9tscuBHuWfKU6HHJRNNlMtr
+	8UTE=
+X-Google-Smtp-Source: AGHT+IFeCr1sXlKuk6y/+HaEO2vkq/lW4xsCt4vEoT13BLeE623tRhqnA0qvoG5XspHJUW7YimhDEg==
+X-Received: by 2002:a5d:860e:0:b0:7d9:eeb8:ddeb with SMTP id f14-20020a5d860e000000b007d9eeb8ddebmr3581267iol.2.1714763577683;
+        Fri, 03 May 2024 12:12:57 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id g6-20020a056602150600b007deeb2d7c4csm786391iow.12.2024.05.03.12.12.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 May 2024 12:12:57 -0700 (PDT)
+Message-ID: <5bdb08a2-0740-4ea0-be24-a948332d60ac@linuxfoundation.org>
+Date: Fri, 3 May 2024 13:12:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502122313.1579719-1-jolsa@kernel.org> <CAEf4BzYxsRMx9M_AiLavTHFpndSmZqOM8QcYhDTbBviSpv1r+A@mail.gmail.com>
- <ZjPx0fncg-8brFBk@krava>
-In-Reply-To: <ZjPx0fncg-8brFBk@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 3 May 2024 11:03:24 -0700
-Message-ID: <CAEf4Bzb-dM+464JvW96KuxwOTfRQA1pxZRWM+pA7AfSWtWwqZw@mail.gmail.com>
-Subject: Re: [PATCHv4 bpf-next 0/7] uprobe: uretprobe speed up
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v22 5/5] ring-buffer/selftest: Add ring-buffer mapping
+ test
+To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ rdunlap@infradead.org, rppt@kernel.org, david@redhat.com,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240430111354.637356-1-vdonnefort@google.com>
+ <20240430111354.637356-6-vdonnefort@google.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240430111354.637356-6-vdonnefort@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 2, 2024 at 1:04=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrote=
-:
->
-> On Thu, May 02, 2024 at 09:43:02AM -0700, Andrii Nakryiko wrote:
-> > On Thu, May 2, 2024 at 5:23=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wro=
-te:
-> > >
-> > > hi,
-> > > as part of the effort on speeding up the uprobes [0] coming with
-> > > return uprobe optimization by using syscall instead of the trap
-> > > on the uretprobe trampoline.
-> > >
-> > > The speed up depends on instruction type that uprobe is installed
-> > > and depends on specific HW type, please check patch 1 for details.
-> > >
-> > > Patches 1-6 are based on bpf-next/master, but path 1 and 2 are
-> > > apply-able on linux-trace.git tree probes/for-next branch.
-> > > Patch 7 is based on man-pages master.
-> > >
-> > > v4 changes:
-> > >   - added acks [Oleg,Andrii,Masami]
-> > >   - reworded the man page and adding more info to NOTE section [Masam=
-i]
-> > >   - rewrote bpf tests not to use trace_pipe [Andrii]
-> > >   - cc-ed linux-man list
-> > >
-> > > Also available at:
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> > >   uretprobe_syscall
-> > >
-> >
-> > It looks great to me, thanks! Unfortunately BPF CI build is broken,
-> > probably due to some of the Makefile additions, please investigate and
-> > fix (or we'll need to fix something on BPF CI side), but it looks like
-> > you'll need another revision, unfortunately.
-> >
-> > pw-bot: cr
-> >
-> >   [0] https://github.com/kernel-patches/bpf/actions/runs/8923849088/job=
-/24509002194
->
-> yes, I think it's missing the 32-bit libc for uprobe_compat binary,
-> probably it needs to be added to github.com:libbpf/ci.git setup-build-env=
-/action.yml ?
-> hm but I'm not sure how to test it, need to check
+On 4/30/24 05:13, Vincent Donnefort wrote:
+> This test maps a ring-buffer and validate the meta-page after reset and
+> after emitting few events.
+> 
 
-You can create a custom PR directly against Github repo
-(kernel-patches/bpf) and BPF CI will run all the tests on your custom
-code. This way you can iterate without spamming the mailing list.
+Changelog needs to be imperative - refer to the following:
 
-But I'm just wondering if it's worth complicating setup just for
-testing this x32 compat mode. So maybe just dropping one of those
-patches would be better?
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
 
->
-> >
-> >
-> >
-> > But while we are at it.
-> >
-> > Masami, Oleg,
-> >
-> > What should be the logistics of landing this? Can/should we route this
-> > through the bpf-next tree, given there are lots of BPF-based
-> > selftests? Or you want to take this through
-> > linux-trace/probes/for-next? In the latter case, it's probably better
-> > to apply only the first two patches to probes/for-next and the rest
-> > should still go through the bpf-next tree (otherwise we are running
->
-> I think this was the plan, previously mentioned in here:
-> https://lore.kernel.org/bpf/20240423000943.478ccf1e735a63c6c1b4c66b@kerne=
-l.org/
->
+Update the change log and describe what the test does and include
+test output.
 
-Ok, then we'll have to land this patch set as two separate ones. It's
-fine, let's figure out if you need to do anything for shadow stacks
-and try to land it soon.
+If the test requires root privileges - make sure add a check to skip
+when a normal use runs the test.
 
-> > into conflicts in BPF selftests). Previously we were handling such
-> > cross-tree dependencies by creating a named branch or tag, and merging
-> > it into bpf-next (so that all SHAs are preserved). It's a bunch of
-> > extra work for everyone involved, so the simplest way would be to just
-> > land through bpf-next, of course. But let me know your preferences.
-> >
-> > Thanks!
-> >
-> > > thanks,
-> > > jirka
-> > >
-> > >
-> > > Notes to check list items in Documentation/process/adding-syscalls.rs=
-t:
-> > >
-> > > - System Call Alternatives
-> > >   New syscall seems like the best way in here, becase we need
-> >
-> > typo (thanks, Gmail): because
->
-> ok
->
-> >
-> > >   just to quickly enter kernel with no extra arguments processing,
-> > >   which we'd need to do if we decided to use another syscall.
-> > >
-> > > - Designing the API: Planning for Extension
-> > >   The uretprobe syscall is very specific and most likely won't be
-> > >   extended in the future.
-> > >
-> > >   At the moment it does not take any arguments and even if it does
-> > >   in future, it's allowed to be called only from trampoline prepared
-> > >   by kernel, so there'll be no broken user.
-> > >
-> > > - Designing the API: Other Considerations
-> > >   N/A because uretprobe syscall does not return reference to kernel
-> > >   object.
-> > >
-> > > - Proposing the API
-> > >   Wiring up of the uretprobe system call si in separate change,
-> >
-> > typo: is
->
-> ok, thanks
->
-> jirka
+The rest looks good.
+
+thanks,
+-- Shuah
