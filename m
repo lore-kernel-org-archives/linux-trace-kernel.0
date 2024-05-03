@@ -1,98 +1,232 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EBC57C9F
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 May 2024 19:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AC1156F2A;
+	Fri,  3 May 2024 19:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714763579; cv=none; b=r0iSd3mLuDMz0tBBT2KlXAEzGN3l08SxG10L4ZI5LJFCHM7K/neYxYTSO0n3hIeQLx9agMP4m5h0NEHjR+z9Qui9H/Yke2b7RBpxuRLhJ5fIWjJjt8HgFzVWzEnuyci/uy835Dmiqs3HNNYt/iuUYQ0BKqc/gdlBC3gfo7Au1Gs=
+	t=1714763912; cv=none; b=GWh4xyXLoX5n3UzBQ1GPZtSdql1Y2eJS5hBQ/gnKmuwPx3pJ5RpkBXkeoyGLpz2GDp7SyKH0dxysIcSXaLzmzNZde8c7dtb2JufGW2TI6kanbestIlhnZf7idRdABV1lv1PA453jkOfRZ+T+70qtqaVMdfij9eVoLS98hewGy2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714763579; c=relaxed/simple;
-	bh=IKLI/Q78RF9vVx/YNe7wLdlLEK7x6bEXRB/vPUdT3wY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LkHk8O+tpGnsjXbEDGnhu8Q7X8PH9KoKVBXcmZpGc5dY+fChNUX28XwFIp8MKOFoSGMT0PPu5XFAtweuwqEly1gmLs9MXneTlx3nzyBer5y82tgw+q97vgMuyZa6jhOb+hkTfENnKHKalDO7v1KHGOTSK3fOEInA8Yo92kzNwzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FqSlnwW0; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1714763912; c=relaxed/simple;
+	bh=Cf9LoRUpPjAh+yLyJB4d5K3369qJcbMglaMH7KY/O5I=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R6dvo/0RlTIO+RlFBLpLX3jtcuzM5dtA7ux0pf+PlYAYIiAxoSr+nUo7HCIFT5Sh4Q8L2dWHbx/ff2mktOVb16Fnq6tvdZHAoXTh7EWdklUSJMA0/7OYlqGdMAtsm00qpd2hI3GWQAgcmoMqG230vKuL9Md4Tgti4RmJ8j4jGhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKvL27KE; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FqSlnwW0"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7decb824727so95239f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 May 2024 12:12:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKvL27KE"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5544fd07easo1465701066b.0;
+        Fri, 03 May 2024 12:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1714763577; x=1715368377; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oRFjxSyK4Qq5KgEaM3tSc2tgl3ftVperAuW9pNscAzY=;
-        b=FqSlnwW0XPXoF59LD+Sgdo5WKNnTnvh3nx7Hirad8Vwmjb9gkuBEYSHDeimXi8zpNb
-         Uhf4Nms/vy+JgftFkQzelYUkvbx3IP0cqmVeTuIHLkd5oMY6kc8tSJfE12xn5/gU39cc
-         QM4d7a2NXO7zlYBJzCBDnqjhXs65Yif01xrSU=
+        d=gmail.com; s=20230601; t=1714763909; x=1715368709; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6aq4UQcdpcKwckp57zb2we9p40MZ5pzcBeJbE0PaEe8=;
+        b=JKvL27KE2qSmFTbHT3DnJk19eRmc8tYNVLIn9YU8X8PHBQY8wr+OTwPnUvu8SqFEwO
+         Fsl55q2iBrbqxPwtCjEMe5Qq6dbVLMs1XHUc2u0t1avjjNNKrCOQ1RpmQKCkFL1vEuK4
+         5qohQiAxOjScYix4+Sn1JbXJy5esXQGaKiBU+LxUgW5oce2CoLQxDhgvmgvFfDYVxmVV
+         MBLX7R5op/LIkvoALgG7YF/biubKWnDdj0otdO+zkPY6epQmpbqXUTJMkrVSIOMvlqJ8
+         2Mad6loI+QVpJcmyLkyUgCrpEBwQtA8oBBgyo6LkbPSd9WGVItsL352VAkEW+Yq23Yxz
+         IsOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714763577; x=1715368377;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1714763909; x=1715368709;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oRFjxSyK4Qq5KgEaM3tSc2tgl3ftVperAuW9pNscAzY=;
-        b=Vn+HCw2bEdehDF4ZyFXwSUEQ6dh86m+W5MXbWCHGoaBfg1sCecqTQTjq3dEdHbOC/R
-         1YGrRpM2U2NYRA6z3lKOYxKXTOnuuNRWcWgmsJOKljY8+u4SwIvPMePzPVwBnhbOg0Jp
-         akV2m9GkKwC7vf7tIMcNqIriD7rPBATkvZNwqpoQtgMcZBjLmL6KHMU3nBbRFPZF/Nci
-         X+ODx9RbO3t92aihmMGVKSnZ5+o4tVH340TPSj4nRlls0KHzOB6zkVSf/oVioVPVdoGB
-         bP3zWb+cdkPO45R0h0fLkv6fWePNx6PtJO3zCXqkhWEAgR5YYPI/C6ULsmIHWWQzqIns
-         t8aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiOt0pljqf3EGKJnHWoaoYgb47vhLBuviSybNJCVECukBwSLVVGTHL+S5HSrBWp1CmjWFt/ftzLwDo0rcebX7yJBJpYdve65CFrF/XdBr7GXTy
-X-Gm-Message-State: AOJu0YymXN58eV+VPu/3VWwKpGEOxyZ4pPLMMoB/hBgrL6nZnqYpsN9i
-	U0zRsZc4sgmyjzl51MdK9nTtJU84dUVaM+0bFOki1pVwxaPe1Xcj9tscuBHuWfKU6HHJRNNlMtr
-	8UTE=
-X-Google-Smtp-Source: AGHT+IFeCr1sXlKuk6y/+HaEO2vkq/lW4xsCt4vEoT13BLeE623tRhqnA0qvoG5XspHJUW7YimhDEg==
-X-Received: by 2002:a5d:860e:0:b0:7d9:eeb8:ddeb with SMTP id f14-20020a5d860e000000b007d9eeb8ddebmr3581267iol.2.1714763577683;
-        Fri, 03 May 2024 12:12:57 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id g6-20020a056602150600b007deeb2d7c4csm786391iow.12.2024.05.03.12.12.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 May 2024 12:12:57 -0700 (PDT)
-Message-ID: <5bdb08a2-0740-4ea0-be24-a948332d60ac@linuxfoundation.org>
-Date: Fri, 3 May 2024 13:12:56 -0600
+        bh=6aq4UQcdpcKwckp57zb2we9p40MZ5pzcBeJbE0PaEe8=;
+        b=NH7UWAIP1jO0w5s9zPT2mxfbBxbUrDOtYUUo/UtslBKTM24yT9rGMh95ZkePh+12db
+         5Wv7dCJJBpVfd0Qmr5A9yJTBVsP7m3Jm3N36bwb4W5NbvnMoevh2/srOeJzDFfp1DzS5
+         BcYQtNawAynqIYKAhDb5A6Od1V9FfCQHFd67nYnZQOeFKu3X/FmG3PH4ZwGNxThNMiQe
+         udKEGVPpUg16eP0qhlcu+TQonjLqHQgMA5JOr5aIEtImNNYPZ/rcCSPYH+RlHTFQnDa5
+         rJU6N8m7tCaD7it+XS3HIZ9HioPcJ1PBc1KBO2HQMMR61RY5z65PVW9WoVLUUIUFGgn3
+         phug==
+X-Forwarded-Encrypted: i=1; AJvYcCUF8uU+Cf5fglxcldK2PPkjBXJZRZ5sSw/F7bIJE+OpAg08YJrYiEhSxU8PnhCnd8Kcdif2Y4WI5y50OLowInF+eXGu9uQDPD5geK57SSupWawySRftdaYBUkhcsanu+Myi8RwBUPiFBGKXQoeW4ePLDrZmvTLQ+QUo6AeoOgZjvEcr/bJgRJFpZ6HjcEmFd3GUVogTPW802CaWA4p6EkyvpkgqCfmOmjlkVg4FwlscbzAsev9BTo8ShQxk
+X-Gm-Message-State: AOJu0YzTnx/MLXyp4ijHlhB1lwcx/8pkCdRS1UuquTCPbzaNt21VFOKN
+	GeBY2R1zk/FLmN5kg63HzcQFZnUW+4PeSM/3k8J6g4iVQpZEpBql
+X-Google-Smtp-Source: AGHT+IH3PC/LlW/jHmTN85qf2LBTbgiAMP6Up8zHTigpFCHasVU/hv3IlOZVVnIm5jTFS2fJ/94rdQ==
+X-Received: by 2002:a50:9993:0:b0:570:5e7f:62cb with SMTP id m19-20020a509993000000b005705e7f62cbmr2156480edb.29.1714763908575;
+        Fri, 03 May 2024 12:18:28 -0700 (PDT)
+Received: from krava ([83.240.62.36])
+        by smtp.gmail.com with ESMTPSA id d17-20020a056402517100b0056fe755f1e6sm1978876ede.91.2024.05.03.12.18.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 12:18:28 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 3 May 2024 21:18:25 +0200
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"yhs@fb.com" <yhs@fb.com>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"oleg@redhat.com" <oleg@redhat.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv4 bpf-next 2/7] uprobe: Add uretprobe syscall to speed up
+ return probe
+Message-ID: <ZjU4ganRF1Cbiug6@krava>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
+ <20240502122313.1579719-3-jolsa@kernel.org>
+ <20240503113453.GK40213@noisy.programming.kicks-ass.net>
+ <ZjTg2cunShA6VbpY@krava>
+ <725e2000dc56d55da4097cface4109c17fe5ad1a.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v22 5/5] ring-buffer/selftest: Add ring-buffer mapping
- test
-To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
- rdunlap@infradead.org, rppt@kernel.org, david@redhat.com,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240430111354.637356-1-vdonnefort@google.com>
- <20240430111354.637356-6-vdonnefort@google.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240430111354.637356-6-vdonnefort@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <725e2000dc56d55da4097cface4109c17fe5ad1a.camel@intel.com>
 
-On 4/30/24 05:13, Vincent Donnefort wrote:
-> This test maps a ring-buffer and validate the meta-page after reset and
-> after emitting few events.
+On Fri, May 03, 2024 at 03:53:15PM +0000, Edgecombe, Rick P wrote:
+> On Fri, 2024-05-03 at 15:04 +0200, Jiri Olsa wrote:
+> > On Fri, May 03, 2024 at 01:34:53PM +0200, Peter Zijlstra wrote:
+> > > On Thu, May 02, 2024 at 02:23:08PM +0200, Jiri Olsa wrote:
+> > > > Adding uretprobe syscall instead of trap to speed up return probe.
+> > > > 
+> > > > At the moment the uretprobe setup/path is:
+> > > > 
+> > > >    - install entry uprobe
+> > > > 
+> > > >    - when the uprobe is hit, it overwrites probed function's return
+> > > > address
+> > > >      on stack with address of the trampoline that contains breakpoint
+> > > >      instruction
+> > > > 
+> > > >    - the breakpoint trap code handles the uretprobe consumers execution
+> > > > and
+> > > >      jumps back to original return address
 > 
+> Hi,
+> 
+> I worked on the x86 shadow stack support.
+> 
+> I didn't know uprobes did anything like this. In hindsight I should have looked
+> more closely. The current upstream behavior is to overwrite the return address
+> on the stack?
+> 
+> Stupid uprobes question - what is actually overwriting the return address on the
+> stack? Is it the kernel? If so perhaps the kernel could just update the shadow
+> stack at the same time.
 
-Changelog needs to be imperative - refer to the following:
+yes, it's in kernel - arch_uretprobe_hijack_return_addr .. so I guess
+we need to update the shadow stack with the new return value as well
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+> 
+> > > > 
+> > > > This patch replaces the above trampoline's breakpoint instruction with new
+> > > > ureprobe syscall call. This syscall does exactly the same job as the trap
+> > > > with some more extra work:
+> > > > 
+> > > >    - syscall trampoline must save original value for rax/r11/rcx registers
+> > > >      on stack - rax is set to syscall number and r11/rcx are changed and
+> > > >      used by syscall instruction
+> > > > 
+> > > >    - the syscall code reads the original values of those registers and
+> > > >      restore those values in task's pt_regs area
+> > > > 
+> > > >    - only caller from trampoline exposed in '[uprobes]' is allowed,
+> > > >      the process will receive SIGILL signal otherwise
+> > > > 
+> > > 
+> > > Did you consider shadow stacks? IIRC we currently have userspace shadow
+> > > stack support available, and that will utterly break all of this.
+> > 
+> > nope.. I guess it's the extra ret instruction in the trampoline that would
+> > make it crash?
+> 
+> The original behavior seems problematic for shadow stack IIUC. I'm not sure of
+> the additional breakage with the new behavior.
 
-Update the change log and describe what the test does and include
-test output.
+I can see it's broken also for current uprobes
 
-If the test requires root privileges - make sure add a check to skip
-when a normal use runs the test.
+> 
+> Roughly, how shadow stack works is there is an additional protected stack for
+> the app thread. The HW pushes to from the shadow stack with CALL, and pops from
+> it with RET. But it also continues to push and pop from the normal stack. On
+> pop, if the values don't match between the two stacks, an exception is
+> generated. The whole point is to prevent the app from overwriting its stack
+> return address to return to random places.
+> 
+> Userspace cannot (normally) write to the shadow stack, but the kernel can do
+> this or adust the SSP (shadow stack pointer). So in the kernel (for things like
+> sigreturn) there is an ability to do what is needed. Ptracers also can do things
+> like this.
 
-The rest looks good.
+hack below seems to fix it for the current uprobe setup,
+we need similar fix for the uretprobe syscall trampoline setup
 
-thanks,
--- Shuah
+jirka
+
+
+---
+diff --git a/arch/x86/include/asm/shstk.h b/arch/x86/include/asm/shstk.h
+index 42fee8959df7..99a0948a3b79 100644
+--- a/arch/x86/include/asm/shstk.h
++++ b/arch/x86/include/asm/shstk.h
+@@ -21,6 +21,7 @@ unsigned long shstk_alloc_thread_stack(struct task_struct *p, unsigned long clon
+ void shstk_free(struct task_struct *p);
+ int setup_signal_shadow_stack(struct ksignal *ksig);
+ int restore_signal_shadow_stack(void);
++void uprobe_change_stack(unsigned long addr);
+ #else
+ static inline long shstk_prctl(struct task_struct *task, int option,
+ 			       unsigned long arg2) { return -EINVAL; }
+diff --git a/arch/x86/kernel/shstk.c b/arch/x86/kernel/shstk.c
+index 59e15dd8d0f8..d2c4dbe5843c 100644
+--- a/arch/x86/kernel/shstk.c
++++ b/arch/x86/kernel/shstk.c
+@@ -577,3 +577,11 @@ long shstk_prctl(struct task_struct *task, int option, unsigned long arg2)
+ 		return wrss_control(true);
+ 	return -EINVAL;
+ }
++
++void uprobe_change_stack(unsigned long addr)
++{
++	unsigned long ssp;
++
++	ssp = get_user_shstk_addr();
++	write_user_shstk_64((u64 __user *)ssp, (u64)addr);
++}
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 81e6ee95784d..88afbeaacb8f 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -348,7 +348,7 @@ void *arch_uprobe_trampoline(unsigned long *psize)
+ 	 * only for native 64-bit process, the compat process still uses
+ 	 * standard breakpoint.
+ 	 */
+-	if (user_64bit_mode(regs)) {
++	if (0 && user_64bit_mode(regs)) {
+ 		*psize = uretprobe_syscall_end - uretprobe_syscall_entry;
+ 		return uretprobe_syscall_entry;
+ 	}
+@@ -1191,8 +1191,10 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
+ 		return orig_ret_vaddr;
+ 
+ 	nleft = copy_to_user((void __user *)regs->sp, &trampoline_vaddr, rasize);
+-	if (likely(!nleft))
++	if (likely(!nleft)) {
++		uprobe_change_stack(trampoline_vaddr);
+ 		return orig_ret_vaddr;
++	}
+ 
+ 	if (nleft != rasize) {
+ 		pr_err("return address clobbered: pid=%d, %%sp=%#lx, %%ip=%#lx\n",
