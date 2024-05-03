@@ -1,202 +1,226 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE8215358B;
-	Fri,  3 May 2024 13:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1415444E;
+	Fri,  3 May 2024 14:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714742048; cv=none; b=fiybGIh0WBX0bRyQbxo1cmcVUgNJHxr+k75ANuGHDk7iViQo5jyd9Q6VeK6GWx6FMp/X6iQHEJ29nrS+Rit93+fzbE2maVHDlpq6VCQpn0aRopoj3twk51aNaYw2Ko0a3WblSn8rScpgxO9MGX4pt9OE7oWy+nF+rM0m2zVKjHc=
+	t=1714745385; cv=none; b=mUVWfdVt0zYaR0o2/SbDplsl3eIToZqAKv+V/l2tox9igjNvNhu+YAjaf2+P4MUCwHgCM+BXRW1fvxmc2bckq1D2TW1uElLHlBiRqqtsP58W8hwu+a4nok4u5MmGUqCX33zQUrnNGkxMWqHUh7iJNJ2B2nvMqmI1lDR6LBR4Pxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714742048; c=relaxed/simple;
-	bh=emDrdx6WOkQnF2Eso3DR0P187wYGRr+WTfcYUP8aUXY=;
+	s=arc-20240116; t=1714745385; c=relaxed/simple;
+	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uFXxjxIXve9tB75TqzA1vNN7p1ZU5NDyFqcopoA0UUVfvFh1JS/nMk3ot7qef24ngbQ2n4pmTs+DAMMeRmnMpMzJeVPMb6hApDjw+5Kkz/K+wFS/+9iHnupJ9J3qE+gTXxDy7nljRkmNzUGN9Vz3vgKH6DzhoQSrEPGwoTNjwh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcauIy26; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CCdPlKyCDCaJhJaOwA2p1JSxq4VuaZLqvkDZ1bf5bPxs0s+fVuu+J0ErRRJkTUSueX9Ozh8KROPOdICNpBkkA0BfOXwwJ1uBH/IrSLWigC6wpebd33UiFahRV/Z+4aHBbfG/UsiIoZw2Vs6tTQ0nRUb/EjIJuxDYXdq9/FKLSJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KM4XIarb; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcauIy26"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f44ed6e82fso314106b3a.3;
-        Fri, 03 May 2024 06:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714742046; x=1715346846; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S6Kz22nN7XZpw5/QYn8eU3Vl5d2ZzmTa9J6l4Ufw1zs=;
-        b=gcauIy26MtzJYA8Gns6kXZilBsGTzVoH5HBE70noznhGOD4euDnekA10A01JhJPaLO
-         3g/gVlbyt0HrO4AS2vlEUGm9fP40LfNNZhe05qHmQQDDTXbdlsjL6mGTAhieH0jEnWuf
-         2UXYKRmnjAejy9goG3wES6Ad1+iG+/facnZgyyouKsCRo2hXWbGOu9VtEEfnnefyPTSW
-         7iMwwes0uuOIIV/vYUUhSG5tqOsagJyJGfgu3ygTA3yLrrmBgMDFctfaUxslbfdu6TXe
-         7IgKNvm5WAWO0WLGUO0ftNS79LC27eJf2MhdRHCgpdbxC0N19AnVU+8e/hJVtiOaJ5Cd
-         29Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714742046; x=1715346846;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S6Kz22nN7XZpw5/QYn8eU3Vl5d2ZzmTa9J6l4Ufw1zs=;
-        b=Q5uGiD4D6J/PrQvGzWl+iPWr35x9BFY32I3uffYTmLVU2gJccyoYKYOihx6Fucj+B2
-         gA9t9O9JpEcUdshqKBBY3YCp0zSPaM3r3ggiRYt5d2a9tFWwBJysy/QI1VF2ZIdh/kqB
-         A/9K4Iba1nfp9IQNqChm4DMSW+jJQFBInncsAwtQzpGZfpG4qVrw7aJAnBg9AhKTNzyJ
-         CvJJNDlUZJhFLk8OtF++fxDILWOYY7glkSaunLgvoUQ8H7V/vnzoma6qsa9Oq4WR37v3
-         k1r2JE9Ti1N+wYw4p0cPfi5eCPspBIp8y5CqBJuaZT6vG4MvG9ej9DIo+7PWdwc/GODd
-         6v+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVILL6wtpyjp9AhtO3obmCsPN3ndhJIKkDpP0EPmFncQvyR/Krsp4rbEJ1jlY3jNJys+oXkf0RSHkgUMRCcecEATmVTc8kc/SRJU3HPnjLguE9vdE6uLjh53jSmXZ2MKaq/VnlNFdZ5DIwROEPEe96L/QUYjImbzgkZsUyKoZBxz1NA8JaCYGyjt5tdyIVPi97Oublw5HQ+zpiA9zKv86vL1l68FUcazL/PG2xQp0i4poNkbUioC9mTRE3VcTwJBq9Rl+Vkmzd/fcpEaT8aPn6FSeOm5TShzeECXsf3O3G8vwrzHoicyoBNXwlrmfKz3sWspenNHP1fv5grRcEa7yRbL3HruID7AYjsySZj4ntgyGwixOYBAZQcOjAoqD3lOiCr7HpZSQ3Gsa/+mJjUtR+RiVCqV8kn6cGhYgf9W12xfI0LMH/hkK06p7fNn16Zygg23SlxfvDBE/Qgc1uf1zwru5rc3ua53X6Dyudnn3XWunVjFj1GemFEY89xD+ymFrqlAuUu3w==
-X-Gm-Message-State: AOJu0YxrOPSFGgA0SvXlclJbHO9actMARbcZeqFgnXwjiekXoN7gsQcY
-	eOQa9hGvHl7K5jXKPV9hHKiye5303LSuvCHluvvjR8nW59v/1Zny
-X-Google-Smtp-Source: AGHT+IGAxZcx6M5jku9xJQNGsk1mq4nfDpmBwjTTeZ5TRCe/HqThlL4pFRsVfzRAFzuWYWRs0QPHbQ==
-X-Received: by 2002:a05:6a20:3cac:b0:1ac:c8dc:3e5e with SMTP id b44-20020a056a203cac00b001acc8dc3e5emr3146813pzj.24.1714742046301;
-        Fri, 03 May 2024 06:14:06 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id j1-20020a170902da8100b001e509d4d6ddsm3203863plx.1.2024.05.03.06.14.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 06:14:05 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id C0EA918462B27; Fri, 03 May 2024 20:14:03 +0700 (WIB)
-Date: Fri, 3 May 2024 20:14:03 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	Kaiyuan Zhang <kaiyuanz@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Florian Westphal <fw@strlen.de>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
-	Arseniy Krasnov <avkrasnov@salutedevices.com>,
-	Aleksander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Richard Gobert <richardbgobert@gmail.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>,
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v8 13/14] net: add devmem TCP documentation
-Message-ID: <ZjTjG_INUM4G1Pf5@archie.me>
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-14-almasrymina@google.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KM4XIarb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714745381;
+	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KM4XIarbWLiqP+rTdHhYP4ADp2FfBPZJESIvebE/x46r3wpaPNaKYYJ8DjRuiR4XK
+	 lgnUuJtE42KneR0ACxiqLQ5uJD/S7BK84VwhVwYe9egEdoAzvtQwKV4FeMNTpP6GjL
+	 22eK/o3npUywdzgLbvtpx7d4AZBFjdzVsbPnc49I=
+Date: Fri, 3 May 2024 16:09:40 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <4cda5d2d-dd92-44ef-9e7b-7b780ec795ab@t-8ch.de>
+References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
+ <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p760D9CQLIFGzr8t"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403002053.2376017-14-almasrymina@google.com>
+In-Reply-To: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 
+Hey Joel,
 
---p760D9CQLIFGzr8t
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2024-05-03 11:03:32+0000, Joel Granados wrote:
+> Here is my feedback for your outstanding constification patches [1] and [2].
 
-On Tue, Apr 02, 2024 at 05:20:50PM -0700, Mina Almasry wrote:
-> +ncdevmem has a validation mode as well that expects a repeating pattern =
-of
-> +incoming data and validates it as such::
-> +
-> +	# On server:
-> +	ncdevmem -s <server IP> -c <client IP> -f eth1 -d 3 -n 0000:06:00.0 -l \
-> +		 -p 5201 -v 7
-> +
-> +	# On client:
-> +	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
-> +		tr \\n \\0 | head -c 5G | nc <server IP> 5201 -p 5201
+Thanks!
 
-What about splitting server and client usage?
+> # You need to split the patch
+> The answer that you got from Jakub in the network subsystem is very clear and
+> baring a change of heart from the network folks, this will go in as but as a
+> split patchset. Please split it considering the following:
+> 1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
+>    miscellaneous that includes whatever does not fit into the others.
+> 2. Consider that this might take several releases.
+> 3. Consider the following sufix for the interim function name "_const". Like in
+>    kfree_const. Please not "_new".
 
----- >8 ----
-diff --git a/Documentation/networking/devmem.rst b/Documentation/networking=
-/devmem.rst
-index e4e978fbcdbd5f..f32acfd62075d2 100644
---- a/Documentation/networking/devmem.rst
-+++ b/Documentation/networking/devmem.rst
-@@ -245,12 +245,14 @@ To run ncdevmem, you need to run it on a server on th=
-e machine under test, and
- you need to run netcat on a peer to provide the TX data.
-=20
- ncdevmem has a validation mode as well that expects a repeating pattern of
--incoming data and validates it as such::
-+incoming data and validates it as such. For example, you can launch
-+ncdevmem on the server by::
-=20
--	# On server:
- 	ncdevmem -s <server IP> -c <client IP> -f eth1 -d 3 -n 0000:06:00.0 -l \
- 		 -p 5201 -v 7
-=20
--	# On client:
-+On client side, use regular netcat to send TX data to ncdevmem process
-+on the server::
-+
- 	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
- 		tr \\n \\0 | head -c 5G | nc <server IP> 5201 -p 5201
+Ack. "_new" was an intentionally unacceptable placeholder.
 
-Thanks.
+> 4. Please publish the final result somewhere. This is important so someone can
+>    take over in case you need to stop.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Will do. Both for each single series and a combination of all of them.
 
---p760D9CQLIFGzr8t
-Content-Type: application/pgp-signature; name="signature.asc"
+> 5. Consistently mention the motivation in your cover letters. I specify more
+>    further down in "#Motivation".
+> 6. Also mention that this is part of a bigger effort (like you did in your
+>    original cover letters). I would include [3,4,5,6]
+> 7. Include a way to show what made it into .rodata. I specify more further down
+>    in "#Show the move".
+> 
+> # Motivation
+> As I read it, the motivation for these constification efforts are:
+> 1. It provides increased safety: Having things in .rodata section reduces the
+>    attack surface. This is especially relevant for structures that have function
+>    pointers (like ctl_table); having these in .rodata means that these pointers
+>    always point to the "intended" function and cannot be changed.
+> 2. Compiler optimizations: This was just a comment in the patchsets that I have
+>    mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
+>    have to do with enhancing locality for the data in .rodata? Do you have other
+>    specific optimizations in mind?
 
------BEGIN PGP SIGNATURE-----
+I don't know about anything that would make it faster.
+It's more about safety and transmission of intent to API users,
+especially callback implementers.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjTjFwAKCRD2uYlJVVFO
-o9RPAQCNza/o9eilURPtLMgckHLWGXSLgl+m05JS4n+5eQOBfAEAuaR+vADZuSKC
-PnV18jn47Aqz1SmrD+MDjjeFy4rw0gM=
-=E6BN
------END PGP SIGNATURE-----
+> 3. Readability: because it is easier to know up-front that data is not supposed
+>    to change or its obvious that a function is re-entrant. Actually a lot of the
+>    readability reasons is about knowing things "up-front".
+> As we move forward with the constification in sysctl, please include a more
+> detailed motivation in all your cover letters. This helps maintainers (that
+> don't have the context) understand what you are trying to do. It does not need
+> to be my three points, but it should be more than just "put things into
+> .rodata". Please tell me if I have missed anything in the motivation.
 
---p760D9CQLIFGzr8t--
+Will do.
+
+> # Show the move
+> I created [8] because there is no easy way to validate which objects made it
+> into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
+> .rodata than I expected (the results are in [9]) Why is that? Is it something
+> that has not been posted to the lists yet? 
+
+Constifying the APIs only *allows* the actual table to be constified
+themselves.
+Then each table definition will have to be touched and "const" added.
+
+See patches 17 and 18 in [7] for two examples.
+
+Some tables in net/ are already "const" as the static definitions are
+never registered themselves but only their copies are.
+
+This seems to explain your findings.
+
+> Best
+
+Thanks!
+
+> [1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
+> [2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net
+> [3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+>     https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org
+> [4] [PATCH v2 00/19] backlight: Constify lcd_ops
+>     https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa82b07bc6@kernel.org
+> [5] [PATCH 1/4] iommu: constify pointer to bus_type
+>     https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski@linaro.org
+> [6] [PATCH 00/29] const xattr tables
+>     https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
+> [7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> 
+> [8]
+
+[snip]
+
+> [9]
+>     section: .rodata                obj_name : kern_table
+>     section: .rodata                obj_name : sysctl_mount_point
+>     section: .rodata                obj_name : addrconf_sysctl
+>     section: .rodata                obj_name : ax25_param_table
+>     section: .rodata                obj_name : mpls_table
+>     section: .rodata                obj_name : mpls_dev_table
+>     section: .data          obj_name : sld_sysctls
+>     section: .data          obj_name : kern_panic_table
+>     section: .data          obj_name : kern_exit_table
+>     section: .data          obj_name : vm_table
+>     section: .data          obj_name : signal_debug_table
+>     section: .data          obj_name : usermodehelper_table
+>     section: .data          obj_name : kern_reboot_table
+>     section: .data          obj_name : user_table
+>     section: .bss           obj_name : sched_core_sysctls
+>     section: .data          obj_name : sched_fair_sysctls
+>     section: .data          obj_name : sched_rt_sysctls
+>     section: .data          obj_name : sched_dl_sysctls
+>     section: .data          obj_name : printk_sysctls
+>     section: .data          obj_name : pid_ns_ctl_table_vm
+>     section: .data          obj_name : seccomp_sysctl_table
+>     section: .data          obj_name : uts_kern_table
+>     section: .data          obj_name : vm_oom_kill_table
+>     section: .data          obj_name : vm_page_writeback_sysctls
+>     section: .data          obj_name : page_alloc_sysctl_table
+>     section: .data          obj_name : hugetlb_table
+>     section: .data          obj_name : fs_stat_sysctls
+>     section: .data          obj_name : fs_exec_sysctls
+>     section: .data          obj_name : fs_pipe_sysctls
+>     section: .data          obj_name : namei_sysctls
+>     section: .data          obj_name : fs_dcache_sysctls
+>     section: .data          obj_name : inodes_sysctls
+>     section: .data          obj_name : fs_namespace_sysctls
+>     section: .data          obj_name : dnotify_sysctls
+>     section: .data          obj_name : inotify_table
+>     section: .data          obj_name : epoll_table
+>     section: .data          obj_name : aio_sysctls
+>     section: .data          obj_name : locks_sysctls
+>     section: .data          obj_name : coredump_sysctls
+>     section: .data          obj_name : fs_shared_sysctls
+>     section: .data          obj_name : fs_dqstats_table
+>     section: .data          obj_name : root_table
+>     section: .data          obj_name : pty_table
+>     section: .data          obj_name : xfs_table
+>     section: .data          obj_name : ipc_sysctls
+>     section: .data          obj_name : key_sysctls
+>     section: .data          obj_name : kernel_io_uring_disabled_table
+>     section: .data          obj_name : tty_table
+>     section: .data          obj_name : random_table
+>     section: .data          obj_name : scsi_table
+>     section: .data          obj_name : iwcm_ctl_table
+>     section: .data          obj_name : net_core_table
+>     section: .data          obj_name : netns_core_table
+>     section: .bss           obj_name : nf_log_sysctl_table
+>     section: .data          obj_name : nf_log_sysctl_ftable
+>     section: .data          obj_name : vs_vars
+>     section: .data          obj_name : vs_vars_table
+>     section: .data          obj_name : ipv4_route_netns_table
+>     section: .data          obj_name : ipv4_route_table
+>     section: .data          obj_name : ip4_frags_ns_ctl_table
+>     section: .data          obj_name : ip4_frags_ctl_table
+>     section: .data          obj_name : ctl_forward_entry
+>     section: .data          obj_name : ipv4_table
+>     section: .data          obj_name : ipv4_net_table
+>     section: .data          obj_name : unix_table
+>     section: .data          obj_name : ipv6_route_table_template
+>     section: .data          obj_name : ipv6_icmp_table_template
+>     section: .data          obj_name : ip6_frags_ns_ctl_table
+>     section: .data          obj_name : ip6_frags_ctl_table
+>     section: .data          obj_name : ipv6_table_template
+>     section: .data          obj_name : ipv6_rotable
+>     section: .data          obj_name : sctp_net_table
+>     section: .data          obj_name : sctp_table
+>     section: .data          obj_name : smc_table
+>     section: .data          obj_name : lowpan_frags_ns_ctl_table
+>     section: .data          obj_name : lowpan_frags_ctl_table
