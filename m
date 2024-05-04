@@ -1,130 +1,67 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670A164CFC
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 May 2024 23:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7038D7FF;
+	Sat,  4 May 2024 00:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714777318; cv=none; b=c5z/Ngtu2atNwaKaV1493VgSER51lyRSzk5hX9qzszRKk/RYgj7wPx3T/foqZ78sFoIZyF2SatUSjVZYhPGXTysWwKwISMPMlyJPD0AqWhkF5vrCOdcuSRvXkntbAO3Pjmtd1io7QVRMseJWfl2pQTWvvi0v6lH/cXyKniw4Lhg=
+	t=1714782785; cv=none; b=Mqv1WzCexBBBFKEtB4OWqlu5UPhjw9Ig/e8QK9/QPwwO2CWoy7o+AZBXfVeOKv0D5JVLAFhYKYVyvX+feD6SItVvMs1XXeAY8HjGqZM3Cyl2Y6PcrpWNCA10p0aOkIV8zbygTHbWOUsy7nKVxa+qKpEfr+YQQRgStW3t4i1l3xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714777318; c=relaxed/simple;
-	bh=4+92T3dF1pCkzFJyIvWH9pdOMABziRyYEtERHQRUflQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SptrdcLP1ianSj5OSeA2qVp9QmW0rU8nd1afDbasbLg2aDXLer0EsomrVzF7a9LyQx26Awgg3zhXFqpN7mEP34wvKmmn2ne0DutrhMyxtlTh7yJ27PrvPnYdYObFAa5oz8ZKhoo3TBtH+kKErQOYE8Fuqz+lIPr+xFumPF8y7GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zCe+/lF3; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1714782785; c=relaxed/simple;
+	bh=dpWHdf4Lt2qh5ayzdY4gmrM1LxVv8Xrq9e3MVXxRmOY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ThWXkGpYaGW4NwlKxhedzsWkSW6ekffMvyY4hn4r4j8mTu1yZPbzbO+anXyvvcv7OYPimlB5qrZZ2sz8Qf5306t9OuENgemoxboD7KhoNVR2oEPA44yTkYnLSWc235FwwKIHTQI6L/8kgrApxppc9EkYM5pPV5hNb1Kl1jfjSPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyWGyDeP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zCe+/lF3"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so1641955ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 May 2024 16:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1714777317; x=1715382117; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4+92T3dF1pCkzFJyIvWH9pdOMABziRyYEtERHQRUflQ=;
-        b=zCe+/lF34YSpkLm2TxtBbKSM5HvQTiKwAV3/44wZGfe5OEzwrVa15OMDxIqPZ6I5Ir
-         fuY3gGUb1FAi2faOv0IGo2pG5+C0IrtWoAvDo27Rm59TDonSdrohlP/jS86LM+nBFEtr
-         GQ3wWvTpg2+gE2rC84ee/b9iJ/8BqenQTpLVlydzmF1Q0OR+SG+iFBTc7vA2g6AR9wul
-         m/yFYwnkqQjsc8A+msgyA4Sd2DrAZoqHoiIs/JMbDHBl0iLiHDMXXc9ty8yA5mVjjUPu
-         NIXwFUvpRU7gKebDzlcSK+ISTKqFUA3d5KvW+ehUNElxgrnfJxbe9q+O7QQnllgNc6za
-         k4nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714777317; x=1715382117;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4+92T3dF1pCkzFJyIvWH9pdOMABziRyYEtERHQRUflQ=;
-        b=YWnyVtRl5ID7JRFfZ43o1YNebl/ZBTAW9jM1N6LnWP2xp9mQ6ORRD95Nhme706rpT0
-         o/ZCcJhZtgzleNUcXSkLT+MkghVvyJdz3Btke8moM3kJsYBTovUlINmI2o0GkAoyvPJp
-         o+/hkUBhBoCi4uoVYqqa31dXhd4zwxd3Wu1Bx7TJ3va7GN40kD7nrpDEJbaNvpF/RBqj
-         tBZ5Xc+PJwB2eMoUW6yAcF049+rthJQv3AbPopoB/8ARMBogBWOS3cZdJS19HSEKLl35
-         us1/eUONUwPyjP7TpjGekrQKZJuOkC5oIRGQUYpRbmNmyPViQ3DnvF0/CrQ2nePnWznq
-         LunQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdVijDwxBnaO3hyifnVq8bwcqQQbOJo4s+2L+YmMDNaHuLpq+G07CHgLlI3/stERfrpX8stWcsvHqc2exgwPgvjaPTSZcsld6GjIYtT1gaALrs
-X-Gm-Message-State: AOJu0YxGypzsU6x/h8aJv68LOxVByGi+tQIdIf8WBDm3SmaGZreHkEDA
-	SKsdekNKWEc4pf8+9ghftQnAtPhA5uAOCDW/FX2YO7XlHqZSGSVJVcrmYLejYp8=
-X-Google-Smtp-Source: AGHT+IHzq6AzE/NVvcqxm4ol0K1axCLWE5IjNbsp5PyIHu/cbS2sPY/kkICJk49x3bkJcMIgzsAwYg==
-X-Received: by 2002:a17:903:32cf:b0:1e2:ca65:68c2 with SMTP id i15-20020a17090332cf00b001e2ca6568c2mr5565119plr.51.1714777316672;
-        Fri, 03 May 2024 16:01:56 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id f7-20020a170902684700b001eab1a1a752sm3841345pln.120.2024.05.03.16.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 16:01:56 -0700 (PDT)
-Date: Fri, 3 May 2024 16:01:53 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
-	"songliubraving@fb.com" <songliubraving@fb.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"andrii@kernel.org" <andrii@kernel.org>,
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"yhs@fb.com" <yhs@fb.com>, "oleg@redhat.com" <oleg@redhat.com>,
-	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCHv4 bpf-next 2/7] uprobe: Add uretprobe syscall to speed up
- return probe
-Message-ID: <ZjVs4bxi7CpWhtEQ@debug.ba.rivosinc.com>
-References: <20240502122313.1579719-1-jolsa@kernel.org>
- <20240502122313.1579719-3-jolsa@kernel.org>
- <20240503113453.GK40213@noisy.programming.kicks-ass.net>
- <ZjTg2cunShA6VbpY@krava>
- <725e2000dc56d55da4097cface4109c17fe5ad1a.camel@intel.com>
- <ZjU4ganRF1Cbiug6@krava>
- <6c143c648e2eff6c4d4b5e4700d1a8fbcc0f8cbc.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyWGyDeP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023DEC116B1;
+	Sat,  4 May 2024 00:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714782785;
+	bh=dpWHdf4Lt2qh5ayzdY4gmrM1LxVv8Xrq9e3MVXxRmOY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AyWGyDePNZdxf2QmO3ycbQDZ8aq17SLAx915yM+hq6bof50If3TJG+3cw7F8NJCZB
+	 3wlCAnO6Fs1oFL3NekW+8HlfVqSJ4V1XOyvNxIkntqr4FF5Zl/dSU79Xud1uJFFTZL
+	 PdKSbtASXioFDMy2tzWxP21+tTLD36qQTAIhru+ODHfnMfcjTqeQ+vXikmNlCEJmuf
+	 /K2+aWNUmTIZskmSkPpzL6NOdHGxB3w+VtO8DcTX0ZKr/vRA9jAqVve57ZHX9Wqx9C
+	 Td1jYbrNKh1ucg1e4nKciGrMun55k9JCUvHCTnObg6Zi92iOdc+70oMPDq4bx/YRan
+	 A+mAtHavm5Cgw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/2] selftests/ftrace: Fix some errors
+Date: Sat,  4 May 2024 09:32:58 +0900
+Message-Id: <171478277880.109670.10932081511777701353.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <6c143c648e2eff6c4d4b5e4700d1a8fbcc0f8cbc.camel@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 03, 2024 at 07:38:18PM +0000, Edgecombe, Rick P wrote:
->+Some more shadow stack folks from other archs. We are discussing how uretprobes
->work with shadow stack.
->
->Context:
->https://lore.kernel.org/lkml/ZjU4ganRF1Cbiug6@krava/
+Here is a couple of patches for fixing errors on ftracetest.
+Shuah, can you pick these to your fixes branch? Or I also can push it.
 
-Thanks Rick.
+Thank you,
+---
 
-Yeah I didn't give enough attention to uprobes either.
-Although now that I think for RISC-V shadow stack, it shouldn't be an issue.
-On RISC-V return addresses don't get pushed as part of call instruction.
-There is a distinct instruction "shadow stack push of return address" in prolog.
-Similarly in epilog there is distinct instruction "shadow stack pop and check with
-link register".
+Masami Hiramatsu (Google) (2):
+      selftests/ftrace: Fix BTFARG testcase to check fprobe is enabled correctly
+      selftests/ftrace: Fix checkbashisms errors
 
-On RISC-V, uretprobe would install a uprobe on function start and when it's hit.
-It'll replace pt_regs->ra = trampoline_handler. As function will resume, trampoline
-addr will get pushed and popped. Although trampoline_handler would have to be enlightened
-to eventually return to original return site.
 
->
->On Fri, 2024-05-03 at 21:18 +0200, Jiri Olsa wrote:
->>
->> hack below seems to fix it for the current uprobe setup,
->> we need similar fix for the uretprobe syscall trampoline setup
->
->It seems like a reasonable direction.
->
->Security-wise, applications cannot do this on themselves, or it is an otherwise
->privileged thing right?
->
->
+ .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |    2 +-
+ .../ftrace/test.d/dynevent/fprobe_entry_arg.tc     |    2 +-
+ .../ftrace/test.d/kprobe/kretprobe_entry_arg.tc    |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
