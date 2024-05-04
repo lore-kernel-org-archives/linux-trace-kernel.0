@@ -1,75 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221B8A34;
-	Sat,  4 May 2024 00:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8944338394;
+	Sat,  4 May 2024 13:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714783021; cv=none; b=SpHlFtP8RXjtzFryGl7PUQu27J/aAvEpwbnKR6S5xrdgKYu3oRLFYI7NKrxdRc8+5Nfv27zWLUWD9oFELErWmfoSavQNUZ5f25g9BxR11WQHX+hkcIfXEmKcJHNNGmtStAomUcqF9w5wTGxrP/oSA91pKmjpzu4q3ulBOO4gD2Q=
+	t=1714829009; cv=none; b=OoJFYiUlEJ6PzIUk9TMOBBcIDOF1fUUPk9qXN2LCodFIlBYsRbhlsIFjH3kGjtFgfj7PrmPGRfQ3COTY+VKFQZBJIaAXJTWDCOSTmCwaSvpyNyARIl/UEUJ5Mb+cRlz3yhGyR5srlPShajxTDLS53g7rbxotQtVjhzFYo2c+HHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714783021; c=relaxed/simple;
-	bh=RVhCUb8j6bIvl5Nrd+AUuRpCyrt+Ya63YaRYyLEZCjY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mc6I90kVovYJ54so0HH+Wsdu7RQgFot/5g8dYvpLeZI9X2Kp8o95aFW9pru7rxl7lz5S/ObyABHC+9t76nux5C4uGzjiuwj3Jn1um8qfx98UPKWvU1x/oh4C/kllkpby8nzQkOXfevtAq/l9dP2zP6dkP9R+lIKazwGy86hNWv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMe2/prL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714829009; c=relaxed/simple;
+	bh=j1r1jilx6lGom9Gnv3zuJNzqKo9xq3dNbo1zLxLuV2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HZBpZnIN9ADSI6AUlpozLV32Hp/DP98KMWnHwfdzm6gX+xwErrSdNVnZfjtI5IyFxPCRpJ9nNJr72ZjQGWDjxqMSYLe7WVHC11JqsNpDuaaHtGFsWyutUMxpqwSQcJvzZmIgazQRimTf1gEm7YAkYqMA2nCQFoiOaj164OksKb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=YA1Y0DPK; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMe2/prL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1768EC116B1;
-	Sat,  4 May 2024 00:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714783020;
-	bh=RVhCUb8j6bIvl5Nrd+AUuRpCyrt+Ya63YaRYyLEZCjY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sMe2/prLxeKpiEOOIQ1hnal/SmAhWd8kLVcREHrf16p57BJtrCdtL1dQoB6wxaxOD
-	 xzm8EdzxbAlx84/zT78D138SXBoqt38Jxc6D3I/HSHELpUglXBfZfHbZ9m9/EgL2Gw
-	 b3C/uKUqjo6g2iJiy8undxT2+dOZX4cARq44ATlnj2w5/RTDK2sdarLUwARqIqWX4k
-	 v3SLEOmyB29RuAsNiuhCLE2BnlmK7hWdgEIv269tIqqV6Eunu8Y6iHODD5N7GmwaGZ
-	 iIdkg21WNr416PWQrpBRzK2d+ls5bgZdWsQNg/X91m/imjarKiw6wJ4qQ3HuSP0Zfm
-	 8ntlFGn9kozLA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Ye Bin <yebin10@huawei.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH for-next] selftests/ftrace: Fix required features for VFS type test case
-Date: Sat,  4 May 2024 09:36:56 +0900
-Message-Id: <171478301645.110267.464634740467398506.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="YA1Y0DPK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=OZa4/AI0KRmeOPBifgCo9CMRnurRIOGqDfHkqHbaCoY=; b=YA1Y0DPKmf9ibdD7
+	TiJwjHTkWpvigshrq3pt4PdX+8cERDwazd6I4WpUIqO4DwSnN8qOQXFvTdgpU78BwcLL94m1uZ1lp
+	aMS1753cUa/DDhN8zUUh6eT0JkB2XDsSHIo/d5ZaguElKO0fyimIK9NR/MktwG0R9K+p60FKe/AXt
+	jZyGhtjgQ8JiA/I2wF6rjItnohJgCGEABhWPt7T5R/pA7nwsHyE96HuBbhLoKpE43eo6WYVxgbJ8K
+	J6ligwwnXzDW9gfZEbq9b+TlcxffDoIrtGdcHC/Z4ATOgBmpxV6cfmsKCX+bKxnpEWBQ30zS2TViC
+	VsO1QIaE7RszQpcjfw==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1s3FM1-004hMp-15;
+	Sat, 04 May 2024 13:23:05 +0000
+From: linux@treblig.org
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] ftrace: Remove unused list 'ftrace_direct_funcs'
+Date: Sat,  4 May 2024 14:23:03 +0100
+Message-ID: <20240504132303.67538-1-linux@treblig.org>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Since the VFS type argument test case uses fprobe events, it must
-check the availablity of dynamic_events file and fprobe events syntax
-in README. Without this fix, the test fails if CONFIG_FPROBE_EVENTS=n.
+Commit 8788ca164eb4b ("ftrace: Remove the legacy _ftrace_direct API")
+stopped using 'ftrace_direct_funcs' (and the associated
+struct ftrace_direct_func).  Remove them.
 
-Fixes: ee97e5e135c6 ("selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Build tested only (on x86-64 with FTRACE and DYNAMIC_FTRACE
+enabled)
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- .../ftrace/test.d/dynevent/fprobe_args_vfs.tc      |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/ftrace.h | 1 -
+ kernel/trace/ftrace.c  | 8 --------
+ 2 files changed, 9 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
-index 49a833bf334c..c6a9d2466a71 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
-@@ -1,7 +1,8 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Fprobe event VFS type argument
--# requires: kprobe_events "%pd/%pD":README
-+# requires: dynamic_events "%pd/%pD":README "f[:[<group>/][<event>]] <func-name>[%return] [<args>]":README
-+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 54d53f345d149..b01cca36147ff 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -83,7 +83,6 @@ static inline void early_trace_init(void) { }
  
- : "Test argument %pd with name for fprobe"
- echo 'f:testprobe dput name=$arg1:%pd' > dynamic_events
+ struct module;
+ struct ftrace_hash;
+-struct ftrace_direct_func;
+ 
+ #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_MODULES) && \
+ 	defined(CONFIG_DYNAMIC_FTRACE)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da1710499698b..b18b4ece3d7c9 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5318,14 +5318,6 @@ ftrace_set_addr(struct ftrace_ops *ops, unsigned long *ips, unsigned int cnt,
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ 
+-struct ftrace_direct_func {
+-	struct list_head	next;
+-	unsigned long		addr;
+-	int			count;
+-};
+-
+-static LIST_HEAD(ftrace_direct_funcs);
+-
+ static int register_ftrace_function_nolock(struct ftrace_ops *ops);
+ 
+ /*
+-- 
+2.45.0
 
