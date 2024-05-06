@@ -1,155 +1,133 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0A8320B
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 May 2024 00:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C863B8;
+	Mon,  6 May 2024 10:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714955364; cv=none; b=aecb6klAh+UVkdMAmbKalg+fIgHbQALUNBPx/yWXr3kZaNaJD9ki2woZ53zsdDLiEkneNMMwt+gdjVWVMsATVpuIYnqRJr4/jEMg+5JYL6HX98I/EbtZGu0J9yhen+TEjCqoRGdyl5ZEALUTjtKctSJS+ujiZ7nx1wpvbUxV6f8=
+	t=1714991926; cv=none; b=l6VGqmoAbiNK8lR1Y+DRBG0AnYt2DOj7t2hN25BgQNf+YulWT+NLK6aMkyu6KyW3KB2Z6JoFbrA7S0Ss9CZRHm+TgxzO2MeW/a8fDFavUmWhZ1nZdGopD+jxJjoC7nK10Lz7dRBX3FIwbWYIfQNpRa+NbrlOfp0AQ0a5MPiH/t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714955364; c=relaxed/simple;
-	bh=7p83fI6SjhbSz9whdN8AjeYm5Iaq6UXmW/wjThWyv6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FbmiakXWv3b3pTYqdgIVw8rsdxxStFDIDFb++tEk21pwhOYspHg89VFFU+fAU998f1dRNj88X1aQ+YSKA5BXjP8gr3B5eb08Iw9TlsMn5/vOrmnefwYHjZ7q7Mq5A07kqBCT+YI4kXZVBRYNhrx+1s24sK+qDkKd5I8wkIOIoRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=YJtQ3EPk; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1714991926; c=relaxed/simple;
+	bh=+sMre+0s8XuSqhviOvxYhM1E9EHHXARPAYeKH8OPY78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HqLlgiBjPiRi3KLd0iVjvFUS5/XnOt+gynd9bG4m+jXPidHcz1w22O2VKQ3iwr14EqGadcY0M6IAjzqDx6lMP8b2mOgEK/ifO4OVzgkUwyHUVtyWhm9MfAYIneDeyd6/BMorQOGRTqBVs2dyTJLv2nr3vnQoksHyCi2f4H0oMZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5chX6W+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="YJtQ3EPk"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2b432be5cc9so966946a91.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 05 May 2024 17:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1714955361; x=1715560161; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sTixdwfAlIVssw/yTwe1uZ1trqj6K9Ho7zGTIsCsG3k=;
-        b=YJtQ3EPk7IxrNvgo8weclRLgIUIWkSOI2Uep1o1M/rk9e0dB+mVfcDL2Ra/RKgbRaV
-         4yD0nNAz17zHnC1JbqzasjATt3Y4kUqFfBfl4uDx/zyyAwmCgdWBqfnXG64JOZ3VVasD
-         TpWrwpoJPMZ1aCGn4xBszZrjTzvv5gHLPW4FLW7M2xKyeRN3dmeqwv7P7Qzj6PulULEp
-         iKKq9LW6PdJR11ebmc1NoRMdfQ6vYQYYHA7xQiZMqlhAGok5r3mf8gMd5KZKadxtoFqx
-         EMNG1nXwcBwffehAbXoAJ9b4BN0JZNUl2iEcpz1iMRyOz+EEFNblqZD7QukB/0M0HXcx
-         nJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714955361; x=1715560161;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sTixdwfAlIVssw/yTwe1uZ1trqj6K9Ho7zGTIsCsG3k=;
-        b=bDtfXXsAZIQVQpHU0BokggZuuVHP9DP8EKGBvBtTdZhrh6RPwpYOyNeVxyKiQJ42Pq
-         GOL2WF4s8thshlm4BcosYPNNpxOu3liOWsY98lEyr3W9rYHoU4RUpu/gx1dQqIGHeQ9Z
-         rVqKB77G1vyi99mGeL7ksKSySxal1F4fXWGGZQVMB11bfYAQKdcmtAMkHuft92Zj1K1d
-         /er7mSIEEco5dlCQrmNkDgE2bNUaJ2CT4GGgPIRWi+nz85qpvQJYk6ZEputPrt8e36kH
-         m2R4LiW2Tuk3mc+Vb0RcmwHJhwRGO9KhZ/ptwWkqTrMxob0cwUoMshW86BcJ/uypeBkX
-         xk5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBIh/HqZd2onwcodMRPG1hkIEQh6zFUk61m1uOekEjV/rwu95i0OaQAdNK60jOktjRM6EFeYYHZmBod0dAgP74b7R9Nolozn2b3ytTlZXZIE5P
-X-Gm-Message-State: AOJu0Yxw8LtPPjntAplnKRdYK85o8XG60NWC8yzQFSI2UK88eIPzatmO
-	tOxrZ7+INkCVPFNSW8aEsa1zx1OvykQoJrIsWy6Uv8o/FFX2RPXTihCLa2rJUZI=
-X-Google-Smtp-Source: AGHT+IFapiyynwMzWBFC3qoHSlJe6Vp0gcSIQLTrnjL4T2m4HyoHAt77UaMOEYoyby7VMZX56YX6rQ==
-X-Received: by 2002:a17:90a:d30a:b0:2aa:c2ba:3758 with SMTP id p10-20020a17090ad30a00b002aac2ba3758mr8212757pju.42.1714955361360;
-        Sun, 05 May 2024 17:29:21 -0700 (PDT)
-Received: from [192.168.1.15] (174-21-160-85.tukw.qwest.net. [174.21.160.85])
-        by smtp.gmail.com with ESMTPSA id h4-20020a17090a710400b002b1314ba8c0sm8708252pjk.57.2024.05.05.17.29.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 May 2024 17:29:20 -0700 (PDT)
-Message-ID: <306cf793-6f96-4a22-aca0-53c0ccefc0a1@davidwei.uk>
-Date: Sun, 5 May 2024 17:29:18 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5chX6W+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FEDC4DDE3;
+	Mon,  6 May 2024 10:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714991925;
+	bh=+sMre+0s8XuSqhviOvxYhM1E9EHHXARPAYeKH8OPY78=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p5chX6W+7I2fDJkE1QqM9wRxsSH/i/mgVUsH3W5V8yEUMBAthAeB0+rRqPoEY3JCr
+	 vpo80Tf8X8DlxxksbetRo+ksekpb00QRchH8UT8aa9L99POHSKNMbkzkx9BJXribmZ
+	 6qAU9u5zE9mhdIwL+BVu7hWwGzUQs8Xxl6rr41WErC51eyPSjn2Gvi3TZDdimZwxYP
+	 a7SrGaLFiuBJvmFMPQ8saRtckD+3jNPkdU1QasHUnXKomBZVFzTAKnOMa+59hjkVC3
+	 5AV9Mvyxy64NPjOzCu9cqaoc+ivkUdY4feLk15FDsZrT5aBJ9+QDooMekmIkYSNLzZ
+	 ozqdCoso0VJ9A==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52006fbae67so2316604e87.0;
+        Mon, 06 May 2024 03:38:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUv9sMl3MyDiEbQBABnkseJoXn3ogwBJ/1nu/QQ3jQoO/kbl06pMGkQPx1XsJa6TuYs8ilVRP44zApo4krW10iS+IUNznj/HWUHLHoFtObdrsiKPmpFAtJRrnV9vFX77xKWQd/xPkLCNcDnG0sEiU2rpULyeF8/Lz8tET4/uUZNE+xZiBp9e8Z3Uuvh6XiCKa89
+X-Gm-Message-State: AOJu0YxABy7MhtxHdxB25LqXWo9ytHNJiPRL4HES1I8DP4b9qz8WrfCl
+	GotV5QgL2ZwR8ZHpUYWmMns8hbz3TNHWMHghJCgshSGYvTTvJGcy1qKQTGEhuJkoJSJUhd3lKG5
+	T6512xHYUCBViPptcJ2Sx27FendM=
+X-Google-Smtp-Source: AGHT+IGrmdoDC9OU2KevduoZC6ArmZA6QOhPgQmvYxG1IrrYVOP27uC3VgBT/7g9DgqcivO0pnNgMPGrMBtlEAKwxG0=
+X-Received: by 2002:a05:6512:33c5:b0:51e:1bed:13a8 with SMTP id
+ d5-20020a05651233c500b0051e1bed13a8mr6619509lfg.29.1714991924016; Mon, 06 May
+ 2024 03:38:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v8 07/14] page_pool: devmem support
-Content-Language: en-GB
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Amritha Nambiar <amritha.nambiar@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Christian Brauner <brauner@kernel.org>,
- Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
- Florian Westphal <fw@strlen.de>, Yunsheng Lin <linyunsheng@huawei.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
- Arseniy Krasnov <avkrasnov@salutedevices.com>,
- Aleksander Lobakin <aleksander.lobakin@intel.com>,
- Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Richard Gobert <richardbgobert@gmail.com>,
- Sridhar Samudrala <sridhar.samudrala@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>,
- Breno Leitao <leitao@debian.org>, Pavel Begunkov <asml.silence@gmail.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-8-almasrymina@google.com>
- <8357256a-f0e9-4640-8fec-23341fc607db@davidwei.uk>
- <ZjH1hO8qJgOqNKub@infradead.org>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <ZjH1hO8qJgOqNKub@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240409210254.660888920@goodmis.org> <20240409211351.075320273@goodmis.org>
+ <202404091521.B63E85D@keescook> <20240409191156.5f92a15c@gandalf.local.home>
+ <202404091638.2F98764A41@keescook> <Zhmgm86tzpanoweB@kernel.org>
+ <20240412181940.3e1d99f7@gandalf.local.home> <202404151017.FC002AA5@keescook> <ZjJYV7ak5ApgNTBx@kernel.org>
+In-Reply-To: <ZjJYV7ak5ApgNTBx@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 6 May 2024 12:38:32 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG3jiLahONhPkKD0VSngDnMQoUCkDmoCsWEzOHDZmhTiA@mail.gmail.com>
+Message-ID: <CAMj1kXG3jiLahONhPkKD0VSngDnMQoUCkDmoCsWEzOHDZmhTiA@mail.gmail.com>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as memmap=nn*align:name
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
+	Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>, wklin@google.com, 
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Suleiman Souhlal <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024-05-01 00:55, Christoph Hellwig wrote:
-> On Fri, Apr 26, 2024 at 05:17:52PM -0700, David Wei wrote:
->> On 2024-04-02 5:20 pm, Mina Almasry wrote:
->>> @@ -69,20 +106,26 @@ net_iov_binding(const struct net_iov *niov)
->>>   */
->>>  typedef unsigned long __bitwise netmem_ref;
->>>  
->>> +static inline bool netmem_is_net_iov(const netmem_ref netmem)
->>> +{
->>> +#if defined(CONFIG_PAGE_POOL) && defined(CONFIG_DMA_SHARED_BUFFER)
->>
->> I am guessing you added this to try and speed up the fast path? It's
->> overly restrictive for us since we do not need dmabuf necessarily. I
->> spent a bit too much time wondering why things aren't working only to
->> find this :(
-> 
-> So what else do you need?  I was assured last round that nothing but
-> dmabuf and potentially the huge page case (that really just is the page
-> provider) would get added.
+On Wed, 1 May 2024 at 16:59, Mike Rapoport <rppt@kernel.org> wrote:
+>
+> On Mon, Apr 15, 2024 at 10:22:53AM -0700, Kees Cook wrote:
+> > On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
+> > > On Fri, 12 Apr 2024 23:59:07 +0300
+> > > Mike Rapoport <rppt@kernel.org> wrote:
+> > >
+> > > > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
+> > > > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:
+> > > > > > On Tue, 9 Apr 2024 15:23:07 -0700
+> > > > > > Kees Cook <keescook@chromium.org> wrote:
+> > > > > >
+> > > > > > > Do we need to involve e820 at all? I think it might be possible to just
+> > > > > > > have pstore call request_mem_region() very early? Or does KASLR make
+> > > > > > > that unstable?
+> > > > > >
+> > > > > > Yeah, would that give the same physical memory each boot, and can we
+> > > > > > guarantee that KASLR will not map the kernel over the previous location?
+> > > > >
+> > > > > Hm, no, for physical memory it needs to get excluded very early, which
+> > > > > means e820.
+> > > >
+> > > > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
+> > > > kaslr, so to begin with, a new memmap parameter should be also added to
+> > > > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
+> > > > physical address will be available after KASLR.
+> > >
+> > > But doesn't KASLR only affect virtual memory not physical memory?
+> >
+> > KASLR for x86 (and other archs, like arm64) do both physical and virtual
+> > base randomization.
+> >
+> > > This just makes sure the physical memory it finds will not be used by the
+> > > system. Then ramoops does the mapping via vmap() I believe, to get a
+> > > virtual address to access the physical address.
+> >
+> > I was assuming, since you were in the e820 code, that it was
+> > manipulating that before KASLR chose a location. But if not, yeah, Mike
+> > is right -- you need to make sure this is getting done before
+> > decompress_kernel().
+>
+> Right now kaslr can handle up to 4 memmap regions and parse_memmap() in
+> arch/x86/boot/compressed/kaslr.c should be updated for a new memmap type.
+>
+> But I think it's better to add a new kernel parameter as I suggested in
+> another email and teach mem_avoid_memmap() in kaslr.c to deal with it, as
+> well as with crashkernel=size@offset, btw.
+>
 
-I'm using userspace memory so having this gated behind
-CONFIG_DMA_SHARED_BUFFER doesn't make sense for us.
+The logic in arch/x86/boot/compressed/kaslr.c is now only used by non-EFI boot.
 
-> 
->>
-> ---end quoted text---
+In general, I am highly skeptical that hopes and prayers are enough to
+prevent the firmware from stepping on such a region, unless this is
+only a best effort thing, and failures are acceptable. For instance,
+booting an EFI system with/without an external display attached, or
+with a USB device inserted (without even using it during boot) will
+impact the memory map, to the extent that the E820 table derived from
+it may look different. (EFI tries to keep the runtime regions in the
+same place but the boot-time regions are allocated/freed on demand)
+
+So I would strongly urge to address this properly, and work with
+firmware folks to define some kind of protocol for this.
