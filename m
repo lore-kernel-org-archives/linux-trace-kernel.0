@@ -1,94 +1,97 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0C315747C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 May 2024 17:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED85156641;
+	Mon,  6 May 2024 18:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715016381; cv=none; b=jtEFB55BFglGtpghwIA7/xOETwC0CJoDMPurqEWfirufk2bnpjJi9wnx80rhdwXGCcBKuG4aurVqtFmbEQiVBuGgNGQxzrStdHjpAO20KrUclnolnqszzCt2IrVb1Ygyi9kN6n7EnnAtGbZ2DTsj+QrvzwzZQeVJPE4fNM9yARU=
+	t=1715019315; cv=none; b=h3+ymjmW45lCp+GvN6GKcyrsNL5QsCBLiSeilSszSMDyvqIghA8HEoJ9GOLiN8K2EvjtvQQ+lHNjvOfEQfs+oLXpgOUvWQDHRBiGyUponEeg/ZkJwMPydJU8K5dd2BX+eYzb9ifvl5jERSbTlbh/myPpuYG+Si37qXkVv+IWKfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715016381; c=relaxed/simple;
-	bh=GeBm+fiewP8Hp6FtkoqI7u2j4sm8eUwPee92+IiBQsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HaRXrSHo441FEczeQUwlz5sn9BSSyCL6XqZlwZ8xwj+kGr836YUyrx8Fw7+yXLeuMs/ov9LPNIdcwhqNomb4fv4ZTnOdh8dwcy7IKwOfSY+/+vBqFMRhZtyTVcdCt7i+TNobUzo7DNW0vw/kEPzDRHpbkk8z6FE82HibJOZcA0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=hqWzazoa; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="hqWzazoa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=gpU1XaagYAB/QpNPVbZIAFBh53jAJkeYizsToKuRKHM=; b=hqWzazoaM5lwgkjK
-	Sv3toB7P0AW0RqBYOv3nxDwOEpOsxrBiYxm9sKxsAK7iOCaxaT8A6VvJoPIT3uPxbyfqd0j5muvW2
-	nokAvzsOJ99DV64nccStbtWslHSy66Svk8GrcTZOxzfXlyt/1dEfrzQJwlgQB51VxAlyzsuuktNNw
-	uJQTtWJzSeWsDT3qc4XixEmJJePPrF3iyrTBukkZWdrTAJhsi165jWcfRLs+q8439Q9vKaw6E73o5
-	5XQFFW1aanK8UV1zPgaeBecLYyCNCbZpGhHVkfc1oHB13RHUuBgM1yVNoktHkYNRvGyu+ZvyoAMpu
-	779M4fFb2SXWnsxlww==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1s426S-004ybF-0h;
-	Mon, 06 May 2024 17:26:16 +0000
-Date: Mon, 6 May 2024 17:26:16 +0000
-From: "Dr. David Alan Gilbert" <dave@treblig.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: ftrace_direct_func_count ?
-Message-ID: <ZjkSuOAGH5ml7YiP@gallifrey>
-References: <ZjY5np4coyMk4ijJ@gallifrey>
- <20240506132515.11754794@gandalf.local.home>
+	s=arc-20240116; t=1715019315; c=relaxed/simple;
+	bh=ZhH5iWadclZ9+WfXofPKpyaOZHjgm7/VzbgUngE0oP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FanQkZg96UguXoIjJosomOTl3sHWhTjfV+Vg5/uElN9flOe52yatyN7YRdjzVCx/X6V51ZD/OWxeAoeLgbMJBBBkcqJxYGfcWGMMrYP9oLl5nrF7Wxhp7HCeClcibsg72o4+mj+DmAXslWlI3vrp/vi/0C1SLgy99q6lliPLErw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4789AC116B1;
+	Mon,  6 May 2024 18:15:10 +0000 (UTC)
+Date: Mon, 6 May 2024 14:15:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, "David S. Miller"
+ <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, Donald Dutile
+ <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen
+ <chenhuacai@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, Liviu
+ Dudau <liviu@dudau.co.uk>, Luis Chamberlain <mcgrof@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Philippe =?UTF-8?B?TWF0aGlldS1EYXVkw6k=?= <philmd@linaro.org>, Rick
+ Edgecombe <rick.p.edgecombe@intel.com>, Russell King
+ <linux@armlinux.org.uk>, Sam Ravnborg <sam@ravnborg.org>, Song Liu
+ <song@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas
+ Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v8 06/17] mm: introduce execmem_alloc() and
+ execmem_free()
+Message-ID: <20240506141515.10fb2a69@gandalf.local.home>
+In-Reply-To: <20240505142600.2322517-7-rppt@kernel.org>
+References: <20240505142600.2322517-1-rppt@kernel.org>
+	<20240505142600.2322517-7-rppt@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20240506132515.11754794@gandalf.local.home>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-17-amd64 (x86_64)
-X-Uptime: 17:26:00 up 124 days, 20:15,  1 user,  load average: 0.07, 0.02,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-* Steven Rostedt (rostedt@goodmis.org) wrote:
-> On Sat, 4 May 2024 13:35:26 +0000
-> "Dr. David Alan Gilbert" <dave@treblig.org> wrote:
-> 
-> > Hi,
-> >   I've just posted a patch 'ftrace: Remove unused list 'ftrace_direct_funcs''
-> > that clears out some old code, but while at it I noticed the global
-> > 'ftrace_direct_func_count'.
-> > 
-> > As far as I can tell, it's never assigned (or initialised) but it is tested:
-> > 
-> > kernel/trace/fgraph.c:
-> > #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> >   /*
-> >    * Skip graph tracing if the return location is served by direct trampoline,
-> >    * since call sequence and return addresses are unpredictable anyway.
-> >    * Ex: BPF trampoline may call original function and may skip frame
-> >    * depending on type of BPF programs attached.
-> >    */
-> >   if (ftrace_direct_func_count &&
-> >       ftrace_find_rec_direct(ret - MCOUNT_INSN_SIZE))
-> >     return -EBUSY;
-> > #endif
-> > 
-> > So I wasn't sure whether it was just safe to nuke that section
-> > or whether it really needed fixing?
-> 
-> Yes, after commit 8788ca164eb4bad ("ftrace: Remove the legacy
-> _ftrace_direct API") that variable is no longer used.
+On Sun,  5 May 2024 17:25:49 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-OK, thanks, I'll send a follow up patch to my other patch to nuke
-this as well.
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 70139d9d2e01..c8ddb7abda7c 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/memory.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/set_memory.h>
+> +#include <linux/execmem.h>
+>  
+>  #include <trace/syscall.h>
+>  
+> @@ -261,15 +262,14 @@ void arch_ftrace_update_code(int command)
+>  #ifdef CONFIG_X86_64
+>  
+>  #ifdef CONFIG_MODULES
+> -#include <linux/moduleloader.h>
+>  /* Module allocation simplifies allocating memory for code */
+>  static inline void *alloc_tramp(unsigned long size)
+>  {
+> -	return module_alloc(size);
+> +	return execmem_alloc(EXECMEM_FTRACE, size);
+>  }
+>  static inline void tramp_free(void *tramp)
+>  {
+> -	module_memfree(tramp);
+> +	execmem_free(tramp);
+>  }
+>  #else
+>  /* Trampolines can only be created if modules are supported */
+> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
 
-Dave
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-> -- Steve
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+-- Steve
