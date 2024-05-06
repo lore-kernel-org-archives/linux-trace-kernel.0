@@ -1,133 +1,355 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C863B8;
-	Mon,  6 May 2024 10:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A139E757EA;
+	Mon,  6 May 2024 10:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714991926; cv=none; b=l6VGqmoAbiNK8lR1Y+DRBG0AnYt2DOj7t2hN25BgQNf+YulWT+NLK6aMkyu6KyW3KB2Z6JoFbrA7S0Ss9CZRHm+TgxzO2MeW/a8fDFavUmWhZ1nZdGopD+jxJjoC7nK10Lz7dRBX3FIwbWYIfQNpRa+NbrlOfp0AQ0a5MPiH/t4=
+	t=1714992986; cv=none; b=AUhxb7a2E3vk7mHI1kZ9r0LOi7ByzmJ4Sz5KJC/iACLHAd3IHXKKqJi3CnLa3ckYr7oPK+x2G5Tp7IOEEVCesUaKL8xKeBlc48VpMLvsBXkvpgmALWVrtxmFrU5kdevwX3XvVevpA5bTliuNJ4FIAvt2YXpJg5uEhHivMB9rVW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714991926; c=relaxed/simple;
-	bh=+sMre+0s8XuSqhviOvxYhM1E9EHHXARPAYeKH8OPY78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HqLlgiBjPiRi3KLd0iVjvFUS5/XnOt+gynd9bG4m+jXPidHcz1w22O2VKQ3iwr14EqGadcY0M6IAjzqDx6lMP8b2mOgEK/ifO4OVzgkUwyHUVtyWhm9MfAYIneDeyd6/BMorQOGRTqBVs2dyTJLv2nr3vnQoksHyCi2f4H0oMZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5chX6W+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714992986; c=relaxed/simple;
+	bh=9NMb3EO3F0DiZNApYRXR91yw6W3gYPuvTxhlybc4//M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YD5Mvfz2Mmrk5SJfvwKe3B8WyKhS8ueUgj8Ds6FD22X+bMZEIRHpBAfEb/CYyDhqXs5YZ+OyLJwkFGRRyncOoFxL1jR5i0eL2ibi/Sxs6H0veuC7vjJRdA1i2nHIRNAnrQCju86Q3TvwyS5ubVbEcZ+0iX+YmiEFkmyAYEKJd9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lnlGjZpy; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5chX6W+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FEDC4DDE3;
-	Mon,  6 May 2024 10:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714991925;
-	bh=+sMre+0s8XuSqhviOvxYhM1E9EHHXARPAYeKH8OPY78=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p5chX6W+7I2fDJkE1QqM9wRxsSH/i/mgVUsH3W5V8yEUMBAthAeB0+rRqPoEY3JCr
-	 vpo80Tf8X8DlxxksbetRo+ksekpb00QRchH8UT8aa9L99POHSKNMbkzkx9BJXribmZ
-	 6qAU9u5zE9mhdIwL+BVu7hWwGzUQs8Xxl6rr41WErC51eyPSjn2Gvi3TZDdimZwxYP
-	 a7SrGaLFiuBJvmFMPQ8saRtckD+3jNPkdU1QasHUnXKomBZVFzTAKnOMa+59hjkVC3
-	 5AV9Mvyxy64NPjOzCu9cqaoc+ivkUdY4feLk15FDsZrT5aBJ9+QDooMekmIkYSNLzZ
-	 ozqdCoso0VJ9A==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52006fbae67so2316604e87.0;
-        Mon, 06 May 2024 03:38:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUv9sMl3MyDiEbQBABnkseJoXn3ogwBJ/1nu/QQ3jQoO/kbl06pMGkQPx1XsJa6TuYs8ilVRP44zApo4krW10iS+IUNznj/HWUHLHoFtObdrsiKPmpFAtJRrnV9vFX77xKWQd/xPkLCNcDnG0sEiU2rpULyeF8/Lz8tET4/uUZNE+xZiBp9e8Z3Uuvh6XiCKa89
-X-Gm-Message-State: AOJu0YxABy7MhtxHdxB25LqXWo9ytHNJiPRL4HES1I8DP4b9qz8WrfCl
-	GotV5QgL2ZwR8ZHpUYWmMns8hbz3TNHWMHghJCgshSGYvTTvJGcy1qKQTGEhuJkoJSJUhd3lKG5
-	T6512xHYUCBViPptcJ2Sx27FendM=
-X-Google-Smtp-Source: AGHT+IGrmdoDC9OU2KevduoZC6ArmZA6QOhPgQmvYxG1IrrYVOP27uC3VgBT/7g9DgqcivO0pnNgMPGrMBtlEAKwxG0=
-X-Received: by 2002:a05:6512:33c5:b0:51e:1bed:13a8 with SMTP id
- d5-20020a05651233c500b0051e1bed13a8mr6619509lfg.29.1714991924016; Mon, 06 May
- 2024 03:38:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnlGjZpy"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f1b378ca5so2854885e87.1;
+        Mon, 06 May 2024 03:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714992983; x=1715597783; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BJIBSGbrgOG9NZBqdWmimHdMF70VT1B2wz13vLxdkPs=;
+        b=lnlGjZpypPGy5SwST+GkLjxQ+n/wMDWmm0PJ+yrB/wQOYddPpAb2CdYa7whtZEv8Sn
+         UOUeLISO2cxILNyLgXS1L3s3NJ0bGT6SL/8ZlQDnEG8sVDbAPWYVAnYYCxJ0o4nKbYpz
+         eFs9rRBCDKzE+hUjWhf3m7JeisKE1K0P9/tq88Ev1+TlVU8RfgCrOBaHWtPhlOyAir9/
+         8P1Jw2rChxadmQDYjgZzMKaNMxSHYW5aprOlFlLG5/SOESAugUedF6Sqp/ZgIoZOMqx1
+         ob8xI+WabuTWMMPpAV62t2qmWTtCQ8nzK7Itxx6cVav874ReLD5ca/ufYYtIFmsg2WUx
+         xpUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714992983; x=1715597783;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BJIBSGbrgOG9NZBqdWmimHdMF70VT1B2wz13vLxdkPs=;
+        b=e5cFkbV34NaOpVJ9eFmxZNx3xyelsaUDilHcyVkTClNmo1ERgKbX7otLiV7dkQrbcz
+         jCRcEdjjWDESjuzUI4NKk6/Ccf4w1aDz/jGbFW5Erv4CPk0VOUg/xPl7pi7AGkZ5qiEp
+         4se/NEsE6J18Kc2h4nsjW346YxlhykPX5Hz1c5LpnPU34t+qQ59TnxXebcbCpTFAFNxM
+         AjKhGA4NHeh1NgiSC6jaUDzVkkWingUgvu7TzA9vIc/tSqm9uoTa1X0A263Gv9tBBHFx
+         44gr9+Js6cm+ePpuyWE36XFRKJv7sDGQofaGSEL7wT5Jj3fOmwm6CkO9AvtMexbC0EJK
+         gynw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6DmT1m9B9Fs0FLyt7/n5fnqgpSXT78TsZSMqgflEC/Eul0KHwFYz6QrB0vMfjVp1EXdXojFJVTYqVl1tmUNbJgeVjk8JxL4Yde0H279i9sxD0Ggcr6urC2OVgX0YNiovIunsykWUcAyy10QBcJq6rzV77I2FbNMXWFENRIs2JBsrTCnBROLubaLu9ECZrRLn5ESpSrQ5Crd7fycR4iGszGEybHL4l+BV5YIGA8DA1PVnCZIkIx0qU+psm
+X-Gm-Message-State: AOJu0Yw8dDpGkcqSi5/STPiDKu3XYkDK/txyhO2ejzKRwh4gP5bUdz2E
+	juj1Kiqo6RwkxaRclViJfNM78TQ3JGrzmNsqFGQv/xBLie+16SC2
+X-Google-Smtp-Source: AGHT+IHCyK3/NNaNYRQTAL/JlLw+JMtaPREdI4MoupuAb10ad8JIR+dA1NVUrOJvGL0InQatybz/Ug==
+X-Received: by 2002:ac2:5932:0:b0:51f:2a80:a982 with SMTP id v18-20020ac25932000000b0051f2a80a982mr8741080lfi.47.1714992982348;
+        Mon, 06 May 2024 03:56:22 -0700 (PDT)
+Received: from krava (ip4-95-82-160-96.cust.nbox.cz. [95.82.160.96])
+        by smtp.gmail.com with ESMTPSA id el24-20020a170907285800b00a59b9263f59sm2194092ejc.102.2024.05.06.03.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 03:56:21 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 6 May 2024 12:56:19 +0200
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"debug@rivosinc.com" <debug@rivosinc.com>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"oleg@redhat.com" <oleg@redhat.com>, "yhs@fb.com" <yhs@fb.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCHv4 bpf-next 2/7] uprobe: Add uretprobe syscall to speed up
+ return probe
+Message-ID: <Zji3U131RJtQDdA_@krava>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
+ <20240502122313.1579719-3-jolsa@kernel.org>
+ <20240503113453.GK40213@noisy.programming.kicks-ass.net>
+ <ZjTg2cunShA6VbpY@krava>
+ <725e2000dc56d55da4097cface4109c17fe5ad1a.camel@intel.com>
+ <ZjU4ganRF1Cbiug6@krava>
+ <6c143c648e2eff6c4d4b5e4700d1a8fbcc0f8cbc.camel@intel.com>
+ <ZjVGZeY-_ySqgfER@krava>
+ <d2e0e53581e26358ee0b3d188a07795878938d2f.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409210254.660888920@goodmis.org> <20240409211351.075320273@goodmis.org>
- <202404091521.B63E85D@keescook> <20240409191156.5f92a15c@gandalf.local.home>
- <202404091638.2F98764A41@keescook> <Zhmgm86tzpanoweB@kernel.org>
- <20240412181940.3e1d99f7@gandalf.local.home> <202404151017.FC002AA5@keescook> <ZjJYV7ak5ApgNTBx@kernel.org>
-In-Reply-To: <ZjJYV7ak5ApgNTBx@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 6 May 2024 12:38:32 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG3jiLahONhPkKD0VSngDnMQoUCkDmoCsWEzOHDZmhTiA@mail.gmail.com>
-Message-ID: <CAMj1kXG3jiLahONhPkKD0VSngDnMQoUCkDmoCsWEzOHDZmhTiA@mail.gmail.com>
-Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as memmap=nn*align:name
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
-	Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>, wklin@google.com, 
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Suleiman Souhlal <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2e0e53581e26358ee0b3d188a07795878938d2f.camel@intel.com>
 
-On Wed, 1 May 2024 at 16:59, Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Mon, Apr 15, 2024 at 10:22:53AM -0700, Kees Cook wrote:
-> > On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
-> > > On Fri, 12 Apr 2024 23:59:07 +0300
-> > > Mike Rapoport <rppt@kernel.org> wrote:
-> > >
-> > > > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
-> > > > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:
-> > > > > > On Tue, 9 Apr 2024 15:23:07 -0700
-> > > > > > Kees Cook <keescook@chromium.org> wrote:
-> > > > > >
-> > > > > > > Do we need to involve e820 at all? I think it might be possible to just
-> > > > > > > have pstore call request_mem_region() very early? Or does KASLR make
-> > > > > > > that unstable?
-> > > > > >
-> > > > > > Yeah, would that give the same physical memory each boot, and can we
-> > > > > > guarantee that KASLR will not map the kernel over the previous location?
-> > > > >
-> > > > > Hm, no, for physical memory it needs to get excluded very early, which
-> > > > > means e820.
-> > > >
-> > > > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
-> > > > kaslr, so to begin with, a new memmap parameter should be also added to
-> > > > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
-> > > > physical address will be available after KASLR.
-> > >
-> > > But doesn't KASLR only affect virtual memory not physical memory?
-> >
-> > KASLR for x86 (and other archs, like arm64) do both physical and virtual
-> > base randomization.
-> >
-> > > This just makes sure the physical memory it finds will not be used by the
-> > > system. Then ramoops does the mapping via vmap() I believe, to get a
-> > > virtual address to access the physical address.
-> >
-> > I was assuming, since you were in the e820 code, that it was
-> > manipulating that before KASLR chose a location. But if not, yeah, Mike
-> > is right -- you need to make sure this is getting done before
-> > decompress_kernel().
->
-> Right now kaslr can handle up to 4 memmap regions and parse_memmap() in
-> arch/x86/boot/compressed/kaslr.c should be updated for a new memmap type.
->
-> But I think it's better to add a new kernel parameter as I suggested in
-> another email and teach mem_avoid_memmap() in kaslr.c to deal with it, as
-> well as with crashkernel=size@offset, btw.
->
+On Fri, May 03, 2024 at 08:35:24PM +0000, Edgecombe, Rick P wrote:
+> On Fri, 2024-05-03 at 22:17 +0200, Jiri Olsa wrote:
+> > when uretprobe is created, kernel overwrites the return address on user
+> > stack to point to user space trampoline, so the setup is in kernel hands
+> 
+> I mean for uprobes in general. I'm didn't have any specific ideas in mind, but
+> in general when we give the kernel more abilities around shadow stack we have to
+> think if attackers could use it to work around shadow stack protections.
+> 
+> > 
+> > with the hack below on top of this patchset I'm no longer seeing shadow
+> > stack app crash on uretprobe.. I'll try to polish it and send out next
+> > week, any suggestions are welcome ;-)
+> 
+> Thanks. Some comments below.
+> 
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > ---
+> > diff --git a/arch/x86/include/asm/shstk.h b/arch/x86/include/asm/shstk.h
+> > index 42fee8959df7..d374305a6851 100644
+> > --- a/arch/x86/include/asm/shstk.h
+> > +++ b/arch/x86/include/asm/shstk.h
+> > @@ -21,6 +21,8 @@ unsigned long shstk_alloc_thread_stack(struct task_struct
+> > *p, unsigned long clon
+> >  void shstk_free(struct task_struct *p);
+> >  int setup_signal_shadow_stack(struct ksignal *ksig);
+> >  int restore_signal_shadow_stack(void);
+> > +void uprobe_change_stack(unsigned long addr);
+> > +void uprobe_push_stack(unsigned long addr);
+> 
+> Maybe name them:
+> shstk_update_last_frame();
+> shstk_push_frame();
 
-The logic in arch/x86/boot/compressed/kaslr.c is now only used by non-EFI boot.
+ok
 
-In general, I am highly skeptical that hopes and prayers are enough to
-prevent the firmware from stepping on such a region, unless this is
-only a best effort thing, and failures are acceptable. For instance,
-booting an EFI system with/without an external display attached, or
-with a USB device inserted (without even using it during boot) will
-impact the memory map, to the extent that the E820 table derived from
-it may look different. (EFI tries to keep the runtime regions in the
-same place but the boot-time regions are allocated/freed on demand)
+> 
+> 
+> >  #else
+> >  static inline long shstk_prctl(struct task_struct *task, int option,
+> >                                unsigned long arg2) { return -EINVAL; }
+> > diff --git a/arch/x86/kernel/shstk.c b/arch/x86/kernel/shstk.c
+> > index 59e15dd8d0f8..804c446231d9 100644
+> > --- a/arch/x86/kernel/shstk.c
+> > +++ b/arch/x86/kernel/shstk.c
+> > @@ -577,3 +577,24 @@ long shstk_prctl(struct task_struct *task, int option,
+> > unsigned long arg2)
+> >                 return wrss_control(true);
+> >         return -EINVAL;
+> >  }
+> > +
+> > +void uprobe_change_stack(unsigned long addr)
+> > +{
+> > +       unsigned long ssp;
+> 
+> Probably want something like:
+> 
+> 	if (!features_enabled(ARCH_SHSTK_SHSTK))
+> 		return;
 
-So I would strongly urge to address this properly, and work with
-firmware folks to define some kind of protocol for this.
+ok
+
+> 
+> So this doesn't try the below if shadow stack is disabled.
+> 
+> > +
+> > +       ssp = get_user_shstk_addr();
+> > +       write_user_shstk_64((u64 __user *)ssp, (u64)addr);
+> > +}
+> 
+> Can we know that there was a valid return address just before this point on the
+> stack? Or could it be a sigframe or something?
+
+when uprobe hijack the return address it assumes it's on the top of the stack,
+so it's saved and replaced with address of the user space trampoline
+
+> 
+> > +
+> > +void uprobe_push_stack(unsigned long addr)
+> > +{
+> > +       unsigned long ssp;
+> 
+> 	if (!features_enabled(ARCH_SHSTK_SHSTK))
+> 		return;
+> 
+> > +
+> > +       ssp = get_user_shstk_addr();
+> > +       ssp -= SS_FRAME_SIZE;
+> > +       write_user_shstk_64((u64 __user *)ssp, (u64)addr);
+> > +
+> > +       fpregs_lock_and_load();
+> > +       wrmsrl(MSR_IA32_PL3_SSP, ssp);
+> > +       fpregs_unlock();
+> > +}
+> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> > index 81e6ee95784d..259457838020 100644
+> > --- a/arch/x86/kernel/uprobes.c
+> > +++ b/arch/x86/kernel/uprobes.c
+> > @@ -416,6 +416,7 @@ SYSCALL_DEFINE0(uretprobe)
+> >         regs->r11 = regs->flags;
+> >         regs->cx  = regs->ip;
+> >  
+> > +       uprobe_push_stack(r11_cx_ax[2]);
+> 
+> I'm concerned this could be used to push arbitrary frames to the shadow stack.
+> Couldn't an attacker do a jump to the point that calls this syscall? Maybe this
+> is what peterz was raising.
+
+of course never say never, but here's my reasoning why I think it's ok
+
+the page with the syscall trampoline is mapped in user space and can be
+found in procfs maps file under '[uprobes]' name
+
+the syscall can be called only from this trampoline, if it's called from
+anywhere else the calling process receives SIGILL
+
+now if you run the uretprobe syscall without any pending uretprobe for
+the task it will receive SIGILL before it gets to the point of pushing
+address on the shadow stack
+
+and to configure the uretprobe you need to have CAP_PERFMON or CAP_SYS_ADMIN
+
+if you'd actually managed to get the pending uretprobe instance, the shadow
+stack entry is going to be used/pop-ed right away in the trampoline with
+the ret instruction
+
+and as I mentioned above it's ensured that the syscall is returning to the
+trampoline and it can't be called from any other place
+
+> 
+> >         return regs->ax;
+> >  
+> >  sigill:
+> > @@ -1191,8 +1192,10 @@ arch_uretprobe_hijack_return_addr(unsigned long
+> > trampoline_vaddr, struct pt_regs
+> >                 return orig_ret_vaddr;
+> >  
+> >         nleft = copy_to_user((void __user *)regs->sp, &trampoline_vaddr,
+> > rasize);
+> > -       if (likely(!nleft))
+> > +       if (likely(!nleft)) {
+> > +               uprobe_change_stack(trampoline_vaddr);
+> >                 return orig_ret_vaddr;
+> > +       }
+> >  
+> >         if (nleft != rasize) {
+> >                 pr_err("return address clobbered: pid=%d, %%sp=%#lx,
+> > %%ip=%#lx\n",
+> 
+
+I'll try to add uprobe test under tools/testing/selftests/x86/test_shadow_stack.c
+and send that and change below as part of new version
+
+thanks for the comments,
+jirka
+
+
+---
+diff --git a/arch/x86/include/asm/shstk.h b/arch/x86/include/asm/shstk.h
+index 42fee8959df7..2e1ddcf98242 100644
+--- a/arch/x86/include/asm/shstk.h
++++ b/arch/x86/include/asm/shstk.h
+@@ -21,6 +21,8 @@ unsigned long shstk_alloc_thread_stack(struct task_struct *p, unsigned long clon
+ void shstk_free(struct task_struct *p);
+ int setup_signal_shadow_stack(struct ksignal *ksig);
+ int restore_signal_shadow_stack(void);
++int shstk_update_last_frame(unsigned long val);
++int shstk_push_frame(unsigned long val);
+ #else
+ static inline long shstk_prctl(struct task_struct *task, int option,
+ 			       unsigned long arg2) { return -EINVAL; }
+@@ -31,6 +33,8 @@ static inline unsigned long shstk_alloc_thread_stack(struct task_struct *p,
+ static inline void shstk_free(struct task_struct *p) {}
+ static inline int setup_signal_shadow_stack(struct ksignal *ksig) { return 0; }
+ static inline int restore_signal_shadow_stack(void) { return 0; }
++static inline int shstk_update_last_frame(unsigned long val) { return 0; }
++static inline int shstk_push_frame(unsigned long val) { return 0; }
+ #endif /* CONFIG_X86_USER_SHADOW_STACK */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/x86/kernel/shstk.c b/arch/x86/kernel/shstk.c
+index 59e15dd8d0f8..66434dfde52e 100644
+--- a/arch/x86/kernel/shstk.c
++++ b/arch/x86/kernel/shstk.c
+@@ -577,3 +577,32 @@ long shstk_prctl(struct task_struct *task, int option, unsigned long arg2)
+ 		return wrss_control(true);
+ 	return -EINVAL;
+ }
++
++int shstk_update_last_frame(unsigned long val)
++{
++	unsigned long ssp;
++
++	if (!features_enabled(ARCH_SHSTK_SHSTK))
++		return 0;
++
++	ssp = get_user_shstk_addr();
++	return write_user_shstk_64((u64 __user *)ssp, (u64)val);
++}
++
++int shstk_push_frame(unsigned long val)
++{
++	unsigned long ssp;
++
++	if (!features_enabled(ARCH_SHSTK_SHSTK))
++		return 0;
++
++	ssp = get_user_shstk_addr();
++	ssp -= SS_FRAME_SIZE;
++	if (write_user_shstk_64((u64 __user *)ssp, (u64)val))
++		return -EFAULT;
++
++	fpregs_lock_and_load();
++	wrmsrl(MSR_IA32_PL3_SSP, ssp);
++	fpregs_unlock();
++	return 0;
++}
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 81e6ee95784d..ae6c3458a675 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -406,6 +406,11 @@ SYSCALL_DEFINE0(uretprobe)
+ 	 * trampoline's ret instruction
+ 	 */
+ 	r11_cx_ax[2] = regs->ip;
++
++	/* make the shadow stack follow that */
++	if (shstk_push_frame(regs->ip))
++		goto sigill;
++
+ 	regs->ip = ip;
+ 
+ 	err = copy_to_user((void __user *)regs->sp, r11_cx_ax, sizeof(r11_cx_ax));
+@@ -1191,8 +1196,13 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
+ 		return orig_ret_vaddr;
+ 
+ 	nleft = copy_to_user((void __user *)regs->sp, &trampoline_vaddr, rasize);
+-	if (likely(!nleft))
++	if (likely(!nleft)) {
++		if (shstk_update_last_frame(trampoline_vaddr)) {
++			force_sig(SIGSEGV);
++			return -1;
++		}
+ 		return orig_ret_vaddr;
++	}
+ 
+ 	if (nleft != rasize) {
+ 		pr_err("return address clobbered: pid=%d, %%sp=%#lx, %%ip=%#lx\n",
