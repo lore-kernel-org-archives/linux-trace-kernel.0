@@ -1,134 +1,107 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F55143877;
-	Mon,  6 May 2024 12:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B52013D285;
+	Mon,  6 May 2024 14:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714997093; cv=none; b=HZ5tEyEAiIZPLrBym2RExVaSOikwoOGQ+r1K4RMiz5L1+cHcyXv7ZQs3ny4k5i4MUZ/Has/efCnFzMyW25hjFpPJi2lf1soAgbU3QXpYbkWYdEXOCeJM4YjuUcrAzCrGNCcwznzJX1+gnvWpM0Me3HpPppOGtfoplA6RKJpE8Q0=
+	t=1715005372; cv=none; b=ClNtmXPHvfJ1Yh+oWcXH+1/WvZdMT6EsN00SHvOHs0uIRADiFmM+dHy1NwhSccvfmsl8f4cC3tznUcDYj+0RH2gKc3gO0TVy8+N1afv1M/f8ngPdFAod6IuGFrDNZRCv5y95AUZApADiBRLbSAutBlA0XCog8cc5VPNQSUaWv84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714997093; c=relaxed/simple;
-	bh=Nn6pTgW11u0x9B6Nd1xA/pfcfA/mwlQQj1++/hKvgLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BjwQsE9C8WSOrL4G4ol76A0+Z+D3fO+fIS9AwvdpY1O5uX8mgxklTZsP3CqaOn6F9PfuZz2mRug2ToL8VLd8F/+dv0zO1wFbw//S1rFjLuyfhQmrxgmP9aQkV6ToJJ42lOR3RLxzHxr3gs5yEDCm9/fAIdXOQlSraLELXFyo044=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Al+5UWz0; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1715005372; c=relaxed/simple;
+	bh=CnTWZ3+KLYBBjQOHiJPtTabL4E1gVt0f3at8gtesFaA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=sM/9Mi+cMpz0bkbRYZW2J2UoJG3L6fH3gfcelVCpV8tb7M9/ZUvbFlo2TjXfoUCi5z6hD7r05S9IvwAdIURL8VBtfY7QSr2UiGwUUStFhABIXF/LgCIxH6Zo7wtizGVoPfIk4k6S672Co+sKtzrwWCoFA70KgbtEN/5dfzUhUg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J7Z2UaaD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Al+5UWz0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yXYhhTIjT/JZbkFthIE5YrCYO35Pg9XXB/SziqtVej8=; b=Al+5UWz0be2VM4EzLSv4PIqpbk
-	mEbhGZD2BYZ0ghxdDv/M4uc7pKbaCXZ4PyarQux3ZBy5JBvo6vA50xgfU8v82lgkdNf0k7VB8TkyR
-	1Gjg/zwRLuHynK93w6eAQDnHxenMCnOmIgK0o5x1r065VybbArgKfhAVoC02C9UjMkG2KG+4uF37X
-	PUvC9dUF6/Yz9GjoGh1VQgNHxsTH6r2iugkT960in4C0K73F8Xd+qFtEy9u15fvhEpWWZ/5e1Thrq
-	FpyJtIxYM4xZMLaMNvucptitryFptPh5kUV3Biz+i04kUBkoV3NFYeslTqPTmvo04D4zfLxosQHAZ
-	xOJ0p5dQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s3x58-00000007Bwu-1EIp;
-	Mon, 06 May 2024 12:04:34 +0000
-Date: Mon, 6 May 2024 05:04:34 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	Kaiyuan Zhang <kaiyuanz@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Florian Westphal <fw@strlen.de>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
-	Arseniy Krasnov <avkrasnov@salutedevices.com>,
-	Aleksander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Richard Gobert <richardbgobert@gmail.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>,
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
- custom page providers
-Message-ID: <ZjjHUh1eINPg1wkn@infradead.org>
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-3-almasrymina@google.com>
- <ZjH1QaSSQ98mw158@infradead.org>
- <CAHS8izM0=xc2UhUxhnF_BixuFs5VaDV9W1jbso1K+Rg=35NzeA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J7Z2UaaD"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 446BhBPr027135;
+	Mon, 6 May 2024 14:22:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=VF+
+	VhKRSNkGh0wQg8mWK8KrHSpHVekHCRFc58SagL3s=; b=J7Z2UaaDyQs0ktGVUyM
+	+Eosd3jssd08NUNxsWk5qp0YWCI9aoRhpuLFrhNW/fWJb0mcPB02lqWWLHyrgmWn
+	2T6xWmACS5/uTNBBZvLMMHozpoV6ICiEwgrkGSYJugXUbDF3l8B9eRnov0btLCgl
+	7nWg+7JfsAlpStzrRbyJwVEJkFnz6+OUx+355TsrTP9TZR9hLCw0dubyipz6falw
+	xi/nQY/bGg0uGx8clpkD510+zA4K3+Y7Eh3l3pHskTEgKgs4r5DcimuICvAVZ8rY
+	6mxNz5YfRBqFs0T/kEd1NMunoHTFGzWudAwOf3jK99gFlfUKFMLJ+Cuv3fPM0Z+F
+	qWg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xxvv70ja4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 May 2024 14:22:36 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 446EMZ3l003055
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 6 May 2024 14:22:35 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 6 May 2024
+ 07:22:35 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Mon, 6 May 2024 07:22:33 -0700
+Subject: [PATCH] tracing: Fix trace_pid_list_free() kernel-doc
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHS8izM0=xc2UhUxhnF_BixuFs5VaDV9W1jbso1K+Rg=35NzeA@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240506-trace_pid_list_free-kdoc-v1-1-c70f0ae29144@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAKjnOGYC/x3MWwrCMBBG4a2UeTaQhlbErYiEXP7YwZqWSZRC6
+ d6NPn4P5+xUIIxC124nwYcLL7mhP3UUJpcfUBybyWgz6FGfVRUXYFeOduZSbRJAPeMSFIxP/eh
+ xGQBq+SpIvP3Xt3uzdwXKi8th+g1nzu9NvVypEDqOL07lW5+JAAAA
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu
+	<mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        "Jeff Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: TQdIgoGh3J3twTPHlJEwNHBqY9egLs0k
+X-Proofpoint-ORIG-GUID: TQdIgoGh3J3twTPHlJEwNHBqY9egLs0k
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-06_08,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 clxscore=1011 suspectscore=0
+ spamscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=704 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2405060099
 
-On Fri, May 03, 2024 at 01:10:44PM -0700, Mina Almasry wrote:
-> Is the concern still that folks may be able to hook proprietary stuff
-> into this like you mentioned before[1]?
+make C=1 reports:
 
-That is on concern.  The other is that people will do stupid stuff
-even in tree if you give them enough rope, and they should not have
-that rope when the only sensible options are page/folio based kernel
-memory (incuding large/huge folios) and dmabuf.
+kernel/trace/pid_list.c:458: warning: Function parameter or struct member 'pid_list' not described in 'trace_pid_list_free'
 
-> cp net/core/page_pool.c net/core/dmabuf_pool.c
-> 
-> and then modify it such that the net stack maintains 2 page_pools?
-> There are a lot of cons to that:
+Add the missing parameter to the trace_pid_list_free() kernel-doc.
 
-No.  Just have branches for page based vs dmabuf in a few places.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ kernel/trace/pid_list.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
+index 95106d02b32d..19b271a12c99 100644
+--- a/kernel/trace/pid_list.c
++++ b/kernel/trace/pid_list.c
+@@ -451,6 +451,7 @@ struct trace_pid_list *trace_pid_list_alloc(void)
+ 
+ /**
+  * trace_pid_list_free - Frees an allocated pid_list.
++ * @pid_list: The pid list to free.
+  *
+  * Frees the memory for a pid_list that was allocated.
+  */
+
+---
+base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
+change-id: 20240506-trace_pid_list_free-kdoc-e2bf15be84ee
 
