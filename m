@@ -1,257 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0149D1607AB;
-	Tue,  7 May 2024 14:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C670616E89D;
+	Tue,  7 May 2024 16:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091310; cv=none; b=RM73hkEzDdejuQfn3JTRzRIeo6+HvQjasBC6W6+JykZ+z3UwKR7Ws/Rpmh/Rfdfc1hgb/uxUBTVShaCCFLlLy9GqTXID/OuHiFU7+1bTpJXkM10xVdPKN9Da6i0tVbqjMFnahImL8mkdGsvbh4SBbwy+WHJQlPzn901Ferc/KS4=
+	t=1715097910; cv=none; b=Iew4z9Z0ZTY6Sd2OAJlJD9L9iOhQGdUDzbXORXvjZ1CInd53MmCJA3D8uv7SefnCqwnJwNbs5375QlgB1PkLbYbXrmZv8PupQGMJfzUeBrIPRWEQAvxBUMnPnlbmrF9lPkCECfxXVpeWbS0y0FshXyShgLy6gRfmZpJsbcaklGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091310; c=relaxed/simple;
-	bh=qz9bUI0E+avzydjRe5h6w3UDaf44DOCWwgWc2tfDYyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qrdUaF2yDjCVbb7nz3OfFK+voxljiDDf5IMTj1CDebn2pEzCg5EN6tjYT6WysT8YawFisoPhGVDF1XCmAd4aRco0/9e5R0eH/gbnRYmBwy7w3w4XFp2IFAnZ7QPMSa0tevigBsYjv/OxYtQYepRgxsNppDV97Ae8/sH8ayNNnHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scBCwpI+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715097910; c=relaxed/simple;
+	bh=sA2umYUzVqo4sIQG3H0UoFRjYkGw+DSiOpJ4aIgmcyA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gk71p9ab2kB5O6oCIe62kGbuKYL55eKR9Mdj+PXqTfGtzfBy7WqVE00MVaFXofaJrvF7Gnt5S7xUrEL1EJo2buMdDmpecGOI4BZMztNF0oUTtSYtKAddZzvw4Qyf/dkA1PTt4fQp8g2vbq5GgJuv2kKbKR4x4luTnUJpvfYJsAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y846Owug; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scBCwpI+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF06C2BBFC;
-	Tue,  7 May 2024 14:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715091309;
-	bh=qz9bUI0E+avzydjRe5h6w3UDaf44DOCWwgWc2tfDYyI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=scBCwpI++kfSsaSK9E+iTNPa3Gn4Kpn7ej+TCsJq9/tvveZnHzDfK4ZdjVpc7TCbs
-	 npyUH8SXX+ysW7F18FoSNddiDpTlv86V9nOo+tD4UHZduDuX7vEut+K31++p/Ygi1U
-	 /ctNctmqffokczLd7vFi00arorqWT8QYVk/XWTHYe3wY0lAPtALVw6B6XQJvHFdkrJ
-	 ZUV4BMK25UOQ/EHs1wvjZ3oYdP52Cx5uxUYNN0z46rnVCVYsgYwGuSLPvlZ9cge6Cw
-	 YIsEs2ZSLiPqF0hIoJmgK07+3aaQH1eUK4jmGfJvgfjjYgOGN0bsNweRxA6vpzSI6t
-	 ByLq9Ng5RgvUw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v10 36/36] fgraph: Skip recording calltime/rettime if it is not nneeded
-Date: Tue,  7 May 2024 23:15:02 +0900
-Message-Id: <171509130284.162236.12400830886224359503.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171509088006.162236.7227326999861366050.stgit@devnote2>
-References: <171509088006.162236.7227326999861366050.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y846Owug"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2dcc8d10d39so37140121fa.3;
+        Tue, 07 May 2024 09:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715097907; x=1715702707; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PSQgqNCjfPNhMe7ojJ0nUJfRe4KU5PbZ7UhYGgtrTLA=;
+        b=Y846Owug7hdoFWqIK7Z9zcq2lfrc0oVzS/k38PJ95hQaZKFmt6oBRhJhFaJ+V9e25M
+         XRLDf6Mp6GoJvxmPYlZWRSCLcE+O5xmtHzJ5MRdDm5dK2WrEDq4nwpJmUdimoUNh5Zek
+         oFv9eurtzT4Dau/7gLz9cuwSK4tvjRAlJsgO9/SR2BM8bOld4S+zsEjFCoC7uSTnqHf1
+         gXrUumK3ED8mBnEDsv2WswtmmSCJZVTEqEw4G7AJWbOulLuEAqi8XY/Wc4tI4VlovWPf
+         kkwVzW26ZoWZi55JwvmZTMJSDu9wGcu0505BTs5zF9QpivvFZv/l/tDx1xZn5EfHsrnw
+         bGCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715097907; x=1715702707;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PSQgqNCjfPNhMe7ojJ0nUJfRe4KU5PbZ7UhYGgtrTLA=;
+        b=u3LuwZV+xaTGkgxcnK/3fYCgYd6CGB/jiYq+Xy2o9J0mwFIwUVXvjrCLqIl4goLBi8
+         ZOn1p6gzEgcHaC1M9tN9sk0jTfVe0VzLqVT4MgZMSWVUcxRQZ4Bbu8sd63a+nmvicTyC
+         zzOvusEoQzK1d84UggRVshRSns1tT4k70ifSaIHH5hI2tuzKJ2NzdUZsBSSfAcfJl8VU
+         vsUVmWClhTeD9pOyOpKz+VyIzMm6VlDfgB5J+xK1N6kHO6gH8E/Uedfy3etWsmng23U5
+         3KmTtzV0gXIKPOAUr3Xkp9JLK4xw+bzgha7wkMgwpy4397AkPFVIp29rzpWIx8/6F+UD
+         rG8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU6QK/gxVO4+escKphijfZj/EyIQmt4OzSQwN0lh+ERswUiezQ+xnca8JCQOpZrh0ykuYDutlbRWtywPeDbG7WTI/eGCCDMlTtf4PRcDarlkeNvwQBMb+RImLC153pQhplZsb80GGYy65lseRSl0JYFgokvG1AVlLcpCoUDukEM1FySCBrCdLersfIF+ESfgWo9mJVkeHpGo+z/EeiPsmOs9afB60gp9D52Pz+0DBOINo2joYXftHIhtL3nLIbdJz0FmRAZVnL8TlZVF+98S1u6gSFDZ0y5Dbot+smApBI5gzHDEB0abgPjPfMPjKbVEKoQlSpncVBua5F6ZU1xM6O3A6jxBzA/OgPRlL6RQzE6URfsttm0ufZLbrbFwaSqmZ3p09EzepkyWE0W6sy9PM/SOJQt8vISGWLAfbyXl6tZTUFFLyHrEGw2ZPrTLoZsEjObIYAdRLcODf16VugSLzQ2KffoNkGqG/DCjGM+fg==
+X-Gm-Message-State: AOJu0YySpL3ndg5lii/8OAgDlS9rugtuRGtp0rA6KH8+g23Wn68JrH7P
+	QUzLkoPAmV/g3ClH7ecmy1NhccJhHVDWXFXIkAmkmS7Ypud+OG1kCAnoIliF
+X-Google-Smtp-Source: AGHT+IGNn8GJzZkbQWg++AR3CoLJpjM4EU80rGYnW6RmraNNFb9jJOD55eI48eU1CcAelZqaFIYOUA==
+X-Received: by 2002:a2e:bc13:0:b0:2da:9ed:9b43 with SMTP id 38308e7fff4ca-2e447085614mr353561fa.31.1715097906664;
+        Tue, 07 May 2024 09:05:06 -0700 (PDT)
+Received: from [192.168.42.69] ([85.255.235.91])
+        by smtp.gmail.com with ESMTPSA id bd13-20020a05600c1f0d00b0041c012ca327sm20235666wmb.45.2024.05.07.09.05.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 09:05:05 -0700 (PDT)
+Message-ID: <20b1c2d9-0b37-414c-b348-89684c0c0998@gmail.com>
+Date: Tue, 7 May 2024 17:05:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
+ custom page providers
+To: Christoph Hellwig <hch@infradead.org>,
+ Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Amritha Nambiar <amritha.nambiar@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+ Kaiyuan Zhang <kaiyuanz@google.com>, Christian Brauner <brauner@kernel.org>,
+ Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
+ Florian Westphal <fw@strlen.de>, Yunsheng Lin <linyunsheng@huawei.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
+ Arseniy Krasnov <avkrasnov@salutedevices.com>,
+ Aleksander Lobakin <aleksander.lobakin@intel.com>,
+ Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>,
+ Richard Gobert <richardbgobert@gmail.com>,
+ Sridhar Samudrala <sridhar.samudrala@intel.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>,
+ Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240403002053.2376017-1-almasrymina@google.com>
+ <20240403002053.2376017-3-almasrymina@google.com>
+ <ZjH1QaSSQ98mw158@infradead.org>
+ <CAHS8izM0=xc2UhUxhnF_BixuFs5VaDV9W1jbso1K+Rg=35NzeA@mail.gmail.com>
+ <ZjjHUh1eINPg1wkn@infradead.org>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <ZjjHUh1eINPg1wkn@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 5/6/24 13:04, Christoph Hellwig wrote:
+> On Fri, May 03, 2024 at 01:10:44PM -0700, Mina Almasry wrote:
+>> Is the concern still that folks may be able to hook proprietary stuff
+>> into this like you mentioned before[1]?
+> 
+> That is on concern.  The other is that people will do stupid stuff
 
-Skip recording calltime and rettime if the fgraph_ops does not need it.
-This is a kind of performance optimization for fprobe. Since the fprobe
-user does not use these entries, recording timestamp in fgraph is just
-a overhead (e.g. eBPF, ftrace). So introduce the skip_timestamp flag,
-and all fgraph_ops sets this flag, skip recording calltime and rettime.
+We're not now banning all virtual function tables because there is
+a chance someone might probably conceivably do perhaps something
+proprietary, aren't we? Let's just patch up all ways they might
+use it if there is any left.
 
-Suggested-by: Jiri Olsa <olsajiri@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v10:
-  - Add likely() to skipping timestamp.
- Changes in v9:
-  - Newly added.
----
- include/linux/ftrace.h |    2 ++
- kernel/trace/fgraph.c  |   51 +++++++++++++++++++++++++++++++++++++++++-------
- kernel/trace/fprobe.c  |    1 +
- 3 files changed, 47 insertions(+), 7 deletions(-)
+> even in tree if you give them enough rope, and they should not have
+> that rope when the only sensible options are page/folio based kernel
+> memory (incuding large/huge folios) and dmabuf.
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 64ca91d1527f..eb9de9d70829 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1156,6 +1156,8 @@ struct fgraph_ops {
- 	struct ftrace_ops		ops; /* for the hash lists */
- 	void				*private;
- 	int				idx;
-+	/* If skip_timestamp is true, this does not record timestamps. */
-+	bool				skip_timestamp;
- };
- 
- void *fgraph_reserve_data(int idx, int size_bytes);
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 40f47fcbc6c3..13b41485ce49 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -138,6 +138,7 @@ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
- int ftrace_graph_active;
- 
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
-+static bool fgraph_skip_timestamp;
- 
- /* LRU index table for fgraph_array */
- static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-@@ -483,7 +484,7 @@ void ftrace_graph_stop(void)
- static int
- ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 			 unsigned long frame_pointer, unsigned long *retp,
--			 int fgraph_idx)
-+			 int fgraph_idx, bool skip_ts)
- {
- 	struct ftrace_ret_stack *ret_stack;
- 	unsigned long long calltime;
-@@ -506,8 +507,12 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	ret_stack = get_ret_stack(current, current->curr_ret_stack, &offset);
- 	if (ret_stack && ret_stack->func == func &&
- 	    get_fgraph_type(current, offset + FGRAPH_FRAME_OFFSET) == FGRAPH_TYPE_BITMAP &&
--	    !is_fgraph_index_set(current, offset + FGRAPH_FRAME_OFFSET, fgraph_idx))
-+	    !is_fgraph_index_set(current, offset + FGRAPH_FRAME_OFFSET, fgraph_idx)) {
-+		/* If previous one skips calltime, update it. */
-+		if (!skip_ts && !ret_stack->calltime)
-+			ret_stack->calltime = trace_clock_local();
- 		return offset + FGRAPH_FRAME_OFFSET;
-+	}
- 
- 	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
- 
-@@ -525,7 +530,11 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 		return -EBUSY;
- 	}
- 
--	calltime = trace_clock_local();
-+	/* This is not really 'likely' but for keeping the least path to be faster. */
-+	if (likely(skip_ts))
-+		calltime = 0LL;
-+	else
-+		calltime = trace_clock_local();
- 
- 	offset = READ_ONCE(current->curr_ret_stack);
- 	ret_stack = RET_STACK(current, offset);
-@@ -609,7 +618,8 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
- 	trace.func = func;
- 	trace.depth = ++current->curr_ret_depth;
- 
--	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0);
-+	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0,
-+					  fgraph_skip_timestamp);
- 	if (offset < 0)
- 		goto out;
- 
-@@ -662,7 +672,8 @@ int function_graph_enter_ops(unsigned long ret, unsigned long func,
- 		return -ENODEV;
- 
- 	/* Use start for the distance to ret_stack (skipping over reserve) */
--	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx);
-+	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx,
-+					  gops->skip_timestamp);
- 	if (offset < 0)
- 		return offset;
- 	type = get_fgraph_type(current, offset);
-@@ -740,6 +751,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
- 	*ret = ret_stack->ret;
- 	trace->func = ret_stack->func;
- 	trace->calltime = ret_stack->calltime;
-+	trace->rettime = 0;
- 	trace->overrun = atomic_read(&current->trace_overrun);
- 	trace->depth = current->curr_ret_depth;
- 	/*
-@@ -800,7 +812,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 		return (unsigned long)panic;
- 	}
- 
--	trace.rettime = trace_clock_local();
- 	if (fregs)
- 		ftrace_regs_set_instruction_pointer(fregs, ret);
- 
-@@ -816,6 +827,12 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 			continue;
- 		if (gops == &fgraph_stub)
- 			continue;
-+		/*
-+		 * This is not really 'unlikely' but for keeping the least path
-+		 * to be faster.
-+		 */
-+		if (unlikely(!trace.rettime && !gops->skip_timestamp))
-+			trace.rettime = trace_clock_local();
- 
- 		gops->retfunc(&trace, gops, fregs);
- 	}
-@@ -1193,6 +1210,24 @@ static void init_task_vars(int idx)
- 	read_unlock(&tasklist_lock);
- }
- 
-+static void update_fgraph_skip_timestamp(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
-+		struct fgraph_ops *gops = fgraph_array[i];
-+
-+		if (gops == &fgraph_stub)
-+			continue;
-+
-+		if (!gops->skip_timestamp) {
-+			fgraph_skip_timestamp = false;
-+			return;
-+		}
-+	}
-+	fgraph_skip_timestamp = true;
-+}
-+
- int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
-@@ -1227,6 +1262,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 	gops->idx = i;
- 
- 	ftrace_graph_active++;
-+	update_fgraph_skip_timestamp();
- 
- 	if (ftrace_graph_active == 1) {
- 		register_pm_notifier(&ftrace_suspend_notifier);
-@@ -1250,6 +1286,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		fgraph_array[i] = &fgraph_stub;
- 		ftrace_graph_active--;
- 		fgraph_lru_release_index(i);
-+		update_fgraph_skip_timestamp();
- 	}
- out:
- 	mutex_unlock(&ftrace_lock);
-@@ -1273,8 +1310,8 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		goto out;
- 
- 	fgraph_array[gops->idx] = &fgraph_stub;
--
- 	ftrace_graph_active--;
-+	update_fgraph_skip_timestamp();
- 
- 	if (!ftrace_graph_active)
- 		command = FTRACE_STOP_FUNC_RET;
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index afa52d9816cf..24bb8edec8a3 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -345,6 +345,7 @@ NOKPROBE_SYMBOL(fprobe_return);
- static struct fgraph_ops fprobe_graph_ops = {
- 	.entryfunc	= fprobe_entry,
- 	.retfunc	= fprobe_return,
-+	.skip_timestamp = true,
- };
- static int fprobe_graph_active;
- 
+I believe there is at least one deep confusion here, considering you
+previously mentioned Keith's pre-mapping patches. The "hooks" are not
+that about in what format you pass memory, it's arguably the least
+interesting part for page pool, more or less it'd circulate whatever
+is given. It's more of how to have a better control over buffer lifetime
+and implement a buffer pool passing data to users and empty buffers
+back.
+It's a different from storage where a user passes a buffer before it
+initiates a read, data is sent by the other socket end. TCP devmem
+uses dmabuf, io_uring keeps pages (of normal user memory).
 
+
+>> cp net/core/page_pool.c net/core/dmabuf_pool.c
+>>
+>> and then modify it such that the net stack maintains 2 page_pools?
+>> There are a lot of cons to that:
+> 
+> No.  Just have branches for page based vs dmabuf in a few places.
+> 
+
+-- 
+Pavel Begunkov
