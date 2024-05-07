@@ -1,81 +1,57 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756BE15B995;
-	Tue,  7 May 2024 09:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8D614EC77;
+	Tue,  7 May 2024 10:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715074552; cv=none; b=Gedy9bovmu8bbFDgkGVDNDaoXlIfKtficblqSzqc+m6B+GrPELq88cemQJ6NJeE2HjmHZOmW726ki4fbYpyzVetktidUN+oiWGOyNx6dEMEERN55VGYtdrlwz4l/mUhgaHPa13JhrwKbM+Z1GKJJRg8nAcig5PJy9C/NjGc6gDk=
+	t=1715079209; cv=none; b=nOZrUeMM/Y6EIQpsk87qMqADa8QIKThtQtTyYJy3GwtAebQL+fXiz3zkzKqqFGMwDeVFEs+S72NnXXW5EysPN0+uoYftSmoDnUiX5utTr4en82MOrPGjVOmQP8MrC+K2rKVdvpNOYZ/t8FK19f/0cM/tWKZmXEZkO6CXALOw/7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715074552; c=relaxed/simple;
-	bh=Xup+ur6V7gGCPjLWD2d3gVVVucYcMlzVWTS+lp/sUdg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b17VeTI+aYrJ5inuUaq3Lz2CZEVRBe8aY2VH6A9TV7MR0kkcfPIMJ+mXh9XNrHIpy++e4SbCT53InaP7LDB1/54HQnGantClA4abbFOFhYc2vxQtWUClnFL0o+Vghv2iP2vZHMgPHaG+pXiaKlsaTluU5lcZCvR5DtW+S+WAfYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M8gmE8Mb; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715079209; c=relaxed/simple;
+	bh=zRCYiOQHPnfhs1z3DR2elwt2Yar4HKiZO0wVgLYg+Vg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hEqIG2sksvVU9Z7qrWCJ2ddzJKAUgJQFvs5XZXH8mOHkioRlsMc1pwr/cEYvsVbdim2kwlUzZElWQENkfYmPYQ9q4Ru95AVXSFdoPUxA4lXsKIEbL9Te8FXyfvzU/TWjpRCdqn99sDd4k6Zqsa3flon5BQVXOtFl5j18L/Xrw78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sd9lJi5H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8gmE8Mb"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e3f6166e4aso7189291fa.1;
-        Tue, 07 May 2024 02:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715074548; x=1715679348; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CGeMtJo22ZpGiOOGfiBpDVqkkH4o+185ycvE55zdP/o=;
-        b=M8gmE8MbMnYyAKJYr96bfv+XLsSbDdAhX4rNHDjsq/wfokUCfq2CAY2O9CQNK+9T4x
-         KqMAsvdD/k1epQZNCcjR1GIdAJDEJ6UY0gZO7XgE5hhGSUMR7jlExF0dpsBb42jBEJkv
-         vEGeo6rJXXJxb9hkVpcOKm6qAewaHmjwQixLvULRNfI2cP3fI+YOiCS4eghQ+HAhTlrs
-         nYgAbpCTX3rdw97oVJkqW7s30Syqb0vwghnrjahPaIGATacVaCi0oWst9rAvdc2aHrZn
-         oiJZSmytnJjPnPOWuEHV9cTkQ6k4QOPk1R/dN7+azbytTTXexJX/nhD4XxpvsDRXTAvK
-         YlTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715074548; x=1715679348;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CGeMtJo22ZpGiOOGfiBpDVqkkH4o+185ycvE55zdP/o=;
-        b=muIfTO7vbe8a8/v2IFCk5feI5tsoW4eO7RvzzKWy3MGMiT8LL6YN5FdO7METUDHokq
-         ZwCEpV4rqcJNFpS+1sVMJNOZOOqW9XIXO4QsAfzBSi6VHTQ/Be9AzZpVbWL6IogObrpW
-         rQx6V+AKYocIPrF8604uo3JaFdiqIufIAXIAC9+Rf66kYXZvl+nwp3NopCIyacquNakY
-         NV8AH/37vM9yjNWGmXYeNdK/hIbg+Sc712ZRbOK7EYelzip/FQiIquPj+Jw/uNXYsbh1
-         hlyzBqPOESEVgn/kjpDrEZYMOSEqRVeZsNjj7wZ6HhoSSX0wfj63NBFJHjeKcWyJwiwS
-         ltDA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVqtMNPnJU1VsD2Jzeqso6NF557n9ualH4vskklfiJRQPZf5/IUzVkJZ9IWsFoXGaEu8NYleIE539kSyWDhKIodyZ1zoriIj/c8mMBIxv9gfSqzjwYiN8p5HN4QusKV8/B2UekK79URhvNWeiXULNj
-X-Gm-Message-State: AOJu0Yz/sPzPA2fouQqUnL/41R7p9O9WXUhwC4FDg1z9OIzFC16mpxGm
-	Mwuq+B7ktomR202b0PhXM2W50UziYSowA383Zvb6Q9R01HM6tGL4
-X-Google-Smtp-Source: AGHT+IHLJp/5yXY68S2MEoHJWtlxnGiX1bJVli0zsoyajbNNQvNKrwVfZXDfz7x/bta8cstMv3LicA==
-X-Received: by 2002:a2e:914d:0:b0:2de:75de:5b0b with SMTP id q13-20020a2e914d000000b002de75de5b0bmr11651610ljg.18.1715074548565;
-        Tue, 07 May 2024 02:35:48 -0700 (PDT)
-Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
-        by smtp.gmail.com with ESMTPSA id t18-20020a2e9d12000000b002e29c50c4dcsm1335473lji.27.2024.05.07.02.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 02:35:48 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: "Paul E . McKenney" <paulmck@kernel.org>
-Cc: RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sd9lJi5H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2481C2BBFC;
+	Tue,  7 May 2024 10:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715079209;
+	bh=zRCYiOQHPnfhs1z3DR2elwt2Yar4HKiZO0wVgLYg+Vg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sd9lJi5HBDDMQcb1fyizgnog+zrbmj5jPa0DvXupXs6nqIMgdu6hI3V4VMe3GjB4f
+	 lo2xNa1OWmjwKh8uY1kkVCEeOCjtqo6YXMIyhMInI0TXtmOy7KbvyBGRkiSG7tlFZa
+	 yt8KkxFd5HryeNJ9NpGX/3djDR8zx7QkrnD3GEsTJ7Q28SdhvGw9yKAJ2XRIzDyfXg
+	 lKQsWQERWl44PwOYWS/WjAdtjfolJLSINidU0Q6tz4q+t2rLtwIUiOUnlbAg9aZFck
+	 nbfsMm+qNHypPzPGTs3Qj5BPBzZMDTLJnEcypgrn3JwbGxrF0E1emYkYDi7UKWGlJo
+	 RcZZQlVaWwAhw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 16/48] ftrace: Choose RCU Tasks based on TASKS_RCU rather than PREEMPTION
-Date: Tue,  7 May 2024 11:34:58 +0200
-Message-Id: <20240507093530.3043-17-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240507093530.3043-1-urezki@gmail.com>
-References: <20240507093530.3043-1-urezki@gmail.com>
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: [PATCHv5 bpf-next 0/8] uprobe: uretprobe speed up
+Date: Tue,  7 May 2024 12:53:13 +0200
+Message-ID: <20240507105321.71524-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -84,45 +60,120 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+hi,
+as part of the effort on speeding up the uprobes [0] coming with
+return uprobe optimization by using syscall instead of the trap
+on the uretprobe trampoline.
 
-The advent of CONFIG_PREEMPT_AUTO, AKA lazy preemption, will mean that
-even kernels built with CONFIG_PREEMPT_NONE or CONFIG_PREEMPT_VOLUNTARY
-might see the occasional preemption, and that this preemption just might
-happen within a trampoline.
+The speed up depends on instruction type that uprobe is installed
+and depends on specific HW type, please check patch 1 for details.
 
-Therefore, update ftrace_shutdown() to invoke synchronize_rcu_tasks()
-based on CONFIG_TASKS_RCU instead of CONFIG_PREEMPTION.
+Patches 1-7 are based on bpf-next/master, but path 1 and 2 are
+apply-able on linux-trace.git tree probes/for-next branch.
+Patch 8 is based on man-pages master.
 
-[ paulmck: Apply Steven Rostedt feedback. ]
+v5 changes:
+- added shadow stack support for uretprobe [peterz]
+- reworded man page + typos [Alejandro Colom]
+- added pipe ASSERT_OK [Andrii]
+- added acks [Andrii]
+- removed compat test for now before ci is fixed
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <linux-trace-kernel@vger.kernel.org>
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Also available at:
+  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  uretprobe_syscall
+
+thanks,
+jirka
+
+
+Notes to check list items in Documentation/process/adding-syscalls.rst:
+
+- System Call Alternatives
+  New syscall seems like the best way in here, because we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
+
+- Designing the API: Planning for Extension
+  The uretprobe syscall is very specific and most likely won't be
+  extended in the future.
+
+  At the moment it does not take any arguments and even if it does
+  in future, it's allowed to be called only from trampoline prepared
+  by kernel, so there'll be no broken user.
+
+- Designing the API: Other Considerations
+  N/A because uretprobe syscall does not return reference to kernel
+  object.
+
+- Proposing the API
+  Wiring up of the uretprobe system call is in separate change,
+  selftests and man page changes are part of the patchset.
+
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
+
+- x86 System Call Implementation
+  It's 64-bit syscall only.
+
+- Compatibility System Calls (Generic)
+  N/A uretprobe syscall has no arguments and is not supported
+  for compat processes.
+
+- Compatibility System Calls (x86)
+  N/A uretprobe syscall is not supported for compat processes.
+
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests and ran ltp on top of this change.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A.
+
+
+[0] https://lore.kernel.org/bpf/ZeCXHKJ--iYYbmLj@krava/
 ---
- kernel/trace/ftrace.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Jiri Olsa (7):
+      uprobe: Wire up uretprobe system call
+      uprobe: Add uretprobe syscall to speed up return probe
+      selftests/bpf: Add uretprobe syscall test for regs integrity
+      selftests/bpf: Add uretprobe syscall test for regs changes
+      selftests/bpf: Add uretprobe syscall call from user space test
+      x86/shstk: Add return uprobe support
+      selftests/x86: Add return uprobe shadow stack test
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index da1710499698..6c96b30f3d63 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3157,8 +3157,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
- 		 * synchronize_rcu_tasks() will wait for those tasks to
- 		 * execute and either schedule voluntarily or enter user space.
- 		 */
--		if (IS_ENABLED(CONFIG_PREEMPTION))
--			synchronize_rcu_tasks();
-+		synchronize_rcu_tasks();
- 
- 		ftrace_trampoline_free(ops);
- 	}
--- 
-2.39.2
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/shstk.h                                |   4 ++
+ arch/x86/kernel/shstk.c                                     |  29 +++++++++
+ arch/x86/kernel/uprobes.c                                   | 127 +++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |   3 +
+ include/uapi/asm-generic/unistd.h                           |   5 +-
+ kernel/events/uprobes.c                                     |  24 +++++--
+ kernel/sys_ni.c                                             |   2 +
+ tools/include/linux/compiler.h                              |   4 ++
+ tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c       | 123 ++++++++++++++++++++++++++++++++++-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 325 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |  15 +++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  17 +++++
+ tools/testing/selftests/x86/test_shadow_stack.c             | 142 ++++++++++++++++++++++++++++++++++++++++
+ 15 files changed, 813 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
 
+Jiri Olsa (1):
+      man2: Add uretprobe syscall page
+
+ man2/uretprobe.2 | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 man2/uretprobe.2
