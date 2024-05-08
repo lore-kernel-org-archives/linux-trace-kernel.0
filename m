@@ -1,118 +1,98 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88048652
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 May 2024 17:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E995131BA5;
+	Wed,  8 May 2024 21:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715188299; cv=none; b=KgXmoutfqOEVWaxzt2fW17VvDdsHNRwaIdIn3n1RWTMntmAQ2RQs92C1+t32245jSd8h/t3bcE94kfDdreg5YwA8azDHNJiFiopT2DM4zZRyGaTyR4effu6RelzHLd9ptPmwbFQQwYh+jFiI/larBJ2+kNZw7ho2rEzu0QmTmSU=
+	t=1715203571; cv=none; b=dhGIomptxp2MkyeKKYqCIGqY9DKFfZaz0aY2a8+5Cw9otM5WitTfhhE8kg6Z+GITndBW+eyNAbnTI0x58jsBYEwE0vuwXLfntgXec8xUXcPGD1QvXWm9yfYH4VnlthhY8Y58+Q4ChUUcXInjn6S7TBx7KnXRS3sqyVh23Aih/Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715188299; c=relaxed/simple;
-	bh=3H2Ex21607oQUraLy4a6ZebeomrW6qImqDFNkYN7KH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CyUkGA+k8uBlK2Wg6KjqCe9VrNZKRZXiXkyf7yc9Uza8afhAYCuEWYYJtWrpsNpPL/pgSUHy1nYWPf1ok8T1f9f1XxrPrvWtitl0UN/wBzQaVp02XEqqRX1DY86WEnX7cryrX8ZASh+nQ3C/WiFdRNivKEbcHM7jp8K7HnBDDSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e/7av/64; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715203571; c=relaxed/simple;
+	bh=jC4/tDWF+DXydkKwS4U4tonr/b7NgqdXz976VdA1gQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QhdrP1UxYjCcnJ43uSwQMahyVEHyD3HDg9mwmitR4KKsbMNbplrciNwtkjwLU7ns4iYtMVhNioXEKwSvo0OKIJGuTtnu2kApmvO2XLLGAF4KgZkriA7ye/UUc6AAefNjAcUgYhS2SrMBTWrc0mgn7bZfsSN8WIp3elwIUyzS48w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iBbBi7iC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e/7av/64"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f45f1179c3so8622b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 08 May 2024 10:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715188297; x=1715793097; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
-        b=e/7av/64Dcgf3OMhlc/3aG68Cv9i0FKAXx1yap6cSbdW0nsJbcNd95Yo1lRWM4CXEO
-         StJJA023SDun4hdxa5p+ZL91TWCTjhJqbT/I8537Y89y8wwXzIEuISflNf2v2IqVxAlb
-         rwDXFcNsSy0ds4FxqMQiDgXwqp7u78CH/UbW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715188297; x=1715793097;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tSmrj41Qt+Se2fdGi7WeozvVj6AfH//AS3pb2zkquGg=;
-        b=QiHw+BUIER2FzKZ8ttWG4yHyEyQkQ6nXqCojJtcF7tlS/S6ODItkTlj0kZGLVW0F46
-         UO+aQTQucAhpFVNNI4V/S6R9iVeeiVvas4JhEnFJb8f0VHBg0Wv2KnEHvpZC8QCjvcJc
-         n18gLSGtShPmXcDW4lnFNKzAEA9htTcNbkLecGoL9SUindpt9BzOIU8JmXhCrVIHMF2b
-         W03nFB42CSuIFmRy96pitHiB64Z48E83ZiAiu2E0gHvI5FN7sc+Z3P8Vv9oDPY5ZB+bn
-         dRJ60CDRCn6NsimTD/Bfi2dKkhrWNweOpJQKa4JOEXOEvPRqsuCbpGo+ZQBKJbquB9Bi
-         c6gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXC7RwLTTOilbEjVKDvz26SzG6uaayR8JjvjppMTbt6m15hJFUqSz2DsY1IZ7jrLN1VypSafeCJ4asy5a6/CMPKiT5hDTfKuiqmrG4NLOibsLr/
-X-Gm-Message-State: AOJu0YzkjE/UjWxwBMs13OI3ZrodZqS2YJQFwfDfE81ycw9hvtq4TgtI
-	LGSIy6hgRBY8vEJ7Qwr+t3c5E/DGOFIk6Pi0u3Rnes/uZM/f32oUqVnqEu9r3A==
-X-Google-Smtp-Source: AGHT+IHN8eeXE9OsgItxEKHR70nrrazwBAjav29jEzJB0wGGmdP+iVlP1VjtMYRBUjqpRzzzPBgYhQ==
-X-Received: by 2002:a05:6a20:c88b:b0:1a5:6a85:8ce9 with SMTP id adf61e73a8af0-1afc8d1b02amr3543639637.12.1715188296881;
-        Wed, 08 May 2024 10:11:36 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lp9-20020a056a003d4900b006f44ed124dfsm9245352pfb.160.2024.05.08.10.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:11:36 -0700 (PDT)
-Date: Wed, 8 May 2024 10:11:35 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <202405080959.104A73A914@keescook>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iBbBi7iC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B91C2BD11;
+	Wed,  8 May 2024 21:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715203571;
+	bh=jC4/tDWF+DXydkKwS4U4tonr/b7NgqdXz976VdA1gQw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iBbBi7iCSjvumvPAFRmnIVnArDqj5xI5HxXKvnq91/VeCUZmyxxu13nioLy1MeiVq
+	 VRA4Bt9in7wFbXkhg74E9eLYnvp8Y92DLvAauwdEkt7LZmOlF8GGVOOk/EW5F4C8aQ
+	 f8hwuzzSX9g6Rou3v+u+SikOvoJu3MrlgXBWgkUOWbWs6bA661Qadwa/wJtQF9HG6/
+	 Up3T3h76j2Q8+XCCw0xuFLvY5/g62fTP16g8C7qRAXfcbxjiBlnD1cM4zEDWnq5yJo
+	 3Bq/w76pxM62dnxTVHCVs9X12kaol8M+CfiMGbPZ5K/GhrSV3kgayqe83bidMew8Mn
+	 MAnir3cFQugzA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH 0/4] Fix user stack traces captured from uprobes
+Date: Wed,  8 May 2024 14:26:01 -0700
+Message-ID: <20240508212605.4012172-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424201234.3cc2b509@kernel.org>
 
-On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
-> On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > The series was split from my larger series sysctl-const series [0].
-> > It only focusses on the proc_handlers but is an important step to be
-> > able to move all static definitions of ctl_table into .rodata.
-> 
-> Split this per subsystem, please.
+This patch set reports two issues with captured stack traces.
 
-I've done a few painful API transitions before, and I don't think the
-complexity of these changes needs a per-subsystem constification pass. I
-think this series is the right approach, but that patch 11 will need
-coordination with Linus. We regularly do system-wide prototype changes
-like this right at the end of the merge window before -rc1 comes out.
+First issue, fixed in patch #2, deals with fixing up uretprobe trampoline
+addresses in captured stack trace. This issue happens when there are pending
+return probes, for which kernel hijacks some of the return addresses on user
+stacks. The code is matching those special uretprobe trampoline addresses with
+the list of pending return probe instances and replaces them with actual
+return addresses.
 
-The requirements are pretty simple: it needs to be a obvious changes
-(this certainly is) and as close to 100% mechanical as possible. I think
-patch 11 easily qualifies. Linus should be able to run the same Coccinelle
-script and get nearly the same results, etc. And all the other changes
-need to have landed. This change also has no "silent failure" conditions:
-anything mismatched will immediately stand out.
+Second issue, which patch #3 is trying to fix with the help of heuristic, is
+having to do with capturing user stack traces in entry uprobes. At the very
+entrance to user function, frame pointer in rbp register is not yet setup, so
+actual caller return address is still pointed to by rsp. Patch is using
+a simple heuristic, looking for `push %rbp` instruction, to fetch this extra
+direct caller return address, before proceeding to unwind the stack using rbp.
 
-So, have patches 1-10 go via their respective subsystems, and once all
-of those are in Linus's tree, send patch 11 as a stand-alone PR.
+Consider this patch #3 an RFC, if there are better suggestions how this can be
+solved, I'd be happy to hear that.
 
-(From patch 11, it looks like the seccomp read/write function changes
-could be split out? I'll do that now...)
+Patch #4 adds tests into BPF selftests, that validate that captured stack
+traces at various points is what we expect to get. This patch, while being BPF
+selftests, is isolated from any other BPF selftests changes and can go in
+through non-BPF tree without the risk of merge conflicts.
 
--Kees
+Patches are based on latest linux-trace's probes/for-next branch.
+
+Andrii Nakryiko (4):
+  uprobes: rename get_trampoline_vaddr() and make it global
+  perf,uprobes: fix user stack traces in the presence of pending
+    uretprobes
+  perf,x86: avoid missing caller address in stack traces captured in
+    uprobe
+  selftests/bpf: add test validating uprobe/uretprobe stack traces
+
+ arch/x86/events/core.c                        |  20 ++
+ include/linux/uprobes.h                       |   3 +
+ kernel/events/callchain.c                     |  42 +++-
+ kernel/events/uprobes.c                       |  17 +-
+ .../bpf/prog_tests/uretprobe_stack.c          | 185 ++++++++++++++++++
+ .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
+ 6 files changed, 359 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
 
 -- 
-Kees Cook
+2.43.0
+
