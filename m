@@ -1,97 +1,356 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502B3376;
-	Thu,  9 May 2024 20:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836E215EFCF
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 May 2024 07:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715286793; cv=none; b=npUUdG01KBLtA8mfwbVqpmOtLRaHooEe+/u/AWjCWTZLDRkJrwpNcFhCKTQJoHEs6KZ6NIjORvxxX82/r4NWcyRUXQ0s4AYbRIXLadt6iWksxf04MYIfySYhWI9GCifc4ut6JW64uE1l4B1gRUvN73EaQL3o+3kUFYOgojse674=
+	t=1715327996; cv=none; b=azVADvaEV9Vd4oi/jsNvc1KMK5CMzDjWKcC1fcXqBTojqCZwdGrj6OOhtvvEL/U7xUvP6kk5+pBGv5SJaocIsF3iFolBIsn6mc7cyKyxvdeWRpegd7EJ0TqtwWNnzr5xbBQn6VwPPCw3q8QsQbrF6ivqErbZNm6JT5n/w8urtjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715286793; c=relaxed/simple;
-	bh=XRyn5/3SR/20zF82M4AG85UDuUuZLhgeU/U/+huhrpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=txXraiHd7+qGwZPky9vb8ppw/JhlA73gOj1SlCNhAiOBiuwRofvW4bqh3ltDEu1a4NSkydA03R5Viza83/CZ5AcdItrgRCr0GyDgV9lYBs9doMO9KU4Ez5tgsV0/FT6KWF9qMvkDj9hHLMYIqMWs2A2kBwJhQoN1Z41Zb0uZwEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CB2C116B1;
-	Thu,  9 May 2024 20:33:11 +0000 (UTC)
-Date: Thu, 9 May 2024 16:33:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "Luck, Tony"
- <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Joel Fernandes
- <joel@joelfernandes.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Ross
- Zwisler <zwisler@google.com>, "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Suleiman Souhlal
- <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-Message-ID: <20240509163310.2aa0b2e1@rorschach.local.home>
-In-Reply-To: <Zj0w9MFfjFm6XqT5@kernel.org>
-References: <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-	<3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
-	<20240411154007.5bdf8d95@gandalf.local.home>
-	<fa5fa4c6-2b02-f47e-b9ba-65cfd85f57f8@igalia.com>
-	<20240412132243.053ad096@gandalf.local.home>
-	<ZjJVnZUX3NZiGW6q@kernel.org>
-	<20240501105455.42b78a0b@gandalf.local.home>
-	<ZjJgIIOvvEdnisNA@kernel.org>
-	<20240509000023.096d4032@rorschach.local.home>
-	<20240509133122.474130be@rorschach.local.home>
-	<Zj0w9MFfjFm6XqT5@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715327996; c=relaxed/simple;
+	bh=npWzHj9ZThuz0LC+ejy72dCyaxcJq0/47rbGM+8noc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bCViIYgKHOPHzQip/ZNz4pgz+AvBamhx2TWcAO2eDb0a8lBWy3k+YSjQgu0KSuMt9/G9ws/iOuUPp3y7OX0wMttnKrvvawWu20/luNr2RQkiPDDI4XYX4EFCpmw01IpfLDJ6QyXDg7U1gFXcvW+WrPjSzzlnFQ3/MLM+YbWLdV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bvIvL4bc; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bvIvL4bc"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-23f02e15fd6so875153fac.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 May 2024 00:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1715327992; x=1715932792; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uJeEXiZ6QtsPIlVB8Y2HLkUohZd7HSL2XlP+CmBisvo=;
+        b=bvIvL4bc60K/whstl4xnMge2Di8BV4y+9UkPZeHUiRQT+HOWpVvig6g2DwZKd7JYxb
+         r1Tld/D6xpvKPWucaXrtMaoGhzAcyThNQr0hanw0MghsFnsvGDI0HO0ym446Jr5BGy8z
+         8crrUE7TgYLjFEszwtmsJF4Oc+h/f22MDer1qQZiF5fuKbqD6FIKEWWtI9NbNEv8oh/p
+         BJE041eVgNfCEUmpS4jslGESlry8XYFwbiJ/U7hmvnzJoqHbfTg6vudRhm0pL8jx1Iv0
+         WIUHhZKKc9VnOj8R3vnb+gcsCO7MPjDtRfmVKWgW3f375HwLUTpUL6AhOHNGk5XDaAfB
+         O2Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715327992; x=1715932792;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uJeEXiZ6QtsPIlVB8Y2HLkUohZd7HSL2XlP+CmBisvo=;
+        b=siImfuStLGfBV54jYc8wC4M+Yfep0pj6XzEZYWt+vOEzvZbQOiyCDi8ekF/MaJ9KnD
+         JKzNmQ+euKxC9G9RlGXwBivS19UOHEbTesGRfcCDql2ROub1M5UOdx9sUxp7HMpoBGtV
+         xlc5k0/q7y4Ao0BTOg+1O9Q3CQML9BP/wM4glUWGY2vXDcUWsvzbTYXQeQRoJN7n6YuD
+         hAGEinhI/AvDKrQtzL/Z4LbGrMjwR8RwerZDlwy4ns684ORwfaysgK6J5u/t3mFYwYTO
+         C+o9miU7iFfPl8nRYo1aeplwfD3vx1Sdv9+LScMeRceD5SRuy5Lg889cXXmOPaOzmzAV
+         B/PA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6j0IJrayNMh3HFGFrCsZERIk5U5jkSniXcaENTio/7L+uhVC/MXgm+6cEjioTWJqryfI8lnaWzS5V9xAVPuhv3Me5SoAsZTSZyEMbxKQMy6Kh
+X-Gm-Message-State: AOJu0YxSWE7wJxdqusGYG/5eiU3QrkOayf5GVj/vW3UtpBBkZ4mIPvjk
+	HxI2OV8Pd60dhemOVq/w0768iqt9VOQDfuH77PEaQ9/PWEimQTfHbmyBjG8R/CQ=
+X-Google-Smtp-Source: AGHT+IFRwknCqD7FhW8JOzyEtPWPo02Cr3jFZQMVaJo1LKmpFsS5qD2JyQtO8Q8o2+3+Kt2s5FRKcg==
+X-Received: by 2002:a05:6870:8289:b0:240:8382:7834 with SMTP id 586e51a60fabf-24172e2ebe2mr2252473fac.45.1715327992622;
+        Fri, 10 May 2024 00:59:52 -0700 (PDT)
+Received: from [192.168.6.6] ([61.213.176.56])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b150dfsm2412609b3a.183.2024.05.10.00.59.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 May 2024 00:59:52 -0700 (PDT)
+Message-ID: <d841cb8f-fb7e-4427-8f21-a850bee3693f@bytedance.com>
+Date: Fri, 10 May 2024 15:59:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] objpool: enable inlining objpool_push() and
+ objpool_pop() operations
+Content-Language: en-US
+To: Vlastimil Babka <vbabka@suse.cz>, Andrii Nakryiko <andrii@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org
+Cc: bpf@vger.kernel.org, "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20240424215214.3956041-1-andrii@kernel.org>
+ <20240424215214.3956041-2-andrii@kernel.org>
+ <0e8b7482-478e-4efc-ad5f-76d60cf02bfd@suse.cz>
+From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Autocrypt: addr=wuqiang.matt@bytedance.com; keydata=
+ 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
+ 4mCJUdEkdwCS
+In-Reply-To: <0e8b7482-478e-4efc-ad5f-76d60cf02bfd@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 9 May 2024 23:24:20 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
-
-> On Thu, May 09, 2024 at 01:31:22PM -0400, Steven Rostedt wrote:
-> > On Thu, 9 May 2024 00:00:23 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > I tried this approach and it unfortunately picks a different physical
-> > > location every time :-(
-> > > 
-> > > So it is either adding to e820 tables or we create a new way to
-> > > allocate memory at early boot up.
-> > >   
-> > 
-> > Hmm, now I'm testing it more and it always seems to end up in the same
-> > location. I'm not sure why it failed the first three times I tried it :-/  
+On 2024/5/7 21:55, Vlastimil Babka wrote:
+> On 4/24/24 11:52 PM, Andrii Nakryiko wrote:
+>> objpool_push() and objpool_pop() are very performance-critical functions
+>> and can be called very frequently in kretprobe triggering path.
+>>
+>> As such, it makes sense to allow compiler to inline them completely to
+>> eliminate function calls overhead. Luckily, their logic is quite well
+>> isolated and doesn't have any sprawling dependencies.
+>>
+>> This patch moves both objpool_push() and objpool_pop() into
+>> include/linux/objpool.h and marks them as static inline functions,
+>> enabling inlining. To avoid anyone using internal helpers
+>> (objpool_try_get_slot, objpool_try_add_slot), rename them to use leading
+>> underscores.
+>>
+>> We used kretprobe microbenchmark from BPF selftests (bench trig-kprobe
+>> and trig-kprobe-multi benchmarks) running no-op BPF kretprobe/kretprobe.multi
+>> programs in a tight loop to evaluate the effect. BPF own overhead in
+>> this case is minimal and it mostly stresses the rest of in-kernel
+>> kretprobe infrastructure overhead. Results are in millions of calls per
+>> second. This is not super scientific, but shows the trend nevertheless.
+>>
+>> BEFORE
+>> ======
+>> kretprobe      :    9.794 ± 0.086M/s
+>> kretprobe-multi:   10.219 ± 0.032M/s
+>>
+>> AFTER
+>> =====
+>> kretprobe      :    9.937 ± 0.174M/s (+1.5%)
+>> kretprobe-multi:   10.440 ± 0.108M/s (+2.2%)
+>>
+>> Cc: Matt (Qiang) Wu <wuqiang.matt@bytedance.com>
+>> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 > 
-> If the kernel and the command line were the same, they shouldn't have. 
-> e820 translates to memblock the same way every boot and the early
-> allocations also do not change from boot to boot.
+> Hello,
 > 
-> Could it be that three runs that failed had some differences in the kernel
-> parameters?
+Hi Vlastimil,
+
+> this question is not specific to your patch, but since it's a recent thread,
+> I'll ask it here instead of digging up the original objpool patches.
+> 
+> I'm trying to understand how objpool works and if it could be integrated
+> into SLUB, for the LSF/MM discussion next week:
+> 
+> https://lore.kernel.org/all/b929d5fb-8e88-4f23-8ec7-6bdaf61f84f9@suse.cz/
+> 
+>> +/* adding object to slot, abort if the slot was already full */
+> 
+> I don't see any actual abort in the code (not in this code nor in the
+> deleted code - it's the same code, just moved for inlining purposes).
+> 
+>> +static inline int
+>> +__objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
+>> +{
+>> +	struct objpool_slot *slot = pool->cpu_slots[cpu];
+>> +	uint32_t head, tail;
+>> +
+>> +	/* loading tail and head as a local snapshot, tail first */
+>> +	tail = READ_ONCE(slot->tail);
+>> +
+>> +	do {
+>> +		head = READ_ONCE(slot->head);
+>> +		/* fault caught: something must be wrong */
+>> +		WARN_ON_ONCE(tail - head > pool->nr_objs);
+> 
+> So this will only WARN if we go over the capacity, but continue and
+> overwrite a pointer that was already there, effectively leaking said object, no?
+
+Yes, the WARN is only for error-catch in caller side (try to push one
+same object multiple times for example).
+
+> 
+>> +	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
+>> +
+>> +	/* now the tail position is reserved for the given obj */
+>> +	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
+>> +	/* update sequence to make this obj available for pop() */
+>> +	smp_store_release(&slot->last, tail + 1);
+>> +
+>> +	return 0;
+>> +}
+>>   
+>>   /**
+>>    * objpool_push() - reclaim the object and return back to objpool
+>> @@ -134,7 +219,19 @@ void *objpool_pop(struct objpool_head *pool);
+>>    * return: 0 or error code (it fails only when user tries to push
+>>    * the same object multiple times or wrong "objects" into objpool)
+>>    */
+>> -int objpool_push(void *obj, struct objpool_head *pool);
+>> +static inline int objpool_push(void *obj, struct objpool_head *pool)
+>> +{
+>> +	unsigned long flags;
+>> +	int rc;
+>> +
+>> +	/* disable local irq to avoid preemption & interruption */
+>> +	raw_local_irq_save(flags);
+>> +	rc = __objpool_try_add_slot(obj, pool, raw_smp_processor_id());
+> 
+> And IIUC, we could in theory objpool_pop() on one cpu, then later another
+> cpu might do objpool_push() and cause the latter cpu's pool to go over
+> capacity? Is there some implicit requirements of objpool users to take care
+> of having matched cpu for pop and push? Are the current objpool users
+> obeying this requirement? (I can see the selftests do, not sure about the
+> actual users).
+> Or am I missing something? Thanks.
+
+The objects are all pre-allocated along with creation of the new objpool
+and the total number of objects never exceeds the capacity on local node.
+So objpool_push() would always find an available slot from the ring-array
+for the given object to insert back. objpool_pop() would try looping all
+the percpu slots until an object is found or whole objpool is empty.
+
+Currently kretprobe is the only actual usecase of objpool.
+
+I'm testing an updated objpool in our HIDS project for critical pathes,
+which is widely deployed on servers inside my company. The new version
+eliminates the raw_local_irq_save and raw_local_irq_restore pair of
+objpool_push and gains up to 5% of performance boost.
+
+> 
+>> +	raw_local_irq_restore(flags);
+>> +
+>> +	return rc;
+>> +}
+>> +
+>>   
+>>   /**
+>>    * objpool_drop() - discard the object and deref objpool
+>> diff --git a/lib/objpool.c b/lib/objpool.c
+>> index cfdc02420884..f696308fc026 100644
+>> --- a/lib/objpool.c
+>> +++ b/lib/objpool.c
+>> @@ -152,106 +152,6 @@ int objpool_init(struct objpool_head *pool, int nr_objs, int object_size,
+>>   }
+>>   EXPORT_SYMBOL_GPL(objpool_init);
+>>   
+>> -/* adding object to slot, abort if the slot was already full */
+>> -static inline int
+>> -objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
+>> -{
+>> -	struct objpool_slot *slot = pool->cpu_slots[cpu];
+>> -	uint32_t head, tail;
+>> -
+>> -	/* loading tail and head as a local snapshot, tail first */
+>> -	tail = READ_ONCE(slot->tail);
+>> -
+>> -	do {
+>> -		head = READ_ONCE(slot->head);
+>> -		/* fault caught: something must be wrong */
+>> -		WARN_ON_ONCE(tail - head > pool->nr_objs);
+>> -	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
+>> -
+>> -	/* now the tail position is reserved for the given obj */
+>> -	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
+>> -	/* update sequence to make this obj available for pop() */
+>> -	smp_store_release(&slot->last, tail + 1);
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -/* reclaim an object to object pool */
+>> -int objpool_push(void *obj, struct objpool_head *pool)
+>> -{
+>> -	unsigned long flags;
+>> -	int rc;
+>> -
+>> -	/* disable local irq to avoid preemption & interruption */
+>> -	raw_local_irq_save(flags);
+>> -	rc = objpool_try_add_slot(obj, pool, raw_smp_processor_id());
+>> -	raw_local_irq_restore(flags);
+>> -
+>> -	return rc;
+>> -}
+>> -EXPORT_SYMBOL_GPL(objpool_push);
+>> -
+>> -/* try to retrieve object from slot */
+>> -static inline void *objpool_try_get_slot(struct objpool_head *pool, int cpu)
+>> -{
+>> -	struct objpool_slot *slot = pool->cpu_slots[cpu];
+>> -	/* load head snapshot, other cpus may change it */
+>> -	uint32_t head = smp_load_acquire(&slot->head);
+>> -
+>> -	while (head != READ_ONCE(slot->last)) {
+>> -		void *obj;
+>> -
+>> -		/*
+>> -		 * data visibility of 'last' and 'head' could be out of
+>> -		 * order since memory updating of 'last' and 'head' are
+>> -		 * performed in push() and pop() independently
+>> -		 *
+>> -		 * before any retrieving attempts, pop() must guarantee
+>> -		 * 'last' is behind 'head', that is to say, there must
+>> -		 * be available objects in slot, which could be ensured
+>> -		 * by condition 'last != head && last - head <= nr_objs'
+>> -		 * that is equivalent to 'last - head - 1 < nr_objs' as
+>> -		 * 'last' and 'head' are both unsigned int32
+>> -		 */
+>> -		if (READ_ONCE(slot->last) - head - 1 >= pool->nr_objs) {
+>> -			head = READ_ONCE(slot->head);
+>> -			continue;
+>> -		}
+>> -
+>> -		/* obj must be retrieved before moving forward head */
+>> -		obj = READ_ONCE(slot->entries[head & slot->mask]);
+>> -
+>> -		/* move head forward to mark it's consumption */
+>> -		if (try_cmpxchg_release(&slot->head, &head, head + 1))
+>> -			return obj;
+>> -	}
+>> -
+>> -	return NULL;
+>> -}
+>> -
+>> -/* allocate an object from object pool */
+>> -void *objpool_pop(struct objpool_head *pool)
+>> -{
+>> -	void *obj = NULL;
+>> -	unsigned long flags;
+>> -	int i, cpu;
+>> -
+>> -	/* disable local irq to avoid preemption & interruption */
+>> -	raw_local_irq_save(flags);
+>> -
+>> -	cpu = raw_smp_processor_id();
+>> -	for (i = 0; i < num_possible_cpus(); i++) {
+>> -		obj = objpool_try_get_slot(pool, cpu);
+>> -		if (obj)
+>> -			break;
+>> -		cpu = cpumask_next_wrap(cpu, cpu_possible_mask, -1, 1);
+>> -	}
+>> -	raw_local_irq_restore(flags);
+>> -
+>> -	return obj;
+>> -}
+>> -EXPORT_SYMBOL_GPL(objpool_pop);
+>> -
+>>   /* release whole objpool forcely */
+>>   void objpool_free(struct objpool_head *pool)
+>>   {
 > 
 
-I wonder if KASLR caused it or not. But when I first added it to
-another machine, it failed to get the same address on the second boot,
-but was fine after that.
+Regards,
+Matt Wu
 
-Could be just something with my setup. I'm going to backport this to
-5.15 and test this on a Chromebook and see what happens there (as
-that's the motivation behind this work).
-
--- Steve
