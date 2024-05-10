@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7E01C6B8;
-	Fri, 10 May 2024 18:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AAE1D530;
+	Fri, 10 May 2024 18:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715366576; cv=none; b=IYBIk8w47GzJ6fWrm3EER+/ad43vKamYN1XTiLuxkkzCI+0gmx4sctRYlAcf3Me4eI2CUpNp1mYMxX96vZqo2R+KW3lGnQGwjJIwVBpP4inpifWsz2pqM8QfFQTlfk/m22zl7rOaTAQ3TZi3C4hsM0UDSu7u0nb9LaV5+Ss7VoQ=
+	t=1715366679; cv=none; b=V3RsSUycl0ANfaNM0h1gAG7k5wcMeWjkvFl+1vtr1xvQ9QWGTuuNVa5FTrtOE8XyNFxsOgIDlpWlZqJ/RTydQz6S3rx4MNNKC38YZvOt93nUiPWVXqiU6FPcDD8bvkAt5TFLcjC7Ocgs+8kOdxWhfhQBjqjJST2iuAPm57k10b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715366576; c=relaxed/simple;
-	bh=gms4cnzhR0dzSd+wzL/32mivfCz+W751yaMNuoAxlII=;
+	s=arc-20240116; t=1715366679; c=relaxed/simple;
+	bh=+Zi5P0x/eCmRw6c9yuMoW9uewtxsDiMo1/NTc5J3QNQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QEe8V3CREX//w6EOLjE5MC898aGqW7kmF3L8bIJLsFKKqCwzp9EAfwBImkwP0PppW/ItTAOxXRF6Z7tEmEdB3Olw3Pp19MrlioM1ZIn87WXNyoe9TJJtExu0VUMxKG/9jKpMNVfj6q+gA91FwoAjOqiTjZ5oBuveeUWhtCCQLkI=
+	 MIME-Version:Content-Type; b=f4wYuTo3cVyiteIBMRIn1HnDINWy8/Iufm8JKom9frqKmc+Bwl7HkCcjxPaeWcYI/FZVqAQBQ37X/bjbw3s/mtgUXB6IkG4ce9ywbbAAxkLS5IBYFDvl32NQ1djy2yEXSNnUWa+SZeaIJUXaU8G35ozxQ3wnbXj4g4K6Xwc+lGw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C08CC113CC;
-	Fri, 10 May 2024 18:42:55 +0000 (UTC)
-Date: Fri, 10 May 2024 14:42:53 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194A3C113CC;
+	Fri, 10 May 2024 18:44:38 +0000 (UTC)
+Date: Fri, 10 May 2024 14:44:36 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
-Cc: David Hildenbrand <david@redhat.com>, mhiramat@kernel.org,
+Cc: Shuah Khan <skhan@linuxfoundation.org>, mhiramat@kernel.org,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  mathieu.desnoyers@efficios.com, kernel-team@android.com,
- rdunlap@infradead.org, rppt@kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20240510144253.4b865a40@rorschach.local.home>
-In-Reply-To: <Zj3-8GHR_EiWY7lB@google.com>
+ rdunlap@infradead.org, rppt@kernel.org, david@redhat.com, Shuah Khan
+ <shuah@kernel.org>, linux-kselftest@vger.kernel.org, Muhammad Usama Anjum
+ <usama.anjum@collabora.com>
+Subject: Re: [PATCH v22 5/5] ring-buffer/selftest: Add ring-buffer mapping
+ test
+Message-ID: <20240510144436.37ea0276@rorschach.local.home>
+In-Reply-To: <Zj3_P5UsO61yp7a7@google.com>
 References: <20240430111354.637356-1-vdonnefort@google.com>
-	<20240430111354.637356-3-vdonnefort@google.com>
-	<20240507223402.206d6ddc@rorschach.local.home>
-	<cc719813-ba73-461f-8b45-4728f926c151@redhat.com>
-	<Zj3-8GHR_EiWY7lB@google.com>
+	<20240430111354.637356-6-vdonnefort@google.com>
+	<5bdb08a2-0740-4ea0-be24-a948332d60ac@linuxfoundation.org>
+	<20240507193555.592a1e28@rorschach.local.home>
+	<Zj3_P5UsO61yp7a7@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,24 +42,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 10 May 2024 12:03:12 +0100
+On Fri, 10 May 2024 12:04:31 +0100
 Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> > I'm not particularly happy about us calling vm_insert_pages with NULL
-> > pointers stored in pages.
-> > 
-> > Should we instead do
-> > 
-> > if (WARN_ON_ONCE(s >= nr_subbufs)) {
-> > 	err = -EINVAL;
-> > 	goto out;
-> > }
-> > 
-> > ?  
+> > Can you address Shuah's concerns. I'm starting to test patches 1-4 so
+> > you only need to send an update to this one, unless of course I find an
+> > issue with one of the others.  
 > 
-> I could also nr_pages = p in the event of s >= nr_subbufs... but that
-> really that shouldn't happen so let's return an error.
+> I will do, as well as with the VM_ flags change.
 
-I'm good with this. It should never happen anyway.
+Just so I'm not confusing you. Pleases send a full patch series again.
+I only wanted the one patch if there wasn't another issue found. But we
+found another issue, so it requires sending a full series.
 
 -- Steve
