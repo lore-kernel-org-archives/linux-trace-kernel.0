@@ -1,66 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B281635C1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 May 2024 09:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8D715FA9E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 May 2024 09:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715332568; cv=none; b=jhEW7UaHcNbYl6RQaJ5ZzqWjdtQMbuWqAZ/XsOm0+/NzijPlPLKNPQH1fimV7TelhfHWXUnRQpMaxRYPlqgdgNxP+3SL6QOTVzAhQsBL7a50iTRwkfGtSb/PfSbcUw8iQLKnZVKlni8YCOz90zLX+5Z6EKVQO86bJHP56qSYOpU=
+	t=1715332769; cv=none; b=m+EnmKJgIMA+3v9LF+S3RUZlULPVOrKJkAVcU1Wby/s7k07Ak49I9/4uTBItYaIfYfAuE5eIUVPIx4cOoQUFZ8p7IMw4KyfZ2Atpt906LwNskVrfWiPo4Cr+lHFPxCeaXogZNFCSOAFJMLpGWJiuedUqpIM/LcQDDw6IsFIz2zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715332568; c=relaxed/simple;
-	bh=HWu44pF+DLC7+OfJU4KJn5l5wLlFFEdPfIVbdoQIhpY=;
+	s=arc-20240116; t=1715332769; c=relaxed/simple;
+	bh=IhFb5Pgicuh3snztn4LKPQtE1fwjYlbAD7oCTha2wuc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HaCHnFlFm13CaexvTzRT7S1aS4UowdPNWvRfhwfQGiwyvwZnmNK1sOpRJyxdylQzRLZLp08sORMUSFRcerBUTIpd01BaKIGjx+r3uUVuvi9pia3D4eaHjlhEANdD6itlaG+mxCqjmQ5OymQqX6ejzI/PigjueZjkIH0yM5wOTMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XHBlixpG; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=Pet8AtB9K9hOAe0kICYZG0NUCi+Id66xsx8ZwQ9jgjNt46Wi3D4zxdlCy0FO0T/DyjRue2As+ezEinElxfSgNIym3S1cvLPITmzV2Ye3rM0SWttr66jnazLwyhplLDnTUWjn3dsr+d7INtAYVm5MjhOSwSfFz+s4iEBee49uH/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RTbhV8fL; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XHBlixpG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RTbhV8fL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715332564;
+	s=mimecast20190719; t=1715332766;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=CGAYugjQIzZh8nENjyz8O6qgSZSL8G5H0JtkpNkkeyU=;
-	b=XHBlixpGxwCk2bSKnl4h7J8Cq1ro4T8Yg6LwwDBaRn325hzucHVD9f9gQ7c2P8VrLW0+rZ
-	HMNo3uBefGWXupg1bS802/SOmkLq9Dw+N6ZSDvh6Ctkm4vn8K59ne/FnNPzpQATOrQKQY4
-	1b9RRQUN689ovamkKWllaxamvjG7PPk=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=w0K49mR3hMRsaS3+WXflIxtYT2lACdM2QgyeFZGMIw0=;
+	b=RTbhV8fLBtz3GXwCnojN5c4B+JJi5JARnbyMWZhpwOVay5nRPCDwJeBiIQSiZmUdgq9MCU
+	em9XrnoiV65tJ4HKMnvZO0JKjf2RHlDxMXZ/iSfGs3ZWsC5lsXVqFTyA8dosmlirx1MkSX
+	TZwnZyaynitfDVOexXE7u7x5cNq71jg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-3ejKq_XRO12XNrDkHlyThg-1; Fri, 10 May 2024 05:16:02 -0400
-X-MC-Unique: 3ejKq_XRO12XNrDkHlyThg-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2e472386ffbso15776651fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 May 2024 02:16:02 -0700 (PDT)
+ us-mta-284-XepGfYJQMbO0H16oYvsS6A-1; Fri, 10 May 2024 05:19:24 -0400
+X-MC-Unique: XepGfYJQMbO0H16oYvsS6A-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34dc66313b3so1201791f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 May 2024 02:19:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715332561; x=1715937361;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CGAYugjQIzZh8nENjyz8O6qgSZSL8G5H0JtkpNkkeyU=;
-        b=LYx2CPsnz3AbvxdJ0vaaWIfgNsqUl4G53qrQr++YiwEZ73capq32tv9Ky+UGAgJbuh
-         rL0EosCiXCMGnJNY69ybsRdzDeaTbg3qZ90R20aFxLVKcz+4dvcexkMuw0JYYA/hoRGP
-         sxFUC/MdYso/3KdckfamjSH6KGfif6Livt25z5WNUAOnYyHC47mwvYiiX1KRZypBoHYs
-         hK1qRA25pS7trHyazHbWJv1plU2bAV5a2yzCC3ImWIbjDHOiBowQrEn6yLCN0r4xnR3x
-         FBdGRiHuZpGwyEuQJoOHMkASBbo+wIhJgMnpWQlz/CNJwM9UwEFA1274nUd4Ll7vNQ6z
-         mqDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUs3YEyO+jj9nSs+sssn0XztbSHmA50OKx2W3OQNUwDPO1TAiKuAE4AT/OG852owTQDs2QZmhm84gOV40mL/WhjJ2+eC6M+If+K7U4+LWmZ4O+a
-X-Gm-Message-State: AOJu0YzP0Ia+8P9CONfJ5AzWqOd2ita2fXZoKTLyX41bHofpA+WdNoNv
-	39upv2IvjuAInR2ujJ7jsQnbuviobFk/a3kb3e42wyIywuFG6/8IB5149Pirdw2gyxeAqeTTKSx
-	yV/y7m+GVL0wdzzh3fQifAEJhixsaNaluNYeq7/7YUCSWjX33iH6KHAU8FU55XsLgGA+CWA==
-X-Received: by 2002:a2e:9b4e:0:b0:2e1:bb65:8306 with SMTP id 38308e7fff4ca-2e5204b1d89mr11927581fa.44.1715332561063;
-        Fri, 10 May 2024 02:16:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzdm1OBnUiNZetvy0ZrGTlWSq2mPd1L2oiERSDerUIW8BnOEBdFB5c1cgyWig2lszR5VO/bQ==
-X-Received: by 2002:a2e:9b4e:0:b0:2e1:bb65:8306 with SMTP id 38308e7fff4ca-2e5204b1d89mr11927401fa.44.1715332560495;
-        Fri, 10 May 2024 02:16:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715332763; x=1715937563;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w0K49mR3hMRsaS3+WXflIxtYT2lACdM2QgyeFZGMIw0=;
+        b=eaZrBBp55HdaFm0175RyBB3kXB9JyIv4vq38jg7kICht1MRnIpdjruUVB6uzP2p8M5
+         SwL+/LeEKrYJ6uIFDzpTMSsKaC+Jd/AzW2w0dgfz6joEFNfyjCtWWRctw6TlhMffA71D
+         r2ZRc+9CwVFUIwKD3LOMYzU7tX9vrzoEwXCbcLCQH4fMCZro78nyPNt8xx/b2HUyIoX6
+         UcMEA/gQ1L02KNMeO1c7BQ7ESzaUY9ZW/tYOfSa64eudn92fFmumIKp7vC3dW69Ib2e2
+         /Cm2GZxGU+gpX5wpcvki/fNQBuDSWaGbq6bjI3XdTxQ1mOfTROjvSWI0nngZnYocLPj3
+         skBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIPR7zNSsUEzyKZz2UmZgh6MGM1sfm3WXIQJTHjjd/KZQWcsRFnyjGn+AZl360hLt+OkBb9TJc9W8KIdaQlHhiOud6OCyW7sDEypTqWNcjVy7K
+X-Gm-Message-State: AOJu0YzFDE8ofuN6mUdQjIrhBORG8o475LRx8K6ekGFQSXiP9ZmJHkfk
+	dvjL2gPnZOhYsHKM6VH4cq2f5mWFr2qQ90IQBxlmaaCHn1IT3evq2eEsdfX+bYmi3aXfwl7GLBH
+	dBChBMVs8lINX8T9zwTfbj1O4AVHv7TD1pya0LwBir7csGYjQogO36PHgH6Zl39RXr5vp9w==
+X-Received: by 2002:a5d:6650:0:b0:34d:7f17:1e22 with SMTP id ffacd0b85a97d-3504a61c818mr1654074f8f.14.1715332763308;
+        Fri, 10 May 2024 02:19:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDLI567jRNFDBdwdqfZ6nGf1Xf15xv0+TRyAm8U9bnx+S0TvouZY2YxcPUZgob0O4OHNWsmA==
+X-Received: by 2002:a5d:6650:0:b0:34d:7f17:1e22 with SMTP id ffacd0b85a97d-3504a61c818mr1654058f8f.14.1715332762858;
+        Fri, 10 May 2024 02:19:22 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c710:2b00:9c9f:9357:3f4c:5358? (p200300cbc7102b009c9f93573f4c5358.dip0.t-ipconnect.de. [2003:cb:c710:2b00:9c9f:9357:3f4c:5358])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce7464sm57231675e9.23.2024.05.10.02.15.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad074sm4067920f8f.70.2024.05.10.02.19.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 02:16:00 -0700 (PDT)
-Message-ID: <c36689df-cfad-46f5-835e-54073b6454a4@redhat.com>
-Date: Fri, 10 May 2024 11:15:59 +0200
+        Fri, 10 May 2024 02:19:22 -0700 (PDT)
+Message-ID: <cc719813-ba73-461f-8b45-4728f926c151@redhat.com>
+Date: Fri, 10 May 2024 11:19:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,15 +70,15 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
  functions
-To: Vincent Donnefort <vdonnefort@google.com>,
- Steven Rostedt <rostedt@goodmis.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
  kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
  linux-mm@kvack.org
 References: <20240430111354.637356-1-vdonnefort@google.com>
  <20240430111354.637356-3-vdonnefort@google.com>
- <20240507223402.206d6ddc@rorschach.local.home> <Zjyt-nX3el5nnDPm@google.com>
+ <20240507223402.206d6ddc@rorschach.local.home>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -125,80 +125,125 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <Zjyt-nX3el5nnDPm@google.com>
+In-Reply-To: <20240507223402.206d6ddc@rorschach.local.home>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 09.05.24 13:05, Vincent Donnefort wrote:
-> On Tue, May 07, 2024 at 10:34:02PM -0400, Steven Rostedt wrote:
->> On Tue, 30 Apr 2024 12:13:51 +0100
->> Vincent Donnefort <vdonnefort@google.com> wrote:
->>
->>> +#ifdef CONFIG_MMU
->>> +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->>> +			struct vm_area_struct *vma)
->>> +{
->>> +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
->>> +	unsigned int subbuf_pages, subbuf_order;
->>> +	struct page **pages;
->>> +	int p = 0, s = 0;
->>> +	int err;
->>> +
->>> +	/* Refuse MP_PRIVATE or writable mappings */
->>> +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
->>> +	    !(vma->vm_flags & VM_MAYSHARE))
->>> +		return -EPERM;
->>> +
->>> +	/*
->>> +	 * Make sure the mapping cannot become writable later. Also tell the VM
->>> +	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND). Finally,
->>> +	 * prevent migration, GUP and dump (VM_IO).
->>> +	 */
->>> +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_IO, VM_MAYWRITE);
->>
->> Do we really need the VM_IO?
->>
->> When testing this in gdb, I would get:
->>
->> (gdb) p tmap->map->subbuf_size
->> Cannot access memory at address 0x7ffff7fc2008
->>
->> It appears that you can't ptrace IO memory. When I removed that flag,
->> gdb has no problem reading that memory.
+On 08.05.24 04:34, Steven Rostedt wrote:
+> On Tue, 30 Apr 2024 12:13:51 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Yeah, VM_IO indeed implies DONTDUMP. VM_IO was part of Linus recommendations.
-
-Yes, the VM should recognize that memory to some degree as being special 
-already due to VM_MIXEDMAP and VM_DONTEXPAND.
-
-#define VM_SPECIAL (VM_IO | VM_DONTEXPAND | VM_PFNMAP | VM_MIXEDMAP)
-
-So any of these flag achieve that (e.g., mlock_fixup() checks 
-VM_SPECIAL). KSM similarly skips VM_DONTEXPAND and VM_MIXEDMAP (likely 
-we should be using VM_SPECIAL in vma_ksm_compatible()). Not sure about 
-page migration, likely its fine.
-
-Thinking about MADV_DONTNEED, I can spot in 
-madvise_dontneed_free_valid_vma() only that we disallow primarily VM_PFNMAP.
-
-... I assume if user space MADV_DONTNEED's some pages we'll simply get a 
-page fault later on access that will SIGBUS, handling that gracefully 
-(we should double-check!).
-
-
-> But perhaps, VM_DONTEXPAND and MIXEDMAP (implicitely set by vm_insert_pages) are
-> enough protection?
-
-Do we want to dump these pages? VM_DONTDUMP might be reasonabe then.
-
+>> +#ifdef CONFIG_MMU
+>> +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+>> +			struct vm_area_struct *vma)
+>> +{
+>> +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
+>> +	unsigned int subbuf_pages, subbuf_order;
+>> +	struct page **pages;
+>> +	int p = 0, s = 0;
+>> +	int err;
+>> +
+>> +	/* Refuse MP_PRIVATE or writable mappings */
+>> +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
+>> +	    !(vma->vm_flags & VM_MAYSHARE))
+>> +		return -EPERM;
+>> +
+>> +	/*
+>> +	 * Make sure the mapping cannot become writable later. Also tell the VM
+>> +	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND). Finally,
+>> +	 * prevent migration, GUP and dump (VM_IO).
+>> +	 */
+>> +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_IO, VM_MAYWRITE);
 > 
-> I don't see how anything could use GUP there and as David pointed-out on the
-> previous version, it doesn't event prevent the GUP-fast path.
+> Do we really need the VM_IO?
+> 
+> When testing this in gdb, I would get:
+> 
+> (gdb) p tmap->map->subbuf_size
+> Cannot access memory at address 0x7ffff7fc2008
+> 
+> It appears that you can't ptrace IO memory. When I removed that flag,
+> gdb has no problem reading that memory.
+> 
+> I think we should drop that flag.
+> 
+> Can you send a v23 with that removed, Shuah's update, and also the
+> change below:
+> 
+>> +
+>> +	lockdep_assert_held(&cpu_buffer->mapping_lock);
+>> +
+>> +	subbuf_order = cpu_buffer->buffer->subbuf_order;
+>> +	subbuf_pages = 1 << subbuf_order;
+>> +
+>> +	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
+>> +	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
+>> +
+>> +	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+>> +	if (!vma_pages || vma_pages > nr_pages)
+>> +		return -EINVAL;
+>> +
+>> +	nr_pages = vma_pages;
+>> +
+>> +	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
+>> +	if (!pages)
+>> +		return -ENOMEM;
+>> +
+>> +	if (!pgoff) {
+>> +		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+>> +
+>> +		/*
+>> +		 * TODO: Align sub-buffers on their size, once
+>> +		 * vm_insert_pages() supports the zero-page.
+>> +		 */
+>> +	} else {
+>> +		/* Skip the meta-page */
+>> +		pgoff--;
+>> +
+>> +		if (pgoff % subbuf_pages) {
+>> +			err = -EINVAL;
+>> +			goto out;
+>> +		}
+>> +
+>> +		s += pgoff / subbuf_pages;
+>> +	}
+>> +
+>> +	while (s < nr_subbufs && p < nr_pages) {
+>> +		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
+>> +		int off = 0;
+>> +
+>> +		for (; off < (1 << (subbuf_order)); off++, page++) {
+>> +			if (p >= nr_pages)
+>> +				break;
+>> +
+>> +			pages[p++] = page;
+>> +		}
+>> +		s++;
+>> +	}
+> 
+> The above can be made to:
+> 
+> 	while (p < nr_pages) {
+> 		struct page *page;
+> 		int off = 0;
+> 
+> 		if (WARN_ON_ONCE(s >= nr_subbufs))
+> 			break;
 
-Yes, GUP-fast would still have worked under some conditions.
+I'm not particularly happy about us calling vm_insert_pages with NULL 
+pointers stored in pages.
+
+Should we instead do
+
+if (WARN_ON_ONCE(s >= nr_subbufs)) {
+	err = -EINVAL;
+	goto out;
+}
+
+?
 
 -- 
 Cheers,
