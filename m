@@ -1,146 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181143C2D;
-	Sat, 11 May 2024 20:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF69F1BC44;
+	Sat, 11 May 2024 21:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715458583; cv=none; b=WiEaO1IXeig/R+Mk/Hb5dXIfILEXaWUNc9VSnx6Ks4Bjue5Iv6hHfINOkizxwjYj6dnvsLHL4lclLMlmxUj6pNE1g5VDgfgpSVsAGU3EMsMw4VXWzIT1Uy9UfJC+9aNKjryEs1KgwKgiBuYD3GyLc9/BBn0W/kws7mUH+GeByb4=
+	t=1715461794; cv=none; b=YGbuCIs8JyLj/wEm1kRYCQWqFeQ1V0VHmaMJ/tldh3pcYB2MUdQNRS4lGtcvJIngmU5aoqQONwBoAkXHD2s4sMGvGuUPEw/gpv9e8n27mXX3KfXAFxt1GKGglX+NwaygnvqIeThkez99+CMBg35xHIMNpwp2u0YRk56LQ8C2HYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715458583; c=relaxed/simple;
-	bh=+LpkdgC+Wz7IOQEvnu/ilSBedx9vD5FOuP4V+JSN3Ys=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C9GKE94qc5D8Iu25YVKWOnhIZQSFbzX2UuMaoovtTDiqstPVrbZU6gi38YoA4GnXPs5AiVT89KYaMm+uIjffT/VKD1rE5yBk9HhGhk2qql1Bhg2FlSm/T7jz/25p5ECxEfLremw+vLpZt3giWkncTsUV7UosN5bFwLpqDVhiR7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hO8RqGiS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715461794; c=relaxed/simple;
+	bh=awyMliQSjbUNmHImBj3im/6MAmRLZaXBovw6qI33SIk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F1Bjh10QIkfp+b1jG7kKHmTh1bTqedkKosxEOdP89vtuxhjAH4NIqKGoWPIiTemLpIR3NFefKZALwHyMspYKWZTB13q4HpkBzxl8+xSKdUvKBM2hqP6WAnPuWKkJm5aIEygqHhK2cGXNzgb5UxZZs3sLcjAN/nRy+HSb2SyN18I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EwgJIpsT; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hO8RqGiS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B66C2BBFC;
-	Sat, 11 May 2024 20:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715458582;
-	bh=+LpkdgC+Wz7IOQEvnu/ilSBedx9vD5FOuP4V+JSN3Ys=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hO8RqGiSiGIdbzIQNIjJaqd4zgy6EslWUiMHUweZkfie3pxeLyxEAbjda0l+zUC6o
-	 Y58knSk9QRMq1/ZpO5GNaHVu59Vk9UxEQO6pXmTE2CMF5VBcB27rPgKPVZJVf0ivSO
-	 nLZ8PHLf5xzaW3JshPYmUELWfhUi91dKzMHj5XQL3TZ8qjL7YXziEI3qwHQGKQoWED
-	 kWraXXxWAX4Qrwcpkd/tZESwllbjt2dPY/NeBsJ82iBUc7OAlyUxMhdQUz0OBUERxV
-	 UIpw/+wgG3IzoRjtgFoANMcgM81urgQNdnz1E1ZaoeTi5xgftjJOf17eEW2JPSUjU4
-	 1nB2HyEV7YBew==
-From: SeongJae Park <sj@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Honggyu Kim <honggyu.kim@sk.com>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com
-Subject: Re: [RFC PATCH v3 1/7] mm/damon/paddr: refactor DAMOS_PAGEOUT with migration_mode
-Date: Sat, 11 May 2024 13:16:17 -0700
-Message-Id: <20240511201617.292811-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240405191907.66958-1-sj@kernel.org>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwgJIpsT"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ed835f3c3cso28434355ad.3;
+        Sat, 11 May 2024 14:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715461792; x=1716066592; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fhGglJZ+b8g6GXzg1Ll6IIdz99ZTq4GAj4YEaMs8Mvw=;
+        b=EwgJIpsTzH4OkgLZBVo4ouzRadD8+NqZY4U4PWYqdHpx2X23MXCuQ05TBfBwF6U8gW
+         LQH7Wp0GjXY4Ka28s3/nSyaNd4P8QyQannKor0vPmml+NeXNO0nY0mx60MYqMIi8eA0Z
+         YSCPc2hyI+GIqSPPXSCWOcsIApyjgHw1WHgpegd6rZ1cA6aROkxBKmMTmG3NK3GUP4yh
+         Y+MXxvTTeC+WTREBoi7RdCwZnxTvtjkAdtrmvZP+ZEszJq8OTjUc0AKHdA8tQhlpHa4N
+         dFPTKpwo5sVqBqp4qBZdoOfv/KMyiJ8V1jXrTP20mOm6PpWGFxgYmepgLdq0XU7552+3
+         XQWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715461792; x=1716066592;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fhGglJZ+b8g6GXzg1Ll6IIdz99ZTq4GAj4YEaMs8Mvw=;
+        b=BMFTKLvxEZnVlDb152oocQtcALWqGYBaVp4tluPrK4SOd+MR11S2E/t56t4cqHegA7
+         4MI2c634enpvFwm8mZKJ23T59madS05IHA9RD0n7bCIbIcqpo8Oalq+u4rLEz7gNrn/H
+         0F1oLpVEj/8KZ8hxFiLZOgy6RE3Q3hwYRwM0l1nAWPde8E4pbW+OUyXIVxa2+GcFCXTw
+         L4Av4F1KdGRfx2NwJXkEat/PcgapRxKo+pQ3sC3GbgE3qhw9Q2lETU6A8oSq9kUyvCbx
+         hqQz36bdv6h4jsgE4/9vFveiaHM57s2lOVJsVpAjUfZ857U5iJWp4duWqOanHAgurciq
+         GmIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7be1Hzc+FAQBcBrQzPngzwbWsPoSIhQlVxYLx6M+WqLqN+hxabNjy1C6G3k2VbfMpYoHG3tzppAaHsFI/DgwYuR0ibUUZRDVZNo5h6IRedwH0+7yW4L4P0W84ArF3qj6rebW2c6PFUOfNQIRMmhAurUsnI1IZcT49jBP4n/tAqjuj02EpKN/+AZByGSKMQygYRgG0jClIocKoHjE9oLjhoeSMVzYScv7mx48lx8nbPulk1nQWszwJ1pRM
+X-Gm-Message-State: AOJu0Yya3bLLR9QbdMt1BaCejySBhYPzNQXjiNKdn+bbDbByek+g3QqY
+	TejS8kRzTLYEHRFL1BaphqgGgSqKYyQwcoJlSf8MhkBIHie88lPU
+X-Google-Smtp-Source: AGHT+IFjDvMTXnhobln5jKNDQ2P6dQWSaGgkS/7twQcL+UsiDkVCy53zVtZ0UlohXhd71LvKm8ZPcA==
+X-Received: by 2002:a17:902:82ca:b0:1e6:116b:b0d3 with SMTP id d9443c01a7336-1ef43d2ec00mr73548335ad.28.1715461791943;
+        Sat, 11 May 2024 14:09:51 -0700 (PDT)
+Received: from krava ([204.113.88.211])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30c7asm52841025ad.171.2024.05.11.14.09.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 May 2024 14:09:51 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sat, 11 May 2024 15:09:48 -0600
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"debug@rivosinc.com" <debug@rivosinc.com>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"yhs@fb.com" <yhs@fb.com>, "oleg@redhat.com" <oleg@redhat.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
+Message-ID: <Zj_enIB_J6pGJ6Nu@krava>
+References: <20240507105321.71524-1-jolsa@kernel.org>
+ <20240507105321.71524-7-jolsa@kernel.org>
+ <a08a955c74682e9dc6eb6d49b91c6968c9b62f75.camel@intel.com>
+ <ZjyJsl_u_FmYHrki@krava>
+ <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
 
-On Fri,  5 Apr 2024 12:19:07 -0700 SeongJae Park <sj@kernel.org> wrote:
-
-> On Fri,  5 Apr 2024 15:08:50 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> 
-> > This is a preparation patch that introduces migration modes.
+On Thu, May 09, 2024 at 04:24:37PM +0000, Edgecombe, Rick P wrote:
+> On Thu, 2024-05-09 at 10:30 +0200, Jiri Olsa wrote:
+> > > Per the earlier discussion, this cannot be reached unless uretprobes are in
+> > > use,
+> > > which cannot happen without something with privileges taking an action. But
+> > > are
+> > > uretprobes ever used for monitoring applications where security is
+> > > important? Or
+> > > is it strictly a debug-time thing?
 > > 
-> > The damon_pa_pageout is renamed to damon_pa_migrate and it receives an
-> > extra argument for migration_mode.
-> 
-> I personally think keeping damon_pa_pageout() as is and adding a new function
-> (damon_pa_migrate()) with some duplicated code is also ok, but this approach
-> also looks fine to me.  So I have no strong opinion here, but just letting you
-> know I would have no objection at both approaches.
-
-Meanwhile, we added one more logic in damon_pa_pageout() for doing page
-idleness double check on its own[1].  It makes reusing damon_pa_pageout() for
-multiple reason a bit complex.  I think the complexity added a problem in this
-patch that I also missed before due to the complexity.  Show below comment in
-line.  Hence now I think it would be better to do the suggested way.
-
-If we use the approach, this patch is no more necessary, and therefore can be
-dropped.
-
-[1] https://lore.kernel.org/20240426195247.100306-1-sj@kernel.org
-
-
-Thanks,
-SJ
-
-[...]
-> 
+> > sorry, I don't have that level of detail, but we do have customers
+> > that use uprobes in general or want to use it and complain about
+> > the speed
 > > 
-> > No functional changes applied.
-> > 
-> > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> > ---
-> >  mm/damon/paddr.c | 18 +++++++++++++++---
-> >  1 file changed, 15 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-> > index 081e2a325778..277a1c4d833c 100644
-> > --- a/mm/damon/paddr.c
-> > +++ b/mm/damon/paddr.c
-> > @@ -224,7 +224,12 @@ static bool damos_pa_filter_out(struct damos *scheme, struct folio *folio)
-> >  	return false;
-> >  }
-> >  
-> > -static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
-> > +enum migration_mode {
-> > +	MIG_PAGEOUT,
-> > +};
+> > there are several tools in bcc [1] that use uretprobes in scripts,
+> > like:
+> >   memleak, sslsniff, trace, bashreadline, gethostlatency, argdist,
+> >   funclatency
 > 
-> To avoid name conflicts, what about renaming to 'damos_migration_mode' and
-> 'DAMOS_MIG_PAGEOUT'?
-> 
-> > +
-> > +static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
-> > +				      enum migration_mode mm)
-> 
-> My poor brain has a bit confused with the name.  What about calling it 'mode'?
-> 
-> >  {
-> >  	unsigned long addr, applied;
-> >  	LIST_HEAD(folio_list);
-> > @@ -249,7 +254,14 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
+> Is it possible to have shadow stack only use the non-syscall solution? It seems
+> it exposes a more limited compatibility in that it only allows writing the
+> specific trampoline address. (IIRC) Then shadow stack users could still use
+> uretprobes, but just not the new optimized solution. There are already
+> operations that are slower with shadow stack, like longjmp(), so this could be
+> ok maybe.
 
-Before this line, damon_pa_pageout() calls folio_clear_referenced() and
-folio_test_clear_young() for the folio, because this is pageout code.  Changed
-function, damon_pa_migrate() is not only for cold pages but general migrations.
-Hence it should also be handled based on the migration mode, but not handled.
+I guess it's doable, we'd need to keep both trampolines around, because
+shadow stack is enabled by app dynamically and use one based on the
+state of shadow stack when uretprobe is installed
 
-I think this problem came from the increased complexity of this function.
-Hence I think it is better to keep damon_pa_pageout() as is and adding a new
-function for migration.
+so you're worried the optimized syscall path could be somehow exploited
+to add data on shadow stack?
 
-
-Thanks,
-SJ
-
-[...]
+jirka
