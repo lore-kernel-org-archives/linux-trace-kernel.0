@@ -1,99 +1,146 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4881537F5;
-	Sat, 11 May 2024 09:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181143C2D;
+	Sat, 11 May 2024 20:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715421082; cv=none; b=hLo1qT7TB6M1I8MXvU4U+q0teDCMTaCT99oP1yXheShClDSEGn2rV4ifefhv/3YO/abP38hBCCzsrcUyArpwKnQONTKXI+RKoIC5VnIahkTw2jq+NK27hcZa61JpOAkVP9bVP1kkw5WYYrGcgCI9k/9+0OPBDERqK0u0+BHgsmc=
+	t=1715458583; cv=none; b=WiEaO1IXeig/R+Mk/Hb5dXIfILEXaWUNc9VSnx6Ks4Bjue5Iv6hHfINOkizxwjYj6dnvsLHL4lclLMlmxUj6pNE1g5VDgfgpSVsAGU3EMsMw4VXWzIT1Uy9UfJC+9aNKjryEs1KgwKgiBuYD3GyLc9/BBn0W/kws7mUH+GeByb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715421082; c=relaxed/simple;
-	bh=0cJX+ofKilB0YeAddG2Rk34Tcb84daQhOHXhdzx0r3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1Emcb0fYYhIyfj4HDg32a0cLUnd3pWmx0p1eqTDOa+K/dtsGx99nPG6i9Fnxbq0yaMHPghGHN9HnmxE2ySH1nZngEn/mRlDZzJNH3K/XDH5c5MvQZU32BFzpay9cqLlH3U8f6hk+0mwpcNA7zgH/xGNpjc1jvhT2QfLm9mOL2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=k56XE3N3; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1715458583; c=relaxed/simple;
+	bh=+LpkdgC+Wz7IOQEvnu/ilSBedx9vD5FOuP4V+JSN3Ys=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=C9GKE94qc5D8Iu25YVKWOnhIZQSFbzX2UuMaoovtTDiqstPVrbZU6gi38YoA4GnXPs5AiVT89KYaMm+uIjffT/VKD1rE5yBk9HhGhk2qql1Bhg2FlSm/T7jz/25p5ECxEfLremw+vLpZt3giWkncTsUV7UosN5bFwLpqDVhiR7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hO8RqGiS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="k56XE3N3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1715421078;
-	bh=0cJX+ofKilB0YeAddG2Rk34Tcb84daQhOHXhdzx0r3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k56XE3N3d4pgs8RXOwLSnRLB27sLWUfITEgcvrDMjZdmJPa/Ir6S6oi9PpE553jPt
-	 sb7k+FxSLFp8Odclpb2t4vqVdgVnPhAwWUDBH9QwI80jAM7LA7gxjkMhJ80aDoR2yw
-	 DUA3ugAMpnt1Nr9pHpMHzjCRdAMZeTMxIBsCjZb8=
-Date: Sat, 11 May 2024 11:51:18 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Joel Granados <j.granados@samsung.com>, Eric Dumazet <edumazet@google.com>, 
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <8d1daa64-3746-46a3-b696-127a70cdf7e7@t-8ch.de>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
- <202405080959.104A73A914@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hO8RqGiS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B66C2BBFC;
+	Sat, 11 May 2024 20:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715458582;
+	bh=+LpkdgC+Wz7IOQEvnu/ilSBedx9vD5FOuP4V+JSN3Ys=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hO8RqGiSiGIdbzIQNIjJaqd4zgy6EslWUiMHUweZkfie3pxeLyxEAbjda0l+zUC6o
+	 Y58knSk9QRMq1/ZpO5GNaHVu59Vk9UxEQO6pXmTE2CMF5VBcB27rPgKPVZJVf0ivSO
+	 nLZ8PHLf5xzaW3JshPYmUELWfhUi91dKzMHj5XQL3TZ8qjL7YXziEI3qwHQGKQoWED
+	 kWraXXxWAX4Qrwcpkd/tZESwllbjt2dPY/NeBsJ82iBUc7OAlyUxMhdQUz0OBUERxV
+	 UIpw/+wgG3IzoRjtgFoANMcgM81urgQNdnz1E1ZaoeTi5xgftjJOf17eEW2JPSUjU4
+	 1nB2HyEV7YBew==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Honggyu Kim <honggyu.kim@sk.com>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com
+Subject: Re: [RFC PATCH v3 1/7] mm/damon/paddr: refactor DAMOS_PAGEOUT with migration_mode
+Date: Sat, 11 May 2024 13:16:17 -0700
+Message-Id: <20240511201617.292811-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240405191907.66958-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202405080959.104A73A914@keescook>
 
-Hi Kees,
+On Fri,  5 Apr 2024 12:19:07 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-On 2024-05-08 10:11:35+0000, Kees Cook wrote:
-> On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
-> > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Weißschuh wrote:
-> > > The series was split from my larger series sysctl-const series [0].
-> > > It only focusses on the proc_handlers but is an important step to be
-> > > able to move all static definitions of ctl_table into .rodata.
-> > 
-> > Split this per subsystem, please.
+> On Fri,  5 Apr 2024 15:08:50 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
 > 
-> I've done a few painful API transitions before, and I don't think the
-> complexity of these changes needs a per-subsystem constification pass. I
-> think this series is the right approach, but that patch 11 will need
-> coordination with Linus. We regularly do system-wide prototype changes
-> like this right at the end of the merge window before -rc1 comes out.
+> > This is a preparation patch that introduces migration modes.
+> > 
+> > The damon_pa_pageout is renamed to damon_pa_migrate and it receives an
+> > extra argument for migration_mode.
+> 
+> I personally think keeping damon_pa_pageout() as is and adding a new function
+> (damon_pa_migrate()) with some duplicated code is also ok, but this approach
+> also looks fine to me.  So I have no strong opinion here, but just letting you
+> know I would have no objection at both approaches.
 
-That sounds good.
+Meanwhile, we added one more logic in damon_pa_pageout() for doing page
+idleness double check on its own[1].  It makes reusing damon_pa_pageout() for
+multiple reason a bit complex.  I think the complexity added a problem in this
+patch that I also missed before due to the complexity.  Show below comment in
+line.  Hence now I think it would be better to do the suggested way.
 
-> The requirements are pretty simple: it needs to be a obvious changes
-> (this certainly is) and as close to 100% mechanical as possible. I think
-> patch 11 easily qualifies. Linus should be able to run the same Coccinelle
-> script and get nearly the same results, etc. And all the other changes
-> need to have landed. This change also has no "silent failure" conditions:
-> anything mismatched will immediately stand out.
+If we use the approach, this patch is no more necessary, and therefore can be
+dropped.
 
-Unfortunately coccinelle alone is not sufficient, as some helpers with
-different prototypes are called by handlers and themselves are calling
-handler and therefore need to change in the same commit.
-But if I add a diff for those on top of the coccinelle script to the
-changelog it should be obvious.
+[1] https://lore.kernel.org/20240426195247.100306-1-sj@kernel.org
 
-> So, have patches 1-10 go via their respective subsystems, and once all
-> of those are in Linus's tree, send patch 11 as a stand-alone PR.
 
-Ack, I'll do that with the cover letter information requested by Joel.
+Thanks,
+SJ
 
-> (From patch 11, it looks like the seccomp read/write function changes
-> could be split out? I'll do that now...)
+[...]
+> 
+> > 
+> > No functional changes applied.
+> > 
+> > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> > ---
+> >  mm/damon/paddr.c | 18 +++++++++++++++---
+> >  1 file changed, 15 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
+> > index 081e2a325778..277a1c4d833c 100644
+> > --- a/mm/damon/paddr.c
+> > +++ b/mm/damon/paddr.c
+> > @@ -224,7 +224,12 @@ static bool damos_pa_filter_out(struct damos *scheme, struct folio *folio)
+> >  	return false;
+> >  }
+> >  
+> > -static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
+> > +enum migration_mode {
+> > +	MIG_PAGEOUT,
+> > +};
+> 
+> To avoid name conflicts, what about renaming to 'damos_migration_mode' and
+> 'DAMOS_MIG_PAGEOUT'?
+> 
+> > +
+> > +static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
+> > +				      enum migration_mode mm)
+> 
+> My poor brain has a bit confused with the name.  What about calling it 'mode'?
+> 
+> >  {
+> >  	unsigned long addr, applied;
+> >  	LIST_HEAD(folio_list);
+> > @@ -249,7 +254,14 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
 
-Thanks!
+Before this line, damon_pa_pageout() calls folio_clear_referenced() and
+folio_test_clear_young() for the folio, because this is pageout code.  Changed
+function, damon_pa_migrate() is not only for cold pages but general migrations.
+Hence it should also be handled based on the migration mode, but not handled.
 
-Thomas
+I think this problem came from the increased complexity of this function.
+Hence I think it is better to keep damon_pa_pageout() as is and adding a new
+function for migration.
+
+
+Thanks,
+SJ
+
+[...]
