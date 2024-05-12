@@ -1,48 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DD25028C;
-	Sun, 12 May 2024 17:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643F04AED7;
+	Sun, 12 May 2024 18:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715536497; cv=none; b=B+/vGS4oU5ZFjkCICzkJWoHTWm0JYA8ax97CHY8U4oZD9/LWx2IZZMDSlgh1u7GMrOTnIHZ73NrZQPGceTbHhwCAHpC7qu+G7Y/59toMQI5a82k1oCkIMEAirRmYoLmwLzqM39pDXH5xQm0DDrJrwuT/SUtHJz+YSh+QhEC0+cU=
+	t=1715536850; cv=none; b=slnY30c4iEmjzyKkwNHjESCq7cAymtn0WffawOLA3H5Jv+BzJuNlqUGib24+OY7F0aBYBdqscm9atjl7rwQz7eBChwQ9/EFkqYxEkzPHpywlzzK4Yi0cZp3m+L1Ku6oIL0ZtVBdHwDVbuXfL4u5VDfAVHTVkO19yICwmagkWCkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715536497; c=relaxed/simple;
-	bh=0nYpdJNOcVsAetSwCRBcYWpfg7K4GaKZMal/LiW2aDo=;
+	s=arc-20240116; t=1715536850; c=relaxed/simple;
+	bh=qpiFUol8P0zNhvUFVoN6iW1e1aeFqNHpooxXO9xEl04=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Xop1mDoxZy+RAxFYZgzr1B/9/kQk0lRwvjf8bsCB6i8n/xf9X4H8yTArNUWncOCntj7jHXW7gqzCjr8f24RT0lakobIiqp+eyu9F050ypB7WHA9VnBxD/38w5cb1uuWLeGMNqczkhWkVc6ev6vjJ6K6aAA2yfQtlB1op04RE6yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiCeiPqc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z3io7xhNiKtUR28p7MbImg6xx3jAGvjtzCItlXH/C8KO2fJVGxD+c7cjI4RH7yKq4YWjt5RN5c8jiG3ofQ60QI2xichtQ9WEbpRgRnjOZK4GrGgfRtWu14dkbxs1kr+keCTuFd+1222uDGxw+2OZqviQubtHwzhkeeuYlUhgViU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFvWblmk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiCeiPqc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC4CC4AF08;
-	Sun, 12 May 2024 17:54:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFvWblmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 546D0C116B1;
+	Sun, 12 May 2024 18:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715536496;
-	bh=0nYpdJNOcVsAetSwCRBcYWpfg7K4GaKZMal/LiW2aDo=;
+	s=k20201202; t=1715536850;
+	bh=qpiFUol8P0zNhvUFVoN6iW1e1aeFqNHpooxXO9xEl04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZiCeiPqcqV3HR6k9NGEGmv4MbUCDzmuxGtuizXoVn0cPcZ2oH7D0dAD2qaL9JevbA
-	 2/PofgQ5iNSARyYqrbxl48ZFFfT0CGlMaaT0tgpiFcmpGWnUYnlZsmMxAnBupiQA5B
-	 8ZUMqtWE2Gpr66DPiyuAbwLu///LkQbyiD29BfRtrL40kVnknmVPavydG9qYWh6U+E
-	 AINgYWGQP/LzlQjCbobJc7kgKHZeh8a4B1Y2QTxPaqPnmTu4n4hmdswrnyM1A3JsK9
-	 SWEZD9x+rYdlDmywxX7FvHgs7UlmCh8pgn5y2ZzCwA02OkVzGfOjj22voQEi+7xy7x
-	 ZuQzZOOofKOIg==
+	b=EFvWblmkErJHGxYytEKfxEysBzLmbIM1r9/FpIWdKSUtJmY/U2D408Fqajysf+2wy
+	 1OEGeICXddpUU7816eua76jSCGLa3khOL4jBE5/hV2RHLXU4IyqDGvxmlkTDMHdYJJ
+	 dJu6exgqHN0EpZKLZ08wO/hmB9yhwJFNnAjGCrRMnnNByWIBs9TPWR2W1Un6aJdRSO
+	 v3gh9cJoOeUO1XTGtlrZa5ZZEvzjZISkE64pDrJfRwseEA6JBmMmPNv9w5J51KMFPb
+	 lIDka2y6oiq2EFiW8BPHmL+BegmoiZ+kByDB5JQiFD67l1COYYV1BGb7WCna3hUfgW
+	 hsTuaOIzCGm6A==
 From: SeongJae Park <sj@kernel.org>
-To: 
+To: SeongJae Park <sj@kernel.org>
 Cc: Honggyu Kim <honggyu.kim@sk.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
 	damon@lists.linux.dev,
 	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	SeongJae Park <sj@kernel.org>
-Subject: [RFC PATCH v4 3/5] mm/migrate: add MR_DAMON to migrate_reason
-Date: Sun, 12 May 2024 10:54:45 -0700
-Message-Id: <20240512175447.75943-4-sj@kernel.org>
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com
+Subject: Re: [RFC PATCH v3 1/7] mm/damon/paddr: refactor DAMOS_PAGEOUT with migration_mode
+Date: Sun, 12 May 2024 11:00:44 -0700
+Message-Id: <20240512180044.76086-1-sj@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240512175447.75943-1-sj@kernel.org>
-References: <20240512175447.75943-1-sj@kernel.org>
+In-Reply-To: <20240511201617.292811-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,45 +64,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Honggyu Kim <honggyu.kim@sk.com>
+On Sat, 11 May 2024 13:16:17 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-The current patch series introduces DAMON based migration across NUMA
-nodes so it'd be better to have a new migrate_reason in trace events.
+> On Fri,  5 Apr 2024 12:19:07 -0700 SeongJae Park <sj@kernel.org> wrote:
+> 
+> > On Fri,  5 Apr 2024 15:08:50 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+> > 
+> > > This is a preparation patch that introduces migration modes.
+> > > 
+> > > The damon_pa_pageout is renamed to damon_pa_migrate and it receives an
+> > > extra argument for migration_mode.
+> > 
+> > I personally think keeping damon_pa_pageout() as is and adding a new function
+> > (damon_pa_migrate()) with some duplicated code is also ok, but this approach
+> > also looks fine to me.  So I have no strong opinion here, but just letting you
+> > know I would have no objection at both approaches.
+> 
+> Meanwhile, we added one more logic in damon_pa_pageout() for doing page
+> idleness double check on its own[1].  It makes reusing damon_pa_pageout() for
+> multiple reason a bit complex.  I think the complexity added a problem in this
+> patch that I also missed before due to the complexity.  Show below comment in
+> line.  Hence now I think it would be better to do the suggested way.
+> 
+> If we use the approach, this patch is no more necessary, and therefore can be
+> dropped.
+> 
+> [1] https://lore.kernel.org/20240426195247.100306-1-sj@kernel.org
 
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-Reviewed-by: SeongJae Park <sj@kernel.org>
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/linux/migrate_mode.h   | 1 +
- include/trace/events/migrate.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+I updated this patchset to address comments on this thread, and posted it as
+RFC patchset v4 on behalf of Honggyu under his approval:
+https://lore.kernel.org/20240512175447.75943-1-sj@kernel.org
 
-diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-index f37cc03f9369..cec36b7e7ced 100644
---- a/include/linux/migrate_mode.h
-+++ b/include/linux/migrate_mode.h
-@@ -29,6 +29,7 @@ enum migrate_reason {
- 	MR_CONTIG_RANGE,
- 	MR_LONGTERM_PIN,
- 	MR_DEMOTION,
-+	MR_DAMON,
- 	MR_TYPES
- };
- 
-diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-index 0190ef725b43..cd01dd7b3640 100644
---- a/include/trace/events/migrate.h
-+++ b/include/trace/events/migrate.h
-@@ -22,7 +22,8 @@
- 	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
- 	EM( MR_CONTIG_RANGE,	"contig_range")			\
- 	EM( MR_LONGTERM_PIN,	"longterm_pin")			\
--	EMe(MR_DEMOTION,	"demotion")
-+	EM( MR_DEMOTION,	"demotion")			\
-+	EMe(MR_DAMON,		"damon")
- 
- /*
-  * First define the enums in the above macros to be exported to userspace
--- 
-2.39.2
 
+Thanks,
+SJ
+
+[...]
