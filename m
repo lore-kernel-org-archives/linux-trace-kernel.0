@@ -1,91 +1,251 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EDB146006
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 May 2024 05:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC70219E7;
+	Mon, 13 May 2024 09:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715578453; cv=none; b=IUaTEfN/TTJ8G8Q1IBfXjGUaUiCI6jiywxgfdM57QlMK/PaSv9L28puc9Lv3iACJcSojZLp2FZYIz4D1ySnVBTWX5nnx/TUXVHCyR1iQjL0yXGCKFJEiOo6EZFChQ/EGrOcM5dossEXujaQ8oflcOHoLJZanLUAdo1bo4wEgEtw=
+	t=1715593516; cv=none; b=vGUOyjfTwGnpHYtfJKd6OfjmgVj4EY4IeLw0cZMqNQeY2xveYbqWtDWS6NrPU/waCZd6z75xhT5q9x4stahfbZ7qT1OM0lOI1t7om5hG3tqCLtSm4ZkkgKx8AT5SGEuS7srfnGNKj5W9GtbkBFfz8DOrjedk8hdefg1QetVUaVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715578453; c=relaxed/simple;
-	bh=3novfxKmuOHtv2/2Uxne6GNAqtrqJ5MvuaL4zalChp4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HzR9HpQQV1PNVzuZgf0Fy3K6hkat9yTUFZIoDfDNTO1wj4/bU9iR8IEa9RK1FbqBY5IejfslXq9FZjf89ooGYVqVAmla/buXgHf4PCI1U3cCOdHVJsNc5rqxiHF2X1ZK7aMtaeM6jN8JPQ9wJIIh3tKB3CyxMb5xBbFPGFeevaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bPNF6x/3; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715593516; c=relaxed/simple;
+	bh=peJzz5pNrQ/dEd3/VmjQgcVwR9MR0Gcc9ElaVB8uRng=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kcClYuP8xEtXoK3SxLWKoXmgELQDNMiYaSrQeVHiYDXFPNAY8Nynz69yTEw5pGaPsNXcygW576gm9+jtVCtOmukwx4krrfthvFyBN96RzGOuZXMCLzxTi/3mRk2iAJWN8u7VFqgt+6tLAbC/22WrcPfPmm9SQRT0nsMIWstekXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omVU3PSm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bPNF6x/3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715578448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NtkBKlqRVPiYt0KU2gHHEP+MV+jp5EvYQ4ZKCZH6xvs=;
-	b=bPNF6x/3D3j3GV79OW8FEMCFENYlL3367JFVNkpvFwAj+4hJh6PsD8ntCa1+sBBnBnlI2V
-	EkHkfGP0Osy0bczztTYbcbNGT0iT9/eGfPZwa4BG/I/oYuBP4CQovPJNR1g38DxH7qORLJ
-	+TfxTSq2+/maLlJOVvUJwVtuqTzcUj4=
-From: hao.ge@linux.dev
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	hao.ge@linux.dev,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH v2] eventfs: Fix a possible null pointer dereference in eventfs_find_events
-Date: Mon, 13 May 2024 13:33:38 +0800
-Message-Id: <20240513053338.63017-1-hao.ge@linux.dev>
-In-Reply-To: <b574c8d6-c000-8673-74de-a7cc092057ad@linux.dev>
-References: <b574c8d6-c000-8673-74de-a7cc092057ad@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omVU3PSm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA43EC32782;
+	Mon, 13 May 2024 09:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715593516;
+	bh=peJzz5pNrQ/dEd3/VmjQgcVwR9MR0Gcc9ElaVB8uRng=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=omVU3PSmZPRU/dJbyVEGRWRJOaYQYEVzCZM7oVTLVxHkxzcm7EuYMmMHpHXqdj/FO
+	 mtx/X476N7pzNOk+/GEZFPq1248HEHfguaFibnNrn0+ax5CZStVsWQkUuoY5pSr9z8
+	 79CjnPHph4jEJVAsTq7dUiTpJOcLBqbHA63ZjpcLhqCNDPcNQzcRlMOHwS08nqQ9Cq
+	 BK8mpsrxtC+b6/hUZJfMDJLNAl28WyyT/jiMKm98KU2oyFHZ2hiA01jnTWt/58YTeV
+	 naEXmJP+KMvmfjFUEFwNpIdLqFYn7cWFCcdh7Z0xADPkjchGbrnK34yYSjKR9wy7Bi
+	 fRnJboZpjXtRA==
+Date: Mon, 13 May 2024 18:45:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org,
+ bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>, "Edgecombe, Rick P"
+ <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
+Subject: Re: [PATCHv5 bpf-next 7/8] selftests/x86: Add return uprobe shadow
+ stack test
+Message-Id: <20240513184507.215ec89dea4790243d17a52c@kernel.org>
+In-Reply-To: <20240507105321.71524-8-jolsa@kernel.org>
+References: <20240507105321.71524-1-jolsa@kernel.org>
+	<20240507105321.71524-8-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Hao Ge <gehao@kylinos.cn>
+On Tue,  7 May 2024 12:53:20 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-In function eventfs_find_events,there is a potential null pointer
-that may be caused by calling update_events_attr which will perform
-some operations on the members of the ei struct when ei is NULL.
+> Adding return uprobe test for shadow stack and making sure it's
+> working properly. Borrowed some of the code from bpf selftests.
 
-Hence,When ei->is_freed is set,return NULL directly.
+Hi Jiri,
 
-Fixes: 8186fff7ab64 ("tracefs/eventfs: Use root and instance inodes as default ownership")
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
+I can not find "SKIP" result in this change. If CONFIG_UPROBES=n,
+this should skip uprobe test.
 
----
-v2:
-- adjust title and commit message
-- omit curly brackets
----
- fs/tracefs/event_inode.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Thank you,
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index a878cea70f4c..0256afdd4acf 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -345,10 +345,9 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- 		 * If the ei is being freed, the ownership of the children
- 		 * doesn't matter.
- 		 */
--		if (ei->is_freed) {
--			ei = NULL;
--			break;
--		}
-+		if (ei->is_freed)
-+			return NULL;
-+
- 		// Walk upwards until you find the events inode
- 	} while (!ei->is_events);
- 
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../testing/selftests/x86/test_shadow_stack.c | 142 ++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/x86/test_shadow_stack.c b/tools/testing/selftests/x86/test_shadow_stack.c
+> index 757e6527f67e..1b919baa999b 100644
+> --- a/tools/testing/selftests/x86/test_shadow_stack.c
+> +++ b/tools/testing/selftests/x86/test_shadow_stack.c
+> @@ -34,6 +34,7 @@
+>  #include <sys/ptrace.h>
+>  #include <sys/signal.h>
+>  #include <linux/elf.h>
+> +#include <linux/perf_event.h>
+>  
+>  /*
+>   * Define the ABI defines if needed, so people can run the tests
+> @@ -681,6 +682,141 @@ int test_32bit(void)
+>  	return !segv_triggered;
+>  }
+>  
+> +static int parse_uint_from_file(const char *file, const char *fmt)
+> +{
+> +	int err, ret;
+> +	FILE *f;
+> +
+> +	f = fopen(file, "re");
+> +	if (!f) {
+> +		err = -errno;
+> +		printf("failed to open '%s': %d\n", file, err);
+> +		return err;
+> +	}
+> +	err = fscanf(f, fmt, &ret);
+> +	if (err != 1) {
+> +		err = err == EOF ? -EIO : -errno;
+> +		printf("failed to parse '%s': %d\n", file, err);
+> +		fclose(f);
+> +		return err;
+> +	}
+> +	fclose(f);
+> +	return ret;
+> +}
+> +
+> +static int determine_uprobe_perf_type(void)
+> +{
+> +	const char *file = "/sys/bus/event_source/devices/uprobe/type";
+> +
+> +	return parse_uint_from_file(file, "%d\n");
+> +}
+> +
+> +static int determine_uprobe_retprobe_bit(void)
+> +{
+> +	const char *file = "/sys/bus/event_source/devices/uprobe/format/retprobe";
+> +
+> +	return parse_uint_from_file(file, "config:%d\n");
+> +}
+> +
+> +static ssize_t get_uprobe_offset(const void *addr)
+> +{
+> +	size_t start, end, base;
+> +	char buf[256];
+> +	bool found = false;
+> +	FILE *f;
+> +
+> +	f = fopen("/proc/self/maps", "r");
+> +	if (!f)
+> +		return -errno;
+> +
+> +	while (fscanf(f, "%zx-%zx %s %zx %*[^\n]\n", &start, &end, buf, &base) == 4) {
+> +		if (buf[2] == 'x' && (uintptr_t)addr >= start && (uintptr_t)addr < end) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	fclose(f);
+> +
+> +	if (!found)
+> +		return -ESRCH;
+> +
+> +	return (uintptr_t)addr - start + base;
+> +}
+> +
+> +static __attribute__((noinline)) void uretprobe_trigger(void)
+> +{
+> +	asm volatile ("");
+> +}
+> +
+> +/*
+> + * This test setups return uprobe, which is sensitive to shadow stack
+> + * (crashes without extra fix). After executing the uretprobe we fail
+> + * the test if we receive SIGSEGV, no crash means we're good.
+> + *
+> + * Helper functions above borrowed from bpf selftests.
+> + */
+> +static int test_uretprobe(void)
+> +{
+> +	const size_t attr_sz = sizeof(struct perf_event_attr);
+> +	const char *file = "/proc/self/exe";
+> +	int bit, fd = 0, type, err = 1;
+> +	struct perf_event_attr attr;
+> +	struct sigaction sa = {};
+> +	ssize_t offset;
+> +
+> +	type = determine_uprobe_perf_type();
+> +	if (type < 0)
+> +		return 1;
+> +
+> +	offset = get_uprobe_offset(uretprobe_trigger);
+> +	if (offset < 0)
+> +		return 1;
+> +
+> +	bit = determine_uprobe_retprobe_bit();
+> +	if (bit < 0)
+> +		return 1;
+> +
+> +	sa.sa_sigaction = segv_gp_handler;
+> +	sa.sa_flags = SA_SIGINFO;
+> +	if (sigaction(SIGSEGV, &sa, NULL))
+> +		return 1;
+> +
+> +	/* Setup return uprobe through perf event interface. */
+> +	memset(&attr, 0, attr_sz);
+> +	attr.size = attr_sz;
+> +	attr.type = type;
+> +	attr.config = 1 << bit;
+> +	attr.config1 = (__u64) (unsigned long) file;
+> +	attr.config2 = offset;
+> +
+> +	fd = syscall(__NR_perf_event_open, &attr, 0 /* pid */, -1 /* cpu */,
+> +		     -1 /* group_fd */, PERF_FLAG_FD_CLOEXEC);
+> +	if (fd < 0)
+> +		goto out;
+> +
+> +	if (sigsetjmp(jmp_buffer, 1))
+> +		goto out;
+> +
+> +	ARCH_PRCTL(ARCH_SHSTK_ENABLE, ARCH_SHSTK_SHSTK);
+> +
+> +	/*
+> +	 * This either segfaults and goes through sigsetjmp above
+> +	 * or succeeds and we're good.
+> +	 */
+> +	uretprobe_trigger();
+> +
+> +	printf("[OK]\tUretprobe test\n");
+> +	err = 0;
+> +
+> +out:
+> +	ARCH_PRCTL(ARCH_SHSTK_DISABLE, ARCH_SHSTK_SHSTK);
+> +	signal(SIGSEGV, SIG_DFL);
+> +	if (fd)
+> +		close(fd);
+> +	return err;
+> +}
+> +
+>  void segv_handler_ptrace(int signum, siginfo_t *si, void *uc)
+>  {
+>  	/* The SSP adjustment caused a segfault. */
+> @@ -867,6 +1003,12 @@ int main(int argc, char *argv[])
+>  		goto out;
+>  	}
+>  
+> +	if (test_uretprobe()) {
+> +		ret = 1;
+> +		printf("[FAIL]\turetprobe test\n");
+> +		goto out;
+> +	}
+> +
+>  	return ret;
+>  
+>  out:
+> -- 
+> 2.44.0
+> 
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
