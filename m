@@ -1,145 +1,185 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CB120DF7;
-	Mon, 13 May 2024 17:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D480632;
+	Mon, 13 May 2024 21:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715621453; cv=none; b=Pbrs7njxqDX8Kd3gsyUgnOLa8HXhnNTymeyjiq8+cxWCDzZfyBcCzxOye14s1pKJBvepz0ENrufoOgi246UC1kAmCnKpoBNax71dDc4TsqvFwel3byPJKo1MR7woZvBTgqM9HIVudHaOWkrdpepGOwli1rczbF64PWl/rQRSPv0=
+	t=1715635428; cv=none; b=ovAHdnUoT3khT9VZaYJ58AsoHHjOlLDOdH0IU4aIOuMuzeq9k+b2BpZOmny/Cebkvn/6m6Agveaoo6zrjO6azLbD3Im8fSc88P2erG7ywEtHmQ0oDwTreFNA22ujyFuSsd8W1ci93BQpsD0q5xgauA8nDKAIvpGG6mGR+tDkwQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715621453; c=relaxed/simple;
-	bh=dEWpL73/G3L/agPWxFvIClOdCN8Npjgde9rmhlcynwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDO1w3mNSKwh5h7JykuEZz/BEN7o4eXKc+MVw2KaSRgYIzFzVxPcz0n+4l7MBqZDDZytHkeVUOUe+JrHWbjfnuztc3DRyNplHm2taC9DWcKfmzongw9txmTsYhL2l13vl6ayMi2eAn5xaGpQjuY6Xqsle/rVepHMnccbbKsZUVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=RoBd39bG; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=RoBd39bG; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1715635428; c=relaxed/simple;
+	bh=7KDldPh4uI/py/rTFc69LhzcvKPYHuy78Y+cIXzQHJA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RIzX6AJxar4HN4bb2IMuhnPQN7polUT+KWev6HTZrx/K9GH7SFAOO8C55eu8U5ZvvgpHioo2YZiAhMuaHuoVw35sC5MC/B3rMTjCQk9A2Xx3YD+TcWD0J+bT9pSnNkZJ91hAKuuHsuVf2EJrhsNLbKcmBSj3wVF/pODBd1Xg08g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WoJdvybr; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RoBd39bG";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="RoBd39bG"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5AC7D5C894;
-	Mon, 13 May 2024 17:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715621450; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sWsm72q9eu1VHpbY+LKUmMDUatEzX8mREe9jVdywOgo=;
-	b=RoBd39bGPLdW8lDwy9ojb/qIWoGNIaP2brQwHgE5+r0Tz0IC3fHId030WMbGXTYgD4vuIn
-	ip0rzwoQaBs0AJ4hC1QIqxlxucjEobRC/EqdFPKqAKcr4Y5Oba74V9wACXrsi8yGMMdFDE
-	PnIl82KbGP3ENnQA45h0F2zzi7/LLbg=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=RoBd39bG
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715621450; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sWsm72q9eu1VHpbY+LKUmMDUatEzX8mREe9jVdywOgo=;
-	b=RoBd39bGPLdW8lDwy9ojb/qIWoGNIaP2brQwHgE5+r0Tz0IC3fHId030WMbGXTYgD4vuIn
-	ip0rzwoQaBs0AJ4hC1QIqxlxucjEobRC/EqdFPKqAKcr4Y5Oba74V9wACXrsi8yGMMdFDE
-	PnIl82KbGP3ENnQA45h0F2zzi7/LLbg=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4372313A52;
-	Mon, 13 May 2024 17:30:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yPoQEEpOQmbMdQAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Mon, 13 May 2024 17:30:50 +0000
-Date: Mon, 13 May 2024 19:30:49 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Christian Brauner <brauner@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Kees Cook <keescook@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Tycho Andersen <tandersen@netflix.com>, 
-	Jens Axboe <axboe@kernel.dk>, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH 1/3] tracing: Remove dependency of saved_cmdlines_buffer
- on PID_MAX_DEFAULT
-Message-ID: <eteswsookugqwr5pju5fuzc6m2wly4pxrbp3y2umke6ojvwo3x@pwjqsu77yh6s>
-References: <20240408145819.8787-1-mkoutny@suse.com>
- <20240408145819.8787-2-mkoutny@suse.com>
- <20240409110126.651e94cb@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WoJdvybr"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2b12b52fbe0so3639396a91.0;
+        Mon, 13 May 2024 14:23:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715635426; x=1716240226; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RMSuz07A4w5gpVATrv0a4fCRS6KDO8fmqCeo2z7sNeI=;
+        b=WoJdvybr4Nld1JPaWS5It0jtEo4KD9n7N7HJ05MAzmi7+uL/DAcmxd+xGIfuiEHN1U
+         QaEh6Z8jV9iKnDNQnn3kL3ahbDU93NpBAdoPZGDI8ibR9rwL8HE1+a10B0zoCr05MdYw
+         9ubk2Ov/0HVahjlu+jAVwd/rGAdqwbaBcRwJE/WQr/b5d5h/nPai2xX6ZYfvbaladpaE
+         JRlMzT/4qyewZH+tzJ3ASz94KtQ51EeyHPzPAgolOBr7JPxCLr7adZfu2+kgnmbHbU5C
+         2GGEtTMbi5bdLVaFITF77Ij3wXgS5otxm9S7PkdTpLAoQtaBDoqMhuK+AhD2MqDVQ+zO
+         uKSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715635426; x=1716240226;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RMSuz07A4w5gpVATrv0a4fCRS6KDO8fmqCeo2z7sNeI=;
+        b=py31cA4XOJ91bfAPHo9CK+XbLhy/1AD3YdNGWOfX4vn7TrLGSbV1tHOJfY1j+5vTC+
+         hwibSQOM0crIMO3+Km/f0q/4ZKHNRcIq3arsBmu4wArppKkBQz5bLR5caO/DWLdL5ZQW
+         Qezu0NZEilfcOGdwMbc2kZMHRAJQQQxnWKouK1enB/2HA1P9IEurP3yrtH0+sKMXMTha
+         wSZJJ+NsJMnI7TrvhJixaA3Ll+wcRjzfi/fMI1A+TTZUuk1T+GRbK1co5ajZpVwwHDFk
+         KV5qNyrdikFmhixbtfE5uYSvnwpwzCKLS4IBaNIYFwE3+TMZaW95StvSrBO3JD0NscEl
+         F9ew==
+X-Forwarded-Encrypted: i=1; AJvYcCUDJrJ5VgDDHsy9AXh6OGm2Z/gioi54BzurSVfQdHhdM2XU0Arz+SwNNKKDoBG3OfN0+VzI1Vx4jsZbsbUm/aVPMJ7DN9eU85BjK/t2x67jLBjno9CtL3mM2TpIwZgkH4nI+Vf70NJ9oGQgMT+CjYT8fIzO+tnvnZKMmNfScqGwHKCj7q84tfJH4nVd9d6RM3BcZJmFakoGVXzVTu9y8BBoWNzXytoGZvlgI5MzQhm0zpoeF6/tJX4rQNic
+X-Gm-Message-State: AOJu0YyL68tcXMRJ2s7TmiOPYavmyrMTzqXZjk5cV9By2p5+C5MCHkr/
+	+1T3OtIUV3GfyUxvB9EUiLwM8cBGr7bXOKJM25MMCXV3GKwGL3j8
+X-Google-Smtp-Source: AGHT+IGMIx5GTk6vK6cbKg4CZgRx+oouSfAzl44B+vmJPTIVjSC83366ig2FbO+jkHjw/44yxi1aHw==
+X-Received: by 2002:a17:90a:da04:b0:2b3:d512:d487 with SMTP id 98e67ed59e1d1-2b6ccd97a79mr10878206a91.39.1715635426267;
+        Mon, 13 May 2024 14:23:46 -0700 (PDT)
+Received: from krava ([50.204.89.31])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b671056503sm8371975a91.3.2024.05.13.14.23.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 14:23:45 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 13 May 2024 15:23:42 -0600
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"debug@rivosinc.com" <debug@rivosinc.com>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"yhs@fb.com" <yhs@fb.com>, "oleg@redhat.com" <oleg@redhat.com>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
+Message-ID: <ZkKE3qT1X_Jirb92@krava>
+References: <20240507105321.71524-1-jolsa@kernel.org>
+ <20240507105321.71524-7-jolsa@kernel.org>
+ <a08a955c74682e9dc6eb6d49b91c6968c9b62f75.camel@intel.com>
+ <ZjyJsl_u_FmYHrki@krava>
+ <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
+ <Zj_enIB_J6pGJ6Nu@krava>
+ <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
+ <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zkpfq5nfsruo2pew"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240409110126.651e94cb@gandalf.local.home>
-X-Spam-Flag: NO
-X-Spam-Score: -7.97
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 5AC7D5C894
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-7.97 / 50.00];
-	BAYES_HAM(-2.86)[99.38%];
-	SIGNED_PGP(-2.00)[];
-	DWL_DNSWL_MED(-2.00)[suse.com:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim]
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
 
+On Mon, May 13, 2024 at 05:12:31PM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2024-05-13 at 18:50 +0900, Masami Hiramatsu wrote:
+> > > I guess it's doable, we'd need to keep both trampolines around, because
+> > > shadow stack is enabled by app dynamically and use one based on the
+> > > state of shadow stack when uretprobe is installed
+> > > 
+> > > so you're worried the optimized syscall path could be somehow exploited
+> > > to add data on shadow stack?
+> 
+> Shadow stack allows for modification to the shadow stack only through a few
+> limited ways (call, ret, etc). The kernel has the ability to write through
+> shadow stack protections (for example when pushing and popping signal frames),
+> but the ways in which it does this are limited in order to try to prevent
+> providing extra capabilities to attackers wanting to craft their own shadow
+> stacks.
+> 
+> But the HW features have optional abilities to allow extra patterns of shadow
+> stack modification for userspace as well. This can facilitate unusual patterns
+> of stack modification (like in this series). For, x86 there is the ability to
+> allow an instruction (called WRSS) such that userspace can also write arbitrary
+> data to the shadow stack. Arm has something likes that, plus an instruction to
+> push to the shadow stack.
+> 
+> There was some debate about whether to use these features, as glibc could not
+> perfectly match compatibility for features that play with the stack like
+> longjmp(). As in, without using those extra HW capabilities, some apps would
+> require modifications to work with shadow stack.
+> 
+> There has been a lot of design tension between security, performance and
+> compatibility in figuring out how to fit this feature into existing software. In
+> the end the consensus was to not use these extra HW capabilities, and lean
+> towards security in the implementation. To try to summarize the debate, this was
+> because we could get pretty close to compatibility without enabling these extra
+> features.
+> 
+> So since this solution does something like enabling these extra capabilities in
+> software that were purposely disabled in HW, it raises eyebrows. Glibc has some
+> operations that now have extra steps because of shadow stack. So if we could do
+> something that was still functional, but slower and more secure, then it seems
+> roughly in line with the tradeoffs we have gone with so far.
 
---zkpfq5nfsruo2pew
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+so at the moment the patch 6 changes shadow stack for
 
-On Tue, Apr 09, 2024 at 11:01:26AM GMT, Steven Rostedt <rostedt@goodmis.org=
-> wrote:
-> > -	tpid =3D pid & (PID_MAX_DEFAULT - 1);
-> > +	tpid =3D pid % PID_MAP_SIZE;
->=20
-> Does that compile to the same? This is a fast path.
+1) current uretprobe which are not working at the moment and we change
+   the top value of shadow stack with shstk_push_frame
+2) optimized uretprobe which needs to push new frame on shadow stack
+   with shstk_update_last_frame
 
-I didn't check.
-If fast is the intetion, I would change it to something
-like BUILD_BUG_ON(!(PID_MAP_SIZE % 2)) and keep the bit operation
-without reliance on compiler optimizations.
+I think we should do 1) and have current uretprobe working with shadow
+stack, which is broken at the moment
 
-Thanks for the response (I may not follow up on this single commit
-though).
+I'm ok with not using optimized uretprobe when shadow stack is detected
+as enabled and we go with current uretprobe in that case
 
-Michal
+would this work for you?
 
---zkpfq5nfsruo2pew
-Content-Type: application/pgp-signature; name="signature.asc"
+thanks,
+jirka
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZkJORwAKCRAGvrMr/1gc
-juwFAQDBe2s/17ASgBrvfEF2JeszX6QHNDTWC+passHlgM1YEwEAscayN2Es6GV6
-HNEqE1pw+AK/Y3sC+HqlfsWgHQRpZQY=
-=GZFY
------END PGP SIGNATURE-----
-
---zkpfq5nfsruo2pew--
+> 
+> But shadow stack is not in widespread use yet, so whether we have the final
+> tradeoffs settled is still open I think. For example, other libcs have expressed
+> interest in using WRSS.
+> 
+> I'm also not clear on the typical use of uretprobes (debugging vs production).
+> And whether shadow stack + debugging + production will happen seems pretty
+> unknown.
+> 
+> > 
+> > Good point. For the security concerning (e.g. leaking sensitive information
+> > from secure process which uses shadow stack), we need another limitation
+> > which prohibits probing such process even for debugging. But I think that
+> > needs another series of patches. We also need to discuss when it should be
+> > prohibited and how (e.g. audit interface? SELinux?).
+> > But I think this series is just optimizing currently available uprobes with
+> > a new syscall. I don't think it changes such security concerning.
+> 
+> Patch 6 adds support for shadow stack for uretprobes. Currently there is no
+> support.
+> 
+> Peterz had asked that the new solution consider shadow stack support, so I think
+> that is how this series grew kind of two goals: new faster uretprobes and
+> initial shadow stack support.
+> 
+> 
