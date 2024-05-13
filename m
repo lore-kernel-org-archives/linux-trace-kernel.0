@@ -1,110 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A6F84A2E;
-	Mon, 13 May 2024 05:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EDB146006
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 May 2024 05:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715577769; cv=none; b=pCGplSlNHiFt7tzyX4wPd4IkfzNIZgCU4qM/+mxdYdSbA6oBgAO7Br4qxeuBtPjaVdV0NI/cbD6hfnlhhoArijHc6JnPK7uy+9yloUHLqa+hjU+NJiBy3U7DWUF68NZHuLJyMUc7nH8EHIaPwSR/vzSjCU5fgRs0WMjb4w4t/wg=
+	t=1715578453; cv=none; b=IUaTEfN/TTJ8G8Q1IBfXjGUaUiCI6jiywxgfdM57QlMK/PaSv9L28puc9Lv3iACJcSojZLp2FZYIz4D1ySnVBTWX5nnx/TUXVHCyR1iQjL0yXGCKFJEiOo6EZFChQ/EGrOcM5dossEXujaQ8oflcOHoLJZanLUAdo1bo4wEgEtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715577769; c=relaxed/simple;
-	bh=R5edv3eTItWTaOLwF4r18UMlBImuuSZKl+iELr5SbFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S+NXTmCs168gKmHEhYo+pIDGTlwHaSvr5gQfkw5eEthLyqQxJ/0a5Y91704BYzlQZ/fnuFm0nAbvdC1q4Pq/xoCWiREcTKIEtH/w96faCi/eghh7DeqLHxzihGY//bcg2E31NtcaP2lk8nSe9jYFzLDpolLaDV2lyHU2lL8Hfrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p06hU1cK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715578453; c=relaxed/simple;
+	bh=3novfxKmuOHtv2/2Uxne6GNAqtrqJ5MvuaL4zalChp4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HzR9HpQQV1PNVzuZgf0Fy3K6hkat9yTUFZIoDfDNTO1wj4/bU9iR8IEa9RK1FbqBY5IejfslXq9FZjf89ooGYVqVAmla/buXgHf4PCI1U3cCOdHVJsNc5rqxiHF2X1ZK7aMtaeM6jN8JPQ9wJIIh3tKB3CyxMb5xBbFPGFeevaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bPNF6x/3; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p06hU1cK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0EA0C113CC;
-	Mon, 13 May 2024 05:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715577769;
-	bh=R5edv3eTItWTaOLwF4r18UMlBImuuSZKl+iELr5SbFY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p06hU1cKczs1w9WQUuXhHvfqS8BQpzyYpI6RVpLu/xjeYm87lmvKgC2IK1cHUjzhk
-	 CyeaI7QCTqOw15obLBu/Z/xyT3MuGwG5bGGPc+uz67a5WR2dDu/j8C2k9aLd8aSjZD
-	 7AZEwcTWK/MVCkhY56eDyX0dNbSYEBKXxtwG1KKMF8t8dfJwxWs0rZLAKnEGMcf++K
-	 mgdBDrdqNIY1yifcawMCrYgn0iL38+5EBIvrE4xkWUtr20SlayPq5kW2d2KB3e5t9M
-	 iyN3qwS6rqZs2+taVFiaWH0I7nq92Es/Jj2y1zeOTHwaVs+Q3j40IJQZD+fMYH61qz
-	 8qh9srqXxGAKg==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51ff65b1e14so4139163e87.2;
-        Sun, 12 May 2024 22:22:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbz6bRkv5kFxsM1UuEaU9nH5r4rqDlBjzBKhfXhZaDEoBzn9swA3TK6XlF8EC8xGl/6kXI4+pdM9THhzIskmLYeYYqHNqJEk6B7h+kVlpDQ6PufLdP0CazMICdnZbUIl2ym3Sx945Zf4HgB6fZKfvn2SSV5rFlcYMeHqUcMrvX0KhL8zG48nLhkH9gQsYYlw==
-X-Gm-Message-State: AOJu0Yxnjb5Ozp/5sryqTjD2H0lLItWKruIIYDAoNDwJFZx9YgAPh4GP
-	ID+XPNEEvgtgIYCpXrIT//5A/5tL7HqS3wri0tR7wlXmsfKLWb9wHvdyy3eqs0bbMXslO/DG4Jc
-	ieUsmalU6wa9QxwT8ZFviVrTpBWU=
-X-Google-Smtp-Source: AGHT+IGNMeTGUj9gmCtDxj73uN5QYb/AJKDUlwqeAjp/0ePXKzFdRpHtutaPh2boetYym1A6BbCNzJLt6CooSG207qQ=
-X-Received: by 2002:a05:6512:3b08:b0:522:2c9b:63b7 with SMTP id
- 2adb3069b0e04-5222c9b648bmr5282900e87.14.1715577767722; Sun, 12 May 2024
- 22:22:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bPNF6x/3"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715578448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtkBKlqRVPiYt0KU2gHHEP+MV+jp5EvYQ4ZKCZH6xvs=;
+	b=bPNF6x/3D3j3GV79OW8FEMCFENYlL3367JFVNkpvFwAj+4hJh6PsD8ntCa1+sBBnBnlI2V
+	EkHkfGP0Osy0bczztTYbcbNGT0iT9/eGfPZwa4BG/I/oYuBP4CQovPJNR1g38DxH7qORLJ
+	+TfxTSq2+/maLlJOVvUJwVtuqTzcUj4=
+From: hao.ge@linux.dev
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	hao.ge@linux.dev,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH v2] eventfs: Fix a possible null pointer dereference in eventfs_find_events
+Date: Mon, 13 May 2024 13:33:38 +0800
+Message-Id: <20240513053338.63017-1-hao.ge@linux.dev>
+In-Reply-To: <b574c8d6-c000-8673-74de-a7cc092057ad@linux.dev>
+References: <b574c8d6-c000-8673-74de-a7cc092057ad@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240511224035.27775-1-kris.van.hees@oracle.com> <20240511224035.27775-7-kris.van.hees@oracle.com>
-In-Reply-To: <20240511224035.27775-7-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 13 May 2024 14:22:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATFx=iJHH=LDPOJBdYo47r5OOMKhnnzTTROedVBWZ5hzA@mail.gmail.com>
-Message-ID: <CAK7LNATFx=iJHH=LDPOJBdYo47r5OOMKhnnzTTROedVBWZ5hzA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] module: add install target for modules.builtin.ranges
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, May 12, 2024 at 7:59=E2=80=AFAM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> When CONFIG_BUILTIN_MODULE_RANGES is enabled, the modules.builtin.ranges
-> file should be installed in the module install location.
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> ---
-> Changes since v1:
->  - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
-> ---
->  scripts/Makefile.modinst | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-> index b45586aa1de49..e185dacae892a 100644
-> --- a/scripts/Makefile.modinst
-> +++ b/scripts/Makefile.modinst
-> @@ -36,6 +36,11 @@ install-y +=3D $(addprefix $(MODLIB)/, modules.builtin=
- modules.builtin.modinfo mod
->  $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo modules.=
-builtin.objs): $(MODLIB)/%: % FORCE
->         $(call cmd,install)
->
-> +install-$(CONFIG_BUILTIN_MODULE_RANGES) +=3D $(MODLIB)/modules.builtin.r=
-anges
-> +
-> +$(MODLIB)/modules.builtin.ranges: modules.builtin.ranges FORCE
-> +       $(call cmd,install)
-> +
+From: Hao Ge <gehao@kylinos.cn>
 
-Why add this to $(addprefix ...) part?
+In function eventfs_find_events,there is a potential null pointer
+that may be caused by calling update_events_attr which will perform
+some operations on the members of the ei struct when ei is NULL.
 
+Hence,When ei->is_freed is set,return NULL directly.
 
+Fixes: 8186fff7ab64 ("tracefs/eventfs: Use root and instance inodes as default ownership")
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
 
+---
+v2:
+- adjust title and commit message
+- omit curly brackets
+---
+ fs/tracefs/event_inode.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
->  endif
->
->  modules :=3D $(call read-file, $(MODORDER))
-> --
-> 2.43.0
->
->
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index a878cea70f4c..0256afdd4acf 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -345,10 +345,9 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+ 		 * If the ei is being freed, the ownership of the children
+ 		 * doesn't matter.
+ 		 */
+-		if (ei->is_freed) {
+-			ei = NULL;
+-			break;
+-		}
++		if (ei->is_freed)
++			return NULL;
++
+ 		// Walk upwards until you find the events inode
+ 	} while (!ei->is_events);
+ 
+-- 
+2.25.1
 
-
---
-Best Regards
-Masahiro Yamada
