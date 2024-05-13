@@ -1,118 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6984C147C91;
-	Mon, 13 May 2024 09:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371EC2E3E0;
+	Mon, 13 May 2024 11:39:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715593848; cv=none; b=rc0j3e/GqrsIPicmLNExwVborLWeMNsPndo0QlBhG6YiUOEM00u6kSpCqO+FQO0ox0pqiugLnl1WMbRtrBzIyeBMEtXyZ2CdfthuxtDE6xyO0OSdXkHzvbyE8a6RDMeNdyIodVwanJ5qiulbkS+UK1R6naIvStHYtSgu4rQPvRU=
+	t=1715600366; cv=none; b=fZqohm9BVsiaSZsxTBs3OtMombDQkPKzQeR3g6JhYKAQfiZBU9XwYs7WDnWhDsQmuTSZmBsumShc+u4gi5geeHxDh2Fw2q73aOayzsJyVxkN+Cykp710vr5vYGjgJuitSuqOLJSOnA82CpJFWsk6h6bf2bptDSEfki32RDX7fok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715593848; c=relaxed/simple;
-	bh=obainReipxsOetadK3S9x5Jt+lJ+nIC9rjpVjn7ETCc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dNQqDnAFZPbL60yJ3AS71LeKKxQphGVBmcD1LHgujUtdtRuU/b7Phph7EAoVq2Ofm9BrAFIF9cXX79J/oc+0jqQliv6RVHEDP/GYu5H9gC1ecnX8wIUYpSxCFLbcq47nqPCPCIfYvDakWCkB1eeWOO7xp+hMT8uB3R69tFfkJ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl6iBeDA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715600366; c=relaxed/simple;
+	bh=ON82PcOIJ17yAE+if6E90kpxCqFKRm2qSDV0U9CSHU0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AOyBb1mef++blVPMOU4Gpp2Xg78AHARrQgfIjoCShtNw5m9R1kCD+DzpAHcQR6fA/Zgr0uFHG3ieHwAw8j2r2i3nZA8yIYdv0n1o9LobwLjYDs6lBlQ2MX1kze+NpnzsC1QBcQmkqcoxxOd3GP8GP623NJP1hGpN4QFe/66suFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/lTEuvD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl6iBeDA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D6EC113CC;
-	Mon, 13 May 2024 09:50:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/lTEuvD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BDBC113CC;
+	Mon, 13 May 2024 11:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715593847;
-	bh=obainReipxsOetadK3S9x5Jt+lJ+nIC9rjpVjn7ETCc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Zl6iBeDAmfyGJavgOuKDO3p73ZHzDn2+ow5pvOFjpmkbpaPcxznWWit16owVeoA+6
-	 4PhjoBM5naFxt492YMR/9yRDxbumdX7Y/ZiGdMrMC9BLeXodeZfVlVS+YlVb9SuwVM
-	 9ixCHkaeXWBVaTXXttQ4cUyw2s3QvxaSvIfnHdKoxBc1liB9KJ9Yd64fSlcwhSvIhm
-	 8xz00uBAHHg5brv9CqpfZA2cM7+/H1kEdMpHDOFZAWGaM7N6mGyMvODGWJoIMmd9Wk
-	 vEeRslelJ/7K560UZt19d/5U8tDk2H3MceSm75Uht5fIzGD3FrX9C50Mcn9onbAjf8
-	 fDEPnYWPj/4OA==
-Date: Mon, 13 May 2024 18:50:40 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "songliubraving@fb.com" <songliubraving@fb.com>, "luto@kernel.org"
- <luto@kernel.org>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "andrii@kernel.org" <andrii@kernel.org>, "debug@rivosinc.com"
- <debug@rivosinc.com>, "john.fastabend@gmail.com"
- <john.fastabend@gmail.com>, "linux-api@vger.kernel.org"
- <linux-api@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>, "ast@kernel.org"
- <ast@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "yhs@fb.com"
- <yhs@fb.com>, "oleg@redhat.com" <oleg@redhat.com>, "peterz@infradead.org"
- <peterz@infradead.org>, "linux-man@vger.kernel.org"
- <linux-man@vger.kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "bp@alien8.de" <bp@alien8.de>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
-Message-Id: <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
-In-Reply-To: <Zj_enIB_J6pGJ6Nu@krava>
-References: <20240507105321.71524-1-jolsa@kernel.org>
-	<20240507105321.71524-7-jolsa@kernel.org>
-	<a08a955c74682e9dc6eb6d49b91c6968c9b62f75.camel@intel.com>
-	<ZjyJsl_u_FmYHrki@krava>
-	<a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
-	<Zj_enIB_J6pGJ6Nu@krava>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1715600365;
+	bh=ON82PcOIJ17yAE+if6E90kpxCqFKRm2qSDV0U9CSHU0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=U/lTEuvDd5+4MGu/pjy5sV+RuxIkPABba4eA3eXP5hfE0e3G/3uoP2D2HiPw3GRc8
+	 yJ5XRB0mG9wP+Fesu8wBlrrbDxwIoJTHSM8HP3lLcryKXTQxJrXAu/o5t4W1LSbc00
+	 77S7T6h80GvK/8kvfxR9g9zqh03GRmCf+9hw+oK6ggCa3k0K6IVXee/Sgjo3PikWY5
+	 Dv+lo3VSUU3xYDMIjeHGpjhWuy2dpkgYjsyzy2OaJkW+eUCim3uB8C6nNBLa2VaqQ4
+	 righvX+sxKUwIlTp6YA60DU8uvQL7qKYvQ93ou35Wy1DUiW0rM0obMX4R9NOaIdg+L
+	 jte4f0soRxqsA==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51f12ccff5eso5775989e87.1;
+        Mon, 13 May 2024 04:39:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfk6zyB3Puv9DDlxSSx7aqP/V/qDS0zuisWPHa2MgsVd79l7ioMqmUcYOatg9SRuZxvyjABYaTiLvnRxMGHGZgCAW4r6LqL2OucYV/7b5kKxvGHEJtMCweHFowTWo/tqI4ddn7Y+gBjegv8SIFb402U4AFpB4yYgeERHI0ipJDtvNvUP5dGRq5iW9SjB0c8A==
+X-Gm-Message-State: AOJu0Yzi5A7FbK2oezql9ipfH7xk5bc9dsgG84MK59PIIiZ/I6dvFAqt
+	rbUWAf2HV9GynuFl9+MHIO/vucg3oxMhQy5DBfknBzzIrB3ZfdGpMesZMedJEDrwzoQwqrf/dhw
+	sVk5kzTW51JKXZgmJUw+WThdN2BE=
+X-Google-Smtp-Source: AGHT+IHRBvVSXUmpIhtBu+KS2rLxAsXnEq0xpczjBPmn3Adz7IitLwoCbrBvsJJywoMxWgerm1TWuN7si0tRvxzuqBc=
+X-Received: by 2002:ac2:46ec:0:b0:516:d259:245e with SMTP id
+ 2adb3069b0e04-5220ff72105mr6636636e87.9.1715600364501; Mon, 13 May 2024
+ 04:39:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20240511224035.27775-1-kris.van.hees@oracle.com>
+ <20240511224035.27775-7-kris.van.hees@oracle.com> <CAK7LNATFx=iJHH=LDPOJBdYo47r5OOMKhnnzTTROedVBWZ5hzA@mail.gmail.com>
+In-Reply-To: <CAK7LNATFx=iJHH=LDPOJBdYo47r5OOMKhnnzTTROedVBWZ5hzA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 13 May 2024 20:38:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR_vJfodvnhAA9O72sTWY_z+QZoeNPy8Gkfs7k5sKkN9A@mail.gmail.com>
+Message-ID: <CAK7LNAR_vJfodvnhAA9O72sTWY_z+QZoeNPy8Gkfs7k5sKkN9A@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] module: add install target for modules.builtin.ranges
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 11 May 2024 15:09:48 -0600
-Jiri Olsa <olsajiri@gmail.com> wrote:
-
-> On Thu, May 09, 2024 at 04:24:37PM +0000, Edgecombe, Rick P wrote:
-> > On Thu, 2024-05-09 at 10:30 +0200, Jiri Olsa wrote:
-> > > > Per the earlier discussion, this cannot be reached unless uretprobes are in
-> > > > use,
-> > > > which cannot happen without something with privileges taking an action. But
-> > > > are
-> > > > uretprobes ever used for monitoring applications where security is
-> > > > important? Or
-> > > > is it strictly a debug-time thing?
-> > > 
-> > > sorry, I don't have that level of detail, but we do have customers
-> > > that use uprobes in general or want to use it and complain about
-> > > the speed
-> > > 
-> > > there are several tools in bcc [1] that use uretprobes in scripts,
-> > > like:
-> > >   memleak, sslsniff, trace, bashreadline, gethostlatency, argdist,
-> > >   funclatency
-> > 
-> > Is it possible to have shadow stack only use the non-syscall solution? It seems
-> > it exposes a more limited compatibility in that it only allows writing the
-> > specific trampoline address. (IIRC) Then shadow stack users could still use
-> > uretprobes, but just not the new optimized solution. There are already
-> > operations that are slower with shadow stack, like longjmp(), so this could be
-> > ok maybe.
-> 
-> I guess it's doable, we'd need to keep both trampolines around, because
-> shadow stack is enabled by app dynamically and use one based on the
-> state of shadow stack when uretprobe is installed
-> 
-> so you're worried the optimized syscall path could be somehow exploited
-> to add data on shadow stack?
-
-Good point. For the security concerning (e.g. leaking sensitive information
-from secure process which uses shadow stack), we need another limitation
-which prohibits probing such process even for debugging. But I think that
-needs another series of patches. We also need to discuss when it should be
-prohibited and how (e.g. audit interface? SELinux?).
-But I think this series is just optimizing currently available uprobes with
-a new syscall. I don't think it changes such security concerning.
-
-Thank you,
-
-> 
-> jirka
+On Mon, May 13, 2024 at 2:22=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> On Sun, May 12, 2024 at 7:59=E2=80=AFAM Kris Van Hees <kris.van.hees@orac=
+le.com> wrote:
+> >
+> > When CONFIG_BUILTIN_MODULE_RANGES is enabled, the modules.builtin.range=
+s
+> > file should be installed in the module install location.
+> >
+> > Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> > Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+> > ---
+> > Changes since v1:
+> >  - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
+> > ---
+> >  scripts/Makefile.modinst | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+> > index b45586aa1de49..e185dacae892a 100644
+> > --- a/scripts/Makefile.modinst
+> > +++ b/scripts/Makefile.modinst
+> > @@ -36,6 +36,11 @@ install-y +=3D $(addprefix $(MODLIB)/, modules.built=
+in modules.builtin.modinfo mod
+> >  $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo module=
+s.builtin.objs): $(MODLIB)/%: % FORCE
+> >         $(call cmd,install)
+> >
+> > +install-$(CONFIG_BUILTIN_MODULE_RANGES) +=3D $(MODLIB)/modules.builtin=
+.ranges
+> > +
+> > +$(MODLIB)/modules.builtin.ranges: modules.builtin.ranges FORCE
+> > +       $(call cmd,install)
+> > +
+>
+> Why add this to $(addprefix ...) part?
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I meant, why don't you add this to $(addprefix ...)
+
+
+
+Like this:
+
+
+$(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo
+modules.builtin.ranges): $(MODLIB)/%: % FORCE
+        $(call cmd,install)
+
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
