@@ -1,120 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371EC2E3E0;
-	Mon, 13 May 2024 11:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5857714D2BC;
+	Mon, 13 May 2024 11:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715600366; cv=none; b=fZqohm9BVsiaSZsxTBs3OtMombDQkPKzQeR3g6JhYKAQfiZBU9XwYs7WDnWhDsQmuTSZmBsumShc+u4gi5geeHxDh2Fw2q73aOayzsJyVxkN+Cykp710vr5vYGjgJuitSuqOLJSOnA82CpJFWsk6h6bf2bptDSEfki32RDX7fok=
+	t=1715601568; cv=none; b=A7VB41/gXZJD9Jg1NpmxlKFHxagaMrRayBYU5ArX1ADd0uykr9bEF/DdwrxYBnPvxXk+WSdhZLgjED4i9H160rijlHk3rHkdbfglBZG89tiCEk2bFuGJA5aIktsQa+c9Z43DYcBqEMF8670j9olmDI/g/dRXnRhyb45jvTxJP5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715600366; c=relaxed/simple;
-	bh=ON82PcOIJ17yAE+if6E90kpxCqFKRm2qSDV0U9CSHU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AOyBb1mef++blVPMOU4Gpp2Xg78AHARrQgfIjoCShtNw5m9R1kCD+DzpAHcQR6fA/Zgr0uFHG3ieHwAw8j2r2i3nZA8yIYdv0n1o9LobwLjYDs6lBlQ2MX1kze+NpnzsC1QBcQmkqcoxxOd3GP8GP623NJP1hGpN4QFe/66suFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/lTEuvD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/lTEuvD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BDBC113CC;
-	Mon, 13 May 2024 11:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715600365;
-	bh=ON82PcOIJ17yAE+if6E90kpxCqFKRm2qSDV0U9CSHU0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=U/lTEuvDd5+4MGu/pjy5sV+RuxIkPABba4eA3eXP5hfE0e3G/3uoP2D2HiPw3GRc8
-	 yJ5XRB0mG9wP+Fesu8wBlrrbDxwIoJTHSM8HP3lLcryKXTQxJrXAu/o5t4W1LSbc00
-	 77S7T6h80GvK/8kvfxR9g9zqh03GRmCf+9hw+oK6ggCa3k0K6IVXee/Sgjo3PikWY5
-	 Dv+lo3VSUU3xYDMIjeHGpjhWuy2dpkgYjsyzy2OaJkW+eUCim3uB8C6nNBLa2VaqQ4
-	 righvX+sxKUwIlTp6YA60DU8uvQL7qKYvQ93ou35Wy1DUiW0rM0obMX4R9NOaIdg+L
-	 jte4f0soRxqsA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51f12ccff5eso5775989e87.1;
-        Mon, 13 May 2024 04:39:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfk6zyB3Puv9DDlxSSx7aqP/V/qDS0zuisWPHa2MgsVd79l7ioMqmUcYOatg9SRuZxvyjABYaTiLvnRxMGHGZgCAW4r6LqL2OucYV/7b5kKxvGHEJtMCweHFowTWo/tqI4ddn7Y+gBjegv8SIFb402U4AFpB4yYgeERHI0ipJDtvNvUP5dGRq5iW9SjB0c8A==
-X-Gm-Message-State: AOJu0Yzi5A7FbK2oezql9ipfH7xk5bc9dsgG84MK59PIIiZ/I6dvFAqt
-	rbUWAf2HV9GynuFl9+MHIO/vucg3oxMhQy5DBfknBzzIrB3ZfdGpMesZMedJEDrwzoQwqrf/dhw
-	sVk5kzTW51JKXZgmJUw+WThdN2BE=
-X-Google-Smtp-Source: AGHT+IHRBvVSXUmpIhtBu+KS2rLxAsXnEq0xpczjBPmn3Adz7IitLwoCbrBvsJJywoMxWgerm1TWuN7si0tRvxzuqBc=
-X-Received: by 2002:ac2:46ec:0:b0:516:d259:245e with SMTP id
- 2adb3069b0e04-5220ff72105mr6636636e87.9.1715600364501; Mon, 13 May 2024
- 04:39:24 -0700 (PDT)
+	s=arc-20240116; t=1715601568; c=relaxed/simple;
+	bh=TNgnzQqPq8Kz9uzS//yGwb0Uho0xHiz8NJ00cchimPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BjtNzQQzLJZw0zbRkHXQl1S9lG/LTO92WnIP1Y82mwGqivYMJFWuBtY+yhRBHyRz6u9HJ7MOmVd5yVkGoOTbhF70UDSK2pTdF5G5mgNFg66/BBt1D9Ebbfo4XOgZResVLLY7qWD/oF9yeSzKAHxOV6dWeT+LYe2I0FpFsvrtMAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-bd-66420098b2c9
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Honggyu Kim <honggyu.kim@sk.com>,
+	Hyeongtak Ji <hyeongtak.ji@sk.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	kernel_team@skhynix.com
+Subject: Re: [RFC PATCH v4 0/5] DAMON based tiered memory management for CXL memory
+Date: Mon, 13 May 2024 20:59:15 +0900
+Message-ID: <20240513115918.1479-1-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240512175447.75943-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240511224035.27775-1-kris.van.hees@oracle.com>
- <20240511224035.27775-7-kris.van.hees@oracle.com> <CAK7LNATFx=iJHH=LDPOJBdYo47r5OOMKhnnzTTROedVBWZ5hzA@mail.gmail.com>
-In-Reply-To: <CAK7LNATFx=iJHH=LDPOJBdYo47r5OOMKhnnzTTROedVBWZ5hzA@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 13 May 2024 20:38:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR_vJfodvnhAA9O72sTWY_z+QZoeNPy8Gkfs7k5sKkN9A@mail.gmail.com>
-Message-ID: <CAK7LNAR_vJfodvnhAA9O72sTWY_z+QZoeNPy8Gkfs7k5sKkN9A@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] module: add install target for modules.builtin.ranges
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnke5MBqc0g9uqFnPWr2GzePL/N6vF
+	5V1z2CzurfnPanFk/VkWi81nzzBbLF6uZrGv4wGTxeGvb5gcOD2Wnn7D5tGy7xa7x6ZVnWwe
+	mz5NYvc4MeM3i8eLzTMZPT5vkgtgj+KySUnNySxLLdK3S+DK2Hn5CVPBMq6KgxvXsTcwruTo
+	YuTkkBAwkbi/cyk7jP3q3U0mEJtNQE3iystJYLaIgKLEuccXWbsYuTiYBdYzS6y/cooZJCEs
+	ECzRfqyFBcRmEVCVWNJ2HmwQr4CZxLnXv1ghhmpKPN7+EyzOKWAssbjzASOILSTAI/Fqw35G
+	iHpBiZMzn4DNYRaQl2jeOpsZZJmEwHU2iZMtHUwQgyQlDq64wTKBkX8Wkp5ZSHoWMDKtYhTK
+	zCvLTczMMdHLqMzLrNBLzs/dxAgM6mW1f6J3MH66EHyIUYCDUYmHN+G0Q5oQa2JZcWXuIUYJ
+	DmYlEV6HQvs0Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxS
+	DYyeIvMS8u42XJ6wYXW96nRe+bWLk+c6JIWH3e9dYP0v+L2T81q2ag+PRRXKPE1C9r5/xLQK
+	ToWbTBcL81UU2VdzLqPw7c+V+dd8r9g3rPiY48Jz4kHtl43Oz1bqNk+0L1XaW7nvWnaZ5q/Q
+	BT+7zAN3OsqW5z1ZYLY5+L76rS7XN2VV+3N5DiuxFGckGmoxFxUnAgAjYSjrZgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsXCNUNLT3cGg1OawZv1BhZz1q9hs3jy/zer
+	xednr5ktOp98Z7Q4PPckq8XlXXPYLO6t+c9qcWT9WRaLzWfPMFssXq5mcejac1aLfR0PmCwO
+	f33D5MDrsfT0GzaPln232D02repk89j0aRK7x4kZv1k8Xmyeyejx7baHx+IXH5g8Pm+SC+CM
+	4rJJSc3JLEst0rdL4MrYefkJU8EyroqDG9exNzCu5Ohi5OSQEDCRePXuJhOIzSagJnHl5SQw
+	W0RAUeLc44usXYxcHMwC65kl1l85xQySEBYIlmg/1sICYrMIqEosaTvPDmLzCphJnHv9ixVi
+	qKbE4+0/weKcAsYSizsfMILYQgI8Eq827GeEqBeUODnzCdgcZgF5ieats5knMPLMQpKahSS1
+	gJFpFaNIZl5ZbmJmjqlecXZGZV5mhV5yfu4mRmAoL6v9M3EH45fL7ocYBTgYlXh4E047pAmx
+	JpYVV+YeYpTgYFYS4XUotE8T4k1JrKxKLcqPLyrNSS0+xCjNwaIkzusVnpogJJCeWJKanZpa
+	kFoEk2Xi4JRqYDwqGf684+zajwV7eOZ1SCnsU3RTn/1/9anuxlrzh4YmO/Wndk+zqSlck3s0
+	X+zmzIvPFyW4f1H64aClLuocvWPDvYzKTadY3y7llBBmfjJDxm/rpTN3ko9Yp7XE8R+flv1m
+	wf3s8uirG3WuOt5QnlE+1z9E5ze77m2nE9cDi0T4IpSNl082Oq3EUpyRaKjFXFScCABjKWO8
+	YQIAAA==
+X-CFilter-Loop: Reflected
 
-On Mon, May 13, 2024 at 2:22=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> On Sun, May 12, 2024 at 7:59=E2=80=AFAM Kris Van Hees <kris.van.hees@orac=
-le.com> wrote:
-> >
-> > When CONFIG_BUILTIN_MODULE_RANGES is enabled, the modules.builtin.range=
-s
-> > file should be installed in the module install location.
-> >
-> > Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> > Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> > ---
-> > Changes since v1:
-> >  - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
-> > ---
-> >  scripts/Makefile.modinst | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-> > index b45586aa1de49..e185dacae892a 100644
-> > --- a/scripts/Makefile.modinst
-> > +++ b/scripts/Makefile.modinst
-> > @@ -36,6 +36,11 @@ install-y +=3D $(addprefix $(MODLIB)/, modules.built=
-in modules.builtin.modinfo mod
-> >  $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo module=
-s.builtin.objs): $(MODLIB)/%: % FORCE
-> >         $(call cmd,install)
-> >
-> > +install-$(CONFIG_BUILTIN_MODULE_RANGES) +=3D $(MODLIB)/modules.builtin=
-.ranges
-> > +
-> > +$(MODLIB)/modules.builtin.ranges: modules.builtin.ranges FORCE
-> > +       $(call cmd,install)
-> > +
->
-> Why add this to $(addprefix ...) part?
+Hi SeongJae,
 
+Thanks very much for your work!  It got delayed due to the priority
+changes in my workplace for building another heterogeneous memory
+allocator.
+https://github.com/skhynix/hmsdk/wiki/hmalloc
 
-I meant, why don't you add this to $(addprefix ...)
+On Sun, 12 May 2024 10:54:42 -0700 SeongJae Park <sj@kernel.org> wrote:
+> There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+> posted at [1].
+> 
+> It says there is no implementation of the demote/promote DAMOS action
+> are made.  This RFC is about its implementation for physical address
+> space.
+> 
+> Changes from RFC v3
+> (https://lore.kernel.org/20240405060858.2818-1-honggyu.kim@sk.com):
 
+This link cannot be opened.  I will share the link again here.
+https://lore.kernel.org/all/20240405060858.2818-1-honggyu.kim@sk.com
 
+>   0. updated from v3 and posted by SJ on behalf of Hunggyu under his
+>      approval.
+>   1. Do not reuse damon_pa_pageout() and drop 'enum migration_mode'
+>   2. Drop vmstat change
 
-Like this:
+I haven't checked whether I can collect useful information without
+vmstat, but the changes look good in general except for that.
 
+>   3. Drop unnecessary page reference check
 
-$(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo
-modules.builtin.ranges): $(MODLIB)/%: % FORCE
-        $(call cmd,install)
+I will compare this patch series with my previous v3 patchset and get
+back to you later maybe next week.  Sorry, I will have another break
+this week.
 
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Thanks,
+Honggyu
