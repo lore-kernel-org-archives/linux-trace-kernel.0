@@ -1,91 +1,219 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302291C6AF;
-	Mon, 13 May 2024 03:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4482110F;
+	Mon, 13 May 2024 04:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715570772; cv=none; b=kFCFT3ecS/n/iptPFpHC+JytFGMwnUpwfiMSy1+3CCeIci/eYzLpAZM3X8CfM5a2Ze8O1d+pKtAe6ey0pP559cFqZY754uoTflXsU1dp1fJsRJJL0Fx22LQN248jN0UbXBkDlTsD7x2eU4GYEw3ZlJB7QYac+nZBCbey888HfYY=
+	t=1715575434; cv=none; b=uzrfgjD9Lr0rdDiE7knO9tj4YK/qDDTNanhMEEaJeQLxx1wchOQByhCsWi/iuzu9qTvJoAYEjwi7PpMuJQcc9wITbA7eBgPKrSyKzTD5lTvDfmZIKXaOYtN++Fhszmjvuq5ZJ3VdBsmuW9wRySZaS4CXlkbZozhd2IYxAXp4o00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715570772; c=relaxed/simple;
-	bh=WJOoQomm8SXfTN6sfPBVf9l1CpvTu8SVl1505d7YD1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sp89FVXFxqcCvTQMBrsBacYHbzMGE8g5MtQI2KDA/97fs+mtgJyo8ZXOpUsD7FWfyQYq2a1CejU/O3qu65eVHeWtlePrm3luK8HhMM7ny0B4K286yosNN8urSP7OPAcex3tNaESAj6/a9bFxcJl65JHF1jqddcI6K9DeOTP4BQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZkBxs0GF; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715575434; c=relaxed/simple;
+	bh=f2hRnqnMpqjqK9xq/EnAefNcHhujuWO4M7G+A9jFyxw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BOpj+D8y9dsHwLSqKyU3cEIy/Jc8YbNjHWAQsuPhkucI9ntoZBt7xaNBNLcpOLNQsvmdX+YN2OWRXVh9sxj7MkwLoL8Jr/LpwcIvI7s/L7nwhj6t5oNW83WxMibhHIfEcTQTxkooWo8WqwZvjRs9ODAC6LRFQOczeH0+HMZXKKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnRZnZBi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZkBxs0GF"
-Message-ID: <b574c8d6-c000-8673-74de-a7cc092057ad@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715570766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R5SPCLBdMmPm9x+0WvDC9Xwe8BqG9DYDcZU8TqCuQFw=;
-	b=ZkBxs0GF88gg721lGUEhujUhTssE2xljMxlpWlVTdoeRomLgnIgifTBddf4mc6DuyqcUDB
-	LOhi94bqMxOnb2OA5/PtUVjM/iztYySR78IR7C3rFABwA6sd+POCa+u0xajGu/A4M76c/8
-	eu91iM4uS1OcVYb0mm0pei+nbr0ZgN8=
-Date: Mon, 13 May 2024 11:25:38 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnRZnZBi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7674C113CC;
+	Mon, 13 May 2024 04:43:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715575433;
+	bh=f2hRnqnMpqjqK9xq/EnAefNcHhujuWO4M7G+A9jFyxw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KnRZnZBiCEqHPjRBiDJXkGZFxA1MD81ZDlBN5aBceUv6w5WovzbrMuIS2jq89htjC
+	 DZvnUrdk7G2/YEgAyihzMtxLbxO2wBe4jebtf15zGRufSFrUGarGmsCmyjR5gRYPME
+	 WmRNOJbVd+Blh3Uze7GhhmyHje0ZPkUbSQaNPScCJWPuJjE3MaOgJEy41c0FPEzvDp
+	 06mGN7dd4PE3VeNXfzEhVupnlVy+GmM9b4fFL9R4gPllx4Ow9SWVLzZ+xUEUhaTjfu
+	 a/8MUk4FGDPph0AjhACmoeEwnLHqd5pUqrT5a+9cVNDnBOOdUmBEXZa/TK1FlE6P64
+	 yMOMc1JBLS5lA==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e27277d2c1so51096711fa.2;
+        Sun, 12 May 2024 21:43:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWrKvMwzeclU1JkQEmRcukiTplMcVBkMVLDETqAjLMWM/WaiOZlMSXZxLRZ2pFB3aiM3w36LT8ZEfAxDif6CzeWZMCSn0/zGl2gwtCip4WsEO1E/tprx+sjGFw80f9AMz5q3UJ2VWOc93MDFuFmpgqskEO9+XfyD2u3GfP0el9sAjfCEITddhpYkjMGNRtHjA==
+X-Gm-Message-State: AOJu0Yx1ijkBwJ/QZVjAvHUUI9IBo/dodBez4JqkPa291jI+c/JjKwxd
+	jvEI/+ClxW0LANBGYygWeO/6nYRmH3UefvwzT6Fk8hz1GbRxCKd9hXqtojCSwtb8Ck3YHeA0/dc
+	lIm3Yh/+EL/9+eUKfyOp7kbo70eQ=
+X-Google-Smtp-Source: AGHT+IH+GcVG/AnLQ4PfEDzfNh+gYR0Re2MrA/t7vDkubHmAlPo1YCWxRHlsnnEHrBsYZiZlxNkPGxwJHeJT8BqoqJQ=
+X-Received: by 2002:a2e:1309:0:b0:2e6:a87e:6df9 with SMTP id
+ 38308e7fff4ca-2e6ac4bb517mr3086031fa.20.1715575432301; Sun, 12 May 2024
+ 21:43:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] eventfs: Directly return NULL to avoid null point
- dereferenced
-To: Markus Elfring <Markus.Elfring@web.de>, Hao Ge <gehao@kylinos.cn>,
- linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240511024255.34767-1-hao.ge@linux.dev>
- <34c7ffeb-1fe9-4e89-a7b6-c6a8be17df90@web.de>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Hao Ge <hao.ge@linux.dev>
-In-Reply-To: <34c7ffeb-1fe9-4e89-a7b6-c6a8be17df90@web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240511224035.27775-1-kris.van.hees@oracle.com>
+In-Reply-To: <20240511224035.27775-1-kris.van.hees@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 13 May 2024 13:43:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATwSDyAWR2FqccF5RFLpw5CYFyndR0N814nC7G7EaL2Tw@mail.gmail.com>
+Message-ID: <CAK7LNATwSDyAWR2FqccF5RFLpw5CYFyndR0N814nC7G7EaL2Tw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Generate address range data for built-in modules
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Markus
-
-
-Thanks for your review.
-
-
-在 5/13/24 01:12, Markus Elfring 写道:
->> When the condition ei->is_free holds,we return NULL directly to
->> avoid update_events_attr to use NULL point about ei.
-> * Please avoid typos in the summary phrase and the commit message.
+On Sun, May 12, 2024 at 7:42=E2=80=AFAM Kris Van Hees <kris.van.hees@oracle=
+.com> wrote:
 >
-> * Would you like to use an imperative wording for an improved change description?
->    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9-rc7#n94
+> Especially for tracing applications, it is convenient to be able to
+> refer to a symbol using a <module name, symbol name> pair and to be able
+> to translate an address into a <nodule mname, symbol name> pair.  But
+> that does not work if the module is built into the kernel because the
+> object files that comprise the built-in module implementation are simply
+> linked into the kernel image along with all other kernel object files.
 >
+> This is especially visible when providing tracing scripts for support
+> purposes, where the developer of the script targets a particular kernel
+> version, but does not have control over whether the target system has
+> a particular module as loadable module or built-in module.  When tracing
+> symbols within a module, referring them by <module name, symbol name>
+> pairs is both convenient and aids symbol lookup.  But that naming will
+> not work if the module name information is lost if the module is built
+> into the kernel on the target system.
 >
-> …
-OK, I'll study it,
->> +++ b/fs/tracefs/event_inode.c
->> @@ -346,8 +346,7 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
->>   		 * doesn't matter.
->>   		 */
->>   		if (ei->is_freed) {
->> -			ei = NULL;
->> -			break;
->> +			return NULL;
->>   		}
-> …
+> Earlier work addressing this loss of information for built-in modules
+> involved adding module name information to the kallsyms data, but that
+> required more invasive code in the kernel proper.  This work never did
+> get merged into the kernel tree.
 >
-> How do you think about to omit curly brackets here?
-You are right, I will make changes to it in future versions
+> All that is really needed is knowing whether a given address belongs to
+> a particular module (or multiple modules if they share an object file).
+> Or in other words, whether that address falls within an address range
+> that is associated with one or more modules.
 >
-> Regards,
-> Markus
+> This patch series is baaed on Luis Chamberlain's patch to generate
+> modules.builtin.objs, associating built-in modules with their object
+> files.  Using this data, vmlinux.o.map and vmlinux.map can be parsed in
+> a single pass to generate a modules.buitin.ranges file with offset range
+> information (relative to the base address of the associated section) for
+> built-in modules.  The file gets installed along with the other
+> modules.builtin.* files.
 
+
+
+I still do not want to see modules.builtin.objs.
+
+
+During the vmlinux.o.map parse, every time an object path
+is encountered, you can open the corresponding .cmd file.
+
+
+
+Let's say, you have the following in vmlinux.o.map:
+
+.text          0x00000000007d4fe0     0x46c8 drivers/i2c/i2c-core-base.o
+
+
+
+You can check drivers/i2c/.i2c-core-base.o.cmd
+
+
+$ cat drivers/i2c/.i2c-core-base.o.cmd | tr ' ' '\n' | grep KBUILD_MODFILE
+-DKBUILD_MODFILE=3D'"drivers/i2c/i2c-core"'
+
+
+Now you know this object is part of drivers/i2c/i2c-core
+(that is, its modname is "i2c-core")
+
+
+
+
+Next, you will get the following:
+
+ .text          0x00000000007dc550     0x13c4 drivers/i2c/i2c-core-acpi.o
+
+
+$ cat drivers/i2c/.i2c-core-acpi.o.cmd | tr ' ' '\n' | grep KBUILD_MODFILE
+-DKBUILD_MODFILE=3D'"drivers/i2c/i2c-core"'
+
+
+This one is also a part of drivers/i2c/i2c-core
+
+
+You will get the address range of "i2c-core" without changing Makefiles.
+
+You still need to modify scripts/Makefile.vmlinux(_o)
+but you can implement everything else in your script,
+although I did not fully understand the gawk script.
+
+
+Now, you can use Python if you like:
+
+  https://lore.kernel.org/lkml/20240512-python-version-v2-1-382870a1fa1d@li=
+naro.org/
+
+Presumably, python code will be more readable for many people.
+
+
+GNU awk is not documented in Documentation/process/changes.rst
+If you insist on using gawk, you need to add it to the doc.
+
+
+
+
+
+Having said that, I often hope to filter traced functions
+by an object path instead of a modname because modname
+filtering is only useful tristate code.
+For example, filter by "path:drivers/i2c/" or "path:drivers/i2c/i2c-core*"
+rather than "mod:i2c-core"
+
+<object path, symbol name> reference will be useful for always-builtin code=
+.
+
+
+
+
+>
+> The impact on the kernel build is minimal because everything is done
+> using a single-pass AWK script.  The generated data size is minimal as
+> well, (depending on the exact kernel configuration) usually in the range
+> of 500-700 lines, with a file size of 20-40KB.
+>
+> Changes since v1:
+>  - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
+>  - Moved the config option to the tracers section
+>  - 2nd arg to generate_builtin_ranges.awk should be vmlinux.map
+>
+> Kris Van Hees (5):
+>   trace: add CONFIG_BUILTIN_MODULE_RANGES option
+>   kbuild: generate a linker map for vmlinux.o
+>   module: script to generate offset ranges for builtin modules
+>   kbuild: generate modules.builtin.ranges when linking the kernel
+>   module: add install target for modules.builtin.ranges
+>
+> Luis Chamberlain (1):
+>   kbuild: add modules.builtin.objs
+>
+>  .gitignore                          |   2 +-
+>  Documentation/dontdiff              |   2 +-
+>  Documentation/kbuild/kbuild.rst     |   5 ++
+>  Makefile                            |   8 +-
+>  include/linux/module.h              |   4 +-
+>  kernel/trace/Kconfig                |  17 ++++
+>  scripts/Makefile.lib                |   5 +-
+>  scripts/Makefile.modinst            |  11 ++-
+>  scripts/Makefile.vmlinux            |  17 ++++
+>  scripts/Makefile.vmlinux_o          |  18 ++++-
+>  scripts/generate_builtin_ranges.awk | 149 ++++++++++++++++++++++++++++++=
+++++++
+>  11 files changed, 228 insertions(+), 10 deletions(-)
+>  create mode 100755 scripts/generate_builtin_ranges.awk
+>
+>
+> base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
+> --
+> 2.42.0
+>
+>
+
+
+--=20
 Best Regards
-
-Hao
-
+Masahiro Yamada
