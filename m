@@ -1,141 +1,91 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6182817550
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 May 2024 02:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302291C6AF;
+	Mon, 13 May 2024 03:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715569085; cv=none; b=ULvp3W0AwmJL5Dq6dKXPHfHxcC1oSlUDjvmhqIcbi6gvgSXzQkCKiATBUO61MFyLSQtrjuFmYte2qAfhDUFe0y31e4C6NzueWBNqNr4juZHSgQ0JqOkEzNC2HmUbIirG2Ecp+pePxRBd8IUxrkId6ao4cj7GTRnEMKHvzUkaG4A=
+	t=1715570772; cv=none; b=kFCFT3ecS/n/iptPFpHC+JytFGMwnUpwfiMSy1+3CCeIci/eYzLpAZM3X8CfM5a2Ze8O1d+pKtAe6ey0pP559cFqZY754uoTflXsU1dp1fJsRJJL0Fx22LQN248jN0UbXBkDlTsD7x2eU4GYEw3ZlJB7QYac+nZBCbey888HfYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715569085; c=relaxed/simple;
-	bh=5/Wrwj94XGzMh/USGtQK2NQHsvhIlya9spYECq7GesU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MOC/Q8kfqkrkyejMd4YRJ9wbXsxs9qxhpL2ZPY+ppABpeRnXz+Bfh1B/NP630VgKIJtJzykdqWE4qHg1KZzmLZnRdDRvWYd6HDF/TLe6yjfF8x9mnW2EJaPK+X2bEgkBxWKC+lGFMPhzBUOMPIgJO2uLPruOiMsJBy/kZENim4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cKQHOIMx; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715570772; c=relaxed/simple;
+	bh=WJOoQomm8SXfTN6sfPBVf9l1CpvTu8SVl1505d7YD1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sp89FVXFxqcCvTQMBrsBacYHbzMGE8g5MtQI2KDA/97fs+mtgJyo8ZXOpUsD7FWfyQYq2a1CejU/O3qu65eVHeWtlePrm3luK8HhMM7ny0B4K286yosNN8urSP7OPAcex3tNaESAj6/a9bFxcJl65JHF1jqddcI6K9DeOTP4BQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZkBxs0GF; arc=none smtp.client-ip=91.218.175.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cKQHOIMx"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f457853950so3241468b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 May 2024 19:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715569083; x=1716173883; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Y/lu5TaLovMBUI69zhtefvoAbFIExvkJe/gVrMPa9Rs=;
-        b=cKQHOIMxV78kC1JWKtcW80dRgdB66xbP0vf8dHiMTk2wRECFhIL+vO5Tq5bphu3oa5
-         fe2qdkchDkYkUTXPTMpn+DAmNH0SoCsezfwHGGg/tqTTzJC1wot+R1jQnIXmoZSIFxHX
-         ZKgx13sjqPUHQT1PV04bFxtlUQwIkvEsyIyRA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715569083; x=1716173883;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/lu5TaLovMBUI69zhtefvoAbFIExvkJe/gVrMPa9Rs=;
-        b=AxZd6gMmZVVDcRLKMP3fk97oKhTS2VDBx0U4Z+XKLN/nWYEvzN1YAUqslFtNVV/xrn
-         /FkhVBEK9tpgeb2Be/lSMm2ngkpqCRCGGnwOPM6zATRPIm2vH7T3Gn6hp2kEn/eINrZv
-         LL6qfSadjk62RMCvvvhZrMJCyChuF/SGv5M5wuMJ8jNz1/3ApPdMLXQQnFrOtboXR9oA
-         7bMpKWmPZxlNxmRo/hTeiTfWEW6YFNgkxtpawIWNVML4mtlOZP20ze+VdSDzPB+EDebo
-         r4HqnUX0XdjUfOJBefMqptEaBf93tofoUlYd4vokYocrxnnbdID2ZXUbiqzaDdq51J2O
-         S8jA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZbK1iG5R7Cpz7zxXoapHI++KarH6RlScPJITiNdLJmwyBfEinqy1gSm3UQZ8y9H2bUygXz7/2kVMyDTD/9698kIMiIVEvbarLLqLDvzAvVD57
-X-Gm-Message-State: AOJu0Yx+OfcjEoNF9JzLTDBm3yi1j6zHCWH81JAopLS7KNQ+FyD8e+CZ
-	gXjeo4Fsb2aixTolNDdZVMSVKNIs9hw7qOo9KFrY/PHyoe90Rt57BR/54VNmSSThepGINHm/a8U
-	=
-X-Google-Smtp-Source: AGHT+IEKZ/LshmwPejdGxanAmq+x/Okf3LXGs+1GNXJLM4QWlBn90rXQR1Oeyq1KkYKRq0CgAkrYow==
-X-Received: by 2002:a05:6a21:1505:b0:1ad:7e68:570c with SMTP id adf61e73a8af0-1afde07d801mr12977761637.4.1715569082704;
-        Sun, 12 May 2024 19:58:02 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b2fa86sm6335827b3a.213.2024.05.12.19.58.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 May 2024 19:58:00 -0700 (PDT)
-Date: Sun, 12 May 2024 19:57:58 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <202405121955.BC922680BA@keescook>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240424201234.3cc2b509@kernel.org>
- <202405080959.104A73A914@keescook>
- <CGME20240511095125eucas1p1e6cd077a31c94dcdda88967d4ffc9262@eucas1p1.samsung.com>
- <8d1daa64-3746-46a3-b696-127a70cdf7e7@t-8ch.de>
- <20240512193240.kholmilosdqjb52p@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZkBxs0GF"
+Message-ID: <b574c8d6-c000-8673-74de-a7cc092057ad@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715570766;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R5SPCLBdMmPm9x+0WvDC9Xwe8BqG9DYDcZU8TqCuQFw=;
+	b=ZkBxs0GF88gg721lGUEhujUhTssE2xljMxlpWlVTdoeRomLgnIgifTBddf4mc6DuyqcUDB
+	LOhi94bqMxOnb2OA5/PtUVjM/iztYySR78IR7C3rFABwA6sd+POCa+u0xajGu/A4M76c/8
+	eu91iM4uS1OcVYb0mm0pei+nbr0ZgN8=
+Date: Mon, 13 May 2024 11:25:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH] eventfs: Directly return NULL to avoid null point
+ dereferenced
+To: Markus Elfring <Markus.Elfring@web.de>, Hao Ge <gehao@kylinos.cn>,
+ linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240511024255.34767-1-hao.ge@linux.dev>
+ <34c7ffeb-1fe9-4e89-a7b6-c6a8be17df90@web.de>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Hao Ge <hao.ge@linux.dev>
+In-Reply-To: <34c7ffeb-1fe9-4e89-a7b6-c6a8be17df90@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240512193240.kholmilosdqjb52p@joelS2.panther.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, May 12, 2024 at 09:32:40PM +0200, Joel Granados wrote:
-> On Sat, May 11, 2024 at 11:51:18AM +0200, Thomas Wei�schuh wrote:
-> > Hi Kees,
-> > 
-> > On 2024-05-08 10:11:35+0000, Kees Cook wrote:
-> > > On Wed, Apr 24, 2024 at 08:12:34PM -0700, Jakub Kicinski wrote:
-> > > > On Tue, 23 Apr 2024 09:54:35 +0200 Thomas Wei�schuh wrote:
-> > > > > The series was split from my larger series sysctl-const series [0].
-> > > > > It only focusses on the proc_handlers but is an important step to be
-> > > > > able to move all static definitions of ctl_table into .rodata.
-> > > > 
-> > > > Split this per subsystem, please.
-> > > 
-> > > I've done a few painful API transitions before, and I don't think the
-> > > complexity of these changes needs a per-subsystem constification pass. I
-> > > think this series is the right approach, but that patch 11 will need
-> > > coordination with Linus. We regularly do system-wide prototype changes
-> > > like this right at the end of the merge window before -rc1 comes out.
-> > 
-> > That sounds good.
-> > 
-> > > The requirements are pretty simple: it needs to be a obvious changes
-> > > (this certainly is) and as close to 100% mechanical as possible. I think
-> > > patch 11 easily qualifies. Linus should be able to run the same Coccinelle
-> > > script and get nearly the same results, etc. And all the other changes
-> > > need to have landed. This change also has no "silent failure" conditions:
-> > > anything mismatched will immediately stand out.
-> > 
-> > Unfortunately coccinelle alone is not sufficient, as some helpers with
-> > different prototypes are called by handlers and themselves are calling
-> > handler and therefore need to change in the same commit.
-> > But if I add a diff for those on top of the coccinelle script to the
-> > changelog it should be obvious.
-> Judging by Kees' comment on "100% mechanical", it might be better just
-> having the diff and have Linus apply than rather than two step process?
-> Have not these types of PRs, so am interested in what folks think.
+Hi Markus
 
-I tried to soften it a little with my "*close* to 100%" modifier, and
-I think that patch basically matched that requirement, and where it had
-manual changes it was detailed in the commit log. I only split out the
-seccomp part because it could actually stand alone.
 
-So yeah, let's get the last of the subsystem specific stuff landed after
--rc1, and it should be possible to finish it all up for 6.11. Yay! :)
+Thanks for your review.
 
--Kees
 
--- 
-Kees Cook
+在 5/13/24 01:12, Markus Elfring 写道:
+>> When the condition ei->is_free holds,we return NULL directly to
+>> avoid update_events_attr to use NULL point about ei.
+> * Please avoid typos in the summary phrase and the commit message.
+>
+> * Would you like to use an imperative wording for an improved change description?
+>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.9-rc7#n94
+>
+>
+> …
+OK, I'll study it,
+>> +++ b/fs/tracefs/event_inode.c
+>> @@ -346,8 +346,7 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+>>   		 * doesn't matter.
+>>   		 */
+>>   		if (ei->is_freed) {
+>> -			ei = NULL;
+>> -			break;
+>> +			return NULL;
+>>   		}
+> …
+>
+> How do you think about to omit curly brackets here?
+You are right, I will make changes to it in future versions
+>
+> Regards,
+> Markus
+
+Best Regards
+
+Hao
+
