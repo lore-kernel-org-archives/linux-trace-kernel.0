@@ -1,122 +1,142 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215A336AF2
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 17:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEFD1FC4;
+	Wed, 15 May 2024 21:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715793150; cv=none; b=KmgYhP16SMWP3FT/mv+YQEjTBo+PslGgtwdNqF7FLVciKJ2FhBv8JHOZ+R5+rVWzgt07Iog3rh2+sXhvliMnp0AvTEv+07ipxo4NG5tk5QfH2kglJehlj8gBi4yeTRWopYPQPAGK24Fi5prmZrtyjRY/z7kEsiib+pmerkrUKnA=
+	t=1715808653; cv=none; b=aQtkn3YR9MyMbEJE38eP57v99tgU/o4w2fMFJ4bgt0C5YNw+Ci50y7xtS9gKdMnCmmPO5DZW2Cf8HRcDD80Rb5J48eAIgXQep9zVG59eWl1T6tjdjc5Bwz/61jahHzuyYSwcN8qKMQNZsQwvk9CCLNWAejKU5NrMwsNOa9PNtek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715793150; c=relaxed/simple;
-	bh=PFgxIB1YPLSdg2W7I438r4ndLIqIln1z0HvRj4J4qqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cl8a4+julYYUsddqelCHU8Et5ztTIQX3tW8r6leR4WowHUZHX//eDitbqEm60PMoDD7hoh7srq3h69qZ/NQY8IwuTskZrBkh8Xsm5Oce3jcXtd7OBCJ3ZRBdZQhbtQLfv/8G+YnAw4Ifw7oywgFg+IMNFC64p1huE7ExsML1J3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=os8QrypA; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1715808653; c=relaxed/simple;
+	bh=cSegm8zca06bh3VxwG/1nohgKIpy1sLC+CwU8trRmDs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nmOHF6qg6Bm7gT9w4E8fm5moIEKYJqAuIqzogToT017XjSknp9/RUjTdH//7cOSOQCzVOkkJtjRbfDb+9oCLWXdiEpBwethzY+7LvY9S4vOL9pmTueQ7ENmRzIkG1uDPr57pRelP+vyd267W6SvEEHYahDsgsU6yAHuaYvVGmRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQZGNlvo; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="os8QrypA"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-34e0d47bd98so4642408f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 10:12:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQZGNlvo"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-350513d2c6aso4245784f8f.2;
+        Wed, 15 May 2024 14:30:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715793147; x=1716397947; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aNosG3ckDHB8NLVJ2gGvIoo4Er1X+7+xgehDnbjd6jc=;
-        b=os8QrypAOGFUEvSmqTbU6IVOP6d5jIztE10CDXdEhhdN4o3ePI0BGrfiP11iJd8CIJ
-         30rpzHtxM8JoRm1AUY1gAey/bAp5dl5Cxle+qQx/KcCFx+SIaqh7meqBoLYgJk0r6M9+
-         +AgcOqPp7bQCQeZsSX9ng8QJSL/QAI0PZFEmN6ShU/R2OX/lT0cHvLv3vW1Azaym41UE
-         H+tsXezBuQLFNeCnUimjV9r2vM0cK+wiDwxo8Iu1YFnClBixIyMLbLMCiQV9qcnMHimT
-         HocFr+9vZ2fXetYL1gYpgCgTxwAyS+pNmKPWjiSj0x1ehpjWVvk6E17rd2SGOcRXb4Bp
-         +FpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715793147; x=1716397947;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1715808650; x=1716413450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aNosG3ckDHB8NLVJ2gGvIoo4Er1X+7+xgehDnbjd6jc=;
-        b=XT6bGxCJeJ6e92HzqltJ22RV+GjKNwtAXXn2Cgmc5GG2ziBQ3OCFTzw1uVKd7hw9wg
-         sa0OCYmfE5M8g+FaPwy4+OVNgDD+QWLFfbzePAS963vZ4V2cRlGRhhGdBNck4DvJ2nbt
-         267QbdYd828knjZL92hDeML6zMt/gVGI7PQbky+XB6/ZoRsNjvboQ26tBdptU/Y2J1gU
-         3QdsiOP+XyXR+aBtuCF6UeJriVvsMWNlgoyxTg0mBlxTJ6zdrrBgVYneC/s7pph7DA5E
-         858ZDa7GeyFfrsySNYhun1RLqPrJmLrsWBhsD+ynJV1XUmljSZi+ZnNDmx770m9uvYKp
-         kf6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUeOHwf2ifNe3dF1zwuV2y85Gkh0AUdaPWf2a7T5RiTSIbwWqegXmuGKnRxJzDK5hZps/911wcf4Cn2ZqBp7TackeVUBHJXqln/b4hLpYrk/bVA
-X-Gm-Message-State: AOJu0YyVZRXQryR9QPbdvXGjw1s/T+67echOKjR9Ena+2QmCDn86ZF8m
-	2/eJm7cfzZEHsJCxEe8U45FuSJ63in1pYwd+t5FUCBNwRe90UO8eWNRnNhFzSic=
-X-Google-Smtp-Source: AGHT+IFLKOGooEzh5kgxSU0G+WqjP7c8Us/ACZAVQOeBbdHE4Nu/p8dE0Q5EYbLnc34bRxIqp6xGpA==
-X-Received: by 2002:a05:6000:930:b0:351:d383:6325 with SMTP id ffacd0b85a97d-351d38363cfmr598051f8f.12.1715793147224;
-        Wed, 15 May 2024 10:12:27 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a780fsm16840240f8f.59.2024.05.15.10.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 10:12:26 -0700 (PDT)
-Date: Wed, 15 May 2024 18:12:24 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Phil Auld <pauld@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
-Message-ID: <20240515171224.wbjlke6uavhig2dl@airbuntu>
-References: <20240514234112.792989-1-qyousef@layalina.io>
- <20240514235851.GA6845@lorien.usersys.redhat.com>
- <20240515083238.GA40213@noisy.programming.kicks-ass.net>
- <20240515112050.GA25724@lorien.usersys.redhat.com>
- <20240515120613.m6ajyxyyxhat7eb5@airbuntu>
- <20240515125049.GA29065@lorien.usersys.redhat.com>
+        bh=V/Y5GE40yPs/wmhH+w0R59Hsxc6Sy/7klwSUObGVbGA=;
+        b=YQZGNlvo/rqPfMziRaeIyqEpHjwsXni8BJYvRzkPBDqEzG4on+0pa2PsUiQp1V136F
+         TpHWKTATmbF0bBRKAR/EHndSkJ/WNnMTrY1AdlGRGYju2qikej67c01yrDb6rR8ekdQc
+         Ks1H2sQVHkXuNN4ItoFNrN61rgjgIcmJWhDLg4TsuU4+bNCGcQJCZuVRduGyZ8uiNdg3
+         pm3CDyaNwTmLy0IQ7rh+E405OtTDQaL1ZDUDgBGgXlO0MsDMKdjZhCDWbxM1bVei3js8
+         4UhQVWzEfr2Q+IZJX8zLyVf3azniENoHDWdUev4mVknSZtJEz5RaYiQZfPr2YaQz0frD
+         tyyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715808650; x=1716413450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V/Y5GE40yPs/wmhH+w0R59Hsxc6Sy/7klwSUObGVbGA=;
+        b=vnDoEVBCkthFGW5eXspcUvNHtJEoeE+32QMsUcJwl+FN/FkPZrHmmMAUK5BrE0YB9A
+         18+zdoRW442NVZ3jk6ds/461va9r8+Z4jBOwgWhKfRd6P3MiMuxOIgPEuc3ZOjWqlCpJ
+         17Wz2jDJSlRx2GHqjoeoHhJ+T9ndPme7UPz72Y1hqO2TK9aV2jpwv7MZfSle+c+Xa6n1
+         UHuBSEn1580XfEAIOIGSEk2QmctFALKbiK505l81znKtRu+j8lXX7vZrHTVENAOZa4Fn
+         sBtwhsa629M7LuxzkTiYvR10Rghk7aysaG81cHKIdjf6bboR5FSSvskjOppISU2wAIne
+         Q/Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCWv6IbD5rdY9MHilHF5D82mTvdrLKmWmjEV63bu54SDvKH13w6gV/Rypx6x61VtwnVlKG9K3ejrZW23bnXSmrW70sn6gVcAiYcANOMl
+X-Gm-Message-State: AOJu0YwB7zuxIUjBz7VOQMxIjH5J2gjA9Qtg9V4BTZQJYKybKdwcJo41
+	RApPS2yhIjQZvoSuAo+d4g/rojGIeIxmyZ9z8Tt7LQznaVm5re/JMON3KyK3TdvtptKUta2p88B
+	m7pFUUBaFGLtJ+2Ir+hpkLRjqVXLf8w==
+X-Google-Smtp-Source: AGHT+IE8VtGau0essx9ToUKZqi4zv6/Id5h0ygVvU2ANrazUnqgPIA5Kx9EcBwhH80J1JyJdj6WPRfZ43FoHRn9fPMU=
+X-Received: by 2002:adf:e851:0:b0:34d:9fc2:4a81 with SMTP id
+ ffacd0b85a97d-3504a61c5c6mr11922947f8f.5.1715808649395; Wed, 15 May 2024
+ 14:30:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240515125049.GA29065@lorien.usersys.redhat.com>
+References: <da22ddaf-384f-4a38-8338-decbfdb929fc.bugreport@ubisectech.com>
+In-Reply-To: <da22ddaf-384f-4a38-8338-decbfdb929fc.bugreport@ubisectech.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 15 May 2024 14:30:37 -0700
+Message-ID: <CAADnVQJndMkNh4X-w0520B8PVN122h8XKQxE4g4LmDTKyWd=0Q@mail.gmail.com>
+Subject: Re: WARNING: kmalloc bug in bpf_uprobe_multi_link_attach
+To: Ubisectech Sirius <bugreport@ubisectech.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, ast <ast@kernel.org>, 
+	daniel <daniel@iogearbox.net>, andrii <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/15/24 08:50, Phil Auld wrote:
+On Tue, May 14, 2024 at 12:33=E2=80=AFAM Ubisectech Sirius
+<bugreport@ubisectech.com> wrote:
+>
+> Hello.
+> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec.=
+ Recently, our team has discovered a issue in Linux kernel 6.7.  Attached t=
+o the email were a PoC file of the issue.
 
-> > > My point was just to call it rt_task() still. 
-> > 
-> > It is called rt_task() still. I just added a new realtime_task() to return true
-> > for RT and DL. rt_task() will return true only for RT now.
-> > 
-> > How do you see this should be done instead? I'm not seeing the problem.
-> >
-> 
-> Right, sorry. I misread your commit message completely and then all the
-> places where you changed rt_task() to realtime_task() fit my misreading.
-> 
-> rt_task() means rt class and realtime_task does what rt_task() used to do.
-> That's how I would do it, too :)
+Jiri,
 
-Ah, I see. I updated the commit message to hopefully read better :)
+please take a look.
 
-"""
-    I define the usage of rt_task() to be tasks that belong to RT class.
-    Make sure that it returns true only for RT class and audit the users and
-    replace the ones required the old behavior with the new realtime_task()
-    which returns true for RT and DL classes. Introduce similar
-    realtime_prio() to create similar distinction to rt_prio() and update
-    the users that required the old behavior to use the new function.
-"""
-
-> Reviewed-by: Phil Auld <pauld@redhat.com>
-
-Thanks for having a look!
-
-Cheers
-
---
-Qais Yousef
+> Stack dump:
+>
+> loop3: detected capacity change from 0 to 8
+> MTD: Attempt to mount non-MTD device "/dev/loop3"
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 10075 at mm/util.c:632 kvmalloc_node+0x199/0x1b0 mm/=
+util.c:632
+> Modules linked in:
+> CPU: 1 PID: 10075 Comm: syz-executor.3 Not tainted 6.7.0 #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/0=
+1/2014
+> RIP: 0010:kvmalloc_node+0x199/0x1b0 mm/util.c:632
+> Code: 02 1d 00 eb aa e8 a7 49 c6 ff 41 81 e5 00 20 00 00 31 ff 44 89 ee e=
+8 36 45 c6 ff 45 85 ed 0f 85 1b ff ff ff e8 88 49 c6 ff 90 <0f> 0b 90 e9 dd=
+ fe ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
+> RSP: 0018:ffffc90002007b60 EFLAGS: 00010212
+> RAX: 00000000000023e4 RBX: 0000000000000400 RCX: ffffc90003aaa000
+> RDX: 0000000000040000 RSI: ffffffff81c3acc8 RDI: 0000000000000005
+> RBP: 00000037ffffcec8 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 00000000ffffffff R15: ffff88805ff6e1b8
+> FS:  00007fc62205f640(0000) GS:ffff88807ec00000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2e026000 CR3: 000000005f338000 CR4: 0000000000750ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  kvmalloc include/linux/slab.h:738 [inline]
+>  kvmalloc_array include/linux/slab.h:756 [inline]
+>  kvcalloc include/linux/slab.h:761 [inline]
+>  bpf_uprobe_multi_link_attach+0x3fe/0xf60 kernel/trace/bpf_trace.c:3239
+>  link_create kernel/bpf/syscall.c:5012 [inline]
+>  __sys_bpf+0x2e85/0x4e00 kernel/bpf/syscall.c:5453
+>  __do_sys_bpf kernel/bpf/syscall.c:5487 [inline]
+>  __se_sys_bpf kernel/bpf/syscall.c:5485 [inline]
+>  __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5485
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0x43/0x120 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+> RIP: 0033:0x7fc62128fd6d
+> Code: c3 e8 97 2b 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fc62205f028 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> RAX: ffffffffffffffda RBX: 00007fc6213cbf80 RCX: 00007fc62128fd6d
+> RDX: 0000000000000040 RSI: 00000000200001c0 RDI: 000000000000001c
+> RBP: 00007fc6212f14cd R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 000000000000000b R14: 00007fc6213cbf80 R15: 00007fc62203f000
+>  </TASK>
+>
+> Thank you for taking the time to read this email and we look forward to w=
+orking with you further.
+>
+>
+>
