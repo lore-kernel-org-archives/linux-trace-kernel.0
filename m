@@ -1,65 +1,82 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37816EB5B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 11:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829447318A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 11:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715772061; cv=none; b=uKQPfLkYV17ycP9v7v/3nCHYcdsIQyF1gSUkXn+zG9VTthAu6Fvn6xA2dk/VC+qjp4Opv0U8GxRciB5c2ZOxq0u02B8d7jtli9vCRsjEgKJahsBUwx2SNoc1IFNIBHKW5k9Chzl3zCfEu/9j7ll7HVg3/gRVOlghsEP7S97MAPc=
+	t=1715772066; cv=none; b=EQhO7Uciaf7soaEEa2YEMHRSImpAxDqFi9/5kZSr5z6txkxeGjmkS4WGXUoH4SHL/vrhPKBgt5jCfaxajBy5EEu78PyPKpjtuiJlpLo+T54oumy6tfEx07WVoNvEoHvVCTghuwchcgPjo68j0abTYZo/a5LOXzkSb2E4xyJ6hsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715772061; c=relaxed/simple;
-	bh=zr1CnaLoqVSMzk7K+1heCWhXCxQ9Rz2pG86DBXmZlGo=;
+	s=arc-20240116; t=1715772066; c=relaxed/simple;
+	bh=M/ZccXoJRnPbA6meUj/MmsF/JxN6cGeMpuCaH9Cj9bw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhGUnt4OQjczhBq7h2xu+j/Sdjxo3wD1/6RjIXKA+pBKo1YJhweMluHbASIyQiwMcy5gXaSSqHaSrEaUXGoC5hSm1WNJ6Ed6PZTKLuJMhE1IfoUIt5jiqrZy4U+wf+xjKC/VYh33mn93knHE8V46AHXIr1D+eK4g7FRMzUSTvlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z2+/BI29; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=hZOikT2hARFapupoO6v//nVXg2mCTYW9bsXnfCWCavddHYZo17XKGtJUyPGFMx7i9kfeWB23lTDbYyMuCN2ylvdHZ0PifvUz5/QudoexJ9HSDsNP395niKWSUGmEU8SmIKoBm07EL6qvBlfQ0EwoIvEjLLtazG3OmNAQ80S2v9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aOoIBYMm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2+/BI29"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aOoIBYMm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715772058;
+	s=mimecast20190719; t=1715772063;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Xb1sVzNBfC6f+qv5BV5/1LiBTZinzT2pJiB886gVfWo=;
-	b=Z2+/BI29EcE08sDWf/yOwLwa1uA3mJ0uy4w7B9Dtp9XLUq3xzXQgtOXRzyOqRbA+uW+2sc
-	lMjrBD9HYBIHI9PfX/1BOV/rTnDQGqJjRpV1GntQRVq8gKeaVnVrsxGoutghqOsiq8CoPr
-	YM4S3gl0PyDGyn5WRemyvOIGqzVqI0M=
+	bh=h5bDd9jfqFy8/uy57c7rT9ALmyU6BJ6GsFfTS9tK9yg=;
+	b=aOoIBYMm+SDZSvyysfyvAciAmnM64qY7xW44Dlr73Mw2/AMi2KRDFzl3n5wH7FmwRHADXT
+	o7jIWJ835zLlD5060lZqLRNj+oOFP0XthUTagYaYeHEdogTxAgiLy/+8qPDh8HKB5tO+2R
+	R+VWqmNLSU46dmi6j/5tJfON0EW9j0g=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-157-vuSAg_TpPFmNlYbMwCy-Yg-1; Wed, 15 May 2024 07:20:55 -0400
-X-MC-Unique: vuSAg_TpPFmNlYbMwCy-Yg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-257-WhGl7FHGPIyWXZjzT2JL7g-1; Wed, 15 May 2024 07:20:54 -0400
+X-MC-Unique: WhGl7FHGPIyWXZjzT2JL7g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C9E7801211;
-	Wed, 15 May 2024 11:20:54 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (unknown [10.22.8.193])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D8193C27;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 415FA8058D7;
 	Wed, 15 May 2024 11:20:52 +0000 (UTC)
-Date: Wed, 15 May 2024 07:20:50 -0400
-From: Phil Auld <pauld@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
-Message-ID: <20240515112050.GA25724@lorien.usersys.redhat.com>
-References: <20240514234112.792989-1-qyousef@layalina.io>
- <20240514235851.GA6845@lorien.usersys.redhat.com>
- <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.36])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 26913200A08E;
+	Wed, 15 May 2024 11:20:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 15 May 2024 13:19:26 +0200 (CEST)
+Date: Wed, 15 May 2024 13:19:20 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"olsajiri@gmail.com" <olsajiri@gmail.com>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"yhs@fb.com" <yhs@fb.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
+Message-ID: <20240515111919.GA6821@redhat.com>
+References: <20240507105321.71524-7-jolsa@kernel.org>
+ <a08a955c74682e9dc6eb6d49b91c6968c9b62f75.camel@intel.com>
+ <ZjyJsl_u_FmYHrki@krava>
+ <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
+ <Zj_enIB_J6pGJ6Nu@krava>
+ <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
+ <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
+ <ZkKE3qT1X_Jirb92@krava>
+ <3e15152888d543d2ee4e5a1d75298c80aa946659.camel@intel.com>
+ <ZkQTgQ3aKU4MAjPu@debug.ba.rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,56 +85,56 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240515083238.GA40213@noisy.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+In-Reply-To: <ZkQTgQ3aKU4MAjPu@debug.ba.rivosinc.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On Wed, May 15, 2024 at 10:32:38AM +0200 Peter Zijlstra wrote:
-> On Tue, May 14, 2024 at 07:58:51PM -0400, Phil Auld wrote:
-> > 
-> > Hi Qais,
-> > 
-> > On Wed, May 15, 2024 at 12:41:12AM +0100 Qais Yousef wrote:
-> > > rt_task() checks if a task has RT priority. But depends on your
-> > > dictionary, this could mean it belongs to RT class, or is a 'realtime'
-> > > task, which includes RT and DL classes.
-> > > 
-> > > Since this has caused some confusion already on discussion [1], it
-> > > seemed a clean up is due.
-> > > 
-> > > I define the usage of rt_task() to be tasks that belong to RT class.
-> > > Make sure that it returns true only for RT class and audit the users and
-> > > replace them with the new realtime_task() which returns true for RT and
-> > > DL classes - the old behavior. Introduce similar realtime_prio() to
-> > > create similar distinction to rt_prio() and update the users.
-> > 
-> > I think making the difference clear is good. However, I think rt_task() is
-> > a better name. We have dl_task() still.  And rt tasks are things managed
-> > by rt.c, basically. Not realtime.c :)  I know that doesn't work for deadline.c
-> > and dl_ but this change would be the reverse of that pattern.
-> 
-> It's going to be a mess either way around, but I think rt_task() and
-> dl_task() being distinct is more sensible than the current overlap.
+Sorry for the late reply, I was on PTO.
+
+On 05/14, Deepak Gupta wrote:
 >
+> Question,
+>
+> Is it kernel who is maintaining all return probes, meaning original return addresses
+> are saved in kernel data structures on per task basis.
 
-Yes, indeed.
+Yes. task_struct->utask->return_instances
 
-My point was just to call it rt_task() still. 
+See prepare_uretprobe() which inserts the new return_instance with
+->orig_ret_vaddr = original return addresses
+when the tracee enters the ret-probed function.
+
+> Once uretprobe did its job then
+> its kernel who is ensuring return to original return address ?
+
+Yes. See instruction_pointer_set(regs, ri->orig_ret_vaddr) in
+handle_trampoline().
 
 
-Cheers,
-Phil
 
-> > > Move MAX_DL_PRIO to prio.h so it can be used in the new definitions.
-> > > 
-> > > Document the functions to make it more obvious what is the difference
-> > > between them. PI-boosted tasks is a factor that must be taken into
-> > > account when choosing which function to use.
-> > > 
-> > > Rename task_is_realtime() to task_has_realtime_policy() as the old name
-> > > is confusing against the new realtime_task().
-> 
-> realtime_task_policy() perhaps?
-> 
+I know absolutely nothing about the shadow stacks, trying to read
+Documentation/arch/x86/shstk.rst but it doesn't tell me too much...
+Where can I find more documentation? I didn't try to google yet.
 
--- 
+	Upon function return, the processor pops the shadow stack copy
+	and compares it to the normal stack copy. If the two differ, the
+	processor raises a control-protection fault.
+
+grep-grep-grep... exc_control_protection I guess.
+
+Let me ask a couple of really stupid questions. What if the shadow stack
+is "shorter" than the normal stack? I mean,
+
+	enable_shstk()
+	{
+		prctl(ARCH_SHSTK_SHSTK);
+	}
+
+what happens when enable_shstk() returns?
+
+
+And what is the purpose of fpregs_lock_and_load() ? Why do we need to
+fpregs_restore_userregs() in shstk_setup() and other places?
+
+Oleg.
 
