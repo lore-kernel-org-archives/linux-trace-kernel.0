@@ -1,27 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B3C38FA3;
-	Wed, 15 May 2024 05:06:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4013A1B0;
+	Wed, 15 May 2024 05:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715749561; cv=none; b=C6XafUAb2O8DYMHJrFGQb7iEKEcDmWl3EMnWoxSD7ugVjQUaukWqAwYZJWzQ5lPrLAIu2K/FLblSxUko3H6WgZrjUhvVmsj0zTCUAun1Lbod99OYO9Pnl6LbRDW+l+Cxf5WTIvVPv6haZfurB5xNbiidT4pNnDsKM5m4kQZBbG0=
+	t=1715751388; cv=none; b=LY4fQZoJIIlUVDi/apEmEwo9ecQuOwh943GzTjdpXI0KXzRzQqlIaAuY2wcGnnhEwwR3psJAYsdXs3NsUJTFNeB3Ewh4UNwt7AKS/Gu9lKmpZBBnrOMLKd1oSBlS9diWgjnjBLN4UfPv+sZQRSV07emm2BssSugQyAoYzMs1Awc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715749561; c=relaxed/simple;
-	bh=OzHSy/KSpuIOanBUBmL7ptmwmGssfiNVRIQKnLPo09Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=T2RhoN/f1L+UXndsyRGBqRhshjWudqwDxRybQ+/T5Rz9qnKmZ/0lhHnVp7A9V7GKepUXMRmjhNQDi7vVogAiGXa7DPj0uOb4ItuE0D9k5nC4lZ/gxaXtVusr3hLIJnU0tapPE4tGjqyGIlW2bRka5YmTg0t51FCyngiHb0ZrLEI=
+	s=arc-20240116; t=1715751388; c=relaxed/simple;
+	bh=c94//jp1PE5EDDwmY7Ielx198lHnxvyElpsaJQ+yI+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YAesdkDnf+LudqI901xPrHeTZVtCtg2AMjPl6TTlvuddbauFmRifTW4EILN5EMqX9CiqBX2TMG6T+t29pdbAMKMtttosxrVEsyLV1MMKdFHFpxm2SZmsz3TiU2Wx8IvrYZsbOe9t+y3KQcwuZsV9WZTa076V8VtpTr2qbA5nixA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492ABC116B1;
-	Wed, 15 May 2024 05:06:00 +0000 (UTC)
-Date: Wed, 15 May 2024 01:05:58 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B008C116B1;
+	Wed, 15 May 2024 05:36:27 +0000 (UTC)
+Date: Wed, 15 May 2024 01:36:20 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] ring-buffer: Add cast to unsigned long addr passed to
- virt_to_page()
-Message-ID: <20240515010558.4abaefdd@rorschach.local.home>
+ <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Shuah
+ Khan <shuahkhan@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Fix test to handle both old and new
+ kernels
+Message-ID: <20240515013620.098cb37a@rorschach.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,31 +36,40 @@ Content-Transfer-Encoding: 7bit
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The sub-buffer pages are held in an unsigned long array, and when it is
-passed to virt_to_page() a cast is needed.
+The function "scheduler_tick" was renamed to "sched_tick" and a selftest
+that used that function for testing function trace filtering used that
+function as part of the test.
 
-Link: https://lore.kernel.org/all/20240515124808.06279d04@canb.auug.org.au/
+But the change causes it to fail when run on older kernels. As tests
+should not fail on older kernels, add a check to see which name is
+available before testing.
 
-Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 86dd6c04ef9f2 ("sched/balancing: Rename scheduler_tick() => sched_tick()")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ftrace/test.d/ftrace/func_set_ftrace_file.tc         | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index a02c7a52a0f5..7345a8b625fb 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6283,7 +6283,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	}
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc
+index 073a748b9380..263f6b798c85 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc
+@@ -19,7 +19,14 @@ fail() { # mesg
  
- 	while (p < nr_pages) {
--		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-+		struct page *page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
- 		int off = 0;
+ FILTER=set_ftrace_filter
+ FUNC1="schedule"
+-FUNC2="sched_tick"
++if grep '^sched_tick\b' available_filter_functions; then
++    FUNC2="sched_tick"
++elif grep '^scheduler_tick\b' available_filter_functions; then
++    FUNC2="scheduler_tick"
++else
++    exit_unresolved
++fi
++
  
- 		if (WARN_ON_ONCE(s >= nr_subbufs)) {
+ ALL_FUNCS="#### all functions enabled ####"
+ 
 -- 
 2.43.0
 
