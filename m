@@ -1,60 +1,48 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC94A364AE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 10:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37816EB5B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 11:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715769084; cv=none; b=ReM16PDAzvFZb/RdcHQG1G9UMaXi47qikZHmE99aDHMTlH4ZKLGUHLVRz+gCexQ6qKzh89HrtJmz7dh2GmjC5ojsy4BVp5foJvGo0XzxsPd7JYesPpe8H0N4p6nLIpbbcTz6gGWJH1qpcQIUW0ltA4tr1bw6Yk+NazZQ2gNyZPU=
+	t=1715772061; cv=none; b=uKQPfLkYV17ycP9v7v/3nCHYcdsIQyF1gSUkXn+zG9VTthAu6Fvn6xA2dk/VC+qjp4Opv0U8GxRciB5c2ZOxq0u02B8d7jtli9vCRsjEgKJahsBUwx2SNoc1IFNIBHKW5k9Chzl3zCfEu/9j7ll7HVg3/gRVOlghsEP7S97MAPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715769084; c=relaxed/simple;
-	bh=ZFdFfOpGktquqXyWz6tLLfSfinPgS2/HBD5fwMfexpU=;
+	s=arc-20240116; t=1715772061; c=relaxed/simple;
+	bh=zr1CnaLoqVSMzk7K+1heCWhXCxQ9Rz2pG86DBXmZlGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVhfmkG4+NmUcaAC1zJsfNaFsxvNepgpxf1+PSyBKHuvT9JcpPBszqnszDaI1zNiy9KgWn2fFAwTPkHXljI3GjvW44EZQPuoNphzISOCz3PwegyrTMBPXlzbNpl5lz1tjVXxJOSAFl7rEh2WHIfR3ACXTwq4+g/TogzLwsze8A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=PrYT6QxD; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	 Content-Type:Content-Disposition:In-Reply-To; b=lhGUnt4OQjczhBq7h2xu+j/Sdjxo3wD1/6RjIXKA+pBKo1YJhweMluHbASIyQiwMcy5gXaSSqHaSrEaUXGoC5hSm1WNJ6Ed6PZTKLuJMhE1IfoUIt5jiqrZy4U+wf+xjKC/VYh33mn93knHE8V46AHXIr1D+eK4g7FRMzUSTvlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z2+/BI29; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="PrYT6QxD"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41fd5dc03easo41180255e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 03:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715769081; x=1716373881; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZG5zBn5o6j3jWJFkBRDbSpLzfISGJr4t+twnkK5Jmvo=;
-        b=PrYT6QxDeJFMOwrOXbfz850MqMTQFlMFpDCYyMtNBDP1Q3Nn+wKWJUPclfNSLApAqr
-         BfR9w6Dh8A4F+vK2BlYk3CU3ohcJeReYnmzegTRCufeWRDKgaM3XSPJ2syZhSAkezfb3
-         P5CoS1H3yq3zOD6Rp/wkWUHnaaVt/lskOq8xa+ongFFK0Ki6WQGpDJv5/vHL48ogId/f
-         SmGrT/alXYOEwEeDoPwKjNvoVtBGHSbfdZgSfZvPbmj7cRA4q4abwoiVMWDxabQWg14+
-         GtoVqsEv0dBA8x0OH6Gj0joZrtqvr/xG+CDwpcBAaRPtEmRVxnlwvJS9cxvEOKkvncc0
-         XwUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715769081; x=1716373881;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZG5zBn5o6j3jWJFkBRDbSpLzfISGJr4t+twnkK5Jmvo=;
-        b=ocxlZlx2xpSvYiz0MrRn3bxUEoSpxpNxbPsrJFnGJYObEP/eIuVFqyGQ0IcFbVswP6
-         q8XRAxcuTkxlZJ99W9QDnDNX6Osv09wEoNBFpcVL1yCFy50NOaqWAPXFeso+U3lX7rGd
-         Edbr/KumJiojdxSMAZrC4zV/p7e/l1xU3JA7Bm/H69altFyuvE96Y3nPP87nyKBQDWqs
-         IqpJSOtCEJIAIoBsYADIoSJJxu+mPCQF2tRn/rFP7Bav5+57T1HW3GUFEQYUQcAh8dfX
-         GXHLkWJUeHtEX/D/++fv7ySdfg0MvnsUxO5L/wG8oOJcbkJYZqctvKYa2vbggTfw8rLc
-         f+Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVq7q08QrIuBc5Ep5bTbH+ofxiLJbZv2/s35+oHGJHOy3yIFr+xbgwt1xbVlRKgrb4RiHGIHYfytpA2lxYk3QCJ2XlUEvBJVtUfKWM1oy9l6+rq
-X-Gm-Message-State: AOJu0Yzmwhro/EvgAt4JKePi/S8uh0PzY72PKxLNTobr9pK7RTxcWXNw
-	1oI9sQfKsNfGhynUZfkNpxIAiaXF4VUvLOyZIcZcgv5kh+8FizrqHLHb4A9EneI=
-X-Google-Smtp-Source: AGHT+IHbRa4f6a0OPIXc+X3mZ/XaiasEuZZegiJVELTp+PTvnfGjOfFYQYTXxfiYT/De51423cv9fw==
-X-Received: by 2002:a05:600c:310d:b0:416:605b:5868 with SMTP id 5b1f17b1804b1-41fead696bbmr107457525e9.35.1715769081002;
-        Wed, 15 May 2024 03:31:21 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8f74sm229578795e9.8.2024.05.15.03.31.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 03:31:20 -0700 (PDT)
-Date: Wed, 15 May 2024 11:31:18 +0100
-From: Qais Yousef <qyousef@layalina.io>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2+/BI29"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715772058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xb1sVzNBfC6f+qv5BV5/1LiBTZinzT2pJiB886gVfWo=;
+	b=Z2+/BI29EcE08sDWf/yOwLwa1uA3mJ0uy4w7B9Dtp9XLUq3xzXQgtOXRzyOqRbA+uW+2sc
+	lMjrBD9HYBIHI9PfX/1BOV/rTnDQGqJjRpV1GntQRVq8gKeaVnVrsxGoutghqOsiq8CoPr
+	YM4S3gl0PyDGyn5WRemyvOIGqzVqI0M=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-vuSAg_TpPFmNlYbMwCy-Yg-1; Wed, 15 May 2024 07:20:55 -0400
+X-MC-Unique: vuSAg_TpPFmNlYbMwCy-Yg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C9E7801211;
+	Wed, 15 May 2024 11:20:54 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (unknown [10.22.8.193])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D8193C27;
+	Wed, 15 May 2024 11:20:52 +0000 (UTC)
+Date: Wed, 15 May 2024 07:20:50 -0400
+From: Phil Auld <pauld@redhat.com>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
@@ -68,7 +56,7 @@ Cc: Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
 	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	linux-mm@kvack.org
 Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
-Message-ID: <20240515103118.qc76v55x4ylqhd52@airbuntu>
+Message-ID: <20240515112050.GA25724@lorien.usersys.redhat.com>
 References: <20240514234112.792989-1-qyousef@layalina.io>
  <20240514235851.GA6845@lorien.usersys.redhat.com>
  <20240515083238.GA40213@noisy.programming.kicks-ass.net>
@@ -78,11 +66,12 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On 05/15/24 10:32, Peter Zijlstra wrote:
+On Wed, May 15, 2024 at 10:32:38AM +0200 Peter Zijlstra wrote:
 > On Tue, May 14, 2024 at 07:58:51PM -0400, Phil Auld wrote:
 > > 
 > > Hi Qais,
@@ -108,15 +97,16 @@ On 05/15/24 10:32, Peter Zijlstra wrote:
 > 
 > It's going to be a mess either way around, but I think rt_task() and
 > dl_task() being distinct is more sensible than the current overlap.
+>
 
-Judging by some of the users I've seen, I think there were some users not
-expecting they're not distinct as they were checking for !dl_task() &&
-!rt_task() which I replaced with !realtime_task(). Similar users checking for
-dl_prio() and rt_prio() in places, and others using rt_prio() to encompass
-dl_prio(). There were BUG_ON(!rt_task())/WARN_ON(!rt_prio()) in rt.c which
-I don't think it in intended to encompass dl there.
+Yes, indeed.
 
-> 
+My point was just to call it rt_task() still. 
+
+
+Cheers,
+Phil
+
 > > > Move MAX_DL_PRIO to prio.h so it can be used in the new definitions.
 > > > 
 > > > Document the functions to make it more obvious what is the difference
@@ -127,7 +117,7 @@ I don't think it in intended to encompass dl there.
 > > > is confusing against the new realtime_task().
 > 
 > realtime_task_policy() perhaps?
+> 
 
-Better yes. Updated.
+-- 
 
-Thanks!
