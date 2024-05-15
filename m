@@ -1,119 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FAA5D738
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 11:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9A56EB4D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 12:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715773024; cv=none; b=bsUa6e+OOXjS5QN16IFhWB/+9s8HiXamKqNaltZTOOAIeTniAjO1jRqnQU26SmqbZxBHp80E3hFUP4SU2mkCKY314owL0L0EFYo8S3LPplT6nczF62JCQ2Uw7HpNq2G9Y60QVEuOqOTy5vPktEt3TBehdYNtGaF8EY467je4eWM=
+	t=1715774778; cv=none; b=noY/j5080ES9bq1Au7FMa/QkV6Jza//li94/5nGA5OShiJc5Aj7BUcsTvcycprPwy14cBUJNr3F1ki4iyghazBqldi/gu2ZEWJQvD0Z5MjCfewKXpnJ1gOd7u4DsoZe6cl7eWChrIbFfqCxQv2EHYEnEcCKGnLyrU+yHQirrnqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715773024; c=relaxed/simple;
-	bh=5b0coiq2Qij7YycX921gmUQ28b31nkq/g83M03VOqAE=;
+	s=arc-20240116; t=1715774778; c=relaxed/simple;
+	bh=Wf4PtMcK4TWbBm/o2EnpN3Y26qLxkxka0G6bwrOg3aA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLKBuZuU0CGGxwb159BbsTHA1bCLdgXTxX/nOvnuqSV4aY1PGLzgZHYO3i5EAfYpSzQR7gwf+06LjYW/z7aQa8b7kyTZ+ISfrjPLy3r+fELmTZYVbYoQH3ljMU3dLOqI3rxlhsJiV5bU8TTKRExRxYtDbBKdDKefh2iDiIcSRIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VcGwL60O; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YKH0e/q7YZ6Nsg9WBprWzP51xOGDdeDbFReD4hdKqUt/UjaKGSXxXZcdebg0syq6XXMRWhe0ieYSIBZWHbZuPdXvxLatlaaY6yPkq2XfSQlw6ykMgMQ12sbSdRPpDHHJZLIyGBzo0E0PgesQ7lSsMPVzZ4WC79CKvKieFqFX8Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=u6H+7BQb; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcGwL60O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715773021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o+uVyj8qUsbsfq+6bn2kM6u9Mh7k22x+zAgMrxxsnbY=;
-	b=VcGwL60OPfPpaFhEFrbqWYQyvtiVAB77sKr0ql2bRN3JdRtUuQeCzHcD+rNmptjo8c2OJK
-	oFiQ7Q2bmzGTgYsT4lj9Tq1lverLK3/yg1wvn2gh2acwsbCKrlV1d4RO+mRrTZDVg6Wj21
-	ZNyZOiMW5cApX9C3Ff/LYR+JZDyXUPs=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-367-4OmFr6i4P9O6WgqBKHOTwQ-1; Wed,
- 15 May 2024 07:36:58 -0400
-X-MC-Unique: 4OmFr6i4P9O6WgqBKHOTwQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5FA151C0512F;
-	Wed, 15 May 2024 11:36:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.39])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 89945200A08E;
-	Wed, 15 May 2024 11:36:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 15 May 2024 13:35:31 +0200 (CEST)
-Date: Wed, 15 May 2024 13:35:25 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"songliubraving@fb.com" <songliubraving@fb.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"andrii@kernel.org" <andrii@kernel.org>,
-	"debug@rivosinc.com" <debug@rivosinc.com>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"yhs@fb.com" <yhs@fb.com>,
-	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
-Message-ID: <20240515113525.GB6821@redhat.com>
-References: <20240507105321.71524-1-jolsa@kernel.org>
- <20240507105321.71524-7-jolsa@kernel.org>
- <a08a955c74682e9dc6eb6d49b91c6968c9b62f75.camel@intel.com>
- <ZjyJsl_u_FmYHrki@krava>
- <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
- <Zj_enIB_J6pGJ6Nu@krava>
- <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
- <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
- <ZkKE3qT1X_Jirb92@krava>
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="u6H+7BQb"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-420180b5897so22598015e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 May 2024 05:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715774775; x=1716379575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rJYF6H91YS9YSoXm+Tl9JERoBMf7eBC9ZSy+O3IfVoo=;
+        b=u6H+7BQb9llJ+GoUyqhx9nL12eq1QZTpEYwVKf4L6Kk8pxybMMa6wGPamt1Bg1ep4d
+         C/lsdKjdJeZdXwMLWp5fxgO6nHcC9zVgGTXn9zymZ6xqiiOGQW4rrxGI9jgMEd1nbgYA
+         3zZ5OzYV1RLUm4QAEl4pAqnDflIDLagY3fotksWvN5G5S8JQRnwavg71k78sQdNQSyGG
+         eNyDwXYPYfDTTtrAth6G5gdKHPHtbfOX2QJbdr59n1S9no5Kz15fhFmCr3jnxK5+YEqu
+         ve6MqQrYhJPoB6C1CRuR5F1dkin6pAE07+u2g+nP8Yhoa3ZGe855d6flwjmZT/e1NoCt
+         ZGUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715774775; x=1716379575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rJYF6H91YS9YSoXm+Tl9JERoBMf7eBC9ZSy+O3IfVoo=;
+        b=ErI5ogo74gO0F6/oKz/3jXlw+odl7mGboloOdN4yVbIB0Bf7VDgg0JG14X+derZx/b
+         jeYSMyZ3u1V2KRxq8IN583won9HyZEQV3kbDCZSAQwGN0vUWxG5AQoAelOg3os3Rkyyq
+         N4N5viRlFkJn6IsVB7Z6c03BtLpnO5ccAiiuayOTpKzK7WNupm/V7Qw1pq1p2mOLVWJV
+         Xd2P7dL95A0X2pYyXnWjGosFnjEd+V+EGnswO2NOKdW128ekC2dSB37wwgQjGGzUACdA
+         c6GYYjkLQSR/dbXBYoWC3e/aA8uSy/WZb8LyizEjMtkONCEuQy9MBc+OASL5PO6fcr+j
+         EemA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtRgYK9NQJdFkLtRSdeOM8hjauVMFKS8vE2+aB578OgqlJ29eHgg3BIh5bvhqErIE/cKo4MyuSIXtFNuaohg1PuRo+lyFPTTI4NLCni/lg2JDM
+X-Gm-Message-State: AOJu0Yx53ZRJMqWTcoIZWi70Rmu7LhxAzxbalJNJ9v24eBIn7ivkKLjY
+	SizZ8AxPdtCYqY9g4FSymnpNPQR0fqI8j856Rilu8By3I3Y7uiK6nVp6CVlEFu0=
+X-Google-Smtp-Source: AGHT+IFLpgfv8/Esnolm22txMsxpEfskLJZ4i6egdOEr6U9kJff2jGBqFVP62Bj1ZgVi3f/r+yf4Tg==
+X-Received: by 2002:a05:600c:2187:b0:419:ec38:f34b with SMTP id 5b1f17b1804b1-41feaa439d6mr115391895e9.20.1715774774868;
+        Wed, 15 May 2024 05:06:14 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87d20488sm266011555e9.25.2024.05.15.05.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 05:06:14 -0700 (PDT)
+Date: Wed, 15 May 2024 13:06:13 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Phil Auld <pauld@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240515120613.m6ajyxyyxhat7eb5@airbuntu>
+References: <20240514234112.792989-1-qyousef@layalina.io>
+ <20240514235851.GA6845@lorien.usersys.redhat.com>
+ <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+ <20240515112050.GA25724@lorien.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZkKE3qT1X_Jirb92@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+In-Reply-To: <20240515112050.GA25724@lorien.usersys.redhat.com>
 
-Let me repeat I know nothing about shadow stacks, only tried to
-read Documentation/arch/x86/shstk.rst few minutes ago ;)
+On 05/15/24 07:20, Phil Auld wrote:
+> On Wed, May 15, 2024 at 10:32:38AM +0200 Peter Zijlstra wrote:
+> > On Tue, May 14, 2024 at 07:58:51PM -0400, Phil Auld wrote:
+> > > 
+> > > Hi Qais,
+> > > 
+> > > On Wed, May 15, 2024 at 12:41:12AM +0100 Qais Yousef wrote:
+> > > > rt_task() checks if a task has RT priority. But depends on your
+> > > > dictionary, this could mean it belongs to RT class, or is a 'realtime'
+> > > > task, which includes RT and DL classes.
+> > > > 
+> > > > Since this has caused some confusion already on discussion [1], it
+> > > > seemed a clean up is due.
+> > > > 
+> > > > I define the usage of rt_task() to be tasks that belong to RT class.
+> > > > Make sure that it returns true only for RT class and audit the users and
+> > > > replace them with the new realtime_task() which returns true for RT and
+> > > > DL classes - the old behavior. Introduce similar realtime_prio() to
+> > > > create similar distinction to rt_prio() and update the users.
+> > > 
+> > > I think making the difference clear is good. However, I think rt_task() is
+> > > a better name. We have dl_task() still.  And rt tasks are things managed
+> > > by rt.c, basically. Not realtime.c :)  I know that doesn't work for deadline.c
+> > > and dl_ but this change would be the reverse of that pattern.
+> > 
+> > It's going to be a mess either way around, but I think rt_task() and
+> > dl_task() being distinct is more sensible than the current overlap.
+> >
+> 
+> Yes, indeed.
+> 
+> My point was just to call it rt_task() still. 
 
-On 05/13, Jiri Olsa wrote:
->
-> 1) current uretprobe which are not working at the moment and we change
->    the top value of shadow stack with shstk_push_frame
-> 2) optimized uretprobe which needs to push new frame on shadow stack
->    with shstk_update_last_frame
->
-> I think we should do 1) and have current uretprobe working with shadow
-> stack, which is broken at the moment
+It is called rt_task() still. I just added a new realtime_task() to return true
+for RT and DL. rt_task() will return true only for RT now.
 
-Agreed,
-
-> I'm ok with not using optimized uretprobe when shadow stack is detected
-> as enabled and we go with current uretprobe in that case
-
-But how can we detect it? Again, suppose userspace does
-
-	enable_shstk()
-	{
-		prctl(ARCH_SHSTK_SHSTK);
-	}
-
-what if enable_shstk() is ret-probed ?
-
-Oleg.
-
+How do you see this should be done instead? I'm not seeing the problem.
