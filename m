@@ -1,75 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4013A1B0;
-	Wed, 15 May 2024 05:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8B22772A;
+	Wed, 15 May 2024 08:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715751388; cv=none; b=LY4fQZoJIIlUVDi/apEmEwo9ecQuOwh943GzTjdpXI0KXzRzQqlIaAuY2wcGnnhEwwR3psJAYsdXs3NsUJTFNeB3Ewh4UNwt7AKS/Gu9lKmpZBBnrOMLKd1oSBlS9diWgjnjBLN4UfPv+sZQRSV07emm2BssSugQyAoYzMs1Awc=
+	t=1715761972; cv=none; b=Ws22vvb/F8VzgdrBhWblXSL2wBKtycZ//YFOQJp3H94judmpHUjJU/LqgCrBIlhkorrmbl+ibbijR0oeMpMDT836o3hzPQeEbuNMLB6c5nd8FOsR4Due/IVHa9BERQuCgDMpmUBmdkNle81MDpYQP/v1nH5p/RFoGOOdcRUp8rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715751388; c=relaxed/simple;
-	bh=c94//jp1PE5EDDwmY7Ielx198lHnxvyElpsaJQ+yI+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YAesdkDnf+LudqI901xPrHeTZVtCtg2AMjPl6TTlvuddbauFmRifTW4EILN5EMqX9CiqBX2TMG6T+t29pdbAMKMtttosxrVEsyLV1MMKdFHFpxm2SZmsz3TiU2Wx8IvrYZsbOe9t+y3KQcwuZsV9WZTa076V8VtpTr2qbA5nixA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B008C116B1;
-	Wed, 15 May 2024 05:36:27 +0000 (UTC)
-Date: Wed, 15 May 2024 01:36:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Shuah
- Khan <shuahkhan@gmail.com>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Fix test to handle both old and new
- kernels
-Message-ID: <20240515013620.098cb37a@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715761972; c=relaxed/simple;
+	bh=UqgOYwdEvMOrn7Hx47ilkz/xoSWwwVwXT1kxEU/Szgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6rNW6hdFBMgA/pS6/o7dBnjSOMOsr4llP2Be49lWTwn39QkocKhWbKh0G9CRMg0YauHS6okwGR0uDR0d4ZBEFYH5kJVOxVFmLHyUFkTfPo4ZuH5ZFo13daUV5imWsHYtzYeVmzU0kJbhotwfXcx9UnKlXXCF3X+fK7Zs1s6bnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n+m36Pp6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n+m36Pp6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QA0Z86REep+wCdmCQX+v/+bp3VyxCri5N4TpcnLcSGo=; b=n+m36Pp6kDfDmvRiAl/tSccNoX
+	9Cvz89UOpGuItPpAgrSs+t73IUNKLAfPMAyNwTImb2yOI6BpOgzHKoaq0ckUYG0kZbNOZJRTmaLta
+	fY6Vu+x/4qre2xlDxCzeZtVBHzfWxifGgUrDl4nAEkFYbdTtyoGgtNUfAQaek79N+9TuZl+4YQ861
+	IcAQSoCCeiMwT3VsS8XuSB7JGrSTzZsf3LoFdNmqR/2vC1UYmvaA64LGywy83Xkxcs+vGzabh0il0
+	T92WagyiD6Ugu/sc5YTuj5rIVaJtqB0hJCWe63k7ptUJfELMepm80C0OsWyPJRwgrhGXco02lgtfA
+	1x5w5+DA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s7A3y-0000000A7MR-2Lht;
+	Wed, 15 May 2024 08:32:41 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 29FBF30068B; Wed, 15 May 2024 10:32:38 +0200 (CEST)
+Date: Wed, 15 May 2024 10:32:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Phil Auld <pauld@redhat.com>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240515083238.GA40213@noisy.programming.kicks-ass.net>
+References: <20240514234112.792989-1-qyousef@layalina.io>
+ <20240514235851.GA6845@lorien.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240514235851.GA6845@lorien.usersys.redhat.com>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, May 14, 2024 at 07:58:51PM -0400, Phil Auld wrote:
+> 
+> Hi Qais,
+> 
+> On Wed, May 15, 2024 at 12:41:12AM +0100 Qais Yousef wrote:
+> > rt_task() checks if a task has RT priority. But depends on your
+> > dictionary, this could mean it belongs to RT class, or is a 'realtime'
+> > task, which includes RT and DL classes.
+> > 
+> > Since this has caused some confusion already on discussion [1], it
+> > seemed a clean up is due.
+> > 
+> > I define the usage of rt_task() to be tasks that belong to RT class.
+> > Make sure that it returns true only for RT class and audit the users and
+> > replace them with the new realtime_task() which returns true for RT and
+> > DL classes - the old behavior. Introduce similar realtime_prio() to
+> > create similar distinction to rt_prio() and update the users.
+> 
+> I think making the difference clear is good. However, I think rt_task() is
+> a better name. We have dl_task() still.  And rt tasks are things managed
+> by rt.c, basically. Not realtime.c :)  I know that doesn't work for deadline.c
+> and dl_ but this change would be the reverse of that pattern.
 
-The function "scheduler_tick" was renamed to "sched_tick" and a selftest
-that used that function for testing function trace filtering used that
-function as part of the test.
+It's going to be a mess either way around, but I think rt_task() and
+dl_task() being distinct is more sensible than the current overlap.
 
-But the change causes it to fail when run on older kernels. As tests
-should not fail on older kernels, add a check to see which name is
-available before testing.
+> > Move MAX_DL_PRIO to prio.h so it can be used in the new definitions.
+> > 
+> > Document the functions to make it more obvious what is the difference
+> > between them. PI-boosted tasks is a factor that must be taken into
+> > account when choosing which function to use.
+> > 
+> > Rename task_is_realtime() to task_has_realtime_policy() as the old name
+> > is confusing against the new realtime_task().
 
-Fixes: 86dd6c04ef9f2 ("sched/balancing: Rename scheduler_tick() => sched_tick()")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../ftrace/test.d/ftrace/func_set_ftrace_file.tc         | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc
-index 073a748b9380..263f6b798c85 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_set_ftrace_file.tc
-@@ -19,7 +19,14 @@ fail() { # mesg
- 
- FILTER=set_ftrace_filter
- FUNC1="schedule"
--FUNC2="sched_tick"
-+if grep '^sched_tick\b' available_filter_functions; then
-+    FUNC2="sched_tick"
-+elif grep '^scheduler_tick\b' available_filter_functions; then
-+    FUNC2="scheduler_tick"
-+else
-+    exit_unresolved
-+fi
-+
- 
- ALL_FUNCS="#### all functions enabled ####"
- 
--- 
-2.43.0
+realtime_task_policy() perhaps?
 
