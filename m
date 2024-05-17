@@ -1,52 +1,36 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AD55812F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A7C58105;
 	Fri, 17 May 2024 13:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715953231; cv=none; b=aBbGNbehIOLUWUC1WA6CPW7FIVm+DC7Th9hNo5cArtV6p7BiuiBiI/Z9k72zISP1atgCfIhnmCnwAMeZuQ3ZOnPbCzSJAe/yDRr0BsB7iSJzLxQ8e2555B4y2qh4P4kSOTjaBAaPndD2uWEuVFID0Ni4D0vZhIp/9NverhUbYAM=
+	t=1715953232; cv=none; b=FYPqEkF7TF6dHZ2Icnn6Zxsp48EzB4xufjfs+7yrmeFknNo1kPkNhNOjd1JuxGQOjWRQqg2Ip5oXe2OmUmrxoYRM2ji5T9BsxibcC6DQTBfmRnS4zxgqcAxdQSdWSrqsO+VnlfWxUaVs5dlXgDzRpq+mcH6tdaaikPbYyhvz5CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715953231; c=relaxed/simple;
-	bh=dWndnL2fcmjN6OLz/k5yycYyXhbbDCUqxD4dhl9EUxs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lwp/USBC5kTmB0hz1FJt/4Rot7/inTV2oeZK+UDdbqyq0uIU9hkFuTJwU6HiB+fJP6tN7JfEiR+H4Y9MQd/Y3xtCuNxlmEckmuNdqtAuG8Ovuhb79jB3/dm4NgDjad5EC4dzO2Ha/ypF/RchYVTdzYcul9F3UrSbZD+U1c1ZIv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IQGRpVxi; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IQGRpVxi; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1715953232; c=relaxed/simple;
+	bh=5kgjrijhfGwPzSc5a+g4Ifwj/qoSboNEoSqq9Epsm4U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NiGbLwHRGKEdojtok8W/JP9onfJDQxcjKL7c47SR0IvVppa4rXz8BFrk72ZBa/5UJB5T/HPOpePSbkhBzwqgD4fVfnGuNZR3fThMC0jNndDrylNy8YUaNYc+NIMF+XLmD4phiPxDxyBZr/HWTVQ+kiJbQU+pva9WK7E8iT6Y2Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IQGRpVxi";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IQGRpVxi"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 576C0374EA;
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 72688374EC;
 	Fri, 17 May 2024 13:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715953228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=zG4qeZ4wXm0hhUEol81eqqpjCLMzzmjIMFnN0YK47ls=;
-	b=IQGRpVxiYr0SkqYdxRblxdnj1xMPd93+UG2TUL9pn0rGGgz1YmI4amlpiNeNuSbcyLNF1S
-	n4bHvAcsn9liD8wTtgSgG0D26yM2FS6uTbzIgCrWF05wDhqzMf88V6FkDkLGfeXf+bHsI+
-	jzNv4byDymOe0/lxskzpva46epP9I9A=
 Authentication-Results: smtp-out1.suse.de;
 	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715953228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=zG4qeZ4wXm0hhUEol81eqqpjCLMzzmjIMFnN0YK47ls=;
-	b=IQGRpVxiYr0SkqYdxRblxdnj1xMPd93+UG2TUL9pn0rGGgz1YmI4amlpiNeNuSbcyLNF1S
-	n4bHvAcsn9liD8wTtgSgG0D26yM2FS6uTbzIgCrWF05wDhqzMf88V6FkDkLGfeXf+bHsI+
-	jzNv4byDymOe0/lxskzpva46epP9I9A=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F23413991;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 64E3013A6A;
 	Fri, 17 May 2024 13:40:28 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 55PrDkxeR2Z/BQAAD6G6ig
+	id iDB6GExeR2Z/BQAAD6G6ig
 	(envelope-from <petr.pavlu@suse.com>); Fri, 17 May 2024 13:40:28 +0000
 From: Petr Pavlu <petr.pavlu@suse.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
@@ -55,10 +39,12 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH 0/2] ring-buffer: Fix a race between readers and resize checks
-Date: Fri, 17 May 2024 15:40:06 +0200
-Message-Id: <20240517134008.24529-1-petr.pavlu@suse.com>
+Subject: [PATCH 2/2] ring-buffer: Fix a race between readers and resize checks
+Date: Fri, 17 May 2024 15:40:08 +0200
+Message-Id: <20240517134008.24529-3-petr.pavlu@suse.com>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20240517134008.24529-1-petr.pavlu@suse.com>
+References: <20240517134008.24529-1-petr.pavlu@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,47 +52,141 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -0.17
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
 X-Spam-Level: 
-X-Spamd-Result: default: False [-0.17 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	BAYES_HAM(-0.37)[77.01%];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: 72688374EC
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
 
-Fix a race between a reader swapping a new reader page into the
-ring-buffer from rb_get_reader_page() and the rb_check_pages() check
-invoked at the end of the resize operation in ring_buffer_resize().
+The reader code in rb_get_reader_page() swaps a new reader page into the
+ring buffer by doing cmpxchg on old->list.prev->next to point it to the
+new page. Following that, if the operation is successful,
+old->list.next->prev gets updated too. This means the underlying
+doubly-linked list is temporarily inconsistent, page->prev->next or
+page->next->prev might not be equal back to page for some page in the
+ring buffer.
 
-Note that a similar problem with rb_check_pages() being executed with
-concurrent readers looks to exist for ring_buffer_subbuf_order_set()
-too. I plan to tackle it in a separate series.
+The resize operation in ring_buffer_resize() can be invoked in parallel.
+It calls rb_check_pages() which can detect the described inconsistency
+and stop further tracing:
 
-Petr Pavlu (2):
-  ring-buffer: Correct stale comments related to non-consuming readers
-  ring-buffer: Fix a race between readers and resize checks
+[  190.271762] ------------[ cut here ]------------
+[  190.271771] WARNING: CPU: 1 PID: 6186 at kernel/trace/ring_buffer.c:1467 rb_check_pages.isra.0+0x6a/0xa0
+[  190.271789] Modules linked in: [...]
+[  190.271991] Unloaded tainted modules: intel_uncore_frequency(E):1 skx_edac(E):1
+[  190.272002] CPU: 1 PID: 6186 Comm: cmd.sh Kdump: loaded Tainted: G            E      6.9.0-rc6-default #5 158d3e1e6d0b091c34c3b96bfd99a1c58306d79f
+[  190.272011] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552c-rebuilt.opensuse.org 04/01/2014
+[  190.272015] RIP: 0010:rb_check_pages.isra.0+0x6a/0xa0
+[  190.272023] Code: [...]
+[  190.272028] RSP: 0018:ffff9c37463abb70 EFLAGS: 00010206
+[  190.272034] RAX: ffff8eba04b6cb80 RBX: 0000000000000007 RCX: ffff8eba01f13d80
+[  190.272038] RDX: ffff8eba01f130c0 RSI: ffff8eba04b6cd00 RDI: ffff8eba0004c700
+[  190.272042] RBP: ffff8eba0004c700 R08: 0000000000010002 R09: 0000000000000000
+[  190.272045] R10: 00000000ffff7f52 R11: ffff8eba7f600000 R12: ffff8eba0004c720
+[  190.272049] R13: ffff8eba00223a00 R14: 0000000000000008 R15: ffff8eba067a8000
+[  190.272053] FS:  00007f1bd64752c0(0000) GS:ffff8eba7f680000(0000) knlGS:0000000000000000
+[  190.272057] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  190.272061] CR2: 00007f1bd6662590 CR3: 000000010291e001 CR4: 0000000000370ef0
+[  190.272070] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  190.272073] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  190.272077] Call Trace:
+[  190.272098]  <TASK>
+[  190.272189]  ring_buffer_resize+0x2ab/0x460
+[  190.272199]  __tracing_resize_ring_buffer.part.0+0x23/0xa0
+[  190.272206]  tracing_resize_ring_buffer+0x65/0x90
+[  190.272216]  tracing_entries_write+0x74/0xc0
+[  190.272225]  vfs_write+0xf5/0x420
+[  190.272248]  ksys_write+0x67/0xe0
+[  190.272256]  do_syscall_64+0x82/0x170
+[  190.272363]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  190.272373] RIP: 0033:0x7f1bd657d263
+[  190.272381] Code: [...]
+[  190.272385] RSP: 002b:00007ffe72b643f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  190.272391] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f1bd657d263
+[  190.272395] RDX: 0000000000000002 RSI: 0000555a6eb538e0 RDI: 0000000000000001
+[  190.272398] RBP: 0000555a6eb538e0 R08: 000000000000000a R09: 0000000000000000
+[  190.272401] R10: 0000555a6eb55190 R11: 0000000000000246 R12: 00007f1bd6662500
+[  190.272404] R13: 0000000000000002 R14: 00007f1bd6667c00 R15: 0000000000000002
+[  190.272412]  </TASK>
+[  190.272414] ---[ end trace 0000000000000000 ]---
 
- kernel/trace/ring_buffer.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Note that ring_buffer_resize() calls rb_check_pages() only if the parent
+trace_buffer has recording disabled. Recent commit d78ab792705c
+("tracing: Stop current tracer when resizing buffer") causes that it is
+now always the case which makes it more likely to experience this issue.
 
+The window to hit this race is nonetheless very small. To help
+reproducing it, one can add a delay loop in rb_get_reader_page():
 
-base-commit: ea5f6ad9ad9645733b72ab53a98e719b460d36a6
+ ret = rb_head_page_replace(reader, cpu_buffer->reader_page);
+ if (!ret)
+ 	goto spin;
+ for (unsigned i = 0; i < 1U << 26; i++)  /* inserted delay loop */
+ 	__asm__ __volatile__ ("" : : : "memory");
+ rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;
+
+.. and then run the following commands on the target system:
+
+ echo 1 > /sys/kernel/tracing/events/sched/sched_switch/enable
+ while true; do
+ 	echo 16 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+ 	echo 8 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+ done &
+ while true; do
+ 	for i in /sys/kernel/tracing/per_cpu/*; do
+ 		timeout 0.1 cat $i/trace_pipe; sleep 0.2
+ 	done
+ done
+
+To fix the problem, make sure ring_buffer_resize() doesn't invoke
+rb_check_pages() concurrently with a reader operating on the same
+ring_buffer_per_cpu by taking its cpu_buffer->reader_lock.
+
+Fixes: 659f451ff213 ("ring-buffer: Add integrity check at end of iter read")
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+---
+ kernel/trace/ring_buffer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 0ae569eae55a..967655591719 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1449,6 +1449,11 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+  *
+  * As a safety measure we check to make sure the data pages have not
+  * been corrupted.
++ *
++ * Callers of this function need to guarantee that the list of pages doesn't get
++ * modified during the check. In particular, if it's possible that the function
++ * is invoked with concurrent readers which can swap in a new reader page then
++ * the caller should take cpu_buffer->reader_lock.
+  */
+ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+@@ -2200,8 +2205,13 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		 */
+ 		synchronize_rcu();
+ 		for_each_buffer_cpu(buffer, cpu) {
++			unsigned long flags;
++
+ 			cpu_buffer = buffer->buffers[cpu];
++			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 			rb_check_pages(cpu_buffer);
++			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock,
++						   flags);
+ 		}
+ 		atomic_dec(&buffer->record_disabled);
+ 	}
 -- 
 2.35.3
 
