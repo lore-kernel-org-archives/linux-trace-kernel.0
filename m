@@ -1,65 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340C35A116;
-	Fri, 17 May 2024 14:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FED12F5A3;
+	Fri, 17 May 2024 15:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715955344; cv=none; b=gC27/vzEHtF4MG78WU1CT35pqByfn5w/yHiURiW3y2UEoHuzryQ82g1x/po4ME/5HTv8XEar3gukUuIlWjk5bZkUo+IZCZDZ2Kc1QkIahBc+jOBDj5bByBDlhb3CzZRq6b3r5IHclErFgqNdsWR5QZmxoIbOtR0kPEHD524o8Gs=
+	t=1715960805; cv=none; b=gD8HYbVUMThpuyZ8qsBs01Umko4W99irkrqfgoYL5QZ31P+g+zVhyR+0DoDFCF15cmaqKMiv4xZEK2YF51cfOy9PBkzfZ8scdLOMPD6oeFmouXvGb9nr73C2QmWIR8xR/dti6z3AowYxTM9+o2qmF/aI56LCOCtd67Mc8lOVNoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715955344; c=relaxed/simple;
-	bh=d+hQgBYBD7HhNvqtRKUIitmuVSa5P1lUxQfBIglOnfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fXN99fV/I3kJFKFVjzeNlnbhIGll0OlfVWKRbXjMXVcg4IuUfBuW15bH0P3nBN3A1WkY6jlB5TP38MQMtgMoqAyJsOv6lAXntYe39uBfdj6cdehKKu+S0nDCTwhxhILwuRPJrOh48/qPvIMAlSnfnTE8BtCuZk8KzeHR+1RiAzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A712C2BD10;
-	Fri, 17 May 2024 14:15:43 +0000 (UTC)
-Date: Fri, 17 May 2024 10:16:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing/treewide: Remove second parameter of
- __assign_str()
-Message-ID: <20240517101613.0584c291@gandalf.local.home>
-In-Reply-To: <87eda0c3uk.fsf@intel.com>
-References: <20240516133454.681ba6a0@rorschach.local.home>
-	<87eda0c3uk.fsf@intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715960805; c=relaxed/simple;
+	bh=EpkhHazhMZ2fwuDobsplhqZvRLo+YDrsHfPiI4NpGv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKACy+u1+YztLmWQdjIiCnkGINYxyXb6Ut+09sAoH/qghxGCCU01rG3+LAFET8qc4JwFGgFIxIAxZryqeu80xnpu35x0RC0EodpbWWvApr86E2ooFn8RYqZM6vWE0/WPeIuRQiBUEqaKiBu+vmZWSXuzZ9HDN1J32+/geUD7pw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPsMCEt7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPsMCEt7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111FAC4AF67;
+	Fri, 17 May 2024 15:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715960804;
+	bh=EpkhHazhMZ2fwuDobsplhqZvRLo+YDrsHfPiI4NpGv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qPsMCEt72a5yEc9EgEt6r+yjYEkV9BPAe1xRO8Mnx0FWUaiC9lvILRG04VRJZWw48
+	 6oi3NhTWACIBMVCpaYFZBzGgjvog9Y2TBWGjwbtg4as/XPHXHwLo0KeYmlix1Tn8jJ
+	 4VeuQ6blAMOigvYJG5R5zp9Slb7rxBGhcGmnSRhVLw3HY2TMrkHzFxNCfy5TM2KOl7
+	 3goZJdJ9Tr8Zr9DvcjkvtgL8pUnnLDDUJrwFLygDVMOs6MaI5wNJFVtqt+sDPTLZKE
+	 8D0fBgS7iYh917OFn63YR+c8+L84i4xjQMciA0V/P7pqzz6WoJLNRgmPCqv4y8iZTU
+	 E4tvvudi2KGsA==
+Date: Fri, 17 May 2024 16:46:32 +0100
+From: Will Deacon <will@kernel.org>
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Liviu Dudau <liviu@dudau.co.uk>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Sam Ravnborg <sam@ravnborg.org>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH RESEND v8 16/16] bpf: remove CONFIG_BPF_JIT dependency on
+ CONFIG_MODULES of
+Message-ID: <20240517154632.GA320@willie-the-truck>
+References: <20240505160628.2323363-1-rppt@kernel.org>
+ <20240505160628.2323363-17-rppt@kernel.org>
+ <7983fbbf-0127-457c-9394-8d6e4299c685@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7983fbbf-0127-457c-9394-8d6e4299c685@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, 17 May 2024 10:08:51 +0300
-Jani Nikula <jani.nikula@linux.intel.com> wrote:
+Hi Klara,
 
-> On Thu, 16 May 2024, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > There's over 700 users of __assign_str() and because coccinelle does not
-> > handle the TRACE_EVENT() macro I ended up using the following sed script:
-> >
-> >   git grep -l __assign_str | while read a ; do
-> >       sed -e 's/\(__assign_str([^,]*[^ ,]\) *,[^;]*/\1)/' $a > /tmp/test-file;
-> >       mv /tmp/test-file $a;
-> >   done  
+On Fri, May 17, 2024 at 01:00:31AM +0200, Klara Modin wrote:
+> On 2024-05-05 18:06, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > BPF just-in-time compiler depended on CONFIG_MODULES because it used
+> > module_alloc() to allocate memory for the generated code.
+> > 
+> > Since code allocations are now implemented with execmem, drop dependency of
+> > CONFIG_BPF_JIT on CONFIG_MODULES and make it select CONFIG_EXECMEM.
+> > 
+> > Suggested-by: Björn Töpel <bjorn@kernel.org>
+> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > ---
+> >   kernel/bpf/Kconfig | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
+> > index bc25f5098a25..f999e4e0b344 100644
+> > --- a/kernel/bpf/Kconfig
+> > +++ b/kernel/bpf/Kconfig
+> > @@ -43,7 +43,7 @@ config BPF_JIT
+> >   	bool "Enable BPF Just In Time compiler"
+> >   	depends on BPF
+> >   	depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
+> > -	depends on MODULES
+> > +	select EXECMEM
+> >   	help
+> >   	  BPF programs are normally handled by a BPF interpreter. This option
+> >   	  allows the kernel to generate native code when a program is loaded
 > 
-> Try 'sed -i' ;)
+> This does not seem to work entirely. If build with BPF_JIT without module
+> support for my Raspberry Pi 3 B I get warnings in my kernel log (easiest way
+> to trigger it seems to be trying to ssh into it, which fails).
 
-I've always been nervous about trusting -i ;-)
+Thanks for the report. I was able to reproduce this using QEMU and it
+looks like the problem is because bpf_arch_text_copy() silently fails
+to write to the read-only area as a result of patch_map() faulting and
+the resulting -EFAULT being chucked away.
 
-> 
-> >  .../drm/i915/display/intel_display_trace.h    |  56 ++++-----  
-> 
-> On i915,
-> 
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> 
+Please can you try the diff below?
 
-Thanks,
+Will
 
--- Steve
+--->8
+
+diff --git a/arch/arm64/kernel/patching.c b/arch/arm64/kernel/patching.c
+index 255534930368..94b9fea65aca 100644
+--- a/arch/arm64/kernel/patching.c
++++ b/arch/arm64/kernel/patching.c
+@@ -36,7 +36,7 @@ static void __kprobes *patch_map(void *addr, int fixmap)
+ 
+        if (image)
+                page = phys_to_page(__pa_symbol(addr));
+-       else if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
++       else if (IS_ENABLED(CONFIG_EXECMEM))
+                page = vmalloc_to_page(addr);
+        else
+                return addr;
 
