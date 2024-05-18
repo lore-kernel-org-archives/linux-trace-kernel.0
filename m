@@ -1,214 +1,105 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166DB60DFA
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 18 May 2024 18:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C982BB10;
+	Sat, 18 May 2024 22:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716058651; cv=none; b=BZQeIKGGPSQxKp83YYAChzU/WyHuNCpQBYrpZkEf7OG0JsKoQti4/xW7l5tpyKOdNcSPP/i9oCnwMYNr9kRAkqvYn4GALQuVAt1ixh+BMYKn19m7dyy4wHkn63eI8LNUEJ/riuvl3oytw+y1nZFIrOi/DxpzJ/ApZ4Ds+O0AmeI=
+	t=1716072911; cv=none; b=s6Sp5yK8cgeFUpiiwCcYoZc7Z3zrKjgU2VvHBvvKtB0m32/N0ipGx4pOrPHDKGHbsXS1yYnxI1np7T1bcfYz2qba75lv1esMZqIf8bHvJCt7I29Nmo9hbiPsV038kGijE6RZLcn65q2DZLk6tT5y2WjfPvcKi+BFwZmb8SWGWQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716058651; c=relaxed/simple;
-	bh=wAqIRcCabbfn5FNmvGNIGPL+iroeEmFcrvMhrlMZdAE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nE1H8iaZKuEQYnN8gH+4QMLlTZtuV50RoxDGKIwkBUTur5ADembYEU4dd3Ef0gpb+v8t0FyTYm0kTigF7W7ssyq+2DpiY3GehH2D+9DcXz66XoNe5VwFRorlntod1G45T+alj8ZbhNPa4I/yBvPevnQU8JvNjgZO17Vu6+1VlMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=v/AmV8kq; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1716072911; c=relaxed/simple;
+	bh=98IygC4khSqKvEBhieD52/i22F2Y9A/DR7XbipdVTMs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=LkeCKOAYTWrPWf5DjMrWuivSv5qveyB3gP2rCxCmBN4nD5KLDt27rprhLIITjNUEvZMOaFdzGmsF8Hzb+Maw9+kGwyR4/WYHNDcwGkfewKl4vM1BRbcrBIAX8SLGVtDF/y67VJq2tVf+f5WCZUeP4xoyJN/AGWEWOfavYOnExZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ti0wqi7F; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="v/AmV8kq"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5b2e942171cso741539eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 18 May 2024 11:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1716058649; x=1716663449; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YguLbfIUe9SPEVY4PVRNzJgWNLjHIbYrZNjYPjw1wDY=;
-        b=v/AmV8kq3UZnHRDaqHKqhNVypfUF8x6d6yBi1N5G0tcfRYE7ce3MRpUzwl4YK2pDOY
-         0gSkGZswCXm5bMtnmSlhuxkbS/tIUF9okGsjBZ5fby4NKwqYTPIwTzC4ZoclOyTZFLem
-         RT2+G780T4Rvt6sAdooeJFD4Qw3kSZNGJ+JoLSw1NmiZZpBQstNxMDIY5BleC4qlptFg
-         +S8gDOPygxpPebphBpPjxk+hnz5mYSWeMnl3BWZFaLUWoQw272KOFLgpA509meCbeaTc
-         1zy687rDIDcZ+p0a/pi8z2PkHBDskEdl/PpU+UT704u1+W7ImWvpp5WEZODo1Gd2YGEU
-         ZAqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716058649; x=1716663449;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YguLbfIUe9SPEVY4PVRNzJgWNLjHIbYrZNjYPjw1wDY=;
-        b=W1M7hHgrB8Log/JbH779ksPTXOsuJFaWpD68LgSAzGr0m79HPgAGptsZJLR7Lu6W5H
-         irQk2EAetwL3nAb41u3de9HeuigW8WjcEcnc8mvvA6/lgXEtgliYdLoyBzL8M58h8zL3
-         OCtQY4XaIAjhOkYeU/JeBRscyGTHF6W7BoMzG8zE/c6jVnXqlO0Nb8gNkBQEvTttCa5N
-         btrof8EKbbVM2YNunYZajikJ2KnlZrVBZ7Wa2y923vWITHUONrz7z6g60Z3drenuLgoM
-         onfC8bJYnZtNJB9ld7ySxfoAaE3gJ4tOmAgf0RUYMj8aLLQr/tDwZ2sfUQJzUGcCDrso
-         cQPg==
-X-Forwarded-Encrypted: i=1; AJvYcCURlN/IJ3snMmpBJ4eNne9d6DYa1pN6YJER5/lYUhMV/2yrBYs9dh58EJdpFG9hNdK++hzorB8zqvb1HukmfUZcBfO4/MUIiMt8FAYbjHI7vXP4
-X-Gm-Message-State: AOJu0YyBZeN48No7UvEiYnvMsvsCqqWSeKtTP0hHq4QclQgLcvQkAxuH
-	LOIXz5uAFJaSV5HuOT8JX85cgf/VgTd/3yPTaLJ975jm4OGYSspEMT3oYA7Wq78=
-X-Google-Smtp-Source: AGHT+IHilXoeJ/w5ohYR0i7AU3401ochXIU5LArEI0v5RdvvJ31YBmDQam4A7KpiPZymCfWrte5bew==
-X-Received: by 2002:a05:6358:3a11:b0:17b:5661:5e2b with SMTP id e5c5f4694b2df-193bb64065bmr2817534555d.18.1716058648846;
-        Sat, 18 May 2024 11:57:28 -0700 (PDT)
-Received: from [192.168.1.16] (174-21-188-197.tukw.qwest.net. [174.21.188.197])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-658764fda40sm5342410a12.5.2024.05.18.11.57.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 May 2024 11:57:28 -0700 (PDT)
-Message-ID: <eeb59c4f-9208-4700-b73b-9652398371d7@davidwei.uk>
-Date: Sat, 18 May 2024 11:57:26 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ti0wqi7F"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44IMCsK2021616;
+	Sat, 18 May 2024 22:54:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=Whq
+	QZT4PPzNDsGPrsaCNycZblGRyU4ILpoVivlMXHdk=; b=Ti0wqi7FagM3B9ZZBEd
+	0xQiWtmDHyvWVJD4wCxyg/xcPjBr40bBMVE1Ghdnt5kW8fhyZVcoB+bACSEaUzMh
+	nnejnYf0+3mhEMaxoFb+QwdLCQRPZ6WJAiy3cMuRBRJ3q38GjVIsiF7ZeV86jNZ7
+	pXQZYuA8CQR0nfLrkrnez6ijXSTm3xLRP90bdNOh9YPWPJgh4REb7Hz3VfFU0FqN
+	TQmpJvaKcfaPS+QTUME0dxCR/3TVJTyoTX54G/ZUH53XOGvtvQ2bQ0tiYAOJTVxI
+	YobA3hFKhDUE4HrrEeonR5V6AsR53Q1XsObsJubyE+vQ5zIMnknlz9lb9+RR6R/j
+	TCw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pqagsbk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 18 May 2024 22:54:52 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44IMsq83008999
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 18 May 2024 22:54:52 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 18 May
+ 2024 15:54:51 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 18 May 2024 15:54:49 -0700
+Subject: [PATCH] kernel: trace: preemptirq_delay_test: add
+ MODULE_DESCRIPTION()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 04/14] netdev: support binding dma-buf to
- netdevice
-Content-Language: en-GB
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20240510232128.1105145-1-almasrymina@google.com>
- <20240510232128.1105145-5-almasrymina@google.com>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <20240510232128.1105145-5-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240518-md-preemptirq_delay_test-v1-1-387d11b30d85@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIALgxSWYC/x2MWwrCMBAAr1L224U0GBSvIlLyWO1CE2s2Skvp3
+ V39HJiZDYQqk8Cl26DSh4WfRaE/dBBHXx6EnJTBGns0rj9jTjhXojw3rq8h0eTXoZE0dM7GZA2
+ dggmguVp3Xv7r6005eCEM1Zc4/oYTl/eC2UujivOqKuz7F/2uGOWPAAAA
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu
+	<mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: EsjHL1m0pHSYB64VXjx8BHz4fim6lQWh
+X-Proofpoint-ORIG-GUID: EsjHL1m0pHSYB64VXjx8BHz4fim6lQWh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-18_14,2024-05-17_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=895 clxscore=1015
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405010000 definitions=main-2405180188
 
-On 2024-05-10 16:21, Mina Almasry wrote:
-> -/* Stub */
->  int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info)
->  {
-> -	return 0;
-> +	struct nlattr *tb[ARRAY_SIZE(netdev_queue_dmabuf_nl_policy)];
-> +	struct net_devmem_dmabuf_binding *out_binding;
-> +	struct list_head *sock_binding_list;
-> +	u32 ifindex, dmabuf_fd, rxq_idx;
-> +	struct net_device *netdev;
-> +	struct sk_buff *rsp;
-> +	struct nlattr *attr;
-> +	int rem, err = 0;
-> +	void *hdr;
-> +
-> +	if (GENL_REQ_ATTR_CHECK(info, NETDEV_A_DEV_IFINDEX) ||
-> +	    GENL_REQ_ATTR_CHECK(info, NETDEV_A_BIND_DMABUF_DMABUF_FD) ||
-> +	    GENL_REQ_ATTR_CHECK(info, NETDEV_A_BIND_DMABUF_QUEUES))
-> +		return -EINVAL;
-> +
-> +	ifindex = nla_get_u32(info->attrs[NETDEV_A_DEV_IFINDEX]);
-> +	dmabuf_fd = nla_get_u32(info->attrs[NETDEV_A_BIND_DMABUF_DMABUF_FD]);
-> +
-> +	rtnl_lock();
-> +
-> +	netdev = __dev_get_by_index(genl_info_net(info), ifindex);
-> +	if (!netdev) {
-> +		err = -ENODEV;
-> +		goto err_unlock;
-> +	}
-> +
-> +	err = net_devmem_bind_dmabuf(netdev, dmabuf_fd, &out_binding);
-> +	if (err)
-> +		goto err_unlock;
-> +
-> +	nla_for_each_attr(attr, genlmsg_data(info->genlhdr),
-> +			  genlmsg_len(info->genlhdr), rem) {
-> +		if (nla_type(attr) != NETDEV_A_BIND_DMABUF_QUEUES)
-> +			continue;
-> +
-> +		err = nla_parse_nested(
-> +			tb, ARRAY_SIZE(netdev_queue_dmabuf_nl_policy) - 1, attr,
-> +			netdev_queue_dmabuf_nl_policy, info->extack);
-> +		if (err < 0)
-> +			goto err_unbind;
-> +
-> +		rxq_idx = nla_get_u32(tb[NETDEV_A_QUEUE_DMABUF_IDX]);
-> +		if (rxq_idx >= netdev->num_rx_queues) {
-> +			err = -ERANGE;
-> +			goto err_unbind;
-> +		}
+Fix the 'make W=1' warning:
 
-net_devmem_bind_dmabuf_to_queue() checks for rxq_idx >=
-netdev->num_rx_queues as well. I'd say remove the one in
-netdev_nl_bind_rx_doit().
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/trace/preemptirq_delay_test.o
 
-Also we may want a generic netdev function e.g. netdev_rx_queue_set_mp()
-since I need the same functionality.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ kernel/trace/preemptirq_delay_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +
-> +		err = net_devmem_bind_dmabuf_to_queue(netdev, rxq_idx,
-> +						      out_binding);
-> +		if (err)
-> +			goto err_unbind;
-> +	}
-> +
-> +	sock_binding_list = genl_sk_priv_get(&netdev_nl_family,
-> +					     NETLINK_CB(skb).sk);
-> +	if (IS_ERR(sock_binding_list)) {
-> +		err = PTR_ERR(sock_binding_list);
-> +		goto err_unbind;
-> +	}
-> +
-> +	list_add(&out_binding->list, sock_binding_list);
-> +
-> +	rsp = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> +	if (!rsp) {
-> +		err = -ENOMEM;
-> +		goto err_unbind;
-> +	}
-> +
-> +	hdr = genlmsg_iput(rsp, info);
-> +	if (!hdr) {
-> +		err = -EMSGSIZE;
-> +		goto err_genlmsg_free;
-> +	}
-> +
-> +	nla_put_u32(rsp, NETDEV_A_BIND_DMABUF_DMABUF_ID, out_binding->id);
-> +	genlmsg_end(rsp, hdr);
-> +
-> +	rtnl_unlock();
-> +
-> +	return genlmsg_reply(rsp, info);
-> +
-> +err_genlmsg_free:
-> +	nlmsg_free(rsp);
-> +err_unbind:
-> +	net_devmem_unbind_dmabuf(out_binding);
-> +err_unlock:
-> +	rtnl_unlock();
-> +	return err;
->  }
+diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+index 8c4ffd076162..cb0871fbdb07 100644
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -215,4 +215,5 @@ static void __exit preemptirq_delay_exit(void)
+ 
+ module_init(preemptirq_delay_init)
+ module_exit(preemptirq_delay_exit)
++MODULE_DESCRIPTION("Preempt / IRQ disable delay thread to test latency tracers");
+ MODULE_LICENSE("GPL v2");
+
+---
+base-commit: 674143feb6a8c02d899e64e2ba0f992896afd532
+change-id: 20240518-md-preemptirq_delay_test-552cd20e7b0b
+
