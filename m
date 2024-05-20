@@ -1,182 +1,484 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A63135A7D;
-	Mon, 20 May 2024 15:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E259137930;
+	Mon, 20 May 2024 16:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716218456; cv=none; b=VO095OT3e4RjRZw3CZweFz3FjnOp0OipLPhNX6hADO+CQkxT9FNVdvQpZpexkQqs0tHw5p2NlI9xG573CYTQEQiynAI2A1jE2N6lyfR3lJGYBJ0z5MTwOnShP7KHC2YjgGouvW0/gVVg8iRLnDKaoL/eLgf3uocOgfWI+RJfLWE=
+	t=1716224046; cv=none; b=Z0thmUKoUgb7gaSjvCO6zQW64HNfnDSxDb7L2+Nz5REeztgvx1wxi6aHQ9997PWTcQGV/b2umR3oASu2x+JFLwHyklQkMh8C376Lo/fXrAaac8j2Qh+ZWhn88AnubcFtoZUwkhnMfvp/w/2mIGHBF5fRJi+9tiDFzcrlrGfbmg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716218456; c=relaxed/simple;
-	bh=ccHVmPe9XgTztqN7RxfgpU2taJrOAXSv9yZQHCm5KLo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LlwHvjCJNgWZWGX5TgjTpWrD3ed/7fHTP8rOEygyfkyU5ftwoDodqX1vRXsdboWyvZIQeJ3N0nyXMJ1rFKmXkCK3Rdf5ZQrfQaJcUPoMthSuS+09JuT+8sXo6wcPdL5C17vXcmEYIMjnSzyDLoxfbVFXybdUEl0P2El6e4ECoX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QTkT68+P; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716224046; c=relaxed/simple;
+	bh=BSuhiVL15vSe8qVXn6kr5snqkwJnG/vYlakcO+WqUTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s+cU8QEpcCtVv61iEUT8xFfFyAUkHVhxvYcds7l4os+7KfNjZeiJf9NLymj8GDjXaxNkw0Oe0YifeRM2ns56/kbqmp2orbZVNpcOXzqJDr0x+l1F5lRwUSrQWVjSxXbwFYMUhYLjS0gUQkkGYKFb3l5bekTgSesS4uVZnXNNFT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cI8x2fJH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTkT68+P"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4202c0d316cso13434365e9.1;
-        Mon, 20 May 2024 08:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716218453; x=1716823253; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zUexGFxFSFLEzTKD6IsN+hOyH9PLOa0GPzXgPLrsHh0=;
-        b=QTkT68+PXGUSV2TvevQ9LJpUItugngCEL1osSfXV3W/yLz6Ta44PJoEgQKmBRScmYm
-         ro+37s0WhMNAoc0NEcZhriQIlGagsGMgc8OlEqyTTxzDK76w1KMoD+TA7VkdobX4xMJ1
-         V1LMI6MoThbr8yiAwUxMjfw80qlcof7OInU5sdqg5XfNObeLAdyIP2+Ovppdnr1i7oFM
-         ud1TzgzQ+IKcEDYi1xvCcoTjMgHTrYJbCyoIuEuR9stoK7T/JIdmN1LAp138o/L3OCw1
-         w+U0KOYmMNCBY65rRq/Tbeu8SnhrJy6M2VXt6T6wJny8SBAsJLjqyI29Vj/tcZVHnsdk
-         AqXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716218453; x=1716823253;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zUexGFxFSFLEzTKD6IsN+hOyH9PLOa0GPzXgPLrsHh0=;
-        b=d4/M2QPh0qdDpcyDIuMTF+EEIirpmGL0CItQtSe+H8C0qU1vOQ1iqcBRu0fQc/LlOW
-         2MmzFM7+gQd9IRf3vLTVbwZraZEZRt5BIrFYgkg8qAg5IRlJlBCPvU4q1+LXP/KGGdSq
-         q5dEBIq4x4oIQaBumGLKMp0FOmdbW8abCiaNG3bkrIrqDlinGrx1wJA4O7ZJelGggg3T
-         Xj6WNuz7l8g376C6yYU5QH9rAFFAx35DEA7dgsgNWyyyADfnOM2ddp08l9XqPSoLCxBh
-         nV6XxuZ1xCg+ZqS8xykHLUEHSQ1xcqAs/QKJefwnF/UepNLepvAUxeaXt5hsPjGKp1fc
-         qxlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdQVPYnrRg5mp8umuAbT3dc4wyOw+ppckOhh1+4WuJ18tuRSW0SfivE0O+sQX4vLY8GraSnq/FTtEfP3b4fR07pfKz0SRnxau1kCYXnyXr+ljDvLe2hLg0y0UOcCK+6xmhcRdf8Q==
-X-Gm-Message-State: AOJu0YwnBsJEORkuiINbdnZlSJS3GOgjSgKDJzQY090SOBFgKXoC++RP
-	j8bbw49Op4JQNqejEr94V/Ug5Ohq3UiM0R/uN3Ca949wHmZWEW5G
-X-Google-Smtp-Source: AGHT+IG7MPogB0k7COFS1tUiR/sBAETVMcNbWza+1u9DMPmIvR0RnHfe3APJ/NLtQMxZ1BhJm2klGw==
-X-Received: by 2002:a7b:ca4e:0:b0:41b:4caa:554c with SMTP id 5b1f17b1804b1-420e19c7f3cmr54181165e9.2.1716218452632;
-        Mon, 20 May 2024 08:20:52 -0700 (PDT)
-Received: from krava ([2a00:102a:4030:3ad2:f918:d0bd:fbd5:61c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8f8asm426039675e9.10.2024.05.20.08.20.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 08:20:52 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 20 May 2024 17:20:49 +0200
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, x86@kernel.org, peterz@infradead.org,
-	mingo@redhat.com, tglx@linutronix.de, bpf@vger.kernel.org,
-	rihams@fb.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/4] perf,x86: avoid missing caller address in stack
- traces captured in uprobe
-Message-ID: <ZktqUYRM79tYtdO1@krava>
-References: <20240508212605.4012172-1-andrii@kernel.org>
- <20240508212605.4012172-4-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cI8x2fJH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8996AC4AF09;
+	Mon, 20 May 2024 16:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716224045;
+	bh=BSuhiVL15vSe8qVXn6kr5snqkwJnG/vYlakcO+WqUTA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cI8x2fJHH+O30CgRycO0oZIpbKsT0M8rvRea3B2divhatuR2eEbeRnCif9B8KyK6K
+	 FajAvbieqQqggiFwVPVu0NT7Xq6hcj5gmpWaqicMHpjAizYZ9atNBIocbHGlr7x4aR
+	 GaNRQH+haDSYJ/Jm+vUonNed6Pu5RZYHeCtmvxqbe0EeqQYwkGw5Y+oTyikahpRNmg
+	 Ur5K4lIGvdRl0JhxUoQ7HpbcL0TBELgWArVhhoZAXvCZdzKcqcsUzqb5AqGIfJ9ge5
+	 cROzW3I+RMnUJyAwCgfXg2gusjicIgBUFZKzSWqN5b2qVFklb81auIwCyaB6QtflL4
+	 xezTMIVpsXsMw==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e271acb015so57996301fa.1;
+        Mon, 20 May 2024 09:54:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWkoScQ5Sknf7JMfZ4W6oLhC01KrDVbhq952zhzqs0xAkK114S5/ZGAOx/hB5/f9+6gzlgyKTt5f0j9tgt+bPCG8wBBznc5yJ6rj6z10gVSVMkdkWsFHimSo14+e+njk2rfprZBC5Nke0RxeENnnIFK7kyRMTcmqFH5YJf2jPOTQL5yOzr1kQvioUwF9bSkRg==
+X-Gm-Message-State: AOJu0YwlBizdLG1yZuncI58rB668vUzN9jXvi5CmVzY3tWh2buEy0dUP
+	bOM0LYAXKiaCc1J9HTicjP3SxDobaX1Z53Qqvxd8cKDNuXtMSUJathUSKFLuULiHkvQMMSKKTw5
+	timgaN7ro8kRMgFGirMfmW8AuIdQ=
+X-Google-Smtp-Source: AGHT+IGrMZcM7yIjtEJsy8/6USzbyCaBXwftuyFzEd745o0InmjeWKjbKmb4FR6RM1EZDyI0Ua1JCtSZZwF3Ieso3lM=
+X-Received: by 2002:ac2:5f48:0:b0:51d:abb3:d701 with SMTP id
+ 2adb3069b0e04-5220fa7191amr18042603e87.5.1716224044132; Mon, 20 May 2024
+ 09:54:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508212605.4012172-4-andrii@kernel.org>
+References: <20240517042839.544650-1-kris.van.hees@oracle.com> <20240517042839.544650-5-kris.van.hees@oracle.com>
+In-Reply-To: <20240517042839.544650-5-kris.van.hees@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 21 May 2024 01:53:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARymQg37LYbxoNB_nm+uPPN1thKC7PqAORh-5=fXpsv6A@mail.gmail.com>
+Message-ID: <CAK7LNARymQg37LYbxoNB_nm+uPPN1thKC7PqAORh-5=fXpsv6A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] module: script to generate offset ranges for
+ builtin modules
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 08, 2024 at 02:26:04PM -0700, Andrii Nakryiko wrote:
-> When tracing user functions with uprobe functionality, it's common to
-> install the probe (e.g., a BPF program) at the first instruction of the
-> function. This is often going to be `push %rbp` instruction in function
-> preamble, which means that within that function frame pointer hasn't
-> been established yet. This leads to consistently missing an actual
-> caller of the traced function, because perf_callchain_user() only
-> records current IP (capturing traced function) and then following frame
-> pointer chain (which would be caller's frame, containing the address of
-> caller's caller).
-> 
-> So when we have target_1 -> target_2 -> target_3 call chain and we are
-> tracing an entry to target_3, captured stack trace will report
-> target_1 -> target_3 call chain, which is wrong and confusing.
-> 
-> This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-> instruction being traced. If that's the case, with the assumption that
-> applicatoin is compiled with frame pointers, this instruction would be
-> a strong indicator that this is the entry to the function. In that case,
-> return address is still pointed to by %rsp, so we fetch it and add to
-> stack trace before proceeding to unwind the rest using frame
-> pointer-based logic.
-> 
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+On Fri, May 17, 2024 at 1:31=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
+.com> wrote:
+>
+> The offset range data for builtin modules is generated using:
+>  - modules.builtin.modinfo: associates object files with module names
+>  - vmlinux.map: provides load order of sections and offset of first membe=
+r
+>     per section
+>  - vmlinux.o.map: provides offset of object file content per section
+>  - .*.cmd: build cmd file with KBUILD_MODFILE and KBUILD_MODNAME
+>
+> The generated data will look like:
+>
+> .text 00000000-00000000 =3D _text
+> .text 0000baf0-0000cb10 amd_uncore
+> .text 0009bd10-0009c8e0 iosf_mbi
+> ...
+> .text 008e6660-008e9630 snd_soc_wcd_mbhc
+> .text 008e9630-008ea610 snd_soc_wcd9335 snd_soc_wcd934x snd_soc_wcd938x
+> .text 008ea610-008ea780 snd_soc_wcd9335
+> ...
+> .data 00000000-00000000 =3D _sdata
+> .data 0000f020-0000f680 amd_uncore
+>
+> For each ELF section, it lists the offset of the first symbol.  This can
+> be used to determine the base address of the section at runtime.
+>
+> Next, it lists (in strict ascending order) offset ranges in that section
+> that cover the symbols of one or more builtin modules.  Multiple ranges
+> can apply to a single module, and ranges can be shared between modules.
+>
+> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
 > ---
->  arch/x86/events/core.c  | 20 ++++++++++++++++++++
->  include/linux/uprobes.h |  2 ++
->  kernel/events/uprobes.c |  2 ++
->  3 files changed, 24 insertions(+)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 5b0dd07b1ef1..82d5570b58ff 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2884,6 +2884,26 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
->  		return;
->  
->  	pagefault_disable();
+> Changes since v2:
+>  - 1st arg to generate_builtin_ranges.awk is now modules.builtin.modinfo
+>  - Switched from using modules.builtin.objs to parsing .*.cmd files
+>  - Parse data from .*.cmd in generate_builtin_ranges.awk
+> ---
+>  scripts/generate_builtin_ranges.awk | 232 ++++++++++++++++++++++++++++
+>  1 file changed, 232 insertions(+)
+>  create mode 100755 scripts/generate_builtin_ranges.awk
+>
+> diff --git a/scripts/generate_builtin_ranges.awk b/scripts/generate_built=
+in_ranges.awk
+> new file mode 100755
+> index 0000000000000..6975a9c7266d9
+> --- /dev/null
+> +++ b/scripts/generate_builtin_ranges.awk
+> @@ -0,0 +1,232 @@
+> +#!/usr/bin/gawk -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +# generate_builtin_ranges.awk: Generate address range data for builtin m=
+odules
+> +# Written by Kris Van Hees <kris.van.hees@oracle.com>
+> +#
+> +# Usage: generate_builtin_ranges.awk modules.builtin.modinfo vmlinux.map=
+ \
+> +#              vmlinux.o.map > modules.builtin.ranges
+> +#
 > +
-> +#ifdef CONFIG_UPROBES
-> +	/*
-> +	 * If we are called from uprobe handler, and we are indeed at the very
-> +	 * entry to user function (which is normally a `push %rbp` instruction,
-> +	 * under assumption of application being compiled with frame pointers),
-> +	 * we should read return address from *regs->sp before proceeding
-> +	 * to follow frame pointers, otherwise we'll skip immediate caller
-> +	 * as %rbp is not yet setup.
-> +	 */
-> +	if (current->utask) {
-> +		struct arch_uprobe *auprobe = current->utask->auprobe;
-> +		u64 ret_addr;
-> +
-> +		if (auprobe && auprobe->insn[0] == 0x55 /* push %rbp */ &&
+> +BEGIN {
+> +       # modules.builtin.modinfo uses \0 as record separator
+> +       # All other files use \n.
+> +       RS =3D "[\n\0]";
+> +}
 
-nice cactch, I was wondering if we should set some auprobe flag in
-arch_uprobe_analyze_insn and test it here instead of matching the
-instruction opcode directly, but that would probably be just more
-complicated.. this is simple and in arch code, no np
 
-jirka
+Why do you want to parse modules.builtin.modinfo
+instead of modules.builtin?
 
-> +		    !__get_user(ret_addr, (const u64 __user *)regs->sp))
-> +			perf_callchain_store(entry, ret_addr);
-> +	}
-> +#endif
+modules.builtin uses \n separator.
+
+
+
+
+
+
 > +
->  	while (entry->nr < entry->max_stack) {
->  		if (!valid_user_frame(fp, sizeof(frame)))
->  			break;
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index 0c57eec85339..7b785cd30d86 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -76,6 +76,8 @@ struct uprobe_task {
->  	struct uprobe			*active_uprobe;
->  	unsigned long			xol_vaddr;
->  
-> +	struct arch_uprobe              *auprobe;
+> +# Return the module name(s) (if any) associated with the given object.
+> +#
+> +# If we have seen this object before, return information from the cache.
+> +# Otherwise, retrieve it from the corresponding .cmd file.
+> +#
+> +function get_module_info(fn, mod, obj, mfn, s) {
+
+
+There are 5 arguments, while the caller passes only 1 argument
+( get_module_info($4) )
+
+
+
+
+
+
+
+> +       if (fn in omod)
+> +               return omod[fn];
 > +
->  	struct return_instance		*return_instances;
->  	unsigned int			depth;
->  };
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 1c99380dc89d..504693845187 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -2072,6 +2072,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
->  	bool need_prep = false; /* prepare return uprobe, when needed */
->  
->  	down_read(&uprobe->register_rwsem);
-> +	current->utask->auprobe = &uprobe->arch;
->  	for (uc = uprobe->consumers; uc; uc = uc->next) {
->  		int rc = 0;
->  
-> @@ -2086,6 +2087,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
->  
->  		remove &= rc;
->  	}
-> +	current->utask->auprobe = NULL;
->  
->  	if (need_prep && !remove)
->  		prepare_uretprobe(uprobe, regs); /* put bp at return */
-> -- 
+> +       if (match(fn, /\/[^/]+$/) =3D=3D 0)
+> +               return "";
+> +
+> +       obj =3D fn;
+> +       mod =3D "";
+> +       mfn =3D "";
+> +       fn =3D substr(fn, 1, RSTART) "." substr(fn, RSTART + 1) ".cmd";
+> +       if (getline s <fn =3D=3D 1) {
+> +               if (match(s, /DKBUILD_MODNAME=3D[^ ]+/) > 0) {
+> +                       mod =3D substr(s, RSTART + 17, RLENGTH - 17);
+> +                       gsub(/['"]/, "", mod);
+> +                       gsub(/:/, " ", mod);
+> +               }
+> +
+> +               if (match(s, /DKBUILD_MODFILE=3D[^ ]+/) > 0) {
+> +                       mfn =3D substr(s, RSTART + 17, RLENGTH - 17);
+> +                       gsub(/['"]/, "", mfn);
+> +                       gsub(/:/, " ", mfn);
+> +               }
+> +       }
+> +       close(fn);
+> +
+> +# tmp =3D $0;
+> +# $0 =3D s;
+> +# print mod " " mfn " " obj " " $NF;
+> +# $0 =3D tmp;
+> +
+> +       # A single module (common case) also reflects objects that are no=
+t part
+> +       # of a module.  Some of those objects have names that are also a =
+module
+> +       # name (e.g. core).  We check the associated module file name, an=
+d if
+> +       # they do not match, the object is not part of a module.
+
+
+You do not need to use KBUILD_MODNAME.
+
+Just use KBUILD_MODFILE only.
+If the same path is found in modules.builtin,
+it is a built-in module.
+
+Its basename is modname.
+
+
+
+
+One more question in a corner case.
+
+How does your code work when an object is shared
+by multiple modules?
+
+
+For example, set
+  CONFIG_EDAC_SKX=3Dy
+  CONFIG_EDAC_I10NM=3Dy
+
+How is the address range of drivers/edac/skx_common.o handled?
+
+There are 4 possibilities.
+
+ - included in skx_edac
+ - included in i10nm_edac
+ - included in both of them
+ - not included in any of them
+
+The correct behavior should be "included in both of them".
+
+How does your code work?
+
+
+
+
+
+
+
+
+
+> +       if (mod !~ / /) {
+> +               if (!(mod in mods))
+> +                       return "";
+> +               if (mods[mod] !=3D mfn)
+> +                       return "";
+> +       }
+> +
+> +       # At this point, mod is a single (valid) module name, or a list o=
+f
+> +       # module names (that do not need validation).
+> +       omod[obj] =3D mod;
+> +       close(fn);
+> +
+> +       return mod;
+> +}
+> +
+> +FNR =3D=3D 1 {
+> +       FC++;
+> +}
+> +
+> +# (1-old) Build a mapping to associate object files with built-in module=
+ names.
+> +#
+> +# The first file argument is used as input (modules.builtin.objs).
+> +#
+> +FC =3D=3D 1 && old_behaviour {
+> +       sub(/:/, "");
+> +       mod =3D $1;
+> +       sub(/([^/]*\/)+/, "", mod);
+> +       sub(/\.o$/, "", mod);
+> +       gsub(/-/, "_", mod);
+> +
+> +       if (NF > 1) {
+> +               for (i =3D 2; i <=3D NF; i++) {
+> +                       if ($i in mods)
+> +                               mods[$i] =3D mods[$i] " " mod;
+> +                       else
+> +                               mods[$i] =3D mod;
+> +               }
+> +       } else
+> +               mods[$1] =3D mod;
+> +
+> +       next;
+> +}
+
+
+Please remove the old code.
+
+
+
+
+
+> +# (1) Build a lookup map of built-in module names.
+> +#
+> +# The first file argument is used as input (modules.builtin.modinfo).
+> +#
+> +# We are interested in lines that follow the format
+> +#     <modname>.file=3D<path>
+> +# and use them to record <modname>
+> +#
+> +FC =3D=3D 1 && /^[^\.]+.file=3D/ {
+> +       gsub(/[\.=3D]/, " ");
+> +# print $1 " -> " $3;
+> +       mods[$1] =3D $3;
+> +       next;
+> +}
+
+
+I guess parsing module.builtin will be simpler.
+
+
+
+
+
+
+> +
+> +# (2) Determine the load address for each section.
+> +#
+> +# The second file argument is used as input (vmlinux.map).
+> +#
+> +# Since some AWK implementations cannot handle large integers, we strip =
+of the
+> +# first 4 hex digits from the address.  This is safe because the kernel =
+space
+> +# is not large enough for addresses to extend into those digits.
+> +#
+> +FC =3D=3D 2 && /^\./ && NF > 2 {
+> +       if (type)
+> +               delete sect_addend[type];
+> +
+> +       if ($1 ~ /percpu/)
+> +               next;
+> +
+> +       raw_addr =3D $2;
+> +       addr_prefix =3D "^" substr($2, 1, 6);
+> +       sub(addr_prefix, "0x", $2);
+> +       base =3D strtonum($2);
+> +       type =3D $1;
+> +       anchor =3D 0;
+> +       sect_base[type] =3D base;
+> +
+> +       next;
+> +}
+> +
+> +!type {
+> +       next;
+> +}
+> +
+> +# (3) We need to determine the base address of the section so that range=
+s can
+> +# be expressed based on offsets from the base address.  This accommodate=
+s the
+> +# kernel sections getting loaded at different addresses than what is rec=
+orded
+> +# in vmlinux.map.
+> +#
+> +# At runtime, we will need to determine the base address of each section=
+ we are
+> +# interested in.  We do that by recording the offset of the first symbol=
+ in the
+> +# section.  Once we know the address of this symbol in the running kerne=
+l, we
+> +# can calculate the base address of the section.
+> +#
+> +# If possible, we use an explicit anchor symbol (sym =3D .) listed at th=
+e base
+> +# address (offset 0).
+> +#
+> +# If there is no such symbol, we record the first symbol in the section =
+along
+> +# with its offset.
+> +#
+> +# We also determine the offset of the first member in the section in cas=
+e the
+> +# final linking inserts some content between the start of the section an=
+d the
+> +# first member.  I.e. in that case, vmlinux.map will list the first memb=
+er at
+> +# a non-zero offset whereas vmlinux.o.map will list it at offset 0.  We =
+record
+> +# the addend so we can apply it when processing vmlinux.o.map (next).
+> +#
+> +FC =3D=3D 2 && !anchor && raw_addr =3D=3D $1 && $3 =3D=3D "=3D" && $4 =
+=3D=3D "." {
+> +       anchor =3D sprintf("%s %08x-%08x =3D %s", type, 0, 0, $2);
+> +       sect_anchor[type] =3D anchor;
+> +
+> +       next;
+> +}
+> +
+> +FC =3D=3D 2 && !anchor && $1 ~ /^0x/ && $2 !~ /^0x/ && NF <=3D 4 {
+> +       sub(addr_prefix, "0x", $1);
+> +       addr =3D strtonum($1) - base;
+> +       anchor =3D sprintf("%s %08x-%08x =3D %s", type, addr, addr, $2);
+> +       sect_anchor[type] =3D anchor;
+> +
+> +       next;
+> +}
+> +
+> +FC =3D=3D 2 && base && /^ \./ && $1 =3D=3D type && NF =3D=3D 4 {
+> +       sub(addr_prefix, "0x", $2);
+> +       addr =3D strtonum($2);
+> +       sect_addend[type] =3D addr - base;
+> +
+> +       if (anchor) {
+> +               base =3D 0;
+> +               type =3D 0;
+> +       }
+> +
+> +       next;
+> +}
+> +
+> +# (4) Collect offset ranges (relative to the section base address) for b=
+uilt-in
+> +# modules.
+> +#
+> +FC =3D=3D 3 && /^ \./ && NF =3D=3D 4 && $3 !=3D "0x0" {
+> +       type =3D $1;
+> +       if (!(type in sect_addend))
+> +               next;
+
+
+This assumes sections are 1:1 mapping
+between vmlinux.o and vmlinux.
+
+How far does this assumption work?
+
+
+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION will not work
+at least.
+
+
+
+As I said in the previous review,
+gawk is not documented in Documentation/process/changes.rst
+
+Please add it if you go with gawk.
+
+
+
+
+
+
+> +
+> +       sub(addr_prefix, "0x", $2);
+> +       addr =3D strtonum($2) + sect_addend[type];
+> +
+> +       mod =3D get_module_info($4);
+> +# printf "[%s, %08x] %s [%s] %08x\n", mod_name, mod_start, $4, mod, addr=
+;
+> +       if (mod =3D=3D mod_name)
+> +               next;
+> +
+> +       if (mod_name) {
+> +               idx =3D mod_start + sect_base[type] + sect_addend[type];
+> +               entries[idx] =3D sprintf("%s %08x-%08x %s", type, mod_sta=
+rt, addr, mod_name);
+> +               count[type]++;
+> +       }
+> +# if (mod =3D=3D "")
+> +# printf "ENTRY WITHOUT MOD - MODULE MAY END AT %08x\n", addr
+> +
+> +       mod_name =3D mod;
+> +       mod_start =3D addr;
+> +}
+> +
+> +END {
+> +       for (type in count) {
+> +               if (type in sect_anchor)
+> +                       entries[sect_base[type]] =3D sect_anchor[type];
+> +       }
+> +
+> +       n =3D asorti(entries, indices);
+> +       for (i =3D 1; i <=3D n; i++)
+> +               print entries[indices[i]];
+> +}
+> --
 > 2.43.0
-> 
-> 
+>
+
+
+--
+Best Regards
+
+Masahiro Yamada
