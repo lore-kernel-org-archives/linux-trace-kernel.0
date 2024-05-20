@@ -1,120 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C268417C67;
-	Mon, 20 May 2024 09:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E212E26AEC;
+	Mon, 20 May 2024 13:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716197931; cv=none; b=iop5wq8NX4WBcPJQMzCGJvyY3PmsVA/tl6v1cTzOS0jz3Cz6ETa1JSwutiHiKRtEaDRk/AMjOtGR+GRNbtzTSj00UWHOYRmmAdFp9lmRKTODsIIHQZwNsFiJYfqbYyOtnqmmEBm+S2kTs6Pj+63OrCo/EPNtoqODpPrbQbd2M18=
+	t=1716213001; cv=none; b=ibNUK7D29dEeEljC9a0SCinHrusmi0oOb2qdfTNaYBGJFhJB0Igk8gqnNENX4EsXuqQoB/glwL0toLg/00AhZY8aZ1thunfkrAqcCOluirD5BSIWWMI3Wiwv3zIafMDhcgzDNgKMAGQCZ75nS9sSyjTPGKl/NZxfMgBiev+bs78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716197931; c=relaxed/simple;
-	bh=f2ltlTJfrPXs5K86QOoQ6YuDR8HIGkk3pJMklKg3P6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nZItjFs54f32rjSMRXa/7w/G6CnJzd3QxMuCO+uh1T5NuaML5GshdDF3EfXm4UmwmuFFOGbWHF0gUYRvzjpukoLyxzLWg1XNrx9J8AiA13srHsELExJYcUZt0L2QuUCGul4qRUpHdWBgtiDMqCRqjoKpacYWAhb7JTOVgCWdCIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAGIgH48; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAGIgH48"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B15FC4AF08;
-	Mon, 20 May 2024 09:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716197931;
-	bh=f2ltlTJfrPXs5K86QOoQ6YuDR8HIGkk3pJMklKg3P6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LAGIgH48/HWLi4pMVeP+Y54RqB4nRlmrFadY+SSIZN1ms2/Z+Xq9ylVZZ6rabqH2H
-	 b8tqnMQtyZtQ2fh6A9Cpu6nfFBllRAFRUAgyHD1+DG7T3wS7/1/QaWau3k+6SMF1EI
-	 QN1PkIF/jln3DDg0aLxM/hrUAQGF9xIM5HPhX4PA8oC63RMuFWBnkSHxIcZ+VUGCxO
-	 fNdZyVKvb9SenaZSgiPncY6esb6ifpn9m9JoDhirxrJf/ByK8R7grQE/zHis4gAWhP
-	 EqEjr6bR3S4vQAjWLJQ7TX+QMxb0GpeXYtVTqXFgHBUG1SGKXrrUbSObjpC28Kvdvh
-	 QoK9rL9fNOz8A==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51f99f9e0faso4685543e87.2;
-        Mon, 20 May 2024 02:38:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/9vaFE6NOAsa94TAYSgboLg0Tz/XHCdx0IDlBUgyVbHGWGHqvKwz0D/jlvKT1K57UTX0CvVus+IwiKIqke2SnA2zccFEKLFYhzsTOAPW5sTP99HkWJr5G1tcZGppC2xsxb2e1USdMBqjot3gmfBqpEETM0hCnSnNJIqwA9gEvFH7wDebwRIeZSwatnqLZMA==
-X-Gm-Message-State: AOJu0Yx7FjM0Re0Wv3ANXDqSS+2G2BK47bBKh3NDdWPiRtidAV7ZVuv+
-	Gi0hXsCselPuUxBlEg3eck1o/725X6r2pd2Xl1PMlw6gOWB1H+jTb8SwUed9yfmxqLYJy6nd+tH
-	Wfs+4cAAFoiCcW882hMhegAs1VrI=
-X-Google-Smtp-Source: AGHT+IHJ50N0b6yVjcPEnuluIR3E+9C3M5NQS8+OA8xjBOBrvD4f0Q/6GXm3dzXglHKaJPbJ3/n8p7uD8nPWdAXamx8=
-X-Received: by 2002:a05:6512:3448:b0:520:76d0:b054 with SMTP id
- 2adb3069b0e04-524590e5807mr610226e87.57.1716197930086; Mon, 20 May 2024
- 02:38:50 -0700 (PDT)
+	s=arc-20240116; t=1716213001; c=relaxed/simple;
+	bh=46mWSNkzzYXt6IhvzmetNq9RgZo7U/8GlVF8Q8Tardg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WPK2bGXBAacm0ynrzKf0VwbmwklqsSuyA8ipZup89wfLIxg8uyCeIA0eDmJMoCRT/O3lkzsnbR2EciBQAC2oIfgypBRWYgRE49htaczPpCXL9V4fbVlT3QkkLiIl9gdM1FNChvrHijHjIzzm+xppD8yJs8H80LXqnny/ycG2oSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99034C2BD10;
+	Mon, 20 May 2024 13:50:00 +0000 (UTC)
+Date: Mon, 20 May 2024 09:50:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rt-users
+ <linux-rt-users@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ring-buffer: Fix a race between readers and resize
+ checks
+Message-ID: <20240520095037.33a7fde6@gandalf.local.home>
+In-Reply-To: <20240517134008.24529-3-petr.pavlu@suse.com>
+References: <20240517134008.24529-1-petr.pavlu@suse.com>
+	<20240517134008.24529-3-petr.pavlu@suse.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517042839.544650-1-kris.van.hees@oracle.com> <20240517042839.544650-3-kris.van.hees@oracle.com>
-In-Reply-To: <20240517042839.544650-3-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 20 May 2024 18:38:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAST_SbaN9WQRM_k0xE1MUReJvn9AMSg4A1-9b9xotf67w@mail.gmail.com>
-Message-ID: <CAK7LNAST_SbaN9WQRM_k0xE1MUReJvn9AMSg4A1-9b9xotf67w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] trace: add CONFIG_BUILTIN_MODULE_RANGES option
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 17, 2024 at 1:30=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range dat=
-a
-> is generated for kernel modules that are built into the kernel image.
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+On Fri, 17 May 2024 15:40:08 +0200
+Petr Pavlu <petr.pavlu@suse.com> wrote:
+
+> The reader code in rb_get_reader_page() swaps a new reader page into the
+> ring buffer by doing cmpxchg on old->list.prev->next to point it to the
+> new page. Following that, if the operation is successful,
+> old->list.next->prev gets updated too. This means the underlying
+> doubly-linked list is temporarily inconsistent, page->prev->next or
+> page->next->prev might not be equal back to page for some page in the
+> ring buffer.
+> 
+> The resize operation in ring_buffer_resize() can be invoked in parallel.
+> It calls rb_check_pages() which can detect the described inconsistency
+> and stop further tracing:
+> 
+> [  190.271762] ------------[ cut here ]------------
+> [  190.271771] WARNING: CPU: 1 PID: 6186 at kernel/trace/ring_buffer.c:1467 rb_check_pages.isra.0+0x6a/0xa0
+> [  190.271789] Modules linked in: [...]
+> [  190.271991] Unloaded tainted modules: intel_uncore_frequency(E):1 skx_edac(E):1
+> [  190.272002] CPU: 1 PID: 6186 Comm: cmd.sh Kdump: loaded Tainted: G            E      6.9.0-rc6-default #5 158d3e1e6d0b091c34c3b96bfd99a1c58306d79f
+> [  190.272011] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552c-rebuilt.opensuse.org 04/01/2014
+> [  190.272015] RIP: 0010:rb_check_pages.isra.0+0x6a/0xa0
+> [  190.272023] Code: [...]
+> [  190.272028] RSP: 0018:ffff9c37463abb70 EFLAGS: 00010206
+> [  190.272034] RAX: ffff8eba04b6cb80 RBX: 0000000000000007 RCX: ffff8eba01f13d80
+> [  190.272038] RDX: ffff8eba01f130c0 RSI: ffff8eba04b6cd00 RDI: ffff8eba0004c700
+> [  190.272042] RBP: ffff8eba0004c700 R08: 0000000000010002 R09: 0000000000000000
+> [  190.272045] R10: 00000000ffff7f52 R11: ffff8eba7f600000 R12: ffff8eba0004c720
+> [  190.272049] R13: ffff8eba00223a00 R14: 0000000000000008 R15: ffff8eba067a8000
+> [  190.272053] FS:  00007f1bd64752c0(0000) GS:ffff8eba7f680000(0000) knlGS:0000000000000000
+> [  190.272057] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  190.272061] CR2: 00007f1bd6662590 CR3: 000000010291e001 CR4: 0000000000370ef0
+> [  190.272070] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  190.272073] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  190.272077] Call Trace:
+> [  190.272098]  <TASK>
+> [  190.272189]  ring_buffer_resize+0x2ab/0x460
+> [  190.272199]  __tracing_resize_ring_buffer.part.0+0x23/0xa0
+> [  190.272206]  tracing_resize_ring_buffer+0x65/0x90
+> [  190.272216]  tracing_entries_write+0x74/0xc0
+> [  190.272225]  vfs_write+0xf5/0x420
+> [  190.272248]  ksys_write+0x67/0xe0
+> [  190.272256]  do_syscall_64+0x82/0x170
+> [  190.272363]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  190.272373] RIP: 0033:0x7f1bd657d263
+> [  190.272381] Code: [...]
+> [  190.272385] RSP: 002b:00007ffe72b643f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> [  190.272391] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f1bd657d263
+> [  190.272395] RDX: 0000000000000002 RSI: 0000555a6eb538e0 RDI: 0000000000000001
+> [  190.272398] RBP: 0000555a6eb538e0 R08: 000000000000000a R09: 0000000000000000
+> [  190.272401] R10: 0000555a6eb55190 R11: 0000000000000246 R12: 00007f1bd6662500
+> [  190.272404] R13: 0000000000000002 R14: 00007f1bd6667c00 R15: 0000000000000002
+> [  190.272412]  </TASK>
+> [  190.272414] ---[ end trace 0000000000000000 ]---
+> 
+> Note that ring_buffer_resize() calls rb_check_pages() only if the parent
+> trace_buffer has recording disabled. Recent commit d78ab792705c
+> ("tracing: Stop current tracer when resizing buffer") causes that it is
+> now always the case which makes it more likely to experience this issue.
+> 
+> The window to hit this race is nonetheless very small. To help
+> reproducing it, one can add a delay loop in rb_get_reader_page():
+> 
+>  ret = rb_head_page_replace(reader, cpu_buffer->reader_page);
+>  if (!ret)
+>  	goto spin;
+>  for (unsigned i = 0; i < 1U << 26; i++)  /* inserted delay loop */
+>  	__asm__ __volatile__ ("" : : : "memory");
+>  rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;
+> 
+> .. and then run the following commands on the target system:
+> 
+>  echo 1 > /sys/kernel/tracing/events/sched/sched_switch/enable
+>  while true; do
+>  	echo 16 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+>  	echo 8 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+>  done &
+>  while true; do
+>  	for i in /sys/kernel/tracing/per_cpu/*; do
+>  		timeout 0.1 cat $i/trace_pipe; sleep 0.2
+>  	done
+>  done
+> 
+> To fix the problem, make sure ring_buffer_resize() doesn't invoke
+> rb_check_pages() concurrently with a reader operating on the same
+> ring_buffer_per_cpu by taking its cpu_buffer->reader_lock.
+
+Definitely a bug. Thanks for catching it. But...
+
+> 
+> Fixes: 659f451ff213 ("ring-buffer: Add integrity check at end of iter read")
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 > ---
-> Changes since v2:
->  - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
-> ---
->  kernel/trace/Kconfig | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 47345bf1d4a9f..d0c82b4b3a61e 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -188,6 +188,24 @@ menuconfig FTRACE
->
->  if FTRACE
->
-> +config BUILTIN_MODULE_RANGES
-> +       bool "Generate address range information for builtin modules"
-> +       depends on FTRACE
-> +       select VMLINUX_MAP
+>  kernel/trace/ring_buffer.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 0ae569eae55a..967655591719 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1449,6 +1449,11 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+>   *
+>   * As a safety measure we check to make sure the data pages have not
+>   * been corrupted.
+> + *
+> + * Callers of this function need to guarantee that the list of pages doesn't get
+> + * modified during the check. In particular, if it's possible that the function
+> + * is invoked with concurrent readers which can swap in a new reader page then
+> + * the caller should take cpu_buffer->reader_lock.
+>   */
+>  static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+>  {
+> @@ -2200,8 +2205,13 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+>  		 */
+>  		synchronize_rcu();
+>  		for_each_buffer_cpu(buffer, cpu) {
+> +			unsigned long flags;
+> +
+>  			cpu_buffer = buffer->buffers[cpu];
+> +			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+>  			rb_check_pages(cpu_buffer);
+> +			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock,
+> +						   flags);
+
+Putting my RT hat on, I really don't like the above fix. The
+rb_check_pages() iterates all subbuffers which makes the time interrupts
+are disabled non-deterministic.
+
+Instead, I would rather have something where we disable readers while we do
+the check, and re-enable them.
+
+			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+			cpu_buffer->read_disabled++;
+			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+
+// Also, don't put flags on a new line. We are allow to go 100 characters now.
 
 
+  			rb_check_pages(cpu_buffer);
+			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+			cpu_buffer->read_disabled--;
+			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
 
-I still got this warning.
+Or something like that. Yes, that also requires creating a new
+"read_disabled" field in the ring_buffer_per_cpu code.
 
+That said, I'm going to accept these patches as is (moving flags onto the
+same line). But would like the above code for the next merge window as it
+would then not affect RT.
 
-WARNING: unmet direct dependencies detected for VMLINUX_MAP
-  Depends on [n]: EXPERT [=3Dn]
-  Selected by [y]:
-  - BUILTIN_MODULE_RANGES [=3Dy] && FTRACE [=3Dy]
+I'll accept these patches because it does fix the bug now.
 
-
-
-
-
-I recommend changing 'select VMLINUX_MAP'
-to 'depends on VMLINUX_MAP'.
-
-
-
-BTW, do you need to put this inside 'if FTRACE'?
-
-FTRACE is not required to generate the ranges file.
+-- Steve
 
 
+>  		}
+>  		atomic_dec(&buffer->record_disabled);
+>  	}
 
-
---=20
-Best Regards
-Masahiro Yamada
