@@ -1,165 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B58836;
-	Tue, 21 May 2024 05:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE7156B7B;
+	Tue, 21 May 2024 10:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716269453; cv=none; b=rqwDHVr5qknyNjha3/H/zrlj8SU245Bl2kN84JZbdDAx4bBQ3QFjRIhWetErI6FhFa0mDBGptWjBT/VYoif4T7yVXpQhzM9piLgQqPpzVa5m1gUoEywo1V1WVT1WCXEFkLG/UbwBQrQOR1Yj829/bzND1RZ0+QQn20xp5NiTUkA=
+	t=1716286323; cv=none; b=S51CLKOXgX7BXoS/QRodvT47bXW2anzRnz6Hy1uhXlmNj1wgpkc6wUp0X9DXqvPlZiQEGR39bzCNBaeaBCatLzhs9+n5CA+62tbSBG96kdetmxKpliJgpO27gLoGDWWm6UiE0/farxELfpfM6+3jfUdG86eScp76d4ehq/t6w8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716269453; c=relaxed/simple;
-	bh=tmFYAnZ399DtCaaCLZqcJMIYNXQT2/24auFWFxtMNHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HtTkDDj8dNWqWLU0zrhUXmw65SNyElGIiU1k2yFscnmlyg666FzGq5s81eOEWzgJlSD7dE3eoy2bgLkhn/8IdHNY/xyW2wEjqu4Vke88w8IQMJ/4MpciH0WoiVW2h+lu1CBvm7XdDYFvuUnkCm9dLmqfRFtOVopeWZXGNENgr6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhOTSKuM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716286323; c=relaxed/simple;
+	bh=yYi5hNsdf/JVmDv8OJQeekda0JmzzC54uH3omBKiUME=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nr1EfKIgSw+iUf4sK83I41jGIbP6tlQluG3kJ349LOgHZRpsiSV3dK1Qs/HV+gAvOxx+DQV5R99iCRnpQlqo+25R034GuaAPzC3fgeAK8jXnNie0eohRNBwoNnnFXptTWuc4VxwKuWGQrvJgAW29Etdms1Z0MBldomkipb82l6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U91SY6bN; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhOTSKuM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B8DCC2BD11;
-	Tue, 21 May 2024 05:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716269452;
-	bh=tmFYAnZ399DtCaaCLZqcJMIYNXQT2/24auFWFxtMNHw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RhOTSKuMx2i5jsmJkj+EjHrXkq9apEsdvXzzQ0CHQeUlexGVMaOY6ZxTPt2xv7lb7
-	 +5hfVPG8mqr6Ko76Uo7Pxg1Oylnpq0r4x6hgERQm1UbOElL1yY0MnaDNWULdpQDAYM
-	 VTqjQ247kucKClu/ewzUA6u8sDMzQmkYSEWEAQ7UWokuEMNAaVnajEiftGY1FMC7v7
-	 kbguqNtqXhq3WSeJ+WT0AQGLyRiNQo5gezPxF2l3QDEHRsGXrxi1IjvuE/QUdefar2
-	 ToOGjRMaocQv32AuBnO+gynleLRINkiQ52YsfqFN8/3MrTyc/iTAG3Nc7mJvpKiIpi
-	 0ktmzcjnR3sGw==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: bpf@vger.kernel.org,
-	oleg@redhat.com,
-	jolsa@kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Breno Leitao <leitao@debian.org>
-Subject: [PATCH] uprobes: prevent mutex_lock() under rcu_read_lock()
-Date: Mon, 20 May 2024 22:30:17 -0700
-Message-ID: <20240521053017.3708530-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U91SY6bN"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso9519199a12.2;
+        Tue, 21 May 2024 03:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716286321; x=1716891121; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DXGQUDdf+LcN9Se8hy3SDw3datb6i3o01wmR3xY+ZaE=;
+        b=U91SY6bN7zE1iekQp9AYZTMIJ4GCYUq4NODLW816WeATTYMW6STyvRQCBUrDybwaO4
+         Z8nNz/fKmx8qfzI3Zai1U6TFc8bYFifvtoBlXXqiIuaoAe7l38i5yT5IIeaju820XtaT
+         WB2bban6pV6OJBWSQ3fgiK5fWl+w5wEsQAw5Kq7QP0pQBXqJhRemLCw1Uhal8W+cb/E3
+         VFLs9qTVA87tcqmXbqvx9cx3pBkbhRej05v4UT3YfzXl79Ju6pWi1VlRK3U2CKN7L7tg
+         zwJHYfV94QnuUAf6GEVK7eX3hbVOuKPeIbjkdk9G0Jh/mci8Q4AnMlN42WO35otNfsi+
+         pPsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716286321; x=1716891121;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DXGQUDdf+LcN9Se8hy3SDw3datb6i3o01wmR3xY+ZaE=;
+        b=f38PwsZkh91RibmV48z49CASkeHK/GFNSE7A2kJwoUi87Vo9CfUGjvzdHYi2eHyuZG
+         DhM6Gqq+xsGIu01i+/hQO6/kX9hjYTToVTLbsHzK9YVE2sVsdMcctqZwtaHOFdOvcVYL
+         TIwMo/yi/ehHvQ0Yxh9BBhLZJNhZyfef7UHNB9w5GUl1m/QAE6Li6iUPYkfLr6lJT+NE
+         dc0uUTmCEgqfMoPQJEGRqNGlfJn8RtlgotbNrQhxZh0uHgOou6oSEh68zyBG4Q4cqysq
+         k98r4YnT5fnGYCIH3X9OcdA2XIeD6DA7xCYB47IkHyVnT/lmJT8bWzsQMYmVdcQT/efY
+         /EqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRj/ZoD3txuDRUxSXJnNEl+wHp+b+igQ8JHs5o54uxfkseEyzT4F8iMOaa7q/ZkYJJDNykkoLFaC4R79KowtBXirbBYIThn4a0JChrmOB9/R6FWwRYp4ughTmb0/dydubIKAocfIf5WW0DlXx8l90mQAqYe0lb3Qm9g7xSGnmeaAFhsRtbmoJ7VJQPzcF8QT5AAky7W3JQRjcRzhqJt84tj68vV5OFehq9HFYMwgz1s4KtuaQLjxOoNEZx
+X-Gm-Message-State: AOJu0YxK3lxPpB/D7ifyWfWs/+GHfP1AMQfPyak6S2SDpgUPREo09NA5
+	xOWFMmlUCp2Ya10AKV8Tr3DGDGsezCwebc/3YQsNDQ8jEqoCbMX5
+X-Google-Smtp-Source: AGHT+IHrL4nO4dbSC1XQCh+yY9f5vG1i3rheyn4t0k3IkGU+d9ENf3sGlpgIMwS4VGw4IHpSZTUeHg==
+X-Received: by 2002:a17:907:7da3:b0:a58:e3d9:e2d6 with SMTP id a640c23a62f3a-a5a2d672f76mr2679777966b.56.1716286320629;
+        Tue, 21 May 2024 03:12:00 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17894d4bsm1581035266b.78.2024.05.21.03.11.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 03:11:59 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 21 May 2024 12:11:57 +0200
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "olsajiri@gmail.com" <olsajiri@gmail.com>,
+	"oleg@redhat.com" <oleg@redhat.com>,
+	"songliubraving@fb.com" <songliubraving@fb.com>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"debug@rivosinc.com" <debug@rivosinc.com>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+	"yhs@fb.com" <yhs@fb.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv5 bpf-next 6/8] x86/shstk: Add return uprobe support
+Message-ID: <ZkxzbSq3bS2loTJI@krava>
+References: <a8b7be15e6dbb1e8f2acaee7dae21fec7775194c.camel@intel.com>
+ <Zj_enIB_J6pGJ6Nu@krava>
+ <20240513185040.416d62bc4a71e79367c1cd9c@kernel.org>
+ <c56ae75e9cf0878ac46185a14a18f6ff7e8f891a.camel@intel.com>
+ <ZkKE3qT1X_Jirb92@krava>
+ <20240515113525.GB6821@redhat.com>
+ <0fa9634e9ac0d30d513eefe6099f5d8d354d93c1.camel@intel.com>
+ <20240515154202.GE6821@redhat.com>
+ <Zkp6mT2xag29dLTR@krava>
+ <81afa4ccc661a1598b659958164c7a73cf211d21.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <81afa4ccc661a1598b659958164c7a73cf211d21.camel@intel.com>
 
-Recent changes made uprobe_cpu_buffer preparation lazy, and moved it
-deeper into __uprobe_trace_func(). This is problematic because
-__uprobe_trace_func() is called inside rcu_read_lock()/rcu_read_unlock()
-block, which then calls prepare_uprobe_buffer() -> uprobe_buffer_get() ->
-mutex_lock(&ucb->mutex), leading to a splat about using mutex under
-non-sleepable RCU:
+On Tue, May 21, 2024 at 01:31:53AM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2024-05-20 at 00:18 +0200, Jiri Olsa wrote:
+> > anyway I think we can fix that in another way by using the optimized
+> > trampoline,
+> > but returning to the user space through iret when shadow stack is detected
+> > (as I did in the first version, before you adjusted it to the sysret path).
+> > 
+> > we need to update the return address on stack only when returning through the
+> > trampoline, but we can jump to original return address directly from syscall
+> > through iret.. which is slower, but with shadow stack we don't care
+> > 
+> > basically the only change is adding the shstk_is_enabled check to the
+> > following condition in SYSCALL_DEFINE0(uretprobe):
+> > 
+> >         if (regs->sp != sp || shstk_is_enabled())
+> >                 return regs->ax;
+> 
+> On the surface it sounds reasonable. Thanks.
+> 
+> And then I guess if tradeoffs are seen differently in the future, and we want to
+> enable the fast path for shadow stack we can go with your other solution. So
+> this just simply fixes things functionally without much code.
 
-  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:585
-   in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 98231, name: stress-ng-sigq
-   preempt_count: 0, expected: 0
-   RCU nest depth: 1, expected: 0
-   ...
-   Call Trace:
-    <TASK>
-    dump_stack_lvl+0x3d/0xe0
-    __might_resched+0x24c/0x270
-    ? prepare_uprobe_buffer+0xd5/0x1d0
-    __mutex_lock+0x41/0x820
-    ? ___perf_sw_event+0x206/0x290
-    ? __perf_event_task_sched_in+0x54/0x660
-    ? __perf_event_task_sched_in+0x54/0x660
-    prepare_uprobe_buffer+0xd5/0x1d0
-    __uprobe_trace_func+0x4a/0x140
-    uprobe_dispatcher+0x135/0x280
-    ? uprobe_dispatcher+0x94/0x280
-    uprobe_notify_resume+0x650/0xec0
-    ? atomic_notifier_call_chain+0x21/0x110
-    ? atomic_notifier_call_chain+0xf8/0x110
-    irqentry_exit_to_user_mode+0xe2/0x1e0
-    asm_exc_int3+0x35/0x40
-   RIP: 0033:0x7f7e1d4da390
-   Code: 33 04 00 0f 1f 80 00 00 00 00 f3 0f 1e fa b9 01 00 00 00 e9 b2 fc ff ff 66 90 f3 0f 1e fa 31 c9 e9 a5 fc ff ff 0f 1f 44 00 00 <cc> 0f 1e fa b8 27 00 00 00 0f 05 c3 0f 1f 40 00 f3 0f 1e fa b8 6e
-   RSP: 002b:00007ffd2abc3608 EFLAGS: 00000246
-   RAX: 0000000000000000 RBX: 0000000076d325f1 RCX: 0000000000000000
-   RDX: 0000000076d325f1 RSI: 000000000000000a RDI: 00007ffd2abc3690
-   RBP: 000000000000000a R08: 00017fb700000000 R09: 00017fb700000000
-   R10: 00017fb700000000 R11: 0000000000000246 R12: 0000000000017ff2
-   R13: 00007ffd2abc3610 R14: 0000000000000000 R15: 00007ffd2abc3780
-    </TASK>
+yes, if we want to enable the fast path for shadow stack in future
+we'll need to remove that shstk_is_enabled and push extra frame on
+shadow stack
 
-Luckily, it's easy to fix by moving prepare_uprobe_buffer() to be called
-slightly earlier: into uprobe_trace_func() and uretprobe_trace_func(), outside
-of RCU locked section. This still keeps this buffer preparation lazy and helps
-avoid the overhead when it's not needed. E.g., if there is only BPF uprobe
-handler installed on a given uprobe, buffer won't be initialized.
-
-Note, the other user of prepare_uprobe_buffer(), __uprobe_perf_func(), is not
-affected, as it doesn't prepare buffer under RCU read lock.
-
-Fixes: 1b8f85defbc8 ("uprobes: prepare uprobe args buffer lazily")
-Reported-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- kernel/trace/trace_uprobe.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8541fa1494ae..c98e3b3386ba 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -970,19 +970,17 @@ static struct uprobe_cpu_buffer *prepare_uprobe_buffer(struct trace_uprobe *tu,
- 
- static void __uprobe_trace_func(struct trace_uprobe *tu,
- 				unsigned long func, struct pt_regs *regs,
--				struct uprobe_cpu_buffer **ucbp,
-+				struct uprobe_cpu_buffer *ucb,
- 				struct trace_event_file *trace_file)
- {
- 	struct uprobe_trace_entry_head *entry;
- 	struct trace_event_buffer fbuffer;
--	struct uprobe_cpu_buffer *ucb;
- 	void *data;
- 	int size, esize;
- 	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
- 
- 	WARN_ON(call != trace_file->event_call);
- 
--	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
- 	if (WARN_ON_ONCE(ucb->dsize > PAGE_SIZE))
- 		return;
- 
-@@ -1014,13 +1012,16 @@ static int uprobe_trace_func(struct trace_uprobe *tu, struct pt_regs *regs,
- 			     struct uprobe_cpu_buffer **ucbp)
- {
- 	struct event_file_link *link;
-+	struct uprobe_cpu_buffer *ucb;
- 
- 	if (is_ret_probe(tu))
- 		return 0;
- 
-+	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
-+
- 	rcu_read_lock();
- 	trace_probe_for_each_link_rcu(link, &tu->tp)
--		__uprobe_trace_func(tu, 0, regs, ucbp, link->file);
-+		__uprobe_trace_func(tu, 0, regs, ucb, link->file);
- 	rcu_read_unlock();
- 
- 	return 0;
-@@ -1031,10 +1032,13 @@ static void uretprobe_trace_func(struct trace_uprobe *tu, unsigned long func,
- 				 struct uprobe_cpu_buffer **ucbp)
- {
- 	struct event_file_link *link;
-+	struct uprobe_cpu_buffer *ucb;
-+
-+	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
- 
- 	rcu_read_lock();
- 	trace_probe_for_each_link_rcu(link, &tu->tp)
--		__uprobe_trace_func(tu, func, regs, ucbp, link->file);
-+		__uprobe_trace_func(tu, func, regs, ucb, link->file);
- 	rcu_read_unlock();
- }
- 
--- 
-2.43.0
-
+jirka
