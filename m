@@ -1,114 +1,102 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65A0131BD3;
-	Tue, 21 May 2024 14:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0DC77F2C
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 May 2024 15:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716301866; cv=none; b=byhO8WKxfF84She+wM9VucFaQbNBtoIRQbyJo+Gi6sbpZjs/VU1R1CBYd0IrziQPzn9dPe2jp0eCVupIYmV7/XdIAL/CYUzgS04vk+TWZ2evMA3hJcVbpZOdHYOdT5HCNzSI6a+VTy++k8RR6k2j1PIzY8WTangu5FpaMbpye6E=
+	t=1716304208; cv=none; b=D3ISh8TMaoLXpdZexgW3orBLWXDquAR2itN/6pH2r8+JqspzaZTHm0pKnMlr6v9eOrDk+aRrBx5lcC4cmGCuL7OAp/70Uw/ZE8W7PG2mrIXypmMu+vAR8y9IcKZNjbIleyr6eyGcIeWWHxsNK/6VOyKFRGig/Nz7Uig5xFZPpo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716301866; c=relaxed/simple;
-	bh=3lDDUrOjVCtG0U2Uql/f9korWE0kx+Vl6201u/dTqtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUDatUdscC4cPfcZzpk+UEBKZlRYBPqpAh13Bj1Zdfv5tkA67UOMwdRva3hWTzYcf2KBDobkibZqTeT92ziDTyVYbMhBd8ddzX42DUMkidF11RdfM/4g7seE/hf0xwjAtt1zpMSih6RI+Xjz9zfikvQ8ELjgjBzaEV8Xyx/2jKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a5a5c930cf6so874023066b.0;
-        Tue, 21 May 2024 07:31:04 -0700 (PDT)
+	s=arc-20240116; t=1716304208; c=relaxed/simple;
+	bh=/5a3h4M20FUoYZhlXVbMuNxjpi38FtVo4tnwNlycoEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gg4VBbsoolPdT9ttMwyYEWJJaTHiFONLD4FJdnUpxHz6jsfIZ7At+Ob+H9Rhv+MCQyq56af32uII9JGZgWItRABsSPIQMDks5AB4YZaonB+7k9QXvZ7oilWZFz9VyRKx+hJkIyuiQM8g0uM+WAr2uxnsakqc60sZpysGPngXcA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SYaiRjdA; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SYaiRjdA"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-37037d8047bso423335ab.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 May 2024 08:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1716304206; x=1716909006; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HZPbXhzIjF9CTIYlsze2Xc3NxTWVq0EkO8P78eNK6Zw=;
+        b=SYaiRjdAwVfXv+VGpEa/G6bRcjZkcTFFpUKGcKeW+aO1l52sv5wN+ouxjmEEbAn8ik
+         9pIIC0dEKf8OuNH3JoMp+wX/QqExrRRnC7pkzFQjQbsSeKVqNE/ZXXlrwON7M2MIXobu
+         bRbLSMOkLlKRjzSkCSyPhHIzbHDazY+3AN1gs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716301863; x=1716906663;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CXNL2+dmhPtXa1nU4mFWOb6y7z207mbWeg1zt84oRH0=;
-        b=HdGFF6Ep3ucF8zQ5/ojGoCxYtWo1W7UoFrmZai1iWEtujtxvZG0n/9MIoJ7ugICrrN
-         IuxLJ95O0lRzHBXUykJexYqjs3Znv+O8bMdwrWS2N/EH51WhM4rpcwNGoAH2c/yXTpnH
-         fZv9Dk85VDGOHHdljCu/UWWJhtnGfh/p71yDBDTJjJu5tl6NNtVD39bYOCmugOu8xpjn
-         8e7s6CpwkXN+A8Y7R/3zabC+7sM+xH6BvgIlQ7vsh1TPfKAnMXGu8CqtECcZxNrHx90j
-         mrDksFh39bOWtZ0g2+uVrBnwc/Dpi08gOmTYVdbidAm4NKX54z8KwofMHcbImPlcmNxO
-         booA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjAGahy3F+ISsOBbWgLokL7Qcts+CPMN+bKgm9gkainnHrTdbMFYVCblgbLZ9SsoiUX2sFizTQzUmd/mF1/6jzn9gV
-X-Gm-Message-State: AOJu0Ywwnz+x0YupQOHHpFE4f7+5F2KFfNJZmtdOm7WDSv768jpo4zM1
-	pQGZbXVVVtRz9twfxOJyDriCR8jvvqATpEafZUoHMoIeXFrHjZ/k
-X-Google-Smtp-Source: AGHT+IEBifjKnlSnLw01leD/HUpygwLKHdnIzNg/giNMtlk+W2hyeKWuhfRrCeQwx/FolYvSjR5u8g==
-X-Received: by 2002:a17:906:f5a2:b0:a5f:d17d:cddf with SMTP id a640c23a62f3a-a5fd17dce72mr580772466b.44.1716301862761;
-        Tue, 21 May 2024 07:31:02 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-000.fbsv.net. [2a03:2880:30ff::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b179casm1610057766b.203.2024.05.21.07.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 07:31:02 -0700 (PDT)
-Date: Tue, 21 May 2024 07:31:00 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org, oleg@redhat.com,
-	jolsa@kernel.org
-Subject: Re: [PATCH] uprobes: prevent mutex_lock() under rcu_read_lock()
-Message-ID: <ZkywJEJPoy0aZnjg@gmail.com>
-References: <20240521053017.3708530-1-andrii@kernel.org>
+        d=1e100.net; s=20230601; t=1716304206; x=1716909006;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HZPbXhzIjF9CTIYlsze2Xc3NxTWVq0EkO8P78eNK6Zw=;
+        b=N1JtlwXazAKgPtVzsATff8Ss4OpBXf97m/qROn75Ff6d8lrb22Bd0Lrz+ktSi6TLmM
+         5qBkYpY4CZddWftToro8R+Ruoqq7VCLqHs9gahn2gnyc6ebR+rOZ8tTD7kgCOq8o7tjw
+         OoHpO8MJJ7lhqL4I0JXA8joU2WRaxZqRf+WuHHhC/XTrxH/TU3dRmlh3Tlr3HNdkS0Q2
+         hPKJfpGQmOls/S64mWls05QMFkZXai3ULz13CtOwS8yRKY9FF0f5QjrTek2xYuY0eraI
+         3xa0VWHxS9s2z+hL5Pg5gqZ4RnyVAzPF4fybRAWkMDFAbkXm3oeRBgxiFg7PePa+imM4
+         4tug==
+X-Forwarded-Encrypted: i=1; AJvYcCUVl0ZYGkuZRj97wig35OrRFO/pK8tUnIihiaSxL+qSDoKSZ/sAhYP5eUPauTPpEuBOAFEu1lSPkTAKb2ABh55c2FSwrZBDbG29gD1L9PQ3nZyv
+X-Gm-Message-State: AOJu0YycAayrv7+4vT4ZrzOjMf/AzdVvRjCk+u+pdrj07qGoNf/dyxoG
+	T5i6SgPeuWISgSJEyLAAqAflHtC0kaEo3vt2Njcmjau2EB2+F6/WxYD00bwVJWo=
+X-Google-Smtp-Source: AGHT+IESEt4nFF0aT8EhBUwdWsXz0bCKQ0ruhojcanJcimk1/Ix+PO0KtmO3gxLFKazgT5fxv/vXPQ==
+X-Received: by 2002:a6b:d203:0:b0:7de:e04b:42c3 with SMTP id ca18e2360f4ac-7e1b5022577mr3286292639f.0.1716304205729;
+        Tue, 21 May 2024 08:10:05 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-48937141644sm7017385173.69.2024.05.21.08.10.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 May 2024 08:10:05 -0700 (PDT)
+Message-ID: <2d65388d-753f-423d-9682-60b00fb66879@linuxfoundation.org>
+Date: Tue, 21 May 2024 09:10:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521053017.3708530-1-andrii@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing/selftests: Fix kprobe event name test for .isra.
+ functions
+To: Steven Rostedt <rostedt@goodmis.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Shuah Khan <shuahkhan@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240520205737.5085e53a@gandalf.local.home>
+ <20240521104919.c8fd7a91b4a9c0435d17017b@kernel.org>
+ <20240520215148.287e417f@gandalf.local.home>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240520215148.287e417f@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 20, 2024 at 10:30:17PM -0700, Andrii Nakryiko wrote:
-> Recent changes made uprobe_cpu_buffer preparation lazy, and moved it
-> deeper into __uprobe_trace_func(). This is problematic because
-> __uprobe_trace_func() is called inside rcu_read_lock()/rcu_read_unlock()
-> block, which then calls prepare_uprobe_buffer() -> uprobe_buffer_get() ->
-> mutex_lock(&ucb->mutex), leading to a splat about using mutex under
-> non-sleepable RCU:
+On 5/20/24 19:51, Steven Rostedt wrote:
+> On Tue, 21 May 2024 10:49:19 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
->   BUG: sleeping function called from invalid context at kernel/locking/mutex.c:585
->    in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 98231, name: stress-ng-sigq
->    preempt_count: 0, expected: 0
->    RCU nest depth: 1, expected: 0
->    ...
->    Call Trace:
->     <TASK>
->     dump_stack_lvl+0x3d/0xe0
->     __might_resched+0x24c/0x270
->     ? prepare_uprobe_buffer+0xd5/0x1d0
->     __mutex_lock+0x41/0x820
->     ? ___perf_sw_event+0x206/0x290
->     ? __perf_event_task_sched_in+0x54/0x660
->     ? __perf_event_task_sched_in+0x54/0x660
->     prepare_uprobe_buffer+0xd5/0x1d0
->     __uprobe_trace_func+0x4a/0x140
->     uprobe_dispatcher+0x135/0x280
->     ? uprobe_dispatcher+0x94/0x280
->     uprobe_notify_resume+0x650/0xec0
->     ? atomic_notifier_call_chain+0x21/0x110
->     ? atomic_notifier_call_chain+0xf8/0x110
->     irqentry_exit_to_user_mode+0xe2/0x1e0
->     asm_exc_int3+0x35/0x40
->    RIP: 0033:0x7f7e1d4da390
->    Code: 33 04 00 0f 1f 80 00 00 00 00 f3 0f 1e fa b9 01 00 00 00 e9 b2 fc ff ff 66 90 f3 0f 1e fa 31 c9 e9 a5 fc ff ff 0f 1f 44 00 00 <cc> 0f 1e fa b8 27 00 00 00 0f 05 c3 0f 1f 40 00 f3 0f 1e fa b8 6e
->    RSP: 002b:00007ffd2abc3608 EFLAGS: 00000246
->    RAX: 0000000000000000 RBX: 0000000076d325f1 RCX: 0000000000000000
->    RDX: 0000000076d325f1 RSI: 000000000000000a RDI: 00007ffd2abc3690
->    RBP: 000000000000000a R08: 00017fb700000000 R09: 00017fb700000000
->    R10: 00017fb700000000 R11: 0000000000000246 R12: 0000000000017ff2
->    R13: 00007ffd2abc3610 R14: 0000000000000000 R15: 00007ffd2abc3780
->     </TASK>
+>>> It is listed twice. This causes the attached kprobe to it to fail which in
+>>> turn fails the test. Instead of just picking the function function that is
+>>> found in available_filter_functions, pick the first one that is listed
+>>> only once in available_filter_functions.
+>>>    
+>>
+>> Looks good to me.
+>>
+>> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
 > 
-> Luckily, it's easy to fix by moving prepare_uprobe_buffer() to be called
-> slightly earlier: into uprobe_trace_func() and uretprobe_trace_func(), outside
-> of RCU locked section. This still keeps this buffer preparation lazy and helps
-> avoid the overhead when it's not needed. E.g., if there is only BPF uprobe
-> handler installed on a given uprobe, buffer won't be initialized.
+> Thanks Masami,
 > 
-> Note, the other user of prepare_uprobe_buffer(), __uprobe_perf_func(), is not
-> affected, as it doesn't prepare buffer under RCU read lock.
-> 
-> Fixes: 1b8f85defbc8 ("uprobes: prepare uprobe args buffer lazily")
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> Shuah, can you take this through your tree?
 
-Tested-by: Breno Leitao <leitao@debian.org>
+Yes. I will take this though mine.
+
+thanks,
+-- Shuah
+
