@@ -1,132 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A97873173;
-	Tue, 21 May 2024 10:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EEB28F0;
+	Tue, 21 May 2024 11:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716288624; cv=none; b=HK/A6NmF+on0jUB4lArA0vorZkv7hzEaVcxBOde3o1vBWew1SPOET3LGA6o5R/06aA+EqAQH3yLOrq0VYcSwPBBS5y61jODn8QIhlUObcfNnEqTJLZDMmS3ygbb+fRba1288GHxOZAarMRWfNUZVbGiGmniNVfzYsYOKpsKm9QM=
+	t=1716289241; cv=none; b=WMA3fs1vqeQs29HZSfsXipCvyCT/du+044EpNUJHGt3BOLbun3eYwWUTB9AKEeutwsY+0mNWGbjwxIZHxgfuSuX9Azn3jVywgpK3lnY6fT8qdhOArS4Wntcbt1ujF6I9vNiO9RmaXKNzF0eVaa3hUG3evfT5SGIItsMlsy6ILsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716288624; c=relaxed/simple;
-	bh=YOJAMtCe8DK1ux8SakApe84VXlSr5Oi60Hn13JG7aeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NGg+AbSHaig26OewEKEWmiQd5MBHF/ME/k22kITgpTUP7fAN4CM4M1CYSk5lNbV65ApHyNZEW/GiTBKuje7X7y7RAh/zCVfVbKGO8TQSc/jbZUae9+bVZQoov5SIGHNsnRo4ljcBiGQ/FC5q0Ov47gPOvPu/4pjSeJuhrD/VjgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6Gtns3+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716289241; c=relaxed/simple;
+	bh=xpW8cWC8VndEV56VMUUuteKJq55p9xa45elyZ7RSY7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tug+Y8y+/P11qZk+ajxUnVZbZ7VLKzxoUe2wq77TMzWZOBz1muu3wt447pGjEZ0qzRr/lybKr6WxC2eP4EOdkt9P2FwpBKZJaAbYPCNpSqcJywqmM451sFIrYh8jmKMVEPOIiwbIbHta5XZgv/b2VP4cxCjk6mn0S5QIT5tavOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FRQFlY5f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6JINQMdp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6Gtns3+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E526EC2BD11;
-	Tue, 21 May 2024 10:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716288624;
-	bh=YOJAMtCe8DK1ux8SakApe84VXlSr5Oi60Hn13JG7aeE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r6Gtns3+EMo4boeflOX9A0YnShB9U6p772Ihi403MnCCYGGoKfoZo7bSuQ7XrrnrY
-	 luxesIqv7GkZyJUc5lO+DSO/ft4OqIy0c/qQg5ftHEHHmZZODQKonagHIRqfGjH/Kz
-	 n2+iHDPWtYjBq456+Z+Kdb/IV11nGCKSx+yvKH/qlROFLw4/EYEs5dyp9phI/XL7Fi
-	 zfi2Ruz2ur43lbunsLkzGBubg0+MNh9jtYKpVqpj+QMBOU5SKAQAAfJAOBk5GvpW3D
-	 qmGEPAT+YegAT6I0bv6xMmlraGQCMpGohCS/5UpPWLeh4pwZBKqxJPVdaYNTz8nv0x
-	 ygkMXgc9GcNew==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FRQFlY5f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6JINQMdp"
+Date: Tue, 21 May 2024 13:00:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716289236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/SKqiKY3fPfFrak3zoFgzP4YhDQY8tnNkx/mXavMpSw=;
+	b=FRQFlY5ffVxx8kUFmC0jx5rMqBpFzKeZH41Rq+N8SgCWVWEyt1zyWLKwZeKbBLRZckUHxP
+	3ZecqZU/4oAZPmzLmFjWAymZK5GmmDbQ9ZUaSFLxijU5FeSNJ78QPknI8k8SYSUIvCTVKH
+	Z7GP4piQL3qIMOrpguhh45A5lD2rDfi/7Ll9EujkhRxmilGycuQatQX9pSAUN2Kscgr3ab
+	OCLCV8NyrT1rNT2nuJYVE/ZVuwM465v+Cnd288JvHFu+ayaUrWpJDPn0kQsAFe8VClF5Gt
+	RgyYimqytc+W9AhUH1eFwVYf/Bx4N9w3/7laag/KIvkhm7YT61swbU4b0z/h+w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716289236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/SKqiKY3fPfFrak3zoFgzP4YhDQY8tnNkx/mXavMpSw=;
+	b=6JINQMdpOPpHBR1iFBmVIaq+lA45HD37UNR4XddxkdAxN5OycpjJSBl/4PhNdTDmrOJ0SB
+	ZyMpkCCSdbU4tQBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: [PATCHv6 9/9] man2: Add uretprobe syscall page
-Date: Tue, 21 May 2024 12:48:25 +0200
-Message-ID: <20240521104825.1060966-10-jolsa@kernel.org>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240521104825.1060966-1-jolsa@kernel.org>
-References: <20240521104825.1060966-1-jolsa@kernel.org>
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240521110035.KRIwllGe@linutronix.de>
+References: <20240515220536.823145-1-qyousef@layalina.io>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240515220536.823145-1-qyousef@layalina.io>
 
-Adding man page for new uretprobe syscall.
+On 2024-05-15 23:05:36 [+0100], Qais Yousef wrote:
+> rt_task() checks if a task has RT priority. But depends on your
+> dictionary, this could mean it belongs to RT class, or is a 'realtime'
+> task, which includes RT and DL classes.
+>=20
+> Since this has caused some confusion already on discussion [1], it
+> seemed a clean up is due.
+>=20
+> I define the usage of rt_task() to be tasks that belong to RT class.
+> Make sure that it returns true only for RT class and audit the users and
+> replace the ones required the old behavior with the new realtime_task()
+> which returns true for RT and DL classes. Introduce similar
+> realtime_prio() to create similar distinction to rt_prio() and update
+> the users that required the old behavior to use the new function.
+>=20
+> Move MAX_DL_PRIO to prio.h so it can be used in the new definitions.
+>=20
+> Document the functions to make it more obvious what is the difference
+> between them. PI-boosted tasks is a factor that must be taken into
+> account when choosing which function to use.
+>=20
+> Rename task_is_realtime() to realtime_task_policy() as the old name is
+> confusing against the new realtime_task().
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- man2/uretprobe.2 | 50 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 man2/uretprobe.2
+I *think* everyone using rt_task() means to include DL tasks. And
+everyone means !SCHED-people since they know when the difference matters.
 
-diff --git a/man2/uretprobe.2 b/man2/uretprobe.2
-new file mode 100644
-index 000000000000..690fe3b1a44f
---- /dev/null
-+++ b/man2/uretprobe.2
-@@ -0,0 +1,50 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+The
-+.BR uretprobe ()
-+syscall is an alternative to breakpoint instructions for
-+triggering return uprobe consumers.
-+.P
-+Calls to
-+.BR uretprobe ()
-+suscall are only made from the user-space trampoline provided by the kernel.
-+Calls from any other place result in a
-+.BR SIGILL .
-+
-+.SH RETURN VALUE
-+The
-+.BR uretprobe ()
-+syscall return value is architecture-specific.
-+
-+.SH VERSIONS
-+This syscall is not specified in POSIX,
-+and details of its behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH HISTORY
-+TBD
-+.SH NOTES
-+The
-+.BR uretprobe ()
-+syscall was initially introduced for the x86_64 architecture where it was shown
-+to be faster than breakpoint traps. It might be extended to other architectures.
-+.P
-+The
-+.BR uretprobe ()
-+syscall exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are architecture-specific.
--- 
-2.44.0
+> No functional changes were intended.
+>=20
+> [1] https://lore.kernel.org/lkml/20240506100509.GL40213@noisy.programming=
+=2Ekicks-ass.net/
+>=20
+> Reviewed-by: Phil Auld <pauld@redhat.com>
+> Signed-off-by: Qais Yousef <qyousef@layalina.io>
+> ---
+>=20
+> Changes since v1:
+>=20
+> 	* Use realtime_task_policy() instead task_has_realtime_policy() (Peter)
+> 	* Improve commit message readability about replace some rt_task()
+> 	  users.
+>=20
+> v1 discussion: https://lore.kernel.org/lkml/20240514234112.792989-1-qyous=
+ef@layalina.io/
+>=20
+>  fs/select.c                       |  2 +-
 
+fs/bcachefs/six.c
+six_owner_running() has rt_task(). But imho should have realtime_task()
+to consider DL. But I think it is way worse that it has its own locking
+rather than using what everyone else but then again it wouldn't be the
+new hot thing=E2=80=A6
+
+>  include/linux/ioprio.h            |  2 +-
+>  include/linux/sched/deadline.h    |  6 ++++--
+>  include/linux/sched/prio.h        |  1 +
+>  include/linux/sched/rt.h          | 27 ++++++++++++++++++++++++++-
+>  kernel/locking/rtmutex.c          |  4 ++--
+>  kernel/locking/rwsem.c            |  4 ++--
+>  kernel/locking/ww_mutex.h         |  2 +-
+>  kernel/sched/core.c               |  6 +++---
+>  kernel/time/hrtimer.c             |  6 +++---
+>  kernel/trace/trace_sched_wakeup.c |  2 +-
+>  mm/page-writeback.c               |  4 ++--
+>  mm/page_alloc.c                   |  2 +-
+>  13 files changed, 48 insertions(+), 20 deletions(-)
+=E2=80=A6
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index 70625dff62ce..08b95e0a41ab 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -1996,7 +1996,7 @@ static void __hrtimer_init_sleeper(struct hrtimer_s=
+leeper *sl,
+>  	 * expiry.
+>  	 */
+>  	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
+> -		if (task_is_realtime(current) && !(mode & HRTIMER_MODE_SOFT))
+> +		if (realtime_task_policy(current) && !(mode & HRTIMER_MODE_SOFT))
+>  			mode |=3D HRTIMER_MODE_HARD;
+>  	}
+> =20
+> @@ -2096,7 +2096,7 @@ long hrtimer_nanosleep(ktime_t rqtp, const enum hrt=
+imer_mode mode,
+>  	u64 slack;
+> =20
+>  	slack =3D current->timer_slack_ns;
+> -	if (rt_task(current))
+> +	if (realtime_task(current))
+>  		slack =3D 0;
+> =20
+>  	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
+> @@ -2301,7 +2301,7 @@ schedule_hrtimeout_range_clock(ktime_t *expires, u6=
+4 delta,
+>  	 * Override any slack passed by the user if under
+>  	 * rt contraints.
+>  	 */
+> -	if (rt_task(current))
+> +	if (realtime_task(current))
+>  		delta =3D 0;
+
+I know this is just converting what is already here but=E2=80=A6
+__hrtimer_init_sleeper() looks at the policy to figure out if the task
+is realtime do decide if should expire in HARD-IRQ context. This is
+correct, a boosted task should not sleep.
+
+hrtimer_nanosleep() + schedule_hrtimeout_range_clock() is looking at
+priority to decide if slack should be removed. This should also look at
+policy since a boosted task shouldn't sleep.
+
+In order to be PI-boosted you need to acquire a lock and the only lock
+you can sleep while acquired without generating a warning is a mutex_t
+(or equivalent sleeping lock) on PREEMPT_RT.=20
+
+>  	hrtimer_init_sleeper_on_stack(&t, clock_id, mode);
+> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched=
+_wakeup.c
+> index 0469a04a355f..19d737742e29 100644
+> --- a/kernel/trace/trace_sched_wakeup.c
+> +++ b/kernel/trace/trace_sched_wakeup.c
+> @@ -545,7 +545,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
+>  	 *  - wakeup_dl handles tasks belonging to sched_dl class only.
+>  	 */
+>  	if (tracing_dl || (wakeup_dl && !dl_task(p)) ||
+> -	    (wakeup_rt && !dl_task(p) && !rt_task(p)) ||
+> +	    (wakeup_rt && !realtime_task(p)) ||
+>  	    (!dl_task(p) && (p->prio >=3D wakeup_prio || p->prio >=3D current->=
+prio)))
+>  		return;
+> =20
+
+Sebastian
