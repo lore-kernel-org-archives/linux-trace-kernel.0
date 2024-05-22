@@ -1,133 +1,100 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EE7148820;
-	Tue, 21 May 2024 20:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0F2DF5B;
+	Wed, 22 May 2024 01:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716325068; cv=none; b=N9NfLSqrH4WVjBOI6Gpv1jyOrlQ7X1C4fTOzlqEOtYFMfEvPjBozFENYya7SpcxKOmB7Irj/dENncNnkERFRsImzsxtjq/WlQVP6EyLXUimPfh4Z3DqnWW1eqwE/BWHb7AbqaMyqzaCPirqmo2CcEGPwu2O1ZBtppsHpTpQPwvA=
+	t=1716341928; cv=none; b=DKOgBi1OFrhZGxMAJPUnoymnTXl1+pnF15GZHu93Ce3Gcf3myYQvGOca/z7NguQOMQPa3eJCLcRYfHwE5JVpeOOLzB2qM3sBR3cPwgnmeLqDXx820GQtpmIyq4odcKADiJTAvmKE99MqQi+VNlMXl3tQFT5RMUI/DBXccMRFL4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716325068; c=relaxed/simple;
-	bh=XvVQOYneXy31VQpI3gd6Ge47sV41dqcKNHKiTVXFSHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+k3U/I0xqQTF05S2IUa0sN6WFMfbnOS7SVpuXqyPHPMYMPYALX8rH9khL3VG5adjtPPR0PVpsGE0W+N/p1S1FkKf2s7Kr4zaf/i+pjcoScnaqQ8pwufyQYuHznNwwXpvRZhvPhDOKNWi4i2I7VdShP09HSZYho2m6W++kNH+Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a1luYuIv; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716341928; c=relaxed/simple;
+	bh=D2SjqfOGPe5xouIRl6RPiNZsyBIkS56bzwVN0xMp4jc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rlbuMoLf1V3stpza+CvNPuY0jHo1XqUttDdXw9FU8JWTiBTSbpP1yJyk87KuajISrmSL6JcS59MSORC8f4pyTT/DYIpWSimkaR7qwYniY904kYdJ+wFORHDzcie53cYKrMocUrY9FY5EgOltniOFnZHM4b/w/spcQeVWLgNj9E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCeo3ylA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1luYuIv"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-351ae94323aso107839f8f.0;
-        Tue, 21 May 2024 13:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716325065; x=1716929865; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XvVQOYneXy31VQpI3gd6Ge47sV41dqcKNHKiTVXFSHM=;
-        b=a1luYuIvlmbLWwWyv5RDPccdKQzJp2cPCcVDKn57bsIYvXwaZYGquvnFNCkP2TC/CA
-         YSdpHK254F0Dgp33Hf9UriNsmIFuHA+QCPZsx4MxpC6OtyWXhbGQYnW/OyQXIK06LOXQ
-         WGcHA/o89D6e8qKrVGhu+iHfEpwIUZQ/vUbi/5YcUOChjOGuWDf2bWTcriujHLaa9Rfo
-         D8QOlifsfKilG02btKLe/4HUvF0yGB4KUrCxMr/74JeiK2LuvuxHQukhXc7WJ91qjHpA
-         wrm+AQCIZXyVnW8UC2rUOggfO8bJmCGCjgxtkqWX8aLKBj74rdTVIKPYctkkt1CA/cNs
-         u6Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716325065; x=1716929865;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XvVQOYneXy31VQpI3gd6Ge47sV41dqcKNHKiTVXFSHM=;
-        b=l64dw9+ekuh45XV93eT7YbIF7tnB6NbCK9hVLO788JmA03K810ahsN3QLRe3IYvgHP
-         sF3AS1GtE9vD1dBvVTI96/Aj3DCcKq/FiiJu3y/IE6nCS21N73yf0Pz2gT3oPaEfJ3U7
-         QR8qoDNVQVUEFWzNTr2AHuG1gS8o0XJwBd5jVxX40HYrUctBodYcvuVxl1gNFWdQV3N2
-         fZsw+pdS2kDXyIeAb9pUeLCtb8gk6ciKU7wZFYwX0Z9j5YJZunRJ/+uW2LuhzA2e2AXl
-         O6RgMLlXB3AU4YalRkG788SZkbY+UyQEb8Xk0/mWTIMopwSK7t1ChTAA1iPtZYBDoerV
-         b90g==
-X-Forwarded-Encrypted: i=1; AJvYcCViMqwE+ff/ErO04LV2HRR0isIKCyMBXYSdZPPgx5SbVCjSoSKLISFbCR3VJkcSYPC47JyX/88hBNB2fcte6yoIGO2aB0J6p8XNjB4r5GnF3+11q9dpzn7CcGb1Pbi+amVcgTmyP7X7HLQ4ivfiVmY6u154Lks9r9WrQSoBEySv+lDUhLxCCxg+dFaltD/AIyZ9QOFmp7rEUvwvWGpoW4pdEOw0maszEVG8kKp0WA3aR03vTGePWjshxyxp
-X-Gm-Message-State: AOJu0YxpvnlLCE+r/vbk52NQiCyMwUG+l7F+xEWNZdvWbJsdeDROWtg/
-	lwFSvC6h8/DtSLrVgwZUL9tIAZXtkv4B+AeGSUCdXCLZfA0LzxlBhnsjKpzAPE/EKjM/SGJP5r2
-	bpW6/AzFfwUfoY8hBNvJqyzGMVwI=
-X-Google-Smtp-Source: AGHT+IFAgV+GWbFNqcaKR32yK6SKB8385j+pIi2sH0h+JACJbcr6SPrKTSjXHv3VoaWXb55zX1+6+g5xDwPZqg+gYxE=
-X-Received: by 2002:a7b:cb07:0:b0:418:f991:713f with SMTP id
- 5b1f17b1804b1-420fd319981mr86955e9.23.1716325065000; Tue, 21 May 2024
- 13:57:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCeo3ylA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0059FC2BD11;
+	Wed, 22 May 2024 01:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716341928;
+	bh=D2SjqfOGPe5xouIRl6RPiNZsyBIkS56bzwVN0xMp4jc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jCeo3ylAH4qbXibrOW/lqDe1CEdwx6TtGht1HYRm3pbCmObmFymIBP4bJm2+ai2k7
+	 JbY4jAVS3WwQ30X507X8OPy+2cC5lf5NsOTUH14vHJEZKRtmC45tpsfHXdtxw+ANU8
+	 7BKCzvlY56W7EI+XPXvg0Fx5qOm7kEfrIcU/0aIe8p12jxfJ191agkCln/8+WA3s+U
+	 JU1cWLptuQAfNL1VhYWIGJjSrl3dDcoFKy+WK2vGIu/YR+hQQxiST+WZ0NBO4pdkov
+	 WBGLiQ8pb6FWu68hu0Y+jJLqvuD6Dx50HjF2YMbbaV3FyzizUqG944/UdmSvouUZK0
+	 PO7ZBfdUV0Opg==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v2 0/4] Fix user stack traces captured from uprobes
+Date: Tue, 21 May 2024 18:38:41 -0700
+Message-ID: <20240522013845.1631305-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521104825.1060966-1-jolsa@kernel.org> <Zk0IvZU834RQ7YKp@debug.ba.rivosinc.com>
-In-Reply-To: <Zk0IvZU834RQ7YKp@debug.ba.rivosinc.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 21 May 2024 13:57:33 -0700
-Message-ID: <CAADnVQ+2Q1992e9mRtWOavHfqKsFUxPp4f6MAAJg90TK_KTpew@mail.gmail.com>
-Subject: Re: [PATCHv6 bpf-next 0/9] uprobe: uretprobe speed up
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Linux API <linux-api@vger.kernel.org>, 
-	linux-man <linux-man@vger.kernel.org>, X86 ML <x86@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 21, 2024 at 1:49=E2=80=AFPM Deepak Gupta <debug@rivosinc.com> w=
-rote:
->
-> On Tue, May 21, 2024 at 12:48:16PM +0200, Jiri Olsa wrote:
-> >hi,
-> >as part of the effort on speeding up the uprobes [0] coming with
-> >return uprobe optimization by using syscall instead of the trap
-> >on the uretprobe trampoline.
->
-> I understand this provides an optimization on x86. I believe primary reas=
-on
-> is syscall is straight-line microcode and short sequence while trap deliv=
-ery
-> still does all the GDT / IDT and segmentation checks and it makes deliver=
-y
-> of the trap slow.
->
-> So doing syscall improves that. Although it seems x86 is going to get rid=
- of
-> that as part of FRED [1, 2]. And linux kernel support for FRED is already=
- upstream [2].
-> So I am imagining x86 hardware already exists with FRED support.
->
-> On other architectures, I believe trap delivery for breakpoint instructio=
-n
-> is same as syscall instruction.
->
-> Given that x86 trap delivery is pretty much going following the suit here=
- and
-> intend to make trap delivery cost similar to syscall delivery.
->
-> Sorry for being buzzkill here but ...
-> Is it worth introducing this syscall which otherwise has no use on other =
-arches
-> and x86 (and x86 kernel) has already taken steps to match trap delivery l=
-atency with
-> syscall latency would have similar cost?
->
-> Did you do any study of this on FRED enabled x86 CPUs?
+This patch set reports two issues with captured stack traces.
 
-afaik CPUs with FRED do not exist on the market and it's
-not clear when they will be available.
-And when they finally will be on the shelves
-the overhead of FRED vs int3 would still have to be measured.
-int3 with FRED might still be higher than syscall with FRED.
+First issue, fixed in patch #2, deals with fixing up uretprobe trampoline
+addresses in captured stack trace. This issue happens when there are pending
+return probes, for which kernel hijacks some of the return addresses on user
+stacks. The code is matching those special uretprobe trampoline addresses with
+the list of pending return probe instances and replaces them with actual
+return addresses. This is the same fixup logic that fprobe/kretprobe has for
+kernel stack traces.
 
->
-> [1] - https://www.intel.com/content/www/us/en/content-details/780121/flex=
-ible-return-and-event-delivery-fred-specification.html
-> [2] - https://docs.kernel.org/arch/x86/x86_64/fred.html
->
-> >
-> >The speed up depends on instruction type that uprobe is installed
-> >and depends on specific HW type, please check patch 1 for details.
-> >
+Second issue, which patch #3 is fixing with the help of heuristic, is having
+to do with capturing user stack traces in entry uprobes. At the very entrance
+to user function, frame pointer in rbp register is not yet setup, so actual
+caller return address is still pointed to by rsp. Patch is using a simple
+heuristic, looking for `push %rbp` instruction, to fetch this extra direct
+caller return address, before proceeding to unwind the stack using rbp.
+
+Patch #4 adds tests into BPF selftests, that validate that captured stack
+traces at various points is what we expect to get. This patch, while being BPF
+selftests, is isolated from any other BPF selftests changes and can go in
+through non-BPF tree without the risk of merge conflicts.
+
+Patches are based on latest linux-trace/probes/for-next.
+
+v1->v2:
+  - fixed GCC aggressively inlining test_uretprobe_stack() function (BPF CI);
+  - fixed comments (Peter).
+
+Andrii Nakryiko (4):
+  uprobes: rename get_trampoline_vaddr() and make it global
+  perf,uprobes: fix user stack traces in the presence of pending
+    uretprobes
+  perf,x86: avoid missing caller address in stack traces captured in
+    uprobe
+  selftests/bpf: add test validating uprobe/uretprobe stack traces
+
+ arch/x86/events/core.c                        |  20 ++
+ include/linux/uprobes.h                       |   3 +
+ kernel/events/callchain.c                     |  43 +++-
+ kernel/events/uprobes.c                       |  17 +-
+ .../bpf/prog_tests/uretprobe_stack.c          | 186 ++++++++++++++++++
+ .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
+ 6 files changed, 361 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
+
+-- 
+2.43.0
+
