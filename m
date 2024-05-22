@@ -1,72 +1,88 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF143AAB;
-	Wed, 22 May 2024 14:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D35D1411E0;
+	Wed, 22 May 2024 16:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716387129; cv=none; b=agXqB6KSZ3i4SGZiCpPEuNmjE8UOVeyhBuTsbReiatQ6odt8FJk3mzEKpd1zkdFcYAAaGlIGGlD2eAQlRDlWrmqmqTzwLtXKexE/3fuSoQSJYCVfeGtjExynTnqQc22BbPvqfALz3BPLoQ8aVrgLTNjEEo9NalBs0SX6R52rq5o=
+	t=1716396263; cv=none; b=XgzAB8PAPSkZYgseBTJYbogCfEEsQiMlquiIEF6kYzgfeStg405nyAywJW/hkkClhqg0gB3gpAp3Gk1Err2k6uaJmZiITzspT8JqUEowK8gaTHIqdFk/OlQ8wjuLoW5xEdK1o9rIx4hDeig7z3nllX8tvLZkOnIFglX8KjkICRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716387129; c=relaxed/simple;
-	bh=DDbjOB44ewZWIRltYmOU003Ll0k98hPAJ99V/6Z7rjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fFud3ziE6eA+pf20YxHIt/PKg/ot2r/RGEsTWvIlTaaZ1cXU756H6Zrv+RpBPp7P0mutUzPlhQnrTTy03XaaUsyooq/PHEVOuY5MaRkSHORgZiPp+Q+h8YvApejwWYMmFEzc/26dNAtPEgP1FYQ7Qd0227NzAcEPFMAGaFAqpyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uEqWCsrX; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uEqWCsrX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DDbjOB44ewZWIRltYmOU003Ll0k98hPAJ99V/6Z7rjA=; b=uEqWCsrXiGnYASDuZAU5ot6tQN
-	XjK1e6Gll8ojSe+3yON3pJfsrV/kkCYvTRBFnNjTzHHovDzW76TQ9M7XXcZxJl+XUGSqoBlf16Z3/
-	ws/+xgLky5OQhAsn3kwnQvcJk+AupZuZZKMGcHUQ05G2fM4NbUT1MU27yCBL9e5yt9wzfYdeqEd7f
-	5SIqFwucxPtY6LnnqhJj2qtrW01//jNhVTzviw0Z1MPuZJaUsj5V0MODpVAWb0q6O41TT4558Mtr5
-	UpW6InBw16BU72NmZLAcfB3Yne9fkNbuFw5e8QnUXbXOmcXrCJHk0h3tgJGNj8infSgJrpr7NDIjU
-	ASpsxliw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9mgx-00000000iS5-2uBa;
-	Wed, 22 May 2024 14:11:43 +0000
-Date: Wed, 22 May 2024 15:11:43 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Sukrit Bhatnagar <Sukrit.Bhatnagar@sony.com>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>, Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Improve dump_page() output for slab pages
-Message-ID: <Zk39H2C_wxnbAvvU@casper.infradead.org>
-References: <20240522074629.2420423-1-Sukrit.Bhatnagar@sony.com>
+	s=arc-20240116; t=1716396263; c=relaxed/simple;
+	bh=m0KMP47n39r0blvYu76srRaZafMY7Z9XIDGSzufey60=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fxd9aV9nQ9T87w0bwfji+OpHJ49aNT1CJU0sRiHbTx8VbL/lU34wNpN94YLsYfkr9IzHrp+kL4NJdhlydtjkqmpXAL/E2GbdRo2MfcfToGXwrzGYSD/E0Mm3wZAx40WLzI4qjVRPZ6YazwABngZKanPdgNH2lFdgPDaNBUJ2vuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3941C2BBFC;
+	Wed, 22 May 2024 16:44:21 +0000 (UTC)
+Date: Wed, 22 May 2024 12:45:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] tracefs: Remove unneeded buggy tracefs iput callback
+Message-ID: <20240522124504.28982867@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522074629.2420423-1-Sukrit.Bhatnagar@sony.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 22, 2024 at 04:46:27PM +0900, Sukrit Bhatnagar wrote:
-> On the other hand, the struct slab has kmem_cache which maintains another set
-> of flags. It would be nice to have these flags added as a part of the debug
-> output, and to have a convenient way to print them.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-I don't understand why the slab cache flags are the interesting thing.
-Seems to me it'd be more useful to print slab->slab_cache->name and
-then you'd be able to look up the flags from that, as well as get a lot
-more information.
+The iput callback was added because the remount could call into the
+eventfs code and touch the ei->entry_attrs array, which could have been
+freed when an eventfs directory is freed (via a synthetic event). But the
+entry_attrs was freed incorrectly and since been fixed to be freed after
+the last reference of the ei is done.
+
+The iput clears the TRACEFS_EVENT_INODE flag of the tracefs_inode
+preventing it from calling the eventfs_remount() function. But the iput
+can be called after the last reference to the inode is done but the
+eventfs_inode still exists, causing the eventfs_remount() not to be called
+on an tracefs_inode when it should be.
+
+Link: https://lore.kernel.org/all/CAK7LNARXgaWw3kH9JgrnH4vK6fr8LDkNKf3wq8NhMWJrVwJyVQ@mail.gmail.com/
+
+Cc: stable@vger.kernel.org
+Reported-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: ee4e0379475e4 ("eventfs: Free all of the eventfs_inode after RCU")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 9252e0d78ea2..62ca9c23b93c 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -455,22 +455,7 @@ static int tracefs_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 	return !(ei && ei->is_freed);
+ }
+ 
+-static void tracefs_d_iput(struct dentry *dentry, struct inode *inode)
+-{
+-	struct tracefs_inode *ti = get_tracefs(inode);
+-
+-	/*
+-	 * This inode is being freed and cannot be used for
+-	 * eventfs. Clear the flag so that it doesn't call into
+-	 * eventfs during the remount flag updates. The eventfs_inode
+-	 * gets freed after an RCU cycle, so the content will still
+-	 * be safe if the iteration is going on now.
+-	 */
+-	ti->flags &= ~TRACEFS_EVENT_INODE;
+-}
+-
+ static const struct dentry_operations tracefs_dentry_operations = {
+-	.d_iput = tracefs_d_iput,
+ 	.d_revalidate = tracefs_d_revalidate,
+ 	.d_release = tracefs_d_release,
+ };
+-- 
+2.43.0
+
