@@ -1,149 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0202613AD3E;
-	Thu, 23 May 2024 05:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C30F13B2A4
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 06:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716441296; cv=none; b=VJJHVZFrtBp02mHbdG5214pNCrK5DNhCG8etBv7+VqG741ucXscWmgxTT/r+iUtXsXAEIQdDYtvuuLGZBrbTVToIfhefIPxZdM96nxjcmXG26h8U821Tzd+FcnmM5mNNfmF+DKDCXZhFQwfp07M69zgJfbX9pFJVSa7M4K8tu7g=
+	t=1716444178; cv=none; b=Q/o/7rYExfoq+DPyHjDwlCT0k3fl5N8+HqNZ67almvFPQT6E1K87yuV/POKgOyoH4i9DPCrJvV9IXs9v1yTph5TUlmoCYbwRIwHTxsh1/WAwc3fOp3sv/ochXmt+yWUOXJXELr3Nfa4CYfG89qzqL1sDdiqQl9aaoh2BaCkyNBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716441296; c=relaxed/simple;
-	bh=XqsroI8Co4hl2Eg1PmlEh9f9N1L0jJ02yHQWdWwApwQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=oHvRQP7GQ2M2OFrcLPRKzwQj2l3hOn45J6Kv2Sb9udiM3lRQRgcZG6kgWwrM2WbzV6fGfUm5iIZIV1JfZsplyNkAl4hq/HJxmDGIC5lutRBgB2Ff0GOdTuR2WYvBGb5fr9GU11dtmvIBXBRwMskPjeM935rNMg/j1Icwp7UaHHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86EF9C4AF0D;
-	Thu, 23 May 2024 05:14:55 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sA0nj-00000006W6f-3ijh;
-	Thu, 23 May 2024 01:15:39 -0400
-Message-ID: <20240523051539.754424703@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 23 May 2024 01:14:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- stable@vger.kernel.org
-Subject: [PATCH v2 3/4] eventfs: Update all the eventfs_inodes from the events descriptor
-References: <20240523051425.335105631@goodmis.org>
+	s=arc-20240116; t=1716444178; c=relaxed/simple;
+	bh=B9lGrOwbzZ9cwWP1ohGSBcMGMvcXioUh06F1RRqtc5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BuHStP3lUhb8HOYxjn6BGsyfZqrGMAfJdw7GBypqGwjoDIDGKd6yx76tKyNoDcUv/jmMGo2Pg/AwRrVR5dFSV5L3cBniqGGV2DYXLdbvmPqp2n1Ghrc0fi1rcDoG9V5i9vUeQPfHe5fyA174CNWmYOnrkt09itS+IzFkWUjtdbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=Uz2AHfik; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="Uz2AHfik"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-36cbad3701dso27065105ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 May 2024 23:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1716444176; x=1717048976; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=txOSv1K2CA1USg0Ze10vD1qMyJxbEs9Mfk9GiCoI090=;
+        b=Uz2AHfikahhuUowwWHZ/rUV3mnPgvxCUBUVLy75Ni4QVr3Zm8DMJc7X+YPT/ZlueFf
+         fM09t2fSBt5pPpQRo2M2zZC0pkRmdXI9FCcScF4/EKN/cySBOR/qDzA5ekE4ILkpPwpy
+         5mKNJ6bHDg+TEheZbQ3IkCrHP/NZCEn3hQOxoKAsaSNFqq1PjKOo0dSQD72z4WdrL11T
+         SDuOkvOaGOZFmfxRTdXg/vfbkBY5oBXpiOFGPI2dN03MwRCRVp7zTktF7l5JeFQL9kbh
+         gj4aNjvikrd9qQBAiO+5XOkySFNkgVh2QVR/GkOax5g1Q2KM/PsKBO5u3BVjXDevfa5r
+         Zpcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716444176; x=1717048976;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=txOSv1K2CA1USg0Ze10vD1qMyJxbEs9Mfk9GiCoI090=;
+        b=VBKvFCe+leH4vHdGXsauTQbOR3VtztUN4qMgDDQu77QD79efMqOieqt/71N1b+CWoC
+         6wd9U2yF2ZfBic6JNkwp9yImYYecqMGA54P9HPCNA4NqNaL3OI4dLI+nMjPq8zB2qoyh
+         ihM0yU4LbUzOtlNzILKikeLLt1m9LiGJShlZgSu2bYNVVurQWdzKZppIYij+wUgHIU4+
+         niXjtnr+gNnKQfYqsvDVnj1x6t19Pfh/c19YJdw65CuIombzNkAyV4k8+NHSGK/bahvs
+         q9/XP0tMNyP0iUfPH05AmA0ijtoCvXXHlmoXS3uL5QmiiVL9zPFRKD16MnCelaX8hBBc
+         RTIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWiU/SljiK41Xmxsxj5MqXx1hGelJwHZDxw6MGaztV9G7ITFYyhS3xTXqKBhf5YfJ74BKBeVcSjv8Ux9ppPCr0okKoVVi0dmPq5NzW4yLVwBW8d
+X-Gm-Message-State: AOJu0YyynvZgVWybPCmDA4iPKXvRmJYVC/qDYNMufilZs58dZHOmahHY
+	K9scxmPZnNUbb8g6rqk1za0Dtd/9v2SONwhTULuzC32q8nhz97gnfRbFDouGjcg=
+X-Google-Smtp-Source: AGHT+IEHlOqXvdbfYiugVF0TXgIiftVk0fEr87owHTsVUKSpnXRyU8iozPM5JlvqTh0LUpuxvOHGhg==
+X-Received: by 2002:a05:6e02:1447:b0:36c:7f3d:59a with SMTP id e9e14a558f8ab-371f7c80fe6mr48056835ab.4.1716444176327;
+        Wed, 22 May 2024 23:02:56 -0700 (PDT)
+Received: from [192.168.1.16] (174-21-188-197.tukw.qwest.net. [174.21.188.197])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634117190absm23448503a12.87.2024.05.22.23.02.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 23:02:55 -0700 (PDT)
+Message-ID: <9097e78d-0e7d-43bd-bafd-e53a4872a4d1@davidwei.uk>
+Date: Wed, 22 May 2024 23:02:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 11/14] tcp: RX path for devmem TCP
+Content-Language: en-GB
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
+ <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240510232128.1105145-1-almasrymina@google.com>
+ <20240510232128.1105145-12-almasrymina@google.com>
+From: David Wei <dw@davidwei.uk>
+In-Reply-To: <20240510232128.1105145-12-almasrymina@google.com>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 2024-05-10 16:21, Mina Almasry wrote:
+> +/* On error, returns the -errno. On success, returns number of bytes sent to the
+> + * user. May not consume all of @remaining_len.
+> + */
+> +static int tcp_recvmsg_dmabuf(struct sock *sk, const struct sk_buff *skb,
+> +			      unsigned int offset, struct msghdr *msg,
+> +			      int remaining_len)
+> +{
+> +	struct dmabuf_cmsg dmabuf_cmsg = { 0 };
+> +	struct tcp_xa_pool tcp_xa_pool;
+> +	unsigned int start;
+> +	int i, copy, n;
+> +	int sent = 0;
+> +	int err = 0;
+> +
+> +	tcp_xa_pool.max = 0;
+> +	tcp_xa_pool.idx = 0;
+> +	do {
+> +		start = skb_headlen(skb);
+> +
+> +		if (skb_frags_readable(skb)) {
+> +			err = -ENODEV;
+> +			goto out;
+> +		}
+> +
+> +		/* Copy header. */
+> +		copy = start - offset;
+> +		if (copy > 0) {
+> +			copy = min(copy, remaining_len);
+> +
+> +			n = copy_to_iter(skb->data + offset, copy,
+> +					 &msg->msg_iter);
+> +			if (n != copy) {
+> +				err = -EFAULT;
+> +				goto out;
+> +			}
+> +
+> +			offset += copy;
+> +			remaining_len -= copy;
+> +
+> +			/* First a dmabuf_cmsg for # bytes copied to user
+> +			 * buffer.
+> +			 */
+> +			memset(&dmabuf_cmsg, 0, sizeof(dmabuf_cmsg));
+> +			dmabuf_cmsg.frag_size = copy;
+> +			err = put_cmsg(msg, SOL_SOCKET, SO_DEVMEM_LINEAR,
+> +				       sizeof(dmabuf_cmsg), &dmabuf_cmsg);
+> +			if (err || msg->msg_flags & MSG_CTRUNC) {
+> +				msg->msg_flags &= ~MSG_CTRUNC;
+> +				if (!err)
+> +					err = -ETOOSMALL;
+> +				goto out;
+> +			}
+> +
+> +			sent += copy;
+> +
+> +			if (remaining_len == 0)
+> +				goto out;
+> +		}
+> +
+> +		/* after that, send information of dmabuf pages through a
+> +		 * sequence of cmsg
+> +		 */
+> +		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
+> +			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
+> +			struct net_iov *niov;
+> +			u64 frag_offset;
+> +			int end;
+> +
+> +			/* !skb_frags_readable() should indicate that ALL the
+> +			 * frags in this skb are dmabuf net_iovs. We're checking
+> +			 * for that flag above, but also check individual frags
+> +			 * here. If the tcp stack is not setting
+> +			 * skb_frags_readable() correctly, we still don't want
+> +			 * to crash here.
+> +			 */
+> +			if (!skb_frag_net_iov(frag)) {
+> +				net_err_ratelimited("Found non-dmabuf skb with net_iov");
+> +				err = -ENODEV;
+> +				goto out;
+> +			}
+> +
+> +			niov = skb_frag_net_iov(frag);
 
-The change to update the permissions of the eventfs_inode had the
-misconception that using the tracefs_inode would find all the
-eventfs_inodes that have been updated and reset them on remount.
-The problem with this approach is that the eventfs_inodes are freed when
-they are no longer used (basically the reason the eventfs system exists).
-When they are freed, the updated eventfs_inodes are not reset on a remount
-because their tracefs_inodes have been freed.
+Sorry if we've already discussed this.
 
-Instead, since the events directory eventfs_inode always has a
-tracefs_inode pointing to it (it is not freed when finished), and the
-events directory has a link to all its children, have the
-eventfs_remount() function only operate on the events eventfs_inode and
-have it descend into its children updating their uid and gids.
+We have this additional hunk:
 
-Link: https://lore.kernel.org/all/CAK7LNARXgaWw3kH9JgrnH4vK6fr8LDkNKf3wq8NhMWJrVwJyVQ@mail.gmail.com/
++ if (niov->pp->mp_ops != &dmabuf_devmem_ops) {
++ 	err = -ENODEV;
++ 	goto out;
++ }
 
-Cc: stable@vger.kernel.org
-Fixes: baa23a8d4360d ("tracefs: Reset permissions on remount if permissions are options")
-Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 44 ++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 13 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 5dfb1ccd56ea..129d0f54ba62 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -305,27 +305,27 @@ static const struct file_operations eventfs_file_operations = {
- 	.llseek		= generic_file_llseek,
- };
- 
--/*
-- * On a remount of tracefs, if UID or GID options are set, then
-- * the mount point inode permissions should be used.
-- * Reset the saved permission flags appropriately.
-- */
--void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
-+static void eventfs_set_attrs(struct eventfs_inode *ei, bool update_uid, kuid_t uid,
-+			      bool update_gid, kgid_t gid, int level)
- {
--	struct eventfs_inode *ei = ti->private;
-+	struct eventfs_inode *ei_child;
- 
--	if (!ei)
-+	/* Update events/<system>/<event> */
-+	if (WARN_ON_ONCE(level > 3))
- 		return;
- 
- 	if (update_uid) {
- 		ei->attr.mode &= ~EVENTFS_SAVE_UID;
--		ei->attr.uid = ti->vfs_inode.i_uid;
-+		ei->attr.uid = uid;
- 	}
- 
--
- 	if (update_gid) {
- 		ei->attr.mode &= ~EVENTFS_SAVE_GID;
--		ei->attr.gid = ti->vfs_inode.i_gid;
-+		ei->attr.gid = gid;
-+	}
-+
-+	list_for_each_entry(ei_child, &ei->children, list) {
-+		eventfs_set_attrs(ei_child, update_uid, uid, update_gid, gid, level + 1);
- 	}
- 
- 	if (!ei->entry_attrs)
-@@ -334,13 +334,31 @@ void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
- 	for (int i = 0; i < ei->nr_entries; i++) {
- 		if (update_uid) {
- 			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_UID;
--			ei->entry_attrs[i].uid = ti->vfs_inode.i_uid;
-+			ei->entry_attrs[i].uid = uid;
- 		}
- 		if (update_gid) {
- 			ei->entry_attrs[i].mode &= ~EVENTFS_SAVE_GID;
--			ei->entry_attrs[i].gid = ti->vfs_inode.i_gid;
-+			ei->entry_attrs[i].gid = gid;
- 		}
- 	}
-+
-+}
-+
-+/*
-+ * On a remount of tracefs, if UID or GID options are set, then
-+ * the mount point inode permissions should be used.
-+ * Reset the saved permission flags appropriately.
-+ */
-+void eventfs_remount(struct tracefs_inode *ti, bool update_uid, bool update_gid)
-+{
-+	struct eventfs_inode *ei = ti->private;
-+
-+	/* Only the events directory does the updates */
-+	if (!ei || !ei->is_events || ei->is_freed)
-+		return;
-+
-+	eventfs_set_attrs(ei, update_uid, ti->vfs_inode.i_uid,
-+			  update_gid, ti->vfs_inode.i_gid, 0);
- }
- 
- /* Return the evenfs_inode of the "events" directory */
--- 
-2.43.0
-
-
+In case one of our skbs end up here, skb_frag_is_net_iov() and
+!skb_frags_readable(). Does this even matter? And if so then is there a
+better way to distinguish between our two types of net_iovs?
