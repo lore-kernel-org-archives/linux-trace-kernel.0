@@ -1,207 +1,186 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C30F13B2A4
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 06:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB7513D29A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 09:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716444178; cv=none; b=Q/o/7rYExfoq+DPyHjDwlCT0k3fl5N8+HqNZ67almvFPQT6E1K87yuV/POKgOyoH4i9DPCrJvV9IXs9v1yTph5TUlmoCYbwRIwHTxsh1/WAwc3fOp3sv/ochXmt+yWUOXJXELr3Nfa4CYfG89qzqL1sDdiqQl9aaoh2BaCkyNBs=
+	t=1716455704; cv=none; b=cl148DzgyLZ9RgbCkPkMiCqgjlVoJEKpcmTJqG10A+O21TOI3fKxbRBTV9N5MzYJKY3u6/axQBL5cuoyjh+f5Z85Wh1qk+lpOGCzTQM/B4Kyuw4sdhiiKzQ9S7vW69t3jc7NH6PuyZvwdToTbJFsjyd/nWvv5/vOLieYwQS05RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716444178; c=relaxed/simple;
-	bh=B9lGrOwbzZ9cwWP1ohGSBcMGMvcXioUh06F1RRqtc5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BuHStP3lUhb8HOYxjn6BGsyfZqrGMAfJdw7GBypqGwjoDIDGKd6yx76tKyNoDcUv/jmMGo2Pg/AwRrVR5dFSV5L3cBniqGGV2DYXLdbvmPqp2n1Ghrc0fi1rcDoG9V5i9vUeQPfHe5fyA174CNWmYOnrkt09itS+IzFkWUjtdbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=Uz2AHfik; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1716455704; c=relaxed/simple;
+	bh=+HnSm28nck3VHTqGDjmFRzfJxYg/Ohuag17riecvzUk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Uj5WtZvPNkwZQzJH/orICWIoiosFl8LCBVbn9n3dwDKri5PZHSc6sneUobK5mKE3aYUnEoupL9FGFn6r1M3FVVNsflrvO6yKRhR6W9LrGQQe05YT5kBQeZK0V2gGpLhsiKTVB+3VSjOImIHLfwXNZE26iYBizLry5TcERBX8pX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hu3E3NmJ; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="Uz2AHfik"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-36cbad3701dso27065105ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 May 2024 23:02:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hu3E3NmJ"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-420eed123a2so25203895e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 02:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1716444176; x=1717048976; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=txOSv1K2CA1USg0Ze10vD1qMyJxbEs9Mfk9GiCoI090=;
-        b=Uz2AHfikahhuUowwWHZ/rUV3mnPgvxCUBUVLy75Ni4QVr3Zm8DMJc7X+YPT/ZlueFf
-         fM09t2fSBt5pPpQRo2M2zZC0pkRmdXI9FCcScF4/EKN/cySBOR/qDzA5ekE4ILkpPwpy
-         5mKNJ6bHDg+TEheZbQ3IkCrHP/NZCEn3hQOxoKAsaSNFqq1PjKOo0dSQD72z4WdrL11T
-         SDuOkvOaGOZFmfxRTdXg/vfbkBY5oBXpiOFGPI2dN03MwRCRVp7zTktF7l5JeFQL9kbh
-         gj4aNjvikrd9qQBAiO+5XOkySFNkgVh2QVR/GkOax5g1Q2KM/PsKBO5u3BVjXDevfa5r
-         Zpcw==
+        d=google.com; s=20230601; t=1716455701; x=1717060501; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jk02q1xwaAjXdhW1L0zkxXMpbJH4jmKA0Vi9iubvVTQ=;
+        b=Hu3E3NmJhTw6viN2yRhRLFouEozrZV61ZWjzLpAOuJqNui7GJZ92KM7FbGtWO4ji2d
+         f4uo3OvxR3dR/+iZGVyqTfUVgFeN+WlPbigiAjbx6NS0vvDfbIqw3CMTSH/va1KpKFNJ
+         31NqYHp6jv/burC3DURPdwiGbRne0RyKXcdKCmCltaUVETC5mPnwcBuqe7/UdJrt1HpA
+         AvvpEdJ+BZctuA4uPYRn/cMturmlXviAXffmTPHsvH5zXqyUvL7bPVLij9tbKk6BUjeU
+         4jDZLeW+YYecmuxrfrKyi9bgivvRxmj3LVEGttN9XoYaWKEYLX6O9oA6BJYwX8g2xfGL
+         SIiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716444176; x=1717048976;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=txOSv1K2CA1USg0Ze10vD1qMyJxbEs9Mfk9GiCoI090=;
-        b=VBKvFCe+leH4vHdGXsauTQbOR3VtztUN4qMgDDQu77QD79efMqOieqt/71N1b+CWoC
-         6wd9U2yF2ZfBic6JNkwp9yImYYecqMGA54P9HPCNA4NqNaL3OI4dLI+nMjPq8zB2qoyh
-         ihM0yU4LbUzOtlNzILKikeLLt1m9LiGJShlZgSu2bYNVVurQWdzKZppIYij+wUgHIU4+
-         niXjtnr+gNnKQfYqsvDVnj1x6t19Pfh/c19YJdw65CuIombzNkAyV4k8+NHSGK/bahvs
-         q9/XP0tMNyP0iUfPH05AmA0ijtoCvXXHlmoXS3uL5QmiiVL9zPFRKD16MnCelaX8hBBc
-         RTIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiU/SljiK41Xmxsxj5MqXx1hGelJwHZDxw6MGaztV9G7ITFYyhS3xTXqKBhf5YfJ74BKBeVcSjv8Ux9ppPCr0okKoVVi0dmPq5NzW4yLVwBW8d
-X-Gm-Message-State: AOJu0YyynvZgVWybPCmDA4iPKXvRmJYVC/qDYNMufilZs58dZHOmahHY
-	K9scxmPZnNUbb8g6rqk1za0Dtd/9v2SONwhTULuzC32q8nhz97gnfRbFDouGjcg=
-X-Google-Smtp-Source: AGHT+IEHlOqXvdbfYiugVF0TXgIiftVk0fEr87owHTsVUKSpnXRyU8iozPM5JlvqTh0LUpuxvOHGhg==
-X-Received: by 2002:a05:6e02:1447:b0:36c:7f3d:59a with SMTP id e9e14a558f8ab-371f7c80fe6mr48056835ab.4.1716444176327;
-        Wed, 22 May 2024 23:02:56 -0700 (PDT)
-Received: from [192.168.1.16] (174-21-188-197.tukw.qwest.net. [174.21.188.197])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634117190absm23448503a12.87.2024.05.22.23.02.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 23:02:55 -0700 (PDT)
-Message-ID: <9097e78d-0e7d-43bd-bafd-e53a4872a4d1@davidwei.uk>
-Date: Wed, 22 May 2024 23:02:54 -0700
+        d=1e100.net; s=20230601; t=1716455701; x=1717060501;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jk02q1xwaAjXdhW1L0zkxXMpbJH4jmKA0Vi9iubvVTQ=;
+        b=n67n8GXk0C3vbok0GijiQ4iOgnKPmSafmg2wrGR5w7WanEGW5jME1R0vLWhwk9s1IU
+         nP6iS7D8IGL6Je7/p8Y9GLRketOqshYwJ2iY2+hYy6iswFnH3QhISSlxl17b4Q5/amyL
+         V/n7abqh6WD6i6VVE83SQsAqd7dFyLhbqBH2IguSnh4T6ltKBhglYT7/g+C+ZhTM4Qmj
+         PWUoKADRURKOeG4nCAjqXKLHCkofL5qgd0d/GDUdCyBZiRW98PJ7OOSts3JrOvP/QCfW
+         CDl+F7Rqtb04SQXm9cRz5/5xWSi/WJUVuxc4ACW21peBOQqOanDx5gxibBKKwedxaL1x
+         SW4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVhed2QHPbRawyJVr2LAbqK0ZpO8jIsLOSRdw1lsg+zd9m6Q8rdC52eyClD+lMGqfnyZK5HP73ZdUxWalpF/UncLVoQ9ExMUlOAGfXLeC2v/ooM
+X-Gm-Message-State: AOJu0Yz2dh+J3JkcDDDZa25fNWUUpC1A6clBUAZpM6TBL7drWBRPy1xV
+	1OgjBZj/9pj/oeLW3+BspgAPqnSfoPosLi+djAFif3JV6+pFCJPCRSBQlSK3O1QL1+kpYmJZKBe
+	1epKikwMy5dfWiJFigQ==
+X-Google-Smtp-Source: AGHT+IFg0ElFrdX/ypixxrO8pVGQT9ah/+snHJKoSVpE1zD3SXtCvnzIsIEBrtrrVICcmdjEFsitmkmwny5oAyA5
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:5127:b0:420:217f:4f7 with SMTP
+ id 5b1f17b1804b1-420fd3894d4mr185815e9.6.1716455700542; Thu, 23 May 2024
+ 02:15:00 -0700 (PDT)
+Date: Thu, 23 May 2024 10:14:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 11/14] tcp: RX path for devmem TCP
-Content-Language: en-GB
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20240510232128.1105145-1-almasrymina@google.com>
- <20240510232128.1105145-12-almasrymina@google.com>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <20240510232128.1105145-12-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240523091445.2568208-1-vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Align meta-page to sub-buffers for improved TLB usage
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, david@redhat.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024-05-10 16:21, Mina Almasry wrote:
-> +/* On error, returns the -errno. On success, returns number of bytes sent to the
-> + * user. May not consume all of @remaining_len.
-> + */
-> +static int tcp_recvmsg_dmabuf(struct sock *sk, const struct sk_buff *skb,
-> +			      unsigned int offset, struct msghdr *msg,
-> +			      int remaining_len)
-> +{
-> +	struct dmabuf_cmsg dmabuf_cmsg = { 0 };
-> +	struct tcp_xa_pool tcp_xa_pool;
-> +	unsigned int start;
-> +	int i, copy, n;
-> +	int sent = 0;
-> +	int err = 0;
-> +
-> +	tcp_xa_pool.max = 0;
-> +	tcp_xa_pool.idx = 0;
-> +	do {
-> +		start = skb_headlen(skb);
-> +
-> +		if (skb_frags_readable(skb)) {
-> +			err = -ENODEV;
-> +			goto out;
-> +		}
-> +
-> +		/* Copy header. */
-> +		copy = start - offset;
-> +		if (copy > 0) {
-> +			copy = min(copy, remaining_len);
-> +
-> +			n = copy_to_iter(skb->data + offset, copy,
-> +					 &msg->msg_iter);
-> +			if (n != copy) {
-> +				err = -EFAULT;
-> +				goto out;
-> +			}
-> +
-> +			offset += copy;
-> +			remaining_len -= copy;
-> +
-> +			/* First a dmabuf_cmsg for # bytes copied to user
-> +			 * buffer.
-> +			 */
-> +			memset(&dmabuf_cmsg, 0, sizeof(dmabuf_cmsg));
-> +			dmabuf_cmsg.frag_size = copy;
-> +			err = put_cmsg(msg, SOL_SOCKET, SO_DEVMEM_LINEAR,
-> +				       sizeof(dmabuf_cmsg), &dmabuf_cmsg);
-> +			if (err || msg->msg_flags & MSG_CTRUNC) {
-> +				msg->msg_flags &= ~MSG_CTRUNC;
-> +				if (!err)
-> +					err = -ETOOSMALL;
-> +				goto out;
-> +			}
-> +
-> +			sent += copy;
-> +
-> +			if (remaining_len == 0)
-> +				goto out;
-> +		}
-> +
-> +		/* after that, send information of dmabuf pages through a
-> +		 * sequence of cmsg
-> +		 */
-> +		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
-> +			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
-> +			struct net_iov *niov;
-> +			u64 frag_offset;
-> +			int end;
-> +
-> +			/* !skb_frags_readable() should indicate that ALL the
-> +			 * frags in this skb are dmabuf net_iovs. We're checking
-> +			 * for that flag above, but also check individual frags
-> +			 * here. If the tcp stack is not setting
-> +			 * skb_frags_readable() correctly, we still don't want
-> +			 * to crash here.
-> +			 */
-> +			if (!skb_frag_net_iov(frag)) {
-> +				net_err_ratelimited("Found non-dmabuf skb with net_iov");
-> +				err = -ENODEV;
-> +				goto out;
-> +			}
-> +
-> +			niov = skb_frag_net_iov(frag);
+Previously, the mapped ring-buffer layout caused misalignment between
+the meta-page and sub-buffers when the sub-buffer size was not a
+multiple of PAGE_SIZE. This prevented hardware with larger TLB entries
+from utilizing them effectively.
 
-Sorry if we've already discussed this.
+Add a padding with the zero-page between the meta-page and sub-buffers.
+Also update the ring-buffer map_test to verify that padding.
 
-We have this additional hunk:
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-+ if (niov->pp->mp_ops != &dmabuf_devmem_ops) {
-+ 	err = -ENODEV;
-+ 	goto out;
-+ }
+-- 
 
-In case one of our skbs end up here, skb_frag_is_net_iov() and
-!skb_frags_readable(). Does this even matter? And if so then is there a
-better way to distinguish between our two types of net_iovs?
+This is based on the mm-unstable branch [1] as it depends on David's work [2]
+for allowing the zero-page in vm_insert_page().
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
+[2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 7345a8b625fb..acaab4d4288f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6148,10 +6148,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	/* install subbuf ID to kern VA translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+-	meta->meta_page_size = PAGE_SIZE;
+ 	meta->meta_struct_len = sizeof(*meta);
+ 	meta->nr_subbufs = nr_subbufs;
+ 	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
++	meta->meta_page_size = meta->subbuf_size;
+ 
+ 	rb_update_meta_page(cpu_buffer);
+ }
+@@ -6238,6 +6238,12 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	    !(vma->vm_flags & VM_MAYSHARE))
+ 		return -EPERM;
+ 
++	subbuf_order = cpu_buffer->buffer->subbuf_order;
++	subbuf_pages = 1 << subbuf_order;
++
++	if (subbuf_order && pgoff % subbuf_pages)
++		return -EINVAL;
++
+ 	/*
+ 	 * Make sure the mapping cannot become writable later. Also tell the VM
+ 	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND).
+@@ -6247,11 +6253,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	lockdep_assert_held(&cpu_buffer->mapping_lock);
+ 
+-	subbuf_order = cpu_buffer->buffer->subbuf_order;
+-	subbuf_pages = 1 << subbuf_order;
+-
+ 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
+-	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
++	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
+ 
+ 	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+ 	if (!vma_pages || vma_pages > nr_pages)
+@@ -6264,20 +6267,20 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 		return -ENOMEM;
+ 
+ 	if (!pgoff) {
++		unsigned long meta_page_padding;
++
+ 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+ 
+ 		/*
+-		 * TODO: Align sub-buffers on their size, once
+-		 * vm_insert_pages() supports the zero-page.
++		 * Pad with the zero-page to align the meta-page with the
++		 * sub-buffers.
+ 		 */
++		meta_page_padding = subbuf_pages - 1;
++		while (meta_page_padding-- && p < nr_pages)
++			pages[p++] = ZERO_PAGE(vma->vm_start + (PAGE_SIZE * p));
+ 	} else {
+ 		/* Skip the meta-page */
+-		pgoff--;
+-
+-		if (pgoff % subbuf_pages) {
+-			err = -EINVAL;
+-			goto out;
+-		}
++		pgoff -= subbuf_pages;
+ 
+ 		s += pgoff / subbuf_pages;
+ 	}
+diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
+index a9006fa7097e..4bb0192e43f3 100644
+--- a/tools/testing/selftests/ring-buffer/map_test.c
++++ b/tools/testing/selftests/ring-buffer/map_test.c
+@@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
+ 	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
+ 		    desc->cpu_fd, meta_len);
+ 	ASSERT_EQ(data, MAP_FAILED);
++
++	/* Verify meta-page padding */
++	if (desc->meta->meta_page_size > getpagesize()) {
++		void *addr;
++
++		data_len = desc->meta->meta_page_size;
++		data = mmap(NULL, data_len,
++			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
++		ASSERT_NE(data, MAP_FAILED);
++
++		addr = (void *)((unsigned long)data + getpagesize());
++		ASSERT_EQ(*((int *)addr), 0);
++		munmap(data, data_len);
++	}
+ }
+ 
+ FIXTURE(snapshot) {
+
+base-commit: c65920c76a977c2b73c3a8b03b4c0c00cc1285ed
+-- 
+2.45.1.288.g0e0cd299f1-goog
+
