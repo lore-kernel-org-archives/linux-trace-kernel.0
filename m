@@ -1,186 +1,133 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB7513D29A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 09:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C44113BC0A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 11:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455704; cv=none; b=cl148DzgyLZ9RgbCkPkMiCqgjlVoJEKpcmTJqG10A+O21TOI3fKxbRBTV9N5MzYJKY3u6/axQBL5cuoyjh+f5Z85Wh1qk+lpOGCzTQM/B4Kyuw4sdhiiKzQ9S7vW69t3jc7NH6PuyZvwdToTbJFsjyd/nWvv5/vOLieYwQS05RA=
+	t=1716465101; cv=none; b=Y+I+geO/yqhjZR+8lZLxYym1hpEflTcemXy8j5wNBoAXsTCbG6ZzL4WfJ+Ux+n94QmvznnVl1ODDAgJYyb5DFhs7InWo/znmYZyrsTeOWwQ1ABNPEbxQ+/FpGwC9hCZaZzXiLPWaMcqWv1c6lTBkKKBHdfGQzC9iSA66uIahXqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455704; c=relaxed/simple;
-	bh=+HnSm28nck3VHTqGDjmFRzfJxYg/Ohuag17riecvzUk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Uj5WtZvPNkwZQzJH/orICWIoiosFl8LCBVbn9n3dwDKri5PZHSc6sneUobK5mKE3aYUnEoupL9FGFn6r1M3FVVNsflrvO6yKRhR6W9LrGQQe05YT5kBQeZK0V2gGpLhsiKTVB+3VSjOImIHLfwXNZE26iYBizLry5TcERBX8pX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hu3E3NmJ; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1716465101; c=relaxed/simple;
+	bh=g8C5XN3fHUDfWkVvbozC29jrfrsP8txwTiSzj5n44vQ=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aRgnecqBQtAkUbiKqbfiKvzByUgHXl2E9DEzEOWo50mWgcm6kdYdsACQyNvQPZpMyg29EcMc3cbnmKu+mWwThI8+M0Z8P1PKxpFKFQqCXORHJEzl+hS91lKyofLoij02dHtwDHPbT+ms333vzAS5NwV/GVvtVtKvuYyw1dtSPk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ldRzBvOO; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hu3E3NmJ"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-420eed123a2so25203895e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 02:15:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ldRzBvOO"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-354f69934feso490994f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 May 2024 04:51:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716455701; x=1717060501; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jk02q1xwaAjXdhW1L0zkxXMpbJH4jmKA0Vi9iubvVTQ=;
-        b=Hu3E3NmJhTw6viN2yRhRLFouEozrZV61ZWjzLpAOuJqNui7GJZ92KM7FbGtWO4ji2d
-         f4uo3OvxR3dR/+iZGVyqTfUVgFeN+WlPbigiAjbx6NS0vvDfbIqw3CMTSH/va1KpKFNJ
-         31NqYHp6jv/burC3DURPdwiGbRne0RyKXcdKCmCltaUVETC5mPnwcBuqe7/UdJrt1HpA
-         AvvpEdJ+BZctuA4uPYRn/cMturmlXviAXffmTPHsvH5zXqyUvL7bPVLij9tbKk6BUjeU
-         4jDZLeW+YYecmuxrfrKyi9bgivvRxmj3LVEGttN9XoYaWKEYLX6O9oA6BJYwX8g2xfGL
-         SIiA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1716465096; x=1717069896; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tomuose927MUcTT3sGm0eYQ4ZHc9XHuBgI6ykSWqNcI=;
+        b=ldRzBvOOyhLWZB5cN+Mc1fYrzAAfcIFBtYE8H2WURHrSTqL/fGzKNajnh9DiGfO/JL
+         H+Tyau9BrFjNv1zc2gKrUCsLAqk3t1cMg1KN0+7vdssta0qAC6i3yP1N+RVwxU3hEHVX
+         zsIpL1pTEYWywVQNjJ2liCN/TPSor/yMFpODh25/k8HOIqKKVfn4m8WAK5vVPbwmnEA8
+         RO3ACFuuOljt2SYpSdRlm+sSqWuST1v27Xs/g936TkKJDNJi7WENH0Q8NzS19TF1Uboe
+         PQF1J/dsxnEzl4upJ1mgCa8jiO9U4I3JxS9W2IPFv9X1K//R/VMhRb8C6pKMJN1rtoqJ
+         xAFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716455701; x=1717060501;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jk02q1xwaAjXdhW1L0zkxXMpbJH4jmKA0Vi9iubvVTQ=;
-        b=n67n8GXk0C3vbok0GijiQ4iOgnKPmSafmg2wrGR5w7WanEGW5jME1R0vLWhwk9s1IU
-         nP6iS7D8IGL6Je7/p8Y9GLRketOqshYwJ2iY2+hYy6iswFnH3QhISSlxl17b4Q5/amyL
-         V/n7abqh6WD6i6VVE83SQsAqd7dFyLhbqBH2IguSnh4T6ltKBhglYT7/g+C+ZhTM4Qmj
-         PWUoKADRURKOeG4nCAjqXKLHCkofL5qgd0d/GDUdCyBZiRW98PJ7OOSts3JrOvP/QCfW
-         CDl+F7Rqtb04SQXm9cRz5/5xWSi/WJUVuxc4ACW21peBOQqOanDx5gxibBKKwedxaL1x
-         SW4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVhed2QHPbRawyJVr2LAbqK0ZpO8jIsLOSRdw1lsg+zd9m6Q8rdC52eyClD+lMGqfnyZK5HP73ZdUxWalpF/UncLVoQ9ExMUlOAGfXLeC2v/ooM
-X-Gm-Message-State: AOJu0Yz2dh+J3JkcDDDZa25fNWUUpC1A6clBUAZpM6TBL7drWBRPy1xV
-	1OgjBZj/9pj/oeLW3+BspgAPqnSfoPosLi+djAFif3JV6+pFCJPCRSBQlSK3O1QL1+kpYmJZKBe
-	1epKikwMy5dfWiJFigQ==
-X-Google-Smtp-Source: AGHT+IFg0ElFrdX/ypixxrO8pVGQT9ah/+snHJKoSVpE1zD3SXtCvnzIsIEBrtrrVICcmdjEFsitmkmwny5oAyA5
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:5127:b0:420:217f:4f7 with SMTP
- id 5b1f17b1804b1-420fd3894d4mr185815e9.6.1716455700542; Thu, 23 May 2024
- 02:15:00 -0700 (PDT)
-Date: Thu, 23 May 2024 10:14:45 +0100
+        d=1e100.net; s=20230601; t=1716465096; x=1717069896;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tomuose927MUcTT3sGm0eYQ4ZHc9XHuBgI6ykSWqNcI=;
+        b=TLKsWXYiWCk2YybIaaDHqKu3RwvCoso4df0Xy2g/lX0iJh/SmGHRsiNKIhqy7HWprO
+         QOdzV3BA+5YE+7mcTksF8kPKzREtCcOMFrwB8cKTPfcrbw02vb7OgGxhWHCGRBHdpzeV
+         KkuPGTvQBED1RLipGcl6TaVIImMxciNupmiu5PJz8Sy5wULdWHZ2t3n3YexdCRuFtVBk
+         qccVewFu1QqahehkA6Nx0pyUF7kSH31XOmiTmpDbnHz4MZfYj+sPR1DmpME8xHxkpSHH
+         c3d913wwgUgDReGnuhoV7JMHWJSjkJ00zbQDpU6z9EI4HBrMv6Qt/rllPWCrC8mWjJ0m
+         T0zA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxSyas89+TNO0OLFuqAQlvgAeZXtogaGjoV40HQ1WnkFo22jsQ7kB3/NOFoyJavyIOTOgjnl3s1iZfdDrT7QDaJiktGORDKLTbHF411MYBdg4V
+X-Gm-Message-State: AOJu0Yz8jkT7dsoHvHhp9rusvYX3O2LPg4U0opWvTE0qfq4yPppF5nkJ
+	Uj2c18uEPojQXtbIds8Qq326+XsOEOmoSRYVLD2RI9/Zg2Xg6ybLl0ZRb+iyplA=
+X-Google-Smtp-Source: AGHT+IFe90bcCCk3DsNh1uSEukvSAXaPs6XHlXPOkfTOcX5gFcR6LlB//XRU3ng08XrqXVcAz3+1YQ==
+X-Received: by 2002:adf:fd04:0:b0:34d:ce05:29ef with SMTP id ffacd0b85a97d-354f75216eamr2192712f8f.17.1716465096610;
+        Thu, 23 May 2024 04:51:36 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-354e03420b4sm3414511f8f.24.2024.05.23.04.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 May 2024 04:51:36 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] riscv: Fix early ftrace nop patching
+Date: Thu, 23 May 2024 13:51:34 +0200
+Message-Id: <20240523115134.70380-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240523091445.2568208-1-vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Align meta-page to sub-buffers for improved TLB usage
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, david@redhat.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Previously, the mapped ring-buffer layout caused misalignment between
-the meta-page and sub-buffers when the sub-buffer size was not a
-multiple of PAGE_SIZE. This prevented hardware with larger TLB entries
-from utilizing them effectively.
+Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
+converted ftrace_make_nop() to use patch_insn_write() which does not
+emit any icache flush relying entirely on __ftrace_modify_code() to do
+that.
 
-Add a padding with the zero-page between the meta-page and sub-buffers.
-Also update the ring-buffer map_test to verify that padding.
+But we missed that ftrace_make_nop() was called very early directly when
+converting mcount calls into nops (actually on riscv it converts 2B nops
+emitted by the compiler into 4B nops).
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+This caused crashes on multiple HW as reported by Conor and Björn since
+the booting core could have half-patched instructions in its icache
+which would trigger an illegal instruction trap: fix this by emitting a
+local flush icache when early patching nops.
 
--- 
+Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/cacheflush.h | 6 ++++++
+ arch/riscv/kernel/ftrace.c          | 3 +++
+ 2 files changed, 9 insertions(+)
 
-This is based on the mm-unstable branch [1] as it depends on David's work [2]
-for allowing the zero-page in vm_insert_page().
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
-[2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7345a8b625fb..acaab4d4288f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6148,10 +6148,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	/* install subbuf ID to kern VA translation */
- 	cpu_buffer->subbuf_ids = subbuf_ids;
- 
--	meta->meta_page_size = PAGE_SIZE;
- 	meta->meta_struct_len = sizeof(*meta);
- 	meta->nr_subbufs = nr_subbufs;
- 	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-+	meta->meta_page_size = meta->subbuf_size;
- 
- 	rb_update_meta_page(cpu_buffer);
- }
-@@ -6238,6 +6238,12 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	    !(vma->vm_flags & VM_MAYSHARE))
- 		return -EPERM;
- 
-+	subbuf_order = cpu_buffer->buffer->subbuf_order;
-+	subbuf_pages = 1 << subbuf_order;
-+
-+	if (subbuf_order && pgoff % subbuf_pages)
-+		return -EINVAL;
-+
- 	/*
- 	 * Make sure the mapping cannot become writable later. Also tell the VM
- 	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND).
-@@ -6247,11 +6253,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
--	subbuf_order = cpu_buffer->buffer->subbuf_order;
--	subbuf_pages = 1 << subbuf_order;
--
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
--	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
-+	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
- 
- 	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
- 	if (!vma_pages || vma_pages > nr_pages)
-@@ -6264,20 +6267,20 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 		return -ENOMEM;
- 
- 	if (!pgoff) {
-+		unsigned long meta_page_padding;
-+
- 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
- 
- 		/*
--		 * TODO: Align sub-buffers on their size, once
--		 * vm_insert_pages() supports the zero-page.
-+		 * Pad with the zero-page to align the meta-page with the
-+		 * sub-buffers.
- 		 */
-+		meta_page_padding = subbuf_pages - 1;
-+		while (meta_page_padding-- && p < nr_pages)
-+			pages[p++] = ZERO_PAGE(vma->vm_start + (PAGE_SIZE * p));
- 	} else {
- 		/* Skip the meta-page */
--		pgoff--;
--
--		if (pgoff % subbuf_pages) {
--			err = -EINVAL;
--			goto out;
--		}
-+		pgoff -= subbuf_pages;
- 
- 		s += pgoff / subbuf_pages;
- 	}
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-index a9006fa7097e..4bb0192e43f3 100644
---- a/tools/testing/selftests/ring-buffer/map_test.c
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
- 	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
- 		    desc->cpu_fd, meta_len);
- 	ASSERT_EQ(data, MAP_FAILED);
-+
-+	/* Verify meta-page padding */
-+	if (desc->meta->meta_page_size > getpagesize()) {
-+		void *addr;
-+
-+		data_len = desc->meta->meta_page_size;
-+		data = mmap(NULL, data_len,
-+			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+		ASSERT_NE(data, MAP_FAILED);
-+
-+		addr = (void *)((unsigned long)data + getpagesize());
-+		ASSERT_EQ(*((int *)addr), 0);
-+		munmap(data, data_len);
-+	}
+diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+index dd8d07146116..ce79c558a4c8 100644
+--- a/arch/riscv/include/asm/cacheflush.h
++++ b/arch/riscv/include/asm/cacheflush.h
+@@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
+ 	asm volatile ("fence.i" ::: "memory");
  }
  
- FIXTURE(snapshot) {
-
-base-commit: c65920c76a977c2b73c3a8b03b4c0c00cc1285ed
++static inline void local_flush_icache_range(unsigned long start,
++					    unsigned long end)
++{
++	local_flush_icache_all();
++}
++
+ #define PG_dcache_clean PG_arch_1
+ 
+ static inline void flush_dcache_folio(struct folio *folio)
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index 4f4987a6d83d..32e7c401dfb4 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+ 	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+ 	mutex_unlock(&text_mutex);
+ 
++	if (!mod)
++		local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
++
+ 	return out;
+ }
+ 
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.39.2
 
