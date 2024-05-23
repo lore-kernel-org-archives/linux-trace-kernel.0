@@ -1,97 +1,159 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9FA13C68A;
-	Thu, 23 May 2024 14:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC87411720;
+	Thu, 23 May 2024 15:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716473635; cv=none; b=kAbxvXKtpTP8wH5liEfJQY10wL9ENg5fv8Gb6xsrQ8N1ZFp84R7ASj+O4NyMWZoM2NXgtvh6SCcN8UjIp40ANXylazjPEQsH15AY1bKVtqwLflVdjaCCfxXOkwsARu86csbLDDN3mBlnABZjxmsBgHCBnaHn2NGlhO8hLwKMh8w=
+	t=1716479098; cv=none; b=b1j06ITsYVH34feGRvW3VxjcO59iudlFp0mcbam2zRIqpviNuUvuCC7+gbkQ/P3J/US2/Kpkuu2w3StgBiPB7+poyExUiuid+l59qb0gJ4eJdyXL1whqY8inEcqOrePETGGtdZ0nbH3n2TlVzIYlNN/gORA4unaVVGUkfeA23Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716473635; c=relaxed/simple;
-	bh=wHmf0+7f1PdiR6STtU5I6IdOk8lZ3B3cslxc5ZQ4saA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvsIzqGUZJNP5A1LapgeiReH5vl3PtByHfeRM9CaHGyA4Xit1gtBCD694Bpg4ggPkfzz+yjpTHNdvtGUXhAMvffLAtJi/cvtyPDT4soYbzVgZeHRJ10tdH9gFPg8KKRfDd9Mi8G2Vo3yifMX1kv6i0MeXUDeqCoxgO6b3ZA5PdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pG3FZUZc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pG3FZUZc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ADDFC32786;
-	Thu, 23 May 2024 14:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716473634;
-	bh=wHmf0+7f1PdiR6STtU5I6IdOk8lZ3B3cslxc5ZQ4saA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pG3FZUZcHCWWmWQj87cDsg9x+aCOqkZg0AY/fdChUJM8p14lzvEzizpRKuHjSb8v1
-	 mr+V8Ar+hMyMvXJziq18S8UPfLVnpcIvZsWW5T2uP27KPi1k4NhK+fm21bFRgmpwvD
-	 iKz3+ZbnSCTKVeisPwev02H1OBWy6vHmdlNXoxLIl+J1DkliIbkDmsFJZc8/ZFIBTr
-	 AnnjzBUEoeE7dGoU2XYLpqbf35+nxElqLJKaNgpqgJcOJNivCrs03H5PQG0dpt3qJq
-	 C7SS8H0HmRti2jEqD+pEBRyNA77lNi3BCtjTnSsHnD1HiI3y9UAyLNSt8J6chiHXne
-	 cETsF6OVa7ZmQ==
-Date: Thu, 23 May 2024 15:13:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
-Message-ID: <20240523-showcase-helpful-4cc84fe2f1d5@spud>
-References: <20240523115134.70380-1-alexghiti@rivosinc.com>
+	s=arc-20240116; t=1716479098; c=relaxed/simple;
+	bh=0zM6tALU7shidJdLtZOrXtoH17h4De0WmF255Z4Mza4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MSo3pO5iv1z6aLQJIpKAIzWbh8MLoZAbc0PulfX7qd51GwQW+ksA1VM2sNw2W18xolbGE1O3BEqK4uXtQV0RDH36KGVszVyt1nAqVlh07QAtJFJtUJHPHEdel1h6fY/j3G4LdxNnZqBmjk1KMkguGGdViAQHBxbhdvDanVVFdl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71C0EC2BD10;
+	Thu, 23 May 2024 15:44:56 +0000 (UTC)
+Date: Thu, 23 May 2024 11:45:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, Phil Auld
+ <pauld@redhat.com>
+Subject: Re: [PATCH v2] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240523114540.2856c109@gandalf.local.home>
+In-Reply-To: <20240515220536.823145-1-qyousef@layalina.io>
+References: <20240515220536.823145-1-qyousef@layalina.io>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2HITYodwdCyzzdtT"
-Content-Disposition: inline
-In-Reply-To: <20240523115134.70380-1-alexghiti@rivosinc.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Wed, 15 May 2024 23:05:36 +0100
+Qais Yousef <qyousef@layalina.io> wrote:
+> diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
+> index df3aca89d4f5..5cb88b748ad6 100644
+> --- a/include/linux/sched/deadline.h
+> +++ b/include/linux/sched/deadline.h
+> @@ -10,8 +10,6 @@
+>  
+>  #include <linux/sched.h>
+>  
+> -#define MAX_DL_PRIO		0
+> -
+>  static inline int dl_prio(int prio)
+>  {
+>  	if (unlikely(prio < MAX_DL_PRIO))
+> @@ -19,6 +17,10 @@ static inline int dl_prio(int prio)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Returns true if a task has a priority that belongs to DL class. PI-boosted
+> + * tasks will return true. Use dl_policy() to ignore PI-boosted tasks.
+> + */
+>  static inline int dl_task(struct task_struct *p)
+>  {
+>  	return dl_prio(p->prio);
+> diff --git a/include/linux/sched/prio.h b/include/linux/sched/prio.h
+> index ab83d85e1183..6ab43b4f72f9 100644
+> --- a/include/linux/sched/prio.h
+> +++ b/include/linux/sched/prio.h
+> @@ -14,6 +14,7 @@
+>   */
+>  
+>  #define MAX_RT_PRIO		100
+> +#define MAX_DL_PRIO		0
+>  
+>  #define MAX_PRIO		(MAX_RT_PRIO + NICE_WIDTH)
+>  #define DEFAULT_PRIO		(MAX_RT_PRIO + NICE_WIDTH / 2)
+> diff --git a/include/linux/sched/rt.h b/include/linux/sched/rt.h
+> index b2b9e6eb9683..a055dd68a77c 100644
+> --- a/include/linux/sched/rt.h
+> +++ b/include/linux/sched/rt.h
+> @@ -7,18 +7,43 @@
+>  struct task_struct;
+>  
+>  static inline int rt_prio(int prio)
+> +{
+> +	if (unlikely(prio < MAX_RT_PRIO && prio >= MAX_DL_PRIO))
+> +		return 1;
+> +	return 0;
+> +}
+> +
+> +static inline int realtime_prio(int prio)
+>  {
+>  	if (unlikely(prio < MAX_RT_PRIO))
+>  		return 1;
+>  	return 0;
+>  }
+
+I'm thinking we should change the above to bool (separate patch), as
+returning an int may give one the impression that it returns the actual
+priority number. Having it return bool will clear that up.
+
+In fact, if we are touching theses functions, might as well change all of
+them to bool when returning true/false. Just to make it easier to
+understand what they are doing.
+
+>  
+> +/*
+> + * Returns true if a task has a priority that belongs to RT class. PI-boosted
+> + * tasks will return true. Use rt_policy() to ignore PI-boosted tasks.
+> + */
+>  static inline int rt_task(struct task_struct *p)
+>  {
+>  	return rt_prio(p->prio);
+>  }
+>  
+> -static inline bool task_is_realtime(struct task_struct *tsk)
+> +/*
+> + * Returns true if a task has a priority that belongs to RT or DL classes.
+> + * PI-boosted tasks will return true. Use realtime_task_policy() to ignore
+> + * PI-boosted tasks.
+> + */
+> +static inline int realtime_task(struct task_struct *p)
+> +{
+> +	return realtime_prio(p->prio);
+> +}
+> +
+> +/*
+> + * Returns true if a task has a policy that belongs to RT or DL classes.
+> + * PI-boosted tasks will return false.
+> + */
+> +static inline bool realtime_task_policy(struct task_struct *tsk)
+>  {
+>  	int policy = tsk->policy;
+>  
 
 
---2HITYodwdCyzzdtT
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
-> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
-> converted ftrace_make_nop() to use patch_insn_write() which does not
-> emit any icache flush relying entirely on __ftrace_modify_code() to do
-> that.
->=20
-> But we missed that ftrace_make_nop() was called very early directly when
-> converting mcount calls into nops (actually on riscv it converts 2B nops
-> emitted by the compiler into 4B nops).
->=20
-> This caused crashes on multiple HW as reported by Conor and Bj=F6rn since
-> the booting core could have half-patched instructions in its icache
-> which would trigger an illegal instruction trap: fix this by emitting a
-> local flush icache when early patching nops.
->=20
-> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+> index 0469a04a355f..19d737742e29 100644
+> --- a/kernel/trace/trace_sched_wakeup.c
+> +++ b/kernel/trace/trace_sched_wakeup.c
+> @@ -545,7 +545,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
+>  	 *  - wakeup_dl handles tasks belonging to sched_dl class only.
+>  	 */
+>  	if (tracing_dl || (wakeup_dl && !dl_task(p)) ||
+> -	    (wakeup_rt && !dl_task(p) && !rt_task(p)) ||
+> +	    (wakeup_rt && !realtime_task(p)) ||
+>  	    (!dl_task(p) && (p->prio >= wakeup_prio || p->prio >= current->prio)))
+>  		return;
+>  
 
-Reported-by: Conor Dooley <conor.dooley@microchip.com>
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Thanks for the quick fix Alex :)
 
---2HITYodwdCyzzdtT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZk9PHQAKCRB4tDGHoIJi
-0qjYAQCZbnkVecKQA29bgEC+XPR/AW8H6mGRAzkYf8O1XZA2AQEAoILUgAjaGIaK
-gWxhQLnUJzhG8w4SK9oCaJ0aLEtWgAI=
-=2ZE4
------END PGP SIGNATURE-----
-
---2HITYodwdCyzzdtT--
