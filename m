@@ -1,140 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1314778C8B;
-	Thu, 23 May 2024 12:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5A513B5B0;
+	Thu, 23 May 2024 12:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716466428; cv=none; b=JGGEu89J4U5XQQAXZ4UlB7zXFcia3mOjZT7tc0IeVVx+BUN3bx1kQnSaCa7UcMID83yQUV9jtSS8xdXEAO7nWGGKnizYmyeDCcUEVAeENF0fN1bicViGxKAJKqycbpsJeeSstKXPz+akLbaNBkKAoA5jwnAu4DXXFZnGY268uLI=
+	t=1716468539; cv=none; b=aMCL7lLMccKSneskja0/KbFebVobYxFtsweDhJCbNHH/rOJ0+K5atREbQ3oPZhdqv3mqGIcRMUmuGl+4W5iTUK5kEv/1mM+GeK7867HOanmmr6umrpXudfR77bqTzLJ5XqHtjLCU3BtRfgcq7s7e443RDkCjDoFtiqBuhGW3Ofg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716466428; c=relaxed/simple;
-	bh=MfUbeJoTsjQv1oAgkHcvkP4o8mZqbSse0UJ8mAO3EvU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E/C860NmTUCQItPBoGrS5zbEUl2SWP4Cv6tBZ8wtXKSZ8dlo1nGGKUMNM6pF4RDV4T2VBeOFpiw61SxImNp0fipkOn6BavmlSzyTCXUSMQm7s2n0o7QlI+44MjUUo98pbkiqEMnV+1HKJaGPNICxk6tBZPdwDI1BQ2xtjGjMfyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oerBvj3h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716468539; c=relaxed/simple;
+	bh=0LnqLKPO3oHw4EJVIibzy2VTLh33HjinRBhfOHkwyqo=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=orBmyz+xwM2SwqK00qtIhowRSE3jy+Qc0kKZDs84nu3aUu+DELh/6sVijGQS5y/4ywjNBYxPzdDAtyL3ym4WVo/ubWulRmfyhIaI74wEwnNl8nrOMlFOsDykdzQzYDCcSqbOC1GM9fT0AabZMPxNTvIvJlps2Y5unf/sad1U7UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmIwD+NW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oerBvj3h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC32AC2BD10;
-	Thu, 23 May 2024 12:13:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmIwD+NW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B52C2BD10;
+	Thu, 23 May 2024 12:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716466427;
-	bh=MfUbeJoTsjQv1oAgkHcvkP4o8mZqbSse0UJ8mAO3EvU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oerBvj3h3QKjPUtyfXJaHNzzjfYa/N7eUF/3TlAAqIT11+KljwgDP6PsbAMCnM77e
-	 nYKcjeINjpVZjePyZHmxLlKIIrAohYv6Rv+apTvTS+qiPZCrSQegaI83EJlzwpot/H
-	 O0NqdO1g6da4w3HlAGCj2FUulCiwT44Thax2f27r44DENF8oBkgNXez5PbBCvaT6ni
-	 9hmLZSXExvBnKdrMKsCrFbMjKnQbiCgOzUC6jCRWAsYxUuyYNAmjV0mG3OcjGFn94j
-	 yKTHtbkSVNrhiPraDpVWWxMz7AalL7wr7OBwsg4vxRyOQxqwLLyRe/MoJ9S1Vs7+Bq
-	 LNgrSWOR2XTJw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: [PATCHv7 9/9] man2: Add uretprobe syscall page
-Date: Thu, 23 May 2024 14:11:49 +0200
-Message-ID: <20240523121149.575616-10-jolsa@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240523121149.575616-1-jolsa@kernel.org>
-References: <20240523121149.575616-1-jolsa@kernel.org>
+	s=k20201202; t=1716468539;
+	bh=0LnqLKPO3oHw4EJVIibzy2VTLh33HjinRBhfOHkwyqo=;
+	h=From:To:Subject:In-Reply-To:References:Date:From;
+	b=gmIwD+NWWG8uf8vz7oJxu92yCfnO5F7AHKAYts7hJ3i7MjyDadHiy9lzsJ6u8U4mI
+	 oYCcZSPKX1+Mx6oRo3u1ATvbTWd2gsQZxBuu1wYMeVa1//6i3BYkZJvjVAv8COnPfc
+	 UgGMD/d2ScHrcYNYsj02hBwhLrTrXjvfp1y+aI3yAhbktDkDf4MMCEdU1pnGsJ3pNL
+	 6ODypG/qGkAdFHLyFRh826sp0Jy7qvGN+SoZNPcwGOYZw8I6JwcpVxJ/b2J/aaE4JC
+	 fEM/kpy8wItlOJWXQBUzcGyLb2xGZQcm3X6KlLvkvun89tmccNqmesex35PqRqk6ET
+	 Y9yV1AO9U188Q==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Andrea Parri
+ <parri.andrea@gmail.com>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Conor Dooley
+ <conor.dooley@microchip.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
+In-Reply-To: <20240523115134.70380-1-alexghiti@rivosinc.com>
+References: <20240523115134.70380-1-alexghiti@rivosinc.com>
+Date: Thu, 23 May 2024 14:48:55 +0200
+Message-ID: <87y1803d8o.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Adding man page for new uretprobe syscall.
+Alexandre Ghiti <alexghiti@rivosinc.com> writes:
 
-Reviewed-by: Alejandro Colomar <alx@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- man/man2/uretprobe.2 | 56 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 man/man2/uretprobe.2
+> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
+> converted ftrace_make_nop() to use patch_insn_write() which does not
+> emit any icache flush relying entirely on __ftrace_modify_code() to do
+> that.
+>
+> But we missed that ftrace_make_nop() was called very early directly when
+> converting mcount calls into nops (actually on riscv it converts 2B nops
+> emitted by the compiler into 4B nops).
+>
+> This caused crashes on multiple HW as reported by Conor and Bj=C3=B6rn si=
+nce
+> the booting core could have half-patched instructions in its icache
+> which would trigger an illegal instruction trap: fix this by emitting a
+> local flush icache when early patching nops.
+>
+> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-new file mode 100644
-index 000000000000..cf1c2b0d852e
---- /dev/null
-+++ b/man/man2/uretprobe.2
-@@ -0,0 +1,56 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+The
-+.BR uretprobe ()
-+system call is an alternative to breakpoint instructions for triggering return
-+uprobe consumers.
-+.P
-+Calls to
-+.BR uretprobe ()
-+system call are only made from the user-space trampoline provided by the kernel.
-+Calls from any other place result in a
-+.BR SIGILL .
-+.SH RETURN VALUE
-+The
-+.BR uretprobe ()
-+system call return value is architecture-specific.
-+.SH ERRORS
-+.TP
-+.B SIGILL
-+The
-+.BR uretprobe ()
-+system call was called by a user-space program.
-+.SH VERSIONS
-+Details of the
-+.BR uretprobe ()
-+system call behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH HISTORY
-+TBD
-+.SH NOTES
-+The
-+.BR uretprobe ()
-+system call was initially introduced for the x86_64 architecture
-+where it was shown to be faster than breakpoint traps.
-+It might be extended to other architectures.
-+.P
-+The
-+.BR uretprobe ()
-+system call exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are architecture-specific.
--- 
-2.45.1
+Nice!
+
+I've manged to reproduce the crash on the VisionFive2 board (however
+only triggered when CONFIG_RELOCATABLE=3Dy), and can verify that this fix
+solves the issue.
+
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
 
