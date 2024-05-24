@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E38061F;
-	Thu, 23 May 2024 23:45:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B47EEAA;
+	Fri, 24 May 2024 00:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716507917; cv=none; b=FDFn6ZgbHOnpn37mJWEXMhKnlCJzU8qD1RxBje9Ue6uYCi044/yoQHM6Ue0gabgzuyX/73d0V/dnE9hm5VO5knlwTQu2iFIrmpVnWhqifr3q6CyyXX5tW4dErzb6MPKYleWITDovv0u2iMNhq2bbvoCHFhjaslGF5gdrhJiL/Iw=
+	t=1716511681; cv=none; b=HBK+XLeGKuDxlrD5jJonJfr3aoC322mOXE4vO5IlpHf92bz95aiWJnYHD4JQ0N6HpHI+qDq2UJb1iyJMy/Zoxmm/Xd3+D2weO30z9PP7yqt4IUwpMUUPieSy0StQ4Pn6iV5j3p0e2NH0zm1WWbHTkME0jJPKLeDXk8dSA2ZnBFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716507917; c=relaxed/simple;
-	bh=XR12DPgjVZ5EFDU5mNXbbJTXKwdp+w1D/FcRUFNhSeI=;
+	s=arc-20240116; t=1716511681; c=relaxed/simple;
+	bh=KTLZyqwm/bxcyXU3DPeiOAIMZgJ5GgaNFY5/kM7KbLU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=JGDFB/AQqyT+eIyFODkj0vNDK0t84oY21BcuAGU2yTB/9XSv22HMFmq1ikCsX493Tr/z2kuRiPxzYqBZcdHu+SgWssMyWqaTrVJeh9IVSKSdfXxs9XxWAsJNgUENQFWXnGj8mvuroao7b/QKzTyh4KpZxNrcg/RgoMgxeci0Xj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgurloOU; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=X4G8RJqMIPjYJdT4RiifZMCBPwoVA1VXYiOCl2dhFmaKKA1tvHPJEfV034iF/buNHNviQVK8HAVQZt1sjV6skt9K0CkGOXfvP+UENeRjSX+F6FIyZ9JWy4TOaYvJGia+XSKft7EySAsym6whzAQCYFrAyeQOyJmz23tm8O/6B9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJVXwHyB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgurloOU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F930C2BD10;
-	Thu, 23 May 2024 23:45:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJVXwHyB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63488C2BD10;
+	Fri, 24 May 2024 00:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716507917;
-	bh=XR12DPgjVZ5EFDU5mNXbbJTXKwdp+w1D/FcRUFNhSeI=;
+	s=k20201202; t=1716511680;
+	bh=KTLZyqwm/bxcyXU3DPeiOAIMZgJ5GgaNFY5/kM7KbLU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hgurloOUKqDYXAquok803HRUIf3lan5WoOpD3c0qiDWtubXjBXnSxm1x4T3Tza/nD
-	 Gg0ptNvtQ0Ob3peJsku4lFANEQBGffeJGu/Hzbc9bqxBr3rjnz1Bw5u+hxZvb16Ich
-	 cDGCnTnXRmM5qW2ADZLyBO64uw2cDKgfWCyQEU2EZaSFPkOz4OZ9Itcto+h5OsFL96
-	 E9z0VOieD4bLyjY7OdyepwCHQbL84ex/LbwDZEgMMfWfOCLG3RdB9e6NYjuI23lP/U
-	 OokmeAl2tbzcBUgbwn+fBI0wBPq7eNfsUiPabqsmyK9nTEP4eOekdj9IJFU1ckO6CE
-	 gXUkRYyj0TeVw==
-Date: Fri, 24 May 2024 08:45:12 +0900
+	b=HJVXwHyBeyjEK2zCH6OXcGN4I66qDgnXHSDTawSc6CCcqN6Mpn+rjN+4VhWGQtB0z
+	 5Wb7Rh3vgJVQa0iYsVSLoaBd+bIB/1UJlioxRr/dSI4ytyDrDjACbERKDSxjEOqN93
+	 W3YViq2y0S9HLU0APvM8EFvwUlk+A4o0QBa5NcgJSFnNSMAI723Kd9jimTI+rnr4AE
+	 DVUsnZR0ab9VYpgU9ptXpGA41DjQksOSNgQNtvSTvny2zPNZ7/vrvDJY6nUGyvYmVJ
+	 kDDsDK6Zqlp1EFfYNTSvS8uAMLdOxUrhlg1/e2YcPPwPSuQjtFeuYQgUcLswnvD1gt
+	 AOfa9LwoKpAcA==
+Date: Fri, 24 May 2024 09:47:56 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
- bpf@vger.kernel.org, oleg@redhat.com, jolsa@kernel.org, Breno Leitao
- <leitao@debian.org>
-Subject: Re: [PATCH] uprobes: prevent mutex_lock() under rcu_read_lock()
-Message-Id: <20240524084512.ed21169228c0e6c39b114d69@kernel.org>
-In-Reply-To: <20240521053017.3708530-1-andrii@kernel.org>
-References: <20240521053017.3708530-1-andrii@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ali Zahraee <ahzahraee@gmail.com>, Shuah Khan <shuah@kernel.org>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] tracing/selftests: Run the ownership test twice
+Message-Id: <20240524094756.1f3dc4f67ea174770f54fdff@kernel.org>
+In-Reply-To: <20240523124541.7dd4cca9@gandalf.local.home>
+References: <20240523124541.7dd4cca9@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,132 +49,91 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 20 May 2024 22:30:17 -0700
-Andrii Nakryiko <andrii@kernel.org> wrote:
+On Thu, 23 May 2024 12:45:41 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Recent changes made uprobe_cpu_buffer preparation lazy, and moved it
-> deeper into __uprobe_trace_func(). This is problematic because
-> __uprobe_trace_func() is called inside rcu_read_lock()/rcu_read_unlock()
-> block, which then calls prepare_uprobe_buffer() -> uprobe_buffer_get() ->
-> mutex_lock(&ucb->mutex), leading to a splat about using mutex under
-> non-sleepable RCU:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
->   BUG: sleeping function called from invalid context at kernel/locking/mutex.c:585
->    in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 98231, name: stress-ng-sigq
->    preempt_count: 0, expected: 0
->    RCU nest depth: 1, expected: 0
->    ...
->    Call Trace:
->     <TASK>
->     dump_stack_lvl+0x3d/0xe0
->     __might_resched+0x24c/0x270
->     ? prepare_uprobe_buffer+0xd5/0x1d0
->     __mutex_lock+0x41/0x820
->     ? ___perf_sw_event+0x206/0x290
->     ? __perf_event_task_sched_in+0x54/0x660
->     ? __perf_event_task_sched_in+0x54/0x660
->     prepare_uprobe_buffer+0xd5/0x1d0
->     __uprobe_trace_func+0x4a/0x140
->     uprobe_dispatcher+0x135/0x280
->     ? uprobe_dispatcher+0x94/0x280
->     uprobe_notify_resume+0x650/0xec0
->     ? atomic_notifier_call_chain+0x21/0x110
->     ? atomic_notifier_call_chain+0xf8/0x110
->     irqentry_exit_to_user_mode+0xe2/0x1e0
->     asm_exc_int3+0x35/0x40
->    RIP: 0033:0x7f7e1d4da390
->    Code: 33 04 00 0f 1f 80 00 00 00 00 f3 0f 1e fa b9 01 00 00 00 e9 b2 fc ff ff 66 90 f3 0f 1e fa 31 c9 e9 a5 fc ff ff 0f 1f 44 00 00 <cc> 0f 1e fa b8 27 00 00 00 0f 05 c3 0f 1f 40 00 f3 0f 1e fa b8 6e
->    RSP: 002b:00007ffd2abc3608 EFLAGS: 00000246
->    RAX: 0000000000000000 RBX: 0000000076d325f1 RCX: 0000000000000000
->    RDX: 0000000076d325f1 RSI: 000000000000000a RDI: 00007ffd2abc3690
->    RBP: 000000000000000a R08: 00017fb700000000 R09: 00017fb700000000
->    R10: 00017fb700000000 R11: 0000000000000246 R12: 0000000000017ff2
->    R13: 00007ffd2abc3610 R14: 0000000000000000 R15: 00007ffd2abc3780
->     </TASK>
+> A regression happened where running the ownership test passes on the first
+> iteration but fails running it a second time. This was caught and fixed,
+> but a later change brought it back. The regression was missed because the
+> automated tests only run the tests once per boot.
 > 
-> Luckily, it's easy to fix by moving prepare_uprobe_buffer() to be called
-> slightly earlier: into uprobe_trace_func() and uretprobe_trace_func(), outside
-> of RCU locked section. This still keeps this buffer preparation lazy and helps
-> avoid the overhead when it's not needed. E.g., if there is only BPF uprobe
-> handler installed on a given uprobe, buffer won't be initialized.
-> 
-> Note, the other user of prepare_uprobe_buffer(), __uprobe_perf_func(), is not
-> affected, as it doesn't prepare buffer under RCU read lock.
+> Change the ownership test to iterate through the tests twice, as this will
+> catch the regression with a single run.
 > 
 
-Oops, good catch! This looks good to me. Let me pick it.
-Let me add a simple uprobe test in ftracetest so that this error can
-detect in selftests. (I could reproduced it.)
+Looks good to me.
 
-Thank you,
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Fixes: 1b8f85defbc8 ("uprobes: prepare uprobe args buffer lazily")
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Thanks!
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/trace_uprobe.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+>  .../ftrace/test.d/00basic/test_ownership.tc   | 34 +++++++++++--------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index 8541fa1494ae..c98e3b3386ba 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -970,19 +970,17 @@ static struct uprobe_cpu_buffer *prepare_uprobe_buffer(struct trace_uprobe *tu,
->  
->  static void __uprobe_trace_func(struct trace_uprobe *tu,
->  				unsigned long func, struct pt_regs *regs,
-> -				struct uprobe_cpu_buffer **ucbp,
-> +				struct uprobe_cpu_buffer *ucb,
->  				struct trace_event_file *trace_file)
->  {
->  	struct uprobe_trace_entry_head *entry;
->  	struct trace_event_buffer fbuffer;
-> -	struct uprobe_cpu_buffer *ucb;
->  	void *data;
->  	int size, esize;
->  	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
->  
->  	WARN_ON(call != trace_file->event_call);
->  
-> -	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
->  	if (WARN_ON_ONCE(ucb->dsize > PAGE_SIZE))
->  		return;
->  
-> @@ -1014,13 +1012,16 @@ static int uprobe_trace_func(struct trace_uprobe *tu, struct pt_regs *regs,
->  			     struct uprobe_cpu_buffer **ucbp)
->  {
->  	struct event_file_link *link;
-> +	struct uprobe_cpu_buffer *ucb;
->  
->  	if (is_ret_probe(tu))
->  		return 0;
->  
-> +	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
-> +
->  	rcu_read_lock();
->  	trace_probe_for_each_link_rcu(link, &tu->tp)
-> -		__uprobe_trace_func(tu, 0, regs, ucbp, link->file);
-> +		__uprobe_trace_func(tu, 0, regs, ucb, link->file);
->  	rcu_read_unlock();
->  
->  	return 0;
-> @@ -1031,10 +1032,13 @@ static void uretprobe_trace_func(struct trace_uprobe *tu, unsigned long func,
->  				 struct uprobe_cpu_buffer **ucbp)
->  {
->  	struct event_file_link *link;
-> +	struct uprobe_cpu_buffer *ucb;
-> +
-> +	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
->  
->  	rcu_read_lock();
->  	trace_probe_for_each_link_rcu(link, &tu->tp)
-> -		__uprobe_trace_func(tu, func, regs, ucbp, link->file);
-> +		__uprobe_trace_func(tu, func, regs, ucb, link->file);
->  	rcu_read_unlock();
+> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+> index c45094d1e1d2..71e43a92352a 100644
+> --- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+> @@ -83,32 +83,38 @@ run_tests() {
+>  	done
 >  }
 >  
+> -mount -o remount,"$new_options" .
+> +# Run the tests twice as leftovers can cause issues
+> +for loop in 1 2 ; do
+>  
+> -run_tests
+> +	echo "Running iteration $loop"
+>  
+> -mount -o remount,"$mount_options" .
+> +	mount -o remount,"$new_options" .
+>  
+> -for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+> -	test "$d" $original_group
+> -done
+> +	run_tests
+> +
+> +	mount -o remount,"$mount_options" .
+> +
+> +	for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+> +		test "$d" $original_group
+> +	done
+>  
+>  # check instances as well
+>  
+> -chgrp $other_group instances
+> +	chgrp $other_group instances
+>  
+> -instance="$(mktemp -u test-XXXXXX)"
+> +	instance="$(mktemp -u test-XXXXXX)"
+>  
+> -mkdir instances/$instance
+> +	mkdir instances/$instance
+>  
+> -cd instances/$instance
+> +	cd instances/$instance
+>  
+> -run_tests
+> +	run_tests
+>  
+> -cd ../..
+> +	cd ../..
+>  
+> -rmdir instances/$instance
+> +	rmdir instances/$instance
+>  
+> -chgrp $original_group instances
+> +	chgrp $original_group instances
+> +done
+>  
+>  exit 0
 > -- 
 > 2.43.0
+> 
 > 
 
 
