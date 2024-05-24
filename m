@@ -1,33 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874C912C460;
-	Fri, 24 May 2024 17:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5038562E;
+	Fri, 24 May 2024 22:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716571162; cv=none; b=VzKe6//uP2MCTM4MEYpQK/d34iKSHbliN/R9Ynr4UC11w9SIBC6KEEZODHHv68a5SRHbGjvP1W2OYpuJpMf1m14ul+VQF8EMetQ9261wi0aUL2GhL6HNV3LcN3l6K8JITxPs3rlE7+PPoD+YnU7nhfT6QEmG2eSfQ9MPCiqIkGo=
+	t=1716590473; cv=none; b=OX1bAPvEcV1j989YLE0nSD7qk5aFip9b7I8rWI4IWWuVe5NwtlguQ1Pk+9pObGvsaGp/YDo8XDMucEPq1Vkg0XZe2DMMLDcNo8bpuLgsL9M6DkjeBZEx3xNguOu33l2XYxJr2UINvUY+Gp055Jnp+qgOlrdrwlbWrwUnFKOKGTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716571162; c=relaxed/simple;
-	bh=IZ2zzLaazPjUEgY1Kiy4qXvXPdNG/1tZB3yjNXOZ1dE=;
+	s=arc-20240116; t=1716590473; c=relaxed/simple;
+	bh=+M+H9EDpt9M62BF9//BYA/DAxOwyZ70sO84XieW/I5E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eLkRALSdU0ozrXQK4KbOaHSvaPb/pXQQb/O6UAn3/BzzFWHaaJXASzOvnmqHwnxhvCWwbqv6IjCIpB+sOoV48+aY7/aM9blcmcmibsuBS9Z0P2oXWVDC0Ua0bESvlzQ9OBdjuRvEpiDnPdNVrkO5k4LoZuqPV9B2PQhgZOLzIIA=
+	 MIME-Version:Content-Type; b=dVdf8CgfYSeSAV/7Y0E0K7RSPbhYy9GPHX1jI71649YPDmhJ1Xxakmq14Jc6oPDVX0RiuVeaypXYcP2io0el7QTPdc41O7gigsROxAU5eE08l1k/GkhE87uea9KukMfYycPZnu0ep2LWuqcPRiVYw4a9z77GU/PaDZhZTyY9990=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565ABC32782;
-	Fri, 24 May 2024 17:19:21 +0000 (UTC)
-Date: Fri, 24 May 2024 13:20:08 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261E8C2BBFC;
+	Fri, 24 May 2024 22:41:11 +0000 (UTC)
+Date: Fri, 24 May 2024 18:41:56 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Ilkka
- =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240524132008.6b6f69f6@gandalf.local.home>
-In-Reply-To: <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
-	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v10 00/36] tracing: fprobe: function_graph:
+ Multi-function graph and fprobe on fgraph
+Message-ID: <20240524184156.2d9704c2@gandalf.local.home>
+In-Reply-To: <171509088006.162236.7227326999861366050.stgit@devnote2>
+References: <171509088006.162236.7227326999861366050.stgit@devnote2>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,25 +41,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 24 May 2024 12:50:08 +0200
-"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+On Tue,  7 May 2024 23:08:00 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> > - Affected Versions: Before kernel version 6.8.10, the bug caused a
-> > quick display of a kernel trace dump before the shutdown/reboot
-> > completed. Starting from version 6.8.10 and continuing into version
-> > 6.9.0 and 6.9.1, this issue has escalated to a kernel panic,
-> > preventing the shutdown or reboot from completing and leaving the
-> > machine stuck.
+> Steven Rostedt (VMware) (15):
+>       function_graph: Convert ret_stack to a series of longs
+>       fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+>       function_graph: Add an array structure that will allow multiple callbacks
+>       function_graph: Allow multiple users to attach to function graph
+>       function_graph: Remove logic around ftrace_graph_entry and return
+>       ftrace/function_graph: Pass fgraph_ops to function graph callbacks
+>       ftrace: Allow function_graph tracer to be enabled in instances
+>       ftrace: Allow ftrace startup flags exist without dynamic ftrace
+>       function_graph: Have the instances use their own ftrace_ops for filtering
+>       function_graph: Add "task variables" per task for fgraph_ops
+>       function_graph: Move set_graph_function tests to shadow stack global var
+>       function_graph: Move graph depth stored data to shadow stack global var
+>       function_graph: Move graph notrace bit to shadow stack global var
+>       function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
+>       function_graph: Add selftest for passing local variables
 
-Ah, I bet it was this commit: baa23a8d4360d ("tracefs: Reset permissions on
-remount if permissions are options"), which added a "iput" callback to the
-dentry without calling iput, leaving stale inodes around.
+Hi Masami,
 
-This is fixed with:
+While reviewing these patches, I realized there's several things I dislike
+about the patches I wrote. So I took these patches and started cleaning
+them up a little. Mostly renaming functions and adding comments.
 
-  0bcfd9aa4dafa ("tracefs: Clear EVENT_INODE flag in tracefs_drop_inode()")
+As this is a major change to the function graph tracer, and I feel nervous
+about building something on top of this, how about I take over these
+patches and push them out for the next merge window. I'm hoping to get them
+into linux-next by v6.10-rc2 (I spent the day working on them, and it's
+mostly minor tweaks).
 
-Try adding just that patch. It will at least make it go back to what was
-happening before 6.8.10 (I hope!).
+Then I can push it out to 6.11 and get some good testing against it. Then
+we can add your stuff on top and get that merged in 6.12.
+
+If all goes well, I'm hoping to get a series on just these patches (and
+your selftest addition) by tonight.
+
+Thoughts?
 
 -- Steve
