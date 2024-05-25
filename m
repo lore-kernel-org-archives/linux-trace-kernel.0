@@ -1,119 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E0F18044;
-	Sat, 25 May 2024 09:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632011CF8F;
+	Sat, 25 May 2024 18:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716630522; cv=none; b=NhfMXEzz1nGoK4Zx+NtI/NPtW9TB9agZE6xBrtyd1P9AZFVhu/OHP8m/e4lp6fIElPRerEurZN0wadZFfvFxOOjDZuKQPnEDoK35xVdd8AODsVGGGf+aOZ8WTA2afhTuaDuP7a+mBUTwUWeGMNNDnizniuXEu+z7FC0Xjh/uwkQ=
+	t=1716661334; cv=none; b=guWHh5+ehCMNPZmgU42qfrsrGSuczCri/LQ/E86s9Q2U54+AZXw7h8+/9NCrkgZI11jBdT/PK34ufYHnSkXLdLjibW+crRtDzH89jiiqRUOiOA/vnsI3K5JzeaREDWTcygdbWLpLqeeN/MAqcTMa9B8BAXdJ+MuBGBkdGeNWYEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716630522; c=relaxed/simple;
-	bh=hkVq9wt5jhijGu8t++0r5AFS3tlAo9uhrGC7TUJWOi0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LXe6BjrW8oAGdfb2kVH8Ap19w4BLs+soZPnJ77hzvb1QgIwDFsTBw7VXL1YyEroJHjt3bBOUKKBWqSwOuBoNzuQMP9DBLhGtF92IqlEfiQ2yeaPULm+1cEHONiAZeR53bm+t683yqwJwDwaBFbfOBqC4qp6dXDcwV0HhMK/nffA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+RYCCbr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716661334; c=relaxed/simple;
+	bh=k/iX0RaIP3m97XishbvBAFhhUj0SK/I4pjIxMOIgjEE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=j7jKvhbcLdtjqDnvnX4h4kDh1yXbgRgcRkh7xPazWY/lJpT0/ssJTx20fmKpOXnODaEg7J8DUwm4p/hCtNDYOLI3+OPbBCKHmsg9RLTLcymMbkZv+6OVknzGMQZBcWCvwrGc/IKsEwV50IH505+snv+UV1qSrmYSifx20qaG87M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B4BkDQGf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=10UCqdOY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B4BkDQGf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=10UCqdOY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+RYCCbr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E2AC3277B;
-	Sat, 25 May 2024 09:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716630521;
-	bh=hkVq9wt5jhijGu8t++0r5AFS3tlAo9uhrGC7TUJWOi0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u+RYCCbrnnV50N3hnYaGDr4UFsVlrzLtIktr3MSCkr6fLkTMH5fwT8vr5P7wP7AcC
-	 ZkiIfb0l13d17Ygs5GgDXvd4Ci3SRY5M1gWM4Ga4UqeMuiLHSv1A0lpCPHVSiwJFoh
-	 MAuvvc5ou30DzjLgDun/2E4p1yq9H4FMEG8K3Zj9SDMsDklzGxVxNy3Wc9hVZEzgWI
-	 uPNUMqq46eLcODoav6GvBD3DBHEJmUFci8TAq34LNQEzkdL+uKXj3UQr62H/PkHRce
-	 o7dsSP5K51p/QX/PWKiQo0WLa03VzDm8bdjC5V43fs54XYk4U+FDYavsI3bHdJXJ/C
-	 HNLYDgzeOsSEw==
-Date: Sat, 25 May 2024 18:48:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v10 00/36] tracing: fprobe: function_graph:
- Multi-function graph and fprobe on fgraph
-Message-Id: <20240525184835.dffd8a4420c159ece0feb63e@kernel.org>
-In-Reply-To: <20240524184156.2d9704c2@gandalf.local.home>
-References: <171509088006.162236.7227326999861366050.stgit@devnote2>
-	<20240524184156.2d9704c2@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B4BkDQGf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="10UCqdOY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B4BkDQGf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="10UCqdOY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 94B235C277;
+	Sat, 25 May 2024 18:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716661331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
+	b=B4BkDQGf0rCTeARCz0UkQTcGjf3OPQjySDDjBszbhFlo37z7KB8cze6xp3xez0fVf1vlFx
+	BERhWCTXF5H8Ju23n80kQsQLyxsyDVy7TdSpRDpFaQ0qrFOjC9dN8a2XBdJ7AqqCjhWqGl
+	wHRRSuRcRTDCazbstSmXbitD61SG0uM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716661331;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
+	b=10UCqdOY0AAmOSPKOXTYmNHS7ZqvWkxg2MB5s1+a0XQHQyiyHvwpqwca+YwIush5VvlhZd
+	Edq3wmjBkGKz/CAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=B4BkDQGf;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=10UCqdOY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716661331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
+	b=B4BkDQGf0rCTeARCz0UkQTcGjf3OPQjySDDjBszbhFlo37z7KB8cze6xp3xez0fVf1vlFx
+	BERhWCTXF5H8Ju23n80kQsQLyxsyDVy7TdSpRDpFaQ0qrFOjC9dN8a2XBdJ7AqqCjhWqGl
+	wHRRSuRcRTDCazbstSmXbitD61SG0uM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716661331;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
+	b=10UCqdOY0AAmOSPKOXTYmNHS7ZqvWkxg2MB5s1+a0XQHQyiyHvwpqwca+YwIush5VvlhZd
+	Edq3wmjBkGKz/CAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F2BD813A6C;
+	Sat, 25 May 2024 18:22:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id V7oMOFIsUmYhTQAAD6G6ig
+	(envelope-from <clopez@suse.de>); Sat, 25 May 2024 18:22:10 +0000
+From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
+To: linux-trace-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	linux-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH] tracing/probes: fix error check in parse_btf_field()
+Date: Sat, 25 May 2024 20:21:32 +0200
+Message-Id: <20240525182131.15740-1-clopez@suse.de>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.13 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	BAYES_HAM(-0.62)[82.14%];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 94B235C277
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -1.13
 
-On Fri, 24 May 2024 18:41:56 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+btf_find_struct_member() might return NULL or an error via the
+ERR_PTR() macro. However, its caller in parse_btf_field() only checks
+for the NULL condition. Fix this by using IS_ERR() and returning the
+error up the stack.
 
-> On Tue,  7 May 2024 23:08:00 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > Steven Rostedt (VMware) (15):
-> >       function_graph: Convert ret_stack to a series of longs
-> >       fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
-> >       function_graph: Add an array structure that will allow multiple callbacks
-> >       function_graph: Allow multiple users to attach to function graph
-> >       function_graph: Remove logic around ftrace_graph_entry and return
-> >       ftrace/function_graph: Pass fgraph_ops to function graph callbacks
-> >       ftrace: Allow function_graph tracer to be enabled in instances
-> >       ftrace: Allow ftrace startup flags exist without dynamic ftrace
-> >       function_graph: Have the instances use their own ftrace_ops for filtering
-> >       function_graph: Add "task variables" per task for fgraph_ops
-> >       function_graph: Move set_graph_function tests to shadow stack global var
-> >       function_graph: Move graph depth stored data to shadow stack global var
-> >       function_graph: Move graph notrace bit to shadow stack global var
-> >       function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
-> >       function_graph: Add selftest for passing local variables
-> 
-> Hi Masami,
-> 
-> While reviewing these patches, I realized there's several things I dislike
-> about the patches I wrote. So I took these patches and started cleaning
-> them up a little. Mostly renaming functions and adding comments.
+Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
+Signed-off-by: Carlos López <clopez@suse.de>
+---
+ kernel/trace/trace_probe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for cleaning up the patches!!
-
-> 
-> As this is a major change to the function graph tracer, and I feel nervous
-> about building something on top of this, how about I take over these
-> patches and push them out for the next merge window. I'm hoping to get them
-> into linux-next by v6.10-rc2 (I spent the day working on them, and it's
-> mostly minor tweaks).
-
-OK.
-
-> Then I can push it out to 6.11 and get some good testing against it. Then
-> we can add your stuff on top and get that merged in 6.12.
-
-Yeah, it is reasonable plan. I also concerns about the stability. Especially,
-this involves fprobe side changes too. If we introduce both at once, it may
-mess up many things.
-
-> 
-> If all goes well, I'm hoping to get a series on just these patches (and
-> your selftest addition) by tonight.
-> 
-> Thoughts?
-
-I agree with you.
-
-Thank you,
-
-> 
-> -- Steve
-
-
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 5e263c141574..5417e9712157 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -554,6 +554,8 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+ 			anon_offs = 0;
+ 			field = btf_find_struct_member(ctx->btf, type, fieldname,
+ 						       &anon_offs);
++			if (IS_ERR(field))
++				return PTR_ERR(field);
+ 			if (!field) {
+ 				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+ 				return -ENOENT;
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.35.3
+
