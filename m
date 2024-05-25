@@ -1,118 +1,127 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968DFD29B;
-	Sat, 25 May 2024 04:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D46C2F34;
+	Sat, 25 May 2024 09:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716611302; cv=none; b=fDjN6eiuZJkVOwvGsLrVLLlmw0FvaXXggfhst38x+bcSAtk8+i/WWDYz2XEwjRrW3p52ZhVwoHxSi0po8B9K3Z1HdBJvEaAoqkoZIBPnvYJVRoewhH354YmY5en3cMr0xHPx0Ra8mxEkBT9U1mQ71o1LPpvxtT65FsrbY7gmJFg=
+	t=1716630260; cv=none; b=awdXoCI0v1esZ1T3zOZsOsD3lo1B4Y32tXtIfMFdR1enysVJ5PE4SGPFb0tTCtXWQ+7zwjjgDqM5108hDI4bqrGThCZnmJ0GIW5tuHzB2J/kq26F8dIwGWy0PQbeoBTP1oQUKtm6H24zP7RY0zVipvswuS4dpuUZjtlsLoT8Z1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716611302; c=relaxed/simple;
-	bh=ttlCjFGN1GWY/TRCbxgxdnLzYeRMUvqNwRjJELBMJSw=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=U8lx9Cz9lbrcnsSz/gOpwS+X1RmtIaRhuxHU7SI1KhZGj6PWzS35AddQwoK/9Q6eBC5yK71PiORw4CKFELAa4DssfzwE6umBMwJx6R3Qc+EqhSpc0gr+eKMWa2PIpFqKBLEHDDM30rp3dsF/bj5mhD72t5+tHaAW9yJb+u+SIOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4oYl54JU; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1716630260; c=relaxed/simple;
+	bh=QGYXWnMmAcQH0S/ZvqQBsiamdeIE/ZeX9XXDq5EIp1E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=EyzMKSLe0WxVG3JMvbCi/Z5cNziReUdOzm7GUaLAGtBRg+aji7SUmHvwAYQeY2g2/Wc+qvNheAfqaM1yE/opluVlBHV6eicy5/wXUG9tRXPHqH2YdXYcxgojXVwqwU8JApJkA8qZP295XbiaXxrTO43fUb5Dyub1SouwUaVKeNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYJtmxYW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4oYl54JU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716611298;
-	bh=ttlCjFGN1GWY/TRCbxgxdnLzYeRMUvqNwRjJELBMJSw=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=4oYl54JU9WNgEPcMjvWlTxh2YNyVcBYI0T4zCpnO9XKUTsSh70gOR/xLsl9kjKOpw
-	 zzT0I1JMFIcgjNKX5vE9rpJUxInTLle0XlOEb55KyPiNAOuRKfJ/tRjooQOtjWbpH+
-	 D/IhPYK9ydHAKMqMqScl+GREoW/lUcKj5Izo6tI5caMTDpb/lszzCbFxWoLqRnM6Bd
-	 5B4C9QiJwCgjDfHqcN3TyAAr1RVXODXy+QL6KIcCwaFo5HUiTkiPXl0ds5z2InH9kc
-	 D3URgFnWliYDZ0LcrTm9nFHewzfb9wiOUNw2QzzI0ry6MRPOpNxI1KqoGBVnRcv/r/
-	 xXj8JHyg8dkrw==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4C4E53782085;
-	Sat, 25 May 2024 04:28:17 +0000 (UTC)
-Message-ID: <f03e4933-d835-4080-ac44-f7f17adeca62@collabora.com>
-Date: Fri, 24 May 2024 21:28:02 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYJtmxYW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36434C2BD11;
+	Sat, 25 May 2024 09:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716630260;
+	bh=QGYXWnMmAcQH0S/ZvqQBsiamdeIE/ZeX9XXDq5EIp1E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tYJtmxYWb1A3mWtjziwqmuClDOKboe4NvqQSW2Em2UQ7N1C0cLwKsZToXZhnZ7Ufb
+	 cxr7E774rEquqweViWpdww1fOcmdaQTweNZqurH1wFdCIQpY04HRklB82qBtpjUFUC
+	 7Bv4ITZaO40Iwt3PgkbPitUGQIsNjKjknWkHeZfRTSOYwVEA0rYViVHV0NEfoS05My
+	 KrLIJwXaKJeGT438WAr+qF/H2PAqlLKOnvLxIXmbFd2JYJp5pDviUCjfwjbgEcIg4c
+	 U+Zg3D9CXUP9XdiXBwZjUyfMrWRnH5862nbXxB/Owg0gVQ09bTmoO9MI44kCOjiGhR
+	 U8K6OkeH8t/4Q==
+Date: Sat, 25 May 2024 18:44:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v10 07/36] function_graph: Allow multiple users to
+ attach to function graph
+Message-Id: <20240525184414.a9e1953e0a9cd390b3e75513@kernel.org>
+In-Reply-To: <20240524213208.36f274c8@gandalf.local.home>
+References: <171509088006.162236.7227326999861366050.stgit@devnote2>
+	<171509096221.162236.8806372072523195752.stgit@devnote2>
+	<20240524213208.36f274c8@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/2] selftests/ftrace: Update required config
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
-References: <171624961322.252417.15852003285637286674.stgit@devnote2>
- <171624963215.252417.12572658025062192987.stgit@devnote2>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <171624963215.252417.12572658025062192987.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/20/24 5:00 PM, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Update required config options for running all tests.
-> This also sorts the config entries alphabetically.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-LGTM
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+On Fri, 24 May 2024 21:32:08 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> ---
->  tools/testing/selftests/ftrace/config |   26 +++++++++++++++++++-------
->  1 file changed, 19 insertions(+), 7 deletions(-)
+> On Tue,  7 May 2024 23:09:22 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-> index e59d985eeff0..048a312abf40 100644
-> --- a/tools/testing/selftests/ftrace/config
-> +++ b/tools/testing/selftests/ftrace/config
-> @@ -1,16 +1,28 @@
-> -CONFIG_KPROBES=y
-> +CONFIG_BPF_SYSCALL=y
-> +CONFIG_DEBUG_INFO_BTF=y
-> +CONFIG_DEBUG_INFO_DWARF4=y
-> +CONFIG_EPROBE_EVENTS=y
-> +CONFIG_FPROBE=y
-> +CONFIG_FPROBE_EVENTS=y
->  CONFIG_FTRACE=y
-> +CONFIG_FTRACE_SYSCALLS=y
-> +CONFIG_FUNCTION_GRAPH_RETVAL=y
->  CONFIG_FUNCTION_PROFILER=y
-> -CONFIG_TRACER_SNAPSHOT=y
-> -CONFIG_STACK_TRACER=y
->  CONFIG_HIST_TRIGGERS=y
-> -CONFIG_SCHED_TRACER=y
-> -CONFIG_PREEMPT_TRACER=y
->  CONFIG_IRQSOFF_TRACER=y
-> -CONFIG_PREEMPTIRQ_DELAY_TEST=m
-> +CONFIG_KALLSYMS_ALL=y
-> +CONFIG_KPROBES=y
-> +CONFIG_KPROBE_EVENTS=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> +CONFIG_PREEMPTIRQ_DELAY_TEST=m
-> +CONFIG_PREEMPT_TRACER=y
-> +CONFIG_PROBE_EVENTS_BTF_ARGS=y
->  CONFIG_SAMPLES=y
->  CONFIG_SAMPLE_FTRACE_DIRECT=m
->  CONFIG_SAMPLE_TRACE_PRINTK=m
-> -CONFIG_KALLSYMS_ALL=y
-> +CONFIG_SCHED_TRACER=y
-> +CONFIG_STACK_TRACER=y
-> +CONFIG_TRACER_SNAPSHOT=y
-> +CONFIG_UPROBES=y
-> +CONFIG_UPROBE_EVENTS=y
+> > @@ -109,6 +244,21 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+> >  	if (!current->ret_stack)
+> >  		return -EBUSY;
+> >  
+> > +	/*
+> > +	 * At first, check whether the previous fgraph callback is pushed by
+> > +	 * the fgraph on the same function entry.
+> > +	 * But if @func is the self tail-call function, we also need to ensure
+> > +	 * the ret_stack is not for the previous call by checking whether the
+> > +	 * bit of @fgraph_idx is set or not.
+> > +	 */
+> > +	ret_stack = get_ret_stack(current, current->curr_ret_stack, &offset);
+> > +	if (ret_stack && ret_stack->func == func &&
+> > +	    get_fgraph_type(current, offset + FGRAPH_FRAME_OFFSET) == FGRAPH_TYPE_BITMAP &&
+> > +	    !is_fgraph_index_set(current, offset + FGRAPH_FRAME_OFFSET, fgraph_idx))
+> > +		return offset + FGRAPH_FRAME_OFFSET;
+> > +
+> > +	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+> > +
+> >  	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
 > 
+> I'm trying to figure out what the above is trying to do. This gets called
+> once in function_graph_enter() (or function_graph_enter_ops()). What
+> exactly are you trying to catch here?
+
+Aah, good catch! This was originally for catching the self tail-call case with
+multiple fgraph callback on the same function, but it was my misread.
+In later patch ([12/36]), we introduced function_graph_enter_ops() so that
+we can skip checking hash table and directly pass the fgraph_ops to user
+callback. I thought this function_graph_enter_ops() is used even if multiple
+fgraph is set on the same function. In this case, we always need to check the
+stack can be reused(pushed by other fgraph_ops on the same function) or not.
+But as we discussed, the function_graph_enter_ops() is used only when only
+one fgraph is set on the function (if there are multiple fgraphs are set on
+the same function, use function_graph_enter() ), we are sure that 
+ftrace_push_return_trace() is called only once on hooking the function entry.
+Thus we don't need to reuse it.
+
 > 
+> Is it from this email:
+> 
+>   https://lore.kernel.org/all/20231110105154.df937bf9f200a0c16806c522@kernel.org/
+> 
+> As that's the last version before you added the above code.
+> 
+> But you also noticed it may not be needed, but triggered a crash without it
+> in v3:
+> 
+>   https://lore.kernel.org/all/20231205234511.3839128259dfec153ea7da81@kernel.org/
+> 
+> I removed this code in my version and it runs just fine. Perhaps there was
+> another bug that this was hiding that you fixed in later versions?
+
+No problem. I think we can remove this block safely.
+
+Thank you,
+
+> 
+> -- Steve
+> 
+
 
 -- 
-BR,
-Muhammad Usama Anjum
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
