@@ -1,115 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA59482E2;
-	Sat, 25 May 2024 02:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ACBAD35;
+	Sat, 25 May 2024 04:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716604616; cv=none; b=qBwhvJGJ7TGH9jgb6/G5n9eVS9AY0AzcWV59e2W0FNJaL1NBRLs1T3bxsuphfg09nG5Bf1j5w/FXr48fzjlAghhHaonFi3JkDccFbRpgFQ/bR7SiM7kg5nRY0xDcXuZvvFAl28EdyDXlZkChAqEeD03ICdruJB+bkBLP8Dt+yeg=
+	t=1716611279; cv=none; b=Yfv1kyXQJ+FHgYArRsUhrgd0B266GGnq8lG5HdoZ7jbpXgw0xVKrCtMnLNWfuYRkguEpuHttWduz9jEWaDf0VB/AX+qawhZBsTl875AiOpfoI6YQaeFs55GApBRJk4WFQORfDbZQNUS+h/A+d22ZqbZtwwY6RtHEoLhYgAnAAkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716604616; c=relaxed/simple;
-	bh=SzvcQSHtCTZDrarq3GkKkV913OM7ddRg0/jQltGll9I=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VWjBX8PPcSGIAri4hciUhf0rsEwV9lJ7WdEf2WGCJbTRKcx1pW71mG2K7c7u3geRRn81yk3wx1mLPOt/l7R2WMSTamdzyIM64lLu5y+9kdJmD8eItmXfrAN6y+610vn8xEp5soo7mHe2zv9gypKJZU9yPeEqLDqIaJkbOxDw5eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CE2C4AF68;
-	Sat, 25 May 2024 02:36:55 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sAhI0-00000007DRZ-2DBo;
-	Fri, 24 May 2024 22:37:44 -0400
-Message-ID: <20240525023744.390040466@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 24 May 2024 22:37:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>,
- Sven Schnelle <svens@linux.ibm.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Guo Ren <guoren@kernel.org>
-Subject: [PATCH 20/20] function_graph: Use bitmask to loop on fgraph entry
-References: <20240525023652.903909489@goodmis.org>
+	s=arc-20240116; t=1716611279; c=relaxed/simple;
+	bh=Sso5+EVsv+hPWxjM1D8Ovn3MztR5D8itoCgIaIV+AM8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iW5Uk4YzkbXV1reKzhQqtl0bRH8EpQbBa29EqoMFCEa7UOez0/FpR/W5eXuevkoSbtRbx1iiaRUuBPlVLbOTcmWxjlimLrmuSDz+TK01OQSnq0WWpTJZkY436/HsLLKlGsAgJQxW6YTLC+M1WYkdh++6URuvAMdR7ZhchlPrfx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FL8udP8G; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FL8udP8G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1716611275;
+	bh=Sso5+EVsv+hPWxjM1D8Ovn3MztR5D8itoCgIaIV+AM8=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=FL8udP8GDOgXacy55MPksoLFcmYi/BY3Bc+fEWsgkju0xXi/hjPNQvQmV6tyzmooS
+	 tu6QYzigbNbCvVt3phjTJmcZMob6yu42Ae+O42lidvx7RanXoXEzhfp2RkLNrxJ40E
+	 OTnOf3/1tTfiguOrNWg8u+2Xap9zUerKsw6r1BMeV28ZgkjBjix9Cyezug2sa7cbV6
+	 hinxAEoDNtUevIWezDPXNuPqveOi9D1h19A8dpi++hHT6/i6AoRIRvmBjcwL8278eX
+	 AIY+KpexdtFI3TgvImfoFd8DyI5ZuNzP9BakRgKJd8KAYXdWQ1pSJ6wfZJWGl6Yp3T
+	 IGUbovcNe/0Mw==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 20BE63782085;
+	Sat, 25 May 2024 04:27:53 +0000 (UTC)
+Message-ID: <8057764f-064a-4d55-8224-a887f62ce539@collabora.com>
+Date: Fri, 24 May 2024 21:27:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests/ftrace: Fix to check required event file
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
+References: <171624961322.252417.15852003285637286674.stgit@devnote2>
+ <171624962273.252417.2474046620369030292.stgit@devnote2>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <171624962273.252417.2474046620369030292.stgit@devnote2>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 5/20/24 5:00 PM, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> The dynevent/test_duplicates.tc test case uses `syscalls/sys_enter_openat`
+> event for defining eprobe on it. Since this `syscalls` events depend on
+> CONFIG_FTRACE_SYSCALLS=y, if it is not set, the test will fail.
+> 
+> Add the event file to `required` line so that the test will return
+> `unsupported` result.
+> 
+> Fixes: 297e1dcdca3d ("selftests/ftrace: Add selftest for testing duplicate eprobes and kprobes")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+LGTM
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Instead of looping through all the elements of fgraph_array[] to see if
-there's an gops attached to one and then calling its gops->func(). Create
-a fgraph_array_bitmask that sets bits when an index in the array is
-reserved (via the simple lru algorithm). Then only the bits set in this
-bitmask needs to be looked at where only elements in the array that have
-ops registered need to be looked at.
+> ---
+>  .../ftrace/test.d/dynevent/test_duplicates.tc      |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+> index d3a79da215c8..5f72abe6fa79 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+> @@ -1,7 +1,7 @@
+>  #!/bin/sh
+>  # SPDX-License-Identifier: GPL-2.0
+>  # description: Generic dynamic event - check if duplicate events are caught
+> -# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
+> +# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README events/syscalls/sys_enter_openat
+>  
+>  echo 0 > events/enable
+>  
+> 
+> 
 
-Note, we do not care about races. If a bit is set before the gops is
-assigned, it only wastes time looking at the element and ignoring it (as
-it did before this bitmask is added).
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/fgraph.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 5e8e13ffcfb6..1aae521e5997 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -173,6 +173,7 @@ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
- int ftrace_graph_active;
- 
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
-+static unsigned long fgraph_array_bitmask;
- 
- /* LRU index table for fgraph_array */
- static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-@@ -197,6 +198,8 @@ static int fgraph_lru_release_index(int idx)
- 
- 	fgraph_lru_table[fgraph_lru_last] = idx;
- 	fgraph_lru_last = (fgraph_lru_last + 1) % FGRAPH_ARRAY_SIZE;
-+
-+	clear_bit(idx, &fgraph_array_bitmask);
- 	return 0;
- }
- 
-@@ -211,6 +214,8 @@ static int fgraph_lru_alloc_index(void)
- 
- 	fgraph_lru_table[fgraph_lru_next] = -1;
- 	fgraph_lru_next = (fgraph_lru_next + 1) % FGRAPH_ARRAY_SIZE;
-+
-+	set_bit(idx, &fgraph_array_bitmask);
- 	return idx;
- }
- 
-@@ -632,7 +637,8 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 	if (offset < 0)
- 		goto out;
- 
--	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
-+	for_each_set_bit(i, &fgraph_array_bitmask,
-+			 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
- 		struct fgraph_ops *gops = fgraph_array[i];
- 		int save_curr_ret_stack;
- 
 -- 
-2.43.0
-
-
+BR,
+Muhammad Usama Anjum
