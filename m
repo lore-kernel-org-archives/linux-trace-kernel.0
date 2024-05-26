@@ -1,148 +1,73 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632011CF8F;
-	Sat, 25 May 2024 18:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33079944D;
+	Sun, 26 May 2024 10:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716661334; cv=none; b=guWHh5+ehCMNPZmgU42qfrsrGSuczCri/LQ/E86s9Q2U54+AZXw7h8+/9NCrkgZI11jBdT/PK34ufYHnSkXLdLjibW+crRtDzH89jiiqRUOiOA/vnsI3K5JzeaREDWTcygdbWLpLqeeN/MAqcTMa9B8BAXdJ+MuBGBkdGeNWYEE=
+	t=1716718261; cv=none; b=q1XmFzZgKT1DOnMGNvp30VOR3dmw45cKZ+SeaEuj7nnEG1OAwct6KgPVquY7+SSPZHItdVjPGfNhiDdQxQ5NRdyIhJ4wxe1buwzusx87xlUGTJeJrKFEHZwoVgBXWPnRmXYHBkJL22zzD6LxJ95rRY8OhfsjEj8WMoxZL6DLH6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716661334; c=relaxed/simple;
-	bh=k/iX0RaIP3m97XishbvBAFhhUj0SK/I4pjIxMOIgjEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=j7jKvhbcLdtjqDnvnX4h4kDh1yXbgRgcRkh7xPazWY/lJpT0/ssJTx20fmKpOXnODaEg7J8DUwm4p/hCtNDYOLI3+OPbBCKHmsg9RLTLcymMbkZv+6OVknzGMQZBcWCvwrGc/IKsEwV50IH505+snv+UV1qSrmYSifx20qaG87M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B4BkDQGf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=10UCqdOY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B4BkDQGf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=10UCqdOY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1716718261; c=relaxed/simple;
+	bh=sYzAz15/z8faKs1VYVEOVSprSAaIaPmv/HsJiqwELDw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ApVQzD/grO2TAO3EswoE7P81NufN7TQYqZG9IQtfnD7hMjI6hMZhL4e9tWi+0CeZQoWeDofmdKZagS/lRl4+cEwpPdfSP3VmlN47GimMB1BZxHG4P9h965KSL1uIjD4d62zz6vWmutXBT/jOZ34TDdCSElAIBzTuytvukNpcjng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkp81Olt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B4BkDQGf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="10UCqdOY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B4BkDQGf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="10UCqdOY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 94B235C277;
-	Sat, 25 May 2024 18:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716661331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
-	b=B4BkDQGf0rCTeARCz0UkQTcGjf3OPQjySDDjBszbhFlo37z7KB8cze6xp3xez0fVf1vlFx
-	BERhWCTXF5H8Ju23n80kQsQLyxsyDVy7TdSpRDpFaQ0qrFOjC9dN8a2XBdJ7AqqCjhWqGl
-	wHRRSuRcRTDCazbstSmXbitD61SG0uM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716661331;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
-	b=10UCqdOY0AAmOSPKOXTYmNHS7ZqvWkxg2MB5s1+a0XQHQyiyHvwpqwca+YwIush5VvlhZd
-	Edq3wmjBkGKz/CAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=B4BkDQGf;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=10UCqdOY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716661331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
-	b=B4BkDQGf0rCTeARCz0UkQTcGjf3OPQjySDDjBszbhFlo37z7KB8cze6xp3xez0fVf1vlFx
-	BERhWCTXF5H8Ju23n80kQsQLyxsyDVy7TdSpRDpFaQ0qrFOjC9dN8a2XBdJ7AqqCjhWqGl
-	wHRRSuRcRTDCazbstSmXbitD61SG0uM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716661331;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m8k3YJ6Pa5+fRRrELod8+uIM03/stiCjVD21MeOxwQs=;
-	b=10UCqdOY0AAmOSPKOXTYmNHS7ZqvWkxg2MB5s1+a0XQHQyiyHvwpqwca+YwIush5VvlhZd
-	Edq3wmjBkGKz/CAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F2BD813A6C;
-	Sat, 25 May 2024 18:22:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id V7oMOFIsUmYhTQAAD6G6ig
-	(envelope-from <clopez@suse.de>); Sat, 25 May 2024 18:22:10 +0000
-From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
-To: linux-trace-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkp81Olt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724D2C2BD10;
+	Sun, 26 May 2024 10:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716718260;
+	bh=sYzAz15/z8faKs1VYVEOVSprSAaIaPmv/HsJiqwELDw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dkp81OltoVClOmVRjStYBulaO3MDzGMQsP3SM5sLcQCp4Nql9futT7xmJA4cb7Nub
+	 LgWxUaHAdadCzRB8LXOAjaDh5/qZX0eiiMe80EPsz7xrVyFTL3uBP0W+s8SOs0OoJw
+	 SvPtYuJHcO+drKGSg99X/D7aBEA+D0qwi6fzwjedeG4O0veWQGse1/pPPLPMs1MRlt
+	 oBog3W5kdnSAw0nDmfRVTnLzjLC2jAEE020/bjbSBI8sPReFXjXlrJFJowr4bBD4/D
+	 mDSNRgnVBQREPcX04+FZpaB+c+/miRdFHQP2qL3EyPDJnBcnlwDQOqmo3hAf2DUpbc
+	 5K37UEGEs5X3g==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH] tracing/probes: fix error check in parse_btf_field()
-Date: Sat, 25 May 2024 20:21:32 +0200
-Message-Id: <20240525182131.15740-1-clopez@suse.de>
-X-Mailer: git-send-email 2.35.3
+	Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH 0/3] tracing: Fix some selftest issues
+Date: Sun, 26 May 2024 19:10:57 +0900
+Message-Id: <171671825710.39694.6859036369216249956.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.13 / 50.00];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	BAYES_HAM(-0.62)[82.14%];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 94B235C277
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -1.13
 
-btf_find_struct_member() might return NULL or an error via the
-ERR_PTR() macro. However, its caller in parse_btf_field() only checks
-for the NULL condition. Fix this by using IS_ERR() and returning the
-error up the stack.
+Hi,
 
-Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
-Signed-off-by: Carlos López <clopez@suse.de>
+Here is a series of some fixes/improvements for the test modules and boot
+time selftest of kprobe events. I found a WARNING message with some boot 
+time selftest configuration, which came from the combination of embedded
+kprobe generate API tests module and ftrace boot-time selftest. So the main
+problem is that the test module should not be built-in. But I also think
+this WARNING message is useless (because there are warning messages already)
+and the cleanup code is redundant. This series fixes those issues.
+
+Thank you,
+
 ---
- kernel/trace/trace_probe.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 5e263c141574..5417e9712157 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -554,6 +554,8 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
- 			anon_offs = 0;
- 			field = btf_find_struct_member(ctx->btf, type, fieldname,
- 						       &anon_offs);
-+			if (IS_ERR(field))
-+				return PTR_ERR(field);
- 			if (!field) {
- 				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
- 				return -ENOENT;
--- 
-2.35.3
+Masami Hiramatsu (Google) (3):
+      tracing: Build event generation tests only as modules
+      tracing/kprobe: Remove unneeded WARN_ON_ONCE() in selftests
+      tracing/kprobe: Remove cleanup code unrelated to selftest
 
+
+ kernel/trace/Kconfig        |    4 ++--
+ kernel/trace/trace_kprobe.c |   29 ++++++++++++-----------------
+ 2 files changed, 14 insertions(+), 19 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
