@@ -1,146 +1,194 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9A979DF;
-	Sun, 26 May 2024 11:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B08DDB2;
+	Sun, 26 May 2024 12:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716722990; cv=none; b=UKg2HDPIh8Vq+PvTHXGZP19p0l21h9og4649+SNgF8+eIr7clpe8A1I5OAdHxVG74iYeUqd+ujbS8f9xI5uY+POts9NhoOR3i6F3eBZ2fXP7OYRUaq+Hk2/pfqmln4sFZyNsl7NopZYn3S+ptLGprZ4feCmgzFatNR7cYs7bEHc=
+	t=1716726490; cv=none; b=gInPFwOu+4ywBgTOmtg+/YYE7I1inLTTWFoEX84WykT/pScFu88knIv2Mfi0jfY8AbKf6fiNoaEC+x4cm3Bqb6dvGEa8cpDS/pFDoNTldpYsKmgptEGgzYvvmDRUqvuovX2pR/ulGACgb9fHbV+gJdjINyMa85KQsTVT5iU6Z5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716722990; c=relaxed/simple;
-	bh=m7WE6uRCBwWdaM+TANh0R3QQ5W14DekpE2GAH0HVaoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TpN9Pyd8Z6jPFmmT9BvNdlwVKMVq2yfVGvLGJoa4ZfPEyK4Ceauatk9xRBWD7hcRuvb35UWIBxKpn8lFdPWaRzu2LZY6lcfdTpOhCEKlsNNAE99Rm9o+/oQvnhjS1jfThEGPwT/Q/4zp1OhiGAHnBjgeIO+trmqWYuxEdstgJNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCpMMGsf; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716726490; c=relaxed/simple;
+	bh=MWqUz7rWEmBBdrWJN03toXtll0HjkA34ta1+UWNFHSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uZvTsH3MpSg1kl0E/E2xE/4LsX15JOch3bgnkttC0t9mIinN0BDRT6TmXyGFTorVRNUVyMkLlhQNyqnTOeY6RJ//+cCZPCGxAS5Y8P7Veu4iSb4NP5+Bl6Tcbi11TpMgQsCnlRCBDkLl46eu8VvxFkA2tE28LL6DNTnildv/rKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k5f+VuYG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/IXDWCXI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k5f+VuYG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/IXDWCXI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCpMMGsf"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f47f0d8ec9so4173365ad.3;
-        Sun, 26 May 2024 04:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716722988; x=1717327788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAQfWvd3nmcnR5EidU0DiImMMPxXcL5PouM/aKZ2j7s=;
-        b=KCpMMGsfd1+6uWQ2jenZ6pHrZZX0D7izW8O91vFQCZwWYsSEXqUrk3W+1xSqLDg1Mi
-         Dw92GSAKLNl71vUH+xLRoAf/3t/5xfYLhjzh8CD3ySWqTxIqtc5GgVsFOC3t0SEiXIfs
-         I0vEmX9A9dnwT2I/nSirAsaQferXZFKc7/LEXFwqi4KFILnWqO0Yqf1gIVE96+tsUukW
-         /FulpPoGMYX4E7/uZZcTn3/x0y27PuSwUeuKtO3YnLGdxXpAmlaSCjZTjoVJDu/75g4I
-         wMNcYaKZ7hwb5X/eHdZgNWI3TMCspvQ4fhPevozLh7byRGLWQEDCNdsFBzeveNZdGEtB
-         kfOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716722988; x=1717327788;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QAQfWvd3nmcnR5EidU0DiImMMPxXcL5PouM/aKZ2j7s=;
-        b=awkPcy+tWF9sBMjZxoxDqTviSwoO1YO8knayRE+vDUldqxqi0EpFWLNRa0NNlT59ge
-         7vBw4uZ5m1n2+g0bKOO4dKTmqZK5uUTqTe76/Iin/FDa4Kp0sT0v9sxfpJXWMKYTWULL
-         q2K06koydNJps7a114CqepL4fflSLD1kd/+iicuXvaV+sL2nSDFwmz4bMVWqCsjVqHaM
-         19P3g2K9sktPq7pjPYr60PhP983yQ6o1Fpk3Q/qxD0RWgWrtdCS1HmHsr21XOFT2W2Gp
-         1N9IkCTJe1fE81B5eNawVfQlnHzaYWWt8BMsjyFMR4vARAVqbO5H0C2/iWkOrAsk11p8
-         ao2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUasnocNRFzj2UR6m1K4g6UX8YwwvzlGeZmfzEXzrqFeMz9w2fQCjqy4DStY1BuRtnxHBKH6iSDEvN7zvx5TnbIAQGwLbuWtRmuRasemhYeYdHn
-X-Gm-Message-State: AOJu0YyErNdKyrHc4D4G0dvIsIXa0j8anHEe/SrYdEbozebOzCcCOuEr
-	PQg84uMGpNS9gLBpQ92lqhqJYEjU2SNDrNjHGGWShXGcjhMogDO7
-X-Google-Smtp-Source: AGHT+IF5GEmFSc5JVcFPUonDzMobbhUaU5CfYK6h+nU5wmyW5PlDDsumsIuq3cdyo7xJhB2E/nYahw==
-X-Received: by 2002:a17:903:41ce:b0:1f4:5477:4bfe with SMTP id d9443c01a7336-1f454774e3cmr60787325ad.69.1716722988355;
-        Sun, 26 May 2024 04:29:48 -0700 (PDT)
-Received: from localhost.localdomain ([240d:1a:13a:f00:f3a2:fbda:2824:ae0e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c970ca0sm43429925ad.142.2024.05.26.04.29.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 May 2024 04:29:48 -0700 (PDT)
-From: Tatsuya S <tatsuya.s2862@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tatsuya S <tatsuya.s2862@gmail.com>
-Subject: [PATCH] ftrace: Fix stack trace entry generated by ftrace_pid_func()
-Date: Sun, 26 May 2024 20:25:11 +0900
-Message-ID: <20240526112658.46740-1-tatsuya.s2862@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k5f+VuYG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/IXDWCXI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k5f+VuYG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/IXDWCXI"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 211C25C952;
+	Sun, 26 May 2024 12:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716726486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
+	b=k5f+VuYGthO+etVnIlQEqHjZoY5jRdKY+r0Fw6Q4V9X7kKGtn9A9gfJfX649b8mTXQVckp
+	jwo2vXq1KJaFxPArOpgt0ty7JGDDbMpj3C3nGflhMiW7neDT+35jSbhY5VXK4Toj0+1dMd
+	xppy2bonFhPALL+NLCDOHVeFZ78mT3w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716726486;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
+	b=/IXDWCXIdxGKpDYJoOoDLpe86g2+haz+BndJibsJHr0w8r7u4fl4e7mhbC4TlDW2AuE1KX
+	uLZs0ez/D9jUbABg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=k5f+VuYG;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/IXDWCXI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1716726486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
+	b=k5f+VuYGthO+etVnIlQEqHjZoY5jRdKY+r0Fw6Q4V9X7kKGtn9A9gfJfX649b8mTXQVckp
+	jwo2vXq1KJaFxPArOpgt0ty7JGDDbMpj3C3nGflhMiW7neDT+35jSbhY5VXK4Toj0+1dMd
+	xppy2bonFhPALL+NLCDOHVeFZ78mT3w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1716726486;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
+	b=/IXDWCXIdxGKpDYJoOoDLpe86g2+haz+BndJibsJHr0w8r7u4fl4e7mhbC4TlDW2AuE1KX
+	uLZs0ez/D9jUbABg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE10F13A6B;
+	Sun, 26 May 2024 12:28:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cBPEJtUqU2bkbQAAD6G6ig
+	(envelope-from <clopez@suse.de>); Sun, 26 May 2024 12:28:05 +0000
+Message-ID: <ff240b23-4143-4171-8dcc-1fdbf1802e8c@suse.de>
+Date: Sun, 26 May 2024 14:27:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing/probes: fix error check in parse_btf_field()
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alan Maguire <alan.maguire@oracle.com>,
+ "open list:TRACING" <linux-kernel@vger.kernel.org>
+References: <20240525182131.15740-1-clopez@suse.de>
+ <20240526191708.860651c915600a535cc2e579@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Carlos_L=C3=B3pez?= <clopez@suse.de>
+In-Reply-To: <20240526191708.860651c915600a535cc2e579@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -6.50
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 211C25C952
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-6.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email]
 
-On setting set_ftrace_pid, a extra entry generated by ftrace_pid_func()
-is shown on stack trace(CONFIG_UNWINDER_FRAME_POINTER=y).
 
-        [004] .....    68.459382: <stack trace>
- => 0xffffffffa00090af
- => ksys_read
- => __x64_sys_read
- => x64_sys_call
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
+Hi,
 
-To resolve this issue, increment skip count
-in function_stack_trace_call() if pids are set.
+On 26/5/24 12:17, Masami Hiramatsu (Google) wrote:
+> On Sat, 25 May 2024 20:21:32 +0200
+> Carlos López <clopez@suse.de> wrote:
+> 
+>> btf_find_struct_member() might return NULL or an error via the
+>> ERR_PTR() macro. However, its caller in parse_btf_field() only checks
+>> for the NULL condition. Fix this by using IS_ERR() and returning the
+>> error up the stack.
+>>
+> 
+> Thanks for finding it!
+> I think this requires new error message for error_log file.
+> Can you add the log as
+> 
+> trace_probe_log_err(ctx->offset, BTF_ERROR);
+> 
+> And define BTF_ERROR in ERRORS@kernel/trace/trace_probe.h ?
 
-Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
----
- include/linux/ftrace.h         | 1 +
- kernel/trace/ftrace.c          | 2 +-
- kernel/trace/trace_functions.c | 7 ++++++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
+Sounds good, but should we perhaps reuse BAD_BTF_TID?
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 800995c425e0..d14447c0d0e9 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -666,6 +666,7 @@ unsigned long ftrace_location(unsigned long ip);
- unsigned long ftrace_location_range(unsigned long start, unsigned long end);
- unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec);
- unsigned long ftrace_get_addr_curr(struct dyn_ftrace *rec);
-+bool ftrace_pids_enabled(struct ftrace_ops *ops);
- 
- extern ftrace_func_t ftrace_trace_function;
- 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 65208d3b5ed9..e8ddd56d1e55 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -99,7 +99,7 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
- /* What to set function_trace_op to */
- static struct ftrace_ops *set_function_trace_op;
- 
--static bool ftrace_pids_enabled(struct ftrace_ops *ops)
-+bool ftrace_pids_enabled(struct ftrace_ops *ops)
- {
- 	struct trace_array *tr;
- 
-diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-index 9f1bfbe105e8..455c9a880199 100644
---- a/kernel/trace/trace_functions.c
-+++ b/kernel/trace/trace_functions.c
-@@ -223,6 +223,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 	long disabled;
- 	int cpu;
- 	unsigned int trace_ctx;
-+	int skip = STACK_SKIP;
- 
- 	if (unlikely(!tr->function_enabled))
- 		return;
-@@ -239,7 +240,11 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 	if (likely(disabled == 1)) {
- 		trace_ctx = tracing_gen_ctx_flags(flags);
- 		trace_function(tr, ip, parent_ip, trace_ctx);
--		__trace_stack(tr, trace_ctx, STACK_SKIP);
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
-+		if (ftrace_pids_enabled(op))
-+			skip++;
-+#endif
-+		__trace_stack(tr, trace_ctx, skip);
- 	}
- 
- 	atomic_dec(&data->disabled);
+```
+C(BAD_BTF_TID,		"Failed to get BTF type info."),\
+```
+
+`btf_find_struct_member()` fails if `type` is not a struct or if it runs
+OOM while allocating the anon stack, so it seems appropriate.
+
+Best,
+Carlos
+
+> Thank you,
+> 
+>> Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
+>> Signed-off-by: Carlos López <clopez@suse.de>
+>> ---
+>>   kernel/trace/trace_probe.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+>> index 5e263c141574..5417e9712157 100644
+>> --- a/kernel/trace/trace_probe.c
+>> +++ b/kernel/trace/trace_probe.c
+>> @@ -554,6 +554,8 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>>   			anon_offs = 0;
+>>   			field = btf_find_struct_member(ctx->btf, type, fieldname,
+>>   						       &anon_offs);
+>> +			if (IS_ERR(field))
+>> +				return PTR_ERR(field);
+>>   			if (!field) {
+>>   				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+>>   				return -ENOENT;
+>> -- 
+>> 2.35.3
+>>
+> 
+> 
+
 -- 
-2.45.1
-
+Carlos López
+Security Engineer
+SUSE Software Solutions
