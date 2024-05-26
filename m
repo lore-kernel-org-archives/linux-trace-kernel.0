@@ -1,80 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EA4E572;
-	Sun, 26 May 2024 10:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFEC1A2C32;
+	Sun, 26 May 2024 10:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716718287; cv=none; b=evlGDnCAo7rxdeLWqqYDScFkecvsXpCFGAB9bHOWIfrsyDTJherCxAEK3plskgn6LiUEMMXblW7MQ4FzoWRA9l/9etL6653mxrxiDBx6tAw8xwDNrfVDb9WUQ8avT3WXBdpNhb7FV683+X/zqHwR7KB+AjmGvD9YVP2iHe9lgtc=
+	t=1716718632; cv=none; b=TK83paJzC9exjiY2PuQx88S2kGwcYIj1Pfy7MvK0sv0oojqkrjE72lheqS6QAfhn14/X259NxGOvxjYShRNI8SkOTkx0llK/2GSBG8So0MhuAqL2zhkdOQiGkKwZJA43/fwdh8sKs+I1wTuyvV/1qUtolclGJzo0kyremA9xDAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716718287; c=relaxed/simple;
-	bh=RiDiiRL4D9ZYJMcdrUXWd2Q9FPZ3gwM3t30z+w+Axb0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hc4kfbI6FCCp66T6s8d6ORCgNhlbYu4HH/WHGviHDyjdx0zMCObL6df03zyI3nplRqkYl08PA4XRL8ZTEzgpZHZ5MZ1PYPKDUXn/bJQggtSG5GVDo8BL5GAqkiiWhMfX2WFIcCcFvkJVHXrCv6mVbCGUx7GnQqC+W6ONv1bjBdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRFXsUd5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716718632; c=relaxed/simple;
+	bh=QKjuM6qyhhJojJ3NC+Cer9ULUtQ6PLmygGkAhHO8PFY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=W7rNBN9fkym5vlv/j5llIay8i0LibjbdiraaIOlMEBN3YdCKJ5mw9s77iZu5zSVp8zYMXgjBQMDbgM8SppR0pqGyoQLt5LIVnBacyAPeDZvlCJri6p3qAxLZSwlotTE7VHSD6pFbC420gHPzDwM/hJf8c3fhyaOeUMutRb/uapU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIsCvxAs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRFXsUd5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F92C2BD10;
-	Sun, 26 May 2024 10:11:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIsCvxAs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FB7C2BD10;
+	Sun, 26 May 2024 10:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716718287;
-	bh=RiDiiRL4D9ZYJMcdrUXWd2Q9FPZ3gwM3t30z+w+Axb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uRFXsUd5iaQ0e1CD4VyDidVjGIpHr+UQFLkCZqKFg/YABE7Evvp04U0bgcMQAWqLW
-	 Snb7/AEsNSwE8sJI44rxLvWfRZt5slxI1EkREL1hC5l8uXTkY4vbkVbdJRkAZsXVTw
-	 9rhZ6ys848pS7UhB0+9D68801I2NI6UtzHxlu6g5U3paSVdzxO/SX520r1Nj2gGEJa
-	 5FlhF1ILuyNGGUMDL3mDB4Ex6kLSNuh3aacH4U7uJscvLF/bd/zJ2E5lWPekMt/+0n
-	 NKyW/KNzo/8LI663Y2TY/3zGe2OvYHKfxG88fyrVH/sJ/BxB/Zzr5Vct0CcP+zNNC/
-	 19I+vXqm60K8w==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH 3/3] tracing/kprobe: Remove cleanup code unrelated to selftest
-Date: Sun, 26 May 2024 19:11:23 +0900
-Message-Id: <171671828374.39694.1028722916245719966.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171671825710.39694.6859036369216249956.stgit@devnote2>
-References: <171671825710.39694.6859036369216249956.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1716718631;
+	bh=QKjuM6qyhhJojJ3NC+Cer9ULUtQ6PLmygGkAhHO8PFY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gIsCvxAs64g72Z0RyzjJMvqvGss61cn42Obg0UKT9kraQHQKi2FiYa+X+i0c4Az96
+	 Ixaj76lUfJVzxEWSX9XTnWsRh9JKm28tw6SHEIuF/T3s+FamqouIqbwb/P2bL14C+p
+	 CG+qiYOW/0aQYwu8YSAVnlftbVXvvDVwYYEEQw2ymHAb5xl4xdOKEveuBCSXv1BPf9
+	 jODMz1r7WukDaoZme7p7uQCvQd3RNv0ZBDerrBKitqC66VkYOPbLicLPp3zlukPqp5
+	 WzqKr+Q2qEBx9teqt2Hg2/5vvEA8rYFxioCjy3efruLcK3ssocvYKnXCA3fPOKUI8P
+	 +IxrpKxgfWCOQ==
+Date: Sun, 26 May 2024 19:17:08 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Carlos =?UTF-8?B?TMOzcGV6?= <clopez@suse.de>
+Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Alan Maguire
+ <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org (open list:TRACING)
+Subject: Re: [PATCH] tracing/probes: fix error check in parse_btf_field()
+Message-Id: <20240526191708.860651c915600a535cc2e579@kernel.org>
+In-Reply-To: <20240525182131.15740-1-clopez@suse.de>
+References: <20240525182131.15740-1-clopez@suse.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sat, 25 May 2024 20:21:32 +0200
+Carlos López <clopez@suse.de> wrote:
 
-This cleanup all kprobe events code is not related to the selftest
-itself, and it can fail by the reason unrelated to this test.
-If the test is successful, the generated events are cleaned up.
-And if not, we cannot guarantee that the kprobe events will work
-correctly. So, anyway, there is no need to clean it up.
+> btf_find_struct_member() might return NULL or an error via the
+> ERR_PTR() macro. However, its caller in parse_btf_field() only checks
+> for the NULL condition. Fix this by using IS_ERR() and returning the
+> error up the stack.
+> 
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_kprobe.c |    5 -----
- 1 file changed, 5 deletions(-)
+Thanks for finding it!
+I think this requires new error message for error_log file.
+Can you add the log as
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 4abed36544d0..f94628c15c14 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -2129,11 +2129,6 @@ static __init int kprobe_trace_self_tests_init(void)
- 	}
- 
- end:
--	ret = dyn_events_release_all(&trace_kprobe_ops);
--	if (ret) {
--		pr_warn("error on cleaning up probes.\n");
--		warn++;
--	}
- 	/*
- 	 * Wait for the optimizer work to finish. Otherwise it might fiddle
- 	 * with probes in already freed __init text.
+trace_probe_log_err(ctx->offset, BTF_ERROR);
 
+And define BTF_ERROR in ERRORS@kernel/trace/trace_probe.h ?
+
+Thank you,
+
+> Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
+> Signed-off-by: Carlos López <clopez@suse.de>
+> ---
+>  kernel/trace/trace_probe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 5e263c141574..5417e9712157 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -554,6 +554,8 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
+>  			anon_offs = 0;
+>  			field = btf_find_struct_member(ctx->btf, type, fieldname,
+>  						       &anon_offs);
+> +			if (IS_ERR(field))
+> +				return PTR_ERR(field);
+>  			if (!field) {
+>  				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
+>  				return -ENOENT;
+> -- 
+> 2.35.3
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
