@@ -1,194 +1,126 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B08DDB2;
-	Sun, 26 May 2024 12:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435F415E97;
+	Sun, 26 May 2024 14:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716726490; cv=none; b=gInPFwOu+4ywBgTOmtg+/YYE7I1inLTTWFoEX84WykT/pScFu88knIv2Mfi0jfY8AbKf6fiNoaEC+x4cm3Bqb6dvGEa8cpDS/pFDoNTldpYsKmgptEGgzYvvmDRUqvuovX2pR/ulGACgb9fHbV+gJdjINyMa85KQsTVT5iU6Z5E=
+	t=1716735144; cv=none; b=aeXuHmq3I5/DattyZkPSH/dF/5FFVhING2njdZLdkVwWjXwlrcetZIiBSQTSMGqu7tnK9vGxEeJrpLFO4ZektYjjWQmjeCsfCnYScFzfkPVgRhhMbwCVy8NG2Tu38SZ0nljazUazy6kBHbYo8iyQpgm+9KPJVYuRpM5F+Z9nOmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716726490; c=relaxed/simple;
-	bh=MWqUz7rWEmBBdrWJN03toXtll0HjkA34ta1+UWNFHSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uZvTsH3MpSg1kl0E/E2xE/4LsX15JOch3bgnkttC0t9mIinN0BDRT6TmXyGFTorVRNUVyMkLlhQNyqnTOeY6RJ//+cCZPCGxAS5Y8P7Veu4iSb4NP5+Bl6Tcbi11TpMgQsCnlRCBDkLl46eu8VvxFkA2tE28LL6DNTnildv/rKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k5f+VuYG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/IXDWCXI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k5f+VuYG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/IXDWCXI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1716735144; c=relaxed/simple;
+	bh=D08KqfwLn6zPSed+s+WzJOGqLtwXk+mXoW/t1KDA+kA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQSVwdPKGbXxfaANrVoDdpjm0vuSZey5hfTXvq/t9x0wMMtROivO1yFMn8RgW6PM+E2dMAyG29JwpOpzhgBs4NxsruBrAqleAk6i1iNPBmRdOb8d/y9eIi4Ut3cB4Uugo02QkASzY7MA4F4Q5KvCClcwc/1mYyX8JRbthXifgVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Idv90CoM; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k5f+VuYG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/IXDWCXI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k5f+VuYG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/IXDWCXI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 211C25C952;
-	Sun, 26 May 2024 12:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716726486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
-	b=k5f+VuYGthO+etVnIlQEqHjZoY5jRdKY+r0Fw6Q4V9X7kKGtn9A9gfJfX649b8mTXQVckp
-	jwo2vXq1KJaFxPArOpgt0ty7JGDDbMpj3C3nGflhMiW7neDT+35jSbhY5VXK4Toj0+1dMd
-	xppy2bonFhPALL+NLCDOHVeFZ78mT3w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716726486;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
-	b=/IXDWCXIdxGKpDYJoOoDLpe86g2+haz+BndJibsJHr0w8r7u4fl4e7mhbC4TlDW2AuE1KX
-	uLZs0ez/D9jUbABg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=k5f+VuYG;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/IXDWCXI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716726486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
-	b=k5f+VuYGthO+etVnIlQEqHjZoY5jRdKY+r0Fw6Q4V9X7kKGtn9A9gfJfX649b8mTXQVckp
-	jwo2vXq1KJaFxPArOpgt0ty7JGDDbMpj3C3nGflhMiW7neDT+35jSbhY5VXK4Toj0+1dMd
-	xppy2bonFhPALL+NLCDOHVeFZ78mT3w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716726486;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=007P97xnnv7oBYszNcxVkI2wzsJ2BBCkDzAZkBu4GKA=;
-	b=/IXDWCXIdxGKpDYJoOoDLpe86g2+haz+BndJibsJHr0w8r7u4fl4e7mhbC4TlDW2AuE1KX
-	uLZs0ez/D9jUbABg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE10F13A6B;
-	Sun, 26 May 2024 12:28:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cBPEJtUqU2bkbQAAD6G6ig
-	(envelope-from <clopez@suse.de>); Sun, 26 May 2024 12:28:05 +0000
-Message-ID: <ff240b23-4143-4171-8dcc-1fdbf1802e8c@suse.de>
-Date: Sun, 26 May 2024 14:27:56 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Idv90CoM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716735141; x=1748271141;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=D08KqfwLn6zPSed+s+WzJOGqLtwXk+mXoW/t1KDA+kA=;
+  b=Idv90CoMCw5F7mewZGhOUuNV9SWrdqXbtm/nCoXBQGQgIDas79E9glyl
+   RE4bzP8+MPJif06OlksuFeSiXiWJlS183hMI37anCT054wDryq4pN3Msp
+   HDvTuph5HQIPRuY2ewQjTTw0oBlSgBVa+QBC5KB8EVOXsByVA7Aq758en
+   fP+4s227ooLrdQdbTJSR+PNGWGTI1kjh+d0bpBuk2ot1Yc5N+kHb2bsgB
+   AdWdhpyT1V5WQ+Mb/MAWmozfM/DHItynlFpP2rmfDREXAVIasnKhycJg+
+   Xzu8bQzo9n+3gqaZwDQEaLH/V0qZq4OtIL+IkE1d5+m26aMb7kjiM4yid
+   g==;
+X-CSE-ConnectionGUID: ubc4Xa0SSky9A2k4oZ34uw==
+X-CSE-MsgGUID: xuIM2pu9T1eyXxIqu92g5g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="15995933"
+X-IronPort-AV: E=Sophos;i="6.08,190,1712646000"; 
+   d="scan'208";a="15995933"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2024 07:52:20 -0700
+X-CSE-ConnectionGUID: VgCDjZlCRcW1AmXR9amjaw==
+X-CSE-MsgGUID: 4yBunriQTZ68WmqHo/pp3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,190,1712646000"; 
+   d="scan'208";a="38912144"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 26 May 2024 07:52:19 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sBFEO-00087P-0q;
+	Sun, 26 May 2024 14:52:16 +0000
+Date: Sun, 26 May 2024 22:51:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tatsuya S <tatsuya.s2862@gmail.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Tatsuya S <tatsuya.s2862@gmail.com>
+Subject: Re: [PATCH] ftrace: Fix stack trace entry generated by
+ ftrace_pid_func()
+Message-ID: <202405262232.L4XH8q6O-lkp@intel.com>
+References: <20240526112658.46740-1-tatsuya.s2862@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/probes: fix error check in parse_btf_field()
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alan Maguire <alan.maguire@oracle.com>,
- "open list:TRACING" <linux-kernel@vger.kernel.org>
-References: <20240525182131.15740-1-clopez@suse.de>
- <20240526191708.860651c915600a535cc2e579@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Carlos_L=C3=B3pez?= <clopez@suse.de>
-In-Reply-To: <20240526191708.860651c915600a535cc2e579@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -6.50
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 211C25C952
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-6.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240526112658.46740-1-tatsuya.s2862@gmail.com>
+
+Hi Tatsuya,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on rostedt-trace/for-next v6.9 next-20240523]
+[cannot apply to rostedt-trace/for-next-urgent]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tatsuya-S/ftrace-Fix-stack-trace-entry-generated-by-ftrace_pid_func/20240526-193149
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240526112658.46740-1-tatsuya.s2862%40gmail.com
+patch subject: [PATCH] ftrace: Fix stack trace entry generated by ftrace_pid_func()
+config: x86_64-buildonly-randconfig-002-20240526 (https://download.01.org/0day-ci/archive/20240526/202405262232.L4XH8q6O-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240526/202405262232.L4XH8q6O-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405262232.L4XH8q6O-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/trace/ftrace.c:102:6: warning: no previous prototype for function 'ftrace_pids_enabled' [-Wmissing-prototypes]
+     102 | bool ftrace_pids_enabled(struct ftrace_ops *ops)
+         |      ^
+   kernel/trace/ftrace.c:102:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     102 | bool ftrace_pids_enabled(struct ftrace_ops *ops)
+         | ^
+         | static 
+   1 warning generated.
 
 
-Hi,
+vim +/ftrace_pids_enabled +102 kernel/trace/ftrace.c
 
-On 26/5/24 12:17, Masami Hiramatsu (Google) wrote:
-> On Sat, 25 May 2024 20:21:32 +0200
-> Carlos López <clopez@suse.de> wrote:
-> 
->> btf_find_struct_member() might return NULL or an error via the
->> ERR_PTR() macro. However, its caller in parse_btf_field() only checks
->> for the NULL condition. Fix this by using IS_ERR() and returning the
->> error up the stack.
->>
-> 
-> Thanks for finding it!
-> I think this requires new error message for error_log file.
-> Can you add the log as
-> 
-> trace_probe_log_err(ctx->offset, BTF_ERROR);
-> 
-> And define BTF_ERROR in ERRORS@kernel/trace/trace_probe.h ?
-
-Sounds good, but should we perhaps reuse BAD_BTF_TID?
-
-```
-C(BAD_BTF_TID,		"Failed to get BTF type info."),\
-```
-
-`btf_find_struct_member()` fails if `type` is not a struct or if it runs
-OOM while allocating the anon stack, so it seems appropriate.
-
-Best,
-Carlos
-
-> Thank you,
-> 
->> Fixes: c440adfbe3025 ("tracing/probes: Support BTF based data structure field access")
->> Signed-off-by: Carlos López <clopez@suse.de>
->> ---
->>   kernel/trace/trace_probe.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
->> index 5e263c141574..5417e9712157 100644
->> --- a/kernel/trace/trace_probe.c
->> +++ b/kernel/trace/trace_probe.c
->> @@ -554,6 +554,8 @@ static int parse_btf_field(char *fieldname, const struct btf_type *type,
->>   			anon_offs = 0;
->>   			field = btf_find_struct_member(ctx->btf, type, fieldname,
->>   						       &anon_offs);
->> +			if (IS_ERR(field))
->> +				return PTR_ERR(field);
->>   			if (!field) {
->>   				trace_probe_log_err(ctx->offset, NO_BTF_FIELD);
->>   				return -ENOENT;
->> -- 
->> 2.35.3
->>
-> 
-> 
+   101	
+ > 102	bool ftrace_pids_enabled(struct ftrace_ops *ops)
+   103	{
+   104		struct trace_array *tr;
+   105	
+   106		if (!(ops->flags & FTRACE_OPS_FL_PID) || !ops->private)
+   107			return false;
+   108	
+   109		tr = ops->private;
+   110	
+   111		return tr->function_pids != NULL || tr->function_no_pids != NULL;
+   112	}
+   113	
 
 -- 
-Carlos López
-Security Engineer
-SUSE Software Solutions
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
