@@ -1,33 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BB815FD10;
-	Mon, 27 May 2024 22:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD21733C8;
+	Mon, 27 May 2024 23:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716849103; cv=none; b=Cg3cCsy62s6G7g1zwvqmpzEFqFHQS0fwPpPhzrSHDRpxG+7X6WfEPo7dsyhD3N8KPN5NIvKCwI90F7OEgZ6mRqQjamAPfj3t2TPrAxHoWBJjz5w11P4FZwFkroRg/bjP7Vf0USZHkSgyArlg3294MYsnXQYNapCEB5JLoe0UCF8=
+	t=1716852550; cv=none; b=WmyJSHCUkm6KdAiXn3w0mRg+z6TnrTFKq0pK8BhfMYMGhHd/a+R7R5NX32xQLz6fGRIQTOfTA9ir1Gh+J3xhHHI2SXyyXbmBbv8KXa1o15RUiWPkSFBHMiHIwVuqeXbYIMB+r0/ue6FeWM5fEQnfBv5jqnThtD6WD2mpn2Bl4SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716849103; c=relaxed/simple;
-	bh=wkWViZB7Ah651duBPihx5UnuKf/7BzqehDIFlTgrTnI=;
+	s=arc-20240116; t=1716852550; c=relaxed/simple;
+	bh=rjLg2LgiEkRoeNsn3CNZc8/LZBGXGzj+L03bkFhBtbI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c2lX6KbTJHrD6n8fG18e+4wy5tYXYEFOls1ZLyj1d1gRQ0WlOjjsSW8OVNoADfiaRQu5kmvWSO03BHGozep9OqjAP7qgW1ZrYpAHj+UkLSEe1qQVDNHUJsDTIQNKmJUGTTpV1aluHn4KfWdujdq4n0jRjaKm6aHZ/S00bM0n43E=
+	 MIME-Version:Content-Type; b=uNIb5yA3GyT3bM87Kc01GX32TKNyMZDxYlcnZPf6w0Pdye6HMlmVwsEZEIk9+gxdmGW0X9EeBnpcFAlGkoTxvlk9x7PVoV9uCCy6OgnpZtZBeiTymQyoyD0on9DVpLEJKPNNhej0AVLkcwPDL3DmNF0vzOeVNt0CBN8khURPQZY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42C4C2BBFC;
-	Mon, 27 May 2024 22:31:41 +0000 (UTC)
-Date: Mon, 27 May 2024 18:31:39 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE13C2BBFC;
+	Mon, 27 May 2024 23:29:09 +0000 (UTC)
+Date: Mon, 27 May 2024 19:29:07 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Ilkka
- =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240527183139.42b6123c@rorschach.local.home>
-In-Reply-To: <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
-	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
+Message-ID: <20240527192907.49c9220f@rorschach.local.home>
+In-Reply-To: <171671825710.39694.6859036369216249956.stgit@devnote2>
+References: <171671825710.39694.6859036369216249956.stgit@devnote2>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,28 +33,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 24 May 2024 12:50:08 +0200
-"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+On Sun, 26 May 2024 19:10:57 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> > - Affected Versions: Before kernel version 6.8.10, the bug caused a
-> > quick display of a kernel trace dump before the shutdown/reboot
-> > completed. Starting from version 6.8.10 and continuing into version
-> > 6.9.0 and 6.9.1, this issue has escalated to a kernel panic,
-> > preventing the shutdown or reboot from completing and leaving the
-> > machine stuck.
+> Hi,
+> 
+> Here is a series of some fixes/improvements for the test modules and boot
+> time selftest of kprobe events. I found a WARNING message with some boot 
+> time selftest configuration, which came from the combination of embedded
+> kprobe generate API tests module and ftrace boot-time selftest. So the main
+> problem is that the test module should not be built-in. But I also think
+> this WARNING message is useless (because there are warning messages already)
+> and the cleanup code is redundant. This series fixes those issues.
 
-You state "Before kernel version 6.8.10, the bug caused ...". Does that
-mean that a bug was happening before v6.8.10? But did not cause a panic?
+Note, when I enable trace tests as builtin instead of modules, I just
+disable the bootup self tests when it detects this. This helps with
+doing tests via config options than having to add user space code that
+loads modules.
 
-I just noticed your second screen shot from your report, and it has:
-
- "cache_from_obj: Wrong slab cache, tracefs_inode_cache but object is from inode_cache"
-
-So somehow an tracefs_inode was allocated from the inode_cache and is
-now being freed by the tracefs_inode logic? Did this happen before
-6.8.10? If so, this code could just be triggering an issue from an
-unrelated bug.
-
-Thanks,
+Could you do something similar?
 
 -- Steve
+
+
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (3):
+>       tracing: Build event generation tests only as modules
+>       tracing/kprobe: Remove unneeded WARN_ON_ONCE() in selftests
+>       tracing/kprobe: Remove cleanup code unrelated to selftest
+> 
