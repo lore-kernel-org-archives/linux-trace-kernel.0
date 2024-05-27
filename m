@@ -1,125 +1,260 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3627FC152
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 May 2024 07:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F7C26AFA
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 May 2024 09:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716796600; cv=none; b=GlPx2Ehpl3V4pccDeZQg/oH788xqF6zYOTM1WTwKg00/MK9J0pGZyDTGsSFAGhlayDyCRENpTIUp+DsTC2e6hLSzwg2WqDG4I4hCLiJE1EJl+++xnS/I3/EVDgyjw0dgIi/PHb+AsAOSeMJ4deEMH2LH2Ny/B1SLenOj3DRLTqA=
+	t=1716802622; cv=none; b=WyRXl0e10S/hBQ4QrrnUS3Ggvgv9XeLx+qv93luLsvLgAZkLJwWQND94pm0EpVwALZOV3dS+jJygrAW1z+eEEdMXW6Pv23ALpCQcckNwK3HkC9F6CYZ7Jfuka2E54cHRCQZx6dhOIpTbN0DHjwtT4pP8gEdtqBKrAtFfHQMyuPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716796600; c=relaxed/simple;
-	bh=6UPx7iXY9+sCmPgf0vrAwvPN1N666sXycIMf3I6/hto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1zQQ+jlM3oF9vXscjj1T9lrAZdU4qBnCpU996VfnbZKjjOIn/+aABlcIPhOZ0P8u/UipTH4jNO7g/YSxFDbZZdx96/g85ot4wGjFrKYcbUk0DdB+2grMIziBnvkO6+N7q8YhHtGtmbMIp/de0fYKvo12wRUxNxIJWAms6Sgzjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jWk8/YaP; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1716802622; c=relaxed/simple;
+	bh=ca7qxTX4u6UzTeFhYW4NkFxCP0XwOUteCJo7P6ydaEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BnQQtbx2Nfl3oHwjpEAG/ZdsMesz8jQunKoLBjIaL+lDA4c7lmjBR3+FRbFattYH0x7W6VUfepCJxmqBJ9JXjB47nMx8s3303v75y/+jYcVb+tjfjWmO5rrZOOLCsMZ1qihhJENFn3OXFabkYIc15FXhWsR2vTcKramVtJCaTI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P0/R063B; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jWk8/YaP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gQEnB7aSCTZt0xCRrWbJeMSZboIGsJ7UMY1FMJREj0w=; b=jWk8/YaPzWQY8UC5bsSk5mNIkJ
-	sHoxOa9NlEBwijVL4kEi+bbpQBbyuPz4bZFID87qunDIk0wU1Co1e6nSM92FjeOU0P4+MjKbqPkP7
-	de5F8IRD8B04GlmJhWBbhU7bsSiYXKlUGxsoooXks9r25FUfC5F8rtjsZlqJPwnpvmXOR00pV2p0G
-	SCrJBnzFAjoQdgJl+oMdWoeTxYfXlAagGrMgGeFWKk2A7RS+zzPNyIdurcOUA3gdkegUZ9yJ3pd35
-	ARBiWj8K7CmvtLoVzmbI531Xdqf7rIPvmREMDGZsZU6t6cQO0RQyRZQ5DQ9v9HA87kog50vXGqwZG
-	BSwwEJgw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:32956)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sBVDS-0003Gg-1Y;
-	Mon, 27 May 2024 08:56:22 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sBVDM-0002AZ-HC; Mon, 27 May 2024 08:56:16 +0100
-Date: Mon, 27 May 2024 08:56:16 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Thorsten Scherer <T.Scherer@eckelmann.de>
-Cc: ardb@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Justin Chen <justin.chen@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Doug Berger <doug.berger@broadcom.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	kernel@pengutronix.de
-Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
-Message-ID: <ZlQ8oDh/Kgkm1+WE@shell.armlinux.org.uk>
-References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
- <z42qu35nuybho36bwjdoatqp3skwm7w2l4apd75ubzaezyvxef@f6yrdlgltlaf>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P0/R063B"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5295a576702so3282245e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 May 2024 02:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1716802617; x=1717407417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H/ixPzkRCck5ZUKxx74gVuIQcS7/KCEVfrXzpOu54PQ=;
+        b=P0/R063Bgh8BsH8SNa6+rs36Zb1kMEof/Yc0G5AAUt0yFyewwUf1VgJw8I/kvNV6VO
+         xIztpzoTlXe6tsmRXONhnsrEfAG6crTv3WYkVGxTrxGHd8Kq+/EQDoGKcm+DGIQGaiBO
+         yJ3WK5j8rjrrsOGXMGStHIdXYegB7+iibzBd6pTIROqY2zBAnmsXgfinBYBlD8fYfCzQ
+         QBdk0wXhaADo5BFEsDq5si78RRXrmeUyQpKTjbeOCayXaOnSKVgPeSUfQwe73v85r5NF
+         wyOSVdcI651j3kUt5eeEK3enBDDMaUvjUIArWzmgAyeCgvTSCCFB5V0MLVe1ZjjW3HRe
+         aowg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716802617; x=1717407417;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H/ixPzkRCck5ZUKxx74gVuIQcS7/KCEVfrXzpOu54PQ=;
+        b=J4P0BNXt1UDBxSnmjnmfpfKiBsFY2VoyDpGDgw/dFd3m7w+/v0UUUGIlzLmSQAznsI
+         HtpbckiT98wzPQkc8Rwomio+mVqgmq9PHKDEqVoS9FaMCHoGREB5pvBDO5iVvvFB/C+n
+         l+FaKmeD2P95LONoXROqjkHdku2YgfZFLmby1caoXU+kFbB8s8k7dKcZbYRsCVdjZe52
+         ox0DBtrEyKP5qfmNlOPFMwfa37IpUtgYHoJC3on+SjOYvSeO3NDVWa5p1Lg3VW2O8aj5
+         eelfjdSm8aRNaE1bsorMFKV75ip8v4KwGeid9WGXhkODtj8fDobBmrXp/0O4BqF/eBLH
+         9CYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU6nAId+fNzhW8BAsax3RxfylD6U/MFrdRSgXcdm5AqJ9bG18zst1ChUR6E825h3aTYH/mtuRKqi8bhrGYlK9c+5BPq6mJvdPTqraTgAhkrMin
+X-Gm-Message-State: AOJu0YwbW1mrW1pFnsGhqK7ud6lpGGoP/l1d/Eg++E0jAlOuMrDSaIYo
+	Ui6dvRZHkJiGfg5ZtW371zK6kvLf6BHfA/rpbQu8T3H9BhdyLNpg8+LeqVYYrbU=
+X-Google-Smtp-Source: AGHT+IHEAjDHV04sv046OkrhZ6dT5pavox8wzKlyT3vi+iHB28XVQkbRU0voEZTDpoqyXyek79OCfA==
+X-Received: by 2002:ac2:4e10:0:b0:51b:e0f0:e4f8 with SMTP id 2adb3069b0e04-52964bb0ea4mr7110372e87.31.1716802616696;
+        Mon, 27 May 2024 02:36:56 -0700 (PDT)
+Received: from [10.100.51.161] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100fad8e2sm136039195e9.33.2024.05.27.02.36.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 02:36:56 -0700 (PDT)
+Message-ID: <2b920bab-23a2-4a8d-95c2-b69472d38373@suse.com>
+Date: Mon, 27 May 2024 11:36:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <z42qu35nuybho36bwjdoatqp3skwm7w2l4apd75ubzaezyvxef@f6yrdlgltlaf>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ring-buffer: Fix a race between readers and resize
+ checks
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-users <linux-rt-users@vger.kernel.org>
+References: <20240517134008.24529-1-petr.pavlu@suse.com>
+ <20240517134008.24529-3-petr.pavlu@suse.com>
+ <20240520095037.33a7fde6@gandalf.local.home>
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20240520095037.33a7fde6@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 27, 2024 at 09:43:41AM +0200, Thorsten Scherer wrote:
-> Hello,
+On 5/20/24 15:50, Steven Rostedt wrote:
+> On Fri, 17 May 2024 15:40:08 +0200
+> Petr Pavlu <petr.pavlu@suse.com> wrote:
 > 
-> in the context of a panic on an i.MX25 based v6.9 kernel [1] Uwe pointed me to
-> this thread.  With the proposed code change applied the procedure
+>> The reader code in rb_get_reader_page() swaps a new reader page into the
+>> ring buffer by doing cmpxchg on old->list.prev->next to point it to the
+>> new page. Following that, if the operation is successful,
+>> old->list.next->prev gets updated too. This means the underlying
+>> doubly-linked list is temporarily inconsistent, page->prev->next or
+>> page->next->prev might not be equal back to page for some page in the
+>> ring buffer.
+>>
+>> The resize operation in ring_buffer_resize() can be invoked in parallel.
+>> It calls rb_check_pages() which can detect the described inconsistency
+>> and stop further tracing:
+>>
+>> [  190.271762] ------------[ cut here ]------------
+>> [  190.271771] WARNING: CPU: 1 PID: 6186 at kernel/trace/ring_buffer.c:1467 rb_check_pages.isra.0+0x6a/0xa0
+>> [  190.271789] Modules linked in: [...]
+>> [  190.271991] Unloaded tainted modules: intel_uncore_frequency(E):1 skx_edac(E):1
+>> [  190.272002] CPU: 1 PID: 6186 Comm: cmd.sh Kdump: loaded Tainted: G            E      6.9.0-rc6-default #5 158d3e1e6d0b091c34c3b96bfd99a1c58306d79f
+>> [  190.272011] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552c-rebuilt.opensuse.org 04/01/2014
+>> [  190.272015] RIP: 0010:rb_check_pages.isra.0+0x6a/0xa0
+>> [  190.272023] Code: [...]
+>> [  190.272028] RSP: 0018:ffff9c37463abb70 EFLAGS: 00010206
+>> [  190.272034] RAX: ffff8eba04b6cb80 RBX: 0000000000000007 RCX: ffff8eba01f13d80
+>> [  190.272038] RDX: ffff8eba01f130c0 RSI: ffff8eba04b6cd00 RDI: ffff8eba0004c700
+>> [  190.272042] RBP: ffff8eba0004c700 R08: 0000000000010002 R09: 0000000000000000
+>> [  190.272045] R10: 00000000ffff7f52 R11: ffff8eba7f600000 R12: ffff8eba0004c720
+>> [  190.272049] R13: ffff8eba00223a00 R14: 0000000000000008 R15: ffff8eba067a8000
+>> [  190.272053] FS:  00007f1bd64752c0(0000) GS:ffff8eba7f680000(0000) knlGS:0000000000000000
+>> [  190.272057] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  190.272061] CR2: 00007f1bd6662590 CR3: 000000010291e001 CR4: 0000000000370ef0
+>> [  190.272070] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [  190.272073] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> [  190.272077] Call Trace:
+>> [  190.272098]  <TASK>
+>> [  190.272189]  ring_buffer_resize+0x2ab/0x460
+>> [  190.272199]  __tracing_resize_ring_buffer.part.0+0x23/0xa0
+>> [  190.272206]  tracing_resize_ring_buffer+0x65/0x90
+>> [  190.272216]  tracing_entries_write+0x74/0xc0
+>> [  190.272225]  vfs_write+0xf5/0x420
+>> [  190.272248]  ksys_write+0x67/0xe0
+>> [  190.272256]  do_syscall_64+0x82/0x170
+>> [  190.272363]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>> [  190.272373] RIP: 0033:0x7f1bd657d263
+>> [  190.272381] Code: [...]
+>> [  190.272385] RSP: 002b:00007ffe72b643f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+>> [  190.272391] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f1bd657d263
+>> [  190.272395] RDX: 0000000000000002 RSI: 0000555a6eb538e0 RDI: 0000000000000001
+>> [  190.272398] RBP: 0000555a6eb538e0 R08: 000000000000000a R09: 0000000000000000
+>> [  190.272401] R10: 0000555a6eb55190 R11: 0000000000000246 R12: 00007f1bd6662500
+>> [  190.272404] R13: 0000000000000002 R14: 00007f1bd6667c00 R15: 0000000000000002
+>> [  190.272412]  </TASK>
+>> [  190.272414] ---[ end trace 0000000000000000 ]---
+>>
+>> Note that ring_buffer_resize() calls rb_check_pages() only if the parent
+>> trace_buffer has recording disabled. Recent commit d78ab792705c
+>> ("tracing: Stop current tracer when resizing buffer") causes that it is
+>> now always the case which makes it more likely to experience this issue.
+>>
+>> The window to hit this race is nonetheless very small. To help
+>> reproducing it, one can add a delay loop in rb_get_reader_page():
+>>
+>>  ret = rb_head_page_replace(reader, cpu_buffer->reader_page);
+>>  if (!ret)
+>>  	goto spin;
+>>  for (unsigned i = 0; i < 1U << 26; i++)  /* inserted delay loop */
+>>  	__asm__ __volatile__ ("" : : : "memory");
+>>  rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;
+>>
+>> .. and then run the following commands on the target system:
+>>
+>>  echo 1 > /sys/kernel/tracing/events/sched/sched_switch/enable
+>>  while true; do
+>>  	echo 16 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+>>  	echo 8 > /sys/kernel/tracing/buffer_size_kb; sleep 0.1
+>>  done &
+>>  while true; do
+>>  	for i in /sys/kernel/tracing/per_cpu/*; do
+>>  		timeout 0.1 cat $i/trace_pipe; sleep 0.2
+>>  	done
+>>  done
+>>
+>> To fix the problem, make sure ring_buffer_resize() doesn't invoke
+>> rb_check_pages() concurrently with a reader operating on the same
+>> ring_buffer_per_cpu by taking its cpu_buffer->reader_lock.
 > 
->     # set to some known good (randomly guessed) filter function and enable function_graph
->     echo mtdblock_open > set_ftrace_filter
->     echo function_graph > current_tracer
+> Definitely a bug. Thanks for catching it. But...
 > 
->     # walk available filter funcs
->     cat available_filter_functions | while read f; do echo $f | tee -a set_ftrace_filter; sleep 1; done
+>>
+>> Fixes: 659f451ff213 ("ring-buffer: Add integrity check at end of iter read")
+>> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+>> ---
+>>  kernel/trace/ring_buffer.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+>> index 0ae569eae55a..967655591719 100644
+>> --- a/kernel/trace/ring_buffer.c
+>> +++ b/kernel/trace/ring_buffer.c
+>> @@ -1449,6 +1449,11 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+>>   *
+>>   * As a safety measure we check to make sure the data pages have not
+>>   * been corrupted.
+>> + *
+>> + * Callers of this function need to guarantee that the list of pages doesn't get
+>> + * modified during the check. In particular, if it's possible that the function
+>> + * is invoked with concurrent readers which can swap in a new reader page then
+>> + * the caller should take cpu_buffer->reader_lock.
+>>   */
+>>  static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+>>  {
+>> @@ -2200,8 +2205,13 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+>>  		 */
+>>  		synchronize_rcu();
+>>  		for_each_buffer_cpu(buffer, cpu) {
+>> +			unsigned long flags;
+>> +
+>>  			cpu_buffer = buffer->buffers[cpu];
+>> +			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+>>  			rb_check_pages(cpu_buffer);
+>> +			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock,
+>> +						   flags);
 > 
-> produces the following output
-> 
-> [  159.832173] Insufficient stack space to handle exception!
-> [  159.832241] Task stack:     [0xc8e44000..0xc8e46000]
-> [  159.842701] IRQ stack:      [0xc8800000..0xc8802000]
-> [  159.847712] Overflow stack: [0xc1934000..0xc1935000]
-> [  159.852726] Internal error: Oops - BUG: 0 [#1] PREEMPT ARM
-> [  159.858273] Modules linked in: capture_events_imxgpt ti_ads7950 industrialio_triggered_buffer kfifo_buf capture_events_irq capture_events iio_trig_hrtimer industrialio_sw_trigger industrialio_configfs dm_mod
-> [  159.876948] CPU: 0 PID: 199 Comm: sh Not tainted 6.9.0 #3
-> [  159.882412] Hardware name: Freescale i.MX25 (Device Tree Support)
-> [  159.888547] PC is at prepare_ftrace_return+0x4/0x7c
-> [  159.893520] LR is at ftrace_graph_caller+0x1c/0x28
-> [  159.898376] pc : [<c010dd44>]    lr : [<c010d988>]    psr: 60000093
-> [  159.904690] sp : c8e44018  ip : c8e44018  fp : c8e4403c
-> [  159.909959] r10: c0c09e78  r9 : c35e9bc0  r8 : c010d9bc
-> [  159.915227] r7 : 00000001  r6 : 00000004  r5 : c8e44064  r4 : c8e440ac
-> [  159.921800] r3 : c8e44030  r2 : c8e4403c  r1 : c010eb9c  r0 : c8e44038
-> [  159.928376] Flags: nZCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> [  159.935652] Control: 0005317f  Table: 83074000  DAC: 00000051
-> [  159.941436] Register r0 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  159.952253] Register r1 information: non-slab/vmalloc memory
-> [  159.957988] Register r2 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  159.968791] Register r3 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  159.979592] Register r4 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  159.990391] Register r5 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  160.001187] Register r6 information: non-paged memory
-> [  160.006303] Register r7 information: non-paged memory
-> [  160.011415] Register r8 information: non-slab/vmalloc memory
-> [  160.017139] Register r9 information: slab kmalloc-32 start c35e9bc0 pointer offset 0 size 32
-> [  160.025718] Register r10 information: non-slab/vmalloc memory
-> [  160.031530] Register r11 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  160.042422] Register r12 information: 2-page vmalloc region starting at 0xc8e44000 allocated at kernel_clone+0xa8/0x408
-> [  160.053315] Process sh (pid: 199, stack limit = 0x68fc3abb)
-> [  160.058955] Stack: (0xc8e44018 to 0xc8e46000)
+> Putting my RT hat on, I really don't like the above fix. The
+> rb_check_pages() iterates all subbuffers which makes the time interrupts
+> are disabled non-deterministic.
 
-No backtrace? No Code: line? I'm guessing there was an attempt to ftrace
-a function involving the ftrace tracing infrastructure, which is why 8KB
-of stack has been gobbled up. It could be
-copy_from_kernel_nofault_allowed() but it would be useful to have at
-least some extract of the backtrace showing the recursive cycle to
-confirm, otherwise there is nothing in your report to confirm. As I'm
-not a ftrace user myself, this isn't something I'd test for, so having
-a full report would be useful.
+I see, this applies also to the same rb_check_pages() validation invoked
+from ring_buffer_read_finish().
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> Instead, I would rather have something where we disable readers while we do
+> the check, and re-enable them.
+> 
+> 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> 			cpu_buffer->read_disabled++;
+> 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> 
+> // Also, don't put flags on a new line. We are allow to go 100 characters now.
+
+Noted.
+
+> 
+> 
+>   			rb_check_pages(cpu_buffer);
+> 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> 			cpu_buffer->read_disabled--;
+> 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> 
+> Or something like that. Yes, that also requires creating a new
+> "read_disabled" field in the ring_buffer_per_cpu code.
+
+I think this would work but I'm personally not immediately sold on this
+approach. If I understand the idea correctly, readers should then check
+whether cpu_buffer->read_disabled is set and bail out with some error if
+that is the case. The rb_check_pages() function is only a self-check
+code and as such, I feel it doesn't justify disrupting readers with
+a new error condition and adding more complex locking.
+
+I've been considering how to approach this RT issue differently. One
+obvious approach would be to drop the rb_check_pages() validation but
+that is probably not desirable.
+
+Another option could be to make the check less thorough and walk only
+a part of the list which is bounded by some constant, typically one
+would want to check the part where some change was just made. In case of
+a smaller list, it should be still possible to traverse it completely.
+
+This is an idea that I'm currently looking at.
+
+> 
+> That said, I'm going to accept these patches as is (moving flags onto the
+> same line). But would like the above code for the next merge window as it
+> would then not affect RT.
+> 
+> I'll accept these patches because it does fix the bug now.
+
+Thanks,
+Petr
