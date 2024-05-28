@@ -1,107 +1,154 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DAF8825;
-	Tue, 28 May 2024 02:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C3912B71;
+	Tue, 28 May 2024 03:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716864938; cv=none; b=cp0nl8kCq/W8yT+q1jVX4ERPTREBKZLCFvA/JpGgvxQfLbe85yaRdDvj2bPtZSPoVbmJlwnrVvuCoE2PJh8ixe6AC6VEotSpFsesRWYJ+VHNhzMZ3NK1jnfOPRjNSClBTGh94dxrM59UAlTJcu1wKAkSXig5H6jfAMUX5MvkpoU=
+	t=1716866817; cv=none; b=W8/NTwRsM2Z3WY28AWRgtv9y6pT+ywwJpz4Waxry5IeT8MQ9D10H+vUXopdQBE2WI0BtMgj51mSWdofkFDO9rm3PU3zxtIDbA6MDMX2EDMz5qY6XVn6ZCgdgFDAk/x/BtLbe8TiPrZ6qiffmmwUHKPa7M71jvcPYoP8sPOhcVKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716864938; c=relaxed/simple;
-	bh=AS2BusS1O3jXMe5bD4wvQx6BF1Nr6GwmUVuZwhkYfyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cV6FGFuBpEFl5PPyXNYwC3LbPX2T2VBOWJq9GEwCNehKHPANcImwgOJqz+Ge0cy90j0jURFrmX9h7zkHyERyp9nftvEPfFW4CEgf0b1u6DeP59+UIvy2fM1nWd9JM64RVqvqfPtcRV9ZYwLkrXITikfvh0rVdIshmxl5id/G1HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JnNvM5Cv; arc=none smtp.client-ip=209.85.167.171
+	s=arc-20240116; t=1716866817; c=relaxed/simple;
+	bh=J/qKoDmaAa//Qut0ZZNW3VbpzctSkHcRK6oEwoKnVHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QN4/OWxThh/teBF+1d4BRfY1m+tMIDzxjbLt0deLu5/IsJhi+p0FtY1jaKyYfs/3tiyIlHWZZH8859K1jjYe0njtmtC1rx9oMfsVA073RHnXj5I1qcndYlgl1m6o+WRI0jRZEok9a4CM8f7jzxdpt9rZ6MsV291tToBLRwW+7Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcvooZCE; arc=none smtp.client-ip=209.85.167.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JnNvM5Cv"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3d11ed39dbbso230320b6e.2;
-        Mon, 27 May 2024 19:55:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcvooZCE"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3d1c077b9baso192039b6e.0;
+        Mon, 27 May 2024 20:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716864936; x=1717469736; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zt4MQknB4C9uVe1D84gDXA/m34wGlxcFhAUEtoR9Nos=;
-        b=JnNvM5Cv0FOdB1UcSDQQaCImxEdmiCcSTpYAYqEIxMbhZ7MOWXuDPTUwaNIW40fbEf
-         NmYjeu4RAiaGyCnw2uX5jlAKuHqGpbkts17JeU0XD/k5dQHt8cZJPx8jIGKwK05EeOqX
-         x2YOfkoN4dER7Vx+3905A8iYSK05ebmmsoKW/dpCpJ6x4iYjcjbDgvmNRDKSVfKL9zbA
-         fxW0307KHT1vCd7IDH3b+BcvLgdM+jRZYkByYfW2AV8aowifcnA0icOHPIpt81nG1Uzi
-         2s7dzQkL55SZfww8ZS9rhlEWrJXeaITQQtKR0AcZ4VhgjerRltRZNRdWrORS90R/G4jo
-         UwmQ==
+        d=gmail.com; s=20230601; t=1716866815; x=1717471615; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yKt9SLq0O6RxnCnYHWJF9LaFqa/mAFeBbqSyy/6tTjA=;
+        b=gcvooZCElap5ysZ91zBwlcpWRiMcPZN3h+mAW+6zKczKONZUaqBtIVOFpNI1nH3AdR
+         OkClrrHNES/+vjgBidgKU338kSOn0XpmBZkO9mOWnC+xuGDnMARtbm1902TVZunXkPQ8
+         ACgX0IA7UWBoZKl9+7HVNB5rRWO7zqJ6TShmW5oqgKBWsUbtHPcmnWKpyrCeGeZTia1n
+         dYfsg1Rg5NNsWTRogRq1jKt4FGfHxoBW/nChTGBy+mINQytRjQDiZxd2ASDZz9J/CTCl
+         T/uf/TgYIek4Kj8FwY4+X08k3U6e14CAS/QTfdT3oD94KGLkV3QlIXE1W8AuJePFpwYM
+         OzTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716864936; x=1717469736;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zt4MQknB4C9uVe1D84gDXA/m34wGlxcFhAUEtoR9Nos=;
-        b=sMK+FZD6cfR/lcU5tCj5TdJBu6H4YJ771wIxQp8kHGZDfuY6COGeQ0P9zrXwjyFMMu
-         kVlqN5wIN/O9oeimIKUxK3lLfqnuBzM+17L2A27bIGolLPIz6GRWCEqAk+9aVBnVJst4
-         WMRsXYDFIDqbf7BwigOlcCjZQPyIeKqu+XzHVUANsiea01IoEsiu+gH85GUPOmraSj4a
-         yLgYDimberptaOm5xa5gBgVmBw7sHuQLQYJKsbxfrXNxSIPLAMZ2qaHf0d0XZnweoMA3
-         g8OZ+Mbl5LR0C8tLqsjlQ9H5kpJIQUbwyKa2q2En1ABbCQJCWQLgnyQCzhKv8G5Q7sfO
-         ruVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2s3Gz/W3P2kEhsCGHGXghQbNkWUi8ibjddKtkkiz/59bPmUowBTmbVr8XOZx3GMrKTmbAAjkqJLlMYjNVXVwFpBAdrrPKk67EUCjz//sT75QcD/5WiXXjb6ziX4IcdO+GpJ/kkze9iWasrnYtBI1q
-X-Gm-Message-State: AOJu0Yw7L/R3wcu0QpKoBAqckcFr9jwyM1mLmDfaXoh08t4OBvhf3gSB
-	cdLD6XfVOn4FlGTyX88XTlHHoV4DSmVSKxjH/Is9KsZCsOZUkK65
-X-Google-Smtp-Source: AGHT+IGUBneRh5CQRkUfAwUKoFgIvU3H0iARFLXD9JIi0ji16SZjBjNxg6IyQ+QZtQ+lfypih0Gi6w==
-X-Received: by 2002:a05:6808:1993:b0:3ce:e166:6688 with SMTP id 5614622812f47-3d1a745c6d2mr13031981b6e.37.1716864936432;
-        Mon, 27 May 2024 19:55:36 -0700 (PDT)
-Received: from archlinux ([240d:1a:13a:f00:f3a2:fbda:2824:ae0e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbeadc5sm5517307b3a.119.2024.05.27.19.55.34
+        d=1e100.net; s=20230601; t=1716866815; x=1717471615;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yKt9SLq0O6RxnCnYHWJF9LaFqa/mAFeBbqSyy/6tTjA=;
+        b=hRjfLjxri9GKY6yebRib7LKx1zoELnOsSWryoY8R24zbhaHcMkoRo+foyaWmpjHUCV
+         WDTVenxLBw8rcvcMPbzSbT2AbhgZSwX/ZoNad8s6G5nddkCVT2df2ctjbN02bBCtsTTw
+         TVt8QUir6DsUiADvNSwf+o3RmX7FaeZVwXNXs+KuNhtEtBvUgFCNhyQRMN0caqLqBcSA
+         04AIRJPIcFjxxHWKqgNRQ/gvvenj/UxM4d/k8tcpQMP40tlQXLiYbSqdgOH4SKEBMllw
+         Yi7enMwi4Q+KYpGnLQK2s7h9gY66zwL7PGdeR3LgAaLp/lx/JADQzTXh5FtpX7Ao0LcX
+         B7mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVirVXWja3kIA11lxBacPd6FguvZoTJgTarw7o24rdoWzkOW3DdK3uUEzcDfAlcZQLskLWfu72MBx7l8/pGQwVe+lpj8vAcEOy/WJlPNIWIgfas
+X-Gm-Message-State: AOJu0YyCP2V84ypZTOpzgH8gwQq4WnsinZFgaKp2HOsmkSJKPIJeRwKi
+	5TO/DMIkE9dz4gAW7SCLzHtNvek5uJTML0RTnDKkvbyDPx4W+4InhVpU/1RR
+X-Google-Smtp-Source: AGHT+IHkRfW+TTxGZti83B+civMUqbRtTFG8mBf3ZzbQG1KC6AQ2DXnXRbMaQT/4XEdIAMjNpMMMng==
+X-Received: by 2002:a05:6808:634c:b0:3c7:48ba:2190 with SMTP id 5614622812f47-3d1a9191926mr9387554b6e.57.1716866814587;
+        Mon, 27 May 2024 20:26:54 -0700 (PDT)
+Received: from localhost.localdomain ([240d:1a:13a:f00:f3a2:fbda:2824:ae0e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3ef4asm5198832b3a.28.2024.05.27.20.26.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 19:55:36 -0700 (PDT)
-Date: Tue, 28 May 2024 11:55:33 +0900
+        Mon, 27 May 2024 20:26:54 -0700 (PDT)
 From: Tatsuya S <tatsuya.s2862@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Fix stack trace entry generated by
- ftrace_pid_func()
-Message-ID: <wic55fclchlbs64bvbdiqmwayob3psytdgxlb7vgkspyuh5ev3@umi7etrknhg2>
-References: <20240527100916.5737-2-tatsuya.s2862@gmail.com>
- <20240527194914.2d25c4ec@rorschach.local.home>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tatsuya S <tatsuya.s2862@gmail.com>
+Subject: [PATCH v3] ftrace: Hide one more entry in stack trace when ftrace_pid is enabled
+Date: Tue, 28 May 2024 12:24:14 +0900
+Message-ID: <20240528032604.6813-3-tatsuya.s2862@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Disposition: inline
-In-Reply-To: <20240527194914.2d25c4ec@rorschach.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 07:49:14PM GMT, Steven Rostedt wrote:
-> On Mon, 27 May 2024 18:44:56 +0900
-> Tatsuya S <tatsuya.s2862@gmail.com> wrote:
-> 
-> > On setting set_ftrace_pid, a extra entry generated by ftrace_pid_func()
-> > is shown on stack trace(CONFIG_UNWINDER_FRAME_POINTER=y).
-> > 
-> >         [004] .....    68.459382: <stack trace>
-> >  => 0xffffffffa00090af
-> >  => ksys_read
-> >  => __x64_sys_read
-> >  => x64_sys_call
-> >  => do_syscall_64
-> >  => entry_SYSCALL_64_after_hwframe  
-> > 
-> > To resolve this issue, increment skip count
-> > in function_stack_trace_call() if pids are set.
-> 
-> Just a note, this isn't a "fix" but simply an improvement in output.
-> I'm happy to take this (after testing and more reviewing), but it will
-> be for the next merge window, and with a different subject line.
-> 
->   "ftrace: Hide one more entry in stack trace when ftrace_pid is enabled"
-> 
-> Or something like that.
-> 
-> Thanks,
-> 
-> -- Steve
-I will send patch with new subject line.
+On setting set_ftrace_pid, a extra entry generated by ftrace_pid_func()
+is shown on stack trace(CONFIG_UNWINDER_FRAME_POINTER=y).
 
-Thank you.
+        [004] .....    68.459382: <stack trace>
+ => 0xffffffffa00090af
+ => ksys_read
+ => __x64_sys_read
+ => x64_sys_call
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
 
-Tatsuya
+To resolve this issue, increment skip count
+in function_stack_trace_call() if pids are set.
+
+Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+---
+Changes in v3:
+    - New subject line
+    - Link to v2: https://lore.kernel.org/linux-trace-kernel/20240527100916.5737-2-tatsuya.s2862@gmail.com
+Changes in v2:
+    - Fix build warnings reported by kernel test robot
+    - Link to v1: https://lore.kernel.org/linux-trace-kernel/20240526112658.46740-1-tatsuya.s2862@gmail.com/
+
+ include/linux/ftrace.h         | 2 ++
+ kernel/trace/ftrace.c          | 2 +-
+ kernel/trace/trace_functions.c | 7 ++++++-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 800995c425e0..0855dfe768eb 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -913,6 +913,8 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
+ /* totally disable ftrace - can not re-enable after this */
+ void ftrace_kill(void);
+ 
++bool ftrace_pids_enabled(struct ftrace_ops *ops);
++
+ static inline void tracer_disable(void)
+ {
+ #ifdef CONFIG_FUNCTION_TRACER
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 65208d3b5ed9..e8ddd56d1e55 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -99,7 +99,7 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
+ /* What to set function_trace_op to */
+ static struct ftrace_ops *set_function_trace_op;
+ 
+-static bool ftrace_pids_enabled(struct ftrace_ops *ops)
++bool ftrace_pids_enabled(struct ftrace_ops *ops)
+ {
+ 	struct trace_array *tr;
+ 
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 9f1bfbe105e8..455c9a880199 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -223,6 +223,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	long disabled;
+ 	int cpu;
+ 	unsigned int trace_ctx;
++	int skip = STACK_SKIP;
+ 
+ 	if (unlikely(!tr->function_enabled))
+ 		return;
+@@ -239,7 +240,11 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (likely(disabled == 1)) {
+ 		trace_ctx = tracing_gen_ctx_flags(flags);
+ 		trace_function(tr, ip, parent_ip, trace_ctx);
+-		__trace_stack(tr, trace_ctx, STACK_SKIP);
++#ifdef CONFIG_UNWINDER_FRAME_POINTER
++		if (ftrace_pids_enabled(op))
++			skip++;
++#endif
++		__trace_stack(tr, trace_ctx, skip);
+ 	}
+ 
+ 	atomic_dec(&data->disabled);
+-- 
+2.45.1
+
