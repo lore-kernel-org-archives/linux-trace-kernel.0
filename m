@@ -1,129 +1,163 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9388213C67D;
-	Tue, 28 May 2024 08:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C104517E8F0;
+	Tue, 28 May 2024 13:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716885738; cv=none; b=t/NfctrccjjshZZwAo47570nQ66FA4MRT9eI2esBKAvf9agBNNub+NGvAbyxxZ0+/TUcv883gSqnNx9FhPMPEeqqLzLWMCDHo2RZax5O369ocsiL2hH3m8vPn6fu6om3agPYj8GEou67AgeIu84b5jwZJhh/ytXF4jyXZkxSxbY=
+	t=1716901437; cv=none; b=pioXJEaxYJS54dbYhHsUQmi+lDz26rZLtxhRmkY6T7vZN7pbrFel+WqGqdKeb6JH9NzVoQ8ZLrc6phLtefisijxIGP5adkF9zrhKeF1iGLXuaNa+Ony91ebGGxnurmANqLCIpG2/BaqqQg+caYlhwGVSZpPrlG2d3EzUVRExrh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716885738; c=relaxed/simple;
-	bh=6tLri2pEFjfAp0kWhBiSqF77STHOqDPuVw+K04apsJc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=QQlZxBj5G0M7X0+AD70Md8yh003dF3n6Nzvljq6vHRACLIKFIZxKuDHWrySsb1/HK4UhJb0MQos9K5LfnK3MIpF7Iuddg5BPQfVeJK8J0YfIniOUf9u68gYgawx+eXFM8LVttwuBHKTGoIVMWvRtZYCVcy8/63WduE+3PjKVjTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VpQrp2M27zxQvK;
-	Tue, 28 May 2024 16:38:18 +0800 (CST)
-Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 41D6A180AA5;
-	Tue, 28 May 2024 16:42:06 +0800 (CST)
-Received: from [10.173.135.154] (10.173.135.154) by
- canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 28 May 2024 16:42:05 +0800
-Subject: Re: [linus:master] [mm] d99e3140a4:
- BUG:KCSAN:data-race_in_folio_remove_rmap_ptes/print_report
-To: David Hildenbrand <david@redhat.com>, kernel test robot
-	<oliver.sang@intel.com>, Matthew Wilcox <willy@infradead.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>,
-	Luis Chamberlain <mcgrof@kernel.org>, Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <202405281431.c46a3be9-lkp@intel.com>
- <8aba80ed-7b3e-4c8c-99e8-d8a2e0b112fc@redhat.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <4b0d996a-7499-6fce-ee19-3357f8d323cd@huawei.com>
-Date: Tue, 28 May 2024 16:42:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1716901437; c=relaxed/simple;
+	bh=jGiPawFhnCveytE5oBKxLPZgwqkR8QL97W/Ti//959g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KVVXIjR89aus3rXZwZV4FEwPZ/0eDb7GwSC4XRZbUr64KiZdoVeO3dnQpxzt48bO5NwhdExmlIaey8GILhdzQy2pDXErWDwq3n1VOnwsouZeA0QaX9inEzyd4U6ZG20BUI0n70iPdhOktqY5FwFmuR9ym52BVzUHU8CB66B4kLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-df7812c4526so836519276.1;
+        Tue, 28 May 2024 06:03:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716901433; x=1717506233;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0lSqiBjQcxkHXiQzsly+X7nKXmBLlE2qDF43dcrCRLw=;
+        b=EFXjF2Drg8lWxhoWdlMOg123HQN3gKx+WapnVjvCDjqDi027Msm78afPpJv/6EXyEj
+         kmdoVCBNYz830KHGbZwP94BvUO7uIirBtHtjxdt4s2N389jNmM2qLvO2wFz0uLyusEIC
+         J2qMnt/ylrP5SpAQTYLjgEQxU6PPRJPZc1UCOKizJZmVlwI213VuS5BwLx77Quyaxu1z
+         Rw15Tw7SvwC0GdnjEDMENORuDeg9y60I2TfUzu8R2t8WIAsvekalVc9bD8IaVdLSOdd6
+         4XFw5Zm8CP+fbAnlkrAJQj4cIeijvq082LQrtGxF1sFfMMGT5Uk/iQNKOcIyxHlRJ+QL
+         GWQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUdaP5+UhNuLVpK4yki73k6k3C582kXqxp2Hic2JPHfPEsbfiNjCsTqANFkpO2EU6dIc5RGdaaEbA1CGa4niBkpgySWAMkxn69EHtYLHSz68CCOOWBMAt7/ESGmao1ZZkbafDovBUAv4jwl1mJvsIHJ79Kmguekzk+cYHIdrwQanOaQZZyBzc17Ru39TY/dejTsZ4f7vIDY0r/CpMHRkxMmiWGnA==
+X-Gm-Message-State: AOJu0Yy+a2EHP2zinbaQCcEITYVSEOCEinadyc1GrhD+81HjYDBjyty7
+	nSYCYcD6VjxZXy07lO1WBt5D4s3fSxcp07J9GYmzN7ERE9IFBauq7boTwu4Z
+X-Google-Smtp-Source: AGHT+IE+RfB2qX5DkAkK1Ooo6FHIkG3gvZtT8LETr34SL5JN5btlVmV3qDUPqUzWpJAMjj+YV9erfQ==
+X-Received: by 2002:a25:b31d:0:b0:df7:955f:9b99 with SMTP id 3f1490d57ef6-df7955fa50amr6987968276.47.1716901432415;
+        Tue, 28 May 2024 06:03:52 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-df774677ff8sm1161309276.11.2024.05.28.06.03.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 06:03:51 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df771b45e13so783051276.2;
+        Tue, 28 May 2024 06:03:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWZvk/s02SV9WLuGPgBVEd9ZuJWbB6eXaVxsPiGIMs69B1jwAo8c21F6aq9Usp6IbLx6+ho7wi8XFteQBbJuohi1btI5PVVrwYY5+UyVwQB+M8mTU+P1sDj0u/YocfVRmDhd4KVKCtSfn1MRkQy24/RytRGdXPow/eQwgAHK+Nl2pG6bbGzOwRM+1DAVqkefZwRT8f8B9s0vKjbBM74IhAUsazf6g==
+X-Received: by 2002:a25:874d:0:b0:df7:c087:57a1 with SMTP id
+ 3f1490d57ef6-df7c0876661mr2996466276.51.1716901431685; Tue, 28 May 2024
+ 06:03:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8aba80ed-7b3e-4c8c-99e8-d8a2e0b112fc@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500002.china.huawei.com (7.192.104.244)
+References: <20240404143424.3279752-1-arnd@kernel.org>
+In-Reply-To: <20240404143424.3279752-1-arnd@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 28 May 2024 15:03:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWSaQrsx5CtyVQ4A74Qt1FxNitNAUJ+YwoNMpS7xxv2zA@mail.gmail.com>
+Message-ID: <CAMuHMdWSaQrsx5CtyVQ4A74Qt1FxNitNAUJ+YwoNMpS7xxv2zA@mail.gmail.com>
+Subject: Re: [PATCH] [v5] kallsyms: rework symbol lookup return codes
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Puranjay Mohan <puranjay12@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Zhen Lei <thunder.leizhen@huawei.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/5/28 15:43, David Hildenbrand wrote:
-> Am 28.05.24 um 09:11 schrieb kernel test robot:
->>
->>
->> Hello,
->>
->> kernel test robot noticed "BUG:KCSAN:data-race_in_folio_remove_rmap_ptes/print_report" on:
->>
->> commit: d99e3140a4d33e26066183ff727d8f02f56bec64 ("mm: turn folio_test_hugetlb into a PageType")
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>
->> [test failed on linus/master      c760b3725e52403dc1b28644fb09c47a83cacea6]
->> [test failed on linux-next/master 3689b0ef08b70e4e03b82ebd37730a03a672853a]
->>
->> in testcase: trinity
->> version: trinity-i386-abe9de86-1_20230429
->> with following parameters:
->>
->>     runtime: 300s
->>     group: group-04
->>     nr_groups: 5
->>
->>
->>
->> compiler: gcc-13
->> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
->>
->> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>
->>
->> we noticed this issue does not always happen. we also noticed there are
->> different random KCSAN issues for both this commit and its parent. but below
->> 4 only happen on this commit with not small rate and keep clean on parent.
->>
-> 
-> Likely that's just a page_type check racing against concurrent
-> mapcount changes.
-> 
-> In __folio_rmap_sanity_checks() we check
->     VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
-> 
-> To make sure we don't get hugetlb folios in the wrong rmap code path. That
-> can easily race with concurrent mapcount changes, just like any other
-> page_type checks that end up in folio_test_type/page_has_type e.g., from
-> PFN walkers.
-> 
-> Load tearing in these functions shouldn't really result in false positives
-> (what we care about), but READ_ONCE shouldn't hurt or make a difference.
-> 
-> 
-> From b03dc9bf27571442d886d8da624a4e4f737433f2 Mon Sep 17 00:00:00 2001
-> From: David Hildenbrand <david@redhat.com>
-> Date: Tue, 28 May 2024 09:37:20 +0200
-> Subject: [PATCH] mm: read page_type using READ_ONCE
-> 
-> KCSAN complains about possible data races: while we check for a
-> page_type -- for example for sanity checks -- we might concurrently
-> modify the mapcount that overlays page_type.
-> 
-> Let's use READ_ONCE to avoid laod tearing (shouldn't make a difference)
-> and to make KCSAN happy.
-> 
-> Note: nothing should really be broken besides wrong KCSAN complaints.
-> 
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202405281431.c46a3be9-lkp@intel.com
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Hi Arnd,
 
-LGTM. Thanks for fixing.
+On Thu, Apr 4, 2024 at 4:52=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wrot=
+e:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> Building with W=3D1 in some configurations produces a false positive
+> warning for kallsyms:
+>
+> kernel/kallsyms.c: In function '__sprint_symbol.isra':
+> kernel/kallsyms.c:503:17: error: 'strcpy' source argument is the same as =
+destination [-Werror=3Drestrict]
+>   503 |                 strcpy(buffer, name);
+>       |                 ^~~~~~~~~~~~~~~~~~~~
+>
+> This originally showed up while building with -O3, but later started
+> happening in other configurations as well, depending on inlining
+> decisions. The underlying issue is that the local 'name' variable is
+> always initialized to the be the same as 'buffer' in the called functions
+> that fill the buffer, which gcc notices while inlining, though it could
+> see that the address check always skips the copy.
+>
+> The calling conventions here are rather unusual, as all of the internal
+> lookup functions (bpf_address_lookup, ftrace_mod_address_lookup,
+> ftrace_func_address_lookup, module_address_lookup and
+> kallsyms_lookup_buildid) already use the provided buffer and either retur=
+n
+> the address of that buffer to indicate success, or NULL for failure,
+> but the callers are written to also expect an arbitrary other buffer
+> to be returned.
+>
+> Rework the calling conventions to return the length of the filled buffer
+> instead of its address, which is simpler and easier to follow as well
+> as avoiding the warning. Leave only the kallsyms_lookup() calling convent=
+ions
+> unchanged, since that is called from 16 different functions and
+> adapting this would be a much bigger change.
+>
+> Link: https://lore.kernel.org/all/20200107214042.855757-1-arnd@arndb.de/
+> Link: https://lore.kernel.org/lkml/20240326130647.7bfb1d92@gandalf.local.=
+home/
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v5: fix ftrace_mod_address_lookup return value,
+>     rebased on top of 2e114248e086 ("bpf: Replace deprecated strncpy with=
+ strscpy")
+> v4: fix string length
+> v3: use strscpy() instead of strlcpy()
+> v2: complete rewrite after the first patch was rejected (in 2020). This
+>     is now one of only two warnings that are in the way of enabling
+>     -Wextra/-Wrestrict by default.
 
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Thanks.
-.
+Aha, commit 06bb7fc0feee32d9 ("kbuild: turn on -Wrestrict by default")
+still made v6.10-rc1, without this one...
 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Thanks, this fixes
+
+    kernel/kallsyms.c: In function =E2=80=98__sprint_symbol.constprop=E2=80=
+=99:
+    kernel/kallsyms.c:492:17: warning: =E2=80=98strcpy=E2=80=99 source argu=
+ment is the
+same as destination [-Werror=3Drestrict]
+      492 |                 strcpy(buffer, name);
+          |                 ^~~~~~~~~~~~~~~~~~~~
+
+I am seeing with shmobile_defconfig and gcc version 11.4.0 (Ubuntu
+11.4.0-1ubuntu1~22.04).
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
