@@ -1,58 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F12B16F0EE;
-	Tue, 28 May 2024 13:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB0D16F267;
+	Tue, 28 May 2024 14:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902242; cv=none; b=lpj9koao2Cu6pJEJXv4Drr6qDRLZfv9YRuhEe8z6mwzv/CG6ApplEFATjf5BHYcE+9EEtvMNoNlUj3okQO/4gf9dYTUMnMgB+xV8ILj9gUcS+gLBDJRShiY+cEXujr/aCAHgKPah4jVEq2PhFGNVqe5sWwT/cA96W8STgywMCOw=
+	t=1716906892; cv=none; b=Bne3vTyD8Uj2pvMLS4Ujdimy6Xz356pT0n/MfZPxkxghsyRnUJf6VLZofQNqbxaLiE3oVB0bYt9KAsnt6zN2jy1QCl9H4Tzcw43ftr2HJD5fv54HKXzGiJKT60rXq3VCsylQ1T3vSYEa+UooKVLuKO+w85iK//7l+bKedVzWCuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902242; c=relaxed/simple;
-	bh=EK1dSveiHoYY2Wh6cOZ0/FTXClfWUzsByxRr6MHg0T4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JkLnf/SCMIJOX2bpD9Z3LL3vq3j3ssr9K5LKwGGri+5pYYYEc91lBoppF3hJvnLUDzgYPiq7OgwnyAOpm5BaSxjLT8SWvR9sVNMJUDzv3tkGaJKMcQ/ChVnHtNxnTrN5TBXYCIFECeosWJhWERg2AEzdaEule0+J3GFZknP1i0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ots3NteD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716906892; c=relaxed/simple;
+	bh=X0Q0HI1b9rH+fVZzvv90qJ//IfIjQBFp/0Kqy1oPHIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a6aoU6ZNVAG/EH65QrWXwITYvcDpcoOE2F32U7pAUYrEK3naXBEQyjPUef/mP8rG0gTAhnAo/cnqXmR7aLnRuRJVCHywGn1ammMmXeG2e9kk5mVJfW24D55YPSltkWZeEh7cv3DbNGXYrMizSNjGtZlDGKs5Q56CstAEQWIZfz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IObycwvI; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ots3NteD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A405C3277B;
-	Tue, 28 May 2024 13:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716902242;
-	bh=EK1dSveiHoYY2Wh6cOZ0/FTXClfWUzsByxRr6MHg0T4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ots3NteDA8ROpL1Bno7PvK4OHeAwEeGCHjKDfZLzWMg6Yb0WSjkpiL7bOci1xOaVG
-	 H6v3zIRfWssrFMvTk1dvPPEINAMeD9HOp7rJ9cwGMlx76CY2sQBanaJ1XhqFwEg6GF
-	 CrPmVWA8AOIT2zD7DCbBOYY1A4hVQUWes4BX3bz936xxQwzh5djcpgKqhxN5yRUMsV
-	 EnNRPQ51VNgJsw6z4yIjg7fksz6d8k2YpD/8wFGsaQS992VzkffbgcLPep162G579b
-	 IrYtjmnhjudlHqudGimN7KtFK6DKkouLGGc/vbgKN8dnfPEdMC3uwkAQ7sKiIM2S0N
-	 kfJCH3R05LquQ==
-Message-ID: <815a7990-6e24-437c-986b-3c1161c7332c@kernel.org>
-Date: Tue, 28 May 2024 15:17:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IObycwvI"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35507fc2600so824751f8f.0;
+        Tue, 28 May 2024 07:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716906888; x=1717511688; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SuPdbyOGZB4+HwsptiUUcZmfTuqcWmYMtI45ENp1tfE=;
+        b=IObycwvIdw+sa8X0Y3GELugl4NzQIC3Ma1fRw7isNtX01qMMf8+4nl47b8R/hPmiQA
+         ZO0HZnUBWKTpeeZ3mlbkeGQ2xf/rgruZ8SWzZeHEbcghxMKqGiJblAKrrsFd5tuiI786
+         CdJX1fFrZPVTIVnv4vTzscr16WrUQFRfQJGJkoDaMPWwObkgTBtV2hu6LndnXb6yVQsy
+         yelNaiFv1XoC/GWWvl6j/GQo8M2Rk0+vUDEU+KlLVpST2W68p5a39YnK7wmFSVPWmY8m
+         JjG/RX9vQ7P5sRN6D0vjHFBEbsvqEUqBJHfrL78WidJD7W1jq9HQ/3cc16tLx1K4GsYT
+         1xXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716906888; x=1717511688;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SuPdbyOGZB4+HwsptiUUcZmfTuqcWmYMtI45ENp1tfE=;
+        b=mp/mua+6dep2KCJHX3IVfSw/Tr3AVF9ZUHToH11tDJxvlz+3nquhDW/shP4Im04WP/
+         tm9riNxTRHZ5lVMWDrFi5krbcnMWi5Hth7ERJQ2nDKkC8x4te2dru2W69ydXlKDkQ6zb
+         OIswklZenlAPAQ/9/+jznMDbfi5A8YR0Q5//EyPlSIG8L5jX/w+48ovXCTi1GbtHkpui
+         fioMVWMP9bJnALnGmmhMwuiRhPyGslwnPmP1k1yRpjZmR03C62YCUlmDIoghId6/MRnQ
+         1ogztp7+8WmFEyoej0mAkMZ+wGkShvivo5thxA9/qSUIyBWRA48X+3RrtumJkCPMH/f0
+         1dgg==
+X-Forwarded-Encrypted: i=1; AJvYcCU91Ws+E3tgW4L8St+hyBjltKe/omX4Yi4rjbm4pYMc2wNBApl/DTpKNvj42DcpuEd5EefxzDVpj9jM0eRKsNBm/5Kw2g8BaO4NVkwPebRNIi1R3WpjwJMHiI5D1nGXBX1bKHMXzZPYyoHqDPaXHvOU
+X-Gm-Message-State: AOJu0YzQwxiQRfrMYteFFu9/inXao31XsdPvaGk+/aeNaGc6J+4gg3ei
+	NYHOKmbBzr6X1j9mMfd72+fPAYYvTsuKmpZpYkW8Snw9xaLLPy1D
+X-Google-Smtp-Source: AGHT+IEvUe4Wyv5qEfelwlQENg4haCJlvDmuMJE1WNUxZ38maU8EjKZVfla4YQZqm+uzgYwJW3s/iA==
+X-Received: by 2002:adf:e547:0:b0:354:fd11:2fa4 with SMTP id ffacd0b85a97d-35526c39f65mr9236960f8f.10.1716906887953;
+        Tue, 28 May 2024 07:34:47 -0700 (PDT)
+Received: from tal-dev.lan ([2a0d:6fc2:40d0:6100:3b6d:a8fe:60ea:3a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557dcf08basm12193233f8f.108.2024.05.28.07.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 07:34:47 -0700 (PDT)
+From: Tal Yacobi <talycb8@gmail.com>
+To: jk@codeconstruct.com.au,
+	matt@codeconstruct.com.au,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	talycb8@gmail.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] mctp i2c: Add rx trace
+Date: Tue, 28 May 2024 17:34:20 +0300
+Message-ID: <20240528143420.742611-1-talycb8@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rv: Update rv_en(dis)able_monitor doc to match kernel-doc
-To: Yang Li <yang.lee@linux.alibaba.com>, rostedt@goodmis.org,
- mhiramat@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240520054239.61784-1-yang.lee@linux.alibaba.com>
-Content-Language: en-US, pt-BR, it-IT
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20240520054239.61784-1-yang.lee@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/20/24 07:42, Yang Li wrote:
-> The patch updates the function documentation comment for
-> rv_en(dis)able_monitor to adhere to the kernel-doc specification.
-> 
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+mctp-i2c rx implementation doesn't call
+__i2c_transfer which calls the i2c reply trace function.
 
-Acked-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+Add an mctp_reply trace function that will be used instead.
 
-Thanks
--- Daniel
+Signed-off-by: Tal Yacobi <talycb8@gmail.com>
+---
+ drivers/net/mctp/mctp-i2c.c |  3 +++
+ include/trace/events/mctp.h | 16 ++++++++++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/drivers/net/mctp/mctp-i2c.c b/drivers/net/mctp/mctp-i2c.c
+index b37a9e4bade4..22754f4e4a8d 100644
+--- a/drivers/net/mctp/mctp-i2c.c
++++ b/drivers/net/mctp/mctp-i2c.c
+@@ -24,6 +24,7 @@
+ #include <linux/if_arp.h>
+ #include <net/mctp.h>
+ #include <net/mctpdevice.h>
++#include <trace/events/mctp.h>
+ 
+ /* byte_count is limited to u8 */
+ #define MCTP_I2C_MAXBLOCK 255
+@@ -312,6 +313,8 @@ static int mctp_i2c_recv(struct mctp_i2c_dev *midev)
+ 		return -ENOMEM;
+ 	}
+ 
++	trace_mctp_reply(midev->rx_buffer, recvlen);
++
+ 	skb->protocol = htons(ETH_P_MCTP);
+ 	skb_put_data(skb, midev->rx_buffer, recvlen);
+ 	skb_reset_mac_header(skb);
+diff --git a/include/trace/events/mctp.h b/include/trace/events/mctp.h
+index 165cf25f77a7..d115c353dff9 100644
+--- a/include/trace/events/mctp.h
++++ b/include/trace/events/mctp.h
+@@ -73,6 +73,22 @@ TRACE_EVENT(mctp_key_release,
+ 	)
+ );
+ 
++TRACE_EVENT(mctp_reply,
++	TP_PROTO(const u8 *rx_buffer, const size_t recvlen),
++	TP_ARGS(rx_buffer, recvlen),
++	TP_STRUCT__entry(
++		__field(__u16, len)
++		__dynamic_array(__u8, buf, recvlen)),
++	TP_fast_assign(
++		__entry->len = (__u16) recvlen;
++		memcpy(__get_dynamic_array(buf), rx_buffer, recvlen);
++	),
++	TP_printk("l=%u [%*phD]",
++		__entry->len,
++		__entry->len, __get_dynamic_array(buf)
++	)
++);
++
+ #endif
+ 
+ #include <trace/define_trace.h>
+-- 
+2.43.0
+
