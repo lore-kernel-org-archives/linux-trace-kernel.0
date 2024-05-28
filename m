@@ -1,200 +1,135 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36E1F4EB;
-	Tue, 28 May 2024 20:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D838722089;
+	Tue, 28 May 2024 23:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716928247; cv=none; b=T1lPXxzC058affAIykZxIAgCMT1FuHEp73EotraniMclhn/lWMh1Qn9si02SXr4wL0DxMaKGAo0ZjZL5T0bq1ca61pSAO7gznDhvF/cXUei5BB+u30PzMhJbLzhBGEUIDG9R0x89OtSzyFv7DOZyRMe5gBD6GO0c9gt0n3y9g0E=
+	t=1716939502; cv=none; b=OFmkIYUTxd2gfoNBmR4ukud9MKcKSSTQ7KU3I4w8eugrBgg3HK1YdbnkBvrdck8rtUV8d+mJqWUDeZpzN+gwkFxhZqOwloY0E4+UGY93Yj8RPqKcDyFLsDwK1bD1JXjS3MIEhaGaVtNusBLwWyzSPLONqPPX7MVCf3mERPfBYME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716928247; c=relaxed/simple;
-	bh=ZP1V1PX5xMJHcGzZ3BmWo98GFHHt8uSTJsjW7Y+4B0M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GzBY95y2yWTbM9rwOtPybFgWY1RX6vhWntb8Q/Da/zsgZNeIETJBXlF6swWpbiShZ4l6kToqsVeQJfasY0TunK/39GVaF+GNqN0novVMDPt/XSioC64QHhmRtxKSyHporb0ttC3aPtB9lgrk6qstYOHZEAXsOCJYs9P6MMBuAik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GSqc7N9W; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716939502; c=relaxed/simple;
+	bh=TpDi1rlY2iMnEAvGzJaWls/kzXNX5boHttjre4NjfoQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fb6LIXyhocGIFpNiKHIuDZo2W+PeiCehpfEs3Fep/gZe/3fXUfs9bfxS0wrZ+nblxmde18DH0AfWfWHNnFGEP/abhI60FP8yL0xhgoWDgOWj8rq59aQ7wDTxVavHBy8+TCMV5xRampq1SNvTLfFn80YICPVhrD/zt3u4SBHAiPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4ogkXsa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSqc7N9W"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59a609dd3fso38090966b.0;
-        Tue, 28 May 2024 13:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716928244; x=1717533044; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wxa9leDMBQqxY4da9JkyLPvpBxzGSOQBoL3fVq0BhEQ=;
-        b=GSqc7N9Wup95911Hp3+MjMNTf9AxwGC0X8MYs3L0FYFemg8RoZrwhLRb6iwK+0/oRn
-         iNZ1tZvtD0bBGKRR2CPVUljgCH44xq56VOC/3hdi7ep98O0RRb+XySIYNi3zmBePLPPY
-         9DWRqBJD2dRX3P8yXS84Zr9b5JJEJaUCjMm8SpbvQCYV3wYQoTqHCc6YUzj+/bFFB85R
-         myUicxnzW8NYv18NTMKCsYbfuEd2HAAhC6ZBhwTb7c56hm2jndivx1dJeMwJEpAtjeh+
-         H6ua2c0QR3klDn14TlDUBoJHv9Tv/s/C/FdrDOMztzOws0etb+gQEdd1Y2/98M2i1zIc
-         GxWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716928244; x=1717533044;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wxa9leDMBQqxY4da9JkyLPvpBxzGSOQBoL3fVq0BhEQ=;
-        b=vEvtQfYP9k5nLFm7oGcgKnQ2oiypmp0F9do41gdSXSFPxyE+RMs3l+j/5SInpu6qku
-         H6CXedcCbDHk+ysPbfg4UgDZ19YFRIWO33EZom6KaZNon+fFtw7Hk/HHXr9Oesrn3JBp
-         gWRQtz9DGjaSOQ6Li7YrcOsfQ5wMpTHwfUvgrHtEFaD09+3sVHkDCZtzHhuoJDGFWNBW
-         DWmmyB5xMg+F/da1ZBHcT6YETAQFJbjtmUxSfgHiilEZPFGSeK4W6MvDHwowR/hOC8Uw
-         h0dthdppSASR/7JQwAV3ZYpAWrbDd/xholZfSDHX4DXhY4cnCfaul8vb7ewcxZNyo0sv
-         h1qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVoGGx8oH4UeF5+N3u7HuJDeycSzmT64n7yJJ0ENOqyxB3HpLtrdVToM2eYil5EYNKMf+jO0tnlDXOGXnJb7jBqzM9
-X-Gm-Message-State: AOJu0YyFMOfT3gN84scK56Clv319WycoHU47Sirun9AY8F6Lym37CAZi
-	vItmr0LILjaUjO6p7wsdEwx3UxY5dEaHNlU2X7S+gtQ3/JzydcGE
-X-Google-Smtp-Source: AGHT+IFr5kgtYaMOxMY5JPPqiEfEKrj0VBMZhNOOBDwbkpnacPbU6enNJr768HawA8aG44+8QJueCg==
-X-Received: by 2002:a17:906:a294:b0:a5c:dad0:c464 with SMTP id a640c23a62f3a-a642d267093mr14114466b.6.1716928243936;
-        Tue, 28 May 2024 13:30:43 -0700 (PDT)
-Received: from krava ([83.240.60.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6283119b12sm569946766b.192.2024.05.28.13.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 13:30:43 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 28 May 2024 22:30:41 +0200
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	Matt Wu <wuqiang.matt@bytedance.com>
-Subject: Re: [PATCH 2/2] objpool: cache nr_possible_cpus() and avoid caching
- nr_cpu_ids
-Message-ID: <ZlY-8ZI_irTK9MAk@krava>
-References: <20240424215214.3956041-1-andrii@kernel.org>
- <20240424215214.3956041-3-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4ogkXsa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91FD6C3277B;
+	Tue, 28 May 2024 23:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716939502;
+	bh=TpDi1rlY2iMnEAvGzJaWls/kzXNX5boHttjre4NjfoQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s4ogkXsa+62W8C1AJPuL5IV3P0qrRMShwzi+74VDtJYPSP/tEt6/NMmilxjTxsTxl
+	 OPTBQZ09T7KswYJcGegYOi0YfHDARkYQNisGv3HKyDFX1RHGBwjO+bKyI3dNR9PrIT
+	 4bNq1NiapYAnZ7KMTo792I+1EUtUW7BazK6U+X/gw+Taul/1kkSjlmKR6DszsCZmmI
+	 WXOnX0Oze2PRjc8yY9wZnx/xsPC9VBhNr8oLWeV53N+1HlkaZnYsBpO4OxR74LjFA7
+	 y1pz9Jbgem4Jz+HTKDn+E8k3qhLvD461ls6VQ5sU3hXnuklXemPXEDZz3NddGOAFz5
+	 tOx0uRIBvM66g==
+Date: Wed, 29 May 2024 08:38:18 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>, Tom Zanussi
+ <zanussi@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
+Message-Id: <20240529083818.b7835de167191d4567405ce6@kernel.org>
+In-Reply-To: <20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
+References: <171671825710.39694.6859036369216249956.stgit@devnote2>
+	<20240527192907.49c9220f@rorschach.local.home>
+	<20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240424215214.3956041-3-andrii@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 24, 2024 at 02:52:14PM -0700, Andrii Nakryiko wrote:
-> Profiling shows that calling nr_possible_cpus() in objpool_pop() takes
-> a noticeable amount of CPU (when profiled on 80-core machine), as we
-> need to recalculate number of set bits in a CPU bit mask. This number
-> can't change, so there is no point in paying the price for recalculating
-> it. As such, cache this value in struct objpool_head and use it in
-> objpool_pop().
-> 
-> On the other hand, cached pool->nr_cpus isn't necessary, as it's not
-> used in hot path and is also a pretty trivial value to retrieve. So drop
-> pool->nr_cpus in favor of using nr_cpu_ids everywhere. This way the size
-> of struct objpool_head remains the same, which is a nice bonus.
-> 
-> Same BPF selftests benchmarks were used to evaluate the effect. Using
-> changes in previous patch (inlining of objpool_pop/objpool_push) as
-> baseline, here are the differences:
-> 
-> BASELINE
-> ========
-> kretprobe      :    9.937 ± 0.174M/s
-> kretprobe-multi:   10.440 ± 0.108M/s
-> 
-> AFTER
-> =====
-> kretprobe      :   10.106 ± 0.120M/s (+1.7%)
-> kretprobe-multi:   10.515 ± 0.180M/s (+0.7%)
+On Wed, 29 May 2024 01:46:40 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-nice, overall lgtm
+> On Mon, 27 May 2024 19:29:07 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Sun, 26 May 2024 19:10:57 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > 
+> > > Hi,
+> > > 
+> > > Here is a series of some fixes/improvements for the test modules and boot
+> > > time selftest of kprobe events. I found a WARNING message with some boot 
+> > > time selftest configuration, which came from the combination of embedded
+> > > kprobe generate API tests module and ftrace boot-time selftest. So the main
+> > > problem is that the test module should not be built-in. But I also think
+> > > this WARNING message is useless (because there are warning messages already)
+> > > and the cleanup code is redundant. This series fixes those issues.
+> > 
+> > Note, when I enable trace tests as builtin instead of modules, I just
+> > disable the bootup self tests when it detects this. This helps with
+> > doing tests via config options than having to add user space code that
+> > loads modules.
+> > 
+> > Could you do something similar?
+> 
+> OK, in that case, I would like to move the test cleanup code in
+> module_exit function into the end of module_init function. 
+> It looks there is no reason to split those into 2 parts.
 
-jirka
+Wait, I would like to hear Tom's opinion. I found following usage comments
+in the code.
+
+ * Following that are a few examples using the created events to test
+ * various ways of tracing a synthetic event.
+ *
+ * To test, select CONFIG_SYNTH_EVENT_GEN_TEST and build the module.
+ * Then:
+ *
+ * # insmod kernel/trace/synth_event_gen_test.ko
+ * # cat /sys/kernel/tracing/trace
+ *
+ * You should see several events in the trace buffer -
+ * "create_synth_test", "empty_synth_test", and several instances of
+ * "gen_synth_test".
+ *
+ * To remove the events, remove the module:
+ *
+ * # rmmod synth_event_gen_test
+
+Tom, is that intended behavior ? and are you expected to reuse these
+events outside of the module? e.g. load the test module and run some
+test script in user space which uses those events?
+
+As far as I can see, those tests are not intended to be embedded in the
+kernel because those are expected to be removed.
+
+Thank you,
 
 > 
-> Cc: Matt (Qiang) Wu <wuqiang.matt@bytedance.com>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  include/linux/objpool.h |  6 +++---
->  lib/objpool.c           | 12 ++++++------
->  2 files changed, 9 insertions(+), 9 deletions(-)
+> Thank you,
 > 
-> diff --git a/include/linux/objpool.h b/include/linux/objpool.h
-> index d8b1f7b91128..cb1758eaa2d3 100644
-> --- a/include/linux/objpool.h
-> +++ b/include/linux/objpool.h
-> @@ -73,7 +73,7 @@ typedef int (*objpool_fini_cb)(struct objpool_head *head, void *context);
->   * struct objpool_head - object pooling metadata
->   * @obj_size:   object size, aligned to sizeof(void *)
->   * @nr_objs:    total objs (to be pre-allocated with objpool)
-> - * @nr_cpus:    local copy of nr_cpu_ids
-> + * @nr_possible_cpus: cached value of num_possible_cpus()
->   * @capacity:   max objs can be managed by one objpool_slot
->   * @gfp:        gfp flags for kmalloc & vmalloc
->   * @ref:        refcount of objpool
-> @@ -85,7 +85,7 @@ typedef int (*objpool_fini_cb)(struct objpool_head *head, void *context);
->  struct objpool_head {
->  	int                     obj_size;
->  	int                     nr_objs;
-> -	int                     nr_cpus;
-> +	int                     nr_possible_cpus;
->  	int                     capacity;
->  	gfp_t                   gfp;
->  	refcount_t              ref;
-> @@ -176,7 +176,7 @@ static inline void *objpool_pop(struct objpool_head *pool)
->  	raw_local_irq_save(flags);
->  
->  	cpu = raw_smp_processor_id();
-> -	for (i = 0; i < num_possible_cpus(); i++) {
-> +	for (i = 0; i < pool->nr_possible_cpus; i++) {
->  		obj = __objpool_try_get_slot(pool, cpu);
->  		if (obj)
->  			break;
-> diff --git a/lib/objpool.c b/lib/objpool.c
-> index f696308fc026..234f9d0bd081 100644
-> --- a/lib/objpool.c
-> +++ b/lib/objpool.c
-> @@ -50,7 +50,7 @@ objpool_init_percpu_slots(struct objpool_head *pool, int nr_objs,
->  {
->  	int i, cpu_count = 0;
->  
-> -	for (i = 0; i < pool->nr_cpus; i++) {
-> +	for (i = 0; i < nr_cpu_ids; i++) {
->  
->  		struct objpool_slot *slot;
->  		int nodes, size, rc;
-> @@ -60,8 +60,8 @@ objpool_init_percpu_slots(struct objpool_head *pool, int nr_objs,
->  			continue;
->  
->  		/* compute how many objects to be allocated with this slot */
-> -		nodes = nr_objs / num_possible_cpus();
-> -		if (cpu_count < (nr_objs % num_possible_cpus()))
-> +		nodes = nr_objs / pool->nr_possible_cpus;
-> +		if (cpu_count < (nr_objs % pool->nr_possible_cpus))
->  			nodes++;
->  		cpu_count++;
->  
-> @@ -103,7 +103,7 @@ static void objpool_fini_percpu_slots(struct objpool_head *pool)
->  	if (!pool->cpu_slots)
->  		return;
->  
-> -	for (i = 0; i < pool->nr_cpus; i++)
-> +	for (i = 0; i < nr_cpu_ids; i++)
->  		kvfree(pool->cpu_slots[i]);
->  	kfree(pool->cpu_slots);
->  }
-> @@ -130,13 +130,13 @@ int objpool_init(struct objpool_head *pool, int nr_objs, int object_size,
->  
->  	/* initialize objpool pool */
->  	memset(pool, 0, sizeof(struct objpool_head));
-> -	pool->nr_cpus = nr_cpu_ids;
-> +	pool->nr_possible_cpus = num_possible_cpus();
->  	pool->obj_size = object_size;
->  	pool->capacity = capacity;
->  	pool->gfp = gfp & ~__GFP_ZERO;
->  	pool->context = context;
->  	pool->release = release;
-> -	slot_size = pool->nr_cpus * sizeof(struct objpool_slot);
-> +	slot_size = nr_cpu_ids * sizeof(struct objpool_slot);
->  	pool->cpu_slots = kzalloc(slot_size, pool->gfp);
->  	if (!pool->cpu_slots)
->  		return -ENOMEM;
+> > 
+> > -- Steve
+> > 
+> > 
+> > > 
+> > > Thank you,
+> > > 
+> > > ---
+> > > 
+> > > Masami Hiramatsu (Google) (3):
+> > >       tracing: Build event generation tests only as modules
+> > >       tracing/kprobe: Remove unneeded WARN_ON_ONCE() in selftests
+> > >       tracing/kprobe: Remove cleanup code unrelated to selftest
+> > > 
+> 
+> 
 > -- 
-> 2.43.0
-> 
-> 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
