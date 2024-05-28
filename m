@@ -1,154 +1,112 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C3912B71;
-	Tue, 28 May 2024 03:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA9117E8E4;
+	Tue, 28 May 2024 04:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716866817; cv=none; b=W8/NTwRsM2Z3WY28AWRgtv9y6pT+ywwJpz4Waxry5IeT8MQ9D10H+vUXopdQBE2WI0BtMgj51mSWdofkFDO9rm3PU3zxtIDbA6MDMX2EDMz5qY6XVn6ZCgdgFDAk/x/BtLbe8TiPrZ6qiffmmwUHKPa7M71jvcPYoP8sPOhcVKc=
+	t=1716869323; cv=none; b=Bk4/M0w7BG/mD2qhkjZ2aLJIRlV+mh5TEV1uysfmlJi+SRK3by2VCB3fm7K+GAU5UFQfMaZvCiwiqwJBFj9vdrf0/Aj0xYk5Bo02WS+LPrmQ+2D0n/ypt/d7F7aIoljpWXHjunqhOUUgotz6/musM+3JelQ5mfiQXbQzAslSQ3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716866817; c=relaxed/simple;
-	bh=J/qKoDmaAa//Qut0ZZNW3VbpzctSkHcRK6oEwoKnVHk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QN4/OWxThh/teBF+1d4BRfY1m+tMIDzxjbLt0deLu5/IsJhi+p0FtY1jaKyYfs/3tiyIlHWZZH8859K1jjYe0njtmtC1rx9oMfsVA073RHnXj5I1qcndYlgl1m6o+WRI0jRZEok9a4CM8f7jzxdpt9rZ6MsV291tToBLRwW+7Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcvooZCE; arc=none smtp.client-ip=209.85.167.170
+	s=arc-20240116; t=1716869323; c=relaxed/simple;
+	bh=1zQlRYQXYa6k6CCPf33lK1Df7v5lDyubYaYJYb2isv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=apZPQm/u3pi6Up5boDgtXHlcTCHRTzwf+nLBxLr8j/95fOV9LthpIZNy3yfvfqRIC4gdsVEqofRhGU35jrrrakt3Q6dJyJynoMaLrx4sqtexppch+/sVwoPap8k/OxeGdYoLugmqdeo8a5B7zqzQlrCenRjdxYm6jvKfAVG2GTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJbnZWW2; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcvooZCE"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3d1c077b9baso192039b6e.0;
-        Mon, 27 May 2024 20:26:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJbnZWW2"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e6f33150bcso3283641fa.2;
+        Mon, 27 May 2024 21:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716866815; x=1717471615; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yKt9SLq0O6RxnCnYHWJF9LaFqa/mAFeBbqSyy/6tTjA=;
-        b=gcvooZCElap5ysZ91zBwlcpWRiMcPZN3h+mAW+6zKczKONZUaqBtIVOFpNI1nH3AdR
-         OkClrrHNES/+vjgBidgKU338kSOn0XpmBZkO9mOWnC+xuGDnMARtbm1902TVZunXkPQ8
-         ACgX0IA7UWBoZKl9+7HVNB5rRWO7zqJ6TShmW5oqgKBWsUbtHPcmnWKpyrCeGeZTia1n
-         dYfsg1Rg5NNsWTRogRq1jKt4FGfHxoBW/nChTGBy+mINQytRjQDiZxd2ASDZz9J/CTCl
-         T/uf/TgYIek4Kj8FwY4+X08k3U6e14CAS/QTfdT3oD94KGLkV3QlIXE1W8AuJePFpwYM
-         OzTg==
+        d=gmail.com; s=20230601; t=1716869320; x=1717474120; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tMyc3pRbel0bshffcEecjOn4iWU9YutUkHwlm4EbsFw=;
+        b=IJbnZWW2kEgxbrN+HgJviZ+yC+ib49+2Qk4saCIgbVfCrXp/BbwSFfHRYV6FUc+UD4
+         XgevKtfKGohqpMRga9P0l8h6C32clnBMlr0MM4JLBlllAudgPLCbShkenIN7AGT7wVK5
+         rC5ZWDAuzU2u02FOv/35CH1s/768H2bto0ZObotjkKDkyXdoGj32sEU/AAQLSI35HeQi
+         OAc/JRUo8Tq/QO2pRbebSk2KPxN9GtFmbHTb7xZCdyKD5pw1iXp/p0UISqSG3VFTFIPz
+         lUBPsQow9rtYAW4RTcUcPxuSnNPakXazfIYehfb5bAbBLxPwtMvHloJP7Vlh1tk8Trle
+         WeUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716866815; x=1717471615;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yKt9SLq0O6RxnCnYHWJF9LaFqa/mAFeBbqSyy/6tTjA=;
-        b=hRjfLjxri9GKY6yebRib7LKx1zoELnOsSWryoY8R24zbhaHcMkoRo+foyaWmpjHUCV
-         WDTVenxLBw8rcvcMPbzSbT2AbhgZSwX/ZoNad8s6G5nddkCVT2df2ctjbN02bBCtsTTw
-         TVt8QUir6DsUiADvNSwf+o3RmX7FaeZVwXNXs+KuNhtEtBvUgFCNhyQRMN0caqLqBcSA
-         04AIRJPIcFjxxHWKqgNRQ/gvvenj/UxM4d/k8tcpQMP40tlQXLiYbSqdgOH4SKEBMllw
-         Yi7enMwi4Q+KYpGnLQK2s7h9gY66zwL7PGdeR3LgAaLp/lx/JADQzTXh5FtpX7Ao0LcX
-         B7mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVirVXWja3kIA11lxBacPd6FguvZoTJgTarw7o24rdoWzkOW3DdK3uUEzcDfAlcZQLskLWfu72MBx7l8/pGQwVe+lpj8vAcEOy/WJlPNIWIgfas
-X-Gm-Message-State: AOJu0YyCP2V84ypZTOpzgH8gwQq4WnsinZFgaKp2HOsmkSJKPIJeRwKi
-	5TO/DMIkE9dz4gAW7SCLzHtNvek5uJTML0RTnDKkvbyDPx4W+4InhVpU/1RR
-X-Google-Smtp-Source: AGHT+IHkRfW+TTxGZti83B+civMUqbRtTFG8mBf3ZzbQG1KC6AQ2DXnXRbMaQT/4XEdIAMjNpMMMng==
-X-Received: by 2002:a05:6808:634c:b0:3c7:48ba:2190 with SMTP id 5614622812f47-3d1a9191926mr9387554b6e.57.1716866814587;
-        Mon, 27 May 2024 20:26:54 -0700 (PDT)
-Received: from localhost.localdomain ([240d:1a:13a:f00:f3a2:fbda:2824:ae0e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fbd3ef4asm5198832b3a.28.2024.05.27.20.26.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 20:26:54 -0700 (PDT)
-From: Tatsuya S <tatsuya.s2862@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tatsuya S <tatsuya.s2862@gmail.com>
-Subject: [PATCH v3] ftrace: Hide one more entry in stack trace when ftrace_pid is enabled
-Date: Tue, 28 May 2024 12:24:14 +0900
-Message-ID: <20240528032604.6813-3-tatsuya.s2862@gmail.com>
-X-Mailer: git-send-email 2.45.1
+        d=1e100.net; s=20230601; t=1716869320; x=1717474120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tMyc3pRbel0bshffcEecjOn4iWU9YutUkHwlm4EbsFw=;
+        b=BVmrgquyBKng5/hYiOKIxLvjpMHJOPxCAO2ahe30+1T455yydp7cnvYQRAO6OcjASs
+         4DeHD2WE/phFbB2SBph/d+61JFDx0fiq87oC3tQqBnP8UlQzkCs989uZ9RJByQBzFNh6
+         jTdrpETTEKeFcIROq9pLGnSdgUiiHM/7wo2qpNMpUNpMEREtrJ2DFnMxp/IVbNf419M8
+         HuhPb3kDxFboUaydSl13r+jGm5XHNC4ZwVRuX2ugiYW5N6DmRwQsE43+8cdZdAXZFl/J
+         dcdr0touxgyMCPDYX8rm5t6qfo1/GM+CJ6QR5kXEKvUpkiSEUBqXVC/yUNmAJrfFHv1K
+         20DA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+IIpAVW2ijt7PZSbNPvgligBmMH57Va4e8ut0kK3om3+1W76yQGAt/mC54jBa9fn7uOSPiuJzBgknZPbrD5Z//4cHBGR5MJ3FapR5iyU0iG2+QRf7isnpZQKulW98umOneui16scrTrC6UE8UaPflN2VrRoc9F0Ow9vL598Xqi3TrOCcL+GLF
+X-Gm-Message-State: AOJu0YydFYaEqahgVIY32VXFiMATInnFiYm6JheW0dawwvK/7lyIInd5
+	wBoO+WPaQgBXzjXmRkttyVHbFs72/tuQF9Cxdh37UCiQ03gfbYrkxLOgNU1hnOO+/xEGXSQCq5d
+	0GzH8zeNeb3al9BoBDJrZs3LptKk=
+X-Google-Smtp-Source: AGHT+IGJiavREr3NWLKOzpRZdqUHa7q77BL+5YFsloQz18KBti8Zw39zdX1RWbJfMYba295OwGrClZrngVMi829iwIM=
+X-Received: by 2002:a2e:800f:0:b0:2e9:6306:8a51 with SMTP id
+ 38308e7fff4ca-2e963069082mr58708411fa.52.1716869319348; Mon, 27 May 2024
+ 21:08:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+ <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info> <20240524132008.6b6f69f6@gandalf.local.home>
+ <CAE4VaRF80OhnaiqeP9STfLa5pORB31YSorgoJ92fQ8tsRovxqQ@mail.gmail.com>
+ <CAE4VaRGaNJSdo474joOtKEkxkfmyJ-zsrr8asb7ojP2JexFt-A@mail.gmail.com>
+ <2024052710-marsupial-debug-febd@gregkh> <20240527174424.75625921@rorschach.local.home>
+In-Reply-To: <20240527174424.75625921@rorschach.local.home>
+From: =?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>
+Date: Tue, 28 May 2024 07:08:03 +0300
+Message-ID: <CAE4VaRGzvMU7ZuNwHq1SE0t+Z02Aa5QO44tBH8YgvSYX5ByRwg@mail.gmail.com>
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During Shutdown/Reboot
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, 
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On setting set_ftrace_pid, a extra entry generated by ftrace_pid_func()
-is shown on stack trace(CONFIG_UNWINDER_FRAME_POINTER=y).
+I tried 6.10-rc1 and it still ends up to panic
 
-        [004] .....    68.459382: <stack trace>
- => 0xffffffffa00090af
- => ksys_read
- => __x64_sys_read
- => x64_sys_call
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
+--Ilkka
 
-To resolve this issue, increment skip count
-in function_stack_trace_call() if pids are set.
 
-Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
----
-Changes in v3:
-    - New subject line
-    - Link to v2: https://lore.kernel.org/linux-trace-kernel/20240527100916.5737-2-tatsuya.s2862@gmail.com
-Changes in v2:
-    - Fix build warnings reported by kernel test robot
-    - Link to v1: https://lore.kernel.org/linux-trace-kernel/20240526112658.46740-1-tatsuya.s2862@gmail.com/
-
- include/linux/ftrace.h         | 2 ++
- kernel/trace/ftrace.c          | 2 +-
- kernel/trace/trace_functions.c | 7 ++++++-
- 3 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 800995c425e0..0855dfe768eb 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -913,6 +913,8 @@ static inline bool is_ftrace_trampoline(unsigned long addr)
- /* totally disable ftrace - can not re-enable after this */
- void ftrace_kill(void);
- 
-+bool ftrace_pids_enabled(struct ftrace_ops *ops);
-+
- static inline void tracer_disable(void)
- {
- #ifdef CONFIG_FUNCTION_TRACER
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 65208d3b5ed9..e8ddd56d1e55 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -99,7 +99,7 @@ struct ftrace_ops *function_trace_op __read_mostly = &ftrace_list_end;
- /* What to set function_trace_op to */
- static struct ftrace_ops *set_function_trace_op;
- 
--static bool ftrace_pids_enabled(struct ftrace_ops *ops)
-+bool ftrace_pids_enabled(struct ftrace_ops *ops)
- {
- 	struct trace_array *tr;
- 
-diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-index 9f1bfbe105e8..455c9a880199 100644
---- a/kernel/trace/trace_functions.c
-+++ b/kernel/trace/trace_functions.c
-@@ -223,6 +223,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 	long disabled;
- 	int cpu;
- 	unsigned int trace_ctx;
-+	int skip = STACK_SKIP;
- 
- 	if (unlikely(!tr->function_enabled))
- 		return;
-@@ -239,7 +240,11 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 	if (likely(disabled == 1)) {
- 		trace_ctx = tracing_gen_ctx_flags(flags);
- 		trace_function(tr, ip, parent_ip, trace_ctx);
--		__trace_stack(tr, trace_ctx, STACK_SKIP);
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
-+		if (ftrace_pids_enabled(op))
-+			skip++;
-+#endif
-+		__trace_stack(tr, trace_ctx, skip);
- 	}
- 
- 	atomic_dec(&data->disabled);
--- 
-2.45.1
-
+On Tue, May 28, 2024 at 12:44=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Mon, 27 May 2024 20:14:42 +0200
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> > On Mon, May 27, 2024 at 07:40:21PM +0300, Ilkka Naulap=C3=A4=C3=A4 wrot=
+e:
+> > > Hi Steven,
+> > >
+> > > I took some time and bisected the 6.8.9 - 6.8.10 and git gave the
+> > > panic inducing commit:
+> > >
+> > > 414fb08628143 (tracefs: Reset permissions on remount if permissions a=
+re options)
+> > >
+> > > I reverted that commit to 6.9.2 and now it only serves the trace but
+> > > the panic is gone. But I can live with it.
+> >
+> > Steven, should we revert that?
+> >
+> > Or is there some other change that we should take to resolve this?
+> >
+>
+> Before we revert it (as it may be a bug in mainline), Ilkka, can you
+> test v6.10-rc1?  If it exists there, it will let me know whether or not
+> I missed something.
+>
+> Thanks,
+>
+> -- Steve
