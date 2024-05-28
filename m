@@ -1,136 +1,99 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1AD4D5AA;
-	Tue, 28 May 2024 07:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9388213C67D;
+	Tue, 28 May 2024 08:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716882484; cv=none; b=eHFbQn77Bxn8nXkl8zAz4a3oNP12lvoTqGIr9YrDReJ1Iz+NdSr+XF2wyvWEOgUl+pki4N0z7MJ45UUW3attQnBUVW5qYLBGm4kiISo5R73huDM1VrhucWobYFci+tGgQRmGSih/DCBNOgY2KU/dsFc5jYD0+33ZVkKGJitbsHM=
+	t=1716885738; cv=none; b=t/NfctrccjjshZZwAo47570nQ66FA4MRT9eI2esBKAvf9agBNNub+NGvAbyxxZ0+/TUcv883gSqnNx9FhPMPEeqqLzLWMCDHo2RZax5O369ocsiL2hH3m8vPn6fu6om3agPYj8GEou67AgeIu84b5jwZJhh/ytXF4jyXZkxSxbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716882484; c=relaxed/simple;
-	bh=MEXmGizH5ZPIfk9tFrmN/a5NTYRN1I0vHNXxtvfSSvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZMNc84/DQTO3nIGSwuk2EK/y/DXpeSTER/tfNGlPQA1RfXFIMwxRALgGHjoIKQsVyWj4zLCa36NRnz9Z68vyHaShcpBctdpsIt57OYEaHOES2AUtk1ndhJxVaGe8cUu1U61oie+z0+VqxjjUVSNANQBoS2ALh36BNXS679a45z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wMfBjZJ7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EH6ODv5T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wMfBjZJ7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EH6ODv5T; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wMfBjZJ7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EH6ODv5T";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wMfBjZJ7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EH6ODv5T"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 724F7201A5;
-	Tue, 28 May 2024 07:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716882477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tkpiOXLGdR9OPIRy+yzo5vTOBWDcbMdJNyfMfwqVvLA=;
-	b=wMfBjZJ76T1L4fBEk/Xuw2HtJYZsAR5tKO0jgzvF3OiH8srVRktv/uQWOa2dWdTZuH5mXb
-	fnEj9rskHg+2/dsTb0KBYPmfzZ5AbHCXaWXQtpUafdZ+8K5HDpOCrrBkxU3eN2lHGG2FJZ
-	S6o4gG9m6N+yKX33Jz5CmZ/2/1PMZZo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716882477;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tkpiOXLGdR9OPIRy+yzo5vTOBWDcbMdJNyfMfwqVvLA=;
-	b=EH6ODv5T3YkeG6oxT6qxs3sXGbDMHk6+WvvQwmcMX8+KSeYlzcq3QEPTNpwUt7ZIBbs0+F
-	YNtigKl372CNejCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1716882477; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tkpiOXLGdR9OPIRy+yzo5vTOBWDcbMdJNyfMfwqVvLA=;
-	b=wMfBjZJ76T1L4fBEk/Xuw2HtJYZsAR5tKO0jgzvF3OiH8srVRktv/uQWOa2dWdTZuH5mXb
-	fnEj9rskHg+2/dsTb0KBYPmfzZ5AbHCXaWXQtpUafdZ+8K5HDpOCrrBkxU3eN2lHGG2FJZ
-	S6o4gG9m6N+yKX33Jz5CmZ/2/1PMZZo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1716882477;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tkpiOXLGdR9OPIRy+yzo5vTOBWDcbMdJNyfMfwqVvLA=;
-	b=EH6ODv5T3YkeG6oxT6qxs3sXGbDMHk6+WvvQwmcMX8+KSeYlzcq3QEPTNpwUt7ZIBbs0+F
-	YNtigKl372CNejCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BFB1513A5D;
-	Tue, 28 May 2024 07:47:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fVzvKyyMVWZgQQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 28 May 2024 07:47:56 +0000
-Date: Tue, 28 May 2024 09:47:47 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: kernel test robot <oliver.sang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
+	s=arc-20240116; t=1716885738; c=relaxed/simple;
+	bh=6tLri2pEFjfAp0kWhBiSqF77STHOqDPuVw+K04apsJc=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=QQlZxBj5G0M7X0+AD70Md8yh003dF3n6Nzvljq6vHRACLIKFIZxKuDHWrySsb1/HK4UhJb0MQos9K5LfnK3MIpF7Iuddg5BPQfVeJK8J0YfIniOUf9u68gYgawx+eXFM8LVttwuBHKTGoIVMWvRtZYCVcy8/63WduE+3PjKVjTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VpQrp2M27zxQvK;
+	Tue, 28 May 2024 16:38:18 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 41D6A180AA5;
+	Tue, 28 May 2024 16:42:06 +0800 (CST)
+Received: from [10.173.135.154] (10.173.135.154) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 28 May 2024 16:42:05 +0800
 Subject: Re: [linus:master] [mm] d99e3140a4:
  BUG:KCSAN:data-race_in_folio_remove_rmap_ptes/print_report
-Message-ID: <ZlWMIwDcEI5edfnJ@localhost.localdomain>
+To: David Hildenbrand <david@redhat.com>, kernel test robot
+	<oliver.sang@intel.com>, Matthew Wilcox <willy@infradead.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>,
+	Luis Chamberlain <mcgrof@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, <linux-mm@kvack.org>,
+	<linux-trace-kernel@vger.kernel.org>
 References: <202405281431.c46a3be9-lkp@intel.com>
  <8aba80ed-7b3e-4c8c-99e8-d8a2e0b112fc@redhat.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <4b0d996a-7499-6fce-ee19-3357f8d323cd@huawei.com>
+Date: Tue, 28 May 2024 16:42:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <8aba80ed-7b3e-4c8c-99e8-d8a2e0b112fc@redhat.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-On Tue, May 28, 2024 at 09:43:39AM +0200, David Hildenbrand wrote:
+On 2024/5/28 15:43, David Hildenbrand wrote:
+> Am 28.05.24 um 09:11 schrieb kernel test robot:
+>>
+>>
+>> Hello,
+>>
+>> kernel test robot noticed "BUG:KCSAN:data-race_in_folio_remove_rmap_ptes/print_report" on:
+>>
+>> commit: d99e3140a4d33e26066183ff727d8f02f56bec64 ("mm: turn folio_test_hugetlb into a PageType")
+>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>
+>> [test failed on linus/master      c760b3725e52403dc1b28644fb09c47a83cacea6]
+>> [test failed on linux-next/master 3689b0ef08b70e4e03b82ebd37730a03a672853a]
+>>
+>> in testcase: trinity
+>> version: trinity-i386-abe9de86-1_20230429
+>> with following parameters:
+>>
+>>     runtime: 300s
+>>     group: group-04
+>>     nr_groups: 5
+>>
+>>
+>>
+>> compiler: gcc-13
+>> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+>>
+>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>
+>>
+>> we noticed this issue does not always happen. we also noticed there are
+>> different random KCSAN issues for both this commit and its parent. but below
+>> 4 only happen on this commit with not small rate and keep clean on parent.
+>>
+> 
 > Likely that's just a page_type check racing against concurrent
 > mapcount changes.
 > 
 > In __folio_rmap_sanity_checks() we check
-> 	VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
-
-Yeah, and that "collides" with
-
-last = atomic_add_negative(-1, &page->_mapcount)
-
-from __folio_remove_rmap.
-
+>     VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
+> 
 > To make sure we don't get hugetlb folios in the wrong rmap code path. That
 > can easily race with concurrent mapcount changes, just like any other
 > page_type checks that end up in folio_test_type/page_has_type e.g., from
@@ -158,10 +121,9 @@ from __folio_remove_rmap.
 > Closes: https://lore.kernel.org/oe-lkp/202405281431.c46a3be9-lkp@intel.com
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+LGTM. Thanks for fixing.
 
-Thanks!
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+Thanks.
+.
 
--- 
-Oscar Salvador
-SUSE Labs
