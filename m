@@ -1,233 +1,133 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC01D2A8CD
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 May 2024 17:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A390179954;
+	Tue, 28 May 2024 18:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716917816; cv=none; b=RSqe3k1BtNM2K7AkYu7l4Gc2+kHQrSDxSTgrF/QYW6NMozqJ2/OE3t9MDj27cbebvx2UM0kYskE1Ul/L/66wWMWAYPmSzwT9U2hdV7X+ymrYP8j1qJpPA6NIfR9sAVAUNDY/aGgT91cgl+21FjM7ankwTPE7USsz9LeyZj+xcjk=
+	t=1716922066; cv=none; b=hXjT8cuvHc+m4rB1yod6GaZFBpNlCWERDaG3IZCCJyXeVcIDgA/LY4Q14Ddo2JL2BpFLeWJ/E204qSmJd59cUQp88cQg2AuOIyIjd0oy4B/SxvCwsaknG6E7aSiZIEpyt7eE9w34jUxihQgG1kTVjdXYg+y5fbZ4JjZComXmPHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716917816; c=relaxed/simple;
-	bh=5jqpjWDjCYeF0iZMmfNh1F02B5hbFSGCHFwvks87kGw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jcYQxVMeEG4QJxAIABkVwo7pclp+KhlRiX1A23iiu4p6O5tWqBK0F7sr+u1I0+wm03aidNm68xzmZ7fOPSjV2e5mHYsxrOd7Nz3UjevPFFTurgw+6rJ4SknORLYqAM+IkYL82HY32Hjcdyai0oB7xK6PbUenlP8TJNvwytJzmkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F4p6t/tW; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F4p6t/tW"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a630ff4ac84so128608066b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 May 2024 10:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1716917813; x=1717522613; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h1nTYMe9Sz2kd146CNINlSxaoddIUqGPBCQrAMYzjnQ=;
-        b=F4p6t/tWtjSOVYylJbwcLVV6UTyM4sNrgf29x/I2qiaXmlzGuSs/libx4uluVN+nqU
-         Q1wu6ZyJ+t/J5G4TTactfmH72bg+9gQMI6XUV/JPUvIcgZPTSklK6xODqYbVvKUruZsd
-         qGcZJqKk9SLen5tkhgx7pjnVQN79mjH/J3XY5cJYmSYfwEdHgeAgZgJLCWfItyd1aUlo
-         m8SST44+ucTlAuYiprzs7++Q4aRuTHjVObQuxYwumcTSK42endimDnDiRHgNYuUyIKni
-         X0y60pnKnN3oBLyeEGWlqJk5sfZxG3gqEzLBOt9HDhyBsgJwOczZkJZdgWzCHvs7ja5e
-         tsGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716917813; x=1717522613;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h1nTYMe9Sz2kd146CNINlSxaoddIUqGPBCQrAMYzjnQ=;
-        b=Lk/HokmpxHzedNV9k6hQSEXW5JmdwU60zR8utsJqA8EhgfnS+LzBhXcWRlK5znrvvb
-         VyqTVzCHKkpwwt4ZnR/pKetLZ4+Sf7Xd7Phj1GSJQTEtRuKzAxdsaDRDw2fBkTK3uxNM
-         /Fkq1mgEpGW/8AekjddXKginpJ1MsfYCK1zZzdkWm7HhdL6Uup1n9k1oUZOuymIHTcEI
-         q6jcXYSi50K7VzA1Byb0XNlZb3+ZjnaB/wUabMf3N9ODALySwqo93dVdo/KEnlSdSwrr
-         ByycEEBx4HFEpZPZjNgF7dhKey0GGtAoAt0vgBf/fme9eGS9ffCdNg9CNczCboTen1g+
-         f5AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+IoyeKa9F/r7Bu4psZh5Rqfo7BT+BywaFcV8tf4zk4vcHWarIsyZUuLR/l/o7KC++7oKe56/MQr5XDb23lf415ufwne9yNDYzJvUpzojIzKzG
-X-Gm-Message-State: AOJu0YzmDDKOnXE4b5BdC8Rv4qQxse5Yggh8EeGX1FPwF+nLGHPYf4BH
-	lr0hWI8bmfxvP7a6aNiSsH+gbqmayvUcyyAEa0ISvzKslJE8VjrfLAED4OQfqsuLBg9QsdB1v0m
-	Fwt5gNscdgS+gruiJI1o+dv69pKfqZ4/1fcyX
-X-Google-Smtp-Source: AGHT+IFf32eXkuapluEvlBEyoJKJxifsmiVKQ0AvF4ow+8ygeGf1col+Xo1abUwIXzRnUJhSc+Yk6CUkl0RPaD3UYic=
-X-Received: by 2002:a17:906:3c1a:b0:a63:42b6:1976 with SMTP id
- a640c23a62f3a-a6342b619f5mr156681366b.68.1716917812713; Tue, 28 May 2024
- 10:36:52 -0700 (PDT)
+	s=arc-20240116; t=1716922066; c=relaxed/simple;
+	bh=hwmeUbItsm+bV91/Ve29xLJ4dPvWDPNLCD48sqQOZYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SZMb1b37WGl3Iyi677JGjgRunJL0iTxwtz+pR0d4Ktr+y46q5jKdd6obinyJpxBXFnuJx98VAEuFcvNZw/e69hW/qAlr/oVhQbxnzoQWTdUwdUXDCENwLH6XrChXm3HfLgMGyiIdSCXYW53gTmqmcFzAPETNmetaF5qtXsPxDuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D691C32781;
+	Tue, 28 May 2024 18:47:45 +0000 (UTC)
+Date: Tue, 28 May 2024 14:47:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+Message-ID: <20240528144743.149e351b@rorschach.local.home>
+In-Reply-To: <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+ <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+ <20240527183139.42b6123c@rorschach.local.home>
+ <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510232128.1105145-1-almasrymina@google.com>
- <20240510232128.1105145-12-almasrymina@google.com> <9097e78d-0e7d-43bd-bafd-e53a4872a4d1@davidwei.uk>
-In-Reply-To: <9097e78d-0e7d-43bd-bafd-e53a4872a4d1@davidwei.uk>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 28 May 2024 10:36:40 -0700
-Message-ID: <CAHS8izOe-uYjm0ttQgHOFpvp_Tj4_oRHV6d1Y1sWJAZJdCdCBA@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 11/14] tcp: RX path for devmem TCP
-To: David Wei <dw@davidwei.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 22, 2024 at 11:02=E2=80=AFPM David Wei <dw@davidwei.uk> wrote:
->
-> On 2024-05-10 16:21, Mina Almasry wrote:
-> > +/* On error, returns the -errno. On success, returns number of bytes s=
-ent to the
-> > + * user. May not consume all of @remaining_len.
-> > + */
-> > +static int tcp_recvmsg_dmabuf(struct sock *sk, const struct sk_buff *s=
-kb,
-> > +                           unsigned int offset, struct msghdr *msg,
-> > +                           int remaining_len)
-> > +{
-> > +     struct dmabuf_cmsg dmabuf_cmsg =3D { 0 };
-> > +     struct tcp_xa_pool tcp_xa_pool;
-> > +     unsigned int start;
-> > +     int i, copy, n;
-> > +     int sent =3D 0;
-> > +     int err =3D 0;
-> > +
-> > +     tcp_xa_pool.max =3D 0;
-> > +     tcp_xa_pool.idx =3D 0;
-> > +     do {
-> > +             start =3D skb_headlen(skb);
-> > +
-> > +             if (skb_frags_readable(skb)) {
-> > +                     err =3D -ENODEV;
-> > +                     goto out;
-> > +             }
-> > +
-> > +             /* Copy header. */
-> > +             copy =3D start - offset;
-> > +             if (copy > 0) {
-> > +                     copy =3D min(copy, remaining_len);
-> > +
-> > +                     n =3D copy_to_iter(skb->data + offset, copy,
-> > +                                      &msg->msg_iter);
-> > +                     if (n !=3D copy) {
-> > +                             err =3D -EFAULT;
-> > +                             goto out;
-> > +                     }
-> > +
-> > +                     offset +=3D copy;
-> > +                     remaining_len -=3D copy;
-> > +
-> > +                     /* First a dmabuf_cmsg for # bytes copied to user
-> > +                      * buffer.
-> > +                      */
-> > +                     memset(&dmabuf_cmsg, 0, sizeof(dmabuf_cmsg));
-> > +                     dmabuf_cmsg.frag_size =3D copy;
-> > +                     err =3D put_cmsg(msg, SOL_SOCKET, SO_DEVMEM_LINEA=
-R,
-> > +                                    sizeof(dmabuf_cmsg), &dmabuf_cmsg)=
-;
-> > +                     if (err || msg->msg_flags & MSG_CTRUNC) {
-> > +                             msg->msg_flags &=3D ~MSG_CTRUNC;
-> > +                             if (!err)
-> > +                                     err =3D -ETOOSMALL;
-> > +                             goto out;
-> > +                     }
-> > +
-> > +                     sent +=3D copy;
-> > +
-> > +                     if (remaining_len =3D=3D 0)
-> > +                             goto out;
-> > +             }
-> > +
-> > +             /* after that, send information of dmabuf pages through a
-> > +              * sequence of cmsg
-> > +              */
-> > +             for (i =3D 0; i < skb_shinfo(skb)->nr_frags; i++) {
-> > +                     skb_frag_t *frag =3D &skb_shinfo(skb)->frags[i];
-> > +                     struct net_iov *niov;
-> > +                     u64 frag_offset;
-> > +                     int end;
-> > +
-> > +                     /* !skb_frags_readable() should indicate that ALL=
- the
-> > +                      * frags in this skb are dmabuf net_iovs. We're c=
-hecking
-> > +                      * for that flag above, but also check individual=
- frags
-> > +                      * here. If the tcp stack is not setting
-> > +                      * skb_frags_readable() correctly, we still don't=
- want
-> > +                      * to crash here.
-> > +                      */
-> > +                     if (!skb_frag_net_iov(frag)) {
-> > +                             net_err_ratelimited("Found non-dmabuf skb=
- with net_iov");
-> > +                             err =3D -ENODEV;
-> > +                             goto out;
-> > +                     }
-> > +
-> > +                     niov =3D skb_frag_net_iov(frag);
->
-> Sorry if we've already discussed this.
->
-> We have this additional hunk:
->
-> + if (niov->pp->mp_ops !=3D &dmabuf_devmem_ops) {
-> +       err =3D -ENODEV;
-> +       goto out;
-> + }
->
-> In case one of our skbs end up here, skb_frag_is_net_iov() and
-> !skb_frags_readable(). Does this even matter? And if so then is there a
-> better way to distinguish between our two types of net_iovs?
+On Tue, 28 May 2024 07:51:30 +0300
+Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
 
-Thanks for bringing this up, yes, maybe we do need a way to
-distinguish, but it's not 100% critical, no? It's mostly for debug
-checking?
+> yeah, the cache_from_obj tracing bug (without panic) has been
+> displayed quite some time now - maybe even since 6.7.x or so. I could
+> try checking a few versions back for this and try bisecting it if I
+> can find when this started.
+>=20
 
-I would say add a helper, like net_iov_is_dmabuf() or net_iov_is_io_uring()=
-.
+OK, so I don't think the commit your last bisect hit is the cause of
+the bug. It added a delay (via RCU) and is causing the real bug to blow
+up more.
 
-Checking for niov->pp->mp_ops seems a bit hacky to me, and may be
-outright broken. IIRC niov's can be disconnected from the page_pool
-via page_pool_clear_pp_info(), and niov->pp may be null. Abstractly
-speaking the niov type maybe should be a property of the niov itself,
-and not the pp the niov is attached to.
+Can you add this patch to v6.9.2 and hopefully it crashes in a better
+location that we can find where the mixup happened.
 
-It is not immediately obvious to me what the best thing to do here is,
-maybe it's best to add a flag to niov or to use niov->pp_magic for
-this.
+You may need to add the other commit (too if this doesn't trigger.
 
-I would humbly ask that your follow up patchset takes care of this
-bit, if possible. I think mine is doing quite a bit of heavy lifting
-as is (and I think may be close to ready?), when it comes to concerns
-of devmem + io_uring coexisting if you're able to take care, awesome,
-if not, I can look into squashing some fix.
-
---=20
 Thanks,
-Mina
+
+-- Steve
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 417c840e6403..7af3f696696d 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -50,6 +50,7 @@ static struct inode *tracefs_alloc_inode(struct super_blo=
+ck *sb)
+ 	list_add_rcu(&ti->list, &tracefs_inodes);
+ 	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
+=20
++	ti->magic =3D 20240823;
+ 	return &ti->vfs_inode;
+ }
+=20
+@@ -66,6 +67,7 @@ static void tracefs_free_inode(struct inode *inode)
+ 	struct tracefs_inode *ti =3D get_tracefs(inode);
+ 	unsigned long flags;
+=20
++	BUG_ON(ti->magic !=3D 20240823);
+ 	spin_lock_irqsave(&tracefs_inode_lock, flags);
+ 	list_del_rcu(&ti->list);
+ 	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
+@@ -271,16 +273,6 @@ static const struct inode_operations tracefs_file_inod=
+e_operations =3D {
+ 	.setattr	=3D tracefs_setattr,
+ };
+=20
+-struct inode *tracefs_get_inode(struct super_block *sb)
+-{
+-	struct inode *inode =3D new_inode(sb);
+-	if (inode) {
+-		inode->i_ino =3D get_next_ino();
+-		simple_inode_init_ts(inode);
+-	}
+-	return inode;
+-}
+-
+ struct tracefs_mount_opts {
+ 	kuid_t uid;
+ 	kgid_t gid;
+@@ -448,6 +440,17 @@ static const struct super_operations tracefs_super_ope=
+rations =3D {
+ 	.show_options	=3D tracefs_show_options,
+ };
+=20
++struct inode *tracefs_get_inode(struct super_block *sb)
++{
++	struct inode *inode =3D new_inode(sb);
++	BUG_ON(sb->s_op !=3D &tracefs_super_operations);
++	if (inode) {
++		inode->i_ino =3D get_next_ino();
++		simple_inode_init_ts(inode);
++	}
++	return inode;
++}
++
+ /*
+  * It would be cleaner if eventfs had its own dentry ops.
+  *
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index f704d8348357..dda7d2708e30 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -16,6 +16,7 @@ struct tracefs_inode {
+ 	};
+ 	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+ 	struct list_head	list;
++	unsigned long		magic;
+ 	unsigned long           flags;
+ 	void                    *private;
+ };
