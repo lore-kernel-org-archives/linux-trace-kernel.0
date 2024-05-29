@@ -1,48 +1,48 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7539016A360;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F25E16A373;
 	Wed, 29 May 2024 08:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716972177; cv=none; b=dSx1SXVkIASaLfPD+1T4pXoCSaTDSoAcWM4yS3RtUIqo3JxpE5sO9h7RzjEhYgWyHffMbnUhzvBhfCIQieuQcwdslikiiocVg6tA+2IvyCxIr5EHRe6W9rRpSJd0Dl1R5lKWyviIfv1aDJu7nOlvpwP3gEtEYW+pZb9ahE8l+vg=
+	t=1716972177; cv=none; b=CCH9AZWPVs5BKT2YzGsknreoGVwibRI0kzMZD7S7UdLisOTbHS1Zh6WlRoli5T4vdeIRqWWtmc3VBtQJBsyLdBbQKrk7NaW0jtLy6554Fagh16+CywPjgm6mZQaJg6qKM2wZadHndIrnCb38vNc+w2tG4Pw9GvF5zFl/wsRPc4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716972177; c=relaxed/simple;
-	bh=//oeuvzZEGBv4gf0XPy6ywHIQohMJXiLEnp6DKM48Xo=;
+	bh=UttgDv4ZvHmM/LW7Dna1NBBwdOyajLEoGI2LDKlrcDo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fj2jJpH92cr3dIzvZsauypW71Zsy/PCFrEw9tHDGAHZC5RkJZUve007A6lhS+rhDeHNdJCtDQLIPfbCGVpUCnUWG6mTAq6+9CWhHRy97HMjgZZY/ZElIpASkctjzus8egLjUvcomEgaVsR2sR+kJJwpLTn5QmgYogTZrybYqoYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pHglhfTU; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=nGofrwmA6QHEjrb9WMiGb6unQQDif7i3DclBZKCg+172HfHiYNzyPYUpaoB8x7AiUBTVHUNqh6EnmNrzh10K5t/9/oTQiRw35sPUTLqF/N7UBRPhE7qV8LAGV7sZCTwq8/Ry45o61eg13Wes26iSnNbm+Lr+Y2qH3uC7zMBnmcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=TUyrrAND; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pHglhfTU"
-X-UUID: 6ab14e2c1d9711efbfff99f2466cf0b4-20240529
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TUyrrAND"
+X-UUID: 69e15b401d9711ef8c37dd7afa272265-20240529
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=pYL3wrkvrAXPw01FI2QeqvUSGskmSGv64xXp8mgpjcs=;
-	b=pHglhfTU9zrpIu129HWdP8cMYEjhRQuUR2iCWEKHj9OTIKTp/dOx/ZEFgeAjp9osc2dSo5s0X4znV2nDbvZLIwlyCLC1GMVqLPRCFcZas9SEWVvEe9l6SdW3uaKMXDdBf9P5dwhR37uyWVUp5/j0BU2YibwoTvL1vWsWuZmk+TY=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=L5mnDnxKJTtj3CGwQCmR4dTFQpwgrDUEnU07dWK/S6I=;
+	b=TUyrrANDiVkKdSiXTMbQYLoWcd0/ZUc2UtRCGiH/g4ctsPUIiB1A30HA//5Fu/ie8LAoLVmBTnwIKT/8YO1emmTN76i/O+Vw0HgFmygGfrK90/jRJ9x+GEHCWjKWlGIxOwhV8gr2u9orbzsgH64fTl0wCmFvJsDk1J48u7aCHxk=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:2d498c84-c2a8-4aba-adbd-76d518a3231d,IP:0,U
+X-CID-O-INFO: VERSION:1.1.39,REQID:39fcab0d-7aad-4e7b-9443-6a68b60c1c89,IP:0,U
 	RL:0,TC:0,Content:-25,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
 	ION:release,TS:-55
-X-CID-META: VersionHash:393d96e,CLOUDID:270c7584-4f93-4875-95e7-8c66ea833d57,B
+X-CID-META: VersionHash:393d96e,CLOUDID:071cf587-8d4f-477b-89d2-1e3bdbef96d1,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
 	L:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
 	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 6ab14e2c1d9711efbfff99f2466cf0b4-20240529
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+X-UUID: 69e15b401d9711ef8c37dd7afa272265-20240529
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
 	(envelope-from <liju-clr.chen@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 601308872; Wed, 29 May 2024 16:42:43 +0800
+	with ESMTP id 676104047; Wed, 29 May 2024 16:42:42 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
  MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 29 May 2024 16:42:42 +0800
+ 15.2.1118.26; Wed, 29 May 2024 16:42:40 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 29 May 2024 16:42:42 +0800
+ 15.2.1118.26 via Frontend Transport; Wed, 29 May 2024 16:42:40 +0800
 From: Liju-clr Chen <liju-clr.chen@mediatek.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
@@ -61,9 +61,9 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	Trilok Soni <quic_tsoni@quicinc.com>, Shawn Hsiao <shawn.hsiao@mediatek.com>,
 	PeiLun Suei <PeiLun.Suei@mediatek.com>, Chi-shen Yeh
 	<Chi-shen.Yeh@mediatek.com>, Kevenny Hsieh <Kevenny.Hsieh@mediatek.com>
-Subject: [PATCH v11 18/21] virt: geniezone: Add memory relinquish support
-Date: Wed, 29 May 2024 16:42:36 +0800
-Message-ID: <20240529084239.11478-19-liju-clr.chen@mediatek.com>
+Subject: [PATCH v11 05/21] virt: geniezone: Add vm support
+Date: Wed, 29 May 2024 16:42:23 +0800
+Message-ID: <20240529084239.11478-6-liju-clr.chen@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20240529084239.11478-1-liju-clr.chen@mediatek.com>
 References: <20240529084239.11478-1-liju-clr.chen@mediatek.com>
@@ -75,187 +75,367 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--7.534500-8.000000
-X-TMASE-MatchedRID: FAqaJEPp0bkCsjHNBKjIykKcYi5Qw/RVQBnqdxuJ5SBGL0g1nVmkYXB4
-	4IkzjfYyR3nAM7y+sxF8f1Kw27wTO10U3RPW+iLPdXz3l78F3Ym2McZY43zJ47UV4VfJ6SB08bf
-	335SL+13q24xRTqfKLQ+BePuQCx01y6xJm0/fVizKUCo1O3wV1RyDrkIwjihb5AAb4Tu2gb7V9x
-	7gL2l/MirVbSJ+KmbRu2drAUtvuhvIs9Qr+U/JpgKDWtq/hHcNf2g6KJZtxl1+YesuCgkiXA+Pz
-	ND1U86eKsiucgwl76rEyq0r6O7kZx8TzIzimOwPC24oEZ6SpSk6XEE7Yhw4FtdqFOzu18YlojLT
-	dIkOf14gJWE9THfcQahogXHJrheB5YOBLKwQ294=
+X-TM-AS-Result: No-10--19.523800-8.000000
+X-TMASE-MatchedRID: Jz4HHHAzncYlUAqjdiICKBn0UD4GU5IqQBnqdxuJ5SCY5NBG7YIbVw2C
+	UGzZxN2d8AyWk2NFMNbVL7DIQyVd754dOTBCL+zXA9lly13c/gEW40XiUkbrGz/90OQ2nJ+7a9e
+	9JE2KBN0Z7JX1lkS/Bd9D3868BaEcIiy3Pxq6O+FHQFjzAbvJEPi4nVERfgwdNa1ImygeaAtVJ0
+	ADqZV4huT03QcW1KNjgmX+NobYg68I1Z5Xryf06B3EEAbn+GRbvJ9Xvh5CmT5UjspoiX02FwaTa
+	lM8C773wvUxdKBGcQx+QQJwTYOt8oALX2fTNBeIGVyS87Wb4lzylcnpAborusOtrkhuZC9Wmzbo
+	lkqUskbUfMJPpS3KKKCX8ek9LY/nuyXwa/V5eQrYxkZC4pzxSA1D0DXwcgIhycmFNidOeD2RbGV
+	jAxwIe8R8uH5v1UzhgDLqnrRlXrZ8nn9tnqel2MprJP8FBOIaA/3R8k/14e0=
 X-TM-AS-User-Approved-Sender: No
 X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--7.534500-8.000000
+X-TMASE-Result: 10--19.523800-8.000000
 X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
 X-TM-SNTS-SMTP:
-	3627735926F4BEE461CD89B0BF5DEB2753B0C85C4C4194128F4081C727E6C9202000:8
+	6FC205CBFE095F2539E8505C476D863CB304EE2DE94366D53E8DEA33D67ED5732000:8
 X-MTK: N
 
 From: Yi-De Wu <yi-de.wu@mediatek.com>
 
-From: "Jerry Wang" <ze-yu.wang@mediatek.com>
+From: "Yingshiuan Pan" <yingshiuan.pan@mediatek.com>
 
-Unpin the pages when VM relinquish the pages or is destroyed.
+The VM component is responsible for setting up the capability and memory
+management for the protected VMs. The capability is mainly about the
+lifecycle control and boot context initialization.
 
-Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
 Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-Signed-off-by: Liju-Clr Chen <liju-clr.chen@mediatek.com>
+Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
+Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
 Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
 ---
- drivers/virt/geniezone/gzvm_exception.c | 23 ++++++++++++
- drivers/virt/geniezone/gzvm_mmu.c       | 49 +++++++++++++++++++++++++
- drivers/virt/geniezone/gzvm_vcpu.c      |  6 ++-
- include/linux/soc/mediatek/gzvm_drv.h   |  2 +
- include/uapi/linux/gzvm.h               |  5 +++
- 5 files changed, 83 insertions(+), 2 deletions(-)
+ MAINTAINERS                             |   1 +
+ arch/arm64/geniezone/gzvm_arch_common.h |   4 +
+ arch/arm64/geniezone/vm.c               |  27 ++++++
+ drivers/virt/geniezone/Makefile         |   2 +-
+ drivers/virt/geniezone/gzvm_main.c      |  16 ++++
+ drivers/virt/geniezone/gzvm_vm.c        | 107 ++++++++++++++++++++++++
+ include/linux/soc/mediatek/gzvm_drv.h   |  27 ++++++
+ include/uapi/linux/gzvm.h               |  25 ++++++
+ 8 files changed, 208 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/virt/geniezone/gzvm_vm.c
+ create mode 100644 include/uapi/linux/gzvm.h
 
-diff --git a/drivers/virt/geniezone/gzvm_exception.c b/drivers/virt/geniezone/gzvm_exception.c
-index 2f5c05045e61..cdfc99d24ded 100644
---- a/drivers/virt/geniezone/gzvm_exception.c
-+++ b/drivers/virt/geniezone/gzvm_exception.c
-@@ -37,3 +37,26 @@ bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu)
- 	else
- 		return false;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index db6ba2f1e3ba..671b09087b90 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9279,6 +9279,7 @@ F:	Documentation/virt/geniezone/
+ F:	arch/arm64/geniezone/
+ F:	drivers/virt/geniezone/
+ F:	include/linux/soc/mediatek/gzvm_drv.h
++F:	include/uapi/linux/gzvm.h
+ 
+ GENWQE (IBM Generic Workqueue Card)
+ M:	Frank Haverkamp <haver@linux.ibm.com>
+diff --git a/arch/arm64/geniezone/gzvm_arch_common.h b/arch/arm64/geniezone/gzvm_arch_common.h
+index 660c7cf3fc18..60ee5ed2b39f 100644
+--- a/arch/arm64/geniezone/gzvm_arch_common.h
++++ b/arch/arm64/geniezone/gzvm_arch_common.h
+@@ -9,6 +9,8 @@
+ #include <linux/arm-smccc.h>
+ 
+ enum {
++	GZVM_FUNC_CREATE_VM = 0,
++	GZVM_FUNC_DESTROY_VM = 1,
+ 	GZVM_FUNC_PROBE = 12,
+ 	NR_GZVM_FUNC,
+ };
+@@ -19,6 +21,8 @@ enum {
+ 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_64,	\
+ 			   SMC_ENTITY_MTK, (GZVM_FUNCID_START + (func)))
+ 
++#define MT_HVC_GZVM_CREATE_VM		GZVM_HCALL_ID(GZVM_FUNC_CREATE_VM)
++#define MT_HVC_GZVM_DESTROY_VM		GZVM_HCALL_ID(GZVM_FUNC_DESTROY_VM)
+ #define MT_HVC_GZVM_PROBE		GZVM_HCALL_ID(GZVM_FUNC_PROBE)
+ 
+ /**
+diff --git a/arch/arm64/geniezone/vm.c b/arch/arm64/geniezone/vm.c
+index dce933f0c122..8ee5490d604a 100644
+--- a/arch/arm64/geniezone/vm.c
++++ b/arch/arm64/geniezone/vm.c
+@@ -7,6 +7,7 @@
+ #include <linux/err.h>
+ #include <linux/uaccess.h>
+ 
++#include <linux/gzvm.h>
+ #include <linux/soc/mediatek/gzvm_drv.h>
+ #include "gzvm_arch_common.h"
+ 
+@@ -61,3 +62,29 @@ int gzvm_arch_probe(void)
+ 
+ 	return 0;
  }
 +
 +/**
-+ * gzvm_handle_guest_hvc() - Handle guest hvc
-+ * @vcpu: Pointer to struct gzvm_vcpu struct
++ * gzvm_arch_create_vm() - create vm
++ * @vm_type: VM type. Only supports Linux VM now.
++ *
 + * Return:
-+ * * true - This hvc has been processed, no need to back to VMM.
-+ * * false - This hvc has not been processed, require userspace.
++ * * positive value	- VM ID
++ * * -ENOMEM		- Memory not enough for storing VM data
 + */
-+bool gzvm_handle_guest_hvc(struct gzvm_vcpu *vcpu)
++int gzvm_arch_create_vm(unsigned long vm_type)
 +{
-+	unsigned long ipa;
++	struct arm_smccc_res res;
 +	int ret;
 +
-+	switch (vcpu->run->hypercall.args[0]) {
-+	case GZVM_HVC_MEM_RELINQUISH:
-+		ipa = vcpu->run->hypercall.args[1];
-+		ret = gzvm_handle_relinquish(vcpu, ipa);
-+		return (ret == 0) ? true : false;
++	ret = gzvm_hypcall_wrapper(MT_HVC_GZVM_CREATE_VM, vm_type, 0, 0, 0, 0,
++				   0, 0, &res);
++	return ret ? ret : res.a1;
++}
++
++int gzvm_arch_destroy_vm(u16 vm_id)
++{
++	struct arm_smccc_res res;
++
++	return gzvm_hypcall_wrapper(MT_HVC_GZVM_DESTROY_VM, vm_id, 0, 0, 0, 0,
++				    0, 0, &res);
++}
+diff --git a/drivers/virt/geniezone/Makefile b/drivers/virt/geniezone/Makefile
+index 3a82e5fddf90..25614ea3dea2 100644
+--- a/drivers/virt/geniezone/Makefile
++++ b/drivers/virt/geniezone/Makefile
+@@ -6,4 +6,4 @@
+ 
+ GZVM_DIR ?= ../../../drivers/virt/geniezone
+ 
+-gzvm-y := $(GZVM_DIR)/gzvm_main.o
++gzvm-y := $(GZVM_DIR)/gzvm_main.o $(GZVM_DIR)/gzvm_vm.o
+diff --git a/drivers/virt/geniezone/gzvm_main.c b/drivers/virt/geniezone/gzvm_main.c
+index efd42b5ab871..8704549c5956 100644
+--- a/drivers/virt/geniezone/gzvm_main.c
++++ b/drivers/virt/geniezone/gzvm_main.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/file.h>
+ #include <linux/kdev_t.h>
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+@@ -40,7 +41,21 @@ int gzvm_err_to_errno(unsigned long err)
+ 	return -EINVAL;
+ }
+ 
++static long gzvm_dev_ioctl(struct file *filp, unsigned int cmd,
++			   unsigned long user_args)
++{
++	switch (cmd) {
++	case GZVM_CREATE_VM:
++		return gzvm_dev_ioctl_create_vm(user_args);
 +	default:
 +		break;
 +	}
-+	return false;
-+}
-diff --git a/drivers/virt/geniezone/gzvm_mmu.c b/drivers/virt/geniezone/gzvm_mmu.c
-index f6e4aca63f86..1c6966a0ed8e 100644
---- a/drivers/virt/geniezone/gzvm_mmu.c
-+++ b/drivers/virt/geniezone/gzvm_mmu.c
-@@ -29,6 +29,36 @@ static int gzvm_insert_ppage(struct gzvm *vm, struct gzvm_pinned_page *ppage)
- 	return 0;
- }
- 
-+static int rb_ppage_cmp(const void *key, const struct rb_node *node)
-+{
-+	struct gzvm_pinned_page *p = container_of(node,
-+						  struct gzvm_pinned_page,
-+						  node);
-+	phys_addr_t ipa = (phys_addr_t)key;
 +
-+	return (ipa < p->ipa) ? -1 : (ipa > p->ipa);
++	return -ENOTTY;
 +}
 +
-+/* Invoker of this function is responsible for locking */
-+static int gzvm_remove_ppage(struct gzvm *vm, phys_addr_t ipa)
-+{
-+	struct gzvm_pinned_page *ppage;
-+	struct rb_node *node;
-+
-+	node = rb_find((void *)ipa, &vm->pinned_pages, rb_ppage_cmp);
-+
-+	if (node)
-+		rb_erase(node, &vm->pinned_pages);
-+	else
-+		return 0;
-+
-+	ppage = container_of(node, struct gzvm_pinned_page, node);
-+	unpin_user_pages_dirty_lock(&ppage->page, 1, true);
-+	kfree(ppage);
-+
-+	return 0;
-+}
-+
- static int pin_one_page(struct gzvm *vm, unsigned long hva, u64 gpa,
- 			struct page **out_page)
- {
-@@ -77,6 +107,25 @@ static int pin_one_page(struct gzvm *vm, unsigned long hva, u64 gpa,
- 	return ret;
- }
- 
-+/**
-+ * gzvm_handle_relinquish() - Handle memory relinquish request from hypervisor
-+ *
-+ * @vcpu: Pointer to struct gzvm_vcpu_run in userspace
-+ * @ipa: Start address(gpa) of a reclaimed page
-+ *
-+ * Return: Always return 0 because there are no cases of failure
-+ */
-+int gzvm_handle_relinquish(struct gzvm_vcpu *vcpu, phys_addr_t ipa)
-+{
-+	struct gzvm *vm = vcpu->gzvm;
-+
-+	mutex_lock(&vm->mem_lock);
-+	gzvm_remove_ppage(vm, ipa);
-+	mutex_unlock(&vm->mem_lock);
-+
-+	return 0;
-+}
-+
- int gzvm_vm_allocate_guest_page(struct gzvm *vm, struct gzvm_memslot *slot,
- 				u64 gfn, u64 *pfn)
- {
-diff --git a/drivers/virt/geniezone/gzvm_vcpu.c b/drivers/virt/geniezone/gzvm_vcpu.c
-index 3ff9bc300fa6..8741088de479 100644
---- a/drivers/virt/geniezone/gzvm_vcpu.c
-+++ b/drivers/virt/geniezone/gzvm_vcpu.c
-@@ -113,12 +113,14 @@ static long gzvm_vcpu_run(struct gzvm_vcpu *vcpu, void __user *argp)
- 		 * it's geniezone's responsibility to fill corresponding data
- 		 * structure
- 		 */
-+		case GZVM_EXIT_HYPERCALL:
-+			if (!gzvm_handle_guest_hvc(vcpu))
-+				need_userspace = true;
-+			break;
- 		case GZVM_EXIT_EXCEPTION:
- 			if (!gzvm_handle_guest_exception(vcpu))
- 				need_userspace = true;
- 			break;
--		case GZVM_EXIT_HYPERCALL:
--			fallthrough;
- 		case GZVM_EXIT_DEBUG:
- 			fallthrough;
- 		case GZVM_EXIT_FAIL_ENTRY:
-diff --git a/include/linux/soc/mediatek/gzvm_drv.h b/include/linux/soc/mediatek/gzvm_drv.h
-index 7c6c1cde0d8d..b8cec9717606 100644
---- a/include/linux/soc/mediatek/gzvm_drv.h
-+++ b/include/linux/soc/mediatek/gzvm_drv.h
-@@ -208,6 +208,8 @@ int gzvm_arch_inform_exit(u16 vm_id);
- int gzvm_find_memslot(struct gzvm *vm, u64 gpa);
- int gzvm_handle_page_fault(struct gzvm_vcpu *vcpu);
- bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu);
-+int gzvm_handle_relinquish(struct gzvm_vcpu *vcpu, phys_addr_t ipa);
-+bool gzvm_handle_guest_hvc(struct gzvm_vcpu *vcpu);
- 
- int gzvm_arch_create_device(u16 vm_id, struct gzvm_create_device *gzvm_dev);
- int gzvm_arch_inject_irq(struct gzvm *gzvm, unsigned int vcpu_idx,
-diff --git a/include/uapi/linux/gzvm.h b/include/uapi/linux/gzvm.h
-index 0d38a0963cb7..5411357ec05e 100644
---- a/include/uapi/linux/gzvm.h
-+++ b/include/uapi/linux/gzvm.h
-@@ -195,6 +195,11 @@ enum {
- 	GZVM_EXCEPTION_PAGE_FAULT = 0x1,
+ static const struct file_operations gzvm_chardev_ops = {
++	.unlocked_ioctl = gzvm_dev_ioctl,
+ 	.llseek		= noop_llseek,
  };
  
-+/* hypercall definitions of GZVM_EXIT_HYPERCALL */
-+enum {
-+	GZVM_HVC_MEM_RELINQUISH = 0xc6000009,
+@@ -62,6 +77,7 @@ static int gzvm_drv_probe(struct platform_device *pdev)
+ 
+ static int gzvm_drv_remove(struct platform_device *pdev)
+ {
++	gzvm_destroy_all_vms();
+ 	misc_deregister(&gzvm_dev);
+ 	return 0;
+ }
+diff --git a/drivers/virt/geniezone/gzvm_vm.c b/drivers/virt/geniezone/gzvm_vm.c
+new file mode 100644
+index 000000000000..76722dba6b1f
+--- /dev/null
++++ b/drivers/virt/geniezone/gzvm_vm.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2023 MediaTek Inc.
++ */
++
++#include <linux/anon_inodes.h>
++#include <linux/file.h>
++#include <linux/kdev_t.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/soc/mediatek/gzvm_drv.h>
++
++static DEFINE_MUTEX(gzvm_list_lock);
++static LIST_HEAD(gzvm_list);
++
++static void gzvm_destroy_vm(struct gzvm *gzvm)
++{
++	pr_debug("VM-%u is going to be destroyed\n", gzvm->vm_id);
++
++	mutex_lock(&gzvm->lock);
++
++	gzvm_arch_destroy_vm(gzvm->vm_id);
++
++	mutex_lock(&gzvm_list_lock);
++	list_del(&gzvm->vm_list);
++	mutex_unlock(&gzvm_list_lock);
++
++	mutex_unlock(&gzvm->lock);
++
++	kfree(gzvm);
++}
++
++static int gzvm_vm_release(struct inode *inode, struct file *filp)
++{
++	struct gzvm *gzvm = filp->private_data;
++
++	gzvm_destroy_vm(gzvm);
++	return 0;
++}
++
++static const struct file_operations gzvm_vm_fops = {
++	.release        = gzvm_vm_release,
++	.llseek		= noop_llseek,
 +};
 +
- /**
-  * struct gzvm_vcpu_run: Same purpose as kvm_run, this struct is
-  *			 shared between userspace, kernel and
++static struct gzvm *gzvm_create_vm(unsigned long vm_type)
++{
++	int ret;
++	struct gzvm *gzvm;
++
++	gzvm = kzalloc(sizeof(*gzvm), GFP_KERNEL);
++	if (!gzvm)
++		return ERR_PTR(-ENOMEM);
++
++	ret = gzvm_arch_create_vm(vm_type);
++	if (ret < 0) {
++		kfree(gzvm);
++		return ERR_PTR(ret);
++	}
++
++	gzvm->vm_id = ret;
++	gzvm->mm = current->mm;
++	mutex_init(&gzvm->lock);
++
++	mutex_lock(&gzvm_list_lock);
++	list_add(&gzvm->vm_list, &gzvm_list);
++	mutex_unlock(&gzvm_list_lock);
++
++	pr_debug("VM-%u is created\n", gzvm->vm_id);
++
++	return gzvm;
++}
++
++/**
++ * gzvm_dev_ioctl_create_vm - Create vm fd
++ * @vm_type: VM type. Only supports Linux VM now.
++ *
++ * Return: fd of vm, negative if error
++ */
++int gzvm_dev_ioctl_create_vm(unsigned long vm_type)
++{
++	struct gzvm *gzvm;
++
++	gzvm = gzvm_create_vm(vm_type);
++	if (IS_ERR(gzvm))
++		return PTR_ERR(gzvm);
++
++	return anon_inode_getfd("gzvm-vm", &gzvm_vm_fops, gzvm,
++			       O_RDWR | O_CLOEXEC);
++}
++
++void gzvm_destroy_all_vms(void)
++{
++	struct gzvm *gzvm, *tmp;
++
++	mutex_lock(&gzvm_list_lock);
++	if (list_empty(&gzvm_list))
++		goto out;
++
++	list_for_each_entry_safe(gzvm, tmp, &gzvm_list, vm_list)
++		gzvm_destroy_vm(gzvm);
++
++out:
++	mutex_unlock(&gzvm_list_lock);
++}
+diff --git a/include/linux/soc/mediatek/gzvm_drv.h b/include/linux/soc/mediatek/gzvm_drv.h
+index 907f2f984de9..e7c29c826a7c 100644
+--- a/include/linux/soc/mediatek/gzvm_drv.h
++++ b/include/linux/soc/mediatek/gzvm_drv.h
+@@ -6,6 +6,12 @@
+ #ifndef __GZVM_DRV_H__
+ #define __GZVM_DRV_H__
+ 
++#include <linux/list.h>
++#include <linux/mutex.h>
++#include <linux/gzvm.h>
++
++#define INVALID_VM_ID   0xffff
++
+ /*
+  * These are the definitions of APIs between GenieZone hypervisor and driver,
+  * there's no need to be visible to uapi. Furthermore, we need GenieZone
+@@ -17,9 +23,30 @@
+ #define ERR_NOT_IMPLEMENTED     (-27)
+ #define ERR_FAULT               (-40)
+ 
++/**
++ * struct gzvm: the following data structures are for data transferring between
++ * driver and hypervisor, and they're aligned with hypervisor definitions.
++ * @mm: userspace tied to this vm
++ * @lock: lock for list_add
++ * @vm_list: list head for vm list
++ * @vm_id: vm id
++ */
++struct gzvm {
++	struct mm_struct *mm;
++	struct mutex lock;
++	struct list_head vm_list;
++	u16 vm_id;
++};
++
++int gzvm_dev_ioctl_create_vm(unsigned long vm_type);
++
+ int gzvm_err_to_errno(unsigned long err);
+ 
++void gzvm_destroy_all_vms(void);
++
+ /* arch-dependant functions */
+ int gzvm_arch_probe(void);
++int gzvm_arch_create_vm(unsigned long vm_type);
++int gzvm_arch_destroy_vm(u16 vm_id);
+ 
+ #endif /* __GZVM_DRV_H__ */
+diff --git a/include/uapi/linux/gzvm.h b/include/uapi/linux/gzvm.h
+new file mode 100644
+index 000000000000..c26c7720fab7
+--- /dev/null
++++ b/include/uapi/linux/gzvm.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright (c) 2023 MediaTek Inc.
++ */
++
++/**
++ * DOC: UAPI of GenieZone Hypervisor
++ *
++ * This file declares common data structure shared among user space,
++ * kernel space, and GenieZone hypervisor.
++ */
++#ifndef __GZVM_H__
++#define __GZVM_H__
++
++#include <linux/const.h>
++#include <linux/types.h>
++#include <linux/ioctl.h>
++
++/* GZVM ioctls */
++#define GZVM_IOC_MAGIC			0x92	/* gz */
++
++/* ioctls for /dev/gzvm fds */
++#define GZVM_CREATE_VM             _IO(GZVM_IOC_MAGIC,   0x01) /* Returns a Geniezone VM fd */
++
++#endif /* __GZVM_H__ */
 -- 
 2.18.0
 
