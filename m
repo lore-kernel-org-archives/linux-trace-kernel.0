@@ -1,139 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C981C6880;
-	Wed, 29 May 2024 19:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A291C6880
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 May 2024 19:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717012110; cv=none; b=ZqSxaVfLwnrq//5y8NnCnAqmU19SdWWJsZyjRjifEErivTSagX2ixZVxeexxnxhnaDsvCCJmaFSIPv1XzhpRIaBsaCWjJC4hE1ze6ozhBPNnhpfHM8tpukR5FLiR1TuVnT1gViq+I1mZ5OLYtFi3atyM0EPAp/xckDdIOBFn6+8=
+	t=1717012165; cv=none; b=ldSQpCzB/7U6622Td6PizrMRJZZvnsJVhwzrmfUFq0K4MLdBHr3oiy/UDD9gPFamXbUnYc13aZz8C5PVbVsyjoRysSVOUPqn3Dqs8dR0q5qtAJh3qty7iVVNa3suqRQXf+og5B8T3fQjTH0tmdNEdBxEA7+V2CpOPJNqw4+WWYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717012110; c=relaxed/simple;
-	bh=mBYHB0w2lJlfGEgtklPsCNe/hCVdcPJEF9Af5j6pvzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lMPXY6zbgZ0TPHnRBL0iPz0Uv8Bdzzr0qBDd8E23dUCCp5mNCeIemQwwvUj70GnG9HuqC3OCcLv10yR8pyeB1sPdM8q8TyCKNnla21ayL/wxra46Sb2k1piIs71h5UCpXv2+WO9Ps55nccWG2film5cq39nMirBlE/8roPMPAAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D7FC113CC;
-	Wed, 29 May 2024 19:48:28 +0000 (UTC)
-Date: Wed, 29 May 2024 15:48:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Cc: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Linux regressions mailing list
- <regressions@lists.linux.dev>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240529154824.2db8133a@rorschach.local.home>
-In-Reply-To: <20240529144757.79d09eeb@rorschach.local.home>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
-	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
-	<20240527183139.42b6123c@rorschach.local.home>
-	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-	<20240528144743.149e351b@rorschach.local.home>
-	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
-	<20240529144757.79d09eeb@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717012165; c=relaxed/simple;
+	bh=6SM4nGMq6YXwjPx3hzOgTtkr8rnEX3Vki2GtQ9/v/Tg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BLqTjxBKQkEZuijWFMt6JyQ3olUA7NoAZicgFOXDBepIxj41TFxPHDcFI2ItRh0MGOMjb3CV4IThUCuZkmjbQ1x1hntomjwWiUnzTRfRGKYHibgWL2gNGb6nfT76WxMnSzQpHYk0I/w+pK6BgsQa7d7GVxR5thBHtrnJxPgsUSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WaKJxj2r; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WaKJxj2r"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5755fafa5a7so128229a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 May 2024 12:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717012162; x=1717616962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mc6m1mM9m4Ud5DdSGHmt9Zcx4NpBQQ1agEgintMCgFk=;
+        b=WaKJxj2rSmiptfxPuIpvUd4DO37VpSMk36dQcSjU2nfbhLrs/6sj+L957ozHRkSxyE
+         TahFIlyXavs4CwVkXbGgibHaZ78nBGAoNz1E+2HWXC9+7wpBE9x3fU/+vVUNcUW6rJqc
+         n0wSQUBi2d3dc4nr8ulLpmSegCq86rCBEhG/icMRdmocKpO4NWAppHoIuWkJ8uNPH+jX
+         o2ArPykUTi8L9m/w0vlaDn5Dc8OxRXwlaoO9jd/ezYSXQJ3I6lBNJtlfF/AcwBvjH0to
+         Qv6SqMuA/Yte/M52TzTy7XMHZ3YE8iF0RhhZ/93YZjD2Ch6+/yU4fVLtCjI9qC9Bx0KN
+         3KUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717012162; x=1717616962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mc6m1mM9m4Ud5DdSGHmt9Zcx4NpBQQ1agEgintMCgFk=;
+        b=CtYzrC1DZ5/E56EJkvii6tf465Flt9mzqgHqQQBGsvqVqr4MBDkybUQP9UWSo2hRN+
+         Vn2kP73N4/VzCJlwh+AWAx5HQpAGH3DWB6ccJaqLqHGVJw+WMlLjdfmHukxrZZX0pxmz
+         nVUcsJjwsMW4mRLQj70fN0ekyY4rdMfOml+/hlcD4/vjqXRhkzNiZrMP1v0oQ48vUFvM
+         r678r0wZar5f+g0MXmPREG/8xUT+8o/z69/QYRPDPALX3Pyy+6tJS6Au7kBTYcUmcang
+         o3pUdv8hLjeS92q9G01ARBOjuW+7/AuqUoThpkYRrc8GIDIbU5A7uddCFQzpmXpbY5Lw
+         eDVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsecptD4BMtKe/sxPwqCbXsFf38WUcCqT+craHaCcS5Q6CKGDUAL7t2tHypu7ZR6TSZWedScjPwEQ9Bzg1o0AO6ebZmdcq4pM5uEWaYQ3lKZZB
+X-Gm-Message-State: AOJu0Yy6A6K8DoXu9isCvYauws7+cyyBaI9nnEEKTnDmvI9EgeD0v7Z6
+	Q7sUvQFzeeQSMlhQClcbM1NR/orqBoDp/u8r1uo6azBGmaDOtLAv+rz0N+cLdugJg52yt9B4sqx
+	/fdzX/SVGlYRViC4j6xkPiDyp84lTMDh2FVp3
+X-Google-Smtp-Source: AGHT+IF9PV9JeYxxToH3qJtJfXsnwGUXtNUCB5FusC4DI8sGVRwbRTrnhLkmsIc9tQHh+KHAMPViyk6pTFPRs1HCH10=
+X-Received: by 2002:a17:906:c18f:b0:a63:49a5:9390 with SMTP id
+ a640c23a62f3a-a65e8f74d3dmr11845366b.41.1717012162364; Wed, 29 May 2024
+ 12:49:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240510232128.1105145-1-almasrymina@google.com>
+ <20240510232128.1105145-5-almasrymina@google.com> <d85f4ba4-774f-4577-985f-45a5a1866da7@davidwei.uk>
+In-Reply-To: <d85f4ba4-774f-4577-985f-45a5a1866da7@davidwei.uk>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 29 May 2024 12:49:08 -0700
+Message-ID: <CAHS8izPVhDaokO9C+S4RR9b6+77OV2CsNb8jnGGKxNqGTa6DXg@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 04/14] netdev: support binding dma-buf to netdevice
+To: David Wei <dw@davidwei.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 May 2024 14:47:57 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, May 18, 2024 at 11:46=E2=80=AFAM David Wei <dw@davidwei.uk> wrote:
+>
+> On 2024-05-10 16:21, Mina Almasry wrote:
+> > +void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *bindin=
+g)
+> > +{
+> > +     struct netdev_rx_queue *rxq;
+> > +     unsigned long xa_idx;
+> > +     unsigned int rxq_idx;
+> > +
+> > +     if (!binding)
+> > +             return;
+> > +
+> > +     if (binding->list.next)
+> > +             list_del(&binding->list);
+> > +
+> > +     xa_for_each(&binding->bound_rxq_list, xa_idx, rxq) {
+> > +             if (rxq->mp_params.mp_priv =3D=3D binding) {
+> > +                     /* We hold the rtnl_lock while binding/unbinding
+> > +                      * dma-buf, so we can't race with another thread =
+that
+> > +                      * is also modifying this value. However, the pag=
+e_pool
+> > +                      * may read this config while it's creating its
+> > +                      * rx-queues. WRITE_ONCE() here to match the
+> > +                      * READ_ONCE() in the page_pool.
+> > +                      */
+> > +                     WRITE_ONCE(rxq->mp_params.mp_ops, NULL);
+> > +                     WRITE_ONCE(rxq->mp_params.mp_priv, NULL);
+> > +
+> > +                     rxq_idx =3D get_netdev_rx_queue_index(rxq);
+> > +
+> > +                     netdev_rx_queue_restart(binding->dev, rxq_idx);
+>
+> What if netdev_rx_queue_restart() fails? Depending on where it failed, a
+> queue might still be filled from struct net_devmem_dmabuf_binding. This
+> is one downside of the current situation with netdev_rx_queue_restart()
+> needing to do allocations each time.
+>
+> Perhaps a full reset if individual queue restart fails?
+>
 
-> Let me make a debug patch (that crashes on this issue) for that kernel,
-> and perhaps you could bisect it?
+Sorry for the late reply, I've been out on vacation for a few days and
+caught up to some other work.
 
-Can you try this on 6.6-rc1 and see if it gives you any other splats?
+Yes, netdev_rx_queue_restart() can fail, but I'm not sure how to
+recover. Full reset would be an option, but it may be way too big of a
+hammer to do a full reset on this failure. Also, last I discussed with
+Jakub, AFAIU, there is no way for core to reset the driver? I had
+suggested to Jakub to use ndo_stop/ndo_open to reset the driver on
+queue binding/unbinding, but he rejected that as it could cause the
+driver to fail to come back up, which would leave the machine stranded
+from the network. This is why we implemented the queue API, as a way
+to do the binding/unbinding without risking the machine stranding via
+a full reset. This is the previous convo from months back[1].
 
-Hmm, you can switch it to WARN_ON and that way it may not crash the
-machine, and you can use dmesg to get the output.
+So, all in all, I don't see anything amazing we can do here to
+recover. How about just log? I will add a warning in the next
+iteration.
 
+(I applied most of the rest of your suggestions btw).
+
+[1] https://patchwork.kernel.org/project/netdevbpf/patch/20231106024413.280=
+1438-13-almasrymina@google.com/#25590262
+
+--=20
 Thanks,
-
--- Steve
-
-
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index de5b72216b1a..a090495e78c9 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
- 		return NULL;
- 
- 	ti->flags = 0;
-+	ti->magic = 20240823;
- 
- 	return &ti->vfs_inode;
- }
- 
- static void tracefs_free_inode(struct inode *inode)
- {
--	kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
-+	struct tracefs_inode *ti = get_tracefs(inode);
-+
-+	BUG_ON(ti->magic != 20240823);
-+	kmem_cache_free(tracefs_inode_cachep, ti);
- }
- 
- static ssize_t default_read_file(struct file *file, char __user *buf,
-@@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode_operations = {
- 	.rmdir		= tracefs_syscall_rmdir,
- };
- 
--struct inode *tracefs_get_inode(struct super_block *sb)
--{
--	struct inode *inode = new_inode(sb);
--	if (inode) {
--		inode->i_ino = get_next_ino();
--		inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
--	}
--	return inode;
--}
--
- struct tracefs_mount_opts {
- 	kuid_t uid;
- 	kgid_t gid;
-@@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
- 		return;
- 
- 	ti = get_tracefs(inode);
-+	BUG_ON(ti->magic != 20240823);
- 	if (ti && ti->flags & TRACEFS_EVENT_INODE)
- 		eventfs_set_ef_status_free(dentry);
- 	iput(inode);
-@@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
- 	return dentry;
- }
- 
-+struct inode *tracefs_get_inode(struct super_block *sb)
-+{
-+	struct inode *inode = new_inode(sb);
-+
-+	BUG_ON(sb->s_op != &tracefs_super_operations);
-+	if (inode) {
-+		inode->i_ino = get_next_ino();
-+		inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
-+	}
-+	return inode;
-+}
-+
- /**
-  * tracefs_create_file - create a file in the tracefs filesystem
-  * @name: a pointer to a string containing the name of the file to create.
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 69c2b1d87c46..9f6f303a9e58 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -9,6 +9,7 @@ enum {
- struct tracefs_inode {
- 	unsigned long           flags;
- 	void                    *private;
-+	unsigned long		magic;
- 	struct inode            vfs_inode;
- };
- 
+Mina
