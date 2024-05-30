@@ -1,167 +1,91 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A291C6880
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 May 2024 19:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35BF17618F;
+	Thu, 30 May 2024 08:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717012165; cv=none; b=ldSQpCzB/7U6622Td6PizrMRJZZvnsJVhwzrmfUFq0K4MLdBHr3oiy/UDD9gPFamXbUnYc13aZz8C5PVbVsyjoRysSVOUPqn3Dqs8dR0q5qtAJh3qty7iVVNa3suqRQXf+og5B8T3fQjTH0tmdNEdBxEA7+V2CpOPJNqw4+WWYQ=
+	t=1717058539; cv=none; b=YbPp4Xsdv9z/zHNxGfE+cswOR1sDlzZ/H2Dg3VLJsuDOMoCP3QCkJqYEpWKZiZhjm9/B/nFJJgyb6mAzdQNlAfI+FxIUnpXHXndjZsrDwU1FXUn5jkpuOj/SH2Xlx5IBRZ3QurtFOZ4yzzvmHkIoIi53QyIvFpGulbZXZl9cJnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717012165; c=relaxed/simple;
-	bh=6SM4nGMq6YXwjPx3hzOgTtkr8rnEX3Vki2GtQ9/v/Tg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BLqTjxBKQkEZuijWFMt6JyQ3olUA7NoAZicgFOXDBepIxj41TFxPHDcFI2ItRh0MGOMjb3CV4IThUCuZkmjbQ1x1hntomjwWiUnzTRfRGKYHibgWL2gNGb6nfT76WxMnSzQpHYk0I/w+pK6BgsQa7d7GVxR5thBHtrnJxPgsUSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WaKJxj2r; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717058539; c=relaxed/simple;
+	bh=ccfTa9kgkRhsQsZ00GPmyDzIklduifKIaXc5PbcyPds=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=h60mue8R+D9Mglu95q8j15Gr4mGr+w4pPkH97/t+kEWZ4oJJ3UgJ8nYsrubMvRdpYYTjIpTJDxPLGRdLmTY2JVO6siEN1cPlNTkqQ6W36tL3XSuzxQeO4bYhsIbQ2UV+7uoA13PHOo4zF8d7es2XiY9EOlEKyEgcxke6t0Vd9Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=decvkoUh; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WaKJxj2r"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5755fafa5a7so128229a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 May 2024 12:49:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="decvkoUh"
+Received: from [192.168.2.60] (210-10-213-150.per.static-ipl.aapt.com.au [210.10.213.150])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 48FC22012A;
+	Thu, 30 May 2024 16:42:12 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717012162; x=1717616962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mc6m1mM9m4Ud5DdSGHmt9Zcx4NpBQQ1agEgintMCgFk=;
-        b=WaKJxj2rSmiptfxPuIpvUd4DO37VpSMk36dQcSjU2nfbhLrs/6sj+L957ozHRkSxyE
-         TahFIlyXavs4CwVkXbGgibHaZ78nBGAoNz1E+2HWXC9+7wpBE9x3fU/+vVUNcUW6rJqc
-         n0wSQUBi2d3dc4nr8ulLpmSegCq86rCBEhG/icMRdmocKpO4NWAppHoIuWkJ8uNPH+jX
-         o2ArPykUTi8L9m/w0vlaDn5Dc8OxRXwlaoO9jd/ezYSXQJ3I6lBNJtlfF/AcwBvjH0to
-         Qv6SqMuA/Yte/M52TzTy7XMHZ3YE8iF0RhhZ/93YZjD2Ch6+/yU4fVLtCjI9qC9Bx0KN
-         3KUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717012162; x=1717616962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mc6m1mM9m4Ud5DdSGHmt9Zcx4NpBQQ1agEgintMCgFk=;
-        b=CtYzrC1DZ5/E56EJkvii6tf465Flt9mzqgHqQQBGsvqVqr4MBDkybUQP9UWSo2hRN+
-         Vn2kP73N4/VzCJlwh+AWAx5HQpAGH3DWB6ccJaqLqHGVJw+WMlLjdfmHukxrZZX0pxmz
-         nVUcsJjwsMW4mRLQj70fN0ekyY4rdMfOml+/hlcD4/vjqXRhkzNiZrMP1v0oQ48vUFvM
-         r678r0wZar5f+g0MXmPREG/8xUT+8o/z69/QYRPDPALX3Pyy+6tJS6Au7kBTYcUmcang
-         o3pUdv8hLjeS92q9G01ARBOjuW+7/AuqUoThpkYRrc8GIDIbU5A7uddCFQzpmXpbY5Lw
-         eDVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsecptD4BMtKe/sxPwqCbXsFf38WUcCqT+craHaCcS5Q6CKGDUAL7t2tHypu7ZR6TSZWedScjPwEQ9Bzg1o0AO6ebZmdcq4pM5uEWaYQ3lKZZB
-X-Gm-Message-State: AOJu0Yy6A6K8DoXu9isCvYauws7+cyyBaI9nnEEKTnDmvI9EgeD0v7Z6
-	Q7sUvQFzeeQSMlhQClcbM1NR/orqBoDp/u8r1uo6azBGmaDOtLAv+rz0N+cLdugJg52yt9B4sqx
-	/fdzX/SVGlYRViC4j6xkPiDyp84lTMDh2FVp3
-X-Google-Smtp-Source: AGHT+IF9PV9JeYxxToH3qJtJfXsnwGUXtNUCB5FusC4DI8sGVRwbRTrnhLkmsIc9tQHh+KHAMPViyk6pTFPRs1HCH10=
-X-Received: by 2002:a17:906:c18f:b0:a63:49a5:9390 with SMTP id
- a640c23a62f3a-a65e8f74d3dmr11845366b.41.1717012162364; Wed, 29 May 2024
- 12:49:22 -0700 (PDT)
+	d=codeconstruct.com.au; s=2022a; t=1717058534;
+	bh=ccfTa9kgkRhsQsZ00GPmyDzIklduifKIaXc5PbcyPds=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=decvkoUhi3BQsNXPWdEwki3kHb6All/6KACr4gdMzoBerw0hEoFmoQ7gFuz/HW1Ji
+	 D5/r0ziKW87Gt2NQW8uG9ZlIff6uwwvgTqCoe+goyxeFy0KjPYNE1TM+BN6eDOKT/T
+	 ZbpoFSBPydvBVgvOXZfV/3c9+E6LXTweDGkjejPxhqCdCz9CL5bkegZEWOphC0mjGp
+	 7bCkFGrqSqoRphTvR3tw/P5wgECdlGyScW3hdBlNLnyWQOzQlSfqizbwua4JwjPmHq
+	 biSiOssLUf5iVjKWqJzKRMkFy5Ocr6USAh4NasYPmEnTBgqe6jskYkShhfVPaC3mYH
+	 z5gNo9FbkZL6Q==
+Message-ID: <a9f559ac6da9e44cdcffe1cb80a4468096efb1f8.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] mctp i2c: Add rx trace
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+To: Tal Yacobi <talycb8@gmail.com>
+Cc: matt@codeconstruct.com.au, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Date: Thu, 30 May 2024 16:42:12 +0800
+In-Reply-To: <CAN7-cG5w9rjhJnDJJSOTiopxkj75mOJEC9eKZqmJaqbeMudPQQ@mail.gmail.com>
+References: <20240528143420.742611-1-talycb8@gmail.com>
+	 <520cf8db945cf8dce4afdaddb59ceda65463a406.camel@codeconstruct.com.au>
+	 <CAN7-cG5w9rjhJnDJJSOTiopxkj75mOJEC9eKZqmJaqbeMudPQQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510232128.1105145-1-almasrymina@google.com>
- <20240510232128.1105145-5-almasrymina@google.com> <d85f4ba4-774f-4577-985f-45a5a1866da7@davidwei.uk>
-In-Reply-To: <d85f4ba4-774f-4577-985f-45a5a1866da7@davidwei.uk>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 29 May 2024 12:49:08 -0700
-Message-ID: <CAHS8izPVhDaokO9C+S4RR9b6+77OV2CsNb8jnGGKxNqGTa6DXg@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 04/14] netdev: support binding dma-buf to netdevice
-To: David Wei <dw@davidwei.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 18, 2024 at 11:46=E2=80=AFAM David Wei <dw@davidwei.uk> wrote:
->
-> On 2024-05-10 16:21, Mina Almasry wrote:
-> > +void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *bindin=
-g)
-> > +{
-> > +     struct netdev_rx_queue *rxq;
-> > +     unsigned long xa_idx;
-> > +     unsigned int rxq_idx;
-> > +
-> > +     if (!binding)
-> > +             return;
-> > +
-> > +     if (binding->list.next)
-> > +             list_del(&binding->list);
-> > +
-> > +     xa_for_each(&binding->bound_rxq_list, xa_idx, rxq) {
-> > +             if (rxq->mp_params.mp_priv =3D=3D binding) {
-> > +                     /* We hold the rtnl_lock while binding/unbinding
-> > +                      * dma-buf, so we can't race with another thread =
-that
-> > +                      * is also modifying this value. However, the pag=
-e_pool
-> > +                      * may read this config while it's creating its
-> > +                      * rx-queues. WRITE_ONCE() here to match the
-> > +                      * READ_ONCE() in the page_pool.
-> > +                      */
-> > +                     WRITE_ONCE(rxq->mp_params.mp_ops, NULL);
-> > +                     WRITE_ONCE(rxq->mp_params.mp_priv, NULL);
-> > +
-> > +                     rxq_idx =3D get_netdev_rx_queue_index(rxq);
-> > +
-> > +                     netdev_rx_queue_restart(binding->dev, rxq_idx);
->
-> What if netdev_rx_queue_restart() fails? Depending on where it failed, a
-> queue might still be filled from struct net_devmem_dmabuf_binding. This
-> is one downside of the current situation with netdev_rx_queue_restart()
-> needing to do allocations each time.
->
-> Perhaps a full reset if individual queue restart fails?
->
+Hi Tal,
 
-Sorry for the late reply, I've been out on vacation for a few days and
-caught up to some other work.
+> > > mctp-i2c rx implementation doesn't call
+> > > __i2c_transfer which calls the i2c reply trace function.
+> >=20
+> > No, but we can trace the i2c rx path through the trace_i2c_slave
+> > tracepoint. It is a little messier than tracing trace_i2c_write,
+> > but
+> > has been sufficient with the debugging I've needed in the past.
+>=20
+> Oh, I missed that.
+> I had to test it with an older kernel without i2c_slave tracing
+> so I looked only at the regular i2c and mctp trace paths.
 
-Yes, netdev_rx_queue_restart() can fail, but I'm not sure how to
-recover. Full reset would be an option, but it may be way too big of a
-hammer to do a full reset on this failure. Also, last I discussed with
-Jakub, AFAIU, there is no way for core to reset the driver? I had
-suggested to Jakub to use ndo_stop/ndo_open to reset the driver on
-queue binding/unbinding, but he rejected that as it could cause the
-driver to fail to come back up, which would leave the machine stranded
-from the network. This is why we implemented the queue API, as a way
-to do the binding/unbinding without risking the machine stranding via
-a full reset. This is the previous convo from months back[1].
+OK! That tracepoint was (coincidentally) added in 5.18, same as the
+MCTP-over-i2c transport. So we should have coverage for both features
+on upstream kernels, at least.
 
-So, all in all, I don't see anything amazing we can do here to
-recover. How about just log? I will add a warning in the next
-iteration.
+> > > Add an mctp_reply trace function that will be used instead.
+> >=20
+> > Can you elaborate a little on what you were/are looking to inspect
+> > here? (mainly: which packet fields are you interested in?) That
+> > will
+> > help to determine the best approach here.
+>=20
+> Sure, I basically wanted to trace the i2c packet buffer in a simple
+> way.
 
-(I applied most of the rest of your suggestions btw).
+OK - did you specifically need the i2c transport headers? Since the
+MCTP interfaces are regular net devices, the easiest way to trace
+generic MCTP transfers is generally via a packet capture (tcpdump,
+wireshark, etc).
 
-[1] https://patchwork.kernel.org/project/netdevbpf/patch/20231106024413.280=
-1438-13-almasrymina@google.com/#25590262
+Cheers,
 
---=20
-Thanks,
-Mina
+
+Jeremy
+
