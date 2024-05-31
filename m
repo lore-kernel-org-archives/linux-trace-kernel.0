@@ -1,93 +1,179 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CA739FF3;
-	Fri, 31 May 2024 15:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7415B128;
+	Fri, 31 May 2024 16:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717169487; cv=none; b=XOTibFL6ba3umTM4/Qb0+ubrcSK2tx297wL1b8619btJDLi23Ss8vod1DF922tuOZo2jyEf8LfoPwOBGvMWSwtTB0UKK/eZRNAZoGsfUH5sdH4dzeAMj3w9KNWQ0KYMae3t2VD92tJh3pAApldxCKUPaELcaEXVZ6nddRxcWHE4=
+	t=1717173848; cv=none; b=kwZLfWKiLUXkTpoaTeHB24qBVfHalprS/1JO8ZKtMBduGWBk+ppU0oOAZgDzOU0lNrQ0WwB0ABGjAXb4qNZYhkqttPau580WDpQaPPnX+7RedyPTEjr1I/6uTIIX3grMqYRN3Ze8hoTS3aHAtn0Ycrz4lv6BlToKvw4eNLC8Vmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717169487; c=relaxed/simple;
-	bh=wb1cOchvcOujs9HWcw7r/ZrIUMH4fHWuktSZkjSAwAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iwNtD4RhyRW0yjyAzAjMb8qB1VuGonUFFeUZwOvUU8D/1uBwtPWvgRYUQFA7JXCEt0kthWjMVjGLBG9htgc8LVhfIml0QAJKGdptfB3pXj6oP6AvC6e5e+XOnkHEvmihfUqZuwKyUvveuP9+QeXOz9w3RiwCkDlrKTg1tqwxG1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 559941424;
-	Fri, 31 May 2024 08:31:49 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A56163F641;
-	Fri, 31 May 2024 08:31:21 -0700 (PDT)
-Date: Fri, 31 May 2024 16:31:14 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
-	David Rientjes <rientjes@google.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/4] static key support for error injection functions
-Message-ID: <ZlntQn-a7Ycko_j5@J2N7QTR9R3>
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
+	s=arc-20240116; t=1717173848; c=relaxed/simple;
+	bh=uG7P1x3HrP8RowMmWDcBXTYjXz0LxJxK8wl6ae3emAA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IDRdQmoGXR1FSOkLIM2ycT2kiDzToRVd5WAdNr7zUkCbdpSQ0c37PZurO7JsZLiW8HB9SDR/GjG93wn46BcvxOT1kNH2pNJML01/p97ljMPDYLx7S0OB+4MK45oFTMzA4zza1IyPZkOFhrC1mRnO01Nrxt9I6fXY7PRWqlYlw/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T7SyYA5K; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7SyYA5K"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-421208c97a2so21008805e9.1;
+        Fri, 31 May 2024 09:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717173845; x=1717778645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GgrPSqavQhhCwRo/IO4y9sSd78oBJ0BfHadESybGIRk=;
+        b=T7SyYA5KUZsU23dLb8L62F/2Jh5Qo6J/r4/MNbO8TkE8nC2FZnaVwWl+kKSqh/QOe+
+         BS1fGqJHvsUtzbGAS4xwdvW8m59LhW2FsM+AlGMc1N3DyrOTvD/76DP7mPJ3Iwm8i5JH
+         eFkkoolx/lsc5ilSkRkPla5644JSh1ltjHyFeP6aCNsujj1mx6xHn72aXGvOgsOPcpTo
+         9DIkSl8uLu/8/e9YHZbf3g4Y3m3AJ57YcLmiSD0LXUyqkqT2P5oi4bpWcLpMXsUQpFZT
+         GwcNl1bC9kXpKpGRO7WQOQC8vMMuSzPT6jJN2kEXAHXlf6SUkKPeKtN0PMsGETVR7mLa
+         ImLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717173845; x=1717778645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GgrPSqavQhhCwRo/IO4y9sSd78oBJ0BfHadESybGIRk=;
+        b=KNUJo6s2zjEMtfJv+23IQd1ZLp/RwYOf3qzaQZd65wf5WooWRDd7+R8A3qeqoBVtsV
+         n3NjqQe2gwHO+/ZU6+SGPZ9NW2+47ztfKDeTu6t3ydC/U5ro6doF15t2a+GHCFuJLzRW
+         lxSv5NFlGYOYm/iTf83GGuoTY/k6LRtBsaiokJIcfWSwLyht4Wau2j7LFGaxzajOFSNW
+         lEBXFvBa8Cu2QBtZzCWivRu9oihXC6pDxyQ1pS2eM7+LU/GZfENhG2FGm6JqdfaRnuRo
+         XKxQGDP0R+6gUczIg7k8NCkvw+YINmHSUJ4q80GB9eVFSM2TGpW+maMFaxQz3gF0MFtg
+         CR6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW201XqUwz/uvT0jmYeD9qAlOn7uN64A2c3btX4znu03YN1rqGa0lSlV7RkzlNYnSSh8ShvdMHYB8ax4sTvEvfHmMnoscb9wawIqrpI9YCgi8cVw6iTmSPXqZ8+xnM79ndW2i/cmm2L9U34luoTyMhyiOLuDOaM745GLyYXmlWp5LP6/Ind
+X-Gm-Message-State: AOJu0Yz1UyywsN/HQ4N5+OWt4YRfYPY7D2GEoxeSnRxyuKOXv+xQM0Pq
+	DfAGcHkimmLGrQdhqZU3mNre/EhgTKe7QliavpBzWLgYCGqttssCRuxCM27upee9DVgiFBo9CzE
+	JnZJrsoLPsjXNvKpPXQnQBiwaukG0bDSf
+X-Google-Smtp-Source: AGHT+IFTytoJamLJRvTQO3BYC2MBDxCEuBj6lgJTYnD/N3Qp380NOujMSa5JG5AI3SYo5H23tb7dmLf0PjIWpX8mTVk=
+X-Received: by 2002:a05:600c:3541:b0:41a:c86e:a4db with SMTP id
+ 5b1f17b1804b1-4212e04732amr18706075e9.9.1717173844917; Fri, 31 May 2024
+ 09:44:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
+References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz> <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
+In-Reply-To: <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 31 May 2024 09:43:53 -0700
+Message-ID: <CAADnVQJ=bNg9nWQPXGjJ11pZnmjntt=zLBqtJng3328T1L-u0g@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/4] mm, slab: add static key for should_failslab()
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, May 31, 2024 at 2:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> Since commit 4f6923fbb352 ("mm: make should_failslab always available for
+> fault injection") should_failslab() is unconditionally a noinline
+> function. This adds visible overhead to the slab allocation hotpath,
+> even if the function is empty. With CONFIG_FAILSLAB=3Dy there's additiona=
+l
+> overhead when the functionality is not enabled by a boot parameter or
+> debugfs.
+>
+> The overhead can be eliminated with a static key around the callsite.
+> Fault injection and error injection frameworks can now be told that the
+> this function has a static key associated, and are able to enable and
+> disable it accordingly.
+>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/failslab.c |  2 +-
+>  mm/slab.h     |  3 +++
+>  mm/slub.c     | 10 +++++++---
+>  3 files changed, 11 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/failslab.c b/mm/failslab.c
+> index ffc420c0e767..878fd08e5dac 100644
+> --- a/mm/failslab.c
+> +++ b/mm/failslab.c
+> @@ -9,7 +9,7 @@ static struct {
+>         bool ignore_gfp_reclaim;
+>         bool cache_filter;
+>  } failslab =3D {
+> -       .attr =3D FAULT_ATTR_INITIALIZER,
+> +       .attr =3D FAULT_ATTR_INITIALIZER_KEY(&should_failslab_active.key)=
+,
+>         .ignore_gfp_reclaim =3D true,
+>         .cache_filter =3D false,
+>  };
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 5f8f47c5bee0..792e19cb37b8 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -11,6 +11,7 @@
+>  #include <linux/memcontrol.h>
+>  #include <linux/kfence.h>
+>  #include <linux/kasan.h>
+> +#include <linux/jump_label.h>
+>
+>  /*
+>   * Internal slab definitions
+> @@ -160,6 +161,8 @@ static_assert(IS_ALIGNED(offsetof(struct slab, freeli=
+st), sizeof(freelist_aba_t)
+>   */
+>  #define slab_page(s) folio_page(slab_folio(s), 0)
+>
+> +DECLARE_STATIC_KEY_FALSE(should_failslab_active);
+> +
+>  /*
+>   * If network-based swap is enabled, sl*b must keep track of whether pag=
+es
+>   * were allocated from pfmemalloc reserves.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 0809760cf789..3bb579760a37 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -3874,13 +3874,15 @@ static __always_inline void maybe_wipe_obj_freept=
+r(struct kmem_cache *s,
+>                         0, sizeof(void *));
+>  }
+>
+> +DEFINE_STATIC_KEY_FALSE(should_failslab_active);
+> +
+>  noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+>  {
+>         if (__should_failslab(s, gfpflags))
+>                 return -ENOMEM;
+>         return 0;
+>  }
+> -ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
+> +ALLOW_ERROR_INJECTION_KEY(should_failslab, ERRNO, &should_failslab_activ=
+e);
+>
+>  static __fastpath_inline
+>  struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s, gfp_t flags=
+)
+> @@ -3889,8 +3891,10 @@ struct kmem_cache *slab_pre_alloc_hook(struct kmem=
+_cache *s, gfp_t flags)
+>
+>         might_alloc(flags);
+>
+> -       if (unlikely(should_failslab(s, flags)))
+> -               return NULL;
+> +       if (static_branch_unlikely(&should_failslab_active)) {
+> +               if (should_failslab(s, flags))
+> +                       return NULL;
+> +       }
 
-On Fri, May 31, 2024 at 11:33:31AM +0200, Vlastimil Babka wrote:
-> Incomplete, help needed from ftrace/kprobe and bpf folks.
+makes sense.
+Acked-by: Alexei Starovoitov <ast@kernel.org>
 
-> - the generic error injection using kretprobes with
->   override_function_with_return is handled in patch 2. The
->   ALLOW_ERROR_INJECTION() annotation is extended so that static key
->   address can be passed, and the framework controls it when error
->   injection is enabled or disabled in debugfs for the function.
-> 
-> There are two more users I know of but am not familiar enough to fix up
-> myself. I hope people that are more familiar can help me here.
-> 
-> - ftrace seems to be using override_function_with_return from
->   #define ftrace_override_function_with_return but I found no place
->   where the latter is used. I assume it might be hidden behind more
->   macro magic? But the point is if ftrace can be instructed to act like
->   an error injection, it would also have to use some form of metadata
->   (from patch 2 presumably?) to get to the static key and control it.
-
-I don't think you've missed anything; nothing currently uses
-ftrace_override_function_with_return(). I added that in commit:
-
-  94d095ffa0e16bb7 ("ftrace: abstract DYNAMIC_FTRACE_WITH_ARGS accesses")
-
-... so that it was possible to do anything that was possible with
-FTRACE_WITH_REGS and/or kprobes, under the expectation that we might
-want to move fault injection and BPF probes over to fprobes in future,
-as ftrace/fprobes is generally faster than kprobes (e.g. for
-architectures that can't do KPROBES_ON_FTRACE or OPTPROBES).
-
-That's just the mechanism for the handler to use; I'd expect whatever
-registered the handler to be responsible for flipping the static key,
-and I don't think anything needs to change within ftrace itself.
-
->   If ftrace can only observe the function being called, maybe it
->   wouldn't be wrong to just observe nothing if the static key isn't
->   enabled because nobody is doing the fault injection?
-
-Yep, that sounds right to me.
-
-Mark.
+Do you have any microbenchmark numbers before/after this optimization?
