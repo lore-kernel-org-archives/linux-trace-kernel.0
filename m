@@ -1,187 +1,257 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD827C6D5;
-	Fri, 31 May 2024 22:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6D9168DA;
+	Fri, 31 May 2024 22:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717193660; cv=none; b=R09eZQCZJ3t9TmCgjBlPKRBy1XuZ/MwAfoWkpQAHvcigFN/bz+lxr0GeLS+RbMBxbbsOTGpQZY/TpTLkQtq+yTOJQOMnGFf/IUOpW5Jrw3PEAtEJM4eI2eLS4qQc45UPqAyL2BK8G1kpapRwFp4eE6zoUV9D6dcaETp85cfp/bA=
+	t=1717195787; cv=none; b=PS0R2U7N7GDkQpM98T99QOSXTWr9iGb0CjJd/pC1jE04oC69RvsOVOZxjJjdjSZcuFfxrH7No0MLazrgCzgFZHlXWSueER0yuVawedoifHnlHkOeej6th5onrmtUrnanO0OdJCh7EqcX6RPoGrltJQ/1O4vvRHbZQdnsmT3oKuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717193660; c=relaxed/simple;
-	bh=GuUvsJi+J1Zhk+r7M0WJIuC2YcG6MioEYbjY5KdOSh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BAouh70KANxW+43u6X47qP7zc3pv0ULYrhuqAlgSqarLVo75ncvoYbmavteBF6RpuVgzW79RXMeEIZrn82V0+JGYOn9x1advRnnMF1x7fxEoWKjzDM7nDVlgwpMyPotfv62udcZS5TIWoP5FNPNFUnt3Ru5zLrtOuZsN8Q8Yzu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ARQQRS8Z; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ARQQRS8Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717193658; x=1748729658;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GuUvsJi+J1Zhk+r7M0WJIuC2YcG6MioEYbjY5KdOSh0=;
-  b=ARQQRS8Z0We19TRpBL1mEho2TBvpPB0YUKLuiBCgDkdvBNLzg1cTEHgP
-   aXEFU/X76oVbER1lJTjWJ1FZXO4X6phZauAXPvXqzD+dj9/e5N9jtcAUH
-   nAy+iqTmKsdKzVjT9MBhIkjPDMcBFf1/lqOJRfUC+i62G3fJNTjcDEa3I
-   oInAoR5wZLviquKuF9yRvsEmecZMwZUvNewlAOlhU0BZLEyEap7qgvuVN
-   BrHZwB1xZuqhCD63dcy53nYCnWw47jswzVIjRfnV0y/hIvBUqYhU/T72Y
-   NtNQdBDeRvrQMigk/rqJPkU+n6SGGhY11BGcYwSHBUmwSSParskdQDwZl
-   g==;
-X-CSE-ConnectionGUID: 8ml6WmHUS2OsJbQDH59rlw==
-X-CSE-MsgGUID: CoZ4vVOuT7G7jsD/aaSI3Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="39156861"
-X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="39156861"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 15:14:18 -0700
-X-CSE-ConnectionGUID: COpeKSwFSjq9r1t2HdI5Kg==
-X-CSE-MsgGUID: sFOcLbcyRU2NRixuWJ53fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="36232343"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 31 May 2024 15:14:15 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sDAVo-000Htz-2d;
-	Fri, 31 May 2024 22:14:12 +0000
-Date: Sat, 1 Jun 2024 06:13:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tal Yacobi <talycb8@gmail.com>, jk@codeconstruct.com.au,
-	matt@codeconstruct.com.au, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] mctp i2c: Add rx trace
-Message-ID: <202406010530.SKASSBs4-lkp@intel.com>
-References: <20240528143420.742611-1-talycb8@gmail.com>
+	s=arc-20240116; t=1717195787; c=relaxed/simple;
+	bh=+UQy7NFH7cIoreL6KRBvahvgtAOgRsqyhcKdhRpeoNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lpXlCAHIGQrs33NFnr89/bW8qY0TGjjshLgzNt6bvqmRkU080LnOObdWP2iZxziQMSkrFmY1MHV8MSiQ/ZonLnPRFx+riLG1VhawlDHTUGmKPEV0ZZVtlMLCyiwlfPXBVP3ASkWrihKotH8ulVywsjXAktGiMhYB1ciWPf1HuOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DB3AC116B1;
+	Fri, 31 May 2024 22:49:42 +0000 (UTC)
+Date: Fri, 31 May 2024 18:49:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH 10/20] function_graph: Have the instances use their own
+ ftrace_ops for filtering
+Message-ID: <20240531184910.799635e8@rorschach.local.home>
+In-Reply-To: <20240531235023.a0b2b207362eba2f8b5c16f7@kernel.org>
+References: <20240525023652.903909489@goodmis.org>
+	<20240525023742.786834257@goodmis.org>
+	<20240530223057.21c2a779@rorschach.local.home>
+	<20240531121241.c586189caad8d31d597f614d@kernel.org>
+	<20240531020346.6c13e2d4@rorschach.local.home>
+	<20240531235023.a0b2b207362eba2f8b5c16f7@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528143420.742611-1-talycb8@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Tal,
+On Fri, 31 May 2024 23:50:23 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-kernel test robot noticed the following build errors:
+> So is it similar to the fprobe/kprobe, use shared signle ftrace_ops,
+> but keep each fgraph has own hash table?
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on horms-ipvs/master v6.10-rc1 next-20240531]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Sort of.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tal-Yacobi/mctp-i2c-Add-rx-trace/20240528-223555
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240528143420.742611-1-talycb8%40gmail.com
-patch subject: [PATCH] mctp i2c: Add rx trace
-config: hexagon-randconfig-r052-20240531 (https://download.01.org/0day-ci/archive/20240601/202406010530.SKASSBs4-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project bafda89a0944d947fc4b3b5663185e07a397ac30)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406010530.SKASSBs4-lkp@intel.com/reproduce)
+I created helper functions in ftrace that lets you have a "manager
+ftrace_ops" that will be used to assign to ftrace (with the function
+that will demultiplex), and then you can have "subops" that can be
+assigned that is per user. Here's a glimpse of the code:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406010530.SKASSBs4-lkp@intel.com/
+/**
+ * ftrace_startup_subops - enable tracing for subops of an ops
+ * @ops: Manager ops (used to pick all the functions of its subops)
+ * @subops: A new ops to add to @ops
+ * @command: Extra commands to use to enable tracing
+ *
+ * The @ops is a manager @ops that has the filter that includes all the functions
+ * that its list of subops are tracing. Adding a new @subops will add the
+ * functions of @subops to @ops.
+ */
+int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+{
+	struct ftrace_hash *filter_hash;
+	struct ftrace_hash *notrace_hash;
+	struct ftrace_hash *save_filter_hash;
+	struct ftrace_hash *save_notrace_hash;
+	int size_bits;
+	int ret;
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+	if (unlikely(ftrace_disabled))
+		return -ENODEV;
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/locktorture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcutorture.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/rcuscale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/rcu/refscale.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp855.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp857.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp863.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp864.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp865.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp869.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_cp936.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_ascii.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-5.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-7.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-9.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/nls_iso8859-15.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-celtic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-inuit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/nls/mac-romanian.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/jbd2/jbd2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in fs/fat/fat.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in crypto/xor.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/math/rational.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/crypto/libarc4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/zlib_inflate/zlib_inflate.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/zlib_deflate/zlib_deflate.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/backlight/rt4831-backlight.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/vfb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/rt4831-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/reset/hisilicon/hi6220_reset.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/goldfish.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/lp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ppdev.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/gud/gud.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_panel_orientation_quirks.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/udl/udl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-w1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/rt4831.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/host/ohci-exynos.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/host/xhci-pci-renesas.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/usb_debug.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/navman.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/matrix-keymap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-qup.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/rc/rc-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ezkey.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gyration.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-kbd.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-mouse.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ite.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kensington.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lcpower.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lenovo.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-letsketch.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-maltron.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-mf.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-megaworld.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ntrig.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-pl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-redragon.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-retrode.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-semitek.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-speedlink.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-topseed.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-uclogic.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-log.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-loopback.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-raw.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-vibrator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gbphy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-i2c.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-pwm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-uart.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-usb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rpmsg/rpmsg_char.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwtracing/intel_th/intel_th_msu_sink.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/hisi-spmi-controller.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/spmi-pmic-arb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/gb-es2.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/siox/siox-bus-gpio.o
->> ERROR: modpost: "__tracepoint_mctp_reply" [drivers/net/mctp/mctp-i2c.ko] undefined!
->> ERROR: modpost: "__traceiter_mctp_reply" [drivers/net/mctp/mctp-i2c.ko] undefined!
+	ftrace_ops_init(ops);
+	ftrace_ops_init(subops);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	/* Make everything canonical (Just in case!) */
+	if (!ops->func_hash->filter_hash)
+		ops->func_hash->filter_hash = EMPTY_HASH;
+	if (!ops->func_hash->notrace_hash)
+		ops->func_hash->notrace_hash = EMPTY_HASH;
+	if (!subops->func_hash->filter_hash)
+		subops->func_hash->filter_hash = EMPTY_HASH;
+	if (!subops->func_hash->notrace_hash)
+		subops->func_hash->notrace_hash = EMPTY_HASH;
+
+	/* For the first subops to ops just enable it normally */
+	if (list_empty(&ops->subop_list)) {
+		/* Just use the subops hashes */
+		filter_hash = copy_hash(subops->func_hash->filter_hash);
+		notrace_hash = copy_hash(subops->func_hash->notrace_hash);
+		if (!filter_hash || !notrace_hash) {
+			free_ftrace_hash(filter_hash);
+			free_ftrace_hash(notrace_hash);
+			return -ENOMEM;
+		}
+
+		save_filter_hash = ops->func_hash->filter_hash;
+		save_notrace_hash = ops->func_hash->notrace_hash;
+
+		ops->func_hash->filter_hash = filter_hash;
+		ops->func_hash->notrace_hash = notrace_hash;
+		list_add(&subops->list, &ops->subop_list);
+		ret = ftrace_startup(ops, command);
+		if (ret < 0) {
+			list_del(&subops->list);
+			ops->func_hash->filter_hash = save_filter_hash;
+			ops->func_hash->notrace_hash = save_notrace_hash;
+			free_ftrace_hash(filter_hash);
+			free_ftrace_hash(notrace_hash);
+		} else {
+			free_ftrace_hash(save_filter_hash);
+			free_ftrace_hash(save_notrace_hash);
+			subops->flags |= FTRACE_OPS_FL_ENABLED;
+		}
+		return ret;
+	}
+
+	/*
+	 * Here there's already something attached. Here are the rules:
+	 *   o If either filter_hash is empty then the final stays empty
+	 *      o Otherwise, the final is a superset of both hashes
+	 *   o If either notrace_hash is empty then the final stays empty
+	 *      o Otherwise, the final is an intersection between the hashes
+	 */
+	if (ops->func_hash->filter_hash == EMPTY_HASH ||
+	    subops->func_hash->filter_hash == EMPTY_HASH) {
+		filter_hash = EMPTY_HASH;
+	} else {
+		size_bits = max(ops->func_hash->filter_hash->size_bits,
+				subops->func_hash->filter_hash->size_bits);
+		filter_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->filter_hash);
+		if (!filter_hash)
+			return -ENOMEM;
+		ret = append_hash(&filter_hash, subops->func_hash->filter_hash);
+		if (ret < 0) {
+			free_ftrace_hash(filter_hash);
+			return ret;
+		}
+	}
+
+	if (ops->func_hash->notrace_hash == EMPTY_HASH ||
+	    subops->func_hash->notrace_hash == EMPTY_HASH) {
+		notrace_hash = EMPTY_HASH;
+	} else {
+		size_bits = max(ops->func_hash->filter_hash->size_bits,
+				subops->func_hash->filter_hash->size_bits);
+		notrace_hash = alloc_ftrace_hash(size_bits);
+		if (!notrace_hash) {
+			free_ftrace_hash(filter_hash);
+			return -ENOMEM;
+		}
+
+		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
+				     subops->func_hash->filter_hash);
+		if (ret < 0) {
+			free_ftrace_hash(filter_hash);
+			free_ftrace_hash(notrace_hash);
+			return ret;
+		}
+	}
+
+	list_add(&subops->list, &ops->subop_list);
+
+	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
+	free_ftrace_hash(filter_hash);
+	free_ftrace_hash(notrace_hash);
+	if (ret < 0)
+		list_del(&subops->list);
+	return ret;
+}
+
+/**
+ * ftrace_shutdown_subops - Remove a subops from a manager ops
+ * @ops: A manager ops to remove @subops from
+ * @subops: The subops to remove from @ops
+ * @command: Any extra command flags to add to modifying the text
+ *
+ * Removes the functions being traced by the @subops from @ops. Note, it
+ * will not affect functions that are being traced by other subops that
+ * still exist in @ops.
+ *
+ * If the last subops is removed from @ops, then @ops is shutdown normally.
+ */
+int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+{
+	struct ftrace_hash *filter_hash;
+	struct ftrace_hash *notrace_hash;
+	int ret;
+
+	if (unlikely(ftrace_disabled))
+		return -ENODEV;
+
+	list_del(&subops->list);
+
+	if (list_empty(&ops->subop_list)) {
+		/* Last one, just disable the current ops */
+
+		ret = ftrace_shutdown(ops, command);
+		if (ret < 0) {
+			list_add(&subops->list, &ops->subop_list);
+			return ret;
+		}
+
+		subops->flags &= ~FTRACE_OPS_FL_ENABLED;
+
+		free_ftrace_hash(ops->func_hash->filter_hash);
+		free_ftrace_hash(ops->func_hash->notrace_hash);
+		ops->func_hash->filter_hash = EMPTY_HASH;
+		ops->func_hash->notrace_hash = EMPTY_HASH;
+
+		return 0;
+	}
+
+	/* Rebuild the hashes without subops */
+	filter_hash = append_hashes(ops);
+	notrace_hash = intersect_hashes(ops);
+	if (!filter_hash || !notrace_hash) {
+		free_ftrace_hash(filter_hash);
+		free_ftrace_hash(notrace_hash);
+		list_add(&subops->list, &ops->subop_list);
+		return -ENOMEM;
+	}
+
+	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
+	if (ret < 0)
+		list_add(&subops->list, &ops->subop_list);
+	free_ftrace_hash(filter_hash);
+	free_ftrace_hash(notrace_hash);
+	return ret;
+}
+
+
+> 
+> > This removes the need to touch the architecture code. It can also be
+> > used by fprobes to handle the attachments to functions for several
+> > different sets of callbacks.
+> > 
+> > I'll send out patches soon.  
+> 
+> OK, I'll wait for that.
+
+I'm just cleaning it up. I'll post it tomorrow (your today).
+
+-- Steve
