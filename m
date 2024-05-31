@@ -1,82 +1,42 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D1E8287F;
-	Fri, 31 May 2024 09:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B5A133993;
+	Fri, 31 May 2024 09:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717148025; cv=none; b=VTyRqa/4k3sXQ5mjfJihsB+OTM4Ea+qe7FQg1+4ng/JhH1t6SipwvFjJP6dq5Gq7HBWx3GPZlVWOmBYn3cbXMq4ao/ZCCa2hlFKjTLmUBW3P1tA33UClR29Spk9OQDLDdxFD9zz1tGEYQHeYmJW8kwNVy10s3Gu+YBYNFobpbTE=
+	t=1717148612; cv=none; b=sHz/ATdRQwD4mJT1vKL8R/7lDEpWORh4051FbJ+XkYZ7f8BJTP+JZUbmJ9IAkeesrG3ybW7vhYrXa99p5K4zbzwAUvA6uv81SoY1Fdq8aeLosnvAkfBF3Nv8kY8eSzKteB2e3Cy3E6w5UUzq/sr1f8w31X6gG7AQJonAycX2Wu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717148025; c=relaxed/simple;
-	bh=WyUHxaHQtVv8tJZ85Q3rEFl1YlXxFbSGzC4RdBJxkTc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VVF3LFtUeRRs6wDJOBj4bT9BBTfzNn78UpLArnuUQarUbmwRowxWamLcua/CG1maERTq5PsfagBK0p5XOLXP7l3gJ47F+n3tLDSVlb4Wo8MZ2L7Htz3xxZ4zEOUEnbcTxYehKibNCyRUaGBe8VtkyqHlaL3mhn9+BdYl7UHWtyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cq3ZS3Bb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WQK9iHyh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cq3ZS3Bb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WQK9iHyh; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1717148612; c=relaxed/simple;
+	bh=Rp8mA1asZ6wDztf7QBipnOaEZGxaR8gps8Opj1bYW4w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=U+p+DbFsCpwb0VOgguAlYiEW/bcBUJWi3I1eu6tlczpEzStgYIBCNTGimIzlj4KZ/boLLRnWgac7/kcLT0AZXfvOSpVY2hwdjW0aH3XPO6LvHbvsYWNl8bKjxsgUkDKLLzj8K78r60iJz2u9O75tXNlun6Dt9zdC2+7KG/PByHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qdnhx3mV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cq3ZS3Bb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WQK9iHyh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cq3ZS3Bb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WQK9iHyh"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6322421B2C;
-	Fri, 31 May 2024 09:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717148020; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zr3/XI/R4rZyT+/e67qBFKZJGDvaAXhwDIbiD/WM1m0=;
-	b=cq3ZS3BbflQ7N2K6lBu8bapgCyqq54EbZLCUHI5AOJr2zGvzJwjgIv1pOlAsS/4VJ+HD//
-	DqP8gM6quCsk/Rf4szRlG7kaJ5KOQrpnHm+OrwzFSPVsOugt54MfF1PraU/+2ZdMSbMJUb
-	WfFBo7wBG5E4quordFfd4kyyCdsRO1E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717148020;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zr3/XI/R4rZyT+/e67qBFKZJGDvaAXhwDIbiD/WM1m0=;
-	b=WQK9iHyhgXJjz5UKPeIRCrBHBTFp99Hwb64bZURii7O8xDLTgt/3LGZGt8RkE0fHxqXxKb
-	zTsFKRohlCJOaEDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717148020; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zr3/XI/R4rZyT+/e67qBFKZJGDvaAXhwDIbiD/WM1m0=;
-	b=cq3ZS3BbflQ7N2K6lBu8bapgCyqq54EbZLCUHI5AOJr2zGvzJwjgIv1pOlAsS/4VJ+HD//
-	DqP8gM6quCsk/Rf4szRlG7kaJ5KOQrpnHm+OrwzFSPVsOugt54MfF1PraU/+2ZdMSbMJUb
-	WfFBo7wBG5E4quordFfd4kyyCdsRO1E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717148020;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zr3/XI/R4rZyT+/e67qBFKZJGDvaAXhwDIbiD/WM1m0=;
-	b=WQK9iHyhgXJjz5UKPeIRCrBHBTFp99Hwb64bZURii7O8xDLTgt/3LGZGt8RkE0fHxqXxKb
-	zTsFKRohlCJOaEDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 45159132C2;
-	Fri, 31 May 2024 09:33:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eAqVEHSZWWZKHQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 31 May 2024 09:33:40 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Fri, 31 May 2024 11:33:35 +0200
-Subject: [PATCH RFC 4/4] mm, page_alloc: add static key for
- should_fail_alloc_page()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qdnhx3mV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5364BC116B1;
+	Fri, 31 May 2024 09:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717148612;
+	bh=Rp8mA1asZ6wDztf7QBipnOaEZGxaR8gps8Opj1bYW4w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Qdnhx3mVVovm/FqmJex3a5//aYOs5MD45Ga8LURUXxiFFfYXRKOpVJDtrsTHlFHL7
+	 fKwhPwhQSW3PHt2xguF69VyrARfhzBrdeLTx2fL5L5WuwUR/hYkfSQxPjwhNY9thZR
+	 B+IeN0oHh3QMyZNUpTIW+EjamGuq87FmPihPSk1w17J8ugredcqYZKUPX4Z3BXXgCo
+	 8w/HMocbhZhJgQSo0Xiu41923oyE4CWMO1EQOo6zOBdRdwqaGmQ7ARgbF42rnwLt9z
+	 4/Pr8VTNud4u349nzCgTithq8+7zzxTQrUEoTkfQVrFzctLGRl/EgmObtAMI6vnHrY
+	 XjInCJc9cBH0A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/2] selftests/tracing: Fix ftracetest testcase issues
+Date: Fri, 31 May 2024 18:43:28 +0900
+Message-Id: <171714860864.198407.18416314586430149538.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -84,136 +44,22 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240531-fault-injection-statickeys-v1-4-a513fd0a9614@suse.cz>
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
-In-Reply-To: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
-To: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
- David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: b4 0.13.0
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.98 / 50.00];
-	REPLY(-4.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	BAYES_HAM(-0.18)[70.22%];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FREEMAIL_TO(0.00)[gmail.com,linux.com,google.com,kernel.org,iogearbox.net,linux.ibm.com,intel.com,davemloft.net,goodmis.org,arm.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linux.dev,gmail.com,vger.kernel.org,kvack.org,suse.cz];
-	R_RATELIMIT(0.00)[to_ip_from(RL5nkphuxq5kxo98ppmuqoc8wo)];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -3.98
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-Similarly to should_failslab(), remove the overhead of calling the
-noinline function should_fail_alloc_page() with a static key that guards
-the allocation hotpath callsite and is controlled by the fault and error
-injection frameworks.
+Here is a couple of patches to fix issues related to runing environment
+and kernel configuration.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Thank you,
 ---
- mm/fail_page_alloc.c |  3 ++-
- mm/internal.h        |  2 ++
- mm/page_alloc.c      | 11 ++++++++---
- 3 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/mm/fail_page_alloc.c b/mm/fail_page_alloc.c
-index b1b09cce9394..0906b76d78e8 100644
---- a/mm/fail_page_alloc.c
-+++ b/mm/fail_page_alloc.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/fault-inject.h>
- #include <linux/mm.h>
-+#include "internal.h"
- 
- static struct {
- 	struct fault_attr attr;
-@@ -9,7 +10,7 @@ static struct {
- 	bool ignore_gfp_reclaim;
- 	u32 min_order;
- } fail_page_alloc = {
--	.attr = FAULT_ATTR_INITIALIZER,
-+	.attr = FAULT_ATTR_INITIALIZER_KEY(&should_fail_alloc_page_active.key),
- 	.ignore_gfp_reclaim = true,
- 	.ignore_gfp_highmem = true,
- 	.min_order = 1,
-diff --git a/mm/internal.h b/mm/internal.h
-index b2c75b12014e..8539e39b02e6 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -410,6 +410,8 @@ extern char * const zone_names[MAX_NR_ZONES];
- /* perform sanity checks on struct pages being allocated or freed */
- DECLARE_STATIC_KEY_MAYBE(CONFIG_DEBUG_VM, check_pages_enabled);
- 
-+DECLARE_STATIC_KEY_FALSE(should_fail_alloc_page_active);
-+
- extern int min_free_kbytes;
- 
- void setup_per_zone_wmarks(void);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2e22ce5675ca..e5dc3bafa549 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -274,6 +274,8 @@ int user_min_free_kbytes = -1;
- static int watermark_boost_factor __read_mostly = 15000;
- static int watermark_scale_factor = 10;
- 
-+DEFINE_STATIC_KEY_FALSE(should_fail_alloc_page_active);
-+
- /* movable_zone is the "real" zone pages in ZONE_MOVABLE are taken from */
- int movable_zone;
- EXPORT_SYMBOL(movable_zone);
-@@ -3012,7 +3014,7 @@ noinline bool should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
- {
- 	return __should_fail_alloc_page(gfp_mask, order);
- }
--ALLOW_ERROR_INJECTION(should_fail_alloc_page, TRUE);
-+ALLOW_ERROR_INJECTION_KEY(should_fail_alloc_page, TRUE, &should_fail_alloc_page_active);
- 
- static inline long __zone_watermark_unusable_free(struct zone *z,
- 				unsigned int order, unsigned int alloc_flags)
-@@ -4430,8 +4432,11 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
- 
- 	might_alloc(gfp_mask);
- 
--	if (should_fail_alloc_page(gfp_mask, order))
--		return false;
-+	if (static_branch_unlikely(&should_fail_alloc_page_active)) {
-+		if (should_fail_alloc_page(gfp_mask, order)) {
-+			return false;
-+		}
-+	}
- 
- 	*alloc_flags = gfp_to_alloc_flags_cma(gfp_mask, *alloc_flags);
- 
+Masami Hiramatsu (Google) (2):
+      selftests/tracing: Fix event filter test to retry up to 10 times
+      selftests/tracing: Fix to check the required syscall event
 
--- 
-2.45.1
 
+ .../ftrace/test.d/dynevent/test_duplicates.tc      |    2 +-
+ .../ftrace/test.d/filter/event-filter-function.tc  |   20 +++++++++++++++++++-
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
