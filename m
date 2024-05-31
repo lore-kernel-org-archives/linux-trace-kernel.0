@@ -1,87 +1,73 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5234928DA0
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 May 2024 06:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3747FBDA;
+	Fri, 31 May 2024 07:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717138234; cv=none; b=eHSOPPfvjYeyj4CAfM7sNPpzXQPBzJqITUMaDHOuo7B9Wsv47wOH2QiHoK1aAdOiR9BBFVnOvnouH6Txthx2cOT97K2G1LwBw8pkGZzZSteXrooNuVuL18lseUgIsJljTP0mEwS5uVC9M5yXcfDWfKGZLDXaOeThShH01N1Nc1g=
+	t=1717140299; cv=none; b=HCrYWVa183QucSZ+aYWYZyRYord2YCPxqqjX7A4NO2RUSfhTCGywnApZORqNmesVMhMfBqCBbHVbfbWqC4h8MA8A3EiP7jMqnPayqZf4vjxGEZbcZyDy1yen82SRlGbs9QBkGRmMOxVh/zWlmw8SPSXSqMYV4692sXb///61O6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717138234; c=relaxed/simple;
-	bh=W8fRjq7Z6y710iIkROTQ7PaNQUOchdeTRaZz7588gfY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FilFcsU9BeCdlcA4W5b9Y7aH2Vs4kawlhwBESh1hdZYp3iwg17eoD/UAaA2S9D2gH6Qv+k8lB4Onfra3q8lFw4caaZYMIPVfLq5eOq8MgSwtdHC/HZYoN2g3Tyy/GINe2Tmof7wk6uAikDxhrf3mHGX1DjH7nZS189dmu1qaQGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36da6da1d98so17641575ab.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 May 2024 23:50:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717138232; x=1717743032;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0vrmo5/ch+u7W6jSFxsW+zK74pp2lMQV7jM4YwFzhww=;
-        b=V2vllBr4BYjlVYAE4dqjJ2O7tE7Jfflz2GcliWNwTxRs+05ytUiZQXyDlq3gDA3SD5
-         /d6Zfpg8OUrlj+vn68kcuVaxCoHnt/H253LhEuXe2dui+phwp31xyxJmxSZKQ+d8KIIo
-         1cvt31IFnlJHMIYUvvIN288gbk9CJDvPKwiqlBzZNFNa++6772KMDpaYElJGbhNwl76s
-         z/tGbtfPRBaOd4a2HJRMtgGEtkPn1pYWRhYI126tWnC46LDteagO/j3GBva/izC5tnYS
-         KBbCKYOs4qMQwOnZid5f/CTvVSVRHrhqjT11G0ensB+2K//EBqKrDNd36VXZTAHwmN+S
-         s10Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUluArb+jK5h49FHn75OGwL+I9pR65CA5m1FRi2Y3rFwgNgEvMoXga2XtymD1pkerbZamfqxCFEvZqNoBRz9h/4fgMY56RS/cj2ium/dWMF436l
-X-Gm-Message-State: AOJu0YxB7BGFmB/p4ZOlkN9rOurJwDZLNaDBEBk0YBjwYfTlgXTLDQCR
-	0xPDcByL7bF4LoLnYO0OJR8tP5WxZJda+8BksN462x7aaQJGwpxEb+ZnCI95hBD5auzD+MygB15
-	IA0T6CfWsK+d5NRe7ADZmdPeItGRYKGiwtp3MpN/M4SMOjsWaNZv5i/s=
-X-Google-Smtp-Source: AGHT+IHtu4v0ERkxIQGbp2AR9qY7gfva9hE+/LAlzF/Y6AzElTm6868MwH+MeitESvwqbNkrAcYyf/GXzaR8LkRWxChDYG6aj/ir
+	s=arc-20240116; t=1717140299; c=relaxed/simple;
+	bh=V35cqtk9XTo/2IpnTDToiE7mqkZ1wlRTu8Z37svt7cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cZSMfJrImO7zOWu57pX7a726Cbm3DSRupxXpRsQCKhIiKqvi8vIBRW5BRT9mXTFxd/LU/rVpWZEZLW4EfHF4HJ3UnCWWGwE9GOmJiRX/cD+NdNi03fJ8lAcbtTijSWriTe8yH448T/FI3JTGJ9zVLsCyMz61EEVoxVIY46uregs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C7CC116B1;
+	Fri, 31 May 2024 07:24:57 +0000 (UTC)
+Date: Fri, 31 May 2024 03:24:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
+Message-ID: <20240531032425.3635dc93@rorschach.local.home>
+In-Reply-To: <20240531113721.c0314e0cdb3beb70c1a6ba7d@kernel.org>
+References: <171671825710.39694.6859036369216249956.stgit@devnote2>
+	<20240527192907.49c9220f@rorschach.local.home>
+	<20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
+	<20240529083818.b7835de167191d4567405ce6@kernel.org>
+	<3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
+	<20240531113721.c0314e0cdb3beb70c1a6ba7d@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2167:b0:371:62ca:48ae with SMTP id
- e9e14a558f8ab-3748b9cf92cmr713135ab.3.1717138232568; Thu, 30 May 2024
- 23:50:32 -0700 (PDT)
-Date: Thu, 30 May 2024 23:50:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000061fac40619ba66f6@google.com>
-Subject: [syzbot] Monthly trace report (May 2024)
-From: syzbot <syzbot+list0820d438c1905c75bc71@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello trace maintainers/developers,
+On Fri, 31 May 2024 11:37:21 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+> So, in summary, it is designed to be a module. Steve, I think these tests
+> should be kept as modules. There are many reason to do so.
+> 
+>  - This test is designed to be used as module.
+>  - This can conflict with other boot time selftest if it is embedded.
+>  - We can make these tests and boot time selftest mutable exclusive but
+>    if we make these tests as modules, we can build and run both tests
+>    safely.
+>  - Embedding these tests leave new events when the kernel boot, which
+>    user must be cleaned up by manual.
+> 
+> What would you think?
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 10 issues are still open and 35 have been fixed so far.
+I was mostly following what Ingo told me long ago, where having it
+built in is just one more way to test it ;-)
 
-Some of the still happening issues:
+But that said, from your first patch, you show the stack dump and
+mention:
 
-Ref Crashes Repro Title
-<1> 705     Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<2> 26      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<3> 7       Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-<4> 6       Yes   INFO: task hung in blk_trace_remove (2)
-                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-<5> 5       Yes   general protection fault in bpf_get_attach_cookie_tracing
-                  https://syzkaller.appspot.com/bug?extid=3ab78ff125b7979e45f9
+> Since the kprobes and synth event generation tests adds and enable
+> generated events in init_module() and delete it in exit_module(),
+> if we make it as built-in, those events are left in kernel and cause
+> kprobe event self-test failure.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+But you don't explain what exactly the conflict is. What about those
+events causes kprobe selftests to fail?
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+-- Steve
