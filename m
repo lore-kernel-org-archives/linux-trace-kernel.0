@@ -1,54 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7BA6F2EB;
-	Fri, 31 May 2024 14:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79E77483;
+	Fri, 31 May 2024 15:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717167029; cv=none; b=lG3Jm3bZ6bi6R4Qm0iiCmZ2ZCdVwSmP/DZxd9XikJ67P9w6h3FmQfg+LEWu50iZCAxlsNJExEzuFlqsa4NpdWAhvz3SRX8ADJzwWjg4RINznhDfg+EaUOx4jX6nOsaQAW3bO1nz5h3jtTDBK5vC7Im8iJYirKbeiQqJicJTuGFs=
+	t=1717167651; cv=none; b=iBhNafHjxx24KfS8X0RmHSRSkj67FwBcTRBZSzlEDYUIv2mzKb3WAm8PYvnxO+bpPBQ2MVMB+zBVYHZIEioL0TJWU+j03BVqA6BMGEFj4zBO25M6rK658DHD6MlxFAYOSIXoxR6Axi2Tog7MlAocIMdR4N9EaU5+62PfRT3N05k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717167029; c=relaxed/simple;
-	bh=SoFBpNqzbtb+5DiL1b3Xa2w1zfCNY7f9atKzwbTKab0=;
+	s=arc-20240116; t=1717167651; c=relaxed/simple;
+	bh=lNSkXp6089IHQNq0gU4AKnSQIdYErLjMuM20ebZC21Q=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mgtLhNLpGBNxB0PdvpSJVn6YhLj5vWiSO0mVibDA0BjTFJUYDN5XMc2AMH4aNMqu5GtEaPk+UoSePUOjmPT8AvjaD6P+8dFU/rQGK9IfwgVRuWct/TAynJ34M6r8eCTOYkpwuCAmdxreu1w0/ZggXqcp5pFZ3acRDHChi5rXDlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=noplJiD1; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=SQsZWpo74JMZdau94/CjqZKEXTCarkLO9JJ/AlR19peMyNwMC6kBuYIHHB8y7lNNf0IGwahHu+Xb2WQ4s/gO+tlMm6Ob67PBnfMDxZfH50KLf8kbsNOL21hU7OiMHjFs1M2UKnEbniVr95jo8TG+VzABQd2rxIj1vW4r5Mn1Lys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YR9aDfRi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="noplJiD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957B3C116B1;
-	Fri, 31 May 2024 14:50:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YR9aDfRi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D0EC32781;
+	Fri, 31 May 2024 15:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717167029;
-	bh=SoFBpNqzbtb+5DiL1b3Xa2w1zfCNY7f9atKzwbTKab0=;
+	s=k20201202; t=1717167650;
+	bh=lNSkXp6089IHQNq0gU4AKnSQIdYErLjMuM20ebZC21Q=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=noplJiD1JNJetlnp2zOzi5qcDqbPSkw74sQoxNmQDAo2MshMOAQqpSJOyJukYUFwu
-	 pwQJJq6CtfBr+2nfEO6WfL7DkO9SxDJJRv/jptWw7CLxLEeREj3cZ0CVsls45I9ImK
-	 xyu2/Kj/sYtgRi8jlfTebsYG+ZD67Og5DLr5fBRYvfQt1aEw0gq2PSAR1YD5noFp/t
-	 Qi63eq1BK8bhuN6L8jX0ES01kBlVLvMPQD6YnPWRq6znArglYSKhk1JYrjoqH1nMmQ
-	 pV/ayB5yUs89kLcAwko7vUXIVSZAlGg+ilAWUpFxwuhV7NktlDepEd6vNX989fSoTH
-	 yDvcsaNaLV9eA==
-Date: Fri, 31 May 2024 23:50:23 +0900
+	b=YR9aDfRiFZ7mZP7hyvPmd8CBM7RmQmzgmehyStOv1WxCy2PvlCFcL+XsJcHvYN3tq
+	 MDIRzMqvHcPN6kKGF9QzNI1WjpMWtV2mvsYUeEnwZeeeMi88rmDgK83gUNjz8QZ3VE
+	 CzjXMkieUp7fEpxajZC5ZHBHsGiNyL42Jwg8q1tRyjneNdQC68OmNe1uHkK2MwSYq4
+	 3BFNWHfzQN7JY6ZLACX/hPY6wFryQEI/ovOUn9AeqdsRdSPl1N4070bmxC4r7dL+0p
+	 jt7Ql1EUX/Tv3mYxIWXn/Vkac9l3dVHWsFRmkvWD7GYGuwqCc8zMVdnFSUWgArg8I+
+	 uyCu9NuNEBxTg==
+Date: Sat, 1 Jun 2024 00:00:47 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH 10/20] function_graph: Have the instances use their own
- ftrace_ops for filtering
-Message-Id: <20240531235023.a0b2b207362eba2f8b5c16f7@kernel.org>
-In-Reply-To: <20240531020346.6c13e2d4@rorschach.local.home>
-References: <20240525023652.903909489@goodmis.org>
-	<20240525023742.786834257@goodmis.org>
-	<20240530223057.21c2a779@rorschach.local.home>
-	<20240531121241.c586189caad8d31d597f614d@kernel.org>
-	<20240531020346.6c13e2d4@rorschach.local.home>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/2] selftests/tracing: Fix to check the required
+ syscall event
+Message-Id: <20240601000047.9e2b406a1307d843314bec02@kernel.org>
+In-Reply-To: <85472ab9-aa2e-4f5e-869d-5ab42e47c8a0@linuxfoundation.org>
+References: <171714860864.198407.18416314586430149538.stgit@devnote2>
+	<171714862700.198407.14000969067636098427.stgit@devnote2>
+	<85472ab9-aa2e-4f5e-869d-5ab42e47c8a0@linuxfoundation.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,115 +49,65 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 31 May 2024 02:03:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 31 May 2024 08:41:00 -0600
+Shuah Khan <skhan@linuxfoundation.org> wrote:
 
-> On Fri, 31 May 2024 12:12:41 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Thu, 30 May 2024 22:30:57 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> On 5/31/24 03:43, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > 
-> > > On Fri, 24 May 2024 22:37:02 -0400
-> > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >   
-> > > > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> > > > 
-> > > > Allow for instances to have their own ftrace_ops part of the fgraph_ops
-> > > > that makes the funtion_graph tracer filter on the set_ftrace_filter file
-> > > > of the instance and not the top instance.
-> > > > 
-> > > > Note that this also requires to update ftrace_graph_func() to call new
-> > > > function_graph_enter_ops() instead of function_graph_enter() so that
-> > > > it avoid pushing on shadow stack multiple times on the same function.  
-> > > 
-> > > So I found a major design flaw in this patch.
-> > >   
-> > > > 
-> > > > Co-developed with Masami Hiramatsu:
-> > > > Link: https://lore.kernel.org/linux-trace-kernel/171509102088.162236.15758883237657317789.stgit@devnote2
-> > > > 
-> > > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > > > ---  
-> > >   
-> > > > diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> > > > index 8da0e66ca22d..998558cb8f15 100644
-> > > > --- a/arch/x86/kernel/ftrace.c
-> > > > +++ b/arch/x86/kernel/ftrace.c
-> > > > @@ -648,9 +648,24 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-> > > >  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
-> > > >  {
-> > > >  	struct pt_regs *regs = &fregs->regs;
-> > > > -	unsigned long *stack = (unsigned long *)kernel_stack_pointer(regs);
-> > > > +	unsigned long *parent = (unsigned long *)kernel_stack_pointer(regs);
-> > > > +	struct fgraph_ops *gops = container_of(op, struct fgraph_ops, ops);
-> > > > +	int bit;
-> > > > +
-> > > > +	if (unlikely(ftrace_graph_is_dead()))
-> > > > +		return;
-> > > > +
-> > > > +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
-> > > > +		return;
-> > > >  
-> > > > -	prepare_ftrace_return(ip, (unsigned long *)stack, 0);
-> > > > +	bit = ftrace_test_recursion_trylock(ip, *parent);
-> > > > +	if (bit < 0)
-> > > > +		return;
-> > > > +
-> > > > +	if (!function_graph_enter_ops(*parent, ip, 0, parent, gops))  
-> > > 
-> > > So each registered graph ops has its own ftrace_ops which gets
-> > > registered with ftrace, so this function does get called in a loop (by
-> > > the ftrace iterator function). This means that we would need that code
-> > > to detect the function_graph_enter_ops() getting called multiple times
-> > > for the same function. This means each fgraph_ops gits its own retstack
-> > > on the shadow stack.  
+> > Since test_duplicates.tc depends on syscalls/sys_enter_openat event,
+> > it must add the event file to `requires`.
+> > Without this fix, the test fails if CONFIG_FTRACE_SYSCALLS=n.
 > > 
-> > Ah, that is my concern and the reason why I added bitmap and stack reuse
-> > code in the ftrace_push_return_trace().
+> > Fixes: 297e1dcdca3d ("selftests/ftrace: Add selftest for testing duplicate eprobes and kprobes")
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >   .../ftrace/test.d/dynevent/test_duplicates.tc      |    2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
 > > 
-> > > 
-> > > I find this a waste of shadow stack resources, and also complicates the
-> > > code with having to deal with tail calls and all that.
-> > > 
-> > > BUT! There's good news! I also thought about another way of handling
-> > > this. I have something working, but requires a bit of rewriting the
-> > > code. I should have something out in a day or two.  
+> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+> > index d3a79da215c8..5f72abe6fa79 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+> > @@ -1,7 +1,7 @@
+> >   #!/bin/sh
+> >   # SPDX-License-Identifier: GPL-2.0
+> >   # description: Generic dynamic event - check if duplicate events are caught
+> > -# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
+> > +# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README events/syscalls/sys_enter_openat
+> >   
+> >   echo 0 > events/enable
+> >   
 > > 
-> > Hmm, I just wonder why you don't reocver my bitmap check and stack
-> > reusing code. Are there any problem on it? (Too complicated?)
 > > 
 > 
-> I actually dislike the use of ftrace itself to do the loop. I rather
-> have fgraph be in control of it.
+> This change is already in mainline. I sent the fix up in my 6.10-rc1 pr?
 
-(actually, I agreed with you, looping in ftrace may cause trouble)
+Oops, sorry, I forgot to pick it to my working branch...
 
+Thanks!
+
+> The short log is a slightly different:
 > 
-> I've come up with a new "subops" assignment, where you can have one
-> ftrace_ops represent multiple sub ftrace_ops. Basically, each fgraph
-> ops can register its own ftrace_ops under a single graph_ops
-> ftrace_ops. The graph_ops will be used to decide what functions call
-> the callback, and then the callback does the multiplexing.
-
-So is it similar to the fprobe/kprobe, use shared signle ftrace_ops,
-but keep each fgraph has own hash table?
-
-> This removes the need to touch the architecture code. It can also be
-> used by fprobes to handle the attachments to functions for several
-> different sets of callbacks.
+> commit f6c3c83db1d939ebdb8c8922748ae647d8126d91
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Date:   Tue May 21 09:00:22 2024 +0900
 > 
-> I'll send out patches soon.
-
-OK, I'll wait for that.
-
-Thank you!
-
+>      selftests/ftrace: Fix to check required event file
+>      
+>      The dynevent/test_duplicates.tc test case uses `syscalls/sys_enter_openat`
+>      event for defining eprobe on it. Since this `syscalls` events depend on
+>      CONFIG_FTRACE_SYSCALLS=y, if it is not set, the test will fail.
+>      
+>      Add the event file to `required` line so that the test will return
+>      `unsupported` result.
+>      
+>      Fixes: 297e1dcdca3d ("selftests/ftrace: Add selftest for testing duplicate eprobes and kprobes")
+>      Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>      Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 > 
-> -- Steve
-> 
+> thanks,
+> -- Shuah
 
 
 -- 
