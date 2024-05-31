@@ -1,114 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79E77483;
-	Fri, 31 May 2024 15:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CA739FF3;
+	Fri, 31 May 2024 15:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717167651; cv=none; b=iBhNafHjxx24KfS8X0RmHSRSkj67FwBcTRBZSzlEDYUIv2mzKb3WAm8PYvnxO+bpPBQ2MVMB+zBVYHZIEioL0TJWU+j03BVqA6BMGEFj4zBO25M6rK658DHD6MlxFAYOSIXoxR6Axi2Tog7MlAocIMdR4N9EaU5+62PfRT3N05k=
+	t=1717169487; cv=none; b=XOTibFL6ba3umTM4/Qb0+ubrcSK2tx297wL1b8619btJDLi23Ss8vod1DF922tuOZo2jyEf8LfoPwOBGvMWSwtTB0UKK/eZRNAZoGsfUH5sdH4dzeAMj3w9KNWQ0KYMae3t2VD92tJh3pAApldxCKUPaELcaEXVZ6nddRxcWHE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717167651; c=relaxed/simple;
-	bh=lNSkXp6089IHQNq0gU4AKnSQIdYErLjMuM20ebZC21Q=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=SQsZWpo74JMZdau94/CjqZKEXTCarkLO9JJ/AlR19peMyNwMC6kBuYIHHB8y7lNNf0IGwahHu+Xb2WQ4s/gO+tlMm6Ob67PBnfMDxZfH50KLf8kbsNOL21hU7OiMHjFs1M2UKnEbniVr95jo8TG+VzABQd2rxIj1vW4r5Mn1Lys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YR9aDfRi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YR9aDfRi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D0EC32781;
-	Fri, 31 May 2024 15:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717167650;
-	bh=lNSkXp6089IHQNq0gU4AKnSQIdYErLjMuM20ebZC21Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YR9aDfRiFZ7mZP7hyvPmd8CBM7RmQmzgmehyStOv1WxCy2PvlCFcL+XsJcHvYN3tq
-	 MDIRzMqvHcPN6kKGF9QzNI1WjpMWtV2mvsYUeEnwZeeeMi88rmDgK83gUNjz8QZ3VE
-	 CzjXMkieUp7fEpxajZC5ZHBHsGiNyL42Jwg8q1tRyjneNdQC68OmNe1uHkK2MwSYq4
-	 3BFNWHfzQN7JY6ZLACX/hPY6wFryQEI/ovOUn9AeqdsRdSPl1N4070bmxC4r7dL+0p
-	 jt7Ql1EUX/Tv3mYxIWXn/Vkac9l3dVHWsFRmkvWD7GYGuwqCc8zMVdnFSUWgArg8I+
-	 uyCu9NuNEBxTg==
-Date: Sat, 1 Jun 2024 00:00:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/2] selftests/tracing: Fix to check the required
- syscall event
-Message-Id: <20240601000047.9e2b406a1307d843314bec02@kernel.org>
-In-Reply-To: <85472ab9-aa2e-4f5e-869d-5ab42e47c8a0@linuxfoundation.org>
-References: <171714860864.198407.18416314586430149538.stgit@devnote2>
-	<171714862700.198407.14000969067636098427.stgit@devnote2>
-	<85472ab9-aa2e-4f5e-869d-5ab42e47c8a0@linuxfoundation.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717169487; c=relaxed/simple;
+	bh=wb1cOchvcOujs9HWcw7r/ZrIUMH4fHWuktSZkjSAwAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iwNtD4RhyRW0yjyAzAjMb8qB1VuGonUFFeUZwOvUU8D/1uBwtPWvgRYUQFA7JXCEt0kthWjMVjGLBG9htgc8LVhfIml0QAJKGdptfB3pXj6oP6AvC6e5e+XOnkHEvmihfUqZuwKyUvveuP9+QeXOz9w3RiwCkDlrKTg1tqwxG1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 559941424;
+	Fri, 31 May 2024 08:31:49 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A56163F641;
+	Fri, 31 May 2024 08:31:21 -0700 (PDT)
+Date: Fri, 31 May 2024 16:31:14 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/4] static key support for error injection functions
+Message-ID: <ZlntQn-a7Ycko_j5@J2N7QTR9R3>
+References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
 
-On Fri, 31 May 2024 08:41:00 -0600
-Shuah Khan <skhan@linuxfoundation.org> wrote:
+Hi,
 
-> On 5/31/24 03:43, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Since test_duplicates.tc depends on syscalls/sys_enter_openat event,
-> > it must add the event file to `requires`.
-> > Without this fix, the test fails if CONFIG_FTRACE_SYSCALLS=n.
-> > 
-> > Fixes: 297e1dcdca3d ("selftests/ftrace: Add selftest for testing duplicate eprobes and kprobes")
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >   .../ftrace/test.d/dynevent/test_duplicates.tc      |    2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
-> > index d3a79da215c8..5f72abe6fa79 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
-> > @@ -1,7 +1,7 @@
-> >   #!/bin/sh
-> >   # SPDX-License-Identifier: GPL-2.0
-> >   # description: Generic dynamic event - check if duplicate events are caught
-> > -# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
-> > +# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README events/syscalls/sys_enter_openat
-> >   
-> >   echo 0 > events/enable
-> >   
-> > 
-> > 
+On Fri, May 31, 2024 at 11:33:31AM +0200, Vlastimil Babka wrote:
+> Incomplete, help needed from ftrace/kprobe and bpf folks.
+
+> - the generic error injection using kretprobes with
+>   override_function_with_return is handled in patch 2. The
+>   ALLOW_ERROR_INJECTION() annotation is extended so that static key
+>   address can be passed, and the framework controls it when error
+>   injection is enabled or disabled in debugfs for the function.
 > 
-> This change is already in mainline. I sent the fix up in my 6.10-rc1 pr?
-
-Oops, sorry, I forgot to pick it to my working branch...
-
-Thanks!
-
-> The short log is a slightly different:
+> There are two more users I know of but am not familiar enough to fix up
+> myself. I hope people that are more familiar can help me here.
 > 
-> commit f6c3c83db1d939ebdb8c8922748ae647d8126d91
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Date:   Tue May 21 09:00:22 2024 +0900
-> 
->      selftests/ftrace: Fix to check required event file
->      
->      The dynevent/test_duplicates.tc test case uses `syscalls/sys_enter_openat`
->      event for defining eprobe on it. Since this `syscalls` events depend on
->      CONFIG_FTRACE_SYSCALLS=y, if it is not set, the test will fail.
->      
->      Add the event file to `required` line so that the test will return
->      `unsupported` result.
->      
->      Fixes: 297e1dcdca3d ("selftests/ftrace: Add selftest for testing duplicate eprobes and kprobes")
->      Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->      Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> 
-> thanks,
-> -- Shuah
+> - ftrace seems to be using override_function_with_return from
+>   #define ftrace_override_function_with_return but I found no place
+>   where the latter is used. I assume it might be hidden behind more
+>   macro magic? But the point is if ftrace can be instructed to act like
+>   an error injection, it would also have to use some form of metadata
+>   (from patch 2 presumably?) to get to the static key and control it.
 
+I don't think you've missed anything; nothing currently uses
+ftrace_override_function_with_return(). I added that in commit:
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+  94d095ffa0e16bb7 ("ftrace: abstract DYNAMIC_FTRACE_WITH_ARGS accesses")
+
+... so that it was possible to do anything that was possible with
+FTRACE_WITH_REGS and/or kprobes, under the expectation that we might
+want to move fault injection and BPF probes over to fprobes in future,
+as ftrace/fprobes is generally faster than kprobes (e.g. for
+architectures that can't do KPROBES_ON_FTRACE or OPTPROBES).
+
+That's just the mechanism for the handler to use; I'd expect whatever
+registered the handler to be responsible for flipping the static key,
+and I don't think anything needs to change within ftrace itself.
+
+>   If ftrace can only observe the function being called, maybe it
+>   wouldn't be wrong to just observe nothing if the static key isn't
+>   enabled because nobody is doing the fault injection?
+
+Yep, that sounds right to me.
+
+Mark.
