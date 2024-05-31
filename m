@@ -1,179 +1,158 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7415B128;
-	Fri, 31 May 2024 16:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B9316D304;
+	Fri, 31 May 2024 17:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717173848; cv=none; b=kwZLfWKiLUXkTpoaTeHB24qBVfHalprS/1JO8ZKtMBduGWBk+ppU0oOAZgDzOU0lNrQ0WwB0ABGjAXb4qNZYhkqttPau580WDpQaPPnX+7RedyPTEjr1I/6uTIIX3grMqYRN3Ze8hoTS3aHAtn0Ycrz4lv6BlToKvw4eNLC8Vmk=
+	t=1717174894; cv=none; b=WFFmRKwqO6vpp0ZnaAfyqHrBYg7dqPEtxcL307f0DflW5TPKgsRRphdCBttOjmfcRfAej4Bnsu1bxpxgBHnXQsfiRdM4xzz7dPwuKeU6B6gLfua4OYSIt/9CmwuA9jOn0HPhx2qSqrvsFIiDzpWiegaRY71uTfNGV0JrNkObLGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717173848; c=relaxed/simple;
-	bh=uG7P1x3HrP8RowMmWDcBXTYjXz0LxJxK8wl6ae3emAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IDRdQmoGXR1FSOkLIM2ycT2kiDzToRVd5WAdNr7zUkCbdpSQ0c37PZurO7JsZLiW8HB9SDR/GjG93wn46BcvxOT1kNH2pNJML01/p97ljMPDYLx7S0OB+4MK45oFTMzA4zza1IyPZkOFhrC1mRnO01Nrxt9I6fXY7PRWqlYlw/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T7SyYA5K; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717174894; c=relaxed/simple;
+	bh=Yjqo3hlhlx9yKevXhDT1MNENp9AFIIad+z8zrRdLuUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZmHNnTs8yfM63sRsdAiqby4yW0MxfVjWNDHk68XfBUt9mqPQNhndAp1uqzoJzf1KS+XFzyHSL7vyYHuPkCEz7bbJZFyBXZ+C7EfTXjkNZ9OGGcGGtAmiQsIdzDGLRy+Zt+kJzkwhP9QT7r4zIs09TlhNJqOOsXRUD4oW6wN/Vek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=faGKBjHC; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7SyYA5K"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-421208c97a2so21008805e9.1;
-        Fri, 31 May 2024 09:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717173845; x=1717778645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GgrPSqavQhhCwRo/IO4y9sSd78oBJ0BfHadESybGIRk=;
-        b=T7SyYA5KUZsU23dLb8L62F/2Jh5Qo6J/r4/MNbO8TkE8nC2FZnaVwWl+kKSqh/QOe+
-         BS1fGqJHvsUtzbGAS4xwdvW8m59LhW2FsM+AlGMc1N3DyrOTvD/76DP7mPJ3Iwm8i5JH
-         eFkkoolx/lsc5ilSkRkPla5644JSh1ltjHyFeP6aCNsujj1mx6xHn72aXGvOgsOPcpTo
-         9DIkSl8uLu/8/e9YHZbf3g4Y3m3AJ57YcLmiSD0LXUyqkqT2P5oi4bpWcLpMXsUQpFZT
-         GwcNl1bC9kXpKpGRO7WQOQC8vMMuSzPT6jJN2kEXAHXlf6SUkKPeKtN0PMsGETVR7mLa
-         ImLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717173845; x=1717778645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GgrPSqavQhhCwRo/IO4y9sSd78oBJ0BfHadESybGIRk=;
-        b=KNUJo6s2zjEMtfJv+23IQd1ZLp/RwYOf3qzaQZd65wf5WooWRDd7+R8A3qeqoBVtsV
-         n3NjqQe2gwHO+/ZU6+SGPZ9NW2+47ztfKDeTu6t3ydC/U5ro6doF15t2a+GHCFuJLzRW
-         lxSv5NFlGYOYm/iTf83GGuoTY/k6LRtBsaiokJIcfWSwLyht4Wau2j7LFGaxzajOFSNW
-         lEBXFvBa8Cu2QBtZzCWivRu9oihXC6pDxyQ1pS2eM7+LU/GZfENhG2FGm6JqdfaRnuRo
-         XKxQGDP0R+6gUczIg7k8NCkvw+YINmHSUJ4q80GB9eVFSM2TGpW+maMFaxQz3gF0MFtg
-         CR6w==
-X-Forwarded-Encrypted: i=1; AJvYcCW201XqUwz/uvT0jmYeD9qAlOn7uN64A2c3btX4znu03YN1rqGa0lSlV7RkzlNYnSSh8ShvdMHYB8ax4sTvEvfHmMnoscb9wawIqrpI9YCgi8cVw6iTmSPXqZ8+xnM79ndW2i/cmm2L9U34luoTyMhyiOLuDOaM745GLyYXmlWp5LP6/Ind
-X-Gm-Message-State: AOJu0Yz1UyywsN/HQ4N5+OWt4YRfYPY7D2GEoxeSnRxyuKOXv+xQM0Pq
-	DfAGcHkimmLGrQdhqZU3mNre/EhgTKe7QliavpBzWLgYCGqttssCRuxCM27upee9DVgiFBo9CzE
-	JnZJrsoLPsjXNvKpPXQnQBiwaukG0bDSf
-X-Google-Smtp-Source: AGHT+IFTytoJamLJRvTQO3BYC2MBDxCEuBj6lgJTYnD/N3Qp380NOujMSa5JG5AI3SYo5H23tb7dmLf0PjIWpX8mTVk=
-X-Received: by 2002:a05:600c:3541:b0:41a:c86e:a4db with SMTP id
- 5b1f17b1804b1-4212e04732amr18706075e9.9.1717173844917; Fri, 31 May 2024
- 09:44:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="faGKBjHC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717174891; x=1748710891;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yjqo3hlhlx9yKevXhDT1MNENp9AFIIad+z8zrRdLuUs=;
+  b=faGKBjHCipfYarK+ZtyukSvXvuDJ9nLLhH83jsdCuoPRrcXL4V7i0QDX
+   KcQiwrp5uQyql6B0usuSccvDUAwWVCaBBp+8kNBzoa9HAFcAxmoNAT5XN
+   +JJGQ08xnXTI2qFu4Y+uQ2Dg+as0/V0lfE6kIw/WdvPsxQJ6rXNmLtSKd
+   lYbjN+ROiJ22MB5zzstaDoLd8qphUrMi1tg32HsiKJIfFUK6bWka5ByAN
+   k2l/e+gl0Q63f2JqkE95EbNRxROzWFI3D9T3NYSGA84FCyKETVbdv6/9C
+   51n3RUX6zDAQGEmL6uDNqv40pUeHcMr6GEO37OxGqQ50jZpGdD2MqFNcj
+   w==;
+X-CSE-ConnectionGUID: RDNgaDEyT9i9nmGA53wnEA==
+X-CSE-MsgGUID: BdTQM0E6Sdu81V7bxIsj+A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="31223123"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="31223123"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 10:01:31 -0700
+X-CSE-ConnectionGUID: kwv4Ne6VSaWer/Fbg//lww==
+X-CSE-MsgGUID: UWrQa+u+SWK1A29eqgaOlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="36800309"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 31 May 2024 10:01:29 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sD5d8-000HUA-1N;
+	Fri, 31 May 2024 17:01:26 +0000
+Date: Sat, 1 Jun 2024 01:01:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	don <zds100@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org
+Subject: Re: [PATCH] tracing/fprobe: Support raw tracepoint events on modules
+Message-ID: <202406010034.fsNP9Rsq-lkp@intel.com>
+References: <171714888633.198965.13093663631481169611.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz> <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
-In-Reply-To: <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 31 May 2024 09:43:53 -0700
-Message-ID: <CAADnVQJ=bNg9nWQPXGjJ11pZnmjntt=zLBqtJng3328T1L-u0g@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/4] mm, slab: add static key for should_failslab()
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <171714888633.198965.13093663631481169611.stgit@devnote2>
 
-On Fri, May 31, 2024 at 2:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> Since commit 4f6923fbb352 ("mm: make should_failslab always available for
-> fault injection") should_failslab() is unconditionally a noinline
-> function. This adds visible overhead to the slab allocation hotpath,
-> even if the function is empty. With CONFIG_FAILSLAB=3Dy there's additiona=
-l
-> overhead when the functionality is not enabled by a boot parameter or
-> debugfs.
->
-> The overhead can be eliminated with a static key around the callsite.
-> Fault injection and error injection frameworks can now be told that the
-> this function has a static key associated, and are able to enable and
-> disable it accordingly.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/failslab.c |  2 +-
->  mm/slab.h     |  3 +++
->  mm/slub.c     | 10 +++++++---
->  3 files changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/failslab.c b/mm/failslab.c
-> index ffc420c0e767..878fd08e5dac 100644
-> --- a/mm/failslab.c
-> +++ b/mm/failslab.c
-> @@ -9,7 +9,7 @@ static struct {
->         bool ignore_gfp_reclaim;
->         bool cache_filter;
->  } failslab =3D {
-> -       .attr =3D FAULT_ATTR_INITIALIZER,
-> +       .attr =3D FAULT_ATTR_INITIALIZER_KEY(&should_failslab_active.key)=
-,
->         .ignore_gfp_reclaim =3D true,
->         .cache_filter =3D false,
->  };
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 5f8f47c5bee0..792e19cb37b8 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -11,6 +11,7 @@
->  #include <linux/memcontrol.h>
->  #include <linux/kfence.h>
->  #include <linux/kasan.h>
-> +#include <linux/jump_label.h>
->
->  /*
->   * Internal slab definitions
-> @@ -160,6 +161,8 @@ static_assert(IS_ALIGNED(offsetof(struct slab, freeli=
-st), sizeof(freelist_aba_t)
->   */
->  #define slab_page(s) folio_page(slab_folio(s), 0)
->
-> +DECLARE_STATIC_KEY_FALSE(should_failslab_active);
-> +
->  /*
->   * If network-based swap is enabled, sl*b must keep track of whether pag=
-es
->   * were allocated from pfmemalloc reserves.
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 0809760cf789..3bb579760a37 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -3874,13 +3874,15 @@ static __always_inline void maybe_wipe_obj_freept=
-r(struct kmem_cache *s,
->                         0, sizeof(void *));
->  }
->
-> +DEFINE_STATIC_KEY_FALSE(should_failslab_active);
-> +
->  noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
->  {
->         if (__should_failslab(s, gfpflags))
->                 return -ENOMEM;
->         return 0;
->  }
-> -ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
-> +ALLOW_ERROR_INJECTION_KEY(should_failslab, ERRNO, &should_failslab_activ=
-e);
->
->  static __fastpath_inline
->  struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s, gfp_t flags=
-)
-> @@ -3889,8 +3891,10 @@ struct kmem_cache *slab_pre_alloc_hook(struct kmem=
-_cache *s, gfp_t flags)
->
->         might_alloc(flags);
->
-> -       if (unlikely(should_failslab(s, flags)))
-> -               return NULL;
-> +       if (static_branch_unlikely(&should_failslab_active)) {
-> +               if (should_failslab(s, flags))
-> +                       return NULL;
-> +       }
+Hi Masami,
 
-makes sense.
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+kernel test robot noticed the following build errors:
 
-Do you have any microbenchmark numbers before/after this optimization?
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.10-rc1 next-20240531]
+[cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-fprobe-Support-raw-tracepoint-events-on-modules/20240531-175013
+base:   linus/master
+patch link:    https://lore.kernel.org/r/171714888633.198965.13093663631481169611.stgit%40devnote2
+patch subject: [PATCH] tracing/fprobe: Support raw tracepoint events on modules
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240601/202406010034.fsNP9Rsq-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project bafda89a0944d947fc4b3b5663185e07a397ac30)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406010034.fsNP9Rsq-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406010034.fsNP9Rsq-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/tracepoint.c:5:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:173:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     501 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     508 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     520 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     529 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/tracepoint.c:751:34: error: no member named '__start___tracepoints_ptrs' in 'struct module'
+     751 |                 for_each_tracepoint_range(mod->__start___tracepoints_ptrs,
+         |                                           ~~~  ^
+   5 warnings and 1 error generated.
+
+
+vim +751 kernel/tracepoint.c
+
+   738	
+   739	void for_each_module_tracepoint(void (*fct)(struct tracepoint *tp, void *priv),
+   740					void *priv)
+   741	{
+   742		struct tp_module *tp_mod;
+   743		struct module *mod;
+   744	
+   745		if (!mod->num_tracepoints)
+   746			return;
+   747	
+   748		mutex_lock(&tracepoint_module_list_mutex);
+   749		list_for_each_entry(tp_mod, &tracepoint_module_list, list) {
+   750			mod = tp_mod->mod;
+ > 751			for_each_tracepoint_range(mod->__start___tracepoints_ptrs,
+   752				mod->tracepoints_ptrs + mod->num_tracepoints,
+   753				fct, priv);
+   754		}
+   755		mutex_unlock(&tracepoint_module_list_mutex);
+   756	}
+   757	#endif /* CONFIG_MODULES */
+   758	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
