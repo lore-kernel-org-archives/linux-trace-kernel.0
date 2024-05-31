@@ -1,86 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDED54CDF9;
-	Fri, 31 May 2024 06:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5234928DA0
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 May 2024 06:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717137022; cv=none; b=ZBNXcAnrH7oOS6mZxmbSKpPgY/uLauVajn1tutRet4mqTBIP4ZCCQIh7O81eIAhyGfTZNAL3DChj4fa6yex6bM3yyELO+V5753hzTlBbF3V7OXulGYv92xY1SfA6pZaK7XE3cmsFN8HpQJnyJgUxSDxDnWbOYDU2sN//1T76fbM=
+	t=1717138234; cv=none; b=eHSOPPfvjYeyj4CAfM7sNPpzXQPBzJqITUMaDHOuo7B9Wsv47wOH2QiHoK1aAdOiR9BBFVnOvnouH6Txthx2cOT97K2G1LwBw8pkGZzZSteXrooNuVuL18lseUgIsJljTP0mEwS5uVC9M5yXcfDWfKGZLDXaOeThShH01N1Nc1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717137022; c=relaxed/simple;
-	bh=ryUzeilFSwy47t1FN5S64noxvyK7l66pL9dkJAS2C6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cn6tmxHn4LLXgrM/wPFLubzdwvn7rKVUjbMwCItLZhgEeqQkIeJSJW4p+5FFTz8Va4dvhrJNH4Ya2bvbNoQPKaVjNxNr9K2fgbn2UYA9CinuMsL4MuWHuHB6kVFNoJjtPrcqIPtx+KxOpR1IYf8Fd8JU3c7akhoxvZGGsKRR+0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QFoB69CH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wjDiGFYZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QFoB69CH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wjDiGFYZ"
-Date: Fri, 31 May 2024 08:30:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717137018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K0QKmm22JdPzh0GWkCWU77DhQui4Y/61huUJNDliaZA=;
-	b=QFoB69CHRFvRO1Fso0pUfBNcwKfvV+h0+FJ/JubW7z2q2efjpJH6b8WXySQFplvr1+uXPZ
-	KLbaZDksbyDfeWdtuooMyEMWp2ZoG1Uk7JhevAk1v/dMmfGLQ9hpLraPoG2PxVOz3zv49k
-	x2CDiEMw2/V/a4e3tSwnS2ueF1V8p9oolXLmNYaG04PACNgDw2vxMaBZrDUbJv1i6YW7RG
-	tg6VtHYT2cTLxQicta5t7yKAAsTuCWRA6rUmFrJfxOR9tsinUBUOzKeatteAwEd58UKcAO
-	CvkGDyB+LajttHbABral2JxJId1Skikf1EwZDGXGZhhxn6JKsXDxr1bKpcvtbw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717137018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K0QKmm22JdPzh0GWkCWU77DhQui4Y/61huUJNDliaZA=;
-	b=wjDiGFYZOlVuL2w0+5a4ueNxOgXg4POfy35IGj/X1kD63/lhPCtWQRjwR3TImhrfyR/JY7
-	a3VsRjTwQkRt8gCw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH v2] sched/rt: Clean up usage of rt_task()
-Message-ID: <20240531063016.OCMg21Uq@linutronix.de>
-References: <20240515220536.823145-1-qyousef@layalina.io>
- <20240521110035.KRIwllGe@linutronix.de>
- <20240527172650.kieptfl3zhyljkzx@airbuntu>
- <20240529082912.gPDpgVy3@linutronix.de>
- <20240529103409.3iiemroaavv5lh2p@airbuntu>
- <20240529105528.9QBTCqCr@linutronix.de>
- <20240530111044.d4jegeiueizvdjrg@airbuntu>
+	s=arc-20240116; t=1717138234; c=relaxed/simple;
+	bh=W8fRjq7Z6y710iIkROTQ7PaNQUOchdeTRaZz7588gfY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FilFcsU9BeCdlcA4W5b9Y7aH2Vs4kawlhwBESh1hdZYp3iwg17eoD/UAaA2S9D2gH6Qv+k8lB4Onfra3q8lFw4caaZYMIPVfLq5eOq8MgSwtdHC/HZYoN2g3Tyy/GINe2Tmof7wk6uAikDxhrf3mHGX1DjH7nZS189dmu1qaQGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36da6da1d98so17641575ab.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 May 2024 23:50:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717138232; x=1717743032;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0vrmo5/ch+u7W6jSFxsW+zK74pp2lMQV7jM4YwFzhww=;
+        b=V2vllBr4BYjlVYAE4dqjJ2O7tE7Jfflz2GcliWNwTxRs+05ytUiZQXyDlq3gDA3SD5
+         /d6Zfpg8OUrlj+vn68kcuVaxCoHnt/H253LhEuXe2dui+phwp31xyxJmxSZKQ+d8KIIo
+         1cvt31IFnlJHMIYUvvIN288gbk9CJDvPKwiqlBzZNFNa++6772KMDpaYElJGbhNwl76s
+         z/tGbtfPRBaOd4a2HJRMtgGEtkPn1pYWRhYI126tWnC46LDteagO/j3GBva/izC5tnYS
+         KBbCKYOs4qMQwOnZid5f/CTvVSVRHrhqjT11G0ensB+2K//EBqKrDNd36VXZTAHwmN+S
+         s10Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUluArb+jK5h49FHn75OGwL+I9pR65CA5m1FRi2Y3rFwgNgEvMoXga2XtymD1pkerbZamfqxCFEvZqNoBRz9h/4fgMY56RS/cj2ium/dWMF436l
+X-Gm-Message-State: AOJu0YxB7BGFmB/p4ZOlkN9rOurJwDZLNaDBEBk0YBjwYfTlgXTLDQCR
+	0xPDcByL7bF4LoLnYO0OJR8tP5WxZJda+8BksN462x7aaQJGwpxEb+ZnCI95hBD5auzD+MygB15
+	IA0T6CfWsK+d5NRe7ADZmdPeItGRYKGiwtp3MpN/M4SMOjsWaNZv5i/s=
+X-Google-Smtp-Source: AGHT+IHtu4v0ERkxIQGbp2AR9qY7gfva9hE+/LAlzF/Y6AzElTm6868MwH+MeitESvwqbNkrAcYyf/GXzaR8LkRWxChDYG6aj/ir
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240530111044.d4jegeiueizvdjrg@airbuntu>
+X-Received: by 2002:a05:6e02:2167:b0:371:62ca:48ae with SMTP id
+ e9e14a558f8ab-3748b9cf92cmr713135ab.3.1717138232568; Thu, 30 May 2024
+ 23:50:32 -0700 (PDT)
+Date: Thu, 30 May 2024 23:50:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000061fac40619ba66f6@google.com>
+Subject: [syzbot] Monthly trace report (May 2024)
+From: syzbot <syzbot+list0820d438c1905c75bc71@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024-05-30 12:10:44 [+0100], Qais Yousef wrote:
-> > This is not consistent because IMHO the clock setup & slack should be
-> > handled equally. So I am asking the sched folks for a policy and I am
-> > leaning towards looking at task-policy in this case instead of prio
-> > because you shouldn't do anything that can delay.
-> 
-> Can't we do that based on is_soft/is_hard flag in hrtimer struct when we apply
-> the slack in hrtimer_set_expires_range_ns() instead?
+Hello trace maintainers/developers,
 
-We need to decide on a policy first.
-You don't want to add overhead on each invocation plus some in-kernel
-ask for delta. ->is_soft is not a good criteria.
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-Sebastian
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 10 issues are still open and 35 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 705     Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<2> 26      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<3> 7       Yes   WARNING in get_probe_ref
+                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+<4> 6       Yes   INFO: task hung in blk_trace_remove (2)
+                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+<5> 5       Yes   general protection fault in bpf_get_attach_cookie_tracing
+                  https://syzkaller.appspot.com/bug?extid=3ab78ff125b7979e45f9
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
