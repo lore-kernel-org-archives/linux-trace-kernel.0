@@ -1,45 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3111F16B;
-	Fri, 31 May 2024 02:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793F078C75;
+	Fri, 31 May 2024 03:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717123046; cv=none; b=Ctv2DbgCSCR9MBrueKZ1H/8RSW1vjU72iR0WDFcKKamyuW+dHxK4UnQE3dt4YTYG4Nbm7TTAVkxGohKuSR5FW3weEe0iiyn/FlT+xinRyB11l/JgXsHnT0kmson6zozZuPmY3GZaFdTnjnj7gdDBYMjkaokXm0MzQlnA/DKoOM8=
+	t=1717125168; cv=none; b=thwas17T9PJS0fbS15ojT9OEM9AXgr+mjXBdoTnFGovBltL9yCmtKx1KJe5uDif8LAbxQNwLC74T8ZeReUwQANQo5CImdVq1GcAVonD1J31iIbCdbU0SOBoEk1cp5bnzjjTMleLQRvXUAmCsaeCUoSg/NJNi6nv9KSQbV1MstXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717123046; c=relaxed/simple;
-	bh=25NiTbvE2NzMasFL8W/zwIAxAosWFfxZafXz8WmfOPQ=;
+	s=arc-20240116; t=1717125168; c=relaxed/simple;
+	bh=mvABzWLO0ZmTDSHnXzGQCtztJaHFqaLp4xV/xy/JZD4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZywkbKJyYbaYzFcVoGWGE6dCsksug3XS/v2xIkykHVpOPg8oQqruMBnkqRk0c0uPL7VPJo9Td2B6p1ysiLD7c4YGuc6J1Bfzn2/fZ3Y1oc2Mn0LURfNAemrrVIBfCGkzAL6Rv71TS5ALFYSbY6aQjuqHhoo+Bh4hQcXeNofoodY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLp4FjPy; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=uA0GIJOymK0kK6EesrZMkIttk71Zs75RjXRkY4+BvA15HDSkS1i6PGaa04KW2M2lX+UEYubjETXrES2C7u7btXePmR4XDCY176telOHmG9GdQzXHB6vsU/YzcFyz1qhKtKXlOdcqJbrJCka2G3Pe8x5/GOO0zUdbYSPCq3zN/Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8rEi16g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLp4FjPy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6DFC2BBFC;
-	Fri, 31 May 2024 02:37:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8rEi16g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB4BC116B1;
+	Fri, 31 May 2024 03:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717123045;
-	bh=25NiTbvE2NzMasFL8W/zwIAxAosWFfxZafXz8WmfOPQ=;
+	s=k20201202; t=1717125168;
+	bh=mvABzWLO0ZmTDSHnXzGQCtztJaHFqaLp4xV/xy/JZD4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BLp4FjPyHwL+h/cA7S8LBPh8vsMNy7+9gGPFH7z04VKN9JuYXJfANIJev/nEdFVsW
-	 AiXBGSekzI7kg5z2h4N8aNmqOG8Zyt2BiRnc2l6mgwcs9s8nFtEKTKsb/V1sISOK58
-	 6Xi64WweIzZxAzCx+OefTDFlnoiZ1PSzDRAOZVH8SO8XMdkRtw5jTBqv5w/vijtmNN
-	 GaK4Roy3GMaHNOiRPnDCKE08Lviw0IJA2suEr3hS5r1m9RXRTlpA4aTTobDOgf763x
-	 av6meTzr4X7bX9f1RdUaObai8WS7xMGRCi4xcGyx/hbh5E6vX5o2TEziqVMeVyUXRd
-	 8mkJYoIRwphUQ==
-Date: Fri, 31 May 2024 11:37:21 +0900
+	b=b8rEi16g2AUW9vHMlCM+VGX3A979YOL+TbVmHAUr/A7tCD1av8ezZFA8Qns1UdcIe
+	 BEN+3sNEtCrL7fEn54+wD5Rz8YjnKjHcJetmwJrhT9pt35vd6ZM5Q7CvR9jGCyUdLF
+	 kXz8axFghW4GZD1K8xvStJmkebMN/wcT2Ej6oJoc8aBIZHsPAtpWxtfzGc0W2WgGnk
+	 ru92ZEIZCifBzk4IZfk9gzMJ2sAvNON9awbsSiOzURPXHh//tV3jwmh+r5p4eX4rYS
+	 iXnW9swLMAinWK0actw41aRF5jrBYwmIFIuXC1oaKnp1bV92j3IjBP6mF3wAUfqYlS
+	 rh/LNYCiykWnQ==
+Date: Fri, 31 May 2024 12:12:41 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
-Message-Id: <20240531113721.c0314e0cdb3beb70c1a6ba7d@kernel.org>
-In-Reply-To: <3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
-References: <171671825710.39694.6859036369216249956.stgit@devnote2>
-	<20240527192907.49c9220f@rorschach.local.home>
-	<20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
-	<20240529083818.b7835de167191d4567405ce6@kernel.org>
-	<3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH 10/20] function_graph: Have the instances use their own
+ ftrace_ops for filtering
+Message-Id: <20240531121241.c586189caad8d31d597f614d@kernel.org>
+In-Reply-To: <20240530223057.21c2a779@rorschach.local.home>
+References: <20240525023652.903909489@goodmis.org>
+	<20240525023742.786834257@goodmis.org>
+	<20240530223057.21c2a779@rorschach.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,141 +54,95 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 29 May 2024 11:01:43 -0500
-Tom Zanussi <tom.zanussi@linux.intel.com> wrote:
+On Thu, 30 May 2024 22:30:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Hi Masami,
+> On Fri, 24 May 2024 22:37:02 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> On Wed, 2024-05-29 at 08:38 +0900, Masami Hiramatsu wrote:
-> > On Wed, 29 May 2024 01:46:40 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > > 
-> > > On Mon, 27 May 2024 19:29:07 -0400
-> > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > 
-> > > > On Sun, 26 May 2024 19:10:57 +0900
-> > > > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > > > 
-> > > > > Hi,
-> > > > > 
-> > > > > Here is a series of some fixes/improvements for the test
-> > > > > modules and boot
-> > > > > time selftest of kprobe events. I found a WARNING message with
-> > > > > some boot 
-> > > > > time selftest configuration, which came from the combination of
-> > > > > embedded
-> > > > > kprobe generate API tests module and ftrace boot-time selftest.
-> > > > > So the main
-> > > > > problem is that the test module should not be built-in. But I
-> > > > > also think
-> > > > > this WARNING message is useless (because there are warning
-> > > > > messages already)
-> > > > > and the cleanup code is redundant. This series fixes those
-> > > > > issues.
-> > > > 
-> > > > Note, when I enable trace tests as builtin instead of modules, I
-> > > > just
-> > > > disable the bootup self tests when it detects this. This helps
-> > > > with
-> > > > doing tests via config options than having to add user space code
-> > > > that
-> > > > loads modules.
-> > > > 
-> > > > Could you do something similar?
-> > > 
-> > > OK, in that case, I would like to move the test cleanup code in
-> > > module_exit function into the end of module_init function. 
-> > > It looks there is no reason to split those into 2 parts.
+> > Allow for instances to have their own ftrace_ops part of the fgraph_ops
+> > that makes the funtion_graph tracer filter on the set_ftrace_filter file
+> > of the instance and not the top instance.
 > > 
-> > Wait, I would like to hear Tom's opinion. I found following usage
-> > comments
-> > in the code.
-> > 
-> >  * Following that are a few examples using the created events to test
-> >  * various ways of tracing a synthetic event.
-> >  *
-> >  * To test, select CONFIG_SYNTH_EVENT_GEN_TEST and build the module.
-> >  * Then:
-> >  *
-> >  * # insmod kernel/trace/synth_event_gen_test.ko
-> >  * # cat /sys/kernel/tracing/trace
-> >  *
-> >  * You should see several events in the trace buffer -
-> >  * "create_synth_test", "empty_synth_test", and several instances of
-> >  * "gen_synth_test".
-> >  *
-> >  * To remove the events, remove the module:
-> >  *
-> >  * # rmmod synth_event_gen_test
-> > 
-> > Tom, is that intended behavior ? and are you expected to reuse these
-> > events outside of the module? e.g. load the test module and run some
-> > test script in user space which uses those events?
-> > 
+> > Note that this also requires to update ftrace_graph_func() to call new
+> > function_graph_enter_ops() instead of function_graph_enter() so that
+> > it avoid pushing on shadow stack multiple times on the same function.
 > 
-> Yeah, this module was meant as a sample module showing how to create
-> and generate synthetic events in-kernel.
+> So I found a major design flaw in this patch.
 > 
-> So the interested user insmods the module, looks at the trace stream
-> and sees, ok the events are there as expected, so it does work, great,
-> let's remove the module to get rid of them and go write our own.
+> > 
+> > Co-developed with Masami Hiramatsu:
+> > Link: https://lore.kernel.org/linux-trace-kernel/171509102088.162236.15758883237657317789.stgit@devnote2
+> > 
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
 > 
-> Having both the creation and cleanup in module_init() wouldn't allow
-> the user the opportunity to do that i.e. verify the results by reading
-> the trace file.
+> > diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> > index 8da0e66ca22d..998558cb8f15 100644
+> > --- a/arch/x86/kernel/ftrace.c
+> > +++ b/arch/x86/kernel/ftrace.c
+> > @@ -648,9 +648,24 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+> >  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+> >  {
+> >  	struct pt_regs *regs = &fregs->regs;
+> > -	unsigned long *stack = (unsigned long *)kernel_stack_pointer(regs);
+> > +	unsigned long *parent = (unsigned long *)kernel_stack_pointer(regs);
+> > +	struct fgraph_ops *gops = container_of(op, struct fgraph_ops, ops);
+> > +	int bit;
+> > +
+> > +	if (unlikely(ftrace_graph_is_dead()))
+> > +		return;
+> > +
+> > +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+> > +		return;
+> >  
+> > -	prepare_ftrace_return(ip, (unsigned long *)stack, 0);
+> > +	bit = ftrace_test_recursion_trylock(ip, *parent);
+> > +	if (bit < 0)
+> > +		return;
+> > +
+> > +	if (!function_graph_enter_ops(*parent, ip, 0, parent, gops))
+> 
+> So each registered graph ops has its own ftrace_ops which gets
+> registered with ftrace, so this function does get called in a loop (by
+> the ftrace iterator function). This means that we would need that code
+> to detect the function_graph_enter_ops() getting called multiple times
+> for the same function. This means each fgraph_ops gits its own retstack
+> on the shadow stack.
 
-So, in summary, it is designed to be a module. Steve, I think these tests
-should be kept as modules. There are many reason to do so.
+Ah, that is my concern and the reason why I added bitmap and stack reuse
+code in the ftrace_push_return_trace().
 
- - This test is designed to be used as module.
- - This can conflict with other boot time selftest if it is embedded.
- - We can make these tests and boot time selftest mutable exclusive but
-   if we make these tests as modules, we can build and run both tests
-   safely.
- - Embedding these tests leave new events when the kernel boot, which
-   user must be cleaned up by manual.
-
-What would you think?
-
-
-Thank you,
 > 
-> Tom 
+> I find this a waste of shadow stack resources, and also complicates the
+> code with having to deal with tail calls and all that.
 > 
-> > As far as I can see, those tests are not intended to be embedded in
-> > the
-> > kernel because those are expected to be removed.
-> > 
-> > Thank you,
-> > 
-> > > 
-> > > Thank you,
-> > > 
-> > > > 
-> > > > -- Steve
-> > > > 
-> > > > 
-> > > > > 
-> > > > > Thank you,
-> > > > > 
-> > > > > ---
-> > > > > 
-> > > > > Masami Hiramatsu (Google) (3):
-> > > > >       tracing: Build event generation tests only as modules
-> > > > >       tracing/kprobe: Remove unneeded WARN_ON_ONCE() in
-> > > > > selftests
-> > > > >       tracing/kprobe: Remove cleanup code unrelated to selftest
-> > > > > 
-> > > 
-> > > 
-> > > -- 
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > 
+> BUT! There's good news! I also thought about another way of handling
+> this. I have something working, but requires a bit of rewriting the
+> code. I should have something out in a day or two.
+
+Hmm, I just wonder why you don't reocver my bitmap check and stack
+reusing code. Are there any problem on it? (Too complicated?)
+
+Thanks,
+
 > 
+> -- Steve
+> 
+> 
+> > +		*parent = (unsigned long)&return_to_handler;
+> > +
+> > +	ftrace_test_recursion_unlock(bit);
+> >  }
+> >  #endif
+> >  
 > 
 
 
