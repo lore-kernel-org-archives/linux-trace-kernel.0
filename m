@@ -1,151 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE0EB645;
-	Sat,  1 Jun 2024 01:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32ABAB645;
+	Sat,  1 Jun 2024 05:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717205755; cv=none; b=VjBqyjtbdRocXDNu4uniZ2XpxFtdJNlqpfgYsTrGZ64odaYOOx8iaA5rWj1GE5jC73PSxRLGnWhvcZ5hiwtmOlwv86JuFv97GmAwrUAYctFAaHlX05gogVyzVeHq9BZNz+HtAtGRApoUAInyZl+E6AWFIX2KOnTemkjB7F3tn1k=
+	t=1717220130; cv=none; b=ncUJ+67RK5bkMTNskJsB9JSWGTRsMWecrDIsPIXoJccVjN8DSk/TIuGo5Iv6m44UpNvRbhBp1FwBqJvuUyaoid715e75RdcTgcRCMLFLkyNbLcnAO3qKyid5w1r3aNkaakidM/Z3OwJWcRcWRIMZHkhWKCcp0XYXptbC7v9WIOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717205755; c=relaxed/simple;
-	bh=pm+Pa3NNlbtKgktm3W+jGGufJv5cuomBQKWgb866zbk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=skZiz2TmRApHjXBOoNRsNLzg8PJ49kW34DbWPpQQWq7K5t02mXeZxPezcsKIPFYfSCTa+B6MBqzUeTuZfQwoCQRlbb4B36Qt4ZHQlSDxiajqQQVXSBYRsuw1mAA3xxFN36W2NXwmgJD+5g4JuFbq9LbdR5bzlU6TOu73uQ2tjNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VM/3Pc57; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717220130; c=relaxed/simple;
+	bh=Qcg2EsWp+MetVfVlJ1MsRloFldhkkthqt6s0XSJGGUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CNBROIVzzRad9bD4fki+dKwX/enbEizuT9BVZjQByrJXz1Mi/vGyRxNbpTbc5d5r2bhithO+moS1qz2G3RcCHxWU59Xxt6JDQiwvEwDYkY2E2Km5/btk7e5ZdQ/870GV/tV1XuU11sY6dP1+D8L/Skgh6BO24PBeGtWf9gxSsuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HKdrUCcb; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VM/3Pc57"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8CFC116B1;
-	Sat,  1 Jun 2024 01:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717205754;
-	bh=pm+Pa3NNlbtKgktm3W+jGGufJv5cuomBQKWgb866zbk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VM/3Pc57q2jCQe4jMoNFxSlA/0yFFxSbxYwak/mjuY/wOeDU99NycqHazcZAlff+9
-	 2YLLr1vWxWQMNR3uiPvW6nUEaw+mBJqAyoU7gx9KUiwHGw8t7bh+s386sVxvmwH6oD
-	 KmXxJCWQHGXzINajM/ywiCVTtpRh53ywqvXzBOS2MuR06TOlEjkmeCCeGQsoqg1nVf
-	 IKgjJU2nzC2lAkvW43a9dRrt0a4+otP5Mf0i3HfK9MAlEytClqZtlNxEvRkRzZHDOP
-	 J3pwExvGhSANyL8JK6N4FGAeWJWPMhuUNZ5I6iX/gI/NoxGlpegcsIP8yd0HvrgPOY
-	 bUSVecZWxF/ZA==
-Date: Sat, 1 Jun 2024 10:35:50 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev, don <zds100@gmail.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/fprobe: Support raw tracepoint events on
- modules
-Message-Id: <20240601103550.b2db29606319440d51af9753@kernel.org>
-In-Reply-To: <202406010034.fsNP9Rsq-lkp@intel.com>
-References: <171714888633.198965.13093663631481169611.stgit@devnote2>
-	<202406010034.fsNP9Rsq-lkp@intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HKdrUCcb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=456lYLJFZKzRl4SbmbA36m1MZ6kwxd5EdW3HB35jgrg=; b=HKdrUCcbh7nuL8yjXhHjQH/2c7
+	U49VdUoahQ9mXcAW41e+bwbDxOi+Vq+eFNiyQVP2sy8gBiQ6/Hs6+GeSqxfWD/fEs3RKX4yjsxvrB
+	QBk3NOphsBeQ5nznYjVhhCXtbxYIF7rSg/FLAq5/WvFZcw7b0toA8m5usAMU+ni1+Y1TWlial5hme
+	KvsVSNOSB79AJSWThDvRC+li8uz2EJJdKOhF707Lf0dpLWLJF6cjRoFrWm8dEvxyi/ImC8yGynqHB
+	uNmkck8LcVheHGVvgWeTovxzhvSb0cCLQIyOyRoHvtbV3ADVSDQFcZmf/3qL/6AwY4q8Fs+FMEG7K
+	BxU0btmg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sDHOb-0000000C0oj-3fR7;
+	Sat, 01 Jun 2024 05:35:13 +0000
+Date: Fri, 31 May 2024 22:35:13 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZlqzER_ufrhlB28v@infradead.org>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240530201616.1316526-3-almasrymina@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sat, 1 Jun 2024 01:01:26 +0800
-kernel test robot <lkp@intel.com> wrote:
+On Thu, May 30, 2024 at 08:16:01PM +0000, Mina Almasry wrote:
+> I'm unsure if the discussion has been resolved yet. Sending the series
+> anyway to get reviews/feedback on the (unrelated) rest of the series.
 
-> Hi Masami,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v6.10-rc1 next-20240531]
-> [cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-fprobe-Support-raw-tracepoint-events-on-modules/20240531-175013
-> base:   linus/master
-> patch link:    https://lore.kernel.org/r/171714888633.198965.13093663631481169611.stgit%40devnote2
-> patch subject: [PATCH] tracing/fprobe: Support raw tracepoint events on modules
-> config: s390-defconfig (https://download.01.org/0day-ci/archive/20240601/202406010034.fsNP9Rsq-lkp@intel.com/config)
-> compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project bafda89a0944d947fc4b3b5663185e07a397ac30)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406010034.fsNP9Rsq-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202406010034.fsNP9Rsq-lkp@intel.com/
+As far as I'm concerned it is not.  I've not seen any convincing
+argument for more than page/folio allocator including larger order /
+huge page and dmabuf.
 
-OK, I must be tired... let me fix that. And I'll add a selftest for this case.
-
-Thanks!
-
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from kernel/tracepoint.c:5:
->    In file included from include/linux/module.h:19:
->    In file included from include/linux/elf.h:6:
->    In file included from arch/s390/include/asm/elf.h:173:
->    In file included from arch/s390/include/asm/mmu_context.h:11:
->    In file included from arch/s390/include/asm/pgalloc.h:18:
->    In file included from include/linux/mm.h:2253:
->    include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      501 |                            item];
->          |                            ~~~~
->    include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      508 |                            NR_VM_NUMA_EVENT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
->      514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
->          |                               ~~~~~~~~~~~ ^ ~~~
->    include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      520 |                            NR_VM_NUMA_EVENT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~~
->    include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->      528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->      529 |                            NR_VM_NUMA_EVENT_ITEMS +
->          |                            ~~~~~~~~~~~~~~~~~~~~~~
-> >> kernel/tracepoint.c:751:34: error: no member named '__start___tracepoints_ptrs' in 'struct module'
->      751 |                 for_each_tracepoint_range(mod->__start___tracepoints_ptrs,
->          |                                           ~~~  ^
->    5 warnings and 1 error generated.
-> 
-> 
-> vim +751 kernel/tracepoint.c
-> 
->    738	
->    739	void for_each_module_tracepoint(void (*fct)(struct tracepoint *tp, void *priv),
->    740					void *priv)
->    741	{
->    742		struct tp_module *tp_mod;
->    743		struct module *mod;
->    744	
->    745		if (!mod->num_tracepoints)
->    746			return;
->    747	
->    748		mutex_lock(&tracepoint_module_list_mutex);
->    749		list_for_each_entry(tp_mod, &tracepoint_module_list, list) {
->    750			mod = tp_mod->mod;
->  > 751			for_each_tracepoint_range(mod->__start___tracepoints_ptrs,
->    752				mod->tracepoints_ptrs + mod->num_tracepoints,
->    753				fct, priv);
->    754		}
->    755		mutex_unlock(&tracepoint_module_list_mutex);
->    756	}
->    757	#endif /* CONFIG_MODULES */
->    758	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
