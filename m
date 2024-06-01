@@ -1,355 +1,122 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441D374413;
-	Sat,  1 Jun 2024 22:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B0017BD9
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  1 Jun 2024 22:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717280443; cv=none; b=BtVzZTZGe+5aMpda30HH4QQ7JO1EjiM3bAAM/rGOxHzBJ3nNzizGALhcefb7Vj+GDOcAUdLjDAHPFZcypvZXkDJSuUfNen/6Qa2tsT+0W6pinsrDNjHzFKeFHgH49b45UK0642Etbj7bvgSUyZNys07nWPXOz21f0vFmm016CvQ=
+	t=1717281083; cv=none; b=gZdvpGVQek5t09Oh+R1iqDDpRE9o77GkOhLZr1zhFvxkCJdXef5bGFb++PXpAS413HIjaoQgkZ4RBjKYt+5FaijZ2dOGB3HJEHvWhJbpiCi02iylkl6OQ8T90L/ooQOq9v32zU6Ik4j7fwAydicg8fl4I0PfILKmprv5zqqMMBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717280443; c=relaxed/simple;
-	bh=gHK9tl5GEnjnYCuTPq+4cdcE8U5jN9ghgvl5krpm6NU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=kckYLApoD/4dJUIkPwxqTGpiFhGOO0SiM9NoBGe7BdXbCmC1oPpPTb3dfHyZ23B8/7J006sRTien7/EAdxkkbgGI7f3vu9q1o+WdFcop3tcefMwJ7RFIN1gmrsIDdWpJwRyAz7ntRaJd3wh6TSBoUMe7L5QUADEe8b8QLJiMU04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JkP3hdZ9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717281083; c=relaxed/simple;
+	bh=rFMuik6wkuNtXHKGkspgDvdX4YfRw4xUp9eXj1XXAhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/ca38V6517+FUPaiJOzuBSfou7OEeSVgpnmTBN5lkJwhEMYcKYvKHo+FB+yIEb63FP4ZBbGC+YRpg0uz9bRh+u3ZHoP21OcjmV/LckfDoyK8LljYrTd4HLhbrD4fdcqq4fgA0STCSJ/uULGlG8PQkj1lQIlWDyPQllL09V9PEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=MYhmkv99; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JkP3hdZ9"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 451MDY2O031347;
-	Sat, 1 Jun 2024 22:20:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=6OISiKHtMTYN/NQBy17uHh
-	49OHuLtPu75D6jMfKGm8w=; b=JkP3hdZ9Y0OxDxNNQIS4ZZ1qpfBTNNAgV6LpU9
-	ERpdBbbHbAtC1dYAy6hIo351O4Xbh9QTAQZCcN77WA48WeqBOSRBQCcz84b4eZMf
-	3HkshemXiIYBMKhFnwEMMBgM5+LPmi7ohEmTXM30d08ImDT7TvfpgbL/LnIF4XZf
-	Wih9AEwV3gBhgeGYnmT9tzYs1PlD8KSXmO2jXYGOjzqYZPIJQKieqZvwT9mcIHz+
-	qhjrcTsMAyYcHuW24OjlDHgUQ26mxuRTW5uvTpgTVs3Z/U4RgRtp+wtAQOPg07fA
-	zW0cV5IHmNvgFDFpJZuh/xL7sKEEAaxLwectc+9sjlF1W5KA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw6v1avp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 01 Jun 2024 22:20:24 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 451MKNuh020346
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 1 Jun 2024 22:20:23 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 1 Jun 2024
- 15:20:22 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Sat, 1 Jun 2024 15:19:39 -0700
-Subject: [PATCH] KUnit: add missing MODULE_DESCRIPTION() macros for
- lib/test_*.ko
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="MYhmkv99"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-421140314d5so29261355e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 01 Jun 2024 15:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1717281080; x=1717885880; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qZbo561XfWIHgBvmySekggiN2gQefSMXY05ZVlA1bQk=;
+        b=MYhmkv99Py0Rw7R3dokFE2DHOdLz+jBfVd7JHnSMN+gBAigWSfisLJ7lp7OSRK+648
+         M9cGT8Hzcw9YtOs+2IAEsJzvrg/dr5l5M4BwRvSEG5Mg8Dykjg3SYW61uT+l+9xH+u8g
+         igwcLlZDXO6eQJwC3cIaWq4zL50Kvgb/WsHE7tnoAyfuo5groLcyA+5D4QDY4YNo6VAq
+         khRAuIzfkB189pmVoejSQTLJSvCQ8b8On3yIBYXUZX/o6CEAiIK2vklR3RsYyUu0s9/E
+         NnPXJDRT5TtRMnGDg9Cm4PR0Al98cLn+uiQ7HaZoVWYb6viOVJ4IttKdCht1zGX8WMSi
+         Xexg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717281080; x=1717885880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qZbo561XfWIHgBvmySekggiN2gQefSMXY05ZVlA1bQk=;
+        b=lw+ZpawBaW02/BsgOlvZspEbVfBhp2NdaO+SKeBw11Y/lHoDcif8NZUoq2deByiYMQ
+         RrrUYo6zPYrYXpnuwS+1zR0f5qgWSHneC4THRMnp6k/4uNLAR+DjW+3WHilYpN1aImye
+         mYNg7cnP2R+mW8MuWQ0Jaxmo3ezzqp3eGf6YJjmHi4DjEOFsDCcGqS5ooIKhxxRSrz1x
+         02s3bKBfwJsTeJnSGForMsxl+fL2pxtd87YaO+rWQQ0iVaZOzPytmxX4VAL32LWVV2yP
+         8x3DjFiH5nFUPl7LCP7JfvnK9gq+qinEq/PnZAXLrx+iedwj7e5Gtrg4qX1lS/cLtX3H
+         AqAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXF7ilbXBfwPmwJh5nC+guKPYI6JqkqiK1vfx05MHeu241sH10hoIPjPd18fjDSSHxyGHLtvNu4NfyltUW0OZDMYBn30obBwejg3s2kl/Q+y6rN
+X-Gm-Message-State: AOJu0YzZCThOB2nyxd3fDqR/fRpz192BmSx4VRoKaoW8kh5oSmagftNu
+	tc3GqErT8tc+HZOfUlR7lNv8jC4nMmKn2mZfBUbhmN6TkljI2oVGsbABfTrv7s8=
+X-Google-Smtp-Source: AGHT+IHfbQ16/ESCbDfdhRvNrgQE37C2AAjcr2HQe1Exqfame6Csvm3T9BWb8bjJaVLiJ2lhT2dYFQ==
+X-Received: by 2002:a05:600c:a4b:b0:421:1165:f240 with SMTP id 5b1f17b1804b1-4212e0bfd91mr46367175e9.36.1717281080159;
+        Sat, 01 Jun 2024 15:31:20 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212f05157esm53941435e9.20.2024.06.01.15.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jun 2024 15:31:19 -0700 (PDT)
+Date: Sat, 1 Jun 2024 23:31:18 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2] sched/rt: Clean up usage of rt_task()
+Message-ID: <20240601223118.zjhp7pgk3wb32abv@airbuntu>
+References: <20240515220536.823145-1-qyousef@layalina.io>
+ <20240521110035.KRIwllGe@linutronix.de>
+ <20240527172650.kieptfl3zhyljkzx@airbuntu>
+ <20240529082912.gPDpgVy3@linutronix.de>
+ <20240529103409.3iiemroaavv5lh2p@airbuntu>
+ <20240529105528.9QBTCqCr@linutronix.de>
+ <20240530111044.d4jegeiueizvdjrg@airbuntu>
+ <20240531063016.OCMg21Uq@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAHqeW2YC/x3MQQqDMBBA0avIrDuQxKK1VykuEjOtAxrLTFoC4
- t1Nu3yL/3dQEiaFe7OD0JeVt1RhLw1Ms08vQo7V4Iy7ms5YXCMuHDCTZrSdubVxiH1PDmrxFnp
- y+d8eY3XwShjEp2n+PRZOn4Kr10wCx3ECJXwlLHwAAAA=
-To: Andrew Morton <akpm@linux-foundation.org>,
-        "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy
-	<anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cki3P3WcaOihKwRWzKiLC6vK7YRZbsUQ
-X-Proofpoint-ORIG-GUID: cki3P3WcaOihKwRWzKiLC6vK7YRZbsUQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-01_11,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- impostorscore=0 mlxscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
- clxscore=1011 spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406010178
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240531063016.OCMg21Uq@linutronix.de>
 
-make allmodconfig && make W=1 C=1 reports for lib/test_*.ko:
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hexdump.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_dhry.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_firmware.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sysctl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hash.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ida.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_list_sort.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_min_heap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sort.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_user_copy.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_keys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_key_base.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_memcat_p.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_blackhole_dev.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_meminit.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_free_pages.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_kprobes.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ref_tracker.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bits.o
+On 05/31/24 08:30, Sebastian Andrzej Siewior wrote:
+> On 2024-05-30 12:10:44 [+0100], Qais Yousef wrote:
+> > > This is not consistent because IMHO the clock setup & slack should be
+> > > handled equally. So I am asking the sched folks for a policy and I am
+> > > leaning towards looking at task-policy in this case instead of prio
+> > > because you shouldn't do anything that can delay.
+> > 
+> > Can't we do that based on is_soft/is_hard flag in hrtimer struct when we apply
+> > the slack in hrtimer_set_expires_range_ns() instead?
+> 
+> We need to decide on a policy first.
+> You don't want to add overhead on each invocation plus some in-kernel
+> ask for delta. ->is_soft is not a good criteria.
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+The suggestion was not to check policy or priority but dictate the behavior
+based on hrtimer properties set at init. Which agrees with your thinking.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- lib/dhry_run.c             | 1 +
- lib/test-kstrtox.c         | 1 +
- lib/test_bits.c            | 1 +
- lib/test_blackhole_dev.c   | 1 +
- lib/test_firmware.c        | 1 +
- lib/test_free_pages.c      | 1 +
- lib/test_hash.c            | 1 +
- lib/test_hexdump.c         | 1 +
- lib/test_ida.c             | 1 +
- lib/test_kprobes.c         | 1 +
- lib/test_list_sort.c       | 1 +
- lib/test_memcat_p.c        | 1 +
- lib/test_meminit.c         | 1 +
- lib/test_min_heap.c        | 1 +
- lib/test_module.c          | 1 +
- lib/test_ref_tracker.c     | 3 ++-
- lib/test_sort.c            | 1 +
- lib/test_static_key_base.c | 1 +
- lib/test_static_keys.c     | 1 +
- lib/test_sysctl.c          | 1 +
- lib/test_user_copy.c       | 1 +
- 21 files changed, 22 insertions(+), 1 deletion(-)
+I think the check for policy at init to enforce a behavior is borderline hack
+by the way and better to get an explicit request from a task and let the
+HRTIMER comply adequately without checking for policies anywhere. Whether this
+property should be inherited or not is a good question and I think is the
+policy you're after here. Proxy Execution would probably handle all this
+inheritance problems transparently, so we need not think much about it if we
+agree proxy execution is the way to deal with all those inheritance problems.
+There are always exceptions though.. So worth a think.
 
-diff --git a/lib/dhry_run.c b/lib/dhry_run.c
-index e6a279dabf84..4a6d05ce4361 100644
---- a/lib/dhry_run.c
-+++ b/lib/dhry_run.c
-@@ -83,4 +83,5 @@ static int __init dhry_init(void)
- module_init(dhry_init);
- 
- MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
-+MODULE_DESCRIPTION("Dhrystone benchmark test module");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test-kstrtox.c b/lib/test-kstrtox.c
-index f355f67169b6..ee87fef66cb5 100644
---- a/lib/test-kstrtox.c
-+++ b/lib/test-kstrtox.c
-@@ -732,4 +732,5 @@ static int __init test_kstrtox_init(void)
- 	return -EINVAL;
- }
- module_init(test_kstrtox_init);
-+MODULE_DESCRIPTION("Module test for kstrto*() APIs");
- MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/lib/test_bits.c b/lib/test_bits.c
-index c9368a2314e7..01313980f175 100644
---- a/lib/test_bits.c
-+++ b/lib/test_bits.c
-@@ -72,4 +72,5 @@ static struct kunit_suite bits_test_suite = {
- };
- kunit_test_suite(bits_test_suite);
- 
-+MODULE_DESCRIPTION("Test cases for functions and macros in bits.h");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_blackhole_dev.c b/lib/test_blackhole_dev.c
-index f247089d63c0..ec290ac2a0d9 100644
---- a/lib/test_blackhole_dev.c
-+++ b/lib/test_blackhole_dev.c
-@@ -96,4 +96,5 @@ module_init(test_blackholedev_init);
- module_exit(test_blackholedev_exit);
- 
- MODULE_AUTHOR("Mahesh Bandewar <maheshb@google.com>");
-+MODULE_DESCRIPTION("module test of the blackhole_dev");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-index 9cfdcd6d21db..bcb32cbff188 100644
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -1567,4 +1567,5 @@ static void __exit test_firmware_exit(void)
- module_exit(test_firmware_exit);
- 
- MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
-+MODULE_DESCRIPTION("interface to trigger and test firmware loading");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_free_pages.c b/lib/test_free_pages.c
-index 9ebf6f5549f3..48952364c540 100644
---- a/lib/test_free_pages.c
-+++ b/lib/test_free_pages.c
-@@ -44,4 +44,5 @@ static void m_ex(void)
- module_init(m_in);
- module_exit(m_ex);
- MODULE_AUTHOR("Matthew Wilcox <willy@infradead.org>");
-+MODULE_DESCRIPTION("Check that free_pages() doesn't leak memory");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_hash.c b/lib/test_hash.c
-index bb25fda34794..a7af39662a0a 100644
---- a/lib/test_hash.c
-+++ b/lib/test_hash.c
-@@ -235,4 +235,5 @@ static struct kunit_suite hash_test_suite = {
- 
- kunit_test_suite(hash_test_suite);
- 
-+MODULE_DESCRIPTION("Test cases for <linux/hash.h> and <linux/stringhash.h>");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
-index fe2682bb21e6..751645645988 100644
---- a/lib/test_hexdump.c
-+++ b/lib/test_hexdump.c
-@@ -253,4 +253,5 @@ static void __exit test_hexdump_exit(void)
- module_exit(test_hexdump_exit);
- 
- MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
-+MODULE_DESCRIPTION("Test cases for lib/hexdump.c module");
- MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/lib/test_ida.c b/lib/test_ida.c
-index 072a49897e71..c80155a1956d 100644
---- a/lib/test_ida.c
-+++ b/lib/test_ida.c
-@@ -214,4 +214,5 @@ static void ida_exit(void)
- module_init(ida_checks);
- module_exit(ida_exit);
- MODULE_AUTHOR("Matthew Wilcox <willy@infradead.org>");
-+MODULE_DESCRIPTION("Test the IDA API");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
-index 0648f7154f5c..e707f7b3a366 100644
---- a/lib/test_kprobes.c
-+++ b/lib/test_kprobes.c
-@@ -400,4 +400,5 @@ static struct kunit_suite kprobes_test_suite = {
- 
- kunit_test_suites(&kprobes_test_suite);
- 
-+MODULE_DESCRIPTION("simple sanity test for *probes");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_list_sort.c b/lib/test_list_sort.c
-index cc5f335f29b5..30879abc8a42 100644
---- a/lib/test_list_sort.c
-+++ b/lib/test_list_sort.c
-@@ -119,4 +119,5 @@ static struct kunit_suite list_sort_suite = {
- 
- kunit_test_suites(&list_sort_suite);
- 
-+MODULE_DESCRIPTION("list_sort() KUnit test suite");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_memcat_p.c b/lib/test_memcat_p.c
-index 849c477d49d0..7e0797a6bebf 100644
---- a/lib/test_memcat_p.c
-+++ b/lib/test_memcat_p.c
-@@ -112,4 +112,5 @@ static void __exit test_memcat_p_exit(void)
- module_init(test_memcat_p_init);
- module_exit(test_memcat_p_exit);
- 
-+MODULE_DESCRIPTION("Test cases for memcat_p() in lib/memcat_p.c");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_meminit.c b/lib/test_meminit.c
-index 0dc173849a54..6298f66c964b 100644
---- a/lib/test_meminit.c
-+++ b/lib/test_meminit.c
-@@ -436,4 +436,5 @@ static int __init test_meminit_init(void)
- }
- module_init(test_meminit_init);
- 
-+MODULE_DESCRIPTION("Test cases for SL[AOU]B/page initialization at alloc/free time");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_min_heap.c b/lib/test_min_heap.c
-index 7b01b4387cfb..a2dd478997bb 100644
---- a/lib/test_min_heap.c
-+++ b/lib/test_min_heap.c
-@@ -191,4 +191,5 @@ static void __exit test_min_heap_exit(void)
- }
- module_exit(test_min_heap_exit);
- 
-+MODULE_DESCRIPTION("Test cases for the min max heap");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_module.c b/lib/test_module.c
-index debd19e35198..3d1b29b74807 100644
---- a/lib/test_module.c
-+++ b/lib/test_module.c
-@@ -31,4 +31,5 @@ static void __exit test_module_exit(void)
- module_exit(test_module_exit);
- 
- MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
-+MODULE_DESCRIPTION("module loading subsystem test module");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
-index 49970a7c96f3..b983ceb12afc 100644
---- a/lib/test_ref_tracker.c
-+++ b/lib/test_ref_tracker.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Referrence tracker self test.
-+ * Reference tracker self test.
-  *
-  * Copyright (c) 2021 Eric Dumazet <edumazet@google.com>
-  */
-@@ -112,4 +112,5 @@ static void __exit test_ref_tracker_exit(void)
- module_init(test_ref_tracker_init);
- module_exit(test_ref_tracker_exit);
- 
-+MODULE_DESCRIPTION("Reference tracker self test");
- MODULE_LICENSE("GPL v2");
-diff --git a/lib/test_sort.c b/lib/test_sort.c
-index be02e3a098cf..81aef88b48b5 100644
---- a/lib/test_sort.c
-+++ b/lib/test_sort.c
-@@ -45,4 +45,5 @@ static struct kunit_suite sort_test_suite = {
- 
- kunit_test_suites(&sort_test_suite);
- 
-+MODULE_DESCRIPTION("sort() KUnit test suite");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_static_key_base.c b/lib/test_static_key_base.c
-index 5089a2e2bdd8..9f507672afa5 100644
---- a/lib/test_static_key_base.c
-+++ b/lib/test_static_key_base.c
-@@ -57,4 +57,5 @@ module_init(test_static_key_base_init);
- module_exit(test_static_key_base_exit);
- 
- MODULE_AUTHOR("Jason Baron <jbaron@akamai.com>");
-+MODULE_DESCRIPTION("Kernel module to support testing static keys");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_static_keys.c b/lib/test_static_keys.c
-index 42daa74be029..00c715f30df9 100644
---- a/lib/test_static_keys.c
-+++ b/lib/test_static_keys.c
-@@ -236,4 +236,5 @@ module_init(test_static_key_init);
- module_exit(test_static_key_exit);
- 
- MODULE_AUTHOR("Jason Baron <jbaron@akamai.com>");
-+MODULE_DESCRIPTION("Kernel module for testing static keys");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_sysctl.c b/lib/test_sysctl.c
-index 9321d850931f..b6696fa1d426 100644
---- a/lib/test_sysctl.c
-+++ b/lib/test_sysctl.c
-@@ -280,4 +280,5 @@ static void __exit test_sysctl_exit(void)
- module_exit(test_sysctl_exit);
- 
- MODULE_AUTHOR("Luis R. Rodriguez <mcgrof@kernel.org>");
-+MODULE_DESCRIPTION("proc sysctl test driver");
- MODULE_LICENSE("GPL");
-diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
-index 5ff04d8fe971..9cfef46fa2d2 100644
---- a/lib/test_user_copy.c
-+++ b/lib/test_user_copy.c
-@@ -328,4 +328,5 @@ static void __exit test_user_copy_exit(void)
- module_exit(test_user_copy_exit);
- 
- MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
-+MODULE_DESCRIPTION("Kernel module for testing copy_to/from_user infrastructure");
- MODULE_LICENSE("GPL");
+I'll drop this patch as this discussion has diverged to something else now.
+I'll leave this here until others get a chance to comment with their views too.
 
----
-base-commit: b050496579632f86ee1ef7e7501906db579f3457
-change-id: 20240601-md-lib-test-16083d9d77e2
 
+Cheers
+
+--
+Qais Yousef
