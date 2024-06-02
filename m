@@ -1,122 +1,117 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B0017BD9
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  1 Jun 2024 22:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFDF17FF;
+	Sun,  2 Jun 2024 01:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717281083; cv=none; b=gZdvpGVQek5t09Oh+R1iqDDpRE9o77GkOhLZr1zhFvxkCJdXef5bGFb++PXpAS413HIjaoQgkZ4RBjKYt+5FaijZ2dOGB3HJEHvWhJbpiCi02iylkl6OQ8T90L/ooQOq9v32zU6Ik4j7fwAydicg8fl4I0PfILKmprv5zqqMMBM=
+	t=1717291932; cv=none; b=naKw/wiG4yk6DlNcSLUxSh3NY9p4EGcm9edcRhblvRK09J8kQ2DfG9wH2vhqG8pVkwzeMh2mbePzCqTCXeayxjYJVECHDfF2F1YCOhBZlVAdVMmoPUNNao36ERtCoS1Nbmwb3hYhzcQ55qYf2MX8G4zglGJZh9EW8k+FvX8TMLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717281083; c=relaxed/simple;
-	bh=rFMuik6wkuNtXHKGkspgDvdX4YfRw4xUp9eXj1XXAhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D/ca38V6517+FUPaiJOzuBSfou7OEeSVgpnmTBN5lkJwhEMYcKYvKHo+FB+yIEb63FP4ZBbGC+YRpg0uz9bRh+u3ZHoP21OcjmV/LckfDoyK8LljYrTd4HLhbrD4fdcqq4fgA0STCSJ/uULGlG8PQkj1lQIlWDyPQllL09V9PEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=MYhmkv99; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1717291932; c=relaxed/simple;
+	bh=mT+6nJ8FcVSsFnNcnZugIXFAnJtFvgLnp40V97LZUMA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Ie/8BwUIiRUEeAlDZQwoCUK/IOXnJlXr8zcpj13yJ7W2hHJIhWEGV06ipz/sB2EsQbrW8aOo8Kf3f5KqjXtM/sHqQP/NSR6kX2VxfbwEM0ixjJ79Z0Z5rT7y8cwRcpP+NY+738ykHmRP1VOEmZy+SInoR7rWeLNRo9rOXqMYFyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C3m+Z6mf; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="MYhmkv99"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-421140314d5so29261355e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 01 Jun 2024 15:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1717281080; x=1717885880; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qZbo561XfWIHgBvmySekggiN2gQefSMXY05ZVlA1bQk=;
-        b=MYhmkv99Py0Rw7R3dokFE2DHOdLz+jBfVd7JHnSMN+gBAigWSfisLJ7lp7OSRK+648
-         M9cGT8Hzcw9YtOs+2IAEsJzvrg/dr5l5M4BwRvSEG5Mg8Dykjg3SYW61uT+l+9xH+u8g
-         igwcLlZDXO6eQJwC3cIaWq4zL50Kvgb/WsHE7tnoAyfuo5groLcyA+5D4QDY4YNo6VAq
-         khRAuIzfkB189pmVoejSQTLJSvCQ8b8On3yIBYXUZX/o6CEAiIK2vklR3RsYyUu0s9/E
-         NnPXJDRT5TtRMnGDg9Cm4PR0Al98cLn+uiQ7HaZoVWYb6viOVJ4IttKdCht1zGX8WMSi
-         Xexg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717281080; x=1717885880;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qZbo561XfWIHgBvmySekggiN2gQefSMXY05ZVlA1bQk=;
-        b=lw+ZpawBaW02/BsgOlvZspEbVfBhp2NdaO+SKeBw11Y/lHoDcif8NZUoq2deByiYMQ
-         RrrUYo6zPYrYXpnuwS+1zR0f5qgWSHneC4THRMnp6k/4uNLAR+DjW+3WHilYpN1aImye
-         mYNg7cnP2R+mW8MuWQ0Jaxmo3ezzqp3eGf6YJjmHi4DjEOFsDCcGqS5ooIKhxxRSrz1x
-         02s3bKBfwJsTeJnSGForMsxl+fL2pxtd87YaO+rWQQ0iVaZOzPytmxX4VAL32LWVV2yP
-         8x3DjFiH5nFUPl7LCP7JfvnK9gq+qinEq/PnZAXLrx+iedwj7e5Gtrg4qX1lS/cLtX3H
-         AqAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF7ilbXBfwPmwJh5nC+guKPYI6JqkqiK1vfx05MHeu241sH10hoIPjPd18fjDSSHxyGHLtvNu4NfyltUW0OZDMYBn30obBwejg3s2kl/Q+y6rN
-X-Gm-Message-State: AOJu0YzZCThOB2nyxd3fDqR/fRpz192BmSx4VRoKaoW8kh5oSmagftNu
-	tc3GqErT8tc+HZOfUlR7lNv8jC4nMmKn2mZfBUbhmN6TkljI2oVGsbABfTrv7s8=
-X-Google-Smtp-Source: AGHT+IHfbQ16/ESCbDfdhRvNrgQE37C2AAjcr2HQe1Exqfame6Csvm3T9BWb8bjJaVLiJ2lhT2dYFQ==
-X-Received: by 2002:a05:600c:a4b:b0:421:1165:f240 with SMTP id 5b1f17b1804b1-4212e0bfd91mr46367175e9.36.1717281080159;
-        Sat, 01 Jun 2024 15:31:20 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212f05157esm53941435e9.20.2024.06.01.15.31.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 15:31:19 -0700 (PDT)
-Date: Sat, 1 Jun 2024 23:31:18 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH v2] sched/rt: Clean up usage of rt_task()
-Message-ID: <20240601223118.zjhp7pgk3wb32abv@airbuntu>
-References: <20240515220536.823145-1-qyousef@layalina.io>
- <20240521110035.KRIwllGe@linutronix.de>
- <20240527172650.kieptfl3zhyljkzx@airbuntu>
- <20240529082912.gPDpgVy3@linutronix.de>
- <20240529103409.3iiemroaavv5lh2p@airbuntu>
- <20240529105528.9QBTCqCr@linutronix.de>
- <20240530111044.d4jegeiueizvdjrg@airbuntu>
- <20240531063016.OCMg21Uq@linutronix.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C3m+Z6mf"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4521Ra3Y032528;
+	Sun, 2 Jun 2024 01:31:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=jeGhGowDT5KeLSUfSBOevN
+	8jGK6lhtgn0lpn7jZgyYQ=; b=C3m+Z6mfHp7eOK3uWt+c0wanTrerRf1BZ1XFge
+	OaRQIUj9RBeAja8ly7jsveNZHJTApUFsFKDkR+Am01HGKytZHy0nThlF828qTQ+S
+	07hyntTgJCn/2JZ0XKnukbQHpKvyQOxeIDuNUuRa6KVAvcNxJXdka7SghW1gsNfe
+	4D91Iga9jCLwIgMa6R1fXDM1MANNOS2TntfXhgiPjTYOagTyqR8MVjyZTvn+VasJ
+	hrYS0ZjuCuVwtk8jgwP5MGCU8le1KLvN+b1JSAv7lLZOADfbV3NsSGxZpXaOBimJ
+	Vx9t95YrRLkrH3iyRIJaubG/oCFABczHHkEEZ0XzQOKyKjRw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw4d1hdq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 02 Jun 2024 01:31:56 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4521Vtc5007563
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 2 Jun 2024 01:31:55 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 1 Jun 2024
+ 18:31:55 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 1 Jun 2024 18:31:55 -0700
+Subject: [PATCH] samples: kprobes: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240531063016.OCMg21Uq@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240601-md-samples-kprobes-v1-1-b6a772353893@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAIrLW2YC/x3MywrCQAyF4VcpWRuYjkXEVxEXc0ltsDMdEpVC6
+ bs3ujp8i/NvoCRMCrduA6EvKy/V0J86SFOoT0LOZvDOD+7ieiwZNZQ2k+KryRJtaYxnn2JK15z
+ Bjk1o5PUfvT/MMShhlFDT9EvNXD8rlqBvEtj3AzrptdGDAAAA
+To: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy
+	<anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: I1V2_EoRLvh0-cLZFrtMsUtLri_B_7eJ
+X-Proofpoint-GUID: I1V2_EoRLvh0-cLZFrtMsUtLri_B_7eJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-01_19,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 adultscore=0 impostorscore=0 bulkscore=0
+ spamscore=0 phishscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406020011
 
-On 05/31/24 08:30, Sebastian Andrzej Siewior wrote:
-> On 2024-05-30 12:10:44 [+0100], Qais Yousef wrote:
-> > > This is not consistent because IMHO the clock setup & slack should be
-> > > handled equally. So I am asking the sched folks for a policy and I am
-> > > leaning towards looking at task-policy in this case instead of prio
-> > > because you shouldn't do anything that can delay.
-> > 
-> > Can't we do that based on is_soft/is_hard flag in hrtimer struct when we apply
-> > the slack in hrtimer_set_expires_range_ns() instead?
-> 
-> We need to decide on a policy first.
-> You don't want to add overhead on each invocation plus some in-kernel
-> ask for delta. ->is_soft is not a good criteria.
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kprobes/kprobe_example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kprobes/kretprobe_example.o
 
-The suggestion was not to check policy or priority but dictate the behavior
-based on hrtimer properties set at init. Which agrees with your thinking.
+Add the missing invocations of the MODULE_DESCRIPTION() macro.
 
-I think the check for policy at init to enforce a behavior is borderline hack
-by the way and better to get an explicit request from a task and let the
-HRTIMER comply adequately without checking for policies anywhere. Whether this
-property should be inherited or not is a good question and I think is the
-policy you're after here. Proxy Execution would probably handle all this
-inheritance problems transparently, so we need not think much about it if we
-agree proxy execution is the way to deal with all those inheritance problems.
-There are always exceptions though.. So worth a think.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ samples/kprobes/kprobe_example.c    | 1 +
+ samples/kprobes/kretprobe_example.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-I'll drop this patch as this discussion has diverged to something else now.
-I'll leave this here until others get a chance to comment with their views too.
+diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
+index ef44c614c6d9..53ec6c8b8c40 100644
+--- a/samples/kprobes/kprobe_example.c
++++ b/samples/kprobes/kprobe_example.c
+@@ -125,4 +125,5 @@ static void __exit kprobe_exit(void)
+ 
+ module_init(kprobe_init)
+ module_exit(kprobe_exit)
++MODULE_DESCRIPTION("sample kernel module showing the use of kprobes");
+ MODULE_LICENSE("GPL");
+diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
+index ed79fd3d48fb..65d6dcafd742 100644
+--- a/samples/kprobes/kretprobe_example.c
++++ b/samples/kprobes/kretprobe_example.c
+@@ -104,4 +104,5 @@ static void __exit kretprobe_exit(void)
+ 
+ module_init(kretprobe_init)
+ module_exit(kretprobe_exit)
++MODULE_DESCRIPTION("sample kernel module showing the use of return probes");
+ MODULE_LICENSE("GPL");
 
+---
+base-commit: b050496579632f86ee1ef7e7501906db579f3457
+change-id: 20240601-md-samples-kprobes-efb32cbcc8dd
 
-Cheers
-
---
-Qais Yousef
