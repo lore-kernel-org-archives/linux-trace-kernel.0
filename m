@@ -1,107 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770578BF3;
-	Sun,  2 Jun 2024 03:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCEA3C00;
+	Sun,  2 Jun 2024 03:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717297794; cv=none; b=RPfhaEAPlWi0rRf7dyzqfSj5zbaJ5u48TrEdTMY+F/aNhUt8OH8iqoAWUG+JmB7fBtTCXMfAevcuvS9yssXB5ptqLm0ktAEaE10h8IVDhqJCfRTcUkdjka1y6YkcqwUDFhjdOjrUhEZrmvfWk9uI0ZRGlq19uefT8Dh6UabhPiM=
+	t=1717298120; cv=none; b=G9hAOwOhpmGEv0tbOOmAlKr2k+XkOdM67p1R591IbODlSY71Og3AtoKY2biulldUHMmuznC8L6gGzWtR0QSrlWmK7qbQvOyznVX9J95nMHlenBlkxkENYQQ8SySJ0oADv5/RO0USDymPgUXHuf9rH9XhxCv0GdCLlyQZQW4DdVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717297794; c=relaxed/simple;
-	bh=mxKHFv4b0GpvtdP6ln5iryWXR3VuD8H8Rh5UyDDSVWQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mdKxp7hr1HBluD3WWoGoCxDxHxMTOgjOCoaJDpOnXLO8efgcz0z2SA9q9GFuTHXYvql0EEBURwThVS5K3XHYTcpaDv1htg4YKZrz9/pwH2RHZ4IjzsM12G+XKfrNXbqUHtOHdfzRgqffpk4lg/b43yRLL4j8AcMUj2wQuUTOV08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRMkliUx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717298120; c=relaxed/simple;
+	bh=edP8nsQBYJd0TE352wO287BLS+JWhbL3wrSTC+ycZXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jLN9BkhSFmnb4ziV/URU2SUnEyYJnkwubZ9woQ5rdsNJfsPdoKTLJdlGelMulH79mTIPgJWqrqe5O9h1I8yB9JRa12AtNiEulPe+oGMWV4cqitxF1XqPXVhsBibfeLOcon3sGUF6hwiVOdlpduNHo1/aV0U3xF+wE0Vd6fSZYyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ALPY0Web; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRMkliUx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C58EC3277B;
-	Sun,  2 Jun 2024 03:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717297794;
-	bh=mxKHFv4b0GpvtdP6ln5iryWXR3VuD8H8Rh5UyDDSVWQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QRMkliUxoT2FNriuvjGQ2nm0MZSVY7Z9ZR9LUhy+haKlUOpl2Vxu4nErbAuUZKCq+
-	 dL7X+XVZOVH0T33b+1Ba1aesvMtb81r3MMj+shFRdUYz9bgWDjRVA+GvPAvqx2TUDa
-	 VgyWqhV+18C/KmGCi1MJe41B76zLqcTVzrPikbr9Q52VpnBBNj8UxRyUjDUuL7611q
-	 I9Sbre88fye0ZgIs2Eu6JT1FGZtOxkgYWE1jdjHZ9fWJTCXj3tA2AxnPcPNDySrrYD
-	 GJL2p6d+NM7UnnXGCdjEVci+QMAaVrknXSVHmpJXDEmuAL7D6/0KyQlZTlIgkc644Y
-	 0mSM49r3kA04Q==
-Date: Sun, 2 Jun 2024 12:09:50 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: syzbot <syzbot+list0820d438c1905c75bc71@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com, bpf@vger.kernel.org
-Subject: Re: [syzbot] Monthly trace report (May 2024)
-Message-Id: <20240602120950.8f08ef16ad9c485db374c08d@kernel.org>
-In-Reply-To: <00000000000061fac40619ba66f6@google.com>
-References: <00000000000061fac40619ba66f6@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ALPY0Web"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4521vPHL008978;
+	Sun, 2 Jun 2024 03:15:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	oYn5Sk8sgs0xTPxHzq8192f59eLtim9v34973Bym1G4=; b=ALPY0Web6Kn8iWpf
+	BBeZsd5lQqjjhgHX+Yca2CLejJTm/+R+7N2yMCQATDZS5bMVlCwYFvn3YzzDgX+H
+	9Xf0rIov/cuCGYhVrSPH/29r1Ubg85I0mkaCPuhKLRTwWBJ5z/CwHTWu0ihegO7B
+	Qgg015qGjQ6t/Q/7qV4qZ1r8JcIRTuGPlxVsKDWyoGo38ah9rcHqfsk/22vJ0Sjm
+	G1DVWs5b8r49pR685QJSr7lxF44Uh6coyYu+vC7Vvm4emVgR9PaXytWa/zXDBBbB
+	f1rv3dwHI6FlgohlLqANhe1KSvs6Fs4GF6Cdd57AU5lPRgBAtz/FuE6eYe9BduwU
+	GAxh6g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5khj48-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 02 Jun 2024 03:15:09 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4523F8PO015548
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 2 Jun 2024 03:15:08 GMT
+Received: from [10.48.241.139] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 1 Jun 2024
+ 20:15:07 -0700
+Message-ID: <42a6c483-5ad0-4985-971d-898ef91cec42@quicinc.com>
+Date: Sat, 1 Jun 2024 20:15:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KUnit: add missing MODULE_DESCRIPTION() macros for
+ lib/test_*.ko
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>,
+        "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy
+	<anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com>
+ <20240602120126.bdf79b0a209ad016f8a91a73@kernel.org>
+Content-Language: en-US
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240602120126.bdf79b0a209ad016f8a91a73@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: V8Lduz61aFqhfa_2OnnlIPUcdVTFTMlv
+X-Proofpoint-ORIG-GUID: V8Lduz61aFqhfa_2OnnlIPUcdVTFTMlv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-01_19,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015 phishscore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406020025
 
-On Thu, 30 May 2024 23:50:32 -0700
-syzbot <syzbot+list0820d438c1905c75bc71@syzkaller.appspotmail.com> wrote:
-
-> Hello trace maintainers/developers,
+On 6/1/2024 8:01 PM, Masami Hiramatsu (Google) wrote:
+> On Sat, 1 Jun 2024 15:19:39 -0700
+> Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 > 
-> This is a 31-day syzbot report for the trace subsystem.
-> All related reports/information can be found at:
-> https://syzkaller.appspot.com/upstream/s/trace
+>> make allmodconfig && make W=1 C=1 reports for lib/test_*.ko:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hexdump.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_dhry.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_firmware.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sysctl.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hash.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ida.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_list_sort.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_min_heap.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sort.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_user_copy.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_keys.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_key_base.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_memcat_p.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_blackhole_dev.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_meminit.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_free_pages.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_kprobes.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ref_tracker.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bits.o
+>>
+>> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+>>
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> ---
+> [...]
 > 
-> During the period, 1 new issues were detected and 0 were fixed.
-> In total, 10 issues are still open and 35 have been fixed so far.
+>> diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
+>> index 0648f7154f5c..e707f7b3a366 100644
+>> --- a/lib/test_kprobes.c
+>> +++ b/lib/test_kprobes.c
+>> @@ -400,4 +400,5 @@ static struct kunit_suite kprobes_test_suite = {
+>>  
+>>  kunit_test_suites(&kprobes_test_suite);
+>>  
+>> +MODULE_DESCRIPTION("simple sanity test for *probes");
 > 
-> Some of the still happening issues:
+> nit: Could you make it "simple sanity test for k*probes" ? because
+> there is test_fprobe.c.
 > 
-> Ref Crashes Repro Title
-> <1> 705     Yes   WARNING in format_decode (3)
->                   https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
 
-Could you send this to bpf folks? It seems bpf_trace_printk caused this errror.
-(Maybe skipping fmt string check?)
+sure, I'll spin a v2
+do you want me to modify the header comment as well since I just copied it:
+/*
+ * test_kprobes.c - simple sanity test for *probes
 
-> <2> 26      Yes   INFO: task hung in blk_trace_ioctl (4)
->                   https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-
-This looks like debugfs_mutex lock leakage. Need to rerun with lockdep.
-
-> <3> 7       Yes   WARNING in get_probe_ref
->                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-
-Hm, fail on register_trace_block_rq_insert(). blktrace issue.
-
-> <4> 6       Yes   INFO: task hung in blk_trace_remove (2)
->                   https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-
-This looks like debugfs_mutex lock leakage too.
-
-> <5> 5       Yes   general protection fault in bpf_get_attach_cookie_tracing
->                   https://syzkaller.appspot.com/bug?extid=3ab78ff125b7979e45f9
-
-This is also BPF problem.
-
-Thank you,
-
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> To disable reminders for individual bugs, reply with the following command:
-> #syz set <Ref> no-reminders
-> 
-> To change bug's subsystems, reply with:
-> #syz set <Ref> subsystems: new-subsystem
-> 
-> You may send multiple commands in a single email message.
+/jeff
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
