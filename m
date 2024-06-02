@@ -1,139 +1,127 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCEA3C00;
-	Sun,  2 Jun 2024 03:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA8711712;
+	Sun,  2 Jun 2024 03:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717298120; cv=none; b=G9hAOwOhpmGEv0tbOOmAlKr2k+XkOdM67p1R591IbODlSY71Og3AtoKY2biulldUHMmuznC8L6gGzWtR0QSrlWmK7qbQvOyznVX9J95nMHlenBlkxkENYQQ8SySJ0oADv5/RO0USDymPgUXHuf9rH9XhxCv0GdCLlyQZQW4DdVg=
+	t=1717299444; cv=none; b=qg6R80zdPX2YsGlYFjfz9D+Ox3c/wXlXEcD02iqcvMmYcr5fKcxqHjdvwF0wAPIabE9nQg9T5sgv9evZ6pf1GFoSOOIXP/IBY9T5Z9q9guVx359pA6AwD5AqWneRE3cCwdL8G1dygtWh73YMh9RWfLGvr0Pe1LPs0HR/3SWEhXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717298120; c=relaxed/simple;
-	bh=edP8nsQBYJd0TE352wO287BLS+JWhbL3wrSTC+ycZXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jLN9BkhSFmnb4ziV/URU2SUnEyYJnkwubZ9woQ5rdsNJfsPdoKTLJdlGelMulH79mTIPgJWqrqe5O9h1I8yB9JRa12AtNiEulPe+oGMWV4cqitxF1XqPXVhsBibfeLOcon3sGUF6hwiVOdlpduNHo1/aV0U3xF+wE0Vd6fSZYyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ALPY0Web; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ALPY0Web"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4521vPHL008978;
-	Sun, 2 Jun 2024 03:15:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	oYn5Sk8sgs0xTPxHzq8192f59eLtim9v34973Bym1G4=; b=ALPY0Web6Kn8iWpf
-	BBeZsd5lQqjjhgHX+Yca2CLejJTm/+R+7N2yMCQATDZS5bMVlCwYFvn3YzzDgX+H
-	9Xf0rIov/cuCGYhVrSPH/29r1Ubg85I0mkaCPuhKLRTwWBJ5z/CwHTWu0ihegO7B
-	Qgg015qGjQ6t/Q/7qV4qZ1r8JcIRTuGPlxVsKDWyoGo38ah9rcHqfsk/22vJ0Sjm
-	G1DVWs5b8r49pR685QJSr7lxF44Uh6coyYu+vC7Vvm4emVgR9PaXytWa/zXDBBbB
-	f1rv3dwHI6FlgohlLqANhe1KSvs6Fs4GF6Cdd57AU5lPRgBAtz/FuE6eYe9BduwU
-	GAxh6g==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5khj48-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 02 Jun 2024 03:15:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4523F8PO015548
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 2 Jun 2024 03:15:08 GMT
-Received: from [10.48.241.139] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 1 Jun 2024
- 20:15:07 -0700
-Message-ID: <42a6c483-5ad0-4985-971d-898ef91cec42@quicinc.com>
-Date: Sat, 1 Jun 2024 20:15:06 -0700
+	s=arc-20240116; t=1717299444; c=relaxed/simple;
+	bh=o6pCTeFxqRUBIZAPxPfqyRNbjqPbTPyf32oB9WTLbbA=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=CTwsTdf3MqCIn99MP79qKSU1E30jKnqOkd0ps7XvX+cfGyIXGWbKcoBXu7w4wdGVGDFxpZo2iIbvnpSPahWRorus34kIBWc/usz6rwVMwTZ9aRY0+xNaDjaBxKDADR2DIBCZtlqUS5cbV1MJqVv90BZdxJa+NJiK6JiY2Kmk78s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35E5BC3277B;
+	Sun,  2 Jun 2024 03:37:24 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sDc3D-000000094J0-0veg;
+	Sat, 01 Jun 2024 23:38:31 -0400
+Message-ID: <20240602033744.563858532@goodmis.org>
+User-Agent: quilt/0.68
+Date: Sat, 01 Jun 2024 23:37:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Guo Ren <guoren@kernel.org>
+Subject: [PATCH v2 00/27] function_graph: Allow multiple users for function graph tracing 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KUnit: add missing MODULE_DESCRIPTION() macros for
- lib/test_*.ko
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-CC: Andrew Morton <akpm@linux-foundation.org>,
-        "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy
-	<anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com>
- <20240602120126.bdf79b0a209ad016f8a91a73@kernel.org>
-Content-Language: en-US
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240602120126.bdf79b0a209ad016f8a91a73@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: V8Lduz61aFqhfa_2OnnlIPUcdVTFTMlv
-X-Proofpoint-ORIG-GUID: V8Lduz61aFqhfa_2OnnlIPUcdVTFTMlv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-01_19,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015 phishscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406020025
-
-On 6/1/2024 8:01 PM, Masami Hiramatsu (Google) wrote:
-> On Sat, 1 Jun 2024 15:19:39 -0700
-> Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
-> 
->> make allmodconfig && make W=1 C=1 reports for lib/test_*.ko:
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hexdump.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_dhry.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_firmware.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sysctl.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hash.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ida.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_list_sort.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_min_heap.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sort.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_user_copy.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_keys.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_key_base.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_memcat_p.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_blackhole_dev.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_meminit.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_free_pages.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_kprobes.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ref_tracker.o
->> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bits.o
->>
->> Add the missing invocations of the MODULE_DESCRIPTION() macro.
->>
->> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
->> ---
-> [...]
-> 
->> diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
->> index 0648f7154f5c..e707f7b3a366 100644
->> --- a/lib/test_kprobes.c
->> +++ b/lib/test_kprobes.c
->> @@ -400,4 +400,5 @@ static struct kunit_suite kprobes_test_suite = {
->>  
->>  kunit_test_suites(&kprobes_test_suite);
->>  
->> +MODULE_DESCRIPTION("simple sanity test for *probes");
-> 
-> nit: Could you make it "simple sanity test for k*probes" ? because
-> there is test_fprobe.c.
-> 
-
-sure, I'll spin a v2
-do you want me to modify the header comment as well since I just copied it:
-/*
- * test_kprobes.c - simple sanity test for *probes
-
-/jeff
 
 
+This is a continuation of the function graph multi user code.
+I wrote a proof of concept back in 2019 of this code[1] and
+Masami started cleaning it up. I started from Masami's work v10
+that can be found here:
+
+ https://lore.kernel.org/linux-trace-kernel/171509088006.162236.7227326999861366050.stgit@devnote2/
+
+This is *only* the code that allows multiple users of function
+graph tracing. This is not the fprobe work that Masami is working
+to add on top of it. As Masami took my proof of concept, there
+was still several things I disliked about that code. Instead of
+having Masami clean it up even more, I decided to take over on just
+my code and change it up a bit.
+
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240525023652.903909489@goodmis.org/
+
+- Added ftrace helpers to allow an ftrace_ops to be a subop of a
+  managing ftrace_op. That is, the managing ftrace_op will enable
+  functions based off of the filters of the subops beneath it.
+  This could be extended for kprobes and fprobes, as the managing
+  ops does the multiplexing for the subops. This allows for only
+  adding a single callback to ftrace but have multiple ops that
+  represent many users.
+
+- At the end, I added static branch which also speeds up the
+  code quite a bit.
+
+Masami Hiramatsu (Google) (3):
+      function_graph: Handle tail calls for stack unwinding
+      function_graph: Use a simple LRU for fgraph_array index number
+      ftrace: Add multiple fgraph storage selftest
+
+Steven Rostedt (Google) (8):
+      ftrace: Allow subops filtering to be modified
+      function_graph: Add pid tracing back to function graph tracer
+      function_graph: Use for_each_set_bit() in __ftrace_return_to_handler()
+      function_graph: Use bitmask to loop on fgraph entry
+      function_graph: Use static_call and branch to optimize entry function
+      function_graph: Use static_call and branch to optimize return function
+      selftests/ftrace: Add function_graph tracer to func-filter-pid test
+      selftests/ftrace: Add fgraph-multi.tc test
+
+Steven Rostedt (VMware) (16):
+      function_graph: Convert ret_stack to a series of longs
+      fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+      function_graph: Add an array structure that will allow multiple callbacks
+      function_graph: Allow multiple users to attach to function graph
+      function_graph: Remove logic around ftrace_graph_entry and return
+      ftrace/function_graph: Pass fgraph_ops to function graph callbacks
+      ftrace: Allow function_graph tracer to be enabled in instances
+      ftrace: Allow ftrace startup flags to exist without dynamic ftrace
+      ftrace: Add subops logic to allow one ops to manage many
+      function_graph: Have the instances use their own ftrace_ops for filtering
+      function_graph: Add "task variables" per task for fgraph_ops
+      function_graph: Move set_graph_function tests to shadow stack global var
+      function_graph: Move graph depth stored data to shadow stack global var
+      function_graph: Move graph notrace bit to shadow stack global var
+      function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
+      function_graph: Add selftest for passing local variables
+
+----
+ include/linux/ftrace.h                             |   43 +-
+ include/linux/sched.h                              |    2 +-
+ include/linux/trace_recursion.h                    |   39 -
+ kernel/trace/fgraph.c                              | 1044 ++++++++++++++++----
+ kernel/trace/ftrace.c                              |  482 ++++++++-
+ kernel/trace/ftrace_internal.h                     |    5 +-
+ kernel/trace/trace.h                               |   94 +-
+ kernel/trace/trace_functions.c                     |    8 +
+ kernel/trace/trace_functions_graph.c               |   96 +-
+ kernel/trace/trace_irqsoff.c                       |   10 +-
+ kernel/trace/trace_sched_wakeup.c                  |   10 +-
+ kernel/trace/trace_selftest.c                      |  259 ++++-
+ .../selftests/ftrace/test.d/ftrace/fgraph-multi.tc |  103 ++
+ .../ftrace/test.d/ftrace/func-filter-pid.tc        |   27 +-
+ 14 files changed, 1916 insertions(+), 306 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
