@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D3028E3;
-	Sun,  2 Jun 2024 03:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770578BF3;
+	Sun,  2 Jun 2024 03:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717297293; cv=none; b=uywjucs5ojkkktEiAdS2Rv39HH2JVO89SWLUhs8Zf48ei2aeAOc+nq3qvuU1QsMfIAsfwjvAy6rKzmlNT1QDjBbA6f/gvwUJftngcImF9erGNAu2ZUcIY0wi3ujjOWlNacU0ieQLpTPiW3juoPNwPqoj8wYTDZhgYl9OhNb60qc=
+	t=1717297794; cv=none; b=RPfhaEAPlWi0rRf7dyzqfSj5zbaJ5u48TrEdTMY+F/aNhUt8OH8iqoAWUG+JmB7fBtTCXMfAevcuvS9yssXB5ptqLm0ktAEaE10h8IVDhqJCfRTcUkdjka1y6YkcqwUDFhjdOjrUhEZrmvfWk9uI0ZRGlq19uefT8Dh6UabhPiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717297293; c=relaxed/simple;
-	bh=JdO1pla7RFG+6UHfAeQ916BDviLKRzz6j8TGIcyMfZM=;
+	s=arc-20240116; t=1717297794; c=relaxed/simple;
+	bh=mxKHFv4b0GpvtdP6ln5iryWXR3VuD8H8Rh5UyDDSVWQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=i+EgZXbfRJL4jyFvd1UO8smI484UAOLmXHdGVjnJnZsB4b5MsjU4LG2NNwQCkCzXSKopLAWdeSY0P8NG1AxYSbd1IdBWxRO13JqVySLTpjy5mhn77tVyldbP6u68n2Yli2dyvKcB+llqAqPgiUz+tkq57qRdsBjBp9y/4z0kkIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5FFX5TN; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=mdKxp7hr1HBluD3WWoGoCxDxHxMTOgjOCoaJDpOnXLO8efgcz0z2SA9q9GFuTHXYvql0EEBURwThVS5K3XHYTcpaDv1htg4YKZrz9/pwH2RHZ4IjzsM12G+XKfrNXbqUHtOHdfzRgqffpk4lg/b43yRLL4j8AcMUj2wQuUTOV08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRMkliUx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5FFX5TN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D261C3277B;
-	Sun,  2 Jun 2024 03:01:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRMkliUx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C58EC3277B;
+	Sun,  2 Jun 2024 03:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717297292;
-	bh=JdO1pla7RFG+6UHfAeQ916BDviLKRzz6j8TGIcyMfZM=;
+	s=k20201202; t=1717297794;
+	bh=mxKHFv4b0GpvtdP6ln5iryWXR3VuD8H8Rh5UyDDSVWQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a5FFX5TNC2FhkIDarq92cTIX2ri7hHaT0ONJHUJYOePg3zFsOHgDvb4HbRvRaRUnP
-	 IzlSeY5xswSEltgPTdKymaesNJ5aflLRtTP60evxbCAHSTVYk+qXpRyHzInrPlm0Hy
-	 rytVtWBUbarh/3dJUc9YoZDxbuxKzmGAS5voa8Ui0dy2CYO8tAM9095fX7w7oNZO1i
-	 HqX0t4QoDEcbJoa4KGHjKcq+yLBN8WmSaDqOrfnfRS++jRrrUMvTUt5MvV+SJZBBMg
-	 RrL7/vooAQTszcN26E1JoT++g5hbjuh7uufyH1v4FRBlV7beeAVlR2wO2s4Fn0RFxc
-	 NNJtgMc0PmiVw==
-Date: Sun, 2 Jun 2024 12:01:26 +0900
+	b=QRMkliUxoT2FNriuvjGQ2nm0MZSVY7Z9ZR9LUhy+haKlUOpl2Vxu4nErbAuUZKCq+
+	 dL7X+XVZOVH0T33b+1Ba1aesvMtb81r3MMj+shFRdUYz9bgWDjRVA+GvPAvqx2TUDa
+	 VgyWqhV+18C/KmGCi1MJe41B76zLqcTVzrPikbr9Q52VpnBBNj8UxRyUjDUuL7611q
+	 I9Sbre88fye0ZgIs2Eu6JT1FGZtOxkgYWE1jdjHZ9fWJTCXj3tA2AxnPcPNDySrrYD
+	 GJL2p6d+NM7UnnXGCdjEVci+QMAaVrknXSVHmpJXDEmuAL7D6/0KyQlZTlIgkc644Y
+	 0mSM49r3kA04Q==
+Date: Sun, 2 Jun 2024 12:09:50 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] KUnit: add missing MODULE_DESCRIPTION() macros for
- lib/test_*.ko
-Message-Id: <20240602120126.bdf79b0a209ad016f8a91a73@kernel.org>
-In-Reply-To: <20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com>
-References: <20240601-md-lib-test-v1-1-a728620e37d8@quicinc.com>
+To: syzbot <syzbot+list0820d438c1905c75bc71@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com, bpf@vger.kernel.org
+Subject: Re: [syzbot] Monthly trace report (May 2024)
+Message-Id: <20240602120950.8f08ef16ad9c485db374c08d@kernel.org>
+In-Reply-To: <00000000000061fac40619ba66f6@google.com>
+References: <00000000000061fac40619ba66f6@google.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,51 +45,62 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 1 Jun 2024 15:19:39 -0700
-Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
+On Thu, 30 May 2024 23:50:32 -0700
+syzbot <syzbot+list0820d438c1905c75bc71@syzkaller.appspotmail.com> wrote:
 
-> make allmodconfig && make W=1 C=1 reports for lib/test_*.ko:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hexdump.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_dhry.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_firmware.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sysctl.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_hash.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ida.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_list_sort.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_min_heap.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_module.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_sort.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_user_copy.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_keys.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_static_key_base.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_memcat_p.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_blackhole_dev.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_meminit.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_free_pages.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_kprobes.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_ref_tracker.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_bits.o
+> Hello trace maintainers/developers,
 > 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> This is a 31-day syzbot report for the trace subsystem.
+> All related reports/information can be found at:
+> https://syzkaller.appspot.com/upstream/s/trace
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-[...]
+> During the period, 1 new issues were detected and 0 were fixed.
+> In total, 10 issues are still open and 35 have been fixed so far.
+> 
+> Some of the still happening issues:
+> 
+> Ref Crashes Repro Title
+> <1> 705     Yes   WARNING in format_decode (3)
+>                   https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
 
-> diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
-> index 0648f7154f5c..e707f7b3a366 100644
-> --- a/lib/test_kprobes.c
-> +++ b/lib/test_kprobes.c
-> @@ -400,4 +400,5 @@ static struct kunit_suite kprobes_test_suite = {
->  
->  kunit_test_suites(&kprobes_test_suite);
->  
-> +MODULE_DESCRIPTION("simple sanity test for *probes");
+Could you send this to bpf folks? It seems bpf_trace_printk caused this errror.
+(Maybe skipping fmt string check?)
 
-nit: Could you make it "simple sanity test for k*probes" ? because
-there is test_fprobe.c.
+> <2> 26      Yes   INFO: task hung in blk_trace_ioctl (4)
+>                   https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+
+This looks like debugfs_mutex lock leakage. Need to rerun with lockdep.
+
+> <3> 7       Yes   WARNING in get_probe_ref
+>                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+
+Hm, fail on register_trace_block_rq_insert(). blktrace issue.
+
+> <4> 6       Yes   INFO: task hung in blk_trace_remove (2)
+>                   https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+
+This looks like debugfs_mutex lock leakage too.
+
+> <5> 5       Yes   general protection fault in bpf_get_attach_cookie_tracing
+>                   https://syzkaller.appspot.com/bug?extid=3ab78ff125b7979e45f9
+
+This is also BPF problem.
 
 Thank you,
+
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> To disable reminders for individual bugs, reply with the following command:
+> #syz set <Ref> no-reminders
+> 
+> To change bug's subsystems, reply with:
+> #syz set <Ref> subsystems: new-subsystem
+> 
+> You may send multiple commands in a single email message.
 
 
 -- 
