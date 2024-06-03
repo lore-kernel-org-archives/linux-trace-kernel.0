@@ -1,169 +1,151 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CAB288DF;
-	Mon,  3 Jun 2024 11:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A56286A6;
+	Mon,  3 Jun 2024 12:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717414545; cv=none; b=iNov4I8FhBu5E1RYWIOGf4i4lTcbjxddVsUmWUivUrh8+A1weKZGSwT5tFix0B+3T4MOrgjEtsPoBdTaK62se7lvOpM45SroWo0wjx/tBQePQVfk2r6aTpIObP0qWWAMv/JDXl5ZLwgC/txcX+coZCgKkL3oa9wwXiqtCKEQEE8=
+	t=1717419162; cv=none; b=hBrB8hbcAPmq+hF/yGCDQfxmNLa9t6Ynw6rz+kFGpJD8Rtf9Qk6ftm2HNE34uoU41r5m4vjeuIrlSDGN5PWL8SLZOb6tJOaemJaw/F0WW4mGi2nffMZY9BDo6kKi44z/u/kqn3fZWKKnHMwIepuFgi5+/qxsqzd7oGai4ZJCJoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717414545; c=relaxed/simple;
-	bh=aoxYSkwX+tV+MwMpCD6gcgbnNLkztkC6LLaSmt3gHik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q/LVAdOifGPR+tJ2cMFLo61q9P5stzivv+tDyY0EHb5ENw9d9Ji1mQWBHXgltnH44v/KRRbRFb211RWAxpzVnaEXPPdsBuQw7u5diCfyF5c69fSHSYQFzMs+pim9M4JBMeIDjUIDFDNKQRfeTg0253NFejRW2cCXNGVBPM82xtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IY7MjAQv; arc=none smtp.client-ip=209.85.219.43
+	s=arc-20240116; t=1717419162; c=relaxed/simple;
+	bh=RQVuKO8KsmnX+HwIJQMFQ5nya3BRk3afvXUxYEj9As8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JzCP0Y8JsADxqLjwPxQgrU/i+cKAnGqcPnDN2IsPm8nyjFCoq/3nzWNdJbTofF8MaPfESkHko30A+bkF27tIYu+5qN5ZPynRR24ITNlzM2VKWD2MFoOW1okzQ+klUIxZr70fmyq9ckz0Cxsa9Rvwx6amXryvMtU8wRTgJabQ9IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDNXqg0d; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY7MjAQv"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ae0abdf095so22586686d6.2;
-        Mon, 03 Jun 2024 04:35:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDNXqg0d"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63947so3594221a12.1;
+        Mon, 03 Jun 2024 05:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717414543; x=1718019343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2/pL0kZCeM1y16ZAOktPzW9q0OBMB22PikjjFd/rS+w=;
-        b=IY7MjAQvE5fw1U2yiXaOKJVtYjdd8A0wTJf5Jdgaoer2my4WfCLhM2QRBTH4gYplIi
-         /zoEFv1/xxK4LjVo+NbIj8cIm7OodTBmArb4w4c76iocR4JWKuiBHKytb1NvEZ2DNdIC
-         jfk2piiZny5R51T095op3y2Kx7XL1tudJY3hQ2/7l89CVGoIt+fJTIom02cK4ctk8WJY
-         maXInlVdOcPQgz7QwoH6CzUmkej8aSuwwakoXGC60w+d18pT9nsnoRpmtS0ONoiO+I8z
-         4+poAGOhiy81wZ6ScIdyKseKHQ6zOW3bMyg8rOWA48RDsudsAEHkh9ZZJrfTiV2TYE6x
-         hx2A==
+        d=gmail.com; s=20230601; t=1717419159; x=1718023959; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yfniF8fjsy176YDZGpwH9nU2UAljfW8YFG1uj+a6gnk=;
+        b=TDNXqg0dX/3loM6vbYTEyr1NEGurqH87sB+5Oad9YsQO8kzzevhnRIRepwpE7gcsTD
+         e35nWwMYzenHkE5RIg/I3W++ZCaUWmCHDc1PYl8lKDIvH83bHoZYpGMASE03KWWrSjji
+         CjyrVXtKVNa7ohmdSp8PJQPjpdJzHNBGK4rUgrNIwizcuiq7I0JxYEIdqWHlzdo0/+sD
+         m/0PtAF1kQlVSAjGBJK8iuo/OnY04hxEm+FLtW3zpw3TIH9jYpFgBSJ2faayxzSEB1xe
+         uMfTNgUHmWmwXabtHngny8PAph91C3UmTyfTr7thPkahB2ma8jCLC4QZGgwTjvsohHff
+         xwqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717414543; x=1718019343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2/pL0kZCeM1y16ZAOktPzW9q0OBMB22PikjjFd/rS+w=;
-        b=MHg1qeWG/6HyOFNucbfFbBf4o9xvhd6JQOpQiDqs1nMoqJA+/7Srf/2YgmtMx96K8Y
-         VApz/zO4PI2Zuo6o7xH2ePoAPP4yzXYvVxV8lr8SRq6tjHgJakSby4mHDeaJr9JZEX2M
-         PazPPqjhlY2Vew77eda7pgMWPv9b7BChtSUkFhe/HnJN/vuHw/2kuFncelJnFnvKYgAd
-         Xl0k6tuO2XUpLg4WnHJR2mWNNXLCtHxOr0r7WhPb78DR9UpnYzbL6FYIcXgMTIJE4YGw
-         yz4Jtvz9XcckRcprvLHN2sWtfrD8nY38dujEbnx1sKc42hXtlsx1H1knBFtnjjdLsGm8
-         Ds5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVSSY3nVl6kSgaELn5nHbTRYLjQLj8LMljC+VIoJKbl585Vfg3xCPvM81RAyoIKNFU/7MqEn1WY43pP+rJi//6RKaPYCdIs1qQ+HrPl9xUXi08LatEatPZ1Ao+SKDaL6pjXJ2ifLTxFs+YvJ3auy4jfCiCWxALw3/O4zneIeZ6ze8aGgBVGFaXC5V/05uXEVLreoQGZDcX9BzkyUy0PZXbrwXmH7Bw6r1CSalhS80dkoF+jL6l5CCQUvHAy1NLhyFo0nXjdARGIAvtwZQ+5uid3xl15ik3ln+OgJlmfNQ==
-X-Gm-Message-State: AOJu0Yw4yruvQ15d3ZEGIk3GO1xM+Y/g4IzO5XG1C/KfZM7MgwVtr9TV
-	NMyHF5Fg6U3Lqk8SvYdrpUlUFMgo/jWxGhlRK2ry09yX+qomTzEte3eoUBvsWs+Dj0G/EqYHhsS
-	Aeked5ch6Yplkfs5ra2ZocyPbIwY=
-X-Google-Smtp-Source: AGHT+IEMPGXe1xq7rGBpGwfaIRAsELArfyOIl90qn3qIm6Yayy3B/d/0+DEKGHoLO4/5D6X82RkZyCrmvpduHJpXVSc=
-X-Received: by 2002:a05:6214:3d99:b0:6af:c64c:d1a0 with SMTP id
- 6a1803df08f44-6afc64cd5b7mr18050666d6.56.1717414542934; Mon, 03 Jun 2024
- 04:35:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717419159; x=1718023959;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfniF8fjsy176YDZGpwH9nU2UAljfW8YFG1uj+a6gnk=;
+        b=u25CydszaufKfcB2/I18ZPBtqNFaIDHz1T5R9Q2Kl0Ki7T4ZKAwNzj/M5BmKD3XmCb
+         LmtTcQJKVBOXA49Q/G6C6y4FUKUlASPF79RaoLFt8v17VdN20SmptVaGVsJF3TOAL0oX
+         fZSJkRm/+oVbp2nD6Isk75sUcCqFhB5aMfWyECMu6Z9I80+ZCxvNhv9km4Qg1BF3gkQF
+         9PGsEi6DZPKeLST8SsdTU7sj0/nE7aLPsze1TmdxCT4Oi3QwUPoEN5L++3HMkEmd5mQ7
+         dQf+ZacAe324iygpFgq+2XCbCq21I+/uAhhpIzYAFfqjUCuhh0WogjstPHndOY4G7lRv
+         770g==
+X-Forwarded-Encrypted: i=1; AJvYcCWxw9rRkDB0Ogq5peLF4uM8jksb5/RtXSVu8ITqP2Etf3tLyGu+DWlW1dC+Zz2kGkoshPRsqdqePi/0fqen2YacgddH3J5glwTMXdAhjdX/agIuDjMAWLo+VY81ypL4Jt4VtnFmH/q2obWvnxz4gs0ZjwkfUrzb7Zc7fEf0eFs5YY+ab+is2zHMVlvRUNFllAoN493jnbwkorxZVc2+fG4+biCgDD3mS/Ln+w3YHUzN2q2TGVo+sgWVfkmAgYLL+njjpwQKCuIQgMMc4q+bq4l2I8yGuEQ2uTvZQG5pOX2kTlXr3OD266ValHOnniLgQlQP2pVwxa2g7Ae5Ci4WFavLWY5RbC6xgkyt/ThfdA54olLUvmuAUVgwUgGfYPZixx/GdoWPfsVf4rqEBizzCenvpeQFgLcrYpFzOkCfwEH6pd92OUltjgem5zpPQJIw0NxAKaAic4Ejs8SDNzSuHJH8jFoPJbApd6sOfZboxmIZJDYYoIQHBiEyWNSRRbwhxZx+zYD9OQ==
+X-Gm-Message-State: AOJu0YyMk7f/HGvHRoBNrtTmSTQhhL7dLdBoe3vGrkHSQvcZCq+G46QV
+	Ptgn7ehM2OwFl+HGMzvZWG329x/hS0LtTkpQ6wvQ7HDPTBfowNCy0NeWUGFe
+X-Google-Smtp-Source: AGHT+IHWekmH9nbBwxtAyBA3aP0bAtq3ZvyaOoiHlV8Yt/cXh+LsKG2d/23Eymxd3zWFCpXjqiJUYw==
+X-Received: by 2002:a50:9b19:0:b0:56e:238e:372c with SMTP id 4fb4d7f45d1cf-57a3653a3d7mr5229810a12.26.1717419158381;
+        Mon, 03 Jun 2024 05:52:38 -0700 (PDT)
+Received: from [192.168.42.59] ([163.114.131.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b990easm5173294a12.6.2024.06.03.05.52.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 05:52:38 -0700 (PDT)
+Message-ID: <fb8fd578-96b8-45b9-b6a9-fe407157122f@gmail.com>
+Date: Mon, 3 Jun 2024 13:52:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240602023754.25443-1-laoar.shao@gmail.com> <20240602023754.25443-2-laoar.shao@gmail.com>
- <87ikysdmsi.fsf@email.froward.int.ebiederm.org> <CALOAHbAASdjLjfDv5ZH7uj=oChKE6iYnwjKFMu6oabzqfs2QUw@mail.gmail.com>
- <CAADnVQJ_RPg_xTjuO=+3G=4auZkS-t-F2WTs18rU2PbVdJVbdQ@mail.gmail.com>
- <874jabdygo.fsf@email.froward.int.ebiederm.org> <CAADnVQ+9T4n=ZhNMd57qfu2w=VqHM8Dzx-7UAAinU5MoORg63w@mail.gmail.com>
-In-Reply-To: <CAADnVQ+9T4n=ZhNMd57qfu2w=VqHM8Dzx-7UAAinU5MoORg63w@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 3 Jun 2024 19:35:04 +0800
-Message-ID: <CALOAHbARXwZvr0GBxKc_c-3nay--h4NhvZbSyt8eZwijNW1a0w@mail.gmail.com>
-Subject: Re: [PATCH 1/6] fs/exec: Drop task_lock() inside __get_task_comm()
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-mm <linux-mm@kvack.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, audit@vger.kernel.org, 
-	LSM List <linux-security-module@vger.kernel.org>, selinux@vger.kernel.org, 
-	bpf <bpf@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v10 01/14] netdev: add netdev_rx_queue_restart()
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-2-almasrymina@google.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20240530201616.1316526-2-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 3, 2024 at 2:23=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Sun, Jun 2, 2024 at 10:53=E2=80=AFAM Eric W. Biederman <ebiederm@xmiss=
-ion.com> wrote:
-> >
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> >
-> > > On Sat, Jun 1, 2024 at 11:57=E2=80=AFPM Yafang Shao <laoar.shao@gmail=
-.com> wrote:
-> > >>
-> > >> On Sun, Jun 2, 2024 at 11:52=E2=80=AFAM Eric W. Biederman <ebiederm@=
-xmission.com> wrote:
-> > >> >
-> > >> > Yafang Shao <laoar.shao@gmail.com> writes:
-> > >> >
-> > >> > > Quoted from Linus [0]:
-> > >> > >
-> > >> > >   Since user space can randomly change their names anyway, using=
- locking
-> > >> > >   was always wrong for readers (for writers it probably does mak=
-e sense
-> > >> > >   to have some lock - although practically speaking nobody cares=
- there
-> > >> > >   either, but at least for a writer some kind of race could have
-> > >> > >   long-term mixed results
-> > >> >
-> > >> > Ugh.
-> > >> > Ick.
-> > >> >
-> > >> > This code is buggy.
-> > >> >
-> > >> > I won't argue that Linus is wrong, about removing the
-> > >> > task_lock.
-> > >> >
-> > >> > Unfortunately strscpy_pad does not work properly with the
-> > >> > task_lock removed, and buf_size larger that TASK_COMM_LEN.
-> > >> > There is a race that will allow reading past the end
-> > >> > of tsk->comm, if we read while tsk->common is being
-> > >> > updated.
-> > >>
-> > >> It appears so. Thanks for pointing it out. Additionally, other code,
-> > >> such as the BPF helper bpf_get_current_comm(), also uses strscpy_pad=
-()
-> > >> directly without the task_lock. It seems we should change that as
-> > >> well.
-> > >
-> > > Hmm. What race do you see?
-> > > If lock is removed from __get_task_comm() it probably can be removed =
-from
-> > > __set_task_comm() as well.
-> > > And both are calling strscpy_pad to write and read comm.
-> > > So I don't see how it would read past sizeof(comm),
-> > > because 'buf' passed into __set_task_comm is NUL-terminated.
-> > > So the concurrent read will find it.
-> >
-> > The read may race with a write that is changing the location
-> > of '\0'.  Especially if the new value is shorter than
-> > the old value.
->
-> so ?
-> strscpy_pad in __[gs]et_task_comm will read/write either long
-> or byte at a time.
-> Assume 64 bit and, say, we had comm where 2nd u64 had NUL.
-> Now two cpus are racing. One is writing shorter comm.
-> Another is reading.
-> The latter can read 1st u64 without NUL and will proceed
-> to read 2nd u64. Either it will read the old u64 with NUL in it
-> or it will read all zeros in 2nd u64 or some zeros in 2nd u64
-> depending on how the compiler generated memset(.., 0, ..)
-> as part of strscpy_pad().
-> _pad() part is critical here.
-> If it was just strscpy() then there would indeed be a chance
-> of reading both u64-s and not finding NUL in any of them.
->
-> > If you are performing lockless reads and depending upon a '\0'
-> > terminator without limiting yourself to the size of the buffer
-> > there needs to be a big fat comment as to how in the world
-> > you are guaranteed that a '\0' inside the buffer will always
-> > be found.
->
-> I think Yafang can certainly add such a comment next to
-> __[gs]et_task_comm.
->
-> I prefer to avoid open coding memcpy + mmemset when strscpy_pad works.
+On 5/30/24 21:16, Mina Almasry wrote:
+> Add netdev_rx_queue_restart() function to netdev_rx_queue.h
+> 
+> Signed-off-by: David Wei <dw@davidwei.uk>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+...
+> diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+> new file mode 100644
+> index 0000000000000..b3899358e5a9c
+> --- /dev/null
+> +++ b/net/core/netdev_rx_queue.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <linux/netdevice.h>
+> +#include <net/netdev_queues.h>
+> +#include <net/netdev_rx_queue.h>
+> +
+> +int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
+> +{
+> +	void *new_mem, *old_mem;
+> +	int err;
 
-Thanks for your explanation.
-I will add a comment for it in the next version.
+I believe it should also do:
 
---=20
-Regards
-Yafang
+if (!dev->queue_mgmt_ops)
+	return -EOPNOTSUPP;
+
+> +
+> +	if (!dev->queue_mgmt_ops->ndo_queue_stop ||
+> +	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
+> +	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
+> +	    !dev->queue_mgmt_ops->ndo_queue_start)
+> +		return -EOPNOTSUPP;
+> +
+> +	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
+
+-- 
+Pavel Begunkov
