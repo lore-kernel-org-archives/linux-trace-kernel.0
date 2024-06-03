@@ -1,132 +1,138 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A2480628
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jun 2024 21:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D66B12DD9B;
+	Mon,  3 Jun 2024 21:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717448649; cv=none; b=lA6bmzvOeuDT4lbFF786WBmUpmcd/QK6MUfqvrgucJBVx7zdcAMl4cS8BmoT4d9jx8x3FEW85DOa4XzB+cPrJnwPGLA3iSUfh3BqFG+4kUacR4uKnhP7MvFJJjjuuSQnjIEKyFYFpsjzldGCUt6i/1KkeuPzaykYx2HMmBb1qkI=
+	t=1717448956; cv=none; b=aq+kKELmj1kr9V0DV9BD4yrwKPv5KWzOQYQCk4A7CrVH8BTPwSH/Q1HTyZuUsBUQEa+Uwe4RsXW2xL67p3M1b/P/rLGqL3xBM8WkCh0l3JFZe+lNLCgGSO/LU/QgT1eHEwiphy9T2M6A/vFaKc2ucVfOQ/8AV8LQJwvQOjJsJ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717448649; c=relaxed/simple;
-	bh=kx2kvEZgNc5XsnnewjVka9co2H4QjUYDuU73T0I0Hl8=;
+	s=arc-20240116; t=1717448956; c=relaxed/simple;
+	bh=FYMKuCZBNDGCJKtAN5IjD+OzRu9w9AkloL6NPNOIgJA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SxnkIclOQAf9ZZHVMpN9k65SUfyRf+fZWnmdfjbZjY0a8jFgAr+NKMVm5zCTElIArR4QKr8QNX4l2uMIqlIlSOoqFQbSIbUH43eVy8Q9ea/euZFtbVtj0Fli9KbzftWaZoGYuuq59NF+DaUg0/cQs0PCMMdWrcUylvcj68NtNu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=VMn4yVx1; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	 To:Cc:Content-Type; b=luxcCxi+fYBEvmvu/RBFk+xGAszf+/URfG9FWscW+NIr0JSLOfLHjFLdWpnqwoACXAxw/1FZ7sHWzdYdjAdctwO6iRg2av7Yx9xRG9wV7vREaFf8im+cYl46bsm7YreAkEgb7L0AuCtCjfrO+Tj0xrx2Q07qcepe5pMLhGpLUI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z3QYqkXz; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="VMn4yVx1"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-62a08b250a2so4324917b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Jun 2024 14:04:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3QYqkXz"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-6c7bf648207so2011443a12.0;
+        Mon, 03 Jun 2024 14:09:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1717448647; x=1718053447; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717448954; x=1718053754; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A4Xwo04AxfSK0W6mUhqUjoHJv2i+cgsYyuXRU+BzfeA=;
-        b=VMn4yVx1AYSFygWtRu5+IglA1BVBZXIDkLMZdFsI6Mm7qdpKVMCWvLyJPV3NTT4HzC
-         0CulDm2WXkRXh1cnRTQGZUtR3Xd4CuCUWIplnYH4Q3S0QWgiNSXrdHbBrfIf9vdhPVrR
-         Ad6jqImA/J1vJLVb4a1EsfeN6pYWwd5afsuAj2gK97uEYtYJ3MTdvbi7irvogUFApxI6
-         o+zdNcpF0+/AvnYCUQoTJ8CGE/+vgqlhwNKZ0nBNaDibw5tpHyEg0a8f2NWwBwJOZCzv
-         5smUPWJI72Y4dnho+rlH2lXeDxKpR2tLinCMumyyk/0/96vhtngi+EtetW0uJgE4wux+
-         87pg==
+        bh=S8FuhmBlBhWpMWq8F+ZJQOzO498/a/MW4e39UXkeSyY=;
+        b=Z3QYqkXzy0lgIZvm1lZKQOq719pMXP9dtAd458tBGct+dkKB/oG2BfyvJ79HSn+g+7
+         Tuf/ttHoO4o6mLOdzph34DCqLhdGWW14d/0wcC4NDIylf6oMubqhl7df3RVo0CkPawjP
+         bj1w/LP5GihqoLya4XJ6Sz9T5IU/Ky83l5mYsb8NXd1Wr5F6WRnHngffmn12nbp5ICqb
+         ezsqpjIcyD+FWZAI8zHWx/7xlm8zZR9bg9mQqXpWVW1wpRWYSK6jJyQSgRrDQpAh+gRc
+         n9pYoRmuZzC3D888yghH47gcf/uYyEAZS5+EkCFJ9EOXLFhV2vKRhdAp1Ucd2JXWtq5T
+         133w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717448647; x=1718053447;
+        d=1e100.net; s=20230601; t=1717448954; x=1718053754;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A4Xwo04AxfSK0W6mUhqUjoHJv2i+cgsYyuXRU+BzfeA=;
-        b=Vm64M7Uhy/8bPwRx++4GUv9t1sOsMa/O1pW9WbhWhLE+ojmQC4CaenMl7htOpfICmg
-         8/z3L+DHBIMM1FfBELLCjDFCZsatcP+VEe6YhBlhtbpE0INr1Kh0ncbE/KPoqFcAvLCO
-         FNF9dyvtZdXwrCzobBXZlcWSQYmfFlZo5JQNzLGynZ0lznkNFvvQ7L+c4cCCKM2/oD6e
-         1WjdOdBwu7UuIdt+Q68O4ekMgDjZz+XCWX/PzEUFu32ejh8jysk5rFte4oblSSU80pua
-         GkPgA3L4TGiX/aDsR/dlC8z7jkfm4fMTpjCuWyV4ng19eOiDuULa1FHRMjwhoBxW74Sc
-         SA1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ5/7ieJC+tmTOccV05xj1gFpH+MgE1tVzuZaareYJ1AjHbXf84SZTCFwwmKdTt5+Cz6k43rL1KwZmlOzNeP3M0NkvJS9C41QMgFDx934bGrWZ
-X-Gm-Message-State: AOJu0YyoWJAcCXHCkZfPKaWxBrWqMlwKELoLV0Qc+dx0i66uRJexlcMP
-	LeaH4Jy+rEgs/CXRGc5esd7O/hNWXVaH6Oo6W2/V1xf53+1OyYuoTo0alivsL3rDn3ikz2Fb9v0
-	PtGoMxT47AtdPsQs3ICRrXUMxg4WqEJ7R+brz
-X-Google-Smtp-Source: AGHT+IGR+FpbhgOaypOj8EHAJX7D2rLdNzF0sO2h5xEd4/ttL81NSVdpzxrwxGxotbOO4RE/GArlcQx7GP4z1mOA6C8=
-X-Received: by 2002:a05:690c:82e:b0:627:de5d:cf36 with SMTP id
- 00721157ae682-62c79777753mr103683987b3.39.1717448646572; Mon, 03 Jun 2024
- 14:04:06 -0700 (PDT)
+        bh=S8FuhmBlBhWpMWq8F+ZJQOzO498/a/MW4e39UXkeSyY=;
+        b=kHzhWVtPQvbC5Dx+ZhOUfWQ7OJ5tzBFaCdjeLdespBhNxkAfuRFxRLJ2kn/qNuDQQo
+         EKLuyRG3R++7FiAA43+nW+32FTIKSV3/Ix575ffz/Il74WgDp0PKGr9XMYCh+ukyvGro
+         f9N5qzh0GGh0Wk+HXA51CF7CoJFtRs/FfIuhmXZVUDBfC8Fju8tQ70WRKsEUN95wGk++
+         fdQrBjxNM3o4SxjZwabfHxx6A7wW1bBw3OC3jO6DGJt0UtZdZWUf8SeNzTeRtq+JK6H+
+         +iV0jDKvnog70h/ZUbNQNrDoB5ZUU24mRE4DtOJPCPdr2IQ4Pp/mHBzbQk0Ebn5fI/rU
+         PDCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVD6QcrhqlksowvHeu2iFqqD2ELq//6LUVqSYe2luXvE0R/MNeHh4tagcp0en4ANlv6zysuTZnO/sc8stTcBSqxuh6hAhAbvY5vfa1aO3ESVGwwoOY+JvBoWHzBlDZw0LINO/iOjw==
+X-Gm-Message-State: AOJu0YxwPgtmhwd2J9g3sReFPp7DUNxKia3yMp6Dy56KsaJB1eMbnJy0
+	FrH6eS8Nyt19q9crjFMYYmc9+EXk60Q7kHJwpyMXQ+b6FWlDAmyfntqOuPx1raWqrU88Oeph7Nl
+	wZMEPO5/SHbVIY7NmTt4k2wCFkio=
+X-Google-Smtp-Source: AGHT+IFuhoFUoqSTzvg6xQH0NPagQC4ex8JcR5NVISkIk+0LbYt4WFhHfjLE9pCgQaE483MWlyAy+ZeHAd9EYSQudxs=
+X-Received: by 2002:a17:90b:a4d:b0:2c1:a77c:6673 with SMTP id
+ 98e67ed59e1d1-2c1dc5c0e68mr9908568a91.38.1717448954505; Mon, 03 Jun 2024
+ 14:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240602023754.25443-1-laoar.shao@gmail.com> <20240602023754.25443-4-laoar.shao@gmail.com>
-In-Reply-To: <20240602023754.25443-4-laoar.shao@gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 3 Jun 2024 17:03:55 -0400
-Message-ID: <CAHC9VhRBN94QRGAmjZKDk_H0GxAEn-PBE4_2tTwuwfXps1Hr5A@mail.gmail.com>
-Subject: Re: [PATCH 3/6] auditsc: Replace memcpy() with __get_task_comm()
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: torvalds@linux-foundation.org, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, Eric Paris <eparis@redhat.com>
+References: <20240522013845.1631305-1-andrii@kernel.org>
+In-Reply-To: <20240522013845.1631305-1-andrii@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 3 Jun 2024 14:09:02 -0700
+Message-ID: <CAEf4BzZLG43F_phpTFJB7CHZkxJt8es1R_vXT6vpVpyaZnz9gw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Fix user stack traces captured from uprobes
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, x86@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 1, 2024 at 10:38=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
+On Tue, May 21, 2024 at 6:38=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
+ wrote:
 >
-> Using __get_task_comm() to read the task comm ensures that the name is
-> always NUL-terminated, regardless of the source string. This approach als=
-o
-> facilitates future extensions to the task comm.
+> This patch set reports two issues with captured stack traces.
 >
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: Eric Paris <eparis@redhat.com>
-> ---
->  kernel/auditsc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-
-Assuming you've sorted out all the problems identified earlier in the
-patchset and __get_task_comm() no longer takes task_lock() this should
-be okay from an audit perspective.
-
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 6f0d6fb6523f..0459a141dc86 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -2730,7 +2730,7 @@ void __audit_ptrace(struct task_struct *t)
->         context->target_uid =3D task_uid(t);
->         context->target_sessionid =3D audit_get_sessionid(t);
->         security_task_getsecid_obj(t, &context->target_sid);
-> -       memcpy(context->target_comm, t->comm, TASK_COMM_LEN);
-> +       __get_task_comm(context->target_comm, TASK_COMM_LEN, t);
->  }
+> First issue, fixed in patch #2, deals with fixing up uretprobe trampoline
+> addresses in captured stack trace. This issue happens when there are pend=
+ing
+> return probes, for which kernel hijacks some of the return addresses on u=
+ser
+> stacks. The code is matching those special uretprobe trampoline addresses=
+ with
+> the list of pending return probe instances and replaces them with actual
+> return addresses. This is the same fixup logic that fprobe/kretprobe has =
+for
+> kernel stack traces.
 >
->  /**
-> @@ -2757,7 +2757,7 @@ int audit_signal_info_syscall(struct task_struct *t=
-)
->                 ctx->target_uid =3D t_uid;
->                 ctx->target_sessionid =3D audit_get_sessionid(t);
->                 security_task_getsecid_obj(t, &ctx->target_sid);
-> -               memcpy(ctx->target_comm, t->comm, TASK_COMM_LEN);
-> +               __get_task_comm(ctx->target_comm, TASK_COMM_LEN, t);
->                 return 0;
->         }
+> Second issue, which patch #3 is fixing with the help of heuristic, is hav=
+ing
+> to do with capturing user stack traces in entry uprobes. At the very entr=
+ance
+> to user function, frame pointer in rbp register is not yet setup, so actu=
+al
+> caller return address is still pointed to by rsp. Patch is using a simple
+> heuristic, looking for `push %rbp` instruction, to fetch this extra direc=
+t
+> caller return address, before proceeding to unwind the stack using rbp.
 >
-> @@ -2778,7 +2778,7 @@ int audit_signal_info_syscall(struct task_struct *t=
-)
->         axp->target_uid[axp->pid_count] =3D t_uid;
->         axp->target_sessionid[axp->pid_count] =3D audit_get_sessionid(t);
->         security_task_getsecid_obj(t, &axp->target_sid[axp->pid_count]);
-> -       memcpy(axp->target_comm[axp->pid_count], t->comm, TASK_COMM_LEN);
-> +       __get_task_comm(axp->target_comm[axp->pid_count], TASK_COMM_LEN, =
-t);
->         axp->pid_count++;
+> Patch #4 adds tests into BPF selftests, that validate that captured stack
+> traces at various points is what we expect to get. This patch, while bein=
+g BPF
+> selftests, is isolated from any other BPF selftests changes and can go in
+> through non-BPF tree without the risk of merge conflicts.
 >
->         return 0;
+> Patches are based on latest linux-trace/probes/for-next.
+>
+> v1->v2:
+>   - fixed GCC aggressively inlining test_uretprobe_stack() function (BPF =
+CI);
+>   - fixed comments (Peter).
+>
+> Andrii Nakryiko (4):
+>   uprobes: rename get_trampoline_vaddr() and make it global
+>   perf,uprobes: fix user stack traces in the presence of pending
+>     uretprobes
+>   perf,x86: avoid missing caller address in stack traces captured in
+>     uprobe
+>   selftests/bpf: add test validating uprobe/uretprobe stack traces
+>
+>  arch/x86/events/core.c                        |  20 ++
+>  include/linux/uprobes.h                       |   3 +
+>  kernel/events/callchain.c                     |  43 +++-
+>  kernel/events/uprobes.c                       |  17 +-
+>  .../bpf/prog_tests/uretprobe_stack.c          | 186 ++++++++++++++++++
+>  .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
+>  6 files changed, 361 insertions(+), 4 deletions(-)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stac=
+k.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
+>
 > --
-> 2.39.1
+> 2.43.0
+>
 
---=20
-paul-moore.com
+Friendly ping. This is a real issue in practice that our production
+users are eager to be fixed, please help to get it upstream. Thanks!
