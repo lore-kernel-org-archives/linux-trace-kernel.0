@@ -1,273 +1,292 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCC08493;
-	Sun,  2 Jun 2024 21:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80DB15D1;
+	Mon,  3 Jun 2024 01:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717362495; cv=none; b=kP6Whzf+TBZGLid+N7G3bLPBlM2MUdEJiDq6ljI4Ybv9SbFisiiNHRHz5KeFBc8lXAto5IVVCY5I89jdnNBlASpfwYzi1tMoLFbcV8Ny8jAzLGrY9Gk/Y3AMBOt3IqvMZM3tv+hdMTDL4QDyANs5aEmsW3zdrC90Wlu7hdRxNug=
+	t=1717378403; cv=none; b=DRvz1hVMJfNzK5wxlkxQ90NL8dQIfBeLgBgHvHmMyWkWVhBlWBZVOoksm280G9G1iii51UQolLN9+kDGvdst2BAypyG/juTweN1IWlH6/8PEW208yTEky+tk61K0fuz9EGKK45Tou07Ly+ydMxERdu6/Wzp9Eix0+z1ck6XmYXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717362495; c=relaxed/simple;
-	bh=QASph2uY1fq4HnU0wZtjG1pIF1jvY+VFOelBy4FoHog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZaU6w+j8dZjZMm4tEq5w/b1pyHkIs2PfN5U3AntJQTm2u8xPue2YQIbQD6nRjNZICuBr4XojqrIJN7WRC0YByTpMhqRJhLwmGan19eMlzDkaLx4ykyKhKo1vwd1RnXKgYsV1Fov4VvJIHynFoIqZMH80diRIsKcyPBTVpb0KvW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xAoIyPs2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aSXhDgJ9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xAoIyPs2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aSXhDgJ9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1717378403; c=relaxed/simple;
+	bh=lVDE88Qb+/GrOkAnpTN63Uoia9YOV0ChEGvGNZ5FMD0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Jq2Wo32TXx4Ar+3hLlxv9rQ1EQnmZ/7hv7/kGv3Uh8IcC0+2KmDdmO6OkolLbHgjWDX+X7ienuBbyvltjB03z15U0sYt+fKtInaaXfYZUhCQ+yBpQOpTY/ksprXH+FDNXkz4AmexOzQj9NMN97QaRS7VPDHADZd7MAEU6EGA/LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDJfZrfC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xAoIyPs2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aSXhDgJ9";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xAoIyPs2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aSXhDgJ9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2501022134;
-	Sun,  2 Jun 2024 21:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717362491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tQZEL/vbM6wKuOYcR4luQQldeA8eAyr6eXnPVohUWho=;
-	b=xAoIyPs2nTlPuXCvTy9BLDzkeK3XIxu4KrdpEnjl8vEwe1c5tZwUZwxCH9m1GJS3l8kOEo
-	q6cU7KRkvTGXBdt/ZklFK4Y/pIKfOXxsRxWGpFj5LYVdvOUaJpsqyDz6m+mVa3Dyc6pJUO
-	NMEI8sToe2CKOO3/KmRsV2aQCeEaKYc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717362491;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tQZEL/vbM6wKuOYcR4luQQldeA8eAyr6eXnPVohUWho=;
-	b=aSXhDgJ9nCrdqhhFTzYHoMz8jOuP0qkmQxZazYXkE/ROGrigeg61nXgB+kMyfXujAaFchM
-	piBSnd/cL+qA+FAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=xAoIyPs2;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=aSXhDgJ9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717362491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tQZEL/vbM6wKuOYcR4luQQldeA8eAyr6eXnPVohUWho=;
-	b=xAoIyPs2nTlPuXCvTy9BLDzkeK3XIxu4KrdpEnjl8vEwe1c5tZwUZwxCH9m1GJS3l8kOEo
-	q6cU7KRkvTGXBdt/ZklFK4Y/pIKfOXxsRxWGpFj5LYVdvOUaJpsqyDz6m+mVa3Dyc6pJUO
-	NMEI8sToe2CKOO3/KmRsV2aQCeEaKYc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717362491;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tQZEL/vbM6wKuOYcR4luQQldeA8eAyr6eXnPVohUWho=;
-	b=aSXhDgJ9nCrdqhhFTzYHoMz8jOuP0qkmQxZazYXkE/ROGrigeg61nXgB+kMyfXujAaFchM
-	piBSnd/cL+qA+FAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ECED713A97;
-	Sun,  2 Jun 2024 21:08:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZW4ROTrfXGbvOQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Sun, 02 Jun 2024 21:08:10 +0000
-Message-ID: <f21161e9-1da6-4015-907d-e419ec5056da@suse.cz>
-Date: Sun, 2 Jun 2024 23:08:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDJfZrfC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71DD3C2BBFC;
+	Mon,  3 Jun 2024 01:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717378402;
+	bh=lVDE88Qb+/GrOkAnpTN63Uoia9YOV0ChEGvGNZ5FMD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dDJfZrfCVVIE36wD1Ywx1u8BL4mLlMGdRdHlMb5Sjkh8hrik7ZSxmWq17xC/u9nai
+	 /csNuwWengEFBJLhqWeh2HlFSmePc6jbQBXvBPERz/CUP+/q+7ztt75+MNkVBLprhB
+	 ZicxOb3j7EXmZGGTOpSJBdguXyn3uqcDgeZECJQxTFT5gjopNL6RM05/n/6UAA/og5
+	 op/IxG5+mmRQiXVBP7n+rCqhFX9CHn63ZWoSFv177L5t88m6LcsXB6wsJFj7rjFNe5
+	 CfCTGFyFJ89LTTm182xvTPhH2SRcrXrvSkwGyUFbXHbimib5xqdRdmY723yjN5ReCl
+	 YIkqvY59HnWQw==
+Date: Mon, 3 Jun 2024 10:33:16 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v2 10/27] ftrace: Add subops logic to allow one ops to
+ manage many
+Message-Id: <20240603103316.3af9dea3214a5d2bde721cd8@kernel.org>
+In-Reply-To: <20240602033832.709653366@goodmis.org>
+References: <20240602033744.563858532@goodmis.org>
+	<20240602033832.709653366@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/4] static key support for error injection functions
-To: David Rientjes <rientjes@google.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
- <71ebaa45-dbd0-b39d-4b33-88da3f497297@google.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <71ebaa45-dbd0-b39d-4b33-88da3f497297@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,linux.com,kernel.org,iogearbox.net,linux.ibm.com,intel.com,davemloft.net,goodmis.org,arm.com,linux.dev,vger.kernel.org,kvack.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 2501022134
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -3.00
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 6/2/24 10:47 PM, David Rientjes wrote:
-> On Fri, 31 May 2024, Vlastimil Babka wrote:
-> 
->> Patches 3 and 4 implement the static keys for the two mm fault injection
->> sites in slab and page allocators. For a quick demonstration I've run a
->> VM and the simple test from [1] that stresses the slab allocator and got
->> this time before the series:
->> 
->> real    0m8.349s
->> user    0m0.694s
->> sys     0m7.648s
->> 
->> with perf showing
->> 
->>    0.61%  nonexistent  [kernel.kallsyms]  [k] should_failslab.constprop.0
->>    0.00%  nonexistent  [kernel.kallsyms]  [k] should_fail_alloc_page                                                                                                                                                                                        ▒
->> 
->> And after the series
->> 
->> real    0m7.924s
->> user    0m0.727s
->> sys     0m7.191s
->> 
->> and the functions gone from perf report.
->> 
-> 
-> Impressive results that will no doubt be a win for kernels that enable 
-> these options.
+Hi Steve,
 
-Oh, I should have been more clear about it. This was done with both of these
-options disabled. It's measuring just removing the overhead of calling the
-empty noninline function, otherwise the difference would be larger. CPU
-mitigations (defaults) were enabled though, which affects the cost of
-function calls (this was in KVM guest on Ryzen 2700).
+On Sat, 01 Jun 2024 23:37:54 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Both CONFIG_FAILSLAB and CONFIG_FAIL_PAGE_ALLOC go out of their way to 
-> have no overhead, both in performance and kernel text overhead, when the 
-> .config options are disabled.
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Except the unavoidable function call overhead since commits 4f6923fbb352 and
-af3b854492f3.
+I think this is a new patch, correct? I'm a bit confused.
 
-> Do we have any insight into the distros or users that enable either of 
-> these options and are expecting optimal performance?  I would have assumed 
-> that while CONFIG_FAULT_INJECTION may be enabled that any users who would 
-> care deeply about this would have disabled both of these debug options.
+And I have some comments below;
+[..]
+> @@ -3164,6 +3166,392 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+>  	return 0;
+>  }
+>  
+> +/* Simply make a copy of @src and return it */
+> +static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
+> +{
+> +	if (!src || src == EMPTY_HASH)
+> +		return EMPTY_HASH;
+> +
+> +	return alloc_and_copy_ftrace_hash(src->size_bits, src);
+> +}
+> +
+> +/*
+> + * Append @new_hash entries to @hash:
+> + *
+> + *  If @hash is the EMPTY_HASH then it traces all functions and nothing
+> + *  needs to be done.
+> + *
+> + *  If @new_hash is the EMPTY_HASH, then make *hash the EMPTY_HASH so
+> + *  that it traces everything.
 
-Eliminating the empty function call overhead, which is currently not
-possible to configure out in any way, was my primary goal. For our distro we
-disable the options and they are enabled only in a debug kernel option. So
-the additional benefit of the static key is we could enable them with no
-cost, and have them available for when needed, without the need to change
-kernel. This is great for debugging functionality in general
-(debug_pagealloc, page_owner), maybe this would be less likely to be useful,
-but one never knows.
+This lacks the most important comment, this function is only for
+filter_hash, not for notrace_hash. :)
 
->> There might be other such fault injection callsites in hotpaths of other
->> subsystems but I didn't search for them at this point.
->> 
->> [1] https://lore.kernel.org/all/6d5bb852-8703-4abf-a52b-90816bccbd7f@suse.cz/
->> [2] https://lore.kernel.org/all/3j5d3p22ssv7xoaghzraa7crcfih3h2qqjlhmjppbp6f42pg2t@kg7qoicog5ye/
->> 
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->> ---
->> Vlastimil Babka (4):
->>       fault-inject: add support for static keys around fault injection sites
->>       error-injection: support static keys around injectable functions
->>       mm, slab: add static key for should_failslab()
->>       mm, page_alloc: add static key for should_fail_alloc_page()
->> 
->>  include/asm-generic/error-injection.h | 13 ++++++++++-
->>  include/asm-generic/vmlinux.lds.h     |  2 +-
->>  include/linux/error-injection.h       |  9 +++++---
->>  include/linux/fault-inject.h          |  7 +++++-
->>  kernel/fail_function.c                | 22 +++++++++++++++---
->>  lib/error-inject.c                    |  6 ++++-
->>  lib/fault-inject.c                    | 43 ++++++++++++++++++++++++++++++++++-
->>  mm/fail_page_alloc.c                  |  3 ++-
->>  mm/failslab.c                         |  2 +-
->>  mm/internal.h                         |  2 ++
->>  mm/page_alloc.c                       | 11 ++++++---
->>  mm/slab.h                             |  3 +++
->>  mm/slub.c                             | 10 +++++---
->>  13 files changed, 114 insertions(+), 19 deletions(-)
->> ---
->> base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
->> change-id: 20240530-fault-injection-statickeys-66b7222e91b7
->> 
->> Best regards,
->> -- 
->> Vlastimil Babka <vbabka@suse.cz>
->> 
->> 
+> + *
+> + *  Otherwise, go through all of @new_hash and add anything that @hash
+> + *  doesn't already have, to @hash.
+> + */
+> +static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
+> +{
+> +	struct ftrace_func_entry *entry;
+> +	int size;
+> +	int i;
+> +
+> +	/* An empty hash does everything */
+> +	if (!*hash || *hash == EMPTY_HASH)
+> +		return 0;
+> +
+> +	/* If new_hash has everything make hash have everything */
+> +	if (!new_hash || new_hash == EMPTY_HASH) {
+> +		free_ftrace_hash(*hash);
+> +		*hash = EMPTY_HASH;
+> +		return 0;
+> +	}
+> +
+> +	size = 1 << new_hash->size_bits;
+> +	for (i = 0; i < size; i++) {
+> +		hlist_for_each_entry(entry, &new_hash->buckets[i], hlist) {
+> +			/* Only add if not already in hash */
+> +			if (!__ftrace_lookup_ip(*hash, entry->ip) &&
+> +			    add_hash_entry(*hash, entry->ip) == NULL)
+> +				return -ENOMEM;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +/* Add to @hash only those that are in both @new_hash1 and @new_hash2 */
 
+Ditto, this is only for the notrace_hash.
+
+> +static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash1,
+> +			  struct ftrace_hash *new_hash2)
+> +{
+> +	struct ftrace_func_entry *entry;
+> +	int size;
+> +	int i;
+> +
+> +	/*
+> +	 * If new_hash1 or new_hash2 is the EMPTY_HASH then make the hash
+> +	 * empty as well as empty for notrace means none are notraced.
+> +	 */
+> +	if (!new_hash1 || new_hash1 == EMPTY_HASH ||
+> +	    !new_hash2 || new_hash2 == EMPTY_HASH) {
+> +		free_ftrace_hash(*hash);
+> +		*hash = EMPTY_HASH;
+> +		return 0;
+> +	}
+> +
+> +	size = 1 << new_hash1->size_bits;
+> +	for (i = 0; i < size; i++) {
+> +		hlist_for_each_entry(entry, &new_hash1->buckets[i], hlist) {
+> +			/* Only add if in both @new_hash1 and @new_hash2 */
+> +			if (__ftrace_lookup_ip(new_hash2, entry->ip) &&
+> +			    add_hash_entry(*hash, entry->ip) == NULL)
+> +				return -ENOMEM;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +/* Return a new hash that has a union of all @ops->filter_hash entries */
+> +static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
+> +{
+> +	struct ftrace_hash *new_hash;
+> +	struct ftrace_ops *subops;
+> +	int ret;
+> +
+> +	new_hash = alloc_ftrace_hash(ops->func_hash->filter_hash->size_bits);
+> +	if (!new_hash)
+> +		return NULL;
+> +
+> +	list_for_each_entry(subops, &ops->subop_list, list) {
+> +		ret = append_hash(&new_hash, subops->func_hash->filter_hash);
+> +		if (ret < 0) {
+> +			free_ftrace_hash(new_hash);
+> +			return NULL;
+> +		}
+> +		/* Nothing more to do if new_hash is empty */
+> +		if (new_hash == EMPTY_HASH)
+> +			break;
+> +	}
+> +	return new_hash;
+> +}
+> +
+> +/* Make @ops trace evenything except what all its subops do not trace */
+> +static struct ftrace_hash *intersect_hashes(struct ftrace_ops *ops)
+> +{
+> +	struct ftrace_hash *new_hash = NULL;
+> +	struct ftrace_ops *subops;
+> +	int size_bits;
+> +	int ret;
+> +
+> +	list_for_each_entry(subops, &ops->subop_list, list) {
+> +		struct ftrace_hash *next_hash;
+> +
+> +		if (!new_hash) {
+> +			size_bits = subops->func_hash->notrace_hash->size_bits;
+> +			new_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->notrace_hash);
+> +			if (!new_hash)
+> +				return NULL;
+
+If the first subops has EMPTY_HASH, this allocates small empty hash (!= EMPTY_HASH)
+on `new_hash`.
+
+> +			continue;
+> +		}
+> +		size_bits = new_hash->size_bits;
+> +		next_hash = new_hash;
+
+And it is assigned to `next_hash`.
+
+> +		new_hash = alloc_ftrace_hash(size_bits);
+> +		ret = intersect_hash(&new_hash, next_hash, subops->func_hash->notrace_hash);
+
+Since the `next_hash` != EMPTY_HASH but it is empty, this keeps `new_hash`
+empty but allocated.
+
+> +		free_ftrace_hash(next_hash);
+> +		if (ret < 0) {
+> +			free_ftrace_hash(new_hash);
+> +			return NULL;
+> +		}
+> +		/* Nothing more to do if new_hash is empty */
+> +		if (new_hash == EMPTY_HASH)
+
+Since `new_hash` is empty but != EMPTY_HASH, this does not pass. Keep looping on.
+
+> +			break;
+> +	}
+> +	return new_hash;
+
+And this will return empty but not EMPTY_HASH hash.
+
+
+So, we need;
+
+#define FTRACE_EMPTY_HASH_OR_NULL(hash)	(!(hash) || (hash) == EMPTY_HASH)
+
+if (FTRACE_EMPTY_HASH_OR_NULL(subops->func_hash->notrace_hash)) {
+	free_ftrace_hash(new_hash);
+	new_hash = EMPTY_HASH;
+	break;
+}
+
+at the beginning of the loop.
+Also, at the end of the loop,
+
+if (ftrace_hash_empty(new_hash)) {
+	free_ftrace_hash(new_hash);
+	new_hash = EMPTY_HASH;
+	break;
+}
+
+> +}
+> +
+> +/* Returns 0 on equal or non-zero on non-equal */
+> +static int compare_ops(struct ftrace_hash *A, struct ftrace_hash *B)
+
+nit: Isn't it better to be `bool hash_equal()` and return true if A == B ?
+
+Thank you,
+
+> +{
+> +	struct ftrace_func_entry *entry;
+> +	int size;
+> +	int i;
+> +
+> +	if (!A || A == EMPTY_HASH)
+> +		return !(!B || B == EMPTY_HASH);
+> +
+> +	if (!B || B == EMPTY_HASH)
+> +		return !(!A || A == EMPTY_HASH);
+> +
+> +	if (A->count != B->count)
+> +		return 1;
+> +
+> +	size = 1 << A->size_bits;
+> +	for (i = 0; i < size; i++) {
+> +		hlist_for_each_entry(entry, &A->buckets[i], hlist) {
+> +			if (!__ftrace_lookup_ip(B, entry->ip))
+> +				return 1;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
