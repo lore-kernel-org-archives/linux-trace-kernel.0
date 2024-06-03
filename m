@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C6F13C9D0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6610213CA81;
 	Mon,  3 Jun 2024 19:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441633; cv=none; b=eZaojl70b/HkKBT0MUzSS2viS5vrTmRPux5uQ0Ee4RY07OZ3RG7YLS+DPQFrfgHC9ZeamkkqeMTKj1uJBLQ/4hNy/OXhm6tiRlZQF9MUCfUPCCgNxKMKIXKKFdUiO2Z+0GPhYr+oiDiE7oua2T4VMlEMO7DWGMADZPnQxFMNhuc=
+	t=1717441633; cv=none; b=NHJjo6KJK1dvY7zmuIdUoBDV+iBJT6bXOlFYOZrBso0qeuqn6yu3YA+KWvNnGCyaiK+s8wWExuI9mbifPNHosSixaMuzCzDYOWWv6YnjP/Tld9tm6mPPioGmzMYrV0DwxqxNFp/ybCEG99p24SgksTj/o/ufTcN9uCZSD9sbS9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717441633; c=relaxed/simple;
-	bh=9LpGl/CYTHJuPvy0Cg8mag2iEBwvUFaJNUn1Vi1Mfk8=;
+	bh=JE93PlBa3kdyQhPv7TKP6/ed9Zy0l5p2+IbasxlOd1M=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=U2z9fpcybj7gDCiwj1xcG/A0xprKnh/7RsUW2Fo5xy23bqVSSfTw/BQII0WEbcBdg9xgW3PZZ1Cu7HrTb6FhOZ0VU6EB/maNNBvU/mx4nmz/Yf+mO0hzIM6lqybdJ6bEhxXMcfgKt8APLLkzQdD7dP9hMY5W2Qxpfib3zHsR2Xk=
+	 Content-Type; b=DKWkfbWk3cf+eRj0YWeqjZR/Bg96FhTKhkND7yu8LbpiCA2enBx+DyPyN8mwsCyIEsQkxQQ4PXP+a/xqx7RlONAyS7D8Mg3nrA+NHdSXEmAoJDEj154feMgJuIQKH4kF60lOSSA+RxHrK0dJy+RZNKE8dNH58RULCPSPbTckYMY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD7EC4AF55;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5100C4DE09;
 	Mon,  3 Jun 2024 19:07:12 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sED2d-00000009Tsw-1DHN;
+	id 1sED2d-00000009TuR-3G9G;
 	Mon, 03 Jun 2024 15:08:23 -0400
-Message-ID: <20240603190823.147421545@goodmis.org>
+Message-ID: <20240603190823.634870264@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 15:07:18 -0400
+Date: Mon, 03 Jun 2024 15:07:21 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -41,7 +41,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 14/27] function_graph: Use a simple LRU for fgraph_array index number
+Subject: [PATCH v3 17/27] function_graph: Move graph depth stored data to shadow stack global
+ var
 References: <20240603190704.663840775@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,160 +52,130 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Since the fgraph_array index is used for the bitmap on the shadow
-stack, it may leave some entries after a function_graph instance is
-removed. Thus if another instance reuses the fgraph_array index soon
-after releasing it, the fgraph may confuse to call the newer callback
-for the entries which are pushed by the older instance.
-To avoid reusing the fgraph_array index soon after releasing, introduce
-a simple LRU table for managing the index number. This will reduce the
-possibility of this confusion.
+The use of the task->trace_recursion for the logic used for the function
+graph depth was a bit of an abuse of that variable. Now that there
+exists global vars that are per stack for registered graph traces, use that
+instead.
 
-Link: https://lore.kernel.org/linux-trace-kernel/171509103267.162236.6885097397289135378.stgit@devnote2
+Link: https://lore.kernel.org/linux-trace-kernel/171509106728.162236.2398372644430125344.stgit@devnote2
 
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 71 ++++++++++++++++++++++++++++++-------------
- 1 file changed, 50 insertions(+), 21 deletions(-)
+ include/linux/trace_recursion.h | 29 ----------------------------
+ kernel/trace/trace.h            | 34 +++++++++++++++++++++++++++++++--
+ 2 files changed, 32 insertions(+), 31 deletions(-)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 30bed20c655f..7fd9b03bd170 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -124,10 +124,48 @@ enum {
- DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
- int ftrace_graph_active;
+diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
+index 02e6afc6d7fe..fdfb6f66718a 100644
+--- a/include/linux/trace_recursion.h
++++ b/include/linux/trace_recursion.h
+@@ -44,25 +44,6 @@ enum {
+  */
+ 	TRACE_IRQ_BIT,
  
--static int fgraph_array_cnt;
+-	/*
+-	 * In the very unlikely case that an interrupt came in
+-	 * at a start of graph tracing, and we want to trace
+-	 * the function in that interrupt, the depth can be greater
+-	 * than zero, because of the preempted start of a previous
+-	 * trace. In an even more unlikely case, depth could be 2
+-	 * if a softirq interrupted the start of graph tracing,
+-	 * followed by an interrupt preempting a start of graph
+-	 * tracing in the softirq, and depth can even be 3
+-	 * if an NMI came in at the start of an interrupt function
+-	 * that preempted a softirq start of a function that
+-	 * preempted normal context!!!! Luckily, it can't be
+-	 * greater than 3, so the next two bits are a mask
+-	 * of what the depth is when we set TRACE_GRAPH_FL
+-	 */
 -
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+-	TRACE_GRAPH_DEPTH_START_BIT,
+-	TRACE_GRAPH_DEPTH_END_BIT,
+-
+ 	/*
+ 	 * To implement set_graph_notrace, if this bit is set, we ignore
+ 	 * function graph tracing of called functions, until the return
+@@ -78,16 +59,6 @@ enum {
+ #define trace_recursion_clear(bit)	do { (current)->trace_recursion &= ~(1<<(bit)); } while (0)
+ #define trace_recursion_test(bit)	((current)->trace_recursion & (1<<(bit)))
  
-+/* LRU index table for fgraph_array */
-+static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-+static int fgraph_lru_next;
-+static int fgraph_lru_last;
+-#define trace_recursion_depth() \
+-	(((current)->trace_recursion >> TRACE_GRAPH_DEPTH_START_BIT) & 3)
+-#define trace_recursion_set_depth(depth) \
+-	do {								\
+-		current->trace_recursion &=				\
+-			~(3 << TRACE_GRAPH_DEPTH_START_BIT);		\
+-		current->trace_recursion |=				\
+-			((depth) & 3) << TRACE_GRAPH_DEPTH_START_BIT;	\
+-	} while (0)
+-
+ #define TRACE_CONTEXT_BITS	4
+ 
+ #define TRACE_FTRACE_START	TRACE_FTRACE_BIT
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 73919129e57c..82d879dc63ff 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -900,8 +900,38 @@ extern void free_fgraph_ops(struct trace_array *tr);
+ 
+ enum {
+ 	TRACE_GRAPH_FL		= 1,
 +
-+/* Initialize fgraph_lru_table with unused index */
-+static void fgraph_lru_init(void)
++	/*
++	 * In the very unlikely case that an interrupt came in
++	 * at a start of graph tracing, and we want to trace
++	 * the function in that interrupt, the depth can be greater
++	 * than zero, because of the preempted start of a previous
++	 * trace. In an even more unlikely case, depth could be 2
++	 * if a softirq interrupted the start of graph tracing,
++	 * followed by an interrupt preempting a start of graph
++	 * tracing in the softirq, and depth can even be 3
++	 * if an NMI came in at the start of an interrupt function
++	 * that preempted a softirq start of a function that
++	 * preempted normal context!!!! Luckily, it can't be
++	 * greater than 3, so the next two bits are a mask
++	 * of what the depth is when we set TRACE_GRAPH_FL
++	 */
++
++	TRACE_GRAPH_DEPTH_START_BIT,
++	TRACE_GRAPH_DEPTH_END_BIT,
+ };
+ 
++static inline unsigned long ftrace_graph_depth(unsigned long *task_var)
 +{
-+	int i;
-+
-+	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
-+		fgraph_lru_table[i] = i;
++	return (*task_var >> TRACE_GRAPH_DEPTH_START_BIT) & 3;
 +}
 +
-+/* Release the used index to the LRU table */
-+static int fgraph_lru_release_index(int idx)
++static inline void ftrace_graph_set_depth(unsigned long *task_var, int depth)
 +{
-+	if (idx < 0 || idx >= FGRAPH_ARRAY_SIZE ||
-+	    WARN_ON_ONCE(fgraph_lru_table[fgraph_lru_last] != -1))
-+		return -1;
-+
-+	fgraph_lru_table[fgraph_lru_last] = idx;
-+	fgraph_lru_last = (fgraph_lru_last + 1) % FGRAPH_ARRAY_SIZE;
-+	return 0;
++	*task_var &= ~(3 << TRACE_GRAPH_DEPTH_START_BIT);
++	*task_var |= (depth & 3) << TRACE_GRAPH_DEPTH_START_BIT;
 +}
 +
-+/* Allocate a new index from LRU table */
-+static int fgraph_lru_alloc_index(void)
-+{
-+	int idx = fgraph_lru_table[fgraph_lru_next];
-+
-+	/* No id is available */
-+	if (idx == -1)
-+		return -1;
-+
-+	fgraph_lru_table[fgraph_lru_next] = -1;
-+	fgraph_lru_next = (fgraph_lru_next + 1) % FGRAPH_ARRAY_SIZE;
-+	return idx;
-+}
-+
- /* Get the FRAME_OFFSET from the word from the @offset on ret_stack */
- static inline int get_frame_offset(struct task_struct *t, int offset)
- {
-@@ -374,7 +412,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 	if (offset < 0)
- 		goto out;
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern struct ftrace_hash __rcu *ftrace_graph_hash;
+ extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
+@@ -934,7 +964,7 @@ ftrace_graph_addr(unsigned long *task_var, struct ftrace_graph_ent *trace)
+ 		 * when the depth is zero.
+ 		 */
+ 		*task_var |= TRACE_GRAPH_FL;
+-		trace_recursion_set_depth(trace->depth);
++		ftrace_graph_set_depth(task_var, trace->depth);
  
--	for (i = 0; i < fgraph_array_cnt; i++) {
-+	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
- 		struct fgraph_ops *gops = fgraph_array[i];
+ 		/*
+ 		 * If no irqs are to be traced, but a set_graph_function
+@@ -959,7 +989,7 @@ ftrace_graph_addr_finish(struct fgraph_ops *gops, struct ftrace_graph_ret *trace
+ 	unsigned long *task_var = fgraph_get_task_var(gops);
  
- 		if (gops == &fgraph_stub)
-@@ -925,7 +963,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
- 	int ret = 0;
--	int i;
-+	int i = -1;
- 
- 	mutex_lock(&ftrace_lock);
- 
-@@ -933,21 +971,16 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		/* The array must always have real data on it */
- 		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
- 			fgraph_array[i] = &fgraph_stub;
-+		fgraph_lru_init();
- 	}
- 
--	/* Look for an available spot */
--	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
--		if (fgraph_array[i] == &fgraph_stub)
--			break;
--	}
--	if (i >= FGRAPH_ARRAY_SIZE) {
-+	i = fgraph_lru_alloc_index();
-+	if (i < 0 || WARN_ON_ONCE(fgraph_array[i] != &fgraph_stub)) {
- 		ret = -ENOSPC;
- 		goto out;
- 	}
- 
- 	fgraph_array[i] = gops;
--	if (i + 1 > fgraph_array_cnt)
--		fgraph_array_cnt = i + 1;
- 	gops->idx = i;
- 
- 	ftrace_graph_active++;
-@@ -975,6 +1008,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		fgraph_array[i] = &fgraph_stub;
- 		ftrace_graph_active--;
- 		gops->saved_func = NULL;
-+		fgraph_lru_release_index(i);
- 	}
- out:
- 	mutex_unlock(&ftrace_lock);
-@@ -984,25 +1018,20 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- void unregister_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
--	int i;
- 
- 	mutex_lock(&ftrace_lock);
- 
- 	if (unlikely(!ftrace_graph_active))
- 		goto out;
- 
--	if (unlikely(gops->idx < 0 || gops->idx >= fgraph_array_cnt))
-+	if (unlikely(gops->idx < 0 || gops->idx >= FGRAPH_ARRAY_SIZE ||
-+		     fgraph_array[gops->idx] != gops))
- 		goto out;
- 
--	WARN_ON_ONCE(fgraph_array[gops->idx] != gops);
-+	if (fgraph_lru_release_index(gops->idx) < 0)
-+		goto out;
- 
- 	fgraph_array[gops->idx] = &fgraph_stub;
--	if (gops->idx + 1 == fgraph_array_cnt) {
--		i = gops->idx;
--		while (i >= 0 && fgraph_array[i] == &fgraph_stub)
--			i--;
--		fgraph_array_cnt = i + 1;
--	}
- 
- 	ftrace_graph_active--;
+ 	if ((*task_var & TRACE_GRAPH_FL) &&
+-	    trace->depth == trace_recursion_depth())
++	    trace->depth == ftrace_graph_depth(task_var))
+ 		*task_var &= ~TRACE_GRAPH_FL;
+ }
  
 -- 
 2.43.0
