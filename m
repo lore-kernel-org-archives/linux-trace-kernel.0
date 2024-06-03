@@ -1,220 +1,132 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9413B2A9;
-	Mon,  3 Jun 2024 19:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A2480628
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jun 2024 21:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717444221; cv=none; b=bnBFno6oBYh4jlSD1IQNQeOr+oh/ZsL/Nj1YCqvzAZrwBlASzy1hOUCaIL9Pn/+u0fr+41KMvsq+SqGtzaghaqJ6HIKFzx8xcc/pvaswxdCoVUo8xn3Vnb4cBn4pXTIGT/nEXOlT358iJltn9l/KJ7DOcwhIkQdnwXmovF7aMEo=
+	t=1717448649; cv=none; b=lA6bmzvOeuDT4lbFF786WBmUpmcd/QK6MUfqvrgucJBVx7zdcAMl4cS8BmoT4d9jx8x3FEW85DOa4XzB+cPrJnwPGLA3iSUfh3BqFG+4kUacR4uKnhP7MvFJJjjuuSQnjIEKyFYFpsjzldGCUt6i/1KkeuPzaykYx2HMmBb1qkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717444221; c=relaxed/simple;
-	bh=IrGXoX934uCRSpDT1wpnKtUAmJ47P6I0zTZYEgLz2K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FcOAoMuntTZNqY8DQUywZyaTC0VXaUF2xEaHc0ym+SFS+wNIzrGhYS7NOMfX5GUNxa/Pz4TNCeVQZMfUo+0I1F3uG/ijYXOK4K/5rBL6rn0SWu/U4AOxuNB6oF+yIv2BNkXcPQoUOhGA7JSKnZd7KAGrDQWcm4xFwCxXC+outrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=d+fP0GQ4; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1717448649; c=relaxed/simple;
+	bh=kx2kvEZgNc5XsnnewjVka9co2H4QjUYDuU73T0I0Hl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SxnkIclOQAf9ZZHVMpN9k65SUfyRf+fZWnmdfjbZjY0a8jFgAr+NKMVm5zCTElIArR4QKr8QNX4l2uMIqlIlSOoqFQbSIbUH43eVy8Q9ea/euZFtbVtj0Fli9KbzftWaZoGYuuq59NF+DaUg0/cQs0PCMMdWrcUylvcj68NtNu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=VMn4yVx1; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="d+fP0GQ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1717444209;
-	bh=IrGXoX934uCRSpDT1wpnKtUAmJ47P6I0zTZYEgLz2K0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d+fP0GQ4bbpq+dAhoAw8HhLMmuoVB3QqKJGj0KRWPVAVRfIcK0ceBuzPpood8WjkO
-	 eoBF72myCGy5NlMssgK0v56T0kLY0juDehQh8D6CHVqge0V1lkRv5FYPUh8L0vl1f4
-	 TTr4syTHgy7JB5SnnDUon39jf/iyZDnjRO7+vk/HLdrAAolzqtMPf0HWnv2LRgiEr7
-	 +PJaRFf30VXcm2JMOiK9chh7TFuIbl0FUvJm8DuaD+Cbm+jjeCGnfwLZhmrqUuLgkp
-	 qBlOP2n3JmPTWd6dcE353dzC3XLKs5GE2vD5s1j2Q/mw2K6IVQSm16JFeT+urovB9p
-	 /c0vV+P5/6oDA==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4VtPTF28zNz12nF;
-	Mon,  3 Jun 2024 15:50:09 -0400 (EDT)
-Message-ID: <fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
-Date: Mon, 3 Jun 2024 15:50:55 -0400
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="VMn4yVx1"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-62a08b250a2so4324917b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Jun 2024 14:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1717448647; x=1718053447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A4Xwo04AxfSK0W6mUhqUjoHJv2i+cgsYyuXRU+BzfeA=;
+        b=VMn4yVx1AYSFygWtRu5+IglA1BVBZXIDkLMZdFsI6Mm7qdpKVMCWvLyJPV3NTT4HzC
+         0CulDm2WXkRXh1cnRTQGZUtR3Xd4CuCUWIplnYH4Q3S0QWgiNSXrdHbBrfIf9vdhPVrR
+         Ad6jqImA/J1vJLVb4a1EsfeN6pYWwd5afsuAj2gK97uEYtYJ3MTdvbi7irvogUFApxI6
+         o+zdNcpF0+/AvnYCUQoTJ8CGE/+vgqlhwNKZ0nBNaDibw5tpHyEg0a8f2NWwBwJOZCzv
+         5smUPWJI72Y4dnho+rlH2lXeDxKpR2tLinCMumyyk/0/96vhtngi+EtetW0uJgE4wux+
+         87pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717448647; x=1718053447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A4Xwo04AxfSK0W6mUhqUjoHJv2i+cgsYyuXRU+BzfeA=;
+        b=Vm64M7Uhy/8bPwRx++4GUv9t1sOsMa/O1pW9WbhWhLE+ojmQC4CaenMl7htOpfICmg
+         8/z3L+DHBIMM1FfBELLCjDFCZsatcP+VEe6YhBlhtbpE0INr1Kh0ncbE/KPoqFcAvLCO
+         FNF9dyvtZdXwrCzobBXZlcWSQYmfFlZo5JQNzLGynZ0lznkNFvvQ7L+c4cCCKM2/oD6e
+         1WjdOdBwu7UuIdt+Q68O4ekMgDjZz+XCWX/PzEUFu32ejh8jysk5rFte4oblSSU80pua
+         GkPgA3L4TGiX/aDsR/dlC8z7jkfm4fMTpjCuWyV4ng19eOiDuULa1FHRMjwhoBxW74Sc
+         SA1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ5/7ieJC+tmTOccV05xj1gFpH+MgE1tVzuZaareYJ1AjHbXf84SZTCFwwmKdTt5+Cz6k43rL1KwZmlOzNeP3M0NkvJS9C41QMgFDx934bGrWZ
+X-Gm-Message-State: AOJu0YyoWJAcCXHCkZfPKaWxBrWqMlwKELoLV0Qc+dx0i66uRJexlcMP
+	LeaH4Jy+rEgs/CXRGc5esd7O/hNWXVaH6Oo6W2/V1xf53+1OyYuoTo0alivsL3rDn3ikz2Fb9v0
+	PtGoMxT47AtdPsQs3ICRrXUMxg4WqEJ7R+brz
+X-Google-Smtp-Source: AGHT+IGR+FpbhgOaypOj8EHAJX7D2rLdNzF0sO2h5xEd4/ttL81NSVdpzxrwxGxotbOO4RE/GArlcQx7GP4z1mOA6C8=
+X-Received: by 2002:a05:690c:82e:b0:627:de5d:cf36 with SMTP id
+ 00721157ae682-62c79777753mr103683987b3.39.1717448646572; Mon, 03 Jun 2024
+ 14:04:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] tracing/fprobe: Support raw tracepoint events on
- modules
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: don <zds100@gmail.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <171723014778.258703.6731294779199848686.stgit@devnote2>
- <171723016594.258703.1629777910752596529.stgit@devnote2>
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <171723016594.258703.1629777910752596529.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240602023754.25443-1-laoar.shao@gmail.com> <20240602023754.25443-4-laoar.shao@gmail.com>
+In-Reply-To: <20240602023754.25443-4-laoar.shao@gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 3 Jun 2024 17:03:55 -0400
+Message-ID: <CAHC9VhRBN94QRGAmjZKDk_H0GxAEn-PBE4_2tTwuwfXps1Hr5A@mail.gmail.com>
+Subject: Re: [PATCH 3/6] auditsc: Replace memcpy() with __get_task_comm()
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: torvalds@linux-foundation.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, Eric Paris <eparis@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-06-01 04:22, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Support raw tracepoint event on module by fprobe events.
-> Since it only uses for_each_kernel_tracepoint() to find a tracepoint,
-> the tracepoints on modules are not handled. Thus if user specified a
-> tracepoint on a module, it shows an error.
-> This adds new for_each_module_tracepoint() API to tracepoint subsystem,
-> and uses it to find tracepoints on modules.
-
-Hi Masami,
-
-Why prevent module unload when a fprobe tracepoint is attached to a
-module ? This changes the kernel's behavior significantly just for the
-sake of instrumentation.
-
-As an alternative, LTTng-modules attach/detach to/from modules with the
-coming/going notifiers, so the instrumentation gets removed when a
-module is unloaded rather than preventing its unload by holding a module
-reference count. I would recommend a similar approach for fprobe.
-
-Thanks,
-
-Mathieu
-
-
-> 
-> Reported-by: don <zds100@gmail.com>
-> Closes: https://lore.kernel.org/all/20240530215718.aeec973a1d0bf058d39cb1e3@kernel.org/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sat, Jun 1, 2024 at 10:38=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
+>
+> Using __get_task_comm() to read the task comm ensures that the name is
+> always NUL-terminated, regardless of the source string. This approach als=
+o
+> facilitates future extensions to the task comm.
+>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: Eric Paris <eparis@redhat.com>
 > ---
->   Changes in v2:
->    - Fix build errors with CONFIG_MODULES=y.
-> ---
->   kernel/trace/trace_fprobe.c |   46 ++++++++++++++++++++++++++++++++++++-------
->   1 file changed, 38 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 62e6a8f4aae9..1d8a983e1edc 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -385,6 +385,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
->   					       const char *event,
->   					       const char *symbol,
->   					       struct tracepoint *tpoint,
-> +					       struct module *mod,
->   					       int maxactive,
->   					       int nargs, bool is_return)
->   {
-> @@ -405,6 +406,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
->   		tf->fp.entry_handler = fentry_dispatcher;
->   
->   	tf->tpoint = tpoint;
-> +	tf->mod = mod;
->   	tf->fp.nr_maxactive = maxactive;
->   
->   	ret = trace_probe_init(&tf->tp, event, group, false, nargs);
-> @@ -895,8 +897,23 @@ static struct notifier_block tracepoint_module_nb = {
->   struct __find_tracepoint_cb_data {
->   	const char *tp_name;
->   	struct tracepoint *tpoint;
-> +	struct module *mod;
->   };
->   
-> +static void __find_tracepoint_module_cb(struct tracepoint *tp, void *priv)
-> +{
-> +	struct __find_tracepoint_cb_data *data = priv;
-> +
-> +	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
-> +		data->tpoint = tp;
-> +		data->mod = __module_text_address((unsigned long)tp->probestub);
-> +		if (!try_module_get(data->mod)) {
-> +			data->tpoint = NULL;
-> +			data->mod = NULL;
-> +		}
-> +	}
-> +}
-> +
->   static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
->   {
->   	struct __find_tracepoint_cb_data *data = priv;
-> @@ -905,14 +922,28 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
->   		data->tpoint = tp;
->   }
->   
-> -static struct tracepoint *find_tracepoint(const char *tp_name)
-> +/*
-> + * Find a tracepoint from kernel and module. If the tracepoint is in a module,
-> + * this increments the module refcount to prevent unloading until the
-> + * trace_fprobe is registered to the list. After registering the trace_fprobe
-> + * on the trace_fprobe list, the module refcount is decremented because
-> + * tracepoint_probe_module_cb will handle it.
-> + */
-> +static struct tracepoint *find_tracepoint(const char *tp_name,
-> +					  struct module **tp_mod)
->   {
->   	struct __find_tracepoint_cb_data data = {
->   		.tp_name = tp_name,
-> +		.mod = NULL,
->   	};
->   
->   	for_each_kernel_tracepoint(__find_tracepoint_cb, &data);
->   
-> +	if (!data.tpoint && IS_ENABLED(CONFIG_MODULES)) {
-> +		for_each_module_tracepoint(__find_tracepoint_module_cb, &data);
-> +		*tp_mod = data.mod;
-> +	}
-> +
->   	return data.tpoint;
->   }
->   
-> @@ -996,6 +1027,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->   	char abuf[MAX_BTF_ARGS_LEN];
->   	char *dbuf = NULL;
->   	bool is_tracepoint = false;
-> +	struct module *tp_mod = NULL;
->   	struct tracepoint *tpoint = NULL;
->   	struct traceprobe_parse_context ctx = {
->   		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
-> @@ -1080,7 +1112,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->   
->   	if (is_tracepoint) {
->   		ctx.flags |= TPARG_FL_TPOINT;
-> -		tpoint = find_tracepoint(symbol);
-> +		tpoint = find_tracepoint(symbol, &tp_mod);
->   		if (!tpoint) {
->   			trace_probe_log_set_index(1);
->   			trace_probe_log_err(0, NO_TRACEPOINT);
-> @@ -1110,8 +1142,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->   		goto out;
->   
->   	/* setup a probe */
-> -	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
-> -				argc, is_return);
-> +	tf = alloc_trace_fprobe(group, event, symbol, tpoint, tp_mod,
-> +				maxactive, argc, is_return);
->   	if (IS_ERR(tf)) {
->   		ret = PTR_ERR(tf);
->   		/* This must return -ENOMEM, else there is a bug */
-> @@ -1119,10 +1151,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->   		goto out;	/* We know tf is not allocated */
->   	}
->   
-> -	if (is_tracepoint)
-> -		tf->mod = __module_text_address(
-> -				(unsigned long)tf->tpoint->probestub);
-> -
->   	/* parse arguments */
->   	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
->   		trace_probe_log_set_index(i + 2);
-> @@ -1155,6 +1183,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->   	}
->   
->   out:
-> +	if (tp_mod)
-> +		module_put(tp_mod);
->   	traceprobe_finish_parse(&ctx);
->   	trace_probe_log_clear();
->   	kfree(new_argv);
-> 
+>  kernel/auditsc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Assuming you've sorted out all the problems identified earlier in the
+patchset and __get_task_comm() no longer takes task_lock() this should
+be okay from an audit perspective.
 
+Acked-by: Paul Moore <paul@paul-moore.com>
+
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index 6f0d6fb6523f..0459a141dc86 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -2730,7 +2730,7 @@ void __audit_ptrace(struct task_struct *t)
+>         context->target_uid =3D task_uid(t);
+>         context->target_sessionid =3D audit_get_sessionid(t);
+>         security_task_getsecid_obj(t, &context->target_sid);
+> -       memcpy(context->target_comm, t->comm, TASK_COMM_LEN);
+> +       __get_task_comm(context->target_comm, TASK_COMM_LEN, t);
+>  }
+>
+>  /**
+> @@ -2757,7 +2757,7 @@ int audit_signal_info_syscall(struct task_struct *t=
+)
+>                 ctx->target_uid =3D t_uid;
+>                 ctx->target_sessionid =3D audit_get_sessionid(t);
+>                 security_task_getsecid_obj(t, &ctx->target_sid);
+> -               memcpy(ctx->target_comm, t->comm, TASK_COMM_LEN);
+> +               __get_task_comm(ctx->target_comm, TASK_COMM_LEN, t);
+>                 return 0;
+>         }
+>
+> @@ -2778,7 +2778,7 @@ int audit_signal_info_syscall(struct task_struct *t=
+)
+>         axp->target_uid[axp->pid_count] =3D t_uid;
+>         axp->target_sessionid[axp->pid_count] =3D audit_get_sessionid(t);
+>         security_task_getsecid_obj(t, &axp->target_sid[axp->pid_count]);
+> -       memcpy(axp->target_comm[axp->pid_count], t->comm, TASK_COMM_LEN);
+> +       __get_task_comm(axp->target_comm[axp->pid_count], TASK_COMM_LEN, =
+t);
+>         axp->pid_count++;
+>
+>         return 0;
+> --
+> 2.39.1
+
+--=20
+paul-moore.com
