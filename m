@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3408512FF8E;
-	Mon,  3 Jun 2024 14:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255EE82D8E;
+	Mon,  3 Jun 2024 14:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717426402; cv=none; b=NK8CoUYG2dTI798b5voazv9IPfhlQPP+1RFmKHPQMzAbWw5oZz2hhmSXPecR779InwrMav0aUIGNnffN8ccbV6Gkg0JUNxjwRSpHniNjMiDMVe4r0/rMukR9zEi0FtjjeNlrovBKu2ABHXu/u55M0LTjesh+AdbwYIYMZIUeD8o=
+	t=1717426755; cv=none; b=IMSHv0ik0ILYQi8OmthABXVW3gyLzFwEOUFFIF9A3PVzbPo/kU4ClL7szOXsMOmGSVQudw9d2nOUwypPdGnEQ357ffcUrRmt0qbJSkKcWDr56xg+UTgV77OPjlOZAFHQeR5pFPasJKYd9iyxyEbabQHS39GesvM74rq3QEQZRC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717426402; c=relaxed/simple;
-	bh=ljBV8B2zDJ+lremQm3VgudoYU5q/ejgQbLgH5webZSU=;
+	s=arc-20240116; t=1717426755; c=relaxed/simple;
+	bh=DBDHC1nWAFD49PJim5SC6PnxIBcdo9JUB9EaWjVgVdk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rdcgVSrLSRVnRTH9OfabdgmQBR/D+Z8VBmic/Y7ypx5fnWHhvAWhSbPVExwMI5zEAQJ9fTymUe+EsnT3M8l97Z0l0pbWi3/RsYFwiMYGGnhWpkDcErL2unZJHww5blfsng+oraQR9zHpZqRMxJcT5qSOgAqw6gfzojheGwoDAVY=
+	 MIME-Version:Content-Type; b=ALfkmID1jDe50mKnHzT/1EreJiADrMzocU/MKs7Un7ASXS7HXTcvCquOmSGmThy/GfzZf4Am8Z0dKS+c+US2df3xxebT6p0aD6qtQPMp1CNNacB5UU3WkXww3Bq48gIpqtMEL1ElOsewPtoo57kSNMvEQ+4TxOckZmy1pxVi66E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B98C2BD10;
-	Mon,  3 Jun 2024 14:53:17 +0000 (UTC)
-Date: Mon, 3 Jun 2024 10:54:26 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCDD1C2BD10;
+	Mon,  3 Jun 2024 14:59:09 +0000 (UTC)
+Date: Mon, 3 Jun 2024 11:00:18 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
@@ -28,15 +28,13 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
  Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
  Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
  <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v2 10/27] ftrace: Add subops logic to allow one ops to
- manage many
-Message-ID: <20240603105426.48ed57c4@gandalf.local.home>
-In-Reply-To: <20240603114636.63b5abe2189cb732bec2474c@kernel.org>
+Subject: Re: [PATCH v2 24/27] function_graph: Use static_call and branch to
+ optimize entry function
+Message-ID: <20240603110018.1cdd6746@gandalf.local.home>
+In-Reply-To: <20240603121107.42f98858ebb790805f75c9b1@kernel.org>
 References: <20240602033744.563858532@goodmis.org>
-	<20240602033832.709653366@goodmis.org>
-	<20240603103316.3af9dea3214a5d2bde721cd8@kernel.org>
-	<20240602220613.3f9eac04@gandalf.local.home>
-	<20240603114636.63b5abe2189cb732bec2474c@kernel.org>
+	<20240602033834.997761817@goodmis.org>
+	<20240603121107.42f98858ebb790805f75c9b1@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,19 +45,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Jun 2024 11:46:36 +0900
+On Mon, 3 Jun 2024 12:11:07 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > > if (ftrace_hash_empty(new_hash)) {
-> > > 	free_ftrace_hash(new_hash);
-> > > 	new_hash = EMPTY_HASH;
-> > > 	break;
-> > > }  
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > In most cases function graph is used by a single user. Instead of calling
+> > a loop to call function graph callbacks in this case, call the function
+> > entry callback directly.
+> > 
+> > Add a static_key that will be used to set the function graph logic to
+> > either do the loop (when more than one callback is registered) or to call
+> > the callback directly if there is only one registered callback.  
 > 
-> And we still need this (I think this should be done in intersect_hash(), we just
-> need to count the number of entries.) 
+> I understand this works, but my concern is that, if we use fprobe
+> and function_graph at the same time, does it always loop on both gops?
+> 
+> I mean if those are the subops of one ftrace_ops, ftrace_trampoline
+> will always call the same function_graph_enter() for both gops, and loop
+> on the gops list.
+> 
+> For example, if there are 2 fgraph_ops, one has "vfs_*" filter and
+> another has "sched_*" filter, those does not cover each other.
+> 
+> Are there any way to solve this issue? I think my previous series
+> calls function_graph_enter_ops() directly from trampoline (If it works
+> correctly...)
 
-Actually, ftrace_hash_empty() may be what I use instead of checking against
-EMPTY_HASH. I forgot about that function when writing the code.
+Yes, but that gets a bit complex, and requires the changing of all archs.
+If it starts to become a problem, I rather add that as a feature. That is,
+we can always go back to it. But for now, lets keep the complexity down.
 
 -- Steve
