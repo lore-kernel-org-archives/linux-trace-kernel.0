@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255EE82D8E;
-	Mon,  3 Jun 2024 14:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F76B65F;
+	Mon,  3 Jun 2024 15:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717426755; cv=none; b=IMSHv0ik0ILYQi8OmthABXVW3gyLzFwEOUFFIF9A3PVzbPo/kU4ClL7szOXsMOmGSVQudw9d2nOUwypPdGnEQ357ffcUrRmt0qbJSkKcWDr56xg+UTgV77OPjlOZAFHQeR5pFPasJKYd9iyxyEbabQHS39GesvM74rq3QEQZRC4=
+	t=1717427204; cv=none; b=bIK3OLEV29eTIuTrqnx/TGlQWZsWHSxKWcT2a98WaNMMAi2+pRWmx4O5yqvxB/rcCyyV7IEXHLils9hDrwMqFJB/0+v1VN/uuKgYafBPjYYpqFlCmVhmWTN/7mmQCcByF4ECr4mWjJujYPNKmIziOeyBCiaecLgXBpcxL2Q1fZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717426755; c=relaxed/simple;
-	bh=DBDHC1nWAFD49PJim5SC6PnxIBcdo9JUB9EaWjVgVdk=;
+	s=arc-20240116; t=1717427204; c=relaxed/simple;
+	bh=iUbp+NolNrOyeGaLe38w93IfAyLn+xoITcXsa+1tWFs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ALfkmID1jDe50mKnHzT/1EreJiADrMzocU/MKs7Un7ASXS7HXTcvCquOmSGmThy/GfzZf4Am8Z0dKS+c+US2df3xxebT6p0aD6qtQPMp1CNNacB5UU3WkXww3Bq48gIpqtMEL1ElOsewPtoo57kSNMvEQ+4TxOckZmy1pxVi66E=
+	 MIME-Version:Content-Type; b=RsObjngHzkVN2KmG9jXos8dyUkh1Nw4ETMTC+R5HSiegZO97iWVygsVKgmGJa+nyuzp2jioOipC/PS76wo1y9nxqD2v6eMAs9ZBVYA0m45rPuRCnXA2Nkjd0xmqsEpa22ArkT5Q307GbQLJ6d9tr3cSZ4zL8b7p3EDyEKVHtDeo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCDD1C2BD10;
-	Mon,  3 Jun 2024 14:59:09 +0000 (UTC)
-Date: Mon, 3 Jun 2024 11:00:18 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78388C2BD10;
+	Mon,  3 Jun 2024 15:06:42 +0000 (UTC)
+Date: Mon, 3 Jun 2024 11:07:52 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
@@ -30,11 +30,12 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
  <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
 Subject: Re: [PATCH v2 24/27] function_graph: Use static_call and branch to
  optimize entry function
-Message-ID: <20240603110018.1cdd6746@gandalf.local.home>
-In-Reply-To: <20240603121107.42f98858ebb790805f75c9b1@kernel.org>
+Message-ID: <20240603110752.6b722aac@gandalf.local.home>
+In-Reply-To: <20240603110018.1cdd6746@gandalf.local.home>
 References: <20240602033744.563858532@goodmis.org>
 	<20240602033834.997761817@goodmis.org>
 	<20240603121107.42f98858ebb790805f75c9b1@kernel.org>
+	<20240603110018.1cdd6746@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,35 +46,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Jun 2024 12:11:07 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Mon, 3 Jun 2024 11:00:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > In most cases function graph is used by a single user. Instead of calling
-> > a loop to call function graph callbacks in this case, call the function
-> > entry callback directly.
-> > 
-> > Add a static_key that will be used to set the function graph logic to
-> > either do the loop (when more than one callback is registered) or to call
-> > the callback directly if there is only one registered callback.  
-> 
-> I understand this works, but my concern is that, if we use fprobe
-> and function_graph at the same time, does it always loop on both gops?
-> 
-> I mean if those are the subops of one ftrace_ops, ftrace_trampoline
-> will always call the same function_graph_enter() for both gops, and loop
-> on the gops list.
-> 
-> For example, if there are 2 fgraph_ops, one has "vfs_*" filter and
-> another has "sched_*" filter, those does not cover each other.
-> 
-> Are there any way to solve this issue? I think my previous series
-> calls function_graph_enter_ops() directly from trampoline (If it works
-> correctly...)
+> Yes, but that gets a bit complex, and requires the changing of all archs.
+> If it starts to become a problem, I rather add that as a feature. That is,
+> we can always go back to it. But for now, lets keep the complexity down.
 
-Yes, but that gets a bit complex, and requires the changing of all archs.
-If it starts to become a problem, I rather add that as a feature. That is,
-we can always go back to it. But for now, lets keep the complexity down.
+And if we were to go the route of calling a single fgraph_ops caller, I
+would want it choreographed with ftrace, such that the direct caller calls
+a different fgraph function only if it has only one graph caller on it and
+the fgraph loop function if a function has more than one. Just like the
+ftrace code does.
+
+If we are going to go that route, let's do it right.
 
 -- Steve
