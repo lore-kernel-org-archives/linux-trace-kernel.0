@@ -1,171 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B416982D9C;
-	Mon,  3 Jun 2024 23:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D58A8BFD;
+	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717456357; cv=none; b=aSzCBKbLISftVEzSFAOI1qEfb5oechzVEU+TwIIbaA2VF59YkaYD9FxP3JAM95looKhJJe/Icop4XRWsW6GbRb6JUbrxEmmhc3BOXVoXHc9IiEscIxcbf6AJ5Dn8KM3bRWjcMolRfCv55LFnaKrEb+GcHX8eRxG+eC4oOeD1sp8=
+	t=1717457720; cv=none; b=tzEFvilbnMntgBDqfWCc8VcKywZ0tl5dR7o+IMmNJRUEioO/9EhNLhx+mK+0q0i/CgqWeHGPIkxCVatl8/iFBGtMhR1R3j0oAllwwSM0hAFA3MMOjsgTHUkXMqAhlXg4ihIUj/9s9XoQohncoaV4tVcKPjvUEBVfOZ5rxv8e8V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717456357; c=relaxed/simple;
-	bh=jlMa/1KQP8AgPUAWk/zBkqIn2aacp2s+DjgzIqxPWDQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XK5R+MCyeKBhePV18DG+ncJlb6a1nb8o16IrUvmsG/xRa5sq4SyGE3QYC3Wg8a3KQimcAeorhVnZIEu2YwlLiFEE8ZD40Voqwi9tqXx+WzR3Wp3Njzg1RWhxt+2Odhszz/ibrW28jvc8JG7/aV5wLnqtLPiBu5N8nXxzqAAu1Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca6KCx7a; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ca6KCx7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3704FC2BD10;
-	Mon,  3 Jun 2024 23:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717456357;
-	bh=jlMa/1KQP8AgPUAWk/zBkqIn2aacp2s+DjgzIqxPWDQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ca6KCx7aqJRwWApIMM8vrwvbTX4Ut/P0HwSeC/htl1BQTTajA27H4YD7Z+Xaoet7A
-	 sO5FwBevKqVeMkVJG6gSMVKADMrcXl5hBmZ+mW75wj3y1UB83Ft15FRaTDhBo/MYBG
-	 Zs/0CKWlEhzYsta8V/LGbJWpeV1IFM69VGHixhji+61vB5H2TfqJxtWiMJOGq0nDnR
-	 gbvDZV+Ze4dC4w8SbhjmhSYIdyMjtMLXwsH/F5m6EB61cWL06S2w/5Dic5ohwnWBY6
-	 5aJ6jJFO1GfkS4lYrITdQaV4xdo36T/QqgfhMcHjGfwZGKikYlg7eO/2WSTJ2YnmvQ
-	 ZM/TEkwCNZgTw==
-Date: Tue, 4 Jun 2024 08:12:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v2 11/27] ftrace: Allow subops filtering to be modified
-Message-Id: <20240604081229.8d80bee75a29663f3b61322d@kernel.org>
-In-Reply-To: <20240603105250.52ea24f2@gandalf.local.home>
-References: <20240602033744.563858532@goodmis.org>
-	<20240602033832.870736657@goodmis.org>
-	<20240603113723.b192c8c346e0ed55cb94b61a@kernel.org>
-	<20240603105250.52ea24f2@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717457720; c=relaxed/simple;
+	bh=1dMFOe+xbS+TUyK3xZQGgujFUJjG1tCcfG92qGYpPpo=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=sEgRpk3VPRGiHCRoa1DUE5mlY5TP1nvPMPUFl+Vg6VrmJKYnmwDDApaFI2pbcYG+7MWnzmZpgaaF2tPC5+k6YB0dIBnkbdK+8zlba3fx8r0X+yx+CnFUBz4BWxXAx5uXGdJYcSF6gXzpzrhM7wdl1DJYjFo23ZfOiFgok93KFVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21208C2BD10;
+	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sEHE7-00000009cuy-1lvA;
+	Mon, 03 Jun 2024 19:36:31 -0400
+Message-ID: <20240603233330.801075898@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 03 Jun 2024 19:33:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org,
+ Guenter Roeck <linux@roeck-us.net>,
+ Ross Zwisler <zwisler@google.com>,
+ wklin@google.com,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: [PATCH 0/2] mm/pstore: Reserve named unspecified memory across boots
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Jun 2024 10:52:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Reserve unspecified location of physical memory from kernel command line
 
-> On Mon, 3 Jun 2024 11:37:23 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Sat, 01 Jun 2024 23:37:55 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > [...]
-> > >  
-> > > +static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
-> > > +					      struct ftrace_hash **orig_subhash,
-> > > +					      struct ftrace_hash *hash,
-> > > +					      int enable)
-> > > +{
-> > > +	struct ftrace_ops *ops = subops->managed;
-> > > +	struct ftrace_hash **orig_hash;
-> > > +	struct ftrace_hash *save_hash;
-> > > +	struct ftrace_hash *new_hash;
-> > > +	int ret;
-> > > +
-> > > +	/* Manager ops can not be subops (yet) */
-> > > +	if (WARN_ON_ONCE(!ops || ops->flags & FTRACE_OPS_FL_SUBOP))
-> > > +		return -EINVAL;  
-> > 
-> > This does return if ops->flags & FTRACE_OPS_FL_SUBOP, but --> (1)
-> 
-> Yes, because what is passed in is "subops" and "ops" is subops->managed.
+Background:
 
-Ah, I missed that point. OK, I got it.
+In ChromeOS, we have 1 MB of pstore ramoops reserved so that we can extract
+dmesg output and some other information when a crash happens in the field.
+(This is only done when the user selects "Allow Google to collect data for
+ improving the system"). But there are cases when there's a bug that
+requires more data to be retrieved to figure out what is happening. We would
+like to increase the pstore size, either temporarily, or maybe even
+permanently. The pstore on these devices are at a fixed location in RAM (as
+the RAM is not cleared on soft reboots nor crashes). The location is chosen
+by the BIOS (coreboot) and passed to the kernel via ACPI tables on x86.
+There's a driver that queries for this to initialize the pstore for
+ChromeOS:
 
+  See drivers/platform/chrome/chromeos_pstore.c
 
-> 
-> > 
-> > > +
-> > > +	/* Move the new hash over to the subops hash */
-> > > +	save_hash = *orig_subhash;
-> > > +	*orig_subhash = __ftrace_hash_move(hash);
-> > > +	if (!*orig_subhash) {
-> > > +		*orig_subhash = save_hash;
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +
-> > > +	/* Create a new_hash to hold the ops new functions */
-> > > +	if (enable) {
-> > > +		orig_hash = &ops->func_hash->filter_hash;
-> > > +		new_hash = append_hashes(ops);
-> > > +	} else {
-> > > +		orig_hash = &ops->func_hash->notrace_hash;
-> > > +		new_hash = intersect_hashes(ops);
-> > > +	}
-> > > +
-> > > +	/* Move the hash over to the new hash */
-> > > +	ret = ftrace_hash_move_and_update_ops(ops, orig_hash, new_hash, enable);  
+Problem:
 
-So this `ops` is managed ops of this subops.
+The problem is that, even though there's a process to change the kernel on
+these systems, and is done regularly to install updates, the firmware is
+updated much less frequently. Choosing the place in RAM also takes special
+care, and may be in a different address for different boards. Updating the
+size via firmware is a large effort and not something that many are willing
+to do for a temporary pstore size change.
 
-> > 
-> > This also a bit wired to me. maybe we need simple version like
-> > 
-> > `__ftrace_hash_move_and_update_ops()`
-> > 
-> > And call it from ftrace_hash_move_and_update_ops() and here?
-> 
-> We could do that. I almost did due to other issues but I reworked the code
-> where I didn't need to.
-> 
-> > 
-> > > +
-> > > +	free_ftrace_hash(new_hash);
-> > > +
-> > > +	if (ret) {
-> > > +		/* Put back the original hash */
-> > > +		free_ftrace_hash_rcu(*orig_subhash);
-> > > +		*orig_subhash = save_hash;
-> > > +	} else {
-> > > +		free_ftrace_hash_rcu(save_hash);
-> > > +	}
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +
-> > >  static u64		ftrace_update_time;
-> > >  unsigned long		ftrace_update_tot_cnt;
-> > >  unsigned long		ftrace_number_of_pages;
-> > > @@ -4770,8 +4823,33 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
-> > >  {
-> > >  	struct ftrace_ops_hash old_hash_ops;
-> > >  	struct ftrace_hash *old_hash;
-> > > +	struct ftrace_ops *op;
-> > >  	int ret;
-> > >  
-> > > +	if (ops->flags & FTRACE_OPS_FL_SUBOP)
-> > > +		return ftrace_hash_move_and_update_subops(ops, orig_hash, hash, enable);  
-> > 
-> > (1) This calls ftrace_hash_move_and_update_subops() if ops->flags & FTRACE_OPS_FL_SUBOP ?
-> 
-> Yes, because ops turns into subops, and the ops above it is its manager ops.
+Requirement:
 
-Ah, OK. This `ops` is a subops. 
+Need a way to reserve memory that will be at a consistent location for
+every boot, if the kernel and system are the same. Does not need to work
+if rebooting to a different kernel, or if the system can change the
+memory layout between boots.
 
+The reserved memory can not be an hard coded address, as the same kernel /
+command line needs to run on several different machines. The picked memory
+reservation just needs to be the same for a given machine, but may be
+different for different machines.
 
-Thank you,
+Solution:
 
-> 
-> -- Steve
-> 
+The solution I have come up with is to introduce a new "reserve_mem=" kernel
+command line. This parameter takes the following format:
 
+  reserve_mem=nn:align:label
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Where nn is the size of memory to reserve, the align is the alignment of
+that memory, and label is the way for other sub-systems to find that memory.
+This way the kernel command line could have:
+
+  reserve_mem=12M:4096:oops   ramoops.mem_name=oops
+
+At boot up, the kernel will search for 12 megabytes in usable memory regions
+with an alignment of 4096. It will start at the highest regions and work its
+way down (for those old devices that want access to lower address DMA). When
+it finds a region, it will save it off in a small table and mark it with the
+"oops" label. Then the pstore ramoops sub-system could ask for that memory
+and location, and it will map itself there.
+
+This prototype allows for 8 different mappings (which may be overkill, 4 is
+probably plenty) with 16 byte size to store the label.
+
+I have tested this and it works for us to solve the above problem. We can
+update the kernel and command line and increase the size of pstore without
+needing to update the firmware, or knowing every memory layout of each
+board. I only tested this locally, it has not been tested in the field.
+
+Changes since the POC: https://lore.kernel.org/all/20240409210254.660888920@goodmis.org/
+
+- Used Mike Rapoport's suggesting to use the later call to
+  memblock_phys_alloc() instead of messing with the e820 tables.
+
+- No longer uses the " memmap" kernel command line and instead uses
+  "reserve_mem". This also removes the issue of booting a kernel without it
+  crashing due to "memmap" defaulting to using only the specified memory
+  when it doesn't know what the extra option is.
+
+- No longer keeping the table as __initdata so that pstore can use it via
+  a module.
+
+- This is no longer a proof of concept patch series.
+
+Steven Rostedt (Google) (2):
+      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
+      pstore/ramoops: Add ramoops.mem_name= command line option
+
+----
+ fs/pstore/ram.c    | 15 +++++++++
+ include/linux/mm.h |  2 ++
+ mm/memblock.c      | 97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
