@@ -1,178 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC31413D533;
-	Mon,  3 Jun 2024 19:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9413B2A9;
+	Mon,  3 Jun 2024 19:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441634; cv=none; b=H7RmO7s9v6U9E3TfQzxqsvopvPEuD8lwynJCMbf8gCpyg0PBkHT+OX2nJmBT2R8193QzzIHGEfQUxtazcrCsBwN+wi3eyCCzk++mKkrdZ9xw82rKBkM3+eWuX5RljlC/OKMRswbmHH7XkO5TCSOWHiQ/7a2ogfvEFYzaotPSTEI=
+	t=1717444221; cv=none; b=bnBFno6oBYh4jlSD1IQNQeOr+oh/ZsL/Nj1YCqvzAZrwBlASzy1hOUCaIL9Pn/+u0fr+41KMvsq+SqGtzaghaqJ6HIKFzx8xcc/pvaswxdCoVUo8xn3Vnb4cBn4pXTIGT/nEXOlT358iJltn9l/KJ7DOcwhIkQdnwXmovF7aMEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717441634; c=relaxed/simple;
-	bh=k1HP8hCmLs5gvyhDOaCFwFm3nHs+PuYGEdirt95Vwq8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=IlETiHMohi+q3ig8Q4k1M2/E6vG+3evuC+I4sl0SFOMbjeMDsJ09vMzRQ4jfiUXk4xFiJKWHG0VmOM/ncjF5BRsKVVPkil58lcAac90rb757K42xzQJDAUXLe5krUtut3I8rTJ47JS3mYWxmK4IG6x6XG2XgDxb/2JO/B1cRJIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 590F4C4AF07;
-	Mon,  3 Jun 2024 19:07:14 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sED2f-00000009TzS-1dXK;
-	Mon, 03 Jun 2024 15:08:25 -0400
-Message-ID: <20240603190825.252845939@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 15:07:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>,
- Sven Schnelle <svens@linux.ibm.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 27/27] selftests/ftrace: Add fgraph-multi.tc test
-References: <20240603190704.663840775@goodmis.org>
+	s=arc-20240116; t=1717444221; c=relaxed/simple;
+	bh=IrGXoX934uCRSpDT1wpnKtUAmJ47P6I0zTZYEgLz2K0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FcOAoMuntTZNqY8DQUywZyaTC0VXaUF2xEaHc0ym+SFS+wNIzrGhYS7NOMfX5GUNxa/Pz4TNCeVQZMfUo+0I1F3uG/ijYXOK4K/5rBL6rn0SWu/U4AOxuNB6oF+yIv2BNkXcPQoUOhGA7JSKnZd7KAGrDQWcm4xFwCxXC+outrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=d+fP0GQ4; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="d+fP0GQ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1717444209;
+	bh=IrGXoX934uCRSpDT1wpnKtUAmJ47P6I0zTZYEgLz2K0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d+fP0GQ4bbpq+dAhoAw8HhLMmuoVB3QqKJGj0KRWPVAVRfIcK0ceBuzPpood8WjkO
+	 eoBF72myCGy5NlMssgK0v56T0kLY0juDehQh8D6CHVqge0V1lkRv5FYPUh8L0vl1f4
+	 TTr4syTHgy7JB5SnnDUon39jf/iyZDnjRO7+vk/HLdrAAolzqtMPf0HWnv2LRgiEr7
+	 +PJaRFf30VXcm2JMOiK9chh7TFuIbl0FUvJm8DuaD+Cbm+jjeCGnfwLZhmrqUuLgkp
+	 qBlOP2n3JmPTWd6dcE353dzC3XLKs5GE2vD5s1j2Q/mw2K6IVQSm16JFeT+urovB9p
+	 /c0vV+P5/6oDA==
+Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4VtPTF28zNz12nF;
+	Mon,  3 Jun 2024 15:50:09 -0400 (EDT)
+Message-ID: <fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
+Date: Mon, 3 Jun 2024 15:50:55 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] tracing/fprobe: Support raw tracepoint events on
+ modules
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: don <zds100@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <171723014778.258703.6731294779199848686.stgit@devnote2>
+ <171723016594.258703.1629777910752596529.stgit@devnote2>
+Content-Language: en-US
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <171723016594.258703.1629777910752596529.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 2024-06-01 04:22, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Support raw tracepoint event on module by fprobe events.
+> Since it only uses for_each_kernel_tracepoint() to find a tracepoint,
+> the tracepoints on modules are not handled. Thus if user specified a
+> tracepoint on a module, it shows an error.
+> This adds new for_each_module_tracepoint() API to tracepoint subsystem,
+> and uses it to find tracepoints on modules.
 
-Add a test that creates 3 instances and enables function_graph tracer in
-each as well as the top instance, where each will enable a filter (but one
-that traces all functions) and check that they are filtering properly.
+Hi Masami,
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../ftrace/test.d/ftrace/fgraph-multi.tc      | 103 ++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
+Why prevent module unload when a fprobe tracepoint is attached to a
+module ? This changes the kernel's behavior significantly just for the
+sake of instrumentation.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
-new file mode 100644
-index 000000000000..ff88f97e41fb
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
-@@ -0,0 +1,103 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: ftrace - function graph filters
-+# requires: set_ftrace_filter function_graph:tracer
-+
-+# Make sure that function graph filtering works
-+
-+INSTANCE1="instances/test1_$$"
-+INSTANCE2="instances/test2_$$"
-+INSTANCE3="instances/test3_$$"
-+
-+WD=`pwd`
-+
-+do_reset() {
-+    cd $WD
-+    if [ -d $INSTANCE1 ]; then
-+	echo nop > $INSTANCE1/current_tracer
-+	rmdir $INSTANCE1
-+    fi
-+    if [ -d $INSTANCE2 ]; then
-+	echo nop > $INSTANCE2/current_tracer
-+	rmdir $INSTANCE2
-+    fi
-+    if [ -d $INSTANCE3 ]; then
-+	echo nop > $INSTANCE3/current_tracer
-+	rmdir $INSTANCE3
-+    fi
-+}
-+
-+mkdir $INSTANCE1
-+if ! grep -q function_graph $INSTANCE1/available_tracers; then
-+    echo "function_graph not allowed with instances"
-+    rmdir $INSTANCE1
-+    exit_unsupported
-+fi
-+
-+mkdir $INSTANCE2
-+mkdir $INSTANCE3
-+
-+fail() { # msg
-+    do_reset
-+    echo $1
-+    exit_fail
-+}
-+
-+disable_tracing
-+clear_trace
-+
-+do_test() {
-+    REGEX=$1
-+    TEST=$2
-+
-+    # filter something, schedule is always good
-+    if ! echo "$REGEX" > set_ftrace_filter; then
-+	fail "can not enable filter $REGEX"
-+    fi
-+
-+    echo > trace
-+    echo function_graph > current_tracer
-+    enable_tracing
-+    sleep 1
-+    # search for functions (has "{" or ";" on the line)
-+    echo 0 > tracing_on
-+    count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep -v "$TEST" | wc -l`
-+    echo 1 > tracing_on
-+    if [ $count -ne 0 ]; then
-+	fail "Graph filtering not working by itself against $TEST?"
-+    fi
-+
-+    # Make sure we did find something
-+    echo 0 > tracing_on
-+    count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep "$TEST" | wc -l`
-+    echo 1 > tracing_on
-+    if [ $count -eq 0 ]; then
-+	fail "No traces found with $TEST?"
-+    fi
-+}
-+
-+do_test '*sched*' 'sched'
-+cd $INSTANCE1
-+do_test '*lock*' 'lock'
-+cd $WD
-+cd $INSTANCE2
-+do_test '*rcu*' 'rcu'
-+cd $WD
-+cd $INSTANCE3
-+echo function_graph > current_tracer
-+
-+sleep 1
-+count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep "$TEST" | wc -l`
-+if [ $count -eq 0 ]; then
-+    fail "No traces found with all tracing?"
-+fi
-+
-+cd $WD
-+echo nop > current_tracer
-+echo nop > $INSTANCE1/current_tracer
-+echo nop > $INSTANCE2/current_tracer
-+echo nop > $INSTANCE3/current_tracer
-+
-+do_reset
-+
-+exit 0
+As an alternative, LTTng-modules attach/detach to/from modules with the
+coming/going notifiers, so the instrumentation gets removed when a
+module is unloaded rather than preventing its unload by holding a module
+reference count. I would recommend a similar approach for fprobe.
+
+Thanks,
+
+Mathieu
+
+
+> 
+> Reported-by: don <zds100@gmail.com>
+> Closes: https://lore.kernel.org/all/20240530215718.aeec973a1d0bf058d39cb1e3@kernel.org/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>   Changes in v2:
+>    - Fix build errors with CONFIG_MODULES=y.
+> ---
+>   kernel/trace/trace_fprobe.c |   46 ++++++++++++++++++++++++++++++++++++-------
+>   1 file changed, 38 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 62e6a8f4aae9..1d8a983e1edc 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -385,6 +385,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
+>   					       const char *event,
+>   					       const char *symbol,
+>   					       struct tracepoint *tpoint,
+> +					       struct module *mod,
+>   					       int maxactive,
+>   					       int nargs, bool is_return)
+>   {
+> @@ -405,6 +406,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
+>   		tf->fp.entry_handler = fentry_dispatcher;
+>   
+>   	tf->tpoint = tpoint;
+> +	tf->mod = mod;
+>   	tf->fp.nr_maxactive = maxactive;
+>   
+>   	ret = trace_probe_init(&tf->tp, event, group, false, nargs);
+> @@ -895,8 +897,23 @@ static struct notifier_block tracepoint_module_nb = {
+>   struct __find_tracepoint_cb_data {
+>   	const char *tp_name;
+>   	struct tracepoint *tpoint;
+> +	struct module *mod;
+>   };
+>   
+> +static void __find_tracepoint_module_cb(struct tracepoint *tp, void *priv)
+> +{
+> +	struct __find_tracepoint_cb_data *data = priv;
+> +
+> +	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
+> +		data->tpoint = tp;
+> +		data->mod = __module_text_address((unsigned long)tp->probestub);
+> +		if (!try_module_get(data->mod)) {
+> +			data->tpoint = NULL;
+> +			data->mod = NULL;
+> +		}
+> +	}
+> +}
+> +
+>   static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
+>   {
+>   	struct __find_tracepoint_cb_data *data = priv;
+> @@ -905,14 +922,28 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
+>   		data->tpoint = tp;
+>   }
+>   
+> -static struct tracepoint *find_tracepoint(const char *tp_name)
+> +/*
+> + * Find a tracepoint from kernel and module. If the tracepoint is in a module,
+> + * this increments the module refcount to prevent unloading until the
+> + * trace_fprobe is registered to the list. After registering the trace_fprobe
+> + * on the trace_fprobe list, the module refcount is decremented because
+> + * tracepoint_probe_module_cb will handle it.
+> + */
+> +static struct tracepoint *find_tracepoint(const char *tp_name,
+> +					  struct module **tp_mod)
+>   {
+>   	struct __find_tracepoint_cb_data data = {
+>   		.tp_name = tp_name,
+> +		.mod = NULL,
+>   	};
+>   
+>   	for_each_kernel_tracepoint(__find_tracepoint_cb, &data);
+>   
+> +	if (!data.tpoint && IS_ENABLED(CONFIG_MODULES)) {
+> +		for_each_module_tracepoint(__find_tracepoint_module_cb, &data);
+> +		*tp_mod = data.mod;
+> +	}
+> +
+>   	return data.tpoint;
+>   }
+>   
+> @@ -996,6 +1027,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>   	char abuf[MAX_BTF_ARGS_LEN];
+>   	char *dbuf = NULL;
+>   	bool is_tracepoint = false;
+> +	struct module *tp_mod = NULL;
+>   	struct tracepoint *tpoint = NULL;
+>   	struct traceprobe_parse_context ctx = {
+>   		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
+> @@ -1080,7 +1112,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>   
+>   	if (is_tracepoint) {
+>   		ctx.flags |= TPARG_FL_TPOINT;
+> -		tpoint = find_tracepoint(symbol);
+> +		tpoint = find_tracepoint(symbol, &tp_mod);
+>   		if (!tpoint) {
+>   			trace_probe_log_set_index(1);
+>   			trace_probe_log_err(0, NO_TRACEPOINT);
+> @@ -1110,8 +1142,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>   		goto out;
+>   
+>   	/* setup a probe */
+> -	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
+> -				argc, is_return);
+> +	tf = alloc_trace_fprobe(group, event, symbol, tpoint, tp_mod,
+> +				maxactive, argc, is_return);
+>   	if (IS_ERR(tf)) {
+>   		ret = PTR_ERR(tf);
+>   		/* This must return -ENOMEM, else there is a bug */
+> @@ -1119,10 +1151,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>   		goto out;	/* We know tf is not allocated */
+>   	}
+>   
+> -	if (is_tracepoint)
+> -		tf->mod = __module_text_address(
+> -				(unsigned long)tf->tpoint->probestub);
+> -
+>   	/* parse arguments */
+>   	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
+>   		trace_probe_log_set_index(i + 2);
+> @@ -1155,6 +1183,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>   	}
+>   
+>   out:
+> +	if (tp_mod)
+> +		module_put(tp_mod);
+>   	traceprobe_finish_parse(&ctx);
+>   	trace_probe_log_clear();
+>   	kfree(new_argv);
+> 
+
 -- 
-2.43.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
