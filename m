@@ -1,116 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECD8522E;
-	Mon,  3 Jun 2024 22:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D61B13C805
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jun 2024 22:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717453114; cv=none; b=M/cS8z0p+9zFUGagVD/Y/Mo0gFc54kBxdGtRJGUZz0rSqe0iNQHCoqtAiAnu9VLvwQu0Ce7s+1azIQZ6FAZFZMEwxQRtTj2gg5bUrJz6xASyoAyPUloBca9ffLEJxJIdnEexmFYcLZDa8VPsYpstS4MUK2EkdLa3eVSubyCCedw=
+	t=1717453451; cv=none; b=f32sfOOVitNs6rh4THkrXchGq9Cc+IsHAeux5bJbtuALau3/1vs3zSSxirokiJ+WZprb9PvucDBBSpQkVJdCVGUAUYh/6r6l6lOuhaOdv3u40Nwdjnh3W2kQbdxgQsP8O9ZJ/Ao26QdVGqXR1FCpGxiXpRjcLWRh9aJNsEN3TdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717453114; c=relaxed/simple;
-	bh=Pe/JUaoyjJimW5/8Dc/JtyU1xBdBAjb+X9J2Einmg2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qppiRfOM6+1NUYLev44lREnzuRd5lso4cxlbSxNn/SqN4/6pXnRrDdfRBETH5Qn1irMbCu9Lw51fojUqfQHcm3IDsSwLVSaAWdzoinV1WL+T9o6Ot9SB3580X2/XJScp16xA76IBk9QWDxCg4vA1s/R7Xo/emiNYKVBj4FmVRwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6369C2BD10;
-	Mon,  3 Jun 2024 22:18:32 +0000 (UTC)
-Date: Mon, 3 Jun 2024 18:19:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- audit@vger.kernel.org, linux-security-module@vger.kernel.org,
- selinux@vger.kernel.org, bpf@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH 2/6] tracing: Replace memcpy() with __get_task_comm()
-Message-ID: <20240603181943.09a539aa@gandalf.local.home>
-In-Reply-To: <CAHk-=whPUBbug2PACOzYXFbaHhA6igWgmBzpr5tOQYzMZinRnA@mail.gmail.com>
-References: <20240602023754.25443-1-laoar.shao@gmail.com>
-	<20240602023754.25443-3-laoar.shao@gmail.com>
-	<20240603172008.19ba98ff@gandalf.local.home>
-	<CAHk-=whPUBbug2PACOzYXFbaHhA6igWgmBzpr5tOQYzMZinRnA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717453451; c=relaxed/simple;
+	bh=AFfU/PEC+zuhNdQ2tMeUL2Lz6Nhx2hQNDlZEumLFtHY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q0m9T/FwNcqy0R/uPVYl9INutx4xOAafrS2NDEGjcPaD9YPK+QO1tfpVayRHFNnOoeMTniPjs1njJnT5P7OMq4KVgzb3kq9a5nKGa4D/H6SpnARQhdQwcbUoV+sNBsmq5bPECuAilgyWAKmdf+w9iDHV/gk7NsL7oC0R09fpfag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NvlNM94t; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NvlNM94t"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a626919d19dso877474766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Jun 2024 15:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1717453447; x=1718058247; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vUfCTj7RhneZiyZGwU4My8ep0xDaKOVngko5RyaH/ts=;
+        b=NvlNM94t6sll7sF2XotPG849RkvwqA2mzJ7yLghmdoWCe/+h99vmOGCGjvSseh3s6r
+         S/GfB/Qh0OaiI3bRW58c5ghzkxxojQrnJFc064N7uvD/XG7B0PItbqmuoTwHykQXxJCr
+         +nEcQxl8fJ8V30NsnGDoJNRo9gdlJTmDzbEkA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717453447; x=1718058247;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vUfCTj7RhneZiyZGwU4My8ep0xDaKOVngko5RyaH/ts=;
+        b=oygEkGEzRrbvLcWXbxPu/m5lxMrL6sR3WzzWGXmRn16tqmJUvh3v36eZCO5GHLHdkN
+         UeiE3ZjCkBkTOlmUZV4abYzjv53YgaF0XU5v/PZ/6p9Lvk4OU/sosdfDWKE+k+DiqQI1
+         O1SvRXUiRbnVxwz2CF8GBLIAnBrFMg5+7m7fmwMfTWK7qzRd6SHbsCMfERtWuvvsdt3+
+         fMIL7XBJfFU2VZqmn6DI55wd6Ala3TgLP840zqUiZ0OP+5Nw4i1fC3uhdMdRps5wkzy8
+         i1m+WqpGYjsO8raBZoitXVPEoPVN4G7EjwQ35iDaBjETSbvPbttOssE+EyY07JlfQVWX
+         RatA==
+X-Forwarded-Encrypted: i=1; AJvYcCXL47cS/wxR1er93giBMO4J1+rFwcE7KPIrIJ1YUYo0rtn+PNOREE2wJerBH4Yo0WL+4eVw0oFtbB6Q48MUy43/CM+UT/SqaHc90aCR2WRX60Pn
+X-Gm-Message-State: AOJu0Yzh3aWhb++Laut910GYOv36b2pkq249txRLedV8S8wh1vjo0+Ly
+	zQKvnWqzoaPtxqIyFH2rPuZa+oXfz4RDMxh3hvSQFdORRwmpPm9GZr8IzspVJx5/4BHLF8fAJjZ
+	Zkjrd9A==
+X-Google-Smtp-Source: AGHT+IHL7Kcg/Myd7Nl2vESkurgm1MyursmJXoLTRZlWikDgw6TXLaWHxTWi5cAOeKyzS+ymygu/XQ==
+X-Received: by 2002:a17:906:e952:b0:a68:8987:891d with SMTP id a640c23a62f3a-a69546aebf8mr62071266b.30.1717453447031;
+        Mon, 03 Jun 2024 15:24:07 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e73faa76sm536984166b.75.2024.06.03.15.24.05
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 15:24:05 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a68ca4d6545so380648466b.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Jun 2024 15:24:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDSNEB8aynkOAG2vCjDZLb8eje1mhLLW1ojYW2odjJbbyb1sVIXDXcGqpojFOSNuW1p/O1ORKZ8sRTuVZKBabZb+PTquVEyGTrH/w8juvNiMjp
+X-Received: by 2002:a17:906:d217:b0:a62:49ae:cd7b with SMTP id
+ a640c23a62f3a-a69543e118emr67505166b.24.1717453445163; Mon, 03 Jun 2024
+ 15:24:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240602023754.25443-1-laoar.shao@gmail.com> <20240602023754.25443-3-laoar.shao@gmail.com>
+ <20240603172008.19ba98ff@gandalf.local.home> <CAHk-=whPUBbug2PACOzYXFbaHhA6igWgmBzpr5tOQYzMZinRnA@mail.gmail.com>
+ <20240603181943.09a539aa@gandalf.local.home>
+In-Reply-To: <20240603181943.09a539aa@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 3 Jun 2024 15:23:48 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgDWUpz2LG5KEztbg-S87N9GjPf5Tv2CVFbxKJJ0uwfSQ@mail.gmail.com>
+Message-ID: <CAHk-=wgDWUpz2LG5KEztbg-S87N9GjPf5Tv2CVFbxKJJ0uwfSQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] tracing: Replace memcpy() with __get_task_comm()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 3 Jun 2024 14:42:10 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Mon, 3 Jun 2024 at 15:18, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> The logic behind __string() and __assign_str() will always add a NUL
+> character.
 
-> On Mon, 3 Jun 2024 at 14:19, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > -               __array(        char,   comm,   TASK_COMM_LEN   )
-> > +               __string(       comm,   strlen(comm)            )  
-> 
-> Is this actually safe is 'comm[]' is being modified at the same time?
-> The 'strlen()' will not be consistent with the string copy.
+Ok. But then you still end up with the issue that now the profiles are
+different, and you have a 8-byte pointer to dynamically allocated
+memory instead of just the simpler comm[TASK_COMM_LEN].
 
-First, I realized that it should actually be:
+Is that actually a good idea for tracing?
 
-		__string(	comm,	task->comm	)
+We're trying to fix the core code to be cleaner for places that may
+actually *care* (like 'ps').
 
-But your question is still a valid question, as the internal logic will
-call strlen() on the second parameter.
+Would we really want to touch this part of tracing?
 
-> 
-> Because that is very much the case. It's not a stable source.
-> 
-> For example, strlen() may return 5. But by the time  you then actually
-> copy the data, the string may have changed, and there would not
-> necessarily be a NUL character at comm[5] any more. It might be
-> further in the string, or it might be earlier.
-
-The logic behind __string() and __assign_str() will always add a NUL
-character.
-
-__string() is defined as:
-
-  static inline const char *__string_src(const char *str)
-  {
-       if (!str)
-               return EVENT_NULL_STR;
-       return str;
-  }
-
-  #undef __dynamic_array
-  #define __dynamic_array(type, item, len)                              \
-        __item_length = (len) * sizeof(type);                           \
-        __data_offsets->item = __data_size +                            \
-                               offsetof(typeof(*entry), __data);        \
-        __data_offsets->item |= __item_length << 16;                    \
-        __data_size += __item_length;
-
-  #undef __string
-  #define __string(item, src) __dynamic_array(char, item,               \
-                    strlen(__string_src(src)) + 1)                      \
-        __data_offsets->item##_ptr_ = src;
-
-
-The above will use the strlen(src) to specify the amount of memory to
-allocate on the ring buffer: "strlen(__string_src(src)) + 1)"
-
-This is stored on a special structure for the entry and used in the
-__assign_str() (the reason I removed the source to that macro during this
-merge window).
-
-  #undef __assign_str
-  #define __assign_str(dst)                                             \
-        do {                                                            \
-                char *__str__ = __get_str(dst);                         \
-                int __len__ = __get_dynamic_array_len(dst) - 1;         \
-                memcpy(__str__, __data_offsets.dst##_ptr_ ? :           \
-                       EVENT_NULL_STR, __len__);                        \
-                __str__[__len__] = '\0';                                \
-        } while (0)
-
-
-The source of the string is copied via memcpy() using the length stored
-from the __string() macro (minus 1), and then '\0' is added to it to force
-the NUL character to be in the memory for the string.
-
--- Steve
+            Linus
