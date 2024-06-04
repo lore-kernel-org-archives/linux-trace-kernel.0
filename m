@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C0314882F;
-	Tue,  4 Jun 2024 16:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C0A8F6C;
+	Tue,  4 Jun 2024 16:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717518529; cv=none; b=bCxCFzdyqN/dL4l2+xvc2kQT9rhhKJRv9U14XPwCg3IaGye92PB0YWWSyP/Q2Vzxk0am46pTTNqSWMqrrG5MnGu8qv2PSYovI983j8GLYBx0o4M4BcCF7sgcopgYbgHjnV7KbLy2F2t2KMRpi0418lpNLKZ9TqwOfiTM93o4J0s=
+	t=1717518687; cv=none; b=C5Nm26iSdyrt5+VgvIpZ6Qpr9miSS66C9lKihbXpwBuVBMob0lwQeXQeJhLcvvtNIdyP9jMX2DpLHfbnExOm97D1uFJeeql7GEw7XtHYtSXi/DVAkrF8wHuqRWBYbPq2VHL9qV09z1+VaeQ6jLAOgSmxAVkp5xHgHp5M4ZMlASE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717518529; c=relaxed/simple;
-	bh=TX40eYpPBSoNfgjKiXXx9iO88CRFF2v2Ilo21ADay8Y=;
+	s=arc-20240116; t=1717518687; c=relaxed/simple;
+	bh=goD58epB5eWbLQiw9SXNOQ0RYoZ4dDRcRSIUQ2Ndgu0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jkceXMH7MgWXG0RA6IlEriYE5JVBh+drRmCQfr59r37S+BIMiAx24vhl4K5MdNDFFwkxxIn5Sw5uHkmwTC3qLE31b9n5ACUlznOw11Uv/zgtNT4Rt5jAHbh+VnfefDwhNJ7vdZyeXJjDSddEvAcAamB8IYohNMsV2QL8mDCtUpE=
+	 MIME-Version:Content-Type; b=MxaW0tHPoXAFEDFEyN2fdpFEoUjs3YsapR9A3N+ikI/MSodb0LSDH7P9aWSht1CLdlisrXNUrKxHnXgF634FLvODXiasplyrM6+D3BvW1Cvodzcc2HVRiiiofIxZ5JKgHtlOcdw1JYxBGjVpjNkpfQN6YTHqS/+1D63rpDdXU9k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 484C2C4AF09;
-	Tue,  4 Jun 2024 16:28:44 +0000 (UTC)
-Date: Tue, 4 Jun 2024 12:28:42 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE72C2BBFC;
+	Tue,  4 Jun 2024 16:31:24 +0000 (UTC)
+Date: Tue, 4 Jun 2024 12:31:24 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
- Andrzej Siewior <bigeasy@linutronix.de>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Andrew
- Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Metin
- Kaya <metin.kaya@arm.com>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH v5 2/2] sched/rt, dl: Convert functions to return bool
-Message-ID: <20240604122842.40296fb1@gandalf.local.home>
-In-Reply-To: <20240604144228.1356121-3-qyousef@layalina.io>
-References: <20240604144228.1356121-1-qyousef@layalina.io>
-	<20240604144228.1356121-3-qyousef@layalina.io>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v3 00/27] function_graph: Allow multiple users for
+ function graph tracing
+Message-ID: <20240604123124.456d19cf@gandalf.local.home>
+In-Reply-To: <Zl8oWNhkEPleJ3B_@J2N7QTR9R3>
+References: <20240603190704.663840775@goodmis.org>
+	<20240604081850.59267aa9@rorschach.local.home>
+	<Zl8oWNhkEPleJ3B_@J2N7QTR9R3>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,19 +45,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue,  4 Jun 2024 15:42:28 +0100
-Qais Yousef <qyousef@layalina.io> wrote:
+On Tue, 4 Jun 2024 15:44:40 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-> {rt, realtime, dl}_{task, prio}() functions return value is actually
-> a bool.  Convert their return type to reflect that.
+> Hi Steve, Masami,
 > 
-> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Signed-off-by: Qais Yousef <qyousef@layalina.io>
-> ---
->  include/linux/sched/deadline.h |  8 +++-----
->  include/linux/sched/rt.h       | 16 ++++++----------
->  2 files changed, 9 insertions(+), 15 deletions(-)
+> On Tue, Jun 04, 2024 at 08:18:50AM -0400, Steven Rostedt wrote:
+> > 
+> > Masami,
+> > 
+> > This series passed all my tests, are you comfortable with me pushing
+> > them to linux-next?  
+> 
+> As a heads-up (and not to block pushing this into next), I just gave
+> this a spin on arm64 atop v6.10-rc2, and running the selftests I see:
+> 
+> 	ftrace - function pid filters
+> 	(instance)  ftrace - function pid filters
+> 
+> ... both go from [PASS] to [FAIL].
+> 
+> Everything else looks good -- I'll go dig into why that's happening.
+> 
+> It's possible that's just something odd with the filesystem I'm using
+> (e.g. the wnership test failed because this lacks 'stat').
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Thanks for the update. I could be something I missed in patch 13 that had
+to put back the pid code.
+
+There may have been something arch specific that I'm unaware about. I'll
+look at that deeper.
 
 -- Steve
