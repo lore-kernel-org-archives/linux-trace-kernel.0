@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A07A14C59C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FAD14D294;
 	Tue,  4 Jun 2024 21:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717536534; cv=none; b=mMerd3EdSvw/nhsKJLyjrwWWsMk3uSjkZNOqS5K76fMfl1eL880bFFywc9Sh49MHKO7KwecKzQNFzePzxMV6AVNH9c0Al3iup/Jw+9kIu8TI85zW2GZ8ibTre2q6T1Gr/+VyDbc/LeLB8aydhVMLucbyaqii3CvieRPrfx2bB80=
+	t=1717536534; cv=none; b=OpDvC/z97/fvv7MEyHBadHscHAlWNsCc07eHduNKiDGair7XKLJR2l6p1HZp5Tjj/Y+f444g82z809PISFscYE+5CjH99Xr1dycc19NnDHbfpewHKHHP8Svp0UfijgvAJVKHzMQUrpUQLgos684v2Oc1KIb5qfVcq8cZvtTzmac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717536534; c=relaxed/simple;
-	bh=VP452e+SSltPUNQ60WPUoVTjGYlGi4NsAMEX2G4U0oQ=;
+	bh=cbZW4vL3SMGQ0M8GRVOAdEPhzxcmYTygyL7401g8GNk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=sdcSazpmHIG29QKu81dJekjtoMmh2C5ED4q9/E6HRzB/nmXTujVAlIxfy9eR6GrlBOUny22WOmA3qW2p0OW2kqUDTFW05GYICmJLDLrizR07pbVJOakz0Yy1dbSbuecBGoqscZd7NLodmX0C6CFTH0/jKrWubK5GrXw0Ot21vh0=
+	 Content-Type; b=bFYggO0eTS3Db/336bP9t2o82F8G0GkA7iKuuNiGZyalYUyc4R6JJSubTNghS06VUrZ9gsFJ2x0DV5Gowyceecpglu9T6prJKpsz+GeVT9mGR5MRBBH358CNZ/flH4huyOhamKvXdNrtY2VGzwzkJ7zy+IhmVPfRXaXp9WVDhGU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B391C4AF0E;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9D7C4AF0A;
 	Tue,  4 Jun 2024 21:28:54 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEbiB-00000000bEo-0nHJ;
+	id 1sEbiB-00000000bFI-1T5m;
 	Tue, 04 Jun 2024 17:28:55 -0400
-Message-ID: <20240604212855.046127611@goodmis.org>
+Message-ID: <20240604212855.208119464@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 17:28:21 -0400
+Date: Tue, 04 Jun 2024 17:28:22 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,8 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/5] ftrace: Convert "filter_hash" and "inc" to bool in
- ftrace_hash_rec_update_modify()
+Subject: [PATCH 5/5] ftrace: Add comments to ftrace_hash_move() and friends
 References: <20240604212817.384103202@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,73 +40,70 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The parameters "filter_hash" and "inc" in the function
-ftrace_hash_rec_update_modify() are boolean. Change them to be such.
-
-Also add documentation to what the function does.
+Describe what ftrace_hash_move() does and add some more comments to some
+other functions to make it easier to understand.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+ kernel/trace/ftrace.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index de652201c86c..021024164938 100644
+index 021024164938..2d955f0c688f 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -1915,8 +1915,31 @@ static bool ftrace_hash_rec_enable(struct ftrace_ops *ops)
- 	return __ftrace_hash_rec_update(ops, true, 1);
+@@ -169,6 +169,7 @@ static inline void ftrace_ops_init(struct ftrace_ops *ops)
+ #endif
  }
  
-+/*
-+ * This function will update what functions @ops traces when its filter
-+ * changes. @filter_hash is set to true when modifying the filter_hash
-+ * and set to false when modifying the notrace_hash.
++/* Call this function for when a callback filters on set_ftrace_pid */
+ static void ftrace_pid_func(unsigned long ip, unsigned long parent_ip,
+ 			    struct ftrace_ops *op, struct ftrace_regs *fregs)
+ {
+@@ -1317,7 +1318,7 @@ static struct ftrace_hash *alloc_ftrace_hash(int size_bits)
+ 	return hash;
+ }
+ 
+-
++/* Used to save filters on functions for modules not loaded yet */
+ static int ftrace_add_mod(struct trace_array *tr,
+ 			  const char *func, const char *module,
+ 			  int enable)
+@@ -1431,6 +1432,7 @@ static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+ 	return new_hash;
+ }
+ 
++/* Move the @src entries to a newly allocated hash */
+ static struct ftrace_hash *
+ __ftrace_hash_move(struct ftrace_hash *src)
+ {
+@@ -1445,6 +1447,26 @@ __ftrace_hash_move(struct ftrace_hash *src)
+ 	return __move_hash(src, size);
+ }
+ 
++/**
++ * ftrace_hash_move - move a new hash to a filter and do updates
++ * @ops: The ops with the hash that @dst points to
++ * @enable: True if for the filter hash, false for the notrace hash
++ * @dst: Points to the @ops hash that should be updated
++ * @src: The hash to update @dst with
 + *
-+ * For example, if the user does: echo schedule > set_ftrace_filter
-+ * that would call: ftrace_hash_rec_update_modify(ops, true, true);
++ * This is called when an ftrace_ops hash is being updated and the
++ * the kernel needs to reflect this. Note, this only updates the kernel
++ * function callbacks if the @ops is enabled (not to be confused with
++ * @enable above). If the @ops is enabled, its hash determines what
++ * callbacks get called. This function gets called when the @ops hash
++ * is updated and it requires new callbacks.
 + *
-+ * For: echo schedule >> set_ftrace_notrace
-+ * That would call: ftrace_hash_rec_enable(ops, false, true);
++ * On success the elements of @src is moved to @dst, and @dst is updated
++ * properly, as well as the functions determined by the @ops hashes
++ * are now calling the @ops callback function.
 + *
-+ * The @inc states if the @ops callbacks are going to be added or removed.
-+ * The dyn_ftrace records are update via:
-+ *
-+ * ftrace_hash_rec_disable_modify(ops, filter_hash);
-+ * ops->hash = new_hash
-+ * ftrace_hash_rec_enable_modify(ops, filter_hash);
-+ *
-+ * Where the @ops is removed from all the records it is tracing using
-+ * its old hash. The @ops hash is updated to the new hash, and then
-+ * the @ops is added back to the records so that it is tracing all
-+ * the new functions.
++ * Regardless of return type, @src should be freed with free_ftrace_hash().
 + */
- static void ftrace_hash_rec_update_modify(struct ftrace_ops *ops,
--					  int filter_hash, int inc)
-+					  bool filter_hash, bool inc)
- {
- 	struct ftrace_ops *op;
- 
-@@ -1939,15 +1962,15 @@ static void ftrace_hash_rec_update_modify(struct ftrace_ops *ops,
- }
- 
- static void ftrace_hash_rec_disable_modify(struct ftrace_ops *ops,
--					   int filter_hash)
-+					   bool filter_hash)
- {
--	ftrace_hash_rec_update_modify(ops, filter_hash, 0);
-+	ftrace_hash_rec_update_modify(ops, filter_hash, false);
- }
- 
- static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops,
--					  int filter_hash)
-+					  bool filter_hash)
- {
--	ftrace_hash_rec_update_modify(ops, filter_hash, 1);
-+	ftrace_hash_rec_update_modify(ops, filter_hash, true);
- }
- 
- /*
+ static int
+ ftrace_hash_move(struct ftrace_ops *ops, int enable,
+ 		 struct ftrace_hash **dst, struct ftrace_hash *src)
 -- 
 2.43.0
 
