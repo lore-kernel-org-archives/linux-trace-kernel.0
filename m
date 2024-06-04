@@ -1,109 +1,238 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0938B;
-	Tue,  4 Jun 2024 02:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC77132135;
+	Tue,  4 Jun 2024 05:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717468550; cv=none; b=Nn6C5ERnJ98nIMZlYBavvCRDvERm0lGgkx0y7SlOGuSS/baOaSgaKGmZbyqVSivhlFqkxfi1uboaB1znvjz8YqqQFYKtBqfzs4LUk6C1J5AwH1C1tHXSUWL5vxRmU/j12OP9WU26Vp62fuRB8tUvg2nTQUzTW301cCgUoDIOGoY=
+	t=1717480357; cv=none; b=gu/zCbUD+oQ1ubNOzyhatdJULfjd0f3sPbP5ZZ/H0SCQ3bQDI9sA94vhDlR/tp22V1WHqTxs9SevxJGQSlBgNBzxetpbd1nGPUJ8ZUH3JPFzpbL775SBAzBhHxN5YRcpr7C1e2xsiEIq1TaS+PVWBSy3xa9DJPrPm30zXioCEAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717468550; c=relaxed/simple;
-	bh=J0+6VuAcmJuFZUzfJKhRgy9ju+3AX5VnSvOv6JpeqlU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qHP9wOIKzyIOA7nN/70JipxsUXrIwkCPgAZbj53cCPyZPdAQgBfJPwQAee5tV7iSchO87iNoPMdkcQ9Q2hKpf/JoM7N3tm8Px50zHPD1Ixmn9EYj1+46tEMYJoaZNOU8ziZq/1qFf70AHyHVUTdhVHHxzk90Cx3BiAb+5xSo3kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKC46LM3; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717480357; c=relaxed/simple;
+	bh=hp/q9fl1l/6+eFOkIX8ny4QgcjTOK17pB3rxlmTZ8Iw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=tnij5pIVxgorKoIRHjMFCfu4GjPMlEgnZKP6XtHP676WbCNxEivDf8gFp4F0PFvh33zT/fRv65a9LjyOaAd5iqRH+1DM/NpOIiza72bDxTFBGAIvMb2oax5HWTibr+ytcmo1K/FNmJ+rsh2Gh8NdymhlxX5HEFULMPaYQmBQwBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRygG54C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKC46LM3"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-62a2424ecb8so7122877b3.1;
-        Mon, 03 Jun 2024 19:35:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717468548; x=1718073348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0+6VuAcmJuFZUzfJKhRgy9ju+3AX5VnSvOv6JpeqlU=;
-        b=eKC46LM38fqF2wqA/Chjlx3Q5kAbRY22wubyPegY2K8RUzxLPElT1FNnteL9exQROj
-         9soRa2W0y3GbJke5W52rOoSp9z4lq2O91Xcx8KE9lPVVplByi2QFU+mcnl/Q5v92cF3x
-         oTfCbaG6sNN+LhnvZmU//zBYK9ZEszUOoSZQPjg7G+7UY1BLWCvsO5EY2Up7ixIhyhz7
-         4gEE4uduQ+nQU8qg0aSc5Wc978M//nH6aoKt+BTHJQzhBZWlEJkRHK52j2wglGSz9FNH
-         OReY7+UWeiu5+jtkvOKI4qe/n60881+C3jE1la28CK4GQZozkUauikdAaoZpxqWQywCw
-         DazA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717468548; x=1718073348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J0+6VuAcmJuFZUzfJKhRgy9ju+3AX5VnSvOv6JpeqlU=;
-        b=XosiLIFTKO+A/r4A1fCS4MR2I9ttosHmwJztnoEe4R0Pp4luPBKESmCu/5d6wNsgts
-         4HNnv6mzEttyRXnQfE7z46AIioqYz2UXFTZpQvm+414zQXA54/PY16G/RzwQgQIj/r4l
-         8wSroE9yDrL9/ulxCvTVnR10Yskhv0C27YdxLSDpxFLgXHFQLpPTSpRfvlCEwGxH4NT4
-         hrMmBSKCBT1XdTlZHVrxlj3JC4FZTXBqazBvHU65C5TM31EpgGQHjbGSc4HXa4lhxRHG
-         Vjm8WTI7fLIxd5gCUWcaDbkRUVMsvxUIEpqXzSnw2JMCb7r5fs9ljPani70/FxZqKBm1
-         m4WA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzTDNzs/xiJA0/sPhvcnFc3+3kQhpYa9gHNlfxW8GNHeArr1rsmLg5D9hqnm2rT6nFwAbvF3UCmYEoptBXSdIRSka2c0iXndnSVSgYFk4hT8LhD9DSZra5yStfWDOFGY4tOBk8V6c/t115jOpqPsl77IoXqrJiR1/itEMmbXIOq7wbMdXqZBT1bV+BSmpB+Cq0A93f96cdkta9YhuwP3lN4+p8o/YXvJiSO7pwT539MqIj1UAtOT64n+8yZ6K9nNNMqhvwkxtUZE7tRRRVve+OuzZXZkSma4WeL+Dt7A==
-X-Gm-Message-State: AOJu0Yx4lXiB8vpsMabjHDVl1uA7oC+q0GM2TKDlhIqw4jd0rcdkEMaU
-	VAnYR0LzoR00a78cYtfNwPjNEOGtENQ55vqCHAgH6o6AwAhYceyNAxflLo0mL7JSOQK01x9OTtb
-	Io27LaRrhO0u3gGvT/3GWklllCmM=
-X-Google-Smtp-Source: AGHT+IFsJKKP6E7ehkS12dXoTKwwv7oEaZTZAGuMrX+8lYbnDgjPUWmWSK4wVLj6fy3L5FaNVQwEPCqorB1AY9Yfm7U=
-X-Received: by 2002:a0d:eb91:0:b0:615:19db:8ed1 with SMTP id
- 00721157ae682-62c79843f8fmr105571827b3.48.1717468548009; Mon, 03 Jun 2024
- 19:35:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRygG54C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A96C2BBFC;
+	Tue,  4 Jun 2024 05:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717480356;
+	bh=hp/q9fl1l/6+eFOkIX8ny4QgcjTOK17pB3rxlmTZ8Iw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=rRygG54CoZ8htmevLQ2Hwd3ZKINlMR4WCoy3mGZm7Er7VXEGvDHQ4Hxm8Fvhepf6G
+	 xEMuSpoBut1mphalvVhYydblbpdlzb9tM6341UEtCE+SYUIpv3WBE/bsBoCYxCutSM
+	 XYUumCwRSdEgTN/mEIo7JIgarVXj5ERxHBHWdZoRAdXpgSToo4JXHm/GyuJCd3wDBr
+	 5vYjNG6497Phbm/PJ9zukKXKSRmm0QPgH9ER9iIQiUux4Q8rquDIPIqY5szq2BVoG6
+	 fdNd2eK8IcYXXbNAe5srDrLtFRI6j9h/cMgIz3X04EHoLjc1Lo6nI9BZWWuBNFy1yz
+	 fpNdjbjPA6yYA==
+Date: Mon, 03 Jun 2024 22:52:37 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+CC: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+ Ross Zwisler <zwisler@google.com>, wklin@google.com,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, ardb@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/2=5D_mm/memblock=3A_Add_=22reserve?=
+ =?US-ASCII?Q?=5Fmem=22_to_reserved_named_memory_at_boot_up?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20240603233631.452433539@goodmis.org>
+References: <20240603233330.801075898@goodmis.org> <20240603233631.452433539@goodmis.org>
+Message-ID: <5DAB46F6-F415-4C2B-AA6A-E0049CF6270C@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240602023754.25443-1-laoar.shao@gmail.com> <20240602023754.25443-3-laoar.shao@gmail.com>
- <20240603172008.19ba98ff@gandalf.local.home> <CAHk-=whPUBbug2PACOzYXFbaHhA6igWgmBzpr5tOQYzMZinRnA@mail.gmail.com>
- <20240603181943.09a539aa@gandalf.local.home> <CAHk-=wgDWUpz2LG5KEztbg-S87N9GjPf5Tv2CVFbxKJJ0uwfSQ@mail.gmail.com>
- <20240603183742.17b34bc3@gandalf.local.home> <20240603184016.3374559f@gandalf.local.home>
-In-Reply-To: <20240603184016.3374559f@gandalf.local.home>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 4 Jun 2024 10:35:09 +0800
-Message-ID: <CALOAHbA_i_pUkX17rBdUKyM-Vr5LtQvbKe7bN9m9LfG=qndnAQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] tracing: Replace memcpy() with __get_task_comm()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 4, 2024 at 6:39=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Mon, 3 Jun 2024 18:37:42 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > Note, I've been wanting to get rid of the hard coded TASK_COMM_LEN from=
- the
-> > events for a while. As I mentioned before, the only reason the memcpy e=
-xists
-> > is because it was added before the __string() logic was. Then it became
-> > somewhat of a habit to do that for everything that referenced task->com=
-m. :-/
->
-> My point is that if we are going to be changing the way we record
-> task->comm in the events, might as well do the change I've been wanting t=
-o
-> do for years. I'd hold off on the sched_switch event, as that's the one
-> event (and perhaps sched_waking events) that user space may be have
-> hardcoded how to read it.
->
-> I would be interested in changing it, just to see what breaks, so I would
-> know where to go fix things. But keep it a separate patch so that it coul=
-d
-> be easily reverted.
->
 
-I will drop the tracing part that includes this patch and the patch #6
- in the next version, and leave it to you.
+
+On June 3, 2024 4:33:31 PM PDT, Steven Rostedt <rostedt@goodmis=2Eorg> wro=
+te:
+>From: "Steven Rostedt (Google)" <rostedt@goodmis=2Eorg>
+>
+>In order to allow for requesting a memory region that can be used for
+>things like pstore on multiple machines where the memory layout is not th=
+e
+>same, add a new option to the kernel command line called "reserve_mem"=2E
+>
+>The format is:  reserve_mem=3Dnn:align:name
+>
+>Where it will find nn amount of memory at the given alignment of align=2E
+>The name field is to allow another subsystem to retrieve where the memory
+>was found=2E For example:
+>
+>  reserve_mem=3D12M:4096:oops ramoops=2Emem_name=3Doops
+
+How does this interact with KASLR? It has chosen its physical location bef=
+ore this parsing happens, so I'd expect this to fail once in a while, unles=
+s the size/alignment is lucky enough that KASLR never uses that portion of =
+the physical memory=2E=2E=2E
+
+-Kees
+
+>
+>Where ramoops=2Emem_name will tell ramoops that memory was reserved for i=
+t
+>via the reserve_mem option and it can find it by calling:
+>
+>  if (reserve_mem_find_by_name("oops", &start, &size)) {
+>	// start holds the start address and size holds the size given
+>
+>Link: https://lore=2Ekernel=2Eorg/all/ZjJVnZUX3NZiGW6q@kernel=2Eorg/
+>
+>Suggested-by: Mike Rapoport <rppt@kernel=2Eorg>
+>Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis=2Eorg>
+>---
+> include/linux/mm=2Eh |  2 +
+> mm/memblock=2Ec      | 97 ++++++++++++++++++++++++++++++++++++++++++++++
+> 2 files changed, 99 insertions(+)
+>
+>diff --git a/include/linux/mm=2Eh b/include/linux/mm=2Eh
+>index 9849dfda44d4=2E=2Eb4455cc02f2c 100644
+>--- a/include/linux/mm=2Eh
+>+++ b/include/linux/mm=2Eh
+>@@ -4263,4 +4263,6 @@ static inline bool pfn_is_unaccepted_memory(unsigne=
+d long pfn)
+> void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+> void vma_pgtable_walk_end(struct vm_area_struct *vma);
+>=20
+>+int reserve_mem_find_by_name(const char *name, unsigned long *start, uns=
+igned long *size);
+>+
+> #endif /* _LINUX_MM_H */
+>diff --git a/mm/memblock=2Ec b/mm/memblock=2Ec
+>index d09136e040d3=2E=2Ea8bf0ee9e2b4 100644
+>--- a/mm/memblock=2Ec
+>+++ b/mm/memblock=2Ec
+>@@ -2244,6 +2244,103 @@ void __init memblock_free_all(void)
+> 	totalram_pages_add(pages);
+> }
+>=20
+>+/* Keep a table to reserve named memory */
+>+#define RESERVE_MEM_MAX_ENTRIES		8
+>+#define RESERVE_MEM_NAME_SIZE		16
+>+struct reserve_mem_table {
+>+	char			name[RESERVE_MEM_NAME_SIZE];
+>+	unsigned long		start;
+>+	unsigned long		size;
+>+};
+>+static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRI=
+ES];
+>+static int reserved_mem_count;
+>+
+>+/* Add wildcard region with a lookup name */
+>+static int __init reserved_mem_add(unsigned long start, unsigned long si=
+ze,
+>+				   const char *name)
+>+{
+>+	struct reserve_mem_table *map;
+>+
+>+	if (!name || !name[0] || strlen(name) >=3D RESERVE_MEM_NAME_SIZE)
+>+		return -EINVAL;
+>+
+>+	if (reserved_mem_count >=3D RESERVE_MEM_MAX_ENTRIES)
+>+		return -1;
+>+
+>+	map =3D &reserved_mem_table[reserved_mem_count++];
+>+	map->start =3D start;
+>+	map->size =3D size;
+>+	strscpy(map->name, name);
+>+	return 0;
+>+}
+>+
+>+/**
+>+ * reserve_mem_find_by_name - Find reserved memory region with a given n=
+ame
+>+ * @name: The name that is attached to a reserved memory region
+>+ * @start: If found, holds the start address
+>+ * @size: If found, holds the size of the address=2E
+>+ *
+>+ * Returns: 1 if found or 0 if not found=2E
+>+ */
+>+int reserve_mem_find_by_name(const char *name, unsigned long *start, uns=
+igned long *size)
+>+{
+>+	struct reserve_mem_table *map;
+>+	int i;
+>+
+>+	for (i =3D 0; i < reserved_mem_count; i++) {
+>+		map =3D &reserved_mem_table[i];
+>+		if (!map->size)
+>+			continue;
+>+		if (strcmp(name, map->name) =3D=3D 0) {
+>+			*start =3D map->start;
+>+			*size =3D map->size;
+>+			return 1;
+>+		}
+>+	}
+>+	return 0;
+>+}
+>+
+>+/*
+>+ * Parse early_reserve_mem=3Dnn:align:name
+>+ */
+>+static int __init reserve_mem(char *p)
+>+{
+>+	phys_addr_t start, size, align;
+>+	char *oldp;
+>+	int err;
+>+
+>+	if (!p)
+>+		return -EINVAL;
+>+
+>+	oldp =3D p;
+>+	size =3D memparse(p, &p);
+>+	if (p =3D=3D oldp)
+>+		return -EINVAL;
+>+
+>+	if (*p !=3D ':')
+>+		return -EINVAL;
+>+
+>+	align =3D memparse(p+1, &p);
+>+	if (*p !=3D ':')
+>+		return -EINVAL;
+>+
+>+	start =3D memblock_phys_alloc(size, align);
+>+	if (!start)
+>+		return -ENOMEM;
+>+
+>+	p++;
+>+	err =3D reserved_mem_add(start, size, p);
+>+	if (err) {
+>+		memblock_phys_free(start, size);
+>+		return err;
+>+	}
+>+
+>+	p +=3D strlen(p);
+>+
+>+	return *p =3D=3D '\0' ? 0: -EINVAL;
+>+}
+>+__setup("reserve_mem=3D", reserve_mem);
+>+
+> #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
+> static const char * const flagname[] =3D {
+> 	[ilog2(MEMBLOCK_HOTPLUG)] =3D "HOTPLUG",
 
 --=20
-Regards
-Yafang
+Kees Cook
