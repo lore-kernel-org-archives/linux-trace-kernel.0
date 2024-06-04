@@ -1,81 +1,115 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6900B13E88B
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DC714D6E1;
+	Tue,  4 Jun 2024 23:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717543566; cv=none; b=BZZNGqeCVXZPPBUSU2sr12ZmzxTk69vgWak7VcLrajVluugQUfKUYeQzDF0rYWUkbLuCiTE10cOnEvn+IJSOoWtm9UcWhHFbS78u08ytBg+DptHltv14shGhIMGh7eNMWC+eSPP2hYz/B37eroSbxspVZOVpCJHSOp8Z4gm+1gA=
+	t=1717544694; cv=none; b=jhKIw31WhFvYnKXyu0H5IsHZo7f77H+UuN1+R4PLDribxd3dsikuF2rcxsSBc7yGxeJK4X0F/qFCjvTvZF2ZlHC+1OUynEycIJCgMT76JP4yfWYALzl+cp+leMnnhzvl0dtEDxWpL3L8w3YMpEf2Ngf1YvXasrOjv4JVaEvWVC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717543566; c=relaxed/simple;
-	bh=uOxO572PIMYk4UD1AMdP6QiZNSv5xA+cPBiAG1f4D1I=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZYrwhAGEMRNsVQlRAJ3GfCsCDX5tm7KvovZk03wG2aIklZVm9UhAycpNrkUMcDR+2RrB4d4weH/mStF/of2evEioMTkgKqlatl0ppiSzgp0mWhySAK8yWcsogxyLHbp8mqa8I2zFFAx1dCbn4qCMBIwe38n5wpH5e2RVJ/wL1j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3745fb76682so62128745ab.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 16:26:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717543564; x=1718148364;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i6eAuVeWTDMsF1yEe0WIVH8Cs9Fqf92OWhWU5p1no/4=;
-        b=ApJZtFXjyq+VI6QZYiiwQrY8DCWv59o2NST3Hyy3mr/SRDeEpduO1TL/9i1a+e9IBF
-         fkaSEARpI3FFtwY2VhkMrE5MvECm4i8IbZiSKFnklAsGgnUaLcL1ieI7eCNk1U6yKkwe
-         tyLZo54nKtckzRse+WHC6oWTy8yOLawm6EWfQ3eKDJkp3aFkNHigLU0ZbgBlnb1XL6mD
-         JfFOCOPBappEEnVkBqt2yAGQILzZQHjI0+Io7wl8jqkuQdkoOauJKNMLn5G5F8GnUGC4
-         jLQPvXpNy+qRTSj7UrmulwMzmWZuy3s5pLC3/GsXJsU9xo2bzcYD0xwVXsTWFr5MBkmO
-         akfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYelTJPJ/Y3VXMqQswfPbxVKCDfLMromAm8zvitSODDVAxUUChCR5hb2SFWl572YQXosUYqF6fR+r8vI/sptCQePKiGnGO72DfLpzpe3vwgRa/
-X-Gm-Message-State: AOJu0Yw3K96rFNIHVJhKaxgbSwIRY/5z7auEOLcRfhMobLrW357tO6Ii
-	e39Gi4djUCduyZU1uMv25+eTNtFjtu8Nvl6ImKLH7/5hAF4tuhLY3CzuR1TSh0Yyir7uFg1BrLt
-	+fI5DudsZEJbM2mw9GLY2aDASUmjNavxbpCU2voGTDzbykArxO19yCCk=
-X-Google-Smtp-Source: AGHT+IF5vyONmiDcpL1Vn1ikfQ9FuJdcA7AQfBqFl0c9bGxvp4BtLQVTyajhYTtMfn8Ff5AgREPlf6px3j7XUvVzCm5vX4mikeym
+	s=arc-20240116; t=1717544694; c=relaxed/simple;
+	bh=5vLaTMhC/f80cHfutQVA8NT+YBHXfBWGgHaK2vOxNpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fpDFON7lauewfG4hkWenVziJ1Kgl/ErIQFvYq4Oo7OjpNCysu5PTlAQGzS+/HlBl2OaFfl499s6FmqDfDvPDem2n+JKy59+AlAxmiDYY4LzFX/SMaOj2TQT/RTWHR8lG+TYxcKkdHsBl4c/3V9EiX9UtfM8V+YV1sJfQdnZQvEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4DYnlGoH; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4DYnlGoH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=PhT9KFFOExWQF20U3AwXuDAmtkcJMJ2i2CdJFaJH1tU=; b=4DYnlGoH09CVVe9B8D6eWoe6IX
+	DObz3+SkqGCNdjLs+aUSWP4imauIabFyOz0tYAXBGAaspL4LEEykxzsBt1MplXhQMcu03p7QOuQAx
+	8TnzwFCM/jMxcD752sO5+qJexRWAe9BvXi/lZ0eAt2OWIDNwwpRUDYNeI+HKaBzM6AbI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sEdpV-00GqyR-E0; Wed, 05 Jun 2024 01:44:37 +0200
+Date: Wed, 5 Jun 2024 01:44:37 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Paolo Abeni <pabeni@redhat.com>,
+	Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Subject: Re: [PATCH net-next v10 05/14] netdev: netdevice devmem allocator
+Message-ID: <3be107ce-3d9f-4528-b9f7-1c9e38da0688@lunn.ch>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-6-almasrymina@google.com>
+ <bea8b8bf1630309bb004f614e4a3c7f684a6acb6.camel@redhat.com>
+ <20240604121551.07192993@gandalf.local.home>
+ <20240604163158.GB21513@ziepe.ca>
+ <20240604124243.66203a46@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c261:0:b0:374:a12c:30e0 with SMTP id
- e9e14a558f8ab-374b1f47739mr473255ab.3.1717543564732; Tue, 04 Jun 2024
- 16:26:04 -0700 (PDT)
-Date: Tue, 04 Jun 2024 16:26:04 -0700
-In-Reply-To: <0000000000003d63410605a18363@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000100905061a18c63a@google.com>
-Subject: Re: [syzbot] [usb?] [input?] INFO: task hung in __input_unregister_device
- (5)
-From: syzbot <syzbot+78e2288f58b881ed3c45@syzkaller.appspotmail.com>
-To: Henk.Vergonet@gmail.com, dmitry.torokhov@gmail.com, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux1394-devel@lists.sourceforge.net, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, o-takashi@sakamocchi.jp, ricardo@marliere.net, 
-	rostedt@goodmis.org, rydberg@bitmath.org, syzkaller-bugs@googlegroups.com, 
-	usbb2k-api-dev@nongnu.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604124243.66203a46@gandalf.local.home>
 
-syzbot has bisected this issue to:
+> Interesting, as I sped up the ftrace ring buffer by a substantial amount by
+> adding strategic __always_inline, noinline, likely() and unlikely()
+> throughout the code. It had to do with what was considered the fast path
+> and slow path, and not actually the size of the function. gcc got it
+> horribly wrong.
 
-commit 6b0b708f12d18f9cccfb1c418bea59fcbff8798c
-Author: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Date:   Wed May 1 07:32:38 2024 +0000
+And what did the compiler people say when you reported gcc was getting
+it wrong?
 
-    firewire: core: add tracepoint event for handling bus reset
+Our assumption is, the compiler is better than a human at deciding
+this. Or at least, a human who does not spend a long time profiling
+and tuning. If this assumption is not true, we probably should be
+trying to figure out why, and improving the compiler when
+possible. That will benefit everybody.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14969a16980000
-start commit:   e0cce98fe279 Merge tag 'tpmdd-next-6.10-rc2' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12969a16980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=238430243a58f702
-dashboard link: https://syzkaller.appspot.com/bug?extid=78e2288f58b881ed3c45
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1318e162980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122e8eaa980000
+       Andrew
 
-Reported-by: syzbot+78e2288f58b881ed3c45@syzkaller.appspotmail.com
-Fixes: 6b0b708f12d1 ("firewire: core: add tracepoint event for handling bus reset")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
