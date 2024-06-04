@@ -1,102 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-out.cvt.stuba.sk (smtp-out.cvt.stuba.sk [147.175.1.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74209801;
-	Tue,  4 Jun 2024 19:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFAE13790A;
+	Tue,  4 Jun 2024 20:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.175.1.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717529151; cv=none; b=Ws6+vV2euuEClgrjw8G2j1ZyJfrmuRTbrSZQxqs9qUmLplxd82/96LC2TPJkSvz0HIpXnkAmRz4yQxTrWtW9Au8Fi6hOSBXIylRaV3OLZm8CjjI0T50kd+didhu3p7sbij+SdTvAbRcs3xsqlrnRW/NpZ6AQMhAmJsIojw07AzU=
+	t=1717531306; cv=none; b=VQhSKZ7YboKnO96FJVU2/deWvxre0ZFVFDgMCWPtsRncqna6lIEqcl3taIiQlsmHGWQs9WVmOiCdDQuwaveBGdB6L6Kmu1StwGn5H8uSNzR/oN7BQvtRdl/Jhk1SWXk+uEQNQrgIFNfloAvyTN4oNtpYL02tV40kDGnRD8XYLqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717529151; c=relaxed/simple;
-	bh=5k7gRhciOuBbwTDEYqzm+9sLuvG1nIhAitQwJrGdHMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aXXVI+pZGvg9yV01hMTgBGFmR54W5SYi2w1eDHPZ0tGu0tfIiFPra0TL8VpBQxPR9R/6H1NWe9pePtbVZIKiGqFYyeCCcxOYvVKjc6oFouTjVKD8xhHQKsEQ2s9R7MbRbMI4dLYLc3bIu0F9hRfF8P90RuHAXRgURo3SmO5+LqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6871CC2BBFC;
-	Tue,  4 Jun 2024 19:25:50 +0000 (UTC)
-Date: Tue, 4 Jun 2024 15:25:50 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] ftrace/selftests: Fix pid test with function graph not
- showing pids
-Message-ID: <20240604152550.0c01d7cd@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717531306; c=relaxed/simple;
+	bh=xe0cw9thbST3IGZR/oHrSk2h8gDB0o+KtYMQ4u2eRgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQu+Rk5vBK2qKO1mz66x/2OrnW18nZW8Lul61lmc6bD3FjtQQTyCzK1QHYQ/L6rv1UmhGJkza6Zgg32CsEL9SDF6/NPT1N33eWjVvdjajQjnqBP3kIXiYY40KSTiEeHv7urWA+UB/RWjUBDSGZyUjVGL1OWz45FlCd/LgLJksos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stuba.sk; spf=pass smtp.mailfrom=stuba.sk; dkim=pass (2048-bit key) header.d=stuba.sk header.i=@stuba.sk header.b=RoiU1XS6; arc=none smtp.client-ip=147.175.1.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=stuba.sk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stuba.sk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stuba.sk header.i=@stuba.sk header.b="RoiU1XS6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=stuba.sk;
+	s=20180406; h=Content-Transfer-Encoding:Content-Type:From:To:Subject:
+	MIME-Version:Date:Message-ID; bh=OzD8eiGhu04GmQy5cDB6iwlOJ1sKBpFqwfQpiANZgQs=
+	; t=1717531302; x=1717963302; b=RoiU1XS6EhzSDf09oyYzywSNGFz8JaMeIms5Ttmc9CrmA
+	K46kprcWX743g67XvJYCRjIurWRbwNnDdr4DOyw1rMHgzeb7gEemvX1+8MZ9ROB2mV797paJsF2xH
+	0qrNun3ZOEe/rQM6FvNOgUZx0g7z1l1d+MUuKCWRf7lmBamgs2HWibosk3p26gw/hHR16Fd8Vpq0g
+	PzWcKzwh2tUA5zeUSkeukEnt4Kspa6w6AdMIkNVxwflYyVa3en3xGBmnFTXUZbUN12jz2gdNu05hf
+	ntL71IV33u7PpZMpXdtZF1b03JmOI+1T66dEqCkw1/0ThU9PaLO6S/FMiMu7849yUQ==;
+X-STU-Diag: 9f3e1a9c84f4ccb1 (auth)
+Received: from ellyah.uim.fei.stuba.sk ([147.175.106.89])
+	by mx1.stuba.sk (Exim4) with esmtpsa (TLS1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+	(envelope-from <matus.jokay@stuba.sk>)
+	id 1sEaLi-0000iB-Fy; Tue, 04 Jun 2024 22:01:38 +0200
+Message-ID: <6cf37b34-c5e4-4d92-8a60-6c083e109439@stuba.sk>
+Date: Tue, 4 Jun 2024 22:01:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] fs/exec: Drop task_lock() inside __get_task_comm()
+To: Yafang Shao <laoar.shao@gmail.com>, torvalds@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+ bpf@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>
+References: <20240602023754.25443-1-laoar.shao@gmail.com>
+ <20240602023754.25443-2-laoar.shao@gmail.com>
+Content-Language: en-US
+From: Matus Jokay <matus.jokay@stuba.sk>
+In-Reply-To: <20240602023754.25443-2-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Sorry guys for the mistake,
 
-The pid filtering test will set the pid filters and make sure that both
-function and function_graph tracing honors the filters. But the
-function_graph tracer test was failing because the PID was not being
-filtered properly. That's because the funcgraph-proc option wasn't getting
-set. Without that option the PID is not shown.
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index c75fd46506df..56a927393a38 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1083,7 +1083,7 @@ struct task_struct {
+>  	 *
+>  	 * - normally initialized setup_new_exec()
+>  	 * - access it with [gs]et_task_comm()
+> -	 * - lock it with task_lock()
+> +	 * - lock it with task_lock() for writing
+there should be fixed only the comment about ->comm initialization during exec.
 
-Instead we get:
-
-	+ cat trace
-	# tracer: function_graph
-	#
-	# CPU  DURATION                  FUNCTION CALLS
-	# |     |   |                     |   |   |   |
-	 3) ! 143.685 us  |  kernel_clone();
-	 3) ! 127.055 us  |  kernel_clone();
-	 1) ! 127.170 us  |  kernel_clone();
-	 3) ! 126.840 us  |  kernel_clone();
-
-When we should be getting:
-
-	+ cat trace
-	# tracer: function_graph
-	#
-	# CPU  TASK/PID         DURATION                  FUNCTION CALLS
-	# |     |    |           |   |                     |   |   |   |
-	 4)    bash-939    | # 1070.009 us |  kernel_clone();
-	 4)    bash-939    | # 1116.903 us |  kernel_clone();
-	 5)    bash-939    | ! 976.133 us  |  kernel_clone();
-	 5)    bash-939    | ! 954.012 us  |  kernel_clone();
-
-The test looks for the pids it is filtering and will fail if it can not
-find them. Without fungraph-proc option set, it will not be displayed and
-the test will fail.
-
-Link: https://lore.kernel.org/all/Zl9JFnzKGuUM10X2@J2N7QTR9R3/
-
-Fixes: 35b944a997e2 ("selftests/ftrace: Add function_graph tracer to func-filter-pid test")
-Reported-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
-index c6fc9d31a496..8dcce001881d 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
-@@ -8,6 +8,7 @@
- # Also test it on an instance directory
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index c75fd46506df..48aa5c85ed9e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1081,9 +1081,9 @@ struct task_struct {
+ 	/*
+ 	 * executable name, excluding path.
+ 	 *
+-	 * - normally initialized setup_new_exec()
++	 * - normally initialized begin_new_exec()
+ 	 * - access it with [gs]et_task_comm()
+-	 * - lock it with task_lock()
++	 * - lock it with task_lock() for writing
+ 	 */
+ 	char				comm[TASK_COMM_LEN];
  
- do_function_fork=1
-+do_funcgraph_proc=1
- 
- if [ ! -f options/function-fork ]; then
-     do_function_fork=0
-@@ -28,6 +29,7 @@ fi
- 
- if [ $do_funcgraph_proc -eq 1 ]; then
-     orig_value2=`cat options/funcgraph-proc`
-+    echo 1 > options/funcgraph-proc
- fi
- 
- do_reset() {
--- 
-2.43.0
+Again, sorry for the noise. It's a very minor fix, but maybe even a small fix to the documentation can help increase the readability of the code.
+
+--
+Thanks
+mY
 
