@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6DC144D27
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EEB1448E2
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:23:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717496006; cv=none; b=tEaPWymwAe5V94ej/Rr0sT7sdFW8OwQCG3Aro22O1HHuwE4DckO7JwxiGu4D1P0xrsBTnXGbfNJB8aGLCQSn2cW0mD5DVYm1KUX9wjXp3yWLRrbtUTPowX4SGDrJpR0gi1T9UOfkRDogQJw6qBHL6qeFXSzrNZLnc2oIEqjChd4=
+	t=1717496637; cv=none; b=Qtdztm5UikRmftZPQKJjYq2hdkkXCdoURvKFSxL00EmUgz9xPIK6gvUVug4jpbFp32qd7ROccnD9UbQt0dGOVWI/dNBvpYB+gpeqfqhvFeMbiNdDxKpgFGtBYeKXYDvM7fa3T0flXXNEihunTEcAeQXBAAIhDaP8JHrdrgZRwcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717496006; c=relaxed/simple;
-	bh=LLpu+VrSCdCx+beYPyN1oab7H35fngPIjvd71r1HkBA=;
+	s=arc-20240116; t=1717496637; c=relaxed/simple;
+	bh=D86S1PctT6PoPMiN3LIF6CC8Go5hsVnU4lgB+LacSjI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aUU3YbwHM4BmgXY9Pbm4LUCrgGW8b+pYfTxaRq/3tt3C3+Fb1ld/uN8thUrjpEe3B6eqIM6ENYGWKGNf/qNJUTBbO1ghMg1WiRFVROGSnnkSVQNiXxZm/IeUQeW0zeXj4BVGMcG12uBocOChInwMPBX18aQg6kcaDyfF3kfH+E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hpFq1RO6; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=QSWNzTPyDdM9Akrcdn/snuvkn5+Du6dgpcz0glW97DDacnR7/n6vgQExL7mSvE28emnTrCJ5I2Ge57ldpjSjoqQt00qAhe9f6uc8bGHPWxo4LXhxwsAXicN38NOpWEgoiZcfuHbbO6SdjS/299syDA+tEnNF0DPCkCKb2rl0yZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UGVi5+6i; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hpFq1RO6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGVi5+6i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717496003;
+	s=mimecast20190719; t=1717496634;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0OK7izK2puLI+f+lTt8pDpiorPuwVLLHSppnMeqF5OU=;
-	b=hpFq1RO6d670pBNu77rR28ZxSiFl81nPqVuYBuSx1dRwz0lvtLKtx5gfAzWItsVGhBFYfP
-	pLo/eJRZ602TQcb+b8xoIMDXZF6XhpoUOd9PumG50CEQcmR021fDFLNv0HkES8rGIndAmy
-	3baUY4jpqPyke6GIE+dCxs0SrA0jF4A=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=gKigJcIbs9B/HNEmDazSe4HaJqUizC2mRGUdcgjE9OM=;
+	b=UGVi5+6iqGcYCT1hvnbgJBs/lNb2qg5TtBz/m0cqpfBnMzeGRoCfAQB3BnYt9iFojrWpy+
+	BeK+JJqtOxsD5UVq0mk6hCc9tCL1/6bZIOAEQSRXQeE455v48mgacB9cH7SD/lrFvxKe2G
+	6h22PGaUuVF8Vyh33kLxLzaA6mMkZ8o=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-562-OshgSJdUPOamj-T6eMvVfQ-1; Tue, 04 Jun 2024 06:13:22 -0400
-X-MC-Unique: OshgSJdUPOamj-T6eMvVfQ-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ea8e94a56aso6198381fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 03:13:22 -0700 (PDT)
+ us-mta-576-2aNHexqaOZK_8mYAO6IReA-1; Tue, 04 Jun 2024 06:23:53 -0400
+X-MC-Unique: 2aNHexqaOZK_8mYAO6IReA-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4212a921250so3903575e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 03:23:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717496001; x=1718100801;
+        d=1e100.net; s=20230601; t=1717496632; x=1718101432;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qj8vTI2LXR4HXBOizcBl1XW0VI7FRaOpZEigzFh4T+M=;
-        b=lqJaBDQK219IIDrDVp1P7pKaTAeH6Dlqc184K3raJiqhLM04wiSUz3sUxiI1igvH23
-         mhlrTFUEPE1Cm/D8iUJ4NTEYKqPLgFdJFA9flLtykLVtSso++qeBT4BwYVDXQ1zqmIzx
-         839hRwdlFotcwXzFwF4YNg6hwCTi1hk6l4lKW+LXD+km4Nv7NnSqMxLzHqqW+4j6rZjM
-         NWxLIPViOMEAGnFHqXAYT0bjQuZt2LT9dNKNgUP1KfkfWq1A1F0m0ClZ8uwdUmH3FHJa
-         8WP6b1ZixnLitIvbEjM4PQyuOIMkPFLEteRhR91bLLk1+KxPwmGZ+EApB28ETT7xLois
-         HQCg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7uib92MxVBcSzHOjsZRFdqDOHrGs9J+KyUFewxytivseAFkEAuxkZSFJrJSw7xZe/IX22E9zicckNe+JlKZknaaGRg+olLNFRp91Xl2pIVn3v
-X-Gm-Message-State: AOJu0Yx2X8dnr92VMGN2j0+4v2Fscue1UBWBleU4F66asMbFn6P9pZAi
-	9OAA7h0ft/mTkxE7forh1F2NkXxUNqvPnQZjHn0YY0AACTttCeQufNp1SBEjIOcu9/agXnQ+fLA
-	Mr08EmyKVoSvG2TtnyKdu7ztyu5c4cci21osDStAH1bVMgouO1zc/QMF5636YtgrW7CDZgg==
-X-Received: by 2002:a05:6512:3b25:b0:52b:8909:58b1 with SMTP id 2adb3069b0e04-52b89702d1emr10432039e87.3.1717496000652;
-        Tue, 04 Jun 2024 03:13:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2KYZpo1PhJKQf4emed84mgFHvwqcq7vviZe/cQXCtmdquAQ4ToFV2c7RihQIOA2x+z432PQ==
-X-Received: by 2002:a05:6512:3b25:b0:52b:8909:58b1 with SMTP id 2adb3069b0e04-52b89702d1emr10431960e87.3.1717496000150;
-        Tue, 04 Jun 2024 03:13:20 -0700 (PDT)
+        bh=O6tikh5JBiLBm1a4LVwhDF58Q+DFMaskKtK9m6Z5K2w=;
+        b=e+Kv9sB2gCgAw2l7po6DQvodVYdbZc89kzO0TPiEHuTxvxIOGhP0HINienNgvU6Xw+
+         YPQxbj0Z9McEf+Ep5vHuKqzrT39KutQtODXH4Gkx8IHABDtXbsicS1QmtlVW05oBRkE1
+         Z9TRkjCD19s/+1nUwzCFu44uCexi42icHtZZJa54LeNDxh1jjDCO1A85c+YCCMg3v53C
+         EdsHFFlLGAxEkA5Gj0q4ZbUzKI+2qjyas2CcDcJ/9oT0mESA3cPKoi8+Uj1vJHtbxdAP
+         0YfYkYIItfSEC7paIKPzAupp4oiqoYPKng1cvabzF4Y69o6x8Ovqwr/Rs2wBhomJWcTt
+         jCYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX5Wmth5IiQBRYWEX1d7UXSz5qoGkmD+0Qv1s36jSIRJw8X9eUg2Lpg7a6CEg9rb/q1E5IM9Z/mKqcHsQOSReDD2JUTNn0kLMHwvjxajMqLHbP
+X-Gm-Message-State: AOJu0YyAEe8hZ46Dwx3oHcuw8N4zRnketKkjjvdz01V5l8MKjrK8ZU8t
+	ASEUjMhUPJZbgzkWJR1r2BtnRWwCTZL8IGuRLD+RjXmTbDiNbL87oagP05c6E2ns8nFq8Q/IwsN
+	tadsunLrTvBU5GzibMifD+JISVgLVbniYdoCMJmLfL2gBXBzQ1CSqa6gBqY8/LYbhDDy66Q==
+X-Received: by 2002:a05:6000:400a:b0:35e:51cf:6908 with SMTP id ffacd0b85a97d-35e51cf6a65mr6304501f8f.0.1717496632026;
+        Tue, 04 Jun 2024 03:23:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrhzH032AI5YL7gUIyX1AtuXBZC4N92hUDih0vFJ9VAbnPZz6xUFLcLH2nJjeRcYQ09o42TQ==
+X-Received: by 2002:a05:6000:400a:b0:35e:51cf:6908 with SMTP id ffacd0b85a97d-35e51cf6a65mr6304415f8f.0.1717496631543;
+        Tue, 04 Jun 2024 03:23:51 -0700 (PDT)
 Received: from gerbillo.redhat.com ([2a0d:3344:1b74:3a10::f71])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e537da921sm6658518f8f.17.2024.06.04.03.13.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c4388sm11260215f8f.14.2024.06.04.03.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 03:13:19 -0700 (PDT)
-Message-ID: <bea8b8bf1630309bb004f614e4a3c7f684a6acb6.camel@redhat.com>
-Subject: Re: [PATCH net-next v10 05/14] netdev: netdevice devmem allocator
+        Tue, 04 Jun 2024 03:23:51 -0700 (PDT)
+Message-ID: <31b376371d52797894809ad8a2edd4b76a76775f.camel@redhat.com>
+Subject: Re: [PATCH net-next v10 06/14] page_pool: convert to use netmem
 From: Paolo Abeni <pabeni@redhat.com>
 To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
@@ -94,12 +94,12 @@ Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
  <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand
  <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
  Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Date: Tue, 04 Jun 2024 12:13:15 +0200
-In-Reply-To: <20240530201616.1316526-6-almasrymina@google.com>
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+ linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
+Date: Tue, 04 Jun 2024 12:23:48 +0200
+In-Reply-To: <20240530201616.1316526-7-almasrymina@google.com>
 References: <20240530201616.1316526-1-almasrymina@google.com>
-	 <20240530201616.1316526-6-almasrymina@google.com>
+	 <20240530201616.1316526-7-almasrymina@google.com>
 Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
@@ -117,19 +117,56 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2024-05-30 at 20:16 +0000, Mina Almasry wrote:
-> diff --git a/net/core/devmem.c b/net/core/devmem.c
-> index d82f92d7cf9ce..d5fac8edf621d 100644
-> --- a/net/core/devmem.c
-> +++ b/net/core/devmem.c
-> @@ -32,6 +32,14 @@ static void net_devmem_dmabuf_free_chunk_owner(struct =
-gen_pool *genpool,
->  =09kfree(owner);
->  }
+> diff --git a/include/trace/events/page_pool.h b/include/trace/events/page=
+_pool.h
+> index 6834356b2d2ae..c5b6383ff2760 100644
+> --- a/include/trace/events/page_pool.h
+> +++ b/include/trace/events/page_pool.h
+> @@ -42,51 +42,52 @@ TRACE_EVENT(page_pool_release,
+>  TRACE_EVENT(page_pool_state_release,
 > =20
-> +static inline dma_addr_t net_devmem_get_dma_addr(const struct net_iov *n=
-iov)
+>  =09TP_PROTO(const struct page_pool *pool,
+> -=09=09 const struct page *page, u32 release),
+> +=09=09 netmem_ref netmem, u32 release),
 
-Minor nit: please no 'inline' keyword in c files.
+This causes a sparse warning, as the caller is still passing a 'page'
+argument.
+
+> =20
+> -=09TP_ARGS(pool, page, release),
+> +=09TP_ARGS(pool, netmem, release),
+> =20
+>  =09TP_STRUCT__entry(
+>  =09=09__field(const struct page_pool *,=09pool)
+> -=09=09__field(const struct page *,=09=09page)
+> +=09=09__field(netmem_ref,=09=09=09netmem)
+>  =09=09__field(u32,=09=09=09=09release)
+>  =09=09__field(unsigned long,=09=09=09pfn)
+>  =09),
+> =20
+>  =09TP_fast_assign(
+>  =09=09__entry->pool=09=09=3D pool;
+> -=09=09__entry->page=09=09=3D page;
+> +=09=09__entry->netmem=09=09=3D netmem;
+>  =09=09__entry->release=09=3D release;
+> -=09=09__entry->pfn=09=09=3D page_to_pfn(page);
+> +=09=09__entry->pfn=09=09=3D netmem_to_pfn(netmem);
+>  =09),
+> =20
+> -=09TP_printk("page_pool=3D%p page=3D%p pfn=3D0x%lx release=3D%u",
+> -=09=09  __entry->pool, __entry->page, __entry->pfn, __entry->release)
+> +=09TP_printk("page_pool=3D%p netmem=3D%lu pfn=3D0x%lx release=3D%u",
+> +=09=09  __entry->pool, (__force unsigned long)__entry->netmem,
+> +=09=09  __entry->pfn, __entry->release)
+>  );
+> =20
+>  TRACE_EVENT(page_pool_state_hold,
+> =20
+>  =09TP_PROTO(const struct page_pool *pool,
+> -=09=09 const struct page *page, u32 hold),
+> +=09=09 netmem_ref netmem, u32 hold),
+
+Same here.
 
 Thanks,
 
