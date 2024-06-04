@@ -1,56 +1,57 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0964143739
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 21:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2AC14C5B8
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 21:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717537661; cv=none; b=MeahhHPSoXaW6qvpU8ruaEa1HANNfHpGEkm91KvDAFwS/7E4jT5kJaegzuJ4growNZ2JZaS8URg8ESEur5R1+aMJIjk/flQy2LtPIab/GB7WcGEguIsjhN/rjXtdSai6+o8Awgjjl5J7zhol20Avvjah5IEj5pcE8Q6WkvBXruw=
+	t=1717537665; cv=none; b=bxJV5VmfbMyMfN5pquJ1y8ilIdL0s+EwiL5vxx+gLwVCBeca5ALcg4Cwmahwd27aAomGa89Re5wjpYt7GuQG8hqUYb/6NGHFo+3bosj2kv9yCiOUAUY3pL9DPw53iXO0IFC6W3BQRE3PlFj4yZ5VX1+vy+3yZ1j+rrFPIsKABt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717537661; c=relaxed/simple;
-	bh=b1fwLs8L3PPzev26UBlSg8JhfZG8X2v0wz71kYRDvME=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mPFT2+wbCqMP7Zr/DEqgK3mDiHf24o00IDUJ7yeEYCzSyMhMnoKhnSbzJAA4v3hGa4O/gEOiZJSjHGT+AXxPNJJbvGagyQYwuLuhawp2QAX8wy/czA3p5jUucrCF0s1HLDR3qdvarDNQsZ8D98pEc5N4886lq3xxDuQxlbeJGcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=QKZt8Yue; arc=none smtp.client-ip=209.85.160.180
+	s=arc-20240116; t=1717537665; c=relaxed/simple;
+	bh=veQ5oIfiTUvENwX+KQoiXEtvqEcqUv4Rq16hqY4Km9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSICsASQrlpYdvB953pMEaA1jkgrjv4eZph/1r0YxGxUGqQmCKPZcIQ1dMRh9UPjguSUHH7cAf0FHMHpx/JA6eA2l3wKPDmDY3TCrBSYdauc30lnWEWIe/op2cNfowhBjKyN6HAa0nkAo6pM+z+6fUIhdPdCSXTzmbL4jkswxWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=HbNJ9QXT; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="QKZt8Yue"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-44027277ebdso4490541cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 14:47:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="HbNJ9QXT"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-44020b1466aso5518511cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 14:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1717537658; x=1718142458; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tVAiho8NfA9+3WTngyAHQcgY5VXgLMOywVJbQtGO8Go=;
-        b=QKZt8YueWz8YkeqgIU89O+E5nXuXOua3ZE3RjRdfFD4m8cWVzPFxV1mXmxJSAbJmw7
-         ZMiS1k3eLcqL2hVg1l7pcuTZfX7aBL/A75hfeZx3KguoC1biNTX3Bjw9W6H6oYgQ26LW
-         ww9u5vcApdVIfy4ghvxmP26b1Ng8QqqmJh0RY2NNc3h4fRyGKyyX+8kZfMgR1tYaENYL
-         tcqk6eZEFN58NShrKAd+XOyi5C3clc8wcRCzW1bs5C/B0RoR4xBloj6YND0okFTV9GW4
-         OzehNUVdPWzJxXRgCz5wxa4VodsXIFxrL4btgr9f+C3EiF0iQ+WV89+FsVrxg4M/cZcK
-         fUQQ==
+        d=cloudflare.com; s=google09082023; t=1717537662; x=1718142462; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xi5+LcSX/bATxH1bP5/g0ND+UBH3qoQYjHtyB8LNLkE=;
+        b=HbNJ9QXTw1kP/iOYD/zVm27UI2YfJa2P2I9CwiY9+fGhe0BRJQXUyHSqSkEWkgbVD5
+         7bgNgnCuKuwf3xfPF5ywp5g2W8XOP1i7h40xq29lmmVBx4uxe/4a/1kSYf//ow8bSlrI
+         6gGLUaXhyKjkEANT9bfLVKsqjw9cCkRA13VHbZoa1QaS5/AtgbblxuVDOTkwJi7WQ1tw
+         TisbUTPQ5HUHRvGXhUr+hf3YpYEd9RN0UKXjfEqn6he72A9vEWxr8kUX29DXOFxJF8Ys
+         ybHwB+ai9F/QshoS7P2osYz6J7UjGUgUsxSGLD8cdech1l940PLmjoh443EIfWO0wff2
+         oysQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717537658; x=1718142458;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tVAiho8NfA9+3WTngyAHQcgY5VXgLMOywVJbQtGO8Go=;
-        b=UnBCcNZcsH+9zMGvqGEZ77QS2763h+sOAxEiQ85wr19YWRSFYWv8RU24s+/phlJ05+
-         sTKbkK/vQhBvPnd/q4yZMG+/a2J044BRQ4HqoZ8s8ZSYfAkGp67Os4eJ+nLpqgY1AACL
-         m0nGb2Msw6aZd6+NlEsaI5iVlksSZMNqYDuIyoQldkrcRZRklEZ6yhFHsizpqxe/ob6K
-         38dws8l48gaS8Dq/0GBo4FSE/YQheFnNIj2REJLmKAygvgnbZe050Il3Nr/v+6xL0L45
-         85QL9hA+NG0t49A/lt9ZEdIUSmcu6sbdYsoCjvsmYPyylv8w4UL4jdwLeLckFimQYYfb
-         GysA==
-X-Forwarded-Encrypted: i=1; AJvYcCXH/WTREZ1GS/HI0/mY/gZugaiBjOXw+wipV0tJ8mFRqg+QCDvApfUhDkjJ1DHFLtNxkwDLdPtgwcqLR1h6brTJ9Jx7JjQuyjulC15nZfoeeIaC
-X-Gm-Message-State: AOJu0YwF6QfNYnWrUwwH+clYlhkCAmWQlaUJ7NWMxd9sIUouoXr1r4WY
-	IDCp9xlNUCaE3wy2SPgpBexODd5Mpn1Fa3IqQcqtCfXqvhzt2Y1CflCf1JmWgxw=
-X-Google-Smtp-Source: AGHT+IEOHx4XoXSQ6kFRU5GEomKxiyrOHwNRgManl23j4v38Hr1ojjv2nQJf3Igp3esuwYvpzpunBw==
-X-Received: by 2002:a05:622a:1823:b0:43f:ee83:3362 with SMTP id d75a77b69052e-4402b6d6cd0mr7631391cf.61.1717537658447;
-        Tue, 04 Jun 2024 14:47:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717537662; x=1718142462;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xi5+LcSX/bATxH1bP5/g0ND+UBH3qoQYjHtyB8LNLkE=;
+        b=uWsEAjfvVRTa2skbGJFFap/4u5HraqnqqdSx+YXlRC0ss4CckDG2mUe7OANQ4AM+iq
+         mZqtJgX2g0Mtc+GSh4jsyFqj9IAXon2b7DrSMZoMJXIWuKD9LQRdQiLAKdAVdJ4910Mv
+         KAf5qiodMpWZH9EzDRNKqaFhBHDl2BjKJG6d5v3UCGSgP7bZ1wHANBOJnKz5xbKi+4nr
+         ZZhdDfoA9W72by4jzLn+zwFkr2fmUjewc0KPyksbA46+4Aoog7258hIwPbB+jR105/hj
+         9y6cd0b+eSP4ef6YulbcK4c6FPxZsuFEjNFzZTqo22ZvwJeTv6xQg9uzsW6+lkyx4QQS
+         hBow==
+X-Forwarded-Encrypted: i=1; AJvYcCXsOn8eEfki4p8tLfDcCzrd890wnWFY/E5NCXU51CmUGWtQsu6aEnrjcYOAlXdNPZPZ73n96bcFqs78TgbkESWQ5G+pQBAEk0vS7ZwsilPO4rIq
+X-Gm-Message-State: AOJu0Yyfg+U1DxHdJIhb/cVECdFceLbdUySzidVXL3yyc5l2rUe+I4I1
+	1kcXNycLsGQ+3EKAaXB83bibV0Hpe0yQ9JIQI9M6fTDcLS4LnRgf+DTJdikPUEg=
+X-Google-Smtp-Source: AGHT+IGCqyUWLOmLdxsaYYhKUdgkQw3I4w6PUaZPCC47ZQJ4/1mMkcgZLWaDyGJ5cfuUWXcsXf9IPw==
+X-Received: by 2002:a05:6214:440b:b0:6af:c491:8cfe with SMTP id 6a1803df08f44-6b030a76552mr5722376d6.45.1717537661766;
+        Tue, 04 Jun 2024 14:47:41 -0700 (PDT)
 Received: from debian.debian ([2a09:bac5:7a49:f9b::18e:1c])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff23c5ef2sm53183961cf.24.2024.06.04.14.47.35
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6af5576960bsm28947326d6.3.2024.06.04.14.47.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 14:47:37 -0700 (PDT)
-Date: Tue, 4 Jun 2024 14:47:34 -0700
+        Tue, 04 Jun 2024 14:47:41 -0700 (PDT)
+Date: Tue, 4 Jun 2024 14:47:38 -0700
 From: Yan Zhai <yan@cloudflare.com>
 To: netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -74,8 +75,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Neil Horman <nhorman@tuxdriver.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [RFC v3 net-next 0/7] net: pass receive socket to drop tracepoint
-Message-ID: <cover.1717529533.git.yan@cloudflare.com>
+Subject: [RFC v3 net-next 1/7] net: add rx_sk to trace_kfree_skb
+Message-ID: <983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
+References: <cover.1717529533.git.yan@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -84,76 +86,127 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1717529533.git.yan@cloudflare.com>
 
-We set up our production packet drop monitoring around the kfree_skb
-tracepoint. While this tracepoint is extremely valuable for diagnosing
-critical problems, it also has some limitation with drops on the local
-receive path: this tracepoint can only inspect the dropped skb itself,
-but such skb might not carry enough information to:
+skb does not include enough information to find out receiving
+sockets/services and netns/containers on packet drops. In theory
+skb->dev tells about netns, but it can get cleared/reused, e.g. by TCP
+stack for OOO packet lookup. Similarly, skb->sk often identifies a local
+sender, and tells nothing about a receiver.
 
-1. determine in which netns/container this skb gets dropped
-2. determine by which socket/service this skb oughts to be received
+Allow passing an extra receiving socket to the tracepoint to improve
+the visibility on receiving drops.
 
-The 1st issue is because skb->dev is the only member field with valid
-netns reference. But skb->dev can get cleared or reused. For example,
-tcp_v4_rcv will clear skb->dev and in later processing it might be reused
-for OFO tree.
-
-The 2nd issue is because there is no reference on an skb that reliably
-points to a receiving socket. skb->sk usually points to the local
-sending socket, and it only points to a receive socket briefly after
-early demux stage, yet the socket can get stolen later. For certain drop
-reason like TCP OFO_MERGE, Zerowindow, UDP at PROTO_MEM error, etc, it
-is hard to infer which receiving socket is impacted. This cannot be
-overcome by simply looking at the packet header, because of
-complications like sk lookup programs. In the past, single purpose
-tracepoints like trace_udp_fail_queue_rcv_skb, trace_sock_rcvqueue_full,
-etc are added as needed to provide more visibility. This could be
-handled in a more generic way.
-
-In this change set we propose a new 'sk_skb_reason_drop' call as a drop-in
-replacement for kfree_skb_reason at various local input path. It accepts
-an extra receiving socket argument. Both issues above can be resolved
-via this new argument.
-
-V2->V3: fixed drop_monitor function signatures; fixed a few uninitialized sks;
-Added a few missing report tags from test bots (also noticed by Dan
-Carpenter and Simon Horman).
-
-V1->V2: instead of using skb->cb, directly add the needed argument to
-trace_kfree_skb tracepoint. Also renamed functions as Eric Dumazet
-suggested.
-
-V2: https://lore.kernel.org/linux-kernel/cover.1717206060.git.yan@cloudflare.com/
-V1: https://lore.kernel.org/netdev/cover.1717105215.git.yan@cloudflare.com/
-
-Yan Zhai (7):
-  net: add rx_sk to trace_kfree_skb
-  net: introduce sk_skb_reason_drop function
-  ping: use sk_skb_reason_drop to free rx packets
-  net: raw: use sk_skb_reason_drop to free rx packets
-  tcp: use sk_skb_reason_drop to free rx packets
-  udp: use sk_skb_reason_drop to free rx packets
-  af_packet: use sk_skb_reason_drop to free rx packets
-
- include/linux/skbuff.h     | 10 ++++++++--
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+---
+v2->v3: fixed drop_monitor function prototype
+---
  include/trace/events/skb.h | 11 +++++++----
  net/core/dev.c             |  2 +-
  net/core/drop_monitor.c    |  9 ++++++---
- net/core/skbuff.c          | 22 ++++++++++++----------
- net/ipv4/ping.c            |  2 +-
- net/ipv4/raw.c             |  4 ++--
- net/ipv4/syncookies.c      |  2 +-
- net/ipv4/tcp_input.c       |  2 +-
- net/ipv4/tcp_ipv4.c        |  6 +++---
- net/ipv4/udp.c             | 10 +++++-----
- net/ipv6/raw.c             |  8 ++++----
- net/ipv6/syncookies.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  6 +++---
- net/ipv6/udp.c             | 10 +++++-----
- net/packet/af_packet.c     | 10 +++++-----
- 16 files changed, 65 insertions(+), 51 deletions(-)
+ net/core/skbuff.c          |  2 +-
+ 4 files changed, 15 insertions(+), 9 deletions(-)
 
+diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
+index 07e0715628ec..aa6b46b6172c 100644
+--- a/include/trace/events/skb.h
++++ b/include/trace/events/skb.h
+@@ -24,15 +24,16 @@ DEFINE_DROP_REASON(FN, FN)
+ TRACE_EVENT(kfree_skb,
+ 
+ 	TP_PROTO(struct sk_buff *skb, void *location,
+-		 enum skb_drop_reason reason),
++		 enum skb_drop_reason reason, struct sock *rx_sk),
+ 
+-	TP_ARGS(skb, location, reason),
++	TP_ARGS(skb, location, reason, rx_sk),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(void *,		skbaddr)
+ 		__field(void *,		location)
+ 		__field(unsigned short,	protocol)
+ 		__field(enum skb_drop_reason,	reason)
++		__field(void *,		rx_skaddr)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -40,12 +41,14 @@ TRACE_EVENT(kfree_skb,
+ 		__entry->location = location;
+ 		__entry->protocol = ntohs(skb->protocol);
+ 		__entry->reason = reason;
++		__entry->rx_skaddr = rx_sk;
+ 	),
+ 
+-	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
++	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s rx_skaddr=%p",
+ 		  __entry->skbaddr, __entry->protocol, __entry->location,
+ 		  __print_symbolic(__entry->reason,
+-				   DEFINE_DROP_REASON(FN, FNe)))
++				   DEFINE_DROP_REASON(FN, FNe)),
++		  __entry->rx_skaddr)
+ );
+ 
+ #undef FN
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 85fe8138f3e4..7844227ecbfd 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5233,7 +5233,7 @@ static __latent_entropy void net_tx_action(struct softirq_action *h)
+ 				trace_consume_skb(skb, net_tx_action);
+ 			else
+ 				trace_kfree_skb(skb, net_tx_action,
+-						get_kfree_skb_cb(skb)->reason);
++						get_kfree_skb_cb(skb)->reason, NULL);
+ 
+ 			if (skb->fclone != SKB_FCLONE_UNAVAILABLE)
+ 				__kfree_skb(skb);
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index 430ed18f8584..2e0ae3328232 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -109,7 +109,8 @@ static u32 net_dm_queue_len = 1000;
+ struct net_dm_alert_ops {
+ 	void (*kfree_skb_probe)(void *ignore, struct sk_buff *skb,
+ 				void *location,
+-				enum skb_drop_reason reason);
++				enum skb_drop_reason reason,
++				struct sock *rx_sk);
+ 	void (*napi_poll_probe)(void *ignore, struct napi_struct *napi,
+ 				int work, int budget);
+ 	void (*work_item_func)(struct work_struct *work);
+@@ -264,7 +265,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 
+ static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb,
+ 				void *location,
+-				enum skb_drop_reason reason)
++				enum skb_drop_reason reason,
++				struct sock *rx_sk)
+ {
+ 	trace_drop_common(skb, location);
+ }
+@@ -491,7 +493,8 @@ static const struct net_dm_alert_ops net_dm_alert_summary_ops = {
+ static void net_dm_packet_trace_kfree_skb_hit(void *ignore,
+ 					      struct sk_buff *skb,
+ 					      void *location,
+-					      enum skb_drop_reason reason)
++					      enum skb_drop_reason reason,
++					      struct sock *rx_sk)
+ {
+ 	ktime_t tstamp = ktime_get_real();
+ 	struct per_cpu_dm_data *data;
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 466999a7515e..2854afdd713f 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -1203,7 +1203,7 @@ bool __kfree_skb_reason(struct sk_buff *skb, enum skb_drop_reason reason)
+ 	if (reason == SKB_CONSUMED)
+ 		trace_consume_skb(skb, __builtin_return_address(0));
+ 	else
+-		trace_kfree_skb(skb, __builtin_return_address(0), reason);
++		trace_kfree_skb(skb, __builtin_return_address(0), reason, NULL);
+ 	return true;
+ }
+ 
 -- 
 2.30.2
 
