@@ -1,205 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA463148FE6;
-	Tue,  4 Jun 2024 15:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A9D4A11
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717516406; cv=none; b=J/ElMn9fnrAqKHj3Q04mRBprYqY+wqNGifUYyZiyMFLQLHCTS25Uj41KAD7XE06esu1IlUxJft+wyaIdDyTdhp7T/FBd6BJAtIa87svht6SR53OFyPuN5s0Fk6Vej4j+uOOzbygcSuA+kTNL5UlecU3UpWXjznFhBuuFSNTcJ7Q=
+	t=1717516673; cv=none; b=GGXnpXx/Qf23F7Qa53nfxG8SWruwWc7QAeO0Zn4Jlk8b3MqqyVHKPM+iOzOVu7WIUTPux8tXiHytgmRl4ixFEjEI0mOxvQQIVZuz50uzQBmggG+VJdhob6volAt4F6SLejnA2wIKW5W2GnsFONjnkUSlGXIl4i8MJwfm1bI8Bj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717516406; c=relaxed/simple;
-	bh=jqzyU34fAZG4/WHYtSv7WuekoSVYXVRfGb6ve0icGKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p24aUvh2sK+xxHKdgy6Nsc5etRY5CTEgKo1l4S7OjdgLXzMcnrN24i2KecpeN4cQrCEo2G5nkOI5AFT/v/bN9IbHUJb2/eqkeQWsl4pHDIpZORyG//m5nc3Wva1nnddlD6cegodt4qLjznDIf8yAzGpYSrbrXWn6acFsy+qIupw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D41BC2BBFC;
-	Tue,  4 Jun 2024 15:52:38 +0000 (UTC)
-Date: Tue, 4 Jun 2024 11:52:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, Allen Pais
- <apais@linux.microsoft.com>, Sebastian Reichel
- <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>, Guenter Roeck
- <linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>, Andi Shyti
- <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones
- <lee@kernel.org>, Samuel Holland <samuel@sholland.org>, Elad Nachman
- <enachman@marvell.com>, Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
- Johannes Berg <johannes.berg@intel.com>, Gregory Greenman
- <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>,
- Vinod Koul <vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Linus Walleij <linus.walleij@linaro.org>, Hans de Goede
- <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Nikita Kravets <teackot@gmail.com>, Jiri
- Slaby <jirislaby@kernel.org>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, Stanley Chang
- <stanley_chang@realtek.com>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers
- <ebiggers@google.com>, Kees Cook <keescook@chromium.org>, Ingo Molnar
- <mingo@kernel.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, Andrew
- Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, Abel
- Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
- Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg
- <eric.snowberg@oracle.com>, Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto
- <o-takashi@sakamocchi.jp>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
- Mark Brown <broonie@kernel.org>, Kuninori Morimoto
- <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
- linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
- linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
- linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
- linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
- linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, David Howells <dhowells@redhat.com>, "David S. Miller"
- <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
- <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko
- Stuebner <heiko@sntech.de>, Peter De Schrijver <pdeschrijver@nvidia.com>,
- Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Huang
- Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar
- <viresh.kumar@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
- <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>, Jean Delvare
- <jdelvare@suse.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, Chen-Yu
- Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Tony
- Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu
- Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Miquel
- Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>,
- Vignesh Raghavendra <vigneshr@ti.com>, Potnuri Bharat Teja
- <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Miri Korenblit
- <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, Mahesh
- J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>,
- Andrew Lunn <andrew@lunn.ch>, Gregory Clement
- <gregory.clement@bootlin.com>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
- <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen
- <Thinh.Nguyen@synopsys.com>, Helge Deller <deller@gmx.de>, Brian Foster
- <bfoster@redhat.com>, Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo
- <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
- <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot de
- Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jason Baron <jbaron@akamai.com>, Jim
- Cromie <jim.cromie@gmail.com>, Paul Moore <paul@paul-moore.com>, James
- Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Dmitry
- Kasatkin <dmitry.kasatkin@gmail.com>, Clemens Ladisch <clemens@ladisch.de>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam
- Girdwood <lgirdwood@gmail.com>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
- sysfs_match_string()
-Message-ID: <20240604115235.044acfd6@gandalf.local.home>
-In-Reply-To: <87tti9cfry.fsf@intel.com>
-References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
-	<87tti9cfry.fsf@intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717516673; c=relaxed/simple;
+	bh=vhZYleApZN8kWLF7LONqg/TsuUedJgn2Sb+eQ5I6y7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ey809fdFdVj1alKyIDNeF1mz31+e1gMubdr6refQx9kTlsh3rgYJ8xoHwVMgLK+ubdxZ2rGp5iDhAPZocjd3n4ohTygmtKp+5xcmI2AO4hGNDXHIODX9nQQRvxDYh30Lu0uYtEYRTGIErUrXktZitoEIWIRtfW9Mv8ed9IhVvC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IKbbDg05; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKbbDg05"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717516671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iY8Smgr4TinEDzI3seLjT/wKu7RCmTGwq48l1prhDuY=;
+	b=IKbbDg05aeYlzeVyOGR5sTiEYHoKFphtl8FkuRmTU4qDy53FrBOKrOBiSmf2M6PeC3vWzG
+	VpqeMKHxlUGZH5LnRLIOELPPacrtrvWziz+cjNbytBkrdBq6Ui5lXaoPJi6lXAzHBa3BJF
+	7YGEnwK9PrSZvb8ISJxiGyeN3rYmPW0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-335-TsCE4RD2PBaCbN33pNukkQ-1; Tue, 04 Jun 2024 11:57:50 -0400
+X-MC-Unique: TsCE4RD2PBaCbN33pNukkQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a68f5c5f31eso128343666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 08:57:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717516669; x=1718121469;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iY8Smgr4TinEDzI3seLjT/wKu7RCmTGwq48l1prhDuY=;
+        b=jvdXyF+X7dy6SeSxEAz7RRZtTy83Xf9BgJNrEsxQdHlzNXYRZtBCFH/xYJHzAo7/zW
+         sNNwBYybcxTfSJza/d+vR032vA7ORcBSK+5sJWab02ibSCfBDZxHpOYp0SIFaEZXfQL5
+         wb4t1fDm20Yra4gnRRL6Bxq3TkgEiJq/IEOkn58x4i9TGDLjG9hkCELClAyAYcM6hShQ
+         sTcsnQCIuyNmeOTMvZNoPBmsQUGMYntG+A6R37MxavL5xR11jaEH3KNR8iQujjHd5VuF
+         t6lDDimZUeBzmQo8WXXeM6HQLv8HtdqjTPuTgQTKTQXgMB0MjTLjPhoOglnvxeGETRLg
+         yP5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXv3aZbCBaCvdQf1dbxnhrRBb9PXDHTfJZO5EJSbGFcWYHOesmYY7NTprMpL8NKKSVRvfMzmNF5sz2NevfkYJE59f47k4Zeq9YNRVH9wCm0qa4/
+X-Gm-Message-State: AOJu0YwhnIGx3j1KWAtl10HxJ92o9N8nBeNl12DL6cehEEo4kkHXCksT
+	xqLPYYDQDtwoPAh1OgJMr02mhI2JmmVKEGE2gGvCDpZ4qFar/2C3lkjl4ym/QO/lFinNNNI2EOR
+	cJmOOV/SEIilc0R8Y+QCERbbSD7M3ZfiqRYKAUTZU/4Y3y8AgBi5rEnLEoIFgTxuiXG86xw==
+X-Received: by 2002:a50:d65d:0:b0:578:64b9:d02e with SMTP id 4fb4d7f45d1cf-57a8bcd7c9emr10601a12.40.1717516668757;
+        Tue, 04 Jun 2024 08:57:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZ80kTYg345fHCJuh2+pANonRw+zjSWqYbitUEjpOBdxl6OvwCwCuHkL4bn4QKZ8cVZwCvRA==
+X-Received: by 2002:a50:d65d:0:b0:578:64b9:d02e with SMTP id 4fb4d7f45d1cf-57a8bcd7c9emr10582a12.40.1717516668361;
+        Tue, 04 Jun 2024 08:57:48 -0700 (PDT)
+Received: from [192.168.0.161] (host-87-11-37-195.retail.telecomitalia.it. [87.11.37.195])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a86a6a5d3sm898050a12.65.2024.06.04.08.57.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 08:57:47 -0700 (PDT)
+Message-ID: <b298bca1-190f-48a2-8d2c-58d54b879c72@redhat.com>
+Date: Tue, 4 Jun 2024 17:57:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] sched/rt: Clean up usage of rt_task()
+To: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ Metin Kaya <metin.kaya@arm.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Phil Auld <pauld@redhat.com>
+References: <20240604144228.1356121-1-qyousef@layalina.io>
+ <20240604144228.1356121-2-qyousef@layalina.io>
+From: Daniel Bristot de Oliveira <bristot@redhat.com>
+In-Reply-To: <20240604144228.1356121-2-qyousef@layalina.io>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, pt-BR, it-IT
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 04 Jun 2024 10:45:37 +0300
-Jani Nikula <jani.nikula@linux.intel.com> wrote:
+On 6/4/24 16:42, Qais Yousef wrote:
+> -	    (wakeup_rt && !dl_task(p) && !rt_task(p)) ||
+> +	    (wakeup_rt && !realtime_task(p)) ||
 
-> On Sun, 02 Jun 2024, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > Make two APIs look similar. Hence convert match_string() to be
-> > a 2-argument macro. In order to avoid unneeded churn, convert
-> > all users as well. There is no functional change intended.  
-> 
-> Why do we think it's a good idea to increase and normalize the use of
-> double-underscore function names across the kernel, like
-> __match_string() in this case? It should mean "reserved for the
-> implementation, not to be called directly".
-> 
-> If it's to be used directly, it should be named accordingly, right?
-> 
-> Being in line with __sysfs_match_string() isn't a great argument alone,
-> because this adds three times the number of __match_string() calls than
-> there are __sysfs_match_string() calls. It's not a good model to follow.
-> Arguably both should be renamed.
+I do not like bikeshedding, and no hard feelings...
 
-Agreed. I want to get rid of any functions starting with an underscore
-except for those that are basically the same function used internally for
-convenience.
+But rt is a shortened version of realtime, and so it is making *it less*
+clear that we also have DL here.
 
-Perhaps "match_string_dynamic()"? Where it is used for dynamically
-allocated arrays without known size. Or, allow a third parameter for
-dynamic arrays.
+I know we can always read the comments, but we can do without changes
+as well...
 
-#define match_string(_a, _s, ...)
-	char _______STR[] = __stringify((__VA_ARGS__));	\
-	if (sizeof(_______STR) > 3)			\
-		__match_string(_a, _s, ##__VA_ARGS__);  \
-	else						\
-		__match_string(_a, _s, ARRAY_SIZE(_a));
+I would suggest finding the plural version for realtime_task()... so
+we know it is not about the "rt" scheduler, but rt and dl schedulers.
 
-What the above stringify((__VA_ARGS__)) does is to check the size of any
-args added to match_string(). if there isn't any, it will turn into:
-"()\0", which is of size 3. If you add an argument, it will be:
-"(<arg>)\0", which will have a size greater than three.
-
-(trace_printk() does this trick in include/linux/kernel.h).
-
-This way, both:
-
- match_string(array, sting);
-
-or
-
- match_string(array, string, size);
-
-will work.
-
--- Steve
+-- Daniel
 
