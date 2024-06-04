@@ -1,237 +1,227 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE5A81736;
-	Mon,  3 Jun 2024 23:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA381384B6;
+	Tue,  4 Jun 2024 01:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717458599; cv=none; b=PFBhog5+0+ohQ2+SACHG/G3mHmHc4uc+V9Ej9UM3p/FCCSb7AkVn8GFFNVfsyBp7doJYe8WX8lJNWa8fmjAbdiQ5h0Qi6uf/yHmfWcw+jBZPyf4TAbW2Zv4VWEVHrpwK1oeZllm2N8cJM/u4c9Tpf7q53qkH3GYBm+B61ROD0XY=
+	t=1717464602; cv=none; b=ioU3orHxl54TlAI9kFxUNQljuC8pTEO3dQoHWesxgGp7xJk3HnQ2hIhxsozO8xSzFa8wFCqEbsYjzF4IrOUjNfeg3GM++lg7MX/CKiPenNRzqq+ISOCFlctYEnjzm+gFeHQIHnZnYYK/RRz2eHCWa3NtJ5UNzlojKCdBCNXRD18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717458599; c=relaxed/simple;
-	bh=J7ujfKDIro1AuoqzLXhgulpzg2GDQ0yWj3lCNmLSGEg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sbvtV0RTj1/x1WfD+6qYVztAUZM1KkjZMjEck2Zg4jU2xyzaALNWs/nistTwzytKzpmkhQHvBo0nsRZfc35qCI3GrMMrzKdnvd2Kza7M2/wy9UXjJu0Uubhrm78oMIm4XIBA/M/FN+WT5ctifYZqQJ2hJ6323oh+5PZN7gLVvGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfsmoDwN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717464602; c=relaxed/simple;
+	bh=+0MwbPrNLjHstEP7nUmI9nU5cr+C1uEqCmU+IfVJhBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TfPn+NeO5ot6+FpPm6BRPnuTYTwlY+6t9FKjWY3wFjhVGENpmihrIeu0tTdVUYsLq7/ncYt4tHsFXOuDlFieQvGd17hEJ4oqJ7Igy0tFPIU8VuQ+F2cAVJjMyyAaPcidHjy8k/j9nnn+cz2sm3kUkuJrTEZc07FsokBFwEta6Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnlgXxEM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfsmoDwN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D331C2BD10;
-	Mon,  3 Jun 2024 23:49:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnlgXxEM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79DCCC2BD10;
+	Tue,  4 Jun 2024 01:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717458598;
-	bh=J7ujfKDIro1AuoqzLXhgulpzg2GDQ0yWj3lCNmLSGEg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZfsmoDwNz6sK6wfcnrzqNKad6rKRLCFADnrkpDTawNrzIrwJCLVeL8fe/6AKQyT3t
-	 xAd7d+BQrQXW4mUMItVpAF5L2GzD8Ij52IeFlElwa3ps8oTtX4ZkEUCAJOs1+Vaxhx
-	 4ny836Bm7WoroUYa9nePsW1of5ae5MI+lFvPHWfBTtPYraFz0hBe8e41Qd1fEYMwIv
-	 MGbbqut/3KDHMAE04EUjEAyI/pP8NZ9fozvnHSUkC5tsMGmP3RqUT9rjfcLi9qniz9
-	 yrEbVHbGqfWKwg/5qeWPFGn3+pmIVc2XB9oFuO0bBuHvGwypnNkoLcnUYrKWhZtTWz
-	 p+DiVM4Q+rYkg==
-Date: Tue, 4 Jun 2024 08:49:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, don <zds100@gmail.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] tracing/fprobe: Support raw tracepoint events on
- modules
-Message-Id: <20240604084955.29b9440687522a1347e0e7cd@kernel.org>
-In-Reply-To: <fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
-References: <171723014778.258703.6731294779199848686.stgit@devnote2>
-	<171723016594.258703.1629777910752596529.stgit@devnote2>
-	<fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1717464601;
+	bh=+0MwbPrNLjHstEP7nUmI9nU5cr+C1uEqCmU+IfVJhBs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bnlgXxEMpTvmKahSPWzVW2eioXzJ7InXnLcF2Rs1JSkMfQA93wXQBY9/XKuZVVXJi
+	 oeHmsD31IY3HyHMYtTD7PSrvj9S1H3KP04TKlWZzgFGXGWPDdoy6u+l15hTWpd+gzW
+	 rrkqErwJ5iAh1ROObeeg8gEUmGPLn4HkWiomXClAUEV1Ygn9FUP+Qbw+IPeT8+Ws56
+	 I8+zq8Wdj1Ege6tKvptsdljRUJrjovlC8dK+XkPQEaDh/6yi5A2iz8Lc911AkK3iVQ
+	 9J/Qo4EvtrUegklsv+qidHqtelitfCS46Jvgeoe5elf4+5tozjA1SGSUxdf7rn2IsA
+	 VjsM2fsbxxo3g==
+Message-ID: <3f98a7da-19c8-4e91-94d7-e8256cc0cb1e@kernel.org>
+Date: Tue, 4 Jun 2024 10:29:35 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Corey Minyard <minyard@acm.org>, Allen Pais <apais@linux.microsoft.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Perry Yuan <perry.yuan@amd.com>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>,
+ Guenter Roeck <linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>,
+ Andi Shyti <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Lee Jones <lee@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ Elad Nachman <enachman@marvell.com>,
+ Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Gregory Greenman <gregory.greenman@intel.com>,
+ Benjamin Berg <benjamin.berg@intel.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>,
+ Vinod Koul <vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Hans de Goede
+ <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Nikita Kravets <teackot@gmail.com>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Stanley Chang <stanley_chang@realtek.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Abdel Alkuor <abdelalkuor@geotab.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Eric Biggers <ebiggers@google.com>, Kees Cook <keescook@chromium.org>,
+ Ingo Molnar <mingo@kernel.org>, "Steven Rostedt (Google)"
+ <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>,
+ Abel Wu <wuyun.abel@bytedance.com>,
+ John Johansen <john.johansen@canonical.com>, Mimi Zohar
+ <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Takashi Iwai <tiwai@suse.de>,
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ Mark Brown <broonie@kernel.org>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, linux-clk@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-pm@vger.kernel.org, qat-linux@intel.com,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Niklas Cassel <cassel@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>,
+ Peter De Schrijver <pdeschrijver@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Huang Rui <ray.huang@amd.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>,
+ Jean Delvare <jdelvare@suse.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Kalle Valo <kvalo@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ JC Kuo <jckuo@nvidia.com>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>,
+ Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>,
+ Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Jun 2024 15:50:55 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On 6/3/24 00:57, Andy Shevchenko wrote:
+> Make two APIs look similar. Hence convert match_string() to be
+> a 2-argument macro. In order to avoid unneeded churn, convert
+> all users as well. There is no functional change intended.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-> On 2024-06-01 04:22, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Support raw tracepoint event on module by fprobe events.
-> > Since it only uses for_each_kernel_tracepoint() to find a tracepoint,
-> > the tracepoints on modules are not handled. Thus if user specified a
-> > tracepoint on a module, it shows an error.
-> > This adds new for_each_module_tracepoint() API to tracepoint subsystem,
-> > and uses it to find tracepoints on modules.
-> 
-> Hi Masami,
-> 
-> Why prevent module unload when a fprobe tracepoint is attached to a
-> module ? This changes the kernel's behavior significantly just for the
-> sake of instrumentation.
+[...]
 
-I don't prevent module unloading all the time, just before registering
-tracepoint handler (something like booking a ticket :-) ).
-See the last hunk of this patch, it puts the module before exiting
-__trace_fprobe_create().
+> diff --git a/drivers/ata/pata_hpt366.c b/drivers/ata/pata_hpt366.c
+> index bdccd1ba1524..8134f9290791 100644
+> --- a/drivers/ata/pata_hpt366.c
+> +++ b/drivers/ata/pata_hpt366.c
+> @@ -178,7 +178,7 @@ static int hpt_dma_blacklisted(const struct ata_device *dev, char *modestr,
+>  
+>  	ata_id_c_string(dev->id, model_num, ATA_ID_PROD, sizeof(model_num));
+>  
+> -	i = match_string(list, -1, model_num);
+> +	i = __match_string(list, -1, model_num);
+>  	if (i >= 0) {
+>  		ata_dev_warn(dev, "%s is not supported for %s\n", modestr, list[i]);
+>  		return 1;
+> diff --git a/drivers/ata/pata_hpt37x.c b/drivers/ata/pata_hpt37x.c
+> index c0329cf01135..2d0b659bbd65 100644
+> --- a/drivers/ata/pata_hpt37x.c
+> +++ b/drivers/ata/pata_hpt37x.c
+> @@ -226,7 +226,7 @@ static int hpt_dma_blacklisted(const struct ata_device *dev, char *modestr,
+>  
+>  	ata_id_c_string(dev->id, model_num, ATA_ID_PROD, sizeof(model_num));
+>  
+> -	i = match_string(list, -1, model_num);
+> +	i = __match_string(list, -1, model_num);
+>  	if (i >= 0) {
+>  		ata_dev_warn(dev, "%s is not supported for %s\n",
+>  			     modestr, list[i]);
 
-> 
-> As an alternative, LTTng-modules attach/detach to/from modules with the
-> coming/going notifiers, so the instrumentation gets removed when a
-> module is unloaded rather than preventing its unload by holding a module
-> reference count. I would recommend a similar approach for fprobe.
+Looks good to me.
 
-Yes, since tracepoint subsystem provides a notifier API to notify the
-tracepoint is gone, fprobe already uses it to find unloading and
-unregister the target function. (see __tracepoint_probe_module_cb)
-
-Thank you!
-
-
-> 
-> Thanks,
-> 
-> Mathieu
-> 
-> 
-> > 
-> > Reported-by: don <zds100@gmail.com>
-> > Closes: https://lore.kernel.org/all/20240530215718.aeec973a1d0bf058d39cb1e3@kernel.org/
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >   Changes in v2:
-> >    - Fix build errors with CONFIG_MODULES=y.
-> > ---
-> >   kernel/trace/trace_fprobe.c |   46 ++++++++++++++++++++++++++++++++++++-------
-> >   1 file changed, 38 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> > index 62e6a8f4aae9..1d8a983e1edc 100644
-> > --- a/kernel/trace/trace_fprobe.c
-> > +++ b/kernel/trace/trace_fprobe.c
-> > @@ -385,6 +385,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
-> >   					       const char *event,
-> >   					       const char *symbol,
-> >   					       struct tracepoint *tpoint,
-> > +					       struct module *mod,
-> >   					       int maxactive,
-> >   					       int nargs, bool is_return)
-> >   {
-> > @@ -405,6 +406,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
-> >   		tf->fp.entry_handler = fentry_dispatcher;
-> >   
-> >   	tf->tpoint = tpoint;
-> > +	tf->mod = mod;
-> >   	tf->fp.nr_maxactive = maxactive;
-> >   
-> >   	ret = trace_probe_init(&tf->tp, event, group, false, nargs);
-> > @@ -895,8 +897,23 @@ static struct notifier_block tracepoint_module_nb = {
-> >   struct __find_tracepoint_cb_data {
-> >   	const char *tp_name;
-> >   	struct tracepoint *tpoint;
-> > +	struct module *mod;
-> >   };
-> >   
-> > +static void __find_tracepoint_module_cb(struct tracepoint *tp, void *priv)
-> > +{
-> > +	struct __find_tracepoint_cb_data *data = priv;
-> > +
-> > +	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
-> > +		data->tpoint = tp;
-> > +		data->mod = __module_text_address((unsigned long)tp->probestub);
-> > +		if (!try_module_get(data->mod)) {
-> > +			data->tpoint = NULL;
-> > +			data->mod = NULL;
-> > +		}
-> > +	}
-> > +}
-> > +
-> >   static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
-> >   {
-> >   	struct __find_tracepoint_cb_data *data = priv;
-> > @@ -905,14 +922,28 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
-> >   		data->tpoint = tp;
-> >   }
-> >   
-> > -static struct tracepoint *find_tracepoint(const char *tp_name)
-> > +/*
-> > + * Find a tracepoint from kernel and module. If the tracepoint is in a module,
-> > + * this increments the module refcount to prevent unloading until the
-> > + * trace_fprobe is registered to the list. After registering the trace_fprobe
-> > + * on the trace_fprobe list, the module refcount is decremented because
-> > + * tracepoint_probe_module_cb will handle it.
-> > + */
-> > +static struct tracepoint *find_tracepoint(const char *tp_name,
-> > +					  struct module **tp_mod)
-> >   {
-> >   	struct __find_tracepoint_cb_data data = {
-> >   		.tp_name = tp_name,
-> > +		.mod = NULL,
-> >   	};
-> >   
-> >   	for_each_kernel_tracepoint(__find_tracepoint_cb, &data);
-> >   
-> > +	if (!data.tpoint && IS_ENABLED(CONFIG_MODULES)) {
-> > +		for_each_module_tracepoint(__find_tracepoint_module_cb, &data);
-> > +		*tp_mod = data.mod;
-> > +	}
-> > +
-> >   	return data.tpoint;
-> >   }
-> >   
-> > @@ -996,6 +1027,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
-> >   	char abuf[MAX_BTF_ARGS_LEN];
-> >   	char *dbuf = NULL;
-> >   	bool is_tracepoint = false;
-> > +	struct module *tp_mod = NULL;
-> >   	struct tracepoint *tpoint = NULL;
-> >   	struct traceprobe_parse_context ctx = {
-> >   		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
-> > @@ -1080,7 +1112,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
-> >   
-> >   	if (is_tracepoint) {
-> >   		ctx.flags |= TPARG_FL_TPOINT;
-> > -		tpoint = find_tracepoint(symbol);
-> > +		tpoint = find_tracepoint(symbol, &tp_mod);
-> >   		if (!tpoint) {
-> >   			trace_probe_log_set_index(1);
-> >   			trace_probe_log_err(0, NO_TRACEPOINT);
-> > @@ -1110,8 +1142,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
-> >   		goto out;
-> >   
-> >   	/* setup a probe */
-> > -	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
-> > -				argc, is_return);
-> > +	tf = alloc_trace_fprobe(group, event, symbol, tpoint, tp_mod,
-> > +				maxactive, argc, is_return);
-> >   	if (IS_ERR(tf)) {
-> >   		ret = PTR_ERR(tf);
-> >   		/* This must return -ENOMEM, else there is a bug */
-> > @@ -1119,10 +1151,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
-> >   		goto out;	/* We know tf is not allocated */
-> >   	}
-> >   
-> > -	if (is_tracepoint)
-> > -		tf->mod = __module_text_address(
-> > -				(unsigned long)tf->tpoint->probestub);
-> > -
-> >   	/* parse arguments */
-> >   	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-> >   		trace_probe_log_set_index(i + 2);
-> > @@ -1155,6 +1183,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
-> >   	}
-> >   
-> >   out:
-> > +	if (tp_mod)
-> > +		module_put(tp_mod);
-> >   	traceprobe_finish_parse(&ctx);
-> >   	trace_probe_log_clear();
-> >   	kfree(new_argv);
-> > 
-> 
-> -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
-> 
-
+Acked-by: Damien Le Moal <dlemoal@kernel.org>	# drivers/ata/
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Damien Le Moal
+Western Digital Research
+
