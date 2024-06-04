@@ -1,170 +1,417 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776E81474C9
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB0813A863;
+	Tue,  4 Jun 2024 14:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512168; cv=none; b=mF9dnoOiRgL7B1RMBsoefcm1vA8CXOmrm8jR3giYrN0DUmrMv2mtz1gqmuGj920Vk52Swwo6ykaXBvRYzJaJ9VAwk0aWuw6eGZwBzIyhTMbFSukzU7AN7qLhVwvQNJ4AlHYk4fFsUP/oT9kfpmalJEnIMbPkSm2IlJjT+unDheg=
+	t=1717512289; cv=none; b=p2jlfGKL8KD6cUZA5Vm8/DvvOsK9EGojqblcgOi54uk8kKceiqgQg2QkNQL/07N2itJzSDGlPOEXqmpk2uEWs6/NNTAiNqamErN/eLQw2E2y/pGW6U5mXiBDqcBSbpLIOGBq4VycC2z5+K6VxAvy05u2Wnv0+NhH7Q5YRb02/us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717512168; c=relaxed/simple;
-	bh=7We/+tZi8h0RWf40KLSzJGP5wUTKovwlp/wvAjS926c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vk9EIXtBkbasXVBmRzOo4rxWcEk9j0hdvC3ypJ1qmPmRznooS6w9Wf66kPzgi5i6uSLNl/l/vKfT2HknzZnTvQtC67EdzwNK5Cfw0aLsSRc92eqXqQpLiwfQ5edjI5oON8EHzdJzMHyKzhunkbH2nMOh4xTNgmo9IPx5A5U6ft8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=DmIt4Ukh; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="DmIt4Ukh"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4213b94b7e7so14739775e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1717512165; x=1718116965; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yRCAwCBL+BIsgnWJn4hsN99PIDBFtmRQDHcbx/zD1tU=;
-        b=DmIt4UkhLwC8rtxLkxM7bGgFH954BKTMZhTPZaSEcHrERHxWy9h47WRdVFav76ngzA
-         N4TbD8E8PJhhUXCbm2cxtb8IV/B6QmlKvRZXVKEMqxeOjX4rifAWR+leOYyu9sp/hlwb
-         t9pEQfCmkI4l6mTnLXBdnvln5DaWxQY/yHaeIzYftrB+9DbTrIxCC5mWWtJ6+8uwvqFZ
-         HZ4Q0T30kIfNZjHYvQY64/MxNIYuCbAnsAOeI/Mfp6oYbzxdaNo+rwA7Pufcc7/OQOUu
-         scJZCBufwTFYegOoF26SwDL6pabdr8pfF+tOjDfSNa9MCxaci5XDF6C75wNJ1jpPKarB
-         5tBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717512165; x=1718116965;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yRCAwCBL+BIsgnWJn4hsN99PIDBFtmRQDHcbx/zD1tU=;
-        b=YcSTmXnkuXjrSnlFLIZD7x4uqmsxmJlv9qNbdX5ELHwhQgn9CGJfK12iq2Hl/KXHE9
-         8M8rfWQkEVWZkytRWFZr45gNdUCZqSeNxBcK01yodel3NmaVlEY1SXiX+bgICWhngoP3
-         yL7Jqb+h/T1QuskJHJ0i4FL+YpwvuLRT/AGCl//tqZwNU0Eu46Z62H2a6Q5Axiw3iR/j
-         MAiaxdoE+SQ0vyHtqcLDJXaE0ZvBg1FUK63C/pVwyma9SKuo5PWfGTuAAg0ZD1mIDmnC
-         qli2663yi0uucmqcSI6e5puho+kGMmq/RnGKFHbXYjf1geKS0kRyqvs1ScuLsm//cc8H
-         76Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdQgf7S5xdcgCllNz/OHhs/aDTCSq0y7eLLoQ0rVId+7Vl9m2x8i0v53bnSNv81R3XKwTofUvMp+Abqn/oOiDjkStV8KibCLRMvmJWd9Oa/nq9
-X-Gm-Message-State: AOJu0Yx5x14NnPGOEU4DDwnNfWepgI+u3Q8mfbpibu+kR/ESZ/f/c1aI
-	UDRww7Z2oImztW/JcIHOmoq1iDieTdeL0wBMTFL6C/qcAomu6N/xWq0t9W2uSE8=
-X-Google-Smtp-Source: AGHT+IH0BLezorijkm6LilA7yxfjptfWPVcGAoCl9lPMtaigyEyQH11++G7gyrhU4E3tJmmgdakkBA==
-X-Received: by 2002:a05:600c:19d2:b0:420:1a72:69dd with SMTP id 5b1f17b1804b1-4214511cb66mr29747005e9.10.1717512164925;
-        Tue, 04 Jun 2024 07:42:44 -0700 (PDT)
-Received: from airbuntu.BoongateKia.local ([87.127.96.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4213eca8a51sm62423295e9.14.2024.06.04.07.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 07:42:44 -0700 (PDT)
-From: Qais Yousef <qyousef@layalina.io>
-To: Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Metin Kaya <metin.kaya@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
+	s=arc-20240116; t=1717512289; c=relaxed/simple;
+	bh=Ptj2vnRcn+8Koe3QLVKz3J3lbtlSAOO3krekDH4wPXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJVsxO1TY/eyclOTBfXL3hS4j43QMIGgWCyx/BLgQLJthax0kAo/dXIBK+OiZ5K6AZuwUYQ/NSL70XVoI//ZngiU9Fl0RvygTnBAZcLh63HKP/bNCOPmQBpEV0kPvjtzZANlB8Jwdfp1uyMuCdtxrDMlF7iSd0rESQyiKIB7nnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF03A1042;
+	Tue,  4 Jun 2024 07:45:10 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DF283F64C;
+	Tue,  4 Jun 2024 07:44:43 -0700 (PDT)
+Date: Tue, 4 Jun 2024 15:44:40 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v5 2/2] sched/rt, dl: Convert functions to return bool
-Date: Tue,  4 Jun 2024 15:42:28 +0100
-Message-Id: <20240604144228.1356121-3-qyousef@layalina.io>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604144228.1356121-1-qyousef@layalina.io>
-References: <20240604144228.1356121-1-qyousef@layalina.io>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Florent Revest <revest@chromium.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v3 00/27] function_graph: Allow multiple users for
+ function graph tracing
+Message-ID: <Zl8oWNhkEPleJ3B_@J2N7QTR9R3>
+References: <20240603190704.663840775@goodmis.org>
+ <20240604081850.59267aa9@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604081850.59267aa9@rorschach.local.home>
 
-{rt, realtime, dl}_{task, prio}() functions return value is actually
-a bool.  Convert their return type to reflect that.
+Hi Steve, Masami,
 
-Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Qais Yousef <qyousef@layalina.io>
----
- include/linux/sched/deadline.h |  8 +++-----
- include/linux/sched/rt.h       | 16 ++++++----------
- 2 files changed, 9 insertions(+), 15 deletions(-)
+On Tue, Jun 04, 2024 at 08:18:50AM -0400, Steven Rostedt wrote:
+> 
+> Masami,
+> 
+> This series passed all my tests, are you comfortable with me pushing
+> them to linux-next?
 
-diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
-index 5cb88b748ad6..3a912ab42bb5 100644
---- a/include/linux/sched/deadline.h
-+++ b/include/linux/sched/deadline.h
-@@ -10,18 +10,16 @@
- 
- #include <linux/sched.h>
- 
--static inline int dl_prio(int prio)
-+static inline bool dl_prio(int prio)
- {
--	if (unlikely(prio < MAX_DL_PRIO))
--		return 1;
--	return 0;
-+	return unlikely(prio < MAX_DL_PRIO);
- }
- 
- /*
-  * Returns true if a task has a priority that belongs to DL class. PI-boosted
-  * tasks will return true. Use dl_policy() to ignore PI-boosted tasks.
-  */
--static inline int dl_task(struct task_struct *p)
-+static inline bool dl_task(struct task_struct *p)
- {
- 	return dl_prio(p->prio);
- }
-diff --git a/include/linux/sched/rt.h b/include/linux/sched/rt.h
-index a055dd68a77c..91ef1ef2019f 100644
---- a/include/linux/sched/rt.h
-+++ b/include/linux/sched/rt.h
-@@ -6,25 +6,21 @@
- 
- struct task_struct;
- 
--static inline int rt_prio(int prio)
-+static inline bool rt_prio(int prio)
- {
--	if (unlikely(prio < MAX_RT_PRIO && prio >= MAX_DL_PRIO))
--		return 1;
--	return 0;
-+	return unlikely(prio < MAX_RT_PRIO && prio >= MAX_DL_PRIO);
- }
- 
--static inline int realtime_prio(int prio)
-+static inline bool realtime_prio(int prio)
- {
--	if (unlikely(prio < MAX_RT_PRIO))
--		return 1;
--	return 0;
-+	return unlikely(prio < MAX_RT_PRIO);
- }
- 
- /*
-  * Returns true if a task has a priority that belongs to RT class. PI-boosted
-  * tasks will return true. Use rt_policy() to ignore PI-boosted tasks.
-  */
--static inline int rt_task(struct task_struct *p)
-+static inline bool rt_task(struct task_struct *p)
- {
- 	return rt_prio(p->prio);
- }
-@@ -34,7 +30,7 @@ static inline int rt_task(struct task_struct *p)
-  * PI-boosted tasks will return true. Use realtime_task_policy() to ignore
-  * PI-boosted tasks.
-  */
--static inline int realtime_task(struct task_struct *p)
-+static inline bool realtime_task(struct task_struct *p)
- {
- 	return realtime_prio(p->prio);
- }
--- 
-2.34.1
+As a heads-up (and not to block pushing this into next), I just gave
+this a spin on arm64 atop v6.10-rc2, and running the selftests I see:
 
+	ftrace - function pid filters
+	(instance)  ftrace - function pid filters
+
+... both go from [PASS] to [FAIL].
+
+Everything else looks good -- I'll go dig into why that's happening.
+
+It's possible that's just something odd with the filesystem I'm using
+(e.g. the wnership test failed because this lacks 'stat').
+
+Mark.
+
+> 
+> -- Steve
+> 
+> 
+> On Mon, 03 Jun 2024 15:07:04 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > This is a continuation of the function graph multi user code.
+> > I wrote a proof of concept back in 2019 of this code[1] and
+> > Masami started cleaning it up. I started from Masami's work v10
+> > that can be found here:
+> > 
+> >  https://lore.kernel.org/linux-trace-kernel/171509088006.162236.7227326999861366050.stgit@devnote2/
+> > 
+> > This is *only* the code that allows multiple users of function
+> > graph tracing. This is not the fprobe work that Masami is working
+> > to add on top of it. As Masami took my proof of concept, there
+> > was still several things I disliked about that code. Instead of
+> > having Masami clean it up even more, I decided to take over on just
+> > my code and change it up a bit.
+> > 
+> > Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240602033744.563858532@goodmis.org
+> > 
+> > - Added comments describing which hashes the append and intersect
+> >   functions were used for.
+> > 
+> > - Replaced checks of (NULL or EMPTY_HASH) with ftrace_hash_empty()
+> >   helper function.
+> > 
+> > - Added check at the end of intersect_hash() to convert the hash
+> >   to EMPTY hash if it doesn't have any functions.
+> > 
+> > - Renamed compare_ops() to ops_equal() and return boolean (inversed return
+> >   value).
+> > 
+> > - Broke out __ftrace_hash_move_and_update_ops() to use in both
+> >   ftrace_hash_move_and_update_ops() and ftrace_hash_move_and_update_subops().
+> > 
+> > Diff between last version at end of this email.
+> > 
+> > Masami Hiramatsu (Google) (3):
+> >       function_graph: Handle tail calls for stack unwinding
+> >       function_graph: Use a simple LRU for fgraph_array index number
+> >       ftrace: Add multiple fgraph storage selftest
+> > 
+> > Steven Rostedt (Google) (9):
+> >       ftrace: Add subops logic to allow one ops to manage many
+> >       ftrace: Allow subops filtering to be modified
+> >       function_graph: Add pid tracing back to function graph tracer
+> >       function_graph: Use for_each_set_bit() in __ftrace_return_to_handler()
+> >       function_graph: Use bitmask to loop on fgraph entry
+> >       function_graph: Use static_call and branch to optimize entry function
+> >       function_graph: Use static_call and branch to optimize return function
+> >       selftests/ftrace: Add function_graph tracer to func-filter-pid test
+> >       selftests/ftrace: Add fgraph-multi.tc test
+> > 
+> > Steven Rostedt (VMware) (15):
+> >       function_graph: Convert ret_stack to a series of longs
+> >       fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+> >       function_graph: Add an array structure that will allow multiple callbacks
+> >       function_graph: Allow multiple users to attach to function graph
+> >       function_graph: Remove logic around ftrace_graph_entry and return
+> >       ftrace/function_graph: Pass fgraph_ops to function graph callbacks
+> >       ftrace: Allow function_graph tracer to be enabled in instances
+> >       ftrace: Allow ftrace startup flags to exist without dynamic ftrace
+> >       function_graph: Have the instances use their own ftrace_ops for filtering
+> >       function_graph: Add "task variables" per task for fgraph_ops
+> >       function_graph: Move set_graph_function tests to shadow stack global var
+> >       function_graph: Move graph depth stored data to shadow stack global var
+> >       function_graph: Move graph notrace bit to shadow stack global var
+> >       function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
+> >       function_graph: Add selftest for passing local variables
+> > 
+> > ----
+> >  include/linux/ftrace.h                             |   43 +-
+> >  include/linux/sched.h                              |    2 +-
+> >  include/linux/trace_recursion.h                    |   39 -
+> >  kernel/trace/fgraph.c                              | 1044 ++++++++++++++++----
+> >  kernel/trace/ftrace.c                              |  522 +++++++++-
+> >  kernel/trace/ftrace_internal.h                     |    5 +-
+> >  kernel/trace/trace.h                               |   94 +-
+> >  kernel/trace/trace_functions.c                     |    8 +
+> >  kernel/trace/trace_functions_graph.c               |   96 +-
+> >  kernel/trace/trace_irqsoff.c                       |   10 +-
+> >  kernel/trace/trace_sched_wakeup.c                  |   10 +-
+> >  kernel/trace/trace_selftest.c                      |  259 ++++-
+> >  .../selftests/ftrace/test.d/ftrace/fgraph-multi.tc |  103 ++
+> >  .../ftrace/test.d/ftrace/func-filter-pid.tc        |   27 +-
+> >  14 files changed, 1945 insertions(+), 317 deletions(-)
+> >  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
+> > 
+> > 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index 41fabc6d30e4..da7e6abf48b4 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -3170,7 +3170,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+> >  /* Simply make a copy of @src and return it */
+> >  static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
+> >  {
+> > -	if (!src || src == EMPTY_HASH)
+> > +	if (ftrace_hash_empty(src))
+> >  		return EMPTY_HASH;
+> >  
+> >  	return alloc_and_copy_ftrace_hash(src->size_bits, src);
+> > @@ -3187,6 +3187,9 @@ static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
+> >   *
+> >   *  Otherwise, go through all of @new_hash and add anything that @hash
+> >   *  doesn't already have, to @hash.
+> > + *
+> > + *  The filter_hash updates uses just the append_hash() function
+> > + *  and the notrace_hash does not.
+> >   */
+> >  static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
+> >  {
+> > @@ -3195,11 +3198,11 @@ static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
+> >  	int i;
+> >  
+> >  	/* An empty hash does everything */
+> > -	if (!*hash || *hash == EMPTY_HASH)
+> > +	if (ftrace_hash_empty(*hash))
+> >  		return 0;
+> >  
+> >  	/* If new_hash has everything make hash have everything */
+> > -	if (!new_hash || new_hash == EMPTY_HASH) {
+> > +	if (ftrace_hash_empty(new_hash)) {
+> >  		free_ftrace_hash(*hash);
+> >  		*hash = EMPTY_HASH;
+> >  		return 0;
+> > @@ -3217,7 +3220,12 @@ static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
+> >  	return 0;
+> >  }
+> >  
+> > -/* Add to @hash only those that are in both @new_hash1 and @new_hash2 */
+> > +/*
+> > + * Add to @hash only those that are in both @new_hash1 and @new_hash2
+> > + *
+> > + * The notrace_hash updates uses just the intersect_hash() function
+> > + * and the filter_hash does not.
+> > + */
+> >  static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash1,
+> >  			  struct ftrace_hash *new_hash2)
+> >  {
+> > @@ -3229,8 +3237,7 @@ static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_has
+> >  	 * If new_hash1 or new_hash2 is the EMPTY_HASH then make the hash
+> >  	 * empty as well as empty for notrace means none are notraced.
+> >  	 */
+> > -	if (!new_hash1 || new_hash1 == EMPTY_HASH ||
+> > -	    !new_hash2 || new_hash2 == EMPTY_HASH) {
+> > +	if (ftrace_hash_empty(new_hash1) || ftrace_hash_empty(new_hash2)) {
+> >  		free_ftrace_hash(*hash);
+> >  		*hash = EMPTY_HASH;
+> >  		return 0;
+> > @@ -3245,6 +3252,11 @@ static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_has
+> >  				return -ENOMEM;
+> >  		}
+> >  	}
+> > +	/* If nothing intersects, make it the empty set */
+> > +	if (ftrace_hash_empty(*hash)) {
+> > +		free_ftrace_hash(*hash);
+> > +		*hash = EMPTY_HASH;
+> > +	}
+> >  	return 0;
+> >  }
+> >  
+> > @@ -3266,7 +3278,7 @@ static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
+> >  			return NULL;
+> >  		}
+> >  		/* Nothing more to do if new_hash is empty */
+> > -		if (new_hash == EMPTY_HASH)
+> > +		if (ftrace_hash_empty(new_hash))
+> >  			break;
+> >  	}
+> >  	return new_hash;
+> > @@ -3300,59 +3312,76 @@ static struct ftrace_hash *intersect_hashes(struct ftrace_ops *ops)
+> >  			return NULL;
+> >  		}
+> >  		/* Nothing more to do if new_hash is empty */
+> > -		if (new_hash == EMPTY_HASH)
+> > +		if (ftrace_hash_empty(new_hash))
+> >  			break;
+> >  	}
+> >  	return new_hash;
+> >  }
+> >  
+> > -/* Returns 0 on equal or non-zero on non-equal */
+> > -static int compare_ops(struct ftrace_hash *A, struct ftrace_hash *B)
+> > +static bool ops_equal(struct ftrace_hash *A, struct ftrace_hash *B)
+> >  {
+> >  	struct ftrace_func_entry *entry;
+> >  	int size;
+> >  	int i;
+> >  
+> > -	if (!A || A == EMPTY_HASH)
+> > -		return !(!B || B == EMPTY_HASH);
+> > +	if (ftrace_hash_empty(A))
+> > +		return ftrace_hash_empty(B);
+> >  
+> > -	if (!B || B == EMPTY_HASH)
+> > -		return !(!A || A == EMPTY_HASH);
+> > +	if (ftrace_hash_empty(B))
+> > +		return ftrace_hash_empty(A);
+> >  
+> >  	if (A->count != B->count)
+> > -		return 1;
+> > +		return false;
+> >  
+> >  	size = 1 << A->size_bits;
+> >  	for (i = 0; i < size; i++) {
+> >  		hlist_for_each_entry(entry, &A->buckets[i], hlist) {
+> >  			if (!__ftrace_lookup_ip(B, entry->ip))
+> > -				return 1;
+> > +				return false;
+> >  		}
+> >  	}
+> >  
+> > -	return 0;
+> > +	return true;
+> >  }
+> >  
+> > -static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
+> > -					   struct ftrace_hash **orig_hash,
+> > -					   struct ftrace_hash *hash,
+> > -					   int enable);
+> > +static void ftrace_ops_update_code(struct ftrace_ops *ops,
+> > +				   struct ftrace_ops_hash *old_hash);
+> > +
+> > +static int __ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
+> > +					     struct ftrace_hash **orig_hash,
+> > +					     struct ftrace_hash *hash,
+> > +					     int enable)
+> > +{
+> > +	struct ftrace_ops_hash old_hash_ops;
+> > +	struct ftrace_hash *old_hash;
+> > +	int ret;
+> > +
+> > +	old_hash = *orig_hash;
+> > +	old_hash_ops.filter_hash = ops->func_hash->filter_hash;
+> > +	old_hash_ops.notrace_hash = ops->func_hash->notrace_hash;
+> > +	ret = ftrace_hash_move(ops, enable, orig_hash, hash);
+> > +	if (!ret) {
+> > +		ftrace_ops_update_code(ops, &old_hash_ops);
+> > +		free_ftrace_hash_rcu(old_hash);
+> > +	}
+> > +	return ret;
+> > +}
+> >  
+> >  static int ftrace_update_ops(struct ftrace_ops *ops, struct ftrace_hash *filter_hash,
+> >  			     struct ftrace_hash *notrace_hash)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (compare_ops(filter_hash, ops->func_hash->filter_hash)) {
+> > -		ret = ftrace_hash_move_and_update_ops(ops, &ops->func_hash->filter_hash,
+> > -						      filter_hash, 1);
+> > +	if (!ops_equal(filter_hash, ops->func_hash->filter_hash)) {
+> > +		ret = __ftrace_hash_move_and_update_ops(ops, &ops->func_hash->filter_hash,
+> > +							filter_hash, 1);
+> >  		if (ret < 0)
+> >  			return ret;
+> >  	}
+> >  
+> > -	if (compare_ops(notrace_hash, ops->func_hash->notrace_hash)) {
+> > -		ret = ftrace_hash_move_and_update_ops(ops, &ops->func_hash->notrace_hash,
+> > -						      notrace_hash, 0);
+> > +	if (!ops_equal(notrace_hash, ops->func_hash->notrace_hash)) {
+> > +		ret = __ftrace_hash_move_and_update_ops(ops, &ops->func_hash->notrace_hash,
+> > +							notrace_hash, 0);
+> >  		if (ret < 0)
+> >  			return ret;
+> >  	}
+> > @@ -3438,8 +3467,8 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
+> >  	 *   o If either notrace_hash is empty then the final stays empty
+> >  	 *      o Otherwise, the final is an intersection between the hashes
+> >  	 */
+> > -	if (ops->func_hash->filter_hash == EMPTY_HASH ||
+> > -	    subops->func_hash->filter_hash == EMPTY_HASH) {
+> > +	if (ftrace_hash_empty(ops->func_hash->filter_hash) ||
+> > +	    ftrace_hash_empty(subops->func_hash->filter_hash)) {
+> >  		filter_hash = EMPTY_HASH;
+> >  	} else {
+> >  		size_bits = max(ops->func_hash->filter_hash->size_bits,
+> > @@ -3454,8 +3483,8 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
+> >  		}
+> >  	}
+> >  
+> > -	if (ops->func_hash->notrace_hash == EMPTY_HASH ||
+> > -	    subops->func_hash->notrace_hash == EMPTY_HASH) {
+> > +	if (ftrace_hash_empty(ops->func_hash->notrace_hash) ||
+> > +	    ftrace_hash_empty(subops->func_hash->notrace_hash)) {
+> >  		notrace_hash = EMPTY_HASH;
+> >  	} else {
+> >  		size_bits = max(ops->func_hash->filter_hash->size_bits,
+> > @@ -3591,7 +3620,7 @@ static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
+> >  	}
+> >  
+> >  	/* Move the hash over to the new hash */
+> > -	ret = ftrace_hash_move_and_update_ops(ops, orig_hash, new_hash, enable);
+> > +	ret = __ftrace_hash_move_and_update_ops(ops, orig_hash, new_hash, enable);
+> >  
+> >  	free_ftrace_hash(new_hash);
+> >  
+> > @@ -4822,11 +4851,6 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
+> >  					   struct ftrace_hash *hash,
+> >  					   int enable)
+> >  {
+> > -	struct ftrace_ops_hash old_hash_ops;
+> > -	struct ftrace_hash *old_hash;
+> > -	struct ftrace_ops *op;
+> > -	int ret;
+> > -
+> >  	if (ops->flags & FTRACE_OPS_FL_SUBOP)
+> >  		return ftrace_hash_move_and_update_subops(ops, orig_hash, hash, enable);
+> >  
+> > @@ -4838,6 +4862,8 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
+> >  	 * it will not affect subops that share it.
+> >  	 */
+> >  	if (!(ops->flags & FTRACE_OPS_FL_ENABLED)) {
+> > +		struct ftrace_ops *op;
+> > +
+> >  		/* Check if any other manager subops maps to this hash */
+> >  		do_for_each_ftrace_op(op, ftrace_ops_list) {
+> >  			struct ftrace_ops *subops;
+> > @@ -4851,15 +4877,7 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
+> >  		} while_for_each_ftrace_op(op);
+> >  	}
+> >  
+> > -	old_hash = *orig_hash;
+> > -	old_hash_ops.filter_hash = ops->func_hash->filter_hash;
+> > -	old_hash_ops.notrace_hash = ops->func_hash->notrace_hash;
+> > -	ret = ftrace_hash_move(ops, enable, orig_hash, hash);
+> > -	if (!ret) {
+> > -		ftrace_ops_update_code(ops, &old_hash_ops);
+> > -		free_ftrace_hash_rcu(old_hash);
+> > -	}
+> > -	return ret;
+> > +	return __ftrace_hash_move_and_update_ops(ops, orig_hash, hash, enable);
+> >  }
+> >  
+> >  static bool module_exists(const char *module)
+> 
