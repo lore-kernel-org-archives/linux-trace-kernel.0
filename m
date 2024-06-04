@@ -1,156 +1,119 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AF714D2B2
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jun 2024 21:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38485134414;
+	Tue,  4 Jun 2024 23:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717537685; cv=none; b=KHaxFIMz0MmdQOiOAaE/Pa/JDgBo/VHbTyU6SxQ4CdOcE7eXP0ISepbUcLKUHCAZXipmlJJd34mXAlC4OMJfB4J685ZRZOT1jPMS17XvqCxVl3LtEp7hwDCznmkrRNCHu/yFTmOuOd73LAKtgkr62s8LMf0Pr9CUWIV/5em5hik=
+	t=1717543430; cv=none; b=SM+CTQtV6CV5FR5qOb7G50VqJNZEJQh6PvwUvC7WOFydIb0aCmoFqVZ9WzWQCeYZFSYOqBEaSNpCFo9axHEgIWdcFoLaWP9xVxHs3RdtHzvrc855k4ty5aWXMFvRckeWsIqB2PhND512jFsyesm0hm9bX/MmAKakxjlrtz9XD3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717537685; c=relaxed/simple;
-	bh=uEGMHEFbMp0HLSU5Z7U4ENmeA4RvQ8IslnoZTeDpYIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=afHCgW8ISos4OBk/kMXNPTS8CAx/GqEun9H4JPlNfQhIVQbl38A0NqS5KXmE+k5Q4f0ErnYkIOawA3+yspQgABnLy2ItAbkl3Eurc9utNA7vDk3HuWBmVy+k0B1DGGAeC0C9lytG35SkipLc3OENxXrymsr54yG+RHzep6ogRIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=F0YGIPaM; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1717543430; c=relaxed/simple;
+	bh=jtW37IPedqBng+fjiD25haPgjvd1pezodV5MYPdwaOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e6tOA8Ta8R6kqMueYMJ1Twf96ucs40Q2z1eRWEVmTxTtDSP0T5rUOgde6fDpj9j4do57xYaCn4s2bZcRn+BDkYaHI7WBa5EK3Bkfh059o2HNfiPu1WsbKycvk3S/C9WgEi1HSWtoKGhPvCwc5f8wVVimgPS6os1+wG5H1Tj6QzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=liLbga7j; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="F0YGIPaM"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6ae12762134so32327106d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jun 2024 14:48:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="liLbga7j"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f692d6e990so16003465ad.3;
+        Tue, 04 Jun 2024 16:23:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1717537683; x=1718142483; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+04wpAGrgh0quqRhPOuIE9e5b5DYf6qkerlRm6e6uUE=;
-        b=F0YGIPaM93k2hd8gAAMatCKDnEXoBJD0/kl28LTYZPwbQgJOaSlpNPIySbvb8tpCUb
-         LTfyQlbFJr3uE6aIYr1Fq8awtTVe6uijQlzsui4kBZKgdzbmV2zXQ+LmdQM64i4qI7zC
-         E1OrxBwneRq1oFhNE+7MBHsf9KC3l+/cXKf05bieZUjjW2rwlpDKV/KZTL+mLc+Hvfnr
-         nfWKopr9oWoPaGjwmQa05zEOFBPlRTBQdKIQJGYfJ+TTPS9GPr/gHQFgPMPT16o3bne9
-         9OwXAv3qzfYebk6ycFiBxZgAvb/5OK/+sCuX+5IEor9DyYXVn6jGR1zM5+f9EZfkKp9f
-         nHqA==
+        d=gmail.com; s=20230601; t=1717543428; x=1718148228; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/9m0oOpwKYgyRDnyieTbEk5CVDgAB0ndZuyco0J6K2w=;
+        b=liLbga7j0KtQUEVgnKnWaAozDiOFsAIfbI8Mk5c86ZGPgyTYpeQUCCllHQA1feue4L
+         JJpODps1FSfFqaZZbtxBdmDU20BjZxTvNPNuE/xsovtVdaKk7Ik/x27hhqNciX/eXdpG
+         mLTIifdPmBC5dyb33SvpTTP7AgBl3fJR4VI568EpBwLo6Y2UqmlHERtM9QaOIEtLmnBr
+         ooWX6tcSYvHmTNG3/fugTHXaZi2BcZDGauSVvwwPSAE/yKbXIA+PhXjn9xHWl3CWCfAc
+         i4c9kDT0pN38QmhEH40BM1fBEvR0PrnsD+e+KjtKjdL8obYDKYPWMwTW/0NCZbtwXJiw
+         0oAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717537683; x=1718142483;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+04wpAGrgh0quqRhPOuIE9e5b5DYf6qkerlRm6e6uUE=;
-        b=BjcOor53XEPEKsIbWUvmm2ShyXaKRlEJPnvYDuH482P4UL+VBv4WAQ7tqyWztGGOUW
-         8UYZdfVX43GVrAXpN2rytson812wkHrtIKBAhAZ0NfxYQwTIboExc/WdRQgxagVyOkWI
-         Lrf4NLKnoM6iacc3cBIwsO3p25h3vpSeL1xl1RrQjD5Rl3ePPWEEu5CQ4uiigpuIf7wn
-         MLxJwH6xG1dTsn194L65xhz7+huzqtPRDoDZLQwTBC66ZhbhEYeFDbtwK0X2F9I8fudw
-         Ke/wfF2q0/2aRRRHVi3mm98uJeV1mIQaFbpcJk+jWaILD6mLfKBFgk8e42vxsa9JIY0T
-         nkZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlRPWe9Enas9aHsxbl58w4t/nUWJ/87epLX39N/A+NkAS0nRP7vBSxOvNBn6fDTgcAqtCWs56so1YCgB1fqqF+lke60P/Wa4NOCH7wmid0Bwbq
-X-Gm-Message-State: AOJu0YxMBoRjk6aSV7OmJ8dWwpTWZfFrhizPQ8LohY0pdMe5/41G2zUP
-	rNP4NxCxkf5iESsbn5fwDw1EvfVIdOHAvhxl4upZlrEH13VObREdKfgvKosXsiY=
-X-Google-Smtp-Source: AGHT+IG6/GBC9sNG+exjZROqqV20El9+yth58LdwTrthEzSlb+iKsIQbqjd2bF6oWHOLCPDaM1c5tg==
-X-Received: by 2002:a05:6214:3902:b0:6af:cb9f:59dc with SMTP id 6a1803df08f44-6b020320c02mr6439866d6.1.1717537683041;
-        Tue, 04 Jun 2024 14:48:03 -0700 (PDT)
-Received: from debian.debian ([2a09:bac5:7a49:f9b::18e:1c])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4b418d5csm42118766d6.106.2024.06.04.14.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 14:48:01 -0700 (PDT)
-Date: Tue, 4 Jun 2024 14:47:59 -0700
-From: Yan Zhai <yan@cloudflare.com>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Abhishek Chauhan <quic_abchauha@quicinc.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Neil Horman <nhorman@tuxdriver.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [RFC v3 net-next 7/7] af_packet: use sk_skb_reason_drop to free rx
- packets
-Message-ID: <0fa6bd81ccb75b9fe28971a895bb7a700b30b81b.1717529533.git.yan@cloudflare.com>
-References: <cover.1717529533.git.yan@cloudflare.com>
+        d=1e100.net; s=20230601; t=1717543428; x=1718148228;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/9m0oOpwKYgyRDnyieTbEk5CVDgAB0ndZuyco0J6K2w=;
+        b=GIN7jRYVpS4AscrffxV/GYi3VGVw1GvdPQXSLc8FbVIXXGEaD08NLGf66uwbsIrmgz
+         7Eix/j0CYjjv1UUXnUybuWJgvzb9TwtNfOQ76WnqzNyI10jbaCKC9d9lgDCIinyTb4B3
+         H3oVw7JuBnbVCyhVM3yyZs4BjU6Vq9Wozdw87tnnD0zy8a4IgvaQpXXqh6lzF2F4vZEo
+         pSA8P4Vojh4wSAsNgEUDZqZrh0jmVOApb0alLLJkje3Qyv8rX4Ph8MMTO38nweI2Cd6e
+         KlYfHjboAOAoCNwYLMxQftLLvlw8aE6IkY5hsXl5HSKBZ+ZgMQMviDZ0pTponT4JNeYt
+         WIIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVb6mp5KJbwLrx+GAB8Rk+ACk1M7GNgjaUx1ldtcY7eGLnd2lYoMG/GjylcwZHch9T/a/eeUfyg8Qx2LyfeiImcKldHnnZQemxPAkizjkMwTJmqDtSTP941ez2UOmVXddyv3kG6aPTUVIiu04jhWN7t
+X-Gm-Message-State: AOJu0YzsFufTd1YbONeNaWsbqDqnlSikOlHmJfx3WuBF112q+MtkCkDW
+	d6qmZc3NOKGx0eouMhWj6zt2RQ3COjn7TnCqmZpB7d65bTbz6p+h
+X-Google-Smtp-Source: AGHT+IGxH4HaSJY31yZN21ecpQ9TvWrPlG6nha8Zg4Ngg5C57E918Tu1wnkCrsF5RDY5lzpDJzzYKA==
+X-Received: by 2002:a17:902:d918:b0:1f4:b43f:9c18 with SMTP id d9443c01a7336-1f6a5a253d7mr11014505ad.33.1717543428289;
+        Tue, 04 Jun 2024 16:23:48 -0700 (PDT)
+Received: from ?IPV6:2804:431:cfd3:42f5:5d7e:7952:2a52:2cb2? ([2804:431:cfd3:42f5:5d7e:7952:2a52:2cb2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63232f1bbsm90116635ad.29.2024.06.04.16.23.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 16:23:47 -0700 (PDT)
+Message-ID: <87d6a52f-27e5-4b88-8a8c-c4c58d969a18@gmail.com>
+Date: Tue, 4 Jun 2024 20:23:42 -0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1717529533.git.yan@cloudflare.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ftrace: adding the missing parameter descriptions of
+ unregister_ftrace_direct
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20240528005046.3778431-1-marilene.agarcia@gmail.com>
+Content-Language: en-US
+From: Marilene Andrade Garcia <marilene.agarcia@gmail.com>
+In-Reply-To: <20240528005046.3778431-1-marilene.agarcia@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Replace kfree_skb_reason with sk_skb_reason_drop and pass the receiving
-socket to the tracepoint.
+On 27/05/2024 21:50, MarileneGarcia wrote:
+> Adding the description of the parameters addr and free_filters
+> of the function unregister_ftrace_direct.
+> 
+> Signed-off-by: MarileneGarcia <marilene.agarcia@gmail.com>
+> ---
+> Hello,
+> These changes fix the following compiler warnings of the function
+> unregister_ftrace_direct.
+> 
+> The warnings happen using GCC compiler, enabling the ftrace related
+> configs and using the command 'make W=1'.
+> 
+> kernel/trace/ftrace.c:5489: warning: Function parameter or struct member
+> 'addr' not described in 'unregister_ftrace_direct'
+> 
+> kernel/trace/ftrace.c:5489: warning: Function parameter or struct member
+> 'free_filters' not described in 'unregister_ftrace_direct'
+> 
+>   kernel/trace/ftrace.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 65208d3b5ed9..6062e4ce1957 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -5475,6 +5475,8 @@ EXPORT_SYMBOL_GPL(register_ftrace_direct);
+>    * unregister_ftrace_direct - Remove calls to custom trampoline
+>    * previously registered by register_ftrace_direct for @ops object.
+>    * @ops: The address of the struct ftrace_ops object
+> + * @addr: The address of the trampoline to call at @ops functions
+> + * @free_filters: non zero to remove all filters for the ftrace_ops
+>    *
+>    * This is used to remove a direct calls to @addr from the nop locations
+>    * of the functions registered in @ops (with by ftrace_set_filter_ip
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/r/202406011859.Aacus8GV-lkp@intel.com/
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
----
-v2->v3: fixed uninitialized sk, added missing report tags.
----
- net/packet/af_packet.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Hello everyone,
+Do you have any feedback to me about the patch?
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index fce390887591..42d29b8a84fc 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2121,7 +2121,7 @@ static int packet_rcv(struct sk_buff *skb, struct net_device *dev,
- 		      struct packet_type *pt, struct net_device *orig_dev)
- {
- 	enum skb_drop_reason drop_reason = SKB_CONSUMED;
--	struct sock *sk;
-+	struct sock *sk = NULL;
- 	struct sockaddr_ll *sll;
- 	struct packet_sock *po;
- 	u8 *skb_head = skb->data;
-@@ -2226,7 +2226,7 @@ static int packet_rcv(struct sk_buff *skb, struct net_device *dev,
- 		skb->len = skb_len;
- 	}
- drop:
--	kfree_skb_reason(skb, drop_reason);
-+	sk_skb_reason_drop(sk, skb, drop_reason);
- 	return 0;
- }
- 
-@@ -2234,7 +2234,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 		       struct packet_type *pt, struct net_device *orig_dev)
- {
- 	enum skb_drop_reason drop_reason = SKB_CONSUMED;
--	struct sock *sk;
-+	struct sock *sk = NULL;
- 	struct packet_sock *po;
- 	struct sockaddr_ll *sll;
- 	union tpacket_uhdr h;
-@@ -2494,7 +2494,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 		skb->len = skb_len;
- 	}
- drop:
--	kfree_skb_reason(skb, drop_reason);
-+	sk_skb_reason_drop(sk, skb, drop_reason);
- 	return 0;
- 
- drop_n_account:
-@@ -2503,7 +2503,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 	drop_reason = SKB_DROP_REASON_PACKET_SOCK_ERROR;
- 
- 	sk->sk_data_ready(sk);
--	kfree_skb_reason(copy_skb, drop_reason);
-+	sk_skb_reason_drop(sk, copy_skb, drop_reason);
- 	goto drop_n_restore;
- }
- 
--- 
-2.30.2
-
-
+Thank you,
+Marilene
