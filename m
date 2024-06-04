@@ -1,31 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D512FB0B;
-	Tue,  4 Jun 2024 15:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D4B143C7A;
+	Tue,  4 Jun 2024 15:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717514496; cv=none; b=ckZu7/aA6Iud4xbGlGvBmxeu9Q2y5FzszE/nl56qNaQXLcADb6BrVeDIJurXHcWtuICSdB5P8dgF12STIsKxS2AK7kZ5UmxgDMe6T4APebijxiqFdl8WntP2rMJDb6hjHr8YJAETJOwB0nppdA8DRXqrrLT0AMVHai8gRgC9yP0=
+	t=1717514882; cv=none; b=SMzwzBJxqgEluhcMUIhx7o7Xmj3NqLfpVuK9qvGvWue2Enr6phJkJgG7ccdxvL0t2p+ZNwvE1uJOHBhSuplRLG6DSaq5pMKZNEmWxMyq9Vo1vBetBkfeT976DGPFRMU/9g/PgEG5bOEDjJbk50n0szS/US257UacI8jupNI0cT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717514496; c=relaxed/simple;
-	bh=p9uNWDaWGqDK9AZkwGIZT+s0wPEqqgkKX6uerXOG/Sw=;
+	s=arc-20240116; t=1717514882; c=relaxed/simple;
+	bh=N7rt7381fj96UTAPC9MEjjfA0I4AkNKWgkWWPbMyq44=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p397BlcF6lef7vt1SvcmiN9Mr7cQ6c0zmHc3NChJmC+diY9iWcxmQbc7fZ2a7JQEuJbRAKxMbppGmSEoa3NsRCMU2+GLBktkE3t+797yLdF7QxJtWQ5YI/nDahp+tvPnQexephA8KT4Bix7lCFp/EAOhyYQM9Qyzk0iLixDuMbo=
+	 MIME-Version:Content-Type; b=Egk1CRfM0QvaEWx9Dlr5mhzRvAQ7p0dTYNd/2qURYYdciJNhXIS2SkV4fhSR5wDqWs2An+sQcGOsWc9usOsrjaTMWO5Husc4uWRvEN6rH/c7JvZ2BRyiMgio9+0CGcfiKEjB4wdlRNhr1FiNlg8uuT1SUuGjkaqhIMF87Welf9g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9609CC2BBFC;
-	Tue,  4 Jun 2024 15:21:34 +0000 (UTC)
-Date: Tue, 4 Jun 2024 11:21:31 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30859C4AF07;
+	Tue,  4 Jun 2024 15:28:00 +0000 (UTC)
+Date: Tue, 4 Jun 2024 11:27:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, don
- <zds100@gmail.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] sefltests/tracing: Add a test for tracepoint
- events on modules
-Message-ID: <20240604112131.25ad0a21@gandalf.local.home>
-In-Reply-To: <171723017495.258703.11572784928592807749.stgit@devnote2>
-References: <171723014778.258703.6731294779199848686.stgit@devnote2>
-	<171723017495.258703.11572784928592807749.stgit@devnote2>
+To: Metin Kaya <metin.kaya@arm.com>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v4 2/2] sched/rt, dl: Convert functions to return bool
+Message-ID: <20240604112759.56b9394c@gandalf.local.home>
+In-Reply-To: <417b39d1-8de8-4234-92dc-f1ef5fd95da7@arm.com>
+References: <20240601213309.1262206-1-qyousef@layalina.io>
+	<20240601213309.1262206-3-qyousef@layalina.io>
+	<417b39d1-8de8-4234-92dc-f1ef5fd95da7@arm.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,16 +42,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat,  1 Jun 2024 17:22:55 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Mon, 3 Jun 2024 08:33:53 +0100
+Metin Kaya <metin.kaya@arm.com> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> On 01/06/2024 10:33 pm, Qais Yousef wrote:
+> > {rt, realtime, dl}_{task, prio}() functions return value is actually
+> > a bool.  Convert their return type to reflect that.
+> > 
+> > Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Signed-off-by: Qais Yousef <qyousef@layalina.io>
+> > ---
+> >   include/linux/sched/deadline.h |  8 ++++----
+> >   include/linux/sched/rt.h       | 16 ++++++++--------
+> >   2 files changed, 12 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
+> > index 5cb88b748ad6..f2053f46f1d5 100644
+> > --- a/include/linux/sched/deadline.h
+> > +++ b/include/linux/sched/deadline.h
+> > @@ -10,18 +10,18 @@
+> >   
+> >   #include <linux/sched.h>
+> >   
+> > -static inline int dl_prio(int prio)
+> > +static inline bool dl_prio(int prio)
+> >   {
+> >   	if (unlikely(prio < MAX_DL_PRIO))
+> > -		return 1;
+> > -	return 0;
+> > +		return true;
+> > +	return false;  
 > 
-> Add a test case for tracepoint events on modules. This checks if it can add
-> and remove the events correctly.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Nit: `return unlikely(prio < MAX_DL_PRIO)` would be simpler.
+> The same can be applied to rt_prio() and realtime_prio(). This would 
+> make {dl, rt, realtime}_task() single-liner. Maybe further 
+> simplification can be done.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Agreed.
 
 -- Steve
