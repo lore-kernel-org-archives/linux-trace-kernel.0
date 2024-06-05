@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14974E567;
-	Wed,  5 Jun 2024 21:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AF4E567;
+	Wed,  5 Jun 2024 21:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717624223; cv=none; b=YdFZNHpEIHANEyvVtOEA6Ozv3KXREESey9z8seAvLTnn6G/ZLuWMQtILhzFvwcOZxytn9wSXN2jq9+zks5xHGP10pdlvwulu7KLzXZd4tt8ToR/roNsgdnT1HEQl9TUorF2bgpfX2Aq+xv4uck2i54Dun22Qkop7iamVJB+tOx0=
+	t=1717624391; cv=none; b=jjWC4HlDR0q3XDdeJYInwjI8IwllUnGW0rH95o3ZxcAfK8U2QwFg0TwopInhQasLbwPti2aD5fuUT6LnGyjnaFydv90nIqkw2OomFgLp176dcBqCQlOvFxlPpjf0JW2reuid8TUgf+Mi4z4Pkl0h0BWQjQ+QkIW74DwzTUx3Ql4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717624223; c=relaxed/simple;
-	bh=Ymc9wcpaG97mbeNDzlGXrcwYGTgFta7AZuf3yen2Aio=;
+	s=arc-20240116; t=1717624391; c=relaxed/simple;
+	bh=uFoqx4EWB80J+V8A2fZpMH7sF3p50Dxm9OodeJrXLJ0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Q6oxGfv8J8dvTkEv2k/M8uSz2D8/vLffhUx9T5MsaJBqtOc83xCiZv3HUx7QH/cf6GdOai6aD6LOE+cS8RoXOAy8VqCxq+5S8914d3yimq5BDqqLodi5tuoE+YGHgsNHD/gziQtmOQz5a4/9qyTjwykPUEDn4ILjonlc1CtLXFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAykoGX1; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=TSNaaXloakhuS7E7BbaGMPxoTCpGIz7HFQHJpqcaFnNMzqjg1omD/8qDHWiSvt5HLcfKIguUirBCYDlUeFE2AJZyzCM0AJIiCSeqTB4tSp6c0JjUT/JQ5hQDBIQi/VQZKibJn89CfLLLO21plGu9ZvlZor3Xr4i2/TQMiax64+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlyjfB5l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAykoGX1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4B34C2BD11;
-	Wed,  5 Jun 2024 21:50:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlyjfB5l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3090C2BD11;
+	Wed,  5 Jun 2024 21:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717624222;
-	bh=Ymc9wcpaG97mbeNDzlGXrcwYGTgFta7AZuf3yen2Aio=;
+	s=k20201202; t=1717624389;
+	bh=uFoqx4EWB80J+V8A2fZpMH7sF3p50Dxm9OodeJrXLJ0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TAykoGX10RKgePgPfuf2G/JzeaU6Ebd2RnNuyIrLkKrilRieEQMr3dr2xosrlEfcT
-	 XeC/hxNvXZX4be+hORGScwlXVnYbqwAM5Cewt/akt+mDmxWYu2x7V9qA1cK/QPpbBO
-	 4GuKIQYJGRL7sxLhfGIhNeEM0rmGwJ/ZDqjBfZC05GU7fk8k1coZ93O25bdAQC/fvT
-	 kow/IKgFiN51Z4rEXqtwgcYN6lc9PZ/DAqYpjNPDpD3RjJVDoOhuD/lNkNTdOqNp58
-	 zZ6R3mQcUZ5u3mrvv6vlJbosOqlIQc3v8Pg8xfRCNQX1a+b19xDZPzlyCMs4NA237/
-	 TULEy2zU0zAKw==
-Date: Thu, 6 Jun 2024 06:50:18 +0900
+	b=UlyjfB5lAWgmkVP405prTTWBC6j4hGQX5NgqGbnSBshloHLrVWb24iiRt5yj6qkLi
+	 4ew6guQGWus/EAff8SFjYd6PLdfnlRAS+QPEt9o5iFp5GJnQsNwZmFoPXP4kd3QVt1
+	 olYMC6q18YSIykxihjirbH6GocuWF6Fb5tjZeHNnOaVQlLGe0pnz/Fq+rNm+F+fFgJ
+	 P8T97bBlLgDwpucbdnIUOq6ajqAwBSG40LWGPGQYIiczAI8lFwNjBTjNwGXptwDxih
+	 Dp/CjeeR+SstfRXR3Oip4KeJNyH/g/37ULrSyPjQ9muTxJsBMI7JbaZO7UjU0DZ3p3
+	 LaOzNAQMlHJig==
+Date: Thu, 6 Jun 2024 06:53:06 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
  Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
  <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/5] ftrace: Remove "filter_hash" parameter from
- ftrace_hash_rec_disable/enable()
-Message-Id: <20240606065018.0bf1d82a3bf9c526aee9a170@kernel.org>
-In-Reply-To: <20240604212854.883675803@goodmis.org>
-References: <20240604212817.384103202@goodmis.org>
-	<20240604212854.883675803@goodmis.org>
+Subject: Re: [PATCH 0/6] ftrace: Minor fixes for sparse and kernel test
+ robot
+Message-Id: <20240606065306.abba1a2def44185fe1dd2200@kernel.org>
+In-Reply-To: <20240605202644.293295925@goodmis.org>
+References: <20240605202644.293295925@goodmis.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,86 +48,38 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 04 Jun 2024 17:28:20 -0400
+On Wed, 05 Jun 2024 16:26:44 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> The functions ftrace_hash_rec_disable() and ftrace_hash_rec_enable()
-> always has 1 passed to its "ftrace_hash" parameter. Remove the parameter
-> and pass in true to __ftrace_hash_rec_update().
+> Recieved some minor bug reports from the kernel test robot. First I started
+> cleaning up some of the sparse warnings. There's many more, but most changes
+> are not really helping anything, but just quieting the warnings.
 > 
-> Also add some comments to both those functions explaining what they do.
-> 
+> But the reports from kernel test robot need to be fixed.
 
-Looks good to me.
+All looks good to me.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you,
+Thank you!
 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ftrace.c | 24 ++++++++++++++++--------
->  1 file changed, 16 insertions(+), 8 deletions(-)
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 93c7c5fd4249..de652201c86c 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -1895,16 +1895,24 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
->  	return update;
->  }
->  
-> -static bool ftrace_hash_rec_disable(struct ftrace_ops *ops,
-> -				    int filter_hash)
-> +/*
-> + * This is called when an ops is removed from tracing. It will decrement
-> + * the counters of the dyn_ftrace records for all the functions that
-> + * the @ops attached to.
-> + */
-> +static bool ftrace_hash_rec_disable(struct ftrace_ops *ops)
->  {
-> -	return __ftrace_hash_rec_update(ops, filter_hash, 0);
-> +	return __ftrace_hash_rec_update(ops, true, 0);
->  }
->  
-> -static bool ftrace_hash_rec_enable(struct ftrace_ops *ops,
-> -				   int filter_hash)
-> +/*
-> + * This is called when an ops is added to tracing. It will increment
-> + * the counters of the dyn_ftrace records for all the functions that
-> + * the @ops attached to.
-> + */
-> +static bool ftrace_hash_rec_enable(struct ftrace_ops *ops)
->  {
-> -	return __ftrace_hash_rec_update(ops, filter_hash, 1);
-> +	return __ftrace_hash_rec_update(ops, true, 1);
->  }
->  
->  static void ftrace_hash_rec_update_modify(struct ftrace_ops *ops,
-> @@ -3062,7 +3070,7 @@ int ftrace_startup(struct ftrace_ops *ops, int command)
->  		return ret;
->  	}
->  
-> -	if (ftrace_hash_rec_enable(ops, 1))
-> +	if (ftrace_hash_rec_enable(ops))
->  		command |= FTRACE_UPDATE_CALLS;
->  
->  	ftrace_startup_enable(command);
-> @@ -3104,7 +3112,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
->  	/* Disabling ipmodify never fails */
->  	ftrace_hash_ipmodify_disable(ops);
->  
-> -	if (ftrace_hash_rec_disable(ops, 1))
-> +	if (ftrace_hash_rec_disable(ops))
->  		command |= FTRACE_UPDATE_CALLS;
->  
->  	ops->flags &= ~FTRACE_OPS_FL_ENABLED;
-> -- 
-> 2.43.0
+> Steven Rostedt (Google) (6):
+>       ftrace: Declare function_trace_op in header to quiet sparse warning
+>       ftrace: Assign ftrace_list_end to ftrace_ops_list type cast to RCU
+>       ftrace: Assign RCU list variable with rcu_assign_ptr()
+>       ftrace: Fix prototypes for ftrace_startup/shutdown_subops()
+>       function_graph: Make fgraph_do_direct static key static
+>       function_graph: Do not update pid func if CONFIG_DYNAMIC_FTRACE not enabled
 > 
-> 
+> ----
+>  include/linux/ftrace.h         | 3 +++
+>  kernel/trace/fgraph.c          | 4 +++-
+>  kernel/trace/ftrace.c          | 4 ++--
+>  kernel/trace/ftrace_internal.h | 9 +++++++++
+>  kernel/trace/trace.h           | 1 -
+>  5 files changed, 17 insertions(+), 4 deletions(-)
 
 
 -- 
