@@ -1,99 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DD56FB0;
-	Wed,  5 Jun 2024 14:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB09481D3
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717597117; cv=none; b=FueftfX4pRD7SKdTqiUFEX41LKjVJp7voyqm1FNuuiMn7zwQLFAA+3U4B7Lv3wX011kMmf1q4MD6r8IHias0SwG4WXqZIHvQaa8xpGyYRLL2NGB+oaL/tsXgbAPEf1Ak+3vmBiqUIHabFSCBdkSjnL4odXYi/L4lSjAaWEn5hbM=
+	t=1717601205; cv=none; b=SqENiVPUxmHa4Dqh+ahdTWnrgDPDwdPEPbVGJMjZ6cKWb8V9HzygMiAtE5Z8oiGp6P820WW00/hCBl3TaBRXX1T1N2cnGdKBv6sVuZR1HFqyokG35CquX5DQ3pjv8aprD2qO0I+1eOj7C+zIdersGx6C4uBCjeGc+/tFcZuIxlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717597117; c=relaxed/simple;
-	bh=LbuZvRIY7fwpTBuUx3Np8cUoMVcmPLOhHPCIl8cD/q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j05q/hCXfaPiDiAsPtfYks1lg54nf6FRv62MZZ/JD/5U4xVOQ+yjmK/bviiLMFeuBZ/gp11UEGEjJRgGmW5oAHyNUjFCLKmQafFzccjZsPRTsA+m+qI2B3Vge7/7jxYcUjMeDLP0hrvrciEv3sfUA0d5qt3qdskwDKruCr1NwNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D42C2C32781;
-	Wed,  5 Jun 2024 14:18:33 +0000 (UTC)
-Date: Wed, 5 Jun 2024 10:18:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/5] ftrace: Comment __ftrace_hash_rec_update() and make
- filter_hash bool
-Message-ID: <20240605101832.09fb4211@gandalf.local.home>
-In-Reply-To: <ZmA6ygUWNPkq0PKV@J2N7QTR9R3>
-References: <20240604212817.384103202@goodmis.org>
-	<20240604212854.725383717@goodmis.org>
-	<ZmA6ygUWNPkq0PKV@J2N7QTR9R3>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717601205; c=relaxed/simple;
+	bh=bNuWGrfh+H7Fav06wVfQOoCuk0r6nLVCkcxz3VrlPag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CWli3XpvNI3z5bILW7yurZG/hCY5eLvUJZhKzI8cuNFmfdVOUkTYi58aFTmWrxlmdrN9ipGzrv9+LnwkfqOJlKEHCakuvsQaKzhPoW4iI0FkS5XBpwwdA0xTZqQx9Y0dUaDp4iDWkulH1xE6kCRCtzPvap1N9KMzryOKlDJni4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XHd5bif5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XHd5bif5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717601203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JBCoiHutLk0vWvVe2jPtxGY0YZJBt3gZWD7D6OcdQ4I=;
+	b=XHd5bif5rlYgI8tMc/2L0L87pjIbrU3r0a14O+1vBYcBIfEtMmPfgNpYbSMbgQEfpYg64U
+	9O377B009rOh7utNwgNJrL2dK/lzR98HzI5DG1DSRqeif7Bem6app5s0B0AuA9XPxjx43Y
+	NtvCnOIP8oar+OOZiYy54whF0SrtTYU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-513-1Nq6HuAwPg6NLiDZHQWiFg-1; Wed, 05 Jun 2024 11:26:35 -0400
+X-MC-Unique: 1Nq6HuAwPg6NLiDZHQWiFg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A5878032F8;
+	Wed,  5 Jun 2024 15:26:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.50])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 32B02C15970;
+	Wed,  5 Jun 2024 15:26:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  5 Jun 2024 17:25:01 +0200 (CEST)
+Date: Wed, 5 Jun 2024 17:24:57 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
+ uprobe_consumer
+Message-ID: <20240605152457.GD25006@redhat.com>
+References: <20240604200221.377848-1-jolsa@kernel.org>
+ <20240604200221.377848-2-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604200221.377848-2-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Wed, 5 Jun 2024 11:15:38 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 9dcdefe9d1aa..93c7c5fd4249 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -1701,8 +1701,20 @@ static bool skip_record(struct dyn_ftrace *rec)
-> >  		!(rec->flags & FTRACE_FL_ENABLED);
-> >  }
-> >  
-> > +/*
-> > + * This is the main engine to the ftrace updates.
-> > + *
-> > + * It will iterate through all the available ftrace functions
-> > + * (the ones that ftrace can have callbacks to) and set the flags
-> > + * to the associated dyn_ftrace records.  
-> 
-> I beleive s/to/in/ here, to make this one of:
-> 
-> 	set the flags in the associated dyn_ftrace records.
-> 
-> ... rather than:
-> 
-> 	set the flags to the associated dyn_ftrace records.
+I'll try to read this code tomorrow, right now I don't really understand
+what does it do and why.
 
-Thanks. It's good to get a "native English speaker" response ;-)
+However,
 
-> 
-> > + *
-> > + * @filter_hash: True if for the filter hash is udpated, false for the
-> > + *               notrace hash  
-> 
-> Typo: s/udpated/updated/
-> 
-> ... though I couldn't parse this regardless; maybe:
-> 
-> 	@filter_hash: true to update the filter hash, false to update
-> 		      the notrace hash
+On 06/04, Jiri Olsa wrote:
+>
+>  struct uprobe_consumer {
+> +	/*
+> +	 * The handler callback return value controls removal of the uprobe.
+> +	 *  0 on success, uprobe stays
+> +	 *  1 on failure, remove the uprobe
+> +	 *    console warning for anything else
+> +	 */
+>  	int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
 
-Sure.
+This is misleading. It is not about success/failure, it is about filtering.
 
--- Steve
+consumer->handler() returns UPROBE_HANDLER_REMOVE if this consumer is not
+interested in this task, so this uprobe can be removed (unless another
+consumer returns 0).
 
-> 
-> Mark.
-> 
-> > + * @inc: True to add this hash, false to remove it (increment the
-> > + *       recorder counters or decrement them).
-> > + */
-> >  static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
-> > -				     int filter_hash,
-> > +				     bool filter_hash,
-> >  				     bool inc)
-> >  {
-> >  	struct ftrace_hash *hash;
-> > -- 
-> > 2.43.0
-> > 
-> >   
+> +/*
+> + * Make sure all the uprobe consumers have only one type of entry
+> + * callback registered (either handler or handler_session) due to
+> + * different return value actions.
+> + */
+> +static int consumer_check(struct uprobe_consumer *curr, struct uprobe_consumer *uc)
+> +{
+> +	if (!curr)
+> +		return 0;
+> +	if (curr->handler_session || uc->handler_session)
+> +		return -EBUSY;
+> +	return 0;
+> +}
+
+Hmm, I don't understand this code, it doesn't match the comment...
+
+The comment says "all the uprobe consumers have only one type" but
+consumer_check() will always fail if the the 1st or 2nd consumer has
+->handler_session != NULL ?
+
+Perhaps you meant
+
+	if (!!curr->handler != !!uc->handler)
+		return -EBUSY;
+
+?
+
+Oleg.
 
