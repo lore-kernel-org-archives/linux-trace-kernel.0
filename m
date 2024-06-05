@@ -1,96 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC2415FA60
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jun 2024 21:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89584125D6;
+	Wed,  5 Jun 2024 21:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717622739; cv=none; b=GmlJgJvh1SE0V3h6ztijtg0FG1vtlwl2wGpLy543bQJhWDRzdb4+jv5W1SLUgD4avezWleEzKKxp5SaLYlIUw2pxFMtdTY2p+0mGvAteVF1Xoui7qkbHRvP1fWgG/51U3k62JZo8jtX6bWqOflxdlah42dM80oFJbF0zrsRqBv0=
+	t=1717624015; cv=none; b=oLlwCevkwCoEH7JuGrcFl/d2Qnu+w7rgqbpWWmxkvQ86y70V3L5RWdcZffUlV0G6zBv895aLY1nhzcAa4AZpHmoi9ts/tpLhOye7IjSE1V99dnRge1Mf8hY9CJM/+L+xX6w1KQBKkNvmUlkz5DPHfgaXKLEetFvHGZPqVC11NmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717622739; c=relaxed/simple;
-	bh=vPUsNLtvA3c1wzJPrmq0xqsqKfT7lCp9zPJqLgYvZgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p7aC3zFN7diGx103whPWNAhx0BNGWEO0R2ZH6GZV9ZF+v1jCyzdRN7k54kFCRHrbeapnfCSM1CQNa0zLkXt5eWweIb01PSWlco+cgqD1hsC4pRRnZBt7L8rQXdlApFH/7xHy4YX1kYCWdDmUKgoInzCxMB46AMW2MMCi85moxz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gP1tfCz9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717624015; c=relaxed/simple;
+	bh=8IwSqABN3QUMo7Xt3msOWudlsQ/lqx8RLiIFZ+0j31g=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=M9oUwMZAIl0wBKVD7uX5bdo8u8zMYiFO4GALTbQ7GbcYrON5LjfX+0L1uWXel/0Znp0QM0ifqghQNG8cXQWo54teLXS6pxw45OzUjVeg1VC4VSgBH6qaF3Lp4RFcuKUv9FERxYkkL7CW4t9LqZQSdPT84AWFQkOhfpdIZ/EF+6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3VcNcRA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gP1tfCz9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717622737;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vPUsNLtvA3c1wzJPrmq0xqsqKfT7lCp9zPJqLgYvZgg=;
-	b=gP1tfCz9oXYYzXNNzEkk7XSptssjpU5x1/Vesy3yGy1i0svzIEuxJsaij666ERs4/onpA8
-	Cqnb2Lg+f8yIl69ozbvY4vLCoQhJRLA5nQ4+FAH/GOa5oJO/0n2SzfP0qvrLuiDi6dJsh+
-	dBT1u8QeLs2HLaRmub2qcS31/8Ab0w8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-249-cJTSEEHmPlaMTdqrJfJyqQ-1; Wed, 05 Jun 2024 17:25:30 -0400
-X-MC-Unique: cJTSEEHmPlaMTdqrJfJyqQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9120A85A588;
-	Wed,  5 Jun 2024 21:25:28 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.62])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 7534A2166AF9;
-	Wed,  5 Jun 2024 21:25:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Jun 2024 23:24:00 +0200 (CEST)
-Date: Wed, 5 Jun 2024 23:23:55 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
- uprobe_consumer
-Message-ID: <20240605212354.GC19139@redhat.com>
-References: <20240604200221.377848-1-jolsa@kernel.org>
- <20240604200221.377848-2-jolsa@kernel.org>
- <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
- <20240605175619.GH25006@redhat.com>
- <CAEf4Bzbz3vi6ahkUu7yABV-QhkzNCF-ROcRjUpGjt0FRjfDuKQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3VcNcRA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EB7C2BD11;
+	Wed,  5 Jun 2024 21:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717624015;
+	bh=8IwSqABN3QUMo7Xt3msOWudlsQ/lqx8RLiIFZ+0j31g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J3VcNcRAd5sterQjy8ufiNGoR9ycCDnEBBSeNq95rhHVOO7SA60FXX3/Xbt0wpwr/
+	 XHHkBYpP5rz9l/1dW1/MlhXgYs05Y+bXJ6zfYbbMocPlRBnAz5Mk/BIu2Uiir4IPHt
+	 p1iuAuTjCfY9JSGqU8Iqmt7whs5+POsThIg9U8AGeugdLeRBe0I/4U2/9lTLvWiFDH
+	 Jsq/koTF2KtPSdKGW7vwiBdSNhu6nP/EOVvmFyPAnBNsVbSKa11WYYKbVFISiskX6L
+	 N0sYIz3olSB0GQmZGpbf8U/Q6gFbvxlMXUw+eArKnUlKZhgUb8x6UlsCg3nUdRZVhN
+	 g83pGVEYMqOoA==
+Date: Thu, 6 Jun 2024 06:46:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/5] ftrace: Rename dup_hash() and comment it
+Message-Id: <20240606064651.2de33dadaf241dda11fb70bc@kernel.org>
+In-Reply-To: <20240604212854.564747474@goodmis.org>
+References: <20240604212817.384103202@goodmis.org>
+	<20240604212854.564747474@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4Bzbz3vi6ahkUu7yABV-QhkzNCF-ROcRjUpGjt0FRjfDuKQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 06/05, Andrii Nakryiko wrote:
->
-> WDYT? It's still fast, and it's simpler than the shadow stack idea, IMO.
+On Tue, 04 Jun 2024 17:28:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Andrii. I am alredy sleeping, I'll try to read your email tomorrow.
-Right now I can only say that everything is simpler than the shadow stack ;)
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The name "dup_hash()" is a misnomer as it does not duplicate the hash that
+> is passed in, but instead moves its entities from that hash to a newly
+> allocated one. Rename it to "__move_hash()" (using starting underscores as
+> it is an internal function), and add some comments about what it does.
 
-> P.S. Regardless, maybe we should change the order in which we insert
-> consumers to uprobe? Right now uprobe consumer added later will be
-> executed first, which, while not wrong, is counter-intuitive.
+Good change.
 
-Agreed...
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Even if currently this doesn't really matter, I guess it is supposed
-that uc->handler() is "non-intrusive".
+Thank you,
 
-Oleg.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ftrace.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index da7e6abf48b4..9dcdefe9d1aa 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1391,7 +1391,11 @@ ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+>  static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
+>  				       struct ftrace_hash *new_hash);
+>  
+> -static struct ftrace_hash *dup_hash(struct ftrace_hash *src, int size)
+> +/*
+> + * Allocate a new hash and remove entries from @src and move them to the new hash.
+> + * On success, the @src hash will be empty and should be freed.
+> + */
+> +static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+>  {
+>  	struct ftrace_func_entry *entry;
+>  	struct ftrace_hash *new_hash;
+> @@ -1438,7 +1442,7 @@ __ftrace_hash_move(struct ftrace_hash *src)
+>  	if (ftrace_hash_empty(src))
+>  		return EMPTY_HASH;
+>  
+> -	return dup_hash(src, size);
+> +	return __move_hash(src, size);
+>  }
+>  
+>  static int
+> -- 
+> 2.43.0
+> 
+> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
