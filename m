@@ -1,127 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEB5195388
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jun 2024 17:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2951D3D9E;
+	Wed,  5 Jun 2024 18:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610280; cv=none; b=IptT+d8tPpi2As6F+470RTIfL14lYYULnhndX1LBTyvFfapXe4oqGTNZOB1l2MOxjkm8JSTwi1Hlo5Il4P64bOo04LC8V82FuXdMdNj0BqkiDkRf1NLYSE8uzpC01G6PRM0uGKGLqvmkIBQz2ibQ1rLn5dUFc0ND5MxdacuVnRo=
+	t=1717610646; cv=none; b=Hx7i+Sp0Gb7f6Fw5q300Sp71Fuj5hG/CYggeQ6gF/Sud805Ww2MWVGTrk1//TPZTJsPRUwo420gyBVNvfZLs7BMv/CCOex6WQlpSYmG/ewsidlCiYZEV26STUCvvKZ/fP3uihcibGCEN+XH6k5cguGnyE+M0EARqdVHCpmqDGUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610280; c=relaxed/simple;
-	bh=M+kTfQgopDw6pRHN5KgPqRjscFYLhvqP2Cm8FVR4IoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KTBQBdyOrAjpu/D0m0m3CVcLuHCnq3nc13QtGnpJQBY/Fob+Gm98U040THgSSzFsmjz76pbIBwbT+8LOa8+YDlzS+r990rMlKmInNowBpMf6c3EFU89oG5fnKakRw7nqf8wKIXzAGRlhE8j6wowqsaCAqgqD43Bvlap0Y0v+jMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PnMOpkGL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PnMOpkGL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717610277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VuJ4fNB8fhXRvR11VmS6YjcKZS/vPkYMz+xJwYDKrdE=;
-	b=PnMOpkGL7uTbq05ljgYn+9PAR6iRYVBN3qoXpYP2SKY2xEnBgEjuZAkN4Wp7X7pkFqgKRM
-	/eMbgdgnK4aKlqgdnFXPDqYc6m11bL2v964doScdEWSyiW8clPi0fP/mYznWhMpXUBFESa
-	8BIKD2W/qwYQgCnrg/XVtzNMHKQpGgk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-IkNazG97MHS7anzZWG_1Mw-1; Wed, 05 Jun 2024 13:57:53 -0400
-X-MC-Unique: IkNazG97MHS7anzZWG_1Mw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2D0B85A588;
-	Wed,  5 Jun 2024 17:57:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.62])
-	by smtp.corp.redhat.com (Postfix) with SMTP id DE3E5408A433;
-	Wed,  5 Jun 2024 17:57:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Jun 2024 19:56:24 +0200 (CEST)
-Date: Wed, 5 Jun 2024 19:56:19 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
- uprobe_consumer
-Message-ID: <20240605175619.GH25006@redhat.com>
-References: <20240604200221.377848-1-jolsa@kernel.org>
- <20240604200221.377848-2-jolsa@kernel.org>
- <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
+	s=arc-20240116; t=1717610646; c=relaxed/simple;
+	bh=Ldbg+sdfEohAnkSLIhjaFK1vi72Igfk+qnGb+F/ERbE=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=QOt8axdhiOAXyZUrB3rKdZXIZWkBSX12oF8wM1Q6CBwxB4es8BJcCmB+rl2mJ2CfxgBOsTtDtE889DYyg3UFZWq4xTncJ1OgbRvj5c6ZD3WcHm4SKciAKp1pM0XdMRJMpjpqtiLN249LHLCflgUEkSpwHkhZlW9t89pAo7UDQrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF55C2BD11;
+	Wed,  5 Jun 2024 18:04:05 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sEuzY-00000000hX1-2oUS;
+	Wed, 05 Jun 2024 14:04:08 -0400
+Message-ID: <20240605180408.537723591@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 05 Jun 2024 14:03:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 1/5] ftrace: Rename dup_hash() and comment it
+References: <20240605180334.090848865@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=UTF-8
 
-On 06/05, Andrii Nakryiko wrote:
->
-> so any such
-> limitations will cause problems, issue reports, investigation, etc.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Agreed...
+The name "dup_hash()" is a misnomer as it does not duplicate the hash that
+is passed in, but instead moves its entities from that hash to a newly
+allocated one. Rename it to "__move_hash()" (using starting underscores as
+it is an internal function), and add some comments about what it does.
 
-> As one possible solution, what if we do
->
-> struct return_instance {
->     ...
->     u64 session_cookies[];
-> };
->
-> and allocate sizeof(struct return_instance) + 8 *
-> <num-of-session-consumers> and then at runtime pass
-> &session_cookies[i] as data pointer to session-aware callbacks?
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ftrace.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-I too thought about this, but I guess it is not that simple.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da7e6abf48b4..9dcdefe9d1aa 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1391,7 +1391,11 @@ ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+ static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
+ 				       struct ftrace_hash *new_hash);
+ 
+-static struct ftrace_hash *dup_hash(struct ftrace_hash *src, int size)
++/*
++ * Allocate a new hash and remove entries from @src and move them to the new hash.
++ * On success, the @src hash will be empty and should be freed.
++ */
++static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+ {
+ 	struct ftrace_func_entry *entry;
+ 	struct ftrace_hash *new_hash;
+@@ -1438,7 +1442,7 @@ __ftrace_hash_move(struct ftrace_hash *src)
+ 	if (ftrace_hash_empty(src))
+ 		return EMPTY_HASH;
+ 
+-	return dup_hash(src, size);
++	return __move_hash(src, size);
+ }
+ 
+ static int
+-- 
+2.43.0
 
-Just for example. Suppose we have 2 session-consumers C1 and C2.
-What if uprobe_unregister(C1) comes before the probed function
-returns?
-
-We need something like map_cookie_to_consumer().
-
-> > +       /* The handler_session callback return value controls execution of
-> > +        * the return uprobe and ret_handler_session callback.
-> > +        *  0 on success
-> > +        *  1 on failure, DO NOT install/execute the return uprobe
-> > +        *    console warning for anything else
-> > +        */
-> > +       int (*handler_session)(struct uprobe_consumer *self, struct pt_regs *regs,
-> > +                              unsigned long *data);
-> > +       int (*ret_handler_session)(struct uprobe_consumer *self, unsigned long func,
-> > +                                  struct pt_regs *regs, unsigned long *data);
-> > +
->
-> We should try to avoid an alternative set of callbacks, IMO. Let's
-> extend existing ones with `unsigned long *data`,
-
-Oh yes, agreed.
-
-And the comment about the return value looks confusing too. I mean, the
-logic doesn't differ from the ret-code from ->handler().
-
-"DO NOT install/execute the return uprobe" is not true if another
-non-session-consumer returns 0.
-
-Oleg.
 
