@@ -1,97 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835301667C8;
-	Wed,  5 Jun 2024 23:45:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A0C1AAA5;
+	Wed,  5 Jun 2024 23:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717631105; cv=none; b=sfaT1NwOCrWZAk/sV6bFfn8WkBMcbvKlld4JGUqnikr+gzFBktnvlu195P5YR91HfmHrPA4QhQIyAfdUQSwcj6d0fKO3Ho5wL3GN8r1r/mkdZXNwnOk8t0glHjadwF8VruPLbdoWqdbpLweAStpXxhbwhXnpRF/Uz97HzeBc/ic=
+	t=1717631871; cv=none; b=Wub+LatOf0YHSujXa/N/tJLFpDdqVMYhpfTeHhHCCgkzeR8sctu9hS80aTnlT4G2fkphiYidR7g/CLt5uRFtHJnhpM4dC0vOzOYiUSomWREt4TBTaieXUm8LPIVVI01Y/f3ho1V98dRp+ajVxd0ig0GiZw6PiVgDSUlR5m0oofI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717631105; c=relaxed/simple;
-	bh=SxNOZQC6b6ULTjoVdRyoVNcIUDCX2H7/xrBVJ2m0CiU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AOtUGVa95nU0bXhs17ciP72zy5BfSPfZPlRcGRUqlQRe2VfZogCff8fnjAcU2NZh73cFJZjT5lTxHv49ETg/czbxKmH5Cve46Qzba7xDVbt4wzzZpUAr5sDK/FUY8YbAlPy1MTIYsaCDv8wMTA7pRkFAa3R85Uoo0EjT5WngW8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUoqOXff; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUoqOXff"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDE1C2BD11;
-	Wed,  5 Jun 2024 23:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717631104;
-	bh=SxNOZQC6b6ULTjoVdRyoVNcIUDCX2H7/xrBVJ2m0CiU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QUoqOXfftlxdVJpBAQZ56H/YUZBhK9yA8rKZQFby3Pavo8j19QoUI9E0XxM+srCEv
-	 X0DpKrvtD4SIvVsJ+ILCCLV2CpOybfrtpnSn3hGJi1gbdBsmMG9eEIb7Nvj077PhcE
-	 vijfRTYA9saiGtlE7Fv8XJ/ghZUN5YLmKiCguFuLktK/n1Q0rKPPQTZZoxuBgpZTog
-	 cQYVLeo5GLpP3KWTW9wsa44Nk8kPxtXSpqVOjpOwP6I+o4J16OYtG0AFqwKMiPhqKb
-	 dNDrYXxynBMQFer23r+q/nWY4uSA/ShmWzXUZaeyYhZFRT3pkFYfuGJ1HWqbllwAcG
-	 k8FlZpYVS8SLg==
-Date: Thu, 6 Jun 2024 08:45:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 0/5] ftrace: Clean up and comment code
-Message-Id: <20240606084500.134f52ee78cad21325cf982b@kernel.org>
-In-Reply-To: <20240605180334.090848865@goodmis.org>
-References: <20240605180334.090848865@goodmis.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717631871; c=relaxed/simple;
+	bh=5ApjUtK872vDWT9BiZ/Y5CWSDUL4VWEAnM4+OUhd+Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=swM4D0LYZknRjEJeaV/zhOTNcKjNNN6DEXrd++mTLxliK8nBJLyyOWrCWf1iASivwiEjuytJWJx57GSKU5zmJEEwYHaTYEanYY7JYWZzC2mJBTYLddzldrsTcpvKU2PcM8Se7AAEIVIdXxsJ4bnlYV93iQlLtrJy4K5SUmv5JmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445C9C2BD11;
+	Wed,  5 Jun 2024 23:57:48 +0000 (UTC)
+Date: Wed, 5 Jun 2024 19:57:50 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Yan Zhai <yan@cloudflare.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, David Ahern
+ <dsahern@kernel.org>, Abhishek Chauhan <quic_abchauha@quicinc.com>, Mina
+ Almasry <almasrymina@google.com>, Florian Westphal <fw@strlen.de>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>, David Howells
+ <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann
+ <daniel@iogearbox.net>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Pavel Begunkov
+ <asml.silence@gmail.com>, linux-kernel@vger.kernel.org,
+ kernel-team@cloudflare.com, Jesper Dangaard Brouer <hawk@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Neil Horman <nhorman@tuxdriver.com>,
+ linux-trace-kernel@vger.kernel.org, Dan Carpenter
+ <dan.carpenter@linaro.org>
+Subject: Re: [RFC v3 net-next 1/7] net: add rx_sk to trace_kfree_skb
+Message-ID: <20240605195750.1a225963@gandalf.local.home>
+In-Reply-To: <983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
+References: <cover.1717529533.git.yan@cloudflare.com>
+	<983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 05 Jun 2024 14:03:34 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 4 Jun 2024 14:47:38 -0700
+Yan Zhai <yan@cloudflare.com> wrote:
 
-> While working on the function_graph multiple users code, I realized
-> that I was struggling with how the ftrace code worked. Being the
-> author of such code meant that it wasn't very intuitive. Namely, the
-> function names were not descriptive enough, or at least, they needed
-> comments.
+> skb does not include enough information to find out receiving
+> sockets/services and netns/containers on packet drops. In theory
+> skb->dev tells about netns, but it can get cleared/reused, e.g. by TCP
+> stack for OOO packet lookup. Similarly, skb->sk often identifies a local
+> sender, and tells nothing about a receiver.
 > 
-> This series moves to solve some of that via changing a couple function
-> names and parameters and adding comments to many of them.
+> Allow passing an extra receiving socket to the tracepoint to improve
+> the visibility on receiving drops.
 > 
-
-This series looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-for this series.
-
-Thanks!
-
-> There's more to do, but this at least moves it in the right direction.
+> Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> ---
+> v2->v3: fixed drop_monitor function prototype
+> ---
+>  include/trace/events/skb.h | 11 +++++++----
+>  net/core/dev.c             |  2 +-
+>  net/core/drop_monitor.c    |  9 ++++++---
+>  net/core/skbuff.c          |  2 +-
+>  4 files changed, 15 insertions(+), 9 deletions(-)
 > 
-> Changes since v1: https://lore.kernel.org/all/20240604212817.384103202@goodmis.org/
-> 
-> - While working on v1 and responding to a comment from Mark Rutland about
->   the usage of "ftrace_hash" in the __ftrace_hash_rec_update() code,
->   I realized that the function does pretty much the same thing if
->   it is set or not set (but slightly differently). It turns out that
->   it isn't needed and that parameter can be removed, making the code
->   simpler.
-> 
-> - Fixed some wording and typos suggested by Mark Rutland.
-> 
-> Steven Rostedt (Google) (5):
->       ftrace: Rename dup_hash() and comment it
->       ftrace: Remove "ftrace_hash" parameter from __ftrace_hash_rec_update()
->       ftrace: Add comments to ftrace_hash_rec_disable/enable()
->       ftrace: Convert "inc" parameter to bool in ftrace_hash_rec_update_modify()
->       ftrace: Add comments to ftrace_hash_move() and friends
-> 
-> ----
->  kernel/trace/ftrace.c | 161 +++++++++++++++++++++++++++++---------------------
->  1 file changed, 94 insertions(+), 67 deletions(-)
+> diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
+> index 07e0715628ec..aa6b46b6172c 100644
+> --- a/include/trace/events/skb.h
+> +++ b/include/trace/events/skb.h
+> @@ -24,15 +24,16 @@ DEFINE_DROP_REASON(FN, FN)
+>  TRACE_EVENT(kfree_skb,
+>  
+>  	TP_PROTO(struct sk_buff *skb, void *location,
+> -		 enum skb_drop_reason reason),
+> +		 enum skb_drop_reason reason, struct sock *rx_sk),
+>  
+> -	TP_ARGS(skb, location, reason),
+> +	TP_ARGS(skb, location, reason, rx_sk),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(void *,		skbaddr)
+>  		__field(void *,		location)
+>  		__field(unsigned short,	protocol)
+>  		__field(enum skb_drop_reason,	reason)
+> +		__field(void *,		rx_skaddr)
+
+Please add the pointer after the other pointers:
+
+ 		__field(void *,		skbaddr)
+ 		__field(void *,		location)
++		__field(void *,		rx_skaddr)
+ 		__field(unsigned short,	protocol)
+ 		__field(enum skb_drop_reason,	reason)
+
+otherwise you are adding holes in the ring buffer event.
+
+The TP_STRUCT__entry() is a structure that is saved in the ring buffer. We
+want to avoid alignment holes. I also question having a short before the
+enum, if the emum is 4 bytes. The short should be at the end.
+
+In fact, looking at the format file, there is a 2 byte hole:
+
+ # cat /sys/kernel/tracing/events/skb/kfree_skb/format
+
+name: kfree_skb
+ID: 1799
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
+
+	field:void * skbaddr;	offset:8;	size:8;	signed:0;
+	field:void * location;	offset:16;	size:8;	signed:0;
+	field:unsigned short protocol;	offset:24;	size:2;	signed:0;
+	field:enum skb_drop_reason reason;	offset:28;	size:4;	signed:0;
+
+Notice that "protocol" is 2 bytes in size at offset 24, but "reason" starts
+at offset 28. This means at offset 26, there's a 2 byte hole.
+
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+>  	),
+>  
+>  	TP_fast_assign(
+> @@ -40,12 +41,14 @@ TRACE_EVENT(kfree_skb,
+>  		__entry->location = location;
+>  		__entry->protocol = ntohs(skb->protocol);
+>  		__entry->reason = reason;
+> +		__entry->rx_skaddr = rx_sk;
+>  	),
+>  
+
