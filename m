@@ -1,80 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54FEC10A36;
-	Wed,  5 Jun 2024 14:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DD56FB0;
+	Wed,  5 Jun 2024 14:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717596481; cv=none; b=tYcVxTH3CSI+7jWmue3PHg2EvySTVSvFPYNbN6EXBoNkl6XD4CXuePHYwaQfrQK8jSHn8OMCqu1pmYgpStSeZh78dYpmPkm0ygVdl0Tjeo2G5YA1EoJ1/2Lpt20BDGWxexYxfAlQNOskMfoho/bYgJ0p7KZ1eo7NyIWaufUWleE=
+	t=1717597117; cv=none; b=FueftfX4pRD7SKdTqiUFEX41LKjVJp7voyqm1FNuuiMn7zwQLFAA+3U4B7Lv3wX011kMmf1q4MD6r8IHias0SwG4WXqZIHvQaa8xpGyYRLL2NGB+oaL/tsXgbAPEf1Ak+3vmBiqUIHabFSCBdkSjnL4odXYi/L4lSjAaWEn5hbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717596481; c=relaxed/simple;
-	bh=b+SI0Tg90J/6xJIl7KUZqAmw1jv9An2oJ/VG+j4rTMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBIM8k+YfKNYMsWCEN6gQUmhTOebaegkL93BrDIewaICVU0cNUOSZzTh4q4O7SWwvtS0IYRQLdA9TXiPv2N31pC5Fpa0FvDVifEHWA1gt4nhLfOzvU2yfVzLO0oNkAibXtR8h97QSrYOhzPPqVzPE2xbL41lewNq1JwPeg+84oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 087C3339;
-	Wed,  5 Jun 2024 07:08:23 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D9D33F792;
-	Wed,  5 Jun 2024 07:07:55 -0700 (PDT)
-Date: Wed, 5 Jun 2024 15:07:49 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Florent Revest <revest@chromium.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v3 00/27] function_graph: Allow multiple users for
- function graph tracing
-Message-ID: <ZmBxNcLtvx0A2asd@J2N7QTR9R3>
-References: <20240603190704.663840775@goodmis.org>
+	s=arc-20240116; t=1717597117; c=relaxed/simple;
+	bh=LbuZvRIY7fwpTBuUx3Np8cUoMVcmPLOhHPCIl8cD/q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j05q/hCXfaPiDiAsPtfYks1lg54nf6FRv62MZZ/JD/5U4xVOQ+yjmK/bviiLMFeuBZ/gp11UEGEjJRgGmW5oAHyNUjFCLKmQafFzccjZsPRTsA+m+qI2B3Vge7/7jxYcUjMeDLP0hrvrciEv3sfUA0d5qt3qdskwDKruCr1NwNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D42C2C32781;
+	Wed,  5 Jun 2024 14:18:33 +0000 (UTC)
+Date: Wed, 5 Jun 2024 10:18:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/5] ftrace: Comment __ftrace_hash_rec_update() and make
+ filter_hash bool
+Message-ID: <20240605101832.09fb4211@gandalf.local.home>
+In-Reply-To: <ZmA6ygUWNPkq0PKV@J2N7QTR9R3>
+References: <20240604212817.384103202@goodmis.org>
+	<20240604212854.725383717@goodmis.org>
+	<ZmA6ygUWNPkq0PKV@J2N7QTR9R3>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603190704.663840775@goodmis.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 03, 2024 at 03:07:04PM -0400, Steven Rostedt wrote:
-> This is a continuation of the function graph multi user code.
-> I wrote a proof of concept back in 2019 of this code[1] and
-> Masami started cleaning it up. I started from Masami's work v10
-> that can be found here:
+On Wed, 5 Jun 2024 11:15:38 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index 9dcdefe9d1aa..93c7c5fd4249 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -1701,8 +1701,20 @@ static bool skip_record(struct dyn_ftrace *rec)
+> >  		!(rec->flags & FTRACE_FL_ENABLED);
+> >  }
+> >  
+> > +/*
+> > + * This is the main engine to the ftrace updates.
+> > + *
+> > + * It will iterate through all the available ftrace functions
+> > + * (the ones that ftrace can have callbacks to) and set the flags
+> > + * to the associated dyn_ftrace records.  
 > 
->  https://lore.kernel.org/linux-trace-kernel/171509088006.162236.7227326999861366050.stgit@devnote2/
+> I beleive s/to/in/ here, to make this one of:
 > 
-> This is *only* the code that allows multiple users of function
-> graph tracing. This is not the fprobe work that Masami is working
-> to add on top of it. As Masami took my proof of concept, there
-> was still several things I disliked about that code. Instead of
-> having Masami clean it up even more, I decided to take over on just
-> my code and change it up a bit.
+> 	set the flags in the associated dyn_ftrace records.
+> 
+> ... rather than:
+> 
+> 	set the flags to the associated dyn_ftrace records.
 
-FWIW, this is useful to me as-is for testing stacktracing.
+Thanks. It's good to get a "native English speaker" response ;-)
 
-Before this series I had some horrid hacks to manipulate the global
-filters, and after this series I just need to manipulate the filters in
-fgraph_ops::ops, which is *much* nicer.
+> 
+> > + *
+> > + * @filter_hash: True if for the filter hash is udpated, false for the
+> > + *               notrace hash  
+> 
+> Typo: s/udpated/updated/
+> 
+> ... though I couldn't parse this regardless; maybe:
+> 
+> 	@filter_hash: true to update the filter hash, false to update
+> 		      the notrace hash
 
-I've pushed out my WIP to:
+Sure.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=stacktrace/tests
+-- Steve
 
-... which is all to say, this is useful and I've given this some testing
-beyond the usual ftrace tests.
+> 
+> Mark.
+> 
+> > + * @inc: True to add this hash, false to remove it (increment the
+> > + *       recorder counters or decrement them).
+> > + */
+> >  static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+> > -				     int filter_hash,
+> > +				     bool filter_hash,
+> >  				     bool inc)
+> >  {
+> >  	struct ftrace_hash *hash;
+> > -- 
+> > 2.43.0
+> > 
+> >   
 
-Mark.
