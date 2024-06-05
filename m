@@ -1,74 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0EC257B;
-	Wed,  5 Jun 2024 09:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D150E1946CA;
+	Wed,  5 Jun 2024 09:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579994; cv=none; b=M6F3LyFpRRJF7s8KtKkD2o1wLnNJrtyv9wui6E9vCrPWrDrLnmblw5mWY+MjeXHIzSg51eU3BCX/Llosm4bVTSdWCsxNnx4xiW69BA5WqfHGlRfEMbMmlPEp+nO8jvHniW9+11sWAQus1OzNC1Kt4ZmF+NlmiN+LKl2VwCtbfcs=
+	t=1717580760; cv=none; b=nQ9AJ5UDbo8uuPdi/AUZlAsdnckCKv3PrBvQCi5arwBgYOtVr+D1vjYsIukeqvr4UdZus8cVJO0iqAyV3WLaSIkg9GzGwPJJEY4q6YRMQeqrSC/tooXnh+P4HTGi5ScTKv6nx/fawyuLLxQ0jK6HtJsXvN14MFvh3giYzjtDmM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579994; c=relaxed/simple;
-	bh=B61tA63KbpXfZktTbcuBLB4bpYvnBjHJDASbK+sOtAo=;
+	s=arc-20240116; t=1717580760; c=relaxed/simple;
+	bh=HRhwsCwZJMDT/pJ0buxmvyRoZ6tgXbl42wDlzIPXQGs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RDJ01rMQaVv/qH1off+58JL8ZC8qnk9niw0FSc7Cfh3klJpThD9By0GzPFC5gK13eScD1W4U1rMHADZy0iYO8k+YmVZkk5uwXEjyI/AtdpFfdg6chDyXj0xRaF32VSCZSUqyd500/pZhjOlfcxo+Nujlk7iHexcsaEOpGF6sXZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m5rcPLyF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KvP6XaFR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m5rcPLyF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KvP6XaFR"
-Date: Wed, 5 Jun 2024 11:33:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717579991;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B61tA63KbpXfZktTbcuBLB4bpYvnBjHJDASbK+sOtAo=;
-	b=m5rcPLyFK0070UTaCOcQIeOSHyH+3FFROc89Mo+vVFznBW0r/574OQG0JH7oL5KHjZ8kTN
-	AolGrI+GtVvBWC5UisJUDigLCfRLJupOEnn4p7RhBoTPNSU9V88NjTqRKTq7gRGaYCieK6
-	gP2CdkUzEkvsfhRjp0alXbi9QTVFtRQ04BpjfuPDHaqBvez0wFC9ovSpLuuSgVGopbpVvl
-	JDQPPR+ZEkzLEsg2+X1cxs18S7XnxicvS1SuD24zDPZJMMBM+8HO/rC3TOdUdH22jK3a1l
-	5NJwJBQYwCXlsJtQSvOYFtJvKkd3PmK02TtymLJqNpPjuLr53LTH994atfEt9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717579991;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B61tA63KbpXfZktTbcuBLB4bpYvnBjHJDASbK+sOtAo=;
-	b=KvP6XaFRDHV5L8VP9gdw+5QgKXaUmZlobZut5gMGifYgnuzjQDAHRrXBWXUpb66CGKD0Z9
-	ypPcnox7X8UvKUAQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Metin Kaya <metin.kaya@arm.com>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v5 0/2] Clean up usage of rt_task()
-Message-ID: <20240605093310.tQbD0ywa@linutronix.de>
-References: <20240604144228.1356121-1-qyousef@layalina.io>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yosi5M8EFnHx+xZt+ATusVR8bEVeKjwxI9p5mcDPtwne9d58o9mAV5RSpbPebXDBZLGVWHnLwhQWX9vsMmRNIPhWXTHRvusmh4rlHTfmY/C6yTTimy6BWj/uyk1I6olnZ/Z7cRnLIbOFRt9v7P+SABZ5/qALwnSIkLStNVMGaS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F951DA7;
+	Wed,  5 Jun 2024 02:46:22 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 426913F792;
+	Wed,  5 Jun 2024 02:45:57 -0700 (PDT)
+Date: Wed, 5 Jun 2024 10:45:54 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ftrace/selftests: Fix pid test with function graph not
+ showing pids
+Message-ID: <ZmAz0uEKV_9ijfSF@J2N7QTR9R3>
+References: <20240604152550.0c01d7cd@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240604144228.1356121-1-qyousef@layalina.io>
+In-Reply-To: <20240604152550.0c01d7cd@gandalf.local.home>
 
-On 2024-06-04 15:42:26 [+0100], Qais Yousef wrote:
-> Make rt_task() return true only for RT class and add new realtime_task() to
-> return true for RT and DL classes to avoid some confusion the old API can
-> cause.
+On Tue, Jun 04, 2024 at 03:25:50PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The pid filtering test will set the pid filters and make sure that both
+> function and function_graph tracing honors the filters. But the
+> function_graph tracer test was failing because the PID was not being
+> filtered properly. That's because the funcgraph-proc option wasn't getting
+> set. Without that option the PID is not shown.
+> 
+> Instead we get:
+> 
+> 	+ cat trace
+> 	# tracer: function_graph
+> 	#
+> 	# CPU  DURATION                  FUNCTION CALLS
+> 	# |     |   |                     |   |   |   |
+> 	 3) ! 143.685 us  |  kernel_clone();
+> 	 3) ! 127.055 us  |  kernel_clone();
+> 	 1) ! 127.170 us  |  kernel_clone();
+> 	 3) ! 126.840 us  |  kernel_clone();
+> 
+> When we should be getting:
+> 
+> 	+ cat trace
+> 	# tracer: function_graph
+> 	#
+> 	# CPU  TASK/PID         DURATION                  FUNCTION CALLS
+> 	# |     |    |           |   |                     |   |   |   |
+> 	 4)    bash-939    | # 1070.009 us |  kernel_clone();
+> 	 4)    bash-939    | # 1116.903 us |  kernel_clone();
+> 	 5)    bash-939    | ! 976.133 us  |  kernel_clone();
+> 	 5)    bash-939    | ! 954.012 us  |  kernel_clone();
+> 
+> The test looks for the pids it is filtering and will fail if it can not
+> find them. Without fungraph-proc option set, it will not be displayed and
+> the test will fail.
+> 
+> Link: https://lore.kernel.org/all/Zl9JFnzKGuUM10X2@J2N7QTR9R3/
+> 
+> Fixes: 35b944a997e2 ("selftests/ftrace: Add function_graph tracer to func-filter-pid test")
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Applying this makes the pid filter tests go from FAIL to PASS, so FWIW:
 
-Sebastian
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+>  tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+> index c6fc9d31a496..8dcce001881d 100644
+> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+> @@ -8,6 +8,7 @@
+>  # Also test it on an instance directory
+>  
+>  do_function_fork=1
+> +do_funcgraph_proc=1
+>  
+>  if [ ! -f options/function-fork ]; then
+>      do_function_fork=0
+> @@ -28,6 +29,7 @@ fi
+>  
+>  if [ $do_funcgraph_proc -eq 1 ]; then
+>      orig_value2=`cat options/funcgraph-proc`
+> +    echo 1 > options/funcgraph-proc
+>  fi
+>  
+>  do_reset() {
+> -- 
+> 2.43.0
+> 
