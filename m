@@ -1,117 +1,142 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D98861FC6;
-	Wed,  5 Jun 2024 04:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892A128370;
+	Wed,  5 Jun 2024 05:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717563071; cv=none; b=HxqK/jhO5IUyOR4j3xLM8+KNh94PKRpex8KTVVC/dm8mqfFIeYhim1BYS6N/SefcDh/DIimSAiS11ysKjsahwaHu9U90Z5ksVqUjpU483+IusFfATyGepjQ0XKRhG/7EkHOMS5a6Fiq9kaIf5dZIimIn6c0KNLSs+N3FYHXEOtU=
+	t=1717564538; cv=none; b=KOv9li5Z0jqWk3cTlCKb4azkITqwpU4WGgiq3NV6f0Wn3nU3YQrZHnBvpNVTN/Kt1KKkc4pY/Ijc11f0DnY2CDBAhByOD3vG0sUE4vHmkbK6aAIRb68qqVvtlEPIzZ58aHvNeEgJDPI59afMfMyc9ZFR83Oj+1jMeGMS7lSP+j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717563071; c=relaxed/simple;
-	bh=IDc6ujVuOTHOaHdN/xtBa1iDkOFL97kXwy4RC0H8QRQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oHui0dFnMVP2moD1ATOFIqM3yax95kI/zFN8lrkDx9AQRQSnf/tabPQvwvHVGE5J4wiRlmc5bPSoKNee5Fgjte/4r+8tu7XW2cTbLFxPMaCOJAkaRJe7PTpT7SwXImLe3GFuUpLWqtrW2Hv/Abh1b0+IXTOl9zbhJZYBOOZcXSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=kwrZnMqW; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1717564538; c=relaxed/simple;
+	bh=8yQ6W/oD6gbHM62049CRaNAqHQbwa8dZ8raBK0FrkvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NDd2+SzUEj2ANuNM6u/nRAcg+BG+CNKSarft7HmmEyvcQXvwM4uOZ8iL/I66gqvoYkH0Y0445OEJWD7p9Jz7kvSzFyEgmA/bnqSTDit/IJjEAVlLUoTpodNHWbRreXpUJvZ1FKZcjxGz7K8g6DjDP7xiteUFDErzIpoddEQfX8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OPfGpBg/; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kwrZnMqW"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454KXfJ9003930;
-	Tue, 4 Jun 2024 21:44:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=OKNIK6PQn1SUEDYPQ/4MC5ygM
-	mYXQNZukQIA+FsOkDc=; b=kwrZnMqWrvwVKrucKc6RKSWiZfEU9gx4dyqkPN9rJ
-	5aXlgh7Ub43U16sepdDCYwm7WiaQyLgNvlludMmNgSReH27HtRp8pv6Fvj47WDu5
-	N/xy8R5CymSRAK4DdRm/6C+FO10qgU9mL45YaWfuHmc8AgbFrUYsBaFMiel3y5i5
-	v8OcaH4Vwg6egSl/QEAY5o5S26+hGDMmGHHfDY60kIkLAYRyUedV635AT97LLymZ
-	QuRyM0uHZD/uo6OcA5Qzt434M0paVA7az1h0R/i3KgEUsIOCQCqtBBJYWdSlVxmZ
-	dAqSob5466SHHAh/xL51oqOz+KSlvV0PMgpN19lxMrajQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3yj167bw8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 21:44:48 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 4 Jun 2024 21:44:47 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 4 Jun 2024 21:44:47 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id EE0DB3F7040;
-	Tue,  4 Jun 2024 21:44:42 -0700 (PDT)
-Date: Wed, 5 Jun 2024 10:14:41 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: <0x7f454c46@gmail.com>
-CC: Eric Dumazet <edumazet@google.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>,
-        David Ahern <dsahern@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 1/6] net/tcp: Use static_branch_tcp_{md5,ao}
- to drop ifdefs
-Message-ID: <20240605044441.GA3452034@maili.marvell.com>
-References: <20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com>
- <20240605-tcp_ao-tracepoints-v2-1-e91e161282ef@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPfGpBg/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717564536; x=1749100536;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8yQ6W/oD6gbHM62049CRaNAqHQbwa8dZ8raBK0FrkvA=;
+  b=OPfGpBg/CYlSztGL1Z2sDGY29H1kIxLDqUntbn/6Sg4tOaRomHDACm/4
+   jAXIg7RtGtP4UzqfLa876sBDltYMogWUXsIfoTBxse08gEVDcA3AJu+3p
+   tqo1AMbzjmZbFhoHJyTS3PqHFRyumnfLbWavVmu33cX9/PErXqw7jaiUe
+   Z5qETohV1kb5DHfzjVmNVh8DoHhdQXfsLH4zAbySQ/c9zRB2de0V1x6Rz
+   xT6uhojQtxlIEOOtzaGN+E/cjM3kxHLu1NJnePgtjSyp21p3TGNTLUmPi
+   FfPx7tBY+d+ayUW9CPMr08wh82/QO5yazib4IrttRIPvCcnZbujBzdKV3
+   A==;
+X-CSE-ConnectionGUID: f8zwwxLGQpunMhlfSFFYTw==
+X-CSE-MsgGUID: Mab3GvW6QRaOdcQFS2sYtw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="14367859"
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="14367859"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 22:15:36 -0700
+X-CSE-ConnectionGUID: FeJbkbX4ReOZTEkWdyy3VA==
+X-CSE-MsgGUID: FL18j427Q6+VPA/k+idD6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="38034183"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 04 Jun 2024 22:15:33 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEizj-0000wl-0H;
+	Wed, 05 Jun 2024 05:15:31 +0000
+Date: Wed, 5 Jun 2024 13:15:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH 4/5] ftrace: Convert "filter_hash" and "inc" to bool in
+ ftrace_hash_rec_update_modify()
+Message-ID: <202406051211.TA5OOyjM-lkp@intel.com>
+References: <20240604212855.046127611@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240605-tcp_ao-tracepoints-v2-1-e91e161282ef@gmail.com>
-X-Proofpoint-ORIG-GUID: gFkNoHKrv-1PWaojsDgW1P09mPHzPUGV
-X-Proofpoint-GUID: gFkNoHKrv-1PWaojsDgW1P09mPHzPUGV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
+In-Reply-To: <20240604212855.046127611@goodmis.org>
 
-On 2024-06-05 at 07:50:02, Dmitry Safonov via B4 Relay (devnull+0x7f454c46.gmail.com@kernel.org) wrote:
-> From: Dmitry Safonov <0x7f454c46@gmail.com>
->
-> It's possible to clean-up some ifdefs by hiding that
-> tcp_{md5,ao}_needed static branch is defined and compiled only
-> under related configs, since commit 4c8530dc7d7d ("net/tcp: Only produce
-> AO/MD5 logs if there are any keys").
->
-> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
-> ---
->  include/net/tcp.h   | 14 ++++----------
->  net/ipv4/tcp_ipv4.c |  8 ++------
->  2 files changed, 6 insertions(+), 16 deletions(-)
->
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 08c3b99501cf..f6dd035e0fa9 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -2386,21 +2386,15 @@ static inline void tcp_get_current_key(const struct sock *sk,
->
->  static inline bool tcp_key_is_md5(const struct tcp_key *key)
->  {
-> -#ifdef CONFIG_TCP_MD5SIG
-> -	if (static_branch_unlikely(&tcp_md5_needed.key) &&
-> -	    key->type == TCP_KEY_MD5)
-> -		return true;
-> -#endif
-> +	if (static_branch_tcp_md5())
-Seems that we lost unlikely hint. Dont we add that as well-> unlikely()
-> +		return key->type == TCP_KEY_MD5;
->  	return false;
->  }
->
->
->
+Hi Steven,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on linus/master v6.10-rc2 next-20240604]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ftrace-Rename-dup_hash-and-comment-it/20240605-053138
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240604212855.046127611%40goodmis.org
+patch subject: [PATCH 4/5] ftrace: Convert "filter_hash" and "inc" to bool in ftrace_hash_rec_update_modify()
+config: i386-buildonly-randconfig-004-20240605 (https://download.01.org/0day-ci/archive/20240605/202406051211.TA5OOyjM-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240605/202406051211.TA5OOyjM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406051211.TA5OOyjM-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+>> kernel/trace/ftrace.c:1961:13: error: conflicting types for 'ftrace_hash_rec_disable_modify'; have 'void(struct ftrace_ops *, bool)' {aka 'void(struct ftrace_ops *, _Bool)'}
+    1961 | static void ftrace_hash_rec_disable_modify(struct ftrace_ops *ops,
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/ftrace.c:1384:1: note: previous declaration of 'ftrace_hash_rec_disable_modify' with type 'void(struct ftrace_ops *, int)'
+    1384 | ftrace_hash_rec_disable_modify(struct ftrace_ops *ops, int filter_hash);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/trace/ftrace.c:1967:13: error: conflicting types for 'ftrace_hash_rec_enable_modify'; have 'void(struct ftrace_ops *, bool)' {aka 'void(struct ftrace_ops *, _Bool)'}
+    1967 | static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops,
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/ftrace.c:1386:1: note: previous declaration of 'ftrace_hash_rec_enable_modify' with type 'void(struct ftrace_ops *, int)'
+    1386 | ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/trace/ftrace.c:1384:1: warning: 'ftrace_hash_rec_disable_modify' used but never defined
+    1384 | ftrace_hash_rec_disable_modify(struct ftrace_ops *ops, int filter_hash);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/trace/ftrace.c:1386:1: warning: 'ftrace_hash_rec_enable_modify' used but never defined
+    1386 | ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/trace/ftrace.c:1967:13: warning: 'ftrace_hash_rec_enable_modify' defined but not used [-Wunused-function]
+    1967 | static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops,
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/trace/ftrace.c:1961:13: warning: 'ftrace_hash_rec_disable_modify' defined but not used [-Wunused-function]
+    1961 | static void ftrace_hash_rec_disable_modify(struct ftrace_ops *ops,
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +1961 kernel/trace/ftrace.c
+
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1960) 
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18 @1961) static void ftrace_hash_rec_disable_modify(struct ftrace_ops *ops,
+5177364f840058 Steven Rostedt (Google   2024-06-04  1962) 					   bool filter_hash)
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1963) {
+5177364f840058 Steven Rostedt (Google   2024-06-04  1964) 	ftrace_hash_rec_update_modify(ops, filter_hash, false);
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1965) }
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1966) 
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18 @1967) static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops,
+5177364f840058 Steven Rostedt (Google   2024-06-04  1968) 					  bool filter_hash)
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1969) {
+5177364f840058 Steven Rostedt (Google   2024-06-04  1970) 	ftrace_hash_rec_update_modify(ops, filter_hash, true);
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1971) }
+84261912ebee41 Steven Rostedt (Red Hat  2014-08-18  1972) 
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
