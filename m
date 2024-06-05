@@ -1,90 +1,132 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FE9190494
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E984962C;
+	Wed,  5 Jun 2024 08:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575010; cv=none; b=XmnpQ0huENLBA5ZA5p/A+iCQ7BC0sD77P9KimQlaQ1a8MRWrYBUqkFEq882K36MIpLTdm31f2wQHLoySrhNMswMLZ622U0Zg0L+RKC5MfJPjnRGNp89Klx/zUk+83/EaIKO68Z8hAFSmz/VHejUiFlzGSTJUwFiF7OljmoPrAj4=
+	t=1717575823; cv=none; b=sASmmRyDBQgL7wVQbK/zMkKLl5Ar2cdiHC8V+dZflx2AKRkFZhd1yEh2WDQWbwrsFN/cE8x4Uhp5+Sun2xhb6bVzgjK7kdLCrpb5pgWhxalZXn8A2vZqxmRgwbqBW96HhInEsGZYAYxEsIqIIP1YqAf1n6+1vbhq6jmyIfPwe+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575010; c=relaxed/simple;
-	bh=3T174Dceoicm7kUCD/y7XPY3dib15KsmGy0OqrQEOVQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VRNZ0AIZIjhp7b/Z757vj9yieyCDCNHpRFl+V6IpviqtCgUqVgDRStxKWE1ToT3bj/uw4zPesTeBHAuKweC2DBgFh9ayiDT/vDYFLPRG/66OB8flJUB7pmllRcCGeHbmsBJAscRNGbK44eGwzTNa+A7sW2tgvKAvQImz7pwbxSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W9S9macV; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717575823; c=relaxed/simple;
+	bh=+6qBXpM4CAtIHbKGm8U2EPi2QBj6ZSNnA68LJ18zkas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RD7KuGWeu+K/As377jJhqHGKZ7/O9sr5Qxd8qNKjJf/ccaNyVG4nc9hEAP2NayB8iIFuLHc1j2t/Qws+CttLzqFtZ8syBLzfNieQ51GEaG+CCW3iG9UhjejDTExvtRc2mRMS8RbuKx6NEmJ112xtqAhGoFegBdVeI+k2VydCumc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P1ixOcqM; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W9S9macV"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a22af919cso5853a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717575007; x=1718179807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3T174Dceoicm7kUCD/y7XPY3dib15KsmGy0OqrQEOVQ=;
-        b=W9S9macVhIq3FZ5k7yka9nNM8QU5bW6GhWY47E1tPYGVMf2Ar6V6kxPlV6pIypg1jr
-         MrAUhTsFVXy9hzd4aeuhhkch3EojkOPz3eq2UoIZfJF641sXNXGpOnfChmLnjGBiZe2g
-         2nv/P47yCuk24TrMCIA84Boo0DuNAJ3ovqtj1E7JlsDOp9+QFxTazGYPokkyqXDMDwk1
-         Ly5wcgu7kDOrItm1I9rxG+4cWkU/yQUANT7NdeXCdvpQWfnyfo/+Rrhly4vGkHEwrCvr
-         26Y8Sy28WEH82eg3Cmzsaa9DpQdF/zz64Cyv0SgeoLtb93Ds8S1ir6XhonSi/Ex43mZO
-         n3sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575007; x=1718179807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3T174Dceoicm7kUCD/y7XPY3dib15KsmGy0OqrQEOVQ=;
-        b=bCHOYVSraefgoEyBn/YgVFn9IH9MjIdHVDtJhUm30VBsxa5VgdTSJGjYG46Vyxxi4I
-         zhoOMCdt852xGObHB6VO3I8Dy12YriYlWrpuJmbOdaA47yAWxdRR7YxiSjYXFgwcMXbu
-         rwJMslsN+t1xHHLQLVXWAgi3ZgfQjydNqs2+gGnu3nXWX9s8J6g7Y9TASyVlTh6NIBhp
-         a9af37r9g1q8tl50psX+vfTU5AY4bAFj1jpuHYN49lkYkBBgtJf8CrHNzYDkfBcccWDk
-         gjnAqhDnRZC50RMGUlmFIUYilPBOYf69U4kSFfsJiVAIoAyZEbqrik8YzKxuQYcYsOsG
-         ZGww==
-X-Forwarded-Encrypted: i=1; AJvYcCWurFGMbvbu4aOTlYwtvJ7epjgUyY0d35cfwgEvUkk4rOzpBUTa0YNJ0toYDVSOOUbJbeO95XgFKdr2MqSxr9D7WF5M7XDu/4v22MjXL3bYwpU4
-X-Gm-Message-State: AOJu0YwIqpWMYVaIYCwuFzHUvN3WNaPNdwHGdiOsj6ttG7gmxeVYZtTZ
-	x9YZwAgldvg53mcdJfuNa6fIBWSvkQufdfDod2ySy+LKMHTC+VDzZQU6+gG4Jh9DDlI4v78y86M
-	GqKzYvg6vHdS17uNG1AW5u5kynoxL+OgMLYmQ
-X-Google-Smtp-Source: AGHT+IFHJQQ7/NDVyqJbqUGkdoduFW8ZFDMW1u4Nz+gk70EjEJGUIexCHfm07OGdLX5eLDSaEBU5m9EO+DfzPVRzJpg=
-X-Received: by 2002:a05:6402:31a3:b0:57a:1937:e28b with SMTP id
- 4fb4d7f45d1cf-57a94fb3c0dmr89289a12.1.1717575006236; Wed, 05 Jun 2024
- 01:10:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P1ixOcqM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=7xhPdfPc2smXf6F7HsxZ8sv5bz75m1tU4HsrWy1Cu+4=; b=P1ixOcqMYBL1qNqoRQQlMNBcnO
+	cJczue4oUfXvh/G4zstXTx292PLJhGaQv23TkAd4cXeR9h8E7cvo2TJC+0SHMai9QBHndQ8hZLSTc
+	0xw66kP3ze14ks9DdH6S+RPoyBybl6k/w0BakZRcP3JhTtO1Rbgl1uiOE7yuJ5sW/Wvh6s1wZHVcv
+	AEMzPhyWgdqcKSbzV3/PAyCLrKF1l1wsuGU4ZMULxbQuYrL6RKDrJCdn1M3WQkm1oA5sshSZQBPOc
+	Q06JS4sW51P1TfL7UaM6Cdr8ZP7QEo9pg7z+entRzmuY6z8rDrtSKtNr+anTt1+bR/0zNSiXcX0y8
+	zeYEKWZA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sElvi-00000005BX0-0Tmg;
+	Wed, 05 Jun 2024 08:23:34 +0000
+Date: Wed, 5 Jun 2024 01:23:34 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZmAghrRrj_KGgSQR@infradead.org>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com> <20240605-tcp_ao-tracepoints-v2-5-e91e161282ef@gmail.com>
-In-Reply-To: <20240605-tcp_ao-tracepoints-v2-5-e91e161282ef@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 5 Jun 2024 10:09:52 +0200
-Message-ID: <CANn89iJtAPYb_N8J_uvKDV_C=rJ8MzzEuhaiRvFs32giW-30EQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 5/6] net/tcp: Remove tcp_hash_fail()
-To: 0x7f454c46@gmail.com
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Jun 5, 2024 at 4:20=E2=80=AFAM Dmitry Safonov via B4 Relay
-<devnull+0x7f454c46.gmail.com@kernel.org> wrote:
->
-> From: Dmitry Safonov <0x7f454c46@gmail.com>
->
-> Now there are tracepoints, that cover all functionality of
-> tcp_hash_fail(), but also wire up missing places
-> They are also faster, can be disabled and provide filtering.
->
-> This potentially may create a regression if a userspace depends on dmesg
-> logs. Fingers crossed, let's see if anyone complains in reality.
->
-> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+On Mon, Jun 03, 2024 at 07:17:05AM -0700, Mina Almasry wrote:
+> On Fri, May 31, 2024 at 10:35 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Thu, May 30, 2024 at 08:16:01PM +0000, Mina Almasry wrote:
+> > > I'm unsure if the discussion has been resolved yet. Sending the series
+> > > anyway to get reviews/feedback on the (unrelated) rest of the series.
+> >
+> > As far as I'm concerned it is not.  I've not seen any convincing
+> > argument for more than page/folio allocator including larger order /
+> > huge page and dmabuf.
+> >
+> 
+> Thanks Christoph, this particular patch series adds dmabuf, so I
+> assume no objection there. I assume the objection is that you want the
+> generic, extensible hooks removed.
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Exactly!  Note that this isn't a review of the dmabuf bits as there
+are people more qualified with me.
+
+> To be honest, I don't think the hooks are an integral part of the
+> design, and at this point I think we've argued for them enough. I
+> think we can easily achieve the same thing with just raw if statements
+> in a couple of places. We can always add the hooks if and only if we
+> actually justify many memory providers.
+> 
+> Any objections to me removing the hooks and directing to memory
+> allocations via simple if statements? Something like (very rough
+> draft, doesn't compile):
+
+I like this approach, thanks! 
+
+You might still want to keep the static key, though.
