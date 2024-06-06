@@ -1,155 +1,129 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CCD13C3F1;
-	Thu,  6 Jun 2024 20:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678234C622;
+	Thu,  6 Jun 2024 21:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717705994; cv=none; b=fmZ9lPg4sC+vpomlA3ub3DsqJJrAbkb1ljqWyixKgAxtDtOOJ1ZkbKtfX795CJL1y8Lvcu5ExY7c/z0HO3YkheCwbCdciVzg/5MWcmmAPkR+jTdhOhweyXG9Sl3AkJtl8HKfq1BEKPiLq2pm0//B2/h1BQVH7XwtJpGZ/irF4ZA=
+	t=1717708891; cv=none; b=RU+K9jxoks66U9xpFi5L9zgqzZl1P43Sk09R4kOVoCeJoBM5PbB+dvmSSGmkonH52EKY7BA98qc2FmjnyhdnjDIi8B4ddWqEWf8tjAruiaoi8jhw14jGHQiH1JOUXgmoUcOWsNXuGSgp7gs44LpZpkUv+oSwBsPLSfWBRj1FpHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717705994; c=relaxed/simple;
-	bh=6nX7MWUTnzz52ZyxiV9MFVPAXzEarRGnZlK04/SqCeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WulckGntRX01EdB1pAx5TbqJk9U+9TKj5TD1u8SV95pDByu+aoIkuHtbFA+KiF4svGqZR9q4MaFlXjiFkhPIQObgPhvgu8M3bmeXjJC208/+RyYtcBEhUUZDp/beGRRvOXY4WO8KSHDFFXnFFu4pZm4iLXTMP6qYvJGKJ4BFD0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=pIErAS3g; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="pIErAS3g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=wH4qzpwIFO32RLV7tQSPATNkfLQ4Pd/Kex9TJqhUJBg=;
-	t=1717705992; x=1718915592; b=pIErAS3gbYP9f03aZlbUayk9Nfs0UFxbLSV0Q66CapIzxIv
-	WVBu7ThqrtxxVtWKJrLqYiaQtQF4NTKMyJgsKUHr0os2Z6sU4eHwLmg+r/YM8fsCDyJk3KRK+rL2E
-	V7LFHBrzUmOzU6ee+EfNQPraJPQXuyPMNc4DdYWtR9bY54oTetASu2cLI3mqiNShrcn0nWcm2C+6z
-	ys7Z4QIR+EPLt5/RdVAGJ4N7EIojmhQAN/uHQAZEsNMfv40aK3RXh6Ton4a01lAH0rXiiaw8l07Xl
-	wr0ftBaSyH1YnMctjtMStGgdOACNjlPSlgekM62976ZdWKXdO87DN1GNpvnZ+89Q==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sFJnC-0000000HDhM-2Poh;
-	Thu, 06 Jun 2024 22:33:02 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH v3 4/4] net: drop_monitor: use drop_reason_lookup()
-Date: Thu,  6 Jun 2024 22:32:04 +0200
-Message-ID: <20240606203255.49433-10-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240606203255.49433-6-johannes@sipsolutions.net>
-References: <20240606203255.49433-6-johannes@sipsolutions.net>
+	s=arc-20240116; t=1717708891; c=relaxed/simple;
+	bh=0lLeJ9L6obuUbihPoov7/e8fbffmXhCAKt5nfOzmqgM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=O7PdobTqYRp14iLc8kMNYh2irDlyJL3ONRdNf6KOkeQ24BqwgrqMweFFnGwh8MSRRlpdVCDIgxA+IspJxX4uDzY4Go+UnDbUbLEHbvKXjStKVHyGHdBsx83hhp2p8X5rZ7qHVdOmp0Z4hK1kUgAd3Pky8TZ++yxXpXjHlpSuY44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F7AC3277B;
+	Thu,  6 Jun 2024 21:21:31 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sFKYC-00000000qHm-1Tg3;
+	Thu, 06 Jun 2024 17:21:36 -0400
+Message-ID: <20240606212136.207093084@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 06 Jun 2024 17:17:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Youssef Esmat <youssefesmat@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ David Howells <dhowells@redhat.com>,
+ Mike Rapoport <rppt@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Tony Luck <tony.luck@intel.com>,
+ Guenter Roeck <linux@roeck-us.net>,
+ Ross Zwisler <zwisler@google.com>,
+ Kees Cook <keescook@chromium.org>
+Subject: [PATCH v3 01/13] ring-buffer: Allow mapped field to be set without mapping
+References: <20240606211735.684785459@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Now that we have drop_reason_lookup(), we can just use it for
-drop_monitor as well, rather than exporting the list itself.
+In preparation for having the ring buffer mapped to a dedicated location,
+which will have the same restrictions as user space memory mapped buffers,
+allow it to use the "mapped" field of the ring_buffer_per_cpu structure
+without having the user space meta page mapping.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+When this starts using the mapped field, it will need to handle adding a
+user space mapping (and removing it) from a ring buffer that is using a
+dedicated memory range.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-v3:
- - look up SKB_DROP_REASON_NOT_SPECIFIED if initial lookup
-   returns NULL, to preserve previous behaviour
----
- include/net/dropreason.h |  4 ----
- net/core/drop_monitor.c  | 20 +++++---------------
- net/core/skbuff.c        |  6 +++---
- 3 files changed, 8 insertions(+), 22 deletions(-)
+ kernel/trace/ring_buffer.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/dropreason.h b/include/net/dropreason.h
-index c157070b5303..0e2195ccf2cd 100644
---- a/include/net/dropreason.h
-+++ b/include/net/dropreason.h
-@@ -38,10 +38,6 @@ struct drop_reason_list {
- 	size_t n_reasons;
- };
- 
--/* Note: due to dynamic registrations, access must be under RCU */
--extern const struct drop_reason_list __rcu *
--drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM];
--
- #ifdef CONFIG_TRACEPOINTS
- const char *drop_reason_lookup(unsigned long long value);
- void drop_reason_show(struct seq_file *m);
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 430ed18f8584..fddf6b68bf06 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -610,9 +610,8 @@ static int net_dm_packet_report_fill(struct sk_buff *msg, struct sk_buff *skb,
- 				     size_t payload_len)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 28853966aa9a..78beaccf9c8c 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5224,6 +5224,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
  {
- 	struct net_dm_skb_cb *cb = NET_DM_SKB_CB(skb);
--	const struct drop_reason_list *list = NULL;
--	unsigned int subsys, subsys_reason;
- 	char buf[NET_DM_MAX_SYMBOL_LEN];
-+	const char *reason_str;
- 	struct nlattr *attr;
- 	void *hdr;
- 	int rc;
-@@ -630,19 +629,10 @@ static int net_dm_packet_report_fill(struct sk_buff *msg, struct sk_buff *skb,
- 		goto nla_put_failure;
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
  
- 	rcu_read_lock();
--	subsys = u32_get_bits(cb->reason, SKB_DROP_REASON_SUBSYS_MASK);
--	if (subsys < SKB_DROP_REASON_SUBSYS_NUM)
--		list = rcu_dereference(drop_reasons_by_subsys[subsys]);
--	subsys_reason = cb->reason & ~SKB_DROP_REASON_SUBSYS_MASK;
--	if (!list ||
--	    subsys_reason >= list->n_reasons ||
--	    !list->reasons[subsys_reason] ||
--	    strlen(list->reasons[subsys_reason]) > NET_DM_MAX_REASON_LEN) {
--		list = rcu_dereference(drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_CORE]);
--		subsys_reason = SKB_DROP_REASON_NOT_SPECIFIED;
--	}
--	if (nla_put_string(msg, NET_DM_ATTR_REASON,
--			   list->reasons[subsys_reason])) {
-+	reason_str = drop_reason_lookup(cb->reason);
-+	if (unlikely(!reason_str))
-+		reason_str = drop_reason_lookup(SKB_DROP_REASON_NOT_SPECIFIED);
-+	if (nla_put_string(msg, NET_DM_ATTR_REASON, reason_str)) {
- 		rcu_read_unlock();
- 		goto nla_put_failure;
++	if (!meta)
++		return;
++
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+ 	meta->reader.id = cpu_buffer->reader_page->id;
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+@@ -6167,7 +6170,7 @@ rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
+ 
+ 	mutex_lock(&cpu_buffer->mapping_lock);
+ 
+-	if (!cpu_buffer->mapped) {
++	if (!cpu_buffer->mapped || !cpu_buffer->meta_page) {
+ 		mutex_unlock(&cpu_buffer->mapping_lock);
+ 		return ERR_PTR(-ENODEV);
  	}
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index cd1ea6c3e0f8..bd4fb7410284 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -139,13 +139,11 @@ static const struct drop_reason_list drop_reasons_core = {
- 	.n_reasons = ARRAY_SIZE(drop_reasons),
- };
+@@ -6359,12 +6362,13 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	 */
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
++
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
  
--const struct drop_reason_list __rcu *
-+static const struct drop_reason_list __rcu *
- drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM] = {
- 	[SKB_DROP_REASON_SUBSYS_CORE] = RCU_INITIALIZER(&drop_reasons_core),
- };
--EXPORT_SYMBOL(drop_reasons_by_subsys);
+ 	err = __rb_map_vma(cpu_buffer, vma);
+ 	if (!err) {
+ 		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+-		cpu_buffer->mapped = 1;
++		cpu_buffer->mapped++;
+ 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	} else {
+ 		kfree(cpu_buffer->subbuf_ids);
+@@ -6403,7 +6407,8 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+ 	mutex_lock(&buffer->mutex);
+ 	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
  
--#ifdef CONFIG_TRACEPOINTS
- const char *drop_reason_lookup(unsigned long long value)
- {
- 	unsigned long long subsys_id = value >> SKB_DROP_REASON_SUBSYS_SHIFT;
-@@ -162,7 +160,9 @@ const char *drop_reason_lookup(unsigned long long value)
- 		return NULL;
- 	return subsys->reasons[reason];
- }
-+EXPORT_SYMBOL(drop_reason_lookup);
+-	cpu_buffer->mapped = 0;
++	WARN_ON_ONCE(!cpu_buffer->mapped);
++	cpu_buffer->mapped--;
  
-+#ifdef CONFIG_TRACEPOINTS
- void drop_reason_show(struct seq_file *m)
- {
- 	u32 subsys_id;
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 
 -- 
-2.45.1
+2.43.0
+
 
