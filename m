@@ -1,249 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D78C11CB8;
-	Thu,  6 Jun 2024 00:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AE579F6;
+	Thu,  6 Jun 2024 01:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717635511; cv=none; b=JRYoIuf2EAm5z6BCP1v2fZeTtNzCShVjrHjBjbnTmY9NfHFGXakQN6kNeCCyQljnaCTsL3msgdHh/yDE8F4jKubNAyL0ExvlUkPo+3Igdr5pgO52SEx++eU+NL6cgAxV3zLd/dfTc1jF3CqhQnb3hji+l8iC+cMfZJc9suov168=
+	t=1717635961; cv=none; b=Ix2CQlnIA3NqIAIqFjuNq++7YBRDSZDS7VHshSKJHBLV7p4sqOAAylvBZ+lDye7cxY0EvZYCEsDj+ik7acE2yKd1JuwZpHOUb9i450weaTfw314Q98SlkfZ6wvC6HuUiL7vjIqMJ6ZL3elFWwWK7WFmqlk6wfWjU77OiKcPP9qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717635511; c=relaxed/simple;
-	bh=ePdLoiccSiQWmg3JmOyMBhhmfnzW5G+Dcs6pWQ1gWBI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kzclyUTTjswA5O556JSwyqfAnsMAtdgjkXOxEGQMSQCy7UtQoRIfQyrRfpbcB1zVUchNXiTxCSB1jvqDE99G9jZw697W8YVWWFNwj9Hwcd0G5hkwJRolf8RoX8DFY7JWDPrdFQ04YjWDZ0DKE2MR9V+I48lNORvYQbf14y/YUfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHB8IF3q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717635961; c=relaxed/simple;
+	bh=KXQcY/KUD/GXgOXdMxL/FSYabj4pqwzKiCsrOHYwN4M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q5xd86hQ6hAm98qYjJQEqcQd69Jz5BPHnVmq/lJM+PCKtbvpxR5Lw8HoMWVgc+iFAmMmSnePtoQl9RhqJvmDAOk2cAGE1HnmiVN/7/UW2cuiTR5/4k90wogYQ6GvPVMGkP0rz8/2szGsI1aXxj3r6lyfQNjshgU2tOucG9ifAz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Njmb+2zx; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHB8IF3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E273CC4AF15;
-	Thu,  6 Jun 2024 00:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717635510;
-	bh=ePdLoiccSiQWmg3JmOyMBhhmfnzW5G+Dcs6pWQ1gWBI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dHB8IF3qqbtRTJvNaiB1rqsgkpvzAhFSbj4JbudMAj4FinvEcR+d8pooWswHaFJw8
-	 +kyjYT2aaiIZBTW9c/AzE2Mrp6R6nnzHpZIdA630iiTlUiFxyYNn0Lf1LgPijZ0w0Z
-	 F32gCXCMUJUyTA6ru6Ho/oB5kr20R5x8YcwX2Wiv5g7nOXkLGuAp6b1VrmgPjXJw9o
-	 NvsJcTj30KanNQxsVxQ1khottviNaBEKUlMQ8lfi3+N+Nd1BIBqj9fxyF8KxsOeucF
-	 IJOZcQELzT4j/NfNnYDzh8B2xH19ZKDVMS4qxhJtj6tNWHn2DeKNKQB97KRVQTkb+/
-	 dkoblU3hAR9Gw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3812C27C5F;
-	Thu,  6 Jun 2024 00:58:30 +0000 (UTC)
-From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Date: Thu, 06 Jun 2024 01:58:22 +0100
-Subject: [PATCH net-next v3 5/6] net/tcp: Remove tcp_hash_fail()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Njmb+2zx"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2bfffa3c748so346285a91.3;
+        Wed, 05 Jun 2024 18:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717635960; x=1718240760; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vcR0/t5uYBIvdEQSeuqs0xUstXN/+KdnI45VENtwQfo=;
+        b=Njmb+2zxKrwMC3Bcrz7roRfIAxfQ6NJ32gduXkxiSyQv0gystbGzbI13VgzL1xfBx9
+         AYgZj6RmNwRKdEZxnIVHDRYk4CYtpgjv8KksEcDel1swd8f3qua9W6xBu3up4i09FCM+
+         DR6TRdLyW4mSVyjSQk7dZSioNyyEtb8DXo+2k+Rbmw/NX4MY127JHddafX35BBkjshj4
+         FQ+L6CARbCnJXZwLp9n26YHYKyPTuDVPlTLeHtrXvg8SRQwTrSnsHj/f7LlxcWHqjb0g
+         XnAYnrQmMNngkJj1CfYFrfqrj+Jkz5v8Ok0EtNrAqptifItNwyT7Kpc9C4C2fJQFBvH9
+         twfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717635960; x=1718240760;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vcR0/t5uYBIvdEQSeuqs0xUstXN/+KdnI45VENtwQfo=;
+        b=BqSOX6EVEgmGINymGGdo0d5W4OIqy621/WrGPv3ORzEUmtd3TCuK03QMxURXm8s5lB
+         dHcsy5viQACRBnxljOq52sh9okuXldERFfzMOBifvw0CAPd+iFP8LLvKMHamSrCtUFjg
+         mSBhFtIJvc4JLsKZwts18K2UP6fhYi20wCDGDKcU7sbLeTdueXPlwlqMG9vufxxcTh5v
+         hMY91XISSIUCR/sNmcJUUlFvn67BjZkOfhsNA2huXlhu+Hs5NiO6/2RfVIqq/xsAttzh
+         fPqD92C0MUvciwo6mSg18YaIKjl7pbAGpsKDMfUHOF4tVLlh28Cyi+6L1GX0/bMObWtl
+         lWPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXumDXG7I2DUZ2eI6GFNC/OXDNeaXm7f3fHc6KpaImiDcxXVa/hyvIWAcojnzfDZVl2DjQzDY9CgqmVcBF2tz7oHYGdvj5+OG8GNmNWvTXKAJR6wU3LX9uNFG0Y2gRRVa3QKSzd/gzP89mH4EOV2oSJa+5xCNR+EDGQCvR8vVbYW6QKvQG74xjcTyPFyR/YWnbO258xZK8Qn2FxulpskXAbjwzz
+X-Gm-Message-State: AOJu0YxXnrnLPzgZfseUYLWrj0PRpXVsgYvH5ADT4X3ntNkT+g8Lb32R
+	kADP0K8sBvb39DqjHc9Wd2vBupwWFFBJACpWBEmFW3niRS3fR4870bARDQHvIFefME/5kF0cvzb
+	TizQPvAoYuaUi7EHQzhwsFdkaZT8=
+X-Google-Smtp-Source: AGHT+IGf/3ayjCPjRYJx47eHZM1uSmdwR03aG7nsKOkBUKFJf8afN6SS2wYJKWrtuZX+8vnrrV71fpGSU3kWnFC1NDE=
+X-Received: by 2002:a17:90a:bf0e:b0:2c2:4107:3a7b with SMTP id
+ 98e67ed59e1d1-2c27db68490mr4294176a91.46.1717635959629; Wed, 05 Jun 2024
+ 18:05:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-tcp_ao-tracepoints-v3-5-13621988c09f@gmail.com>
-References: <20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com>
-In-Reply-To: <20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com>
-To: Eric Dumazet <edumazet@google.com>, 
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Dmitry Safonov <0x7f454c46@gmail.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717635508; l=6884;
- i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
- bh=XI7M8UxlijNn0LpHYS39+USk6l9LLXrSMmapXEmiV+g=;
- b=fFR9oaS8dfFyMrJPef2EYJLKwisXLZZuI/+pcMtMxV+8BqNDEhSoa5MgsE9J7doyb+q/uOiaWNWa
- 84JTEnudDWB51Ezx/n5WFJUTOujWdjyO717f5O6Rn5tWhjSF1MRm
-X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
- pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
-X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
- auth_id=152
-X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
-Reply-To: 0x7f454c46@gmail.com
-
+References: <20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com>
+ <20240605-tcp_ao-tracepoints-v2-3-e91e161282ef@gmail.com> <CANn89iLHGimJWRNcM8c=Ymec-+A3UG9rGy9Va_n7+eZ2WGHDiw@mail.gmail.com>
+ <CAJwJo6YVtBaCn+iUEvC7OWa7k9LtC9yReHM=RmuiDUACFympRw@mail.gmail.com> <CANn89i+em+sjuQE32bM2KWg=EFcf-jnfvzD=YekMviUSjARrnQ@mail.gmail.com>
+In-Reply-To: <CANn89i+em+sjuQE32bM2KWg=EFcf-jnfvzD=YekMviUSjARrnQ@mail.gmail.com>
 From: Dmitry Safonov <0x7f454c46@gmail.com>
+Date: Thu, 6 Jun 2024 02:05:47 +0100
+Message-ID: <CAJwJo6YWf40BuWCc7rxBAAbzngFMuXeMXsj_Mmxe3W0rjNWDAQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 3/6] net/tcp: Move tcp_inbound_hash() from headers
+To: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now there are tracepoints, that cover all functionality of
-tcp_hash_fail(), but also wire up missing places
-They are also faster, can be disabled and provide filtering.
+On Wed, 5 Jun 2024 at 18:37, Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Wed, Jun 5, 2024 at 7:35=E2=80=AFPM Dmitry Safonov <0x7f454c46@gmail.c=
+om> wrote:
+> >
+> > Hi Eric,
+> >
+> > Thanks for the review,
+> >
+> > On Wed, 5 Jun 2024 at 09:07, Eric Dumazet <edumazet@google.com> wrote:
+[..]
+> > > Then we probably do not need EXPORT_SYMBOL(tcp_inbound_md5_hash); any=
+more ?
+> >
+> > Certainly, my bad. I will remove that in v3.
+> >
+>
+> No problem, also make it static, in case this was not clear from my comme=
+nt.
 
-This potentially may create a regression if a userspace depends on dmesg
-logs. Fingers crossed, let's see if anyone complains in reality.
+Thanks!
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
----
- include/net/tcp_ao.h | 37 -------------------------------------
- net/ipv4/tcp.c       | 25 -------------------------
- net/ipv4/tcp_ao.c    |  9 ---------
- 3 files changed, 71 deletions(-)
-
-diff --git a/include/net/tcp_ao.h b/include/net/tcp_ao.h
-index 6501ed1dfa1e..ebc6d4e3c073 100644
---- a/include/net/tcp_ao.h
-+++ b/include/net/tcp_ao.h
-@@ -148,43 +148,6 @@ extern struct static_key_false_deferred tcp_ao_needed;
- #define static_branch_tcp_ao()	false
- #endif
- 
--static inline bool tcp_hash_should_produce_warnings(void)
--{
--	return static_branch_tcp_md5() || static_branch_tcp_ao();
--}
--
--#define tcp_hash_fail(msg, family, skb, fmt, ...)			\
--do {									\
--	const struct tcphdr *th = tcp_hdr(skb);				\
--	char hdr_flags[6];						\
--	char *f = hdr_flags;						\
--									\
--	if (!tcp_hash_should_produce_warnings())			\
--		break;							\
--	if (th->fin)							\
--		*f++ = 'F';						\
--	if (th->syn)							\
--		*f++ = 'S';						\
--	if (th->rst)							\
--		*f++ = 'R';						\
--	if (th->psh)							\
--		*f++ = 'P';						\
--	if (th->ack)							\
--		*f++ = '.';						\
--	*f = 0;								\
--	if ((family) == AF_INET) {					\
--		net_info_ratelimited("%s for %pI4.%d->%pI4.%d [%s] " fmt "\n", \
--				msg, &ip_hdr(skb)->saddr, ntohs(th->source), \
--				&ip_hdr(skb)->daddr, ntohs(th->dest),	\
--				hdr_flags, ##__VA_ARGS__);		\
--	} else {							\
--		net_info_ratelimited("%s for [%pI6c].%d->[%pI6c].%d [%s]" fmt "\n", \
--				msg, &ipv6_hdr(skb)->saddr, ntohs(th->source), \
--				&ipv6_hdr(skb)->daddr, ntohs(th->dest),	\
--				hdr_flags, ##__VA_ARGS__);		\
--	}								\
--} while (0)
--
- #ifdef CONFIG_TCP_AO
- /* TCP-AO structures and functions */
- struct tcp4_ao_context {
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index cf097a73e42b..49feb1d6e29b 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -4477,7 +4477,6 @@ tcp_inbound_md5_hash(const struct sock *sk, const struct sk_buff *skb,
- 
- 	if (!key && hash_location) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5UNEXPECTED);
--		tcp_hash_fail("Unexpected MD5 Hash found", family, skb, "");
- 		trace_tcp_hash_md5_unexpected(sk, skb);
- 		return SKB_DROP_REASON_TCP_MD5UNEXPECTED;
- 	}
-@@ -4493,21 +4492,6 @@ tcp_inbound_md5_hash(const struct sock *sk, const struct sk_buff *skb,
- 							 NULL, skb);
- 	if (genhash || memcmp(hash_location, newhash, 16) != 0) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5FAILURE);
--		if (family == AF_INET) {
--			tcp_hash_fail("MD5 Hash failed", AF_INET, skb, "%s L3 index %d",
--				      genhash ? "tcp_v4_calc_md5_hash failed"
--				      : "", l3index);
--		} else {
--			if (genhash) {
--				tcp_hash_fail("MD5 Hash failed",
--					      AF_INET6, skb, "L3 index %d",
--					      l3index);
--			} else {
--				tcp_hash_fail("MD5 Hash mismatch",
--					      AF_INET6, skb, "L3 index %d",
--					      l3index);
--			}
--		}
- 		trace_tcp_hash_md5_mismatch(sk, skb);
- 		return SKB_DROP_REASON_TCP_MD5FAILURE;
- 	}
-@@ -4530,8 +4514,6 @@ tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
- 
- 	/* Invalid option or two times meet any of auth options */
- 	if (tcp_parse_auth_options(th, &md5_location, &aoh)) {
--		tcp_hash_fail("TCP segment has incorrect auth options set",
--			      family, skb, "");
- 		trace_tcp_hash_bad_header(sk, skb);
- 		return SKB_DROP_REASON_TCP_AUTH_HDR;
- 	}
-@@ -4549,9 +4531,6 @@ tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
- 			}
- 
- 			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOBAD);
--			tcp_hash_fail("TCP connection can't start/end using TCP-AO",
--				      family, skb, "%s",
--				      !aoh ? "missing AO" : "AO signed");
- 			trace_tcp_ao_handshake_failure(sk, skb, keyid, rnext, maclen);
- 			return SKB_DROP_REASON_TCP_AOFAILURE;
- 		}
-@@ -4570,15 +4549,11 @@ tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
- 		 * always at least one current_key.
- 		 */
- 		if (tcp_ao_required(sk, saddr, family, l3index, true)) {
--			tcp_hash_fail("AO hash is required, but not found",
--				      family, skb, "L3 index %d", l3index);
- 			trace_tcp_hash_ao_required(sk, skb);
- 			return SKB_DROP_REASON_TCP_AONOTFOUND;
- 		}
- 		if (unlikely(tcp_md5_do_lookup(sk, l3index, saddr, family))) {
- 			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5NOTFOUND);
--			tcp_hash_fail("MD5 Hash not found",
--				      family, skb, "L3 index %d", l3index);
- 			trace_tcp_hash_md5_required(sk, skb);
- 			return SKB_DROP_REASON_TCP_MD5NOTFOUND;
- 		}
-diff --git a/net/ipv4/tcp_ao.c b/net/ipv4/tcp_ao.c
-index 87c5d39dc105..f0f4203fdfed 100644
---- a/net/ipv4/tcp_ao.c
-+++ b/net/ipv4/tcp_ao.c
-@@ -893,9 +893,6 @@ tcp_ao_verify_hash(const struct sock *sk, const struct sk_buff *skb,
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOBAD);
- 		atomic64_inc(&info->counters.pkt_bad);
- 		atomic64_inc(&key->pkt_bad);
--		tcp_hash_fail("AO hash wrong length", family, skb,
--			      "%u != %d L3index: %d", maclen,
--			      tcp_ao_maclen(key), l3index);
- 		trace_tcp_ao_wrong_maclen(sk, skb, aoh->keyid,
- 					  aoh->rnext_keyid, maclen);
- 		return SKB_DROP_REASON_TCP_AOFAILURE;
-@@ -912,8 +909,6 @@ tcp_ao_verify_hash(const struct sock *sk, const struct sk_buff *skb,
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOBAD);
- 		atomic64_inc(&info->counters.pkt_bad);
- 		atomic64_inc(&key->pkt_bad);
--		tcp_hash_fail("AO hash mismatch", family, skb,
--			      "L3index: %d", l3index);
- 		trace_tcp_ao_mismatch(sk, skb, aoh->keyid,
- 				      aoh->rnext_keyid, maclen);
- 		kfree(hash_buf);
-@@ -944,8 +939,6 @@ tcp_inbound_ao_hash(struct sock *sk, const struct sk_buff *skb,
- 	info = rcu_dereference(tcp_sk(sk)->ao_info);
- 	if (!info) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOKEYNOTFOUND);
--		tcp_hash_fail("AO key not found", family, skb,
--			      "keyid: %u L3index: %d", aoh->keyid, l3index);
- 		trace_tcp_ao_key_not_found(sk, skb, aoh->keyid,
- 					   aoh->rnext_keyid, maclen);
- 		return SKB_DROP_REASON_TCP_AOUNEXPECTED;
-@@ -1052,8 +1045,6 @@ tcp_inbound_ao_hash(struct sock *sk, const struct sk_buff *skb,
- key_not_found:
- 	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOKEYNOTFOUND);
- 	atomic64_inc(&info->counters.key_not_found);
--	tcp_hash_fail("Requested by the peer AO key id not found",
--		      family, skb, "L3index: %d", l3index);
- 	trace_tcp_ao_key_not_found(sk, skb, aoh->keyid,
- 				   aoh->rnext_keyid, maclen);
- 	return SKB_DROP_REASON_TCP_AOKEYNOTFOUND;
-
--- 
-2.42.0
-
-
+--=20
+             Dmitry
