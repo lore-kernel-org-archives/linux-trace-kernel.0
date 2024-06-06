@@ -1,137 +1,187 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4571E197550
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4101974E7;
+	Thu,  6 Jun 2024 15:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688831; cv=none; b=g4rPVKIDQbThFBoa1lNp2dlOojzH1AwwRxc+hdvK6SYkmntbdEncJtmqLh5FwmqPgtYXJy3mWQxTPTEZmvWL9zHvdDG49lyk5a568nYE2V9dKn1EhbIt3/nLnAaSsP5yaVUVbC084lZMlTFEofuWXomRXoVOMUA93crroBSz4K8=
+	t=1717688959; cv=none; b=dSCxlIkIuSD9j7JZFnc2e7hxbq/VOn+9XBou7QNFqQ8mHWHqe53WIWzx2XvcrXDt3NMCf04hSmAZbCN7lNkPWXaoxwc4hJgDEdGFVF9wvInR15BZKXkYWpYzD+cdx5K0WlKUKI0BU2eFcE5Ac5SQRqRtsfhFDkca64yRMFivPwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688831; c=relaxed/simple;
-	bh=hKe52NGpfUxlQvWE5siBYeg/W5fcruKXW0Q1K5Wl+lE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tIZfICA4g4gPcmLxAeIVsYrgsnVWVRamlHSNzUd1loMXM2hR9yjJh5O16g7MfLJQHbw3yRzP+Wb9aNGVwVUwGOKGij0L9MLEA445RPE+6iY0hinkoOUEtyYo+94+FzH67Fhc74/Bzjxg1ad6yDA1bq3screKpZw/cHAUsDQ/WQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OZNx6c2/; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717688959; c=relaxed/simple;
+	bh=qKBLsTXNP6vC+txyf96Pbii9gskyvekAxKhkwXaTg08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ILXUm2cIdAOApiI2vHKxQseyazoikhe51MkyGKa2ZwCLU8oQuFhGyc/3+HbbpRDm/QL9RIF6TY/1zelyj323Ph4rluAuQHBlXiwqVUNZDCiPgjxFe79w78ZbD7KRU8esvJbhE9W8QLA8+N4hCASYbNxMCxsBVjnBpAc43dsOELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9RA+PO1; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OZNx6c2/"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-35dceef4227so1091656f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Jun 2024 08:47:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9RA+PO1"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7952b60b4d7so68013785a.1;
+        Thu, 06 Jun 2024 08:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717688828; x=1718293628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1717688956; x=1718293756; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hKe52NGpfUxlQvWE5siBYeg/W5fcruKXW0Q1K5Wl+lE=;
-        b=OZNx6c2/IKmqQJcxrj0tQNl2zPD5oIkhrhQGFsoBiwvg0uKo0JcRyiJyw+KzMdVdeu
-         Td+E+VwRLrrt3V9uWxkPdw1WOkQy1W+hovlj5if+8p7WjWHFkYnBaCrdgqTjO0wC1xU7
-         va9+oTOj5z20OS3AtlP3Nqnbxm1BHWI/eYgOaRCEbDtdRUixsdylUnBmGbhpqcSoeuYX
-         4/9J7WfunmnqKXh4KUmT5aeghIPTjsFeLAg+x0pp7r+7NqkAfkEgds6it/TZviqje9/1
-         1IfaAUuGG0cky3yhJyFPJkC2jUzdBvSxbFHLAzsCP44/0TIQCfmNq5qUpvdLO4np4A7K
-         lZJw==
+        bh=gzKkLAKlqoZUCODC8uK1zfRTl8mdtLcn1fcJfh9jcFU=;
+        b=G9RA+PO11hjIRwK1TfodEhGydCiuJZoi7FcqCN2WeN33nNa3twFUCP1zPAZaPsP73W
+         MxcGAqq0k8LCS2DwxX9OcJyT4MuPfjX9nPp7O2vNi2qiJfDjsJ3WA2DNhy424R7V3F6s
+         UFTyso0UEkckb3TEZAbFTJd1ZsWpsA4XdsbIgHmYqmR10wFjDNR5TscGD9tXB/eodZ20
+         fLCOIV5mrLi5JlR2MAcJokVesF4pQZynCcxicy29TRdy1Zo3n+JCn9zr6BKIDUFczJzL
+         q1pY4PK/AGuWeZg7VOtyS1vTULbOxC4VNVoSHr2OYLLsKTWHNwNXkOqZhabNPHKPVwd+
+         EsbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717688828; x=1718293628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717688956; x=1718293756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hKe52NGpfUxlQvWE5siBYeg/W5fcruKXW0Q1K5Wl+lE=;
-        b=lKAKefMxOS7jWC9TblXOCVp9loKSR7/suJAsbA0XEQ+G4QG2sFqsjgROGpGbVKjrcU
-         HzO2u6Af8H+CHvuuwQm7lShkkwuUm65KJH8bIxpZXHkRcXBrRhW3t1++3fQZV9939Lsd
-         QIHH9El8GlOckRzpZJqeL8bcGi7RherFQRci00JxonrCkkOR7zi9Gs6uuoTdI6iHYuqa
-         HNahYreClI+0fE9rYf0VKMUYs1iziFHFWOO1N0OnvQDbIiE/4p4aYzVQ/yxc06f+KvaO
-         Gj/Egr8svx1rnzCvv5feHUeoGtSQzGN9JwYrPl1GRMj91kDGzhND0xeW6ThA9QoNvMMu
-         3oag==
-X-Forwarded-Encrypted: i=1; AJvYcCVAoiGe9IaK2o9gXnh4VD/mYPwkOnKZqN69ylxiJCWCm6oQSHf0irfZn/U7gUKStoHLp5e6acndg8oCBvwAnDXmyFFent5YSEabNhZnGEV1ulss
-X-Gm-Message-State: AOJu0Ywys2MSoUAM01Hs4j+pXiFodgQ1vbTDAr6D/xj1vAwQ+S/SiUCU
-	13pq3kWj1JuFhG64Rmj2WoL0/75e/v1W4tcmk+JmcY5wdKTGkL4pUjlHDe+8LqMw8eo3UPYZSPm
-	uRU1IfSVUOKHyy5dO4hp8H1a9ebIE9VIt0r8u
-X-Google-Smtp-Source: AGHT+IHRaKVw7qOuW6NYsVktUE3gSn+rIAOkyJWHl3lX8amN9wd4ANmNf31Gd3QTmhu64UAg4XcBRWc+rft0gePr+8A=
-X-Received: by 2002:a5d:6ac6:0:b0:35e:8333:28f4 with SMTP id
- ffacd0b85a97d-35e8ef7f346mr4448223f8f.60.1717688828366; Thu, 06 Jun 2024
- 08:47:08 -0700 (PDT)
+        bh=gzKkLAKlqoZUCODC8uK1zfRTl8mdtLcn1fcJfh9jcFU=;
+        b=CUmQcyGGyEss48yltgMNcUKjRGdCH9aez4lMV4qDSqt92+aWpUoPr8SC1oIq9ExYEC
+         mSms8E8P+ECFciLq2SRT6qti8xRWtsIwrVgZhOMUiZvn5qnnnrK5baFN7Twd2Nu9MNEv
+         0hwW8o2MzylpFlot+bcBk8PiEqNYk8Ix9x1pZCDK0o82csyuZmH1s6tfkOx422/4VPQi
+         QPWQgaC7L7JEezzuqVGlsfuP/fW2OfVuPMJv8S6av5XrokQAN22VNH46BhbaLPYe74oQ
+         eEoWy2oP+FY7GVa0MpRSVKMqeOzwUh85ECS7cj11RYddTUujYGU1UoTZmVOdM76bC8/z
+         I6uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUHEhEwV3uW1fL7mqTSDwR//XPVJI6XaFRAIpjNISpTBhgqA5CLTztP0BJUTbwOjTEht7uSa0qS6DXUjPBHYXgasRBRUF0uS8Ej9vtZWOlasbKAB3qtkQm+f4FZ+R1xU1GVL1ud53c0TqIQJ7EuxZZpclOjtJpQYnkSMSF7dNiPQRJD0y9UIOoixIuqvyZhR4=
+X-Gm-Message-State: AOJu0YyKjDcRfeMNkROtLiGjqdwpwt4ytE92M2+uYz+cD9StPlNHdAME
+	JSZzyFVWoSIYQagBzqegycLKT4ubIPe+/pz2+BFGCQWUUOBeUMUQrBTe6A==
+X-Google-Smtp-Source: AGHT+IEFetjUuprranDmw5ZJd0GeJKi72Itx5uTqS/pls2I9jPyyGvrMahCfHgf3e26E4HEjVZYsdw==
+X-Received: by 2002:a05:620a:2ea:b0:795:2891:12df with SMTP id af79cd13be357-79528911570mr468163285a.47.1717688956356;
+        Thu, 06 Jun 2024 08:49:16 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-795330b7198sm71192185a.90.2024.06.06.08.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 08:49:16 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 537D11200043;
+	Thu,  6 Jun 2024 11:49:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 06 Jun 2024 11:49:15 -0400
+X-ME-Sender: <xms:e9phZuktlMhXYjnSHguXm6OfJRRfYrfGA4UwMfqlJaBs0xwYBwyCEQ>
+    <xme:e9phZl3-GDFB2xgTpu3XI5Jbypqr6rrnDkWJuT3TkXujXXRZHOPrL5MSJj1XcaS_N
+    r63Kqt-dGZU6ppmqA>
+X-ME-Received: <xmr:e9phZsozSHfFYDA7ykoIoAqeRpAx7QTPohdQVzW4konswY18aZk82i6lyXE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelkedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeetffehgffhieetuefgjeffveektdejgfetueekvdehhedvvdegveekiefh
+    heefudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpvg
+    hffhhitghiohhsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
+    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
+    lhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:e9phZin1YNe2_r_ALQcMD-NUy8M1xqu8jyo5GgIL1Wez4MXL8WFJuQ>
+    <xmx:e9phZs38mpx3G7AEbhJ0kFcr9otaZW1agHN78O64tz4e0byaS5LRbA>
+    <xmx:e9phZpttAEGG_fPgoEGwtNub35n1iU8gm2Kck_OAbP492io2GIJJfw>
+    <xmx:e9phZoV-KfexwDEIcrrNJoVWyzmKtRdk2EXpwsuFLNzF-XlSdkfz4g>
+    <xmx:e9phZn0po4UT8M4EZKy8Qzev0BJ-BcIh_Q-Nv46mbzFtM_QEOmWSajsM>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Jun 2024 11:49:14 -0400 (EDT)
+Date: Thu, 6 Jun 2024 08:49:06 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] rust: add tracepoint support
+Message-ID: <ZmHacqvRwBj7OvWm@boqun-archlinux>
+References: <20240606-tracepoint-v1-0-6551627bf51b@google.com>
+ <20240606-tracepoint-v1-3-6551627bf51b@google.com>
+ <389a8c55-a169-47ef-99c0-48f58003b40c@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606-tracepoint-v1-0-6551627bf51b@google.com> <cd4a58d9-3e0a-49d1-8a74-bc9d53fc2dfd@efficios.com>
-In-Reply-To: <cd4a58d9-3e0a-49d1-8a74-bc9d53fc2dfd@efficios.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 6 Jun 2024 17:46:55 +0200
-Message-ID: <CAH5fLgi4zs5ehDCEgkxPzaamNKn_2cP5+qH8KTy4ujdf2_D-vA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Tracepoints and static branch/call in Rust
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <389a8c55-a169-47ef-99c0-48f58003b40c@efficios.com>
 
-On Thu, Jun 6, 2024 at 5:25=E2=80=AFPM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
+On Thu, Jun 06, 2024 at 11:30:03AM -0400, Mathieu Desnoyers wrote:
 > On 2024-06-06 11:05, Alice Ryhl wrote:
-> > This implementation implements support for static keys in Rust so that
-> > the actual static branch will end up in the Rust object file. However,
-> > it would also be possible to just wrap the trace_##name generated by
-> > __DECLARE_TRACE in an extern C function and then call that from Rust.
-> > This will simplify the Rust code by removing the need for static
-> > branches and calls, but it places the static branch behind an external
-> > call, which has performance implications.
->
-> The tracepoints try very hard to minimize overhead of dormant tracepoints
-> so it is not frowned-upon to have them built into production binaries.
-> This is needed to make sure distribution vendors keep those tracepoints
-> in the kernel binaries that reach end-users.
->
-> Adding a function call before evaluation of the static branch goes agains=
-t
-> this major goal.
->
-> >
-> > A possible middle ground would be to place just the __DO_TRACE body in
-> > an extern C function and to implement the Rust wrapper by doing the
-> > static branch in Rust, and then calling into C the code that contains
-> > __DO_TRACE when the tracepoint is active. However, this would need some
-> > changes to include/linux/tracepoint.h to generate and export a function
-> > containing the body of __DO_TRACE when the tracepoint should be callabl=
-e
-> > from Rust.
->
-> This tradeoff is more acceptable than having a function call before
-> evaluation of the static branch, but I wonder what is the upside of
-> this tradeoff compared to inlining the whole __DO_TRACE in Rust ?
->
-> > So in general, there is a tradeoff between placing parts of the
-> > tracepoint (which is perf sensitive) behind an external call, and havin=
-g
-> > code duplicated in both C and Rust (which must be kept in sync when
-> > changes are made). This is an important point that I would like feedbac=
-k
-> > on from the C maintainers.
->
-> I don't see how the duplication happens there: __DO_TRACE is meant to be
-> inlined into each C tracepoint caller site, so the code is already meant
-> to be duplicated. Having an explicit function wrapping the tracepoint
-> for Rust would just create an extra instance of __DO_TRACE if it happens
-> to be also inlined into C code.
->
-> Or do you meant you would like to prevent having to duplicate the
-> implementation of __DO_TRACE in both C and Rust ?
->
-> I'm not sure if you mean to prevent source code duplication between
-> C and Rust or duplication of binary code (instructions).
+> > Make it possible to have Rust code call into tracepoints defined by C
+> > code. It is still required that the tracepoint is declared in a C
+> > header, and that this header is included in the input to bindgen.
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> 
+> [...]
+> 
+> > diff --git a/rust/helpers.c b/rust/helpers.c
+> > index 2c37a0f5d7a8..0560cc2a512a 100644
+> > --- a/rust/helpers.c
+> > +++ b/rust/helpers.c
+> > @@ -165,6 +165,30 @@ rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> >   }
+> >   EXPORT_SYMBOL_GPL(rust_helper_krealloc);
+> > +void rust_helper_preempt_enable_notrace(void)
+> > +{
+> > +	preempt_enable_notrace();
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper_preempt_enable_notrace);
+> > +
+> > +void rust_helper_preempt_disable_notrace(void)
+> > +{
+> > +	preempt_disable_notrace();
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper_preempt_disable_notrace);
+> > +
+> > +bool rust_helper_current_cpu_online(void)
+> > +{
+> > +	return cpu_online(raw_smp_processor_id());
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper_current_cpu_online);
+> > +
+> > +void *rust_helper___rcu_dereference_raw(void **p)
+> > +{
+> > +	return rcu_dereference_raw(p);
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper___rcu_dereference_raw);
+> 
+> Ouch. Doing a function call for each of those small operations will
+> have a rather large performance impact when tracing is active. If it is
 
-It's a question of maintenance burden. If you change how __DO_TRACE is
-implemented, then those changes must also be reflected in the Rust
-version. There's no issue in the binary code.
+Long-term plan is to 1) compile the C helpers in some IR and 2) inline
+the helpers with Rust in IR-level, as what Gary has:
 
-Alice
+	https://lore.kernel.org/rust-for-linux/20240529202817.3641974-1-gary@garyguo.net/
+
+and I use it for the upcoming atomic API support:
+
+	https://github.com/fbq/linux/tree/dev/rust/atomic-rfc
+
+and it works very well.
+	
+Regards,
+Boqun
+
+> not possible to inline those in Rust, then implementing __DO_TRACE in
+> a C function would at least allow Rust to only do a single call to C
+> rather than go back and forth between Rust and C.
+> 
+> What prevents inlining those helpers in Rust ?
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
+> 
