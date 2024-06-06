@@ -1,395 +1,327 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D91FAA;
-	Thu,  6 Jun 2024 17:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1EC31990CC;
+	Thu,  6 Jun 2024 17:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717696252; cv=none; b=Em7OlcFa+eqck7S3L0/g6aYtIsApyfZtnxdxpPUcvDq9qgze/bWJMAq7QR+SYcHjgDEiTQjC+lzKe/PQ23Tvgn7iIW4FDF2684jB1xmPq+04hx1SKA2lAOLFhQr78L6L9CZ1Xg4kt2yYp8USg6agdTTfpfOSkZ7mRJ7SFhUJ68Y=
+	t=1717696401; cv=none; b=nyawYTyxZZdlpROoVG30j6LrZ6qCsvQF3U1m6d/kD/y2VM/wmI0S52/v9vzu33wGxh86KJQ4JREgHoNjeswP3WFfFEtl15HYOLUFGBn2YvGgX+UJEIllG3OQzARvueTnzMseF03LYolS4FU+iGzyeZACFGwrfWBm5CbFjeIkKqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717696252; c=relaxed/simple;
-	bh=uM97TImJyyjsWJvlyD6in9njBmVd+hhWRtPCKJfJmcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=okPr7FrpjVcaueszPQrgDyz0Me7KF3zRqT/CAefhEvw6AXs4CUdQNSaECa5inoHP5M4/r7pLLMFBwcD8MSGzqS2rR7nu1ROeVFTn9Mlt63hCETfXxYX3ZBg1ypvaWe3W9yP8ZX9QAUMjbkJ/vvzWkpg2P5cR7glhC77wxqFiRvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0639C2BD10;
-	Thu,  6 Jun 2024 17:50:49 +0000 (UTC)
-Date: Thu, 6 Jun 2024 13:51:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linux Memory Management List
- <linux-mm@kvack.org>, amd-gfx@lists.freedesktop.org, bpf@vger.kernel.org,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] BUILD REGRESSION
- ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f
-Message-ID: <20240606135101.30b0701a@rorschach.local.home>
-In-Reply-To: <202406070106.im4Z1j0V-lkp@intel.com>
-References: <202406070106.im4Z1j0V-lkp@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717696401; c=relaxed/simple;
+	bh=ftz4Bm8vHSLMeffp8LaWdkXvqrUGzL8z2wEg8QsBdvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNL4bJeCq4PlRWAhv39JpkRoXtA0Js0+XsLrz3/WX8khFAQTduYrOtNZgTP1WHyPjycL8zWnC85J9wppDzMQkjarSQA1u4MDWwfu2NTBe1qeMhn8JQzO7WHMd+GrwOWmScuS2c9I/ppEUcB+Sk6WKEevJE72qA/fXnrNjcWzCBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9958C2F4;
+	Thu,  6 Jun 2024 10:53:42 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DEC43F64C;
+	Thu,  6 Jun 2024 10:53:17 -0700 (PDT)
+Date: Thu, 6 Jun 2024 18:53:12 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 2/5] ftrace: Remove "ftrace_hash" parameter from
+ __ftrace_hash_rec_update()
+Message-ID: <ZmH3iNgj_sLpQhTr@J2N7QTR9R3.cambridge.arm.com>
+References: <20240605180334.090848865@goodmis.org>
+ <20240605180408.691995506@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605180408.691995506@goodmis.org>
 
+On Wed, Jun 05, 2024 at 02:03:36PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> While adding comments to the function __ftrace_hash_rec_update() and
+> trying to describe in detail what the parameter for "ftrace_hash" does, I
+> realized that it basically does exactly the same thing (but differently)
+> if it is set or not!
 
-Is there something new since the last report?
+Typo: "ftrace_hash" should be "filter_hash", and likewise in the commit
+title.
 
- https://lore.kernel.org/all/202406060125.8GGeEpJs-lkp@intel.com/
+> If it is set, the idea was the ops->filter_hash was being updated, and the
+> code should focus on the functions that are in the ops->filter_hash and
+> add them. But it still had to pay attention to the functions in the
+> ops->notrace_hash, to ignore them.
+> 
+> If it was cleared, it focused on the ops->notrace_hash, and would add
+> functions that were not in the ops->notrace_hash but would still keep
+> functions in the "ops->filter_hash". Basically doing the same thing.
+> 
+> In reality, the __ftrace_hash_rec_update() only needs to either remove the
+> functions associated to the give ops (if "inc" is set) or remove them (if
+> "inc" is cleared). It has to pay attention to both the filter_hash and
+> notrace_hash regardless.
 
-If not, can we please not keep spamming, as it makes it harder to know
-what to fix and what has been fixed.
+AFAICT, we actually remove a latent bug here, but that bug wasn't
+reachable because we never call __ftrace_hash_rec_update() with
+"filter_hash" clear.
 
--- Steve
+Before this patch, if we did call __ftrace_hash_rec_update() with
+"filter_hash" clear, we'd setup:
 
+	all = false;
+	...
+	if (filter_hash) {
+		...
+	} else {
+		hash = ops->func_hash->notrace_hash;
+		other_hash = ops->func_hash->filter_hash;
+	}
 
-On Fri, 07 Jun 2024 01:15:11 +0800
-kernel test robot <lkp@intel.com> wrote:
+... and then at the tail of the loop where we do:
 
-> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> branch HEAD: ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f  Add linux-next specific files for 20240606
+	count++;
+
+	[...] 
+
+	/* Shortcut, if we handled all records, we are done. */
+	if (!all && count == hash->count) {
+		pr_info("HARK: stopping after %d recs\n", count);
+		return update;
+	}
+
+... we'd be checking whether we've updated notrace_hash->count entries,
+when that could be smaller than the number of entries we actually need
+to update (e.g. if the notrace hash contains a single entry, but the
+filter_hash contained more).
+
+As above, we never actually hit that because we never call with
+"filter_hash" clear, so it might be good to explicitly say that before
+this patch we never actually call __ftrace_hash_rec_update() with
+"filter_hash" clear, and this is removing dead (and potentially broken)
+code.
+
+> Remove the "filter_hash" parameter from __filter_hash_rec_update() and
+> comment the function for what it really is doing.
 > 
-> Error/Warning reports:
-> 
-> https://lore.kernel.org/oe-kbuild-all/202406061744.rZDXfRrG-lkp@intel.com
-> 
-> Error/Warning: (recently discovered and may have been fixed)
-> 
-> kernel/trace/trace_selftest.c:761: warning: "BYTE_NUMBER" redefined
-> 
-> Unverified Error/Warning (likely false positive, please contact us if interested):
-> 
-> arch/microblaze/boot/dts/system.dts:20.9-23.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-> arch/microblaze/boot/dts/system.dts:272.4-19: Warning (clocks_property): /amba_pl/dma@41e00000:clocks: cell 0 is not a phandle reference
-> arch/microblaze/boot/dts/system.dts:284.4-19: Warning (clocks_property): /amba_pl/timer@41c00000:clocks: cell 0 is not a phandle reference
-> arch/microblaze/boot/dts/system.dts:339.4-19: Warning (clocks_property): /amba_pl/i2c@40800000:clocks: cell 0 is not a phandle reference
-> arch/microblaze/boot/dts/system.dts:483.25-486.6: Warning (unit_address_format): /amba_pl/flash@60000000/partition@0x00000000: unit name should not have leading "0x"
-> arch/microblaze/boot/dts/system.dts:483.25-486.6: Warning (unit_address_format): /amba_pl/flash@60000000/partition@0x00000000: unit name should not have leading 0s
-> arch/microblaze/boot/dts/system.dts:50.4-19: Warning (clocks_property): /cpus/cpu@0:clocks: cell 0 is not a phandle reference
-> arch/microblaze/boot/dts/system.dts:560.4-19: Warning (clocks_property): /amba_pl/serial@44a00000:clocks: cell 0 is not a phandle reference
-> arch/microblaze/boot/dts/system.dts:579.15-588.4: Warning (simple_bus_reg): /amba_pl/gpio-restart: missing or empty reg/ranges property
-> 
-> Error/Warning ids grouped by kconfigs:
-> 
-> gcc_recent_errors
-> |-- alpha-randconfig-r123-20240606
-> |   `-- drivers-hwmon-cros_ec_hwmon.c:sparse:sparse:cast-to-restricted-__le16
-> |-- loongarch-defconfig
-> |   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-hubbub-dcn401-dcn401_hubbub.o:warning:objtool:unexpected-relocation-symbol-type-in-.rela.discard.reachable
-> |   `-- drivers-thermal-thermal_trip.o:warning:objtool:unexpected-relocation-symbol-type-in-.rela.discard.reachable
-> |-- microblaze-buildonly-randconfig-r001-20230308
-> |   |-- arch-microblaze-boot-dts-system.dts.-.:Warning-(simple_bus_reg):amba_pl-gpio-restart:missing-or-empty-reg-ranges-property
-> |   |-- arch-microblaze-boot-dts-system.dts.-.:Warning-(unit_address_format):amba_pl-flash-partition:unit-name-should-not-have-leading
-> |   |-- arch-microblaze-boot-dts-system.dts.-.:Warning-(unit_address_format):amba_pl-flash-partition:unit-name-should-not-have-leading-0s
-> |   |-- arch-microblaze-boot-dts-system.dts.-.:Warning-(unit_address_vs_reg):memory:node-has-a-reg-or-ranges-property-but-no-unit-name
-> |   |-- arch-microblaze-boot-dts-system.dts.:Warning-(clocks_property):amba_pl-dma-41e00000:clocks:cell-is-not-a-phandle-reference
-> |   |-- arch-microblaze-boot-dts-system.dts.:Warning-(clocks_property):amba_pl-i2c:clocks:cell-is-not-a-phandle-reference
-> |   |-- arch-microblaze-boot-dts-system.dts.:Warning-(clocks_property):amba_pl-serial-44a00000:clocks:cell-is-not-a-phandle-reference
-> |   |-- arch-microblaze-boot-dts-system.dts.:Warning-(clocks_property):amba_pl-timer-41c00000:clocks:cell-is-not-a-phandle-reference
-> |   `-- arch-microblaze-boot-dts-system.dts.:Warning-(clocks_property):cpus-cpu:clocks:cell-is-not-a-phandle-reference
-> |-- openrisc-randconfig-r121-20240606
-> |   `-- drivers-clk-qcom-camcc-sm7150.c:sparse:sparse:symbol-camcc_sm7150_hws-was-not-declared.-Should-it-be-static
-> |-- sh-randconfig-c004-20211223
-> |   `-- kernel-trace-trace_selftest.c:warning:BYTE_NUMBER-redefined
-> |-- sh-randconfig-r111-20240606
-> |   |-- include-linux-container_of.h:error:struct-ftrace_ops-has-no-member-named-list
-> |   |-- include-linux-list.h:error:struct-ftrace_ops-has-no-member-named-list
-> |   |-- include-linux-stddef.h:error:struct-ftrace_ops-has-no-member-named-list
-> |   |-- kernel-trace-fgraph.c:error:implicit-declaration-of-function-ftrace_shutdown_subops
-> |   |-- kernel-trace-fgraph.c:error:implicit-declaration-of-function-ftrace_startup_subops
-> |   `-- kernel-trace-fgraph.c:error:struct-ftrace_ops-has-no-member-named-subop_list
-> |-- um-allyesconfig
-> |   `-- kernel-bpf-verifier.c:error:pcpu_hot-undeclared-(first-use-in-this-function)
-> `-- x86_64-randconfig-161-20240606
->     |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vm.c-amdgpu_vm_bo_update()-error:we-previously-assumed-bo-could-be-null-(see-line-)
->     |-- drivers-gpu-drm-i915-display-intel_dpt.c-intel_dpt_pin_to_ggtt()-error:uninitialized-symbol-vma-.
->     |-- drivers-gpu-drm-i915-display-intel_fb_pin.c-intel_fb_pin_to_dpt()-error:uninitialized-symbol-vma-.
->     `-- drivers-gpu-drm-i915-display-intel_fb_pin.c-intel_fb_pin_to_dpt()-error:vma-dereferencing-possible-ERR_PTR()
-> clang_recent_errors
-> |-- arm-randconfig-r133-20240606
-> |   |-- drivers-mtd-nand-raw-mxc_nand.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-buf-got-void-noderef-__iomem
-> |   `-- drivers-mtd-nand-raw-mxc_nand.c:sparse:sparse:incorrect-type-in-initializer-(different-address-spaces)-expected-unsigned-short-noderef-usertype-__iomem-t-got-void-buf
-> |-- arm64-allmodconfig
-> |   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:arithmetic-between-different-enumeration-types-(-enum-dc_irq_source-and-enum-irq_type-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dce110-irq_service_dce110.c:error:arithmetic-between-different-enumeration-types-(-enum-dc_irq_source-and-enum-irq_type-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_cursor.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_ddi.c:error:arithmetic-between-different-enumeration-types-(-enum-hpd_pin-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_ddi.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-phy-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-tc_port-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display_irq.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display_irq.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_dpll_mgr.c:error:arithmetic-between-different-enumeration-types-(-enum-tc_port-and-enum-intel_dpll_id-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_hotplug.c:error:arithmetic-between-different-enumeration-types-(-enum-hpd_pin-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_pipe_crc.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_tc.c:error:arithmetic-between-different-enumeration-types-(-enum-intel_display_power_domain-and-enum-tc_port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_vdsc.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-skl_universal_plane.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-skl_watermark.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   `-- drivers-gpu-drm-renesas-rcar-du-rcar_cmm.c:error:unused-function-rcar_cmm_read-Werror-Wunused-function
-> |-- arm64-randconfig-r113-20240606
-> |   |-- kernel-trace-fgraph.c:sparse:sparse:symbol-fgraph_do_direct-was-not-declared.-Should-it-be-static
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-B-got-struct-ftrace_hash-noderef-__rcu-filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-B-got-struct-ftrace_hash-noderef-__rcu-notrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-new_hash-got-struct-ftrace_hash-noderef-__rcu-filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-new_hash1-got-struct-ftrace_hash-noderef-__rcu-filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-new_hash2-got-struct-ftrace_hash-noderef-__rcu-filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-new_hash2-got-struct-ftrace_hash-noderef-__rcu-notrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-orig_hash-got-struct-ftrace_hash-noderef-__rcu
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-src-got-struct-ftrace_hash-noderef-__rcu-filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-ftrace_hash-src-got-struct-ftrace_hash-noderef-__rcu-notrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-noderef-__rcu-filter_hash-got-struct-ftrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-noderef-__rcu-filter_hash-got-struct-ftrace_hash-assigned-filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-noderef-__rcu-filter_hash-got-struct-ftrace_hash-save_filter_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-noderef-__rcu-notrace_hash-got-struct-ftrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-noderef-__rcu-notrace_hash-got-struct-ftrace_hash-assigned-notrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-noderef-__rcu-notrace_hash-got-struct-ftrace_hash-save_notrace_hash
-> |   |-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-save_filter_hash-got-struct-ftrace_hash-noderef-__rcu-filter_hash
-> |   `-- kernel-trace-ftrace.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-ftrace_hash-save_notrace_hash-got-struct-ftrace_hash-noderef-__rcu-notrace_hash
-> |-- i386-buildonly-randconfig-001-20240606
-> |   `-- drivers-gpu-drm-drm_mm.c:error:function-drm_mm_node_scanned_block-is-not-needed-and-will-not-be-emitted-Werror-Wunneeded-internal-declaration
-> |-- i386-buildonly-randconfig-005-20240606
-> |   `-- drivers-gpu-drm-drm_mm.c:error:function-drm_mm_node_scanned_block-is-not-needed-and-will-not-be-emitted-Werror-Wunneeded-internal-declaration
-> |-- i386-randconfig-006-20240606
-> |   `-- drivers-gpu-drm-drm_mm.c:error:function-drm_mm_node_scanned_block-is-not-needed-and-will-not-be-emitted-Werror-Wunneeded-internal-declaration
-> |-- i386-randconfig-062-20240606
-> |   `-- drivers-hwmon-cros_ec_hwmon.c:sparse:sparse:cast-to-restricted-__le16
-> |-- riscv-allmodconfig
-> |   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:arithmetic-between-different-enumeration-types-(-enum-dc_irq_source-and-enum-irq_type-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dce110-irq_service_dce110.c:error:arithmetic-between-different-enumeration-types-(-enum-dc_irq_source-and-enum-irq_type-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_cursor.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_ddi.c:error:arithmetic-between-different-enumeration-types-(-enum-hpd_pin-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_ddi.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-phy-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-tc_port-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display_irq.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display_irq.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_dpll_mgr.c:error:arithmetic-between-different-enumeration-types-(-enum-tc_port-and-enum-intel_dpll_id-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_hotplug.c:error:arithmetic-between-different-enumeration-types-(-enum-hpd_pin-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_pipe_crc.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_tc.c:error:arithmetic-between-different-enumeration-types-(-enum-intel_display_power_domain-and-enum-tc_port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_vdsc.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-skl_universal_plane.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   `-- drivers-gpu-drm-i915-display-skl_watermark.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |-- riscv-allyesconfig
-> |   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:arithmetic-between-different-enumeration-types-(-enum-dc_irq_source-and-enum-irq_type-)-Werror-Wenum-enum-conversion
-> |   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dce110-irq_service_dce110.c:error:arithmetic-between-different-enumeration-types-(-enum-dc_irq_source-and-enum-irq_type-)-Werror-Wenum-enum-conversion
-> |-- s390-allmodconfig
-> |   |-- drivers-gpu-drm-i915-display-intel_cursor.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_ddi.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-phy-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display_irq.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_display_irq.c:error:arithmetic-between-different-enumeration-types-(-enum-transcoder-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_dpll_mgr.c:error:arithmetic-between-different-enumeration-types-(-enum-tc_port-and-enum-intel_dpll_id-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_hotplug.c:error:arithmetic-between-different-enumeration-types-(-enum-hpd_pin-and-enum-port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_pipe_crc.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_tc.c:error:arithmetic-between-different-enumeration-types-(-enum-intel_display_power_domain-and-enum-tc_port-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-intel_vdsc.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   |-- drivers-gpu-drm-i915-display-skl_universal_plane.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |   `-- drivers-gpu-drm-i915-display-skl_watermark.c:error:arithmetic-between-different-enumeration-types-(-enum-pipe-and-enum-intel_display_power_domain-)-Werror-Wenum-enum-conversion
-> |-- x86_64-randconfig-014-20240606
-> |   `-- drivers-gpu-drm-drm_mm.c:error:function-drm_mm_node_scanned_block-is-not-needed-and-will-not-be-emitted-Werror-Wunneeded-internal-declaration
-> |-- x86_64-randconfig-076-20240606
-> |   `-- drivers-gpu-drm-drm_mm.c:error:function-drm_mm_node_scanned_block-is-not-needed-and-will-not-be-emitted-Werror-Wunneeded-internal-declaration
-> `-- x86_64-randconfig-r112-20240606
->     `-- drivers-hwmon-cros_ec_hwmon.c:sparse:sparse:cast-to-restricted-__le16
-> 
-> elapsed time: 742m
-> 
-> configs tested: 179
-> configs skipped: 3
-> 
-> tested configs:
-> alpha                             allnoconfig   gcc  
-> alpha                            allyesconfig   gcc  
-> alpha                               defconfig   gcc  
-> arc                              allmodconfig   gcc  
-> arc                               allnoconfig   gcc  
-> arc                              allyesconfig   gcc  
-> arc                                 defconfig   gcc  
-> arc                   randconfig-001-20240606   gcc  
-> arc                   randconfig-002-20240606   gcc  
-> arm                              allmodconfig   gcc  
-> arm                               allnoconfig   clang
-> arm                              allyesconfig   gcc  
-> arm                     davinci_all_defconfig   clang
-> arm                                 defconfig   clang
-> arm                           omap1_defconfig   gcc  
-> arm                   randconfig-001-20240606   clang
-> arm                   randconfig-002-20240606   clang
-> arm                   randconfig-003-20240606   clang
-> arm                   randconfig-004-20240606   clang
-> arm                           tegra_defconfig   gcc  
-> arm64                            allmodconfig   clang
-> arm64                             allnoconfig   gcc  
-> arm64                               defconfig   gcc  
-> arm64                 randconfig-001-20240606   clang
-> arm64                 randconfig-002-20240606   gcc  
-> arm64                 randconfig-003-20240606   clang
-> arm64                 randconfig-004-20240606   clang
-> csky                             alldefconfig   gcc  
-> csky                             allmodconfig   gcc  
-> csky                              allnoconfig   gcc  
-> csky                             allyesconfig   gcc  
-> csky                                defconfig   gcc  
-> csky                  randconfig-001-20240606   gcc  
-> csky                  randconfig-002-20240606   gcc  
-> hexagon                          allmodconfig   clang
-> hexagon                           allnoconfig   clang
-> hexagon                          allyesconfig   clang
-> hexagon                             defconfig   clang
-> hexagon               randconfig-001-20240606   clang
-> hexagon               randconfig-002-20240606   clang
-> i386                             allmodconfig   gcc  
-> i386                              allnoconfig   gcc  
-> i386                             allyesconfig   gcc  
-> i386         buildonly-randconfig-001-20240606   clang
-> i386         buildonly-randconfig-002-20240606   clang
-> i386         buildonly-randconfig-003-20240606   clang
-> i386         buildonly-randconfig-004-20240606   gcc  
-> i386         buildonly-randconfig-005-20240606   clang
-> i386         buildonly-randconfig-006-20240606   gcc  
-> i386                                defconfig   clang
-> i386                  randconfig-001-20240606   clang
-> i386                  randconfig-002-20240606   clang
-> i386                  randconfig-003-20240606   clang
-> i386                  randconfig-004-20240606   clang
-> i386                  randconfig-005-20240606   clang
-> i386                  randconfig-006-20240606   clang
-> i386                  randconfig-011-20240606   clang
-> i386                  randconfig-012-20240606   gcc  
-> i386                  randconfig-013-20240606   gcc  
-> i386                  randconfig-014-20240606   gcc  
-> i386                  randconfig-015-20240606   gcc  
-> i386                  randconfig-016-20240606   gcc  
-> loongarch                        allmodconfig   gcc  
-> loongarch                         allnoconfig   gcc  
-> loongarch                           defconfig   gcc  
-> loongarch             randconfig-001-20240606   gcc  
-> loongarch             randconfig-002-20240606   gcc  
-> m68k                             allmodconfig   gcc  
-> m68k                              allnoconfig   gcc  
-> m68k                             allyesconfig   gcc  
-> m68k                                defconfig   gcc  
-> m68k                          hp300_defconfig   gcc  
-> microblaze                       allmodconfig   gcc  
-> microblaze                        allnoconfig   gcc  
-> microblaze                       allyesconfig   gcc  
-> microblaze                          defconfig   gcc  
-> mips                              allnoconfig   gcc  
-> mips                             allyesconfig   gcc  
-> mips                      maltasmvp_defconfig   gcc  
-> nios2                            allmodconfig   gcc  
-> nios2                             allnoconfig   gcc  
-> nios2                            allyesconfig   gcc  
-> nios2                               defconfig   gcc  
-> nios2                 randconfig-001-20240606   gcc  
-> nios2                 randconfig-002-20240606   gcc  
-> openrisc                          allnoconfig   gcc  
-> openrisc                         allyesconfig   gcc  
-> openrisc                            defconfig   gcc  
-> parisc                           allmodconfig   gcc  
-> parisc                            allnoconfig   gcc  
-> parisc                           allyesconfig   gcc  
-> parisc                              defconfig   gcc  
-> parisc                randconfig-001-20240606   gcc  
-> parisc                randconfig-002-20240606   gcc  
-> parisc64                            defconfig   gcc  
-> powerpc                          allmodconfig   gcc  
-> powerpc                           allnoconfig   gcc  
-> powerpc                          allyesconfig   clang
-> powerpc                    gamecube_defconfig   clang
-> powerpc                       holly_defconfig   clang
-> powerpc                        icon_defconfig   gcc  
-> powerpc                 linkstation_defconfig   clang
-> powerpc                      obs600_defconfig   clang
-> powerpc                      ppc44x_defconfig   clang
-> powerpc               randconfig-001-20240606   gcc  
-> powerpc               randconfig-002-20240606   gcc  
-> powerpc               randconfig-003-20240606   gcc  
-> powerpc64             randconfig-001-20240606   clang
-> powerpc64             randconfig-002-20240606   clang
-> powerpc64             randconfig-003-20240606   gcc  
-> riscv                            allmodconfig   clang
-> riscv                             allnoconfig   gcc  
-> riscv                            allyesconfig   clang
-> riscv                               defconfig   clang
-> riscv                 randconfig-001-20240606   gcc  
-> riscv                 randconfig-002-20240606   clang
-> s390                             allmodconfig   clang
-> s390                              allnoconfig   clang
-> s390                             allyesconfig   gcc  
-> s390                                defconfig   clang
-> s390                  randconfig-001-20240606   gcc  
-> s390                  randconfig-002-20240606   gcc  
-> sh                               allmodconfig   gcc  
-> sh                                allnoconfig   gcc  
-> sh                               allyesconfig   gcc  
-> sh                                  defconfig   gcc  
-> sh                          r7785rp_defconfig   gcc  
-> sh                    randconfig-001-20240606   gcc  
-> sh                    randconfig-002-20240606   gcc  
-> sh                      rts7751r2d1_defconfig   gcc  
-> sh                  sh7785lcr_32bit_defconfig   gcc  
-> sparc                            allmodconfig   gcc  
-> sparc                             allnoconfig   gcc  
-> sparc                               defconfig   gcc  
-> sparc64                          allmodconfig   gcc  
-> sparc64                          allyesconfig   gcc  
-> sparc64                             defconfig   gcc  
-> sparc64               randconfig-001-20240606   gcc  
-> sparc64               randconfig-002-20240606   gcc  
-> um                               allmodconfig   clang
-> um                                allnoconfig   clang
-> um                               allyesconfig   gcc  
-> um                                  defconfig   clang
-> um                             i386_defconfig   gcc  
-> um                    randconfig-001-20240606   clang
-> um                    randconfig-002-20240606   gcc  
-> um                           x86_64_defconfig   clang
-> x86_64                            allnoconfig   clang
-> x86_64                           allyesconfig   clang
-> x86_64       buildonly-randconfig-001-20240606   gcc  
-> x86_64       buildonly-randconfig-002-20240606   clang
-> x86_64       buildonly-randconfig-003-20240606   gcc  
-> x86_64       buildonly-randconfig-004-20240606   gcc  
-> x86_64       buildonly-randconfig-005-20240606   gcc  
-> x86_64       buildonly-randconfig-006-20240606   clang
-> x86_64                              defconfig   gcc  
-> x86_64                randconfig-001-20240606   gcc  
-> x86_64                randconfig-002-20240606   gcc  
-> x86_64                randconfig-003-20240606   gcc  
-> x86_64                randconfig-004-20240606   clang
-> x86_64                randconfig-005-20240606   gcc  
-> x86_64                randconfig-006-20240606   gcc  
-> x86_64                randconfig-011-20240606   clang
-> x86_64                randconfig-012-20240606   gcc  
-> x86_64                randconfig-013-20240606   clang
-> x86_64                randconfig-014-20240606   clang
-> x86_64                randconfig-015-20240606   clang
-> x86_64                randconfig-016-20240606   clang
-> x86_64                randconfig-071-20240606   clang
-> x86_64                randconfig-072-20240606   gcc  
-> x86_64                randconfig-073-20240606   clang
-> x86_64                randconfig-074-20240606   clang
-> x86_64                randconfig-075-20240606   gcc  
-> x86_64                randconfig-076-20240606   clang
-> x86_64                          rhel-8.3-rust   clang
-> xtensa                            allnoconfig   gcc  
-> xtensa                  nommu_kc705_defconfig   gcc  
-> xtensa                randconfig-001-20240606   gcc  
-> xtensa                randconfig-002-20240606   gcc  
-> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+FWIW, this looks good to me, and works in testing, so:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+
+I have one comment below, but the above stands regardless.
+
+[...]
+
+> +/*
+> + * This is the main engine to the ftrace updates to the dyn_ftrace records.
+> + *
+> + * It will iterate through all the available ftrace functions
+> + * (the ones that ftrace can have callbacks to) and set the flags
+> + * in the associated dyn_ftrace records.
+> + *
+> + * @inc: If true, the functions associated to @ops are added to
+> + *       the dyn_ftrace records, otherwise they are removed.
+> + */
+>  static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+> -				     int filter_hash,
+>  				     bool inc)
+>  {
+>  	struct ftrace_hash *hash;
+> -	struct ftrace_hash *other_hash;
+> +	struct ftrace_hash *notrace_hash;
+>  	struct ftrace_page *pg;
+>  	struct dyn_ftrace *rec;
+>  	bool update = false;
+> @@ -1718,35 +1725,16 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+>  		return false;
+>  
+>  	/*
+> -	 * In the filter_hash case:
+>  	 *   If the count is zero, we update all records.
+>  	 *   Otherwise we just update the items in the hash.
+> -	 *
+> -	 * In the notrace_hash case:
+> -	 *   We enable the update in the hash.
+> -	 *   As disabling notrace means enabling the tracing,
+> -	 *   and enabling notrace means disabling, the inc variable
+> -	 *   gets inversed.
+>  	 */
+> -	if (filter_hash) {
+> -		hash = ops->func_hash->filter_hash;
+> -		other_hash = ops->func_hash->notrace_hash;
+> -		if (ftrace_hash_empty(hash))
+> -			all = true;
+> -	} else {
+> -		inc = !inc;
+> -		hash = ops->func_hash->notrace_hash;
+> -		other_hash = ops->func_hash->filter_hash;
+> -		/*
+> -		 * If the notrace hash has no items,
+> -		 * then there's nothing to do.
+> -		 */
+> -		if (ftrace_hash_empty(hash))
+> -			return false;
+> -	}
+> +	hash = ops->func_hash->filter_hash;
+> +	notrace_hash = ops->func_hash->notrace_hash;
+> +	if (ftrace_hash_empty(hash))
+> +		all = true;
+>  
+>  	do_for_each_ftrace_rec(pg, rec) {
+> -		int in_other_hash = 0;
+> +		int in_notrace_hash = 0;
+>  		int in_hash = 0;
+>  		int match = 0;
+>  
+> @@ -1758,26 +1746,17 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+>  			 * Only the filter_hash affects all records.
+>  			 * Update if the record is not in the notrace hash.
+>  			 */
+> -			if (!other_hash || !ftrace_lookup_ip(other_hash, rec->ip))
+> +			if (!notrace_hash || !ftrace_lookup_ip(notrace_hash, rec->ip))
+>  				match = 1;
+>  		} else {
+>  			in_hash = !!ftrace_lookup_ip(hash, rec->ip);
+> -			in_other_hash = !!ftrace_lookup_ip(other_hash, rec->ip);
+> +			in_notrace_hash = !!ftrace_lookup_ip(notrace_hash, rec->ip);
+>  
+>  			/*
+> -			 * If filter_hash is set, we want to match all functions
+> -			 * that are in the hash but not in the other hash.
+> -			 *
+> -			 * If filter_hash is not set, then we are decrementing.
+> -			 * That means we match anything that is in the hash
+> -			 * and also in the other_hash. That is, we need to turn
+> -			 * off functions in the other hash because they are disabled
+> -			 * by this hash.
+> +			 * We want to match all functions that are in the hash but
+> +			 * not in the other hash.
+>  			 */
+> -			if (filter_hash && in_hash && !in_other_hash)
+> -				match = 1;
+> -			else if (!filter_hash && in_hash &&
+> -				 (in_other_hash || ftrace_hash_empty(other_hash)))
+> +			if (in_hash && !in_notrace_hash)
+>  				match = 1;
+>  		}
+>  		if (!match)
+
+I wonder how much the (subsequent) shortcut for count == hash->count
+matters in practice, because if we were happy to get rid of that, we
+could get rid of 'all', 'count', 'in_hash', 'in_notrace_hash', and
+simplify the above down to:
+
+	do_for_each_ftrace_rec(pg, rec) {
+		if (skip_record(rec))
+			continue;
+
+		/*
+		 * When the hash is empty we update all records.
+		 * Otherwise we just update the items in the hash.
+		 */
+		if (!ftrace_hash_empty(hash) &&
+		    !ftrace_lookup_ip(hash, rec->ip))
+			continue;
+
+		if (!ftrace_lookup_ip(notrace_hash, rec->ip))
+			continue;
+
+		[...]
+			/* do the actual updates here */
+		[...]
+
+	} while_for_each_ftrace_rec();
+
+... which'd be easier to follow.
+
+FWIW, diff atop this patch below. It passes the selftests in my local
+testing, but I understand if we'd rather keep the shortcut.
+
+Mark.
+
+---->8----
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index f1aab82fa465..165e8dd4f894 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1714,49 +1714,27 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+ 	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
+ 	bool update = false;
+-	int count = 0;
+-	int all = false;
+ 
+ 	/* Only update if the ops has been registered */
+ 	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
+ 		return false;
+ 
+-	/*
+-	 *   If the count is zero, we update all records.
+-	 *   Otherwise we just update the items in the hash.
+-	 */
+ 	hash = ops->func_hash->filter_hash;
+ 	notrace_hash = ops->func_hash->notrace_hash;
+-	if (ftrace_hash_empty(hash))
+-		all = true;
+ 
+ 	do_for_each_ftrace_rec(pg, rec) {
+-		int in_notrace_hash = 0;
+-		int in_hash = 0;
+-		int match = 0;
+-
+ 		if (skip_record(rec))
+ 			continue;
+ 
+-		if (all) {
+-			/*
+-			 * Only the filter_hash affects all records.
+-			 * Update if the record is not in the notrace hash.
+-			 */
+-			if (!notrace_hash || !ftrace_lookup_ip(notrace_hash, rec->ip))
+-				match = 1;
+-		} else {
+-			in_hash = !!ftrace_lookup_ip(hash, rec->ip);
+-			in_notrace_hash = !!ftrace_lookup_ip(notrace_hash, rec->ip);
++		/*
++		 * If the hash is empty, we update all records.
++		 * Otherwise we just update the items in the hash.
++		 */
++		if (!ftrace_hash_empty(hash) &&
++		    !ftrace_lookup_ip(hash, rec->ip))
++			continue;
+ 
+-			/*
+-			 * We want to match all functions that are in the hash but
+-			 * not in the other hash.
+-			 */
+-			if (in_hash && !in_notrace_hash)
+-				match = 1;
+-		}
+-		if (!match)
++		if (ftrace_lookup_ip(notrace_hash, rec->ip))
+ 			continue;
+ 
+ 		if (inc) {
+@@ -1846,14 +1824,9 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+ 		else
+ 			rec->flags &= ~FTRACE_FL_CALL_OPS;
+ 
+-		count++;
+-
+ 		/* Must match FTRACE_UPDATE_CALLS in ftrace_modify_all_code() */
+ 		update |= ftrace_test_record(rec, true) != FTRACE_UPDATE_IGNORE;
+ 
+-		/* Shortcut, if we handled all records, we are done. */
+-		if (!all && count == hash->count)
+-			return update;
+ 	} while_for_each_ftrace_rec();
+ 
+ 	return update;
+
 
