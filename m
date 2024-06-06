@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5378821;
-	Thu,  6 Jun 2024 00:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436EACA6F;
+	Thu,  6 Jun 2024 00:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717635511; cv=none; b=TUSUTEqXzs8uxqI7FMNBT4u1QiMjOBgWK30RpRTLBNPAAz0ZJQqBsJoZjEWW1FOKl2CHp2+N9YW63vf7UODOycvpK/l/s07K9id73RzZlgZ4Ve5Y4WpUy7z2mUjfMjUfYs0GiOT8XmcdPnfoLcv5j5YEOKdRDHNQN69FmuUIk8o=
+	t=1717635511; cv=none; b=P4jzcYtyrY5FLBHkuCcwONLrtYxEbbf0Hyni79d50Rhz9Bz8PH59J+cUmXo1hqR+j0xrhl/qv9nO6RGkwXsdKFKhaUcUNKw/vK/UYS4HI2uQamVDih+/jlNW7VB3Zt6VB5YfIdl61aOnCKWrLwDiFn7RKaUM4IQ97mvjWToBO60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717635511; c=relaxed/simple;
-	bh=bcGRgEvEo62X/MLxlgNLFRIy+S5DmEwSGkybq/yerHo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NGKFxEGjSJs9f0E9mCX20Bmi5EjL8IWdwQMqMvkJ37AceTEyG0s8/HM5hida41UZ6uCCiYzsIxI80HC4uTRYTzgJuopyys6DeYiC71ecwzT53+7rEdPe4yu1lS3rzbXu8QnJCM1vTOjce8zhR/m9dHzraaViTPHndzzL57Wv+Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHsQ/o1+; arc=none smtp.client-ip=10.30.226.201
+	bh=m1ODjAZVIal9y8K9wO0qbhWp8y4HHguHQ1q4lW0dScU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kHvPr4YNEjbFJiNs5hZPeHtw9a5zCdetYOZN7qSbNz+DM26RZnrGWKbt8vzhRNXDi1nCuSUSdHPUR8DDnVMEltuTHkXhwPxzWmbKEM9j0rDyfV5bGOf0xc/ysNR/3u2mJ/4Bby1q584HqMRQoM26cKzGXQNVL4rZyBRTt4Yj0q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYBpFy/R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHsQ/o1+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C9BCC2BD11;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYBpFy/R"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B3846C4AF08;
 	Thu,  6 Jun 2024 00:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717635510;
-	bh=bcGRgEvEo62X/MLxlgNLFRIy+S5DmEwSGkybq/yerHo=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=NHsQ/o1+ZT6g0mEopCY5oecP7MNefvl7arpnfF3dR/Unpe21f7IZpakRHPYf6F5KK
-	 AC+WxGuIkuFEa/c93C+N0nPC1krPm58ChwpwvBRL3iTXc0O17vve7CSJNskfLaSE9u
-	 prNpl6raSszXqRpRqK+JJz9lKvlLfDpBNXHCGrVcKoXX/hN05tLdUPJ12pAS+RTU3Y
-	 uHD4MJlGumc4CXsf1oh6yZTx8HY6d16VRH1qR9OT6cYGS9pfvGRXhdBYQQ1ByDm8/G
-	 lqfZ/EOWShovIuyMSJDUqiP6Kh1UK5PoxVwuQvdknPQCEVyjS533kAkH3gb57HrB04
-	 DNIWJHIXGMoYQ==
+	bh=m1ODjAZVIal9y8K9wO0qbhWp8y4HHguHQ1q4lW0dScU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=EYBpFy/ReR255lYkxKgXO3cJUiteqvhDzWL5sk/4KN162F8hgNqAbWaQVzHp3JhDx
+	 WyFm7nJaZDX+NVYoALbsbUYTtR8eZQoUg2BozQZtHwoaaIpxvFQH89IKTvXEkb+7AZ
+	 L6UIqOg1A1DYaErrVeqfMvhpcqhpx6ZLW2fERC/NwcQbVyuvmHkSITi8oFL/e0eh+A
+	 vkeZ4muQICDJPlawAWFalaBcWnSqu93kHPNvWl9tR4AYwWIdqnP+Z+BubmQfAdOQWi
+	 K/mXf4RibUfbIV2qjkqTTAOJkdqbb6e+DFJXbj6az65Fph70snpcOlI8tYStSQ0H3I
+	 8M1Y0AXHqKpkg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F630C25B76;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB8EC27C5F;
 	Thu,  6 Jun 2024 00:58:30 +0000 (UTC)
 From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Subject: [PATCH net-next v3 0/6] net/tcp: TCP-AO and TCP-MD5 tracepoints
-Date: Thu, 06 Jun 2024 01:58:17 +0100
-Message-Id: <20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com>
+Date: Thu, 06 Jun 2024 01:58:19 +0100
+Subject: [PATCH net-next v3 2/6] net/tcp: Add a helper tcp_ao_hdr_maclen()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,11 +40,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKoJYWYC/22OwWrDMBBEfyXo3G21aztpesp/lFDW8ioWNJKRh
- EgI/vfKKqVQehyGeW8eKkl0ktTb7qGiFJdc8DV0TztlZvYXATfVrEhTr4cOIZvlgwPkyEaW4Hx
- OYJkEe0Grp0nV4RLFuluDvisvGbzcsjrXZuQkMEb2Zt6gP93LlZ3flrNLOcR7e1Ow7ZuYqN/E8
- EdcEDTgYDscD7bTfDhxrAR+NuHafIV+GXs9/He+UGXIEQX3SK8k9nSpbz6/Eeu6fgFqpbuNIgE
- AAA==
+Message-Id: <20240606-tcp_ao-tracepoints-v3-2-13621988c09f@gmail.com>
+References: <20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com>
+In-Reply-To: <20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com>
 To: Eric Dumazet <edumazet@google.com>, 
  "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
@@ -57,11 +55,11 @@ Cc: Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
  Dmitry Safonov <0x7f454c46@gmail.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717635508; l=1866;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717635508; l=1228;
  i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
- bh=bcGRgEvEo62X/MLxlgNLFRIy+S5DmEwSGkybq/yerHo=;
- b=sz9JlhZh10+BL8KGtQIEgSt9PbtbS3WiNVSbOjSb0K4eFnKvKIDkNpd74mFdySFe3vyCOqcsQE6w
- 9htUSe5dCXdRKDh7tAmTS5t9vdh0K0mOARs2FqUy7YdGMr0bF8Mp
+ bh=3r0GUti1sbRL2DmiJwhtJuQ4wZfREpceQasirqqFZEo=;
+ b=CQ0LdFqzJrO1PgTov6mN9djdrLg5x4/LZXb466Qlyk6W8wybb7HWvhrWy3gUyCTv+g5jZQzDy/Ml
+ mjcdbQsSDD66rdlUluNAiirWV6c98jWuyOKlRgWqRbMUdReXpkck
 X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
  pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
 X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
@@ -69,49 +67,48 @@ X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
 X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
 Reply-To: 0x7f454c46@gmail.com
 
+From: Dmitry Safonov <0x7f454c46@gmail.com>
+
+It's going to be used more in TCP-AO tracepoints.
+
 Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
 ---
-Changes in v3:
-- Unexported tcp_inbound_ao_hash() and made static (Eric Dumazet)
-- Link to v2: https://lore.kernel.org/r/20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com
+ include/net/tcp_ao.h | 5 +++++
+ net/ipv4/tcp_ao.c    | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Fix the build with CONFIG_IPV6=m (Eric Dumazet)
-- Move unused keyid/rnext/maclen later in the series to the patch
-  that uses them (Simon Horman)
-- Reworked tcp_ao selftest lib to allow async tracing non-tcp events
-  (was working on a stress-test that needs trace_kfree_skb() event,
-   not in this series).
-- Separated selftest changes from kernel, as they now have a couple
-  of unrelated to tracepoints changes
-- Wrote a few lines of Documentation/
-- Link to v1: https://lore.kernel.org/r/20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com
+diff --git a/include/net/tcp_ao.h b/include/net/tcp_ao.h
+index 471e177362b4..6501ed1dfa1e 100644
+--- a/include/net/tcp_ao.h
++++ b/include/net/tcp_ao.h
+@@ -19,6 +19,11 @@ struct tcp_ao_hdr {
+ 	u8	rnext_keyid;
+ };
+ 
++static inline u8 tcp_ao_hdr_maclen(const struct tcp_ao_hdr *aoh)
++{
++	return aoh->length - sizeof(struct tcp_ao_hdr);
++}
++
+ struct tcp_ao_counters {
+ 	atomic64_t	pkt_good;
+ 	atomic64_t	pkt_bad;
+diff --git a/net/ipv4/tcp_ao.c b/net/ipv4/tcp_ao.c
+index 781b67a52571..7c9e90e531e3 100644
+--- a/net/ipv4/tcp_ao.c
++++ b/net/ipv4/tcp_ao.c
+@@ -884,8 +884,8 @@ tcp_ao_verify_hash(const struct sock *sk, const struct sk_buff *skb,
+ 		   const struct tcp_ao_hdr *aoh, struct tcp_ao_key *key,
+ 		   u8 *traffic_key, u8 *phash, u32 sne, int l3index)
+ {
+-	u8 maclen = aoh->length - sizeof(struct tcp_ao_hdr);
+ 	const struct tcphdr *th = tcp_hdr(skb);
++	u8 maclen = tcp_ao_hdr_maclen(aoh);
+ 	void *hash_buf = NULL;
+ 
+ 	if (maclen != tcp_ao_maclen(key)) {
 
----
-Dmitry Safonov (6):
-      net/tcp: Use static_branch_tcp_{md5,ao} to drop ifdefs
-      net/tcp: Add a helper tcp_ao_hdr_maclen()
-      net/tcp: Move tcp_inbound_hash() from headers
-      net/tcp: Add tcp-md5 and tcp-ao tracepoints
-      net/tcp: Remove tcp_hash_fail()
-      Documentation/tcp-ao: Add a few lines on tracepoints
-
- Documentation/networking/tcp_ao.rst |   9 +
- include/net/tcp.h                   |  92 +----------
- include/net/tcp_ao.h                |  42 +----
- include/trace/events/tcp.h          | 317 ++++++++++++++++++++++++++++++++++++
- net/ipv4/tcp.c                      |  90 ++++++++--
- net/ipv4/tcp_ao.c                   |  24 +--
- net/ipv4/tcp_input.c                |   8 +-
- net/ipv4/tcp_ipv4.c                 |   8 +-
- net/ipv4/tcp_output.c               |   2 +
- 9 files changed, 435 insertions(+), 157 deletions(-)
----
-base-commit: d223d1947dadec37d2bb5efbda9fc34c03b9a784
-change-id: 20240531-tcp_ao-tracepoints-fa2e14e1f0dd
-
-Best regards,
 -- 
-Dmitry Safonov <0x7f454c46@gmail.com>
+2.42.0
 
 
