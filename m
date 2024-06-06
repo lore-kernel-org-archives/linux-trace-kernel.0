@@ -1,85 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AC013B28A;
-	Thu,  6 Jun 2024 12:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97B1A195993;
+	Thu,  6 Jun 2024 12:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717676323; cv=none; b=W9vmEFBVuJnrQJfe6xj0SVfNyjOj9OsimcEMmG4wQ3wOt0AC0YhxRT9iwmsRBBy/Q2IvAsyzRpDLRiI0eor8vJWRaD7iIE4duAW2YvqD+/leK1IH4NhL7DCGTEyWGEvqhGuluq4+7mLpSkev8fkVDomIkJxUycj5CtALls0EUvs=
+	t=1717678388; cv=none; b=ff18qvkW4qLwQL4gepqvkNO1xNeOv97FHyVDf1I2K2UW88g+P+ft+T40RaQff2HnnWOZ2kmtJhx5Tqw7tc2aNfFUCVHNS4q/je5REo9L39oLDF/2QqfcOMRTMBcMk0+6nxLrQG52O4iPeSZqBMNLDw9+I7auHoylfY8WUhuUFNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717676323; c=relaxed/simple;
-	bh=SQNXTsj89MLWuzJf5l0TgCEvvxyzvDkvobR9izSokYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fc+52KeE63LyagkIS8L/52azcyhuTfttj8UdcIjjcxmzWxVe5Wqk4B5W9hW4qIjQxByYEmUTvItQfTZIp1ELAJ1+4nFmV5JzbpPOO2DaGEGkIE5BPwGdJpV7J4jULJ2c+IUv/uRCmrHbcsoiyD+7gZXXrheZxR7Ai8kBn3sNRqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A9EC32782;
-	Thu,  6 Jun 2024 12:18:42 +0000 (UTC)
-Date: Thu, 6 Jun 2024 08:18:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] function_graph: Rename BYTE_NUMBER to CHAR_NUMBER in
- selftests
-Message-ID: <20240606081846.4cb82dc4@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717678388; c=relaxed/simple;
+	bh=fRpk2JACrLGpV1chwSwx047Nj1SvEiyU9gcoq9W3hSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ahmy8niRWojrLFPlPO7ZlPtU8/1fkH+1IoeULec579HavQxJr7RWEeg7YMw4WTjwb/J60hVAnd2iFRpERJqiGbCSNgvlVWJ7mmllD5idSIBGK1QOqXM6q6a8MPi31yXb7fNHOO8Mqqwlz+iRTgBWjrmVOukvO+gvlXm9YKTo1ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E2222F4;
+	Thu,  6 Jun 2024 05:53:30 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E5983F762;
+	Thu,  6 Jun 2024 05:53:05 -0700 (PDT)
+Date: Thu, 6 Jun 2024 13:53:02 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 1/5] ftrace: Rename dup_hash() and comment it
+Message-ID: <ZmGxLprlQohC3tJ3@J2N7QTR9R3.cambridge.arm.com>
+References: <20240605180334.090848865@goodmis.org>
+ <20240605180408.537723591@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605180408.537723591@goodmis.org>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, Jun 05, 2024 at 02:03:35PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The name "dup_hash()" is a misnomer as it does not duplicate the hash that
+> is passed in, but instead moves its entities from that hash to a newly
+> allocated one. Rename it to "__move_hash()" (using starting underscores as
+> it is an internal function), and add some comments about what it does.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-The function_graph selftests checks various size variables to pass from
-the entry of the function to the exit. It tests 1, 2, 4 and 8 byte words.
-The 1 byte macro was called BYTE_NUMBER but that is used in the sh
-architecture: arch/sh/include/asm/bitops-op32.h
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Just rename the macro to CHAR_NUMBER.
+Mark.
 
-Fixes: 47c3c70aa3697 ("function_graph: Add selftest for passing local variables")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406061744.rZDXfRrG-lkp@intel.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_selftest.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-index 369efc569238..adf0f436d84b 100644
---- a/kernel/trace/trace_selftest.c
-+++ b/kernel/trace/trace_selftest.c
-@@ -758,7 +758,7 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
--#define BYTE_NUMBER 123
-+#define CHAR_NUMBER 123
- #define SHORT_NUMBER 12345
- #define WORD_NUMBER 1234567890
- #define LONG_NUMBER 1234567890123456789LL
-@@ -789,7 +789,7 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
- 
- 	switch (size) {
- 	case 1:
--		*(char *)p = BYTE_NUMBER;
-+		*(char *)p = CHAR_NUMBER;
- 		break;
- 	case 2:
- 		*(short *)p = SHORT_NUMBER;
-@@ -830,7 +830,7 @@ static __init void store_return(struct ftrace_graph_ret *trace,
- 
- 	switch (fixture->store_size) {
- 	case 1:
--		expect = BYTE_NUMBER;
-+		expect = CHAR_NUMBER;
- 		found = *(char *)p;
- 		break;
- 	case 2:
--- 
-2.43.0
-
+> ---
+>  kernel/trace/ftrace.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index da7e6abf48b4..9dcdefe9d1aa 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1391,7 +1391,11 @@ ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+>  static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
+>  				       struct ftrace_hash *new_hash);
+>  
+> -static struct ftrace_hash *dup_hash(struct ftrace_hash *src, int size)
+> +/*
+> + * Allocate a new hash and remove entries from @src and move them to the new hash.
+> + * On success, the @src hash will be empty and should be freed.
+> + */
+> +static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+>  {
+>  	struct ftrace_func_entry *entry;
+>  	struct ftrace_hash *new_hash;
+> @@ -1438,7 +1442,7 @@ __ftrace_hash_move(struct ftrace_hash *src)
+>  	if (ftrace_hash_empty(src))
+>  		return EMPTY_HASH;
+>  
+> -	return dup_hash(src, size);
+> +	return __move_hash(src, size);
+>  }
+>  
+>  static int
+> -- 
+> 2.43.0
+> 
+> 
