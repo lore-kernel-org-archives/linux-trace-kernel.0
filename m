@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC6F13D280;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EF7196DAB;
 	Thu,  6 Jun 2024 21:21:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717708891; cv=none; b=lJWiJAvPoIa/09UhABOhke5k+k+1V7cKI+ox/cnGqAHDMq4dI1+Ynyl7d1jVsrceIguyXenG6gDSS5LG8RggWOyiKWw2fl4CJYn9hoss6AWutypB6LHNotLfZcdNBkktjyONGpt/+NtpReAbkrxTPrGnge3NoqPZRjPTmvEowvs=
+	t=1717708892; cv=none; b=CNk4/1w0m2lSr+4xjwx9Vl2VrjGsa0oOt8Cm7Z8gdRdQ1VTTU+OBz/9RhgV8GHZ8mg4WesPuu9ve+e06IcLUcCj+CylQxqPEr6n2WiNzBKxsXhlFdRRAPfJ4L926JEMjo04A8ZSf0SXJAshBiuLn6rM2bjzXZd6bmsoA3gVUa88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717708891; c=relaxed/simple;
-	bh=+Nrr5QPcUeFmKDpIeE4S3vqLr11X9s3E+wEcO1onOJk=;
+	s=arc-20240116; t=1717708892; c=relaxed/simple;
+	bh=jN0UJbZ1ieOpK2a7AmK6Zn7zT7sw+AyyRVp/MP8Ex34=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=GyEiSqg7FjwQ6aK2LGU66MxaOmqYWeDk+G2jMLcK9jD1XC7afDhxgNV541RQEA2nBINGmw2gMDLtynKoKgB1OzPNQv4Hfki7aLHAicWkzB2aeD8GBgWxuF2vHvtwEjGbwJAvEEp5sXuLpWT1c7SQUhvVJ4Roq7iC9m2q6ML01fg=
+	 Content-Type; b=KKOV0b/JeuOwx0URV6uNBqtVv1gaLEPcqUwOtSfWOY4H0fJdA189/EHAoDMEwOApFBvDrxuaMWVBFDOzC0j7v3Cl3MeoUbQqJO6LISkVlMIAH9pOEbq2vreDh78zRHKVbRWbx8uSF1rY7gStQRgnjS+admeIyslADWhzs+puvfw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A57EC3277B;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18A3C4AF1C;
 	Thu,  6 Jun 2024 21:21:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sFKYC-00000000qJF-3S31;
-	Thu, 06 Jun 2024 17:21:36 -0400
-Message-ID: <20240606212136.686202984@goodmis.org>
+	id 1sFKYD-00000000qKD-0btQ;
+	Thu, 06 Jun 2024 17:21:37 -0400
+Message-ID: <20240606212137.006600684@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Jun 2024 17:17:39 -0400
+Date: Thu, 06 Jun 2024 17:17:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,8 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3 04/13] tracing: Implement creating an instance based on a given memory
- region
+Subject: [PATCH v3 06/13] ring-buffer: Add test if range of boot buffer is valid
 References: <20240606211735.684785459@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,152 +61,256 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Allow for creating a new instance by passing in an address and size to map
-the ring buffer for the instance to.
+Add a test against the ring buffer memory range to see if it has valid
+data. The ring_buffer_meta structure is given a new field called
+"first_buffer" which holds the address of the first sub-buffer. This is
+used to both determine if the other fields are valid as well as finding
+the offset between the old addresses of the sub-buffer from the previous
+boot to the new addresses of the current boot.
 
-This will allow features like a pstore memory mapped region to be used for
-an tracing instance ring buffer that can be retrieved from one boot to the
-next.
+Since the values for nr_subbufs and subbuf_size is to be the same, check
+if the values in the meta page match the values calculated.
+
+Take the range of the first_buffer and the total size of all the buffers
+and make sure the saved head_buffer and commit_buffer fall in the range.
+
+Iterate through all the sub-buffers to make sure that the values in the
+sub-buffer "commit" field (the field that holds the amount of data on the
+sub-buffer) is within the end of the sub-buffer. Also check the index
+array to make sure that all the indexes are within nr_subbufs.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 50 +++++++++++++++++++++++++++++++++++---------
- kernel/trace/trace.h |  4 ++++
- 2 files changed, 44 insertions(+), 10 deletions(-)
+ kernel/trace/ring_buffer.c | 143 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 135 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 578a49ff5c32..ff2b504fbe00 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4921,6 +4921,11 @@ static int tracing_open(struct inode *inode, struct file *file)
- static bool
- trace_ok_for_array(struct tracer *t, struct trace_array *tr)
- {
-+#ifdef CONFIG_TRACER_SNAPSHOT
-+	/* arrays with mapped buffer range do not have snapshots */
-+	if (tr->range_addr_start && t->use_max_tr)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 093c73c617cc..aecd4a7d62be 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -45,6 +45,7 @@
+ static void update_pages_handler(struct work_struct *work);
+ 
+ struct ring_buffer_meta {
++	unsigned long	first_buffer;
+ 	unsigned long	head_buffer;
+ 	unsigned long	commit_buffer;
+ 	__u32		subbuf_size;
+@@ -1617,21 +1618,103 @@ static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
+ 	return (void *)ptr;
+ }
+ 
++/*
++ * See if the existing memory contains valid ring buffer data.
++ * As the previous kernel must be the same as this kernel, all
++ * the calculations (size of buffers and number of buffers)
++ * must be the same.
++ */
++static bool rb_meta_valid(struct ring_buffer_meta *meta, int cpu,
++			  struct trace_buffer *buffer, int nr_pages)
++{
++	int subbuf_size = PAGE_SIZE;
++	struct buffer_data_page *subbuf;
++	unsigned long buffers_start;
++	unsigned long buffers_end;
++	int i;
++
++	/* The subbuffer's size and number of subbuffers must match */
++	if (meta->subbuf_size != subbuf_size ||
++	    meta->nr_subbufs != nr_pages + 1) {
++		pr_info("Ring buffer boot meta [%d] mismatch of subbuf_size/nr_pages\n", cpu);
 +		return false;
-+#endif
- 	return (tr->flags & TRACE_ARRAY_FL_GLOBAL) || t->allow_instances;
- }
- 
-@@ -8664,11 +8669,13 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 				tr, cpu, &tracing_entries_fops);
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
--	trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
--				tr, cpu, &snapshot_fops);
-+	if (!tr->range_addr_start) {
-+		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
-+				      tr, cpu, &snapshot_fops);
- 
--	trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
--				tr, cpu, &snapshot_raw_fops);
-+		trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
-+				      tr, cpu, &snapshot_raw_fops);
 +	}
- #endif
- }
- 
-@@ -9205,7 +9212,18 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 
- 	buf->tr = tr;
- 
--	buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	if (tr->range_addr_start && tr->range_addr_size) {
-+		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
-+						      tr->range_addr_start,
-+						      tr->range_addr_size);
-+		/*
-+		 * This is basically the same as a mapped buffer,
-+		 * with the same restrictions.
-+		 */
-+		tr->mapped++;
-+	} else {
-+		buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	}
- 	if (!buf->buffer)
- 		return -ENOMEM;
- 
-@@ -9242,6 +9260,10 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
- 		return ret;
- 
- #ifdef CONFIG_TRACER_MAX_TRACE
-+	/* Fix mapped buffer trace arrays do not have snapshot buffers */
-+	if (tr->range_addr_start)
-+		return 0;
 +
- 	ret = allocate_trace_buffer(tr, &tr->max_buffer,
- 				    allocate_snapshot ? size : 1);
- 	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
-@@ -9342,7 +9364,9 @@ static int trace_array_create_dir(struct trace_array *tr)
++	buffers_start = meta->first_buffer;
++	buffers_end = meta->first_buffer + (subbuf_size * meta->nr_subbufs);
++
++	/* Is the head and commit buffers within the range of buffers? */
++	if (meta->head_buffer < buffers_start ||
++	    meta->head_buffer >= buffers_end) {
++		pr_info("Ring buffer boot meta [%d] head buffer out of range\n", cpu);
++		return false;
++	}
++
++	if (meta->commit_buffer < buffers_start ||
++	    meta->commit_buffer >= buffers_end) {
++		pr_info("Ring buffer boot meta [%d] commit buffer out of range\n", cpu);
++		return false;
++	}
++
++	subbuf = rb_subbufs_from_meta(meta);
++
++	/* Is the meta buffers and the subbufs themselves have correct data? */
++	for (i = 0; i < meta->nr_subbufs; i++) {
++		if (meta->buffers[i] < 0 ||
++		    meta->buffers[i] >= meta->nr_subbufs) {
++			pr_info("Ring buffer boot meta [%d] array out of range\n", cpu);
++			return false;
++		}
++
++		if ((unsigned)local_read(&subbuf->commit) > subbuf_size) {
++			pr_info("Ring buffer boot meta [%d] buffer invalid commit\n", cpu);
++			return false;
++		}
++
++		subbuf = (void *)subbuf + subbuf_size;
++	}
++
++	pr_info("Ring buffer meta is from previous boot!\n");
++	return true;
++}
++
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ {
+ 	struct ring_buffer_meta *meta;
++	unsigned long delta;
+ 	void *subbuf;
+ 	int cpu;
+ 	int i;
+ 
+ 	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		void *next_meta;
++
+ 		meta = rb_range_meta(buffer, nr_pages, cpu);
+ 
++		if (rb_meta_valid(meta, cpu, buffer, nr_pages)) {
++			/* Make the mappings match the current address */
++			subbuf = rb_subbufs_from_meta(meta);
++			delta = (unsigned long)subbuf - meta->first_buffer;
++			meta->first_buffer += delta;
++			meta->head_buffer += delta;
++			meta->commit_buffer += delta;
++			continue;
++		}
++
++		if (cpu < nr_cpu_ids - 1)
++			next_meta = rb_range_meta(buffer, nr_pages, cpu + 1);
++		else
++			next_meta = (void *)buffer->range_addr_end;
++
++		memset(meta, 0, next_meta - (void *)meta);
++
+ 		meta->nr_subbufs = nr_pages + 1;
+ 		meta->subbuf_size = PAGE_SIZE;
+ 
+ 		subbuf = rb_subbufs_from_meta(meta);
+ 
++		meta->first_buffer = (unsigned long)subbuf;
++
+ 		/*
+ 		 * The buffers[] array holds the order of the sub-buffers
+ 		 * that are after the meta data. The sub-buffers may
+@@ -1723,10 +1806,26 @@ int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, in
+ 	return 0;
  }
  
- static struct trace_array *
--trace_array_create_systems(const char *name, const char *systems)
-+trace_array_create_systems(const char *name, const char *systems,
-+			   unsigned long range_addr_start,
-+			   unsigned long range_addr_size)
++/* Map the buffer_pages to the previous head and commit pages */
++static void rb_meta_buffer_update(struct ring_buffer_per_cpu *cpu_buffer,
++				  struct buffer_page *bpage)
++{
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++
++	if (meta->head_buffer == (unsigned long)bpage->page)
++		cpu_buffer->head_page = bpage;
++
++	if (meta->commit_buffer == (unsigned long)bpage->page) {
++		cpu_buffer->commit_page = bpage;
++		cpu_buffer->tail_page = bpage;
++	}
++}
++
+ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 		long nr_pages, struct list_head *pages)
  {
- 	struct trace_array *tr;
+ 	struct trace_buffer *buffer = cpu_buffer->buffer;
++	struct ring_buffer_meta *meta = NULL;
+ 	struct buffer_page *bpage, *tmp;
+ 	bool user_thread = current->mm != NULL;
+ 	gfp_t mflags;
+@@ -1761,6 +1860,10 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 	 */
+ 	if (user_thread)
+ 		set_current_oom_origin();
++
++	if (buffer->range_addr_start)
++		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
++
+ 	for (i = 0; i < nr_pages; i++) {
+ 		struct page *page;
+ 
+@@ -1777,11 +1880,14 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 */
+ 		list_add_tail(&bpage->list, pages);
+ 
+-		if (buffer->range_addr_start) {
++		if (meta) {
+ 			/* A range was given. Use that for the buffer page */
+ 			bpage->page = rb_range_buffer(cpu_buffer, i + 1);
+ 			if (!bpage->page)
+ 				goto free_pages;
++			/* If this is valid from a previous boot */
++			if (meta->head_buffer)
++				rb_meta_buffer_update(cpu_buffer, bpage);
+ 			bpage->range = 1;
+ 			bpage->id = i + 1;
+ 		} else {
+@@ -1843,6 +1949,7 @@ static struct ring_buffer_per_cpu *
+ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
++	struct ring_buffer_meta *meta;
+ 	struct buffer_page *bpage;
+ 	struct page *page;
  	int ret;
-@@ -9368,6 +9392,10 @@ trace_array_create_systems(const char *name, const char *systems)
- 			goto out_free_tr;
+@@ -1883,6 +1990,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 		bpage->page = rb_range_buffer(cpu_buffer, 0);
+ 		if (!bpage->page)
+ 			goto fail_free_reader;
++		if (cpu_buffer->ring_meta->head_buffer)
++			rb_meta_buffer_update(cpu_buffer, bpage);
+ 		bpage->range = 1;
+ 	} else {
+ 		page = alloc_pages_node(cpu_to_node(cpu),
+@@ -1901,14 +2010,32 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	if (ret < 0)
+ 		goto fail_free_reader;
+ 
+-	cpu_buffer->head_page
+-		= list_entry(cpu_buffer->pages, struct buffer_page, list);
+-	cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
++	/* If the boot meta was valid then this has already been updated */
++	meta = cpu_buffer->ring_meta;
++	if (!meta || !meta->head_buffer ||
++	    !cpu_buffer->head_page || !cpu_buffer->commit_page || !cpu_buffer->tail_page) {
++		if (meta && meta->head_buffer &&
++		    (cpu_buffer->head_page || cpu_buffer->commit_page || cpu_buffer->tail_page)) {
++			pr_warn("Ring buffer meta buffers not all mapped\n");
++			if (!cpu_buffer->head_page)
++				pr_warn("   Missing head_page\n");
++			if (!cpu_buffer->commit_page)
++				pr_warn("   Missing commit_page\n");
++			if (!cpu_buffer->tail_page)
++				pr_warn("   Missing tail_page\n");
++		}
+ 
+-	rb_head_page_activate(cpu_buffer);
+-	if (cpu_buffer->ring_meta) {
+-		struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
+-		meta->commit_buffer = meta->head_buffer;
++		cpu_buffer->head_page
++			= list_entry(cpu_buffer->pages, struct buffer_page, list);
++		cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
++
++		rb_head_page_activate(cpu_buffer);
++
++		if (cpu_buffer->ring_meta)
++			meta->commit_buffer = meta->head_buffer;
++	} else {
++		/* The valid meta buffer still needs to activate the head page */
++		rb_head_page_activate(cpu_buffer);
  	}
  
-+	/* Only for boot up memory mapped ring buffers */
-+	tr->range_addr_start = range_addr_start;
-+	tr->range_addr_size = range_addr_size;
-+
- 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
- 
- 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
-@@ -9425,7 +9453,7 @@ trace_array_create_systems(const char *name, const char *systems)
- 
- static struct trace_array *trace_array_create(const char *name)
- {
--	return trace_array_create_systems(name, NULL);
-+	return trace_array_create_systems(name, NULL, 0, 0);
- }
- 
- static int instance_mkdir(const char *name)
-@@ -9479,7 +9507,7 @@ struct trace_array *trace_array_get_by_name(const char *name, const char *system
- 			goto out_unlock;
- 	}
- 
--	tr = trace_array_create_systems(name, systems);
-+	tr = trace_array_create_systems(name, systems, 0, 0);
- 
- 	if (IS_ERR(tr))
- 		tr = NULL;
-@@ -9672,8 +9700,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
--	trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
--			  tr, &snapshot_fops);
-+	if (!tr->range_addr_start) {
-+		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
-+				  tr, &snapshot_fops);
-+	}
- #endif
- 
- 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 749a182dab48..994b86b9bf73 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -344,6 +344,10 @@ struct trace_array {
- 	struct irq_work		fsnotify_irqwork;
- #endif
- #endif
-+	/* The below is for memory mapped ring buffer */
-+	unsigned long		range_addr_start;
-+	unsigned long		range_addr_size;
-+
- 	struct trace_pid_list	__rcu *filtered_pids;
- 	struct trace_pid_list	__rcu *filtered_no_pids;
- 	/*
+ 	return cpu_buffer;
 -- 
 2.43.0
 
