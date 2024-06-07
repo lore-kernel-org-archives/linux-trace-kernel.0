@@ -1,103 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46FC192B89;
-	Fri,  7 Jun 2024 13:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799D5197A99;
+	Fri,  7 Jun 2024 14:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717768101; cv=none; b=EMDAJyvsJ0YLAgITzwwvmuYXMTxHLaD9Uhx/8fUUyLXM9ILM57eHDBDE8113KmIbQXQEw+grePs+WFR2GbCZ6OInCEXmQ0Et44br20uuBl0U01fOUSqG2gvdVoTGSU/xiIEfvxV/UQg/1b9sdu66z7rCe7z92wAnbNFWM8gEWTs=
+	t=1717770455; cv=none; b=P+d8uN1rueupnANN+Tx2fOFLxfBIx18FXDQdejiCSV+m7Wswa23PMmCQpkA1g1TiOquNnJZrN/60BhPKjgpOdDdOduvYZlbpPHJtfKTaMITy0e9qvTRJByEUAH1VqLdsRNslYQ9VGyhm5w0tRZ+nZaFSbpJ42wPFw7lpiNrZsmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717768101; c=relaxed/simple;
-	bh=JdONP7PI4z5eHlGJTSokvp6V8e5bDvrLIcTnte+cj2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rWcMhFqkAXnlM8qVP59CC/VpQvI7f68Rv1J9uZgY2DHQ9qhu9sAjqKx1Ep71yqbE/uyiXT1aaIEYg2NdHsFw+RC7a4FcI2r9EALBs6XZvHq+qg82pPL3m1IlHFjj5nAHIPu0bXT8iPvUo5GMGw2EKHEIg5gEi8lUOjP9BHbMn5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94387C2BBFC;
-	Fri,  7 Jun 2024 13:48:19 +0000 (UTC)
-Date: Fri, 7 Jun 2024 09:48:33 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] function_graph: Make fgraph_update_pid_func() a stub for
- !DYNAMIC_FTRACE
-Message-ID: <20240607094833.6a787d73@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717770455; c=relaxed/simple;
+	bh=KPoMrsS5snh8BDGlOijeafq2go5qhS6jTOpT7vzHlQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g1idzG+TscsfE4qdOTkNqE4eLLOfNo6WaEqI886aoAQNPOAeiTJUTYxE17jIJo8z5I59xpo1cu8W+56xXO4XjnX0Rv8X7l8et/gODHQzMsSzfyVnHCghuosrrAx11VIlE3X4YXke930sWnTGR/pOXIGI/Fp734eWZOaxJnifiFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rb7DMqcA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rb7DMqcA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50BBCC32786;
+	Fri,  7 Jun 2024 14:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717770455;
+	bh=KPoMrsS5snh8BDGlOijeafq2go5qhS6jTOpT7vzHlQQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Rb7DMqcArkZvyfBzLSVJUlQlV/Ck/+6ESPZxN5arnY7H9q7XJGMPPBAE6V2HkFmBt
+	 ncwTlfI/t3hucXH/VxlO/fez1rU2hLs6i/UEpdUTN54W2IQMZ7n1U4OQrWgA1LmJR0
+	 zqDW98yT8BuLgAvCcObpxLiQFfHY2URX5ybVl931TqQhYmhE6iZq2PBE2DaWde/7Eq
+	 ovQkSS/Be7X8r3wJ/i72g+jHgwGd7hyJUkX9jN5/oboTDeg43lJjOz4IMLmY5nFrs6
+	 IyllF283aguUwgY+ZXHesUmBojvGPxRsoSaw6Pxmz4XZKaEL7YdgXyxtgphJeI0HVU
+	 EnAm4F9g8Gk9Q==
+Message-ID: <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+Date: Fri, 7 Jun 2024 08:27:29 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Content-Language: en-US
+To: Pavel Begunkov <asml.silence@gmail.com>,
+ Mina Almasry <almasrymina@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+ <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+ <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 6/7/24 7:42 AM, Pavel Begunkov wrote:
+> I haven't seen any arguments against from the (net) maintainers so
+> far. Nor I see any objection against callbacks from them (considering
+> that either option adds an if).
 
-When CONFIG_DYNAMIC_FTRACE is not set, the function
-fgraph_update_pid_func() doesn't do anything. Currently, most of its logic
-is within a "#ifdef CONFIG_DYNAMIC_FTRACE" block, but its variables were
-declared outside that, and when DYNAMIC_FTRACE is not set, it produces
-unused variable warnings.
+I have said before I do not understand why the dmabuf paradigm is not
+sufficient for both device memory and host memory. A less than ideal
+control path to put hostmem in a dmabuf wrapper vs extra checks and
+changes in the datapath. The former should always be preferred.
 
-Instead, just place it (and the helper function fgraph_pid_func()) within
-the #ifdef block and have the header file use a empty stub function for
-when DYNAMIC_FTRACE is not defined.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406071806.BRjaC5FF-lkp@intel.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/fgraph.c          | 4 ++--
- kernel/trace/ftrace_internal.h | 4 ++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index c0e428c87ea5..0859ab112db7 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1151,6 +1151,7 @@ void ftrace_graph_exit_task(struct task_struct *t)
- 	kfree(ret_stack);
- }
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE
- static int fgraph_pid_func(struct ftrace_graph_ent *trace,
- 			   struct fgraph_ops *gops)
- {
-@@ -1177,7 +1178,6 @@ void fgraph_update_pid_func(void)
- 	if (!(graph_ops.flags & FTRACE_OPS_FL_INITIALIZED))
- 		return;
- 
--#ifdef CONFIG_DYNAMIC_FTRACE
- 	list_for_each_entry(op, &graph_ops.subop_list, list) {
- 		if (op->flags & FTRACE_OPS_FL_PID) {
- 			gops = container_of(op, struct fgraph_ops, ops);
-@@ -1187,8 +1187,8 @@ void fgraph_update_pid_func(void)
- 				static_call_update(fgraph_func, gops->entryfunc);
- 		}
- 	}
--#endif
- }
-+#endif
- 
- /* Allocate a return stack for each task */
- static int start_graph_tracing(void)
-diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
-index 4bb1e881154a..3235470e61b3 100644
---- a/kernel/trace/ftrace_internal.h
-+++ b/kernel/trace/ftrace_internal.h
-@@ -52,7 +52,11 @@ static inline int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_o
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- extern int ftrace_graph_active;
-+# ifdef CONFIG_DYNAMIC_FTRACE
- extern void fgraph_update_pid_func(void);
-+# else
-+static inline void fgraph_update_pid_func(void) {}
-+# endif
- #else /* !CONFIG_FUNCTION_GRAPH_TRACER */
- # define ftrace_graph_active 0
- static inline void fgraph_update_pid_func(void) {}
--- 
-2.43.0
-
+I also do not understand why the ifq cache and overloading xdp functions
+have stuck around; I always thought both were added by Jonathan to
+simplify kernel ports during early POC days.
