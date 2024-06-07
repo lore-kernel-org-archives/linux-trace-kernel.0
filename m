@@ -1,90 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179BC194AD3;
-	Fri,  7 Jun 2024 14:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC85819EEAA
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jun 2024 14:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717770555; cv=none; b=AeY3cn3RPUN3uaVPqET/ci+PBByNsjDWiSyHJZ2zWyjwMq1oKGO5i70kSYUo/R7ifD2Ep7OhnhuC0Yjf4oElvkdmsac/4la7u2hVDFPmxL4+DIoT3KrOngMPM2D0UD7q7EuFkpAPj2RoQ87QaqqU4o7yKht9utH2GLWVQpvLAcU=
+	t=1717771971; cv=none; b=P1aojtdRadOadcP1KPZzCa1dTlRQa/pTol4bHyb/RH067A8I537kQQaAot3CfUIRSOyuhIF7xrawIYpLuSJnV5qBvtnsRJvgpOOQFjJ6+G5F8bUNOd4ilRHHalNgIzM4R/MLSZ2ub76GpUSPhS6qLGxwP3dUkgoJSJd05fwKKJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717770555; c=relaxed/simple;
-	bh=dKD4INyKXeP5zXbI15q6iLNYwFvtOX/hgD4VslxEkyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bbjBauPJBqIc+lAASD/GpXB6o9XM9hq3dA1TLvgH0DxZ24jP/ug1PGK8Fz50RdYaZ0wRwMoYXSCbwQGDinWZ8q6d2ts+Fk+ZfH3MjER4PuT3IK0+CSCHGHLHFEXiOp6vUzPgCXjmsXWT/MJWPBLtqVH/4HNiBm+T28TFLgPrT8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WISwcBMr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717771971; c=relaxed/simple;
+	bh=lRtTAdTXNw3RVPrpvvNKKuuzE413bhtwKVpiQVvurek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p04ZY4oTzEJqeUiCbPKRS3C2Vi9U23hvxxtp5+uPHKI41qJpIQkODxtgcC0p9eUKNy6dxJWnAcfTuIO1yrBJ37s9m57vMVTFISmXQH1cRMkruZ8ltmxIket32nmcsIFaW2KQxDGfQegGu6zYGEuksuG8hI0H2kqLicWJaxEwwfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=hQJmj9FG; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WISwcBMr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F37C3277B;
-	Fri,  7 Jun 2024 14:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717770554;
-	bh=dKD4INyKXeP5zXbI15q6iLNYwFvtOX/hgD4VslxEkyE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WISwcBMrAlDtOZwQNGG7H8FM9ZvP+UGPYDCIUIKTqiMMcXsizYH1EYEEHDSPz5p0v
-	 dJhixKrlIUO1MxqfW7e1uRUlTc/F36SEg7I0WhWDEcle7mk69ivFU3bQbAHUR1TOfm
-	 tHI0KmjC1gKxrYugOD07N23v8LpCOrRD85d5aWYMupoumVX1nVScNWFXNkxlZKmHNp
-	 HVe3OBheGeM4fSRhqLATCDyIriWuI2Iii07Y0wD3zQwoXrzvQu2PjCkvFv5BIi7wog
-	 HXn/PaK8+9RYFxCFmcjhagwCpzIH7jPBMQqMjD75MmJHgQx21p8Bb6FR8G2B17QW2p
-	 Fw1zdllHqbjxw==
-Message-ID: <4533aea5-550a-454b-8b82-2ae28a97fd1c@kernel.org>
-Date: Fri, 7 Jun 2024 08:29:12 -0600
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hQJmj9FG"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7951713ba08so181038585a.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Jun 2024 07:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1717771968; x=1718376768; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=be9t9+ReZ6YBtow20QbHH2FmkX+nC7rbtPeGa2mS4as=;
+        b=hQJmj9FGqkDWyCgt/SU+4tUjCosWn1r7jPWCOxSoQcFLTAHBHmCt1UPHWUfacLPk0A
+         J27M3PHiZT4a/3dgSP410VtO8nsNQzDfKUKFxJN3iIePAPaAXbaP+l6LyEKYF4CkTy48
+         W7AEcymnLWnS3+i8chqAC7sLqibivCTcSwkpGR1xtaFDOarqDm2RsDk88kHT7kdlDC/+
+         9Z8FIQqtXasRprzwCsdTxihilrlaHvGsr45MSTgHsNCW06TV4YSXg9RXEoJSh9JliJhN
+         EElPiNvBU31l6J6yWS1+Pv/JSZLa707wvYnKwDocL0pue06OzOB0p871OIuyts6x8rd8
+         zTsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717771968; x=1718376768;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=be9t9+ReZ6YBtow20QbHH2FmkX+nC7rbtPeGa2mS4as=;
+        b=p6OTI2qbzCWnMU8wnd5+gd8JrX19p3xSvWxqvitQlyazji2huHtWXBHaqmMLgHiIM6
+         k+3KaSUOCBISSJ2eK1oYmkLX29ik9N6Hy1Bqs+KVo0+DjD0C6lv7Ub16EzHRsOWDhyq9
+         SHY1yJe+lGtlfuuOEHusuePFrOyWcBiutDAZoPlgHyUcqiCQ6O1UsXNcGIUIgmnN0VM5
+         ejUP1CtDZd2tsSXio+8nw82rGrr4QNlU6d822e8hKUnau0HSVDwS+OBjgSxSK6yI3uzM
+         dSOHK988JbMI9siwvWyoKdbcpU3xKAxJw6LX0m+RSIb9wTj0a2menN9KcWks9Hwi4uG2
+         tW9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWP9ScYii37ooNaQV1xtFQfuowfyEQ+ue02QjeqisOHY1pf8dIl4SnXqPSNg017Sj04lcuDPyi/IufflMAKSz0PNHTYebQXRiXCpv5Y3dhTyXO/
+X-Gm-Message-State: AOJu0YwDfzvtZOd3vmqc74QVApmN8yZtss+cunpbQ1m1s5auHw2dvfV+
+	Dv93wV/nHr3gPGl1IglBn7b6rM0VnzkcU7ioIsDEwXryMm963hZKUes0KEHQx70=
+X-Google-Smtp-Source: AGHT+IEol1YR1WI0zC3A5eIuWJjKcIm2ZGRprGfgrv26PYx2gMqkRphUST2lY2DmLHNeG4xW82MRzw==
+X-Received: by 2002:a05:620a:31a8:b0:795:4e67:1ef5 with SMTP id af79cd13be357-7954e672231mr106304685a.11.1717771968557;
+        Fri, 07 Jun 2024 07:52:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79532870231sm173090885a.60.2024.06.07.07.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 07:52:48 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sFaxT-00HGBa-Cf;
+	Fri, 07 Jun 2024 11:52:47 -0300
+Date: Fri, 7 Jun 2024 11:52:47 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: David Ahern <dsahern@kernel.org>
+Cc: Pavel Begunkov <asml.silence@gmail.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Wei <dw@davidwei.uk>, Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <20240607145247.GG791043@ziepe.ca>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+ <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+ <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+ <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v3 net-next 1/7] net: add rx_sk to trace_kfree_skb
-Content-Language: en-US
-To: Yan Zhai <yan@cloudflare.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Abhishek Chauhan <quic_abchauha@quicinc.com>,
- Mina Almasry <almasrymina@google.com>, Florian Westphal <fw@strlen.de>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Pavel Begunkov <asml.silence@gmail.com>, linux-kernel@vger.kernel.org,
- kernel-team@cloudflare.com, Jesper Dangaard Brouer <hawk@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Neil Horman <nhorman@tuxdriver.com>, linux-trace-kernel@vger.kernel.org,
- Dan Carpenter <dan.carpenter@linaro.org>
-References: <cover.1717529533.git.yan@cloudflare.com>
- <983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
- <20240605195750.1a225963@gandalf.local.home>
- <CAO3-PbqRNRduSAyN9CtaxPFsOs9xtGHruu1ACfJ5e-mrvTo2Cw@mail.gmail.com>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <CAO3-PbqRNRduSAyN9CtaxPFsOs9xtGHruu1ACfJ5e-mrvTo2Cw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
 
-On 6/6/24 9:37 AM, Yan Zhai wrote:
-> # cat /sys/kernel/debug/tracing/events/skb/kfree_skb/format
-> name: kfree_skb
-> ID: 2260
-> format:
->         field:unsigned short common_type;       offset:0;
-> size:2; signed:0;
->         field:unsigned char common_flags;       offset:2;
-> size:1; signed:0;
->         field:unsigned char common_preempt_count;       offset:3;
->  size:1; signed:0;
->         field:int common_pid;   offset:4;       size:4; signed:1;
+On Fri, Jun 07, 2024 at 08:27:29AM -0600, David Ahern wrote:
+> On 6/7/24 7:42 AM, Pavel Begunkov wrote:
+> > I haven't seen any arguments against from the (net) maintainers so
+> > far. Nor I see any objection against callbacks from them (considering
+> > that either option adds an if).
 > 
->         field:void * skbaddr;   offset:8;       size:8; signed:0;
->         field:void * location;  offset:16;      size:8; signed:0;
->         field:unsigned short protocol;  offset:24;      size:2; signed:0;
->         field:enum skb_drop_reason reason;      offset:28;
-> size:4; signed:0;
->         field:void * rx_skaddr; offset:32;      size:8; signed:0;
-> 
-> Do you think we still need to change the order?
-> 
+> I have said before I do not understand why the dmabuf paradigm is not
+> sufficient for both device memory and host memory. A less than ideal
+> control path to put hostmem in a dmabuf wrapper vs extra checks and
+> changes in the datapath. The former should always be preferred.
 
-yes. Keeping proper order now ensures no holes creep in with later changes.
+I think Pavel explained this - his project is principally to replace
+the lifetime policy of pages in the data plane. He wants to change
+when a page is considered available for re-allocation because
+userspace may continue to use the page after the netstack thinks it is
+done with it. It sounds like having a different source of the pages is
+the less important part.
 
+IMHO it seems to compose poorly if you can only use the io_uring
+lifecycle model with io_uring registered memory, and not with DMABUF
+memory registered through Mina's mechanism.
+
+Jason
