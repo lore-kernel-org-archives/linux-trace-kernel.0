@@ -1,182 +1,148 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4180819AA5A;
-	Fri,  7 Jun 2024 16:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B1619AD45
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jun 2024 16:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717776341; cv=none; b=T4ehdNmke335BNIq9L1d8/AGgcXDy6A64Ww6dI8Vo3iVnphTkUi33P4PoZdLt3fT/gmjYB0Bz+HC7Xsa+mUZ2O7V6mkUghipx4AM4eV/6IlVq0SCo4wIWWXnua+0VxVb/gLhzhITEv3lmySQk0bUEdlJDYst4Kq89XNrRy+ynz4=
+	t=1717779573; cv=none; b=n+HP8EnaRhykJH7eiD2Ak0Dx5Pa61DA6s0p310f4DwQD0aHfU/QmpGSZJJWlAv62Lvasag/mjDbYbEjWrACfTz9RgLfG4kLklBNfQu2RMcFHm7Wjr87w5AspSi7PYu5h4s+vj5CECZy4t9o4gEhe88XHvA69CiDXoaRvKFFQL5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717776341; c=relaxed/simple;
-	bh=E4arFM9k6nDnCNLegQCocTifweIoWJFBm9lxLSUeLxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g5cwhkwUuofJXBEvK/5UOugsLxh2AYVodhdhZ6/CSuGRqmPbIIaERJIk27FSxRaTYrY6VEikFduatet2CxGhL7J9dsV9/1UsCUe7tGuy9UmETT34xBEBnU3z0H6ts5koSlkwEmbFDGobmfq/hmNVJkbMG2xUPhmu/1zLlrlSODI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=igZr1jmw; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1717779573; c=relaxed/simple;
+	bh=b716fHLqA+q2jVEnF0wQCq5rwwcoiNDI2tYRdVxGBJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oBScGNrlvTpYIXd7NEFfpZo3sxV/jPQ805fhdQZMC+9an7jhhULgqP+nixJzudzhbca2yi8G/FH/dSsgC+MWjiYB986pjprRcctQpL8yTCoguPfP1+eaolchtEgBb0vhITN2aR7OhiqH5FQiDbR0Aema3YwuCFVvikBocRB4CR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G2AVTqpi; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="igZr1jmw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=tKr7lLN/VFwO5+6n6WfNe+lZgTMwnw4xRQwRBA9Nxfs=;
-	t=1717776335; x=1718985935; b=igZr1jmwsPqrez+HHw2xwvLz9nQOok87U1KKpPDF9dt2+cE
-	qszclyYBKq9OmGq7RwBGudeW84cpYzCPbYM6uZwG6UJwv3dJOv7eiZlpBkS3SNMZQMPLEG7+s8lny
-	NcCP8fgkmmuvX6jthPvPPR3QQfuqh9U7tUiVm25x1kS1yx99zlgQ3eD0jcd1Ayq7/ouKNQ0OHQp69
-	g8h4uibCbB1wbvusJx7Ee4qC4kiEM1pZkTdZ7pTcY/hemPz0xLR+GUf15L2vtDruwgZprICX6Qv0z
-	niJMvwNFI8s9TlJhRmgiKEy5l2jzXEZQr+2yh2GA6UKEb6DgiQJOTsUHC6DxSoeg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sFc5s-00000001Iyu-2Bnz;
-	Fri, 07 Jun 2024 18:05:32 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH v4 3/4] net: dropreason: use new __print_sym() in tracing
-Date: Fri,  7 Jun 2024 18:04:25 +0200
-Message-ID: <20240607160527.23624-9-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240607160527.23624-6-johannes@sipsolutions.net>
-References: <20240607160527.23624-6-johannes@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G2AVTqpi"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a68bf84d747so231728466b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Jun 2024 09:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717779569; x=1718384369; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b716fHLqA+q2jVEnF0wQCq5rwwcoiNDI2tYRdVxGBJ8=;
+        b=G2AVTqpij2cJhN5HRQo3ptWXB/TQ9YDh9RGrpGeXVnp1CnL9i2DHQgrabHfRJ+vI4v
+         6rj8PhKQhbrqw08lFKhBQBeW3OEzxZgvZ0sM8DqYOCgzynh/TqX8zhUpecpLeveUgZe/
+         4WO2raT386olPe7+CqYN3aB+/KVKBRO+MtAq0XGvPQZgecLr0Yv0La164s3HFQRW75Oj
+         zZN4yPFMx3bgrVJwSDOEuMmEHfxotBiwl6JuetdpyYQLp0Ofu9L4f3YRHWKNySwxc9/Q
+         JR8ZXjlMx3qbDJacaMfkf8ysfsu1jvPB+cyZ9tvZ8GL8kf1mEaJBMzprr6qo856Q0ny6
+         yaFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717779569; x=1718384369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b716fHLqA+q2jVEnF0wQCq5rwwcoiNDI2tYRdVxGBJ8=;
+        b=hGLHavZQciurW3Sy2NSNBrTKoRE0PZ5Ogv14oqkFqJUs4Aqlgcl6VtQOQOnBHtMUWV
+         i98tcvjrnCKhMx3TQX1brnX9BsYU3C1ANr/3YyiJbnGiWD8FIEjP77eZblOZOo25Ti1w
+         47vAgTU1rTAjwTd0q5A66EJQdGfDRlb0OCjCY63RlFxaur1atwQRIdfyIweCoRS6iKte
+         AoAOncoN62Ob3neS1eAtiJDffPR+ZDr1f+rsX57vS/T5Yg35utbTmVPwHeYjoOIPJ7Eu
+         p/S0FCge7c2UIEK6wWv4KaB+wOQOpXJEe8Vhur6bFZaCdM1PnxftrgqH9UZF+VFUp2Gv
+         R8RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOVxiKSHLfRYJI0HffteDFriJ+StNcQ9XalIA4fB47mNkqSV2Rl/EZr4KJDRh/0UHDDoFuImERWgqQzN3VoqHgH7Lxnu7AnbenM0tMv5AtwYER
+X-Gm-Message-State: AOJu0YzgPkSZRfFcNpJtNXdYfiKc54gJAXXaLzlAFUrOpUvD8CdwACVb
+	l97vZS7uTieWlLkJ0c8L09EvQr4R7PQ+D1SnaINeDnR4zCV/4uYtLcTFR4PjbpDPVps9pJS8nQI
+	0SesnFu207ASXmTNSVZfSFL+oOViKezRzCeGm
+X-Google-Smtp-Source: AGHT+IFO8pnZEEr0e5+OyIy57985L/vijoXMBq19GG2GOaDteqsHQMVykhBCrf2eEzDSRbH9iO1UMt7DJvGo0PZ4Mj4=
+X-Received: by 2002:a17:906:12c1:b0:a63:3cd4:97d2 with SMTP id
+ a640c23a62f3a-a6cdbd0d2e5mr206803066b.63.1717779569136; Fri, 07 Jun 2024
+ 09:59:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com> <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com> <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+ <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com> <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+ <8f44ca2a-8910-418f-b4a6-ca1e051484ba@gmail.com> <a8df4459-30bf-4414-aeca-2f67c461adc4@gmail.com>
+In-Reply-To: <a8df4459-30bf-4414-aeca-2f67c461adc4@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 7 Jun 2024 09:59:16 -0700
+Message-ID: <CAHS8izNcYMsSpTNVSGRJHK6u+kDxnFab5Km1rYy8b++0FeUNgA@mail.gmail.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: David Ahern <dsahern@kernel.org>, Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Fri, Jun 7, 2024 at 8:47=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.c=
+om> wrote:
+>
+> On 6/7/24 16:42, Pavel Begunkov wrote:
+> > On 6/7/24 15:27, David Ahern wrote:
+> >> On 6/7/24 7:42 AM, Pavel Begunkov wrote:
+> >>> I haven't seen any arguments against from the (net) maintainers so
+> >>> far. Nor I see any objection against callbacks from them (considering
+> >>> that either option adds an if).
+> >>
+> >> I have said before I do not understand why the dmabuf paradigm is not
+> >> sufficient for both device memory and host memory. A less than ideal
+> >> control path to put hostmem in a dmabuf wrapper vs extra checks and
+> >> changes in the datapath. The former should always be preferred.
+> >
+> > If we're talking about types of memory specifically, I'm not strictly
+> > against wrapping into dmabuf in kernel, but that just doesn't give
+> > anything.
+>
+> And the reason I don't have too strong of an opinion on that is
+> mainly because it's just setup/cleanup path.
+>
 
-The __print_symbolic() could only ever print the core
-drop reasons, since that's the way the infrastructure
-works. Now that we have __print_sym() with all the
-advantages mentioned in that commit, convert to that
-and get all the drop reasons from all subsystems. As
-we already have a list of them, that's really easy.
+I agree wrapping io uring in dmabuf seems to be an unnecessary detour.
+I never understood the need or upside to do that, but it could be a
+lack of understanding on my part.
 
-This is a little bit of .text (~100 bytes in my build)
-and saves a lot of .data (~17k).
+However, the concern that David brings up may materialize. I've had to
+spend a lot of time minimizing or justifying checks to the code with
+page pool benchmarks that detect even 1 cycle regressions. You may be
+asked to run the same benchmarks and minimize similar overhead.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- include/net/dropreason.h   |  5 +++++
- include/trace/events/skb.h | 16 +++-----------
- net/core/skbuff.c          | 43 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+), 13 deletions(-)
+The benchmark in question is Jesper's bench_page_pool_simple. I've
+forked it and applied it on top of net-next here:
+https://github.com/mina/linux/commit/927596f87ab5791a8a6ba8597ba2189747396e=
+54
 
-diff --git a/include/net/dropreason.h b/include/net/dropreason.h
-index 56cb7be92244..c157070b5303 100644
---- a/include/net/dropreason.h
-+++ b/include/net/dropreason.h
-@@ -42,6 +42,11 @@ struct drop_reason_list {
- extern const struct drop_reason_list __rcu *
- drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM];
- 
-+#ifdef CONFIG_TRACEPOINTS
-+const char *drop_reason_lookup(unsigned long long value);
-+void drop_reason_show(struct seq_file *m);
-+#endif
-+
- void drop_reasons_register_subsys(enum skb_drop_reason_subsys subsys,
- 				  const struct drop_reason_list *list);
- void drop_reasons_unregister_subsys(enum skb_drop_reason_subsys subsys);
-diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
-index 07e0715628ec..8a1a63f9e796 100644
---- a/include/trace/events/skb.h
-+++ b/include/trace/events/skb.h
-@@ -8,15 +8,9 @@
- #include <linux/skbuff.h>
- #include <linux/netdevice.h>
- #include <linux/tracepoint.h>
-+#include <net/dropreason.h>
- 
--#undef FN
--#define FN(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
--DEFINE_DROP_REASON(FN, FN)
--
--#undef FN
--#undef FNe
--#define FN(reason)	{ SKB_DROP_REASON_##reason, #reason },
--#define FNe(reason)	{ SKB_DROP_REASON_##reason, #reason }
-+TRACE_DEFINE_SYM_FNS(drop_reason, drop_reason_lookup, drop_reason_show);
- 
- /*
-  * Tracepoint for free an sk_buff:
-@@ -44,13 +38,9 @@ TRACE_EVENT(kfree_skb,
- 
- 	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
- 		  __entry->skbaddr, __entry->protocol, __entry->location,
--		  __print_symbolic(__entry->reason,
--				   DEFINE_DROP_REASON(FN, FNe)))
-+		  __print_sym(__entry->reason, drop_reason ))
- );
- 
--#undef FN
--#undef FNe
--
- TRACE_EVENT(consume_skb,
- 
- 	TP_PROTO(struct sk_buff *skb, void *location),
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 466999a7515e..cd1ea6c3e0f8 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -145,6 +145,49 @@ drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM] = {
- };
- EXPORT_SYMBOL(drop_reasons_by_subsys);
- 
-+#ifdef CONFIG_TRACEPOINTS
-+const char *drop_reason_lookup(unsigned long long value)
-+{
-+	unsigned long long subsys_id = value >> SKB_DROP_REASON_SUBSYS_SHIFT;
-+	u32 reason = value & ~SKB_DROP_REASON_SUBSYS_MASK;
-+	const struct drop_reason_list *subsys;
-+
-+	if (subsys_id >= SKB_DROP_REASON_SUBSYS_NUM)
-+		return NULL;
-+
-+	subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
-+	if (!subsys)
-+		return NULL;
-+	if (reason >= subsys->n_reasons)
-+		return NULL;
-+	return subsys->reasons[reason];
-+}
-+
-+void drop_reason_show(struct seq_file *m)
-+{
-+	u32 subsys_id;
-+
-+	rcu_read_lock();
-+	for (subsys_id = 0; subsys_id < SKB_DROP_REASON_SUBSYS_NUM; subsys_id++) {
-+		const struct drop_reason_list *subsys;
-+		u32 i;
-+
-+		subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
-+		if (!subsys)
-+			continue;
-+
-+		for (i = 0; i < subsys->n_reasons; i++) {
-+			if (!subsys->reasons[i])
-+				continue;
-+			seq_printf(m, ", { %u, \"%s\" }",
-+				   (subsys_id << SKB_DROP_REASON_SUBSYS_SHIFT) | i,
-+				   subsys->reasons[i]);
-+		}
-+	}
-+	rcu_read_unlock();
-+}
-+#endif
-+
- /**
-  * drop_reasons_register_subsys - register another drop reason subsystem
-  * @subsys: the subsystem to register, must not be the core
--- 
-2.45.2
+As io_uring ZC comes close to merging, I suspect it would be good to
+run this to understand the regression in the fast path, if any. If
+there are no to little regressions, I have no concerns over io uring
+memory not being wrapped in dmabufs, and David may agree as well.
 
+--
+Thanks,
+Mina
