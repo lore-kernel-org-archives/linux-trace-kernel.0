@@ -1,404 +1,268 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5D613E40C
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jun 2024 00:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3515F15A873;
+	Fri,  7 Jun 2024 07:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717721525; cv=none; b=Qau/DvJTsASIF38DwBe+bL5mDK6NhRXY8gGKc4shPiwXNowqxCYomZOxysVLyO9X0e/38QcHCZ2G1ju2sVVCiYfO4cJD/rDJarQOgtihPwstJd9HaiSd40ZtMi8rHNR4f5njElJAqnmjMgsnMb+wNmURNMxlDnVwWBqyDxKpUak=
+	t=1717747001; cv=none; b=C/wUaMPfi3w4sek5cP3vRs9/aukPGmb4aKX0DGTikKil9k7rYcD6X8lgz0CbN9O9E952zjewEDh9kAxy4ZJ1nwV9G5khN2IAjGbTe0eyjO0Ljb1L8WJIYR3pf19MP9Ed9TGtYPbh9NVhDQGZOyxh6DXUJRFZ3Pz0dHfneO8HMI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717721525; c=relaxed/simple;
-	bh=IpmsKdmAg2dkzE7gg4B1MRUlTQNolccrcZaFLDHfwBA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Vlj6rb1xQEIV0H501C3SKnsj76VV44zcceYRGMdfmo+cK8nQgZ8whKMm9v61b5LtufbCJjmHBET3XRL+oRlrbnk68GmybibkgFos8WTtozuSIwITGCjmfNf72R5ypzaHrUQCST/APPsj5iioKATN5iq60D0BPnk8CmRyCo71AvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gbtgdxJ4; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1717747001; c=relaxed/simple;
+	bh=j/rl63wxZ5qthNZl4RgAiQQ7QUt4/Mkl8JbpHOlg6qU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=prXl8XXu5D1pYIpgEsPBtNILGaQYVxcrsmZcXiuoewyloBvx5AL4Y8/ie0OLrwbMJ12uBrLNDyfVE8kNMwLphxFVB1kLe+rQlcJuah/P4CL+sS/OgtvDbYVzsk4OOg6BWz3HEut0qnS+4Q/2QuMfzsTbItTUw5FwCkM715WL/NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KMmZfsSG; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gbtgdxJ4"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-df771b5e942so2463048276.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Jun 2024 17:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717721515; x=1718326315; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOmuvn8Oj/aVx2P9uVs7PicLin7S83XgYGg6MlGI1pQ=;
-        b=gbtgdxJ4DyD5ELWxQKb8wPTkd/N41Rbm6mM5j4pcsewvrgAK4kx1OofIgG3GLOEyHV
-         UrDYt6fJp/ruQnXVVpD03xQbE+r4rqnkWV73QUiYMtFdbmnfVmAMPXFgYXQ7ykw0aXiB
-         zLYCRA+c8/V0jQ4tFjzaDa956fYCNl8a5Ltnf8x4jIHJF4mITxldjn9ahT1Rc0d/Id/y
-         Xup+EpfrZ9ucK0I9ntKSvnzLfXe9CBKanzy78l2zlvKE0yJf5it2VgLwqerd1LfoOmlV
-         0cj6jgx8bSrCk+lbrhWFw93WAy9ISwF05CnIu1Y6gA4iH+HVSu6TuttSI6gGzS8lNNW/
-         /WvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717721515; x=1718326315;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOmuvn8Oj/aVx2P9uVs7PicLin7S83XgYGg6MlGI1pQ=;
-        b=cGso0hGvo3H+EgV4x8sAZmu+TgtG6bLflZSUMI4ZAv7xpJWfPVSuS9kwcgkxC2sT6u
-         PC/x0hHT4vyXO5GpxFhlB/44BZdUTB7r5xK+DuGC8Mk1IwmIu/TZl6JXzoGtqKGHvjh5
-         1VGdIIarD1h3HGJgWW7iNYOq+mh91Hdmwh9e/5JGzadWRfhUt1mLaU91Dzqk/3ZULts8
-         nwGQ9jaHRKpTEKJQ0V36buqkQxUnKXWC0ST+T5G5w4nKCcj0oSH9/oAWpOL601aznLho
-         k+QxB4Wjy8PWZPvSis852ZdHJm/V42422wjd8SdVWjYxvM1BJD9mxwyh5jkVUFmQLmSN
-         9lUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGqlTLVZO605gelc1TlkMVtQATZymC9Om+0sbA6HnFs2qFcorwbcZxuyrLkFd+KN29qSFnWE0KkH2H3Pdz61RLKHPXj752iXZ2uXwF25aE7hII
-X-Gm-Message-State: AOJu0YzGUV5QJkPCrnulVBq1MEJteoJdTfaxzH+FFCnllPzMTLCQWrJ4
-	YlFVW8VCPWEzvE5tpAc/kMglHo+s6H37efMk8aGK4TCMOY7vXidDN4aIeC79j60UeoBlG1j455i
-	PQ/qP472YXUWAmpScFHMkbQ==
-X-Google-Smtp-Source: AGHT+IGB9uqbLMDr+q9R8HhoFDIbUDIDIvBbGO5v2bU1XGM3hMBBv6ZDhoqjoZuLO6RMGtT+CEzbt3fMZKOR+h/vzg==
-X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
- (user=almasrymina job=sendgmr) by 2002:a05:6902:708:b0:dd9:2a64:e98a with
- SMTP id 3f1490d57ef6-dfaf663d3dbmr153427276.9.1717721514446; Thu, 06 Jun 2024
- 17:51:54 -0700 (PDT)
-Date: Fri,  7 Jun 2024 00:51:22 +0000
-In-Reply-To: <20240607005127.3078656-1-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KMmZfsSG"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4577ofwx010041;
+	Fri, 7 Jun 2024 07:55:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=j/rl63wxZ5qthNZl4RgAiQQ7QUt4/Mkl8JbpHOlg6qU=;
+ b=KMmZfsSGU6Aj198BOJT/FDC3pENCPVEK3hMGQTiqvFDF+irvWWJ4iR6lvUoSLHTcqcH4
+ +LBWjMlTI2oBWsMXKezQ4UTBj+bMGbQUuaW+qU4Oi1UBpMvRsFNsNdxzBNw4o9BiS0JF
+ yzIVBlOLVilRIx7u6qJNM9jIIaHcqqHuVnJzWvSno5aZOQXQJGcGDL02GkGLmA5MHA2s
+ fNa6wuKVNyQhd2nvElcPTOdntgkhTY5u4BhTWuG0hE/t/5r3zhaOfi53YHzu1e/mtXMp
+ FWxE2JP14L2jgnkIkEP9M5P0Qo/y2jQibpExSXmPFs78WDQiRTNnhDCSQBmJdr7SWVg4 ow== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ykwd7g4jp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 07:55:58 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4577tvP8019559;
+	Fri, 7 Jun 2024 07:55:57 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ykwd7g4jh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 07:55:57 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4574hKE5008463;
+	Fri, 7 Jun 2024 07:55:56 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygec17nwg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 07:55:56 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4577tr0b9175782
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jun 2024 07:55:56 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A142A58059;
+	Fri,  7 Jun 2024 07:55:53 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 58B1D58066;
+	Fri,  7 Jun 2024 07:55:42 +0000 (GMT)
+Received: from [9.179.22.112] (unknown [9.179.22.112])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Jun 2024 07:55:42 +0000 (GMT)
+Message-ID: <ca1037935d570f70fd8900e18f1c7149298c5bf3.camel@linux.ibm.com>
+Subject: Re: [PATCH net-next v10 05/14] netdev: netdevice devmem allocator
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Paolo Abeni <pabeni@redhat.com>,
+        Mina
+ Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        "David S.
+ Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,
+        Donald Hunter <donald.hunter@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Richard Henderson
+ <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+        Jesper Dangaard Brouer
+ <hawk@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Masami
+ Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,
+        Arnd Bergmann <arnd@arndb.de>, Alexei
+ Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau
+ <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend
+ <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        David Ahern
+ <dsahern@kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Pavel
+ Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+        Yunsheng Lin
+ <linyunsheng@huawei.com>,
+        Shailend Chand <shailend@google.com>,
+        Harshitha
+ Ramamurthy <hramamurthy@google.com>,
+        Shakeel Butt
+ <shakeel.butt@linux.dev>,
+        Jeroen de Borst <jeroendb@google.com>,
+        Praveen
+ Kaligineedi <pkaligineedi@google.com>,
+        Willem de Bruijn
+ <willemb@google.com>,
+        Kaiyuan Zhang <kaiyuanz@google.com>
+Date: Fri, 07 Jun 2024 09:55:41 +0200
+In-Reply-To: <20240604202738.3aab6308@gandalf.local.home>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+	 <20240530201616.1316526-6-almasrymina@google.com>
+	 <bea8b8bf1630309bb004f614e4a3c7f684a6acb6.camel@redhat.com>
+	 <20240604121551.07192993@gandalf.local.home>
+	 <20240604163158.GB21513@ziepe.ca>
+	 <20240604124243.66203a46@gandalf.local.home>
+	 <3be107ce-3d9f-4528-b9f7-1c9e38da0688@lunn.ch>
+	 <20240604202738.3aab6308@gandalf.local.home>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240607005127.3078656-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240607005127.3078656-13-almasrymina@google.com>
-Subject: [PATCH net-next v11 12/13] net: add devmem TCP documentation
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: DLLwzBlI9yMqnkc--SBFCOLrnAHHLBl5
+X-Proofpoint-ORIG-GUID: BJdtqwSte07HUVK0jglwFnXMa3Grzdbc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_02,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ clxscore=1011 suspectscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2406070055
 
-Add documentation outlining the usage and details of devmem TCP.
+On Tue, 2024-06-04 at 20:27 -0400, Steven Rostedt wrote:
+> On Wed, 5 Jun 2024 01:44:37 +0200
+> Andrew Lunn <andrew@lunn.ch> wrote:
+>=20
+> > > Interesting, as I sped up the ftrace ring buffer by a substantial amo=
+unt by
+> > > adding strategic __always_inline, noinline, likely() and unlikely()
+> > > throughout the code. It had to do with what was considered the fast p=
+ath
+> > > and slow path, and not actually the size of the function. gcc got it
+> > > horribly wrong. =20
+> >=20
+> > And what did the compiler people say when you reported gcc was getting
+> > it wrong?
+> >=20
+> > Our assumption is, the compiler is better than a human at deciding
+> > this. Or at least, a human who does not spend a long time profiling
+> > and tuning. If this assumption is not true, we probably should be
+> > trying to figure out why, and improving the compiler when
+> > possible. That will benefit everybody.
+> >=20
+>=20
+> How is the compiler going to know which path is going to be taken the mos=
+t?
+> There's two main paths in the ring buffer logic. One when an event stays =
+on
+> the sub-buffer, the other when the event crosses over to a new sub buffer=
+.
+> As there's 100s of events that happen on the same sub-buffer for every on=
+e
+> time there's a cross over, I optimized the paths that stayed on the
+> sub-buffer, which caused the time for those events to go from 250ns down =
+to
+> 150 ns!. That's a 40% speed up.
+>=20
+> I added the unlikely/likely and 'always_inline' and 'noinline' paths to
+> make sure the "staying on the buffer" path was always the hot path, and
+> keeping it tight in cache.
+>=20
+> How is a compiler going to know that?
+>=20
+> -- Steve
+>=20
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Isn't this basically a perfect example of something where profile
+guided optimization should work?
 
----
-
-v9: https://lore.kernel.org/netdev/20240403002053.2376017-14-almasrymina@google.com/
-- Bagas doc suggestions.
-
-v8:
-- Applied docs suggestions (Randy). Thanks!
-
-v7:
-- Applied docs suggestions (Jakub).
-
-v2:
-
-- Missing spdx (simon)
-- add to index.rst (simon)
-
----
- Documentation/networking/devmem.rst | 258 ++++++++++++++++++++++++++++
- Documentation/networking/index.rst  |   1 +
- 2 files changed, 259 insertions(+)
- create mode 100644 Documentation/networking/devmem.rst
-
-diff --git a/Documentation/networking/devmem.rst b/Documentation/networking/devmem.rst
-new file mode 100644
-index 0000000000000..f32acfd62075d
---- /dev/null
-+++ b/Documentation/networking/devmem.rst
-@@ -0,0 +1,258 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+Device Memory TCP
-+=================
-+
-+
-+Intro
-+=====
-+
-+Device memory TCP (devmem TCP) enables receiving data directly into device
-+memory (dmabuf). The feature is currently implemented for TCP sockets.
-+
-+
-+Opportunity
-+-----------
-+
-+A large number of data transfers have device memory as the source and/or
-+destination. Accelerators drastically increased the prevalence of such
-+transfers.  Some examples include:
-+
-+- Distributed training, where ML accelerators, such as GPUs on different hosts,
-+  exchange data.
-+
-+- Distributed raw block storage applications transfer large amounts of data with
-+  remote SSDs. Much of this data does not require host processing.
-+
-+Typically the Device-to-Device data transfers in the network are implemented as
-+the following low-level operations: Device-to-Host copy, Host-to-Host network
-+transfer, and Host-to-Device copy.
-+
-+The flow involving host copies is suboptimal, especially for bulk data transfers,
-+and can put significant strains on system resources such as host memory
-+bandwidth and PCIe bandwidth.
-+
-+Devmem TCP optimizes this use case by implementing socket APIs that enable
-+the user to receive incoming network packets directly into device memory.
-+
-+Packet payloads go directly from the NIC to device memory.
-+
-+Packet headers go to host memory and are processed by the TCP/IP stack
-+normally. The NIC must support header split to achieve this.
-+
-+Advantages:
-+
-+- Alleviate host memory bandwidth pressure, compared to existing
-+  network-transfer + device-copy semantics.
-+
-+- Alleviate PCIe bandwidth pressure, by limiting data transfer to the lowest
-+  level of the PCIe tree, compared to the traditional path which sends data
-+  through the root complex.
-+
-+
-+More Info
-+---------
-+
-+  slides, video
-+    https://netdevconf.org/0x17/sessions/talk/device-memory-tcp.html
-+
-+  patchset
-+    [RFC PATCH v6 00/12] Device Memory TCP
-+    https://lore.kernel.org/netdev/20240305020153.2787423-1-almasrymina@google.com/
-+
-+
-+Interface
-+=========
-+
-+Example
-+-------
-+
-+tools/testing/selftests/net/ncdevmem.c:do_server shows an example of setting up
-+the RX path of this API.
-+
-+NIC Setup
-+---------
-+
-+Header split, flow steering, & RSS are required features for devmem TCP.
-+
-+Header split is used to split incoming packets into a header buffer in host
-+memory, and a payload buffer in device memory.
-+
-+Flow steering & RSS are used to ensure that only flows targeting devmem land on
-+an RX queue bound to devmem.
-+
-+Enable header split & flow steering::
-+
-+	# enable header split
-+	ethtool -G eth1 tcp-data-split on
-+
-+
-+	# enable flow steering
-+	ethtool -K eth1 ntuple on
-+
-+Configure RSS to steer all traffic away from the target RX queue (queue 15 in
-+this example)::
-+
-+	ethtool --set-rxfh-indir eth1 equal 15
-+
-+
-+The user must bind a dmabuf to any number of RX queues on a given NIC using
-+the netlink API::
-+
-+	/* Bind dmabuf to NIC RX queue 15 */
-+	struct netdev_queue *queues;
-+	queues = malloc(sizeof(*queues) * 1);
-+
-+	queues[0]._present.type = 1;
-+	queues[0]._present.idx = 1;
-+	queues[0].type = NETDEV_RX_QUEUE_TYPE_RX;
-+	queues[0].idx = 15;
-+
-+	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
-+
-+	req = netdev_bind_rx_req_alloc();
-+	netdev_bind_rx_req_set_ifindex(req, 1 /* ifindex */);
-+	netdev_bind_rx_req_set_dmabuf_fd(req, dmabuf_fd);
-+	__netdev_bind_rx_req_set_queues(req, queues, n_queue_index);
-+
-+	rsp = netdev_bind_rx(*ys, req);
-+
-+	dmabuf_id = rsp->dmabuf_id;
-+
-+
-+The netlink API returns a dmabuf_id: a unique ID that refers to this dmabuf
-+that has been bound.
-+
-+Socket Setup
-+------------
-+
-+The socket must be flow steered to the dmabuf bound RX queue::
-+
-+	ethtool -N eth1 flow-type tcp4 ... queue 15,
-+
-+
-+Receiving data
-+--------------
-+
-+The user application must signal to the kernel that it is capable of receiving
-+devmem data by passing the MSG_SOCK_DEVMEM flag to recvmsg::
-+
-+	ret = recvmsg(fd, &msg, MSG_SOCK_DEVMEM);
-+
-+Applications that do not specify the MSG_SOCK_DEVMEM flag will receive an EFAULT
-+on devmem data.
-+
-+Devmem data is received directly into the dmabuf bound to the NIC in 'NIC
-+Setup', and the kernel signals such to the user via the SCM_DEVMEM_* cmsgs::
-+
-+		for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
-+			if (cm->cmsg_level != SOL_SOCKET ||
-+				(cm->cmsg_type != SCM_DEVMEM_DMABUF &&
-+				 cm->cmsg_type != SCM_DEVMEM_LINEAR))
-+				continue;
-+
-+			dmabuf_cmsg = (struct dmabuf_cmsg *)CMSG_DATA(cm);
-+
-+			if (cm->cmsg_type == SCM_DEVMEM_DMABUF) {
-+				/* Frag landed in dmabuf.
-+				 *
-+				 * dmabuf_cmsg->dmabuf_id is the dmabuf the
-+				 * frag landed on.
-+				 *
-+				 * dmabuf_cmsg->frag_offset is the offset into
-+				 * the dmabuf where the frag starts.
-+				 *
-+				 * dmabuf_cmsg->frag_size is the size of the
-+				 * frag.
-+				 *
-+				 * dmabuf_cmsg->frag_token is a token used to
-+				 * refer to this frag for later freeing.
-+				 */
-+
-+				struct dmabuf_token token;
-+				token.token_start = dmabuf_cmsg->frag_token;
-+				token.token_count = 1;
-+				continue;
-+			}
-+
-+			if (cm->cmsg_type == SCM_DEVMEM_LINEAR)
-+				/* Frag landed in linear buffer.
-+				 *
-+				 * dmabuf_cmsg->frag_size is the size of the
-+				 * frag.
-+				 */
-+				continue;
-+
-+		}
-+
-+Applications may receive 2 cmsgs:
-+
-+- SCM_DEVMEM_DMABUF: this indicates the fragment landed in the dmabuf indicated
-+  by dmabuf_id.
-+
-+- SCM_DEVMEM_LINEAR: this indicates the fragment landed in the linear buffer.
-+  This typically happens when the NIC is unable to split the packet at the
-+  header boundary, such that part (or all) of the payload landed in host
-+  memory.
-+
-+Applications may receive no SO_DEVMEM_* cmsgs. That indicates non-devmem,
-+regular TCP data that landed on an RX queue not bound to a dmabuf.
-+
-+
-+Freeing frags
-+-------------
-+
-+Frags received via SCM_DEVMEM_DMABUF are pinned by the kernel while the user
-+processes the frag. The user must return the frag to the kernel via
-+SO_DEVMEM_DONTNEED::
-+
-+	ret = setsockopt(client_fd, SOL_SOCKET, SO_DEVMEM_DONTNEED, &token,
-+			 sizeof(token));
-+
-+The user must ensure the tokens are returned to the kernel in a timely manner.
-+Failure to do so will exhaust the limited dmabuf that is bound to the RX queue
-+and will lead to packet drops.
-+
-+
-+Implementation & Caveats
-+========================
-+
-+Unreadable skbs
-+---------------
-+
-+Devmem payloads are inaccessible to the kernel processing the packets. This
-+results in a few quirks for payloads of devmem skbs:
-+
-+- Loopback is not functional. Loopback relies on copying the payload, which is
-+  not possible with devmem skbs.
-+
-+- Software checksum calculation fails.
-+
-+- TCP Dump and bpf can't access devmem packet payloads.
-+
-+
-+Testing
-+=======
-+
-+More realistic example code can be found in the kernel source under
-+tools/testing/selftests/net/ncdevmem.c
-+
-+ncdevmem is a devmem TCP netcat. It works very similarly to netcat, but
-+receives data directly into a udmabuf.
-+
-+To run ncdevmem, you need to run it on a server on the machine under test, and
-+you need to run netcat on a peer to provide the TX data.
-+
-+ncdevmem has a validation mode as well that expects a repeating pattern of
-+incoming data and validates it as such. For example, you can launch
-+ncdevmem on the server by::
-+
-+	ncdevmem -s <server IP> -c <client IP> -f eth1 -d 3 -n 0000:06:00.0 -l \
-+		 -p 5201 -v 7
-+
-+On client side, use regular netcat to send TX data to ncdevmem process
-+on the server::
-+
-+	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
-+		tr \\n \\0 | head -c 5G | nc <server IP> 5201 -p 5201
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index a6443851a1424..f93950a441573 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -48,6 +48,7 @@ Contents:
-    cdc_mbim
-    dccp
-    dctcp
-+   devmem
-    dns_resolver
-    driver
-    eql
--- 
-2.45.2.505.gda0bf45e8d-goog
-
+Thanks,
+Niklas
