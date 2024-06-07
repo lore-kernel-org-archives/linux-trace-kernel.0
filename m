@@ -1,183 +1,77 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39FE157A40
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5866515B11E;
+	Fri,  7 Jun 2024 08:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717748948; cv=none; b=YhhI7Kd0koG7VCNV2Ood6ys+DvWz8HhW5cG7W4CGzzMC2Uami9hzPj2A1iV9rQhgd42nZoEgUPQJIiJTPeWRJW9whUAY+HMRFSjhzBMlzrYktWHB8+ILjLgufKccAo6gNOCCxcZ2/udgHaEDasH/Ln2YG/CGB3Qpc8UVdoU7QpI=
+	t=1717750210; cv=none; b=iTvkfRcqDuFnvZC3KHVok9rxZeIhXUbsm7pcSBq/6YuzcgiaomuimjV/YdKkCWgWOPAL1SN/PHjEp4LIgDwmS/Hjubu8LhfTXvd1GirF78ac5YEQFWGu0Eu+OlcGbWEHdQakt8jfp7WI5LeXNXnTGP1gxZrof99OWIIcHNO5bWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717748948; c=relaxed/simple;
-	bh=QATZmHP34GTT8tosT9gK5RtxZXN64Ern4IqkCYoKwlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eNEATIoSVrDqW/zFnpiA9BGpTJzdCKjqCHpzv7BxEGN/WOE+RYV9H4SvNra0mOsm0gOwzZOOU2o+caNtwfTQZojGwQbdVwu1hLtHEUigFBHm65Ld5e0pLJ6CpXrMJzOYfDhb95vMbACPCGl6pvCvrQr3l4HOpTWXWH3TWJzkhhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DSHbEEAe; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717750210; c=relaxed/simple;
+	bh=I+5QaYIykDUxkM+AktFs0YaLfJqsqXs4Jnxrc3yWOTg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PopiWwBMuRPzl4kVIao2ILRSVMykrtZtN71064WnM2DQWR6bKLq+ScPtkvPxbdQH53cP6zDmTF4W04rn0aszs38Epk7CZxjiE/8ZGFQjPYEBTaU3wDdZbCJJtB6l5LYSaj3QWaMN8aph0NKONqG/7AhHmw7Ga2cz2BTEWtCHk7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rtNSPQ+l; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DSHbEEAe"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-421727f4e4aso1268445e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Jun 2024 01:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717748945; x=1718353745; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vSxiQ+5CYM/BoywAPnNuMbG49canrkXeNSJBPwAeVdc=;
-        b=DSHbEEAeT/RjvnUybtM1ToTFamakMfMweQLycKwVfw2EqSGENadomJL3ZMognB7oca
-         oVkxRFEnrl2MNegT28SVWCwOqTrqJhSMoWCKJUXbFKUWpLklSgTCXkewG1LxrrVmFyf0
-         SO/+2kXQQ2zMnf2+xUZz6x8Xp+vV1XubC2WFeEaiDsuwsOKMZPLyiLjSTkNkJtimHqak
-         tBgxj0fkLsMI1PjNQusD2+EoPpDCcM1gp1Nkmg55sQ3eVWTc4h7boWq2k49Oyt60KfbW
-         Innh1v+FNmH+l1o5H4saxB5H3iUbGwxvr6ognvXTcoY7Iu7c9sVC9jLam7KqAIc2nB3D
-         sQTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717748945; x=1718353745;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vSxiQ+5CYM/BoywAPnNuMbG49canrkXeNSJBPwAeVdc=;
-        b=ia1oW4reOHMROKIPhy4l+FoMW+dkuHXvKI2xuirLWj+lvwfvM6vwKk8bEUhG3Vi/O4
-         hDt6gZbHMdJP08sFKDUMaC2XhpT6L1euRz3qGdKekDyUdMfRlykt510ijLpAnqPFS6sm
-         tGZTSAcw3afkRMI60XjjoCvlo/h42sSADliQowE4ybo/IO5MAgjqWPbJeWRtSQQnrKT5
-         gqmOOc3xetjarrC7vKsEtxryrgvEPgIm7gUiOzkF0/1tWM0jqJf7jMX2C6ajsTUxYR2c
-         Sl4FQToNOEm3L9S8suari92NPZ14iU5HmgJqbSjJqPzuf639jvq9bHiQ2G1z3+TZ4a0I
-         61ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWgw0mhQ1w3oArvkJ1lNJeWVJwEk9s4Dj9wn33daMqDZZEOJyI6yM476VgDbE7vJMLuUvZV3a/yKV95nHABBDumrfkmUuSxz3XlYvCISU4ORaFh
-X-Gm-Message-State: AOJu0YyVoFRz/uYzQ1zjYZVFpwehDhofcD9zUU2tpccUTK6tGe/bj4YJ
-	NiktoSi9kN3AuYzXWoWCcPrsjQzdXQrRJKLZFGy3VVXOiLXIdakh84IaTwknJPo=
-X-Google-Smtp-Source: AGHT+IFrzHtybL1xMi2IzJGSx+essiIdz77G9veyJjUyflJ49lylbDU6tgHyqxqyeVZd90W+7k5J+g==
-X-Received: by 2002:a05:600c:4449:b0:421:4f71:6ed4 with SMTP id 5b1f17b1804b1-42164a207bemr16318865e9.26.1717748945051;
-        Fri, 07 Jun 2024 01:29:05 -0700 (PDT)
-Received: from [10.100.51.161] (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c2cd2d3sm45358385e9.41.2024.06.07.01.29.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 01:29:04 -0700 (PDT)
-Message-ID: <8f5dca5a-330d-4258-8e01-0734ffda361d@suse.com>
-Date: Fri, 7 Jun 2024 10:29:03 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rtNSPQ+l"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1717750199; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=03my5rSzWoozmJ4G5TZgDpCn57NCoB6M9R5muxRkurE=;
+	b=rtNSPQ+lt4Tx5wNlhs8y5TMJ5WhHkwiO1aM0HIV9JXUn5WubhSs1JD+yjGdWP5FfwwfP2eNdmFfelW3SiDilVU74hhW5TFsP9Ju/z7HaIWsru+OWVjUBOPPzqpdA8Hc2WMPsGhbt1NH5c3F10pPZtl/YQXS4i88xRmhY7F4TESA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W8-ctpw_1717750198;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W8-ctpw_1717750198)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Jun 2024 16:49:58 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next 1/2] function_graph: Add kernel-doc comments for ftrace_graph_ret_addr() function
+Date: Fri,  7 Jun 2024 16:49:56 +0800
+Message-Id: <20240607084957.64715-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ring-buffer: Fix a race between readers and resize
- checks
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rt-users <linux-rt-users@vger.kernel.org>
-References: <20240517134008.24529-1-petr.pavlu@suse.com>
- <20240517134008.24529-3-petr.pavlu@suse.com>
- <20240520095037.33a7fde6@gandalf.local.home>
- <2b920bab-23a2-4a8d-95c2-b69472d38373@suse.com>
- <20240527194356.5078b56f@rorschach.local.home>
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20240527194356.5078b56f@rorschach.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/28/24 01:43, Steven Rostedt wrote:
-> On Mon, 27 May 2024 11:36:55 +0200
-> Petr Pavlu <petr.pavlu@suse.com> wrote:
-> 
->>>>  static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
->>>>  {
->>>> @@ -2200,8 +2205,13 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
->>>>  		 */
->>>>  		synchronize_rcu();
->>>>  		for_each_buffer_cpu(buffer, cpu) {
->>>> +			unsigned long flags;
->>>> +
->>>>  			cpu_buffer = buffer->buffers[cpu];
->>>> +			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->>>>  			rb_check_pages(cpu_buffer);
->>>> +			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock,
->>>> +						   flags);  
->>>
->>> Putting my RT hat on, I really don't like the above fix. The
->>> rb_check_pages() iterates all subbuffers which makes the time interrupts
->>> are disabled non-deterministic.  
->>
->> I see, this applies also to the same rb_check_pages() validation invoked
->> from ring_buffer_read_finish().
->>
->>>
->>> Instead, I would rather have something where we disable readers while we do
->>> the check, and re-enable them.
->>>
->>> 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->>> 			cpu_buffer->read_disabled++;
->>> 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->>>
->>> // Also, don't put flags on a new line. We are allow to go 100 characters now.  
->>
->> Noted.
->>
->>>
->>>
->>>   			rb_check_pages(cpu_buffer);
->>> 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->>> 			cpu_buffer->read_disabled--;
->>> 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->>>
->>> Or something like that. Yes, that also requires creating a new
->>> "read_disabled" field in the ring_buffer_per_cpu code.  
->>
->> I think this would work but I'm personally not immediately sold on this
->> approach. If I understand the idea correctly, readers should then check
->> whether cpu_buffer->read_disabled is set and bail out with some error if
->> that is the case. The rb_check_pages() function is only a self-check
->> code and as such, I feel it doesn't justify disrupting readers with
->> a new error condition and adding more complex locking.
-> 
-> Honestly, this code was never made for more than one reader per
-> cpu_buffer. I'm perfectly fine if all check_pages() causes other
-> readers to the same per_cpu buffer to get -EBUSY.
-> 
-> Do you really see this being a problem? What use case is there for
-> hitting the check_pages() and reading the same cpu buffer at the same
-> time?
+Added kernel-doc comments for the ftrace_graph_ret_addr() function to
+improve code documentation and readability.
 
-My main issue is with added complexity to check the new read_disabled
-flag. The rb_check_pages() part is simple and you showed what to do. The
-readers part is what I struggle with.
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9299
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ kernel/trace/fgraph.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I think the read_disabled flag needs to be either checked once in
-rb_get_reader_page() where the actual problem with making the list
-temporarily inconsistent exists. Or alternatively, it can be checked by
-direct or indirect users of rb_get_reader_page() just after they take
-the reader_lock.
-
-Looking at the final rb_get_reader_page() function, it currently always
-returns a valid reader page unless the buffer doesn't contain any
-additional entry or a serious problem is detected by RB_WARN_ON()
-checks. This is simple to handle for callers, either they get a reader
-page and can continue, or they stop.
-
-Returning -EBUSY means that callers have a new case that they need to
-decide what to do about. They need to propagate the error up the chain
-or attempt to handle it. This involves ring-buffer functions
-rb_advance_reader(), rb_buffer_peek(), ring_buffer_peek(),
-ring_buffer_consume(), ring_buffer_read_page()
-ring_buffer_map_get_reader() and their callers from other source files.
-
-It is possible to handle this new case in these functions but I'm not
-sure if adding this logic is justified. I feel I must have misunderstood
-something how it should work?
-
-I was further thinking about alternatives that would possibly provide
-a less thorough check but have their complexity limited only to
-rb_check_pages(). The already mentioned idea is to have the function to
-look only at surrounding nodes where some change in the list occurred.
-
-Another option could be to try traversing the whole list in smaller
-parts and give up the reader_lock in between them. This would need some
-care to make sure that the operation completes, e.g. the code would need
-to bail out if it detects a change on cpu_buffer->pages_read.
-
-Thanks,
-Petr
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index a13551a023aa..4ad33e4cb8da 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -872,6 +872,12 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ /**
+  * ftrace_graph_ret_addr - convert a potentially modified stack return address
+  *			   to its original value
++ * @task: pointer to the task_struct of the task being examined
++ * @idx: pointer to a state variable, should be initialized to zero
++ *	 before the first call
++ * @ret: the current return address found on the stack
++ * @retp: pointer to the return address on the stack, ignored if
++ *	  HAVE_FUNCTION_GRAPH_RET_ADDR_PTR is not defined
+  *
+  * This function can be called by stack unwinding code to convert a found stack
+  * return address ('ret') to its original value, in case the function graph
+-- 
+2.20.1.7.g153144c
 
