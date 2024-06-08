@@ -1,132 +1,155 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EB9D27A;
-	Fri,  7 Jun 2024 19:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21E9B64E;
+	Sat,  8 Jun 2024 04:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717790104; cv=none; b=f425aOW5R6PVgxbVlOosCe3l/+mT69aoN6tqcBYT6SC8T7dVZHvVVXOwx7Odv8zfkb/V8M+hku1T99I5ugmOs9RBsNNSJlY4PkTKuXCv74PJXszOfFF93KVTzg8hNwiHIBgRz015O66FmZo5+q+rztVuqsX/0+2CZNrRG/dQL7w=
+	t=1717820651; cv=none; b=hY91xNNTFm232tLUkiSzi1xKZgoseKY3nQmiTLIPMo6sepZ2fOCth9esHBvvScBgBbouDrxq2y7tlbeZBXaKlfr2t7Wwwa/WU/QdD6qeDxX3yA4O1v8a7LqSONm/HB7abqSbFYmRbWO74nLzyDO1qVkE9j5xBkHbClSN2uwxQsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717790104; c=relaxed/simple;
-	bh=CSYTB2dVOTn1wxVQwAkOMx1O39MevSRp/szfd1u8ONI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iSWWuYGh7YGv124ZS5TAjVnJ2BsP987oN6qxk9P5gFYLx+jAVV6eBQZBCC/bWlI+gaFSJ0O3MxkwW95jtU1mruVAxpJByu8wGlZnfqcIbmlEySSL4DZuHkTN/gzKk+Pi67JCGsB1Q7V1JSQSGLWHhYNMtOpGNBLamJCvVBdSHrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=R44bug6F; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1717820651; c=relaxed/simple;
+	bh=HoIBiSVlyaYUy4do0V2wz4HWBYTIE8ZePp7n/kH8yGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JIWaqfaVkSXlcOYzQKct/dnr9jRqIky+kbPKAqYQL4cmoeUmNXJSXKg4IR5UbeOa3PSe9C4XkeWTmli4N9dGaNf8mnUUbpCnf/3WQ4qGUHvcMN1/0WrE7NnA/IWgK0KY1R1ZGDmxCAjyv39tpL+QTW3exUBYj9kZ26oHU+1Wm+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9rl2B8X; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="R44bug6F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BTOKnMT5T2ZhEPykgSzSOI+vQfKzqcBhRm9xKY95hq0=; b=R44bug6FEwA67verN95KlbS9di
-	Fb8CAXgDV9V6Fo/fnNRkOHDlmWl+/SlxbIJARzGMbsqbqEk5f2xW5Jtp3qWZBBEzokNzzrXzz19qv
-	/WE4/VrRKejOXXQjCeYydUF4AJM86CtbacqxXsVq9zkEo/zX0yahufFC3j8avIi7xiRoCCmIe1Y4f
-	GNnHt8ZCEBxwrDWv+OmP8c2uLcuFGHUwQEKAbenoum408yBPqLakeLwpm1cJPQ6twJIhJeAGCrX6D
-	vd8ce+A19emKZNv1UETrYjdVp9du7jZkI66AmYgnp6sZgQeEWGv/gwnr/BSMxtywxUbqpZMDs1SxU
-	i3D7ZbGw==;
-Received: from [191.205.188.103] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1sFffp-000eQE-AD; Fri, 07 Jun 2024 21:54:53 +0200
-Message-ID: <aa8c49d5-1a51-9256-6327-d47036b343fe@igalia.com>
-Date: Fri, 7 Jun 2024 16:54:41 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9rl2B8X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717820648; x=1749356648;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HoIBiSVlyaYUy4do0V2wz4HWBYTIE8ZePp7n/kH8yGk=;
+  b=Y9rl2B8XPB/cD5MmPfvY5hYC5eHgOC1xG4fBoKADQcUDRjNludnQsPkZ
+   RNRDGNj4gH3UWZ/V/rL+79FNuH66etFOG5MuBuAb/2MGnpbdg7Lnr4hVD
+   mvt7/im9MA6Z54vfiEqfJg+lBXGoDsgHV6PuAVaCxRaG9vc/6n+8km9h2
+   jlbQIVgtFQKo0RwbJ6Kg0tbvUh1BV1PPHzpR023IF7g1lx+FbsngHsDbT
+   IoVUcBnnvx9x/d2se8vUnzDCFOvHIDhcns+rHObdR3Hi0npl5SUDZsBCs
+   Y6jWbvjShUT9Pw3reGyNTjeko86QP1brq1NryTEuTp7pjBpggvnUrPRyS
+   Q==;
+X-CSE-ConnectionGUID: FhZlvdiKQY2xDHs7+avgKw==
+X-CSE-MsgGUID: xgnCSMy9SvCk8HNrc5XH4Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="25970566"
+X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
+   d="scan'208";a="25970566"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 21:24:08 -0700
+X-CSE-ConnectionGUID: laP+KoQJQsOb6kbwAYEetA==
+X-CSE-MsgGUID: vKjSdE7hRku0mbO9S69tvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
+   d="scan'208";a="43456632"
+Received: from lkp-server01.sh.intel.com (HELO 472b94a103a1) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 07 Jun 2024 21:24:06 -0700
+Received: from kbuild by 472b94a103a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFncZ-0000yj-0N;
+	Sat, 08 Jun 2024 04:24:03 +0000
+Date: Sat, 8 Jun 2024 12:23:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	Johannes Berg <johannes.berg@intel.com>
+Subject: Re: [PATCH v4 1/4] tracing: add __print_sym() to replace
+ __print_symbolic()
+Message-ID: <202406081255.2FEQDvBK-lkp@intel.com>
+References: <20240607160527.23624-7-johannes@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 0/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
- wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>
-References: <20240606150143.876469296@goodmis.org>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20240606150143.876469296@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607160527.23624-7-johannes@sipsolutions.net>
 
-On 06/06/2024 12:01, Steven Rostedt wrote:
-> Reserve unspecified location of physical memory from kernel command line
-> [...]
-> Solution:
-> 
-> The solution I have come up with is to introduce a new "reserve_mem=" kernel
-> command line. This parameter takes the following format:
-> 
->   reserve_mem=nn:align:label
-> 
-> Where nn is the size of memory to reserve, the align is the alignment of
-> that memory, and label is the way for other sub-systems to find that memory.
-> This way the kernel command line could have:
-> 
->   reserve_mem=12M:4096:oops   ramoops.mem_name=oops
-> 
-> At boot up, the kernel will search for 12 megabytes in usable memory regions
-> with an alignment of 4096. It will start at the highest regions and work its
-> way down (for those old devices that want access to lower address DMA). When
-> it finds a region, it will save it off in a small table and mark it with the
-> "oops" label. Then the pstore ramoops sub-system could ask for that memory
-> and location, and it will map itself there.
-> 
-> This prototype allows for 8 different mappings (which may be overkill, 4 is
-> probably plenty) with 16 byte size to store the label.
-> 
-> I have tested this and it works for us to solve the above problem. We can
-> update the kernel and command line and increase the size of pstore without
-> needing to update the firmware, or knowing every memory layout of each
-> board. I only tested this locally, it has not been tested in the field.
-> 
+Hi Johannes,
 
-Hi Steve, first of all, thanks for this work! This is much appreciated.
-The kdumpst tooling (Arch Linux) makes use of pstore when available, and
-the recommendation so far was to reserve memory somehow, like "mem=" or
-use kdump instead, if no free RAM area was available.
+kernel test robot noticed the following build warnings:
 
-With your solution, things get way more "elegant". Also, I think we all
-know pstore is not 100% reliable, specially the RAM backend due to
-already mentioned reasons (like FW memory retraining, ECC memory, etc),
-but it's great we have a mechanism to **try it**. If it works, awesome -
-for statistical analysis, this is very useful; pstore has been used with
-success in the Steam Deck, for example.
+[auto build test WARNING on mcgrof/modules-next]
+[also build test WARNING on arnd-asm-generic/master tip/timers/core net/main net-next/main linus/master horms-ipvs/master v6.10-rc2 next-20240607]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-With all that said, I've tested your patches on top of 6.10-rc2 in 2
-qemu VMs (one running legacy BIOS - seabios - and the other UEFI - using
-ovmf) and on Steam Deck, and it's working flawlessly. I've tested only
-using ramoops as module.
+url:    https://github.com/intel-lab-lkp/linux/commits/Johannes-Berg/tracing-add-__print_sym-to-replace-__print_symbolic/20240608-000918
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git modules-next
+patch link:    https://lore.kernel.org/r/20240607160527.23624-7-johannes%40sipsolutions.net
+patch subject: [PATCH v4 1/4] tracing: add __print_sym() to replace __print_symbolic()
+config: i386-buildonly-randconfig-005-20240608 (https://download.01.org/0day-ci/archive/20240608/202406081255.2FEQDvBK-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406081255.2FEQDvBK-lkp@intel.com/reproduce)
 
-Some code review in the patches themselves (like a missing
-EXPORT_SYMBOL_GPL), but all in all, that's a great addition! Feel free
-to add my:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406081255.2FEQDvBK-lkp@intel.com/
 
-Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+All warnings (new ones prefixed by >>):
 
-Thanks,
+>> kernel/trace/trace_events.c:1583:6: warning: variable 'n_sym_defs' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+    1583 |         if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module) {
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace_events.c:1595:18: note: uninitialized use occurs here
+    1595 |         for (i = 0; i < n_sym_defs; i++) {
+         |                         ^~~~~~~~~~
+   kernel/trace/trace_events.c:1583:2: note: remove the 'if' if its condition is always true
+    1583 |         if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module) {
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/trace_events.c:1581:25: note: initialize the variable 'n_sym_defs' to silence this warning
+    1581 |         unsigned int n_sym_defs, i;
+         |                                ^
+         |                                 = 0
+   1 warning generated.
 
 
-Guilherme
+vim +1583 kernel/trace/trace_events.c
+
+  1575	
+  1576	/* note: @name is not NUL-terminated */
+  1577	static void show_sym_list(struct seq_file *m, struct trace_event_call *call,
+  1578				  const char *name, unsigned int name_len)
+  1579	{
+  1580		struct trace_sym_def **sym_defs;
+  1581		unsigned int n_sym_defs, i;
+  1582	
+> 1583		if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module) {
+  1584			sym_defs = __start_ftrace_sym_defs;
+  1585			n_sym_defs = __stop_ftrace_sym_defs - __start_ftrace_sym_defs;
+  1586	#ifdef CONFIG_MODULES
+  1587		} else {
+  1588			struct module *mod = call->module;
+  1589	
+  1590			sym_defs = mod->trace_sym_defs;
+  1591			n_sym_defs = mod->num_trace_sym_defs;
+  1592	#endif /* CONFIG_MODULES */
+  1593		}
+  1594	
+  1595		for (i = 0; i < n_sym_defs; i++) {
+  1596			unsigned int sym_len;
+  1597	
+  1598			if (!sym_defs[i])
+  1599				continue;
+  1600			if (sym_defs[i]->system != call->class->system)
+  1601				continue;
+  1602			sym_len = strlen(sym_defs[i]->symbol_id);
+  1603			if (name_len != sym_len)
+  1604				continue;
+  1605			if (strncmp(sym_defs[i]->symbol_id, name, sym_len))
+  1606				continue;
+  1607			if (sym_defs[i]->show)
+  1608				sym_defs[i]->show(m);
+  1609			break;
+  1610		}
+  1611	}
+  1612	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
