@@ -1,116 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B54149DED;
-	Sat,  8 Jun 2024 14:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DCC6FC6;
+	Sat,  8 Jun 2024 21:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717857167; cv=none; b=rRdtPzzbvYY1xd03QIF9ySrhZIcyqtuE7ZYGKilJeccSAYHlLenbk0kjMUR23fEMuuCPmV7cB1vGiUsdhUWK3/gSZqk4kepL5pTiaQkv4bTTib6Ck+RJ/Fx7TtCLPPfletDdaTmXdTVKrWEfkmP7ORwfe51e12Qa1IdF9HoGq+I=
+	t=1717881383; cv=none; b=LaiDAERb66VRcHzus4cXsKeCEFUj9Gu5FsqQt0NUgFn9WY0l7JlZcHp375YKn0Ofs2DZc2GZwK+kja1SQtBuMzzU9oA8p4GK90R606tSJErgAyUumYpT1t8BLyDSTJw3Z6EuILMmselF+gO83O0s35XZsdnP874G0xzaoN7zx9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717857167; c=relaxed/simple;
-	bh=+mfH5kPRQKjFbiX+1m7cu4HLvr1f9QnlfzdttOt8hto=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CD9D2pekS2cQChhbG+To+I+wvXD33MJmilXsc5zvZnYK7dZBWMIShPT2B4FeILKaQIdiCztgW9StWTb8qo8WAOtthKJAGX+58Slrkio2IMxjjJiLUNEnQq5iP0aS8yXEUWmVj9BNwE4jZkx904MaJCWLhC7cqNF0SGsmvf6O+Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6HGJuTs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717881383; c=relaxed/simple;
+	bh=ILnuGu5r6cuHQ9wdUVbkAPXhJPVeZtLb6jYztlxoK3Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rTdccNit8euZF51MKXKObF1cPTlDm53YFUGXSFw8ACj/V66O8HqYEhfRttjVFpv724gRfkjP2jduzuOFHTBVA84RhWQdd3eIwua6X0qjemceM20Rb9DyLINXlt1uA5C7xXT9q0qw9XkJuZ14Do9VAqeRSDFnfd1OaqlzYpxSkYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=C/2UCxEc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ekWp98Kd; arc=none smtp.client-ip=64.147.123.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6HGJuTs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D342C2BD11;
-	Sat,  8 Jun 2024 14:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717857166;
-	bh=+mfH5kPRQKjFbiX+1m7cu4HLvr1f9QnlfzdttOt8hto=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W6HGJuTsLphg3hJwaCcOqeBS/036cr1C35LPh+8S97Y+K7jUszwmKWkgwu5GjXPiK
-	 LoEX3fxAN2Q/2/ElZBXzpd4aO+B05yvV7V/0xf5CQJ0rW/ivN3zUAgcJ1xVbAjnQBD
-	 W6nvC+wkNMVOd/9fbnDQF5SgtqMI6dhEJb5HuzaXEQ7gGjGDqUP8n1QQQluMvNOWTN
-	 S5G3rueKMUiWI1aF74l9jSnB90djcoSqWvUGmZgwf4FDQTcPVokTMvAbBZPfsrKc7P
-	 Roief3NScRkY1DcjAIcx39RO0GwlU0EDKBV9J3kFkmgNIJ3Hp3ddxszlsLDVkf/RvU
-	 OV2DdZ/nqxo1A==
-Date: Sat, 8 Jun 2024 23:32:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] function_graph: Rename BYTE_NUMBER to CHAR_NUMBER in
- selftests
-Message-Id: <20240608233242.414564f51bcc5db9993eb682@kernel.org>
-In-Reply-To: <20240606081846.4cb82dc4@gandalf.local.home>
-References: <20240606081846.4cb82dc4@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="C/2UCxEc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ekWp98Kd"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.west.internal (Postfix) with ESMTP id 7C1F31C00091;
+	Sat,  8 Jun 2024 17:16:20 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Sat, 08 Jun 2024 17:16:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm3; t=1717881380; x=1717967780; bh=0YjzCY6kziUrd0juArDnY
+	i2Mlm4V8ledwTgp3zoKTHM=; b=C/2UCxEcrta2pXIQsQBSLsP5dh3P/OXAmTLTF
+	mYPK2tbDh9O5/BWTx/NXJ92yEdolAXahFJLFsXq3RnMzQJNQjYQkDgSSQYbt0FcH
+	AGfluzboETbuhYl4dSBCibukN9wzGxzBmX74S1KpZ4qPh9YoZzsAMaBPtAd28Drq
+	SN0gq2PUXqDZH6Iw8PXNG4AUwnkvxutxvPEXGuhxEB81wqGm93SJuzwlb43mRpql
+	m3ERGu3cj3oArbBWBR436SeoBpnOcyt6rQv/gV0KM97HPHsKxlyC1XaPHnonUrTO
+	KbtUTChrm0XH5nWmUHNIYFifHf7+xJrykdtEcp7xVlQGw20qg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1717881380; x=1717967780; bh=0YjzCY6kziUrd0juArDnYi2Mlm4V
+	8ledwTgp3zoKTHM=; b=ekWp98Kdaj4NLFqyv137QlWn0Oq4q0VzN6XzuCs8a0qq
+	MOmHo8VLWG5gOvu9CIUnb8Lrzh6pbU5Pq26GJaoYs17tI4plC+K7eSbZZXA/SuW/
+	powdCyu+V34uTsI2Hh2ImtHO6D0OKCIKRU81g5ewFMqZFZKR8iTRRTzhyHfsaWfs
+	th5gnmKlr7ZmxhFn2koA1HPGJQdJF5gihtR63MEgxFONLMeeXEIMCKXJdyK9sSeb
+	rwe3m/2KJsgb3krIMsz0cyExxJEtHP0jfAm7WiYziREI2/wJBzNlVRV4S46RRicg
+	FK698k+04raY/IhfsgH+LKgSNK5lLs7L2Y3WK4rLtg==
+X-ME-Sender: <xms:I8pkZiPQzS0JXLGj4NDo3WVWzaVL9PqE3LCxpHna_WhYtwYF1w0vVQ>
+    <xme:I8pkZg8t2-s7n2u7FViZ8CbEccF6qvHBSLy9yhQcR9l4-lERiTMpoPEiXyvehM0ub
+    JzSZqLqQFQ3jMOckw>
+X-ME-Received: <xmr:I8pkZpQBAtosIsPYcZ5iyafuJ_gd0ZxAoZfdkEfexMNhLJ8H4CE1dBy3VmFuHhi_RL29ZFlztxA8UNXGRU0BmglYlTlZ7sNraLB5rQSw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedtgedgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
+    uhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepvdeggfetgfelhefhueefke
+    duvdfguedvhfegleejudduffffgfetueduieeikeejnecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:I8pkZisQmbH7y9ZoWwm7tgGLW_uvHYqOiyn_9unXpvQKE22eEMIDtg>
+    <xmx:I8pkZqdImpCGCcFuRfXp5JcpUhBUGqbjLpZIzObtbvx3A-NbQCqVzw>
+    <xmx:I8pkZm2V0XvkjKsAVr3t0CE6l3TyinwdoabJiUAQg8TdoUkFsNNlCw>
+    <xmx:I8pkZu8elr2R4BiSBJWV_cmLSUaaies627q8TxqJHiMB5HDQFd4kgw>
+    <xmx:JMpkZl1M1QfxBF7KARSxx2fP7fMSp_GZkkJq6ZennI4n0H607d478TUN>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 8 Jun 2024 17:16:18 -0400 (EDT)
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	fsverity@lists.linux.dev,
+	andrii@kernel.org,
+	olsajiri@gmail.com,
+	quentin@isovalent.com,
+	alan.maguire@oracle.com,
+	acme@kernel.org,
+	eddyz87@gmail.com
+Cc: kernel-team@meta.com
+Subject: [PATCH bpf-next v4 00/12] bpf: Support dumping kfunc prototypes from BTF
+Date: Sat,  8 Jun 2024 15:15:56 -0600
+Message-ID: <cover.1717881178.git.dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Jun 2024 08:18:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+This patchset enables both detecting as well as dumping compilable
+prototypes for kfuncs.
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The function_graph selftests checks various size variables to pass from
-> the entry of the function to the exit. It tests 1, 2, 4 and 8 byte words.
-> The 1 byte macro was called BYTE_NUMBER but that is used in the sh
-> architecture: arch/sh/include/asm/bitops-op32.h
-> 
-> Just rename the macro to CHAR_NUMBER.
-> 
+The first commit instructs pahole to DECL_TAG kfuncs when available.
+This requires v1.27 or newer. v1.27 is nearing release at time of
+writing. Following this, users will be able to look at BTF inside
+vmlinux (or modules) and check if the kfunc they want is available.
 
-Looks good to me.
+The final commit teaches bpftool how to dump kfunc prototypes. This
+is done for developer convenience.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The rest of the commits are fixups to enable selftests to use the
+newly dumped kfunc prototypes. With these, selftests will regularly
+exercise the newly added codepaths.
 
-Thanks,
+=== Changelog ===
+From v3:
+* Teach selftests to use dumped prototypes
 
-> Fixes: 47c3c70aa3697 ("function_graph: Add selftest for passing local variables")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406061744.rZDXfRrG-lkp@intel.com/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_selftest.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-> index 369efc569238..adf0f436d84b 100644
-> --- a/kernel/trace/trace_selftest.c
-> +++ b/kernel/trace/trace_selftest.c
-> @@ -758,7 +758,7 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE
->  
-> -#define BYTE_NUMBER 123
-> +#define CHAR_NUMBER 123
->  #define SHORT_NUMBER 12345
->  #define WORD_NUMBER 1234567890
->  #define LONG_NUMBER 1234567890123456789LL
-> @@ -789,7 +789,7 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
->  
->  	switch (size) {
->  	case 1:
-> -		*(char *)p = BYTE_NUMBER;
-> +		*(char *)p = CHAR_NUMBER;
->  		break;
->  	case 2:
->  		*(short *)p = SHORT_NUMBER;
-> @@ -830,7 +830,7 @@ static __init void store_return(struct ftrace_graph_ret *trace,
->  
->  	switch (fixture->store_size) {
->  	case 1:
-> -		expect = BYTE_NUMBER;
-> +		expect = CHAR_NUMBER;
->  		found = *(char *)p;
->  		break;
->  	case 2:
-> -- 
-> 2.43.0
-> 
-> 
+From v2:
+* Update Makefile.btf with pahole flag
+* More error checking
+* Output formatting changes
+* Drop already-merged commit
 
+From v1:
+* Add __weak annotation
+* Use btf_dump for kfunc prototypes
+* Update kernel bpf_rdonly_cast() signature
+
+Daniel Xu (12):
+  kbuild: bpf: Tell pahole to DECL_TAG kfuncs
+  bpf: selftests: Fix bpf_iter_task_vma_new() prototype
+  bpf: selftests: Fix fentry test kfunc prototypes
+  bpf: selftests: Fix bpf_cpumask_first_zero() kfunc prototype
+  bpf: selftests: Fix bpf_map_sum_elem_count() kfunc prototype
+  bpf: selftests: Fix bpf_session_cookie() kfunc prototype
+  bpf: selftests: Namespace struct_opt callbacks in bpf_dctcp
+  bpf: verifier: Relax caller requirements for kfunc projection type
+    args
+  bpf: treewide: Align kfunc signatures to prog point-of-view
+  bpf: selftests: nf: Opt out of using generated kfunc prototypes
+  bpf: selftests: xfrm: Opt out of using generated kfunc prototypes
+  bpftool: Support dumping kfunc prototypes from BTF
+
+ fs/verity/measure.c                           |  3 +-
+ include/linux/bpf.h                           |  8 +--
+ kernel/bpf/crypto.c                           | 24 +++++---
+ kernel/bpf/helpers.c                          | 39 +++++++++----
+ kernel/bpf/verifier.c                         | 12 +++-
+ kernel/trace/bpf_trace.c                      |  9 ++-
+ net/core/filter.c                             | 32 +++++++----
+ scripts/Makefile.btf                          |  2 +-
+ tools/bpf/bpftool/btf.c                       | 55 +++++++++++++++++++
+ .../testing/selftests/bpf/bpf_experimental.h  |  2 +-
+ tools/testing/selftests/bpf/bpf_kfuncs.h      |  2 +-
+ tools/testing/selftests/bpf/progs/bpf_dctcp.c | 36 ++++++------
+ .../selftests/bpf/progs/get_func_ip_test.c    | 14 ++---
+ .../selftests/bpf/progs/ip_check_defrag.c     | 10 ++--
+ .../bpf/progs/kprobe_multi_session_cookie.c   |  2 +-
+ .../selftests/bpf/progs/map_percpu_stats.c    |  2 +-
+ .../selftests/bpf/progs/nested_trust_common.h |  2 +-
+ .../testing/selftests/bpf/progs/test_bpf_nf.c |  1 +
+ .../selftests/bpf/progs/test_bpf_nf_fail.c    |  1 +
+ .../bpf/progs/verifier_netfilter_ctx.c        |  6 +-
+ .../selftests/bpf/progs/xdp_synproxy_kern.c   |  1 +
+ tools/testing/selftests/bpf/progs/xfrm_info.c |  1 +
+ 22 files changed, 183 insertions(+), 81 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.44.0
+
