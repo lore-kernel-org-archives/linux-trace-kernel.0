@@ -1,155 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21E9B64E;
-	Sat,  8 Jun 2024 04:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B54149DED;
+	Sat,  8 Jun 2024 14:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717820651; cv=none; b=hY91xNNTFm232tLUkiSzi1xKZgoseKY3nQmiTLIPMo6sepZ2fOCth9esHBvvScBgBbouDrxq2y7tlbeZBXaKlfr2t7Wwwa/WU/QdD6qeDxX3yA4O1v8a7LqSONm/HB7abqSbFYmRbWO74nLzyDO1qVkE9j5xBkHbClSN2uwxQsw=
+	t=1717857167; cv=none; b=rRdtPzzbvYY1xd03QIF9ySrhZIcyqtuE7ZYGKilJeccSAYHlLenbk0kjMUR23fEMuuCPmV7cB1vGiUsdhUWK3/gSZqk4kepL5pTiaQkv4bTTib6Ck+RJ/Fx7TtCLPPfletDdaTmXdTVKrWEfkmP7ORwfe51e12Qa1IdF9HoGq+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717820651; c=relaxed/simple;
-	bh=HoIBiSVlyaYUy4do0V2wz4HWBYTIE8ZePp7n/kH8yGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JIWaqfaVkSXlcOYzQKct/dnr9jRqIky+kbPKAqYQL4cmoeUmNXJSXKg4IR5UbeOa3PSe9C4XkeWTmli4N9dGaNf8mnUUbpCnf/3WQ4qGUHvcMN1/0WrE7NnA/IWgK0KY1R1ZGDmxCAjyv39tpL+QTW3exUBYj9kZ26oHU+1Wm+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9rl2B8X; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717857167; c=relaxed/simple;
+	bh=+mfH5kPRQKjFbiX+1m7cu4HLvr1f9QnlfzdttOt8hto=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CD9D2pekS2cQChhbG+To+I+wvXD33MJmilXsc5zvZnYK7dZBWMIShPT2B4FeILKaQIdiCztgW9StWTb8qo8WAOtthKJAGX+58Slrkio2IMxjjJiLUNEnQq5iP0aS8yXEUWmVj9BNwE4jZkx904MaJCWLhC7cqNF0SGsmvf6O+Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6HGJuTs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9rl2B8X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717820648; x=1749356648;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HoIBiSVlyaYUy4do0V2wz4HWBYTIE8ZePp7n/kH8yGk=;
-  b=Y9rl2B8XPB/cD5MmPfvY5hYC5eHgOC1xG4fBoKADQcUDRjNludnQsPkZ
-   RNRDGNj4gH3UWZ/V/rL+79FNuH66etFOG5MuBuAb/2MGnpbdg7Lnr4hVD
-   mvt7/im9MA6Z54vfiEqfJg+lBXGoDsgHV6PuAVaCxRaG9vc/6n+8km9h2
-   jlbQIVgtFQKo0RwbJ6Kg0tbvUh1BV1PPHzpR023IF7g1lx+FbsngHsDbT
-   IoVUcBnnvx9x/d2se8vUnzDCFOvHIDhcns+rHObdR3Hi0npl5SUDZsBCs
-   Y6jWbvjShUT9Pw3reGyNTjeko86QP1brq1NryTEuTp7pjBpggvnUrPRyS
-   Q==;
-X-CSE-ConnectionGUID: FhZlvdiKQY2xDHs7+avgKw==
-X-CSE-MsgGUID: xgnCSMy9SvCk8HNrc5XH4Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="25970566"
-X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
-   d="scan'208";a="25970566"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 21:24:08 -0700
-X-CSE-ConnectionGUID: laP+KoQJQsOb6kbwAYEetA==
-X-CSE-MsgGUID: vKjSdE7hRku0mbO9S69tvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
-   d="scan'208";a="43456632"
-Received: from lkp-server01.sh.intel.com (HELO 472b94a103a1) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 07 Jun 2024 21:24:06 -0700
-Received: from kbuild by 472b94a103a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFncZ-0000yj-0N;
-	Sat, 08 Jun 2024 04:24:03 +0000
-Date: Sat, 8 Jun 2024 12:23:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [PATCH v4 1/4] tracing: add __print_sym() to replace
- __print_symbolic()
-Message-ID: <202406081255.2FEQDvBK-lkp@intel.com>
-References: <20240607160527.23624-7-johannes@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6HGJuTs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D342C2BD11;
+	Sat,  8 Jun 2024 14:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717857166;
+	bh=+mfH5kPRQKjFbiX+1m7cu4HLvr1f9QnlfzdttOt8hto=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W6HGJuTsLphg3hJwaCcOqeBS/036cr1C35LPh+8S97Y+K7jUszwmKWkgwu5GjXPiK
+	 LoEX3fxAN2Q/2/ElZBXzpd4aO+B05yvV7V/0xf5CQJ0rW/ivN3zUAgcJ1xVbAjnQBD
+	 W6nvC+wkNMVOd/9fbnDQF5SgtqMI6dhEJb5HuzaXEQ7gGjGDqUP8n1QQQluMvNOWTN
+	 S5G3rueKMUiWI1aF74l9jSnB90djcoSqWvUGmZgwf4FDQTcPVokTMvAbBZPfsrKc7P
+	 Roief3NScRkY1DcjAIcx39RO0GwlU0EDKBV9J3kFkmgNIJ3Hp3ddxszlsLDVkf/RvU
+	 OV2DdZ/nqxo1A==
+Date: Sat, 8 Jun 2024 23:32:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] function_graph: Rename BYTE_NUMBER to CHAR_NUMBER in
+ selftests
+Message-Id: <20240608233242.414564f51bcc5db9993eb682@kernel.org>
+In-Reply-To: <20240606081846.4cb82dc4@gandalf.local.home>
+References: <20240606081846.4cb82dc4@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607160527.23624-7-johannes@sipsolutions.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Johannes,
+On Thu, 6 Jun 2024 08:18:46 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-kernel test robot noticed the following build warnings:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The function_graph selftests checks various size variables to pass from
+> the entry of the function to the exit. It tests 1, 2, 4 and 8 byte words.
+> The 1 byte macro was called BYTE_NUMBER but that is used in the sh
+> architecture: arch/sh/include/asm/bitops-op32.h
+> 
+> Just rename the macro to CHAR_NUMBER.
+> 
 
-[auto build test WARNING on mcgrof/modules-next]
-[also build test WARNING on arnd-asm-generic/master tip/timers/core net/main net-next/main linus/master horms-ipvs/master v6.10-rc2 next-20240607]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Looks good to me.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Johannes-Berg/tracing-add-__print_sym-to-replace-__print_symbolic/20240608-000918
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git modules-next
-patch link:    https://lore.kernel.org/r/20240607160527.23624-7-johannes%40sipsolutions.net
-patch subject: [PATCH v4 1/4] tracing: add __print_sym() to replace __print_symbolic()
-config: i386-buildonly-randconfig-005-20240608 (https://download.01.org/0day-ci/archive/20240608/202406081255.2FEQDvBK-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406081255.2FEQDvBK-lkp@intel.com/reproduce)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406081255.2FEQDvBK-lkp@intel.com/
+Thanks,
 
-All warnings (new ones prefixed by >>):
+> Fixes: 47c3c70aa3697 ("function_graph: Add selftest for passing local variables")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406061744.rZDXfRrG-lkp@intel.com/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_selftest.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+> index 369efc569238..adf0f436d84b 100644
+> --- a/kernel/trace/trace_selftest.c
+> +++ b/kernel/trace/trace_selftest.c
+> @@ -758,7 +758,7 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  
+> -#define BYTE_NUMBER 123
+> +#define CHAR_NUMBER 123
+>  #define SHORT_NUMBER 12345
+>  #define WORD_NUMBER 1234567890
+>  #define LONG_NUMBER 1234567890123456789LL
+> @@ -789,7 +789,7 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
+>  
+>  	switch (size) {
+>  	case 1:
+> -		*(char *)p = BYTE_NUMBER;
+> +		*(char *)p = CHAR_NUMBER;
+>  		break;
+>  	case 2:
+>  		*(short *)p = SHORT_NUMBER;
+> @@ -830,7 +830,7 @@ static __init void store_return(struct ftrace_graph_ret *trace,
+>  
+>  	switch (fixture->store_size) {
+>  	case 1:
+> -		expect = BYTE_NUMBER;
+> +		expect = CHAR_NUMBER;
+>  		found = *(char *)p;
+>  		break;
+>  	case 2:
+> -- 
+> 2.43.0
+> 
+> 
 
->> kernel/trace/trace_events.c:1583:6: warning: variable 'n_sym_defs' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-    1583 |         if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module) {
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_events.c:1595:18: note: uninitialized use occurs here
-    1595 |         for (i = 0; i < n_sym_defs; i++) {
-         |                         ^~~~~~~~~~
-   kernel/trace/trace_events.c:1583:2: note: remove the 'if' if its condition is always true
-    1583 |         if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module) {
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/trace_events.c:1581:25: note: initialize the variable 'n_sym_defs' to silence this warning
-    1581 |         unsigned int n_sym_defs, i;
-         |                                ^
-         |                                 = 0
-   1 warning generated.
-
-
-vim +1583 kernel/trace/trace_events.c
-
-  1575	
-  1576	/* note: @name is not NUL-terminated */
-  1577	static void show_sym_list(struct seq_file *m, struct trace_event_call *call,
-  1578				  const char *name, unsigned int name_len)
-  1579	{
-  1580		struct trace_sym_def **sym_defs;
-  1581		unsigned int n_sym_defs, i;
-  1582	
-> 1583		if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module) {
-  1584			sym_defs = __start_ftrace_sym_defs;
-  1585			n_sym_defs = __stop_ftrace_sym_defs - __start_ftrace_sym_defs;
-  1586	#ifdef CONFIG_MODULES
-  1587		} else {
-  1588			struct module *mod = call->module;
-  1589	
-  1590			sym_defs = mod->trace_sym_defs;
-  1591			n_sym_defs = mod->num_trace_sym_defs;
-  1592	#endif /* CONFIG_MODULES */
-  1593		}
-  1594	
-  1595		for (i = 0; i < n_sym_defs; i++) {
-  1596			unsigned int sym_len;
-  1597	
-  1598			if (!sym_defs[i])
-  1599				continue;
-  1600			if (sym_defs[i]->system != call->class->system)
-  1601				continue;
-  1602			sym_len = strlen(sym_defs[i]->symbol_id);
-  1603			if (name_len != sym_len)
-  1604				continue;
-  1605			if (strncmp(sym_defs[i]->symbol_id, name, sym_len))
-  1606				continue;
-  1607			if (sym_defs[i]->show)
-  1608				sym_defs[i]->show(m);
-  1609			break;
-  1610		}
-  1611	}
-  1612	
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
