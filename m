@@ -1,50 +1,60 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4902C19E;
-	Sun,  9 Jun 2024 08:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2276C6AC0;
+	Sun,  9 Jun 2024 15:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717921687; cv=none; b=IZ5Hb46i/ghjymQSfKhIw5yNFekLDMfHWyy/QFSbpIn/nBIGDfYXLuT0NzTmAq2hrgnkIebD28j+v4rJ9A/F3X7FKmrdW3R8b96cxB22BdQof4wgyeD06BOoRNseFqgoCGGLrw7YdW4zVQ7ryaVnGJRWgUokemV5RkwGNCGXyGc=
+	t=1717948229; cv=none; b=XMyT5ZabNjocFwgXWfNxoOCXBOrOpL/e8qKeqHSVRzDMn9WWdnGEmLTVteyKz/3xXbRc375u50ESQ/zLlUzXfvRvoomEZ7noq6ICZdAAIraQ/xPAUlZBpbuR0U37K3fszGYnsawXSiRcXgOMLmCFIj6Izdd3U4GigZO39XQ4AI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717921687; c=relaxed/simple;
-	bh=NiNHIvLM53266J2UpSupU/mhEjqFwYGKpKv/PxEnfjg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iMvqTtc8OxJ/bcazbLB6tHWmsivPUY3XgEuxkcKHXxe4TT+0k71431dlvaB4aBHq/J08OnfiEMk4nvsheIEn16UpErARxQKTfQiFvhxzX/okbJ5rYru8wjgRg7Ht+18JtZufXWQh+l4E+pvfuL6azLqYaVl6quK7hrCZphZ6VLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=MIfxNhRD; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1717948229; c=relaxed/simple;
+	bh=ughDwphXf3dYe4EijagZi0zfWLW6TKptPdAqN0DgPKo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tZE5NQYzGdg8Pm4ylnR7jkMm36mL4+9Hcx11a1H0gkGjZ6e/kCNpMHC8VVPTetsnOuBYCyCRgfcIQc6+zQj6YaAOqcFW+bGyN2g1n+pDxweYpugAhdxMLI3CTByJzeP0pQdIN/VbREngx3Vz6HEe529sr/c6+TzOBFbnZ5mAMfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Ivzuu+cK; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="MIfxNhRD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Ivzuu+cK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZGX1+w2KuTr4rSi8N+qfCTHA1YisBmkGA0Ss7Dju5os=;
-  b=MIfxNhRDBVUjuFmHXlb+sNburKUTYfbjg/5uLy1R/ywhQBlUW+zmy4Xu
-   2tU+2GFyi/wU/NwekIaEysW7i7MDCEFJKzQ8LxGDPQTvwvOMtfm0mKKVZ
-   Hzr8XViuT/8Vp0pCRmkFXP49qaxPROuwsqKjRs23k8XwrZq8qMHUd4FeW
-   8=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.08,225,1712613600"; 
-   d="scan'208";a="169696900"
-Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2024 10:27:49 +0200
-From: Julia Lawall <Julia.Lawall@inria.fr>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: kernel-janitors@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-Date: Sun,  9 Jun 2024 10:27:17 +0200
-Message-Id: <20240609082726.32742-6-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240609082726.32742-1-Julia.Lawall@inria.fr>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1717948228; x=1749484228;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Z8JQDhiIHyghD/mh78yFhS3Rp61K/3MKFSXJkIVLIho=;
+  b=Ivzuu+cKyEsM1Qe7GZ2P9vNzi5PZ0JdTFtuYISPs3Y5/ir5XE8mROleP
+   YUiL8XhFW0u85nMRQdCFVf3zAXc3HT0bruMLCTejNQ0pKambXWjybD+8J
+   gx6t4KxXCDV/kv/Fo4exu0iq/UDt2CfF7QD4/MjHDKrt1u3yp/co0ghHq
+   E=;
+X-IronPort-AV: E=Sophos;i="6.08,225,1712620800"; 
+   d="scan'208";a="300979316"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2024 15:50:25 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:59941]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.236:2525] with esmtp (Farcaster)
+ id 37964eda-c515-4ff2-b20a-3dd4b8262df1; Sun, 9 Jun 2024 15:50:23 +0000 (UTC)
+X-Farcaster-Flow-ID: 37964eda-c515-4ff2-b20a-3dd4b8262df1
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Sun, 9 Jun 2024 15:50:23 +0000
+Received: from dev-dsk-nsaenz-1b-189b39ae.eu-west-1.amazon.com (10.13.235.138)
+ by EX19D004EUC001.ant.amazon.com (10.252.51.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Sun, 9 Jun 2024 15:50:17 +0000
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+CC: <pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<graf@amazon.de>, <dwmw2@infradead.org>, <paul@amazon.com>,
+	<nsaenz@amazon.com>, <mlevitsk@redhat.com>, <jgowans@amazon.com>,
+	<corbet@lwn.net>, <decui@microsoft.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <amoorthy@google.com>
+Subject: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM Emulation
+Date: Sun, 9 Jun 2024 15:49:27 +0000
+Message-ID: <20240609154945.55332-1-nsaenz@amazon.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,124 +62,132 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWA004.ant.amazon.com (10.13.139.85) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-Since SLOB was removed, it is not necessary to use call_rcu
-when the callback only performs kmem_cache_free. Use
-kfree_rcu() directly.
+This series introduces core KVM functionality necessary to emulate Hyper-V's
+Virtual Secure Mode in a Virtual Machine Monitor (VMM).
 
-The changes were done using the following Coccinelle semantic patch.
-This semantic patch is designed to ignore cases where the callback
-function is used in another way.
+Hyper-V's Virtual Secure Mode (VSM) is a virtualization security feature that
+leverages the hypervisor to create secure execution environments within a
+guest. VSM is documented as part of Microsoft's Hypervisor Top Level Functional
+Specification [1]. Security features that build upon VSM, like Windows
+Credential Guard, are enabled by default on Windows 11 and are becoming a
+prerequisite in some industries.
 
-// <smpl>
-@r@
-expression e;
-local idexpression e2;
-identifier cb,f;
-position p;
-@@
+VSM introduces the concept of Virtual Trust Levels (VTLs). These are
+independent execution contexts, each with its own CPU architectural state,
+local APIC state, and a different view of memory. They are hierarchical, with
+more privileged VTLs having priority over the execution of lower VTLs and
+control over lower VTLs' state. Windows leverages these low-level
+paravirtualized primitives, as well as the hypervisor's higher trust base, to
+prevent guest data exfiltration even when the operating system itself has been
+compromised.
 
-(
-call_rcu(...,e2)
-|
-call_rcu(&e->f,cb@p)
-)
+As discussed at LPC2023 and in our previous RFC [2], we decided to model each
+VTL as a distinct KVM VM. With this approach, and the RWX memory attributes
+introduced in this series, we have been able to implement VTL memory
+protections in a non-intrusive way, using generic KVM APIs. Additionally, each
+CPU's VTL is modeled as a distinct KVM vCPU, owned by the KVM VM tracking that
+VTL's state. VTL awareness is fully removed from KVM, and the responsibility
+for VTL-aware hypercalls, VTL scheduling, and state transfer is delegated to
+userspace.
 
-@r1@
-type T;
-identifier x,r.cb;
-@@
+Series overview:
+- 1-8: Introduce a number of Hyper-V hyper-calls, all of which are VTL-aware and
+       expected to be handled in userspace. Additionally an new VTL-specifc MP
+       state is introduced.
+- 9-10: Pass the instruction length as part of the userspace fault exit data
+        in order to simplify VSM's secure intercept generation.
+- 11-17: Introduce RWX memory attributes as well as extend userspace faults.
+- 18: Introduces the main VSM CPUID bit which gates all VTL configuration and
+      runtime hypercalls.
 
- cb(...) {
-(
-   kmem_cache_free(...);
-|
-   T x = ...;
-   kmem_cache_free(...,x);
-|
-   T x;
-   x = ...;
-   kmem_cache_free(...,x);
-)
- }
+The series is accompanied by two repositories:
+ - A PoC QEMU implementation of VSM [3]: This PoC VSM implementation is capable
+   of booting Windows Server 2016 and 2019 with Credential Guard (CG) enabled
+   on VMs of any size or vCPUs number. It's generally stable, but still sees
+   its share of crashes. The PoC itself implements VSM interfaces to
+   accommodate CG's needs, and it's by no means comprehensive. All in all,
+   don't expect anything usable in production.
 
-@s depends on r1@
-position p != r.p;
-identifier r.cb;
-@@
+ - VSM kvm-unit-tests [4]: They cover all VSM hypercalls, as well as KVM APIs
+   introduced by this series. But unfortunately depends on the QEMU
+   implementation.
 
- cb@p
+We mostly tested on an Intel machine, both with and without TDP. Basic tests
+were also run on AMD (build and kvm-unit-tests). Please note that v2 will
+include KVM self-tests to close the testing gap, and allow merging this while
+we work on the userspace bits.
 
-@script:ocaml@
-cb << r.cb;
-p << s.p;
-@@
+The series is based on 'kvm/master', that is, commit db574f2f96d0, and also
+available in github [5].
 
-Printf.eprintf "Other use of %s at %s:%d\n"
-   cb (List.hd p).file (List.hd p).line
+This series also serves as a call-out to anyone interested in collaborating. We
+have a proven design, a working PoC, and hopefully a path forward to merge
+these KVM APIs. There is plenty to do in both QEMU and KVM still, I'll post a
+list of ideas in the future. Feel free to get in touch!
 
-@depends on r1 && !s@
-expression e;
-identifier r.cb,f;
-position r.p;
-@@
+Thanks,
+Nicolas
 
-- call_rcu(&e->f,cb@p)
-+ kfree_rcu(e,f)
-
-@r1a depends on !s@
-type T;
-identifier x,r.cb;
-@@
-
-- cb(...) {
-(
--  kmem_cache_free(...);
-|
--  T x = ...;
--  kmem_cache_free(...,x);
-|
--  T x;
--  x = ...;
--  kmem_cache_free(...,x);
-)
-- }
-// </smpl>
-
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+[1] https://raw.githubusercontent.com/Microsoft/Virtualization-Documentation/master/tlfs/Hypervisor%20Top%20Level%20Functional%20Specification%20v6.0b.pdf
+[2] https://lore.kernel.org/lkml/20231108111806.92604-1-nsaenz@amazon.com/
+[3] https://github.com/vianpl/qemu/tree/vsm-v1
+[4] https://github.com/vianpl/kvm-unit-tests/tree/vsm-v1
+[4] https://github.com/vianpl/linux/tree/vsm-v1
 
 ---
- fs/tracefs/inode.c |   10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 7c29f4afc23d..338c52168e61 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -53,14 +53,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
- 	return &ti->vfs_inode;
- }
- 
--static void tracefs_free_inode_rcu(struct rcu_head *rcu)
--{
--	struct tracefs_inode *ti;
--
--	ti = container_of(rcu, struct tracefs_inode, rcu);
--	kmem_cache_free(tracefs_inode_cachep, ti);
--}
--
- static void tracefs_free_inode(struct inode *inode)
- {
- 	struct tracefs_inode *ti = get_tracefs(inode);
-@@ -70,7 +62,7 @@ static void tracefs_free_inode(struct inode *inode)
- 	list_del_rcu(&ti->list);
- 	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
- 
--	call_rcu(&ti->rcu, tracefs_free_inode_rcu);
-+	kfree_rcu(ti, rcu);
- }
- 
- static ssize_t default_read_file(struct file *file, char __user *buf,
+Anish Moorthy (1):
+  KVM: Define and communicate KVM_EXIT_MEMORY_FAULT RWX flags to
+    userspace
+
+Nicolas Saenz Julienne (17):
+  KVM: x86: hyper-v: Introduce XMM output support
+  KVM: x86: hyper-v: Introduce helpers to check if VSM is exposed to
+    guest
+  hyperv-tlfs: Update struct hv_send_ipi{_ex}'s declarations
+  KVM: x86: hyper-v: Introduce VTL awareness to Hyper-V's PV-IPIs
+  KVM: x86: hyper-v: Introduce MP_STATE_HV_INACTIVE_VTL
+  KVM: x86: hyper-v: Exit on Get/SetVpRegisters hcall
+  KVM: x86: hyper-v: Exit on TranslateVirtualAddress hcall
+  KVM: x86: hyper-v: Exit on StartVirtualProcessor and
+    GetVpIndexFromApicId hcalls
+  KVM: x86: Keep track of instruction length during faults
+  KVM: x86: Pass the instruction length on memory fault user-space exits
+  KVM: x86/mmu: Introduce infrastructure to handle non-executable
+    mappings
+  KVM: x86/mmu: Avoid warning when installing non-private memory
+    attributes
+  KVM: x86/mmu: Init memslot if memory attributes available
+  KVM: Introduce RWX memory attributes
+  KVM: x86: Take mem attributes into account when faulting memory
+  KVM: Introduce traces to track memory attributes modification.
+  KVM: x86: hyper-v: Handle VSM hcalls in user-space
+
+ Documentation/virt/kvm/api.rst     | 107 +++++++++++++++++++++++-
+ arch/x86/hyperv/hv_apic.c          |   3 +-
+ arch/x86/include/asm/hyperv-tlfs.h |   2 +-
+ arch/x86/kvm/Kconfig               |   1 +
+ arch/x86/kvm/hyperv.c              | 127 +++++++++++++++++++++++++++--
+ arch/x86/kvm/hyperv.h              |  18 ++++
+ arch/x86/kvm/mmu/mmu.c             |  91 +++++++++++++++++----
+ arch/x86/kvm/mmu/mmu_internal.h    |   9 +-
+ arch/x86/kvm/mmu/mmutrace.h        |  29 +++++++
+ arch/x86/kvm/mmu/paging_tmpl.h     |   2 +-
+ arch/x86/kvm/mmu/tdp_mmu.c         |   8 +-
+ arch/x86/kvm/svm/svm.c             |   7 +-
+ arch/x86/kvm/vmx/vmx.c             |  23 +++++-
+ arch/x86/kvm/x86.c                 |  17 +++-
+ include/asm-generic/hyperv-tlfs.h  |  16 +++-
+ include/linux/kvm_host.h           |  45 +++++++++-
+ include/trace/events/kvm.h         |  20 +++++
+ include/uapi/linux/kvm.h           |  15 ++++
+ virt/kvm/kvm_main.c                |  35 +++++++-
+ 19 files changed, 527 insertions(+), 48 deletions(-)
+
+-- 
+2.40.1
 
