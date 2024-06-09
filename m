@@ -1,112 +1,177 @@
-Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF5F1C698;
-	Sat,  8 Jun 2024 21:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB351CA89;
+	Sun,  9 Jun 2024 08:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717881793; cv=none; b=hVMkzkGm83Lria9u9mjWcxjuT0vq1vqQGzLDgn6TgsmaWDyurO1otaL3/6ODoM02RwdJ3jx5B0V0O1tK7rpxCsx52iCdHT+8m/yfLR168Yeh7tjI8/bP4eYrfm0035oo+ONAsKeX6hKsy7DaplDpdIYAiIjDUF558+aUlORyxcQ=
+	t=1717921680; cv=none; b=ZQPgzDDLcl/QSGo1gkIIy7VgMsEwPZA8zCyPrtXP8d8XXrYlQGU52loGAQ0YxcC1EyiSGobzedoZQIySNxC0PqYUjGZSC1rtprAhDXMfLSDsWxYpOiVw0IS/rMoBYRaXhDRne9RRYJyQOJdImTUKTtULF1unqy2Oy5ClxFcJuGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717881793; c=relaxed/simple;
-	bh=nPpfHqjB8ECJoQcQxd81rwO8kyHOA7R3sHnvHxyFwHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EPi9tTBVGEVwjmIu1lmqy+Bnl+YhwQRRbCAlcvtgm8ZcBIuVzmBB0kMIIcyjBsTqLgkjUjzqthV7wanWYJiXMsme/PMbUNVQXySZg1ezSe3dGHVCfY+5KkV4F/y1NX379zFXiKbwUjOma53Sal65Wp4E6eQsIVcMmZCSzSKPDAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=EZ71DIVy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OuI1V7Th; arc=none smtp.client-ip=64.147.123.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1717921680; c=relaxed/simple;
+	bh=cl9fmVF+HqNubeETqLioP3KnvOsLThBpD2QkFmQe7ZM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cHqexTzfwS2VZtl2wgHwW7NnVCV5Gnx/7CQTtZRsC5mgR0Ol7JnCxa8A4u8T7CyPwakz4HnjxjPGmTmUbnRQ0AaANnLYziwdOYhlimmw+lh8MRBNh+wfJWswxtFtJey2YKpruKScdh8GjN0zpOZ5TyKP/iYvfERvpv8/36nDwrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=c3jg9XiA; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="EZ71DIVy";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OuI1V7Th"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 10B9C1800097;
-	Sat,  8 Jun 2024 17:23:10 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sat, 08 Jun 2024 17:23:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1717881789; x=1717968189; bh=yYg7wzIf8U
-	Ce8+qz6R6GMATvHmkISuN1P+RUeT4wo50=; b=EZ71DIVyNH9rjssYyLvsTPGhGq
-	rhgZfMsRKOmKw2eTO0ApVIJiLrVEUAhgXJk4MtCH/Aj1z7rmnV5lhlpxZtYE1bXt
-	3VoPSegW4N2PNFQSIOSes2nfil4yrJVtybtjeDMzSupUmjwuqdRgIw3FQOmhy9so
-	mhazy17eIMttZZvBw1qq+/fYU4c3jKeM1Z6RaRq4CwyQKoMZyCetDg4RLOiWg7Go
-	SgOhcBR+FebK6eHm14n4ZtVUhTfnsCYF8QK6MeBshGv+xfmIeSq8F9UlW1qPeGjc
-	xa7KloZz3aEC6Wbxuf8w4C1+QL54Gs39GMrktNinomyosGRN78AEU+qyY1yw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1717881789; x=1717968189; bh=yYg7wzIf8UCe8+qz6R6GMATvHmkI
-	SuN1P+RUeT4wo50=; b=OuI1V7ThYhR87o9tdmTKzKGRr5LNmMRdCrzGUfnYHkKu
-	cKpGd3voCTHpqMqxfaMWG+TKlZW7EGNoXrQ3/Wo0HrfSSedk8GZ6t3yNiihFytJl
-	XZezf6r4wsDDeQB30xo3+eC04YwKXVNcLwgh3a+S37gdd+ojfXh8O9Ju561TEmUf
-	neh+EKqm+TSaawpLZ7+oQyCHqfe2rdW45gnQ+w+TSv+ZL2yWkOFyhk27kpaBQIRK
-	RQ/SslrwN76apqhhAHVzU8qfVAPkrKbLBcd6GGx9QDeA9sh9NMJGvgXOnmdAoJqr
-	b8c0yG8elDiacJjrE6kSOJddEftfeFAAEsRtZQqtBQ==
-X-ME-Sender: <xms:vctkZi_ZJou4ViJXB0GLAI2FxYEa93h83llvqELmeDRfOS4KGtOZsQ>
-    <xme:vctkZivP9GfrfT_T1Jkx6EOY4yTJamoq44eucpYgx1PK21xNKvJVeJPjS_rrcM8T7
-    lxJwiD6TPowgnsvwg>
-X-ME-Received: <xmr:vctkZoAvYXIehuvjywTIQK1HPjJEc8FdSw2nPfLobgaGJPYOJhtrX_Y1AjlPU05pM0GX7l5VMc-uSAcFw2CkcFqZuza2P3rf3w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedtgedgleehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlfeehmdenucfjughrpeffhf
-    fvvefukfhfgggtuggjsehttdfstddttddvnecuhfhrohhmpeffrghnihgvlhcuighuuceo
-    ugiguhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnheptdejkeduleeitedvfe
-    egvdegjeehhfdvgffgjeduuedtgeevieevtdfhheefleeknecuffhomhgrihhnpehgihht
-    hhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpegugihusegugihuuhhurdighiii
-X-ME-Proxy: <xmx:vctkZqel8RJnfssnLySoE6DfrGKmzXHihudZe2AAUNa1sg3rmBITOA>
-    <xmx:vctkZnNW7--PBrfyGjsqeNptdRUfBnjjwZcyKy-eAFiWLnU-LnusoQ>
-    <xmx:vctkZkm9fR0U_LnkVUfQDnyyIwSArCPAUB-mYHU_FpVfejhu9eGkUQ>
-    <xmx:vctkZpu_gsaXF8A8VL-_WqnLEkmkvZbFJEw0a4-_5Cd66OxVEKaoww>
-    <xmx:vctkZumlfhUgr33CAQiTNZf9iBaPdvHw09-p0crfWlLi_eAHeql01SLZ>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 8 Jun 2024 17:23:08 -0400 (EDT)
-Date: Sat, 8 Jun 2024 15:23:07 -0600
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, fsverity@lists.linux.dev, andrii@kernel.org, olsajiri@gmail.com, 
-	quentin@isovalent.com, alan.maguire@oracle.com, acme@kernel.org, eddyz87@gmail.com
-Cc: kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v4 00/12] bpf: Support dumping kfunc prototypes
- from BTF
-Message-ID: <u42jmbratxsej74zrtzn47j7evmdksswyrp6kfvr5tze36qcwt@mbl5e7fkekrz>
-References: <cover.1717881178.git.dxu@dxuuu.xyz>
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="c3jg9XiA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=REYx9XJxXex1wT0g8DdBknTJa5z8s+++8BsQM1tAkdE=;
+  b=c3jg9XiAgeKcNkg9Ypz1MXA57+I6z9Upi3oqzG67AIxQoc2Tb/l9+twd
+   o1xqjWHj9bZB/XffVTZ6y3Q5wlIBrpiRIuaxP20ZifTf9z4PP9a6/uHrQ
+   jbNAr8EHCg32T8reqfZHBfM1Bu9ssqsOLmK26M8DXHwpWqbgwQfkqJwz8
+   I=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.08,225,1712613600"; 
+   d="scan'208";a="169696895"
+Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2024 10:27:48 +0200
+From: Julia Lawall <Julia.Lawall@inria.fr>
+To: linux-block@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com,
+	linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH 00/14] replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+Date: Sun,  9 Jun 2024 10:27:12 +0200
+Message-Id: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1717881178.git.dxu@dxuuu.xyz>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 08, 2024 at 03:15:56PM GMT, Daniel Xu wrote:
-> This patchset enables both detecting as well as dumping compilable
-> prototypes for kfuncs.
-> 
-> The first commit instructs pahole to DECL_TAG kfuncs when available.
-> This requires v1.27 or newer. v1.27 is nearing release at time of
-> writing. Following this, users will be able to look at BTF inside
-> vmlinux (or modules) and check if the kfunc they want is available.
-> 
-> The final commit teaches bpftool how to dump kfunc prototypes. This
-> is done for developer convenience.
-> 
-> The rest of the commits are fixups to enable selftests to use the
-> newly dumped kfunc prototypes. With these, selftests will regularly
-> exercise the newly added codepaths.
+Since SLOB was removed, it is not necessary to use call_rcu
+when the callback only performs kmem_cache_free. Use
+kfree_rcu() directly.
 
-I tested that this patchset works for both pahole:
+The changes were done using the following Coccinelle semantic patch.
+This semantic patch is designed to ignore cases where the callback
+function is used in another way.
 
-    <1.27: https://github.com/kernel-patches/bpf/pull/7168
-    >=1.27: https://github.com/kernel-patches/bpf/pull/7163
+// <smpl>
+@r@
+expression e;
+local idexpression e2;
+identifier cb,f;
+position p;
+@@
 
-I meant to include that in the cover letter but I forgot. I'll try to
-remember next time.
+(
+call_rcu(...,e2)
+|
+call_rcu(&e->f,cb@p)
+)
 
+@r1@
+type T;
+identifier x,r.cb;
+@@
 
+ cb(...) {
+(
+   kmem_cache_free(...);
+|
+   T x = ...;
+   kmem_cache_free(...,x);
+|
+   T x;
+   x = ...;
+   kmem_cache_free(...,x);
+)
+ }
+
+@s depends on r1@
+position p != r.p;
+identifier r.cb;
+@@
+
+ cb@p
+
+@script:ocaml@
+cb << r.cb;
+p << s.p;
+@@
+
+Printf.eprintf "Other use of %s at %s:%d\n"
+   cb (List.hd p).file (List.hd p).line
+
+@depends on r1 && !s@
+expression e;
+identifier r.cb,f;
+position r.p;
+@@
+
+- call_rcu(&e->f,cb@p)
++ kfree_rcu(e,f)
+
+@r1a depends on !s@
+type T;
+identifier x,r.cb;
+@@
+
+- cb(...) {
+(
+-  kmem_cache_free(...);
+|
+-  T x = ...;
+-  kmem_cache_free(...,x);
+|
+-  T x;
+-  x = ...;
+-  kmem_cache_free(...,x);
+)
+- }
+// </smpl>
+
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
+---
+
+ arch/powerpc/kvm/book3s_mmu_hpte.c  |    8 +-------
+ block/blk-ioc.c                     |    9 +--------
+ drivers/net/wireguard/allowedips.c  |    9 ++-------
+ fs/ecryptfs/dentry.c                |    8 +-------
+ fs/nfsd/nfs4state.c                 |    9 +--------
+ fs/tracefs/inode.c                  |   10 +---------
+ kernel/time/posix-timers.c          |    9 +--------
+ kernel/workqueue.c                  |    8 +-------
+ net/bridge/br_fdb.c                 |    9 +--------
+ net/can/gw.c                        |   13 +++----------
+ net/ipv4/fib_trie.c                 |    8 +-------
+ net/ipv4/inetpeer.c                 |    9 ++-------
+ net/ipv6/ip6_fib.c                  |    9 +--------
+ net/ipv6/xfrm6_tunnel.c             |    8 +-------
+ net/kcm/kcmsock.c                   |   10 +---------
+ net/netfilter/nf_conncount.c        |   10 +---------
+ net/netfilter/nf_conntrack_expect.c |   10 +---------
+ net/netfilter/xt_hashlimit.c        |    9 +--------
+ 18 files changed, 22 insertions(+), 143 deletions(-)
