@@ -1,110 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F8414AD3E;
-	Mon, 10 Jun 2024 16:54:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B502D1EA6F;
+	Mon, 10 Jun 2024 17:02:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718038467; cv=none; b=EMaclGYCNEHDHg/caw29vEAKHx8iaSu/lY5WHxZocHkchtrdLI9Ny75+ehTzVCaHdAfY32OWcMdnhkbbcBqhkYPW0Sipuci2C9zH7IBQ6oItClMzkrd1dlZpENX7iQidbTUl41+D2no6cOUBHZLfGY/A7VVIZynEzqkonSmIV/Y=
+	t=1718038926; cv=none; b=D13GHqW+hqVBrxmgP87LogMWHuwVKCNrsJOEXpU2q/fpuulY0SZ1D48eXVBapQ2aPSLaEJ1lpbWeEMj/txE+f/zoqwmHZVlU1nhNQvNxWZqhIb9jvXL22PZ9ykYgMtupb84KtawluHjR6s0YXGwvlxUcaLOq+lS5hHrOW/jwt7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718038467; c=relaxed/simple;
-	bh=IHKjkJJmNUwQBgZoGJ0QQEMWCIHokZu18EE5Cx8Z+f8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GyCA0oUHdIJE5GpENnff5CrnAxFvYo6LJT5FYhdFdplqs2z6a0GYma6flsyVKlVbWpl98N1a2UmIdwHkXvJm4qyPc3ar56aZ9rwvS7IvRlNt2hyYhfzmOFQeWCzk19TQWsxqAmyW0fzlE5f6Di1GIPhZTcXL3o4vFgLLlNzwxw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599B4C2BBFC;
-	Mon, 10 Jun 2024 16:54:24 +0000 (UTC)
-Date: Mon, 10 Jun 2024 12:54:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yan Zhai <yan@cloudflare.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, David Ahern
- <dsahern@kernel.org>, Abhishek Chauhan <quic_abchauha@quicinc.com>, Mina
- Almasry <almasrymina@google.com>, Florian Westphal <fw@strlen.de>,
- Alexander Lobakin <aleksander.lobakin@intel.com>, David Howells
- <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann
- <daniel@iogearbox.net>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Pavel Begunkov
- <asml.silence@gmail.com>, linux-kernel@vger.kernel.org,
- kernel-team@cloudflare.com, Jesper Dangaard Brouer <hawk@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Neil Horman <nhorman@tuxdriver.com>,
- linux-trace-kernel@vger.kernel.org, Dan Carpenter
- <dan.carpenter@linaro.org>
-Subject: Re: [RFC v3 net-next 1/7] net: add rx_sk to trace_kfree_skb
-Message-ID: <20240610125422.252da487@rorschach.local.home>
-In-Reply-To: <CAO3-PbqRNRduSAyN9CtaxPFsOs9xtGHruu1ACfJ5e-mrvTo2Cw@mail.gmail.com>
-References: <cover.1717529533.git.yan@cloudflare.com>
-	<983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
-	<20240605195750.1a225963@gandalf.local.home>
-	<CAO3-PbqRNRduSAyN9CtaxPFsOs9xtGHruu1ACfJ5e-mrvTo2Cw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718038926; c=relaxed/simple;
+	bh=WFeffItMXMcz+XG1+wQHxMIyeQdKyjz6JLP3Gz+RuNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWU4H/iXSNHiZmjRBFCh7p7sjVWaoVlANLr07adgarlHfFA/FZGdF9T9i/0l97RGZJFmYNlv6nvLzvPQ4hDAjDoSebjCDFYc3EYEWOBHCuM22OsWbj8DnEbWcjcL8IgJPqCePbU0hu6T3GvRYULyoHFZzZa0VzNHbL4+i5Cc/ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ti3YrOvh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ti3YrOvh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F37C2BBFC;
+	Mon, 10 Jun 2024 17:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718038926;
+	bh=WFeffItMXMcz+XG1+wQHxMIyeQdKyjz6JLP3Gz+RuNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ti3YrOvh6kr5L5/NEmkjAc5sZJGS2uB9eaN9LfnQmvR7CYr1QvL70SPO1fFt+U3b+
+	 doxRofUpDLlm82KDuIFhpGfxLe1vkjZjOSUgNJ0+fLX2LXO7StMGCMkXufzn8drQN0
+	 6OiNHM6Uf/ryvFLlmDbEEHSfOU8ryT/2wjZqzX6aV4iZP3D7Gd78TistJY9yFMMTF4
+	 UEcLNDRf5z0B0KLJWltETSvBp/o3kbaYzMNKlw8C8TXulzA6FAytCGJHVjUX+b1oWu
+	 UeSi5LdyRoEd5kDGRZlhTAcaT5HWBWlYEdD+5IdM7uZStDBCz/CJGdxOi9VuvbLqOD
+	 9AOlEQ2ImzyDw==
+Date: Mon, 10 Jun 2024 10:02:05 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v2 0/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <202406101001.D469C9A@keescook>
+References: <20240606150143.876469296@goodmis.org>
+ <aa8c49d5-1a51-9256-6327-d47036b343fe@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa8c49d5-1a51-9256-6327-d47036b343fe@igalia.com>
 
-On Thu, 6 Jun 2024 10:37:46 -0500
-Yan Zhai <yan@cloudflare.com> wrote:
-
-> > name: kfree_skb
-> > ID: 1799
-> > format:
-> >         field:unsigned short common_type;       offset:0;       size:2; signed:0;
-> >         field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-> >         field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-> >         field:int common_pid;   offset:4;       size:4; signed:1;
-> >
-> >         field:void * skbaddr;   offset:8;       size:8; signed:0;
-> >         field:void * location;  offset:16;      size:8; signed:0;
-> >         field:unsigned short protocol;  offset:24;      size:2; signed:0;
-> >         field:enum skb_drop_reason reason;      offset:28;      size:4; signed:0;
-> >
-> > Notice that "protocol" is 2 bytes in size at offset 24, but "reason" starts
-> > at offset 28. This means at offset 26, there's a 2 byte hole.
-> >  
-> The reason I added the pointer as the last argument is trying to
-> minimize the surprise to existing TP users, because for common ABIs
-> it's fine to omit later arguments when defining a function, but it
-> needs change and recompilation if the order of arguments changed.
-
-Nothing should be hard coding the offsets of the fields. This is
-exported to user space so that tools can see where the fields are.
-That's the purpose of libtraceevent. The fields should be movable and
-not affect anything. There should be no need to recompile.
-
+On Fri, Jun 07, 2024 at 04:54:41PM -0300, Guilherme G. Piccoli wrote:
+> On 06/06/2024 12:01, Steven Rostedt wrote:
+> > Reserve unspecified location of physical memory from kernel command line
+> > [...]
+> > Solution:
+> > 
+> > The solution I have come up with is to introduce a new "reserve_mem=" kernel
+> > command line. This parameter takes the following format:
+> > 
+> >   reserve_mem=nn:align:label
+> > 
+> > Where nn is the size of memory to reserve, the align is the alignment of
+> > that memory, and label is the way for other sub-systems to find that memory.
+> > This way the kernel command line could have:
+> > 
+> >   reserve_mem=12M:4096:oops   ramoops.mem_name=oops
+> > 
+> > At boot up, the kernel will search for 12 megabytes in usable memory regions
+> > with an alignment of 4096. It will start at the highest regions and work its
+> > way down (for those old devices that want access to lower address DMA). When
+> > it finds a region, it will save it off in a small table and mark it with the
+> > "oops" label. Then the pstore ramoops sub-system could ask for that memory
+> > and location, and it will map itself there.
+> > 
+> > This prototype allows for 8 different mappings (which may be overkill, 4 is
+> > probably plenty) with 16 byte size to store the label.
+> > 
+> > I have tested this and it works for us to solve the above problem. We can
+> > update the kernel and command line and increase the size of pstore without
+> > needing to update the firmware, or knowing every memory layout of each
+> > board. I only tested this locally, it has not been tested in the field.
+> > 
 > 
-> Looking at the actual format after the change, it does not add a new
-> hole since protocol and reason are already packed into the same 8-byte
-> block, so rx_skaddr starts at 8-byte aligned offset:
+> Hi Steve, first of all, thanks for this work! This is much appreciated.
+> The kdumpst tooling (Arch Linux) makes use of pstore when available, and
+> the recommendation so far was to reserve memory somehow, like "mem=" or
+> use kdump instead, if no free RAM area was available.
 > 
-> # cat /sys/kernel/debug/tracing/events/skb/kfree_skb/format
-> name: kfree_skb
-> ID: 2260
-> format:
->         field:unsigned short common_type;       offset:0;
-> size:2; signed:0;
->         field:unsigned char common_flags;       offset:2;
-> size:1; signed:0;
->         field:unsigned char common_preempt_count;       offset:3;
->  size:1; signed:0;
->         field:int common_pid;   offset:4;       size:4; signed:1;
+> With your solution, things get way more "elegant". Also, I think we all
+> know pstore is not 100% reliable, specially the RAM backend due to
+> already mentioned reasons (like FW memory retraining, ECC memory, etc),
+> but it's great we have a mechanism to **try it**. If it works, awesome -
+> for statistical analysis, this is very useful; pstore has been used with
+> success in the Steam Deck, for example.
 > 
->         field:void * skbaddr;   offset:8;       size:8; signed:0;
->         field:void * location;  offset:16;      size:8; signed:0;
->         field:unsigned short protocol;  offset:24;      size:2; signed:0;
->         field:enum skb_drop_reason reason;      offset:28;
-> size:4; signed:0;
->         field:void * rx_skaddr; offset:32;      size:8; signed:0;
+> With all that said, I've tested your patches on top of 6.10-rc2 in 2
+> qemu VMs (one running legacy BIOS - seabios - and the other UEFI - using
+> ovmf) and on Steam Deck, and it's working flawlessly. I've tested only
+> using ramoops as module.
 > 
-> Do you think we still need to change the order?
+> Some code review in the patches themselves (like a missing
+> EXPORT_SYMBOL_GPL), but all in all, that's a great addition! Feel free
+> to add my:
+> 
+> Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-Up to you, just wanted to point it out.
+Yeah, I think this looks good as long as it's understood to be a "best
+effort", and will radically simplify doing qemu testing, etc. I expect I
+can take v3 into -next with the fixes Guilherme noted.
 
--- Steve
+-Kees
 
+-- 
+Kees Cook
