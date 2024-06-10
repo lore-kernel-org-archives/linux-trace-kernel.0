@@ -1,513 +1,164 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0C278C9E;
-	Mon, 10 Jun 2024 11:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6720E7F498
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718017602; cv=none; b=WaYlQMDRr0y8aevJIeXNoMgm2JcfSJ7uThad3LtnX2Elr3rIaAshHAI+yMgSi6DLouMiIlgjZ5KdbsKeqbxubUAO5PYwRv9i6bfZVNDRXZgns36Tr60utmdFyQYpiVWCPHd2Szm/FhlGmIeSrvNwCeDmhpUaJe7YPMrNnH4kCGo=
+	t=1718021791; cv=none; b=NJmxc9eIv0HPvHLiW9eSfLPqvQiM4Mjoxb/W+EJCsCyyoaA874SR2uCZYDqbaIw9MQsC8PpHHOiyQlQzfDpfyKAC/tMd5TCpNmoh7p6uUTAMaaOO5LjBeKN98EWvtO/K5XRbG5Cj9i45FMZkyX4qEcK+qQu4wG8E0c3TKLSeetI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718017602; c=relaxed/simple;
-	bh=eN89P4Gijgwbd1kZfDZOo9Byb5RugBJUfe2RaqfLcY0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXfLAIsW5CmYDC5zlM7aUQ51tjibX+Y7NjEZrh6BJWayPDammsMHmbYM4fSTNTsCyZhhggpEyRJRcwyIF/vzMWLkjs6oEqXOYqtUptMqH7ETe6uzuiadIk7WEpl8vulX3K+dQfFmzw/Tf4rwpV6afk/xZnH/CC5OId8zwC/KFSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GVXFs51Y; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718021791; c=relaxed/simple;
+	bh=wqKQas949IIXrsipBtEwY28UkuazUZ16a21oKmwHiv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BnJsBz8jiP+UlSkvrY8kh7DV5cAQj4u5vX9PiNhlK8qVvDN5UMgaPFFRKPcGM1R2luJ4IKdoLPGFLCz+K2+aKF0UDMxTw5ON1E0sK7588TcFqtpMl1zZEmbZL2gwyO4nNCKCjHHo16lVGdeT94hIP45IGDcwjsDn8bspWRxup1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=fqDNmK54; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVXFs51Y"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6ef8bf500dso222401066b.0;
-        Mon, 10 Jun 2024 04:06:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fqDNmK54"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-627ea4e0becso45985617b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718017599; x=1718622399; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v/RJsnygqWaLtOBqetJ6C6fOKKEH8iBaTz+Irtp/U4Q=;
-        b=GVXFs51Yt4dUCs9Vf7mANaWZUu85lOAcLqNMUdgtbRYkJiTGYf6zzMSGxROYHYVEEM
-         zNvqJw87u5YmIiNTri8Dcw+9FGZNfQDUP95ofCIdbGFZP37LNRVq5QCC4dQE7UoswmZZ
-         U30b6foiw7X7YftJIwF8epdqgasMKmTRCePh4TsTTfBO7q50IDYQ3Aeqorje1yp0j3XW
-         4ZRBo+Ls6QCEjG6mixe9lKtAteZekOSJyq6PVyfb+hlrxos6JJzeBn/WHsS/nvnYVNWd
-         7zc4QgHR5tdL48Y1D6E/rpkEWsx/Ow1KUAEfrUnFzzc+iZYVkoE/IInpeWV65xLTD2B2
-         SkLQ==
+        d=ziepe.ca; s=google; t=1718021788; x=1718626588; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sLBhiGTWQPkGSzXF44ZdseZQqm/Ay7CrbOb4xYeFmxw=;
+        b=fqDNmK54kqBa6EQtJoGnldfHFauQ6kcsHN8jJRtx3a3rll3Um/eyPaj3jVHFB+tyw7
+         oWllKFUvqeIWDHF887kAzWvvU2KdZlizeuujfZw56cW3rHyG0oOcnpydIhz7FnSl+hXL
+         U1KjenD06DybeKg4nnOats3t12CBNccFG6N8XmD8XbhnL0U0M5o2hd2PsPLpd5/9lTX1
+         NjMsJx1Nc/2JFedHyuBzS1TuVPQ0pno023UGN7oqWLiAo0tvFSQm4VVsGEzDH5kI2kIh
+         JYXjXf1y56GIE8lsAofXPKrSTQcUoBAoqT3pE/mAb6WpQ96S6WM6PKQTPTnkDqCnPnsn
+         7TJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718017599; x=1718622399;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v/RJsnygqWaLtOBqetJ6C6fOKKEH8iBaTz+Irtp/U4Q=;
-        b=Mma/Guv4BOrmPzEQK9AxYObwqBWKMOmnb/pX4VDcK86QwUakglNwLtP/EikZD2Sifm
-         3u1Ba3H/zqBuSyppftbu8LYkMuRM9NWFpUiHjQIeYAQHeQXGxoSsQeerBHqBHu1M/dsC
-         5byLehcTUdK1KTZusOFXCSsMHmW8UH2JI9AA68wB/O1kC4JQyjmAouavJuQfeXvMPAJh
-         De02QJUTySBtA6HL9qIpU7jMHhuBFtx1CxoUCcNu+qgAH8USVxQOk9kzTA1bxgKzxOpw
-         1GhFz5GZj+ooTCBTREe5/ZgcwYsd3ZiMuxalmf+crM488mp2f1s7jDGzgg1B9E9bsGT7
-         FcIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBhE1M5i7kCtSHUUAoPr2RXWI0UVNssl8zAcIHXhJm/W1dnrDwC5FCY/LaWGCGPN3PLgW09tIxdwdw/DXCfMZbOgJjGi+LDS14wiIW6CFI2Qw3kufVHAjiOQxIQtqtm4DVlzQov4fae5RNuz7OXVDz6f6qjbXO8CZCGDM3txmeK4bxsNx7
-X-Gm-Message-State: AOJu0YyzTKI875uypNr7Hw3Q3a5pK8MaYDiC4gVS6RnYFeWgmDnCCeNO
-	3pW4P1GK07ttPuR6IxPFIFDUEEU8B7PDKgQGjJCGA1KrRuug1xe4
-X-Google-Smtp-Source: AGHT+IHJB0mDHbzvs0d/HvBmKjQMT/69SEguC+92/PgSRWl+LReXxTJ6A0PHSsyRZkT8BmCzt+L8kg==
-X-Received: by 2002:a17:907:9723:b0:a6f:1f7b:6a8b with SMTP id a640c23a62f3a-a6f1f7b6be5mr163160566b.66.1718017598781;
-        Mon, 10 Jun 2024 04:06:38 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f20e40072sm94792566b.89.2024.06.10.04.06.37
+        d=1e100.net; s=20230601; t=1718021788; x=1718626588;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sLBhiGTWQPkGSzXF44ZdseZQqm/Ay7CrbOb4xYeFmxw=;
+        b=dsGqF3aEaJEI7uhPu0jLgnW0yDKLpWX2d8yA2keUkmVdzkq2WvouX5jAOtcdmAv6At
+         pQB80lKup+1wf1Ck4EpqEkP997o1Llg5x528HzIPfLhVFtYtRn5vMNIkFGz8DOEt/bmS
+         umlNDDlEcwzJVb8PUto+eTxhFDlJ+JHh2aEGIsCE8etZxlUePVQeji63bpD+UjO+Sx7/
+         MD1Zv2dwg/JsR0Siajo1ngThC6bTLIO6DP4CEHIgpCGO2bzXJMLKnzyfHiN4DWzTI4DG
+         IKyXgF2fldrdlqC9nP2A2my/46lLCG3559qQxhCmXDTRLaPqDGL/ZtkMkFLWVkiLOy+f
+         TQNA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6cC6mPYdjyYzOnMXe6UdR21KX/p+rrKeC6VMDxU3sSoT5iSkSeqijj83bIwX6i9RtgPVjngyh1d0CJlVC+JcMtewMbDT+O5iGmhOqrUfOonix
+X-Gm-Message-State: AOJu0YxDubjJ8GLxaluJxSG4ZchNUcfFhjzZRSUrbEPOPuO7ubP01qYJ
+	Q08B1w3JCmqhuusVNBx3P3m4KpPdi5688qWxHRkir2eMZhBqAXwWj9ARzc0Vgn0=
+X-Google-Smtp-Source: AGHT+IHKUHpBEHdEL4hUatHn2U1DbF50V0YQ7tp+HSd+jRZUj7MSdsNfIMBQ/mHVI5dhq2ZCcmRiZw==
+X-Received: by 2002:a81:6fd5:0:b0:627:dca5:407b with SMTP id 00721157ae682-62cd55c0a56mr87073917b3.13.1718021786857;
+        Mon, 10 Jun 2024 05:16:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f6213dfsm45360126d6.23.2024.06.10.05.16.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 04:06:38 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 10 Jun 2024 13:06:36 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+        Mon, 10 Jun 2024 05:16:26 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sGdwn-00Di9E-NN;
+	Mon, 10 Jun 2024 09:16:25 -0300
+Date: Mon, 10 Jun 2024 09:16:25 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: David Wei <dw@davidwei.uk>, David Ahern <dsahern@kernel.org>,
+	Mina Almasry <almasrymina@google.com>,
+	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
- uprobe_consumer
-Message-ID: <ZmbePPIKqc6XuVjL@krava>
-References: <20240604200221.377848-1-jolsa@kernel.org>
- <20240604200221.377848-2-jolsa@kernel.org>
- <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
- <20240605175619.GH25006@redhat.com>
- <ZmDPQH2uiPYTA_df@krava>
- <ZmHn43Af4Kwlxoyc@krava>
- <CAEf4BzaFcpqFc8w6dH5oOJNKsAXZjs-KCFAXLp8TMBtS5ooo4g@mail.gmail.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <20240610121625.GI791043@ziepe.ca>
+References: <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+ <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+ <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+ <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+ <20240607145247.GG791043@ziepe.ca>
+ <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
+ <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzaFcpqFc8w6dH5oOJNKsAXZjs-KCFAXLp8TMBtS5ooo4g@mail.gmail.com>
+In-Reply-To: <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
 
-On Thu, Jun 06, 2024 at 09:52:39AM -0700, Andrii Nakryiko wrote:
-> On Thu, Jun 6, 2024 at 9:46 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Wed, Jun 05, 2024 at 10:50:11PM +0200, Jiri Olsa wrote:
-> > > On Wed, Jun 05, 2024 at 07:56:19PM +0200, Oleg Nesterov wrote:
-> > > > On 06/05, Andrii Nakryiko wrote:
-> > > > >
-> > > > > so any such
-> > > > > limitations will cause problems, issue reports, investigation, etc.
-> > > >
-> > > > Agreed...
-> > > >
-> > > > > As one possible solution, what if we do
-> > > > >
-> > > > > struct return_instance {
-> > > > >     ...
-> > > > >     u64 session_cookies[];
-> > > > > };
-> > > > >
-> > > > > and allocate sizeof(struct return_instance) + 8 *
-> > > > > <num-of-session-consumers> and then at runtime pass
-> > > > > &session_cookies[i] as data pointer to session-aware callbacks?
-> > > >
-> > > > I too thought about this, but I guess it is not that simple.
-> > > >
-> > > > Just for example. Suppose we have 2 session-consumers C1 and C2.
-> > > > What if uprobe_unregister(C1) comes before the probed function
-> > > > returns?
-> > > >
-> > > > We need something like map_cookie_to_consumer().
-> > >
-> > > I guess we could have hash table in return_instance that gets 'consumer -> cookie' ?
-> >
-> > ok, hash table is probably too big for this.. I guess some solution that
-> > would iterate consumers and cookies made sure it matches would be fine
-> >
+On Mon, Jun 10, 2024 at 02:07:01AM +0100, Pavel Begunkov wrote:
+> On 6/10/24 01:37, David Wei wrote:
+> > On 2024-06-07 17:52, Jason Gunthorpe wrote:
+> > > IMHO it seems to compose poorly if you can only use the io_uring
+> > > lifecycle model with io_uring registered memory, and not with DMABUF
+> > > memory registered through Mina's mechanism.
+> > 
+> > By this, do you mean io_uring must be exclusively used to use this
+> > feature?
+> > 
+> > And you'd rather see the two decoupled, so userspace can register w/ say
+> > dmabuf then pass it to io_uring?
 > 
-> Yes, I was hoping to avoid hash tables for this, and in the common
-> case have no added overhead.
+> Personally, I have no clue what Jason means. You can just as
+> well say that it's poorly composable that write(2) to a disk
+> cannot post a completion into a XDP ring, or a netlink socket,
+> or io_uring's main completion queue, or name any other API.
 
-hi,
-here's first stab on that.. the change below:
-  - extends current handlers with extra argument rather than adding new
-    set of handlers
-  - store session consumers objects within return_instance object and
-  - iterate these objects ^^^ in handle_uretprobe_chain
+There is no reason you shouldn't be able to use your fast io_uring
+completion and lifecycle flow with DMABUF backed memory. Those are not
+widly different things and there is good reason they should work
+together.
 
-I guess it could be still polished, but I wonder if this could
-be the right direction to do this.. thoughts? ;-)
+Pretending they are totally different just because two different
+people wrote them is a very siloed view.
 
-thanks,
-jirka
+> The devmem TCP callback can implement it in a way feasible to
+> the project, but it cannot directly post events to an unrelated
+> API like io_uring. And devmem attaches buffers to a socket,
+> for which a ring for returning buffers might even be a nuisance.
 
+If you can't compose your io_uring completion mechanism with a DMABUF
+provided backing store then I think it needs more work.
 
----
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f46e0ca0169c..4e40e8352eac 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -34,15 +34,19 @@ enum uprobe_filter_ctx {
- };
- 
- struct uprobe_consumer {
--	int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
-+	int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs,
-+			unsigned long *data);
- 	int (*ret_handler)(struct uprobe_consumer *self,
- 				unsigned long func,
--				struct pt_regs *regs);
-+				struct pt_regs *regs,
-+				unsigned long *data);
- 	bool (*filter)(struct uprobe_consumer *self,
- 				enum uprobe_filter_ctx ctx,
- 				struct mm_struct *mm);
- 
- 	struct uprobe_consumer *next;
-+	bool is_session;
-+	unsigned int id;
- };
- 
- #ifdef CONFIG_UPROBES
-@@ -80,6 +84,12 @@ struct uprobe_task {
- 	unsigned int			depth;
- };
- 
-+struct session_consumer {
-+	long cookie;
-+	unsigned int id;
-+	int rc;
-+};
-+
- struct return_instance {
- 	struct uprobe		*uprobe;
- 	unsigned long		func;
-@@ -88,6 +98,8 @@ struct return_instance {
- 	bool			chained;	/* true, if instance is nested */
- 
- 	struct return_instance	*next;		/* keep as stack */
-+	int			session_cnt;
-+	struct session_consumer	sc[1];		/* 1 for zero item marking the end */
- };
- 
- enum rp_check {
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2c83ba776fc7..cbd71dc06ef0 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -63,6 +63,8 @@ struct uprobe {
- 	loff_t			ref_ctr_offset;
- 	unsigned long		flags;
- 
-+	unsigned int		session_cnt;
-+
- 	/*
- 	 * The generic code assumes that it has two members of unknown type
- 	 * owned by the arch-specific code:
-@@ -750,11 +752,30 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
- 	return uprobe;
- }
- 
-+static void
-+uprobe_consumer_account(struct uprobe *uprobe, struct uprobe_consumer *uc)
-+{
-+	static unsigned int session_id;
-+
-+	if (uc->is_session) {
-+		uprobe->session_cnt++;
-+		uc->id = ++session_id ?: ++session_id;
-+	}
-+}
-+
-+static void
-+uprobe_consumer_unaccount(struct uprobe *uprobe, struct uprobe_consumer *uc)
-+{
-+	if (uc->is_session)
-+		uprobe->session_cnt--;
-+}
-+
- static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
- 	down_write(&uprobe->consumer_rwsem);
- 	uc->next = uprobe->consumers;
- 	uprobe->consumers = uc;
-+	uprobe_consumer_account(uprobe, uc);
- 	up_write(&uprobe->consumer_rwsem);
- }
- 
-@@ -773,6 +794,7 @@ static bool consumer_del(struct uprobe *uprobe, struct uprobe_consumer *uc)
- 		if (*con == uc) {
- 			*con = uc->next;
- 			ret = true;
-+			uprobe_consumer_unaccount(uprobe, uc);
- 			break;
- 		}
- 	}
-@@ -1744,6 +1766,23 @@ static struct uprobe_task *get_utask(void)
- 	return current->utask;
- }
- 
-+static size_t ri_size(int session_cnt)
-+{
-+	struct return_instance *ri __maybe_unused;
-+
-+	return sizeof(*ri) + session_cnt * sizeof(ri->sc[0]);
-+}
-+
-+static struct return_instance *alloc_return_instance(int session_cnt)
-+{
-+	struct return_instance *ri;
-+
-+	ri = kzalloc(ri_size(session_cnt), GFP_KERNEL);
-+	if (ri)
-+		ri->session_cnt = session_cnt;
-+	return ri;
-+}
-+
- static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
- {
- 	struct uprobe_task *n_utask;
-@@ -1756,11 +1795,11 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
- 
- 	p = &n_utask->return_instances;
- 	for (o = o_utask->return_instances; o; o = o->next) {
--		n = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
-+		n = alloc_return_instance(o->session_cnt);
- 		if (!n)
- 			return -ENOMEM;
- 
--		*n = *o;
-+		memcpy(n, o, ri_size(o->session_cnt));
- 		get_uprobe(n->uprobe);
- 		n->next = NULL;
- 
-@@ -1853,35 +1892,38 @@ static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
- 	utask->return_instances = ri;
- }
- 
--static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
-+static struct return_instance *
-+prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
-+		  struct return_instance *ri, int session_cnt)
- {
--	struct return_instance *ri;
- 	struct uprobe_task *utask;
- 	unsigned long orig_ret_vaddr, trampoline_vaddr;
- 	bool chained;
- 
- 	if (!get_xol_area())
--		return;
-+		return ri;
- 
- 	utask = get_utask();
- 	if (!utask)
--		return;
-+		return ri;
- 
- 	if (utask->depth >= MAX_URETPROBE_DEPTH) {
- 		printk_ratelimited(KERN_INFO "uprobe: omit uretprobe due to"
- 				" nestedness limit pid/tgid=%d/%d\n",
- 				current->pid, current->tgid);
--		return;
-+		return ri;
- 	}
- 
--	ri = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
--	if (!ri)
--		return;
-+	if (!ri) {
-+		ri = alloc_return_instance(session_cnt);
-+		if (!ri)
-+			return NULL;
-+	}
- 
- 	trampoline_vaddr = get_trampoline_vaddr();
- 	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
- 	if (orig_ret_vaddr == -1)
--		goto fail;
-+		return ri;
- 
- 	/* drop the entries invalidated by longjmp() */
- 	chained = (orig_ret_vaddr == trampoline_vaddr);
-@@ -1899,7 +1941,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
- 			 * attack from user-space.
- 			 */
- 			uprobe_warn(current, "handle tail call");
--			goto fail;
-+			return ri;
- 		}
- 		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
- 	}
-@@ -1914,9 +1956,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
- 	ri->next = utask->return_instances;
- 	utask->return_instances = ri;
- 
--	return;
-- fail:
--	kfree(ri);
-+	return NULL;
- }
- 
- /* Prepare to single-step probed instruction out of line. */
-@@ -2069,44 +2109,90 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- {
- 	struct uprobe_consumer *uc;
- 	int remove = UPROBE_HANDLER_REMOVE;
-+	struct session_consumer *sc = NULL;
-+	struct return_instance *ri = NULL;
- 	bool need_prep = false; /* prepare return uprobe, when needed */
- 
- 	down_read(&uprobe->register_rwsem);
--	for (uc = uprobe->consumers; uc; uc = uc->next) {
-+	if (uprobe->session_cnt) {
-+		ri = alloc_return_instance(uprobe->session_cnt);
-+		if (!ri)
-+			goto out;
-+	}
-+	for (uc = uprobe->consumers, sc = &ri->sc[0]; uc; uc = uc->next) {
- 		int rc = 0;
- 
- 		if (uc->handler) {
--			rc = uc->handler(uc, regs);
-+			rc = uc->handler(uc, regs, uc->is_session ? &sc->cookie : NULL);
- 			WARN(rc & ~UPROBE_HANDLER_MASK,
- 				"bad rc=0x%x from %ps()\n", rc, uc->handler);
- 		}
- 
--		if (uc->ret_handler)
-+		if (uc->is_session) {
-+			need_prep |= !rc;
-+			remove = 0;
-+			sc->id = uc->id;
-+			sc->rc = rc;
-+			sc++;
-+		} else if (uc->ret_handler) {
- 			need_prep = true;
-+		}
- 
- 		remove &= rc;
- 	}
- 
- 	if (need_prep && !remove)
--		prepare_uretprobe(uprobe, regs); /* put bp at return */
-+		ri = prepare_uretprobe(uprobe, regs, ri, uprobe->session_cnt); /* put bp at return */
-+	kfree(ri);
- 
- 	if (remove && uprobe->consumers) {
- 		WARN_ON(!uprobe_is_active(uprobe));
- 		unapply_uprobe(uprobe, current->mm);
- 	}
-+ out:
- 	up_read(&uprobe->register_rwsem);
- }
- 
-+static struct session_consumer *
-+consumer_find(struct session_consumer *sc, struct uprobe_consumer *uc)
-+{
-+	for (; sc && sc->id; sc++) {
-+		if (sc->id == uc->id)
-+			return sc;
-+	}
-+	return NULL;
-+}
-+
- static void
- handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
- {
- 	struct uprobe *uprobe = ri->uprobe;
-+	struct session_consumer *sc, *tmp;
- 	struct uprobe_consumer *uc;
- 
- 	down_read(&uprobe->register_rwsem);
--	for (uc = uprobe->consumers; uc; uc = uc->next) {
--		if (uc->ret_handler)
--			uc->ret_handler(uc, ri->func, regs);
-+	for (uc = uprobe->consumers, sc = &ri->sc[0]; uc; uc = uc->next) {
-+		long *cookie = NULL;
-+		int rc = 0;
-+
-+		if (uc->is_session) {
-+			/*
-+			 * session_consumers are in order with uprobe_consumers,
-+			 * we just need to reflect that any uprobe_consumer could
-+			 * be removed or added
-+			 */
-+			tmp = consumer_find(sc, uc);
-+			if (tmp) {
-+				rc = tmp->rc;
-+				cookie = &tmp->cookie;
-+				sc = tmp + 1;
-+			} else {
-+				rc = 1;
-+			}
-+		}
-+
-+		if (!rc && uc->ret_handler)
-+			uc->ret_handler(uc, ri->func, regs, cookie);
- 	}
- 	up_read(&uprobe->register_rwsem);
- }
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index f5154c051d2c..ae7c35379e4a 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3329,7 +3329,8 @@ uprobe_multi_link_filter(struct uprobe_consumer *con, enum uprobe_filter_ctx ctx
- }
- 
- static int
--uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *regs)
-+uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *regs,
-+			  unsigned long *data)
- {
- 	struct bpf_uprobe *uprobe;
- 
-@@ -3338,7 +3339,8 @@ uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *regs)
- }
- 
- static int
--uprobe_multi_link_ret_handler(struct uprobe_consumer *con, unsigned long func, struct pt_regs *regs)
-+uprobe_multi_link_ret_handler(struct uprobe_consumer *con, unsigned long func, struct pt_regs *regs,
-+			      unsigned long *data)
- {
- 	struct bpf_uprobe *uprobe;
- 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8541fa1494ae..f7b17f08344c 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -88,9 +88,11 @@ static struct trace_uprobe *to_trace_uprobe(struct dyn_event *ev)
- static int register_uprobe_event(struct trace_uprobe *tu);
- static int unregister_uprobe_event(struct trace_uprobe *tu);
- 
--static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs);
-+static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs,
-+			     unsigned long *data);
- static int uretprobe_dispatcher(struct uprobe_consumer *con,
--				unsigned long func, struct pt_regs *regs);
-+				unsigned long func, struct pt_regs *regs,
-+				unsigned long *data);
- 
- #ifdef CONFIG_STACK_GROWSUP
- static unsigned long adjust_stack_addr(unsigned long addr, unsigned int n)
-@@ -1500,7 +1502,8 @@ trace_uprobe_register(struct trace_event_call *event, enum trace_reg type,
- 	}
- }
- 
--static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
-+static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs,
-+			     unsigned long *data)
- {
- 	struct trace_uprobe *tu;
- 	struct uprobe_dispatch_data udd;
-@@ -1530,7 +1533,8 @@ static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
- }
- 
- static int uretprobe_dispatcher(struct uprobe_consumer *con,
--				unsigned long func, struct pt_regs *regs)
-+				unsigned long func, struct pt_regs *regs,
-+				unsigned long *data)
- {
- 	struct trace_uprobe *tu;
- 	struct uprobe_dispatch_data udd;
+Jason
