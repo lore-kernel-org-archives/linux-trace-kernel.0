@@ -1,159 +1,81 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401D71509A8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 22:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720AD18E2A;
+	Mon, 10 Jun 2024 22:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718057708; cv=none; b=A8hF4d5qJdCRzGaIhIh2IOvCyoZ5u6/4wXfxAFPlwgPq7t4RvikKbR9D5xX+JSmlQ1OSYbwzb/KVElV6ZYHRaEmU7aN4rqkULcHMM1bA7iWokPfVdknXDXN2m3ha+LdWetn9s3x6j5Vf8tgkDg3V7VwHGiybFae2cHn4eZjDc1Q=
+	t=1718057855; cv=none; b=TVq53ZjjLs7JtsoL9m7ksbrrLzcGahRj4bCg1HzWI0RKxzBnF3Q0ZOO5ER1yZsJ4Uhm10DAa8QZeMSP7yAWAjTei7v6CWzaOBZ/4i3aH6C/v+uuwu9qYx9RoluHNhDuT71rjBG21nfeAOhuNRu94PLASMgbRGzCQOR3wJjcrJSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718057708; c=relaxed/simple;
-	bh=z+wd9sAGfEDNr43zUFts3rXiT7ShOZVNnrA/+9o7y3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HK7nMcbau4K8/BqZMMv2K4vKmKIuYZncM5+yCprvrqvEDMrCvEeFF2d5q3wF+fJApYOiLrSvTkh7DfzYBZqTEvV/iHNVF17dIMhn+j702X7JDnSqFuPYbMvLdxHZz2cWelhUBzuyzPCquTc4P0ficI/v6/603hEQ7DRRCmNxDbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=DV1B8yAB; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DV1B8yAB"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b06b78e716so13234086d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1718057705; x=1718662505; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fYxIeKtLL3lQwNiFRr25O1e9GIX4G5slG5d4Uc4G46M=;
-        b=DV1B8yABKh8zcLUmgBZlPAFY0iTcPLR8YOx7LLCpFjMnV7rXNkaRxAYuvwk3C7PPOH
-         jZB05ZxEeozQlYPvsSKrdHH9XRsHaWMfRgA07nc67PzNRXJVUcgHaMaIwTLkn/0NBaej
-         Y+DkdkBwr03IdCK/sG3d/54s8BvaqhWBnl/jBki+4FuzFDk5MC/R7srQTW0MtfyTEffw
-         S/cazkXqzTrhTNLq77EhsuipjQDoKG+ONrmQBCCYr/YTuVzQ2K1qnCx+gVlmf+ptUByB
-         YHBold4jl4t0CXl3DWfVhfY0nGwvEmmEftLaTtJM4KO8eLCbZeisPO65pggAcwOIB0GE
-         jnmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718057705; x=1718662505;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fYxIeKtLL3lQwNiFRr25O1e9GIX4G5slG5d4Uc4G46M=;
-        b=G1x+RnZ0i3/kDRHQ5U/NlCYTfAQvDIDcw6RslKGt8vSpNfLPoeY8Jbh8M4BrV1T2NJ
-         Bdjr1LTMP38vYSBAYe8ThkbhYn1o6VfPE0S0pjRt14x7BKGJg7v/qOZ5C8SF8AbJWRvp
-         7dMbcEVkqxbQWknnTEsdfO5r58E6idhjgTFl9Z6SCKsDmGXGz41lNKezUTCjNLmEFigh
-         11of4kKc8naQz6QTsYt511sfbMLhhs7Vp33t7GqEYUqtGqe36xlOULX+fK367LX8oxOb
-         lTyjSmWR2BmvRf28BuGhyMdLYjz4Z+XzBQep0CdwjnLEHoou41y56axzhObLjKVtMEd+
-         jyQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhxryxuvY5rknEE8+2nhSMXD8vZrALlOLLlb+vZpxiV6CFzL95C4deILYVDQ8luOeWscOqWPHh6LwXS2GYGLJpV5tYDZM4fEZb4HoCEo/KQ9Fj
-X-Gm-Message-State: AOJu0YziRYPc7mVSiRHn881vS9PEYWK3LKRxyw7wPpCn5lg3pYmPngJC
-	XmEmW9geSub/i1PsM+p+eBKvxtNotqvgWOtP4BwLtJcPju8hvlK4+djkYn+XQwI=
-X-Google-Smtp-Source: AGHT+IGNwK7dorh82QSLW5MV/WzZAixZNPt6ZilaFo6ceP30TQ1KYPRJL2ImTAjvrOrdYOBtAU+f5Q==
-X-Received: by 2002:a05:6214:4a06:b0:6b0:72ef:2877 with SMTP id 6a1803df08f44-6b072ef2a2bmr79573716d6.40.1718057705068;
-        Mon, 10 Jun 2024 15:15:05 -0700 (PDT)
-Received: from ziepe.ca ([128.77.69.89])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b076a42242sm20947266d6.59.2024.06.10.15.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 15:15:03 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sGnI4-00FsKs-9Z;
-	Mon, 10 Jun 2024 19:15:00 -0300
-Date: Mon, 10 Jun 2024 19:15:00 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: David Ahern <dsahern@kernel.org>, David Wei <dw@davidwei.uk>,
-	Mina Almasry <almasrymina@google.com>,
-	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
- custom page providers
-Message-ID: <20240610221500.GN791043@ziepe.ca>
-References: <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
- <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
- <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
- <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
- <20240607145247.GG791043@ziepe.ca>
- <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
- <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
- <20240610121625.GI791043@ziepe.ca>
- <59443d14-1f1d-42bb-8be3-73e6e4a0b683@kernel.org>
- <00c67cf0-2bf3-4eaf-b200-ffe00d91593b@gmail.com>
+	s=arc-20240116; t=1718057855; c=relaxed/simple;
+	bh=JSCara3hi6qF428O+BVXiaUpm0X/OTitwR/xoTFOfY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FdvkJok14mTRnBunkMLCjKI0qL+K9kjJkjDhst5GRPrIHWuaFW5SBFPeaUh/+xQx5AUE5CfWuq8iaMreDVvfCm1QqbHgeM4T10m2cKuLuNoFwCRjN5gU+XlC5QVu0/RR5aXREBLvwVtCjleQUxBN2072TYtlMJFVNcBs79hLI8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B167CC2BBFC;
+	Mon, 10 Jun 2024 22:17:33 +0000 (UTC)
+Date: Mon, 10 Jun 2024 18:17:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH -next 1/2] function_graph: Add kernel-doc comments for
+ ftrace_graph_ret_addr() function
+Message-ID: <20240610181746.656e3759@gandalf.local.home>
+In-Reply-To: <20240607084957.64715-1-yang.lee@linux.alibaba.com>
+References: <20240607084957.64715-1-yang.lee@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00c67cf0-2bf3-4eaf-b200-ffe00d91593b@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 08:20:08PM +0100, Pavel Begunkov wrote:
-> On 6/10/24 16:16, David Ahern wrote:
+On Fri,  7 Jun 2024 16:49:56 +0800
+Yang Li <yang.lee@linux.alibaba.com> wrote:
 
-> > > There is no reason you shouldn't be able to use your fast io_uring
-> > > completion and lifecycle flow with DMABUF backed memory. Those are not
-> > > widly different things and there is good reason they should work
-> > > together.
+> Added kernel-doc comments for the ftrace_graph_ret_addr() function to
+> improve code documentation and readability.
 > 
-> Let's not mix up devmem TCP and dmabuf specifically, as I see it
-> your question was concerning the latter: "... DMABUF memory registered
-> through Mina's mechanism". io_uring's zcrx can trivially get dmabuf
-> support in future, as mentioned it's mostly the setup side. ABI,
-> buffer workflow and some details is a separate issue, and I don't
-> see how further integration aside from what we're already sharing
-> is beneficial, on opposite it'll complicate things.
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9299
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> ---
+>  kernel/trace/fgraph.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index a13551a023aa..4ad33e4cb8da 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -872,6 +872,12 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+>  /**
+>   * ftrace_graph_ret_addr - convert a potentially modified stack return address
+>   *			   to its original value
+> + * @task: pointer to the task_struct of the task being examined
+> + * @idx: pointer to a state variable, should be initialized to zero
+> + *	 before the first call
 
-Again, I am talking about composability here, duplicating the DMABUF
-stuff into io_uring is not composable, it is just duplicating things.
+parameter descriptions should not go across more than one line. At least
+not in my code. Also, you don't need to add that it needs to be initialized
+here. That belongs in the body.
 
-It does not match the view that there should be two distinct layers
-here, one that provides the pages and one that manages the
-lifecycle. As HCH pushes for pages either come from the allocator and
-get to use the struct folio or the come from a dmabuf and they
-don't. That is it, the only two choices.
+And it's not a state variable. The description you got that from is wrong.
 
-The iouring stuff is trying to confuse the source of the pages with
-the lifecycle - which is surely convenient, but is why Christoph is
-opposing it.
+I'll go update it and give you a reported by, as the entire description
+needs a rewrite.
 
-Jason
+-- Steve
+
+
+> + * @ret: the current return address found on the stack
+> + * @retp: pointer to the return address on the stack, ignored if
+> + *	  HAVE_FUNCTION_GRAPH_RET_ADDR_PTR is not defined
+>   *
+>   * This function can be called by stack unwinding code to convert a found stack
+>   * return address ('ret') to its original value, in case the function graph
+
