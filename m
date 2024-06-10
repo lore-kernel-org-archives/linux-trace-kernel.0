@@ -1,248 +1,125 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF6547773;
-	Sun,  9 Jun 2024 15:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9019717C2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 00:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717948778; cv=none; b=atkusyu5NpocCa3iKj1XziDW8kGMPkjP5kw3kqYR9tiU9dqSLOeiqSvxXRqfv+EMHUsqABGctDo4ragGZHFmne2qpgZlG1R7vXLZnYygvXhVn6cKEKTce5mC3VwddvG3/5JB3pHSfEdjKivLJtkSp6h7CuSixgGVuqH2fdjoC6w=
+	t=1717979279; cv=none; b=BaQ5wppl5geE960yRjBAly0ClHZy6+CBaRuGIYTCOs4RtO8Oc6rsN6FhBQl4LdbmW9sm6F6YUOFWwPgKRjxvBlCJOFvL0SkfT66xTiE0OkH4jlmQkjid9pe7Y6pJrGS4i/EInjalvwUq/ZdUqDpFrFu1fJD+SncGCcaBcuV70Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717948778; c=relaxed/simple;
-	bh=CCy4O8Rajex09opnQ3cvR+y3w5z+7/dgktja4ZDmCrI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cr1TsqD2ux+PAAcBWpPBEaFYY2JxiBDLenNRntzBn2Jqnk02RRQMEO/KMq097JmoESuQdmlQRGk2Upk+G1IVQhpHia0aEcZyMzrteKCTqFPvhWFcgUt9bzdemQqDy/IbqjxwQ/z6Q/crU9SowODLTFPgJdmHviF0kiLDDrtl7ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ifS5c22+; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1717979279; c=relaxed/simple;
+	bh=MhpwXQPEWuldXab2yRt6lwaofFGFqOHBQxOKwwMzkWs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=prlKI0dqTcJvnfzb5Q34nNP4hjKAtkdbWev+w5GNawBE90I6+48cl1ZRwYwmZKvpOqpP9LUPYayF5rFsFnbN91KESJ5CN2XkxudVjDMn3hKrw9VZ/xQZQqsn24eJTVwDJbmLgNjN85wqel08TagC2uxvUOuXuEGzUid4OBH7/Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=eaS/rB5p; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ifS5c22+"
+	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="eaS/rB5p"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c1ab9e17f6so3306076a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Jun 2024 17:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1717948776; x=1749484776;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2xpbGXjdiYfY57DmPTq+vnmg1VxAdFdiWMT93+NIDeg=;
-  b=ifS5c22+s/cWFkPc1/QzMoMblBlavMUAK6bTzAa752YhXWJ6J2QCy7cl
-   GUcNZh0svaPDpNRjTVgktgNvATAZPCY8x/wzQ5+HcgciLQqBy8GkR8wve
-   wP+etzD/8j8IKnb9qCIpX9I5Qeoo1Om91FyFVFly40wUQ6u1e8Hy2mcsi
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.08,225,1712620800"; 
-   d="scan'208";a="95498928"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2024 15:59:34 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.17.79:35948]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.236:2525] with esmtp (Farcaster)
- id b1c7cef1-ac9e-43a8-b2c2-8d9cfffadc0c; Sun, 9 Jun 2024 15:59:33 +0000 (UTC)
-X-Farcaster-Flow-ID: b1c7cef1-ac9e-43a8-b2c2-8d9cfffadc0c
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sun, 9 Jun 2024 15:59:33 +0000
-Received: from dev-dsk-nsaenz-1b-189b39ae.eu-west-1.amazon.com (10.13.235.138)
- by EX19D004EUC001.ant.amazon.com (10.252.51.190) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sun, 9 Jun 2024 15:59:26 +0000
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-CC: <pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
-	<linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<graf@amazon.de>, <dwmw2@infradead.org>, <paul@amazon.com>,
-	<nsaenz@amazon.com>, <mlevitsk@redhat.com>, <jgowans@amazon.com>,
-	<corbet@lwn.net>, <decui@microsoft.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <amoorthy@google.com>
-Subject: [PATCH 18/18] KVM: x86: hyper-v: Handle VSM hcalls in user-space
-Date: Sun, 9 Jun 2024 15:49:47 +0000
-Message-ID: <20240609154945.55332-19-nsaenz@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240609154945.55332-1-nsaenz@amazon.com>
-References: <20240609154945.55332-1-nsaenz@amazon.com>
+        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1717979277; x=1718584077; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MhpwXQPEWuldXab2yRt6lwaofFGFqOHBQxOKwwMzkWs=;
+        b=eaS/rB5ptAbHAU0q7qdhCVXxZ7lbplvWL9hU4TV8HO/se05eThjpH8FgH1E6aS56n0
+         rW/FP7pOSyTxC+8whzwcsq90dLgrS0QhatoUNkRaMF2tATXfBuMr+yUVS6o0AfoXCkNB
+         TQ/NutpDHJ4gJiMiKl9PcUGQqkiHEQYofisKHAoQrKewsoipTcj45F4gmgOrwRNPXnAG
+         hLrgEbuXXS/YMk9seiceNyXS95VU2N5n+4a/vXtDWKNahfG762KAc+Imp1kvFGXC0A+p
+         MU7pTWE7PVbAluvuq5FFXNSY19XM4DoyPVbkO2q5ZxDdT0TvSqVt3YTSZnHaNO60Y+T1
+         bMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717979277; x=1718584077;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MhpwXQPEWuldXab2yRt6lwaofFGFqOHBQxOKwwMzkWs=;
+        b=uHCdE0vfggv1Ha0BvTHFw3QSrc4t6t1T8a2tTZutb8cw0hl3zhKtftwU5RknHteVVe
+         ZZr9SWWXMI3adDD+LGmFup5mOrj3l7YEhY1ze0/8arkb11/3de8TLk4DEYmLVE7Z1eSK
+         ovb3u6E4RFIIAtxQKVsiZTAoc9eVzTCWH+NIhJSMyK9GH48ZqcfYxBG28nU9JVxa9xZ3
+         GyWaCwhNy/i/nHf6eGamww4FVRW66PXYbH/590a58tZ7SdOmHneGbOuZQbG3HrvUm9oZ
+         IasR//FKp1mQOImmnwVMy44swSM4btDlQOBNwjEKCn4VfmnBYLNNuio1reRvmau1xyQ2
+         DyUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBJ/TbGlWK+CechpcZG4f6PRsOzIXvJtl+21lKl/8F4E99+EXDfchS1Giys9jyavT+dSL/+1D6n7ehqNKDPzlFTRFkinkkHdzyVc5rcQD59zdw
+X-Gm-Message-State: AOJu0YzqhYokz0srwBSMhiD7UrqxpQ47JYfcubNNS1dOKuTZ9daC+16L
+	B/ZmZ2WTzHEOYpYb3B57x2l+Z1JXg8BEDwIqAH5rqtKUKGtM1ykEyO+EMZnm7gQ=
+X-Google-Smtp-Source: AGHT+IHFUY13EgQWeWpod8cMzpAhYoaErdO5QtBiSVL31xjUWTYCgJQDuWf1poRGpWIptTmVDcqXrA==
+X-Received: by 2002:a17:902:d4c3:b0:1f4:a36c:922c with SMTP id d9443c01a7336-1f6d02de0d6mr98614085ad.20.1717979276488;
+        Sun, 09 Jun 2024 17:27:56 -0700 (PDT)
+Received: from [192.168.1.8] (174-21-189-109.tukw.qwest.net. [174.21.189.109])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd75f162sm70228185ad.61.2024.06.09.17.27.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Jun 2024 17:27:56 -0700 (PDT)
+Message-ID: <8f7bc361-aa92-4d73-b276-f2d6bb4fbd6a@davidwei.uk>
+Date: Sun, 9 Jun 2024 17:27:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWA003.ant.amazon.com (10.13.139.46) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Content-Language: en-GB
+To: David Ahern <dsahern@kernel.org>, Pavel Begunkov
+ <asml.silence@gmail.com>, Mina Almasry <almasrymina@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
+ Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+ <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+ <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+ <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+From: David Wei <dw@davidwei.uk>
+In-Reply-To: <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Let user-space handle all hypercalls that fall under the AccessVsm
-partition privilege flag. That is:
- - HvCallModifyVtlProtectionMask
- - HvCallEnablePartitionVtl
- - HvCallEnableVpVtl
- - HvCallVtlCall
- - HvCallVtlReturn
+On 2024-06-07 17:27, David Ahern wrote:
+> I also do not understand why the ifq cache and overloading xdp functions
+> have stuck around; I always thought both were added by Jonathan to
+> simplify kernel ports during early POC days.
 
-All these are VTL aware and as such need to be handled in user-space.
-Additionally, select KVM_GENERIC_MEMORY_ATTRIBUTES when
-CONFIG_KVM_HYPERV is enabled, as it's necessary in order to implement
-VTL memory protections.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
----
- Documentation/virt/kvm/api.rst    | 23 +++++++++++++++++++++++
- arch/x86/kvm/Kconfig              |  1 +
- arch/x86/kvm/hyperv.c             | 29 +++++++++++++++++++++++++----
- include/asm-generic/hyperv-tlfs.h |  6 +++++-
- 4 files changed, 54 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 6d3bc5092ea63..77af2ccf49a30 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -8969,3 +8969,26 @@ HvCallGetVpIndexFromApicId. Currently, it is only used in conjunction with
- HV_ACCESS_VSM, and immediately exits to userspace with KVM_EXIT_HYPERV_HCALL as
- the reason. Userspace is expected to complete the hypercall before resuming
- execution.
-+
-+10.4 HV_ACCESS_VSM
-+------------------
-+
-+:Location: CPUID.40000003H:EBX[bit 16]
-+
-+This CPUID indicates that KVM supports HvCallModifyVtlProtectionMask,
-+HvCallEnablePartitionVtl, HvCallEnableVpVtl, HvCallVtlCall, and
-+HvCallVtlReturn.  Additionally, as a prerequirsite to being able to implement
-+Hyper-V VSM, it also identifies the availability of HvTranslateVirtualAddress,
-+as well as the VTL-aware aspects of HvCallSendSyntheticClusterIpi and
-+HvCallSendSyntheticClusterIpiEx.
-+
-+All these hypercalls immediately exit with KVM_EXIT_HYPERV_HCALL as the reason.
-+Userspace is expected to complete the hypercall before resuming execution.
-+Note that both IPI hypercalls will only exit to userspace if the request is
-+VTL-aware, which will only happen if HV_ACCESS_VSM is exposed to the guest.
-+
-+Access restriction memory attributes (4.141) are available to simplify
-+HvCallModifyVtlProtectionMask's implementation.
-+
-+Ultimately this CPUID also indicates that KVM_MP_STATE_HV_INACTIVE_VTL is
-+available.
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index fec95a7702703..8d851fe3b8c25 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -157,6 +157,7 @@ config KVM_SMM
- config KVM_HYPERV
- 	bool "Support for Microsoft Hyper-V emulation"
- 	depends on KVM
-+	select KVM_GENERIC_MEMORY_ATTRIBUTES
- 	default y
- 	help
- 	  Provides KVM support for emulating Microsoft Hyper-V.  This allows KVM
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index dd64f41dc835d..1158c59a92790 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -2388,7 +2388,12 @@ static void kvm_hv_hypercall_set_result(struct kvm_vcpu *vcpu, u64 result)
- 	}
- }
- 
--static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u64 result)
-+static inline bool kvm_hv_is_vtl_call_return(u16 code)
-+{
-+	return code == HVCALL_VTL_CALL || code == HVCALL_VTL_RETURN;
-+}
-+
-+static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u16 code, u64 result)
- {
- 	u32 tlb_lock_count = 0;
- 	int ret;
-@@ -2400,9 +2405,12 @@ static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u64 result)
- 		result = HV_STATUS_INVALID_HYPERCALL_INPUT;
- 
- 	trace_kvm_hv_hypercall_done(result);
--	kvm_hv_hypercall_set_result(vcpu, result);
- 	++vcpu->stat.hypercalls;
- 
-+	/* VTL call and return don't set a hcall result */
-+	if (!kvm_hv_is_vtl_call_return(code))
-+		kvm_hv_hypercall_set_result(vcpu, result);
-+
- 	ret = kvm_skip_emulated_instruction(vcpu);
- 
- 	if (tlb_lock_count)
-@@ -2459,7 +2467,7 @@ static int kvm_hv_hypercall_complete_userspace(struct kvm_vcpu *vcpu)
- 		kvm_hv_write_xmm(vcpu->run->hyperv.u.hcall.xmm);
- 	}
- 
--	return kvm_hv_hypercall_complete(vcpu, result);
-+	return kvm_hv_hypercall_complete(vcpu, code, result);
- }
- 
- static u16 kvm_hvcall_signal_event(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
-@@ -2513,6 +2521,7 @@ static bool is_xmm_fast_hypercall(struct kvm_hv_hcall *hc)
- 	case HVCALL_SEND_IPI_EX:
- 	case HVCALL_GET_VP_REGISTERS:
- 	case HVCALL_SET_VP_REGISTERS:
-+	case HVCALL_MODIFY_VTL_PROTECTION_MASK:
- 	case HVCALL_TRANSLATE_VIRTUAL_ADDRESS:
- 		return true;
- 	}
-@@ -2552,6 +2561,12 @@ static bool hv_check_hypercall_access(struct kvm_vcpu_hv *hv_vcpu, u16 code)
- 		 */
- 		return !kvm_hv_is_syndbg_enabled(hv_vcpu->vcpu) ||
- 			hv_vcpu->cpuid_cache.features_ebx & HV_DEBUGGING;
-+	case HVCALL_MODIFY_VTL_PROTECTION_MASK:
-+	case HVCALL_ENABLE_PARTITION_VTL:
-+	case HVCALL_ENABLE_VP_VTL:
-+	case HVCALL_VTL_CALL:
-+	case HVCALL_VTL_RETURN:
-+		return hv_vcpu->cpuid_cache.features_ebx & HV_ACCESS_VSM;
- 	case HVCALL_GET_VP_REGISTERS:
- 	case HVCALL_SET_VP_REGISTERS:
- 		return hv_vcpu->cpuid_cache.features_ebx &
-@@ -2744,6 +2759,11 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 			break;
- 		}
- 		goto hypercall_userspace_exit;
-+	case HVCALL_MODIFY_VTL_PROTECTION_MASK:
-+	case HVCALL_ENABLE_PARTITION_VTL:
-+	case HVCALL_ENABLE_VP_VTL:
-+	case HVCALL_VTL_CALL:
-+	case HVCALL_VTL_RETURN:
- 	case HVCALL_GET_VP_REGISTERS:
- 	case HVCALL_SET_VP_REGISTERS:
- 	case HVCALL_TRANSLATE_VIRTUAL_ADDRESS:
-@@ -2765,7 +2785,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
- 	}
- 
- hypercall_complete:
--	return kvm_hv_hypercall_complete(vcpu, ret);
-+	return kvm_hv_hypercall_complete(vcpu, hc.code, ret);
- 
- hypercall_userspace_exit:
- 	vcpu->run->exit_reason = KVM_EXIT_HYPERV;
-@@ -2921,6 +2941,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 			ent->ebx |= HV_POST_MESSAGES;
- 			ent->ebx |= HV_SIGNAL_EVENTS;
- 			ent->ebx |= HV_ENABLE_EXTENDED_HYPERCALLS;
-+			ent->ebx |= HV_ACCESS_VSM;
- 			ent->ebx |= HV_ACCESS_VP_REGISTERS;
- 			ent->ebx |= HV_START_VIRTUAL_PROCESSOR;
- 
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index e24b88ec4ec00..6b12e5818292c 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -149,9 +149,13 @@ union hv_reference_tsc_msr {
- /* Declare the various hypercall operations. */
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE	0x0002
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST	0x0003
--#define HVCALL_ENABLE_VP_VTL			0x000f
- #define HVCALL_NOTIFY_LONG_SPIN_WAIT		0x0008
- #define HVCALL_SEND_IPI				0x000b
-+#define HVCALL_MODIFY_VTL_PROTECTION_MASK	0x000c
-+#define HVCALL_ENABLE_PARTITION_VTL		0x000d
-+#define HVCALL_ENABLE_VP_VTL			0x000f
-+#define HVCALL_VTL_CALL				0x0011
-+#define HVCALL_VTL_RETURN			0x0012
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
- #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
- #define HVCALL_SEND_IPI_EX			0x0015
--- 
-2.40.1
-
+Setting up an Rx queue for ZC w/ a different pp will be done properly
+using the new queue API that Mina merged recently. Those custom XDP
+hooks will be gone in a non-RFC patchset.
