@@ -1,167 +1,119 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E5015CE;
-	Mon, 10 Jun 2024 01:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5F14690;
+	Mon, 10 Jun 2024 02:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717981950; cv=none; b=dW874Or8EP5ScmdTYNK//bXcpk0a1JHlmELoOpgxcE5zSihOuXrdzze6C9F97hHipe1GMzdhxdY8VBkDzsznp8NdOiMwX1wAg56hCHw1ku2eEtR5jLx8DCT3H+SuBrp4sL89GjNC4quG5V/iv0ryV9YiJoVU8ebYuqvIlyx5a98=
+	t=1717985405; cv=none; b=R+SDDGw4Lx8+rmbZCjHafFIyI3vIxJNiKK6RTKbsEQXBTfOBCXe2LVND+XJind5ldFr4Kij7ZApy5/OCd0/IjNpxuHG3hlRqdmAXybXmb4KqYXORcRj04RIcjnTiGbkkZXZWXCPNrdQjFbuWfzHysplY9DcrXbtGyMXCwnZq2XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717981950; c=relaxed/simple;
-	bh=EsX5TKziqgKhjkWYw5NLeEdQUsicnvMiY7lDy1rAcv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KS53eTtVtLLHIc+NH+9WjqwavPBq1JH26jNYDr4VKjrV/8+6bh9uik+h4vdM0Z5o5nKzjGgOVQGVkBJk8TUwuDwQy0Q0PfXC+qjWEDw3WLmxa9fJuB32Oe7TVB0Uaq2hejnz7wK/zvOOLbcOXr39D7ew/re3I/P+oKmhxiBAB2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HxTfbDoC; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717985405; c=relaxed/simple;
+	bh=jhxWRa0+J1JHMbuwYGlUbrlrc9N4suvPVz3VmXVLMyU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uZ+mQhxdTYXxJ0ienT6XkkMSBi1SPg5SUdoxXl+j4y11sklp0jWvOXWt4YgceCEPNWNYVG3jKpyyjBHZ9UaKNNQucrZgghY/XJVjZvrv3LQj5JCFnf4pS94TWNRbOXLAQETRHohHi/H1Lbp2vIgRT7sEEz40+IpeRoNod6pjWhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ny/+cEbi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxTfbDoC"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4218180a122so4707665e9.1;
-        Sun, 09 Jun 2024 18:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717981947; x=1718586747; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lNJduADeWsFPxp+m1I5nZ3f95BR1hPfUvUg61woS5Tg=;
-        b=HxTfbDoC89Qf0MsImNbmIKWJTh32SI6iwMqfT9O/prOG0vt11PFGr7UpiXnFmvZ4vy
-         Wc47ZP6Uzy4rk3CxWfdcBz6qrXfLrzeFlRRw5ostrVsVMqO+q62hVC1pRKraekq1WoKQ
-         LnMl0MFZ3z5qkS9V6GGpXRnAQU7pjQZI7tYa/NtlHApZZDneKwbUdOrOrkuw9PKk+IVD
-         3aDYridbIjvo0Ts9nBInmFZpE0e5egbWK2Y0xDa4cxmNh8yi4BzMSINR5QdgAybdmglD
-         S+NEIVK//kO1QdQv80fQqoJkXkhtjudMX9NngNDzJcYAD77vVny1VyLK2c/zv4dgTosH
-         CvIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717981947; x=1718586747;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lNJduADeWsFPxp+m1I5nZ3f95BR1hPfUvUg61woS5Tg=;
-        b=efXW7TGUbjzhTPjWaR3M9JNJ0TT3hgr52fwW/08d1zSl2DJVHKIK1ywXDJxFP8jUCN
-         uXoRYY2NQSfdmNBD01VXcvn91lh3Gdcj1bmXmAJGssewVLk4uU1++8i46KUHPYU1E8n4
-         +CAZNxNElM41PIhqeqWnXjew7TpUURKPkdd4YJJpDo746OeOvb6GVs6LKgrjbHcrrzGB
-         FtySB9tx+pyxrvxCw7olwdkkURLL2b7Q5EjJjg03MDhC8LnwCb72fA2/mcQLUARsKeV0
-         se95wMBEIfASmdqiEZjY7F+BRSlYNM7xdD8UMNoNXcgJXZOjef14KP6ehd7LX+o6MgWw
-         sZqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfJIJOllN6tFckACsP6Lf/NQTIgbkmtqGKN/oJaX8Tpyu/yZghmDPq8EIRo96HHTtzmeiavEzs9xye/Eea3iluOv57I22neaWt/E7WpKyGF+En0q/Vh0Fzix/D9TKXOLbrA3E/szeDgIBGA/ZkNOiWYWw+AE4QSS/r+4emUzHt6FPQEK5vSDtnRaWnLTKscsHHNP+qyJPRYTMJoyq8X1VCzpeuSEEiSInwcomynMT9xikjgErSvKm6DGmU9Az2J6VyqsoOTHhF9++mYtlA/KxqkyUEK/KA4DrBEi0aPWrGkKsdj0xgi3QMYt+BuTVkLgjHzPDlYdxmszrJ0PVeVweBhn0fF/PRYOeRgcBdq4mEbEDBZ9X5jBMn6aecPDKJmR/yue9ZUmyzAMZ6cSCXaaFpaFBeXJCbjQME/yIS5O2QcMLOKHoFuph4aPax1JHOUGMDxpKHBl5ur94KaBU6pMXwAdXpBdpXl/Waz+BipEKdgrQ+xrM8xGYkPYXar2pHEBBujS3VQw==
-X-Gm-Message-State: AOJu0YwZs1yFSBL0veNDh42YRYeXG3l6nIedPtaf7vYjzimRwG+f9HBz
-	QwCCNJRyQ1P5tVA6tda3rDvVJVi8pM0270M0RgrHyEo7NKPqZ67X
-X-Google-Smtp-Source: AGHT+IHDaD1xgXKiE70wxK20VeOXv7YAKZBIIZIbJBgPUlJwOc+Otz/U6x6lGExUj8MSrU2BCjmLtQ==
-X-Received: by 2002:a05:600c:5113:b0:421:f346:6b06 with SMTP id 5b1f17b1804b1-421f3466f07mr3105805e9.28.1717981946528;
-        Sun, 09 Jun 2024 18:12:26 -0700 (PDT)
-Received: from [192.168.42.136] ([148.252.129.53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814f141sm158668365e9.42.2024.06.09.18.12.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Jun 2024 18:12:26 -0700 (PDT)
-Message-ID: <5cc208d6-6116-4e9d-a48e-67290adc573a@gmail.com>
-Date: Mon, 10 Jun 2024 02:12:24 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ny/+cEbi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F366C2BD10;
+	Mon, 10 Jun 2024 02:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717985405;
+	bh=jhxWRa0+J1JHMbuwYGlUbrlrc9N4suvPVz3VmXVLMyU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ny/+cEbiDGl/YTmkXoj6hCCAnSTf3Io6fsEWazovZSFqOhb0JTiCjNm0CejjTACAz
+	 kR/TNDjcTT2V7F8PmMUFie8fVbZDtd3E8eZ4DVv5Vkvuz+0WfMl0UIjwS9MgiauMzo
+	 /jJ0rmEzjmSvULIAfSHXvJUV0DdYPxjDtqRLZW3jvN5UfuzuMH4e0ZmIGJPRSJaoGq
+	 Md2wVbrwbLBNKBhYVL3uD0hJwsXZJb0W66Sp9EqPI6i3m+gsapmSj9/Q7W7guatgOE
+	 7xBQdHlOee0YeA45PNKXQG6rktvjPRGSr20BKDReqo9GvwN/rentpXXghbBghiTriO
+	 7rP3OtYRz8HOQ==
+Date: Mon, 10 Jun 2024 11:10:01 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
+Message-Id: <20240610111001.5ed3e97f6383915fcba87e31@kernel.org>
+In-Reply-To: <20240531032425.3635dc93@rorschach.local.home>
+References: <171671825710.39694.6859036369216249956.stgit@devnote2>
+	<20240527192907.49c9220f@rorschach.local.home>
+	<20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
+	<20240529083818.b7835de167191d4567405ce6@kernel.org>
+	<3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
+	<20240531113721.c0314e0cdb3beb70c1a6ba7d@kernel.org>
+	<20240531032425.3635dc93@rorschach.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
- custom page providers
-To: Mina Almasry <almasrymina@google.com>
-Cc: David Ahern <dsahern@kernel.org>, Christoph Hellwig <hch@infradead.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240530201616.1316526-1-almasrymina@google.com>
- <20240530201616.1316526-3-almasrymina@google.com>
- <ZlqzER_ufrhlB28v@infradead.org>
- <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
- <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
- <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
- <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
- <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
- <8f44ca2a-8910-418f-b4a6-ca1e051484ba@gmail.com>
- <a8df4459-30bf-4414-aeca-2f67c461adc4@gmail.com>
- <CAHS8izNcYMsSpTNVSGRJHK6u+kDxnFab5Km1rYy8b++0FeUNgA@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izNcYMsSpTNVSGRJHK6u+kDxnFab5Km1rYy8b++0FeUNgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 6/7/24 17:59, Mina Almasry wrote:
-> On Fri, Jun 7, 2024 at 8:47 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 6/7/24 16:42, Pavel Begunkov wrote:
->>> On 6/7/24 15:27, David Ahern wrote:
->>>> On 6/7/24 7:42 AM, Pavel Begunkov wrote:
->>>>> I haven't seen any arguments against from the (net) maintainers so
->>>>> far. Nor I see any objection against callbacks from them (considering
->>>>> that either option adds an if).
->>>>
->>>> I have said before I do not understand why the dmabuf paradigm is not
->>>> sufficient for both device memory and host memory. A less than ideal
->>>> control path to put hostmem in a dmabuf wrapper vs extra checks and
->>>> changes in the datapath. The former should always be preferred.
->>>
->>> If we're talking about types of memory specifically, I'm not strictly
->>> against wrapping into dmabuf in kernel, but that just doesn't give
->>> anything.
->>
->> And the reason I don't have too strong of an opinion on that is
->> mainly because it's just setup/cleanup path.
->>
-> 
-> I agree wrapping io uring in dmabuf seems to be an unnecessary detour.
-> I never understood the need or upside to do that, but it could be a
-> lack of understanding on my part.
-> 
-> However, the concern that David brings up may materialize. I've had to
-> spend a lot of time minimizing or justifying checks to the code with
-> page pool benchmarks that detect even 1 cycle regressions. You may be
-> asked to run the same benchmarks and minimize similar overhead.
-> 
-> The benchmark in question is Jesper's bench_page_pool_simple. I've
-> forked it and applied it on top of net-next here:
-> https://github.com/mina/linux/commit/927596f87ab5791a8a6ba8597ba2189747396e54
-> 
-> As io_uring ZC comes close to merging, I suspect it would be good to
-> run this to understand the regression in the fast path, if any. If
-> there are no to little regressions, I have no concerns over io uring
-> memory not being wrapped in dmabufs, and David may agree as well.
+On Fri, 31 May 2024 03:24:25 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-That's the easiest part as io_uring only reusing call points
-you added for devmem and thus doesn't add anything new on top
-to hot paths.
+> On Fri, 31 May 2024 11:37:21 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > So, in summary, it is designed to be a module. Steve, I think these tests
+> > should be kept as modules. There are many reason to do so.
+> > 
+> >  - This test is designed to be used as module.
+> >  - This can conflict with other boot time selftest if it is embedded.
+> >  - We can make these tests and boot time selftest mutable exclusive but
+> >    if we make these tests as modules, we can build and run both tests
+> >    safely.
+> >  - Embedding these tests leave new events when the kernel boot, which
+> >    user must be cleaned up by manual.
+> > 
+> > What would you think?
+> 
+> I was mostly following what Ingo told me long ago, where having it
+> built in is just one more way to test it ;-)
+> 
+> But that said, from your first patch, you show the stack dump and
+> mention:
+> 
+> > Since the kprobes and synth event generation tests adds and enable
+> > generated events in init_module() and delete it in exit_module(),
+> > if we make it as built-in, those events are left in kernel and cause
+> > kprobe event self-test failure.
+> 
+> But you don't explain what exactly the conflict is. What about those
+> events causes kprobe selftests to fail?
+
+I also found another problem on these modules. These modules get trace
+event file references to prevent removing probes. Therefore, if we
+embed these modules, we can not remove these events forever!
+
+        /*
+         * Now get the gen_kprobe_test event file.  We need to prevent
+         * the instance and event from disappearing from underneath
+         * us, which trace_get_event_file() does (though in this case
+         * we're using the top-level instance which never goes away).
+         */
+        gen_kprobe_test = trace_get_event_file(NULL, "kprobes",
+                                               "gen_kprobe_test");
+        if (IS_ERR(gen_kprobe_test)) {
+                ret = PTR_ERR(gen_kprobe_test);
+                goto delete;
+        }
+
+This means most ftracetest fails because we can not clean up the
+tracing state by removing dynamic events, which are installed while
+booting.
+Note that these references (locks) will be removed when the module
+is unloaded.
+
+Thanks,
+
+> 
+> 
+> -- Steve
+
 
 -- 
-Pavel Begunkov
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
