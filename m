@@ -1,158 +1,78 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B113D57A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB95210E7;
+	Mon, 10 Jun 2024 20:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718051149; cv=none; b=FolxuammWUT7bsmDDD8p70016hLca+k+uiA4fIoQLVdWK9jcR7BweqnnsqkFETNCdMzw8qUnvkTPA+xAyXpAE07C5PGGfOew+I/5e+rXGO3sg6hl+lAmEqJDKaZOo3xiljY39BBbqY56Y0QkVQNJCVkuCe4uQ1HBhkl31cFWzvU=
+	t=1718051753; cv=none; b=Kxrlc1T/zmcHMLclzDFmCO+hmsGC9tgwEhGO1cTtqHV32or062SxVrd3Mh2v6mJUS5knF4Kxe/1bnxM+gfYND/6l/CZzfwd1rpMNrqkmVpezfeygd5rD28sM1aqfMvKyWsRgozJl9nSMPu2b9+RsQ4ZptFb6AR6Di28+6hJYqMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718051149; c=relaxed/simple;
-	bh=SONlq9bXQbAkTw0EihI5/xjKerm7ff58Ryq6LfBbhF0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mDFrKfsCdIi2sAFe0+XqB0sKIMg90oC8S+infvPRtxYSpRcriyUmzyPJs9pSLvXDxdVZsHZ7/KgDi2CXsuLRUspf/a0bXU4AOMS827pPSYus94suFMWzo5Wjv1xPDkvYPvZaWVcStaycJ0aY617oT96Vzi8UWuv/j19qe7GXW30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=BS4mV88J; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="BS4mV88J"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c83100cb4so1600094a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:25:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1718051146; x=1718655946; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wH3mYXJPFC56KG/UdINpo4FbUx5USQeX53C3PDh1Bk=;
-        b=BS4mV88JHJcQKOZH4AjD/VXAJRB4cGA+sC/iEuSHK1446agPTX8IyrvQxzYXAcDKrz
-         /jxI4dUEFadkJGS9o+OFujWmP8VmZ5LHersUiOFaltIVoPQORYzB3qfd6xeMnlIOACA1
-         7ociECb8aVwKYIzvu7VHQY1nu840AiC10HUeseLxS28KI1IgwqUa8QQTlKhs71S6+Zlw
-         XUZu4bfEmcnNt/X7iZF+Ext3RIfANRLjNA4G5sqHv0ketyjXscSebxmeLo5hoT2KVMP3
-         LdGLT1cItVzGnsZ3O8850AVnsYU8pW60fLbVNJgIf/sn1QdvyTKownzX3WKscDGgpMIs
-         ozrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718051146; x=1718655946;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wH3mYXJPFC56KG/UdINpo4FbUx5USQeX53C3PDh1Bk=;
-        b=tDbYejQv+/Fkl/6NM9HvNbOjkXejV8Oo65Xxiuwl5fU8YrCbjVCVWHreBNdDgtYcqM
-         VvmJSFhxay3K5swrDxwxh3Po6WllrDZH9NSEfFpkBCvGyLo+bWqnx3S7rx5hRxTgKNFP
-         zWihjzlUKPDTs/JcEI+ShUEfFASF8HyPFLqI0Uc/HAEitOHqe3DF9YJv/ErUkZvKv91y
-         b/ndoMeCExHVvteXolRM4agE7hWWssGmQmnI9WTIuKbFjP6sEMwhIExYEXWIznrQ9EfO
-         EF9cGd7h0OsyY0wroBANm62z6KVAk/YEUUV79pJCWM5YXlCDPHqtlNITTkNT/aWauwVn
-         Fekg==
-X-Forwarded-Encrypted: i=1; AJvYcCUV7caELNrnc842nV/W1QO2Q+G/czebq9pZnKjv3iWj/mN5l/Zhgen9spwF4XcQxc42YuONQNQxvIBK2M02FZM57cnQiGC6eTL3mwuyWqfypGvv
-X-Gm-Message-State: AOJu0YzHNdvcUIGdmynSwb0QvPC1IAzoT/edNtbAf/v1bNcfEhGxQ120
-	rfwOzFTIJph6Xo9KEMZzGJarVuKYiPTDgkm3JyfPH7+NiMedCn4J7Urni6M2Ra3yfehk6jpVI0/
-	IQKzIfTJ5a1ylVJ4WlfbQ8gZQgqROoVUq8YoY2Q==
-X-Google-Smtp-Source: AGHT+IFeNM+vnJ0I5dqzaSHadBEEqlOnv2kTGQITQ/wXOYx520e/KZSJn/7E3GvgAEEb7/zIgfGp2FD5q2fX1wytAaQ=
-X-Received: by 2002:a50:8751:0:b0:57c:7f3b:6b9c with SMTP id
- 4fb4d7f45d1cf-57c7f3b6bbdmr2819913a12.5.1718051146118; Mon, 10 Jun 2024
- 13:25:46 -0700 (PDT)
+	s=arc-20240116; t=1718051753; c=relaxed/simple;
+	bh=8h+HeseX3jlzuJIdwlgBh0FhC5FsZDxHURzF2CXuxKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QCAYzCCg/9wCQ+of/uo4sf4UKDoZVvFqQM84GUu8s9Q4QcewtOUg72rQHyC8jdFmHoHylbCiv3LkIXSMjBO5UcpdwLiaZBEn5825q9w/aOawTy1z4axpdFQ2SvtYuojPIOLUhhCeMa9oFlPYUqV8r/fW2XtfY3kW7CFgO8peq18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C0AC2BBFC;
+	Mon, 10 Jun 2024 20:35:52 +0000 (UTC)
+Date: Mon, 10 Jun 2024 16:36:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Julia Lawall <Julia.Lawall@inria.fr>, kernel-janitors@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <20240610163606.069d552a@gandalf.local.home>
+In-Reply-To: <b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+	<20240609082726.32742-6-Julia.Lawall@inria.fr>
+	<20240610112223.151faf65@rorschach.local.home>
+	<b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717529533.git.yan@cloudflare.com> <983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
- <20240605195750.1a225963@gandalf.local.home> <CAO3-PbqRNRduSAyN9CtaxPFsOs9xtGHruu1ACfJ5e-mrvTo2Cw@mail.gmail.com>
- <20240610125422.252da487@rorschach.local.home>
-In-Reply-To: <20240610125422.252da487@rorschach.local.home>
-From: Yan Zhai <yan@cloudflare.com>
-Date: Mon, 10 Jun 2024 15:25:34 -0500
-Message-ID: <CAO3-PbpX1RCcYgr_xKVoO=MYOrP6jBhtGuTbptjRMjR=VAvthQ@mail.gmail.com>
-Subject: Re: [RFC v3 net-next 1/7] net: add rx_sk to trace_kfree_skb
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Abhishek Chauhan <quic_abchauha@quicinc.com>, Mina Almasry <almasrymina@google.com>, 
-	Florian Westphal <fw@strlen.de>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Pavel Begunkov <asml.silence@gmail.com>, 
-	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Neil Horman <nhorman@tuxdriver.com>, 
-	linux-trace-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 11:54=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Thu, 6 Jun 2024 10:37:46 -0500
-> Yan Zhai <yan@cloudflare.com> wrote:
->
-> > > name: kfree_skb
-> > > ID: 1799
-> > > format:
-> > >         field:unsigned short common_type;       offset:0;       size:=
-2; signed:0;
-> > >         field:unsigned char common_flags;       offset:2;       size:=
-1; signed:0;
-> > >         field:unsigned char common_preempt_count;       offset:3;    =
-   size:1; signed:0;
-> > >         field:int common_pid;   offset:4;       size:4; signed:1;
-> > >
-> > >         field:void * skbaddr;   offset:8;       size:8; signed:0;
-> > >         field:void * location;  offset:16;      size:8; signed:0;
-> > >         field:unsigned short protocol;  offset:24;      size:2; signe=
-d:0;
-> > >         field:enum skb_drop_reason reason;      offset:28;      size:=
-4; signed:0;
-> > >
-> > > Notice that "protocol" is 2 bytes in size at offset 24, but "reason" =
-starts
-> > > at offset 28. This means at offset 26, there's a 2 byte hole.
-> > >
-> > The reason I added the pointer as the last argument is trying to
-> > minimize the surprise to existing TP users, because for common ABIs
-> > it's fine to omit later arguments when defining a function, but it
-> > needs change and recompilation if the order of arguments changed.
->
-> Nothing should be hard coding the offsets of the fields. This is
-> exported to user space so that tools can see where the fields are.
-> That's the purpose of libtraceevent. The fields should be movable and
-> not affect anything. There should be no need to recompile.
->
-Oh I misunderstood previously. I was also thinking about the argument
-order in TP_PROTO, but what you mentioned is just the order in
-TP_STRUCT__entry, correct? I'd prefer to not change the argument order
-but the struct field order can definitely be aligned better here.
+On Mon, 10 Jun 2024 08:46:42 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Yan
+> > > index 7c29f4afc23d..338c52168e61 100644
+> > > --- a/fs/tracefs/inode.c
+> > > +++ b/fs/tracefs/inode.c
+> > > @@ -53,14 +53,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+> > >  	return &ti->vfs_inode;
+> > >  }
+> > >  
+> > > -static void tracefs_free_inode_rcu(struct rcu_head *rcu)
+> > > -{
+> > > -	struct tracefs_inode *ti;
+> > > -
+> > > -	ti = container_of(rcu, struct tracefs_inode, rcu);
+> > > -	kmem_cache_free(tracefs_inode_cachep, ti);  
+> > 
+> > Does this work?
+> > 
+> > tracefs needs to be freed via the tracefs_inode_cachep. Does
+> > kfree_rcu() handle specific frees for objects that were not allocated
+> > via kmalloc()?  
+> 
+> A recent change to kfree() allows it to correctly handle memory allocated
+> via kmem_cache_alloc().  News to me as of a few weeks ago.  ;-)
 
-> >
-> > Looking at the actual format after the change, it does not add a new
-> > hole since protocol and reason are already packed into the same 8-byte
-> > block, so rx_skaddr starts at 8-byte aligned offset:
-> >
-> > # cat /sys/kernel/debug/tracing/events/skb/kfree_skb/format
-> > name: kfree_skb
-> > ID: 2260
-> > format:
-> >         field:unsigned short common_type;       offset:0;
-> > size:2; signed:0;
-> >         field:unsigned char common_flags;       offset:2;
-> > size:1; signed:0;
-> >         field:unsigned char common_preempt_count;       offset:3;
-> >  size:1; signed:0;
-> >         field:int common_pid;   offset:4;       size:4; signed:1;
-> >
-> >         field:void * skbaddr;   offset:8;       size:8; signed:0;
-> >         field:void * location;  offset:16;      size:8; signed:0;
-> >         field:unsigned short protocol;  offset:24;      size:2; signed:=
-0;
-> >         field:enum skb_drop_reason reason;      offset:28;
-> > size:4; signed:0;
-> >         field:void * rx_skaddr; offset:32;      size:8; signed:0;
-> >
-> > Do you think we still need to change the order?
->
-> Up to you, just wanted to point it out.
->
-> -- Steve
->
+If that's the case then:
+
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Do we have a way to add a "Depends-on" tag so that anyone backporting this
+will know that it requires the change to whatever allowed that to happen?
+
+Or we need to update the change log to explicitly state that this should
+*not* be backported.
+
+-- Steve
