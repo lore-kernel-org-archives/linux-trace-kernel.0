@@ -1,176 +1,156 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B42B14A85;
-	Mon, 10 Jun 2024 19:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA14714A85
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 19:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718047215; cv=none; b=WKcj9cJrciRrIjg+mlI6OrzgcOxcDVj1o5q+vWozcDEB3/PDipYaZMxjX2eoniH+xsPANZpFrEtpcYmN7xYGJpQ6dIqfEE2gtog5MqO3YE2O7B2pg5dAmlyldPokM31rE5wr9vnEAGGC4tCyg3IRkVuIcejouZLq0MUZ3TcR+m0=
+	t=1718047227; cv=none; b=NkghMTckd+RDLarLD+FMXHnYo9x0mvIJ4jVzi4YH6gwu7ZAEAAPMvwuMTjrAe1MsadYcpjXw+ebLtud+eh0jaroxyxFO1eTU07Xg1YUvgUgxVGS46vdrPyqQg1w9xTAujjAm/RBVQ9Zuydpg0Gxw9NP3R6uqRaaFYc57/vfna9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718047215; c=relaxed/simple;
-	bh=Cy140D/wRN6P1O46vTjuDRmJh0MS1NceCS6uXkJqXLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TJT7UAGD/rqbEbEP0IS5bq980Yc4GprU8esfga8gfn+T+89/xvz9GDjjN3EsyYE4d2/4qTOa/iorrNqGPYcLOYLHD2mI/erwtF/eDIxawFp5hSw2A9OgUfPkNZM1obNGqXwaPi+UZC+a+RrGBp2iyZhvhzqFJ4GK1+wJSub6f8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=el4krPbO; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718047227; c=relaxed/simple;
+	bh=y6UMp+m9utYZgleNENyTjU9jhHksT+GMIMx/yKH2WLk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KLPbWo+71rlNcDTtQjloXzaPnM/5kSGbtKH93ps3OAwIygI5D6M80qjZMOb3KpVuSiP4CSXnGEXoSGjibFG67ACcEKLr2wLipgm+VHObPmmLIe7vsUJzrmXh65DKCz7PAIZsaYMdGFwy7pa9bie5dMPNZ6f07cPIPjr+Tl0IVv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=hqVtsydn; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="el4krPbO"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f27eed98aso338505f8f.2;
-        Mon, 10 Jun 2024 12:20:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="hqVtsydn"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-35f22d3abf1so1399814f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718047212; x=1718652012; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ds39/wk1Vz6prMfj1gC31qm8pnLcqbnW8HnwNU8zLQg=;
-        b=el4krPbOumDvyC9M1bKQh2oLjPIlVR0/xfL0Tvp+DhIET9QAhcdhmKTH118Yto2lnd
-         +HkbJ2b7Lr7Br9D/PwyTavSeg8h8uSIszeHJuItXQMyHyXABr1iIBu5L+ePvSy+Te6X2
-         gVfTbUTaFX6ArMv0MpTtQvZAM1GD6oykAZDwIuAc85tGsMZTT/Anro+x33Rw42jdltZF
-         qr3BSVsAS3BEf91deqHfgukGnCIggTA2+dT/v+yxQEI0fYMH74K6YCG11vlwF7Y21IaP
-         tLhAZQoaq/1mImHEoA/aIRAkHadxuYuA396ORIB64m1vfXHYiMHC+1s4FtozuCpQY1uO
-         PR5g==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1718047222; x=1718652022; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Guz7MjyMNC45VGVGtnc1o6ogeR5taFihB6DV18NWqFk=;
+        b=hqVtsydnmMw9Uvu8OGiLOStNOKANZ4ZbHr4i3N+JvxKxwT+Thf/Pg3H498Ao+y81Fr
+         m4sOGnBErVW0Yi7PKL1p0W/bXQVLftRzi1ycZfAVJk2zZmEVblPiAG8iItsF2QZwm4GV
+         slNX7uxO4uObcdCupaP4ZVJLIZFqE8Xr0joz/K0yvVY3WsIaaHeDcgSQajtflqrnsG+q
+         aMppXrw4XvQdd5Ymr4ND92SQgu3ctIhRCaQX3xW7LokojoCup0CTdv16ZW5EbdAB1SAo
+         EZr0r+Vzqd5bkQPJYLim/4iW8qRXWTK04lc8pZ3TNFphOWP4KvD56H4bt6wXHu9dlteX
+         oUaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718047212; x=1718652012;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ds39/wk1Vz6prMfj1gC31qm8pnLcqbnW8HnwNU8zLQg=;
-        b=dtpqOd+yp9ZPGSzchk2JrrDILAPlC6D5Rz6l7DxBZGMJkkJebKEGEsS+fHnlCcpvBs
-         cTNqiVMl/zRmRXZQfm3bA/euyXaZr4C13i3BkLQ5182No3Ose7itfyyVObZ9CivGZyle
-         hnYnIcFZpDXvItzLGEE9lLXACqQ2BTuERi3oAujxt2cIhVPSb5zh9/WgZQLsF73XiUC7
-         ZquiGZvKOg+SRw/O5V7Bw+NcndcPyi0glh56sg3HdvwJF4QrUgoCOpb6Pk+HT0B6kcuj
-         baAsTUkiPXDI+Nw0Kt0lJkkiCFIBBC9alZbw9SHZjlzzh04POdjtvN0+nGe6EiVhFuoB
-         XTZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU7f9FHVVmZH+K8Pri0GKi/2fQogNnqv/veYlP0xtPWoc+CvMj8z3apWndKqTEqUArzLsZgAW/Qwl2B9iEt2oNSn8pvsY7706u/KfHtX+PTcXlXx+MUkMb3Y060XCqaqS3ZtqJ/90PPqX5J1NroYX3eD8jNdsF99e8XSBj6mmGhUAR1ZEDwz5JruF3xDkjXrgKLipS5gInvNj9cpwFGsOw+JIBAONQtqVfbPwhpQvTPOHqpZJhc6AbQ0z7pH0uUyhlGoSO45wPmpMt2vD8PRDgkZFDrDcEafkXGU6SJWcXywTaCjddQCaQwLKnNDD+AAhAYpkCcv2CZIH2yqnwRQAT/gkIQKxE4+GeHEC2YsDWKy8iMaTmDQ1iE1eFTrPg9dEcqnflZDqUQWg1Oeb0JOuyP+XCCpZyvv+liI0ltRdFGW+JSdj1atOXwyif5uB3S+dnuEj+wSY1t242eDonKoBTKny0cfhQNyRfI++bXHzWf7a0fUth5qjRLYWdUNpV0heEZ4XpqA==
-X-Gm-Message-State: AOJu0YzKMvJLxWzt36ilC2Oo1WIg0ZVBLWYxtyuen7s/Bf01vJlQ1M7T
-	k3rgvG2UMz+LvHYI7EbrB6W7buc7WoPYl7YxIcH9b54IXGfXVdq8
-X-Google-Smtp-Source: AGHT+IHtyedrk98ou29Kg6rNsqOMEn95U01t7gSYrXBTrHwwR/KGG9pYFlYAQ/YJ7hVTZ+llph15Ng==
-X-Received: by 2002:a5d:4383:0:b0:35f:2af3:7843 with SMTP id ffacd0b85a97d-35f2af37959mr455787f8f.48.1718047211545;
-        Mon, 10 Jun 2024 12:20:11 -0700 (PDT)
-Received: from [192.168.42.64] ([148.252.129.53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f0d512556sm8313077f8f.29.2024.06.10.12.20.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 12:20:11 -0700 (PDT)
-Message-ID: <00c67cf0-2bf3-4eaf-b200-ffe00d91593b@gmail.com>
-Date: Mon, 10 Jun 2024 20:20:08 +0100
+        d=1e100.net; s=20230601; t=1718047222; x=1718652022;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Guz7MjyMNC45VGVGtnc1o6ogeR5taFihB6DV18NWqFk=;
+        b=u52NiUtK7KVLoG14ub3vAHQhsN3wYCYCrtTPOM8D9qDnogfLrw6suIgNQhXgTsQUBZ
+         I2WOp1eV3Kw4C6fewawN+fO3ORrdN66OuAruacGSMfZjG1XqFj2O8ZS3BWjr0a0e2J5D
+         O811ihy9r8uwAckHHt/TGsXkY08isf3H+8XBYycKVQh9Y2iYq+l7jZBEudUO4oFaB5fp
+         IvRiImpBvTmbcf3xxBftvCY8cMc0R+ftpZRMcunKtTs2Zysj3TMQTSwzLhboR7ILFFMe
+         CEMl2slSb4XUyzaU2VH60a2/iewntXWu1Su71/Eyvbi6uj4Bwp8wrOZtKdRajg6MQNfY
+         Kpag==
+X-Forwarded-Encrypted: i=1; AJvYcCUHgznvM0gbdqg/R0QfD9Rd1Ep6qWqgtSPYgPVd1oVQ1hT8OLfLrEbpw+wfFgbpQYzhFukApKun9zJlYY29m5ud6ynrzftGOXoLVGIdYG6oLbPR
+X-Gm-Message-State: AOJu0Yyday76THC4cbbiF8zDhGTQh+TogIgJasU7yw3V4F+FNChdRQJN
+	B6cCIPVbFpkbOXiRAlljjJjhoP0VWX1zFbqJrYJo6T/aY4/xHJ3vQQsjGuhbfOA=
+X-Google-Smtp-Source: AGHT+IHq8jSEMkw7gwkS01+qTAl/yGpwM7w1xlBZWuVyZXGP6Ki1z+5dsHApq2plP2vN33SQwO/EeA==
+X-Received: by 2002:a05:6000:1886:b0:35f:17c8:fe2d with SMTP id ffacd0b85a97d-35f17c8ff54mr6394663f8f.37.1718047221959;
+        Mon, 10 Jun 2024 12:20:21 -0700 (PDT)
+Received: from airbuntu.. (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f1f30c3ccsm4988326f8f.7.2024.06.10.12.20.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 12:20:21 -0700 (PDT)
+From: Qais Yousef <qyousef@layalina.io>
+To: Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Metin Kaya <metin.kaya@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Qais Yousef <qyousef@layalina.io>
+Subject: [PATCH v6 0/3] Clean up usage of rt_task()
+Date: Mon, 10 Jun 2024 20:20:15 +0100
+Message-Id: <20240610192018.1567075-1-qyousef@layalina.io>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
- custom page providers
-To: David Ahern <dsahern@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: David Wei <dw@davidwei.uk>, Mina Almasry <almasrymina@google.com>,
- Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240530201616.1316526-3-almasrymina@google.com>
- <ZlqzER_ufrhlB28v@infradead.org>
- <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
- <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
- <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
- <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
- <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
- <20240607145247.GG791043@ziepe.ca>
- <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
- <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
- <20240610121625.GI791043@ziepe.ca>
- <59443d14-1f1d-42bb-8be3-73e6e4a0b683@kernel.org>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <59443d14-1f1d-42bb-8be3-73e6e4a0b683@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/10/24 16:16, David Ahern wrote:
-> On 6/10/24 6:16 AM, Jason Gunthorpe wrote:
->> On Mon, Jun 10, 2024 at 02:07:01AM +0100, Pavel Begunkov wrote:
->>> On 6/10/24 01:37, David Wei wrote:
->>>> On 2024-06-07 17:52, Jason Gunthorpe wrote:
->>>>> IMHO it seems to compose poorly if you can only use the io_uring
->>>>> lifecycle model with io_uring registered memory, and not with DMABUF
->>>>> memory registered through Mina's mechanism.
->>>>
->>>> By this, do you mean io_uring must be exclusively used to use this
->>>> feature?
->>>>
->>>> And you'd rather see the two decoupled, so userspace can register w/ say
->>>> dmabuf then pass it to io_uring?
->>>
->>> Personally, I have no clue what Jason means. You can just as
->>> well say that it's poorly composable that write(2) to a disk
->>> cannot post a completion into a XDP ring, or a netlink socket,
->>> or io_uring's main completion queue, or name any other API.
->>
->> There is no reason you shouldn't be able to use your fast io_uring
->> completion and lifecycle flow with DMABUF backed memory. Those are not
->> widly different things and there is good reason they should work
->> together.
+Make rt_task() return true only for RT class and add new realtime_task() to
+return true for RT and DL classes to avoid some confusion the old API can
+cause.
 
-Let's not mix up devmem TCP and dmabuf specifically, as I see it
-your question was concerning the latter: "... DMABUF memory registered
-through Mina's mechanism". io_uring's zcrx can trivially get dmabuf
-support in future, as mentioned it's mostly the setup side. ABI,
-buffer workflow and some details is a separate issue, and I don't
-see how further integration aside from what we're already sharing
-is beneficial, on opposite it'll complicate things.
+No functional changes intended in patch 1. Patch 2 cleans up the return type as
+suggested by Steve. Patch 3 uses rt_or_dl() instead of 'realtime' as suggested
+by Daniel. As the name was debatable, I'll leave up to the maintainers to pick
+their preference.
 
->> Pretending they are totally different just because two different
->> people wrote them is a very siloed view.
-io_uring zcrx and devmem? They are not, nobody is saying otherwise,
-_very_ similar approaches if anything but with different API, which
-is the reason we already use common infra.
+Changes since v5:
 
->>> The devmem TCP callback can implement it in a way feasible to
->>> the project, but it cannot directly post events to an unrelated
->>> API like io_uring. And devmem attaches buffers to a socket,
->>> for which a ring for returning buffers might even be a nuisance.
->>
->> If you can't compose your io_uring completion mechanism with a DMABUF
->> provided backing store then I think it needs more work.
+	* Added a new patch to s/realtime/rt_or_dl/ as suggested by Daniel.
+	* Added Reviewed-bys.
 
-As per above, it conflates devmem TCP with dmabuf.
+Changes since v4:
 
-> exactly. io_uring, page_pool, dmabuf - all kernel building blocks for
-> solutions. This why I was pushing for Mina's set not to be using the
-> name `devmem` - it is but one type of memory and with dmabuf it should
-> not matter if it is gpu or host (or something else later on - cxl?).
+	* Simplify return of rt/realtime_prio() as the explicit true/false was
+	  not necessary.
+
+Changes since v3:
+
+	* Make sure the 'new' bool functions return true/false instead of 1/0.
+	* Drop patch 2 about hrtimer usage of realtime_task() as ongoing
+	  discussion on v1 indicates its scope outside of this simple cleanup.
+
+Changes since v2:
+
+	* Fix one user that should use realtime_task() but remained using
+	  rt_task() (Sebastian)
+	* New patch to convert all hrtimer users to use realtime_task_policy()
+	  (Sebastian)
+	* Add a new patch to convert return type to bool (Steve)
+	* Rebase on tip/sched/core and handle a conflict with code shuffle to
+	  syscalls.c
+	* Add Reviewed-by Steve
+
+Changes since v1:
+
+	* Use realtime_task_policy() instead task_has_realtime_policy() (Peter)
+	* Improve commit message readability about replace some rt_task()
+	  users.
+
+v1 discussion: https://lore.kernel.org/lkml/20240514234112.792989-1-qyousef@layalina.io/
+v2 discussion: https://lore.kernel.org/lkml/20240515220536.823145-1-qyousef@layalina.io/
+v3 discussion: https://lore.kernel.org/lkml/20240527234508.1062360-1-qyousef@layalina.io/
+v4 discussion: https://lore.kernel.org/lkml/20240601213309.1262206-1-qyousef@layalina.io/
+v5 discussion: https://lore.kernel.org/lkml/20240604144228.1356121-1-qyousef@layalina.io/
+
+Qais Yousef (3):
+  sched/rt: Clean up usage of rt_task()
+  sched/rt, dl: Convert functions to return bool
+  sched/rt: Rename realtime_{prio, task}() to rt_or_dl_{prio, task}()
+
+ fs/bcachefs/six.c                 |  2 +-
+ fs/select.c                       |  2 +-
+ include/linux/ioprio.h            |  2 +-
+ include/linux/sched/deadline.h    | 14 ++++++-------
+ include/linux/sched/prio.h        |  1 +
+ include/linux/sched/rt.h          | 33 +++++++++++++++++++++++++------
+ kernel/locking/rtmutex.c          |  4 ++--
+ kernel/locking/rwsem.c            |  4 ++--
+ kernel/locking/ww_mutex.h         |  2 +-
+ kernel/sched/core.c               |  4 ++--
+ kernel/sched/syscalls.c           |  2 +-
+ kernel/time/hrtimer.c             |  6 +++---
+ kernel/trace/trace_sched_wakeup.c |  2 +-
+ mm/page-writeback.c               |  4 ++--
+ mm/page_alloc.c                   |  2 +-
+ 15 files changed, 53 insertions(+), 31 deletions(-)
 
 -- 
-Pavel Begunkov
+2.34.1
+
