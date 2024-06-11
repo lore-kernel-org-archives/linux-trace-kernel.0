@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9058C15216C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4B3152789;
 	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718134132; cv=none; b=mX/54W6eh7sfDTK/e/AP0yWPavT06YNhBZ08GeGNUJ8cRW7QzRXzVh7y2SczFq3BGtw7VDb1qDQZpQdzZH3Kg17D/awxc3WbFjHnJH9N6SYp1eHnO+mcxvbbfE0OtAYIsjmJ0y0tBLwMyAX44SrZFbx68mX6vcxcDWJUAeKXz7c=
+	t=1718134133; cv=none; b=fawYRHaE+Qxv29I9ucxCVba8LXyiXI/kORbKNjzzCGA6o4K6WfQntwHsz4MpyFoR3SPILlroc5mniUKWp9cQw551504b+WykGyAYxmKXSaLyevkr7XcGK52kbCf7KFex10JvTs7EaQSWyMoqTR943GEJaiC8peG1L2MKu/l+Pjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718134132; c=relaxed/simple;
-	bh=GVvcmn3027Fc6rCsvulA82p+nR13kJETnki+fNMXM9U=;
+	s=arc-20240116; t=1718134133; c=relaxed/simple;
+	bh=mZTyYJB2LiFL7vhNFEBQuD6v2hbJlYmFFJs3Rt2sAQA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=q3kGUOxBWivd5qzX+w19fyHcEYwdCful7tHwlWeOS/aGO8TQEZqseTGLx7VESH85CiVk50fDdj1OtrNNDATriYr9oBsVNeSRz6gzosk6gfAQhnFySFb9WvSsojDfIflErBqXXWFwt8DVgxl6Bk9ZggK4AFz1OqjN/x8zcN7tYcM=
+	 Content-Type; b=WHEn0D6kRV6xMu2NvTOcODzC7Ic8Rsd73rywsPWSV5ZqDNI7+SuEYVS1iaAY8fDdoUUgj4AbJLR2dx0LKLfhVF0VRWH25qmeFVG+ExuerwllOFYioT5iuRurrU0lzGXmYLcO+TgTK9mjGMsPN0qMiMW8NMJZJBsEi/iQiQBpJFA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322CAC4AF50;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73094C4DE03;
 	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sH7B6-00000001TtR-2laI;
+	id 1sH7B6-00000001TuR-45zg;
 	Tue, 11 Jun 2024 15:29:08 -0400
-Message-ID: <20240611192908.518698789@goodmis.org>
+Message-ID: <20240611192908.835949908@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 15:28:36 -0400
+Date: Tue, 11 Jun 2024 15:28:38 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -48,9 +48,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tony Luck <tony.luck@intel.com>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>,
- linux-mm@kvack.org
-Subject: [PATCH v4 08/13] tracing: Add option to use memmapped memory for trace boot instance
+ Kees Cook <keescook@chromium.org>
+Subject: [PATCH v4 10/13] tracing/ring-buffer: Add last_boot_info file to boot instance
 References: <20240611192828.691638177@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,159 +61,191 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add an option to the trace_instance kernel command line parameter that
-allows it to use the reserved memory from memmap boot parameter.
+If an instance is mapped to memory on boot up, create a new file called
+"last_boot_info" that will hold information that can be used to properly
+parse the raw data in the ring buffer.
 
-  memmap=12M$0x284500000 trace_instance=boot_mapped@0x284500000:12M
+It will export the delta of the addresses for text and data from what it
+was from the last boot. It does not expose actually addresses (unless you
+knew what the actual address was from the last boot).
 
-The above will reserves 12 megs at the physical address 0x284500000.
-The second parameter will create a "boot_mapped" instance and use the
-memory reserved as the memory for the ring buffer.
+The output will look like:
 
-That will create an instance called "boot_mapped":
+ # cat last_boot_info
+ text delta:	-268435456
+ data delta:	-268435456
 
-  /sys/kernel/tracing/instances/boot_mapped
+The text and data are kept separate in case they are ever made different.
 
-Note, because the ring buffer is using a defined memory ranged, it will
-act just like a memory mapped ring buffer. It will not have a snapshot
-buffer, as it can't swap out the buffer. The snapshot files as well as any
-tracers that uses a snapshot will not be present in the boot_mapped
-instance.
-
-Cc: linux-mm@kvack.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  9 +++
- kernel/trace/trace.c                          | 75 +++++++++++++++++--
- 2 files changed, 78 insertions(+), 6 deletions(-)
+ include/linux/ring_buffer.h |  3 +++
+ kernel/trace/ring_buffer.c  | 23 ++++++++++++++++++
+ kernel/trace/trace.c        | 47 ++++++++++++++++++++++++++++++++++++-
+ kernel/trace/trace.h        |  2 ++
+ 4 files changed, 74 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b600df82669d..ff26b6094e79 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6754,6 +6754,15 @@
- 			the same thing would happen if it was left off). The irq_handler_entry
- 			event, and all events under the "initcall" system.
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index a50b0223b1d3..55de3798a9b9 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -94,6 +94,9 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+ 					       unsigned long range_size,
+ 					       struct lock_class_key *key);
  
-+			If memory has been reserved (see memmap for x86), the instance
-+			can use that memory:
++bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
++				 long *data);
 +
-+				memmap=12M$0x284500000 trace_instance=boot_map@0x284500000:12M
-+
-+			The above will create a "boot_map" instance that uses the physical
-+			memory at 0x284500000 that is 12Megs. The per CPU buffers of that
-+			instance will be split up accordingly.
-+
- 	trace_options=[option-list]
- 			[FTRACE] Enable or disable tracer options at boot.
- 			The option-list is a comma delimited list of options
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 622fe670949d..dfde26aa3211 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9504,6 +9504,31 @@ static int instance_mkdir(const char *name)
- 	return ret;
+ /*
+  * Because the ring buffer is generic, if other users of the ring buffer get
+  * traced by ftrace, it can produce lockdep warnings. We need to keep each
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index ab6b8a0ee8e1..8c1d7ea01e6f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2394,6 +2394,29 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+ 	return alloc_buffer(size, flags, order, start, start + range_size, key);
  }
  
-+static u64 map_pages(u64 start, u64 size)
++/**
++ * ring_buffer_last_boot_delta - return the delta offset from last boot
++ * @buffer: The buffer to return the delta from
++ * @text: Return text delta
++ * @data: Return data delta
++ *
++ * Returns: The true if the delta is non zero
++ */
++bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
++				 long *data)
 +{
-+	struct page **pages;
-+	phys_addr_t page_start;
-+	unsigned int page_count;
-+	unsigned int i;
-+	void *vaddr;
++	if (!buffer)
++		return false;
 +
-+	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
++	if (!buffer->last_text_delta)
++		return false;
 +
-+	page_start = start;
-+	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
-+	if (!pages)
-+		return 0;
++	*text = buffer->last_text_delta;
++	*data = buffer->last_data_delta;
 +
-+	for (i = 0; i < page_count; i++) {
-+		phys_addr_t addr = page_start + i * PAGE_SIZE;
-+		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
-+	}
-+	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
-+	kfree(pages);
-+
-+	return (u64)(unsigned long)vaddr;
++	return true;
 +}
 +
  /**
-  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
-  * @name: The name of the trace array to be looked up/created.
-@@ -10350,6 +10375,7 @@ __init static void enable_instances(void)
- {
- 	struct trace_array *tr;
- 	char *curr_str;
-+	char *name;
- 	char *str;
- 	char *tok;
+  * ring_buffer_free - free a ring buffer.
+  * @buffer: the buffer to free.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index dfde26aa3211..dc4eee33d920 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6041,6 +6041,18 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 	return ret;
+ }
  
-@@ -10358,19 +10384,56 @@ __init static void enable_instances(void)
- 	str = boot_instance_info;
- 
- 	while ((curr_str = strsep(&str, "\t"))) {
-+		unsigned long start = 0;
-+		unsigned long size = 0;
-+		unsigned long addr = 0;
- 
- 		tok = strsep(&curr_str, ",");
-+		name = strsep(&tok, "@");
-+		if (tok) {
-+			start = memparse(tok, &tok);
-+			if (!start) {
-+				pr_warn("Tracing: Invalid boot instance address for %s\n",
-+					name);
-+				continue;
-+			}
-+		}
- 
--		if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
--			do_allocate_snapshot(tok);
-+		if (start) {
-+			if (*tok != ':') {
-+				pr_warn("Tracing: No size specified for instance %s\n", name);
-+				continue;
-+			}
-+			tok++;
-+			size = memparse(tok, &tok);
-+			if (!size) {
-+				pr_warn("Tracing: Invalid boot instance size for %s\n",
-+					name);
-+				continue;
-+			}
-+			addr = map_pages(start, size);
-+			if (addr) {
-+				pr_info("Tracing: mapped boot instance %s at physical memory 0x%lx of size 0x%lx\n",
-+					name, start, size);
-+			} else {
-+				pr_warn("Tracing: Failed to map boot instance %s\n", name);
-+				continue;
-+			}
-+		} else {
-+			/* Only non mapped buffers have snapshot buffers */
-+			if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
-+				do_allocate_snapshot(name);
-+		}
- 
--		tr = trace_array_get_by_name(tok, NULL);
-+		tr = trace_array_create_systems(name, NULL, addr, size);
- 		if (!tr) {
--			pr_warn("Failed to create instance buffer %s\n", curr_str);
-+			pr_warn("Tracing: Failed to create instance buffer %s\n", curr_str);
- 			continue;
- 		}
--		/* Allow user space to delete it */
--		trace_array_put(tr);
++static void update_last_data(struct trace_array *tr)
++{
++	if (!tr->text_delta && !tr->data_delta)
++		return;
 +
-+		/* Only allow non mapped buffers to be deleted */
-+		if (!start)
-+			trace_array_put(tr);
++	/* Clear old data */
++	tracing_reset_online_cpus(&tr->array_buffer);
++
++	/* Using current data now */
++	tr->text_delta = 0;
++	tr->data_delta = 0;
++}
  
- 		while ((tok = strsep(&curr_str, ","))) {
- 			early_enable_events(tr, tok, true);
+ /**
+  * tracing_update_buffers - used by tracing facility to expand ring buffers
+@@ -6058,6 +6070,9 @@ int tracing_update_buffers(struct trace_array *tr)
+ 	int ret = 0;
+ 
+ 	mutex_lock(&trace_types_lock);
++
++	update_last_data(tr);
++
+ 	if (!tr->ring_buffer_expanded)
+ 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+ 						RING_BUFFER_ALL_CPUS);
+@@ -6113,6 +6128,8 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
++	update_last_data(tr);
++
+ 	if (!tr->ring_buffer_expanded) {
+ 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+ 						RING_BUFFER_ALL_CPUS);
+@@ -6860,6 +6877,21 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
+ 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+ }
+ 
++static ssize_t
++tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
++{
++	struct trace_array *tr = filp->private_data;
++	struct seq_buf seq;
++	char buf[64];
++
++	seq_buf_init(&seq, buf, 64);
++
++	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
++	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
++
++	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
++}
++
+ static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
+ {
+ 	struct trace_array *tr = inode->i_private;
+@@ -7499,6 +7531,13 @@ static const struct file_operations trace_time_stamp_mode_fops = {
+ 	.release	= tracing_single_release_tr,
+ };
+ 
++static const struct file_operations last_boot_fops = {
++	.open		= tracing_open_generic_tr,
++	.read		= tracing_last_boot_read,
++	.llseek		= generic_file_llseek,
++	.release	= tracing_release_generic_tr,
++};
++
+ #ifdef CONFIG_TRACER_SNAPSHOT
+ static const struct file_operations snapshot_fops = {
+ 	.open		= tracing_snapshot_open,
+@@ -9242,6 +9281,9 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
+ 						      tr->range_addr_start,
+ 						      tr->range_addr_size);
++
++		ring_buffer_last_boot_delta(buf->buffer,
++					    &tr->text_delta, &tr->data_delta);
+ 		/*
+ 		 * This is basically the same as a mapped buffer,
+ 		 * with the same restrictions.
+@@ -9751,7 +9793,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 		MEM_FAIL(1, "Could not allocate function filter files");
+ 
+ #ifdef CONFIG_TRACER_SNAPSHOT
+-	if (!tr->range_addr_start) {
++	if (tr->range_addr_start) {
++		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
++				  tr, &last_boot_fops);
++	} else {
+ 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
+ 				  tr, &snapshot_fops);
+ 	}
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 2efa4cccdd3b..611be17fdc70 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -347,6 +347,8 @@ struct trace_array {
+ 	/* The below is for memory mapped ring buffer */
+ 	unsigned long		range_addr_start;
+ 	unsigned long		range_addr_size;
++	long			text_delta;
++	long			data_delta;
+ 
+ 	struct trace_pid_list	__rcu *filtered_pids;
+ 	struct trace_pid_list	__rcu *filtered_no_pids;
 -- 
 2.43.0
 
