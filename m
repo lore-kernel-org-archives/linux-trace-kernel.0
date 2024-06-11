@@ -1,199 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7884579C2;
-	Tue, 11 Jun 2024 06:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0C6116;
+	Tue, 11 Jun 2024 06:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718086323; cv=none; b=fNU3Zsl7UCPSKIZWXTIW5LOeHtjKk6bP0ueG48mIFp5LxrWLozonxVwdhvotZevf5eGCgNFmwHs8w63MwpEhsUQM/06YhhQKc/1mO2V/8l11VId/6gjQcYqH2LjKAMH0Uwdsb9zpu+6zDhhJWdf4grU0QlyF9ShnyqayElquVBs=
+	t=1718086994; cv=none; b=FOUyCgZlxYGO13+VioCuwA2B5lYxQJLiH6OM1Am97hhdNtrJ0ox4Lk2NPx2TNtO6BRhm9cFO6hE3nLsC7AH26HPkgKrCCTtD9JEi0el/Hlp7WmP/D+Yh2fiwH/pLTwUgQedcal0/IuBFV+OOyT+MvI5jlIeF/8pNHjYOnjtMb58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718086323; c=relaxed/simple;
-	bh=FnX0yoxR6ZaCdJZqR446yzRj3FXdbNWw744N+h5an/A=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Xc+egQK14IlO3dsTYH2rOepw1KLxB8kotTYuA9ZKUzZgEBnHEW8uvESeYt25Yn5n0ekRk8mif3jNg2FIoxF8olAoVie6bmt4KhzQrxg3IMwX/TJeoKYVV0l12PItoJ2I17Hg3Dcua+PxhpLvJi7bfqpCsyLpkOq/bjPzvf1/kJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0QzyBgY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718086994; c=relaxed/simple;
+	bh=ve4gT6CyxU4E2TQ43WtxEhXL8/ATKIHsYr3UXy4cHyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJN18xxn2YK+qzeAAygyEuuxXrsV9vZgxvYJnafQS9Bv8ODq6W5b1xSyvjCIJ3asSs7Rb5gBLPFJkmx+Sc4AdZh6rMS0RoVzLxoDG7o99Z3ZEAOTsnmYS9GXyiH9pq6wFaWXxrW9p9fb9Kg2XCpkjGr5l4Bx2/ulIYWbWHwn/6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=18Jf531q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0QzyBgY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6788BC2BD10;
-	Tue, 11 Jun 2024 06:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718086322;
-	bh=FnX0yoxR6ZaCdJZqR446yzRj3FXdbNWw744N+h5an/A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=R0QzyBgY9wKE2btdFa/+xBFG3+ltYad4sCqm9Jge3jI3JlxHyP8QnzBuLCbvjhyAN
-	 hsjuBQfSQAzUB3CputC3M+WIz17tUusYN5Kl38dMzAPzoJ1QTNB7sB40BEyAkfAVrE
-	 cGKZMjgmQWpGwaNla42q8H/nK6NstaYSd33/b9x5EkwT27tk4+JfzpjKUgnXYBRY7u
-	 wsHGkbmDSRmUoF81FUOA2PXmnBts4z/hwGIofZlrCXNoNm9zSftnXhvR+HtmXHq87L
-	 RSr9GvnDsk7EWMIOd2a7lsGr6JDMIkUJceDWEXDl8noz2nI3ZijgYq9nYXprzAoVyw
-	 Jaegczi5PABxA==
-Date: Tue, 11 Jun 2024 15:11:59 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 2/3] tracing/kprobe: Remove unneeded WARN_ON_ONCE() in
- selftests
-Message-Id: <20240611151159.fefefc259661e7a41afb39ed@kernel.org>
-In-Reply-To: <20240610201813.319d6500@gandalf.local.home>
-References: <171805478534.52471.6269290579314514778.stgit@devnote2>
-	<171805480405.52471.13982671291270977479.stgit@devnote2>
-	<20240610201813.319d6500@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="18Jf531q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFC3C2BD10;
+	Tue, 11 Jun 2024 06:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718086994;
+	bh=ve4gT6CyxU4E2TQ43WtxEhXL8/ATKIHsYr3UXy4cHyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=18Jf531qULxA/w23HwCUdkd/2Y3nJjWIdgleWTellkonv3YQTG0F1QG0wlv7DzTdW
+	 SrvqlNIF0jkDgNfIVHsbIhRqxh0YFLAYsjfSXfHUs9RH/SH5tZBk3lwxcOEK7pNReM
+	 f1GLVwOyOPoxXC+2uL+/vb+ZybUC97FNph2f4/6w=
+Date: Tue, 11 Jun 2024 08:23:11 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	kernel-janitors@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <2024061143-transfer-jalapeno-afa0@gregkh>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240609082726.32742-6-Julia.Lawall@inria.fr>
+ <20240610112223.151faf65@rorschach.local.home>
+ <b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
+ <20240610163606.069d552a@gandalf.local.home>
+ <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
 
-On Mon, 10 Jun 2024 20:18:13 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 11 Jun 2024 06:26:44 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, Jun 10, 2024 at 11:40:54PM +0200, Vlastimil Babka wrote:
+> On 6/10/24 10:36 PM, Steven Rostedt wrote:
+> > On Mon, 10 Jun 2024 08:46:42 -0700
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
 > > 
-> > Since the kprobe-events selftest shows OK or NG with the reason, the
-> > WARN_ON_ONCE()s for each place are redundant. Let's remove it.
+> >> > > index 7c29f4afc23d..338c52168e61 100644
+> >> > > --- a/fs/tracefs/inode.c
+> >> > > +++ b/fs/tracefs/inode.c
+> >> > > @@ -53,14 +53,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+> >> > >  	return &ti->vfs_inode;
+> >> > >  }
+> >> > >  
+> >> > > -static void tracefs_free_inode_rcu(struct rcu_head *rcu)
+> >> > > -{
+> >> > > -	struct tracefs_inode *ti;
+> >> > > -
+> >> > > -	ti = container_of(rcu, struct tracefs_inode, rcu);
+> >> > > -	kmem_cache_free(tracefs_inode_cachep, ti);  
+> >> > 
+> >> > Does this work?
+> >> > 
+> >> > tracefs needs to be freed via the tracefs_inode_cachep. Does
+> >> > kfree_rcu() handle specific frees for objects that were not allocated
+> >> > via kmalloc()?  
+> >> 
+> >> A recent change to kfree() allows it to correctly handle memory allocated
+> >> via kmem_cache_alloc().  News to me as of a few weeks ago.  ;-)
 > > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace_kprobe.c |   26 +++++++++++++-------------
-> >  1 file changed, 13 insertions(+), 13 deletions(-)
+> > If that's the case then:
 > > 
-> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> > index 16383247bdbf..4abed36544d0 100644
-> > --- a/kernel/trace/trace_kprobe.c
-> > +++ b/kernel/trace/trace_kprobe.c
-> > @@ -2023,18 +2023,18 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  	pr_info("Testing kprobe tracing: ");
-> >  
-> >  	ret = create_or_delete_trace_kprobe("p:testprobe kprobe_trace_selftest_target $stack $stack0 +0($stack)");
-> > -	if (WARN_ON_ONCE(ret)) {
-> > +	if (ret) {
-> >  		pr_warn("error on probing function entry.\n");
+> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > 
+> > Do we have a way to add a "Depends-on" tag so that anyone backporting this
+> > will know that it requires the change to whatever allowed that to happen?
 > 
-> Actually, you can consolidate this to:
+> Looks like people use that tag, although no grep hits in Documentation, so
+> Cc'ing workflows@ and Thorsten.
 > 
-> 	if (WARN_ONCE(ret, "error on probing function entry."))
+> In this case it would be
+> 
+> Depends-on: c9929f0e344a ("mm/slob: remove CONFIG_SLOB")
 
-Ahh, OK, let me update it.
+Ick, no, use the documented way of handling this as described in the
+stable kernel rules file.
 
-> 
-> >  		warn++;
-> >  	} else {
-> >  		/* Enable trace point */
-> >  		tk = find_trace_kprobe("testprobe", KPROBE_EVENT_SYSTEM);
-> > -		if (WARN_ON_ONCE(tk == NULL)) {
-> > +		if (tk == NULL) {
-> >  			pr_warn("error on getting new probe.\n");
-> 
-> And this to:
-> 
-> 		if (WARN_ONCE(tk == NULL, "error on getting new probe."))
+thanks,
 
-Thank you!
-
-> 
-> end so on.
-> 
-> -- Steve
-> 
-> >  			warn++;
-> >  		} else {
-> >  			file = find_trace_probe_file(tk, top_trace_array());
-> > -			if (WARN_ON_ONCE(file == NULL)) {
-> > +			if (file == NULL) {
-> >  				pr_warn("error on getting probe file.\n");
-> >  				warn++;
-> >  			} else
-> > @@ -2044,18 +2044,18 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  	}
-> >  
-> >  	ret = create_or_delete_trace_kprobe("r:testprobe2 kprobe_trace_selftest_target $retval");
-> > -	if (WARN_ON_ONCE(ret)) {
-> > +	if (ret) {
-> >  		pr_warn("error on probing function return.\n");
-> >  		warn++;
-> >  	} else {
-> >  		/* Enable trace point */
-> >  		tk = find_trace_kprobe("testprobe2", KPROBE_EVENT_SYSTEM);
-> > -		if (WARN_ON_ONCE(tk == NULL)) {
-> > +		if (tk == NULL) {
-> >  			pr_warn("error on getting 2nd new probe.\n");
-> >  			warn++;
-> >  		} else {
-> >  			file = find_trace_probe_file(tk, top_trace_array());
-> > -			if (WARN_ON_ONCE(file == NULL)) {
-> > +			if (file == NULL) {
-> >  				pr_warn("error on getting probe file.\n");
-> >  				warn++;
-> >  			} else
-> > @@ -2079,7 +2079,7 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  
-> >  	/* Disable trace points before removing it */
-> >  	tk = find_trace_kprobe("testprobe", KPROBE_EVENT_SYSTEM);
-> > -	if (WARN_ON_ONCE(tk == NULL)) {
-> > +	if (tk == NULL) {
-> >  		pr_warn("error on getting test probe.\n");
-> >  		warn++;
-> >  	} else {
-> > @@ -2089,7 +2089,7 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  		}
-> >  
-> >  		file = find_trace_probe_file(tk, top_trace_array());
-> > -		if (WARN_ON_ONCE(file == NULL)) {
-> > +		if (file == NULL) {
-> >  			pr_warn("error on getting probe file.\n");
-> >  			warn++;
-> >  		} else
-> > @@ -2098,7 +2098,7 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  	}
-> >  
-> >  	tk = find_trace_kprobe("testprobe2", KPROBE_EVENT_SYSTEM);
-> > -	if (WARN_ON_ONCE(tk == NULL)) {
-> > +	if (tk == NULL) {
-> >  		pr_warn("error on getting 2nd test probe.\n");
-> >  		warn++;
-> >  	} else {
-> > @@ -2108,7 +2108,7 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  		}
-> >  
-> >  		file = find_trace_probe_file(tk, top_trace_array());
-> > -		if (WARN_ON_ONCE(file == NULL)) {
-> > +		if (file == NULL) {
-> >  			pr_warn("error on getting probe file.\n");
-> >  			warn++;
-> >  		} else
-> > @@ -2117,20 +2117,20 @@ static __init int kprobe_trace_self_tests_init(void)
-> >  	}
-> >  
-> >  	ret = create_or_delete_trace_kprobe("-:testprobe");
-> > -	if (WARN_ON_ONCE(ret)) {
-> > +	if (ret) {
-> >  		pr_warn("error on deleting a probe.\n");
-> >  		warn++;
-> >  	}
-> >  
-> >  	ret = create_or_delete_trace_kprobe("-:testprobe2");
-> > -	if (WARN_ON_ONCE(ret)) {
-> > +	if (ret) {
-> >  		pr_warn("error on deleting a probe.\n");
-> >  		warn++;
-> >  	}
-> >  
-> >  end:
-> >  	ret = dyn_events_release_all(&trace_kprobe_ops);
-> > -	if (WARN_ON_ONCE(ret)) {
-> > +	if (ret) {
-> >  		pr_warn("error on cleaning up probes.\n");
-> >  		warn++;
-> >  	}
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+greg k-h
