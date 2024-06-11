@@ -1,74 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD1317D894;
-	Tue, 11 Jun 2024 14:24:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2F51EF01;
+	Tue, 11 Jun 2024 14:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718115886; cv=none; b=AGOF0MD+GiJ2XDtp6VOUvRk4jwVcrDkdsMKolS3/fEjcH4vwRlC+/0kUo8wXMRLufquri/aUZhY/hKtRTypoMW5nNTxBln7Ey6Ijmj6+QPbpVFbOjQPg1zOA1JvGpMQCkBwuNKQsoTtg6yw3AU71pe5xe6YoW/YKeG1MUMkLlKs=
+	t=1718115933; cv=none; b=X/psZ6Hdv3rrr3ZcQXLAJo7tkQ33C0Ni/sMTE7cVYHM4CSdfbVwBDfckCNmqaXXqVtvVfrc2c0lh881AUB4NjlRKTj0/tnS/BJ/arJGsSD10cLPW8mPVqSUN+Vrcg+AjJubFRRb5uXCKTYegQSpnqJlDAi0Zvp93anaKfTaUUHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718115886; c=relaxed/simple;
-	bh=1CKuk9B0FuPJf1djCoC4PuFEIJtP/VlYB88UvPspDbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E3OiIV6DQJ789LVbyYldL4HsCC2gFKGFtAxs2eU0BNSbvI8aZxUtTCAzdEpKP39BFClrzhXU8Hhpr1t+mwhdi5D6lnP+rdGsPQIKjioZPpSl9QoJmaNz+dzMt28ygq8tFaRN3h1EKsFa83Cq/m7Ck4DXob4vCCqjo0TyiLs6lRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C7AAC2BD10;
-	Tue, 11 Jun 2024 14:24:45 +0000 (UTC)
-Date: Tue, 11 Jun 2024 10:25:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v3 3/3] tracing/kprobe: Remove cleanup code unrelated to
- selftest
-Message-ID: <20240611102500.27493dd2@gandalf.local.home>
-In-Reply-To: <171811265627.85078.16897867213512435822.stgit@devnote2>
-References: <171811262833.85078.12421348187962271050.stgit@devnote2>
-	<171811265627.85078.16897867213512435822.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718115933; c=relaxed/simple;
+	bh=q7wQiHNLHYzy0RjwM792O1yu2UhopzF0mTpZxoTHKKI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mDuUV79Ht/YEEpOihflZ7STpvoRqyhZSMAH5YOR+k3Y6P6/j58vts3Nb5G6Ig6LrDaXdXzIVfyLD6HCfIAodffvtF9Hhcvgxa5NJxWk2dxbyR9HVHZUla9JG3XZ2ykGhUMGTqxRPW+h/o+ysKndogpvKca1aZ0LpTFaRlD7P/RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDRL8FNm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDRL8FNm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1124BC2BD10;
+	Tue, 11 Jun 2024 14:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718115932;
+	bh=q7wQiHNLHYzy0RjwM792O1yu2UhopzF0mTpZxoTHKKI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NDRL8FNmdTG9WJ8ghyWQ/Lm8Qrhi9UqZ/CL9dnVq3O+mtLbeAK9bz3RHBQ8qePPH/
+	 cOSZFfugvnKTO6ajItL3nBxo5zU2N6pQ2rfS7C12MUBaxJoOhJQMMOhKdvvwkMTiDY
+	 vZmhORBPwNlozlOpHheOYw/hM9PnMEOaPSD1HZ9CzDivUxS40b8U9+eiDH8s5mIYKl
+	 5oa4eHCQCQDAZ0F9NUloJN3H9FI0GDxXm0Nz6NuW+AsnzhtA+NHQ1925raVy/NzskX
+	 16VI7jp4LnTNmI0Qg5AFXgD3nKcPax/6Tw56l8TvBMMKXMDNT3/7DSavVlN0XIB7T3
+	 z+nMKVEfIMHOQ==
+Date: Tue, 11 Jun 2024 23:25:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>,
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org,
+ bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>, "Edgecombe, Rick P"
+ <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCHv7 bpf-next 0/9] uprobe: uretprobe speed up
+Message-Id: <20240611232525.c4aaee0d1a0ea3c7ecd78076@kernel.org>
+In-Reply-To: <CAEf4BzYcwUS=7KFX5fUibS9eLT8yQxYqaWF_+sVM0YZJzBD=Sg@mail.gmail.com>
+References: <20240523121149.575616-1-jolsa@kernel.org>
+	<CAEf4Bza-+=04GG7Tg4U4pCQ28Oy_2F_5872EPDsX6X3Y=jhEuw@mail.gmail.com>
+	<CAEf4Bzbc99bwGcmtCa3iekXSvSrxMQzfnTViT5Y-dn8qbvJy7A@mail.gmail.com>
+	<20240611064641.9021829459211782902e4fb2@kernel.org>
+	<CAEf4BzYcwUS=7KFX5fUibS9eLT8yQxYqaWF_+sVM0YZJzBD=Sg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Jun 2024 22:30:56 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Tue, 11 Jun 2024 09:30:52 +0100
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> This cleanup all kprobe events code is not related to the selftest
-> itself, and it can fail by the reason unrelated to this test.
-> If the test is successful, the generated events are cleaned up.
-> And if not, we cannot guarantee that the kprobe events will work
-> correctly. So, anyway, there is no need to clean it up.
+> > I think it would be better to include those patches together in
+> > linux-tree. Can you review and ack to the last patch ? ([9/9])
 > 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  kernel/trace/trace_kprobe.c |    4 ----
->  1 file changed, 4 deletions(-)
+> Sure. Jiri, please add my ack for the entire series in the next revision:
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 8c5816c04bd2..7fd0f8576e4c 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -2114,10 +2114,6 @@ static __init int kprobe_trace_self_tests_init(void)
->  
->  
->  end:
-> -	ret = dyn_events_release_all(&trace_kprobe_ops);
-> -	if (WARN_ONCE(ret, "error on cleaning up probes."))
-> -		warn++;
-> -
->  	/*
->  	 * Wait for the optimizer work to finish. Otherwise it might fiddle
->  	 * with probes in already freed __init text.
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
+Thanks! let me pick the next version.
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
