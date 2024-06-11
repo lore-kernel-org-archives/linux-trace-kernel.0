@@ -1,141 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295C117A93A;
-	Tue, 11 Jun 2024 11:23:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53BF17C21D;
+	Tue, 11 Jun 2024 13:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105036; cv=none; b=qB35osB5FDT1lFB9hZOnmkr7/TewKob2NFR+GaCsCehWfD3tcvvWN6FtfLb/kGGAloS+4fE/pJhDwC4cqJv7ZnYW5hz8RFFE09WxUSRbQFjd12nvpG6PM1L83hhbnbbR1ppPFS7x6dpzcJym9nzB4Soc70uVPUQVHPCcxo4A9BI=
+	t=1718112632; cv=none; b=WW+0nMstfzQyMkJjEfo2XofNjAqSW2FZyUTAPl6W2bZN5VH0oRk2hMAPpMr3qICqJEDoyfTviuKE3GCJOzN3ERPsi1z2DkkZ0eS9Lg9qtz/NqLBIRJ2nXdsXulDi+7OjTTzhKF0xgr1+/ogwdzkeuo216SrEZQhxOf6hJChP0HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105036; c=relaxed/simple;
-	bh=/8nbAp1OS2X1ovAw089c1Fq7pMcHWVM163XH0tCI8M0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kXR8+H8ANGn4llM9AH74FTAH00rOAuPwg1VrBRtvrwHhyG92sUCDD6McaS9EXVbsCblMWaBsu9a5vWB+NlOAMKy6WpDDfnpFZgHjhiMGWbGA9zEF2Q5o4KI109YOOnKtd5HgSSWIkIdDS537mHlrXpkAif1H27akKCV9RVeEmXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8D2OKRs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718112632; c=relaxed/simple;
+	bh=NXb3HaeTQ1KSXRxrj4kItzQB2kuaUrDr2uem270lec0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=UU3JQfS9G2KZeK/M9aeZubNwOaoSIlg4XCwmp39lyuiUKjKlNcKBO+FIBSWrIy6NzbN+/hhsyd9gEdr0uehMU81/ZOfzuf1hY6VFxayZNe1+QPciK0yq271v5Eq01wzgPzWtv5/mnIHAhlps6CKHHcqvZ48FwTBovz/v7163YmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEDnJwrG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8D2OKRs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9361EC2BD10;
-	Tue, 11 Jun 2024 11:23:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEDnJwrG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97F6C2BD10;
+	Tue, 11 Jun 2024 13:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718105035;
-	bh=/8nbAp1OS2X1ovAw089c1Fq7pMcHWVM163XH0tCI8M0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L8D2OKRsMCOkyWAJXAdC5j6d8MlciLvsnlc0yB2gnuY7N4CrjOoZrm9ZVr1CP45FJ
-	 oob9F2O+eRZpmi+MvB/dHJem9Sx3Rd412NZ7zGDqU7zfUsO2B9JCnyjWcaQCmI/mPc
-	 CckGizsqCttV0oFQX6qDE6MlUjiBEDAJOSwmGTtHptiDsOWm7L3IknfMVtGhXkj+Hd
-	 pQHjTqoPnR2DVp/bj6IIreeMAdRtM7dI7LEnNTR4F0DHzKt4rDJ4svOnDvtN+AxBLI
-	 5R8h5P6bg9pXo7KIjTjjjOYslRO3UGf5r3Mg2ydCXFRuUT6FJYrjvb39fxLO1dOjgl
-	 +aHb3gK1FZOBg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	s=k20201202; t=1718112632;
+	bh=NXb3HaeTQ1KSXRxrj4kItzQB2kuaUrDr2uem270lec0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OEDnJwrGBNr6hbsmpAoAXAWUpZGjjYpFBrc+50yKl1jX36RxXdA2uQd8ipk6tz6uk
+	 dOLHFZAPEuG7Fdj+Hh3KDkI4pjU5jAy7IKrg/ue1nc8F8TndBYN0em2wHV6wjJvZ5C
+	 ux9ooe6z91cxQEF+JI8r3k8dUAPW0RTidzPav6+jRnys51BwsGXZ6mpFHXBwS+6H8C
+	 tpnQ66CdOkAEmAoeeEbMkfohjlloYdw1kWUiL/hsSgb0L8fvNuVPqeRzTz1DRx3rlh
+	 qJ+qow+wUht6T6mfMoZc9cFXxVoGOgih7bnCQHiGwBeI5inaWZeUUDfT+akgo9vCOR
+	 EbGUXoJ+5Fqzg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: [PATCHv8 9/9] man2: Add uretprobe syscall page
-Date: Tue, 11 Jun 2024 13:21:58 +0200
-Message-ID: <20240611112158.40795-10-jolsa@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240611112158.40795-1-jolsa@kernel.org>
-References: <20240611112158.40795-1-jolsa@kernel.org>
+	Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH v3 0/3] tracing: Fix some selftest issues
+Date: Tue, 11 Jun 2024 22:30:28 +0900
+Message-Id: <171811262833.85078.12421348187962271050.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Adding man page for new uretprobe syscall.
+Hi,
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Reviewed-by: Alejandro Colomar <alx@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Here is v3 of a series of some fixes/cleanups for the test modules and
+boot time selftest of kprobe events. The previous version is here;
+
+https://lore.kernel.org/all/171805478534.52471.6269290579314514778.stgit@devnote2/
+
+In this version, I updated the 2nd patch to integrate WARN_ON_ONCE() and
+pr_warn() instead of removing WARN_ONCE() because this warning messages
+are needed to ktest to handle errors.
+
+Thank you,
+
 ---
- man/man2/uretprobe.2 | 56 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 man/man2/uretprobe.2
 
-diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-new file mode 100644
-index 000000000000..cf1c2b0d852e
---- /dev/null
-+++ b/man/man2/uretprobe.2
-@@ -0,0 +1,56 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+The
-+.BR uretprobe ()
-+system call is an alternative to breakpoint instructions for triggering return
-+uprobe consumers.
-+.P
-+Calls to
-+.BR uretprobe ()
-+system call are only made from the user-space trampoline provided by the kernel.
-+Calls from any other place result in a
-+.BR SIGILL .
-+.SH RETURN VALUE
-+The
-+.BR uretprobe ()
-+system call return value is architecture-specific.
-+.SH ERRORS
-+.TP
-+.B SIGILL
-+The
-+.BR uretprobe ()
-+system call was called by a user-space program.
-+.SH VERSIONS
-+Details of the
-+.BR uretprobe ()
-+system call behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH HISTORY
-+TBD
-+.SH NOTES
-+The
-+.BR uretprobe ()
-+system call was initially introduced for the x86_64 architecture
-+where it was shown to be faster than breakpoint traps.
-+It might be extended to other architectures.
-+.P
-+The
-+.BR uretprobe ()
-+system call exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are architecture-specific.
--- 
-2.45.1
+Masami Hiramatsu (Google) (3):
+      tracing: Build event generation tests only as modules
+      tracing/kprobe: Integrate test warnings into WARN_ONCE
+      tracing/kprobe: Remove cleanup code unrelated to selftest
 
+
+ kernel/trace/Kconfig        |    4 ++-
+ kernel/trace/trace_kprobe.c |   54 ++++++++++++++-----------------------------
+ 2 files changed, 19 insertions(+), 39 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
