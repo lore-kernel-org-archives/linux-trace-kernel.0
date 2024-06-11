@@ -1,105 +1,87 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA9717545;
-	Mon, 10 Jun 2024 23:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B26036D;
+	Tue, 11 Jun 2024 00:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718060508; cv=none; b=ckhifRV77swfR9hBzi3Ec7WzqH8bUtuaJYthL1nV2kcwCJH85FYuAd1pNPvplv4QA9pUrpebWyjB1kfMql0DsESsLXlL0GY6Q/FUIFtp/onCtsWAWVJBKgPlkce7JxbnJspX0vZLmH1+uSVwbDZa1EfkVDo3qwCfqG4CAPMnO7o=
+	t=1718064431; cv=none; b=ERHCCMyiU91O8j2wFPJpsrd9LHsAp3wVgCeFUpSeoWsVaddgm7rjHNGdXyuurWC4zK8woHVmmZvRbqp4q/uVnrazzai5Miyn6ADtiZujJVbMzRuDEguqr2ZXStLAm5HR06MNiDOOsf7RNOQEzMNDlsqgAtbDx/mfr/fBWZNTnbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718060508; c=relaxed/simple;
-	bh=ls7HTQ+/jbzpvqw5yh4Yy1Cb/Btht+DdhN/vrACOwIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kgQwm4NwyjrcgkCAfTzKYYHBpxY0zSLjn9OF08xTzEYaKrMff4tF6RALinZj7qt35Hf1Sgot/jDSD2OnhpAmEtvGz60lw9NBiCK5gt5c0tqVGP2IgG45WkkM2WrJZ9fG6CLoKvy0Cc39BFKQQfgI/lHg7CGoHt8UMAS1fpKiQYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EPHqPPzM; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718064431; c=relaxed/simple;
+	bh=atyHicKZdMAHj/WLHQbktI55MDWwQjhtggNyC1vQN78=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=G7mfrPNoF0VQATAgFBhGYpGGZelGui1JJRbJDz98vIFa2/j3jXmwNH7fsH9uLDdeuxG8F56XbAadqU9Wso94DzF6ECCLdDfoiImv81aYvq+JtCDrPgke+vi+acVYES4s05bQv/N1cfHJN96cY/cYwZqD4GdFEr5D0LDtnrGNSUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvXTE/yI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPHqPPzM"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-354be94c874so348980f8f.3;
-        Mon, 10 Jun 2024 16:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718060505; x=1718665305; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ls7HTQ+/jbzpvqw5yh4Yy1Cb/Btht+DdhN/vrACOwIg=;
-        b=EPHqPPzMRMtgNgc1IFkone2e2fgn5zwJresoDmHoi7KgEpiytQXHoNCYxCZ8kAyPZh
-         SCQfoBiGOUueYsgcYJ+a6ALOKbOCpFvRNJlO1J1XsfclePBznS94f41SmR9M99W4Fpxt
-         lVzSLppQKP0ZLggixrdEnCxPFtO2Nf7r+eHmLudL2JqjDl+PlEbfO7dftsxjZ3lktn2T
-         L5oKqcb1rvY/EVn6pRMDGbAusdqSXigaYGaIDoii2MxjObru5NZLUKewakdTiJkC7k2v
-         i2ac+rBejacP8iYPaejxlDzOPfDWINSXT/gt6hr/6q+XgZ5vxN//TfCmtp7STXLNm8dg
-         H5Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718060505; x=1718665305;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ls7HTQ+/jbzpvqw5yh4Yy1Cb/Btht+DdhN/vrACOwIg=;
-        b=jifApUcNwiCgBMNF3jjKVqKU40InEWofM9TUyC1QylAyCJ9/80ZLCYStddC1PgH1ZS
-         q3RE49J28ytCIyqfdLZq/oyVN+58gSxDVOOQuYmeKT9K2g2bENkRMXJDSZFj7gpi8bJO
-         8f/l8Ed3UR6ThSxKMvkgzV4ke4rpGdz4ggOGKQ/WpHcf4k4P1s1gpYAgO67PU7VeG9h4
-         RFzy1+/MYm87GiWADCRj7MkhL2LIuX+6w57dGkmodA4vu4SlWB9+1jQu40q7YVY+qpOL
-         jzt0XkFsoICUOJNVKPb0YtTuuBf0Gns58XEhpJxQfo5tEEI368nc5Kb8OJ5LvB9eCq1y
-         z4tA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAwj1ns+F9X6iWGxHUd7nQA6xfsOqAn74d0LNn332J8tj0LHhNwmPgWC8AzkqXfQk/GBMdXWCkKOwaESVwbYU3dUlJQYODXyPZu/f28kDvBAOzpKyDY305E6BPEy6PjpPdvhRJ07R+56kMY4H7yeXUE69MYQwNfNANyQtRPDrKn/ufjNsV7ke8VY+zB0YbRHHvRLqfo0RWmjOHfVN7NfTPFPmGh23ZkfZYRcKo0LUlmKwHSCtB+mCJewtISdZ6Id0rYgkN4K9RjC0WwHXmEzNxxh4JyTjqKINrvZxDSA==
-X-Gm-Message-State: AOJu0YxaSus8oZ5TqaFF59lXGkCOIzeYGN8sXMBDLcRvKswnmoL+wGuU
-	ZQme110pQKvePi6FMXXXsWlLXgcE45/QZIYhMjUcNi9fTy24VNJeiL1Ct6cm3xpxmrjhr7LsBwy
-	nDri5FVOIynAnqCaw925IvyjHheI=
-X-Google-Smtp-Source: AGHT+IG9rTv9XLL+c9x3TKAtlg11qCt3Ry3LNyhJckbX7PwJtMcxvlnWL84CmLkok90u60BS/pZg9lk0L5MvUxg112g=
-X-Received: by 2002:adf:fc0f:0:b0:35f:90e:a1d2 with SMTP id
- ffacd0b85a97d-35f090ea26fmr7973708f8f.9.1718060505013; Mon, 10 Jun 2024
- 16:01:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvXTE/yI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18069C32786;
+	Tue, 11 Jun 2024 00:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718064431;
+	bh=atyHicKZdMAHj/WLHQbktI55MDWwQjhtggNyC1vQN78=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YvXTE/yI0cihdrzYnjsyqEu8vwUkGEzrvKpbBSw0ioa5sdr+SmjOG4HbeXweMmtem
+	 Du/1njQq3MdgB5O6/h0HGKhYWfaThbSIDXdbwNMZ/YGaX7CiYO1gUHhBqFSOiMQL3t
+	 idx6eVTugDbRampqLr2gPhk9i2UmiUChik8JbAOYpTiDo5AYrAsP0eSfDwPBpg1g5h
+	 Dhx/KQI1aEN7POBePyICphL4fyG/XVdhuUgn2GwuT4etcDVGUs8wuFmlMt+pP+hhC/
+	 uiYV0JDFQ3vmbldma8buDJSisRmJoCF9zY7/fUsqhdkH/5yV9N4psxF5F+7xsAolKv
+	 DjKwTkTEdialg==
+Date: Tue, 11 Jun 2024 09:07:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH 2/3] tracing/kprobe: Remove unneeded WARN_ON_ONCE() in
+ selftests
+Message-Id: <20240611090707.58b663bf1d8659b3b76fc136@kernel.org>
+In-Reply-To: <20240610174052.0fd280f2@gandalf.local.home>
+References: <171805478534.52471.6269290579314514778.stgit@devnote2>
+	<171805480405.52471.13982671291270977479.stgit@devnote2>
+	<20240610174052.0fd280f2@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240602023754.25443-1-laoar.shao@gmail.com> <20240602023754.25443-2-laoar.shao@gmail.com>
- <87ikysdmsi.fsf@email.froward.int.ebiederm.org> <CALOAHbAASdjLjfDv5ZH7uj=oChKE6iYnwjKFMu6oabzqfs2QUw@mail.gmail.com>
- <CAADnVQJ_RPg_xTjuO=+3G=4auZkS-t-F2WTs18rU2PbVdJVbdQ@mail.gmail.com>
- <874jabdygo.fsf@email.froward.int.ebiederm.org> <CAADnVQ+9T4n=ZhNMd57qfu2w=VqHM8Dzx-7UAAinU5MoORg63w@mail.gmail.com>
- <87ikyhrn7q.fsf@email.froward.int.ebiederm.org>
-In-Reply-To: <87ikyhrn7q.fsf@email.froward.int.ebiederm.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 10 Jun 2024 16:01:33 -0700
-Message-ID: <CAADnVQKaHdy-KvHCejYgr8N8VNBQBjbmFDiE5mtm76GZGkOsaw@mail.gmail.com>
-Subject: Re: [PATCH 1/6] fs/exec: Drop task_lock() inside __get_task_comm()
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-mm <linux-mm@kvack.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, audit@vger.kernel.org, 
-	LSM List <linux-security-module@vger.kernel.org>, selinux@vger.kernel.org, 
-	bpf <bpf@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 5:34=E2=80=AFAM Eric W. Biederman <ebiederm@xmissio=
-n.com> wrote:
->
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
->
-> > On Sun, Jun 2, 2024 at 10:53=E2=80=AFAM Eric W. Biederman <ebiederm@xmi=
-ssion.com> wrote:
-> >>
-> >> If you are performing lockless reads and depending upon a '\0'
-> >> terminator without limiting yourself to the size of the buffer
-> >> there needs to be a big fat comment as to how in the world
-> >> you are guaranteed that a '\0' inside the buffer will always
-> >> be found.
-> >
-> > I think Yafang can certainly add such a comment next to
-> > __[gs]et_task_comm.
-> >
-> > I prefer to avoid open coding memcpy + mmemset when strscpy_pad works.
->
-> Looking through the code in set_task_comm
-> strscpy_pad only works when both the source and designation are aligned.
-> Otherwise it performs a byte a time copy, and is most definitely
-> susceptible to the race I observed.
+On Mon, 10 Jun 2024 17:40:52 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Byte copy doesn't have an issue either.
-Due to padding there is always a zero there.
-Worst case in the last byte. So dst buffer will be zero terminated.
+> On Tue, 11 Jun 2024 06:26:44 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Since the kprobe-events selftest shows OK or NG with the reason, the
+> > WARN_ON_ONCE()s for each place are redundant. Let's remove it.
+> 
+> Note, the ktests we run to validate commits, fail when it detects a WARN()
+> triggered.
+> 
+> If this fails in any configuration, ktest will not detect it failed.
+
+Hmm, I think there are 2 options,
+ - remove pr_warn() instead. (WARN_ON_ONCE + pr_warn is redundant)
+ - Or, remove WARN_ON_ONCE() from each place, but add WARN_ON_ONCE() when
+   `warn` is not zero.
+
+Thank you,
+
+> 
+> -- Steve
+> 
+> 
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/trace_kprobe.c |   26 +++++++++++++-------------
+> >  1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
