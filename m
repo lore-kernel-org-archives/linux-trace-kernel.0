@@ -1,101 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ACE152DF1;
-	Tue, 11 Jun 2024 19:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F0C84A21;
+	Tue, 11 Jun 2024 19:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718134133; cv=none; b=J/0Ex3PrY2apdjGOnUcowYHy8ktdTkvgJkmLvaMtXm5qYDy4+RwxFVJxoElsoyEeIOjX6lAVhgk25Gdnnk4nHbMrZtPdw/eKD6PZsN523swqy3thgU/7G7WelkzcLh+MAMvuYfFaQvNeyTkCevS14hZoQKITCwuC/c1N4WqEwsM=
+	t=1718134741; cv=none; b=ukkKTwVYcfUVR+1/QqWfy1xbF+JbaZxaVy7yr/OutacfZDE2jqZnSYhixi77yExUmrZrpZ6t4pYH3KLlS6VJHWjEe9m5RtFHBjStxa3TBB5pDBji8cGWUi+KZ/x+CC5ee/81vqpeO1t1roTSeiyE04hzE6r/ncGmuS8LRW+OZ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718134133; c=relaxed/simple;
-	bh=5vY8upmAWCSCeuI23auVBMfapEFPUJFegpBwQdZuq6o=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=AY4KtWNnNyGz6eWl2rWwosdX1+rEntkx4ardpqYMpTc/giXZtXmtmgO46Khk4XwzW4gts9OLtdsS5lpu4OQjHf1Zn2J9fuuXIP3/WOSDt+5juix2z945F64/SkIooFucEs9twUXiM05lY/D3DtNqKaEQ9oTqJzLXkqUJdWk2R+g=
+	s=arc-20240116; t=1718134741; c=relaxed/simple;
+	bh=w2c2G6obsMPgsfkn18lzhEJVlZV+GkjZQ8kXfu4gBA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HkoAlpo9ANDI9xZQpOCwI88EZm6X9V9KrqJm7pg9hQJyq6IkW+248wTp9ToFyk2lsipYJgSIFqXWfbS7ZHWhLiYWmHG3u8YKEHLbKUj/0usROwRH9Tcv6VkfCjCTS2nHjz4F2vKaeVvKB9CvZmA5HAErFob1sMKfk5rwew4FA54=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE75AC4AF49;
-	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sH7B7-00000001Tvw-1s67;
-	Tue, 11 Jun 2024 15:29:09 -0400
-Message-ID: <20240611192909.310647031@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 15:28:41 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AE7C4AF48;
+	Tue, 11 Jun 2024 19:38:57 +0000 (UTC)
+Date: Tue, 11 Jun 2024 15:39:13 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>,
- Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>
-Subject: [PATCH v4 13/13] tracing: Add last boot delta offset for stack traces
-References: <20240611192828.691638177@goodmis.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
+ <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel
+ <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240611153913.1568be52@gandalf.local.home>
+In-Reply-To: <20240611111218.71e57e0f@gandalf.local.home>
+References: <20240606150143.876469296@goodmis.org>
+	<20240606150316.751642266@goodmis.org>
+	<20240611144029.h7egl4aif5mjlrwf@master>
+	<20240611111218.71e57e0f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, 11 Jun 2024 11:12:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The addresses of a stack trace event are relative to the kallsyms. As that
-can change between boots, when printing the stack trace from a buffer that
-was from the last boot, it needs all the addresses to be added to the
-"text_delta" that gives the delta between the addresses of the functions
-for the current boot compared to the address of the last boot. Then it can
-be passed to kallsyms to find the function name, otherwise it just shows a
-useless list of addresses.
+> > >+	p++;
+> > >+	err = reserved_mem_add(start, size, p);
+> > >+	if (err) {
+> > >+		memblock_phys_free(start, size);
+> > >+		return err;
+> > >+	}
+> > >+
+> > >+	p += strlen(p);
+> > >+
+> > >+	return *p == '\0' ? 0: -EINVAL;    
+> > 
+> > We won't free the memory if return -EINVAL?  
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I actually copied this from parse_memmap_one() in arch/x86/kernel/e820.c
+and now looking at it, it's a pretty stupid check.
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index b9d2c64c0648..48de93598897 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1233,6 +1233,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 	struct trace_seq *s = &iter->seq;
- 	unsigned long *p;
- 	unsigned long *end;
-+	long delta = iter->tr->text_delta;
- 
- 	trace_assign_type(field, iter->ent);
- 	end = (unsigned long *)((long)iter->ent + iter->ent_size);
-@@ -1245,7 +1246,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 			break;
- 
- 		trace_seq_puts(s, " => ");
--		seq_print_ip_sym(s, *p, flags);
-+		seq_print_ip_sym(s, (*p) + delta, flags);
- 		trace_seq_putc(s, '\n');
- 	}
- 
--- 
-2.43.0
+It does: p += strlen(p); which requires p ending with '\0'. So this will
+likely bug if there is no '\0'.
 
+I'm going to remove this, but still check to make sure that the name has
+some length before the allocation.
 
+-- Steve
