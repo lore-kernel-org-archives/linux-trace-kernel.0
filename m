@@ -1,41 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E0D1DDF4;
-	Tue, 11 Jun 2024 14:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87690AD2C;
+	Tue, 11 Jun 2024 14:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718115284; cv=none; b=HXPHxtGhUkO+CL8Gxhqn666diltWjCMOvmJDYQN+/QJt+Qnob90h7BFl8HrUX7BC0mp+WCWn/0KkQCviV8LpeSrxEfYNNwcs5ZgvmVvbJ1IerWWJo/FOj4P4ALZ3JusDVuXROH18PTcYQ1EntZJMNqNlF1vUFquR+GjrGlL1AwI=
+	t=1718115613; cv=none; b=C9oWgTpZmwvWVeL/V57KlZ95YmguLHnL30bQ+MhO+xthLm/X6eyZDbJWtcX8nDDcLq+gQR7vE6HoCHdrM4VA/NQq7HAxY+1EsBnQOHRyDgBAbeQy5cZ8R5ZY7qE+iRdCUnbzLWhs68Hdo8pef52oQ5ZlbTe0oq4bBXSSmrerAgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718115284; c=relaxed/simple;
-	bh=S/j3+QxdEt9IjCO3OfwR4LKCMbcrl3GvC8e/rIHpyMA=;
+	s=arc-20240116; t=1718115613; c=relaxed/simple;
+	bh=VIwnoCS4IaBoGX5EiRkAQ9RQUl2lu3NbQQfnw5doDjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aWdHzLxSg0SuYbkLV8MR89iAe3cB+urnBs8k265oxSH0clIN3xRMc2KFrIepDsBpXvxNbElUvXwE23RX4njiWlFKbZUL7Id3eenFRSC7Odxpv0Oh8NqxvwadQ3C4C2Mv5rKFZ9I9F/vYUQF0L1He30PJXxbc3AypYSbv03J0Y2w=
+	 MIME-Version:Content-Type; b=H0qinAmChcGrEFNddkc1yOnJnPIt3fhAAFzjE5ualSE3qAYf+pjGGT0RDhRW6M7EpzXEDd3yudeQsCAStvYDyPxsHI069MbT7ci8OUxitCXcUCKC9Vzx9Tc2+6yt/oxQCW+SmYaSRFG8Jgg/IJ+0aSHddH+cZQhqaDvnkbRjbNk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AEEC2BD10;
-	Tue, 11 Jun 2024 14:14:42 +0000 (UTC)
-Date: Tue, 11 Jun 2024 10:14:58 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D9A1C2BD10;
+	Tue, 11 Jun 2024 14:20:11 +0000 (UTC)
+Date: Tue, 11 Jun 2024 10:20:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
- kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- "workflows@vger.kernel.org" <workflows@vger.kernel.org>, Thorsten Leemhuis
- <linux@leemhuis.info>
-Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <20240611101458.7fa78da8@gandalf.local.home>
-In-Reply-To: <05ec743a-c4e9-4c66-b2cd-4e89c858d7d4@suse.cz>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
-	<20240609082726.32742-6-Julia.Lawall@inria.fr>
-	<20240610112223.151faf65@rorschach.local.home>
-	<b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
-	<20240610163606.069d552a@gandalf.local.home>
-	<70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
-	<2024061143-transfer-jalapeno-afa0@gregkh>
-	<05ec743a-c4e9-4c66-b2cd-4e89c858d7d4@suse.cz>
+To: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jens Axboe
+ <axboe@kernel.dk>, Metin Kaya <metin.kaya@arm.com>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v6 3/3] sched/rt: Rename realtime_{prio, task}() to
+ rt_or_dl_{prio, task}()
+Message-ID: <20240611102026.1be1155f@gandalf.local.home>
+In-Reply-To: <b5f84790-8036-44cf-bfd9-0a43269a26d9@redhat.com>
+References: <20240610192018.1567075-1-qyousef@layalina.io>
+	<20240610192018.1567075-4-qyousef@layalina.io>
+	<b5f84790-8036-44cf-bfd9-0a43269a26d9@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,27 +43,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Jun 2024 10:42:28 +0200
-Vlastimil Babka <vbabka@suse.cz> wrote:
+On Tue, 11 Jun 2024 11:03:25 +0200
+Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
 
-> AFAICS that documented way is for a different situation? I assume you mean
-> this part:
+> On 6/10/24 21:20, Qais Yousef wrote:
+> > -	if (realtime_prio(p->prio)) /* includes deadline */
+> > +	if (rt_or_dl_prio(p->prio))  
 > 
-> * Specify any additional patch prerequisites for cherry picking::
-> 
->     Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
-> 
-> But that would assume we actively want to backport this cleanup patch in the
-> first place. But as I understand Steven's intention, we want just to make
-> sure that if in the future this patch is backported (i.e. as a dependency of
-> something else) it won't be forgotten to also backport c9929f0e344a
-> ("mm/slob: remove CONFIG_SLOB"). How to express that without actively
-> marking this patch for backport at the same time?
+> that is it... no thinking, no recall, no comment, no confusion...
 
-Exactly! This isn't to be tagged as stable. It's just a way to say "if you
-need this patch for any reason, you also need patch X".
+How about "not_normal_prio(p->prio)" ?
 
-I think "Depends-on" is the way to go, as it is *not* a stable thing, and
-what is in stable rules is only about stable patches.
+/me runs!
 
 -- Steve
