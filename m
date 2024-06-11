@@ -1,173 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C4E803;
-	Tue, 11 Jun 2024 00:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3E863CB;
+	Tue, 11 Jun 2024 01:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718065085; cv=none; b=TdXBZkYPziEDQX9wpQOPP8zG/F/iD+bWlc7XFvOvRM9Ln980nGjiprV9UES6pyH01p9zF6kIa7g83RJTqGRlpZvqY7wv5X2H8pTz7hvh6Awnt9HyIOLHMfleheJ8ISyalXr6VAG0kW7liYq8y+IjoI4FJUEqT1WPgVsUtZXrZgw=
+	t=1718071023; cv=none; b=Z907CJdFthD0qGWfeTnMGtHdJyNgEUxskdVBi+lv6GyDnlrSrLui/9TL+JCqAJ9lzwQJ7P1cbH47NIZMX2jPtVWZugYokpLmyyhCqHe8gW1LLK7tK9ZGtR8XSJTA5eAsewOU2DNJS3ork0U/u2qRRphLTH/OXICttNOsjN6jrRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718065085; c=relaxed/simple;
-	bh=GyghYEv0X82cGi7Oik5zQ6/zwcOSNDNjHdgQcuZoQpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HZI8MATrS3pSpw1YdxKNVjleZFA8pQD9bTm9ddlg2jn7J5lWFV3HpTeglpRXZMb6IE2aANv1h5hxBaWKWWZ/DlLBVpHyQv7cR1gFx7jbiEk+oHeIpTMXLpB5OfTThY5Y5aBS0Pib4Gkhx26hYa5o6SwbW3g4rdb+S1cAG8ly/Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F12C2BBFC;
-	Tue, 11 Jun 2024 00:18:02 +0000 (UTC)
-Date: Mon, 10 Jun 2024 20:18:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 2/3] tracing/kprobe: Remove unneeded WARN_ON_ONCE() in
- selftests
-Message-ID: <20240610201813.319d6500@gandalf.local.home>
-In-Reply-To: <171805480405.52471.13982671291270977479.stgit@devnote2>
-References: <171805478534.52471.6269290579314514778.stgit@devnote2>
-	<171805480405.52471.13982671291270977479.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718071023; c=relaxed/simple;
+	bh=Rqwz1rMtbocjuzkpdlY14SlJ71M96bYi5eunpDJIidM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jAaa7Y4ZOnK26Ary57ilme0YtlV4wsrJqT1+opQ6vQd/sLpoxVs5do6ebLOKlBgM0LLGvpuKUW0Q78CXPkSshGEnKt08WSD/kH/qYBaRKcmQ5Uk/Xh7dz4jYLwnDvlts9eEE4T8v/Lt1ekbUvIPkFGrkwFctxEfQd2xDauje1Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VysBm5mRNz1X3Rt;
+	Tue, 11 Jun 2024 09:53:04 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 813711A0190;
+	Tue, 11 Jun 2024 09:56:51 +0800 (CST)
+Received: from [10.67.111.172] (10.67.111.172) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 11 Jun 2024 09:56:51 +0800
+Message-ID: <57e499a4-e26d-148f-317d-233e873d11b4@huawei.com>
+Date: Tue, 11 Jun 2024 09:56:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [RFC PATCH] ftrace: Skip __fentry__ location of overridden weak
+ functions
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>
+CC: <rostedt@goodmis.org>, <mcgrof@kernel.org>, <mhiramat@kernel.org>,
+	<mark.rutland@arm.com>, <mathieu.desnoyers@efficios.com>,
+	<jpoimboe@kernel.org>, <linux-modules@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>
+References: <20240607115211.734845-1-zhengyejian1@huawei.com>
+ <20240607150228.GR8774@noisy.programming.kicks-ass.net>
+From: Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20240607150228.GR8774@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-On Tue, 11 Jun 2024 06:26:44 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 2024/6/7 23:02, Peter Zijlstra wrote:
+> On Fri, Jun 07, 2024 at 07:52:11PM +0800, Zheng Yejian wrote:
+>> ftrace_location() was changed to not only return the __fentry__ location
+>> when called for the __fentry__ location, but also when called for the
+>> sym+0 location after commit aebfd12521d9 ("x86/ibt,ftrace: Search for
+>> __fentry__ location"). That is, if sym+0 location is not __fentry__,
+>> ftrace_location() would find one over the entire size of the sym.
+>>
+>> However, there is case that more than one __fentry__ exist in the sym
+>> range (described below) and ftrace_location() would find wrong __fentry__
+>> location by binary searching, which would cause its users like livepatch/
+>> kprobe/bpf to not work properly on this sym!
+>>
+>> The case is that, based on current compiler behavior, suppose:
+>>   - function A is followed by weak function B1 in same binary file;
+>>   - weak function B1 is overridden by function B2;
+>> Then in the final binary file:
+>>   - symbol B1 will be removed from symbol table while its instructions are
+>>     not removed;
+>>   - __fentry__ of B1 will be still in __mcount_loc table;
+>>   - function size of A is computed by substracting the symbol address of
+>>     A from its next symbol address (see kallsyms_lookup_size_offset()),
+>>     but because symbol info of B1 is removed, the next symbol of A is
+>>     originally the next symbol of B1. See following example, function
+>>     sizeof A will be (symbol_address_C - symbol_address_A):
+>>
+>>       symbol_address_A
+>>       symbol_address_B1 (Not in symbol table)
+>>       symbol_address_C
+>>
+>> The weak function issue has been discovered in commit b39181f7c690
+>> ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid adding weak function")
+>> but it didn't resolve the issue in ftrace_location().
+>>
+>> There may be following resolutions:
 > 
-> Since the kprobe-events selftest shows OK or NG with the reason, the
-> WARN_ON_ONCE()s for each place are redundant. Let's remove it.
+> Oh gawd, sodding weak functions again.
 > 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_kprobe.c |   26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
+> I would suggest changing scipts/kallsyms.c to emit readily identifiable
+> symbol names for all the weak junk, eg:
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 16383247bdbf..4abed36544d0 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -2023,18 +2023,18 @@ static __init int kprobe_trace_self_tests_init(void)
->  	pr_info("Testing kprobe tracing: ");
->  
->  	ret = create_or_delete_trace_kprobe("p:testprobe kprobe_trace_selftest_target $stack $stack0 +0($stack)");
-> -	if (WARN_ON_ONCE(ret)) {
-> +	if (ret) {
->  		pr_warn("error on probing function entry.\n");
+>    __weak_junk_NNNNN
+> 
 
-Actually, you can consolidate this to:
+Sorry for the late reply, I just had a long noon holiday :>
 
-	if (WARN_ONCE(ret, "error on probing function entry."))
+scripts/kallsyms.c is compiled and used to handle symbols in vmlinux.o
+or vmlinux.a, see kallsyms_step() in scripts/link-vmlinux.sh, those
+overridden weak symbols has been removed from symbol table of vmlinux.o
+or vmlinux.a. But we can found those symbols from original xx/xx.o file,
+for example, the weak free_initmem() in in init/main.c is overridden,
+its symbol is not in vmlinx but is still in init/main.o .
 
->  		warn++;
->  	} else {
->  		/* Enable trace point */
->  		tk = find_trace_kprobe("testprobe", KPROBE_EVENT_SYSTEM);
-> -		if (WARN_ON_ONCE(tk == NULL)) {
-> +		if (tk == NULL) {
->  			pr_warn("error on getting new probe.\n");
+How about traversing all origin xx/xx.o and finding all weak junk symbols ?
 
-And this to:
+> That instantly fixes the immediate problem and Steve's horrid hack can
+> go away.
+> 
 
-		if (WARN_ONCE(tk == NULL, "error on getting new probe."))
+Yes, this can be done in same patch series.
 
-end so on.
+> Additionally, I would add a boot up pass that would INT3 fill all such
+> functions and remove/invalidate all
+> static_call/static_jump/fentry/alternative entry that is inside of them.
+> 
+> 
+> 
 
--- Steve
+--
 
->  			warn++;
->  		} else {
->  			file = find_trace_probe_file(tk, top_trace_array());
-> -			if (WARN_ON_ONCE(file == NULL)) {
-> +			if (file == NULL) {
->  				pr_warn("error on getting probe file.\n");
->  				warn++;
->  			} else
-> @@ -2044,18 +2044,18 @@ static __init int kprobe_trace_self_tests_init(void)
->  	}
->  
->  	ret = create_or_delete_trace_kprobe("r:testprobe2 kprobe_trace_selftest_target $retval");
-> -	if (WARN_ON_ONCE(ret)) {
-> +	if (ret) {
->  		pr_warn("error on probing function return.\n");
->  		warn++;
->  	} else {
->  		/* Enable trace point */
->  		tk = find_trace_kprobe("testprobe2", KPROBE_EVENT_SYSTEM);
-> -		if (WARN_ON_ONCE(tk == NULL)) {
-> +		if (tk == NULL) {
->  			pr_warn("error on getting 2nd new probe.\n");
->  			warn++;
->  		} else {
->  			file = find_trace_probe_file(tk, top_trace_array());
-> -			if (WARN_ON_ONCE(file == NULL)) {
-> +			if (file == NULL) {
->  				pr_warn("error on getting probe file.\n");
->  				warn++;
->  			} else
-> @@ -2079,7 +2079,7 @@ static __init int kprobe_trace_self_tests_init(void)
->  
->  	/* Disable trace points before removing it */
->  	tk = find_trace_kprobe("testprobe", KPROBE_EVENT_SYSTEM);
-> -	if (WARN_ON_ONCE(tk == NULL)) {
-> +	if (tk == NULL) {
->  		pr_warn("error on getting test probe.\n");
->  		warn++;
->  	} else {
-> @@ -2089,7 +2089,7 @@ static __init int kprobe_trace_self_tests_init(void)
->  		}
->  
->  		file = find_trace_probe_file(tk, top_trace_array());
-> -		if (WARN_ON_ONCE(file == NULL)) {
-> +		if (file == NULL) {
->  			pr_warn("error on getting probe file.\n");
->  			warn++;
->  		} else
-> @@ -2098,7 +2098,7 @@ static __init int kprobe_trace_self_tests_init(void)
->  	}
->  
->  	tk = find_trace_kprobe("testprobe2", KPROBE_EVENT_SYSTEM);
-> -	if (WARN_ON_ONCE(tk == NULL)) {
-> +	if (tk == NULL) {
->  		pr_warn("error on getting 2nd test probe.\n");
->  		warn++;
->  	} else {
-> @@ -2108,7 +2108,7 @@ static __init int kprobe_trace_self_tests_init(void)
->  		}
->  
->  		file = find_trace_probe_file(tk, top_trace_array());
-> -		if (WARN_ON_ONCE(file == NULL)) {
-> +		if (file == NULL) {
->  			pr_warn("error on getting probe file.\n");
->  			warn++;
->  		} else
-> @@ -2117,20 +2117,20 @@ static __init int kprobe_trace_self_tests_init(void)
->  	}
->  
->  	ret = create_or_delete_trace_kprobe("-:testprobe");
-> -	if (WARN_ON_ONCE(ret)) {
-> +	if (ret) {
->  		pr_warn("error on deleting a probe.\n");
->  		warn++;
->  	}
->  
->  	ret = create_or_delete_trace_kprobe("-:testprobe2");
-> -	if (WARN_ON_ONCE(ret)) {
-> +	if (ret) {
->  		pr_warn("error on deleting a probe.\n");
->  		warn++;
->  	}
->  
->  end:
->  	ret = dyn_events_release_all(&trace_kprobe_ops);
-> -	if (WARN_ON_ONCE(ret)) {
-> +	if (ret) {
->  		pr_warn("error on cleaning up probes.\n");
->  		warn++;
->  	}
-
+Thanks,
+Zheng Yejian
