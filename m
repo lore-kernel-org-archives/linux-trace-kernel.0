@@ -1,104 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0C6116;
-	Tue, 11 Jun 2024 06:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42ED16F8E1;
+	Tue, 11 Jun 2024 06:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718086994; cv=none; b=FOUyCgZlxYGO13+VioCuwA2B5lYxQJLiH6OM1Am97hhdNtrJ0ox4Lk2NPx2TNtO6BRhm9cFO6hE3nLsC7AH26HPkgKrCCTtD9JEi0el/Hlp7WmP/D+Yh2fiwH/pLTwUgQedcal0/IuBFV+OOyT+MvI5jlIeF/8pNHjYOnjtMb58=
+	t=1718087119; cv=none; b=DY5Zt5i9h9EJJmYTtrySH6AfLwmlZU269g28ibyDVwEXcCUE5fWR0j5pXG1echEGAV8VA48FezGYZgsaicSQe5uCm27JvhRD05txtGAYzVkGl4nF7klfbQ0eV+K0K92rBzhUPm26euLNCWiXAWvZVCoC+NV1532UAXIztfzuNA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718086994; c=relaxed/simple;
-	bh=ve4gT6CyxU4E2TQ43WtxEhXL8/ATKIHsYr3UXy4cHyA=;
+	s=arc-20240116; t=1718087119; c=relaxed/simple;
+	bh=NwZHYp51blvYYi6voSW7p7zTGyG43lBc53N0AUPKbMY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iJN18xxn2YK+qzeAAygyEuuxXrsV9vZgxvYJnafQS9Bv8ODq6W5b1xSyvjCIJ3asSs7Rb5gBLPFJkmx+Sc4AdZh6rMS0RoVzLxoDG7o99Z3ZEAOTsnmYS9GXyiH9pq6wFaWXxrW9p9fb9Kg2XCpkjGr5l4Bx2/ulIYWbWHwn/6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=18Jf531q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dkEIG5xtw2LACJjAUMWizasFat5lf7Ud6+LVUR3sl7OBCXtYEOuao77CqjWgUprTduG/vebobnP8sPHp+wIEjaLdhwnAI8NvLJpYWp7RQEtRH61WfNG+4LiRfV41eS3662spa22+u8EyUpV40v9h/gbbMPVqfNFcufabpsoh46g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vsk5TKRp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="18Jf531q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFC3C2BD10;
-	Tue, 11 Jun 2024 06:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718086994;
-	bh=ve4gT6CyxU4E2TQ43WtxEhXL8/ATKIHsYr3UXy4cHyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=18Jf531qULxA/w23HwCUdkd/2Y3nJjWIdgleWTellkonv3YQTG0F1QG0wlv7DzTdW
-	 SrvqlNIF0jkDgNfIVHsbIhRqxh0YFLAYsjfSXfHUs9RH/SH5tZBk3lwxcOEK7pNReM
-	 f1GLVwOyOPoxXC+2uL+/vb+ZybUC97FNph2f4/6w=
-Date: Tue, 11 Jun 2024 08:23:11 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	kernel-janitors@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vsk5TKRp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=NwZHYp51blvYYi6voSW7p7zTGyG43lBc53N0AUPKbMY=; b=vsk5TKRpCpoLMJwN4+N0Xoce51
+	gKqcmhrI8PGJLqTcZutaWEzny49LEjldaSM6NmvaVDtRZNxFhkUaHoZs8k2IkAw/fSYqS/NpbNJ99
+	4I1IhUkLjfFTWmZJ3fkPDjAWZE7YIc6yjaI/bvKrOEGOLnvFOolePciBdRXEhFkeX+a4rf2V8LQ24
+	ASrGu9QSNlIbshOV8VyBqP04jK0Pm23TNGVHvX3jw2bIFWfbbynmxLhqIPBKJvJYn5jeTr0NJd/fJ
+	FcXmdLCQg3rcquFvDdfQ+TZfRZEf5PeJN+Qpvz3aTjMUEDbZyWXSccEEf+6LaxquvbvSltTCUEM4G
+	+1WPY34w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sGuwL-00000007gBF-0Jyi;
+	Tue, 11 Jun 2024 06:25:05 +0000
+Date: Mon, 10 Jun 2024 23:25:05 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Pavel Begunkov <asml.silence@gmail.com>,
+	David Wei <dw@davidwei.uk>, David Ahern <dsahern@kernel.org>,
+	Mina Almasry <almasrymina@google.com>,
+	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <2024061143-transfer-jalapeno-afa0@gregkh>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240609082726.32742-6-Julia.Lawall@inria.fr>
- <20240610112223.151faf65@rorschach.local.home>
- <b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
- <20240610163606.069d552a@gandalf.local.home>
- <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZmftwZDXYk53fKzm@infradead.org>
+References: <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+ <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+ <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+ <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+ <20240607145247.GG791043@ziepe.ca>
+ <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
+ <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
+ <20240610121625.GI791043@ziepe.ca>
+ <cdbc0d5f-bfbc-4f58-a6dd-c13b0bb5ff1c@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cdbc0d5f-bfbc-4f58-a6dd-c13b0bb5ff1c@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Jun 10, 2024 at 11:40:54PM +0200, Vlastimil Babka wrote:
-> On 6/10/24 10:36 PM, Steven Rostedt wrote:
-> > On Mon, 10 Jun 2024 08:46:42 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > 
-> >> > > index 7c29f4afc23d..338c52168e61 100644
-> >> > > --- a/fs/tracefs/inode.c
-> >> > > +++ b/fs/tracefs/inode.c
-> >> > > @@ -53,14 +53,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
-> >> > >  	return &ti->vfs_inode;
-> >> > >  }
-> >> > >  
-> >> > > -static void tracefs_free_inode_rcu(struct rcu_head *rcu)
-> >> > > -{
-> >> > > -	struct tracefs_inode *ti;
-> >> > > -
-> >> > > -	ti = container_of(rcu, struct tracefs_inode, rcu);
-> >> > > -	kmem_cache_free(tracefs_inode_cachep, ti);  
-> >> > 
-> >> > Does this work?
-> >> > 
-> >> > tracefs needs to be freed via the tracefs_inode_cachep. Does
-> >> > kfree_rcu() handle specific frees for objects that were not allocated
-> >> > via kmalloc()?  
-> >> 
-> >> A recent change to kfree() allows it to correctly handle memory allocated
-> >> via kmem_cache_alloc().  News to me as of a few weeks ago.  ;-)
-> > 
-> > If that's the case then:
-> > 
-> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > 
-> > Do we have a way to add a "Depends-on" tag so that anyone backporting this
-> > will know that it requires the change to whatever allowed that to happen?
-> 
-> Looks like people use that tag, although no grep hits in Documentation, so
-> Cc'ing workflows@ and Thorsten.
-> 
-> In this case it would be
-> 
-> Depends-on: c9929f0e344a ("mm/slob: remove CONFIG_SLOB")
+On Mon, Jun 10, 2024 at 02:38:18PM +0200, Christian König wrote:
+> Well there is the fundamental problem that you can't use io_uring to
+> implement the semantics necessary for a dma_fence.
 
-Ick, no, use the documented way of handling this as described in the
-stable kernel rules file.
+What is the exact problem there?
 
-thanks,
-
-greg k-h
