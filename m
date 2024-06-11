@@ -1,126 +1,164 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3E863CB;
-	Tue, 11 Jun 2024 01:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72652BA42;
+	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718071023; cv=none; b=Z907CJdFthD0qGWfeTnMGtHdJyNgEUxskdVBi+lv6GyDnlrSrLui/9TL+JCqAJ9lzwQJ7P1cbH47NIZMX2jPtVWZugYokpLmyyhCqHe8gW1LLK7tK9ZGtR8XSJTA5eAsewOU2DNJS3ork0U/u2qRRphLTH/OXICttNOsjN6jrRQ=
+	t=1718075843; cv=none; b=Kc+0nl1+YoKblT/IzKsCvRc8BgehVt0B2Rt7j5N7IJt5AhQ9yUvL17rPKf/Q8S9szgPUHykZSR1C/5rhMBrT/4SCk/UI2Z8Gx1GqTlZiHAD8ghx3k9UrKfhV2RP46JvypqbsoehZozjByPoHynY9ztHb1adZlCGiFb326EZ0WLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718071023; c=relaxed/simple;
-	bh=Rqwz1rMtbocjuzkpdlY14SlJ71M96bYi5eunpDJIidM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jAaa7Y4ZOnK26Ary57ilme0YtlV4wsrJqT1+opQ6vQd/sLpoxVs5do6ebLOKlBgM0LLGvpuKUW0Q78CXPkSshGEnKt08WSD/kH/qYBaRKcmQ5Uk/Xh7dz4jYLwnDvlts9eEE4T8v/Lt1ekbUvIPkFGrkwFctxEfQd2xDauje1Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VysBm5mRNz1X3Rt;
-	Tue, 11 Jun 2024 09:53:04 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 813711A0190;
-	Tue, 11 Jun 2024 09:56:51 +0800 (CST)
-Received: from [10.67.111.172] (10.67.111.172) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 11 Jun 2024 09:56:51 +0800
-Message-ID: <57e499a4-e26d-148f-317d-233e873d11b4@huawei.com>
-Date: Tue, 11 Jun 2024 09:56:51 +0800
+	s=arc-20240116; t=1718075843; c=relaxed/simple;
+	bh=jTg1jp0c8Fovh+0yRZbaZ+CIe7vWhQquUeeZ4ruU8q0=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=ZvIFT0FOgklKnRqDfUinTQ2okqfU6E78DrWCqmjPEUzSWjJAY9EI67EqsLQAjPJyDO2xyVvzo2i9NBbTPAXoRUjPmAOXeXVgXlaVbjh7uS72Vb4A4lsz5Csr67JEvSycs2BAbhhzsBBVVEZ7aOepB3cWFo7AxATnTJPHPPZScqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B51C2BBFC;
+	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sGs0v-00000001Jgi-42JD;
+	Mon, 10 Jun 2024 23:17:37 -0400
+Message-ID: <20240611031737.821995106@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 10 Jun 2024 23:09:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Guo Ren <guoren@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH 1/2] function_graph: Fix up ftrace_graph_ret_addr()
+References: <20240611030934.162955582@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [RFC PATCH] ftrace: Skip __fentry__ location of overridden weak
- functions
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>
-CC: <rostedt@goodmis.org>, <mcgrof@kernel.org>, <mhiramat@kernel.org>,
-	<mark.rutland@arm.com>, <mathieu.desnoyers@efficios.com>,
-	<jpoimboe@kernel.org>, <linux-modules@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-References: <20240607115211.734845-1-zhengyejian1@huawei.com>
- <20240607150228.GR8774@noisy.programming.kicks-ass.net>
-From: Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <20240607150228.GR8774@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Content-Type: text/plain; charset=UTF-8
 
-On 2024/6/7 23:02, Peter Zijlstra wrote:
-> On Fri, Jun 07, 2024 at 07:52:11PM +0800, Zheng Yejian wrote:
->> ftrace_location() was changed to not only return the __fentry__ location
->> when called for the __fentry__ location, but also when called for the
->> sym+0 location after commit aebfd12521d9 ("x86/ibt,ftrace: Search for
->> __fentry__ location"). That is, if sym+0 location is not __fentry__,
->> ftrace_location() would find one over the entire size of the sym.
->>
->> However, there is case that more than one __fentry__ exist in the sym
->> range (described below) and ftrace_location() would find wrong __fentry__
->> location by binary searching, which would cause its users like livepatch/
->> kprobe/bpf to not work properly on this sym!
->>
->> The case is that, based on current compiler behavior, suppose:
->>   - function A is followed by weak function B1 in same binary file;
->>   - weak function B1 is overridden by function B2;
->> Then in the final binary file:
->>   - symbol B1 will be removed from symbol table while its instructions are
->>     not removed;
->>   - __fentry__ of B1 will be still in __mcount_loc table;
->>   - function size of A is computed by substracting the symbol address of
->>     A from its next symbol address (see kallsyms_lookup_size_offset()),
->>     but because symbol info of B1 is removed, the next symbol of A is
->>     originally the next symbol of B1. See following example, function
->>     sizeof A will be (symbol_address_C - symbol_address_A):
->>
->>       symbol_address_A
->>       symbol_address_B1 (Not in symbol table)
->>       symbol_address_C
->>
->> The weak function issue has been discovered in commit b39181f7c690
->> ("ftrace: Add FTRACE_MCOUNT_MAX_OFFSET to avoid adding weak function")
->> but it didn't resolve the issue in ftrace_location().
->>
->> There may be following resolutions:
-> 
-> Oh gawd, sodding weak functions again.
-> 
-> I would suggest changing scipts/kallsyms.c to emit readily identifiable
-> symbol names for all the weak junk, eg:
-> 
->    __weak_junk_NNNNN
-> 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Sorry for the late reply, I just had a long noon holiday :>
+Yang Li sent a patch to fix the kerneldoc of ftrace_graph_ret_addr().
+While reviewing it, I realized that the comments in the entire function
+header needed a rewrite. When doing that, I realized that @idx parameter
+was being ignored. Every time this was called by the unwinder, it would
+start the loop at the top of the shadow stack and look for the matching
+stack pointer. When it found it, it would return it. When the unwinder
+asked for the next function, it would search from the beginning again.
 
-scripts/kallsyms.c is compiled and used to handle symbols in vmlinux.o
-or vmlinux.a, see kallsyms_step() in scripts/link-vmlinux.sh, those
-overridden weak symbols has been removed from symbol table of vmlinux.o
-or vmlinux.a. But we can found those symbols from original xx/xx.o file,
-for example, the weak free_initmem() in in init/main.c is overridden,
-its symbol is not in vmlinx but is still in init/main.o .
+In reality, it should start from where it left off. That was the reason
+for the @idx parameter in the first place. The first time the unwinder
+calls this function, the @idx pointer would contain zero. That would mean
+to start from the top of the stack. The function was supposed to update
+the @idx with the index where it found the return address, so that the
+next time the unwinder calls this function it doesn't have to search
+through the previous addresses it found (making it O(n^2)!).
 
-How about traversing all origin xx/xx.o and finding all weak junk symbols ?
+This speeds up the unwinder's use of ftrace_graph_ret_addr() by an order
+of magnitude.
 
-> That instantly fixes the immediate problem and Steve's horrid hack can
-> go away.
-> 
+Link: https://lore.kernel.org/linux-trace-kernel/20240610181746.656e3759@gandalf.local.home/
 
-Yes, this can be done in same patch series.
+Reported-by: Yang Li <yang.lee@linux.alibaba.com>
+Fixes: 7aa1eaef9f428 ("function_graph: Allow multiple users to attach to function graph")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-> Additionally, I would add a boot up pass that would INT3 fill all such
-> functions and remove/invalidate all
-> static_call/static_jump/fentry/alternative entry that is inside of them.
-> 
-> 
-> 
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 63d0c2f84ce1..91f1eef256af 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -870,18 +870,24 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ }
+ 
+ /**
+- * ftrace_graph_ret_addr - convert a potentially modified stack return address
+- *			   to its original value
++ * ftrace_graph_ret_addr - return the original value of the return address
++ * @task: The task the unwinder is being executed on
++ * @idx: An initialized pointer to the next stack index to use
++ * @ret: The current return address (likely pointing to return_handler)
++ * @retp: The address on the stack of the current return location
+  *
+  * This function can be called by stack unwinding code to convert a found stack
+- * return address ('ret') to its original value, in case the function graph
++ * return address (@ret) to its original value, in case the function graph
+  * tracer has modified it to be 'return_to_handler'.  If the address hasn't
+- * been modified, the unchanged value of 'ret' is returned.
++ * been modified, the unchanged value of @ret is returned.
+  *
+- * 'idx' is a state variable which should be initialized by the caller to zero
+- * before the first call.
++ * @idx holds the last index used to know where to start from. It should be
++ * initialized to zero for the first iteration as that will mean to start
++ * at the top of the shadow stack. If the location is found, this pointer
++ * will be assigned that location so that if called again, it will continue
++ * where it left off.
+  *
+- * 'retp' is a pointer to the return address on the stack.  It's ignored if
++ * @retp is a pointer to the return address on the stack.  It's ignored if
+  * the arch doesn't have HAVE_FUNCTION_GRAPH_RET_ADDR_PTR defined.
+  */
+ #ifdef HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+@@ -895,6 +901,10 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 	if (ret != return_handler)
+ 		return ret;
+ 
++	if (!idx)
++		return ret;
++
++	i = *idx ? : task->curr_ret_stack;
+ 	while (i > 0) {
+ 		ret_stack = get_ret_stack(current, i, &i);
+ 		if (!ret_stack)
+@@ -908,8 +918,10 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 		 * Thus we will continue to find real return address.
+ 		 */
+ 		if (ret_stack->retp == retp &&
+-		    ret_stack->ret != return_handler)
++		    ret_stack->ret != return_handler) {
++			*idx = i;
+ 			return ret_stack->ret;
++		}
+ 	}
+ 
+ 	return ret;
+-- 
+2.43.0
 
---
 
-Thanks,
-Zheng Yejian
