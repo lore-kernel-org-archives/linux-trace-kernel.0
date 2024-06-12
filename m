@@ -1,112 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC185336D;
-	Wed, 12 Jun 2024 14:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB385336D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718201388; cv=none; b=a9JVnSdzZQhIZt+Ef6+0jy1gVu6BIL+aznoIyFzfB7foJ11SoJ5MtFcHhzYsRJjxffdMyR/7StCWkHM5qaaym42GezPybZ7A0TKMPfi1kcgTJHvm6rad7xS4HkL5qEpbPQXkMSBX54YRRZeDR1LmolagZ7AIlP2AgvTzFwiHSPo=
+	t=1718201563; cv=none; b=rJ9T/sfjhsiRQi+iA103NwnaxaPaDgsti9yPsgIAafL9WMUb2nHZ0UhO+dQSvCFbzNvMRwEazvp/6I4iyKVirbN0O5zNBEP0j/btfw+dNzDes2T+RuEidlU20+RcUUfeoVAq9QVB/fhuJGCyMuFCaw5rfvuEqj034j1CSvjHyao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718201388; c=relaxed/simple;
-	bh=II/NbhnYcdYmV79okBAT6ronkbwY9LssX0rkK2/jFYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wxu0jU5kyth4VxQavCyO4FoQkUQrsH2NW70feMII77aQ15StLhsmHGPD2SVNNDFiAIEtGh92e7WNd/xXxBGsoi6OwOCdV7kQBNxfgZJtngBUqtf6R2vwIqeEmT3qnSHYPZctytnBB+w1ZTIzN1RPWgg5BBuISkE2fAu/+YVhSYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=VFuu2Wwj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718201563; c=relaxed/simple;
+	bh=e6CithrYoqvWAZTwPj/kYCtycBNrDIODo8TF0DmX2ss=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Onf0VWN/D96xWwLfPckuXuHpLPfQNaRjwtA1MS/U5kfa6zUv94rrFBXa0FuFJ5QxBY0Jo/TVBbHadrUg1DShwKi0j1QwpuKjNiINy3GfSwlhmxZ8jq01TNqGKYFn1MdA4tXX6es3w2izC07g4tcx8i6yIvf7mPLjram0t045S6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=StgvcIY0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="VFuu2Wwj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA7D4C116B1;
-	Wed, 12 Jun 2024 14:09:46 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="VFuu2Wwj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718201384;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="StgvcIY0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718201560;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sp4kuln6csh80is8raFd9JuQeBE6LYfogahL+0jpLZs=;
-	b=VFuu2WwjHV79Ftcbh7MPyFzpURb23M2Q8GuLu1yfrurEKnnPfVq67aRQjUcnc6pG7iF9Fz
-	uVoB+nZR2nX6+c0ItUORM/GdfNQtMLltNs5JmOX74vBFe+zjQadH2pnpdOkcFnkBTZXF9s
-	v/CYDvOwV2LPGahQixqcoChvchvtCxo=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 50eb8ae5 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 12 Jun 2024 14:09:43 +0000 (UTC)
-Date: Wed, 12 Jun 2024 16:09:40 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Greg KH <gregkh@linuxfoundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	kernel-janitors@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <ZmmsJFDmnbjngRNV@zx2c4.com>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240609082726.32742-6-Julia.Lawall@inria.fr>
- <20240610112223.151faf65@rorschach.local.home>
- <b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
- <20240610163606.069d552a@gandalf.local.home>
- <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
- <2024061143-transfer-jalapeno-afa0@gregkh>
- <05ec743a-c4e9-4c66-b2cd-4e89c858d7d4@suse.cz>
- <20240611101458.7fa78da8@gandalf.local.home>
+	bh=41mm6L+5qDMknpvTMwkuAgq3SgjPtSkdBwaxW2ijW5Q=;
+	b=StgvcIY01GgvOEzsnVnPOKpkrULziz5Nc5fAQIQ32FTAtcj5QTOSbxASJzkdFsKQSZ/ROB
+	q3MzJqcKrSg3BVLog03jwLJF9Lyci8srSvQah5MCfLN/5OvLVU76YSLVSdVpth9APFi1bH
+	8Xk+laGiFmAQPbjl7MtNNY20YPhghIU=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-68-JwmjxfQONkWqocQEXvDHPA-1; Wed, 12 Jun 2024 10:12:39 -0400
+X-MC-Unique: JwmjxfQONkWqocQEXvDHPA-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-795bb25ae28so161355585a.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:12:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718201559; x=1718806359;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=41mm6L+5qDMknpvTMwkuAgq3SgjPtSkdBwaxW2ijW5Q=;
+        b=mtpKLrGuslyH71mRb0wtDyIjzYVMRWaqZTp4DV+udNsw4jI6unvNuId9//ToR42S/W
+         paBlueumICdIP4K4+CLBbRGNZN+VJTz7KoTYmYoWIb1ySaoRoFaPgyAd8GYK90in0TfJ
+         MLPxR0oKieov2iuSmGKxb00bvbq+RmUSlM2t/OHbJugbDEgUIcFJwyyyN6eNaleqQP3v
+         iQ5D29M88sNgTcar56jmOE6efIiUfleexISzqMcjgwCyO7Rlerqid80Vlj/kQz3uXeMQ
+         2jyfZDcZhuK1xJhUD1XO+cn6Fufv1vEh/oBDSQSnRheiWmZ7xwz+ug3VcDyCBnUdvGSM
+         TZ8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUEuQnieDi2etbj6+02VBd+58TQyeXtzAN054bOjGgzCACvAd/jJ/v3pBOdoEFrMwlW+9wpzuJOgynhqN4IeHUqsdMnGcqPRCeVniTnwjTDzKA5
+X-Gm-Message-State: AOJu0YxrC7mwsNxezWxEGl35uWlNqBCr1vyyuSa9B0P2Up2leuSofeHq
+	SiRy8DUMf4uhAAoeKk9KeeVekj8xnLM6ukEFi0fhi347MCXeJ/TcWAINJqdHUpVMCYqEBmkvn/8
+	9rFKg8jVNuEeZ+Mj7tZ5KMs1xeHn43bXiahlb+4Uxzhfmxx0vy5uzFUW7O8ldHjRAJmBkF7UFO2
+	0DMQ==
+X-Received: by 2002:a05:620a:190f:b0:797:84e7:9046 with SMTP id af79cd13be357-797f4db30e5mr352016885a.4.1718201558711;
+        Wed, 12 Jun 2024 07:12:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHB5vrOLZcD6InRm6Qvq4YB5P6QAVqAA61aZvOvCoo3qbREicdPR4c13qRvHDbOEOnZ6c3QTQ==
+X-Received: by 2002:a05:620a:190f:b0:797:84e7:9046 with SMTP id af79cd13be357-797f4db30e5mr352013285a.4.1718201558298;
+        Wed, 12 Jun 2024 07:12:38 -0700 (PDT)
+Received: from fionn ([74.12.5.183])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7954de1c077sm453970885a.48.2024.06.12.07.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 07:12:37 -0700 (PDT)
+Date: Wed, 12 Jun 2024 10:12:26 -0400 (EDT)
+From: John Kacur <jkacur@redhat.com>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+cc: Daniel Bristot de Oliveira <bristot@kernel.org>, 
+    Steven Rostedt <rostedt@goodmis.org>, Clark Williams <williams@redhat.com>, 
+    linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtla/osnoise: Better report when histogram is empty
+In-Reply-To: <Zml6JmH5cbS7-HfZ@uudg.org>
+Message-ID: <9d283173-4ff6-fbac-bcc3-e712daa99572@redhat.com>
+References: <Zml6JmH5cbS7-HfZ@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240611101458.7fa78da8@gandalf.local.home>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Jun 11, 2024 at 10:14:58AM -0400, Steven Rostedt wrote:
-> On Tue, 11 Jun 2024 10:42:28 +0200
-> Vlastimil Babka <vbabka@suse.cz> wrote:
+
+
+On Wed, 12 Jun 2024, Luis Claudio R. Goncalves wrote:
+
+> When osnoise hist does not observe any samples above the threshold,
+> no entries are recorded and the final report shows empty entries
+> for the usual statistics (count, min, max, avg):
 > 
-> > AFAICS that documented way is for a different situation? I assume you mean
-> > this part:
-> > 
-> > * Specify any additional patch prerequisites for cherry picking::
-> > 
-> >     Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
-> > 
-> > But that would assume we actively want to backport this cleanup patch in the
-> > first place. But as I understand Steven's intention, we want just to make
-> > sure that if in the future this patch is backported (i.e. as a dependency of
-> > something else) it won't be forgotten to also backport c9929f0e344a
-> > ("mm/slob: remove CONFIG_SLOB"). How to express that without actively
-> > marking this patch for backport at the same time?
+>     [~]# osnoise hist -d 5s -T 500
+>     # RTLA osnoise histogram
+>     # Time unit is microseconds (us)
+>     # Duration:   0 00:00:05
+>     Index
+>     over: 
+>     count:
+>     min:  
+>     avg:  
+>     max:  
 > 
-> Exactly! This isn't to be tagged as stable. It's just a way to say "if you
-> need this patch for any reason, you also need patch X".
+> That could lead users to confusing interpretations of the results.
 > 
-> I think "Depends-on" is the way to go, as it is *not* a stable thing, and
-> what is in stable rules is only about stable patches.
+> A simple solution is to report 0 for count and the statistics, making it
+> clear that no noise (above the defined threshold) was observed:
+> 
+>     [~]# osnoise hist -d 5s -T 500
+>     # RTLA osnoise histogram
+>     # Time unit is microseconds (us)
+>     # Duration:   0 00:00:05
+>     Index
+>     over: 0
+>     count: 0
+>     min: 0
+>     avg: 0
+>     max: 0
+> 
+> 
+> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> ---
+>  tools/tracing/rtla/src/osnoise_hist.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+> index 7be17d09f7e85..214e2c93fde01 100644
+> --- a/tools/tracing/rtla/src/osnoise_hist.c
+> +++ b/tools/tracing/rtla/src/osnoise_hist.c
+> @@ -374,6 +374,7 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
+>  {
+>  	struct osnoise_hist_data *data = tool->data;
+>  	struct trace_instance *trace = &tool->trace;
+> +	int has_samples = 0;
+>  	int bucket, cpu;
+>  	int total;
+>  
+> @@ -402,11 +403,25 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
+>  			continue;
+>  		}
+>  
+> +		/* There are samples above the threshold */
+IMHO The comment isn't needed because the variable had_samples is 
+descriptive, but it's not a big deal either
 
-How does "Depends-on" not spiral out of control? There's a *lot* of
-"Depends-on" relations one could express in commit series and such. Of
-course a lot of git itself is designed to show some subset of these
-relationships.
 
-It seems like in most cases, the "Cc: stable@v.g.o # x.y.z+" notation
-expresses the backporting safety correctly. What is the purpose of
-saying, "if you need this patch for any reason, you also need patch X"?
-Who is the intended audience, and are you sure they need this?
+> +		has_samples = 1;
+>  		trace_seq_printf(trace->seq, "\n");
+>  		trace_seq_do_printf(trace->seq);
+>  		trace_seq_reset(trace->seq);
+>  	}
+>  
+> +	/*
+> +	 * If no samples were recorded, skip calculations, print zeroed statistics
+> +	 * and return.
+> +	 */
+> +	if (!has_samples) {
+> +		trace_seq_reset(trace->seq);
+> +		trace_seq_printf(trace->seq, "over: 0\ncount: 0\nmin: 0\navg: 0\nmax: 0\n");
+> +		trace_seq_do_printf(trace->seq);
+> +		trace_seq_reset(trace->seq);
+> +		return;
+> +	}
+> +
+>  	if (!params->no_index)
+>  		trace_seq_printf(trace->seq, "over: ");
+>  
+> 
+> 
+> 
 
-I ask these questions because I wind up doing a lot of work backporting
-patches to stable and marking things properly for that or submitting
-manually backported stable patches and so forth, and in general, patch
-applicability for stable things is something I wind up devoting a lot of
-time to. If I have to *additionally* start caring about the theoretical
-possibility that somebody in the future, outside of the stable flow,
-might not understand the context of a given patch and blindly apply it
-to some random tree here or there, that sounds like a lot of extra brain
-cycles to consider.
 
-So, is this actually necessary, and how does it not spiral out of
-control?
+Reviewed-by: John Kacur <jkacur@redhat.com>
+
