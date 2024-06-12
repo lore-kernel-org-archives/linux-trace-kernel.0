@@ -1,53 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958B416EBFD
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8419416F28C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 12:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718188593; cv=none; b=cJ4kBQpfoVSatgY0rRylYxwsB9TCytCbvhOq2/I+gFRpDKoMk+LsWM6vY0cPrNkMLZynmCXlMa2SPEj3CArUl5gxFQKhJilhNNHC3qFJAVEew3qolOnU+MGguetDayf9A+u9NiIiqJEAljuNL+fMhHTP4KtGPVkPnQ1145ynBdY=
+	t=1718193970; cv=none; b=sLzbQyl6ET1YVTocln58H53OWA23HBz8pqsomdogl3ROsKb59/ZkNxeoCcx+A+/z5RvPtl9rftXvBdw9vyvX1I2zs4eKcLbjCBJPfuErJBZHAZNWkmkM9RiIWJA6+s+YwE9pqAupF1/8aI3mn78K55PHBYiLJf2zX7wO8TqH+eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718188593; c=relaxed/simple;
-	bh=eX0hMDs+PRjjxkDL9dZLNeFINrDNoCX8o2tqm0A4dhM=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sVohLiW5vjwIT55NIRVcaSU19xecCy/EYG7yxp+JiPx6jzub0itvgGCOi0BeV/zcOsLft3qE3gx16ocQ2l7IoASRHOBYWbNilkHia5NnUScBi7MG6rW4bZTrHAhxyw7SK9dT4l9qZ/MEqWCBE4nDstHKr7v/MfaMqjoFmsSDNWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VhSpMeLv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718193970; c=relaxed/simple;
+	bh=654VBwTTZj6O5cwvd+Nmv/nVSh8Rktw+YZv2YfH5NqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QRz240VtDNFOutdmB1BesjB6pqTfo9mlcaH5icuDvAifdWvKulTWbnKg+KAzCWUiUMMiu1Fb6ns2HXRfmg6l5vPou6RYrLpwzkmR3JJ6/nlpwZohty21B2WJw4ntOjVZ1mwjbXn9MyEsOoS8CnuZhL1apL98VDyVRde82IlIfCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=b+K+9yut; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhSpMeLv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718188590;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=J9SukMWyQNIS5OWhxrsad2CeSFU7AFbK+BapPzKpiNg=;
-	b=VhSpMeLvyUTylYwZiySySz77zLc6uYBzTCDT+lzRP7S654W9tflij640ZNai7vyE0BD3zL
-	bN/+ScAlUs0JdvCWN2/1+KKJGf2ZYdU1fb19M8Wa9e8vrMeyFcg0eVt0isIMlFVoSt1H4h
-	exvS+VIfZg0pYDO9RN5mOUY2iRzezQ0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-343-a9BIPxjXNV-Tve-9jF0Mnw-1; Wed,
- 12 Jun 2024 06:36:26 -0400
-X-MC-Unique: a9BIPxjXNV-Tve-9jF0Mnw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1002D195608F;
-	Wed, 12 Jun 2024 10:36:25 +0000 (UTC)
-Received: from localhost (unknown [10.22.8.85])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F11DE19560AA;
-	Wed, 12 Jun 2024 10:36:23 +0000 (UTC)
-Date: Wed, 12 Jun 2024 07:36:22 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="b+K+9yut"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4405304d062so28208161cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 05:06:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1718193967; x=1718798767; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=654VBwTTZj6O5cwvd+Nmv/nVSh8Rktw+YZv2YfH5NqU=;
+        b=b+K+9yutIZvL7EhYnDc9PCqyJQyg2rNZnBSM82DUh/mVjbpDQy0AjlTT1QxvPywdj1
+         5x3Bd9/ca2iYboUwAHk3ommKdZwLtidiIZFwneX47/uHtGfpvI9RYqChNL0+zSjfMHo1
+         eLjMobFz+Qu1oy3MVyvb4rEeOUKTLSjore47JD2UdH3oqgTIkXqhVcGm+UYAEnMiQ+T5
+         RK5UP92BF1rCkwKJet0x6kGN6ceBNfxoJL/qrz8UJcsTrQpKGIJJ91JIlvqFFjM3nnYj
+         7adAlrkKUSp2YwiQ+JcrIa0p91XG2fUzPI4njv/lY/djRSEZJX+zpmehJwwsBOi4fkfY
+         pCDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718193967; x=1718798767;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=654VBwTTZj6O5cwvd+Nmv/nVSh8Rktw+YZv2YfH5NqU=;
+        b=YC+7s/GOZbmwJfXPwpPQYT4XO0Zblp37sy2Scg1yFC9XZ/UxKtBhNYSO4wsJUPBI9v
+         rikJSyfb+WJ110C7DR9AKRxeYIZ1PnAC/7+eu/c7kuTusWcM4ntKvPs+Dz7EFjhe+g2X
+         BTwDBWrB8I458Rw3mNPqzqbxzVge7XJX07zRehXSSo7ZGyG2Nl2E7h67cfFKo9BKCLop
+         5zImr0Tb7CZXMDdna+Yp5Tx7mjWw1HrIcTDLiUZDXsiTDtOBvbtBCHO8cxPsO/Dnmbmn
+         yODfsPEbMfX+Vhcyo04arc8FANbJt0Iwr1xMi56Km2GBUpul60kJK1L3FrY0lP0Oz/PV
+         VPbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqw82Af6NgtY98LxbIe22S54CY7MRD6EVo3YLx33uRSH+k4E2wldPV0C9Qm14KHnZde+OHXrd5QO2bNkDE5/0aSfVyPmxUMf7IAAlo6o8i8/5N
+X-Gm-Message-State: AOJu0Yw2pI9v2CCtjTtPzOKldEaYRxHyKJwVOnBHkZHeqggpp5pPYfKv
+	mry8rOk1smFeKDw8+ap08EUgrOiwqgujam86o3CA8+tB4wV7O4NXmds3GaKy0PM=
+X-Google-Smtp-Source: AGHT+IElu+dk9DZ7aij8c0y6F8TXy6i5LV0OSLpqQpTgGbv9PZ9NHP5JfFSWjv6MHZMgeDua9fHUGQ==
+X-Received: by 2002:a05:622a:30f:b0:440:5de2:2a03 with SMTP id d75a77b69052e-4415abae5a3mr13859041cf.1.1718193967008;
+        Wed, 12 Jun 2024 05:06:07 -0700 (PDT)
+Received: from ziepe.ca ([128.77.69.89])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44152b1585bsm12849751cf.27.2024.06.12.05.06.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 05:06:06 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sHMjq-008UjB-Tl;
+	Wed, 12 Jun 2024 09:06:02 -0300
+Date: Wed, 12 Jun 2024 09:06:02 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>,
+	David Ahern <dsahern@kernel.org>, David Wei <dw@davidwei.uk>,
+	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rtla/osnoise: Better report when histogram is empty
-Message-ID: <Zml6JmH5cbS7-HfZ@uudg.org>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <20240612120602.GQ791043@ziepe.ca>
+References: <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+ <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+ <20240607145247.GG791043@ziepe.ca>
+ <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
+ <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
+ <20240610121625.GI791043@ziepe.ca>
+ <59443d14-1f1d-42bb-8be3-73e6e4a0b683@kernel.org>
+ <00c67cf0-2bf3-4eaf-b200-ffe00d91593b@gmail.com>
+ <20240610221500.GN791043@ziepe.ca>
+ <CAHS8izNRd=f=jHgrYKKfzgcU3JzkZA1NkZnbQM+hfYd8-0NyBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,81 +125,22 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <CAHS8izNRd=f=jHgrYKKfzgcU3JzkZA1NkZnbQM+hfYd8-0NyBQ@mail.gmail.com>
 
-When osnoise hist does not observe any samples above the threshold,
-no entries are recorded and the final report shows empty entries
-for the usual statistics (count, min, max, avg):
+On Tue, Jun 11, 2024 at 11:09:15AM -0700, Mina Almasry wrote:
 
-    [~]# osnoise hist -d 5s -T 500
-    # RTLA osnoise histogram
-    # Time unit is microseconds (us)
-    # Duration:   0 00:00:05
-    Index
-    over: 
-    count:
-    min:  
-    avg:  
-    max:  
+> Just curious: in Pavel's effort, io_uring - which is not a device - is
+> trying to share memory with the page_pool, which is also not a device.
+> And Pavel is being asked to wrap the memory in a dmabuf. Is dmabuf
+> going to be the kernel's standard for any memory sharing between any 2
+> components in the future, even when they're not devices?
 
-That could lead users to confusing interpretations of the results.
+dmabuf is how we are refcounting non-struct page memory, there is
+nothing about it that says it has to be MMIO memory, or even that the
+memory doesn't have struct pages.
 
-A simple solution is to report 0 for count and the statistics, making it
-clear that no noise (above the defined threshold) was observed:
+All it says is that the memory is alive according to dmabuf
+refcounting rules. And the importer obviously don't get to touch the
+underlying folios, if any.
 
-    [~]# osnoise hist -d 5s -T 500
-    # RTLA osnoise histogram
-    # Time unit is microseconds (us)
-    # Duration:   0 00:00:05
-    Index
-    over: 0
-    count: 0
-    min: 0
-    avg: 0
-    max: 0
-
-
-Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
----
- tools/tracing/rtla/src/osnoise_hist.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 7be17d09f7e85..214e2c93fde01 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -374,6 +374,7 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
- {
- 	struct osnoise_hist_data *data = tool->data;
- 	struct trace_instance *trace = &tool->trace;
-+	int has_samples = 0;
- 	int bucket, cpu;
- 	int total;
- 
-@@ -402,11 +403,25 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
- 			continue;
- 		}
- 
-+		/* There are samples above the threshold */
-+		has_samples = 1;
- 		trace_seq_printf(trace->seq, "\n");
- 		trace_seq_do_printf(trace->seq);
- 		trace_seq_reset(trace->seq);
- 	}
- 
-+	/*
-+	 * If no samples were recorded, skip calculations, print zeroed statistics
-+	 * and return.
-+	 */
-+	if (!has_samples) {
-+		trace_seq_reset(trace->seq);
-+		trace_seq_printf(trace->seq, "over: 0\ncount: 0\nmin: 0\navg: 0\nmax: 0\n");
-+		trace_seq_do_printf(trace->seq);
-+		trace_seq_reset(trace->seq);
-+		return;
-+	}
-+
- 	if (!params->no_index)
- 		trace_seq_printf(trace->seq, "over: ");
- 
-
+Jason
