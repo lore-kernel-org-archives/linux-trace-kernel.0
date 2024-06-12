@@ -1,223 +1,313 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4079B156222;
-	Wed, 12 Jun 2024 07:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C987D412;
+	Wed, 12 Jun 2024 07:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718175759; cv=none; b=I4iluAm733Xk24OZr04b6i1PCYbttF7W6RIMePzBXNADJNp+TBelhdiKJwwoQ+qELK48+OXWjRmh20WizdWdrvXRUnfT7k8kUEkGp0DUFoAete9ykPGe6iWs3STNLqiTqwqeoLKQZu26IOqIpEzJVWejt42vO37XRbciArOgRSg=
+	t=1718177025; cv=none; b=ejJcFbRuli+5LW79Z+6d9dh1/Mkyk2rZyq7WbjY42i1dtJSFIXPEFgKHO6L5x4XFknogsal/qYEO6i8g+SHaT++BEe5HCr9G350jYDqFqI3x0n2sSmGinI75CWOmALImgxKsyO9Bd8i3jEOj/gbjDBCpBzonE5niJqkiTM6CrkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718175759; c=relaxed/simple;
-	bh=J/yVHwlCx0SSNOA13os1gLLRefppTZlosqIv5gqL8Z8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WEj5DtRQRflKkJmN9A9EGkahR+WgEIJJqjiFtAWppTXr2DWgIVW7q31jXb2obXbjUcpPGisA7r95Ds3WckzPOQAsqTtW6mYYHJQoJ2u9MrbzRm7Zi6SB1ay18hDn+q9QWc6DA3x0yCjZZaumWIw5rkndsj0I7v5vjE+I4emvxsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALyBJWp4; arc=none smtp.client-ip=209.85.215.179
+	s=arc-20240116; t=1718177025; c=relaxed/simple;
+	bh=y9mF+JpF82gFZ7/11rrW03SsbP5vOzAjWt7DDYM8LqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O1WuhWhjOzhBWleL7l33oYMU7zlva7mINseY5C07G8tqG3gsgYQaawt1KZ00M6Lrpb4XAX/Bhbf/oRgnkZKWIEVFIbC0PKpJZbwvkNP5s0/SRMETHGSXSod38xGknoR5ackA67jNTZvtIPfVD3FwfVpojgYhKWmML8bvSgSjoxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0REuxv0; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALyBJWp4"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-6570bd6c3d7so3908434a12.0;
-        Wed, 12 Jun 2024 00:02:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0REuxv0"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57ca8e45a1bso489484a12.0;
+        Wed, 12 Jun 2024 00:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718175757; x=1718780557; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1718177022; x=1718781822; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=11lKSsj1AVPuJZdBE+6Cqq9/3ElM9E/sLmElaFQuHPY=;
-        b=ALyBJWp48LQR/ibW2Qn5nr9XAnZn8SvvEiCzzruEc00+xVmrxjfPjjfOavfUr7Q7cX
-         LvTAbSiv2n74ip3Ohh66lXvM2oxBz3vgCo/nO+yv8ZWwxRAT2NGcBiWVn+wC1oG+7ory
-         MExjBTDuO/VGIRPMUe89sfcB7zOfHuDzvZkZthqgLa4OCn05dRX39pDmdRRwie2cTot3
-         srgOL31NezZnfMSAuHw6k+q78OpIl/8EIotBQ5JYjNRPmopoM8UgZSpukTbvmYgeOySH
-         Sicom1Z4dwMyytBgoTCRAY7qAefQcEa8phHE4bouo4ipaMAeAhJM/cMYXVALD/uwzcjL
-         U3yw==
+        bh=zzoZ2C0guQAGIJY+WDpPhVUMExli5mSXJ8fvKFTkBhw=;
+        b=D0REuxv0DCfBochDjS7RcgE3H7p3V4hdflD+WUVe785xX0teBtApfC92TUSr7lWbfO
+         +0fSwRswvYu6tYVQPRyzX5p6yF27atUTEyX2Nmia7u+aJ5SpdqTcloVlTZ3heq2e8jQj
+         PFUVGmLpjCaEDvMehvArQR3GdYBHA1ddKx6U6Ujrknlf2LUi5BsOlXezc+Fbl5ake/9G
+         4zNF0N9Q38e/vwM34VrvvqXWVCgEWemuUZsx5FFoEnKBzjKjJ2f9L4ZQRQgwyjWF3PwC
+         KUOmLq0W8X0Gd69LSLmANPI3nlMQCM0q45aVc5PYN7D2xFDFrVb55Z+F46nrLyFdCt5B
+         OdBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718175757; x=1718780557;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=11lKSsj1AVPuJZdBE+6Cqq9/3ElM9E/sLmElaFQuHPY=;
-        b=g4yLHxeL6axjk8vj9/z5hDQyDuuLelLOw2iG1SPLEKhAfXefBoTdMT/95YKhxVBSSU
-         ro8ZdEHIVBAZygd5D/eJi024pj18r5IfzuYnWDbcT6nW+ktx4IDUzY1ATDvCk83r8X/f
-         Lsr4WvNyck2LPVnGgxKM+j5MLo42dye637+vCyXGu2nDZT7/aryQmXU25QSAwpPq6lwu
-         UsX4xZ30P0VY0IOj52jleZSK95exDF0IYiG1RKMzWXGJj4YOygw/5Qa1yIKNyC1BvPw8
-         0CYX5rrLcEBEA3YxhDK1sZPzt6UAOUvZq2o7A159YY/XZ9SvQvTwFbGY0+KMtnHj/5p2
-         FStw==
-X-Forwarded-Encrypted: i=1; AJvYcCWuQ/1mbPRtJ3uBBgoEBNc11QzhqbEuwKi1xwQtaJJ6HJdpLzys5jKpO6J4vqoqa33kGVnHxlVEAidohkCQwxHrXTQg0H65K9XAEE7+r5KhHPf3mq6UhWgLXY5bzL6vPvYM1fIPb71fshqV0tUpZGsSa3mZCCN+xP3H86D3sqWT1KOj3oDQB/DC9vOkVbbjg4O4BFD5wgKRo9LfdqF+tRycNgnPo5ajpIs/SJ4Jmy+E7TtDX0mwJb6+om4H
-X-Gm-Message-State: AOJu0YwefpuKJ8Yu6yv5J9hnhtyS/7+lAPlKfOBgHpNRFWKD5yRHQp4h
-	KCI1zDeieIVLStu0fmOS9cizQktLNMGopMnfryBqvR3PTDK2C6vgSYr4TycqCx/z9cbpGRRNfxM
-	5oN7Z3X+6uOi6U2MSJ6ZsQR8mpdU=
-X-Google-Smtp-Source: AGHT+IFd7aScjoB1o5nbbLRHp/KbqDDY5CR5RTuqnjrw9jR8jB5FFSGCGSERy0hRoO0KfOZjYySRww0bR/A2dhWSgUM=
-X-Received: by 2002:a17:90a:a082:b0:2c2:c662:ca5 with SMTP id
- 98e67ed59e1d1-2c4a76d4e35mr948305a91.30.1718175757398; Wed, 12 Jun 2024
- 00:02:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718177022; x=1718781822;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zzoZ2C0guQAGIJY+WDpPhVUMExli5mSXJ8fvKFTkBhw=;
+        b=YMLojAPS+zBfhR0N1ZmlduDiqUuKBvVh7g1ArJCv9LYmCldGx9kqfMfou5KdgNgxIr
+         HDrqKhzEfFxMgN1d1h7T9UU17ctFmgt0WX7jRGv7Cu0HMnBAGoT4LOvkTDaIt5+rqll3
+         9Kc9IYA7w8tHk7xPpAy62B5PxEDJAfb9HjxPphKX3W6YnplCeYbDt+aLxWzoFVcOuert
+         tODAYj6AWiZnE6p/wPA5uPvVB9en7C/eN5EnGu59lNOB+3MRB2aXMe7EpEJFUmGWBG2R
+         33YGcd9pN8jrimb26mUuTFuGpj78eDPdicCOCLwPAg0ERVUkW4Bm0O+CTZhr24SSbqE9
+         aE5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWevKg5PI70bYBmugZxSPek0LUY8Jt0jxSCmvfvGgZtBeo5WEGntN2LxOob4+rGL34O9ERMahW8gSgEbk3AXzHbD8gLWKn0uBKWW7p3IhiagM+b8YqH6BcktKxuQf5uJLdI54E3GfUFLDzlJArjcUZPI82iwWaF4Pp42FqRu1MBuvcUFnpEfs7BWEijCKcoAo6S
+X-Gm-Message-State: AOJu0YxrypJNlq/qnIbjf6do7tk7U5kE0eFPylytS/rAcg2ifbQQvZ19
+	/xPz8sNqQyaMfGwz4c0NwoC9rUS4LVIXijfwTTT5eL02n+GW8SEG
+X-Google-Smtp-Source: AGHT+IGNIbOiKuBi8XBaHBBWZFuuSUm5/fxYrK1eNRgIcIp/HAFQQAj2B1ndW70Hhj705NIJRAC8gQ==
+X-Received: by 2002:a50:99d9:0:b0:57c:610a:6e85 with SMTP id 4fb4d7f45d1cf-57caa9bc77emr933866a12.27.1718177022047;
+        Wed, 12 Jun 2024 00:23:42 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7156e6c2sm6912641a12.9.2024.06.12.00.23.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Jun 2024 00:23:41 -0700 (PDT)
+Date: Wed, 12 Jun 2024 07:23:40 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240612072340.hsdxusmszixebvrt@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20240606150143.876469296@goodmis.org>
+ <20240606150316.751642266@goodmis.org>
+ <20240611144029.h7egl4aif5mjlrwf@master>
+ <20240611111218.71e57e0f@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611112158.40795-1-jolsa@kernel.org> <20240611235228.f70de698f8e43a3c177a15b8@kernel.org>
-In-Reply-To: <20240611235228.f70de698f8e43a3c177a15b8@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 12 Jun 2024 08:02:25 +0100
-Message-ID: <CAEf4BzZzE94QUdhWPmrMzRBRLa=nm86Mdm5vow688jKq3HzJeA@mail.gmail.com>
-Subject: Re: [PATCHv8 bpf-next 0/9] uprobe: uretprobe speed up
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	Deepak Gupta <debug@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611111218.71e57e0f@gandalf.local.home>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Tue, Jun 11, 2024 at 3:52=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
+On Tue, Jun 11, 2024 at 11:12:18AM -0400, Steven Rostedt wrote:
+>On Tue, 11 Jun 2024 14:40:29 +0000
+>Wei Yang <richard.weiyang@gmail.com> wrote:
 >
-> On Tue, 11 Jun 2024 13:21:49 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
+>Missed this just before sending out v3 :-p
 >
-> > hi,
-> > as part of the effort on speeding up the uprobes [0] coming with
-> > return uprobe optimization by using syscall instead of the trap
-> > on the uretprobe trampoline.
-> >
-> > The speed up depends on instruction type that uprobe is installed
-> > and depends on specific HW type, please check patch 1 for details.
-> >
-> > Patches 1-8 are based on bpf-next/master, but patch 2 and 3 are
-> > apply-able on linux-trace.git tree probes/for-next branch.
-> > Patch 9 is based on man-pages master.
-> >
-> > v8 changes:
-> > - rebased (another new syscall got merged)
-> > - added acks
-> >
-> > Also available at:
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   uretprobe_syscall
+>> >diff --git a/mm/memblock.c b/mm/memblock.c
+>> >index d09136e040d3..a8bf0ee9e2b4 100644
+>> >--- a/mm/memblock.c
+>> >+++ b/mm/memblock.c
+>> >@@ -2244,6 +2244,103 @@ void __init memblock_free_all(void)
+>> > 	totalram_pages_add(pages);
+>> > }
+>> > 
+>> >+/* Keep a table to reserve named memory */
+>> >+#define RESERVE_MEM_MAX_ENTRIES		8
+>> >+#define RESERVE_MEM_NAME_SIZE		16  
+>>                                         ^
+>> Suggest to align with previous line.
 >
-> Applied patch [1/9] - [8/9] on probes/for-next in
->  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+>It is. But because the patch adds a "+", it pushed the "8" out another tab.
+>
+>> 
+>> >+struct reserve_mem_table {
+>> >+	char			name[RESERVE_MEM_NAME_SIZE];
+>> >+	unsigned long		start;
+>> >+	unsigned long		size;  
+>> 
+>> phys_addr_t looks more precise?
+>
+>For just the start variable, correct? I'm OK with updating that.
 >
 
-Thanks, Masami, looks good! I also confirmed that probes/for-next and
-bpf-next/master can be merged with no conflicts (hopefully it stays
-this way till the next merge window).
+Both start and size. When you look at the definition of memblock_region, both
+are defined as phys_addr_t.
 
-> Thank you!
+>> 
+>> >+};
+>> >+static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+>> >+static int reserved_mem_count;  
+>> 
+>> Seems no matter we use this feature or not, these memory would be occupied?
 >
-> >
-> > thanks,
-> > jirka
-> >
-> >
-> > Notes to check list items in Documentation/process/adding-syscalls.rst:
-> >
-> > - System Call Alternatives
-> >   New syscall seems like the best way in here, because we need
-> >   just to quickly enter kernel with no extra arguments processing,
-> >   which we'd need to do if we decided to use another syscall.
-> >
-> > - Designing the API: Planning for Extension
-> >   The uretprobe syscall is very specific and most likely won't be
-> >   extended in the future.
-> >
-> >   At the moment it does not take any arguments and even if it does
-> >   in future, it's allowed to be called only from trampoline prepared
-> >   by kernel, so there'll be no broken user.
-> >
-> > - Designing the API: Other Considerations
-> >   N/A because uretprobe syscall does not return reference to kernel
-> >   object.
-> >
-> > - Proposing the API
-> >   Wiring up of the uretprobe system call is in separate change,
-> >   selftests and man page changes are part of the patchset.
-> >
-> > - Generic System Call Implementation
-> >   There's no CONFIG option for the new functionality because it
-> >   keeps the same behaviour from the user POV.
-> >
-> > - x86 System Call Implementation
-> >   It's 64-bit syscall only.
-> >
-> > - Compatibility System Calls (Generic)
-> >   N/A uretprobe syscall has no arguments and is not supported
-> >   for compat processes.
-> >
-> > - Compatibility System Calls (x86)
-> >   N/A uretprobe syscall is not supported for compat processes.
-> >
-> > - System Calls Returning Elsewhere
-> >   N/A.
-> >
-> > - Other Details
-> >   N/A.
-> >
-> > - Testing
-> >   Adding new bpf selftests and ran ltp on top of this change.
-> >
-> > - Man Page
-> >   Attached.
-> >
-> > - Do not call System Calls in the Kernel
-> >   N/A.
-> >
-> >
-> > [0] https://lore.kernel.org/bpf/ZeCXHKJ--iYYbmLj@krava/
-> > ---
-> > Jiri Olsa (8):
-> >       x86/shstk: Make return uprobe work with shadow stack
-> >       uprobe: Wire up uretprobe system call
-> >       uprobe: Add uretprobe syscall to speed up return probe
-> >       selftests/x86: Add return uprobe shadow stack test
-> >       selftests/bpf: Add uretprobe syscall test for regs integrity
-> >       selftests/bpf: Add uretprobe syscall test for regs changes
-> >       selftests/bpf: Add uretprobe syscall call from user space test
-> >       selftests/bpf: Add uretprobe shadow stack test
-> >
-> >  arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
-> >  arch/x86/include/asm/shstk.h                                |   4 +
-> >  arch/x86/kernel/shstk.c                                     |  16 ++++
-> >  arch/x86/kernel/uprobes.c                                   | 124 ++++=
-++++++++++++++++++++++++-
-> >  include/linux/syscalls.h                                    |   2 +
-> >  include/linux/uprobes.h                                     |   3 +
-> >  include/uapi/asm-generic/unistd.h                           |   5 +-
-> >  kernel/events/uprobes.c                                     |  24 ++++=
---
-> >  kernel/sys_ni.c                                             |   2 +
-> >  tools/include/linux/compiler.h                              |   4 +
-> >  tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c       | 123 ++++=
-++++++++++++++++++++++++-
-> >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 385 ++++=
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++++++++
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall.c          |  15 ++++
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  17 ++++
-> >  tools/testing/selftests/x86/test_shadow_stack.c             | 145 ++++=
-++++++++++++++++++++++++++++++
-> >  15 files changed, 860 insertions(+), 10 deletions(-)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_sysca=
-ll.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_ex=
-ecuted.c
-> >
-> > Jiri Olsa (1):
-> >       man2: Add uretprobe syscall page
-> >
-> >  man/man2/uretprobe.2 | 56 ++++++++++++++++++++++++++++++++++++++++++++=
-++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >  create mode 100644 man/man2/uretprobe.2
+>Yes, because allocation may screw it up as well. I could add a CONFIG
+>around it, so that those that do not want this could configure it out. But
+>since it's just a total of (16 + 8 + 8) * 8 = 256 bytes, I'm not sure it's
+>much of a worry to add the complexities to save that much space. As the
+>code to save it may likely be bigger.
+>
+
+If Mike feel good to it, I am ok.
+
+>> 
+>> >+
+>> >+/* Add wildcard region with a lookup name */
+>> >+static int __init reserved_mem_add(unsigned long start, unsigned long size,
+>> >+				   const char *name)
+>> >+{
+>> >+	struct reserve_mem_table *map;
+>> >+
+>> >+	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
+>> >+		return -EINVAL;
+>> >+
+>> >+	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
+>> >+		return -1;  
+>> 
+>> return ENOSPC? Not good at it, but a raw value maybe not a good practice.
+>
+>This is what gets returned by the command line parser. It only cares if it
+>is zero or not.
+>
+>> 
+>> Also, we'd better do this check before allocation.
+>
+>What allocation?
+>
+
+You call reserved_mem_add() after memblock_phys_alloc(). 
+My suggestion is do those sanity check before calling memblock_phys_alloc().
+
+>> 
+>> >+
+>> >+	map = &reserved_mem_table[reserved_mem_count++];
+>> >+	map->start = start;
+>> >+	map->size = size;
+>> >+	strscpy(map->name, name);
+>> >+	return 0;
+>> >+}
+>> >+
+>> >+/**
+>> >+ * reserve_mem_find_by_name - Find reserved memory region with a given name
+>> >+ * @name: The name that is attached to a reserved memory region
+>> >+ * @start: If found, holds the start address
+>> >+ * @size: If found, holds the size of the address.
+>> >+ *
+>> >+ * Returns: 1 if found or 0 if not found.
+>> >+ */
+>> >+int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
+>> >+{
+>> >+	struct reserve_mem_table *map;
+>> >+	int i;
+>> >+
+>> >+	for (i = 0; i < reserved_mem_count; i++) {
+>> >+		map = &reserved_mem_table[i];
+>> >+		if (!map->size)
+>> >+			continue;
+>> >+		if (strcmp(name, map->name) == 0) {
+>> >+			*start = map->start;
+>> >+			*size = map->size;
+>> >+			return 1;
+>> >+		}
+>> >+	}
+>> >+	return 0;
+>> >+}
+>> >+
+>> >+/*
+>> >+ * Parse early_reserve_mem=nn:align:name  
+>> 
+>> early_reserve_mem or reserve_mem ?
+>
+>Oops, that was the original name. I'll change that.
+>
+>> 
+>> >+ */
+>> >+static int __init reserve_mem(char *p)
+>> >+{
+>> >+	phys_addr_t start, size, align;
+>
+>Hmm, I wonder if I should change size and align to unsigned long?
+>
+
+I grep the kernel, some use u64, some use unsigned long. 
+I think it is ok to use unsigned long here.
+
+>> >+	char *oldp;
+>> >+	int err;
+>> >+
+>> >+	if (!p)
+>> >+		return -EINVAL;
+>> >+
+>> >+	oldp = p;
+>> >+	size = memparse(p, &p);
+>> >+	if (p == oldp)
+>> >+		return -EINVAL;
+>> >+
+>> >+	if (*p != ':')
+>> >+		return -EINVAL;
+>> >+
+>> >+	align = memparse(p+1, &p);
+>> >+	if (*p != ':')
+>> >+		return -EINVAL;
+>> >+  
+>> 
+>> Better to check if the name is valid here. 
+>
+>You mean that it has text and is not blank?
+>
+>> 
+>> Make sure command line parameters are valid before doing the allocation.
+>
+>You mean that size is non zero?
+>
+
+I mean do those sanity check before real allocation.
+
+>I don't know if we care what the align is. Zero is valid.
+>
+
+memblock internal would check the alignment. If it is zero, it will change to
+SMP_CACHE_BYTES with dump_stack().
+
+>> 
+>> >+	start = memblock_phys_alloc(size, align);
+>> >+	if (!start)
+>> >+		return -ENOMEM;
+>> >+
+>> >+	p++;
+>> >+	err = reserved_mem_add(start, size, p);
+>> >+	if (err) {
+>> >+		memblock_phys_free(start, size);
+>> >+		return err;
+>> >+	}
+>> >+
+>> >+	p += strlen(p);
+>> >+
+>> >+	return *p == '\0' ? 0: -EINVAL;  
+>> 
+>> We won't free the memory if return -EINVAL?
+>
+>I guess we can do this check before the allocation, like you suggested.
+>
+>Thanks for the review.
+>
+>-- Steve
 >
 >
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>> 
+>> >+}
+>> >+__setup("reserve_mem=", reserve_mem);
+>> >+
+>> > #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
+>> > static const char * const flagname[] = {
+>> > 	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
+>> >-- 
+>> >2.43.0
+>> >
+>> >  
+>> 
+
+-- 
+Wei Yang
+Help you, Help me
