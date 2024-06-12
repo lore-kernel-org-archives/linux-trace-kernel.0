@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AEF219E4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C51025605;
 	Wed, 12 Jun 2024 02:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158627; cv=none; b=YbZQScllsJnyDP3pYCxHypF2hyPPlFhzv7UCVU6dskzgDCKoslPUmTtjxpruJV4uQX61+c7YKBV1u01gbwv5u/u+SnPkCwZaHFZzNN8104wXT2jNp0p3nzE0E5XyiuV3oAAw780QQoiKItcbZweQ9XkmSn17+pChBesGnM4w5v0=
+	t=1718158627; cv=none; b=S7qA4EsIXTjb6j/bOONqn7pOQYTbUGobrVxAtf3b/JEbbudA7/elpnZX4/+dmKvfXk0VloeV44dEwL2Xr96EF4rg9V8ByD3gwfXJe8Cznc7jbSzQPj1NBvUAwBaI70UFev9TmAZpMDm9cvplmCuvcwTRwMUKe3duy1zso9RWKBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718158627; c=relaxed/simple;
-	bh=IE1IK2OKn7/pafSQ0ncO+HLzuopsT1q+/33iYZS7wTg=;
+	bh=5vY8upmAWCSCeuI23auVBMfapEFPUJFegpBwQdZuq6o=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Ime2h42TBND9sVvPhV9xLMcHJaxEymszzKeiLvKOgcs0fwGE0ebCSuVI9x/MqM9XmkwK4meDMgWhGcTqgGhEYVbDVyYUzdqGFBM83Waim0a2J0G5x9atK1BGDrMHioRDHw8y3pR3bQif6gfTWXMKrbx+XE3knUGwlva6xAyY/nU=
+	 Content-Type; b=CdlSOHnky92tkG113cPSTUaBR3D9Aw1thCSodiDKPS6q3tUDgfEz7v8ThJRZA0MnKTxnWQljoYkt/+79HxdNO1g57WFPcMudARp44EvhZSuF1zuvcMMlrC2VyzwNgdSxUQlAejMetPi+0jTNHJosciq+DSSlZKW/HRioP7F10C8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E06C4AF50;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B476C4AF62;
 	Wed, 12 Jun 2024 02:17:07 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sHDYC-00000001XOh-0gKW;
+	id 1sHDYC-00000001XPD-1MxJ;
 	Tue, 11 Jun 2024 22:17:24 -0400
-Message-ID: <20240612021724.022660136@goodmis.org>
+Message-ID: <20240612021724.184338670@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 22:16:54 -0400
+Date: Tue, 11 Jun 2024 22:16:55 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v5 12/13] tracing: Update function tracing output for previous boot buffer
+Subject: [PATCH v5 13/13] tracing: Add last boot delta offset for stack traces
 References: <20240612021642.941740855@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -61,53 +61,40 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-For a persistent ring buffer that is saved across boots, if function
-tracing was performed in the previous boot, it only saves the address of
-the functions and uses "%pS" to print their names. But the current boot,
-those functions may be in different locations. The persistent meta-data
-saves the text delta between the two boots and can be used to find the
-address of the saved function of where it is located in the current boot.
+The addresses of a stack trace event are relative to the kallsyms. As that
+can change between boots, when printing the stack trace from a buffer that
+was from the last boot, it needs all the addresses to be added to the
+"text_delta" that gives the delta between the addresses of the functions
+for the current boot compared to the address of the last boot. Then it can
+be passed to kallsyms to find the function name, otherwise it just shows a
+useless list of addresses.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_output.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ kernel/trace/trace_output.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index d8b302d01083..b9d2c64c0648 100644
+index b9d2c64c0648..48de93598897 100644
 --- a/kernel/trace/trace_output.c
 +++ b/kernel/trace/trace_output.c
-@@ -990,8 +990,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
- }
- 
- static void print_fn_trace(struct trace_seq *s, unsigned long ip,
--			   unsigned long parent_ip, int flags)
-+			   unsigned long parent_ip, long delta, int flags)
- {
-+	ip += delta;
-+	parent_ip += delta;
-+
- 	seq_print_ip_sym(s, ip, flags);
- 
- 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
-@@ -1009,7 +1012,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
+@@ -1233,6 +1233,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
+ 	struct trace_seq *s = &iter->seq;
+ 	unsigned long *p;
+ 	unsigned long *end;
++	long delta = iter->tr->text_delta;
  
  	trace_assign_type(field, iter->ent);
+ 	end = (unsigned long *)((long)iter->ent + iter->ent_size);
+@@ -1245,7 +1246,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
+ 			break;
  
--	print_fn_trace(s, field->ip, field->parent_ip, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
- 	trace_seq_putc(s, '\n');
+ 		trace_seq_puts(s, " => ");
+-		seq_print_ip_sym(s, *p, flags);
++		seq_print_ip_sym(s, (*p) + delta, flags);
+ 		trace_seq_putc(s, '\n');
+ 	}
  
- 	return trace_handle_return(s);
-@@ -1674,7 +1677,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, iter->ent);
- 
--	print_fn_trace(s, field->ip, field->parent_ip, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
- 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
- 	trace_print_time(s, iter,
- 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
 -- 
 2.43.0
 
