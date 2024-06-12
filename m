@@ -1,90 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFED11C14;
-	Wed, 12 Jun 2024 22:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B433C28385;
+	Wed, 12 Jun 2024 22:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718230334; cv=none; b=djZjmpp1MmBBqe1o7oS0yZ7axeJFmrznpnYAlxB6LP/n+3BEU0RN7L04NNrnnUbSRLxOiqyPCSbJjcqFdu/PxhWcREWpP1nEw1X2tG1eO432Hyb4Dyacv1O1e6YONYFXwM4iEmYF8Kb475o2U7JhwYdkH/B3if/aBZ96heiGArE=
+	t=1718231876; cv=none; b=tLCf+n2Rg62o9iaq+cKVkksQlZgQionrgULmfVF+NYoiRx7rRK9yDBhSkmYPj9acnre97xZ3AsdqXF/CYJp+iJdoOWBa6V9hDUgcGQgcEKmGOP3P+vfGPiTfYHgDt3iGh5ETHrswC9nVTdwttuggy4UNWx6mVyev1w1rl9KzNQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718230334; c=relaxed/simple;
-	bh=u7GHi5Z1GZsq+IxhBO/WJI3EakrV1PcZZ0OzD6obEbQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HyPKwZdUnSo3zbtb/XE5Qbt0otBLiwmpjRBHIxIjkA8nKh0feOJto6t60Q8U2qsIdF2HJz/A052tEU98JKvn/X8psMsvvILdDvdT/5BuofPWcaZgih1K8a4rge+7npWoTacvERPXKemJxKbEF1na8P34hTa+o1I1/5WSZnU+WS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaSDEKGh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718231876; c=relaxed/simple;
+	bh=oIsohZ+9uDXt1/szfbZNu9uZ6WH4ExPZbv0MeSABAuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VP11zNL1BHneE8u7HEMfsUdH+TTt58BXmUt97y5tCQSOCfZ+c7VbB8FRiO14JUZEt4dtU1L31WsStNJEZK8JyiIlGBhxjNfO/k28/iXk3q17jZ/hThZ4W31jnG/kIeDhC0V7w9PaloX3DW5SH85++t8gAu7XIcQivgAjyLov8LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gP+b8oI2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaSDEKGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2575C116B1;
-	Wed, 12 Jun 2024 22:12:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gP+b8oI2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29078C116B1;
+	Wed, 12 Jun 2024 22:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718230334;
-	bh=u7GHi5Z1GZsq+IxhBO/WJI3EakrV1PcZZ0OzD6obEbQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eaSDEKGhkM2xrA4E0ZxP7iIKy4aKLWT9Si877cXaIg6KBLgbkH5EkaK658PolKZ1L
-	 gtYDPLyGifDB3P8tgWQIH1mFdMHWLjcH/6VOSlSrRC9WwWzRzFipLeO2TbquXUA/PA
-	 4gzsRE1f1n+TeqCg6LaxGLDXF5crzPp52nmQxDnfLQ6MOKiGb9siOhsZOCi4T7cXOI
-	 dabEUinztOrM14elcnjXRD5q13tGc5JuwBuSfQdz4TblWEVUhtoRMVKHruDp1pw+1k
-	 Gbr5XmC2v48+mu1kijPM5DXdR6dZz8OwhKlQ1DRuVaob9gqKciRPE86gJB7MCBxUGM
-	 jkcP4qr1DwfxQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
+	s=k20201202; t=1718231876;
+	bh=oIsohZ+9uDXt1/szfbZNu9uZ6WH4ExPZbv0MeSABAuw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=gP+b8oI23RaN2auavn9kdJs6IaFxGfpTRers71TYsRO81EBkAJS1TEEGF9PeM+7wx
+	 JfjAorGHi0StC2tbEFL0bYR8ahwDNRtKXd/jEciawD5flFj7OxObqgTN+5TakbhJo9
+	 MYUohzqZDX+JJBX7UwG3NUQCOUrxFlzf999/p9+XDhMFm6el3kPv2V63iZvZ5wUcv5
+	 lQ5MrBltINH+5KZS/28WiZf4A+9rRX+iNrE09oOnoadekn/S8rZO8cAVOXqThDgSq8
+	 GX1/wlDqJccdnaongSnTXVexdmEnFHpo7BzVqTOxZtg9rbL/bdSMDg4px5jWTRJf+V
+	 LGtEBztw5cOtQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id BC95ACE0DEA; Wed, 12 Jun 2024 15:37:55 -0700 (PDT)
+Date: Wed, 12 Jun 2024 15:37:55 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
 	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Add required dependency for kprobe tests
-Date: Thu, 13 Jun 2024 07:12:10 +0900
-Message-Id: <171823033048.152840.662759412433336839.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612143305.451abf58@kernel.org>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
+> On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
+> > Since SLOB was removed, it is not necessary to use call_rcu
+> > when the callback only performs kmem_cache_free. Use
+> > kfree_rcu() directly.
+> > 
+> > The changes were done using the following Coccinelle semantic patch.
+> > This semantic patch is designed to ignore cases where the callback
+> > function is used in another way.
+> 
+> How does the discussion on:
+>   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
+>   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
+> reflect on this series? IIUC we should hold off..
 
-kprobe_args_{char,string}.tc are using available_filter_functions file
-which is provided by function tracer. Thus if function tracer is disabled,
-these tests are failed on recent kernels because tracefs_create_dir is
-not raised events by adding a dynamic event.
-Add available_filter_functions to requires line.
+We do need to hold off for the ones in kernel modules (such as 07/14)
+where the kmem_cache is destroyed during module unload.
 
-Fixes: 7c1130ea5cae ("test: ftrace: Fix kprobe test for eventfs")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../ftrace/test.d/kprobe/kprobe_args_char.tc       |    2 +-
- .../ftrace/test.d/kprobe/kprobe_args_string.tc     |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+OK, I might as well go through them...
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-index e21c9c27ece4..77f4c07cdcb8 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-@@ -1,7 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Kprobe event char type argument
--# requires: kprobe_events
-+# requires: kprobe_events available_filter_functions
- 
- case `uname -m` in
- x86_64)
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-index 93217d459556..39001073f7ed 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-@@ -1,7 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Kprobe event string type argument
--# requires: kprobe_events
-+# requires: kprobe_events available_filter_functions
- 
- case `uname -m` in
- x86_64)
+[PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	Needs to wait, see wg_allowedips_slab_uninit().
 
+[PATCH 02/14] net: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	I don't immediately see the rcu_barrier(), but if there isn't
+	one in there somewhere there probably should be.  Caution
+	suggests a need to wait.
+
+[PATCH 03/14] KVM: PPC: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	I don't immediately see the rcu_barrier(), but if there isn't
+	one in there somewhere there probably should be.  Caution
+	suggests a need to wait.
+
+[PATCH 04/14] xfrm6_tunnel: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	Needs to wait, see xfrm6_tunnel_fini().
+
+[PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	This one is fine because the tracefs_inode_cachep kmem_cache
+	is created at boot and never destroyed.
+
+[PATCH 06/14] eCryptfs: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	I don't see a kmem_cache_destroy(), but then again, I also don't
+	see the kmem_cache_create().  Unless someone can see what I am
+	not seeing, let's wait.
+
+[PATCH 07/14] net: bridge: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	Needs to wait, see br_fdb_fini() and br_deinit().
+
+[PATCH 08/14] nfsd: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	I don't immediately see the rcu_barrier(), but if there isn't
+	one in there somewhere there probably should be.  Caution
+	suggests a need to wait.
+
+[PATCH 09/14] block: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	I don't see a kmem_cache_destroy(), but then again, I also don't
+	see the kmem_cache_create().  Unless someone can see what I am
+	not seeing, let's wait.
+
+[PATCH 10/14] can: gw: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	Needs to wait, see cgw_module_exit().
+
+[PATCH 11/14] posix-timers: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	This one is fine because the posix_timers_cache kmem_cache is
+	created at boot and never destroyed.
+
+[PATCH 12/14] workqueue: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	This one is fine because the pwq_cache kmem_cache is created at
+	boot and never destroyed.
+
+[PATCH 13/14] kcm: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	I don't immediately see the rcu_barrier(), but if there isn't
+	one in there somewhere there probably should be.  Caution
+	suggests a need to wait.
+
+[PATCH 14/14] netfilter: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+	Needs to wait, see hashlimit_mt_exit().
+
+So 05/14, 11/14 and 12/14 are OK and can go ahead.  The rest need some
+help.
+
+Apologies for my having gotten overly enthusiastic about this change!
+
+							Thanx, Paul
