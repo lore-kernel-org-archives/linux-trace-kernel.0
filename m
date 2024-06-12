@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AF1134BC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901E417BB9;
 	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158626; cv=none; b=e6dexEHMc1KJixuyNddVQUTZ50sQXRPsIk6n092/gB1qDAheXltlRfrjDIDpb5CircKQh+Hp0hfcoKe4Ga4ji4ffxCfCUbLGM20NcQdIikBtstbyMh8ZdHy6iTLpMxDR6ZI0K0k0L+TzjzY3O+4RlMOfXkshVSpDfBY5vW/nMZM=
+	t=1718158626; cv=none; b=SDvjZTBtf50xin1Km7wBof04WNxyD9cPRuobkSL/pwi7FajVfK+txrRTxaSZERDb9aW/bElCnTSIsZMTHvkRyC9Qylf16A3Lyjucgn4ufBXZots6w33qLGET9jEAUQbsIGh2v1MGLjzu1IjcDdK5nhCme+ccHGnDiMzYotsh0zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718158626; c=relaxed/simple;
-	bh=GVvcmn3027Fc6rCsvulA82p+nR13kJETnki+fNMXM9U=;
+	bh=37r8lDjHzicuRAJsYN1lC8DJ6beNJb/4WZW/eHu4mrg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=lIBX07a0HumFSYOwtjeKWotUQCcmf/plrrRSATxQprUscpELTc62cWx6Q8GmAW48xtZqG2hqXfckHeHu1froFEcDhxPpawtBADdF9YbKERI/xlnUygrBjeV3fRlC9ZSn/Mm0NaMdKLvKyjRAHeXW+MXiFbzDgY87/oYzWaGcF+I=
+	 Content-Type; b=QM1gqb8sDmiM1cZYmXUhOSLdLr87tPFoqNAtSXrGL4tK7O2xmfA+wexZawcWj/f+Tpfd/zTOkg2BMsgIuzk6/9QlrjYTY6W3006yj1M+hIdwKKouk1S78ksE21lFPZVyGDH7Koi9dTZgNf9k5MRwFQRxYK8+27/FtP5phDh6VdI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABB5C4AF61;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7751DC4AF65;
 	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sHDYB-00000001XMf-29YO;
+	id 1sHDYB-00000001XNC-2oNb;
 	Tue, 11 Jun 2024 22:17:23 -0400
-Message-ID: <20240612021723.374491025@goodmis.org>
+Message-ID: <20240612021723.532929570@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 22:16:50 -0400
+Date: Tue, 11 Jun 2024 22:16:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -48,9 +48,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tony Luck <tony.luck@intel.com>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>,
- linux-mm@kvack.org
-Subject: [PATCH v5 08/13] tracing: Add option to use memmapped memory for trace boot instance
+ Kees Cook <keescook@chromium.org>
+Subject: [PATCH v5 09/13] ring-buffer: Save text and data locations in mapped meta data
 References: <20240612021642.941740855@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,159 +61,75 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add an option to the trace_instance kernel command line parameter that
-allows it to use the reserved memory from memmap boot parameter.
+When a ring buffer is mapped to a specific address, save the address of a
+text function and some data. This will be used to determine the delta
+between the last boot and the current boot for pointers to functions as
+well as to data.
 
-  memmap=12M$0x284500000 trace_instance=boot_mapped@0x284500000:12M
-
-The above will reserves 12 megs at the physical address 0x284500000.
-The second parameter will create a "boot_mapped" instance and use the
-memory reserved as the memory for the ring buffer.
-
-That will create an instance called "boot_mapped":
-
-  /sys/kernel/tracing/instances/boot_mapped
-
-Note, because the ring buffer is using a defined memory ranged, it will
-act just like a memory mapped ring buffer. It will not have a snapshot
-buffer, as it can't swap out the buffer. The snapshot files as well as any
-tracers that uses a snapshot will not be present in the boot_mapped
-instance.
-
-Cc: linux-mm@kvack.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  9 +++
- kernel/trace/trace.c                          | 75 +++++++++++++++++--
- 2 files changed, 78 insertions(+), 6 deletions(-)
+ kernel/trace/ring_buffer.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b600df82669d..ff26b6094e79 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6754,6 +6754,15 @@
- 			the same thing would happen if it was left off). The irq_handler_entry
- 			event, and all events under the "initcall" system.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 2118c478e42b..195e47ef730d 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -45,6 +45,8 @@
+ static void update_pages_handler(struct work_struct *work);
  
-+			If memory has been reserved (see memmap for x86), the instance
-+			can use that memory:
+ struct ring_buffer_meta {
++	unsigned long	text_addr;
++	unsigned long	data_addr;
+ 	unsigned long	first_buffer;
+ 	unsigned long	head_buffer;
+ 	unsigned long	commit_buffer;
+@@ -542,6 +544,9 @@ struct trace_buffer {
+ 	unsigned long			range_addr_start;
+ 	unsigned long			range_addr_end;
+ 
++	long				last_text_delta;
++	long				last_data_delta;
 +
-+				memmap=12M$0x284500000 trace_instance=boot_map@0x284500000:12M
-+
-+			The above will create a "boot_map" instance that uses the physical
-+			memory at 0x284500000 that is 12Megs. The per CPU buffers of that
-+			instance will be split up accordingly.
-+
- 	trace_options=[option-list]
- 			[FTRACE] Enable or disable tracer options at boot.
- 			The option-list is a comma delimited list of options
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 622fe670949d..dfde26aa3211 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9504,6 +9504,31 @@ static int instance_mkdir(const char *name)
- 	return ret;
+ 	unsigned int			subbuf_size;
+ 	unsigned int			subbuf_order;
+ 	unsigned int			max_data_size;
+@@ -1821,10 +1826,15 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	}
  }
  
-+static u64 map_pages(u64 start, u64 size)
-+{
-+	struct page **pages;
-+	phys_addr_t page_start;
-+	unsigned int page_count;
-+	unsigned int i;
-+	void *vaddr;
++/* Used to calculate data delta */
++static char rb_data_ptr[] = "";
 +
-+	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
-+
-+	page_start = start;
-+	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
-+	if (!pages)
-+		return 0;
-+
-+	for (i = 0; i < page_count; i++) {
-+		phys_addr_t addr = page_start + i * PAGE_SIZE;
-+		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
-+	}
-+	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
-+	kfree(pages);
-+
-+	return (u64)(unsigned long)vaddr;
-+}
-+
- /**
-  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
-  * @name: The name of the trace array to be looked up/created.
-@@ -10350,6 +10375,7 @@ __init static void enable_instances(void)
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
  {
- 	struct trace_array *tr;
- 	char *curr_str;
-+	char *name;
- 	char *str;
- 	char *tok;
- 
-@@ -10358,19 +10384,56 @@ __init static void enable_instances(void)
- 	str = boot_instance_info;
- 
- 	while ((curr_str = strsep(&str, "\t"))) {
-+		unsigned long start = 0;
-+		unsigned long size = 0;
-+		unsigned long addr = 0;
- 
- 		tok = strsep(&curr_str, ",");
-+		name = strsep(&tok, "@");
-+		if (tok) {
-+			start = memparse(tok, &tok);
-+			if (!start) {
-+				pr_warn("Tracing: Invalid boot instance address for %s\n",
-+					name);
-+				continue;
-+			}
-+		}
- 
--		if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
--			do_allocate_snapshot(tok);
-+		if (start) {
-+			if (*tok != ':') {
-+				pr_warn("Tracing: No size specified for instance %s\n", name);
-+				continue;
-+			}
-+			tok++;
-+			size = memparse(tok, &tok);
-+			if (!size) {
-+				pr_warn("Tracing: Invalid boot instance size for %s\n",
-+					name);
-+				continue;
-+			}
-+			addr = map_pages(start, size);
-+			if (addr) {
-+				pr_info("Tracing: mapped boot instance %s at physical memory 0x%lx of size 0x%lx\n",
-+					name, start, size);
-+			} else {
-+				pr_warn("Tracing: Failed to map boot instance %s\n", name);
-+				continue;
-+			}
-+		} else {
-+			/* Only non mapped buffers have snapshot buffers */
-+			if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
-+				do_allocate_snapshot(name);
-+		}
- 
--		tr = trace_array_get_by_name(tok, NULL);
-+		tr = trace_array_create_systems(name, NULL, addr, size);
- 		if (!tr) {
--			pr_warn("Failed to create instance buffer %s\n", curr_str);
-+			pr_warn("Tracing: Failed to create instance buffer %s\n", curr_str);
+ 	struct ring_buffer_meta *meta;
+ 	unsigned long delta;
++	unsigned long this_text = (unsigned long)rb_range_meta_init;
++	unsigned long this_data = (unsigned long)rb_data_ptr;
+ 	void *subbuf;
+ 	int cpu;
+ 	int i;
+@@ -1841,6 +1851,10 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 			meta->first_buffer += delta;
+ 			meta->head_buffer += delta;
+ 			meta->commit_buffer += delta;
++			buffer->last_text_delta = this_text - meta->text_addr;
++			buffer->last_data_delta = this_data - meta->data_addr;
++			meta->text_addr = this_text;
++			meta->data_addr = this_data;
  			continue;
  		}
--		/* Allow user space to delete it */
--		trace_array_put(tr);
-+
-+		/* Only allow non mapped buffers to be deleted */
-+		if (!start)
-+			trace_array_put(tr);
  
- 		while ((tok = strsep(&curr_str, ","))) {
- 			early_enable_events(tr, tok, true);
+@@ -1857,6 +1871,8 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 		subbuf = rb_subbufs_from_meta(meta);
+ 
+ 		meta->first_buffer = (unsigned long)subbuf;
++		meta->text_addr = this_text;
++		meta->data_addr = this_data;
+ 
+ 		/*
+ 		 * The buffers[] array holds the order of the sub-buffers
 -- 
 2.43.0
 
