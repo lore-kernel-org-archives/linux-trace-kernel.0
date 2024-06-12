@@ -1,169 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB385336D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947CA5336D;
+	Wed, 12 Jun 2024 14:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718201563; cv=none; b=rJ9T/sfjhsiRQi+iA103NwnaxaPaDgsti9yPsgIAafL9WMUb2nHZ0UhO+dQSvCFbzNvMRwEazvp/6I4iyKVirbN0O5zNBEP0j/btfw+dNzDes2T+RuEidlU20+RcUUfeoVAq9QVB/fhuJGCyMuFCaw5rfvuEqj034j1CSvjHyao=
+	t=1718201569; cv=none; b=evKe0sodGpgmMnlW2V9CxSjR36jSCBYTqV3e0gyDXXKB0+S+vEEFBF6O/v05AJuay2Jfmjl8o7zbakqkMy0Q2yPaUSYNsFlOAM3Xbv5XA0NUU/ryQIlzxNeIZNlXHGC/R+4EJCswbbbrBJmabVvKLdlSD2O757B4nf7BZwe5eac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718201563; c=relaxed/simple;
-	bh=e6CithrYoqvWAZTwPj/kYCtycBNrDIODo8TF0DmX2ss=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Onf0VWN/D96xWwLfPckuXuHpLPfQNaRjwtA1MS/U5kfa6zUv94rrFBXa0FuFJ5QxBY0Jo/TVBbHadrUg1DShwKi0j1QwpuKjNiINy3GfSwlhmxZ8jq01TNqGKYFn1MdA4tXX6es3w2izC07g4tcx8i6yIvf7mPLjram0t045S6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=StgvcIY0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="StgvcIY0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718201560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=41mm6L+5qDMknpvTMwkuAgq3SgjPtSkdBwaxW2ijW5Q=;
-	b=StgvcIY01GgvOEzsnVnPOKpkrULziz5Nc5fAQIQ32FTAtcj5QTOSbxASJzkdFsKQSZ/ROB
-	q3MzJqcKrSg3BVLog03jwLJF9Lyci8srSvQah5MCfLN/5OvLVU76YSLVSdVpth9APFi1bH
-	8Xk+laGiFmAQPbjl7MtNNY20YPhghIU=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-68-JwmjxfQONkWqocQEXvDHPA-1; Wed, 12 Jun 2024 10:12:39 -0400
-X-MC-Unique: JwmjxfQONkWqocQEXvDHPA-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-795bb25ae28so161355585a.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:12:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718201559; x=1718806359;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41mm6L+5qDMknpvTMwkuAgq3SgjPtSkdBwaxW2ijW5Q=;
-        b=mtpKLrGuslyH71mRb0wtDyIjzYVMRWaqZTp4DV+udNsw4jI6unvNuId9//ToR42S/W
-         paBlueumICdIP4K4+CLBbRGNZN+VJTz7KoTYmYoWIb1ySaoRoFaPgyAd8GYK90in0TfJ
-         MLPxR0oKieov2iuSmGKxb00bvbq+RmUSlM2t/OHbJugbDEgUIcFJwyyyN6eNaleqQP3v
-         iQ5D29M88sNgTcar56jmOE6efIiUfleexISzqMcjgwCyO7Rlerqid80Vlj/kQz3uXeMQ
-         2jyfZDcZhuK1xJhUD1XO+cn6Fufv1vEh/oBDSQSnRheiWmZ7xwz+ug3VcDyCBnUdvGSM
-         TZ8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUEuQnieDi2etbj6+02VBd+58TQyeXtzAN054bOjGgzCACvAd/jJ/v3pBOdoEFrMwlW+9wpzuJOgynhqN4IeHUqsdMnGcqPRCeVniTnwjTDzKA5
-X-Gm-Message-State: AOJu0YxrC7mwsNxezWxEGl35uWlNqBCr1vyyuSa9B0P2Up2leuSofeHq
-	SiRy8DUMf4uhAAoeKk9KeeVekj8xnLM6ukEFi0fhi347MCXeJ/TcWAINJqdHUpVMCYqEBmkvn/8
-	9rFKg8jVNuEeZ+Mj7tZ5KMs1xeHn43bXiahlb+4Uxzhfmxx0vy5uzFUW7O8ldHjRAJmBkF7UFO2
-	0DMQ==
-X-Received: by 2002:a05:620a:190f:b0:797:84e7:9046 with SMTP id af79cd13be357-797f4db30e5mr352016885a.4.1718201558711;
-        Wed, 12 Jun 2024 07:12:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHB5vrOLZcD6InRm6Qvq4YB5P6QAVqAA61aZvOvCoo3qbREicdPR4c13qRvHDbOEOnZ6c3QTQ==
-X-Received: by 2002:a05:620a:190f:b0:797:84e7:9046 with SMTP id af79cd13be357-797f4db30e5mr352013285a.4.1718201558298;
-        Wed, 12 Jun 2024 07:12:38 -0700 (PDT)
-Received: from fionn ([74.12.5.183])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7954de1c077sm453970885a.48.2024.06.12.07.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 07:12:37 -0700 (PDT)
-Date: Wed, 12 Jun 2024 10:12:26 -0400 (EDT)
-From: John Kacur <jkacur@redhat.com>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-cc: Daniel Bristot de Oliveira <bristot@kernel.org>, 
-    Steven Rostedt <rostedt@goodmis.org>, Clark Williams <williams@redhat.com>, 
-    linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtla/osnoise: Better report when histogram is empty
-In-Reply-To: <Zml6JmH5cbS7-HfZ@uudg.org>
-Message-ID: <9d283173-4ff6-fbac-bcc3-e712daa99572@redhat.com>
-References: <Zml6JmH5cbS7-HfZ@uudg.org>
+	s=arc-20240116; t=1718201569; c=relaxed/simple;
+	bh=iOMYlsNUD4In4rhG3CCxDYocCLMlHDu5Sy6BBOT1Ab8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CSdm7JBfbZxg+btfWba1KIqoAS3Zb17kiIyckxeR9IhlKrXxmnvdIaGyWV4gBZvWmU2MKUS144yd5WA8IR4w6uyU/IVRFTn0YZsPZbNl4hcZ7nZbkKXkJI8hEXdBqa95GDs8BaJuIYB8jCa6rTZ2AE4TGIPOCGoBpcgaIRXwEBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D923BC4AF1A;
+	Wed, 12 Jun 2024 14:12:45 +0000 (UTC)
+Date: Wed, 12 Jun 2024 10:12:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort
+ <vdonnefort@google.com>, Joel Fernandes <joel@joelfernandes.org>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, suleiman@google.com, Thomas Gleixner
+ <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef
+ Esmat <youssefesmat@google.com>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, David
+ Howells <dhowells@redhat.com>, Mike Rapoport <rppt@kernel.org>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>, Kees Cook
+ <keescook@chromium.org>
+Subject: Re: [PATCH v5 01/13] ring-buffer: Allow mapped field to be set
+ without mapping
+Message-ID: <20240612101245.1a6a5836@rorschach.local.home>
+In-Reply-To: <20240612021722.239841009@goodmis.org>
+References: <20240612021642.941740855@goodmis.org>
+	<20240612021722.239841009@goodmis.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 11 Jun 2024 22:16:43 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On Wed, 12 Jun 2024, Luis Claudio R. Goncalves wrote:
-
-> When osnoise hist does not observe any samples above the threshold,
-> no entries are recorded and the final report shows empty entries
-> for the usual statistics (count, min, max, avg):
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
->     [~]# osnoise hist -d 5s -T 500
->     # RTLA osnoise histogram
->     # Time unit is microseconds (us)
->     # Duration:   0 00:00:05
->     Index
->     over: 
->     count:
->     min:  
->     avg:  
->     max:  
+> In preparation for having the ring buffer mapped to a dedicated location,
+> which will have the same restrictions as user space memory mapped buffers,
+> allow it to use the "mapped" field of the ring_buffer_per_cpu structure
+> without having the user space meta page mapping.
 > 
-> That could lead users to confusing interpretations of the results.
+> When this starts using the mapped field, it will need to handle adding a
+> user space mapping (and removing it) from a ring buffer that is using a
+> dedicated memory range.
 > 
-> A simple solution is to report 0 for count and the statistics, making it
-> clear that no noise (above the defined threshold) was observed:
-> 
->     [~]# osnoise hist -d 5s -T 500
->     # RTLA osnoise histogram
->     # Time unit is microseconds (us)
->     # Duration:   0 00:00:05
->     Index
->     over: 0
->     count: 0
->     min: 0
->     avg: 0
->     max: 0
-> 
-> 
-> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  tools/tracing/rtla/src/osnoise_hist.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  kernel/trace/ring_buffer.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
 > 
-> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-> index 7be17d09f7e85..214e2c93fde01 100644
-> --- a/tools/tracing/rtla/src/osnoise_hist.c
-> +++ b/tools/tracing/rtla/src/osnoise_hist.c
-> @@ -374,6 +374,7 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 28853966aa9a..aa8eb878e0d4 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -491,6 +491,7 @@ struct ring_buffer_per_cpu {
+>  	unsigned long			pages_removed;
+>  
+>  	unsigned int			mapped;
+> +	unsigned int			user_mapped;	/* first user space mapping */
+
+This actually needs to be a counter and not just save the mapped value
+when it first gets set :-p
+
+As the mappings could technically be incremented and decremented
+differently.
+
+I'll send a new patch. But since my long test keeps failing for subtle
+things, I'm not going to post another series until the full test passes.
+
+-- Steve
+
+
+>  	struct mutex			mapping_lock;
+>  	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
+>  	struct trace_buffer_meta	*meta_page;
+> @@ -5224,6 +5225,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
 >  {
->  	struct osnoise_hist_data *data = tool->data;
->  	struct trace_instance *trace = &tool->trace;
-> +	int has_samples = 0;
->  	int bucket, cpu;
->  	int total;
+>  	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
 >  
-> @@ -402,11 +403,25 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
->  			continue;
->  		}
->  
-> +		/* There are samples above the threshold */
-IMHO The comment isn't needed because the variable had_samples is 
-descriptive, but it's not a big deal either
-
-
-> +		has_samples = 1;
->  		trace_seq_printf(trace->seq, "\n");
->  		trace_seq_do_printf(trace->seq);
->  		trace_seq_reset(trace->seq);
->  	}
->  
-> +	/*
-> +	 * If no samples were recorded, skip calculations, print zeroed statistics
-> +	 * and return.
-> +	 */
-> +	if (!has_samples) {
-> +		trace_seq_reset(trace->seq);
-> +		trace_seq_printf(trace->seq, "over: 0\ncount: 0\nmin: 0\navg: 0\nmax: 0\n");
-> +		trace_seq_do_printf(trace->seq);
-> +		trace_seq_reset(trace->seq);
+> +	if (!meta)
 > +		return;
-> +	}
 > +
->  	if (!params->no_index)
->  		trace_seq_printf(trace->seq, "over: ");
+>  	meta->reader.read = cpu_buffer->reader_page->read;
+>  	meta->reader.id = cpu_buffer->reader_page->id;
+>  	meta->reader.lost_events = cpu_buffer->lost_events;
+> @@ -6167,7 +6171,7 @@ rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
 >  
-> 
-> 
-> 
-
-
-Reviewed-by: John Kacur <jkacur@redhat.com>
+>  	mutex_lock(&cpu_buffer->mapping_lock);
+>  
+> -	if (!cpu_buffer->mapped) {
+> +	if (!cpu_buffer->mapped || !cpu_buffer->meta_page) {
+>  		mutex_unlock(&cpu_buffer->mapping_lock);
+>  		return ERR_PTR(-ENODEV);
+>  	}
+> @@ -6194,7 +6198,7 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
+>  	if (inc && cpu_buffer->mapped == UINT_MAX)
+>  		return -EBUSY;
+>  
+> -	if (WARN_ON(!inc && cpu_buffer->mapped == 0))
+> +	if (WARN_ON(!inc && cpu_buffer->mapped < cpu_buffer->user_mapped))
+>  		return -EINVAL;
+>  
+>  	mutex_lock(&cpu_buffer->buffer->mutex);
+> @@ -6328,7 +6332,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  
+>  	mutex_lock(&cpu_buffer->mapping_lock);
+>  
+> -	if (cpu_buffer->mapped) {
+> +	if (cpu_buffer->user_mapped) {
+>  		err = __rb_map_vma(cpu_buffer, vma);
+>  		if (!err)
+>  			err = __rb_inc_dec_mapped(cpu_buffer, true);
+> @@ -6359,12 +6363,15 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+>  	 */
+>  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+>  	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+> +
+>  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+>  
+>  	err = __rb_map_vma(cpu_buffer, vma);
+>  	if (!err) {
+>  		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> -		cpu_buffer->mapped = 1;
+> +		/* This is the first time it is mapped externally */
+> +		cpu_buffer->mapped++;
+> +		cpu_buffer->user_mapped = cpu_buffer->mapped;
+>  		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+>  	} else {
+>  		kfree(cpu_buffer->subbuf_ids);
+> @@ -6392,10 +6399,10 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+>  
+>  	mutex_lock(&cpu_buffer->mapping_lock);
+>  
+> -	if (!cpu_buffer->mapped) {
+> +	if (!cpu_buffer->user_mapped) {
+>  		err = -ENODEV;
+>  		goto out;
+> -	} else if (cpu_buffer->mapped > 1) {
+> +	} else if (cpu_buffer->mapped > cpu_buffer->user_mapped) {
+>  		__rb_inc_dec_mapped(cpu_buffer, false);
+>  		goto out;
+>  	}
+> @@ -6403,7 +6410,10 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+>  	mutex_lock(&buffer->mutex);
+>  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+>  
+> -	cpu_buffer->mapped = 0;
+> +	/* This is the last user space mapping */
+> +	if (!WARN_ON_ONCE(cpu_buffer->mapped != cpu_buffer->user_mapped))
+> +		cpu_buffer->mapped--;
+> +	cpu_buffer->user_mapped = 0;
+>  
+>  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+>  
 
