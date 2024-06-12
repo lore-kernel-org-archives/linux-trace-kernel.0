@@ -1,88 +1,100 @@
 Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B807181CE2;
-	Wed, 12 Jun 2024 15:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F81F184100;
+	Wed, 12 Jun 2024 15:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718207935; cv=none; b=jSy4EmMmDEZ2RIDC/BlT5oqQaxtGQR+GVbw7Qqjxem/x5b5pqTybVc396rChMNDDTDEPThhv+6e5VrmdQOj6XKvBFvs2sDt+8mQOEtq4BVfRXev6zhS3aLzH2iWcQ0iTa1JkGNyN9FJQybfGeUUJrb8bh65SRFSxY50kF8fVDyU=
+	t=1718207958; cv=none; b=EbfH2lVTfLq0lLBKEJeMW+LX62rvtHdASZ/Hhey8vlj5ESdIt7PqXaeqv7963mNqvzzGShTNK+kXLqvss1813ojUMq/HShCx+i9QLwNX0RJm+WydoY4/PljZR4ut54czgOJ1ovZjnV/Q9V82kyNbQWjv5dVSrbvB5A+xt9V+aNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718207935; c=relaxed/simple;
-	bh=W+jeMBnxhS6jlPaTrEAMDVDFNqWeLN6ix77HMDsJyOE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FqvunDzDlYkB2WbvdbPTxqeDAaBh0Pq9l3yLzJG6542fr1Td9q2QaqR3fMxQkczxo0IM35ZQX+DfzI7lBEXM+BWDprF26p3+vozZzzM6YoPoCZZli6HggB16jjIQjF5DiK/p9vdLLpczkBMoVt3jF6Kb1EGoC0YT3FDiyFcpUpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=HevoMQeH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pNgewxui; arc=none smtp.client-ip=64.147.123.149
+	s=arc-20240116; t=1718207958; c=relaxed/simple;
+	bh=IfFlcVkbzIPvggXb24hyNdkZRJ2Jg5qhR39WWU95QM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Uy4LvgcYKDkklCrtK0G0NmiVsC+L7rImTj8VxUqOditIFKa4oP9/sxNwR86o27shxqlMEW8UpXHKL4WYr0X5oWdMVyAXZG+0Udavf3HS463e8mfG7tKj//DcOPE1SCXNy47lYfCcVQbvCiU+l4WIBqXlOsuV51kvw8tBXAT1gsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=Mei5pO4S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lsTkyBaE; arc=none smtp.client-ip=64.147.123.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="HevoMQeH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pNgewxui"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.west.internal (Postfix) with ESMTP id B0AF41C000FC;
-	Wed, 12 Jun 2024 11:58:51 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="Mei5pO4S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lsTkyBaE"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.west.internal (Postfix) with ESMTP id 6C30E1C0017B;
+	Wed, 12 Jun 2024 11:59:14 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 12 Jun 2024 11:58:52 -0400
+  by compute1.internal (MEProxy); Wed, 12 Jun 2024 11:59:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1718207931; x=1718294331; bh=lZNEnqp773uzAqziPN4z0
-	qNlf0lINbmqCuH/tcesE+g=; b=HevoMQeHXigG+6FXskHzOBLCeauAiRxC8h389
-	dej5hFVj6zR0aoICtH1AtSY+Ryt+tLMtszdrsDxP00dTkmqB7+9TtISMilMmBQIu
-	9HkEbwSseUZ8zWLs39Pe2Y5Xdui7FAVsFjLRoFZs9U9obAFcOvABgWKB2MoLwwlM
-	m2QJGfw/kjQbOqrwe2nvhYZBTZpoM+dMpBh+ncNo2dEdSSRS8QWdH8b6kKi6M61I
-	quylEi3QeddM8x2ra2R8Av8oU586A5e+5fkMapHOyoSxVWM5UOzU4VoLA/cSuD9s
-	Ma3tMuNyJt+mFPio/dIVZxzfYTY7fB+qpUMcwTZ8T0loBIJQg==
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1718207954; x=
+	1718294354; bh=C3eATvZn8DMrz6feHue+B4ljsm6ZCJgGAZ3zJ6p4BTU=; b=M
+	ei5pO4SA/Fa04V1ZBXmPuIkc+6wQHy3B1QRrT/frA+/dRxxskUrxjZgA/8fouqBB
+	Xz4g14WX4EBMZu6goUN6+5eIo4gfmHs0MPjNgAaiLkavsi34dJcqCNXBk+5kfcrZ
+	k3tqqycqsfDIXJa/Bw0vqrDXtzHN1mdqivxC63g8+il5Jfk4goObpItEv/cLOzlM
+	MUFIEnPQbkvb+W/QKnMQQ805oZSU4RrGaFG2AKDzzKgjNoX5EdVAnQLvvCRpaPPa
+	jlYLs/7b1wusJJ+N8gdHdqfHX73ymco267HthP6srjE35yEjOtvobhgJEsZYkbkA
+	u+t/6h0hGTjCe+Qz9Ea7Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718207931; x=1718294331; bh=lZNEnqp773uzAqziPN4z0qNlf0lI
-	NbmqCuH/tcesE+g=; b=pNgewxui531SonZy0q0p0krvK2Mlrb5HK89Ht4MzBaVb
-	J/d0QC4zarry+HE7mfOOKkRCpLQROBmxtEL2xa+MRweTqtPrpDNThCpoiZH4NNAL
-	58LxIwt/AsRkU/A2QRNG9NS8ipdJI/DtjSEu61whmv3iwroVsGFvfP3HDRwT/2HP
-	SrzuiHmOF3rG7SawQ+hJMNigPT3SWHLTkTXhcXapYL87404PLwm3DoGgasI9aJDy
-	28X26vh+up5KcXCrLrz/gK/rb3ZYqdVZBe6cS5amnJ/2nhGY3wzBm0XNEr9oZXLe
-	tNgMtwxU3/c2apvUTKVgp5BRWoB8pbvXlVyFH2gTFw==
-X-ME-Sender: <xms:u8VpZotBo2dKox_et4WZvAVIoUWMQjSyXlxY9Q_Tc2N7_QYcyHkzKw>
-    <xme:u8VpZlfmfwvxgPi7cDSe3uhMSvw02DCblQ5oweV5Px06L8MTthKpBH3_zruaMvL5V
-    JZVXDsueFRR2w6MYw>
-X-ME-Received: <xmr:u8VpZjyV-4-wxEqV0H4VULuGBundfv0mN98kowJNEwVJHbC0EneW63TYmv-5VziP5rOaw3Ed6PqA8YWfN4loBBv-_9GN_ev1EqNoHQjh>
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718207954; x=
+	1718294354; bh=C3eATvZn8DMrz6feHue+B4ljsm6ZCJgGAZ3zJ6p4BTU=; b=l
+	sTkyBaEHGMI5yqCbXYNXcWrtE70HR2LuI7o9X8QAbtXugD6Q2IEs0HxZk16Rl1D/
+	f7SOrxaaZeXGEgk1AOjLYRlX4MkM7jBnxByMyMcSROFj4Q0DSThiIwDptbZwIyBj
+	g8L/TZ1gRTFYu9Gdh8OTalAMtzvwwlxlGQlNhRCKFW9icgiFDD0cNsdHhSPGSpN+
+	fVQWLbZFotdBZ2ddayVJESNo8MP7UH4uShak1msrhrym0R0dLHTen2PqdF6jJsx5
+	E//lJp4p2qmNnVWgHb96K4VCEjDc3yzpxW3efiToacxVHUcA5wP9ocDHWVmjhqtV
+	3fde5Vi1oD7F+tRNa3O6A==
+X-ME-Sender: <xms:0cVpZnJQEw1RYFZyf7_NY0j_FqwGMpti6uFbhROWxJU5hQRTrMuTbw>
+    <xme:0cVpZrLIjTh5m3yiAbVLDznUUt7ZRabIwZS8natAHrNY11DUbdcRxzuVrmrusCBn4
+    xKzO8rOtUdNUpASNw>
+X-ME-Received: <xmr:0cVpZvu3Js6tvpssg3zT1yZzdyDXspZGXxTf1FSxwcq2fLuARHAYS65PxmFkJ4yNQ8LyFwvFTkBeysao0J5_8FVI0CoTguNCTU366gMb>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedugedgleefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlfeehmdenucfjughrpefhvf
-    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
-    uhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepiedtkefgudevteevvefgue
-    fhgeeikeelgeehfedtkefffeejgfetteefueekgfeknecuffhomhgrihhnpehgihhthhhu
-    sgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpegugihusegugihuuhhurdighiii
-X-ME-Proxy: <xmx:u8VpZrPeZTa0_BTThRb8TMjH7qs4h8HOVhf-2Umj9f937OGIpEZSTg>
-    <xmx:u8VpZo9ovHLCV6UXcXBP1ronL5vDeMG-84e_n3TT3IS2zbD7W7P_ZA>
-    <xmx:u8VpZjWb4warsTUProQ4pWrwXIpLZih59TIWQDGr2KNqKASBupsPdg>
-    <xmx:u8VpZhdF1OklyRMXuRpJeZaExPEOjnv0QjR4zMbDa5yCnOD-x_YxHg>
-    <xmx:u8VpZrfXblp_gbyAPaTMb2ZoUUdzO7haAFmQGBSYXW9QTMVagDJQvXJS>
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    evufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceo
+    ugiguhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepgfefgfegjefhudeike
+    dvueetffelieefuedvhfehjeeljeejkefgffeghfdttdetnecuvehluhhsthgvrhfuihii
+    vgepudenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:0cVpZgZEDxp1d-z6FWL_npnm85AB2EixzOr2NV9AP2vCCTDZ29YiFQ>
+    <xmx:0cVpZuYeafVs-IJyM7CA-VJDDVFzK0t4tBjkXuzDofTOWjvaFgvj9w>
+    <xmx:0cVpZkBoc2CuliF8Du76OO9LDbPdOJzblUOLsm78p_NsczuruY5HzQ>
+    <xmx:0cVpZsZ0as4GMH_AV7CwEPNfevHNxdIaPH5o6-WqYq5hI3WWuyoP0Q>
+    <xmx:0sVpZqr5rtjsSatkLVnSJPE6I55ivCGcUacpTa-uu3DTqlS_qOCGw73x>
 Feedback-ID: i6a694271:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 12 Jun 2024 11:58:49 -0400 (EDT)
+ 12 Jun 2024 11:59:12 -0400 (EDT)
 From: Daniel Xu <dxu@dxuuu.xyz>
-To: bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	fsverity@lists.linux.dev,
-	andrii@kernel.org,
+To: andrii@kernel.org,
 	jolsa@kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	mhiramat@kernel.org,
+	song@kernel.org,
+	rostedt@goodmis.org,
 	olsajiri@gmail.com,
 	quentin@isovalent.com,
 	alan.maguire@oracle.com,
 	acme@kernel.org,
 	eddyz87@gmail.com
-Cc: kernel-team@meta.com
-Subject: [PATCH bpf-next v5 00/12] bpf: Support dumping kfunc prototypes from BTF
-Date: Wed, 12 Jun 2024 09:58:24 -0600
-Message-ID: <cover.1718207789.git.dxu@dxuuu.xyz>
+Cc: martin.lau@linux.dev,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	mathieu.desnoyers@efficios.com,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH bpf-next v5 06/12] bpf: Make bpf_session_cookie() kfunc return long *
+Date: Wed, 12 Jun 2024 09:58:30 -0600
+Message-ID: <7043e1c251ab33151d6e3830f8ea1902ed2604ac.1718207789.git.dxu@dxuuu.xyz>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1718207789.git.dxu@dxuuu.xyz>
+References: <cover.1718207789.git.dxu@dxuuu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -91,86 +103,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset enables both detecting as well as dumping compilable
-prototypes for kfuncs.
+We will soon be generating kfunc prototypes from BTF. As part of that,
+we need to align the manual signatures in bpf_kfuncs.h with the actual
+kfunc definitions. There is currently a conflicting signature for
+bpf_session_cookie() w.r.t. return type.
 
-The first commit instructs pahole to DECL_TAG kfuncs when available.
-This requires v1.27 which was released on 6/11/24. With it, users will
-be able to look at BTF inside vmlinux (or modules) and check if the
-kfunc they want is available.
+The original intent was to return long * and not __u64 *. You can see
+evidence of that intent in a3a5113393cc ("selftests/bpf: Add kprobe
+session cookie test").
 
-The final commit teaches bpftool how to dump kfunc prototypes. This
-is done for developer convenience.
+Fix conflict by changing kfunc definition.
 
-The rest of the commits are fixups to enable selftests to use the
-newly dumped kfunc prototypes. With these, selftests will regularly
-exercise the newly added codepaths.
+Fixes: 5c919acef851 ("bpf: Add support for kprobe session cookie")
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ kernel/trace/bpf_trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested with and without the required pahole changes:
-
-  * https://github.com/kernel-patches/bpf/pull/7186
-  * https://github.com/kernel-patches/bpf/pull/7187
-
-=== Changelog ===
-From v4:
-* Change bpf_session_cookie() return type
-* Only fixup used fentry test kfunc prototypes
-* Extract out projection detection into shared btf_is_projection_of()
-* Fix kernel test robot build warnings about doc comments
-
-From v3:
-* Teach selftests to use dumped prototypes
-
-From v2:
-* Update Makefile.btf with pahole flag
-* More error checking
-* Output formatting changes
-* Drop already-merged commit
-
-From v1:
-* Add __weak annotation
-* Use btf_dump for kfunc prototypes
-* Update kernel bpf_rdonly_cast() signature
-
-Daniel Xu (12):
-  kbuild: bpf: Tell pahole to DECL_TAG kfuncs
-  bpf: selftests: Fix bpf_iter_task_vma_new() prototype
-  bpf: selftests: Fix fentry test kfunc prototypes
-  bpf: selftests: Fix bpf_cpumask_first_zero() kfunc prototype
-  bpf: selftests: Fix bpf_map_sum_elem_count() kfunc prototype
-  bpf: Make bpf_session_cookie() kfunc return long *
-  bpf: selftests: Namespace struct_opt callbacks in bpf_dctcp
-  bpf: verifier: Relax caller requirements for kfunc projection type
-    args
-  bpf: treewide: Align kfunc signatures to prog point-of-view
-  bpf: selftests: nf: Opt out of using generated kfunc prototypes
-  bpf: selftests: xfrm: Opt out of using generated kfunc prototypes
-  bpftool: Support dumping kfunc prototypes from BTF
-
- fs/verity/measure.c                           |  5 +-
- include/linux/bpf.h                           |  8 +--
- include/linux/btf.h                           |  1 +
- kernel/bpf/btf.c                              | 13 ++++-
- kernel/bpf/crypto.c                           | 24 +++++---
- kernel/bpf/helpers.c                          | 39 +++++++++----
- kernel/bpf/verifier.c                         | 12 +++-
- kernel/trace/bpf_trace.c                      | 17 +++---
- net/core/filter.c                             | 32 +++++++----
- scripts/Makefile.btf                          |  2 +-
- tools/bpf/bpftool/btf.c                       | 55 +++++++++++++++++++
- .../testing/selftests/bpf/bpf_experimental.h  |  2 +-
- tools/testing/selftests/bpf/progs/bpf_dctcp.c | 36 ++++++------
- .../selftests/bpf/progs/get_func_ip_test.c    |  7 +--
- .../selftests/bpf/progs/ip_check_defrag.c     | 10 ++--
- .../selftests/bpf/progs/map_percpu_stats.c    |  2 +-
- .../selftests/bpf/progs/nested_trust_common.h |  2 +-
- .../testing/selftests/bpf/progs/test_bpf_nf.c |  1 +
- .../selftests/bpf/progs/test_bpf_nf_fail.c    |  1 +
- .../bpf/progs/verifier_netfilter_ctx.c        |  6 +-
- .../selftests/bpf/progs/xdp_synproxy_kern.c   |  1 +
- tools/testing/selftests/bpf/progs/xfrm_info.c |  1 +
- 22 files changed, 193 insertions(+), 84 deletions(-)
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index d1daeab1bbc1..bc16e21a2a44 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -3527,7 +3527,7 @@ __bpf_kfunc bool bpf_session_is_return(void)
+ 	return session_ctx->is_return;
+ }
+ 
+-__bpf_kfunc __u64 *bpf_session_cookie(void)
++__bpf_kfunc long *bpf_session_cookie(void)
+ {
+ 	struct bpf_session_run_ctx *session_ctx;
+ 
 -- 
 2.44.0
 
