@@ -1,173 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947CA5336D;
-	Wed, 12 Jun 2024 14:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1FB17DE21
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718201569; cv=none; b=evKe0sodGpgmMnlW2V9CxSjR36jSCBYTqV3e0gyDXXKB0+S+vEEFBF6O/v05AJuay2Jfmjl8o7zbakqkMy0Q2yPaUSYNsFlOAM3Xbv5XA0NUU/ryQIlzxNeIZNlXHGC/R+4EJCswbbbrBJmabVvKLdlSD2O757B4nf7BZwe5eac=
+	t=1718204158; cv=none; b=GlS2/CisncrPSu0TQ4hT1PR0droIv3qskXLZGwkjx8ti/Y2SvRHMEdyarWi4Yr0AfSQcPBpTIqcAMy4edUkGCf2KeqZ0Essr7MgWb+tfxwASALk3KQhp22dW/kqdlVro87ifm1nSX25gktVTdZSPPYocwuskDAfda3uHCNgdHz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718201569; c=relaxed/simple;
-	bh=iOMYlsNUD4In4rhG3CCxDYocCLMlHDu5Sy6BBOT1Ab8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CSdm7JBfbZxg+btfWba1KIqoAS3Zb17kiIyckxeR9IhlKrXxmnvdIaGyWV4gBZvWmU2MKUS144yd5WA8IR4w6uyU/IVRFTn0YZsPZbNl4hcZ7nZbkKXkJI8hEXdBqa95GDs8BaJuIYB8jCa6rTZ2AE4TGIPOCGoBpcgaIRXwEBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D923BC4AF1A;
-	Wed, 12 Jun 2024 14:12:45 +0000 (UTC)
-Date: Wed, 12 Jun 2024 10:12:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort
- <vdonnefort@google.com>, Joel Fernandes <joel@joelfernandes.org>, Daniel
- Bristot de Oliveira <bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, suleiman@google.com, Thomas Gleixner
- <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef
- Esmat <youssefesmat@google.com>, Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>, Borislav
- Petkov <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, David
- Howells <dhowells@redhat.com>, Mike Rapoport <rppt@kernel.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Guenter
- Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>, Kees Cook
- <keescook@chromium.org>
-Subject: Re: [PATCH v5 01/13] ring-buffer: Allow mapped field to be set
- without mapping
-Message-ID: <20240612101245.1a6a5836@rorschach.local.home>
-In-Reply-To: <20240612021722.239841009@goodmis.org>
-References: <20240612021642.941740855@goodmis.org>
-	<20240612021722.239841009@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718204158; c=relaxed/simple;
+	bh=xh6MUGu4by/vG11OEeezU9OPPR4k7PK3TGG2UVuMagc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l7TBFOXHgp2sL7ef2y5hzTv3a7+i1mfjXN7AROn9pWVCtHyPlRMp/zR9svYkYkhb+H2YfjIpxGH4oUO25kgJnVVbZp7JKpNrDH5lo1FBUcvfq2/DA9wy2N8DkV4KrqYThjxllHnukRJdOinndbHGkMAHXCWhr+u/8TGs9ihb4ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g7Oj+tdX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g7Oj+tdX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718204155;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FT0dvVd6Gm7M+CCKrZ6Jo3Pbd+HUvtG3ZBX2N+JLxYw=;
+	b=g7Oj+tdXqhd2U2G8IUPcB+So7c7hfOnfBA+ASHeHDMg5hFcEKgp6xqKPZkLh/Occ1oWC9R
+	g97AMirtW4z9EJQg2ehbQrjfAJps1YW4TbR+xbRtL+0K5WcwNiQQ8KaB1ZF6t9qfAdCy1e
+	kxjFrdHjdtlrrg3Zy6h+TaFlNDqgbpc=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-39-ZmrNPSz6OGmdv1ZqI9Knmw-1; Wed,
+ 12 Jun 2024 10:55:52 -0400
+X-MC-Unique: ZmrNPSz6OGmdv1ZqI9Knmw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5F8771955E72;
+	Wed, 12 Jun 2024 14:55:51 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.68])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 273D31956087;
+	Wed, 12 Jun 2024 14:55:48 +0000 (UTC)
+From: tglozar@redhat.com
+To: bristot@kernel.org,
+	rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jkacur@redhat.com,
+	jwyatt@redhat.com,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 0/5] rtla: Support idle state disabling via libcpupower in timerlat
+Date: Wed, 12 Jun 2024 16:54:34 +0200
+Message-ID: <20240612145439.206990-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, 11 Jun 2024 22:16:43 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Tomas Glozar <tglozar@redhat.com>
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> In preparation for having the ring buffer mapped to a dedicated location,
-> which will have the same restrictions as user space memory mapped buffers,
-> allow it to use the "mapped" field of the ring_buffer_per_cpu structure
-> without having the user space meta page mapping.
-> 
-> When this starts using the mapped field, it will need to handle adding a
-> user space mapping (and removing it) from a ring buffer that is using a
-> dedicated memory range.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 28853966aa9a..aa8eb878e0d4 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -491,6 +491,7 @@ struct ring_buffer_per_cpu {
->  	unsigned long			pages_removed;
->  
->  	unsigned int			mapped;
-> +	unsigned int			user_mapped;	/* first user space mapping */
+rtla-timerlat allows reducing latency on wake up from idle by setting
+/dev/cpu_dma_latency during the timerlat measurement. This has an effect on
+the idle states of all CPUs, including those which are not used by timerlat.
 
-This actually needs to be a counter and not just save the mapped value
-when it first gets set :-p
+Add option --disable-idle-states that disables all idle states only on
+the CPUs where timerlat measurements are running.
 
-As the mappings could technically be incremented and decremented
-differently.
+libcpupower is used to do the disabling of idle states via the corresponding
+sysfs interface.
 
-I'll send a new patch. But since my long test keeps failing for subtle
-things, I'm not going to post another series until the full test passes.
+Tomas Glozar (5):
+  rtla: Add dependency on libcpupower
+  rtla/utils: Add idle state disabling via libcpupower
+  rtla/timerlat: Add --disable-idle-states for top
+  rtla/timerlat: Add --disable-idle-states for hist
+  rtla: Documentation: Add --disable-idle-states
 
--- Steve
+ .../tools/rtla/common_timerlat_options.rst    |   6 +
+ tools/build/Makefile.feature                  |   1 +
+ tools/build/feature/Makefile                  |   4 +
+ tools/build/feature/test-libcpupower.c        |   8 ++
+ tools/tracing/rtla/Makefile                   |   2 +
+ tools/tracing/rtla/Makefile.config            |   9 ++
+ tools/tracing/rtla/README.txt                 |   4 +
+ tools/tracing/rtla/src/timerlat_hist.c        |  35 ++++-
+ tools/tracing/rtla/src/timerlat_top.c         |  35 ++++-
+ tools/tracing/rtla/src/utils.c                | 133 ++++++++++++++++++
+ tools/tracing/rtla/src/utils.h                |   4 +
+ 11 files changed, 239 insertions(+), 2 deletions(-)
+ create mode 100644 tools/build/feature/test-libcpupower.c
 
-
->  	struct mutex			mapping_lock;
->  	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
->  	struct trace_buffer_meta	*meta_page;
-> @@ -5224,6 +5225,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
->  {
->  	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
->  
-> +	if (!meta)
-> +		return;
-> +
->  	meta->reader.read = cpu_buffer->reader_page->read;
->  	meta->reader.id = cpu_buffer->reader_page->id;
->  	meta->reader.lost_events = cpu_buffer->lost_events;
-> @@ -6167,7 +6171,7 @@ rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
->  
->  	mutex_lock(&cpu_buffer->mapping_lock);
->  
-> -	if (!cpu_buffer->mapped) {
-> +	if (!cpu_buffer->mapped || !cpu_buffer->meta_page) {
->  		mutex_unlock(&cpu_buffer->mapping_lock);
->  		return ERR_PTR(-ENODEV);
->  	}
-> @@ -6194,7 +6198,7 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
->  	if (inc && cpu_buffer->mapped == UINT_MAX)
->  		return -EBUSY;
->  
-> -	if (WARN_ON(!inc && cpu_buffer->mapped == 0))
-> +	if (WARN_ON(!inc && cpu_buffer->mapped < cpu_buffer->user_mapped))
->  		return -EINVAL;
->  
->  	mutex_lock(&cpu_buffer->buffer->mutex);
-> @@ -6328,7 +6332,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->  
->  	mutex_lock(&cpu_buffer->mapping_lock);
->  
-> -	if (cpu_buffer->mapped) {
-> +	if (cpu_buffer->user_mapped) {
->  		err = __rb_map_vma(cpu_buffer, vma);
->  		if (!err)
->  			err = __rb_inc_dec_mapped(cpu_buffer, true);
-> @@ -6359,12 +6363,15 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->  	 */
->  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->  	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
-> +
->  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->  
->  	err = __rb_map_vma(cpu_buffer, vma);
->  	if (!err) {
->  		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> -		cpu_buffer->mapped = 1;
-> +		/* This is the first time it is mapped externally */
-> +		cpu_buffer->mapped++;
-> +		cpu_buffer->user_mapped = cpu_buffer->mapped;
->  		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->  	} else {
->  		kfree(cpu_buffer->subbuf_ids);
-> @@ -6392,10 +6399,10 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
->  
->  	mutex_lock(&cpu_buffer->mapping_lock);
->  
-> -	if (!cpu_buffer->mapped) {
-> +	if (!cpu_buffer->user_mapped) {
->  		err = -ENODEV;
->  		goto out;
-> -	} else if (cpu_buffer->mapped > 1) {
-> +	} else if (cpu_buffer->mapped > cpu_buffer->user_mapped) {
->  		__rb_inc_dec_mapped(cpu_buffer, false);
->  		goto out;
->  	}
-> @@ -6403,7 +6410,10 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
->  	mutex_lock(&buffer->mutex);
->  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->  
-> -	cpu_buffer->mapped = 0;
-> +	/* This is the last user space mapping */
-> +	if (!WARN_ON_ONCE(cpu_buffer->mapped != cpu_buffer->user_mapped))
-> +		cpu_buffer->mapped--;
-> +	cpu_buffer->user_mapped = 0;
->  
->  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->  
+-- 
+2.43.0
 
