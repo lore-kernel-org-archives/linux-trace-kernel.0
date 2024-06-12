@@ -1,158 +1,103 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E762381CC
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 17:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0155316E895;
+	Wed, 12 Jun 2024 18:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718213492; cv=none; b=TQ0if0tPY5LHcroBZizB+DT3UWcNLKzg1E1B7N4+MPGazo/9RcB4wTa1r5RRMs6OPpkPWkFyqwyRqOCuNoPsOE7enSCBLRQiDHDXqosEmIUnP7mbPVg6Dc8EesKQaG3biNCC4ctwlu8iJVS8jKOj1NHMTBQSaLpUwCZ4RHyAewU=
+	t=1718215833; cv=none; b=WPrZ7wkWwzbKnTc0ORFVCElEiBwQcs54bK2pK3HYezLHQqhdxSz8LjvBFYHhJ79XRmA8gj3AWiWNgDuC+n6XV57rUyHShKxJ17Xnc7W/LerwbXFmkMFs2iCvkf9Ywm/khxW/tYHWrqOgviEJhDRtLpQsPFIOLcGGHoGIo1P7c4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718213492; c=relaxed/simple;
-	bh=BVxVglBu/aJdIm8zaMwOg3iRpiLrT6XOkxr2cN79Qtg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=e4HgCJZvdnYayysDROLD96eQZoz8Yc6zspl4ud88fYhWhVIVffpRgdxm54zih0j/klw/wACAxlWVc6GzhKdMqrhRQX5cXlhtatYw0vy03zFakqczQcVM08Y9S6N0pQFCyH1ap+Zibj9i9jUGkg+FD45kQio993kWAUTpbVE5hZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yZgdmIRv; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718215833; c=relaxed/simple;
+	bh=zxGx4UHWoFeslODIvuI4YPtEigCLjSm31dy2cb55Oz4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=k4WKtG1kg0Gc9Q2LcQ0Z1xIzyHOihsI5lZtYZnjfOgHQQW04/HcdG/bE3IAA3UoxBZ5/P2ruELUGdffvubs9WehZOHIgsM9eczE3SoMza1Ny+eIdGGMSF4VFjLHU57wWCAo0fotAdtMJacxwAKtH+k0uHDmZjFpXp4dU0RByN6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWUF0D7I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yZgdmIRv"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1f310201aefso841055ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718213489; x=1718818289; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZttrWbEybPZrU6j9LIdJZge1/Pd2kmv/UPX9FdzbJ4o=;
-        b=yZgdmIRv2moEI8Zld6u/VkhMeDaPNBowLD5mqzgUawyckf+6uKgiEpnvneIfP4v8FV
-         WOmAWW33+keA4TocyR7SUMJNYlJpph+hMQPsIC1mrHssbSFAHZTXAqQI2k+94Z3JGRZn
-         ssrk2ZmjVaV6UA0nwa0tJ4gqdz4iSiDj1mEE2QfORsmHVs/vuIIHBKIISR8+YIwFMihi
-         uWyFttAx4xGdHXoGdh0ZviEmhP6pdwqNgaKk7Jk1eMhE78nW8BaFAkeky4PAgXWNl+0N
-         cPERpKsYDxaqxIt6hjIe2mhbLo4cc0aMRh490Ha3fAaChpygl6QgWdjucY1jWosdeXr3
-         b4Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718213489; x=1718818289;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZttrWbEybPZrU6j9LIdJZge1/Pd2kmv/UPX9FdzbJ4o=;
-        b=xO0yBBO1YoR/67yBjG2OanGhgFppkHJS5TbRabXg/yugJLxylWSd4veavlrGU1vlny
-         p9sDLieaW5j9HWtK8rTn+PyK7z7L15NZEpA+bvqb7wDEopnXJDlCJ9HjHbveRWgMJgpQ
-         FR8yZ3Aaq9jGollTxmIMok42uHpSMG/dhOViT1q5qyWdQzM30ht28VmfRIeBUobYM5TV
-         sItdcCw4ZI4qGRSpym9wY4Kv4I6GNgbWwDaynGC/qwCL/PZ33/UczZc4qgL332aw9YYu
-         sKzE8K53S8c4gYviYp+d9XJEdDvW8Jsqy39AxnkzUkQbhx67waoR5IolYplFSfXlNWxx
-         urjw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6bmE6b70HDgKEaPNtcuJFxbbXh8JHlHhUuusrwM7oP/3neQMcvRYO7nWDxHZOL2ea+cQUqMr710WCZqGnO6QO7JZtLMhoHEnzAFiMjMaHRcLV
-X-Gm-Message-State: AOJu0YzlBJaLgAoFWBQlIbqAO9IfRDIAH57cJOxTz+6WmHn7wnOz1NKq
-	jgAEgCarUbhQ/emd3xpSsVI4f+0wdFCUHA+/KHFY5yUACP/R/saCxAohAvnH2PihDhZKKTI6rhj
-	qXA==
-X-Google-Smtp-Source: AGHT+IEfEUqjAJd5HwtcI3SellD9wJyKICC45AOG2hDSPfUBXvAeRlQriWUGwdY0fjJOl8E1dOYOBVVBc8s=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:182:b0:1f3:4b2a:1acb with SMTP id
- d9443c01a7336-1f83b23ddb1mr79315ad.0.1718213489334; Wed, 12 Jun 2024 10:31:29
- -0700 (PDT)
-Date: Wed, 12 Jun 2024 10:31:27 -0700
-In-Reply-To: <Zmm9SdVfg18RECT5@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWUF0D7I"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 72475C32786;
+	Wed, 12 Jun 2024 18:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718215831;
+	bh=zxGx4UHWoFeslODIvuI4YPtEigCLjSm31dy2cb55Oz4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TWUF0D7IRN5Vo2R7IFWkPtDTNF++1BL+Rgac5joXi+V6G+etTmFy8BLu+h6L7ExVi
+	 So01cJN5cilVjQ+l2BOZRbCDzBz4l0jx/528FVGADA91iX16nEcQqhk7C+I3XC2HK7
+	 h8YY+rz3VaV27PABMQPe+XFO0A3f09JiU6xuOpIhAcnYGpceK3myDMpXIhk8UsbUdW
+	 44QYK4zDYozKR6bdgJ0AuhU4boMkic+TRxvaa7l46+NcC0mz6N2MBj6oFYUg2r+kni
+	 oNTBDRvYmIZCWXND1t6CZDNcgogj3r8+3POtzOg865W7XV0bEc8neCi90WXcaEyIdz
+	 QYprE511ev6Tw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 58136C43618;
+	Wed, 12 Jun 2024 18:10:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405115815.3226315-2-pbonzini@redhat.com> <20240412104408.GA27645@willie-the-truck>
- <86jzl2sovz.wl-maz@kernel.org> <ZhlLHtfeSHk9gRRO@google.com>
- <86h6g5si0m.wl-maz@kernel.org> <Zh1d94Pl6gneVoDd@google.com>
- <20240418141932.GA1855@willie-the-truck> <ZiF6NgGYLSsPNEOg@google.com>
- <20240419112432.GB2972@willie-the-truck> <Zmm9SdVfg18RECT5@google.com>
-Message-ID: <Zmnbb-Xlyz4VXNHI@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v5 00/12] bpf: Support dumping kfunc prototypes from
+ BTF
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171821583135.29771.8486292481897939634.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Jun 2024 18:10:31 +0000
+References: <cover.1718207789.git.dxu@dxuuu.xyz>
+In-Reply-To: <cover.1718207789.git.dxu@dxuuu.xyz>
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, andrii@kernel.org,
+ jolsa@kernel.org, linux-kbuild@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ olsajiri@gmail.com, quentin@isovalent.com, alan.maguire@oracle.com,
+ acme@kernel.org, eddyz87@gmail.com, kernel-team@meta.com
 
-On Wed, Jun 12, 2024, Sean Christopherson wrote:
-> On Fri, Apr 19, 2024, Will Deacon wrote:
-> > On Thu, Apr 18, 2024 at 12:53:26PM -0700, Sean Christopherson wrote:
-> > > On Thu, Apr 18, 2024, Will Deacon wrote:
-> > > > > I assume the idea would be to let arch code do single-page invalidations of
-> > > > > stage-2 entries for each gfn?
-> > > > 
-> > > > Right, as it's the only code which knows which ptes actually ended up
-> > > > being aged.
-> > > > 
-> > > > > Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
-> > > > > doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
-> > > > > provides an instruction to do broadcast invalidations, but it takes a virtual
-> > > > > address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
-> > > > > a guest virtual address, but it's a moot point because KVM doen't have the guest
-> > > > > virtual address, and if it's a host virtual address, there would need to be valid
-> > > > > mappings in the host page tables for it to work, which KVM can't guarantee.
-> > > > 
-> > > > Ah, so it sounds like it would need to be an arch opt-in then.
-> > > 
-> > > Even if x86 (or some other arch code) could use the precise tracking, I think it
-> > > would make sense to have the behavior be arch specific.  Adding infrastructure
-> > > to get information from arch code, only to turn around and give it back to arch
-> > > code would be odd.
-> > 
-> > Sorry, yes, that's what I had in mind. Basically, a way for the arch code
-> > to say "I've handled the TLBI, don't worry about it."
-> > 
-> > > Unless arm64 can't do the invalidation immediately after aging the stage-2 PTE,
-> > > the best/easiest solution would be to let arm64 opt out of the common TLB flush
-> > > when a SPTE is made young.
-> > > 
-> > > With the range-based flushing bundled in, this?
-> > > 
-> > > ---
-> > >  include/linux/kvm_host.h |  2 ++
-> > >  virt/kvm/kvm_main.c      | 40 +++++++++++++++++++++++++---------------
-> > >  2 files changed, 27 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > > index afbc99264ffa..8fe5f5e16919 100644
-> > > --- a/include/linux/kvm_host.h
-> > > +++ b/include/linux/kvm_host.h
-> > > @@ -2010,6 +2010,8 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
-> > >  extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
-> > >  
-> > >  #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
-> > > +int kvm_arch_flush_tlb_if_young(void);
-> > > +
-> > >  static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
-> > >  {
-> > >  	if (unlikely(kvm->mmu_invalidate_in_progress))
-> > > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > > index 38b498669ef9..5ebef8ef239c 100644
-> > > --- a/virt/kvm/kvm_main.c
-> > > +++ b/virt/kvm/kvm_main.c
-> > > @@ -595,6 +595,11 @@ static void kvm_null_fn(void)
-> > >  }
-> > >  #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
-> > >  
-> > > +int __weak kvm_arch_flush_tlb_if_young(void)
-> > > +{
-> > > +	return true;
-> > > +}
-> > 
-> > I tend to find __weak functions a little ugly, but I think the gist of the
-> > diff looks good to me. Thanks for putting it together!
+Hello:
+
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
+
+On Wed, 12 Jun 2024 09:58:24 -0600 you wrote:
+> This patchset enables both detecting as well as dumping compilable
+> prototypes for kfuncs.
 > 
-> Circling back to this, I don't think we should pursue this specific tweak, at
-> least not without hard data for a concrete use case.
+> The first commit instructs pahole to DECL_TAG kfuncs when available.
+> This requires v1.27 which was released on 6/11/24. With it, users will
+> be able to look at BTF inside vmlinux (or modules) and check if the
+> kfunc they want is available.
+> 
+> [...]
 
-Ha, I spoke too soon.  Based on the learning from the KVM+MGLRU thread[*], it
-looks like KVM should omit the TLB flush when aging pages whenever possible.  If
-that's not doable on all architectures for whatever reason, then something like
-this is probably the way to go.
+Here is the summary with links:
+  - [bpf-next,v5,01/12] kbuild: bpf: Tell pahole to DECL_TAG kfuncs
+    https://git.kernel.org/bpf/bpf-next/c/ebb79e96f1ea
+  - [bpf-next,v5,02/12] bpf: selftests: Fix bpf_iter_task_vma_new() prototype
+    https://git.kernel.org/bpf/bpf-next/c/718135f5bd24
+  - [bpf-next,v5,03/12] bpf: selftests: Fix fentry test kfunc prototypes
+    https://git.kernel.org/bpf/bpf-next/c/dff96e4f5078
+  - [bpf-next,v5,04/12] bpf: selftests: Fix bpf_cpumask_first_zero() kfunc prototype
+    https://git.kernel.org/bpf/bpf-next/c/89f0b1abac49
+  - [bpf-next,v5,05/12] bpf: selftests: Fix bpf_map_sum_elem_count() kfunc prototype
+    https://git.kernel.org/bpf/bpf-next/c/ac42f636dc11
+  - [bpf-next,v5,06/12] bpf: Make bpf_session_cookie() kfunc return long *
+    https://git.kernel.org/bpf/bpf-next/c/2b8dd87332cd
+  - [bpf-next,v5,07/12] bpf: selftests: Namespace struct_opt callbacks in bpf_dctcp
+    https://git.kernel.org/bpf/bpf-next/c/0ce089cbdc6a
+  - [bpf-next,v5,08/12] bpf: verifier: Relax caller requirements for kfunc projection type args
+    https://git.kernel.org/bpf/bpf-next/c/ec209ad86324
+  - [bpf-next,v5,09/12] bpf: treewide: Align kfunc signatures to prog point-of-view
+    https://git.kernel.org/bpf/bpf-next/c/cce4c40b9606
+  - [bpf-next,v5,10/12] bpf: selftests: nf: Opt out of using generated kfunc prototypes
+    https://git.kernel.org/bpf/bpf-next/c/f709124dd72f
+  - [bpf-next,v5,11/12] bpf: selftests: xfrm: Opt out of using generated kfunc prototypes
+    https://git.kernel.org/bpf/bpf-next/c/c567cba34585
+  - [bpf-next,v5,12/12] bpftool: Support dumping kfunc prototypes from BTF
+    https://git.kernel.org/bpf/bpf-next/c/770abbb5a25a
 
-[*] https://lore.kernel.org/all/CAOUHufYCmYNngmS=rOSAQRB0N9ai+mA0aDrB9RopBvPHEK42Ng@mail.gmail.com
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
