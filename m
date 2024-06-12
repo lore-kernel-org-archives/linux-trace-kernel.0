@@ -1,96 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AD617FAA4;
-	Wed, 12 Jun 2024 16:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E762381CC
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 17:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718208301; cv=none; b=uQJFnR6iK67YS/kSHW0kEXXxc5JAd3DAtSL+CznFRlW64oUZtfqdTWF4BTrvTXRHYJmMapa44ZLr8h+Dh6I2tKzg6lvcNTcpeJO0WAm3pGfypumouxxS611uLNWdWm2tmrs7Xy5jHqJRA04ifWXj4/PEALwd1dMlch3mlx77TBk=
+	t=1718213492; cv=none; b=TQ0if0tPY5LHcroBZizB+DT3UWcNLKzg1E1B7N4+MPGazo/9RcB4wTa1r5RRMs6OPpkPWkFyqwyRqOCuNoPsOE7enSCBLRQiDHDXqosEmIUnP7mbPVg6Dc8EesKQaG3biNCC4ctwlu8iJVS8jKOj1NHMTBQSaLpUwCZ4RHyAewU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718208301; c=relaxed/simple;
-	bh=RWJAxgMTq0703GeW99QCv1Ot2/tX/YqzAh2KeOG06tI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C847Tz/x1t737Rb81A/ZdS60SLpZA6XrwIv1SkdRwv0qB1A+geym9m9BsOYwh6nAbFTiB+qJQVdnfJF/AjFa/GUBuTCF4jGFRf/PSqiFir0SeeTTrjXFdkZzgdEMGeXXLM0jp1IzATH+T0O+PGCbjFE3DN0Nn6/IFrHcLiAg8Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E39BC32786;
-	Wed, 12 Jun 2024 16:04:59 +0000 (UTC)
-Date: Wed, 12 Jun 2024 12:04:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Greg KH <gregkh@linuxfoundation.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Julia Lawall
- <Julia.Lawall@inria.fr>, kernel-janitors@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- "workflows@vger.kernel.org" <workflows@vger.kernel.org>, Thorsten Leemhuis
- <linux@leemhuis.info>
-Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <20240612120457.5329934c@rorschach.local.home>
-In-Reply-To: <ZmmsJFDmnbjngRNV@zx2c4.com>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
-	<20240609082726.32742-6-Julia.Lawall@inria.fr>
-	<20240610112223.151faf65@rorschach.local.home>
-	<b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
-	<20240610163606.069d552a@gandalf.local.home>
-	<70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
-	<2024061143-transfer-jalapeno-afa0@gregkh>
-	<05ec743a-c4e9-4c66-b2cd-4e89c858d7d4@suse.cz>
-	<20240611101458.7fa78da8@gandalf.local.home>
-	<ZmmsJFDmnbjngRNV@zx2c4.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718213492; c=relaxed/simple;
+	bh=BVxVglBu/aJdIm8zaMwOg3iRpiLrT6XOkxr2cN79Qtg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=e4HgCJZvdnYayysDROLD96eQZoz8Yc6zspl4ud88fYhWhVIVffpRgdxm54zih0j/klw/wACAxlWVc6GzhKdMqrhRQX5cXlhtatYw0vy03zFakqczQcVM08Y9S6N0pQFCyH1ap+Zibj9i9jUGkg+FD45kQio993kWAUTpbVE5hZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yZgdmIRv; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yZgdmIRv"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1f310201aefso841055ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718213489; x=1718818289; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZttrWbEybPZrU6j9LIdJZge1/Pd2kmv/UPX9FdzbJ4o=;
+        b=yZgdmIRv2moEI8Zld6u/VkhMeDaPNBowLD5mqzgUawyckf+6uKgiEpnvneIfP4v8FV
+         WOmAWW33+keA4TocyR7SUMJNYlJpph+hMQPsIC1mrHssbSFAHZTXAqQI2k+94Z3JGRZn
+         ssrk2ZmjVaV6UA0nwa0tJ4gqdz4iSiDj1mEE2QfORsmHVs/vuIIHBKIISR8+YIwFMihi
+         uWyFttAx4xGdHXoGdh0ZviEmhP6pdwqNgaKk7Jk1eMhE78nW8BaFAkeky4PAgXWNl+0N
+         cPERpKsYDxaqxIt6hjIe2mhbLo4cc0aMRh490Ha3fAaChpygl6QgWdjucY1jWosdeXr3
+         b4Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718213489; x=1718818289;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZttrWbEybPZrU6j9LIdJZge1/Pd2kmv/UPX9FdzbJ4o=;
+        b=xO0yBBO1YoR/67yBjG2OanGhgFppkHJS5TbRabXg/yugJLxylWSd4veavlrGU1vlny
+         p9sDLieaW5j9HWtK8rTn+PyK7z7L15NZEpA+bvqb7wDEopnXJDlCJ9HjHbveRWgMJgpQ
+         FR8yZ3Aaq9jGollTxmIMok42uHpSMG/dhOViT1q5qyWdQzM30ht28VmfRIeBUobYM5TV
+         sItdcCw4ZI4qGRSpym9wY4Kv4I6GNgbWwDaynGC/qwCL/PZ33/UczZc4qgL332aw9YYu
+         sKzE8K53S8c4gYviYp+d9XJEdDvW8Jsqy39AxnkzUkQbhx67waoR5IolYplFSfXlNWxx
+         urjw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6bmE6b70HDgKEaPNtcuJFxbbXh8JHlHhUuusrwM7oP/3neQMcvRYO7nWDxHZOL2ea+cQUqMr710WCZqGnO6QO7JZtLMhoHEnzAFiMjMaHRcLV
+X-Gm-Message-State: AOJu0YzlBJaLgAoFWBQlIbqAO9IfRDIAH57cJOxTz+6WmHn7wnOz1NKq
+	jgAEgCarUbhQ/emd3xpSsVI4f+0wdFCUHA+/KHFY5yUACP/R/saCxAohAvnH2PihDhZKKTI6rhj
+	qXA==
+X-Google-Smtp-Source: AGHT+IEfEUqjAJd5HwtcI3SellD9wJyKICC45AOG2hDSPfUBXvAeRlQriWUGwdY0fjJOl8E1dOYOBVVBc8s=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:182:b0:1f3:4b2a:1acb with SMTP id
+ d9443c01a7336-1f83b23ddb1mr79315ad.0.1718213489334; Wed, 12 Jun 2024 10:31:29
+ -0700 (PDT)
+Date: Wed, 12 Jun 2024 10:31:27 -0700
+In-Reply-To: <Zmm9SdVfg18RECT5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240405115815.3226315-2-pbonzini@redhat.com> <20240412104408.GA27645@willie-the-truck>
+ <86jzl2sovz.wl-maz@kernel.org> <ZhlLHtfeSHk9gRRO@google.com>
+ <86h6g5si0m.wl-maz@kernel.org> <Zh1d94Pl6gneVoDd@google.com>
+ <20240418141932.GA1855@willie-the-truck> <ZiF6NgGYLSsPNEOg@google.com>
+ <20240419112432.GB2972@willie-the-truck> <Zmm9SdVfg18RECT5@google.com>
+Message-ID: <Zmnbb-Xlyz4VXNHI@google.com>
+Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
+From: Sean Christopherson <seanjc@google.com>
+To: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 12 Jun 2024 16:09:40 +0200
-"Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
+On Wed, Jun 12, 2024, Sean Christopherson wrote:
+> On Fri, Apr 19, 2024, Will Deacon wrote:
+> > On Thu, Apr 18, 2024 at 12:53:26PM -0700, Sean Christopherson wrote:
+> > > On Thu, Apr 18, 2024, Will Deacon wrote:
+> > > > > I assume the idea would be to let arch code do single-page invalidations of
+> > > > > stage-2 entries for each gfn?
+> > > > 
+> > > > Right, as it's the only code which knows which ptes actually ended up
+> > > > being aged.
+> > > > 
+> > > > > Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
+> > > > > doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
+> > > > > provides an instruction to do broadcast invalidations, but it takes a virtual
+> > > > > address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
+> > > > > a guest virtual address, but it's a moot point because KVM doen't have the guest
+> > > > > virtual address, and if it's a host virtual address, there would need to be valid
+> > > > > mappings in the host page tables for it to work, which KVM can't guarantee.
+> > > > 
+> > > > Ah, so it sounds like it would need to be an arch opt-in then.
+> > > 
+> > > Even if x86 (or some other arch code) could use the precise tracking, I think it
+> > > would make sense to have the behavior be arch specific.  Adding infrastructure
+> > > to get information from arch code, only to turn around and give it back to arch
+> > > code would be odd.
 > > 
-> > I think "Depends-on" is the way to go, as it is *not* a stable thing, and
-> > what is in stable rules is only about stable patches.  
+> > Sorry, yes, that's what I had in mind. Basically, a way for the arch code
+> > to say "I've handled the TLBI, don't worry about it."
+> > 
+> > > Unless arm64 can't do the invalidation immediately after aging the stage-2 PTE,
+> > > the best/easiest solution would be to let arm64 opt out of the common TLB flush
+> > > when a SPTE is made young.
+> > > 
+> > > With the range-based flushing bundled in, this?
+> > > 
+> > > ---
+> > >  include/linux/kvm_host.h |  2 ++
+> > >  virt/kvm/kvm_main.c      | 40 +++++++++++++++++++++++++---------------
+> > >  2 files changed, 27 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > > index afbc99264ffa..8fe5f5e16919 100644
+> > > --- a/include/linux/kvm_host.h
+> > > +++ b/include/linux/kvm_host.h
+> > > @@ -2010,6 +2010,8 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
+> > >  extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
+> > >  
+> > >  #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
+> > > +int kvm_arch_flush_tlb_if_young(void);
+> > > +
+> > >  static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
+> > >  {
+> > >  	if (unlikely(kvm->mmu_invalidate_in_progress))
+> > > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > > index 38b498669ef9..5ebef8ef239c 100644
+> > > --- a/virt/kvm/kvm_main.c
+> > > +++ b/virt/kvm/kvm_main.c
+> > > @@ -595,6 +595,11 @@ static void kvm_null_fn(void)
+> > >  }
+> > >  #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
+> > >  
+> > > +int __weak kvm_arch_flush_tlb_if_young(void)
+> > > +{
+> > > +	return true;
+> > > +}
+> > 
+> > I tend to find __weak functions a little ugly, but I think the gist of the
+> > diff looks good to me. Thanks for putting it together!
 > 
-> How does "Depends-on" not spiral out of control? There's a *lot* of
-> "Depends-on" relations one could express in commit series and such. Of
-> course a lot of git itself is designed to show some subset of these
-> relationships.
+> Circling back to this, I don't think we should pursue this specific tweak, at
+> least not without hard data for a concrete use case.
 
-If a change occurs because a recent change happened that allows the
-current change to work, then I think a Depends-on is appropriate.
+Ha, I spoke too soon.  Based on the learning from the KVM+MGLRU thread[*], it
+looks like KVM should omit the TLB flush when aging pages whenever possible.  If
+that's not doable on all architectures for whatever reason, then something like
+this is probably the way to go.
 
-Like in this example. I thought this change was broken, and it would
-have been except for a recent change. Having the dependency listed is
-useful, especially if the dependency is subtle (doesn't break the build
-and may not show the bug immediately).
-
-> 
-> It seems like in most cases, the "Cc: stable@v.g.o # x.y.z+" notation
-> expresses the backporting safety correctly. What is the purpose of
-> saying, "if you need this patch for any reason, you also need patch X"?
-> Who is the intended audience, and are you sure they need this?
-
-The intended audience is someone backporting features and not fixes.
-
-> 
-> I ask these questions because I wind up doing a lot of work backporting
-> patches to stable and marking things properly for that or submitting
-> manually backported stable patches and so forth, and in general, patch
-> applicability for stable things is something I wind up devoting a lot of
-> time to. If I have to *additionally* start caring about the theoretical
-> possibility that somebody in the future, outside of the stable flow,
-> might not understand the context of a given patch and blindly apply it
-> to some random tree here or there, that sounds like a lot of extra brain
-> cycles to consider.
-> 
-> So, is this actually necessary, and how does it not spiral out of
-> control?
-
-How would you see it going out of control? And "Depends-on" would only
-be used for non stable relationships. If stable backports, we can keep
-with the current method.
-
--- Steve
+[*] https://lore.kernel.org/all/CAOUHufYCmYNngmS=rOSAQRB0N9ai+mA0aDrB9RopBvPHEK42Ng@mail.gmail.com
