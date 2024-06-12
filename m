@@ -1,278 +1,125 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDE417E459;
-	Wed, 12 Jun 2024 15:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B2A1EB2A;
+	Wed, 12 Jun 2024 15:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718206687; cv=none; b=Z9JNXhWi/wRTe4pkxKlZ+xCfhn9DSu0XPLP9yUYH6aHeeurxNnt7huP9d+3rFaivtK6CRS31UGKTg8oxZbVJeHqEBf2RPJFZgJT9p17JAC/8T8KXUMypqKdmHzQKgaxnZp7GeGqarcBBTNrxVhsxL5rhWoFJjjoerzluAWHvx28=
+	t=1718207265; cv=none; b=UNsoko0/78auhNQrD8urD4Ib7rK6/elCCmCstZaFp1PutZF6iRykHAsGVCM/kJQMtnRkL2v/3QigjQduSxdqJsNJUD9xt8W3jesyFZj7Hr78F1dcg/H8i2y1ptjm4HnY3j+W9m/waF8G2xt7TyjnNuAyqQtlrBQ/F3plqa21wH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718206687; c=relaxed/simple;
-	bh=BbRKLeBRXiAlrIOYGEopdh8kaUezPNfsznzzn4Gls7M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SUiCCTuabYYD0eJnI4iGNTNCvMdcvaA+m9VnniOlU4CZHPhmkoM7REV7aojkt5chO2Uncux0ZtRQsLc96r/I96sbMnCIXRH435mX52UKTQn3S6s3ybEIMg2+DI0UHDawhCX+33Rok6Sr7Ks+AX8BCJ/+OlYtuxkmuZjS4/bGvrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=daXsUq4X; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718207265; c=relaxed/simple;
+	bh=RcO8kJK1SPBxidMQCBZS6Nufe2pEKnWn1BExnfdFDhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H5RBiW4jLym8vj659wwxhgGumRTWDTtjLtvKARwuNZ+bKSnrnMR62SQGWlXoPniqOLLkA0NaAqgFd+KLtl4fmjvhlaLmKmWq+ZrYM/Vu4/V/vBHpWsr54vdG6WxebUjBEVGUJUmSxw+koReJDsrSSwBTT0+7ilvhgYfSnwk1OTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUUDhFkB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="daXsUq4X"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CFTKxU001593;
-	Wed, 12 Jun 2024 15:37:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:subject:from:to:cc:date:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	sUlVOpLsB7ZgvZM2Yku0ftpL1kxmfJTOLslTgiO7Wc0=; b=daXsUq4XnojjxyDh
-	rPr9puRhWpsPHbxnHsDA45+Ak7X/gc6/eWJlq6VdxuuBhEH2cVk8eSh7J3u1QF2r
-	2iz25E/yYhBBavM9hj7cdamlNfKbIpe5TRTbWTPTPtOZrlKfDz80FREgwAB1N/DF
-	39EGVItTyh5uFdosCCg+oduzzdN/nIs3unsVyF9+nEFGpXi4KsxPH20qUqW/6H4J
-	h0rKBW/mTZGiAldxPaAojr7RqIwxh800XCERGPKVz5VhZN8i0eFcZOXIH+jt0ZYr
-	HflGxrUP/wP4pLCTgE2r490Ih3S0EoY2sqIJLRKzcJdjw/YPj5w8LUWPnl0fi+2N
-	AoA2qg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqebx80pn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:37:40 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45CFbdDb014086;
-	Wed, 12 Jun 2024 15:37:40 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqebx80pj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:37:39 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45CFLocC003881;
-	Wed, 12 Jun 2024 15:37:39 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mpy4ha-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:37:39 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45CFbXI411403582
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Jun 2024 15:37:35 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 187342004E;
-	Wed, 12 Jun 2024 15:37:33 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B02D720040;
-	Wed, 12 Jun 2024 15:37:32 +0000 (GMT)
-Received: from [9.155.200.166] (unknown [9.155.200.166])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Jun 2024 15:37:32 +0000 (GMT)
-Message-ID: <6403223315eda4e8023a828d6f40353c694d474e.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 01/34] ftrace: Unpoison ftrace_regs in
- ftrace_ops_list_func()
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko
- <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph
- Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Heiko
- Carstens <hca@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco
- Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka
- Enberg <penberg@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
-        Vlastimil
- Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle
- <svens@linux.ibm.com>
-Date: Wed, 12 Jun 2024 17:37:32 +0200
-In-Reply-To: <20240102101712.515e0fe3@gandalf.local.home>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
-	 <20231213233605.661251-2-iii@linux.ibm.com>
-	 <20240102101712.515e0fe3@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rmQltXYdpFw9fTbDS6VlEHPVsYz_YHE3
-X-Proofpoint-GUID: Ivcj_IlvBtvvOQzLTRy84LG3MKhmjE9t
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUUDhFkB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8CCFC116B1;
+	Wed, 12 Jun 2024 15:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718207264;
+	bh=RcO8kJK1SPBxidMQCBZS6Nufe2pEKnWn1BExnfdFDhs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tUUDhFkBvtiENrkhGjsuaqjXStFu2y4QmRyEz8Z44+BNeCUMT1FwXpmM/Z+ZWMWEt
+	 xzcTbt93S5t/Z2Gjbj8/IPxqyEriOfVzDPo8HuhM4xgnSUgcbkjoEHG3d2MQTSOFzv
+	 0qw54/7Zv6wsSjSdQQTHNp9M57WuCZdau/mlvGyNsjZNzhUF8fmviXzmsmm/taiwEh
+	 UVHIkfWuUcjER2VhozjXME73U59vBlXDJxWYNfGXzCU6uWRy+oqe9bZwHjAo8SrVfr
+	 B8TqlIFed1ii275iDSfF4yGkhIgvyJBVxzUfGA6GSAus8H08zqOCQJNpZ4tAB3Ft9h
+	 9EyHQ6Et14wWw==
+Message-ID: <12fd227b-5f6a-4929-baaa-7f657933cde6@kernel.org>
+Date: Wed, 12 Jun 2024 09:47:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_08,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 adultscore=0
- clxscore=1011 impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120110
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@ziepe.ca>, Mina Almasry <almasrymina@google.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+ Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
+ <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
+ <20240607145247.GG791043@ziepe.ca>
+ <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
+ <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
+ <20240610121625.GI791043@ziepe.ca>
+ <59443d14-1f1d-42bb-8be3-73e6e4a0b683@kernel.org>
+ <00c67cf0-2bf3-4eaf-b200-ffe00d91593b@gmail.com>
+ <20240610221500.GN791043@ziepe.ca>
+ <CAHS8izNRd=f=jHgrYKKfzgcU3JzkZA1NkZnbQM+hfYd8-0NyBQ@mail.gmail.com>
+ <20240612120602.GQ791043@ziepe.ca>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20240612120602.GQ791043@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-01-02 at 10:17 -0500, Steven Rostedt wrote:
-> On Thu, 14 Dec 2023 00:24:21 +0100
-> Ilya Leoshkevich <iii@linux.ibm.com> wrote:
->=20
-> > Architectures use assembly code to initialize ftrace_regs and call
-> > ftrace_ops_list_func(). Therefore, from the KMSAN's point of view,
-> > ftrace_regs is poisoned on ftrace_ops_list_func entry(). This
-> > causes
-> > KMSAN warnings when running the ftrace testsuite.
->=20
-> BTW, why is this only a problem for s390 and no other architectures?
->=20
-> If it is only a s390 thing, then we should do this instead:
->=20
-> in include/linux/ftrace.h:
->=20
-> /* Add a comment here to why this is needed */
-> #ifndef ftrace_list_func_unpoison
-> # define ftrace_list_func_unpoison(fregs) do { } while(0)
-> #endif
->=20
-> In arch/s390/include/asm/ftrace.h:
->=20
-> /* Add a comment to why s390 is special */
-> # define ftrace_list_func_unpoison(fregs)
-> kmsan_unpoison_memory(fregs, sizeof(*fregs))
->=20
-> >=20
-> > Fix by trusting the architecture-specific assembly code and always
-> > unpoisoning ftrace_regs in ftrace_ops_list_func.
-> >=20
-> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->=20
-> I'm taking my ack away for this change in favor of what I'm
-> suggesting now.
->=20
-> > Reviewed-by: Alexander Potapenko <glider@google.com>
-> > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> > ---
-> > =C2=A0kernel/trace/ftrace.c | 1 +
-> > =C2=A01 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 8de8bec5f366..dfb8b26966aa 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -7399,6 +7399,7 @@ __ftrace_ops_list_func(unsigned long ip,
-> > unsigned long parent_ip,
-> > =C2=A0void arch_ftrace_ops_list_func(unsigned long ip, unsigned long
-> > parent_ip,
-> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ftrace_ops *op, st=
-ruct
-> > ftrace_regs *fregs)
-> > =C2=A0{
-> > +	kmsan_unpoison_memory(fregs, sizeof(*fregs));
->=20
-> And here have:
->=20
-> 	ftrace_list_func_unpoison(fregs);
->=20
-> That way we only do it for archs that really need it, and do not
-> affect
-> archs that do not.
->=20
->=20
-> I want to know why this only affects s390, because if we are just
-> doing
-> this because "it works", it could be just covering up a symptom of
-> something else and not actually doing the "right thing".
->=20
->=20
-> -- Steve
->=20
->=20
-> > =C2=A0	__ftrace_ops_list_func(ip, parent_ip, NULL, fregs);
-> > =C2=A0}
-> > =C2=A0#else
->=20
+On 6/12/24 6:06 AM, Jason Gunthorpe wrote:
+> On Tue, Jun 11, 2024 at 11:09:15AM -0700, Mina Almasry wrote:
+> 
+>> Just curious: in Pavel's effort, io_uring - which is not a device - is
+>> trying to share memory with the page_pool, which is also not a device.
+>> And Pavel is being asked to wrap the memory in a dmabuf. Is dmabuf
+>> going to be the kernel's standard for any memory sharing between any 2
+>> components in the future, even when they're not devices?
+> 
+> dmabuf is how we are refcounting non-struct page memory, there is
+> nothing about it that says it has to be MMIO memory, or even that the
+> memory doesn't have struct pages.
+> 
+> All it says is that the memory is alive according to dmabuf
+> refcounting rules. And the importer obviously don't get to touch the
+> underlying folios, if any.
+> 
 
-Ok, it has been a while, but I believe I have a good answer now. KMSAN
-shadow for memory above $rsp is essentially random. Here is an example
-(you'll need a GDB hack from [1] if you want to try this at home):
+In addition, the io_uring developers should be considering the use case
+of device memory. There is no reason for this design to be limited to
+host memory. io_uring should not care (it is not peeking inside the
+memory buffers); it is just memory references.
 
-(gdb) x/5i do_nanosleep
-   0xffffffff843607c0 <do_nanosleep>:   call   0xffffffffc0201000
-Thread 3 hit Breakpoint 1, 0xffffffffc0201000 in ?? ()
-(gdb) x/64bx kmsan_get_metadata($rsp - 64, 0)
-0xffffd1000087bd38:     0x00    0x00    0x00    0x00    0x00    0x00 =20
-0x00    0x00
-0xffffd1000087bd40:     0x00    0x00    0x00    0x00    0x00    0x00 =20
-0x00    0x00
-0xffffd1000087bd48:     0x00    0x00    0x00    0x00    0x00    0x00 =20
-0x00    0x00
-0xffffd1000087bd50:     0x00    0x00    0x00    0x00    0xff    0xff =20
-0xff    0xff
-0xffffd1000087bd58:     0x00    0x00    0x00    0x00    0x00    0x00 =20
-0x00    0x00
-0xffffd1000087bd60:     0xff    0xff    0xff    0xff    0xff    0xff =20
-0xff    0xff
-0xffffd1000087bd68:     0xff    0xff    0xff    0xff    0xff    0xff =20
-0xff    0xff
-0xffffd1000087bd70:     0xff    0xff    0xff    0xff    0xff    0xff =20
-0xff    0xff
+One of io_uring's primary benefits is avoiding system calls. io_uring
+works with TCP sockets. Let it work with any dmabuf without concern of
+memory type. The performance benefits the Google crowd sees with system
+call based apps should be even better with io_uring.
 
-So if assembly (in this case ftrace_regs_caller) allocates struct
-pt_regs on stack, it may or may not be poisoned depending on what was
-called before. So, by accident, on s390x it's poisoned and trips KMSAN,
-and on x86_64 it's not. Based on this observation, I'd say we need
-an unpoison call in all ftrace handlers (e.g., kprobe_ftrace_handler),
-and not just this one.
-
-But why is this the case? Kernel stacks are created by
-alloc_thread_stack_node() using __vmalloc_node_range(__GFP_ZERO), so
-they are fully unpoisoned. Then functions are called and return, their
-locals are poisoned and unpoisoned. Interestingly enough, on return,
-they are not poisoned back, even though
-
-commit 37ad4ee8364255c73026a3c343403b5977fa7e79
-Author: Alexander Potapenko <glider@google.com>
-Date:   Thu Sep 15 17:04:13 2022 +0200
-
-    x86: kmsan: don't instrument stack walking functions
-
-says they do. So what if we introduce that [2]?
-
-# echo "p:nanosleep do_nanosleep %di"
->/sys/kernel/tracing/kprobe_events
-# echo 1 >/sys/kernel/debug/tracing/events/kprobes/nanosleep/enable
-# sleep 1
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-BUG: KMSAN: uninit-value in kprobe_ftrace_handler+0x5b9/0x790
- kprobe_ftrace_handler+0x5b9/0x790
- 0xffffffffc02010de
- do_nanosleep+0x5/0x670
- hrtimer_nanosleep+0x169/0x3b0
- common_nsleep+0xc7/0x100
- __x64_sys_clock_nanosleep+0x4e2/0x650
- do_syscall_64+0x6e/0x120
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-Local variable nd created at:
- do_filp_open+0x3b2/0x5e0
-
-Quite similar to s390. Local variable nd is a random leftover from a
-different call stack, which the modified instrumentation poisoned on
-return from do_filp_open().
-
-Alexander, what do you think about adding [2] upstream as an option
-that can be enabled from the command line? Also, what do you think
-about poisoning kernel stacks? Formally they are zeroed out, but I
-think valid code has no business reading these zeroes.
-
-[1] https://sourceware.org/bugzilla/show_bug.cgi?id=3D31878
-[2]
-https://github.com/iii-i/llvm-project/commits/msan-poison-allocas-before-re=
-turning-2024-06-12/
+Focus on primitives, building blocks with solid APIs for other
+subsystems to leverage and let them be wired up in ways you cannot
+imagine today.
 
