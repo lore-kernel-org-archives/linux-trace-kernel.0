@@ -1,101 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A17812E1DE;
-	Wed, 12 Jun 2024 23:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3344022092;
+	Wed, 12 Jun 2024 23:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718234408; cv=none; b=cK2cuBGBAxRTq6fD5A+rj7V9EuGSHVlOA+LTxry3/73YrRTrneM53D4l6bToReYJNPmJnbKvTih4QoWOu1aeU4RARp9Getcxkg1hMxMvDYZSm2g0QIgN2mt1lMNsgt6c+b0Z7/lyynHf9fpvMfAle0Mn7EZ7pwTOfIgBdn2FDFQ=
+	t=1718235128; cv=none; b=qNMAxb0SjeLRMjfxtNNj1iZIZjrMPrpLEcM4NkT5CNG8kBNZbIuOqWLZMpUNUuFDO10GkFu+j2a2C6ORg3Bp+kY8qE72n4WkUKM3aRLb5QzSRrTpUVUdgvxEPn427RRStRRzO3g/ZSmFuEb2Mchz3O39cFh1T4kX85sIhmHrKhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718234408; c=relaxed/simple;
-	bh=5vY8upmAWCSCeuI23auVBMfapEFPUJFegpBwQdZuq6o=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ZBRPnknHOKKOb6xdjNOzkXJiKBPm7QKpudmU/ODDePz4c6b7XDc1mIzshmKAahTnhixIfhrlS55PKGVT+LHkkNAyYgy/DKuI91a5CltLHXRTQUxCUMfdPZ4ju7Xj7wCuSikV+xduEv1gkoW0BP73cMQfRNg0NVsv78/+sTzTiTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E28EC4AF1D;
-	Wed, 12 Jun 2024 23:20:08 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sHXGV-00000001dgR-1Bkb;
-	Wed, 12 Jun 2024 19:20:27 -0400
-Message-ID: <20240612232027.145807384@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 12 Jun 2024 19:19:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>,
- Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>
-Subject: [PATCH v6 13/13] tracing: Add last boot delta offset for stack traces
-References: <20240612231934.608252486@goodmis.org>
+	s=arc-20240116; t=1718235128; c=relaxed/simple;
+	bh=vXTin2RE5LVdNvEj9vXYTNfzeL/DBSh7hlukwrm3jM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZWP7+Ef1VbQgeAFP9ulJCdFEyHoYp6q4EIpy4GZcbTEzkWkW4TbgPdIiF64VadtQFT8WnEsSJIQ+vdUKSoua9Xyc038ups93MZreOhMgQWD5ktikCEQDK+ox2Fr9LVMJMcy0p9iFX1nzwWK65SwhTWtnyZ4VmDkY5U7tcLQhzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=KuRtSsoX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KuRtSsoX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79393C116B1;
+	Wed, 12 Jun 2024 23:32:05 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KuRtSsoX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1718235123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qSAYPgRWQjgO94CvH8azZnzUEXB1002L22u56bSmdYM=;
+	b=KuRtSsoXnhoWtj8ILW+HbvJl66iT9qTq9bSBLEsqlgbz+NueejOfai90fuwt9YC44f1xei
+	hmuw3gt1QJJwUC0wpdH+Cc3bGwXliu0JUoPBoQ3fEIPyMnLEjglwvNilIrEYYHTX8Rku8B
+	FH2QYFekE0pqYf5XHoYxT03jyvV2YLs=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7c292bc0 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 12 Jun 2024 23:32:03 +0000 (UTC)
+Date: Thu, 13 Jun 2024 01:31:57 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <Zmov7ZaL-54T9GiM@zx2c4.com>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
+> On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
+> > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
+> > > Since SLOB was removed, it is not necessary to use call_rcu
+> > > when the callback only performs kmem_cache_free. Use
+> > > kfree_rcu() directly.
+> > > 
+> > > The changes were done using the following Coccinelle semantic patch.
+> > > This semantic patch is designed to ignore cases where the callback
+> > > function is used in another way.
+> > 
+> > How does the discussion on:
+> >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
+> >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
+> > reflect on this series? IIUC we should hold off..
+> 
+> We do need to hold off for the ones in kernel modules (such as 07/14)
+> where the kmem_cache is destroyed during module unload.
+> 
+> OK, I might as well go through them...
+> 
+> [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+> 	Needs to wait, see wg_allowedips_slab_uninit().
 
-The addresses of a stack trace event are relative to the kallsyms. As that
-can change between boots, when printing the stack trace from a buffer that
-was from the last boot, it needs all the addresses to be added to the
-"text_delta" that gives the delta between the addresses of the functions
-for the current boot compared to the address of the last boot. Then it can
-be passed to kallsyms to find the function name, otherwise it just shows a
-useless list of addresses.
+Right, this has exactly the same pattern as the batman-adv issue:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+    void wg_allowedips_slab_uninit(void)
+    {
+            rcu_barrier();
+            kmem_cache_destroy(node_cache);
+    }
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index b9d2c64c0648..48de93598897 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1233,6 +1233,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 	struct trace_seq *s = &iter->seq;
- 	unsigned long *p;
- 	unsigned long *end;
-+	long delta = iter->tr->text_delta;
- 
- 	trace_assign_type(field, iter->ent);
- 	end = (unsigned long *)((long)iter->ent + iter->ent_size);
-@@ -1245,7 +1246,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 			break;
- 
- 		trace_seq_puts(s, " => ");
--		seq_print_ip_sym(s, *p, flags);
-+		seq_print_ip_sym(s, (*p) + delta, flags);
- 		trace_seq_putc(s, '\n');
- 	}
- 
--- 
-2.43.0
+I'll hold off on sending that up until this matter is resolved.
 
-
+Jason
