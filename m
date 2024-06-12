@@ -1,99 +1,204 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8729181312;
-	Wed, 12 Jun 2024 15:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48104180A77;
+	Wed, 12 Jun 2024 15:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718207758; cv=none; b=TqXTeEeTAyXVbweCTjoWfBrrGZJUwDrCPyIDjVgVE3FZ26jyM9Z3RPxx6/LeAjEp3TsP95CT+n6UP0CUMsRsB8M3+YQyKDh1oR2OoF1wnWNVpe8KaS7+09BcaDD6vEo2GpIVOIzC3TiLZ1xqA9gNc9zEuyE5KGmvuf/A4EuNMZA=
+	t=1718207775; cv=none; b=VuUS9wcx3J8w96OcLUzfcGIY70dJjhXPyiJTbzGR8wxEyqxWb2/z34gSSkQjB6Qc7vftjB0mhTTmoHocuhb7yIt6tzz7MgkPvv295R8I0ZZ0sPV/jdfeuoNuSIrLdZ4IkVkPKIGD8BkRfYSXUz4allQCNTenqmeLhYKUya47le8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718207758; c=relaxed/simple;
-	bh=OGohKvk0MjWf9+Q8+mvrBX+1BAlKKRyUXLbfH75xyb4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=aVOTTwsJpcctQuUjdTM8dhm19LLOc1Dt6AuwIhKCXrejUHcYcJPE5H4DC9Fzyw6QCAdYqEK0nP0ui81Knrinl0W7LiaUbPTrmLHR1XPSyo1uTsFW2/6YtmNxiP9jkihUCMxy7nnZMPsyNeMQ5f1h0fnSNwiH7kbWlovFqnKdm34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYWVzenO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYWVzenO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7AEC7C4DDE4;
-	Wed, 12 Jun 2024 15:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718207757;
-	bh=OGohKvk0MjWf9+Q8+mvrBX+1BAlKKRyUXLbfH75xyb4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kYWVzenO6v46dav7m+6VeeBQvWtkfZ2ijSROLzZNF2xhVox8NT4g6D7nEQ7Yr1CvD
-	 QbMqbzoNwKvtHxN4oOUSJGsdzFSOiqxLCA02gKqMCQ7TCsZzzusBONx5M/RWdCVpV3
-	 EiLccKqgRHfAnZUsG10WiKCsIr5ffuOoIqg1qhcsU6IhDG8FGsX5pkowWNVMy10FlC
-	 cn2EJB/8N7UtSBq02dCqRuSQs3PZ1MDiLAg7XtxdpzyjShLg11I47hWenlonizyvmL
-	 MeVPPNyid+I2VhiIZBpPj5WbK56sRWz78MH6UY8PKtaaCMSFrdgOOixPo+5vEX+bSG
-	 8/iqEXeUVgsUQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 61107C43618;
-	Wed, 12 Jun 2024 15:55:57 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1718207775; c=relaxed/simple;
+	bh=hEp61NZconNU+jnxkwQl1pyt2D631XSmXBr+s2MhVg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eZa3QCsJC5D8ZF1RkofJzHqU+VFGmt2WW9IEvny2sIsMJFI4k3eKTtq2hzB9lI/HsKtoySVRroVjl+XXQ3KP2OgUk1S+XbLmhI2yBeMD6H4VBzpgFwFJBIuRK52x4CGK523OM9G2ZFkXLTOd0SON/MD1W1ExLY34VqGRjp6Dg3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DF2C116B1;
+	Wed, 12 Jun 2024 15:56:13 +0000 (UTC)
+Date: Wed, 12 Jun 2024 11:56:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Ilkka
+ =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+Message-ID: <20240612115612.2e5f4b34@rorschach.local.home>
+In-Reply-To: <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+	<20240527183139.42b6123c@rorschach.local.home>
+	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+	<20240528144743.149e351b@rorschach.local.home>
+	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+	<20240529144757.79d09eeb@rorschach.local.home>
+	<20240529154824.2db8133a@rorschach.local.home>
+	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+	<20240530095953.0020dff9@rorschach.local.home>
+	<CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
+	<ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] tracing/treewide: Remove second parameter of
- __assign_str()
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <171820775738.32393.13116890369510221266.git-patchwork-notify@kernel.org>
-Date: Wed, 12 Jun 2024 15:55:57 +0000
-References: <20240516133454.681ba6a0@rorschach.local.home>
-In-Reply-To: <20240516133454.681ba6a0@rorschach.local.home>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, ath10k@lists.infradead.org,
- Julia.Lawall@inria.fr, linux-s390@vger.kernel.org, dev@openvswitch.org,
- linux-cifs@vger.kernel.org, linux-bcachefs@vger.kernel.org,
- linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- io-uring@vger.kernel.org, torvalds@linux-foundation.org,
- iommu@lists.linux.dev, ath11k@lists.infradead.org,
- linux-media@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-pm@vger.kernel.org, selinux@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- linux-erofs@lists.ozlabs.org, virtualization@lists.linux.dev,
- linux-sound@vger.kernel.org, linux-block@vger.kernel.org,
- ocfs2-devel@lists.linux.dev, mathieu.desnoyers@efficios.com,
- linux-cxl@vger.kernel.org, linux-tegra@vger.kernel.org,
- intel-xe@lists.freedesktop.org, linux-edac@vger.kernel.org,
- linux-hwmon@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- linuxppc-dev@lists.ozlabs.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
- linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
- ath12k@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
- mhiramat@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-nfs@vger.kernel.org,
- linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Wed, 12 Jun 2024 15:36:22 +0200
+"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>=
+ wrote:
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Steven Rostedt (Google) <rostedt@goodmis.org>:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>=20
+> Ilkka or Steven, what happened to this? This thread looks stalled. I
+> also was unsuccessful when looking for other threads related to this
+> report or the culprit. Did it fall through the cracks or am I missing
+> something here?
 
-On Thu, 16 May 2024 13:34:54 -0400 you wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> [
->    This is a treewide change. I will likely re-create this patch again in
->    the second week of the merge window of v6.10 and submit it then. Hoping
->    to keep the conflicts that it will cause to a minimum.
-> ]
-> 
-> [...]
+Honesty, I have no idea where the bug is. I can't reproduce it. These
+patches I sent would check all the places that add to the list to make
+sure the proper trace_inode was being added, and the output shows that
+they are all correct. Then suddenly, something that came from the
+inode cache is calling the tracefs inode cache to free it, and that's
+where the bug is happening.
 
-Here is the summary with links:
-  - [f2fs-dev] tracing/treewide: Remove second parameter of __assign_str()
-    https://git.kernel.org/jaegeuk/f2fs/c/2c92ca849fcc
+This really looks like another bug that the recent changes have made
+more predominate.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+-- Steve
 
+
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
+>=20
+> On 02.06.24 09:32, Ilkka Naulap=C3=A4=C3=A4 wrote:
+> > sorry longer delay, been a bit busy but here is the result from that
+> > new patch. Only applied this patch so if the previous one is needed
+> > also, let me know and I'll rerun it.
+> >=20
+> > --Ilkka
+> >=20
+> > On Thu, May 30, 2024 at 5:00=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
+.org> wrote: =20
+> >>
+> >> On Thu, 30 May 2024 16:02:37 +0300
+> >> Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
+> >> =20
+> >>> applied your patch and here's the output.
+> >>> =20
+> >>
+> >> Unfortunately, it doesn't give me any new information. I added one more
+> >> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
+> >>
+> >> -- Steve
+> >>
+> >> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> >> index de5b72216b1a..a090495e78c9 100644
+> >> --- a/fs/tracefs/inode.c
+> >> +++ b/fs/tracefs/inode.c
+> >> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct su=
+per_block *sb)
+> >>                 return NULL;
+> >>
+> >>         ti->flags =3D 0;
+> >> +       ti->magic =3D 20240823;
+> >>
+> >>         return &ti->vfs_inode;
+> >>  }
+> >>
+> >>  static void tracefs_free_inode(struct inode *inode)
+> >>  {
+> >> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
+> >> +       struct tracefs_inode *ti =3D get_tracefs(inode);
+> >> +
+> >> +       BUG_ON(ti->magic !=3D 20240823);
+> >> +       kmem_cache_free(tracefs_inode_cachep, ti);
+> >>  }
+> >>
+> >>  static ssize_t default_read_file(struct file *file, char __user *buf,
+> >> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_=
+inode_operations =3D {
+> >>         .rmdir          =3D tracefs_syscall_rmdir,
+> >>  };
+> >>
+> >> -struct inode *tracefs_get_inode(struct super_block *sb)
+> >> -{
+> >> -       struct inode *inode =3D new_inode(sb);
+> >> -       if (inode) {
+> >> -               inode->i_ino =3D get_next_ino();
+> >> -               inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_=
+current(inode);
+> >> -       }
+> >> -       return inode;
+> >> -}
+> >> -
+> >>  struct tracefs_mount_opts {
+> >>         kuid_t uid;
+> >>         kgid_t gid;
+> >> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *den=
+try, struct inode *inode)
+> >>                 return;
+> >>
+> >>         ti =3D get_tracefs(inode);
+> >> +       BUG_ON(ti->magic !=3D 20240823);
+> >>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
+> >>                 eventfs_set_ef_status_free(dentry);
+> >>         iput(inode);
+> >> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry=
+ *dentry)
+> >>         return dentry;
+> >>  }
+> >>
+> >> +struct inode *tracefs_get_inode(struct super_block *sb)
+> >> +{
+> >> +       struct inode *inode =3D new_inode(sb);
+> >> +
+> >> +       BUG_ON(sb->s_op !=3D &tracefs_super_operations);
+> >> +       if (inode) {
+> >> +               inode->i_ino =3D get_next_ino();
+> >> +               inode->i_atime =3D inode->i_mtime =3D inode_set_ctime_=
+current(inode);
+> >> +       }
+> >> +       return inode;
+> >> +}
+> >> +
+> >>  /**
+> >>   * tracefs_create_file - create a file in the tracefs filesystem
+> >>   * @name: a pointer to a string containing the name of the file to cr=
+eate.
+> >> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+> >> index 69c2b1d87c46..9059b8b11bb6 100644
+> >> --- a/fs/tracefs/internal.h
+> >> +++ b/fs/tracefs/internal.h
+> >> @@ -9,12 +9,15 @@ enum {
+> >>  struct tracefs_inode {
+> >>         unsigned long           flags;
+> >>         void                    *private;
+> >> +       unsigned long           magic;
+> >>         struct inode            vfs_inode;
+> >>  };
+> >>
+> >>  static inline struct tracefs_inode *get_tracefs(const struct inode *i=
+node)
+> >>  {
+> >> -       return container_of(inode, struct tracefs_inode, vfs_inode);
+> >> +       struct tracefs_inode *ti =3D container_of(inode, struct tracef=
+s_inode, vfs_inode);
+> >> +       BUG_ON(ti->magic !=3D 20240823);
+> >> +       return ti;
+> >>  }
+> >>
+> >>  struct dentry *tracefs_start_creating(const char *name, struct dentry=
+ *parent); =20
 
