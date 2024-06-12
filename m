@@ -1,103 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0155316E895;
-	Wed, 12 Jun 2024 18:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D5E2135A;
+	Wed, 12 Jun 2024 18:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718215833; cv=none; b=WPrZ7wkWwzbKnTc0ORFVCElEiBwQcs54bK2pK3HYezLHQqhdxSz8LjvBFYHhJ79XRmA8gj3AWiWNgDuC+n6XV57rUyHShKxJ17Xnc7W/LerwbXFmkMFs2iCvkf9Ywm/khxW/tYHWrqOgviEJhDRtLpQsPFIOLcGGHoGIo1P7c4Q=
+	t=1718217960; cv=none; b=NjpPkgdGxlKUexMQx1nP07jaec/j4p1cOyVJ/l3w6RYr8gJz0Tno1jINZ9apVWmkLkaoWdESTtlM6IIyyM78ZBw6KpLOA7QrzPc8zVByd5ANRDs2D1yM9kWdDrBvGKoX4stHJQfadDmQ3PfWkwtcjE9TrPlSISwG+6YGzrZBQqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718215833; c=relaxed/simple;
-	bh=zxGx4UHWoFeslODIvuI4YPtEigCLjSm31dy2cb55Oz4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=k4WKtG1kg0Gc9Q2LcQ0Z1xIzyHOihsI5lZtYZnjfOgHQQW04/HcdG/bE3IAA3UoxBZ5/P2ruELUGdffvubs9WehZOHIgsM9eczE3SoMza1Ny+eIdGGMSF4VFjLHU57wWCAo0fotAdtMJacxwAKtH+k0uHDmZjFpXp4dU0RByN6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWUF0D7I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718217960; c=relaxed/simple;
+	bh=dXhvjwM/0oFIvt2EbGPoQJdmtCjDsX+7C5LbE2ZsBNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4PcrEsmaE2HTDNQYkowTdBis6NaEdb/7E2ca4aedo8JR8U4V02PJfCauRpLNj3cmZ0E7v9cFPNYkjYm24SyRuRZLAjAmJ9RNAPwwb7dMQONoZV2AbkHK8SmVba26qw8wIcd7WvJV4GdaTs6DGfPh7N6Y4TBicSE/wIAGkf7pgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbFj2lOK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWUF0D7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 72475C32786;
-	Wed, 12 Jun 2024 18:10:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbFj2lOK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29118C32786;
+	Wed, 12 Jun 2024 18:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718215831;
-	bh=zxGx4UHWoFeslODIvuI4YPtEigCLjSm31dy2cb55Oz4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TWUF0D7IRN5Vo2R7IFWkPtDTNF++1BL+Rgac5joXi+V6G+etTmFy8BLu+h6L7ExVi
-	 So01cJN5cilVjQ+l2BOZRbCDzBz4l0jx/528FVGADA91iX16nEcQqhk7C+I3XC2HK7
-	 h8YY+rz3VaV27PABMQPe+XFO0A3f09JiU6xuOpIhAcnYGpceK3myDMpXIhk8UsbUdW
-	 44QYK4zDYozKR6bdgJ0AuhU4boMkic+TRxvaa7l46+NcC0mz6N2MBj6oFYUg2r+kni
-	 oNTBDRvYmIZCWXND1t6CZDNcgogj3r8+3POtzOg865W7XV0bEc8neCi90WXcaEyIdz
-	 QYprE511ev6Tw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 58136C43618;
-	Wed, 12 Jun 2024 18:10:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1718217958;
+	bh=dXhvjwM/0oFIvt2EbGPoQJdmtCjDsX+7C5LbE2ZsBNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HbFj2lOKKRLqmpNJyH1ELmss+TDEz4RJ1NB0NKtbvEQ2Q6/0z5WVXLtB/tOQOZ0KV
+	 EAy+4jYi1xAS63Q/3Nmc3D53yrduqGvkwkWy80rWFLxGYC/t3ubqBJD90Hw6ORZiAm
+	 tw+lzL1LOEn4fgoAEEB2R8Vb8Nu6CeOFEk1/4IECUnTQ1kPSF4v1GPdUyuW4gnaV8w
+	 h55x04pfatlIDpIiWLt2lDQPIYDhcA3YGu19NkxWsRwfKSuLPCjIGqMPtncmjSd6LE
+	 M0qxhxk+ERJ7Q6e3qi8IC4pbnahl/1I6ROoaU7q+pzDF+hzQWqOx0q76fNHfbPbuck
+	 06aLuT5irhExQ==
+Date: Wed, 12 Jun 2024 11:45:57 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
+ line option
+Message-ID: <202406121145.8860502D7@keescook>
+References: <20240611144911.327227285@goodmis.org>
+ <20240611144949.703297941@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v5 00/12] bpf: Support dumping kfunc prototypes from
- BTF
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171821583135.29771.8486292481897939634.git-patchwork-notify@kernel.org>
-Date: Wed, 12 Jun 2024 18:10:31 +0000
-References: <cover.1718207789.git.dxu@dxuuu.xyz>
-In-Reply-To: <cover.1718207789.git.dxu@dxuuu.xyz>
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, fsverity@lists.linux.dev, andrii@kernel.org,
- jolsa@kernel.org, linux-kbuild@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
- olsajiri@gmail.com, quentin@isovalent.com, alan.maguire@oracle.com,
- acme@kernel.org, eddyz87@gmail.com, kernel-team@meta.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611144949.703297941@goodmis.org>
 
-Hello:
-
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Wed, 12 Jun 2024 09:58:24 -0600 you wrote:
-> This patchset enables both detecting as well as dumping compilable
-> prototypes for kfuncs.
+On Tue, Jun 11, 2024 at 10:49:13AM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> The first commit instructs pahole to DECL_TAG kfuncs when available.
-> This requires v1.27 which was released on 6/11/24. With it, users will
-> be able to look at BTF inside vmlinux (or modules) and check if the
-> kfunc they want is available.
+> Add a method to find a region specified by reserve_mem=nn:align:name for
+> ramoops. Adding a kernel command line parameter:
 > 
-> [...]
+>   reserve_mem=12M:4096:oops ramoops.mem_name=oops
+> 
+> Will use the size and location defined by the memmap parameter where it
+> finds the memory and labels it "oops". The "oops" in the ramoops option
+> is used to search for it.
+> 
+> This allows for arbitrary RAM to be used for ramoops if it is known that
+> the memory is not cleared on kernel crashes or soft reboots.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Here is the summary with links:
-  - [bpf-next,v5,01/12] kbuild: bpf: Tell pahole to DECL_TAG kfuncs
-    https://git.kernel.org/bpf/bpf-next/c/ebb79e96f1ea
-  - [bpf-next,v5,02/12] bpf: selftests: Fix bpf_iter_task_vma_new() prototype
-    https://git.kernel.org/bpf/bpf-next/c/718135f5bd24
-  - [bpf-next,v5,03/12] bpf: selftests: Fix fentry test kfunc prototypes
-    https://git.kernel.org/bpf/bpf-next/c/dff96e4f5078
-  - [bpf-next,v5,04/12] bpf: selftests: Fix bpf_cpumask_first_zero() kfunc prototype
-    https://git.kernel.org/bpf/bpf-next/c/89f0b1abac49
-  - [bpf-next,v5,05/12] bpf: selftests: Fix bpf_map_sum_elem_count() kfunc prototype
-    https://git.kernel.org/bpf/bpf-next/c/ac42f636dc11
-  - [bpf-next,v5,06/12] bpf: Make bpf_session_cookie() kfunc return long *
-    https://git.kernel.org/bpf/bpf-next/c/2b8dd87332cd
-  - [bpf-next,v5,07/12] bpf: selftests: Namespace struct_opt callbacks in bpf_dctcp
-    https://git.kernel.org/bpf/bpf-next/c/0ce089cbdc6a
-  - [bpf-next,v5,08/12] bpf: verifier: Relax caller requirements for kfunc projection type args
-    https://git.kernel.org/bpf/bpf-next/c/ec209ad86324
-  - [bpf-next,v5,09/12] bpf: treewide: Align kfunc signatures to prog point-of-view
-    https://git.kernel.org/bpf/bpf-next/c/cce4c40b9606
-  - [bpf-next,v5,10/12] bpf: selftests: nf: Opt out of using generated kfunc prototypes
-    https://git.kernel.org/bpf/bpf-next/c/f709124dd72f
-  - [bpf-next,v5,11/12] bpf: selftests: xfrm: Opt out of using generated kfunc prototypes
-    https://git.kernel.org/bpf/bpf-next/c/c567cba34585
-  - [bpf-next,v5,12/12] bpftool: Support dumping kfunc prototypes from BTF
-    https://git.kernel.org/bpf/bpf-next/c/770abbb5a25a
+Acked-by: Kees Cook <kees@kernel.org>
 
-You are awesome, thank you!
+Let me know if this should go via the pstore tree, if you'd rather carry
+it?
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Kees Cook
