@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3DE20DF7;
-	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AEF219E4;
+	Wed, 12 Jun 2024 02:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158627; cv=none; b=HUmK1iuI/kSg4mH91t58lxSuHgR4Kg8BRfOiTBZ7ipi6IFHTufOJhFfSX7GXCGTQdXZvI8s7kbhWTibXn2h0nTMVIJXV5Et97BSWpaPdA7qqhwiWQhWT/mQJOiTSst9/Z7Qr1//PpvXsLjvwfJxhAv+eRr+w2G5sJz5b39bDupw=
+	t=1718158627; cv=none; b=YbZQScllsJnyDP3pYCxHypF2hyPPlFhzv7UCVU6dskzgDCKoslPUmTtjxpruJV4uQX61+c7YKBV1u01gbwv5u/u+SnPkCwZaHFZzNN8104wXT2jNp0p3nzE0E5XyiuV3oAAw780QQoiKItcbZweQ9XkmSn17+pChBesGnM4w5v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718158627; c=relaxed/simple;
-	bh=ssSeXi7BFIPhLBrvWHaTeqk4SQQW53gNHjHlpycGqZE=;
+	bh=IE1IK2OKn7/pafSQ0ncO+HLzuopsT1q+/33iYZS7wTg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=pJ4kM1P+n9nZ43ShmDjdmEE9zD5tSWCpAqXZ5vcPNltPnnyl4Buo+WZUDloIrfVLwOlNciPCqbwUTKu5EHACdzwodd16Auu/RA27lIIPkzC4dmk+oj1sAvwy4nooC+YlJ5N8Gec5G+gLok692atSaHjlFuMsGZFnFq+NvRvCcFU=
+	 Content-Type; b=Ime2h42TBND9sVvPhV9xLMcHJaxEymszzKeiLvKOgcs0fwGE0ebCSuVI9x/MqM9XmkwK4meDMgWhGcTqgGhEYVbDVyYUzdqGFBM83Waim0a2J0G5x9atK1BGDrMHioRDHw8y3pR3bQif6gfTWXMKrbx+XE3knUGwlva6xAyY/nU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7416C4AF67;
-	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E06C4AF50;
+	Wed, 12 Jun 2024 02:17:07 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sHDYB-00000001XNh-3V5d;
-	Tue, 11 Jun 2024 22:17:23 -0400
-Message-ID: <20240612021723.690952544@goodmis.org>
+	id 1sHDYC-00000001XOh-0gKW;
+	Tue, 11 Jun 2024 22:17:24 -0400
+Message-ID: <20240612021724.022660136@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 22:16:52 -0400
+Date: Tue, 11 Jun 2024 22:16:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v5 10/13] tracing/ring-buffer: Add last_boot_info file to boot instance
+Subject: [PATCH v5 12/13] tracing: Update function tracing output for previous boot buffer
 References: <20240612021642.941740855@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -61,191 +61,53 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-If an instance is mapped to memory on boot up, create a new file called
-"last_boot_info" that will hold information that can be used to properly
-parse the raw data in the ring buffer.
-
-It will export the delta of the addresses for text and data from what it
-was from the last boot. It does not expose actually addresses (unless you
-knew what the actual address was from the last boot).
-
-The output will look like:
-
- # cat last_boot_info
- text delta:	-268435456
- data delta:	-268435456
-
-The text and data are kept separate in case they are ever made different.
+For a persistent ring buffer that is saved across boots, if function
+tracing was performed in the previous boot, it only saves the address of
+the functions and uses "%pS" to print their names. But the current boot,
+those functions may be in different locations. The persistent meta-data
+saves the text delta between the two boots and can be used to find the
+address of the saved function of where it is located in the current boot.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h |  3 +++
- kernel/trace/ring_buffer.c  | 23 ++++++++++++++++++
- kernel/trace/trace.c        | 47 ++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace.h        |  2 ++
- 4 files changed, 74 insertions(+), 1 deletion(-)
+ kernel/trace/trace_output.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index a50b0223b1d3..55de3798a9b9 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -94,6 +94,9 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       unsigned long range_size,
- 					       struct lock_class_key *key);
- 
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data);
-+
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 195e47ef730d..ccb2101a2e38 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2396,6 +2396,29 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 	return alloc_buffer(size, flags, order, start, start + range_size, key);
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index d8b302d01083..b9d2c64c0648 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -990,8 +990,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
  }
  
-+/**
-+ * ring_buffer_last_boot_delta - return the delta offset from last boot
-+ * @buffer: The buffer to return the delta from
-+ * @text: Return text delta
-+ * @data: Return data delta
-+ *
-+ * Returns: The true if the delta is non zero
-+ */
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data)
-+{
-+	if (!buffer)
-+		return false;
-+
-+	if (!buffer->last_text_delta)
-+		return false;
-+
-+	*text = buffer->last_text_delta;
-+	*data = buffer->last_data_delta;
-+
-+	return true;
-+}
-+
- /**
-  * ring_buffer_free - free a ring buffer.
-  * @buffer: the buffer to free.
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dfde26aa3211..dc4eee33d920 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6041,6 +6041,18 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 	return ret;
- }
- 
-+static void update_last_data(struct trace_array *tr)
-+{
-+	if (!tr->text_delta && !tr->data_delta)
-+		return;
-+
-+	/* Clear old data */
-+	tracing_reset_online_cpus(&tr->array_buffer);
-+
-+	/* Using current data now */
-+	tr->text_delta = 0;
-+	tr->data_delta = 0;
-+}
- 
- /**
-  * tracing_update_buffers - used by tracing facility to expand ring buffers
-@@ -6058,6 +6070,9 @@ int tracing_update_buffers(struct trace_array *tr)
- 	int ret = 0;
- 
- 	mutex_lock(&trace_types_lock);
-+
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded)
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6113,6 +6128,8 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 
- 	mutex_lock(&trace_types_lock);
- 
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded) {
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6860,6 +6877,21 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
-+static ssize_t
-+tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct trace_array *tr = filp->private_data;
-+	struct seq_buf seq;
-+	char buf[64];
-+
-+	seq_buf_init(&seq, buf, 64);
-+
-+	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
-+	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
-+
-+	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
-+}
-+
- static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
+ static void print_fn_trace(struct trace_seq *s, unsigned long ip,
+-			   unsigned long parent_ip, int flags)
++			   unsigned long parent_ip, long delta, int flags)
  {
- 	struct trace_array *tr = inode->i_private;
-@@ -7499,6 +7531,13 @@ static const struct file_operations trace_time_stamp_mode_fops = {
- 	.release	= tracing_single_release_tr,
- };
- 
-+static const struct file_operations last_boot_fops = {
-+	.open		= tracing_open_generic_tr,
-+	.read		= tracing_last_boot_read,
-+	.llseek		= generic_file_llseek,
-+	.release	= tracing_release_generic_tr,
-+};
++	ip += delta;
++	parent_ip += delta;
 +
- #ifdef CONFIG_TRACER_SNAPSHOT
- static const struct file_operations snapshot_fops = {
- 	.open		= tracing_snapshot_open,
-@@ -9242,6 +9281,9 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
- 						      tr->range_addr_size);
-+
-+		ring_buffer_last_boot_delta(buf->buffer,
-+					    &tr->text_delta, &tr->data_delta);
- 		/*
- 		 * This is basically the same as a mapped buffer,
- 		 * with the same restrictions.
-@@ -9751,7 +9793,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
+ 	seq_print_ip_sym(s, ip, flags);
  
- #ifdef CONFIG_TRACER_SNAPSHOT
--	if (!tr->range_addr_start) {
-+	if (tr->range_addr_start) {
-+		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
-+				  tr, &last_boot_fops);
-+	} else {
- 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
- 				  tr, &snapshot_fops);
- 	}
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 2efa4cccdd3b..611be17fdc70 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -347,6 +347,8 @@ struct trace_array {
- 	/* The below is for memory mapped ring buffer */
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
-+	long			text_delta;
-+	long			data_delta;
+ 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
+@@ -1009,7 +1012,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
  
- 	struct trace_pid_list	__rcu *filtered_pids;
- 	struct trace_pid_list	__rcu *filtered_no_pids;
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
+ 	trace_seq_putc(s, '\n');
+ 
+ 	return trace_handle_return(s);
+@@ -1674,7 +1677,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
+ 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
+ 	trace_print_time(s, iter,
+ 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
 -- 
 2.43.0
 
