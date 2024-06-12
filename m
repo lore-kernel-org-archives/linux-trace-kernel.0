@@ -1,101 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C51025605;
-	Wed, 12 Jun 2024 02:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBC179D8;
+	Wed, 12 Jun 2024 05:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158627; cv=none; b=S7qA4EsIXTjb6j/bOONqn7pOQYTbUGobrVxAtf3b/JEbbudA7/elpnZX4/+dmKvfXk0VloeV44dEwL2Xr96EF4rg9V8ByD3gwfXJe8Cznc7jbSzQPj1NBvUAwBaI70UFev9TmAZpMDm9cvplmCuvcwTRwMUKe3duy1zso9RWKBI=
+	t=1718170831; cv=none; b=JPvSCok8NBI4PFFVFBKYxB3SFpBDFe/O+VEHXGUSBVzqUgHvVJAjiOMZXpFyynORoFin78TJUt9JgP3EYJt9jT+z5EFuAxOWeteMysJ6BY2istkOSTE2OhikwalVfYmOiU1/LnjXUvqm8mAZHva/UflK7pDtDEvdmjr1ojAqxio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718158627; c=relaxed/simple;
-	bh=5vY8upmAWCSCeuI23auVBMfapEFPUJFegpBwQdZuq6o=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=CdlSOHnky92tkG113cPSTUaBR3D9Aw1thCSodiDKPS6q3tUDgfEz7v8ThJRZA0MnKTxnWQljoYkt/+79HxdNO1g57WFPcMudARp44EvhZSuF1zuvcMMlrC2VyzwNgdSxUQlAejMetPi+0jTNHJosciq+DSSlZKW/HRioP7F10C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B476C4AF62;
-	Wed, 12 Jun 2024 02:17:07 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sHDYC-00000001XPD-1MxJ;
-	Tue, 11 Jun 2024 22:17:24 -0400
-Message-ID: <20240612021724.184338670@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 22:16:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>,
- Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>
-Subject: [PATCH v5 13/13] tracing: Add last boot delta offset for stack traces
-References: <20240612021642.941740855@goodmis.org>
+	s=arc-20240116; t=1718170831; c=relaxed/simple;
+	bh=z5DKGdkQHd6N4C5R0TvXcMTfbPbCS6uuyB3zQ/QDn24=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CMehYYXxZAWjVk4aZcyerRl9CWXWbbAtXo8q6gFmiYEuDrUGLIziRz9uNg7XXKEjqhjbp5cKpN9B9YEEEZap/UriqBGzp2Gqi5FP+2A0/Gpugff8uXm/mBEDnMqD6PPSgMrvWCrxZxhmA62C8Ir8B33hObXr2m11N0Uj3WghewA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0llf8ES; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0llf8ES"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0509AC32786;
+	Wed, 12 Jun 2024 05:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718170831;
+	bh=z5DKGdkQHd6N4C5R0TvXcMTfbPbCS6uuyB3zQ/QDn24=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=B0llf8ES9k8QfWvbjirSJ+bEiP2L0vVMIDIFZvmAUl70BL6OxphJJHQLaTcoFvAB0
+	 zNypUlDZuPtNNhnCkbuVCLZJR9bFtejkFtMCGzt3iokIKxQ+3ML8QeZe0IBa2PXaUk
+	 g1jNhG23NLUXo11ukTFqWXphaRYHMseC/NOZTH+8YmAnqX+euU7JL0gWZAx3dXAmjw
+	 /Q+84ehJzLxGMJ8DlQyjRNYKO4him0tUKoXakwOPG1Pli3K6W30eE0hkFv2UTmVCxy
+	 M6LflOjnt+ZIkFzNaW8D7aBA6clV0aVmOy5j2UZTooZoLugJ8Yy+4FRkMUdbUji4k0
+	 hmTn0KWEqpRGA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E0465C54BB2;
+	Wed, 12 Jun 2024 05:40:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v4 0/6] net/tcp: TCP-AO and TCP-MD5 tracepoints
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171817083091.28312.7398867679773366981.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Jun 2024 05:40:30 +0000
+References: <20240607-tcp_ao-tracepoints-v4-0-88dc245c1f39@gmail.com>
+In-Reply-To: <20240607-tcp_ao-tracepoints-v4-0-88dc245c1f39@gmail.com>
+To: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Cc: edumazet@google.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, dsahern@kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net,
+ mnassiri@ciena.com, horms@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, 0x7f454c46@gmail.com
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hello:
 
-The addresses of a stack trace event are relative to the kallsyms. As that
-can change between boots, when printing the stack trace from a buffer that
-was from the last boot, it needs all the addresses to be added to the
-"text_delta" that gives the delta between the addresses of the functions
-for the current boot compared to the address of the last boot. Then it can
-be passed to kallsyms to find the function name, otherwise it just shows a
-useless list of addresses.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Fri, 07 Jun 2024 00:25:54 +0100 you wrote:
+> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+> ---
+> Changes in v4:
+> - Fix the build for CONFIG_TCP_MD5SIG=n (Matthieu Baerts, netdev dashboard)
+> - Link to v3: https://lore.kernel.org/r/20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com
+> 
+> Changes in v3:
+> - Unexported tcp_inbound_ao_hash() and made static (Eric Dumazet)
+> - Link to v2: https://lore.kernel.org/r/20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com
+> 
+> [...]
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index b9d2c64c0648..48de93598897 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1233,6 +1233,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 	struct trace_seq *s = &iter->seq;
- 	unsigned long *p;
- 	unsigned long *end;
-+	long delta = iter->tr->text_delta;
- 
- 	trace_assign_type(field, iter->ent);
- 	end = (unsigned long *)((long)iter->ent + iter->ent_size);
-@@ -1245,7 +1246,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 			break;
- 
- 		trace_seq_puts(s, " => ");
--		seq_print_ip_sym(s, *p, flags);
-+		seq_print_ip_sym(s, (*p) + delta, flags);
- 		trace_seq_putc(s, '\n');
- 	}
- 
+Here is the summary with links:
+  - [net-next,v4,1/6] net/tcp: Use static_branch_tcp_{md5,ao} to drop ifdefs
+    https://git.kernel.org/netdev/net-next/c/3966a668bfee
+  - [net-next,v4,2/6] net/tcp: Add a helper tcp_ao_hdr_maclen()
+    https://git.kernel.org/netdev/net-next/c/72863087f635
+  - [net-next,v4,3/6] net/tcp: Move tcp_inbound_hash() from headers
+    https://git.kernel.org/netdev/net-next/c/811efc06e5f3
+  - [net-next,v4,4/6] net/tcp: Add tcp-md5 and tcp-ao tracepoints
+    https://git.kernel.org/netdev/net-next/c/96be3dcd013d
+  - [net-next,v4,5/6] net/tcp: Remove tcp_hash_fail()
+    https://git.kernel.org/netdev/net-next/c/78b1b27db91c
+  - [net-next,v4,6/6] Documentation/tcp-ao: Add a few lines on tracepoints
+    https://git.kernel.org/netdev/net-next/c/efe46fb18e78
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
