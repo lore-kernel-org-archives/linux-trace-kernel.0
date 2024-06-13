@@ -1,123 +1,89 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A6071465BB;
-	Thu, 13 Jun 2024 13:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C77143C40;
+	Thu, 13 Jun 2024 13:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284882; cv=none; b=tJ31ZOSkIkdizCeTCwIw/MYuv5Xtvmmkpp9ynG9f0EuuYew4MNkzuSB0405A78dQbfD+V6PzBUJLDHjjpqIl2dpgeo2X7eTQJDKRdx7o5cN7NfThcMQe+sCHMx/lbpBxxnQwMvlVKL/bx2VWmvhoTH45Ocd18+bPUW0k/h93U6k=
+	t=1718285208; cv=none; b=OTTCrOwwOzxYJw05aRnQIp8sIx97NSPUacBrW1id2NoggJpp0tpdq4Y3sJfBPP/+zJG/eYH8ctyf92XK5VVz4XyHXT6QkGLhZ+U87cxSW9AJ1A35eb+QkNcHn7MmmfY/HC9nYoD6OY1NMWG2bHv6xxLUqq3vi7IVag6HwDjLh8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284882; c=relaxed/simple;
-	bh=EQ20HpMAIER6Uw/xHoQiBTRUedahaArff+OtmAqGPP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QBoVCk8xTYLxF9KEHTQ2r1mbWrLnPcaTpgScQmTHMtJPDlmPeAdrVnzSSHKzrj5bB1hTqKGPy6JH5egzZ2edTrU0jlxEXoy3d0BLnmkzMig7m//n0+uJ571KDO64406GzCOpeZHu/d1YcpPdqKhaXwEpkCwgX2shfDMelPSRwek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-5b-666af24d0095
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gregory Price <gregory.price@memverge.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com,
-	kernel_team@skhynix.com,
-	Honggyu Kim <honggyu.kim@sk.com>
-Subject: [PATCH v5 8/8] Docs/.../mm/damon: add more damos actions
-Date: Thu, 13 Jun 2024 22:20:55 +0900
-Message-ID: <20240613132056.608-9-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240613132056.608-1-honggyu.kim@sk.com>
-References: <20240613132056.608-1-honggyu.kim@sk.com>
+	s=arc-20240116; t=1718285208; c=relaxed/simple;
+	bh=/4UAOu8OPxB6jQeNkyxjOzmqUKJUuZRRJHc/NOgQCGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VUUuw8sIkm//gPo1CE2Rkj1zuzZ3QZ88tIC/rfa3K5UtUmWjTdP9wbN1kXP63M6ovUPpZ+X2CIyzVO3JnZ7+1RDIOcVJYe+2jGLY/tBxLlaSEezJVcJDluFkaaX0stCW2YVLhoiJmcHSI2hVaP96NA1IA2dbSd7++05rBlsQEYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C307C32786;
+	Thu, 13 Jun 2024 13:26:44 +0000 (UTC)
+Date: Thu, 13 Jun 2024 09:26:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
+ <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
+ line option
+Message-ID: <20240613092642.385461d5@rorschach.local.home>
+In-Reply-To: <CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
+References: <20240611144911.327227285@goodmis.org>
+	<20240611144949.703297941@goodmis.org>
+	<202406121145.8860502D7@keescook>
+	<20240612145228.5bf426e0@rorschach.local.home>
+	<ZmqLejL1mblOikLp@kernel.org>
+	<CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsXC9ZZnoa7vp6w0g7OPeCwm9hhYzFm/hs3i
-	/oPX7BZP/v9mtWhoesRicXnXHDaLe2v+s1ocWX+WxWLz2TPMFouXq1ns63jAZHH46xsmBx6P
-	paffsHnsnHWX3aNl3y12j02rOtk8Nn2axO5xYsZvFo8Xm2cyemz8+J/d4/MmuQDOKC6blNSc
-	zLLUIn27BK6M0x0vWAtOClQsmDqBrYHxJW8XIyeHhICJxPyGN4ww9sWv05lBbDYBNYkrLycx
-	dTFycIgIWElM2xHbxcjFwSywgVli0rkXTCA1wgKOEqc3rGEFqWERUJWY+jkFJMwrYCqxtncV
-	K8RITYnH23+yg9icAmYSj+a+YgOxhYBqZvy4ygxRLyhxcuYTFhCbWUBeonnrbGaQXRICr9kk
-	3uw4BnWbpMTBFTdYJjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgTGwrPZP
-	9A7GTxeCDzEKcDAq8fB6PMtKE2JNLCuuzD3EKMHBrCTCO2shUIg3JbGyKrUoP76oNCe1+BCj
-	NAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAOj0fam+8qzuFZNer+9bO/OFGn+hzb/9xvz
-	iFUwsq24V7dSS9F6lfChXFnJeWmG9ftKnh2XKw49sSU74vQLXtd3PwP2uETmvq47oP/GztX0
-	uVuvjtL11SoL6tRrc6ZsXXj48N0ayfebT212f384ViD54duccsmpX/cuiVUJmnMr+faDc6u8
-	F175qcRSnJFoqMVcVJwIAAeMmpp9AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNLT9fnU1aawdnV1hYTewws5qxfw2Zx
-	/8Frdosn/3+zWjQ0PWKx+PzsNbPF4bknWS0u75rDZnFvzX9WiyPrz7JYbD57htli8XI1i30d
-	D5gsDn99w+TA57H09Bs2j52z7rJ7tOy7xe6xaVUnm8emT5PYPU7M+M3i8WLzTEaPjR//s3t8
-	u+3hsfjFByaPz5vkArijuGxSUnMyy1KL9O0SuDJOd7xgLTgpULFg6gS2BsaXvF2MnBwSAiYS
-	F79OZwax2QTUJK68nMTUxcjBISJgJTFtR2wXIxcHs8AGZolJ514wgdQICzhKnN6whhWkhkVA
-	VWLq5xSQMK+AqcTa3lWsECM1JR5v/8kOYnMKmEk8mvuKDcQWAqqZ8eMqM0S9oMTJmU9YQGxm
-	AXmJ5q2zmScw8sxCkpqFJLWAkWkVo0hmXlluYmaOqV5xdkZlXmaFXnJ+7iZGYIgvq/0zcQfj
-	l8vuhxgFOBiVeHg9nmWlCbEmlhVX5h5ilOBgVhLhnbUQKMSbklhZlVqUH19UmpNafIhRmoNF
-	SZzXKzw1QUggPbEkNTs1tSC1CCbLxMEp1cDIbDTHJ0jbZN9aqVmV3QyfpgS29XWfWWQzd0n5
-	QR15v97A/FW/dL6GtW7WrKx44KSzRn7aqx4LoUfvL5//tet6zeETCyrTbkzImOj2ry88vV/4
-	9eKTulN2fuLnOc27tkeyPq9Lxfh8EFfaasuPKle47/855DunbrHpjm98//ifHrzXHvxC//xn
-	JZbijERDLeai4kQAaQY8EG0CAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This patch adds damon description for "migrate_hot" and "migrate_cold"
-actions for both usage and design documents as long as a new
-"target_nid" knob to set the migration target node.
+On Thu, 13 Jun 2024 08:11:48 +0200
+Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > I've added one more comment to v5, with that fixed I can take this.
+> >  
+> 
+> So how is this supposed to work wrt to the rigid 'no user visible
+> regressions' rule, given that this whole thing is a best effort thing
 
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
----
- Documentation/admin-guide/mm/damon/usage.rst | 8 +++++++-
- Documentation/mm/damon/design.rst            | 4 ++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+This has nothing to do with user space. The kernel command line has
+broken in the past. If you update the kernel, you can update the
+command line. There's no "no user visible regressions" rule. It's
+"Don't break user space". This has nothing to do with user space.
 
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 7bff54963975..84d62d16c9f9 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -300,6 +300,10 @@ from the file and their meaning are same to those of the list on
- The ``apply_interval_us`` file is for setting and getting the scheme's
- :ref:`apply_interval <damon_design_damos>` in microseconds.
- 
-+The ``target_nid`` file is for setting the migration target node, which is
-+only meaningful when the ``action`` is either ``migrate_hot`` or
-+``migrate_cold``.
-+
- .. _sysfs_access_pattern:
- 
- schemes/<N>/access_pattern/
-@@ -759,7 +763,9 @@ list on :ref:`design doc <damon_design_damos_action>`.
-  - 4: ``nohugepage``
-  - 5: ``lru_prio``
-  - 6: ``lru_deprio``
-- - 7: ``stat``
-+ - 7: ``migrate_hot``
-+ - 8: ``migrate_cold``
-+ - 9: ``stat``
- 
- Quota
- ~~~~~
-diff --git a/Documentation/mm/damon/design.rst b/Documentation/mm/damon/design.rst
-index 3df387249937..3f12c884eb3a 100644
---- a/Documentation/mm/damon/design.rst
-+++ b/Documentation/mm/damon/design.rst
-@@ -325,6 +325,10 @@ that supports each action are as below.
-    Supported by ``paddr`` operations set.
-  - ``lru_deprio``: Deprioritize the region on its LRU lists.
-    Supported by ``paddr`` operations set.
-+ - ``migrate_hot``: Migrate the regions prioritizing warmer regions.
-+   Supported by ``paddr`` operations set.
-+ - ``migrate_cold``: Migrate the regions prioritizing colder regions.
-+   Supported by ``paddr`` operations set.
-  - ``stat``: Do nothing but count the statistics.
-    Supported by all operations sets.
- 
--- 
-2.34.1
+> to begin with. This needs at least a huge disclaimer that this rule
+> does not apply, and if this works today, there is no guarantee that it
+> will keep working on newer kernels. Otherwise, you will be making the
+> job of the people who work on the boot code significantly more
+> difficult. And even then, I wonder whether Linus and #regzcop are
+> going to honour such a disclaimer.
 
+Again, this has nothing to do with user space. The rule Linus talks
+about is breaking user space. This is about kernel debugging. Something
+*completely different*!
+
+> 
+> So this belongs downstream, unless some guarantees can be provided
+> that this functionality is exempt from the usual regression policies.
+
+I disagree. kexec/kdump also has the same issues.
+
+
+-- Steve
