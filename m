@@ -1,125 +1,153 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461D214B091
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 22:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D076F14D71E;
+	Thu, 13 Jun 2024 22:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718317096; cv=none; b=RcVuLcjzkOyK1/3rpZKD/9aULcBtA5PwnwaLQuMJfwgTzCNgt3XLkmeS7OSC8edOYNsRa16G9B4lZHMPj466jkJlDJerXlZWZv774AHcbp2aJk/poXqpouIsVQ6kYLCz13xFY99bIX0tLr4M4Y9GZ4U5vdX/r6YwM5vuYa8qadU=
+	t=1718318178; cv=none; b=IRIM3O5mGjlIo6ouFSxN2fo9QiLyiBWcCQBCnJJnsyS5Ap+fhuW+abDGOBVQ2qr6b0u0LT9Jc3mxKxgkDH7kXg8oHO+OsjD9tooNgbcKv+r+rcScsHR80dpvFwDGHRecvzOLn6uWVYv94fL2kPjpCDOQHExiLUpnJShePJ2uboY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718317096; c=relaxed/simple;
-	bh=GspCeXbe53JYdKAHLrPNjz5Bk3zxp4umRvOyOhKibSg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hq6U90eyeEvt8yMECYwNrRFqHep/Bl4yha/t06xYamh5zqEgQKHscXtBqOyj67KSwU7UHYafHFZnezJ5QLSCjSumIAOhQgAbnnaFmtqpQdAv+YEkI5o5vm9owAA3Y6Rky892cWlTv931y0EQ+syX4van9LqJSFkoblQ6m3qCdb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=F8hu2pjx; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718318178; c=relaxed/simple;
+	bh=wL06T1k2B8Q2rL32NqzllZw15uOhghb5OR6zN4NYrfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=to0mo54n+A3VpFwFrtWqr1XMgDWwSnpsoMtjwJljDulzBf/oaJpSES+wFk52dV2P7kRBYFPpjL5KBShadn07VutiM4LF+S+fMgEnJpFvf0amhhdZhJaHf59RxH9AvZjQA7v7cDEf3qb9ygLO1td3mjIrCV0IqLvks4caj5B6iwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNzn+PCH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="F8hu2pjx"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebf961e504so16075561fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:18:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718317092; x=1718921892; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ivv8xxFePEFaIPZc0G+v3++kMFBsUSKEIP1k/xbjdQI=;
-        b=F8hu2pjx0zRLoSXjyqV03rAwVJHdiSjYSNKVQL+4WGHUtBPfp8aogbw/DoSrfgTk40
-         g4lHlHrkD/jvUMSm/xopfaumtQU2i+fQrQquhfUW0JSh5McZPKFiX5mdl2M+0gM6OQH0
-         qrX7dssbpzn8BL2QafqybrQHPa1cusaHOlN7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718317092; x=1718921892;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ivv8xxFePEFaIPZc0G+v3++kMFBsUSKEIP1k/xbjdQI=;
-        b=knqjDcDN8SYEJGOPiLorcs6B9vuf+cLfMEVijW+dCY3Pr3QwiDjQOiKLj0NyxmZQ6Z
-         7xnPnuIxxAHQuAGRVUAn365qEm4HueV/KpKsVm3p7mU6sXOhSDt+qdrU2DIUkSVpHwL3
-         UwswCcPBXBrxryp+jANpLc4oJUZGHUWoRnhDnjW8YWKieaBFDNPs8XVLHK6WvevmrQm7
-         9wVUYl3wxcCCRA4UcavE8D7uH2Gj8swYMV9yJN8QiHftxGiU12mmrD+OPqrav3xI3zxJ
-         8ah6qOt1Xv/F0loASCTa5636wbNEccWlgK16fqsb2hXVPSRfAiTQv8qxBr+9Ac3DLY2P
-         E5yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2GtPGWqVoqrC6gL8GVOGgLbukA8r0VzTi+UeWmZBF/tO+jGZc+eSXp0LQFj0+Hp6hDEVIg5YZAkwkBxy2Eb7EyW0HAJ+sxLwmpnjDiZP0rlyG
-X-Gm-Message-State: AOJu0Yx4ISK9SwYDM05fH7QlvHu6fZM0t8RypXGwaJVAAZPitQnr0Nwh
-	g1UUhVc0OA0pgJev1khcg3VhpnVHRteHr13tXEXsBH8NUjJ8MGNJ7uXLJcwwIayNGRSTJ/fsGw/
-	rkRbwBQ==
-X-Google-Smtp-Source: AGHT+IFiJb0iJ3lX5WVM/yFcxVd6rELoQFNIJksktLokk09c5g4GoeeTs0IQP49THyhwQ1/f2Dr1pA==
-X-Received: by 2002:a2e:9d8c:0:b0:2ec:e5:8254 with SMTP id 38308e7fff4ca-2ec0e5d135bmr6432841fa.28.1718317092118;
-        Thu, 13 Jun 2024 15:18:12 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05bf41ccsm3719481fa.28.2024.06.13.15.18.10
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jun 2024 15:18:11 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ebf961e504so16075251fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:18:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4t0CB6gm5y6RxiTbLPHD2WWXvBVNkUqXgKVeLFOBC+elMd5FizFZmqebco2wSbsSZai3/rSfR9RFKjqSjRz5OrYdST3HQsTKop1NF7LFRmbSv
-X-Received: by 2002:a2e:92d6:0:b0:2eb:242b:652a with SMTP id
- 38308e7fff4ca-2ec0e5c6ce9mr6646061fa.15.1718317090589; Thu, 13 Jun 2024
- 15:18:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNzn+PCH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3894BC32786;
+	Thu, 13 Jun 2024 22:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718318178;
+	bh=wL06T1k2B8Q2rL32NqzllZw15uOhghb5OR6zN4NYrfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gNzn+PCHszOklsBLsMSUobxEOt3oNA31VuDs0RoPQzosJ5FKK4ZZpIUgZvpeLy0Ys
+	 ZcnN3hmYy2Et0hsuuT7G67TJ4asf17PqyfivrljLeTL/7sbh/RvGLABbvGbZMLoJqz
+	 xu485Bb1Lx1Vd29xTjkzPXPGV0+7rvANw6oDJIi2Pt+mRZ9cCfxMfnI6Ph7qnmymx3
+	 hYltskgyvOGG2fxulkPoaxbcwPeKj5k3qWwWlGgnF8TbL8+KIagy8O2AKaf3C4Kwzg
+	 p+0A1IYbrvnDSRCtba5fIGMz4WOiHodY7XQ0tN7C3b7yH7t0aVrU98QV5BpB/ekqj/
+	 oHLy4+BBqawag==
+Date: Thu, 13 Jun 2024 15:36:15 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Andy Chiu <andy.chiu@sifive.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Zong Li <zong.li@sifive.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Evgenii Shatokhin <e.shatokhin@yadro.com>
+Subject: Re: [PATCH 3/8] riscv: ftrace: support fastcc in Clang for WITH_ARGS
+Message-ID: <20240613223615.GA2739249@thelio-3990X>
+References: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
+ <20240613-dev-andyc-dyn-ftrace-v4-v1-3-1a538e12c01e@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613023044.45873-1-laoar.shao@gmail.com> <20240613023044.45873-6-laoar.shao@gmail.com>
- <20240613141435.fad09579c934dbb79a3086cc@linux-foundation.org>
-In-Reply-To: <20240613141435.fad09579c934dbb79a3086cc@linux-foundation.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 13 Jun 2024 15:17:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgqrwFXK-CO8-V4fwUh5ymnUZ=wJnFyufV1dM9rC1t3Lg@mail.gmail.com>
-Message-ID: <CAHk-=wgqrwFXK-CO8-V4fwUh5ymnUZ=wJnFyufV1dM9rC1t3Lg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] mm/util: Fix possible race condition in kstrdup()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613-dev-andyc-dyn-ftrace-v4-v1-3-1a538e12c01e@sifive.com>
 
-On Thu, 13 Jun 2024 at 14:14, Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> The concept sounds a little strange.  If some code takes a copy of a
-> string while some other code is altering it, yes, the result will be a
-> mess.  This is why get_task_comm() exists, and why it uses locking.
+On Thu, Jun 13, 2024 at 03:11:08PM +0800, Andy Chiu wrote:
+> Some caller-saved registers which are not defined as function arguments
+> in the ABI can still be passed as arguments when the kernel is compiled
+> with Clang. As a result, we must save and restore those registers to
+> prevent ftrace from clobbering them.
+> 
+> - [1]: https://reviews.llvm.org/D68559
+> Reported-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
+> Closes: https://lore.kernel.org/linux-riscv/7e7c7914-445d-426d-89a0-59a9199c45b1@yadro.com/
+> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
 
-The thing is, get_task_comm() is terminally broken.
+Acked-by: Nathan Chancellor <nathan@kernel.org>
 
-Nobody sane uses it, and sometimes it's literally _because_ it uses locking.
-
-Let's look at the numbers:
-
- - 39 uses of get_task_comm()
-
- - 2 uses of __get_task_comm() because the locking doesn't work
-
- - 447 uses of raw "current->comm"
-
- - 112 uses of raw 'ta*sk->comm' (and possibly
-
-IOW, we need to just accept the fact that nobody actually wants to use
-"get_task_comm()". It's a broken interface. It's inconvenient, and the
-locking makes it worse.
-
-Now, I'm not convinced that kstrdup() is what anybody should use
-should, but of the 600 "raw" uses of ->comm, four of them do seem to
-be kstrdup.
-
-Not great, I think they could be removed, but they are examples of
-people doing this. And I think it *would* be good to have the
-guarantee that yes, the kstrdup() result is always a proper string,
-even if it's used for unstable sources. Who knows what other unstable
-sources exist?
-
-I do suspect that most of the raw uses of 'xyz->comm' is for
-printouts. And I think we would be better with a '%pTSK' vsnprintf()
-format thing for that.
-
-Sadly, I don't think coccinelle can do the kinds of transforms that
-involve printf format strings.
-
-And no, a printk() string still couldn't use the locking version.
-
-               Linus
+> ---
+>  arch/riscv/include/asm/ftrace.h |  7 +++++++
+>  arch/riscv/kernel/asm-offsets.c |  7 +++++++
+>  arch/riscv/kernel/mcount-dyn.S  | 16 ++++++++++++++--
+>  3 files changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> index 9eb31a7ea0aa..5f81c53dbfd9 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -144,6 +144,13 @@ struct ftrace_regs {
+>  			unsigned long a5;
+>  			unsigned long a6;
+>  			unsigned long a7;
+> +#ifdef CONFIG_CC_IS_CLANG
+> +			unsigned long t2;
+> +			unsigned long t3;
+> +			unsigned long t4;
+> +			unsigned long t5;
+> +			unsigned long t6;
+> +#endif
+>  		};
+>  	};
+>  };
+> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+> index b09ca5f944f7..db5a26fcc9ae 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -497,6 +497,13 @@ void asm_offsets(void)
+>  	DEFINE(FREGS_SP,	    offsetof(struct ftrace_regs, sp));
+>  	DEFINE(FREGS_S0,	    offsetof(struct ftrace_regs, s0));
+>  	DEFINE(FREGS_T1,	    offsetof(struct ftrace_regs, t1));
+> +#ifdef CONFIG_CC_IS_CLANG
+> +	DEFINE(FREGS_T2,	    offsetof(struct ftrace_regs, t2));
+> +	DEFINE(FREGS_T3,	    offsetof(struct ftrace_regs, t3));
+> +	DEFINE(FREGS_T4,	    offsetof(struct ftrace_regs, t4));
+> +	DEFINE(FREGS_T5,	    offsetof(struct ftrace_regs, t5));
+> +	DEFINE(FREGS_T6,	    offsetof(struct ftrace_regs, t6));
+> +#endif
+>  	DEFINE(FREGS_A0,	    offsetof(struct ftrace_regs, a0));
+>  	DEFINE(FREGS_A1,	    offsetof(struct ftrace_regs, a1));
+>  	DEFINE(FREGS_A2,	    offsetof(struct ftrace_regs, a2));
+> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
+> index 745dd4c4a69c..e988bd26b28b 100644
+> --- a/arch/riscv/kernel/mcount-dyn.S
+> +++ b/arch/riscv/kernel/mcount-dyn.S
+> @@ -96,7 +96,13 @@
+>  	REG_S	x8,  FREGS_S0(sp)
+>  #endif
+>  	REG_S	x6,  FREGS_T1(sp)
+> -
+> +#ifdef CONFIG_CC_IS_CLANG
+> +	REG_S	x7,  FREGS_T2(sp)
+> +	REG_S	x28, FREGS_T3(sp)
+> +	REG_S	x29, FREGS_T4(sp)
+> +	REG_S	x30, FREGS_T5(sp)
+> +	REG_S	x31, FREGS_T6(sp)
+> +#endif
+>  	// save the arguments
+>  	REG_S	x10, FREGS_A0(sp)
+>  	REG_S	x11, FREGS_A1(sp)
+> @@ -115,7 +121,13 @@
+>  	REG_L	x8, FREGS_S0(sp)
+>  #endif
+>  	REG_L	x6,  FREGS_T1(sp)
+> -
+> +#ifdef CONFIG_CC_IS_CLANG
+> +	REG_L	x7,  FREGS_T2(sp)
+> +	REG_L	x28, FREGS_T3(sp)
+> +	REG_L	x29, FREGS_T4(sp)
+> +	REG_L	x30, FREGS_T5(sp)
+> +	REG_L	x31, FREGS_T6(sp)
+> +#endif
+>  	// restore the arguments
+>  	REG_L	x10, FREGS_A0(sp)
+>  	REG_L	x11, FREGS_A1(sp)
+> 
+> -- 
+> 2.43.0
+> 
