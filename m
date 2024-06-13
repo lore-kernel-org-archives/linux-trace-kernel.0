@@ -1,123 +1,76 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B884314430C;
-	Thu, 13 Jun 2024 13:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61952161;
+	Thu, 13 Jun 2024 13:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718285806; cv=none; b=PNuZZdpw2XSX/1bN8cPS206sm5yfe+MPfO/Yn0PvNSu73wFcM2sQrgQt1wL0qAea0qVaxeTKQAe0nFaFgDqvaTzO7O/GvgNIIUi0KZCZBX2EEfz/o6MTSsLvsvMthWxAfOasIGHmGGNKKTdxGeQaPqdxx+UazIM7e1d7Uqc6TK8=
+	t=1718286747; cv=none; b=F+Uf0/1lFu0UzgH+kC3p31tGnhMFP+K+CyGEgxnR/0/y86MlUde8hWzSXt2DjFM3Ns1IBHkzNGWennR7nTMl83jHWGyrZ6gzFQZcPpZmDH0WaeiqkpfHmmHIAdaUrPS33ZKGB9uyJVAaoxma8lZJ2WUv8J5rjBHgS8+8lmtSlNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718285806; c=relaxed/simple;
-	bh=e65AO8YkGqI6QNmDImUltk/oT8Th8lPKfyfsMwtaoc8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sgchlM9P2uJ9RhjZ/ewIcxoswEKhj6XCZB88RGMpbCTm0BRTGyJRaipOYC+5pUvkrJKinMfBC+qpdH5VeHac4Dpw9C5TKS7FbdyU7/zA3fKcw/BSizo1WW8h/LepIY28THZ28nmsA+F5GuihS59sXzLuE3EtmneK41GvWH6O438=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W0NcC6mT1zmb2t;
-	Thu, 13 Jun 2024 21:31:55 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 761B1140258;
-	Thu, 13 Jun 2024 21:36:41 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 13 Jun 2024 21:36:41 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <christophe.leroy@csgroup.eu>,
-	<naveen.n.rao@linux.ibm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <mcgrof@kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<masahiroy@kernel.org>, <nathan@kernel.org>, <nicolas@fjasle.eu>,
-	<kees@kernel.org>, <james.clark@arm.com>, <kent.overstreet@linux.dev>,
-	<yhs@fb.com>, <jpoimboe@kernel.org>, <peterz@infradead.org>
-CC: <zhengyejian1@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-modules@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-Subject: [PATCH 5/6] ftrace: Fix possible out-of-bound issue in ftrace_process_locs()
-Date: Thu, 13 Jun 2024 21:37:10 +0800
-Message-ID: <20240613133711.2867745-6-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240613133711.2867745-1-zhengyejian1@huawei.com>
-References: <20240613133711.2867745-1-zhengyejian1@huawei.com>
+	s=arc-20240116; t=1718286747; c=relaxed/simple;
+	bh=9dHSMOKqQ7eHeWqhAwwz31AHL3NqJp2gEZYZPH2vk4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Fxrgx+g2+S6WxZSgSFf4hC22+pF+WIcQgxl4xsQDBI2QPWBZ2BJ3U64LXC9HwJYsKVj0ZzeW07NFmLowWf2YjJZ5s3iNzT+N9+A6s1EavqF0ZeHf+BaBJ6Ug+s+YCMaKtVvflVPPCwZAg2gF00PFgmFKlA7z84iwSjb7D0Jbrlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293EEC2BBFC;
+	Thu, 13 Jun 2024 13:52:25 +0000 (UTC)
+Date: Thu, 13 Jun 2024 09:52:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: [PATCH] function_graph: Add READ_ONCE() when accessing
+ fgraph_array[]
+Message-ID: <20240613095223.1f07e3a4@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In ftrace_process_locs(), a series pages are prepared and linked in
-start_pg, then fentry records are skipped or added, then unused pages
-are freed.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-However, assume that all records are skipped, currently the start_pg
-will still be in list of ftrace_pages_start but without any record.
-Then in ftrace_free_mem() index record by (pg->index - 1) will be out
-of bound.
+In function_graph_enter() there's a loop that looks at fgraph_array[]
+elements which are fgraph_ops. It first tests if it is a fgraph_stub op,
+and if so skips it, as that's just there as a place holder. Then it checks
+the fgraph_ops filters to see if the ops wants to trace the current
+function.
 
-To fix this issue, properly handle with unused start_pg and add
-WARN_ON_ONCE() where the records need to be indexed.
+But if the compiler reloads the fgraph_array[] after the check against
+fgraph_stub, it could race with the fgraph_array[] being updated with the
+fgraph_stub. That would cause the stub to be processed. But the stub has a
+null "func_hash" field which will cause a NULL pointer dereference.
 
-Fixes: 26efd79c4624 ("ftrace: Fix possible warning on checking all pages used in ftrace_process_locs()")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Add a READ_ONCE() so that the gops that is compared against the
+fgraph_stub is also the gops that is processed later.
+
+Link: https://lore.kernel.org/all/CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com/
+
+Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ kernel/trace/fgraph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 0e8628e4d296..c46c35ac9b42 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6575,10 +6575,22 @@ static int ftrace_process_locs(struct module *mod,
- 		rec->ip = addr;
- 	}
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 8317d1a7f43a..fc205ad167a9 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -641,7 +641,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+ 	{
+ 		for_each_set_bit(i, &fgraph_array_bitmask,
+ 					 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
+-			struct fgraph_ops *gops = fgraph_array[i];
++			struct fgraph_ops *gops = READ_ONCE(fgraph_array[i]);
+ 			int save_curr_ret_stack;
  
--	if (pg->next) {
-+	if (pg->index == 0) {
-+		/* No record is added on the current page, so it's unused */
-+		pg_unuse = pg;
-+	} else if (pg->next) {
-+		/* Current page has records, so it's next page is unused */
- 		pg_unuse = pg->next;
- 		pg->next = NULL;
- 	}
-+	/*
-+	 * Even the start_pg hasn't been used, that means, no record has
-+	 * been added, so restore state of ftrace_pages and just go out.
-+	 */
-+	if (pg_unuse == start_pg) {
-+		ftrace_pages->next = NULL;
-+		goto out;
-+	}
- 
- 	/* Assign the last page to ftrace_pages */
- 	ftrace_pages = pg;
-@@ -6794,6 +6806,8 @@ void ftrace_release_mod(struct module *mod)
- 	 */
- 	last_pg = &ftrace_pages_start;
- 	for (pg = ftrace_pages_start; pg; pg = *last_pg) {
-+		/* The page should have at lease one record */
-+		WARN_ON_ONCE(!pg->index);
- 		rec = &pg->records[0];
- 		if (within_module(rec->ip, mod)) {
- 			/*
-@@ -7176,6 +7190,8 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 		mod_map = allocate_ftrace_mod_map(mod, start, end);
- 
- 	for (pg = ftrace_pages_start; pg; last_pg = &pg->next, pg = *last_pg) {
-+		/* The page should have at lease one record */
-+		WARN_ON_ONCE(!pg->index);
- 		if (end < pg->records[0].ip ||
- 		    start >= (pg->records[pg->index - 1].ip + MCOUNT_INSN_SIZE))
- 			continue;
+ 			if (gops == &fgraph_stub)
 -- 
-2.25.1
+2.43.0
 
