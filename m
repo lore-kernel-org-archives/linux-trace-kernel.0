@@ -1,136 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE2317C72;
-	Thu, 13 Jun 2024 15:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0B6A23;
+	Thu, 13 Jun 2024 15:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718291526; cv=none; b=ZYBtLcMnkkUpgH9gWaYdSP1E3WsXAbtcV1Ou0r35pzXvwUdT23rcln3irB4mBzZsAj9rfeFVSv5BnqT/UaA7xG0od50wy4R4WCd34CjJdplH/sKH8uHmiV6CwabuVZCRkN/mj4p1QH3tbtClVkg0rf3o4Gb7uBsRi5Zbfca6RYA=
+	t=1718293209; cv=none; b=EAbuhC6yjGbBZoSg7wVfBdQxPNaVsoD9DIujwm0c4cC+u0761txCOvvl7VsFojBPFOrVuix6uOQz1NWIzLIRZu82BAzW6yriblMJz8NRCc13wpNZEJwxzJAhj7rLKmT1NY3N7qLQXQHw3WTl9XEwsx4cz/UDpcikig8vMVaDxcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718291526; c=relaxed/simple;
-	bh=Js8RVIcQWrK8SBzBs0EgFN3NPMVLrfZVEqHlgM+8ujY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fb9Rrr7NXtNhvCWyjuERHOori/5Sw77A71qaSzaLu6IA9TpS7vs1lrZ9ml88P3mFeRMSmPrrcokKwWsq9r0kblGU4p8XPFXJKA5fRer9rQqURUZwf4KE5k3m+IIJQzG8UjPeOXhfBb/A+UFch+7mZlDH2XWNqLY6Sw6E45hQHLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLFhTImn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718293209; c=relaxed/simple;
+	bh=NXZcvOEnxUr1dkE9zrg8KiNNlIismJj85YQ/p8KMwMo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JUWgzjzod8LeBpd7qXh5eAa5RerxC+zbybpTq8P/MIeoULHjLpvIBNs+VwRTy804V9ApVGD/2U95hbd3WeQmEb63rpj3sApebQ1vWl7f+d+c0qtpWyqq2/ixZDB6nFFm+jiMzkrA9pkmdHxLuZIfyyBxupMoVO0u8XNU/Cv7VjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Xg3HEhtN; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLFhTImn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B4A1C2BBFC;
-	Thu, 13 Jun 2024 15:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718291526;
-	bh=Js8RVIcQWrK8SBzBs0EgFN3NPMVLrfZVEqHlgM+8ujY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=PLFhTImnGBfruVfem7uoDdRQY9dt85NU9uz9NI1nWR1Tl8ZwZA2Rn8Oo+pStfyXsV
-	 EcyX+RV9PlAq8NGbBuCq1xDrwXHGIZbMJoy9lp/uxPIyy3x1VXFO0lRdU9guvTXWpK
-	 fWfovpAiSyeT2cI38X08BEvOMCHEP5MPP0MmNOwv9CguIjdgxn95t02Yg8rhsTjHrv
-	 JMsJdorpaWlfhjWGwd4su7F+sxA8gjgfARcKbZKcoULYJLtjoN0Cnd2hb1zWGCyIw6
-	 EdYmQujOfzjZ7hZCGpSCTtFxQu7IFk8SsutSm4TeEzC3kDQYyJTjRTvS5rNl7PGpcJ
-	 CzwVznRaVDJlg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A66DDCE09E0; Thu, 13 Jun 2024 08:12:05 -0700 (PDT)
-Date: Thu, 13 Jun 2024 08:12:05 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <6595ff2a-690e-4d6c-9be5-eb83f2df23fa@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
- <Zmov7ZaL-54T9GiM@zx2c4.com>
- <Zmo9-YGraiCj5-MI@zx2c4.com>
- <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
- <Zmrkkel0Fo4_g75a@zx2c4.com>
- <e06440e2-9121-4c92-8bf2-945977987052@paulmck-laptop>
- <Zmr-KPG9F6w-uzys@zx2c4.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xg3HEhtN"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45DES8dv002382;
+	Thu, 13 Jun 2024 15:39:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=v73BMs0EqfMCw
+	xJniJdo3jdaknlggr5A1qJ50X9w6PM=; b=Xg3HEhtNfw4Nggs6FgLxvW/orJyHi
+	T4CAPSaP5Pa6GxF3CrmAY/YDBzM+/N6poCa64kZ4m1eRvOaDNa+6PDOJx01cljgS
+	8H1Bo49BayCQsOe7qbu2VBIQW5dYHBaaQx0hCdarYas8/M+CuOxe+iolWQQ/m5m/
+	ysqqDxXmJr32+PF98kbzTfRXDfhdH/6oc1hqSzApmH4O46EGRs8oyxQmvtf2H/3a
+	0u4AJvLKmryv0Xd8fmED/bGLURZwbVgznvYl/cO6VPkZEUtLxzSkc38j5X+ZziBo
+	GfwnpgrrRBg1oW8OpE2RYv7ok8BEDtgHs3pvIu6J0dCtx7CdJDZ27+nWQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr1rbgde1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 15:39:41 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45DFdeJI014227;
+	Thu, 13 Jun 2024 15:39:40 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yr1rbgddx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 15:39:40 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45DEAZNg008701;
+	Thu, 13 Jun 2024 15:39:39 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn4b3rk09-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Jun 2024 15:39:39 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45DFdYlL53281258
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Jun 2024 15:39:36 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F407F2005A;
+	Thu, 13 Jun 2024 15:39:33 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 800F62004F;
+	Thu, 13 Jun 2024 15:39:33 +0000 (GMT)
+Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 13 Jun 2024 15:39:33 +0000 (GMT)
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v4 02/35] kmsan: Make the tests compatible with kmsan.panic=1
+Date: Thu, 13 Jun 2024 17:34:04 +0200
+Message-ID: <20240613153924.961511-3-iii@linux.ibm.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240613153924.961511-1-iii@linux.ibm.com>
+References: <20240613153924.961511-1-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zmr-KPG9F6w-uzys@zx2c4.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: CdYaY4n1sBSfG-XGjjLpn6owGrgb3SMW
+X-Proofpoint-GUID: Y8_1HwUsdyB2-FrEKBSNLoa0NfmRdcsp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-13_09,2024-06-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406130112
 
-On Thu, Jun 13, 2024 at 04:11:52PM +0200, Jason A. Donenfeld wrote:
-> On Thu, Jun 13, 2024 at 05:46:11AM -0700, Paul E. McKenney wrote:
-> > How about a kmem_cache_destroy_rcu() that marks that specified cache
-> > for destruction, and then a kmem_cache_destroy_barrier() that waits?
-> > 
-> > I took the liberty of adding your name to the Google document [1] and
-> > adding this section:
-> 
-> Cool, though no need to make me yellow!
+It's useful to have both tests and kmsan.panic=1 during development,
+but right now the warnings, that the tests cause, lead to kernel
+panics.
 
-No worries, Jakub is also colored yellow.  People added tomorrow
-will be cyan if I follow my usual change-color ordering.  ;-)
+Temporarily set kmsan.panic=0 for the duration of the KMSAN testing.
 
-> > > But then, if that mechanism generally works, we don't really need a new
-> > > function and we can just go with the first option of making
-> > > kmem_cache_destroy() asynchronously wait. It'll wait, as you described,
-> > > but then we adjust the tail of every kfree_rcu batch freeing cycle to
-> > > check if there are _still_ any old outstanding kmem_cache_destroy()
-> > > requests. If so, then we can splat and keep the old debugging info we
-> > > currently have for finding memleaks.
-> > 
-> > The mechanism can always be sabotaged by memory-leak bugs on the part
-> > of the user of the kmem_cache structure in play, right?
-> > 
-> > OK, but I see your point.  I added this to the existing
-> > "kmem_cache_destroy() Lingers for kfree_rcu()" section:
-> > 
-> > 	One way of preserving this debugging information is to splat if
-> > 	all of the slab’s memory has not been freed within a reasonable
-> > 	timeframe, perhaps the same 21 seconds that causes an RCU CPU
-> > 	stall warning.
-> > 
-> > Does that capture it?
-> 
-> Not quite what I was thinking. Your 21 seconds as a time-based thing I
-> guess could be fine. But I was mostly thinking:
-> 
-> 1) kmem_cache_destroy() is called, but there are outstanding objects, so
->    it defers.
-> 
-> 2) Sometime later, a kfree_rcu_work batch freeing operation runs.
+Reviewed-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
+ mm/kmsan/kmsan_test.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Or not, if there has been a leak and there happens to be no outstanding
-kfree_rcu() memory.
+diff --git a/mm/kmsan/kmsan_test.c b/mm/kmsan/kmsan_test.c
+index 07d3a3a5a9c5..9bfd11674fe3 100644
+--- a/mm/kmsan/kmsan_test.c
++++ b/mm/kmsan/kmsan_test.c
+@@ -659,9 +659,13 @@ static void test_exit(struct kunit *test)
+ {
+ }
+ 
++static int orig_panic_on_kmsan;
++
+ static int kmsan_suite_init(struct kunit_suite *suite)
+ {
+ 	register_trace_console(probe_console, NULL);
++	orig_panic_on_kmsan = panic_on_kmsan;
++	panic_on_kmsan = 0;
+ 	return 0;
+ }
+ 
+@@ -669,6 +673,7 @@ static void kmsan_suite_exit(struct kunit_suite *suite)
+ {
+ 	unregister_trace_console(probe_console, NULL);
+ 	tracepoint_synchronize_unregister();
++	panic_on_kmsan = orig_panic_on_kmsan;
+ }
+ 
+ static struct kunit_suite kmsan_test_suite = {
+-- 
+2.45.1
 
-> 3) At the end of this batch freeing, the kernel notices that the
->    kmem_cache whose destruction was previously deferred still has
->    outstanding objects and has not been destroyed. It can conclude that
->    there's thus been a memory leak.
-
-And the batch freeing can be replicated across CPUs, so it would be
-necessary to determine which was last to do this effective.  Don't get
-me wrong, this can be done, but the performance/latency tradeoffs can
-be interesting.
-
-> In other words, instead of having to do this based on timers, you can
-> just have the batch freeing code ask, "did those pending kmem_cache
-> destructions get completed as a result of this last operation?"
-
-I agree that kfree_rcu_work-batch time is a good time to evaluate slab
-(and I have added this to the document), but I do not believe that it
-can completely replace timeouts.
-
-							Thanx, Paul
