@@ -1,132 +1,283 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB509137C20;
-	Thu, 13 Jun 2024 19:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDDD149E0A;
+	Thu, 13 Jun 2024 19:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718305764; cv=none; b=DWYbhgdpZS/HCD7O8CddL//tSVedSGYcROmijJ/R/uP7PmNNPR6cQUVT3g5TvdT5soTPM41UsD+bzza0MVOx39Zppmlz3ab++gRldO5pBMZA6FQ22E2IeMovZw0ukGtdOryCk5bAgH2lOEB9zwxlyFWgKhA+WDN/2SPYmzsV7x8=
+	t=1718306544; cv=none; b=Gszfz3pJvZaqvjilrNQQ37RABK1j59muBcxBLWpW6q+oozcoWTXqIhp5Hp7CHL+HN7lYRUbAoDYSwEntQDyX+4AY79sV/Ym/nDmn4kTvRVGqPXVJ1tfHr/gUydpzfn05dcOH2PJI2F/n6kV/dMZ9g+qz8273sRTQk5IQXmIgupw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718305764; c=relaxed/simple;
-	bh=HFWyWh6KpryPRqXeZqS8bpwy4cpqT7565JH13UCYe8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=URFTR3E1b82UiJldQXEDSVB+81XT14dvazmUnQ1xmmWrPkqxJ60oAQQPTip+jCV0NBpHp9mABL8MVyAZTINsOAaRb3IFKvGZgU9l67xF22UpQckhVG0beTo9YiduTZZ1cNngRDusphIOUkyTc+s2YcFxHggYNIASFngZtR4na0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r15KrCdS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718306544; c=relaxed/simple;
+	bh=m99D/EYeY9r1H12JBRzT3mckwwjIV8/NOX61Q0pTF9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DgFhTqjjBwyoD/syCpcOQTAVMJGB2HkSvfvbZuwKsqijveGYMRaUyXhEeANJp6h/BAQwDPvQdXqE4cz+haDuuixc43i0ckcj8evZbbz1gQe5u/zix5T9JrZ2pSeGey9WFERW44ZM2n5YBBYQ3RmYbkaocsTl+F54fZfFU4oMl/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rm29ljGR; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r15KrCdS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C484C2BBFC;
-	Thu, 13 Jun 2024 19:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718305763;
-	bh=HFWyWh6KpryPRqXeZqS8bpwy4cpqT7565JH13UCYe8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r15KrCdS9IdIHad1rdEnJ2d8ckWytMU6LKbZHtECfabZeOOL5NeBLIxxPBq3z0zys
-	 3slzhtA9cdHuWZnGZHDV5NLs2bTHbBZynuD7Q8DQOxVA09rVcITHteKZ+9+HgLXR5M
-	 HdoVCKVKrpzgEk2cSlL6jYQ71DUrUvpCH8y/LyXJsqZGTYjaU0YmUIsxGTKPGUwrAM
-	 uV1gBh1sR/ghA14TJc9M7AyHJIwf42TPHHmnNcaLCqawQObi8CV5wvWxi8CbRIG6cM
-	 TBm0dJY8W1NUsdLFkBf/mQlzHFacpAS20ZjS1cela3jB5ird9bozLTcvGNoQEx+Z3j
-	 J9N0ANl5gHr0g==
-Date: Thu, 13 Jun 2024 12:09:20 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Chiu <andy.chiu@sifive.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Zong Li <zong.li@sifive.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	Evgenii Shatokhin <e.shatokhin@yadro.com>
-Subject: Re: [PATCH 4/8] riscv: ftrace: align patchable functions to 4 Byte
- boundary
-Message-ID: <20240613190920.GB1272931@thelio-3990X>
-References: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
- <20240613-dev-andyc-dyn-ftrace-v4-v1-4-1a538e12c01e@sifive.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rm29ljGR"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so9084335e9.1;
+        Thu, 13 Jun 2024 12:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718306541; x=1718911341; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=imGPK4z3NEfZjdDaqJiJJhSbCgQiRrtwTd3vB04zoVI=;
+        b=Rm29ljGR4yrgriaQNWtggaMRdlX5ElvYS4veCg5aw5D8Ik18XuawdNDKNIct4jh2m3
+         dTN5rqgmZwY61C27h2QqfZQpvZAKFGh+t3+FkqIECQm6hSswvz51tWrDP+vIbSNowswu
+         DNONSAhn7qB/pUGEOQ3j0c9xS0fval4Yz/5vOhiAnujwplQFQs+3rcT2DdSS0RAWPRFz
+         Pj0k5mBSsoxCLN/8kpU3FksnmxSPtick8n4Bd3GA5wlEWGRb1W0IjuWJiUcDlADEZzB+
+         eDN/K361pS74xRKf/75lhrXnZYhT5ibfV0a98Ja4KUgR3GVTLub89/NihqTX0DlY8RaR
+         eaHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718306541; x=1718911341;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=imGPK4z3NEfZjdDaqJiJJhSbCgQiRrtwTd3vB04zoVI=;
+        b=lV24802W19IBSb/DwgdXsVX0ok4BX9vf23P/KSofJjHez8xaxdJzzX+060OdpyTln0
+         tKRl+U2qyQM1tkkWSzfDkluZkk7RrQx/OHzGG1PB+DhTXXK3IUW11LZB/kIQ1f683k1m
+         ZhiBbnt1PRg0S4wGMSLSgZovVAUN/hps56YOItAQDk8YF7cEeQ9nSjLDFAlwbx137We8
+         x7LwZ/f6UsVSuV4YpCD2drYBblL/ZSu3UyAi9RZPDY6lxR/RO+9G4cDgS+TIU80lkJaQ
+         hWF8RPZi/KhG4cJSxYrZRa7y08Sv7RHN7cgi1c92BYhEDR0oICZswGkQc4dui87pL4hl
+         16Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXyXuyvh/ByvldoGkDkptrCIoOlWF14qKr8yJxioagOAnMvZNGgl5/HOkOk6FT6hOEZCgSRi5hiuwEAKFOQUETJb+hq4SM+LKJH7LsKAmppNupnfuz4fsGoni9U9U9K9gd6U/P/hcUxnqLg68Vndg6Na16m2mqvo2g4
+X-Gm-Message-State: AOJu0YzE7DgwRfXB+Tyb1z0igmeShWgfEmn1sfYHB/WdceBiPf/XExOI
+	msM5/cF7Hjg9sA+FzI6sENzJb++sUOj3sYiWLwti2az01yT91Bw=
+X-Google-Smtp-Source: AGHT+IFH3yjMnIlYZVz60Gd2uWIgUoqeFphBchYabfiO5ee8/amBOEzYRoX9UrhLZ9icxXjC3KMjCw==
+X-Received: by 2002:a05:600c:19cf:b0:421:7ab8:59c with SMTP id 5b1f17b1804b1-42304825ce7mr8523605e9.10.1718306541180;
+        Thu, 13 Jun 2024 12:22:21 -0700 (PDT)
+Received: from p183 ([46.53.250.201])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f6127d6dsm34575855e9.26.2024.06.13.12.22.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 12:22:20 -0700 (PDT)
+Date: Thu, 13 Jun 2024 22:22:18 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] linux++: delete some forward declarations
+Message-ID: <5ad5556c-7c32-45b7-89cf-f723c9d7332b@p183>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240613-dev-andyc-dyn-ftrace-v4-v1-4-1a538e12c01e@sifive.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+g++ doesn't like forward enum declarations:
 
-On Thu, Jun 13, 2024 at 03:11:09PM +0800, Andy Chiu wrote:
-> We are changing ftrace code patching in order to remove dependency from
-> stop_machine() and enable kernel preemption. This requires us to align
-> functions entry at a 4-B align address.
-> 
-> However, -falign-functions on older versions of GCC alone was not strong
-> enoungh to align all functions. In fact, cold functions are not aligned
-> after turning on optimizations. We consider this is a bug in GCC and
-> turn off guess-branch-probility as a workaround to align all functions.
-> 
-> GCC bug id: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88345
-> 
-> The option -fmin-function-alignment is able to align all functions
-> properly on newer versions of gcc. So, we add a cc-option to test if
-> the toolchain supports it.
-> 
-> Suggested-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
-> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
-> ---
->  arch/riscv/Kconfig  | 1 +
->  arch/riscv/Makefile | 7 ++++++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index b94176e25be1..80b8d48e1e46 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -203,6 +203,7 @@ config CLANG_SUPPORTS_DYNAMIC_FTRACE
->  config GCC_SUPPORTS_DYNAMIC_FTRACE
->  	def_bool CC_IS_GCC
->  	depends on $(cc-option,-fpatchable-function-entry=8)
-> +	depends on $(cc-option,-fmin-function-alignment=4) || !RISCV_ISA_C
+	error: use of enum ‘E’ without previous declaration
+	   64 | enum E;
 
-Please use CC_HAS_MIN_FUNCTION_ALIGNMENT (from arch/Kconfig), which
-already checks for support for this option.
+Delete those which aren't used.
 
->  config HAVE_SHADOW_CALL_STACK
->  	def_bool $(cc-option,-fsanitize=shadow-call-stack)
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index 06de9d365088..74628ad8dcf8 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -14,8 +14,13 @@ endif
->  ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
->  	LDFLAGS_vmlinux += --no-relax
->  	KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-> +ifeq ($(CONFIG_CC_IS_CLANG),y)
+Delete some unused/unnecessary forward struct declarations for a change.
 
-Same here, please invert this and use
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-  ifdef CONFIG_CC_HAS_MIN_FUNCTION_ALIGNMENT
+ fs/ramfs/inode.c         |    1 -
+ include/linux/console.h  |    2 --
+ include/linux/device.h   |    3 ---
+ include/linux/ftrace.h   |    4 ----
+ include/linux/security.h |    6 ------
+ include/linux/signal.h   |    2 --
+ include/linux/syscalls.h |    7 -------
+ include/linux/sysfs.h    |    2 --
+ mm/internal.h            |    4 ----
+ mm/shmem.c               |    1 -
+ 10 files changed, 32 deletions(-)
 
-like the main Makefile does.
-
-> +	cflags_ftrace_align := -falign-functions=4
-> +else
-> +	cflags_ftrace_align := -fmin-function-alignment=4
-> +endif
->  ifeq ($(CONFIG_RISCV_ISA_C),y)
-> -	CC_FLAGS_FTRACE := -fpatchable-function-entry=4
-> +	CC_FLAGS_FTRACE := -fpatchable-function-entry=4 $(cflags_ftrace_align)
->  else
->  	CC_FLAGS_FTRACE := -fpatchable-function-entry=2
->  endif
-> 
-> -- 
-> 2.43.0
-> 
-> 
+--- a/fs/ramfs/inode.c
++++ b/fs/ramfs/inode.c
+@@ -51,7 +51,6 @@ struct ramfs_fs_info {
+ 
+ #define RAMFS_DEFAULT_MODE	0755
+ 
+-static const struct super_operations ramfs_ops;
+ static const struct inode_operations ramfs_dir_inode_operations;
+ 
+ struct inode *ramfs_get_inode(struct super_block *sb,
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -21,10 +21,8 @@
+ #include <linux/vesa.h>
+ 
+ struct vc_data;
+-struct console_font_op;
+ struct console_font;
+ struct module;
+-struct tty_struct;
+ struct notifier_block;
+ 
+ enum con_scroll {
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -36,10 +36,7 @@
+ struct device;
+ struct device_private;
+ struct device_driver;
+-struct driver_private;
+ struct module;
+-struct class;
+-struct subsys_private;
+ struct device_node;
+ struct fwnode_handle;
+ struct iommu_group;
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -531,8 +531,6 @@ extern const void *ftrace_expected;
+ 
+ void ftrace_bug(int err, struct dyn_ftrace *rec);
+ 
+-struct seq_file;
+-
+ extern int ftrace_text_reserved(const void *start, const void *end);
+ 
+ struct ftrace_ops *ftrace_ops_trampoline(unsigned long addr);
+@@ -1147,8 +1145,6 @@ static inline void unpause_graph_tracing(void) { }
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 
+ #ifdef CONFIG_TRACING
+-enum ftrace_dump_mode;
+-
+ #define MAX_TRACER_SIZE		100
+ extern char ftrace_dump_on_oops[];
+ extern int ftrace_dump_on_oops_enabled(void);
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -41,7 +41,6 @@ struct rlimit;
+ struct kernel_siginfo;
+ struct sembuf;
+ struct kern_ipc_perm;
+-struct audit_context;
+ struct super_block;
+ struct inode;
+ struct dentry;
+@@ -59,8 +58,6 @@ struct xfrm_sec_ctx;
+ struct mm_struct;
+ struct fs_context;
+ struct fs_parameter;
+-enum fs_value_type;
+-struct watch;
+ struct watch_notification;
+ struct lsm_ctx;
+ 
+@@ -183,8 +180,6 @@ struct sock;
+ struct sockaddr;
+ struct socket;
+ struct flowi_common;
+-struct dst_entry;
+-struct xfrm_selector;
+ struct xfrm_policy;
+ struct xfrm_state;
+ struct xfrm_user_sec_ctx;
+@@ -219,7 +214,6 @@ extern unsigned long dac_mmap_min_addr;
+ #define LSM_PRLIMIT_WRITE 2
+ 
+ /* forward declares to avoid warnings */
+-struct sched_param;
+ struct request_sock;
+ 
+ /* bprm->unsafe reasons */
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -274,8 +274,6 @@ static inline int valid_signal(unsigned long sig)
+ 	return sig <= _NSIG ? 1 : 0;
+ }
+ 
+-struct timespec;
+-struct pt_regs;
+ enum pid_type;
+ 
+ extern int next_signal(struct sigpending *pending, sigset_t *mask);
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -11,8 +11,6 @@
+ 
+ struct __aio_sigset;
+ struct epoll_event;
+-struct iattr;
+-struct inode;
+ struct iocb;
+ struct io_event;
+ struct iovec;
+@@ -20,14 +18,12 @@ struct __kernel_old_itimerval;
+ struct kexec_segment;
+ struct linux_dirent;
+ struct linux_dirent64;
+-struct list_head;
+ struct mmap_arg_struct;
+ struct msgbuf;
+ struct user_msghdr;
+ struct mmsghdr;
+ struct msqid_ds;
+ struct new_utsname;
+-struct nfsctl_arg;
+ struct __old_kernel_stat;
+ struct oldold_utsname;
+ struct old_utsname;
+@@ -38,7 +34,6 @@ struct rusage;
+ struct sched_param;
+ struct sched_attr;
+ struct sel_arg_struct;
+-struct semaphore;
+ struct sembuf;
+ struct shmid_ds;
+ struct sockaddr;
+@@ -48,14 +43,12 @@ struct statfs;
+ struct statfs64;
+ struct statx;
+ struct sysinfo;
+-struct timespec;
+ struct __kernel_old_timeval;
+ struct __kernel_timex;
+ struct timezone;
+ struct tms;
+ struct utimbuf;
+ struct mq_attr;
+-struct compat_stat;
+ struct old_timeval32;
+ struct robust_list_head;
+ struct futex_waitv;
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -23,9 +23,7 @@
+ #include <linux/atomic.h>
+ 
+ struct kobject;
+-struct module;
+ struct bin_attribute;
+-enum kobj_ns_type;
+ 
+ struct attribute {
+ 	const char		*name;
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1095,10 +1095,6 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ /* Flags that allow allocations below the min watermark. */
+ #define ALLOC_RESERVES (ALLOC_NON_BLOCK|ALLOC_MIN_RESERVE|ALLOC_HIGHATOMIC|ALLOC_OOM)
+ 
+-enum ttu_flags;
+-struct tlbflush_unmap_batch;
+-
+-
+ /*
+  * only for MM internal work items which do not depend on
+  * any allocations or locks which might depend on allocations
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -261,7 +261,6 @@ static const struct inode_operations shmem_dir_inode_operations;
+ static const struct inode_operations shmem_special_inode_operations;
+ static const struct vm_operations_struct shmem_vm_ops;
+ static const struct vm_operations_struct shmem_anon_vm_ops;
+-static struct file_system_type shmem_fs_type;
+ 
+ bool shmem_mapping(struct address_space *mapping)
+ {
