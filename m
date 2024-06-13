@@ -1,178 +1,109 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BC613D524;
-	Thu, 13 Jun 2024 13:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBCCF9449;
+	Thu, 13 Jun 2024 13:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718284023; cv=none; b=Bl7QObNjP8niiKvmzHmdJBehCOVq0AOydaZ4zVgL4TClo3wtv7irghSlhya2ptebmR+J0LuJPmRYrh0t0tRGU+yvG2T938FW2IT74pMJPYhvBSQT65iuC6lxBI2tpTtvrhbyWTVSBvYZgp197niPngLBc0y6u1uoPmrVgPaA3JY=
+	t=1718284691; cv=none; b=ArT8J6oxusIeh9chLCnHyzKztxUZgYf/lQJv/XNXz1GfgAiAwynSx4MPaSRhkuDFZIX1C2NzJq/h94YHk7aSx8wV2kieB66uuLLe4C6gsqQZATd/0EyRX1/NbEKUkStTk/E3eGIDnlRytK6qUlzxRFNbiE8s51bI4BOmq31kvXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718284023; c=relaxed/simple;
-	bh=xu1792XvTnU3jDP3FYbYyhez1VlS5TvvwKQ4Hm46MoY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OMl6W2nbddR8smhTMtvq+NX2WBQ6+9UlYFkbq0cjlqi4H0E1TDiEb29Z9kMH5ySAW6siXGdzD1Rc7gynLibbVYQNLIo/8Lqf54J+tQwR8gGClC7LOpOyFbVosThruIh9DYPFByW0m8nE/B4UTPudc9w7egnYPldBNTvkH1K86+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lHpKLv4x; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHpKLv4x"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebd95f136bso10801621fa.0;
-        Thu, 13 Jun 2024 06:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718284018; x=1718888818; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=H4qMOlVAmB1+8562nApjJnNhlZQHZLqU1OXBwVXRF78=;
-        b=lHpKLv4xuroqczJt/Ywx8NPgMxPogcx8+78+YIa89Ws8ZSLTpvqmGLUKFxVOQlfbZ2
-         p3z4te5c2HO9g8+O3suERoCg3RYPQchSX4iaJKU9fTNvKa/phzJDhr/z+7O4He/OFnYe
-         z+vy7B7UjBYhkRKHHAgrEPhH4074IEBeknApcjudzORfl08aww/jACSaVNTHc49iqOiP
-         drFuPeWeAkgd4GIMCvMuXfuaJaLYPxgxDLEfl+zbBD5dr6xQh9GDMZGsOOW0TDX7hqdq
-         Wmyds3YQtfZYaUZYYr9qcQMkWfHkD3bTytLzUklplf9Y3kOro87R3TAWy2r1NWhBbd5E
-         2oNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718284018; x=1718888818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H4qMOlVAmB1+8562nApjJnNhlZQHZLqU1OXBwVXRF78=;
-        b=GSH+vuq+atblt2ONCh+TkgHMtZj6fOeBynKrQoCsTlIJASZ6Wj8CgpRYRpv9wPBe3y
-         Rc00TTMV9AlDxmeiSr8HjG2BQTE2dw8zqVNaIgjCmLP5u0teTCPGsGClfXOjWWOF6RM+
-         +/Q4HBoS6kytkJWCK+z3vxAp0OJWKQ5O/qp46b9takYihnLKO6HficNw0CJaABaf7bQl
-         Pdw0940qcxRcHwCXr7KlVjmi6anSBwnoh8dwEYl0Ggi+3mMaShds13A4iEzt+AGbBT+P
-         E9qtJLwB3XcJKJCNjWEoLFmXhebCh4tNbeqkO83AJ9VD3kd86x9w5Ei4KKasIHEUKt8b
-         FklA==
-X-Forwarded-Encrypted: i=1; AJvYcCXP46oBl9LWEeWZOi/nFO9LpfvD0XoXbjOze/y6JDCJBg8tWdMdYajFUlftwyFss9puNTTuHwlKWEIIvIB2jFDl6S48mcaLkYGvh3GMmxC3Nt7i+fd7S0YTjq14gSIWCGOIz0tm6QmrFpxoSLz8uRKbO8OTaPBJykm7iugHg1JzlEzIfwKDGF/EhovOdHI061peiiqbOINYoAEeU8K1Oe31BYZvY0y1xg+p1lCaTCormFL9CGyW9JeCT1+otoXW5Kd6RyhZTAoY612Xsx5F/mExtE0TYRhCV+ArQ8PWpgtBVcGCf0U6qpHyLh1EPdyPWuDnOHi1kTMjytStGOpgxFoZwZnvmOqDI51dN1oLq7M9bcwwBLl1hzW9WwMflZBwbFPR+WwOkcenlUHpYB+la126LQmDHWl6VPD6WGL7woF4mnRQphN7tnjdYSRfwg==
-X-Gm-Message-State: AOJu0YweF5XV8H+UF6myYCXms8mjJEFBK244riqhJzn46zyVY064vIwI
-	b8ZopXLnuMlBjdjlq08IeFphupqb91cIJ/K5Rd/IpLx94tfX950p
-X-Google-Smtp-Source: AGHT+IFNjIqLDbiiJvyVQ+CTYUUPuuKLx47d3/3uk6kw1RXtVGPymnVcCEA7pTqKhgYonTHLU10trQ==
-X-Received: by 2002:a2e:878f:0:b0:2eb:ecba:444a with SMTP id 38308e7fff4ca-2ebfc9fac80mr27236611fa.23.1718284018170;
-        Thu, 13 Jun 2024 06:06:58 -0700 (PDT)
-Received: from pc636 (host-90-233-218-141.mobileonline.telia.com. [90.233.218.141])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c05f56sm2099851fa.42.2024.06.13.06.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 06:06:57 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 13 Jun 2024 15:06:54 +0200
-To: "Paul E. McKenney" <paulmck@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
+	s=arc-20240116; t=1718284691; c=relaxed/simple;
+	bh=zH9/26bCnqQ1D4kgrGaATCsRHHQL0Yv8+lKkx1Ua+NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bl46d5j2QoSz4YT8AJyAeNA/ww+sixI9WRnVHQ8xUC9Le450VlhTpui+hdxLnyhTZxsHSAseCAGNrURiHkBEh4fO6YU2j0FZY29zOziOU6OUuUsQd2k80VXcfBQhDlfTQCzm+gs3LGqpP4SKeyUUj8lRNADoNFnYB3oQdNaARws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-2b-666af18c52e4
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <Zmru7hhz8kPDPsyz@pc636>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
- <ZmrfA1p2zSVIaYam@zx2c4.com>
- <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gregory Price <gregory.price@memverge.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com,
+	kernel_team@skhynix.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH 1/8] mm: make alloc_demote_folio externally invokable for migration
+Date: Thu, 13 Jun 2024 22:17:32 +0900
+Message-ID: <20240613131741.513-2-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240613131741.513-1-honggyu.kim@sk.com>
+References: <20240613131741.513-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80e03b02-7e24-4342-af0b-ba5117b19828@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsXC9ZZnkW7Px6w0g/2T5S0m9hhYzFm/hs3i
+	/oPX7BZP/v9mtWhoesRicXnXHDaLe2v+s1ocWX+WxWLz2TPMFouXq1ns63jAZHH46xsmBx6P
+	paffsHnsnHWX3aNl3y12j02rOtk8Nn2axO5xYsZvFo8Xm2cyemz8+J/d4/MmuQDOKC6blNSc
+	zLLUIn27BK6MKacPMhd0clf8nbqavYFxPmcXIyeHhICJxK8JR9lg7FtNRxhBbDYBNYkrLycx
+	dTFycIgIWElM2xHbxcjFwSywgVli0rkXTCA1wgLBElt6O5hBbBYBVYnuRYvAenkFTCXmfl3L
+	AjFTU+Lx9p/sIDangJnEum/3wWqEgGo6/j9jhqgXlDg58wlYPbOAvETz1tnMIMskBJ6zSSyd
+	vh7qOEmJgytusExg5J+FpGcWkp4FjEyrGIUy88pyEzNzTPQyKvMyK/SS83M3MQKjYFntn+gd
+	jJ8uBB9iFOBgVOLh9XiWlSbEmlhWXJl7iFGCg1lJhHfWQqAQb0piZVVqUX58UWlOavEhRmkO
+	FiVxXqNv5SlCAumJJanZqakFqUUwWSYOTqkGxgmbT4lXGsstDDgw6UuL2YoF6yd8jTLLK3dt
+	O17lLnrE7YX+/IoTc24tC5Jr3nh8mVzz9vNvtiw0i566hcmqqyZp0dftbgncqpbcebz3fIqf
+	3RZpmdhcqv71ULHp8mPSJVyO2jbdKbtXra9fvXa6qJXD2qip2m/y9axDlcq53LdEVm16+c+s
+	VImlOCPRUIu5qDgRADNYT1t+AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXCNUNLT7fnY1aawdtLghYTewws5qxfw2Zx
+	/8Frdosn/3+zWjQ0PWKx+PzsNbPF4bknWS0u75rDZnFvzX9WiyPrz7JYbD57htli8XI1i30d
+	D5gsDn99w+TA57H09Bs2j52z7rJ7tOy7xe6xaVUnm8emT5PYPU7M+M3i8WLzTEaPjR//s3t8
+	u+3hsfjFByaPz5vkArijuGxSUnMyy1KL9O0SuDKmnD7IXNDJXfF36mr2Bsb5nF2MnBwSAiYS
+	t5qOMILYbAJqEldeTmLqYuTgEBGwkpi2I7aLkYuDWWADs8Skcy+YQGqEBYIltvR2MIPYLAKq
+	Et2LFoH18gqYSsz9upYFYqamxOPtP9lBbE4BM4l13+6D1QgB1XT8f8YMUS8ocXLmE7B6ZgF5
+	ieats5knMPLMQpKahSS1gJFpFaNIZl5ZbmJmjqlecXZGZV5mhV5yfu4mRmCQL6v9M3EH45fL
+	7ocYBTgYlXh4PZ5lpQmxJpYVV+YeYpTgYFYS4Z21ECjEm5JYWZValB9fVJqTWnyIUZqDRUmc
+	1ys8NUFIID2xJDU7NbUgtQgmy8TBKdXAuGcS/8F7a1WXezHoi9Wa+XJIXWbeGlhkM3ma+vV+
+	zQ9zWwUvLjzJqrD80YGJBgVCXYx7ngd4Fa7dmnji0M1ZQjcYD+cfKXqSumNq5dlOOz+DZXNn
+	dshqrHdnyd24Y43Z8xTByVnHFjW5zFM9spfTIHbxr41aXwpDUo9YL2Isn2D1cIaEscu5AiWW
+	4oxEQy3mouJEAJ586qJuAgAA
+X-CFilter-Loop: Reflected
 
-On Thu, Jun 13, 2024 at 05:47:08AM -0700, Paul E. McKenney wrote:
-> On Thu, Jun 13, 2024 at 01:58:59PM +0200, Jason A. Donenfeld wrote:
-> > On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
-> > > On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
-> > > > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
-> > > > > Since SLOB was removed, it is not necessary to use call_rcu
-> > > > > when the callback only performs kmem_cache_free. Use
-> > > > > kfree_rcu() directly.
-> > > > > 
-> > > > > The changes were done using the following Coccinelle semantic patch.
-> > > > > This semantic patch is designed to ignore cases where the callback
-> > > > > function is used in another way.
-> > > > 
-> > > > How does the discussion on:
-> > > >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-> > > >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
-> > > > reflect on this series? IIUC we should hold off..
-> > > 
-> > > We do need to hold off for the ones in kernel modules (such as 07/14)
-> > > where the kmem_cache is destroyed during module unload.
-> > > 
-> > > OK, I might as well go through them...
-> > > 
-> > > [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-> > > 	Needs to wait, see wg_allowedips_slab_uninit().
-> > 
-> > Also, notably, this patch needs additionally:
-> > 
-> > diff --git a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
-> > index e4e1638fce1b..c95f6937c3f1 100644
-> > --- a/drivers/net/wireguard/allowedips.c
-> > +++ b/drivers/net/wireguard/allowedips.c
-> > @@ -377,7 +377,6 @@ int __init wg_allowedips_slab_init(void)
-> > 
-> >  void wg_allowedips_slab_uninit(void)
-> >  {
-> > -	rcu_barrier();
-> >  	kmem_cache_destroy(node_cache);
-> >  }
-> > 
-> > Once kmem_cache_destroy has been fixed to be deferrable.
-> > 
-> > I assume the other patches are similar -- an rcu_barrier() can be
-> > removed. So some manual meddling of these might be in order.
-> 
-> Assuming that the deferrable kmem_cache_destroy() is the option chosen,
-> agreed.
->
-<snip>
-void kmem_cache_destroy(struct kmem_cache *s)
-{
-	int err = -EBUSY;
-	bool rcu_set;
+The alloc_demote_folio can be used out of vmscan.c so it'd be better to
+remove static keyword from it.
 
-	if (unlikely(!s) || !kasan_check_byte(s))
-		return;
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ mm/internal.h | 1 +
+ mm/vmscan.c   | 3 +--
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-	cpus_read_lock();
-	mutex_lock(&slab_mutex);
+diff --git a/mm/internal.h b/mm/internal.h
+index b2c75b12014e..b3ca996a4efc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1052,6 +1052,7 @@ extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+         unsigned long, unsigned long);
+ 
+ extern void set_pageblock_order(void);
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private);
+ unsigned long reclaim_pages(struct list_head *folio_list);
+ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ 					    struct list_head *folio_list);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 2e34de9cd0d4..2f4406872f43 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -916,8 +916,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
+ 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
+ }
+ 
+-static struct folio *alloc_demote_folio(struct folio *src,
+-		unsigned long private)
++struct folio *alloc_demote_folio(struct folio *src, unsigned long private)
+ {
+ 	struct folio *dst;
+ 	nodemask_t *allowed_mask;
+-- 
+2.34.1
 
-	rcu_set = s->flags & SLAB_TYPESAFE_BY_RCU;
-
-	s->refcount--;
-	if (s->refcount)
-		goto out_unlock;
-
-	err = shutdown_cache(s);
-	WARN(err, "%s %s: Slab cache still has objects when called from %pS",
-	     __func__, s->name, (void *)_RET_IP_);
-...
-	cpus_read_unlock();
-	if (!err && !rcu_set)
-		kmem_cache_release(s);
-}
-<snip>
-
-so we have SLAB_TYPESAFE_BY_RCU flag that defers freeing slab-pages
-and a cache by a grace period. Similar flag can be added, like
-SLAB_DESTROY_ONCE_FULLY_FREED, in this case a worker rearm itself
-if there are still objects which should be freed.
-
-Any thoughts here?
-
---
-Uladzislau Rezki
