@@ -1,106 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D545D399;
-	Thu, 13 Jun 2024 14:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303B32AEFE;
+	Thu, 13 Jun 2024 14:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718289821; cv=none; b=PS1oML7q8f8unvNgLHE+TkqkyH8r9ovoHmO6Gj2aYmhPkqbpZDn69LNSE6Mg8vnk19aIVjEB32ZBUdqgw7sf/LDIEUSZrg6YP4w7r4kmCyATV8VQv+TAGc0ThCaExJaNVaYSxMvPyDweauVVh3nj81/+VIuw0uxT/nuknSqpKWw=
+	t=1718290405; cv=none; b=Uy9msA1WPMgOApn0F5Z5S3B9soDMzSksHIkxo9uVLtvbrL2eIeS1b5HJY7pqUnq9nCHkPql8CcIw85VLSkgsdk+G5iSUTnbNfyUbNuVLy4DoydxMHq7IOth868Ww6YiCpXhzo5Nwg7wZafuKysyIaz3GQDlE+1jPiPTtslAfz6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718289821; c=relaxed/simple;
-	bh=U2lp9FtQVPZjq8CdUltsKztb3aNzK34AI2dW7bwkUFA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FLZN/ANtZ4GvXfDbmaQ8kVYWeIUEFe7surlh/gG2EdTgktttkM0zH0Kkbdjnd47BoI2eJqfQ8GvfSObuQ/2OuxLpEvyaID6QTDf43klqbrmy0UsxWIiUgePzeg623tTsTBQY/XUMOHu/NLB6d4TGFGdrMnZNAGlx5/m4ekomCBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gb72+7xO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718290405; c=relaxed/simple;
+	bh=mv116xzS15vzP9cCgyxl+fMi+NNgkWtSKInvv0qYaOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWKbHay+d+itWUMNjwzGQvQy0TvFUdMP0qZFieFj+haKJh8vi+UviTLW67fZxUM4J9nP521YJdtiS8zzY7W81xBiSB72qGLEaZDDjAv5GA0iJXzKWTqG+lAn2n7s7d1nmX0MaFY/dqE8o1JVMPnnN8McBi3YKOmsQ1/H2Lox8rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrpLVmcH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gb72+7xO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E64C2BBFC;
-	Thu, 13 Jun 2024 14:43:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrpLVmcH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC65C2BBFC;
+	Thu, 13 Jun 2024 14:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718289821;
-	bh=U2lp9FtQVPZjq8CdUltsKztb3aNzK34AI2dW7bwkUFA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Gb72+7xOsUioNvlfIMYnfYpFkYPIAFwYVTWDro3Xhj9C3l6dKw1P+l+FEUMNJVTxP
-	 4cCQ6ja8fXMPXI5Ws7i7Bv41+TO1UKMEb27xGC+6xHAOJEolkmVUz13zHajOLyaGcI
-	 znLtHPBFvHtTC/XnwYa+5XewLAEzrBd7JFDu01z8hKys+lBk/h5Tz9edw/sAS6bryR
-	 QzkyIyvbGLK6nwgv0rL7HCLaZ+fCY1Th30sTehEI/YSh3OzULykG9aFvsqcPT7o8sY
-	 00e/ty+6MfKpi0cFYwYyJSCS+tIZSqi5JyPpeNB4YyptYuPsxcDdSB9CIukKnoFjUR
-	 58crVjJqaQq7g==
-Date: Thu, 13 Jun 2024 23:43:37 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Naresh Kamboju
- <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH] function_graph: Add READ_ONCE() when accessing
- fgraph_array[]
-Message-Id: <20240613234337.cdd71759ab3d93d22eef7cf1@kernel.org>
-In-Reply-To: <20240613095223.1f07e3a4@rorschach.local.home>
-References: <20240613095223.1f07e3a4@rorschach.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1718290404;
+	bh=mv116xzS15vzP9cCgyxl+fMi+NNgkWtSKInvv0qYaOs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JrpLVmcHw+1vVdhz0hr4zlMOLXiUKHV49VrNryd9CK9X7dHErNGXoNPragvwwBCL6
+	 SI+TwOrU0FMj0xU+2UtPCWQYN40GnerBvRUWBRAdFC6tFr6qz/km2rV7Chl1lUoJ9m
+	 GkMihacipvdMQvdeIh6blgyiwV88h8rLs6V0Mnkla0nj4SuiDXJa+6y8vT55UDyDCg
+	 17cVFuyxwkGgEp3TDCWzn0VlfqZ9umP1GCUkgnyIY+4CdHl8IwPus+2YunewlR6OZN
+	 LcIgWzpaZOEsxjLA0loXbAyOPGV2Su96HAd1dBvN9u04caeK6yBd20pCVyC1ZFFfIw
+	 qT4yEmqTp71dA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 556E8CE09E0; Thu, 13 Jun 2024 07:53:24 -0700 (PDT)
+Date: Thu, 13 Jun 2024 07:53:24 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <62757652-8874-45d7-afec-734edeb03831@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <Zmov7ZaL-54T9GiM@zx2c4.com>
+ <Zmo9-YGraiCj5-MI@zx2c4.com>
+ <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
+ <20240613071738.0655ff4f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240613071738.0655ff4f@kernel.org>
 
-On Thu, 13 Jun 2024 09:52:23 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, Jun 13, 2024 at 07:17:38AM -0700, Jakub Kicinski wrote:
+> On Wed, 12 Jun 2024 20:38:02 -0700 Paul E. McKenney wrote:
+> > o	Make rcu_barrier() wait for kfree_rcu() objects.  (This is
+> > 	surprisingly complex and will wait unnecessarily in some cases.
+> > 	However, it does preserve current code.)
 > 
-> In function_graph_enter() there's a loop that looks at fgraph_array[]
-> elements which are fgraph_ops. It first tests if it is a fgraph_stub op,
-> and if so skips it, as that's just there as a place holder. Then it checks
-> the fgraph_ops filters to see if the ops wants to trace the current
-> function.
-> 
-> But if the compiler reloads the fgraph_array[] after the check against
-> fgraph_stub, it could race with the fgraph_array[] being updated with the
-> fgraph_stub. That would cause the stub to be processed. But the stub has a
-> null "func_hash" field which will cause a NULL pointer dereference.
-> 
-> Add a READ_ONCE() so that the gops that is compared against the
-> fgraph_stub is also the gops that is processed later.
-> 
-> Link: https://lore.kernel.org/all/CA+G9fYsSVJQZH=nM=1cjTc94PgSnMF9y65BnOv6XSoCG_b6wmw@mail.gmail.com/
-> 
-> Fixes: cc60ee813b503 ("function_graph: Use static_call and branch to optimize entry function")
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Not sure how much mental capacity for API variations we expect from
+> people using caches, but I feel like this would score the highest
+> on Rusty's API scale. I'd even venture an opinion that it's less
+> confusing to require cache users to have their own (trivial) callbacks
+> than add API variants we can't error check even at runtime...
 
-Looks good to me.
+Fair point, though please see Jason's emails.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+And the underlying within-RCU mechanism is the same either way, so that
+API decision can be deferred for some time.
 
-Thanks.
+But the within-slab mechanism does have the advantage of also possibly
+simplifying reference-counting and the potential upcoming hazard pointers.
+On the other hand, I currently have no idea what level of violence this
+change would make to the slab subsystem.
 
-> ---
->  kernel/trace/fgraph.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 8317d1a7f43a..fc205ad167a9 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -641,7 +641,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
->  	{
->  		for_each_set_bit(i, &fgraph_array_bitmask,
->  					 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
-> -			struct fgraph_ops *gops = fgraph_array[i];
-> +			struct fgraph_ops *gops = READ_ONCE(fgraph_array[i]);
->  			int save_curr_ret_stack;
->  
->  			if (gops == &fgraph_stub)
-> -- 
-> 2.43.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+							Thanx, Paul
