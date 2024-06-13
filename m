@@ -1,60 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC998130A40;
-	Thu, 13 Jun 2024 03:38:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E1837C;
+	Thu, 13 Jun 2024 06:02:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718249883; cv=none; b=KRGkE0ok+wbYnTorTmGyFNa6iDPjgFcO66NRaihIrWax6yjmlEGXI2R5MVdljD/82LPZuQtW2zs1x+PC8eePOvIvdLva8h+ANWh/PIWqJIMhNMw4gw8SNj+BCEj1ol7nefqZorcEGx5MmFr8nRCbaAjx1P4bYUGlcfQlB7xvfHA=
+	t=1718258567; cv=none; b=OR7yxlnDFhChAm13ywu4sNOpr17SI1eRaYX9Sc1vDwTzGUnr6BVBoV4KgYokU/oHxrmq+XfJESOegvFekpz1zyARRDjNyEZYJdp5F3Ym9JnYlKFIq4UDin56F53zcAa3MPa25YABO++p57DCWPcJsHJe/9XIKyIwrzD4Cu57mp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718249883; c=relaxed/simple;
-	bh=MUF6QJIs92YjVFx9pLVup9B1X4v/FOHgXQ+Q1ulGSY8=;
+	s=arc-20240116; t=1718258567; c=relaxed/simple;
+	bh=3sL49NFvnClvD1y18UTPpLyD+rkcg9Qkf8lGulrYlEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HW+9VwlcPz5RihUx6mpz0y4hErm5jUTcRWbLAo1ssOQ/imt9cTFXtfOJ1e5as9RT3dXmiFL2HJtY7/oK5vOzmWFwYLdpr6xv4EknNAtSIR5eGbKqatsI54Onvvh7v4SuOb12Kew5sogp2Zxa28SlOHeNVEcxCQJMk3+AS1g6uKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/Q38vJo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=efMhuAsbtUlZ0wobXcipPZ6QYVYz/MY5S73mU7nb90LjcvvumjcgYsqkcwlQojP7n+w9QGMg+V9iAIpEH1dDsoIQinGDCdgtfNDAXKmQUZS/G9rZmeGItm8AMSnTOCw8xjFsC0I9sCj0iIsnQPRsLSrQMtjTy7XUj1yhXUeTVZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvkO8eyv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/Q38vJo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7817BC2BBFC;
-	Thu, 13 Jun 2024 03:38:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvkO8eyv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 637B4C2BBFC;
+	Thu, 13 Jun 2024 06:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718249882;
-	bh=MUF6QJIs92YjVFx9pLVup9B1X4v/FOHgXQ+Q1ulGSY8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=D/Q38vJoRXlXt5XW/4wGVxDR3Ve5LY0YeIOEeyXy3NbqhqX2dZ1j6M305bUwT45/t
-	 UDuYraBOn5RJGcB5wbPp0mVvgGhhjTHGq9Z0Flg5xyFBTSbQm63u8OHLMVmMqygIG8
-	 n9Bktxt8XPwCkrGEjHdwaonD6xgWh8Godtd+lRtFFTJN7g05LyY6qtQ9CoXmzs1IMm
-	 s3wJnTMklP71T4XudKIUo3akJ/RvcV6b0A4eh6dGBbeQLpeU8YyAJJTIYJ6rHLoz8s
-	 fp4CPkLTgzE6dVIPWUBEYXDVCE07lQXMRXq4lTfYFbtT2/hHBATfDcVAbYnccY1Jab
-	 dAuGuN0IsVTKA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 1975FCE0DEA; Wed, 12 Jun 2024 20:38:02 -0700 (PDT)
-Date: Wed, 12 Jun 2024 20:38:02 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	s=k20201202; t=1718258567;
+	bh=3sL49NFvnClvD1y18UTPpLyD+rkcg9Qkf8lGulrYlEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bvkO8eyvvIQKPJoZWLyWMTfK6O5N03AQA4XC6mijqToSBsMszcXr9Ps7YULdd+mwQ
+	 CMIxPSG6EFndRhrbMBaKeL08MauHHAIYDLjAKQjgKU9NWCkcTVyFrvmFQ8r91xLE5G
+	 KwzQ4EytMRXAmkLSDbDYk3Jw+MQeBKW52A481j5Gd4DtQ4Vuoxq/v80A/v3kTyKhUZ
+	 ykIEmOFhBgNH6uX8WEQThF4xIbon1RXDG+QAmVAq9AD4LNVqnG0TVN+3QEi1q60q0h
+	 oN9NkQffZog6Xl9BoKMpr+ebDOPGgNSA3sS4mGDmYKBzRXD9g7BgXpjse/6BO5DZDa
+	 qaftLWaQdNBdA==
+Date: Thu, 13 Jun 2024 09:00:31 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
- <Zmov7ZaL-54T9GiM@zx2c4.com>
- <Zmo9-YGraiCj5-MI@zx2c4.com>
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v5 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <ZmqK_zeGus_VxAHN@kernel.org>
+References: <20240613003435.401549779@goodmis.org>
+ <20240613003508.752963299@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,135 +65,145 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zmo9-YGraiCj5-MI@zx2c4.com>
+In-Reply-To: <20240613003508.752963299@goodmis.org>
 
-On Thu, Jun 13, 2024 at 02:31:53AM +0200, Jason A. Donenfeld wrote:
-> On Thu, Jun 13, 2024 at 01:31:57AM +0200, Jason A. Donenfeld wrote:
-> > On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
-> > > On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
-> > > > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
-> > > > > Since SLOB was removed, it is not necessary to use call_rcu
-> > > > > when the callback only performs kmem_cache_free. Use
-> > > > > kfree_rcu() directly.
-> > > > > 
-> > > > > The changes were done using the following Coccinelle semantic patch.
-> > > > > This semantic patch is designed to ignore cases where the callback
-> > > > > function is used in another way.
-> > > > 
-> > > > How does the discussion on:
-> > > >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-> > > >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
-> > > > reflect on this series? IIUC we should hold off..
-> > > 
-> > > We do need to hold off for the ones in kernel modules (such as 07/14)
-> > > where the kmem_cache is destroyed during module unload.
-> > > 
-> > > OK, I might as well go through them...
-> > > 
-> > > [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-> > > 	Needs to wait, see wg_allowedips_slab_uninit().
-> > 
-> > Right, this has exactly the same pattern as the batman-adv issue:
-> > 
-> >     void wg_allowedips_slab_uninit(void)
-> >     {
-> >             rcu_barrier();
-> >             kmem_cache_destroy(node_cache);
-> >     }
-> > 
-> > I'll hold off on sending that up until this matter is resolved.
+On Wed, Jun 12, 2024 at 08:34:36PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> BTW, I think this whole thing might be caused by:
+> In order to allow for requesting a memory region that can be used for
+> things like pstore on multiple machines where the memory layout is not the
+> same, add a new option to the kernel command line called "reserve_mem".
 > 
->     a35d16905efc ("rcu: Add basic support for kfree_rcu() batching")
+> The format is:  reserve_mem=nn:align:name
 > 
-> The commit message there mentions:
+> Where it will find nn amount of memory at the given alignment of align.
+> The name field is to allow another subsystem to retrieve where the memory
+> was found. For example:
 > 
->     There is an implication with rcu_barrier() with this patch. Since the
->     kfree_rcu() calls can be batched, and may not be handed yet to the RCU
->     machinery in fact, the monitor may not have even run yet to do the
->     queue_rcu_work(), there seems no easy way of implementing rcu_barrier()
->     to wait for those kfree_rcu()s that are already made. So this means a
->     kfree_rcu() followed by an rcu_barrier() does not imply that memory will
->     be freed once rcu_barrier() returns.
+>   reserve_mem=12M:4096:oops ramoops.mem_name=oops
 > 
-> Before that, a kfree_rcu() used to just add a normal call_rcu() into the
-> list, but with the function offset < 4096 as a special marker. So the
-> kfree_rcu() calls would be treated alongside the other call_rcu() ones
-> and thus affected by rcu_barrier(). Looks like that behavior is no more
-> since this commit.
+> Where ramoops.mem_name will tell ramoops that memory was reserved for it
+> via the reserve_mem option and it can find it by calling:
+> 
+>   if (reserve_mem_find_by_name("oops", &start, &size)) {
+> 	// start holds the start address and size holds the size given
+> 
+> This is typically used for systems that do not wipe the RAM, and this
+> command line will try to reserve the same physical memory on soft reboots.
+> Note, it is not guaranteed to be the same location. For example, if KASLR
+> places the kernel at the location of where the RAM reservation was from a
+> previous boot, the new reservation will be at a different location.  Any
+> subsystem using this feature must add a way to verify that the contents of
+> the physical memory is from a previous boot, as there may be cases where
+> the memory will not be located at the same location.
+> 
+> Not all systems may work either. There could be bit flips if the reboot
+> goes through the BIOS. Using kexec to reboot the machine is likely to
+> have better results in such cases.
+> 
+> Link: https://lore.kernel.org/all/ZjJVnZUX3NZiGW6q@kernel.org/
+> 
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v4: https://lore.kernel.org/linux-trace-kernel/20240611215801.443593152@goodmis.org
+> 
+> - Add all checks about reserve_mem before allocation.
+>   This means reserved_mem_add() is now a void function.
+> 
+> - Check for name duplications.
+> 
+> - Fix compare of align to SMP_CACHE_BYTES ("<" instead of "<=")
+> 
+>  .../admin-guide/kernel-parameters.txt         |  20 +++
+>  include/linux/mm.h                            |   2 +
+>  mm/memblock.c                                 | 117 ++++++++++++++++++
+>  3 files changed, 139 insertions(+)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index d09136e040d3..739d106a9165 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
 
-You might well be right, and thank you for digging into this!
+...
 
-> Rather than getting rid of the batching, which seems good for
-> efficiency, I wonder if the right fix to this would be adding a
-> `should_destroy` boolean to kmem_cache, which kmem_cache_destroy() sets
-> to true. And then right after it checks `if (number_of_allocations == 0)
-> actually_destroy()`, and likewise on each kmem_cache_free(), it could
-> check `if (should_destroy && number_of_allocations == 0)
-> actually_destroy()`. This way, the work is delayed until it's safe to do
-> so. This might also mitigate other lurking bugs of bad code that calls
-> kmem_cache_destroy() before kmem_cache_free().
+> +/*
+> + * Parse reserve_mem=nn:align:name
+> + */
+> +static int __init reserve_mem(char *p)
+> +{
+> +	phys_addr_t start, size, align;
+> +	char *name;
+> +	char *oldp;
+> +	int len;
+> +
+> +	if (!p)
+> +		return -EINVAL;
+> +
+> +	/* Check if there's room for more reserved memory */
+> +	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
+> +		return -EBUSY;
+> +
+> +	oldp = p;
+> +	size = memparse(p, &p);
+> +	if (!size || p == oldp)
+> +		return -EINVAL;
+> +
+> +	if (*p != ':')
+> +		return -EINVAL;
+> +
+> +	align = memparse(p+1, &p);
+> +	if (*p != ':')
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * memblock_phys_alloc() doesn't like a zero size align,
+> +	 * but it is OK for this command to have it.
+> +	 */
+> +	if (align < SMP_CACHE_BYTES)
+> +		align = SMP_CACHE_BYTES;
+> +
+> +	name = p + 1;
+> +	len = strlen(name);
+> +
+> +	/* name needs to have length but not too big */
+> +	if (!len || len >= RESERVE_MEM_NAME_SIZE)
+> +		return -EINVAL;
+> +
+> +	/* Make sure that name has text */
+> +	for (p = name; *p; p++) {
+> +		if (!isspace(*p))
+> +			break;
+> +	}
+> +	if (!*p)
+> +		return -EINVAL;
+> +
+> +	/* Make sure the name is not already used (size is only updated if found) */
+> +	if (reserve_mem_find_by_name(name, &start, &size))
+> +		return -EBUSY;
 
-Here are the current options being considered, including those that
-are completely brain-dead:
+I'd prefer another variable here rather than size. Will be more robust IMO.
 
-o	Document current state.  (Must use call_rcu() if module
-	destroys slab of RCU-protected objects.)
+> +
+> +	start = memblock_phys_alloc(size, align);
+> +	if (!start)
+> +		return -ENOMEM;
+> +
+> +	reserved_mem_add(start, size, name);
+> +
+> +	return 0;
+> +}
+> +__setup("reserve_mem=", reserve_mem);
+> +
+>  #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
+>  static const char * const flagname[] = {
+>  	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
+> -- 
+> 2.43.0
+> 
+> 
 
-	Need to review Julia's and Uladzislau's series of patches
-	that change call_rcu() of slab objects to kfree_rcu().
-
-o	Make rcu_barrier() wait for kfree_rcu() objects.  (This is
-	surprisingly complex and will wait unnecessarily in some cases.
-	However, it does preserve current code.)
-
-o	Make a kfree_rcu_barrier() that waits for kfree_rcu() objects.
-	(This avoids the unnecessary waits, but adds complexity to
-	kfree_rcu().  This is harder than it looks, but could be done,
-	for example by maintaining pairs of per-CPU counters and handling
-	them in an SRCU-like fashion.  Need some way of communicating the
-	index, though.)
-
-	(There might be use cases where both rcu_barrier() and
-	kfree_rcu_barrier() would need to be invoked.)
-
-	A simpler way to implement this is to scan all of the in-flight
-	objects, and queue each (either separately or in bulk) using
-	call_rcu().  This still has problems with kfree_rcu_mightsleep()
-	under low-memory conditions, in which case there are a bunch
-	of synchronize_rcu() instances waiting.  These instances could
-	use SRCU-like per-CPU arrays of counters.  Or just protect the
-	calls to synchronize_rcu() and the later frees with an SRCU
-	reader, then have the other end call synchronize_srcu().
-
-o	Make the current kmem_cache_destroy() asynchronously wait for
-	all memory to be returned, then complete the destruction.
-	(This gets rid of a valuable debugging technique because
-	in normal use, it is a bug to attempt to destroy a kmem_cache
-	that has objects still allocated.)
-
-o	Make a kmem_cache_destroy_rcu() that asynchronously waits for
-	all memory to be returned, then completes the destruction.
-	(This raises the question of what to is it takes a "long time"
-	for the objects to be freed.)
-
-o	Make a kmem_cache_free_barrier() that blocks until all
-	objects in the specified kmem_cache have been freed.
-
-o	Make a kmem_cache_destroy_wait() that waits for all memory to
-	be returned, then does the destruction.  This is equivalent to:
-
-		kmem_cache_free_barrier(&mycache);
-		kmem_cache_destroy(&mycache);
-
-Uladzislau has started discussions on the last few of these:
-https://lore.kernel.org/all/ZmnL4jkhJLIW924W@pc636/
-
-I have also added this information to a Google Document for
-easier tracking:
-https://docs.google.com/document/d/1v0rcZLvvjVGejT3523W0rDy_sLFu2LWc_NR3fQItZaA/edit?usp=sharing
-
-Other thoughts?
-
-							Thanx, Paul
+-- 
+Sincerely yours,
+Mike.
