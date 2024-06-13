@@ -1,101 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3344022092;
-	Wed, 12 Jun 2024 23:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA6137C;
+	Thu, 13 Jun 2024 00:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718235128; cv=none; b=qNMAxb0SjeLRMjfxtNNj1iZIZjrMPrpLEcM4NkT5CNG8kBNZbIuOqWLZMpUNUuFDO10GkFu+j2a2C6ORg3Bp+kY8qE72n4WkUKM3aRLb5QzSRrTpUVUdgvxEPn427RRStRRzO3g/ZSmFuEb2Mchz3O39cFh1T4kX85sIhmHrKhI=
+	t=1718237432; cv=none; b=hrlwPFeAog/B8XYNVTRfZz4tNgZJlsJ75L0cRtlORlEDV5Rrno6WJ1MvVSE0UtCzWFrAWLqgsrTN6pSnrlmQ4TzKQqi77eqNQ5AF+u2Uvpp8IxPE3DJWepbaOy+Y4swkMSlse1LkWq9L9TOITwXuCOA/IhuuGSr+sW4TTB/4NKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718235128; c=relaxed/simple;
-	bh=vXTin2RE5LVdNvEj9vXYTNfzeL/DBSh7hlukwrm3jM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KZWP7+Ef1VbQgeAFP9ulJCdFEyHoYp6q4EIpy4GZcbTEzkWkW4TbgPdIiF64VadtQFT8WnEsSJIQ+vdUKSoua9Xyc038ups93MZreOhMgQWD5ktikCEQDK+ox2Fr9LVMJMcy0p9iFX1nzwWK65SwhTWtnyZ4VmDkY5U7tcLQhzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=KuRtSsoX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718237432; c=relaxed/simple;
+	bh=ALaMOklo/D6m9out9qebU875GAFWtP61hk1J63pvt/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BGTfOfycW+8XJWjm6WtyCQMTCZ4ViI1AeILaW5e40PN+BZ96FqKqUpC9aw1KjwrJsix9l9B0XgI4Qwx4axQbraEL7z8ObmIH7N4tG9gJLSvHgYp8PzL+5tF4RnQausEAeq/Fbh/WsSKoqY/0+2bqzmwXp0V1tPYK4Hjk4G16fzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz/ZQ4SN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KuRtSsoX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79393C116B1;
-	Wed, 12 Jun 2024 23:32:05 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KuRtSsoX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1718235123;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qSAYPgRWQjgO94CvH8azZnzUEXB1002L22u56bSmdYM=;
-	b=KuRtSsoXnhoWtj8ILW+HbvJl66iT9qTq9bSBLEsqlgbz+NueejOfai90fuwt9YC44f1xei
-	hmuw3gt1QJJwUC0wpdH+Cc3bGwXliu0JUoPBoQ3fEIPyMnLEjglwvNilIrEYYHTX8Rku8B
-	FH2QYFekE0pqYf5XHoYxT03jyvV2YLs=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7c292bc0 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 12 Jun 2024 23:32:03 +0000 (UTC)
-Date: Thu, 13 Jun 2024 01:31:57 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
-	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
-	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
- kmem_cache_free callback
-Message-ID: <Zmov7ZaL-54T9GiM@zx2c4.com>
-References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
- <20240612143305.451abf58@kernel.org>
- <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz/ZQ4SN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BC8C116B1;
+	Thu, 13 Jun 2024 00:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718237431;
+	bh=ALaMOklo/D6m9out9qebU875GAFWtP61hk1J63pvt/w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mz/ZQ4SNRhD4Slftyf1RGHhLam/Qf7W3PwDTBqymj8MrjJ2zFfcEBpzzqoIp7aIRE
+	 +HNQhNVE1+IOeDAWgqZssDT0yMjs5KujxGNYD5/v0d4xLqGdW6Z4IfirrVTI0gfG77
+	 pMXEtZ7kL2cG4kkEGdlkXN+sdZwbMnbryjY9PGB3jmEupZmxCvx/3ljnSDJVkMYjc3
+	 aerFM5mLp0PJV3xP/U6IojVO32XHdmwSgJHAiTk7a4PvwYlAlAf0U2KtXvJacugqV3
+	 /CEmWSpj8No1QubiV6AWTL6traVV8XO5JJaskmf2fawRbrkUX9ZG4c4dRG9FtdOikt
+	 K1w3nC+pECkGA==
+Date: Wed, 12 Jun 2024 17:10:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan
+ <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, "Christian
+ =?UTF-8?B?S8O2bmln?=" <christian.koenig@amd.com>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, Nikolay
+ Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, linux-mm@kvack.org, Matthew Wilcox
+ <willy@infradead.org>
+Subject: Re: [PATCH net-next v11 05/13] page_pool: convert to use netmem
+Message-ID: <20240612171029.71adc273@kernel.org>
+In-Reply-To: <20240607005127.3078656-6-almasrymina@google.com>
+References: <20240607005127.3078656-1-almasrymina@google.com>
+	<20240607005127.3078656-6-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 12, 2024 at 03:37:55PM -0700, Paul E. McKenney wrote:
-> On Wed, Jun 12, 2024 at 02:33:05PM -0700, Jakub Kicinski wrote:
-> > On Sun,  9 Jun 2024 10:27:12 +0200 Julia Lawall wrote:
-> > > Since SLOB was removed, it is not necessary to use call_rcu
-> > > when the callback only performs kmem_cache_free. Use
-> > > kfree_rcu() directly.
-> > > 
-> > > The changes were done using the following Coccinelle semantic patch.
-> > > This semantic patch is designed to ignore cases where the callback
-> > > function is used in another way.
-> > 
-> > How does the discussion on:
-> >   [PATCH] Revert "batman-adv: prefer kfree_rcu() over call_rcu() with free-only callbacks"
-> >   https://lore.kernel.org/all/20240612133357.2596-1-linus.luessing@c0d3.blue/
-> > reflect on this series? IIUC we should hold off..
+On Fri,  7 Jun 2024 00:51:15 +0000 Mina Almasry wrote:
+> Abstrace the memory type from the page_pool so we can later add support
+> for new memory types. Convert the page_pool to use the new netmem type
+> abstraction, rather than use struct page directly.
 > 
-> We do need to hold off for the ones in kernel modules (such as 07/14)
-> where the kmem_cache is destroyed during module unload.
+> As of this patch the netmem type is a no-op abstraction: it's always a
+> struct page underneath. All the page pool internals are converted to
+> use struct netmem instead of struct page, and the page pool now exports
+> 2 APIs:
 > 
-> OK, I might as well go through them...
+> 1. The existing struct page API.
+> 2. The new struct netmem API.
 > 
-> [PATCH 01/14] wireguard: allowedips: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-> 	Needs to wait, see wg_allowedips_slab_uninit().
+> Keeping the existing API is transitional; we do not want to refactor all
+> the current drivers using the page pool at once.
+> 
+> The netmem abstraction is currently a no-op. The page_pool uses
+> page_to_netmem() to convert allocated pages to netmem, and uses
+> netmem_to_page() to convert the netmem back to pages to pass to mm APIs,
+> 
+> Follow up patches to this series add non-paged netmem support to the
+> page_pool. This change is factored out on its own to limit the code
+> churn to this 1 patch, for ease of code review.
 
-Right, this has exactly the same pattern as the batman-adv issue:
+Sorry for lack of meaningful review, busy times, in the meantime:
 
-    void wg_allowedips_slab_uninit(void)
-    {
-            rcu_barrier();
-            kmem_cache_destroy(node_cache);
-    }
-
-I'll hold off on sending that up until this matter is resolved.
-
-Jason
+drivers/net/ethernet/renesas/ravb_main.c:306:16: error: incompatible integer to pointer conversion assigning to 'struct page *' from 'netmem_ref' (aka 'unsigned long') [-Wint-conversion]
+  306 |         rx_buff->page = page_pool_alloc(priv->rx_pool[q], &rx_buff->offset,
+      |                       ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  307 |                                         &size, gfp_mask);
+      |                                         ~~~~~~~~~~~~~~~~
+-- 
+pw-bot: cr
