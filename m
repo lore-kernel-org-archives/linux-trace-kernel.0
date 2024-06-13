@@ -1,62 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0482F50;
-	Thu, 13 Jun 2024 21:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461D214B091
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 22:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718314114; cv=none; b=RCsQLDccuYhpgRaxfSXAkG5P23ax1eRJJ8AYinXFnPTFk02eShjY2YjMn0okZJKb8Rbj7eZsw8eX+S9FJ3JHrd5O29gh5owEa84sr548ll9kve5RJ5dyxWAp4nJ8T5mvIw2E2ShNOHt7fgyoMA77ntLY0XFa7A5tgfRxhOFFMJY=
+	t=1718317096; cv=none; b=RcVuLcjzkOyK1/3rpZKD/9aULcBtA5PwnwaLQuMJfwgTzCNgt3XLkmeS7OSC8edOYNsRa16G9B4lZHMPj466jkJlDJerXlZWZv774AHcbp2aJk/poXqpouIsVQ6kYLCz13xFY99bIX0tLr4M4Y9GZ4U5vdX/r6YwM5vuYa8qadU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718314114; c=relaxed/simple;
-	bh=lQRNKUS+iBpvuTMpf193ejGTFCkscE26dA7f7KxEze8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r3bzXt8eLDYWVb8jNGY9u71elgHCKBcmj/RUHV+b9xYdQuYKgJBjLz48ea+0OnYgI0lO+GGlqHPYJI7BMxYvK/sFfF5ZYar/ZZeKf8dnXhvQuiBSc5bt+r0aTmDY0LWZIhJNMOZTWWD60A6VJl+45iTTOpnt1bXp8e/mCro0jgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B108AC2BBFC;
-	Thu, 13 Jun 2024 21:28:32 +0000 (UTC)
-Date: Thu, 13 Jun 2024 17:28:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-security-module@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] linux++: delete some forward declarations
-Message-ID: <20240613172831.5e7f762f@rorschach.local.home>
-In-Reply-To: <20240613142110.30019a4084d922d63c6d4352@linux-foundation.org>
-References: <5ad5556c-7c32-45b7-89cf-f723c9d7332b@p183>
-	<20240613153402.3b067d4b@rorschach.local.home>
-	<20240613130420.a62ed8965a73b0f8d35890d4@linux-foundation.org>
-	<20240613161012.1dd2ff60@rorschach.local.home>
-	<20240613142110.30019a4084d922d63c6d4352@linux-foundation.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718317096; c=relaxed/simple;
+	bh=GspCeXbe53JYdKAHLrPNjz5Bk3zxp4umRvOyOhKibSg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hq6U90eyeEvt8yMECYwNrRFqHep/Bl4yha/t06xYamh5zqEgQKHscXtBqOyj67KSwU7UHYafHFZnezJ5QLSCjSumIAOhQgAbnnaFmtqpQdAv+YEkI5o5vm9owAA3Y6Rky892cWlTv931y0EQ+syX4van9LqJSFkoblQ6m3qCdb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=F8hu2pjx; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="F8hu2pjx"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ebf961e504so16075561fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1718317092; x=1718921892; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ivv8xxFePEFaIPZc0G+v3++kMFBsUSKEIP1k/xbjdQI=;
+        b=F8hu2pjx0zRLoSXjyqV03rAwVJHdiSjYSNKVQL+4WGHUtBPfp8aogbw/DoSrfgTk40
+         g4lHlHrkD/jvUMSm/xopfaumtQU2i+fQrQquhfUW0JSh5McZPKFiX5mdl2M+0gM6OQH0
+         qrX7dssbpzn8BL2QafqybrQHPa1cusaHOlN7A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718317092; x=1718921892;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ivv8xxFePEFaIPZc0G+v3++kMFBsUSKEIP1k/xbjdQI=;
+        b=knqjDcDN8SYEJGOPiLorcs6B9vuf+cLfMEVijW+dCY3Pr3QwiDjQOiKLj0NyxmZQ6Z
+         7xnPnuIxxAHQuAGRVUAn365qEm4HueV/KpKsVm3p7mU6sXOhSDt+qdrU2DIUkSVpHwL3
+         UwswCcPBXBrxryp+jANpLc4oJUZGHUWoRnhDnjW8YWKieaBFDNPs8XVLHK6WvevmrQm7
+         9wVUYl3wxcCCRA4UcavE8D7uH2Gj8swYMV9yJN8QiHftxGiU12mmrD+OPqrav3xI3zxJ
+         8ah6qOt1Xv/F0loASCTa5636wbNEccWlgK16fqsb2hXVPSRfAiTQv8qxBr+9Ac3DLY2P
+         E5yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2GtPGWqVoqrC6gL8GVOGgLbukA8r0VzTi+UeWmZBF/tO+jGZc+eSXp0LQFj0+Hp6hDEVIg5YZAkwkBxy2Eb7EyW0HAJ+sxLwmpnjDiZP0rlyG
+X-Gm-Message-State: AOJu0Yx4ISK9SwYDM05fH7QlvHu6fZM0t8RypXGwaJVAAZPitQnr0Nwh
+	g1UUhVc0OA0pgJev1khcg3VhpnVHRteHr13tXEXsBH8NUjJ8MGNJ7uXLJcwwIayNGRSTJ/fsGw/
+	rkRbwBQ==
+X-Google-Smtp-Source: AGHT+IFiJb0iJ3lX5WVM/yFcxVd6rELoQFNIJksktLokk09c5g4GoeeTs0IQP49THyhwQ1/f2Dr1pA==
+X-Received: by 2002:a2e:9d8c:0:b0:2ec:e5:8254 with SMTP id 38308e7fff4ca-2ec0e5d135bmr6432841fa.28.1718317092118;
+        Thu, 13 Jun 2024 15:18:12 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05bf41ccsm3719481fa.28.2024.06.13.15.18.10
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jun 2024 15:18:11 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ebf961e504so16075251fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 15:18:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4t0CB6gm5y6RxiTbLPHD2WWXvBVNkUqXgKVeLFOBC+elMd5FizFZmqebco2wSbsSZai3/rSfR9RFKjqSjRz5OrYdST3HQsTKop1NF7LFRmbSv
+X-Received: by 2002:a2e:92d6:0:b0:2eb:242b:652a with SMTP id
+ 38308e7fff4ca-2ec0e5c6ce9mr6646061fa.15.1718317090589; Thu, 13 Jun 2024
+ 15:18:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240613023044.45873-1-laoar.shao@gmail.com> <20240613023044.45873-6-laoar.shao@gmail.com>
+ <20240613141435.fad09579c934dbb79a3086cc@linux-foundation.org>
+In-Reply-To: <20240613141435.fad09579c934dbb79a3086cc@linux-foundation.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 13 Jun 2024 15:17:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgqrwFXK-CO8-V4fwUh5ymnUZ=wJnFyufV1dM9rC1t3Lg@mail.gmail.com>
+Message-ID: <CAHk-=wgqrwFXK-CO8-V4fwUh5ymnUZ=wJnFyufV1dM9rC1t3Lg@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] mm/util: Fix possible race condition in kstrdup()
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>, ebiederm@xmission.com, 
+	alexei.starovoitov@gmail.com, rostedt@goodmis.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 13 Jun 2024 14:21:10 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Thu, 13 Jun 2024 at 14:14, Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> The concept sounds a little strange.  If some code takes a copy of a
+> string while some other code is altering it, yes, the result will be a
+> mess.  This is why get_task_comm() exists, and why it uses locking.
 
-> On Thu, 13 Jun 2024 16:10:12 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > > And...  I'm a bit surprised that forward declarations are allowed in C.
-> > > A billion years ago I used a C compiler which would use 16 bits for
-> > > an enum if the enumted values would fit in 16 bits.  And it would use 32
-> > > bits otherwise.  So the enumerated values were *required* for the
-> > > compiler to be able to figure out the sizeof.  But it was a billion
-> > > years ago.  
-> > 
-> > Well, I only looked at the one change in ftrace.h which has a
-> > "struct seq_file;" that is not used anywhere else in the file, so that
-> > one definitely can go.  
-> 
-> The risk is that something which includes ftrace.h is depending upon
-> the enum declaration.
+The thing is, get_task_comm() is terminally broken.
 
-You mean forward struct declaration. And if so, good! it needs to be fixed ;-)
+Nobody sane uses it, and sometimes it's literally _because_ it uses locking.
 
--- Steve
+Let's look at the numbers:
+
+ - 39 uses of get_task_comm()
+
+ - 2 uses of __get_task_comm() because the locking doesn't work
+
+ - 447 uses of raw "current->comm"
+
+ - 112 uses of raw 'ta*sk->comm' (and possibly
+
+IOW, we need to just accept the fact that nobody actually wants to use
+"get_task_comm()". It's a broken interface. It's inconvenient, and the
+locking makes it worse.
+
+Now, I'm not convinced that kstrdup() is what anybody should use
+should, but of the 600 "raw" uses of ->comm, four of them do seem to
+be kstrdup.
+
+Not great, I think they could be removed, but they are examples of
+people doing this. And I think it *would* be good to have the
+guarantee that yes, the kstrdup() result is always a proper string,
+even if it's used for unstable sources. Who knows what other unstable
+sources exist?
+
+I do suspect that most of the raw uses of 'xyz->comm' is for
+printouts. And I think we would be better with a '%pTSK' vsnprintf()
+format thing for that.
+
+Sadly, I don't think coccinelle can do the kinds of transforms that
+involve printf format strings.
+
+And no, a printk() string still couldn't use the locking version.
+
+               Linus
