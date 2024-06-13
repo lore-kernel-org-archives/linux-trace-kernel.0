@@ -1,120 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CA810F9;
-	Thu, 13 Jun 2024 14:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13BD1448D7;
+	Thu, 13 Jun 2024 14:12:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287667; cv=none; b=IpM2cqsJrArEEKeVbm8AV/df6yeg9itC/98rJrJBQqcTSA6xxFNGZeALNMG/uppsQhB+aB64ko/cUem2lyObJKzzgKVr8u1SQGP7KtA8nJmx/p/sjugdmK9KutKxGqqGElLsKVV5EZrsw2o2+lUp9/CPieRgleCfoNZ6bT9NGk4=
+	t=1718287925; cv=none; b=I86ts514cHJIs+9lfKtf0TiX1JFvuCbNzdhoMBmZpePOi72wKEesCNrYrcItQD0zAQUTDBC1oxFj8usSmCQKL9FJiL/4axH8zUfdaNhesFmQHxg2y8FAIV12pzirFCKwSLT3jMHbESn7cxIiW4rXyX00xROF58WTRgI7B7hTGl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287667; c=relaxed/simple;
-	bh=odfp1TpgeErbFjJ61Se8vEzIbx/qU6+JD3DTGwxuJtk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To; b=t3e+5wnHk8mTrXx9c0c7TokYWPkWmd+C4PHjyFctTr/5KUxeBZoBWBPTu+Z0lh6IjA1WzKkEag1fAS+7u0/gBzcrnaYU4lPCLVGV/nzBhSd9Fn6lW0f3q7lWLFXxpnze9AfvWP00Cz60swQ6mIKf+5sBMxoJtTfsttJ+4TaI/u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2Gh31x0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718287925; c=relaxed/simple;
+	bh=BP0dHPKrPu1s5lsp6b2VSCZAPBtD2LfDAGF3nZJ/aYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKPeoTew5K7KAhRH1tBMnRVXgyjWyWh8QRVrrsIeQtRZ5JzmVeU8MNxFkM/EKHGRThz5ddhQJxJ46GWPMv5MapSB6JlctJ1QuHs6FQDDbXY9qGuqfNT7ayWoXVK4CjJc/tHJI5cF2HLNlkJvHMJ3crwShyiQ0r9TgzScHbuP/5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=L2OdeEdD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2Gh31x0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830FEC2BBFC;
-	Thu, 13 Jun 2024 14:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718287667;
-	bh=odfp1TpgeErbFjJ61Se8vEzIbx/qU6+JD3DTGwxuJtk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:From;
-	b=Q2Gh31x0D8g+FDWZnBJ4HAyMYMjVk7RRlq9uO/0AyrM13tWmr2HVLbcigsBbvVBBW
-	 1VjNa589ejVuxOYtWXUj0IKD9Xfx977Gg8zRrx9cv7+bNbGExDAVOcpBQqpj4aJ+Z1
-	 MD4HjSxYbfUSAttpDVRdLUHUO5KY0VY8WbYlm7pcoBYWQ4x8Ww+ztMuR/h/9i+wXxx
-	 ZT86AZO+IFS2ELHnLt2kAqh/IdrAENiicumNSjxi7SdBL1qL9HX7i2Stlq1HD1uyAh
-	 5frETOxA7lkrf/IZuHk13SkQwy6m8fRZiVJLZ5qn8sZIZAOwdeSpTQHuxUKItzKTDW
-	 0rycJZY4fktsA==
-From: SeongJae Park <sj@kernel.org>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="L2OdeEdD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 414C2C2BBFC;
+	Thu, 13 Jun 2024 14:12:02 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="L2OdeEdD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1718287920;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fjz4ZCmXLkYKy1WwR1BKUB9SOdktn0OQ80YKkl5C07A=;
+	b=L2OdeEdDbAYwCCQIo0q3Y5svBHl6HUoVii7Ipx/YqW9msnW5nLiQCcmVhvT3d2aYbXekmX
+	6vGp/7RezmQfWwaVJxWqE0MwVUi9dk5ylrevWbLPzxAvc9yHIJFCNMr0XP5ij6Ppv2K3la
+	u18h46ekO5C4iutUHhucdp/z23ziWUY=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9cf22b43 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 13 Jun 2024 14:11:58 +0000 (UTC)
+Date: Thu, 13 Jun 2024 16:11:52 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gregory Price <gregory.price@memverge.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com,
-	kernel_team@skhynix.com
-Subject: Re: [PATCH v5 8/8] Docs/.../mm/damon: add more damos actions
-Date: Thu, 13 Jun 2024 07:07:29 -0700
-Message-Id: <20240613140729.27177-1-sj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240613132056.608-9-honggyu.kim@sk.com>
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <Zmr-KPG9F6w-uzys@zx2c4.com>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <Zmov7ZaL-54T9GiM@zx2c4.com>
+ <Zmo9-YGraiCj5-MI@zx2c4.com>
+ <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
+ <Zmrkkel0Fo4_g75a@zx2c4.com>
+ <e06440e2-9121-4c92-8bf2-945977987052@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e06440e2-9121-4c92-8bf2-945977987052@paulmck-laptop>
 
-Hi Honggyu,
-
-On Thu, 13 Jun 2024 22:20:55 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-
-> This patch adds damon description for "migrate_hot" and "migrate_cold"
-> actions for both usage and design documents as long as a new
-> "target_nid" knob to set the migration target node.
+On Thu, Jun 13, 2024 at 05:46:11AM -0700, Paul E. McKenney wrote:
+> How about a kmem_cache_destroy_rcu() that marks that specified cache
+> for destruction, and then a kmem_cache_destroy_barrier() that waits?
 > 
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> ---
->  Documentation/admin-guide/mm/damon/usage.rst | 8 +++++++-
->  Documentation/mm/damon/design.rst            | 4 ++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
+> I took the liberty of adding your name to the Google document [1] and
+> adding this section:
+
+Cool, though no need to make me yellow!
+
+> > But then, if that mechanism generally works, we don't really need a new
+> > function and we can just go with the first option of making
+> > kmem_cache_destroy() asynchronously wait. It'll wait, as you described,
+> > but then we adjust the tail of every kfree_rcu batch freeing cycle to
+> > check if there are _still_ any old outstanding kmem_cache_destroy()
+> > requests. If so, then we can splat and keep the old debugging info we
+> > currently have for finding memleaks.
 > 
-> diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-> index 7bff54963975..84d62d16c9f9 100644
-> --- a/Documentation/admin-guide/mm/damon/usage.rst
-> +++ b/Documentation/admin-guide/mm/damon/usage.rst
-> @@ -300,6 +300,10 @@ from the file and their meaning are same to those of the list on
->  The ``apply_interval_us`` file is for setting and getting the scheme's
->  :ref:`apply_interval <damon_design_damos>` in microseconds.
->  
-> +The ``target_nid`` file is for setting the migration target node, which is
-> +only meaningful when the ``action`` is either ``migrate_hot`` or
-> +``migrate_cold``.
-> +
->  .. _sysfs_access_pattern:
->  
->  schemes/<N>/access_pattern/
-> @@ -759,7 +763,9 @@ list on :ref:`design doc <damon_design_damos_action>`.
->   - 4: ``nohugepage``
->   - 5: ``lru_prio``
->   - 6: ``lru_deprio``
-> - - 7: ``stat``
-> + - 7: ``migrate_hot``
-> + - 8: ``migrate_cold``
-> + - 9: ``stat``
+> The mechanism can always be sabotaged by memory-leak bugs on the part
+> of the user of the kmem_cache structure in play, right?
+> 
+> OK, but I see your point.  I added this to the existing
+> "kmem_cache_destroy() Lingers for kfree_rcu()" section:
+> 
+> 	One way of preserving this debugging information is to splat if
+> 	all of the slab’s memory has not been freed within a reasonable
+> 	timeframe, perhaps the same 21 seconds that causes an RCU CPU
+> 	stall warning.
+> 
+> Does that capture it?
 
-This section is for DAMON debugfs interface.  And to my understanding, this
-patchset is not adding support of migrate_{hot,cold} DAMOS actions on DAMON
-debugfs interface.  So I think this part should be removed.
+Not quite what I was thinking. Your 21 seconds as a time-based thing I
+guess could be fine. But I was mostly thinking:
 
->  
->  Quota
->  ~~~~~
-> diff --git a/Documentation/mm/damon/design.rst b/Documentation/mm/damon/design.rst
-> index 3df387249937..3f12c884eb3a 100644
-> --- a/Documentation/mm/damon/design.rst
-> +++ b/Documentation/mm/damon/design.rst
-> @@ -325,6 +325,10 @@ that supports each action are as below.
->     Supported by ``paddr`` operations set.
->   - ``lru_deprio``: Deprioritize the region on its LRU lists.
->     Supported by ``paddr`` operations set.
-> + - ``migrate_hot``: Migrate the regions prioritizing warmer regions.
-> +   Supported by ``paddr`` operations set.
-> + - ``migrate_cold``: Migrate the regions prioritizing colder regions.
-> +   Supported by ``paddr`` operations set.
->   - ``stat``: Do nothing but count the statistics.
->     Supported by all operations sets.
+1) kmem_cache_destroy() is called, but there are outstanding objects, so
+   it defers.
 
-Except the DAMON debugfs interface section, this patch looks good to me.
+2) Sometime later, a kfree_rcu_work batch freeing operation runs.
 
+3) At the end of this batch freeing, the kernel notices that the
+   kmem_cache whose destruction was previously deferred still has
+   outstanding objects and has not been destroyed. It can conclude that
+   there's thus been a memory leak.
 
-Thanks,
-SJ
-
-[...]
+In other words, instead of having to do this based on timers, you can
+just have the batch freeing code ask, "did those pending kmem_cache
+destructions get completed as a result of this last operation?"
