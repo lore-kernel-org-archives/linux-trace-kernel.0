@@ -1,207 +1,153 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B5413C827;
-	Thu, 13 Jun 2024 07:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E5913C8FF;
+	Thu, 13 Jun 2024 07:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718264928; cv=none; b=qUbIojJgibrRo6Hl89I7tFQDIsYvR0gUsc5XI4rL/jklAdVVhbm8zArNyw10SI/q7ip3MJUbrQm6+73TiPe//G8LWhiJfJ79Zixv1Kcm7EbxKuQtwdlSzokHwR9QaO/GOoMcv/T0Vsf+QJ9Cd/YzRLFdXLmB4OHNITMfFvO2vRc=
+	t=1718264958; cv=none; b=Q2AbHutii92cnpcd/NtH/vzdiNmPYzjMq9iyxbTpXV9yUH2VNqbg3DGKCC/FnsvT8oyeNTJUJ82ejRSPakmE7iVXuxCWWXd39P14WVTFdRNPQ2lJhXjGq1lR69Z88jrxZUzJr9uaFJYsFoknTHXtAue0UYzecN9JF2DlcngpqnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718264928; c=relaxed/simple;
-	bh=/5EG8VMd7LliSml0B5DgPKmGWzFXy5kJxof/+4sXrGc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JP2+I/V4ItF4TH5cOLhpxBfMrQS/ZPCWQp7jVYQoF21J/vvvPayAHSJu86STzzGywieWRT34YpB7OJXQgl7BS3z9HzqdxJ7/QZXrkqZo9bQdhBc5fuw8i39eQExIW4195Wzj9xIPW5+BSAeuR82wer0kGYbdAr9eJV+LXQJX14U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=adOEAd6b; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718264958; c=relaxed/simple;
+	bh=tOsnQVOFTDPDAjyXqM6o5BX1/ALySEuh1yBpE5U5t04=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=POrwzKFW3kXvLAy2vACT5dviI84CkJPtVgCsDAxTPqjL1tTk4LW526zQo9jz9A8B8iMeLYL4QLW4Fdtrz2J44oC1Pc9X/R/LpF0K0nW8R64mVNXGoIJMTOfPnD3RVTLX8XCPSaNGCV+73iUD+trdLjT3W2uOPdN6JEZ83g7V/QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=HMvLdNuo; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="adOEAd6b"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Zjr+VSpN2YOV8SzNhgW0HxlJxurFf1+bVKCUe+pa/6g=;
-	t=1718264926; x=1718696926; b=adOEAd6bDO6WKtWHJJi5tI9lzcYLhC471j1AST0wa6gVTKx
-	OKHtZYCuNQ7vPSTgj5XU8PDSe/fI69n9lfVP1tcf4T93yoPzMEsgaG9mLMrxdJRn3SagALtFgrlCB
-	d6qAaOO/Mfi+2b07aWUciVxo15Ok5q5kxp3+o5EY6R+FrFUVMjwu7NdCsXH2jVX/HTb9nc5NyMaNp
-	m8ECo0Nbk7MqRLSB8xjCAF+a0TM8u94QzLIdNUPGaOzosQsou5Z4TZTinQRFigXcnWK+A6/DHpVjX
-	HGertUroJY3FxP5J3S2oL8fpZR+pIMT1TcvE1D0F3+eta0XShJ+JXGWeWIgkkKsw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHfCL-0007aF-Hm; Thu, 13 Jun 2024 09:48:41 +0200
-Message-ID: <d1a2072c-e558-418c-a3b0-280d9be0e8f3@leemhuis.info>
-Date: Thu, 13 Jun 2024 09:48:40 +0200
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="HMvLdNuo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718264955; x=1749800955;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tOsnQVOFTDPDAjyXqM6o5BX1/ALySEuh1yBpE5U5t04=;
+  b=HMvLdNuoCW8QchGY2gQAkxqeLGY+6ijhiwXQECNNzQ9dNSYAPU6ZI+2B
+   tsuWMRPLjwamHRPaWi1C73VEhpuYAJFSdL5PLMk9Uj+Ap+WnmAPLE0C2B
+   CdlC6Xd4IYdnIO7u5v6rgXOnuLgT3hVs6dyPltUYu18kC4YPcocFZfxh2
+   pe2wm2SRGIi4NXPrQQcBDxwlhO+UmkbrCMLTpSJbo5dimubNJgR6M8d+h
+   k3eCjlvuMmXcoeK3jst2qROa0TjIfRWnLHTmvUWvwylb8EUvLlLhCUmZT
+   RUd+8Hu1/hADsZ8wJdlM4NsfTlWdoM3ICnjVuKqZ20aqtg4SSzn2bqqSa
+   g==;
+X-CSE-ConnectionGUID: HD7DQktUQset5I4Uvw9H8Q==
+X-CSE-MsgGUID: EH4vLWffT2uZaRrw4Ct1EA==
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="asc'?scan'208";a="29819693"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Jun 2024 00:49:13 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 13 Jun 2024 00:48:53 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 13 Jun 2024 00:48:51 -0700
+Date: Thu, 13 Jun 2024 08:48:34 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Andrea Parri <parri.andrea@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
+Message-ID: <20240613-lubricant-breath-061192a9489a@wendy>
+References: <20240523115134.70380-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-To: =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?= <digirigawa@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
- <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
- <20240527183139.42b6123c@rorschach.local.home>
- <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
- <20240528144743.149e351b@rorschach.local.home>
- <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
- <20240529144757.79d09eeb@rorschach.local.home>
- <20240529154824.2db8133a@rorschach.local.home>
- <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
- <20240530095953.0020dff9@rorschach.local.home>
- <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
- <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
- <20240612115612.2e5f4b34@rorschach.local.home>
- <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718264926;2021880b;
-X-HE-SMSGID: 1sHfCL-0007aF-Hm
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ucH24q+vfrE+sERa"
+Content-Disposition: inline
+In-Reply-To: <20240523115134.70380-1-alexghiti@rivosinc.com>
 
-On 13.06.24 09:32, Ilkka Naulapää wrote:
-> On Wed, Jun 12, 2024 at 6:56 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->> On Wed, 12 Jun 2024 15:36:22 +0200
->> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
->>>
->>> Ilkka or Steven, what happened to this? This thread looks stalled. I
->>> also was unsuccessful when looking for other threads related to this
->>> report or the culprit. Did it fall through the cracks or am I missing
->>> something here?
->
->> Honesty, I have no idea where the bug is. I can't reproduce it. [...]
+--ucH24q+vfrE+sERa
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Steven, thx for the update! And yeah, that's how it sometimes is. Given
-that we haven't seen similar reports (at least afaics) it's nothing I
-worry much about.
+On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
+> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
+> converted ftrace_make_nop() to use patch_insn_write() which does not
+> emit any icache flush relying entirely on __ftrace_modify_code() to do
+> that.
+>=20
+> But we missed that ftrace_make_nop() was called very early directly when
+> converting mcount calls into nops (actually on riscv it converts 2B nops
+> emitted by the compiler into 4B nops).
+>=20
+> This caused crashes on multiple HW as reported by Conor and Bj=F6rn since
+> the booting core could have half-patched instructions in its icache
+> which would trigger an illegal instruction trap: fix this by emitting a
+> local flush icache when early patching nops.
+>=20
+> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/cacheflush.h | 6 ++++++
+>  arch/riscv/kernel/ftrace.c          | 3 +++
+>  2 files changed, 9 insertions(+)
+>=20
+> diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm=
+/cacheflush.h
+> index dd8d07146116..ce79c558a4c8 100644
+> --- a/arch/riscv/include/asm/cacheflush.h
+> +++ b/arch/riscv/include/asm/cacheflush.h
+> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
+>  	asm volatile ("fence.i" ::: "memory");
+>  }
+> =20
+> +static inline void local_flush_icache_range(unsigned long start,
+> +					    unsigned long end)
+> +{
+> +	local_flush_icache_all();
+> +}
+> +
+>  #define PG_dcache_clean PG_arch_1
+> =20
+>  static inline void flush_dcache_folio(struct folio *folio)
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 4f4987a6d83d..32e7c401dfb4 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct dyn_ft=
+race *rec)
+>  	out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>  	mutex_unlock(&text_mutex);
 
-> ok, so if you don't have any idea where this bug is after those debug
-> patches, I'll try to find some time to bisect it as a last resort.
-> Stay tuned.
+So, turns out that this patch is not sufficient. I've seen some more
+crashes, seemingly due to initialising nops on this mutex_unlock().
+Palmer suggested moving the if (!mod) ... into the lock, which fixed
+the problem for me.
 
-Yeah, that would be great help. Thank you, too!
+> =20
+> +	if (!mod)
+> +		local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
+> +
+>  	return out;
+>  }
+> =20
+> --=20
+> 2.39.2
+>=20
 
-Ciao, Thorsten
+--ucH24q+vfrE+sERa
+Content-Type: application/pgp-signature; name="signature.asc"
 
->>> On 02.06.24 09:32, Ilkka Naulapää wrote:
->>>> sorry longer delay, been a bit busy but here is the result from that
->>>> new patch. Only applied this patch so if the previous one is needed
->>>> also, let me know and I'll rerun it.
->>>>
->>>> --Ilkka
->>>>
->>>> On Thu, May 30, 2024 at 5:00 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->>>>>
->>>>> On Thu, 30 May 2024 16:02:37 +0300
->>>>> Ilkka Naulapää <digirigawa@gmail.com> wrote:
->>>>>
->>>>>> applied your patch and here's the output.
->>>>>>
->>>>>
->>>>> Unfortunately, it doesn't give me any new information. I added one more
->>>>> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
->>>>>
->>>>> -- Steve
->>>>>
->>>>> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
->>>>> index de5b72216b1a..a090495e78c9 100644
->>>>> --- a/fs/tracefs/inode.c
->>>>> +++ b/fs/tracefs/inode.c
->>>>> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
->>>>>                 return NULL;
->>>>>
->>>>>         ti->flags = 0;
->>>>> +       ti->magic = 20240823;
->>>>>
->>>>>         return &ti->vfs_inode;
->>>>>  }
->>>>>
->>>>>  static void tracefs_free_inode(struct inode *inode)
->>>>>  {
->>>>> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
->>>>> +       struct tracefs_inode *ti = get_tracefs(inode);
->>>>> +
->>>>> +       BUG_ON(ti->magic != 20240823);
->>>>> +       kmem_cache_free(tracefs_inode_cachep, ti);
->>>>>  }
->>>>>
->>>>>  static ssize_t default_read_file(struct file *file, char __user *buf,
->>>>> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode_operations = {
->>>>>         .rmdir          = tracefs_syscall_rmdir,
->>>>>  };
->>>>>
->>>>> -struct inode *tracefs_get_inode(struct super_block *sb)
->>>>> -{
->>>>> -       struct inode *inode = new_inode(sb);
->>>>> -       if (inode) {
->>>>> -               inode->i_ino = get_next_ino();
->>>>> -               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
->>>>> -       }
->>>>> -       return inode;
->>>>> -}
->>>>> -
->>>>>  struct tracefs_mount_opts {
->>>>>         kuid_t uid;
->>>>>         kgid_t gid;
->>>>> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
->>>>>                 return;
->>>>>
->>>>>         ti = get_tracefs(inode);
->>>>> +       BUG_ON(ti->magic != 20240823);
->>>>>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
->>>>>                 eventfs_set_ef_status_free(dentry);
->>>>>         iput(inode);
->>>>> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
->>>>>         return dentry;
->>>>>  }
->>>>>
->>>>> +struct inode *tracefs_get_inode(struct super_block *sb)
->>>>> +{
->>>>> +       struct inode *inode = new_inode(sb);
->>>>> +
->>>>> +       BUG_ON(sb->s_op != &tracefs_super_operations);
->>>>> +       if (inode) {
->>>>> +               inode->i_ino = get_next_ino();
->>>>> +               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
->>>>> +       }
->>>>> +       return inode;
->>>>> +}
->>>>> +
->>>>>  /**
->>>>>   * tracefs_create_file - create a file in the tracefs filesystem
->>>>>   * @name: a pointer to a string containing the name of the file to create.
->>>>> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
->>>>> index 69c2b1d87c46..9059b8b11bb6 100644
->>>>> --- a/fs/tracefs/internal.h
->>>>> +++ b/fs/tracefs/internal.h
->>>>> @@ -9,12 +9,15 @@ enum {
->>>>>  struct tracefs_inode {
->>>>>         unsigned long           flags;
->>>>>         void                    *private;
->>>>> +       unsigned long           magic;
->>>>>         struct inode            vfs_inode;
->>>>>  };
->>>>>
->>>>>  static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
->>>>>  {
->>>>> -       return container_of(inode, struct tracefs_inode, vfs_inode);
->>>>> +       struct tracefs_inode *ti = container_of(inode, struct tracefs_inode, vfs_inode);
->>>>> +       BUG_ON(ti->magic != 20240823);
->>>>> +       return ti;
->>>>>  }
->>>>>
->>>>>  struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
->>
-> 
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmqkUQAKCRB4tDGHoIJi
+0m3VAQDMZOg52eVsvZthKmdZBM/Y3SXPrObGxlcvKyFsEVooWQD8C8VClKYq1GTX
+I/KHs08ahGuI+30Vfq/MEeFlrbU1AgU=
+=hljr
+-----END PGP SIGNATURE-----
+
+--ucH24q+vfrE+sERa--
