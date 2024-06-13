@@ -1,106 +1,207 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED8613D52B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B5413C827;
+	Thu, 13 Jun 2024 07:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718263994; cv=none; b=GFqaRwtjGW52ugIqk6K2Duo5osB80+a8GB8ALo3pHyBCFBCh7K86KIjjykkaQd8zAGj2JyD9WiIh63PWzbnTLUaOu1kcouNXsG+mmyywZ8GJoBBdgbEz1Kd4DRZSMC/NihA7amriruiiR8gApv7sWah2p9GzoFAY6x9SC12XTS0=
+	t=1718264928; cv=none; b=qUbIojJgibrRo6Hl89I7tFQDIsYvR0gUsc5XI4rL/jklAdVVhbm8zArNyw10SI/q7ip3MJUbrQm6+73TiPe//G8LWhiJfJ79Zixv1Kcm7EbxKuQtwdlSzokHwR9QaO/GOoMcv/T0Vsf+QJ9Cd/YzRLFdXLmB4OHNITMfFvO2vRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718263994; c=relaxed/simple;
-	bh=uoTnrqYSg19kqb0lgMH7SLS/qe9dnaqbOD+HJnS87Ho=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=haQr3eVJqzHK/IG0iGhtYKVhWU73HwGgNhwP66rmWcD4pf6YedtqBrU0z3R73mGEGMawb4YFw4623GCb70Zr8LzFXeND1Ciagq4Mp8FmiwPpyyG3ED78jWTR5Sw4cip1zl/JJEUfsqJ7bZ7uYIQh/TlQbm8ZdvFqLTdOUPngYXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=WlfE5jC2; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1718264928; c=relaxed/simple;
+	bh=/5EG8VMd7LliSml0B5DgPKmGWzFXy5kJxof/+4sXrGc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JP2+I/V4ItF4TH5cOLhpxBfMrQS/ZPCWQp7jVYQoF21J/vvvPayAHSJu86STzzGywieWRT34YpB7OJXQgl7BS3z9HzqdxJ7/QZXrkqZo9bQdhBc5fuw8i39eQExIW4195Wzj9xIPW5+BSAeuR82wer0kGYbdAr9eJV+LXQJX14U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=adOEAd6b; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WlfE5jC2"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-6e4dbca52f0so525214a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 00:33:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1718263992; x=1718868792; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RlJIkXaRaXYEOo0FtAy4w5B+d0jhj99dMDrjOpWfyi4=;
-        b=WlfE5jC2GSHvYdL9YEYEFvD537xrYazzBJ5mcLQhpz6eXYU1TCCthCwF/9Cx4OGZG5
-         M5dcRHbYBN8zf7QyWPprIZvpyEqDCAGabmxG0cpu47t9F+v5jRoLq54svsMPwYaSYXxo
-         MbqkKkVE76RkQOkzbk9o1t+nlNWyD/mSjNxXvgmD6kdWjHRL4UiNcm6dbFjq6HcHb8ht
-         jnNHxiZFEfy0Tl1Da6DlSmvzTiKMPMUdoWO3weOiLfM7Mhi/Xg9f3c0rjAToPMUvEsVy
-         byUqA1iW/vapQZGso9cMJL9g//EPx1sODvCJLndZW0DRbnp8AB80IqtZXCNGcBByQluk
-         XS0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718263992; x=1718868792;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RlJIkXaRaXYEOo0FtAy4w5B+d0jhj99dMDrjOpWfyi4=;
-        b=Ur7GAjYajI6qy7REdXhflZfiPBxMfG5fiQHRaKR/irl1EnY2Qof1E7ffsV7LvaUP8O
-         RyLLzelZjL47bWhmreNsGTH8y63iCVX5FIvfBK6jt8EB2qfOI9sq4PGCrmwD2pCJmUEY
-         ZNJAOWVni274RatbeYApGMX8la8q5h9g8+E1vZpbcaPsOqPHQo/x475eg/Trllp1ex81
-         6M8KWSARiexhBrAZ5pUh00r+ivDPEVcfca0qbTGa9fo3iQeOz6BTc/Sw3V7szElPmlIK
-         gUdkAXiUPO+wcIlc0q9Z4MUAND47//cLiVSV3FdGtr4p6K4qA2Shlnmj5xRac4/fmBhU
-         5UsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/8XoNY1b2GI3G4UqD9+UnyntKYfmuWMutjkLTu2J7nuhuCix4Unz32EvI6nSXCMqhC+pdcTJBOo16/UOIGTNR4fOL5MVZRUOl7wkYEvF0iljq
-X-Gm-Message-State: AOJu0YwMSAhOyCJp71MPVA+RgJHEYsYyLWcb4am48JL4TNGteZvDrrSW
-	IuJcG64NtpuNwFMom5GQyfECMUS0gjyezQk16yLhMI5EkUIQfwlylLgez1rOSNg=
-X-Google-Smtp-Source: AGHT+IEyM0ONI7ICTx6DjS1SeAdMKnjMDIyvhgY/AOB26Jk18oYzU1QW75t2bRm257+1EVhnYwVCTA==
-X-Received: by 2002:a05:6a20:3d88:b0:1b2:a889:f7da with SMTP id adf61e73a8af0-1b8a9c887fdmr4702279637.55.1718263991983;
-        Thu, 13 Jun 2024 00:33:11 -0700 (PDT)
-Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cc78a1a0sm730028b3a.0.2024.06.13.00.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 00:33:11 -0700 (PDT)
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Thu, 13 Jun 2024 15:11:13 +0800
-Subject: [PATCH 8/8] riscv: ftrace: support PREEMPT
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="adOEAd6b"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Zjr+VSpN2YOV8SzNhgW0HxlJxurFf1+bVKCUe+pa/6g=;
+	t=1718264926; x=1718696926; b=adOEAd6bDO6WKtWHJJi5tI9lzcYLhC471j1AST0wa6gVTKx
+	OKHtZYCuNQ7vPSTgj5XU8PDSe/fI69n9lfVP1tcf4T93yoPzMEsgaG9mLMrxdJRn3SagALtFgrlCB
+	d6qAaOO/Mfi+2b07aWUciVxo15Ok5q5kxp3+o5EY6R+FrFUVMjwu7NdCsXH2jVX/HTb9nc5NyMaNp
+	m8ECo0Nbk7MqRLSB8xjCAF+a0TM8u94QzLIdNUPGaOzosQsou5Z4TZTinQRFigXcnWK+A6/DHpVjX
+	HGertUroJY3FxP5J3S2oL8fpZR+pIMT1TcvE1D0F3+eta0XShJ+JXGWeWIgkkKsw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sHfCL-0007aF-Hm; Thu, 13 Jun 2024 09:48:41 +0200
+Message-ID: <d1a2072c-e558-418c-a3b0-280d9be0e8f3@leemhuis.info>
+Date: Thu, 13 Jun 2024 09:48:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-dev-andyc-dyn-ftrace-v4-v1-8-1a538e12c01e@sifive.com>
-References: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
-In-Reply-To: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li <zong.li@sifive.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Puranjay Mohan <puranjay@kernel.org>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Andy Chiu <andy.chiu@sifive.com>
-X-Mailer: b4 0.12.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+To: =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?= <digirigawa@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+ <5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+ <20240527183139.42b6123c@rorschach.local.home>
+ <CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+ <20240528144743.149e351b@rorschach.local.home>
+ <CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+ <20240529144757.79d09eeb@rorschach.local.home>
+ <20240529154824.2db8133a@rorschach.local.home>
+ <CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+ <20240530095953.0020dff9@rorschach.local.home>
+ <CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
+ <ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+ <20240612115612.2e5f4b34@rorschach.local.home>
+ <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718264926;2021880b;
+X-HE-SMSGID: 1sHfCL-0007aF-Hm
 
-Now, we can safely enable dynamic ftrace with kernel preemption.
+On 13.06.24 09:32, Ilkka Naulapää wrote:
+> On Wed, Jun 12, 2024 at 6:56 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>> On Wed, 12 Jun 2024 15:36:22 +0200
+>> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
+>>>
+>>> Ilkka or Steven, what happened to this? This thread looks stalled. I
+>>> also was unsuccessful when looking for other threads related to this
+>>> report or the culprit. Did it fall through the cracks or am I missing
+>>> something here?
+>
+>> Honesty, I have no idea where the bug is. I can't reproduce it. [...]
 
-Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
----
- arch/riscv/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Steven, thx for the update! And yeah, that's how it sometimes is. Given
+that we haven't seen similar reports (at least afaics) it's nothing I
+worry much about.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 80b8d48e1e46..c1493ee1b8cd 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -133,7 +133,7 @@ config RISCV
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_EBPF_JIT if MMU
- 	select HAVE_GUP_FAST if MMU
- 	select HAVE_FUNCTION_ARG_ACCESS_API
+> ok, so if you don't have any idea where this bug is after those debug
+> patches, I'll try to find some time to bisect it as a last resort.
+> Stay tuned.
 
--- 
-2.43.0
+Yeah, that would be great help. Thank you, too!
 
+Ciao, Thorsten
+
+>>> On 02.06.24 09:32, Ilkka Naulapää wrote:
+>>>> sorry longer delay, been a bit busy but here is the result from that
+>>>> new patch. Only applied this patch so if the previous one is needed
+>>>> also, let me know and I'll rerun it.
+>>>>
+>>>> --Ilkka
+>>>>
+>>>> On Thu, May 30, 2024 at 5:00 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>>>>>
+>>>>> On Thu, 30 May 2024 16:02:37 +0300
+>>>>> Ilkka Naulapää <digirigawa@gmail.com> wrote:
+>>>>>
+>>>>>> applied your patch and here's the output.
+>>>>>>
+>>>>>
+>>>>> Unfortunately, it doesn't give me any new information. I added one more
+>>>>> BUG on, want to try this? Otherwise, I'm pretty much at a lost. :-/
+>>>>>
+>>>>> -- Steve
+>>>>>
+>>>>> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+>>>>> index de5b72216b1a..a090495e78c9 100644
+>>>>> --- a/fs/tracefs/inode.c
+>>>>> +++ b/fs/tracefs/inode.c
+>>>>> @@ -39,13 +39,17 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+>>>>>                 return NULL;
+>>>>>
+>>>>>         ti->flags = 0;
+>>>>> +       ti->magic = 20240823;
+>>>>>
+>>>>>         return &ti->vfs_inode;
+>>>>>  }
+>>>>>
+>>>>>  static void tracefs_free_inode(struct inode *inode)
+>>>>>  {
+>>>>> -       kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
+>>>>> +       struct tracefs_inode *ti = get_tracefs(inode);
+>>>>> +
+>>>>> +       BUG_ON(ti->magic != 20240823);
+>>>>> +       kmem_cache_free(tracefs_inode_cachep, ti);
+>>>>>  }
+>>>>>
+>>>>>  static ssize_t default_read_file(struct file *file, char __user *buf,
+>>>>> @@ -147,16 +151,6 @@ static const struct inode_operations tracefs_dir_inode_operations = {
+>>>>>         .rmdir          = tracefs_syscall_rmdir,
+>>>>>  };
+>>>>>
+>>>>> -struct inode *tracefs_get_inode(struct super_block *sb)
+>>>>> -{
+>>>>> -       struct inode *inode = new_inode(sb);
+>>>>> -       if (inode) {
+>>>>> -               inode->i_ino = get_next_ino();
+>>>>> -               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
+>>>>> -       }
+>>>>> -       return inode;
+>>>>> -}
+>>>>> -
+>>>>>  struct tracefs_mount_opts {
+>>>>>         kuid_t uid;
+>>>>>         kgid_t gid;
+>>>>> @@ -384,6 +378,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
+>>>>>                 return;
+>>>>>
+>>>>>         ti = get_tracefs(inode);
+>>>>> +       BUG_ON(ti->magic != 20240823);
+>>>>>         if (ti && ti->flags & TRACEFS_EVENT_INODE)
+>>>>>                 eventfs_set_ef_status_free(dentry);
+>>>>>         iput(inode);
+>>>>> @@ -568,6 +563,18 @@ struct dentry *eventfs_end_creating(struct dentry *dentry)
+>>>>>         return dentry;
+>>>>>  }
+>>>>>
+>>>>> +struct inode *tracefs_get_inode(struct super_block *sb)
+>>>>> +{
+>>>>> +       struct inode *inode = new_inode(sb);
+>>>>> +
+>>>>> +       BUG_ON(sb->s_op != &tracefs_super_operations);
+>>>>> +       if (inode) {
+>>>>> +               inode->i_ino = get_next_ino();
+>>>>> +               inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
+>>>>> +       }
+>>>>> +       return inode;
+>>>>> +}
+>>>>> +
+>>>>>  /**
+>>>>>   * tracefs_create_file - create a file in the tracefs filesystem
+>>>>>   * @name: a pointer to a string containing the name of the file to create.
+>>>>> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+>>>>> index 69c2b1d87c46..9059b8b11bb6 100644
+>>>>> --- a/fs/tracefs/internal.h
+>>>>> +++ b/fs/tracefs/internal.h
+>>>>> @@ -9,12 +9,15 @@ enum {
+>>>>>  struct tracefs_inode {
+>>>>>         unsigned long           flags;
+>>>>>         void                    *private;
+>>>>> +       unsigned long           magic;
+>>>>>         struct inode            vfs_inode;
+>>>>>  };
+>>>>>
+>>>>>  static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+>>>>>  {
+>>>>> -       return container_of(inode, struct tracefs_inode, vfs_inode);
+>>>>> +       struct tracefs_inode *ti = container_of(inode, struct tracefs_inode, vfs_inode);
+>>>>> +       BUG_ON(ti->magic != 20240823);
+>>>>> +       return ti;
+>>>>>  }
+>>>>>
+>>>>>  struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
+>>
+> 
+> 
