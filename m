@@ -1,275 +1,691 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9667C8C09;
-	Thu, 13 Jun 2024 00:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F032D524
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 01:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718238893; cv=none; b=qpUSPYzeYxme72usGv0cj/NZJ9yNEB1lJ8TDjMop0Zy1fBYgP5fx5vz8MJ7H7IlgYVwEhg/6aU2WzcFKRsfAzpPWK96tnWOI0+hvO++uhVn5NG25KFCLeJWNXtbdEicnM4vpvj+8WPMWr4aTruA8dL3eG8YiwhAPtrHkxd400Qg=
+	t=1718242564; cv=none; b=QhHvEBMaGZtMexJmvrmg6Zbtg3Vfw/7v03vVoComq6OWTt4ycj06qYUlPEGkgPKXcIFgu0dJrAsu0W5qzasj9YcmpE+kdW+YjuiGG+IW/pTQwi3WasbrjX5fFrS1QhivmUWG25TjjLfBLWKodw8R5I66rTwTAffRa43knvkFrzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718238893; c=relaxed/simple;
-	bh=sm99DwASeQO1ECKvTnDxPmJJ6qHTDXWNprQagI7uP4s=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=QAHnADwHgXmG+rGGaFmNuYMetRsO3nrBtMZFP98lLsgwxy5G4LGqInD7Xg9r2XFgvXpJLW8UdLZMP7U/Nu7kXdNEa2sATvmLZ9LKMFNalA9oj65TtC6Apm01LBQELrYOYGTaGg+WWOs+PR0kX1xsWnkzZ0q8QWyPq7ZfZc+igxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C3DC116B1;
-	Thu, 13 Jun 2024 00:34:52 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sHYQm-00000001eMY-32F3;
-	Wed, 12 Jun 2024 20:35:08 -0400
-Message-ID: <20240613003435.401549779@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 12 Jun 2024 20:34:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v5 0/2] mm/memblock: Add "reserve_mem" to reserved named  memory at boot up
+	s=arc-20240116; t=1718242564; c=relaxed/simple;
+	bh=j4rX8FJqjA75G3UVdXTnFSBmHXNCUNNSwc5NVlU1RAg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rI1BK+wpIcDxMeJi1/6JFbIXi8xydi6uWgBbF2939LDKt9VM7j2T2BmAWgZDf7k2N9wfcO+0C+Oe/q3xbUvgiEXUngOGJH+C+1MQJ1cYOWraDg8YTowbO1/eC97ORA7U1X+wOb636ueuz2YHFZn11Zxi6qqCt+fYy3CvDQmKLIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=goI6lT0o; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="goI6lT0o"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfdfe3d9fc8so880582276.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718242560; x=1718847360; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fj0i6QouKR1uyy7UuUjOMapZZ3prdDAhQb6pAXCLMlY=;
+        b=goI6lT0o6lxfCkHueUPHZIB3FuKqtacaTZ7JDOjkJ3tTusaKuI3Bjdk7qnp89/AQja
+         KwDCJYgWG5K0llEyvmLH8fxp5nArcMUjSle8Q5H4Z3S21kvCpQE+FaomzUcGZujbjbfy
+         amcffOFv8rFKPL3zhR5dq8sryHX8tilCE/i0P7AX/gn2xq0PZV9P0T543us6a5hCCS7D
+         uxuS/XtqfgVPIey7VejdyRq0VyUq4P1nOU8vabvwRwFoXrIeNdv8Y9z99rS3jZ0wACyT
+         xbR78a+FHgGLx8zaGrm6qolmYKGkpWyP7eloLV7rjjPu9vgCt3kPH7Pz43wye9UP2H/u
+         /OSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718242560; x=1718847360;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fj0i6QouKR1uyy7UuUjOMapZZ3prdDAhQb6pAXCLMlY=;
+        b=c5oL8tI489ApqQ93ORIBkctRto4FbndL7X7vRDs9yHbnmn8q2b4vYF01/tWRHHC/Sk
+         SAL/zxBiR5KwFuEZO9pwv/OyqsgtKJnaVEut81kKAyJQr/q6yvieZbPRXEfXuS26EYrv
+         KEkHtv1JqMqLPW+stg3xAWWUJKJGEC15oDY6uqAMwVgurTg8hHsg6p43+N3vkAPuSveK
+         N0P5D6Qw8TMPYGVNKT6n8v2q9YGslusUGdLj00Wja2PAlKajcIQ65PEkDKwrqcX6C1j0
+         cHfgZO+axlFoCTb7BuMuk1KjXh6mXaiBIqsOX8L7JckO0Tg/9U3G0p77/Zf3XU9IxvUf
+         yHAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGOWblWBgXWCkq0JHJvK5210/8YA8KJ4f0l9J0f9Zgr9lfVNb6SzP6aJPRFYu2nAc8eSbs1MvQ9BF1WHgBiTmw1N5l+A/npppqN6V8ZSWdr2Zy
+X-Gm-Message-State: AOJu0Yw5nHOH9Zpb01L8Yc0ke62FWgJ4hRjZbysbK3+ScXWme4LZCqlo
+	vB42jWsbHmmi5exmzNxFmLXqrmMNHeEruNqOvWV7iq3rm4b5MmmFADameGjuN34wQmJrpFevi/+
+	Qi0W7cTgn0RrcbxWHK/J78g==
+X-Google-Smtp-Source: AGHT+IHZuep0q8flMja9CV1qAeRg00lYbAIW2h2uRhW+GPQSJjBoP4u6CGKxVG1JKn7/mMh9Rm0+fp+qG3i1PYmJ0g==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a25:b80e:0:b0:dfb:bf0:59cd with SMTP
+ id 3f1490d57ef6-dfe66a636e1mr653441276.7.1718242560379; Wed, 12 Jun 2024
+ 18:36:00 -0700 (PDT)
+Date: Thu, 13 Jun 2024 01:35:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240613013557.1169171-1-almasrymina@google.com>
+Subject: [PATCH net-next v12 00/13] Device Memory TCP
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reserve unspecified location of physical memory from kernel command line
+v12: https://patchwork.kernel.org/project/netdevbpf/list/?series=3D859747&s=
+tate=3D*
+=3D=3D=3D=3D
 
-Background:
+Major changes:
+--------------
 
-In ChromeOS, we have 1 MB of pstore ramoops reserved so that we can extract
-dmesg output and some other information when a crash happens in the field.
-(This is only done when the user selects "Allow Google to collect data for
- improving the system"). But there are cases when there's a bug that
-requires more data to be retrieved to figure out what is happening. We would
-like to increase the pstore size, either temporarily, or maybe even
-permanently. The pstore on these devices are at a fixed location in RAM (as
-the RAM is not cleared on soft reboots nor crashes). The location is chosen
-by the BIOS (coreboot) and passed to the kernel via ACPI tables on x86.
-There's a driver that queries for this to initialize the pstore for
-ChromeOS:
+This iteration only addresses one minor comment from Pavel with regards
+to the trace printing of netmem, and the patchwork build error
+introduced in v11 because I missed doing an allmodconfig build, sorry.
 
-  See drivers/platform/chrome/chromeos_pstore.c
+Other than that v11, AFAICT, received no feedback. There is one
+discussion about how the specifics of  plugging io uring memory through
+the page pool, but not relevant to content in this particular patchset,
+AFAICT.
 
-Problem:
+As usual, the full devmem TCP changes including the full GVE driver
+implementation is here:
 
-The problem is that, even though there's a process to change the kernel on
-these systems, and is done regularly to install updates, the firmware is
-updated much less frequently. Choosing the place in RAM also takes special
-care, and may be in a different address for different boards. Updating the
-size via firmware is a large effort and not something that many are willing
-to do for a temporary pstore size change.
+https://github.com/mina/linux/commits/tcpdevmem-v12/
 
-Requirement:
+v11: https://patchwork.kernel.org/project/netdevbpf/list/?series=3D857457&s=
+tate=3D*
+=3D=3D=3D=3D
 
-Need a way to reserve memory that will be at a consistent location for
-every boot, if the kernel and system are the same. Does not need to work
-if rebooting to a different kernel, or if the system can change the
-memory layout between boots.
+Major Changes:
+--------------
 
-The reserved memory can not be an hard coded address, as the same kernel /
-command line needs to run on several different machines. The picked memory
-reservation just needs to be the same for a given machine, but may be
-different for different machines.
+v11 addresses feedback received in v10. The major change is the removal
+of the memory provider ops as requested by Christoph. We still
+accomplish the same thing, but utilizing direct function calls with if
+statements rather than generic ops.
 
-Solution:
+Additionally address sparse warnings, bugs and review comments from
+folks that reviewed.
 
-The solution I have come up with is to introduce a new "reserve_mem=" kernel
-command line. This parameter takes the following format:
+As usual, the full devmem TCP changes including the full GVE driver
+implementation is here:
 
-  reserve_mem=nn:align:label
+https://github.com/mina/linux/commits/tcpdevmem-v11/
 
-Where nn is the size of memory to reserve, the align is the alignment of
-that memory, and label is the way for other sub-systems to find that memory.
-This way the kernel command line could have:
+Detailed changelog:
+-------------------
 
-  reserve_mem=12M:4096:oops   ramoops.mem_name=oops
+- Fixes in netdev_rx_queue_restart() from Pavel & David.
+- Remove commit e650e8c3a36f5 ("net: page_pool: create hooks for
+custom page providers") from the series to address Christoph's
+feedback and rebased other patches on the series on this change.
+- Fixed build errors with CONFIG_DMA_SHARED_BUFFER &&
+  !CONFIG_GENERIC_ALLOCATOR build.
+- Fixed sparse warnings pointed out by Paolo.
+- Drop unnecessary gro_pull_from_frag0 checks.
+- Added Bagas reviewed-by to docs.
 
-At boot up, the kernel will search for 12 megabytes in usable memory regions
-with an alignment of 4096. It will start at the highest regions and work its
-way down (for those old devices that want access to lower address DMA). When
-it finds a region, it will save it off in a small table and mark it with the
-"oops" label. Then the pstore ramoops sub-system could ask for that memory
-and location, and it will map itself there.
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>
 
-This prototype allows for 8 different mappings (which may be overkill, 4 is
-probably plenty) with 16 byte size to store the label.
+v10: https://patchwork.kernel.org/project/netdevbpf/list/?series=3D852422&s=
+tate=3D*
+=3D=3D=3D=3D
 
-I have tested this and it works for us to solve the above problem. We can
-update the kernel and command line and increase the size of pstore without
-needing to update the firmware, or knowing every memory layout of each
-board. I only tested this locally, it has not been tested in the field.
+Major Changes:
+--------------
 
-Changes since v4: https://lore.kernel.org/all/20240611215610.548854415@goodmis.org/
+v9 was sent right before the merge window closed (sorry!). v10 is almost
+a re-send of the series now that the merge window re-opened. Only
+rebased to latest net-next and addressed some minor iterative comments
+received on v9.
 
-[ patch at bottom showing differences ]
+As usual, the full devmem TCP changes including the full GVE driver
+implementation is here:
 
-- Add all checks about reserve_mem before allocation.
-  This means reserved_mem_add() is now a void function.
+https://github.com/mina/linux/commits/tcpdevmem-v10/
 
-- Check for name duplications.
+Detailed changelog:
+-------------------
 
-- Fix compare of align to SMP_CACHE_BYTES ("<" instead of "<=")
+- Fixed tokens leaking in DONTNEED setsockopt (Nikolay).
+- Moved net_iov_dma_addr() to devmem.c and made it a devmem specific
+  helpers (David).
+- Rename hook alloc_pages to alloc_netmems as alloc_pages is now
+  preprocessor macro defined and causes a build error.
 
-Changes since v3: https://lore.kernel.org/all/20240611144911.327227285@goodmis.org/
+v9:
+=3D=3D=3D
 
-- Changed table type of start and size from unsigned long to phys_addr_t
-  (as well as the parameters to the functions that use them)
+Major Changes:
+--------------
 
-- Changed old reference to "early_reserve_mem" to "reserve_mem"
+GVE queue API has been merged. Submitting this version as non-RFC after
+rebasing on top of the merged API, and dropped the out of tree queue API
+I was carrying on github. Addressed the little feedback v8 has received.
 
-- Check before reservering memory:
-  o Size is non-zero
-  o name has text in it
+Detailed changelog:
+------------------
+- Added new patch from David Wei to this series for
+  netdev_rx_queue_restart()
+  - Fixed sparse error.
+  - Removed CONFIG_ checks in netmem_is_net_iov()
+  - Flipped skb->readable to skb->unreadable
+  - Minor fixes to selftests & docs.
 
-- If align is less than SMP_CACHE_BYTES, make it SMP_CACHE_BYTES
+RFC v8:
+=3D=3D=3D=3D=3D=3D=3D
 
-- Remove the silly check of testing *p == '\0' after a p += strlen(p)
+Major Changes:
+--------------
 
-Changes since v2: https://lore.kernel.org/all/20240606150143.876469296@goodmis.org/
+- Fixed build error generated by patch-by-patch build.
+- Applied docs suggestions from Randy.
 
-- Fixed typo of "reserver"
+RFC v7:
+=3D=3D=3D=3D=3D=3D=3D
 
-- Added EXPORT_SYMBOL_GPL() for reserve_mem_find_by_name()
+Major Changes:
+--------------
 
-- Removed "built-in" from module description that was changed from v1.
+This revision largely rebases on top of net-next and addresses the feedback
+RFCv6 received from folks, namely Jakub, Yunsheng, Arnd, David, & Pavel.
+
+The series remains in RFC because the queue-API ndos defined in this
+series are not yet implemented. I have a GVE implementation I carry out
+of tree for my testing. A upstreamable GVE implementation is in the
+works. Aside from that, in my estimation all the patches are ready for
+review/merge. Please do take a look.
+
+As usual the full devmem TCP changes including the full GVE driver
+implementation is here:
+
+https://github.com/mina/linux/commits/tcpdevmem-v7/
+
+Detailed changelog:
+
+- Use admin-perm in netlink API.
+- Addressed feedback from Jakub with regards to netlink API
+  implementation.
+- Renamed devmem.c functions to something more appropriate for that
+  file.
+- Improve the performance seen through the page_pool benchmark.
+- Fix the value definition of all the SO_DEVMEM_* uapi.
+- Various fixes to documentation.
+
+Perf - page-pool benchmark:
+---------------------------
+
+Improved performance of bench_page_pool_simple.ko tests compared to v6:
+
+https://pastebin.com/raw/v5dYRg8L
+
+      net-next base: 8 cycle fast path.
+      RFC v6: 10 cycle fast path.
+      RFC v7: 9 cycle fast path.
+      RFC v7 with CONFIG_DMA_SHARED_BUFFER disabled: 8 cycle fast path,
+                                                     same as baseline.
+
+Perf - Devmem TCP benchmark:
+---------------------
+
+Perf is about the same regardless of the changes in v7, namely the
+removal of the static_branch_unlikely to improve the page_pool benchmark
+performance:
+
+189/200gbps bi-directional throughput with RX devmem TCP and regular TCP
+TX i.e. ~95% line rate.
+
+RFC v6:
+=3D=3D=3D=3D=3D=3D=3D
+
+Major Changes:
+--------------
+
+This revision largely rebases on top of net-next and addresses the little
+feedback RFCv5 received.
+
+The series remains in RFC because the queue-API ndos defined in this
+series are not yet implemented. I have a GVE implementation I carry out
+of tree for my testing. A upstreamable GVE implementation is in the
+works. Aside from that, in my estimation all the patches are ready for
+review/merge. Please do take a look.
+
+As usual the full devmem TCP changes including the full GVE driver
+implementation is here:
+
+https://github.com/mina/linux/commits/tcpdevmem-v6/
+
+This version also comes with some performance data recorded in the cover
+letter (see below changelog).
+
+Detailed changelog:
+
+- Rebased on top of the merged netmem_ref changes.
+
+- Converted skb->dmabuf to skb->readable (Pavel). Pavel's original
+  suggestion was to remove the skb->dmabuf flag entirely, but when I
+  looked into it closely, I found the issue that if we remove the flag
+  we have to dereference the shinfo(skb) pointer to obtain the first
+  frag to tell whether an skb is readable or not. This can cause a
+  performance regression if it dirties the cache line when the
+  shinfo(skb) was not really needed. Instead, I converted the skb->dmabuf
+  flag into a generic skb->readable flag which can be re-used by io_uring
+  0-copy RX.
+
+- Squashed a few locking optimizations from Eric Dumazet in the RX path
+  and the DEVMEM_DONTNEED setsockopt.
+
+- Expanded the tests a bit. Added validation for invalid scenarios and
+  added some more coverage.
+
+Perf - page-pool benchmark:
+---------------------------
+
+bench_page_pool_simple.ko tests with and without these changes:
+https://pastebin.com/raw/ncHDwAbn
+
+AFAIK the number that really matters in the perf tests is the
+'tasklet_page_pool01_fast_path Per elem'. This one measures at about 8
+cycles without the changes but there is some 1 cycle noise in some
+results.
+
+With the patches this regresses to 9 cycles with the changes but there
+is 1 cycle noise occasionally running this test repeatedly.
+
+Lastly I tried disable the static_branch_unlikely() in
+netmem_is_net_iov() check. To my surprise disabling the
+static_branch_unlikely() check reduces the fast path back to 8 cycles,
+but the 1 cycle noise remains.
+
+Perf - Devmem TCP benchmark:
+---------------------
+
+189/200gbps bi-directional throughput with RX devmem TCP and regular TCP
+TX i.e. ~95% line rate.
+
+Major changes in RFC v5:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+1. Rebased on top of 'Abstract page from net stack' series and used the
+   new netmem type to refer to LSB set pointers instead of re-using
+   struct page.
+
+2. Downgraded this series back to RFC and called it RFC v5. This is
+   because this series is now dependent on 'Abstract page from net
+   stack'[1] and the queue API. Both are removed from the series to
+   reduce the patch # and those bits are fairly independent or
+   pre-requisite work.
+
+3. Reworked the page_pool devmem support to use netmem and for some
+   more unified handling.
+
+4. Reworked the reference counting of net_iov (renamed from
+   page_pool_iov) to use pp_ref_count for refcounting.
+
+The full changes including the dependent series and GVE page pool
+support is here:
+
+https://github.com/mina/linux/commits/tcpdevmem-rfcv5/
+
+[1] https://patchwork.kernel.org/project/netdevbpf/list/?series=3D810774
+
+Major changes in v1:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+1. Implemented MVP queue API ndos to remove the userspace-visible
+   driver reset.
+
+2. Fixed issues in the napi_pp_put_page() devmem frag unref path.
+
+3. Removed RFC tag.
+
+Many smaller addressed comments across all the patches (patches have
+individual change log).
+
+Full tree including the rest of the GVE driver changes:
+https://github.com/mina/linux/commits/tcpdevmem-v1
+
+Changes in RFC v3:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+1. Pulled in the memory-provider dependency from Jakub's RFC[1] to make the
+   series reviewable and mergeable.
+
+2. Implemented multi-rx-queue binding which was a todo in v2.
+
+3. Fix to cmsg handling.
+
+The sticking point in RFC v2[2] was the device reset required to refill
+the device rx-queues after the dmabuf bind/unbind. The solution
+suggested as I understand is a subset of the per-queue management ops
+Jakub suggested or similar:
+
+https://lore.kernel.org/netdev/20230815171638.4c057dcd@kernel.org/
+
+This is not addressed in this revision, because:
+
+1. This point was discussed at netconf & netdev and there is openness to
+   using the current approach of requiring a device reset.
+
+2. Implementing individual queue resetting seems to be difficult for my
+   test bed with GVE. My prototype to test this ran into issues with the
+   rx-queues not coming back up properly if reset individually. At the
+   moment I'm unsure if it's a mistake in the POC or a genuine issue in
+   the virtualization stack behind GVE, which currently doesn't test
+   individual rx-queue restart.
+
+3. Our usecases are not bothered by requiring a device reset to refill
+   the buffer queues, and we'd like to support NICs that run into this
+   limitation with resetting individual queues.
+
+My thought is that drivers that have trouble with per-queue configs can
+use the support in this series, while drivers that support new netdev
+ops to reset individual queues can automatically reset the queue as
+part of the dma-buf bind/unbind.
+
+The same approach with device resets is presented again for consideration
+with other sticking points addressed.
+
+This proposal includes the rx devmem path only proposed for merge. For a
+snapshot of my entire tree which includes the GVE POC page pool support &
+device memory support:
+
+https://github.com/torvalds/linux/compare/master...mina:linux:tcpdevmem-v3
+
+[1] https://lore.kernel.org/netdev/f8270765-a27b-6ccf-33ea-cda097168d79@red=
+hat.com/T/
+[2] https://lore.kernel.org/netdev/CAHS8izOVJGJH5WF68OsRWFKJid1_huzzUK+hpKb=
+LcL4pSOD1Jw@mail.gmail.com/T/
+
+Changes in RFC v2:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+The sticking point in RFC v1[1] was the dma-buf pages approach we used to
+deliver the device memory to the TCP stack. RFC v2 is a proof-of-concept
+that attempts to resolve this by implementing scatterlist support in the
+networking stack, such that we can import the dma-buf scatterlist
+directly. This is the approach proposed at a high level here[2].
+
+Detailed changes:
+1. Replaced dma-buf pages approach with importing scatterlist into the
+   page pool.
+2. Replace the dma-buf pages centric API with a netlink API.
+3. Removed the TX path implementation - there is no issue with
+   implementing the TX path with scatterlist approach, but leaving
+   out the TX path makes it easier to review.
+4. Functionality is tested with this proposal, but I have not conducted
+   perf testing yet. I'm not sure there are regressions, but I removed
+   perf claims from the cover letter until they can be re-confirmed.
+5. Added Signed-off-by: contributors to the implementation.
+6. Fixed some bugs with the RX path since RFC v1.
+
+Any feedback welcome, but specifically the biggest pending questions
+needing feedback IMO are:
+
+1. Feedback on the scatterlist-based approach in general.
+2. Netlink API (Patch 1 & 2).
+3. Approach to handle all the drivers that expect to receive pages from
+   the page pool (Patch 6).
+
+[1] https://lore.kernel.org/netdev/dfe4bae7-13a0-3c5d-d671-f61b375cb0b4@gma=
+il.com/T/
+[2] https://lore.kernel.org/netdev/CAHS8izPm6XRS54LdCDZVd0C75tA1zHSu6jLVO8n=
+zTLXCc=3DH7Nw@mail.gmail.com/
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+* TL;DR:
+
+Device memory TCP (devmem TCP) is a proposal for transferring data to and/o=
+r
+from device memory efficiently, without bouncing the data to a host memory
+buffer.
+
+* Problem:
+
+A large amount of data transfers have device memory as the source and/or
+destination. Accelerators drastically increased the volume of such transfer=
+s.
+Some examples include:
+- ML accelerators transferring large amounts of training data from storage =
+into
+  GPU/TPU memory. In some cases ML training setup time can be as long as 50=
+% of
+  TPU compute time, improving data transfer throughput & efficiency can hel=
+p
+  improving GPU/TPU utilization.
+
+- Distributed training, where ML accelerators, such as GPUs on different ho=
+sts,
+  exchange data among them.
+
+- Distributed raw block storage applications transfer large amounts of data=
+ with
+  remote SSDs, much of this data does not require host processing.
+
+Today, the majority of the Device-to-Device data transfers the network are
+implemented as the following low level operations: Device-to-Host copy,
+Host-to-Host network transfer, and Host-to-Device copy.
+
+The implementation is suboptimal, especially for bulk data transfers, and c=
+an
+put significant strains on system resources, such as host memory bandwidth,
+PCIe bandwidth, etc. One important reason behind the current state is the
+kernel=E2=80=99s lack of semantics to express device to network transfers.
+
+* Proposal:
+
+In this patch series we attempt to optimize this use case by implementing
+socket APIs that enable the user to:
+
+1. send device memory across the network directly, and
+2. receive incoming network packets directly into device memory.
+
+Packet _payloads_ go directly from the NIC to device memory for receive and=
+ from
+device memory to NIC for transmit.
+Packet _headers_ go to/from host memory and are processed by the TCP/IP sta=
+ck
+normally. The NIC _must_ support header split to achieve this.
+
+Advantages:
+
+- Alleviate host memory bandwidth pressure, compared to existing
+ network-transfer + device-copy semantics.
+
+- Alleviate PCIe BW pressure, by limiting data transfer to the lowest level
+  of the PCIe tree, compared to traditional path which sends data through t=
+he
+  root complex.
+
+* Patch overview:
+
+** Part 1: netlink API
+
+Gives user ability to bind dma-buf to an RX queue.
+
+** Part 2: scatterlist support
+
+Currently the standard for device memory sharing is DMABUF, which doesn't
+generate struct pages. On the other hand, networking stack (skbs, drivers, =
+and
+page pool) operate on pages. We have 2 options:
+
+1. Generate struct pages for dmabuf device memory, or,
+2. Modify the networking stack to process scatterlist.
+
+Approach #1 was attempted in RFC v1. RFC v2 implements approach #2.
+
+** part 3: page pool support
+
+We piggy back on page pool memory providers proposal:
+https://github.com/kuba-moo/linux/tree/pp-providers
+
+It allows the page pool to define a memory provider that provides the
+page allocation and freeing. It helps abstract most of the device memory
+TCP changes from the driver.
+
+** part 4: support for unreadable skb frags
+
+Page pool iovs are not accessible by the host; we implement changes
+throughput the networking stack to correctly handle skbs with unreadable
+frags.
+
+** Part 5: recvmsg() APIs
+
+We define user APIs for the user to send and receive device memory.
+
+Not included with this series is the GVE devmem TCP support, just to
+simplify the review. Code available here if desired:
+https://github.com/mina/linux/tree/tcpdevmem
+
+This series is built on top of net-next with Jakub's pp-providers changes
+cherry-picked.
+
+* NIC dependencies:
+
+1. (strict) Devmem TCP require the NIC to support header split, i.e. the
+   capability to split incoming packets into a header + payload and to put
+   each into a separate buffer. Devmem TCP works by using device memory
+   for the packet payload, and host memory for the packet headers.
+
+2. (optional) Devmem TCP works better with flow steering support & RSS supp=
+ort,
+   i.e. the NIC's ability to steer flows into certain rx queues. This allow=
+s the
+   sysadmin to enable devmem TCP on a subset of the rx queues, and steer
+   devmem TCP traffic onto these queues and non devmem TCP elsewhere.
+
+The NIC I have access to with these properties is the GVE with DQO support
+running in Google Cloud, but any NIC that supports these features would suf=
+fice.
+I may be able to help reviewers bring up devmem TCP on their NICs.
+
+* Testing:
+
+The series includes a udmabuf kselftest that show a simple use case of
+devmem TCP and validates the entire data path end to end without
+a dependency on a specific dmabuf provider.
+
+** Test Setup
+
+Kernel: net-next with this series and memory provider API cherry-picked
+locally.
+
+Hardware: Google Cloud A3 VMs.
+
+NIC: GVE with header split & RSS & flow steering support.
+
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: David Wei <dw@davidwei.uk>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: Shailend Chand <shailend@google.com>
+Cc: Harshitha Ramamurthy <hramamurthy@google.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Jeroen de Borst <jeroendb@google.com>
+Cc: Praveen Kaligineedi <pkaligineedi@google.com>
 
 
-Changes since v1: https://lore.kernel.org/all/20240603233330.801075898@goodmis.org/
 
-- Updated the change log of the first patch as well as added an entry
-  into kernel-parameters.txt about how reserve_mem is for soft reboots
-  and may not be reliable. 
+Mina Almasry (13):
+  netdev: add netdev_rx_queue_restart()
+  net: netdev netlink api to bind dma-buf to a net device
+  netdev: support binding dma-buf to netdevice
+  netdev: netdevice devmem allocator
+  page_pool: convert to use netmem
+  page_pool: devmem support
+  memory-provider: dmabuf devmem memory provider
+  net: support non paged skb frags
+  net: add support for skbs with unreadable frags
+  tcp: RX path for devmem TCP
+  net: add SO_DEVMEM_DONTNEED setsockopt to release RX frags
+  net: add devmem TCP documentation
+  selftests: add ncdevmem, netcat for devmem TCP
 
+ Documentation/netlink/specs/netdev.yaml  |  57 +++
+ Documentation/networking/devmem.rst      | 258 +++++++++++
+ Documentation/networking/index.rst       |   1 +
+ arch/alpha/include/uapi/asm/socket.h     |   6 +
+ arch/mips/include/uapi/asm/socket.h      |   6 +
+ arch/parisc/include/uapi/asm/socket.h    |   6 +
+ arch/sparc/include/uapi/asm/socket.h     |   6 +
+ drivers/net/ethernet/renesas/ravb_main.c |   5 +-
+ include/linux/skbuff.h                   |  61 ++-
+ include/linux/skbuff_ref.h               |  11 +-
+ include/linux/socket.h                   |   1 +
+ include/net/devmem.h                     | 124 ++++++
+ include/net/mp_dmabuf_devmem.h           |  44 ++
+ include/net/netdev_rx_queue.h            |   5 +
+ include/net/netmem.h                     | 208 ++++++++-
+ include/net/page_pool/helpers.h          | 153 +++++--
+ include/net/page_pool/types.h            |  22 +-
+ include/net/sock.h                       |   2 +
+ include/net/tcp.h                        |   5 +-
+ include/trace/events/page_pool.h         |  30 +-
+ include/uapi/asm-generic/socket.h        |   6 +
+ include/uapi/linux/netdev.h              |  19 +
+ include/uapi/linux/uio.h                 |  17 +
+ net/bpf/test_run.c                       |   5 +-
+ net/core/Makefile                        |   3 +-
+ net/core/datagram.c                      |   6 +
+ net/core/dev.c                           |   6 +-
+ net/core/devmem.c                        | 373 ++++++++++++++++
+ net/core/gro.c                           |   3 +-
+ net/core/netdev-genl-gen.c               |  23 +
+ net/core/netdev-genl-gen.h               |   6 +
+ net/core/netdev-genl.c                   | 103 +++++
+ net/core/netdev_rx_queue.c               |  74 ++++
+ net/core/page_pool.c                     | 360 ++++++++-------
+ net/core/skbuff.c                        |  83 +++-
+ net/core/sock.c                          |  61 +++
+ net/ipv4/esp4.c                          |   3 +-
+ net/ipv4/tcp.c                           | 261 ++++++++++-
+ net/ipv4/tcp_input.c                     |  13 +-
+ net/ipv4/tcp_ipv4.c                      |  10 +
+ net/ipv4/tcp_minisocks.c                 |   2 +
+ net/ipv4/tcp_output.c                    |   5 +-
+ net/ipv6/esp6.c                          |   3 +-
+ net/packet/af_packet.c                   |   4 +-
+ tools/include/uapi/linux/netdev.h        |  19 +
+ tools/testing/selftests/net/.gitignore   |   1 +
+ tools/testing/selftests/net/Makefile     |   5 +
+ tools/testing/selftests/net/ncdevmem.c   | 542 +++++++++++++++++++++++
+ 48 files changed, 2759 insertions(+), 268 deletions(-)
+ create mode 100644 Documentation/networking/devmem.rst
+ create mode 100644 include/net/devmem.h
+ create mode 100644 include/net/mp_dmabuf_devmem.h
+ create mode 100644 net/core/devmem.c
+ create mode 100644 net/core/netdev_rx_queue.c
+ create mode 100644 tools/testing/selftests/net/ncdevmem.c
 
-Steven Rostedt (Google) (2):
-      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-      pstore/ramoops: Add ramoops.mem_name= command line option
+--=20
+2.45.2.505.gda0bf45e8d-goog
 
-----
- Documentation/admin-guide/kernel-parameters.txt |  20 ++++
- fs/pstore/ram.c                                 |  14 +++
- include/linux/mm.h                              |   2 +
- mm/memblock.c                                   | 117 ++++++++++++++++++++++++
- 4 files changed, 153 insertions(+)
-
-
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 044ddce8f085..739d106a9165 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2256,22 +2256,15 @@ static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
- static int reserved_mem_count;
- 
- /* Add wildcard region with a lookup name */
--static int __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-+static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
- 				   const char *name)
- {
- 	struct reserve_mem_table *map;
- 
--	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
--		return -EINVAL;
--
--	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
--		return -1;
--
- 	map = &reserved_mem_table[reserved_mem_count++];
- 	map->start = start;
- 	map->size = size;
- 	strscpy(map->name, name);
--	return 0;
- }
- 
- /**
-@@ -2280,6 +2273,8 @@ static int __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-  * @start: If found, holds the start address
-  * @size: If found, holds the size of the address.
-  *
-+ * @start and @size are only updated if @name is found.
-+ *
-  * Returns: 1 if found or 0 if not found.
-  */
- int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
-@@ -2309,11 +2304,15 @@ static int __init reserve_mem(char *p)
- 	phys_addr_t start, size, align;
- 	char *name;
- 	char *oldp;
--	int err;
-+	int len;
- 
- 	if (!p)
- 		return -EINVAL;
- 
-+	/* Check if there's room for more reserved memory */
-+	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
-+		return -EBUSY;
-+
- 	oldp = p;
- 	size = memparse(p, &p);
- 	if (!size || p == oldp)
-@@ -2330,11 +2329,14 @@ static int __init reserve_mem(char *p)
- 	 * memblock_phys_alloc() doesn't like a zero size align,
- 	 * but it is OK for this command to have it.
- 	 */
--	if (align <= SMP_CACHE_BYTES)
-+	if (align < SMP_CACHE_BYTES)
- 		align = SMP_CACHE_BYTES;
- 
- 	name = p + 1;
--	if (!strlen(name))
-+	len = strlen(name);
-+
-+	/* name needs to have length but not too big */
-+	if (!len || len >= RESERVE_MEM_NAME_SIZE)
- 		return -EINVAL;
- 
- 	/* Make sure that name has text */
-@@ -2345,15 +2347,15 @@ static int __init reserve_mem(char *p)
- 	if (!*p)
- 		return -EINVAL;
- 
-+	/* Make sure the name is not already used (size is only updated if found) */
-+	if (reserve_mem_find_by_name(name, &start, &size))
-+		return -EBUSY;
-+
- 	start = memblock_phys_alloc(size, align);
- 	if (!start)
- 		return -ENOMEM;
- 
--	err = reserved_mem_add(start, size, name);
--	if (err) {
--		memblock_phys_free(start, size);
--		return err;
--	}
-+	reserved_mem_add(start, size, name);
- 
- 	return 0;
- }
