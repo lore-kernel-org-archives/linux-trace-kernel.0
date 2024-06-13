@@ -1,67 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9458A130AC8;
-	Thu, 13 Jun 2024 18:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DA6139CFE;
+	Thu, 13 Jun 2024 18:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718304173; cv=none; b=H6DGQErRnwjcFMgTB0PWvbPef2Nn8f3dv5+XIDEKg/hVJXfEDc8yDv9elfZFK8u/bsfJolD1itGKKDgrIG6Gdnx86gnW1fYeD4IT+dNTBbz/qydMXPrTTpmtQL6Ag8Paek865xNloWCAAdfiKv5K/RB7F36UX9+SMlhWfLUyFdY=
+	t=1718304708; cv=none; b=CIYD3dR2Qmxwb2SM6ovINvcd5ZKpDsJQxgY9wQ/j9tD4L3tODouxDdLt6Bu03lGAtOT1jul/JuHOgVDrM8uKrNFK7VuJkaSJpPW8jBuPV7O6J5bcOU//syuiP4EwD4Ox6PzqRRSOYmMq+4d3BcIlWKOEgpaDccNLB9xYVcBd5+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718304173; c=relaxed/simple;
-	bh=B9X+plNiBVhQ/1yH74OFHxsxyAUQZhS7oAwqTbB7euM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pzFUxJI2B3PNTMnQxJ2A1cbd+GA9LfSUuVyLVHr9f8Qn7bmqIDyzyHc5mMzbtyvd3wT/e9xftlW94XMewMexrMNsOHOwf6KMDumBEZqvNDuwlgos7KPBiCBObLQ/LeqCen4XVgkOWhOtbf58CUJMI37yff1I+kmSI4tprzoZQZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE21C2BBFC;
-	Thu, 13 Jun 2024 18:42:50 +0000 (UTC)
-Date: Thu, 13 Jun 2024 14:42:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, suleiman@google.com, Thomas Gleixner
- <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef
- Esmat <youssefesmat@google.com>, Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>, Borislav
- Petkov <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, David
- Howells <dhowells@redhat.com>
-Subject: Re: [PATCH v6 2/2] pstore/ramoops: Add ramoops.mem_name= command
- line option
-Message-ID: <20240613144248.2251b189@rorschach.local.home>
-In-Reply-To: <6a6bd674-48ca-f7fc-d572-51e52e6899d9@igalia.com>
-References: <20240613155506.811013916@goodmis.org>
-	<20240613155527.591647061@goodmis.org>
-	<6a6bd674-48ca-f7fc-d572-51e52e6899d9@igalia.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718304708; c=relaxed/simple;
+	bh=iV4q/X0Wj6UHGCAGLqeS48rT8zJY+mCSDmYajJv0QZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ft6LY3JUsNnEGrEOe525Ep/35PUUz9SMtHrIg9voXALGVHia1JIS4rUiRTS59m9Jj0naRrTIJ7ncWgQTr5+e+4KB02u2OoTlI399/5hdO6L+VZ3DoW5rbmSsfXlufeU4wD9cEB1h9p8vnxoZVpiynwWCCGvg/P1jrZlAEBc03Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=T9QPArPz; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="T9QPArPz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9HN5Q9m3aml9BDWCtbf5XAXVRqLbIQ29IsCzgD1YK88=; b=T9QPArPzVGnD7tA9lxmswDYhaG
+	wPXm01yGP4vRBLtzkEUoyEmxb9ADjsu0ud+8cU6NUJarVry86LAS+wwRm8xOJ/5E+miXe5hnNcTes
+	386fiCZjvRoOLfX9Pr3r/+EqJRdlBb7Ag+muNAfmJHJz5+O63ScJ1a+OHHMj4WvvOxKhsWkbBGslB
+	jV0Kd3OUFl2ZezEQuB814vQ1FQbBxWl8Q5H3SDg8e4ke+gIp8VK7eypVNDc6iFhfIr7TyLvFVPuu6
+	YgEgfqFVaYYCn1FI5Z8NyA6i4WdwLgHAvW9jYfuBW4BL5SSSvDpObf9QTEOWEMSohbAZAaVZAyXFT
+	sANcU5YA==;
+Received: from [191.205.188.103] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1sHpXs-002qHg-Lq; Thu, 13 Jun 2024 20:51:36 +0200
+Message-ID: <3c6f4c1c-6dca-aa82-341f-758c9c3d4ffa@igalia.com>
+Date: Thu, 13 Jun 2024 15:51:25 -0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 2/2] pstore/ramoops: Add ramoops.mem_name= command line
+ option
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ suleiman@google.com, Thomas Gleixner <tglx@linutronix.de>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Youssef Esmat <youssefesmat@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Alexander Graf <graf@amazon.com>,
+ Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>, David Howells <dhowells@redhat.com>
+References: <20240613155506.811013916@goodmis.org>
+ <20240613155527.591647061@goodmis.org>
+ <6a6bd674-48ca-f7fc-d572-51e52e6899d9@igalia.com>
+ <20240613144248.2251b189@rorschach.local.home>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20240613144248.2251b189@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Jun 2024 15:19:50 -0300
-"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
-
-> > +
-> > +	reserver_mem=2M:4096:oops  ramoops.mem_name=oops
-> > +  
+On 13/06/2024 15:42, Steven Rostedt wrote:
+> On Thu, 13 Jun 2024 15:19:50 -0300
+> "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
 > 
-> Likely this could be fixed on merge, to avoid another version, but...
+>>> +
+>>> +	reserver_mem=2M:4096:oops  ramoops.mem_name=oops
+>>> +  
+>>
+>> Likely this could be fixed on merge, to avoid another version, but...
+>>
+>> s/reserver_mem/reserve_mem
 > 
-> s/reserver_mem/reserve_mem
+> That 'r' is my nemesis! Almost every time I type "reserve" I write it
+> as "reserver" and have to go back and delete it. :-p
 
-That 'r' is my nemesis! Almost every time I type "reserve" I write it
-as "reserver" and have to go back and delete it. :-p
+LOL, I thought the same! And I even wondered if you're not a vim user
+that makes use of 'r' for replacing text and double typed that - I do
+that all the time, with r and i.
 
-Just to make patchwork work nicely, I'll send a v7. But I'll wait for
-other comments or acks and reviews.
-
--- Steve
+Anyway, thanks for fixing that.
+Cheers!
