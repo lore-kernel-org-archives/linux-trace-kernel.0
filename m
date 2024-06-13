@@ -1,295 +1,72 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B12145358
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 14:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B88D535;
+	Thu, 13 Jun 2024 14:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718288321; cv=none; b=Pmf3uILvF/+5psQCWU4HUlsa9cj3x9+o4iUSWLSXXo8p9yaF2wWqaK3Cj9gwhW6B8MMrj5em+mo6vsndZDV5rEDA5/3KxKhGfz7ZKNy8MLPWOotiNRZIVFBM606/JZ38A8exZC+xWOZRw9Ni/DwNzzB0iYdyQyRaqU2q/sTlMn4=
+	t=1718289109; cv=none; b=Dmbp0SJL6UFqZDKnMENqXGJKzRpzCdHwGtwPhKWcw5n9NqYTOCkjIhMGH4iqSlLohm/Pl5zP4m2/X8erzpGQgYjJ9QmWA4po2pr+X1Qg3bi+86AlYcDsUjjF22/0uap7IwxiTXQTNO5JOeiMhLdVxi6rEDCDQi1Rz1fVs2rJFZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718288321; c=relaxed/simple;
-	bh=85JEwVuIKe/KftRkpLke8Aoka5Lgv+YCkT+qp2fOU5U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DBz5h6lliVlX0rd1fiVubCmUUdOtgBr7SXonTZ3GCtx6Te0c/NdD0wXgGQEVHuFBOExv5d3HiiHeUgHzqrEh9QaK1E+Vlb+yYCXqfQIfj5kxKlz0g3XtqMCnzp+yvTZMbgCt1P/e0DJgKyTBQeUm4fdf0YRAWPtsAUZv2kd1Pm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1uY36BzV; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1uY36BzV"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6f1dc06298so141850466b.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jun 2024 07:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718288317; x=1718893117; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2wBzmun2RrCaRgPyNcy89ODI4aX7kCqGzkCYxhF3xnY=;
-        b=1uY36BzVJy4dzA0pfzS9f36pt0hd48XMPPtFl+Q99Tyja0t1hHnDPm+vvqRU1/08X2
-         EPn+0jR1XjbtWGu1EO2FG0ZuCYBKsFQobb1viEWq/37nIaYWAvh/PzBTvxqAdNhykwT4
-         pasrk3Ib5oScRGe+KwOECelnujLlQUAfndsjA/E+liS0rHrPgvMSbVb6OPyjhj29jYq7
-         I+cHmRKrxXeRJ2S5rnhViEhiyjsjcw3qpz6xqW7rs6HFPcsMeBTEPDgv7PVz8y2nodTy
-         UEo7EaKDFCOuIxT0DBqlSWmBWnw8OD6wjZNWDCX/NjLWpe3l9TtSKupIdDibbOMT9EGU
-         Wb+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718288317; x=1718893117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2wBzmun2RrCaRgPyNcy89ODI4aX7kCqGzkCYxhF3xnY=;
-        b=Y0Z0WlsSeAPTAPq3cIMuEN28o3P/9pLuN5DQGLyPSIKKOzkJprC0Yg+9u8RpgpDhvo
-         uFDwa+mMgniXSlcxHz5y6M1vy1ArCl1ZqzDIKTKpl5SHMEfnM9Hf8t6m9tC9rK3ZF2Hb
-         d5LL0M/zyr+fy+fkeBkpcB7DrtblMPxkx771lqeA5MR9v3gViBmj/t1sD3/DM5//Vwsb
-         Jtr2hpRoGPK1y9v/2x7QJ6PnB/jUKsJIu3F2F7DBjCjljOCUlUR+j1JMDAfIiQvOjpur
-         0BXlTHbP+QrgjHjanw3ETgWBpDAoOlicuI82j6TNzt1Wq6hWn/jAppdqOLNPLTmaR2xe
-         tdhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGZfoClg7TstHiFaXXuFYNSwHRQgMZuF2NBieDK4M9tQWziJQgiC6Bp4rQSkF0f3IuPNQGywQtn/hXkoTF6ff7ln+l1jdVWlSgXjtnEo1x3t2T
-X-Gm-Message-State: AOJu0YwGatfQ2p09juH30ZuTmQ/X0bWk6vZOhASO9PE4gmoupZWhQoXf
-	LL3TJmK/0NZvK5cjfgK0tCC+4ljHDFPcLoSHJgMfYOv2Lr/h5jo+n6GEsyhSMjK9hdvNKjyD311
-	GOP9Jup93S/B8tE0/peVyurbm8OCGiexWA0nq
-X-Google-Smtp-Source: AGHT+IGGR91TbvvdCO5M/lcoYEexAy68BO6MkHDSEDuQZJK4BYVHQSKOXB6UDTw4lBZYreUPv3qYPyzkPkZtS6UL4po=
-X-Received: by 2002:a17:907:94d1:b0:a6f:4bd5:16bb with SMTP id
- a640c23a62f3a-a6f4bd51782mr329005366b.56.1718288317233; Thu, 13 Jun 2024
- 07:18:37 -0700 (PDT)
+	s=arc-20240116; t=1718289109; c=relaxed/simple;
+	bh=9PsPQmeESTeyLm7KAtQ8IYUYp2oYTDZnLsGETxZ4WU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jrRejHo22PLV9CUFrNV+Cmpga9ihcYa9OdlxxAVfCs5MoA9rXymFEuCg6eFdhCE+kkE+8t4AJQPyWhsCsN4Oqja6qotnc5CojxVQqZfx52uiuvCx5yPyM2qnbkL4cGwhjF/gH09PQZGTBCSmLj81EvN5yzPVi6CGBpcLxKJEYME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91CB8C2BBFC;
+	Thu, 13 Jun 2024 14:31:45 +0000 (UTC)
+Date: Thu, 13 Jun 2024 10:31:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
+ <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
+ line option
+Message-ID: <20240613103144.2a78f663@rorschach.local.home>
+In-Reply-To: <CAMj1kXFGnk4vYpTk4PwUg8iYHcbXdrPaYP+OBxHrD5+=jvow+g@mail.gmail.com>
+References: <20240611144911.327227285@goodmis.org>
+	<20240611144949.703297941@goodmis.org>
+	<202406121145.8860502D7@keescook>
+	<20240612145228.5bf426e0@rorschach.local.home>
+	<ZmqLejL1mblOikLp@kernel.org>
+	<CAMj1kXHLSROujjc_OifzVmuAd7BpA+b4D2JrPGLJJYj2au7SfQ@mail.gmail.com>
+	<20240613092642.385461d5@rorschach.local.home>
+	<CAMj1kXFGnk4vYpTk4PwUg8iYHcbXdrPaYP+OBxHrD5+=jvow+g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613013557.1169171-1-almasrymina@google.com>
- <20240613013557.1169171-6-almasrymina@google.com> <322e7317-61dc-4f1e-8706-7db6f5f7a030@bp.renesas.com>
-In-Reply-To: <322e7317-61dc-4f1e-8706-7db6f5f7a030@bp.renesas.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 13 Jun 2024 07:18:23 -0700
-Message-ID: <CAHS8izO6T-CSgdfGFw8nMu1EMLz7ZOa_t9v+YCO8jXEM_=iT7A@mail.gmail.com>
-Subject: Re: [PATCH net-next v12 05/13] page_pool: convert to use netmem
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 13, 2024 at 1:36=E2=80=AFAM Paul Barker
-<paul.barker.ct@bp.renesas.com> wrote:
->
-> On 13/06/2024 02:35, Mina Almasry wrote:
-> > Abstrace the memory type from the page_pool so we can later add support
->
-> s/Abstrace/Abstract/
->
+On Thu, 13 Jun 2024 16:06:47 +0200
+Ard Biesheuvel <ardb@kernel.org> wrote:
 
-Thanks, will do.
+> Fair enough. As long as it is documented that there is no guarantee
+> that this will keep working over a kernel upgrade, then I have no
+> objections.
 
-> > for new memory types. Convert the page_pool to use the new netmem type
-> > abstraction, rather than use struct page directly.
-> >
-> > As of this patch the netmem type is a no-op abstraction: it's always a
-> > struct page underneath. All the page pool internals are converted to
-> > use struct netmem instead of struct page, and the page pool now exports
-> > 2 APIs:
-> >
-> > 1. The existing struct page API.
-> > 2. The new struct netmem API.
-> >
-> > Keeping the existing API is transitional; we do not want to refactor al=
-l
-> > the current drivers using the page pool at once.
-> >
-> > The netmem abstraction is currently a no-op. The page_pool uses
-> > page_to_netmem() to convert allocated pages to netmem, and uses
-> > netmem_to_page() to convert the netmem back to pages to pass to mm APIs=
-,
-> >
-> > Follow up patches to this series add non-paged netmem support to the
-> > page_pool. This change is factored out on its own to limit the code
-> > churn to this 1 patch, for ease of code review.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >
-> > v12:
-> > - Fix allmodconfig build error. Very recently renesas/ravb_main.c added
-> >   a dependency on page_pool that I missed in my rebase. The dependency
-> >   calls page_pool_alloc() directly as it wants to set a custom gfp_mask=
-,
-> >   which is unique as all other drivers call a wrapper to that function.
-> >   Fix it by adding netmem_to_page() in the driver.> - Fix printing netm=
-em trace printing (Pavel).
-> >
-> > v11:
-> > - Fix typing to remove sparse warning. (Paolo/Steven)
-> >
-> > v9:
-> > - Fix sparse error (Simon).
-> >
-> > v8:
-> > - Fix napi_pp_put_page() taking netmem instead of page to fix
-> >   patch-by-patch build error.
-> > - Add net/netmem.h include in this patch to fix patch-by-patch build
-> >   error.
-> >
-> > v6:
-> >
-> > - Rebased on top of the merged netmem_ref type.
-> >
-> > Cc: linux-mm@kvack.org
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> >
-> > ---
-> >  drivers/net/ethernet/renesas/ravb_main.c |   5 +-
-> >  include/linux/skbuff_ref.h               |   4 +-
-> >  include/net/netmem.h                     |  15 ++
-> >  include/net/page_pool/helpers.h          | 120 ++++++---
-> >  include/net/page_pool/types.h            |  14 +-
-> >  include/trace/events/page_pool.h         |  30 +--
-> >  net/bpf/test_run.c                       |   5 +-
-> >  net/core/page_pool.c                     | 304 ++++++++++++-----------
-> >  net/core/skbuff.c                        |   8 +-
-> >  9 files changed, 305 insertions(+), 200 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/eth=
-ernet/renesas/ravb_main.c
-> > index c1546b916e4ef..093236ebfeecb 100644
-> > --- a/drivers/net/ethernet/renesas/ravb_main.c
-> > +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> > @@ -303,8 +303,9 @@ ravb_alloc_rx_buffer(struct net_device *ndev, int q=
-, u32 entry, gfp_t gfp_mask,
-> >
-> >       rx_buff =3D &priv->rx_buffers[q][entry];
-> >       size =3D info->rx_buffer_size;
-> > -     rx_buff->page =3D page_pool_alloc(priv->rx_pool[q], &rx_buff->off=
-set,
-> > -                                     &size, gfp_mask);
-> > +     rx_buff->page =3D netmem_to_page(page_pool_alloc(priv->rx_pool[q]=
-,
-> > +                                                    &rx_buff->offset,
-> > +                                                    &size, gfp_mask));
-> >       if (unlikely(!rx_buff->page)) {
-> >               /* We just set the data size to 0 for a failed mapping wh=
-ich
-> >                * should prevent DMA from happening...
->
-> [snip]
->
-> >
-> > -static inline struct page *page_pool_alloc(struct page_pool *pool,
-> > -                                        unsigned int *offset,
-> > -                                        unsigned int *size, gfp_t gfp)
-> > +static inline netmem_ref page_pool_alloc(struct page_pool *pool,
-> > +                                      unsigned int *offset,
-> > +                                      unsigned int *size, gfp_t gfp)
-> >  {
-> >       unsigned int max_size =3D PAGE_SIZE << pool->p.order;
-> > -     struct page *page;
-> > +     netmem_ref netmem;
-> >
-> >       if ((*size << 1) > max_size) {
-> >               *size =3D max_size;
-> >               *offset =3D 0;
-> > -             return page_pool_alloc_pages(pool, gfp);
-> > +             return page_pool_alloc_netmem(pool, gfp);
-> >       }
-> >
-> > -     page =3D page_pool_alloc_frag(pool, offset, *size, gfp);
-> > -     if (unlikely(!page))
-> > -             return NULL;
-> > +     netmem =3D page_pool_alloc_frag_netmem(pool, offset, *size, gfp);
-> > +     if (unlikely(!netmem))
-> > +             return 0;
-> >
-> >       /* There is very likely not enough space for another fragment, so=
- append
-> >        * the remaining size to the current fragment to avoid truesize
-> > @@ -140,7 +142,7 @@ static inline struct page *page_pool_alloc(struct p=
-age_pool *pool,
-> >               pool->frag_offset =3D max_size;
-> >       }
-> >
-> > -     return page;
-> > +     return netmem;
-> >  }
-> >
-> >  /**
-> > @@ -154,7 +156,7 @@ static inline struct page *page_pool_alloc(struct p=
-age_pool *pool,
-> >   * utilization and performance penalty.
-> >   *
-> >   * Return:
-> > - * Return allocated page or page fragment, otherwise return NULL.
-> > + * Return allocated page or page fragment, otherwise return 0.
-> >   */
-> >  static inline struct page *page_pool_dev_alloc(struct page_pool *pool,
-> >                                              unsigned int *offset,
-> > @@ -162,7 +164,7 @@ static inline struct page *page_pool_dev_alloc(stru=
-ct page_pool *pool,
-> >  {
-> >       gfp_t gfp =3D (GFP_ATOMIC | __GFP_NOWARN);
-> >
-> > -     return page_pool_alloc(pool, offset, size, gfp);
-> > +     return netmem_to_page(page_pool_alloc(pool, offset, size, gfp));
-> >  }
->
-> I find this API change confusing - why should page_pool_alloc() return a
-> netmem_ref but page_pool_dev_alloc() return a struct page *?
->
-> Is there any reason to change page_pool_alloc() anyway? It calls
-> page_pool_alloc_pages() or page_pool_alloc_frag() as appropriate, both
-> of which your patch already converts to wrappers around the appropriate
-> _netmem() functions. In all instances where page_pool_alloc() is called
-> in this patch, you wrap it with netmem_to_page() anyway, there are no
-> calls to page_pool_alloc() added which actually want a netmem_ref.
->
-
-The general gist is that the page_pool API is being converted to use
-netmem_ref instead of page. The existing API, which uses struct page,
-is kept around transitionally, but meant to be removed and everything
-moved to netmem.
-
-APIs that current drivers depend on, like page_pool_dev_alloc(), I've
-kept as struct page and added netmem versions when needed. APIs that
-had no external users, like page_pool_alloc(), I took the opportunity
-to move them to netmem immediately. But you recently depended on that.
-
-I thought page_pool_alloc() was an internal function to the page_pool
-not meant to be called from drivers, but the documentation actually
-mentions it. Seems like I need to keep it as page* function
-transitionally as well. I'll look into making this change you
-suggested, there is
-no needed page_pool_alloc() caller at the moment.
-
-
---
 Thanks,
-Mina
+
+I'll send out v6 and even stress that this may not work for all kernel
+versions.
+
+-- Steve
+
