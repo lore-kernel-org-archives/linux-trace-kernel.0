@@ -1,98 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62433136E1D;
-	Thu, 13 Jun 2024 20:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E20A13541B;
+	Thu, 13 Jun 2024 21:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718309414; cv=none; b=S9We/C6ePQwR/IhGnL5jlIh8I/3MYwE7px9K7muH+xuOuGHQPSpV7q9JTR1eMQf46TIW9wa0kiTd7xLWzMnm+IaUupunbd3ID0qfjfM71pJHhA6/V1LG1rCIfyGmTqlJWZAUywqUxYRNqucj4BNfDNK2ToxR+PI7OhNfE/4lDbA=
+	t=1718313277; cv=none; b=nAWDc/JpKo3O0iQpmo3f/JVeyQno3RUUPtoMYEDxuJ752qQCa+hRnZ2P/kW132a2KCrEnJ/Jt/DbN8/NzQMsmZWFYhQlmMhlKoGoucQFps/04TmyFCjwNbLvpNNOzD6+xbhz0gspQTrGALkIspPP2RUMZpJlzXJBScphlNnAVLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718309414; c=relaxed/simple;
-	bh=IjmHMXcphwekH/gLOJkQYvaNS+ZdtxIQCAgnq4I7qjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a/ElfHe7xdpVECcZuxP3hHfM6WDggO8bIucTLBRlTKN2TCe/vcCHn5V7V2xd7tuisjliNsVGKwfdWUe747pVcCg0CzkPt96BEvUBK3lTDSMatzW2q+e2jdCx1ph0jfGrYhUtK9O7yOVgLChgkSQlzedAEDIEPcFJfzKi/h2GiiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794DDC2BBFC;
-	Thu, 13 Jun 2024 20:10:13 +0000 (UTC)
-Date: Thu, 13 Jun 2024 16:10:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-security-module@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] linux++: delete some forward declarations
-Message-ID: <20240613161012.1dd2ff60@rorschach.local.home>
-In-Reply-To: <20240613130420.a62ed8965a73b0f8d35890d4@linux-foundation.org>
-References: <5ad5556c-7c32-45b7-89cf-f723c9d7332b@p183>
-	<20240613153402.3b067d4b@rorschach.local.home>
-	<20240613130420.a62ed8965a73b0f8d35890d4@linux-foundation.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718313277; c=relaxed/simple;
+	bh=4a2+5zIfwargPvYAlTmLGH6pFw0rZamk0P9b4EVRVsM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=J5qK+BHpvk/gEtqryvsEniQeH2DMXzjDGqdVN3KRwcRNo+449/wjJrKHs7bSXbV8AlwCfNkHdu0XY0+pXSrsO0Cfizrv5Ibd2OkYjaHmfara94UAz+BYb7WE4fncOem3BmVTsmiDMXKUmF2Rb8GFoMbjd+FLDypwH0yMjmzWB6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EMg5zEp0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EMg5zEp0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E20C2BBFC;
+	Thu, 13 Jun 2024 21:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1718313277;
+	bh=4a2+5zIfwargPvYAlTmLGH6pFw0rZamk0P9b4EVRVsM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EMg5zEp0mO+NhF6jvPGvPYkQn8Gd0u2aw4kR2cAYBNOQj5bRnNWwQM9CehUe95cZs
+	 6Ig1y6VAXMhH/JYy3dPHM1EG0vGdCUoJaJs1tYAbb6NeSB3p4cP0PLop0SsGaGcGr6
+	 fg74mWAVBAHGreHe41TJIWG8GiGZhlI1Nb5wr4hM=
+Date: Thu, 13 Jun 2024 14:14:35 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: torvalds@linux-foundation.org, ebiederm@xmission.com,
+ alexei.starovoitov@gmail.com, rostedt@goodmis.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ audit@vger.kernel.org, linux-security-module@vger.kernel.org,
+ selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 05/10] mm/util: Fix possible race condition in
+ kstrdup()
+Message-Id: <20240613141435.fad09579c934dbb79a3086cc@linux-foundation.org>
+In-Reply-To: <20240613023044.45873-6-laoar.shao@gmail.com>
+References: <20240613023044.45873-1-laoar.shao@gmail.com>
+	<20240613023044.45873-6-laoar.shao@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Jun 2024 13:04:20 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Thu, 13 Jun 2024 10:30:39 +0800 Yafang Shao <laoar.shao@gmail.com> wrote:
 
-> On Thu, 13 Jun 2024 15:34:02 -0400 Steven Rostedt <rostedt@goodmis.org> w=
-rote:
->=20
-> > On Thu, 13 Jun 2024 22:22:18 +0300
-> > Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >  =20
-> > > g++ doesn't like forward enum declarations:
-> > >=20
-> > > 	error: use of enum =E2=80=98E=E2=80=99 without previous declaration
-> > > 	   64 | enum E; =20
-> >=20
-> > But we don't care about g++. Do we? =20
->=20
-> It appears that g++ is a useful enum declaration detector.
->=20
-> I'm curious to know how even the above warning was generated.  Does g++
-> work at all on Linux?
->=20
-> > I would make that a separate patch. =20
->=20
-> What are you referring to here?
+> In kstrdup(), it is critical to ensure that the dest string is always
+> NUL-terminated. However, potential race condidtion can occur between a
+> writer and a reader.
+> 
+> Consider the following scenario involving task->comm:
+> 
+>     reader                    writer
+> 
+>   len = strlen(s) + 1;
+>                              strlcpy(tsk->comm, buf, sizeof(tsk->comm));
+>   memcpy(buf, s, len);
+> 
+> In this case, there is a race condition between the reader and the
+> writer. The reader calculate the length of the string `s` based on the
+> old value of task->comm. However, during the memcpy(), the string `s`
+> might be updated by the writer to a new value of task->comm.
+> 
+> If the new task->comm is larger than the old one, the `buf` might not be
+> NUL-terminated. This can lead to undefined behavior and potential
+> security vulnerabilities.
+> 
+> Let's fix it by explicitly adding a NUL-terminator.
 
-The enum change should be separate from the struct changes.
+The concept sounds a little strange.  If some code takes a copy of a
+string while some other code is altering it, yes, the result will be a
+mess.  This is why get_task_comm() exists, and why it uses locking.
 
->=20
-> > >=20
-> > > Delete those which aren't used.
-> > >=20
-> > > Delete some unused/unnecessary forward struct declarations for a chan=
-ge. =20
-> >=20
-> > This is a clean up, but should have a better change log. Just something
-> > simple like:
-> >=20
-> >   Delete unnecessary forward struct declarations. =20
->=20
-> Alexey specializes in cute changelogs.
+I get that "your copy is a mess" is less serious than "your string
+isn't null-terminated" but still.  Whichever outcome we get, the
+calling code is buggy and should be fixed.
 
-eh
+Are there any other problematic scenarios we're defending against here?
 
->=20
-> I do have a concern about the patch: has it been tested with all
-> possible Kconfigs?  No.  There may be some configs in which the forward
-> declaration is required.
->=20
-> And...  I'm a bit surprised that forward declarations are allowed in C.
-> A billion years ago I used a C compiler which would use 16 bits for
-> an enum if the enumted values would fit in 16 bits.  And it would use 32
-> bits otherwise.  So the enumerated values were *required* for the
-> compiler to be able to figure out the sizeof.  But it was a billion
-> years ago.
+>
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -60,8 +60,10 @@ char *kstrdup(const char *s, gfp_t gfp)
+>  
+>  	len = strlen(s) + 1;
+>  	buf = kmalloc_track_caller(len, gfp);
+> -	if (buf)
+> +	if (buf) {
+>  		memcpy(buf, s, len);
+> +		buf[len - 1] = '\0';
+> +	}
+>  	return buf;
+>  }
 
-Well, I only looked at the one change in ftrace.h which has a
-"struct seq_file;" that is not used anywhere else in the file, so that
-one definitely can go.
+Now I'll start receiving patches to remove this again.  Let's have a
+code comment please.
 
--- Steve
+And kstrdup() is now looking awfully similar to kstrndup().  Perhaps
+there's a way to reduce duplication?
