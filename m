@@ -1,114 +1,171 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E76E502B9
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Jun 2024 18:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DD4182BD;
+	Sat, 15 Jun 2024 22:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718476113; cv=none; b=a2uJf7FDnqbrzAvSlCunDp00usZ3+gy7dEO6dPAiwzV7uLkcUN1fKNsvPXiUJYAcfqNKWB773VNJzhKrGvipLdbglmUJATgVysxo5hk368OdFBg6yjXHw8lQc69t4y8QwpGubJgmoYWR233zB2NY71n5uZAjhp/EK/w0ITMx2ME=
+	t=1718492268; cv=none; b=sj/oBEqscqpm+tayA871/59osvQGr3ZqC+j3cgn205xKHoL/s251B6z4ctRS5NtEYQMyFlq5dRwmnXJdaJrZGF3tHixav0s+LDBrnGHLDb1EAGT04zuadj0d95RghqfQq2eXRiP7W9gosRdbM7bezCsRC3rjUElpBNTrKw9uo7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718476113; c=relaxed/simple;
-	bh=MojULXevuVBZf7Jew86/KK2hIQUH03CY6ojPp9rcZQI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fa/hXGdDiRdl7on5Bu6e9uD4RxfRl3x3Fqar4fYZK6ktX+rhNIpgTXp9xgvRv2GQWtIH2istU8c4vv2ljjXFn9NN//n662WCt7xtXS5kpCQSLUIZl5Fk+mCmv1asqM5Ds2XSQHKCpTayaqjgsCsUykuswQNpVyZtzNpuPuxpQks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=W7fYUzKD; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1718492268; c=relaxed/simple;
+	bh=xGWREnMXr4sgcSPZUNg+qY2W7mkgfv7zvb5EPMvy93M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jyw5kiOXeNOes25L9fJGEzIBH1aucpTPV6SJ/ZiVRZB7a3ehWLb6DAbk5cnvJhff2XcFaZAnM0r6PXWC4TPV9PHhqJ+2L7IEtZ5kUhgQPIJPOnywhXxLlqEhN7629KaOsisb3ss4Rrq8DFaZxgYh0t3d8++2NmZDv+qd9sqoFuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J7YhUIiu; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="W7fYUzKD"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2c508ea0cc5so280346a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Jun 2024 11:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1718476110; x=1719080910; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOa4EL2QOHlkY1KBVF4rLIyNml+AHSitErfNXPe/ZDo=;
-        b=W7fYUzKD73Myp1IYaIT82nHWCUwgoGCAY9i08B9Z3drMrYUtEIvLyEhOHo1HobklVF
-         hri9F13dzAq0PF9KCUr39xX2gnW5ItXKIbNNgQGAAfyBDDItju28xwJMZJVtZ/52Uwi1
-         O8hijMwciEm7uE4Qom4mjZk85vQka7RD7nN5B89Fee3gP4/FOC+DFTO6iH4RuDC1tDY1
-         8AviCmlyuIr3mCaIordHkLlPLnfHpHCKb3UC+UK8NQu8wpF+SKQmt+FE5k5jiLEylE5C
-         tn0AOErJ4yBRqQdPieyu6PIX5bFbxmiLzEuuh97pEzoGgfvEk2d65XvntbC3J781RT60
-         +xag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718476110; x=1719080910;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fOa4EL2QOHlkY1KBVF4rLIyNml+AHSitErfNXPe/ZDo=;
-        b=b62izkGYNEUvHptmkl97804n4MomTwa5kCwBXKh0v9TORT8bRk8jKpgJ069/XNKfe0
-         Pn/YfStpC19KhR6b7FF3p/ZNJmZPBDAKLDc5DHLPUAOa9bgeWUae6I+AfUhBXbqCOVBS
-         e3Xr8cCIJh8EoSJP5S2t/4kuTv0FSHV33glU6BbO8/1f9T9//trKmPanw4w2EM/jJnKR
-         m+Zk6G8z09OXzib/t332qm/7duEX9kZmW/1VCqeRbjf8mfRKbKi+LoTr/UIB+AIl7aGR
-         2c7/rTjpAgNqHVzRv8HQ9OY/KgyMy+LTUv6+/7n5bOObvdKeQblz+ZE70v/QhvWVYxMY
-         7Acg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoc5gYMrmqTik34VT8/2Rl7jg5vCPTcYxxIhYLdvPEi9Cy6FW3HQguOcgAI5j2FVolTjDUzv1m5+hCtfZo06C8taRV8n/erebF0iC5g/qQVFIw
-X-Gm-Message-State: AOJu0YwY6mgbj++tPma1AL/D3Dhkb07rH6zAaXmZfs/mUAC2bupOnln9
-	QPWr2PhyrE5q6THTq11rKQXKadS0Squ7HntBFHRjMiUUJXh6vaktqPc9pvz3xEQ=
-X-Google-Smtp-Source: AGHT+IGL8+wuMeLtL5lsWvGcn57A7lx2hOGD+VPMZ7Qju9XjYe18J9PbGRRjxgxHxHaFKJWluhoW+g==
-X-Received: by 2002:a17:90a:c086:b0:2c2:f6c1:4d87 with SMTP id 98e67ed59e1d1-2c4db24d144mr5662861a91.20.1718476110201;
-        Sat, 15 Jun 2024 11:28:30 -0700 (PDT)
-Received: from debian.vc.shawcable.net. (S0106c09435b54ab9.vc.shawcable.net. [24.85.107.15])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c467c6besm6072463a91.52.2024.06.15.11.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jun 2024 11:28:29 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] ring-buffer: Use vma_pages() helper function
-Date: Sat, 15 Jun 2024 20:27:43 +0200
-Message-Id: <20240615182742.1234-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J7YhUIiu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718492267; x=1750028267;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xGWREnMXr4sgcSPZUNg+qY2W7mkgfv7zvb5EPMvy93M=;
+  b=J7YhUIiubecmGBI8S7GcLBPkscha4wMPZQF9cg2GqRIyHZU6+oeommxU
+   6Xjyo6ggmAMsorQid8/G7rPN3BDK5bKdTKUGSCspjqOHevk3xuDmKrQ0X
+   3/xO1t4X0oyqP2qv16B5jjYyJWtDUrMaFoHEuNTTl5XchNyD87apJ6a1I
+   dqc8uuulgOhovjnRQwdvpyuVfq+qNvyOeZNoz7RBGalND0fLr1BA5YCGQ
+   AroUcFmYehIJ5dmtbulM51WXOVbwapNwgCHS0cexV1cpQ6OHzXRF57x0X
+   z+SwmrOGn/nO3ab0SqufTsJyVP4Z4+JsarItIF9KcdFsG0Uf15tM0mnof
+   A==;
+X-CSE-ConnectionGUID: 0qoMoXqLSN20t0CREOpiUA==
+X-CSE-MsgGUID: lb3MH1vqTFuCSKyCwj55ZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11104"; a="18279575"
+X-IronPort-AV: E=Sophos;i="6.08,241,1712646000"; 
+   d="scan'208";a="18279575"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2024 15:57:46 -0700
+X-CSE-ConnectionGUID: tQT5lppYTfmW2X/IqdwLEw==
+X-CSE-MsgGUID: e3r39IKvSLGNMxgXhoTGkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,241,1712646000"; 
+   d="scan'208";a="40697793"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 15 Jun 2024 15:57:42 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sIcL6-0000Zo-1U;
+	Sat, 15 Jun 2024 22:57:40 +0000
+Date: Sun, 16 Jun 2024 06:56:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net,
+	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+	linux@armlinux.org.uk, ardb@kernel.org, yangtiezhu@loongson.cn,
+	arnd@arndb.de, kees@kernel.org, rmk+kernel@armlinux.org.uk,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH] arm: Add KPROBES_ON_FTRACE supported
+Message-ID: <202406160646.J89U1UKK-lkp@intel.com>
+References: <20240614022318.2600814-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240614022318.2600814-1-ruanjinjie@huawei.com>
 
-Use the vma_pages() helper function and fix the following
-Coccinelle/coccicheck warning reported by vma_pages.cocci:
+Hi Jinjie,
 
-	WARNING: Consider using vma_pages helper on vma
+kernel test robot noticed the following build errors:
 
-Rename the local variable vma_pages accordingly.
+[auto build test ERROR on soc/for-next]
+[also build test ERROR on linus/master v6.10-rc3 next-20240613]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/trace/ring_buffer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Jinjie-Ruan/arm-Add-KPROBES_ON_FTRACE-supported/20240614-102440
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+patch link:    https://lore.kernel.org/r/20240614022318.2600814-1-ruanjinjie%40huawei.com
+patch subject: [PATCH] arm: Add KPROBES_ON_FTRACE supported
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20240616/202406160646.J89U1UKK-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240616/202406160646.J89U1UKK-lkp@intel.com/reproduce)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 28853966aa9a..473ba56b889b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6226,7 +6226,7 @@ static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
- static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 			struct vm_area_struct *vma)
- {
--	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
-+	unsigned long nr_subbufs, nr_pages, nr_vma_pages, pgoff = vma->vm_pgoff;
- 	unsigned int subbuf_pages, subbuf_order;
- 	struct page **pages;
- 	int p = 0, s = 0;
-@@ -6252,11 +6252,11 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
- 	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
- 
--	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
--	if (!vma_pages || vma_pages > nr_pages)
-+	nr_vma_pages = vma_pages(vma);
-+	if (!nr_vma_pages || nr_vma_pages > nr_pages)
- 		return -EINVAL;
- 
--	nr_pages = vma_pages;
-+	nr_pages = nr_vma_pages;
- 
- 	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
- 	if (!pages)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406160646.J89U1UKK-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+>> drivers/gpu/drm/xe/xe_lrc.c:92: warning: "NOP" redefined
+      92 | #define NOP(x) (BIT(7) | (x))
+         | 
+   In file included from include/linux/ftrace.h:23,
+                    from include/linux/kprobes.h:28,
+                    from include/linux/kgdb.h:19,
+                    from include/drm/drm_util.h:36,
+                    from include/drm/drm_connector.h:32,
+                    from drivers/gpu/drm/i915/display/intel_display_core.h:16,
+                    from drivers/gpu/drm/xe/xe_device_types.h:27,
+                    from drivers/gpu/drm/xe/xe_vm_types.h:16,
+                    from drivers/gpu/drm/xe/xe_bo.h:13,
+                    from drivers/gpu/drm/xe/xe_lrc.c:14:
+   arch/arm/include/asm/ftrace.h:39: note: this is the location of the previous definition
+      39 | #define NOP             0xe28dd004      /* add   sp, sp, #4 */
+         | 
+--
+>> drivers/gpu/drm/xe/xe_pci.c:80: warning: "NOP" redefined
+      80 | #define NOP(x)  x
+         | 
+   In file included from include/linux/ftrace.h:23,
+                    from include/linux/kprobes.h:28,
+                    from include/linux/kgdb.h:19,
+                    from include/drm/drm_util.h:36,
+                    from drivers/gpu/drm/xe/xe_device.h:12,
+                    from drivers/gpu/drm/xe/display/xe_display.h:9,
+                    from drivers/gpu/drm/xe/xe_pci.c:18:
+   arch/arm/include/asm/ftrace.h:39: note: this is the location of the previous definition
+      39 | #define NOP             0xe28dd004      /* add   sp, sp, #4 */
+         | 
+--
+   In file included from include/linux/ftrace.h:23,
+                    from include/linux/perf_event.h:52,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:93,
+                    from drivers/scsi/aacraid/linit.c:32:
+>> arch/arm/include/asm/ftrace.h:39:25: error: expected identifier before numeric constant
+      39 | #define NOP             0xe28dd004      /* add   sp, sp, #4 */
+         |                         ^~~~~~~~~~
+   include/scsi/scsi_status.h:19:9: note: in expansion of macro 'NOP'
+      19 |         NOP                     = 0x08,
+         |         ^~~
+   In file included from drivers/scsi/aacraid/linit.c:38:
+   include/scsi/scsi_cmnd.h: In function 'scsi_msg_to_host_byte':
+>> include/scsi/scsi_cmnd.h:372:14: error: 'TARGET_RESET' undeclared (first use in this function)
+     372 |         case TARGET_RESET:
+         |              ^~~~~~~~~~~~
+   include/scsi/scsi_cmnd.h:372:14: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +39 arch/arm/include/asm/ftrace.h
+
+    24	
+    25	/*
+    26	 * The compiler emitted profiling hook consists of
+    27	 *
+    28	 *   PUSH    {LR}
+    29	 *   BL	     __gnu_mcount_nc
+    30	 *
+    31	 * To turn this combined sequence into a NOP, we need to restore the value of
+    32	 * SP before the PUSH. Let's use an ADD rather than a POP into LR, as LR is not
+    33	 * modified anyway, and reloading LR from memory is highly likely to be less
+    34	 * efficient.
+    35	 */
+    36	#ifdef CONFIG_THUMB2_KERNEL
+    37	#define	NOP		0xf10d0d04	/* add.w sp, sp, #4 */
+    38	#else
+  > 39	#define	NOP		0xe28dd004	/* add   sp, sp, #4 */
+    40	#endif
+    41	
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
