@@ -1,126 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B11383;
-	Fri, 14 Jun 2024 20:07:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE1F4DA0F;
+	Sat, 15 Jun 2024 15:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718395653; cv=none; b=CkQ9fJkbB0cfZI3hIyMTwUEsT+43SN+bWni3jHCp3YV9TTSGSoLH0VyhfcDXsoXX/QfTar8/98mxnGkgE3PMyADRtEjM+rmwVgqeG8CEuWDqsMeZC2weR0OMIGRVNhsDKezcQJTDWM1FC5Q7/DbVRbb9U9bm3FB4+HdC9U9D3L8=
+	t=1718464764; cv=none; b=iyRVHLimAVqM1Y5QFxHexkEXDVTtRz3zMSB7fdZdT71aLZZz0mgIp130RQMnEr78xGHiuMVYqRqjZ9BuDpz17uvDt0Rm86B8Rl56vCFUsOxvGAEwhwiy6c71FQoDmflefzpZCjUekd6/bavIQGYad4KLSIBSxjrxhVluORAZNI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718395653; c=relaxed/simple;
-	bh=TLgK8xBlI7oOA+HqaXRUGCcZgq0Lk85TpQM6TQ5u5vE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gH2zv9FnV2CS9yEHimQSpjZCi4QouJkRkEFf14VOucO/3xDEwah7pZrH+d7xmoPoPTQm+P0Ya2r0dyOAJflLXEEufJIrVbQb050NxtKUTYmVWOULVtrf7mg87b+ZhQCvNlM6HIc7ROMY/6ohQZUXe9lzF/isD77tOG6znSROO4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZhA5TST; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718464764; c=relaxed/simple;
+	bh=adZ/bRj+MoOBaiiYAdhvJpu9cSDcRAK6pFkfbsYL9p8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PUuyJcEr0cD1F3Cg9/5aPlq6sFFP6Qx0Obvv5lJIV7VBFtOaBKxhqajVbrobKTZ9lJMKwH7oBP17oXP2OX3RPHEhkMt622XNWxCz7lcUV2IRzimaDrUZTFWeM9kRZyNQLAxMlnPG6Nr4CapSXNs344lk+n0dxRiSahR7r5PYmCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iX1sMCK5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZhA5TST"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286B3C2BD10;
-	Fri, 14 Jun 2024 20:07:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iX1sMCK5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38FF0C116B1;
+	Sat, 15 Jun 2024 15:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718395652;
-	bh=TLgK8xBlI7oOA+HqaXRUGCcZgq0Lk85TpQM6TQ5u5vE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UZhA5TSTgrFRJ9dD/QT1sJgzGt5IJQ3Hcb3774r5mwGZYvh/ncQlMr12G/49O+ype
-	 woKnX70Axer069t3Z9L5exZ4HcTk/JxiG0Eb8RGIOGIsEtlmcW2eAMaHh4fjyMSkWb
-	 q6wBuNUF0k8Z/k+R0lQaFNhZ+37igEYeTZJcUR6xOC8Bdl2VqDl3GM+ptzECnNRb0I
-	 iKLXF6C9qJQDnwCgpsAGlTHRyfsP5gK2JP5rtTGYiq2raFrsq2vMMWWOJcMVxnE2wD
-	 dgQW2njMxCFVpGMA8A/dXKzSja2vd0kgSJTTX+4fmQimKe1AdetaN2pC8zpqLDuVev
-	 +f/LKzF10mpgw==
-Date: Fri, 14 Jun 2024 13:07:29 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev
-Subject: Re: [PATCHv8 bpf-next 3/9] uprobe: Add uretprobe syscall to speed up
- return probe
-Message-ID: <20240614200729.GA1585004@thelio-3990X>
-References: <20240611112158.40795-1-jolsa@kernel.org>
- <20240611112158.40795-4-jolsa@kernel.org>
- <20240614174822.GA1185149@thelio-3990X>
- <ZmyZgzqsowkGyqmH@krava>
+	s=k20201202; t=1718464763;
+	bh=adZ/bRj+MoOBaiiYAdhvJpu9cSDcRAK6pFkfbsYL9p8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iX1sMCK5GkTbCqQlZaeiCQXuH2SfTDx+MgqmQMnJ3CEjboesGRau+F0rCGkPpb4Im
+	 YuBsXOSXRqzHJu7EvHWKl7XpBsBqIl54LIlicRIQv235z19QGGzuUvihLgOAyYyQ7g
+	 IfCxF3MQ7TL86uPAVPXRVq1u4FBHiSr27CrAM4xvfmFtbRVNmhIUpeSNozJ+pYvMot
+	 KU0Ct2s2+hIDf4rSfOfqwCjgMCP3a+3T+8zp+5qIMgq78l57Q4P7JxjGguH4sPFtMb
+	 8BRsM74V1MlobFcSYhdTjYh0mHG4BEm774gtALJQWJ9/cVRvNK8S7yJ/qm8BZ+s0HR
+	 2XTgy1hfJpslw==
+Date: Sun, 16 Jun 2024 00:19:20 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko
+ <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] bpf/selftests: Fix __NR_uretprobe in uprobe_syscall
+ test
+Message-Id: <20240616001920.0662473b0c3211e1dbd4b6f5@kernel.org>
+In-Reply-To: <20240614101509.764664-1-jolsa@kernel.org>
+References: <20240614101509.764664-1-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmyZgzqsowkGyqmH@krava>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 14, 2024 at 09:26:59PM +0200, Jiri Olsa wrote:
-> On Fri, Jun 14, 2024 at 10:48:22AM -0700, Nathan Chancellor wrote:
-> > Hi Jiri,
-> > 
-> > On Tue, Jun 11, 2024 at 01:21:52PM +0200, Jiri Olsa wrote:
-> > > Adding uretprobe syscall instead of trap to speed up return probe.
-> > ...
-> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > index 2c83ba776fc7..2816e65729ac 100644
-> > > --- a/kernel/events/uprobes.c
-> > > +++ b/kernel/events/uprobes.c
-> > > @@ -1474,11 +1474,20 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +void * __weak arch_uprobe_trampoline(unsigned long *psize)
-> > > +{
-> > > +	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-> > 
-> > This change as commit ff474a78cef5 ("uprobe: Add uretprobe syscall to
-> > speed up return probe") in -next causes the following build error for
-> > ARCH=loongarch allmodconfig:
-> > 
-> >   In file included from include/linux/uprobes.h:49,
-> >                    from include/linux/mm_types.h:16,
-> >                    from include/linux/mmzone.h:22,
-> >                    from include/linux/gfp.h:7,
-> >                    from include/linux/xarray.h:16,
-> >                    from include/linux/list_lru.h:14,
-> >                    from include/linux/fs.h:13,
-> >                    from include/linux/highmem.h:5,
-> >                    from kernel/events/uprobes.c:13:
-> >   kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
-> >   arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element is not constant
-> >      12 | #define UPROBE_SWBP_INSN        larch_insn_gen_break(BRK_UPROBE_BP)
-> >         |                                 ^~~~~~~~~~~~~~~~~~~~
-> >   kernel/events/uprobes.c:1479:39: note: in expansion of macro 'UPROBE_SWBP_INSN'
-> >    1479 |         static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
+On Fri, 14 Jun 2024 12:15:09 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
+
+> Fixing the __NR_uretprobe number in uprobe_syscall test,
+> because it changed due to merge conflict.
 > 
-> reproduced, could you please try the change below
 
-Yeah, that fixes the issue for me.
+Ah, it is not enough, since Stephen's change is just a temporary fix on
+next tree. OK, Let me update it.
 
-Tested-by: Nathan Chancellor <nathan@kernel.org> # build
+Thanks,
 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2816e65729ac..6986bd993702 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1476,8 +1476,9 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
->  
->  void * __weak arch_uprobe_trampoline(unsigned long *psize)
->  {
-> -	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
-> +	static uprobe_opcode_t insn;
->  
-> +	insn = insn ?: UPROBE_SWBP_INSN;
->  	*psize = UPROBE_SWBP_INSN_SIZE;
->  	return &insn;
+>  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> index c8517c8f5313..bd8c75b620c2 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> @@ -216,7 +216,7 @@ static void test_uretprobe_regs_change(void)
 >  }
+>  
+>  #ifndef __NR_uretprobe
+> -#define __NR_uretprobe 463
+> +#define __NR_uretprobe 467
+>  #endif
+>  
+>  __naked unsigned long uretprobe_syscall_call_1(void)
+> -- 
+> 2.45.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
