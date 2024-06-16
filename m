@@ -1,131 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0438168B7
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Jun 2024 16:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2F0DF6B;
+	Sun, 16 Jun 2024 19:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718553956; cv=none; b=BUGxxDsxuZgMCeuZIeWucb+ca7V+kdsMbxRbqEhTP8i/Rl7qffX6UgpkD5dSxwPpHrbhOe+dbqcrG1IAM/ztH983VU/zuoIkKaCaaY39DJSoMdoWd8CMjSdNf5u6uXtcMgEQlZeX6gI29eTh2wn7sfPyimgYbgTHMGfd0IQ3EOk=
+	t=1718567488; cv=none; b=V9oOX3POxqBJWDYJ/xRq0C9cOiE5Y2xwtq47xMtvH46b5BfEfTttW+3lWPwSc0Q+hlBnDjMrWjGGGvwIf3lGcNV7QDhV/tv6F01RKONJus5uhYF21ahceBh49sqCFx0TCKBssjfLlixg1ETQiuahgJyvsMQldyJOOrEqJv4Mu1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718553956; c=relaxed/simple;
-	bh=jWPn9iHaLtLH42siBzpBDgnax3bP3yA0wAFza39sHXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MY2tCMKSZXX9eSorjINh0tRAvJ6ZRlRNiztAKY1v/bhoccXI4bUoTOwCk3uX2QG9wjXsV6kRLgztYeTIUk1Xm+T/tBuwawouNPipKnOb9+rMQBMx6iTEiXx2TGAcgrCXzWLqyjarCTKOcCxo/rgsAmOTU/OXMqDpWiwwEGkpdRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hEzSkrxb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718567488; c=relaxed/simple;
+	bh=EQ3iTrrzXPP3MOYvlPCcfpt/KxQkKojuPogEIJEBzvw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0VwFAmJpBrEJWBn7Q+KFLIL6qhslO+04XtYut1wtyBGQ3PqO8VNIpRgde12yMOYOzSmy/JhxndyKzdR9Z/VJqYlFmS7+9S1OEB25qZ8AjX3vrLUzGRaqq58akxs8k8Oj207v+LE6ChKBaKK8nnPTCbRpwBONv6T49hoF8LKhiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=exlZ++y8; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEzSkrxb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718553953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MvMJu7sYbHTnFA3tw1OE+4otMrjKcOURe4Vll9EDiOI=;
-	b=hEzSkrxbyCohzyB+ZcLBrrsD0XGcrO9w9HrBIw9ITIMuZyrWHi+eIPTZbBs2DjEIlwVOKU
-	6U9ijF8vitRDPZ9p3zrjnRQ9hmtIHAacN2PGU7c6a/4TiRQffvgVHSpUaMrWvWF7KnyBtA
-	ebjJDf3sWdVqd6oy4/sHV8texQt0Vys=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-317-6kxyAy5_M5u40q3GMwna6w-1; Sun,
- 16 Jun 2024 12:05:47 -0400
-X-MC-Unique: 6kxyAy5_M5u40q3GMwna6w-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 42D8C1956094;
-	Sun, 16 Jun 2024 16:05:45 +0000 (UTC)
-Received: from [10.22.32.70] (unknown [10.22.32.70])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 65FC13000218;
-	Sun, 16 Jun 2024 16:05:41 +0000 (UTC)
-Message-ID: <139fd239-49e3-4591-965e-82c9f7d627e9@redhat.com>
-Date: Sun, 16 Jun 2024 12:05:40 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exlZ++y8"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52ca342d6f3so3174617e87.2;
+        Sun, 16 Jun 2024 12:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718567484; x=1719172284; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0UxXjHhA9OJxuIxRF9yrjGa8JmT9i0hYKwblsJfsTYE=;
+        b=exlZ++y8x3vClGURJuNmf8optuuQwIag3BMdUF/cGbErFslarjdxg2Lz+WXBbkdc2T
+         +VeM32q57CgRrd7jj63b5+ke7WtPXv/dlFP0/CQMWqrWLBgHyHUqcjjVJtPmG2TcBV1D
+         7xzD5dhmX85qGKNUdKBm55msYaBuD2shIexvaR01alexnoTOtQNM9s9nEJITkMrSJiae
+         qWeimmr85W7p6HHGEcvjrk0P1IGZwfviW98GA577gCO7MdyPjnOTNR1lnCNUMU6e/yOP
+         ZEa7vrh81GqwWX7V3LH/fRXBhmg/62573/WQtIYocSjNEEwSmbXKpMylSgkUhVPAYhRr
+         8orA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718567484; x=1719172284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0UxXjHhA9OJxuIxRF9yrjGa8JmT9i0hYKwblsJfsTYE=;
+        b=vZZdFZXkhAuHxFYiASxkYKtk8v0WKTscvi5AhukWypF1bW5Hkhi2LwRL1nXn7AAcug
+         ljL/8RBvZ3NcXTZA+swiiWt2PebaE9nHW9a/5JNBA2KIwRKPyuB646anNwOqKb+U60Ki
+         9AXUVQ6ilDn0Obq/Fh57jvR3giuvqID9X0BC3I5m0uuf3DKePtoDeQL5vBwE5S1sL/Xa
+         T5LVzk8JoF8CgxHb+d4KddSN43po+bDM5H5BK4gZw9yp4C8Y1qDMkBxcnE8h3Q3Kqs14
+         aPe4twc7LXoyjjuKRHxjyBH+OniJLpHezZaIXP9+xdwtaJTJ+H8mw+wmaVE4NEEGXoos
+         I+Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnUZALm51/F1oG5EvPgf3/5SU2OQnQXtvJLT0DE2q6SU/jb/mW0LuuVaPh8hvz5FXARpr1M4RdAPX9hyWZex0wSAy3sGyvPicxeHuoO9osCb6ACLSJRTNskNx8PPEN/19YfCAwB20d4loArg81t1hvav43j89Pz9ieZCz6B+JCcCD+fevp
+X-Gm-Message-State: AOJu0YzIjCroWuMt34zLJ/1Ingr3RN3urB2TgSre2I6pdaia6B42OMZY
+	Grydn0Er7n20gABqJiMdNi+JnjOJ+8/j65ylAjREIE7nNqc5th/B
+X-Google-Smtp-Source: AGHT+IGOFgACiHg3TIi3DNIqmlaJ2D3JFHlg4xpC2duW9W9tKpxnjJ5V6JwtZlJbBvM2UXRG69hZ8g==
+X-Received: by 2002:ac2:528c:0:b0:52c:836c:9ce8 with SMTP id 2adb3069b0e04-52ca6e5506amr5521881e87.4.1718567484176;
+        Sun, 16 Jun 2024 12:51:24 -0700 (PDT)
+Received: from krava (85-193-35-50.rib.o2.cz. [85.193.35.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56da3fb9sm437325566b.30.2024.06.16.12.51.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Jun 2024 12:51:23 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sun, 16 Jun 2024 21:51:18 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH] bpf/selftests: Fix __NR_uretprobe in uprobe_syscall test
+Message-ID: <Zm9CNlPVfmV_Pc-S@krava>
+References: <20240614101509.764664-1-jolsa@kernel.org>
+ <20240616001920.0662473b0c3211e1dbd4b6f5@kernel.org>
+ <20240616011911.009492d917999c380320fd1b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] possible deadlock in
- __mmap_lock_do_trace_start_locking
-To: syzbot <syzbot+6ff90931779bcdfc840c@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org,
- hawk@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, lizefan.x@bytedance.com,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org, netdev@vger.kernel.org,
- rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
-References: <000000000000d05580061b025528@google.com>
-Content-Language: en-US
-From: Waiman Long <longman@redhat.com>
-In-Reply-To: <000000000000d05580061b025528@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240616011911.009492d917999c380320fd1b@kernel.org>
 
-On 6/16/24 10:05, syzbot wrote:
-> syzbot has bisected this issue to:
->
-> commit 21c38a3bd4ee3fb7337d013a638302fb5e5f9dc2
-> Author: Jesper Dangaard Brouer <hawk@kernel.org>
-> Date:   Wed May 1 14:04:11 2024 +0000
->
->      cgroup/rstat: add cgroup_rstat_cpu_lock helpers and tracepoints
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16695261980000
-> start commit:   36534d3c5453 tcp: use signed arithmetic in tcp_rtx_probe0_..
-> git tree:       bpf
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=15695261980000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11695261980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=333ebe38d43c42e2
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6ff90931779bcdfc840c
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1585acfa980000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17bdb7ee980000
->
-> Reported-by: syzbot+6ff90931779bcdfc840c@syzkaller.appspotmail.com
-> Fixes: 21c38a3bd4ee ("cgroup/rstat: add cgroup_rstat_cpu_lock helpers and tracepoints")
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-+static __always_inline
-+unsigned long _cgroup_rstat_cpu_lock(raw_spinlock_t *cpu_lock, int cpu,
-+                                    struct cgroup *cgrp, const bool 
-fast_path)
-+{
-+       unsigned long flags;
-+       bool contended;
-+
-+       /*
-+        * The _irqsave() is needed because cgroup_rstat_lock is
-+        * spinlock_t which is a sleeping lock on PREEMPT_RT. Acquiring
-+        * this lock with the _irq() suffix only disables interrupts on
-+        * a non-PREEMPT_RT kernel. The raw_spinlock_t below disables
-+        * interrupts on both configurations. The _irqsave() ensures
-+        * that interrupts are always disabled and later restored.
-+        */
-+       contended = !raw_spin_trylock_irqsave(cpu_lock, flags);
-+       if (contended) {
-+               if (fast_path)
-+ trace_cgroup_rstat_cpu_lock_contended_fastpath(cgrp, cp>
-+               else
-+                       trace_cgroup_rstat_cpu_lock_contended(cgrp, cpu, 
-conten>
-+
-+               raw_spin_lock_irqsave(cpu_lock, flags);
-+       }
+On Sun, Jun 16, 2024 at 01:19:11AM +0900, Masami Hiramatsu wrote:
+> On Sun, 16 Jun 2024 00:19:20 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > On Fri, 14 Jun 2024 12:15:09 +0200
+> > Jiri Olsa <jolsa@kernel.org> wrote:
+> > 
+> > > Fixing the __NR_uretprobe number in uprobe_syscall test,
+> > > because it changed due to merge conflict.
+> > > 
+> > 
+> > Ah, it is not enough, since Stephen's change is just a temporary fix on
+> > next tree. OK, Let me update it.
+> 
+> Hm, I thought I need to change all NR_uretprobe, but it makes NR_syscalls
+> list sparse. This may need to be solved on linus tree in merge window,
+> or I should merge (or rebase on) vfs-brauner tree before sending
+> probes/for-next.
+> 
+> Steve, do you have any idea? we talked about conflict on next tree[0].
+> 
+> [0] https://lore.kernel.org/all/20240613114243.2a50059b@canb.auug.org.au/
 
-I believe the problem may be caused by the fact that 
-trace_cgroup_rstat_cpu_lock_contended*() can be called with IRQ enabled. 
-I had suggested before IRQ should be disabled first before doing any 
-trace operation. See
+hi,
+I have one more fix to send [1] for this, please let me know which tree
+I should based that on
 
-https://lore.kernel.org/linux-mm/203fdb35-f4cf-4754-9709-3c024eecade9@redhat.com/
+thanks,
+jirka
 
-Doing so may be able to resolve this possible deadlock.
 
-Cheers,
-Longman
+[1] https://lore.kernel.org/bpf/ZmyZgzqsowkGyqmH@krava/
 
+> 
+> Thanks,
+> 
+> > 
+> > Thanks,
+> > 
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > > index c8517c8f5313..bd8c75b620c2 100644
+> > > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> > > @@ -216,7 +216,7 @@ static void test_uretprobe_regs_change(void)
+> > >  }
+> > >  
+> > >  #ifndef __NR_uretprobe
+> > > -#define __NR_uretprobe 463
+> > > +#define __NR_uretprobe 467
+> > >  #endif
+> > >  
+> > >  __naked unsigned long uretprobe_syscall_call_1(void)
+> > > -- 
+> > > 2.45.1
+> > > 
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
