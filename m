@@ -1,55 +1,55 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66916177999
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Jun 2024 02:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A117BB22
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Jun 2024 03:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718591949; cv=none; b=upulkncEfR8msfzQSaoAJ1SGBdEEvqQMEGCRiD2NIZKJWEGkA23TdmVnY6oDlZLouYJv8DY7b7UMMms0c1qNW8BX6WpviPEBpwNcC6VnZUDQy3oXf63yUJcePDxHdELCtspCwZpzJZYCfkf0uP7vdrwzr3yYHbVozS6+rA57u+A=
+	t=1718594006; cv=none; b=HO48PN/R2wdSCqwSLFQKa8TFI3U6urjVtd1wl1P5Cg6ntwtRIgLYXu/y/+pOwHsyB0Ejg4nLjNbaFYZjXBWqD9vU44Mn/9g/SBr0B9dzBOFO5Hc2u/2TiW3BiHwT7tmgiNspFMq3Q5pT8r9JbF5/iheWv9E2jsd0wo+iZINQclQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718591949; c=relaxed/simple;
-	bh=K7pDmm+KuihRdNnBeqcmqK4FUXdjWwv/YZO/vwywIOM=;
+	s=arc-20240116; t=1718594006; c=relaxed/simple;
+	bh=ipKCaT77f+BUWT9EBLkbLtp2pj7mmowaKj2ZBqhLeeM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a1vKhE9QmqiLXuU1VP9mF/5xhVeG28Aw4z7I7aU4NkhKYpqVLcx96Uirpf0wSe+/Q/awkQr/BcZL0BiaW/4bdnRTH22z7xUaxGff+DYfGxJlCD78iUuuyo6c7QUsVY3r4PfouhmWl22L+BazeEnAWChryIjH8yqMla1t5JBylEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=GGXhekeG; arc=none smtp.client-ip=209.85.128.174
+	 To:Cc:Content-Type; b=QBPyJ10ZnohUsCPh7FvJ5KKQEFVgBCFDqCs3sqJ2ZfcwOFNXJsVHwjVS9w+sZyfKJNoCQ3tfHo3XGJl+S5C2tDegTaZi5YutROp4Zs7kwYsMxHaYYlFXnqqXX2Pqo29BYM0vw9/PVE8dSzxDOOdDUVdRbUI8SUmF1ObjraswzPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=gTRFCI6l; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GGXhekeG"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-62a2424ecb8so41537777b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Jun 2024 19:39:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gTRFCI6l"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62ffc495935so41628197b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Jun 2024 20:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1718591946; x=1719196746; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1718594004; x=1719198804; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RvWKRG4G4uh/VafRKr+dQcPE/37QW82H6MxcQ22NpJs=;
-        b=GGXhekeG6R/OHSII3KTOT5URBT/Zv3r5QQkNwUWddyafnA/EgoJgbgTvDk6ITbneVl
-         BtOaLCFUHbPkQK2dZiVyaPvplBoz/d5ESj/GBJ563OyZ0LWbssAeOERAYbsCw26UYoLw
-         v5up4lyszNguYjjB1Mv9tmSB3eYlD5Hb3y62vkfn4uxM1Wf2x8VQ+GJPBpX0YbAc8Yl5
-         bpdXZTTLsglxIWBOlj0xBddDg8MynDlZLFCPo34xZhc4gUgnQur4s+ZBQtiAJlIJC5Uz
-         4dc/R527x+9V2dXCTsbWxFaijBXIcSrjOxXaRlt0hjUgt/Ixy/7Ah/HRdUO0BvgTawx1
-         q52Q==
+        bh=MTUZ05e6Yum4t2GwgWWjL5msqoEXhl4LpMNkyudXVSA=;
+        b=gTRFCI6lrebc8ayFGC2fYAYVobfBfBbDZgFshWalvmzKMkG0qUfainAU/4zFHlxQxC
+         JHNZ9YFXpH2A5uKt7pHTItasPGniCanTEJ4vuaI+MG6sJpKDvwQDUn1cPP3p6TEQ84+M
+         TVDgRo+OubAFnldcmrHIZM64MqeTgjGZyZ54Twluibk1mAqig0fCeFdrq4YkgeD7I3M5
+         SmADpbobRolQB/pJu55PJO9G2EpQfa6wx9ZbrGLKSc4yYTnE6ACOO+aPFm+Vc6xbqNSs
+         22NTl/20jIUN7RXyUf2tOeFHJpmhh47hmBd88HNk0oKZ5VHOst9az3UdBrlr+gRizbjx
+         qgmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718591946; x=1719196746;
+        d=1e100.net; s=20230601; t=1718594004; x=1719198804;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RvWKRG4G4uh/VafRKr+dQcPE/37QW82H6MxcQ22NpJs=;
-        b=Sx3ZErlA9upaDTOcTjTnaDH/4wVZCFOLhvyMR+BTjOgTrL5vAOfP1ABhfffPqNqgCf
-         7qnOJL8fUGu2TDMING3gSjLeptvDNc7dufo+3fgx+vml/F0Hf45vhl2m4qjnMmTTKGZ7
-         M1QtudshdKUNWNCbEdSBTc7Um3R0Y3bMno8slII7ub135PlQWYlYSU2shAIkkOEBN56f
-         qiyAPViZyYXOXu2UrqfUdLrfZDoWCAQyswtHh070XQH+/hvFXOAfANN7+OAW6JYyXFuB
-         qGpomUBsSI3yvQ3pYid0oFqU41gRurkqqvK1/UC2QcH7BOHExfOhtI0qVZI7+iBwm9db
-         Mu/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUp2JMlZA+FRrN6PJZuy2Z2C3j9gTfinxn+OypWtS1T7SjbsHi+OWa3RAznGPyDNhBavcdgRkfu7O4E6iPo4NCyJBuNpCR7QX1qAJ3gdWikvKZL
-X-Gm-Message-State: AOJu0YxR7OaePkRTWxPXBj2Cgg5SzeEyfQQiXJAOlA4Cm55SuZloy04z
-	IKeuSoE2dkA84ldNLgX0gkVLZmI326wrqSkCFEbsjKxWVj0cZxjv7h99q7U6HmWBaxO3PtPR9Ko
-	6QsVb5oQuEbE0MTesSaDzTY5cY9hXcjmpNw0a3w==
-X-Google-Smtp-Source: AGHT+IGx5gyoe+gPzQWT+v+p8579+Wzzy0Rc6gNG/13H/HestUrQLJhhbdrIOQVQ4ELHkFaMdUbQlF19+HnvPT5nnBA=
-X-Received: by 2002:a25:b19b:0:b0:dfe:5a00:df5c with SMTP id
- 3f1490d57ef6-dff153a6620mr8483209276.18.1718591946340; Sun, 16 Jun 2024
- 19:39:06 -0700 (PDT)
+        bh=MTUZ05e6Yum4t2GwgWWjL5msqoEXhl4LpMNkyudXVSA=;
+        b=LkhdI07yAc7+j5EUlCq9xCAfr6AEXoYSZ1ohgB4LpL8aALG/OB4T6nE0hEQEX9FRac
+         vnD27C36Ok1Uq2oPWcsrIjEA6M11UblrokOwJVTVDiMRo+txEh57XQeA5yS2U6HGJSAy
+         4OOXxtYGj6BXnPYOrp1V1BFDR8gfKm80PmvzwmHCyGVkJrdKn3B031fNsudJeUY0b7vN
+         655vr8B91VWKiWeZcwxRisXxdBimGvAyUG6/P7ugKy0DfAcjaAvUdGZaTlmF/Sll53bC
+         vzS2jN3HcDTtwirV+v82+Qu3WriRzbKTuEQiCTscUQCvzFDf6yWJbuqteVX/9bCWFdiS
+         rEGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzIb+CPdeoWsf7gJuAVG8COKNVk0noyx4pXLzVplxPqVQNedz5baM1jkou9rIY9DyKd5c3hWxNnf+jlovP1oP6OrIBSEcfJIqqoB3JG10bKNqA
+X-Gm-Message-State: AOJu0Ywr0ds5XBtA5sl64HGFmpgkqOuMVsPbYh/UJ0MZ5N3DF/VFNF4/
+	jZ2JslX/w8CFa/MCVrE3bEHvj6RaXCgSUOGLvvV8eHTNujXEm89oKbu8c2pK88ilM0foHlXqucw
+	XmLkx1XqglwJmg3rxgVwjuplw7aXFw780y5TYcVLjOIpxGCXWzu8=
+X-Google-Smtp-Source: AGHT+IGcbuDhr//ejMFGoqLnDmcjq65GRM5Khv3QI8grXciiziqO38Mc6HPFBs3lKXswm9MpPGZCzPb1AOhqda4ES4M=
+X-Received: by 2002:a0d:e648:0:b0:627:ecd3:6223 with SMTP id
+ 00721157ae682-6322480e9e1mr84249517b3.35.1718594004136; Sun, 16 Jun 2024
+ 20:13:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,11 +57,12 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com>
- <20240613-dev-andyc-dyn-ftrace-v4-v1-4-1a538e12c01e@sifive.com> <20240613190920.GB1272931@thelio-3990X>
-In-Reply-To: <20240613190920.GB1272931@thelio-3990X>
+ <20240613-dev-andyc-dyn-ftrace-v4-v1-4-1a538e12c01e@sifive.com>
+ <20240613190920.GB1272931@thelio-3990X> <CABgGipV_6sFx8TJNrHszGLk=V9X1PJAXuOmRDxnTHPrigqJL0A@mail.gmail.com>
+In-Reply-To: <CABgGipV_6sFx8TJNrHszGLk=V9X1PJAXuOmRDxnTHPrigqJL0A@mail.gmail.com>
 From: Andy Chiu <andy.chiu@sifive.com>
-Date: Mon, 17 Jun 2024 10:38:55 +0800
-Message-ID: <CABgGipV_6sFx8TJNrHszGLk=V9X1PJAXuOmRDxnTHPrigqJL0A@mail.gmail.com>
+Date: Mon, 17 Jun 2024 11:13:13 +0800
+Message-ID: <CABgGipXqZe5GTNNe0oRBPBaFqRYF7LLZsdhQQ9RSuXqk7+cukA@mail.gmail.com>
 Subject: Re: [PATCH 4/8] riscv: ftrace: align patchable functions to 4 Byte boundary
 To: Nathan Chancellor <nathan@kernel.org>
 Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
@@ -76,94 +77,112 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 14, 2024 at 3:09=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> Hi Andy,
->
-> On Thu, Jun 13, 2024 at 03:11:09PM +0800, Andy Chiu wrote:
-> > We are changing ftrace code patching in order to remove dependency from
-> > stop_machine() and enable kernel preemption. This requires us to align
-> > functions entry at a 4-B align address.
-> >
-> > However, -falign-functions on older versions of GCC alone was not stron=
-g
-> > enoungh to align all functions. In fact, cold functions are not aligned
-> > after turning on optimizations. We consider this is a bug in GCC and
-> > turn off guess-branch-probility as a workaround to align all functions.
-> >
-> > GCC bug id: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D88345
-> >
-> > The option -fmin-function-alignment is able to align all functions
-> > properly on newer versions of gcc. So, we add a cc-option to test if
-> > the toolchain supports it.
-> >
-> > Suggested-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
-> > Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
-> > ---
-> >  arch/riscv/Kconfig  | 1 +
-> >  arch/riscv/Makefile | 7 ++++++-
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index b94176e25be1..80b8d48e1e46 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -203,6 +203,7 @@ config CLANG_SUPPORTS_DYNAMIC_FTRACE
-> >  config GCC_SUPPORTS_DYNAMIC_FTRACE
-> >       def_bool CC_IS_GCC
-> >       depends on $(cc-option,-fpatchable-function-entry=3D8)
-> > +     depends on $(cc-option,-fmin-function-alignment=3D4) || !RISCV_IS=
-A_C
->
-> Please use CC_HAS_MIN_FUNCTION_ALIGNMENT (from arch/Kconfig), which
-> already checks for support for this option.
+Sorry for the noise,
 
-Thanks for the suggestion!
-
+On Mon, Jun 17, 2024 at 10:38=E2=80=AFAM Andy Chiu <andy.chiu@sifive.com> w=
+rote:
 >
-> >  config HAVE_SHADOW_CALL_STACK
-> >       def_bool $(cc-option,-fsanitize=3Dshadow-call-stack)
-> > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> > index 06de9d365088..74628ad8dcf8 100644
-> > --- a/arch/riscv/Makefile
-> > +++ b/arch/riscv/Makefile
-> > @@ -14,8 +14,13 @@ endif
-> >  ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
-> >       LDFLAGS_vmlinux +=3D --no-relax
-> >       KBUILD_CPPFLAGS +=3D -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-> > +ifeq ($(CONFIG_CC_IS_CLANG),y)
->
-> Same here, please invert this and use
->
->   ifdef CONFIG_CC_HAS_MIN_FUNCTION_ALIGNMENT
->
-> like the main Makefile does.
-
-Hope this makes sense to you. I am going to add the following in riscv Kcon=
-ig:
-
-select FUNCTION_ALIGNMENT_4B if DYNAMIC_FTRACE && !RISCV_ISA_C
-
-So we will not need any of these
-
->
-> > +     cflags_ftrace_align :=3D -falign-functions=3D4
-> > +else
-> > +     cflags_ftrace_align :=3D -fmin-function-alignment=3D4
-> > +endif
-> >  ifeq ($(CONFIG_RISCV_ISA_C),y)
-> > -     CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D4
-> > +     CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D4 $(cflags_ftra=
-ce_align)
-> >  else
-> >       CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D2
-> >  endif
+> On Fri, Jun 14, 2024 at 3:09=E2=80=AFAM Nathan Chancellor <nathan@kernel.=
+org> wrote:
 > >
-> > --
-> > 2.43.0
+> > Hi Andy,
 > >
+> > On Thu, Jun 13, 2024 at 03:11:09PM +0800, Andy Chiu wrote:
+> > > We are changing ftrace code patching in order to remove dependency fr=
+om
+> > > stop_machine() and enable kernel preemption. This requires us to alig=
+n
+> > > functions entry at a 4-B align address.
+> > >
+> > > However, -falign-functions on older versions of GCC alone was not str=
+ong
+> > > enoungh to align all functions. In fact, cold functions are not align=
+ed
+> > > after turning on optimizations. We consider this is a bug in GCC and
+> > > turn off guess-branch-probility as a workaround to align all function=
+s.
+> > >
+> > > GCC bug id: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D88345
+> > >
+> > > The option -fmin-function-alignment is able to align all functions
+> > > properly on newer versions of gcc. So, we add a cc-option to test if
+> > > the toolchain supports it.
+> > >
+> > > Suggested-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
+> > > Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+> > > ---
+> > >  arch/riscv/Kconfig  | 1 +
+> > >  arch/riscv/Makefile | 7 ++++++-
+> > >  2 files changed, 7 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > index b94176e25be1..80b8d48e1e46 100644
+> > > --- a/arch/riscv/Kconfig
+> > > +++ b/arch/riscv/Kconfig
+> > > @@ -203,6 +203,7 @@ config CLANG_SUPPORTS_DYNAMIC_FTRACE
+> > >  config GCC_SUPPORTS_DYNAMIC_FTRACE
+> > >       def_bool CC_IS_GCC
+> > >       depends on $(cc-option,-fpatchable-function-entry=3D8)
+> > > +     depends on $(cc-option,-fmin-function-alignment=3D4) || !RISCV_=
+ISA_C
 > >
+> > Please use CC_HAS_MIN_FUNCTION_ALIGNMENT (from arch/Kconfig), which
+> > already checks for support for this option.
+>
+> Thanks for the suggestion!
+>
+> >
+> > >  config HAVE_SHADOW_CALL_STACK
+> > >       def_bool $(cc-option,-fsanitize=3Dshadow-call-stack)
+> > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> > > index 06de9d365088..74628ad8dcf8 100644
+> > > --- a/arch/riscv/Makefile
+> > > +++ b/arch/riscv/Makefile
+> > > @@ -14,8 +14,13 @@ endif
+> > >  ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
+> > >       LDFLAGS_vmlinux +=3D --no-relax
+> > >       KBUILD_CPPFLAGS +=3D -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+> > > +ifeq ($(CONFIG_CC_IS_CLANG),y)
+> >
+> > Same here, please invert this and use
+> >
+> >   ifdef CONFIG_CC_HAS_MIN_FUNCTION_ALIGNMENT
+> >
+> > like the main Makefile does.
+>
+> Hope this makes sense to you. I am going to add the following in riscv Kc=
+onig:
+>
+> select FUNCTION_ALIGNMENT_4B if DYNAMIC_FTRACE && !RISCV_ISA_C
 
-Thanks,
-Andy
+This should be:
+
+select FUNCTION_ALIGNMENT_4B if DYNAMIC_FTRACE && RISCV_ISA_C
+
+as RISCV_ISA_C =3D=3D y means that there are 2B instructions. In this
+case, functions can be non 4B aligned, so we need to enforce the
+alignment requirement from the compiler.
+
+>
+> So we will not need any of these
+>
+> >
+> > > +     cflags_ftrace_align :=3D -falign-functions=3D4
+> > > +else
+> > > +     cflags_ftrace_align :=3D -fmin-function-alignment=3D4
+> > > +endif
+> > >  ifeq ($(CONFIG_RISCV_ISA_C),y)
+> > > -     CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D4
+> > > +     CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D4 $(cflags_ft=
+race_align)
+> > >  else
+> > >       CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D2
+> > >  endif
+> > >
+> > > --
+> > > 2.43.0
+> > >
+> > >
+>
+> Thanks,
+> Andy
