@@ -1,156 +1,98 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F79B19AA5C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Jun 2024 18:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA65CDDD7;
+	Mon, 17 Jun 2024 18:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718647774; cv=none; b=RJKwwOHfj2w2umkE7/Zx+kiPC6tcgRGOQyyUqSV+QUJ53VbSPzGMKcmrY+aIm5wWibyeesxc04Zo9UAPrWMZySSfqTnrg3DBGlVkvTJwqdeCfhJtlgJQhRD6O1HVUiqu7R6lGmvygC/BxGIkgdWSxWBpgLgTZW7TE7KDMUj+fHo=
+	t=1718649506; cv=none; b=PYf/IcUtREGfjUIftTtU4lWmcJakJ03q28GUaA3qKS7HIW9sXRPzR7Ord1TmM92L+kn6DhDhWP9mW90QGYAuOqpOeJrjuCKRXpFoTneEfgcPnzyWzeyefE2y8Xg9QmZT2e26PscjYB0fPzteNW1EjBJwrkvvHtZKSDB1Tf4L8BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718647774; c=relaxed/simple;
-	bh=uEGMHEFbMp0HLSU5Z7U4ENmeA4RvQ8IslnoZTeDpYIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cq1WXF5CBU/OYIiUx/hf3rd47F4sCaTZiSMC6g8xfHNB8Jc37V84QNscSrKy7TU6NpY5SbMWuosicp6ndysWRYht/RAHtDLlPa3mCBRoyByz3lrKxhNVgMUcutTmFeGQ7GqaT4pZaOPRZqIalqsQlNsHhgMQKuY5hNR9JMNeOss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=UfBBODtG; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1718649506; c=relaxed/simple;
+	bh=FOB17oFouDgBVDfGthNlUyZopRj+WFqI2vR+CJXhUv0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IxgPnlIPaEd9odNhfgRUnf8evheGiYiIBii5WCMDMnUTopqF6/cu/GEqKY1HpBvAPstEZyEgmcJszsswQY8OX5jgQ6TZJO7TOLs5aAIaHNpGbCEw6i88AG+bLzjB3i42kT2UyHulkoiuReg8OUYHzVFqHGrcx+rOPes7S2DBh6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=0lrzpbb1; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="UfBBODtG"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6b2a6e99be8so26233886d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Jun 2024 11:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1718647771; x=1719252571; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+04wpAGrgh0quqRhPOuIE9e5b5DYf6qkerlRm6e6uUE=;
-        b=UfBBODtGKX/lYpNEADTZF7usQLHAoR7lXwZbFTkCpc9B7H2T3I/qYP7GWU92eAz7SK
-         zmaNweOEbrnmPRsjPUlZTDKNxP2qsZkNN5h/l5B/dYvfVrCgWIBDWYbz/5oboRKEYabs
-         pU0b6btpML9W2UmqbXhViWf5fUSU4LQRDn7IzEhHUL4LLcMEKx2WJ6RWli3mflUKNm+h
-         p8sdZBX6DGzKQ4TUVyQ9FJqwm29WMJOc8L+Yknqwgw0blc5twDq7gwZWzL2MQ8D0rAvK
-         420o8o9gHFdRjMhLKKQTKv1kDTHJ5Rob7HGGWbJIi+JlA3YA4ty1td/a19WrEJ8CwzMY
-         xMQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718647771; x=1719252571;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+04wpAGrgh0quqRhPOuIE9e5b5DYf6qkerlRm6e6uUE=;
-        b=JWo23GG/2O2Vu8XHctSd4JSUF1l6qqAsSsTRgZG0wx5LawDBTIiQ8aXfbh0qkuI1cp
-         bIO1D+XuPYVqzEUb0l1GHsCTKuXM/4BNu581ARq2EVoWg2E2T3JTUhCCMaDJLW4p65kx
-         Q/UOa14kn32odoAd7jfYbSrQ+y3dD8LLgqGG6QCqpJ8krbBLTOHVy91zDLmnu3dSaLLg
-         7jfd6JypiLw2n6JGaG3OEK+F5DnvBRVnzz1HCQ0EIn7mdv2ZrZrvhjpBL2e+TNQwMkDM
-         CNaUVvmzRmu7CHscQpJyp/0MiAOpn2zmpZVTx/F+kq/RxDVRmArsXmdFJANxurpTFTEo
-         lqhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkMto+ThVDx4MfnjS/kueU6bi4X4BTdyYKIUgVbSXgZTtI2L51U+0OHHpFaVswRuksyS55EJCIUblslvWBEQixo2kDANNMf0wsn/WP5GmqI92w
-X-Gm-Message-State: AOJu0Yyy20u+hvdcyx/apeEm15g+FzSC8iSqMcwPGt3XcJbIPNcw3Q4J
-	IZojc/KclqjcVbEAi/iq6wMNsncQkrkpIUcleQfCz2Pqi7ClzEE0zCDD7iz0nPw=
-X-Google-Smtp-Source: AGHT+IGDb1Z2mu+N6vTL3KwtF1RLgOFuZEZO687nwA+LSC1hobQujIxWESlnTh3cU3IQaPtqTnbLhA==
-X-Received: by 2002:a0c:aa59:0:b0:6b0:82ad:e89c with SMTP id 6a1803df08f44-6b2afc7924emr107624276d6.11.1718647771318;
-        Mon, 17 Jun 2024 11:09:31 -0700 (PDT)
-Received: from debian.debian ([2a09:bac5:7a49:f9b::18e:164])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c4664csm57391246d6.65.2024.06.17.11.09.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 11:09:30 -0700 (PDT)
-Date: Mon, 17 Jun 2024 11:09:27 -0700
-From: Yan Zhai <yan@cloudflare.com>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Abhishek Chauhan <quic_abchauha@quicinc.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Florian Westphal <fw@strlen.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Neil Horman <nhorman@tuxdriver.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH net-next v5 7/7] af_packet: use sk_skb_reason_drop to free rx
- packets
-Message-ID: <5c336e8da85ce9940e75b9090b296cc7fd727cad.1718642328.git.yan@cloudflare.com>
-References: <cover.1718642328.git.yan@cloudflare.com>
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="0lrzpbb1"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3766DDACC8;
+	Mon, 17 Jun 2024 20:38:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1718649493; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=fkX8p9YHUlga3ceEGkfVb9C99KqLrEWgX258cj34lg8=;
+	b=0lrzpbb1f4Jm6Vk6Bf1xlB9CfOEZgsePvSjjIucMWaWLpUD6P8D3c8z8L3l5qblJ3UMS1v
+	ahvu1KbgBZVV+PS0KWNoXpZzbuB7OiYsW5XEjYuepQ9xMuhdl0SWHzqwHHX9diwJi7Y2Ix
+	H/eQxIYjku0zHDQvHIbaqGWUiSlsAcpKNECcDmAxOwIJf6C40zC5Wzsdi9DmwmrF9yGM+0
+	iLGnjWCDdQfQ06F84KV1UvVbSyy885TywQUogsiudAHvqYf1CmP1X18zh2QB/33pEK1UY0
+	lxiTMZKZMvoUniOjws13gLkiFy1qoz2jcUaJ66Squ/RiGC/QZeb78RKA2NSGuw==
+From: Daniel Wagner <dwagner@suse.de>
+Date: Mon, 17 Jun 2024 20:38:04 +0200
+Subject: [PATCH] tools: build: use correct lib name for libtracefs feature
+ detection
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1718642328.git.yan@cloudflare.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240617-rtla-build-v1-1-6882c34678e8@suse.de>
+X-B4-Tracking: v=1; b=H4sIAIuCcGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDM0Nz3aKSnETdpNLMnBRdC2MDI4OkxDRLI3NzJaCGgqLUtMwKsGHRsbW
+ 1AL/40SNcAAAA
+To: Daniel Bristot de Oliveira <bristot@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: Daniel Wagner <dwagner@suse.de>
+X-Mailer: b4 0.13.0
+X-Last-TLS-Session-Version: TLSv1.3
 
-Replace kfree_skb_reason with sk_skb_reason_drop and pass the receiving
-socket to the tracepoint.
+Use libtracefs as package name to lookup the CFLAGS for libtracefs. This
+makes it possible to use the distro specific path as include path for
+the header file.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/r/202406011859.Aacus8GV-lkp@intel.com/
-Signed-off-by: Yan Zhai <yan@cloudflare.com>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
-v2->v3: fixed uninitialized sk, added missing report tags.
----
- net/packet/af_packet.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Our downstream packaging stop working. After a bit of didding I found out that
+the libtracefs feature detection is not completely right.
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index fce390887591..42d29b8a84fc 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2121,7 +2121,7 @@ static int packet_rcv(struct sk_buff *skb, struct net_device *dev,
- 		      struct packet_type *pt, struct net_device *orig_dev)
+https://build.opensuse.org/build/benchmark/SLE_15_SP5/x86_64/rtla/_log
+---
+ tools/build/feature/Makefile          | 2 +-
+ tools/build/feature/test-libtracefs.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index ed54cef450f5..489cbed7e82a 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -213,7 +213,7 @@ endif
+ 	$(BUILD) -ltraceevent
+ 
+ $(OUTPUT)test-libtracefs.bin:
+-	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtraceevent 2>/dev/null) -ltracefs
++	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtracefs 2>/dev/null) -ltracefs
+ 
+ $(OUTPUT)test-libcrypto.bin:
+ 	$(BUILD) -lcrypto
+diff --git a/tools/build/feature/test-libtracefs.c b/tools/build/feature/test-libtracefs.c
+index 8eff16c0c10b..29a757a7d848 100644
+--- a/tools/build/feature/test-libtracefs.c
++++ b/tools/build/feature/test-libtracefs.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <tracefs/tracefs.h>
++#include <tracefs.h>
+ 
+ int main(void)
  {
- 	enum skb_drop_reason drop_reason = SKB_CONSUMED;
--	struct sock *sk;
-+	struct sock *sk = NULL;
- 	struct sockaddr_ll *sll;
- 	struct packet_sock *po;
- 	u8 *skb_head = skb->data;
-@@ -2226,7 +2226,7 @@ static int packet_rcv(struct sk_buff *skb, struct net_device *dev,
- 		skb->len = skb_len;
- 	}
- drop:
--	kfree_skb_reason(skb, drop_reason);
-+	sk_skb_reason_drop(sk, skb, drop_reason);
- 	return 0;
- }
- 
-@@ -2234,7 +2234,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 		       struct packet_type *pt, struct net_device *orig_dev)
- {
- 	enum skb_drop_reason drop_reason = SKB_CONSUMED;
--	struct sock *sk;
-+	struct sock *sk = NULL;
- 	struct packet_sock *po;
- 	struct sockaddr_ll *sll;
- 	union tpacket_uhdr h;
-@@ -2494,7 +2494,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 		skb->len = skb_len;
- 	}
- drop:
--	kfree_skb_reason(skb, drop_reason);
-+	sk_skb_reason_drop(sk, skb, drop_reason);
- 	return 0;
- 
- drop_n_account:
-@@ -2503,7 +2503,7 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
- 	drop_reason = SKB_DROP_REASON_PACKET_SOCK_ERROR;
- 
- 	sk->sk_data_ready(sk);
--	kfree_skb_reason(copy_skb, drop_reason);
-+	sk_skb_reason_drop(sk, copy_skb, drop_reason);
- 	goto drop_n_restore;
- }
- 
+
+---
+base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
+change-id: 20240617-rtla-build-83020baf9277
+
+Best regards,
 -- 
-2.30.2
-
+Daniel Wagner <dwagner@suse.de>
 
