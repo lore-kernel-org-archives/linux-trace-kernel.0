@@ -1,49 +1,59 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591D869D31;
-	Mon, 17 Jun 2024 07:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170A7197A88;
+	Mon, 17 Jun 2024 13:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718608090; cv=none; b=HMZUhZzdkJHMqP8NGfSyGFklb9Nhj4Bhq/+deSrFkPqaFDkF/0azYhSvTUbQ0XZbosk18NiPEUvX+FQNVoKBMEvUFJH9QVtUdLLm85D1t0V0dqA/YmRw7pDLccc1yCrwklpPqqCWQ0FphWCINyNnip1pLL1+OqrgSNs8aDpbcO0=
+	t=1718630445; cv=none; b=oTe7oK4bxZ7pHbBAq0+w1ZHRmj2+Jy+a1gUWMr9gcL0Uro3QZEPrVpOID8g0R19+eFTJJ4vswW2DwCA5TDQuCOm+hMw1dCSCI2Q3pc1E6jzL2fHn52EaMreF9dJFS0nNOV0sOq/AeIaGuQ990xu6Z4pdBe+XoPyHc8EZcAHGFr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718608090; c=relaxed/simple;
-	bh=w8HeAcyEUauFysd/D5UhWyakbWbHWE0FzlL+RQtQH5k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lJAZw1ivE/Zm4t7BhqRJQClSd62k+4HAI8vIdciOh+Qj8Pl2MxDvsalO48eYtkmGLG/kGbDyqv/UN7n8HOGGIo2f8aZDiTcV0sh90eaVmMc8g+YxovFxOGuunxm0W4GGjSqlMpSgG8DhjCxsRM+3a3KQSfQwwO4ZZrGuCjcxOSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=fwR6Jvao; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1718630445; c=relaxed/simple;
+	bh=1nrAD4KfLSnRE+kqydRysazLWCkP8jJyqBGQ4Hd6vr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eL+lleYxG/K/uGosnkev+hauwd374azZyCbeGClCBCl6PvtPJryZFjeXwY3jmV0Prkky5Pc6Go4bO93mRP6/wBfi7TqxMZa+ecII5cFMU+cZ12Jt9PTHT4uYZ0pyZs4ov8CgPLoexsXOmqOb3V5t6NsaaKcXcqakOa2FhJLHpDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkyQDocK; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fwR6Jvao"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkyQDocK"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso757187366b.1;
+        Mon, 17 Jun 2024 06:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1718608089; x=1750144089;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=w8HeAcyEUauFysd/D5UhWyakbWbHWE0FzlL+RQtQH5k=;
-  b=fwR6JvaoDE2JBCdosG33FgT+mB8DpLspuHm0EzX3kjQeSOZ2QeBNSlka
-   /uBUPlfv4pCGT5xIAk5mVQyxCq1cgKHwuf+WL/r2fdkFoYAcBz69b3dpZ
-   7JYKnC/O3MgNrgiNNKvGBQxP6igjvCo6NuQ3BlRIRLa01jHMwcJaRLQCN
-   U=;
-X-IronPort-AV: E=Sophos;i="6.08,244,1712620800"; 
-   d="scan'208";a="733325863"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 07:07:45 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:4992]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.30.16:2525] with esmtp (Farcaster)
- id c0d1a6c4-19f9-405c-b3d0-38b92c177528; Mon, 17 Jun 2024 07:07:44 +0000 (UTC)
-X-Farcaster-Flow-ID: c0d1a6c4-19f9-405c-b3d0-38b92c177528
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 17 Jun 2024 07:07:36 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Mon, 17 Jun
- 2024 07:07:31 +0000
-Message-ID: <7c90c574-5cfa-40cf-bd4c-1188136cd886@amazon.com>
-Date: Mon, 17 Jun 2024 09:07:29 +0200
+        d=gmail.com; s=20230601; t=1718630442; x=1719235242; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FUae8JuWsbpwcHSTs/RVPWcmF5+7RW32qrRGZUORids=;
+        b=AkyQDocKAkm3wA9QKpVyA3+wOLD0HS9GSqpOg028xfcDzF0NXcxR7vcJdrRuk8BCm0
+         8KqsHCGdRdaSb+BG3REBtMo2QJzpAManHpxrDaml23UuYF3xADfRvaAaF4D0/7H6FGNt
+         XRZeA8rGZIZadbca/QlvcGf910sTa6sN4xriq4khh9cBbzeutPi1bOOh0U6S0JxZKOrH
+         uxNW/oKCbgi2MMt+7jV4g2dp+NG/lXZDbFTeaS/U3SXhKsdumymUnwXjrP+b+TXdw/r2
+         Ly4F/kQaRpO8v9/rV2L52II6ETsHg/5NyC3LdK5JpJzdTnGUHWN0CX/n7JM1FBkCb/Gm
+         86+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718630442; x=1719235242;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FUae8JuWsbpwcHSTs/RVPWcmF5+7RW32qrRGZUORids=;
+        b=ZW+V9G2epyh/KysUSiJ3x6oFhva4gSbBZobC2IGmmKvo74OM/IAm/4GoYoRetDYNt8
+         avo0ItGEBpady45+/IMqqJp5jJ7cWNx4lvbRkByEc8ywgw3/64nwnlPXlwkdb+LLaHgP
+         lC+DAepvktzbIdHQY9vjtHgLNMJwFu8NRNXREybx3rL43mUqKzGPMJITQ+dBtcPjBKnh
+         mppseJrch7EgVnBnPyoyXYLct6yeQ1Y21fLAJjHUGAtN5b0afp5r5N6Uv0EmN5qZuvnx
+         ybjjwr5giPJ5/I/ZXlEn9GWXEkNCgXnJSiTZWZigKE8PXrld4U48ZdeM242Q2lQkCpoz
+         u2AA==
+X-Forwarded-Encrypted: i=1; AJvYcCWchIxPUAgYDKe3Rr9kUh/w5051MexNXM1Qtynww3WkOaMBsaGkp/uGYI/gGA4U8fzq5saajeMe8IsEiaRA5YmLXgoV1tzOwgVb7t6fX2QOhze/m7nL0gUzDE3iDCSX+h/Zqs/fg1rQK8nFSfhYT2bAIRuiEBXk0BGqnw8BmLztJUYvE4F7/XZuKHOkikZJbcm75UL6JFBFUzkbbuIbVq2rn5KEcG/j7QAu6tjI3U7C5ZHFRVnfHM7msW3S6v6CGa0u+l/PdnOm9OUdi8xWOfqx70MUJGgEXmU3HQ7t5/ZvqVIaqb0uLK7qEdbzqFFlJ8P4stRe/tFX+WiPXxIgCyTrS+J17I+3PwmZUNj8rRMJ101KlpEppk/2tnHkYDY5rmCjuT+ZRM57NsTdfRFc+BG+xEzLrgxDieBoZ4i4RF03Zej3rFEjnE+TPWQaO90ZnFvOUlvVaSaLZ8wtuaqJF6Zdqezo2i643SBzlfi9SleWIYDRD0TxrwzMZiT2ba151+0xniCJhmXHR09Y19/j6fLZM9CBBx8zNTjk9GxndZS5/vUUFe1kO9+1
+X-Gm-Message-State: AOJu0YxbwIZI1DTTNzRaxcvZNypArwvupsJuQ57jOCJWMQ5vs5nTECdq
+	G0I0m7viSD1k+3bOgVDZXs980Kq2FkNRW/FnrwEr5vb4ub9vtvnSLtqi+S/U
+X-Google-Smtp-Source: AGHT+IHyYrCA4cWOAfaQmJOiDF7VHhRCpPr7ss5P86Xw14pxsXCUj8adUxCN6A9F4atdUbL10vfY8g==
+X-Received: by 2002:a17:906:354e:b0:a6f:c17:1572 with SMTP id a640c23a62f3a-a6f5247429amr788950266b.33.1718630442157;
+        Mon, 17 Jun 2024 06:20:42 -0700 (PDT)
+Received: from [192.168.42.82] ([163.114.131.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56f41700sm514847966b.152.2024.06.17.06.20.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jun 2024 06:20:41 -0700 (PDT)
+Message-ID: <8cd3af33-3a86-478a-a5ac-462c2cca732a@gmail.com>
+Date: Mon, 17 Jun 2024 14:20:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,95 +61,195 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>, "Joel
- Fernandes" <joel@joelfernandes.org>, Daniel Bristot de Oliveira
-	<bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, <suleiman@google.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef Esmat
-	<youssefesmat@google.com>, Beau Belgrave <beaub@linux.microsoft.com>,
-	"Baoquan He" <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, "Paul E.
- McKenney" <paulmck@kernel.org>, David Howells <dhowells@redhat.com>, Mike
- Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-References: <20240613155506.811013916@goodmis.org>
- <b0ed328f-c4e5-4e9b-ae4e-5c60703ab376@amazon.com>
- <20240613131212.7d1a7ffa@rorschach.local.home>
+Subject: Re: [PATCH net-next v12 01/13] netdev: add netdev_rx_queue_restart()
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Nikolay Aleksandrov <razor@blackwall.org>, David Wei <dw@davidwei.uk>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
+ Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240613013557.1169171-1-almasrymina@google.com>
+ <20240613013557.1169171-2-almasrymina@google.com>
 Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <20240613131212.7d1a7ffa@rorschach.local.home>
-X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20240613013557.1169171-2-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SGV5IFN0ZXZlLAoKT24gMTMuMDYuMjQgMTk6MTIsIFN0ZXZlbiBSb3N0ZWR0IHdyb3RlOgo+IE9u
-IFRodSwgMTMgSnVuIDIwMjQgMTg6NTQ6MTIgKzAyMDAKPiBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBh
-bWF6b24uY29tPiB3cm90ZToKPgo+PiBEbyB5b3UgaGF2ZSBhICJyZWFsIiBwc3RvcmUgb24gdGhl
-c2Ugc3lzdGVtcyB0aGF0IHlvdSBjb3VsZCBzdG9yZQo+PiBub24tdm9sYXRpbGUgdmFyaWFibGVz
-IGluLCBzdWNoIGFzIHBlcnNpc3RlbnQgVUVGSSB2YXJpYWJsZXM/IElmIHNvLCB5b3UKPj4gY291
-bGQgY3JlYXRlIGFuIGFjdHVhbGx5IHBlcnNpc3RlbnQgbWFwcGluZyBmb3IgeW91ciB0cmFjZSBw
-c3RvcmUgZXZlbgo+PiBhY3Jvc3Mga2VybmVsIHZlcnNpb24gdXBkYXRlcyBhcyBhIGdlbmVyYWwg
-bWVjaGFuaXNtIHRvIGNyZWF0ZSByZXNlcnZlZAo+PiBtZW1ibG9ja3MgYXQgZml4ZWQgb2Zmc2V0
-cy4KPiBBZnRlciBpbXBsZW1lbnRpbmcgYWxsIHRoaXMsIEkgZG9uJ3QgdGhpbmsgSSBjYW4gdXNl
-IHBzdG9yZSBmb3IgbXkKPiBwdXJwb3NlLiBwc3RvcmUgaXMgYSBnZW5lcmljIGludGVyZmFjZSBm
-b3IgcGVyc2lzdGVudCBzdG9yYWdlLCBhbmQKPiByZXF1aXJlcyBhbiBpbnRlcmZhY2UgdG8gYWNj
-ZXNzIGl0LiBGcm9tIHdoYXQgSSB1bmRlcnN0YW5kLCBpdCdzIG5vdAo+IHRoZSBwbGFjZSB0byBq
-dXN0IGFzayBmb3IgYW4gYXJlYSBvZiBSQU0uCj4KPiBGb3IgdGhpcywgSSBoYXZlIGEgc2luZ2xl
-IHBhdGNoIHRoYXQgYWxsb3dzIHRoZSB0cmFjaW5nIGluc3RhbmNlIHRvIHVzZQo+IGFuIGFyZWEg
-cmVzZXJ2ZWQgYnkgcmVzZXJ2ZV9tZW0uCj4KPiAgICByZXNlcnZlX21lbT0xMk06NDA5Njp0cmFj
-ZSB0cmFjZV9pbnN0YW5jZT1ib290X21hcHBlZEB0cmFjZQo+Cj4gSSd2ZSBhbHJlYWR5IHRlc3Rl
-ZCB0aGlzIG9uIHFlbXUgYW5kIGEgY291cGxlIG9mIGNocm9tZWJvb2tzLiBJdCB3b3Jrcwo+IHdl
-bGwuCgoKSSBiZWxpZXZlIHdlJ3JlIHRhbGtpbmcgYWJvdXQgMiBkaWZmZXJlbnQgdGhpbmdzIDop
-LiBMZXQgbWUgcmVwaHJhc2UgYSAKYml0IGFuZCBtYWtlIGEgY29uY3JldGUgZXhhbXBsZS4KCklt
-YWdpbmUgeW91IGhhdmUgcGFzc2VkIHRoZSAicmVzZXJ2ZV9tZW09MTJNOjQwOTY6dHJhY2UiIGtl
-cm5lbCBjb21tYW5kIApsaW5lIG9wdGlvbi4gVGhlIGtlcm5lbCBub3cgY29tZXMgdXAgYW5kIGFs
-bG9jYXRlcyBhIHJhbmRvbSBjaHVuayBvZiAKbWVtb3J5IHRoYXQgLSBieSAoYWRtaXR0ZWRseSBn
-b29kKSBjaGFuY2UgLSBtYXkgYmUgYXQgdGhlIHNhbWUgcGh5c2ljYWwgCmxvY2F0aW9uIGFzIGJl
-Zm9yZS4gTGV0J3MgYXNzdW1lIGl0IGRlZW1lZCAweDEwMDAwMDAgYXMgYSBnb29kIG9mZnNldC4K
-CkxldCdzIG5vdyBhc3N1bWUgeW91J3JlIHJ1bm5pbmcgb24gYSBVRUZJIHN5c3RlbS4gVGhlcmUs
-IHlvdSBhbHdheXMgaGF2ZSAKbm9uLXZvbGF0aWxlIHN0b3JhZ2UgYXZhaWxhYmxlIHRvIHlvdSBl
-dmVuIGluIHRoZSBwcmUtYm9vdCBwaGFzZS4gVGhhdCAKbWVhbnMgdGhlIGtlcm5lbCBjb3VsZCBj
-cmVhdGUgYSBVRUZJIHZhcmlhYmxlIHRoYXQgc2F5cyAiMTJNOjQwOTY6dHJhY2UgCi0+IDB4MTAw
-MDAwMCIuIFRoZSBwcmUtYm9vdCBwaGFzZSB0YWtlcyBhbGwgdGhlc2UgVUVGSSB2YXJpYWJsZXMg
-YW5kIAptYXJrcyB0aGVtIGFzIHJlc2VydmVkLiBXaGVuIHlvdSBmaW5hbGx5IHJlYWNoIHlvdXIg
-Y29tbWFuZCBsaW5lIHBhcnNpbmcgCmxvZ2ljIGZvciByZXNlcnZlX21lbT0sIHlvdSBjYW4gZmxp
-cCBhbGwgcmVzZXJ2YXRpb25zIHRoYXQgd2VyZSBub3Qgb24gCnRoZSBjb21tYW5kIGxpbmUgYmFj
-ayB0byBub3JtYWwgbWVtb3J5LgoKVGhhdCB3YXkgeW91IGhhdmUgcHJldHR5IG11Y2ggZ3VhcmFu
-dGVlZCBwZXJzaXN0ZW50IG1lbW9yeSByZWdpb25zLCBldmVuIAp3aXRoIEtBU0xSIGNoYW5naW5n
-IHlvdXIgbWVtb3J5IGxheW91dCBhY3Jvc3MgYm9vdHMuCgpUaGUgbmljZSB0aGluZyBpcyB0aGF0
-IHRoZSBhYm92ZSBpcyBhbiBleHRlbnNpb24gb2Ygd2hhdCB5b3UndmUgYWxyZWFkeSAKYnVpbHQ6
-IFN5c3RlbXMgd2l0aCBVRUZJIHNpbXBseSBnZXQgYmV0dGVyIGd1YXJhbnRlZXMgdGhhdCB0aGVp
-ciByZWdpb25zIApwZXJzaXN0LgoKCj4KPj4KPj4+IFJlcXVpcmVtZW50Ogo+Pj4KPj4+IE5lZWQg
-YSB3YXkgdG8gcmVzZXJ2ZSBtZW1vcnkgdGhhdCB3aWxsIGJlIGF0IGEgY29uc2lzdGVudCBsb2Nh
-dGlvbiBmb3IKPj4+IGV2ZXJ5IGJvb3QsIGlmIHRoZSBrZXJuZWwgYW5kIHN5c3RlbSBhcmUgdGhl
-IHNhbWUuIERvZXMgbm90IG5lZWQgdG8gd29yawo+Pj4gaWYgcmVib290aW5nIHRvIGEgZGlmZmVy
-ZW50IGtlcm5lbCwgb3IgaWYgdGhlIHN5c3RlbSBjYW4gY2hhbmdlIHRoZQo+Pj4gbWVtb3J5IGxh
-eW91dCBiZXR3ZWVuIGJvb3RzLgo+Pj4KPj4+IFRoZSByZXNlcnZlZCBtZW1vcnkgY2FuIG5vdCBi
-ZSBhbiBoYXJkIGNvZGVkIGFkZHJlc3MsIGFzIHRoZSBzYW1lIGtlcm5lbCAvCj4+PiBjb21tYW5k
-IGxpbmUgbmVlZHMgdG8gcnVuIG9uIHNldmVyYWwgZGlmZmVyZW50IG1hY2hpbmVzLiBUaGUgcGlj
-a2VkIG1lbW9yeQo+Pj4gcmVzZXJ2YXRpb24ganVzdCBuZWVkcyB0byBiZSB0aGUgc2FtZSBmb3Ig
-YSBnaXZlbiBtYWNoaW5lLCBidXQgbWF5IGJlCj4+Cj4+IFdpdGggS0FTTFIgaXMgZW5hYmxlZCwg
-ZG9lc24ndCB0aGlzIGFwcHJvYWNoIGJyZWFrIHRvbyBvZnRlbiB0byBiZQo+PiByZWxpYWJsZSBl
-bm91Z2ggZm9yIHRoZSBkYXRhIHlvdSB3YW50IHRvIGV4dHJhY3Q/Cj4+Cj4+IFBpY2tpbmcgdXAg
-dGhlIGlkZWEgYWJvdmUsIHdpdGggYSBwZXJzaXN0ZW50IHZhcmlhYmxlIHdlIGNvdWxkIGV2ZW4g
-bWFrZQo+PiBLQVNMUiBhdm9pZCB0aGF0IHJlc2VydmVkIHBzdG9yZSByZWdpb24gaW4gaXRzIHNl
-YXJjaCBmb3IgYSB2aWFibGUgS0FTTFIKPj4gb2Zmc2V0Lgo+IEkgdGhpbmsgSSB3YXMgaGl0IGJ5
-IGl0IG9uY2UgaW4gYWxsIG15IHRlc3RpbmcuIEZvciBvdXIgdXNlIGNhc2UsIHRoZQo+IGZldyB0
-aW1lcyBpdCBmYWlscyB0byBtYXAgaXMgbm90IGdvaW5nIHRvIGFmZmVjdCB3aGF0IHdlIG5lZWQg
-dGhpcyBmb3IKPiBhdCBhbGwuCgoKT25jZSBpcyBwcmV0dHkgZ29vZC4gRG8geW91IGtub3cgd2h5
-PyBBbHNvIG9uY2Ugb3V0IG9mIGhvdyBtYW55IHJ1bnM/IElzIAp0aGUgcmFuZG9tbmVzcyBzb3Vy
-Y2Ugbm90IGFzIHJhbmRvbSBhcyBpdCBzaG91bGQgYmUgb3IgYXJlIHRoZSBudW1iZXIgb2YgCmJp
-dHMgZm9yIEtBU0xSIG1heWJlIHNvIGZldyBvbiB5b3VyIHRhcmdldCBhcmNoaXRlY3R1cmUgdGhh
-dCB0aGUgb2RkcyBvZiAKaGl0dGluZyBhbnl0aGluZyBiZWNvbWUgbG93PyBEbyB0aGVzZSBzYW1l
-IGNvbnN0cmFpbnRzIGhvbGQgdHJ1ZSBvdXRzaWRlIApvZiB5b3VyIHRlc3RpbmcgZW52aXJvbm1l
-bnQ/CgoKQWxleAoKCgoKQW1hem9uIFdlYiBTZXJ2aWNlcyBEZXZlbG9wbWVudCBDZW50ZXIgR2Vy
-bWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6
-IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNn
-ZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAyNTc3NjQgQgpTaXR6OiBCZXJsaW4KVXN0
-LUlEOiBERSAzNjUgNTM4IDU5Nwo=
+On 6/13/24 02:35, Mina Almasry wrote:
+> Add netdev_rx_queue_restart() function to netdev_rx_queue.h
 
+see nit below
+
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+
+
+> Signed-off-by: David Wei <dw@davidwei.uk>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+> 
+> v11:
+> - Fix not checking dev->queue_mgmt_ops (Pavel).
+> - Fix ndo_queue_mem_free call that passed the wrong pointer (David).
+> 
+> v9: https://lore.kernel.org/all/20240502045410.3524155-4-dw@davidwei.uk/
+> (submitted by David).
+> - fixed SPDX license identifier (Simon).
+> - Rebased on top of merged queue API definition, and changed
+>    implementation to match that.
+> - Replace rtnl_lock() with rtnl_is_locked() to make it useable from my
+>    netlink code where rtnl is already locked.
+> 
+> ---
+>   include/net/netdev_rx_queue.h |  3 ++
+>   net/core/Makefile             |  1 +
+>   net/core/netdev_rx_queue.c    | 74 +++++++++++++++++++++++++++++++++++
+>   3 files changed, 78 insertions(+)
+>   create mode 100644 net/core/netdev_rx_queue.c
+> 
+> diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+> index aa1716fb0e53c..e78ca52d67fbf 100644
+> --- a/include/net/netdev_rx_queue.h
+> +++ b/include/net/netdev_rx_queue.h
+> @@ -54,4 +54,7 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+>   	return index;
+>   }
+>   #endif
+> +
+> +int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq);
+> +
+>   #endif
+> diff --git a/net/core/Makefile b/net/core/Makefile
+> index 62be9aef25285..f82232b358a2c 100644
+> --- a/net/core/Makefile
+> +++ b/net/core/Makefile
+> @@ -19,6 +19,7 @@ obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
+>   
+>   obj-y += net-sysfs.o
+>   obj-y += hotdata.o
+> +obj-y += netdev_rx_queue.o
+>   obj-$(CONFIG_PAGE_POOL) += page_pool.o page_pool_user.o
+>   obj-$(CONFIG_PROC_FS) += net-procfs.o
+>   obj-$(CONFIG_NET_PKTGEN) += pktgen.o
+> diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+> new file mode 100644
+> index 0000000000000..de0575cf6df5d
+> --- /dev/null
+> +++ b/net/core/netdev_rx_queue.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <linux/netdevice.h>
+> +#include <net/netdev_queues.h>
+> +#include <net/netdev_rx_queue.h>
+> +
+> +int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
+> +{
+> +	void *new_mem, *old_mem;
+> +	int err;
+> +
+> +	if (!dev->queue_mgmt_ops || !dev->queue_mgmt_ops->ndo_queue_stop ||
+> +	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
+> +	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
+> +	    !dev->queue_mgmt_ops->ndo_queue_start)
+> +		return -EOPNOTSUPP;
+> +
+> +	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
+> +
+> +	new_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
+> +	if (!new_mem)
+> +		return -ENOMEM;
+> +
+> +	old_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
+> +	if (!old_mem) {
+> +		err = -ENOMEM;
+> +		goto err_free_new_mem;
+> +	}
+> +
+> +	err = dev->queue_mgmt_ops->ndo_queue_mem_alloc(dev, new_mem, rxq_idx);
+> +	if (err)
+> +		goto err_free_old_mem;
+> +
+> +	err = dev->queue_mgmt_ops->ndo_queue_stop(dev, old_mem, rxq_idx);
+> +	if (err)
+> +		goto err_free_new_queue_mem;
+> +
+> +	err = dev->queue_mgmt_ops->ndo_queue_start(dev, new_mem, rxq_idx);
+> +	if (err)
+> +		goto err_start_queue;
+> +
+> +	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
+> +
+> +	kvfree(old_mem);
+> +	kvfree(new_mem);
+> +
+> +	return 0;
+> +
+> +err_start_queue:
+> +	/* Restarting the queue with old_mem should be successful as we haven't
+> +	 * changed any of the queue configuration, and there is not much we can
+> +	 * do to recover from a failure here.
+> +	 *
+> +	 * WARN if the we fail to recover the old rx queue, and at least free
+
+nit "if the we"
+
+> +	 * old_mem so we don't also leak that.
+> +	 */
+> +	if (dev->queue_mgmt_ops->ndo_queue_start(dev, old_mem, rxq_idx)) {
+> +		WARN(1,
+> +		     "Failed to restart old queue in error path. RX queue %d may be unhealthy.",
+> +		     rxq_idx);
+> +		dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
+> +	}
+> +
+> +err_free_new_queue_mem:
+> +	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, new_mem);
+> +
+> +err_free_old_mem:
+> +	kvfree(old_mem);
+> +
+> +err_free_new_mem:
+> +	kvfree(new_mem);
+> +
+> +	return err;
+> +}
+
+-- 
+Pavel Begunkov
