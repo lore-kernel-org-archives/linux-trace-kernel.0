@@ -1,248 +1,102 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABBE13A3E1;
-	Tue, 18 Jun 2024 12:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F7213C695
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 12:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718712171; cv=none; b=Z6AR56NsUDTFYuCysiT2BVWr/jhVR2sib39ML0TL4jiUz9CE0y7ePMH91wV0U+M/tHOkhX6F3yrLhkCALwlKrADwwnxx0aAYQbPFAe++gDxsgfc235D69NVe3EkaB2+QEovO4YrtUTFZUFMdkLO7XrVs7/wDzNs2OfaDkEZhkLI=
+	t=1718713408; cv=none; b=qqAcxngVcdplWTLGtSGzd8uR+6HoZLbL0vcKCXNkdoSDCnet+1xhvZ2pt7s0L8PzKHvyLpImXJuIf5a4If2WhIyVk8NFJ848Uqva2KtI9jSZuMbueVo80BCvuRBBMQgpfsBO+TK31pwBdion5sdo9kzAiuAhjUbT4u0WENZgai0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718712171; c=relaxed/simple;
-	bh=cbzF01ahKtAAGn0TxOe2bawlyssofdtkzjYQzurcqGc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=T7pTJGwugl276ySH+t/NTBxBaAa17cqeWfBTSPtbIjQTEpMiaMaMYaQd7Og88OQNuzbnSrjfGG2xzSxkrRMSTPU4zcLgxlbBZgVoX15kGGEAEWfEm/e9CX+teqwCx0R+bWN432ziAIgVLqGw/noYen7tChlHYTA4KAHqRuTQ3ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 61AE81C0006;
-	Tue, 18 Jun 2024 12:02:37 +0000 (UTC)
-Message-ID: <b603c8b5-3100-4ccf-b014-9274f980358d@ghiti.fr>
-Date: Tue, 18 Jun 2024 14:02:37 +0200
+	s=arc-20240116; t=1718713408; c=relaxed/simple;
+	bh=7r9377QHeRx4YGuRMxxudwYWoomRsoHVd1b1XjrAH4c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ttqHvWIUDDvRaZgUdAJz82uST6yYji9XbHFi7wWCs3o8fsDbr79e3M0DS0T6xMXo7mEGnuDzz4gq/xKVpmNCXQRY5G+xI9Vk27c5u8LJM8Sz6sLm30U/y+hFEvZcqNVoO5Zs/9GT1g+RIz3mNFOOBbj/BE2AiTfCAh4xce3U++U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oLjLXBdU; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLjLXBdU"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6383f01d1deso17350087b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 05:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718713406; x=1719318206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7r9377QHeRx4YGuRMxxudwYWoomRsoHVd1b1XjrAH4c=;
+        b=oLjLXBdU73Qyz9mlpjJ51V9DXeiY4HN4EDhGZg87mJIhSS2mT3BGSHB73eqQj2LSmP
+         wPPZva3HcVqLg3GrYTTpB+VkZsOKaEHE4vNavIICp++EhkybhGPQsxCrw0p4FsyizT/r
+         mPGTl9oAeTuSiEuHC/Z6Xd7vHBCuekZFCAhljPcM4DZeGwyJe6BbTfYq/3IyKsBfeAkt
+         jDNScJDAjWSKEsguf9DFCakl3YS0E1/pg6Ig95g+scgdfab2fWMbuCRSIP32GhGLVCWt
+         4pIqCuQy6/9Wld+OGfiLK9d+N6oKGFdW9kc/GeeXdPxuuy+03n83VmZ8Q+BLV+F9xljy
+         Rjdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718713406; x=1719318206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7r9377QHeRx4YGuRMxxudwYWoomRsoHVd1b1XjrAH4c=;
+        b=HQl8eicblT6cc2gHY5xwPqm0JRZLJ36ydnF+BgUUNg6RA4cz8Y44wcydANcKdjg0VZ
+         kNrPyDp3O7HHlXgvjiY0VdjWxiDzFg6k4+U2ikYrCJQTbpjUUZ2mKjMkmjS4U2BjPeNq
+         G1ktdkucIMCyjT8aKTj0y+eDYs7UcuYnvQec+wN+altZgvJMDQA/fnYSxf2t5l3G0xkN
+         c/SQb1YCzrKICwye4F7n2JZmPFxxdtawVma+pJdu2xm5v1XWAO46xtLLAwu2O0nv895c
+         kaFrsDvN7R/hKdk8nl3nOETVRgXvy6ejNoAlCeey68KXOzlStFrtzVL9ctfFxaQWogdH
+         o9XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFp0jiJOiqQetU7QJTiLGL2hqFH1slI/tOtbp/wgBvbnLtFtRU/vPqKxUo9HR/tV2aVUcIdWhehr0G8MWjkXLqMAqS1R1JfsoXCgPDcrHcsy53
+X-Gm-Message-State: AOJu0Yy9fmTF7SKoXVGU4T4PVUs6xsRSZf0CoJZp5D/qijGxMlavNXAf
+	z3P80MFzpE5GI5H790LflLneURibGDWobIQv8JJoh0hFfwFJtJ+adSbi61Hu0ICJY2q7iqgbfIf
+	NlaBw5NHm137z0ODxgwZtGFOnlEhfmQW6417b
+X-Google-Smtp-Source: AGHT+IGByXTFHMVNXIbwEPuEy6ECS8UlQ7NjRzqMyf5rOrRSa+3k76BSDfeXF6KiRmwBQfl6+NuPndA17rE7v9lMezs=
+X-Received: by 2002:a05:690c:6a09:b0:62c:f01a:17a3 with SMTP id
+ 00721157ae682-63222a586e9mr136731667b3.15.1718713405543; Tue, 18 Jun 2024
+ 05:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-To: Conor Dooley <conor.dooley@microchip.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- puranjay Mohan <puranjay12@gmail.com>, Andy Chiu <andy.chiu@sifive.com>
-References: <20240523115134.70380-1-alexghiti@rivosinc.com>
- <20240613-lubricant-breath-061192a9489a@wendy>
- <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
-In-Reply-To: <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-12-iii@linux.ibm.com>
+In-Reply-To: <20240613153924.961511-12-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Tue, 18 Jun 2024 14:22:44 +0200
+Message-ID: <CAG_fn=UEutgfgiE5xcFT=LXk51_PYmcCXCeNg3zSSEPYJ+tttg@mail.gmail.com>
+Subject: Re: [PATCH v4 11/35] kmsan: Allow disabling KMSAN checks for the
+ current task
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Conor,
-
-On 17/06/2024 15:23, Alexandre Ghiti wrote:
-> Hi Conor,
+On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
+> wrote:
 >
-> Sorry for the delay here.
+> Like for KASAN, it's useful to temporarily disable KMSAN checks around,
+> e.g., redzone accesses. Introduce kmsan_disable_current() and
+> kmsan_enable_current(), which are similar to their KASAN counterparts.
 >
-> On 13/06/2024 09:48, Conor Dooley wrote:
->> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
->>> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
->>> converted ftrace_make_nop() to use patch_insn_write() which does not
->>> emit any icache flush relying entirely on __ftrace_modify_code() to do
->>> that.
->>>
->>> But we missed that ftrace_make_nop() was called very early directly 
->>> when
->>> converting mcount calls into nops (actually on riscv it converts 2B 
->>> nops
->>> emitted by the compiler into 4B nops).
->>>
->>> This caused crashes on multiple HW as reported by Conor and Björn since
->>> the booting core could have half-patched instructions in its icache
->>> which would trigger an illegal instruction trap: fix this by emitting a
->>> local flush icache when early patching nops.
->>>
->>> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
->>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>> ---
->>>   arch/riscv/include/asm/cacheflush.h | 6 ++++++
->>>   arch/riscv/kernel/ftrace.c          | 3 +++
->>>   2 files changed, 9 insertions(+)
->>>
->>> diff --git a/arch/riscv/include/asm/cacheflush.h 
->>> b/arch/riscv/include/asm/cacheflush.h
->>> index dd8d07146116..ce79c558a4c8 100644
->>> --- a/arch/riscv/include/asm/cacheflush.h
->>> +++ b/arch/riscv/include/asm/cacheflush.h
->>> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
->>>       asm volatile ("fence.i" ::: "memory");
->>>   }
->>>   +static inline void local_flush_icache_range(unsigned long start,
->>> +                        unsigned long end)
->>> +{
->>> +    local_flush_icache_all();
->>> +}
->>> +
->>>   #define PG_dcache_clean PG_arch_1
->>>     static inline void flush_dcache_folio(struct folio *folio)
->>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->>> index 4f4987a6d83d..32e7c401dfb4 100644
->>> --- a/arch/riscv/kernel/ftrace.c
->>> +++ b/arch/riscv/kernel/ftrace.c
->>> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct 
->>> dyn_ftrace *rec)
->>>       out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
->>>       mutex_unlock(&text_mutex);
->> So, turns out that this patch is not sufficient. I've seen some more
->> crashes, seemingly due to initialising nops on this mutex_unlock().
->> Palmer suggested moving the if (!mod) ... into the lock, which fixed
->> the problem for me.
->
->
-> Ok, it makes sense, I completely missed that. I'll send a fix for that 
-> shortly so that it can be merged in rc5.
->
-> Thanks,
->
-> Alex
+> Make them reentrant in order to handle memory allocations in interrupt
+> context. Repurpose the allow_reporting field for this.
 
+I am still a bit reluctant, because these nested counters always end
+up being inconsistent.
+But your patch series fixes support for SLUB_DEBUG, and I don't have
+better ideas how to do this.
 
-So I digged a bit more and I'm afraid that the only way to make sure 
-this issue does not happen elsewhere is to flush the icache right after 
-the patching. We actually can't wait to batch the icache flush since 
-along the way, we may call a function that has just been patched (the 
-issue that you encountered here).
+Could you please extend "Disabling the instrumentation" in kmsan.rst
+so that it explains the new enable/disable API?
+I think we should mention that the users need to be careful with it,
+keeping the regions short and preferring other ways to disable
+instrumentation, where possible.
 
-I don't know how much it will impact the performance but I guess it will.
-
-Unless someone has a better idea (I added Andy and Puranjay in cc), here 
-is the patch that implements this, can you give it a try? Thanks
-
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 87cbd86576b2..4b95c574fd04 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct 
-dyn_ftrace *rec)
-         out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-         mutex_unlock(&text_mutex);
-
--       if (!mod)
--               local_flush_icache_range(rec->ip, rec->ip + 
-MCOUNT_INSN_SIZE);
--
-         return out;
-  }
-
-@@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
-         } else {
-                 while (atomic_read(&param->cpu_count) <= num_online_cpus())
-                         cpu_relax();
--       }
-
--       local_flush_icache_all();
-+               local_flush_icache_all();
-+       }
-
-         return 0;
-  }
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index 4007563fb607..ab03732d06c4 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
-
-         memset(waddr, c, len);
-
-+       /*
-+        * We could have just patched a function that is about to be
-+        * called so make sure we don't execute partially patched
-+        * instructions by flushing the icache as soon as possible.
-+        */
-+       local_flush_icache_range((unsigned long)waddr,
-+                                (unsigned long)waddr + len);
-+
-         patch_unmap(FIX_TEXT_POKE0);
-
-         if (across_pages)
-@@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const 
-void *insn, size_t len)
-
-         ret = copy_to_kernel_nofault(waddr, insn, len);
-
-+       /*
-+        * We could have just patched a function that is about to be
-+        * called so make sure we don't execute partially patched
-+        * instructions by flushing the icache as soon as possible.
-+        */
-+       local_flush_icache_range((unsigned long)waddr,
-+                                (unsigned long)waddr + len);
-+
-         patch_unmap(FIX_TEXT_POKE0);
-
-         if (across_pages)
-@@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
-
-         ret = patch_insn_set(tp, c, len);
-
--       if (!ret)
--               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
--
-         return ret;
-  }
-  NOKPROBE_SYMBOL(patch_text_set_nosync);
-@@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns, 
-size_t len)
-
-         ret = patch_insn_write(tp, insns, len);
-
--       if (!ret)
--               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
--
-         return ret;
-  }
-  NOKPROBE_SYMBOL(patch_text_nosync);
-@@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
-         } else {
-                 while (atomic_read(&patch->cpu_count) <= num_online_cpus())
-                         cpu_relax();
--       }
-
--       local_flush_icache_all();
-+               local_flush_icache_all();
-+       }
-
-         return ret;
-  }
-
-
->
->
->>
->>>   +    if (!mod)
->>> +        local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
->>> +
->>>       return out;
->>>   }
->>>   --
->>> 2.39.2
->>>
->>>
->>> _______________________________________________
->>> linux-riscv mailing list
->>> linux-riscv@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-riscv
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
