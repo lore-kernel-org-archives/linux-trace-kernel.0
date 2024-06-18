@@ -1,253 +1,298 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FD228FC;
-	Mon, 17 Jun 2024 22:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C2B4C6D;
+	Tue, 18 Jun 2024 03:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718664844; cv=none; b=ETdnRfapUECaJJG6eAlAyiSs+3Etg+ZTyVRhyFFBPGRxt4suQBRE6vNwyC3E1Muo+iPxjy0S0FF6cRItVRpDZrO1zfnPtGWSmQ1fQPMAS/PKjCgXq4meJSY08TL4y9Ms2o3YjpWDAcO73D7wrR8A668Jr74mtzoHlgMDxRqSX+A=
+	t=1718682623; cv=none; b=HF+OdNVih8VXde9h0xnVPCj2IgkMfaFvDc7BLkqHGkYSUXRkGMz0QN8e6i2xczu1Ul0G8KjsV5vNR48+oWmIm1TM02wGvesA4fiHODdH5cihA5c0in1x/MtUhADsL02Rctim7li6G7pcjkAnpqHc9RwmrrgBRKHNS7FA8o5rlT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718664844; c=relaxed/simple;
-	bh=gKVq9NreA83zmWg4zI8Bf9GfsmIQOHyb/2gaXDn+jEY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tkNhToLXxPJkfESFqlsGEYZocYe96nuv9Q3J77MvM4HW4aZCNMg7P6UB29U+7DFNADjt960zuKb5JvadznjKPQQBX7AQWobPTDQS++0ClgdOTX22k1ofPNNU+wEZ7mLSWyjum4iWAY5NUgSfx4McpEysvt68e2OHzyei86/PPgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3Vk/POF; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3Vk/POF"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2bfdae7997aso3936906a91.2;
-        Mon, 17 Jun 2024 15:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718664843; x=1719269643; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=euP5QDKTB5EI7sJME0BwF0iiV4DR44cs6erLRRFFlyI=;
-        b=W3Vk/POF2CHC8gjQ+LWCMrOIRXnQ+tqXjhPKp1ZEgHyt0NtyjPdZL3ZWCUjphTtDGy
-         MOQoZfdZPjhmQudIHOTEFr1eAhp/oI7vCQk1fbo+NUDYkoESLAd0QSV6vo1lkDVrovWg
-         tMFOshG0WrLpdQLq67h6EIOR3tHETPTdqHCC5S6UtfdPK8xUpM8G9kKPf7mg0dj9E0Zx
-         BSSyDm/7o7NPe6XGBkH7jvZAF5KDfttgZOFUDiYF7JUFNzWSmzU0Mb8wDxPFHaR0A8t0
-         qo5UFJAtP7y8czuFIMjZb9LHwQc5rG24ThHFsnNKisp2xHknG5hhDackmPcBEF9zL09J
-         pB7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718664843; x=1719269643;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=euP5QDKTB5EI7sJME0BwF0iiV4DR44cs6erLRRFFlyI=;
-        b=qYyxifpA+bWXoqdQCkIYsMufL94TRu5DwOweaJ5Lv2TkCLUO7c+vsPCpNL8dbfo1c3
-         zSwd4SMUS8D2rMyXi0R+ySg9+oycVyrn5Vn8ZlUovJ+UhQihJ5JqFKbhceNEETkDp9ZQ
-         QxVObv9zEuXhHLVVZoN2gHTnumDbUgAtp/iA1i+IPUC8BCZsVTuoJhHbdZMQEtfOZq7y
-         hWuf0HQm7cJVFXYIzUeFK8g9jlfzrxer8ufZEdR02hQXgfPnD7wYqvfEVpJUGif/ORqI
-         PcrQeTjPnrQIUuzSwuu3/S75DwQxOSJOZX+yOjOcuRpVfvpXvFfZ/ypGAjvATc3hzWWJ
-         7RwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLe5q6FSK5GfhKJ/pVLTDRb3ngWKezzt8sDzpmzTymhTlD7gnjaKIdqdtg3K+qVMufvgmM8yh+5MXdSAaav2ZNgBVDajO8r8X0Fs5s0bkl9+LJwT8HVnBBEd05U5EiGIcjhEyg0D3R1Ol7uExgdtsxNb1NYoamQFPll6hPaBWmYs0cbta0
-X-Gm-Message-State: AOJu0YzDG3R7xhfanMEDwXZIJrtj8vW75VvJOIpSCtPnng77QNvejlxN
-	/IOxL5KBWHfEGgEjhuscbaFFpd58Az6BYjWRSuKNvPS0BSzJfcK6jtT1aFHjtm0EOGKnGG3GJtZ
-	gsSZyYneioiN7k6IMC6OiHYAEwTk=
-X-Google-Smtp-Source: AGHT+IGPGwNguwIysJ7Ic3F6GSehGgYoAOs0VsCnmqllCklhAUSuV+oj4WPhV9FO4RkKaiubPmDvw0WZvaeA2Wf/chA=
-X-Received: by 2002:a17:90a:5ac6:b0:2c6:de10:6ac3 with SMTP id
- 98e67ed59e1d1-2c6de106bbbmr836066a91.31.1718664842643; Mon, 17 Jun 2024
- 15:54:02 -0700 (PDT)
+	s=arc-20240116; t=1718682623; c=relaxed/simple;
+	bh=Xis7cfUeFfNoFwhmC90x2/8Dwti+81UPvnMn6vz2duY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B8vQPbUD8rR0UuxQlmD+G6ijcmvQqhWdpO0NeX6jkyWlgQkx1XSiyfzwzfc8TyU4LN8k1hUGswlkvVS/ecNU5Dk6qDEYWmlBzkLq5SyL5PHs5dvKXVx8AUCL+ISJcqSRAyAlg4sRHTXc3TiyPZ9m3lk3wmK78QEbMEmEumgyvsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W3CMy1CLCzxSK8;
+	Tue, 18 Jun 2024 11:46:06 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id D55B6140361;
+	Tue, 18 Jun 2024 11:50:16 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 18 Jun
+ 2024 11:50:16 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mark.rutland@arm.com>, <linux@armlinux.org.uk>, <ruanjinjie@huawei.com>,
+	<ardb@kernel.org>, <yangtiezhu@loongson.cn>, <arnd@arndb.de>,
+	<kees@kernel.org>, <rmk+kernel@armlinux.org.uk>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH v2] arm: Add KPROBES_ON_FTRACE supported
+Date: Tue, 18 Jun 2024 11:52:42 +0800
+Message-ID: <20240618035242.3491691-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240604200221.377848-1-jolsa@kernel.org> <20240604200221.377848-2-jolsa@kernel.org>
- <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
- <20240605175619.GH25006@redhat.com> <ZmDPQH2uiPYTA_df@krava>
- <ZmHn43Af4Kwlxoyc@krava> <CAEf4BzaFcpqFc8w6dH5oOJNKsAXZjs-KCFAXLp8TMBtS5ooo4g@mail.gmail.com>
- <ZmbePPIKqc6XuVjL@krava>
-In-Reply-To: <ZmbePPIKqc6XuVjL@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 17 Jun 2024 15:53:50 -0700
-Message-ID: <CAEf4BzaqDSGBbaEuOpEW5NbosgN8jE4CUE8s+-dgs-0sV6_geA@mail.gmail.com>
-Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to uprobe_consumer
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Mon, Jun 10, 2024 at 4:06=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Thu, Jun 06, 2024 at 09:52:39AM -0700, Andrii Nakryiko wrote:
-> > On Thu, Jun 6, 2024 at 9:46=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
-rote:
-> > >
-> > > On Wed, Jun 05, 2024 at 10:50:11PM +0200, Jiri Olsa wrote:
-> > > > On Wed, Jun 05, 2024 at 07:56:19PM +0200, Oleg Nesterov wrote:
-> > > > > On 06/05, Andrii Nakryiko wrote:
-> > > > > >
-> > > > > > so any such
-> > > > > > limitations will cause problems, issue reports, investigation, =
-etc.
-> > > > >
-> > > > > Agreed...
-> > > > >
-> > > > > > As one possible solution, what if we do
-> > > > > >
-> > > > > > struct return_instance {
-> > > > > >     ...
-> > > > > >     u64 session_cookies[];
-> > > > > > };
-> > > > > >
-> > > > > > and allocate sizeof(struct return_instance) + 8 *
-> > > > > > <num-of-session-consumers> and then at runtime pass
-> > > > > > &session_cookies[i] as data pointer to session-aware callbacks?
-> > > > >
-> > > > > I too thought about this, but I guess it is not that simple.
-> > > > >
-> > > > > Just for example. Suppose we have 2 session-consumers C1 and C2.
-> > > > > What if uprobe_unregister(C1) comes before the probed function
-> > > > > returns?
-> > > > >
-> > > > > We need something like map_cookie_to_consumer().
-> > > >
-> > > > I guess we could have hash table in return_instance that gets 'cons=
-umer -> cookie' ?
-> > >
-> > > ok, hash table is probably too big for this.. I guess some solution t=
-hat
-> > > would iterate consumers and cookies made sure it matches would be fin=
-e
-> > >
-> >
-> > Yes, I was hoping to avoid hash tables for this, and in the common
-> > case have no added overhead.
->
-> hi,
-> here's first stab on that.. the change below:
->   - extends current handlers with extra argument rather than adding new
->     set of handlers
->   - store session consumers objects within return_instance object and
->   - iterate these objects ^^^ in handle_uretprobe_chain
->
-> I guess it could be still polished, but I wonder if this could
-> be the right direction to do this.. thoughts? ;-)
+Add support for kprobes on ftrace call sites to avoid much of the overhead
+with regular kprobes. Try it with simple steps:
 
-Yeah, I think this is the right direction. It's a bit sad that this
-makes getting rid of rw_sem on hot path even harder, but that's a
-separate problem.
+	cd /sys/kernel/debug/tracing/
+	echo 'p:myprobe sys_clone r0=%r0 r1=%r1 r2=%r2' > kprobe_events
+	echo 1 > events/kprobes/enable
+	echo  1 > events/kprobes/myprobe/enable
+	cat trace
+	# tracer: nop
+	#
+	# entries-in-buffer/entries-written: 2/2   #P:4
+	#
+	#                                _-----=> irqs-off/BH-disabled
+	#                               / _----=> need-resched
+	#                              | / _---=> hardirq/softirq
+	#                              || / _--=> preempt-depth
+	#                              ||| / _-=> migrate-disable
+	#                              |||| /     delay
+	#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+	#              | |         |   |||||     |         |
+	              sh-75      [000] .....    33.793362: myprobe: (sys_clone+0xc/0xa0) r0=0x1200011 r1=0x0 r2=0x0
+	              sh-75      [000] .....    34.817804: myprobe: (sys_clone+0xc/0xa0) r0=0x1200011 r1=0x0 r2=0x0
 
->
-> thanks,
-> jirka
->
->
-> ---
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index f46e0ca0169c..4e40e8352eac 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -34,15 +34,19 @@ enum uprobe_filter_ctx {
->  };
->
->  struct uprobe_consumer {
-> -       int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
-);
-> +       int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
-,
-> +                       unsigned long *data);
+	cat /sys/kernel/debug/kprobes/list
+		c03453e8  k  sys_clone+0xc    [FTRACE]
+					       ^^^^^^
 
-can we use __u64 here? This long vs __u64 might cause problems for BPF
-when the host is 32-bit architecture (BPF is always 64-bit).
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406160646.J89U1UKK-lkp@intel.com/
+---
+v2:
+- Fix the allmodconfig compile issue by renaming "NOP" to "FTRACE_NOP".
+---
+ .../debug/kprobes-on-ftrace/arch-support.txt  |  2 +-
+ arch/arm/Kconfig                              |  1 +
+ arch/arm/include/asm/ftrace.h                 | 17 ++++++
+ arch/arm/kernel/ftrace.c                      | 19 +------
+ arch/arm/probes/Makefile                      |  1 +
+ arch/arm/probes/ftrace.c                      | 53 +++++++++++++++++++
+ arch/arm/probes/kprobes/core.c                | 32 +++++++++++
+ 7 files changed, 106 insertions(+), 19 deletions(-)
+ create mode 100644 arch/arm/probes/ftrace.c
 
->         int (*ret_handler)(struct uprobe_consumer *self,
->                                 unsigned long func,
-> -                               struct pt_regs *regs);
-> +                               struct pt_regs *regs,
-> +                               unsigned long *data);
->         bool (*filter)(struct uprobe_consumer *self,
->                                 enum uprobe_filter_ctx ctx,
->                                 struct mm_struct *mm);
->
+diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+index 02febc883588..4ecd7d53e859 100644
+--- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
++++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+@@ -8,7 +8,7 @@
+     -----------------------
+     |       alpha: | TODO |
+     |         arc: | TODO |
+-    |         arm: | TODO |
++    |         arm: |  ok  |
+     |       arm64: | TODO |
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 9f09a16338e3..036381c5d42f 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -114,6 +114,7 @@ config ARM
+ 	select HAVE_KERNEL_LZO
+ 	select HAVE_KERNEL_XZ
+ 	select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
++	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
+ 	select HAVE_KRETPROBES if HAVE_KPROBES
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+index 5be3ddc96a50..ecf5590f3657 100644
+--- a/arch/arm/include/asm/ftrace.h
++++ b/arch/arm/include/asm/ftrace.h
+@@ -22,6 +22,23 @@ struct dyn_arch_ftrace {
+ #endif
+ };
+ 
++/*
++ * The compiler emitted profiling hook consists of
++ *
++ *   PUSH    {LR}
++ *   BL	     __gnu_mcount_nc
++ *
++ * To turn this combined sequence into a NOP, we need to restore the value of
++ * SP before the PUSH. Let's use an ADD rather than a POP into LR, as LR is not
++ * modified anyway, and reloading LR from memory is highly likely to be less
++ * efficient.
++ */
++#ifdef CONFIG_THUMB2_KERNEL
++#define	FTRACE_NOP		0xf10d0d04	/* add.w sp, sp, #4 */
++#else
++#define	FTRACE_NOP		0xe28dd004	/* add   sp, sp, #4 */
++#endif
++
+ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+ {
+ 	/* With Thumb-2, the recorded addresses have the lsb set */
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index e61591f33a6c..0bb372f5aa1d 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -25,23 +25,6 @@
+ #include <asm/stacktrace.h>
+ #include <asm/patch.h>
+ 
+-/*
+- * The compiler emitted profiling hook consists of
+- *
+- *   PUSH    {LR}
+- *   BL	     __gnu_mcount_nc
+- *
+- * To turn this combined sequence into a NOP, we need to restore the value of
+- * SP before the PUSH. Let's use an ADD rather than a POP into LR, as LR is not
+- * modified anyway, and reloading LR from memory is highly likely to be less
+- * efficient.
+- */
+-#ifdef CONFIG_THUMB2_KERNEL
+-#define	NOP		0xf10d0d04	/* add.w sp, sp, #4 */
+-#else
+-#define	NOP		0xe28dd004	/* add   sp, sp, #4 */
+-#endif
+-
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 
+ static int __ftrace_modify_code(void *data)
+@@ -60,7 +43,7 @@ void arch_ftrace_update_code(int command)
+ 
+ static unsigned long ftrace_nop_replace(struct dyn_ftrace *rec)
+ {
+-	return NOP;
++	return FTRACE_NOP;
+ }
+ 
+ void ftrace_caller_from_init(void);
+diff --git a/arch/arm/probes/Makefile b/arch/arm/probes/Makefile
+index 8b0ea5ace100..b3c355942a21 100644
+--- a/arch/arm/probes/Makefile
++++ b/arch/arm/probes/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_UPROBES)		+= decode.o decode-arm.o uprobes/
+ obj-$(CONFIG_KPROBES)		+= decode.o kprobes/
++obj-$(CONFIG_KPROBES_ON_FTRACE)	+= ftrace.o
+ ifdef CONFIG_THUMB2_KERNEL
+ obj-$(CONFIG_KPROBES)		+= decode-thumb.o
+ else
+diff --git a/arch/arm/probes/ftrace.c b/arch/arm/probes/ftrace.c
+new file mode 100644
+index 000000000000..0f54b8e5d2a6
+--- /dev/null
++++ b/arch/arm/probes/ftrace.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/kprobes.h>
++
++/* Ftrace callback handler for kprobes -- called under preepmt disabled */
++void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
++			   struct ftrace_ops *ops, struct ftrace_regs *regs)
++{
++	struct kprobe *p;
++	struct kprobe_ctlblk *kcb;
++
++	p = get_kprobe((kprobe_opcode_t *)ip);
++	if (unlikely(!p) || kprobe_disabled(p))
++		return;
++
++	kcb = get_kprobe_ctlblk();
++	if (kprobe_running()) {
++		kprobes_inc_nmissed_count(p);
++	} else {
++		unsigned long orig_ip = instruction_pointer(&(regs->regs));
++
++		instruction_pointer_set(&(regs->regs), ip);
++
++		__this_cpu_write(current_kprobe, p);
++		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++		if (!p->pre_handler || !p->pre_handler(p, &(regs->regs))) {
++			/*
++			 * Emulate singlestep (and also recover regs->pc)
++			 * as if there is a nop
++			 */
++			instruction_pointer_set(&(regs->regs),
++						(unsigned long)p->addr + MCOUNT_INSN_SIZE);
++			if (unlikely(p->post_handler)) {
++				kcb->kprobe_status = KPROBE_HIT_SSDONE;
++				p->post_handler(p, &(regs->regs), 0);
++			}
++			instruction_pointer_set(&(regs->regs), orig_ip);
++		}
++
++		/*
++		 * If pre_handler returns !0, it changes regs->pc. We have to
++		 * skip emulating post_handler.
++		 */
++		__this_cpu_write(current_kprobe, NULL);
++	}
++}
++NOKPROBE_SYMBOL(kprobe_ftrace_handler);
++
++int arch_prepare_kprobe_ftrace(struct kprobe *p)
++{
++	p->ainsn.insn = NULL;
++	return 0;
++}
+diff --git a/arch/arm/probes/kprobes/core.c b/arch/arm/probes/kprobes/core.c
+index d8238da095df..45ccf8bea5e4 100644
+--- a/arch/arm/probes/kprobes/core.c
++++ b/arch/arm/probes/kprobes/core.c
+@@ -45,6 +45,38 @@ DEFINE_PER_CPU(struct kprobe *, current_kprobe) = NULL;
+ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+ 
+ 
++kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
++					 bool *on_func_entry)
++{
++#ifdef CONFIG_KPROBES_ON_FTRACE
++	unsigned long nop_offset = 0;
++	u32 insn = 0;
++
++	/*
++	 * Since 'addr' is not guaranteed to be safe to access, use
++	 * copy_from_kernel_nofault() to read the instruction:
++	 */
++	if (copy_from_kernel_nofault(&insn, (void *)(addr + nop_offset),
++				     sizeof(u32)))
++		return NULL;
++
++	while (insn != FTRACE_NOP) {
++		nop_offset += 4;
++		if (copy_from_kernel_nofault(&insn, (void *)(addr + nop_offset),
++					     sizeof(u32)))
++			return NULL;
++	}
++
++	*on_func_entry = offset <= nop_offset;
++	if (*on_func_entry)
++		offset = nop_offset;
++#else
++	*on_func_entry = !offset;
++#endif
++
++	return (kprobe_opcode_t *)(addr + offset);
++}
++
+ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+ {
+ 	kprobe_opcode_t insn;
+-- 
+2.34.1
 
-[...]
-
->  static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
->  {
->         struct uprobe_task *n_utask;
-> @@ -1756,11 +1795,11 @@ static int dup_utask(struct task_struct *t, struc=
-t uprobe_task *o_utask)
->
->         p =3D &n_utask->return_instances;
->         for (o =3D o_utask->return_instances; o; o =3D o->next) {
-> -               n =3D kmalloc(sizeof(struct return_instance), GFP_KERNEL)=
-;
-> +               n =3D alloc_return_instance(o->session_cnt);
->                 if (!n)
->                         return -ENOMEM;
->
-> -               *n =3D *o;
-> +               memcpy(n, o, ri_size(o->session_cnt));
->                 get_uprobe(n->uprobe);
->                 n->next =3D NULL;
->
-> @@ -1853,35 +1892,38 @@ static void cleanup_return_instances(struct uprob=
-e_task *utask, bool chained,
->         utask->return_instances =3D ri;
->  }
->
-> -static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *reg=
-s)
-> +static struct return_instance *
-> +prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
-> +                 struct return_instance *ri, int session_cnt)
-
-you have struct uprobe, why do you need to pass session_cnt? Also,
-given return_instance is cached, it seems more natural to have
-
-struct return_instance **ri as in/out parameter, and keep the function
-itself as void
-
->  {
-> -       struct return_instance *ri;
->         struct uprobe_task *utask;
->         unsigned long orig_ret_vaddr, trampoline_vaddr;
->         bool chained;
->
-
-[...]
-
->         if (need_prep && !remove)
-> -               prepare_uretprobe(uprobe, regs); /* put bp at return */
-> +               ri =3D prepare_uretprobe(uprobe, regs, ri, uprobe->sessio=
-n_cnt); /* put bp at return */
-> +       kfree(ri);
->
->         if (remove && uprobe->consumers) {
->                 WARN_ON(!uprobe_is_active(uprobe));
->                 unapply_uprobe(uprobe, current->mm);
->         }
-> + out:
->         up_read(&uprobe->register_rwsem);
->  }
->
-> +static struct session_consumer *
-> +consumer_find(struct session_consumer *sc, struct uprobe_consumer *uc)
-
-why can't we keep track of remaining number of session_consumer items
-instead of using entire extra entry as a terminating element? Seems
-wasteful and unnecessary.
-
-> +{
-> +       for (; sc && sc->id; sc++) {
-> +               if (sc->id =3D=3D uc->id)
-> +                       return sc;
-> +       }
-> +       return NULL;
-> +}
-> +
-
-[...]
