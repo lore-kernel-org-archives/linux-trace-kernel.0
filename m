@@ -1,90 +1,135 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25241CE9E2
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 09:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFFE13C9CA;
+	Tue, 18 Jun 2024 09:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718702828; cv=none; b=CrHnEqsuzSpANs+JKohmR3XSK7hCNOC6oQd0e5/1fPPa6vyHTjxgzzYA1BKUxrj4eifeHIYHmsjhPbEJ7Le3HOqeAhNXepd9Y9ARxpPhc3w1HmBw5rGRTvf2Wu/JqWLQaWfk2jiPI1Itz299sfKTOwPkZpDcBpmilNUdPh3Ik1o=
+	t=1718703069; cv=none; b=CqD91REVcIjqygnTcB0rHKlnwJgs6HNImzwkPsvf9nE0NNwXM0wfPTIk9rlW+TeH4EXw5qrKpHllHomN2nFSNYvYKMi4jRTQpnO9jlbEg0rYqjsJ5nnin8JfohC/cQgylc6mNeEBELnWEt/JsXNV29Sc/xbIjK3j8+zRyG5Ao+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718702828; c=relaxed/simple;
-	bh=HgjCqFVtKavNFxLDu8aE6OS/1nGbyLOwVqAAdquKtbU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WfauTZTpHfH/JppjSfzt/TxC0Y3jOjkA5n6pXzXLT7Niro8Tb3/iR5X/i1HJVkIo7IgGtKIwBUqAfhPxylGOuGry8Kb6PZR+14Mf4BBDNf2D+el1667ydXV14/Cx/ovu5+2oVqXyl1FuXGZPC1o9sicYjCUgm7JTx8V8Dua/kr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=huOg/vor; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718703069; c=relaxed/simple;
+	bh=g0uSCj3d+UUUWfZz4wBc8kGDKF4ITFgP+uzc7Zk6jo4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rISXf7waFZSJA+bHlFek4ni+Hfv9Enm7AZwg5zWA0cOu1SCmiCcxQpq10sSPyefb6Pgcpe8Uofu4SO3EqV3bW1POCjA9MqE6CMcWJ/SCB7LC8B2JRQu0sctvuvWdD3aXPuPN9squ5lHvS2Px2TouNNsn6GY5sjj8bP7u7w5QOCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIpt+Wmi; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="huOg/vor"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-795482e114cso441691185a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 02:27:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIpt+Wmi"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so62200911fa.1;
+        Tue, 18 Jun 2024 02:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718702826; x=1719307626; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HgjCqFVtKavNFxLDu8aE6OS/1nGbyLOwVqAAdquKtbU=;
-        b=huOg/vorR3YTqG+1X95HfNzG5wPbQpgY4knV5mwPbe1kboc6s+AHfXSs1xlxg2W83E
-         FpMEpHhkgNDyzT32O6VQ5gpZBD0aKxREqcdEAct/EZjYR5nE5UljBprPHp25Yi3tTrTW
-         vnT/WVX3E85rA0vD9A6Tg/5DWr7bNFmOaNDEOWR9gTdi8yOb0VQrLJYS5auDv2XmRRBF
-         mjxeMe9IJm6uDBNq++N8DyqTArzbcT96DzV9dYoHiU/ilp8jEauFnPd0WCr0S0k7LZBC
-         3Nt5kgY2pdkk//VimcM3MAiMIYz91h+6kqk0838u8yrJnijEAvYq3gqbAigOH40iRwXu
-         w8Zg==
+        d=gmail.com; s=20230601; t=1718703065; x=1719307865; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gd0sb+wrja9GmMiLQT0DMWUWixEF5baH+EtRGLOjO0I=;
+        b=LIpt+WmiKKBJu4qn8g4Uc6VDK+8ixmT9RVeibZKhUQIbF4jdil0q03BXF8HjxBp/Ws
+         Qw3wy9HVV2Y6m0mywjBMkLDiBoDYIgXWyOQpBHcY5/X5UcA0DKv2XxOFjdWZ6XoikQP8
+         iOd50DLVsFJd/a6tMa+JaO3A84DuoMxFTZYAfeHLwB6yjernB1RAe4c3HzqtQqz4Y1tc
+         Xsd9Vgkkl3vH4kVl/GQMjfA6nyziRXGVljh8zAQuN479Llcp9YFtbSpAVXyuORSVuwBh
+         gNgr/ZCs5N2BaSYW0dqMOtSxBTLyKaiMQiV1839VZ1uIhLNxQcL6WR3z92jUxe5y9EaF
+         C4UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718702826; x=1719307626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HgjCqFVtKavNFxLDu8aE6OS/1nGbyLOwVqAAdquKtbU=;
-        b=d2AC10nPzWsNWvmstg/j2nJhfe6tJaWpwFMjl6zoxuWWBDDJi16nxARt9lNdsZcbj/
-         BFflC6pmghA5m7K0poZyJmrh/An7udcXtwyoqAD06IgrDnzbCWAmDi7Ay3g3Z3szoMsf
-         WbNB17onasdveZK2a5SXHjoWX92scL1JxiDTq1r48SiojQL3BqywDmS+Av1U/m/FKtWw
-         cHinLyeAf5mg7kdNBi89B9cmG17olliaqF0+TpcTnf9gmPu9GwWmO4cG/sDS2jeRs/Ul
-         ti2Y8aBP9eyHZ93avmDotDCUhDORUmO3Uju3z4XNkj5rKCm7sQpAEZtaCpIoqOXnNGMH
-         SSTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB8kT7ZGemcz/sKyZ/a0pBIw3eeFIH1utgBXJT+gdnbBS0/e5aqwhRvEyoKxqUY47QXNkrRSz7OmuqstRP+EGq3zPDuf0jVwIg5oetW6tdwCdS
-X-Gm-Message-State: AOJu0YyLqGcYa5Bv5AgE6aB89RFF1c3IMb3c1vntiE9L1gGguSwu5NWd
-	f6Q3NAUawEixcrhfZ/Le2e87XQr5Dv4SJDfORXDCDMFB/29Jp0Ir/Wbbl1fd3DQlnqCXuCNRDuW
-	/8YxVemCNVi7cz7WN0xPeeFzhLIoM3qFeQEs6
-X-Google-Smtp-Source: AGHT+IE/yIrzcpOv3eiTPoXN3cwGJ3TQnnFMvA5d279z/tiAN3Xspn0UhsEikZvmg+vlTu/xFiTY3m/3H4pxUpWqwP4=
-X-Received: by 2002:a05:6214:1249:b0:6b2:cf8b:21db with SMTP id
- 6a1803df08f44-6b2cf8b2252mr79472176d6.53.1718702825469; Tue, 18 Jun 2024
- 02:27:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718703065; x=1719307865;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gd0sb+wrja9GmMiLQT0DMWUWixEF5baH+EtRGLOjO0I=;
+        b=CT61gQHjC8l993yT3OL2eHcEdqF8Yr+3QwzjhLz2z7zhp8rdzM4CLjJuA+71m9ZFHv
+         WQZH3A9gNiU4IvOi2YSA7QAqCwt+i1PcUUavHTyKyCURtfWrVKxqbGnDwZh7jeoDvnRP
+         E2Ns4f5ktCH2TvU4nGBuHB216zW0CGGg5F0j6kLBzSnjrNeeemqr7U+tI5iorAmXaV79
+         tEOpWRPemCkhbvDVxYmtWrk2OgZrqT7yvyqHcnlOHxqVnidMSue53CpBlym5LkVykbQN
+         1ap0nG6ELzUZvIFlN405A+ehJ3f2w+tKRO8XQHtk8nLi/vH7pyiKZjuw4tJnz2l60TVS
+         F+ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWGvIrOHutgLbQxdPAX4h9vAoou0ebHDKKoFbGQUVpRMuqq9UWM104AmSA6vyKRSe4bO0yuBzMm+Fe8xGAxnWQQgrK7PnilcbPpn9tJUAIPl4+CgS5NoHYPd2Is/PfpFrKLMZiWR46l1ioPkEpQlkqCyvpCyV7ZU78sCAkGky5hcwZRgWHwjwq1b9tRaNVSSIFgmMjVqoIMBk+80/Di5Yn8X4WkY6p5v+nLsp2/OvhSvHJBjCt38+p0ettlME3QGRj90sBitCrfCFMwFCxzJQgZzx/LosYTjKxLlP5H1ScjjaFDFCVJwMypPIXrxdBHfnrgh+ESc7gda9UnWx/QVrht62e9ZhRX9uXq38s2/CdknOloLFzjfR8nUVpF8uKkv4vu8VlIB5EkS5A6K9kRAIP+vb0St8ZEMjf82zUMLFaNI+nAgY0REDEdPMff/g==
+X-Gm-Message-State: AOJu0Yyx8se2x2e7S9Z9AtRF44QC1WMpEDQ3+PIIn/qJnNACJbGNS7N5
+	ZIqOz2uVvcX8zYV9Qg7NC3ji4wJVwZYKWsxmUxo8bkgpt7J57Kh+
+X-Google-Smtp-Source: AGHT+IEirA7ZfcWMvk+A5QKOFGiN5irQ5RBB6sZAAJ03RtbeHM09p7vDGOoZf2DqBzAK5fdSSuz/pQ==
+X-Received: by 2002:a19:9141:0:b0:52c:81d5:cf96 with SMTP id 2adb3069b0e04-52ca6e659demr6468892e87.28.1718703065080;
+        Tue, 18 Jun 2024 02:31:05 -0700 (PDT)
+Received: from pc636 (host-90-233-216-238.mobileonline.telia.com. [90.233.216.238])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2825b38sm1445362e87.24.2024.06.18.02.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 02:31:04 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 18 Jun 2024 11:31:00 +0200
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Uladzislau Rezki <urezki@gmail.com>, paulmck@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <ZnFT1Czb8oRb0SE7@pc636>
+References: <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <Zmov7ZaL-54T9GiM@zx2c4.com>
+ <Zmo9-YGraiCj5-MI@zx2c4.com>
+ <08ee7eb2-8d08-4f1f-9c46-495a544b8c0e@paulmck-laptop>
+ <Zmrkkel0Fo4_g75a@zx2c4.com>
+ <e926e3c6-05ce-4ba6-9e2e-e5f3b37bcc23@suse.cz>
+ <3b6fe525-626c-41fb-8625-3925ca820d8e@paulmck-laptop>
+ <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
+ <ZnCDgdg1EH6V7w5d@pc636>
+ <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-27-iii@linux.ibm.com>
-In-Reply-To: <20240613153924.961511-27-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 18 Jun 2024 11:26:29 +0200
-Message-ID: <CAG_fn=VVGwxBUH=3HrVHhNs6AQFMqFgw7JDLqUFBTv13FOd5cQ@mail.gmail.com>
-Subject: Re: [PATCH v4 26/35] s390/diag: Unpoison diag224() output buffer
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
 
-On Thu, Jun 13, 2024 at 5:40=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> Diagnose 224 stores 4k bytes, which currently cannot be deduced from
-> the inline assembly constraints. This leads to KMSAN false positives.
->
-> Fix the constraints by using a 4k-sized struct instead of a raw
-> pointer. While at it, prettify them too.
->
-> Suggested-by: Heiko Carstens <hca@linux.ibm.com>
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+> On 6/17/24 8:42 PM, Uladzislau Rezki wrote:
+> >> +
+> >> +	s = container_of(work, struct kmem_cache, async_destroy_work);
+> >> +
+> >> +	// XXX use the real kmem_cache_free_barrier() or similar thing here
+> > It implies that we need to introduce kfree_rcu_barrier(), a new API, which i
+> > wanted to avoid initially.
+> 
+> I wanted to avoid new API or flags for kfree_rcu() users and this would
+> be achieved. The barrier is used internally so I don't consider that an
+> API to avoid. How difficult is the implementation is another question,
+> depending on how the current batching works. Once (if) we have sheaves
+> proven to work and move kfree_rcu() fully into SLUB, the barrier might
+> also look different and hopefully easier. So maybe it's not worth to
+> invest too much into that barrier and just go for the potentially
+> longer, but easier to implement?
+> 
+Right. I agree here. If the cache is not empty, OK, we just defer the
+work, even we can use a big 21 seconds delay, after that we just "warn"
+if it is still not empty and leave it as it is, i.e. emit a warning and
+we are done.
+
+Destroying the cache is not something that must happen right away. 
+
+> > Since you do it asynchronous can we just repeat
+> > and wait until it a cache is furry freed?
+> 
+> The problem is we want to detect the cases when it's not fully freed
+> because there was an actual read. So at some point we'd need to stop the
+> repeats because we know there can no longer be any kfree_rcu()'s in
+> flight since the kmem_cache_destroy() was called.
+> 
+Agree. As noted above, we can go with 21 seconds(as an example) interval
+and just perform destroy(without repeating).
+
+--
+Uladzislau Rezki
