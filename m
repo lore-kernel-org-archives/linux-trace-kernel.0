@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1273FC0E;
-	Tue, 18 Jun 2024 06:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D95761FCD;
+	Tue, 18 Jun 2024 06:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718691702; cv=none; b=Zt1Jh9020ZQksktpaRwzSogmovUkhp962iCCcqKHT1K2/l7ZVebbi5P6B7LaaWZxLSzcdJ2vRv+puqfMDA1eXnTkCN5liAnOn0stZH3TUgkyNrRDWtvEZTu1UX+obu1UVIB05KgsEanhy74QdZ+w2za5XtLIowm1dQdbeylkTXI=
+	t=1718691753; cv=none; b=ASD67Ee3jy5Xek40ljzwki1f5d5OnRM6XTHcEYnFpFtg0Mu3SbSjSO6r/ee9PMWsiJO0TocEQym5igmZvFdtkQAu0hSjwHebMAIg8KTUKRbH/ZljyklJxCcLo9bVCeM+sEV+VKDpsw6rCTQiK7FI1SvDc98C6JPmioBFfttcBFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718691702; c=relaxed/simple;
-	bh=N5xX8FWgiQuVKn4hXY2q65aXLG46YOAIRaccl2TMTRo=;
+	s=arc-20240116; t=1718691753; c=relaxed/simple;
+	bh=pDX//bLAcHAg6HmQwDE7e1+KuMUVWxAU5Qjmk/rLAd8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iot7/vlt36pxw4zUuZjJdUXIEm730gHxa16p9ga4xklkgpFg0xuRcOIc48zFeeWQvkB4w0Y0xBr34BODxCxcpcMxeEPggHybyMGLSOXs3WKfhbSMR2Qtn9TQwEkDYSnv7jgkoWMReuquIwL213/826/PlaivBq5Kn1l1Atm/geI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBBV/Sgf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bmtxhcKtpFCeXzcbM+AfY0x3gI+91lRo+GHK9Syl/rmTw/fIpouQgcpD7Yi4oJYu7qdHga3QsJoC2vO1cMNDwfYRbn099XesSJeq7ELm5Fidv5us3NuRklRRcfvGLDIwys5OgZbHUXrv3QT8SflZDopi/PD5nX3NwrdDRyAbsk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShTFK2ky; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBBV/Sgf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B9AC3277B;
-	Tue, 18 Jun 2024 06:21:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShTFK2ky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83627C3277B;
+	Tue, 18 Jun 2024 06:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718691702;
-	bh=N5xX8FWgiQuVKn4hXY2q65aXLG46YOAIRaccl2TMTRo=;
+	s=k20201202; t=1718691753;
+	bh=pDX//bLAcHAg6HmQwDE7e1+KuMUVWxAU5Qjmk/rLAd8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JBBV/Sgf5T3q3av88XVG4MmH3+KX9AKTxpBZqCdg7PRRvn7qaGGE6F6CawAKwBkLz
-	 i1+lAUKRucccjWI3HHoy3XFVekBF2ikvG4AWQbRMOxpixyPFDccPF7kaE3lTc0hFck
-	 RKAEFreGCZ4NIdggxowG7MbADkU7XXUioO4099EFFaaYuz3LwFr+mnrtBlx3JL7Es5
-	 AzWr5N6qVZA1S7nbSgKETFxvDpbFpTkGNT9QlIEM7Qwn36QigAkPnOAlojxoi6fjKg
-	 hl8x0XPd8r+GgiAjRDRx3Za9HBpp+sjKA9O1bNZeasKzPHXnI4L67U72R7k9yBKyQg
-	 L5VurwIHadtxQ==
-Message-ID: <4bf3e406-4e7b-499b-b53e-22c52f9f2029@kernel.org>
-Date: Tue, 18 Jun 2024 08:21:36 +0200
+	b=ShTFK2kyHyzgBzZFR+lwExVy3lssmtDosQdA4uekjXuhiIeyAAG0j0g3X01T3v40n
+	 468F30pLbmy7o+8OBM+HN3ggALhPX/dtn5HkpNeLAqZoTc2AF7gs/Ay+JeSa1PgLuY
+	 A/xXFphj+GGtjaRehnAlUq4BSGv296Sjr74rSL+qYEtanBsCluwx7WDxskVV1wLYFA
+	 AaegAsmG6/lJAEteBBYkZw9lSlHFVIE4hPzLlzFUuhAlEZIBDhWk73v/oYdK3BZ9og
+	 rJEHN/i74HFLEuNSAH9FiJ/v0ws/h5gUDIMJF6UKrCotVdlOBDREuu4YQ1E5Kltn7C
+	 b0GBUfJgOqFFA==
+Message-ID: <550206ce-6b8e-4733-b7c5-bf1593644400@kernel.org>
+Date: Tue, 18 Jun 2024 08:22:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 5/7] tcp: use sk_skb_reason_drop to free rx
+Subject: Re: [PATCH net-next v5 6/7] udp: use sk_skb_reason_drop to free rx
  packets
 To: Yan Zhai <yan@cloudflare.com>, netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -56,10 +56,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
  Neil Horman <nhorman@tuxdriver.com>, linux-trace-kernel@vger.kernel.org,
  Dan Carpenter <dan.carpenter@linaro.org>
 References: <cover.1718642328.git.yan@cloudflare.com>
- <f1ba64da683281a4c015095b3afd7f7153d1d034.1718642328.git.yan@cloudflare.com>
+ <0dca67a158f2a3bed1a2cee3bc3582b34af70252.1718642328.git.yan@cloudflare.com>
 Content-Language: en-US
 From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <f1ba64da683281a4c015095b3afd7f7153d1d034.1718642328.git.yan@cloudflare.com>
+In-Reply-To: <0dca67a158f2a3bed1a2cee3bc3582b34af70252.1718642328.git.yan@cloudflare.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -69,16 +69,13 @@ On 17/06/2024 20.09, Yan Zhai wrote:
 > socket to the tracepoint.
 > 
 > Reported-by: kernel test robot<lkp@intel.com>
-> Closes:https://lore.kernel.org/r/202406011539.jhwBd7DX-lkp@intel.com/
+> Closes:https://lore.kernel.org/r/202406011751.NpVN0sSk-lkp@intel.com/
 > Signed-off-by: Yan Zhai<yan@cloudflare.com>
 > ---
 > v2->v3: added missing report tags
 > ---
->   net/ipv4/syncookies.c | 2 +-
->   net/ipv4/tcp_input.c  | 2 +-
->   net/ipv4/tcp_ipv4.c   | 6 +++---
->   net/ipv6/syncookies.c | 2 +-
->   net/ipv6/tcp_ipv6.c   | 6 +++---
->   5 files changed, 9 insertions(+), 9 deletions(-)
+>   net/ipv4/udp.c | 10 +++++-----
+>   net/ipv6/udp.c | 10 +++++-----
+>   2 files changed, 10 insertions(+), 10 deletions(-)
 
 Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
