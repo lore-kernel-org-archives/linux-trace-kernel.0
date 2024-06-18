@@ -1,212 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3284582D98;
-	Tue, 18 Jun 2024 10:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CD4155395;
+	Tue, 18 Jun 2024 11:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718706093; cv=none; b=C8YDK+TtiaYZCKEwXytBb30mRw01vXg6WmI7GXVoh3Xk1SmlOA2koEMmaW7ZqhZEIuBh4UQ5XKPth++qhqb3KgVC+XLUd69W+lOvOslsutZ+DBjDoYSZROn2TtOmavBAZt98QUf4D7s0vTBdhJOMTFvaBzxBDGW6RSc7tfaJKrQ=
+	t=1718710813; cv=none; b=uQ0rJ0wKVL85mgx+TmU5WKhCxrQ3Ca07md+Ki3wfxWta6cWLOg3WoqjHWPPkL5UbK1Upf0iHeb9vC/5slQnaBYuauxtmY+POSN4m0VxlgLhRdhb+bpcHNgHJKulgtJhWgYKblk8aTK/WAZAYlUZyg5LxWg+0ZnBg598L+ExSgTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718706093; c=relaxed/simple;
-	bh=N7eOxHp2WbWwLt0YRrTk1o+SIsaJnwdVhP4S5VDFwEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YkhFrhlET482tcW+9wT3QmIZRhprjgUQz1WnsrGfyeAONJ2WSrvU7oaiPRctdJRId1u3H6SWGiT/sXoRLnFY4sW/iCWFYWtcDUFc9vPRwrmPxYdfu6m3AwCuZPPTWDGQaH4foBVoOzFdEwCuDdNSKNU/61Blh+i6b5WgkIUhxBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTxtR7Sl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718710813; c=relaxed/simple;
+	bh=3lZSziatHbH2qXjBGEliNz48M5CThCwzTut2GQxW/ww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bvcAhQ6KrYtT+/HjjdV+oKBqxgUonSMjclSzpXDJfs0pMiVmZKJiOpBQYvmhBpqmwQI2MPeeO8OIcz/W3cWJX9/xCRpc1zrEG6ohYIoCa5BRhg2KMuPIKebQAZ6T6c8fUDX5LaJPkrSFr7uM+mNYZ1YqAAFI0Q1U9Z/dIB4Drlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zd6H5iZd; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTxtR7Sl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB237C4AF55;
-	Tue, 18 Jun 2024 10:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718706092;
-	bh=N7eOxHp2WbWwLt0YRrTk1o+SIsaJnwdVhP4S5VDFwEw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kTxtR7SlN0EhVtmUeut5MWOZA05CKSkmwDRc4Zt+i7CAusx/mmy1hJKMgoK6grpjl
-	 Mu/o0Nez7NujK90Wrc6Vnnoa6Yc1WsB8XrsVK6gdsQmQsQv6KbFiENwWcD6LN/WaY+
-	 etsH2vVebwV4DeNFQ0J6CgoN4yho63aGwVG1nh/Z9sk7MjcYaSGWsGNYR50Nh9GTL4
-	 FLI+N0fHEp8UHrMMVC3fnXvqXUg0RTwUnIrCPR1Osdg9zjbDX28VXu0gijwsMle6qB
-	 K0BvaPZ1N5ch4ulPPGZ3zqNf6pn7IQRsuLUuRxTqllHuKzQIbnjnWSyZOGdEQUeTFW
-	 6e+BuWsgyLRuA==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebe3bac675so47382211fa.1;
-        Tue, 18 Jun 2024 03:21:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1l5J8m5z79nfsvOKsZMAUdfUHfvWp4ganRZFcWZQmdKV8fXiEMxjkrQRQZIv8aJUGYCIAtWF9Yt43ck3E9MjKrkMqbP6piQJHQhAVl3edaxYkpkl+9bGfVMdb7IbEkTieJbxNIb5wPOTL7MdDAWpX
-X-Gm-Message-State: AOJu0YyxznfSNd6KhEzdFSfDuiuganyKw9vX/UocaidjsTkhMh2ROspu
-	nUtHw8uNxQGkRhZgA7xblE6MyHc5l/PhN2JkQZdsgNmaioNcDPfqXYYfzxdjD64g4roNgg1wOck
-	WBKhSydFAGalGl6oU8sgKLBrVVr0=
-X-Google-Smtp-Source: AGHT+IFuvWaoKBQenRCtc9r/vp/7EgwSDRST9GJCUelo+dCGXvyD4rIWiz64mttYriWu4xBfPOTN5yaGNKYJrrOXS68=
-X-Received: by 2002:a2e:9157:0:b0:2ea:ab3b:fd89 with SMTP id
- 38308e7fff4ca-2ec3465230emr5779411fa.10.1718706090736; Tue, 18 Jun 2024
- 03:21:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd6H5iZd"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57d046f4afdso122887a12.1;
+        Tue, 18 Jun 2024 04:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718710810; x=1719315610; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wkL4gZeTFn58PzKiilUj2Jvl065qOPmkOqhQzjfXBnk=;
+        b=Zd6H5iZdbt8XYrfM2c+f7fRN7pCzYXBksdwvBb0rdNXRBxONFTQDLayIHoZ+1CEXKx
+         z5SllyqlzVGi80jVh73AHKRsH63GWMac+aeveM04pcuDmZP3mQhIq+kDiQSgqsl+PGet
+         n2lFAa/p//6cKg4gLSasMyAPxS++8j9SsE6skJXnJr+4caGKSQZK52PxFMaAgFSHyBw2
+         xxwmtUNapB+zvvO5B40i627zWXlyDuTyJ+NYd7XmRE4N0k2mCuc16vfgnmgTKWCEAw5Q
+         nqNxF+LnbjDvaUmE6l26Wc1Nv0okGS/vz197nZPs/bg5jUAu462HfoQ5ybiXZ6ERwqPd
+         u82Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718710810; x=1719315610;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wkL4gZeTFn58PzKiilUj2Jvl065qOPmkOqhQzjfXBnk=;
+        b=GBIGOqzZq2XAW3KCDfN1EmVQyLepGq+cuu03oMyOBwF62P2ge1xhW6DCCHwXAR/V6z
+         qK3NcRTvKYGKqDIBYWBR5lx+3RHk/ioWyoQMi8kU12n6OQjF+cYeAa5bEkF7kVNLgLkM
+         leIZvWTsbppJ6qxN7oscPR0OQAjouGf9zlBuErWadQrWQ7BbwiieGxBjAJkUVWtH/pnK
+         wTDAJbLWM4ZSPx52JkuQN7lfqDp+uDqs9OXomhA8z1OAJxVms54czAoJZGj/OMYQP7Xd
+         yoabcgPQykIpbg7bou3mtvhH1ukLohtoh0qtJk54nHMwy0g58wNjkUybgU3QYROu7cTW
+         j4xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgN38X9zN+uyEV7T0gxN+LeuE8FuV37KNXm+hxNG32EirvvuIINK58S9tJ6MGhDQHTeoyB8dgB+SH44W7RqRvvOeMI3b2KgDWB7+KVAvEsxNqiAqAdkn3osk6hXf1WT64Emb1jDRvlmGDNvqlkdiys2kTTpEv9nZcny5GdsiXu3DhpTozBEFTBZXR/ezLo8TOevHbDnTNAIJug4t4f3opiNBBcZ1P68bgiMAVVSOZoe63pddRSQfQuUR1xvEWVnHB4ZXBub6vQq3B7KaVR2POFLbIAceNCpvN95jFyDLfmV9KLezQhzvFueSxSgPkK5jCf/RJAb/lSoza+Np3Ve7NLEuceYu2e/OEyfMTUgmQqu5ZzMg2EOC7wtjxLecLd30jOSKyQKWBRGpEUaDk/bpGxdMUBTQKfj/HxM2i3ZfCPt5kRtSiaZYcfqsW2s9wAS9ABejpYn0QGCv67XGdS72p2RjhgwnodsyCcFtOmIFpdILL08SCCdcBX2PE9pnXKjoiFrqQThQ==
+X-Gm-Message-State: AOJu0Yyu+0jmklM2ZhBMzxVNr2twcG2AiZG115jlFy82HSOI/NAL6onb
+	luNa5JP8WtLN487yuqGa7DYBUPTaas/6TBVPyMLdm/nSfLyaZ2KX
+X-Google-Smtp-Source: AGHT+IHTXs6888aBCQaVqx3Ld2cescOW04wu9+DX8hnGCFhgSs6AKtIOVIvQW1zhvtYJcvE1BCkIfg==
+X-Received: by 2002:a50:c30b:0:b0:579:d673:4e67 with SMTP id 4fb4d7f45d1cf-57cbd6c7495mr9752771a12.26.1718710810253;
+        Tue, 18 Jun 2024 04:40:10 -0700 (PDT)
+Received: from [192.168.42.11] ([163.114.131.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72e9515sm7685752a12.41.2024.06.18.04.40.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 04:40:09 -0700 (PDT)
+Message-ID: <204af618-03f7-4f2e-bbcb-7111011f78bf@gmail.com>
+Date: Tue, 18 Jun 2024 12:40:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613155506.811013916@goodmis.org> <b0ed328f-c4e5-4e9b-ae4e-5c60703ab376@amazon.com>
- <20240613131212.7d1a7ffa@rorschach.local.home> <7c90c574-5cfa-40cf-bd4c-1188136cd886@amazon.com>
- <20240617164006.198b9ba3@rorschach.local.home> <049b2e0f-00b2-4704-8868-1569a006a134@amazon.com>
-In-Reply-To: <049b2e0f-00b2-4704-8868-1569a006a134@amazon.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 18 Jun 2024 12:21:19 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF3AetyuLh-QU8yaE-wTLcgyzwuAwe-uo_3EqSDsAYhuQ@mail.gmail.com>
-Message-ID: <CAMj1kXF3AetyuLh-QU8yaE-wTLcgyzwuAwe-uo_3EqSDsAYhuQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-To: Alexander Graf <graf@amazon.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, suleiman@google.com, 
-	Thomas Gleixner <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, 
-	Youssef Esmat <youssefesmat@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	David Howells <dhowells@redhat.com>, Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+ <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+ <ZmAgszZpSrcdHtyl@infradead.org>
+ <ee9a55cd-7541-4865-ab2a-9e860b88c9e4@gmail.com>
+ <Zmfv6_uWAVavYJNj@infradead.org>
+ <8ca3e144-75f3-4e57-9ae0-cc88f245094e@gmail.com>
+ <ZnEshp0VICflc6Bg@infradead.org>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <ZnEshp0VICflc6Bg@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 17 Jun 2024 at 23:01, Alexander Graf <graf@amazon.com> wrote:
->
-> On 17.06.24 22:40, Steven Rostedt wrote:
-> > On Mon, 17 Jun 2024 09:07:29 +0200
-> > Alexander Graf<graf@amazon.com>  wrote:
-> >
-> >> Hey Steve,
-> >>
-> >>
-> >> I believe we're talking about 2 different things :). Let me rephrase a
-> >> bit and make a concrete example.
-> >>
-> >> Imagine you have passed the "reserve_mem=12M:4096:trace" kernel command
-> >> line option. The kernel now comes up and allocates a random chunk of
-> >> memory that - by (admittedly good) chance - may be at the same physical
-> >> location as before. Let's assume it deemed 0x1000000 as a good offset.
-> > Note, it's not random. It picks from the top of available memory every
-> > time. But things can mess with it (see below).
-> >
-> >> Let's now assume you're running on a UEFI system. There, you always have
-> >> non-volatile storage available to you even in the pre-boot phase. That
-> >> means the kernel could create a UEFI variable that says "12M:4096:trace
-> >> -> 0x1000000". The pre-boot phase takes all these UEFI variables and
-> >> marks them as reserved. When you finally reach your command line parsing
-> >> logic for reserve_mem=, you can flip all reservations that were not on
-> >> the command line back to normal memory.
-> >>
-> >> That way you have pretty much guaranteed persistent memory regions, even
-> >> with KASLR changing your memory layout across boots.
-> >>
-> >> The nice thing is that the above is an extension of what you've already
-> >> built: Systems with UEFI simply get better guarantees that their regions
-> >> persist.
-> > This could be an added feature, but it is very architecture specific,
-> > and would likely need architecture specific updates.
->
->
-> It definitely would be an added feature, yes. But one that allows you to
-> ensure persistence a lot more safely :).
->
->
-> >>>>> Requirement:
-> >>>>>
-> >>>>> Need a way to reserve memory that will be at a consistent location for
-> >>>>> every boot, if the kernel and system are the same. Does not need to work
-> >>>>> if rebooting to a different kernel, or if the system can change the
-> >>>>> memory layout between boots.
-> >>>>>
-> >>>>> The reserved memory can not be an hard coded address, as the same kernel /
-> >>>>> command line needs to run on several different machines. The picked memory
-> >>>>> reservation just needs to be the same for a given machine, but may be
-> >>>> With KASLR is enabled, doesn't this approach break too often to be
-> >>>> reliable enough for the data you want to extract?
-> >>>>
-> >>>> Picking up the idea above, with a persistent variable we could even make
-> >>>> KASLR avoid that reserved pstore region in its search for a viable KASLR
-> >>>> offset.
-> >>> I think I was hit by it once in all my testing. For our use case, the
-> >>> few times it fails to map is not going to affect what we need this for
-> >>> at all.
-> >> Once is pretty good. Do you know why? Also once out of how many runs? Is
-> >> the randomness source not as random as it should be or are the number of
-> >> bits for KASLR maybe so few on your target architecture that the odds of
-> >> hitting anything become low? Do these same constraints hold true outside
-> >> of your testing environment?
-> > So I just ran it a hundred times in a loop. I added a patch to print
-> > the location of "_text". The loop was this:
-> >
-> >    for i in `seq 100`; do
-> >          ssh root@debiantesting-x86-64 "dmesg | grep -e 'text starts' -e 'mapped boot'  >> text; grub-reboot '1>0'; sleep 0.5; reboot"
-> >          sleep 25
-> >    done
-> >
-> > It searches dmesg for my added printk as well as the print of were the
-> > ring buffer was loaded in physical memory.
-> >
-> > It takes about 15 seconds to reboot, so I waited 25. The results are
-> > attached. I found that it was consistent 76 times, which means 1 out of
-> > 4 it's not. Funny enough, it broke whenever it loaded the kernel below
-> > 0x100000000. And then it would be off by a little.
-> >
-> > It was consistently at:
-> >
-> >    0x27d000000
-> >
-> > And when it failed, it was at 0x27ce00000.
-> >
-> > Note, when I used the e820 tables to do this, I never saw a failure. My
-> > assumption is that when it is below 0x100000000, something else gets
-> > allocated causing this to get pushed down.
->
->
-> Thinking about it again: What if you run the allocation super early (see
-> arch/x86/boot/compressed/kaslr.c:handle_mem_options())?
+On 6/18/24 07:43, Christoph Hellwig wrote:
+> On Mon, Jun 17, 2024 at 07:04:43PM +0100, Pavel Begunkov wrote:
+>>> There should be no other memory source other than the page allocator
+>>> and dmabuf.  If you need different life time control for your
+>>> zero copy proposal don't mix that up with the contol of the memory
+>>> source.
+>>
+>> No idea how I'm mixing it up when I was explaining exactly this
+>> all along as well as that the callback (and presumably the call
+>> site in general) you was so eager to nack is used exactly to
+>> implement the life time control.
+> 
+> And that's exactly my point.  You want to use one callback to mix
+> allocation source and life time control.  
 
-That code is not used by EFI boot anymore.
+No, it only takes the role of life time control and doesn't
+care about the source. The allocation source step with
+corresponding initialisation happens separately and
+priorly, at initialisation time.
 
-In general, I would recommend (and have recommended) against these
-kinds of hacks in mainline, because -especially on x86- there is
-always someone that turns up with some kind of convoluted use case
-that gets broken if we try to change anything in the boot code.
-
-I spent considerable time over the past year making the EFI/x86 boot
-code compatible with the new MS imposed requirements on PC boot
-firmware (related to secure boot and NX restrictions on memory
-mappings). This involved some radical refactoring of the boot
-sequence, including the KASLR logic. Adding fragile code there that
-will result in regressions observable to end users when it gets broken
-is really not what I'd like to see.
-
-So I would personally prefer for this code not to go in at all. But if
-it does go in (and Steven has already agreed to this), it needs a
-giant disclaimer that it is best effort and may get broken
-inadvertently by changes that may seem unrelated.
-
-> If you stick to
-> allocating only from top, you're effectively kernel version independent
-> for your allocations because none of the kernel code ran yet and
-> definitely KASLR independent because you're running deterministically
-> before KASLR even gets allocated.
->
-
-Allocating top down under EFI is almost guaranteed to result in
-problems, because that is how the EFI page allocator works as well.
-This means that allocations will move around depending on, e.g.,
-whether some USB stick was inserted on the first boot and removed on
-the second, or whether your external display was on or off.
-
-> > As this code relies on memblock_phys_alloc() being consistent, if
-> > something gets allocated before it differently depending on where the
-> > kernel is, it can also move the location. A plugin to UEFI would mean
-> > that it would need to reserve the memory, and the code here will need
-> > to know where it is. We could always make the function reserve_mem()
-> > global and weak so that architectures can override it.
->
->
-> Yes, the in-kernel UEFI loader (efi-stub) could simply populate a new
-> type of memblock with the respective reservations and you later call
-> memblock_find_in_range_node() instead of memblock_phys_alloc() to pass
-> in flags that you want to allocate only from the new
-> MEMBLOCK_RESERVE_MEM type.
-
-This would require the introduction of a new kind of memory map for
-the handover between EFI stub and core kernel. Currently, x86 relies
-on E820 and other architectures pass the EFI memory map unmodified.
+> That's the perfect recipe
+> to create an un-extensible un-composable mess
+-- 
+Pavel Begunkov
