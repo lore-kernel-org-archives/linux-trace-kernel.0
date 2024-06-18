@@ -1,95 +1,73 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7770B1514DD
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 14:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B0B768E1;
+	Tue, 18 Jun 2024 14:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718721550; cv=none; b=QlarMmA/DUTHRCB1XX3uX1rhrxXumDF01ANZyD2Mhr3oVybzrw2b861kX7LQRk5BIsrnyN3uWafC4mXwa+AoCOKP8kPku6SHatBIdgSGIv/x/DX6XOqeDHm1a4MVEhxu71eeCOqUwyPrbOD0lchW/WGTCeSK5PJwvrUhuLVP9QU=
+	t=1718722361; cv=none; b=VQ5GUdNHJQ6c0YOkTvGi7cLY8SHuEzgqc8yviLpnSR++/d8JIUCLBLoXvL3/e5EEgbvvHpb4CwIcQ//Gkqu4/NlCjesoJ4tUQrWYYYySeXto3fQlMrBO4wKihho0ZkKVIqYmFOHdJxUW7WhHIPg5xjUMuZ0/9n1uQLhcoUwv20g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718721550; c=relaxed/simple;
-	bh=dBK+Ndw0Vot1wf/eS0eqhW75oHUr4im8qRpkAfEJRNo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sx9TE9NJCCUg2IUGfPLAGjJBmBwQd+jyD61RArczc1aP/guSXhPMsyWG/TAqRahnek/H4GOcnvk97rqAXKc2FpXg5ksvlsY/4s2sWHso2X6He693Dnck+LJPCq7g/0iiF6fofRohzkfufR5GsLQ1SlyHO933ArPW2DtJbefFcXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YjLEw97L; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YjLEw97L"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6fa0edb64bdso2984025a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 07:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718721548; x=1719326348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dBK+Ndw0Vot1wf/eS0eqhW75oHUr4im8qRpkAfEJRNo=;
-        b=YjLEw97LcDvrYFVevvaMmoIBRMpHrSATUHvBtdgvCWP5EJ8d9tCMM0iH+dxskBFebH
-         OGuNMF/mCr/iI2AEO+QmNGi3Zq10CJ2RNCG1nZUohstMfZuTq6mLxNK0wveBOKMiCcXZ
-         VXzkVtPS28uXylXJI4GWSrVXtzxGG/pxP9h6sA9ySwcqEBXkQfsNBdk76x4y18s3BVPS
-         UktNu9Mt+4W4PsfN2nFsaunMdYXGvC/b43JEHg1bhaErNfc+zReY6OcgxOPIk9TvBdYB
-         e1MJXER3Yhz1ka0wYxMwD4SzILpq8wKl5u5S0nB1bP4Er6G4kkQVGo1vNfvUIBT/DOcx
-         IA+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718721548; x=1719326348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dBK+Ndw0Vot1wf/eS0eqhW75oHUr4im8qRpkAfEJRNo=;
-        b=b4zxRKL2zXvg+0UKpP/Jb6vnpI416C5r6djMElWToBPKrc1mJh6uh63aU0CYUYD5Wi
-         vlmfgpAsuBNNX1iD8hwDmRuhBLI4NnEKa1Msb7C40OkMdgR/6xEeWv3eMkiHXsme6lZc
-         kVDv5eK7Z2jwFEmo0hX5S8erC0UQpLmLihs3bnEAog5OVG+Ii22hB3oV5UGk//J83zSu
-         R/0kewhfBAjUUZ3vnwmDEPLabOpkcYCyN7WEDlmOvUlrL4EVKmS1+WNV+0osX/Kc9O0e
-         d2qY9Avk2shZJzxlz0bWMsjjPJeYTpMfdJ1JUcgzcvzRCqb1lOIsjP5nWCfT2sTYGUgj
-         sNOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXCRDilrIurzvqJKmgR+K0WUCEtBNLlSAamzTbRZORXUuFid9+i8/1NYq+oTrcIcpsCujA4oofmn7+l0Wz3FmdhCw3+LJMOvpGgYk+DNgF8Ane
-X-Gm-Message-State: AOJu0YyTNuw7ExLUnM7Opl6a0bXla+bsvHJZgysiHUC7xkXrDwWuOwzJ
-	wkjGDVaGYElblBlIKTEMSwkVbHaJa/Aly7tiSaS5HQCI6rylnyhVAO0wd+iLGf56nslfzNQ5ESP
-	gtNb/xzXhBNYHWCGIMqZzE0Set1oMx4ZqdsUz
-X-Google-Smtp-Source: AGHT+IHvmtXD/5jdcU/F3gCaBUEdfvS5SdhkcxvX24T00XkUY5xtucdhFcs/3zm/3mx3Jnt7TCz3MWavkll+mwgIPtY=
-X-Received: by 2002:a05:6830:1d8f:b0:6f9:6e0d:dfaf with SMTP id
- 46e09a7af769-6fb93b08befmr13854300a34.26.1718721548293; Tue, 18 Jun 2024
- 07:39:08 -0700 (PDT)
+	s=arc-20240116; t=1718722361; c=relaxed/simple;
+	bh=TguY3CMuPmfVcYMtx2cC7kMtEqG6rcQyTG5JioFScNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YoN54gXO8UQMKF11NrWLX4w1L3sTRJQPw7/8m5HgKCQt0MC54rDkD2nB1Uur5xy5ULMdGGGzf4AQX67hBc6B9S5ORU3FFLrykA14k+GMAPcldmunNDmG5l5qB5lD2aXV1j53wUJUkgSMsrDXolytI0wHV7lRSZW3Ccn8WLtc0GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9345FC3277B;
+	Tue, 18 Jun 2024 14:52:40 +0000 (UTC)
+Date: Tue, 18 Jun 2024 10:52:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
+ Shutdown/Reboot
+Message-ID: <20240618105239.1feda53a@rorschach.local.home>
+In-Reply-To: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
+References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
+	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
+	<20240527183139.42b6123c@rorschach.local.home>
+	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
+	<20240528144743.149e351b@rorschach.local.home>
+	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
+	<20240529144757.79d09eeb@rorschach.local.home>
+	<20240529154824.2db8133a@rorschach.local.home>
+	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
+	<20240530095953.0020dff9@rorschach.local.home>
+	<CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
+	<ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
+	<20240612115612.2e5f4b34@rorschach.local.home>
+	<CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-17-iii@linux.ibm.com>
-In-Reply-To: <20240613153924.961511-17-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 18 Jun 2024 16:38:31 +0200
-Message-ID: <CAG_fn=Uyx7ijj-igC2hgSpdzmChM0FVy46HTRXyKzNAA0OFK7A@mail.gmail.com>
-Subject: Re: [PATCH v4 16/35] mm: slub: Unpoison the memchr_inv() return value
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> Even though the KMSAN warnings generated by memchr_inv() are suppressed
-> by metadata_access_enable(), its return value may still be poisoned.
->
-> The reason is that the last iteration of memchr_inv() returns
-> `*start !=3D value ? start : NULL`, where *start is poisoned. Because of
-> this, somewhat counterintuitively, the shadow value computed by
-> visitSelectInst() is equal to `(uintptr_t)start`.
->
-> The intention behind guarding memchr_inv() behind
-> metadata_access_enable() is to touch poisoned metadata without
-> triggering KMSAN, so unpoison its return value.
+On Thu, 13 Jun 2024 10:32:24 +0300
+Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
 
-What do you think about applying __no_kmsan_checks to these functions inste=
-ad?
+> ok, so if you don't have any idea where this bug is after those debug
+> patches, I'll try to find some time to bisect it as a last resort.
+> Stay tuned.
+
+FYI,
+
+I just debugged a strange crash that was caused by my config having
+something leftover from your config. Specifically, that was:
+
+CONFIG_FORCE_NR_CPUS
+
+Do you get any warning about nr cpus not matching at boot up?
+
+Regardless, can you disable that and see if you still get the same
+crash.
+
+Thanks,
+
+-- Steve
