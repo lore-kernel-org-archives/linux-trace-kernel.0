@@ -1,73 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B0B768E1;
-	Tue, 18 Jun 2024 14:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1A310A1A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718722361; cv=none; b=VQ5GUdNHJQ6c0YOkTvGi7cLY8SHuEzgqc8yviLpnSR++/d8JIUCLBLoXvL3/e5EEgbvvHpb4CwIcQ//Gkqu4/NlCjesoJ4tUQrWYYYySeXto3fQlMrBO4wKihho0ZkKVIqYmFOHdJxUW7WhHIPg5xjUMuZ0/9n1uQLhcoUwv20g=
+	t=1718723149; cv=none; b=fIHgbRqQu3Z5EO4ITkmrHGxFhenCtRTDDo9aoTx1rbkDAZehsWH7qRw/X7qqEZXuz/7qsWOguu6eJGHnabe1UMABeTxoKX1cN0LDv4Yro5mCnYg6leepUCDhlWxzAQrVipq0x9xpUF3u6mgh2gz3YRdHMxzdj9rAmIvOSAXlCTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718722361; c=relaxed/simple;
-	bh=TguY3CMuPmfVcYMtx2cC7kMtEqG6rcQyTG5JioFScNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YoN54gXO8UQMKF11NrWLX4w1L3sTRJQPw7/8m5HgKCQt0MC54rDkD2nB1Uur5xy5ULMdGGGzf4AQX67hBc6B9S5ORU3FFLrykA14k+GMAPcldmunNDmG5l5qB5lD2aXV1j53wUJUkgSMsrDXolytI0wHV7lRSZW3Ccn8WLtc0GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9345FC3277B;
-	Tue, 18 Jun 2024 14:52:40 +0000 (UTC)
-Date: Tue, 18 Jun 2024 10:52:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>
-Cc: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Linux regressions mailing list
- <regressions@lists.linux.dev>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: Bug in Kernel 6.8.x, 6.9.x Causing Trace/Panic During
- Shutdown/Reboot
-Message-ID: <20240618105239.1feda53a@rorschach.local.home>
-In-Reply-To: <CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-References: <CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com>
-	<5b79732b-087c-411f-a477-9b837566673e@leemhuis.info>
-	<20240527183139.42b6123c@rorschach.local.home>
-	<CAE4VaRHaijpV1CC9Jo_Lg4tNQb_+=LTHwygOp5Bm2z5ErVzeow@mail.gmail.com>
-	<20240528144743.149e351b@rorschach.local.home>
-	<CAE4VaRE3_MYVt+=BGs+WVCmKUiQv0VSKE2NT+JmUPKG0UF+Juw@mail.gmail.com>
-	<20240529144757.79d09eeb@rorschach.local.home>
-	<20240529154824.2db8133a@rorschach.local.home>
-	<CAE4VaRGRwsp+KuEWtsUCxjEtgv1FO+_Ey1-A9xr-o+chaUeteg@mail.gmail.com>
-	<20240530095953.0020dff9@rorschach.local.home>
-	<CAE4VaRGYoa_CAtttifVzmkdm4vW05WtoCwOrcH7=rSUVeD6n5g@mail.gmail.com>
-	<ceb24cb7-dbb0-48b0-9de2-9557f3e310b5@leemhuis.info>
-	<20240612115612.2e5f4b34@rorschach.local.home>
-	<CAE4VaRFwdxNuUWb=S+itDLZf1rOZx9px+xoLWCi+hdUaWJwj6Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718723149; c=relaxed/simple;
+	bh=kCd4OKDue09xkLeRYSUln1FvuHgENd6Jhn9M/W7Y1FM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hwC07cOZxmUNMdUlWQ6jQqDAruJMQalEeWbdLo1vHYwsK4vkt2xJx9qzrcJheFaVRn0FxkS0ppCkHZPIDjYfWHlWToi3VpqqAGNsAZA2EBvQMnL38Jl7f3xU/+5GojjNCvK3ni+/cUlQM8oxzuv7R53WiYjHhoODP/UP/qOBhrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f+QAV7et; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+QAV7et"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6adc63c2ee0so21333146d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:05:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718723147; x=1719327947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fy3M/AH6/xybCaot3WBwIJpFavAawHNjcL6fl3GGJgo=;
+        b=f+QAV7et32yU/vQfav+iZS1jQ5JCUkFtu8ptt/MVuYBp3aykDNDT0bn3GlRZYJ/2UH
+         PLi+SW1pBkeXv8i5Hii0MyEq09zntSATcl4V1Qxrpq01/t8kIZw/Lp3W0r4XBIUyh6iC
+         x7udLTaL1kNdzTOBu9H+2gWBUiTwlLL1gHq8skZiHM0znOeddzjFOUP0KP/ueUQV7Hyp
+         p0iNwU9HJdo8QTnc5cTbCKSjfgg9Er0q/2SuGYagxqDztG7Z5EAIXEb6Mc5+0smyYNuL
+         2osdMrb9F/61vgMG0HraM8v0eFZLwhMPut9wuy0Y3LtcCoI4UbTp0VmnysHo/F/6LdL6
+         aKqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718723147; x=1719327947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fy3M/AH6/xybCaot3WBwIJpFavAawHNjcL6fl3GGJgo=;
+        b=BW2DJVxqkocb68KYxmcjJ0i9B7wQligd/zosFAfdcMqYKahnoRktxJC6DrSXEc8GSJ
+         LLfwdVAjyEob1nNXpgi2OPr0U5rlgEpU+BKD/FkmTqwuWiPeue/Lr73XdVEj4w0KdnCv
+         JDAwZ8rHPJmai0NFIQQX8cUGWgqljoiKgjcObOSitcPnXdOtxmRV0i5GxO/JcZ7zLROb
+         p27RTxxgvLZUrXE52FazNopl0rw0gjUbGVitrhTyNWwE/BILgvgVby16fA0ldyjWYbBC
+         eri8eBM65AaKImVoVjK8QRFP6jA5FPYOqz1tzUdG3bEQrELgLqBo0H7+CJahWc+QmAMI
+         HAHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWL6PLxfMzFuF9IpaKs9OMXnfLVWWV2TBH8FQeIWr5EmVMHwXTrs/JBRM/OSt80bNKy3TUIC+2E7DpH+4LpYORWKe2DLEUPzTzsYM7xn0bULPS
+X-Gm-Message-State: AOJu0YxlgGbrCm9+MVrlMNsciRvBGz4POl3NsHmcxsNIHtyeBRsumcVg
+	o5SHC2gU6eDIu1xSbaIsOTnKJKN5u+GLP06kNp/C3oKW19Ac43J3p9A1DU21SNbfqgulVUdoBnh
+	0RpGOwCXrDF+J7uc+7Mq1OcVSWgQqSvkuDV6g
+X-Google-Smtp-Source: AGHT+IFa6FCBqd8D9Nj1JaNGKSLtJBvp/bRoyV+oAG2O6vNiHQ1JuiqvjZSAmr21MMQcuWOKxcWHb2lgAwdr0eNcVzw=
+X-Received: by 2002:a0c:df02:0:b0:6b5:61:53a9 with SMTP id 6a1803df08f44-6b50061578fmr5936766d6.28.1718723146610;
+ Tue, 18 Jun 2024 08:05:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240613233044.117000-1-sj@kernel.org> <5a8a3c85760c19be66965630418e09a820f79277.camel@linux.ibm.com>
+In-Reply-To: <5a8a3c85760c19be66965630418e09a820f79277.camel@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Tue, 18 Jun 2024 17:05:10 +0200
+Message-ID: <CAG_fn=VoCfRAKqesutB6eP2Qi0aG8Tyq4zqoiy0_A3MJDQAEfw@mail.gmail.com>
+Subject: Re: [PATCH v4 12/35] kmsan: Support SLAB_POISON
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: SeongJae Park <sj@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Jun 2024 10:32:24 +0300
-Ilkka Naulap=C3=A4=C3=A4 <digirigawa@gmail.com> wrote:
+On Fri, Jun 14, 2024 at 1:44=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.com=
+> wrote:
+>
+> On Thu, 2024-06-13 at 16:30 -0700, SeongJae Park wrote:
+> > Hi Ilya,
+> >
+> > On Thu, 13 Jun 2024 17:34:14 +0200 Ilya Leoshkevich
+> > <iii@linux.ibm.com> wrote:
+> >
+> > > Avoid false KMSAN negatives with SLUB_DEBUG by allowing
+> > > kmsan_slab_free() to poison the freed memory, and by preventing
+> > > init_object() from unpoisoning new allocations by using __memset().
+> > >
+> > > There are two alternatives to this approach. First, init_object()
+> > > can be marked with __no_sanitize_memory. This annotation should be
+> > > used
+> > > with great care, because it drops all instrumentation from the
+> > > function, and any shadow writes will be lost. Even though this is
+> > > not a
+> > > concern with the current init_object() implementation, this may
+> > > change
+> > > in the future.
+> > >
+> > > Second, kmsan_poison_memory() calls may be added after memset()
+> > > calls.
+> > > The downside is that init_object() is called from
+> > > free_debug_processing(), in which case poisoning will erase the
+> > > distinction between simply uninitialized memory and UAF.
+> > >
+> > > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> > > ---
+> > >  mm/kmsan/hooks.c |  2 +-
+> > >  mm/slub.c        | 13 +++++++++----
+> > >  2 files changed, 10 insertions(+), 5 deletions(-)
+> > >
+> > [...]
+> > > --- a/mm/slub.c
+> > > +++ b/mm/slub.c
+> > > @@ -1139,7 +1139,12 @@ static void init_object(struct kmem_cache
+> > > *s, void *object, u8 val)
+> > >     unsigned int poison_size =3D s->object_size;
+> > >
+> > >     if (s->flags & SLAB_RED_ZONE) {
+> > > -           memset(p - s->red_left_pad, val, s->red_left_pad);
+> > > +           /*
+> > > +            * Use __memset() here and below in order to avoid
+> > > overwriting
+> > > +            * the KMSAN shadow. Keeping the shadow makes it
+> > > possible to
+> > > +            * distinguish uninit-value from use-after-free.
+> > > +            */
+> > > +           __memset(p - s->red_left_pad, val, s-
+> > > >red_left_pad);
+> >
+> > I found my build test[1] fails with below error on latest mm-unstable
+> > branch.
+> > 'git bisect' points me this patch.
+> >
+> >       CC      mm/slub.o
+> >     /mm/slub.c: In function 'init_object':
+> >     /mm/slub.c:1147:17: error: implicit declaration of function
+> > '__memset'; did you mean 'memset'? [-Werror=3Dimplicit-function-
+> > declaration]
+> >      1147 |                 __memset(p - s->red_left_pad, val, s-
+> > >red_left_pad);
+> >           |                 ^~~~~~~~
+> >           |                 memset
+> >     cc1: some warnings being treated as errors
+> >
+> > I haven't looked in deep, but reporting first.  Do you have any idea?
+> >
+> > [1]
+> > https://github.com/awslabs/damon-tests/blob/next/corr/tests/build_m68k.=
+sh
+> >
+> >
+> > Thanks,
+> > SJ
+> >
+> > [...]
+>
+> Thanks for the report.
+>
+> Apparently not all architectures have __memset(). We should probably go
+> back to memset_no_sanitize_memory() [1], but this time mark it with
+> noinline __maybe_unused __no_sanitize_memory, like it's done in, e.g.,
+> 32/35.
+>
+> Alexander, what do you think?
 
-> ok, so if you don't have any idea where this bug is after those debug
-> patches, I'll try to find some time to bisect it as a last resort.
-> Stay tuned.
+We could probably go without __no_sanitize_memory assuming that
+platforms supporting KMSAN always have __memset():
 
-FYI,
-
-I just debugged a strange crash that was caused by my config having
-something leftover from your config. Specifically, that was:
-
-CONFIG_FORCE_NR_CPUS
-
-Do you get any warning about nr cpus not matching at boot up?
-
-Regardless, can you disable that and see if you still get the same
-crash.
-
-Thanks,
-
--- Steve
+  #if defined(CONFIG_KMSAN)
+  static inline void *memset_no_sanitize_memory(void *s, int c, size_t n)
+  {
+          return __memset(s, c, n);
+  }
+  #else
+  static inline void *memset_no_sanitize_memory(void *s, int c, size_t n)
+  {
+          return memset(s, c, n);
+  }
+  #endif
