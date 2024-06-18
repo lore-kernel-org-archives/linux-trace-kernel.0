@@ -1,70 +1,70 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1A310A1A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A85023777
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 15:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718723149; cv=none; b=fIHgbRqQu3Z5EO4ITkmrHGxFhenCtRTDDo9aoTx1rbkDAZehsWH7qRw/X7qqEZXuz/7qsWOguu6eJGHnabe1UMABeTxoKX1cN0LDv4Yro5mCnYg6leepUCDhlWxzAQrVipq0x9xpUF3u6mgh2gz3YRdHMxzdj9rAmIvOSAXlCTM=
+	t=1718724980; cv=none; b=SFulJjofrsk8IUy2ikGpx2dlR4GQnzJabhpHyNmoOZ9pcUmGW2uT7tf8JPhkHQLYBqAS/zcUh94wcSW2hKCYq0r12HorKiSHGHnYbXFfw1SCm2jnT4ighDHViNwKwP+dsPu0nN1nOwIOHQj01Xb/jbAStEOPvXMYJoQ5P1B1soM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718723149; c=relaxed/simple;
-	bh=kCd4OKDue09xkLeRYSUln1FvuHgENd6Jhn9M/W7Y1FM=;
+	s=arc-20240116; t=1718724980; c=relaxed/simple;
+	bh=5RGeJPOFaWHdjpCL2phNpFb4SArUUUeonhkd+IsWbC4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hwC07cOZxmUNMdUlWQ6jQqDAruJMQalEeWbdLo1vHYwsK4vkt2xJx9qzrcJheFaVRn0FxkS0ppCkHZPIDjYfWHlWToi3VpqqAGNsAZA2EBvQMnL38Jl7f3xU/+5GojjNCvK3ni+/cUlQM8oxzuv7R53WiYjHhoODP/UP/qOBhrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f+QAV7et; arc=none smtp.client-ip=209.85.219.53
+	 To:Cc:Content-Type; b=hP2WNc3l6C1XmBh8ZLrRqkI03+rnxbL0HL7zFmM0pVeU6/e/HvZkHdhpFiGckJzZZT0fHxUltmvtGqB9yWCANK1BmAP+A2x7Yh/A3gpsc6yx1gujEKol9oCAzOm3nnYTZAY60DBX6ftw8LrEENv/uA9Txg9d/8Y3r7CDuTyOlWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ysXS1H4f; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f+QAV7et"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6adc63c2ee0so21333146d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:05:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ysXS1H4f"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6f97a4c4588so3340480a34.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jun 2024 08:36:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718723147; x=1719327947; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718724977; x=1719329777; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fy3M/AH6/xybCaot3WBwIJpFavAawHNjcL6fl3GGJgo=;
-        b=f+QAV7et32yU/vQfav+iZS1jQ5JCUkFtu8ptt/MVuYBp3aykDNDT0bn3GlRZYJ/2UH
-         PLi+SW1pBkeXv8i5Hii0MyEq09zntSATcl4V1Qxrpq01/t8kIZw/Lp3W0r4XBIUyh6iC
-         x7udLTaL1kNdzTOBu9H+2gWBUiTwlLL1gHq8skZiHM0znOeddzjFOUP0KP/ueUQV7Hyp
-         p0iNwU9HJdo8QTnc5cTbCKSjfgg9Er0q/2SuGYagxqDztG7Z5EAIXEb6Mc5+0smyYNuL
-         2osdMrb9F/61vgMG0HraM8v0eFZLwhMPut9wuy0Y3LtcCoI4UbTp0VmnysHo/F/6LdL6
-         aKqg==
+        bh=5RGeJPOFaWHdjpCL2phNpFb4SArUUUeonhkd+IsWbC4=;
+        b=ysXS1H4fS2mPV03Y4L/m84FKCjlkHSxi4xOu32dnqb6LzOwsyaraZoWoQH+LcpDk1H
+         cFgLindy9f2RhCTqS2qdoZsnPhxjDYvAYZAuddd4mGhwuKseFVr+T63p/7jRFd9y+8Cu
+         iq0nWFCXflnt8DFMsx1/RMCPABIQxCQpdHxEGONq+sFpQwMV16Ue7TY3DTYPNXp/mhaL
+         MO9tdYbrl+a/D/gLdejAg8ugwKJEf4tbZHMNevcmsVyEtI1oi6TnGsm6KCITtEcIjsmo
+         X9j0hF2G1+SGmpdKf/cBeoxvm0rOSp5qNU5/nl/oIjxpF4+GluSqPb5OiFNDRVFGRs8d
+         BLBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718723147; x=1719327947;
+        d=1e100.net; s=20230601; t=1718724977; x=1719329777;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fy3M/AH6/xybCaot3WBwIJpFavAawHNjcL6fl3GGJgo=;
-        b=BW2DJVxqkocb68KYxmcjJ0i9B7wQligd/zosFAfdcMqYKahnoRktxJC6DrSXEc8GSJ
-         LLfwdVAjyEob1nNXpgi2OPr0U5rlgEpU+BKD/FkmTqwuWiPeue/Lr73XdVEj4w0KdnCv
-         JDAwZ8rHPJmai0NFIQQX8cUGWgqljoiKgjcObOSitcPnXdOtxmRV0i5GxO/JcZ7zLROb
-         p27RTxxgvLZUrXE52FazNopl0rw0gjUbGVitrhTyNWwE/BILgvgVby16fA0ldyjWYbBC
-         eri8eBM65AaKImVoVjK8QRFP6jA5FPYOqz1tzUdG3bEQrELgLqBo0H7+CJahWc+QmAMI
-         HAHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWL6PLxfMzFuF9IpaKs9OMXnfLVWWV2TBH8FQeIWr5EmVMHwXTrs/JBRM/OSt80bNKy3TUIC+2E7DpH+4LpYORWKe2DLEUPzTzsYM7xn0bULPS
-X-Gm-Message-State: AOJu0YxlgGbrCm9+MVrlMNsciRvBGz4POl3NsHmcxsNIHtyeBRsumcVg
-	o5SHC2gU6eDIu1xSbaIsOTnKJKN5u+GLP06kNp/C3oKW19Ac43J3p9A1DU21SNbfqgulVUdoBnh
-	0RpGOwCXrDF+J7uc+7Mq1OcVSWgQqSvkuDV6g
-X-Google-Smtp-Source: AGHT+IFa6FCBqd8D9Nj1JaNGKSLtJBvp/bRoyV+oAG2O6vNiHQ1JuiqvjZSAmr21MMQcuWOKxcWHb2lgAwdr0eNcVzw=
-X-Received: by 2002:a0c:df02:0:b0:6b5:61:53a9 with SMTP id 6a1803df08f44-6b50061578fmr5936766d6.28.1718723146610;
- Tue, 18 Jun 2024 08:05:46 -0700 (PDT)
+        bh=5RGeJPOFaWHdjpCL2phNpFb4SArUUUeonhkd+IsWbC4=;
+        b=nygIAl0DlZZIek8pbLpxfbcGmLeTLsauxU5RYA27dqL3lBDT9t5TPv4HjY8V07cY5m
+         +MQLyPfqpMoSN4uDC2eJFlzsjF4OnYnO74bJWdH4DTTDOJ5fb30TqINc8mCd8m8TfyKx
+         zv65q6UToNR+8xiDEoNc61hdi04TXCJJSd2LFY0kK1EWZLBGiqWzXX0r8pVeQtBZU+oA
+         p2B8AqvgJopbbTO1nnIF8TrtJuQlo7eOo+vPxdhr2y04pVjk1cmA+XknPVbQO7MHCVZj
+         Rdp7ZrIC3RsP7ndo7s5LN+bJVC8jU/tz5+yWi+NWGWcaaEbe43mhePZbLmecB3UbGPhU
+         LSig==
+X-Forwarded-Encrypted: i=1; AJvYcCWki2fcSUjPzf6Ra3BVE3J4s7aKuvnrZVOaJa6vuUKsIq+vdBDauyRJViNQLw7ka4+TCSeETjkTB12Ah7AX9uIXyeUcpPBEcqHxU76enbBxseU/
+X-Gm-Message-State: AOJu0YxIWzTDGQFeJnbHW1R9mc+Od4ejZmM0bBGXko+y/nzI0kWrrPAS
+	jqxT0uQOXtIb6E69khpl1XNYKoTjzOpri5utbNt+NrU2/+GVX7M/9a6YvX97jVP6jLLnl6OJCMk
+	u7KBjYNBBEFfF5iFrbh3wfJUOd/jVCJay6YpA
+X-Google-Smtp-Source: AGHT+IEspShaRu1ToIazyKYK7a+yojtYmsB71BOjBBtI4HtP9AWTraCEUo7NTIwtb9GkxSM1Qq0A95f/tFWqAqFyrLk=
+X-Received: by 2002:a9d:6510:0:b0:6fd:6240:9dba with SMTP id
+ 46e09a7af769-70074ebf134mr77156a34.16.1718724976930; Tue, 18 Jun 2024
+ 08:36:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613233044.117000-1-sj@kernel.org> <5a8a3c85760c19be66965630418e09a820f79277.camel@linux.ibm.com>
-In-Reply-To: <5a8a3c85760c19be66965630418e09a820f79277.camel@linux.ibm.com>
+References: <20240613153924.961511-1-iii@linux.ibm.com> <20240613153924.961511-10-iii@linux.ibm.com>
+In-Reply-To: <20240613153924.961511-10-iii@linux.ibm.com>
 From: Alexander Potapenko <glider@google.com>
-Date: Tue, 18 Jun 2024 17:05:10 +0200
-Message-ID: <CAG_fn=VoCfRAKqesutB6eP2Qi0aG8Tyq4zqoiy0_A3MJDQAEfw@mail.gmail.com>
-Subject: Re: [PATCH v4 12/35] kmsan: Support SLAB_POISON
+Date: Tue, 18 Jun 2024 17:35:36 +0200
+Message-ID: <CAG_fn=VT5u6fn6eaqzdB4bDZ+aw0kKBta7_Ff2Thn813RG6EVQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/35] kmsan: Expose kmsan_get_metadata()
 To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: SeongJae Park <sj@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
 	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
 	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
@@ -76,107 +76,19 @@ Cc: SeongJae Park <sj@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 14, 2024 at 1:44=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.com=
+On Thu, Jun 13, 2024 at 5:39=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
 > wrote:
 >
-> On Thu, 2024-06-13 at 16:30 -0700, SeongJae Park wrote:
-> > Hi Ilya,
-> >
-> > On Thu, 13 Jun 2024 17:34:14 +0200 Ilya Leoshkevich
-> > <iii@linux.ibm.com> wrote:
-> >
-> > > Avoid false KMSAN negatives with SLUB_DEBUG by allowing
-> > > kmsan_slab_free() to poison the freed memory, and by preventing
-> > > init_object() from unpoisoning new allocations by using __memset().
-> > >
-> > > There are two alternatives to this approach. First, init_object()
-> > > can be marked with __no_sanitize_memory. This annotation should be
-> > > used
-> > > with great care, because it drops all instrumentation from the
-> > > function, and any shadow writes will be lost. Even though this is
-> > > not a
-> > > concern with the current init_object() implementation, this may
-> > > change
-> > > in the future.
-> > >
-> > > Second, kmsan_poison_memory() calls may be added after memset()
-> > > calls.
-> > > The downside is that init_object() is called from
-> > > free_debug_processing(), in which case poisoning will erase the
-> > > distinction between simply uninitialized memory and UAF.
-> > >
-> > > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> > > ---
-> > >  mm/kmsan/hooks.c |  2 +-
-> > >  mm/slub.c        | 13 +++++++++----
-> > >  2 files changed, 10 insertions(+), 5 deletions(-)
-> > >
-> > [...]
-> > > --- a/mm/slub.c
-> > > +++ b/mm/slub.c
-> > > @@ -1139,7 +1139,12 @@ static void init_object(struct kmem_cache
-> > > *s, void *object, u8 val)
-> > >     unsigned int poison_size =3D s->object_size;
-> > >
-> > >     if (s->flags & SLAB_RED_ZONE) {
-> > > -           memset(p - s->red_left_pad, val, s->red_left_pad);
-> > > +           /*
-> > > +            * Use __memset() here and below in order to avoid
-> > > overwriting
-> > > +            * the KMSAN shadow. Keeping the shadow makes it
-> > > possible to
-> > > +            * distinguish uninit-value from use-after-free.
-> > > +            */
-> > > +           __memset(p - s->red_left_pad, val, s-
-> > > >red_left_pad);
-> >
-> > I found my build test[1] fails with below error on latest mm-unstable
-> > branch.
-> > 'git bisect' points me this patch.
-> >
-> >       CC      mm/slub.o
-> >     /mm/slub.c: In function 'init_object':
-> >     /mm/slub.c:1147:17: error: implicit declaration of function
-> > '__memset'; did you mean 'memset'? [-Werror=3Dimplicit-function-
-> > declaration]
-> >      1147 |                 __memset(p - s->red_left_pad, val, s-
-> > >red_left_pad);
-> >           |                 ^~~~~~~~
-> >           |                 memset
-> >     cc1: some warnings being treated as errors
-> >
-> > I haven't looked in deep, but reporting first.  Do you have any idea?
-> >
-> > [1]
-> > https://github.com/awslabs/damon-tests/blob/next/corr/tests/build_m68k.=
-sh
-> >
-> >
-> > Thanks,
-> > SJ
-> >
-> > [...]
+> Each s390 CPU has lowcore pages associated with it. Each CPU sees its
+> own lowcore at virtual address 0 through a hardware mechanism called
+> prefixing. Additionally, all lowcores are mapped to non-0 virtual
+> addresses stored in the lowcore_ptr[] array.
 >
-> Thanks for the report.
+> When lowcore is accessed through virtual address 0, one needs to
+> resolve metadata for lowcore_ptr[raw_smp_processor_id()].
 >
-> Apparently not all architectures have __memset(). We should probably go
-> back to memset_no_sanitize_memory() [1], but this time mark it with
-> noinline __maybe_unused __no_sanitize_memory, like it's done in, e.g.,
-> 32/35.
+> Expose kmsan_get_metadata() to make it possible to do this from the
+> arch code.
 >
-> Alexander, what do you think?
-
-We could probably go without __no_sanitize_memory assuming that
-platforms supporting KMSAN always have __memset():
-
-  #if defined(CONFIG_KMSAN)
-  static inline void *memset_no_sanitize_memory(void *s, int c, size_t n)
-  {
-          return __memset(s, c, n);
-  }
-  #else
-  static inline void *memset_no_sanitize_memory(void *s, int c, size_t n)
-  {
-          return memset(s, c, n);
-  }
-  #endif
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
