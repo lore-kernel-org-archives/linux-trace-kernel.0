@@ -1,143 +1,212 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6259215F3F0;
-	Wed, 19 Jun 2024 15:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929CB2262B;
+	Wed, 19 Jun 2024 16:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811981; cv=none; b=TmYhFDJ72/zlhnp5yiUTAIHMRR6vwpHRA1yex+SVuIuTJYTTvVTZaa2q+u/sdQoNOLn9meca5di2PzBL1fNttKvKHH7jg7xmE11fK4z+nV84gveTxOiUJkQFbg9kJgZrFZCN5k4LjCXukrMYX2l5iLb8mt0QN190AqPjACopHpA=
+	t=1718815596; cv=none; b=a1/Cb2UNdUvQC4Pmw0B4YWM9yyv2/OFUUJJKpOoTBjFWJ57gMu9K9OGJiVbkOmSPaaJUFlpMJ9i64A9D4YYjDgBewIiDdJHCJMCkrn9vvmb+/lpG3oC6c5wPM2JHUUE45PAZ6C0gl9L4p/p2xYrl/bHJzD8dVes0STdQxzr5RFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811981; c=relaxed/simple;
-	bh=rxVyQ6lZU702PwA+PUfiD2YlhwM/n97a6/s5p7/Epck=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NwDv+veU/pBSaq6lziP/fR0PNA6PGeOVlLu84HtWXFz+eJ2P0IRWA3+VQH7jB0PyoLNVhFe0zfiQz9fQEX2RNkjlW/e0Jshwf9hvWkAuhqnGgYdTxFooSuRzB6sAiXz/6BaLpu5Dv7MZFIGgsbHr3wMkW0q+OS9NmKf+8jkzIHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DdY7fdaK; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1718815596; c=relaxed/simple;
+	bh=EYkeKSbtNt6ckvuCFzfSCizaZJeveGlRlQZbS2iiRBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3XEZcnslU7UfPPApSN7e6PKOnz60D7GtxSNPqeHcmMw9e4M9XycHHGL+FbgKx1kwoe0FEYuAsHE+VIjEwK7wgK7ayQe0GikRDTCeErD7H82n1lD254DRgsj0pIaKTvb886yrYxuQdoHM9nme1R1VDmySejtYurB7T3gqoK37wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6v5z/sd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DdY7fdaK"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45JFSdmn014351;
-	Wed, 19 Jun 2024 15:45:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=aLe/3XBqno9Yk
-	h6K8Gazkn5dKq5eSwzJESHfR5NZsd4=; b=DdY7fdaKNdwJqdDfmDqHhthc1ZLbz
-	k3r/VZ6nxUdAm7/zSJ1pIm5AWYYsAta5Z6VDxHYgg67YkRVLsSpmdSPWyWsx7+uG
-	iQB/XSLjQS9S5uOUSV9sOCvhfg5bIrg7+icjckKJSq2gnhvYd5nkFjmOBdMN6Pk3
-	HToM/mTScvoDECuiPhzEfMkdGSaQTVSg3OXoa++r8SVge8HwjTribgGGLfeVqrsD
-	wgc1LLwy/AYXW4Xtehiu91RRGzEwj1/JG+OZ6qDwP+eSbpzfZsAIhACXZMrqB7pw
-	jf8ePFvbuJnxAcU6sGTOoPihnNUrOu9zykvcH1JjOO3XN4wx2zdpJETTw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yv20gg1gr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 15:45:52 +0000 (GMT)
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45JFgsTe002902;
-	Wed, 19 Jun 2024 15:45:51 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yv20gg1gm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 15:45:51 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45JFPGhi006210;
-	Wed, 19 Jun 2024 15:45:50 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysn9ux8ne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Jun 2024 15:45:50 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45JFjjTl46072230
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Jun 2024 15:45:47 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F371420067;
-	Wed, 19 Jun 2024 15:45:44 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A42EA2006E;
-	Wed, 19 Jun 2024 15:45:44 +0000 (GMT)
-Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Jun 2024 15:45:44 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v5 32/37] s390/traps: Unpoison the kernel_stack_overflow()'s pt_regs
-Date: Wed, 19 Jun 2024 17:44:07 +0200
-Message-ID: <20240619154530.163232-33-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240619154530.163232-1-iii@linux.ibm.com>
-References: <20240619154530.163232-1-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6v5z/sd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5A8C2BBFC;
+	Wed, 19 Jun 2024 16:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718815596;
+	bh=EYkeKSbtNt6ckvuCFzfSCizaZJeveGlRlQZbS2iiRBM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=U6v5z/sdVrRwT3ywPATsj7XmP7jMC/9Ue7euI2CV/THH1rdybzupp61Q3EwrfCb0Z
+	 oRYlNRBfdTqybOoKx/k80D0IFIG9kqzvnBfEhD0JRlH5VjuYxCM23EMd3xBXpXT4V1
+	 1uKiOxgwzsrXXxoSU+L5hezYeMeNJITqk3/QT2yQTixMKTvXNKFLINUqCcR1a6Eofa
+	 +OA6Ypzrq6AdcZ9WeH29C2vx0ekyMr+caeurBrnmo/hQuNhH7uVp+yJZMA3eeltGHh
+	 vqikZFgBg0Khso/7VAufzpVxv9ZrPvAsnpHAA9QtIEbrLcOlZKN9roRJ/XJu5hty2l
+	 uLXG9ZdVaWb9A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id EC3CDCE09D8; Wed, 19 Jun 2024 09:46:35 -0700 (PDT)
+Date: Wed, 19 Jun 2024 09:46:35 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <04567347-c138-48fb-a5ab-44cc6a318549@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <e926e3c6-05ce-4ba6-9e2e-e5f3b37bcc23@suse.cz>
+ <3b6fe525-626c-41fb-8625-3925ca820d8e@paulmck-laptop>
+ <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
+ <ZnCDgdg1EH6V7w5d@pc636>
+ <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
+ <ZnFT1Czb8oRb0SE7@pc636>
+ <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
+ <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz>
+ <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
+ <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: v76OCW-rSK0e3OTzOrEaX6yNZpyNzUiP
-X-Proofpoint-GUID: 3PULXL9LrKrVhTrKFdx-3pRbX3v6Ygw_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-19_02,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406190115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz>
 
-This is normally done by the generic entry code, but the
-kernel_stack_overflow() flow bypasses it.
+On Wed, Jun 19, 2024 at 11:28:13AM +0200, Vlastimil Babka wrote:
+> On 6/18/24 7:53 PM, Paul E. McKenney wrote:
+> > On Tue, Jun 18, 2024 at 07:21:42PM +0200, Vlastimil Babka wrote:
+> >> On 6/18/24 6:48 PM, Paul E. McKenney wrote:
+> >> > On Tue, Jun 18, 2024 at 11:31:00AM +0200, Uladzislau Rezki wrote:
+> >> >> > On 6/17/24 8:42 PM, Uladzislau Rezki wrote:
+> >> >> > >> +
+> >> >> > >> +	s = container_of(work, struct kmem_cache, async_destroy_work);
+> >> >> > >> +
+> >> >> > >> +	// XXX use the real kmem_cache_free_barrier() or similar thing here
+> >> >> > > It implies that we need to introduce kfree_rcu_barrier(), a new API, which i
+> >> >> > > wanted to avoid initially.
+> >> >> > 
+> >> >> > I wanted to avoid new API or flags for kfree_rcu() users and this would
+> >> >> > be achieved. The barrier is used internally so I don't consider that an
+> >> >> > API to avoid. How difficult is the implementation is another question,
+> >> >> > depending on how the current batching works. Once (if) we have sheaves
+> >> >> > proven to work and move kfree_rcu() fully into SLUB, the barrier might
+> >> >> > also look different and hopefully easier. So maybe it's not worth to
+> >> >> > invest too much into that barrier and just go for the potentially
+> >> >> > longer, but easier to implement?
+> >> >> > 
+> >> >> Right. I agree here. If the cache is not empty, OK, we just defer the
+> >> >> work, even we can use a big 21 seconds delay, after that we just "warn"
+> >> >> if it is still not empty and leave it as it is, i.e. emit a warning and
+> >> >> we are done.
+> >> >> 
+> >> >> Destroying the cache is not something that must happen right away. 
+> >> > 
+> >> > OK, I have to ask...
+> >> > 
+> >> > Suppose that the cache is created and destroyed by a module and
+> >> > init/cleanup time, respectively.  Suppose that this module is rmmod'ed
+> >> > then very quickly insmod'ed.
+> >> > 
+> >> > Do we need to fail the insmod if the kmem_cache has not yet been fully
+> >> > cleaned up?
+> >> 
+> >> We don't have any such link between kmem_cache and module to detect that, so
+> >> we would have to start tracking that. Probably not worth the trouble.
+> > 
+> > Fair enough!
+> > 
+> >> >  If not, do we have two versions of the same kmem_cache in
+> >> > /proc during the overlap time?
+> >> 
+> >> Hm could happen in /proc/slabinfo but without being harmful other than
+> >> perhaps confusing someone. We could filter out the caches being destroyed
+> >> trivially.
+> > 
+> > Or mark them in /proc/slabinfo?  Yet another column, yay!!!  Or script
+> > breakage from flagging the name somehow, for example, trailing "/"
+> > character.
+> 
+> Yeah I've been resisting such changes to the layout and this wouldn't be
+> worth it, apart from changing the name itself but not in a dangerous way
+> like with "/" :)
 
-Reviewed-by: Alexander Potapenko <glider@google.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
- arch/s390/kernel/traps.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+;-) ;-) ;-)
 
-diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
-index 52578b5cecbd..dde69d2a64f0 100644
---- a/arch/s390/kernel/traps.c
-+++ b/arch/s390/kernel/traps.c
-@@ -27,6 +27,7 @@
- #include <linux/uaccess.h>
- #include <linux/cpu.h>
- #include <linux/entry-common.h>
-+#include <linux/kmsan.h>
- #include <asm/asm-extable.h>
- #include <asm/vtime.h>
- #include <asm/fpu.h>
-@@ -262,6 +263,11 @@ static void monitor_event_exception(struct pt_regs *regs)
- 
- void kernel_stack_overflow(struct pt_regs *regs)
- {
-+	/*
-+	 * Normally regs are unpoisoned by the generic entry code, but
-+	 * kernel_stack_overflow() is a rare case that is called bypassing it.
-+	 */
-+	kmsan_unpoison_entry_regs(regs);
- 	bust_spinlocks(1);
- 	printk("Kernel stack overflow.\n");
- 	show_regs(regs);
--- 
-2.45.1
+> >> Sysfs and debugfs might be more problematic as I suppose directory names
+> >> would clash. I'll have to check... might be even happening now when we do
+> >> detect leaked objects and just leave the cache around... thanks for the
+> >> question.
+> > 
+> > "It is a service that I provide."  ;-)
+> > 
+> > But yes, we might be living with it already and there might already
+> > be ways people deal with it.
+> 
+> So it seems if the sysfs/debugfs directories already exist, they will
+> silently not be created. Wonder if we have such cases today already because
+> caches with same name exist. I think we do with the zsmalloc using 32 caches
+> with same name that we discussed elsewhere just recently.
+> 
+> Also indeed if the cache has leaked objects and won't be thus destroyed,
+> these directories indeed stay around, as well as the slabinfo entry, and can
+> prevent new ones from being created (slabinfo lines with same name are not
+> prevented).
 
+New one on me!
+
+> But it wouldn't be great to introduce this possibility to happen for the
+> temporarily delayed removal due to kfree_rcu() and a module re-insert, since
+> that's a legitimate case and not buggy state due to leaks.
+
+Agreed.
+
+> The debugfs directory we could remove immediately before handing over to the
+> scheduled workfn, but if it turns out there was a leak and the workfn leaves
+> the cache around, debugfs dir will be gone and we can't check the
+> alloc_traces/free_traces files there (but we have the per-object info
+> including the traces in the dmesg splat).
+> 
+> The sysfs directory is currently removed only with the whole cache being
+> destryed due to sysfs/kobject lifetime model. I'd love to untangle it for
+> other reasons too, but haven't investigated it yet. But again it might be
+> useful for sysfs dir to stay around for inspection, as for the debugfs.
+> 
+> We could rename the sysfs/debugfs directories before queuing the work? Add
+> some prefix like GOING_AWAY-$name. If leak is detected and cache stays
+> forever, another rename to LEAKED-$name. (and same for the slabinfo). But
+> multiple ones with same name might pile up, so try adding a counter then?
+> Probably messy to implement, but perhaps the most robust in the end? The
+> automatic counter could also solve the general case of people using same
+> name for multiple caches.
+> 
+> Other ideas?
+
+Move the going-away files/directories to some new directoriesy?  But you
+would still need a counter or whatever.  I honestly cannot say what
+would be best from the viewpoint of existing software scanning those
+files and directories.
+
+							Thanx, Paul
+
+> Thanks,
+> Vlastimil
+> 
+> > 
+> > 							Thanx, Paul
+> > 
+> >> >> > > Since you do it asynchronous can we just repeat
+> >> >> > > and wait until it a cache is furry freed?
+> >> >> > 
+> >> >> > The problem is we want to detect the cases when it's not fully freed
+> >> >> > because there was an actual read. So at some point we'd need to stop the
+> >> >> > repeats because we know there can no longer be any kfree_rcu()'s in
+> >> >> > flight since the kmem_cache_destroy() was called.
+> >> >> > 
+> >> >> Agree. As noted above, we can go with 21 seconds(as an example) interval
+> >> >> and just perform destroy(without repeating).
+> >> >> 
+> >> >> --
+> >> >> Uladzislau Rezki
+> >> 
+> 
