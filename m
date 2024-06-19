@@ -1,96 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9F21386B4;
-	Wed, 19 Jun 2024 11:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5A41E492;
+	Wed, 19 Jun 2024 13:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718797831; cv=none; b=nba/o8RefybDBj7tcOg6LsUxrS+tdUfoF2CinUw5UfGL1jgYoIUo2jm02vC2jcGWX3ZiJ8xwZD7rQWBeduIDuDhK9iJTRDakX6JtfDS9iuOEiHBDyakDPMS9C5n3VBG/o9j+dldDeEJ3XQFOt04GIx43BJqTCpj5+25RjKPu9WI=
+	t=1718804615; cv=none; b=SYRnR2y4k+wEm588dAQ9yMkrpZ/WS4rB2NJS5/CF3sJ34DZQuUV8N5F72RFTXrj07f4yOMCa4SuN7kBtclIVPvJeTlFNPCsSFqW1gDGUCG9e6m0GvSitc2nXeIWIpPn6PD4skeQu0qHVNhIhj7xs1ICjdnQkvs7i5tsUvjwempk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718797831; c=relaxed/simple;
-	bh=WBAY54eGwt1loIBs6Hp8ejKwZhZ0eB+pAKKRU6vShMo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=aNgQ5eSMEop5JAiK1MOuLiyF2ckY47qARyIyFZ+y1kLIx383WS0mi8QdWYAT1giK6k1mdfuBNZu+Wbmnzho30/+Tzcz3Uiat8A1chnCIQe51tGbLoArsKockv2XLpXgZg9hESXjy4Laory99qwcorUewK0Bbjxp51Yqn0+TY648=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvmZUOLe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718804615; c=relaxed/simple;
+	bh=5cXu+JHFL08f9J9rX0pT6j0NjNsjkr5HoSXnkbDpJB0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=P23f3g//dDaYftAt9/KRQ8bNF0Gt0WRCnPTFtg9cjvNTAFdI9y9eyrzeHByWLx6RZhyjyz45u+z/aWTMmVrEmQ7Fg9cfw7vtP60a/d3EC0p9wm5/2L1dvHzn49mi8dXjI/qFc4aGxDUK1Yg3yyzE6YkzB1x9lVZok5aNDkS4M7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrVinK5N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvmZUOLe"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 50136C4AF1A;
-	Wed, 19 Jun 2024 11:50:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrVinK5N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E69C2BBFC;
+	Wed, 19 Jun 2024 13:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718797831;
-	bh=WBAY54eGwt1loIBs6Hp8ejKwZhZ0eB+pAKKRU6vShMo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=WvmZUOLeb3qYVRlGvndMx20KcKoEOaFqXvUOuRtiiHPgzZse+YYSpMGK9uYt7zlCm
-	 YF+qBY0on/1wGD/yh2CdK6q0TnYco2ZJTxJA5LY1OVBmwWft/GlKbVIcoFgui9uJ1W
-	 VL65GxS1+FGSFsFpBdaKpEbac6Qnu46lj7ERSUhtAiBvJsgqz0MMnagXDBWXrbqk5n
-	 svP7MfKjjQTOcseNUNy3+85tSbIrf/crPsLbEnFFWTmX2HeWguhhOhxOsrmbRtjmqH
-	 5t9rDEz+svIM3EttXUhP9aaWMV4nG9GZ5thJe4Eoc8+f+HnijsMMCFXb5mRTzu/fDG
-	 XE5OAq4B5fL6w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3B1DEC4361A;
-	Wed, 19 Jun 2024 11:50:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1718804614;
+	bh=5cXu+JHFL08f9J9rX0pT6j0NjNsjkr5HoSXnkbDpJB0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DrVinK5NLi0QN/bFRVYH5asigrGLs+nbEbhk2hup4JiYhsbnsRwkqDnlaCq7ZMhqb
+	 wwu+RuUUAc7C9oQkLr9JM2IkwT8IEfdn3qehanlZ3APJbaZsDAHIZJ8IvT3JatqyPV
+	 ic0OmIW8uxnEElhOLuXJ6QR02ia3MkoUZpdxROj+kTwnWCbYQHfDBeg0QeH6zZMBhb
+	 v1TI0dbWIQeRha0HTDlna01Cb2FKiTVw8RmfSeQKvT5EIflriaOg6ZDQTRwQPMLIIY
+	 ud78XlC+zHqBpr/Tx3t9iSGEyssoXtI1rpRyoSYUubDAL2hp6qvwHdgq87ok+Zm2Pe
+	 BeVI5zjZazHVQ==
+Date: Wed, 19 Jun 2024 22:43:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH] fgraph: Use str_plural() in test_graph_storage_single()
+Message-Id: <20240619224330.d54d6d1ef2f2dd7b02dfd739@kernel.org>
+In-Reply-To: <20240618072014.20855-1-jiapeng.chong@linux.alibaba.com>
+References: <20240618072014.20855-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v5 0/7] net: pass receive socket to drop tracepoint
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171879783123.2748.515065113481168194.git-patchwork-notify@kernel.org>
-Date: Wed, 19 Jun 2024 11:50:31 +0000
-References: <cover.1718642328.git.yan@cloudflare.com>
-In-Reply-To: <cover.1718642328.git.yan@cloudflare.com>
-To: Yan Zhai <yan@cloudflare.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, dsahern@kernel.org,
- quic_abchauha@quicinc.com, almasrymina@google.com, fw@strlen.de,
- aleksander.lobakin@intel.com, dhowells@redhat.com, jiri@resnulli.us,
- daniel@iogearbox.net, bigeasy@linutronix.de, lorenzo@kernel.org,
- asml.silence@gmail.com, linux-kernel@vger.kernel.org,
- kernel-team@cloudflare.com, hawk@kernel.org, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, nhorman@tuxdriver.com,
- linux-trace-kernel@vger.kernel.org, dan.carpenter@linaro.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Tue, 18 Jun 2024 15:20:14 +0800
+Jiapeng Chong <jiapeng.chong@linux.alibaba.com> wrote:
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Mon, 17 Jun 2024 11:09:00 -0700 you wrote:
-> We set up our production packet drop monitoring around the kfree_skb
-> tracepoint. While this tracepoint is extremely valuable for diagnosing
-> critical problems, it also has some limitation with drops on the local
-> receive path: this tracepoint can only inspect the dropped skb itself,
-> but such skb might not carry enough information to:
+> Use existing str_plural() function rather than duplicating its
+> implementation.
 > 
-> 1. determine in which netns/container this skb gets dropped
-> 2. determine by which socket/service this skb oughts to be received
+> ./kernel/trace/trace_selftest.c:880:56-60: opportunity for str_plural(size).
 > 
-> [...]
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9349
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-Here is the summary with links:
-  - [net-next,v5,1/7] net: add rx_sk to trace_kfree_skb
-    https://git.kernel.org/netdev/net-next/c/c53795d48ee8
-  - [net-next,v5,2/7] net: introduce sk_skb_reason_drop function
-    https://git.kernel.org/netdev/net-next/c/ba8de796baf4
-  - [net-next,v5,3/7] ping: use sk_skb_reason_drop to free rx packets
-    https://git.kernel.org/netdev/net-next/c/7467de17635f
-  - [net-next,v5,4/7] net: raw: use sk_skb_reason_drop to free rx packets
-    https://git.kernel.org/netdev/net-next/c/ce9a2424e9da
-  - [net-next,v5,5/7] tcp: use sk_skb_reason_drop to free rx packets
-    https://git.kernel.org/netdev/net-next/c/46a02aa35752
-  - [net-next,v5,6/7] udp: use sk_skb_reason_drop to free rx packets
-    https://git.kernel.org/netdev/net-next/c/fc0cc9248843
-  - [net-next,v5,7/7] af_packet: use sk_skb_reason_drop to free rx packets
-    https://git.kernel.org/netdev/net-next/c/e2e7d78d9a25
+Thanks, this looks good to me.
 
-You are awesome, thank you!
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+> ---
+>  kernel/trace/trace_selftest.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+> index adf0f436d84b..97f1e4bc47dc 100644
+> --- a/kernel/trace/trace_selftest.c
+> +++ b/kernel/trace/trace_selftest.c
+> @@ -877,7 +877,7 @@ static int __init test_graph_storage_single(struct fgraph_fixture *fixture)
+>  	int ret;
+>  
+>  	pr_cont("PASSED\n");
+> -	pr_info("Testing fgraph storage of %d byte%s: ", size, size > 1 ? "s" : "");
+> +	pr_info("Testing fgraph storage of %d byte%s: ", size, str_plural(size));
+>  
+>  	ret = init_fgraph_fixture(fixture);
+>  	if (ret && ret != -ENODEV) {
+> -- 
+> 2.20.1.7.g153144c
+> 
+
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
