@@ -1,92 +1,261 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDAF153820
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Jun 2024 17:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8E015885C;
+	Wed, 19 Jun 2024 18:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718819843; cv=none; b=X42MUM1duLeF5AyoBw9/deBqH/E15IlN0CP+LQ8KuVbfrGuFKloHHb48GnASwL45dv9CH2M4/Z59RlWHl0L6Rsbvx2NiOiu+TNLVBQQABP+zJHh3c29tUG2R5VAbLjDRDVC6rcAx8iKbUeiEwMMwVenUkyXOlB6jkR2ul7Mqh3k=
+	t=1718822941; cv=none; b=ugoI9aCSKiv82nELc0omicQth0TtGIkluzO1DLNuGR//VKrUZcYlK0fDtdQJS8w0EyeqRaMcJWJWd0zyiD6oqL7W9/zDMeCY4tLbZd+jDj1h+r0yLB4vLYcp6sGJj9qxavGb+64JW3P5jWzXvD3wSkI1r4VwndQQZIBXy4iC+k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718819843; c=relaxed/simple;
-	bh=cOST1LD2L/IX7IsCCJXvuJQMIXuM5uZcCpA50xbBDuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tzZ2kb9bRLigfPXyXwu8jsg0Maq3woiEJEVq9d9NKL0gECWQQ939EsqeEEO0qpN32uFhEcEjLWXB7ktMkvtIR6Ld8mGj07eWBUNRdtDZNNBtCZP8mBiP4UIw+3pUkPtfxgGsBbTFTa8mphIrT2jlox8SwEp9glI5AKw9SuMvoBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W1uIjQxm; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718822941; c=relaxed/simple;
+	bh=qfTsdnJOq5fgxNKsMKUsFwWWyP0L9Eg9x4k1dvQW65E=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mPQHkp43smAe98ECZo2SV0Ez/vhwkmEY9ZUbdSrdmA0E0zOecxGTmKCXyvkgArzOzm5+RV925Qt/rzziIUEx/CwLcGXoiMbhjSy1JaUWhVjKIotwhitusNOEhdbD3foNh/p3ff72vubrGeltFgx0spS/fJH1Qr+jTOFPkiXYQjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cQ2XuEsU; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W1uIjQxm"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52cc9b887f1so84469e87.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Jun 2024 10:57:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQ2XuEsU"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42121d27861so1201965e9.0;
+        Wed, 19 Jun 2024 11:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718819840; x=1719424640; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=N8Kayv4g6koIn38mbeG+B2azD4AgtkWZC+a18KeR3Ss=;
-        b=W1uIjQxmaOD/MhrLCRSRm0fbIco7Hp0GIDfsFINT93DZoJTi1bdrr+r8ywfP+RAbmX
-         /3N9YFSTNOHmbhtkiq9bbGR0Q/54Yo2vX5nWVtvbdocxMUVS5tw4J+zjJZaKu57LW42L
-         fOr4f6xGI8C4hwZMSlZ4F5T7MvvSJUu2DwCYQ=
+        d=gmail.com; s=20230601; t=1718822938; x=1719427738; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oOHV1OyPE5U8qTFJC5RPbb2z7vBlikoGyLR98RlK/24=;
+        b=cQ2XuEsU/F0gQ8nqabK0nFVaDdRJmETj42lYNgSh8sdYHcO5EgSWXQNFvLp91uS86G
+         1QXVPCj/8mBaM3Cg9qeKetrvvvVO/A/2u4kGTVYeUGiUjUg8EHUoOMwt9WuqwZCxaHgf
+         040YjfD9xX2Xq4qWUxO/1+D3EUp/8A57ieb69/ne5lupXpz5izNAjR4fF0qTYy/kGeYj
+         BEfxrW3DqyibmRsE6Zej0M8rTD2TzTqWtueVUZIhypYxHDY8KRIntXtK2gofERlY3Wx0
+         3j94BEUBf9+A9QVbIm+8tKMKWb1JHiKqGpTDXV1W1LZPjZPr3PyzUp/nsWpq4Rxh2ak2
+         pEXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718819840; x=1719424640;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N8Kayv4g6koIn38mbeG+B2azD4AgtkWZC+a18KeR3Ss=;
-        b=P2D54oyVLkQ5e6vK7a0m9U0Y+dO8IOlQBi7moTLaBiRHkRM+K7ceCYxEFanF7MrJHG
-         PT8WYBwkW77aTorEYGKFg+8iV8k+GZSOKHo6mdmLjK7Oc9VvPkjyF3Y/ZahyWRPjT92O
-         gACanc6nZYtr0vja3rJKz7klaqFrju6OlMkepFovZIwI3wNXTMyd84pozMF7IwJBpZl+
-         FARNG8rhe7mmPYfZzfMGkVD02b36eZNZl1S35HKXP/k23GpvG+0nC+qr4vuBFkFv94RB
-         UeYcmjt9Z/V/+wcUjz0VqhEYTX/KOm/PB255J+Bqaw8w4+YMR+tvWrGoewsyYU0YAoTa
-         Gx2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWdidxGLWNe4IaOCp+/JemLbQfHvdzXrGXE9F+t/HBHFL2o94ZPULFQR9l9n5yPqecFniMRSPV9iwn0JqKGicddNBc6Mi9G0pGeJYGsd712S7uE
-X-Gm-Message-State: AOJu0Yx5OGo7a4DjzwlPda3JIyFGqFr5hgshfK7t89AVOt++gFTQLKOy
-	vf1eLE/fvDJkwIme84xOZBBt9Ds+x9b/HPBl0jhQ4EnYpOGRrWSXW/TPecKYnHkAgrgeCyanPXN
-	X9TeOtq/r8OT5My7N8H/I6tK+BXcoWFv7LQ4=
-X-Google-Smtp-Source: AGHT+IEgCS86JnQXRyN0nE0BGQEBVqiPjOVoriIOkC3n4X0reg2XiAoY/sbyO3Xu8SPKVUrmNpIW/ln1WidijI4MmP4=
-X-Received: by 2002:a05:6512:3f0d:b0:52c:818c:13b8 with SMTP id
- 2adb3069b0e04-52ccaa587c8mr2438161e87.4.1718819839758; Wed, 19 Jun 2024
- 10:57:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718822938; x=1719427738;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOHV1OyPE5U8qTFJC5RPbb2z7vBlikoGyLR98RlK/24=;
+        b=PVXhonWYxXvn9Dh9/KvGxNKbnzVQnuDvKbVC3G5Ku1VvcGvgayTIbYg/HusxlkC1+p
+         zlTbFB5XJ0/S6d11WQK8bb6+46xgY3C+GUGO6WlD1KlY13pwjWinpCy6LtZHYdtpgUT1
+         MKAOUhI8Q8j6W43Vrx5pbEV6F7sEtqw/OhoQgQU6+pcSnRUnYUkDnK2Loqf3onoz92Dp
+         HAdnqLE3H9qzC6imvkqRuM/B5c+hME7e1w371X+ydKdgl8iXwXxwnMAa1bwHsULShM+M
+         mmY080TnyIc8d9HAKjvxZ928gSvIy1cRHl9T55zs3gqdDkWxqvHxMnq+cqRix/x/JoRr
+         XaoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVe46GLTsXTpu89qWzk7itJi1hGeeL/OngngfLJUTwrEZoAbNJLy+p8ez9s7/2OaXwQyou8xQLK9rS2vh2rBKC3dudbP1UfIpaqo1dD5V7O881nyfDzHJv0PP5HhPk9AajJSiwPy81V4Gmr0GZlRqWo9PFXgOVrMojytZh3w10E/fMCdh2w
+X-Gm-Message-State: AOJu0YwZBGPcD1C/O7JCUtZERQGQcVBmLnM8zxBcO7acoLQOX1dNj53o
+	YKSAhJ26nZaXY0fSQMLDsg9gphUfM17CrSQXqbZNmDO9doftQ4gf
+X-Google-Smtp-Source: AGHT+IH5y762c8nZSaoulqdoVkVT4/6AxhiQsd0NHTfK2saKY1Pbfyy3k1Bjd9mNU/P8yp98uATQQA==
+X-Received: by 2002:a5d:4b4e:0:b0:362:ac86:4903 with SMTP id ffacd0b85a97d-36317b830c1mr2255111f8f.42.1718822938035;
+        Wed, 19 Jun 2024 11:48:58 -0700 (PDT)
+Received: from krava (85-193-35-215.rib.o2.cz. [85.193.35.215])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f2263sm18022195f8f.83.2024.06.19.11.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 11:48:57 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 19 Jun 2024 20:48:55 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
+ uprobe_consumer
+Message-ID: <ZnMoF84ilUcEoiX5@krava>
+References: <20240604200221.377848-1-jolsa@kernel.org>
+ <20240604200221.377848-2-jolsa@kernel.org>
+ <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
+ <20240605175619.GH25006@redhat.com>
+ <ZmDPQH2uiPYTA_df@krava>
+ <ZmHn43Af4Kwlxoyc@krava>
+ <CAEf4BzaFcpqFc8w6dH5oOJNKsAXZjs-KCFAXLp8TMBtS5ooo4g@mail.gmail.com>
+ <ZmbePPIKqc6XuVjL@krava>
+ <CAEf4BzaqDSGBbaEuOpEW5NbosgN8jE4CUE8s+-dgs-0sV6_geA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618093656.1944210-1-takayas@chromium.org> <20240618155320.75807db5@rorschach.local.home>
-In-Reply-To: <20240618155320.75807db5@rorschach.local.home>
-From: Takaya Saeki <takayas@chromium.org>
-Date: Thu, 20 Jun 2024 02:57:08 +0900
-Message-ID: <CAH9xa6cNT6VwQoQwcop3uLOHLF8xqX=D8HQ7x4C1Aw3qNr=2_A@mail.gmail.com>
-Subject: Re: [PATCH] filemap: add trace events for get_pages, map_pages, and fault
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Junichi Uekawa <uekawa@chromium.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzaqDSGBbaEuOpEW5NbosgN8jE4CUE8s+-dgs-0sV6_geA@mail.gmail.com>
 
-Thanks Steven for trying it out.
+On Mon, Jun 17, 2024 at 03:53:50PM -0700, Andrii Nakryiko wrote:
+> On Mon, Jun 10, 2024 at 4:06 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Thu, Jun 06, 2024 at 09:52:39AM -0700, Andrii Nakryiko wrote:
+> > > On Thu, Jun 6, 2024 at 9:46 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > >
+> > > > On Wed, Jun 05, 2024 at 10:50:11PM +0200, Jiri Olsa wrote:
+> > > > > On Wed, Jun 05, 2024 at 07:56:19PM +0200, Oleg Nesterov wrote:
+> > > > > > On 06/05, Andrii Nakryiko wrote:
+> > > > > > >
+> > > > > > > so any such
+> > > > > > > limitations will cause problems, issue reports, investigation, etc.
+> > > > > >
+> > > > > > Agreed...
+> > > > > >
+> > > > > > > As one possible solution, what if we do
+> > > > > > >
+> > > > > > > struct return_instance {
+> > > > > > >     ...
+> > > > > > >     u64 session_cookies[];
+> > > > > > > };
+> > > > > > >
+> > > > > > > and allocate sizeof(struct return_instance) + 8 *
+> > > > > > > <num-of-session-consumers> and then at runtime pass
+> > > > > > > &session_cookies[i] as data pointer to session-aware callbacks?
+> > > > > >
+> > > > > > I too thought about this, but I guess it is not that simple.
+> > > > > >
+> > > > > > Just for example. Suppose we have 2 session-consumers C1 and C2.
+> > > > > > What if uprobe_unregister(C1) comes before the probed function
+> > > > > > returns?
+> > > > > >
+> > > > > > We need something like map_cookie_to_consumer().
+> > > > >
+> > > > > I guess we could have hash table in return_instance that gets 'consumer -> cookie' ?
+> > > >
+> > > > ok, hash table is probably too big for this.. I guess some solution that
+> > > > would iterate consumers and cookies made sure it matches would be fine
+> > > >
+> > >
+> > > Yes, I was hoping to avoid hash tables for this, and in the common
+> > > case have no added overhead.
+> >
+> > hi,
+> > here's first stab on that.. the change below:
+> >   - extends current handlers with extra argument rather than adding new
+> >     set of handlers
+> >   - store session consumers objects within return_instance object and
+> >   - iterate these objects ^^^ in handle_uretprobe_chain
+> >
+> > I guess it could be still polished, but I wonder if this could
+> > be the right direction to do this.. thoughts? ;-)
+> 
+> Yeah, I think this is the right direction. It's a bit sad that this
+> makes getting rid of rw_sem on hot path even harder, but that's a
+> separate problem.
+> 
+> >
+> > thanks,
+> > jirka
+> >
+> >
+> > ---
+> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > index f46e0ca0169c..4e40e8352eac 100644
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -34,15 +34,19 @@ enum uprobe_filter_ctx {
+> >  };
+> >
+> >  struct uprobe_consumer {
+> > -       int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
+> > +       int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs,
+> > +                       unsigned long *data);
+> 
+> can we use __u64 here? This long vs __u64 might cause problems for BPF
+> when the host is 32-bit architecture (BPF is always 64-bit).
 
-> I can see it bringing down the number of pages needed to be saved dramatically.
+ok
 
-Yes, I agree.
-However, note that wc does not count the size of the page caches
-correctly since 'get_map_pages' gives you a range. In your example of
-the less command, actually the total sizes of page_cache_size and
-get_map_pages look the same.
+> 
+> >         int (*ret_handler)(struct uprobe_consumer *self,
+> >                                 unsigned long func,
+> > -                               struct pt_regs *regs);
+> > +                               struct pt_regs *regs,
+> > +                               unsigned long *data);
+> >         bool (*filter)(struct uprobe_consumer *self,
+> >                                 enum uprobe_filter_ctx ctx,
+> >                                 struct mm_struct *mm);
+> >
+> 
+> [...]
+> 
+> >  static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
+> >  {
+> >         struct uprobe_task *n_utask;
+> > @@ -1756,11 +1795,11 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
+> >
+> >         p = &n_utask->return_instances;
+> >         for (o = o_utask->return_instances; o; o = o->next) {
+> > -               n = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
+> > +               n = alloc_return_instance(o->session_cnt);
+> >                 if (!n)
+> >                         return -ENOMEM;
+> >
+> > -               *n = *o;
+> > +               memcpy(n, o, ri_size(o->session_cnt));
+> >                 get_uprobe(n->uprobe);
+> >                 n->next = NULL;
+> >
+> > @@ -1853,35 +1892,38 @@ static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
+> >         utask->return_instances = ri;
+> >  }
+> >
+> > -static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+> > +static struct return_instance *
+> > +prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
+> > +                 struct return_instance *ri, int session_cnt)
+> 
+> you have struct uprobe, why do you need to pass session_cnt? Also,
+> given return_instance is cached, it seems more natural to have
+> 
+> struct return_instance **ri as in/out parameter, and keep the function
+> itself as void
 
-Instead of less, running a large binary such as Chrome (232MB) gives
-us a better example. '# trace-cmd record -e filemap chrome --version'
-showed 58% reduction from 42MB to 17MB in my environment.
-- Total size of mm_filemap_add_to_page_cache: 42,958,848 bytes
-- With mm_filemap_map_pages and mm_filemap_get_pages: 17,993,728 bytes
+I tried that, but now I think it'd be better if we just let prepare_uretprobe
+to allocate (if needed) and free ri in case it fails and do something like:
 
-By the way,  'mm_filemap_map_pages' traces a range requested to
-populate, which includes pages that are not in caches yet and thus are
-skipped. So, you need to calculate the intersection with
-mm_filemap_add_to_page_cache to see page caches that are actually
-mapped.
-I'm wondering if we should put a trace event per each successful page
-mapping event as mm_filemap_add_to_page_cache does, by putting an
-event inside the page map loop.
+       if (need_prep && !remove)
+               prepare_uretprobe(uprobe, regs, ri); /* put bp at return */
+       else
+               kfree(ri);
+
+> 
+> >  {
+> > -       struct return_instance *ri;
+> >         struct uprobe_task *utask;
+> >         unsigned long orig_ret_vaddr, trampoline_vaddr;
+> >         bool chained;
+> >
+> 
+> [...]
+> 
+> >         if (need_prep && !remove)
+> > -               prepare_uretprobe(uprobe, regs); /* put bp at return */
+> > +               ri = prepare_uretprobe(uprobe, regs, ri, uprobe->session_cnt); /* put bp at return */
+> > +       kfree(ri);
+> >
+> >         if (remove && uprobe->consumers) {
+> >                 WARN_ON(!uprobe_is_active(uprobe));
+> >                 unapply_uprobe(uprobe, current->mm);
+> >         }
+> > + out:
+> >         up_read(&uprobe->register_rwsem);
+> >  }
+> >
+> > +static struct session_consumer *
+> > +consumer_find(struct session_consumer *sc, struct uprobe_consumer *uc)
+> 
+> why can't we keep track of remaining number of session_consumer items
+> instead of using entire extra entry as a terminating element? Seems
+> wasteful and unnecessary.
+
+ok I think it's possible, will try that
+
+thanks,
+jirka
