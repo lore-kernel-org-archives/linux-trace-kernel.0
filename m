@@ -1,124 +1,184 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925CDB657;
-	Thu, 20 Jun 2024 19:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D8F24B26;
+	Thu, 20 Jun 2024 19:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718910069; cv=none; b=G5TpHCT1e7QYzR0hfCYoSGAfl0Jh54rWOFmsuLG+kTHSIBeP1s4wRfPl8olAexk29v2wvrQCT1QfzEUogw1bipcRoIudpRkyCzu9uUktWM6mMmT7mzjcbkyy5q7U3kJE2TGCIEY6yKLL7ZAiU1QhCJ0huh4g3ZaYPwpu7Gxv27Q=
+	t=1718910582; cv=none; b=p2gQjokz9OuLHVSlOMk0g7iai0G38Zk+xgZ5q5mGATXxbqAnONrG39b1pesSs+XtG/XlbOVpFv6IUXH6ubnzFk+EJBYjFaRPqJHfCpNkzzFSvGcGLVuDYxJ9Gjo+DHVh24/xOqOoJDburOUh4U2vCW/10r+zLWubQUziKyXRfrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718910069; c=relaxed/simple;
-	bh=DhHUliTDv9obS+xUqwdC0en0lhuGpMpydP7QX14WBNw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QEia1LDketutSalTZLY49eWFjEUA3AvaBE608m/ynC2tLRQDqZN6oQAlNRtrpb0EJWq8Y3+dkDv5gmScU8wPg75gVVwzTeSTCpbMue7r/dCjaueBF2reH0LVC5hhPhYy3ldsBsSdFF9F1BRaQ3QqMMyO6ukBdX0bU8fhJCKNz54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTq21/IV; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718910582; c=relaxed/simple;
+	bh=H8nf7tfD5oT/6PWOmbgyxWoLMQxlwQFGYGkHr7dxa64=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LUp5dRI7lDUf2ne1F0COrhWG6V+scuNsPVMWj6cJh5oFYSManvis1py6dgrgVO8o8KNcpqthgtUL+lCIEdzY5x2A9BkP+f7VV/thAar3h6LJNDTvPS24HLs5Qywi7jKH5sa8LhltNLr7uCwzwxn9AxFeXrqGVgS2Xhwwz57Tve8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSk2QqIL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTq21/IV"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-6e9f52e99c2so912145a12.1;
-        Thu, 20 Jun 2024 12:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718910068; x=1719514868; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=edgL49LMRv7Ws8FTfMR2qUOp30oBPUnUg1BlrmXNj0k=;
-        b=MTq21/IVEatBY1E1Yx2PfGGPbVGt8wQTrKBFx2BFHEUN065p36JnRzwvQfjwB4bfpv
-         f2OoW04xRwH+udRcBqOw9rz0qPru+vVq3p0lzt95E2ocHIubhJdh+A1XEKrm1ciWfoEo
-         4ODl4kosg6jMlpYT2VMI/NxtTN778Ha5bT7t8wn0jl9HOlJr4q/2VIk8uWVXBDsDipca
-         tQN6QXPOYeqFrZMw94RHq0zM+sERLO7whEPX5ieqOexdYyDFAT4TFJi28ZolTlxKY6HJ
-         LhUyL0kO+sP6bu7Ti/F6Ew11Zbfb36oSD3BIhJD+1fowK8JpJGz6Dvdycq6RrgLZET/u
-         rUDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718910068; x=1719514868;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=edgL49LMRv7Ws8FTfMR2qUOp30oBPUnUg1BlrmXNj0k=;
-        b=OazL4yOYd/avTnXGWy3hmxsd/bHQrkmsn6+5N+JjSJKH4ss0pZD7TR73CzKIIVwizB
-         qzipL16ReGzOkCNAfuk8W6jD4de9kJdMHB9Uj3kR+0qeHtTX5qqTYjewyuKp6/vIlCom
-         go456XR9yXlzWlidO+1nOUEYavXnWUCdZbTaC9NGNFU1ldo3dfbr4uZqaskteB5AkiQv
-         SYxVDfXfp7SGbtL6+PdAy5dwk6EMP0epasQuQIctiB2OR5mH7qI27c2FZr0jKUBSUrUc
-         LeEALxnORsozuWC0+IF5v4gwRz5oxIRqt/0Pi7PMBsKzAUUkCMvwAJiH46MvgkqH1UpN
-         QQ2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzWJw2F/nfkDBEUtNA1iqKUvhEr+n7+BComBoCh3u/A2vlF4IIXM3G+s1rUOcvuvuxGglv+OHGUEBeDYapZvZaFL+TVmzt67XV+0VZTTYfl8Ows6UrXat1jfFFoYaIdFlR/bQP5EPfcCx1yrqu08isxa0+1TDTeTPRujdY1XZtgpo7IRIC
-X-Gm-Message-State: AOJu0YwBDKN8Q6pAUmt5HssuIIYmxuYaZxx50rjROXgMNXGYgvvHjse5
-	k8TjNTJjPWj2XKjrdoDO0XQdRFS57Wzi/meIBgol7Uw1jz6GyBrOwkmxQq0dCIiDHfgoP2uB95O
-	ad+AdfvNHKSPKwLuXsERr/VjjqdFOHg==
-X-Google-Smtp-Source: AGHT+IFwISJyQPW1kEQVodY5n7ZimQCwzXCRznBCj3vo6t+DlpcwO+ayOJjl5QFOV+y2yc6+XFD75IBGnnNRgJR3+q0=
-X-Received: by 2002:a17:90a:8a02:b0:2c2:f704:5278 with SMTP id
- 98e67ed59e1d1-2c7b5dc7f9emr6158069a91.42.1718910067663; Thu, 20 Jun 2024
- 12:01:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSk2QqIL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80241C2BD10;
+	Thu, 20 Jun 2024 19:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718910582;
+	bh=H8nf7tfD5oT/6PWOmbgyxWoLMQxlwQFGYGkHr7dxa64=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uSk2QqILNZieTS1eCmaJ9OksCEvdPA04YDPLi+lJY/yhtYNoJ3bYo2pdhR9R5ZlOh
+	 x0FJHikNVELPugwWcYaLfjeGz7EB2L5H/FUkCdkqhOq/sF4ddkoT5n+PiGyz43I55F
+	 sSU45m3FVxC8vHbPG1rzmDr1NdXtmr2XJMjXKA6rL0FBlDA6mmhps1rPy1vJd/ptYz
+	 nDh1MyXmwGBXhI265C7jFthCckzyLDAcXZk/rKz2SGNZEraQmWs2Y7ZsJV90GD8DGH
+	 QRtAzWGMMTmOAGxNdGF0q0T8sey+MWgG3Dr2e1214VzLYxVpUJjJy+jPwjXSCV1n7s
+	 3E8/rWhHB8PnQ==
+From: Naveen N Rao <naveen@kernel.org>
+To: <linuxppc-dev@lists.ozlabs.org>,
+	<linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Song Liu <song@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Subject: [RFC PATCH v3 10/11] powerpc64/bpf: Fold bpf_jit_emit_func_call_hlp() into bpf_jit_emit_func_call_rel()
+Date: Fri, 21 Jun 2024 00:39:10 +0530
+Message-ID: <ccd119e39602ff4eb331b83291b214073f3db0e0.1718908016.git.naveen@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1718908016.git.naveen@kernel.org>
+References: <cover.1718908016.git.naveen@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618194306.1577022-1-jolsa@kernel.org>
-In-Reply-To: <20240618194306.1577022-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 20 Jun 2024 12:00:55 -0700
-Message-ID: <CAEf4BzbN4Li2iesQm28ZYEV2nXsLre8_qknmvkSy510EV7h=SA@mail.gmail.com>
-Subject: Re: [PATCH] uprobe: Do not use UPROBE_SWBP_INSN as static initializer
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 12:43=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote=
-:
->
-> Nathan reported compilation fail for loongarch arch:
->
->   kernel/events/uprobes.c: In function 'arch_uprobe_trampoline':
->   arch/loongarch/include/asm/uprobes.h:12:33: error: initializer element =
-is not constant
->      12 | #define UPROBE_SWBP_INSN        larch_insn_gen_break(BRK_UPROBE=
-_BP)
->         |                                 ^~~~~~~~~~~~~~~~~~~~
->   kernel/events/uprobes.c:1479:39: note: in expansion of macro 'UPROBE_SW=
-BP_INSN'
->    1479 |         static uprobe_opcode_t insn =3D UPROBE_SWBP_INSN;
->
-> Loongarch defines UPROBE_SWBP_INSN as function call, so we can't
-> use it to initialize static variable.
->
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return pr=
-obe")
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  kernel/events/uprobes.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
+Commit 61688a82e047 ("powerpc/bpf: enable kfunc call") enhanced
+bpf_jit_emit_func_call_hlp() to handle calls out to module region, where
+bpf progs are generated. The only difference now between
+bpf_jit_emit_func_call_hlp() and bpf_jit_emit_func_call_rel() is in
+handling of the initial pass where target function address is not known.
+Fold that logic into bpf_jit_emit_func_call_hlp() and rename it to
+bpf_jit_emit_func_call_rel() to simplify bpf function call JIT code.
 
-Can we instead ask loongarch folks to rewrite it to be a constant?
-Having this as a function call is both an inconvenience and potential
-performance problem (a minor one, but still). I would imagine it's not
-hard to hard-code an instruction as a constant here.
+We don't actually need to load/restore TOC across a call out to a
+different kernel helper or to a different bpf program since they all
+work with the kernel TOC. We only need to do it if we have to call out
+to a module function. So, guard TOC load/restore with appropriate
+conditions.
 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2816e65729ac..6986bd993702 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1476,8 +1476,9 @@ static int xol_add_vma(struct mm_struct *mm, struct=
- xol_area *area)
->
->  void * __weak arch_uprobe_trampoline(unsigned long *psize)
->  {
-> -       static uprobe_opcode_t insn =3D UPROBE_SWBP_INSN;
-> +       static uprobe_opcode_t insn;
->
-> +       insn =3D insn ?: UPROBE_SWBP_INSN;
->         *psize =3D UPROBE_SWBP_INSN_SIZE;
->         return &insn;
->  }
-> --
-> 2.45.1
->
+Signed-off-by: Naveen N Rao <naveen@kernel.org>
+---
+ arch/powerpc/net/bpf_jit_comp64.c | 61 +++++++++----------------------
+ 1 file changed, 17 insertions(+), 44 deletions(-)
+
+diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
+index 7703dcf48be8..288ff32d676f 100644
+--- a/arch/powerpc/net/bpf_jit_comp64.c
++++ b/arch/powerpc/net/bpf_jit_comp64.c
+@@ -202,14 +202,22 @@ void bpf_jit_build_epilogue(u32 *image, struct codegen_context *ctx)
+ 	EMIT(PPC_RAW_BLR());
+ }
+ 
+-static int
+-bpf_jit_emit_func_call_hlp(u32 *image, u32 *fimage, struct codegen_context *ctx, u64 func)
++int bpf_jit_emit_func_call_rel(u32 *image, u32 *fimage, struct codegen_context *ctx, u64 func)
+ {
+ 	unsigned long func_addr = func ? ppc_function_entry((void *)func) : 0;
+ 	long reladdr;
+ 
+-	if (WARN_ON_ONCE(!kernel_text_address(func_addr)))
+-		return -EINVAL;
++	/* bpf to bpf call, func is not known in the initial pass. Emit 5 nops as a placeholder */
++	if (!func) {
++		for (int i = 0; i < 5; i++)
++			EMIT(PPC_RAW_NOP());
++		/* elfv1 needs an additional instruction to load addr from descriptor */
++		if (IS_ENABLED(CONFIG_PPC64_ELF_ABI_V1))
++			EMIT(PPC_RAW_NOP());
++		EMIT(PPC_RAW_MTCTR(_R12));
++		EMIT(PPC_RAW_BCTRL());
++		return 0;
++	}
+ 
+ #ifdef CONFIG_PPC_KERNEL_PCREL
+ 	reladdr = func_addr - local_paca->kernelbase;
+@@ -266,7 +274,8 @@ bpf_jit_emit_func_call_hlp(u32 *image, u32 *fimage, struct codegen_context *ctx,
+ 			 * We can clobber r2 since we get called through a
+ 			 * function pointer (so caller will save/restore r2).
+ 			 */
+-			EMIT(PPC_RAW_LD(_R2, bpf_to_ppc(TMP_REG_2), 8));
++			if (is_module_text_address(func_addr))
++				EMIT(PPC_RAW_LD(_R2, bpf_to_ppc(TMP_REG_2), 8));
+ 		} else {
+ 			PPC_LI64(_R12, func);
+ 			EMIT(PPC_RAW_MTCTR(_R12));
+@@ -276,46 +285,14 @@ bpf_jit_emit_func_call_hlp(u32 *image, u32 *fimage, struct codegen_context *ctx,
+ 		 * Load r2 with kernel TOC as kernel TOC is used if function address falls
+ 		 * within core kernel text.
+ 		 */
+-		EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)));
++		if (is_module_text_address(func_addr))
++			EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)));
+ 	}
+ #endif
+ 
+ 	return 0;
+ }
+ 
+-int bpf_jit_emit_func_call_rel(u32 *image, u32 *fimage, struct codegen_context *ctx, u64 func)
+-{
+-	unsigned int i, ctx_idx = ctx->idx;
+-
+-	if (WARN_ON_ONCE(func && is_module_text_address(func)))
+-		return -EINVAL;
+-
+-	/* skip past descriptor if elf v1 */
+-	func += FUNCTION_DESCR_SIZE;
+-
+-	/* Load function address into r12 */
+-	PPC_LI64(_R12, func);
+-
+-	/* For bpf-to-bpf function calls, the callee's address is unknown
+-	 * until the last extra pass. As seen above, we use PPC_LI64() to
+-	 * load the callee's address, but this may optimize the number of
+-	 * instructions required based on the nature of the address.
+-	 *
+-	 * Since we don't want the number of instructions emitted to increase,
+-	 * we pad the optimized PPC_LI64() call with NOPs to guarantee that
+-	 * we always have a five-instruction sequence, which is the maximum
+-	 * that PPC_LI64() can emit.
+-	 */
+-	if (!image)
+-		for (i = ctx->idx - ctx_idx; i < 5; i++)
+-			EMIT(PPC_RAW_NOP());
+-
+-	EMIT(PPC_RAW_MTCTR(_R12));
+-	EMIT(PPC_RAW_BCTRL());
+-
+-	return 0;
+-}
+-
+ static int bpf_jit_emit_tail_call(u32 *image, struct codegen_context *ctx, u32 out)
+ {
+ 	/*
+@@ -1047,11 +1024,7 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+ 			if (ret < 0)
+ 				return ret;
+ 
+-			if (func_addr_fixed)
+-				ret = bpf_jit_emit_func_call_hlp(image, fimage, ctx, func_addr);
+-			else
+-				ret = bpf_jit_emit_func_call_rel(image, fimage, ctx, func_addr);
+-
++			ret = bpf_jit_emit_func_call_rel(image, fimage, ctx, func_addr);
+ 			if (ret)
+ 				return ret;
+ 
+-- 
+2.45.2
+
