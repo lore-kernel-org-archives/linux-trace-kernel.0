@@ -1,353 +1,96 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E6754720
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AAA1AB91C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718872613; cv=none; b=V5R+6DIFoyeXv2WJEifjswPE1YO9XEP4EvaSdpKwVvZ83KHdcIi0gTqES5wZJTZiVzUFS3fOKr37tASJwzzp+j6+t/ggOYDDsmBwRbXnZDQTxL+n2Sh3haG1ZhDna5XhSTVBt1zCSyk1MPkL0sdfRhOdfFvaH9qv9GXaIXMnqWo=
+	t=1718873404; cv=none; b=tShwI4YlQGvbuRTI0G3DleMjpml4wmG0NeC3to65MstIX8mip6+yBBGDQT6S+VbyMP4ELMNq84N92znnQ8X8Py1bcz2HDKUJE2Vr1oBgE/NdZFdymBr6S0tHQJcojeqnjehOEkEcPGkCxNRZMtXpqJR7cGdf+2W3+cRtmcuhHbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718872613; c=relaxed/simple;
-	bh=gThRgA+KYC5GB8/QMnZsGnppNwIjDv7ifk09VTYI/e4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RhZkYDizfPwgHNeKIs6YLIz3PGm9Kfe6IT3gvhhXcFr7bbd48bFGmdhODf9e2/H7zYDybDb7vyXmNCp7yLF6DgyVzgYqGFULLqniI5z8BHMrgXl9n6uhaaR0YMb83WON/cOEm4Hyo2Ly44CLMnEAwiu0Vascg4OD6ZiCw8CdXT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mDp2fqA6; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718873404; c=relaxed/simple;
+	bh=E/xlmU084aOXXwFw807wZImjGPqm1ANMchdMOU8QUug=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=r7+oKMZJaXU9WX0HHYo057Gf9BkGVXe2MA2rR9opdJHKgldgzyBVxPMBzsjMw2FwjG54uyulgtnHnaxniTShu9xdKvRnCpVdQG8iTMVf//1Yl9WDvbpvB0Zkq6aK0rKEiN002kpo691NIfSDtxPr052t/5a8ojPVc7/XkeFj8pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X7VeeHkV; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDp2fqA6"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4435f782553so4088421cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:36:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X7VeeHkV"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f177b78dcso60527666b.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718872611; x=1719477411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/OUYcIAPu8Sr/lzFQuuddP6LocZmaVvpQ1N05tgsbXo=;
-        b=mDp2fqA67B5SeRvojKMA6ld+w7F4NgXSmoLXY3ykDVCuzWa8IK2xH8blxrJFyNUcIj
-         nQoE4lcEXSN3FyolpQZSxAjCs4Q2STezxFzvF5KgGE07shXk1smCEGNX+FmAkmYS3o6C
-         mgl+kgnLyvywhLHH/TeZWm5VUwAdElHb7UpoCcEteNxIvoviIDuUecf0gYEw3mIx++fO
-         1fIEL6WB3GtcAFcY4rZ34tViPuqM94syz9Necn9np2DNTEhKwZsgFO5PBpfJBwDP2+iA
-         Yi8QYiyuXh4B85vdRgyD6pH5AgbBVJ4NUCh26EAUulYynLcWYFqoar6A7K8jdhiBIn4Z
-         Lk7A==
+        d=linaro.org; s=google; t=1718873401; x=1719478201; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vPUY4GnBpPiQcbABkIr/cid7Dg+9bQhVw0p/ZhNJByA=;
+        b=X7VeeHkVNnoM4c/vIDPSHLEFNAAE4h9jolRxuo4ZEwsFzcqN+IX6rwhyn8CUVcnBIK
+         Ljoq08b58s8IVqjm/YIRJqY6l/ZxLVNhufoUil9vwHs2po8Rtn7Y8FaxVL6OeAt7/0ZI
+         AcVuC9RjRbP4YPbT96GAyM3SlWQmbK6ilbUTPX9M2x6p79SJJ700XoHAigMkqt698fWF
+         CE2HNrthqHlMWLDNqMDYvVBjEVnZpYCFvhqvoKxYM4phuyg0YwnIBEU7SrlQEX8HwgT4
+         /NH0kKw1qGodIboCMVqbdaoecvAIafSn6rOgr96Fj5BQc/Dtn8eQEOCo0MtZXW//9izk
+         fICQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718872611; x=1719477411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/OUYcIAPu8Sr/lzFQuuddP6LocZmaVvpQ1N05tgsbXo=;
-        b=jwSD5H29bf1T9eqgkpaEzBfb/b5jN04jwwg5dHBbeEKctbrzYwEhO2d/5o/b3b6mGz
-         Jq5jCoN0i35eEwA4d/eECb6LL23miY61leRn+IOqZSbTLruQMG1UeoE5GkTSU+7EMWDS
-         ZiNtIPlqoSUZ5M3KPfqYFqFCRtc5r3HlqDdt/C81HFRZn3lknduU4W9Z9jmaPeAIugKS
-         JKTnXgBkG/UeLFSzvMNYzpfShoo5CW7sNDG1r74IYQ8s5So/2tY+bT9UwPgnwpe8ML5p
-         hduNyQlWHlodciVYM61AHQsoOxV1NffJRHEGcr1OVrB4njg43Efyn4R+xWisBvttQYE8
-         2HHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVAxO6Mw8H0gYT64sX6P2d8hjNulYuA/h+UXLDKLSP4X61LXpnL6Ckg6pXGfUflvGawPti788TD7dh1TX0HJnOY6BVJ03QnwtMs9/6QO1/cThv
-X-Gm-Message-State: AOJu0YysMyimSO+r577xyhAXZba52KrWGi3CgRB8NjUBYcUMU9fQDmiw
-	BUH6r9Se7lbUaHXXBVoC7omJBQ3Wt1PqYi4nzRmku4Z7pgZ0SCyws/I9ZjHx9cKhH8rgRQLXHPD
-	ShPQnQ8V/VaMEULaqZB4IhOW5cyDxS6yobbdP
-X-Google-Smtp-Source: AGHT+IErmEp1x0YBOZTZJdlWJwFXEfsRyPhDcy8wmEVW3hTA6/SyMHr3il2LMbLMxYtDvHsm6Ik4jSDo32quxqAzw+g=
-X-Received: by 2002:a05:6214:4a42:b0:6b4:f761:f0b8 with SMTP id
- 6a1803df08f44-6b501dff5a9mr45755846d6.8.1718872610557; Thu, 20 Jun 2024
- 01:36:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718873401; x=1719478201;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vPUY4GnBpPiQcbABkIr/cid7Dg+9bQhVw0p/ZhNJByA=;
+        b=WWSwp5N1Ik1jNVssYfLG5U19G67WgLXLSg6HqB6GR1FUXNdA1ChOejILWL4LTpslIP
+         rPFLpqdiZ3WEL/kqmCylc2nmdWSejtCDQK3MiS5Puu8wDajnC5jg95mA/fxOZRJ5rLob
+         v9r3FkRy682fhY4LmApUMmSjg3GhB8Pb3LWnBUkTCs08X7PBbXceTxkr57a48OVlf/jw
+         vUEZw3mjzgJ85uFTXXYSOlNDHG2Hcj/n6Qnr0fyjOGg2g8gZT8zS9hhf10GgNEI6tj2u
+         q9X0RZEayAIMEbgDq7AWE/qgzdEpDmgzl4gUwhLQekm+EuEKV6FHcbo945FMYrQ8oR9e
+         yPpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXisJYgm0x9KeckLrByg6dPaB5bMDxrrKm2A7LGXomf6N5+aohZ1AxbDb0V75wxiIurmGynidmxZ9Kbj6B0JRbDHrDTHdXy8R6vp6Fl2nU2iNF2
+X-Gm-Message-State: AOJu0Yy/AHiWGch9vG/xccQ7E42DYrc+YFSFzUxcVdplXHSaNAHP/GKj
+	9sevr83v3ZuyFK1dsZuTXgLCRPfyJNG/f+jEjbwWViRY2qXpYYH1lg62/4smo1c=
+X-Google-Smtp-Source: AGHT+IGeRQpttQkvdYS0dTEFzVkziwzBfpxbBi4M6n3CVQkw5KiESUy5y3Tp6fSmCv99sCUYOBBX3g==
+X-Received: by 2002:a17:907:c70d:b0:a6f:1045:d5e2 with SMTP id a640c23a62f3a-a6fab60b27amr291477766b.4.1718873401051;
+        Thu, 20 Jun 2024 01:50:01 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f5f377dd8sm694535966b.146.2024.06.20.01.50.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 01:50:00 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:49:57 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] tracing: Fix NULL vs IS_ERR() check in enable_instances()
+Message-ID: <9b23ea03-d709-435f-a309-461c3d747457@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619154530.163232-1-iii@linux.ibm.com> <20240619154530.163232-34-iii@linux.ibm.com>
-In-Reply-To: <20240619154530.163232-34-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 20 Jun 2024 10:36:12 +0200
-Message-ID: <CAG_fn=V8Tt28LE9FtoYkos=5XG4zP_tDP1mF1COfEhAMg2ULqQ@mail.gmail.com>
-Subject: Re: [PATCH v5 33/37] s390/uaccess: Add KMSAN support to put_user()
- and get_user()
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Wed, Jun 19, 2024 at 5:45=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> put_user() uses inline assembly with precise constraints, so Clang is
-> in principle capable of instrumenting it automatically. Unfortunately,
-> one of the constraints contains a dereferenced user pointer, and Clang
-> does not currently distinguish user and kernel pointers. Therefore
-> KMSAN attempts to access shadow for user pointers, which is not a right
-> thing to do.
+The trace_array_create_systems() function returns error pointers, not
+NULL.  Fix the check to match.
 
-By the way, how does this problem manifest?
-I was expecting KMSAN to generate dummy shadow accesses in this case,
-and reading/writing 1-8 bytes from dummy shadow shouldn't be a
-problem.
+Fixes: e645535a954a ("tracing: Add option to use memmapped memory for trace boot instance")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-(On the other hand, not inlining the get_user/put_user functions is
-probably still faster than retrieving the dummy shadow, so I'm fine
-either way)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 71cca10581d6..5462fb10ff64 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -10507,7 +10507,7 @@ __init static void enable_instances(void)
+ 		}
+ 
+ 		tr = trace_array_create_systems(name, NULL, addr, size);
+-		if (!tr) {
++		if (IS_ERR(tr)) {
+ 			pr_warn("Tracing: Failed to create instance buffer %s\n", curr_str);
+ 			continue;
+ 		}
+-- 
+2.43.0
 
->
-> An obvious fix to add __no_sanitize_memory to __put_user_fn() does not
-> work, since it's __always_inline. And __always_inline cannot be removed
-> due to the __put_user_bad() trick.
->
-> A different obvious fix of using the "a" instead of the "+Q" constraint
-> degrades the code quality, which is very important here, since it's a
-> hot path.
->
-> Instead, repurpose the __put_user_asm() macro to define
-> __put_user_{char,short,int,long}_noinstr() functions and mark them with
-> __no_sanitize_memory. For the non-KMSAN builds make them
-> __always_inline in order to keep the generated code quality. Also
-> define __put_user_{char,short,int,long}() functions, which call the
-> aforementioned ones and which *are* instrumented, because they call
-> KMSAN hooks, which may be implemented as macros.
->
-> The same applies to get_user() as well.
->
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  arch/s390/include/asm/uaccess.h | 111 +++++++++++++++++++++++---------
->  1 file changed, 79 insertions(+), 32 deletions(-)
->
-> diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uacc=
-ess.h
-> index 81ae8a98e7ec..70f0edc00c2a 100644
-> --- a/arch/s390/include/asm/uaccess.h
-> +++ b/arch/s390/include/asm/uaccess.h
-> @@ -78,13 +78,24 @@ union oac {
->
->  int __noreturn __put_user_bad(void);
->
-> -#define __put_user_asm(to, from, size)                                 \
-> -({                                                                     \
-> +#ifdef CONFIG_KMSAN
-> +#define get_put_user_noinstr_attributes \
-> +       noinline __maybe_unused __no_sanitize_memory
-> +#else
-> +#define get_put_user_noinstr_attributes __always_inline
-> +#endif
-> +
-> +#define DEFINE_PUT_USER(type)                                          \
-> +static get_put_user_noinstr_attributes int                             \
-> +__put_user_##type##_noinstr(unsigned type __user *to,                  \
-> +                           unsigned type *from,                        \
-> +                           unsigned long size)                         \
-> +{                                                                      \
->         union oac __oac_spec =3D {                                       =
- \
->                 .oac1.as =3D PSW_BITS_AS_SECONDARY,                      =
- \
->                 .oac1.a =3D 1,                                           =
- \
->         };                                                              \
-> -       int __rc;                                                       \
-> +       int rc;                                                         \
->                                                                         \
->         asm volatile(                                                   \
->                 "       lr      0,%[spec]\n"                            \
-> @@ -93,12 +104,28 @@ int __noreturn __put_user_bad(void);
->                 "2:\n"                                                  \
->                 EX_TABLE_UA_STORE(0b, 2b, %[rc])                        \
->                 EX_TABLE_UA_STORE(1b, 2b, %[rc])                        \
-> -               : [rc] "=3D&d" (__rc), [_to] "+Q" (*(to))                =
- \
-> +               : [rc] "=3D&d" (rc), [_to] "+Q" (*(to))                  =
- \
->                 : [_size] "d" (size), [_from] "Q" (*(from)),            \
->                   [spec] "d" (__oac_spec.val)                           \
->                 : "cc", "0");                                           \
-> -       __rc;                                                           \
-> -})
-> +       return rc;                                                      \
-> +}                                                                      \
-> +                                                                       \
-> +static __always_inline int                                             \
-> +__put_user_##type(unsigned type __user *to, unsigned type *from,       \
-> +                 unsigned long size)                                   \
-> +{                                                                      \
-> +       int rc;                                                         \
-> +                                                                       \
-> +       rc =3D __put_user_##type##_noinstr(to, from, size);              =
- \
-> +       instrument_put_user(*from, to, size);                           \
-> +       return rc;                                                      \
-> +}
-> +
-> +DEFINE_PUT_USER(char);
-> +DEFINE_PUT_USER(short);
-> +DEFINE_PUT_USER(int);
-> +DEFINE_PUT_USER(long);
->
->  static __always_inline int __put_user_fn(void *x, void __user *ptr, unsi=
-gned long size)
->  {
-> @@ -106,24 +133,24 @@ static __always_inline int __put_user_fn(void *x, v=
-oid __user *ptr, unsigned lon
->
->         switch (size) {
->         case 1:
-> -               rc =3D __put_user_asm((unsigned char __user *)ptr,
-> -                                   (unsigned char *)x,
-> -                                   size);
-> +               rc =3D __put_user_char((unsigned char __user *)ptr,
-> +                                    (unsigned char *)x,
-> +                                    size);
->                 break;
->         case 2:
-> -               rc =3D __put_user_asm((unsigned short __user *)ptr,
-> -                                   (unsigned short *)x,
-> -                                   size);
-> +               rc =3D __put_user_short((unsigned short __user *)ptr,
-> +                                     (unsigned short *)x,
-> +                                     size);
->                 break;
->         case 4:
-> -               rc =3D __put_user_asm((unsigned int __user *)ptr,
-> +               rc =3D __put_user_int((unsigned int __user *)ptr,
->                                     (unsigned int *)x,
->                                     size);
->                 break;
->         case 8:
-> -               rc =3D __put_user_asm((unsigned long __user *)ptr,
-> -                                   (unsigned long *)x,
-> -                                   size);
-> +               rc =3D __put_user_long((unsigned long __user *)ptr,
-> +                                    (unsigned long *)x,
-> +                                    size);
->                 break;
->         default:
->                 __put_user_bad();
-> @@ -134,13 +161,17 @@ static __always_inline int __put_user_fn(void *x, v=
-oid __user *ptr, unsigned lon
->
->  int __noreturn __get_user_bad(void);
->
-> -#define __get_user_asm(to, from, size)                                 \
-> -({                                                                     \
-> +#define DEFINE_GET_USER(type)                                          \
-> +static get_put_user_noinstr_attributes int                             \
-> +__get_user_##type##_noinstr(unsigned type *to,                         \
-> +                           unsigned type __user *from,                 \
-> +                           unsigned long size)                         \
-> +{                                                                      \
->         union oac __oac_spec =3D {                                       =
- \
->                 .oac2.as =3D PSW_BITS_AS_SECONDARY,                      =
- \
->                 .oac2.a =3D 1,                                           =
- \
->         };                                                              \
-> -       int __rc;                                                       \
-> +       int rc;                                                         \
->                                                                         \
->         asm volatile(                                                   \
->                 "       lr      0,%[spec]\n"                            \
-> @@ -149,13 +180,29 @@ int __noreturn __get_user_bad(void);
->                 "2:\n"                                                  \
->                 EX_TABLE_UA_LOAD_MEM(0b, 2b, %[rc], %[_to], %[_ksize])  \
->                 EX_TABLE_UA_LOAD_MEM(1b, 2b, %[rc], %[_to], %[_ksize])  \
-> -               : [rc] "=3D&d" (__rc), "=3DQ" (*(to))                    =
-   \
-> +               : [rc] "=3D&d" (rc), "=3DQ" (*(to))                      =
-   \
->                 : [_size] "d" (size), [_from] "Q" (*(from)),            \
->                   [spec] "d" (__oac_spec.val), [_to] "a" (to),          \
->                   [_ksize] "K" (size)                                   \
->                 : "cc", "0");                                           \
-> -       __rc;                                                           \
-> -})
-> +       return rc;                                                      \
-> +}                                                                      \
-> +                                                                       \
-> +static __always_inline int                                             \
-> +__get_user_##type(unsigned type *to, unsigned type __user *from,       \
-> +                 unsigned long size)                                   \
-> +{                                                                      \
-> +       int rc;                                                         \
-> +                                                                       \
-> +       rc =3D __get_user_##type##_noinstr(to, from, size);              =
- \
-> +       instrument_get_user(*to);                                       \
-> +       return rc;                                                      \
-> +}
-> +
-> +DEFINE_GET_USER(char);
-> +DEFINE_GET_USER(short);
-> +DEFINE_GET_USER(int);
-> +DEFINE_GET_USER(long);
->
->  static __always_inline int __get_user_fn(void *x, const void __user *ptr=
-, unsigned long size)
->  {
-> @@ -163,24 +210,24 @@ static __always_inline int __get_user_fn(void *x, c=
-onst void __user *ptr, unsign
->
->         switch (size) {
->         case 1:
-> -               rc =3D __get_user_asm((unsigned char *)x,
-> -                                   (unsigned char __user *)ptr,
-> -                                   size);
-> +               rc =3D __get_user_char((unsigned char *)x,
-> +                                    (unsigned char __user *)ptr,
-> +                                    size);
->                 break;
->         case 2:
-> -               rc =3D __get_user_asm((unsigned short *)x,
-> -                                   (unsigned short __user *)ptr,
-> -                                   size);
-> +               rc =3D __get_user_short((unsigned short *)x,
-> +                                     (unsigned short __user *)ptr,
-> +                                     size);
->                 break;
->         case 4:
-> -               rc =3D __get_user_asm((unsigned int *)x,
-> +               rc =3D __get_user_int((unsigned int *)x,
->                                     (unsigned int __user *)ptr,
->                                     size);
->                 break;
->         case 8:
-> -               rc =3D __get_user_asm((unsigned long *)x,
-> -                                   (unsigned long __user *)ptr,
-> -                                   size);
-> +               rc =3D __get_user_long((unsigned long *)x,
-> +                                    (unsigned long __user *)ptr,
-> +                                    size);
->                 break;
->         default:
->                 __get_user_bad();
-> --
-> 2.45.1
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/kasan-dev/20240619154530.163232-34-iii%40linux.ibm.com.
-
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
