@@ -1,238 +1,324 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33331AD48C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 16:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880E21AE875;
+	Thu, 20 Jun 2024 17:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718900353; cv=none; b=D7KI65Qpd9xzk2zk9CZs+suDFx7eStM2pOFZ/eMwGu8Gp9PNpGGpGnw+pi0U2z1ZKqIozTyIpGrhgHSc07K+h8skm07eooTp3b+ioaWApVhpqZP2e7V2djuytpfssZqFRAW8znTqKSf5fbeuoKd6d7+elU/CUTjXlKYt2o77kl8=
+	t=1718903028; cv=none; b=UNOeAQNZJmR0kI3Mccg57Q9jWGEE1i8o3aGDauSnIlQha0v3zKpdl4lpHDIOD20UaTpvPaTDNpK3PAjAWQD95xxhrOfzsC2KGAnTjJEaZWWKxhidYJzz5bxgIeUcm5bNviPY4MGSjObuCiWzOxNe98AhPYt4V4MIQuXNhI5+qZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718900353; c=relaxed/simple;
-	bh=oVLl+XcsKvcWdYE77A2RFFRwvfhdCY0dhp5sI6AvCr8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YUoQ6dwga/csJqTzCqbbShRJp1LbFi7VYBmhpDHYqE6R8z/5Gz3F5R6I5/bkLcR1+b3HhDlWBvF3d+HusFgojDaU8lzcxuFGDpzFDvxJbdV88Va9YtAD58wvwrBclp0XMeeMGL8Y/YymbA7AsCgLOhQgFLHAu06tgLm2fuQku/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hlQYb1Rj; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hlQYb1Rj"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f480624d10so8967625ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 09:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718900351; x=1719505151; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gDTwzMRp7r7igVV+ZTOkGMM8uRoM9/iMzbfcbOs3NYs=;
-        b=hlQYb1RjDm/dAQxclkDOO4GKMXYg/SoDBVBZVczfRlNf4nMiwuaF49akqzraU9rVHJ
-         7qKWNhsFEu+w3S/ayk630UuncOfiUq0OHvswtVIK4b4Csgzw/YuNdIgZck0PR8ZrefqP
-         xhjYqQd7FLZouI8R6CHc8T3RmQ0G41d4gCV1Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718900351; x=1719505151;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gDTwzMRp7r7igVV+ZTOkGMM8uRoM9/iMzbfcbOs3NYs=;
-        b=CECtBN9rdQo9YAu3jQNcVO5zxxYeeup8mahrfXJsKt/M1md06GKWKjp98R5FXm7/Sv
-         0DgFA/pN6cAYtUq0hfIguwKsN1Xj3YjdDNY7q9MH49P3ccbPr4QuieEhdSkz+PfCX7qx
-         NSFzBZUCP+DiTVCmmAasBYKu2h7vUymyCke0+tiP7vaMid/b9KCeDFgiLewsT9pmIGya
-         dqaulpg7YhkWlvaRfgxznsP7jAT73OqM2/iEZ86yWJJiMuNx+Wa3JcvDySBrrVYMmNfI
-         6obdF3c3d8FB2pydHx8q9+YIXpC9HuS5xJZzOMKZrJNWyZw92s4nXrIaIR+/6TBfiRjJ
-         JvOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBOTy4jCmtFc4RKqlzVC+S6DtH0nJzHlehggURV6OX3MSS+DkaGN0hk2eBphNdL/GMnBNDfVAT6Qpuqmtw2MIm5BJP4v3+BbPp8uMPgSEsp62i
-X-Gm-Message-State: AOJu0YwlsY8kpWAsdhP9vwxrEZP6kN/Z8BGtpHYKbK4lHTaBKS1UfYlC
-	fRmUTGbgSUePildaF29Jsz32qqESfPjEuXdg88oRr+1/wv4NnHJyDLySNFP5
-X-Google-Smtp-Source: AGHT+IFSW1DtPmzfkyXjIzCznsvC4863obnU5C/WxGZH3fmU++B5UFx8192lW0ggQO9pfsgefF865g==
-X-Received: by 2002:a17:903:11cc:b0:1f6:ea71:34ee with SMTP id d9443c01a7336-1f9aa3ce954mr69656465ad.16.1718900351103;
-        Thu, 20 Jun 2024 09:19:11 -0700 (PDT)
-Received: from localhost (148.175.199.104.bc.googleusercontent.com. [104.199.175.148])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-1f9c72085f9sm18696855ad.79.2024.06.20.09.19.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jun 2024 09:19:10 -0700 (PDT)
-From: Takaya Saeki <takayas@chromium.org>
-To: Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Junichi Uekawa <uekawa@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Takaya Saeki <takayas@chromium.org>
-Subject: [PATCH v2] filemap: add trace events for get_pages, map_pages, and fault
-Date: Thu, 20 Jun 2024 16:19:03 +0000
-Message-ID: <20240620161903.3176859-1-takayas@chromium.org>
-X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
+	s=arc-20240116; t=1718903028; c=relaxed/simple;
+	bh=8iRJHYBHSJDAfuG/nuIifUPlChLJCBR9C7u6zRQZ6aA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E/QWj3+4AnSNQEm1EOFWCrmbhhYErVQkjoppfya+b6KDy48IMkLJof7Grf4BjpRor/C0gBCzAOe1rgVeqzmNuGz0EBXjIxWXbyj4FBBpdYwEQqyEM3Dxt6RcOuPCfLkQFkvwabKXbXVQBdDAaUomErLfZk2HBbJR3RztRHf7A1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7F8F820007;
+	Thu, 20 Jun 2024 17:03:39 +0000 (UTC)
+Message-ID: <92f64e0c-fe10-48df-9ede-d841741755d7@ghiti.fr>
+Date: Thu, 20 Jun 2024 19:03:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
+Content-Language: en-US
+To: Andy Chiu <andy.chiu@sifive.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ puranjay Mohan <puranjay12@gmail.com>
+References: <20240523115134.70380-1-alexghiti@rivosinc.com>
+ <20240613-lubricant-breath-061192a9489a@wendy>
+ <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
+ <b603c8b5-3100-4ccf-b014-9274f980358d@ghiti.fr>
+ <CABgGipU1tjFAJ+KD7fFabVmLoqNtmQagn2sREHVzZCZ3OxozzQ@mail.gmail.com>
+ <CAHVXubiubf9oCHnFco19SReZRPELYJSRtZmwEnGQLR++N+aH-g@mail.gmail.com>
+ <CABgGipWu2sL0EiKGUgksCZta5Ru3N5fqiNZVQ-5mrDt00puyyQ@mail.gmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <CABgGipWu2sL0EiKGUgksCZta5Ru3N5fqiNZVQ-5mrDt00puyyQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-To allow precise tracking of page caches accessed, add new tracepoints
-that trigger when a process actually accesses them.
 
-The ureadahead program used by ChromeOS traces the disk access of
-programs as they start up at boot up. It uses mincore(2) or the
-'mm_filemap_add_to_page_cache' trace event to accomplish this. It stores
-this information in a "pack" file and on subsequent boots, it will read
-the pack file and call readahead(2) on the information so that disk
-storage can be loaded into RAM before the applications actually need it.
+On 19/06/2024 05:40, Andy Chiu wrote:
+> On Tue, Jun 18, 2024 at 9:40 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
+>> Hi Andy,
+>>
+>> On Tue, Jun 18, 2024 at 2:48 PM Andy Chiu <andy.chiu@sifive.com> wrote:
+>>> On Tue, Jun 18, 2024 at 8:02 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>>>> Hi Conor,
+>>>>
+>>>> On 17/06/2024 15:23, Alexandre Ghiti wrote:
+>>>>> Hi Conor,
+>>>>>
+>>>>> Sorry for the delay here.
+>>>>>
+>>>>> On 13/06/2024 09:48, Conor Dooley wrote:
+>>>>>> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
+>>>>>>> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
+>>>>>>> converted ftrace_make_nop() to use patch_insn_write() which does not
+>>>>>>> emit any icache flush relying entirely on __ftrace_modify_code() to do
+>>>>>>> that.
+>>>>>>>
+>>>>>>> But we missed that ftrace_make_nop() was called very early directly
+>>>>>>> when
+>>>>>>> converting mcount calls into nops (actually on riscv it converts 2B
+>>>>>>> nops
+>>>>>>> emitted by the compiler into 4B nops).
+>>>>>>>
+>>>>>>> This caused crashes on multiple HW as reported by Conor and Björn since
+>>>>>>> the booting core could have half-patched instructions in its icache
+>>>>>>> which would trigger an illegal instruction trap: fix this by emitting a
+>>>>>>> local flush icache when early patching nops.
+>>>>>>>
+>>>>>>> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
+>>>>>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>>>>>>> ---
+>>>>>>>    arch/riscv/include/asm/cacheflush.h | 6 ++++++
+>>>>>>>    arch/riscv/kernel/ftrace.c          | 3 +++
+>>>>>>>    2 files changed, 9 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/arch/riscv/include/asm/cacheflush.h
+>>>>>>> b/arch/riscv/include/asm/cacheflush.h
+>>>>>>> index dd8d07146116..ce79c558a4c8 100644
+>>>>>>> --- a/arch/riscv/include/asm/cacheflush.h
+>>>>>>> +++ b/arch/riscv/include/asm/cacheflush.h
+>>>>>>> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
+>>>>>>>        asm volatile ("fence.i" ::: "memory");
+>>>>>>>    }
+>>>>>>>    +static inline void local_flush_icache_range(unsigned long start,
+>>>>>>> +                        unsigned long end)
+>>>>>>> +{
+>>>>>>> +    local_flush_icache_all();
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>    #define PG_dcache_clean PG_arch_1
+>>>>>>>      static inline void flush_dcache_folio(struct folio *folio)
+>>>>>>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>>>>>>> index 4f4987a6d83d..32e7c401dfb4 100644
+>>>>>>> --- a/arch/riscv/kernel/ftrace.c
+>>>>>>> +++ b/arch/riscv/kernel/ftrace.c
+>>>>>>> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct
+>>>>>>> dyn_ftrace *rec)
+>>>>>>>        out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>>>>>>>        mutex_unlock(&text_mutex);
+>>>>>> So, turns out that this patch is not sufficient. I've seen some more
+>>>>>> crashes, seemingly due to initialising nops on this mutex_unlock().
+>>>>>> Palmer suggested moving the if (!mod) ... into the lock, which fixed
+>>>>>> the problem for me.
+>>>>>
+>>>>> Ok, it makes sense, I completely missed that. I'll send a fix for that
+>>>>> shortly so that it can be merged in rc5.
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>> Alex
+>>>>
+>>>> So I digged a bit more and I'm afraid that the only way to make sure
+>>>> this issue does not happen elsewhere is to flush the icache right after
+>>>> the patching. We actually can't wait to batch the icache flush since
+>>>> along the way, we may call a function that has just been patched (the
+>>>> issue that you encountered here).
+>>> Trying to provide my thoughts, please let me know if I missed
+>>> anything. I think what Conor suggested is safe for init_nop, as it
+>>> would be called only when there is only one core (booting) and at the
+>>> loading stage of kernel modules. In the first case we just have to
+>>> make sure there is no patchable entry before the core executes
+>>> fence.i. The second case is unconditionally safe because there is no
+>>> read-side of the race.
+>>>
+>>> It is a bit tricky for the generic (runtime) case of ftrace code
+>>> patching, but that is not because of the batch fence.i maintenance. As
+>>> long as there exists a patchable entry for the stopping thread, it is
+>>> possible for them to execute on a partially patched instruction. A
+>>> solution for this is again to prevent any patchable entry in the
+>>> stop_machine's stopping thread. Another solution is to apply the
+>>> atomic ftrace patching series which aims to get rid of the race.
+>> Yeah but my worry is that we can't make sure that functions called
+>> between the patching and the fence.i are not the ones that just get
+>> patched. At least today, patch_insn_write() etc should be marked as
+> IIUC, the compiler does not generate a patchable entry for
+> patch_insn_write, and so do all functions in patch.c. The entire file
+> is not compiled with patchable entry because the flag is removed in
+> riscv's Makefile. Please let me know if I misunderstand it.
+>
+>> noinstr. But even then, we call core functions that could be patchable
+>> (I went through all and it *seems* we are safe *for now*, but this is
+>> very fragile).
+> Yes, functions in the "else" clause, atomic_read() etc, are safe for
+> now. However, it is impossible to fix as long as there exists a
+> patchable entry along the way. This is the problem that we cannot
+> patch 2 instructions with a concurrent read-side. On the other hand,
+> the path of ftrace_modify_all_code may experience the batch fence.i
+> maintenance issue, and can be fixed via a local fence.i. This is
+> because the path is executed by only one core. There does not exist a
+> concurrent write-side. As a result, we just need to make sure it
+> leaves each patch-site with a local fence.i to make sure code is
+> up-to-date.
+>
+>> Then what do you think we should do to fix Conor's issue right now:
+>> should we mark the riscv specific functions as noinstr, cross fingers
+>> that the core functions are not (and don't become) patchable and wait
+>> for your atomic patching? Or should we flush as soon as possible as I
+>> proposed above (which to me fixes the issue but hurts performance)?
+> Either way works for me. IMHO, the fix should include:
+>
+> 1. move fence.i before mutex_unlock in init_nop
+> 2. do local fence.i in __ftrace_modify_call
+> 3. make sure the else clause does not happen to have a patchable entry
 
-A problem we see is that due to the kernel's readahead algorithm that
-can aggressively pull in more data than needed (to try and accomplish
-the same goal) and this data is also recorded. The end result is that
-the pack file contains a lot of pages on disk that are never actually
-used. Calling readahead(2) on these unused pages can slow down the
-system boot up times.
 
-To solve this, add 3 new trace events, get_pages, map_pages, and fault.
-These will be used to trace the pages are not only pulled in from disk,
-but are actually used by the application. Only those pages will be
-stored in the pack file, and this helps out the performance of boot up.
+OK I have just checked again and I agree with you on the whole fix :) I 
+may add some comments for 3 so that it is very clear.
 
-With the combination of these 3 new trace events and
-mm_filemap_add_to_page_cache, we observed a reduction in the pack file
-by 7.3% - 20% on ChromeOS varying by device.
+Thanks Andy!
 
-Signed-off-by: Takaya Saeki <takayas@chromium.org>
----
-Changelog between v2 and v1
-- Fix a file offset type usage by casting pgoff_t to loff_t
-- Fixed format string of dev and inode
+Alex
 
- include/trace/events/filemap.h | 84 ++++++++++++++++++++++++++++++++++
- mm/filemap.c                   |  4 ++
- 2 files changed, 88 insertions(+)
 
-V1:https://lore.kernel.org/all/20240618093656.1944210-1-takayas@chromium.org/
-
-diff --git a/include/trace/events/filemap.h b/include/trace/events/filemap.h
-index 46c89c1e460c..3a94bd633bf0 100644
---- a/include/trace/events/filemap.h
-+++ b/include/trace/events/filemap.h
-@@ -56,6 +56,90 @@ DEFINE_EVENT(mm_filemap_op_page_cache, mm_filemap_add_to_page_cache,
- 	TP_ARGS(folio)
- 	);
- 
-+DECLARE_EVENT_CLASS(mm_filemap_op_page_cache_range,
-+
-+	TP_PROTO(
-+		struct address_space *mapping,
-+		pgoff_t index,
-+		pgoff_t last_index
-+	),
-+
-+	TP_ARGS(mapping, index, last_index),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, i_ino)
-+		__field(dev_t, s_dev)
-+		__field(unsigned long, index)
-+		__field(unsigned long, last_index)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->i_ino = mapping->host->i_ino;
-+		if (mapping->host->i_sb)
-+			__entry->s_dev =
-+				mapping->host->i_sb->s_dev;
-+		else
-+			__entry->s_dev = mapping->host->i_rdev;
-+		__entry->index = index;
-+		__entry->last_index = last_index;
-+	),
-+
-+	TP_printk(
-+		"dev=%d:%d ino=%lx ofs=%lld max_ofs=%lld",
-+		MAJOR(__entry->s_dev),
-+		MINOR(__entry->s_dev), __entry->i_ino,
-+		((loff_t)__entry->index) << PAGE_SHIFT,
-+		((loff_t)__entry->last_index) << PAGE_SHIFT
-+	)
-+);
-+
-+DEFINE_EVENT(mm_filemap_op_page_cache_range, mm_filemap_get_pages,
-+	TP_PROTO(
-+		struct address_space *mapping,
-+		pgoff_t index,
-+		pgoff_t last_index
-+	),
-+	TP_ARGS(mapping, index, last_index)
-+);
-+
-+DEFINE_EVENT(mm_filemap_op_page_cache_range, mm_filemap_map_pages,
-+	TP_PROTO(
-+		struct address_space *mapping,
-+		pgoff_t index,
-+		pgoff_t last_index
-+	),
-+	TP_ARGS(mapping, index, last_index)
-+);
-+
-+TRACE_EVENT(mm_filemap_fault,
-+	TP_PROTO(struct address_space *mapping, pgoff_t index),
-+
-+	TP_ARGS(mapping, index),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, i_ino)
-+		__field(dev_t, s_dev)
-+		__field(unsigned long, index)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->i_ino = mapping->host->i_ino;
-+		if (mapping->host->i_sb)
-+			__entry->s_dev =
-+				mapping->host->i_sb->s_dev;
-+		else
-+			__entry->s_dev = mapping->host->i_rdev;
-+		__entry->index = index;
-+	),
-+
-+	TP_printk(
-+		"dev=%d:%d ino=%lx ofs=%lld",
-+		MAJOR(__entry->s_dev),
-+		MINOR(__entry->s_dev), __entry->i_ino,
-+		((loff_t)__entry->index) << PAGE_SHIFT
-+	)
-+);
-+
- TRACE_EVENT(filemap_set_wb_err,
- 		TP_PROTO(struct address_space *mapping, errseq_t eseq),
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 876cc64aadd7..39f9d7fb3d2c 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2556,6 +2556,7 @@ static int filemap_get_pages(struct kiocb *iocb, size_t count,
- 			goto err;
- 	}
- 
-+	trace_mm_filemap_get_pages(mapping, index, last_index);
- 	return 0;
- err:
- 	if (err < 0)
-@@ -3286,6 +3287,8 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
- 	if (unlikely(index >= max_idx))
- 		return VM_FAULT_SIGBUS;
- 
-+	trace_mm_filemap_fault(mapping, index);
-+
- 	/*
- 	 * Do we have something in the page cache already?
- 	 */
-@@ -3652,6 +3655,7 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
- 	} while ((folio = next_uptodate_folio(&xas, mapping, end_pgoff)) != NULL);
- 	add_mm_counter(vma->vm_mm, folio_type, rss);
- 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-+	trace_mm_filemap_map_pages(mapping, start_pgoff, end_pgoff);
- out:
- 	rcu_read_unlock();
- 
--- 
-2.45.2.627.g7a2c4fd464-goog
-
+>
+> Thanks,
+> Andy
+>
+>> Thanks,
+>>
+>> Alex
+>>
+>>>> I don't know how much it will impact the performance but I guess it will.
+>>>>
+>>>> Unless someone has a better idea (I added Andy and Puranjay in cc), here
+>>>> is the patch that implements this, can you give it a try? Thanks
+>>>>
+>>>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>>>> index 87cbd86576b2..4b95c574fd04 100644
+>>>> --- a/arch/riscv/kernel/ftrace.c
+>>>> +++ b/arch/riscv/kernel/ftrace.c
+>>>> @@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct
+>>>> dyn_ftrace *rec)
+>>>>           out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>>>>           mutex_unlock(&text_mutex);
+>>>>
+>>>> -       if (!mod)
+>>>> -               local_flush_icache_range(rec->ip, rec->ip +
+>>>> MCOUNT_INSN_SIZE);
+>>>> -
+>>>>           return out;
+>>>>    }
+>>>>
+>>>> @@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
+>>>>           } else {
+>>>>                   while (atomic_read(&param->cpu_count) <= num_online_cpus())
+>>>>                           cpu_relax();
+>>>> -       }
+>>>>
+>>>> -       local_flush_icache_all();
+>>>> +               local_flush_icache_all();
+>>>> +       }
+>>>>
+>>>>           return 0;
+>>>>    }
+>>>> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+>>>> index 4007563fb607..ab03732d06c4 100644
+>>>> --- a/arch/riscv/kernel/patch.c
+>>>> +++ b/arch/riscv/kernel/patch.c
+>>>> @@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
+>>>>
+>>>>           memset(waddr, c, len);
+>>>>
+>>>> +       /*
+>>>> +        * We could have just patched a function that is about to be
+>>>> +        * called so make sure we don't execute partially patched
+>>>> +        * instructions by flushing the icache as soon as possible.
+>>>> +        */
+>>>> +       local_flush_icache_range((unsigned long)waddr,
+>>>> +                                (unsigned long)waddr + len);
+>>>> +
+>>>>           patch_unmap(FIX_TEXT_POKE0);
+>>>>
+>>>>           if (across_pages)
+>>>> @@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const
+>>>> void *insn, size_t len)
+>>>>
+>>>>           ret = copy_to_kernel_nofault(waddr, insn, len);
+>>>>
+>>>> +       /*
+>>>> +        * We could have just patched a function that is about to be
+>>>> +        * called so make sure we don't execute partially patched
+>>>> +        * instructions by flushing the icache as soon as possible.
+>>>> +        */
+>>>> +       local_flush_icache_range((unsigned long)waddr,
+>>>> +                                (unsigned long)waddr + len);
+>>>> +
+>>>>           patch_unmap(FIX_TEXT_POKE0);
+>>>>
+>>>>           if (across_pages)
+>>>> @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
+>>>>
+>>>>           ret = patch_insn_set(tp, c, len);
+>>>>
+>>>> -       if (!ret)
+>>>> -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
+>>>> -
+>>>>           return ret;
+>>>>    }
+>>>>    NOKPROBE_SYMBOL(patch_text_set_nosync);
+>>>> @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns,
+>>>> size_t len)
+>>>>
+>>>>           ret = patch_insn_write(tp, insns, len);
+>>>>
+>>>> -       if (!ret)
+>>>> -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
+>>>> -
+>>>>           return ret;
+>>>>    }
+>>>>    NOKPROBE_SYMBOL(patch_text_nosync);
+>>>> @@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
+>>>>           } else {
+>>>>                   while (atomic_read(&patch->cpu_count) <= num_online_cpus())
+>>>>                           cpu_relax();
+>>>> -       }
+>>>>
+>>>> -       local_flush_icache_all();
+>>>> +               local_flush_icache_all();
+>>>> +       }
+>>>>
+>>>>           return ret;
+>>>>    }
+>>>>
+>>>>
+>>>>>
+>>>>>>>    +    if (!mod)
+>>>>>>> +        local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
+>>>>>>> +
+>>>>>>>        return out;
+>>>>>>>    }
+>>>>>>>    --
+>>>>>>> 2.39.2
+>>>>>>>
+>>>>>>>
+>>>>>>> _______________________________________________
+>>>>>>> linux-riscv mailing list
+>>>>>>> linux-riscv@lists.infradead.org
+>>>>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>>>> _______________________________________________
+>>>>> linux-riscv mailing list
+>>>>> linux-riscv@lists.infradead.org
+>>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>> Cheers,
+>>> Andy
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
