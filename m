@@ -1,64 +1,60 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AAA1AB91C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F46A19DF88
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873404; cv=none; b=tShwI4YlQGvbuRTI0G3DleMjpml4wmG0NeC3to65MstIX8mip6+yBBGDQT6S+VbyMP4ELMNq84N92znnQ8X8Py1bcz2HDKUJE2Vr1oBgE/NdZFdymBr6S0tHQJcojeqnjehOEkEcPGkCxNRZMtXpqJR7cGdf+2W3+cRtmcuhHbY=
+	t=1718873450; cv=none; b=JHs7KSr5Tqm/3M1h6ZCTDoumj1s3aXK/zBcnKwAHr1yFe28Dz2DMfkjlysmDAzJIbqo8wpZxt/tsHqIP9lqz7ZFfiW9cdxqZkQXTxGv/viTiyGrvGLkKZlNEnx5tEbozYUgf1tgw26vu0VJ1shIJc87XG6naVJiZb1Six1d/gdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873404; c=relaxed/simple;
-	bh=E/xlmU084aOXXwFw807wZImjGPqm1ANMchdMOU8QUug=;
+	s=arc-20240116; t=1718873450; c=relaxed/simple;
+	bh=J8AlTzn2cuj5/AsWL16JdZQs7eEzAqoaqJbZsGynG6s=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=r7+oKMZJaXU9WX0HHYo057Gf9BkGVXe2MA2rR9opdJHKgldgzyBVxPMBzsjMw2FwjG54uyulgtnHnaxniTShu9xdKvRnCpVdQG8iTMVf//1Yl9WDvbpvB0Zkq6aK0rKEiN002kpo691NIfSDtxPr052t/5a8ojPVc7/XkeFj8pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X7VeeHkV; arc=none smtp.client-ip=209.85.218.51
+	 Content-Disposition; b=Q9boHp8SIvQhDRNR1fTGegtA2/WmP3Ivbm8uQ9+fJpbXnVad0VEnDlq17ThdMH0O8H2bGqdA8WkiPpNvMk9NBMQVPqlqdBVSzTwhDhBCVzbgYSCDhn8RVzRlepXDUbJtRapFwBEHNbJ/3yiNVi6SHqYkXKnNUJateqB1U0Qtyes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zzqcxyRN; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X7VeeHkV"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f177b78dcso60527666b.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:50:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzqcxyRN"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57ccd1111aeso633160a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:50:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718873401; x=1719478201; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718873447; x=1719478247; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vPUY4GnBpPiQcbABkIr/cid7Dg+9bQhVw0p/ZhNJByA=;
-        b=X7VeeHkVNnoM4c/vIDPSHLEFNAAE4h9jolRxuo4ZEwsFzcqN+IX6rwhyn8CUVcnBIK
-         Ljoq08b58s8IVqjm/YIRJqY6l/ZxLVNhufoUil9vwHs2po8Rtn7Y8FaxVL6OeAt7/0ZI
-         AcVuC9RjRbP4YPbT96GAyM3SlWQmbK6ilbUTPX9M2x6p79SJJ700XoHAigMkqt698fWF
-         CE2HNrthqHlMWLDNqMDYvVBjEVnZpYCFvhqvoKxYM4phuyg0YwnIBEU7SrlQEX8HwgT4
-         /NH0kKw1qGodIboCMVqbdaoecvAIafSn6rOgr96Fj5BQc/Dtn8eQEOCo0MtZXW//9izk
-         fICQ==
+        bh=dISpUGJA38EuaCw6NEc2rJ6Reirv0G1941aI36CtMEE=;
+        b=zzqcxyRN8Ag2jhqDSy5jIZEfKCiBJjlwrAyd+ZX+CmCRqkEEBnGq+oO8T8yICRaNW9
+         ZbuhLwmZSei2a97HN8OqllF8Z8WOylnd/s+CavEyYUQoN8g34FGpaWAJpWv0u+jSM7vB
+         7WPde1utDoVgwBfP/E37dxK+GDLmCfKyLaHSjeQE7pSC3FKVQ8Mfj2GPYxxlnlfXLrI4
+         umvPcEfh29XXL9l1MZdWjOGxhEEoGZlap+eJwFqo89AI94t6zkQ7VI6/YPYU0udXagCS
+         k0hcJ71VOaKLv4Fcs/dncB/EQLJKnev8j05/mOtPa5I+3ZgPMJULbyCBq6qO4oJKjwjz
+         XzvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718873401; x=1719478201;
+        d=1e100.net; s=20230601; t=1718873447; x=1719478247;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vPUY4GnBpPiQcbABkIr/cid7Dg+9bQhVw0p/ZhNJByA=;
-        b=WWSwp5N1Ik1jNVssYfLG5U19G67WgLXLSg6HqB6GR1FUXNdA1ChOejILWL4LTpslIP
-         rPFLpqdiZ3WEL/kqmCylc2nmdWSejtCDQK3MiS5Puu8wDajnC5jg95mA/fxOZRJ5rLob
-         v9r3FkRy682fhY4LmApUMmSjg3GhB8Pb3LWnBUkTCs08X7PBbXceTxkr57a48OVlf/jw
-         vUEZw3mjzgJ85uFTXXYSOlNDHG2Hcj/n6Qnr0fyjOGg2g8gZT8zS9hhf10GgNEI6tj2u
-         q9X0RZEayAIMEbgDq7AWE/qgzdEpDmgzl4gUwhLQekm+EuEKV6FHcbo945FMYrQ8oR9e
-         yPpw==
-X-Forwarded-Encrypted: i=1; AJvYcCXisJYgm0x9KeckLrByg6dPaB5bMDxrrKm2A7LGXomf6N5+aohZ1AxbDb0V75wxiIurmGynidmxZ9Kbj6B0JRbDHrDTHdXy8R6vp6Fl2nU2iNF2
-X-Gm-Message-State: AOJu0Yy/AHiWGch9vG/xccQ7E42DYrc+YFSFzUxcVdplXHSaNAHP/GKj
-	9sevr83v3ZuyFK1dsZuTXgLCRPfyJNG/f+jEjbwWViRY2qXpYYH1lg62/4smo1c=
-X-Google-Smtp-Source: AGHT+IGeRQpttQkvdYS0dTEFzVkziwzBfpxbBi4M6n3CVQkw5KiESUy5y3Tp6fSmCv99sCUYOBBX3g==
-X-Received: by 2002:a17:907:c70d:b0:a6f:1045:d5e2 with SMTP id a640c23a62f3a-a6fab60b27amr291477766b.4.1718873401051;
-        Thu, 20 Jun 2024 01:50:01 -0700 (PDT)
+        bh=dISpUGJA38EuaCw6NEc2rJ6Reirv0G1941aI36CtMEE=;
+        b=UoCU9m0Ly+Z2gwwast6bk66kbkTP5dKxCwZHi1TyNaCv4faL/NEBw6xRJ/rkob11NQ
+         1KUC+PRqo1SURDJSQSltN1yYjBPRNhk1VQfffU2733AjQasLDyqiukYXtKMZm5ioNrfL
+         OSixSlCiu8FLKSEN+RJGvn7MKpMxQVLwUFuZi/BkQNKs7aR14kkUmfTz49HszdKpPb+H
+         NMUCkDiLEuO8UH5Gg6JzRLUj9/m05tDoHbsGpmy4YIaU2DKZKczAWlW32TdTxYSM72M8
+         OON5XJXI5vCH8IpWlxl7lR6fEU89YfEH4eh1msWGSaqeYe4um51qBpYzK1L49oMYwmpR
+         cIkw==
+X-Gm-Message-State: AOJu0YxqeC0Rdbe2BpkjZnDwAIWEN55EHco4jW3Xj0F1ZwDuw+LCqMod
+	OL0RbT2wL1XctGtJdh44S8GJKQSUilUm47ir9sa+8etInnPOZui8d4ZovVyAdCY=
+X-Google-Smtp-Source: AGHT+IFYCMyxttsDKcVr+qJocF1z1eWvhmn7UsF9WLdJbxR0GAPuIpFhweTWRsaCmmWDU67Q+OgbXA==
+X-Received: by 2002:a50:d6c2:0:b0:57c:aac9:cd6 with SMTP id 4fb4d7f45d1cf-57d07e27370mr2542832a12.4.1718873446653;
+        Thu, 20 Jun 2024 01:50:46 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f5f377dd8sm694535966b.146.2024.06.20.01.50.00
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cddba1b0esm5167951a12.84.2024.06.20.01.50.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 01:50:00 -0700 (PDT)
-Date: Thu, 20 Jun 2024 11:49:57 +0300
+        Thu, 20 Jun 2024 01:50:46 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:50:43 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] tracing: Fix NULL vs IS_ERR() check in enable_instances()
-Message-ID: <9b23ea03-d709-435f-a309-461c3d747457@moroto.mountain>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: [bug report] ring-buffer: Validate boot range memory events
+Message-ID: <e1f7e29a-0350-40c6-a28d-e9012f9a6428@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,30 +63,100 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
 
-The trace_array_create_systems() function returns error pointers, not
-NULL.  Fix the check to match.
+Hello Steven Rostedt (Google),
 
-Fixes: e645535a954a ("tracing: Add option to use memmapped memory for trace boot instance")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Commit 5f3b6e839f3c ("ring-buffer: Validate boot range memory
+events") from Jun 12, 2024 (linux-next), leads to the following
+Smatch static checker warning:
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 71cca10581d6..5462fb10ff64 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10507,7 +10507,7 @@ __init static void enable_instances(void)
- 		}
- 
- 		tr = trace_array_create_systems(name, NULL, addr, size);
--		if (!tr) {
-+		if (IS_ERR(tr)) {
- 			pr_warn("Tracing: Failed to create instance buffer %s\n", curr_str);
- 			continue;
- 		}
--- 
-2.43.0
+	kernel/trace/ring_buffer.c:1824 rb_meta_validate_events()
+	error: uninitialized symbol 'head_page'.
 
+kernel/trace/ring_buffer.c
+    1751 static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+    1752 {
+    1753         struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
+    1754         struct buffer_page *head_page;
+    1755         unsigned long entry_bytes = 0;
+    1756         unsigned long entries = 0;
+    1757         int ret;
+    1758         int i;
+    1759 
+    1760         if (!meta || !meta->head_buffer)
+    1761                 return;
+    1762 
+    1763         /* Do the reader page first */
+    1764         ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
+    1765         if (ret < 0) {
+    1766                 pr_info("Ring buffer reader page is invalid\n");
+    1767                 goto invalid;
+
+head_page is uninitialized
+
+    1768         }
+    1769         entries += ret;
+    1770         entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+    1771         local_set(&cpu_buffer->reader_page->entries, ret);
+    1772 
+    1773         head_page = cpu_buffer->head_page;
+    1774 
+    1775         /* If both the head and commit are on the reader_page then we are done. */
+    1776         if (head_page == cpu_buffer->reader_page &&
+    1777             head_page == cpu_buffer->commit_page)
+    1778                 goto done;
+    1779 
+    1780         /* Iterate until finding the commit page */
+    1781         for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+    1782 
+    1783                 /* Reader page has already been done */
+    1784                 if (head_page == cpu_buffer->reader_page)
+    1785                         continue;
+    1786 
+    1787                 ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
+    1788                 if (ret < 0) {
+    1789                         pr_info("Ring buffer meta [%d] invalid buffer page\n",
+    1790                                 cpu_buffer->cpu);
+    1791                         goto invalid;
+    1792                 }
+    1793                 entries += ret;
+    1794                 entry_bytes += local_read(&head_page->page->commit);
+    1795                 local_set(&cpu_buffer->head_page->entries, ret);
+    1796 
+    1797                 if (head_page == cpu_buffer->commit_page)
+    1798                         break;
+    1799         }
+    1800 
+    1801         if (head_page != cpu_buffer->commit_page) {
+    1802                 pr_info("Ring buffer meta [%d] commit page not found\n",
+    1803                         cpu_buffer->cpu);
+    1804                 goto invalid;
+    1805         }
+    1806  done:
+    1807         local_set(&cpu_buffer->entries, entries);
+    1808         local_set(&cpu_buffer->entries_bytes, entry_bytes);
+    1809 
+    1810         pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
+    1811         return;
+    1812 
+    1813  invalid:
+    1814         /* The content of the buffers are invalid, reset the meta data */
+    1815         meta->head_buffer = 0;
+    1816         meta->commit_buffer = 0;
+    1817 
+    1818         /* Reset the reader page */
+    1819         local_set(&cpu_buffer->reader_page->entries, 0);
+    1820         local_set(&cpu_buffer->reader_page->page->commit, 0);
+    1821 
+    1822         /* Reset all the subbuffers */
+    1823         for (i = 0; i < meta->nr_subbufs - 1; i++, rb_inc_page(&head_page)) {
+--> 1824                 local_set(&head_page->entries, 0);
+                                    ^^^^^^^^^
+Uninitialized
+
+    1825                 local_set(&head_page->page->commit, 0);
+    1826         }
+    1827 }
+
+regards,
+dan carpenter
