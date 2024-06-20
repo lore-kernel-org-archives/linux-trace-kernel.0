@@ -1,324 +1,253 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880E21AE875;
-	Thu, 20 Jun 2024 17:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED361AE875;
+	Thu, 20 Jun 2024 17:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718903028; cv=none; b=UNOeAQNZJmR0kI3Mccg57Q9jWGEE1i8o3aGDauSnIlQha0v3zKpdl4lpHDIOD20UaTpvPaTDNpK3PAjAWQD95xxhrOfzsC2KGAnTjJEaZWWKxhidYJzz5bxgIeUcm5bNviPY4MGSjObuCiWzOxNe98AhPYt4V4MIQuXNhI5+qZQ=
+	t=1718903190; cv=none; b=n3utL0XnWzz3uv7/GF3uwf2enLy8xs93DG6Rq/TZlGcfMIbUffQWs+39TcFoCiHyHP+eQc7/Som2QwkK73gfwB1pEUHWJa+yd51sQYwaGKQEfOO0WGkj7HvrIMmJl8WngMiCT/6dKU9ZwYrBoMxrx5rN2wsQ6GLcBzVRtjKia2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718903028; c=relaxed/simple;
-	bh=8iRJHYBHSJDAfuG/nuIifUPlChLJCBR9C7u6zRQZ6aA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E/QWj3+4AnSNQEm1EOFWCrmbhhYErVQkjoppfya+b6KDy48IMkLJof7Grf4BjpRor/C0gBCzAOe1rgVeqzmNuGz0EBXjIxWXbyj4FBBpdYwEQqyEM3Dxt6RcOuPCfLkQFkvwabKXbXVQBdDAaUomErLfZk2HBbJR3RztRHf7A1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7F8F820007;
-	Thu, 20 Jun 2024 17:03:39 +0000 (UTC)
-Message-ID: <92f64e0c-fe10-48df-9ede-d841741755d7@ghiti.fr>
-Date: Thu, 20 Jun 2024 19:03:38 +0200
+	s=arc-20240116; t=1718903190; c=relaxed/simple;
+	bh=aZefvX2i2zdaaemPAMbUWZ55XJ/KZi7qSCtrnSRv/hs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qhZHWO1rvUT1g7FG1zI9n3oo1Dr9wqZWBaUkME0PaGozBKsYA4Qedmiv/086CbvyBQMPJ4ypRN2uGDt+txT5WzPEpxtlvN1xLCqk11GrdxVYki1jviCZFIfAc5NnvCguT8uOTCX3fA3agPG5N0sr3QfnW+nZCAeJwVcOf4078OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WpEf61lL; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WpEf61lL"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45KGw4nC024890;
+	Thu, 20 Jun 2024 17:06:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:subject:from:to:cc:date:in-reply-to:references
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	aZefvX2i2zdaaemPAMbUWZ55XJ/KZi7qSCtrnSRv/hs=; b=WpEf61lLhyDkJfY0
+	dk/Dz4IM+JSVcEnqU5f0IiO400t/Z2LI6UtFSpj8MreiwScPueDFdaFyw/NmayrQ
+	gti6xiqgJ5yYiL4z+QFnxXmZJgm0IiWvqhQKchyPifDaAQTiQWY3c9Z7tRm5EZmT
+	5yR2LM2nF/a+PWTyssJMCjfSeFheknMItHS500aQ3Qr3iSZG0JeNcGVg/a5dx/ka
+	7ioT5gbXOF4kDDkTfaujEVVdIj+rWHqrNXsA9dYkSyr88zJVv7DPoq8CAvsYag/4
+	Xb7DdKgpkG0I+SbGvVGvASPIrJA139/8JcG3nqo6AnxCdazcyIQXLsA1SJXael3w
+	yXYELA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvqymr31b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 17:06:01 +0000 (GMT)
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45KH60lE006975;
+	Thu, 20 Jun 2024 17:06:00 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvqymr316-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 17:06:00 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45KFOWgb019670;
+	Thu, 20 Jun 2024 17:05:59 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysnp1re64-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Jun 2024 17:05:58 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45KH5qkU42205492
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Jun 2024 17:05:54 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B54F220043;
+	Thu, 20 Jun 2024 17:05:52 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 464A820069;
+	Thu, 20 Jun 2024 17:05:51 +0000 (GMT)
+Received: from [127.0.0.1] (unknown [9.152.108.100])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Jun 2024 17:05:51 +0000 (GMT)
+Message-ID: <2fe48485c7181b4fe3a39882f495babebadad595.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 33/37] s390/uaccess: Add KMSAN support to put_user()
+ and get_user()
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Alexander Potapenko <glider@google.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andrew Morton
+ <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        David
+ Rientjes <rientjes@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joonsoo
+ Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami
+ Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven
+ Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil
+ Babka <vbabka@suse.cz>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle
+ <svens@linux.ibm.com>
+Date: Thu, 20 Jun 2024 19:05:50 +0200
+In-Reply-To: <aaef3e0fe22ad9074de84717f36f316204ae088c.camel@linux.ibm.com>
+References: <20240619154530.163232-1-iii@linux.ibm.com>
+	 <20240619154530.163232-34-iii@linux.ibm.com>
+	 <CAG_fn=V8Tt28LE9FtoYkos=5XG4zP_tDP1mF1COfEhAMg2ULqQ@mail.gmail.com>
+	 <aaef3e0fe22ad9074de84717f36f316204ae088c.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Fix early ftrace nop patching
-Content-Language: en-US
-To: Andy Chiu <andy.chiu@sifive.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrea Parri <parri.andrea@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- puranjay Mohan <puranjay12@gmail.com>
-References: <20240523115134.70380-1-alexghiti@rivosinc.com>
- <20240613-lubricant-breath-061192a9489a@wendy>
- <a396c024-f1a8-4636-85ee-e36950a2dca0@ghiti.fr>
- <b603c8b5-3100-4ccf-b014-9274f980358d@ghiti.fr>
- <CABgGipU1tjFAJ+KD7fFabVmLoqNtmQagn2sREHVzZCZ3OxozzQ@mail.gmail.com>
- <CAHVXubiubf9oCHnFco19SReZRPELYJSRtZmwEnGQLR++N+aH-g@mail.gmail.com>
- <CABgGipWu2sL0EiKGUgksCZta5Ru3N5fqiNZVQ-5mrDt00puyyQ@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CABgGipWu2sL0EiKGUgksCZta5Ru3N5fqiNZVQ-5mrDt00puyyQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: j17PtW7VvRI5cDmaVdbvQOn8NhUFba9g
+X-Proofpoint-ORIG-GUID: CB6tpAHI_NWQszkbL50NdGp2bn9CzjB5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-20_08,2024-06-20_04,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=668 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 malwarescore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406200122
 
+On Thu, 2024-06-20 at 13:19 +0200, Ilya Leoshkevich wrote:
+> On Thu, 2024-06-20 at 10:36 +0200, Alexander Potapenko wrote:
+> > On Wed, Jun 19, 2024 at 5:45=E2=80=AFPM Ilya Leoshkevich
+> > <iii@linux.ibm.com>
+> > wrote:
+> > >=20
+> > > put_user() uses inline assembly with precise constraints, so
+> > > Clang
+> > > is
+> > > in principle capable of instrumenting it automatically.
+> > > Unfortunately,
+> > > one of the constraints contains a dereferenced user pointer, and
+> > > Clang
+> > > does not currently distinguish user and kernel pointers.
+> > > Therefore
+> > > KMSAN attempts to access shadow for user pointers, which is not a
+> > > right
+> > > thing to do.
+> >=20
+> > By the way, how does this problem manifest?
+> > I was expecting KMSAN to generate dummy shadow accesses in this
+> > case,
+> > and reading/writing 1-8 bytes from dummy shadow shouldn't be a
+> > problem.
+> >=20
+> > (On the other hand, not inlining the get_user/put_user functions is
+> > probably still faster than retrieving the dummy shadow, so I'm fine
+> > either way)
+>=20
+> We have two problems here: not only clang can't distinguish user and
+> kernel pointers, the KMSAN runtime - which is supposed to clean that
+> up - can't do that either due to overlapping kernel and user address
+> spaces on s390. So the instrumentation ultimately tries to access the
+> real shadow.
+>=20
+> I forgot what the consequences of that were exactly, so I reverted
+> the
+> patch and now I get:
+>=20
+> Unable to handle kernel pointer dereference in virtual kernel address
+> space
+> Failing address: 000003fed25fa000 TEID: 000003fed25fa403
+> Fault in home space mode while using kernel ASCE.
+> AS:0000000005a70007 R3:00000000824d8007 S:0000000000000020=20
+> Oops: 0010 ilc:2 [#1] SMP=20
+> Modules linked in:
+> CPU: 3 PID: 1 Comm: init Tainted: G=C2=A0=C2=A0=C2=A0 B=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 N 6.10.0-rc4-
+> g8aadb00f495e #11
+> Hardware name: IBM 3931 A01 704 (KVM/Linux)
+> Krnl PSW : 0704c00180000000 000003ffe288975a (memset+0x3a/0xa0)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 R:0 T:1 IO:1=
+ EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0
+> EA:3
+> Krnl GPRS: 0000000000000000 000003fed25fa180 000003fed25fa180
+> 000003ffe28897a6
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000000000000=
+0007 000003ffe0000000 0000000000000000
+> 000002ee06e68190
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000002ee06f1=
+9000 000003fed25fa180 000003ffd25fa180
+> 000003ffd25fa180
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000000000000=
+0008 0000000000000000 000003ffe17262e0
+> 0000037ee000f730
+> Krnl Code: 000003ffe288974c: 41101100=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 la=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %r1,256(%r1)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
+9750: a737fffb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+brctg=C2=A0=20
+> %r3,000003ffe2889746
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #000003ffe2889754:=
+ c03000000029=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 larl=C2=A0=C2=A0=20
+> %r3,000003ffe28897a6
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 >000003ffe288975a:=
+ 44403000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ex=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 %r4,0(%r3)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
+975e: 07fe=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 bcr=C2=A0=C2=A0=C2=A0=C2=A0 15,%r14
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
+9760: a74f0001=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+cghi=C2=A0=C2=A0=C2=A0 %r4,1
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
+9764: b9040012=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+lgr=C2=A0=C2=A0=C2=A0=C2=A0 %r1,%r2
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 000003ffe288=
+9768: a784001c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+brc=C2=A0=C2=A0=C2=A0=20
+> 8,000003ffe28897a0
+> Call Trace:
+> =C2=A0[<000003ffe288975a>] memset+0x3a/0xa0=20
+> ([<000003ffe17262bc>] kmsan_internal_set_shadow_origin+0x21c/0x3a0)
+> =C2=A0[<000003ffe1725fb6>] kmsan_internal_unpoison_memory+0x26/0x30=20
+> =C2=A0[<000003ffe1c1c646>] create_elf_tables+0x13c6/0x2620=20
+> =C2=A0[<000003ffe1c0ebaa>] load_elf_binary+0x50da/0x68f0=C2=A0=20
+> =C2=A0[<000003ffe18c41fc>] bprm_execve+0x201c/0x2f40=20
+> =C2=A0[<000003ffe18bff9a>] kernel_execve+0x2cda/0x2d00=20
+> =C2=A0[<000003ffe49b745a>] kernel_init+0x9ba/0x1630=20
+> =C2=A0[<000003ffe000cd5c>] __ret_from_fork+0xbc/0x180=20
+> =C2=A0[<000003ffe4a1907a>] ret_from_fork+0xa/0x30=20
+> Last Breaking-Event-Address:
+> =C2=A0[<000003ffe2889742>] memset+0x22/0xa0
+> Kernel panic - not syncing: Fatal exception: panic_on_oops
+>=20
+> So is_bad_asm_addr() returned false for a userspace address.
+> Why? Because it happened to collide with the kernel modules area:
+> precisely the effect of overlapping.
+>=20
+> VMALLOC_START: 0x37ee0000000
+> VMALLOC_END:=C2=A0=C2=A0 0x3a960000000
+> MODULES_VADDR: 0x3ff60000000
+> Address:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3ffd157a580
+> MODULES_END:=C2=A0=C2=A0 0x3ffe0000000
+>=20
+> Now the question is, why do we crash when accessing shadow for
+> modules?
 
-On 19/06/2024 05:40, Andy Chiu wrote:
-> On Tue, Jun 18, 2024 at 9:40 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
->> Hi Andy,
->>
->> On Tue, Jun 18, 2024 at 2:48 PM Andy Chiu <andy.chiu@sifive.com> wrote:
->>> On Tue, Jun 18, 2024 at 8:02 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
->>>> Hi Conor,
->>>>
->>>> On 17/06/2024 15:23, Alexandre Ghiti wrote:
->>>>> Hi Conor,
->>>>>
->>>>> Sorry for the delay here.
->>>>>
->>>>> On 13/06/2024 09:48, Conor Dooley wrote:
->>>>>> On Thu, May 23, 2024 at 01:51:34PM +0200, Alexandre Ghiti wrote:
->>>>>>> Commit c97bf629963e ("riscv: Fix text patching when IPI are used")
->>>>>>> converted ftrace_make_nop() to use patch_insn_write() which does not
->>>>>>> emit any icache flush relying entirely on __ftrace_modify_code() to do
->>>>>>> that.
->>>>>>>
->>>>>>> But we missed that ftrace_make_nop() was called very early directly
->>>>>>> when
->>>>>>> converting mcount calls into nops (actually on riscv it converts 2B
->>>>>>> nops
->>>>>>> emitted by the compiler into 4B nops).
->>>>>>>
->>>>>>> This caused crashes on multiple HW as reported by Conor and Björn since
->>>>>>> the booting core could have half-patched instructions in its icache
->>>>>>> which would trigger an illegal instruction trap: fix this by emitting a
->>>>>>> local flush icache when early patching nops.
->>>>>>>
->>>>>>> Fixes: c97bf629963e ("riscv: Fix text patching when IPI are used")
->>>>>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>>>>>> ---
->>>>>>>    arch/riscv/include/asm/cacheflush.h | 6 ++++++
->>>>>>>    arch/riscv/kernel/ftrace.c          | 3 +++
->>>>>>>    2 files changed, 9 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/riscv/include/asm/cacheflush.h
->>>>>>> b/arch/riscv/include/asm/cacheflush.h
->>>>>>> index dd8d07146116..ce79c558a4c8 100644
->>>>>>> --- a/arch/riscv/include/asm/cacheflush.h
->>>>>>> +++ b/arch/riscv/include/asm/cacheflush.h
->>>>>>> @@ -13,6 +13,12 @@ static inline void local_flush_icache_all(void)
->>>>>>>        asm volatile ("fence.i" ::: "memory");
->>>>>>>    }
->>>>>>>    +static inline void local_flush_icache_range(unsigned long start,
->>>>>>> +                        unsigned long end)
->>>>>>> +{
->>>>>>> +    local_flush_icache_all();
->>>>>>> +}
->>>>>>> +
->>>>>>>    #define PG_dcache_clean PG_arch_1
->>>>>>>      static inline void flush_dcache_folio(struct folio *folio)
->>>>>>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->>>>>>> index 4f4987a6d83d..32e7c401dfb4 100644
->>>>>>> --- a/arch/riscv/kernel/ftrace.c
->>>>>>> +++ b/arch/riscv/kernel/ftrace.c
->>>>>>> @@ -120,6 +120,9 @@ int ftrace_init_nop(struct module *mod, struct
->>>>>>> dyn_ftrace *rec)
->>>>>>>        out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
->>>>>>>        mutex_unlock(&text_mutex);
->>>>>> So, turns out that this patch is not sufficient. I've seen some more
->>>>>> crashes, seemingly due to initialising nops on this mutex_unlock().
->>>>>> Palmer suggested moving the if (!mod) ... into the lock, which fixed
->>>>>> the problem for me.
->>>>>
->>>>> Ok, it makes sense, I completely missed that. I'll send a fix for that
->>>>> shortly so that it can be merged in rc5.
->>>>>
->>>>> Thanks,
->>>>>
->>>>> Alex
->>>>
->>>> So I digged a bit more and I'm afraid that the only way to make sure
->>>> this issue does not happen elsewhere is to flush the icache right after
->>>> the patching. We actually can't wait to batch the icache flush since
->>>> along the way, we may call a function that has just been patched (the
->>>> issue that you encountered here).
->>> Trying to provide my thoughts, please let me know if I missed
->>> anything. I think what Conor suggested is safe for init_nop, as it
->>> would be called only when there is only one core (booting) and at the
->>> loading stage of kernel modules. In the first case we just have to
->>> make sure there is no patchable entry before the core executes
->>> fence.i. The second case is unconditionally safe because there is no
->>> read-side of the race.
->>>
->>> It is a bit tricky for the generic (runtime) case of ftrace code
->>> patching, but that is not because of the batch fence.i maintenance. As
->>> long as there exists a patchable entry for the stopping thread, it is
->>> possible for them to execute on a partially patched instruction. A
->>> solution for this is again to prevent any patchable entry in the
->>> stop_machine's stopping thread. Another solution is to apply the
->>> atomic ftrace patching series which aims to get rid of the race.
->> Yeah but my worry is that we can't make sure that functions called
->> between the patching and the fence.i are not the ones that just get
->> patched. At least today, patch_insn_write() etc should be marked as
-> IIUC, the compiler does not generate a patchable entry for
-> patch_insn_write, and so do all functions in patch.c. The entire file
-> is not compiled with patchable entry because the flag is removed in
-> riscv's Makefile. Please let me know if I misunderstand it.
->
->> noinstr. But even then, we call core functions that could be patchable
->> (I went through all and it *seems* we are safe *for now*, but this is
->> very fragile).
-> Yes, functions in the "else" clause, atomic_read() etc, are safe for
-> now. However, it is impossible to fix as long as there exists a
-> patchable entry along the way. This is the problem that we cannot
-> patch 2 instructions with a concurrent read-side. On the other hand,
-> the path of ftrace_modify_all_code may experience the batch fence.i
-> maintenance issue, and can be fixed via a local fence.i. This is
-> because the path is executed by only one core. There does not exist a
-> concurrent write-side. As a result, we just need to make sure it
-> leaves each patch-site with a local fence.i to make sure code is
-> up-to-date.
->
->> Then what do you think we should do to fix Conor's issue right now:
->> should we mark the riscv specific functions as noinstr, cross fingers
->> that the core functions are not (and don't become) patchable and wait
->> for your atomic patching? Or should we flush as soon as possible as I
->> proposed above (which to me fixes the issue but hurts performance)?
-> Either way works for me. IMHO, the fix should include:
->
-> 1. move fence.i before mutex_unlock in init_nop
-> 2. do local fence.i in __ftrace_modify_call
-> 3. make sure the else clause does not happen to have a patchable entry
+So, Alexander G. and I have figured it out. KMSAN maps vmalloc/modules
+metadata lazily - when the corresponding memory is allocated. Here we
+have a completely random address that did not come from a prior
+vmalloc()/execmem_alloc(), so the corresponding metadata pages are
+missing.
 
+We could probably detect this situation and perform the lazy
+initialization in this case as well, but I don't know if it's worth the
+effort.
 
-OK I have just checked again and I agree with you on the whole fix :) I 
-may add some comments for 3 so that it is very clear.
+> I'll need to investigate, this does not look normal. But even if that
+> worked, we clearly wouldn't want userspace accesses to pollute module
+> shadow, so I think we need this patch in its current form.
+>=20
+> [...]
 
-Thanks Andy!
-
-Alex
-
-
->
-> Thanks,
-> Andy
->
->> Thanks,
->>
->> Alex
->>
->>>> I don't know how much it will impact the performance but I guess it will.
->>>>
->>>> Unless someone has a better idea (I added Andy and Puranjay in cc), here
->>>> is the patch that implements this, can you give it a try? Thanks
->>>>
->>>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->>>> index 87cbd86576b2..4b95c574fd04 100644
->>>> --- a/arch/riscv/kernel/ftrace.c
->>>> +++ b/arch/riscv/kernel/ftrace.c
->>>> @@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct
->>>> dyn_ftrace *rec)
->>>>           out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
->>>>           mutex_unlock(&text_mutex);
->>>>
->>>> -       if (!mod)
->>>> -               local_flush_icache_range(rec->ip, rec->ip +
->>>> MCOUNT_INSN_SIZE);
->>>> -
->>>>           return out;
->>>>    }
->>>>
->>>> @@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
->>>>           } else {
->>>>                   while (atomic_read(&param->cpu_count) <= num_online_cpus())
->>>>                           cpu_relax();
->>>> -       }
->>>>
->>>> -       local_flush_icache_all();
->>>> +               local_flush_icache_all();
->>>> +       }
->>>>
->>>>           return 0;
->>>>    }
->>>> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
->>>> index 4007563fb607..ab03732d06c4 100644
->>>> --- a/arch/riscv/kernel/patch.c
->>>> +++ b/arch/riscv/kernel/patch.c
->>>> @@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
->>>>
->>>>           memset(waddr, c, len);
->>>>
->>>> +       /*
->>>> +        * We could have just patched a function that is about to be
->>>> +        * called so make sure we don't execute partially patched
->>>> +        * instructions by flushing the icache as soon as possible.
->>>> +        */
->>>> +       local_flush_icache_range((unsigned long)waddr,
->>>> +                                (unsigned long)waddr + len);
->>>> +
->>>>           patch_unmap(FIX_TEXT_POKE0);
->>>>
->>>>           if (across_pages)
->>>> @@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const
->>>> void *insn, size_t len)
->>>>
->>>>           ret = copy_to_kernel_nofault(waddr, insn, len);
->>>>
->>>> +       /*
->>>> +        * We could have just patched a function that is about to be
->>>> +        * called so make sure we don't execute partially patched
->>>> +        * instructions by flushing the icache as soon as possible.
->>>> +        */
->>>> +       local_flush_icache_range((unsigned long)waddr,
->>>> +                                (unsigned long)waddr + len);
->>>> +
->>>>           patch_unmap(FIX_TEXT_POKE0);
->>>>
->>>>           if (across_pages)
->>>> @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
->>>>
->>>>           ret = patch_insn_set(tp, c, len);
->>>>
->>>> -       if (!ret)
->>>> -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
->>>> -
->>>>           return ret;
->>>>    }
->>>>    NOKPROBE_SYMBOL(patch_text_set_nosync);
->>>> @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns,
->>>> size_t len)
->>>>
->>>>           ret = patch_insn_write(tp, insns, len);
->>>>
->>>> -       if (!ret)
->>>> -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
->>>> -
->>>>           return ret;
->>>>    }
->>>>    NOKPROBE_SYMBOL(patch_text_nosync);
->>>> @@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
->>>>           } else {
->>>>                   while (atomic_read(&patch->cpu_count) <= num_online_cpus())
->>>>                           cpu_relax();
->>>> -       }
->>>>
->>>> -       local_flush_icache_all();
->>>> +               local_flush_icache_all();
->>>> +       }
->>>>
->>>>           return ret;
->>>>    }
->>>>
->>>>
->>>>>
->>>>>>>    +    if (!mod)
->>>>>>> +        local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_SIZE);
->>>>>>> +
->>>>>>>        return out;
->>>>>>>    }
->>>>>>>    --
->>>>>>> 2.39.2
->>>>>>>
->>>>>>>
->>>>>>> _______________________________________________
->>>>>>> linux-riscv mailing list
->>>>>>> linux-riscv@lists.infradead.org
->>>>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
->>>>> _______________________________________________
->>>>> linux-riscv mailing list
->>>>> linux-riscv@lists.infradead.org
->>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
->>> Cheers,
->>> Andy
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
