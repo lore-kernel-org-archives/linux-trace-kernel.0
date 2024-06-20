@@ -1,136 +1,105 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3F2EEAA;
-	Thu, 20 Jun 2024 01:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3501917554D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 08:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718846343; cv=none; b=MD561CoKXhzLN04rR+s2J3o+Bi8SQA9QnUcbfv9GK2326IFV9bmFsK5vem3nYj1lBtj4NkuQQY6xDe13SRW62zg/0FtW/Bs5x1lwXUqzD5IyKeDOr7dQ/Z1D85KRSxCVuUJoMytXtuPRlbenE6LKVGZ86A8a1/EV+ckAdKFpE80=
+	t=1718871311; cv=none; b=uscxU4bdU8P4fTmDjs4YIHFhVLqAp871UgJn9u7onzGVEBezFZZJefz3oK5QuZskRvELL+hbJt2ATQjwAUhPTt4WAh2PsUn7a6TS/bYiUcvuzWmwx10leELgHmH4GRC1ehesZyCV2j2pPJ4VDZcfynLQiz7IYLTZ3Qm801TAoFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718846343; c=relaxed/simple;
-	bh=CiVOVivRlQIu24Ixw0rbOHAen0kjuJ5zDGUPi3OSZXk=;
+	s=arc-20240116; t=1718871311; c=relaxed/simple;
+	bh=ZHRuGJFlUYdLamnB6sF47nsjZQIytquVYyRv7K2ZWxU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CWdWNayFXqjS9VWODuKa1JfJZ9snPYfQyDd+5kDYXgGSUP+q+0vgjrSQNgnG5nhojZhiPT34BtKIyQc5uGOY+BwxVeCOGidtfIYuNh+PbPyivGij5dmwzDJneyz/SxYkqz32VaIr9B5gxVSUjYplwzAUjhHyl/bWRQcqHOuDZ1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmUt6j1m; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=CXiOJaa0+EPzLXIqr2OXv/V3YWrJStDKQYNt3darBxIz1ahS0AtDhUBnjvazbj6Z0PPQX4gz+sRBp//+3KasB3mN+Rd8plUaAlWFRFH1SK6dDOG2iBsnwhy+mpGjXAS9q5gIwK2a9vaJ9Scz9FSXnil9ur1vWr48BQL3HCMS0h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0q1TTYUR; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmUt6j1m"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4217d451f69so3791385e9.0;
-        Wed, 19 Jun 2024 18:19:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0q1TTYUR"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-63127fc434aso4840417b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jun 2024 01:15:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718846340; x=1719451140; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718871309; x=1719476109; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uDHT6yLRB/v0oglM9yUXjYWVmzlOS187SihTeCnHq4k=;
-        b=UmUt6j1mzbqDEwWnU8Jc7PeSmB6pjyKD2Z1CyZCM9YzQf6gt8gQWZHWL4HotQ1THDR
-         s08cHYDMsofHu7d4xKEuLD14OFYWWtK3CCwpIGCAYqHZymV5oMUHgDghwOyy4wuFo/DZ
-         TdF4ytInqOCLSI2Bq+PusmLO98q4v09iK6Wb6raaHv34hE/nNR+wZ2ih4x4nCK+5p6YD
-         VUhSRgYLCXRPYD6e/M1Db4NDSKsxshyPqly+sQKeNPZtsyrygzU7+uyy83iAcUhr4/x/
-         li+x/M/yk5G/9y9uROjamtzjo2rtFwaAFlb1/kisbapBrgKOa1Z47yM5/h/bU3qJzJ+v
-         hE/g==
+        bh=VkDyjmmo2mJ4eSIsOzioTK+npaxfD4Q0PqQ0hVQZ66Q=;
+        b=0q1TTYURnIp+/XFb/EoH4dDbQF63DjNb0U+1GNE+ogoI/17YREMvATQGVlZ+Y6fAfV
+         AUyJLwDnn3FP7lwBsoNp10YgVAwp2QdsHCllE7PW+Y5wiCoHKW9McjfSfQmbAGkeFJym
+         bKwrSSW54DfizLu/IGad6MaLecomhonc0iXvbQ6NaAmX/1LGC4LlnLAzzP/6QR6xkQZT
+         7yUta9lsPaaNfJt2bbaMYrrgLINexvn9ihcRooPYTyFSmrEnZ2DgSD7Ayr7jPfwl1PaD
+         hW6+/vbc6A/NQ5p3IHkWvGy7W6rwj8y3qTN4L3rZMG/H49O8GUbelgrAroLH7vhEQgKS
+         crhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718846340; x=1719451140;
+        d=1e100.net; s=20230601; t=1718871309; x=1719476109;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uDHT6yLRB/v0oglM9yUXjYWVmzlOS187SihTeCnHq4k=;
-        b=T8NJf8TWR9jTIaY4xejO07EyJRCY65o3I14HlXD7VsqXz4zrb9uvEkmfMZChjzZz5U
-         Taxa6pI+uZhxAuNciuQmMtjnMq28qMyAk7qkCmP53ugtej+6RFGgqalpzTOm+p8GU5oB
-         tmvXe/CyfjlMYDZV4rMWBsI16TrWg1M1t5zcGXKsE3NBqcSqfMsCO3dmVb05+boOm6s4
-         e1DXXLoolhloX+JKqVORZgJ4YI2qba67JNAzjO2QmrlP3qwce6t7kCcfZTL0bxVjy9Fm
-         3ZW/nNOhFao/EN22eQz+cN11sm2isNjEWKKFxOkdSmUgTbyYViUv7I2N/fMKydTG3fDu
-         5F9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWDee1KhIr3Zg1uzB9H4uKNqnL4lLiswjuSF2/0c4PMQE5hbfVQ1JVWLGpKWyxr/mcUuYltBUPoXVkMxBl5SVzinCp+akPze/82HWPS/C3vTwoQRWwidmF9UmNZPdF/1d5rXwLhCg+gJ5ila5H7SThJPm7nglmhlTR4asQ84VpgCVArXxCc
-X-Gm-Message-State: AOJu0YxlqClnXeE+QH7eKmoaGhlyPYOXg1KiBD2uBQMu4ZqWC/EjP/QQ
-	/G+EQlYXGO7C5kVFWZYTwHElaJRfs4MBjW1wCL5YzatUrRXs3GUWvEnAU+KWozswveo0PktHdql
-	sn9xMcr/n1r8hiF4ITJfNLeZ6Y58=
-X-Google-Smtp-Source: AGHT+IGKhQCbJwrXTD1wLMTOnHS2G1M40SRH7cHaBrBenjcNqfuIlq6OJO1UBMN5+xHWxsPf3hslz7XTNojTJbBeuO4=
-X-Received: by 2002:a05:600c:6a09:b0:421:eecc:2404 with SMTP id
- 5b1f17b1804b1-424751809e3mr29825415e9.24.1718846339564; Wed, 19 Jun 2024
- 18:18:59 -0700 (PDT)
+        bh=VkDyjmmo2mJ4eSIsOzioTK+npaxfD4Q0PqQ0hVQZ66Q=;
+        b=UvQnfrZsPBh4n3/+JZwrawm6DoFQ5FKjLgx2XrR9SORwVrdcsJTH4F+TcbVZ0uwEW9
+         GhZPvEkW0cL+9JdxVihJVSRL4VTUQbwRHMBbnFSQ/ZslHGNOMpdYyoBeXpIFm28E3jup
+         Y+Blh6G6agkFSTRHIVkBWU1lfXNFSKGOZU5Nq2zsAvkaupw4TestlIGlXqlFt1UiDl5T
+         knFNBUF6SEeGaH9fjkO7AOWmlr5n2qID5vLRlXDv69pkDmsL5++DApJcnlZPveyIXFp6
+         +DQHjymPSCRBJdXTAMEH66jLrKMXvVY2Z+JMGHc2GhTg7jNqV3J1ymc6lTCGw8afO/kF
+         lHKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdt7lWmkmtDCazFUjlcH4KPNO38Vy8Won4VmhmpRS3YbY7phBx9F6oNhfxrAF8xxHbkbdkOnOAiPPHP7NiRdpDHPWMy1OdX/l2OiOzroOsay7y
+X-Gm-Message-State: AOJu0YxPU0spBbTC+OjghIRZGsKUgKx3LM8u5v8K44vVYw8NGJoVnJuE
+	F8CJJqxAVenDC+sOSIGxobFuYuBfZDnP3d7GyA9/Bnmqgb38l7349cRdeEEpkDLP6/kShmHvHZu
+	h/ZCgPFaF6GakFR2n3xfHwCnVnB/LXKM9u+Zn
+X-Google-Smtp-Source: AGHT+IEov8tA6WgC+NocZnlJNfskZn/sCcpgNQNbOkch4CKnuKF2F+01qvPEG14FlebgcmBeM68GwMaerknT5zuvZsM=
+X-Received: by 2002:a0d:f185:0:b0:61b:3345:a349 with SMTP id
+ 00721157ae682-63a8d44ac47mr43240177b3.3.1718871308642; Thu, 20 Jun 2024
+ 01:15:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz> <20240620-fault-injection-statickeys-v2-5-e23947d3d84b@suse.cz>
-In-Reply-To: <20240620-fault-injection-statickeys-v2-5-e23947d3d84b@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 19 Jun 2024 18:18:48 -0700
-Message-ID: <CAADnVQLKRAa5_-JUEZwwbrbySDekVdSgEp0UqgqbVfqsgfYjQg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] bpf: do not create bpf_non_sleepable_error_inject
- list when unnecessary
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20240619154530.163232-1-iii@linux.ibm.com> <20240619154530.163232-13-iii@linux.ibm.com>
+In-Reply-To: <20240619154530.163232-13-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 20 Jun 2024 10:14:27 +0200
+Message-ID: <CAG_fn=W6L0Yr_GLHEok=LmL0-whk2r+-E7fVHj8pA8GCtgze=Q@mail.gmail.com>
+Subject: Re: [PATCH v5 12/37] kmsan: Introduce memset_no_sanitize_memory()
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 19, 2024 at 3:49=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
+On Wed, Jun 19, 2024 at 5:45=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
+> wrote:
 >
-> When CONFIG_FUNCTION_ERROR_INJECTION is disabled,
-> within_error_injection_list() will return false for any address and the
-> result of check_non_sleepable_error_inject() denylist is thus redundant.
-> The bpf_non_sleepable_error_inject list thus does not need to be
-> constructed at all, so #ifdef it out.
+> Add a wrapper for memset() that prevents unpoisoning. This is useful
+> for filling memory allocator redzones.
 >
-> This will allow to inline functions on the list when
-> CONFIG_FUNCTION_ERROR_INJECTION is disabled as there will be no BTF_ID()
-> reference for them.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  kernel/bpf/verifier.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 77da1f438bec..5cd93de37d68 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -21044,6 +21044,8 @@ static int check_attach_modify_return(unsigned lo=
-ng addr, const char *func_name)
->         return -EINVAL;
->  }
->
-> +#ifdef CONFIG_FUNCTION_ERROR_INJECTION
-> +
->  /* list of non-sleepable functions that are otherwise on
->   * ALLOW_ERROR_INJECTION list
->   */
-> @@ -21061,6 +21063,19 @@ static int check_non_sleepable_error_inject(u32 =
-btf_id)
->         return btf_id_set_contains(&btf_non_sleepable_error_inject, btf_i=
-d);
->  }
->
-> +#else /* CONFIG_FUNCTION_ERROR_INJECTION */
-> +
-> +/*
-> + * Pretend the denylist is empty, within_error_injection_list() will ret=
-urn
-> + * false anyway.
-> + */
-> +static int check_non_sleepable_error_inject(u32 btf_id)
-> +{
-> +       return 0;
-> +}
-> +
-> +#endif
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
 
-The comment reads like this is an optimization, but it's a mandatory
-ifdef since should_failslab() might not be found by resolve_btfid
-during the build.
-Please make it clear in the comment.
+> ---
+>  include/linux/kmsan.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/include/linux/kmsan.h b/include/linux/kmsan.h
+> index 23de1b3d6aee..5f50885f2023 100644
+> --- a/include/linux/kmsan.h
+> +++ b/include/linux/kmsan.h
+> @@ -255,6 +255,14 @@ void kmsan_enable_current(void);
+>   */
+>  void kmsan_disable_current(void);
+>
+> +/*
+> + * memset_no_sanitize_memory(): memset() without KMSAN instrumentation.
+> + */
+Please make this a doc comment, like in the rest of the file.
+(Please also fix kmsan_enable_current/kmsan_disable_current in the
+respective patch)
