@@ -1,244 +1,292 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84345D8F0
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Jun 2024 15:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908B3156227;
+	Fri, 21 Jun 2024 16:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718982641; cv=none; b=WgbsqFXek/HzbDry5QImn13g3NPLlk6wpVH0sWbwSXRFdAFQBJ6rshbtk5U3jHWwsMRWmkUS2cm0gNvFtZq2JGWqYZEvLfRtzCFv01Mhix3Uk1IGaN8r7NJTzM0MK8DjBG+oUMZAMG9SgWwyrJMrnIrzFEZ/Rz4lICO2Eq82iIE=
+	t=1718987654; cv=none; b=BT+OLzs9Ojk5fTaC3TWLi8gCIVsSSVnMbOQXryrAzJDQ3vW7NLm+ublQN56ZmhW+Zp7ZZuORanLqqy/SicsxcCkdU+gK1u2MD6PLydUTLvIggmEUCHyUPfahwnUzXvndta8r13q9f8TBrYw6zttvbl9Am495psoB49nkSjzciZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718982641; c=relaxed/simple;
-	bh=n0yyI0xH+rKGRk6Y1c5yjFbmbpAnKs8Ed5uaTz9f4vM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OKkzvXXBHPDeoGZdGoSIiWre0BQCteK3tDlUtkMRidTcFhFUUTTvuAEzgP9ff0W/EclMygB878YXu0vInACztUOk0/vJn38ShDU8UZj6WsAV8vb7Drqq0pMPvuCS/IPxI8dHAZOPy6DDpbBQ4GVG67o2ZO/R3XyYgxxpK/XQiX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g5UdkIHj; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1718987654; c=relaxed/simple;
+	bh=SzpHfji6jieEcUwIJxBlYV6UQEyva0Ke/KALpE5BdSA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gRAou1ymoWPmx/MnL2r1Cmz+4LdsqdUSxBgqnY63Cm6fjvGN7nkPdFLNEJ/5GO7wt1X3gA83Areb5I3LPKBGQATsvsdObVzBAdzZtRoqRLNhJZ264Dqcg13z6LNnTjeLX4CR5fpWjdxFOpBetNnNQUzgx6jNLHZTiNHvTm3h0So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jJlq0Q3T; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g5UdkIHj"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4217990f8baso20050985e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Jun 2024 08:10:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJlq0Q3T"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7065a2f4573so460051b3a.2;
+        Fri, 21 Jun 2024 09:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1718982637; x=1719587437; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718987652; x=1719592452; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=trIhIa1l4EBBRllL40pfGpy0O1mYOGrhroFn2a/S/KM=;
-        b=g5UdkIHjpP/NBwmE3o3D+rZaUXj93n18Y3VE6acnuP/+pWIaiTmJHZM/zD4e0JutHg
-         Xr+9Da/2vLlw+A8lwKZqtKoip8lFaBXsQyCy4xvCL9MwKxHHIkL349qPc2HGAd4tCRam
-         XpS4whxT70gAKiMYG7TYQfMCJw+j+4ba9UnKjl894uNtkB6FyfcMOMMyv+Ogokp8KXyq
-         VXFz0VC1dwS+srrGE6I13KaUP4alpMeGAqyVSxNGoxg9/a6fTIEL+Mg6+LtPrrob6FFv
-         S7qLOkx0iWZlj89VkRZbUyFluu3iDy3UYJn0zKCygig1iSRP5s1H2/FetXfaDKC5TbXM
-         UVfw==
+        bh=Pj1xp1u+kQa0camB8UfdblfjMRYqud2QNR4VwIx50Oo=;
+        b=jJlq0Q3T9wfTwha7BG0wkwSbFOn3qt13CEShfSr1BfY2q188b3itUjPCdFvoPvVdFW
+         rVqZlIif0Pa9ct3oTsPVOtpS9EkBfccLqNVJSvq1lU9/0VhYgj8vU+p1nNMdy0lvc7Jj
+         Piw2oHC+izW4+GQctLqWQDUxuddyKBOrIaCL0ntYmG+75TWxQNPxTSrc7QSp7Zg1050X
+         kZOoG1JfPGaQmzadexO767JSpE/xBThSVEJxio4FBMtdnDNk88Iv9O43e/uvxBGKGOgm
+         T53fNbzAmbHvCNnUw9eTxEQu3vMkQh0v1+xUkew3yEtjEql8qyUyEOdWyvvsLKO/LSxj
+         ipLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718982637; x=1719587437;
+        d=1e100.net; s=20230601; t=1718987652; x=1719592452;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=trIhIa1l4EBBRllL40pfGpy0O1mYOGrhroFn2a/S/KM=;
-        b=O+KbTbgLA+A7QUZrmGHlI3xiJNmnAnuKjhx4/G7qLfYU1IfeOC3aZfZRhHNHaeie4t
-         6OXMLgEr3Bh+RlKKBJKA02HPxdhmVA3ApHSWG5ei70hNnxA+amFxxfYXsgMFFubId8C1
-         KppEJdmiha4Vq1qHBtwCvs+7v1CeBH0FerRrJSIR7CdHaXsGQ6WiH2u3/9slKiU/jf6X
-         pYgtO+C+Gc4g6C5HCvYmbiFX87NgCozWJzrhparIFWTMFEp4Zoh11KChvceAPbYTfu+5
-         /skXoKmrB8g61c7Qm51omwqv04WOYhRXCkUUamc1qWcHg9yHj1+4y7HXlslsjXOhvsPo
-         woKg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1VLnrQaR4q3Bf5eh2c2lMYDkb3JxiDV2H67qCMHM+eE5i7yH5fdcFZoZ4dVSt5jnE+zii0VZGhD4lfIU3L/PdL6TNnoSG0RuyyFJ7rQGg5vfA
-X-Gm-Message-State: AOJu0YzeGv+TaHIYMrapAWV6l4Zl47UMtlJokIt4r3b/4mo4idOdJaNf
-	+eNjuia0BDGMPkpoU7ouvhMWkOdQsvSsdHjTSveXKN07W67TGVyue02Qwh+pZM0=
-X-Google-Smtp-Source: AGHT+IHUyyUovuNkrF+EtFY2o30UqjW6jIrtwAnY2fSUhe2U+cdejyi+YDTKkpYYmzkD2F8lYHSmuQ==
-X-Received: by 2002:a05:600c:b49:b0:421:7b3d:1fdb with SMTP id 5b1f17b1804b1-42475184608mr61381225e9.21.1718982637156;
-        Fri, 21 Jun 2024 08:10:37 -0700 (PDT)
-Received: from dhcp161.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0b63b5sm68430065e9.7.2024.06.21.08.10.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 08:10:36 -0700 (PDT)
-From: Petr Pavlu <petr.pavlu@suse.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+        bh=Pj1xp1u+kQa0camB8UfdblfjMRYqud2QNR4VwIx50Oo=;
+        b=wYsZpCKD5AwESpylV6OEL9qCdLDb6KB6yoFGP2OvH5wdR29vBbwBmkRGOOYEzd4c/Y
+         DHZqAd2GFGJTM3vQ5mKjfUuK7XL7zHf31QOzd1ujtWM0QK2NDbgKW6/c7YcdMGQbWwXO
+         lOSngna9AHFgANmgaNIcDx0MhOymxa/7Cvvn2x3GPK931eAViB/DtO8ZxSmVaL4nkCS9
+         RkOVjnyC3/NlCJImbtyEtLIAT0UtoCxkCPrtP8g1sNajCj9NSgkP/K3aLTVcHZka3P3C
+         3enUTQ9Ums1a5hUyMOpVjaN3Fwp9zPpK0AFHumvTLv5P6iV5aWzTth8r9PMHaoNShUBH
+         xIGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0HN8hKpIIW9LbE04WlmKv5PpmsVnuPicJBJuifhSmMz8kZnEsIFz9D/7hIXXyuoGdlE/2gzE3C7dYpN7VctcL8RGM24B36mc5W3zm69ogv2As79kSpOzcED6ghZwjHm60oZi9FyJvA+ERfrn6A5D7
+X-Gm-Message-State: AOJu0YxVDnA+dLk+h37oPmA3B9wZElkNl9kT0xdhD+oK2/2viFqfbf5T
+	ZAMt3XjDcDPZfCUDFqf+CD8kaMph5xFR81xaLSTmYGZYJ2XUfft4WkP8Mg==
+X-Google-Smtp-Source: AGHT+IGDPz6QXD1xbUHPZ6tYUQXqEH+AmvFhC78fud6CJiOyWZdEm//Qqma5t8UIZ+6MDsaiz9N4Pw==
+X-Received: by 2002:a05:6a00:138c:b0:702:3e36:b7c4 with SMTP id d2e1a72fcca58-70629c15e97mr10553453b3a.5.1718987651744;
+        Fri, 21 Jun 2024 09:34:11 -0700 (PDT)
+Received: from localhost.localdomain ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065119d734sm1606526b3a.59.2024.06.21.09.34.06
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 21 Jun 2024 09:34:10 -0700 (PDT)
+From: yskelg@gmail.com
+To: Pedro Tammela <pctammela@mojatatu.com>
+Cc: netdev@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Taehee Yoo <ap420073@gmail.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	shjy180909@gmail.com,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH] ring-buffer: Limit time with disabled interrupts in rb_check_pages()
-Date: Fri, 21 Jun 2024 17:09:56 +0200
-Message-Id: <20240621150956.24814-1-petr.pavlu@suse.com>
-X-Mailer: git-send-email 2.35.3
+	ppbuk5246@gmail.com,
+	Yunseong Kim <yskelg@gmail.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH net v2] net/sched: Fixes: 51270d573a8d NULL ptr deref in perf_trace_qdisc_reset()
+Date: Sat, 22 Jun 2024 01:25:54 +0900
+Message-ID: <20240621162552.5078-4-yskelg@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Function rb_check_pages() validates the integrity of a specified per-CPU
-tracing ring buffer. It does so by walking the underlying linked
-list and checking its next and prev links.
+From: Yunseong Kim <yskelg@gmail.com>
 
-To guarantee that the list doesn't get modified during the check,
-a caller typically needs to take cpu_buffer->reader_lock. This prevents
-the check from running concurrently with a potential reader which can
-make the list temporarily inconsistent when swapping its old reader page
-into the buffer.
+In the TRACE_EVENT(qdisc_reset) NULL dereference occurred from
 
-A problem is that the time when interrupts are disabled is
-non-deterministic, dependent on the ring buffer size. This particularly
-affects PREEMPT_RT because the reader_lock is a raw spinlock which
-doesn't become sleepable on PREEMPT_RT kernels.
+ qdisc->dev_queue->dev <NULL> ->name
 
-Modify the check so it still tries to walk the whole list but gives up
-the reader_lock between checking individual pages.
+This situation simulated from bunch of veths and Bluetooth dis/reconnection.
 
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+During qdisc initialization, qdisc was being set to noop_queue.
+In veth_init_queue, the initial tx_num was reduced back to one,
+causing the qdisc reset to be called with noop, which led to the kernel panic.
+
+I've attached the GitHub gist link that C converted syz-execprogram
+source code and 3 log of reproduced vmcore-dmesg.
+
+ https://gist.github.com/yskelg/cc64562873ce249cdd0d5a358b77d740
+
+Yeoreum and I use two fuzzing tool simultaneously.
+
+One process with syz-executor : https://github.com/google/syzkaller
+
+ $ ./syz-execprog -executor=./syz-executor -repeat=1 -sandbox=setuid \
+    -enable=none -collide=false log1
+
+The other process with perf fuzzer:
+ https://github.com/deater/perf_event_tests/tree/master/fuzzer
+
+ $ perf_event_tests/fuzzer/perf_fuzzer
+
+I think this will happen on the kernel version.
+
+ Linux kernel version ≥ v6.7.10, ≥ v6.8 ≥ v6.9 and 6.10
+
+This occurred from 51270d573a8d. I think this patch is absolutely 
+necessary. Previously, It was showing not intended string value of name.
+
+I've reproduced 3 time from my fedora 40 Debug Kernel with any other module 
+or patched.
+
+ version: 6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug
+
+[ 5287.164555] veth0_vlan: left promiscuous mode
+[ 5287.164929] veth1_macvtap: left promiscuous mode
+[ 5287.164950] veth0_macvtap: left promiscuous mode
+[ 5287.164983] veth1_vlan: left promiscuous mode
+[ 5287.165008] veth0_vlan: left promiscuous mode
+[ 5287.165450] veth1_macvtap: left promiscuous mode
+[ 5287.165472] veth0_macvtap: left promiscuous mode
+[ 5287.165502] veth1_vlan: left promiscuous mode
+…
+[ 5297.598240] bridge0: port 2(bridge_slave_1) entered blocking state
+[ 5297.598262] bridge0: port 2(bridge_slave_1) entered forwarding state
+[ 5297.598296] bridge0: port 1(bridge_slave_0) entered blocking state
+[ 5297.598313] bridge0: port 1(bridge_slave_0) entered forwarding state
+[ 5297.616090] 8021q: adding VLAN 0 to HW filter on device bond0
+[ 5297.620405] bridge0: port 1(bridge_slave_0) entered disabled state
+[ 5297.620730] bridge0: port 2(bridge_slave_1) entered disabled state
+[ 5297.627247] 8021q: adding VLAN 0 to HW filter on device team0
+[ 5297.629636] bridge0: port 1(bridge_slave_0) entered blocking state
+…
+[ 5298.002798] bridge_slave_0: left promiscuous mode
+[ 5298.002869] bridge0: port 1(bridge_slave_0) entered disabled state
+[ 5298.309444] bond0 (unregistering): (slave bond_slave_0): Releasing backup interface
+[ 5298.315206] bond0 (unregistering): (slave bond_slave_1): Releasing backup interface
+[ 5298.320207] bond0 (unregistering): Released all slaves
+[ 5298.354296] hsr_slave_0: left promiscuous mode
+[ 5298.360750] hsr_slave_1: left promiscuous mode
+[ 5298.374889] veth1_macvtap: left promiscuous mode
+[ 5298.374931] veth0_macvtap: left promiscuous mode
+[ 5298.374988] veth1_vlan: left promiscuous mode
+[ 5298.375024] veth0_vlan: left promiscuous mode
+[ 5299.109741] team0 (unregistering): Port device team_slave_1 removed
+[ 5299.185870] team0 (unregistering): Port device team_slave_0 removed
+…
+[ 5300.155443] Bluetooth: hci3: unexpected cc 0x0c03 length: 249 > 1
+[ 5300.155724] Bluetooth: hci3: unexpected cc 0x1003 length: 249 > 9
+[ 5300.155988] Bluetooth: hci3: unexpected cc 0x1001 length: 249 > 9
+….
+[ 5301.075531] team0: Port device team_slave_1 added
+[ 5301.085515] bridge0: port 1(bridge_slave_0) entered blocking state
+[ 5301.085531] bridge0: port 1(bridge_slave_0) entered disabled state
+[ 5301.085588] bridge_slave_0: entered allmulticast mode
+[ 5301.085800] bridge_slave_0: entered promiscuous mode
+[ 5301.095617] bridge0: port 1(bridge_slave_0) entered blocking state
+[ 5301.095633] bridge0: port 1(bridge_slave_0) entered disabled state
+…
+[ 5301.149734] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
+[ 5301.173234] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
+[ 5301.180517] bond0: (slave bond_slave_1): Enslaving as an active interface with an up link
+[ 5301.193481] hsr_slave_0: entered promiscuous mode
+[ 5301.204425] hsr_slave_1: entered promiscuous mode
+[ 5301.210172] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+[ 5301.210185] Cannot create hsr debugfs directory
+[ 5301.224061] bond0: (slave bond_slave_1): Enslaving as an active interface with an up link
+[ 5301.246901] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
+[ 5301.255934] team0: Port device team_slave_0 added
+[ 5301.256480] team0: Port device team_slave_1 added
+[ 5301.256948] team0: Port device team_slave_0 added
+…
+[ 5301.435928] hsr_slave_0: entered promiscuous mode
+[ 5301.446029] hsr_slave_1: entered promiscuous mode
+[ 5301.455872] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+[ 5301.455884] Cannot create hsr debugfs directory
+[ 5301.502664] hsr_slave_0: entered promiscuous mode
+[ 5301.513675] hsr_slave_1: entered promiscuous mode
+[ 5301.526155] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+[ 5301.526164] Cannot create hsr debugfs directory
+[ 5301.563662] hsr_slave_0: entered promiscuous mode
+[ 5301.576129] hsr_slave_1: entered promiscuous mode
+[ 5301.580259] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+[ 5301.580270] Cannot create hsr debugfs directory
+[ 5301.590269] 8021q: adding VLAN 0 to HW filter on device bond0
+
+[ 5301.595872] KASAN: null-ptr-deref in range [0x0000000000000130-0x0000000000000137]
+[ 5301.595877] Mem abort info:
+[ 5301.595881]   ESR = 0x0000000096000006
+[ 5301.595885]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 5301.595889]   SET = 0, FnV = 0
+[ 5301.595893]   EA = 0, S1PTW = 0
+[ 5301.595896]   FSC = 0x06: level 2 translation fault
+[ 5301.595900] Data abort info:
+[ 5301.595903]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+[ 5301.595907]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[ 5301.595911]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ 5301.595915] [dfff800000000026] address between user and kernel address ranges
+[ 5301.595971] Internal error: Oops: 0000000096000006 [#1] SMP
+…
+[ 5301.596076] CPU: 2 PID: 102769 Comm:
+syz-executor.3 Kdump: loaded Tainted:
+ G        W         -------  ---  6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug #1
+[ 5301.596080] Hardware name: VMware, Inc. VMware20,1/VBSA,
+ BIOS VMW201.00V.21805430.BA64.2305221830 05/22/2023
+[ 5301.596082] pstate: 01400005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[ 5301.596085] pc : strnlen+0x40/0x88
+[ 5301.596114] lr : trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
+[ 5301.596124] sp : ffff8000beef6b40
+[ 5301.596126] x29: ffff8000beef6b40 x28: dfff800000000000 x27: 0000000000000001
+[ 5301.596131] x26: 6de1800082c62bd0 x25: 1ffff000110aa9e0 x24: ffff800088554f00
+[ 5301.596136] x23: ffff800088554ec0 x22: 0000000000000130 x21: 0000000000000140
+[ 5301.596140] x20: dfff800000000000 x19: ffff8000beef6c60 x18: ffff7000115106d8
+[ 5301.596143] x17: ffff800121bad000 x16: ffff800080020000 x15: 0000000000000006
+[ 5301.596147] x14: 0000000000000002 x13: ffff0001f3ed8d14 x12: ffff700017ddeda5
+[ 5301.596151] x11: 1ffff00017ddeda4 x10: ffff700017ddeda4 x9 : ffff800082cc5eec
+[ 5301.596155] x8 : 0000000000000004 x7 : 00000000f1f1f1f1 x6 : 00000000f2f2f200
+[ 5301.596158] x5 : 00000000f3f3f3f3 x4 : ffff700017dded80 x3 : 00000000f204f1f1
+[ 5301.596162] x2 : 0000000000000026 x1 : 0000000000000000 x0 : 0000000000000130
+[ 5301.596166] Call trace:
+[ 5301.596175]  strnlen+0x40/0x88
+[ 5301.596179]  trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
+[ 5301.596182]  perf_trace_qdisc_reset+0xb0/0x538
+[ 5301.596184]  __traceiter_qdisc_reset+0x68/0xc0
+[ 5301.596188]  qdisc_reset+0x43c/0x5e8
+[ 5301.596190]  netif_set_real_num_tx_queues+0x288/0x770
+[ 5301.596194]  veth_init_queues+0xfc/0x130 [veth]
+[ 5301.596198]  veth_newlink+0x45c/0x850 [veth]
+[ 5301.596202]  rtnl_newlink_create+0x2c8/0x798
+[ 5301.596205]  __rtnl_newlink+0x92c/0xb60
+[ 5301.596208]  rtnl_newlink+0xd8/0x130
+[ 5301.596211]  rtnetlink_rcv_msg+0x2e0/0x890
+[ 5301.596214]  netlink_rcv_skb+0x1c4/0x380
+[ 5301.596225]  rtnetlink_rcv+0x20/0x38
+[ 5301.596227]  netlink_unicast+0x3c8/0x640
+[ 5301.596231]  netlink_sendmsg+0x658/0xa60
+[ 5301.596234]  __sock_sendmsg+0xd0/0x180
+[ 5301.596243]  __sys_sendto+0x1c0/0x280
+[ 5301.596246]  __arm64_sys_sendto+0xc8/0x150
+[ 5301.596249]  invoke_syscall+0xdc/0x268
+[ 5301.596256]  el0_svc_common.constprop.0+0x16c/0x240
+[ 5301.596259]  do_el0_svc+0x48/0x68
+[ 5301.596261]  el0_svc+0x50/0x188
+[ 5301.596265]  el0t_64_sync_handler+0x120/0x130
+[ 5301.596268]  el0t_64_sync+0x194/0x198
+[ 5301.596272] Code: eb15001f 54000120 d343fc02 12000801 (38f46842) 
+[ 5301.596285] SMP: stopping secondary CPUs
+[ 5301.597053] Starting crashdump kernel...
+[ 5301.597057] Bye!
+
+Yeoreum and I don't know if the patch we wrote will fix the underlying cause,
+but we think that priority is to prevent kernel panic happening.
+So, we're sending this patch.
+
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
+ include/trace/events/qdisc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is a follow-up to the discussion in
-https://lore.kernel.org/linux-trace-kernel/20240517134008.24529-1-petr.pavlu@suse.com/
-
- kernel/trace/ring_buffer.c | 96 +++++++++++++++++++++++++++-----------
- 1 file changed, 70 insertions(+), 26 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 28853966aa9a..3aefaf8a4d58 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1454,40 +1454,91 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
- 	RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK);
- }
+diff --git a/include/trace/events/qdisc.h b/include/trace/events/qdisc.h
+index f1b5e816e7e5..170b51fbe47a 100644
+--- a/include/trace/events/qdisc.h
++++ b/include/trace/events/qdisc.h
+@@ -81,7 +81,7 @@ TRACE_EVENT(qdisc_reset,
+ 	TP_ARGS(q),
  
-+static bool rb_check_links(struct ring_buffer_per_cpu *cpu_buffer,
-+			   struct list_head *list)
-+{
-+	if (RB_WARN_ON(cpu_buffer,
-+		       rb_list_head(rb_list_head(list->next)->prev) != list))
-+		return false;
-+
-+	if (RB_WARN_ON(cpu_buffer,
-+		       rb_list_head(rb_list_head(list->prev)->next) != list))
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  * rb_check_pages - integrity check of buffer pages
-  * @cpu_buffer: CPU buffer with pages to test
-  *
-  * As a safety measure we check to make sure the data pages have not
-  * been corrupted.
-- *
-- * Callers of this function need to guarantee that the list of pages doesn't get
-- * modified during the check. In particular, if it's possible that the function
-- * is invoked with concurrent readers which can swap in a new reader page then
-- * the caller should take cpu_buffer->reader_lock.
-  */
- static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
- {
--	struct list_head *head = rb_list_head(cpu_buffer->pages);
--	struct list_head *tmp;
-+	struct list_head *head, *tmp;
-+	unsigned long flags;
-+	size_t pages_read;
-+	int nr_loops = 0;
- 
--	if (RB_WARN_ON(cpu_buffer,
--			rb_list_head(rb_list_head(head->next)->prev) != head))
-+	/*
-+	 * Walk the linked list underpinning the ring buffer and validate all
-+	 * its next and prev links.
-+	 *
-+	 * The check acquires the reader_lock in order to avoid concurrent
-+	 * processing with a potential reader which can make the list
-+	 * temporarily inconsistent when swapping its old reader page into the
-+	 * buffer and obtaining a new page. However, the lock cannot be held for
-+	 * the whole duration of the walk, as this would make the time when
-+	 * interrupts are disabled non-deterministic, dependent on the ring
-+	 * buffer size. Therefore, the code releases and re-acquires the lock
-+	 * after checking each page. The pages_read variable is then used to
-+	 * detect if a reader changed the list while the lock was not held, in
-+	 * which case the check needs to be restarted.
-+	 *
-+	 * The code attempts to perform the check at most three times before
-+	 * giving up. That itself is ok because this is only a self-validation
-+	 * to detect problems early on. In practice, if it even happens that
-+	 * this code runs concurrently with a reader getting a new page from the
-+	 * buffer, it should take the reader a bit to process the obtained page
-+	 * before coming back for more data and so this check typically succeeds
-+	 * at most on the second try.
-+	 */
-+again:
-+	if (++nr_loops > 3)
- 		return;
- 
--	if (RB_WARN_ON(cpu_buffer,
--			rb_list_head(rb_list_head(head->prev)->next) != head))
--		return;
-+	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+	head = rb_list_head(cpu_buffer->pages);
-+	if (!rb_check_links(cpu_buffer, head))
-+		goto out_locked;
-+	pages_read = local_read(&cpu_buffer->pages_read);
-+	tmp = head;
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
--	for (tmp = rb_list_head(head->next); tmp != head; tmp = rb_list_head(tmp->next)) {
--		if (RB_WARN_ON(cpu_buffer,
--				rb_list_head(rb_list_head(tmp->next)->prev) != tmp))
--			return;
-+	while (true) {
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 
--		if (RB_WARN_ON(cpu_buffer,
--				rb_list_head(rb_list_head(tmp->prev)->next) != tmp))
--			return;
-+		if (pages_read != local_read(&cpu_buffer->pages_read)) {
-+			/* A reader updated the list, try again. */
-+			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+			goto again;
-+		}
-+
-+		tmp = rb_list_head(tmp->next);
-+		if (tmp == head)
-+			/* The iteration circled back, all is done. */
-+			goto out_locked;
-+
-+		if (!rb_check_links(cpu_buffer, tmp))
-+			goto out_locked;
-+
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 	}
-+
-+out_locked:
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- }
- 
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
-@@ -2215,12 +2266,8 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		 */
- 		synchronize_rcu();
- 		for_each_buffer_cpu(buffer, cpu) {
--			unsigned long flags;
--
- 			cpu_buffer = buffer->buffers[cpu];
--			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 			rb_check_pages(cpu_buffer);
--			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 		}
- 		atomic_dec(&buffer->record_disabled);
- 	}
-@@ -5150,12 +5197,9 @@ void
- ring_buffer_read_finish(struct ring_buffer_iter *iter)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
--	unsigned long flags;
- 
- 	/* Use this opportunity to check the integrity of the ring buffer. */
--	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 	rb_check_pages(cpu_buffer);
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
- 	atomic_dec(&cpu_buffer->resize_disabled);
- 	kfree(iter->event);
-
-base-commit: 50736169ecc8387247fe6a00932852ce7b057083
+ 	TP_STRUCT__entry(
+-		__string(	dev,		qdisc_dev(q)->name	)
++		__string(dev, qdisc_dev(q) ? qdisc_dev(q)->name : "noop_queue")
+ 		__string(	kind,		q->ops->id		)
+ 		__field(	u32,		parent			)
+ 		__field(	u32,		handle			)
 -- 
-2.35.3
+2.45.2
 
