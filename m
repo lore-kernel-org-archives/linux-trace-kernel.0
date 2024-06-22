@@ -1,198 +1,186 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D36914AD19;
-	Sat, 22 Jun 2024 06:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA131E871;
+	Sat, 22 Jun 2024 11:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719036772; cv=none; b=ga+emqN5wLrIP8DMt/aV27xtg6DTyCyx887WvmkCI6p8weV2zoY7Ioe6syDkd95+DhycWdKrQni/3NfaS3pVWQw99231L5l5dqTh68nyWsM7H4orVlqtEi+tC/WRLD5KruhGWTAkspF/Z5ZJf5CJEkbfexwnxrU/sr5zxwO/gGI=
+	t=1719054040; cv=none; b=Bwd1EFOzDXo5KQzO+QmcZ/w22P+8PJsiuCskWg1rjDymRMXkPXksGCG1miozhxxaMP5JpVOLmqT6c2//Sib0ywTJZigJOc2IyIkzuvI1Oydoc2s2QD64NnHOzc92rGSZbv5GtneTXAstkC4abV2gGpwsxKKfWuJjx/zpV4OaO1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719036772; c=relaxed/simple;
-	bh=p6PDmXigC5hUdyFCozlaD9uz4k5UZDZrhOi7GZpbu7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DH7GtcvL7Tu7yER/M9+SWsqdYos0WXyU4vIhX51lLvxxwAs33Je4jCi6sfV0kOrwE6Qbe2Up3s4/MkuFWK1aeQZfkdjjrHm7mzhGIdbZazYy7twd28fG7OHKRxYah+hQV+n2iIBzG+cplZSqG91/yDUr5iPn9Z1j+qSEvhrEPWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L00B/iYX; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719054040; c=relaxed/simple;
+	bh=jZKMMHb1Scf+LoA5wMQap4Hh2SvydY9wTa+sLKebS1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t9a433ECgg7e8gAlbISI8V9KxoIEX6vk+ysMZxInYRX1Zn18NFqSEflrF0l+fgDL/DHqSE1x0/zJff3MiXHsR1hSYBGSqwPcM+i85OUEhIoNdjdUwEDmT1gRhgWePjnINDLSL89oNgtVfgzUYOrSwG46XwMvSQBI2DGCftKCaGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=laPrQx36; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L00B/iYX"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f6da06ba24so20057945ad.2;
-        Fri, 21 Jun 2024 23:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719036770; x=1719641570; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=krjZBqR5YUtpntS8j4/66w89iNnPL3e7qeE0XOy0iWk=;
-        b=L00B/iYXcqvCIAvL0UJXvzmDUL37hSthzUI9ffrCM4k28LXlcs2wlwNMU9FrwnrbaX
-         y3CtEGIrJ6qXzCDNR53mNCRtNu15HA8UhiRuNaXKQc603sOlmd7jCgG/Ei9HSVrSbLDQ
-         b04+2G1/D/NIZunEk7If/BTWOmXDjbMbR3S1SYEC6bRqI65E4ID2laxDLKpDn3z+0t2G
-         //MGHQeTE3nGs/BWrEIAEyJU6zI/2kk6fKPAclGYKWGprU0jxH7N0Imvt6ER0f783MwX
-         ecRxAa3nk6lxdR/fqlQR6wr08P+yt0faS+ykYg5511wXeXEgErl7BdJ8c9zrsWz9wnTp
-         U0Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719036770; x=1719641570;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=krjZBqR5YUtpntS8j4/66w89iNnPL3e7qeE0XOy0iWk=;
-        b=horGJeyJT9NHHEn46XenpXTRswxD5+VsaP9EtvGFKvA7u5Lv61I33P7ZQosKjFQ+k8
-         qPkMwT+0jvB0rxByo1eZM6TwFF4+VJxnQv+WJMv/Fxbl7UDrqtSaegh/es0SDsKx2Y20
-         av5D+vsywgyb8w5HO+R4LWneLMXBJIP2q30QXTW09slp5lcBR9lmc51XVcxNdLV5s64d
-         irkNmVaviCRfZXyTTKijei7E/8QSYdha0uNz+mxaxKYDma5dnEY4uPnJb+m/eXMb7k2j
-         tM4U9IBZPzBjwB8mbzy2T0QzuciVU+5QAuFhDruxcI5QAGHhOeueD2+kY/NsWd9TtTMo
-         yhCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbgLD2keh86SkFlBvt475KKpnkoyj16SS8wTBaOpEp9DUAbN1j+zL9eR6g5rRf/n3GYz8MrhEoHOY/7i20O+VPjTiPbAaylslnXIV6Lo8kzSD2Ua16wtu+pURCx2H0w3YYf2N5gxDuOc/aVDSFBFTWe7X6hF65MA0Lsgd8QV8kmohqOXAzXADNr2RXDuqthKO8LJ84MkbLTAG/bS8pITNA
-X-Gm-Message-State: AOJu0Yy+Ql34ohD4u/eDuel4famWtVaXC7ZnXYbIU5QcYUSZdNZuf5ef
-	L1x5LUB+E8722DJdhNwWsQU0+HOZ8ocfTqHmb+reZy74S+9XN4W6y2WXFg==
-X-Google-Smtp-Source: AGHT+IGB5XwqfWtYBN6crK+WQ07ENNTrZ/be0kujOfF3fjm8luW20woMymDtrUMtTNGlDFm90ozJ4g==
-X-Received: by 2002:a17:902:d4c9:b0:1f9:e3e8:456b with SMTP id d9443c01a7336-1f9e3e852cbmr54609045ad.4.1719036770233;
-        Fri, 21 Jun 2024 23:12:50 -0700 (PDT)
-Received: from [192.168.50.95] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3c608fsm23819705ad.157.2024.06.21.23.12.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 23:12:49 -0700 (PDT)
-Message-ID: <80f28cfb-f287-419b-a448-b5967bc778ae@gmail.com>
-Date: Sat, 22 Jun 2024 15:12:43 +0900
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="laPrQx36"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1719054029;
+	bh=jZKMMHb1Scf+LoA5wMQap4Hh2SvydY9wTa+sLKebS1Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=laPrQx36mxewqlSzNXdvqDIS29piPKgu9336MrbdIgNT3WC5NA0Ro9IxsDcNlLi+t
+	 P8WlXAIWI/x2Ns7ydjjjK8xZuiQFT62TB997/iP50gl2OGi3nNPJREndIzqzd1ZRpG
+	 7y7wx8028ms1cyGDyraw3wKfWcAHy34wrTs/AmPc=
+Received: from stargazer.. (unknown [113.200.174.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 9093F67186;
+	Sat, 22 Jun 2024 07:00:25 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alejandro Colomar <alx@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] vfs: Add AT_EMPTY_PATH_NOCHECK as unchecked AT_EMPTY_PATH
+Date: Sat, 22 Jun 2024 18:56:08 +0800
+Message-ID: <20240622105621.7922-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] tracing/net_sched: NULL pointer dereference in
- perf_trace_qdisc_reset()
-To: Taehee Yoo <ap420073@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Pedro Tammela <pctammela@mojatatu.com>,
- netdev@vger.kernel.org, stable@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Takashi Iwai <tiwai@suse.de>, "David S. Miller" <davem@davemloft.net>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Jamal Hadi Salim
- <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Austin Kim <austindh.kim@gmail.com>,
- shjy180909@gmail.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, ppbuk5246@gmail.com,
- Yeoreum Yun <yeoreum.yun@arm.com>, virtualization@lists.linux.dev
-References: <20240622045701.8152-2-yskelg@gmail.com>
- <CAMArcTVgpAq8dC_u8eFE=asMWriWjNfYsmo6KVFi=tpHebdmCA@mail.gmail.com>
-Content-Language: en-US
-From: Yunseong Kim <yskelg@gmail.com>
-In-Reply-To: <CAMArcTVgpAq8dC_u8eFE=asMWriWjNfYsmo6KVFi=tpHebdmCA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Taehee,
+It's cheap to check if the path is empty in the userspace, but expensive
+to check if a userspace string is empty from the kernel.  So using statx
+and AT_EMPTY_PATH to implement fstat is slower than a "native" fstat
+call.  But for arch/loongarch fstat does not exist so we have to use
+statx, and on all 32-bit architectures we must use statx after 2037.
+And seccomp also cannot audit AT_EMPTY_PATH properly because it cannot
+check if path is empty.
 
-On 6/22/24 2:50 오후, Taehee Yoo wrote:
-> On Sat, Jun 22, 2024 at 1:58 PM <yskelg@gmail.com> wrote:
->>
->> From: Yunseong Kim <yskelg@gmail.com>
->>
-> 
-> Hi Yunseong,
-> Thanks a lot for this work!
+To resolve these issues, add a relaxed version of AT_EMPTY_PATH: it does
+not check if the path is empty, but just assumes the path is empty and
+then behaves like AT_EMPTY_PATH.
 
-Thank you Taehee for reviewing our patch. It's greatly appreciated.
+Link: https://sourceware.org/pipermail/libc-alpha/2023-September/151364.html
+Link: https://lore.kernel.org/loongarch/599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name/
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alejandro Colomar <alx@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Icenowy Zheng <uwu@icenowy.me>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ fs/namei.c                 | 8 +++++++-
+ fs/stat.c                  | 4 +++-
+ include/linux/namei.h      | 4 ++++
+ include/trace/misc/fs.h    | 1 +
+ include/uapi/linux/fcntl.h | 3 +++
+ 5 files changed, 18 insertions(+), 2 deletions(-)
 
->> During qdisc initialization, qdisc was being set to noop_queue.
->> In veth_init_queue, the initial tx_num was reduced back to one,
->> causing the qdisc reset to be called with noop, which led to the kernel panic.
->>
->> I've attached the GitHub gist link that C converted syz-execprogram
->> source code and 3 log of reproduced vmcore-dmesg.
->>
->>  https://gist.github.com/yskelg/cc64562873ce249cdd0d5a358b77d740
->>
->> Yeoreum and I use two fuzzing tool simultaneously.
->>
->> One process with syz-executor : https://github.com/google/syzkaller
->>
->>  $ ./syz-execprog -executor=./syz-executor -repeat=1 -sandbox=setuid \
->>     -enable=none -collide=false log1
->>
->> The other process with perf fuzzer:
->>  https://github.com/deater/perf_event_tests/tree/master/fuzzer
->>
->>  $ perf_event_tests/fuzzer/perf_fuzzer
->>
->> I think this will happen on the kernel version.
->>
->>  Linux kernel version +v6.7.10, +v6.8, +v6.9 and it could happen in v6.10.
->>
->> This occurred from 51270d573a8d. I think this patch is absolutely
->> necessary. Previously, It was showing not intended string value of name.
+diff --git a/fs/namei.c b/fs/namei.c
+index 37fb0a8aa09a..0c44a7ea5961 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -147,7 +147,13 @@ getname_flags(const char __user *filename, int flags, int *empty)
+ 	kname = (char *)result->iname;
+ 	result->name = kname;
+ 
+-	len = strncpy_from_user(kname, filename, EMBEDDED_NAME_MAX);
++	if (!(flags & LOOKUP_EMPTY_NOCHECK))
++		len = strncpy_from_user(kname, filename, EMBEDDED_NAME_MAX);
++	else {
++		len = 0;
++		kname[0] = '\0';
++	}
++
+ 	if (unlikely(len < 0)) {
+ 		__putname(result);
+ 		return ERR_PTR(len);
+diff --git a/fs/stat.c b/fs/stat.c
+index 70bd3e888cfa..53944d3287cd 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -210,6 +210,8 @@ int getname_statx_lookup_flags(int flags)
+ 		lookup_flags |= LOOKUP_AUTOMOUNT;
+ 	if (flags & AT_EMPTY_PATH)
+ 		lookup_flags |= LOOKUP_EMPTY;
++	if (flags & AT_EMPTY_PATH_NOCHECK)
++		lookup_flags |= LOOKUP_EMPTY | LOOKUP_EMPTY_NOCHECK;
+ 
+ 	return lookup_flags;
+ }
+@@ -237,7 +239,7 @@ static int vfs_statx(int dfd, struct filename *filename, int flags,
+ 	int error;
+ 
+ 	if (flags & ~(AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT | AT_EMPTY_PATH |
+-		      AT_STATX_SYNC_TYPE))
++		      AT_STATX_SYNC_TYPE | AT_EMPTY_PATH_NOCHECK))
+ 		return -EINVAL;
+ 
+ retry:
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 967aa9ea9f96..def6a8a1b531 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -45,9 +45,13 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
+ #define LOOKUP_IN_ROOT		0x100000 /* Treat dirfd as fs root. */
+ #define LOOKUP_CACHED		0x200000 /* Only do cached lookup */
+ #define LOOKUP_LINKAT_EMPTY	0x400000 /* Linkat request with empty path. */
++
+ /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
+ #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
+ 
++/* If this is set, LOOKUP_EMPTY must be set as well. */
++#define LOOKUP_EMPTY_NOCHECK	0x800000 /* Consider path empty. */
++
+ extern int path_pts(struct path *path);
+ 
+ extern int user_path_at_empty(int, const char __user *, unsigned, struct path *, int *empty);
+diff --git a/include/trace/misc/fs.h b/include/trace/misc/fs.h
+index 738b97f22f36..24aec7ed6b0b 100644
+--- a/include/trace/misc/fs.h
++++ b/include/trace/misc/fs.h
+@@ -119,4 +119,5 @@
+ 		{ LOOKUP_NO_XDEV,	"NO_XDEV" }, \
+ 		{ LOOKUP_BENEATH,	"BENEATH" }, \
+ 		{ LOOKUP_IN_ROOT,	"IN_ROOT" }, \
++		{ LOOKUP_EMPTY_NOCHECK,	"EMPTY_NOCHECK" }, \
+ 		{ LOOKUP_CACHED,	"CACHED" })
+diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+index c0bcc185fa48..aa2f68d80820 100644
+--- a/include/uapi/linux/fcntl.h
++++ b/include/uapi/linux/fcntl.h
+@@ -113,6 +113,9 @@
+ #define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the server */
+ 
+ #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
++#define AT_EMPTY_PATH_NOCHECK	0x10000	/* Like AT_EMPTY_PATH, but the path
++                                           is not checked and it's just
++                                           assumed to be empty */
+ 
+ /* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits... */
+ #define AT_HANDLE_FID		AT_REMOVEDIR	/* file handle is needed to
+-- 
+2.45.2
 
-
-> I found a simple reproducer, please use the below command to test this patch.
-> 
-> echo 1 > /sys/kernel/debug/tracing/events/enable
-> ip link add veth0 type veth peer name veth1
-
-The perf event is activated by perf_fuzzer, and it's indeed a similar
-environment with veth.
-
-> In my machine, the splat looks like:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000130
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-> CPU: 1 PID: 1207 Comm: ip Not tainted 6.10.0-rc4+ #25
-> 362ec22a686962a9936425abea9a73f03b445c0c
-> Hardware name: ASUS System Product Name/PRIME Z690-P D4, BIOS 0603 11/01/2021
-> RIP: 0010:strlen+0x0/0x20
-> Code: f7 75 ec 31 c0 c3 cc cc cc cc 48 89 f8 c3 cc cc cc cc 0f 1f 84
-> 00 00 00 00 00 90 90 90 90 9c
-> RSP: 0018:ffffbed8435c7630 EFLAGS: 00010206
-> RAX: ffffffff92d629c0 RBX: ffffa14100185c60 RCX: 0000000000000000
-> RDX: 0000000000000001 RSI: ffffffff92d62840 RDI: 0000000000000130
-> RBP: ffffffff92dc4600 R08: 0000000000000fd0 R09: 0000000000000010
-> R10: ffffffff92c66c98 R11: 0000000000000001 R12: 0000000000000001
-> R13: 0000000000000000 R14: 0000000000000130 R15: ffffffff92d62840
-> FS: 00007f6a94e50b80(0000) GS:ffffa1485f680000(0000) knlGS:0000000000000000
-> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000130 CR3: 0000000103414000 CR4: 00000000007506f0
-> PKRU: 55555554
-> Call Trace:
-> <TASK>
-> ? __die+0x20/0x70
-> ? page_fault_oops+0x15a/0x460
-> ? trace_event_raw_event_x86_exceptions+0x5f/0xa0
-> ? exc_page_fault+0x6e/0x180
-> ? asm_exc_page_fault+0x22/0x30
-> ? __pfx_strlen+0x10/0x10
-> trace_event_raw_event_qdisc_reset+0x4d/0x180
-> ? synchronize_rcu_expedited+0x215/0x240
-> ? __pfx_autoremove_wake_function+0x10/0x10
-> qdisc_reset+0x130/0x150
-> netif_set_real_num_tx_queues+0xe3/0x1e0
-> veth_init_queues+0x44/0x70 [veth 24a9dd1cd1b1b279e1b467ad46d47a753799b428]
-> veth_newlink+0x22b/0x440 [veth 24a9dd1cd1b1b279e1b467ad46d47a753799b428]
-> __rtnl_newlink+0x718/0x990
-> rtnl_newlink+0x44/0x70
-> rtnetlink_rcv_msg+0x159/0x410
-> ? kmalloc_reserve+0x90/0xf0
-> ? trace_event_raw_event_kmem_cache_alloc+0x87/0xe0
-> ? __pfx_rtnetlink_rcv_msg+0x10/0x10
-> netlink_rcv_skb+0x54/0x100
-> netlink_unicast+0x243/0x370
-> netlink_sendmsg+0x1bb/0x3e0
-> ____sys_sendmsg+0x2bb/0x320
-> ? copy_msghdr_from_user+0x6d/0xa0
-> ___sys_sendmsg+0x88/0xd0
-> 
-> Thanks a lot!
-> Taehee Yoo
-
-I think this bug might cause inconvenience for developers working on net
-devices driver in a virtual machine when they use tracing.
-
-I'm appreciate your effort in reproducing it.
-
-Warm Regards,
-Yunseong Kim
