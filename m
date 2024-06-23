@@ -1,184 +1,109 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4475912E1DC;
-	Sun, 23 Jun 2024 12:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFBE146D57
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Jun 2024 14:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719145600; cv=none; b=OLIKqZSIJFblt8m6AeBsjtEx3Zgrzu5asG+aLI4XmT5htihxG7OojGIwTctU5ek5z1LJQXDzCa1b21aEMNbUcXBb8lTorZtYdQ/7fzA1l5stxVSzKzWkEABtzTpSPbn31dfAwQ6D5PXGybbZBTfC7B2utNtH1kR/eRQFqAznHhY=
+	t=1719154501; cv=none; b=U0MLyOz8PjoS4LqwTzKMLn8lulS9OL4qDc0FjMhVYXCoqKhn6JiBSP3+3QziY+IdT9Xa0aA99D0knfS6sedEZGDcJRtAcEGJMb4ZCEynSUUxJxRklZhlDAQfXnHNNZA3G2JxRzfD3R8WC9soJ3AO6slxTIFp+7zYQRhqXHt3xSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719145600; c=relaxed/simple;
-	bh=mIqfBCvqzwdHOW8Oo2iYgxApTMfLroYEglXYxWIf7l0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tEcBPwo+8WXJSAaKOcLRmIBgwDPfFavkoBq1CKPehAiUR1/oUpzqaNAgYlEAAgevXrZoRHEPdBzOc9pqVfE4jTH3o0xfS/Qviv5pyyAJ+k9XzzMLl3Umt4xc1Vrsc7hMdCkWGLH4Kwmi055IqJwAvwncK5x1khYavNVnEglNvY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=lwci9HTV; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1719154501; c=relaxed/simple;
+	bh=WHJyLpXJsvXpBkB3XYopVJ4ntyGCuMv9iGmRnnNXZp8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DGIHT0w6K7hwLoHpCSDIzVayUFEc1FUDa8+yBzJoFza+FQITdARfwh92VZk93usU2ZxHGT4hDJhmEIiwfqQOl7EOI5jVKuM+XF+Ir55cK8trg7LURr4vnblcRKwXLVDQGqDMGB8p0I/HLvdThWdzJ0PtZXmFS+oeNaUPStBcRdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AbSUuxGx; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="lwci9HTV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1719145589;
-	bh=mIqfBCvqzwdHOW8Oo2iYgxApTMfLroYEglXYxWIf7l0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=lwci9HTVc/95e270r9YWQBQ6RWGLIvCZfKxIbsTe1jqcjqZvnQ6Clbnos9baCmaVv
-	 NCBk00KhCIbm0K4STKp5YdpLavGxByDfE2tsKBNP85WI8x0oJ0flw/OzqdE5e556gu
-	 RHeQWfzdIs9S+U0NRAWcTA4iQMCKzXlmy1n6OE7U=
-Received: from [192.168.124.13] (unknown [113.200.174.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6B02767608;
-	Sun, 23 Jun 2024 08:26:23 -0400 (EDT)
-Message-ID: <33f9ffadecbd5f189cb312f91373bf6a64e7ef9c.camel@xry111.site>
-Subject: Re: [PATCH] vfs: Add AT_EMPTY_PATH_NOCHECK as unchecked
- AT_EMPTY_PATH
-From: Xi Ruoyao <xry111@xry111.site>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner
-	 <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara
-	 <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	 <mhiramat@kernel.org>, Alejandro Colomar <alx@kernel.org>, Arnd Bergmann
-	 <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Icenowy Zheng
-	 <uwu@icenowy.me>, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Sun, 23 Jun 2024 20:26:18 +0800
-In-Reply-To: <CAGudoHGsumzEukjQg=TxQgzjBcZ4a+TsdNVtFp4dpaSw6BzaSA@mail.gmail.com>
-References: <20240622105621.7922-1-xry111@xry111.site>
-	 <kslf3yc7wnwhxzv5cejaqf52bdr6yxqaqphtjl7d4iaph23y6v@ssyq7vrdwx56>
-	 <CAHk-=wgj6h97Ro6oQcOq5YTG0JcKRLN0CtXgYCW_Ci6OSzL5NA@mail.gmail.com>
-	 <eeb7e9895aca92fa5a8d11d9f37b283428185278.camel@xry111.site>
-	 <CAGudoHFofUZ0Nb9UtV=Q3uQ0K+JnBHPrgLxNYuj7nSLF-=ue8g@mail.gmail.com>
-	 <9d1512b57683a68a7176ae8221562657fb0231a3.camel@xry111.site>
-	 <CAGudoHGsumzEukjQg=TxQgzjBcZ4a+TsdNVtFp4dpaSw6BzaSA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AbSUuxGx"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-366e70d0330so561972f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 23 Jun 2024 07:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719154497; x=1719759297; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qal8+/NVQ4EaUsktF5ubea5e2SmhtWYohY8n2jnwsTs=;
+        b=AbSUuxGxzPQ5vBH8ZSxqd8zR7LVOh6L5KTUUIKiJo5gr9o0HPtr+p2OfhPgE/KptjM
+         rYdc2IwdCxUDYKyEpQCk3qYoCGIYeurWs3iPI4j+LEyn0UsT3fl3YZREJCHKa40YUXoD
+         fY+T7vXym5gj1LgXHYg+jR6A684mlJ3UiwrNHXTYvXIGeE5biilj1WdVRBpWIQggm3VD
+         KTHUBIpfN9we+qxFu1MOVT6K1acsvUGXxk6WBrfENnzgaeNrTlIP61aJZychWSWdUyyO
+         cEFGEcDDMlX2pIIH6CywquZvMtU2APIvwwrRr3tU7kYCfHWGQQ2jnu3JE3fULrxyyHsk
+         BQzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719154497; x=1719759297;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qal8+/NVQ4EaUsktF5ubea5e2SmhtWYohY8n2jnwsTs=;
+        b=ZtyzKm/W6ZRjWYu3/3w3sLrG+HKBdzuVsutFhTTsedDvJ4nDxW2LNq24KIO6JyJVre
+         4wKYYG3xOH+Jtvm0zWuSDveN7DMbVGzJ14yloV5b8r9sJgzig88K4h6JAuzeOPog7nJO
+         CRjIlyXT7FFWFW9dS+N+PXzdkkrvqV5n3ARJEy3odpWNOndgA0rsAhkzWdzoBB+X+KPe
+         URlC8/4h9f4hvl/sMaC6cdmAX+UF8v+7Jy5O1CVg8GTU2My764REvaPDWotblGdyY0aT
+         EJMrNx9spiMonewWupOTfmFlMaMKfYcRDo5IYGLzO3SE9I/vhflKJXpgFfBHLZP3SksS
+         f3Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWeQD9zGq9F5D6Aj8ePG7h6JsAK5U0GaofAvdVeq/kdhc6x4fIe58yCpAh57GiL4zHFRFJhDlU/UgmPBOgkc2xnb30RH0DGgpq/bqQVSBqmRhhc
+X-Gm-Message-State: AOJu0Yw+2m5fcrBsUW8hUZMj2qZAOJfasMguUB5X47VJlrBjuBUayn+P
+	KKUoaNpYwcH4sL3T3Qf7iSjRAIo62+yePYiJ0R9zF+YMjn/2CoDamz5DUclCeriSAaRYiQE9KLB
+	u
+X-Google-Smtp-Source: AGHT+IENANslWkRWKxF1ggDUKEOlpEjTlLLg7IZN3Seke0zlOE5s0EvXnCKHFi7kpDs0Y60GuNlCuw==
+X-Received: by 2002:a5d:6d8c:0:b0:366:eef4:ce99 with SMTP id ffacd0b85a97d-366eef4cf70mr816268f8f.45.1719154497388;
+        Sun, 23 Jun 2024 07:54:57 -0700 (PDT)
+Received: from [10.100.51.161] (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a8c8f50sm7478559f8f.109.2024.06.23.07.54.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Jun 2024 07:54:57 -0700 (PDT)
+Message-ID: <a16b5720-ad2d-44af-a231-e7aa172ccf0e@suse.com>
+Date: Sun, 23 Jun 2024 16:54:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Limit time with disabled interrupts in
+ rb_check_pages()
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20240621150956.24814-1-petr.pavlu@suse.com>
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20240621150956.24814-1-petr.pavlu@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 2024-06-23 at 14:04 +0200, Mateusz Guzik wrote:
-> On Sun, Jun 23, 2024 at 3:22=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wr=
-ote:
-> >=20
-> > On Sun, 2024-06-23 at 03:07 +0200, Mateusz Guzik wrote:
-> > > On Sun, Jun 23, 2024 at 2:59=E2=80=AFAM Xi Ruoyao <xry111@xry111.site=
->
-> > > wrote:
-> > > >=20
-> > > > On Sat, 2024-06-22 at 15:41 -0700, Linus Torvalds wrote:
-> > > >=20
-> > > > > I do think that we should make AT_EMPTY_PATH with a NULL path
-> > > > > "JustWork(tm)", because the stupid "look if the pathname is
-> > > > > empty" is
-> > > > > horrible.
-> > > > >=20
-> > > > > But moving that check into getname() is *NOT* the right
-> > > > > answer,
-> > > > > because by the time you get to getname(), you have already
-> > > > > lost.
-> > > >=20
-> > > > Oops.=C2=A0 I'll try to get around of getname() too...
-> > > >=20
-> > > > > So the short-cut in vfs_fstatat() to never get a pathname is
-> > > > > disgusting - people should have used 'fstat()' - but it's
-> > > > > _important_
-> > > > > disgusting.
-> > > >=20
-> > > > The problem is we don't have fstat() for LoongArch, and it'll be
-> > > > unusable on all 32-bit arch after 2037.
-> > > >=20
-> > > > And Arnd hates the idea adding fstat() for LoongArch because
-> > > > there would
-> > > > be one more 32-bit arch broken in 2037.
-> > > >=20
-> > > > Or should we just add something like "fstat_2037()"?
-> > > >=20
-> > >=20
-> > > In that case fstat is out of the question, but no problem.
-> > >=20
-> > > It was suggested to make AT_EMPTY_PATH + NULL pathname do the
-> > > right
-> > > thing and have the syscalls short-circuit as needed.
-> > >=20
-> > > for statx it would look like this (except you are going to have
-> > > implement do_statx_by_fd):
-> > >=20
-> > > diff --git a/fs/stat.c b/fs/stat.c
-> > > index 16aa1f5ceec4..0afe72b320cc 100644
-> > > --- a/fs/stat.c
-> > > +++ b/fs/stat.c
-> > > @@ -710,6 +710,9 @@ SYSCALL_DEFINE5(statx,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct filename *name;
-> > >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (flags =3D=3D AT_EMPTY_PATH =
-&& filename =3D=3D NULL)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return do_statx_by_fd(...);
-> > > +
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 name =3D getname_flags(fil=
-ename,
-> > > getname_statx_lookup_flags(flags));
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D do_statx(dfd, name=
-, flags, mask, buffer);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 putname(name);
-> > >=20
-> > > and so on
-> > >=20
-> > > Personally I would prefer if fstatx was added instead, fwiw most
-> > > massaging in the area will be the same regardless.
-> >=20
-> > I do agree.=C2=A0 But if we do it *now* would it be "breaking the
-> > userspace"
-> > if some stupid program relies on fstatx() to return some error when
-> > the
-> > path is NULL?=C2=A0 The "stupid programs" may just exist in the wild...
-> >=20
->=20
-> You mean statx? fstatx would not accept a path to begin with.
+On 6/21/24 17:09, Petr Pavlu wrote:
+> Function rb_check_pages() validates the integrity of a specified per-CPU
+> tracing ring buffer. It does so by walking the underlying linked
+> list and checking its next and prev links.
+> 
+> To guarantee that the list doesn't get modified during the check,
+> a caller typically needs to take cpu_buffer->reader_lock. This prevents
+> the check from running concurrently with a potential reader which can
+> make the list temporarily inconsistent when swapping its old reader page
+> into the buffer.
+> 
+> A problem is that the time when interrupts are disabled is
+> non-deterministic, dependent on the ring buffer size. This particularly
+> affects PREEMPT_RT because the reader_lock is a raw spinlock which
+> doesn't become sleepable on PREEMPT_RT kernels.
+> 
+> Modify the check so it still tries to walk the whole list but gives up
+> the reader_lock between checking individual pages.
 
-Yes I mean statx.
+Sorry, I'm afraid this patch is actually buggy. It considers only the
+case when rb_check_pages() is called by ring_buffer_resize() and the
+ring-buffer list is potentially modified by a reader swapping its page
+into the buffer from rb_get_reader_page(). However, I suspect the
+opposite can happen, rb_check_pages() called by a completing reader from
+ring_buffer_read_finish() and rb_remove_pages()/rb_insert_pages()
+concurrently modifying the ring-buffer pages. This needs to be handled
+as well.
 
-> Worry about some code breaking is why I suggested a dedicated flag
-> (AT_NO_PATH) myself in case fstatx is a no-go.
+I'm at a conference next week, I'll have a closer look afterwards.
 
-I agree a dedicated flag will be better but I only came up with nasty
-names like it AT_FORCE_EMPTY_PATH or AT_EMPTY_PATH_NOCHECK.  I think
-your AT_NO_PATH is a better name.
-
-> I am not convinced messing with AT_* flags is justified to begin with.
-> Any syscall which does not have a fd-only variant and is found to be
-> routinely used with AT_EMPTY_PATH should get one instead.
->=20
-> As far as I know that's only stat(due to a perf bug in glibc, now
-> fixed) and increasingly statx.
-
-And you mean fstatat instead of stat, I guess.
-
-> Suppose AT_EMPTY_PATH + NULL are to land and stat + statx get the
-> treatment. What about all the other syscalls? Sorting all that out is
-> quite a big of churn which is probably not worth it. But then there is
-> a feature gap in that they EFAULT for this pair while the stat* ones
-> don't and that's bound to raise confusion. Then one could add the
-> check in the bowels of path lookup in similar way you do did to
-> maintain the same behavior (but without per-syscall churn) and a big
-> fat warning that anyone getting there often needs to get patched with
-> short-circuiting the entire thing. So I think that's either a lot of
-> churn or nasty additions.
->=20
-> Regardless, as noted above, either making fstatx a thing or
-> short-circuiting mostly the same patching has to be done for
-> statx-related stuff.
->=20
-> However, this is not my call to make.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+-- 
+Petr
