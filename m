@@ -1,192 +1,320 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015C5132120;
-	Mon, 24 Jun 2024 11:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD31619ADB3
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jun 2024 15:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719230394; cv=none; b=DgbSNeSWMdgtrS71ouyx145YTP9nTvHk0JwvSTXMPmOEESCyFgLKAV9fxpGYc4MXEOjgDByfZDP/Ma941ZhmDwE1llJdv5KneoGv/1ZS2FF6PGS14HsTbktdhLnE80xOqt5SfriDPZInQOKWDPQFXwARUS0lYzQ9DODZK0ZVUrA=
+	t=1719241957; cv=none; b=W6ODnQ6zwtenZH0KjAMqB12mHGdM4AmAaoe5eek+hZqu95J0QC7E8XIYnnQxh2CfUIye1fnHa4+3IP1C1ZvaIKLWL+qSgj5ucGQjTGIEyTdpapz7/kyRbBhTdxcF5Fw8Z4E/ebjkaRrLRsEFk0CgnMp6CBXyyglUsHYusVgzLGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719230394; c=relaxed/simple;
-	bh=9XS+CSAvJdGqq2rmRnYQw8dql7JPcCEcOR56vHp1HqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TK9CBfxuUgwlJArMBL0IIrVkdIcdlAFfHAnTJ/Wdus2CjfoyvXCqwZYADx8ebmcBPm6vfSSZLcyX/YBE9jicLDlxyOMr6BK4dbAzJb0zrRGVzLTaqynwcuwYB7NR2EaIKCCOD+f4SSzxpNrmWJyeXKxmPuFu8muSv/W1OjsBdBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Yfwjqzf8; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719241957; c=relaxed/simple;
+	bh=ojuN/mc5k607ZrfKqTQBy1V/hHjJkk3A7P6CMg1iw/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l73W63AzLgtng/6z1yEl2xJLf48NRcxwjM3IF5+qRBW/WCHoB/PNU7ZgGme7bdwz2t3G97US1ZQdKXN2dx3Ve0d8d7fGWAJOQSSp6r868DIXWGrl6RVTwpZBw0cKBuipQyfNfHA/r6DEBZ6Pma/PgKEy5tD35nCJ3auDdK6q2ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com; spf=none smtp.mailfrom=mojatatu.com; dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b=ruIGpWZT; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Yfwjqzf8"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OBQhUi007111;
-	Mon, 24 Jun 2024 11:59:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=pp1; bh=psOxch6FPs2WsulZ5Aax8wZVHel
-	HN19NTHnsoW0XnZM=; b=Yfwjqzf8CFxopXNKvmRz1hYonmx8D9fVGlocPPdYJlF
-	dn4CmDbNvLF04tlcPrlz2lo4uY5l+7VcnjbGBojcZnTLbcW1lQjfqjDBSfbBk8R8
-	f/kK9tFoNEkNB+FM9X+nIEqjsthMYeE88wgDmiibKRu3QVhZgnKuwFJZ320L2AVn
-	bEU8oa1hiVve8DuVQLPfp5i4SaZPSOC+sJNE0plOKqQi1kO7MRsYNwq0QixsY1p+
-	Qt/AKBdLV6tjPIKxI2poqEZLWPn8uzi3498nBpVIGLh0GrOXv/gQiW411eojpDoR
-	5MeBc1LFuyKm3ClbvKDfcw4acp5evQ1+J9W1ihNqmZQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7h8g4k5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 11:59:19 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45OBxIuK000959;
-	Mon, 24 Jun 2024 11:59:18 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7h8g4k3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 11:59:18 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45O9tANs008196;
-	Mon, 24 Jun 2024 11:59:18 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9b0gpuf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 11:59:17 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45OBxDOA39649658
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Jun 2024 11:59:16 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DC6DA20043;
-	Mon, 24 Jun 2024 11:59:13 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 380D220040;
-	Mon, 24 Jun 2024 11:59:06 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.43.62.173])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 24 Jun 2024 11:59:06 +0000 (GMT)
-Date: Mon, 24 Jun 2024 17:29:03 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tejun Heo <tj@kernel.org>,
-        David Vernet <dvernet@meta.com>
-Subject: Re: [RFC PATCH v3 00/11] powerpc: Add support for ftrace direct and
- BPF trampolines
-Message-ID: <ZnlfhxvNnmM1mSVm@linux.ibm.com>
-References: <cover.1718908016.git.naveen@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1718908016.git.naveen@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6xGmPnNfcB_oqQw8qAVL90PTjoHARv1z
-X-Proofpoint-ORIG-GUID: QFZJp2eMEmgOHMNDYsKPZda3PAumUEGB
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="ruIGpWZT"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f8395a530dso34283165ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jun 2024 08:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1719241955; x=1719846755; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=peW8Z3S28CwGFuIpazhrzFeDoTUsFpCtaaEIifjimFQ=;
+        b=ruIGpWZTbUm+8KSzrQeE+pRiaZg0+NDCAUrWbgxEyi+WIZBvTS5sdGdHDSB39BhakO
+         /A6NKHQ5bX9okHcya0y2K5UUrw4tERU3iefT9FODPuMl+7so6jkO7A882ZoaqTawoSMB
+         k2RzYO0uaZa1ooYu4MvKL7frDglzj8/dSLG6czeWI6PcclysgBDQfRr5yrsOK6ICc6mQ
+         o5L+Ef3xsG5Wg+4FzRUSZJYWJB71n45nfpXP6e/OVCJVYkdGeOtUll8P5Vh7ii2u7lCb
+         MjNG6TL/JsaAcucX8LZ1Dp0V3kUzr+vbHXPKjISuVTyTBQJktOVb+ALCb7Sle0Fs+MZw
+         /POg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719241955; x=1719846755;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=peW8Z3S28CwGFuIpazhrzFeDoTUsFpCtaaEIifjimFQ=;
+        b=OiVtwnTw/hjvGeycow85/+pNhC20ipeuoGzANGrV+FlwlH9RpbGxofIBkncUA+gzps
+         u6/82xhT1tSahILGHXwcVpOeF9yZyQOkpF8QGBVN42dFs0Q5bmjyfcoxRAbziHnE/yEA
+         0+WZK7r/sj2HUWwJ7OC9NgLu5IdBWvcoS7c5A0haSGZzzv4C8NPs3lMOpaFf939JuamR
+         8PxgoW2AoRWP3+BamJqba9+iCxXbZv9zV1tX/KJN2S5WnVfqI37Jbtxikx9wF5LcMJtd
+         36PGB2EVGLOs1p4m313w+vQyuCAkAsJdTDsGIbtV/GLnDvQvQfk0HsPhOmuNXvZofcLE
+         TSWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPRc2yo57xIDRxzDRVKtCNt9r9fgSrmU2XPcgotDWqpyZkImt82YivW2WZZdYQQvMu8tgEGFoR6eSbobjdvu7sH/1ZIi0N59hb8/+W9+t6dk/o
+X-Gm-Message-State: AOJu0Yx6j/PtPRMAdSnEzMm/DSRShT2HoSmmG70p2qzrbWaBUrYZrtnB
+	fhoqs/wIgBWbbdr0Tqau2uF0DBroduadXtHIJuqnSLgURKNRB6i7VGSPQfFrxQ==
+X-Google-Smtp-Source: AGHT+IEN/zBRCtieICYKZDxLphZvn5UQQKpSrMS/syCqKx2ld79T7HXLa1NJ87s4p+b/SOjvvRGY+Q==
+X-Received: by 2002:a17:902:cecc:b0:1f9:f3a0:629b with SMTP id d9443c01a7336-1fa23f1d33bmr46473115ad.54.1719241954864;
+        Mon, 24 Jun 2024 08:12:34 -0700 (PDT)
+Received: from ?IPV6:2804:14d:5c5e:44fb:8ef6:cdff:1677:b083? ([2804:14d:5c5e:44fb:8ef6:cdff:1677:b083])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb2f058bsm63929855ad.13.2024.06.24.08.12.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 08:12:34 -0700 (PDT)
+Message-ID: <fa8e452b-ad37-482b-8d9b-bc8b4cad0ff9@mojatatu.com>
+Date: Mon, 24 Jun 2024 12:12:26 -0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_09,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1011 mlxscore=0
- mlxlogscore=999 spamscore=0 phishscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406240095
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] tracing/net_sched: NULL pointer dereference in
+ perf_trace_qdisc_reset()
+To: yskelg@gmail.com
+Cc: netdev@vger.kernel.org, stable@vger.kernel.org,
+ Jakub Kicinski <kuba@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Takashi Iwai <tiwai@suse.de>, "David S. Miller" <davem@davemloft.net>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Jamal Hadi Salim
+ <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Taehee Yoo <ap420073@gmail.com>,
+ Austin Kim <austindh.kim@gmail.com>, shjy180909@gmail.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ ppbuk5246@gmail.com, Yeoreum Yun <yeoreum.yun@arm.com>
+References: <20240622045701.8152-2-yskelg@gmail.com>
+Content-Language: en-US
+From: Pedro Tammela <pctammela@mojatatu.com>
+In-Reply-To: <20240622045701.8152-2-yskelg@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 21, 2024 at 12:24:03AM +0530, Naveen N Rao wrote:
-> This is v3 of the patches posted here:
-> http://lkml.kernel.org/r/cover.1718008093.git.naveen@kernel.org
+On 22/06/2024 01:57, yskelg@gmail.com wrote:
+> From: Yunseong Kim <yskelg@gmail.com>
 > 
-> Since v2, I have addressed review comments from Steven and Masahiro 
-> along with a few fixes. Patches 7-11 are new in this series and add 
-> support for ftrace direct and bpf trampolines. 
+> In the TRACE_EVENT(qdisc_reset) NULL dereference occurred from
 > 
-> This series depends on the patch series from Benjamin Gray adding 
-> support for patch_ulong():
-> http://lkml.kernel.org/r/20240515024445.236364-1-bgray@linux.ibm.com
+>   qdisc->dev_queue->dev <NULL> ->name
+> 
+> This situation simulated from bunch of veths and Bluetooth dis/reconnection.
+> 
+> During qdisc initialization, qdisc was being set to noop_queue.
+> In veth_init_queue, the initial tx_num was reduced back to one,
+> causing the qdisc reset to be called with noop, which led to the kernel panic.
+> 
+> I've attached the GitHub gist link that C converted syz-execprogram
+> source code and 3 log of reproduced vmcore-dmesg.
+> 
+>   https://gist.github.com/yskelg/cc64562873ce249cdd0d5a358b77d740
+> 
+> Yeoreum and I use two fuzzing tool simultaneously.
+> 
+> One process with syz-executor : https://github.com/google/syzkaller
+> 
+>   $ ./syz-execprog -executor=./syz-executor -repeat=1 -sandbox=setuid \
+>      -enable=none -collide=false log1
+> 
+> The other process with perf fuzzer:
+>   https://github.com/deater/perf_event_tests/tree/master/fuzzer
+> 
+>   $ perf_event_tests/fuzzer/perf_fuzzer
+> 
+> I think this will happen on the kernel version.
+> 
+>   Linux kernel version +v6.7.10, +v6.8, +v6.9 and it could happen in v6.10.
+> 
+> This occurred from 51270d573a8d. I think this patch is absolutely
+> necessary. Previously, It was showing not intended string value of name.
+> 
+> I've reproduced 3 time from my fedora 40 Debug Kernel with any other module
+> or patched.
+> 
+>   version: 6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug
+> 
+> [ 5287.164555] veth0_vlan: left promiscuous mode
+> [ 5287.164929] veth1_macvtap: left promiscuous mode
+> [ 5287.164950] veth0_macvtap: left promiscuous mode
+> [ 5287.164983] veth1_vlan: left promiscuous mode
+> [ 5287.165008] veth0_vlan: left promiscuous mode
+> [ 5287.165450] veth1_macvtap: left promiscuous mode
+> [ 5287.165472] veth0_macvtap: left promiscuous mode
+> [ 5287.165502] veth1_vlan: left promiscuous mode
+> …
+> [ 5297.598240] bridge0: port 2(bridge_slave_1) entered blocking state
+> [ 5297.598262] bridge0: port 2(bridge_slave_1) entered forwarding state
+> [ 5297.598296] bridge0: port 1(bridge_slave_0) entered blocking state
+> [ 5297.598313] bridge0: port 1(bridge_slave_0) entered forwarding state
+> [ 5297.616090] 8021q: adding VLAN 0 to HW filter on device bond0
+> [ 5297.620405] bridge0: port 1(bridge_slave_0) entered disabled state
+> [ 5297.620730] bridge0: port 2(bridge_slave_1) entered disabled state
+> [ 5297.627247] 8021q: adding VLAN 0 to HW filter on device team0
+> [ 5297.629636] bridge0: port 1(bridge_slave_0) entered blocking state
+> …
+> [ 5298.002798] bridge_slave_0: left promiscuous mode
+> [ 5298.002869] bridge0: port 1(bridge_slave_0) entered disabled state
+> [ 5298.309444] bond0 (unregistering): (slave bond_slave_0): Releasing backup interface
+> [ 5298.315206] bond0 (unregistering): (slave bond_slave_1): Releasing backup interface
+> [ 5298.320207] bond0 (unregistering): Released all slaves
+> [ 5298.354296] hsr_slave_0: left promiscuous mode
+> [ 5298.360750] hsr_slave_1: left promiscuous mode
+> [ 5298.374889] veth1_macvtap: left promiscuous mode
+> [ 5298.374931] veth0_macvtap: left promiscuous mode
+> [ 5298.374988] veth1_vlan: left promiscuous mode
+> [ 5298.375024] veth0_vlan: left promiscuous mode
+> [ 5299.109741] team0 (unregistering): Port device team_slave_1 removed
+> [ 5299.185870] team0 (unregistering): Port device team_slave_0 removed
+> …
+> [ 5300.155443] Bluetooth: hci3: unexpected cc 0x0c03 length: 249 > 1
+> [ 5300.155724] Bluetooth: hci3: unexpected cc 0x1003 length: 249 > 9
+> [ 5300.155988] Bluetooth: hci3: unexpected cc 0x1001 length: 249 > 9
+> ….
+> [ 5301.075531] team0: Port device team_slave_1 added
+> [ 5301.085515] bridge0: port 1(bridge_slave_0) entered blocking state
+> [ 5301.085531] bridge0: port 1(bridge_slave_0) entered disabled state
+> [ 5301.085588] bridge_slave_0: entered allmulticast mode
+> [ 5301.085800] bridge_slave_0: entered promiscuous mode
+> [ 5301.095617] bridge0: port 1(bridge_slave_0) entered blocking state
+> [ 5301.095633] bridge0: port 1(bridge_slave_0) entered disabled state
+> …
+> [ 5301.149734] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
+> [ 5301.173234] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
+> [ 5301.180517] bond0: (slave bond_slave_1): Enslaving as an active interface with an up link
+> [ 5301.193481] hsr_slave_0: entered promiscuous mode
+> [ 5301.204425] hsr_slave_1: entered promiscuous mode
+> [ 5301.210172] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+> [ 5301.210185] Cannot create hsr debugfs directory
+> [ 5301.224061] bond0: (slave bond_slave_1): Enslaving as an active interface with an up link
+> [ 5301.246901] bond0: (slave bond_slave_0): Enslaving as an active interface with an up link
+> [ 5301.255934] team0: Port device team_slave_0 added
+> [ 5301.256480] team0: Port device team_slave_1 added
+> [ 5301.256948] team0: Port device team_slave_0 added
+> …
+> [ 5301.435928] hsr_slave_0: entered promiscuous mode
+> [ 5301.446029] hsr_slave_1: entered promiscuous mode
+> [ 5301.455872] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+> [ 5301.455884] Cannot create hsr debugfs directory
+> [ 5301.502664] hsr_slave_0: entered promiscuous mode
+> [ 5301.513675] hsr_slave_1: entered promiscuous mode
+> [ 5301.526155] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+> [ 5301.526164] Cannot create hsr debugfs directory
+> [ 5301.563662] hsr_slave_0: entered promiscuous mode
+> [ 5301.576129] hsr_slave_1: entered promiscuous mode
+> [ 5301.580259] debugfs: Directory 'hsr0' with parent 'hsr' already present!
+> [ 5301.580270] Cannot create hsr debugfs directory
+> [ 5301.590269] 8021q: adding VLAN 0 to HW filter on device bond0
+> 
+> [ 5301.595872] KASAN: null-ptr-deref in range [0x0000000000000130-0x0000000000000137]
+> [ 5301.595877] Mem abort info:
+> [ 5301.595881]   ESR = 0x0000000096000006
+> [ 5301.595885]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [ 5301.595889]   SET = 0, FnV = 0
+> [ 5301.595893]   EA = 0, S1PTW = 0
+> [ 5301.595896]   FSC = 0x06: level 2 translation fault
+> [ 5301.595900] Data abort info:
+> [ 5301.595903]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+> [ 5301.595907]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [ 5301.595911]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [ 5301.595915] [dfff800000000026] address between user and kernel address ranges
+> [ 5301.595971] Internal error: Oops: 0000000096000006 [#1] SMP
+> …
+> [ 5301.596076] CPU: 2 PID: 102769 Comm:
+> syz-executor.3 Kdump: loaded Tainted:
+>   G        W         -------  ---  6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug #1
+> [ 5301.596080] Hardware name: VMware, Inc. VMware20,1/VBSA,
+>   BIOS VMW201.00V.21805430.BA64.2305221830 05/22/2023
+> [ 5301.596082] pstate: 01400005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+> [ 5301.596085] pc : strnlen+0x40/0x88
+> [ 5301.596114] lr : trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
+> [ 5301.596124] sp : ffff8000beef6b40
+> [ 5301.596126] x29: ffff8000beef6b40 x28: dfff800000000000 x27: 0000000000000001
+> [ 5301.596131] x26: 6de1800082c62bd0 x25: 1ffff000110aa9e0 x24: ffff800088554f00
+> [ 5301.596136] x23: ffff800088554ec0 x22: 0000000000000130 x21: 0000000000000140
+> [ 5301.596140] x20: dfff800000000000 x19: ffff8000beef6c60 x18: ffff7000115106d8
+> [ 5301.596143] x17: ffff800121bad000 x16: ffff800080020000 x15: 0000000000000006
+> [ 5301.596147] x14: 0000000000000002 x13: ffff0001f3ed8d14 x12: ffff700017ddeda5
+> [ 5301.596151] x11: 1ffff00017ddeda4 x10: ffff700017ddeda4 x9 : ffff800082cc5eec
+> [ 5301.596155] x8 : 0000000000000004 x7 : 00000000f1f1f1f1 x6 : 00000000f2f2f200
+> [ 5301.596158] x5 : 00000000f3f3f3f3 x4 : ffff700017dded80 x3 : 00000000f204f1f1
+> [ 5301.596162] x2 : 0000000000000026 x1 : 0000000000000000 x0 : 0000000000000130
+> [ 5301.596166] Call trace:
+> [ 5301.596175]  strnlen+0x40/0x88
+> [ 5301.596179]  trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
+> [ 5301.596182]  perf_trace_qdisc_reset+0xb0/0x538
+> [ 5301.596184]  __traceiter_qdisc_reset+0x68/0xc0
+> [ 5301.596188]  qdisc_reset+0x43c/0x5e8
+> [ 5301.596190]  netif_set_real_num_tx_queues+0x288/0x770
+> [ 5301.596194]  veth_init_queues+0xfc/0x130 [veth]
+> [ 5301.596198]  veth_newlink+0x45c/0x850 [veth]
+> [ 5301.596202]  rtnl_newlink_create+0x2c8/0x798
+> [ 5301.596205]  __rtnl_newlink+0x92c/0xb60
+> [ 5301.596208]  rtnl_newlink+0xd8/0x130
+> [ 5301.596211]  rtnetlink_rcv_msg+0x2e0/0x890
+> [ 5301.596214]  netlink_rcv_skb+0x1c4/0x380
+> [ 5301.596225]  rtnetlink_rcv+0x20/0x38
+> [ 5301.596227]  netlink_unicast+0x3c8/0x640
+> [ 5301.596231]  netlink_sendmsg+0x658/0xa60
+> [ 5301.596234]  __sock_sendmsg+0xd0/0x180
+> [ 5301.596243]  __sys_sendto+0x1c0/0x280
+> [ 5301.596246]  __arm64_sys_sendto+0xc8/0x150
+> [ 5301.596249]  invoke_syscall+0xdc/0x268
+> [ 5301.596256]  el0_svc_common.constprop.0+0x16c/0x240
+> [ 5301.596259]  do_el0_svc+0x48/0x68
+> [ 5301.596261]  el0_svc+0x50/0x188
+> [ 5301.596265]  el0t_64_sync_handler+0x120/0x130
+> [ 5301.596268]  el0t_64_sync+0x194/0x198
+> [ 5301.596272] Code: eb15001f 54000120 d343fc02 12000801 (38f46842)
+> [ 5301.596285] SMP: stopping secondary CPUs
+> [ 5301.597053] Starting crashdump kernel...
+> [ 5301.597057] Bye!
+> 
+> Yeoreum and I don't know if the patch we wrote will fix the underlying cause,
+> but we think that priority is to prevent kernel panic happening.
+> So, we're sending this patch.
+> 
+> Link: https://lore.kernel.org/lkml/20240229143432.273b4871@gandalf.local.home/t/
+> Fixes: 51270d573a8d ("tracing/net_sched: Fix tracepoints that save qdisc_dev() as a string")
+> Cc: netdev@vger.kernel.org
+> Cc: stable@vger.kernel.org # +v6.7.10, +v6.8
+> Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>   include/trace/events/qdisc.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/qdisc.h b/include/trace/events/qdisc.h
+> index f1b5e816e7e5..170b51fbe47a 100644
+> --- a/include/trace/events/qdisc.h
+> +++ b/include/trace/events/qdisc.h
+> @@ -81,7 +81,7 @@ TRACE_EVENT(qdisc_reset,
+>   	TP_ARGS(q),
+>   
+>   	TP_STRUCT__entry(
+> -		__string(	dev,		qdisc_dev(q)->name	)
+> +		__string(dev, qdisc_dev(q) ? qdisc_dev(q)->name : "noop_queue")
+>   		__string(	kind,		q->ops->id		)
+>   		__field(	u32,		parent			)
+>   		__field(	u32,		handle			)
 
-This patchset, along with its dependent patchset [2], enables support 
-for BPF schedulers introduced by the sched_ext patchset [1] on 
-Power Architecture.
+You missed the __assign_str portion (see below). Also let's just say 
+"(null)" as it's the correct device name. "noop_queue" could be misleading.
 
-Before this patchset, BPF schedulers were failing to load due to the 
-lack of trampoline support.
+diff --git a/include/trace/events/qdisc.h b/include/trace/events/qdisc.h
+index 1f4258308b96..f54e0b4dbcf4 100644
+--- a/include/trace/events/qdisc.h
++++ b/include/trace/events/qdisc.h
+@@ -81,14 +81,14 @@ TRACE_EVENT(qdisc_reset,
+         TP_ARGS(q),
 
-GitHub repo for sched_ext: https://github.com/sched-ext/sched_ext
-Note: This repo has been archived. Please refer to the description 
-provided on the repo homepage for more details.
+         TP_STRUCT__entry(
+-               __string(       dev,            qdisc_dev(q)->name      )
++               __string(       dev,            qdisc_dev(q) ? 
+qdisc_dev(q)->name : "(null)"    )
+                 __string(       kind,           q->ops->id              )
+                 __field(        u32,            parent                  )
+                 __field(        u32,            handle                  )
+         ),
 
-[1] v6 https://lore.kernel.org/lkml/20240501151312.635565-1-tj@kernel.org
-[2] http://lkml.kernel.org/r/20240515024445.236364-1-bgray@linux.ibm.com
+         TP_fast_assign(
+-               __assign_str(dev, qdisc_dev(q)->name);
++               __assign_str(dev, qdisc_dev(q) ? qdisc_dev(q)->name : 
+"(null)");
+                 __assign_str(kind, q->ops->id);
+                 __entry->parent = q->parent;
+                 __entry->handle = q->handle;
 
-Thank you for the patch!
-> 
-> 
-> - Naveen
-> 
-> 
-> Naveen N Rao (11):
->   powerpc/kprobes: Use ftrace to determine if a probe is at function
->     entry
->   powerpc/ftrace: Unify 32-bit and 64-bit ftrace entry code
->   powerpc/module_64: Convert #ifdef to IS_ENABLED()
->   powerpc/ftrace: Remove pointer to struct module from dyn_arch_ftrace
->   kbuild: Add generic hook for architectures to use before the final
->     vmlinux link
->   powerpc64/ftrace: Move ftrace sequence out of line
->   powerpc/ftrace: Add support for DYNAMIC_FTRACE_WITH_CALL_OPS
->   powerpc/ftrace: Add support for DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->   samples/ftrace: Add support for ftrace direct samples on powerpc
->   powerpc64/bpf: Fold bpf_jit_emit_func_call_hlp() into
->     bpf_jit_emit_func_call_rel()
->   powerpc64/bpf: Add support for bpf trampolines
-> 
->  arch/Kconfig                                |   3 +
->  arch/powerpc/Kconfig                        |   9 +
->  arch/powerpc/Makefile                       |   8 +
->  arch/powerpc/include/asm/ftrace.h           |  29 +-
->  arch/powerpc/include/asm/module.h           |   5 +
->  arch/powerpc/include/asm/ppc-opcode.h       |  14 +
->  arch/powerpc/kernel/asm-offsets.c           |  11 +
->  arch/powerpc/kernel/kprobes.c               |  18 +-
->  arch/powerpc/kernel/module_64.c             |  67 +-
->  arch/powerpc/kernel/trace/ftrace.c          | 269 +++++++-
->  arch/powerpc/kernel/trace/ftrace_64_pg.c    |  73 +-
->  arch/powerpc/kernel/trace/ftrace_entry.S    | 210 ++++--
->  arch/powerpc/kernel/vmlinux.lds.S           |   3 +-
->  arch/powerpc/net/bpf_jit.h                  |  11 +
->  arch/powerpc/net/bpf_jit_comp.c             | 702 +++++++++++++++++++-
->  arch/powerpc/net/bpf_jit_comp32.c           |   7 +-
->  arch/powerpc/net/bpf_jit_comp64.c           |  68 +-
->  arch/powerpc/tools/Makefile                 |  10 +
->  arch/powerpc/tools/gen-ftrace-pfe-stubs.sh  |  49 ++
->  samples/ftrace/ftrace-direct-modify.c       |  85 ++-
->  samples/ftrace/ftrace-direct-multi-modify.c | 101 ++-
->  samples/ftrace/ftrace-direct-multi.c        |  79 ++-
->  samples/ftrace/ftrace-direct-too.c          |  83 ++-
->  samples/ftrace/ftrace-direct.c              |  69 +-
->  scripts/Makefile.vmlinux                    |   8 +
->  scripts/link-vmlinux.sh                     |  11 +-
->  26 files changed, 1813 insertions(+), 189 deletions(-)
->  create mode 100644 arch/powerpc/tools/Makefile
->  create mode 100755 arch/powerpc/tools/gen-ftrace-pfe-stubs.sh
-> 
-> 
-> base-commit: e2b06d707dd067509cdc9ceba783c06fa6a551c2
-> prerequisite-patch-id: a1d50e589288239d5a8b1c1f354cd4737057c9d3
-> prerequisite-patch-id: da4142d56880861bd0ad7ad7087c9e2670a2ee54
-> prerequisite-patch-id: 609d292e054b2396b603890522a940fa0bdfb6d8
-> prerequisite-patch-id: 6f7213fb77b1260defbf43be0e47bff9c80054cc
-> prerequisite-patch-id: ad3b71bf071ae4ba1bee5b087e61a2055772a74f
-> -- 
-> 2.45.2
-> 
+
