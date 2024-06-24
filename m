@@ -1,211 +1,192 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0A8132130
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jun 2024 11:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015C5132120;
+	Mon, 24 Jun 2024 11:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719229795; cv=none; b=lrIP1zaJoZnBAQoJQ6r2ALLo2ptcF+f8hswp7eo6l12lEy3V9DnysAOSefl3epg0pdMRqYqoiukpcrVR7zKQz9KxCP/vSM53GpRkqK/u9UsxxYLvSkpRAcWAIY14Od6zIYvSeVqyruPSnFEd/K7P5DwWz5Q9Hwgi8zWiQiF67Zw=
+	t=1719230394; cv=none; b=DgbSNeSWMdgtrS71ouyx145YTP9nTvHk0JwvSTXMPmOEESCyFgLKAV9fxpGYc4MXEOjgDByfZDP/Ma941ZhmDwE1llJdv5KneoGv/1ZS2FF6PGS14HsTbktdhLnE80xOqt5SfriDPZInQOKWDPQFXwARUS0lYzQ9DODZK0ZVUrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719229795; c=relaxed/simple;
-	bh=RlYVDlZja+6rZP5BTG6snFkXYSrb+JuGGHvj19by53o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p2qe6C8RLU3bI8SjGJhGXsAbUtoy4vNLhQrwimSCBO+mUbaxe21B9sSzEQKCh6XvN7Cmv6zmmOT9HETrU2jxXBBIupdUxIib6ucHcsP+1j8r3jdw7p8XNvJQ9hB01uQo0Efj6E/ZCgl3MRZ7/yTUUpMG7PEf9ElaMKXO3qtMrkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=LJICEpEk; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1719230394; c=relaxed/simple;
+	bh=9XS+CSAvJdGqq2rmRnYQw8dql7JPcCEcOR56vHp1HqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TK9CBfxuUgwlJArMBL0IIrVkdIcdlAFfHAnTJ/Wdus2CjfoyvXCqwZYADx8ebmcBPm6vfSSZLcyX/YBE9jicLDlxyOMr6BK4dbAzJb0zrRGVzLTaqynwcuwYB7NR2EaIKCCOD+f4SSzxpNrmWJyeXKxmPuFu8muSv/W1OjsBdBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Yfwjqzf8; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LJICEpEk"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6326f1647f6so36793177b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jun 2024 04:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1719229792; x=1719834592; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kd5I5Sm5SEEI9bJESKa04ZiDJHwtLURV9qvtnPEr1Cw=;
-        b=LJICEpEklun5dGEHwjyIq0HG52//n6h6gch4F3uqI5vkDjfF8r1zNMCcuodHCwDqyQ
-         bb2p4pFBo18KjahmegoAo/K2KM9VlQUp96CYnYvlEYf2Wz/a/WOtteATsvzgbgMSWwzz
-         8jgWK5wrwA5RTk2Uu74dnD6RL9+nrPcr7CLV1MPa2Pc5d2xhIO1VdQgYcRAICUNw1X04
-         JxWnkBk35rVmE9UGJ7/uGlvo6PeWE3ySGsRY/frvNOsEw34JKT7V+5fSQcpkJ7/VVcnd
-         UtUV6y2ulYXEtPkoLR7jfqdn7ug7aWjMCdCXz9Z2hME7hD4aV507dUAxeVFfDlHs2HT5
-         eQ3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719229792; x=1719834592;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kd5I5Sm5SEEI9bJESKa04ZiDJHwtLURV9qvtnPEr1Cw=;
-        b=wQLhhTrLEqFEvmsvyPs8L1Hf7l5EYHAX2Iy3hD9lC/bvwSCXvS8Z5Xqg3QjZ67C+fP
-         2FZHU59inqSPmtINkI2HS3FM50B8nmI0633cAohlvJE8nyXHPttjhol+tVLoQ/rCobK7
-         8sb+G0VXFpJaThNSiKAhC4u1Es7zlc58cWCNq/d+X7LhdJP+NiZ4mFxNStPEMGZAVyPQ
-         PdChWdqvQ0KH+c/wlFTo65y3tHHZv5Ud0NzXukgWAEo42w0/cN2eiSvSqdG0a3qwFUMo
-         aGxh9Hxinq3XQoMNqxZbQLFTvSWJZOiJQ5TfS1Itmo6ksjrlOnUprFnF+1POug8HjneT
-         Pg8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWQUUJEM6CBa1MmnmHViL16eWCw2JUTf9VJZ70MSraJfZV7kR+ZlnPZGCUCr6KNfb7VFGVTe+BKVfj9UD0ZFXWQqKtLIKY2jjoBnpsu3JaHCrgb
-X-Gm-Message-State: AOJu0YyFMW0bh7bctx80OySbLuvxw1o8OrSiNsCXgfXMzQRRCSxCLB55
-	9USJvNEAhqsKEfMfE4hCb0wLnohWEGqn+RwT0Av3kwlpuM8LNdjCIBDEti4Y26CeYyjaOj0rqqZ
-	ql7r9C1Gukya9T8vxn9uruxx2HnztEz6lIBzoB5PXDFHQXCmE
-X-Google-Smtp-Source: AGHT+IGJjTrlmcRbQh6/kbNdxg9y/Oeu+nWF3lYXzODXDhrNFp8r1QHIEdwFpED/HofduNZ7d6h1p7TJUAIO6YF8oeQ=
-X-Received: by 2002:a81:9288:0:b0:62c:efa2:a091 with SMTP id
- 00721157ae682-643aaa88c36mr39059547b3.14.1719229792054; Mon, 24 Jun 2024
- 04:49:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Yfwjqzf8"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OBQhUi007111;
+	Mon, 24 Jun 2024 11:59:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=pp1; bh=psOxch6FPs2WsulZ5Aax8wZVHel
+	HN19NTHnsoW0XnZM=; b=Yfwjqzf8CFxopXNKvmRz1hYonmx8D9fVGlocPPdYJlF
+	dn4CmDbNvLF04tlcPrlz2lo4uY5l+7VcnjbGBojcZnTLbcW1lQjfqjDBSfbBk8R8
+	f/kK9tFoNEkNB+FM9X+nIEqjsthMYeE88wgDmiibKRu3QVhZgnKuwFJZ320L2AVn
+	bEU8oa1hiVve8DuVQLPfp5i4SaZPSOC+sJNE0plOKqQi1kO7MRsYNwq0QixsY1p+
+	Qt/AKBdLV6tjPIKxI2poqEZLWPn8uzi3498nBpVIGLh0GrOXv/gQiW411eojpDoR
+	5MeBc1LFuyKm3ClbvKDfcw4acp5evQ1+J9W1ihNqmZQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7h8g4k5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 11:59:19 +0000 (GMT)
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45OBxIuK000959;
+	Mon, 24 Jun 2024 11:59:18 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7h8g4k3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 11:59:18 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45O9tANs008196;
+	Mon, 24 Jun 2024 11:59:18 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9b0gpuf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 11:59:17 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45OBxDOA39649658
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Jun 2024 11:59:16 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DC6DA20043;
+	Mon, 24 Jun 2024 11:59:13 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 380D220040;
+	Mon, 24 Jun 2024 11:59:06 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.43.62.173])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 24 Jun 2024 11:59:06 +0000 (GMT)
+Date: Mon, 24 Jun 2024 17:29:03 +0530
+From: Vishal Chourasia <vishalc@linux.ibm.com>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Tejun Heo <tj@kernel.org>,
+        David Vernet <dvernet@meta.com>
+Subject: Re: [RFC PATCH v3 00/11] powerpc: Add support for ftrace direct and
+ BPF trampolines
+Message-ID: <ZnlfhxvNnmM1mSVm@linux.ibm.com>
+References: <cover.1718908016.git.naveen@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1718908016.git.naveen@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 6xGmPnNfcB_oqQw8qAVL90PTjoHARv1z
+X-Proofpoint-ORIG-GUID: QFZJp2eMEmgOHMNDYsKPZda3PAumUEGB
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624082141.153871-1-alexghiti@rivosinc.com>
-In-Reply-To: <20240624082141.153871-1-alexghiti@rivosinc.com>
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Mon, 24 Jun 2024 19:49:41 +0800
-Message-ID: <CABgGipXR6ETkH0w-8GG8uBtKbG5jvD0VHz-A-VnXFPgvqrd6Lw@mail.gmail.com>
-Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after
- patching to avoid illegal insns
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Puranjay Mohan <puranjay12@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-24_09,2024-06-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2406240095
 
-Hi Alex,
+On Fri, Jun 21, 2024 at 12:24:03AM +0530, Naveen N Rao wrote:
+> This is v3 of the patches posted here:
+> http://lkml.kernel.org/r/cover.1718008093.git.naveen@kernel.org
+> 
+> Since v2, I have addressed review comments from Steven and Masahiro 
+> along with a few fixes. Patches 7-11 are new in this series and add 
+> support for ftrace direct and bpf trampolines. 
+> 
+> This series depends on the patch series from Benjamin Gray adding 
+> support for patch_ulong():
+> http://lkml.kernel.org/r/20240515024445.236364-1-bgray@linux.ibm.com
 
-On Mon, Jun 24, 2024 at 4:21=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosinc=
-.com> wrote:
->
-> We cannot delay the icache flush after patching some functions as we may
-> have patched a function that will get called before the icache flush.
->
-> The only way to completely avoid such scenario is by flushing the icache
-> as soon as we patch a function. This will probably be costly as we don't
-> batch the icache maintenance anymore.
->
-> Fixes: 6ca445d8af0e ("riscv: Fix early ftrace nop patching")
-> Reported-by: Conor Dooley <conor.dooley@microchip.com>
-> Closes: https://lore.kernel.org/linux-riscv/20240613-lubricant-breath-061=
-192a9489a@wendy/
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/kernel/ftrace.c |  7 ++-----
->  arch/riscv/kernel/patch.c  | 26 ++++++++++++++++++--------
->  2 files changed, 20 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> index 87cbd86576b2..4b95c574fd04 100644
-> --- a/arch/riscv/kernel/ftrace.c
-> +++ b/arch/riscv/kernel/ftrace.c
-> @@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct dyn_ft=
-race *rec)
->         out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
->         mutex_unlock(&text_mutex);
->
-> -       if (!mod)
-> -               local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN_S=
-IZE);
-> -
->         return out;
->  }
->
-> @@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
->         } else {
->                 while (atomic_read(&param->cpu_count) <=3D num_online_cpu=
-s())
->                         cpu_relax();
-> -       }
->
-> -       local_flush_icache_all();
-> +               local_flush_icache_all();
-> +       }
+This patchset, along with its dependent patchset [2], enables support 
+for BPF schedulers introduced by the sched_ext patchset [1] on 
+Power Architecture.
 
-Sorry, maybe I should point it out directly earlier. But I don't think
-this diff chunk is required. Threads running in the else clause from
-stop_machine must not run into any patchable entry. If it runs into a
-patchable entry, running the local fence.i is not going to fix the
-problem.
+Before this patchset, BPF schedulers were failing to load due to the 
+lack of trampoline support.
 
->
->         return 0;
->  }
-> diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-> index 4007563fb607..ab03732d06c4 100644
-> --- a/arch/riscv/kernel/patch.c
-> +++ b/arch/riscv/kernel/patch.c
-> @@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size_t l=
-en)
->
->         memset(waddr, c, len);
->
-> +       /*
-> +        * We could have just patched a function that is about to be
-> +        * called so make sure we don't execute partially patched
-> +        * instructions by flushing the icache as soon as possible.
-> +        */
-> +       local_flush_icache_range((unsigned long)waddr,
-> +                                (unsigned long)waddr + len);
-> +
->         patch_unmap(FIX_TEXT_POKE0);
->
->         if (across_pages)
-> @@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const void=
- *insn, size_t len)
->
->         ret =3D copy_to_kernel_nofault(waddr, insn, len);
->
-> +       /*
-> +        * We could have just patched a function that is about to be
-> +        * called so make sure we don't execute partially patched
-> +        * instructions by flushing the icache as soon as possible.
-> +        */
-> +       local_flush_icache_range((unsigned long)waddr,
-> +                                (unsigned long)waddr + len);
-> +
->         patch_unmap(FIX_TEXT_POKE0);
->
->         if (across_pages)
-> @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t le=
-n)
->
->         ret =3D patch_insn_set(tp, c, len);
->
-> -       if (!ret)
-> -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
-> -
->         return ret;
->  }
->  NOKPROBE_SYMBOL(patch_text_set_nosync);
-> @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns, =
-size_t len)
->
->         ret =3D patch_insn_write(tp, insns, len);
->
-> -       if (!ret)
-> -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
-> -
->         return ret;
->  }
->  NOKPROBE_SYMBOL(patch_text_nosync);
-> @@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
->         } else {
->                 while (atomic_read(&patch->cpu_count) <=3D num_online_cpu=
-s())
->                         cpu_relax();
-> -       }
->
-> -       local_flush_icache_all();
-> +               local_flush_icache_all();
-> +       }
->
->         return ret;
->  }
-> --
-> 2.39.2
->
+GitHub repo for sched_ext: https://github.com/sched-ext/sched_ext
+Note: This repo has been archived. Please refer to the description 
+provided on the repo homepage for more details.
 
-Thanks,
-Andy
+[1] v6 https://lore.kernel.org/lkml/20240501151312.635565-1-tj@kernel.org
+[2] http://lkml.kernel.org/r/20240515024445.236364-1-bgray@linux.ibm.com
+
+Thank you for the patch!
+> 
+> 
+> - Naveen
+> 
+> 
+> Naveen N Rao (11):
+>   powerpc/kprobes: Use ftrace to determine if a probe is at function
+>     entry
+>   powerpc/ftrace: Unify 32-bit and 64-bit ftrace entry code
+>   powerpc/module_64: Convert #ifdef to IS_ENABLED()
+>   powerpc/ftrace: Remove pointer to struct module from dyn_arch_ftrace
+>   kbuild: Add generic hook for architectures to use before the final
+>     vmlinux link
+>   powerpc64/ftrace: Move ftrace sequence out of line
+>   powerpc/ftrace: Add support for DYNAMIC_FTRACE_WITH_CALL_OPS
+>   powerpc/ftrace: Add support for DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>   samples/ftrace: Add support for ftrace direct samples on powerpc
+>   powerpc64/bpf: Fold bpf_jit_emit_func_call_hlp() into
+>     bpf_jit_emit_func_call_rel()
+>   powerpc64/bpf: Add support for bpf trampolines
+> 
+>  arch/Kconfig                                |   3 +
+>  arch/powerpc/Kconfig                        |   9 +
+>  arch/powerpc/Makefile                       |   8 +
+>  arch/powerpc/include/asm/ftrace.h           |  29 +-
+>  arch/powerpc/include/asm/module.h           |   5 +
+>  arch/powerpc/include/asm/ppc-opcode.h       |  14 +
+>  arch/powerpc/kernel/asm-offsets.c           |  11 +
+>  arch/powerpc/kernel/kprobes.c               |  18 +-
+>  arch/powerpc/kernel/module_64.c             |  67 +-
+>  arch/powerpc/kernel/trace/ftrace.c          | 269 +++++++-
+>  arch/powerpc/kernel/trace/ftrace_64_pg.c    |  73 +-
+>  arch/powerpc/kernel/trace/ftrace_entry.S    | 210 ++++--
+>  arch/powerpc/kernel/vmlinux.lds.S           |   3 +-
+>  arch/powerpc/net/bpf_jit.h                  |  11 +
+>  arch/powerpc/net/bpf_jit_comp.c             | 702 +++++++++++++++++++-
+>  arch/powerpc/net/bpf_jit_comp32.c           |   7 +-
+>  arch/powerpc/net/bpf_jit_comp64.c           |  68 +-
+>  arch/powerpc/tools/Makefile                 |  10 +
+>  arch/powerpc/tools/gen-ftrace-pfe-stubs.sh  |  49 ++
+>  samples/ftrace/ftrace-direct-modify.c       |  85 ++-
+>  samples/ftrace/ftrace-direct-multi-modify.c | 101 ++-
+>  samples/ftrace/ftrace-direct-multi.c        |  79 ++-
+>  samples/ftrace/ftrace-direct-too.c          |  83 ++-
+>  samples/ftrace/ftrace-direct.c              |  69 +-
+>  scripts/Makefile.vmlinux                    |   8 +
+>  scripts/link-vmlinux.sh                     |  11 +-
+>  26 files changed, 1813 insertions(+), 189 deletions(-)
+>  create mode 100644 arch/powerpc/tools/Makefile
+>  create mode 100755 arch/powerpc/tools/gen-ftrace-pfe-stubs.sh
+> 
+> 
+> base-commit: e2b06d707dd067509cdc9ceba783c06fa6a551c2
+> prerequisite-patch-id: a1d50e589288239d5a8b1c1f354cd4737057c9d3
+> prerequisite-patch-id: da4142d56880861bd0ad7ad7087c9e2670a2ee54
+> prerequisite-patch-id: 609d292e054b2396b603890522a940fa0bdfb6d8
+> prerequisite-patch-id: 6f7213fb77b1260defbf43be0e47bff9c80054cc
+> prerequisite-patch-id: ad3b71bf071ae4ba1bee5b087e61a2055772a74f
+> -- 
+> 2.45.2
+> 
