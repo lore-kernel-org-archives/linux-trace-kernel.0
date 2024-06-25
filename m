@@ -1,124 +1,115 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9D9172786;
-	Tue, 25 Jun 2024 17:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD11F145320;
+	Tue, 25 Jun 2024 17:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719335581; cv=none; b=ZaHRK0vXXb7MFrxVsd4Y+r+athqATinKFehfQSdrh3NpaE9PxabSegqbPgWDsPj7dB2ecLgcOj6lXPaONn4gankyEm3ZG+PgAbKhRaOSBmqd4q8GYnKBnC+NJCcokW67jwj0wU2mKp42+Yrkmrb3hqUGLuOKR5S5r6mTU7NnKU4=
+	t=1719336674; cv=none; b=hZweenxdgFtWmqsS+viokod21V29F3Twc1C7IIzkZ6qZe+Oez3mQwmEiu1EGJH90rEgWrEh3ecEyKBP+NNPSmGuoDkyRDkFHZjnfXGc8FgyfFGwvXjJdvRXzm/xDlLvWUEUzoMqg67U+zpb2BYeDVNJ97MO4Y9vPL8sOyczL814=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719335581; c=relaxed/simple;
-	bh=Wwa4HGkLETbKqeTTU6fvEcD/qSObTjEYyqi/1NukKz4=;
+	s=arc-20240116; t=1719336674; c=relaxed/simple;
+	bh=g9QS/ehG4Xk/Y8AH65W2lg0e/h61wJgf+NH/CzdVGys=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0do4xvrnEPlNxWdkkgQIB4zlMiVhgd1B2Xx8hPH1SmkufUPbOB+Th3L9OgErd2GKm7EBJeYZQ81UjIyPrxn6qp9vSsOrlKIC+pSLKvUv1jKUF19k3RPFjst/gJnt97RS+E08iO8sX6kO6tre7+dQRdj4b+B0fR9pI9QaQI1YEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/79w8su; arc=none smtp.client-ip=209.85.221.41
+	 To:Cc:Content-Type; b=ppXVA2FpPHv5QHJIAGGh9CvMoXPrZvqxHXnwNIduSy6B4zQph30LsCYhc7KRqCHjgpDI57c0lX9xkEScpRCQMwlQPGwxGB0rENBsPYvcXoLop3lu7PltAyVrjkIjhJ33jTRsgxyuciW8bFkrwvG/NvjCqXpH13eQ6tLhkERwk6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nbgy5K6g; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/79w8su"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-36703b0f914so575245f8f.0;
-        Tue, 25 Jun 2024 10:12:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nbgy5K6g"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fa3bdd91c1so20019535ad.2;
+        Tue, 25 Jun 2024 10:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719335578; x=1719940378; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719336672; x=1719941472; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BI5OFEaVYhrUkuh/u4LxK0p6IDDHPXl4NuFtwgsoCq4=;
-        b=R/79w8su5OYlKu588PZ/L+Ac39IOQMnyTSJ6jiEcZXGnjdnJHHihyaWIzcSrDU309q
-         /ehpuklLrmwPDHBRN77ZoYMc+ngp5IrpJO/QIrU7bihMKqVtykI/ilaqsHrySnew2+07
-         y3XkeBlHriGL0wA5+I9HsM33TrqOd+P4D/f0YkazajKxnIgvwVsQv7ybm1Oz7MM1zuii
-         atX+um2HLZHQbLBJnyIcEvsR4zny5gxS4Ka/qQlHat9wutU99XDDUMK5Pz0S0C6ST7n/
-         tKmKi/iWPXv+qhABAOTRyUIrqVtZSd2S5Ru4NLrNJACKLZ0NWlYowtk4bTIyE4oJEfL0
-         4Jpg==
+        bh=XPnk4Pf4uBWBcDb7dcN6WpRMINwXFv4I3KD89X3EyRg=;
+        b=nbgy5K6gbil1/MELqzgkOftQDysakhmH8RFbu+4pUHj6hLJJBOgampEExVZvYb/adq
+         FmogGIndS6wlzgZX8J4Uvd24BnYBftPoKkDk3Uf4oExWl3TF2sh2x3BIgaUAEg5dzEdl
+         tyDYH/iF947ros7cutKdar63X4foURLdbUrAh8ifwouu9M/0niVdUKsGYQ2Pr6nr9cRh
+         th9uKE5C5fVBu516fTijlfSAKZvynpQbETwYNid+ctVmsf2ZP12kqbD81+twLaBNS9k9
+         FibJspWk66iqG5UFrH/7Pk4UvgGElCmI0ermofgRrUH7EGn9yHx8Zp9Cyy46ZbvO1aho
+         TLpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719335578; x=1719940378;
+        d=1e100.net; s=20230601; t=1719336672; x=1719941472;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BI5OFEaVYhrUkuh/u4LxK0p6IDDHPXl4NuFtwgsoCq4=;
-        b=YkSYEuiQl5vJnXmr1Kv5UxlXfxp99IwxyUamjJxfH2gHunEeBtufkbOLNqhs2ghv5z
-         Vhy00vqUEg91Yzc+1YWl1SMJVupdX9/uNXAHmTF1YRO4G4VlXBrwxFewRSM7LgsDqoPm
-         gF0gL2dZgXSVYbAbZ5BgBwF7GH9Q7S43UZ+quYFKm6q6CIKOIM8Vqn08zVeEIu02Gdwg
-         Axj5z0hM4UguSzBq3Q5za7FyNKSo3+K2cuXuLrBEXlfITRKtB09soT4zlh1eCusf6Pi8
-         G/nuoMS9aTnRWqLCg7/6ZASGcQ7YTS7D3KSVJqcmM+/DYNSSxXCtmORD1uOe3nsO96oE
-         a2iw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ROdD7Z2AMIKhcIdQlCgirf+aMBh0yOJnV7cou52N/LPx2vkBfJJRRgDRxp1BD0LuyIV7Dwts/q7uFACj6aGwhK3gpAclBCRW32zzDyk6Hilqdw5N0tQ06ZEARVdl8g8P+RxDfiw0JFbLl8TNfSCy7naxkEASxdSyul0fhIIj5EsvP26q
-X-Gm-Message-State: AOJu0Yzo1++47F56ZlbyP5CP+UiFgAAqDfM9d6vBnJO1ghiBqZ7zFxWO
-	JR4VHj91vQucNc9nrJGr6MEbvho0pPNNAccTpqKV4ICTY6sm9kO3L+gX435EZZIqLtAPTwhWVk7
-	jrP4Nlr2+HwEuVnpaDOxt1fDHr3M=
-X-Google-Smtp-Source: AGHT+IE06FOCAbgOD9xJVbw3JngT0HOsO4esODsbSBdUue19gmiKBnUmKzc7qwytynqNUagCApCOkM09kU86aKoNtak=
-X-Received: by 2002:a05:6000:1a8c:b0:360:728d:8439 with SMTP id
- ffacd0b85a97d-366e36491b7mr11108459f8f.2.1719335577845; Tue, 25 Jun 2024
- 10:12:57 -0700 (PDT)
+        bh=XPnk4Pf4uBWBcDb7dcN6WpRMINwXFv4I3KD89X3EyRg=;
+        b=YJ2C0NNuPbcbm9xIsE0qu1zBLd9f45XqlC+s+UVt09Lixv03qBc/WTuCXi8XBQYY3y
+         86ZmLZWZwHoHdmMt/M/BePqR+5DIeV1NycAXUZmHvhxoo0L8EsQ0u/2nF4MyFPsJpsc0
+         DHsuK/5775GlVx18DzhajmyoB1OFacAxREmuvs9Y4i2/mDRC+H4tQMApIVi9GNDYADwh
+         vGXU0tq0ftOFpMKTEtqhmxDWwSRRIjOnijGxBLuP6weNvVY+XQusWwLvf74nfqWTKfWU
+         5t1moYqVMlQsai9v38V6PdKb+4Ozo1/+I/frivDuGnxBcgsJeJ0M7LtS/9F4i6Cy0eTn
+         88aw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmPtewXhGWWA1E0bFs0co/1ptPdyiF8WpSwnk9lc7jhnhc5j1rMA54PH9psjsTFzD+FNWuF676ywnu1fDGFLs6706qiPZiNAhHPxCeIdj5MGLNh8Ocz+UCTETtSm1tFqoIUIcZHfAt
+X-Gm-Message-State: AOJu0YwH9MImR24meWcYVvelK4oxEoaE3DL9z72Asvdmjg6zP93eq3V3
+	WxrG9O6tmY9RbcCWuVRryMlF1PtvQtVhLTceK6DKb0uLn8DFhdS6kLXpkG/HTEMsZm7ixBFhQBB
+	rGWtgdiRKehNq3x4aKome/feLSns=
+X-Google-Smtp-Source: AGHT+IHqN2pNIw2sB0v0KWHt2GnrRoyPD5OMoNaBKgLlYYVMv2yfXdQlfZFUSpcD5yNeWQFcIBrYUfbPqlwnJQvou0M=
+X-Received: by 2002:a17:90b:180b:b0:2c8:716f:b47f with SMTP id
+ 98e67ed59e1d1-2c8716fbb29mr7038896a91.14.1719336671987; Tue, 25 Jun 2024
+ 10:31:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz>
- <20240620-fault-injection-statickeys-v2-6-e23947d3d84b@suse.cz> <78177ff2-e140-4e81-9b2a-be5bece34cfc@suse.cz>
-In-Reply-To: <78177ff2-e140-4e81-9b2a-be5bece34cfc@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 25 Jun 2024 10:12:46 -0700
-Message-ID: <CAADnVQJrirvzu8fqwRChM1aUvHUNoszNpLhXHB9EHVesuD_YJA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] mm, slab: add static key for should_failslab()
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-5-andrii@kernel.org>
+ <20240625144409.GA21366@redhat.com>
+In-Reply-To: <20240625144409.GA21366@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 25 Jun 2024 10:30:59 -0700
+Message-ID: <CAEf4Bzbi9G_sJXZLdsX=qe8pNVrAp6mgByv9fPbwwyzy9x-jhw@mail.gmail.com>
+Subject: Re: [PATCH 04/12] uprobes: revamp uprobe refcounting and lifetime management
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	clm@meta.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 25, 2024 at 7:24=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
+On Tue, Jun 25, 2024 at 7:45=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> On 6/20/24 12:49 AM, Vlastimil Babka wrote:
-> > --- a/mm/slub.c
-> > +++ b/mm/slub.c
-> > @@ -3874,13 +3874,37 @@ static __always_inline void maybe_wipe_obj_free=
-ptr(struct kmem_cache *s,
-> >                       0, sizeof(void *));
-> >  }
+> Again, I'll try to read (at least this) patch later this week,
+> just one cosmetic nit for now...
+
+Thanks, and yep, please take your time. I understand that this is not
+a trivial change to a code base that has been sitting untouched for
+many years now. But I'd really appreciate if you can give it a through
+review anyways!
+
+>
+> On 06/24, Andrii Nakryiko wrote:
 > >
-> > -noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
-> > +#if defined(CONFIG_FUNCTION_ERROR_INJECTION) || defined(CONFIG_FAILSLA=
-B)
-> > +DEFINE_STATIC_KEY_FALSE(should_failslab_active);
-> > +
-> > +#ifdef CONFIG_FUNCTION_ERROR_INJECTION
-> > +noinline
-> > +#else
-> > +static inline
-> > +#endif
-> > +int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+> > + * UPROBE_REFCNT_GET constant is chosen such that it will *increment b=
+oth*
+> > + * epoch and refcnt parts atomically with one atomic_add().
+> > + * UPROBE_REFCNT_PUT is chosen such that it will *decrement* refcnt pa=
+rt and
+> > + * *increment* epoch part.
+> > + */
+> > +#define UPROBE_REFCNT_GET ((1LL << 32) | 1LL)
+> > +#define UPROBE_REFCNT_PUT (0xffffffffLL)
 >
-> Note that it has been found that (regardless of this series) gcc may clon=
-e
-> this to a should_failslab.constprop.0 in case the function is empty becau=
-se
-> __should_failslab is compiled out (CONFIG_FAILSLAB=3Dn). The "noinline"
-> doesn't help - the original function stays but only the clone is actually
-> being called, thus overriding the original function achieves nothing, see=
-:
-> https://github.com/bpftrace/bpftrace/issues/3258
+> How about
 >
-> So we could use __noclone to prevent that, and I was thinking by adding
-> something this to error-injection.h:
->
-> #ifdef CONFIG_FUNCTION_ERROR_INJECTION
-> #define __error_injectable(alternative)         noinline __noclone
+>         #define UPROBE_REFCNT_GET ((1ULL << 32) + 1ULL)
+>         #define UPROBE_REFCNT_PUT ((1ULL << 32) - 1ULL)
 
-To prevent such compiler transformations we typically use
-__used noinline
+It's cute, I'll change to that. But I'll probably also add a comment
+with the final value in hex for someone like me (because I can reason
+about 0xffffffff and its effect on refcount, not so much with `(1LL <<
+32) - 1`.
 
-We didn't have a need for __noclone yet. If __used is enough I'd stick to t=
-hat.
+>
+> ? this makes them symmetrical and makes it clear why
+> atomic64_add(UPROBE_REFCNT_PUT) works as described in the comment.
+>
+> Feel free to ignore if you don't like it.
+>
+> Oleg.
+>
