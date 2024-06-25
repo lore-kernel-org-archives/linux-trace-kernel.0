@@ -1,215 +1,146 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA4014EC44;
-	Tue, 25 Jun 2024 17:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96C41448D9;
+	Tue, 25 Jun 2024 18:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719338029; cv=none; b=Sget9Qrv9I7z6WkWR8fuzlDMkSVZ0JSgSg3bhN+ZoMMGi9Fa5y478eiZtRpznCOdCbZ//F4eRs5RFZQbcNcnOIz6dkpk/h7dvbDSAl0dlZVX0ToVuqPOlX/Ek3xWwmr/tPrfCLbkDkGit3LmQ3MWL7fYzZBSUG4PV6YD5kjnk6Q=
+	t=1719339090; cv=none; b=N3Eo+0hUWiFmV4RCu1xrZO2GjdcNfk0+ZHAH/jDXTgvUhb+idfbv3RmOKPCNB9zLgJmfFQU63C3P0V1KCpsUG9OQXZXt55AaCgsovv0S89IV7GcuY5IOfTcEOs93EoefoENyBCOS55s34ScKxNsm/YJisxKR6MmGpp1utKbd9Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719338029; c=relaxed/simple;
-	bh=KRxmmfhj8VirFtTMm7wZK/yWFNhQUl38+IfPmeOnv/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lv8NKMQ2JAPt/f/FsSsKXfpJHnRkz6bCT+yGdmLEFNNm9TQgyhrakXASrx0CfD6fumk+5BwTeBP3kWzpd37xf6SvboD4bgkQFAzxlZ+8GDEXocWN9C2WBLjKSn2RWMksvogNk7NZqZbP36Ag0gmbqh5rT6sVIKwenBVVqPXrmqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x0SVB2G5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6+cg1lJd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x0SVB2G5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6+cg1lJd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1719339090; c=relaxed/simple;
+	bh=47HQqh62bnsTizgbR20A+Vzh1+D6CR3M79ZW5+4A4pA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GpgqVNszMoLbBwM0FprmbwLAthScz27PJeYwVNNwjHvlY1lBGL1Zt13PBRn4HcyPpajwA0klbJHqVlJnPT2c8Tt+TvAiofaNnDZxZw1xpY3nG+C2jTIRBiIp9X51Miitkmw4E3avLJK6egBzOkIJ4lA9RDQTu54mNHbPhJerGag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V83S62df; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x0SVB2G5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6+cg1lJd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x0SVB2G5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6+cg1lJd"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B330F1F896;
-	Tue, 25 Jun 2024 17:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719338025; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZiLxFwiIBIRrsw6YD+1R7GROuRlYmXnVOEUWPLcacXE=;
-	b=x0SVB2G5OGcnn4ojzKkzAqQ6fmlXJd2CVyCCQltrORtV1S+M25LnstyYr8SrNuLwLyrsar
-	/fSU1nz/CoopCJSfr/8NLv+bcTo6JGBmFxtZmaOMoFGJe5p2oObPsDstGfxyJZ1KoniHK/
-	XWyE4I+AUbAtpds8Pm1Xz8NXhC6mfZw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719338025;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZiLxFwiIBIRrsw6YD+1R7GROuRlYmXnVOEUWPLcacXE=;
-	b=6+cg1lJd8fnnaSvzeG96seusvkRpKtZO7JNj3HEYffQ2Z7Hj/WyfU7ZxaUYRlbYlVEdjOe
-	YQk8xRWnYBzDacAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719338025; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZiLxFwiIBIRrsw6YD+1R7GROuRlYmXnVOEUWPLcacXE=;
-	b=x0SVB2G5OGcnn4ojzKkzAqQ6fmlXJd2CVyCCQltrORtV1S+M25LnstyYr8SrNuLwLyrsar
-	/fSU1nz/CoopCJSfr/8NLv+bcTo6JGBmFxtZmaOMoFGJe5p2oObPsDstGfxyJZ1KoniHK/
-	XWyE4I+AUbAtpds8Pm1Xz8NXhC6mfZw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719338025;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZiLxFwiIBIRrsw6YD+1R7GROuRlYmXnVOEUWPLcacXE=;
-	b=6+cg1lJd8fnnaSvzeG96seusvkRpKtZO7JNj3HEYffQ2Z7Hj/WyfU7ZxaUYRlbYlVEdjOe
-	YQk8xRWnYBzDacAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 24F9213A9A;
-	Tue, 25 Jun 2024 17:53:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id prMzACkEe2YWawAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 25 Jun 2024 17:53:44 +0000
-Message-ID: <84eaa356-eafd-45b5-add2-2c44cb9509f5@suse.cz>
-Date: Tue, 25 Jun 2024 19:53:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V83S62df"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-444c5877b1bso18406221cf.3;
+        Tue, 25 Jun 2024 11:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719339087; x=1719943887; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7enU7EQn35wapqSJ3Ru7OFtTxxJNvvUnWFzW1y1Qj58=;
+        b=V83S62dfptb8KZcysg5mMwKc63y17muFQQdwhXnGp5VBVBoT/Xf6AzrXDHrvqOuTkQ
+         8JbzGPDwz8xuxxjW5f28PUGz2oOM4s+rBZp+NcyDXx/fdI51s7/PTgKnvBdOf7zjcpkS
+         MxGsksJNLEj7E3DrOei9CxKQbzl8yNXFv+Rg4Va/OjQb3HqHxXa8jT/0URK5cym5vyUr
+         cqzRCf0ITMmgyMrFknT1CShGH6LsDIFgGf2QgGnroD/QcQOm4VvB8TVbYOwkpWFjNDu7
+         8Lry0AmlcliQGhq9f/twY7qITew4ILwmwsw7/GrawPjVRoKcLD3FWxpdREjOTg23rwxg
+         Y/WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719339087; x=1719943887;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7enU7EQn35wapqSJ3Ru7OFtTxxJNvvUnWFzW1y1Qj58=;
+        b=cFCltKeAODro3fUQKiAYPYP3icAEjSUdSDjeIhKVFcfaagDLG0NVShdk/JJ2RQbQDg
+         NQVIELlg/4tdWdpArh9lm5GG1Tj1OK22gKPemI9jS+Dk7QQY55kYclT/ePcAHLUiXdgA
+         SSCE5VgZaOEE9tbatyOU/xmltD63VJ8oPE9ia96WqDMeuJWL6Fms0OIU0cGzFchshZGA
+         eNBzlhyTI+kima9mRmxkwEB9RlkFKJqUS7Bl6298GOhb6ijwFL/j5RWZRS4SyhTN2mm7
+         U5AyFg+BIMytpXKqcme1HoyHXDNV5FXoEg7qa37UlYebW1qIb7yR/LIK49UYFnFRW+HH
+         gcIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQwKlntNwU0W6VeGDuJlUeiG48kXZ/1EAsOR+JbY2SfzqToGDjgSshq7OZM1OvRI+jP6vfobw9Ef5aSsp6RDQjAe1JPULeHjwcbcE2VtLevOHpWGGUoUeGSppX+K2zQjmgea2OP71sfcNHYHk4G3fHHSa2su+s5ZY0VVpuUC9M9TNh0U+EIk4AKYSqqfzLV40=
+X-Gm-Message-State: AOJu0YwGYKuErZrkLoG0gExeB7aGtZMRhVm7VSmn+wOkeBtd9HVP0Ucg
+	uqmx7DkJeDuBH+3jGxJuco1U09Uz8e5IS1vprePyORlHTCf6e5xu
+X-Google-Smtp-Source: AGHT+IFfA8lsn/fqFUDCllaQaIvkwzaaRWNT9WgCxsf+hTzitqmVpVmjg7wnBdgeo+CnODhOumFdUA==
+X-Received: by 2002:a05:622a:387:b0:444:e526:8ece with SMTP id d75a77b69052e-444e526a6afmr57498971cf.19.1719339087524;
+        Tue, 25 Jun 2024 11:11:27 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c2b989aasm57828431cf.49.2024.06.25.11.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 11:11:25 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id C806E120007C;
+	Tue, 25 Jun 2024 14:11:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 25 Jun 2024 14:11:24 -0400
+X-ME-Sender: <xms:TAh7ZlqXogQ4zA3jMFJuwGmE3Sa1IWefy7OxBsxlUMSSiW50qUS0iw>
+    <xme:TAh7ZnppI-hYcH1KZXxHqu0NgdSlKmx0OhWWzOaYAiuforJqfsNCxe2YrUOPewCTL
+    GDSUMcKamYeieVWeg>
+X-ME-Received: <xmr:TAh7ZiPdr6eNxF4Y9_I-LQBOhBerSRXUpqLywdxaR4P0tG6_V6ctFekSi-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtddtgdeklecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudff
+    iedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
+    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
+    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
+    hmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:TAh7Zg4GtuEk00-uYZSDR2907PfGVMiYiQM859mZyr62zPtd3kXSog>
+    <xmx:TAh7Zk7sHJkfOXLV3qWoiuV5QMjrvwewRR1nB2Y7Hrj1cz9B25AS7g>
+    <xmx:TAh7ZohNbSpHtE15kC9_9nxH2-TqMW_yA3iJZVyaiiN-a_IABTPbog>
+    <xmx:TAh7Zm7ELyC6IorsvlJ1sxG73XSeYqTE8LcnoHTrndJjpSbnSCzs2g>
+    <xmx:TAh7ZrJD6iBhZgMEHFh4AsEvw7ELP_NaAmxpZNufZS59jU_Hve34ojRP>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Jun 2024 14:11:24 -0400 (EDT)
+Date: Tue, 25 Jun 2024 11:10:47 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] rust: add tracepoint support
+Message-ID: <ZnsIJ6ejNX_dAc8f@boqun-archlinux>
+References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
+ <20240621-tracepoint-v3-2-9e44eeea2b85@google.com>
+ <CAH5fLghb6oVkgy3ckf=dUk9S4VdCeWin+yDBW1ffBoxu=HqBKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] mm, slab: add static key for should_failslab()
-Content-Language: en-US
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
- David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
- linux-mm <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-References: <20240620-fault-injection-statickeys-v2-0-e23947d3d84b@suse.cz>
- <20240620-fault-injection-statickeys-v2-6-e23947d3d84b@suse.cz>
- <78177ff2-e140-4e81-9b2a-be5bece34cfc@suse.cz>
- <CAADnVQJrirvzu8fqwRChM1aUvHUNoszNpLhXHB9EHVesuD_YJA@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAADnVQJrirvzu8fqwRChM1aUvHUNoszNpLhXHB9EHVesuD_YJA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.79
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,linux.com,google.com,kernel.org,iogearbox.net,linux.ibm.com,intel.com,davemloft.net,goodmis.org,arm.com,linux.dev,vger.kernel.org,kvack.org];
-	TO_DN_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH5fLghb6oVkgy3ckf=dUk9S4VdCeWin+yDBW1ffBoxu=HqBKw@mail.gmail.com>
 
-On 6/25/24 7:12 PM, Alexei Starovoitov wrote:
-> On Tue, Jun 25, 2024 at 7:24 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->>
->> On 6/20/24 12:49 AM, Vlastimil Babka wrote:
->> > --- a/mm/slub.c
->> > +++ b/mm/slub.c
->> > @@ -3874,13 +3874,37 @@ static __always_inline void maybe_wipe_obj_freeptr(struct kmem_cache *s,
->> >                       0, sizeof(void *));
->> >  }
->> >
->> > -noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
->> > +#if defined(CONFIG_FUNCTION_ERROR_INJECTION) || defined(CONFIG_FAILSLAB)
->> > +DEFINE_STATIC_KEY_FALSE(should_failslab_active);
->> > +
->> > +#ifdef CONFIG_FUNCTION_ERROR_INJECTION
->> > +noinline
->> > +#else
->> > +static inline
->> > +#endif
->> > +int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
->>
->> Note that it has been found that (regardless of this series) gcc may clone
->> this to a should_failslab.constprop.0 in case the function is empty because
->> __should_failslab is compiled out (CONFIG_FAILSLAB=n). The "noinline"
->> doesn't help - the original function stays but only the clone is actually
->> being called, thus overriding the original function achieves nothing, see:
->> https://github.com/bpftrace/bpftrace/issues/3258
->>
->> So we could use __noclone to prevent that, and I was thinking by adding
->> something this to error-injection.h:
->>
->> #ifdef CONFIG_FUNCTION_ERROR_INJECTION
->> #define __error_injectable(alternative)         noinline __noclone
+On Fri, Jun 21, 2024 at 02:52:10PM +0200, Alice Ryhl wrote:
+[...]
 > 
-> To prevent such compiler transformations we typically use
-> __used noinline
+> Hmm, I tried using the support where I have both events and hooks:
 > 
-> We didn't have a need for __noclone yet. If __used is enough I'd stick to that.
+> #define CREATE_TRACE_POINTS
+> #define CREATE_RUST_TRACE_POINTS
+> #include <trace/hooks/rust_binder.h>
+> #include <trace/events/rust_binder.h>
+> 
+> But it's not really working. Initially I thought that it's because I
+> need to undef DEFINE_RUST_DO_TRACE at the end of this file, but even
+> when I added that, I still get this error:
+> 
+>     error: redefinition of 'str__rust_binder__trace_system_name'
+> 
+> Is the Rust support missing something, or is the answer just that you
+> can't have two files of the same name like this? Or am I doing
+> something else wrong?
+> 
 
-__used made no difference here (gcc 13.3), __noclone did
+Because your hooks/rust_binder.h and events/rust_binder.h use the same
+TRACE_SYSTEM name? Could you try something like:
+
+	#define TRACE_SYSTEM rust_binder_hook
+
+in your hooks/rust_binder.h?
+
+Regards,
+Boqun
+
+> Alice
