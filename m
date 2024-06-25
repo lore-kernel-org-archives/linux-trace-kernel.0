@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDA4101D5;
-	Tue, 25 Jun 2024 01:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9535417BA0;
+	Tue, 25 Jun 2024 01:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719278532; cv=none; b=W3Prn2ATi4SuDuBPsbcEnEB9K4PujrYz3D1boolf4JQhLpTv1nMAXZG8XlaUgwY78eBVBDxRXkPMkS5nPOT8R5sw5gyDEBWkD8tenQkfOGj0auKzrU/GgZ7T8FJUmWhiz312NU005g9uifMihvXy7H7V+U4bDwXRqCrQtj+V/aQ=
+	t=1719278970; cv=none; b=BKU96CfFGKazbE4d+5iHM/7U/EyMIy3l+XAdZRUZ7jxQ1b0FIbDUFp8prFPw/9iOcNCIlncRud+63UxH6WBCBy8++HbE29c6UOM8cQkqWVx5peitn1A18GDH5BOS2KN6N/RDL2ZZG8IJrydpoQm7Y/VXQqcluXEkBjfwK61ijFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719278532; c=relaxed/simple;
-	bh=2f0aAV9cj3g9bVBBTB4nxdJL5pwRf0+xwfRd3YeDNoY=;
+	s=arc-20240116; t=1719278970; c=relaxed/simple;
+	bh=XjjssAJBNddISSmt0hM1wukuGTlEDquHwFEQeOSzgs4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jk/2ELSRz6sOPgA/8bRn+F3o6dKAwyu9RH1pNRDTHLEtoVJe/tzuBKyhOVvpBIOynJ0aGUBxMYnGSenY8YnrV1jsixTGhESuth2FmnUYj0H3Oh6CP69+TZBTkfxEZXEXLb+7n3QWa9zAtMls3VszeTSIHn8bHR5HzICuPir4SDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8iiGkCZ; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=u1TNo8SVP7nE30I+QcFTFyJ7Z7qbl96mwedPFlRa/VN92xdnfxH4Qp4w/l+6RHr8yHWm4IxhkgwWNmuJSacGVeBmRxiJ3RLRsSh0897XavXmlyEurPUeAYPQA8Jco9JPhkVa2cIpKcmOe6s8HBQR0NrpAH3AfCrGt9Rpzd6JGZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6CTwfej; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8iiGkCZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9DCFC2BBFC;
-	Tue, 25 Jun 2024 01:22:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6CTwfej"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99899C2BBFC;
+	Tue, 25 Jun 2024 01:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719278532;
-	bh=2f0aAV9cj3g9bVBBTB4nxdJL5pwRf0+xwfRd3YeDNoY=;
+	s=k20201202; t=1719278970;
+	bh=XjjssAJBNddISSmt0hM1wukuGTlEDquHwFEQeOSzgs4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p8iiGkCZIssd5YSQuP2OqjPUKv11/HjYIdo6UKT76VBc8sHjqQQVYxF5twJyRr4Y+
-	 VeNWkOR3QNC95Myf6slQavq3yyP7/bH+2HG1sOwqD8KsYG1sHkLde/lHoJofLCT6SO
-	 JJCZaedCUA18bRrl4jluegMHHaYPoktANUKHb6+QUcCOnIG+NPAe6MwEiyxyubV+Gw
-	 GmKE3NAmB2mByzmDwcVeqvyCLEO+8KTpxCLuzKIL02NSehf6LdaSyL2ILseCeehCRQ
-	 QfeU8m0ZacsYUri1gpsVoUReN+tv7/yoUXXrFHle3M0d992NUda67UbkHhBFJ86S6/
-	 mfPDBNZmeLElA==
-Date: Tue, 25 Jun 2024 10:22:07 +0900
+	b=d6CTwfejUWlq+zJgBuG5rWdq1qOTX82B+zEGVzUCSgjqgs7fpj6s3Yz5WZe1QPN2x
+	 W1uBY//I9XC695m4sUPKzQl3zGPHof96/IMWCrjXlOjUWjq7ccZ8H/kG0fgyZwBeLs
+	 Bk7+JrWz1u3clZyoDeE27KNup7JoOhVgKULJysk1W44Btloay2NFMEnGhDJHmJLFIX
+	 opFouUJYR6o6qTpSXov4jauVsRE3nMGWt1I45G4/Qxpzh//V3SYjLlArMcbaPjN6xZ
+	 KdeobwIfucOxIvCoqZF6Vi48ob69tqzot8vJ926G00GvyddL9vQTR/wAx8reUaZs+L
+	 X+LXMBsbtmmiA==
+Date: Tue, 25 Jun 2024 10:29:25 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, x86@kernel.org,
- peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
- bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] selftests/bpf: add test validating
- uprobe/uretprobe stack traces
-Message-Id: <20240625102207.0e2c09c4417d881b35fba653@kernel.org>
-In-Reply-To: <20240522013845.1631305-5-andrii@kernel.org>
-References: <20240522013845.1631305-1-andrii@kernel.org>
-	<20240522013845.1631305-5-andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+ oleg@redhat.com, peterz@infradead.org, mingo@redhat.com,
+ bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
+Subject: Re: [PATCH 02/12] uprobes: grab write mmap lock in unapply_uprobe()
+Message-Id: <20240625102925.665f2fa3b39dc7602b1321d8@kernel.org>
+In-Reply-To: <20240625002144.3485799-3-andrii@kernel.org>
+References: <20240625002144.3485799-1-andrii@kernel.org>
+	<20240625002144.3485799-3-andrii@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,372 +47,50 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 21 May 2024 18:38:45 -0700
+On Mon, 24 Jun 2024 17:21:34 -0700
 Andrii Nakryiko <andrii@kernel.org> wrote:
 
-> Add a set of tests to validate that stack traces captured from or in the
-> presence of active uprobes and uretprobes are valid and complete.
+> Given unapply_uprobe() can call remove_breakpoint() which eventually
+> calls uprobe_write_opcode(), which can modify a set of memory pages and
+> expects mm->mmap_lock held for write, it needs to have writer lock.
 > 
-> For this we use BPF program that are installed either on entry or exit
-> of user function, plus deep-nested USDT. One of target funtions
-> (target_1) is recursive to generate two different entries in the stack
-> trace for the same uprobe/uretprobe, testing potential edge conditions.
+> Fix this by switching to mmap_write_lock()/mmap_write_unlock().
 > 
-> Without fixes in this patch set, we get something like this for one of
-> the scenarios:
 
-I changed it to;
+Oops, it is an actual bug, right?
 
-    If there is no fixes, we get something like this for one of the scenarios:
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> 
->  caller: 0x758fff - 0x7595ab
->  target_1: 0x758fd5 - 0x758fff
->  target_2: 0x758fca - 0x758fd5
->  target_3: 0x758fbf - 0x758fca
->  target_4: 0x758fb3 - 0x758fbf
->  ENTRY #0: 0x758fb3 (in target_4)
->  ENTRY #1: 0x758fd3 (in target_2)
->  ENTRY #2: 0x758ffd (in target_1)
->  ENTRY #3: 0x7fffffffe000
->  ENTRY #4: 0x7fffffffe000
->  ENTRY #5: 0x6f8f39
->  ENTRY #6: 0x6fa6f0
->  ENTRY #7: 0x7f403f229590
-> 
-> Entry #3 and #4 (0x7fffffffe000) are uretprobe trampoline addresses
-> which obscure actual target_1 and another target_1 invocations. Also
-> note that between entry #0 and entry #1 we are missing an entry for
-> target_3, which is fixed in patch #2.
+Thanks,
 
-And remove ", which is fixed in patch #2".
-
-Is that OK?
-
-Thank you,
-
-> 
-> With all the fixes, we get desired full stack traces:
-> 
->  caller: 0x758fff - 0x7595ab
->  target_1: 0x758fd5 - 0x758fff
->  target_2: 0x758fca - 0x758fd5
->  target_3: 0x758fbf - 0x758fca
->  target_4: 0x758fb3 - 0x758fbf
->  ENTRY #0: 0x758fb7 (in target_4)
->  ENTRY #1: 0x758fc8 (in target_3)
->  ENTRY #2: 0x758fd3 (in target_2)
->  ENTRY #3: 0x758ffd (in target_1)
->  ENTRY #4: 0x758ff3 (in target_1)
->  ENTRY #5: 0x75922c (in caller)
->  ENTRY #6: 0x6f8f39
->  ENTRY #7: 0x6fa6f0
->  ENTRY #8: 0x7f986adc4cd0
-> 
-> Now there is a logical and complete sequence of function calls.
-> 
+> Fixes: da1816b1caec ("uprobes: Teach handler_chain() to filter out the probed task")
 > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 > ---
->  .../bpf/prog_tests/uretprobe_stack.c          | 186 ++++++++++++++++++
->  .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
->  2 files changed, 282 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
->  create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
+>  kernel/events/uprobes.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c b/tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
-> new file mode 100644
-> index 000000000000..6deb8d560ddd
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/uretprobe_stack.c
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2024 Meta Platforms, Inc. and affiliates. */
-> +
-> +#include <test_progs.h>
-> +#include "uretprobe_stack.skel.h"
-> +#include "../sdt.h"
-> +
-> +/* We set up target_1() -> target_2() -> target_3() -> target_4() -> USDT()
-> + * call chain, each being traced by our BPF program. On entry or return from
-> + * each target_*() we are capturing user stack trace and recording it in
-> + * global variable, so that user space part of the test can validate it.
-> + *
-> + * Note, we put each target function into a custom section to get those
-> + * __start_XXX/__stop_XXX symbols, generated by linker for us, which allow us
-> + * to know address range of those functions
-> + */
-> +__attribute__((section("uprobe__target_4")))
-> +__weak int target_4(void)
-> +{
-> +	STAP_PROBE1(uretprobe_stack, target, 42);
-> +	return 42;
-> +}
-> +
-> +extern const void *__start_uprobe__target_4;
-> +extern const void *__stop_uprobe__target_4;
-> +
-> +__attribute__((section("uprobe__target_3")))
-> +__weak int target_3(void)
-> +{
-> +	return target_4();
-> +}
-> +
-> +extern const void *__start_uprobe__target_3;
-> +extern const void *__stop_uprobe__target_3;
-> +
-> +__attribute__((section("uprobe__target_2")))
-> +__weak int target_2(void)
-> +{
-> +	return target_3();
-> +}
-> +
-> +extern const void *__start_uprobe__target_2;
-> +extern const void *__stop_uprobe__target_2;
-> +
-> +__attribute__((section("uprobe__target_1")))
-> +__weak int target_1(int depth)
-> +{
-> +	if (depth < 1)
-> +		return 1 + target_1(depth + 1);
-> +	else
-> +		return target_2();
-> +}
-> +
-> +extern const void *__start_uprobe__target_1;
-> +extern const void *__stop_uprobe__target_1;
-> +
-> +extern const void *__start_uretprobe_stack_sec;
-> +extern const void *__stop_uretprobe_stack_sec;
-> +
-> +struct range {
-> +	long start;
-> +	long stop;
-> +};
-> +
-> +static struct range targets[] = {
-> +	{}, /* we want target_1 to map to target[1], so need 1-based indexing */
-> +	{ (long)&__start_uprobe__target_1, (long)&__stop_uprobe__target_1 },
-> +	{ (long)&__start_uprobe__target_2, (long)&__stop_uprobe__target_2 },
-> +	{ (long)&__start_uprobe__target_3, (long)&__stop_uprobe__target_3 },
-> +	{ (long)&__start_uprobe__target_4, (long)&__stop_uprobe__target_4 },
-> +};
-> +
-> +static struct range caller = {
-> +	(long)&__start_uretprobe_stack_sec,
-> +	(long)&__stop_uretprobe_stack_sec,
-> +};
-> +
-> +static void validate_stack(__u64 *ips, int stack_len, int cnt, ...)
-> +{
-> +	int i, j;
-> +	va_list args;
-> +
-> +	if (!ASSERT_GT(stack_len, 0, "stack_len"))
-> +		return;
-> +
-> +	stack_len /= 8;
-> +
-> +	/* check if we have enough entries to satisfy test expectations */
-> +	if (!ASSERT_GE(stack_len, cnt, "stack_len2"))
-> +		return;
-> +
-> +	if (env.verbosity >= VERBOSE_NORMAL) {
-> +		printf("caller: %#lx - %#lx\n", caller.start, caller.stop);
-> +		for (i = 1; i < ARRAY_SIZE(targets); i++)
-> +			printf("target_%d: %#lx - %#lx\n", i, targets[i].start, targets[i].stop);
-> +		for (i = 0; i < stack_len; i++) {
-> +			for (j = 1; j < ARRAY_SIZE(targets); j++) {
-> +				if (ips[i] >= targets[j].start && ips[i] < targets[j].stop)
-> +					break;
-> +			}
-> +			if (j < ARRAY_SIZE(targets)) { /* found target match */
-> +				printf("ENTRY #%d: %#lx (in target_%d)\n", i, (long)ips[i], j);
-> +			} else if (ips[i] >= caller.start && ips[i] < caller.stop) {
-> +				printf("ENTRY #%d: %#lx (in caller)\n", i, (long)ips[i]);
-> +			} else {
-> +				printf("ENTRY #%d: %#lx\n", i, (long)ips[i]);
-> +			}
-> +		}
-> +	}
-> +
-> +	va_start(args, cnt);
-> +
-> +	for (i = cnt - 1; i >= 0; i--) {
-> +		/* most recent entry is the deepest target function */
-> +		const struct range *t = va_arg(args, const struct range *);
-> +
-> +		ASSERT_GE(ips[i], t->start, "addr_start");
-> +		ASSERT_LT(ips[i], t->stop, "addr_stop");
-> +	}
-> +
-> +	va_end(args);
-> +}
-> +
-> +/* __weak prevents inlining */
-> +__attribute__((section("uretprobe_stack_sec")))
-> +__weak void test_uretprobe_stack(void)
-> +{
-> +	LIBBPF_OPTS(bpf_uprobe_opts, uprobe_opts);
-> +	struct uretprobe_stack *skel;
-> +	int err;
-> +
-> +	skel = uretprobe_stack__open_and_load();
-> +	if (!ASSERT_OK_PTR(skel, "skel_open"))
-> +		return;
-> +
-> +	err = uretprobe_stack__attach(skel);
-> +	if (!ASSERT_OK(err, "skel_attach"))
-> +		goto cleanup;
-> +
-> +	/* trigger */
-> +	ASSERT_EQ(target_1(0), 42 + 1, "trigger_return");
-> +
-> +	/*
-> +	 * Stacks captured on ENTRY uprobes
-> +	 */
-> +
-> +	/* (uprobe 1) target_1 in stack trace*/
-> +	validate_stack(skel->bss->entry_stack1, skel->bss->entry1_len,
-> +		       2, &caller, &targets[1]);
-> +	/* (uprobe 1, recursed) */
-> +	validate_stack(skel->bss->entry_stack1_recur, skel->bss->entry1_recur_len,
-> +		       3, &caller, &targets[1], &targets[1]);
-> +	/* (uprobe 2) caller -> target_1 -> target_1 -> target_2 */
-> +	validate_stack(skel->bss->entry_stack2, skel->bss->entry2_len,
-> +		       4, &caller, &targets[1], &targets[1], &targets[2]);
-> +	/* (uprobe 3) */
-> +	validate_stack(skel->bss->entry_stack3, skel->bss->entry3_len,
-> +		       5, &caller, &targets[1], &targets[1], &targets[2], &targets[3]);
-> +	/* (uprobe 4) caller -> target_1 -> target_1 -> target_2 -> target_3 -> target_4 */
-> +	validate_stack(skel->bss->entry_stack4, skel->bss->entry4_len,
-> +		       6, &caller, &targets[1], &targets[1], &targets[2], &targets[3], &targets[4]);
-> +
-> +	/* (USDT): full caller -> target_1 -> target_1 -> target_2 (uretprobed)
-> +	 *              -> target_3 -> target_4 (uretprobes) chain
-> +	 */
-> +	validate_stack(skel->bss->usdt_stack, skel->bss->usdt_len,
-> +		       6, &caller, &targets[1], &targets[1], &targets[2], &targets[3], &targets[4]);
-> +
-> +	/*
-> +	 * Now stacks captured on the way out in EXIT uprobes
-> +	 */
-> +
-> +	/* (uretprobe 4) everything up to target_4, but excluding it */
-> +	validate_stack(skel->bss->exit_stack4, skel->bss->exit4_len,
-> +		       5, &caller, &targets[1], &targets[1], &targets[2], &targets[3]);
-> +	/* we didn't install uretprobes on target_2 and target_3 */
-> +	/* (uretprobe 1, recur) first target_1 call only */
-> +	validate_stack(skel->bss->exit_stack1_recur, skel->bss->exit1_recur_len,
-> +		       2, &caller, &targets[1]);
-> +	/* (uretprobe 1) just a caller in the stack trace */
-> +	validate_stack(skel->bss->exit_stack1, skel->bss->exit1_len,
-> +		       1, &caller);
-> +
-> +cleanup:
-> +	uretprobe_stack__destroy(skel);
-> +}
-> diff --git a/tools/testing/selftests/bpf/progs/uretprobe_stack.c b/tools/testing/selftests/bpf/progs/uretprobe_stack.c
-> new file mode 100644
-> index 000000000000..9fdcf396b8f4
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/uretprobe_stack.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2024 Meta Platforms, Inc. and affiliates. */
-> +#include <vmlinux.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +#include <bpf/usdt.bpf.h>
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +__u64 entry_stack1[32], exit_stack1[32];
-> +__u64 entry_stack1_recur[32], exit_stack1_recur[32];
-> +__u64 entry_stack2[32];
-> +__u64 entry_stack3[32];
-> +__u64 entry_stack4[32], exit_stack4[32];
-> +__u64 usdt_stack[32];
-> +
-> +int entry1_len, exit1_len;
-> +int entry1_recur_len, exit1_recur_len;
-> +int entry2_len, exit2_len;
-> +int entry3_len, exit3_len;
-> +int entry4_len, exit4_len;
-> +int usdt_len;
-> +
-> +#define SZ sizeof(usdt_stack)
-> +
-> +SEC("uprobe//proc/self/exe:target_1")
-> +int BPF_UPROBE(uprobe_1)
-> +{
-> +	/* target_1 is recursive wit depth of 2, so we capture two separate
-> +	 * stack traces, depending on which occurence it is
-> +	 */
-> +	static bool recur = false;
-> +
-> +	if (!recur)
-> +		entry1_len = bpf_get_stack(ctx, &entry_stack1, SZ, BPF_F_USER_STACK);
-> +	else
-> +		entry1_recur_len = bpf_get_stack(ctx, &entry_stack1_recur, SZ, BPF_F_USER_STACK);
-> +
-> +	recur = true;
-> +	return 0;
-> +}
-> +
-> +SEC("uretprobe//proc/self/exe:target_1")
-> +int BPF_URETPROBE(uretprobe_1)
-> +{
-> +	/* see above, target_1 is recursive */
-> +	static bool recur = false;
-> +
-> +	/* NOTE: order of returns is reversed to order of entries */
-> +	if (!recur)
-> +		exit1_recur_len = bpf_get_stack(ctx, &exit_stack1_recur, SZ, BPF_F_USER_STACK);
-> +	else
-> +		exit1_len = bpf_get_stack(ctx, &exit_stack1, SZ, BPF_F_USER_STACK);
-> +
-> +	recur = true;
-> +	return 0;
-> +}
-> +
-> +SEC("uprobe//proc/self/exe:target_2")
-> +int BPF_UPROBE(uprobe_2)
-> +{
-> +	entry2_len = bpf_get_stack(ctx, &entry_stack2, SZ, BPF_F_USER_STACK);
-> +	return 0;
-> +}
-> +
-> +/* no uretprobe for target_2 */
-> +
-> +SEC("uprobe//proc/self/exe:target_3")
-> +int BPF_UPROBE(uprobe_3)
-> +{
-> +	entry3_len = bpf_get_stack(ctx, &entry_stack3, SZ, BPF_F_USER_STACK);
-> +	return 0;
-> +}
-> +
-> +/* no uretprobe for target_3 */
-> +
-> +SEC("uprobe//proc/self/exe:target_4")
-> +int BPF_UPROBE(uprobe_4)
-> +{
-> +	entry4_len = bpf_get_stack(ctx, &entry_stack4, SZ, BPF_F_USER_STACK);
-> +	return 0;
-> +}
-> +
-> +SEC("uretprobe//proc/self/exe:target_4")
-> +int BPF_URETPROBE(uretprobe_4)
-> +{
-> +	exit4_len = bpf_get_stack(ctx, &exit_stack4, SZ, BPF_F_USER_STACK);
-> +	return 0;
-> +}
-> +
-> +SEC("usdt//proc/self/exe:uretprobe_stack:target")
-> +int BPF_USDT(usdt_probe)
-> +{
-> +	usdt_len = bpf_get_stack(ctx, &usdt_stack, SZ, BPF_F_USER_STACK);
-> +	return 0;
-> +}
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 197fbe4663b5..e896eeecb091 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1235,7 +1235,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  	struct vm_area_struct *vma;
+>  	int err = 0;
+>  
+> -	mmap_read_lock(mm);
+> +	mmap_write_lock(mm);
+>  	for_each_vma(vmi, vma) {
+>  		unsigned long vaddr;
+>  		loff_t offset;
+> @@ -1252,7 +1252,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  		vaddr = offset_to_vaddr(vma, uprobe->offset);
+>  		err |= remove_breakpoint(uprobe, mm, vaddr);
+>  	}
+> -	mmap_read_unlock(mm);
+> +	mmap_write_unlock(mm);
+>  
+>  	return err;
+>  }
 > -- 
 > 2.43.0
 > 
