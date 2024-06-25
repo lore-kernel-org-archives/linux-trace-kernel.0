@@ -1,255 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F17619BA6;
-	Tue, 25 Jun 2024 01:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EBE1CA8D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jun 2024 02:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719279480; cv=none; b=IOYdtLE+vTsydYojuDcwmVlNX0h+DLLv68WkTG+5iOlsO9OR6Lgz7KFJ3UncdYuK7CAA5zJEFgOMUST8Tz7iydWCKL6LBuqQduATT1qxZ5oqBy6six4EdGOq+VunC/hJNvRHmi8sfeCq/VJAEARPofMn2eyq2ZIfshbAKyiInx0=
+	t=1719283152; cv=none; b=uTaeZJjth+8ZmyNcHjMbflDRBDXp02Eu27QNI8cI4Y3Nek5kgEYdwTDO6PeG3BSR71Kh++Zc2vMS27QXBdVDZ7f785oDi+jzZ/Yli9q6SXsg5gUbMfXbRjhWwklDoDjHZkbj6WB9HoineFv6gzaMxHFVC2ji7n2ljfsPFZGBVfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719279480; c=relaxed/simple;
-	bh=T2IKRMyiJU/ikBIc7GfMfGKcl29jbPUqP8MY5Vns/lA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FR2a/tymMmi1l2PTL2Z4HIfvpLCI5HFBMjMKYJZ7iY7/VYCuCDFSlWFK/z1R+uVSdXCKpjuR5L5ibpWN1gDNKEqW7GuegMdms6huD78kJeKr6j/+uxe2tSdnruciTBOwyfsWEQ0KFCBMHAR2IRCMWANmxr47yqtEyw6xqc2GcXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iibIp8TP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719283152; c=relaxed/simple;
+	bh=S2zvzr2YT3txVPQM8oaC1bFkuwpT9uFDDUsd/JUX46w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eg59yWVm1qgc1AFiDk3TV6eEEXE6OVuLWR1UP9eAO7AOqodWQdyIP7ErhJU77vdkcjO8/zXYlsFzzSfRZoy9vGDTdwSOILq2xV6uvUTTEAJH0SjhCJt1HfiekSrgTX6FjZqEBfQ2Uxl3/zsC+u6POMu1mdbaMrmIyqoo00pzy1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=caFAtzOl; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iibIp8TP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E558FC2BBFC;
-	Tue, 25 Jun 2024 01:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719279479;
-	bh=T2IKRMyiJU/ikBIc7GfMfGKcl29jbPUqP8MY5Vns/lA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iibIp8TP46s9ZfiehKlkWtJn2poV7mENZVjklt7JGfMwfo2nctb3xn1hOsR6e3ST7
-	 3MuR2f/22x9f2YYV6h7NW/9RXeZy4/8oK7PhAbugbRxtLPCstcrUiBsjI0jbDgeZBD
-	 ZDihHFKt9YSBxo84B+HtbRSSDqKymjQuIht2za0urcM0iMJaLG5Wf9QzItxLUxYrxy
-	 FvOrMRMSKMowqw5BCNSC2synjyUP54sGX43IINIb4Pi4DFhzt+vFAj1k+vhLQAzEwk
-	 hUFTk1U/K2tpE3yBy+0rfEHvg1cFspz0zsTj5KvAzCwbshYKN7qPcln2iM/TK+zutv
-	 hBxJLCdhIJuug==
-Date: Tue, 25 Jun 2024 10:37:53 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v11 00/18] tracing: fprobe: function_graph:
- Multi-function graph and fprobe on fgraph
-Message-Id: <20240625103753.600882dbd43831c043f2a050@kernel.org>
-In-Reply-To: <171858878797.288820.237119113242007537.stgit@devnote2>
-References: <171858878797.288820.237119113242007537.stgit@devnote2>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="caFAtzOl"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dff1ccdc17bso5228669276.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jun 2024 19:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1719283150; x=1719887950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x4nK+m/TEmRPZdUwZe7j9O1ig+33bNCxGNefCYINg2Q=;
+        b=caFAtzOllDWQzP+aNiO4O5jbr8Z0iBjaJORadfpYfNzYgIEAaFLhJjK6kCAY2sGIbA
+         DcBtsUNffDdXqNf5NKmzUlOMYq5+OkXrmGv1H5bvZDPKBZyMryK75Rn33U7dof7J7SaS
+         uSei87ijHphPqVm+WXyphYbRpY0Tb4F3IcNdcS6FlI2tVDivuMMe0y6yWOqNHGVvO5hO
+         5zJwiM3G3C68FNhuAkfUK2WGW+Gn46NtE42EZj8PBvr+XoyJt1zWwNEUqp5zgIx+uIwA
+         oPCNvW58P9ZwBqhk8gZpA0Bfv/07Kle55ZnqlwQWz2gQooF1C5/WMvSCuxikJRzSSGjP
+         AzNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719283150; x=1719887950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x4nK+m/TEmRPZdUwZe7j9O1ig+33bNCxGNefCYINg2Q=;
+        b=QtrGLykMhho1FIdeMupodlEE3L8n6/DLoxdw0k8fXdLCBqektKq//nwfbQPB0PYKx4
+         4vz0ceaGOafOzKlXlpPZi6PjEvPH+InT/GTB+fhOvbm7z1QUvsdcuWjRQI0P3YZBfJF+
+         TYY8idDvu0fFerfVlX5PXCxuMQef65Pa8SXtSuhZxPZpQi6qsLSyYIYnitZyxEq/Qx0T
+         du0ck0goLhCEEw7z0oiz0TpLAhOMGhVaMgycWEfl1AN5YzqsKVtSpEyE6sB/m8qv7+Nw
+         0A8BrzUoRPKQQoFGqjwCJ/0GvX/i8iKtlJnGiWWQxB4JPPH3MDJoQUNlClpxC885ecFT
+         GHaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxTe+Cl2/3yJEGfpBNj6Us2SGE3nnvPYTGrpP+1YGk0rif4F9nKXdSV0iI3ttYUucMxJJBdr4B0V3Otwp80kVLgpUh8AeOr/m0FOq3zHgBloXH
+X-Gm-Message-State: AOJu0YzUEEZkE7T8qbj46XiIqSYCWVrwdY2b02AdykUkf2Zeb+D2odvf
+	goGYP83nEOlGxUjSmSzBSgdBAF2nEKQtjkyLCnMyhkfO6109pKnxgfSA3R3HrsPX4c71aiCFVhq
+	jz2nSCxLhlm2bxKu3ZM/UnrJnWgkcq+Fd271zLQ==
+X-Google-Smtp-Source: AGHT+IHKSN058g/QcX941p8tcRKTOzJPr409onokITSLEzi+0NUbHeNvo0EJpY+vaEpFjSnmhZzP/QtohyABMy5Rmf8=
+X-Received: by 2002:a25:abcb:0:b0:e02:bab0:2b11 with SMTP id
+ 3f1490d57ef6-e02fc37b011mr6929278276.59.1719283149931; Mon, 24 Jun 2024
+ 19:39:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20240624082141.153871-1-alexghiti@rivosinc.com> <CABgGipXR6ETkH0w-8GG8uBtKbG5jvD0VHz-A-VnXFPgvqrd6Lw@mail.gmail.com>
+In-Reply-To: <CABgGipXR6ETkH0w-8GG8uBtKbG5jvD0VHz-A-VnXFPgvqrd6Lw@mail.gmail.com>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Tue, 25 Jun 2024 10:38:59 +0800
+Message-ID: <CABgGipWOKqVynXW2OvxP3cfX7dvbjVES8t4epW+f3W11AJLgeA@mail.gmail.com>
+Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after
+ patching to avoid illegal insns
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Puranjay Mohan <puranjay12@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 17 Jun 2024 10:46:28 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Mon, Jun 24, 2024 at 7:49=E2=80=AFPM Andy Chiu <andy.chiu@sifive.com> wr=
+ote:
+>
+> Hi Alex,
+>
+> On Mon, Jun 24, 2024 at 4:21=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosi=
+nc.com> wrote:
+> >
+> > We cannot delay the icache flush after patching some functions as we ma=
+y
+> > have patched a function that will get called before the icache flush.
+> >
+> > The only way to completely avoid such scenario is by flushing the icach=
+e
+> > as soon as we patch a function. This will probably be costly as we don'=
+t
+> > batch the icache maintenance anymore.
+> >
+> > Fixes: 6ca445d8af0e ("riscv: Fix early ftrace nop patching")
+> > Reported-by: Conor Dooley <conor.dooley@microchip.com>
+> > Closes: https://lore.kernel.org/linux-riscv/20240613-lubricant-breath-0=
+61192a9489a@wendy/
+> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-> Hi,
-> 
-> Here is the 11th version of the series to re-implement the fprobe on
-> function-graph tracer. The previous version is;
-> 
-> https://lore.kernel.org/all/171509088006.162236.7227326999861366050.stgit@devnote2/
-> 
-> Most of the patches in the previous version (for multiple function graph
-> trace instance) are already merged via tracing/for-next. This version
-> is the remaining part, fprobe implement on fgraph. Basically just moves
-> on the updated fgraph implementation, and no major changes.
-> 
+Reviewed-by: Andy Chiu <andy.chiu@sifive.com>
 
-BTW, I've measured the performance improvement with this series using
-bpf bench.
+> > ---
+> >  arch/riscv/kernel/ftrace.c |  7 ++-----
+> >  arch/riscv/kernel/patch.c  | 26 ++++++++++++++++++--------
+> >  2 files changed, 20 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> > index 87cbd86576b2..4b95c574fd04 100644
+> > --- a/arch/riscv/kernel/ftrace.c
+> > +++ b/arch/riscv/kernel/ftrace.c
+> > @@ -120,9 +120,6 @@ int ftrace_init_nop(struct module *mod, struct dyn_=
+ftrace *rec)
+> >         out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+> >         mutex_unlock(&text_mutex);
+> >
+> > -       if (!mod)
+> > -               local_flush_icache_range(rec->ip, rec->ip + MCOUNT_INSN=
+_SIZE);
+> > -
+> >         return out;
+> >  }
+> >
+> > @@ -156,9 +153,9 @@ static int __ftrace_modify_code(void *data)
+> >         } else {
+> >                 while (atomic_read(&param->cpu_count) <=3D num_online_c=
+pus())
+> >                         cpu_relax();
+> > -       }
+> >
+> > -       local_flush_icache_all();
+> > +               local_flush_icache_all();
+> > +       }
+>
+> Sorry, maybe I should point it out directly earlier. But I don't think
+> this diff chunk is required. Threads running in the else clause from
+> stop_machine must not run into any patchable entry. If it runs into a
+> patchable entry, running the local fence.i is not going to fix the
+> problem.
 
-Before:
-kprobe-multi   :    6.507 ± 0.065M/s 
-kretprobe-multi:    3.518 ± 0.002M/s 
+Sorry, I read the code wrong. The local flush is not in the while
+loop. I have no problem with this chunk after properly seeing them.
 
-After:
-kprobe-multi   :    6.183 ± 0.094M/s 
-kretprobe-multi:    4.754 ± 0.004M/s 
-
-So kprobe-multi (fprobe fentry probe) is slightly down (-5%), and
-kretprobe-multi (fprobe fexit probe) is improved (35%).
-I think this fentry probe regression may come from pushing all data
-on shadow stack. So it can be solved by using ftrace but not fgraph
-if fprobe does not have any fexit handler.
-
-Thank you,
-
-
-> Overview
-> --------
-> This series rewrites the fprobe on this function-graph.
-> The purposes of this change are;
-> 
->  1) Remove dependency of the rethook from fprobe so that we can reduce
->    the return hook code and shadow stack.
-> 
->  2) Make 'ftrace_regs' the common trace interface for the function
->    boundary.
-> 
-> 1) Currently we have 2(or 3) different function return hook codes,
->  the function-graph tracer and rethook (and legacy kretprobe).
->  But since this  is redundant and needs double maintenance cost,
->  I would like to unify those. From the user's viewpoint, function-
->  graph tracer is very useful to grasp the execution path. For this
->  purpose, it is hard to use the rethook in the function-graph
->  tracer, but the opposite is possible. (Strictly speaking, kretprobe
->  can not use it because it requires 'pt_regs' for historical reasons.)
-> 
-> 2) Now the fprobe provides the 'pt_regs' for its handler, but that is
->  wrong for the function entry and exit. Moreover, depending on the
->  architecture, there is no way to accurately reproduce 'pt_regs'
->  outside of interrupt or exception handlers. This means fprobe should
->  not use 'pt_regs' because it does not use such exceptions.
->  (Conversely, kprobe should use 'pt_regs' because it is an abstract
->   interface of the software breakpoint exception.)
-> 
-> This series changes fprobe to use function-graph tracer for tracing
-> function entry and exit, instead of mixture of ftrace and rethook.
-> Unlike the rethook which is a per-task list of system-wide allocated
-> nodes, the function graph's ret_stack is a per-task shadow stack.
-> Thus it does not need to set 'nr_maxactive' (which is the number of
-> pre-allocated nodes).
-> Also the handlers will get the 'ftrace_regs' instead of 'pt_regs'.
-> Since eBPF mulit_kprobe/multi_kretprobe events still use 'pt_regs' as
-> their register interface, this changes it to convert 'ftrace_regs' to
-> 'pt_regs'. Of course this conversion makes an incomplete 'pt_regs',
-> so users must access only registers for function parameters or
-> return value. 
-> 
-> Design
-> ------
-> Instead of using ftrace's function entry hook directly, the new fprobe
-> is built on top of the function-graph's entry and return callbacks
-> with 'ftrace_regs'.
-> 
-> Since the fprobe requires access to 'ftrace_regs', the architecture
-> must support CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS and
-> CONFIG_HAVE_FTRACE_GRAPH_FUNC, which enables to call function-graph
-> entry callback with 'ftrace_regs', and also
-> CONFIG_HAVE_FUNCTION_GRAPH_FREGS, which passes the ftrace_regs to
-> return_to_handler.
-> 
-> All fprobes share a single function-graph ops (means shares a common
-> ftrace filter) similar to the kprobe-on-ftrace. This needs another
-> layer to find corresponding fprobe in the common function-graph
-> callbacks, but has much better scalability, since the number of
-> registered function-graph ops is limited.
-> 
-> In the entry callback, the fprobe runs its entry_handler and saves the
-> address of 'fprobe' on the function-graph's shadow stack as data. The
-> return callback decodes the data to get the 'fprobe' address, and runs
-> the exit_handler.
-> 
-> The fprobe introduces two hash-tables, one is for entry callback which
-> searches fprobes related to the given function address passed by entry
-> callback. The other is for a return callback which checks if the given
-> 'fprobe' data structure pointer is still valid. Note that it is
-> possible to unregister fprobe before the return callback runs. Thus
-> the address validation must be done before using it in the return
-> callback.
-> 
-> Download
-> --------
-> This series can be applied against the ftrace/for-next branch in
-> linux-trace tree.
-> 
-> This series can also be found below branch.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/fprobe-on-fgraph
-> 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (Google) (18):
->       tracing: Add a comment about ftrace_regs definition
->       tracing: Rename ftrace_regs_return_value to ftrace_regs_get_return_value
->       function_graph: Pass ftrace_regs to entryfunc
->       function_graph: Replace fgraph_ret_regs with ftrace_regs
->       function_graph: Pass ftrace_regs to retfunc
->       fprobe: Use ftrace_regs in fprobe entry handler
->       fprobe: Use ftrace_regs in fprobe exit handler
->       tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs
->       tracing: Add ftrace_fill_perf_regs() for perf event
->       tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
->       bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
->       ftrace: Add CONFIG_HAVE_FTRACE_GRAPH_FUNC
->       fprobe: Rewrite fprobe on function-graph tracer
->       tracing/fprobe: Remove nr_maxactive from fprobe
->       selftests: ftrace: Remove obsolate maxactive syntax check
->       selftests/ftrace: Add a test case for repeating register/unregister fprobe
->       Documentation: probes: Update fprobe on function-graph tracer
->       fgraph: Skip recording calltime/rettime if it is not nneeded
-> 
-> 
->  Documentation/trace/fprobe.rst                     |   42 +
->  arch/arm64/Kconfig                                 |    3 
->  arch/arm64/include/asm/ftrace.h                    |   47 +
->  arch/arm64/kernel/asm-offsets.c                    |   12 
->  arch/arm64/kernel/entry-ftrace.S                   |   32 +
->  arch/arm64/kernel/ftrace.c                         |   20 +
->  arch/loongarch/Kconfig                             |    4 
->  arch/loongarch/include/asm/ftrace.h                |   32 -
->  arch/loongarch/kernel/asm-offsets.c                |   12 
->  arch/loongarch/kernel/ftrace_dyn.c                 |   10 
->  arch/loongarch/kernel/mcount.S                     |   17 -
->  arch/loongarch/kernel/mcount_dyn.S                 |   14 
->  arch/powerpc/Kconfig                               |    1 
->  arch/powerpc/include/asm/ftrace.h                  |   15 
->  arch/powerpc/kernel/trace/ftrace.c                 |    2 
->  arch/powerpc/kernel/trace/ftrace_64_pg.c           |   10 
->  arch/riscv/Kconfig                                 |    3 
->  arch/riscv/include/asm/ftrace.h                    |   26 -
->  arch/riscv/kernel/ftrace.c                         |   17 +
->  arch/riscv/kernel/mcount.S                         |   24 -
->  arch/s390/Kconfig                                  |    3 
->  arch/s390/include/asm/ftrace.h                     |   39 +
->  arch/s390/kernel/asm-offsets.c                     |    6 
->  arch/s390/kernel/mcount.S                          |    9 
->  arch/x86/Kconfig                                   |    4 
->  arch/x86/include/asm/ftrace.h                      |   37 +
->  arch/x86/kernel/ftrace.c                           |   50 +-
->  arch/x86/kernel/ftrace_32.S                        |   15 
->  arch/x86/kernel/ftrace_64.S                        |   17 -
->  include/linux/fprobe.h                             |   57 +-
->  include/linux/ftrace.h                             |  136 ++++
->  kernel/trace/Kconfig                               |   23 +
->  kernel/trace/bpf_trace.c                           |   19 -
->  kernel/trace/fgraph.c                              |   96 ++-
->  kernel/trace/fprobe.c                              |  637 ++++++++++++++------
->  kernel/trace/ftrace.c                              |    6 
->  kernel/trace/trace.h                               |    6 
->  kernel/trace/trace_fprobe.c                        |  147 ++---
->  kernel/trace/trace_functions_graph.c               |   10 
->  kernel/trace/trace_irqsoff.c                       |    6 
->  kernel/trace/trace_probe_tmpl.h                    |    2 
->  kernel/trace/trace_sched_wakeup.c                  |    6 
->  kernel/trace/trace_selftest.c                      |   11 
->  lib/test_fprobe.c                                  |   51 --
->  samples/fprobe/fprobe_example.c                    |    4 
->  .../test.d/dynevent/add_remove_fprobe_repeat.tc    |   19 +
->  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
->  47 files changed, 1145 insertions(+), 618 deletions(-)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_repeat.tc
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> >
+> >         return 0;
+> >  }
+> > diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+> > index 4007563fb607..ab03732d06c4 100644
+> > --- a/arch/riscv/kernel/patch.c
+> > +++ b/arch/riscv/kernel/patch.c
+> > @@ -89,6 +89,14 @@ static int __patch_insn_set(void *addr, u8 c, size_t=
+ len)
+> >
+> >         memset(waddr, c, len);
+> >
+> > +       /*
+> > +        * We could have just patched a function that is about to be
+> > +        * called so make sure we don't execute partially patched
+> > +        * instructions by flushing the icache as soon as possible.
+> > +        */
+> > +       local_flush_icache_range((unsigned long)waddr,
+> > +                                (unsigned long)waddr + len);
+> > +
+> >         patch_unmap(FIX_TEXT_POKE0);
+> >
+> >         if (across_pages)
+> > @@ -135,6 +143,14 @@ static int __patch_insn_write(void *addr, const vo=
+id *insn, size_t len)
+> >
+> >         ret =3D copy_to_kernel_nofault(waddr, insn, len);
+> >
+> > +       /*
+> > +        * We could have just patched a function that is about to be
+> > +        * called so make sure we don't execute partially patched
+> > +        * instructions by flushing the icache as soon as possible.
+> > +        */
+> > +       local_flush_icache_range((unsigned long)waddr,
+> > +                                (unsigned long)waddr + len);
+> > +
+> >         patch_unmap(FIX_TEXT_POKE0);
+> >
+> >         if (across_pages)
+> > @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t =
+len)
+> >
+> >         ret =3D patch_insn_set(tp, c, len);
+> >
+> > -       if (!ret)
+> > -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
+> > -
+> >         return ret;
+> >  }
+> >  NOKPROBE_SYMBOL(patch_text_set_nosync);
+> > @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns=
+, size_t len)
+> >
+> >         ret =3D patch_insn_write(tp, insns, len);
+> >
+> > -       if (!ret)
+> > -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len=
+);
+> > -
+> >         return ret;
+> >  }
+> >  NOKPROBE_SYMBOL(patch_text_nosync);
+> > @@ -253,9 +263,9 @@ static int patch_text_cb(void *data)
+> >         } else {
+> >                 while (atomic_read(&patch->cpu_count) <=3D num_online_c=
+pus())
+> >                         cpu_relax();
+> > -       }
+> >
+> > -       local_flush_icache_all();
+> > +               local_flush_icache_all();
+> > +       }
+> >
+> >         return ret;
+> >  }
+> > --
+> > 2.39.2
+> >
+>
+> Thanks,
+> Andy
