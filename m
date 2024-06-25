@@ -1,123 +1,355 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D91E153506
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jun 2024 15:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225F716D323;
+	Tue, 25 Jun 2024 16:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719330312; cv=none; b=Gjg6oHhifvUxdckXcp0iu9g71UmmmsxyR9+BdU1pFy9JIohOh4dtRFpDaKSAk1clt9JWafBdHRsNmQ7CIOWO4lYaSirColELzS1Z5ngKHgHGmQXE2DTpbf2Gda6cElTIAHRjF8ZBMHfXdVp+DY0lmgPSEHAWc6UA2vUz91AmEIU=
+	t=1719332324; cv=none; b=BLldXhtn7mO0yHp5xvkIHqnYbgIH3+0WJWgT1AlLk5Nq/6dpm9CP8glf/XXfe6n9k24irFv9WyMo1/Z0B7eQI7PH5L+NJ84WbYSCbFqJ64mXLmcrCWtqSq2IYrVG4e9X0mp6Xp2t/si0Q6Wj4TmKmnG/DIcxbKeVpOt3uE2OCJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719330312; c=relaxed/simple;
-	bh=hf5eUmooJC7dWoChVFFPsyBXOKh1NM93BaxyD/i/B2Y=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=bpozkzHTOPgZ3TtFOTW2evjS7/UhLJJagiCJFpkSltnovK2DGO92/H8lqq6lBgDcjFL1exrTMuNXfUynrtW944z/Q0P5229z4rQ9jcm/UjOVVMO8nM/6lv9F9QWwYmVnk/pze4L998E0FWXtQO3pBj+4pxubA1SY8kgQkHGVMbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=UxCp0fxH; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1719332324; c=relaxed/simple;
+	bh=LIs4vK4bUzf89N/r9zzNId0+b4TR4KWaZxiHMNozK90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SnKF8nM9+byX+CaGaVCabOjZyyQQT24x/q8t4t+AMLGymp6tc/kN6Byo21ARO3UabCouNTjYsFrVVIQIRuIuzLoalZLVV6Vtxy3WY2z0oVg/ZcHRrlAh0PQdViR7H9mHvsVdxRBDp5KVa773PB+u94pkCiotRo6rFHG0+QTDcgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vk+BnFQ9; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="UxCp0fxH"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-6c53a315c6eso3933636a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jun 2024 08:45:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vk+BnFQ9"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-440556a5cbdso26132471cf.0;
+        Tue, 25 Jun 2024 09:18:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1719330309; x=1719935109; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2tZOMKcRfzsOTLcaI6P+nurFJ1oFQE37Rn/GemYRQhk=;
-        b=UxCp0fxHEqZmwtgUKLRf2Ye8esSEOv7F3/gtGn+v6gDJcBDBhN6DEjIA/7++GtfvLf
-         GOSGRQ46Exm3dqhsdYG/wGpObpNob9D/aQGbtE0M2AplTHuHey9hbu65vxzthZ2B1CXS
-         sw03VAbR9/SRYIz1Rj5Isv+LQGg/9CZvHZSroQoKd30LB+yS6SCOHjLaxK8Xl7umkNx1
-         vuafFbmiZp9h/Qb6SGV55VAoXwuv/NXSDELdUFesP9Jv53DsW1ZzJU/fNK6CTvBRlGv8
-         3jWwt26GWE3D56vbAyMqGc6+xzUyUR6tgWG9FwWo8qPMexGPPdJBa05x27vhtnqjS+1M
-         gOWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719330309; x=1719935109;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1719332321; x=1719937121; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2tZOMKcRfzsOTLcaI6P+nurFJ1oFQE37Rn/GemYRQhk=;
-        b=dkPgHvTUqpZP+8a1KxJAGCCnZl7fzLUZz2u0n332hU4/t291a+wFU1BRE23P/2YX0x
-         5OvMq0znAR+a3YT3+jHblWt2svQjNjAnEGq0L6msraeIOJAfU568tMwnYK/sVA6X3CPJ
-         UXZI++j40JxJwKU19uIc4g815vF2WAa8Vn6DQszx1xIL658bzsS8E+ShaUsckK15EYk3
-         XH/rIhp6RbyFRH9SbobpoXqUszpQSK/L7cbRw6be80dR+CwnBAD49GOgz+MkBI0NYTzs
-         akgCaXMM7Y3OmB6mhtokHwHt8eg0ZhRVz09wPAqh8bs9GPceLqUvl9vFNWXerjwLjd6E
-         qEmw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0u//eP5sag7u4E+qJpUWK9nhNKKBGYWU34+buU8crefTjHmP/usWnL/QaWnzebSIwRSiJlPgtFs8s3xUmWCQGATGR+N+ODr2BpDnPA/BvFMgU
-X-Gm-Message-State: AOJu0YzUqOgdBn9iQNZGz/r8ycCF4OYL/sk6JtNUQuh/yc2kELfXICau
-	DbcPOnMVBH3zjDQuK5fuvLzvQQWRHB7ZOJ7GoUH7VjE/7r7yMrQYoWe5D1Pev/o=
-X-Google-Smtp-Source: AGHT+IGSYCPwWhLTCA7tsdYi2n2YERYEuj0Bk7h22FlWi9B1mlJhhHz/QYqnR8FLA80DAw08tCIl9Q==
-X-Received: by 2002:a05:6a20:b918:b0:1bc:ed85:3920 with SMTP id adf61e73a8af0-1bcee9893f4mr7574816637.52.1719330307012;
-        Tue, 25 Jun 2024 08:45:07 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70677235b41sm4843347b3a.24.2024.06.25.08.45.06
+        bh=NzV/v+3gA2B4KAmBgeJNV2RGM4iqu3a2XsO7XRn5nTQ=;
+        b=Vk+BnFQ9KfKMb99bt5VogOb51vfXsnNi2f/ZyVzf7RNeg/x6p/POmKktP+d5i0dwt/
+         mJ8kdjGCAFwGt9eel89P/L12uDeJ4t+wUHh85woXRmy42RB7ABmENPX179mEZnoZxlBJ
+         ApXbWTymojpq7h8jzeaqPu7xuI7iEfGRvtqknWYoiCfVr2XSw3t1To2I1rVjD0bYA5BK
+         72S38YYrRSq0qgqCEjC3VZvSmXQKau4X24CrgQo++wpTlQNPkG/bNjuW0XpL9KIQ00qi
+         wxpP9gvbYTIlVV02sM+1bO3/MQ4tJ4b6THLtj+pRMRRNdkIuXq9b5sSS5uZ4u+4nMYC2
+         7wCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719332321; x=1719937121;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NzV/v+3gA2B4KAmBgeJNV2RGM4iqu3a2XsO7XRn5nTQ=;
+        b=DNWeY22EjA2eOP45f6Dd7TyOWIVnt+EQbyzQJkGhc1ujruPWBh6ke6Uaeic6A6b4ha
+         khAkF7vDrUBPPZKmlQMo2fgO+EryvHWGzPRplMeky363qElWhlMnQ1NzFPbFJvs/47pB
+         tnnISsyAxs2Kd3tJE0loo0flV/97JMGxJ0GD7DYC9MPmVReuGEgCWr2QK2iOZWQgNR63
+         sfTtcMhbiUNwIRzqL7DzxJbG94kia3IWRrmYLOvXUCbSe6cJrL06J4zP5JWgFAPntIh/
+         g4sVdUuhiia7JxXa/ylPjdCRr/BC2zZHrKG8/LcvpDtS6+sgAAfoT+sAxknGzRDmXhmO
+         U1GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXz7d7p8761ChKGi4NJDdZhacRymtnrnXvttgfW6U8hBsFfVjSTS2KfYZOYnw+72lqvb2eYc9imXu8ntlo2nUni0BqJ55bclXIaleOHgVivXxpN7RwoxeiMCxiYmbdBLvP7cXn4J++I6aDtH8YGC+/Dmpc=
+X-Gm-Message-State: AOJu0YzBcla4QgosdE9Ubdokv6vvOz2V1MTGRFHePZ4SI62RUtkXVac7
+	omGYmzUXSxa+WXbtA62bWyEuToL3i0xoLq1OPdmiP1iLlG+zYlsX67gSyA/J
+X-Google-Smtp-Source: AGHT+IGq8vNxrEB+T2u6ak9DDo5dyFHVI6uChwI183CHMHk2AnJ3HswuwZ4AFQ7shCN1dpYRLLtgCQ==
+X-Received: by 2002:ac8:5a8e:0:b0:441:55b3:8f55 with SMTP id d75a77b69052e-444d65542a4mr86144731cf.68.1719332320562;
+        Tue, 25 Jun 2024 09:18:40 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-444c2b4ca60sm56762531cf.8.2024.06.25.09.18.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 08:45:06 -0700 (PDT)
-Date: Tue, 25 Jun 2024 08:45:06 -0700 (PDT)
-X-Google-Original-Date: Tue, 25 Jun 2024 08:45:05 PDT (-0700)
-Subject:     Re: [PATCH 1/8] riscv: stacktrace: convert arch_stack_walk() to noinstr
-In-Reply-To: <cb71a5e9-aafe-48af-9f16-baae407d467b@ghiti.fr>
-CC: andy.chiu@sifive.com, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, alexghiti@rivosinc.com, zong.li@sifive.com, rostedt@goodmis.org,
-  mhiramat@kernel.org, Mark Rutland <mark.rutland@arm.com>, nathan@kernel.org,
-  ndesaulniers@google.com, morbo@google.com, justinstitt@google.com, puranjay@kernel.org,
-  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-  llvm@lists.linux.dev
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: alex@ghiti.fr
-Message-ID: <mhng-37c10407-3c40-4045-9627-0b53f770cb4e@palmer-ri-x1c9a>
+        Tue, 25 Jun 2024 09:18:39 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id B21741200068;
+	Tue, 25 Jun 2024 12:18:38 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 25 Jun 2024 12:18:38 -0400
+X-ME-Sender: <xms:3u16Zs_BSxBTLen0HdT8P4JA-kxZW7auNThqakbpGn1AF0Ohg0n7oA>
+    <xme:3u16ZkubK3VCHp3urVE5D8rh3vVgEFn5ItbyLqTG6oypkjFuMUbR-66xau3nXYse2
+    IypIOSjEWjXStdlNQ>
+X-ME-Received: <xmr:3u16ZiDZmjsJTjaLXcNMXZBb7QdlE6Fg-lcF3yzwG5W1fUBDr0KHioKqHkBsIw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtddtgdeiiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudff
+    iedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
+    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
+    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
+    hmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:3u16ZseeZK6SkF197gOnhCB2CJLXwjNJVYP76ut5b2f3Pa37JVp3mg>
+    <xmx:3u16ZhMpNtWU-4dlK-Ea9hB27lKbOSkeDZ0XofJJzN8uoC2MsFC3yg>
+    <xmx:3u16ZmkrYUmpQR2uEzfr3tE-JO4G9w8T5VW-0_V3sgVJhZgWakJXig>
+    <xmx:3u16ZjtjyRBSRNrJ6L8COu96Y7yVyOMlWr0ZwmF5zSDsA_5d7w4_pQ>
+    <xmx:3u16ZvsO-8FEkYzBu2K5pKYgTfNBj-ODhIhBCjoX2jWc7sAMIgPkuCST>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Jun 2024 12:18:37 -0400 (EDT)
+Date: Tue, 25 Jun 2024 09:18:01 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
+ Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
+	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
+ Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 1/2] rust: add static_key_false
+Message-ID: <ZnrtuaUByT70tJY5@boqun-archlinux>
+References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
+ <20240621-tracepoint-v3-1-9e44eeea2b85@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240621-tracepoint-v3-1-9e44eeea2b85@google.com>
 
-On Tue, 18 Jun 2024 02:55:32 PDT (-0700), alex@ghiti.fr wrote:
-> Hi Andy,
->
-> On 13/06/2024 09:11, Andy Chiu wrote:
->> arch_stack_walk() is called intensively in function_graph when the
->> kernel is compiled with CONFIG_TRACE_IRQFLAGS. As a result, the kernel
->> logs a lot of arch_stack_walk and its sub-functions into the ftrace
->> buffer. However, these functions should not appear on the trace log
->> because they are part of the ftrace itself. This patch references what
->> arm64 does for the smae function. So it further prevent the re-enter
->> kprobe issue, which is also possible on riscv.
->>
->> Related-to: commit 0fbcd8abf337 ("arm64: Prohibit instrumentation on arch_stack_walk()")
->> Fixes: 680341382da5 ("riscv: add CALLER_ADDRx support")
->> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
->> ---
->>   arch/riscv/kernel/stacktrace.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
->> index 528ec7cc9a62..0d3f00eb0bae 100644
->> --- a/arch/riscv/kernel/stacktrace.c
->> +++ b/arch/riscv/kernel/stacktrace.c
->> @@ -156,7 +156,7 @@ unsigned long __get_wchan(struct task_struct *task)
->>   	return pc;
->>   }
->>
->> -noinline void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
->> +noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
->>   		     struct task_struct *task, struct pt_regs *regs)
->>   {
->>   	walk_stackframe(task, regs, consume_entry, cookie);
->>
->
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->
-> I'll try to make this go into -fixes, this is in my fixes branch at least.
+Hi Alice,
 
-Looks like there's some comments on the rest of the patch set.
+On Fri, Jun 21, 2024 at 10:35:26AM +0000, Alice Ryhl wrote:
+> Add just enough support for static key so that we can use it from
+> tracepoints. Tracepoints rely on `static_key_false` even though it is
+> deprecated, so we add the same functionality to Rust.
+> 
+> It is not possible to use the existing C implementation of
+> arch_static_branch because it passes the argument `key` to inline
+> assembly as an 'i' parameter, so any attempt to add a C helper for this
+> function will fail to compile because the value of `key` must be known
+> at compile-time.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Andy: aree you going to send a v2, or do you want me to just pick this 
-one up onto fixes now and then handle the rest later?
+[Add linux-arch, and related arch maintainers Cced]
 
->
-> Thanks,
->
-> Alex
+Since inline asms are touched here, please consider copying linux-arch
+and arch maintainers next time ;-)
+
+> ---
+>  rust/kernel/lib.rs        |   1 +
+>  rust/kernel/static_key.rs | 143 ++++++++++++++++++++++++++++++++++++++++++++++
+>  scripts/Makefile.build    |   2 +-
+>  3 files changed, 145 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index fbd91a48ff8b..a0be9544996d 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -38,6 +38,7 @@
+>  pub mod prelude;
+>  pub mod print;
+>  mod static_assert;
+> +pub mod static_key;
+>  #[doc(hidden)]
+>  pub mod std_vendor;
+>  pub mod str;
+> diff --git a/rust/kernel/static_key.rs b/rust/kernel/static_key.rs
+> new file mode 100644
+> index 000000000000..9c844fe3e3a3
+> --- /dev/null
+> +++ b/rust/kernel/static_key.rs
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2024 Google LLC.
+> +
+> +//! Logic for static keys.
+> +
+> +use crate::bindings::*;
+> +
+> +#[doc(hidden)]
+> +#[macro_export]
+> +#[cfg(target_arch = "x86_64")]
+> +macro_rules! _static_key_false {
+> +    ($key:path, $keytyp:ty, $field:ident) => {'my_label: {
+> +        core::arch::asm!(
+> +            r#"
+> +            1: .byte 0x0f,0x1f,0x44,0x00,0x00
+> +
+> +            .pushsection __jump_table,  "aw"
+> +            .balign 8
+> +            .long 1b - .
+> +            .long {0} - .
+> +            .quad {1} + {2} - .
+> +            .popsection
+> +            "#,
+> +            label {
+> +                break 'my_label true;
+> +            },
+> +            sym $key,
+> +            const ::core::mem::offset_of!($keytyp, $field),
+> +        );
+> +
+> +        break 'my_label false;
+> +    }};
+> +}
+> +
+> +#[doc(hidden)]
+> +#[macro_export]
+> +#[cfg(target_arch = "aarch64")]
+> +macro_rules! _static_key_false {
+> +    ($key:path, $keytyp:ty, $field:ident) => {'my_label: {
+> +        core::arch::asm!(
+> +            r#"
+> +            1: nop
+> +
+> +            .pushsection __jump_table,  "aw"
+> +            .align 3
+> +            .long 1b - ., {0} - .
+> +            .quad {1} + {2} - .
+> +            .popsection
+> +            "#,
+> +            label {
+> +                break 'my_label true;
+> +            },
+> +            sym $key,
+> +            const ::core::mem::offset_of!($keytyp, $field),
+> +        );
+> +
+> +        break 'my_label false;
+> +    }};
+> +}
+> +
+
+For x86_64 and arm64 bits:
+
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
+
+One thing though, we should split the arch-specific impls into different
+files, for example: rust/kernel/arch/arm64.rs or rust/arch/arm64.rs.
+That'll be easier for arch maintainers to watch the Rust changes related
+to a particular architecture.
+
+Another thought is that, could you implement an arch_static_branch!()
+(instead of _static_key_false!()) and use it for static_key_false!()
+similar to what we have in C? The benefit is that at least for myself
+it'll be easier to compare the implementation between C and Rust.
+
+Regards,
+Boqun
+
+> +#[doc(hidden)]
+> +#[macro_export]
+> +#[cfg(target_arch = "loongarch64")]
+> +macro_rules! _static_key_false {
+> +    ($key:path, $keytyp:ty, $field:ident) => {'my_label: {
+> +        core::arch::asm!(
+> +            r#"
+> +            1: nop
+> +
+> +            .pushsection __jump_table,  "aw"
+> +            .align 3
+> +            .long 1b - ., {0} - .
+> +            .quad {1} + {2} - .
+> +            .popsection
+> +            "#,
+> +            label {
+> +                break 'my_label true;
+> +            },
+> +            sym $key,
+> +            const ::core::mem::offset_of!($keytyp, $field),
+> +        );
+> +
+> +        break 'my_label false;
+> +    }};
+> +}
+> +
+> +#[doc(hidden)]
+> +#[macro_export]
+> +#[cfg(target_arch = "riscv64")]
+> +macro_rules! _static_key_false {
+> +    ($key:path, $keytyp:ty, $field:ident) => {'my_label: {
+> +        core::arch::asm!(
+> +            r#"
+> +            .align  2
+> +            .option push
+> +            .option norelax
+> +            .option norvc
+> +            1: nop
+> +            .option pop
+> +            .pushsection __jump_table,  "aw"
+> +            .align 3
+> +            .long 1b - ., {0} - .
+> +            .dword {1} + {2} - .
+> +            .popsection
+> +            "#,
+> +            label {
+> +                break 'my_label true;
+> +            },
+> +            sym $key,
+> +            const ::core::mem::offset_of!($keytyp, $field),
+> +        );
+> +
+> +        break 'my_label false;
+> +    }};
+> +}
+> +
+> +/// Branch based on a static key.
+> +///
+> +/// Takes three arguments:
+> +///
+> +/// * `key` - the path to the static variable containing the `static_key`.
+> +/// * `keytyp` - the type of `key`.
+> +/// * `field` - the name of the field of `key` that contains the `static_key`.
+> +#[macro_export]
+> +macro_rules! static_key_false {
+> +    // Forward to the real implementation. Separated like this so that we don't have to duplicate
+> +    // the documentation.
+> +    ($key:path, $keytyp:ty, $field:ident) => {{
+> +        // Assert that `$key` has type `$keytyp` and that `$key.$field` has type `static_key`.
+> +        //
+> +        // SAFETY: We know that `$key` is a static because otherwise the inline assembly will not
+> +        // compile. The raw pointers created in this block are in-bounds of `$key`.
+> +        static _TY_ASSERT: () = unsafe {
+> +            let key: *const $keytyp = ::core::ptr::addr_of!($key);
+> +            let _: *const $crate::bindings::static_key = ::core::ptr::addr_of!((*key).$field);
+> +        };
+> +
+> +        $crate::_static_key_false! { $key, $keytyp, $field }
+> +    }};
+> +}
+> +
+> +pub use static_key_false;
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index efacca63c897..60197c1c063f 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -263,7 +263,7 @@ $(obj)/%.lst: $(obj)/%.c FORCE
+>  # Compile Rust sources (.rs)
+>  # ---------------------------------------------------------------------------
+>  
+> -rust_allowed_features := new_uninit
+> +rust_allowed_features := asm_const,asm_goto,new_uninit
+>  
+>  # `--out-dir` is required to avoid temporaries being created by `rustc` in the
+>  # current working directory, which may be not accessible in the out-of-tree
+> 
+> -- 
+> 2.45.2.741.gdbec12cfda-goog
+> 
