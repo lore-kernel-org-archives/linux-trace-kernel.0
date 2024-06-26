@@ -1,92 +1,69 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D471190462;
-	Wed, 26 Jun 2024 18:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0781118FC85;
+	Wed, 26 Jun 2024 18:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719426040; cv=none; b=o9D91xt8zmL64LHnNpIYoJWLvsxc/viCHQtl/d0ES2NImzOsYi8BPhrGUwE7WKYURgTCIYDRhe+y9Pi8uQNJk6oWUClp9ONdgFDOagjZXhqwFElLrTdkHKnY6SiEcgQ1v8AS12iCaqJIRVcqCm+XFbEO9PAy/ImBVLU065oLwY0=
+	t=1719427398; cv=none; b=F5f6maByOAseQDUvHS28WPy7vBsU0qCC0AKozG6Rf38MLNhARzArY5c34qgZBxO294Q3KMqtGr6VraozIea0UoTUGtjKnk1wfj+3iK7SWk2NRiXLauAreK+xD4Ir7tuog6B+6/o8JjqRM/PSNR+HSXbv6lLTKLOVFnxc4c5NnAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719426040; c=relaxed/simple;
-	bh=z27AxN76ZfzbtD0CwX3/5wDGi1LekqzkOCwGwmnzDHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eeGeDGrQXFrG0kIyEjeG5jIHQ1kCqv8e2NqQrNhA0+mH4BD/VVR9OA1lJAOiSVHm9OfRlDEUYFuZq3sRDwP0dg9duKudLt2KAnjHTw+PdOwP5QAokm+INGMjCpbc9IKzsJKm+Yhn3pEChlFvN1Ny6erLKHuJEiVmyyH18nXM9rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ekoVEJOn; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ekoVEJOn"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8CDA040E0185;
-	Wed, 26 Jun 2024 18:20:36 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 16O2WKeMzR4y; Wed, 26 Jun 2024 18:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1719426032; bh=51qt3WM+PNcXiXQa/UQX9tYSNmBsISQmLiUi2BYhe64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekoVEJOnlkf8oIDtlfa7mIjpOjxbtKwRTTjZ4O3nmjk8UTY2ZTKDO+hq6aDm03HHj
-	 o1ieljxyJov3OaDCIiKseGOxDp+uwlM8UnNDAtHdZ3uNK7d7vEw5Fp+UBvjjLgqcqH
-	 1QdZnkiTNUVbW18urUJwRP3y1GIWhWK4vHR2kijurQq6OAJ+uHSKwrJguV5kISNGz8
-	 U8UlNFichQ5rYp7doVLw+gCwOG5mKFEJmR6OqlfZZbDKU9ITfSA4uXIi53uthNQlmb
-	 np3Dn+DJLx4IlhoHBG4Js0equT1b3vwmw79bH1bUbB5ZAwQdP290YJxdT71C2D4+sv
-	 f5by/uEZKCKLk89gGLLlLevTFa48bnQCfvKU3ya+GiUw0CitsR8jaUVx/DBF02JHW4
-	 OzDCoPWJyKoO6p0UYHZ4CN6zJu99t4mGx7y8bGIjoMHCCi1+IxqAMgnQ9qkNsHm4lQ
-	 LiE/J1Hp3aR4pdSSlo3Hczdez5dPsY0IKYqXMSh0dXwS6L/p/xSB7C3a8FYGmVrLnZ
-	 nEZkB/+zECRmS+evIUSTT5/fCNwiotSD1Z0/DTdZ24RQ8JUPiSn4BvGah9xUcqgN7Y
-	 y8U8DGzoc5euBIJKG9v/xW1uVYeebdWQYrG84tr6qrBwC2WWks7Q0LPPPrjcoIxmYs
-	 /nTOtBiSqLLOJLpDQjhQlj3s=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B068040E021D;
-	Wed, 26 Jun 2024 18:20:14 +0000 (UTC)
-Date: Wed, 26 Jun 2024 20:20:13 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Naik, Avadhut" <avadnaik@amd.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>, x86@kernel.org,
-	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tony.luck@intel.com, rafael@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, rostedt@goodmis.org, lenb@kernel.org,
-	mchehab@kernel.org, james.morse@arm.com, airlied@gmail.com,
-	yazen.ghannam@amd.com, john.allen@amd.com
-Subject: Re: [PATCH v2 4/4] EDAC/mce_amd: Add support for FRU Text in MCA
-Message-ID: <20240626182013.GEZnxb3TpU6VgROX8g@fat_crate.local>
-References: <20240625195624.2565741-1-avadhut.naik@amd.com>
- <20240625195624.2565741-5-avadhut.naik@amd.com>
- <20240626120429.GQZnwDzQ47y1fOlFTp@fat_crate.local>
- <ff9efb14-f3e5-4c4e-8285-7da853e6ffb7@amd.com>
+	s=arc-20240116; t=1719427398; c=relaxed/simple;
+	bh=le/+nw/Qzup/+krmq6I3s9Mx1o6B4hej1yo/g5Nb2f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f/52ROgF55y9F0X3BDFEomc1eqawSs6VTA+VcNKxcracZeMNxIB0+kGEHiezJfW1uPsQcz/AA5Bk+VTw91LlttkW0KDWrsBIlHiRJotXXK2deybKJXpWPTs/uXCbvQ3VP9PLVQGRGzfvOe3eRF71p6v9I/WoEmLupYsX+h9s8gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350F6C116B1;
+	Wed, 26 Jun 2024 18:43:15 +0000 (UTC)
+Date: Wed, 26 Jun 2024 14:43:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary
+ Guo <gary@garyguo.net>, =?UTF-8?B?QmrDtnJu?= Roy Baron
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@samsung.com>, linux-trace-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] rust: add tracepoint support
+Message-ID: <20240626144313.3f1e8277@rorschach.local.home>
+In-Reply-To: <CAH5fLgiG5hdh1JJgjH94E=ZwJo6ERkuZUFDpkrrJ6ErQhTvCrg@mail.gmail.com>
+References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
+	<20240621-tracepoint-v3-2-9e44eeea2b85@google.com>
+	<CAH5fLghb6oVkgy3ckf=dUk9S4VdCeWin+yDBW1ffBoxu=HqBKw@mail.gmail.com>
+	<ZnsIJ6ejNX_dAc8f@boqun-archlinux>
+	<CAH5fLgiG5hdh1JJgjH94E=ZwJo6ERkuZUFDpkrrJ6ErQhTvCrg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ff9efb14-f3e5-4c4e-8285-7da853e6ffb7@amd.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 26, 2024 at 01:00:30PM -0500, Naik, Avadhut wrote:
-> > 
-> > Why are you clearing it if you're overwriting it immediately?
-> > 
-> Since its a local variable, wanted to ensure that the memory is zeroed out to prevent
-> any issues with the %s specifier, used later on.
+On Wed, 26 Jun 2024 10:48:23 +0200
+Alice Ryhl <aliceryhl@google.com> wrote:
 
-What issues?
+> >
+> > Because your hooks/rust_binder.h and events/rust_binder.h use the same
+> > TRACE_SYSTEM name? Could you try something like:
+> >
+> >         #define TRACE_SYSTEM rust_binder_hook
+> >
+> > in your hooks/rust_binder.h?  
+> 
+> I was able to get it to work by moving the includes into two different
+> .c files. I don't think changing TRACE_SYSTEM works because it must
+> match the filename.
 
-> Would you recommend removing that and using initializer instead for the string?
+Try to use:
 
-I'd recommend looking at what the code does and then really thinking whether
-that makes any sense.
+ #define TRACE_SYSTEM_VAR rust_binder_hook_other_name
 
--- 
-Regards/Gruss,
-    Boris.
+in one. Then that is used as the variable for that file.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+-- Steve
