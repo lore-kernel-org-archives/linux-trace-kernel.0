@@ -1,182 +1,162 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A8479CE;
-	Wed, 26 Jun 2024 11:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E28149E06;
+	Wed, 26 Jun 2024 11:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719401228; cv=none; b=AZLREdc0Zijc8R3pB2uinUOdVrQkk+y/3hLsR6ueckEiC+0IP/sCTKUF7UF9S1xwV6CvsE3hzUe+XBH8Szje4v2s8wbnwiPi71ygtvcELS6ghiVrgwoE0UOwF+Gs1BAR0Mf6qc9cgOXm1onnZDR9EoES39+cJy9tfQzN0wuyYkY=
+	t=1719403078; cv=none; b=puSIxl/4LIbgN2GVs/PMuWQNAkufIg3QVfxuXTOZViV1vnds/BuzEPBErXO7ivRPdoYKqoW0LbjhR1z8ENE3ojN+fiOrkNFvQZXMD4zMumWhAwmUhRm4Arl7LjVC7b0B87vRle/amVpqoOlB7MjP0pyP9EKbGsz7FGCRU/o1g+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719401228; c=relaxed/simple;
-	bh=KwdgGKKP+0hBaa8xY11hyl9LdTWxcBsHIXLIb1rjsoI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tm5/WMjXA+B8YbOo5YuRRAq78vtBjjIIhTPGpH/UEwXmIm4w2vRn7S6TDgVfuopP0CBMDaXfq/mEeGHCoUDgnmbEUIKXcP+bWtUFWD/FpdCGj0eXu++BGmnQNXu9pa1smzJmHYBkOROSevYDgpqrgnClpCAaA0kfhqWP8IZLt0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ay8bDe+c; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719403078; c=relaxed/simple;
+	bh=N4l6MEM8Kb0sl/tgaxpPhxXwDu9KIcUXzbA5ENyc4Pg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fHW3pfO1pxDEaYlkx7KKLtVLsnSY/Gk6w6NMYYp01XnFT146tnnGU4eszu59mdjb0PW6tBFtKJn5bJTxArpLxk4IG7h0rGKiHKH9ZsKo1RbOG1oKU6jjBP6rkT0+Yf+6n1vjh4qiJXJ6p2yK2CHQZk5L2JepRHKQUct7h+XwTEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OlSDsUWb; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ay8bDe+c"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a72420e84feso546659166b.0;
-        Wed, 26 Jun 2024 04:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719401225; x=1720006025; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=32147Wd81QPPxA7RUo5Ydca3GRbb3yWdnXAnVTXWZxk=;
-        b=ay8bDe+cTWvTh9b0uGvEaYaZ1RyhwRdYepjZ9PZ/2JrKAop+JZaMgygUmI5tDxJN/3
-         2mhm9hzxh5CltnZA0R2TZDXmhqQ+fM5G1oPvkOd+ugrzUBD2GPM3IvCUsPnTtA1wSIyg
-         FhMM2wP3L6ksXtNhWqwlInaTtc+YD4FhS03G1o9qOdL6NG2ncN9sOeoftcJhoghyri8D
-         WHCMCQd9kgne+uGUzbVmIdDb6szUzuCAv9L+rSfUP7lzS+ny7zruyAHn9Ih/Q9D8uFes
-         z3UEKf3RwrQHd6OhV/MWLQxJZRvVjtkOwigTlZZEd3+bWqtEMNeTUDM+CiprFklvDAcC
-         qEHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719401225; x=1720006025;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=32147Wd81QPPxA7RUo5Ydca3GRbb3yWdnXAnVTXWZxk=;
-        b=gITKEqCBI6zY283ae9trqTpAAnjLfzNZUEZJ4CXhz+SwYhNF21s+MPx+/5MMv+BI9f
-         a1ZQ2nZnqbcMC6/sqH787tR5pf86aIQlgVvqr82wRqL7f2C43C2L1xsKMQRunInzZJaG
-         TA/dm7tVkaRojfF921kHmn5u0tCX559FfQup8yYyS37Gj+uYAYP/5JRTbJvIx4H9lqoS
-         Aoo6ke+eqh8Ci5wU4PaEzJOeTlNQiorQDlQlrRv/RVxYuhdc6sQysyGscTwK8QZs/KqU
-         2GgH8zYy++ccwvnJGLURh0j91uCH9Z5BxNr8mySs+sh8FbNmU8rf0vJo6NVAhIZDzJ35
-         tOVA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+a4/XLBK472fUw35TNQZVqWTV2ARlkIWYqdi+TX1F2S4srkpZ70LBCEWKWv0aWiC+i3jxG0QGhQtOfSlv/2fl0jiA
-X-Gm-Message-State: AOJu0YxXdGfrt7XtnHBtNzS65YJT27MXBAN7qV0YUc1HtrC/LZLdnYkJ
-	547YqhdORkIR35OvTUdjaK7fFSdDU89n2+EmZSyxNlLNBOmMpnwR
-X-Google-Smtp-Source: AGHT+IHwlIkPhILSjJKKwguFh9k1/TDmOniodDZirdZYVLLT/e/KxnDBdFe8XzuQqqxeoUeiX68QHQ==
-X-Received: by 2002:a17:906:5849:b0:a6f:4d6b:c77a with SMTP id a640c23a62f3a-a7245b8515dmr876605566b.13.1719401225106;
-        Wed, 26 Jun 2024 04:27:05 -0700 (PDT)
-Received: from krava (net-93-147-243-244.cust.vodafonedsl.it. [93.147.243.244])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fe077369dsm495740566b.68.2024.06.26.04.27.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 04:27:04 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 26 Jun 2024 13:27:01 +0200
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	mingo@redhat.com, bpf@vger.kernel.org, paulmck@kernel.org,
-	clm@meta.com
-Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister APIs
-Message-ID: <Znv7BZGwdEunAETt@krava>
-References: <20240625002144.3485799-1-andrii@kernel.org>
- <20240625002144.3485799-7-andrii@kernel.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OlSDsUWb"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E03D640E0219;
+	Wed, 26 Jun 2024 11:57:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 3BoJPFucZedR; Wed, 26 Jun 2024 11:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719403069; bh=r49OXr3owHtWkbfriGJWueL5gi1+VE3lZHu88Kq8SVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OlSDsUWbpR1ckeVIt9DRoVmraS5ScvD0SdcsdlzdJDyhdg+qnsStSjIEAoD+C0Bqt
+	 MWKu6ac4ZOsK8bW8kry0XHTaFVqigwkPYBHsOlMBIIHB9EUGuayIEpe1alGG25NrEM
+	 vb1CHn4yFj7a3/LGHPa38fa2UAgWXw5MZrGwCXR1EduRaRHppGdPqc5hZiyGGgkGjv
+	 FlRL/hzLaJfaaVR1O2l0LrbnBMRQoo0NKnI6/1q36ss9Kbfz3FSFHYI6CsWuojyQJB
+	 p9I4LtngJMrlZKfNPEADovMRU10VPAQKNIKYkDErbGQbU6We/CE6usih2z4EMA0AVJ
+	 qhZt5ea3oQFVAdNVBQmHyZLvVoYBO46I3WNrH2FW669elDEtAE1yuZLP8Jgj3Lo/Hu
+	 /PVR8tdPXpy0FU6eJ+RddI/kXUfN+Sh3xsmpW0D5KL3wI2Qt7PQpo1dpOBfLaxxYA+
+	 cuKNB9JJWXgZMQNTr72gTIYg5H9VQsJIdHBvdiLpKcbAfyqPkM/+OPMfWdLR/W3Mnf
+	 PJcV0mWKe6sEdmKP8R5b77OWNxwqht20t0AW75yt7PmtzYmheuEtssQ8arAPjuQ961
+	 uHjYZ2P+HC5inOFoRfoM3H0YmfkUmeCEqFU7rM0qtvPscjOTPbow/UQTFH3RjsT9zp
+	 Vcn287CjQbUSHqpSg3KMwbhQ=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E11340E0218;
+	Wed, 26 Jun 2024 11:57:31 +0000 (UTC)
+Date: Wed, 26 Jun 2024 13:57:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Avadhut Naik <avadhut.naik@amd.com>
+Cc: x86@kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tony.luck@intel.com,
+	rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	rostedt@goodmis.org, lenb@kernel.org, mchehab@kernel.org,
+	james.morse@arm.com, airlied@gmail.com, yazen.ghannam@amd.com,
+	john.allen@amd.com, avadnaik@amd.com
+Subject: Re: [PATCH v2 3/4] x86/mce/apei: Handle variable register array size
+Message-ID: <20240626115641.GPZnwB-QEGYCoI_Fv3@fat_crate.local>
+References: <20240625195624.2565741-1-avadhut.naik@amd.com>
+ <20240625195624.2565741-4-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240625002144.3485799-7-andrii@kernel.org>
+In-Reply-To: <20240625195624.2565741-4-avadhut.naik@amd.com>
 
-On Mon, Jun 24, 2024 at 05:21:38PM -0700, Andrii Nakryiko wrote:
-
-SNIP
-
-> +	for (i = 0; i < cnt; i++) {
-> +		uc = get_uprobe_consumer(i, ctx);
-> +
-> +		/* Each consumer must have at least one set consumer */
-> +		if (!uc || (!uc->handler && !uc->ret_handler))
-> +			return -EINVAL;
-> +		/* Racy, just to catch the obvious mistakes */
-> +		if (uc->offset > i_size_read(inode))
-> +			return -EINVAL;
-> +		if (uc->uprobe)
-> +			return -EINVAL;
-> +		/*
-> +		 * This ensures that copy_from_page(), copy_to_page() and
-> +		 * __update_ref_ctr() can't cross page boundary.
-> +		 */
-> +		if (!IS_ALIGNED(uc->offset, UPROBE_SWBP_INSN_SIZE))
-> +			return -EINVAL;
-> +		if (!IS_ALIGNED(uc->ref_ctr_offset, sizeof(short)))
-> +			return -EINVAL;
-> +	}
->  
-> -	down_write(&uprobe->register_rwsem);
-> -	consumer_add(uprobe, uc);
-> -	ret = register_for_each_vma(uprobe, uc);
-> -	if (ret)
-> -		__uprobe_unregister(uprobe, uc);
-> -	up_write(&uprobe->register_rwsem);
-> +	for (i = 0; i < cnt; i++) {
-> +		uc = get_uprobe_consumer(i, ctx);
->  
-> -	if (ret)
-> -		put_uprobe(uprobe);
-> +		uprobe = alloc_uprobe(inode, uc->offset, uc->ref_ctr_offset);
-> +		if (IS_ERR(uprobe)) {
-> +			ret = PTR_ERR(uprobe);
-> +			goto cleanup_uprobes;
-> +		}
-> +
-> +		uc->uprobe = uprobe;
-> +	}
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		uc = get_uprobe_consumer(i, ctx);
-> +		uprobe = uc->uprobe;
-> +
-> +		down_write(&uprobe->register_rwsem);
-> +		consumer_add(uprobe, uc);
-> +		ret = register_for_each_vma(uprobe, uc);
-> +		if (ret)
-> +			__uprobe_unregister(uprobe, uc);
-> +		up_write(&uprobe->register_rwsem);
-> +
-> +		if (ret) {
-> +			put_uprobe(uprobe);
-> +			goto cleanup_unreg;
-> +		}
-> +	}
-> +
-> +	return 0;
->  
-> +cleanup_unreg:
-> +	/* unregister all uprobes we managed to register until failure */
-> +	for (i--; i >= 0; i--) {
-> +		uc = get_uprobe_consumer(i, ctx);
-> +
-> +		down_write(&uprobe->register_rwsem);
-> +		__uprobe_unregister(uc->uprobe, uc);
-> +		up_write(&uprobe->register_rwsem);
-> +	}
-> +cleanup_uprobes:
-
-when we jump here from 'goto cleanup_uprobes' not all of the
-consumers might have uc->uprobe set up
-
-perhaps we can set cnt = i - 1 before the goto, or just check uc->uprobe below
-
-
-> +	/* put all the successfully allocated/reused uprobes */
-> +	for (i = cnt - 1; i >= 0; i--) {
-
-curious, any reason why we go from the top here?
-
-thanks,
-jirka
-
-> +		uc = get_uprobe_consumer(i, ctx);
-> +
-> +		put_uprobe(uc->uprobe);
-> +		uc->uprobe = NULL;
-> +	}
->  	return ret;
->  }
->  
->  int uprobe_register(struct inode *inode, struct uprobe_consumer *uc)
->  {
-> -	return __uprobe_register(inode, uc->offset, uc->ref_ctr_offset, uc);
-> +	return uprobe_register_batch(inode, 1, uprobe_consumer_identity, uc);
->  }
->  EXPORT_SYMBOL_GPL(uprobe_register);
->  
-> -- 
-> 2.43.0
+On Tue, Jun 25, 2024 at 02:56:23PM -0500, Avadhut Naik wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
 > 
+> ACPI Boot Error Record Table (BERT) is being used by the kernel to
+> report errors that occurred in a previous boot. On some modern AMD
+> systems, these very errors within the BERT are reported through the
+> x86 Common Platform Error Record (CPER) format which consists of one
+> or more Processor Context Information Structures. These context
+> structures provide a starting address and represent an x86 MSR range
+> in which the data constitutes a contiguous set of MSRs starting from,
+> and including the starting address.
+> 
+> It's common, for AMD systems that implement this behavior, that the
+> MSR range represents the MCAX register space used for the Scalable MCA
+> feature. The apei_smca_report_x86_error() function decodes and passes
+> this information through the MCE notifier chain. However, this function
+> assumes a fixed register size based on the original HW/FW implementation.
+> 
+> This assumption breaks with the addition of two new MCAX registers viz.
+> MCA_SYND1 and MCA_SYND2. These registers are added at the end of the
+> MCAX register space, so they won't be included when decoding the CPER
+> data.
+> 
+> Rework apei_smca_report_x86_error() to support a variable register array
+> size. This covers any case where the MSR context information starts at
+> the MCAX address for MCA_STATUS and ends at any other register within
+> the MCAX register space.
+> 
+> Add code comments indicating the MCAX register at each offset.
+> 
+> [Yazen: Add Avadhut as co-developer for wrapper changes.]
+> 
+> Co-developed-by: Avadhut Naik <avadhut.naik@amd.com>
+> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+
+This needs Avadhut's SOB after Yazen's.
+
+Touchups ontop:
+
+diff --git a/arch/x86/kernel/cpu/mce/apei.c b/arch/x86/kernel/cpu/mce/apei.c
+index 7a15f0ca1bd1..6bbeb29125a9 100644
+--- a/arch/x86/kernel/cpu/mce/apei.c
++++ b/arch/x86/kernel/cpu/mce/apei.c
+@@ -69,7 +69,7 @@ EXPORT_SYMBOL_GPL(apei_mce_report_mem_error);
+ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ {
+ 	const u64 *i_mce = ((const u64 *) (ctx_info + 1));
+-	unsigned int cpu, num_registers;
++	unsigned int cpu, num_regs;
+ 	struct mce_hw_err err;
+ 	struct mce *m = &err.m;
+ 
+@@ -93,10 +93,10 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ 	/*
+ 	 * The number of registers in the register array is determined by
+ 	 * Register Array Size/8 as defined in UEFI spec v2.8, sec N.2.4.2.2.
+-	 * Ensure that the array size includes at least 1 register.
++	 * Sanity-check registers array size.
+ 	 */
+-	num_registers = ctx_info->reg_arr_size >> 3;
+-	if (!num_registers)
++	num_regs = ctx_info->reg_arr_size >> 3;
++	if (!num_regs)
+ 		return -EINVAL;
+ 
+ 	mce_setup(m);
+@@ -118,13 +118,12 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ 	/*
+ 	 * The SMCA register layout is fixed and includes 16 registers.
+ 	 * The end of the array may be variable, but the beginning is known.
+-	 * Switch on the number of registers. Cap the number of registers to
+-	 * expected max (15).
++	 * Cap the number of registers to expected max (15).
+ 	 */
+-	if (num_registers > 15)
+-		num_registers = 15;
++	if (num_regs > 15)
++		num_regs = 15;
+ 
+-	switch (num_registers) {
++	switch (num_regs) {
+ 	/* MCA_SYND2 */
+ 	case 15:
+ 		err.vi.amd.synd2 = *(i_mce + 14);
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
