@@ -1,156 +1,182 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E02817DE02
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Jun 2024 11:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A8479CE;
+	Wed, 26 Jun 2024 11:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719400478; cv=none; b=FyXcZZhAIta8sJ40x/Gp15Sq0Gfl27QtFab00Xa7Uu16Ce+699A9aLoJ8W/Ukuo9ymQowqb8CqbUFDyX/1ecXEUlOOnMORbBnwMBa23A+CJYGaycvaX9NZNdjXqU438sENk+4UU1Z1CwmbrxkXvdKIq6PjPFP/y81/jhNHW8FMM=
+	t=1719401228; cv=none; b=AZLREdc0Zijc8R3pB2uinUOdVrQkk+y/3hLsR6ueckEiC+0IP/sCTKUF7UF9S1xwV6CvsE3hzUe+XBH8Szje4v2s8wbnwiPi71ygtvcELS6ghiVrgwoE0UOwF+Gs1BAR0Mf6qc9cgOXm1onnZDR9EoES39+cJy9tfQzN0wuyYkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719400478; c=relaxed/simple;
-	bh=QxJ6Ryg0MTGf1ol2NkihM25bbyjZ46x5noyiSJpXA5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dEjpldHsxa3YV/kDQ1S9rE6qa5qy/vcXxUy2mn7QUxbKdmRNBAFotb9kZWKs0/E5Kx/gQ1JKytgWYhRsEGu0sXfCumGNbh+q6+kGngmbKI3py+27Bc9Zr5jpbao/iZy3RE9NiWu9irSiwphpmQ6XzihYj0X2sjq8RJPAyk8xncQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=h9AVUdF8; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1719401228; c=relaxed/simple;
+	bh=KwdgGKKP+0hBaa8xY11hyl9LdTWxcBsHIXLIb1rjsoI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tm5/WMjXA+B8YbOo5YuRRAq78vtBjjIIhTPGpH/UEwXmIm4w2vRn7S6TDgVfuopP0CBMDaXfq/mEeGHCoUDgnmbEUIKXcP+bWtUFWD/FpdCGj0eXu++BGmnQNXu9pa1smzJmHYBkOROSevYDgpqrgnClpCAaA0kfhqWP8IZLt0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ay8bDe+c; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="h9AVUdF8"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57d4ee2aaabso114654a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Jun 2024 04:14:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ay8bDe+c"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a72420e84feso546659166b.0;
+        Wed, 26 Jun 2024 04:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1719400474; x=1720005274; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EtgNgXw4xx+u3otM9wLzx6tVvs8OZ+sqt5uPSGOj0/8=;
-        b=h9AVUdF86aQFnEBTDVJTpNaUDe6H52Xsi9ulCPMSQ15LhujD6yb5M/hlENLB/cb4aW
-         gZ1gCDP1MxZJWA+j/Q0Uv3CCL+guwnAv4v9l4RE3a8Wjfen4xDAqeO0m8I3tEdKfryQy
-         l/pKWL5IHUKu0N/OMnnaM/iwp/Td9ZTTyt6eKtzUAdX8b+69YiMNwSFtjES5YopOr75q
-         CrRK6Q0imqsrBaFJEJVNPTDdIGYSLkBxDCmMn6rIzltxTxwugjd1x37qjP1aYeRJ0Xs6
-         Lzn6y1DE98I06KKNcim15PsRjsU5dTcpuFpGCEl3a4vwFIr+pcW8dVRYrM19zOO5eemK
-         CzZw==
+        d=gmail.com; s=20230601; t=1719401225; x=1720006025; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=32147Wd81QPPxA7RUo5Ydca3GRbb3yWdnXAnVTXWZxk=;
+        b=ay8bDe+cTWvTh9b0uGvEaYaZ1RyhwRdYepjZ9PZ/2JrKAop+JZaMgygUmI5tDxJN/3
+         2mhm9hzxh5CltnZA0R2TZDXmhqQ+fM5G1oPvkOd+ugrzUBD2GPM3IvCUsPnTtA1wSIyg
+         FhMM2wP3L6ksXtNhWqwlInaTtc+YD4FhS03G1o9qOdL6NG2ncN9sOeoftcJhoghyri8D
+         WHCMCQd9kgne+uGUzbVmIdDb6szUzuCAv9L+rSfUP7lzS+ny7zruyAHn9Ih/Q9D8uFes
+         z3UEKf3RwrQHd6OhV/MWLQxJZRvVjtkOwigTlZZEd3+bWqtEMNeTUDM+CiprFklvDAcC
+         qEHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719400474; x=1720005274;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EtgNgXw4xx+u3otM9wLzx6tVvs8OZ+sqt5uPSGOj0/8=;
-        b=i6I2rZ7D9/88fUa/z/9EHaEnCXnVplljpqHY4y418Dkw6WiS8a1lx63uYWmMw583En
-         N0r3wtt/nAQdIoRWXJBkmJNB1a2cNF5bjFW+VcxGeS1g03PJt8NKFaJUK6NPZDDrFEXo
-         f45QU+AKeFo3Jj2bOjDl10+vPm45i2+4nzr4W4eOPYvR1OBVPRK3a1ZeQQ0u7kyuUJOs
-         TslfTwOebhJAcq1i4Uac0jTJSpx7ecL7s7gmZvd62UUZKz4sn3kGRfgD63DbMUKrDmgs
-         lISqfpe3uitIDxe/J4oQ+pkIGsKWrci/t4UhL+jGqqKJyQRHLrWKvkh0YOpYE4ZQQ0Pc
-         /JZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8HhBZcK92Pay2uOUlE5M+jeUBnohIrChHir5f1OJMLP9Jxg73VdwtphGjdgHLwEE6tN8BaIz2cfOWcK7YHUqm2mHi3OZviCOEcHxue3WZlcoD
-X-Gm-Message-State: AOJu0Yzj3tVh4Z0r6cJThfF5Mvc/vE3ny6CYotPUu2MfQADIQqz66ieQ
-	hGC9OMoxk0n9SQo+S7H3LIfG87oQ359o8vR6vYoBOvFDAflo9FrmaULJ+b3Q8J0=
-X-Google-Smtp-Source: AGHT+IGayyA9DDFhDYoFM+ga8k4lnKPETjVZJrjYalViZSne124FOI0Yd/seFB4YsVb6tDnNMrZMyg==
-X-Received: by 2002:a50:d79e:0:b0:57d:101f:ae9f with SMTP id 4fb4d7f45d1cf-57d4bdc76c9mr6673624a12.33.1719400473452;
-        Wed, 26 Jun 2024 04:14:33 -0700 (PDT)
-Received: from [192.168.51.243] ([78.128.78.220])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d303d7b26sm7088836a12.3.2024.06.26.04.14.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 04:14:33 -0700 (PDT)
-Message-ID: <1d0483b9-13bc-426e-a57a-69044d5098c1@blackwall.org>
-Date: Wed, 26 Jun 2024 14:14:23 +0300
+        d=1e100.net; s=20230601; t=1719401225; x=1720006025;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=32147Wd81QPPxA7RUo5Ydca3GRbb3yWdnXAnVTXWZxk=;
+        b=gITKEqCBI6zY283ae9trqTpAAnjLfzNZUEZJ4CXhz+SwYhNF21s+MPx+/5MMv+BI9f
+         a1ZQ2nZnqbcMC6/sqH787tR5pf86aIQlgVvqr82wRqL7f2C43C2L1xsKMQRunInzZJaG
+         TA/dm7tVkaRojfF921kHmn5u0tCX559FfQup8yYyS37Gj+uYAYP/5JRTbJvIx4H9lqoS
+         Aoo6ke+eqh8Ci5wU4PaEzJOeTlNQiorQDlQlrRv/RVxYuhdc6sQysyGscTwK8QZs/KqU
+         2GgH8zYy++ccwvnJGLURh0j91uCH9Z5BxNr8mySs+sh8FbNmU8rf0vJo6NVAhIZDzJ35
+         tOVA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+a4/XLBK472fUw35TNQZVqWTV2ARlkIWYqdi+TX1F2S4srkpZ70LBCEWKWv0aWiC+i3jxG0QGhQtOfSlv/2fl0jiA
+X-Gm-Message-State: AOJu0YxXdGfrt7XtnHBtNzS65YJT27MXBAN7qV0YUc1HtrC/LZLdnYkJ
+	547YqhdORkIR35OvTUdjaK7fFSdDU89n2+EmZSyxNlLNBOmMpnwR
+X-Google-Smtp-Source: AGHT+IHwlIkPhILSjJKKwguFh9k1/TDmOniodDZirdZYVLLT/e/KxnDBdFe8XzuQqqxeoUeiX68QHQ==
+X-Received: by 2002:a17:906:5849:b0:a6f:4d6b:c77a with SMTP id a640c23a62f3a-a7245b8515dmr876605566b.13.1719401225106;
+        Wed, 26 Jun 2024 04:27:05 -0700 (PDT)
+Received: from krava (net-93-147-243-244.cust.vodafonedsl.it. [93.147.243.244])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fe077369dsm495740566b.68.2024.06.26.04.27.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jun 2024 04:27:04 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 26 Jun 2024 13:27:01 +0200
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	mingo@redhat.com, bpf@vger.kernel.org, paulmck@kernel.org,
+	clm@meta.com
+Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister APIs
+Message-ID: <Znv7BZGwdEunAETt@krava>
+References: <20240625002144.3485799-1-andrii@kernel.org>
+ <20240625002144.3485799-7-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v14 11/13] net: add SO_DEVMEM_DONTNEED setsockopt
- to release RX frags
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20240625195407.1922912-1-almasrymina@google.com>
- <20240625195407.1922912-12-almasrymina@google.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20240625195407.1922912-12-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625002144.3485799-7-andrii@kernel.org>
 
-On 25/06/2024 22:53, Mina Almasry wrote:
-> Add an interface for the user to notify the kernel that it is done
-> reading the devmem dmabuf frags returned as cmsg. The kernel will
-> drop the reference on the frags to make them available for reuse.
-> 
-> Signed-off-by: Willem de Bruijn <willemb@google.com>
-> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> ---
-> 
-> v10:
-> - Fix leak of tokens (Nikolay).
-> 
-> v7:
-> - Updated SO_DEVMEM_* uapi to use the next available entry (Arnd).
-> 
-> v6:
-> - Squash in locking optimizations from edumazet@google.com. With his
->    changes we lock the xarray once per sock_devmem_dontneed operation
->    rather than once per frag.
-> 
-> Changes in v1:
-> - devmemtoken -> dmabuf_token (David).
-> - Use napi_pp_put_page() for refcounting (Yunsheng).
-> - Fix build error with missing socket options on other asms.
-> 
-> ---
->   arch/alpha/include/uapi/asm/socket.h  |  1 +
->   arch/mips/include/uapi/asm/socket.h   |  1 +
->   arch/parisc/include/uapi/asm/socket.h |  1 +
->   arch/sparc/include/uapi/asm/socket.h  |  1 +
->   include/uapi/asm-generic/socket.h     |  1 +
->   include/uapi/linux/uio.h              |  4 ++
->   net/core/sock.c                       | 61 +++++++++++++++++++++++++++
->   7 files changed, 70 insertions(+)
-> 
+On Mon, Jun 24, 2024 at 05:21:38PM -0700, Andrii Nakryiko wrote:
 
-FWIW,
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+SNIP
+
+> +	for (i = 0; i < cnt; i++) {
+> +		uc = get_uprobe_consumer(i, ctx);
+> +
+> +		/* Each consumer must have at least one set consumer */
+> +		if (!uc || (!uc->handler && !uc->ret_handler))
+> +			return -EINVAL;
+> +		/* Racy, just to catch the obvious mistakes */
+> +		if (uc->offset > i_size_read(inode))
+> +			return -EINVAL;
+> +		if (uc->uprobe)
+> +			return -EINVAL;
+> +		/*
+> +		 * This ensures that copy_from_page(), copy_to_page() and
+> +		 * __update_ref_ctr() can't cross page boundary.
+> +		 */
+> +		if (!IS_ALIGNED(uc->offset, UPROBE_SWBP_INSN_SIZE))
+> +			return -EINVAL;
+> +		if (!IS_ALIGNED(uc->ref_ctr_offset, sizeof(short)))
+> +			return -EINVAL;
+> +	}
+>  
+> -	down_write(&uprobe->register_rwsem);
+> -	consumer_add(uprobe, uc);
+> -	ret = register_for_each_vma(uprobe, uc);
+> -	if (ret)
+> -		__uprobe_unregister(uprobe, uc);
+> -	up_write(&uprobe->register_rwsem);
+> +	for (i = 0; i < cnt; i++) {
+> +		uc = get_uprobe_consumer(i, ctx);
+>  
+> -	if (ret)
+> -		put_uprobe(uprobe);
+> +		uprobe = alloc_uprobe(inode, uc->offset, uc->ref_ctr_offset);
+> +		if (IS_ERR(uprobe)) {
+> +			ret = PTR_ERR(uprobe);
+> +			goto cleanup_uprobes;
+> +		}
+> +
+> +		uc->uprobe = uprobe;
+> +	}
+> +
+> +	for (i = 0; i < cnt; i++) {
+> +		uc = get_uprobe_consumer(i, ctx);
+> +		uprobe = uc->uprobe;
+> +
+> +		down_write(&uprobe->register_rwsem);
+> +		consumer_add(uprobe, uc);
+> +		ret = register_for_each_vma(uprobe, uc);
+> +		if (ret)
+> +			__uprobe_unregister(uprobe, uc);
+> +		up_write(&uprobe->register_rwsem);
+> +
+> +		if (ret) {
+> +			put_uprobe(uprobe);
+> +			goto cleanup_unreg;
+> +		}
+> +	}
+> +
+> +	return 0;
+>  
+> +cleanup_unreg:
+> +	/* unregister all uprobes we managed to register until failure */
+> +	for (i--; i >= 0; i--) {
+> +		uc = get_uprobe_consumer(i, ctx);
+> +
+> +		down_write(&uprobe->register_rwsem);
+> +		__uprobe_unregister(uc->uprobe, uc);
+> +		up_write(&uprobe->register_rwsem);
+> +	}
+> +cleanup_uprobes:
+
+when we jump here from 'goto cleanup_uprobes' not all of the
+consumers might have uc->uprobe set up
+
+perhaps we can set cnt = i - 1 before the goto, or just check uc->uprobe below
 
 
+> +	/* put all the successfully allocated/reused uprobes */
+> +	for (i = cnt - 1; i >= 0; i--) {
+
+curious, any reason why we go from the top here?
+
+thanks,
+jirka
+
+> +		uc = get_uprobe_consumer(i, ctx);
+> +
+> +		put_uprobe(uc->uprobe);
+> +		uc->uprobe = NULL;
+> +	}
+>  	return ret;
+>  }
+>  
+>  int uprobe_register(struct inode *inode, struct uprobe_consumer *uc)
+>  {
+> -	return __uprobe_register(inode, uc->offset, uc->ref_ctr_offset, uc);
+> +	return uprobe_register_batch(inode, 1, uprobe_consumer_identity, uc);
+>  }
+>  EXPORT_SYMBOL_GPL(uprobe_register);
+>  
+> -- 
+> 2.43.0
+> 
