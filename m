@@ -1,84 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE841850B8;
-	Wed, 26 Jun 2024 13:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F60C18F2CA;
+	Wed, 26 Jun 2024 16:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719410295; cv=none; b=YnBwYUEwG5l0BGWCWjEqoMb7YmbAt2x1vHZD/EQcdBKJMGujFJ2I01AtZo6/VRUvIsjwT6N724gSjQ/tWTvJeZ2jYgkHuiNt3XTMbiPx8ci+yvjIvB4K05aViKWm2Vq5Ddwf5Jza6bCwOq8dAlr3lyEbtcRv6hyAkWLw+VqTk1I=
+	t=1719419952; cv=none; b=SVvtrmFU/AGhxNOr06bGPb3qSGar89aA5/cSEj/Dzt8l56N+bQ6kMTMYYmQe2dyCsSHp8tiUygRmedPlX0X7Ry8WMeYtYg6TXaC6oCHvaneq9Frl+9v7FrDBunK9ZFKkKKPp1KB4snVurYGV67aq1BH9akA/RRgiU91i6WaPxSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719410295; c=relaxed/simple;
-	bh=gBr8PCzn+D3ELiMEpL79fGfTNAj+Hb36Tf9km+5Pfr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sKpOofSG8kij8Z+/kYAY+QN1y2oMPqASyWltCcLoDUJxpXUGt/TAV5aHqlB9hVCdvPYbQiWSc+/aTwqx7QOmZGLVCISIwCKz7xbvhGK2Ta6OnyStHnf+pDmarFnnEyj9y6KJb+qTEfruc8g1ic8j7PRt0qxS2I81vzRTA7npFBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB36EC116B1;
-	Wed, 26 Jun 2024 13:58:13 +0000 (UTC)
-Date: Wed, 26 Jun 2024 09:58:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Takaya Saeki <takayas@chromium.org>, Matthew Wilcox
- <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Junichi Uekawa
- <uekawa@chromium.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH v2] filemap: add trace events for get_pages, map_pages,
- and fault
-Message-ID: <20240626095812.2c5ffb72@rorschach.local.home>
-In-Reply-To: <20240626213157.e2d1b916bcb28d97620043d1@kernel.org>
-References: <20240620161903.3176859-1-takayas@chromium.org>
-	<20240626213157.e2d1b916bcb28d97620043d1@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1719419952; c=relaxed/simple;
+	bh=XE6pwL6dsdiz5xjRoMJf9n0tb/ajimR+y1vYBe1dYPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kIOb+SOZPH9McxIvBq7/RzjGXrCEqjsdAZHQUPx4uxnkyNsgVFwizE6AsGe7tDiN8vXg+jlvttcs2kGsLHxVgOOimTz7RiVYUvL0m2/kAfokbHCBRyPrKa+cFrfxZcd63y/XtFrCiIZN1bDXr4z0p1b3dmqxFmXIq+K8Ao0XMUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmQdy7mt; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmQdy7mt"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-717f17d7c63so3887596a12.0;
+        Wed, 26 Jun 2024 09:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719419951; x=1720024751; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XE6pwL6dsdiz5xjRoMJf9n0tb/ajimR+y1vYBe1dYPA=;
+        b=cmQdy7mtfdlePzpqiwCXJMOS67lm+dizt5hhdjU9H0MiY+xgLVx77iKEO/XyBkQCUh
+         6YCIEVRNs2RvfreL5VkEbcoO16ra56SFGRzfJcCiG6rboWdrnpJWrK2N2LDA017bCXhE
+         +kNkIrCip83fgXXruPKIjV0oOs+MHMovrsPNwjE+5AXG9MkZrulj9wnwy4Uh31Yyg5+u
+         q+AwnHmzLP8hKnQtN8XugzNOOtVSI+1uLqR6cO/IUuXRRxAq+uE2QRRXpKDcmMcZ/ZHs
+         +BqTYG7Y19T7CxUJ3ywOwTrZun7IxsoKFaP67SVaBwTOKfHxb8Q9wThMc7xct4PQ2SuI
+         AxgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719419951; x=1720024751;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XE6pwL6dsdiz5xjRoMJf9n0tb/ajimR+y1vYBe1dYPA=;
+        b=naipsFSCL5Jyla73lY/d3uwlaivKDm2TY5MNAGCTmVm+yFAytXExbu+01RGEmBsfJ6
+         sa/Uaiexs2qocuFgmsgR7kooLYTggSea9rd0XOBNJEFI/Uxano1b2vDQqQqFEE5juMs2
+         FCvNdTm7+jvriRo70+ACVtjKO2KB5ftr+ulnkNAg6g9xNcpaz6ahM8m1DRhcM2kLgSck
+         FIvGP7OA8tiNl1A/1NLPxlOyDbPPijUn1u9ku745k+/h/2T1iZE8gSlFMZCPrq2lioUh
+         CisYigo7qCd/KfqBcBt2Ya0asTMBdUuJvd8hex65zLgQxzk7Q70lzSKEABP3432kl7lB
+         ybYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcytEI4mL7mWMquDi8dpKdzN0qzE/cK1rCjwJ2XxC+zlUM9p31yrnJO15BqKaB4XGZ8VUovHSMKmzKdDY8+oLNZHCGbLu4VSV2fMFXMtKng4TKcBfrJIaEKnZeWpj7BW4sSm6/F5Ws
+X-Gm-Message-State: AOJu0Yw8Wyuz0gq9/+jST3iH8ppbbL7o74Lqn1gNDTU+Qhj7SYfDkUl+
+	8gArl7O/kqHHzdB2Vrh/SQX1QiOP4gW7WQIv762bwdKkVb6LfniH/85CXiKO+SwJohLREYLnX4n
+	kRODEpuT6EFAnt74pSiPMCqMD6I0=
+X-Google-Smtp-Source: AGHT+IHaSRj6jlmwRm6hcSn9v0kziMhficzDoNx7tnNpHiVQ8S/DjM91iTfoPok8IMU6AEBEOtjiW4OqSeAThRGlvYQ=
+X-Received: by 2002:a17:90a:d0c4:b0:2c8:858:812a with SMTP id
+ 98e67ed59e1d1-2c86146d1f5mr9497497a91.38.1719419950716; Wed, 26 Jun 2024
+ 09:39:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-3-andrii@kernel.org>
+ <20240625102925.665f2fa3b39dc7602b1321d8@kernel.org> <20240625144952.GA21558@redhat.com>
+ <CAEf4BzZqGNVqAmk_wrGP+MmxQidEr4=FdYiYpodpRd1TAib81A@mail.gmail.com> <20240625190748.GC14254@redhat.com>
+In-Reply-To: <20240625190748.GC14254@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 26 Jun 2024 09:38:58 -0700
+Message-ID: <CAEf4BzbktxogF_a3pEewkXcS9WA4S9FQ3D_St_apvX=DLrcZmQ@mail.gmail.com>
+Subject: Re: [PATCH 02/12] uprobes: grab write mmap lock in unapply_uprobe()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, peterz@infradead.org, 
+	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	clm@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 26 Jun 2024 21:31:57 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, Jun 25, 2024 at 12:09=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wr=
+ote:
+>
+> On 06/25, Andrii Nakryiko wrote:
+> >
+> > On Tue, Jun 25, 2024 at 7:51=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > >
+> > > Why?
+> > >
+> > > So far I don't understand this change. Quite possibly I missed someth=
+ing,
+> > > but in this case the changelog should explain the problem more clearl=
+y.
+> > >
+> >
+> > I just went off of "Called with mm->mmap_lock held for write." comment
+> > in uprobe_write_opcode(), tbh.
+>
+> Ah, indeed... and git blame makes me sad ;)
+>
+> I _think_ that 29dedee0e693a updated this comment without any thinking,
+> but today I can't recall. In any case, today this nothing to do with
+> mem_cgroup_charge(). Not sure __replace_page() is correct (in this respec=
+t)
+> when it returns -EAGAIN but this is another story.
+>
+> > If we don't actually need writer
+> > mmap_lock, we should probably update at least that comment.
+>
+> Agreed.
 
-> On Thu, 20 Jun 2024 16:19:03 +0000
-> Takaya Saeki <takayas@chromium.org> wrote:
-> 
-> > To allow precise tracking of page caches accessed, add new tracepoints
-> > that trigger when a process actually accesses them.
-> > 
-> > The ureadahead program used by ChromeOS traces the disk access of
-> > programs as they start up at boot up. It uses mincore(2) or the
-> > 'mm_filemap_add_to_page_cache' trace event to accomplish this. It stores
-> > this information in a "pack" file and on subsequent boots, it will read
-> > the pack file and call readahead(2) on the information so that disk
-> > storage can be loaded into RAM before the applications actually need it.
-> > 
-> > A problem we see is that due to the kernel's readahead algorithm that
-> > can aggressively pull in more data than needed (to try and accomplish
-> > the same goal) and this data is also recorded. The end result is that
-> > the pack file contains a lot of pages on disk that are never actually
-> > used. Calling readahead(2) on these unused pages can slow down the
-> > system boot up times.
-> > 
-> > To solve this, add 3 new trace events, get_pages, map_pages, and fault.
-> > These will be used to trace the pages are not only pulled in from disk,
-> > but are actually used by the application. Only those pages will be
-> > stored in the pack file, and this helps out the performance of boot up.
-> > 
-> > With the combination of these 3 new trace events and
-> > mm_filemap_add_to_page_cache, we observed a reduction in the pack file
-> > by 7.3% - 20% on ChromeOS varying by device.
-> >   
-> 
-> This looks good to me from the trace-event point of view.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Ok, I'll drop this change and will just update the comment.
 
-I added my reviewed-by on the last patch, you could have added it on
-this one as it didn't change as much. But anyway, here it is again:
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
+>
+> > There is a
+> > lot going on in uprobe_write_opcode(), and I don't understand all the
+> > requirements there.
+>
+> Heh. Neither me today ;)
+>
+> Oleg.
+>
