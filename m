@@ -1,92 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807631E87C;
-	Wed, 26 Jun 2024 12:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA0C18412F;
+	Wed, 26 Jun 2024 13:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719406765; cv=none; b=ZfKbXqfByR1BPLckqzGqcjoQfQz88PJF490P0iEtClTWFurpyxuIHwxj1YxsjczV2m6Uqdu2sTAwgws6+sS2JJkEH95ZUnvUkXfqVdFKg60XWENNdAOhZcwdg+/VFr9EGamDPsMfWNE3pdsbMW/ZRoxooz34L46WJB41KkBT7Y8=
+	t=1719409346; cv=none; b=CbtbzpGcMB6j/cNSujC8Sz99Vpzociu4rJPW9H8Ssj4XqOKMamfgP6coOUwOk1t7RA+Zkctlh5RUakPZbsrNYGqGRkYHdhnkYLzgNe2unSOJ5Lhzm4CBDHIGOVubrZl6jKj6rz5bk8mUeUcZuhFdjLzLdr8wx5Vs9aunEv7hp04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719406765; c=relaxed/simple;
-	bh=9TrlOyltmZ/QX4Ys9Bg7ZXIQUZ0PLaKMhQFyJgcNcTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxlpvVeiDIYVnQEAvAFhb3v4BMC3lQmpOBa4kbGvbtPIy4bhz5KnJf3aoY4cRZp6a2qMIh6L7Sk0z5mDoAoaTE8ZicY0pM5SKOXQh44i2lwXbb58lEWSN6nTk2zzItnRaD4mRCttGtpjDNEyo/Wyx62qex4UjV2btEGiHOAX0Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vcn3/n4H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719409346; c=relaxed/simple;
+	bh=D6DrSixvJMhLJsy7OBcG0oar56V4B7uTvyItqNhYmNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LqPPd2vInyzGGgW516zTd9WefAKZlQKBhxA9BlLHqoqk/kuUGHoNmEvbYzb05jLqeNHFf7wkYy6jPApvpY5fFywkVOoxKrwfoyK887pP5xdGFyEWihIqBjdN4jSzzajNTB8I+eoPAzCCpSIKmRRB8IqNZPqtfuQIT0of98VDfRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqyNICxT; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vcn3/n4H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB7DC2BD10;
-	Wed, 26 Jun 2024 12:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719406765;
-	bh=9TrlOyltmZ/QX4Ys9Bg7ZXIQUZ0PLaKMhQFyJgcNcTo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vcn3/n4HyNJrzHq67QHZQ57mfSDQ9/5xlPXsLqLL/JbJEkVTOMWM6FMCE/9swgyaw
-	 t26oBubZBy2xvQ2x49nwiOJXd3h4B/aSu929r8w2ryOz5ptVk7k1yq7SxOr3TGktuA
-	 c1GKOQpcPZ69tq4muyjIa0PqKLxqxVZf9S0hfsTVBaqgyNiU3AR9O1FCY7vPrtqiBx
-	 LzlyLe5KGFZWRsYoZOY4lxbt3q3VvneIx20mM3nK026K/S53QSQoX0X7CStbs3LjvO
-	 OFoMPyFmgEuwsM3NHJXw2wi0I0Nv19+1kQnazttixLmJEaCTiJiGXTDQO+zp1sQjSr
-	 QoxA0GHHNdz9w==
-Date: Wed, 26 Jun 2024 13:59:20 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Puranjay Mohan <puranjay12@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after
- patching to avoid illegal insns
-Message-ID: <20240626-astrology-fructose-275fb799ebce@spud>
-References: <20240624082141.153871-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqyNICxT"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57d1679ee83so331754a12.2;
+        Wed, 26 Jun 2024 06:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719409343; x=1720014143; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+FdmqDIycq2mg5V0lsvCxzsdDO8aUqmZjoj0FE/lExQ=;
+        b=QqyNICxTpcHzL4hO/3SyrJqQqJ37KVaM2hX5WUpc+w9K2rPcBp3As4qzlbg91eOfFB
+         an+hjPA6I/2YL9d53K6FHqp312LlKo+w8IxR1kpkrDoF/4DpZbtZR6SkMarCs+ysbhQo
+         Pt7WGrEh848ZXvR1TQhkreHNRJ/4OB6xkbK0sfBtjgn79vpblF2P3yQr0IIBdVP8CspZ
+         zRV5REH/bfq4VzBWB93AVgnzN1Kcpr8wzAtdyEdz7LRg1XD17m0dQMtOTDT1DFc1eFxI
+         Q1bZkV4DDAD23+vux+VZ4CPMGVbBe5kZpmXcIcmMBFt91j23QHDazjyG78S0e2ijbpCM
+         YcHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719409343; x=1720014143;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+FdmqDIycq2mg5V0lsvCxzsdDO8aUqmZjoj0FE/lExQ=;
+        b=DKkFEiRFA8rl3tQ8aDR8eRivEGU6v7djP2F9mVHytWALLTOfeMIADxjpzBuCIPbSkb
+         N0qm0FS2E5h9lQ5HxB7/MdCPbhDtcd5bEoU5EnDRBswcojgDY6eQsUXZtQuyBQcTE1xa
+         peZf7l7jD/GkV74nHD4AWwNYLrp3yrp9mm5Z97A9C8uzeSQ0Mh82I0fW9dsnfTfeVimr
+         oRDvjqwgoHlKL16XeN3cYrFbg71AnunsyvSko8Sdw3/zc5Y6+X6asUYlasa0kBOXLmMJ
+         LFlsc8Px+qEDQbzZdyr9b5qEIv7PoE1BeVxUPsGWkKHtf5RDb2MlzoYfMrnb92nq2nA9
+         h3jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUstwAnh26W/mxm3bNzYY++a6OaFWhWS/Sx7qORkEJxOGlbUEnTnniMIABFx16/aj4qRzlq6l2tU2rzNdWdDfwH/90OBO9pyfxpV1VS2x6zeaBe+U3XeXvdTI+6VACHNGjnQKwZbLRqshIF9BHXbuQutjfWvz4ScJ0UrmNxsLGbQm2nSoU11zgyeDtgiaZzqeAo5NFtNN8i1Ks2zBgOM/VAbX/ovIuGfP6CR2G83Xs4g/3Esalo8VG9snyXGBj6uBFRKibuBnN3CDPmaRmzdyLRimYMl3GErmeghLK5UI4SDiUVIPtYTDu1TnBLBhds+z4Xkb5adUTr20P9JXl8XJbNt9d9lhw2Zo6zyJep6d9Vpf1zwvKeJu4fURf+/Cv8EmNFAWypgX9pJcIEUQLmhNMOedJXRNt3pwPj/Cd08ecWEBy6KPM1EZJQZEPQbrDb7Oy4kC9H364OBGDUrDChSxpR0rIYmpjE3CSLaoFqETFxmuUpuf804eZ8pjdKXr9QdSt8eRmEFg==
+X-Gm-Message-State: AOJu0Ywcsq6hPgKSVc8CWw8eIYKISqZRzRhxVBq9Fio6fzT2SNrrhdCZ
+	ZAtGe2zXnLmqArBAi6kVO9I2SPXirn7hviOnp8vyc38L2J2z8rEZ
+X-Google-Smtp-Source: AGHT+IGSGpl/VlVQhxEFYrK07OrwK0X9sCyxv8xjTYoLcqAK5RzUy2KJrXSwjqhZzrye8okazO8J4A==
+X-Received: by 2002:a17:906:c096:b0:a6f:86fd:72b8 with SMTP id a640c23a62f3a-a715f97972bmr751303866b.42.1719409343065;
+        Wed, 26 Jun 2024 06:42:23 -0700 (PDT)
+Received: from [192.168.42.3] ([163.114.131.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf48b24asm619850066b.57.2024.06.26.06.42.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 06:42:22 -0700 (PDT)
+Message-ID: <6524676c-fbc0-4ea0-b320-f605d34da007@gmail.com>
+Date: Wed, 26 Jun 2024 14:42:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n6A0djetNF9SaJ8G"
-Content-Disposition: inline
-In-Reply-To: <20240624082141.153871-1-alexghiti@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v13 10/13] tcp: RX path for devmem TCP
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
+ <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Nikolay Aleksandrov <razor@blackwall.org>, David Wei <dw@davidwei.uk>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>,
+ Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240625024721.2140656-1-almasrymina@google.com>
+ <20240625024721.2140656-11-almasrymina@google.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20240625024721.2140656-11-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/25/24 03:47, Mina Almasry wrote:
+> In tcp_recvmsg_locked(), detect if the skb being received by the user
+> is a devmem skb. In this case - if the user provided the MSG_SOCK_DEVMEM
+> flag - pass it to tcp_recvmsg_devmem() for custom handling.
+> 
+> tcp_recvmsg_devmem() copies any data in the skb header to the linear
+> buffer, and returns a cmsg to the user indicating the number of bytes
+> returned in the linear buffer.
+> 
+> tcp_recvmsg_devmem() then loops over the unaccessible devmem skb frags,
+> and returns to the user a cmsg_devmem indicating the location of the
+> data in the dmabuf device memory. cmsg_devmem contains this information:
+> 
+> 1. the offset into the dmabuf where the payload starts. 'frag_offset'.
+> 2. the size of the frag. 'frag_size'.
+> 3. an opaque token 'frag_token' to return to the kernel when the buffer
+> is to be released.
+> 
+> The pages awaiting freeing are stored in the newly added
+> sk->sk_user_frags, and each page passed to userspace is get_page()'d.
+> This reference is dropped once the userspace indicates that it is
+> done reading this page.  All pages are released when the socket is
+> destroyed.
 
---n6A0djetNF9SaJ8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
 
-On Mon, Jun 24, 2024 at 10:21:41AM +0200, Alexandre Ghiti wrote:
-> We cannot delay the icache flush after patching some functions as we may
-> have patched a function that will get called before the icache flush.
->=20
-> The only way to completely avoid such scenario is by flushing the icache
-> as soon as we patch a function. This will probably be costly as we don't
-> batch the icache maintenance anymore.
->=20
-> Fixes: 6ca445d8af0e ("riscv: Fix early ftrace nop patching")
-> Reported-by: Conor Dooley <conor.dooley@microchip.com>
-> Closes: https://lore.kernel.org/linux-riscv/20240613-lubricant-breath-061=
-192a9489a@wendy/
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-So, I can't even test this right now :/ The issue is annoying enough to
-reproduce that same config + compiler + commit isn't enough.
-
---n6A0djetNF9SaJ8G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnwQqAAKCRB4tDGHoIJi
-0iSqAP486M4V8TRvY4pTcu95fzUWRuzRV0oH+MPkmoNcTZXfzAD/XOaCqK/Aynb0
-LKzQVLCv7/qhMQgD7WB2oSCZZV1YFgA=
-=z8Xv
------END PGP SIGNATURE-----
-
---n6A0djetNF9SaJ8G--
+-- 
+Pavel Begunkov
