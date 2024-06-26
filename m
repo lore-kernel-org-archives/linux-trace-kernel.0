@@ -1,115 +1,139 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F7215F41F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Jun 2024 08:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607B2176AAB;
+	Wed, 26 Jun 2024 10:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719391718; cv=none; b=unxg/fhAOUUSGlUJ0VqHrYBavWS8wZgqpzwoCoEbkXImqM3ItXgpbKU8lhVS78uTzGAEIvMll+dw30SeWwHbL8VlacU/JUMCJaLBC8Dgg1swjEyOhwGZSz1fO5rx031zxM2x+DdUb92R0PqlqpNJPmrrwnJ0H2FJ1KuIKbH3fwY=
+	t=1719398702; cv=none; b=eSMV6Iw8t1oF5TN/PDTyqheGaC0MhTzW3nm9QchOa2/uXZg/WNOSCil/Rd8z0f3ICIhIML9DWx3BGu776HKy2kctVhj9vyUxnHsXBD9e0zMwkTZa0G81lcE0x5MEs+ZejV8sV2gGlBtq+5thFBH2WxP7Tj2owe0bk/Ux2PJ+E7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719391718; c=relaxed/simple;
-	bh=UVIPWp5QKq/h9uqekbClLnSeZK1DVdDfWrr2Y5V4nMM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rs2a+YpkPfLKuLdU5Vatp81AurcCGH0UEgE7BiHTnwBx4s+duzHw5r/R6Haqmf1b2Z/idb61duuEosfGxNZ9CXOTviLFSNOjcublbgFJx0TN29AbCxecNVKco+UkJbr4HPIPJXG5hvZTpdN/3jv9Wn6ov9I9sN7+hH3epUL5LWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T7X9mjpD; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719398702; c=relaxed/simple;
+	bh=N5HUNnSxF52LqTiTZ4MD/cgKDig5Sbo0lMVYyZgGD88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ihsH59JUNRvr+UT65RmL5+qC3iBJJ0dfLO/63b1nKVaPhx+dZE1CQ3Z2/zc7PNaEJ6w4xiw6iLYBdSoR0wIqg7NaLIlm3h1+QhoN3wRUIdbfMC6s+XnXIxeZMFJMbN4S+msj9JqqIV4H+/pTFZxZKINqgdOSMYRIiujhJbI5PxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PdlZ4x6+; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T7X9mjpD"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3629c517da9so6253904f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Jun 2024 01:48:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719391715; x=1719996515; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EuOhVzYq3wiE4Y7A5GoZE+4/Q5xc4iE6WYutIGSgv7o=;
-        b=T7X9mjpDJ+XFS02wlYb3FUYF0nVFUyKCTCuR4GOLYkE8un7QvRMZ3Zj1DV5Xv3X352
-         X9Cqisne9+4oSKFdiF1pJP2DLKCF/j51xF63EkuSeYWxLo/iZefo3uDJ0hWv4ETp4QKE
-         /CWJ1gO6WPHSWzYcOqO7PWC7qv+u71fofHs/C5sdQBK90mdPNAWSCYfZ9jLxII2ppB3x
-         dKi/CzM8Ib1+8UGSQjy6qYWLYw4XaYrWO6dNzWdjRHyBJSFYN3LeQIkl+zMZ3OCyPeaS
-         bbZqLbs0oEMVDA+G/RWIfpwLJbpW5x+6/9O5eyR3bbDc8Z43fkXCa/bnWYwUwS0nuqvQ
-         KznQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719391715; x=1719996515;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EuOhVzYq3wiE4Y7A5GoZE+4/Q5xc4iE6WYutIGSgv7o=;
-        b=TGw3ZyRcd+ouoaChFGInQ3ZUFySUm6RPOfXcZBkrbyGuiWRuoHXY3hRURdZxhJOP0M
-         QOJy1khIHjpb2S2Px3xWv/yY5yNkoZI14KbxeWfx6MF1N2nWdiiQ04R4QVLq8zra6RMA
-         G4RA2IywbpNh1BdOvbQNyjWup8LrIumvQdBA7IYyqXyYipYJDLb9lex6QHwMeG4dWLcE
-         Jm6N87t2CJLDh9yCs8lcln6oxxLAbM4+hhDtiQYCldvZFDfgydq/clvLeKMUOWm0XUuB
-         4by23B28HLHCycei0SunRh3yHI4b2zEX+AIQbWoochrGbvPSk+MXS886mtF3VrQE6IK/
-         UIQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmus3SiszQRgJobkAgDHLIza9bvC5ygU59NiyLU5di5p5zbXmPO91dRdeQlzXykEcu6KHVxb0cJCmymJVEvjrbRwv/AdMuJr5yzQBjVGunGJEt
-X-Gm-Message-State: AOJu0YwZyz8O2+InHKnGeHPqpyc/LeisLWkfsfPG6Ba2rcLsvScimXy1
-	t9K0mtxtSBW0EloAZGpQ4K45hwx6olI7hf9g1JEhkEcuN01dFVFgGfoq+W+gPmwt/k9fkE3hoiM
-	AkvfvQvDhSQ7Jh8cTKbgK02ohpPsmluMqgpbB
-X-Google-Smtp-Source: AGHT+IG6k43sHnAMkEDWrxc31NUjBNVuJF/BEysBO6SpoWaLGBJdAcL78H62ahXzL4uftuSYq1Hf8sENRymPPH9UvJo=
-X-Received: by 2002:a05:6000:2ab:b0:366:eb00:9ddf with SMTP id
- ffacd0b85a97d-366eb009e92mr9799022f8f.3.1719391715071; Wed, 26 Jun 2024
- 01:48:35 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PdlZ4x6+"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 959C240E021E;
+	Wed, 26 Jun 2024 10:44:56 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id WLfKgW4WQVYn; Wed, 26 Jun 2024 10:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719398691; bh=Y2MsjGLfE7g1SN+DJyJWLxEAOzeLgB4denA5+ilckE4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PdlZ4x6+xF4IrjgXiJynmbDOih/0s7toOMtXLZexV6s3QxDY98m4u1/H2vKjvjtEv
+	 tI5sWZO46M14fnZ+XHwS/52/LRKqnXyHF6aRFKoD/5ruHdG+NykZ9oK3yKxpI8MnQ3
+	 2YtACds0AjJ5WyAIQZ06a4/vQFEombCbYoipqZE6b9dWlzS2v/KXBD67MZpBgp/hLS
+	 fRbLZxqAr+KZMgfhVRMfuKl3eInAaYnimzGafclexXnBtzX/e93FXuXFK8jq2Txypd
+	 NYq78OrHTmLia/vXFeC01Nw7FoHImiSkFqIrbAviM/n//OOzZB2uAhIhI/3lbACkm3
+	 2RRl1AkELgqoZDTlj4sU/xnYD6Lxv/88Iuz6eeI/NaZfbAfxer4fEEexmPPA37KUyx
+	 r0xbm2Ffj4ltVMcE282lMtQB2x1YirE7DJzqCasfumzNNgxL51+hOgPLjg+dbzSVco
+	 uP/UVXU3Y+DljvRiz9sIVnKQ2wOW6xNxB5iY612TPgBBz0E12fZhUIHGnKqjBuRnR5
+	 /4GgmObWcU2zXNrFQrZ0tLvggkp16vQpsI3k7TzQUrQ54iNLQDgO/LRnLY59Lx8aA7
+	 5HMDGdyV6M8GBHusBC04GUmGLNXAtI1BiXpPexdISG/b4uhbOMB5Krhcaarh/Ds8bp
+	 9hVabBrD9DHO04wnwhnhlLM4=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8562440E01D6;
+	Wed, 26 Jun 2024 10:44:33 +0000 (UTC)
+Date: Wed, 26 Jun 2024 12:44:27 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: tony.luck@intel.com
+Cc: Avadhut Naik <avadhut.naik@amd.com>, x86@kernel.org,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	rostedt@goodmis.org, lenb@kernel.org, mchehab@kernel.org,
+	james.morse@arm.com, airlied@gmail.com, yazen.ghannam@amd.com,
+	john.allen@amd.com, avadnaik@amd.com
+Subject: Re: [PATCH v2 1/4] x86/mce: Add wrapper for struct mce to export
+ vendor specific info
+Message-ID: <20240626104427.GNZnvxC1JHclKwwKQU@fat_crate.local>
+References: <20240625195624.2565741-1-avadhut.naik@amd.com>
+ <20240625195624.2565741-2-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
- <20240621-tracepoint-v3-2-9e44eeea2b85@google.com> <CAH5fLghb6oVkgy3ckf=dUk9S4VdCeWin+yDBW1ffBoxu=HqBKw@mail.gmail.com>
- <ZnsIJ6ejNX_dAc8f@boqun-archlinux>
-In-Reply-To: <ZnsIJ6ejNX_dAc8f@boqun-archlinux>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 26 Jun 2024 10:48:23 +0200
-Message-ID: <CAH5fLgiG5hdh1JJgjH94E=ZwJo6ERkuZUFDpkrrJ6ErQhTvCrg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] rust: add tracepoint support
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240625195624.2565741-2-avadhut.naik@amd.com>
 
-On Tue, Jun 25, 2024 at 8:11=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Fri, Jun 21, 2024 at 02:52:10PM +0200, Alice Ryhl wrote:
-> [...]
-> >
-> > Hmm, I tried using the support where I have both events and hooks:
-> >
-> > #define CREATE_TRACE_POINTS
-> > #define CREATE_RUST_TRACE_POINTS
-> > #include <trace/hooks/rust_binder.h>
-> > #include <trace/events/rust_binder.h>
-> >
-> > But it's not really working. Initially I thought that it's because I
-> > need to undef DEFINE_RUST_DO_TRACE at the end of this file, but even
-> > when I added that, I still get this error:
-> >
-> >     error: redefinition of 'str__rust_binder__trace_system_name'
-> >
-> > Is the Rust support missing something, or is the answer just that you
-> > can't have two files of the same name like this? Or am I doing
-> > something else wrong?
-> >
->
-> Because your hooks/rust_binder.h and events/rust_binder.h use the same
-> TRACE_SYSTEM name? Could you try something like:
->
->         #define TRACE_SYSTEM rust_binder_hook
->
-> in your hooks/rust_binder.h?
+On Tue, Jun 25, 2024 at 02:56:21PM -0500, Avadhut Naik wrote:
+> Currently, exporting new additional machine check error information
+> involves adding new fields for the same at the end of the struct mce.
+> This additional information can then be consumed through mcelog or
+> tracepoint.
+> 
+> However, as new MSRs are being added (and will be added in the future)
+> by CPU vendors on their newer CPUs with additional machine check error
+> information to be exported, the size of struct mce will balloon on some
+> CPUs, unnecessarily, since those fields are vendor-specific. Moreover,
+> different CPU vendors may export the additional information in varying
+> sizes.
+> 
+> The problem particularly intensifies since struct mce is exposed to
+> userspace as part of UAPI. It's bloating through vendor-specific data
+> should be avoided to limit the information being sent out to userspace.
+> 
+> Add a new structure mce_hw_err to wrap the existing struct mce. The same
+> will prevent its ballooning since vendor-specifc data, if any, can now be
+> exported through a union within the wrapper structure and through
+> __dynamic_array in mce_record tracepoint.
+> 
+> Furthermore, new internal kernel fields can be added to the wrapper
+> struct without impacting the user space API.
+> 
+> Note: Some Checkpatch checks have been ignored to maintain coding style.
+> 
+> [Yazen: Add last commit message paragraph.]
+> 
+> Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
+> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> ---
+>  arch/x86/include/asm/mce.h              |   6 +-
+>  arch/x86/kernel/cpu/mce/amd.c           |  29 ++--
+>  arch/x86/kernel/cpu/mce/apei.c          |  54 +++----
+>  arch/x86/kernel/cpu/mce/core.c          | 178 +++++++++++++-----------
+>  arch/x86/kernel/cpu/mce/dev-mcelog.c    |   2 +-
+>  arch/x86/kernel/cpu/mce/genpool.c       |  20 +--
+>  arch/x86/kernel/cpu/mce/inject.c        |   4 +-
+>  arch/x86/kernel/cpu/mce/internal.h      |   4 +-
+>  drivers/acpi/acpi_extlog.c              |   2 +-
+>  drivers/acpi/nfit/mce.c                 |   2 +-
+>  drivers/edac/i7core_edac.c              |   2 +-
+>  drivers/edac/igen6_edac.c               |   2 +-
+>  drivers/edac/mce_amd.c                  |   2 +-
+>  drivers/edac/pnd2_edac.c                |   2 +-
+>  drivers/edac/sb_edac.c                  |   2 +-
+>  drivers/edac/skx_common.c               |   2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c |   2 +-
+>  drivers/ras/amd/fmpm.c                  |   2 +-
+>  drivers/ras/cec.c                       |   2 +-
+>  include/trace/events/mce.h              |  42 +++---
+>  20 files changed, 199 insertions(+), 162 deletions(-)
 
-I was able to get it to work by moving the includes into two different
-.c files. I don't think changing TRACE_SYSTEM works because it must
-match the filename.
+Ok, did some minor massaging but otherwise looks ok now.
 
-Alice
+Tony, any comments? You ok with this, would that fit any Intel-specific vendor
+fields too or do you need some additional Intel-specific changes?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
