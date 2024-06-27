@@ -1,52 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF98179658;
-	Thu, 27 Jun 2024 14:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD441974FA;
+	Thu, 27 Jun 2024 14:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719498038; cv=none; b=AAiV5MoKlcBybruSgyAIm2sNQ9dCYHydjMCc4bXfUmg48+5LQPJoqTntQMPvQUlwf671btN1uNGKesBfV6amw2AgthBmSMZoUmC+fhe7t0GKaYhTH7V2NHffkdtGY5zBoKEwMNrdo4PRKXQU28N2vXGQzNUbuAKeh9SS68UEosc=
+	t=1719498885; cv=none; b=TeFrBgt8RWyDqkqTW6n4smRlEJoGFZJnEO/gJAmaRl2MooQh/sEEfUfg69rVI3ai00BeTqdM+clEQtTdZPp8AzCOS2Yv0aLWDBLilQzzcGEZwVY72ejUGOyp5JAkvmJBnusKfoAQBHpzXlMZms0ueOF8A+pwr5C5jH6PAl3uCQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719498038; c=relaxed/simple;
-	bh=6jpdpavsTgvc7X+5C/YGS9Rd1h6rsBawCk2gIEwDWcU=;
+	s=arc-20240116; t=1719498885; c=relaxed/simple;
+	bh=+EcQSElV8U7hgTnk8jkGMqLkzjgdHI0a/w4WJecqjsY=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HaIbfkpiUQqBTLdt9qEUFjFhG/2eeh3Zrt5kVX/pxAZHsyq8lWw4cevVspuiNyp5Y0JqMF6tebbR21/NXFds/B+ikMMugAJTcXckcxekuPqA+kAElwY/jX/HgmGfLrMjz1l6DLR/diYrHqmVYP49Yocv/QceTbJut58xBN3ygy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPE3Bnoi; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=NUMAJFugJzZTnE93lzwp3IdLwcZ2EFARry8zIP9Gowkd+5bKQ3gSWsLZ79Ioj/P48EBw8BtmjQXAmFWArT7bPVhakmHehNd45uPIPFG2EEo0EdpqC6rdxy4GI9v9w0C3XN6RMmYLPI358Xg67UHq/Ma2ciIKEPZHfmp9E8Iep6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5F0kAqg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPE3Bnoi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2F8C2BBFC;
-	Thu, 27 Jun 2024 14:20:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5F0kAqg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B653C32786;
+	Thu, 27 Jun 2024 14:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719498038;
-	bh=6jpdpavsTgvc7X+5C/YGS9Rd1h6rsBawCk2gIEwDWcU=;
+	s=k20201202; t=1719498884;
+	bh=+EcQSElV8U7hgTnk8jkGMqLkzjgdHI0a/w4WJecqjsY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gPE3BnoiM3lOpSUdHFHE3y0FyHv04P/fktEqlAuSubyYvKniCSFAaWObzgBs1ig99
-	 mASXhCE5+chbUx65o51o8G2ESUOpiWQRBeoPypLQ9ctwcsO1o48cOMzF/nFHwnmyI2
-	 UoP4Ixb/5egOc59mSp+tfZUeJiwsZsMRdCN62//GP0shfzbRZLb2IhqhujgJFfTsKA
-	 L7OwgeMzaWzgKrBlGgcpxjQxs4C8ck4SGPoSwFSBjDAXYMXTjGCAJ6wjOw2OuatoO4
-	 GMlIinVMGjs+BU1nC744kIsGP4dhRjTVHeVlxDsmSbG6gB+85A71d7zwXH7p+b3Daf
-	 qnN2pfgEt8x3g==
-Date: Thu, 27 Jun 2024 23:20:32 +0900
+	b=S5F0kAqgyGrlkhKFMuWACktWySeAvPHCFK8gYwdlWgAeueBuATpcfR1EUA+b+ZF98
+	 mYUft68aqb6Y6nFi0suTvZJ0NV0q/RdXweRAZzWPEt11vak2rTu1D49rDBPQJlOkDw
+	 kowME0cymxAzhx9zCQT/JuH5rHZzspvo5aooOgktcIHVyuWxO0RUOcbdDiujtRRnXa
+	 hK48fl0UKLkIOoPicBT1ETIe1Wz7XyK0O+G9Z+Sx407KQBTWgkDjFHje/yssA4akW7
+	 /+jRZukkO7cNg8p4Rbz7alAd9zB6CNtR+So5fAstHaSZlpckV6rox1yle9zKFDqd1h
+	 sMfyRKLrLGMyw==
+Date: Thu, 27 Jun 2024 23:34:40 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH] uprobe: Do not use UPROBE_SWBP_INSN as static
- initializer
-Message-Id: <20240627232032.a202e546f59a0290c615510f@kernel.org>
-In-Reply-To: <Zn1ssLPeMj-On_uT@krava>
-References: <20240618194306.1577022-1-jolsa@kernel.org>
-	<CAEf4BzbN4Li2iesQm28ZYEV2nXsLre8_qknmvkSy510EV7h=SA@mail.gmail.com>
-	<20240620193846.GA7165@redhat.com>
-	<CAEf4BzaqgbjPfxKmzF-M7nzGroOwKikA0BM7Tnw7dKzKS+x9ZQ@mail.gmail.com>
-	<20240621120149.GB12521@redhat.com>
-	<ZnV9hvOP5388YJtw@krava>
-	<Zn1ssLPeMj-On_uT@krava>
+To: Yunseong Kim <yskelg@gmail.com>
+Cc: Akanksha J N <akanksha@linux.ibm.com>, "Naveen N. Rao"
+ <naveen.n.rao@linux.vnet.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Martin Schwidefsky
+ <schwidefsky@de.ibm.com>, MichelleJin <shjy180909@gmail.com>,
+ linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: selftests/ftrace kprobe_eventname test fails on s390x QEMU
+ (KVM/Linux)
+Message-Id: <20240627233440.256b3057e0bb299090cf4207@kernel.org>
+In-Reply-To: <1add7a0a-f91d-4249-9632-424505597e45@gmail.com>
+References: <1add7a0a-f91d-4249-9632-424505597e45@gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,85 +47,293 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Jun 2024 15:44:16 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+Hi,
 
-> On Fri, Jun 21, 2024 at 03:17:58PM +0200, Jiri Olsa wrote:
-> > On Fri, Jun 21, 2024 at 02:01:50PM +0200, Oleg Nesterov wrote:
-> > > On 06/20, Andrii Nakryiko wrote:
-> > > >
-> > > > On Thu, Jun 20, 2024 at 12:40 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > > >
-> > > > > But I can't understand what does it do, it calls emit_break() and
-> > > > > git grep -w emit_break finds nothing.
-> > > > >
-> > > >
-> > > > It's DEF_EMIT_REG0I15_FORMAT(break, break_op) in
-> > > > arch/loongarch/include/asm/inst.h
-> > > >
-> > > > A bunch of macro magic, but in the end it produces some constant
-> > > > value, of course.
-> > > 
-> > > I see, thanks!
-> > > 
-> > > Then perhaps something like below?
-> > 
-> > lgtm, added loong arch list/folks
-> 
-> ping
-> 
-> Oleg, do you want to send formal patch?
-> 
-> thanks,
-> jirka
+Thanks for reporting!
 
-Yes, can you send v2 patch?
+On Thu, 27 Jun 2024 14:03:14 +0900
+Yunseong Kim <yskelg@gmail.com> wrote:
+
+> Hi all,
+> 
+> 
+> In my s390x archtecture, kprobe_eventname selftest have always failed
+> because of rcu_sched stalls.
+> 
+> My environment is QEMU Ubuntu 24.04 KVM Machine Linux version
+> 6.8.0-36-generic (buildd@bos01-s390x-012) (s390x-linux-gnu-gcc-13
+> (Ubuntu 13.2.0-23ubuntu4) 13.2.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #36
+> 
+> 1 configured CPUs, Linux is running under KVM in 64-bit mode
+> 
+> 
+>  qemu-system-s390x -no-reboot -name auto-inst-test -nographic -m 4096 \
+>    -drive file=disk-image.qcow2,format=qcow2,cache=none,if=virtio \
+>    -netdev user,id=enc0,hostfwd=tcp::10000-:22 \
+>    -device virtio-net-ccw,netdev=enc0 \
+>    -qmp tcp:localhost:4444,server,nowait
+> 
+> 
+> Currently, This failure can be always reproduced by this kselftests script:
+> 
+>  # tools/testing/selftests/ftrace/ftracetest
+> tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> 
+> I've investigating cause of line, then I find this line.
+> 
+>  for i in `seq 0 255`; do
+>    echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
+>  done
+> 
+>  cat kprobe_events >> $testlog
+> 
+>  echo 1 > events/kprobes/enable # <<<
+
+Isn't it kprobe_insn_boundary.tc?
+
+Also, can you modify it as
+
+for i in `seq 0 255`; do
+  echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
+  echo 1 > events/kprobes/enable
+done
+
+And run it with --console option? It may tell us when the stall happens
+with what offset. 
+
+Also, please try it with the latest kernel instead of 6.8.x
 
 Thank you,
 
 > 
-> > 
-> > for context:
-> >   https://lore.kernel.org/bpf/20240614174822.GA1185149@thelio-3990X/
-> > 
-> > thanks,
-> > jirka
-> > 
-> > > 
-> > > Oleg.
-> > > 
-> > > 
-> > > --- x/arch/loongarch/include/asm/uprobes.h
-> > > +++ x/arch/loongarch/include/asm/uprobes.h
-> > > @@ -9,7 +9,7 @@ typedef u32 uprobe_opcode_t;
-> > >  #define MAX_UINSN_BYTES		8
-> > >  #define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
-> > >  
-> > > -#define UPROBE_SWBP_INSN	larch_insn_gen_break(BRK_UPROBE_BP)
-> > > +#define UPROBE_SWBP_INSN	(uprobe_opcode_t)(BRK_UPROBE_BP | (break_op << 15))
-> > >  #define UPROBE_SWBP_INSN_SIZE	LOONGARCH_INSN_SIZE
-> > >  
-> > >  #define UPROBE_XOLBP_INSN	larch_insn_gen_break(BRK_UPROBE_XOLBP)
-> > > --- x/arch/loongarch/kernel/uprobes.c
-> > > +++ x/arch/loongarch/kernel/uprobes.c
-> > > @@ -7,6 +7,13 @@
-> > >  
-> > >  #define UPROBE_TRAP_NR	UINT_MAX
-> > >  
-> > > +static __init int __ck_insn(void)
-> > > +{
-> > > +	BUG_ON(UPROBE_SWBP_INSN != larch_insn_gen_break(BRK_UPROBE_BP));
-> > > +	return 0;
-> > > +}
-> > > +late_initcall(__ck_insn);
-> > > +
-> > >  int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
-> > >  			     struct mm_struct *mm, unsigned long addr)
-> > >  {
-> > > 
+> 
+> This line makes "rcu_sched detected stalls" log and stall the system.
+> 
+>  [ 7825.578940] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> 
+> After this line, the test doesn't go any further.
+> 
+> 
+> This test was added in the patch below.
+> 
+> ("selftests/ftrace: Add new test case which adds multiple consecutive
+> probes in a function")
+> Link:
+> https://lore.kernel.org/linux-trace-kernel/20230428163842.95118-2-akanksha@linux.ibm.com/
+> 
+> 
+> I've attached a link to a compressed version of vmcore, vmlinux and
+> config files that I dumped from my environment.
+> 
+>  https://drive.google.com/file/d/1O2bCKrRbyJ-yP4zTz_sAd_qM80nHnCGr/view?usp=sharing
+> 
+> 
+> I used QEMU QMP to dump the vmcore.
+> 
+>  $ telnet localhost 4444
+> 
+>   {"execute": "qmp_capabilities"}
+> 
+>   {"execute":"dump-guest-memory","arguments":
+> {"paging":false,"protocol":"file:/home/paran/vmcore1.img"}}
+> 
+> 
+> rcu: INFO: rcu_sched detected stalls on CPUs/tasks:s:
+> rcu:
+> (detected by 0, t=6002 jiffies, g=24353, q=1 ncpus=1)1)
+> rcu: All QSes seen, last rcu_sched kthread activity 6002
+> (4294978930-4294972928), jiffies_till_next_fqs=1, root ->qsmask 0x0x0
+> rcu: rcu_sched kthread starved for 6002 jiffies! g24353 f0x2
+> RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0=0
+> rcu:
+> Unless rcu_sched kthread gets sufficient CPU time, OOM is now expected
+> behavior.r.
+> rcu: RCU grace-period kthread stack dump:p:
+> task:rcu_sched       state:R  running task     stack:0     pid:16
+> tgid:16    ppid:2      flags:0x0000000000
+> Call Trace:e:
+>  __schedule+0x346/0x8b8 8
+>  schedule+0x36/0x148 8
+>  schedule_timeout+0x8e/0x148 8
+>  rcu_gp_fqs_loop+0x444/0x548 8
+>  rcu_gp_kthread+0x146/0x198 8
+>  kthread+0x124/0x128 8
+>  __ret_from_fork+0x40/0x58 8
+>  ret_from_fork+0xa/0x30 0
+> rcu: Stack dump where RCU GP kthread last ran:n:
+> CPU: 0 PID: 1077 Comm: ftracetest Not tainted 6.8.0-36-generic #36-Ubuntu
+> Hardware name: QEMU 8561 QEMU (KVM/Linux)
+> Krnl PSW : 0704f00180000000 0000000000121d32 kprobe_exceptions_notify
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/kprobes.c:519
+> (discriminator 1))
+>            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:3 PM:0 RI:0 EA:3:3
+> Krnl GPRS: 0000000000000000 0000000000000000 0000000000008001
+> 0000000000000000
+>            0000000000000000 0000000000000000 0000000000000000
+> 0000000001956720
+>            ffffffffffffffff 0000000000121c98 0000000001958d40
+> 00000380000cfbd8
+>            000003ff938dbc78 00000380000cfab8 0000000000121d1c
+> 00000380000cf980
+> Krnl Code: 0000000000121d26: 9103b008
+> 
+> Code starting with the faulting instruction
+> ===========================================
+> 8(%r11),3
+> 0000000000121d2a: a7840004
+> 8,0000000000121d32
+> #0000000000121d2e: ad03f0a0
+> stosm
+> 160(%r15),3
+> >0000000000121d32: b9140022
+> lgfr
+> %r2,%r2
+> 0000000000121d36: ebbff0a80004
+> %r11,%r15,168(%r15)
+> 0000000000121d3c: a7190000
+> lghi
+> %r1,0
+> 0000000000121d40: a7390000
+> lghi
+> %r3,0
+> 0000000000121d44: a7490000
+> lghi
+> %r4,0
+> Call Trace:
+>  kprobe_exceptions_notify
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/kprobes.c:519
+> (discriminator 1))
+>  kprobe_exceptions_notify
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/kprobes.c:504
+> (discriminator 1))
+>  notifier_call_chain (/build/linux-3nCxw2/linux-6.8.0/kernel/notifier.c:93)
+>  notify_die (/build/linux-3nCxw2/linux-6.8.0/kernel/notifier.c:597)
+>  do_per_trap
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/traps.c:75
+> (discriminator 1))
+>  __do_pgm_check
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/irqflags.h:47
+> (discriminator 1)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/irqflags.h:52
+> (discriminator 1)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/traps.c:356
+> (discriminator 1))
+>  pgm_check_handler
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/entry.S:383)
+>  kernel_clone
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/uaccess.h:119
+> (discriminator 1) /build/linux-3nCxw2/linux-6.8.0/kernel/fork.c:2927
+> (discriminator 1))
+>  __do_sys_clone (/build/linux-3nCxw2/linux-6.8.0/kernel/fork.c:3055)
+>  __s390x_sys_clone (/build/linux-3nCxw2/linux-6.8.0/kernel/fork.c:3027)
+>  __do_syscall
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/ptrace.h:195
+> (discriminator 3)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/ptrace.h:200
+> (discriminator 3)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/syscall.c:145
+> (discriminator 3)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/syscall.c:168
+> (discriminator 3))
+>  system_call (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/entry.S:309)
+> Last Breaking-Event-Address:
+> 0xfdf5045050
+> ?rcu: INFO: rcu_sched detected stalls on CPUs/tasks:s:
+> @rcu:
+> (detected by 0, t=24007 jiffies, g=24353, q=1 ncpus=1)
+> rcu: All QSes seen, last rcu_sched kthread activity 24007
+> (4294996935-4294972928), jiffies_till_next_fqs=1, root ->qsmask 0x0x0
+> rcu: rcu_sched kthread starved for 24007 jiffies! g24353 f0x2
+> RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0=0
+> rcu:
+> Unless rcu_sched kthread gets sufficient CPU time, OOM is now expected
+> behavior.r.
+> rcu: RCU grace-period kthread stack dump:p:
+> task:rcu_sched       state:R  running task     stack:0     pid:16
+> tgid:16    ppid:2      flags:0x0000000000
+> Call Trace:e:
+>  __schedule+0x346/0x8b8 8
+>  schedule+0x36/0x148 8
+>  schedule_timeout+0x8e/0x148 8
+>  rcu_gp_fqs_loop+0x444/0x548 8
+>  rcu_gp_kthread+0x146/0x198 8
+>  kthread+0x124/0x128 8
+>  __ret_from_fork+0x40/0x58 8
+>  ret_from_fork+0xa/0x30 0
+> rcu: Stack dump where RCU GP kthread last ran:n:
+> CPU: 0 PID: 1077 Comm: ftracetest Not tainted 6.8.0-36-generic #36-Ubuntu
+> Hardware name: QEMU 8561 QEMU (KVM/Linux)
+> Krnl PSW : 0704d00180000000 0000000000ebe0b2 __do_pgm_check
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/traps.c:353)
+>            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0 RI:0 EA:3:3
+> Krnl GPRS: 0704c00180000000 0000000000000000 00000380000cfb97
+> 0000000000000000
+>            0000000000000000 0704c00180000000 0000000000000000
+> 0000000000000000
+>            0704c00180000000 00000000001a8388 0000000000000000
+> 00000380000cfbd8
+>            000003ff938dbc78 0000000000ed1c6c 0000000000ebe024
+> 00000380000cfaf0
+> Krnl Code: 0000000000ebe0a4: a504bfff
+> 
+> Code starting with the faulting instruction
+> ===========================================
+> nihh
+> %r0,49151
+> 0000000000ebe0a8: e300f0a80024
+> %r0,168(%r15)
+> #0000000000ebe0ae: 8000f0a8
+> 168(%r15)
+> >0000000000ebe0b2: 5850b0a0
+> %r5,160(%r11)
+> 0000000000ebe0b6: c05b0000007f
+> nilf
+> %r5,127
+> 0000000000ebe0bc: a7840012
+> 8,0000000000ebe0e0
+> 0000000000ebe0c0: b91600e5
+> llgfr
+> %r14,%r5
+> 0000000000ebe0c4: c0400051121e
+> larl
+> %r4,00000000018e0500
+> Call Trace:
+>  __do_pgm_check
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/traps.c:353)
+>  __do_pgm_check
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/traps.c:318)
+>  pgm_check_handler
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/entry.S:383)
+>  kernel_clone
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/uaccess.h:119
+> (discriminator 1) /build/linux-3nCxw2/linux-6.8.0/kernel/fork.c:2927
+> (discriminator 1))
+>  __do_sys_clone (/build/linux-3nCxw2/linux-6.8.0/kernel/fork.c:3055)
+>  __s390x_sys_clone (/build/linux-3nCxw2/linux-6.8.0/kernel/fork.c:3027)
+>  __do_syscall
+> (/build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/ptrace.h:195
+> (discriminator 3)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/include/asm/ptrace.h:200
+> (discriminator 3)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/syscall.c:145
+> (discriminator 3)
+> /build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/syscall.c:168
+> (discriminator 3))
+>  system_call (/build/linux-3nCxw2/linux-6.8.0/arch/s390/kernel/entry.S:309)
+> Last Breaking-Event-Address:
+>  0x4404c0018000000000
+> 
+> 
+> It's not easy for me to resolve this issue. If advice or guidance can be
+> provided on how to resolve this issue, I'll try sending a patch!
+> 
+> 
+> Warm regards,
+> Yunseong Kim
+> 
 
 
 -- 
