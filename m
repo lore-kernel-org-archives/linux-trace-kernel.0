@@ -1,79 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6474C9A;
-	Thu, 27 Jun 2024 17:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA7619AD81
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Jun 2024 19:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719510645; cv=none; b=sHTvf/5/jcLA5PI16KR5hJoptEA6KQdB66up2ZB6nAObVpDz0ZaVSHh9zwiiBKxu6VwUwM3WauBy2BzG4iLjIX4qam5Tyw0fHsy7/q91JtzR2bJfz7KbJQJXYgGUVTgJlBvPFJ1C4pKyZtETu3a2MDLeDRViUDGngxHjeOG7xw4=
+	t=1719518156; cv=none; b=rULAKKaLvfwswEOQtT0k/W693DAzygKofyoN2+a7OcDxxnox15Z+UPFC/T//AoG2hY88DJa0fo7sYW8iFrBVJFAJU2jqV1e5vb5vnGqiHCLf/G7fdRVF/N59uTZ4wPO/Gm38bV9A4aw9uC8swTH//tu/phzDAcBI7+QVaDmptfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719510645; c=relaxed/simple;
-	bh=jobjg9OesfGn+Q6aCcAWa0Gq/nbPQMb6sNYVq2ittnQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gtY0HuXb0xO3BJo/8EFsAohJ2vvY/lYBhxobBdUQmVy9uTznaSUj9qNifu25vVS48E1W69dqXx8WskkYzNlwuE/eHarsNX1xmBJ0K/mC8Bw6YV9XBWFmdA80YD13vUYEd2gDHR87EwZ7sjWj0rmHpvIaluGiLUYM9kc5/4LoiiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdJ64EEn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719518156; c=relaxed/simple;
+	bh=36GxoZjliAZT52Uum3hkhku+z1zWUxDL4YWuJDbCmCU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aBnS1TkvERxYU1b4Hfhf6P04TZfV6PKQxrXUJK3rQxHDVSUfwW0yaIfR+S4alOvMkVlhjXgJ+45u9VKKCnBhNoKgwFkkx2NS/MHx/ultTJPg9x9KbsbQnMpAQdpJ0j1vsAqt9RLOpVO1S6jVOLtBKWkRoDy7AHxBhxrmNoCb7Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pKZGc8sT; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdJ64EEn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C9C73C2BD10;
-	Thu, 27 Jun 2024 17:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719510644;
-	bh=jobjg9OesfGn+Q6aCcAWa0Gq/nbPQMb6sNYVq2ittnQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hdJ64EEnw+ocdIPgMBxcSO0LRAqr3vLx2l2KCjZ/B2DT3wUoG2gUMypr0XRKZ498Z
-	 ozdCKPuHPsG4WZxp271//HfptbaNG6sZeOSfthkltOYB6cZ8VOSS5sW4KHFxUEOfUs
-	 HWpo8zwgK3YGwaMwQVVinVXFUE0aTG90dUgpaR16LAFXjSFV0FgaNI7UJJTAWP+6US
-	 0oPFyIm6WzdMTzww8Z3IYDreBK+N73/6yfjb/ziPxcaMRtZKIFvBZRuELaDKRmHw8U
-	 tCkK4JWLFIaUBjXqVM3jLjIkaNrmE+7CZ0WgOtitDuYYovApX074XBVIgDSePuuc2x
-	 hJWL3H9VhXwwQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8ED99C433A2;
-	Thu, 27 Jun 2024 17:50:44 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKZGc8sT"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52cdcd26d61so6699890e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Jun 2024 12:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719518153; x=1720122953; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HwbPl7/RVFpU7jHcXTQEjahrmwW8PQdQrA+IV3FhN4w=;
+        b=pKZGc8sTJiPK8evW+kyTJom27vWLLcaatgTP+pqNNLik3mw1pmxqfY8BC6C2Oa9+oI
+         o0sCCeMv+WZal6hDaWgzmHoncPuHmkHoAWo/Ck/6FuDrAQdLlfhkR9KmZsxGc443vkjr
+         5ujWzSTQNw9wjOOwbnW3XPU61Dca2ugh48ywLYRU+VcRpd7i3tp/cfEjewfSyXRILNvv
+         sJgKRnx3yzI5aWIHj3tc6qE6MNwWNocuDjwigxiw7d7HiOc30Xdd29sJqDUtaTNLWPyr
+         RN1F5aOe5ICn2RmnfOTaJ1d72Wl+yAJWGgOJhh7wOYjxwW+dPqi2218Mw9ed924jYzNQ
+         0M7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719518153; x=1720122953;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HwbPl7/RVFpU7jHcXTQEjahrmwW8PQdQrA+IV3FhN4w=;
+        b=owcb160ornfgLLhn/NQGvhe80t1W/Hv1s2yPc8WBUP3Tc7aHy8FnO1DY52cqoFPYrs
+         6L2BQac2zRW0L/5qV/JsxIsJAhhtOrko4JmtUpBuLvc36te4IZRzTSEewpsxF/nMZQ7i
+         tUUj+PJ1A14hJqNURdWGFLlLyMPZzP3kjhtMXe/83QBtoSBT/2vSU4eYqHMAYheV6kZZ
+         0Wf1cY4oyefQeEbBOdG5jkC2uCyK/bfG07M1dsHLhRivjgoLbyhed/65UCY/IAHFhpyp
+         UwplxjLuLQ2VqoP0F9YOtE/oOfcqNONOL8PB5SEhooRXxnEjjyObiZkv1bm8IlwHbpd/
+         j9sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKqXzStV1PABqLYEAXMpnJBLDWWjrSOyhCN5dVay+31np2njXyd4bW2aOc4mTXCcsd5/+7MH6TTQF5TgjvJ7E7xK61DLPDjgNVcujbrKCsRm7s
+X-Gm-Message-State: AOJu0Yw2YOfiTmZCCGXW2XKpBYC2U2WChEc2/hN+sF3GRjR8G3vrG2Yg
+	mXoOrOrd/0fSSzOeDGENbY3B1+8HbLrQUUepxY9vdnsUR+2JKOi1oBBNgcG/3w0GgZvg/pplbXy
+	SCTkfd8cI76oomRB2gv6wWucDLv3RtCYMvazG
+X-Google-Smtp-Source: AGHT+IHrIkqcjhj0KSGiy7gblVxOce/ysoGeptTitOpdzuEly5ueVJ0/ZUmc2dX4a/lyh+Q8t0Uj2uTJuS+Tj9wzWDM=
+X-Received: by 2002:a05:6512:2004:b0:516:d692:5e0b with SMTP id
+ 2adb3069b0e04-52ce185f9d6mr8027892e87.54.1719518152535; Thu, 27 Jun 2024
+ 12:55:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after patching to
- avoid illegal insns
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <171951064458.6762.1867426653510240080.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Jun 2024 17:50:44 +0000
-References: <20240624082141.153871-1-alexghiti@rivosinc.com>
-In-Reply-To: <20240624082141.153871-1-alexghiti@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mark.rutland@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, bjorn@rivosinc.com, andy.chiu@sifive.com,
- puranjay12@gmail.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, conor.dooley@microchip.com
+References: <20240625195407.1922912-1-almasrymina@google.com>
+ <20240625195407.1922912-14-almasrymina@google.com> <20240626150822.742eaf6a@kernel.org>
+ <20240626174634.2adec19d@kernel.org>
+In-Reply-To: <20240626174634.2adec19d@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 27 Jun 2024 12:55:38 -0700
+Message-ID: <CAHS8izOd_yYNJ6+xv35XoCvF7MzqachPVrkQJbic8-h=T1Vg_A@mail.gmail.com>
+Subject: Re: [PATCH net-next v14 13/13] selftests: add ncdevmem, netcat for
+ devmem TCP
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Stanislav Fomichev <sdf@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Wed, Jun 26, 2024 at 5:46=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Wed, 26 Jun 2024 15:08:22 -0700 Jakub Kicinski wrote:
+> > On Tue, 25 Jun 2024 19:54:01 +0000 Mina Almasry wrote:
+> > > +CFLAGS +=3D -I../../../net/ynl/generated/
+> > > +CFLAGS +=3D -I../../../net/ynl/lib/
+> > > +
+> > > +LDLIBS +=3D ../../../net/ynl/lib/ynl.a ../../../net/ynl/generated/pr=
+otos.a
+> >
+> > Not as easy as this.. Please add this commit to your series:
+> > https://github.com/kuba-moo/linux/commit/c130e8cc7208be544ec4f6f3627f1d=
+36875d8c47
+> >
+> > And here's an example of how you then use ynl.mk to code gen and build
+> > for desired families (note the ordering of variables vs includes,
+> > I remember that part was quite inflexible..):
+> > https://github.com/kuba-moo/linux/commit/5d357f97ccd0248ca6136c5e11ca3e=
+adf5091bb3
+>
+> Investigating this further my patches will not work for O=3Dxyz builds
+> either. Please squash this into the relevant changes:
+>
 
-This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+Thanks! I cherry-picked commit 15dbefa97fb98 ("tools: net: package
+libynl for use in selftests"), and then applied the diff below to the
+series [1].
 
-On Mon, 24 Jun 2024 10:21:41 +0200 you wrote:
-> We cannot delay the icache flush after patching some functions as we may
-> have patched a function that will get called before the icache flush.
-> 
-> The only way to completely avoid such scenario is by flushing the icache
-> as soon as we patch a function. This will probably be costly as we don't
-> batch the icache maintenance anymore.
-> 
-> [...]
+Now:
 
-Here is the summary with links:
-  - [-fixes] riscv: patch: Flush the icache right after patching to avoid illegal insns
-    https://git.kernel.org/riscv/c/edf2d546bfd6
+`git clean -fdx && make  headers_install && make -C
+./tools/testing/selftests/net` works
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+`git clean -fdx && make  headers_install && make -C
+./tools/testing/selftests/net ncdevmem` doesn't work with this error:
+
+make: Entering directory
+'/usr/local/google/home/almasrymina/cos-kernel/tools/testing/selftests/net'
+gcc -Wall -Wl,--no-as-needed -O2 -g -I../../../../usr/include/
+-isystem /usr/local/google/home/almasrymina/cos-kernel/tools/testing/selfte=
+sts/../../../usr/include
+-I../     ncdevmem.c  -lmnl -o ncdevmem
+ncdevmem.c:34:10: fatal error: netdev-user.h: No such file or directory
+   34 | #include "netdev-user.h"
+      |          ^~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [<builtin>: ncdevmem] Error 1
+
+It seems specifying the target doesn't trigger the libynl.a to be
+built. Isn't this a bug, or is that expected? I took a bit of a look
+into it but couldn't figure it out immediately. If it is a bug, any
+pointers would be appreciated (but I'm digging into it anyway).
+
+[1] The diff on top of the series-with-cherry-pick that I'm testing with:
+
+diff --git a/tools/testing/selftests/net/Makefile
+b/tools/testing/selftests/net/Makefile
+index 7ba1505dc2eb4..1d3b99e9c12e8 100644
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@ -5,10 +5,6 @@ CFLAGS +=3D  -Wall -Wl,--no-as-needed -O2 -g
+ CFLAGS +=3D -I../../../../usr/include/ $(KHDR_INCLUDES)
+ # Additional include paths needed by kselftest.h
+ CFLAGS +=3D -I../
+-CFLAGS +=3D -I../../../net/ynl/generated/
+-CFLAGS +=3D -I../../../net/ynl/lib/
+-
+-LDLIBS +=3D ../../../net/ynl/lib/ynl.a ../../../net/ynl/generated/protos.a
+
+ LDLIBS +=3D -lmnl
+
+@@ -100,7 +96,11 @@ TEST_PROGS +=3D fdb_flush.sh
+ TEST_PROGS +=3D fq_band_pktlimit.sh
+ TEST_PROGS +=3D vlan_hw_filter.sh
+ TEST_PROGS +=3D bpf_offload.py
+-TEST_GEN_FILES +=3D ncdevmem
++
++# YNL files, must be before "include ..lib.mk"
++EXTRA_CLEAN +=3D $(OUTPUT)/libynl.a
++YNL_GEN_FILES :=3D ncdevmem
++TEST_GEN_FILES +=3D $(YNL_GEN_FILES)
+
+ TEST_FILES :=3D settings
+ TEST_FILES +=3D in_netns.sh lib.sh net_helper.sh setup_loopback.sh setup_v=
+eth.sh
+@@ -111,6 +111,10 @@ TEST_INCLUDES :=3D forwarding/lib.sh
+
+ include ../lib.mk
+
++# YNL build
++YNL_GENS :=3D netdev
++include ynl.mk
++
+ $(OUTPUT)/epoll_busy_poll: LDLIBS +=3D -lcap
+ $(OUTPUT)/reuseport_bpf_numa: LDLIBS +=3D -lnuma
+ $(OUTPUT)/tcp_mmap: LDLIBS +=3D -lpthread -lcrypto
+diff --git a/tools/testing/selftests/net/ynl.mk
+b/tools/testing/selftests/net/ynl.mk
+index 0e01ad12b30ec..59cb26cf3f738 100644
+--- a/tools/testing/selftests/net/ynl.mk
++++ b/tools/testing/selftests/net/ynl.mk
+@@ -18,6 +18,4 @@ $(YNL_OUTPUTS): CFLAGS +=3D \
+
+ $(OUTPUT)/libynl.a:
+        $(Q)$(MAKE) -C $(top_srcdir)/tools/net/ynl GENS=3D"$(YNL_GENS)" lib=
+ynl.a
+-       $(Q)cp $(top_srcdir)/tools/net/ynl/libynl.a ./
+-
+-EXTRA_CLEAN +=3D libynl.a
++       $(Q)cp $(top_srcdir)/tools/net/ynl/libynl.a $(OUTPUT)/libynl.a
 
 
+
+
+
+--=20
+Thanks,
+Mina
