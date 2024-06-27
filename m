@@ -1,126 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69A5A50;
-	Thu, 27 Jun 2024 00:46:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374E24C62;
+	Thu, 27 Jun 2024 01:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719449198; cv=none; b=dffrzsLCroNS9h1WB8+Yu55SaT96NPALW5h/2VQC3peqhoUQ0TsJRAHHteGw+rESE3dbN9LNOUtCSajqxo84xnNnj7h/OWBurqNALw12isCUzqpyMzNNHzZVpRfqdxvfqRxdXnYMWpDCpvlsXI6hmw3f3OV3o8A24o3xoMk9+bA=
+	t=1719450034; cv=none; b=He0RPVxCXXEtnYX0+BUOySTuxvgF5nMxG1Z7mDwuf+k+8ogogIXpQprqOl48w5qG47nkLWXNKLmbe6Czr9aPu5ZDDhnUgowZiP66o1zjZa/4kVQRozDMv/z1wtSFneuWuOjeHWxnySWKhEqrFTDjDeOZmjjJS8IiYXrQkWLNd04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719449198; c=relaxed/simple;
-	bh=0SG3laByZlaFUISZCHp29XT3JkoNZdaHE8iSnv9r4Ww=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e29aBtSG5yk6cFLdUcnnEn6RFj9wDNBzdPp4zP4Jeksm16qg7avahlVDm3hjcfYB1tuokJ7m8F0h5j8sHtVSHbcpiJavSUIB+oANT8FQcdSqYLj8khQpxh5DFfPrNxtkiohAGM319MfYbv0dYgDPImW5PuOPgaAsYTCHYpKL3b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBlNUmVM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719450034; c=relaxed/simple;
+	bh=LUacYIlT79rW04FeLla3/n41llR1qlk2oIplHlsSCo8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=C+V4ZHKdhToK6fhXbpM1oPUEjO4AJ4DwN7v5FvcWb4fl/4ajfSeMNgsn/JjeFivqnuHpPxEne/b9/AQ/hq3gVCGOKP4fZUks/rQPTl6gPgm2mRLcC+QEBlxgSr9tnepo3Jp7i5+6TPMACZx7WSfQ/t0QkWuybE4hqlQGd/L/K78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9ba/YQc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBlNUmVM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B63CC116B1;
-	Thu, 27 Jun 2024 00:46:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9ba/YQc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C54C116B1;
+	Thu, 27 Jun 2024 01:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719449197;
-	bh=0SG3laByZlaFUISZCHp29XT3JkoNZdaHE8iSnv9r4Ww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mBlNUmVMzPFiiYZI8a8E65frgk5k1lxp0RkrYfN3Nlf/2A5ch4UMQN/KRSpXjJb2O
-	 djBU41eFDkc5BhBiVK+bvijq7reE+WvVLOjI6abwchbipLi50MqkLBcE9HAZXML2ZB
-	 vcXNkl0oVc41ZWhheArOwYfFHV0uN/gdJSrWAvNZjaO4ES7wR4BNnUbOfdxD7g2qby
-	 10el+2M74ZCpdaxOCG4dY/gaD016jFvumOcdSt4+KsTBMcEqxEPu2v7WSj29kUUMx0
-	 pwpxnw8AxBcF47BxCRsv11U6w9kvZBBbsJL9xFpmJWoMiS8guNVpQsYJOkzW+Fd5BG
-	 bUJejdYs3QDaw==
-Date: Wed, 26 Jun 2024 17:46:34 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan
- <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, "Christian
- =?UTF-8?B?S8O2bmln?=" <christian.koenig@amd.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, Nikolay
- Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Stanislav Fomichev <sdf@google.com>
-Subject: Re: [PATCH net-next v14 13/13] selftests: add ncdevmem, netcat for
- devmem TCP
-Message-ID: <20240626174634.2adec19d@kernel.org>
-In-Reply-To: <20240626150822.742eaf6a@kernel.org>
-References: <20240625195407.1922912-1-almasrymina@google.com>
-	<20240625195407.1922912-14-almasrymina@google.com>
-	<20240626150822.742eaf6a@kernel.org>
+	s=k20201202; t=1719450034;
+	bh=LUacYIlT79rW04FeLla3/n41llR1qlk2oIplHlsSCo8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=X9ba/YQcgXhwCm8/TJ8Uh4mp258noDC2rr0AaFBl0BEPkB9XQSpA9M/tEdKbW40tB
+	 X+Z6OGP+Si5nRlkpsVLibkf4AiJAhojO5s5V4kpdXBIJSvoviXwiDj2FaKW9uWMIAF
+	 4MJe8FP26sA3j5dAvuApRF0se7CFUhvx/9I/7Ypf06bwRsiLc+H3ZydlyzSjxhuOQy
+	 R4nTwxqZPHonjDzgUF/boDRbHPm/GCueYfwTcNMQfuNdRA6mEcLGkfR/cpyvCK45yD
+	 JEtcOJ0ldQB1gqsLGla+o6eQDD+OE0qG0jN1ui8Y+8pFdGfOAeReIE+TaGQIdyro9B
+	 lzDTU8RbwnwwQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 00/10] fs: multigrain timestamp redux
+Date: Wed, 26 Jun 2024 21:00:20 -0400
+Message-Id: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKS5fGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMyMz3dz0kszcVF3T5BQLgyRDixQLQwMloOKCotS0zAqwQdGxtbUA/AJ
+ kIFgAAAA=
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3126; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=LUacYIlT79rW04FeLla3/n41llR1qlk2oIplHlsSCo8=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmfLmuyaAFpK8/qwLflf3v4ChVsLVE+AkNZRWYo
+ JubBGmnD9+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZny5rgAKCRAADmhBGVaC
+ FcVxEACn53hnX+vD8wOy1qsZk+3QM/qqzDCO7uy8RgExJI106gkJfuFX8+lcL+HRdrW2QfOGSw+
+ hO7Mt3G37n3x1PsLI2i2L3wKymPJkPtkN0gCUDRhqkHhXfjGWMiAYKcupUoOQgd3/5sUw/wVOCn
+ gxb4joKDPQjyDOuFdQP/iiNryS6CSID8IXYPqpgksIsTrI82/iB6MW5X0/XiO53z+TGnMEIyLHy
+ P62o2CEnPUm77LjIIamrxVwCpX1qLDDUt4zXOf5PU+KQq+Cmo+3hFTZEYW1qFsWUOPaKoGLW2vc
+ cCHBezSmioQNmG4EyshecGnFRdqkKvZM69d9AXpw0PjJOpF1X90HsqY9e46vLExXidPMU3sOo01
+ dFvdrSLUHmDnX7cmaEakCVuKv+EQRzodyHNKI12T9IsuPl0cXsJVgWTlunlLF2nnHPp4uGiC0K6
+ Dx0bk6gvhtz/eH66y2wnXWr0Q3xAMJ/SxYdqWfIArsqDw7LBA40+erE6CKTDPAf9VRsfTcO0ura
+ SaHhLn470dWvbxOVa/L15AfDgNL+Y24+RWVrD3UYAOmDIKDyj3Ki+s8359EemA9FRV8FGJhjUhL
+ ij+SmnVh0io7cDczz/QZh+y5Cy/DLAd3/lDWZuSoTZVLrvn5tepmBjcI0URpN1uvHG6ODJ3s/3M
+ vO1R8IE1b5/DaDA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, 26 Jun 2024 15:08:22 -0700 Jakub Kicinski wrote:
-> On Tue, 25 Jun 2024 19:54:01 +0000 Mina Almasry wrote:
-> > +CFLAGS += -I../../../net/ynl/generated/
-> > +CFLAGS += -I../../../net/ynl/lib/
-> > +
-> > +LDLIBS += ../../../net/ynl/lib/ynl.a ../../../net/ynl/generated/protos.a  
-> 
-> Not as easy as this.. Please add this commit to your series:
-> https://github.com/kuba-moo/linux/commit/c130e8cc7208be544ec4f6f3627f1d36875d8c47
-> 
-> And here's an example of how you then use ynl.mk to code gen and build
-> for desired families (note the ordering of variables vs includes,
-> I remember that part was quite inflexible..):
-> https://github.com/kuba-moo/linux/commit/5d357f97ccd0248ca6136c5e11ca3eadf5091bb3
+At LSF/MM this year, we had a discussion about the inode change
+attribute. At the time I mentioned that I thought I could salvage the
+multigrain timestamp work that had to be reverted last year [1].  That
+version had to be reverted because it was possible for a file to get a
+coarse grained timestamp that appeared to be earlier than another file
+that had recently gotten a fine-grained stamp.
 
-Investigating this further my patches will not work for O=xyz builds
-either. Please squash this into the relevant changes:
+This version corrects the problem by establishing a global ctime_floor
+value that should prevent this from occurring. In the above situation
+that was problematic before, the two files might end up with the same
+timestamp value, but they won't appear to have been modified in the
+wrong order.
 
-diff --git a/tools/testing/selftests/drivers/net/Makefile b/tools/testing/selftests/drivers/net/Makefile
-index db60d2718b35..9966e5b7139b 100644
---- a/tools/testing/selftests/drivers/net/Makefile
-+++ b/tools/testing/selftests/drivers/net/Makefile
-@@ -9,7 +9,8 @@ TEST_PROGS := \
- 	stats.py \
- # end of TEST_PROGS
- 
--# YNL files
-+# YNL files, must be before "include ..lib.mk"
-+EXTRA_CLEAN += $(OUTPUT)/libynl.a
- YNL_GEN_FILES := psp_responder
- TEST_GEN_FILES += $(YNL_GEN_FILES)
- 
-diff --git a/tools/testing/selftests/net/ynl.mk b/tools/testing/selftests/net/ynl.mk
-index 0e01ad12b30e..59cb26cf3f73 100644
---- a/tools/testing/selftests/net/ynl.mk
-+++ b/tools/testing/selftests/net/ynl.mk
-@@ -18,6 +18,4 @@ $(YNL_OUTPUTS): CFLAGS += \
- 
- $(OUTPUT)/libynl.a:
- 	$(Q)$(MAKE) -C $(top_srcdir)/tools/net/ynl GENS="$(YNL_GENS)" libynl.a
--	$(Q)cp $(top_srcdir)/tools/net/ynl/libynl.a ./
--
--EXTRA_CLEAN += libynl.a
-+	$(Q)cp $(top_srcdir)/tools/net/ynl/libynl.a $(OUTPUT)/libynl.a
+That problem was discovered by the test-stat-time gnulib test. Note that
+that test still fails on multigrain timestamps, but that's because its
+method of determining the minimum delay that will show a timestamp
+change will no longer work with multigrain timestamps. I have a patch to
+change the testcase to use a different method that I will post soon.
+
+The big question with this set is whether the performance will be
+suitable. The testing I've done seems to show performance parity with
+multigrain timestamps enabled, but it's hard to rule this out regressing
+some workload.
+
+This set is based on top of Christian's vfs.misc branch (which has the
+earlier change to track inode timestamps as discrete integers). If there
+are no major objections, I'd like to let this soak in linux-next for a
+bit to see if any problems shake out.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (10):
+      fs: turn inode ctime fields into a single ktime_t
+      fs: uninline inode_get_ctime and inode_set_ctime_to_ts
+      fs: tracepoints for inode_needs_update_time and inode_set_ctime_to_ts
+      fs: add infrastructure for multigrain timestamps
+      fs: add percpu counters to count fine vs. coarse timestamps
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ fs/attr.c                        |  52 +++++++--
+ fs/btrfs/file.c                  |  25 +----
+ fs/btrfs/super.c                 |   3 +-
+ fs/ext4/super.c                  |   2 +-
+ fs/inode.c                       | 222 +++++++++++++++++++++++++++++++++++----
+ fs/stat.c                        |  39 ++++++-
+ fs/xfs/libxfs/xfs_trans_inode.c  |   6 +-
+ fs/xfs/xfs_iops.c                |   6 +-
+ fs/xfs/xfs_super.c               |   2 +-
+ include/linux/fs.h               |  61 +++++++----
+ include/trace/events/timestamp.h | 173 ++++++++++++++++++++++++++++++
+ mm/shmem.c                       |   2 +-
+ 12 files changed, 514 insertions(+), 79 deletions(-)
+---
+base-commit: 33b321ac3a51e590225585f41c7412b86e987a0d
+change-id: 20240626-mgtime-5cd80b18d810
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
