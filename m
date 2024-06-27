@@ -1,170 +1,218 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2077.outbound.protection.outlook.com [40.107.237.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7D8199234;
-	Thu, 27 Jun 2024 16:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719505216; cv=fail; b=QLhO2u6Z6IJY/V+xOrnh7Sexe8snG1SDXygc4lIPgvlDGHEzVmmdKa9IeIEjYBwJNjxizoNzxpPyjM0UeO2GktynH5Hgcwqln40TwD6+AR+svtL918JDceKmOWuvjrIwHSbCambbSDN6LQ3Lok+rtm5K3UtKS4+z2K3aNduVFnA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719505216; c=relaxed/simple;
-	bh=wKIwHmxZl0UoEjxdg0BnBrgbIsYsGjBT7r21nSU12T8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=b7i0h0p2KxdwI4UXVIkVJEoW0armzKZN2zf649PujNyi6GU3dSmKQOenknVmEMTqjoqGe7v73cy8YulPOAB7LF2mUHO0u77NGNt4fFeXQp6kah8cWEP0/GeQOarGHWFcmXEbVZn3Zwx/S3rxTR1eeRYubNkTiN0eljX3mMHP2A0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AeTttTLK; arc=fail smtp.client-ip=40.107.237.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C641991A9;
+	Thu, 27 Jun 2024 16:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719505654; cv=none; b=kj61BPXySl78oWnQJ8RNK1arWiIrVea7/FWAmpNePoYMJeManbcI+twxRNypU5DKWI6/utAMPvX5NJJa0e9LQOW8mIME/TSdRYB8Ea9Uu5t04zf6f/RXGfzrK+9gzBvoJ93uZfEcjAwhOyadlAYQl87Xk0B2TcH3XuEu7IWJRr8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719505654; c=relaxed/simple;
+	bh=t/mlo7YOmJpKfpzQN0RD7EEKMLvicfCC0Lm2qcWAkG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYbcEjRHncsUeYiT+7ioVVgzG2vWAvI/rVfbyJDYI5itGUaMYcmITwxYisumjue1ZT5x/Ri1rZsvGR8JC4T08Bburv3p14rTTliHQdOiNrgSHd4fNTV5hTYY47NLVTTLgU8nbx9MgcWWlWZFdyY2jaxrFR4+Axo236OR61e+9Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFmB+51L; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AeTttTLK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mXaNaXg90NMtMGmBX7KomyDxKU8xsWWNG/DxForvKwQJIhQ0392nRf8ob/vT4F0M16yDK5WcGxPEF5GMias5+EIzg/SfrtGV/BjCkxQ+INwToPXVnwWCqOVyyboDD9LOwINAdWYgHWiEB9wW21Orj7xir6F41JD56vEd4R67r/tMt6o3dsZiebxxALsor0KTr5iHqxEBxPTTqhBfsrY7iUDaFUo+DeSISe0h8CBzLMxr99lOcboA6NwAOidSkz5WGjxeaE4egxW8qjAc/rrQfN0F4o3jXmcLj5M4UUskOml+w3e7X7mRkXP6n6/Uo2t3q8NVhGNqqo9pOb/gQk+VqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Eu330YjAymmuDfFIr9wi0vnxiQClEMAeKM4OvG0JvYM=;
- b=B96gvKbaoLK4sZdvGxg0gc68FItof8Qmkv/nZbmlpz/NUQk1POP06cVd7UkwNlNpcOJJlAyTkF44srmMPagq9EDXkRetvMrURS0n7H38w08URck6+xcogyoUJk9rFVvv4Te3FINoI7xf0EeQ/hGjCZFweehzmo5jAjiIKeh+IxSILVLjnNoKZKqNR5l8IxWG0foKr5EcHW/Q4gU92vHfbw0IW3tQFrUc52nzlQT4vA14qLSONXid55vU1u2vOj4mdnA348KD9yFBQMei4ut4EjFU51DudO8qVpc1dMbDju3RTvNaIXVz7Ltp2BqPM/FnEXfPE2teNFrPCeogSliPWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Eu330YjAymmuDfFIr9wi0vnxiQClEMAeKM4OvG0JvYM=;
- b=AeTttTLKnVLg9dg0vljx++vqr8W8VPNLhfhU5apAN7peZT05La4+P5dFGFcU/J4VVnJKaFk0BFPJ5xQ637xZysFaBmoEpRbSivSeif2lBv1tzWANTy38BqM4dXTwFnNip+QQH6bSQaGN8l5RwkLQM8bi2Ssnl5LL7Jbqu6kic8E=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by IA0PR12MB7508.namprd12.prod.outlook.com (2603:10b6:208:440::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Thu, 27 Jun
- 2024 16:20:12 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::43a5:ed10:64c2:aba3]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::43a5:ed10:64c2:aba3%6]) with mapi id 15.20.7719.022; Thu, 27 Jun 2024
- 16:20:11 +0000
-Date: Thu, 27 Jun 2024 12:20:08 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>, Avadhut Naik <Avadhut.Naik@amd.com>
-Cc: "Naik, Avadhut" <avadnaik@amd.com>, Avadhut Naik <avadhut.naik@amd.com>,
-	x86@kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tony.luck@intel.com,
-	rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	rostedt@goodmis.org, lenb@kernel.org, mchehab@kernel.org,
-	james.morse@arm.com, airlied@gmail.com, john.allen@amd.com
-Subject: Re: [PATCH v2 4/4] EDAC/mce_amd: Add support for FRU Text in MCA
-Message-ID: <20240627162008.GA76758@yaz-khff2.amd.com>
-References: <20240625195624.2565741-1-avadhut.naik@amd.com>
- <20240625195624.2565741-5-avadhut.naik@amd.com>
- <20240626120429.GQZnwDzQ47y1fOlFTp@fat_crate.local>
- <ff9efb14-f3e5-4c4e-8285-7da853e6ffb7@amd.com>
- <20240626182013.GEZnxb3TpU6VgROX8g@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626182013.GEZnxb3TpU6VgROX8g@fat_crate.local>
-X-ClientProxiedBy: BN9PR03CA0056.namprd03.prod.outlook.com
- (2603:10b6:408:fb::31) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFmB+51L"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-700d1721dd9so1201928a34.0;
+        Thu, 27 Jun 2024 09:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719505651; x=1720110451; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=920O8PJb054pqxNaJJIQxYWqrCoZjbSlHkszY3iGPvs=;
+        b=LFmB+51LXMqwVAlUe8ynQIceJ9oQDPbqc0+LMI/4bT8k7TIiS92OA8TjbJj0XbHn9s
+         KW7xnbJkce/QKHeTvkQqxifWH3N3RKEqnVKr2vheyKqZWl+VUDyr5WyyVtw1MBN7wYyM
+         lqvJ6Vgh1rol0KMZ1ktrKRa7Zf8LkUHEutx92PIPy0e1kOgJDiPN6pXNfXMOgSLATuVD
+         TE7daAwAcyAbm3dbtwuTPNYmxVKS0PMO+yVawEkdM28EPelvHsi9dwZMokQ2MMXyXYpz
+         yMZrXfuYmtjT5cAHk9nX8WdqGXF3FKT+k+X7thwOjeKjq8F/o8AZ9Q5dPYUd74UEgtw3
+         iqZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719505651; x=1720110451;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=920O8PJb054pqxNaJJIQxYWqrCoZjbSlHkszY3iGPvs=;
+        b=UfoSuvZvqs1bVj2CaW8+kOtiU0qMr1wUaM5DhHxa9UWfyOuS7Wu2lv37Y/KOtgwOq0
+         Rv+BAPF7ANZFUYzu19/xWWUCP5h8jtBWbshCzg9+hL19bVctcycqBGRkrTb5966uBlWf
+         PosxdCbsW211riJpaKDZJUrEpVgnTsjk/RW6/z4B2qP5f4nl8N/nNmC8BLvKYU8gHWWM
+         eDf430IV2p6hmFYUhpIxKze6MXGE48rvX8skqdbX2c6+NNcE0UL9WxZmLJ8D5RICj5CH
+         BsuFun5VGfKmmDzKQR8RnR6jOmkMTdbpF4HGIfUctxcvaJuXSwadatb7Cb2V7fVqrMNI
+         Hdkw==
+X-Forwarded-Encrypted: i=1; AJvYcCXomcxdUttCWCLHHPqktdo8zrh5nStcteBqhRMDYP++2XevoTbSLKxvHMT2l5tT7SyW7gSrLo8cPjz7qcbew2TWGNGrynoCqD04XcTcyeQ+weRNSd83cpE9IYOEQMzxuLLueVUUw5SniPD3PNhaoBwJYtY=
+X-Gm-Message-State: AOJu0Yz/QYTChBbXfR0ng1IKooEABgydg+LNhiKRPUo8CX5KBdKywn7c
+	JNyIViwN5ALJ7xKD9Mr+JUDmZ79trn8CbxcIGbq6T1o8uyM6PNaLHnMWQw==
+X-Google-Smtp-Source: AGHT+IGtxkj9q+MuV9hPKLDs1WYWjSnutMr24viHqxFRA0ixkobVLmpIKr3zHIzusqBFjnzSHILUPA==
+X-Received: by 2002:a9d:7442:0:b0:6f9:61a1:aa73 with SMTP id 46e09a7af769-700b11e972fmr15703870a34.9.1719505651156;
+        Thu, 27 Jun 2024 09:27:31 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d5c8ade9csm68978785a.88.2024.06.27.09.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 09:27:30 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id E6C3E1200068;
+	Thu, 27 Jun 2024 12:27:29 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 27 Jun 2024 12:27:29 -0400
+X-ME-Sender: <xms:8ZJ9ZkwJQn3hGVjppSrTV0IZyrxtIWOEEpPcVprEZGpYEKndneZdBA>
+    <xme:8ZJ9ZoRZfmuNC_KNH9Mloe836UALKfMuxCj6toj6ZkgMcIokFm-s7skTzdbFK2hxF
+    a1FfTrhbD-VSodd5A>
+X-ME-Received: <xmr:8ZJ9ZmUNST7F9h19vO8rHuGtFfi1CieIGpKmgCo01SoAAvDNjb7l9XcSn7VDoQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtdeggddutddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefh
+    gfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:8ZJ9ZijeIlsxoOLKTT3HOtZOSh6yMswoZGAqWT-utfHKi1PTqMGvfg>
+    <xmx:8ZJ9ZmBLlNoz_h24bDEAp5hVZIrDBw_SkEIY90BRdzCghwCBifhRrA>
+    <xmx:8ZJ9ZjL0QopEp0Spd6lmQAPYta6FnBpwFrCXWW1ieXd4ByBmUrsDPQ>
+    <xmx:8ZJ9ZtB2nPKWDSX_1IdDt2ch85T0JBrm7Lj26_uwmF-czPtXpHktkQ>
+    <xmx:8ZJ9ZmxDzs_ruGAMdNA72uLCPg_m3GLOZAcirp7AKUUUeM4G9aA8ZuMo>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Jun 2024 12:27:29 -0400 (EDT)
+Date: Thu, 27 Jun 2024 09:26:46 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
+ Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
+	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
+ Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 1/2] rust: add static_key_false
+Message-ID: <Zn2SxvgfbWbmVnYY@boqun-archlinux>
+References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
+ <20240621-tracepoint-v3-1-9e44eeea2b85@google.com>
+ <ZnrtuaUByT70tJY5@boqun-archlinux>
+ <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3108:EE_|IA0PR12MB7508:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1d1ee42-e3f8-481b-a386-08dc96c504ea
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sX/dW9w3s0JBMHkAjBPcTDK5TpiH0ddhdiRlNc3ulCLU0beVKiQDRVcgBEgj?=
- =?us-ascii?Q?Eld5+Lljz1Q7x9BBejGVqgtrfdb9NhUDLXqVentwkhqZgwnH5kmWZXhj+ezu?=
- =?us-ascii?Q?96Pc3ZF5UYg9S/pdwzuEMb7fPRmlcUV7df0eMX8TK7vgczE1N4grWI/mXhop?=
- =?us-ascii?Q?pz7sQbAYNPNrOwLLPRstxUBbLbfGnFQNRlj678ULGuhEDbE8OysxvD+bmFR4?=
- =?us-ascii?Q?HbexWfpZ0IvqQags6MXNf/fYvcRULTXabvTRQoMtL66OzB2ajulCe5Ut0tJa?=
- =?us-ascii?Q?nGBQSwFrnYt3C7u5cdYYqTObD7B0YbwMxwyfGEN0hK5GDstp1QytsGuf2+7X?=
- =?us-ascii?Q?Xxw1VLTP1RF7N6K9OEVtKMrbgLoHtNFJcUCh2Gzcrza8ZA3TYEESmF8mSsFe?=
- =?us-ascii?Q?ip0SMxY4Ta/IdRFhLlb9eMuAioKXF4H2OA5lwEM4I1Jscz1bZAfwzl2URdPy?=
- =?us-ascii?Q?iqztfr+4X0v1BFBz0cHMghfpxj/WYM5jQ+/SATfqrQVx95/J+tiXvMvjhs0b?=
- =?us-ascii?Q?UazcAtYRwn/ZUjQ9SALQD6pQQ9GH+5vr8VQ10E83OJaeHY312tgo+b2RwwPh?=
- =?us-ascii?Q?j11uMCibYHlSZEfEbTICXCJ3VU6fEyQlnNQaNSMjjSpiTZrVkdEWpP32/En7?=
- =?us-ascii?Q?cdsoNA5IeM2hL9zrOX8IzqIFsUUKYMRpAISoxAyQwS3aTiEfOAgD090Fpud/?=
- =?us-ascii?Q?EhuINGwcWQkac5G/PYi8ukVh1aPCAbGStBNVf3qEmE0ZXU/JPMlFcJ6DwJ6G?=
- =?us-ascii?Q?d0RTc1EQVD4CVhoW0ZK08pRn2iLWUlCqc6WrBgQHTZ36YXP2fsACrWutDnpt?=
- =?us-ascii?Q?CbnRPde4OEGO3SgREPybW8BqJi+wTNBrOgfekgVgrUYaycLexnM+2lYLFA7o?=
- =?us-ascii?Q?MOELEFwVxsqk/gFGYx7fqbMBtYgiXb6Putoc0XgSDlGDmoTmHWydVUSBxDNp?=
- =?us-ascii?Q?r9jKyu1lM6WN4xQ8PrIQtzEpoWoQPm15URZHpX4ZWiS+WXuVy2kdzo/bt2XS?=
- =?us-ascii?Q?L4IMglk6NJT5UvkJIiv0LLTvNUD9XmyHZgPP2T+D5pCLOlPlY43UyxQy8pTa?=
- =?us-ascii?Q?1Ibd18FK6X4Cdj9NFrhjBTx8TT9gfW1DeXHJKrHbEo4XfWXVlj8VAVJBs5dC?=
- =?us-ascii?Q?q7OJY6gijyInVDB+hlMmYUSGs2Ex1TEm++xYzbliQrGqayZX95xHoTuw6cHP?=
- =?us-ascii?Q?4dSWHWpYYIuSsO069GrTbDdBJ4dB2UpLaFSdFa538zLqRT4mj+omX2KZVZly?=
- =?us-ascii?Q?o5UuhKNE8OtDwhpA8CPp1nbH/lGIc3H7ky80Do4/lHaBfMEZ2a4QVAFy/t6Z?=
- =?us-ascii?Q?aPCyBCXTSGDPPZ6YKmuTRZ4zUd89WfGlqIwDe1J1bu38xw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/zvBKV9atFHNCs2gyv4lmVB6SoaWpD39J9TYiZA7/+HUnYx7xcQjDNkMVQJC?=
- =?us-ascii?Q?1v0GFv8BuRcHmdJa3sPiUO5+9w0edaBtP40NL4RBEIuaNg2b041917ugyrmm?=
- =?us-ascii?Q?aWycU/wSfvKkkgz288pOjBguoxC2d+8z+aBZp/G5yruSub4uJC8T8FPhJ12N?=
- =?us-ascii?Q?FKakX8WTODelHgb7P4FqmcBxl3WXnmP9Bo/ZXzG8Kl+3I1dLYgTDpoyhXwx0?=
- =?us-ascii?Q?dgvXLj+uc1oq5uciVhsSzNOStfvFrzlA9DCdTjudm2etiiSUtwZFL+7ZGBBe?=
- =?us-ascii?Q?sLojBuYxsX/pLDTS+xtAC9BNvHbvZQzzWCtkBDclo9SycN3HXkZerUfue9uY?=
- =?us-ascii?Q?SpFzXHHWp/Bo+XdKfmSeSLcLbAfn4qPXZMdTOT09DzmGARlTkEm23SKRqyrt?=
- =?us-ascii?Q?5sVofQRZnMoijuZ6mhjz/YJUHmJ7iqImmUHtfRU8kTFqhjETs3Vqv1ot1/rL?=
- =?us-ascii?Q?SZeBpfKDl8yZRAqBUD8qtPn5iKpwcCenfEYU4lQbfrL4m8aknS8+tBXKDmcf?=
- =?us-ascii?Q?0+jG9EktbkFa96HaEjlR3rxQ48OKHHHRr/9duSq3is/yZG+LbZcTpn15uDN5?=
- =?us-ascii?Q?i/r/EV/F4Ft3a9cvZOGMky057549aOdpn8BE9rp+FLoVDnwEjxc5Vf4/TB1D?=
- =?us-ascii?Q?artfxMuoMF2kyKcEiKq1/ieewsIo9mv9cw8GK6GuNm96KB87CNfCDFmpFL0k?=
- =?us-ascii?Q?2wNCJWRqDqjdD15VHIoutfEO4QSGRBobTWQ71JK9j02rk9iiCnJwlt00VyXM?=
- =?us-ascii?Q?W+vIOYSlVYGqY5PHNehC1f5K7V7acSaybeWWTNmfiZ4rAjLWi3V26VL4lt60?=
- =?us-ascii?Q?QedyscgdennaCuQ4ixkh0TRe7751kP12fyPNeyIR96RuJSMw0BwLmlFmISCA?=
- =?us-ascii?Q?ERSY3CiKfA7WkWsnuZAqKQEyDE3Vg3XUdzUsVNrVjIBHLZTRTvpvrwMSPzf6?=
- =?us-ascii?Q?s38w5HVThTjEsqs4IYLwUzLSUUZL7iK9T8YfMb1DoxmjdKF04p1IRshsSgY6?=
- =?us-ascii?Q?llprTrB7Gfvn8X5moh8/VqhZ7jPK0egwzMo2ARpzb5JGrRjwB2IDgx5bQ+N5?=
- =?us-ascii?Q?JdoDOn0vfT31/55xNWCmk+uiaxrbCdZEeRmROCekdU2Phts9rvAZo7z283+W?=
- =?us-ascii?Q?uZ+UwvH6KG/T6Rq45rcikzLiLo4vupOFHiwglYBmIiS/B8N0iIVJbFSFykZn?=
- =?us-ascii?Q?Xq+EsTgfufCLCZWR4WMLNyv8i86e2ehsONWG+twlHI1Q32pNjqnj5qWcmTNU?=
- =?us-ascii?Q?6SqzFr+Ep3y/iFXihTj9nYgd/ok9CeTiUGYTBvVjTXtF5Zwccdo6pVnBSmq7?=
- =?us-ascii?Q?wDVzs2lcqZZ1z6WHWgyGtUwtOQnEcc5/HrcuBZANRRXc9ZtIGa3050XTsJeJ?=
- =?us-ascii?Q?hrT3ATXg4fYKNQq/KeUbWXql4Sdh9fyWrxkrAVgbOmhU3qz1uRECLxJTNy7E?=
- =?us-ascii?Q?OXF7U1s7dL+eeFcmLfow66ydnFKw9AkLLzXT5tpiFc6gYbWdx/vjek/SspQ9?=
- =?us-ascii?Q?dokVlHa6tBMzIgE2pQacInzD9FyaxdCzlr/uh/FSYpXi9LsDdzX7r2z8Ifya?=
- =?us-ascii?Q?5ASdgMw6YI1Y47RQw68D68Ay802FIE7OvCixDsCE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1d1ee42-e3f8-481b-a386-08dc96c504ea
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 16:20:11.6537
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y4sBmlZsP2R3jMb9+Ujr4T4Li/hL6OB5/LHktkbTVUeqUCsPnYJXq7+HxZ1r2Py5HdYPi1anIt6HfIjt+Cey5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7508
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
 
-On Wed, Jun 26, 2024 at 08:20:13PM +0200, Borislav Petkov wrote:
-> On Wed, Jun 26, 2024 at 01:00:30PM -0500, Naik, Avadhut wrote:
-> > > 
-> > > Why are you clearing it if you're overwriting it immediately?
-> > > 
-> > Since its a local variable, wanted to ensure that the memory is zeroed out to prevent
-> > any issues with the %s specifier, used later on.
+On Thu, Jun 27, 2024 at 10:34:39AM +0200, Alice Ryhl wrote:
+> On Tue, Jun 25, 2024 at 6:18 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > Hi Alice,
+> >
+> > On Fri, Jun 21, 2024 at 10:35:26AM +0000, Alice Ryhl wrote:
+> > > Add just enough support for static key so that we can use it from
+> > > tracepoints. Tracepoints rely on `static_key_false` even though it is
+> > > deprecated, so we add the same functionality to Rust.
+> > >
+> > > It is not possible to use the existing C implementation of
+> > > arch_static_branch because it passes the argument `key` to inline
+> > > assembly as an 'i' parameter, so any attempt to add a C helper for this
+> > > function will fail to compile because the value of `key` must be known
+> > > at compile-time.
+> > >
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> >
+> > [Add linux-arch, and related arch maintainers Cced]
+> >
+> > Since inline asms are touched here, please consider copying linux-arch
+> > and arch maintainers next time ;-)
 > 
-> What issues?
+> Will do.
 > 
-> > Would you recommend removing that and using initializer instead for the string?
+> > For x86_64 and arm64 bits:
+> >
+> > Acked-by: Boqun Feng <boqun.feng@gmail.com>
+> >
+> > One thing though, we should split the arch-specific impls into different
+> > files, for example: rust/kernel/arch/arm64.rs or rust/arch/arm64.rs.
+> > That'll be easier for arch maintainers to watch the Rust changes related
+> > to a particular architecture.
 > 
-> I'd recommend looking at what the code does and then really thinking whether
-> that makes any sense.
->
+> Is that how you would prefer to name these files? You don't want
+> static_key somewhere in the filename?
+> 
 
-We need to make sure the string is NULL-terminated. So the memset()
-could be replaced with this:
+I could have been more explicit. My preference is (for example ARM64)
 
-	frutext[16] = '\0';
+*	we have a rust/kernel/arch.rs, where we do:
 
-Or better yet, maybe we can use scnprintf() or similar.
+		#[cfg(CONFIG_ARM64)]
+		mod arm64::*;
 
-Thanks,
-Yazen
+		#[cfg(CONFIG_ARM64)]
+		pub use arm64::*;
+
+*	we have a rust/kernel/arch/arm64.rs:
+
+		pub(crate) mod jump_label;
+
+*	we have a rust/kernel/arch/arm64/jump_label.rs, where we put
+	ARM64 arch_static_branch() there. (or static_key.rs and
+	arch_static_key_false()).
+
+Then linux-arch can watch:
+
+	rust/kernel/arch.rs
+	rust/kernel/arch/
+
+And ARM64 maintainers can watch:
+
+	rust/kernel/arch/arm64.rs
+	rust/kernel/arch/arm64
+
+This is similar to how <asm/*.h> are organized today.
+
+Does this make sense?
+
+Regards,
+Boqun
+
+> > Another thought is that, could you implement an arch_static_branch!()
+> > (instead of _static_key_false!()) and use it for static_key_false!()
+> > similar to what we have in C? The benefit is that at least for myself
+> > it'll be easier to compare the implementation between C and Rust.
+> 
+> I can try to include that.
+> 
+> Alice
