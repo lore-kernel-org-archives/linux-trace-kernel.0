@@ -1,218 +1,159 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C641991A9;
-	Thu, 27 Jun 2024 16:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEA91494A1;
+	Thu, 27 Jun 2024 16:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719505654; cv=none; b=kj61BPXySl78oWnQJ8RNK1arWiIrVea7/FWAmpNePoYMJeManbcI+twxRNypU5DKWI6/utAMPvX5NJJa0e9LQOW8mIME/TSdRYB8Ea9Uu5t04zf6f/RXGfzrK+9gzBvoJ93uZfEcjAwhOyadlAYQl87Xk0B2TcH3XuEu7IWJRr8=
+	t=1719506621; cv=none; b=cbG5GEBPjmS9TA5rMwwOJ3htnjHgKIoVfEtCR3/gqPgEmMejUAHaJ8i8sLOqtRFIghLDWbUNwjdF/rjCTw3HbpG72kLvMqWAIA2dDS7ED1QB6newd/OoIWM+IEVyllgf6eb1/aBfXCD3bospxP+N+rbRrdaPirHQ3v9f4uSx514=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719505654; c=relaxed/simple;
-	bh=t/mlo7YOmJpKfpzQN0RD7EEKMLvicfCC0Lm2qcWAkG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYbcEjRHncsUeYiT+7ioVVgzG2vWAvI/rVfbyJDYI5itGUaMYcmITwxYisumjue1ZT5x/Ri1rZsvGR8JC4T08Bburv3p14rTTliHQdOiNrgSHd4fNTV5hTYY47NLVTTLgU8nbx9MgcWWlWZFdyY2jaxrFR4+Axo236OR61e+9Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFmB+51L; arc=none smtp.client-ip=209.85.210.44
+	s=arc-20240116; t=1719506621; c=relaxed/simple;
+	bh=Pzvab+P7oHtsuMWQVvxBpy27WDalK4SAhrkR7Q0XMms=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pHJsXomnJJ5wfkQLA3mjKi+WCWGnrS54NgYdHcSE3xhdDJcEbM6NqEHPM+kULZS/JUWC5iQiHOfRRBm5Gi8F+X3tpXdkI10M4wOYfeGCXyc6VuJnom9269UGbetStRmJmLNs+0DyYiM1Jb3FcfCOjxEpybcTobucWPfAuE3b8lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkdBWOQ1; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFmB+51L"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-700d1721dd9so1201928a34.0;
-        Thu, 27 Jun 2024 09:27:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkdBWOQ1"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2c7dff0f4e4so6419600a91.2;
+        Thu, 27 Jun 2024 09:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719505651; x=1720110451; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=920O8PJb054pqxNaJJIQxYWqrCoZjbSlHkszY3iGPvs=;
-        b=LFmB+51LXMqwVAlUe8ynQIceJ9oQDPbqc0+LMI/4bT8k7TIiS92OA8TjbJj0XbHn9s
-         KW7xnbJkce/QKHeTvkQqxifWH3N3RKEqnVKr2vheyKqZWl+VUDyr5WyyVtw1MBN7wYyM
-         lqvJ6Vgh1rol0KMZ1ktrKRa7Zf8LkUHEutx92PIPy0e1kOgJDiPN6pXNfXMOgSLATuVD
-         TE7daAwAcyAbm3dbtwuTPNYmxVKS0PMO+yVawEkdM28EPelvHsi9dwZMokQ2MMXyXYpz
-         yMZrXfuYmtjT5cAHk9nX8WdqGXF3FKT+k+X7thwOjeKjq8F/o8AZ9Q5dPYUd74UEgtw3
-         iqZg==
+        d=gmail.com; s=20230601; t=1719506619; x=1720111419; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yrAx6aaMDW2xL/mgwiGPWCampdvgGJiEDrh0Y/dkQXE=;
+        b=FkdBWOQ1FZLWvfK4V6MO03ohPgR1w+kdPcghKY4ATZyfpWdVRoZjBxbGmE3clMPDT6
+         nlSTJdjxo3lrz9a44eqegIwoOHb/2nWmhyhEnf5SiJpdcfnXRXaY66ngo08wuBkVeySk
+         YCsl2qrgS570RqwZQEkrXzkj33HziNflNYc8GJUpg8vghF8Neaow42jrmDNdf6B43/UX
+         ao24265GWfffqcY3ske3ZVUCf0FgrJH5y9YvBqG3fYjp5La1vqPAXv0C3ho0htmGe40Q
+         J+zFwX6MHoWXP4kUeJQwY8142gJaT4q8V7QYRhxUiLFiKVhC3r/+v/dTqoKum/OJZtAl
+         OQsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719505651; x=1720110451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=920O8PJb054pqxNaJJIQxYWqrCoZjbSlHkszY3iGPvs=;
-        b=UfoSuvZvqs1bVj2CaW8+kOtiU0qMr1wUaM5DhHxa9UWfyOuS7Wu2lv37Y/KOtgwOq0
-         Rv+BAPF7ANZFUYzu19/xWWUCP5h8jtBWbshCzg9+hL19bVctcycqBGRkrTb5966uBlWf
-         PosxdCbsW211riJpaKDZJUrEpVgnTsjk/RW6/z4B2qP5f4nl8N/nNmC8BLvKYU8gHWWM
-         eDf430IV2p6hmFYUhpIxKze6MXGE48rvX8skqdbX2c6+NNcE0UL9WxZmLJ8D5RICj5CH
-         BsuFun5VGfKmmDzKQR8RnR6jOmkMTdbpF4HGIfUctxcvaJuXSwadatb7Cb2V7fVqrMNI
-         Hdkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXomcxdUttCWCLHHPqktdo8zrh5nStcteBqhRMDYP++2XevoTbSLKxvHMT2l5tT7SyW7gSrLo8cPjz7qcbew2TWGNGrynoCqD04XcTcyeQ+weRNSd83cpE9IYOEQMzxuLLueVUUw5SniPD3PNhaoBwJYtY=
-X-Gm-Message-State: AOJu0Yz/QYTChBbXfR0ng1IKooEABgydg+LNhiKRPUo8CX5KBdKywn7c
-	JNyIViwN5ALJ7xKD9Mr+JUDmZ79trn8CbxcIGbq6T1o8uyM6PNaLHnMWQw==
-X-Google-Smtp-Source: AGHT+IGtxkj9q+MuV9hPKLDs1WYWjSnutMr24viHqxFRA0ixkobVLmpIKr3zHIzusqBFjnzSHILUPA==
-X-Received: by 2002:a9d:7442:0:b0:6f9:61a1:aa73 with SMTP id 46e09a7af769-700b11e972fmr15703870a34.9.1719505651156;
-        Thu, 27 Jun 2024 09:27:31 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d5c8ade9csm68978785a.88.2024.06.27.09.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 09:27:30 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id E6C3E1200068;
-	Thu, 27 Jun 2024 12:27:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 27 Jun 2024 12:27:29 -0400
-X-ME-Sender: <xms:8ZJ9ZkwJQn3hGVjppSrTV0IZyrxtIWOEEpPcVprEZGpYEKndneZdBA>
-    <xme:8ZJ9ZoRZfmuNC_KNH9Mloe836UALKfMuxCj6toj6ZkgMcIokFm-s7skTzdbFK2hxF
-    a1FfTrhbD-VSodd5A>
-X-ME-Received: <xmr:8ZJ9ZmUNST7F9h19vO8rHuGtFfi1CieIGpKmgCo01SoAAvDNjb7l9XcSn7VDoQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrtdeggddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefh
-    gfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:8ZJ9ZijeIlsxoOLKTT3HOtZOSh6yMswoZGAqWT-utfHKi1PTqMGvfg>
-    <xmx:8ZJ9ZmBLlNoz_h24bDEAp5hVZIrDBw_SkEIY90BRdzCghwCBifhRrA>
-    <xmx:8ZJ9ZjL0QopEp0Spd6lmQAPYta6FnBpwFrCXWW1ieXd4ByBmUrsDPQ>
-    <xmx:8ZJ9ZtB2nPKWDSX_1IdDt2ch85T0JBrm7Lj26_uwmF-czPtXpHktkQ>
-    <xmx:8ZJ9ZmxDzs_ruGAMdNA72uLCPg_m3GLOZAcirp7AKUUUeM4G9aA8ZuMo>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Jun 2024 12:27:29 -0400 (EDT)
-Date: Thu, 27 Jun 2024 09:26:46 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
- Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
-	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
- Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 1/2] rust: add static_key_false
-Message-ID: <Zn2SxvgfbWbmVnYY@boqun-archlinux>
-References: <20240621-tracepoint-v3-0-9e44eeea2b85@google.com>
- <20240621-tracepoint-v3-1-9e44eeea2b85@google.com>
- <ZnrtuaUByT70tJY5@boqun-archlinux>
- <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1719506619; x=1720111419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yrAx6aaMDW2xL/mgwiGPWCampdvgGJiEDrh0Y/dkQXE=;
+        b=JvbXxpmGaW43C+hFZCY5aUauxwnIC/UJ+sHd+RBEC0A8G3Hg8gmGMaytoLZPe2Y+Fv
+         LIA8bzyHeDzM2gLGry86cvotFS5vQYaAoVbA/Yfrpjdi11iNdKgRRinB+z97HV8s7vGk
+         +SRwcUgDXj88GCjM5XSp/1KwkVCcsIIbtRfZaCUPgSfBPoUwJ+pNzU1iR4X8SXw1q5E6
+         +IXmfRn94laP0rt1hmEYMlxk0b3ZwK8Y17ADIkEojR4U7TS+FAPtGKMw2E2ujWeDyK3g
+         n1jXHutitgLBZ1/rvT2GWOePYzw2T32O9uwKQevxIjRZ94x/ctIJdIxOT+9FHN68loOs
+         K44Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUVibfy7XgWsLb2HXSQyG6DvolsV1ngXNyQb3ZxFfaXx8Gm6ipmRKcywsnOe7DWXZNew3kA56X1rewdGIe5ir7e4rkB/yaFUW5qF5EFj7yjq+lr5ImwCzqwOiESNosc9aSNss3w3XJJ
+X-Gm-Message-State: AOJu0YzU0bMB4Schc9mRLmzOqf1Qc8SliYf2VILCCQ4wkXPPRZcKTuoz
+	E/lMmK8QXak57pcI8NVGV1d5UiA8qe2tP46ndy8WW3G4C/Xz/qTC9bbAkixcw8SdfPB5FE45e7B
+	ekQ16Hx1+ZRr5mZHOEAt/1QaUqkk=
+X-Google-Smtp-Source: AGHT+IEaJSigUX5Kkf7eZK6OfnbzfrbSiyXBRiuu1f7shgCEz9vjnLpbFxc5KLKK9LSsVFuOOTHwqHcz6ViwIRByMZI=
+X-Received: by 2002:a17:90a:448b:b0:2c7:dfb6:dbe6 with SMTP id
+ 98e67ed59e1d1-2c8614861c8mr9994167a91.45.1719506619278; Thu, 27 Jun 2024
+ 09:43:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgjCAbz39-8EzBxxrWFXFg6VK=ts98BBvpEk8=RZoMuBSA@mail.gmail.com>
+References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-5-andrii@kernel.org>
+ <20240627112958.0e4aa22fe5a694a2feb11e06@kernel.org>
+In-Reply-To: <20240627112958.0e4aa22fe5a694a2feb11e06@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 27 Jun 2024 09:43:26 -0700
+Message-ID: <CAEf4BzYF4kyWoY9qz2KV0iUDnNO6xEHMaTpZQPTDe2Dqa0_Fyg@mail.gmail.com>
+Subject: Re: [PATCH 04/12] uprobes: revamp uprobe refcounting and lifetime management
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, oleg@redhat.com, peterz@infradead.org, mingo@redhat.com, 
+	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 27, 2024 at 10:34:39AM +0200, Alice Ryhl wrote:
-> On Tue, Jun 25, 2024 at 6:18 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+On Wed, Jun 26, 2024 at 7:30=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Mon, 24 Jun 2024 17:21:36 -0700
+> Andrii Nakryiko <andrii@kernel.org> wrote:
+>
+> > Anyways, under exclusive writer lock, we double-check that refcount
+> > didn't change and is still zero. If it is, we proceed with destruction,
+> > because at that point we have a guarantee that find_active_uprobe()
+> > can't successfully look up this uprobe instance, as it's going to be
+> > removed in destructor under writer lock. If, on the other hand,
+> > find_active_uprobe() managed to bump refcount from zero to one in
+> > between put_uprobe()'s atomic_dec_and_test(&uprobe->ref) and
+> > write_lock(&uprobes_treelock), we'll deterministically detect this with
+> > extra atomic_read(&uprobe->ref) check, and if it doesn't hold, we
+> > pretend like atomic_dec_and_test() never returned true. There is no
+> > resource freeing or any other irreversible action taken up till this
+> > point, so we just exit early.
 > >
-> > Hi Alice,
+> > One tricky part in the above is actually two CPUs racing and dropping
+> > refcnt to zero, and then attempting to free resources. This can happen
+> > as follows:
+> >   - CPU #0 drops refcnt from 1 to 0, and proceeds to grab uprobes_treel=
+ock;
+> >   - before CPU #0 grabs a lock, CPU #1 updates refcnt as 0 -> 1 -> 0, a=
+t
+> >     which point it decides that it needs to free uprobe as well.
 > >
-> > On Fri, Jun 21, 2024 at 10:35:26AM +0000, Alice Ryhl wrote:
-> > > Add just enough support for static key so that we can use it from
-> > > tracepoints. Tracepoints rely on `static_key_false` even though it is
-> > > deprecated, so we add the same functionality to Rust.
-> > >
-> > > It is not possible to use the existing C implementation of
-> > > arch_static_branch because it passes the argument `key` to inline
-> > > assembly as an 'i' parameter, so any attempt to add a C helper for this
-> > > function will fail to compile because the value of `key` must be known
-> > > at compile-time.
-> > >
-> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> >
-> > [Add linux-arch, and related arch maintainers Cced]
-> >
-> > Since inline asms are touched here, please consider copying linux-arch
-> > and arch maintainers next time ;-)
-> 
-> Will do.
-> 
-> > For x86_64 and arm64 bits:
-> >
-> > Acked-by: Boqun Feng <boqun.feng@gmail.com>
-> >
-> > One thing though, we should split the arch-specific impls into different
-> > files, for example: rust/kernel/arch/arm64.rs or rust/arch/arm64.rs.
-> > That'll be easier for arch maintainers to watch the Rust changes related
-> > to a particular architecture.
-> 
-> Is that how you would prefer to name these files? You don't want
-> static_key somewhere in the filename?
-> 
+> > At this point both CPU #0 and CPU #1 will believe they need to destroy
+> > uprobe, which is obviously wrong. To prevent this situations, we augmen=
+t
+> > refcount with epoch counter, which is always incremented by 1 on either
+> > get or put operation. This allows those two CPUs above to disambiguate
+> > who should actually free uprobe (it's the CPU #1, because it has
+> > up-to-date epoch). See comments in the code and note the specific value=
+s
+> > of UPROBE_REFCNT_GET and UPROBE_REFCNT_PUT constants. Keep in mind that
+> > a single atomi64_t is actually a two sort-of-independent 32-bit counter=
+s
+> > that are incremented/decremented with a single atomic_add_and_return()
+> > operation. Note also a small and extremely rare (and thus having no
+> > effect on performance) need to clear the highest bit every 2 billion
+> > get/put operations to prevent high 32-bit counter from "bleeding over"
+> > into lower 32-bit counter.
+>
+> I have a question here.
+> Is there any chance to the CPU#1 to put the uprobe before CPU#0 gets
+> the uprobes_treelock, and free uprobe before CPU#0 validate uprobe->ref
+> again? e.g.
+>
+> CPU#0                                                   CPU#1
+>
+> put_uprobe() {
+>         atomic64_add_return()
+>                                                         __get_uprobe();
+>                                                         put_uprobe() {
+>                                                                 kfree(upr=
+obe)
+>                                                         }
+>         write_lock(&uprobes_treelock);
+>         atomic64_read(&uprobe->ref);
+> }
+>
+> I think it is very rare case, but I could not find any code to prevent
+> this scenario.
+>
 
-I could have been more explicit. My preference is (for example ARM64)
+Yes, I think you are right, great catch!
 
-*	we have a rust/kernel/arch.rs, where we do:
+I concentrated on preventing double kfree() in this situation, and
+somehow convinced myself that eager kfree() is fine. But I think I'll
+need to delay freeing, probably with RCU. The problem is that we can't
+use rcu_read_lock()/rcu_read_unlock() because we take locks, so it has
+to be a sleepable variant of RCU. I'm thinking of using
+rcu_read_lock_trace(), the same variant of RCU we use for sleepable
+BPF programs (including sleepable uprobes). srcu might be too heavy
+for this.
 
-		#[cfg(CONFIG_ARM64)]
-		mod arm64::*;
+I'll try a few variants over the next few days and see how the
+performance looks.
 
-		#[cfg(CONFIG_ARM64)]
-		pub use arm64::*;
-
-*	we have a rust/kernel/arch/arm64.rs:
-
-		pub(crate) mod jump_label;
-
-*	we have a rust/kernel/arch/arm64/jump_label.rs, where we put
-	ARM64 arch_static_branch() there. (or static_key.rs and
-	arch_static_key_false()).
-
-Then linux-arch can watch:
-
-	rust/kernel/arch.rs
-	rust/kernel/arch/
-
-And ARM64 maintainers can watch:
-
-	rust/kernel/arch/arm64.rs
-	rust/kernel/arch/arm64
-
-This is similar to how <asm/*.h> are organized today.
-
-Does this make sense?
-
-Regards,
-Boqun
-
-> > Another thought is that, could you implement an arch_static_branch!()
-> > (instead of _static_key_false!()) and use it for static_key_false!()
-> > similar to what we have in C? The benefit is that at least for myself
-> > it'll be easier to compare the implementation between C and Rust.
-> 
-> I can try to include that.
-> 
-> Alice
+> Thank you,
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
