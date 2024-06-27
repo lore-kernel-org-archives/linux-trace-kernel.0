@@ -1,105 +1,109 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2434B433B3;
-	Thu, 27 Jun 2024 17:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201BA19AA7A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Jun 2024 17:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719508132; cv=none; b=NV/VN7sHFlGPGsmKTGOme2owEoEMt8NNplM9xnYEA3gUIfcst2L7D3aJBEYmYEI0PwjkRFDysZnLXnKqX6thBx4ym73ni3ZwXjrBA/KRjRHJmHx/o1xHE190TIO9NSKRAWaa0TzEhjTvoNumiyLLCg47Ww811EiEYThEP7W3sbM=
+	t=1719509997; cv=none; b=mvbC9sPrUnGi/whcWaZ4ekcwUhWzJy6Ca4LO4cKYsfy1EKpIDPL2CpeCU3lHlv8kRh5ITEmZ/rh8CX/Qdv0OPxB7YdBVPe+Bi36S9TKAo8mT8XiG8m/QRABCf4vIcdKrfXa7wT8pJYNApWeDIWszQstNxW6twklo682u1p1hbdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719508132; c=relaxed/simple;
-	bh=6a+QzgfITt8frxG2BinwNLUcugEG8Lp4mDKzxGhzYm4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=d6Oot6BmsHFOSI8YADIhJRo+oZnkgwTTi/kjGp7QRUhC5IUAA1zBIrpAmY8WrYoJMFV7bLpVJWC+uCKUbGyuz1AK6oN3zUkKdZbqHxVFdY9QytRSDB9qNxVD1tV6joIzlRE2IBguJo+jYzEBKwWrIk1hdCvIOQoKrze5Ed4aEcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+kNx+ND; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719509997; c=relaxed/simple;
+	bh=M1Pr/ccqxR64Qy5pX519WkVfLnUUaSq7Qjbum1LSRes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M89iYqDuLEEY8inZ6xqcaVvCODR51ZuV3OyZhmToafhxW/OqLgYvUB0ZxSymr6QQbb4OkFPju0QMcgfdCzub5pwPoReP0sol/zEdP9KvKpmCsIFiOv9C9INskI/xY4go3kViTmTItPTcCF9O1+NQZP/CZaNW+9bc5SK+TYZJwHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y+Ao9hbl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+kNx+ND"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42561c16ffeso13857075e9.3;
-        Thu, 27 Jun 2024 10:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719508129; x=1720112929; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cd52TDCo23vBUICUzAHPR5YFmSE3EhQH6c918u4ugTM=;
-        b=l+kNx+NDwiJN6QHmYwbT4SGurL9WxLn07hFdAH4sd/lEfWKy6Noq7f+ijhr67RwKZB
-         onULGKKtnqUOdckxbqL+OIFdpUyeaJN6TmKBuzAMu4N9CD3Q03myC8KJxToUx8zHH+4u
-         UX9TkxglsiIwhnV00lj3kCjDB6rHgsWWNRLIUtNf1j1zl56ciR5b7wA6rxdLRbwep6Gu
-         uopXkX66+IaBD6+ROZDX+eBfqqkPnqs6pbT9YBu9H2/qWHL8eQcSWI2cdKvdgjb9pLk4
-         gBEQXq8vrIpXXD1VaYZGB8sSbSlunmaW6bS7Eb/jsXlO21s4c+unLCQl8ZTgxf+GcLJ0
-         Blmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719508129; x=1720112929;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cd52TDCo23vBUICUzAHPR5YFmSE3EhQH6c918u4ugTM=;
-        b=T6XD5c50Og8elC3ksQM7arGF0ZpN4yP5HXAm7uNtCPafy6AZ10pnrfzS5MQZaycWza
-         vMpe9my3x+IID4+N/mT1wl4ogLe3dQmMz7WIUXRf78Xt9TLfAO1Snpcbq3puLQmt68Ly
-         MX/Ko6IysghGsZBO3pZJ15fePizmZUh4SDFIfUm0fUatSMFMAEq4/cs0MfU7H3W3nOw5
-         YVN63MPHEoc3tT9gTTcqSnmbtguUV2k/VD7Hc2p4gQl1kEe23FAe9V1M7RsaAoiXxEMn
-         2X3euc/7flJRPOn+iOo9uFgAkoR7Q3IVi/KiKRRsVwanIR49at46kYTe6psmb3HBEuza
-         S3uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtY1I/ugo29QsI4upeDo+IKg4jYn/YpB9vq0cNoixyxaypcsTq+a5Zm9XYpNyycfrfnQRk+d016NrZPrL4WhjCgmLTN/ZneoSnUazGXPm/WK5bsk36c9yMenuMdZuoCbcR/8gA9W/UQrrPGQcNf6T+
-X-Gm-Message-State: AOJu0YyS5jnyy6diMrYxY/zrBg/PzwM6ihUMJSL3zIpMfaeG2/ZfoqDE
-	7PEmO7/DHJd9MeciZto0NQwX7VgcD7hUk7EtwFSOvdm0NaTmtfJ4NHUAwA==
-X-Google-Smtp-Source: AGHT+IE5bMkYh7fWJfWBM1m0gURnI3pYwYNUdfjazbH575zk32WvUb2At7eMuejqYxfL6YI71DOP4Q==
-X-Received: by 2002:a05:6000:1010:b0:367:f2b:aeff with SMTP id ffacd0b85a97d-3670f2bb07emr4426806f8f.0.1719508129193;
-        Thu, 27 Jun 2024 10:08:49 -0700 (PDT)
-Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357c12esm2493077f8f.15.2024.06.27.10.08.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 10:08:48 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y+Ao9hbl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719509994;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=34BYMyGoC6lX3CxmLrEw2DjPDGR7811PFr+ZC7aQ/ZU=;
+	b=Y+Ao9hblb7/Lp/WbUjWOV2unEMUy1ULLKNVXLsLcZrJfDIfRn/fbC6/xphYU2KUrlElPW/
+	z3noxblx4oUH6XCMpkg+U4JHZkJSRtymwUkREG8F8Y/zCDkoj7oTNwXQiQ2E7XG1ONGGlE
+	w9NJU0JdXZl9CGqwiSyMcRfCP/X/FnM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-sTRvXhL3ML203UbvsHfRAA-1; Thu,
+ 27 Jun 2024 13:39:49 -0400
+X-MC-Unique: sTRvXhL3ML203UbvsHfRAA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D9E2195608A;
+	Thu, 27 Jun 2024 17:39:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5297819560AA;
+	Thu, 27 Jun 2024 17:39:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 27 Jun 2024 19:38:12 +0200 (CEST)
+Date: Thu, 27 Jun 2024 19:38:06 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jiri Olsa <jolsa@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH][next] firewire: core: Fix spelling mistakes in tracepoint messages
-Date: Thu, 27 Jun 2024 18:08:47 +0100
-Message-Id: <20240627170847.125531-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	Andrii Nakryiko <andrii@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH] LoongArch: uprobes: make
+ UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN constant
+Message-ID: <20240627173806.GC21813@redhat.com>
+References: <20240618194306.1577022-1-jolsa@kernel.org>
+ <20240627160255.GA25374@redhat.com>
+ <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-There are two spelling mistakes in the tracepoint message text. Fix them.
+On 06/27, Andrii Nakryiko wrote:
+>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- include/trace/events/firewire.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks!
 
-diff --git a/include/trace/events/firewire.h b/include/trace/events/firewire.h
-index d9158a134beb..86330ba58336 100644
---- a/include/trace/events/firewire.h
-+++ b/include/trace/events/firewire.h
-@@ -853,7 +853,7 @@ DECLARE_EVENT_CLASS(isoc_single_completions_template,
- 		memcpy(__get_dynamic_array(header), header, __get_dynamic_array_len(header));
- 	),
- 	TP_printk(
--		"context=0x%llx card_index=%u timestap=0x%04x cause=%s header=%s",
-+		"context=0x%llx card_index=%u timestamp=0x%04x cause=%s header=%s",
- 		__entry->context,
- 		__entry->card_index,
- 		__entry->timestamp,
-@@ -891,7 +891,7 @@ TRACE_EVENT(isoc_inbound_multiple_completions,
- 		__entry->cause = cause;
- 	),
- 	TP_printk(
--		"context=0x%llx card_index=%u comleted=%u cause=%s",
-+		"context=0x%llx card_index=%u completed=%u cause=%s",
- 		__entry->context,
- 		__entry->card_index,
- 		__entry->completed,
--- 
-2.39.2
+> > --- a/arch/loongarch/kernel/uprobes.c
+> > +++ b/arch/loongarch/kernel/uprobes.c
+> > @@ -7,6 +7,14 @@
+> >
+> >  #define UPROBE_TRAP_NR UINT_MAX
+> >
+> > +static __init int check_emit_break(void)
+> > +{
+> > +       BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
+> > +       BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
+> > +       return 0;
+> > +}
+> > +arch_initcall(check_emit_break);
+> > +
+>
+> I wouldn't even bother with this, but whatever.
+
+Agreed, this looks a bit ugly. I did this only because I can not test
+this (hopefully trivial) patch and the maintainers didn't reply.
+
+If LoongArch boots at least once with this change, this run-time check
+can be removed.
+
+And just in case... I didn't dare to make a more "generic" change, but
+perhaps KPROBE_BP_INSN and KPROBE_SSTEPBP_INSN should be redefined the
+same way for micro-optimization. In this case __emit_break() should be
+probably moved into arch/loongarch/include/asm/inst.h.
+
+Oleg.
 
