@@ -1,128 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BA219922E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Jun 2024 16:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CB919938C;
+	Thu, 27 Jun 2024 16:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719504284; cv=none; b=J85MTYx+oGvkO3OxNEYM9B6edA7YkWU631hTl9E3/Ve7MKclO1xwxLthavpip9lUJdWVFcEOS13GDQ5qZjah1+J0tQAPXXz24Mui0o2Pws2RrXRcLT6JLc8prTHmeu6i7mual+BfalxasqfoV48oKs9EMOu6ZY2v/HAEdlSxG6M=
+	t=1719504921; cv=none; b=cc4J4I9hUkG8G+Mktdmi8+w33BjWXTJdcRwKKJNGqAu55V7IwFVkLFpsyBosmPhuAZBC+QH/8oNWlkLVvmLURq+mFpPwIv9PoYcI3DJmEkS8EiaiPdZeziJsTYmdLO1mD9YVRvH90Bg9ZW0wuVeMqoWI7e6RFc8dujAiD7w7YV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719504284; c=relaxed/simple;
-	bh=+xg+eevwCWNy89yxtQRq2r+EP1xcUe3bwgIph/PpJKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b8KX40CPBBnX3LBD7rlTKXxCIt3NZNXR4DoHZ2MEeCWKXfS+m38+bWqCjBzAi4DSeHum/7EgQvXIVyyi/lcYYdfTmKEXEI4e0ybA+2vzXlhNrqnoVRMVfM1ui4Qa3+bj7qcjMSnrO6a/8QN0OITKHPWclhRuhjUYKjIfr0Z6U7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IPmCYFzU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719504921; c=relaxed/simple;
+	bh=CDA54h0hWnLUGhTZX+zKgbXuYHV9KPWv43ZxtZveg8g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=BtJW2N2xcVENsGeQbtwmbnVr7agiK97rg58K6cTLyuchPM9/8YaC8GKB/PHltIYIh0yMMG4pRJWKzhyHTa4h5PXAaArjw7vy5ReRrMTds0rRdkckTEGAQ+nBFjt2M/e2PVVB8ClB5MonWUR+0DPrGw9x3lAZH7Rlphi8q7qHWj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jWuuQLEj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPmCYFzU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719504281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IHtUPZptzkhMFmEd2WdOkD9spo21pG/I1JXLQ6QiKXg=;
-	b=IPmCYFzUlFjHamdKYVzLGbqyhQnSs/G8DELVzpAxN/iayWC2y+S+AYlHdMPBl+ejdcNtVM
-	gIPuRdKhMxsct9xH1TtyyGZRqVcra1OIEdFxLc+IpRELo41mQq6Sb6cjdG8/2HA/Dhgyqc
-	8/kJJxr14285v/8cMkiz1iSVC2Q6RWg=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-134-NlcjFHhrMRadlitg845r3g-1; Thu,
- 27 Jun 2024 12:04:38 -0400
-X-MC-Unique: NlcjFHhrMRadlitg845r3g-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 895D21956096;
-	Thu, 27 Jun 2024 16:04:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0FAB319560A3;
-	Thu, 27 Jun 2024 16:04:30 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 27 Jun 2024 18:03:01 +0200 (CEST)
-Date: Thu, 27 Jun 2024 18:02:55 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Jiri Olsa <jolsa@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: [PATCH] LoongArch: uprobes: make UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN
- constant
-Message-ID: <20240627160255.GA25374@redhat.com>
-References: <20240618194306.1577022-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jWuuQLEj"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45REuSjO019530;
+	Thu, 27 Jun 2024 16:15:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:in-reply-to:references:date:message-id
+	:content-type:mime-version; s=pp1; bh=1/BkFzRrzEfYPMmdOD5/4JC3K9
+	WTbsso5dhAT+3LruU=; b=jWuuQLEjGfDF4VxF6OEZb2vYCY63ZENahB9D1jFnGe
+	N2Rs1Sj/RLbF7irFXcWGkHzxceVjfmKhTsqrqsLp2GtZqIA1XMzebH2igA6k6/MI
+	NTt4L7jNWFwqP0uaCRBZYz0+/jNnmra8nHLMbWYtEWsOUILqhWgErhqxHX1fPAW9
+	roeP2PdWNafPOeE7BwSKgvxtyIufyy35YNj1AtIL9eGJVi2SoybK9LPgonj+E0H8
+	R/fkB1PzrC62BuuHy0nEz2vqhdWzOCiNl8lSfvZU2k2u0sMo0eaiXjRyBSUiN+cg
+	96YyD9pfgatkmpAvT8H3bQpcqag3jFJhzQIydw1gGMjA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400yaw1w9k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 16:15:17 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45RGFHsN013469;
+	Thu, 27 Jun 2024 16:15:17 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400yaw1w9h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 16:15:17 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45REUQA1018103;
+	Thu, 27 Jun 2024 16:15:16 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yx8xukugw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Jun 2024 16:15:16 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45RGFAHi38076726
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Jun 2024 16:15:12 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D9442004E;
+	Thu, 27 Jun 2024 16:15:10 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6A5E42004D;
+	Thu, 27 Jun 2024 16:15:10 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 27 Jun 2024 16:15:10 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Yunseong Kim <yskelg@gmail.com>
+Cc: Akanksha J N <akanksha@linux.ibm.com>,
+        "Naveen N. Rao"
+ <naveen.n.rao@linux.vnet.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        MichelleJin
+ <shjy180909@gmail.com>, linux-s390@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: selftests/ftrace kprobe_eventname test fails on s390x QEMU
+ (KVM/Linux)
+In-Reply-To: <1add7a0a-f91d-4249-9632-424505597e45@gmail.com> (Yunseong Kim's
+	message of "Thu, 27 Jun 2024 14:03:14 +0900")
+References: <1add7a0a-f91d-4249-9632-424505597e45@gmail.com>
+Date: Thu, 27 Jun 2024 18:15:10 +0200
+Message-ID: <yt9dsewy746p.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LYnnZLIcyY3OFaiaYL_hgWz4e_d8nqrO
+X-Proofpoint-GUID: wZ4mcCmB0kjLnm1tDifpTMLA_u79RN1r
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618194306.1577022-1-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-27_12,2024-06-27_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 suspectscore=0 clxscore=1011 spamscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406270121
 
-LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
-arch_uprobe_trampoline() which uses it to initialize a static variable.
+Yunseong Kim <yskelg@gmail.com> writes:
 
-Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return probe")
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-3990X/
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- arch/loongarch/include/asm/uprobes.h | 6 ++++--
- arch/loongarch/kernel/uprobes.c      | 8 ++++++++
- 2 files changed, 12 insertions(+), 2 deletions(-)
+> In my s390x archtecture, kprobe_eventname selftest have always failed
+> because of rcu_sched stalls.
+>
+> My environment is QEMU Ubuntu 24.04 KVM Machine Linux version
+> 6.8.0-36-generic (buildd@bos01-s390x-012) (s390x-linux-gnu-gcc-13
+> (Ubuntu 13.2.0-23ubuntu4) 13.2.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #36
+>
+> 1 configured CPUs, Linux is running under KVM in 64-bit mode
+>
+>
+>  qemu-system-s390x -no-reboot -name auto-inst-test -nographic -m 4096 \
+>    -drive file=disk-image.qcow2,format=qcow2,cache=none,if=virtio \
+>    -netdev user,id=enc0,hostfwd=tcp::10000-:22 \
+>    -device virtio-net-ccw,netdev=enc0 \
+>    -qmp tcp:localhost:4444,server,nowait
+>
+>
+> Currently, This failure can be always reproduced by this kselftests script:
+>
+>  # tools/testing/selftests/ftrace/ftracetest
+> tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+>
+> I've investigating cause of line, then I find this line.
+>
+>  for i in `seq 0 255`; do
+>    echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
+>  done
 
-diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/include/asm/uprobes.h
-index c8f59983f702..18221eb9a8b0 100644
---- a/arch/loongarch/include/asm/uprobes.h
-+++ b/arch/loongarch/include/asm/uprobes.h
-@@ -6,13 +6,15 @@
- 
- typedef u32 uprobe_opcode_t;
- 
-+#define __emit_break(imm)	(uprobe_opcode_t)((imm) | (break_op << 15))
-+
- #define MAX_UINSN_BYTES		8
- #define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
- 
--#define UPROBE_SWBP_INSN	larch_insn_gen_break(BRK_UPROBE_BP)
-+#define UPROBE_SWBP_INSN	__emit_break(BRK_UPROBE_BP)
- #define UPROBE_SWBP_INSN_SIZE	LOONGARCH_INSN_SIZE
- 
--#define UPROBE_XOLBP_INSN	larch_insn_gen_break(BRK_UPROBE_XOLBP)
-+#define UPROBE_XOLBP_INSN	__emit_break(BRK_UPROBE_XOLBP)
- 
- struct arch_uprobe {
- 	unsigned long	resume_era;
-diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/uprobes.c
-index 87abc7137b73..90462d94c28f 100644
---- a/arch/loongarch/kernel/uprobes.c
-+++ b/arch/loongarch/kernel/uprobes.c
-@@ -7,6 +7,14 @@
- 
- #define UPROBE_TRAP_NR	UINT_MAX
- 
-+static __init int check_emit_break(void)
-+{
-+	BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
-+	BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
-+	return 0;
-+}
-+arch_initcall(check_emit_break);
-+
- int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
- 			     struct mm_struct *mm, unsigned long addr)
- {
--- 
-2.25.1.362.g51ebf55
+I think this is fixed with:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.10-rc5&id=c239c83ed5c558be3b5926c7f11639f02c8acd00
 
+Regards,
+Sven
