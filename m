@@ -1,59 +1,59 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B94249F9;
-	Thu, 27 Jun 2024 21:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B9F50297;
+	Thu, 27 Jun 2024 22:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719524676; cv=none; b=S73zNebOdfWLmA0HxiM1XEMWqiDqxP9hb1d9gwfzVe4y6ph29GAH1sLz6H9Gvq11Fnkd7sTq0Bb4sYwg6QwMIktYTKF+TGDmeYG+KMtfm61LqXsqEiicWZvNUcmSHWUjRILF61dMkDHrOil4Bw0mmH4VbLLv6NBmtyFOhgxe+Vk=
+	t=1719527585; cv=none; b=gzvpncykvNJ+rXrY96BYAJOcHgO9WjtIxUPv/xRfK4QqtI+5/w2wEAzj3tjXV1K9Y7NpaUaynPuGcll6DUKEFXJNhGbFNChnViMRC+t8f5AEnlsAsb26N31BSvnK4u+LSzDIm3GIXyJBCMtgLcDNiiIWVTcLJVdvuY4PRdlNnQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719524676; c=relaxed/simple;
-	bh=kn68BtQ6AWZ3RcXT2AfKsVPC/rmYoZaD6FVsONJ4H34=;
+	s=arc-20240116; t=1719527585; c=relaxed/simple;
+	bh=i6m5qwwX44sa7BWWoVglfdkp0zY2C3NrwRGhJeG3J1Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QZFt59WWeVKSfa9FmtmW/d759UKZFuAqd72HZOUGlIyn/YgYRjJCpqFAFGJN0HXXLQRhQ5VfDVDL4ULfodGp5DS8CcO7+lohUI86s5q3UFMJvSqn07xwKMKgoFyE4de36UUo3Ku+nQnylejX7dK2+TZFjwAL95mcEmaxOTMf00k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YrynArIl; arc=none smtp.client-ip=209.85.214.177
+	 In-Reply-To:Content-Type; b=Yy/9AKKF+i7E/6vdqkTONTVtb+St4Za1aA5K6RAd/47mqtjQ+/prDRler7nvUz8Zv5EpSot5IVk3MeEjSye2KPBLEk/Z1LRX/xUpWJ5+FFbe1BHEzwAHoZAFvUSeKeE99RE7rTg6YAikW/1DPj966HZdkQ7t2Cg5AYnM49n1+Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QfVyvA2C; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrynArIl"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fa2ea1c443so44503615ad.0;
-        Thu, 27 Jun 2024 14:44:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfVyvA2C"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c7bf925764so27221a91.0;
+        Thu, 27 Jun 2024 15:33:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719524673; x=1720129473; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719527583; x=1720132383; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HQZBke7p8dpuWc4nCjSqAhRJMLUZMYWtUAmiNcjemkc=;
-        b=YrynArIlVU1FBHuQV3IK3XxujZL/hU+IqxmWJIb/6TNSzWjV6Pz57zduepZhU88cOw
-         QOMkEgrGoZRb1GWfwn4Yf/JV4tfoUFv/n3IR40ZSq2ci/bDVk1k8F9XpehpqGZ8klGuX
-         T//XHCDMsfNqDLGRUpPWWDMOLIormqxByG1TYqwvy28mJdaPw27DQIZ5ORAmpA5sp8YX
-         +2jGZ45H58tYYxvRyPcQSpa3TJ5X5heBxmlgBdSMTggtivClvG9BR5dtmnYxbmlSu/TG
-         LkjhR0C5NTlL3n+9AVSK+TT308YIcVuH7YOvpp8bJlym7ec5NXDUZDIRPiQfQBspPNT3
-         dEvw==
+        bh=KiKUQ7+sVtO2XmAIs87R1jV/vY8NV05dNAtCxHrW3FQ=;
+        b=QfVyvA2CMt2/n2RVz1nbS3m/EjLBA0+itFeF5BcX/UwpVckpRzvoOxDPf0xN+DYAfn
+         uMCzsOsyrobuC8hJxhGzocwncDGrfvG0VTSIKCO7LnmP+IPBMREsNKHkbq0P75mXMJDr
+         vYx60B8J16Rs+KvPsR+O96D0EJEymIllWqsDso4SQXGs3gACtN7ykOpZh0dzUBF73Toz
+         SWzfNzK7BVhS0nPAHCVp1DorTxmHbjTqFO2AnGs10Xw16tdgXRxbQxIYhd90n2sB9Jfz
+         rlGuY8xHREmItboPi0Ndmcb+WvmBe50iPo7v6JO92jBPLdR0/nn8fkYCqMgblEfNc3jb
+         1WAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719524673; x=1720129473;
+        d=1e100.net; s=20230601; t=1719527583; x=1720132383;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HQZBke7p8dpuWc4nCjSqAhRJMLUZMYWtUAmiNcjemkc=;
-        b=w6Jt30TCLvP1T7pOsoN5HZtNmTa0JEE14xUywc2U+1hcnRZ5h9g5ALzmnL5d3iAC05
-         IgxWrfV9np2F7lsW/+8QMlKd/w0II0klfPvdTyDhK33sbcNLIFSuDaKGwenUOYKUT8+I
-         5/9vC6kthHkHkVDw1aksicFnBBmdQPwlHf7qsv80EzYVLK0liGIUSPCoKmHewDTcEmYO
-         AlFqyOuXapVzKk4zLwKxMJxR0r/ny5H0AgTxP9gGZcazUGh35Uuz5SW6SYuNvDtTVn7j
-         +UMyyoFFCp1iFQLvuSM/3mwZEuoA1spsFxQLPEiF1KlZ/TPAMdKKhmNRtmOjD1BFzbsp
-         yG5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXsE/DeaFl7iDeC3ZtgmDiILkMkoZhGTp9gYA7EZqmi03Qq//vHLNuk0aE4UHOiNwC89Y3Q0hSSFZThoaTWKJPnzkLMPWE6GTFC+pr6DAosZVL8bv+rYL64n55lueqHS1wW4F8EVhkT4qwRrHwUmCvvABlgRs3ih/k+IuI/EZtNZN+1vEHoa5DDmWZntaKmgQ==
-X-Gm-Message-State: AOJu0YyeQNdaQ0Xpr289TjzRtyS2/YY2w8U/0Yd3gIkQrp6R43rQhSB6
-	ie12U4/USOQIrekb0I2Gw7g7yfBpoVM2PbMkO+2SY3y9Ow9V/+7N
-X-Google-Smtp-Source: AGHT+IGikKERanb0wYATNNbc62kMceyfTd7c58Xz5xhwWDj5hZXipidI0sR4ijXGdrOINhhyafcnWA==
-X-Received: by 2002:a17:902:ccce:b0:1f7:126:5bab with SMTP id d9443c01a7336-1fa23ed509dmr161068885ad.40.1719524672844;
-        Thu, 27 Jun 2024 14:44:32 -0700 (PDT)
+        bh=KiKUQ7+sVtO2XmAIs87R1jV/vY8NV05dNAtCxHrW3FQ=;
+        b=TxStxpurZYbH5ue59nX/kTe+948PtcpiPoptItoyegSs31oTw74icxa3kXk8snUTNj
+         /IsQkX/fMHa8+TSk6Ytv3hXXyt82gHZRrNg3pgM07ApPgLLdPEqoxIsrloDnBPC2p1O1
+         +L4TyUbWKhB863hGFu41GY2SHvn4cfDP7lDx++W+QU670v73FdCppJdTyEWeL0IJAoRS
+         By8fHQNE069YGQLZBt7wxHXoKvr7YgHFkER02ciUiGP4jMjhMG9nXJqu+xY5bwdcqCDG
+         iuOUrnefLSxBRs5a2mjS+xG5Mpd8zDrQcduzLteDpsetT6uyKxnlevhdItgWQYuoUOi3
+         zKEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQfEI4xmdAnXEdJ7dQC24LKLP0GCO9Mmm/Asg25PIQ8Lf65R/5R4/wunKwWchsiVErbjrW7JuBLa+y//7QrvC4iUzrDex/1vxJPxM7FLR/dmn/lzT4+UWUr96yyn6PKeINk5uMhjB7PeiDjfm2/V8yoZF2By1ft68pVkLnUnx2zubRLhphAZUo/QVf12X31hp1uGV8iQAV0LZPWRIWJrfK
+X-Gm-Message-State: AOJu0YyzuHFpCjL6cfaxtLKjzHhim7OL2bLLhYG9wzOxu9pbaGKGz3aq
+	bfIdhkAmvNpOhtvbO9dmf5DvbqRIO2+8eoWJTlaEZM1nu2Sj48MW
+X-Google-Smtp-Source: AGHT+IFaeTR6OuM/ChfneRPlABRb7o1Rkppac9PHNFclCGSFGfgtKxOIouXSfXFtNY4qpLJgc+OWjw==
+X-Received: by 2002:a17:90a:b115:b0:2c8:5129:417b with SMTP id 98e67ed59e1d1-2c8613e7a41mr15161268a91.31.1719527583209;
+        Thu, 27 Jun 2024 15:33:03 -0700 (PDT)
 Received: from [192.168.50.95] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1568f43sm2316195ad.187.2024.06.27.14.44.29
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce17c1bsm316559a91.5.2024.06.27.15.32.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Jun 2024 14:44:32 -0700 (PDT)
-Message-ID: <fe224893-2f54-41d3-ae2a-e449fc147473@gmail.com>
-Date: Fri, 28 Jun 2024 06:44:27 +0900
+        Thu, 27 Jun 2024 15:33:02 -0700 (PDT)
+Message-ID: <85e47c59-4f57-4840-8e4d-24f27919e73d@gmail.com>
+Date: Fri, 28 Jun 2024 07:32:56 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,1135 +61,181 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: selftests/ftrace kprobe_eventname test fails on s390x QEMU
- (KVM/Linux)
-To: Steven Rostedt <rostedt@goodmis.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Sven Schnelle <svens@linux.ibm.com>
-Cc: Akanksha J N <akanksha@linux.ibm.com>,
- "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Martin Schwidefsky <schwidefsky@de.ibm.com>,
- MichelleJin <shjy180909@gmail.com>, linux-s390@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <1add7a0a-f91d-4249-9632-424505597e45@gmail.com>
- <yt9dsewy746p.fsf@linux.ibm.com>
+Subject: Re: [PATCH v4] tracing/net_sched: NULL pointer dereference in
+ perf_trace_qdisc_reset()
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Taehee Yoo <ap420073@gmail.com>, Pedro Tammela <pctammela@mojatatu.com>,
+ Austin Kim <austindh.kim@gmail.com>, MichelleJin <shjy180909@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, pbuk5246@gmail.com, stable@vger.kernel.org,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Takashi Iwai <tiwai@suse.de>, "David S. Miller" <davem@davemloft.net>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Jamal Hadi Salim
+ <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>
+References: <20240624173320.24945-4-yskelg@gmail.com>
+ <5ce3076ba0989a062f8e46e54a073b393ad22810.camel@redhat.com>
 Content-Language: en-US
 From: Yunseong Kim <yskelg@gmail.com>
-In-Reply-To: <yt9dsewy746p.fsf@linux.ibm.com>
+In-Reply-To: <5ce3076ba0989a062f8e46e54a073b393ad22810.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+Hi Paolo,
 
-On 6/28/24 1:15 오전, Sven Schnelle wrote:
-> Yunseong Kim <yskelg@gmail.com> writes:
+On 6/27/24 6:14 오후, Paolo Abeni wrote:
+> On Tue, 2024-06-25 at 02:33 +0900, yskelg@gmail.com wrote:
+>> From: Yunseong Kim <yskelg@gmail.com>
+>>
+>> In the TRACE_EVENT(qdisc_reset) NULL dereference occurred from
+>>
+>>  qdisc->dev_queue->dev <NULL> ->name
+>>
+>> This situation simulated from bunch of veths and Bluetooth disconnection
+>> and reconnection.
+>>
+>> During qdisc initialization, qdisc was being set to noop_queue.
+>> In veth_init_queue, the initial tx_num was reduced back to one,
+>> causing the qdisc reset to be called with noop, which led to the kernel
+>> panic.
+>>
+>> I've attached the GitHub gist link that C converted syz-execprogram
+>> source code and 3 log of reproduced vmcore-dmesg.
+>>
+>>  https://gist.github.com/yskelg/cc64562873ce249cdd0d5a358b77d740
+>>
+>> Yeoreum and I use two fuzzing tool simultaneously.
+>>
+>> One process with syz-executor : https://github.com/google/syzkaller
+>>
+>>  $ ./syz-execprog -executor=./syz-executor -repeat=1 -sandbox=setuid \
+>>     -enable=none -collide=false log1
+>>
+>> The other process with perf fuzzer:
+>>  https://github.com/deater/perf_event_tests/tree/master/fuzzer
+>>
+>>  $ perf_event_tests/fuzzer/perf_fuzzer
+>>
+>> I think this will happen on the kernel version.
+>>
+>>  Linux kernel version +v6.7.10, +v6.8, +v6.9 and it could happen in v6.10.
+>>
+>> This occurred from 51270d573a8d. I think this patch is absolutely
+>> necessary. Previously, It was showing not intended string value of name.
+>>
+>> I've reproduced 3 time from my fedora 40 Debug Kernel with any other module
+>> or patched.
+>>
+>>  version: 6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug
+>>
+
+>> [ 5301.595872] KASAN: null-ptr-deref in range [0x0000000000000130-0x0000000000000137]
+>> [ 5301.595877] Mem abort info:
+>> [ 5301.595881]   ESR = 0x0000000096000006
+>> [ 5301.595885]   EC = 0x25: DABT (current EL), IL = 32 bits
+>> [ 5301.595889]   SET = 0, FnV = 0
+>> [ 5301.595893]   EA = 0, S1PTW = 0
+>> [ 5301.595896]   FSC = 0x06: level 2 translation fault
+>> [ 5301.595900] Data abort info:
+>> [ 5301.595903]   ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
+>> [ 5301.595907]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>> [ 5301.595911]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+>> [ 5301.595915] [dfff800000000026] address between user and kernel address ranges
+>> [ 5301.595971] Internal error: Oops: 0000000096000006 [#1] SMP
+>> …
+>> [ 5301.596076] CPU: 2 PID: 102769 Comm:
+>> syz-executor.3 Kdump: loaded Tainted:
+>>  G        W         -------  ---  6.10.0-0.rc2.20240608gitdc772f8237f9.29.fc41.aarch64+debug #1
+>> [ 5301.596080] Hardware name: VMware, Inc. VMware20,1/VBSA,
+>>  BIOS VMW201.00V.21805430.BA64.2305221830 05/22/2023
+>> [ 5301.596082] pstate: 01400005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+>> [ 5301.596085] pc : strnlen+0x40/0x88
+>> [ 5301.596114] lr : trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
+>> [ 5301.596124] sp : ffff8000beef6b40
+>> [ 5301.596126] x29: ffff8000beef6b40 x28: dfff800000000000 x27: 0000000000000001
+>> [ 5301.596131] x26: 6de1800082c62bd0 x25: 1ffff000110aa9e0 x24: ffff800088554f00
+>> [ 5301.596136] x23: ffff800088554ec0 x22: 0000000000000130 x21: 0000000000000140
+>> [ 5301.596140] x20: dfff800000000000 x19: ffff8000beef6c60 x18: ffff7000115106d8
+>> [ 5301.596143] x17: ffff800121bad000 x16: ffff800080020000 x15: 0000000000000006
+>> [ 5301.596147] x14: 0000000000000002 x13: ffff0001f3ed8d14 x12: ffff700017ddeda5
+>> [ 5301.596151] x11: 1ffff00017ddeda4 x10: ffff700017ddeda4 x9 : ffff800082cc5eec
+>> [ 5301.596155] x8 : 0000000000000004 x7 : 00000000f1f1f1f1 x6 : 00000000f2f2f200
+>> [ 5301.596158] x5 : 00000000f3f3f3f3 x4 : ffff700017dded80 x3 : 00000000f204f1f1
+>> [ 5301.596162] x2 : 0000000000000026 x1 : 0000000000000000 x0 : 0000000000000130
+>> [ 5301.596166] Call trace:
+>> [ 5301.596175]  strnlen+0x40/0x88
+>> [ 5301.596179]  trace_event_get_offsets_qdisc_reset+0x6c/0x2b0
+>> [ 5301.596182]  perf_trace_qdisc_reset+0xb0/0x538
+>> [ 5301.596184]  __traceiter_qdisc_reset+0x68/0xc0
+>> [ 5301.596188]  qdisc_reset+0x43c/0x5e8
+>> [ 5301.596190]  netif_set_real_num_tx_queues+0x288/0x770
+>> [ 5301.596194]  veth_init_queues+0xfc/0x130 [veth]
+>> [ 5301.596198]  veth_newlink+0x45c/0x850 [veth]
+>> [ 5301.596202]  rtnl_newlink_create+0x2c8/0x798
+>> [ 5301.596205]  __rtnl_newlink+0x92c/0xb60
+>> [ 5301.596208]  rtnl_newlink+0xd8/0x130
+>> [ 5301.596211]  rtnetlink_rcv_msg+0x2e0/0x890
+>> [ 5301.596214]  netlink_rcv_skb+0x1c4/0x380
+>> [ 5301.596225]  rtnetlink_rcv+0x20/0x38
+>> [ 5301.596227]  netlink_unicast+0x3c8/0x640
+>> [ 5301.596231]  netlink_sendmsg+0x658/0xa60
+>> [ 5301.596234]  __sock_sendmsg+0xd0/0x180
+>> [ 5301.596243]  __sys_sendto+0x1c0/0x280
+>> [ 5301.596246]  __arm64_sys_sendto+0xc8/0x150
+>> [ 5301.596249]  invoke_syscall+0xdc/0x268
+>> [ 5301.596256]  el0_svc_common.constprop.0+0x16c/0x240
+>> [ 5301.596259]  do_el0_svc+0x48/0x68
+>> [ 5301.596261]  el0_svc+0x50/0x188
+>> [ 5301.596265]  el0t_64_sync_handler+0x120/0x130
+>> [ 5301.596268]  el0t_64_sync+0x194/0x198
+>> [ 5301.596272] Code: eb15001f 54000120 d343fc02 12000801 (38f46842)
+>> [ 5301.596285] SMP: stopping secondary CPUs
+>> [ 5301.597053] Starting crashdump kernel...
+>> [ 5301.597057] Bye!
+>>
+>> After applying our patch, I didn't find any kernel panic errors.
+>>
+>> We've found a simple reproducer
+>>
+>>  # echo 1 > /sys/kernel/debug/tracing/events/qdisc/qdisc_reset/enable
+>>
+>>  # ip link add veth0 type veth peer name veth1
+>>
+>>  Error: Unknown device type.
+
+>>
+>> Fixes: 51270d573a8d ("tracing/net_sched: Fix tracepoints that save qdisc_dev() as a string")
+>> Link: https://lore.kernel.org/lkml/20240229143432.273b4871@gandalf.local.home/t/
+>> Cc: netdev@vger.kernel.org
+>> Cc: stable@vger.kernel.org # +v6.7.10, +v6.8
+>> Tested-by: Yunseong Kim <yskelg@gmail.com>
+>> Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+>> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 > 
->> In my s390x archtecture, kprobe_eventname selftest have always failed
->> because of rcu_sched stalls.
->>
->> My environment is QEMU Ubuntu 24.04 KVM Machine Linux version
->> 6.8.0-36-generic (buildd@bos01-s390x-012) (s390x-linux-gnu-gcc-13
->> (Ubuntu 13.2.0-23ubuntu4) 13.2.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #36
->>
->> 1 configured CPUs, Linux is running under KVM in 64-bit mode
->>
->>
->>  qemu-system-s390x -no-reboot -name auto-inst-test -nographic -m 4096 \
->>    -drive file=disk-image.qcow2,format=qcow2,cache=none,if=virtio \
->>    -netdev user,id=enc0,hostfwd=tcp::10000-:22 \
->>    -device virtio-net-ccw,netdev=enc0 \
->>    -qmp tcp:localhost:4444,server,nowait
->>
->>
->> Currently, This failure can be always reproduced by this kselftests script:
->>
->>  # tools/testing/selftests/ftrace/ftracetest
->> tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
-
-> Could you see if you have the same issue on the most recent kernel?
->
-> -- Steve
-
-
-Thanks you Steve,
-
-
-As soon as I saw your mail, I pulled the latest kernel.
-
-
-Linux version 6.10.0-rc5+ (paran@fedora) (s390x-linux-gnu-gcc (GCC)
-14.1.1 20240507 (Red Hat Cross 14.1.1-1), GNU ld version 2.41-1.fc40)
-#30 SMP Fri Jun 28 04:32:20 KST 2024
-
-
-My Linux is running under QEMU KVM in 64-bit mode, cpu: 1 configured
-CPUs, 0 standby CPUs.
-
-
-[  726.069032] Kernel panic - not syncing: Corrupt kernel stack, can't
-continue.
-[  726.069297] CPU: 0 PID: 1023 Comm: ftracetest Not tainted 6.10.0-rc5+ #30
-[  726.069335] Hardware name: QEMU 8561 QEMU (KVM/Linux)
-[  726.069361] Call Trace:
-[  726.069383]  [<000003ffe0dc545e>] dump_stack_lvl+0x76/0xa8
-[  726.069446]  [<000003ffe0db7170>] panic+0x170/0x358
-[  726.069485]  [<000003ffe0000f16>] kernel_stack_overflow+0x56/0x60
-[  726.069522]  [<0000000000000200>] 0x200
-[  726.069987] Dumping ftrace buffer:
-[  726.070144] ---------------------------------
-[  726.071356]    <...>-1023      0..... 1829038us : p_kernel_clone_0:
-(kernel_clone+0x0/0x390)
-[  726.071452]    <...>-1023      0dN... 1829717us : p_kernel_clone_6:
-(kernel_clone+0x6/0x390)
-[  726.071506]    <...>-1023      0dN... 1830009us : p_kernel_clone_12:
-(kernel_clone+0xc/0x390)
-[  726.071558]    <...>-1023      0dN... 1830064us : p_kernel_clone_16:
-...
-
-
-I have changed the QEMU setting a bit to run latest kernel.
-
-
-qemu-system-s390x -no-reboot -name auto-inst-test -nographic -m 4096 \
-  -kernel bzImage-6.10.0-rc5-00035-gafcd48134c58 \
-  -initrd 6.8.0-36-generic/initrd.img-6.8.0-36-generic  \
-  -append
-"root=/dev/disk/by-id/dm-uuid-LVM-7JeH1Hjp3H1U60GH8m82Od6YXP47ItB01EcvyJ33Ya80VPeRinI1vfMjI9Ndzcc3
-crashkernel=512M-:1024M oops=panic panic_on_warn=1
-ftrace_dump_on_oops=orig_cpu slub_debug=UZ nokaslr gcov_persist=0 " \
-  -drive file=disk-image.qcow2,format=qcow2,cache=none,if=virtio \
-  -netdev user,id=enc0,hostfwd=tcp::10000-:22 \
-  -device virtio-net-ccw,netdev=enc0 \
-  -qmp tcp:localhost:4444,server,nowait
-
-
-> Hi,
->
-> Thanks for reporting!
-
-
-Hi, Masami, It's my pleasure.
-
-
->>  # tools/testing/selftests/ftrace/ftracetest
->> tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
->>
->> I've investigating cause of line, then I find this line.
->>
->>  for i in `seq 0 255`; do
->>    echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
->>  done
->>
->>  cat kprobe_events >> $testlog
->>
->>  echo 1 > events/kprobes/enable # <<<
->
-> Isn't it kprobe_insn_boundary.tc?
-
-
-That's exactly right!
-I'm sorry, I slipped up again. :(
-
-
-This is my exactly tested command.
-
-
- $ cd tools/testing/selftests/ftrace/
- $ sudo ./ftracetest --console test.d/kprobe/kprobe_insn_boundary.tc
-
-
-> Also, can you modify it as
->
-> for i in `seq 0 255`; do
->   echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
->   echo 1 > events/kprobes/enable
-> done
->
-> And run it with --console option? It may tell us when the stall happens
-> with what offset.
->
-> Also, please try it with the latest kernel instead of 6.8.x
->
-> Thank you,
->
-
-
-I took what you said and applied it in test script.
-
-
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-@@ -6,11 +6,11 @@
-
- for i in `seq 0 255`; do
-   echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
-+  echo 1 > events/kprobes/enable
- done
-
- cat kprobe_events >> $testlog
-
--echo 1 > events/kprobes/enable
- ( echo "forked" )
- echo 0 > events/kprobes/enable
- echo > kprobe_events
-
-
-This is the results from console.
-
-
-=== Ftrace unit tests ===
-[1] Register multiple kprobe events in a function+ checkreq
-/home/paran/linux-source/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-+ + grep ^#[ \t]*requires:
-/home/paran/linux-source-6.8.0/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-cut -f2- -d:
-+ requires= kprobe_events
-+ eval check_requires  kprobe_events
-+ check_requires kprobe_events
-+ p=kprobe_events
-+ r=kprobe_events
-+ t=kprobe_events
-+ [ kprobe_events != kprobe_events ]
-+ [ kprobe_events != kprobe_events ]
-+ [ kprobe_events != kprobe_events ]
-+ [ ! -e kprobe_events ]
-+ initialize_ftrace
-+ disable_tracing
-+ echo 0
-+ reset_tracer
-+ echo nop
-+ reset_trigger
-+ [ -d events/synthetic ]
-+ reset_trigger_file events/alarmtimer/alarmtimer_cancel/trigger
-events/alarmtimer/alarmtimer_fired/trigger events/alarmtimer+
-
-....
-
-clear_trace
-+ echo
-+ enable_tracing
-+ echo 1
-+ .
-/home/paran/linux-source/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-+ seq 0 255
-+ echo p kernel_clone+0
-+ echo 1
-+ echo p kernel_clone+1
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+2
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+3
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+4
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+5
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+6
-+ echo 1
-+ echo p kernel_clone+7
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+8
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+9
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+10
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+11
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+12
-+ echo 1
-+ echo p kernel_clone+13
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+14
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+15
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+16
-+ echo 1
-+ echo p kernel_clone+17
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+18
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+19
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+20
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+21
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+22
-+ echo 1
-+ echo p kernel_clone+23
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+24
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+25
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+26
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+27
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+28
-+ echo 1
-+ echo p kernel_clone+29
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+30
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+31
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+32
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+33
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+34
-+ echo 1
-+ echo p kernel_clone+35
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+36
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+37
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+38
-+ echo 1
-+ echo p kernel_clone+39
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+40
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+41
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+42
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+43
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+44
-+ echo 1
-+ echo p kernel_clone+45
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+46
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+47
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+48
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+49
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+50
-+ echo 1
-+ echo p kernel_clone+51
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+52
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+53
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+54
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+55
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+56
-+ echo 1
-+ echo p kernel_clone+57
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+58
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+59
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+60
-+ echo 1
-+ echo p kernel_clone+61
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+62
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+63
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+64
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+65
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+66
-+ echo 1
-+ echo p kernel_clone+67
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+68
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+69
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+70
-+ echo 1
-+ echo p kernel_clone+71
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+72
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+73
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+74
-+ echo 1
-+ echo p kernel_clone+75
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+76
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+77
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+78
-+ echo 1
-+ echo p kernel_clone+79
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+80
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+81
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+82
-+ echo 1
-+ echo p kernel_clone+83
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+84
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+85
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+86
-+ echo 1
-+ echo p kernel_clone+87
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+88
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+89
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+90
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+91
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+92
-+ echo 1
-+ echo p kernel_clone+93
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+94
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+95
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+96
-+ echo 1
-+ echo p kernel_clone+97
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+98
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+99
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+100
-+ echo 1
-+ echo p kernel_clone+101
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+102
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+103
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+104
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+105
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+106
-+ echo 1
-+ echo p kernel_clone+107
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+108
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+109
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+110
-+ echo 1
-+ echo p kernel_clone+111
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+112
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+113
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+114
-+ echo 1
-+ echo p kernel_clone+115
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+116
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+117
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+118
-+ echo 1
-+ echo p kernel_clone+119
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+120
-+ echo 1
-+ echo p kernel_clone+121
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+122
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+123
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+124
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+125
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+126
-+ echo 1
-+ echo p kernel_clone+127
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+128
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+129
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+130
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+131
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+132
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+133
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+134
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+135
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+136
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+137
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+138
-+ echo 1
-+ echo p kernel_clone+139
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+140
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+141
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+142
-+ echo 1
-+ echo p kernel_clone+143
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+144
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+145
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+146
-+ echo 1
-+ echo p kernel_clone+147
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+148
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+149
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+150
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+151
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+152
-+ echo 1
-+ echo p kernel_clone+153
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+154
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+155
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+156
-+ echo 1
-+ echo p kernel_clone+157
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+158
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+159
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+160
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+161
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+162
-+ echo 1
-+ echo p kernel_clone+163
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+164
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+165
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+166
-+ echo 1
-+ echo p kernel_clone+167
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+168
-+ echo 1
-+ echo p kernel_clone+169
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+170
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+171
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+172
-+ echo 1
-+ echo p kernel_clone+173
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+174
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+175
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+176
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+177
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+178
-+ echo 1
-+ echo p kernel_clone+179
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+180
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+181
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+182
-+ echo 1
-+ echo p kernel_clone+183
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+184
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+185
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+186
-+ echo 1
-+ echo p kernel_clone+187
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+188
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+189
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+190
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+191
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+192
-+ echo 1
-+ echo p kernel_clone+193
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+194
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+195
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+196
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+197
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+198
-+ echo 1
-+ echo p kernel_clone+199
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+200
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+201
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+202
-+ echo 1
-+ echo p kernel_clone+203
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+204
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+205
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+206
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+207
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+208
-+ echo 1
-+ echo p kernel_clone+209
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+210
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+211
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+212
-+ echo 1
-+ echo p kernel_clone+213
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+214
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+215
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+216
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+217
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+218
-+ echo 1
-+ echo p kernel_clone+219
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+220
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+221
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+222
-+ echo 1
-+ echo p kernel_clone+223
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+224
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+225
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+226
-+ echo 1
-+ echo p kernel_clone+227
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+228
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+229
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+230
-+ echo 1
-+ echo p kernel_clone+231
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+232
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+233
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+234
-+ echo 1
-+ echo p kernel_clone+235
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+236
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+237
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+238
-+ echo 1
-+ echo p kernel_clone+239
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+240
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+241
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+242
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+243
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+244
-+ echo 1
-+ echo p kernel_clone+245
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+246
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+247
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+248
-+ echo 1
-+ echo p kernel_clone+249
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+250
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+251
-./ftracetest: 8: echo: echo: I/O error
-+ continue
-+ echo p kernel_clone+252
-
-
->> I've investigating cause of line, then I find this line.
->>
->>  for i in `seq 0 255`; do
->>    echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
->>  done
+> I took the liberty of dropping the stable tag when applying, because as
+> noted from Petro this patch will not address the issue on v6.7.10 nor
+> on +v6.8, as they lack the upstream commit 2c92ca849fcc
+> ("tracing/treewide: Remove second parameter of __assign_str()") and a
+> we need slightly different fix on such trees, including the
+> TP_fast_assign() chunk.
 > 
-> I think this is fixed with:
+> Could you please take care of such backport?
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.10-rc5&id=c239c83ed5c558be3b5926c7f11639f02c8acd00
+> Thanks,
 > 
-> Regards,
-> Sven
+> Paolo
 
+Thank you Paolo for your hard work.
 
-Hi, Sven, Oh thank you so much for the link.
+Yes, I'll try Pedro's review for +v6.7.10, test it and submit a backport
+patch.
 
-I have also checked that the patch(c239c83ed5c55) you mentioned has been
-applied to the code.
-
-
-It looks like have another problem.
-
-This is the whole call trace.
-
-
-[  726.069032] Kernel panic - not syncing: Corrupt kernel stack, can't
-continue.
-[  726.069297] CPU: 0 PID: 1023 Comm: ftracetest Not tainted 6.10.0-rc5+ #30
-[  726.069335] Hardware name: QEMU 8561 QEMU (KVM/Linux)
-[  726.069361] Call Trace:
-[  726.069383]  [<000003ffe0dc545e>] dump_stack_lvl+0x76/0xa8
-[  726.069446]  [<000003ffe0db7170>] panic+0x170/0x358
-[  726.069485]  [<000003ffe0000f16>] kernel_stack_overflow+0x56/0x60
-[  726.069522]  [<0000000000000200>] 0x200
-[  726.069987] Dumping ftrace buffer:
-[  726.070144] ---------------------------------
-[  726.071356]    <...>-1023      0..... 1829038us : p_kernel_clone_0:
-(kernel_clone+0x0/0x390)
-[  726.071452]    <...>-1023      0dN... 1829717us : p_kernel_clone_6:
-(kernel_clone+0x6/0x390)
-[  726.071506]    <...>-1023      0dN... 1830009us : p_kernel_clone_12:
-(kernel_clone+0xc/0x390)
-[  726.071558]    <...>-1023      0dN... 1830064us : p_kernel_clone_16:
-(kernel_clone+0x10/0x390)
-[  726.071610]    <...>-1023      0dN... 1830116us : p_kernel_clone_22:
-(kernel_clone+0x16/0x390)
-[  726.071661]    <...>-1023      0dN... 1830161us : p_kernel_clone_28:
-(kernel_clone+0x1c/0x390)
-[  726.071711]    <...>-1023      0dN... 1830204us : p_kernel_clone_34:
-(kernel_clone+0x22/0x390)
-[  726.071762]    <...>-1023      0dN... 1830252us : p_kernel_clone_38:
-(kernel_clone+0x26/0x390)
-[  726.071815]    <...>-1023      0dN... 1830301us : p_kernel_clone_44:
-(kernel_clone+0x2c/0x390)
-[  726.071866]    <...>-1023      0dN... 1830355us : p_kernel_clone_50:
-(kernel_clone+0x32/0x390)
-[  726.071917]    <...>-1023      0dN... 1830399us : p_kernel_clone_56:
-(kernel_clone+0x38/0x390)
-[  726.071967]    <...>-1023      0dN... 1830441us : p_kernel_clone_60:
-(kernel_clone+0x3c/0x390)
-[  726.072018]    <...>-1023      0dN... 1830495us : p_kernel_clone_66:
-(kernel_clone+0x42/0x390)
-[  726.072068]    <...>-1023      0dN... 1830553us : p_kernel_clone_70:
-(kernel_clone+0x46/0x390)
-[  726.072118]    <...>-1023      0dN... 1830597us : p_kernel_clone_74:
-(kernel_clone+0x4a/0x390)
-[  726.072168]    <...>-1023      0dN... 1830639us : p_kernel_clone_78:
-(kernel_clone+0x4e/0x390)
-[  726.072217]    <...>-1023      0dN... 1830681us : p_kernel_clone_82:
-(kernel_clone+0x52/0x390)
-[  726.072267]    <...>-1023      0dN... 1830722us : p_kernel_clone_86:
-(kernel_clone+0x56/0x390)
-[  726.072318]    <...>-1023      0dN... 1830765us : p_kernel_clone_92:
-(kernel_clone+0x5c/0x390)
-[  726.072368]    <...>-1023      0dN... 1830806us : p_kernel_clone_96:
-(kernel_clone+0x60/0x390)
-[  726.072418]    <...>-1023      0dN... 1830847us : p_kernel_clone_100:
-(kernel_clone+0x64/0x390)
-[  726.072468]    <...>-1023      0dN... 1830911us : p_kernel_clone_106:
-(kernel_clone+0x6a/0x390)
-[  726.072518]    <...>-1023      0dN... 1830953us : p_kernel_clone_110:
-(kernel_clone+0x6e/0x390)
-[  726.072568]    <...>-1023      0dN... 1830994us : p_kernel_clone_114:
-(kernel_clone+0x72/0x390)
-[  726.072619]    <...>-1023      0dN... 1831035us : p_kernel_clone_118:
-(kernel_clone+0x76/0x390)
-[  726.072669]    <...>-1023      0dN... 1831092us : p_kernel_clone_120:
-(kernel_clone+0x78/0x390)
-[  726.072718]    <...>-1023      0dN... 1831133us : p_kernel_clone_126:
-(kernel_clone+0x7e/0x390)
-[  726.072769]    <...>-1023      0dN... 1831175us : p_kernel_clone_138:
-(kernel_clone+0x8a/0x390)
-[  726.072819]    <...>-1023      0dN... 1831221us : p_kernel_clone_142:
-(kernel_clone+0x8e/0x390)
-[  726.072869]    <...>-1023      0dN... 1831262us : p_kernel_clone_146:
-(kernel_clone+0x92/0x390)
-[  726.072919]    <...>-1023      0dN... 1831303us : p_kernel_clone_152:
-(kernel_clone+0x98/0x390)
-[  726.072970]    <...>-1023      0dN... 1831344us : p_kernel_clone_156:
-(kernel_clone+0x9c/0x390)
-[  726.073020]    <...>-1023      0dN... 1831385us : p_kernel_clone_162:
-(kernel_clone+0xa2/0x390)
-[  726.073070]    <...>-1023      0dN... 1831427us : p_kernel_clone_166:
-(kernel_clone+0xa6/0x390)
-[  726.073120]    <...>-1023      0dN... 1831469us : p_kernel_clone_168:
-(kernel_clone+0xa8/0x390)
-[  726.073910]    <...>-1023      0dN... 1831511us : p_kernel_clone_172:
-(kernel_clone+0xac/0x390)
-[  726.073983]    <...>-1023      0dN... 1831554us : p_kernel_clone_178:
-(kernel_clone+0xb2/0x390)
-[  726.074047]    <...>-1023      0dN... 1831601us : p_kernel_clone_182:
-(kernel_clone+0xb6/0x390)
-[  726.074109]    <...>-1023      0dN... 1831642us : p_kernel_clone_186:
-(kernel_clone+0xba/0x390)
-[  726.074172]    <...>-1023      0dN... 1831683us : p_kernel_clone_192:
-(kernel_clone+0xc0/0x390)
-[  726.074234]    <...>-1023      0dN... 1831725us : p_kernel_clone_198:
-(kernel_clone+0xc6/0x390)
-[  726.074296]    <...>-1023      0dN... 1831766us : p_kernel_clone_202:
-(kernel_clone+0xca/0x390)
-[  726.074358]    <...>-1023      0dN... 1831807us : p_kernel_clone_208:
-(kernel_clone+0xd0/0x390)
-[  726.074419]    <...>-1023      0dN... 1831848us : p_kernel_clone_212:
-(kernel_clone+0xd4/0x390)
-[  726.074481]    <...>-1023      0dN... 1831895us : p_kernel_clone_218:
-(kernel_clone+0xda/0x390)
-[  726.074542]    <...>-1023      0dN... 1831941us : p_kernel_clone_222:
-(kernel_clone+0xde/0x390)
-[  726.074603]    <...>-1023      0dN... 1831982us : p_kernel_clone_226:
-(kernel_clone+0xe2/0x390)
-[  726.074665]    <...>-1023      0dN... 1832023us : p_kernel_clone_230:
-(kernel_clone+0xe6/0x390)
-[  726.074727]    <...>-1023      0dN... 1832064us : p_kernel_clone_234:
-(kernel_clone+0xea/0x390)
-[  726.074787]    <...>-1023      0dN... 1832105us : p_kernel_clone_238:
-(kernel_clone+0xee/0x390)
-[  726.074846]    <...>-1023      0dN... 1832146us : p_kernel_clone_244:
-(kernel_clone+0xf4/0x390)
-[  726.074906]    <...>-1023      0dN... 1832188us : p_kernel_clone_248:
-(kernel_clone+0xf8/0x390)
-[  726.074965]    <...>-1023      0dN... 1832229us : p_kernel_clone_252:
-(kernel_clone+0xfc/0x390)
-[  726.075024]    <...>-1023      0dN... 1832286us : p_kernel_clone_74:
-(kernel_clone+0x4a/0x390)
-[  726.075083]    <...>-1023      0dN... 1832324us : p_kernel_clone_78:
-(kernel_clone+0x4e/0x390)
-[  726.075142]    <...>-1023      0dN... 1832361us : p_kernel_clone_82:
-(kernel_clone+0x52/0x390)
-[  726.075200]    <...>-1023      0dN... 1832398us : p_kernel_clone_86:
-(kernel_clone+0x56/0x390)
-[  726.075259]    <...>-1023      0dN... 1832436us : p_kernel_clone_92:
-(kernel_clone+0x5c/0x390)
-[  726.075317]    <...>-1023      0dN... 1832472us : p_kernel_clone_96:
-(kernel_clone+0x60/0x390)
-[  726.075376]    <...>-1023      0dN... 1832510us : p_kernel_clone_100:
-(kernel_clone+0x64/0x390)
-[  726.075434]    <...>-1023      0dN... 1832547us : p_kernel_clone_106:
-(kernel_clone+0x6a/0x390)
-[  726.075493]    <...>-1023      0dN... 1832584us : p_kernel_clone_110:
-(kernel_clone+0x6e/0x390)
-[  726.075552]    <...>-1023      0dN... 1832620us : p_kernel_clone_114:
-(kernel_clone+0x72/0x390)
-[  726.075611]    <...>-1023      0dN... 1832657us : p_kernel_clone_118:
-(kernel_clone+0x76/0x390)
-[  726.075669]    <...>-1023      0dN... 1832694us : p_kernel_clone_120:
-(kernel_clone+0x78/0x390)
-[  726.075734]    <...>-1023      0dN... 1832731us : p_kernel_clone_126:
-(kernel_clone+0x7e/0x390)
-[  726.075793]    <...>-1023      0dN... 1832768us : p_kernel_clone_138:
-(kernel_clone+0x8a/0x390)
-[  726.075860]    <...>-1023      0dN... 1832805us : p_kernel_clone_142:
-(kernel_clone+0x8e/0x390)
-[  726.075922]    <...>-1023      0dN... 1832848us : p_kernel_clone_146:
-(kernel_clone+0x92/0x390)
-[  726.075980]    <...>-1023      0dN... 1832885us : p_kernel_clone_152:
-(kernel_clone+0x98/0x390)
-[  726.076046]    <...>-1023      0dN... 1832922us : p_kernel_clone_156:
-(kernel_clone+0x9c/0x390)
-[  726.076107]    <...>-1023      0dN... 1832959us : p_kernel_clone_162:
-(kernel_clone+0xa2/0x390)
-[  726.076168]    <...>-1023      0dN... 1832996us : p_kernel_clone_166:
-(kernel_clone+0xa6/0x390)
-[  726.076229]    <...>-1023      0dN... 1833038us : p_kernel_clone_168:
-(kernel_clone+0xa8/0x390)
-[  726.076290]    <...>-1023      0dN... 1833078us : p_kernel_clone_172:
-(kernel_clone+0xac/0x390)
-[  726.076376]    <...>-1023      0dN... 1833117us : p_kernel_clone_178:
-(kernel_clone+0xb2/0x390)
-[  726.076438]    <...>-1023      0dN... 1833154us : p_kernel_clone_182:
-(kernel_clone+0xb6/0x390)
-[  726.076505]    <...>-1023      0dN... 1833190us : p_kernel_clone_186:
-(kernel_clone+0xba/0x390)
-[  726.076565]    <...>-1023      0dN... 1833229us : p_kernel_clone_192:
-(kernel_clone+0xc0/0x390)
-[  726.076634]    <...>-1023      0dN... 1833266us : p_kernel_clone_198:
-(kernel_clone+0xc6/0x390)
-[  726.076695]    <...>-1023      0dN... 1833302us : p_kernel_clone_202:
-(kernel_clone+0xca/0x390)
-[  726.076779]    <...>-1023      0dN... 1833339us : p_kernel_clone_208:
-(kernel_clone+0xd0/0x390)
-[  726.076842]    <...>-1023      0dN... 1833376us : p_kernel_clone_212:
-(kernel_clone+0xd4/0x390)
-[  726.076886] ---------------------------------
-
-
-
-Thank you Steve, Masami and Sven for the great advice on what I reported.
-
-If there are any additional aspects I should check or any advice,
-please let me know and I will look into it.
+Link:
+https://lore.kernel.org/all/06d0ea61-47ee-4e54-9dfa-a711c5bc07d0@mojatatu.com/
 
 
 Warm regards,
