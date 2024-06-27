@@ -1,418 +1,467 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2486EE57D;
-	Thu, 27 Jun 2024 02:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC2168DA;
+	Thu, 27 Jun 2024 03:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719455869; cv=none; b=VUvraqEd5x0/JwvTBqidpz24KVzrGUEchk+fH0rHKn4Xe+P3DvLMI9v1aWDoywP2pRnnH3BJ9SwYpXNZW2581nr8ah5D2CL/YTI1CMuhFTXRmr/RJpLJ6iFFCHhzsbEzgcheOlyYxo7NmVGecL+Pl6dTrZLZgsx8uVghhcw7HGI=
+	t=1719457588; cv=none; b=s7RAoL4JaQh6S2PSi/Fi+WJKbkqhWFiECykUq7kwIR7Xl+mcESiF1IacMFc6TcV5UpR0dpSSwhVs3OUh4julwy4WK7L9FtFBnLwfe1Wc+mNprd4xTMbzU68Jur00O+VzNLmdWuhbiooA68VuLH38VrBehsvNADBqov4vsiS+QRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719455869; c=relaxed/simple;
-	bh=f9ksulllz9Whvoack1P59db8I8PzWveewB4WmQHnQ9w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ch7lOZay2yxAZIF7X0qVndIw29THK17ht+d+iO07yXALDz46VATfbNt5kGkdA1biyr3cixr/BOHS+kpspdFzDpVZPKUNLQD2Ri0VoVFlvJ8H+g32jo81WmQXHwSF+lo2U8UDqbjC3ZtUJj+jZOpQaHp6ULHZRJXrpuiTk0lcVdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=md6n3YPF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719457588; c=relaxed/simple;
+	bh=XxOrtLMFb8ZoeZFJ1vzTi6CWSKWFFP3m9J9eEwkblYM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YlhTTE8+sJyQoUXidpqLsDhJPdLjmQN1zr+WBso6OpUTLgfmt2kcI2kT6TWrOJMNyVrbZhBeIKmWEhUd2AGPzpurBdpUqLmd7f220AM06jSWQLbgK2RE+KWf8ClSkKtYbgjPk2RewYBZvcFh2cYDFoVHZH8UIDa39tX4ntQ5l8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZ6UNnZd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="md6n3YPF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719455868; x=1750991868;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=f9ksulllz9Whvoack1P59db8I8PzWveewB4WmQHnQ9w=;
-  b=md6n3YPFKvBT2fdvpcnugSF2aicC7NFTNnYu+r+1a9zt/BmHRy1xHm7Y
-   4/KlDFrkda+ZoHvfvwt4jHWapazsgwv3d+kcATFuawaIm1jnzY04Zta/W
-   GVG5OgVY3oGjbqoipaveov4umpVgJq+mWlxg1NTQpKpfJ/B2ok+pEFfir
-   Zf61K1tL+qgWEhbDqqEyxPOx1xkXJKey50F6tM2MG8fmuMEGRsx/GBwzW
-   4zaYib9I1uYG/CwkKnW6b8HNHHatRorRjpm/Y2Xi+QQvIksm5rdMWCvQM
-   0IxhULrtHss8YJaOoHkPXMS2IFz5fb+AZLhW2ThuSwZavRpEnQwYe25QF
-   A==;
-X-CSE-ConnectionGUID: KekiA+8tQDuLW5nGtTrtdg==
-X-CSE-MsgGUID: X1XpzGBaSBKZrqYCE/gwvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="27959504"
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="27959504"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:37:46 -0700
-X-CSE-ConnectionGUID: N2zy6o+gQve42Vxja4hs4w==
-X-CSE-MsgGUID: cFZu4SJ9RIGY3dpoKXvPig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="44052404"
-Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:37:45 -0700
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-To: Jithu Joseph <jithu.joseph@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ashok Raj <ashok.raj@intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-trace-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Shankar Ravi V <ravi.v.shankar@intel.com>
-Subject: [PATCH v1 3/4] platform/x86/intel/ifs: Add SBAF test support
-Date: Thu, 27 Jun 2024 02:35:15 +0000
-Message-Id: <20240627023516.3783454-4-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZ6UNnZd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE92BC116B1;
+	Thu, 27 Jun 2024 03:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719457588;
+	bh=XxOrtLMFb8ZoeZFJ1vzTi6CWSKWFFP3m9J9eEwkblYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UZ6UNnZdGlmlxqBalOcPFX0aOCQ0mQyz8yAGysEufDlAnxRPCEsmLqQTpkjsUAzC+
+	 kNCVVNTacue61tHSNEXPABOAtBOl3wLTCjBPGqYVasU18ZOr5u+K4kgLk92q19W5X1
+	 UZffkJi2ALOQiTlnckOGXiZD/6Eric2hwKXE6RHNnDDNPFxRL2+tOEFVyV3CTuc6YR
+	 RIpr/07kyMBjhPb4y0LEzj4eIU3HV9Q5+PiQ4gRme3r9XQlDGfqh96bphjD19/XDXt
+	 thiXkl6gIC+hu2nxM/H36kV4pv3r39Cm/Uuo3qZKLcLELBk0RO6lV7huvl8pNW+B6O
+	 KGLUwhAba8FHg==
+Date: Thu, 27 Jun 2024 12:06:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+ oleg@redhat.com, peterz@infradead.org, mingo@redhat.com,
+ bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
+Subject: Re: [PATCH 05/12] uprobes: move offset and ref_ctr_offset into
+ uprobe_consumer
+Message-Id: <20240627120623.8e946a9c3856fa28f068437a@kernel.org>
+In-Reply-To: <20240625002144.3485799-6-andrii@kernel.org>
+References: <20240625002144.3485799-1-andrii@kernel.org>
+	<20240625002144.3485799-6-andrii@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+On Mon, 24 Jun 2024 17:21:37 -0700
+Andrii Nakryiko <andrii@kernel.org> wrote:
 
-In a core, the SBAF test engine is shared between sibling CPUs.
+> Simplify uprobe registration/unregistration interfaces by making offset
+> and ref_ctr_offset part of uprobe_consumer "interface". In practice, all
+> existing users already store these fields somewhere in uprobe_consumer's
+> containing structure, so this doesn't pose any problem. We just move
+> some fields around.
+> 
+> On the other hand, this simplifies uprobe_register() and
+> uprobe_unregister() API by having only struct uprobe_consumer as one
+> thing representing attachment/detachment entity. This makes batched
+> versions of uprobe_register() and uprobe_unregister() simpler.
+> 
+> This also makes uprobe_register_refctr() unnecessary, so remove it and
+> simplify consumers.
+> 
+> No functional changes intended.
+> 
 
-An SBAF test image contains multiple bundles. Each bundle is further
-composed of subunits called programs. When a SBAF test (for a particular
-core) is triggered by the user, each SBAF bundle from the loaded test
-image is executed sequentially on all the threads on the core using
-the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
-writing to MSR_ACTIVATE_SBAF.
+Looks good to me.
 
-SBAF test bundle execution may be aborted when an interrupt occurs or
-if the CPU does not have enough power budget for the test. In these
-cases the kernel restarts the test from the aborted bundle. SBAF
-execution is not retried if the test fails or if the test makes no
-forward progress after 5 retries.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
- drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
- 2 files changed, 264 insertions(+)
+Thanks!
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 600bb8a1b285..b261be46bce8 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -157,6 +157,8 @@
- #define MSR_SBAF_HASHES_STATUS			0x000002b9
- #define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK	0x000002ba
- #define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS	0x000002bb
-+#define MSR_ACTIVATE_SBAF			0x000002bc
-+#define MSR_SBAF_STATUS				0x000002bd
- 
- #define MSR_COPY_SCAN_HASHES			0x000002c2
- #define MSR_SCAN_HASHES_STATUS			0x000002c3
-@@ -283,6 +285,34 @@ union ifs_array {
- 	};
- };
- 
-+/* MSR_ACTIVATE_SBAF bit fields */
-+union ifs_sbaf {
-+	u64	data;
-+	struct {
-+		u32	bundle_idx	:9;
-+		u32	rsvd1		:5;
-+		u32	pgm_idx		:2;
-+		u32	rsvd2		:16;
-+		u32	delay		:31;
-+		u32	sigmce		:1;
-+	};
-+};
-+
-+/* MSR_SBAF_STATUS bit fields */
-+union ifs_sbaf_status {
-+	u64	data;
-+	struct {
-+		u32	bundle_idx	:9;
-+		u32	rsvd1		:5;
-+		u32	pgm_idx		:2;
-+		u32	rsvd2		:16;
-+		u32	error_code	:8;
-+		u32	rsvd3		:21;
-+		u32	test_fail	:1;
-+		u32	sbaf_status	:2;
-+	};
-+};
-+
- /*
-  * Driver populated error-codes
-  * 0xFD: Test timed out before completing all the chunks.
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 282e4bfe30da..bdb31b2f45b4 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -29,6 +29,13 @@ struct run_params {
- 	union ifs_status status;
- };
- 
-+struct sbaf_run_params {
-+	struct ifs_data *ifsd;
-+	int *retry_cnt;
-+	union ifs_sbaf *activate;
-+	union ifs_sbaf_status status;
-+};
-+
- /*
-  * Number of TSC cycles that a logical CPU will wait for the other
-  * logical CPU on the core in the WRMSR(ACTIVATE_SCAN).
-@@ -146,6 +153,7 @@ static bool can_restart(union ifs_status status)
- #define SPINUNIT 100 /* 100 nsec */
- static atomic_t array_cpus_in;
- static atomic_t scan_cpus_in;
-+static atomic_t sbaf_cpus_in;
- 
- /*
-  * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-@@ -387,6 +395,226 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
- 		ifsd->status = SCAN_TEST_PASS;
- }
- 
-+#define SBAF_STATUS_PASS			0
-+#define SBAF_STATUS_SIGN_FAIL			1
-+#define SBAF_STATUS_INTR			2
-+#define SBAF_STATUS_TEST_FAIL			3
-+
-+enum sbaf_status_err_code {
-+	IFS_SBAF_NO_ERROR				= 0,
-+	IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN		= 1,
-+	IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS		= 2,
-+	IFS_SBAF_UNASSIGNED_ERROR_CODE3			= 3,
-+	IFS_SBAF_INVALID_BUNDLE_INDEX			= 4,
-+	IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS		= 5,
-+	IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY		= 6,
-+	IFS_SBAF_UNASSIGNED_ERROR_CODE7			= 7,
-+	IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
-+	IFS_SBAF_INTERRUPTED_DURING_EXECUTION		= 9,
-+	IFS_SBAF_INVALID_PROGRAM_INDEX			= 0xA,
-+	IFS_SBAF_CORRUPTED_CHUNK			= 0xB,
-+	IFS_SBAF_DID_NOT_START				= 0xC,
-+};
-+
-+static const char * const sbaf_test_status[] = {
-+	[IFS_SBAF_NO_ERROR] = "SBAF no error",
-+	[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] = "Other thread could not join.",
-+	[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] = "Interrupt occurred prior to SBAF coordination.",
-+	[IFS_SBAF_UNASSIGNED_ERROR_CODE3] = "Unassigned error code 0x3",
-+	[IFS_SBAF_INVALID_BUNDLE_INDEX] = "Non valid sbaf bundles. Reload test image",
-+	[IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS] = "Mismatch in arguments between threads T0/T1.",
-+	[IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY] = "Core not capable of performing SBAF currently",
-+	[IFS_SBAF_UNASSIGNED_ERROR_CODE7] = "Unassigned error code 0x7",
-+	[IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT] = "Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
-+	[IFS_SBAF_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SBAF start",
-+	[IFS_SBAF_INVALID_PROGRAM_INDEX] = "SBAF program index not valid",
-+	[IFS_SBAF_CORRUPTED_CHUNK] = "SBAF operation aborted due to corrupted chunk",
-+	[IFS_SBAF_DID_NOT_START] = "SBAF operation did not start",
-+};
-+
-+static void sbaf_message_not_tested(struct device *dev, int cpu, u64 status_data)
-+{
-+	union ifs_sbaf_status status = (union ifs_sbaf_status)status_data;
-+
-+	if (status.error_code < ARRAY_SIZE(sbaf_test_status)) {
-+		dev_info(dev, "CPU(s) %*pbl: SBAF operation did not start. %s\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)),
-+			 sbaf_test_status[status.error_code]);
-+	} else if (status.error_code == IFS_SW_TIMEOUT) {
-+		dev_info(dev, "CPU(s) %*pbl: software timeout during scan\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)));
-+	} else if (status.error_code == IFS_SW_PARTIAL_COMPLETION) {
-+		dev_info(dev, "CPU(s) %*pbl: %s\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)),
-+			 "Not all SBAF bundles executed. Maximum forward progress retries exceeded");
-+	} else {
-+		dev_info(dev, "CPU(s) %*pbl: SBAF unknown status %llx\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)), status.data);
-+	}
-+}
-+
-+static void sbaf_message_fail(struct device *dev, int cpu, union ifs_sbaf_status status)
-+{
-+	/* Failed signature check is set when SBAF signature did not match the expected value */
-+	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL) {
-+		dev_err(dev, "CPU(s) %*pbl: Failed signature check\n",
-+			cpumask_pr_args(cpu_smt_mask(cpu)));
-+	}
-+
-+	/* Failed to reach end of test */
-+	if (status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
-+		dev_err(dev, "CPU(s) %*pbl: Failed to complete test\n",
-+			cpumask_pr_args(cpu_smt_mask(cpu)));
-+	}
-+}
-+
-+static bool sbaf_bundle_completed(union ifs_sbaf_status status)
-+{
-+	if (status.sbaf_status || status.error_code)
-+		return false;
-+	return true;
-+}
-+
-+static bool sbaf_can_restart(union ifs_sbaf_status status)
-+{
-+	enum sbaf_status_err_code err_code = status.error_code;
-+
-+	/* Signature for chunk is bad, or scan test failed */
-+	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
-+	    status.sbaf_status == SBAF_STATUS_TEST_FAIL)
-+		return false;
-+
-+	switch (err_code) {
-+	case IFS_SBAF_NO_ERROR:
-+	case IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN:
-+	case IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS:
-+	case IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT:
-+	case IFS_SBAF_INTERRUPTED_DURING_EXECUTION:
-+		return true;
-+	case IFS_SBAF_UNASSIGNED_ERROR_CODE3:
-+	case IFS_SBAF_INVALID_BUNDLE_INDEX:
-+	case IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS:
-+	case IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY:
-+	case IFS_SBAF_UNASSIGNED_ERROR_CODE7:
-+	case IFS_SBAF_INVALID_PROGRAM_INDEX:
-+	case IFS_SBAF_CORRUPTED_CHUNK:
-+	case IFS_SBAF_DID_NOT_START:
-+		break;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * Execute the SBAF test. Called "simultaneously" on all threads of a core
-+ * at high priority using the stop_cpus mechanism.
-+ */
-+static int dosbaf(void *data)
-+{
-+	struct sbaf_run_params *run_params = data;
-+	int cpu = smp_processor_id();
-+	union ifs_sbaf_status status;
-+	struct ifs_data *ifsd;
-+	int first;
-+
-+	ifsd = run_params->ifsd;
-+
-+	/* Only the first logical CPU on a core reports result */
-+	first = cpumask_first(cpu_smt_mask(cpu));
-+	wait_for_sibling_cpu(&sbaf_cpus_in, NSEC_PER_SEC);
-+
-+	/*
-+	 * This WRMSR will wait for other HT threads to also write
-+	 * to this MSR (at most for activate.delay cycles). Then it
-+	 * starts scan of each requested bundle. The core test happens
-+	 * during the "execution" of the WRMSR.
-+	 */
-+	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
-+	rdmsrl(MSR_SBAF_STATUS, status.data);
-+
-+	/* Pass back the result of the test */
-+	if (cpu == first)
-+		run_params->status = status;
-+
-+	return 0;
-+}
-+
-+static void ifs_sbaf_test_core(int cpu, struct device *dev)
-+{
-+	struct sbaf_run_params run_params;
-+	union ifs_sbaf_status status;
-+	union ifs_sbaf activate;
-+	unsigned long timeout;
-+	struct ifs_data *ifsd;
-+	int stop_bundle;
-+	int retries;
-+
-+	ifsd = ifs_get_data(dev);
-+
-+	activate.data = 0;
-+	activate.delay = IFS_THREAD_WAIT;
-+
-+	timeout = jiffies + (2 * HZ);
-+	retries = MAX_IFS_RETRIES;
-+	activate.bundle_idx = 0;
-+	stop_bundle = ifsd->max_bundle;
-+
-+	while (activate.bundle_idx <= stop_bundle) {
-+		if (time_after(jiffies, timeout)) {
-+			status.error_code = IFS_SW_TIMEOUT;
-+			break;
-+		}
-+
-+		atomic_set(&sbaf_cpus_in, 0);
-+
-+		run_params.ifsd = ifsd;
-+		run_params.activate = &activate;
-+		run_params.retry_cnt = &retries;
-+		stop_core_cpuslocked(cpu, dosbaf, &run_params);
-+
-+		status = run_params.status;
-+
-+		if (sbaf_bundle_completed(status)) {
-+			activate.bundle_idx = status.bundle_idx + 1;
-+			activate.pgm_idx = 0;
-+			retries = MAX_IFS_RETRIES;
-+			continue;
-+		}
-+
-+		/* Some cases can be retried, give up for others */
-+		if (!sbaf_can_restart(status))
-+			break;
-+
-+		if (status.pgm_idx == activate.pgm_idx) {
-+			/* If no progress retry */
-+			if (--retries == 0) {
-+				if (status.error_code == IFS_NO_ERROR)
-+					status.error_code = IFS_SW_PARTIAL_COMPLETION;
-+				break;
-+			}
-+		} else {
-+			/* if some progress, more pgms remaining in bundle, reset retries */
-+			retries = MAX_IFS_RETRIES;
-+			activate.bundle_idx = status.bundle_idx;
-+			activate.pgm_idx = status.pgm_idx;
-+		}
-+	}
-+
-+	/* Update status for this core */
-+	ifsd->scan_details = status.data;
-+
-+	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
-+	    status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
-+		ifsd->status = SCAN_TEST_FAIL;
-+		sbaf_message_fail(dev, cpu, status);
-+	} else if (status.error_code || status.sbaf_status == SBAF_STATUS_INTR ||
-+		   (activate.bundle_idx < stop_bundle)) {
-+		ifsd->status = SCAN_NOT_TESTED;
-+		sbaf_message_not_tested(dev, cpu, status.data);
-+	} else {
-+		ifsd->status = SCAN_TEST_PASS;
-+	}
-+}
-+
- /*
-  * Initiate per core test. It wakes up work queue threads on the target cpu and
-  * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
-@@ -420,6 +648,12 @@ int do_core_test(int cpu, struct device *dev)
- 		else
- 			ifs_array_test_gen1(cpu, dev);
- 		break;
-+	case IFS_TYPE_SBAF:
-+		if (!ifsd->loaded)
-+			ret = -EPERM;
-+		else
-+			ifs_sbaf_test_core(cpu, dev);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 	}
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  include/linux/uprobes.h                       | 18 +++----
+>  kernel/events/uprobes.c                       | 19 ++-----
+>  kernel/trace/bpf_trace.c                      | 21 +++-----
+>  kernel/trace/trace_uprobe.c                   | 53 ++++++++-----------
+>  .../selftests/bpf/bpf_testmod/bpf_testmod.c   | 23 ++++----
+>  5 files changed, 55 insertions(+), 79 deletions(-)
+> 
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index b503fafb7fb3..a75ba37ce3c8 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -42,6 +42,11 @@ struct uprobe_consumer {
+>  				enum uprobe_filter_ctx ctx,
+>  				struct mm_struct *mm);
+>  
+> +	/* associated file offset of this probe */
+> +	loff_t offset;
+> +	/* associated refctr file offset of this probe, or zero */
+> +	loff_t ref_ctr_offset;
+> +	/* for internal uprobe infra use, consumers shouldn't touch fields below */
+>  	struct uprobe_consumer *next;
+>  };
+>  
+> @@ -110,10 +115,9 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
+>  extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+>  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+>  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
+> -extern int uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
+> -extern int uprobe_register_refctr(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+> +extern int uprobe_register(struct inode *inode, struct uprobe_consumer *uc);
+>  extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
+> -extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
+> +extern void uprobe_unregister(struct inode *inode, struct uprobe_consumer *uc);
+>  extern int uprobe_mmap(struct vm_area_struct *vma);
+>  extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
+>  extern void uprobe_start_dup_mmap(void);
+> @@ -152,11 +156,7 @@ static inline void uprobes_init(void)
+>  #define uprobe_get_trap_addr(regs)	instruction_pointer(regs)
+>  
+>  static inline int
+> -uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
+> -{
+> -	return -ENOSYS;
+> -}
+> -static inline int uprobe_register_refctr(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc)
+> +uprobe_register(struct inode *inode, struct uprobe_consumer *uc)
+>  {
+>  	return -ENOSYS;
+>  }
+> @@ -166,7 +166,7 @@ uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, boo
+>  	return -ENOSYS;
+>  }
+>  static inline void
+> -uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
+> +uprobe_unregister(struct inode *inode, struct uprobe_consumer *uc)
+>  {
+>  }
+>  static inline int uprobe_mmap(struct vm_area_struct *vma)
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 8ce669bc6474..2544e8b79bad 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1197,14 +1197,13 @@ __uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
+>  /*
+>   * uprobe_unregister - unregister an already registered probe.
+>   * @inode: the file in which the probe has to be removed.
+> - * @offset: offset from the start of the file.
+> - * @uc: identify which probe if multiple probes are colocated.
+> + * @uc: identify which probe consumer to unregister.
+>   */
+> -void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
+> +void uprobe_unregister(struct inode *inode, struct uprobe_consumer *uc)
+>  {
+>  	struct uprobe *uprobe;
+>  
+> -	uprobe = find_uprobe(inode, offset);
+> +	uprobe = find_uprobe(inode, uc->offset);
+>  	if (WARN_ON(!uprobe))
+>  		return;
+>  
+> @@ -1277,20 +1276,12 @@ static int __uprobe_register(struct inode *inode, loff_t offset,
+>  	return ret;
+>  }
+>  
+> -int uprobe_register(struct inode *inode, loff_t offset,
+> -		    struct uprobe_consumer *uc)
+> +int uprobe_register(struct inode *inode, struct uprobe_consumer *uc)
+>  {
+> -	return __uprobe_register(inode, offset, 0, uc);
+> +	return __uprobe_register(inode, uc->offset, uc->ref_ctr_offset, uc);
+>  }
+>  EXPORT_SYMBOL_GPL(uprobe_register);
+>  
+> -int uprobe_register_refctr(struct inode *inode, loff_t offset,
+> -			   loff_t ref_ctr_offset, struct uprobe_consumer *uc)
+> -{
+> -	return __uprobe_register(inode, offset, ref_ctr_offset, uc);
+> -}
+> -EXPORT_SYMBOL_GPL(uprobe_register_refctr);
+> -
+>  /*
+>   * uprobe_apply - unregister an already registered probe.
+>   * @inode: the file in which the probe has to be removed.
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index d1daeab1bbc1..ba62baec3152 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3154,8 +3154,6 @@ struct bpf_uprobe_multi_link;
+>  
+>  struct bpf_uprobe {
+>  	struct bpf_uprobe_multi_link *link;
+> -	loff_t offset;
+> -	unsigned long ref_ctr_offset;
+>  	u64 cookie;
+>  	struct uprobe_consumer consumer;
+>  };
+> @@ -3181,8 +3179,7 @@ static void bpf_uprobe_unregister(struct path *path, struct bpf_uprobe *uprobes,
+>  	u32 i;
+>  
+>  	for (i = 0; i < cnt; i++) {
+> -		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset,
+> -				  &uprobes[i].consumer);
+> +		uprobe_unregister(d_real_inode(path->dentry), &uprobes[i].consumer);
+>  	}
+>  }
+>  
+> @@ -3262,10 +3259,10 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+>  
+>  	for (i = 0; i < ucount; i++) {
+>  		if (uoffsets &&
+> -		    put_user(umulti_link->uprobes[i].offset, uoffsets + i))
+> +		    put_user(umulti_link->uprobes[i].consumer.offset, uoffsets + i))
+>  			return -EFAULT;
+>  		if (uref_ctr_offsets &&
+> -		    put_user(umulti_link->uprobes[i].ref_ctr_offset, uref_ctr_offsets + i))
+> +		    put_user(umulti_link->uprobes[i].consumer.ref_ctr_offset, uref_ctr_offsets + i))
+>  			return -EFAULT;
+>  		if (ucookies &&
+>  		    put_user(umulti_link->uprobes[i].cookie, ucookies + i))
+> @@ -3439,15 +3436,16 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>  		goto error_free;
+>  
+>  	for (i = 0; i < cnt; i++) {
+> -		if (__get_user(uprobes[i].offset, uoffsets + i)) {
+> +		if (__get_user(uprobes[i].consumer.offset, uoffsets + i)) {
+>  			err = -EFAULT;
+>  			goto error_free;
+>  		}
+> -		if (uprobes[i].offset < 0) {
+> +		if (uprobes[i].consumer.offset < 0) {
+>  			err = -EINVAL;
+>  			goto error_free;
+>  		}
+> -		if (uref_ctr_offsets && __get_user(uprobes[i].ref_ctr_offset, uref_ctr_offsets + i)) {
+> +		if (uref_ctr_offsets &&
+> +		    __get_user(uprobes[i].consumer.ref_ctr_offset, uref_ctr_offsets + i)) {
+>  			err = -EFAULT;
+>  			goto error_free;
+>  		}
+> @@ -3477,10 +3475,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+>  		      &bpf_uprobe_multi_link_lops, prog);
+>  
+>  	for (i = 0; i < cnt; i++) {
+> -		err = uprobe_register_refctr(d_real_inode(link->path.dentry),
+> -					     uprobes[i].offset,
+> -					     uprobes[i].ref_ctr_offset,
+> -					     &uprobes[i].consumer);
+> +		err = uprobe_register(d_real_inode(link->path.dentry), &uprobes[i].consumer);
+>  		if (err) {
+>  			bpf_uprobe_unregister(&path, uprobes, i);
+>  			goto error_free;
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index c98e3b3386ba..d786f99114be 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -60,8 +60,6 @@ struct trace_uprobe {
+>  	struct path			path;
+>  	struct inode			*inode;
+>  	char				*filename;
+> -	unsigned long			offset;
+> -	unsigned long			ref_ctr_offset;
+>  	unsigned long			nhit;
+>  	struct trace_probe		tp;
+>  };
+> @@ -205,7 +203,7 @@ static unsigned long translate_user_vaddr(unsigned long file_offset)
+>  
+>  	udd = (void *) current->utask->vaddr;
+>  
+> -	base_addr = udd->bp_addr - udd->tu->offset;
+> +	base_addr = udd->bp_addr - udd->tu->consumer.offset;
+>  	return base_addr + file_offset;
+>  }
+>  
+> @@ -286,13 +284,13 @@ static bool trace_uprobe_match_command_head(struct trace_uprobe *tu,
+>  	if (strncmp(tu->filename, argv[0], len) || argv[0][len] != ':')
+>  		return false;
+>  
+> -	if (tu->ref_ctr_offset == 0)
+> -		snprintf(buf, sizeof(buf), "0x%0*lx",
+> -				(int)(sizeof(void *) * 2), tu->offset);
+> +	if (tu->consumer.ref_ctr_offset == 0)
+> +		snprintf(buf, sizeof(buf), "0x%0*llx",
+> +				(int)(sizeof(void *) * 2), tu->consumer.offset);
+>  	else
+> -		snprintf(buf, sizeof(buf), "0x%0*lx(0x%lx)",
+> -				(int)(sizeof(void *) * 2), tu->offset,
+> -				tu->ref_ctr_offset);
+> +		snprintf(buf, sizeof(buf), "0x%0*llx(0x%llx)",
+> +				(int)(sizeof(void *) * 2), tu->consumer.offset,
+> +				tu->consumer.ref_ctr_offset);
+>  	if (strcmp(buf, &argv[0][len + 1]))
+>  		return false;
+>  
+> @@ -410,7 +408,7 @@ static bool trace_uprobe_has_same_uprobe(struct trace_uprobe *orig,
+>  
+>  	list_for_each_entry(orig, &tpe->probes, tp.list) {
+>  		if (comp_inode != d_real_inode(orig->path.dentry) ||
+> -		    comp->offset != orig->offset)
+> +		    comp->consumer.offset != orig->consumer.offset)
+>  			continue;
+>  
+>  		/*
+> @@ -472,8 +470,8 @@ static int validate_ref_ctr_offset(struct trace_uprobe *new)
+>  
+>  	for_each_trace_uprobe(tmp, pos) {
+>  		if (new_inode == d_real_inode(tmp->path.dentry) &&
+> -		    new->offset == tmp->offset &&
+> -		    new->ref_ctr_offset != tmp->ref_ctr_offset) {
+> +		    new->consumer.offset == tmp->consumer.offset &&
+> +		    new->consumer.ref_ctr_offset != tmp->consumer.ref_ctr_offset) {
+>  			pr_warn("Reference counter offset mismatch.");
+>  			return -EINVAL;
+>  		}
+> @@ -675,8 +673,8 @@ static int __trace_uprobe_create(int argc, const char **argv)
+>  		WARN_ON_ONCE(ret != -ENOMEM);
+>  		goto fail_address_parse;
+>  	}
+> -	tu->offset = offset;
+> -	tu->ref_ctr_offset = ref_ctr_offset;
+> +	tu->consumer.offset = offset;
+> +	tu->consumer.ref_ctr_offset = ref_ctr_offset;
+>  	tu->path = path;
+>  	tu->filename = filename;
+>  
+> @@ -746,12 +744,12 @@ static int trace_uprobe_show(struct seq_file *m, struct dyn_event *ev)
+>  	char c = is_ret_probe(tu) ? 'r' : 'p';
+>  	int i;
+>  
+> -	seq_printf(m, "%c:%s/%s %s:0x%0*lx", c, trace_probe_group_name(&tu->tp),
+> +	seq_printf(m, "%c:%s/%s %s:0x%0*llx", c, trace_probe_group_name(&tu->tp),
+>  			trace_probe_name(&tu->tp), tu->filename,
+> -			(int)(sizeof(void *) * 2), tu->offset);
+> +			(int)(sizeof(void *) * 2), tu->consumer.offset);
+>  
+> -	if (tu->ref_ctr_offset)
+> -		seq_printf(m, "(0x%lx)", tu->ref_ctr_offset);
+> +	if (tu->consumer.ref_ctr_offset)
+> +		seq_printf(m, "(0x%llx)", tu->consumer.ref_ctr_offset);
+>  
+>  	for (i = 0; i < tu->tp.nr_args; i++)
+>  		seq_printf(m, " %s=%s", tu->tp.args[i].name, tu->tp.args[i].comm);
+> @@ -1089,12 +1087,7 @@ static int trace_uprobe_enable(struct trace_uprobe *tu, filter_func_t filter)
+>  	tu->consumer.filter = filter;
+>  	tu->inode = d_real_inode(tu->path.dentry);
+>  
+> -	if (tu->ref_ctr_offset)
+> -		ret = uprobe_register_refctr(tu->inode, tu->offset,
+> -				tu->ref_ctr_offset, &tu->consumer);
+> -	else
+> -		ret = uprobe_register(tu->inode, tu->offset, &tu->consumer);
+> -
+> +	ret = uprobe_register(tu->inode, &tu->consumer);
+>  	if (ret)
+>  		tu->inode = NULL;
+>  
+> @@ -1112,7 +1105,7 @@ static void __probe_event_disable(struct trace_probe *tp)
+>  		if (!tu->inode)
+>  			continue;
+>  
+> -		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
+> +		uprobe_unregister(tu->inode, &tu->consumer);
+>  		tu->inode = NULL;
+>  	}
+>  }
+> @@ -1310,7 +1303,7 @@ static int uprobe_perf_close(struct trace_event_call *call,
+>  		return 0;
+>  
+>  	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
+> -		ret = uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
+> +		ret = uprobe_apply(tu->inode, tu->consumer.offset, &tu->consumer, false);
+>  		if (ret)
+>  			break;
+>  	}
+> @@ -1334,7 +1327,7 @@ static int uprobe_perf_open(struct trace_event_call *call,
+>  		return 0;
+>  
+>  	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
+> -		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
+> +		err = uprobe_apply(tu->inode, tu->consumer.offset, &tu->consumer, true);
+>  		if (err) {
+>  			uprobe_perf_close(call, event);
+>  			break;
+> @@ -1464,7 +1457,7 @@ int bpf_get_uprobe_info(const struct perf_event *event, u32 *fd_type,
+>  	*fd_type = is_ret_probe(tu) ? BPF_FD_TYPE_URETPROBE
+>  				    : BPF_FD_TYPE_UPROBE;
+>  	*filename = tu->filename;
+> -	*probe_offset = tu->offset;
+> +	*probe_offset = tu->consumer.offset;
+>  	*probe_addr = 0;
+>  	return 0;
+>  }
+> @@ -1627,9 +1620,9 @@ create_local_trace_uprobe(char *name, unsigned long offs,
+>  		return ERR_CAST(tu);
+>  	}
+>  
+> -	tu->offset = offs;
+> +	tu->consumer.offset = offs;
+>  	tu->path = path;
+> -	tu->ref_ctr_offset = ref_ctr_offset;
+> +	tu->consumer.ref_ctr_offset = ref_ctr_offset;
+>  	tu->filename = kstrdup(name, GFP_KERNEL);
+>  	if (!tu->filename) {
+>  		ret = -ENOMEM;
+> diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+> index b0132a342bb5..9ae2a3c64daa 100644
+> --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+> +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+> @@ -377,7 +377,6 @@ uprobe_ret_handler(struct uprobe_consumer *self, unsigned long func,
+>  
+>  struct testmod_uprobe {
+>  	struct path path;
+> -	loff_t offset;
+>  	struct uprobe_consumer consumer;
+>  };
+>  
+> @@ -391,25 +390,24 @@ static int testmod_register_uprobe(loff_t offset)
+>  {
+>  	int err = -EBUSY;
+>  
+> -	if (uprobe.offset)
+> +	if (uprobe.consumer.offset)
+>  		return -EBUSY;
+>  
+>  	mutex_lock(&testmod_uprobe_mutex);
+>  
+> -	if (uprobe.offset)
+> +	if (uprobe.consumer.offset)
+>  		goto out;
+>  
+>  	err = kern_path("/proc/self/exe", LOOKUP_FOLLOW, &uprobe.path);
+>  	if (err)
+>  		goto out;
+>  
+> -	err = uprobe_register_refctr(d_real_inode(uprobe.path.dentry),
+> -				     offset, 0, &uprobe.consumer);
+> -	if (err)
+> +	uprobe.consumer.offset = offset;
+> +	err = uprobe_register(d_real_inode(uprobe.path.dentry), &uprobe.consumer);
+> +	if (err) {
+>  		path_put(&uprobe.path);
+> -	else
+> -		uprobe.offset = offset;
+> -
+> +		uprobe.consumer.offset = 0;
+> +	}
+>  out:
+>  	mutex_unlock(&testmod_uprobe_mutex);
+>  	return err;
+> @@ -419,10 +417,9 @@ static void testmod_unregister_uprobe(void)
+>  {
+>  	mutex_lock(&testmod_uprobe_mutex);
+>  
+> -	if (uprobe.offset) {
+> -		uprobe_unregister(d_real_inode(uprobe.path.dentry),
+> -				  uprobe.offset, &uprobe.consumer);
+> -		uprobe.offset = 0;
+> +	if (uprobe.consumer.offset) {
+> +		uprobe_unregister(d_real_inode(uprobe.path.dentry), &uprobe.consumer);
+> +		uprobe.consumer.offset = 0;
+>  	}
+>  
+>  	mutex_unlock(&testmod_uprobe_mutex);
+> -- 
+> 2.43.0
+> 
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
