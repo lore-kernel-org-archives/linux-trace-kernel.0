@@ -1,154 +1,105 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32EA1990C4;
-	Thu, 27 Jun 2024 16:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2434B433B3;
+	Thu, 27 Jun 2024 17:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719507110; cv=none; b=URmj0U1szRbZD/hLzDlT+fDxWmEcD5U50mgsrDAGD4QPnNwMOC81lidbyl8y+3Na0Z+uYD97zgG9is6YbhI28uAlnG5o2GlhRoGsUlvCuywsg9M0jc0gUbcgY00mNiXfrbyAXUYHYHhIk0Jo1osDhBtxuhMwJt9MwtFUyFHVoj4=
+	t=1719508132; cv=none; b=NV/VN7sHFlGPGsmKTGOme2owEoEMt8NNplM9xnYEA3gUIfcst2L7D3aJBEYmYEI0PwjkRFDysZnLXnKqX6thBx4ym73ni3ZwXjrBA/KRjRHJmHx/o1xHE190TIO9NSKRAWaa0TzEhjTvoNumiyLLCg47Ww811EiEYThEP7W3sbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719507110; c=relaxed/simple;
-	bh=qIvu4g/bIBmBH2H9f4HwrUaLQ5grYwZpG98mYQbbVE0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QLrptxn2I5RXlBmnlfk1uqqBN1Ruz/t9sW+rzK5NPjTBO+V8yiMjYhxHYxi4daJhJ9zJdl8g+OT7Xya8hL0U4DfA186xIrDmei+7rtvgeg2zG4L5r4kdI7rqvRS9dnrkT/MZMO1wAPZ+y3hzwmZmP+zYTkNAQTBgqcKNaJ6P4ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DldEElm4; arc=none smtp.client-ip=209.85.215.180
+	s=arc-20240116; t=1719508132; c=relaxed/simple;
+	bh=6a+QzgfITt8frxG2BinwNLUcugEG8Lp4mDKzxGhzYm4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=d6Oot6BmsHFOSI8YADIhJRo+oZnkgwTTi/kjGp7QRUhC5IUAA1zBIrpAmY8WrYoJMFV7bLpVJWC+uCKUbGyuz1AK6oN3zUkKdZbqHxVFdY9QytRSDB9qNxVD1tV6joIzlRE2IBguJo+jYzEBKwWrIk1hdCvIOQoKrze5Ed4aEcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l+kNx+ND; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DldEElm4"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-70b2421471aso5840529a12.0;
-        Thu, 27 Jun 2024 09:51:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+kNx+ND"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42561c16ffeso13857075e9.3;
+        Thu, 27 Jun 2024 10:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719507108; x=1720111908; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1XSXQVstAeex/QLAPNBTMhwk+wqQDJE0LuUAT237zRI=;
-        b=DldEElm4XDMXVQrwrMD6DjndIeVmra915tuWv6nFgQGtUqEUJbP9pvRpq2qYm66YiH
-         kTo+ns7znlr9S3uMeAdJfrZngkanwUEN+aozmfgdQh2S+5vELa1SitQ1ef4JlnP4qNfz
-         FBAvdhXzs3WByb7E2bS8gd1LT48zAFgUk04FkN3p+qrFi7jsurjRKgq5NeMG0RxLt592
-         oRZip697cIbLG0H5OrLgVAtLUcWyRaHiV9vR8Ch5URFnba02KP49GgTkvlwVDtXItQsS
-         ecwRJcFblNHwvRzM8mYTt6RsLcoxCezBYnbaG8bTrcNNYhR5ADakODY4GzMKpno0wh8Y
-         4yPQ==
+        d=gmail.com; s=20230601; t=1719508129; x=1720112929; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cd52TDCo23vBUICUzAHPR5YFmSE3EhQH6c918u4ugTM=;
+        b=l+kNx+NDwiJN6QHmYwbT4SGurL9WxLn07hFdAH4sd/lEfWKy6Noq7f+ijhr67RwKZB
+         onULGKKtnqUOdckxbqL+OIFdpUyeaJN6TmKBuzAMu4N9CD3Q03myC8KJxToUx8zHH+4u
+         UX9TkxglsiIwhnV00lj3kCjDB6rHgsWWNRLIUtNf1j1zl56ciR5b7wA6rxdLRbwep6Gu
+         uopXkX66+IaBD6+ROZDX+eBfqqkPnqs6pbT9YBu9H2/qWHL8eQcSWI2cdKvdgjb9pLk4
+         gBEQXq8vrIpXXD1VaYZGB8sSbSlunmaW6bS7Eb/jsXlO21s4c+unLCQl8ZTgxf+GcLJ0
+         Blmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719507108; x=1720111908;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1XSXQVstAeex/QLAPNBTMhwk+wqQDJE0LuUAT237zRI=;
-        b=a3itqysm13pDVdfXUxzoU/ylqwjonLAXkMmwd6B2x9fgstBMACX5VWnbK7EfpPBZNa
-         rx9GY0gMv8ntPxbIresmwlWrgkIR66dub8D+cqegkTKEE7Fk6ZP0/fsPOg7iowI4Zj5I
-         PpiMVkeL0y3UqdFp0qAFc3s3NpOlBERDbzXZUIxRWDqtGbKW6jgdiGWMlBarl+1Pav9o
-         boAhkSoXrsowrOWqdtt9InV6Lr9jYXLB7l8bO8CXRBqR7CP4nr9uO1M2i2NGQczguIdp
-         aTBDCI8UtJhZV4jn+/UUNFeKDHAaKauvPnjHiB628RRB/Ma26pD/Kx3+fSt8jeRzYZw3
-         dugQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFfocTSCEp8sM+bESEN4XJdo+TTJWMWzYG9GLlgBSjbNy4pPGjDp537cVugYSprZwPJYcVAosuJuWMRvWw1A1uNF0LP/t3FvoMcdqCFQxE6G+au6RFv2UWnB4TtlzL9jYhb31sqiTOTpUu7op1WNVoblQkSkkNPeQ13WrYwK6OgxcwJepP
-X-Gm-Message-State: AOJu0Yx5bj4jYc58/T7gc5E8QWJAxfIPKYHPOx0n8eRhm1R8RyibsfEt
-	x9qv3xFjei9FbPnVtlIztwaaythCbWCTnHqAtb4siH5u5xMqY/qyF8KNTnKdwenXID0ykDv2HYu
-	YmseP18OiLaPNNBM6HXIQDTp7E20=
-X-Google-Smtp-Source: AGHT+IGXhQGVZd2LJiMpsrXL71XDxbNoacHQmSsuRaKegbY7AIu6gYcF5MN/YCRWVrZjSANHroTFUHFWhELa89DiLk4=
-X-Received: by 2002:a05:6a20:8c24:b0:1bd:2acd:d175 with SMTP id
- adf61e73a8af0-1bd2acdd201mr5372076637.32.1719507107687; Thu, 27 Jun 2024
- 09:51:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719508129; x=1720112929;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cd52TDCo23vBUICUzAHPR5YFmSE3EhQH6c918u4ugTM=;
+        b=T6XD5c50Og8elC3ksQM7arGF0ZpN4yP5HXAm7uNtCPafy6AZ10pnrfzS5MQZaycWza
+         vMpe9my3x+IID4+N/mT1wl4ogLe3dQmMz7WIUXRf78Xt9TLfAO1Snpcbq3puLQmt68Ly
+         MX/Ko6IysghGsZBO3pZJ15fePizmZUh4SDFIfUm0fUatSMFMAEq4/cs0MfU7H3W3nOw5
+         YVN63MPHEoc3tT9gTTcqSnmbtguUV2k/VD7Hc2p4gQl1kEe23FAe9V1M7RsaAoiXxEMn
+         2X3euc/7flJRPOn+iOo9uFgAkoR7Q3IVi/KiKRRsVwanIR49at46kYTe6psmb3HBEuza
+         S3uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtY1I/ugo29QsI4upeDo+IKg4jYn/YpB9vq0cNoixyxaypcsTq+a5Zm9XYpNyycfrfnQRk+d016NrZPrL4WhjCgmLTN/ZneoSnUazGXPm/WK5bsk36c9yMenuMdZuoCbcR/8gA9W/UQrrPGQcNf6T+
+X-Gm-Message-State: AOJu0YyS5jnyy6diMrYxY/zrBg/PzwM6ihUMJSL3zIpMfaeG2/ZfoqDE
+	7PEmO7/DHJd9MeciZto0NQwX7VgcD7hUk7EtwFSOvdm0NaTmtfJ4NHUAwA==
+X-Google-Smtp-Source: AGHT+IE5bMkYh7fWJfWBM1m0gURnI3pYwYNUdfjazbH575zk32WvUb2At7eMuejqYxfL6YI71DOP4Q==
+X-Received: by 2002:a05:6000:1010:b0:367:f2b:aeff with SMTP id ffacd0b85a97d-3670f2bb07emr4426806f8f.0.1719508129193;
+        Thu, 27 Jun 2024 10:08:49 -0700 (PDT)
+Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357c12esm2493077f8f.15.2024.06.27.10.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 10:08:48 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH][next] firewire: core: Fix spelling mistakes in tracepoint messages
+Date: Thu, 27 Jun 2024 18:08:47 +0100
+Message-Id: <20240627170847.125531-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618194306.1577022-1-jolsa@kernel.org> <20240627160255.GA25374@redhat.com>
-In-Reply-To: <20240627160255.GA25374@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 27 Jun 2024 09:51:35 -0700
-Message-ID: <CAEf4BzZVmKjfQD1zKMDOD-Zc4pVp+EGgb8h2veg=bXe1Pjn_Uw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: uprobes: make UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN
- constant
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jiri Olsa <jolsa@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 9:04=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
-> arch_uprobe_trampoline() which uses it to initialize a static variable.
->
-> Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return pr=
-obe")
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-3990X=
-/
-> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  arch/loongarch/include/asm/uprobes.h | 6 ++++--
->  arch/loongarch/kernel/uprobes.c      | 8 ++++++++
->  2 files changed, 12 insertions(+), 2 deletions(-)
->
+There are two spelling mistakes in the tracepoint message text. Fix them.
 
-LGTM.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ include/trace/events/firewire.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+diff --git a/include/trace/events/firewire.h b/include/trace/events/firewire.h
+index d9158a134beb..86330ba58336 100644
+--- a/include/trace/events/firewire.h
++++ b/include/trace/events/firewire.h
+@@ -853,7 +853,7 @@ DECLARE_EVENT_CLASS(isoc_single_completions_template,
+ 		memcpy(__get_dynamic_array(header), header, __get_dynamic_array_len(header));
+ 	),
+ 	TP_printk(
+-		"context=0x%llx card_index=%u timestap=0x%04x cause=%s header=%s",
++		"context=0x%llx card_index=%u timestamp=0x%04x cause=%s header=%s",
+ 		__entry->context,
+ 		__entry->card_index,
+ 		__entry->timestamp,
+@@ -891,7 +891,7 @@ TRACE_EVENT(isoc_inbound_multiple_completions,
+ 		__entry->cause = cause;
+ 	),
+ 	TP_printk(
+-		"context=0x%llx card_index=%u comleted=%u cause=%s",
++		"context=0x%llx card_index=%u completed=%u cause=%s",
+ 		__entry->context,
+ 		__entry->card_index,
+ 		__entry->completed,
+-- 
+2.39.2
 
-
-> diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/includ=
-e/asm/uprobes.h
-> index c8f59983f702..18221eb9a8b0 100644
-> --- a/arch/loongarch/include/asm/uprobes.h
-> +++ b/arch/loongarch/include/asm/uprobes.h
-> @@ -6,13 +6,15 @@
->
->  typedef u32 uprobe_opcode_t;
->
-> +#define __emit_break(imm)      (uprobe_opcode_t)((imm) | (break_op << 15=
-))
-> +
->  #define MAX_UINSN_BYTES                8
->  #define UPROBE_XOL_SLOT_BYTES  MAX_UINSN_BYTES
->
-> -#define UPROBE_SWBP_INSN       larch_insn_gen_break(BRK_UPROBE_BP)
-> +#define UPROBE_SWBP_INSN       __emit_break(BRK_UPROBE_BP)
->  #define UPROBE_SWBP_INSN_SIZE  LOONGARCH_INSN_SIZE
->
-> -#define UPROBE_XOLBP_INSN      larch_insn_gen_break(BRK_UPROBE_XOLBP)
-> +#define UPROBE_XOLBP_INSN      __emit_break(BRK_UPROBE_XOLBP)
->
-
-this looks correct (but based on pure code inspection)
-
->  struct arch_uprobe {
->         unsigned long   resume_era;
-> diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/upro=
-bes.c
-> index 87abc7137b73..90462d94c28f 100644
-> --- a/arch/loongarch/kernel/uprobes.c
-> +++ b/arch/loongarch/kernel/uprobes.c
-> @@ -7,6 +7,14 @@
->
->  #define UPROBE_TRAP_NR UINT_MAX
->
-> +static __init int check_emit_break(void)
-> +{
-> +       BUG_ON(UPROBE_SWBP_INSN  !=3D larch_insn_gen_break(BRK_UPROBE_BP)=
-);
-> +       BUG_ON(UPROBE_XOLBP_INSN !=3D larch_insn_gen_break(BRK_UPROBE_XOL=
-BP));
-> +       return 0;
-> +}
-> +arch_initcall(check_emit_break);
-> +
-
-I wouldn't even bother with this, but whatever.
-
->  int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
->                              struct mm_struct *mm, unsigned long addr)
->  {
-> --
-> 2.25.1.362.g51ebf55
->
->
