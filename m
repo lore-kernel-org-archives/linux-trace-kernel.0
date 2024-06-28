@@ -1,195 +1,151 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8042D4DA0C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5EE158201
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719571624; cv=none; b=vE/g7tpg5y2UM9F0hUI1eM/xHZEEuomLFTzx35qB+Fb4muqnWzPM6MQ8iWXs3fJ4RxtUZIGbOuuatT5iGzeupSeGi9TXuBz1WgLIoXeATWwt/BT53XuAPrFxU4/xQJAwSuNn2tRVYqFLBYG1pu/cao0wECWn+XW9TxQx42S+MeA=
+	t=1719575295; cv=none; b=IS9WBieg/zfvJq+bxh6tMSxOuMtKml8FQwwqI8qHtHQzjRDzauBMuJZavtzd73wW3PFT/rxs5k/8xXbFH3t52RXdbFp2qQXEUHTyl1xKH5i86x+Z7md1GxurqTXVOm9Gpb62mBcTTvG4dirZ/1PoilzvEtwm5dbPZByITK9ZjCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719571624; c=relaxed/simple;
-	bh=woktVHjxsn0gr5hr8+bromFgaR2dogPu6y9jS/+fBQ4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZVKE173fuyereBGAYRfxqaBrUz1m+4sl7QvXNX0wxZsGASCs5kLWttNxPHpisobfM0OGHClwuWIObx7IhytF8sxbv/EhjcvzZxegQDhqpx39/HDV3Bktogtq/piWeVhdBR2u3iI/pjUuqBxnTxVZHbGIurINTgaUbS+c7LDslvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v4lp96/z; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1719575295; c=relaxed/simple;
+	bh=nMicCFqOOSqXWHUG6+RMyPjEXy9o5YSjEOcCsaIXIMI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JoOGvyxzvK9c8D4LFtbAfyCA9MWcoH7JxkXCcb2Hhrelp6Tr0QuvLeGbOAdDbGXOijNXqZnSpZiOUWX1Pl4TAcXj0us8poFXwt0j8Jweqc3I/psjDM8j/JvFH6nmg2sb3s0eM24bkol3RxshcSTnXMdiS7ce2REE4kyhosX4whE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ICVHBBCf; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4lp96/z"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4256b7702a5so3132135e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:47:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ICVHBBCf"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-701ef03185fso270672a34.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 04:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719571621; x=1720176421; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mVAGmQDGpiRemF1EjQXmA7rPtOTMJWbLR7/b4BT5RFw=;
-        b=v4lp96/zQJlpT76ERcsL2tTbP+JW1NhGvQ5uwwFgTNoLRUs+SGYLfnTqQCe6DBPQ5H
-         Mx8sryHVafGwO3Ml+GgqFaEsvXeHDDBKvafg2uceSg9jAdh3YfcRS1xgEMchyNWyGMDH
-         3O0L1BkzchL6I/SeZ96rgyLoCInWvppjWl11JP6RVHkvx0RyPV+d2LJEZuSJ0bxqnsst
-         k1xNT20wPS56kysw44D516gpywYHTOBf18Uf8kidQ6A2NnQPqUxqWgf1IooY0jrM8gl6
-         itD8Ag1zxudVy1srXdYWT90f+b4jZk1Q3g93QQWrnBrBeDZ7uNX7b+7mOIq4iSYwLWhr
-         d7UA==
+        d=sifive.com; s=google; t=1719575293; x=1720180093; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Go8tsPI3JHaqc+IarHpTHOFjcdklbUr4X/cGV00jz4=;
+        b=ICVHBBCffdyo1DjayEb/GFmDzptLm6xJ6c2M4soIbVHFKH/0z9z3pQvl4jqJDvQcqm
+         eXLzIB5pq0VeuxfnU/+KiEtOIuyZVl8xMmweqfO7SCC/SwmPgK9tjiaFHK/V9/UO8Q0M
+         18AaWzKDFzphjuX2KEMINBK6Pkl+b/57vPXXLir2g4Fd6HZBB/dkG0qxB/6wkXVowA8d
+         cximUFNbcONH1hZswhzKxMu33xvVZwHcMAFtLhvS93b9nOWu1TznHznvTi0V1YaBOs4T
+         6Zkx6Lyzob16Suc1PBHUivPpZlSGmvy4LMr+Is0N8HLTd9fqn51xG2UHRWxNv7W2h+fW
+         MV5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719571621; x=1720176421;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mVAGmQDGpiRemF1EjQXmA7rPtOTMJWbLR7/b4BT5RFw=;
-        b=RdXC0ANV4iG5VmJsGE+m6zlJ0qsKV45gdXP4E6SxmM1h4fpHTHoiEA0wVsbUIHCa+A
-         EhRXasFM5ynAiAXwVxB07e2/EdqbRfgxktAd8xVk5LGhwiQatJ9tzZM3nFZd3GyNmTQb
-         fk5PBvF9iqPr7TAwjXKM2tXomweH9d++4/VDULdZKK+eKVClA51NzwjF1OFrXp3PrJIs
-         zVjVp1FxFpJYMAB21Adzo30edg/OwLUeSkSuqwbpGxLLDFvJIpS8AYyyRYlWNFgsoMLn
-         HVGQzD9H0ZsaZAxqha6TJWXKWfAuZjR3gKu8opwEBsi6kP3ptFrE+ScW8kJzNtnht8a4
-         YGNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4WSwSzSumDKsrL5gB2MmPYAgODsLqtKN8NKIHXAtAz0Ic83domeuBbu0zGLniOrUYflSTTfm0UaXAlbPj+TINfLSei3Wus9+MlXlTzF0/i7N8
-X-Gm-Message-State: AOJu0YySNL7XL2NBDasPWVVo/2TkyWpxmQw5HiT+07dzV5kTYtYbY7Ua
-	lDQWOn7SiTXhevQM05hqwSuZ+IrjgM3Ed6bkKm/TZE73N1KJf2eXuWboKe/55VlnZJr6N9OBoX3
-	XnCw7VbogIOU2nPy73Q==
-X-Google-Smtp-Source: AGHT+IHZHlvGw4nxcFoHXUEV2Mmu2bpQJUntZHoAE0zOBHagzfvEXRkaEhyc77Lxq96Bn5RGJbrsHF420JmpKzNT
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:4c11:b0:425:5eee:2b75 with
- SMTP id 5b1f17b1804b1-4256d5a7ceamr221355e9.4.1719571620888; Fri, 28 Jun 2024
- 03:47:00 -0700 (PDT)
-Date: Fri, 28 Jun 2024 11:46:11 +0100
+        d=1e100.net; s=20230601; t=1719575293; x=1720180093;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Go8tsPI3JHaqc+IarHpTHOFjcdklbUr4X/cGV00jz4=;
+        b=qUHlukzGws+3Bfd4z5C659GhFJizCAj4tircQLPI05NoJocUNKmnx59QGO0cw0wBtA
+         Wxpg1KoPpFUjcbJyYaWeYJK4n4Lfib8wmwQhXV+W7E3iO2KVk9PAhDwUdd+2P87QUGGR
+         ZaZRb+Fr+A9EniFxDRoljgfodDtn4uxaLEw/kh3NdELB3/24rrje8r+tigbCVxdzfv2Y
+         7yH5quw2svNIcTuq4+vhJcqsou7u72sKkV5hrsmgSHuERE3qcEhz90aoQLNMwBURZWN/
+         3vp30nmUCYyXTZABxTg7Ya9kW3znD2wEeLg1d07Fork4L32ASuYhYEji3fRctGCi11xK
+         VLSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUARRSoGZH7f+t3o7+ekLz2HNuOXgLXs/fKRrUqPcgmbW4IN3dF65gazhuzSoNnNNLdj9FJvbF3V6caEoaL/VN0OF3S/X7MMZZf4L/Eg7POQdh
+X-Gm-Message-State: AOJu0YyEysj+hCul9ZU7rgM94z4d5WRbdKzIZlidDANHkfnsQl9zc7zc
+	Q9bGUr7Oa6fccBT8XuGrZrF+Q1Lu004ydrXURycdKCmK0LZqr4XmiyOx2uupqU4=
+X-Google-Smtp-Source: AGHT+IGxaDreBVCsSLdh9PoJI0Hihs2g42vWKzBlr7lrYPNGCbC+Og4f9H83lvBVMVl6OYqO7WNyog==
+X-Received: by 2002:a05:6870:d891:b0:254:7348:9071 with SMTP id 586e51a60fabf-25d0170cec9mr17765030fac.26.1719575292823;
+        Fri, 28 Jun 2024 04:48:12 -0700 (PDT)
+Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecfb90sm1377775b3a.139.2024.06.28.04.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jun 2024 04:48:12 -0700 (PDT)
+From: Andy Chiu <andy.chiu@sifive.com>
+Subject: [PATCH v2 0/6] riscv: ftrace: atmoic patching and preempt
+ improvements
+Date: Fri, 28 Jun 2024 19:47:43 +0800
+Message-Id: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Message-ID: <20240628104611.1443542-1-vdonnefort@google.com>
-Subject: [PATCH v2] ring-buffer: Align meta-page to sub-buffers for improved
- TLB usage
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, david@redhat.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN+ifmYC/4WNQQ7CIBBFr9LM2jEMRWNd9R6mCwJTOwvBQEMkT
+ e8u9gIu30v++xtkTsIZ7t0GiYtkiaGBPnXgFhuejOIbg1baqCv16LmgDb469DXgvCbrGIvBwZA
+ 3Vim2NEBbvxPP8jnKj6nxInmNqR5HhX72f7MQKiR76W9M2iniMcsshc8uvmDa9/0L/OJ01L8AA
+ AA=
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li <zong.li@sifive.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Puranjay Mohan <puranjay@kernel.org>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Evgenii Shatokhin <e.shatokhin@yadro.com>, 
+ Andy Chiu <andy.chiu@sifive.com>
+X-Mailer: b4 0.12.4
 
-Previously, the mapped ring-buffer layout caused misalignment between
-the meta-page and sub-buffers when the sub-buffer size was not a
-multiple of PAGE_SIZE. This prevented hardware with larger TLB entries
-from utilizing them effectively.
+This series makes atmoic code patching possible in riscv ftrace. A
+direct benefit of this is that we can get rid of stop_machine() when
+patching function entries. This also makes it possible to run ftrace
+with full kernel preemption. Before this series, the kernel initializes
+patchable function entries to NOP4 + NOP4. To start tracing, it updates
+entries to AUIPC + JALR while holding other cores in stop_machine.
+stop_machine() is required because it is impossible to update 2
+instructions, and be seen atomically. And preemption must have to be
+prevented, as kernel preemption allows process to be scheduled out while
+executing on one of these instruction pairs.
 
-Add a padding with the zero-page between the meta-page and sub-buffers.
-Also update the ring-buffer map_test to verify that padding.
+This series addresses the problem by initializing the first NOP4 to
+AUIPC. So, atmoic patching is possible because the kernel only has to
+update one instruction. As long as the instruction is naturally aligned,
+then it is expected to be updated atomically.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+However, the address range of the ftrace trampoline is limited to +-2K
+from ftrace_caller after appplying this series. This issue is expected
+to be solved by Puranjay's CALL_OPS, where it adds 8B naturally align
+data in front of pacthable functions and can  use it to direct execution
+out to any custom trampolines.
 
---
+The series is composed by three parts. The first part cleans up the
+existing issues when the kernel is compiled with clang.The second part
+modifies the ftrace code patching mechanism (2-4) as mentioned above.
+Then prepare ftrace to be able to run with kernel preemption (5,6)
 
-This is based on the mm-unstable branch [1] as it depends on David's work [2]
-for allowing the zero-page in vm_insert_page().
+This series is tested after applying the following ftrace/patching in
+the fixes branch:
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
-[2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
+- commit 57a369b6f2ee ("riscv: patch: Flush the icache right after
+                        patching to avoid illegal insns")
+- commit a2bd3a5b4b63 ("riscv: stacktrace: convert arch_stack_walk() to
+                        noinstr")
 
-v1 -> v2:
-  * Fix unsequenced modification and access to 'p' (s390 build)
+Changes in v2:
+- Drop patch 1 as it is merged through fixes.
+- Drop patch 2, which converts kernel_text_address into notrace. As
+  users can prevent tracing it by configuring the tracefs.
+- Use a more generic way in kconfig to align functions.
+- Link to v1: https://lore.kernel.org/r/20240613-dev-andyc-dyn-ftrace-v4-v1-0-1a538e12c01e@sifive.com
 
+---
+Andy Chiu (6):
+      riscv: ftrace: support fastcc in Clang for WITH_ARGS
+      riscv: ftrace: align patchable functions to 4 Byte boundary
+      riscv: ftrace: prepare ftrace for atomic code patching
+      riscv: ftrace: do not use stop_machine to update code
+      riscv: vector: Support calling schedule() for preemptible Vector
+      riscv: ftrace: support PREEMPT
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7345a8b625fb..c1116e76fe17 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6148,10 +6148,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	/* install subbuf ID to kern VA translation */
- 	cpu_buffer->subbuf_ids = subbuf_ids;
- 
--	meta->meta_page_size = PAGE_SIZE;
- 	meta->meta_struct_len = sizeof(*meta);
- 	meta->nr_subbufs = nr_subbufs;
- 	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-+	meta->meta_page_size = meta->subbuf_size;
- 
- 	rb_update_meta_page(cpu_buffer);
- }
-@@ -6238,6 +6238,12 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	    !(vma->vm_flags & VM_MAYSHARE))
- 		return -EPERM;
- 
-+	subbuf_order = cpu_buffer->buffer->subbuf_order;
-+	subbuf_pages = 1 << subbuf_order;
-+
-+	if (subbuf_order && pgoff % subbuf_pages)
-+		return -EINVAL;
-+
- 	/*
- 	 * Make sure the mapping cannot become writable later. Also tell the VM
- 	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND).
-@@ -6247,11 +6253,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
--	subbuf_order = cpu_buffer->buffer->subbuf_order;
--	subbuf_pages = 1 << subbuf_order;
--
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
--	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
-+	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
- 
- 	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
- 	if (!vma_pages || vma_pages > nr_pages)
-@@ -6264,20 +6267,24 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 		return -ENOMEM;
- 
- 	if (!pgoff) {
-+		unsigned long meta_page_padding;
-+
- 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
- 
- 		/*
--		 * TODO: Align sub-buffers on their size, once
--		 * vm_insert_pages() supports the zero-page.
-+		 * Pad with the zero-page to align the meta-page with the
-+		 * sub-buffers.
- 		 */
--	} else {
--		/* Skip the meta-page */
--		pgoff--;
-+		meta_page_padding = subbuf_pages - 1;
-+		while (meta_page_padding-- && p < nr_pages) {
-+			unsigned long __maybe_unused zero_addr =
-+				vma->vm_start + (PAGE_SIZE * p);
- 
--		if (pgoff % subbuf_pages) {
--			err = -EINVAL;
--			goto out;
-+			pages[p++] = ZERO_PAGE(zero_addr);
- 		}
-+	} else {
-+		/* Skip the meta-page */
-+		pgoff -= subbuf_pages;
- 
- 		s += pgoff / subbuf_pages;
- 	}
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-index a9006fa7097e..4bb0192e43f3 100644
---- a/tools/testing/selftests/ring-buffer/map_test.c
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
- 	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
- 		    desc->cpu_fd, meta_len);
- 	ASSERT_EQ(data, MAP_FAILED);
-+
-+	/* Verify meta-page padding */
-+	if (desc->meta->meta_page_size > getpagesize()) {
-+		void *addr;
-+
-+		data_len = desc->meta->meta_page_size;
-+		data = mmap(NULL, data_len,
-+			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+		ASSERT_NE(data, MAP_FAILED);
-+
-+		addr = (void *)((unsigned long)data + getpagesize());
-+		ASSERT_EQ(*((int *)addr), 0);
-+		munmap(data, data_len);
-+	}
- }
- 
- FIXTURE(snapshot) {
+ arch/riscv/Kconfig                 |   4 +-
+ arch/riscv/include/asm/ftrace.h    |  11 +++
+ arch/riscv/include/asm/processor.h |   5 ++
+ arch/riscv/include/asm/vector.h    |  22 +++++-
+ arch/riscv/kernel/asm-offsets.c    |   7 ++
+ arch/riscv/kernel/ftrace.c         | 133 ++++++++++++++++---------------------
+ arch/riscv/kernel/mcount-dyn.S     |  25 +++++--
+ 7 files changed, 121 insertions(+), 86 deletions(-)
+---
+base-commit: a2bd3a5b4b63b95aea7dbf61d9395cd6696a2bc0
+change-id: 20240613-dev-andyc-dyn-ftrace-v4-941d4a00ea19
 
-base-commit: c65920c76a977c2b73c3a8b03b4c0c00cc1285ed
+Best regards,
 -- 
-2.45.2.803.g4e1b14247a-goog
+Andy Chiu <andy.chiu@sifive.com>
 
