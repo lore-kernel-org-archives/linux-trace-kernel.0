@@ -1,61 +1,61 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAD5158A18
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55AC158A3A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 11:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719575308; cv=none; b=HL+rfw2FsFjug3SijtT/CBsucN0ioNBOX7YmD425ZeGWeF9sqQ7k6d/39Fu6ByGVii4aJMCWY4Og+JOhqBeIXOJduMU3bGnxiBrX/0EF+Yhh4psruajIKlzutnwY0t6JkphV1eWlV3IV7RMiYn8fOJUbL/ZFuBwpvFGhm75i0yc=
+	t=1719575313; cv=none; b=XWPV7oDRZ9UpEgXCHCORVqkyojXZF8EO5twgcJWkqv62pl/gcRMkzIexatxHJFDpVVU04gB8HK/PoQsVaJHbKSuiOAVt/GWZyFvLsSR/w3L7zLuZG/4P9j7NGeb9bi+3l1sbSKihzRo9gs7s19FAkGXRO2N2sf1K5opPd8p/PPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719575308; c=relaxed/simple;
-	bh=2UN4njlPUSnNWhL/NqYg76UfIkKuxRSCp7rCMspAINA=;
+	s=arc-20240116; t=1719575313; c=relaxed/simple;
+	bh=r2Z/LjuDaVIR0Nv6TzPPNFim2MqrgP18fiLXA6TsO1w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gH6KrCw/siF1ozpURecjmc65COhz1PGn/HaTtuva15nFpUZv60PuvGy8eOdfx0WEiJqjeSjR+bAoE08WN6QelcIp3gYmikLZXO9YLAgPJamIhnjv5005vbu99GRGuA7VFKKVU+f5wJMxxzXfcMrlElGt7weXX91yp4lAbvb5gqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=MFkj85++; arc=none smtp.client-ip=209.85.210.181
+	 In-Reply-To:To:Cc; b=u/p+yczDOIKap4ZcFhbwkYSdEFdsaV5qvx7bRRy7M04a/bTS17kDcd8mY34PVINoTP3oSCXQHXZNfJEciOPJDUx6kxqQiZFLKw3SFWfO5kBC+nR1UddyJQkdI5XUdCVLItJiwYVoUX44sRO2XixD4ut3OxYiCeInHlZtViCxzN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Krs2+7lv; arc=none smtp.client-ip=209.85.160.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MFkj85++"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-70698bcd19eso379554b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 04:48:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Krs2+7lv"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-25cb3f1765bso284761fac.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 04:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1719575306; x=1720180106; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1719575310; x=1720180110; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VRfKgP0f/b5byy3Hsr+xfWPWy/6xoLq7KDU6P/HKJkA=;
-        b=MFkj85++09QATntzviMtAKgPeZOO7v4YRnMhyPh8SlSjglto0yZ3VRI3F3KBXkcuu6
-         zbSVUthyDk+LVcf9DYhBneZhQaQapqPzK1YxXYQne0BnQYk3walKwqEdTanFo6tUxEbm
-         G81UhC8SWTCjuhvtkhhwz4Te1IpnWUSwwM6MawVrsr+ZwPzUeSrhmaZjYccIJh7noGvU
-         bJRWrA8SIjwk61XBU8Ud07Xb6VHlYAjOkSrSOyDITIXTlyZYPRr8y5THfKiZLnSMhaZA
-         KkKxFHjmDcXxH5yykk97HZv5tAW6XsUjkApPQH9wD98tdEp7wuv1qgR9LzqW2K3rdG6Y
-         U0hA==
+        bh=qB3HAqDltbljiMzJTGZiW2YiCbH7zPagQDm7C4z8cfY=;
+        b=Krs2+7lvcIjFVcbsXmVKWiEPCFO/oJOFQCDzQ9Js/Ar1pxeRKnqet7du87PtyCygVx
+         umMQhBu50e3P2vrbR9Qa/XRTFbAh9CCqgWMQs6usqrHjpBkIo0w3GTuwBuSuFNlZGInf
+         LKts/TXZZ3xEasr4PaMeAlOTXCdZAYcmkSBj5G6W4SAGBi6nXKK/5N9HutVApp3tiAZ1
+         dOYFqRJd0mFj8vwh6Dk/GreFVzywjiErdx7ACUGzLt+N6UjyJ6pf0EIrm9qWqIzw5WCL
+         29lqVk9VmXz9lxv6FA5v8KHXnHOXP5Eej5vx6o5Z1hsMKPwlG3G0RdENxCJD+3gVSFye
+         l21A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719575306; x=1720180106;
+        d=1e100.net; s=20230601; t=1719575310; x=1720180110;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VRfKgP0f/b5byy3Hsr+xfWPWy/6xoLq7KDU6P/HKJkA=;
-        b=WkYDSJauQ0YVFOVfcLUI3wRijfNImPLPCn1FSUewPKtJyJFmZwt+fSEn+KtPodYGfQ
-         7mNmgxxSv592LR0yfcOI4afnBfr4p0wMOJ1iUNLqkRhd4hM5n1uPGjom6+Wan7PQ4Bek
-         BRLvhV62wFCuaSYnDvrw4NINHLLNc+9aQ0dJ5KFRd/t5x/4IEjOs1xEWknbuu/ZCFvc3
-         89RR8nMzsc+vNeDxqPQCc7YIWvEA76UA4d4ydUOtVrnpTDaPuLfq9hoScf+xtz8HGeau
-         /0MzKCQihGt7AINqaYKxZHUka9pXHM9mkxKv5K/grGwX9KTxMZmBadBMPY4AeucZJ7Ka
-         qhvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZPsmXZ7ajfwFrq6zwM2d08paSbcC84pmWpf4gWIfzF8kUCs5xZX8PvzymBWcfufrGHjYu038PKObEpFWoLTGP/JHfyPPZ+Kd2G8n9iLqKu2OX
-X-Gm-Message-State: AOJu0YzCuv1mAbZ4y02jLPq/xH3Jpsh/dLQYTEtkgpbGP4Rd/BvG1MyG
-	5MJHFG/Qq7F/OnyUH7u979zUK2f7b4DH/5I9MxwhZ/wjx1r9ZgtAH07LE48cYJw=
-X-Google-Smtp-Source: AGHT+IEAymT/KibkJ2rVnqkBCpfqAUN3Ax4XLYgVI1XP9yFZGQfCsMCsbNKadorxrzTjX8uUzgoyYQ==
-X-Received: by 2002:a05:6a00:2e96:b0:706:8cc6:7471 with SMTP id d2e1a72fcca58-7068cc67611mr15622161b3a.34.1719575306121;
-        Fri, 28 Jun 2024 04:48:26 -0700 (PDT)
+        bh=qB3HAqDltbljiMzJTGZiW2YiCbH7zPagQDm7C4z8cfY=;
+        b=KkPpmSSBNp5QPa8JsDjy3IYhlhq4VCV0Py6kRvI6nLtKa8QVOxeMiOFP+B9Yinxiw7
+         PzuiXlUxUaxY/YvGH/iYMJj1rFaZfiEBWsWuGZslyUAqxO5v535kLypcYZnz9KLg4tEJ
+         UPcE2L5icBdzljafD6G6CZZaCm9H3EcTQeegImfgYE7g9jX1n+zmDkb6MohAHhCUSuQz
+         bNdp7nFhAK8K3jja7yD7BwC4d3kqEf/xDGnRvwzGoXFM3qykFzcqXDUylYvcBL9pFHuJ
+         RBkqxgjQZDTbjft3J4fX1J+FM/MJd+VBqSMoUboWh7KM/OtD2okvZA+f5EFKN4oYfLSL
+         fsxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxI2YEfSI9d0hpgIhVzXZsQP8Ak5rx3Hi1TgXj4qWA/ALchfxIfZ+KI26uXODfSRv7TO0SYwGQHsjxuxgyvSEJVQALoWeM0YBKhnDU8cWbRnqB
+X-Gm-Message-State: AOJu0YwH7l/eK1tXFLhODQpczr3mfzwmW57ofdXsOBX2u/0TsEGzjd4q
+	OT8thMBdiPeEKvxE9wWNhI1h74cFtHkF0ns7mwfkHhRmfDnVArBYVbxzt2DB4ec=
+X-Google-Smtp-Source: AGHT+IGkb+sc7AJyAjkV7J32sa3aBUKfOklckBlPnZN/quYaW53HpZw38PiUs6Fyq7Dt9/iYzdP+/g==
+X-Received: by 2002:a05:6870:9110:b0:254:a57e:1aed with SMTP id 586e51a60fabf-25d06cd083dmr17067065fac.26.1719575310299;
+        Fri, 28 Jun 2024 04:48:30 -0700 (PDT)
 Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecfb90sm1377775b3a.139.2024.06.28.04.48.22
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecfb90sm1377775b3a.139.2024.06.28.04.48.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 04:48:25 -0700 (PDT)
+        Fri, 28 Jun 2024 04:48:30 -0700 (PDT)
 From: Andy Chiu <andy.chiu@sifive.com>
-Date: Fri, 28 Jun 2024 19:47:46 +0800
-Subject: [PATCH v2 3/6] riscv: ftrace: prepare ftrace for atomic code
- patching
+Date: Fri, 28 Jun 2024 19:47:47 +0800
+Subject: [PATCH v2 4/6] riscv: ftrace: do not use stop_machine to update
+ code
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-dev-andyc-dyn-ftrace-v4-v2-3-1e5f4cb1f049@sifive.com>
+Message-Id: <20240628-dev-andyc-dyn-ftrace-v4-v2-4-1e5f4cb1f049@sifive.com>
 References: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
 In-Reply-To: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -81,232 +81,88 @@ Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
  llvm@lists.linux.dev, Andy Chiu <andy.chiu@sifive.com>
 X-Mailer: b4 0.12.4
 
-We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
-instruction fetch can break down to 4 byte at a time, it is impossible
-to update two instructions without a race. In order to mitigate it, we
-initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
-patching can change NOP4 to JALR to eable/disable ftrcae from a
-function. This limits the reach of each ftrace entry to +-2KB displacing
-from ftrace_caller.
-
-Starting from the trampoline, we add a level of indirection for it to
-reach ftrace caller target. Now, it loads the target address from a
-memory location, then perform the jump. This enable the kernel to update
-the target atomically.
-
-The ordering of reading/updating the targert address should be guarded
-by generic ftrace code, where it sends smp_rmb ipi.
+Now it is safe to remove dependency from stop_machine() for us to patch
+code in ftrace.
 
 Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
 ---
- arch/riscv/include/asm/ftrace.h |  4 +++
- arch/riscv/kernel/ftrace.c      | 80 ++++++++++++++++++++++++++---------------
- arch/riscv/kernel/mcount-dyn.S  |  9 +++--
- 3 files changed, 62 insertions(+), 31 deletions(-)
+ arch/riscv/kernel/ftrace.c | 53 ++++------------------------------------------
+ 1 file changed, 4 insertions(+), 49 deletions(-)
 
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index 5f81c53dbfd9..7199383f8c02 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -81,6 +81,7 @@ struct dyn_arch_ftrace {
- #define JALR_T0			(0x000282e7)
- #define AUIPC_T0		(0x00000297)
- #define NOP4			(0x00000013)
-+#define JALR_RANGE		(JALR_SIGN_MASK - 1)
- 
- #define to_jalr_t0(offset)						\
- 	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
-@@ -118,6 +119,9 @@ do {									\
-  * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here.
-  */
- #define MCOUNT_INSN_SIZE 8
-+#define MCOUNT_AUIPC_SIZE	4
-+#define MCOUNT_JALR_SIZE	4
-+#define MCOUNT_NOP4_SIZE	4
- 
- #ifndef __ASSEMBLY__
- struct dyn_ftrace;
 diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 4b95c574fd04..5ebe412280ef 100644
+index 5ebe412280ef..57a6558e212e 100644
 --- a/arch/riscv/kernel/ftrace.c
 +++ b/arch/riscv/kernel/ftrace.c
-@@ -64,42 +64,64 @@ static int ftrace_check_current_call(unsigned long hook_pos,
- 	return 0;
- }
+@@ -13,23 +13,13 @@
+ #include <asm/patch.h>
  
--static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
--				bool enable, bool ra)
-+static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target, bool validate)
+ #ifdef CONFIG_DYNAMIC_FTRACE
+-void ftrace_arch_code_modify_prepare(void) __acquires(&text_mutex)
++void arch_ftrace_update_code(int command)
  {
- 	unsigned int call[2];
--	unsigned int nops[2] = {NOP4, NOP4};
-+	unsigned int replaced[2];
-+
-+	make_call_t0(hook_pos, target, call);
- 
--	if (ra)
--		make_call_ra(hook_pos, target, call);
--	else
--		make_call_t0(hook_pos, target, call);
-+	if (validate) {
-+		/*
-+		 * Read the text we want to modify;
-+		 * return must be -EFAULT on read error
-+		 */
-+		if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
-+					     MCOUNT_INSN_SIZE))
-+			return -EFAULT;
-+
-+		if (replaced[0] != call[0]) {
-+			pr_err("%p: expected (%08x) but got (%08x)\n",
-+			       (void *)hook_pos, call[0], replaced[0]);
-+			return -EINVAL;
-+		}
-+	}
- 
--	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
--	if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
-+	/* Replace the jalr at once. Return -EPERM on write error. */
-+	if (patch_insn_write((void *)(hook_pos + MCOUNT_AUIPC_SIZE), call + 1, MCOUNT_JALR_SIZE))
- 		return -EPERM;
- 
- 	return 0;
- }
- 
--int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-+static int __ftrace_modify_call_site(ftrace_func_t *hook_pos, ftrace_func_t target, bool enable)
- {
--	unsigned int call[2];
-+	ftrace_func_t call = target;
-+	ftrace_func_t nops = &ftrace_stub;
- 
--	make_call_t0(rec->ip, addr, call);
--
--	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
--		return -EPERM;
-+	WRITE_ONCE(*hook_pos, enable ? call : nops);
- 
- 	return 0;
- }
- 
-+int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-+{
-+	unsigned long distance, orig_addr;
-+
-+	orig_addr = (unsigned long)&ftrace_caller;
-+	distance = addr > orig_addr ? addr - orig_addr : orig_addr - addr;
-+	if (distance > JALR_RANGE)
-+		return -EINVAL;
-+
-+	return __ftrace_modify_call(rec->ip, addr, false);
-+}
-+
- int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- 		    unsigned long addr)
- {
--	unsigned int nops[2] = {NOP4, NOP4};
-+	unsigned int nops[1] = {NOP4};
- 
--	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)(rec->ip + MCOUNT_AUIPC_SIZE), nops, MCOUNT_NOP4_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -114,21 +136,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
-  */
- int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
- {
-+	unsigned int nops[2];
- 	int out;
- 
-+	make_call_t0(rec->ip, &ftrace_caller, nops);
-+	nops[1] = NOP4;
-+
  	mutex_lock(&text_mutex);
--	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-+	out = patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE);
- 	mutex_unlock(&text_mutex);
- 
- 	return out;
- }
- 
-+ftrace_func_t ftrace_call_dest = ftrace_stub;
- int ftrace_update_ftrace_func(ftrace_func_t func)
- {
--	int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
--				       (unsigned long)func, true, true);
 -
--	return ret;
-+	return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
+-	/*
+-	 * The code sequences we use for ftrace can't be patched while the
+-	 * kernel is running, so we need to use stop_machine() to modify them
+-	 * for now.  This doesn't play nice with text_mutex, we use this flag
+-	 * to elide the check.
+-	 */
+-	riscv_patch_in_stop_machine = true;
+-}
+-
+-void ftrace_arch_code_modify_post_process(void) __releases(&text_mutex)
+-{
+-	riscv_patch_in_stop_machine = false;
++	command |= FTRACE_MAY_SLEEP;
++	ftrace_modify_all_code(command);
+ 	mutex_unlock(&text_mutex);
++	flush_icache_all();
  }
  
- struct ftrace_modify_param {
-@@ -182,7 +206,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
- 	if (ret)
- 		return ret;
- 
--	return __ftrace_modify_call(caller, addr, true, false);
-+	return __ftrace_modify_call(caller, addr, true);
+ static int ftrace_check_current_call(unsigned long hook_pos,
+@@ -155,41 +145,6 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
+ 	return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
  }
+ 
+-struct ftrace_modify_param {
+-	int command;
+-	atomic_t cpu_count;
+-};
+-
+-static int __ftrace_modify_code(void *data)
+-{
+-	struct ftrace_modify_param *param = data;
+-
+-	if (atomic_inc_return(&param->cpu_count) == num_online_cpus()) {
+-		ftrace_modify_all_code(param->command);
+-		/*
+-		 * Make sure the patching store is effective *before* we
+-		 * increment the counter which releases all waiting CPUs
+-		 * by using the release variant of atomic increment. The
+-		 * release pairs with the call to local_flush_icache_all()
+-		 * on the waiting CPU.
+-		 */
+-		atomic_inc_return_release(&param->cpu_count);
+-	} else {
+-		while (atomic_read(&param->cpu_count) <= num_online_cpus())
+-			cpu_relax();
+-
+-		local_flush_icache_all();
+-	}
+-
+-	return 0;
+-}
+-
+-void arch_ftrace_update_code(int command)
+-{
+-	struct ftrace_modify_param param = { command, ATOMIC_INIT(0) };
+-
+-	stop_machine(__ftrace_modify_code, &param, cpu_online_mask);
+-}
  #endif
  
-@@ -217,17 +241,17 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
- 	prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
- }
- #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
--extern void ftrace_graph_call(void);
-+ftrace_func_t ftrace_graph_call_dest = ftrace_stub;
- int ftrace_enable_ftrace_graph_caller(void)
- {
--	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
--				    (unsigned long)&prepare_ftrace_return, true, true);
-+	return __ftrace_modify_call_site(&ftrace_graph_call_dest,
-+					 &prepare_ftrace_return, true);
- }
- 
- int ftrace_disable_ftrace_graph_caller(void)
- {
--	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
--				    (unsigned long)&prepare_ftrace_return, false, true);
-+	return __ftrace_modify_call_site(&ftrace_graph_call_dest,
-+					 &prepare_ftrace_return, false);
- }
- #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- #endif /* CONFIG_DYNAMIC_FTRACE */
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index e988bd26b28b..bc06e8ab81cf 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -162,7 +162,8 @@ SYM_FUNC_START(ftrace_caller)
- 	mv	a3, sp
- 
- SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
--	call	ftrace_stub
-+	REG_L	ra, ftrace_call_dest
-+	jalr	0(ra)
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	addi	a0, sp, ABI_RA
-@@ -172,7 +173,8 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
- 	mv	a2, s0
- #endif
- SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
--	call	ftrace_stub
-+	REG_L	ra, ftrace_graph_call_dest
-+	jalr	0(ra)
- #endif
- 	RESTORE_ABI
- 	jr	t0
-@@ -185,7 +187,8 @@ SYM_FUNC_START(ftrace_caller)
- 	PREPARE_ARGS
- 
- SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
--	call	ftrace_stub
-+	REG_L	ra, ftrace_call_dest
-+	jalr	0(ra)
- 
- 	RESTORE_ABI_REGS
- 	bnez	t1, .Ldirect
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
 
 -- 
 2.43.0
