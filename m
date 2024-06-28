@@ -1,136 +1,167 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6616914E2E3;
-	Fri, 28 Jun 2024 09:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F381B4D58A;
+	Fri, 28 Jun 2024 09:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719565598; cv=none; b=S4Vpm5hZQGboXCkSmbF1OG+DqlmybGP3f8Knf4DNlCT0XbA8YgnNj9LNs+fYzGlAm36smi2tJ2dSYfK0nL95ICExdZuKDU5aj1BLwsMyIgC+8oGYhgTcKEaQxU+kO92GmatbAb4bbUxDUcQInQpWa96UAFRVlWvt5sqbYa02EPU=
+	t=1719567922; cv=none; b=gAiAZBhsimlPCEgg1suliFLbcwvC71mTzzHWZHHPX9C7z1QDhliY26v0RM/IEcN5ZItbUQZH9jNYvN/dmkmdeWuqoi8NToxapJeNAeIZxDnZ4yaKfv9ZyavFVgcJOX33rGVmI5Hl2cJR/370aiq69oa94egm0FhThqRypiYZxoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719565598; c=relaxed/simple;
-	bh=KFR6O5apdaE005aia/eSIy/aDnoPWMXgYn13tfLkB8g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EKRfcSsidmOIy6o9QYj676pssnQcSPNpF+5xmJwnzFXvVN+YMaqyW0kLXLczpjC9cC8N7nLiRyE6yeK9NZX79A68wRJ2iZL0UW4T4AM1fqgqFtcOVnAxSgWtMLWONuraGXsdgszA4M+Q/t/T+C62eOfOJgEmfBY9o63CWtaHCn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXPZhHWP; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719567922; c=relaxed/simple;
+	bh=251VEXUxoQ/OtBMK4PuhzNQr1HTbdjDTwS29xU+GHnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObKRNnzKBlGFM8RN7wdwLA3dmmwD+7fJPT8F3ydKzpGrEusfZUlfFGVtejqKkS/wgxFCi2+XF1wo64tEKnlIXvlcOALNv7qxJhwCoi7aMOURZE2B1MVv4+i9fovrHItd2Ag6wNfzUco9W74EeFRrc66dd/fIMlRWxOdVSbAL26A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KUYTxA9y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WUVxshvX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bLi52LFr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Whc/fUS9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXPZhHWP"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1faad409ca7so10102195ad.1;
-        Fri, 28 Jun 2024 02:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719565596; x=1720170396; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uws88M38Us6mZwthahlWUK7fM6+CMa7f0lHdNpc5/ec=;
-        b=XXPZhHWP5QwN57uWYOpdmk6Gaux3myKKOf3nc9dvHIPRKclvO1+9Bv6SRs4YWb7fXo
-         99EJL8IXsa2NhD6TX9su8uf2+VXgFECijWlmsYBqEkQC3V4qk7sBRah3P9K0lQoY08qR
-         FRMkgJn677sRYGlrGnajHFdUnES0aNh7IShdXt+EBd4d0AwJD5dWIzi8spLy7SHjZPPz
-         lhSQpPjRJhRh2XdMNQ/ZOfUt4MQ0JdHtyreGG9HPT3aPYcg+sakQ0VUlPj3twOvSiPKb
-         H+rhtadKLFnNIPb/r34KiYaHYtwn0ErFhTd8mAQ4vOZUnL43BJ9s79G3bQ6hKgtbK6dV
-         OZnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719565596; x=1720170396;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uws88M38Us6mZwthahlWUK7fM6+CMa7f0lHdNpc5/ec=;
-        b=U70QX8udI8MELd5FeBLkaMmLRTUDQwJ+HGSVw2w3rOVeL4gxykvXAG636bi6XK/ipy
-         Uz5iyzCRcllVrDNRVtBQEXfhBLeauvOnyl5SQKf6LCXK+z84MH6KH8yz6tiL5zZPuQ+W
-         vUKO1HiLe6ODqTrsYY2cLpdUmFryN+iTOKqHa+QU/h4QNA+MU5GVlsg+aRdBO4WVl/XR
-         GduIoGC0Cnn3owemaG36ZRFLDu/Lbcb8r1KWertNPtbdR2TDQcb2IF2DH5LZukJqNR4e
-         0l7zdJuj/p61WztsnkYijsXdrTz6x9tldcTiSpBljfut1FTPdY9VqL/uOCihrJujhWS0
-         7k4w==
-X-Forwarded-Encrypted: i=1; AJvYcCV1GP4aohZ1kgG3orBrbhNMaf6kI3Cx4ta4OQT20zzEXOk40ls63sluWp1QE0mm4VHCbnWuuByiiHmsSxSW7kTP/GwzpaLPmWzFLluOYxsW6XgtnGsAFf+cGPsSP7G79VE5eB5x0+AI4mQJHD51cfgWteCOw1n2m4NzN2ruqdC23WcqHok4hMvYdihEMFnKSYMo7lP2CHrWQ8bU5XuquYi6mGNMZSDTXKgI8vC0+0Uz2RtCctXOhxM4eC/WnmsSg849BVYoVLhggiea6YOcnQnx9BsPGmuoArKSnQBMoIBFswo1BBWO+NNUNnmUNvqgdN5s/q+7+g==
-X-Gm-Message-State: AOJu0YyujdauGEAtCS0+BhclUwfeWFn0NvbDEs6EV7KY3SXwmWSpyL29
-	deWd3CozyCvRoYLBFZHiha0cGmHJNWl7wL9LtyMN2/yXZezq6+wObRpE8D1kBLg=
-X-Google-Smtp-Source: AGHT+IFavdIVLnysCQZL38ewD7/CaBekji3/EpakpMEZSkmUhyVQ9iiqTWsp/YgBhmvk5fMqdYz2hg==
-X-Received: by 2002:a17:903:244a:b0:1f9:e3fa:d932 with SMTP id d9443c01a7336-1fac7e975ffmr17035345ad.9.1719565596545;
-        Fri, 28 Jun 2024 02:06:36 -0700 (PDT)
-Received: from localhost.localdomain ([39.144.106.153])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e3a1dsm10473085ad.68.2024.06.28.02.06.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2024 02:06:36 -0700 (PDT)
-From: Yafang Shao <laoar.shao@gmail.com>
-To: torvalds@linux-foundation.org,
-	laoar.shao@gmail.com
-Cc: akpm@linux-foundation.org,
-	alexei.starovoitov@gmail.com,
-	audit@vger.kernel.org,
-	bpf@vger.kernel.org,
-	catalin.marinas@arm.com,
-	dri-devel@lists.freedesktop.org,
-	ebiederm@xmission.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	penguin-kernel@i-love.sakura.ne.jp,
-	rostedt@goodmis.org,
-	selinux@vger.kernel.org,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>
-Subject: [PATCH v4 11/11] drm: Replace strcpy() with __get_task_comm()
-Date: Fri, 28 Jun 2024 17:05:17 +0800
-Message-Id: <20240628090517.17994-11-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20240628090517.17994-1-laoar.shao@gmail.com>
-References: <20240628085750.17367-1-laoar.shao@gmail.com>
- <20240628090517.17994-1-laoar.shao@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KUYTxA9y";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WUVxshvX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bLi52LFr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Whc/fUS9"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E9FB221BC9;
+	Fri, 28 Jun 2024 09:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1719567919; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f26nbjFyLnlYInHIRR6KDvb4r0aSsw8ifojWvt5uZhw=;
+	b=KUYTxA9yfgjQxbwI4K8stUvHGu1vsAYhUXpwJkG+ELqu86igcdg1sbLNvlKfLZUnKA3WlH
+	RZino+8fbK2+MJfZIKhW+wF30EYWKgf46/Ra2eq+CS95dvpBo8KvAlX2AfNtqwyWxnQkNK
+	4yRCyob67BtYLBu14RxYJwgLcEqZiZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1719567919;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f26nbjFyLnlYInHIRR6KDvb4r0aSsw8ifojWvt5uZhw=;
+	b=WUVxshvXtPCGrq4IGUx4Lk1be12on57Evx2IiNVmvE84OeO4SG4zztw3ZylHAkBR1WRNoC
+	Fc2qm8RbXgb7MXCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1719567917; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f26nbjFyLnlYInHIRR6KDvb4r0aSsw8ifojWvt5uZhw=;
+	b=bLi52LFrNYz4r7H3P+mEUw86IXx8vzgnG+3QyHg99jKg9DF7ujgYInC2P+225v7/iifv06
+	nU6JAj8A7nfotAxn7yt17IQRrpbMDN0/a+8Z+X25K59tSV1tXWOhAmvNlcFaSXSciGuZ5q
+	T2A5GpG2qx+b7csuthBsE2tgcDs2vII=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1719567917;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f26nbjFyLnlYInHIRR6KDvb4r0aSsw8ifojWvt5uZhw=;
+	b=Whc/fUS9d3BhyO19okPfQdzkp0dnWCR3SjDCYNy5EIAMr+QN2/FQkXW0U2SXZZvifZxt6y
+	FImH8Q/bIhkMHyDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC5B113A9A;
+	Fri, 28 Jun 2024 09:45:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id T2rFNS2GfmarOQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 28 Jun 2024 09:45:17 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 9ED29A088E; Fri, 28 Jun 2024 11:45:17 +0200 (CEST)
+Date: Fri, 28 Jun 2024 11:45:17 +0200
+From: Jan Kara <jack@suse.cz>
+To: Eric Sandeen <sandeen@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
+	autofs@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-efi@vger.kernel.org, Namjae Jeon <linkinjeon@kernel.org>,
+	linux-ext4@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
+	linux-mm@kvack.org, Jan Kara <jack@suse.cz>, ntfs3@lists.linux.dev,
+	linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Hans Caniullan <hcaniull@redhat.com>
+Subject: Re: [PATCH 01/14] fs_parse: add uid & gid option option parsing
+ helpers
+Message-ID: <20240628094517.ifs4bp73nlggsnxz@quack3>
+References: <8dca3c11-99f4-446d-a291-35c50ed2dc14@redhat.com>
+ <de859d0a-feb9-473d-a5e2-c195a3d47abb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de859d0a-feb9-473d-a5e2-c195a3d47abb@redhat.com>
+X-Spam-Score: -3.80
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,sandeen.net:email,imap1.dmz-prg2.suse.org:helo]
 
-To prevent erros from occurring when the src string is longer than the
-dst string in strcpy(), we should use __get_task_comm() instead. This
-approach also facilitates future extensions to the task comm.
+On Thu 27-06-24 19:26:24, Eric Sandeen wrote:
+> Multiple filesystems take uid and gid as options, and the code to
+> create the ID from an integer and validate it is standard boilerplate
+> that can be moved into common helper functions, so do that for
+> consistency and less cut&paste.
+> 
+> This also helps avoid the buggy pattern noted by Seth Jenkins at
+> https://lore.kernel.org/lkml/CALxfFW4BXhEwxR0Q5LSkg-8Vb4r2MONKCcUCVioehXQKr35eHg@mail.gmail.com/
+> because uid/gid parsing will fail before any assignment in most
+> filesystems.
+> 
+> Signed-off-by: Eric Sandeen <sandeen@sandeen.net>
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
----
- drivers/gpu/drm/drm_framebuffer.c     | 2 +-
- drivers/gpu/drm/i915/i915_gpu_error.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I like the idea since this seems like a nobrainer but is actually
+surprisingly subtle...
 
-diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-index 888aadb6a4ac..25262b07ffaf 100644
---- a/drivers/gpu/drm/drm_framebuffer.c
-+++ b/drivers/gpu/drm/drm_framebuffer.c
-@@ -868,7 +868,7 @@ int drm_framebuffer_init(struct drm_device *dev, struct drm_framebuffer *fb,
- 	INIT_LIST_HEAD(&fb->filp_head);
- 
- 	fb->funcs = funcs;
--	strcpy(fb->comm, current->comm);
-+	__get_task_comm(fb->comm, sizeof(fb->comm), current);
- 
- 	ret = __drm_mode_object_add(dev, &fb->base, DRM_MODE_OBJECT_FB,
- 				    false, drm_framebuffer_free);
-diff --git a/drivers/gpu/drm/i915/i915_gpu_error.c b/drivers/gpu/drm/i915/i915_gpu_error.c
-index 625b3c024540..b2c16a53bd24 100644
---- a/drivers/gpu/drm/i915/i915_gpu_error.c
-+++ b/drivers/gpu/drm/i915/i915_gpu_error.c
-@@ -1411,7 +1411,7 @@ static bool record_context(struct i915_gem_context_coredump *e,
- 	rcu_read_lock();
- 	task = pid_task(ctx->pid, PIDTYPE_PID);
- 	if (task) {
--		strcpy(e->comm, task->comm);
-+		__get_task_comm(e->comm, sizeof(e->comm), task);
- 		e->pid = task->pid;
- 	}
- 	rcu_read_unlock();
+> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+> index a4d6ca0b8971..24727ec34e5a 100644
+> --- a/fs/fs_parser.c
+> +++ b/fs/fs_parser.c
+> @@ -308,6 +308,40 @@ int fs_param_is_fd(struct p_log *log, const struct fs_parameter_spec *p,
+>  }
+>  EXPORT_SYMBOL(fs_param_is_fd);
+>  
+> +int fs_param_is_uid(struct p_log *log, const struct fs_parameter_spec *p,
+> +		    struct fs_parameter *param, struct fs_parse_result *result)
+> +{
+> +	kuid_t uid;
+> +
+> +	if (fs_param_is_u32(log, p, param, result) != 0)
+> +		return fs_param_bad_value(log, param);
+> +
+> +	uid = make_kuid(current_user_ns(), result->uint_32);
+
+But here is the problem: Filesystems mountable in user namespaces need to use
+fc->user_ns for resolving uids / gids (e.g. like fuse_parse_param()).
+Having helpers that work for some filesystems and are subtly broken for
+others is worse than no helpers... Or am I missing something?
+
+And the problem with fc->user_ns is that currently __fs_parse() does not
+get fs_context as an argument... So that will need some larger work.
+
+								Honza
 -- 
-2.43.5
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
