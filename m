@@ -1,140 +1,195 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E93156C70;
-	Fri, 28 Jun 2024 10:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8042D4DA0C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 10:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719569438; cv=none; b=s2DrgN/6oTpgStVmVTVYg7J9zi0U+iHqUt97bSwvm0e/Ri0J0WZlCylIWNwFe7/hoF09jdCl0EFm/sGJWjTczX7nq0itmgfJdD+I2Nl1BhOr8suRTL0tHumTUXO/RYItGCDUop1E1D9DljGxdO0wMHM/F0TzRLm4cM7AB7FTlmc=
+	t=1719571624; cv=none; b=vE/g7tpg5y2UM9F0hUI1eM/xHZEEuomLFTzx35qB+Fb4muqnWzPM6MQ8iWXs3fJ4RxtUZIGbOuuatT5iGzeupSeGi9TXuBz1WgLIoXeATWwt/BT53XuAPrFxU4/xQJAwSuNn2tRVYqFLBYG1pu/cao0wECWn+XW9TxQx42S+MeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719569438; c=relaxed/simple;
-	bh=WoG3XUFYpnnYPBYkCiNe37kKCSGW3AfAOh5Ro/F+QME=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=YJU8tlqBOZug9at7dRhBiAlrupXRZkh+PWFQWPJ+oNZc5ZWk4KDYFEEBvhrQNr2YqjGG9+Z7k9uCSv4Ukr/xXtQOCtlOTgvdUzwgp+4MLk1casqLvXak7jQIhXvUCxyuPHHALycOrUbpTJO/3nvP3QCHjxRvnhUM7Ud10drLr7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3GYY47T; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719571624; c=relaxed/simple;
+	bh=woktVHjxsn0gr5hr8+bromFgaR2dogPu6y9jS/+fBQ4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZVKE173fuyereBGAYRfxqaBrUz1m+4sl7QvXNX0wxZsGASCs5kLWttNxPHpisobfM0OGHClwuWIObx7IhytF8sxbv/EhjcvzZxegQDhqpx39/HDV3Bktogtq/piWeVhdBR2u3iI/pjUuqBxnTxVZHbGIurINTgaUbS+c7LDslvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v4lp96/z; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3GYY47T"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42564a0d3ceso3271535e9.0;
-        Fri, 28 Jun 2024 03:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4lp96/z"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4256b7702a5so3132135e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jun 2024 03:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719569435; x=1720174235; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=djRjxO/ZJBQCrIZgaI6fk/U62O19bgzxywyn0TmHo/A=;
-        b=K3GYY47T8BBONpqixXEDRkPDVltUJbuybfgfmgV690AYWrrup3tKYqGQifv2cwzEFE
-         LXTHhdiN8lLIxEozAT5w8v8LYi/PlHLVkxUrNFg2QyDTlIAf1Qfm8VZPDbGdIBDZ+yew
-         cDtGV7y0GKhn0pZNQOSAdZHxDrLkyFPvFs3fgytHAdby1+QBTFMx6Bj9Sx4mcrn/XeUU
-         HlC6fgF5U6DDFTKQEoC4iSQenk608pwKclS961nUK84gsYmMU/oT13Z/zITFgwFFKGO9
-         mmvAmseCXjGgkhcU7+baQ3d9LLQoDx9srw1XDhIXZk8Zss21ebYyCH9fjAnZJzu+sx8o
-         V7MA==
+        d=google.com; s=20230601; t=1719571621; x=1720176421; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mVAGmQDGpiRemF1EjQXmA7rPtOTMJWbLR7/b4BT5RFw=;
+        b=v4lp96/zQJlpT76ERcsL2tTbP+JW1NhGvQ5uwwFgTNoLRUs+SGYLfnTqQCe6DBPQ5H
+         Mx8sryHVafGwO3Ml+GgqFaEsvXeHDDBKvafg2uceSg9jAdh3YfcRS1xgEMchyNWyGMDH
+         3O0L1BkzchL6I/SeZ96rgyLoCInWvppjWl11JP6RVHkvx0RyPV+d2LJEZuSJ0bxqnsst
+         k1xNT20wPS56kysw44D516gpywYHTOBf18Uf8kidQ6A2NnQPqUxqWgf1IooY0jrM8gl6
+         itD8Ag1zxudVy1srXdYWT90f+b4jZk1Q3g93QQWrnBrBeDZ7uNX7b+7mOIq4iSYwLWhr
+         d7UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719569435; x=1720174235;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=djRjxO/ZJBQCrIZgaI6fk/U62O19bgzxywyn0TmHo/A=;
-        b=TpSn1BqE5IexeTOq6OuXUtHdMqUPS+A8XiqLuJoW2zFU3qf39iAJ0ZO+nD5jj0+hY5
-         6YD64beVUcPQvSPdApx1KUg5youyb8nbmWGpyJt/cw/JGPb5TQS0ww6FZ40llexwFN9b
-         PpWRoD6C4wHB6ucnPchx4SkW4PMPn4Rg0EJ+jjuc7OhSS3EpFnjS6KoApGf1CTZTVAdF
-         dE0EcClC0VZvJu/bQHByktU4Q4spFQ50nb+ROWNP40HDqVVWa12kXWN4oIgVE1TaHmhT
-         1Z4oYse5uXl7OUZW3GVdD1UyMV7PgQbss9BSWjNTTEE+cUYtJD0JeERkRrUnVAZ2N5Xy
-         CW6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6mp+Qq3gShRha3lOXeB1uwQ8hY9OPWchwqSXBTKrRTMZBoytS+XorvcE7G4IuR0d69mRYt9oPUCmbEEbNvety24bn7kpoBlu1XmduS8Bw3wVTT7S0QdnJSVTMMer4k1O0JA2Vv4RaX1IZjREsqwjUgPsJFcFOP+n3Ywu9R1YByy5NjEC9MgcdIAdToucVyrYY/5S2O6dO+B0T+T2Ogc42D6ThjtBYZjLG/zScoRRy0al+NkFqmyk6V5OvAz8XL3AIZb6jaSs8/6bVb2ghoEtNdPwny0LhTchoHFHrYExPnjp5oG6/5LRaDIc4MoGy3gY9Jr4xZQggicipPcK513xufK9eA/XYLye3QTzOynkSfOqHojCOPAp8qQ5mpjldKiQcNPI4jYrVIVE8ah/eMopFRqm4IRiJcjSokD6qzo9/DDZih/bWiCsG3wM9uasK7kYxvdEqPEl02vzMI1ITKEhC2ofFoyKiIBYOEStcFw==
-X-Gm-Message-State: AOJu0YxyvBZz+dDWvjJi+IDafaU+ntkoxZ/Mkzhdtdlt5FQqFjFlv+1G
-	xxy5zRbsbcGu4MdBqXZKxI9QMhV17L80B48SQ0zXK5ozO/SSvYqf
-X-Google-Smtp-Source: AGHT+IGTbLKuH6+lACoVW6gBGISTlFA2luNgNp0at8l17FynGxoGb7mI7uIhlXYSjVIEoYumxGZPkg==
-X-Received: by 2002:a7b:cc16:0:b0:424:8e3a:d020 with SMTP id 5b1f17b1804b1-42498ced472mr80452775e9.29.1719569435211;
-        Fri, 28 Jun 2024 03:10:35 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:49ff:2a2d:712c:9944])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c15f8sm26999325e9.47.2024.06.28.03.10.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 03:10:34 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-doc@vger.kernel.org,  linux-alpha@vger.kernel.org,
-  linux-mips@vger.kernel.org,  linux-parisc@vger.kernel.org,
-  sparclinux@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
-  linux-arch@vger.kernel.org,  bpf@vger.kernel.org,
-  linux-kselftest@vger.kernel.org,  linux-media@vger.kernel.org,
-  dri-devel@lists.freedesktop.org,  "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Jonathan
- Corbet <corbet@lwn.net>,  Richard Henderson
- <richard.henderson@linaro.org>,  Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>,  Matt Turner <mattst88@gmail.com>,  Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>,  "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,  Helge Deller <deller@gmx.de>,
-  Andreas Larsson <andreas@gaisler.com>,  Jesper Dangaard Brouer
- <hawk@kernel.org>,  Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Arnd Bergmann <arnd@arndb.de>,  Alexei
- Starovoitov <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,
-  Andrii Nakryiko <andrii@kernel.org>,  Martin KaFai Lau
- <martin.lau@linux.dev>,  Eduard Zingerman <eddyz87@gmail.com>,  Song Liu
- <song@kernel.org>,  Yonghong Song <yonghong.song@linux.dev>,  John
- Fastabend <john.fastabend@gmail.com>,  KP Singh <kpsingh@kernel.org>,
-  Stanislav Fomichev <sdf@fomichev.me>,  Hao Luo <haoluo@google.com>,  Jiri
- Olsa <jolsa@kernel.org>,  Steffen Klassert <steffen.klassert@secunet.com>,
-  Herbert Xu <herbert@gondor.apana.org.au>,  David Ahern
- <dsahern@kernel.org>,  Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-  Shuah Khan <shuah@kernel.org>,  Sumit Semwal <sumit.semwal@linaro.org>,
-  =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,  Bagas
- Sanjaya
- <bagasdotme@gmail.com>,  Christoph Hellwig <hch@infradead.org>,  Nikolay
- Aleksandrov <razor@blackwall.org>,  Pavel Begunkov
- <asml.silence@gmail.com>,  David Wei <dw@davidwei.uk>,  Jason Gunthorpe
- <jgg@ziepe.ca>,  Yunsheng Lin <linyunsheng@huawei.com>,  Shailend Chand
- <shailend@google.com>,  Harshitha Ramamurthy <hramamurthy@google.com>,
-  Shakeel Butt <shakeel.butt@linux.dev>,  Jeroen de Borst
- <jeroendb@google.com>,  Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v15 12/14] net: add devmem TCP documentation
-In-Reply-To: <20240628003253.1694510-13-almasrymina@google.com> (Mina
-	Almasry's message of "Fri, 28 Jun 2024 00:32:49 +0000")
-Date: Fri, 28 Jun 2024 11:09:28 +0100
-Message-ID: <m234oxcraf.fsf@gmail.com>
-References: <20240628003253.1694510-1-almasrymina@google.com>
-	<20240628003253.1694510-13-almasrymina@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        d=1e100.net; s=20230601; t=1719571621; x=1720176421;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mVAGmQDGpiRemF1EjQXmA7rPtOTMJWbLR7/b4BT5RFw=;
+        b=RdXC0ANV4iG5VmJsGE+m6zlJ0qsKV45gdXP4E6SxmM1h4fpHTHoiEA0wVsbUIHCa+A
+         EhRXasFM5ynAiAXwVxB07e2/EdqbRfgxktAd8xVk5LGhwiQatJ9tzZM3nFZd3GyNmTQb
+         fk5PBvF9iqPr7TAwjXKM2tXomweH9d++4/VDULdZKK+eKVClA51NzwjF1OFrXp3PrJIs
+         zVjVp1FxFpJYMAB21Adzo30edg/OwLUeSkSuqwbpGxLLDFvJIpS8AYyyRYlWNFgsoMLn
+         HVGQzD9H0ZsaZAxqha6TJWXKWfAuZjR3gKu8opwEBsi6kP3ptFrE+ScW8kJzNtnht8a4
+         YGNA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4WSwSzSumDKsrL5gB2MmPYAgODsLqtKN8NKIHXAtAz0Ic83domeuBbu0zGLniOrUYflSTTfm0UaXAlbPj+TINfLSei3Wus9+MlXlTzF0/i7N8
+X-Gm-Message-State: AOJu0YySNL7XL2NBDasPWVVo/2TkyWpxmQw5HiT+07dzV5kTYtYbY7Ua
+	lDQWOn7SiTXhevQM05hqwSuZ+IrjgM3Ed6bkKm/TZE73N1KJf2eXuWboKe/55VlnZJr6N9OBoX3
+	XnCw7VbogIOU2nPy73Q==
+X-Google-Smtp-Source: AGHT+IHZHlvGw4nxcFoHXUEV2Mmu2bpQJUntZHoAE0zOBHagzfvEXRkaEhyc77Lxq96Bn5RGJbrsHF420JmpKzNT
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:4c11:b0:425:5eee:2b75 with
+ SMTP id 5b1f17b1804b1-4256d5a7ceamr221355e9.4.1719571620888; Fri, 28 Jun 2024
+ 03:47:00 -0700 (PDT)
+Date: Fri, 28 Jun 2024 11:46:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240628104611.1443542-1-vdonnefort@google.com>
+Subject: [PATCH v2] ring-buffer: Align meta-page to sub-buffers for improved
+ TLB usage
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, david@redhat.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Mina Almasry <almasrymina@google.com> writes:
-> +
-> +The user must bind a dmabuf to any number of RX queues on a given NIC using
-> +the netlink API::
-> +
-> +	/* Bind dmabuf to NIC RX queue 15 */
-> +	struct netdev_queue *queues;
-> +	queues = malloc(sizeof(*queues) * 1);
-> +
-> +	queues[0]._present.type = 1;
-> +	queues[0]._present.idx = 1;
-> +	queues[0].type = NETDEV_RX_QUEUE_TYPE_RX;
-> +	queues[0].idx = 15;
-> +
-> +	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
-> +
-> +	req = netdev_bind_rx_req_alloc();
-> +	netdev_bind_rx_req_set_ifindex(req, 1 /* ifindex */);
-> +	netdev_bind_rx_req_set_dmabuf_fd(req, dmabuf_fd);
-> +	__netdev_bind_rx_req_set_queues(req, queues, n_queue_index);
-> +
-> +	rsp = netdev_bind_rx(*ys, req);
-> +
-> +	dmabuf_id = rsp->dmabuf_id;
-> +
-> +
-> +The netlink API returns a dmabuf_id: a unique ID that refers to this dmabuf
-> +that has been bound.
+Previously, the mapped ring-buffer layout caused misalignment between
+the meta-page and sub-buffers when the sub-buffer size was not a
+multiple of PAGE_SIZE. This prevented hardware with larger TLB entries
+from utilizing them effectively.
 
-The docs don't mention the unbinding behaviour. Can you add the text
-from the commit message for patch 3 ?
+Add a padding with the zero-page between the meta-page and sub-buffers.
+Also update the ring-buffer map_test to verify that padding.
+
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+
+--
+
+This is based on the mm-unstable branch [1] as it depends on David's work [2]
+for allowing the zero-page in vm_insert_page().
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
+[2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
+
+v1 -> v2:
+  * Fix unsequenced modification and access to 'p' (s390 build)
+
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 7345a8b625fb..c1116e76fe17 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6148,10 +6148,10 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	/* install subbuf ID to kern VA translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+-	meta->meta_page_size = PAGE_SIZE;
+ 	meta->meta_struct_len = sizeof(*meta);
+ 	meta->nr_subbufs = nr_subbufs;
+ 	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
++	meta->meta_page_size = meta->subbuf_size;
+ 
+ 	rb_update_meta_page(cpu_buffer);
+ }
+@@ -6238,6 +6238,12 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	    !(vma->vm_flags & VM_MAYSHARE))
+ 		return -EPERM;
+ 
++	subbuf_order = cpu_buffer->buffer->subbuf_order;
++	subbuf_pages = 1 << subbuf_order;
++
++	if (subbuf_order && pgoff % subbuf_pages)
++		return -EINVAL;
++
+ 	/*
+ 	 * Make sure the mapping cannot become writable later. Also tell the VM
+ 	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND).
+@@ -6247,11 +6253,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	lockdep_assert_held(&cpu_buffer->mapping_lock);
+ 
+-	subbuf_order = cpu_buffer->buffer->subbuf_order;
+-	subbuf_pages = 1 << subbuf_order;
+-
+ 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
+-	nr_pages = ((nr_subbufs) << subbuf_order) - pgoff + 1; /* + meta-page */
++	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
+ 
+ 	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+ 	if (!vma_pages || vma_pages > nr_pages)
+@@ -6264,20 +6267,24 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 		return -ENOMEM;
+ 
+ 	if (!pgoff) {
++		unsigned long meta_page_padding;
++
+ 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+ 
+ 		/*
+-		 * TODO: Align sub-buffers on their size, once
+-		 * vm_insert_pages() supports the zero-page.
++		 * Pad with the zero-page to align the meta-page with the
++		 * sub-buffers.
+ 		 */
+-	} else {
+-		/* Skip the meta-page */
+-		pgoff--;
++		meta_page_padding = subbuf_pages - 1;
++		while (meta_page_padding-- && p < nr_pages) {
++			unsigned long __maybe_unused zero_addr =
++				vma->vm_start + (PAGE_SIZE * p);
+ 
+-		if (pgoff % subbuf_pages) {
+-			err = -EINVAL;
+-			goto out;
++			pages[p++] = ZERO_PAGE(zero_addr);
+ 		}
++	} else {
++		/* Skip the meta-page */
++		pgoff -= subbuf_pages;
+ 
+ 		s += pgoff / subbuf_pages;
+ 	}
+diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
+index a9006fa7097e..4bb0192e43f3 100644
+--- a/tools/testing/selftests/ring-buffer/map_test.c
++++ b/tools/testing/selftests/ring-buffer/map_test.c
+@@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
+ 	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
+ 		    desc->cpu_fd, meta_len);
+ 	ASSERT_EQ(data, MAP_FAILED);
++
++	/* Verify meta-page padding */
++	if (desc->meta->meta_page_size > getpagesize()) {
++		void *addr;
++
++		data_len = desc->meta->meta_page_size;
++		data = mmap(NULL, data_len,
++			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
++		ASSERT_NE(data, MAP_FAILED);
++
++		addr = (void *)((unsigned long)data + getpagesize());
++		ASSERT_EQ(*((int *)addr), 0);
++		munmap(data, data_len);
++	}
+ }
+ 
+ FIXTURE(snapshot) {
+
+base-commit: c65920c76a977c2b73c3a8b03b4c0c00cc1285ed
+-- 
+2.45.2.803.g4e1b14247a-goog
+
