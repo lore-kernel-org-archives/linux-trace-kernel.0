@@ -1,169 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EED50288
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 29 Jun 2024 15:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4EE374FA;
+	Sat, 29 Jun 2024 23:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719673503; cv=none; b=lVr6D1QiG0EkASkvt4yTGktvX9aZCueKRkpNNLhJ/4Ulrsy7sh5e26jt0Rrf/1aT/dHz+yEl6XAkIXSjuGScZyQclezP+DSEcqOZ9KdnOhdwpP/DoEEvO0+1cVBhblp4lDn2c4GVFc5M/UAMHQAPGbTABKmcgtlxbfYCtLr1FQA=
+	t=1719703817; cv=none; b=S4PDP8Js5BjO9sIhTocJq4Q5aBCgfN5Tif+92gTgMpI7KsfuDNm1D109wLgu6EFIywGP1lDpFEp4Pe84h8NLct4Yjq3dV+qd9pfQ8ZX5i4uUHoiPUH0tNKOzDLynPWNRw9v9Hlp+X+103zhfY0bmGbVEtxgC377VElUwhRrWIW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719673503; c=relaxed/simple;
-	bh=2DTQmWqH/wkMk/0O7Leu0Bu0zxHmvBJSnT2Q6y4GAuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p8v9AOtV4I0A8M1qTtJvxCX2axVmsVaF6MJLmhoPSBxRSLuEdwNRkxJxHAL7vuxw3sI6IZe2n69STgvAHdQLWmmxPpSP7W94LvKTb0WD5WTm+CaCkAlDjzszMshy0dQ6URl8fQxyfRvPiWUeBhXh2DyGHJy8ZuyUDNWmso9FCmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UERG+yMI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719703817; c=relaxed/simple;
+	bh=BxVbkFkNCRgnICzgALLTUBsQGL6A6EdkoAO//1PoZnQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=a+bdn1FUxIt8biHTFyExs7DQYmXsJNfHAcstdWHloz50zXYf1G80e2eDAc+yQEvi+u8emyPlRrN4POaC+HKB8kZjHvzJmsMqcXugIwyt06MDcHpJmTpCDfhFGearM7OJqBvHgfTYvSxTGl4S+ZdRVZ1ggNaIkoKHb6V0hH0fDR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcvHQ6Ja; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UERG+yMI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719673500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hk4NhAj11FnmgdfVKtJg7NJBjEggdWwUsCGnQLGSY70=;
-	b=UERG+yMIke32ebwf6RC4k8NllIJTzsrxPjE6PRiMzHLGIUPvkZibag7560P0eomz0MsceC
-	QZHbNnO7NanFszpkkXHfqGL57Rjj7JZaOpxfLD/FsGH0EP2vHHNH14+5D0M4L0CZbAB4/P
-	6/LOgy66SU9QO7UEW/46F90NEtbrp9c=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-180-xzfP7Ds6Np29icu3_sB1Nw-1; Sat,
- 29 Jun 2024 11:04:58 -0400
-X-MC-Unique: xzfP7Ds6Np29icu3_sB1Nw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D9B0719560AA;
-	Sat, 29 Jun 2024 15:04:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.39.192.76])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3892B19560AA;
-	Sat, 29 Jun 2024 15:04:49 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 29 Jun 2024 17:03:21 +0200 (CEST)
-Date: Sat, 29 Jun 2024 17:03:14 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, andrii.nakryiko@gmail.com,
-	andrii@kernel.org, bpf@vger.kernel.org, jolsa@kernel.org,
-	kernel@xen0n.name, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	mhiramat@kernel.org, nathan@kernel.org, rostedt@goodmis.org
-Subject: [PATCH] LoongArch: make the users of larch_insn_gen_break() constant
-Message-ID: <20240629150313.GB4504@redhat.com>
-References: <20240627173806.GC21813@redhat.com>
- <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
- <20240629133747.GA4504@redhat.com>
- <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcvHQ6Ja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D2FC2BBFC;
+	Sat, 29 Jun 2024 23:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719703817;
+	bh=BxVbkFkNCRgnICzgALLTUBsQGL6A6EdkoAO//1PoZnQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OcvHQ6JaDlU++dDmDvAhjFqAgwytvFDMRNMLS69Ng4Wv7fxXSWLgDtR2gDDVu30A6
+	 5d0EG47n/GE1Z8s1ZEO5PFc2awNQ7U+hZTVT/5P7hQm4kEhFnMDTnAV4scRIq0O2rF
+	 ikFt+cX9E8K5n1BXH/Pxw8FU5MSHYnAaeio2j2BbvcuSkbk9NKbLClrEgtye0ngqWY
+	 VJeUqdC11oSHftNRtqMebpgvNs8RmIe5GTDXZTyj99bJGEPZe2sgdaVoETbT+uKsa6
+	 XBUp2dns+0hzo7U+6B8dp3jB65DCZPZGZJKLX2tXdsx6XstjEfGu8/1L5EdwdziwfA
+	 yFUPISYqvsvjw==
+Date: Sun, 30 Jun 2024 08:30:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org, oleg@redhat.com, peterz@infradead.org,
+ mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org,
+ paulmck@kernel.org, clm@meta.com
+Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister
+ APIs
+Message-Id: <20240630083010.99ff77488ec62b38bcfeaa29@kernel.org>
+In-Reply-To: <CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
+References: <20240625002144.3485799-1-andrii@kernel.org>
+	<20240625002144.3485799-7-andrii@kernel.org>
+	<20240627220449.0d2a12e24731e4764540f8aa@kernel.org>
+	<CAEf4BzbLNHYsUfPi3+M_WUVSaZ9Ey-r3BxqV0Zz6pPqpMCjqpg@mail.gmail.com>
+	<20240628152846.ddf192c426fc6ce155044da0@kernel.org>
+	<CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
-arch_uprobe_trampoline() which uses it to initialize a static variable.
+On Fri, 28 Jun 2024 09:34:26 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-Add the new "__builtin_constant_p" helper, __emit_break(), and redefine
-the current users of larch_insn_gen_break() to use it.
+> On Thu, Jun 27, 2024 at 11:28 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Thu, 27 Jun 2024 09:47:10 -0700
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > > On Thu, Jun 27, 2024 at 6:04 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > > On Mon, 24 Jun 2024 17:21:38 -0700
+> > > > Andrii Nakryiko <andrii@kernel.org> wrote:
+> > > >
+> > > > > -static int __uprobe_register(struct inode *inode, loff_t offset,
+> > > > > -                          loff_t ref_ctr_offset, struct uprobe_consumer *uc)
+> > > > > +int uprobe_register_batch(struct inode *inode, int cnt,
+> > > > > +                       uprobe_consumer_fn get_uprobe_consumer, void *ctx)
+> > > >
+> > > > Is this interface just for avoiding memory allocation? Can't we just
+> > > > allocate a temporary array of *uprobe_consumer instead?
+> > >
+> > > Yes, exactly, to avoid the need for allocating another array that
+> > > would just contain pointers to uprobe_consumer. Consumers would never
+> > > just have an array of `struct uprobe_consumer *`, because
+> > > uprobe_consumer struct is embedded in some other struct, so the array
+> > > interface isn't the most convenient.
+> >
+> > OK, I understand it.
+> >
+> > >
+> > > If you feel strongly, I can do an array, but this necessitates
+> > > allocating an extra array *and keeping it* for the entire duration of
+> > > BPF multi-uprobe link (attachment) existence, so it feels like a
+> > > waste. This is because we don't want to do anything that can fail in
+> > > the detachment logic (so no temporary array allocation there).
+> >
+> > No need to change it, that sounds reasonable.
+> >
+> 
+> Great, thanks.
+> 
+> > >
+> > > Anyways, let me know how you feel about keeping this callback.
+> >
+> > IMHO, maybe the interface function is better to change to
+> > `uprobe_consumer *next_uprobe_consumer(void **data)`. If caller
+> > side uses a linked list of structure, index access will need to
+> > follow the list every time.
+> 
+> This would be problematic. Note how we call get_uprobe_consumer(i,
+> ctx) with i going from 0 to N in multiple independent loops. So if we
+> are only allowed to ask for the next consumer, then
+> uprobe_register_batch and uprobe_unregister_batch would need to build
+> its own internal index and remember ith instance. Which again means
+> more allocations and possibly failing uprobe_unregister_batch(), which
+> isn't great.
 
-The patch adds check_emit_break() into kprobes.c and uprobes.c to test
-this change. They can be removed if LoongArch boots at least once, but
-otoh these 2 __init functions will be discarded by free_initmem().
+No, I think we can use a cursor variable as;
 
-Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return probe")
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-3990X/
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- arch/loongarch/include/asm/inst.h    |  3 +++
- arch/loongarch/include/asm/uprobes.h |  4 ++--
- arch/loongarch/kernel/kprobes.c      | 12 ++++++++++--
- arch/loongarch/kernel/uprobes.c      |  8 ++++++++
- 4 files changed, 23 insertions(+), 4 deletions(-)
+int uprobe_register_batch(struct inode *inode,
+                 uprobe_consumer_fn get_uprobe_consumer, void *ctx)
+{
+	void *cur = ctx;
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index c3993fd88aba..944482063f14 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -532,6 +532,9 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 
- DEF_EMIT_REG0I15_FORMAT(break, break_op)
- 
-+/* like emit_break(imm) but returns a constant expression */
-+#define __emit_break(imm)	((u32)((imm) | (break_op << 15)))
-+
- #define DEF_EMIT_REG0I26_FORMAT(NAME, OP)				\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 			       int offset)				\
-diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/include/asm/uprobes.h
-index c8f59983f702..99a0d198927f 100644
---- a/arch/loongarch/include/asm/uprobes.h
-+++ b/arch/loongarch/include/asm/uprobes.h
-@@ -9,10 +9,10 @@ typedef u32 uprobe_opcode_t;
- #define MAX_UINSN_BYTES		8
- #define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
- 
--#define UPROBE_SWBP_INSN	larch_insn_gen_break(BRK_UPROBE_BP)
-+#define UPROBE_SWBP_INSN	__emit_break(BRK_UPROBE_BP)
- #define UPROBE_SWBP_INSN_SIZE	LOONGARCH_INSN_SIZE
- 
--#define UPROBE_XOLBP_INSN	larch_insn_gen_break(BRK_UPROBE_XOLBP)
-+#define UPROBE_XOLBP_INSN	__emit_break(BRK_UPROBE_XOLBP)
- 
- struct arch_uprobe {
- 	unsigned long	resume_era;
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-index 17b040bd6067..78cfaac52748 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -4,8 +4,16 @@
- #include <linux/preempt.h>
- #include <asm/break.h>
- 
--#define KPROBE_BP_INSN		larch_insn_gen_break(BRK_KPROBE_BP)
--#define KPROBE_SSTEPBP_INSN	larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
-+#define KPROBE_BP_INSN		__emit_break(BRK_KPROBE_BP)
-+#define KPROBE_SSTEPBP_INSN	__emit_break(BRK_KPROBE_SSTEPBP)
-+
-+static __init int check_emit_break(void)
-+{
-+	BUG_ON(KPROBE_BP_INSN      != larch_insn_gen_break(BRK_KPROBE_BP));
-+	BUG_ON(KPROBE_SSTEPBP_INSN != larch_insn_gen_break(BRK_KPROBE_SSTEPBP));
-+	return 0;
-+}
-+arch_initcall(check_emit_break);
- 
- DEFINE_PER_CPU(struct kprobe *, current_kprobe);
- DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
-diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/uprobes.c
-index 87abc7137b73..90462d94c28f 100644
---- a/arch/loongarch/kernel/uprobes.c
-+++ b/arch/loongarch/kernel/uprobes.c
-@@ -7,6 +7,14 @@
- 
- #define UPROBE_TRAP_NR	UINT_MAX
- 
-+static __init int check_emit_break(void)
-+{
-+	BUG_ON(UPROBE_SWBP_INSN  != larch_insn_gen_break(BRK_UPROBE_BP));
-+	BUG_ON(UPROBE_XOLBP_INSN != larch_insn_gen_break(BRK_UPROBE_XOLBP));
-+	return 0;
-+}
-+arch_initcall(check_emit_break);
-+
- int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
- 			     struct mm_struct *mm, unsigned long addr)
- {
+	while ((uc = get_uprobe_consumer(&cur)) != NULL) {
+		...
+	} 
+
+	cur = ctx;
+	while ((uc = get_uprobe_consumer(&cur)) != NULL) {
+		...
+	} 
+}
+
+This can also remove the cnt.
+
+Thank you,
+
+> 
+> For now this API works well, I propose to keep it as is. For linked
+> list case consumers would need to allocate one extra array or pay the
+> price of O(N) search (which might be ok, depending on how many uprobes
+> are being attached). But we don't have such consumers right now,
+> thankfully.
+> 
+> >
+> > Thank you,
+> >
+> >
+> > >
+> > > >
+> > > > Thank you,
+> > > >
+> > > > --
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
 -- 
-2.25.1.362.g51ebf55
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
