@@ -1,151 +1,94 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAAD27713;
-	Fri, 28 Jun 2024 16:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6B92B9BE;
+	Sat, 29 Jun 2024 12:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719592480; cv=none; b=dZB9W7/cxtP622MwUbe5rlMc2fxKhBZ+fNNXrdP6W3EH4b2W6PWoXDxnymlHCSpC/Ru1wonrcEWLJ+6aAbBJfZ2Pn6o+2mvgNTAvKpVoEz7247lrQyhjvW5vkyTR2xrKkigxD3qfEP+6zV+2KP3hYWq66I52fxsranlron2sMC4=
+	t=1719665293; cv=none; b=nDl2WeXlm+FDzBJTUCOpT9IrYm0XK6/XSUX3cJEx/ERbDo2JP+luVt/slF+RmyW1raPsGci9xN6CdQbqoa6dl4VqWxuoGc3CjoGdpHCM9Ys2VJemynZJK0Hlx/XzijsDx+zw7bcGZAe2IOvHjevKzYdOT1ck7by3nY4mvC0S7fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719592480; c=relaxed/simple;
-	bh=znCzwlFobyfBO2MbybTMkVatV1nZrL2UNgmpPkyX9tc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ErqFbrbk3DKn3nQY1oWG/sCPfkMHHRA4X2XbhFDNf9QPJUkGeFf37PJqSBetsAxMVZHGRYVq4d6WYNFK3kZS90npH7yj8UX6JfLe4/Mrpjnv+7Se+kIrGr1wYacICBIYMr5crWGWeDlVo6DVXOY+mEfAqNiiR1bIgp1ELFgE7R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amqSYrmu; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amqSYrmu"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-656d8b346d2so532346a12.2;
-        Fri, 28 Jun 2024 09:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719592479; x=1720197279; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZR3HG0KPtFjFEAuIDOxaF9EEpQn7U1Qh+XfY7fmwtc=;
-        b=amqSYrmuXkCQHBcrNNNuwiKn1Ye5Z413Ueoy8COsjG2svV13aHZ3vxId6CRVka7fZH
-         5yBc6Xz290T1f4Qx1BNXs9DksS6Gl3obDr35AWgQHg+I04gImVGSFr0SBwZBT6c7IpJJ
-         ZksU1MEPbxI5ffB3wdSedlZIDR88hW0jTwwCX9UsWIMvchKlOwDxb3SVMyTyjiTgV1bb
-         j8mvPDjaG564M9gcAPK1nSaAIeNhge7+5fI37lFkBAMm5bdTc7MxyB+gf86Q9srPMdcA
-         SZLGaHUekJVYLsx0rkYJGN29n7w1i/wXOinVTjQjyWXpazU21ljj+wvj0/fbr2LLfOBx
-         l2vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719592479; x=1720197279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZR3HG0KPtFjFEAuIDOxaF9EEpQn7U1Qh+XfY7fmwtc=;
-        b=izZwxZyC/EzFoT/ofdVrSCg61D2HCj/EkuO9zT6G0fCK7Dsqu0nQ/1+/kBZinLA9Hg
-         JE+SoqIE8F6V3chkTwin1WeqJtxo2UbGyywzJtLowY/xhFJuMtrztvitmqXCzfdaEMJL
-         6oPMitcmSZ9EDIigudtd273frunXXz46tAHm3Q55l3byss+l18RKz8VSDWa3n5Us8aqE
-         hEOTTuIY3DJxKKqc7877eBqD2GmfUex+zfKjZYVeIoskNAHJkC9J3ElPG0Y9ig5+iQ7N
-         M+X4IlxwIRP3srpdrSkc2yl9oxuwexgyOgmUmCmm3PmQ+DYNd05ZWnX2wryrrs7XczLk
-         H/hA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzcBrYBMZSy+trE2mYuKLkxWEqMuUDu2zJ+OcHeU+/CraIUSqBvaXP+Qd2X90/298x0DAKbwOkgMSd5O7pXh5UYs4zh1nZowy8Oe4qqPwcAHt8Tzil5QpYh9ohHW22T6WAYK5sGiD/
-X-Gm-Message-State: AOJu0YzOHRbT2H9FmQ2FUNrLX5XFvWyAhwkHv5VPWzEQo4FLuktFX6gf
-	TTQjEGsklnO+cAWUzrleeMlK9QVsQOhW6/d7CJbt5fgS8BqidFzecgUZnHEKBOafIj8Mo6qHI06
-	caMb0XO3nQJswOa3gZiclsMCP4wA=
-X-Google-Smtp-Source: AGHT+IGzYlN7WQA6sPNBHf2zVMZZfTWYCrWnfjcbfSalrQqJXB10ApcaSBPLOOzWD7zojjtZKsGzmNHUH+ZPa0/3Q9Q=
-X-Received: by 2002:a05:6a20:9692:b0:1b4:1560:f80f with SMTP id
- adf61e73a8af0-1bcf7ffaf67mr15356522637.56.1719592478833; Fri, 28 Jun 2024
- 09:34:38 -0700 (PDT)
+	s=arc-20240116; t=1719665293; c=relaxed/simple;
+	bh=eksxv3soLqwNNaIwyq6qM/uW+C8SEtvfywK/NPtrcUY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=DyC0UpNXiOqvtT8E4bFL1DnAorh1V1Q6p0ZP1W28XYyFS9L0o5uKA+rwQQQiQYBPRttPrBi6nWsahUVP2npCQeC6vp5aNSYpq9r78K1Mu79V5b2udXQIarN4CQrpYPiGq/DDk0tytqZOi2jV+6WT5zNQ3h3LyfjLLATuAu5DyXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [36.44.122.216])
+	by gateway (Coremail) with SMTP id _____8Bx3+uBAoBmC28LAA--.28821S3;
+	Sat, 29 Jun 2024 20:48:01 +0800 (CST)
+Received: from [192.168.0.109] (unknown [36.44.122.216])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx68Z+AoBmIVk1AA--.59448S3;
+	Sat, 29 Jun 2024 20:48:00 +0800 (CST)
+Message-ID: <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
+Date: Sat, 29 Jun 2024 20:48:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-7-andrii@kernel.org>
- <20240627220449.0d2a12e24731e4764540f8aa@kernel.org> <CAEf4BzbLNHYsUfPi3+M_WUVSaZ9Ey-r3BxqV0Zz6pPqpMCjqpg@mail.gmail.com>
- <20240628152846.ddf192c426fc6ce155044da0@kernel.org>
-In-Reply-To: <20240628152846.ddf192c426fc6ce155044da0@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 28 Jun 2024 09:34:26 -0700
-Message-ID: <CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
-Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister APIs
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, oleg@redhat.com, peterz@infradead.org, mingo@redhat.com, 
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+To: oleg@redhat.com
+Cc: andrii.nakryiko@gmail.com, andrii@kernel.org, bpf@vger.kernel.org,
+ chenhuacai@kernel.org, jolsa@kernel.org, kernel@xen0n.name,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, mhiramat@kernel.org, nathan@kernel.org,
+ rostedt@goodmis.org, yangtiezhu@loongson.cn
+References: <20240627173806.GC21813@redhat.com>
+Subject: Re: [PATCH] LoongArch: uprobes: make
+ UPROBE_SWBP_INSN/UPROBE_XOLBP_INSN constant
+Content-Language: en-US
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <20240627173806.GC21813@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Cx68Z+AoBmIVk1AA--.59448S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFyxGF48CFyxuw18trWUGFX_yoW3Kwc_uw
+	sxCay8J348Cr40qFn2y3s3Zw4DWF4xWFW5Xr97Zwn7J34UK3WDZ3yFgrn7Za4rKF40gFsI
+	9FZ0qa48Zr1avosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUUUU=
 
-On Thu, Jun 27, 2024 at 11:28=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.=
-org> wrote:
->
-> On Thu, 27 Jun 2024 09:47:10 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
->
-> > On Thu, Jun 27, 2024 at 6:04=E2=80=AFAM Masami Hiramatsu <mhiramat@kern=
-el.org> wrote:
-> > >
-> > > On Mon, 24 Jun 2024 17:21:38 -0700
-> > > Andrii Nakryiko <andrii@kernel.org> wrote:
-> > >
-> > > > -static int __uprobe_register(struct inode *inode, loff_t offset,
-> > > > -                          loff_t ref_ctr_offset, struct uprobe_con=
-sumer *uc)
-> > > > +int uprobe_register_batch(struct inode *inode, int cnt,
-> > > > +                       uprobe_consumer_fn get_uprobe_consumer, voi=
-d *ctx)
-> > >
-> > > Is this interface just for avoiding memory allocation? Can't we just
-> > > allocate a temporary array of *uprobe_consumer instead?
-> >
-> > Yes, exactly, to avoid the need for allocating another array that
-> > would just contain pointers to uprobe_consumer. Consumers would never
-> > just have an array of `struct uprobe_consumer *`, because
-> > uprobe_consumer struct is embedded in some other struct, so the array
-> > interface isn't the most convenient.
->
-> OK, I understand it.
->
-> >
-> > If you feel strongly, I can do an array, but this necessitates
-> > allocating an extra array *and keeping it* for the entire duration of
-> > BPF multi-uprobe link (attachment) existence, so it feels like a
-> > waste. This is because we don't want to do anything that can fail in
-> > the detachment logic (so no temporary array allocation there).
->
-> No need to change it, that sounds reasonable.
->
+On Thu, 27 Jun 2024 19:38:06 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-Great, thanks.
+...
 
-> >
-> > Anyways, let me know how you feel about keeping this callback.
->
-> IMHO, maybe the interface function is better to change to
-> `uprobe_consumer *next_uprobe_consumer(void **data)`. If caller
-> side uses a linked list of structure, index access will need to
-> follow the list every time.
+ > > > +arch_initcall(check_emit_break);
+ > > > +
+ > >
+ > > I wouldn't even bother with this, but whatever.
+ >
+ > Agreed, this looks a bit ugly. I did this only because I can not test
+ > this (hopefully trivial) patch and the maintainers didn't reply.
 
-This would be problematic. Note how we call get_uprobe_consumer(i,
-ctx) with i going from 0 to N in multiple independent loops. So if we
-are only allowed to ask for the next consumer, then
-uprobe_register_batch and uprobe_unregister_batch would need to build
-its own internal index and remember ith instance. Which again means
-more allocations and possibly failing uprobe_unregister_batch(), which
-isn't great.
+The LoongArch maintainer Huacai told me offline to reply this thread today.
 
-For now this API works well, I propose to keep it as is. For linked
-list case consumers would need to allocate one extra array or pay the
-price of O(N) search (which might be ok, depending on how many uprobes
-are being attached). But we don't have such consumers right now,
-thankfully.
+ > If LoongArch boots at least once with this change, this run-time check
+ > can be removed.
 
->
-> Thank you,
->
->
-> >
-> > >
-> > > Thank you,
-> > >
-> > > --
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I will test it next Monday.
+
+ > And just in case... I didn't dare to make a more "generic" change, but
+ > perhaps KPROBE_BP_INSN and KPROBE_SSTEPBP_INSN should be redefined the
+ > same way for micro-optimization. In this case __emit_break() should be
+ > probably moved into arch/loongarch/include/asm/inst.h.
+
+Yeah. I think so too.
+
+Thanks,
+Tiezhu
+
