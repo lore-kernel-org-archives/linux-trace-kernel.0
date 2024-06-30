@@ -1,151 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F4B2AE68;
-	Sun, 30 Jun 2024 21:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0E53EA9B;
+	Sun, 30 Jun 2024 21:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719781667; cv=none; b=YAlDdSSaWLH4YODI+810aPOpAMo9AIYJxSD08a5Llc6blUkUWMdp2dg9fFVDm0O8DIy+UWDjDMo6f+WC6qDOxPvNTjxCySUHxnwS13P6FASjlR/gnSs+dkJmr3i//LuU77dEFpCbVv3UqXB+b5WVbg0AEB+E8l3lU+Goc/XHXQ4=
+	t=1719783391; cv=none; b=HqmYE3oUvpXwsrbmF93sHg8JUH94ouqio01hFTgt4fj4kJTrls5kUDwUtiHWgTaBu7+JipusgM7QX8bPXomdR4OQeJtCd2jyZ3ePR3r9sMNpeywRN9IVrYD8Krc1aP3R9yLvxOUK46SupOn4WJSaI7VKdoNK2HuFPJUgKzi7hYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719781667; c=relaxed/simple;
-	bh=77XTBIyxEHi2pWA9EdzatQ3mgTNKrOB8Dqo5RGzGxG8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wq2NMl4svVJguN5XBmmkq+RJl4AnT54IWTtC9iWYNxcQwsfX3TTxEPvvQs2UdsW/K2IhMCEmyJdntHGsgFL6owDUdtn2vFFrq0J34E7JaZ6sJDMyifTvPxLogO7qzUpPIrf6hfM0ob2bYueRFaT4WBhMsswHkx5Bpl7ASz2ncXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHY7+0K1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHY7+0K1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519CAC2BD10;
-	Sun, 30 Jun 2024 21:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719781665;
-	bh=77XTBIyxEHi2pWA9EdzatQ3mgTNKrOB8Dqo5RGzGxG8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WHY7+0K1ko1M2f7h4lhw/pdOUjPlpbuOWxPOM0UdHIbFmI2Z+5V806+qIi+wEmiRK
-	 4JxqSQ+HrzRdB7wItUfTk33W9dHQoqomIhKai/1JCU6kob10iWsya6nu9KLN8J/8Kh
-	 HLNL/R7G+N7FqyAbJsQsEk9loe7hwQuWg2fQ3kjBxbNSviZx+fUzGrBpUeSY1Fx1Cg
-	 9cQfZ+uMyb5Dwdzc4cNmCueaP02JuJ+W7SQqRtNZ9EysgLfI0xChLw2guMNXkESY66
-	 p8SUawddrcXBKq05+rs3ZRTzGs5/ZIcEWZxacxZ2D5ox2HU5Lw+PCQeyHcyJc52kyj
-	 gNScX5r0r1h/Q==
-Message-ID: <4ec0e4822293763691d8699750b0df88385ab646.camel@kernel.org>
-Subject: Re: [RFC PATCH 0/3] tracing: Support poll on event hist file
-From: Tom Zanussi <zanussi@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Steven Rostedt
-	 <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Date: Sun, 30 Jun 2024 16:07:43 -0500
-In-Reply-To: <171932861260.584123.15653284949837094747.stgit@devnote2>
-References: <171932861260.584123.15653284949837094747.stgit@devnote2>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1719783391; c=relaxed/simple;
+	bh=ia4RVuCgBczpk1ifE6xgRj55S+Jnfhj9ts2Uhz9veW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=eCkGMPem/LFW5SHVWJBIWUw6m51lXnNuSPcZr189ZWdmgN2BfxIylAXA1YosFoP4agva3LbAyhAKMijqkE1Q2l9wF0V2ycwrmm228kvEwswycpfrC2BmFuZceDu5kKunZ2rCFqTJoTdh8mvzLz+iFeniX3IpanDm7hTcm1X5ECY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id BD3FC72C8CC;
+	Mon,  1 Jul 2024 00:36:26 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id AB61B7CCB3A; Mon,  1 Jul 2024 00:36:26 +0300 (IDT)
+Date: Sun, 30 Jun 2024 21:36:26 +0000
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>,
+	David Hildenbrand <david@redhat.com>, linux-api@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] uapi: change TRACE_MMAP_IOCTL_GET_READER to avoid collision
+ with TCGETS
+Message-ID: <20240630213626.GA23566@altlinux.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Masami,
+The number that was initially chosen for TRACE_MMAP_IOCTL_GET_READER,
+unfortunately, collides with TCGETS on most of architectures.
 
-On Wed, 2024-06-26 at 00:16 +0900, Masami Hiramatsu (Google) wrote:
-> Hi,
->=20
-> Here is an RFC patch to support polling on event 'hist' file.
->=20
-> There has been interest in allowing user programs to monitor kernel
-> events in real time. Ftrace provides `trace_pipe` interface to wait
-> on events in the ring buffer, but it is needed to wait until filling
-> up a page with events in the ring buffer. We can also peek the
-> `trace` file periodically, but that is inefficient way to monitor
-> a randomely happening event.
->=20
-> This patch set allows user to `poll`(or `select`, `epoll`) on event
-> histogram interface. As you know each event has its own `hist` file
-> which shows histograms generated by trigger action. So user can set
-> a new hist trigger on any event you want to monitor, and poll on the
-> `hist` file until it is updated.
->=20
-> There are 2 poll events are supported, POLLIN and POLLPRI. POLLIN
-> means that there are any readable update on `hist` file and this
-> event will be flashed only when you call read(). So, this is
-> useful if you want to read the histogram periodically.
-> The other POLLPRI event is for monitoring trace event. Like the
-> POLLIN, this will be returned when the histogram is updated, but
-> you don't need to read() the file and use poll() again.
->=20
-> Note that this waits for histogram update (not event arrival), thus
-> you must set a histogram on the event at first.
->=20
-> Here is an example usage:
->=20
-> ----
-> TRACEFS=3D/sys/kernel/tracing
-> EVENT=3D$TRACEFS/events/sched/sched_process_free
->=20
-> # setup histogram trigger and enable event
-> echo "hist:key=3Dcomm" >> $EVENT/trigger
-> echo 1 > $EVENT/enable
->=20
-> # Wait for update
-> poll $EVENT/hist
->=20
-> # Event arrived.
-> echo "process free event is comming"
-> tail $TRACEFS/trace
-> ----
->=20
-> The 'poll' command is in the selftest patch.
->=20
-> You can take this series also from here;
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=
-=3Dtopic/event-hist-poll
->=20
-> Thank you,
+For example, this is how strace output would look like when
+support for this value of TRACE_MMAP_IOCTL_GET_READER is added:
 
-I think this is a clever use of the histogram files, and will be very
-useful for real-time monitoring apps. I'm looking forward to using it
-myself - thanks for doing this.
+$ strace -e ioctl stty
+ioctl(0, TCGETS or TRACE_MMAP_IOCTL_GET_READER, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR,
++c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}) = 0
 
-For the whole series,
+Even though ioctl numbers are inherently not unique, TCGETS
+is a very traditional one, so let's change the value of
+TRACE_MMAP_IOCTL_GET_READER a bit to avoid this collision.
 
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Given that _IO('T', 0x1) is _IOC(_IOC_NONE, 'T', 0x1, 0),
+something like _IOC(_IOC_NONE, 'T', 0x1, 0x1) should be OK.
 
->=20
-> ---
->=20
-> Masami Hiramatsu (Google) (3):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing/hist: Add poll(POLLIN) support on =
-hist file
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tracing/hist: Support POLLPRI event for po=
-ll on histogram
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 selftests/tracing: Add hist poll() support=
- test
->=20
->=20
-> =C2=A0include/linux/trace_events.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 5 +
-> =C2=A0kernel/trace/trace_events.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 18 ++++
-> =C2=A0kernel/trace/trace_events_hist.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 101
-> +++++++++++++++++++-
-> =C2=A0tools/testing/selftests/ftrace/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 3 +
-> =C2=A0tools/testing/selftests/ftrace/poll.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 34 +++++++
-> =C2=A0.../ftrace/test.d/trigger/trigger-hist-poll.tc=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0 46 +++++++++
-> =C2=A06 files changed, 204 insertions(+), 3 deletions(-)
-> =C2=A0create mode 100644 tools/testing/selftests/ftrace/poll.c
-> =C2=A0create mode 100644
-> tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
->=20
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Fixes: cf9f0f7c4c5bb ("tracing: Allow user-space mapping of the ring-buffer")
+Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+---
+ include/uapi/linux/trace_mmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+index bd1066754220..cb858f1b8367 100644
+--- a/include/uapi/linux/trace_mmap.h
++++ b/include/uapi/linux/trace_mmap.h
+@@ -43,6 +43,6 @@ struct trace_buffer_meta {
+ 	__u64	Reserved2;
+ };
+ 
+-#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
++#define TRACE_MMAP_IOCTL_GET_READER		_IOC(_IOC_NONE, 'T', 0x1, 0x1)
+ 
+ #endif /* _TRACE_MMAP_H_ */
+-- 
+ldv
