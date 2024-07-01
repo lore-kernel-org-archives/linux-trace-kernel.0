@@ -1,104 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC2016B739;
-	Mon,  1 Jul 2024 15:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B165453AC;
+	Mon,  1 Jul 2024 15:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719846101; cv=none; b=icRjMsahMsVKsCqnv8JSstcNeKdnmbZ3ir5KmGCw78ZMsewRVVPRtlHZCyD/DCXOBN92YLhmd5l+ZLqy1ihWJGEJvgpKdBfgYwNVPYImRwVX0bdoctVqW7lfOuJS4OvpcyDYSmwIwvmBo4nwt8gaoTi+gPKciTm1djqlUCmFR0w=
+	t=1719847486; cv=none; b=aPDcPuwbqc9mNK2WgXe+j4OgmI16cwBWHagxs2J/YpBY9NvH4AdmW9SiJhF5OEYe39B3ESyVB32mL895i+rWSVe7oNXbZtkJmtB1yeQWuiIV8FlyxE+QFXS2A+bqTQVJFtZlJdFygAS+C9q6B4RK6x1XtaWRZvzmiT4x7re+Ctw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719846101; c=relaxed/simple;
-	bh=ABvpPirgDymHngsRUpcwej27uh5jlGJQls9PaiHXP0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NrlPsPkb21l1L7XkUXLvsV6jehEdPRs093eZdtNqhG35xSfk5Wc/OJnwdRmY634x+4fwtB2R7c6uQ8LsDmgFWK6oSE2Lb5zEtiaQjNljD+yNT9GW80T0lg0mJVtzU91F2LhD2RqD3tTdOZEvWsya13uFDa2jIyI23o7YQ0diGTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjnKpk9J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719847486; c=relaxed/simple;
+	bh=A4X/8zuLwhQlbEDJM8qv3feEW02PFnloz6FKlPPEy+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCkkY3DbvJ618Z0IYas3yR1B5FG2P5i0N9eglcScrLdzp1/KWG/+RrPai5CESdhlbq6Lhkpv/9JarKCNBKJCz0VQ0goFWeUv27s+f7ZuGc2j+liwen2mL8Yb+M+/2KIBFwmfxGUhxsRrwWCW41txpBKGMkObLlYwn6wlNCIQvds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eYVMLLHU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3P9wJM2V; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eYVMLLHU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3P9wJM2V; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjnKpk9J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDB2C4AF0D;
-	Mon,  1 Jul 2024 15:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719846101;
-	bh=ABvpPirgDymHngsRUpcwej27uh5jlGJQls9PaiHXP0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cjnKpk9Jxta1tmVipwVY/V7wlzDa4mS07YJGE5Lq4VrcBYJGTqn03Lt4BM2mOqXTL
-	 /FjSbK285snVcCUdW9vir7Rla+U7V5ztPY8FPLZTthwJmk0BPRsuwg35lABoT8b0Wf
-	 kbpzLayDlDCogXaKDQHg2ItopU4E90F151oMQVLIzvwTW2logbQxq/eNxlKvPahGKs
-	 kiHx+N7e0jtdU6x+Ptf3eL0cR0dytTTESAjYYkvM1JVh4Eh2UNgXJre3rEatMGhRvm
-	 38NgzXMla1PazEs7uUzvOYz+KxJ38NHzIgCC5bFPErCCQxP64NKgU6cM8Gyjfnyh2Z
-	 qFf/EVvXbU4ww==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a724a8097deso374592266b.1;
-        Mon, 01 Jul 2024 08:01:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUY2xOsf9rVTL7U9mFE6Jrd6/0bbkmjFRBLysKNz21dzfAKBcXIjSbZKz8bI2zPC2ouuMENUAJK3foAAjltWmvMAm5PAafAqpsTF931ATvPnotg4hY50oZXS7gLiVRyPRb4fxB4IFoA7x5iJ0tBttgvAnAFQwnLCOoN3wyNi+LlUuDxPKpj
-X-Gm-Message-State: AOJu0YxIxnlfjPD5sA0p8JzoaTCy0Qd/oHi2DWqqHdeS8bxBJYH04hE9
-	NkxrxgCJxEWh1g19jciT1sVaOi640QA7plrQzpI5XeI+w+qh93S0KYWWRrKsOk/9CLFRNdA25S+
-	g81ypv2c9gi7juWgkB1K5LFoKGCU=
-X-Google-Smtp-Source: AGHT+IH9cvBZlZ9SVpr1fbztwtyHo/IWmpwga95XhMPugjWfjFCA0EEYNnDOD02gQFtrn7M18jzGcoZrhDNm4C9nHBs=
-X-Received: by 2002:a17:907:a0c9:b0:a6f:bc02:a008 with SMTP id
- a640c23a62f3a-a7514402354mr459434866b.4.1719846099486; Mon, 01 Jul 2024
- 08:01:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eYVMLLHU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3P9wJM2V";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eYVMLLHU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3P9wJM2V"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B3EC6219B9;
+	Mon,  1 Jul 2024 15:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1719847482;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cj7Ce9Ym/sfb2sDvLTmuCL9ctsqC7G9CNBaQC/7mpWM=;
+	b=eYVMLLHUiywmTNc4rCPjIViO/DXO6iAHpwDw3qE1A+yHT4hB7jZHK1vNq4S3Qya2hj8Nzx
+	nnM1jC+Thkp777m+eNkDMsAptyMFvtINhgXBUlkLuEiIXUCDqLLCtepT1ZBwH4WW+6Hltb
+	BzJbls++BS91/poXGjWflmBHtxstYC8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1719847482;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cj7Ce9Ym/sfb2sDvLTmuCL9ctsqC7G9CNBaQC/7mpWM=;
+	b=3P9wJM2V7xu/1owrLE9QMz9guXL/Sm7CRWt/qRwbHWrdRhAzDyrohNPLfez4VmKwn2ohzV
+	q4G6XkTbAnBbldCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1719847482;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cj7Ce9Ym/sfb2sDvLTmuCL9ctsqC7G9CNBaQC/7mpWM=;
+	b=eYVMLLHUiywmTNc4rCPjIViO/DXO6iAHpwDw3qE1A+yHT4hB7jZHK1vNq4S3Qya2hj8Nzx
+	nnM1jC+Thkp777m+eNkDMsAptyMFvtINhgXBUlkLuEiIXUCDqLLCtepT1ZBwH4WW+6Hltb
+	BzJbls++BS91/poXGjWflmBHtxstYC8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1719847482;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cj7Ce9Ym/sfb2sDvLTmuCL9ctsqC7G9CNBaQC/7mpWM=;
+	b=3P9wJM2V7xu/1owrLE9QMz9guXL/Sm7CRWt/qRwbHWrdRhAzDyrohNPLfez4VmKwn2ohzV
+	q4G6XkTbAnBbldCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A55613800;
+	Mon,  1 Jul 2024 15:24:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 9mq8GTrKgmZuAgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 01 Jul 2024 15:24:42 +0000
+Date: Mon, 1 Jul 2024 17:24:37 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andi Kleen <ak@linux.intel.com>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] btrfs: convert to multigrain timestamps
+Message-ID: <20240701152437.GE21023@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
+ <20240701-mgtime-v2-9-19d412a940d9@kernel.org>
+ <20240701134936.GB504479@perftesting>
+ <ec952d79bbe19d80a7aff495e9784c60a1a1e668.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627173806.GC21813@redhat.com> <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
- <20240629133747.GA4504@redhat.com> <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
- <20240629150313.GB4504@redhat.com> <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
-In-Reply-To: <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 1 Jul 2024 23:01:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Pr2UmOTezMtO8GfAWEbWkSJ4aUJFusLWxDNn3VyTXXA@mail.gmail.com>
-Message-ID: <CAAhV-H5Pr2UmOTezMtO8GfAWEbWkSJ4aUJFusLWxDNn3VyTXXA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: make the users of larch_insn_gen_break() constant
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Oleg Nesterov <oleg@redhat.com>, andrii.nakryiko@gmail.com, andrii@kernel.org, 
-	bpf@vger.kernel.org, jolsa@kernel.org, kernel@xen0n.name, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, mhiramat@kernel.org, nathan@kernel.org, 
-	rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec952d79bbe19d80a7aff495e9784c60a1a1e668.camel@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLkafno779cm49o166uw1xdisb)];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
 
-On Mon, Jul 1, 2024 at 2:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> On 06/29/2024 11:03 PM, Oleg Nesterov wrote:
-> > LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
-> > arch_uprobe_trampoline() which uses it to initialize a static variable.
-> >
-> > Add the new "__builtin_constant_p" helper, __emit_break(), and redefine
-> > the current users of larch_insn_gen_break() to use it.
-> >
-> > The patch adds check_emit_break() into kprobes.c and uprobes.c to test
-> > this change. They can be removed if LoongArch boots at least once, but
-> > otoh these 2 __init functions will be discarded by free_initmem().
-> >
-> > Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return =
-probe")
-> > Reported-by: Nathan Chancellor <nathan@kernel.org>
-> > Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-399=
-0X/
-> > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->
-> Tested on LoongArch machine with Loongson-3A5000 and Loongson-3A6000
-> CPU, based on 6.10-rc3,
->
-> KPROBE_BP_INSN =3D=3D larch_insn_gen_break(BRK_KPROBE_BP)
-> KPROBE_SSTEPBP_INSN =3D=3D larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
-> UPROBE_SWBP_INSN  =3D=3D larch_insn_gen_break(BRK_UPROBE_BP)
-> UPROBE_XOLBP_INSN =3D=3D larch_insn_gen_break(BRK_UPROBE_XOLBP)
->
-> The two functions check_emit_break() can be removed in
-> arch/loongarch/kernel/kprobes.c and arch/loongarch/kernel/uprobes.c
->
-> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Queued, thanks.
+On Mon, Jul 01, 2024 at 09:57:43AM -0400, Jeff Layton wrote:
+> On Mon, 2024-07-01 at 09:49 -0400, Josef Bacik wrote:
+> > On Mon, Jul 01, 2024 at 06:26:45AM -0400, Jeff Layton wrote:
+> > > Enable multigrain timestamps, which should ensure that there is an
+> > > apparent change to the timestamp whenever it has been written after
+> > > being actively observed via getattr.
+> > > 
+> > > Beyond enabling the FS_MGTIME flag, this patch eliminates
+> > > update_time_for_write, which goes to great pains to avoid in-memory
+> > > stores. Just have it overwrite the timestamps unconditionally.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  fs/btrfs/file.c  | 25 ++++---------------------
+> > >  fs/btrfs/super.c |  3 ++-
+> > >  2 files changed, 6 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+> > > index d90138683a0a..409628c0c3cc 100644
+> > > --- a/fs/btrfs/file.c
+> > > +++ b/fs/btrfs/file.c
+> > > @@ -1120,26 +1120,6 @@ void btrfs_check_nocow_unlock(struct
+> > > btrfs_inode *inode)
+> > >  	btrfs_drew_write_unlock(&inode->root->snapshot_lock);
+> > >  }
+> > >  
+> > > -static void update_time_for_write(struct inode *inode)
+> > > -{
+> > > -	struct timespec64 now, ts;
+> > > -
+> > > -	if (IS_NOCMTIME(inode))
+> > > -		return;
+> > > -
+> > > -	now = current_time(inode);
+> > > -	ts = inode_get_mtime(inode);
+> > > -	if (!timespec64_equal(&ts, &now))
+> > > -		inode_set_mtime_to_ts(inode, now);
+> > > -
+> > > -	ts = inode_get_ctime(inode);
+> > > -	if (!timespec64_equal(&ts, &now))
+> > > -		inode_set_ctime_to_ts(inode, now);
+> > > -
+> > > -	if (IS_I_VERSION(inode))
+> > > -		inode_inc_iversion(inode);
+> > > -}
+> > > -
+> > >  static int btrfs_write_check(struct kiocb *iocb, struct iov_iter
+> > > *from,
+> > >  			     size_t count)
+> > >  {
+> > > @@ -1171,7 +1151,10 @@ static int btrfs_write_check(struct kiocb
+> > > *iocb, struct iov_iter *from,
+> > >  	 * need to start yet another transaction to update the
+> > > inode as we will
+> > >  	 * update the inode when we finish writing whatever data
+> > > we write.
+> > >  	 */
+> > > -	update_time_for_write(inode);
+> > > +	if (!IS_NOCMTIME(inode)) {
+> > > +		inode_set_mtime_to_ts(inode,
+> > > inode_set_ctime_current(inode));
+> > > +		inode_inc_iversion(inode);
+> > 
+> > You've dropped the
+> > 
+> > if (IS_I_VERSION(inode))
+> > 
+> > check here, and it doesn't appear to be in inode_inc_iversion.  Is
+> > there a
+> > reason for this?  Thanks,
+> > 
+> 
+> AFAICT, btrfs always sets SB_I_VERSION. Are there any cases where it
+> isn't? If so, then I can put this check back. I'll make a note about it
+> in the changelog if not.
 
-Huacai
->
-> Thanks,
-> Tiezhu
->
->
+Yes it's always set and I don't see anything in the generic code that
+would unset it so it's safe to drop the IS_I_VERSION check.
+
+The check was originally added in November 2012 by 6c760c072403f4
+("Btrfs: do not call file_update_time in aio_write") and then moved a
+few times. Enabling the super block flags was added in May 2012 by
+0c4d2d95d06e92 ("Btrfs: use i_version instead of our own sequence") so
+the check was not necessary from the beginning.
