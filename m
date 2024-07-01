@@ -1,75 +1,99 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0E53EA9B;
-	Sun, 30 Jun 2024 21:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7134239FCE;
+	Mon,  1 Jul 2024 06:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719783391; cv=none; b=HqmYE3oUvpXwsrbmF93sHg8JUH94ouqio01hFTgt4fj4kJTrls5kUDwUtiHWgTaBu7+JipusgM7QX8bPXomdR4OQeJtCd2jyZ3ePR3r9sMNpeywRN9IVrYD8Krc1aP3R9yLvxOUK46SupOn4WJSaI7VKdoNK2HuFPJUgKzi7hYw=
+	t=1719814973; cv=none; b=p0EA/vwfhux8HgwKpX2oy99T2nOnNFeZSR8DCXxaAeWY5Nd68mC5FdsIdYiK7+KsmnUApUms+3vgCuJCEq1RPfbDM6UzYyfyXv3EkQP61ztSCvCVKK/LFEX8YMKnr4yoey80N4B7XTFOjksSR7qm3ROH+YSrbyRYVb9J+1KYnlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719783391; c=relaxed/simple;
-	bh=ia4RVuCgBczpk1ifE6xgRj55S+Jnfhj9ts2Uhz9veW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eCkGMPem/LFW5SHVWJBIWUw6m51lXnNuSPcZr189ZWdmgN2BfxIylAXA1YosFoP4agva3LbAyhAKMijqkE1Q2l9wF0V2ycwrmm228kvEwswycpfrC2BmFuZceDu5kKunZ2rCFqTJoTdh8mvzLz+iFeniX3IpanDm7hTcm1X5ECY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id BD3FC72C8CC;
-	Mon,  1 Jul 2024 00:36:26 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-	id AB61B7CCB3A; Mon,  1 Jul 2024 00:36:26 +0300 (IDT)
-Date: Sun, 30 Jun 2024 21:36:26 +0000
-From: "Dmitry V. Levin" <ldv@strace.io>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>,
-	David Hildenbrand <david@redhat.com>, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] uapi: change TRACE_MMAP_IOCTL_GET_READER to avoid collision
- with TCGETS
-Message-ID: <20240630213626.GA23566@altlinux.org>
+	s=arc-20240116; t=1719814973; c=relaxed/simple;
+	bh=vodbmlWePU0fqHsCtlWb2D6JH4N4gZ0QSc01Jd4e3VY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=r6lxDOxqY9VohflqiOJl7PkNIAr7T1pHfZ4uphHZrBSVzDhbkUJdlcG2ItyYZYZiFxU/019YVMmbbLH6KlWFD9KOmEg8QaIKB5bs9FwRAqsIh00EPnXBJTuunK65uLoglgWIhc3JE1/zLdXsb66jUWqF5vNhnVqBvKrsYnRoKEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxi7o4S4JmMc8LAA--.1787S3;
+	Mon, 01 Jul 2024 14:22:48 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxMMQ2S4Jmriw3AA--.26764S3;
+	Mon, 01 Jul 2024 14:22:47 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: make the users of larch_insn_gen_break()
+ constant
+To: Oleg Nesterov <oleg@redhat.com>, Huacai Chen <chenhuacai@kernel.org>
+References: <20240627173806.GC21813@redhat.com>
+ <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
+ <20240629133747.GA4504@redhat.com>
+ <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
+ <20240629150313.GB4504@redhat.com>
+Cc: andrii.nakryiko@gmail.com, andrii@kernel.org, bpf@vger.kernel.org,
+ jolsa@kernel.org, kernel@xen0n.name, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ mhiramat@kernel.org, nathan@kernel.org, rostedt@goodmis.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
+Date: Mon, 1 Jul 2024 14:22:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20240629150313.GB4504@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxMMQ2S4Jmriw3AA--.26764S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ww17tF13Kr43Kr4rZr1DurX_yoW8Xry8pa
+	nFyr43urs8J3ykJryDXw15ZFyxAw4kGw42grsIy3y5Gay5XwnxGFy8Wr47JryYvryrKay8
+	ta1vg3y2qa4UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
-The number that was initially chosen for TRACE_MMAP_IOCTL_GET_READER,
-unfortunately, collides with TCGETS on most of architectures.
+On 06/29/2024 11:03 PM, Oleg Nesterov wrote:
+> LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
+> arch_uprobe_trampoline() which uses it to initialize a static variable.
+>
+> Add the new "__builtin_constant_p" helper, __emit_break(), and redefine
+> the current users of larch_insn_gen_break() to use it.
+>
+> The patch adds check_emit_break() into kprobes.c and uprobes.c to test
+> this change. They can be removed if LoongArch boots at least once, but
+> otoh these 2 __init functions will be discarded by free_initmem().
+>
+> Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return probe")
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-3990X/
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 
-For example, this is how strace output would look like when
-support for this value of TRACE_MMAP_IOCTL_GET_READER is added:
+Tested on LoongArch machine with Loongson-3A5000 and Loongson-3A6000
+CPU, based on 6.10-rc3,
 
-$ strace -e ioctl stty
-ioctl(0, TCGETS or TRACE_MMAP_IOCTL_GET_READER, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR,
-+c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}) = 0
+KPROBE_BP_INSN == larch_insn_gen_break(BRK_KPROBE_BP)
+KPROBE_SSTEPBP_INSN == larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+UPROBE_SWBP_INSN  == larch_insn_gen_break(BRK_UPROBE_BP)
+UPROBE_XOLBP_INSN == larch_insn_gen_break(BRK_UPROBE_XOLBP)
 
-Even though ioctl numbers are inherently not unique, TCGETS
-is a very traditional one, so let's change the value of
-TRACE_MMAP_IOCTL_GET_READER a bit to avoid this collision.
+The two functions check_emit_break() can be removed in
+arch/loongarch/kernel/kprobes.c and arch/loongarch/kernel/uprobes.c
 
-Given that _IO('T', 0x1) is _IOC(_IOC_NONE, 'T', 0x1, 0),
-something like _IOC(_IOC_NONE, 'T', 0x1, 0x1) should be OK.
+Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Fixes: cf9f0f7c4c5bb ("tracing: Allow user-space mapping of the ring-buffer")
-Signed-off-by: Dmitry V. Levin <ldv@strace.io>
----
- include/uapi/linux/trace_mmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Tiezhu
 
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index bd1066754220..cb858f1b8367 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -43,6 +43,6 @@ struct trace_buffer_meta {
- 	__u64	Reserved2;
- };
- 
--#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
-+#define TRACE_MMAP_IOCTL_GET_READER		_IOC(_IOC_NONE, 'T', 0x1, 0x1)
- 
- #endif /* _TRACE_MMAP_H_ */
--- 
-ldv
