@@ -1,173 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A9617BA1;
-	Mon,  1 Jul 2024 22:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0DD4779E;
+	Mon,  1 Jul 2024 23:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719874182; cv=none; b=u8aARWDsdSmta65FJP7jdRsONCSILIPbhNjoNxNDjna5/8HN2sbvjeLrz+82mZwHRyKdxvJCY0ZSkJllQcPkN4FStsa0Y5nq1Yu7+gMlraODZoSmdYt5s+I6PuSVtZYpiYq5XAwy8UcfrUyNgn5oVQiFx/fLhWqSo2SXbgTaAzw=
+	t=1719875444; cv=none; b=UKGsTiDnnDhp/cLtuQ1F4IpJQR/wl2yK5itHqNAfRBwyWF0DQdpfxbmF94hX+kxzSWmx60eulPTVo0izvgsALbOH6ZsMr/NbhVTZSPwzm/GUNtGo1WctWXEQYqd472du09q3KNH/G4OveN4FHBqvfzpwtpoYK/xPSVdMcHTi3TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719874182; c=relaxed/simple;
-	bh=bXoWDyduCGsJU7lhbujiLjxLA54PjQmw5SMTkVT0vNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aOY/q+lHQEjFSLMAP6FTF6ABlk/W+rHq8cstR2cufqvdkpcyY/bheoWssnzP60UyzgRJFBPw+qorbB2GSZA7fj6Owf8L3dXNhiZXduxAxULjxBJE+RmmlYTs6vFRRCuWxNb9QS4L33p2fJGXz9Lqt92y46LzwYMpI9EXaClcxm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnsIb0uN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719875444; c=relaxed/simple;
+	bh=Ez+L9dBMWPaMgY0ZHn8Ku3SGrDn4jJArONet3i7gJ3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qYUQGk2IDzDpwhLZjoZy83aX8Ks892GfR+5m5ACGnF5yZQliWxqkxiJpKapDL3Xoj3JhP6ULRsCx4IWcRtVRDorNEcALlmYpys1B0LOgSGcdLBODgeundM+zDHHfVGNBsQ9r7f1txkf420YjtFHcK/5KdDy/wDZ0Ty8biBW4Eyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yy9SPmkY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnsIb0uN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F84C116B1;
-	Mon,  1 Jul 2024 22:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yy9SPmkY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E971FC116B1;
+	Mon,  1 Jul 2024 23:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719874182;
-	bh=bXoWDyduCGsJU7lhbujiLjxLA54PjQmw5SMTkVT0vNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MnsIb0uNSwAHfqytxz2YxarQKag9GysdcNIBeUK8dH1tzYMDJUfwlKcSo9NyetHFj
-	 4gRTea8CYRA/mwIDw8oQW65xy5aeE/FMx8dHovVUqnwGBQ4AMIi7TwrfpiY//28W68
-	 GrtBUsMP/EL1H25z91QNWBL63F7TRQUhp19y5VK0+7ldauGeatdJextRuf2x+nFj+D
-	 iToBZrGCa+a2CZZd1KHEMQIfFgam7OVr+YJ9P0s1scV4VsWOy36sQp+RFpToV/BKr+
-	 x2PWAcV1CMKmDKqSRrQjQTblzn4M2tyZE92FrpeA94E7MCwdHtrYNE606nDiRjp05o
-	 7pAp5zCFIgkUg==
-Date: Mon, 1 Jul 2024 15:49:41 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
-Message-ID: <20240701224941.GE612460@frogsfrogsfrogs>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
- <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
+	s=k20201202; t=1719875444;
+	bh=Ez+L9dBMWPaMgY0ZHn8Ku3SGrDn4jJArONet3i7gJ3k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Yy9SPmkY/k/FYCAWcqf0wAlZgFxQfJUFZGQ0VgOoZDCVJ1uibzumULSmGQUhMPzVH
+	 ISPY8I7lwxluNjsGsSWdWRrdJOJZglkwlEtfFWZQitGsETpQmWVV6VzgLQ9cfx7Fid
+	 CRVO98oXdQjWGuFwN8LXAc9fwQ2+oL7ZrvtiSykU8pAYzE75bOZqK549pB1y49P8dF
+	 O8tuVznKEKVFrFtj+hOp9Fdavmpe9StZMWifeXjyUCHN0HMyRs3+adknQwO54Aud65
+	 dUblxjP35TnrDZOKBw82On7TDxWjxDIF/zWFhlZUjs64XguktAicdWs98Ngz6CtyTa
+	 3HaafwsT9Kpog==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH] perf,x86: avoid missing caller address in stack traces captured in uprobe
+Date: Mon,  1 Jul 2024 16:10:27 -0700
+Message-ID: <20240701231027.61930-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 26, 2024 at 09:00:21PM -0400, Jeff Layton wrote:
-> The ctime is not settable to arbitrary values. It always comes from the
-> system clock, so we'll never stamp an inode with a value that can't be
-> represented there. If we disregard people setting their system clock
-> past the year 2262, there is no reason we can't replace the ctime fields
-> with a ktime_t.
-> 
-> Switch the ctime fields to a single ktime_t. Move the i_generation down
-> above i_fsnotify_mask and then move the i_version into the resulting 8
-> byte hole. This shrinks struct inode by 8 bytes total, and should
-> improve the cache footprint as the i_version and ctime are usually
-> updated together.
-> 
-> The one downside I can see to switching to a ktime_t is that if someone
-> has a filesystem with files on it that has ctimes outside the ktime_t
-> range (before ~1678 AD or after ~2262 AD), we won't be able to display
-> them properly in stat() without some special treatment in the
-> filesystem. The operating assumption here is that that is not a
-> practical problem.
+When tracing user functions with uprobe functionality, it's common to
+install the probe (e.g., a BPF program) at the first instruction of the
+function. This is often going to be `push %rbp` instruction in function
+preamble, which means that within that function frame pointer hasn't
+been established yet. This leads to consistently missing an actual
+caller of the traced function, because perf_callchain_user() only
+records current IP (capturing traced function) and then following frame
+pointer chain (which would be caller's frame, containing the address of
+caller's caller).
 
-What happens if a filesystem with the ability to store ctimes beyond
-whatever ktime_t supports (AFAICT 2^63-1 nanonseconds on either side of
-the Unix epoch)?  I think the behavior with your patch is that ktime_set
-clamps the ctime on iget because the kernel can't handle it?
+So when we have target_1 -> target_2 -> target_3 call chain and we are
+tracing an entry to target_3, captured stack trace will report
+target_1 -> target_3 call chain, which is wrong and confusing.
 
-It's a little surprising that the ctime will suddenly jump back in time
-to 2262, but maybe you're right that nobody will notice or care? ;)
+This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+instruction being traced. Given entire kernel implementation of user
+space stack trace capturing works under assumption that user space code
+was compiled with frame pointer register (%rbp) preservation, it seems
+pretty reasonable to use this instruction as a strong indicator that
+this is the entry to the function. In that case, return address is still
+pointed to by %rsp, so we fetch it and add to stack trace before
+proceeding to unwind the rest using frame pointer-based logic.
 
---D
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ arch/x86/events/core.c  | 20 ++++++++++++++++++++
+ include/linux/uprobes.h |  2 ++
+ kernel/events/uprobes.c |  2 ++
+ 3 files changed, 24 insertions(+)
 
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  include/linux/fs.h | 26 +++++++++++---------------
->  1 file changed, 11 insertions(+), 15 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 5ff362277834..5139dec085f2 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -662,11 +662,10 @@ struct inode {
->  	loff_t			i_size;
->  	time64_t		i_atime_sec;
->  	time64_t		i_mtime_sec;
-> -	time64_t		i_ctime_sec;
->  	u32			i_atime_nsec;
->  	u32			i_mtime_nsec;
-> -	u32			i_ctime_nsec;
-> -	u32			i_generation;
-> +	ktime_t			__i_ctime;
-> +	atomic64_t		i_version;
->  	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
->  	unsigned short          i_bytes;
->  	u8			i_blkbits;
-> @@ -701,7 +700,6 @@ struct inode {
->  		struct hlist_head	i_dentry;
->  		struct rcu_head		i_rcu;
->  	};
-> -	atomic64_t		i_version;
->  	atomic64_t		i_sequence; /* see futex */
->  	atomic_t		i_count;
->  	atomic_t		i_dio_count;
-> @@ -724,6 +722,8 @@ struct inode {
->  	};
->  
->  
-> +	u32			i_generation;
-> +
->  #ifdef CONFIG_FSNOTIFY
->  	__u32			i_fsnotify_mask; /* all events this inode cares about */
->  	/* 32-bit hole reserved for expanding i_fsnotify_mask */
-> @@ -1608,29 +1608,25 @@ static inline struct timespec64 inode_set_mtime(struct inode *inode,
->  	return inode_set_mtime_to_ts(inode, ts);
->  }
->  
-> -static inline time64_t inode_get_ctime_sec(const struct inode *inode)
-> +static inline struct timespec64 inode_get_ctime(const struct inode *inode)
->  {
-> -	return inode->i_ctime_sec;
-> +	return ktime_to_timespec64(inode->__i_ctime);
->  }
->  
-> -static inline long inode_get_ctime_nsec(const struct inode *inode)
-> +static inline time64_t inode_get_ctime_sec(const struct inode *inode)
->  {
-> -	return inode->i_ctime_nsec;
-> +	return inode_get_ctime(inode).tv_sec;
->  }
->  
-> -static inline struct timespec64 inode_get_ctime(const struct inode *inode)
-> +static inline long inode_get_ctime_nsec(const struct inode *inode)
->  {
-> -	struct timespec64 ts = { .tv_sec  = inode_get_ctime_sec(inode),
-> -				 .tv_nsec = inode_get_ctime_nsec(inode) };
-> -
-> -	return ts;
-> +	return inode_get_ctime(inode).tv_nsec;
->  }
->  
->  static inline struct timespec64 inode_set_ctime_to_ts(struct inode *inode,
->  						      struct timespec64 ts)
->  {
-> -	inode->i_ctime_sec = ts.tv_sec;
-> -	inode->i_ctime_nsec = ts.tv_nsec;
-> +	inode->__i_ctime = ktime_set(ts.tv_sec, ts.tv_nsec);
->  	return ts;
->  }
->  
-> 
-> -- 
-> 2.45.2
-> 
-> 
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 5b0dd07b1ef1..82d5570b58ff 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2884,6 +2884,26 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ 		return;
+ 
+ 	pagefault_disable();
++
++#ifdef CONFIG_UPROBES
++	/*
++	 * If we are called from uprobe handler, and we are indeed at the very
++	 * entry to user function (which is normally a `push %rbp` instruction,
++	 * under assumption of application being compiled with frame pointers),
++	 * we should read return address from *regs->sp before proceeding
++	 * to follow frame pointers, otherwise we'll skip immediate caller
++	 * as %rbp is not yet setup.
++	 */
++	if (current->utask) {
++		struct arch_uprobe *auprobe = current->utask->auprobe;
++		u64 ret_addr;
++
++		if (auprobe && auprobe->insn[0] == 0x55 /* push %rbp */ &&
++		    !__get_user(ret_addr, (const u64 __user *)regs->sp))
++			perf_callchain_store(entry, ret_addr);
++	}
++#endif
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index b503fafb7fb3..a270a5892ab4 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -76,6 +76,8 @@ struct uprobe_task {
+ 	struct uprobe			*active_uprobe;
+ 	unsigned long			xol_vaddr;
+ 
++	struct arch_uprobe              *auprobe;
++
+ 	struct return_instance		*return_instances;
+ 	unsigned int			depth;
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 99be2adedbc0..6e22e4d80f1e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 	bool need_prep = false; /* prepare return uprobe, when needed */
+ 
+ 	down_read(&uprobe->register_rwsem);
++	current->utask->auprobe = &uprobe->arch;
+ 	for (uc = uprobe->consumers; uc; uc = uc->next) {
+ 		int rc = 0;
+ 
+@@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 
+ 		remove &= rc;
+ 	}
++	current->utask->auprobe = NULL;
+ 
+ 	if (need_prep && !remove)
+ 		prepare_uretprobe(uprobe, regs); /* put bp at return */
+-- 
+2.43.0
+
