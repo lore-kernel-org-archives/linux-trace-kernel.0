@@ -1,180 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64992CCB4;
-	Mon,  1 Jul 2024 20:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D1D16F0E4
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jul 2024 20:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719864016; cv=none; b=IyPLFKVP+sdH0sEuF3tYMyQ1v7G79Zm7Ex/uxKaWesIByNmRNf9aMN4nB+x9KRPjql1XM8V3D8Ocz8Ix8u1KW2mvYNGkmyiJrZrUEod0Ymg4LI9aMTcwp2tbARIzhR/y73Gk+O2IrfVXm9Xr4iM42pUYb4LfOncxB3N5GqtHV14=
+	t=1719866009; cv=none; b=RrAUrebEbJtmwFRbsoMxWBUvDaqP68BxY2g87qUTxIFo4BArlVU82uOelgYYQ1LPHvIKdG6MWrf7BML3c0OaPbg0Ez4dGuzZDyBexXahvV8T+h8Iy0J9z7s4wFEdMJQcBufBDzbNTwI7+jZvwxchkkXbzDDtCAWmgjUBVMT72fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719864016; c=relaxed/simple;
-	bh=HOe/q2x64JLK6UhZnoyDYpQNWW5obTHws+8OFaBVsw8=;
+	s=arc-20240116; t=1719866009; c=relaxed/simple;
+	bh=jEinBn73kAQeiKA6biJBVZ0znaclnyoeCW0MFqYT2GY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gCbO4kZzjCJOYCFLWTj81nNkHGIs7cyFZ/DdR+r5uHNAqVt9fu7sp2QUsVbo0Qbo9bg3RjSc08EGEZzY+UZ58R/NNkEcOLvjYYFZgoPw4/v5LERJVhoJwEauuhkRhI7EALGTPtsnQQE73gSCzMcz43HIQs85xxMPWOEeIOlUxb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBgTVwIQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPfimHPUvMKo8Ju2tDvAaa3gKgzRCzy52ldMGxNiI4C8MH+0tlTNZBfFQ8gm/xej8yQqPEg4NSXOeEmv+ylJCJCZJtcad1eKU0SBmlfDE42pMrUAdxfluLjKCwTdsdjDaLzvHte97GDUu71EpcKInskahngI9rGGRNclLtQLBxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=skuZDf80; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBgTVwIQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C7BC116B1;
-	Mon,  1 Jul 2024 20:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719864016;
-	bh=HOe/q2x64JLK6UhZnoyDYpQNWW5obTHws+8OFaBVsw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gBgTVwIQC2olfrsUXYgK3T5FqOLvM9Ko7870xFqkz5qU7nvxkagVJVT23v/rXwyqL
-	 7RQEPYyfbF52KCruxJdNX3/3sfbkXGC0273oh3i86t2dWAWMprwE3JE0UvRoQbK351
-	 xLNNQlFJHy1c6SWMpA2pazbRZk0lgvMDWBSAcHbEREIoCq2zE+Bn3uXxo7yNo6vC80
-	 q+ki+yJygATs9/Cl8peZjm5xUSP2rmpzLIkR+P7VxR/sLkZR5cPl8AjgfXXe1mDdeV
-	 p/p0WfKWZJkeQm/x2ezpoGUn56oE+kDkOYEtpOLaGhUXt8HSXza2iwZFqbRREks9wr
-	 4bGYFFsyJLktw==
-Date: Tue, 2 Jul 2024 01:28:00 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Nicholas Piggin <npiggin@gmail.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [RFC PATCH v3 11/11] powerpc64/bpf: Add support for bpf
- trampolines
-Message-ID: <ldghd5e4ltteizchnhwdzf45rdcy6pr2iovchboz4b263jpbun@dhwjlq223kwv>
-References: <cover.1718908016.git.naveen@kernel.org>
- <a88b5b57d7e9b6db96323a6d6b236d567ebd6443.1718908016.git.naveen@kernel.org>
- <D2E5I4W6C23X.3A42AJCY8ODUJ@gmail.com>
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="skuZDf80"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-79c0abd3eaaso275400485a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jul 2024 13:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1719866006; x=1720470806; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eJWQ2aw4J/WLIAVkZzcuHyyU5owW6RRYm2ZeVPaEzB8=;
+        b=skuZDf80doiLymvCWsYlJ/cKG3vZ2Q9BukFjNM7u/x0SGqbYFJ011iPuV6oDCIO7a6
+         HUAoBzRGXal73sktZYyKb0TwR2e7wEfj1mHmDsGvKSDRTZW3SPFWOegfKl/PvbPs3Y6c
+         3wz454SIm87ualx41QjvPlxfSxP0yTzyv1CpudOk89UYSjfogovtFCroTYXD6qU7M01s
+         qhj3XU41S0ZDH2vWvyMoL9402IdEpdLodXOybK49lcjzyHN5w3aIQNh/uw0nIbNf5CoA
+         Lqz9fLshNXhhPAoOMmyrJJXb3fvP2HZOXILUWXKssSlHSvI9qXlkJvGxwrYSr9Rar0iS
+         GROQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719866006; x=1720470806;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eJWQ2aw4J/WLIAVkZzcuHyyU5owW6RRYm2ZeVPaEzB8=;
+        b=krzIckN4NrYsFXxdfH9xF5E4gR0iabpbAVapjoXHMxWTTT9VZQxTBPWOCzSfHMLXZH
+         TE+Z04tJK/E/ORvAhlaL75tVYs82dctln2SqWtqHybG6fexq/0E8zgNmxxU0R+s7wQcQ
+         4ECeExKvCKGrsrWVNR2CzmT/Y1tjQFMZ3gwiKQ0pgfqVUWtDzIc4CM5Am8gusG89qLsG
+         Z6dcdVZfK3OnUQj2qWp3XfC7d7FWR+JItgzEj0+NWBQ/PbVPhHlmUnCnTNoK2OK/blur
+         oSWLsCciEpxEgdRy074d9wjzXlh3xWR6X9v0nA1BjwH9H5cjIRkMqpznsLFhg+zdzFdi
+         sz+A==
+X-Forwarded-Encrypted: i=1; AJvYcCW19gbL4MUl56yNNNrpPE4pmC1mIbqz6u4QZfsBopB9oG7HMgWpPaqFLRXrtUu/oQQ2nEjp/zoCvskhoY8jiVWLllp7OPhqWw05MB0Fx2t4PPFB
+X-Gm-Message-State: AOJu0YztQjQqZDp7DSQipQr5T8g1g4dyuK2MP1GW0iCs+i17mRwmRq2B
+	CwDjoBxPplYt/rIKIoRo22wXFbcZtLKuTyEqy+jIGYKiISXtexORNKlcr7JeGdU=
+X-Google-Smtp-Source: AGHT+IHquiezZuh7KYAcKV1s9Va0xkaeqQinyvX7/0dTMvr1KCMbQie9WJzy87YdgytxI01W/IdsjQ==
+X-Received: by 2002:a05:620a:2683:b0:79c:f0e:f793 with SMTP id af79cd13be357-79d7b99e142mr1064186885a.14.1719866006069;
+        Mon, 01 Jul 2024 13:33:26 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d692600b6sm384373985a.20.2024.07.01.13.33.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 13:33:25 -0700 (PDT)
+Date: Mon, 1 Jul 2024 16:33:24 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andi Kleen <ak@linux.intel.com>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] btrfs: convert to multigrain timestamps
+Message-ID: <20240701203324.GA510298@perftesting>
+References: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
+ <20240701-mgtime-v2-9-19d412a940d9@kernel.org>
+ <20240701134936.GB504479@perftesting>
+ <ec952d79bbe19d80a7aff495e9784c60a1a1e668.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <D2E5I4W6C23X.3A42AJCY8ODUJ@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec952d79bbe19d80a7aff495e9784c60a1a1e668.camel@kernel.org>
 
-On Mon, Jul 01, 2024 at 09:03:52PM GMT, Nicholas Piggin wrote:
-> On Fri Jun 21, 2024 at 5:09 AM AEST, Naveen N Rao wrote:
-> > Add support for bpf_arch_text_poke() and arch_prepare_bpf_trampoline()
-> > for 64-bit powerpc.
+On Mon, Jul 01, 2024 at 09:57:43AM -0400, Jeff Layton wrote:
+> On Mon, 2024-07-01 at 09:49 -0400, Josef Bacik wrote:
+> > On Mon, Jul 01, 2024 at 06:26:45AM -0400, Jeff Layton wrote:
+> > > Enable multigrain timestamps, which should ensure that there is an
+> > > apparent change to the timestamp whenever it has been written after
+> > > being actively observed via getattr.
+> > > 
+> > > Beyond enabling the FS_MGTIME flag, this patch eliminates
+> > > update_time_for_write, which goes to great pains to avoid in-memory
+> > > stores. Just have it overwrite the timestamps unconditionally.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  fs/btrfs/file.c  | 25 ++++---------------------
+> > >  fs/btrfs/super.c |  3 ++-
+> > >  2 files changed, 6 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+> > > index d90138683a0a..409628c0c3cc 100644
+> > > --- a/fs/btrfs/file.c
+> > > +++ b/fs/btrfs/file.c
+> > > @@ -1120,26 +1120,6 @@ void btrfs_check_nocow_unlock(struct
+> > > btrfs_inode *inode)
+> > >  	btrfs_drew_write_unlock(&inode->root->snapshot_lock);
+> > >  }
+> > >  
+> > > -static void update_time_for_write(struct inode *inode)
+> > > -{
+> > > -	struct timespec64 now, ts;
+> > > -
+> > > -	if (IS_NOCMTIME(inode))
+> > > -		return;
+> > > -
+> > > -	now = current_time(inode);
+> > > -	ts = inode_get_mtime(inode);
+> > > -	if (!timespec64_equal(&ts, &now))
+> > > -		inode_set_mtime_to_ts(inode, now);
+> > > -
+> > > -	ts = inode_get_ctime(inode);
+> > > -	if (!timespec64_equal(&ts, &now))
+> > > -		inode_set_ctime_to_ts(inode, now);
+> > > -
+> > > -	if (IS_I_VERSION(inode))
+> > > -		inode_inc_iversion(inode);
+> > > -}
+> > > -
+> > >  static int btrfs_write_check(struct kiocb *iocb, struct iov_iter
+> > > *from,
+> > >  			     size_t count)
+> > >  {
+> > > @@ -1171,7 +1151,10 @@ static int btrfs_write_check(struct kiocb
+> > > *iocb, struct iov_iter *from,
+> > >  	 * need to start yet another transaction to update the
+> > > inode as we will
+> > >  	 * update the inode when we finish writing whatever data
+> > > we write.
+> > >  	 */
+> > > -	update_time_for_write(inode);
+> > > +	if (!IS_NOCMTIME(inode)) {
+> > > +		inode_set_mtime_to_ts(inode,
+> > > inode_set_ctime_current(inode));
+> > > +		inode_inc_iversion(inode);
+> > 
+> > You've dropped the
+> > 
+> > if (IS_I_VERSION(inode))
+> > 
+> > check here, and it doesn't appear to be in inode_inc_iversion.  Is
+> > there a
+> > reason for this?  Thanks,
+> > 
 > 
-> What do BPF trampolines give you?
+> AFAICT, btrfs always sets SB_I_VERSION. Are there any cases where it
+> isn't? If so, then I can put this check back. I'll make a note about it
+> in the changelog if not.
 
-At a very basic level, they provide a way to attach bpf programs at 
-function entry/exit - as an alternative to ftrace/kprobe - in a more 
-optimal manner. Commit fec56f5890d9 ("bpf: Introduce BPF trampoline") 
-has more details.
+Ah ok I'm dumb, ignore me, thanks,
 
-> 
-> > BPF prog JIT is extended to mimic 64-bit powerpc approach for ftrace
-> > having a single nop at function entry, followed by the function
-> > profiling sequence out-of-line and a separate long branch stub for calls
-> > to trampolines that are out of range. A dummy_tramp is provided to
-> > simplify synchronization similar to arm64.
-> 
-> Synrhonization - between BPF and ftrace interfaces?
-> 
-> > BPF Trampolines adhere to the existing ftrace ABI utilizing a
-> > two-instruction profiling sequence, as well as the newer ABI utilizing a
-> > three-instruction profiling sequence enabling return with a 'blr'. The
-> > trampoline code itself closely follows x86 implementation.
-> >
-> > While the code is generic, BPF trampolines are only enabled on 64-bit
-> > powerpc. 32-bit powerpc will need testing and some updates.
-> >
-> > Signed-off-by: Naveen N Rao <naveen@kernel.org>
-> 
-> Just a quick glance for now, and I don't know BPF code much.
-> 
-> > ---
-> >  arch/powerpc/include/asm/ppc-opcode.h |  14 +
-> >  arch/powerpc/net/bpf_jit.h            |  11 +
-> >  arch/powerpc/net/bpf_jit_comp.c       | 702 +++++++++++++++++++++++++-
-> >  arch/powerpc/net/bpf_jit_comp32.c     |   7 +-
-> >  arch/powerpc/net/bpf_jit_comp64.c     |   7 +-
-> >  5 files changed, 738 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/powerpc/include/asm/ppc-opcode.h b/arch/powerpc/include/asm/ppc-opcode.h
-> > index 076ae60b4a55..9eaa2c5d9b73 100644
-> > --- a/arch/powerpc/include/asm/ppc-opcode.h
-> > +++ b/arch/powerpc/include/asm/ppc-opcode.h
-> > @@ -585,12 +585,26 @@
-> >  #define PPC_RAW_MTSPR(spr, d)		(0x7c0003a6 | ___PPC_RS(d) | __PPC_SPR(spr))
-> >  #define PPC_RAW_EIEIO()			(0x7c0006ac)
-> >  
-> > +/* bcl 20,31,$+4 */
-> > +#define PPC_RAW_BCL()			(0x429f0005)
-> 
-> This is the special bcl form that gives the current address.
-> Maybe call it PPC_RAW_BCL4()
-
-Sure.
-
-> 
-> >  
-> > +void dummy_tramp(void);
-> > +
-> > +asm (
-> > +"	.pushsection .text, \"ax\", @progbits	;"
-> > +"	.global dummy_tramp			;"
-> > +"	.type dummy_tramp, @function		;"
-> > +"dummy_tramp:					;"
-> > +#ifdef CONFIG_FTRACE_PFE_OUT_OF_LINE
-> > +"	blr					;"
-> > +#else
-> > +"	mflr	11				;"
-> 
-> Can you just drop this instruction? The caller will always
-> have it in r11?
-
-Indeed. Will add a comment and remove the instruction.
-
-> 
-> > +"	mtctr	11				;"
-> > +"	mtlr	0				;"
-> > +"	bctr					;"
-> > +#endif
-> > +"	.size dummy_tramp, .-dummy_tramp	;"
-> > +"	.popsection				;"
-> > +);
-> > +
-> > +void bpf_jit_build_fentry_stubs(u32 *image, struct codegen_context *ctx)
-> > +{
-> > +	int ool_stub_idx, long_branch_stub_idx;
-> > +
-> > +	/*
-> > +	 * Out-of-line stub:
-> > +	 *	mflr	r0
-> > +	 *	[b|bl]	tramp
-> > +	 *	mtlr	r0 // only with CONFIG_FTRACE_PFE_OUT_OF_LINE
-> > +	 *	b	bpf_func + 4
-> > +	 */
-> > +	ool_stub_idx = ctx->idx;
-> > +	EMIT(PPC_RAW_MFLR(_R0));
-> > +	EMIT(PPC_RAW_NOP());
-> > +	if (IS_ENABLED(CONFIG_FTRACE_PFE_OUT_OF_LINE))
-> > +		EMIT(PPC_RAW_MTLR(_R0));
-> > +	WARN_ON_ONCE(!is_offset_in_branch_range(4 - (long)ctx->idx * 4)); /* TODO */
-> > +	EMIT(PPC_RAW_BRANCH(4 - (long)ctx->idx * 4));
-> > +
-> > +	/*
-> > +	 * Long branch stub:
-> > +	 *	.long	<dummy_tramp_addr>
-> > +	 *	mflr	r11
-> > +	 *	bcl	20,31,$+4
-> > +	 *	mflr	r12
-> > +	 *	ld	r12, -8-SZL(r12)
-> > +	 *	mtctr	r12
-> > +	 *	mtlr	r11 // needed to retain ftrace ABI
-> > +	 *	bctr
-> > +	 */
-> 
-> You could avoid clobbering LR on >= POWER9 with addpcis instruction. Or
-> use a pcrel load with pcrel even. I guess that's something to do later.
-
-Yes, much of BPF JIT could use a re-look to consider opportunities to 
-emit prefix instructions.
-
-
-Thanks,
-Naveen
-
+Josef
