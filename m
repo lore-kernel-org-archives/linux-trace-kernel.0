@@ -1,57 +1,57 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6D615B0FD
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACC915ECEA
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719841618; cv=none; b=u+2Wp4gQEIUltGoYQXdnO1USFCWTW568aApupEqcyn+15ZPXtuGjgBHHGnu2EKukOm/4RoKbmIqrCgAHRmdbHjbAJUiVmbowQUUQylxNzbcDQ1gvHiyf6K7Rk440wlQo9mw8K+D/MdNJJrKwptkUhaCJqixn/iPAdCov866hkcQ=
+	t=1719841780; cv=none; b=k+QJOY7tfXesFpShXIkD3NpKlfjkq6dd8U/ENgy9eBGLElEibeoFIsyJiQlCsubjr1AReVHz4S+J2xchSWMFsL0PZR9+QRgVeJRWukY+PYHCQB+CN1Y6fmNQyfa4CPkC+q7eDE0RLWhLu92hPZFs+gC+Lk7Z74bEtIPd6F6jw2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719841618; c=relaxed/simple;
-	bh=Ww3zO2BWA6CNrPfVjdCQ8/edKcVa8UvzDOn/+wZVrEM=;
+	s=arc-20240116; t=1719841780; c=relaxed/simple;
+	bh=JRmjt6M1zrDefWhinxPjwL+BigzvExn5UQ3vGAyMhOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bWqoZT2wZ/5e12uI7vm9hOtI4dd/QE1Wmw0LoqCnLyfy0ZstPHf+/zn/QXzYU5B2AKDGnIzORh6NTMPMqAsMOmexjt3kdO2MXhK1460nAFmYK/5hyri6dLsZRQebSRW2HIYekrLInWWdj5wbVv3JYJAFwxX/7CTMrzdl66doUys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=rAqstR5h; arc=none smtp.client-ip=209.85.219.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=ja9h11zQq8rNEdlIrTfYgSM1co3KyscQFnRsYfdAdALmpTW7MTOo9EvxjgDzZ+RW9H7lIozuf4JbsChJVC3Giu+epDKG+YhpHUcByldJKEkpkVSTtGhzd73O5Nfq0QH7Yn1iWZZD1A4x99TjsGWF4KncSjszLS9uIK5ShwQxkwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=dj9VQCdG; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="rAqstR5h"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b50aeb2424so13400816d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:46:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="dj9VQCdG"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6b2c6291038so23866156d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1719841615; x=1720446415; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1719841777; x=1720446577; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/7pK8M+T679Mr4Uw1+2PXZ/iLLD0jN5yzRREJHhd/M8=;
-        b=rAqstR5haeuwUowCfxCsQJIDf2qieHtgMh+/eTl2ebv8mkMM1HXvwROMApDpg6OG1m
-         RqgsLoF652BqZbYRaiiuBfUxYrkv6/Oz5JDzyZma2wEKP7wTY/o3LltyoHd5HUXIo4fl
-         0XSjC+XbKoPv58qG/XCotkfE7uut/wF1fCpRDqMY1MUEUtOwWDD6d7xy8pup9hVypChg
-         /eRTAcd3ablPgl7txgWWcymn5qj10yEu1EkddYON84Q+tIl3mjdQOtYRv73QjZ1EqjsU
-         IhU8ztbaR+NKHNO4lDc/gY6CB1waiKLXBNviHrfW4CRsj5QMny+jwXgvjjO4Td8ar6r0
-         dHwg==
+        bh=4/JXsQY1meprtTaQCBMH/rREZnhH9nYDIg327XZYrLM=;
+        b=dj9VQCdGjly1zcriAcksl99UgVyIMkjXTC3I5cIMHOmmR9vqMnOTl85tgmTbuEeiWz
+         OIOxthDp12zK9owBVARDxiJbsJfUsq8E7q8DvLR4MiviovimCZ5TK67F+KqeVA72ww/U
+         qsXXlHkoTkVWfsOzAu6S56edTIp6vFLLat6Mgy7uKfJApDsw8hAdmaw2vruVwvqQ4V63
+         0NgleIyzSSgQ+X07Qo5BgdArSt2FYwIPaHQMEhNUE0CEle3gN54vHQgq0E5sycuZpd1w
+         vO7xhAOjwJwMG58Az+D8LVw8KvcZP0j2Cm29+ij52gCmRUzqZ7DsLUzyOXoSWQJXmYJt
+         Mefw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719841615; x=1720446415;
+        d=1e100.net; s=20230601; t=1719841777; x=1720446577;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/7pK8M+T679Mr4Uw1+2PXZ/iLLD0jN5yzRREJHhd/M8=;
-        b=CZGwupoHy6eedMpJVW392/wOmipXqIEBmt2lPFKHHzZw2RUQVat/W9Lmr5AqvfdmJC
-         dFKXung7povzCkIl/m4DUBmJjdLyjk+4INOQH0RgEIDVWOeBVtRqoEU73MGqACRmP1zA
-         /7JoCBW+D1VbTygEZsLDziWURTjlUsEhRZj49DvI9168mRewmIxs6gMJLQMAqEj9naNy
-         DcCFUXFdMn1ds8QlxvO1kd5hZTn5AGsumwNvVk4ipiFp5hbIWzOqTBP/x66voJCa5nMy
-         sfbbosf/OfnZ0OUlkJ9TYanUjV8uxb4f9S1fk8xGYexDMJFree/GMntdMhCrdHCanhJ1
-         +tNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3RmAn6epxgl+p/uaqQJQzJKThwc2Wqn9N4x5+RpX1JUpUqIFU1ZJuPrP8HlwOG32UNZ9QZfrPIef4SRXFLt8F9YkWBelVBnNzfLeQCMauiO4t
-X-Gm-Message-State: AOJu0Yx/7w1W6BCOC1+GZ7DEgpOwUuUpa+u39jGS/ToIg9slJ8ZXuULk
-	WONSv3zq1nKF/mATkOlthCHDgDfzuIfMXl2PyeUaJRYPcFOYLEKUvEDxeYGMVBw=
-X-Google-Smtp-Source: AGHT+IG8OekqgNnErri1uZBaOEWN7EF2UDkAF5obMoo6PPyjxSiFbWfhXRMS/kv2BHuTbAr7oS5ICw==
-X-Received: by 2002:a05:6214:f03:b0:6b5:47b0:8f09 with SMTP id 6a1803df08f44-6b5b70cde0fmr83155356d6.36.1719841615063;
-        Mon, 01 Jul 2024 06:46:55 -0700 (PDT)
+        bh=4/JXsQY1meprtTaQCBMH/rREZnhH9nYDIg327XZYrLM=;
+        b=gnf24xHK/m0cSztT8oELQu/fbHxkBCLDeV+iO1PAh6hpNEFcNvvTyPGlCXCfJ4J4Fv
+         mmVa5ldslewFU9ePPCp+OBDzByBqdI+NvfbStGdxlj8sC5xVF7KE6SQWqrnn3isq6F0w
+         Np7A50pNf+JUAYlV2XY/PtRhh32vj8JG0WlO6R77hcZ9aKp0iR4vcEPwqyiYWTcl5xU+
+         WYq5waIwgbtoBvA6CFTTcnBtKJcsSOYXz9NluypGLqmFJ5J/+RUZOASN9fcEqWn7Zv+y
+         4+XWPKSBK6Tcszyd+EOEWbPhHYH+/9wqa93Sq8SJmwDDyRznsEajtydk+x1LFelzVZ9/
+         7vmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCMInki9ZthHKD0Uq6b+o5cAWnj9/ttQazLwfPgsa8X5oHbLIQ9uWK7pdsBlpK3sBmsrYljUkyFYx1m4jIGYrAUT9rjdALVA7ahVIbrCckBGzz
+X-Gm-Message-State: AOJu0YwPS77Uoyloo4sBJaKV6PUp7aRlr8ESVQnm+6DEOWogHJ+9LTAh
+	/ujXVFLiTaPEZy2ydLHI0hdfcLiY+aokzOiuZJxG7wmBuiY4f2iPuIAOY+6+cnU=
+X-Google-Smtp-Source: AGHT+IF5Q8o3oVoprCBhbVVvWMvB1AzB5Fn65AX5L6dAkIaxIGZIh7YN74qptGSpJhUhQ3WfUDtBdQ==
+X-Received: by 2002:a05:6214:e6a:b0:6b5:198e:353d with SMTP id 6a1803df08f44-6b5a541bfcbmr122142846d6.10.1719841777433;
+        Mon, 01 Jul 2024 06:49:37 -0700 (PDT)
 Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f5f51sm33227276d6.75.2024.07.01.06.46.53
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e7436dcsm32788866d6.142.2024.07.01.06.49.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 06:46:54 -0700 (PDT)
-Date: Mon, 1 Jul 2024 09:46:53 -0400
+        Mon, 01 Jul 2024 06:49:37 -0700 (PDT)
+Date: Mon, 1 Jul 2024 09:49:36 -0400
 From: Josef Bacik <josef@toxicpanda.com>
 To: Jeff Layton <jlayton@kernel.org>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -70,10 +70,10 @@ Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
 	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
 	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
 	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 07/11] xfs: switch to multigrain timestamps
-Message-ID: <20240701134653.GA504479@perftesting>
+Subject: Re: [PATCH v2 09/11] btrfs: convert to multigrain timestamps
+Message-ID: <20240701134936.GB504479@perftesting>
 References: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
- <20240701-mgtime-v2-7-19d412a940d9@kernel.org>
+ <20240701-mgtime-v2-9-19d412a940d9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,62 +82,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240701-mgtime-v2-7-19d412a940d9@kernel.org>
+In-Reply-To: <20240701-mgtime-v2-9-19d412a940d9@kernel.org>
 
-On Mon, Jul 01, 2024 at 06:26:43AM -0400, Jeff Layton wrote:
+On Mon, Jul 01, 2024 at 06:26:45AM -0400, Jeff Layton wrote:
 > Enable multigrain timestamps, which should ensure that there is an
 > apparent change to the timestamp whenever it has been written after
 > being actively observed via getattr.
 > 
-> Also, anytime the mtime changes, the ctime must also change, and those
-> are now the only two options for xfs_trans_ichgtime. Have that function
-> unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
-> always set.
+> Beyond enabling the FS_MGTIME flag, this patch eliminates
+> update_time_for_write, which goes to great pains to avoid in-memory
+> stores. Just have it overwrite the timestamps unconditionally.
 > 
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
->  fs/xfs/xfs_iops.c               | 6 ++++--
->  fs/xfs/xfs_super.c              | 2 +-
->  3 files changed, 8 insertions(+), 6 deletions(-)
+>  fs/btrfs/file.c  | 25 ++++---------------------
+>  fs/btrfs/super.c |  3 ++-
+>  2 files changed, 6 insertions(+), 22 deletions(-)
 > 
-> diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-> index 69fc5b981352..1f3639bbf5f0 100644
-> --- a/fs/xfs/libxfs/xfs_trans_inode.c
-> +++ b/fs/xfs/libxfs/xfs_trans_inode.c
-> @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
->  	ASSERT(tp);
->  	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
->  
-> -	tv = current_time(inode);
-> +	/* If the mtime changes, then ctime must also change */
-> +	ASSERT(flags & XFS_ICHGTIME_CHG);
->  
-> +	tv = inode_set_ctime_current(inode);
->  	if (flags & XFS_ICHGTIME_MOD)
->  		inode_set_mtime_to_ts(inode, tv);
-> -	if (flags & XFS_ICHGTIME_CHG)
-> -		inode_set_ctime_to_ts(inode, tv);
->  	if (flags & XFS_ICHGTIME_CREATE)
->  		ip->i_crtime = tv;
+> diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+> index d90138683a0a..409628c0c3cc 100644
+> --- a/fs/btrfs/file.c
+> +++ b/fs/btrfs/file.c
+> @@ -1120,26 +1120,6 @@ void btrfs_check_nocow_unlock(struct btrfs_inode *inode)
+>  	btrfs_drew_write_unlock(&inode->root->snapshot_lock);
 >  }
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index ff222827e550..ed6e6d9507df 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -590,10 +590,12 @@ xfs_vn_getattr(
->  	stat->gid = vfsgid_into_kgid(vfsgid);
->  	stat->ino = ip->i_ino;
->  	stat->atime = inode_get_atime(inode);
-> -	stat->mtime = inode_get_mtime(inode);
-> -	stat->ctime = inode_get_ctime(inode);
-> +
-> +	fill_mg_cmtime(stat, request_mask, inode);
-> +
->  	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
 >  
-> +
+> -static void update_time_for_write(struct inode *inode)
+> -{
+> -	struct timespec64 now, ts;
+> -
+> -	if (IS_NOCMTIME(inode))
+> -		return;
+> -
+> -	now = current_time(inode);
+> -	ts = inode_get_mtime(inode);
+> -	if (!timespec64_equal(&ts, &now))
+> -		inode_set_mtime_to_ts(inode, now);
+> -
+> -	ts = inode_get_ctime(inode);
+> -	if (!timespec64_equal(&ts, &now))
+> -		inode_set_ctime_to_ts(inode, now);
+> -
+> -	if (IS_I_VERSION(inode))
+> -		inode_inc_iversion(inode);
+> -}
+> -
+>  static int btrfs_write_check(struct kiocb *iocb, struct iov_iter *from,
+>  			     size_t count)
+>  {
+> @@ -1171,7 +1151,10 @@ static int btrfs_write_check(struct kiocb *iocb, struct iov_iter *from,
+>  	 * need to start yet another transaction to update the inode as we will
+>  	 * update the inode when we finish writing whatever data we write.
+>  	 */
+> -	update_time_for_write(inode);
+> +	if (!IS_NOCMTIME(inode)) {
+> +		inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
+> +		inode_inc_iversion(inode);
 
-Stray newline.  Thanks,
+You've dropped the
+
+if (IS_I_VERSION(inode))
+
+check here, and it doesn't appear to be in inode_inc_iversion.  Is there a
+reason for this?  Thanks,
 
 Josef
