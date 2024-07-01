@@ -1,121 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F63215E5A6;
-	Mon,  1 Jul 2024 14:12:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC2016B739;
+	Mon,  1 Jul 2024 15:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719843153; cv=none; b=AWpDw4D2yabVnV19QO82sTjVeSWTTkU+Nvp3AnkAFeKKIhEsYUEc9B3JKGjukhoYj9Dw6c045GUXjy72t8qwWcQOBK9dXbtRycLedAuMajJTfDZqBD3rP5G3UlIIMgD+ht8pqM6YAyjxWm+bkMmpHwpY4Nmrfq9mmeKlfr7upqs=
+	t=1719846101; cv=none; b=icRjMsahMsVKsCqnv8JSstcNeKdnmbZ3ir5KmGCw78ZMsewRVVPRtlHZCyD/DCXOBN92YLhmd5l+ZLqy1ihWJGEJvgpKdBfgYwNVPYImRwVX0bdoctVqW7lfOuJS4OvpcyDYSmwIwvmBo4nwt8gaoTi+gPKciTm1djqlUCmFR0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719843153; c=relaxed/simple;
-	bh=1VVWwQxpbYpxgTGynZjIRizmv2vMmvHZ76g/uhUNoXw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DbQjITkpBzwUGgslzg1pvc3threVNDOtfsKznridTMqOi5Kt4drcQ299g2X6gYM9XgQOvkGwazjCjMXMMTXAaRYvKC1TK6Yqfj+jYI3ZZBQp/Xmsyq+u0fZwQUihGrM/GPOC7i8QQ5Wf5gt1f4Jf6hTo2a6LddUhA7r6fsXIXIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bx6gl0u0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719846101; c=relaxed/simple;
+	bh=ABvpPirgDymHngsRUpcwej27uh5jlGJQls9PaiHXP0A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NrlPsPkb21l1L7XkUXLvsV6jehEdPRs093eZdtNqhG35xSfk5Wc/OJnwdRmY634x+4fwtB2R7c6uQ8LsDmgFWK6oSE2Lb5zEtiaQjNljD+yNT9GW80T0lg0mJVtzU91F2LhD2RqD3tTdOZEvWsya13uFDa2jIyI23o7YQ0diGTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjnKpk9J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bx6gl0u0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4F24C116B1;
-	Mon,  1 Jul 2024 14:12:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjnKpk9J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDB2C4AF0D;
+	Mon,  1 Jul 2024 15:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719843153;
-	bh=1VVWwQxpbYpxgTGynZjIRizmv2vMmvHZ76g/uhUNoXw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Bx6gl0u0KpVIjrIpzrfYuY6WoBWEJEEFsy7b/cg2a/dYiOrt9fM/DJGDrY4QzS/z2
-	 BtJ2c2Y8K4NKN+etRhqcUQVzjCCN2h5D7xdOOXxL5/4RUam5MFz6a5hFvUmmHrbjSW
-	 GBdgrvmiHCBMiiPg8KwsHfBQSvqTTXGjspMQ8+oIkERaDsrnslkOSLiNDBbJCCVNht
-	 /HKEoG8hniCJoiHW0rvXZ6VGbyPTaEMa8dRiFPRr0P5g4yDZ+n/Rir8GoP0agHiEDr
-	 zbOJgH3sUJKUT1OpmSMSjDXDkXEvDtLAmCs0lSDgEg0QZPn/+DDoPCdTUZUf/Qmq/8
-	 RZQkXLVyvBeww==
-Message-ID: <1c3cee9f7ef81e1da09e0c7b4ee1e47dc9161a75.camel@kernel.org>
-Subject: Re: [PATCH v2 00/11] fs: multigrain timestamp redux
-From: Jeff Layton <jlayton@kernel.org>
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R
- <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, Theodore
- Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Chris
- Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Andi Kleen
- <ak@linux.intel.com>,  kernel-team@fb.com, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org,  linux-ext4@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-mm@kvack.org,  linux-nfs@vger.kernel.org
-Date: Mon, 01 Jul 2024 10:12:29 -0400
-In-Reply-To: <20240701135332.GD504479@perftesting>
-References: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
-	 <20240701135332.GD504479@perftesting>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=k20201202; t=1719846101;
+	bh=ABvpPirgDymHngsRUpcwej27uh5jlGJQls9PaiHXP0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cjnKpk9Jxta1tmVipwVY/V7wlzDa4mS07YJGE5Lq4VrcBYJGTqn03Lt4BM2mOqXTL
+	 /FjSbK285snVcCUdW9vir7Rla+U7V5ztPY8FPLZTthwJmk0BPRsuwg35lABoT8b0Wf
+	 kbpzLayDlDCogXaKDQHg2ItopU4E90F151oMQVLIzvwTW2logbQxq/eNxlKvPahGKs
+	 kiHx+N7e0jtdU6x+Ptf3eL0cR0dytTTESAjYYkvM1JVh4Eh2UNgXJre3rEatMGhRvm
+	 38NgzXMla1PazEs7uUzvOYz+KxJ38NHzIgCC5bFPErCCQxP64NKgU6cM8Gyjfnyh2Z
+	 qFf/EVvXbU4ww==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a724a8097deso374592266b.1;
+        Mon, 01 Jul 2024 08:01:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUY2xOsf9rVTL7U9mFE6Jrd6/0bbkmjFRBLysKNz21dzfAKBcXIjSbZKz8bI2zPC2ouuMENUAJK3foAAjltWmvMAm5PAafAqpsTF931ATvPnotg4hY50oZXS7gLiVRyPRb4fxB4IFoA7x5iJ0tBttgvAnAFQwnLCOoN3wyNi+LlUuDxPKpj
+X-Gm-Message-State: AOJu0YxIxnlfjPD5sA0p8JzoaTCy0Qd/oHi2DWqqHdeS8bxBJYH04hE9
+	NkxrxgCJxEWh1g19jciT1sVaOi640QA7plrQzpI5XeI+w+qh93S0KYWWRrKsOk/9CLFRNdA25S+
+	g81ypv2c9gi7juWgkB1K5LFoKGCU=
+X-Google-Smtp-Source: AGHT+IH9cvBZlZ9SVpr1fbztwtyHo/IWmpwga95XhMPugjWfjFCA0EEYNnDOD02gQFtrn7M18jzGcoZrhDNm4C9nHBs=
+X-Received: by 2002:a17:907:a0c9:b0:a6f:bc02:a008 with SMTP id
+ a640c23a62f3a-a7514402354mr459434866b.4.1719846099486; Mon, 01 Jul 2024
+ 08:01:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240627173806.GC21813@redhat.com> <37f79351-a051-3fa9-7bfb-960fb2762e27@loongson.cn>
+ <20240629133747.GA4504@redhat.com> <CAAhV-H4tCrTuWJa88JE96N93U2O_RUsnA6WAAUMOWR6EzM9Mzw@mail.gmail.com>
+ <20240629150313.GB4504@redhat.com> <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
+In-Reply-To: <0ed72555-372a-64ff-5d0e-a6567650bd91@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Jul 2024 23:01:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Pr2UmOTezMtO8GfAWEbWkSJ4aUJFusLWxDNn3VyTXXA@mail.gmail.com>
+Message-ID: <CAAhV-H5Pr2UmOTezMtO8GfAWEbWkSJ4aUJFusLWxDNn3VyTXXA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: make the users of larch_insn_gen_break() constant
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Oleg Nesterov <oleg@redhat.com>, andrii.nakryiko@gmail.com, andrii@kernel.org, 
+	bpf@vger.kernel.org, jolsa@kernel.org, kernel@xen0n.name, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, mhiramat@kernel.org, nathan@kernel.org, 
+	rostedt@goodmis.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-07-01 at 09:53 -0400, Josef Bacik wrote:
-> On Mon, Jul 01, 2024 at 06:26:36AM -0400, Jeff Layton wrote:
-> > This set is essentially unchanged from the last one, aside from the
-> > new file in Documentation/. I had a review comment from Andi Kleen
-> > suggesting that the ctime_floor should be per time_namespace, but I
-> > think that's incorrect as the realtime clock is not namespaced.
-> >=20
-> > At LSF/MM this year, we had a discussion about the inode change
-> > attribute. At the time I mentioned that I thought I could salvage the
-> > multigrain timestamp work that had to be reverted last year [1].=C2=A0 =
-That
-> > version had to be reverted because it was possible for a file to get a
-> > coarse grained timestamp that appeared to be earlier than another file
-> > that had recently gotten a fine-grained stamp.
-> >=20
-> > This version corrects the problem by establishing a per-time_namespace
-> > ctime_floor value that should prevent this from occurring. In the above
-> > situation that was problematic before, the two files might end up with
-> > the same timestamp value, but they won't appear to have been modified i=
-n
-> > the wrong order.
-> >=20
-> > That problem was discovered by the test-stat-time gnulib test. Note tha=
-t
-> > that test still fails on multigrain timestamps, but that's because its
-> > method of determining the minimum delay that will show a timestamp
-> > change will no longer work with multigrain timestamps. I have a patch t=
-o
-> > change the testcase to use a different method that I've posted to the
-> > bug-gnulib mailing list.
-> >=20
-> > The big question with this set is whether the performance will be
-> > suitable. The testing I've done seems to show performance parity with
-> > multigrain timestamps enabled, but it's hard to rule this out regressin=
-g
-> > some workload.
-> >=20
-> > This set is based on top of Christian's vfs.misc branch (which has the
-> > earlier change to track inode timestamps as discrete integers). If ther=
-e
-> > are no major objections, I'd like to let this soak in linux-next for a
-> > bit to see if any problems shake out.
-> >=20
-> > [1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec1=
-43a704@kernel.org/
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> I have a few nits that need to be addressed, but you can add
->=20
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
->=20
-> to the series once they're addressed.=C2=A0 Thanks,
->=20
+On Mon, Jul 1, 2024 at 2:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
+>
+> On 06/29/2024 11:03 PM, Oleg Nesterov wrote:
+> > LoongArch defines UPROBE_SWBP_INSN as a function call and this breaks
+> > arch_uprobe_trampoline() which uses it to initialize a static variable.
+> >
+> > Add the new "__builtin_constant_p" helper, __emit_break(), and redefine
+> > the current users of larch_insn_gen_break() to use it.
+> >
+> > The patch adds check_emit_break() into kprobes.c and uprobes.c to test
+> > this change. They can be removed if LoongArch boots at least once, but
+> > otoh these 2 __init functions will be discarded by free_initmem().
+> >
+> > Fixes: ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return =
+probe")
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Closes: https://lore.kernel.org/all/20240614174822.GA1185149@thelio-399=
+0X/
+> > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+>
+> Tested on LoongArch machine with Loongson-3A5000 and Loongson-3A6000
+> CPU, based on 6.10-rc3,
+>
+> KPROBE_BP_INSN =3D=3D larch_insn_gen_break(BRK_KPROBE_BP)
+> KPROBE_SSTEPBP_INSN =3D=3D larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+> UPROBE_SWBP_INSN  =3D=3D larch_insn_gen_break(BRK_UPROBE_BP)
+> UPROBE_XOLBP_INSN =3D=3D larch_insn_gen_break(BRK_UPROBE_XOLBP)
+>
+> The two functions check_emit_break() can be removed in
+> arch/loongarch/kernel/kprobes.c and arch/loongarch/kernel/uprobes.c
+>
+> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Queued, thanks.
 
-Thanks! Fixed them up in my tree. I left the IS_I_VERSION check out as
-well, and added a note to the changelog on the btrfs patch.
---=20
-Jeff Layton <jlayton@kernel.org>
+Huacai
+>
+> Thanks,
+> Tiezhu
+>
+>
