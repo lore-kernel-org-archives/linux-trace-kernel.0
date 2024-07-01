@@ -1,57 +1,57 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65116839FE;
-	Mon,  1 Jul 2024 08:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E9412FF6E;
+	Mon,  1 Jul 2024 09:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719824243; cv=none; b=KhyvMa5xORg2ScF7Qy1pgiIqqReDuWAdFOukbjjyoqlSGi3whG1W6te0t5zLQV2LMa08uWtIWcwJwAY68PHsoj4lKAabLgpiON/XlNtZX7b2X5YClM942KOquaSlRfvBLI21yH3TDTz1YP7DH3GGmpLtC2Jol4W1hSnoxyhrVjM=
+	t=1719824524; cv=none; b=hhWiaaYJxj1Bd8EO3HejDMrkY3pNaJRXy2qyeus9O3JFv5CP7wT+hswpWr7fTQs8JQAO3fBLr2roNXIli/N1cEIkCtIJOK5J8veSxm3o/NKvRx7z7Zp6SD4mDcwRNGnB5xgaKNb5wDhwfln9do2zCJYWEUfQ0RuA6AacWXa61As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719824243; c=relaxed/simple;
-	bh=x9qyqzYLzzPN6prYn4VihZJVecigNgYi6pofpHOU8fk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=TC8Debu07wt/Eg2nfpg4Bkwh4ISuy+aQtcWZsNtf41y77zGyBp9qjx6z8EY2O7rSgpTCQzsF1JZGwwWMTBw77FJF/gYSmZsmAXaxMgNLX+DiTqj+JTFOuhmiNAJcazKq7iauTFTDgOt48iv3yDHnEV22t6ANxcsDiGjp4glC3XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ayeZXJn/; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1719824524; c=relaxed/simple;
+	bh=eyWKni/+X2/LBQ3BfnBvxUxML05TnimAdXg5nrWod2g=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=e8M70qsXMHeRRZjaH8StPSr8YXCBgSlEZmFDAasLls0MDcPDP2vnVIsGM1UsXIikhD0XtrY3u7VdZq++48lzHqPPEzazVBG4ruZLAeusAterrApvk7yk0pMm54Y94PA4GkM+GIj/6bM3sUNodF8iznQTYFCPPbXIHnvgjlORqWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tyl+zqkw; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayeZXJn/"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c7bf925764so1980747a91.0;
-        Mon, 01 Jul 2024 01:57:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tyl+zqkw"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fa75f53f42so11613535ad.0;
+        Mon, 01 Jul 2024 02:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719824242; x=1720429042; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=gmail.com; s=20230601; t=1719824522; x=1720429322; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s3EvXgsoc3O6to34ZUw4BNKot/Hf+C3K+5hMVbVjdas=;
-        b=ayeZXJn/otxyB2xO9AUifBbHzkzPgUKNq8GHXhS33+lw2oZRXAI3DIzEHzTc21BbVY
-         Z+BH7X5MCqBCeQ5ugXF8dw1Zjp8J1J838CL0k2Gu+b1OGHzZD2GExgh318aN4fq5qG2T
-         6l1ZHvU0BrXcYUq49XHZ0Iuo5jTqE66jWcqdYphkkvfJ7jrVXz9OST01eku8IQqEghch
-         Qlx9HeElBfSo96v3j92ErbtD2+sNL9b1MEvZh6ZBCqT0ah0R8BJhHmKAgu1+jVNvWE+c
-         9tPpBg63kirPgc1uoUmZkIu4E4EMTa7DtEty1Cy/TALma0o4RYfd5Xho16gcI/RfWmjJ
-         jWlQ==
+        bh=8AZjFIWKODzM/NcTqJf05rFl20Hxp9H5fZbg5Tl9cDM=;
+        b=Tyl+zqkw0R7uHaq+6UWMJsva7l3SY3ptp+yzTgWPz0tWLgeycWNaHY/3U1T+IIxEbC
+         5Izm/nGbStOXMufFbTUvhI6m3Si0N9XOk4WbLa9Orezia7lp2AqMOVj0zY5svUNeHp2e
+         9igjpMzlx/OShQXcgy7RhKjGKjRqTH7GRfytpxdrCgaBFAImBDgfTQU838/HX19XMRlX
+         kyQrSv7/Rr9EwZAb/VLBKa04guwEoy5rYVZSnuIsMJ8FrHbrEn75jTkLV3rLNHr0hM7A
+         fCEQIA1W/CgYQ3nywcUotNIIC3/BPqTuz8PEfgkg6aWJ2bGSM0dz07VgrILuOrLcdwIQ
+         PyCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719824242; x=1720429042;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=1e100.net; s=20230601; t=1719824522; x=1720429322;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=s3EvXgsoc3O6to34ZUw4BNKot/Hf+C3K+5hMVbVjdas=;
-        b=nObmSeuLY76sXmyyYbk/XRGTV6WtuSPUdl9ehDsBh0pzQxz4FuRVWk+roGM9KD2v/T
-         /I4FWUflY/Vcc7krriwUmTSSMxgp7svSMT/eZnoa0njiZs4bghACsJKsIb5O2hSmcJlR
-         NZqhn09jHuw2uRh4+pdlEnyTuWNwq+YDM8m4BCUndoJGIwA/kNxrc1V+8fxHptAoRTwZ
-         +CiB6z5XXr/wAWyOaZ/buSvjNwxGHg7htEwwmji8NWaLXpmdYdVOnZbJ0iwBxDJLfgeA
-         lMTy6mT7nunDNKWepSOQRsd5qtpSyjc/ccN4UeUHSvjbGjWuMwcEzTeRyBvtvIUPT7Lz
-         G+gA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/v5W+nGiljXKrk/Sxg5s4KcGylwimVU3y757aRyDze8lGq22nBcVoBbcbtFjyV8ZwoP18XeKzNraEULI/ohk4Djo3bY5TaItx1J1rEbKgOr3oUoFGLukLP4Exf3D84h+Io0ElkqzG
-X-Gm-Message-State: AOJu0YwJTx4eGLwmSIK5ZItoL9LYsas+8gseMOK+bIVuWDNy7wVAJYIF
-	Jut3w5+cLb5GdfO9tDFQ9gmjAzDyE7e/lD/AeS26xWuTyf4X8EMs
-X-Google-Smtp-Source: AGHT+IEDvSU0oo0hBRimVQFNxsC3NUrVirQPsrFJamW6UMpKXqrPbz0/TBmfJjHNrLF1XSL0utuzIw==
-X-Received: by 2002:a17:90a:5145:b0:2c8:660d:cc2 with SMTP id 98e67ed59e1d1-2c93d6f286cmr3927079a91.4.1719824241618;
-        Mon, 01 Jul 2024 01:57:21 -0700 (PDT)
+        bh=8AZjFIWKODzM/NcTqJf05rFl20Hxp9H5fZbg5Tl9cDM=;
+        b=lOKXQqo3uFR4IIdp9uGeGwuSJRbgEfJidJdZGkUhs3PWNI0D62Elbr+TYbJimz8iyl
+         Yl9w7X07H5TFgHuLtYR4M3oeiZNzTMQ4ep4x6t4KfZOb2rIk07m9LaeRX2xI4iKI78Ct
+         6H/kT966Y2McTTzDo3/HQZS/tpjdO+f66GhxU5EsMW/FEEFM5kpQ4zSSL2MPg8KLpyGg
+         IwQ7jYqphzBAGG5/mlUiYaEPpuWCt6Cz6APtmlHNeKOuSWDAM5NQyiE7vSuLJTwwJjSA
+         ytW1To8kAqlXXRgVk69kc6JNmqBxTtx1uEFC0NxBSdJDvItfsAmX71FevewDBaTRUPHP
+         eQhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVra3KX/YF1xtqiPJta78yeSztzvGHs2QnCr/Ii3ubSEEaY5BTZwHLOgbf6Iek6Y8vM+oMZNII3lLNol7tEWJ+rxjY0PXgdn3Nxg2Xg1QesREW+S/OWeKwNF0D2b7s/brFcCfqzioj0
+X-Gm-Message-State: AOJu0YwoN9E0/tdflVcruIcRl/J7KGNtPpNxB0qj2kFxZzET98V9ikzh
+	2jU3DTnjNS7PWDH+MhuDQ/EmGgsxBtIwoDz2xNhaMJy4kAXvpqdxrTE4Dw==
+X-Google-Smtp-Source: AGHT+IGsrF3+f846+0ll/nXhZ5ebUEruoSp54Z7Zxn3+lFCS9qSPb8kXe8eT8SjoYF/hztGBwmF+Vg==
+X-Received: by 2002:a17:902:e54f:b0:1f7:1655:825c with SMTP id d9443c01a7336-1fadbca1794mr29389455ad.36.1719824522032;
+        Mon, 01 Jul 2024 02:02:02 -0700 (PDT)
 Received: from localhost (118-211-5-80.tpgi.com.au. [118.211.5.80])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3b9f2csm6205352a91.35.2024.07.01.01.57.15
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1568ea7sm59477635ad.186.2024.07.01.02.01.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 01:57:21 -0700 (PDT)
+        Mon, 01 Jul 2024 02:02:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,8 +60,10 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 01 Jul 2024 18:57:12 +1000
-Message-Id: <D2E2T58ECN7G.1CFVM4AI1ZESG@gmail.com>
+Date: Mon, 01 Jul 2024 19:01:53 +1000
+Message-Id: <D2E2WQD0YGWH.11G3KU8SYPPZE@gmail.com>
+To: "Naveen N Rao" <naveen@kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
 Cc: "Michael Ellerman" <mpe@ellerman.id.au>, "Steven Rostedt"
  <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
  "Christophe Leroy" <christophe.leroy@csgroup.eu>, "Masahiro Yamada"
@@ -70,105 +72,59 @@ Cc: "Michael Ellerman" <mpe@ellerman.id.au>, "Steven Rostedt"
  "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
  <andrii@kernel.org>, "Song Liu" <song@kernel.org>, "Jiri Olsa"
  <jolsa@kernel.org>
-Subject: Re: [RFC PATCH v3 02/11] powerpc/ftrace: Unify 32-bit and 64-bit
- ftrace entry code
+Subject: Re: [RFC PATCH v3 03/11] powerpc/module_64: Convert #ifdef to
+ IS_ENABLED()
 From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Naveen N Rao" <naveen@kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
 X-Mailer: aerc 0.17.0
 References: <cover.1718908016.git.naveen@kernel.org>
- <f2d5d66d47b28474b6224613787757fed3e92d3d.1718908016.git.naveen@kernel.org>
-In-Reply-To: <f2d5d66d47b28474b6224613787757fed3e92d3d.1718908016.git.naveen@kernel.org>
+ <e0782cdf680a645d7f8d311a16530be7004bb0ef.1718908016.git.naveen@kernel.org>
+In-Reply-To: <e0782cdf680a645d7f8d311a16530be7004bb0ef.1718908016.git.naveen@kernel.org>
 
 On Fri Jun 21, 2024 at 4:54 AM AEST, Naveen N Rao wrote:
-> On 32-bit powerpc, gcc generates a three instruction sequence for
-> function profiling:
-> 	mflr	r0
-> 	stw	r0, 4(r1)
-> 	bl	_mcount
->
-> On kernel boot, the call to _mcount() is nop-ed out, to be patched back
-> in when ftrace is actually enabled. The 'stw' instruction therefore is
-> not necessary unless ftrace is enabled. Nop it out during ftrace init.
->
-> When ftrace is enabled, we want the 'stw' so that stack unwinding works
-> properly. Perform the same within the ftrace handler, similar to 64-bit
-> powerpc.
->
-> For 64-bit powerpc, early versions of gcc used to emit a three
-> instruction sequence for function profiling (with -mprofile-kernel) with
-> a 'std' instruction to mimic the 'stw' above. Address that scenario also
-> by nop-ing out the 'std' instruction during ftrace init.
-
-Cool! Could 32-bit use the 2-insn sequence as well if it had
--mprofile-kernel, out of curiosity?
-
+> Minor refactor for converting #ifdef to IS_ENABLED().
 >
 > Signed-off-by: Naveen N Rao <naveen@kernel.org>
 > ---
->  arch/powerpc/kernel/trace/ftrace.c       | 6 ++++--
->  arch/powerpc/kernel/trace/ftrace_entry.S | 4 ++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
+>  arch/powerpc/kernel/module_64.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 >
-> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/tra=
-ce/ftrace.c
-> index d8d6b4fd9a14..463bd7531dc8 100644
-> --- a/arch/powerpc/kernel/trace/ftrace.c
-> +++ b/arch/powerpc/kernel/trace/ftrace.c
-> @@ -241,13 +241,15 @@ int ftrace_init_nop(struct module *mod, struct dyn_=
-ftrace *rec)
->  		/* Expected sequence: 'mflr r0', 'stw r0,4(r1)', 'bl _mcount' */
->  		ret =3D ftrace_validate_inst(ip - 8, ppc_inst(PPC_RAW_MFLR(_R0)));
->  		if (!ret)
-> -			ret =3D ftrace_validate_inst(ip - 4, ppc_inst(PPC_RAW_STW(_R0, _R1, 4=
-)));
-> +			ret =3D ftrace_modify_code(ip - 4, ppc_inst(PPC_RAW_STW(_R0, _R1, 4))=
-,
-> +						 ppc_inst(PPC_RAW_NOP()));
->  	} else if (IS_ENABLED(CONFIG_MPROFILE_KERNEL)) {
->  		/* Expected sequence: 'mflr r0', ['std r0,16(r1)'], 'bl _mcount' */
->  		ret =3D ftrace_read_inst(ip - 4, &old);
->  		if (!ret && !ppc_inst_equal(old, ppc_inst(PPC_RAW_MFLR(_R0)))) {
->  			ret =3D ftrace_validate_inst(ip - 8, ppc_inst(PPC_RAW_MFLR(_R0)));
-> -			ret |=3D ftrace_validate_inst(ip - 4, ppc_inst(PPC_RAW_STD(_R0, _R1, =
-16)));
-> +			ret |=3D ftrace_modify_code(ip - 4, ppc_inst(PPC_RAW_STD(_R0, _R1, 16=
-)),
-> +						  ppc_inst(PPC_RAW_NOP()));
-
-So this is the old style path... Should you check the mflr validate
-result first? Also do you know what GCC version, roughly? Maybe we
-could have a comment here and eventually deprecate it.
-
-You could split this change into its own patch.
-
+> diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module=
+_64.c
+> index e9bab599d0c2..c202be11683b 100644
+> --- a/arch/powerpc/kernel/module_64.c
+> +++ b/arch/powerpc/kernel/module_64.c
+> @@ -241,14 +241,13 @@ static unsigned long get_stubs_size(const Elf64_Ehd=
+r *hdr,
 >  		}
->  	} else {
->  		return -EINVAL;
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kern=
-el/trace/ftrace_entry.S
-> index 76dbe9fd2c0f..244a1c7bb1e8 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -33,6 +33,8 @@
->   * and then arrange for the ftrace function to be called.
->   */
->  .macro	ftrace_regs_entry allregs
-> +	/* Save the original return address in A's stack frame */
-> +	PPC_STL		r0, LRSAVE(r1)
->  	/* Create a minimal stack frame for representing B */
->  	PPC_STLU	r1, -STACK_FRAME_MIN_SIZE(r1)
+>  	}
 > =20
-> @@ -44,8 +46,6 @@
->  	SAVE_GPRS(3, 10, r1)
+> -#ifdef CONFIG_DYNAMIC_FTRACE
+>  	/* make the trampoline to the ftrace_caller */
+> -	relocs++;
+> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> +	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE))
+> +		relocs++;
+> +
+>  	/* an additional one for ftrace_regs_caller */
+> -	relocs++;
+> -#endif
+> -#endif
+> +	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
+> +		relocs++;
 > =20
->  #ifdef CONFIG_PPC64
-> -	/* Save the original return address in A's stack frame */
-> -	std	r0, LRSAVE+SWITCH_FRAME_SIZE+STACK_FRAME_MIN_SIZE(r1)
->  	/* Ok to continue? */
->  	lbz	r3, PACA_FTRACE_ENABLED(r13)
->  	cmpdi	r3, 0
+>  	pr_debug("Looks like a total of %lu stubs, max\n", relocs);
+>  	return relocs * sizeof(struct ppc64_stub_entry);
 
-That seems right to me.
+LGTM. Hmm, you could get even cleverer
+
+    // make the trampoline to the ftrace_caller and ftrace_regs_caller
+    relocs +=3D IS_ENABLED(CONFIG_DYNAMIC_FTRACE) +
+              IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS);
+
+But either way
 
 Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+
+Thanks,
+Nick
+
