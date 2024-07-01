@@ -1,148 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0DD4779E;
-	Mon,  1 Jul 2024 23:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFEF502A9;
+	Mon,  1 Jul 2024 23:48:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719875444; cv=none; b=UKGsTiDnnDhp/cLtuQ1F4IpJQR/wl2yK5itHqNAfRBwyWF0DQdpfxbmF94hX+kxzSWmx60eulPTVo0izvgsALbOH6ZsMr/NbhVTZSPwzm/GUNtGo1WctWXEQYqd472du09q3KNH/G4OveN4FHBqvfzpwtpoYK/xPSVdMcHTi3TU=
+	t=1719877687; cv=none; b=PdCuaHQd8jsyj0OdEOqgrRjMeUD21pyfmfx5EF2YYobYmD51NRnaQuXc2upWrB8KezDbeNuB6rRm6J7EirxiBtgHRHp0Pze8KeJp98IwLF2hUtymUg0K9JS0sQCcRY1Ai3o00HI89VfDV/yfZACdWcslZasq2aNkf3Vy31SboyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719875444; c=relaxed/simple;
-	bh=Ez+L9dBMWPaMgY0ZHn8Ku3SGrDn4jJArONet3i7gJ3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qYUQGk2IDzDpwhLZjoZy83aX8Ks892GfR+5m5ACGnF5yZQliWxqkxiJpKapDL3Xoj3JhP6ULRsCx4IWcRtVRDorNEcALlmYpys1B0LOgSGcdLBODgeundM+zDHHfVGNBsQ9r7f1txkf420YjtFHcK/5KdDy/wDZ0Ty8biBW4Eyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yy9SPmkY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yy9SPmkY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E971FC116B1;
-	Mon,  1 Jul 2024 23:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719875444;
-	bh=Ez+L9dBMWPaMgY0ZHn8Ku3SGrDn4jJArONet3i7gJ3k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Yy9SPmkY/k/FYCAWcqf0wAlZgFxQfJUFZGQ0VgOoZDCVJ1uibzumULSmGQUhMPzVH
-	 ISPY8I7lwxluNjsGsSWdWRrdJOJZglkwlEtfFWZQitGsETpQmWVV6VzgLQ9cfx7Fid
-	 CRVO98oXdQjWGuFwN8LXAc9fwQ2+oL7ZrvtiSykU8pAYzE75bOZqK549pB1y49P8dF
-	 O8tuVznKEKVFrFtj+hOp9Fdavmpe9StZMWifeXjyUCHN0HMyRs3+adknQwO54Aud65
-	 dUblxjP35TnrDZOKBw82On7TDxWjxDIF/zWFhlZUjs64XguktAicdWs98Ngz6CtyTa
-	 3HaafwsT9Kpog==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: x86@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	bpf@vger.kernel.org,
-	rihams@fb.com,
-	linux-perf-users@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH] perf,x86: avoid missing caller address in stack traces captured in uprobe
-Date: Mon,  1 Jul 2024 16:10:27 -0700
-Message-ID: <20240701231027.61930-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1719877687; c=relaxed/simple;
+	bh=Hs/3V/EDUVH1ePdQNsyRIcof/5TxXo32RR7iRrPFtQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u4lFpB9V0YebcX2bOP3cXpYSZGfZcSjN1dVE2qJ22kS/kci3RgTwKA/NuBIebJP1r1e9wTRcbp97yR37aRf5391VJ8FWUsreJrLT83AO7JSnqZgVGCOJc+g8Rx6Q3l8PTgFq4NCCYYbzvdA27CSEHFud5jdJHQyWGGzqF1AR1l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C574CC116B1;
+	Mon,  1 Jul 2024 23:48:05 +0000 (UTC)
+Date: Mon, 1 Jul 2024 19:49:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: <muchun.song@linux.dev>, <mhiramat@kernel.org>,
+ <mathieu.desnoyers@efficios.com>, <linux-mm@kvack.org>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] hugetlbfs: use tracepoints in hugetlbfs functions.
+Message-ID: <20240701194906.3a9b6765@gandalf.local.home>
+In-Reply-To: <20240612011156.2891254-3-lihongbo22@huawei.com>
+References: <20240612011156.2891254-1-lihongbo22@huawei.com>
+	<20240612011156.2891254-3-lihongbo22@huawei.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When tracing user functions with uprobe functionality, it's common to
-install the probe (e.g., a BPF program) at the first instruction of the
-function. This is often going to be `push %rbp` instruction in function
-preamble, which means that within that function frame pointer hasn't
-been established yet. This leads to consistently missing an actual
-caller of the traced function, because perf_callchain_user() only
-records current IP (capturing traced function) and then following frame
-pointer chain (which would be caller's frame, containing the address of
-caller's caller).
+On Wed, 12 Jun 2024 09:11:56 +0800
+Hongbo Li <lihongbo22@huawei.com> wrote:
 
-So when we have target_1 -> target_2 -> target_3 call chain and we are
-tracing an entry to target_3, captured stack trace will report
-target_1 -> target_3 call chain, which is wrong and confusing.
+> @@ -934,6 +943,12 @@ static int hugetlbfs_setattr(struct mnt_idmap *idmap,
+>  	if (error)
+>  		return error;
+>  
+> +	trace_hugetlbfs_setattr(inode, dentry->d_name.len, dentry->d_name.name,
+> +			attr->ia_valid, attr->ia_mode,
+> +			from_kuid(&init_user_ns, attr->ia_uid),
+> +			from_kgid(&init_user_ns, attr->ia_gid),
+> +			inode->i_size, attr->ia_size);
+> +
 
-This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-instruction being traced. Given entire kernel implementation of user
-space stack trace capturing works under assumption that user space code
-was compiled with frame pointer register (%rbp) preservation, it seems
-pretty reasonable to use this instruction as a strong indicator that
-this is the entry to the function. In that case, return address is still
-pointed to by %rsp, so we fetch it and add to stack trace before
-proceeding to unwind the rest using frame pointer-based logic.
+That's a lot of parameters to pass to a tracepoint. Why not just pass the
+dentry and attr and do the above in the TP_fast_assign() logic? That would
+put less pressure on the icache for the code part.
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- arch/x86/events/core.c  | 20 ++++++++++++++++++++
- include/linux/uprobes.h |  2 ++
- kernel/events/uprobes.c |  2 ++
- 3 files changed, 24 insertions(+)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 5b0dd07b1ef1..82d5570b58ff 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2884,6 +2884,26 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
- 		return;
- 
- 	pagefault_disable();
-+
-+#ifdef CONFIG_UPROBES
-+	/*
-+	 * If we are called from uprobe handler, and we are indeed at the very
-+	 * entry to user function (which is normally a `push %rbp` instruction,
-+	 * under assumption of application being compiled with frame pointers),
-+	 * we should read return address from *regs->sp before proceeding
-+	 * to follow frame pointers, otherwise we'll skip immediate caller
-+	 * as %rbp is not yet setup.
-+	 */
-+	if (current->utask) {
-+		struct arch_uprobe *auprobe = current->utask->auprobe;
-+		u64 ret_addr;
-+
-+		if (auprobe && auprobe->insn[0] == 0x55 /* push %rbp */ &&
-+		    !__get_user(ret_addr, (const u64 __user *)regs->sp))
-+			perf_callchain_store(entry, ret_addr);
-+	}
-+#endif
-+
- 	while (entry->nr < entry->max_stack) {
- 		if (!valid_user_frame(fp, sizeof(frame)))
- 			break;
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b503fafb7fb3..a270a5892ab4 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -76,6 +76,8 @@ struct uprobe_task {
- 	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
- 
-+	struct arch_uprobe              *auprobe;
-+
- 	struct return_instance		*return_instances;
- 	unsigned int			depth;
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 99be2adedbc0..6e22e4d80f1e 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 	bool need_prep = false; /* prepare return uprobe, when needed */
- 
- 	down_read(&uprobe->register_rwsem);
-+	current->utask->auprobe = &uprobe->arch;
- 	for (uc = uprobe->consumers; uc; uc = uc->next) {
- 		int rc = 0;
- 
-@@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 
- 		remove &= rc;
- 	}
-+	current->utask->auprobe = NULL;
- 
- 	if (need_prep && !remove)
- 		prepare_uretprobe(uprobe, regs); /* put bp at return */
--- 
-2.43.0
-
+-- Steve
