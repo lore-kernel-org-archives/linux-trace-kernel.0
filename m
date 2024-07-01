@@ -1,193 +1,143 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A377BB06;
-	Mon,  1 Jul 2024 11:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6D615B0FD
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  1 Jul 2024 13:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719831844; cv=none; b=C1oKYFIXCHC2MBo4AtKXuByIWcDvYhF8jrPvPBpIcaeicKQW9Vk24bMpZW3aLtChgeb1pjhzWlf5+yib8uBXHP+ApFi3vGzgI/RBMTyiMjgVuA6ZpI79QVZY+7t8174DjYLagG9zqrVsWoEoRAy8wj+uT5e09/i6mlBoxxF9vZw=
+	t=1719841618; cv=none; b=u+2Wp4gQEIUltGoYQXdnO1USFCWTW568aApupEqcyn+15ZPXtuGjgBHHGnu2EKukOm/4RoKbmIqrCgAHRmdbHjbAJUiVmbowQUUQylxNzbcDQ1gvHiyf6K7Rk440wlQo9mw8K+D/MdNJJrKwptkUhaCJqixn/iPAdCov866hkcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719831844; c=relaxed/simple;
-	bh=+xmtqoTC9pRu9tBCd/MZgIgv0a3lnG32B+0rTFHnTDA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ddzgjRTg+EV778J6JYI9fKns+yYcxaWuYbYDVrbLWpDZxyMotvHa8M17CRal0Q7av6+zAC21Y86GntCLts0Mb35ZKEWUhZjpjjkINYxCq6jTklcmnQTy+pFw/B7vFHnQ4j85lZ/rizqw+NkRWxFkuWdPFV1+kWNckzkHmy87xvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOOQe542; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719841618; c=relaxed/simple;
+	bh=Ww3zO2BWA6CNrPfVjdCQ8/edKcVa8UvzDOn/+wZVrEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bWqoZT2wZ/5e12uI7vm9hOtI4dd/QE1Wmw0LoqCnLyfy0ZstPHf+/zn/QXzYU5B2AKDGnIzORh6NTMPMqAsMOmexjt3kdO2MXhK1460nAFmYK/5hyri6dLsZRQebSRW2HIYekrLInWWdj5wbVv3JYJAFwxX/7CTMrzdl66doUys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=rAqstR5h; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOOQe542"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-24c9f892aeaso1359035fac.2;
-        Mon, 01 Jul 2024 04:04:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="rAqstR5h"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b50aeb2424so13400816d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jul 2024 06:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719831842; x=1720436642; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YXzeEVHZAYNwP9LyDiGI74pJ3kMgBavuirX+asSxPgg=;
-        b=XOOQe542zrSAN45yseBkACoY2GOzIrunJfgOq9cUlteuprrsfJghsP2J9JWCTuk9Lq
-         gnGIx61ZfdqL/SoHKBAiploxuI90ZCxL3To6FRHCnwXwS0U3XxgbX5CKSK9pqP5g7WHG
-         xw6bD3kKjTItl0BaTK9FbZKKUQrNxz9tRkzFLzvg2+VVUuIPUgD8Btu2cwEboIMCWY5x
-         xFqDKMKVo+VZiO0LQ7IE5e43hz6YbUVqCs5Tfanifh3PW5+ZhH5BkYDjIiy70kd0oMZB
-         i/9OvMuVuFpOAG8JQWCe61/oQTGl3ds/teWJztQ46wVlP45HhVrVnzzjFG5s7fjvsWIa
-         N/vg==
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1719841615; x=1720446415; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/7pK8M+T679Mr4Uw1+2PXZ/iLLD0jN5yzRREJHhd/M8=;
+        b=rAqstR5haeuwUowCfxCsQJIDf2qieHtgMh+/eTl2ebv8mkMM1HXvwROMApDpg6OG1m
+         RqgsLoF652BqZbYRaiiuBfUxYrkv6/Oz5JDzyZma2wEKP7wTY/o3LltyoHd5HUXIo4fl
+         0XSjC+XbKoPv58qG/XCotkfE7uut/wF1fCpRDqMY1MUEUtOwWDD6d7xy8pup9hVypChg
+         /eRTAcd3ablPgl7txgWWcymn5qj10yEu1EkddYON84Q+tIl3mjdQOtYRv73QjZ1EqjsU
+         IhU8ztbaR+NKHNO4lDc/gY6CB1waiKLXBNviHrfW4CRsj5QMny+jwXgvjjO4Td8ar6r0
+         dHwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719831842; x=1720436642;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YXzeEVHZAYNwP9LyDiGI74pJ3kMgBavuirX+asSxPgg=;
-        b=a6laURTd0drt8dBrxM10tFuQV+iTJiUXJz2xkRKLzto5xx9jfCW1hkjLnquMFEZl+s
-         MGKyYphVCT9/aLWCKlRWYEEDwDObTpqQkVaW/0RFLgmtRKiI69ndXWMt0w4uuUZnBUgx
-         r5dx3Q3i/n5vDMUAV7LAXEXJy86nI+DFdq6CCUydWcMoqZiraSeol6L8CHbPqIClgbrd
-         N5e5ohRbDzSag5RCrZ5e+CPZ2dkaVP+B73MjWCakHphvaA4l1R3ObBZG6zNu86DQv+GU
-         kfPs8G19ti3iPOXDsX4DnJEipkWl69Wxz/1qlrelUESf8MAUCieUL9ciVwH7xQ+4upzS
-         BEEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqdagzDV7GqlsZ+wzRhurZxddcrcAxyjTnSMuY6NPfH5fxhSvndBI+Jz5QDbzAnzFMtgE3ShQ8EjDVROs8xRcguZA90pbVzsoS7lfSgnYEZSNrMydERJt4ZUR4CYliEOW5dNjUDtHn
-X-Gm-Message-State: AOJu0Yw4lVhKkP8aeFlE9LpQ9SkJr3Fd3cgmltDPy+XsilMYGOHy0XZf
-	LFTrG87zm5H+GPy0blkhbSbZbVuymQ7gPLb1SLB/c+VHx01cs6ElbJA7Dw==
-X-Google-Smtp-Source: AGHT+IGMlV0x2miXA7z/rApts7dhyaI7OUHVJdLxouoZVTa6LuzzBUiiewgzDm8W7JY1cJ2YJcu8rA==
-X-Received: by 2002:a05:6870:d889:b0:25d:5a7c:c8ec with SMTP id 586e51a60fabf-25db33f8b67mr5830768fac.13.1719831841923;
-        Mon, 01 Jul 2024 04:04:01 -0700 (PDT)
-Received: from localhost (118-211-5-80.tpgi.com.au. [118.211.5.80])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708044ae395sm6396945b3a.144.2024.07.01.04.03.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 04:04:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719841615; x=1720446415;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/7pK8M+T679Mr4Uw1+2PXZ/iLLD0jN5yzRREJHhd/M8=;
+        b=CZGwupoHy6eedMpJVW392/wOmipXqIEBmt2lPFKHHzZw2RUQVat/W9Lmr5AqvfdmJC
+         dFKXung7povzCkIl/m4DUBmJjdLyjk+4INOQH0RgEIDVWOeBVtRqoEU73MGqACRmP1zA
+         /7JoCBW+D1VbTygEZsLDziWURTjlUsEhRZj49DvI9168mRewmIxs6gMJLQMAqEj9naNy
+         DcCFUXFdMn1ds8QlxvO1kd5hZTn5AGsumwNvVk4ipiFp5hbIWzOqTBP/x66voJCa5nMy
+         sfbbosf/OfnZ0OUlkJ9TYanUjV8uxb4f9S1fk8xGYexDMJFree/GMntdMhCrdHCanhJ1
+         +tNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3RmAn6epxgl+p/uaqQJQzJKThwc2Wqn9N4x5+RpX1JUpUqIFU1ZJuPrP8HlwOG32UNZ9QZfrPIef4SRXFLt8F9YkWBelVBnNzfLeQCMauiO4t
+X-Gm-Message-State: AOJu0Yx/7w1W6BCOC1+GZ7DEgpOwUuUpa+u39jGS/ToIg9slJ8ZXuULk
+	WONSv3zq1nKF/mATkOlthCHDgDfzuIfMXl2PyeUaJRYPcFOYLEKUvEDxeYGMVBw=
+X-Google-Smtp-Source: AGHT+IG8OekqgNnErri1uZBaOEWN7EF2UDkAF5obMoo6PPyjxSiFbWfhXRMS/kv2BHuTbAr7oS5ICw==
+X-Received: by 2002:a05:6214:f03:b0:6b5:47b0:8f09 with SMTP id 6a1803df08f44-6b5b70cde0fmr83155356d6.36.1719841615063;
+        Mon, 01 Jul 2024 06:46:55 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b59e5f5f51sm33227276d6.75.2024.07.01.06.46.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 06:46:54 -0700 (PDT)
+Date: Mon, 1 Jul 2024 09:46:53 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andi Kleen <ak@linux.intel.com>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 07/11] xfs: switch to multigrain timestamps
+Message-ID: <20240701134653.GA504479@perftesting>
+References: <20240701-mgtime-v2-0-19d412a940d9@kernel.org>
+ <20240701-mgtime-v2-7-19d412a940d9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 01 Jul 2024 21:03:52 +1000
-Message-Id: <D2E5I4W6C23X.3A42AJCY8ODUJ@gmail.com>
-Cc: "Michael Ellerman" <mpe@ellerman.id.au>, "Steven Rostedt"
- <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>, "Masahiro Yamada"
- <masahiroy@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexei
- Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Song Liu" <song@kernel.org>, "Jiri Olsa"
- <jolsa@kernel.org>
-Subject: Re: [RFC PATCH v3 11/11] powerpc64/bpf: Add support for bpf
- trampolines
-From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Naveen N Rao" <naveen@kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <cover.1718908016.git.naveen@kernel.org>
- <a88b5b57d7e9b6db96323a6d6b236d567ebd6443.1718908016.git.naveen@kernel.org>
-In-Reply-To: <a88b5b57d7e9b6db96323a6d6b236d567ebd6443.1718908016.git.naveen@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701-mgtime-v2-7-19d412a940d9@kernel.org>
 
-On Fri Jun 21, 2024 at 5:09 AM AEST, Naveen N Rao wrote:
-> Add support for bpf_arch_text_poke() and arch_prepare_bpf_trampoline()
-> for 64-bit powerpc.
-
-What do BPF trampolines give you?
-
-> BPF prog JIT is extended to mimic 64-bit powerpc approach for ftrace
-> having a single nop at function entry, followed by the function
-> profiling sequence out-of-line and a separate long branch stub for calls
-> to trampolines that are out of range. A dummy_tramp is provided to
-> simplify synchronization similar to arm64.
-
-Synrhonization - between BPF and ftrace interfaces?
-
-> BPF Trampolines adhere to the existing ftrace ABI utilizing a
-> two-instruction profiling sequence, as well as the newer ABI utilizing a
-> three-instruction profiling sequence enabling return with a 'blr'. The
-> trampoline code itself closely follows x86 implementation.
->
-> While the code is generic, BPF trampolines are only enabled on 64-bit
-> powerpc. 32-bit powerpc will need testing and some updates.
->
-> Signed-off-by: Naveen N Rao <naveen@kernel.org>
-
-Just a quick glance for now, and I don't know BPF code much.
-
+On Mon, Jul 01, 2024 at 06:26:43AM -0400, Jeff Layton wrote:
+> Enable multigrain timestamps, which should ensure that there is an
+> apparent change to the timestamp whenever it has been written after
+> being actively observed via getattr.
+> 
+> Also, anytime the mtime changes, the ctime must also change, and those
+> are now the only two options for xfs_trans_ichgtime. Have that function
+> unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
+> always set.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->  arch/powerpc/include/asm/ppc-opcode.h |  14 +
->  arch/powerpc/net/bpf_jit.h            |  11 +
->  arch/powerpc/net/bpf_jit_comp.c       | 702 +++++++++++++++++++++++++-
->  arch/powerpc/net/bpf_jit_comp32.c     |   7 +-
->  arch/powerpc/net/bpf_jit_comp64.c     |   7 +-
->  5 files changed, 738 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/ppc-opcode.h b/arch/powerpc/include=
-/asm/ppc-opcode.h
-> index 076ae60b4a55..9eaa2c5d9b73 100644
-> --- a/arch/powerpc/include/asm/ppc-opcode.h
-> +++ b/arch/powerpc/include/asm/ppc-opcode.h
-> @@ -585,12 +585,26 @@
->  #define PPC_RAW_MTSPR(spr, d)		(0x7c0003a6 | ___PPC_RS(d) | __PPC_SPR(sp=
-r))
->  #define PPC_RAW_EIEIO()			(0x7c0006ac)
-> =20
-> +/* bcl 20,31,$+4 */
-> +#define PPC_RAW_BCL()			(0x429f0005)
-
-This is the special bcl form that gives the current address.
-Maybe call it PPC_RAW_BCL4()
-
-> =20
-> +void dummy_tramp(void);
+>  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
+>  fs/xfs/xfs_iops.c               | 6 ++++--
+>  fs/xfs/xfs_super.c              | 2 +-
+>  3 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
+> index 69fc5b981352..1f3639bbf5f0 100644
+> --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
+>  	ASSERT(tp);
+>  	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
+>  
+> -	tv = current_time(inode);
+> +	/* If the mtime changes, then ctime must also change */
+> +	ASSERT(flags & XFS_ICHGTIME_CHG);
+>  
+> +	tv = inode_set_ctime_current(inode);
+>  	if (flags & XFS_ICHGTIME_MOD)
+>  		inode_set_mtime_to_ts(inode, tv);
+> -	if (flags & XFS_ICHGTIME_CHG)
+> -		inode_set_ctime_to_ts(inode, tv);
+>  	if (flags & XFS_ICHGTIME_CREATE)
+>  		ip->i_crtime = tv;
+>  }
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index ff222827e550..ed6e6d9507df 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -590,10 +590,12 @@ xfs_vn_getattr(
+>  	stat->gid = vfsgid_into_kgid(vfsgid);
+>  	stat->ino = ip->i_ino;
+>  	stat->atime = inode_get_atime(inode);
+> -	stat->mtime = inode_get_mtime(inode);
+> -	stat->ctime = inode_get_ctime(inode);
 > +
-> +asm (
-> +"	.pushsection .text, \"ax\", @progbits	;"
-> +"	.global dummy_tramp			;"
-> +"	.type dummy_tramp, @function		;"
-> +"dummy_tramp:					;"
-> +#ifdef CONFIG_FTRACE_PFE_OUT_OF_LINE
-> +"	blr					;"
-> +#else
-> +"	mflr	11				;"
-
-Can you just drop this instruction? The caller will always
-have it in r11?
-
-> +"	mtctr	11				;"
-> +"	mtlr	0				;"
-> +"	bctr					;"
-> +#endif
-> +"	.size dummy_tramp, .-dummy_tramp	;"
-> +"	.popsection				;"
-> +);
+> +	fill_mg_cmtime(stat, request_mask, inode);
 > +
-> +void bpf_jit_build_fentry_stubs(u32 *image, struct codegen_context *ctx)
-> +{
-> +	int ool_stub_idx, long_branch_stub_idx;
+>  	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
+>  
 > +
-> +	/*
-> +	 * Out-of-line stub:
-> +	 *	mflr	r0
-> +	 *	[b|bl]	tramp
-> +	 *	mtlr	r0 // only with CONFIG_FTRACE_PFE_OUT_OF_LINE
-> +	 *	b	bpf_func + 4
-> +	 */
-> +	ool_stub_idx =3D ctx->idx;
-> +	EMIT(PPC_RAW_MFLR(_R0));
-> +	EMIT(PPC_RAW_NOP());
-> +	if (IS_ENABLED(CONFIG_FTRACE_PFE_OUT_OF_LINE))
-> +		EMIT(PPC_RAW_MTLR(_R0));
-> +	WARN_ON_ONCE(!is_offset_in_branch_range(4 - (long)ctx->idx * 4)); /* TO=
-DO */
-> +	EMIT(PPC_RAW_BRANCH(4 - (long)ctx->idx * 4));
-> +
-> +	/*
-> +	 * Long branch stub:
-> +	 *	.long	<dummy_tramp_addr>
-> +	 *	mflr	r11
-> +	 *	bcl	20,31,$+4
-> +	 *	mflr	r12
-> +	 *	ld	r12, -8-SZL(r12)
-> +	 *	mtctr	r12
-> +	 *	mtlr	r11 // needed to retain ftrace ABI
-> +	 *	bctr
-> +	 */
 
-You could avoid clobbering LR on >=3D POWER9 with addpcis instruction. Or
-use a pcrel load with pcrel even. I guess that's something to do later.
+Stray newline.  Thanks,
 
-Thanks,
-Nick
+Josef
