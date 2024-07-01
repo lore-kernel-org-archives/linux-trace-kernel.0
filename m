@@ -1,68 +1,70 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB29171655;
-	Mon,  1 Jul 2024 21:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E775F17BBB;
+	Mon,  1 Jul 2024 22:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719871188; cv=none; b=Mca0B65R1AkoAwero1lMpXg9wbo0aH63loqBRWy/V0c8VlC/Gh8tDwFGk2RmxLlhYfNL75k+Y0F2lD9f3jjwBKbIMdgFJfaOcZf16vrFEVmHyKx4SUXUfTWxItmtwoEu5uVo1u9K8uoo0OoL41bknUaFBfLdv329gjctbouU7X0=
+	t=1719872170; cv=none; b=d7vWtwm72l4Rh+G2SeFgxMMqivuFTf6AwDCDfodA6X+ktYMLtiYvtIvSuYQ4B6PbdiohMCTt8Q4YRprHZrnoJdAeablaS2a0XlTKc40NaLLW+UnxxscDhi3EdwFUfXIfbT12vc/wugvdGlGHtx8QzbYAgpUZSDSEP4/wVkJLt4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719871188; c=relaxed/simple;
-	bh=1M1p8C4/P0V0oUAe+3ZaIwYJGfBKdAJBqZvfGOUsTMU=;
+	s=arc-20240116; t=1719872170; c=relaxed/simple;
+	bh=PkYevu+meDcrJ4K9ZYQEViE4HnY6jmPQJ2Ah8pPTDSE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hdkt4L3efVQ+yvFVQKCt3rknIVT5HAC5FRlE2jtR5YJrjTk945dswSLXlmuygXEnUxxLz7K06iszTEbX66IMeO8rX/G0bMsqBo8h13PSVAc0QHx9NeE607UZTuZmrPC+xllcoT71LIhRQHWoixpmmkU+3Z9IxY1tM0K/u2JCLX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSdpOimW; arc=none smtp.client-ip=209.85.210.176
+	 To:Cc:Content-Type; b=UswgjUjEv5vO6IxBkmSbBHXGiH/b4+UCB7jHJEW8ozDFYKcoNg35Bejv4UPGf+Cp3/HOS/5CHgKi0CO5EBhzKMRsN0c1a9nuzqq035xoA/BczDfwrDK/ztJzviQyFxKshEJulboWvuzbVKBOKnIZdEx/8Z1NmJjNszYaQ22VzUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8ZFvvJd; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSdpOimW"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-706a1711ee5so1975070b3a.0;
-        Mon, 01 Jul 2024 14:59:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8ZFvvJd"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2c1a4192d55so2033630a91.2;
+        Mon, 01 Jul 2024 15:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719871186; x=1720475986; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719872168; x=1720476968; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EljLqQqy+0CdCrAAg1oogk23N4XDa9105icf5+m+XY0=;
-        b=aSdpOimWuInlSBs8Ln1Il2ibEbLXh11jJAyHbFIyd1hfX74+50uLxcJcAwcVckAoDr
-         0r4fvqd7Lvy+N/XpF1jya37sUtttxwEf9Kom7UlQiQkFHzJnKVZbhQBWfgfPV7ieA9QT
-         TgNWsttOGJI0cOk1iwIsNPMr/g0mEWn8m3HhFFwnSWkMXlNgyRz+Dfrkd3P56Fe9aztI
-         vrZS7wOR01eHZ97AiwAzcLxT6fnLAU7lqLAPFxKoIwVQb9IftunYjXlULLO5ebPnTtfB
-         AvN/el5s+5mef9OxtUl+wNVaiPcrknq0LCgrq+Pald04kSg6bRUgZUzl5IW96pBIzlG8
-         8SzQ==
+        bh=ZP3TGZz5ID0PDfMrLLlXy5RNYFoGLYxV7gOLZK6weKE=;
+        b=G8ZFvvJd+ElEzZ+lQ8Mz/jvEgFxJOHoQ/aMfLhWARBUmF9PHY1CUJrJeVrvZycrW84
+         Z+T2nwOV44i4s12pR+7nr5aRkQGYXu+d2WEn1Bfz9XSUjAwoqfrI5JqY7MV868BQ6lT2
+         /7IPuhcFLIsVIqJ/OaO+TAPjxzhSVBD2T8iok+yga/1v3MUteG+mjbc8357U3vLJSYfE
+         nWJdTIqMm4lwqAsjcPgYVqnvjzXOUf7dOwKFxQmBwz0Mogci3vsY9GmC1EkIrLIPZxeZ
+         D28MUzDdNadQtL1zm7K1lCf33GolWJ/yW+lFznbRgEp5+sa5lAv2TjWxf7KEsbAFu984
+         U1/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719871186; x=1720475986;
+        d=1e100.net; s=20230601; t=1719872168; x=1720476968;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EljLqQqy+0CdCrAAg1oogk23N4XDa9105icf5+m+XY0=;
-        b=G7BKMKYEoOXiLMxZ9kboI8o6NSsi3cDU7RHpYnUB9/zjGC6pyUq/R/+1hCTLVylIcc
-         oO19pMOjtTNfarRWevE3UrhVst+JRqmG+UyucbzAfXmyAvircavBnl4qgzpBnggS5BXX
-         e7POaSE2vmYr38fwbbKKrfMcZvxGFJYNtX/xd5vZJLY73VQY2lVNwoFOiM5JDVw3hqY/
-         Uw4Dl4ATWUdKf3TKngDB3sJcTTJRjryV9yFyZZN7z0hrZGfPMl1AoGFfSbCDiqSOZ59i
-         z93mF/a7apKSTp3TDz+3B5Vs5W1aYuQGyEPsOkLs3+mU0TZNodqMYLTcX5dOWXbNA6Hr
-         Hjpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgjnuOD6CTMxtjs5gSeN17fQTa6Ej5ZUAqm7lVLfzAPRU/jYxXdcJLPkIF0LzmECVZXGY6tBibVT/CngbIl2BQroBdkwQRiL/rp0JQKxWV5u68uk2yf4MYV+KIe7vlYk6IgxGqd+ZJ
-X-Gm-Message-State: AOJu0YybxOpYIYUYNuZG41WuJ8fH1GiD1+vZNvtcdWaG+kjwEIOx/5eB
-	XlTdWRMmSCkvS5sSTZ0M7rly2+c3GMH95STlka8ixuHuISniCBYLCVBe2ilOZe6Chr/+l+UeBgP
-	mSI+FGjyaxA4g4JmxdLimU3xAtS6LNA==
-X-Google-Smtp-Source: AGHT+IFh0SMlO6O4GwT1wx93kEAD+FtucK7bJ+5egpBda+XvANY6b1ym1NAZS+6J4kj4BwAJk4RZXDX73L5PmrXujcA=
-X-Received: by 2002:a05:6a00:1792:b0:706:5a4a:dcd0 with SMTP id
- d2e1a72fcca58-70aaaf530c2mr5135536b3a.34.1719871186375; Mon, 01 Jul 2024
- 14:59:46 -0700 (PDT)
+        bh=ZP3TGZz5ID0PDfMrLLlXy5RNYFoGLYxV7gOLZK6weKE=;
+        b=UZkPXCiyZtnobXSnK3FOu8RbB1vjTj6qgGRC1asFiMfzH4XjwI4h03i4Zy0RePxwnI
+         l4TTT+ApEX52F+nA1hwP6zue7nkXXPSui1EvM5gw2UVZ/3Huk/NrhVVF/9x0jDg2F9Vv
+         rtC/x6LZpk/cH4sOr8GwvIbsPHFuRgMZzkDcUoGp5BtbXQ0eleVhA1rI1nUGNZSSjJiy
+         ZVPUcWb+sL6/khoTg0t7H3qBv9jmcslolNDma2d5xKCdkGOXeleLnwHReFEDuC/82CAP
+         5I2UvB5kkqevqNrV0DByOH0il04Cn31sNLJqY0jSU2PESUMKJWbRqIyLEgJA2jA/SzsZ
+         vhVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVZ+VJPwdCkbXlJxIT8d2yRdXeWrAep4lIHDGaWMYMcWiYI7S247VCkzhvVKQH7w13huRDycIHKVqYdSaQHQpHVFAC8YvplzITR2hee29Btna13yW8Ew2jglDMNCtEm5q9vAASFsfa
+X-Gm-Message-State: AOJu0YwwpdbeeeemSsZVUHq8T1KCQNdfTzRe2OkVeC0UwB9kD+6vFpNs
+	jJ+xjhwW2a3Bg87GjvTQBkdQeH1/2BrrBfeZcNo7HGAcbkb6AiRX98DhK3xMw6lSH5SzPIZr/ZF
+	JCVtCfcXO2aEH+qJwAJCGJudP4kPtVQ==
+X-Google-Smtp-Source: AGHT+IERQm/9BqHDzD5JwOCIsHSSgR1HGZeUwN66JbbPoJFryJSQPnVHPfAZq05Ijra+Tdgk0Es9EOlLxFKdUlrueDo=
+X-Received: by 2002:a17:90a:e386:b0:2c4:c2d3:c061 with SMTP id
+ 98e67ed59e1d1-2c93d6ecb38mr4004217a91.18.1719872168208; Mon, 01 Jul 2024
+ 15:16:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-5-andrii@kernel.org>
- <20240627112958.0e4aa22fe5a694a2feb11e06@kernel.org> <CAEf4BzYF4kyWoY9qz2KV0iUDnNO6xEHMaTpZQPTDe2Dqa0_Fyg@mail.gmail.com>
-In-Reply-To: <CAEf4BzYF4kyWoY9qz2KV0iUDnNO6xEHMaTpZQPTDe2Dqa0_Fyg@mail.gmail.com>
+References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-7-andrii@kernel.org>
+ <20240627220449.0d2a12e24731e4764540f8aa@kernel.org> <CAEf4BzbLNHYsUfPi3+M_WUVSaZ9Ey-r3BxqV0Zz6pPqpMCjqpg@mail.gmail.com>
+ <20240628152846.ddf192c426fc6ce155044da0@kernel.org> <CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
+ <20240630083010.99ff77488ec62b38bcfeaa29@kernel.org> <CAEf4BzZh4ShURvqk-QxC5h1NpN0tjWMr1db+__gsCmr-suUNOQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzZh4ShURvqk-QxC5h1NpN0tjWMr1db+__gsCmr-suUNOQ@mail.gmail.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 1 Jul 2024 14:59:34 -0700
-Message-ID: <CAEf4BzaQrEbitAM1cCsLpO=VkWPUzV0tc2ozVVXNmNpj1rbaNw@mail.gmail.com>
-Subject: Re: [PATCH 04/12] uprobes: revamp uprobe refcounting and lifetime management
+Date: Mon, 1 Jul 2024 15:15:56 -0700
+Message-ID: <CAEf4BzbRQjK7nnR2nnw_hgYztPPxaSC6_qFTrdADy3yCki_wEA@mail.gmail.com>
+Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister APIs
 To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
 	rostedt@goodmis.org, oleg@redhat.com, peterz@infradead.org, mingo@redhat.com, 
@@ -70,198 +72,156 @@ Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 27, 2024 at 9:43=E2=80=AFAM Andrii Nakryiko
+On Mon, Jul 1, 2024 at 10:55=E2=80=AFAM Andrii Nakryiko
 <andrii.nakryiko@gmail.com> wrote:
 >
-> On Wed, Jun 26, 2024 at 7:30=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel=
+> On Sat, Jun 29, 2024 at 4:30=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel=
 .org> wrote:
 > >
-> > On Mon, 24 Jun 2024 17:21:36 -0700
-> > Andrii Nakryiko <andrii@kernel.org> wrote:
+> > On Fri, 28 Jun 2024 09:34:26 -0700
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 > >
-> > > Anyways, under exclusive writer lock, we double-check that refcount
-> > > didn't change and is still zero. If it is, we proceed with destructio=
-n,
-> > > because at that point we have a guarantee that find_active_uprobe()
-> > > can't successfully look up this uprobe instance, as it's going to be
-> > > removed in destructor under writer lock. If, on the other hand,
-> > > find_active_uprobe() managed to bump refcount from zero to one in
-> > > between put_uprobe()'s atomic_dec_and_test(&uprobe->ref) and
-> > > write_lock(&uprobes_treelock), we'll deterministically detect this wi=
-th
-> > > extra atomic_read(&uprobe->ref) check, and if it doesn't hold, we
-> > > pretend like atomic_dec_and_test() never returned true. There is no
-> > > resource freeing or any other irreversible action taken up till this
-> > > point, so we just exit early.
+> > > On Thu, Jun 27, 2024 at 11:28=E2=80=AFPM Masami Hiramatsu <mhiramat@k=
+ernel.org> wrote:
+> > > >
+> > > > On Thu, 27 Jun 2024 09:47:10 -0700
+> > > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > >
+> > > > > On Thu, Jun 27, 2024 at 6:04=E2=80=AFAM Masami Hiramatsu <mhirama=
+t@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon, 24 Jun 2024 17:21:38 -0700
+> > > > > > Andrii Nakryiko <andrii@kernel.org> wrote:
+> > > > > >
+> > > > > > > -static int __uprobe_register(struct inode *inode, loff_t off=
+set,
+> > > > > > > -                          loff_t ref_ctr_offset, struct upro=
+be_consumer *uc)
+> > > > > > > +int uprobe_register_batch(struct inode *inode, int cnt,
+> > > > > > > +                       uprobe_consumer_fn get_uprobe_consume=
+r, void *ctx)
+> > > > > >
+> > > > > > Is this interface just for avoiding memory allocation? Can't we=
+ just
+> > > > > > allocate a temporary array of *uprobe_consumer instead?
+> > > > >
+> > > > > Yes, exactly, to avoid the need for allocating another array that
+> > > > > would just contain pointers to uprobe_consumer. Consumers would n=
+ever
+> > > > > just have an array of `struct uprobe_consumer *`, because
+> > > > > uprobe_consumer struct is embedded in some other struct, so the a=
+rray
+> > > > > interface isn't the most convenient.
+> > > >
+> > > > OK, I understand it.
+> > > >
+> > > > >
+> > > > > If you feel strongly, I can do an array, but this necessitates
+> > > > > allocating an extra array *and keeping it* for the entire duratio=
+n of
+> > > > > BPF multi-uprobe link (attachment) existence, so it feels like a
+> > > > > waste. This is because we don't want to do anything that can fail=
+ in
+> > > > > the detachment logic (so no temporary array allocation there).
+> > > >
+> > > > No need to change it, that sounds reasonable.
+> > > >
 > > >
-> > > One tricky part in the above is actually two CPUs racing and dropping
-> > > refcnt to zero, and then attempting to free resources. This can happe=
-n
-> > > as follows:
-> > >   - CPU #0 drops refcnt from 1 to 0, and proceeds to grab uprobes_tre=
-elock;
-> > >   - before CPU #0 grabs a lock, CPU #1 updates refcnt as 0 -> 1 -> 0,=
- at
-> > >     which point it decides that it needs to free uprobe as well.
+> > > Great, thanks.
 > > >
-> > > At this point both CPU #0 and CPU #1 will believe they need to destro=
-y
-> > > uprobe, which is obviously wrong. To prevent this situations, we augm=
-ent
-> > > refcount with epoch counter, which is always incremented by 1 on eith=
-er
-> > > get or put operation. This allows those two CPUs above to disambiguat=
-e
-> > > who should actually free uprobe (it's the CPU #1, because it has
-> > > up-to-date epoch). See comments in the code and note the specific val=
-ues
-> > > of UPROBE_REFCNT_GET and UPROBE_REFCNT_PUT constants. Keep in mind th=
-at
-> > > a single atomi64_t is actually a two sort-of-independent 32-bit count=
-ers
-> > > that are incremented/decremented with a single atomic_add_and_return(=
-)
-> > > operation. Note also a small and extremely rare (and thus having no
-> > > effect on performance) need to clear the highest bit every 2 billion
-> > > get/put operations to prevent high 32-bit counter from "bleeding over=
-"
-> > > into lower 32-bit counter.
+> > > > >
+> > > > > Anyways, let me know how you feel about keeping this callback.
+> > > >
+> > > > IMHO, maybe the interface function is better to change to
+> > > > `uprobe_consumer *next_uprobe_consumer(void **data)`. If caller
+> > > > side uses a linked list of structure, index access will need to
+> > > > follow the list every time.
+> > >
+> > > This would be problematic. Note how we call get_uprobe_consumer(i,
+> > > ctx) with i going from 0 to N in multiple independent loops. So if we
+> > > are only allowed to ask for the next consumer, then
+> > > uprobe_register_batch and uprobe_unregister_batch would need to build
+> > > its own internal index and remember ith instance. Which again means
+> > > more allocations and possibly failing uprobe_unregister_batch(), whic=
+h
+> > > isn't great.
 > >
-> > I have a question here.
-> > Is there any chance to the CPU#1 to put the uprobe before CPU#0 gets
-> > the uprobes_treelock, and free uprobe before CPU#0 validate uprobe->ref
-> > again? e.g.
+> > No, I think we can use a cursor variable as;
 > >
-> > CPU#0                                                   CPU#1
+> > int uprobe_register_batch(struct inode *inode,
+> >                  uprobe_consumer_fn get_uprobe_consumer, void *ctx)
+> > {
+> >         void *cur =3D ctx;
 > >
-> > put_uprobe() {
-> >         atomic64_add_return()
-> >                                                         __get_uprobe();
-> >                                                         put_uprobe() {
-> >                                                                 kfree(u=
-probe)
-> >                                                         }
-> >         write_lock(&uprobes_treelock);
-> >         atomic64_read(&uprobe->ref);
+> >         while ((uc =3D get_uprobe_consumer(&cur)) !=3D NULL) {
+> >                 ...
+> >         }
+> >
+> >         cur =3D ctx;
+> >         while ((uc =3D get_uprobe_consumer(&cur)) !=3D NULL) {
+> >                 ...
+> >         }
 > > }
 > >
-> > I think it is very rare case, but I could not find any code to prevent
-> > this scenario.
+> > This can also remove the cnt.
+>
+> Ok, if you prefer this I'll switch. It's a bit more cumbersome to use
+> for callers, but we have one right now, and might have another one, so
+> not a big deal.
+>
+
+Actually, now that I started implementing this, I really-really don't
+like it. In the example above you assume by storing and reusing
+original ctx value you will reset iteration to the very beginning.
+This is not how it works in practice though. Ctx is most probably a
+pointer to some struct somewhere with iteration state (e.g., array of
+all uprobes + current index), and so get_uprobe_consumer() doesn't
+update `void *ctx` itself, it updates the state of that struct.
+
+And so there is no easy and clean way to reset this iterator without
+adding another callback or something. At which point it becomes quite
+cumbersome and convoluted.
+
+How about this? I'll keep the existing get_uprobe_consumer(idx, ctx)
+contract, which works for the only user right now, BPF multi-uprobes.
+When it's time to add another consumer that works with a linked list,
+we can add another more complicated contract that would do
+iterator-style callbacks. This would be used by linked list users, and
+we can transparently implement existing uprobe_register_batch()
+contract on top of if by implementing a trivial iterator wrapper on
+top of get_uprobe_consumer(idx, ctx) approach.
+
+Let's not add unnecessary complications right now given we have a
+clear path forward to add it later, if necessary, without breaking
+anything. I'll send v2 without changes to get_uprobe_consumer() for
+now, hopefully my above plan makes sense to you. Thanks!
+
 > >
->
-> Yes, I think you are right, great catch!
->
-> I concentrated on preventing double kfree() in this situation, and
-> somehow convinced myself that eager kfree() is fine. But I think I'll
-> need to delay freeing, probably with RCU. The problem is that we can't
-> use rcu_read_lock()/rcu_read_unlock() because we take locks, so it has
-> to be a sleepable variant of RCU. I'm thinking of using
-> rcu_read_lock_trace(), the same variant of RCU we use for sleepable
-> BPF programs (including sleepable uprobes). srcu might be too heavy
-> for this.
->
-> I'll try a few variants over the next few days and see how the
-> performance looks.
->
-
-So I think I'm going with the changes below, incorporated into this
-patch (nothing else changes). __get_uprobe() doesn't need any added
-RCU protection (we know that uprobe is alive). It's only put_uprobe()
-that needs to guarantee RCU protection before we drop refcount all the
-way until we know whether we are the winning destructor or not.
-
-Good thing is that the changes are pretty minimal in code and also
-don't seem to regress performance/scalability. So I'm pretty happy
-about that, will send v2 soon.
-
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 07ad8b2e7508..41d9e37633ca 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -56,6 +56,7 @@ struct uprobe {
-        atomic64_t              ref;            /* see
-UPROBE_REFCNT_GET below */
-        struct rw_semaphore     register_rwsem;
-        struct rw_semaphore     consumer_rwsem;
-+       struct rcu_head         rcu;
-        struct list_head        pending_list;
-        struct uprobe_consumer  *consumers;
-        struct inode            *inode;         /* Also hold a ref to inode=
- */
-@@ -623,7 +624,7 @@ set_orig_insn(struct arch_uprobe *auprobe, struct
-mm_struct *mm, unsigned long v
- #define UPROBE_REFCNT_GET ((1LL << 32) | 1LL)
- #define UPROBE_REFCNT_PUT (0xffffffffLL)
-
--/**
-+/*
-  * Caller has to make sure that:
-  *   a) either uprobe's refcnt is positive before this call;
-  *   b) or uprobes_treelock is held (doesn't matter if for read or write),
-@@ -657,10 +658,26 @@ static inline bool uprobe_is_active(struct uprobe *up=
-robe)
-        return !RB_EMPTY_NODE(&uprobe->rb_node);
- }
-
-+static void uprobe_free_rcu(struct rcu_head *rcu)
-+{
-+       struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rcu);
-+
-+       kfree(uprobe);
-+}
-+
- static void put_uprobe(struct uprobe *uprobe)
- {
-        s64 v;
-
-+       /*
-+        * here uprobe instance is guaranteed to be alive, so we use Tasks
-+        * Trace RCU to guarantee that uprobe won't be freed from under us,=
- if
-+        * we end up being a losing "destructor" inside uprobe_treelock'ed
-+        * section double-checking uprobe->ref value below.
-+        * Note call_rcu_tasks_trace() + uprobe_free_rcu below.
-+        */
-+       rcu_read_lock_trace();
-+
-        v =3D atomic64_add_return(UPROBE_REFCNT_PUT, &uprobe->ref);
-
-        if (unlikely((u32)v =3D=3D 0)) {
-@@ -691,6 +708,8 @@ static void put_uprobe(struct uprobe *uprobe)
-                        rb_erase(&uprobe->rb_node, &uprobes_tree);
-                write_unlock(&uprobes_treelock);
-
-+               rcu_read_unlock_trace();
-+
-                /* uprobe got resurrected, pretend we never tried to free i=
-t */
-                if (!destroy)
-                        return;
-@@ -704,7 +723,7 @@ static void put_uprobe(struct uprobe *uprobe)
-                delayed_uprobe_remove(uprobe, NULL);
-                mutex_unlock(&delayed_uprobe_lock);
-
--               kfree(uprobe);
-+               call_rcu_tasks_trace(&uprobe->rcu, uprobe_free_rcu);
-                return;
-        }
-
-@@ -716,6 +735,8 @@ static void put_uprobe(struct uprobe *uprobe)
-         */
-        if (unlikely(v < 0))
-                (void)atomic64_cmpxchg(&uprobe->ref, v, v & ~(1ULL << 63));
-+
-+       rcu_read_unlock_trace();
- }
-
- static __always_inline
-
-
-
 > > Thank you,
+> >
+> > >
+> > > For now this API works well, I propose to keep it as is. For linked
+> > > list case consumers would need to allocate one extra array or pay the
+> > > price of O(N) search (which might be ok, depending on how many uprobe=
+s
+> > > are being attached). But we don't have such consumers right now,
+> > > thankfully.
+> > >
+> > > >
+> > > > Thank you,
+> > > >
+> > > >
+> > > > >
+> > > > > >
+> > > > > > Thank you,
+> > > > > >
+> > > > > > --
+> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > >
+> > > >
+> > > > --
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > >
 > >
 > > --
 > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
