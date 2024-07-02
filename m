@@ -1,50 +1,64 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7515B15B10F;
-	Tue,  2 Jul 2024 12:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A962F1C686;
+	Tue,  2 Jul 2024 12:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719921727; cv=none; b=R4o0Muva/BZMSSW3P2lOKfOj7/1I2KArcnaP5Na3bCO0G9W1VZIiYvgwyraFGPYDkJpKfOookLgrkVgc+wtZjx2lqcGXeM4lADOoFC6Mhzjzvz/APPOueEZgK5uVO8w7dI2OZCWxDGz/VBBY5JADWK5O116/8FprP+46+ma5zv4=
+	t=1719921884; cv=none; b=cXKpEyNWmdKC5dj9OnPFlQcZjOcBOD/n2VEqMyMG8aD/PG6RT1wfdWbOAi4jmgPqNYfeRpQJPfDIQ86YRcBAgEtOx7Gkw6WiMC8kuVrctJRmhDl59VqgNAyTu/8jgUqG5HW5Z+6I88bvRc0JLdoNn9BmpvUp5W0J8Sb2I5qRrm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719921727; c=relaxed/simple;
-	bh=6+CKEhkMe2CwGR+Amp7jTJil14pHK7hidnCRm1NzLUM=;
+	s=arc-20240116; t=1719921884; c=relaxed/simple;
+	bh=b5GM9ijpBeGynJURaypdSlk8pKpNi4papiSVaQlHPkA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CLufIpVZ0BpANB2i4s0v6/1lrDmqJS6TiZmsZ5BW5Tu9v3OMfpvIOJlp6yB9JjW8AbYq8RAymIxWktevv3Ft1lBgh+tv7foGovqC49NAhkQPKJqjH5p5Qw9CNov+VaShuJVfxrQXZqfssiFiMoNMKb3XNwHFmX7avdiXWUx+0Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WnUXE+J4; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGwKdGnknFTsnXmKXLhTqQgG7nUlVI1cVSGInLqCcRNaS6L1xpNrImGfp+uz2pAl1fK9WBcVbSC6hp5MAqBaw8X7C4SZTLBJeq2SxZ/AleOodb4pbv6OOO7Rei9dDl2t6n/x3YooLeAWfqhu1hfktQBFOah3KdMlB91TRNne0Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RLlELJu9; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WnUXE+J4"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RLlELJu9"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0fmx3brueG8ivWi5L34jTrdGNl5ELxv76aQMcr2RTXo=; b=WnUXE+J4kbnZsAZ76RZ0vqfdQk
-	3JuiTVdML6uB4KHOnfAkfWCuwAdIutswauOpSND1ZnjXSAtIe5clKphzN5RkN0oyPLiB1JTfWnP8S
-	YwqIOaciyPC0Q089w7KFjsyaUSDpEq9ESI5f7ph6GhMezWdRGJXVEQF+xEi+9yi69al+NWAghSX+4
-	xhSR45VYN2BSJjBRUGYJSAa1+EThrPsO/Z+h1H10yBzAzTA0W1uQunhj4pkOq8rbp7xFSCWIMQvNY
-	s4Fc3t6afro8faGCHOrM1+owya1b8QV+rE6AhpYrSm6zGC+LiD24TNbSg76jLP+vXGtnCWuQhbc7g
-	bvIw23LA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOcCj-00000009obd-3Lry;
-	Tue, 02 Jul 2024 12:01:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C24B0300694; Tue,  2 Jul 2024 14:01:46 +0200 (CEST)
-Date: Tue, 2 Jul 2024 14:01:46 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	clm@meta.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-Message-ID: <20240702120146.GB28838@noisy.programming.kicks-ass.net>
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240702102353.GG11386@noisy.programming.kicks-ass.net>
- <20240702115447.GA28838@noisy.programming.kicks-ass.net>
+	bh=d9z4p2MzaEAaeaMBOOPYtXfjQBBoKbQHMUDRf2gF2pw=; b=RLlELJu9ZDvb6/ca5kEpiffpn9
+	AXM4DXiayCCL/ue1TvQdBfuuONUrUp2KY9mHdvvHSFj8qiRwQCzBeWukZl/NQpK9fYgoDgolJ8RTp
+	7CatmwQKkCDwqrfPy4afHx56bsBzomm9Qzd+VOf4LJS/FfLKPcIKwtH8K8VJAhNUAckJqcXkxnsv/
+	1DSgpoQZfYdkDzfQZHPxKk1P5B9K0dd6w+7mrLkL3mRX0bFReG7ANIUEgNso3r3fYPet5Y3PR16zh
+	LpHCDFHjoVx3UuaRSrtK6EOq8Lbhh6ho3GKWV2k3SpssdidQ4MXGuO6V/s4r3aqANyozmhV2Nb1Lj
+	TeYixs3g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOcFN-00000006bnO-0uO9;
+	Tue, 02 Jul 2024 12:04:33 +0000
+Date: Tue, 2 Jul 2024 05:04:33 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+Message-ID: <ZoPs0TfTEktPaCHo@infradead.org>
+References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
+ <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
+ <20240701224941.GE612460@frogsfrogsfrogs>
+ <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
+ <ZoOuSxRlvEQ5rOqn@infradead.org>
+ <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+ <20240702101902.qcx73xgae2sqoso7@quack3>
+ <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,49 +67,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240702115447.GA28838@noisy.programming.kicks-ass.net>
+In-Reply-To: <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jul 02, 2024 at 01:54:47PM +0200, Peter Zijlstra wrote:
+On Tue, Jul 02, 2024 at 07:44:19AM -0400, Jeff Layton wrote:
+> Complaining about it is fairly simple. We could just throw a pr_warn in
+> inode_set_ctime_to_ts when the time comes back as KTIME_MAX. This might
+> also be what we need to do for filesystems like NFS, where a future
+> ctime on the server is not necessarily a problem for the client.
+> 
+> Refusing to load the inode on disk-based filesystems is harder, but is
+> probably possible. There are ~90 calls to inode_set_ctime_to_ts in the
+> kernel, so we'd need to vet the places that are loading times from disk
+> images or the like and fix them to return errors in this situation.
+> 
+> Is warning acceptable, or do we really need to reject inodes that have
+> corrupt timestamps like this?
 
-> @@ -668,12 +677,25 @@ static struct uprobe *__find_uprobe(struct inode *inode, loff_t offset)
->  static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
->  {
->  	struct uprobe *uprobe;
-> +	unsigned seq;
->  
-> +	guard(rcu)();
->  
-> +	do {
-> +		seq = read_seqcount_begin(&uprobes_seqcount);
-> +		uprobes = __find_uprobe(inode, offset);
-> +		if (uprobes) {
-> +			/*
-> +			 * Lockless RB-tree lookups are prone to false-negatives.
-> +			 * If they find something, it's good. If they do not find,
-> +			 * it needs to be validated.
-> +			 */
-> +			return uprobes;
-> +		}
-> +	} while (read_seqcount_retry(&uprobes_seqcount, seq));
-> +
-> +	/* Really didn't find anything. */
-> +	return NULL;
->  }
->  
->  static struct uprobe *__insert_uprobe(struct uprobe *uprobe)
-> @@ -702,7 +724,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
->  	struct uprobe *u;
->  
->  	write_lock(&uprobes_treelock);
-> +	write_seqcount_begin(&uprobes_seqcount);
->  	u = __insert_uprobe(uprobe);
-> +	write_seqcount_end(&uprobes_seqcount);
->  	write_unlock(&uprobes_treelock);
->  
->  	return u;
-
-Strictly speaking I suppose we should add rb_find_rcu() and
-rc_find_add_rcu() that sprinkle some rcu_dereference_raw() and
-rb_link_node_rcu() around. See the examples in __lt_find() and
-__lt_insert().
+inode_set_ctime_to_ts should return an error if things are out of range.
+How do we currently catch this when it comes from userland?
 
