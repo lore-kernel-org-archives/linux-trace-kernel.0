@@ -1,91 +1,90 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED231DFFC;
-	Tue,  2 Jul 2024 15:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9051BA883;
+	Tue,  2 Jul 2024 15:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719933163; cv=none; b=Rq2t65owanOnDswCs4Mtc23lq5z/T371ks43KUHghXiUNwn9ooe/iXElS6eCjXW5K4Xblhy40GXegYpUxbfPq6UvldqrVby5m0Wwrjn4Jc4yJ32xwUNGU1S4CLhtok1GaRO0kzjVESvqa6mFLcTT3u8XBiSMCLpb3Rs3OqgBtM8=
+	t=1719933491; cv=none; b=uua3549IAefJUoFHKAaTsT9N+Yc/Tk09g8QfFKi4+WE4byBhDjjZ2nN6/4eRgXAzBCwa0jcnpu37HC/ZpIgADNBk+sciOWWo+0g2OpOQO5Hga2JQxS5b5+wffQQ1YEiY27UCFaOUtCrojlSVPYbRq04CqUymTR28j4m99Lt9YDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719933163; c=relaxed/simple;
-	bh=ABYatGOHDvGjohsk6pDUWhV3e0zacUzLxB8sgh2L0Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dS03hnGJVjnp0+l26vMKQRu/W2PM/qVCp9D19ue3JZYQrhk3JP1b/ZzhL1YGX4ydCLkj5rVJn4efI/YoicjLYigOmT7NyVvbj1zRV0O5tBqSqNvrhPCrszRAou2VUyYcpUGrIOSUwGlS9K8e7G67P9uDCp6X41lz1DL8XzMkE6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dCljCzJR; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dCljCzJR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8aouOiHZz/CtkLH8RlphiC+CuL1fGX3TYjmQQVPOhZE=; b=dCljCzJRSfznNuYHX5KeHFLuWV
-	1bGB2/E0ElcUGou1naiVTb8GjiRYIwBvBWILQ6RLqqRbBdOIErpJ+SWkBWdjlw0iN1lSHfonwrj0h
-	wVdYu0AnkD5wOr6zpmOvc/VRJ7EyUE9eLSu3jJDW06TfZ4HwOGaTRkiCfriacF5Wo6FBnITHbgOe2
-	cUWZdK2jsEKUktlwltOfhcgJvoqG4q8eukNIK7KWBynHYywL5TPP8gs5jg82+w2Xyc2gd4deZhrue
-	H21CvG2clgGVczz798MUMmJhoWGmR3TMIxyr1HailAgCTaIgccNe/f1h4oVzV2bhQzXPmu4J40qQX
-	V4LqdFhA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOfBK-000000079no-1zHc;
-	Tue, 02 Jul 2024 15:12:34 +0000
-Date: Tue, 2 Jul 2024 08:12:34 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
-Message-ID: <ZoQY4jdTc5dHPGGG@infradead.org>
-References: <20240701224941.GE612460@frogsfrogsfrogs>
- <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
- <ZoOuSxRlvEQ5rOqn@infradead.org>
- <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
- <20240702101902.qcx73xgae2sqoso7@quack3>
- <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
- <ZoPs0TfTEktPaCHo@infradead.org>
- <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
- <ZoPvR39vGeluD5T2@infradead.org>
- <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
+	s=arc-20240116; t=1719933491; c=relaxed/simple;
+	bh=4+6bb590DiNQ9QG+pwIJYPGpZqN7VtIX8tkAx55gPe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LktNupwGCbF5HRp4cXrBmnWH4o8pKpdDmk7fHOzAWKfSx5Yl2MMbLxv0ulREmv6IZQgws6Uyw6/7fkgZhqRJGaxmC9P9fmKE5WW2uTrcldxlAI7JDGbACcvF9TquBjWTLF4eX7npThwgLV4w0bz0sP/iCRo5oqfGdviKwfepFnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADA0C116B1;
+	Tue,  2 Jul 2024 15:18:09 +0000 (UTC)
+Date: Tue, 2 Jul 2024 11:18:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Dmitry V. Levin" <ldv@strace.io>, Vincent Donnefort
+ <vdonnefort@google.com>, mhiramat@kernel.org, kernel-team@android.com,
+ rdunlap@infradead.org, rppt@kernel.org, david@redhat.com,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
+ ring-buffer
+Message-ID: <20240702111807.13d2dd2c@rorschach.local.home>
+In-Reply-To: <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
+References: <20240510140435.3550353-1-vdonnefort@google.com>
+	<20240510140435.3550353-4-vdonnefort@google.com>
+	<20240630105322.GA17573@altlinux.org>
+	<20240630084053.0b506916@rorschach.local.home>
+	<9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 02, 2024 at 08:21:42AM -0400, Jeff Layton wrote:
-> Many of the existing callers of inode_ctime_to_ts are in void return
-> functions. They're just copying data from an internal representation to
-> struct inode and assume it always succeeds. For those we'll probably
-> have to catch bad ctime values earlier.
+On Tue, 2 Jul 2024 10:36:03 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+
+> > I can send a patch this week to update it. Or feel free to send a patch
+> > yourself.  
 > 
-> So, I think I'll probably have to roll bespoke error handling in all of
-> the relevant filesystems if we go this route. There are also
-> differences between filesystems -- does it make sense to refuse to load
-> an inode with a bogus ctime on NFS or AFS? Probably not.
+> You need to reserve an unused ioctl Code and Seq# range within:
 > 
-> Hell, it may be simpler to just ditch this patch and reimplement
-> mgtimes using the nanosecond fields like the earlier versions did.
+> Documentation/userspace-api/ioctl/ioctl-number.rst
 
-Thatdoes for sure sound simpler.  What is the big advantage of the
-ktime_t?  Smaller size?
+Ug, it's been so long, I completely forgot about that file.
 
+Thanks for catching this.
+
+> 
+> Otherwise this duplicate will confuse all system call instrumentation
+> tooling.
+
+Agreed, what if we did this then:
+
+-- Steve
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index a141e8e65c5d..9a97030c6c8d 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -186,6 +186,7 @@ Code  Seq#    Include File                                           Comments
+ 'Q'   all    linux/soundcard.h
+ 'R'   00-1F  linux/random.h                                          conflict!
+ 'R'   01     linux/rfkill.h                                          conflict!
++'R'   20-2F  linux/trace_mmap.h
+ 'R'   C0-DF  net/bluetooth/rfcomm.h
+ 'R'   E0     uapi/linux/fsl_mc.h
+ 'S'   all    linux/cdrom.h                                           conflict!
+diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+index bd1066754220..c102ef35d11e 100644
+--- a/include/uapi/linux/trace_mmap.h
++++ b/include/uapi/linux/trace_mmap.h
+@@ -43,6 +43,6 @@ struct trace_buffer_meta {
+ 	__u64	Reserved2;
+ };
+ 
+-#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
++#define TRACE_MMAP_IOCTL_GET_READER		_IO('R', 0x20)
+ 
+ #endif /* _TRACE_MMAP_H_ */
