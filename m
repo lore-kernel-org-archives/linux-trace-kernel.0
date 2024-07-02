@@ -1,142 +1,163 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205AE1534E1;
-	Tue,  2 Jul 2024 09:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0317D156C47;
+	Tue,  2 Jul 2024 09:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719912846; cv=none; b=aK+U8WYOuJ7GtRYCq5S4o+VurZ6BZGjzkExImn6D5EO++L/O4sgwUTwC4Qb/aNWTyd3NfajRaVX1p1bs0nkqZJrzFRWaSaXHjCUEDJ+fC+vf/I9bQz0TZcpYQUTUw7N0cABvlNzek2vmYHwXbxPlf5BrI72L6mW0PzOSrT1Xwsc=
+	t=1719913849; cv=none; b=G7n25zbkeUbYr2FGuQD7DR+X3GUqyBdEZFm57px1L/wwzo6BNRUTPqZ/x77omCk1jrDdWFMUpE0Q5cWQAdQQnI5wLuUEHKmytI3gJnKGcqNk6QWKDnVB3G4RA4why27Wg5Qgj1JD5kx1n0jUce0Bu4zOqfltE1c1WLo8ZfHZzHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719912846; c=relaxed/simple;
-	bh=OHn1ckY1ViIAHvmeaBhl4RVsY7dCnn6nSLzEnFbY7H4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZW/ZWAE8PWBDV7xBcy8wXiZnJUzv/DbGcknm/KLOtczYwYvt2GXZkbuToscH4e1X/la4o8fBdjbVywjk57Rr7CqRIe/KFvWreN07S7xPpPalQhFkTUU2Zo2rr+FI+7EKk0lvxHcqPLucJIHwHgL6RZ0r2DNcnaXDbAXVPy23WV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZBQTEMyM; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719913849; c=relaxed/simple;
+	bh=C71q7XOGjq1cp7MEC0epIpQIKzfkI54UVlCdCaChcCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kh34x7t8dxu1l64vcns8JtkKruCpM4kau6BrevjDkBFCGgYRl2P6bJb6CwWRa1GNKknSUs3FPEneP3kX0b5djxCsXf5F1acBkeo0WWgn6NmofibcT+ck2m0EP48pJfLTmSaevAOuOJ/Dq/Mp2Xk527WdrpowsiKeKbSRfQlzLqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KVAp/286; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBQTEMyM"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7021f23d699so534806a34.3;
-        Tue, 02 Jul 2024 02:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719912844; x=1720517644; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cWXvodTV40xpsQgD046diOP7NF2BEo3aGKT0Hy04vKs=;
-        b=ZBQTEMyMDKJbU7hV744Uytoc4LJt9baatO8fqoptKJc9Z6ro2IBfYXw7pgCyEjNVka
-         mQMYMgImdC78+P7u+yYC3VST6hxf3lUHmjA5Ro9iZ6MXzFz7rZmfjNoSQL2OcptYJ2Ra
-         m345jFhs+hq4sYbJlbDD13fdtYotW0j4Ikiwyshse+segDtvTmSJDVfP49YT4eX1ka8a
-         uRB/VehcZ7UFbpaWhvzQTmvKlLjMfiksmK+4AGW3AmATmJY962ZoEC01yl5U4F+rJpWb
-         WI1Lnm975IkRObQjQCT9XdKkysfd6wgwhYoZF2gY22Kf1imTKSuNbW1BtjrOfBJRJ1dm
-         zS+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719912844; x=1720517644;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cWXvodTV40xpsQgD046diOP7NF2BEo3aGKT0Hy04vKs=;
-        b=FMwbeWHAQLjLb1vH4tMak+t6Cb/IfZTUh4W+YH/h3baoGw7wiBN3U/NNief9mfwFab
-         bcEvJo8NdLa7aMrHSd8GS26JeV3aqK2clyMjfNUwFqfPLz0GlOCJs9eiq6imrAOM/2UL
-         pjw6W7naqQmwQ09zKOwcXW48VCUxuIPapghNZxc8QtuNMjWsLJcGPH4NkqN36q/UUNpO
-         wohXuF+kj6GVs6oZH1/O9BNZoIRfWX6JCqYDDyvSrZ+cU7Pn8sFjgNAwHfWpko0OMA1s
-         kmB/wkjzxDMvsPoLAZxBVx5C3Cb3f1gKVx+qnP05qyeLnBABUd8o8b15Mk3DM0DfkvsK
-         5hxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXYuE2OThn+wRxZcttJaMU2LGuhuLsNf7hgO96g7843Q7e/QJqBVzdF3UnVtb0pInbhr1gCmJNYVAfQPJXw+mAXES49dfH5pGPO6VG+k38zEf+Kz8+LRpMtc//pQPgjpwDwmJW9fY4Ub4juKQTgT4vifcjcIpOWJFfX7Vvb/zSFhQ2cQrajr2ElHWRluwQ4uW2118Jt8Z5Qu1cNk0SyCs4WiHMIpH1PTPiQFaf/1VvpZ9pLMq/u9awn72PIqZthT5/wc/jplKmY/9oQqpEFVNrKmFz1UWVw3KPxzREmRQjraLNZYJpkF8NOjXFXrTYUhvr9piGwCWy8DK0dGVYCsf9SjgR4ZA0FoN7apwC+HJl4YmRM2QlMv3npTpowXJJ1fkLq+t8LTqqfCRskCOUF56mPwVD6TqVFYtWZKtgTRipJn84yYmv0XjYJTqq3b1HZYXl01y8+DhDXDPFLsEcuSAZJxs1im0xAuTQlVla1RA==
-X-Gm-Message-State: AOJu0YxGHUwcH6dyWfY+L6ZATyv8il+kySKOUoA1Fesao4R5WCL8JVBl
-	l+qs9paJIkBuDdraXFZIses39FBPR/+cn7wixwFlAd0dw45okRCKzNoMYAA5w3SmxTJrp1ayET+
-	IcFGpvnWL4Lb1bG3iF0gNu7lGCQQ=
-X-Google-Smtp-Source: AGHT+IEDzJCkSxic9thzD1A+qXwSy94/OFeuEZqEmxDLENKBg+0OkSwbEdt7g8VxaiGVVFbl4hnPJFDds9/ibJSVDwQ=
-X-Received: by 2002:a05:6870:56ab:b0:254:aae8:d822 with SMTP id
- 586e51a60fabf-25db3432ec4mr7759858fac.26.1719912844128; Tue, 02 Jul 2024
- 02:34:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KVAp/286"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yVAgFmc2jfemV7dYXU7HrJUVOj82WBlcccsUG2Rh3ts=; b=KVAp/286L9ZgnaYlV3rgbv4Mmm
+	oJTk4aZiqPS6tlLFgFd5VoNoJTyekSZnQMunHSeaLleobIuQ4OGtqMEHw4MOP0roiVZ5e4zTKHUMx
+	5sMuAS9SSzHNIP2PysDVmKgHD5FC0gA/vmMjHnhiq37TIh5E/JnRQBNdAaxzp+31n9b2VW9sUw/l5
+	vukWVQHS8U9i83TFOIz9/unESMNhY2Tsyh+5k5ccVs51qO0fJrLe7Ps3hbkcmf1n0XWE3V1Ymoj1+
+	hwbuNGH0ySEfCfcRh+RKsMZwL+Q5CVdhEXGlful0udf5qGYLrN34TcEG8CGhLdIZh2zRZ386xbXSP
+	X1ehJbWQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOa9o-00000009nny-1U1Z;
+	Tue, 02 Jul 2024 09:50:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 08D05300694; Tue,  2 Jul 2024 11:50:37 +0200 (CEST)
+Date: Tue, 2 Jul 2024 11:50:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com,
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+Message-ID: <20240702095036.GE11386@noisy.programming.kicks-ass.net>
+References: <20240701231027.61930-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628003253.1694510-1-almasrymina@google.com>
- <20240628003253.1694510-3-almasrymina@google.com> <m27ce9cris.fsf@gmail.com> <CAHS8izNM8TjJ1DU+7gzq-0kH=tVeM6j-QsaKk=2FHNDF6RLwnA@mail.gmail.com>
-In-Reply-To: <CAHS8izNM8TjJ1DU+7gzq-0kH=tVeM6j-QsaKk=2FHNDF6RLwnA@mail.gmail.com>
-From: Donald Hunter <donald.hunter@gmail.com>
-Date: Tue, 2 Jul 2024 10:33:52 +0100
-Message-ID: <CAD4GDZznS=0xG+ms6bLKSwQFNTqxSqi8fdoNM97ymwcnqX3yhg@mail.gmail.com>
-Subject: Re: [PATCH net-next v15 02/14] net: netdev netlink api to bind
- dma-buf to a net device
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Stanislav Fomichev <sdf@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701231027.61930-1-andrii@kernel.org>
 
-On Mon, 1 Jul 2024 at 20:05, Mina Almasry <almasrymina@google.com> wrote:
->
-> On Fri, Jun 28, 2024 at 3:10=E2=80=AFAM Donald Hunter <donald.hunter@gmai=
-l.com> wrote:
-> >
-> > Mina Almasry <almasrymina@google.com> writes:
-> > > +  -
-> > > +    name: bind-dmabuf
-> > > +    attributes:
-> > > +      -
-> > > +        name: ifindex
-> > > +        doc: netdev ifindex to bind the dma-buf to.
-> >
-> > Minor nit:
-> >
-> > The series uses a mix of dmabuf and dma-buf but the doc additions
-> > (devmem.rst) consistently uses dmabuf. I think it would be helpful to b=
-e
-> > consistent here and say 'devmem dmabuf' in the docstring to highlight
-> > whos dmabuf it is and keep the generated netdev docs in alignment.
->
-> To be honest, even the dmabuf docs mixes 'dma-buf' and 'dmabuf', to my ey=
-e:
->
-> https://docs.kernel.org/driver-api/dma-buf.html
->
-> I can edit these docs I'm adding so these are consistent.
->
-> But on 'devmem dmabuf', not sure to be honest. Technically all dmabufs
-> are supported, even non-devmem ones. I'm not sure non-devmem dmabufs
-> are common at all, the only example I can think of is udmabuf whose
-> primary user is qemu and testing, so it's somewhat implied that the
-> dmabuf is devmem, and even if it isn't, it would be supported. I
-> prefer to keep the docs saying just 'dmabuf' as technically all are
-> supported. Maybe I should add a note about this somewhere in the
-> dedicated docs.
 
-That's a fair point. If you could mention it in the docs, that would be gre=
-at.
++Josj +LKML
 
-Thanks,
-Donald.
+On Mon, Jul 01, 2024 at 04:10:27PM -0700, Andrii Nakryiko wrote:
+> When tracing user functions with uprobe functionality, it's common to
+> install the probe (e.g., a BPF program) at the first instruction of the
+> function. This is often going to be `push %rbp` instruction in function
+> preamble, which means that within that function frame pointer hasn't
+> been established yet. This leads to consistently missing an actual
+> caller of the traced function, because perf_callchain_user() only
+> records current IP (capturing traced function) and then following frame
+> pointer chain (which would be caller's frame, containing the address of
+> caller's caller).
+> 
+> So when we have target_1 -> target_2 -> target_3 call chain and we are
+> tracing an entry to target_3, captured stack trace will report
+> target_1 -> target_3 call chain, which is wrong and confusing.
+> 
+> This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+> instruction being traced. Given entire kernel implementation of user
+> space stack trace capturing works under assumption that user space code
+> was compiled with frame pointer register (%rbp) preservation, it seems
+> pretty reasonable to use this instruction as a strong indicator that
+> this is the entry to the function. In that case, return address is still
+> pointed to by %rsp, so we fetch it and add to stack trace before
+> proceeding to unwind the rest using frame pointer-based logic.
+> 
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  arch/x86/events/core.c  | 20 ++++++++++++++++++++
+>  include/linux/uprobes.h |  2 ++
+>  kernel/events/uprobes.c |  2 ++
+>  3 files changed, 24 insertions(+)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 5b0dd07b1ef1..82d5570b58ff 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2884,6 +2884,26 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+>  		return;
+>  
+>  	pagefault_disable();
+> +
+> +#ifdef CONFIG_UPROBES
+> +	/*
+> +	 * If we are called from uprobe handler, and we are indeed at the very
+> +	 * entry to user function (which is normally a `push %rbp` instruction,
+> +	 * under assumption of application being compiled with frame pointers),
+> +	 * we should read return address from *regs->sp before proceeding
+> +	 * to follow frame pointers, otherwise we'll skip immediate caller
+> +	 * as %rbp is not yet setup.
+> +	 */
+> +	if (current->utask) {
+> +		struct arch_uprobe *auprobe = current->utask->auprobe;
+> +		u64 ret_addr;
+> +
+> +		if (auprobe && auprobe->insn[0] == 0x55 /* push %rbp */ &&
+> +		    !__get_user(ret_addr, (const u64 __user *)regs->sp))
+
+This u64 is wrong, perf_callchain_user() is always native size.
+
+Additionally, I suppose you should also add a hunk to
+perf_callchain_user32(), which is the compat case.
+
+> +			perf_callchain_store(entry, ret_addr);
+> +	}
+> +#endif
+> +
+>  	while (entry->nr < entry->max_stack) {
+>  		if (!valid_user_frame(fp, sizeof(frame)))
+>  			break;
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index b503fafb7fb3..a270a5892ab4 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -76,6 +76,8 @@ struct uprobe_task {
+>  	struct uprobe			*active_uprobe;
+>  	unsigned long			xol_vaddr;
+>  
+> +	struct arch_uprobe              *auprobe;
+> +
+>  	struct return_instance		*return_instances;
+>  	unsigned int			depth;
+>  };
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 99be2adedbc0..6e22e4d80f1e 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  	bool need_prep = false; /* prepare return uprobe, when needed */
+>  
+>  	down_read(&uprobe->register_rwsem);
+> +	current->utask->auprobe = &uprobe->arch;
+>  	for (uc = uprobe->consumers; uc; uc = uc->next) {
+>  		int rc = 0;
+>  
+> @@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  
+>  		remove &= rc;
+>  	}
+> +	current->utask->auprobe = NULL;
+>  
+>  	if (need_prep && !remove)
+>  		prepare_uretprobe(uprobe, regs); /* put bp at return */
+> -- 
+> 2.43.0
+> 
