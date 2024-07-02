@@ -1,62 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147621BC094;
-	Tue,  2 Jul 2024 16:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0C11C0DCA;
+	Tue,  2 Jul 2024 16:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719938271; cv=none; b=nncndl7aMua3T/YPWMrxHovrnW8wRt3SnsRUcZ+Nc5ZLmG8kdDmFSF5s95VPW9FO0/Xe7kiNwldOy4K/ajJ1w76rzSf3II7QQbYOwF2pDJSKbFH0DQBrMTALg9J/I04CzfX9sm5pm/K2jqN2kfxMyhcvct7zsOX48jMSpzt4GYo=
+	t=1719938696; cv=none; b=m9C0Sp7sxgHP9vhZREFhcly1R6X82P5wsLq6hHwp8iHmxE0XVKQIjmR0zfS1pHFcOTt70fqXx4cxU9K2BN7ulJxebz44yEM+8et7khmHGMBqJCDWA16nkPgBerRTxRLGpcg0zWNrWkQ8IEIeOUUUW4eRXwhiSTUZpnMrjoWhQQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719938271; c=relaxed/simple;
-	bh=NyDSteSnZ6BQf94sFoFThr5Rp9UVaWXqBJvOAZRP5uY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Su8y3mkh9xdaOwKs0HfDn7whbUpn4Z1vM02nhudHmGhbmFtHO0iB+l4dRMLxe4lNKEwaUZ233TscS0PiAYrB2tutrsgRxaI0Xeb7jjSSyOExo4O1u4VW4iBtsMVHZmoVtJGmZ3iUgUSDkaTk9jMwU1ZoDenNjXIRWr+vIJtFFgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D882C116B1;
-	Tue,  2 Jul 2024 16:37:49 +0000 (UTC)
-Date: Tue, 2 Jul 2024 12:37:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Takaya Saeki <takayas@chromium.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Matthew Wilcox
- <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Junichi Uekawa
- <uekawa@chromium.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH v2] filemap: add trace events for get_pages, map_pages,
- and fault
-Message-ID: <20240702123747.796b98c5@rorschach.local.home>
-In-Reply-To: <CAH9xa6ej2g+DvCd=cqjj8sx9yZ=DjL6Ffu6aOfebvcjBmGs5pQ@mail.gmail.com>
-References: <20240620161903.3176859-1-takayas@chromium.org>
-	<20240626213157.e2d1b916bcb28d97620043d1@kernel.org>
-	<20240626095812.2c5ffb72@rorschach.local.home>
-	<CAH9xa6ej2g+DvCd=cqjj8sx9yZ=DjL6Ffu6aOfebvcjBmGs5pQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1719938696; c=relaxed/simple;
+	bh=Yhje840QSjNSdNQxsc4dG5jeAsfocmN5qaeueFJZNZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B3O5m+ulHk3p/C1WdsdHO8VEH25cNXTXpY400ilu4MontiF5Kiow2c4OeDOZkRGNB6QbDeRvEhEttOcRieO2d//ZfaZm21LpRkGG1wwfZ7qJTpxGuZI/g0rXz1h/iAiXSBEWUpwTkQvA+ID1xMZq0qvG/RJY2edRWYehgbG41Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id A673472C8CC;
+	Tue,  2 Jul 2024 19:44:46 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id 92B507CCB3A; Tue,  2 Jul 2024 19:44:46 +0300 (IDT)
+Date: Tue, 2 Jul 2024 19:44:46 +0300
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+	kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
+	david@redhat.com, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
+ ring-buffer
+Message-ID: <20240702164445.GA16225@altlinux.org>
+References: <20240510140435.3550353-1-vdonnefort@google.com>
+ <20240510140435.3550353-4-vdonnefort@google.com>
+ <20240630105322.GA17573@altlinux.org>
+ <20240630084053.0b506916@rorschach.local.home>
+ <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
+ <20240702111807.13d2dd2c@rorschach.local.home>
+ <cb02f5a0-d6a3-4228-9cbb-473fd392ee48@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb02f5a0-d6a3-4228-9cbb-473fd392ee48@efficios.com>
 
-On Tue, 2 Jul 2024 19:27:16 +0900
-Takaya Saeki <takayas@chromium.org> wrote:
-
-> Hello all, and thank you so much for the review, Steven and Masami.
+On Tue, Jul 02, 2024 at 11:32:53AM -0400, Mathieu Desnoyers wrote:
+[...]
+> Note that user events also has this issue: the ioctl is not reserved in
+> the ioctl-number.rst list. See include/uapi/linux/user_events.h:
 > 
-> I'm currently considering replacing the `max_ofs` output with
-> `length`. Please let me know your thoughts.
-> With the current design, a memory range of an event is an inclusive
-> range of [ofs, max_ofs + 4096]. I found the `+4096` part confusing
-> during the ureadahead's upstreaming work. Replacing `max_ofs` with
-> `length` makes the range specified by an event much more concise.
+> #define DIAG_IOC_MAGIC '*'
+> 
+> /* Request to register a user_event */
+> #define DIAG_IOCSREG _IOWR(DIAG_IOC_MAGIC, 0, struct user_reg *)
+> 
+> /* Request to delete a user_event */
+> #define DIAG_IOCSDEL _IOW(DIAG_IOC_MAGIC, 1, char *)
+> 
+> /* Requests to unregister a user_event */
+> #define DIAG_IOCSUNREG _IOW(DIAG_IOC_MAGIC, 2, struct user_unreg*)
+> 
+> Where '*' maps to Code 0x2A. Looking at the list I don't see any
+> conflicts there, but we should definitely add it.
+> 
+> If we use '*' for user events already, perhaps we'd want to consider
+> using the same range for the ring buffer ioctls ? Arguably one is
+> about instrumentation and the other is about ring buffer interaction
+> (data transport), but those are both related to tracing.
 
-This makes sense to me.
+FWIW, I've checked the list of ioctls known to strace and can confirm that
+currently there are no more users of 0x2a ioctl code besides these three
+DIAG_* ioctls.
 
-Matthew, have any comments on this?
 
-Thanks,
-
--- Steve
+-- 
+ldv
