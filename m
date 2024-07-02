@@ -1,118 +1,104 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A839A200134;
-	Tue,  2 Jul 2024 20:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B7148FF0;
+	Tue,  2 Jul 2024 21:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719953572; cv=none; b=C5PzytFs0MI+glqi+UcGdsRR4oa92kNYwDLtQLIPCvtCagmbrQTxkqnhseT2wnhiNG7Im1iszhjZOQtcJ6Qfs8wT617Pj8ggNzqST82BgmtSA/i1F01hpPy25sYKmkUk0MIpjatXyy9pvAhEi1zM35xzadSfUUKxt3LDAJORdaA=
+	t=1719955446; cv=none; b=R4/xl/vPdccJz1K3qhlg0iX1DhsAsY15q/cvWEzuGF6U0HslHNma/6DTkCrC3p3TwScVYD1xPQlCWZ5eszR/rsVd4LxyO1beVG/wQgE17i5vtu5v460QOPE6jVKdF6OC6O6fkROvF4GfRdn2jiea8yvgtKHytSBfBe/9Gy4TH9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719953572; c=relaxed/simple;
-	bh=gepoO6cOPMo/DOI3XgZGN8LXNSfcCbsIJ5EA8atVg1o=;
+	s=arc-20240116; t=1719955446; c=relaxed/simple;
+	bh=R9xuYBV9v9qX0Vg50TywmOry6cS8bvfIIYme6jpoVS4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kWB+Z/K2dUYrdBmA910MBn23WXq41eqIWlMLk6PEkrra2fM3BAH37vrP43jtBA9m2wsiN+Kgw5NrcUJrJuck356xtE/Lymum7A1D1QmbwbbiYEGLdZJJ2+8zHILeRbIW7VzuhpGeRwczzJzbR6R192qEe2WI+j2X67/7pwIz9H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RCM55eYi; arc=none smtp.client-ip=209.85.210.179
+	 To:Cc:Content-Type; b=XiTg+SbpehtaIZeMttzXY7wfYIjctt/IoUuXkVIwAB1XUQ3LmNS6rT+Yz8ZVtcpWr61FgUuaUn3GoV3zn5q2cJJtaG4vbno16RncVyGpznnO5mKTxwywb8936J47QjXel4PepLNkNKSWR6kp4Enx9/KbeMzHnoKg0hQPW1S6O6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TmHS9e2a; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCM55eYi"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70670188420so3235575b3a.2;
-        Tue, 02 Jul 2024 13:52:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmHS9e2a"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-70df2135426so2659074a12.2;
+        Tue, 02 Jul 2024 14:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719953571; x=1720558371; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719955445; x=1720560245; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ka8cDyPF3TtOuN3B8pP21oZz+Ld8yxRwwPYf5j+KImo=;
-        b=RCM55eYi8JAVIOea5wemE3hvm++gZYoC9eeubG12G41UpJ5EgdpyEspWxRvyF0HfMV
-         eVKtaHwAHVwgnvLcPlLSK0HGuuTVhlLgxLkfUgqUwVapwjPJkGORKb574HVyyJHtEO2f
-         iyZIf66otUUdgs/iL0no2V89VTqvG5Shd/Zeq82tWZ3w2sp+ezdzLfmTWeQAxHct4l1m
-         egIfLHa4mafSdjTkfY1iumUELx2MMZ6tyzn5hPvy8Hb4lrRGlz1hIMmg9D58ryEGQku1
-         hFsZi0hunhLnc/efyc1WOKA3z0FjgSLLs4ZaudS00qdsj1eXt8RVY/KjS6NLmfj8IdXb
-         v43A==
+        bh=R9xuYBV9v9qX0Vg50TywmOry6cS8bvfIIYme6jpoVS4=;
+        b=TmHS9e2acyNTyc4BWvNVNPnUWt68UnWKp7HMzLNGrVvVpvFLrhMMIelJzfft0OhYoC
+         2Lhzl7g1Xtjc6Ukv6NIonGjfBmne4lB9NzZi5EZsm6gaCtF5pP1IkgmNyR40tFZw9l8L
+         M048l7GiCExTm0uJscsZ6PyWR2Rm3AK72gvHtQXis71N21DvO5IS/dqBQ5HlF/PdBTZA
+         0rfejCix9oK5rP4q3Qxi/92TFTZRJJGMpvXYFNWolz+KVHRBCbbzrs0yWTYM1b91ywIv
+         LHDhywDf9LJPz7aMQe80vAHhIgj5FdSz9/GMlKZhgKyo/k2ukiRp/w4R1mZ+iGJExV5m
+         tqww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719953571; x=1720558371;
+        d=1e100.net; s=20230601; t=1719955445; x=1720560245;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ka8cDyPF3TtOuN3B8pP21oZz+Ld8yxRwwPYf5j+KImo=;
-        b=DYjRCHkbN6Z8OC4sAcQUYO1QQIfgWAORd3sgiBRG3izblogmjUK8Rsjat0zWPw04OT
-         P2hj713xUsAm3RrMlEQSj5Ow3gz8EwMOA/TodLuNhaK0oYYU9CmLoTn/7nwbgsvhF/QF
-         ZmVIw51sFomDajUYjA9uqCyxLusMsVwBoZvnl0OK+WdYJlO0jxxwY/A6XZhfsAId0K9G
-         kYjz4A3i1g+wnbupprisWlYi2fwNdWzlntQtg0WcvvDcXEKNcQKkW/m4DThrMoNYZzjD
-         XbsEePTKmcyPB5UZ2+ik9/dcPnrySqDkgbsW8CCZrZ+msHBLB6a/2HwH0zy5wbNwnSsU
-         nqAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIIGAEyPxiHDodYBr2wrAyIMaVUcKtEOBfAaMlrEJg05mU6W0GHvo6x7ifRXBQTRACh9JgsDOkvkQ5/aPBpnXYyX4bhEqt7zLQNKiY6dTmfHiRpImxmounUqsQHVylW4hyS6sjL+thwSNWMJnHXvtO5IBpP9ZW2HfJ6L3BBuw38fbb838U
-X-Gm-Message-State: AOJu0YyaK72HicELZve+kMoUnLUveRC1ZNZYCbRXYK+qxK3wBvZdfcjS
-	0hfw3cM76gpUoDvgDtGSwuplqXWmhS4boJ8+i8523fXNJKKuJFujHF2OHGp6SMqirO7Jjn9Ycpm
-	3UIejkT5zY7CCZP2/JOdHoLCRTFg=
-X-Google-Smtp-Source: AGHT+IFqZ1uKSZfEUZonCPz2t787Re0NvZrqmMdWo3PXwBwPuZFGxuO2RROLpCXOi61Hl3aS+dPea5xciO2dgWvjKkU=
-X-Received: by 2002:a05:6a00:4614:b0:705:a450:a993 with SMTP id
- d2e1a72fcca58-70aaad51cccmr9567542b3a.17.1719953570968; Tue, 02 Jul 2024
- 13:52:50 -0700 (PDT)
+        bh=R9xuYBV9v9qX0Vg50TywmOry6cS8bvfIIYme6jpoVS4=;
+        b=Bw1f2k0VLZXHi6kAw1jHRHEBMjY9r3o4RE15ga/s5AaEDd5dRaARQ2qfKnbnspZj7Z
+         X7i7Yt8jYIZV6rH9N+/t2VtDCaZ5T1bPZjwHnXoUDocyhgJ5kL1kz2Y+pBjim4w8kq4D
+         NyEnpxLR52UFJxNVcZo1OUej68loVe2RaD4rYA6TewMUUI+4TNzXIy+d94wqeWDfpC/O
+         b+rH2gR4d8fbVCX8VV5g+ntywIZU74ydUJvmboEo9vViLklIDDkLOKu+NUUHkuZa5Qbj
+         6sUS4Sp1J6YfsAtg2phuF+gCeSes1G869JvNeOIgJ8ZFiw22yQ/wowzgZMGq9axocHIh
+         5RqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbaVnXkUHZBJnwcnKosV46mzeX05/VHGBjio7BpF1mtXXjhwq9MeDY/x1wvpD9uvi0Hx1GQOmsTx0gsc4Hu2DD6eafcvURJUI9YGDJqXpDYcIdaTI6FmPPvTdIA9ndTGKCmW9ZCzHO
+X-Gm-Message-State: AOJu0YwgN+oCcIheeu67YjOHHBMGzdgnv3PDhU7UKUrzI163TO3OiLc9
+	jXdWyBP5uZ+cVPb/rRwQjo1FagE2Cdf2ZrhDCqZuKSzxbuXsj/I3XYVkEhCoWMHKVSvObOKfVJz
+	AvnFdEKzjPImVOLivSZg+af5e/ak=
+X-Google-Smtp-Source: AGHT+IEZdLK2woq80lIw83J0hxLEBTyc338C3fF2vRSGIXVE6m8lox7jlv/+IynCskcqdzvjdSrxwsduYewCLbVDkX4=
+X-Received: by 2002:a05:6a20:a10f:b0:1bd:248d:990d with SMTP id
+ adf61e73a8af0-1bef61034b4mr10223713637.25.1719955444703; Tue, 02 Jul 2024
+ 14:24:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701164115.723677-1-jolsa@kernel.org> <20240701164115.723677-2-jolsa@kernel.org>
- <20240702130408.GH11386@noisy.programming.kicks-ass.net> <ZoQmkiKwsy41JNt4@krava>
-In-Reply-To: <ZoQmkiKwsy41JNt4@krava>
+References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-7-andrii@kernel.org>
+ <20240627220449.0d2a12e24731e4764540f8aa@kernel.org> <CAEf4BzbLNHYsUfPi3+M_WUVSaZ9Ey-r3BxqV0Zz6pPqpMCjqpg@mail.gmail.com>
+ <20240628152846.ddf192c426fc6ce155044da0@kernel.org> <CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
+ <20240630083010.99ff77488ec62b38bcfeaa29@kernel.org> <CAEf4BzZh4ShURvqk-QxC5h1NpN0tjWMr1db+__gsCmr-suUNOQ@mail.gmail.com>
+ <CAEf4BzbRQjK7nnR2nnw_hgYztPPxaSC6_qFTrdADy3yCki_wEA@mail.gmail.com>
+ <20240702100151.509a9e45c04a9cfed0653e6f@kernel.org> <CAEf4BzYShpT2fZKv3yZYxZA0Ha9JQXC3YQyJsjGB+T-yLOKs+Q@mail.gmail.com>
+ <20240703001905.4bc2699cf91b8101649a458a@kernel.org> <20240702125320.64ec588e@rorschach.local.home>
+In-Reply-To: <20240702125320.64ec588e@rorschach.local.home>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Jul 2024 13:52:38 -0700
-Message-ID: <CAEf4BzYz-4eeNb1621LugDtm7NFshGJUgPzrVL7p4Wg+mq4Aqg@mail.gmail.com>
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+Date: Tue, 2 Jul 2024 14:23:52 -0700
+Message-ID: <CAEf4BzYmK=mE5VUViZ+AvON51jzp2szqv5=QwwpsuEjhc-M4Vw@mail.gmail.com>
+Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister APIs
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, oleg@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	clm@meta.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 2, 2024 at 9:11=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
-:
+On Tue, Jul 2, 2024 at 9:53=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
 >
-> On Tue, Jul 02, 2024 at 03:04:08PM +0200, Peter Zijlstra wrote:
-> > On Mon, Jul 01, 2024 at 06:41:07PM +0200, Jiri Olsa wrote:
-> >
-> > > +static void
-> > > +uprobe_consumer_account(struct uprobe *uprobe, struct uprobe_consume=
-r *uc)
-> > > +{
-> > > +   static unsigned int session_id;
-> > > +
-> > > +   if (uc->session) {
-> > > +           uprobe->sessions_cnt++;
-> > > +           uc->session_id =3D ++session_id ?: ++session_id;
-> > > +   }
-> > > +}
-> >
-> > The way I understand this code, you create a consumer every time you do
-> > uprobe_register() and unregister makes it go away.
-> >
-> > Now, register one, then 4g-1 times register+unregister, then register
-> > again.
-> >
-> > The above seems to then result in two consumers with the same
-> > session_id, which leads to trouble.
-> >
-> > Hmm?
+> On Wed, 3 Jul 2024 00:19:05 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 >
-> ugh true.. will make it u64 :)
+> > > BTW, is this (batched register/unregister APIs) something you'd like
+> > > to use from the tracefs-based (or whatever it's called, I mean non-BP=
+F
+> > > ones) uprobes as well? Or there is just no way to even specify a batc=
+h
+> > > of uprobes? Just curious if you had any plans for this.
+> >
+> > No, because current tracefs dynamic event interface is not designed for
+> > batched registration. I think we can expand it to pass wildcard symbols
+> > (for kprobe and fprobe) or list of addresses (for uprobes) for uprobe.
+> > Um, that maybe another good idea.
 >
-> I think we could store uprobe_consumer pointer+ref in session_consumer,
-> and that would make the unregister path more interesting.. will check
+> I don't see why not. The wild cards were added to the kernel
+> specifically for the tracefs interface (set_ftrace_filter).
 
-More interesting how? It's actually a great idea, uprobe_consumer
-pointer itself is a unique ID and 64-bit. We can still use lowest bit
-for RC (see my other reply).
+Nice, I'd be happy to adjust batch API to work for that use case as
+well (when we get there).
 
 >
-> thanks,
-> jirka
+> -- Steve
