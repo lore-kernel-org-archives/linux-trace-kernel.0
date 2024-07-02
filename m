@@ -1,121 +1,193 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5A71DFE3;
-	Tue,  2 Jul 2024 14:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28551B4C32
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jul 2024 14:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930067; cv=none; b=LyFOQakvN+K8R/uuAK7Clv3LHZN6NyxFIJ9n8n91pczfVymEna3NZkqKmwTqZbR83nCh+tOCwjPkbXJASpahQzUuvzruT0Y0jgCoBxdhdBaOW0yW2HTvw5oipafUCnVUcXjSxRiWAckSZhkphY14s1HfbpKD3ZGOPY78xwXr+uU=
+	t=1719930652; cv=none; b=fLTcH41Nn/RpnUaEYdPlQZ43h6bvIVMRv59iRRTSsnYJUdSO2Slmgc2ybq9fDlBqFy9/IWbOUo2oKgM1PTKCQNg+PhDoVADI3F2oZEkM0sFdGAWbYisqZ+ULpwIVrOnSkhf2C9gz7mFjtAZ34eCy2o7y8knMn08mNbKOPMfrd3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930067; c=relaxed/simple;
-	bh=nWKxdV5ujyrGy3s7qRfFotWRCfmuZrI9OL8cics4EZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZXuqLTUY0NkqY9yne71EGn05EcHkV9nvteFSWkdA0cSYtqdidqAa4GyOEy3Q/0BIbBhJGT4ophOSRbgdZUZHrDfUvjLRNlL6GgRHz2P7s0Aej4ZBxOX4GB8xtcyI6T05WQDgfswHvG7qkMTr4yUtQWrkjaTgnJe18yGpJMdhP9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WD4hr5GkHz1T4Fw;
-	Tue,  2 Jul 2024 22:16:28 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id E9C0A1400CD;
-	Tue,  2 Jul 2024 22:21:00 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 2 Jul 2024 22:21:00 +0800
-Message-ID: <5856cee4-1e13-4c67-8fea-f5f938f7452f@huawei.com>
-Date: Tue, 2 Jul 2024 22:21:00 +0800
+	s=arc-20240116; t=1719930652; c=relaxed/simple;
+	bh=nPsWzSKNKWp6syDtdY7Ir2nt0wTvI1SQEd/GjSGs6hs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N8ml6aqx320zsLZnofeh+ccQbTyi0lhlmbjM4nKjjYKlTd9R38hy5VZ9ZZEZUf7VxxeuOPgTBuZvv9T65pmz6KKWPOcmq9IgR7r3czgZ35b4O10bFV5rg+totoHBxyymT6WuUTauJF9lBNfuloAON+O1J4orQaJ3mJsnv9GTu3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcjrS/mU; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcjrS/mU"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57d119fddd9so23705a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jul 2024 07:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719930649; x=1720535449; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3jM7/wfZzza6LzDSng98O/sFMouLELQtFerEOq9E8OA=;
+        b=XcjrS/mUBdohB1KNhGJQfJf/nbZ8kwgOfO6qBmU7gseA2VjYs3KYNg6P3qjdS6kXwA
+         t3PYUEXsAYNAnugIOeyWNrMKC9zpbt9E2WcvB3YJqqb45ymsEt1oYukBzuoT48ERCr13
+         qAhDw+AsJhrb54yNrOORg0LQz50mBF2K7N645UDwGtgq3FLU/FUwoCEkGz8KC/gfnEPh
+         kCjhKxR/KPHv8ud5NsMekoA8HF6CNdf2M9HPr5BKCrCkxZhD6UFov63lSjr16CW4Qv/0
+         UUNHiPyslXVCt/BKP8SCP6MSQOYal4roNuMJgSUBSneb1BxDv8FD0LAV+td72x/VG8LW
+         /vnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719930649; x=1720535449;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3jM7/wfZzza6LzDSng98O/sFMouLELQtFerEOq9E8OA=;
+        b=XxEqcREFfufAqg1X2UFugMHxa3SCJsWhedVLFhXSPZ8xolcZ/Yo5xHRcaU2Z5v0WMR
+         8U5xYwSTmV9ROI4V14D9ej01hfGs/4UOOObnAOuXtKUFjvXWAsg6p/wz1nZtvak6SQ+O
+         dNAK7apRRp37nE4u/fHbPju7K8Ufy1ezcHYGPobsrFLnx0TMnDArCCaYbamzZ58fMEzi
+         cbgSyGOwnHOQQmIv2u/1uFHa+EMu+K2chuT9fljISXWEXh1bqe9O9kvW8rlCpggqM5+W
+         /pVjTbwTd/ncalHZu3zniYQsKTEuFSZt9+mXaLyThF9kFSROPSNNAg9e2NwYHgn4cUac
+         CvXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeb4SDN/pYFut5zBkNVLNW5rt/q+OrppZZWjgAF2N1owC8DNGjVT2O+oQbyNNOlZRcxDp92fTCM1rEUstUdfggStAgBG7V6VD9VMNg9Pd3sfJN
+X-Gm-Message-State: AOJu0Yz+14ru02yyx6c5D8wJbeXYs92RmYIQX6W8/nJILLtaHucKNjAQ
+	fOm1LDIp5e3KXF3Bifz9QTxB8ACG4ARMMb9aSihqczIR0v/61HFUg+XuKmYxOM1g4QAqPlZfnK2
+	JP2McR6BIs5pn0dBOs1ycT4WzOoAMN6WUfwm/
+X-Google-Smtp-Source: AGHT+IG6q9qlZv6p0XsjYtQr/2CJh2iWJHZfafuRVFcTNadBZxk7tzb9cfayzAyvnfb859R1NpQn1uwJAUI6SXHDoq4=
+X-Received: by 2002:a50:f68b:0:b0:58b:e3b:c5d8 with SMTP id
+ 4fb4d7f45d1cf-58c61e8924fmr10222a12.0.1719930648903; Tue, 02 Jul 2024
+ 07:30:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] hugetlbfs: use tracepoints in hugetlbfs functions.
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Steven Rostedt
-	<rostedt@goodmis.org>
-CC: <muchun.song@linux.dev>, <mhiramat@kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-References: <20240612011156.2891254-1-lihongbo22@huawei.com>
- <20240612011156.2891254-3-lihongbo22@huawei.com>
- <20240701194906.3a9b6765@gandalf.local.home>
- <1eca1fcd-5479-47b2-b7ba-eb4027135af2@huawei.com>
- <8015a0bf-39e2-406c-8f61-db87a40a71a3@efficios.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <8015a0bf-39e2-406c-8f61-db87a40a71a3@efficios.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+References: <20240628003253.1694510-1-almasrymina@google.com> <20240628003253.1694510-12-almasrymina@google.com>
+In-Reply-To: <20240628003253.1694510-12-almasrymina@google.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 2 Jul 2024 16:30:37 +0200
+Message-ID: <CANn89iLRRaf31svCM9KUChwmKo53T9TTKayr3_bnbUu+Fuej7g@mail.gmail.com>
+Subject: Re: [PATCH net-next v15 11/14] net: add SO_DEVMEM_DONTNEED setsockopt
+ to release RX frags
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 28, 2024 at 2:33=E2=80=AFAM Mina Almasry <almasrymina@google.co=
+m> wrote:
+>
+> Add an interface for the user to notify the kernel that it is done
+> reading the devmem dmabuf frags returned as cmsg. The kernel will
+> drop the reference on the frags to make them available for reuse.
+>
+> Signed-off-by: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>
+> ---
+>
+> v10:
+> - Fix leak of tokens (Nikolay).
+>
+> v7:
+> - Updated SO_DEVMEM_* uapi to use the next available entry (Arnd).
+>
+> v6:
+> - Squash in locking optimizations from edumazet@google.com. With his
+>   changes we lock the xarray once per sock_devmem_dontneed operation
+>   rather than once per frag.
+>
+> Changes in v1:
+> - devmemtoken -> dmabuf_token (David).
+> - Use napi_pp_put_page() for refcounting (Yunsheng).
+> - Fix build error with missing socket options on other asms.
+>
+> ---
+>  arch/alpha/include/uapi/asm/socket.h  |  1 +
+>  arch/mips/include/uapi/asm/socket.h   |  1 +
+>  arch/parisc/include/uapi/asm/socket.h |  1 +
+>  arch/sparc/include/uapi/asm/socket.h  |  1 +
+>  include/uapi/asm-generic/socket.h     |  1 +
+>  include/uapi/linux/uio.h              |  4 ++
+>  net/core/sock.c                       | 61 +++++++++++++++++++++++++++
+>  7 files changed, 70 insertions(+)
+>
 
+>
+> +struct dmabuf_token {
+> +       __u32 token_start;
+> +       __u32 token_count;
+> +};
+>  /*
+>   *     UIO_MAXIOV shall be at least 16 1003.1g (5.4.1.1)
+>   */
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index 9abc4fe259535..040c66ac26244 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -124,6 +124,7 @@
+>  #include <linux/netdevice.h>
+>  #include <net/protocol.h>
+>  #include <linux/skbuff.h>
+> +#include <linux/skbuff_ref.h>
+>  #include <net/net_namespace.h>
+>  #include <net/request_sock.h>
+>  #include <net/sock.h>
+> @@ -1049,6 +1050,62 @@ static int sock_reserve_memory(struct sock *sk, in=
+t bytes)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_PAGE_POOL
+> +static noinline_for_stack int
+> +sock_devmem_dontneed(struct sock *sk, sockptr_t optval, unsigned int opt=
+len)
+> +{
+> +       unsigned int num_tokens, i, j, k, netmem_num =3D 0;
+> +       struct dmabuf_token *tokens;
+> +       netmem_ref netmems[16];
+> +       int ret =3D 0;
+> +
+> +       if (sk->sk_type !=3D SOCK_STREAM || sk->sk_protocol !=3D IPPROTO_=
+TCP)
+> +               return -EBADF;
 
-On 2024/7/2 21:30, Mathieu Desnoyers wrote:
-> On 2024-07-02 07:55, Hongbo Li wrote:
->>
->>
->> On 2024/7/2 7:49, Steven Rostedt wrote:
->>> On Wed, 12 Jun 2024 09:11:56 +0800
->>> Hongbo Li <lihongbo22@huawei.com> wrote:
->>>
->>>> @@ -934,6 +943,12 @@ static int hugetlbfs_setattr(struct mnt_idmap 
->>>> *idmap,
->>>>       if (error)
->>>>           return error;
->>>> +    trace_hugetlbfs_setattr(inode, dentry->d_name.len, 
->>>> dentry->d_name.name,
->>>> +            attr->ia_valid, attr->ia_mode,
->>>> +            from_kuid(&init_user_ns, attr->ia_uid),
->>>> +            from_kgid(&init_user_ns, attr->ia_gid),
->>>> +            inode->i_size, attr->ia_size);
->>>> +
->>>
->>> That's a lot of parameters to pass to a tracepoint. Why not just pass 
->>> the
->>> dentry and attr and do the above in the TP_fast_assign() logic? That 
->>> would
->>> put less pressure on the icache for the code part.
->>
->> Thanks for reviewing!
->>
->> Some logic such as kuid_t --> uid_t might be reasonable obtained in 
->> filesystem layer. Passing the dentry and attr will let trace know the 
->> meaning of structure, perhaps tracepoint should not be aware of the
->> members of these structures as much as possible.
-> 
-> As maintainer of the LTTng out-of-tree kernel tracer, I appreciate the
-> effort to decouple instrumentation from the subsystem instrumentation,
-> but as long as the structure sits in public headers and the global
-> variables used within the TP_fast_assign() logic (e.g. init_user_ns)
-> are export-gpl, this is enough to make it easy for tracer integration
-Thank you for your friendly elaboration and suggestion!
-I will update this part based on your suggestion in next version.
+This might use sk_is_tcp() helper.
 
-Thanks,
-Hongbo
-> and it keeps the tracepoint caller code footprint to a minimum.
-> 
-> The TRACE_EVENT definitions are specific to the subsystem anyway,
-> so I don't think it matters that the TRACE_EVENT() need to access
-> the dentry and attr structures.
-> 
-> So I agree with Steven's suggestion. However, just as a precision,
-> I suspect it will have mainly an impact on code size, but not
-> necessarily on icache footprint, because it will shrink the code
-> size within the tracepoint unlikely branch (cold instructions).
-> 
-> Thanks,
-> 
-> Mathieu
-> 
->>
->> Thanks,
->> Hongbo
->>
->>>
->>> -- Steve
->>>
-> 
+> +
+> +       if (optlen % sizeof(struct dmabuf_token) ||
+> +           optlen > sizeof(*tokens) * 128)
+> +               return -EINVAL;
+> +
+> +       tokens =3D kvmalloc_array(128, sizeof(*tokens), GFP_KERNEL);
+
+This allocates 8192 bytes even for small optlen ?
+
+Probably no big deal, no need to send a new version.
+
+Reviewed-by: Eric Dumazet <edumazet@google.com>
