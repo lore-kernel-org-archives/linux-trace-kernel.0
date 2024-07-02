@@ -1,115 +1,97 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0701BBBD7;
-	Tue,  2 Jul 2024 16:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CB615B11D;
+	Tue,  2 Jul 2024 16:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719936668; cv=none; b=VO3kOS4PBuFIod9P2vo69utvRVvEM4zHJi/wco3zoFhXnV0V0jHILrZo8DzyknL1LqNCdXe7R4dAsP8tgYoz+C8G4cPXbaow8JGLKRgJlt/0u/pHt2pIIIMdZW8tv+9vqqJVxi4+/b4p4GqqKqq/8bE7GDl+wUuu2Igsa/HQv+E=
+	t=1719937146; cv=none; b=cLayFQonFoT0r5aV3qNq25Enrs6c0UqngtzbWhg4qUmnEaNcOorJWP9CgyRRe3gpnNUDNooWGm4myuJs0dRAEeow/foi4gVhDyrYVDXrdz2Npzt2ykxIgiNrYi2NWqUvHs67+wFrlFAml3bCqP5T90kQmt9XIKwYDXg7Ss8Nchc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719936668; c=relaxed/simple;
-	bh=3xJuzOTRMluaoR8nsvkgFb7mnpaY4B66CdYGgij2JvE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLQWsGBu6IvSSPci6YHZyXVXlj4isoz4ZldA8XTWeoldpIamBCCNKibaS52fUi+y/xQ1njVeQhUFUojqA8/kpbsDBsXphG06sFNt70RYmPDz8zy+5cUyYMbCjNfM14RvWgS84YjH9psnmaZWjrL92rR+Sxe37KdO7GzCwjDUa7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i9m/LTV0; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719937146; c=relaxed/simple;
+	bh=f/Lt6TGAChQhJDo1d9S1C9KYvC+2NSkWdhgXVkkdLDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEljVPxeReaao268QOPZbdgc3ZoiY1hmRDBA6GIKVJhDJq/lMLrmXbZaR7/iFna54t18AQrAsxcRybtuwExHGX+KYeFJXyNnaKsD/3lOnMNuDMAOk5BYKFPN71epdFWpnEXKNV/PbgHhGHvymCdygI6yZ4LW7eTwYTlmPE4A5ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWe8+4vr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9m/LTV0"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-424ad289912so31011965e9.2;
-        Tue, 02 Jul 2024 09:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719936665; x=1720541465; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V0Qz98KWmiG+EMpaS/dWI6Z22uc/M7LVTuKKam6RTUU=;
-        b=i9m/LTV0N2dD9sCg8hGwELfMHD3G5FA986CUb6JKsSpzcaOdYKfpTXLioFueKzfi3N
-         NcapAMkIt6RgcwoKynRcdaQwjBVU2tcGN4F2y/ngQtZZzrHfe6h4y3W+a8gvG8eHYl6c
-         NN/oKRTjKcD+mMNd35nhjNtegKsBs405FIdaGMvtVCo1mKOJmLNsIHmHt/AbcY0CO30w
-         0YHWocDVLcBT2G6obGZgjI1TOKHACR2Ny70pmaRDXItsqtiGbkMn0aFBeOFSmfVXPP2K
-         elB1V0fvfcqomAx2GH3IUHXDrQzgqENmqECfwKS11eytMaxaHCy9qB6EVTzoaXx1O02w
-         YTGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719936665; x=1720541465;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V0Qz98KWmiG+EMpaS/dWI6Z22uc/M7LVTuKKam6RTUU=;
-        b=uPG47nBl6mkqjxmvgA6GBym23DTXHNmWwoIRoMpZ6ae348hRMaLI45EJVQUQhPUVMa
-         U0g5OfZjUgUdBM6Wujmlvq+VAiE12sIdBr4GRNaKKWbD8u86WOD0cy1J9QZlIbH/Ahlb
-         RXJoarFlUhlRAH5sTMgMZKguMaF/qfeCzuepAD1fYNC3HO/+Y3HJVH38bLbhGqh06HJh
-         u3Dhk4TPrMv9fVr7B9MygGzTOjW1Zm/WuQ/853crCtMAPNyvazjf9ux+E2/JCG/fvGYo
-         SDxfrn1x5fnaHeSXuUd12wlpxTZHR8tvMSym9Rq+IS1LweyEW7t/1cnpfr5hQDh3Axhi
-         Uupw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgl6b5s9Ww/L/ijwZk7l0AC7ibuypsaboscgFdXRsdtSjNwCF6L7oeXkE8PQ7+Pjee9Dh/HmEY+WS2jE9NzwZzX3jwoDM7axaP8VJCfvnJSptz0JcNjpkXwqIk5iQrpaBM/j+BPxpoAMd7yHvwQvEezt1unjT4yTuBSc5/8SqDprzccpo8
-X-Gm-Message-State: AOJu0Yxym2InxVnFwMTpiRoVIpvze0y1gla0JRbdqMWMQC5BMb+vS+Fv
-	UQ2Wa9D2hVXxCzhR3sZKVc7BLUNo+dUYbFFAskFyn0FoJ+TZ9TYM
-X-Google-Smtp-Source: AGHT+IFxlAlKL7CVEdpm+YsZgzcGzjI937/84Y3tdXQrGJ2iODKxpg6z2gXa40cQl9BEceDHAi8nvQ==
-X-Received: by 2002:a05:600c:4da1:b0:424:acf6:6068 with SMTP id 5b1f17b1804b1-4257a03479emr70285705e9.34.1719936664991;
-        Tue, 02 Jul 2024 09:11:04 -0700 (PDT)
-Received: from krava ([176.105.156.1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b09a2bcsm202179825e9.36.2024.07.02.09.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 09:11:04 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 2 Jul 2024 18:10:58 +0200
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-ID: <ZoQmkiKwsy41JNt4@krava>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-2-jolsa@kernel.org>
- <20240702130408.GH11386@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWe8+4vr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47053C116B1;
+	Tue,  2 Jul 2024 16:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719937146;
+	bh=f/Lt6TGAChQhJDo1d9S1C9KYvC+2NSkWdhgXVkkdLDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oWe8+4vrZ82aLpFmQ/xxCaJvhq1zmz0VUCOjwx+pO4joEWaTNHfWjLRMGZoaPiVDt
+	 budCT+VnEcgyoSf2Ab8MdsbVsBFm77eny8iEcIwJQ8JyEGL4+bTuUEjbENlNcYIpp/
+	 gL3SnCOgO6dZZl8vgmgZ762DzwQodDtcRzBW6kItR6KjM163XwjU2Lgn7iM5pgI6/7
+	 XBsh3uDkaMZxoYbbDoDEcrrpMrlrSldQO/fACxHAu6ntHbLUVC4HHK5mhcmY/NpEBF
+	 XVA4ga3Rk7WIXoZ0aUPw+mEDsMkvhR1DhZmouNn2Tfi29hI2nY5C6cVQ0Pr5Mz7q2M
+	 Il08gNdV6QXbQ==
+Date: Tue, 2 Jul 2024 18:18:57 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R <chandan.babu@oracle.com>, 
+	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+Message-ID: <20240702-inwiefern-beraten-cc4b5efce8ef@brauner>
+References: <20240701224941.GE612460@frogsfrogsfrogs>
+ <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
+ <ZoOuSxRlvEQ5rOqn@infradead.org>
+ <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+ <20240702101902.qcx73xgae2sqoso7@quack3>
+ <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
+ <ZoPs0TfTEktPaCHo@infradead.org>
+ <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
+ <ZoPvR39vGeluD5T2@infradead.org>
+ <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240702130408.GH11386@noisy.programming.kicks-ass.net>
+In-Reply-To: <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
 
-On Tue, Jul 02, 2024 at 03:04:08PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 01, 2024 at 06:41:07PM +0200, Jiri Olsa wrote:
+On Tue, Jul 02, 2024 at 08:21:42AM GMT, Jeff Layton wrote:
+> On Tue, 2024-07-02 at 05:15 -0700, Christoph Hellwig wrote:
+> > On Tue, Jul 02, 2024 at 08:09:46AM -0400, Jeff Layton wrote:
+> > > > > corrupt timestamps like this?
+> > > > 
+> > > > inode_set_ctime_to_ts should return an error if things are out of
+> > > > range.
+> > > 
+> > > Currently it just returns the timespec64 we're setting it to (which
+> > > makes it easy to do several assignments), so we'd need to change
+> > > its
+> > > prototype to handle this case, and fix up the callers to recognize
+> > > the
+> > > error.
+> > > 
+> > > Alternately it may be easier to just add in a test for when
+> > > __i_ctime == KTIME_MAX in the appropriate callers and have them
+> > > error
+> > > out. I'll have a look and see what makes sense.
+> > 
+> > The seems like a more awkward interface vs one that explicitly
+> > checks.
+> > 
 > 
-> > +static void
-> > +uprobe_consumer_account(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> > +{
-> > +	static unsigned int session_id;
-> > +
-> > +	if (uc->session) {
-> > +		uprobe->sessions_cnt++;
-> > +		uc->session_id = ++session_id ?: ++session_id;
-> > +	}
-> > +}
+> Many of the existing callers of inode_ctime_to_ts are in void return
+> functions. They're just copying data from an internal representation to
+> struct inode and assume it always succeeds. For those we'll probably
+> have to catch bad ctime values earlier.
 > 
-> The way I understand this code, you create a consumer every time you do
-> uprobe_register() and unregister makes it go away.
-> 
-> Now, register one, then 4g-1 times register+unregister, then register
-> again.
-> 
-> The above seems to then result in two consumers with the same
-> session_id, which leads to trouble.
-> 
-> Hmm?
+> So, I think I'll probably have to roll bespoke error handling in all of
+> the relevant filesystems if we go this route. There are also
 
-ugh true.. will make it u64 :)
-
-I think we could store uprobe_consumer pointer+ref in session_consumer,
-and that would make the unregister path more interesting.. will check
-
-thanks,
-jirka
+Shudder, let's try and avoid that.
