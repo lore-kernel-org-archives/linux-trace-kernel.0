@@ -1,105 +1,49 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADDC157E84;
-	Tue,  2 Jul 2024 10:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEEA154449;
+	Tue,  2 Jul 2024 10:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719915548; cv=none; b=lUZ/x/u6IIn+Eo3KGerCVGDEffHZNNTeEHuPo2qLkZgc3hUMCoK/9eu1TIJCHtMVdhKps2sV7nwEGWFFHNJtrx+9gcEQq2UzhVaxJy+Lyn4oCp0vXowuLQ9WTAJzpnDBH/A7Z8x8FcUWBdcc8Jh2vbU6UDioLGesXKV/Fa6dn1E=
+	t=1719915787; cv=none; b=lg90qQe1/9SqltALwa/qAF87PH5jcCpYL27LFfHulRsSivYmp6G0FwjpuLsKwG3gORcgnmW1+w27uohV0DL1Wh6MGHbmahXej6jMqYKgFRwxAZhP9j8Gjeh/RzZWpM0yaxeR221aaVTG0DcL2q/3XMB87bKg7giVKIve/TULPvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719915548; c=relaxed/simple;
-	bh=14fl0hG2i0eIiGJZ4fDwGiWtU7bkyFt1BvazraR5F/U=;
+	s=arc-20240116; t=1719915787; c=relaxed/simple;
+	bh=bFjuzJ295uJimSFa8xCMyegxRKXHOfDHP87kW0xW+LE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lswljfr38T7GS0w3sF/nJhj7o9ahih414KViK03BeRg1NkVccx8VdV8n6PmKxBWZNQ3CZ7QCT1dM/9Lpk606vVmLstvaDjyygaWtFdqNawquAZFHYCybtsp2zq6sncIfeXWwV6/6r6OQhSHYjDq5Hu7GAMV8cIIgyx5+Cbu9Pf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j7fuXjZk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZn2I7tN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j7fuXjZk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gZn2I7tN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXKpT0/dEyruR+uU1+l0S8J9j1M9atTR+C/4QG6VBSBBFX9/VH4wTfRjylnv8/rmRQIkW9NzDkhyFBjKq/XqNLBh2Cq/mJXsdtogiQPzMqO3cy28MNcFpCAfSbXJbqkVecAmtsKmaT1dhjMa7mNX/I+E/GWxMLe+Vh/FrgHpBtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=byDL4QTf; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j7fuXjZk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZn2I7tN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j7fuXjZk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gZn2I7tN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C13D621AA1;
-	Tue,  2 Jul 2024 10:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719915542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=j7fuXjZkmiE8Ag2HgL272opB8gC348U1vxjpTBOtY6LE+6BtsWFohG7inTzCArFz3+/Y2A
-	fsagrkuxeYfZ8SNgIRc8ho8lY829gEzTHrEt6cB9TicadUdIHt122lBAeI7D6DiGbUVJHp
-	ABYPmNo0+u1Ybzt2b8ywZJKWmP+nEvM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719915542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=gZn2I7tNyT6UFDx6bdQBhB0nr4VJsWmxq/IWXZIsvrb6DqDNA3HlA+g+TnuOiGJ/cdZZBe
-	+buovUNEnvNclaAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=j7fuXjZk;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=gZn2I7tN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1719915542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=j7fuXjZkmiE8Ag2HgL272opB8gC348U1vxjpTBOtY6LE+6BtsWFohG7inTzCArFz3+/Y2A
-	fsagrkuxeYfZ8SNgIRc8ho8lY829gEzTHrEt6cB9TicadUdIHt122lBAeI7D6DiGbUVJHp
-	ABYPmNo0+u1Ybzt2b8ywZJKWmP+nEvM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1719915542;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QgfEvG+VBe8fgiEqH2xll6Fjp3VI8MfOXpkPTjxvqU=;
-	b=gZn2I7tNyT6UFDx6bdQBhB0nr4VJsWmxq/IWXZIsvrb6DqDNA3HlA+g+TnuOiGJ/cdZZBe
-	+buovUNEnvNclaAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B253413A9A;
-	Tue,  2 Jul 2024 10:19:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id N46DKxbUg2bdPgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 02 Jul 2024 10:19:02 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 7219DA08A6; Tue,  2 Jul 2024 12:19:02 +0200 (CEST)
-Date: Tue, 2 Jul 2024 12:19:02 +0200
-From: Jan Kara <jack@suse.cz>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
-Message-ID: <20240702101902.qcx73xgae2sqoso7@quack3>
-References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
- <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
- <20240701224941.GE612460@frogsfrogsfrogs>
- <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
- <ZoOuSxRlvEQ5rOqn@infradead.org>
- <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="byDL4QTf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M1hpvyL+mQoOpfMwMhftwcClDsPopz7FwsJCl2tQTdA=; b=byDL4QTfHEpsCvoIhoGYzFnKgr
+	kg10R1n+S0iX+L/93AzGvjlgze5EGYRn0mdHuFBoiLDoE1k+iKv0r+dzR7m8nj7ufuRIplm1mZej5
+	r+aR7gkL44vQVghYWb49hd9Wmh3TsCa0w+yUkuu5JjfJKy+LvfIol9q5J5pXFQejE+oWe7cz5NAe1
+	ywjY1bUdPTvsh92a8rTD4Ptll7kCqCrQ0Y9McddqvJ1l2Ff+JJEM5NUNjc4c7khS9s7aNJfplQQOr
+	Gy8YQC7WlrG2txluJQJ5MBYdnb9MATbUu3Z/x26i0FAuOjqJn/K8UIx6lUadvrv742IXWJnYNVYSC
+	eFzDqc2w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOaf3-00000009o3U-25Np;
+	Tue, 02 Jul 2024 10:22:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9BC4F300694; Tue,  2 Jul 2024 12:22:54 +0200 (CEST)
+Date: Tue, 2 Jul 2024 12:22:54 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
+	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	clm@meta.com
+Subject: Re: [PATCH v2 04/12] uprobes: revamp uprobe refcounting and lifetime
+ management
+Message-ID: <20240702102254.GF11386@noisy.programming.kicks-ass.net>
+References: <20240701223935.3783951-1-andrii@kernel.org>
+ <20240701223935.3783951-5-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -108,72 +52,186 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
-X-Rspamd-Queue-Id: C13D621AA1
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+In-Reply-To: <20240701223935.3783951-5-andrii@kernel.org>
 
-On Tue 02-07-24 05:56:37, Jeff Layton wrote:
-> On Tue, 2024-07-02 at 00:37 -0700, Christoph Hellwig wrote:
-> > On Mon, Jul 01, 2024 at 08:22:07PM -0400, Jeff Layton wrote:
-> > > 2) the filesystem has been altered (fuzzing? deliberate doctoring?).
-> > > 
-> > > None of these seem like legitimate use cases so I'm arguing that we
-> > > shouldn't worry about them.
-> > 
-> > Not worry seems like the wrong answer here.  Either we decide they
-> > are legitimate enough and we preserve them, or we decide they are
-> > bogus and refuse reading the inode.  But we'll need to consciously
-> > deal with the case.
-> > 
-> 
-> Is there a problem with consciously dealing with it by clamping the
-> time at KTIME_MAX? If I had a fs with corrupt timestamps, the last
-> thing I'd want is the filesystem refusing to let me at my data because
-> of them.
+On Mon, Jul 01, 2024 at 03:39:27PM -0700, Andrii Nakryiko wrote:
 
-Well, you could also view it differently: If I have a fs that corrupts time
-stamps, the last thing I'd like is that the kernel silently accepts it
-without telling me about it :)
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 23449a8c5e7e..560cf1ca512a 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -53,9 +53,10 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
+>  
+>  struct uprobe {
+>  	struct rb_node		rb_node;	/* node in the rb tree */
+> -	refcount_t		ref;
+> +	atomic64_t		ref;		/* see UPROBE_REFCNT_GET below */
+>  	struct rw_semaphore	register_rwsem;
+>  	struct rw_semaphore	consumer_rwsem;
+> +	struct rcu_head		rcu;
+>  	struct list_head	pending_list;
+>  	struct uprobe_consumer	*consumers;
+>  	struct inode		*inode;		/* Also hold a ref to inode */
+> @@ -587,15 +588,138 @@ set_orig_insn(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long v
+>  			*(uprobe_opcode_t *)&auprobe->insn);
+>  }
+>  
+> -static struct uprobe *get_uprobe(struct uprobe *uprobe)
+> +/*
+> + * Uprobe's 64-bit refcount is actually two independent counters co-located in
+> + * a single u64 value:
+> + *   - lower 32 bits are just a normal refcount with is increment and
+> + *   decremented on get and put, respectively, just like normal refcount
+> + *   would;
+> + *   - upper 32 bits are a tag (or epoch, if you will), which is always
+> + *   incremented by one, no matter whether get or put operation is done.
+> + *
+> + * This upper counter is meant to distinguish between:
+> + *   - one CPU dropping refcnt from 1 -> 0 and proceeding with "destruction",
+> + *   - while another CPU continuing further meanwhile with 0 -> 1 -> 0 refcnt
+> + *   sequence, also proceeding to "destruction".
+> + *
+> + * In both cases refcount drops to zero, but in one case it will have epoch N,
+> + * while the second drop to zero will have a different epoch N + 2, allowing
+> + * first destructor to bail out because epoch changed between refcount going
+> + * to zero and put_uprobe() taking uprobes_treelock (under which overall
+> + * 64-bit refcount is double-checked, see put_uprobe() for details).
+> + *
+> + * Lower 32-bit counter is not meant to over overflow, while it's expected
 
-But more seriously, my filesystem development experience shows that if the
-kernel silently tries to accept and fixup the breakage, it is nice in the
-short term (no complaining users) but it tends to get ugly in the long term
-(where tend people come up with nasty cases where it was wrong to fix it
-up). So I think Christoph's idea of refusing to load inodes with ctimes out
-of range makes sense. Or at least complain about it if nothing else (which
-has some precedens in the year 2038 problem).
+So refcount_t very explicitly handles both overflow and underflow and
+screams bloody murder if they happen. Your thing does not.. 
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> + * that upper 32-bit counter will overflow occasionally. Note, though, that we
+> + * can't allow upper 32-bit counter to "bleed over" into lower 32-bit counter,
+> + * so whenever epoch counter gets highest bit set to 1, __get_uprobe() and
+> + * put_uprobe() will attempt to clear upper bit with cmpxchg(). This makes
+> + * epoch effectively a 31-bit counter with highest bit used as a flag to
+> + * perform a fix-up. This ensures epoch and refcnt parts do not "interfere".
+> + *
+> + * UPROBE_REFCNT_GET constant is chosen such that it will *increment both*
+> + * epoch and refcnt parts atomically with one atomic_add().
+> + * UPROBE_REFCNT_PUT is chosen such that it will *decrement* refcnt part and
+> + * *increment* epoch part.
+> + */
+> +#define UPROBE_REFCNT_GET ((1LL << 32) + 1LL) /* 0x0000000100000001LL */
+> +#define UPROBE_REFCNT_PUT ((1LL << 32) - 1LL) /* 0x00000000ffffffffLL */
+> +
+> +/*
+> + * Caller has to make sure that:
+> + *   a) either uprobe's refcnt is positive before this call;
+> + *   b) or uprobes_treelock is held (doesn't matter if for read or write),
+> + *      preventing uprobe's destructor from removing it from uprobes_tree.
+> + *
+> + * In the latter case, uprobe's destructor will "resurrect" uprobe instance if
+> + * it detects that its refcount went back to being positive again inbetween it
+> + * dropping to zero at some point and (potentially delayed) destructor
+> + * callback actually running.
+> + */
+> +static struct uprobe *__get_uprobe(struct uprobe *uprobe)
+>  {
+> -	refcount_inc(&uprobe->ref);
+> +	s64 v;
+> +
+> +	v = atomic64_add_return(UPROBE_REFCNT_GET, &uprobe->ref);
+
+Distinct lack of u32 overflow testing here..
+
+> +
+> +	/*
+> +	 * If the highest bit is set, we need to clear it. If cmpxchg() fails,
+> +	 * we don't retry because there is another CPU that just managed to
+> +	 * update refcnt and will attempt the same "fix up". Eventually one of
+> +	 * them will succeed to clear highset bit.
+> +	 */
+> +	if (unlikely(v < 0))
+> +		(void)atomic64_cmpxchg(&uprobe->ref, v, v & ~(1ULL << 63));
+> +
+>  	return uprobe;
+>  }
+
+>  static void put_uprobe(struct uprobe *uprobe)
+>  {
+> -	if (refcount_dec_and_test(&uprobe->ref)) {
+> +	s64 v;
+> +
+> +	/*
+> +	 * here uprobe instance is guaranteed to be alive, so we use Tasks
+> +	 * Trace RCU to guarantee that uprobe won't be freed from under us, if
+
+What's wrong with normal RCU?
+
+> +	 * we end up being a losing "destructor" inside uprobe_treelock'ed
+> +	 * section double-checking uprobe->ref value below.
+> +	 * Note call_rcu_tasks_trace() + uprobe_free_rcu below.
+> +	 */
+> +	rcu_read_lock_trace();
+> +
+> +	v = atomic64_add_return(UPROBE_REFCNT_PUT, &uprobe->ref);
+
+No underflow handling... because nobody ever had a double put bug.
+
+> +	if (unlikely((u32)v == 0)) {
+> +		bool destroy;
+> +
+> +		write_lock(&uprobes_treelock);
+> +		/*
+> +		 * We might race with find_uprobe()->__get_uprobe() executed
+> +		 * from inside read-locked uprobes_treelock, which can bump
+> +		 * refcount from zero back to one, after we got here. Even
+> +		 * worse, it's possible for another CPU to do 0 -> 1 -> 0
+> +		 * transition between this CPU doing atomic_add() and taking
+> +		 * uprobes_treelock. In either case this CPU should bail out
+> +		 * and not proceed with destruction.
+> +		 *
+> +		 * So now that we have exclusive write lock, we double check
+> +		 * the total 64-bit refcount value, which includes the epoch.
+> +		 * If nothing changed (i.e., epoch is the same and refcnt is
+> +		 * still zero), we are good and we proceed with the clean up.
+> +		 *
+> +		 * But if it managed to be updated back at least once, we just
+> +		 * pretend it never went to zero. If lower 32-bit refcnt part
+> +		 * drops to zero again, another CPU will proceed with
+> +		 * destruction, due to more up to date epoch.
+> +		 */
+> +		destroy = atomic64_read(&uprobe->ref) == v;
+> +		if (destroy && uprobe_is_active(uprobe))
+> +			rb_erase(&uprobe->rb_node, &uprobes_tree);
+> +		write_unlock(&uprobes_treelock);
+> +
+> +		/*
+> +		 * Beyond here we don't need RCU protection, we are either the
+> +		 * winning destructor and we control the rest of uprobe's
+> +		 * lifetime; or we lost and we are bailing without accessing
+> +		 * uprobe fields anymore.
+> +		 */
+> +		rcu_read_unlock_trace();
+> +
+> +		/* uprobe got resurrected, pretend we never tried to free it */
+> +		if (!destroy)
+> +			return;
+> +
+>  		/*
+>  		 * If application munmap(exec_vma) before uprobe_unregister()
+>  		 * gets called, we don't get a chance to remove uprobe from
+> @@ -604,8 +728,21 @@ static void put_uprobe(struct uprobe *uprobe)
+>  		mutex_lock(&delayed_uprobe_lock);
+>  		delayed_uprobe_remove(uprobe, NULL);
+>  		mutex_unlock(&delayed_uprobe_lock);
+> -		kfree(uprobe);
+> +
+> +		call_rcu_tasks_trace(&uprobe->rcu, uprobe_free_rcu);
+> +		return;
+>  	}
+> +
+> +	/*
+> +	 * If the highest bit is set, we need to clear it. If cmpxchg() fails,
+> +	 * we don't retry because there is another CPU that just managed to
+> +	 * update refcnt and will attempt the same "fix up". Eventually one of
+> +	 * them will succeed to clear highset bit.
+> +	 */
+> +	if (unlikely(v < 0))
+> +		(void)atomic64_cmpxchg(&uprobe->ref, v, v & ~(1ULL << 63));
+> +
+> +	rcu_read_unlock_trace();
+>  }
