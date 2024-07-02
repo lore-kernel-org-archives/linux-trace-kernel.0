@@ -1,165 +1,77 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552D1EB25;
-	Tue,  2 Jul 2024 19:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B676E5ED;
+	Tue,  2 Jul 2024 19:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719947949; cv=none; b=OZxgXwo727nah7jUJmiBeoP3W8cv16j11KaQKg/Cwb5CpUtkFEqZ6Sfc8Yf7RDnCDF4duW98XWS7WMX0qg8LPio+OUd1aC9/lM8eMFNkUv1gdsOIIJS2MOdkIE1Y8HQJu1HBA0BCKHGLMclWsWnxrSzTbju3t5hKJ4piaZuTjyY=
+	t=1719948837; cv=none; b=J53PIw2EqiIgHzbdPUL6ODz16lSUfCi8Gg0/kf1ST1olfP9Hu8X9MBWueN+oQSYn17JpD9HzNdB3JEiv+K9YQRm0albBoTOS43MPmc4zw7RVE4rujrvDSkOx0a5/Y1oLTl0Rf8r+nCLVwIMIsHZ+6zPwtQSG9GysUeGLfJA08L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719947949; c=relaxed/simple;
-	bh=qE5auNhai9dGV9LtL6KaE2P0rxgrR5aQwmk1i1Ie/T4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jn28i5ZhP0Zp72F6gTP4g3597iQwAxnx7Ld9VPHD868RhfeueXffq3OJTViwV3+GOGOvowb6rQjQlXqJ64LKSnc00OVFxuT61AqF9CUPEsxVq3AHfNT71uc1XAPpJpUOcOdESmQBdacOyIW2gTU+oG/qiGnZN1KgCe/qa7QNeww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FwHHpTTq; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FwHHpTTq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=652kzr90UlMHK6R7AjCXVbHKXbDJFiJb4ijYez+VQrI=; b=FwHHpTTqbKxtFPHHu7y62KH28K
-	W/tKXaL3YLfeSHOooxkTjPD+dtFtxlpYnJ6wV/aqI81osSBtkgMEyXOFLeulxKtp4GHNQHxLQ9X36
-	nvHNi51FhRnKuMY9ZXDHSUVbyTNt802rzFU1xi2n0L0uuM5nzJqmeO7saplQ+PYRxShFF2IvTuw4J
-	j6AvM8Dboj5FBUAfU7SwQIBaZNtJvfffOVW1ODLTUEWlDTmc3qpvoQgNsf+DzIZDo2VI4vbW2LrFi
-	PdrsK4lNSQr7pF1lduxA+sPfeErOr8B0eKrNPIaymXkmoXBucxDodmKTiFXjYjUooRh+bcB4stP/t
-	RxqtkUZw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOj1p-00000009rOm-0csw;
-	Tue, 02 Jul 2024 19:19:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EDFFD300694; Tue,  2 Jul 2024 21:18:57 +0200 (CEST)
-Date: Tue, 2 Jul 2024 21:18:57 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: "Paul E . McKenney" <paulmck@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, clm@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-Message-ID: <20240702191857.GJ11386@noisy.programming.kicks-ass.net>
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240702102353.GG11386@noisy.programming.kicks-ass.net>
- <20240702115447.GA28838@noisy.programming.kicks-ass.net>
- <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
+	s=arc-20240116; t=1719948837; c=relaxed/simple;
+	bh=BSoQXcEkIVVku/MTyTc3Nu0S/1SsP+ErNDDqvBvByL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SeZUj9klppUSe0I/LGt1Zg/2cjoRiR7xdou73puQ+deP1zbjk4MvX5yP7MY6+VqCr6Vdvgr3vQXqCelfMD7dpe0tb8T/uKrv6uN9nRbObTO0Zh7N83XG8atN2ZiBs5fIsHV2urDWVwcCJIU1oCr54ZpvoOyNQ6LGN3i2Rs7JBzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F1FC116B1;
+	Tue,  2 Jul 2024 19:33:55 +0000 (UTC)
+Date: Tue, 2 Jul 2024 15:33:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, "Dmitry V. Levin" <ldv@strace.io>,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH] tracing: Have memmapped ring buffer use ioctl of "R" range
+ 0x20-2F
+Message-ID: <20240702153354.367861db@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 02, 2024 at 10:54:51AM -0700, Andrii Nakryiko wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> > @@ -593,6 +595,12 @@ static struct uprobe *get_uprobe(struct uprobe *uprobe)
-> >         return uprobe;
-> >  }
-> >
-> > +static void uprobe_free_rcu(struct rcu_head *rcu)
-> > +{
-> > +       struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
-> > +       kfree(uprobe);
-> > +}
-> > +
-> >  static void put_uprobe(struct uprobe *uprobe)
-> >  {
-> >         if (refcount_dec_and_test(&uprobe->ref)) {
-> > @@ -604,7 +612,8 @@ static void put_uprobe(struct uprobe *uprobe)
-> 
-> right above this we have roughly this:
-> 
-> percpu_down_write(&uprobes_treelock);
-> 
-> /* refcount check */
-> rb_erase(&uprobe->rb_node, &uprobes_tree);
-> 
-> percpu_up_write(&uprobes_treelock);
-> 
-> 
-> This writer lock is necessary for modification of the RB tree. And I
-> was under impression that I shouldn't be doing
-> percpu_(down|up)_write() inside the normal
-> rcu_read_lock()/rcu_read_unlock() region (percpu_down_write has
-> might_sleep() in it). But maybe I'm wrong, hopefully Paul can help to
-> clarify.
+To prevent conflicts with other ioctl numbers to allow strace to have an
+idea of what is happening, add the rang of ioctls for the trace buffer
+mapping from _IO("T", 0x1) to the range of "R" 0x20 - 0x2F.
 
-preemptible RCU or SRCU would work.
+Link: https://lore.kernel.org/linux-trace-kernel/20240630105322.GA17573@altlinux.org/
 
-> 
-> But actually what's wrong with RCU Tasks Trace flavor? 
+Reported-by: "Dmitry V. Levin" <ldv@strace.io>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/userspace-api/ioctl/ioctl-number.rst | 1 +
+ include/uapi/linux/trace_mmap.h                    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Paul, isn't this the RCU flavour you created to deal with
-!rcu_is_watching()? The flavour that never should have been created in
-favour of just cleaning up the mess instead of making more.
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index a141e8e65c5d..9a97030c6c8d 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -186,6 +186,7 @@ Code  Seq#    Include File                                           Comments
+ 'Q'   all    linux/soundcard.h
+ 'R'   00-1F  linux/random.h                                          conflict!
+ 'R'   01     linux/rfkill.h                                          conflict!
++'R'   20-2F  linux/trace_mmap.h
+ 'R'   C0-DF  net/bluetooth/rfcomm.h
+ 'R'   E0     uapi/linux/fsl_mc.h
+ 'S'   all    linux/cdrom.h                                           conflict!
+diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+index bd1066754220..c102ef35d11e 100644
+--- a/include/uapi/linux/trace_mmap.h
++++ b/include/uapi/linux/trace_mmap.h
+@@ -43,6 +43,6 @@ struct trace_buffer_meta {
+ 	__u64	Reserved2;
+ };
+ 
+-#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
++#define TRACE_MMAP_IOCTL_GET_READER		_IO('R', 0x20)
+ 
+ #endif /* _TRACE_MMAP_H_ */
+-- 
+2.43.0
 
-> I will
-> ultimately use it anyway to avoid uprobe taking unnecessary refcount
-> and to protect uprobe->consumers iteration and uc->handler() calls,
-> which could be sleepable, so would need rcu_read_lock_trace().
-
-I don't think you need trace-rcu for that. SRCU would do nicely I think.
-
-> >                 mutex_lock(&delayed_uprobe_lock);
-> >                 delayed_uprobe_remove(uprobe, NULL);
-> >                 mutex_unlock(&delayed_uprobe_lock);
-> > -               kfree(uprobe);
-> > +
-> > +               call_rcu(&uprobe->rcu, uprobe_free_rcu);
-> >         }
-> >  }
-> >
-> > @@ -668,12 +677,25 @@ static struct uprobe *__find_uprobe(struct inode *inode, loff_t offset)
-> >  static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
-> >  {
-> >         struct uprobe *uprobe;
-> > +       unsigned seq;
-> >
-> > -       read_lock(&uprobes_treelock);
-> > -       uprobe = __find_uprobe(inode, offset);
-> > -       read_unlock(&uprobes_treelock);
-> > +       guard(rcu)();
-> >
-> > -       return uprobe;
-> > +       do {
-> > +               seq = read_seqcount_begin(&uprobes_seqcount);
-> > +               uprobes = __find_uprobe(inode, offset);
-> > +               if (uprobes) {
-> > +                       /*
-> > +                        * Lockless RB-tree lookups are prone to false-negatives.
-> > +                        * If they find something, it's good. If they do not find,
-> > +                        * it needs to be validated.
-> > +                        */
-> > +                       return uprobes;
-> > +               }
-> > +       } while (read_seqcount_retry(&uprobes_seqcount, seq));
-> > +
-> > +       /* Really didn't find anything. */
-> > +       return NULL;
-> >  }
-> 
-> Honest question here, as I don't understand the tradeoffs well enough.
-> Is there a lot of benefit to switching to seqcount lock vs using
-> percpu RW semaphore (previously recommended by Ingo). The latter is a
-> nice drop-in replacement and seems to be very fast and scale well.
-
-As you noted, that percpu-rwsem write side is quite insane. And you're
-creating this batch complexity to mitigate that.
-
-The patches you propose are quite complex, this alternative not so much.
-
-> Right now we are bottlenecked on uprobe->register_rwsem (not
-> uprobes_treelock anymore), which is currently limiting the scalability
-> of uprobes and I'm going to work on that next once I'm done with this
-> series.
-
-Right, but it looks fairly simple to replace that rwsem with a mutex and
-srcu.
