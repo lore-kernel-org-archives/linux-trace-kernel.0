@@ -1,193 +1,119 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28551B4C32
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jul 2024 14:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317CE1E50F;
+	Tue,  2 Jul 2024 14:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719930652; cv=none; b=fLTcH41Nn/RpnUaEYdPlQZ43h6bvIVMRv59iRRTSsnYJUdSO2Slmgc2ybq9fDlBqFy9/IWbOUo2oKgM1PTKCQNg+PhDoVADI3F2oZEkM0sFdGAWbYisqZ+ULpwIVrOnSkhf2C9gz7mFjtAZ34eCy2o7y8knMn08mNbKOPMfrd3U=
+	t=1719930949; cv=none; b=IUIQR8wr+d8EhzCl4SCNmO2yO4rgVH4o1fl+qeix6xBRS0DwJrDPub22xB2E3sxxjooLFwuFAa1ke6kjVtY9Om3my8LMEd/S+896H6WMUEdBIFYpI0l1aRJuZjJZpD3p7wvD4mWwwGmlpgBekV9jM1SO205+0PolDf8+1ORuF8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719930652; c=relaxed/simple;
-	bh=nPsWzSKNKWp6syDtdY7Ir2nt0wTvI1SQEd/GjSGs6hs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N8ml6aqx320zsLZnofeh+ccQbTyi0lhlmbjM4nKjjYKlTd9R38hy5VZ9ZZEZUf7VxxeuOPgTBuZvv9T65pmz6KKWPOcmq9IgR7r3czgZ35b4O10bFV5rg+totoHBxyymT6WuUTauJF9lBNfuloAON+O1J4orQaJ3mJsnv9GTu3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcjrS/mU; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719930949; c=relaxed/simple;
+	bh=WX5kDqC4tJpN29x0TQP8aggg4HMYizhSJ7+/HkfdHwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJeNTn7EwWJRvyfo8mqnx/lMVPXiEhpQYwbsOQ5i82A4k1q9lYoC6xQMP1LufjHHCKPQVcTMLseoF1Rz0k6ECafmD8RSiljr3p7tkJPsj453cpoh0Y7f3s6Nmx0nZ0ccuDVXD5YqgSS7QbnEVLGo8cXK/SQ8gAP1PbNehMCCe9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FtlD4jZv; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcjrS/mU"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57d119fddd9so23705a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jul 2024 07:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719930649; x=1720535449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3jM7/wfZzza6LzDSng98O/sFMouLELQtFerEOq9E8OA=;
-        b=XcjrS/mUBdohB1KNhGJQfJf/nbZ8kwgOfO6qBmU7gseA2VjYs3KYNg6P3qjdS6kXwA
-         t3PYUEXsAYNAnugIOeyWNrMKC9zpbt9E2WcvB3YJqqb45ymsEt1oYukBzuoT48ERCr13
-         qAhDw+AsJhrb54yNrOORg0LQz50mBF2K7N645UDwGtgq3FLU/FUwoCEkGz8KC/gfnEPh
-         kCjhKxR/KPHv8ud5NsMekoA8HF6CNdf2M9HPr5BKCrCkxZhD6UFov63lSjr16CW4Qv/0
-         UUNHiPyslXVCt/BKP8SCP6MSQOYal4roNuMJgSUBSneb1BxDv8FD0LAV+td72x/VG8LW
-         /vnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719930649; x=1720535449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3jM7/wfZzza6LzDSng98O/sFMouLELQtFerEOq9E8OA=;
-        b=XxEqcREFfufAqg1X2UFugMHxa3SCJsWhedVLFhXSPZ8xolcZ/Yo5xHRcaU2Z5v0WMR
-         8U5xYwSTmV9ROI4V14D9ej01hfGs/4UOOObnAOuXtKUFjvXWAsg6p/wz1nZtvak6SQ+O
-         dNAK7apRRp37nE4u/fHbPju7K8Ufy1ezcHYGPobsrFLnx0TMnDArCCaYbamzZ58fMEzi
-         cbgSyGOwnHOQQmIv2u/1uFHa+EMu+K2chuT9fljISXWEXh1bqe9O9kvW8rlCpggqM5+W
-         /pVjTbwTd/ncalHZu3zniYQsKTEuFSZt9+mXaLyThF9kFSROPSNNAg9e2NwYHgn4cUac
-         CvXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeb4SDN/pYFut5zBkNVLNW5rt/q+OrppZZWjgAF2N1owC8DNGjVT2O+oQbyNNOlZRcxDp92fTCM1rEUstUdfggStAgBG7V6VD9VMNg9Pd3sfJN
-X-Gm-Message-State: AOJu0Yz+14ru02yyx6c5D8wJbeXYs92RmYIQX6W8/nJILLtaHucKNjAQ
-	fOm1LDIp5e3KXF3Bifz9QTxB8ACG4ARMMb9aSihqczIR0v/61HFUg+XuKmYxOM1g4QAqPlZfnK2
-	JP2McR6BIs5pn0dBOs1ycT4WzOoAMN6WUfwm/
-X-Google-Smtp-Source: AGHT+IG6q9qlZv6p0XsjYtQr/2CJh2iWJHZfafuRVFcTNadBZxk7tzb9cfayzAyvnfb859R1NpQn1uwJAUI6SXHDoq4=
-X-Received: by 2002:a50:f68b:0:b0:58b:e3b:c5d8 with SMTP id
- 4fb4d7f45d1cf-58c61e8924fmr10222a12.0.1719930648903; Tue, 02 Jul 2024
- 07:30:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FtlD4jZv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1719930944;
+	bh=WX5kDqC4tJpN29x0TQP8aggg4HMYizhSJ7+/HkfdHwk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FtlD4jZvXq217zYnd/L5G9ScVzmrDJTpOBnDM4WKRtXaeZ9tAAh42XBiudMdP+L6c
+	 v3PrjxkCa6qkpji5bCsYuot8IdJyhOtPSIsvhgK6HIJr3rx4uumJ1chLTH7RQWqofW
+	 YzeBtYcJ6wfsiLTXLjyfZ9LX8jo5z86HBCJwUEsxezJl0wNH/fYxX7aASSdDvhHPWM
+	 2byCcOOcQFPQShT4crZ7sMBqIABOjFHAG9HkKugXsJN3sUTHQs3+bE3VVD1/OXP2pA
+	 FvOWqhfi6EnnN2fkB8OA995ejiSM+J7tv8fVqUkOiQiIgpGBihmBRkODHR83QkNUJ8
+	 WzmdQKdJlItdA==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WD5745522z17vy;
+	Tue,  2 Jul 2024 10:35:44 -0400 (EDT)
+Message-ID: <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
+Date: Tue, 2 Jul 2024 10:36:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628003253.1694510-1-almasrymina@google.com> <20240628003253.1694510-12-almasrymina@google.com>
-In-Reply-To: <20240628003253.1694510-12-almasrymina@google.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 2 Jul 2024 16:30:37 +0200
-Message-ID: <CANn89iLRRaf31svCM9KUChwmKo53T9TTKayr3_bnbUu+Fuej7g@mail.gmail.com>
-Subject: Re: [PATCH net-next v15 11/14] net: add SO_DEVMEM_DONTNEED setsockopt
- to release RX frags
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
+ ring-buffer
+To: Steven Rostedt <rostedt@goodmis.org>, "Dmitry V. Levin" <ldv@strace.io>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+ kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
+ david@redhat.com, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240510140435.3550353-1-vdonnefort@google.com>
+ <20240510140435.3550353-4-vdonnefort@google.com>
+ <20240630105322.GA17573@altlinux.org>
+ <20240630084053.0b506916@rorschach.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20240630084053.0b506916@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 28, 2024 at 2:33=E2=80=AFAM Mina Almasry <almasrymina@google.co=
-m> wrote:
->
-> Add an interface for the user to notify the kernel that it is done
-> reading the devmem dmabuf frags returned as cmsg. The kernel will
-> drop the reference on the frags to make them available for reuse.
->
-> Signed-off-by: Willem de Bruijn <willemb@google.com>
-> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
->
-> ---
->
-> v10:
-> - Fix leak of tokens (Nikolay).
->
-> v7:
-> - Updated SO_DEVMEM_* uapi to use the next available entry (Arnd).
->
-> v6:
-> - Squash in locking optimizations from edumazet@google.com. With his
->   changes we lock the xarray once per sock_devmem_dontneed operation
->   rather than once per frag.
->
-> Changes in v1:
-> - devmemtoken -> dmabuf_token (David).
-> - Use napi_pp_put_page() for refcounting (Yunsheng).
-> - Fix build error with missing socket options on other asms.
->
-> ---
->  arch/alpha/include/uapi/asm/socket.h  |  1 +
->  arch/mips/include/uapi/asm/socket.h   |  1 +
->  arch/parisc/include/uapi/asm/socket.h |  1 +
->  arch/sparc/include/uapi/asm/socket.h  |  1 +
->  include/uapi/asm-generic/socket.h     |  1 +
->  include/uapi/linux/uio.h              |  4 ++
->  net/core/sock.c                       | 61 +++++++++++++++++++++++++++
->  7 files changed, 70 insertions(+)
->
+On 2024-06-30 08:40, Steven Rostedt wrote:
+> On Sun, 30 Jun 2024 13:53:23 +0300
+> "Dmitry V. Levin" <ldv@strace.io> wrote:
+> 
+>> On Fri, May 10, 2024 at 03:04:32PM +0100, Vincent Donnefort wrote:
+>> [...]
+>>> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+>>> index b682e9925539..bd1066754220 100644
+>>> --- a/include/uapi/linux/trace_mmap.h
+>>> +++ b/include/uapi/linux/trace_mmap.h
+>>> @@ -43,4 +43,6 @@ struct trace_buffer_meta {
+>>>   	__u64	Reserved2;
+>>>   };
+>>>   
+>>> +#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
+>>> +
+>>
+>> I'm sorry but among all the numbers this one was probably the least
+>> fortunate choice because it collides with TCGETS on most of architectures.
+> 
+> Hmm, that is unfortunate.
+> 
+>>
+>> For example, this is how strace output would look like when
+>> TRACE_MMAP_IOCTL_GET_READER support is added:
+>>
+>> $ strace -e ioctl stty
+>> ioctl(0, TCGETS or TRACE_MMAP_IOCTL_GET_READER, {c_iflag=ICRNL|IXON, c_oflag=NL0|CR0|TAB0|BS0|VT0|FF0|OPOST|ONLCR, c_cflag=B38400|CS8|CREAD, c_lflag=ISIG|ICANON|ECHO|ECHOE|ECHOK|IEXTEN|ECHOCTL|ECHOKE, ...}) = 0
+>>
+>> Even though ioctl numbers are inherently not unique, TCGETS is
+>> a very traditional one, so it would be great if you could change
+>> TRACE_MMAP_IOCTL_GET_READER to avoid this collision.
+>>
+>> Given that _IO('T', 0x1) is _IOC(_IOC_NONE, 'T', 0x1, 0),
+>> something like _IOC(_IOC_NONE, 'T', 0x1, 0x1) should be OK.
+> 
+> Well, it may not be too late to update this as it hasn't been
+> officially released in 6.10 yet. It's still only in the -rc and the
+> library doesn't rely on this yet (I've been holding off until 6.10 was
+> officially released before releasing the library that uses it).
+> 
+> I can send a patch this week to update it. Or feel free to send a patch
+> yourself.
 
->
-> +struct dmabuf_token {
-> +       __u32 token_start;
-> +       __u32 token_count;
-> +};
->  /*
->   *     UIO_MAXIOV shall be at least 16 1003.1g (5.4.1.1)
->   */
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 9abc4fe259535..040c66ac26244 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -124,6 +124,7 @@
->  #include <linux/netdevice.h>
->  #include <net/protocol.h>
->  #include <linux/skbuff.h>
-> +#include <linux/skbuff_ref.h>
->  #include <net/net_namespace.h>
->  #include <net/request_sock.h>
->  #include <net/sock.h>
-> @@ -1049,6 +1050,62 @@ static int sock_reserve_memory(struct sock *sk, in=
-t bytes)
->         return 0;
->  }
->
-> +#ifdef CONFIG_PAGE_POOL
-> +static noinline_for_stack int
-> +sock_devmem_dontneed(struct sock *sk, sockptr_t optval, unsigned int opt=
-len)
-> +{
-> +       unsigned int num_tokens, i, j, k, netmem_num =3D 0;
-> +       struct dmabuf_token *tokens;
-> +       netmem_ref netmems[16];
-> +       int ret =3D 0;
-> +
-> +       if (sk->sk_type !=3D SOCK_STREAM || sk->sk_protocol !=3D IPPROTO_=
-TCP)
-> +               return -EBADF;
+You need to reserve an unused ioctl Code and Seq# range within:
 
-This might use sk_is_tcp() helper.
+Documentation/userspace-api/ioctl/ioctl-number.rst
 
-> +
-> +       if (optlen % sizeof(struct dmabuf_token) ||
-> +           optlen > sizeof(*tokens) * 128)
-> +               return -EINVAL;
-> +
-> +       tokens =3D kvmalloc_array(128, sizeof(*tokens), GFP_KERNEL);
+Otherwise this duplicate will confuse all system call instrumentation
+tooling.
 
-This allocates 8192 bytes even for small optlen ?
+Thanks,
 
-Probably no big deal, no need to send a new version.
+Mathieu
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
