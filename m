@@ -1,120 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1183F8E2;
-	Tue,  2 Jul 2024 04:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465744CB23;
+	Tue,  2 Jul 2024 07:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719894437; cv=none; b=uNxepcjEW8w29a23JyVt6p3qvEpY5Tt1selM2Gyk6VqyMcM+54d9fCfCExXrp1jg1g3WPgrYwLesrz/jY1c455Qv+q11M99MNto8zFLPDPrhXksi0yDB4HZPEzNXdUiq3IRwMfzetZ0ItydV43t/NyTd5mVF2rap0TSqPuewDkc=
+	t=1719905876; cv=none; b=W6wg9moEUN1R95TjERWcw/pXdnkLbfVI+EATzZV+auLbFu3aq6Xcx1zw0UeIET0bNfk7Sjm933pHv4a0o03lXs0umM4F7Yt052NVKvHV5CsUxCD2rp2J5Zej0KvIHkd7XQBDWc6YuU2l0Nq38u0hjzPhyfzGDvVxUsJnlwN0uIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719894437; c=relaxed/simple;
-	bh=Pv0BfDTulESS3H2hspa9V/qPBcr+GryRdQNP1DxU5JY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BHjo1UmSc5jUdZNWi6C4S2G6AXBMcu3yUgWMIWzCZK5ABww3irvjwLUarizT4STM4xEXdRd0ZiLWOtCz4aVDNWYdCxD1LdiEPXSjBnJ3ZIzpXljIzwON3UbV6JgPxru6xIUYzdZWMFo4CiqwT9DwEfioxfs0+cGHR2TSlRZfxrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmThOihg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719905876; c=relaxed/simple;
+	bh=2VYDxOt/ANNEhf8pUSMHmU8uQwhxTzHw4bbej7YnNQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpN4Tc6FSFKq2h40U5YAA1r5V8GZwxAVDMTK7k2suZ107bocAxi8yni0bg90brOZJ1T/4d8yMcGw+KnYZz8QRf5Rup7EqDynhW6/ApP8LD1eeifbwhQVlA0f9YzJzfyvNHTjePfFupm4/SFnjMmRiiDPdFIhhlBt3PopjO/YJLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GCBLdFrj; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmThOihg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27DDC116B1;
-	Tue,  2 Jul 2024 04:27:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719894437;
-	bh=Pv0BfDTulESS3H2hspa9V/qPBcr+GryRdQNP1DxU5JY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QmThOihg9UGFPaNoDYQyvvbRVQdaQkcab25Xy2SgQMsBgmC3a7qBKgUNdrsX6AoTx
-	 mJhcmZq7U/oVhTFsfpggxVdwg8WRJXrYHREzkqOw34vvGDGgZX7R90e2xCIGko+vvA
-	 qBmWLbhllc4Ea/2SnLbt4k0Kb0R8dMBE1S9D1iXW7Zt27SE0Ya2hVrO11DbQWG+2ri
-	 HqbBH6dAx7D01N9uC0MQBTZvFaqmMw13gj3qDjJVI6mwSkBuY2ATeM1/wpABIqaAhH
-	 8z+HoC0itipm7i+VVUwgjskOl6FhAVgVuLe2pHxeKVLhhG2BoVo9KTzlu0+oEK8oN3
-	 q8sGJHAxqGD8Q==
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org,
-	Eric Sandeen <sandeen@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	autofs@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-efi@vger.kernel.org,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	linux-ext4@vger.kernel.org,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	linux-mm@kvack.org,
-	Jan Kara <jack@suse.cz>,
-	ntfs3@lists.linux.dev,
-	linux-cifs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Hans Caniullan <hcaniull@redhat.com>
-Subject: Re: (subset) [PATCH 0/14] New uid & gid mount option parsing helpers
-Date: Tue,  2 Jul 2024 06:25:05 +0200
-Message-ID: <20240702-putzig-krater-aea1bf2b652d@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <8dca3c11-99f4-446d-a291-35c50ed2dc14@redhat.com>
-References: <8dca3c11-99f4-446d-a291-35c50ed2dc14@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GCBLdFrj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rxGl+63oN1WDMSTt3tuoEFowmTF6ElvlJY4+FmesakA=; b=GCBLdFrjfKQdOXAbJDYAUldMcU
+	DSmkwndO1FhRCRFEv30KICrnRNwrFf9kJcEYMqhwqQDtLGuTCsv/XKs1i4qYzbEK4bDB//29ZIl/Z
+	TyUMsccI/iUY5NQUTOrNNQZM0hhSV+5kkoK79H8Po0NcbQPcICCM3GQwh25NRLhmhXCICDRSuyiPq
+	wrFue8viWQOTqL+Fg5JPI4ghXP1YvSA80e3qc0eztth2PFfU/1m0gidDEYPN+n80rPsZURhP7EL1V
+	ZfShbVBnFGywltDR18+pzXwEuIrHk/UYIUMD5W1zc+qOJRqd8wAWe5dbAhyAv/2NL90AXPEqVJLQ0
+	Xb2L/HoA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOY5D-00000005sux-1EZd;
+	Tue, 02 Jul 2024 07:37:47 +0000
+Date: Tue, 2 Jul 2024 00:37:47 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+Message-ID: <ZoOuSxRlvEQ5rOqn@infradead.org>
+References: <20240626-mgtime-v1-0-a189352d0f8f@kernel.org>
+ <20240626-mgtime-v1-1-a189352d0f8f@kernel.org>
+ <20240701224941.GE612460@frogsfrogsfrogs>
+ <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2869; i=brauner@kernel.org; h=from:subject:message-id; bh=Pv0BfDTulESS3H2hspa9V/qPBcr+GryRdQNP1DxU5JY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ1N86epaB8O+RGuUfcyR2t/+MibkifPWzJrzm/ojW// bz+7/jIjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIncDGf4p3JIf1/9yu1MzKr3 pz/12149IctCKa9v5339fMP28/emGDIyXF+35fODGL28nUFvD8xImtm5d1dfRe/hRdfiA9seu4Y HcwIA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3042db2f803fbc711575ec4f1c4a273912a50904.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, 27 Jun 2024 19:24:59 -0500, Eric Sandeen wrote:
-> Multiple filesystems take uid and gid as options, and the code to
-> create the ID from an integer and validate it is standard boilerplate
-> that can be moved into common helper functions, so do that for
-> consistency and less cut&paste.
+On Mon, Jul 01, 2024 at 08:22:07PM -0400, Jeff Layton wrote:
+> 2) the filesystem has been altered (fuzzing? deliberate doctoring?).
 > 
-> This also helps avoid the buggy pattern noted by Seth Jenkins at
-> https://lore.kernel.org/lkml/CALxfFW4BXhEwxR0Q5LSkg-8Vb4r2MONKCcUCVioehXQKr35eHg@mail.gmail.com/
-> because uid/gid parsing will fail before any assignment in most
-> filesystems.
-> 
-> [...]
+> None of these seem like legitimate use cases so I'm arguing that we
+> shouldn't worry about them.
 
-I've snatched everything but the fuse change as we should do that one in
-two steps.
+Not worry seems like the wrong answer here.  Either we decide they
+are legitimate enough and we preserve them, or we decide they are
+bogus and refuse reading the inode.  But we'll need to consciously
+deal with the case.
 
----
-
-Applied to the vfs.mount.api branch of the vfs/vfs.git tree.
-Patches in the vfs.mount.api branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.mount.api
-
-[01/14] fs_parse: add uid & gid option option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/9f111059e725
-[02/14] autofs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/748cddf13de5
-[03/14] debugfs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/49abee5991e1
-[04/14] efivarfs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/dcffad38c767
-[05/14] exfat: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/ffe1b94d7464
-[06/14] ext4: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/6b5732b5ca4f
-[08/14] hugetlbfs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/eefc13247722
-[09/14] isofs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/6a265845db28
-[10/14] ntfs3: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/c449cb5d1bce
-[11/14] tmpfs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/2ec07010b6a9
-[12/14] smb: client: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/3229e3a5a374
-[13/14] tracefs: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/b548291690d1
-[14/14] vboxsf: Convert to new uid/gid option parsing helpers
-        https://git.kernel.org/vfs/vfs/c/da99d45bd551
