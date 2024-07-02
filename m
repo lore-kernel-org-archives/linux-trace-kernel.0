@@ -1,331 +1,120 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2452F43;
-	Tue,  2 Jul 2024 01:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1183F8E2;
+	Tue,  2 Jul 2024 04:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719884111; cv=none; b=VAp7zLJivUf3np5hL0BCmofHUsUTGXEScHMl4+aBAZEp9qH1/zwWg6wqVhHDPm8ZllE7Ptnpmhj50VZx8bf8mx0Q3ipoRg/D0+4K2ItNG4oFNm5c9TdvPFRRmJPDesy0B3MAYBLAaH4Y3VKzmdo3DUxluUSaEeZ+2TEmG06BfZI=
+	t=1719894437; cv=none; b=uNxepcjEW8w29a23JyVt6p3qvEpY5Tt1selM2Gyk6VqyMcM+54d9fCfCExXrp1jg1g3WPgrYwLesrz/jY1c455Qv+q11M99MNto8zFLPDPrhXksi0yDB4HZPEzNXdUiq3IRwMfzetZ0ItydV43t/NyTd5mVF2rap0TSqPuewDkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719884111; c=relaxed/simple;
-	bh=PIzYFOK0PDzkUyIeOB5c2a9FdJS+U+iXhHuKC468duk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h/rO8dVZo/Ou+PuNYxR02sVZ+qbBhZN+OVEBbvhxIMv0SdGBc/Xpn4PwgR4gcfuDKJeDHC17Tgx6zkH4Q+FShVKK/RzAIUOvMfcBSXYHfMVRKJ4LkeqM2J/ytkvgekLqwPA46TlYpVe4o9MPTZo8KPCdln9M2ucWlrvZfr+O71Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZuLXdtJQ; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719894437; c=relaxed/simple;
+	bh=Pv0BfDTulESS3H2hspa9V/qPBcr+GryRdQNP1DxU5JY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BHjo1UmSc5jUdZNWi6C4S2G6AXBMcu3yUgWMIWzCZK5ABww3irvjwLUarizT4STM4xEXdRd0ZiLWOtCz4aVDNWYdCxD1LdiEPXSjBnJ3ZIzpXljIzwON3UbV6JgPxru6xIUYzdZWMFo4CiqwT9DwEfioxfs0+cGHR2TSlRZfxrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmThOihg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZuLXdtJQ"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3d55f198f1eso1812100b6e.0;
-        Mon, 01 Jul 2024 18:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719884108; x=1720488908; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sBXXf8pITsw6l4LfxVnWjvzW94GQwfP4c3NRXFnNIJE=;
-        b=ZuLXdtJQJh6kKTY0qUMFa8ubwDW1h3o3cz+Lj7946m3SLAGIck+9F45k0Bo9tjkAYA
-         vylNt4OWmidCov7qCTMjUlzVyxpQ3LHWfuru5d4wYDjh+cJAyZNv3uWKielco9+FxQGN
-         CcEMXAP2UsKeoM9j6Bd3YlObO/ekQdwKI6MWM+Nqi+nwRC3RB+qzmyoCpwiDxI1tR5mc
-         5CrHypbJAkePwd9b4L1fOOpHUuhOrGbtLKPblLzqC68WZw8lHc28TEQa6u2VNBsNrHb/
-         fX8W9FYAvFkPXZ5g66uHKr9idnMI3ECJUYW55iIydc63t0uKFrIOukpNjaURzNnKZ+WW
-         MRwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719884108; x=1720488908;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sBXXf8pITsw6l4LfxVnWjvzW94GQwfP4c3NRXFnNIJE=;
-        b=fFP4YOk64EseBxPKO0Sf4SAhMNI07zxmcGY8PDfPFovzAt6bvBVkMSLekox1efmUqI
-         AU3mwCIfTulD69b9bU71AaqvqV4yn+r9fCYCLpn7WOj5JujcThrgYNzBXu+95Taz8TOo
-         cBCMO9JRu/yywz/9MBD5XZc3jy6DmgIFFOpZD0b7lVsV8fry/qhpLVqJpfdHNED8Wfrr
-         UXf0xf3cNx3H1/h9iWcJW+6XIgepcF79ujNS90FrM6+xSLdcTS95NOUYzBST3A/Eu/n5
-         w7xGR2GWd0pKXk4SxuSx1LmPJ9JOG/ffU7GqRFgpzjz32uxqONYQ4hKIb3oJLQA70Py+
-         WRTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOiQbQpOG3BNOHx+TF6JZOk3h1IZOQylIlIS3iv6Fb3MbqGiGT/AhiIFHEPL86DEkTmuBYNBvZRRTQVRLjEjfGddKwZ3ICDRpKkXLMIZJritAjW3ouYamowrkkgCK+ExdfYSPijkXz
-X-Gm-Message-State: AOJu0YypYl/o86FobutGVrhBcEItWgzh7W1I68+XObae941z2OgB7UyG
-	eLgKgt+GLvexiH6fRIHlIRuQkK9j7SN0VR600oNYf4lMHNcYLN7OfmGSddkA4kGVhCSedSMcQ+t
-	XAzPTgIZ9Q9XdmXBIHt0+dYOqEyg=
-X-Google-Smtp-Source: AGHT+IGkmEJ8753bYaETSqXEP7YS13zqav+d3S14tfqjdJeANw9bthaekf1H1Nt7Tv3PRqTjnZl3ZMMWgZ8Cbul+KWQ=
-X-Received: by 2002:a05:6808:1416:b0:3d5:6344:fd9f with SMTP id
- 5614622812f47-3d6b37b3ac8mr9816968b6e.31.1719884107383; Mon, 01 Jul 2024
- 18:35:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmThOihg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27DDC116B1;
+	Tue,  2 Jul 2024 04:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719894437;
+	bh=Pv0BfDTulESS3H2hspa9V/qPBcr+GryRdQNP1DxU5JY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QmThOihg9UGFPaNoDYQyvvbRVQdaQkcab25Xy2SgQMsBgmC3a7qBKgUNdrsX6AoTx
+	 mJhcmZq7U/oVhTFsfpggxVdwg8WRJXrYHREzkqOw34vvGDGgZX7R90e2xCIGko+vvA
+	 qBmWLbhllc4Ea/2SnLbt4k0Kb0R8dMBE1S9D1iXW7Zt27SE0Ya2hVrO11DbQWG+2ri
+	 HqbBH6dAx7D01N9uC0MQBTZvFaqmMw13gj3qDjJVI6mwSkBuY2ATeM1/wpABIqaAhH
+	 8z+HoC0itipm7i+VVUwgjskOl6FhAVgVuLe2pHxeKVLhhG2BoVo9KTzlu0+oEK8oN3
+	 q8sGJHAxqGD8Q==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org,
+	Eric Sandeen <sandeen@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	autofs@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-efi@vger.kernel.org,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	linux-ext4@vger.kernel.org,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	linux-mm@kvack.org,
+	Jan Kara <jack@suse.cz>,
+	ntfs3@lists.linux.dev,
+	linux-cifs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Hans Caniullan <hcaniull@redhat.com>
+Subject: Re: (subset) [PATCH 0/14] New uid & gid mount option parsing helpers
+Date: Tue,  2 Jul 2024 06:25:05 +0200
+Message-ID: <20240702-putzig-krater-aea1bf2b652d@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <8dca3c11-99f4-446d-a291-35c50ed2dc14@redhat.com>
+References: <8dca3c11-99f4-446d-a291-35c50ed2dc14@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625002144.3485799-1-andrii@kernel.org> <20240625002144.3485799-7-andrii@kernel.org>
- <20240627220449.0d2a12e24731e4764540f8aa@kernel.org> <CAEf4BzbLNHYsUfPi3+M_WUVSaZ9Ey-r3BxqV0Zz6pPqpMCjqpg@mail.gmail.com>
- <20240628152846.ddf192c426fc6ce155044da0@kernel.org> <CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
- <20240630083010.99ff77488ec62b38bcfeaa29@kernel.org> <CAEf4BzZh4ShURvqk-QxC5h1NpN0tjWMr1db+__gsCmr-suUNOQ@mail.gmail.com>
- <CAEf4BzbRQjK7nnR2nnw_hgYztPPxaSC6_qFTrdADy3yCki_wEA@mail.gmail.com> <20240702100151.509a9e45c04a9cfed0653e6f@kernel.org>
-In-Reply-To: <20240702100151.509a9e45c04a9cfed0653e6f@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 1 Jul 2024 18:34:55 -0700
-Message-ID: <CAEf4BzYShpT2fZKv3yZYxZA0Ha9JQXC3YQyJsjGB+T-yLOKs+Q@mail.gmail.com>
-Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister APIs
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, oleg@redhat.com, peterz@infradead.org, mingo@redhat.com, 
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2869; i=brauner@kernel.org; h=from:subject:message-id; bh=Pv0BfDTulESS3H2hspa9V/qPBcr+GryRdQNP1DxU5JY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ1N86epaB8O+RGuUfcyR2t/+MibkifPWzJrzm/ojW// bz+7/jIjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIncDGf4p3JIf1/9yu1MzKr3 pz/12149IctCKa9v5339fMP28/emGDIyXF+35fODGL28nUFvD8xImtm5d1dfRe/hRdfiA9seu4Y HcwIA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 1, 2024 at 6:01=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Mon, 1 Jul 2024 15:15:56 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
->
-> > On Mon, Jul 1, 2024 at 10:55=E2=80=AFAM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Sat, Jun 29, 2024 at 4:30=E2=80=AFPM Masami Hiramatsu <mhiramat@ke=
-rnel.org> wrote:
-> > > >
-> > > > On Fri, 28 Jun 2024 09:34:26 -0700
-> > > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> > > >
-> > > > > On Thu, Jun 27, 2024 at 11:28=E2=80=AFPM Masami Hiramatsu <mhiram=
-at@kernel.org> wrote:
-> > > > > >
-> > > > > > On Thu, 27 Jun 2024 09:47:10 -0700
-> > > > > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> > > > > >
-> > > > > > > On Thu, Jun 27, 2024 at 6:04=E2=80=AFAM Masami Hiramatsu <mhi=
-ramat@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, 24 Jun 2024 17:21:38 -0700
-> > > > > > > > Andrii Nakryiko <andrii@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > > -static int __uprobe_register(struct inode *inode, loff_t=
- offset,
-> > > > > > > > > -                          loff_t ref_ctr_offset, struct =
-uprobe_consumer *uc)
-> > > > > > > > > +int uprobe_register_batch(struct inode *inode, int cnt,
-> > > > > > > > > +                       uprobe_consumer_fn get_uprobe_con=
-sumer, void *ctx)
-> > > > > > > >
-> > > > > > > > Is this interface just for avoiding memory allocation? Can'=
-t we just
-> > > > > > > > allocate a temporary array of *uprobe_consumer instead?
-> > > > > > >
-> > > > > > > Yes, exactly, to avoid the need for allocating another array =
-that
-> > > > > > > would just contain pointers to uprobe_consumer. Consumers wou=
-ld never
-> > > > > > > just have an array of `struct uprobe_consumer *`, because
-> > > > > > > uprobe_consumer struct is embedded in some other struct, so t=
-he array
-> > > > > > > interface isn't the most convenient.
-> > > > > >
-> > > > > > OK, I understand it.
-> > > > > >
-> > > > > > >
-> > > > > > > If you feel strongly, I can do an array, but this necessitate=
-s
-> > > > > > > allocating an extra array *and keeping it* for the entire dur=
-ation of
-> > > > > > > BPF multi-uprobe link (attachment) existence, so it feels lik=
-e a
-> > > > > > > waste. This is because we don't want to do anything that can =
-fail in
-> > > > > > > the detachment logic (so no temporary array allocation there)=
-.
-> > > > > >
-> > > > > > No need to change it, that sounds reasonable.
-> > > > > >
-> > > > >
-> > > > > Great, thanks.
-> > > > >
-> > > > > > >
-> > > > > > > Anyways, let me know how you feel about keeping this callback=
-.
-> > > > > >
-> > > > > > IMHO, maybe the interface function is better to change to
-> > > > > > `uprobe_consumer *next_uprobe_consumer(void **data)`. If caller
-> > > > > > side uses a linked list of structure, index access will need to
-> > > > > > follow the list every time.
-> > > > >
-> > > > > This would be problematic. Note how we call get_uprobe_consumer(i=
-,
-> > > > > ctx) with i going from 0 to N in multiple independent loops. So i=
-f we
-> > > > > are only allowed to ask for the next consumer, then
-> > > > > uprobe_register_batch and uprobe_unregister_batch would need to b=
-uild
-> > > > > its own internal index and remember ith instance. Which again mea=
-ns
-> > > > > more allocations and possibly failing uprobe_unregister_batch(), =
-which
-> > > > > isn't great.
-> > > >
-> > > > No, I think we can use a cursor variable as;
-> > > >
-> > > > int uprobe_register_batch(struct inode *inode,
-> > > >                  uprobe_consumer_fn get_uprobe_consumer, void *ctx)
-> > > > {
-> > > >         void *cur =3D ctx;
-> > > >
-> > > >         while ((uc =3D get_uprobe_consumer(&cur)) !=3D NULL) {
-> > > >                 ...
-> > > >         }
-> > > >
-> > > >         cur =3D ctx;
-> > > >         while ((uc =3D get_uprobe_consumer(&cur)) !=3D NULL) {
-> > > >                 ...
-> > > >         }
-> > > > }
-> > > >
-> > > > This can also remove the cnt.
-> > >
-> > > Ok, if you prefer this I'll switch. It's a bit more cumbersome to use
-> > > for callers, but we have one right now, and might have another one, s=
-o
-> > > not a big deal.
-> > >
-> >
-> > Actually, now that I started implementing this, I really-really don't
-> > like it. In the example above you assume by storing and reusing
-> > original ctx value you will reset iteration to the very beginning.
-> > This is not how it works in practice though. Ctx is most probably a
-> > pointer to some struct somewhere with iteration state (e.g., array of
-> > all uprobes + current index), and so get_uprobe_consumer() doesn't
-> > update `void *ctx` itself, it updates the state of that struct.
->
-> Yeah, that should be noted so that if the get_uprobe_consumer() is
-> called with original `ctx` value, it should return the same.
-> Ah, and I found we need to pass both ctx and pos...
->
->        while ((uc =3D get_uprobe_consumer(&cur, ctx)) !=3D NULL) {
->                  ...
->          }
->
-> Usually it is enough to pass the cursor as similar to the other
-> for_each_* macros. For example, struct foo has .list and .uc, then
->
-> struct uprobe_consumer *get_uprobe_consumer_foo(void **pos, void *head)
-> {
->         struct foo *foo =3D *pos;
->
->         if (!foo)
->                 return NULL;
->
->         *pos =3D list_next_entry(foo, list);
->         if (list_is_head(pos, (head)))
->                 *pos =3D NULL;
->
->         return foo->uc;
-> }
->
-> This works something like this.
->
-> #define for_each_uprobe_consumer_from_foo(uc, pos, head) \
->         list_for_each_entry(pos, head, list) \
->                 if (uc =3D uprobe_consumer_from_foo(pos))
->
-> or, for array of *uprobe_consumer (array must be end with NULL),
->
-> struct uprobe_consumer *get_uprobe_consumer_array(void **pos, void *head =
-__unused)
-> {
->         struct uprobe_consumer **uc =3D *pos;
->
->         if (!*uc)
->                 return NULL;
->
->         *pos =3D uc + 1;
->
->         return *uc;
-> }
->
-> But this may not be able to support array of uprobe_consumer. Hmm.
->
->
-> > And so there is no easy and clean way to reset this iterator without
-> > adding another callback or something. At which point it becomes quite
-> > cumbersome and convoluted.
->
-> If you consider that is problematic, I think we can prepare more
-> iterator like object;
->
-> struct uprobe_consumer_iter_ops {
->         struct uprobe_consumer *(*start)(struct uprobe_consumer_iter_ops =
-*);
->         struct uprobe_consumer *(*next)(struct uprobe_consumer_iter_ops *=
-);
->         void *ctx; // or, just embed the data in this structure.
-> };
->
+On Thu, 27 Jun 2024 19:24:59 -0500, Eric Sandeen wrote:
+> Multiple filesystems take uid and gid as options, and the code to
+> create the ID from an integer and validate it is standard boilerplate
+> that can be moved into common helper functions, so do that for
+> consistency and less cut&paste.
+> 
+> This also helps avoid the buggy pattern noted by Seth Jenkins at
+> https://lore.kernel.org/lkml/CALxfFW4BXhEwxR0Q5LSkg-8Vb4r2MONKCcUCVioehXQKr35eHg@mail.gmail.com/
+> because uid/gid parsing will fail before any assignment in most
+> filesystems.
+> 
+> [...]
 
-Yeah, I was thinking about something like this for adding a proper
-iterator-based interface.
+I've snatched everything but the fuse change as we should do that one in
+two steps.
 
->
-> > How about this? I'll keep the existing get_uprobe_consumer(idx, ctx)
-> > contract, which works for the only user right now, BPF multi-uprobes.
-> > When it's time to add another consumer that works with a linked list,
-> > we can add another more complicated contract that would do
-> > iterator-style callbacks. This would be used by linked list users, and
-> > we can transparently implement existing uprobe_register_batch()
-> > contract on top of if by implementing a trivial iterator wrapper on
-> > top of get_uprobe_consumer(idx, ctx) approach.
->
-> Agreed, anyway as far as it uses an array of uprobe_consumer, it works.
-> When we need to register list of the structure, we may be possible to
-> allocate an array or introduce new function.
->
+---
 
-Cool, glad we agree. What you propose above with start + next + ctx
-seems like a way forward if we need this.
+Applied to the vfs.mount.api branch of the vfs/vfs.git tree.
+Patches in the vfs.mount.api branch should appear in linux-next soon.
 
-BTW, is this (batched register/unregister APIs) something you'd like
-to use from the tracefs-based (or whatever it's called, I mean non-BPF
-ones) uprobes as well? Or there is just no way to even specify a batch
-of uprobes? Just curious if you had any plans for this.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> Thank you!
->
-> >
-> > Let's not add unnecessary complications right now given we have a
-> > clear path forward to add it later, if necessary, without breaking
-> > anything. I'll send v2 without changes to get_uprobe_consumer() for
-> > now, hopefully my above plan makes sense to you. Thanks!
-> >
-> > > >
-> > > > Thank you,
-> > > >
-> > > > >
-> > > > > For now this API works well, I propose to keep it as is. For link=
-ed
-> > > > > list case consumers would need to allocate one extra array or pay=
- the
-> > > > > price of O(N) search (which might be ok, depending on how many up=
-robes
-> > > > > are being attached). But we don't have such consumers right now,
-> > > > > thankfully.
-> > > > >
-> > > > > >
-> > > > > > Thank you,
-> > > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Thank you,
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > >
-> > > >
-> > > > --
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.mount.api
+
+[01/14] fs_parse: add uid & gid option option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/9f111059e725
+[02/14] autofs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/748cddf13de5
+[03/14] debugfs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/49abee5991e1
+[04/14] efivarfs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/dcffad38c767
+[05/14] exfat: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/ffe1b94d7464
+[06/14] ext4: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/6b5732b5ca4f
+[08/14] hugetlbfs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/eefc13247722
+[09/14] isofs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/6a265845db28
+[10/14] ntfs3: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/c449cb5d1bce
+[11/14] tmpfs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/2ec07010b6a9
+[12/14] smb: client: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/3229e3a5a374
+[13/14] tracefs: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/b548291690d1
+[14/14] vboxsf: Convert to new uid/gid option parsing helpers
+        https://git.kernel.org/vfs/vfs/c/da99d45bd551
