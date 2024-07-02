@@ -1,207 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B5D1B5831
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jul 2024 14:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5A71DFE3;
+	Tue,  2 Jul 2024 14:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719929872; cv=none; b=JyDhniMZ9k/3+f1Y25et8oI9RKJsfwS2svasvwbhiywnTgcxxNj1CrE6GQxURPj2od6hXUcBxf+M3Wb91bs/OBU0zp2OQqoCSopPKq4PvQAJ47J/i4sA3wfSeV32p3Js9cI162NazFjbDxxhB4rU/MXw6Hso19pKIGLWw+vp0Ew=
+	t=1719930067; cv=none; b=LyFOQakvN+K8R/uuAK7Clv3LHZN6NyxFIJ9n8n91pczfVymEna3NZkqKmwTqZbR83nCh+tOCwjPkbXJASpahQzUuvzruT0Y0jgCoBxdhdBaOW0yW2HTvw5oipafUCnVUcXjSxRiWAckSZhkphY14s1HfbpKD3ZGOPY78xwXr+uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719929872; c=relaxed/simple;
-	bh=vyDtnmT0VC60yEJNHEUXTuVSVJQQ83MchqGSjKAqNv4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T7cjfBSEIbpB3C/o7lv8WTjlAoD7QMKUY9V7bBlACNI3DZuEH5Zoz7NtmM4eIs/rAIXOJlvMl8d9cCSSIjEiGtyTLOfCzR9XxCIH+Z+kO4hly9XjuyCdtScea1lr6cu8iKeOXTuRe1UBsQleXvpCYyfylZN/fppqgBSbsfOrGes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RYzHTCgE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYzHTCgE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719929870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LyizWTpoNVL7a6zbtz+OxslI5MZuM9dIMFYNrNn6KjQ=;
-	b=RYzHTCgEnp8luBgSV/RU5gDVX3/Apo+9nCWcpKtTgJUcZP4BPLfVGfH1YAGRnTC5o0O/0t
-	cm5hOIWI3Jh/lEXlHUFRXYh4DbAlj92iII+rFb4cD8tdLSsEiMWm5OJNCmQvf7CI0fsKcW
-	TQs5fv5CqCNZcZMEf4h+RMnTXr6FFlA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-y0iHwNG3PgCtph3MV0R0Ww-1; Tue, 02 Jul 2024 10:17:49 -0400
-X-MC-Unique: y0iHwNG3PgCtph3MV0R0Ww-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4256e46d820so2151245e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jul 2024 07:17:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719929868; x=1720534668;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ued8NE/q8zXpL0TRng1QPMxjOe9iz1whmao3wS1ySBg=;
-        b=o9mYDgA5m3UlI3qJLYZCdiaxPA1rijW1xodaP3cRMzDOUNSRKk3+9ACE1oTSSvQUx0
-         pKSKFD8zs6Z5oLfuUa4ce0ojNojYXhSXV5GwkbZfEf6bgwyqjh5+S6IAliHlXvhViPIZ
-         6BaqF/Ucm4mMN9XETF6xXX4/PGWE/Vt+tkW+7wuBfJpLazFAY85qhjf4P20qzUpVo2O6
-         hmX3sg/Xt3TCS/F7QE6S94ChM0v83FdXUMeCVJeOilXK8jrqVoXsvSwn4WrRh8zrMFp0
-         l3tT3XBMZ4rERm5Ft4wYt85p+3HXRUvmgt1O0CtQxA4DFLP/Ffl2KMAp0hoZmgb2zBJ6
-         co3g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/CpB9SvqQMRnxa/dKDCZKHSggILj2n3JlikGfmGzsoondxvlOCoNvw3duNd85OEuRAkfP7JQWb26XI5YWIozrDYNuzrlouJzGytBxR96O/fn/
-X-Gm-Message-State: AOJu0YyWoRqAK1OATvdBo0YolxwrleWRasAtQqzZlRq3Je7vRXWAjgvy
-	NGFkzGWg1nyGdrD8TGBBcEhlPzNuhMNtViZpLeb9ioUrOUnzTzK3EZhGWnpJFSZgon6wcaXGH94
-	Wava53yC9TFQD8zBke9VmfBYLKpK67j+qRaMGjDU6mTihihw14vFUm66aXm4/CoIc9hFsuQ==
-X-Received: by 2002:a05:600c:4fd3:b0:422:78c:82f6 with SMTP id 5b1f17b1804b1-4257a0df29dmr65490125e9.3.1719929867929;
-        Tue, 02 Jul 2024 07:17:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFbWk8I4Yl1h9HU7fJ8yjrwVSLYofO39SP2rdrxUuS5Wy6cRR2zvMHL+Gj2TSgNve9bWyjhzw==
-X-Received: by 2002:a05:600c:4fd3:b0:422:78c:82f6 with SMTP id 5b1f17b1804b1-4257a0df29dmr65489935e9.3.1719929867495;
-        Tue, 02 Jul 2024 07:17:47 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b0a6:6710::f71])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42581bd5e4bsm94460405e9.10.2024.07.02.07.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 07:17:46 -0700 (PDT)
-Message-ID: <dea693fdd35692e3542466868fb3b979c1b23593.camel@redhat.com>
-Subject: Re: [PATCH net-next v15 03/14] netdev: support binding dma-buf to
- netdevice
-From: Paolo Abeni <pabeni@redhat.com>
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Donald Hunter
- <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
- Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>,  Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,  Shuah Khan
- <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, Nikolay
- Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>,  Shakeel Butt
- <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, Praveen
- Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn
- <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Date: Tue, 02 Jul 2024 16:17:43 +0200
-In-Reply-To: <29c65e23b88002eef6b2a8c272357fa2b2a661b6.camel@redhat.com>
-References: <20240628003253.1694510-1-almasrymina@google.com>
-	 <20240628003253.1694510-4-almasrymina@google.com>
-	 <29c65e23b88002eef6b2a8c272357fa2b2a661b6.camel@redhat.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39)
+	s=arc-20240116; t=1719930067; c=relaxed/simple;
+	bh=nWKxdV5ujyrGy3s7qRfFotWRCfmuZrI9OL8cics4EZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZXuqLTUY0NkqY9yne71EGn05EcHkV9nvteFSWkdA0cSYtqdidqAa4GyOEy3Q/0BIbBhJGT4ophOSRbgdZUZHrDfUvjLRNlL6GgRHz2P7s0Aej4ZBxOX4GB8xtcyI6T05WQDgfswHvG7qkMTr4yUtQWrkjaTgnJe18yGpJMdhP9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WD4hr5GkHz1T4Fw;
+	Tue,  2 Jul 2024 22:16:28 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id E9C0A1400CD;
+	Tue,  2 Jul 2024 22:21:00 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 2 Jul 2024 22:21:00 +0800
+Message-ID: <5856cee4-1e13-4c67-8fea-f5f938f7452f@huawei.com>
+Date: Tue, 2 Jul 2024 22:21:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] hugetlbfs: use tracepoints in hugetlbfs functions.
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Steven Rostedt
+	<rostedt@goodmis.org>
+CC: <muchun.song@linux.dev>, <mhiramat@kernel.org>, <linux-mm@kvack.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+References: <20240612011156.2891254-1-lihongbo22@huawei.com>
+ <20240612011156.2891254-3-lihongbo22@huawei.com>
+ <20240701194906.3a9b6765@gandalf.local.home>
+ <1eca1fcd-5479-47b2-b7ba-eb4027135af2@huawei.com>
+ <8015a0bf-39e2-406c-8f61-db87a40a71a3@efficios.com>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <8015a0bf-39e2-406c-8f61-db87a40a71a3@efficios.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Tue, 2024-07-02 at 13:08 +0200, Paolo Abeni wrote:
-> On Fri, 2024-06-28 at 00:32 +0000, Mina Almasry wrote:
-> > +int net_devmem_bind_dmabuf(struct net_device *dev, unsigned int dmabuf=
-_fd,
-> > +=09=09=09   struct net_devmem_dmabuf_binding **out)
-> > +{
-> > +=09struct net_devmem_dmabuf_binding *binding;
-> > +=09static u32 id_alloc_next;
-> > +=09struct scatterlist *sg;
-> > +=09struct dma_buf *dmabuf;
-> > +=09unsigned int sg_idx, i;
-> > +=09unsigned long virtual;
-> > +=09int err;
-> > +
-> > +=09dmabuf =3D dma_buf_get(dmabuf_fd);
-> > +=09if (IS_ERR(dmabuf))
-> > +=09=09return -EBADFD;
-> > +
-> > +=09binding =3D kzalloc_node(sizeof(*binding), GFP_KERNEL,
-> > +=09=09=09       dev_to_node(&dev->dev));
-> > +=09if (!binding) {
-> > +=09=09err =3D -ENOMEM;
-> > +=09=09goto err_put_dmabuf;
-> > +=09}
-> > +
-> > +=09binding->dev =3D dev;
-> > +
-> > +=09err =3D xa_alloc_cyclic(&net_devmem_dmabuf_bindings, &binding->id,
-> > +=09=09=09      binding, xa_limit_32b, &id_alloc_next,
-> > +=09=09=09      GFP_KERNEL);
-> > +=09if (err < 0)
-> > +=09=09goto err_free_binding;
-> > +
-> > +=09xa_init_flags(&binding->bound_rxq_list, XA_FLAGS_ALLOC);
-> > +
-> > +=09refcount_set(&binding->ref, 1);
-> > +
-> > +=09binding->dmabuf =3D dmabuf;
-> > +
-> > +=09binding->attachment =3D dma_buf_attach(binding->dmabuf, dev->dev.pa=
-rent);
-> > +=09if (IS_ERR(binding->attachment)) {
-> > +=09=09err =3D PTR_ERR(binding->attachment);
-> > +=09=09goto err_free_id;
-> > +=09}
-> > +
-> > +=09binding->sgt =3D
-> > +=09=09dma_buf_map_attachment(binding->attachment, DMA_FROM_DEVICE);
-> > +=09if (IS_ERR(binding->sgt)) {
-> > +=09=09err =3D PTR_ERR(binding->sgt);
-> > +=09=09goto err_detach;
-> > +=09}
-> > +
-> > +=09/* For simplicity we expect to make PAGE_SIZE allocations, but the
-> > +=09 * binding can be much more flexible than that. We may be able to
-> > +=09 * allocate MTU sized chunks here. Leave that for future work...
-> > +=09 */
-> > +=09binding->chunk_pool =3D
-> > +=09=09gen_pool_create(PAGE_SHIFT, dev_to_node(&dev->dev));
-> > +=09if (!binding->chunk_pool) {
-> > +=09=09err =3D -ENOMEM;
-> > +=09=09goto err_unmap;
-> > +=09}
-> > +
-> > +=09virtual =3D 0;
-> > +=09for_each_sgtable_dma_sg(binding->sgt, sg, sg_idx) {
-> > +=09=09dma_addr_t dma_addr =3D sg_dma_address(sg);
-> > +=09=09struct dmabuf_genpool_chunk_owner *owner;
-> > +=09=09size_t len =3D sg_dma_len(sg);
-> > +=09=09struct net_iov *niov;
-> > +
-> > +=09=09owner =3D kzalloc_node(sizeof(*owner), GFP_KERNEL,
-> > +=09=09=09=09     dev_to_node(&dev->dev));
->=20
-> I'm sorry for not catching this earlier, but it looks like the above
-> allocation lacks a NULL check.
 
-FTR, given the size of the series, the number of iterations already
-done and the issue not preventing the functionality, I agree to merge
-the series as-is, and handle this with a follow-up.
+
+On 2024/7/2 21:30, Mathieu Desnoyers wrote:
+> On 2024-07-02 07:55, Hongbo Li wrote:
+>>
+>>
+>> On 2024/7/2 7:49, Steven Rostedt wrote:
+>>> On Wed, 12 Jun 2024 09:11:56 +0800
+>>> Hongbo Li <lihongbo22@huawei.com> wrote:
+>>>
+>>>> @@ -934,6 +943,12 @@ static int hugetlbfs_setattr(struct mnt_idmap 
+>>>> *idmap,
+>>>>       if (error)
+>>>>           return error;
+>>>> +    trace_hugetlbfs_setattr(inode, dentry->d_name.len, 
+>>>> dentry->d_name.name,
+>>>> +            attr->ia_valid, attr->ia_mode,
+>>>> +            from_kuid(&init_user_ns, attr->ia_uid),
+>>>> +            from_kgid(&init_user_ns, attr->ia_gid),
+>>>> +            inode->i_size, attr->ia_size);
+>>>> +
+>>>
+>>> That's a lot of parameters to pass to a tracepoint. Why not just pass 
+>>> the
+>>> dentry and attr and do the above in the TP_fast_assign() logic? That 
+>>> would
+>>> put less pressure on the icache for the code part.
+>>
+>> Thanks for reviewing!
+>>
+>> Some logic such as kuid_t --> uid_t might be reasonable obtained in 
+>> filesystem layer. Passing the dentry and attr will let trace know the 
+>> meaning of structure, perhaps tracepoint should not be aware of the
+>> members of these structures as much as possible.
+> 
+> As maintainer of the LTTng out-of-tree kernel tracer, I appreciate the
+> effort to decouple instrumentation from the subsystem instrumentation,
+> but as long as the structure sits in public headers and the global
+> variables used within the TP_fast_assign() logic (e.g. init_user_ns)
+> are export-gpl, this is enough to make it easy for tracer integration
+Thank you for your friendly elaboration and suggestion!
+I will update this part based on your suggestion in next version.
 
 Thanks,
-
-Paolo
-
+Hongbo
+> and it keeps the tracepoint caller code footprint to a minimum.
+> 
+> The TRACE_EVENT definitions are specific to the subsystem anyway,
+> so I don't think it matters that the TRACE_EVENT() need to access
+> the dentry and attr structures.
+> 
+> So I agree with Steven's suggestion. However, just as a precision,
+> I suspect it will have mainly an impact on code size, but not
+> necessarily on icache footprint, because it will shrink the code
+> size within the tracepoint unlikely branch (cold instructions).
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+>>
+>> Thanks,
+>> Hongbo
+>>
+>>>
+>>> -- Steve
+>>>
+> 
