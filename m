@@ -1,43 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BD91DA30B;
-	Tue,  2 Jul 2024 23:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F9B1DA310;
+	Tue,  2 Jul 2024 23:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719961699; cv=none; b=e9+7SSH2reRIIItYNF4rsG68lR+b2byhWWhD0oeXwgxPw8CWrcv6SpEbk9niSEcEwGiwRRFvTb3kM6vi0BEWR8SbAhzWqxDHN0qeIwdAUWgqguGeBGm0X9PdTrMLG8RuapOdd6lPIPY8giu4eUdsBbaR1248HQZ55pvW8IcX6wc=
+	t=1719962195; cv=none; b=uttknOHTjfPgenf5fOQ069bpbQvbocjAAGFHuYuxFDxcpVNMqhcT1QqbtkenLYf3s2bwh2hqcUImSDSrSYyxhxQlvO9qG2wlMp5FDVT2J7/3mtm0zxB67VUQ99s8taZvWc2VO8QZOoAo4s3H0WiHIq8TTBXE1uY6XoCbpq2WOsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719961699; c=relaxed/simple;
-	bh=4v44RV6ZEhl5+m0N3QwHq5yw1b9JD/QuNu1dEFKSJeM=;
+	s=arc-20240116; t=1719962195; c=relaxed/simple;
+	bh=uGqt+NmSAxykzOZPEEPI8Op9DF7EbIbtDsiQasAIoms=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=s8P9nPTBw+Dzi7fIL640QLZlXjrwymsghhDuCaGEc3oJYfd2regOUSfl249Vjdsb4OE7V4Ip1z+glS9ptgT5WKPQzFy2hyoU/Ym5eu7dSK62YteqH45OEGJSEvCFux2ZmmHoqVdFpJZt1Uiu7Hbf/eihDhTU12CwNdthb5fNAHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKOeoQz2; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=aTjdivzZghcnxXyC/ZWAtIrZ97xsz3XU3a6L5W38OSSQzBMwXmtJvi6w+dz/zXOEQPUfPz4Z3eIPObPeAscnCigMSAa6I8+GQrfzA04vvgjUhYRNf4VCtcSFflTZNMFMNrVIq/J6XlvrXpmu2d6q6se7ZEBT2tDhOVE+FbjhUJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgYDy9Nz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKOeoQz2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45151C116B1;
-	Tue,  2 Jul 2024 23:08:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgYDy9Nz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2263BC116B1;
+	Tue,  2 Jul 2024 23:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719961699;
-	bh=4v44RV6ZEhl5+m0N3QwHq5yw1b9JD/QuNu1dEFKSJeM=;
+	s=k20201202; t=1719962194;
+	bh=uGqt+NmSAxykzOZPEEPI8Op9DF7EbIbtDsiQasAIoms=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hKOeoQz2MrfDh4zxOhfGVOl7TDqIfZolkzOZUV+QX1k8sEnbvumGB5RtIv80SPRPE
-	 3hyWP6JFC3nUhnCTbUt/PqY1WWRkH5AOg13+pgqhl5nGQhQFyAT2nsaf4Q0qROpKZN
-	 QuGCPr5/vYMe3VDgf/o7S1DYa6MRsJXJZeCRSNhMvXbi4NoW41FD6UioTveZNLCFyQ
-	 Fs0jcejnZmGxR2RNn/WIf4Jy7Jv7RUPl3oN69Q6Kp5/LhAcCYVmvLID+hG7OnKawg+
-	 X8q51OjG2l7n0tp6fR6QTUMZ4sRVR5cjSIW6EOO7q9DO8d6a6fnFfTi9r0zbdNra57
-	 QXjQq7RKiM0rA==
-Date: Wed, 3 Jul 2024 08:08:14 +0900
+	b=XgYDy9NzWcWzb3elfREPi1nf3kDzqxS5FGgj8XdoorQgUNELWmcNWMGbPYiPju61M
+	 QSVBhs8SyMlSMvAz3Kci5JCct+F/Jl5Ffd5HE4JEWnI/B8g1/6C+a1XTa8QcQOtECR
+	 HtHbNiWIOfn8xtkg8d2Mi8EQbUcI9wjvRyyPUC67FwmwMhnJulLJ4bkk05t8jjrgJy
+	 lqHCcpZjucTfhNqP7NtQDFJ86kbPHWYTj2L9sPFOcYN7xUo0molEuxEsKbQBhqwiJ2
+	 eNtSBOEwoFGiNh+00ev0vE4Q/neezhCGmhmEkxRmLjwKyBHfBNrjTGemeI1Lj61sNf
+	 hYug/wcO7d6Jw==
+Date: Wed, 3 Jul 2024 08:16:29 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Tom Zanussi <zanussi@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] tracing: Support poll on event hist file
-Message-Id: <20240703080814.c8bbe5b27ad70a5520262a6d@kernel.org>
-In-Reply-To: <4ec0e4822293763691d8699750b0df88385ab646.camel@kernel.org>
-References: <171932861260.584123.15653284949837094747.stgit@devnote2>
-	<4ec0e4822293763691d8699750b0df88385ab646.camel@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Andrii Nakryiko
+ <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, oleg@redhat.com,
+ peterz@infradead.org, mingo@redhat.com, bpf@vger.kernel.org,
+ jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
+Subject: Re: [PATCH 06/12] uprobes: add batch uprobe register/unregister
+ APIs
+Message-Id: <20240703081629.e26cb6dc55a8dd7d4ae36a11@kernel.org>
+In-Reply-To: <20240702125320.64ec588e@rorschach.local.home>
+References: <20240625002144.3485799-1-andrii@kernel.org>
+	<20240625002144.3485799-7-andrii@kernel.org>
+	<20240627220449.0d2a12e24731e4764540f8aa@kernel.org>
+	<CAEf4BzbLNHYsUfPi3+M_WUVSaZ9Ey-r3BxqV0Zz6pPqpMCjqpg@mail.gmail.com>
+	<20240628152846.ddf192c426fc6ce155044da0@kernel.org>
+	<CAEf4Bzbr-yFv6wPJ8P=GBth7jLLj58Y7D5NwcDbX4V8nAs1QmA@mail.gmail.com>
+	<20240630083010.99ff77488ec62b38bcfeaa29@kernel.org>
+	<CAEf4BzZh4ShURvqk-QxC5h1NpN0tjWMr1db+__gsCmr-suUNOQ@mail.gmail.com>
+	<CAEf4BzbRQjK7nnR2nnw_hgYztPPxaSC6_qFTrdADy3yCki_wEA@mail.gmail.com>
+	<20240702100151.509a9e45c04a9cfed0653e6f@kernel.org>
+	<CAEf4BzYShpT2fZKv3yZYxZA0Ha9JQXC3YQyJsjGB+T-yLOKs+Q@mail.gmail.com>
+	<20240703001905.4bc2699cf91b8101649a458a@kernel.org>
+	<20240702125320.64ec588e@rorschach.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,109 +57,37 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, 30 Jun 2024 16:07:43 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
+On Tue, 2 Jul 2024 12:53:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Hi Masami,
+> On Wed, 3 Jul 2024 00:19:05 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> On Wed, 2024-06-26 at 00:16 +0900, Masami Hiramatsu (Google) wrote:
-> > Hi,
+> > > BTW, is this (batched register/unregister APIs) something you'd like
+> > > to use from the tracefs-based (or whatever it's called, I mean non-BPF
+> > > ones) uprobes as well? Or there is just no way to even specify a batch
+> > > of uprobes? Just curious if you had any plans for this.  
 > > 
-> > Here is an RFC patch to support polling on event 'hist' file.
-> > 
-> > There has been interest in allowing user programs to monitor kernel
-> > events in real time. Ftrace provides `trace_pipe` interface to wait
-> > on events in the ring buffer, but it is needed to wait until filling
-> > up a page with events in the ring buffer. We can also peek the
-> > `trace` file periodically, but that is inefficient way to monitor
-> > a randomely happening event.
-> > 
-> > This patch set allows user to `poll`(or `select`, `epoll`) on event
-> > histogram interface. As you know each event has its own `hist` file
-> > which shows histograms generated by trigger action. So user can set
-> > a new hist trigger on any event you want to monitor, and poll on the
-> > `hist` file until it is updated.
-> > 
-> > There are 2 poll events are supported, POLLIN and POLLPRI. POLLIN
-> > means that there are any readable update on `hist` file and this
-> > event will be flashed only when you call read(). So, this is
-> > useful if you want to read the histogram periodically.
-> > The other POLLPRI event is for monitoring trace event. Like the
-> > POLLIN, this will be returned when the histogram is updated, but
-> > you don't need to read() the file and use poll() again.
-> > 
-> > Note that this waits for histogram update (not event arrival), thus
-> > you must set a histogram on the event at first.
-> > 
-> > Here is an example usage:
-> > 
-> > ----
-> > TRACEFS=/sys/kernel/tracing
-> > EVENT=$TRACEFS/events/sched/sched_process_free
-> > 
-> > # setup histogram trigger and enable event
-> > echo "hist:key=comm" >> $EVENT/trigger
-> > echo 1 > $EVENT/enable
-> > 
-> > # Wait for update
-> > poll $EVENT/hist
-> > 
-> > # Event arrived.
-> > echo "process free event is comming"
-> > tail $TRACEFS/trace
-> > ----
-> > 
-> > The 'poll' command is in the selftest patch.
-> > 
-> > You can take this series also from here;
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/event-hist-poll
-> > 
-> > Thank you,
+> > No, because current tracefs dynamic event interface is not designed for
+> > batched registration. I think we can expand it to pass wildcard symbols
+> > (for kprobe and fprobe) or list of addresses (for uprobes) for uprobe.
+> > Um, that maybe another good idea.
 > 
-> I think this is a clever use of the histogram files, and will be very
-> useful for real-time monitoring apps. I'm looking forward to using it
-> myself - thanks for doing this.
-> 
-> For the whole series,
-> 
-> Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+> I don't see why not. The wild cards were added to the kernel
+> specifically for the tracefs interface (set_ftrace_filter).
 
-Thanks Tom!
+Sorry for mislead you, I meant current "dynamic_events" interface does not
+support the wildcard places.
+And I agree that we can update it to support something like
 
-I found an issue in the selftests (can not support old stable kernel) so
-let me update it.
+ p:multi_uprobe 0x1234,0x2234,0x3234@/bin/foo $arg1 $arg2 $arg3
+
+(note: kernel does not read the symbols in user binary)
 
 Thank you,
-
-> 
-> > 
-> > ---
-> > 
-> > Masami Hiramatsu (Google) (3):
-> >       tracing/hist: Add poll(POLLIN) support on hist file
-> >       tracing/hist: Support POLLPRI event for poll on histogram
-> >       selftests/tracing: Add hist poll() support test
-> > 
-> > 
-> >  include/linux/trace_events.h                       |    5 +
-> >  kernel/trace/trace_events.c                        |   18 ++++
-> >  kernel/trace/trace_events_hist.c                   |  101
-> > +++++++++++++++++++-
-> >  tools/testing/selftests/ftrace/Makefile            |    3 +
-> >  tools/testing/selftests/ftrace/poll.c              |   34 +++++++
-> >  .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   46 +++++++++
-> >  6 files changed, 204 insertions(+), 3 deletions(-)
-> >  create mode 100644 tools/testing/selftests/ftrace/poll.c
-> >  create mode 100644
-> > tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
-> > 
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
 
 
 -- 
