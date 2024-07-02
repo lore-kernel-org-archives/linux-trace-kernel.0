@@ -1,201 +1,165 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7A6481D0
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jul 2024 18:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552D1EB25;
+	Tue,  2 Jul 2024 19:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719946468; cv=none; b=qrMchoFJ/7f7VKhc472GG2ITrSoFfHNHi2EREzBbmaRTyFRJGtmTvz4HtyYeRdNHimE8iHZnMcWiDdIQ3PGU3IUL4Mh1Notoa6YipnzGr/4l9e0C5dQGuzMWPtVmcxZa5zl5spaLUUeWHKDuRej1IfC2YVAxStJNO/caA8ZVaa4=
+	t=1719947949; cv=none; b=OZxgXwo727nah7jUJmiBeoP3W8cv16j11KaQKg/Cwb5CpUtkFEqZ6Sfc8Yf7RDnCDF4duW98XWS7WMX0qg8LPio+OUd1aC9/lM8eMFNkUv1gdsOIIJS2MOdkIE1Y8HQJu1HBA0BCKHGLMclWsWnxrSzTbju3t5hKJ4piaZuTjyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719946468; c=relaxed/simple;
-	bh=9G4wOeIwf5ploeNF30ak/FAUx4/xtayEJ1hWnxnrfPc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WxJNytBK4v5GiS4Sw8fLkKgGFTTPdWPtIjyuFa+wcSYUlNh7UCVmEis+b8jr+2wI+5onswJ2L8jO+khhJY9PT4doVhuu/HIXcWqlzFlJW2okTLjNmSwMKGBsa5khB1fZGJS51opnEId/79McuN1d9Hvx3yg9VXemitXHf3Mmmrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f3d2d068abso507882839f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 02 Jul 2024 11:54:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719946466; x=1720551266;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ayBkiWWazh08zh1Rk4ClkHRgsUu4SJ893J55DMzfyBU=;
-        b=Mh6VmEDmPK1iFeM72//L0TcVCLMnorfY3rgM0sFvaTeHWkAlOsDY9mYlswFRQ2pLVB
-         wi+ap8wQcnZg/g5WvmYDEr04iG5mVpfOavIJ59X+czPwHsfj5fBrFETWdUM9BTDLgxlZ
-         fp5n+qaWkfxsPt5a5K5G+S0FQy7NpSv6uGTf/eickmufKoZeYXSLY24zxBTZMaXhv5AW
-         8bURYr3JLMXktU+XPOFZj3HSXu8RJIwxnLcXC1KwUUQlo96iiO7OzEa9wjnCtJuSNF8/
-         dPYrgUuOh9mPNMn/nrzxcBGUd1D5MSeQLxL6iWFF2SOtPwRza5V5dtpXBmNbtxUSrLFu
-         2Cww==
-X-Forwarded-Encrypted: i=1; AJvYcCVdqaDymtqBf62njpCHqnIDDASXSZo1It8D28eWeFGqUxrACKyC/EtfdD36Or3OLRmBJORSqsCLOpGEhfuiGK3WKXxYJXzZqnFGwcXwlMQJe7m2
-X-Gm-Message-State: AOJu0YxxIG7fQgLs8v8BO3VA1ku1tG7nj9dUeuZ5WTV73dErXoCOO9U0
-	0EwQb4CJcxpU6rr3PZwjwm4VNmsrIv1jkSZbOLYeB86iwhiiHLKB/jOl7kbbPwgBZg4Cxm56UaH
-	jrcDcjs5wNaD9OzN7VcBQEPkfEIYBkjEMT0WoMPqk54FAs5wg93yjZqs=
-X-Google-Smtp-Source: AGHT+IFEa4YWBdAhrJz19jN8b+Sj5EhnUWJnDjbnm2mLwblaROPIBs5zqCZhx3SZuLkVMblRrmGq2JaYN6+Nwp5dEXFL41ZYg3R/
+	s=arc-20240116; t=1719947949; c=relaxed/simple;
+	bh=qE5auNhai9dGV9LtL6KaE2P0rxgrR5aQwmk1i1Ie/T4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jn28i5ZhP0Zp72F6gTP4g3597iQwAxnx7Ld9VPHD868RhfeueXffq3OJTViwV3+GOGOvowb6rQjQlXqJ64LKSnc00OVFxuT61AqF9CUPEsxVq3AHfNT71uc1XAPpJpUOcOdESmQBdacOyIW2gTU+oG/qiGnZN1KgCe/qa7QNeww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FwHHpTTq; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FwHHpTTq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=652kzr90UlMHK6R7AjCXVbHKXbDJFiJb4ijYez+VQrI=; b=FwHHpTTqbKxtFPHHu7y62KH28K
+	W/tKXaL3YLfeSHOooxkTjPD+dtFtxlpYnJ6wV/aqI81osSBtkgMEyXOFLeulxKtp4GHNQHxLQ9X36
+	nvHNi51FhRnKuMY9ZXDHSUVbyTNt802rzFU1xi2n0L0uuM5nzJqmeO7saplQ+PYRxShFF2IvTuw4J
+	j6AvM8Dboj5FBUAfU7SwQIBaZNtJvfffOVW1ODLTUEWlDTmc3qpvoQgNsf+DzIZDo2VI4vbW2LrFi
+	PdrsK4lNSQr7pF1lduxA+sPfeErOr8B0eKrNPIaymXkmoXBucxDodmKTiFXjYjUooRh+bcB4stP/t
+	RxqtkUZw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOj1p-00000009rOm-0csw;
+	Tue, 02 Jul 2024 19:19:01 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EDFFD300694; Tue,  2 Jul 2024 21:18:57 +0200 (CEST)
+Date: Tue, 2 Jul 2024 21:18:57 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: "Paul E . McKenney" <paulmck@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
+	bpf@vger.kernel.org, jolsa@kernel.org, clm@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
+ and per-CPU RW semaphore
+Message-ID: <20240702191857.GJ11386@noisy.programming.kicks-ass.net>
+References: <20240701223935.3783951-1-andrii@kernel.org>
+ <20240702102353.GG11386@noisy.programming.kicks-ass.net>
+ <20240702115447.GA28838@noisy.programming.kicks-ass.net>
+ <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2389:b0:4b9:e5b4:67fd with SMTP id
- 8926c6da1cb9f-4bbb6ec54d2mr522953173.1.1719946466543; Tue, 02 Jul 2024
- 11:54:26 -0700 (PDT)
-Date: Tue, 02 Jul 2024 11:54:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002be09b061c483ea1@google.com>
-Subject: [syzbot] [mm?] possible deadlock in __mmap_lock_do_trace_released
-From: syzbot <syzbot+16b6ab88e66b34d09014@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	hawk@kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, lizefan.x@bytedance.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, netdev@vger.kernel.org, 
-	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
 
-Hello,
+On Tue, Jul 02, 2024 at 10:54:51AM -0700, Andrii Nakryiko wrote:
 
-syzbot found the following issue on:
+> > @@ -593,6 +595,12 @@ static struct uprobe *get_uprobe(struct uprobe *uprobe)
+> >         return uprobe;
+> >  }
+> >
+> > +static void uprobe_free_rcu(struct rcu_head *rcu)
+> > +{
+> > +       struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
+> > +       kfree(uprobe);
+> > +}
+> > +
+> >  static void put_uprobe(struct uprobe *uprobe)
+> >  {
+> >         if (refcount_dec_and_test(&uprobe->ref)) {
+> > @@ -604,7 +612,8 @@ static void put_uprobe(struct uprobe *uprobe)
+> 
+> right above this we have roughly this:
+> 
+> percpu_down_write(&uprobes_treelock);
+> 
+> /* refcount check */
+> rb_erase(&uprobe->rb_node, &uprobes_tree);
+> 
+> percpu_up_write(&uprobes_treelock);
+> 
+> 
+> This writer lock is necessary for modification of the RB tree. And I
+> was under impression that I shouldn't be doing
+> percpu_(down|up)_write() inside the normal
+> rcu_read_lock()/rcu_read_unlock() region (percpu_down_write has
+> might_sleep() in it). But maybe I'm wrong, hopefully Paul can help to
+> clarify.
 
-HEAD commit:    a12978712d90 selftests/bpf: Move ARRAY_SIZE to bpf_misc.h
-git tree:       bpf-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=130457fa980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=736daf12bd72e034
-dashboard link: https://syzkaller.appspot.com/bug?extid=16b6ab88e66b34d09014
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125718be980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14528876980000
+preemptible RCU or SRCU would work.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9d845a55bf58/disk-a1297871.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/12cb27bdb2de/vmlinux-a1297871.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/db09a1fa448c/bzImage-a1297871.xz
+> 
+> But actually what's wrong with RCU Tasks Trace flavor? 
 
-The issue was bisected to:
+Paul, isn't this the RCU flavour you created to deal with
+!rcu_is_watching()? The flavour that never should have been created in
+favour of just cleaning up the mess instead of making more.
 
-commit 21c38a3bd4ee3fb7337d013a638302fb5e5f9dc2
-Author: Jesper Dangaard Brouer <hawk@kernel.org>
-Date:   Wed May 1 14:04:11 2024 +0000
+> I will
+> ultimately use it anyway to avoid uprobe taking unnecessary refcount
+> and to protect uprobe->consumers iteration and uc->handler() calls,
+> which could be sleepable, so would need rcu_read_lock_trace().
 
-    cgroup/rstat: add cgroup_rstat_cpu_lock helpers and tracepoints
+I don't think you need trace-rcu for that. SRCU would do nicely I think.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ecc085980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16ecc085980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12ecc085980000
+> >                 mutex_lock(&delayed_uprobe_lock);
+> >                 delayed_uprobe_remove(uprobe, NULL);
+> >                 mutex_unlock(&delayed_uprobe_lock);
+> > -               kfree(uprobe);
+> > +
+> > +               call_rcu(&uprobe->rcu, uprobe_free_rcu);
+> >         }
+> >  }
+> >
+> > @@ -668,12 +677,25 @@ static struct uprobe *__find_uprobe(struct inode *inode, loff_t offset)
+> >  static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+> >  {
+> >         struct uprobe *uprobe;
+> > +       unsigned seq;
+> >
+> > -       read_lock(&uprobes_treelock);
+> > -       uprobe = __find_uprobe(inode, offset);
+> > -       read_unlock(&uprobes_treelock);
+> > +       guard(rcu)();
+> >
+> > -       return uprobe;
+> > +       do {
+> > +               seq = read_seqcount_begin(&uprobes_seqcount);
+> > +               uprobes = __find_uprobe(inode, offset);
+> > +               if (uprobes) {
+> > +                       /*
+> > +                        * Lockless RB-tree lookups are prone to false-negatives.
+> > +                        * If they find something, it's good. If they do not find,
+> > +                        * it needs to be validated.
+> > +                        */
+> > +                       return uprobes;
+> > +               }
+> > +       } while (read_seqcount_retry(&uprobes_seqcount, seq));
+> > +
+> > +       /* Really didn't find anything. */
+> > +       return NULL;
+> >  }
+> 
+> Honest question here, as I don't understand the tradeoffs well enough.
+> Is there a lot of benefit to switching to seqcount lock vs using
+> percpu RW semaphore (previously recommended by Ingo). The latter is a
+> nice drop-in replacement and seems to be very fast and scale well.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+16b6ab88e66b34d09014@syzkaller.appspotmail.com
-Fixes: 21c38a3bd4ee ("cgroup/rstat: add cgroup_rstat_cpu_lock helpers and tracepoints")
+As you noted, that percpu-rwsem write side is quite insane. And you're
+creating this batch complexity to mitigate that.
 
-============================================
-WARNING: possible recursive locking detected
-6.10.0-rc2-syzkaller-00797-ga12978712d90 #0 Not tainted
---------------------------------------------
-syz-executor646/5097 is trying to acquire lock:
-ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: __mmap_lock_do_trace_released+0x83/0x620 mm/mmap_lock.c:243
+The patches you propose are quite complex, this alternative not so much.
 
-but task is already holding lock:
-ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: __mmap_lock_do_trace_released+0x83/0x620 mm/mmap_lock.c:243
+> Right now we are bottlenecked on uprobe->register_rwsem (not
+> uprobes_treelock anymore), which is currently limiting the scalability
+> of uprobes and I'm going to work on that next once I'm done with this
+> series.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(lock#9);
-  lock(lock#9);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-5 locks held by syz-executor646/5097:
- #0: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: mmap_read_lock include/linux/mmap_lock.h:144 [inline]
- #0: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: acct_collect+0x1cf/0x830 kernel/acct.c:563
- #1: ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
- #1: ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: __mmap_lock_do_trace_released+0x83/0x620 mm/mmap_lock.c:243
- #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: get_memcg_path_buf mm/mmap_lock.c:139 [inline]
- #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: get_mm_memcg_path+0xb1/0x600 mm/mmap_lock.c:209
- #3: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: trace_call_bpf+0xbc/0x8a0
- #4: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: mmap_read_trylock include/linux/mmap_lock.h:163 [inline]
- #4: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: stack_map_get_build_id_offset+0x237/0x9d0 kernel/bpf/stackmap.c:141
-
-stack backtrace:
-CPU: 0 PID: 5097 Comm: syz-executor646 Not tainted 6.10.0-rc2-syzkaller-00797-ga12978712d90 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_deadlock kernel/locking/lockdep.c:3062 [inline]
- validate_chain+0x15d3/0x5900 kernel/locking/lockdep.c:3856
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
- __mmap_lock_do_trace_released+0x9c/0x620 mm/mmap_lock.c:243
- __mmap_lock_trace_released include/linux/mmap_lock.h:42 [inline]
- mmap_read_unlock include/linux/mmap_lock.h:170 [inline]
- bpf_mmap_unlock_mm kernel/bpf/mmap_unlock_work.h:52 [inline]
- stack_map_get_build_id_offset+0x9c7/0x9d0 kernel/bpf/stackmap.c:173
- __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
- bpf_prog_e6cf5f9c69743609+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- bpf_prog_run_array include/linux/bpf.h:2104 [inline]
- trace_call_bpf+0x369/0x8a0 kernel/trace/bpf_trace.c:147
- perf_trace_run_bpf_submit+0x7c/0x1d0 kernel/events/core.c:10269
- perf_trace_mmap_lock+0x3d7/0x510 include/trace/events/mmap_lock.h:16
- trace_mmap_lock_released include/trace/events/mmap_lock.h:50 [inline]
- __mmap_lock_do_trace_released+0x5bb/0x620 mm/mmap_lock.c:243
- __mmap_lock_trace_released include/linux/mmap_lock.h:42 [inline]
- mmap_read_unlock include/linux/mmap_lock.h:170 [inline]
- acct_collect+0x81d/0x830 kernel/acct.c:566
- do_exit+0x936/0x27e0 kernel/exit.c:853
- do_group_exit+0x207/0x2c0 kernel/exit.c:1023
- __do_sys_exit_group kernel/exit.c:1034 [inline]
- __se_sys_exit_group kernel/exit.c:1032 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1032
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8fac26d039
-Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
-RSP: 002b:00007ffd95d56e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8fac26d039
-RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
-RBP: 00007f8fac2e82b0 R08: ffffffffffffffb8 R09: 00000000000000a0
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f8fac2e82b0
-R13: 0000000000000000 R14: 00007f8fac2e8d20 R15: 00007f8fac23e1e0
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Right, but it looks fairly simple to replace that rwsem with a mutex and
+srcu.
