@@ -1,93 +1,291 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D891C1C69A;
-	Wed,  3 Jul 2024 06:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46340944E
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jul 2024 07:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719987082; cv=none; b=SCx/wGa512CgEmZZaqyU+ZPrkmaDwiikllyiFiAyH2YGsMhibwlrmZ6wkbl76Ei5t+QN4WIeNlyHayAXQ9pVKFSa/GO05xBJ6VJc9Zvl2xfm3Q87jTnltnfXXQDYbGSOMaoLR4pr0BYzjyVOAjy8GQ/QzGo8QyhnIO+f8jbJaIU=
+	t=1719993228; cv=none; b=NDNzOZ5eEl0T5YOmjQghHWTFHknU2jk9Ezbg8wfZ2ACJEl128uE17M0+Hz7PYxfm7WaZB/8P1P/88nCyDEmKEeucETXO/lQ2H6ToGQjLuFFO+mv/XLpQ1B+UQSKlUM2rxGeBlb9gaBMGbgzvJ7H4pknnRug4o4Gtz7Ey1x9r53U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719987082; c=relaxed/simple;
-	bh=dkrl4qdg1v7Cw1wOdAvDDj6CD1YkoPIloW0UtKmbjX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rZqGqPdYN1knf5gQZgZfBb/yvgk8Ftv50jhwhtrAXUu+Z0k0rD1meRRMI+UmEAKXKXJBY6dWDfiPFw6hcPgNAVtCaQqTb4aeNhj24a6tGuc1KVKuPKgD6y4x0faeYZBs47cCMnasXa2XuXGRymyzebUZeMqV799Gfh75FXASK6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4htRq5Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719993228; c=relaxed/simple;
+	bh=Du+hbtiVe0vXnZWfZdgrHmmTfF2kGLcwXBrD2Oxxgjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jk7ka/HnwrgHNT8MTR83GvP2dOul2DcuwJYIbTbZRE5512xVtG0vOJpuGYH3aUfly8tdtjfmsneMvmg9Isvsj1XCDVkSvbveIj87VoPGdG4uIElyRuupBaG9vWcmWXkijwFMy36X4okJzdZSgCvY2d6rkL7k0ND72Ya7ew/OIno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GcdDQjZy; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4htRq5Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B42C32781;
-	Wed,  3 Jul 2024 06:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719987081;
-	bh=dkrl4qdg1v7Cw1wOdAvDDj6CD1YkoPIloW0UtKmbjX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s4htRq5YxeO43gwT/hyUFvB/tlmMH1ZoTto/N3dKJfBB61txf6cRt5GjbsZTVLWjs
-	 iMd0b9JLHM8/DGliEUPKVBVGps3qQJ4tjlTod8ZW/iWfG5riX3qvZy+437BLovvF30
-	 DGq11iy5J+1d/Q3LMds2EFb7crocRxclaWF5xQspNi7RH6ecGU22SZBN5mXb/z40tc
-	 4JQLWjzoOA6RsPjnjd4qGY9/pEtMJYeb4aJ5U6D3bT4duDhaGweaxpozgzK8STH0a5
-	 URbfNUWzAy5Usr+um9s5/HH/Zu5zt0oz88rkjMq7XYR4D8HUvKw1HCriimNoQOTRgo
-	 CNLy5pjNIKrYg==
-Date: Tue, 2 Jul 2024 23:11:19 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack
- traces captured in uprobe
-Message-ID: <20240703061119.iamshulwf3qzsdu3@treble>
-References: <20240702171858.187562-1-andrii@kernel.org>
- <20240702233554.slj6kh7dn2mc2w4n@treble>
- <20240702233902.p42gfhhnxo2veemf@treble>
- <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
- <20240703011153.jfg6jakxaiedyrom@treble>
- <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GcdDQjZy"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57cb9a370ddso3269293a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jul 2024 00:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719993223; x=1720598023; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U5JXgyMic27rF0uTzeA4AUA7J0+eENGzNVobt6nLL58=;
+        b=GcdDQjZyTRcjBnL9qEFlSYkHCowNubI1leV9g29WtADcqWWk8P/+/gNQLBaQ0OX6jN
+         aL8xi9IbtAXDX5Ph0KbQy1oN1E6Wqpl88ll51ScC8kxPVF51HKso/xvwaeCH1QYamSRd
+         7xF26UUzptqgmpkiReOMYFWP5HSidYVmZRp00LPfKtDwd9F0AxdmCpSc1I0Mb+NCvkRM
+         LQ94oi1S0qK97NqS/jMJ7XR3pyELWqIl21polGUsR+Yk1GcUb9/b4h4y0uaRCg6lub3U
+         ZtDZRuEQuxbZ0OQjBGkLe+hXXeaRDF0p0i4v8xwwTQUWo/9/HfrVW0m+ZBgMuCjDjm2n
+         GWUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719993223; x=1720598023;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U5JXgyMic27rF0uTzeA4AUA7J0+eENGzNVobt6nLL58=;
+        b=eSFDUhvCMzTWoZMFx6DaDgt86QpRMf17dTTOM/28pw8N8FFgm/pOTGtLkOqL6Hka3v
+         6b0WuPm0DM4p48nqP38r9OHKbBHL5L4WSPDq7vckL01G9rmYJBuCOM1fkkKv9qY/DTuL
+         aLgQcFWLAkAjBjgCGlOvWnA6QZVpSz7VmAz4e4dNldgSN5f9rmLCARIYXOK+YqWy+n0e
+         U3ggWw6aAMcFE2MN6L6RXPYt2Raiol7KbJCmQn/to31/intwYuehF7VU/5bY8FM5RoZU
+         jghjADwumibiEwDc8gq50HtUFYX70Bwf6YLXIxW2PG1hFh8ipmag5jONkNLYmqdwhQVN
+         BR+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUfBbmmdpbnwZhL58YwImYk+t2vjaZYuhTnefsAYVkb/kXYQPzRBLooIMcAibO+cQASzBidSPr5x5pfkyDYykGjwKkD6kiWE6mJJaIFWZ6wZQDd
+X-Gm-Message-State: AOJu0YygM0bXxKA5QcchnmfA1UofU6lQBgnuVUABfeB9km4YtZgh4Vu4
+	vwYK4bU6f48cYsGXsUQpLlevavEyrDxTBEq1fFOuS5jNdz5spuyMoSGZ+yv+fCU03tf6zrxA/CT
+	X
+X-Google-Smtp-Source: AGHT+IHx2gSoZYtFSuNqPB57GKnRYFsLhjFlEi4nE9BwzkxY9JN1lUj3Kg8MQ0EELkRhuPKAEIgTAA==
+X-Received: by 2002:a05:6402:254a:b0:578:649e:e63e with SMTP id 4fb4d7f45d1cf-5879f1c2563mr7293173a12.16.1719993222472;
+        Wed, 03 Jul 2024 00:53:42 -0700 (PDT)
+Received: from dhcp161.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58bef78662fsm1409447a12.70.2024.07.03.00.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 00:53:42 -0700 (PDT)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH v2] ring-buffer: Limit time with disabled interrupts in rb_check_pages()
+Date: Wed,  3 Jul 2024 09:53:14 +0200
+Message-Id: <20240703075314.23511-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
 
-On Tue, Jul 02, 2024 at 08:35:08PM -0700, Andrii Nakryiko wrote:
-> On Tue, Jul 2, 2024 at 6:11 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > On Tue, Jul 02, 2024 at 05:06:14PM -0700, Andrii Nakryiko wrote:
-> > > In general, even with false positives, I think it's overwhelmingly
-> > > better to get correct entry stack trace 99.9% of the time, and in the
-> > > rest 0.01% cases it's fine having one extra bogus entry (but the rest
-> > > should still be correct), which should be easy for humans to recognize
-> > > and filter out, if necessary.
-> >
-> > Agreed, this is a definite improvement overall.
-> 
-> Cool, I'll incorporate that into v3 and send it soon.
-> 
-> >
-> > BTW, soon there will be support for sframes instead of frame pointers,
-> > at which point these checks should only be done for the frame pointer
-> > case.
-> 
-> Nice, this is one of the reasons I've been thinking about asynchronous
-> stack trace capture in BPF (see [0] from recent LSF/MM).
->  [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdLW55fHOut4co3Zs5akk0t4
+The function rb_check_pages() validates the integrity of a specified
+per-CPU tracing ring buffer. It does so by traversing the underlying
+linked list and checking its next and prev links.
 
-I don't seem to have permission to open it.
+To guarantee that the list isn't modified during the check, a caller
+typically needs to take cpu_buffer->reader_lock. This prevents the check
+from running concurrently, for example, with a potential reader which
+can make the list temporarily inconsistent when swapping its old reader
+page into the buffer.
 
-> Few questions, while we are at it. Does it mean that
-> perf_callchain_user() will support working from sleepable context and
-> will wait for data to be paged in? Is anyone already working on this?
-> Any pointers?
+A problem with this approach is that the time when interrupts are
+disabled is non-deterministic, dependent on the ring buffer size. This
+particularly affects PREEMPT_RT because the reader_lock is a raw
+spinlock which doesn't become sleepable on PREEMPT_RT kernels.
 
-I had a prototype here:
+Modify the check so it still attempts to traverse the entire list, but
+gives up the reader_lock between checking individual pages. Introduce
+for this purpose a new variable ring_buffer_per_cpu.pages_era which is
+bumped any time the list is modified. The value is used by
+rb_check_pages() to detect such a change and restart the check.
 
-  https://lkml.kernel.org/lkml/cover.1699487758.git.jpoimboe@kernel.org
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+---
 
-Hopefully I can get started on v2 soon.
+This is a follow-up to the discussion about improving this check [1].
 
+Changes since v1 [2]:
+* Correct the case when rb_check_pages() is invoked concurrently with
+  the resize code which modifies the list. Introduce
+  ring_buffer_per_cpu.pages_era for this purpose.
+
+[1] https://lore.kernel.org/linux-trace-kernel/20240517134008.24529-1-petr.pavlu@suse.com/
+[2] https://lore.kernel.org/linux-trace-kernel/20240621150956.24814-1-petr.pavlu@suse.com/
+
+ kernel/trace/ring_buffer.c | 97 ++++++++++++++++++++++++++++----------
+ 1 file changed, 71 insertions(+), 26 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 28853966aa9a..ff9a98c06043 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -462,6 +462,7 @@ struct ring_buffer_per_cpu {
+ 	unsigned long			nr_pages;
+ 	unsigned int			current_context;
+ 	struct list_head		*pages;
++	unsigned long			pages_era;	/* list state era */
+ 	struct buffer_page		*head_page;	/* read from head */
+ 	struct buffer_page		*tail_page;	/* write to tail */
+ 	struct buffer_page		*commit_page;	/* committed pages */
+@@ -1454,40 +1455,87 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+ 	RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK);
+ }
+ 
++static bool rb_check_links(struct ring_buffer_per_cpu *cpu_buffer,
++			   struct list_head *list)
++{
++	if (RB_WARN_ON(cpu_buffer,
++		       rb_list_head(rb_list_head(list->next)->prev) != list))
++		return false;
++
++	if (RB_WARN_ON(cpu_buffer,
++		       rb_list_head(rb_list_head(list->prev)->next) != list))
++		return false;
++
++	return true;
++}
++
+ /**
+  * rb_check_pages - integrity check of buffer pages
+  * @cpu_buffer: CPU buffer with pages to test
+  *
+  * As a safety measure we check to make sure the data pages have not
+  * been corrupted.
+- *
+- * Callers of this function need to guarantee that the list of pages doesn't get
+- * modified during the check. In particular, if it's possible that the function
+- * is invoked with concurrent readers which can swap in a new reader page then
+- * the caller should take cpu_buffer->reader_lock.
+  */
+ static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+-	struct list_head *head = rb_list_head(cpu_buffer->pages);
+-	struct list_head *tmp;
++	struct list_head *head, *tmp;
++	unsigned long pages_era;
++	unsigned long flags;
++	int nr_loops = 0;
+ 
+-	if (RB_WARN_ON(cpu_buffer,
+-			rb_list_head(rb_list_head(head->next)->prev) != head))
++	/*
++	 * Walk the linked list underpinning the ring buffer and validate all
++	 * its next and prev links.
++	 *
++	 * The check acquires the reader_lock to avoid concurrent processing
++	 * with code that could be modifying the list. However, the lock cannot
++	 * be held for the entire duration of the walk, as this would make the
++	 * time when interrupts are disabled non-deterministic, dependent on the
++	 * ring buffer size. Therefore, the code releases and re-acquires the
++	 * lock after checking each page. The pages_era variable is then used to
++	 * detect if the list was modified while the lock was not held, in which
++	 * case the check needs to be restarted.
++	 *
++	 * The code attempts to perform the check at most three times before
++	 * giving up. This is acceptable because this is only a self-validation
++	 * to detect problems early on. In practice, the list modification
++	 * operations are fairly spaced, and so this check typically succeeds at
++	 * most on the second try.
++	 */
++again:
++	if (++nr_loops > 3)
+ 		return;
+ 
+-	if (RB_WARN_ON(cpu_buffer,
+-			rb_list_head(rb_list_head(head->prev)->next) != head))
+-		return;
++	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	head = rb_list_head(cpu_buffer->pages);
++	if (!rb_check_links(cpu_buffer, head))
++		goto out_locked;
++	pages_era = cpu_buffer->pages_era;
++	tmp = head;
++	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 
+-	for (tmp = rb_list_head(head->next); tmp != head; tmp = rb_list_head(tmp->next)) {
+-		if (RB_WARN_ON(cpu_buffer,
+-				rb_list_head(rb_list_head(tmp->next)->prev) != tmp))
+-			return;
++	while (true) {
++		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 
+-		if (RB_WARN_ON(cpu_buffer,
+-				rb_list_head(rb_list_head(tmp->prev)->next) != tmp))
+-			return;
++		if (pages_era != cpu_buffer->pages_era) {
++			/* The list was updated, try again. */
++			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++			goto again;
++		}
++
++		tmp = rb_list_head(tmp->next);
++		if (tmp == head)
++			/* The iteration circled back, all is done. */
++			goto out_locked;
++
++		if (!rb_check_links(cpu_buffer, tmp))
++			goto out_locked;
++
++		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	}
++
++out_locked:
++	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ }
+ 
+ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+@@ -1874,6 +1922,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ 
+ 	/* make sure pages points to a valid page in the ring buffer */
+ 	cpu_buffer->pages = next_page;
++	cpu_buffer->pages_era++;
+ 
+ 	/* update head page */
+ 	if (head_bit)
+@@ -1980,6 +2029,7 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ 			 * pointer to point to end of list
+ 			 */
+ 			head_page->prev = last_page;
++			cpu_buffer->pages_era++;
+ 			success = true;
+ 			break;
+ 		}
+@@ -2215,12 +2265,8 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		 */
+ 		synchronize_rcu();
+ 		for_each_buffer_cpu(buffer, cpu) {
+-			unsigned long flags;
+-
+ 			cpu_buffer = buffer->buffers[cpu];
+-			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 			rb_check_pages(cpu_buffer);
+-			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 		}
+ 		atomic_dec(&buffer->record_disabled);
+ 	}
+@@ -4611,6 +4657,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;
+ 	rb_inc_page(&cpu_buffer->head_page);
+ 
++	cpu_buffer->pages_era++;
+ 	local_inc(&cpu_buffer->pages_read);
+ 
+ 	/* Finally update the reader page to the new head */
+@@ -5150,12 +5197,9 @@ void
+ ring_buffer_read_finish(struct ring_buffer_iter *iter)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
+-	unsigned long flags;
+ 
+ 	/* Use this opportunity to check the integrity of the ring buffer. */
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 	rb_check_pages(cpu_buffer);
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 
+ 	atomic_dec(&cpu_buffer->resize_disabled);
+ 	kfree(iter->event);
+@@ -6050,6 +6094,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 		cpu_buffer->pages = cpu_buffer->new_pages.next;
+ 		cpu_buffer->new_pages.next->prev = cpu_buffer->new_pages.prev;
+ 		cpu_buffer->new_pages.prev->next = cpu_buffer->new_pages.next;
++		cpu_buffer->pages_era++;
+ 
+ 		/* Clear the new_pages list */
+ 		INIT_LIST_HEAD(&cpu_buffer->new_pages);
+
+base-commit: 1dfe225e9af5bd3399a1dbc6a4df6a6041ff9c23
 -- 
-Josh
+2.35.3
+
