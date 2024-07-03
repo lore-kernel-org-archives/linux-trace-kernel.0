@@ -1,233 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8B561FD4;
-	Wed,  3 Jul 2024 05:33:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D891C1C69A;
+	Wed,  3 Jul 2024 06:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719984784; cv=none; b=uRTzLcCRtS/UUXPWRmWZcGa/zf+6bwMpZKWF7q2IpqoBuy1y44WgquXpLlxGWc6K2dOxGcDqyzHGXiw02XRodPVHXt2rsSrYXbcDkxUiDB0eiq8DmEEs9Ajdfm1a5qHjJXmusjG4DlTSCeHhgEiGltDVgjsiFScJmKXCjhsWmEw=
+	t=1719987082; cv=none; b=SCx/wGa512CgEmZZaqyU+ZPrkmaDwiikllyiFiAyH2YGsMhibwlrmZ6wkbl76Ei5t+QN4WIeNlyHayAXQ9pVKFSa/GO05xBJ6VJc9Zvl2xfm3Q87jTnltnfXXQDYbGSOMaoLR4pr0BYzjyVOAjy8GQ/QzGo8QyhnIO+f8jbJaIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719984784; c=relaxed/simple;
-	bh=qMUrvkxecOx/v3yAVcd4bfohhjch6A/wjtM7rqSvV/g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q72NAyPYEEn3k/18kOMniJU9vEB7SU4g2Dt+WpFtjlFOGochgLdonzx1ja9B1CIPDobZAj2NH/poeXLFOztIbQVV28qI+9KG21N/cTpPWGKAWXJy9Us0nAzmJ6qG184qjrLU2zZy3l/WPo/3e+3xOf4fpDxybon1O+1u8gyznDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmN8nv6G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719987082; c=relaxed/simple;
+	bh=dkrl4qdg1v7Cw1wOdAvDDj6CD1YkoPIloW0UtKmbjX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZqGqPdYN1knf5gQZgZfBb/yvgk8Ftv50jhwhtrAXUu+Z0k0rD1meRRMI+UmEAKXKXJBY6dWDfiPFw6hcPgNAVtCaQqTb4aeNhj24a6tGuc1KVKuPKgD6y4x0faeYZBs47cCMnasXa2XuXGRymyzebUZeMqV799Gfh75FXASK6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4htRq5Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmN8nv6G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F17BEC32781;
-	Wed,  3 Jul 2024 05:33:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4htRq5Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B42C32781;
+	Wed,  3 Jul 2024 06:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719984783;
-	bh=qMUrvkxecOx/v3yAVcd4bfohhjch6A/wjtM7rqSvV/g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PmN8nv6GXyGbXfjwXwc48AHyl38EgSsWzC9dgCS9wYpXax6U4pS5QDd6lUd22jRTV
-	 hJgOaGyrvV2f9AZFzd2reezTb00n5gEdwSx+8zwRJeEeQu+bkDDZtH/j0WMEM3udzN
-	 k7ojdCv4DQPEzb7Pk3utvYNPmvCDLyn1zPDbaI+NF/AJoVvT51WNTK3BKF4brWdZg+
-	 cEEOvKfQPDxWCYNbTwxaWMZ2/lY5kaErdr0Pav2ECGIkYChEvLw1aZbzYmV7zCKtna
-	 4/0u8XFLoaRLUUafh/3liWYctMoE773XA4t3bEKq9Hdl/e4wQemBUJiXAOYdXpp7kv
-	 kGqVH/Tbnk2Mw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Tom Zanussi <zanussi@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 3/3] selftests/tracing: Add hist poll() support test
-Date: Wed,  3 Jul 2024 14:33:00 +0900
-Message-Id: <171998477999.54594.16011632695593086016.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171998475175.54594.7244942110355338359.stgit@devnote2>
-References: <171998475175.54594.7244942110355338359.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1719987081;
+	bh=dkrl4qdg1v7Cw1wOdAvDDj6CD1YkoPIloW0UtKmbjX8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s4htRq5YxeO43gwT/hyUFvB/tlmMH1ZoTto/N3dKJfBB61txf6cRt5GjbsZTVLWjs
+	 iMd0b9JLHM8/DGliEUPKVBVGps3qQJ4tjlTod8ZW/iWfG5riX3qvZy+437BLovvF30
+	 DGq11iy5J+1d/Q3LMds2EFb7crocRxclaWF5xQspNi7RH6ecGU22SZBN5mXb/z40tc
+	 4JQLWjzoOA6RsPjnjd4qGY9/pEtMJYeb4aJ5U6D3bT4duDhaGweaxpozgzK8STH0a5
+	 URbfNUWzAy5Usr+um9s5/HH/Zu5zt0oz88rkjMq7XYR4D8HUvKw1HCriimNoQOTRgo
+	 CNLy5pjNIKrYg==
+Date: Tue, 2 Jul 2024 23:11:19 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack
+ traces captured in uprobe
+Message-ID: <20240703061119.iamshulwf3qzsdu3@treble>
+References: <20240702171858.187562-1-andrii@kernel.org>
+ <20240702233554.slj6kh7dn2mc2w4n@treble>
+ <20240702233902.p42gfhhnxo2veemf@treble>
+ <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
+ <20240703011153.jfg6jakxaiedyrom@treble>
+ <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Jul 02, 2024 at 08:35:08PM -0700, Andrii Nakryiko wrote:
+> On Tue, Jul 2, 2024 at 6:11 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > On Tue, Jul 02, 2024 at 05:06:14PM -0700, Andrii Nakryiko wrote:
+> > > In general, even with false positives, I think it's overwhelmingly
+> > > better to get correct entry stack trace 99.9% of the time, and in the
+> > > rest 0.01% cases it's fine having one extra bogus entry (but the rest
+> > > should still be correct), which should be easy for humans to recognize
+> > > and filter out, if necessary.
+> >
+> > Agreed, this is a definite improvement overall.
+> 
+> Cool, I'll incorporate that into v3 and send it soon.
+> 
+> >
+> > BTW, soon there will be support for sframes instead of frame pointers,
+> > at which point these checks should only be done for the frame pointer
+> > case.
+> 
+> Nice, this is one of the reasons I've been thinking about asynchronous
+> stack trace capture in BPF (see [0] from recent LSF/MM).
+>  [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdLW55fHOut4co3Zs5akk0t4
 
-Add a testcase for poll() on hist file. This introduces a helper binary
-to the ftracetest, because there is no good way to reliably execute
-poll() on hist file.
+I don't seem to have permission to open it.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Update poll command to support both of POLLIN and POLLPRI, and timeout.
-  - Identify unsupported stable kernel if poll-in returns soon.
-  - Test both of POLLIN and POLLPRI.
----
- tools/testing/selftests/ftrace/Makefile            |    2 +
- tools/testing/selftests/ftrace/poll.c              |   62 +++++++++++++++++
- .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 ++++++++++++++++++++
- 3 files changed, 138 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/poll.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> Few questions, while we are at it. Does it mean that
+> perf_callchain_user() will support working from sleepable context and
+> will wait for data to be paged in? Is anyone already working on this?
+> Any pointers?
 
-diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-index a1e955d2de4c..49d96bb16355 100644
---- a/tools/testing/selftests/ftrace/Makefile
-+++ b/tools/testing/selftests/ftrace/Makefile
-@@ -6,4 +6,6 @@ TEST_PROGS := ftracetest-ktap
- TEST_FILES := test.d settings
- EXTRA_CLEAN := $(OUTPUT)/logs/*
- 
-+TEST_GEN_PROGS = poll
-+
- include ../lib.mk
-diff --git a/tools/testing/selftests/ftrace/poll.c b/tools/testing/selftests/ftrace/poll.c
-new file mode 100644
-index 000000000000..8003a59fe042
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/poll.c
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Simple poll on a file.
-+ *
-+ * Copyright (c) 2024 Google LLC.
-+ */
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <poll.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#define BUFSIZE 4096
-+
-+/*
-+ * Usage:
-+ *  poll <in|pri> <FILE> [timeout]
-+ */
-+int main(int argc, char *argv[])
-+{
-+	struct pollfd pfd;
-+	char buf[BUFSIZE];
-+	int timeout = -1;
-+	int ret;
-+
-+	if (argc < 3)
-+		return -1;
-+
-+	if (!strcmp(argv[1], "in"))
-+		pfd.events = POLLIN;
-+	else if (!strcmp(argv[1], "pri"))
-+		pfd.events = POLLPRI;
-+
-+	pfd.fd = open(argv[2], O_RDONLY);
-+	if (pfd.fd < 0) {
-+		perror("open");
-+		return -1;
-+	}
-+
-+	if (argc == 4)
-+		timeout = atoi(argv[3]);
-+
-+	/* Reset poll by read if POLLIN is specified. */
-+	if (pfd.events & POLLIN)
-+		do {} while (read(pfd.fd, buf, BUFSIZE) == BUFSIZE);
-+
-+	ret = poll(&pfd, 1, timeout);
-+	if (ret < 0 && errno != EINTR) {
-+		perror("poll");
-+		return -1;
-+	}
-+	close(pfd.fd);
-+
-+	/* If timeout happned, return code is 0 */
-+	if (ret == 0)
-+		return 1;
-+
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
-new file mode 100644
-index 000000000000..53bea74e2234
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
-@@ -0,0 +1,74 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event trigger - test poll wait on histogram
-+# requires: set_event events/sched/sched_process_free/trigger events/sched/sched_process_free/hist
-+# flags: instance
-+
-+POLL=${FTRACETEST_ROOT}/poll
-+
-+if [ ! -x ${POLL} ]; then
-+  echo "poll program is not compiled!"
-+  exit_unresolved
-+fi
-+
-+EVENT=events/sched/sched_process_free/
-+
-+# Check poll ops is supported. Before implementing poll on hist file, it
-+# returns soon with POLLIN | POLLOUT, but not POLLPRI.
-+
-+# This must wait >1 sec and return 1 (timeout).
-+set +e
-+${POLL} in ${EVENT}/hist 1000
-+ret=$?
-+set -e
-+if [ ${ret} != 1 ]; then
-+  echo "poll on hist file is not supported"
-+  exit_unsupported
-+fi
-+
-+# Test POLLIN
-+echo > trace
-+echo "hist:key=comm" > ${EVENT}/trigger
-+echo 1 > ${EVENT}/enable
-+
-+# This sleep command will exit after 2 seconds.
-+sleep 2 &
-+BGPID=$!
-+# if timeout happens, poll returns 1.
-+${POLL} in ${EVENT}/hist 4000
-+echo 0 > tracing_on
-+
-+if [ -d /proc/${BGPID} ]; then
-+  echo "poll exits too soon"
-+  kill -KILL ${BGPID} ||:
-+  exit_fail
-+fi
-+
-+if ! grep -qw "sleep" trace; then
-+  echo "poll exits before event happens"
-+  exit_fail
-+fi
-+
-+# Test POLLPRI
-+echo > trace
-+echo 1 > tracing_on
-+
-+# This sleep command will exit after 2 seconds.
-+sleep 2 &
-+BGPID=$!
-+# if timeout happens, poll returns 1.
-+${POLL} pri ${EVENT}/hist 4000
-+echo 0 > tracing_on
-+
-+if [ -d /proc/${BGPID} ]; then
-+  echo "poll exits too soon"
-+  kill -KILL ${BGPID} ||:
-+  exit_fail
-+fi
-+
-+if ! grep -qw "sleep" trace; then
-+  echo "poll exits before event happens"
-+  exit_fail
-+fi
-+
-+exit_pass
+I had a prototype here:
 
+  https://lkml.kernel.org/lkml/cover.1699487758.git.jpoimboe@kernel.org
+
+Hopefully I can get started on v2 soon.
+
+-- 
+Josh
