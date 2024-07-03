@@ -1,102 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6764D17A587
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219E71E4BE;
+	Wed,  3 Jul 2024 13:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720010929; cv=none; b=GKPI0HNIXIATHsh2l1d0rNLeZBJTgBi0YpFhyaBF/W+1tq2amkZ3tkreyZPkwaBkfVDcD9SG7vsJ1e276TowIBZQ/kQj07FMkhkd++TUBSKPGydlxnxy2vVsYN37btW3PHvMO60FXMT+xq0zFzErKZx977byabaTHPrQxA8q4Ms=
+	t=1720012530; cv=none; b=Y+MnERVqXC0LI5IRNXbw9B9K6NNtIR3gqYhP1Ckz+Q6xb1mJRsal4/ZQirQUOcQxo0qSQ4Uv06IbkjomhcFvEBCaE2ywBxr+0g6SRW2JZ7MKH8Zl2/jtYpnJWqPFlI9U5uOneNTSP3Q18L6Km5GqUOD2Yo/ZJ006CCF71kMavq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720010929; c=relaxed/simple;
-	bh=nOrLYdaQKWbCBzur09331cdOZ260WekYtYvlyXlVvNg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M+Cgjvyn6uPP+e4WuY8s29uwKQ9SDYtDPayAceugkQfCeOqaf1ieuJh8RoVRr9LF980gVhxAIoFdwpICPP7oI4S2yKmrufQ+umw8xTlRzbZSsRyEMzFbMGzi+249GLyPMrqk/sJGvQXuIAI1tV3+dikWeG/4GZNrYHogfGalunw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7QCLfwU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720012530; c=relaxed/simple;
+	bh=pp9IYcc32SZRbVofOh0Qkhr0fzVFapnBx6KENqMEW60=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=QsoEXQg5ncoj8aEUHBmSa9vAqEI8u3Fa0HpmdcKKK/wvOulKC1hr3tM+GKleKozGY3isga74/5UAHROIFXf9sIORWOfMxMJ/zx9E80Qbs2LeGQ7qS2rdwtnMCWVn8GeGOUbNrJaWAJUnBy5nPuqaecj+2NiWSlC1BZZlDnHGB+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9tIHEnk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7QCLfwU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720010927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2MEP5KBKlMKx9T4CmY7WwoI0xWCk7Wv3Ry4wWTTbIMQ=;
-	b=P7QCLfwUcz3mg2A5ElG0ooCZzvadMZYJQAY+KS5kE9t26MDPBMjQjMeIVsODzCMY0DCEJe
-	Ep41J0lxy3oVja+gVxtNGpFAqxAWuEZ+B4IoZ6kbPZ0+Ce8G1w7kNVvkv7sURdc29q/d8S
-	McbqP4YFFDZhyIzrpg868ivJMZwIMfI=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-tBHi2sSAND2wkIGZdF7H7w-1; Wed, 03 Jul 2024 08:48:46 -0400
-X-MC-Unique: tBHi2sSAND2wkIGZdF7H7w-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ee890f0cecso2347431fa.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:48:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720010924; x=1720615724;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2MEP5KBKlMKx9T4CmY7WwoI0xWCk7Wv3Ry4wWTTbIMQ=;
-        b=kv6H0JcMhI2CbqmpHOJe3TP2CNT802mhabNnBehWn26L8YVzh80ZGtqm001HplaBm2
-         6m0vUIhnstbnwqv0twQWv6Bt6VPpNz8ryGjlHM2013jSLcwCCqWIaedHBUe7tn3UoK0T
-         iBxbpnsTYbcSO/sSNSLvGMVFm+Eg4SytybKNGPpigL5WfovV3S9IW0eb5MMVjGqayrFc
-         9GfDuq2QRJlAudUI/NP5kPGacku/eXKyYJXJtXXwL6BtWNv0+LoqwD98hT/WS28XbAXV
-         Bp71ViZJvaPtSCJAHlNQe4KQuJm71lSUiUYBzYcfUglQAtqDV0cBLOGvBriiNcUxt86A
-         1fTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWaRr5mRWTipp2sL4s8fs6g9hiz9N03RsdVZrGRWInF8N/z2fmWHFbmTx66mg843fyddnawdgACJDLr8CIn9JQ8Bub9iAiJs6k7il2SCeFxud9i
-X-Gm-Message-State: AOJu0YzA2ECj2uK0Mv1URW8z+GLgwQFc4KpN0MKs+QdpwsajHFUz9TVH
-	xUQx/PCfw62Zrghyt3Fr9lITrlnhM/Iitn22jTstkUjgGwBAp8Ovx7DSTDsAM6fO/NB8S3/Kw4i
-	RLwElXayG6k4fNSUwsxhF0r/4OPJGu5zJlFJPCazgc1VccmK/UYEcqgGCk0WVM5mm7vkqFw==
-X-Received: by 2002:a2e:a7c2:0:b0:2ee:45f3:1d13 with SMTP id 38308e7fff4ca-2ee5e704e51mr78433961fa.47.1720010924676;
-        Wed, 03 Jul 2024 05:48:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFP5TqWKFAuIwTILcZtQfViw3L54aF8RKuLImctjrV+bIlLQQRnHKZJF7c8esvbcZCiclXd1w==
-X-Received: by 2002:a2e:a7c2:0:b0:2ee:45f3:1d13 with SMTP id 38308e7fff4ca-2ee5e704e51mr78433691fa.47.1720010924256;
-        Wed, 03 Jul 2024 05:48:44 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d8cd8sm15773145f8f.27.2024.07.03.05.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 05:48:43 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>, seanjc@google.com
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
- nsaenz@amazon.com, linux-trace-kernel@vger.kernel.org, graf@amazon.de,
- dwmw2@infradead.org, pdurrant@amazon.co.uk, mlevitsk@redhat.com,
- jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, amoorthy@google.com
-Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM
- Emulation
-In-Reply-To: <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
-Date: Wed, 03 Jul 2024 14:48:42 +0200
-Message-ID: <87ikxm63px.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9tIHEnk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74258C2BD10;
+	Wed,  3 Jul 2024 13:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720012529;
+	bh=pp9IYcc32SZRbVofOh0Qkhr0fzVFapnBx6KENqMEW60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=a9tIHEnkLMgStKfgO2iJaVkYL3WlY6Lt9JVIKL0YOdbq/WtARvixdcj2ugHbMcyi4
+	 ef9/Dc1DxJBLp3j0GKKouMJ1Hlrg8wvOlxoM2GIyGl/bblde92pWuzUe3kqGafjVBG
+	 zbSYyC2jd4woe5tIAJ3ziKNt5Pup/zODIFTPdyn9ek09vz9TxiNKmukhfhVkyJ1J7X
+	 YUk40SEjG02Vo1dY9fU7aU0LnnSHId60lavxussjknn/SJf+RIjPdLUlbjO+iR82tK
+	 4AQfyjzyDzVUapudeia3Sasli15hGWPvsz9PaYwup7vFMmoPs4rXEyU0H7YwuGwMrU
+	 0o8LZ2DiDu+cA==
+Date: Wed, 3 Jul 2024 22:15:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+ oleg@redhat.com, peterz@infradead.org, mingo@redhat.com,
+ bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
+Subject: Re: [PATCH v2 02/12] uprobes: correct mmap_sem locking assumptions
+ in uprobe_write_opcode()
+Message-Id: <20240703221525.dff79d6c71af3921ca7a7232@kernel.org>
+In-Reply-To: <20240701223935.3783951-3-andrii@kernel.org>
+References: <20240701223935.3783951-1-andrii@kernel.org>
+	<20240701223935.3783951-3-andrii@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
+On Mon,  1 Jul 2024 15:39:25 -0700
+Andrii Nakryiko <andrii@kernel.org> wrote:
 
-> Hi Sean,
->
-> On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
->> This series introduces core KVM functionality necessary to emulate Hyper-V's
->> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
->
-> Just wanted to make sure the series is in your radar.
->
+> It seems like uprobe_write_opcode() doesn't require writer locked
+> mmap_sem, any lock (reader or writer) should be sufficient. This was
+> established in a discussion in [0] and looking through existing code
+> seems to confirm that there is no need for write-locked mmap_sem.
+> 
+> Fix the comment to state this clearly.
+> 
+>   [0] https://lore.kernel.org/linux-trace-kernel/20240625190748.GC14254@redhat.com/
+> 
+> Fixes: 29dedee0e693 ("uprobes: Add mem_cgroup_charge_anon() into uprobe_write_opcode()")
 
-Not Sean here but I was planning to take a look at least at Hyper-V
-parts of it next week.
+nit: why this has Fixes but [01/12] doesn't?
+
+Should I pick both to fixes branch?
+
+Thank you,
+
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  kernel/events/uprobes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 081821fd529a..f87049c08ee9 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -453,7 +453,7 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
+>   * @vaddr: the virtual address to store the opcode.
+>   * @opcode: opcode to be written at @vaddr.
+>   *
+> - * Called with mm->mmap_lock held for write.
+> + * Called with mm->mmap_lock held for read or write.
+>   * Return 0 (success) or a negative errno.
+>   */
+>  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+> -- 
+> 2.43.0
+> 
+
 
 -- 
-Vitaly
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
