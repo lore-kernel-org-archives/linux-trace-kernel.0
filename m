@@ -1,114 +1,84 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C35D13A240;
-	Wed,  3 Jul 2024 08:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C616143758;
+	Wed,  3 Jul 2024 09:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719994446; cv=none; b=arW/XUDVemXosmUmnO/oTzMip+Uy3EL+tSHRE09DebB5sAdlnBswVq/9Nkbp+BbypihbivquD1ZYIOId1h0/XYIWeIX1vwiQSNPO38vAaQN+PPwRe00dZ0SgTm43Ab2oRtGNha4P3N+xVwXMaAwb7PB4pimgyzsWDTc3GWZYs0o=
+	t=1720000539; cv=none; b=QoLLjhyhcNzH5UWlepdZH4KJPWZq9Hp06HVP9K6S21UIkZlyT8PNM/PZMzqOkEIu/k7swPvzQbqLlrV0KCHIDk4u/1NlB5f3+oNI+h83i5hTDY19WY+NTsxMiygH1OSsgJkfTGV9Ar5PYKonIw8LTDsQOuRKlCvsgHHZtrMNitI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719994446; c=relaxed/simple;
-	bh=UbrT7MLEbcbQzeNgLCfOBCxSek/yGusozCZS6BByWiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QTYq4nAh6CAKr92mwctYJAuciA3uH91g+BSTot2ePsi9YktsKi1H9qOBfGYOzbimk7Q2ZI3a4lAO49Ud6oaAO9Y55dq3Ni+929vQFtwj4D/hUa8G7et45wM4MEwCiYntYPGNaqNnXLUKalwvqM24IyKpQlFJzFET5mL+sejFov8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZauMvKPd; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720000539; c=relaxed/simple;
+	bh=VAztpCOR1tH3GwIz0d5tqw3J6dkGZ3sS7qwDIFUKl/U=;
+	h=MIME-Version:Content-Type:Date:Message-ID:To:CC:Subject:From:
+	 References:In-Reply-To; b=jNF7IC0nhC0LyVtYCWFXX1J70++MEvNiw2GfDHFm7Hu1cvqn59QDyk4px3IKxa+N+9n2Y30MxNJc4LqqcvHM9yXgaGgudG5/YR93zl28z3r5BFIMOv/OsG2tUZclKGwy6XmleNYkUXLe8273YI8QV9OcADq0lk9FgHit21VN39c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=VF3Uyut2; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZauMvKPd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=h1FAH4DAPdebB/Wse9W0SfJUP8z/jO44OvECbxhA2NA=; b=ZauMvKPdPFXeDgFFJ4m2TGJYS4
-	SbSNyZq+L5sXQZIPWaUdQHpKeRxXnBGZ8yjp1JyNN9f0NmYl/XJJz6pi6EiAbVF1FpUCm1sWXn7+b
-	tey31dq7pHoNdi8ptQMjQyhhj5pi6V7yTR/NztqcIzTFAMd3mQYUiHg7kkLG4oHNmmy4GTiB24Jck
-	7KDI5OXnm0gFc4eF0T4GgXjpfr1qG9KHvOGtGZ7SECD7DbviUk04AIWF1mgWr8o6raIx4WEy1Pmmp
-	GENIJsPhKJNEV0MYsAGbyJ/zi192VBGG25PcmZ8y/PRPKD3lRnoX6B/51kguGrzzC0GGBsFnAMMDw
-	jF1ZGiKQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sOv77-00000009whu-170q;
-	Wed, 03 Jul 2024 08:13:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 32C2B3006B7; Wed,  3 Jul 2024 10:13:15 +0200 (CEST)
-Date: Wed, 3 Jul 2024 10:13:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	clm@meta.com
-Subject: Re: [PATCH v2 05/12] uprobes: move offset and ref_ctr_offset into
- uprobe_consumer
-Message-ID: <20240703081315.GN11386@noisy.programming.kicks-ass.net>
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240701223935.3783951-6-andrii@kernel.org>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VF3Uyut2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1720000538; x=1751536538;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   to:cc:subject:from:references:in-reply-to;
+  bh=VAztpCOR1tH3GwIz0d5tqw3J6dkGZ3sS7qwDIFUKl/U=;
+  b=VF3Uyut2JB5TiKqzMmDJ71r78jkF5eqbmYhcisPNoGEP1s7swEEmQsIr
+   FGtjXE5EK1+O4E7C2grr0XnHuKkYFg4MleaM1yvm3rp0VaWPY4cefExOP
+   5sVNDs+f/jkH4omBB99/mQ3Rr6rkkPjmReFWa74uVeESsxllNw0gHnGgd
+   o=;
+X-IronPort-AV: E=Sophos;i="6.09,181,1716249600"; 
+   d="scan'208";a="643328494"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 09:55:35 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:41563]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.31.218:2525] with esmtp (Farcaster)
+ id 4054678a-94ee-40f8-a85c-6afac11b8361; Wed, 3 Jul 2024 09:55:34 +0000 (UTC)
+X-Farcaster-Flow-ID: 4054678a-94ee-40f8-a85c-6afac11b8361
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 3 Jul 2024 09:55:34 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Wed, 3 Jul 2024
+ 09:55:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701223935.3783951-6-andrii@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 3 Jul 2024 09:55:24 +0000
+Message-ID: <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
+To: <seanjc@google.com>
+CC: <pbonzini@redhat.com>, <seanjc@google.com>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>, <vkuznets@redhat.com>,
+	<linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <nsaenz@amazon.com>,
+	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
+	<dwmw2@infradead.org>, <pdurrant@amazon.co.uk>, <mlevitsk@redhat.com>,
+	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
+Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM
+ Emulation
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+X-Mailer: aerc 0.17.0-152-g73bcb4661460-dirty
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+In-Reply-To: <20240609154945.55332-1-nsaenz@amazon.com>
+X-ClientProxiedBy: EX19D039UWB002.ant.amazon.com (10.13.138.79) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On Mon, Jul 01, 2024 at 03:39:28PM -0700, Andrii Nakryiko wrote:
-> Simplify uprobe registration/unregistration interfaces by making offset
-> and ref_ctr_offset part of uprobe_consumer "interface". In practice, all
-> existing users already store these fields somewhere in uprobe_consumer's
-> containing structure, so this doesn't pose any problem. We just move
-> some fields around.
-> 
-> On the other hand, this simplifies uprobe_register() and
-> uprobe_unregister() API by having only struct uprobe_consumer as one
-> thing representing attachment/detachment entity. This makes batched
-> versions of uprobe_register() and uprobe_unregister() simpler.
-> 
-> This also makes uprobe_register_refctr() unnecessary, so remove it and
-> simplify consumers.
-> 
-> No functional changes intended.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  include/linux/uprobes.h                       | 18 +++----
->  kernel/events/uprobes.c                       | 19 ++-----
->  kernel/trace/bpf_trace.c                      | 21 +++-----
->  kernel/trace/trace_uprobe.c                   | 53 ++++++++-----------
->  .../selftests/bpf/bpf_testmod/bpf_testmod.c   | 22 ++++----
->  5 files changed, 55 insertions(+), 78 deletions(-)
-> 
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index b503fafb7fb3..a75ba37ce3c8 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -42,6 +42,11 @@ struct uprobe_consumer {
->  				enum uprobe_filter_ctx ctx,
->  				struct mm_struct *mm);
->  
-> +	/* associated file offset of this probe */
-> +	loff_t offset;
-> +	/* associated refctr file offset of this probe, or zero */
-> +	loff_t ref_ctr_offset;
-> +	/* for internal uprobe infra use, consumers shouldn't touch fields below */
->  	struct uprobe_consumer *next;
->  };
->  
-> @@ -110,10 +115,9 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
->  extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
->  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
->  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
-> -extern int uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-> -extern int uprobe_register_refctr(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
-> +extern int uprobe_register(struct inode *inode, struct uprobe_consumer *uc);
->  extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
-> -extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-> +extern void uprobe_unregister(struct inode *inode, struct uprobe_consumer *uc);
+Hi Sean,
 
-It seems very weird and unnatural to split inode and offset like this.
-The whole offset thing only makes sense within the context of an inode.
+On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
+> This series introduces core KVM functionality necessary to emulate Hyper-=
+V's
+> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
 
-So yeah, lets not do this.
+Just wanted to make sure the series is in your radar.
+
+Thanks,
+Nicolas
