@@ -1,81 +1,87 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7B13136643;
-	Wed,  3 Jul 2024 22:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C421C68D;
+	Wed,  3 Jul 2024 22:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720045612; cv=none; b=axtVdd4ySRD8+4d7E4hJLSnfZsmmtlTkSimtIDpP1C9PvyuRXXq2Q67HB4LbTBTta8S24I4Zm5I9C4U1Qs26rMUBf+3ON16Qt6wCrYyasoNzL7M99Yp7oiqDFO7N2hGf8Yt8L8R8smbuUUGZG6WBHTfEA7KKIbZnqjRfhmK1PuM=
+	t=1720046371; cv=none; b=mysRdRDD8n57WNH+75Uxc4aB4KVuMDg3OSkK8fCPDR/T4UyNkdO5n3JeI4U56Ra/xeTijoSY6Ch+5Cw6eAtNaL0l71TvU3eisDR58Wod8nvnZ2pfTA9z20Na5tJW4GHaRKOvgEwngzE8ta+1Wd4UB/EctQz4S+fn+tUAkvuIAAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720045612; c=relaxed/simple;
-	bh=oypge0eDe1k0diy+whdltG9WV8gATeebYZ5wxQnvQxI=;
+	s=arc-20240116; t=1720046371; c=relaxed/simple;
+	bh=1BgN09tJcD3ylA6qFAtoMI1gjQ6sMPuy7sgcQ2PipHk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bclmlOh3AywcSC3FRGztN+wK3DT61sL9WT6f2xJ7juWopunmrtYjFnwPyr4UO8mFss2/LvL4EfvBEfLeUuxZlmQFIs41yIoUXfMsoFvIuzkMqI/+/gMgdAezB/43L0I8Bh4xRW7PP/RJWYA3YksGbAcFm6ubkun4/KZYVCQ6s2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iYeJHUmc; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BM8aoa6iAY3pt9XubIATITf5uLAViluIB1g1Jcmj3wKnJABfbGnIYA+C98kinB4tZIga+9ESzRrYnRRyE2OFMTPPCc7rirG2pJqmt4AbLu6eScX7hkc/jS5GOsuYvi8fOdKhhbhPHfOYVrvCeElhHuw768Heykj7acjEk+wDAi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhLcPazT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iYeJHUmc"
-Received: from CPC-beaub-VBQ1L. (unknown [4.155.48.126])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6DDD520B7001;
-	Wed,  3 Jul 2024 15:26:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DDD520B7001
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1720045610;
-	bh=VxOS5jnbA0Lf+6v1MBAkXU6TPJciosuFNl3HvdPNn6c=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhLcPazT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929EDC2BD10;
+	Wed,  3 Jul 2024 22:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720046370;
+	bh=1BgN09tJcD3ylA6qFAtoMI1gjQ6sMPuy7sgcQ2PipHk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iYeJHUmcJAvo9XetcxRm48+P4V1WJQBWYGeMQJIVJk11tNhseVXjjCOLPi+V/wKS9
-	 2vKzvOZNl5UoSS+gdJvqbw/oC5yktnm71yqL+g649SzJMcjcbRkw83ATX80eeWuOxA
-	 R5dXbgloSUJbwjpZKZ/+eQqNADRGrMf2hQbSngtk=
-Date: Wed, 3 Jul 2024 22:26:46 +0000
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Dmitry V. Levin" <ldv@strace.io>,
-	Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
-	kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
-	david@redhat.com, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-api@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v23 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <20240703222646.GA2025-beaub@linux.microsoft.com>
-References: <20240510140435.3550353-1-vdonnefort@google.com>
- <20240510140435.3550353-4-vdonnefort@google.com>
- <20240630105322.GA17573@altlinux.org>
- <20240630084053.0b506916@rorschach.local.home>
- <9a9c8ea4-8e17-4e7e-95fe-7b51441a228c@efficios.com>
- <20240702111807.13d2dd2c@rorschach.local.home>
- <cb02f5a0-d6a3-4228-9cbb-473fd392ee48@efficios.com>
- <20240702125126.50a6267c@rorschach.local.home>
+	b=LhLcPazTUERr2j0S5ALF+gdMrnL7T7oN/gi8ir6iF4J2HzmE18Um36K2HmYL/pyXk
+	 oaJCdRsu7aTtyZxFpkENKFvoe7LkLivGyTrStVxz30AQIs/CRw/4CACGlEt5gYH5RC
+	 iP/tZ2BU+cyEXcRFwM9JTagc09zmIDVHplE2WL7Wy6eqF3fByP9+sEKskJ/PCAnIP0
+	 s1E850+MFHm3qWUILeWXNWaXNU1ONWLIKh+WSzsmdGCBN2+f/hm6uys18SNE+0fz0t
+	 ir6A7wAOLwyXNomm0d0R9eycVd2sXLHWwplJZNpN/RMmqNc5fiSPTUffgbDsnI0dE/
+	 /clJ6fFAATt2Q==
+Date: Wed, 3 Jul 2024 15:39:27 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org,
+	mingo@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3] perf,x86: avoid missing caller address in stack
+ traces captured in uprobe
+Message-ID: <20240703223927.zby4glzbngjqxemd@treble>
+References: <20240703040203.3368505-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240702125126.50a6267c@rorschach.local.home>
+In-Reply-To: <20240703040203.3368505-1-andrii@kernel.org>
 
-On Tue, Jul 02, 2024 at 12:51:26PM -0400, Steven Rostedt wrote:
-> On Tue, 2 Jul 2024 11:32:53 -0400
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
-> > If we use '*' for user events already, perhaps we'd want to consider
-> > using the same range for the ring buffer ioctls ? Arguably one is
-> > about instrumentation and the other is about ring buffer interaction
-> > (data transport), but those are both related to tracing.
-> 
-> Yeah, but I still rather keep them separate.
-> 
-> Beau, care to send a patch adding an entry into that ioctl document for
-> user events?
-> 
-> -- Steve
+On Tue, Jul 02, 2024 at 09:02:03PM -0700, Andrii Nakryiko wrote:
+> @@ -2833,6 +2858,18 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+>  
+>  	fp = compat_ptr(ss_base + regs->bp);
+>  	pagefault_disable();
+> +
+> +#ifdef CONFIG_UPROBES
+> +	/* see perf_callchain_user() below for why we do this */
+> +	if (current->utask) {
+> +		u32 ret_addr;
+> +
+> +		if (is_uprobe_at_func_entry(regs, current->utask->auprobe) &&
+> +		    !__get_user(ret_addr, (const u32 __user *)regs->sp))
 
-Sure thing, sent one out [1].
+Shouldn't the regs->sp value be checked with __access_ok() before
+calling __get_user()?
 
-Thanks,
--Beau
+Also, instead of littering functions with ifdefs it would be better to
+abstract this out into a separate function which has an "always return
+false" version for !CONFIG_UPROBES.  Then the above could be simplified to
+something like:
 
-1. https://lore.kernel.org/linux-doc/20240703222501.1547-1-beaub@linux.microsoft.com/
+	...
+ 	pagefault_disable();
+
+	if (is_uprobe_at_func_entry(regs, current) &&
+	    __access_ok(regs->sp, 4) &&
+	    !__get_user(ret_addr, (const u32 __user *)regs->sp))
+	    	perf_callchain_store(entry, ret_addr);
+	...
+
+Also it's good practice to wait at least several days before posting new
+versions to avoid spamming reviewers and to give them time to digest
+what you've already sent.
+
+-- 
+Josh
