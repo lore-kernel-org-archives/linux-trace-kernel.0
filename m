@@ -1,84 +1,135 @@
-Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id C78E6945A;
-	Wed,  3 Jul 2024 03:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E71510A1F;
+	Wed,  3 Jul 2024 03:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719977669; cv=none; b=ltnfaYQCesTBdOj5JQWk1+o2CAiMGn/vtghofu5OZMGE1MR0QB13xSET1k7QKsuGxgAI4H2rR+q9+gw6uNqx2bLwk5DVfSsRRguhpT3TMYF/JXEZzJVdOyGkczGeITCoKfOonqJn1yn3+eJwqbtxUqJwj9z1jfoyu5kAXLEBOxE=
+	t=1719977722; cv=none; b=jYdIvEYC8Km6560KYUbhenag7bxvnyMUQN+dH8bHCf71/wYUCWhTsVkEB3u51hDuHIFpDdb75l1VDGtSCgAoEbEa7ak1u1nSGLFMHpEFpYu18WYdvkuVbF4XvdLjBHtx1QSJoTJ0JZB2wbd4tByPhOEtrIL14EaBIg1c+vjThzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719977669; c=relaxed/simple;
-	bh=OXS1bOzvLhqNwCViyagDjz4vM7bVgZBNZ7u3g4eWfkE=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Azz7gsN7udfpLrigg01i8qMF9f3587SthMthuhJvRxNm2bA4PCP7x9vCQcOTHRZD5R/os4HNxp3JTzwaovOIxfzByofgMMmUMXNgRkFZOx2hxcTdOhsudgpQygLOfxipD4p6albeSGiIaENG3pUlssoSoW+jxf4pML3zJgg0R64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.12])
-	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 977FB183104549;
-	Wed,  3 Jul 2024 11:33:57 +0800 (CST)
-Received: from didi-ThinkCentre-M930t-N000 (10.79.64.101) by
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 3 Jul 2024 11:34:02 +0800
-Date: Wed, 3 Jul 2024 11:33:53 +0800
-X-MD-Sfrom: tiozhang@didiglobal.com
-X-MD-SrcIP: 10.79.65.12
-From: Tio Zhang <tiozhang@didiglobal.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<vineethr@linux.ibm.com>, <akpm@linux-foundation.org>,
-	<mathieu.desnoyers@efficios.com>, <tiozhang@didiglobal.com>,
-	<mingo@kernel.org>, <mgorman@techsingularity.net>, <peterz@infradead.org>,
-	<qyousef@layalina.io>, <vincent.guittot@linaro.org>, <elver@google.com>,
-	<zyhtheonly@gmail.com>, <zyhtheonly@yeah.net>
-Subject: [PATCH 1/1] tracing/sched: sched_switch: place prev_comm and
- next_comm in right order
-Message-ID: <20240703033353.GA2833@didi-ThinkCentre-M930t-N000>
-Mail-Followup-To: rostedt@goodmis.org, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	vineethr@linux.ibm.com, akpm@linux-foundation.org,
-	mathieu.desnoyers@efficios.com, mingo@kernel.org,
-	mgorman@techsingularity.net, peterz@infradead.org,
-	qyousef@layalina.io, vincent.guittot@linaro.org, elver@google.com,
-	zyhtheonly@gmail.com, zyhtheonly@yeah.net
+	s=arc-20240116; t=1719977722; c=relaxed/simple;
+	bh=alDW/5WRTsnQvPoIKEAj39FCtHeT0wPGDtOjyOtERHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z53H0ZLLSD6ktaZGx92nSSCfvMSY7rpRD7XgUND46QXHDZTB2ixejHi3Np/VozcSSaX1saSoSHfI+zHz0Gua4R+9VUTSYHjHrwYcrJmt2Pd0kkmr+KuQXK2X1djjKaWkQLB4ydBixIiPHE5GWJve5g1yCsGsd9i/bsnTOAHO398=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OASLjKx1; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OASLjKx1"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7066a3229f4so3253711b3a.2;
+        Tue, 02 Jul 2024 20:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719977721; x=1720582521; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l0OSZ5JJ3cRcJxK0FWpvSgsBkGlhmq63+yMgRkflksk=;
+        b=OASLjKx1MK5i9ELYo8t8PnW5Q7k00bXmd/+huQlbOiURQCAIy3lldGLrx+X2gLDFqq
+         v8BVBi9ec7T4MpVNsT45aN6zLhItMLtW++UIvNoH57NDPdpBMiYdkbEKgjeiBH4ueitT
+         IfeYjBI8nMCLAs33s7kNFUUR3yhMQGn8ces6C30gBF/DTPEdrH7tJBUwQmVQ/VpDEDdm
+         buC0EK8T/8kfLRgiTHV75scAuX4eGVtdsEEIcBczeD3k1QfE3Suw3X+t+TgofUvNovLx
+         6mdrGmjkh8uU+HZSF4I3BoA3DeeBXGMXDULWx3SSrfOkmk8YQRpY6ShmsFR6FwvAQUMz
+         YMSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719977721; x=1720582521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l0OSZ5JJ3cRcJxK0FWpvSgsBkGlhmq63+yMgRkflksk=;
+        b=caHJN4wkx8MF5mWoj9tPoil2cH65xKGYrmlschgjwo/Oe3ETLfoW0VrHPWGKFcbYhi
+         SuAwuHVL23OnIs6iVMka8+PfS1idwFMTYDpro3V6VEEpC64r37y9to032sXwq39l+KDt
+         pjfMstc1df4wWNnkB81/iDWEXuIyRT7+Ph+rpW5hL2l/jLRUHZd76idEqQOnAw3+9hG7
+         cMzOH+aL+DNQPAKhdRDQyebMSDleZwxOOM+Id6KNTfYwgRoz0+PinJdfTSx7uasU43gO
+         0dxsmyBKKEjOuqbZkL6MQQmYdqW5c4EHrIesdP+Ltkhv36SSDyL5qxHqZQTATEMADNB+
+         udgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvlXKcEF7eFBrPrP7P7LVfpLMViiod0HJwiu/x5yTtG/UHMJcI07NCUjb3QbMTvK5kVKn0j10L4856j1u/P6KSULhEce/zFGi0NNeY93qKBndZgTK4vpcBvYBOKpW0hWFHGhZUiDGzMxCXAkngNVSdZrhmFPqP5A1anksjFM+QGy9F+iVXARujzLO5nrxGZY559q6Sdtxnj4E93HhRNM1Tz1zYEJcCdg==
+X-Gm-Message-State: AOJu0YwvB5oppPriMbWcDQA8Z1dJryPBB7LSU+4WV5bkOixNrA9CSgZY
+	m2LdiZuxe1luhyAaI/J1xrdolOlSEHQLDfbLjbS8KDn3Nwi1peYZYSlPZRjnVr5GNso6JbZs6rK
+	DJXelt9ttGEIYd22qUZeEZ5i+0Z5vUKdx
+X-Google-Smtp-Source: AGHT+IEvXhl7/THETxftoNv1+QEaIpTlrmxZjQ5Jl1zLbDAXsZxlBu4DIpOCs3GNgARkdzzKCjvFzBRweyzktSXtPgQ=
+X-Received: by 2002:a05:6a00:4fcf:b0:706:6af8:e088 with SMTP id
+ d2e1a72fcca58-70aaad2975bmr9987422b3a.3.1719977720721; Tue, 02 Jul 2024
+ 20:35:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: ZJY03-PUBMBX-01.didichuxing.com (10.79.71.12) To
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
+References: <20240702171858.187562-1-andrii@kernel.org> <20240702233554.slj6kh7dn2mc2w4n@treble>
+ <20240702233902.p42gfhhnxo2veemf@treble> <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
+ <20240703011153.jfg6jakxaiedyrom@treble>
+In-Reply-To: <20240703011153.jfg6jakxaiedyrom@treble>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 2 Jul 2024 20:35:08 -0700
+Message-ID: <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Switch the order of prev_comm and next_comm in sched_switch's code to
-align with its printing order.
+On Tue, Jul 2, 2024 at 6:11=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
+ wrote:
+>
+> On Tue, Jul 02, 2024 at 05:06:14PM -0700, Andrii Nakryiko wrote:
+> > > > Should it also check for ENDBR64?
+> > > >
+> >
+> > Sure, I can add a check for endbr64 as well. endbr64 probably can be
+> > used not just at function entry, is that right? So it might be another
+> > case of false positive (which I think is ok, see below).
+>
+> Yeah, at least theoretically they could happen in the middle of a
+> function for implementing C switch jump tables.
+>
+> > > > When compiled with -fcf-protection=3Dbranch, the first instruction =
+of the
+> > > > function will almost always be ENDBR64.  I'm not sure about other
+> > > > distros, but at least Fedora compiles its binaries like that.
+> > >
+> > > BTW, there are some cases (including leaf functions and some stack
+> > > alignment sequences) where a "push %rbp" can happen inside a function=
+.
+> > > Then it would presumably add a bogus trace entry.  Are such false
+> > > positives ok?
+> >
+> > I think such cases should be rare. People mostly seem to trace user
+> > function entry/exit, rarely if ever they trace something within the
+> > function, except for USDT cases, where it will be a nop instruction
+> > that they trace.
+> >
+> > In general, even with false positives, I think it's overwhelmingly
+> > better to get correct entry stack trace 99.9% of the time, and in the
+> > rest 0.01% cases it's fine having one extra bogus entry (but the rest
+> > should still be correct), which should be easy for humans to recognize
+> > and filter out, if necessary.
+>
+> Agreed, this is a definite improvement overall.
 
-Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
-Reviewed-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
----
- include/trace/events/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Cool, I'll incorporate that into v3 and send it soon.
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index dbb01b4b7451..a4bd4330db4c 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -239,11 +239,11 @@ TRACE_EVENT(sched_switch,
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-+		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
- 		__entry->prev_pid	= prev->pid;
- 		__entry->prev_prio	= prev->prio;
- 		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
--		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
-+		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
- 		__entry->next_pid	= next->pid;
- 		__entry->next_prio	= next->prio;
- 		/* XXX SCHED_DEADLINE */
--- 
-2.17.1
+>
+> BTW, soon there will be support for sframes instead of frame pointers,
+> at which point these checks should only be done for the frame pointer
+> case.
 
+Nice, this is one of the reasons I've been thinking about asynchronous
+stack trace capture in BPF (see [0] from recent LSF/MM).
+
+Few questions, while we are at it. Does it mean that
+perf_callchain_user() will support working from sleepable context and
+will wait for data to be paged in? Is anyone already working on this?
+Any pointers?
+
+ [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdLW55fHOut=
+4co3Zs5akk0t4
+
+>
+> --
+> Josh
