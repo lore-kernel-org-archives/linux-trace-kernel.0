@@ -1,240 +1,91 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D473B1BC;
-	Wed,  3 Jul 2024 04:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4047017C60;
+	Wed,  3 Jul 2024 05:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719982498; cv=none; b=Uq/9ZKIOxIJDN/isGiAek8+ZZykZVaGAoRIUqst0igW7iajCKcrHtCugnGuhE2xe0FGgir4JphJEGuFwdVlXj1YVvWNted3YzMBNDf57bszhdXqfPwLGOOvEXq3uhcCys7xDVsqxxuYhewIFPSrAd1zdl4dUsxtMQv8enea0VIE=
+	t=1719984425; cv=none; b=pws6zvZOqJh4KYX3g0l4Dcv2RkEZ3Jh+ar36Q8P2M/1zW/koWC+Y7GVFITwrkPv18TyqTWkyO6lCt/GewD0ek5K7WuE+0Pxaqd31jPNy/KSEqiLwrDuMmPFv4Ju3FY0ovMDr5WadqoyzAA8RdvLy16t83L7RXIhP/pNGoSiLq6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719982498; c=relaxed/simple;
-	bh=iXUw4GvNpASMcNbS/qMPqNBslzVg7ZC4vPgOn+6cqso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SdNImGfwKXd1s+qZHg8RWnLw59n+1uLCl80F5oAuq1IClCD7BOnr5qxw2tzto0r6xHGz3T9UuVMnIFYv/1IsN3g4JCk+Ve6nMOiz/JgVCUPdurdwcUM3whHMza3HjtWH/SPjYXJx7p4GNLQVd1bKyt4Yok94K6SgAn18WCOCR/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xx5kahgf; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719984425; c=relaxed/simple;
+	bh=mZHTDOjfNldNq9pm83st4/J9NEm34dK9p7Q7e6Vj96w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S+AMSGIkZEDfAuVaDdIv8/fvTD+KvvPZ2UtsUJE/bKyeBlQke/jOJ1UAo6kGs3a08VatfRtGzd/kvkvbU23X3rpXV1I19EW3GY2A9IW3fmZP4urOXXgqena0SBjt86hCAixUzgmC7JTvhnJvSfFzyqKFppe8xKqJwWqVV7ncd8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uhVnfzsl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xx5kahgf"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70aeb6e1908so125788b3a.0;
-        Tue, 02 Jul 2024 21:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719982496; x=1720587296; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDpaa0dfkI/CTDnvUjwqbRxEtMZIx9LS8sItRX0s7WE=;
-        b=Xx5kahgfVhZRe6QE1+3v6alTDnqcrjTPonYkGmuDKppHMx6bCZCwziIOURmKs8U5HP
-         eOCqB0QPZB5o/KZ0LZjDnlOyMBq9gKSqrV8wSbGfWX4tSusPGK4ye8la7s47qbUOACPv
-         OOsQn7OXSALuTHEw5m0luPg6dCyQKFg3iIxmouBQUJEmnSG4OZXFWNZ6CKm1D3qtw9cT
-         n2sI8mqyjT2V8i+VPkI72aYuc7P4LU5uhr/FIyo0SoyV6c6JbsN8nnRB511UNB65HGDJ
-         Npt0Ib97kIjPK7v/vKIiSPQo5rcGafsWkPPuvuSHyRv5zmvwvNDM0PqajSyAa9aRWF/9
-         hUmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719982496; x=1720587296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DDpaa0dfkI/CTDnvUjwqbRxEtMZIx9LS8sItRX0s7WE=;
-        b=Tbddt34G6ZdE/GayllwhLEu7TRNDZX9kDH2HJ0DPGj7rWruGvtOC80hfmCTNfZYvr8
-         cdjiQ89lC+TUIXylCf+p04FF60hlSl313SZKPw6Rp6y4I1G42+Vsq2A7/j+cNPIWwZSU
-         U/CYUWpqLhNFNIAkFn9TU9wnwE89sQrIYK365FVReFr/k0XEknuIqsOK53aispiJnb96
-         UlQUc0LcYoFhIfxs0L2DoXk1XNZOXho846BQIhAZo5Z4D/J45QYmrxoinNn57nG4SgUn
-         uRffn1nO69OkOv9UgFlJwR4bFM2bYGbpt1Gu2L0jbM5kAss3kVOiK4tiZ2c29ON662LC
-         XS9A==
-X-Forwarded-Encrypted: i=1; AJvYcCX07w/onMiouVVR/sV4JWGPdpnJODnzSG8NNM/EdXDPOD5gfM804DzFQThsA2Z/acD+PelkE+JdwMFJtCjtVCOIcB76qneg0nP/CJa3zlWw9vCfnrFS5JNBSbjsQQMhDedoW4OizNJRJbjr/sdAGDzeh308yZW1icBwYG5+ukveW6p6cXl4
-X-Gm-Message-State: AOJu0YwzXsvY8P0Xb782NwpyxvgiJTeGFyssGWZ3I9p/TP8NiPghN1ub
-	buzmG81OMWBA8HmlxzrzZDp1l5qP1rPdnoGG1C9IVhWknynR/siYZ+bzuYpRzRM/4vbSI6d8CHY
-	dY4UO+2xU7O2UANRvQTNNys1awUU=
-X-Google-Smtp-Source: AGHT+IHfKbuu0mDTG8MLd6Z/DkyZRTYRD3A8P4M+CeGmfg6YgH087ZYLSAJvqTtmcFKvuO1LkuMN9oZ/Fz32sQCiAZ0=
-X-Received: by 2002:a05:6a00:1d09:b0:706:b179:dc5d with SMTP id
- d2e1a72fcca58-70aaaf1053dmr9916424b3a.25.1719982495542; Tue, 02 Jul 2024
- 21:54:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uhVnfzsl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=B2QFWmmtnzG9/Nt7IO4g9fzoajf9ZPOHUxGkfqY/0Fk=; b=uhVnfzsl8Ss5ByDBA//ACjebHe
+	jorQN3OuDLkgxctOg56Sg6djOeDxfc7ypq0RjIwaSmmPFXDEUZ/TW5UWehQr/LfVoSlFkiaAC6pRA
+	WvgJeI4zFNwfDNZlzqcdkrJT9lGakvlV4LUKGqpz60aa64GQRq7tKAemE2ILOcCM62/kioq5QTKqv
+	xL2lvZFiMCrBvDaEoHNlgd2xoA3eHdmqrwffMGPTrPWwyP1HwbKBsmqlZP+Z0fNJWZhXRpK2wYiLL
+	aI/5wqPGpdtMm3LxwtISeJZIpmVQmcTBWUE5NDVOMGGK/Sm4+IAz+HiFlxcI8UJmYUzaxk/mGUo26
+	CAFHPolQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOsW7-000000092xA-20k6;
+	Wed, 03 Jul 2024 05:26:55 +0000
+Date: Tue, 2 Jul 2024 22:26:55 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] fs: turn inode ctime fields into a single ktime_t
+Message-ID: <ZoThH9fWsdzq7IXR@infradead.org>
+References: <ZoOuSxRlvEQ5rOqn@infradead.org>
+ <d91a29f0e600793917b73ac23175e02dafd56beb.camel@kernel.org>
+ <20240702101902.qcx73xgae2sqoso7@quack3>
+ <958080f6de517cf9d0a1994e3ca500f23599ca33.camel@kernel.org>
+ <ZoPs0TfTEktPaCHo@infradead.org>
+ <09ad82419eb78a2f81dda5dca9caae10663a2a19.camel@kernel.org>
+ <ZoPvR39vGeluD5T2@infradead.org>
+ <a11d84a3085c6a6920d086bf8fae1625ceff5764.camel@kernel.org>
+ <ZoQY4jdTc5dHPGGG@infradead.org>
+ <4ec1fbdc6568e16da40f41789081805e764fd83e.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701223935.3783951-1-andrii@kernel.org> <20240702102353.GG11386@noisy.programming.kicks-ass.net>
- <20240702115447.GA28838@noisy.programming.kicks-ass.net> <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
- <20240702191857.GJ11386@noisy.programming.kicks-ass.net> <fd1d8b71-2a42-4649-b7ba-1b2e88028a20@paulmck-laptop>
-In-Reply-To: <fd1d8b71-2a42-4649-b7ba-1b2e88028a20@paulmck-laptop>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Jul 2024 21:54:43 -0700
-Message-ID: <CAEf4Bzbz2bXFFB_s=bD+8CFAvMNuRSXxJPQBkRxWjY303v4Caw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-To: paulmck@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	oleg@redhat.com, mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, 
-	clm@meta.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ec1fbdc6568e16da40f41789081805e764fd83e.camel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jul 2, 2024 at 4:56=E2=80=AFPM Paul E. McKenney <paulmck@kernel.org=
-> wrote:
->
-> On Tue, Jul 02, 2024 at 09:18:57PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jul 02, 2024 at 10:54:51AM -0700, Andrii Nakryiko wrote:
-> >
-> > > > @@ -593,6 +595,12 @@ static struct uprobe *get_uprobe(struct uprobe=
- *uprobe)
-> > > >         return uprobe;
-> > > >  }
-> > > >
-> > > > +static void uprobe_free_rcu(struct rcu_head *rcu)
-> > > > +{
-> > > > +       struct uprobe *uprobe =3D container_of(rcu, struct uprobe, =
-rcu);
-> > > > +       kfree(uprobe);
-> > > > +}
-> > > > +
-> > > >  static void put_uprobe(struct uprobe *uprobe)
-> > > >  {
-> > > >         if (refcount_dec_and_test(&uprobe->ref)) {
-> > > > @@ -604,7 +612,8 @@ static void put_uprobe(struct uprobe *uprobe)
-> > >
-> > > right above this we have roughly this:
-> > >
-> > > percpu_down_write(&uprobes_treelock);
-> > >
-> > > /* refcount check */
-> > > rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > >
-> > > percpu_up_write(&uprobes_treelock);
-> > >
-> > >
-> > > This writer lock is necessary for modification of the RB tree. And I
-> > > was under impression that I shouldn't be doing
-> > > percpu_(down|up)_write() inside the normal
-> > > rcu_read_lock()/rcu_read_unlock() region (percpu_down_write has
-> > > might_sleep() in it). But maybe I'm wrong, hopefully Paul can help to
-> > > clarify.
-> >
-> > preemptible RCU or SRCU would work.
->
-> I agree that SRCU would work from a functional viewpoint.  No so for
-> preemptible RCU, which permits preemption (and on -rt, blocking for
-> spinlocks), it does not permit full-up blocking, and for good reason.
->
-> > > But actually what's wrong with RCU Tasks Trace flavor?
-> >
-> > Paul, isn't this the RCU flavour you created to deal with
-> > !rcu_is_watching()? The flavour that never should have been created in
-> > favour of just cleaning up the mess instead of making more.
->
-> My guess is that you are instead thinking of RCU Tasks Rude, which can
-> be eliminated once all architectures get their entry/exit/deep-idle
-> functions either inlined or marked noinstr.
->
-> > > I will
-> > > ultimately use it anyway to avoid uprobe taking unnecessary refcount
-> > > and to protect uprobe->consumers iteration and uc->handler() calls,
-> > > which could be sleepable, so would need rcu_read_lock_trace().
-> >
-> > I don't think you need trace-rcu for that. SRCU would do nicely I think=
-.
->
-> From a functional viewpoint, agreed.
->
-> However, in the past, the memory-barrier and array-indexing overhead
-> of SRCU has made it a no-go for lightweight probes into fastpath code.
-> And these cases were what motivated RCU Tasks Trace (as opposed to RCU
-> Tasks Rude).
+On Tue, Jul 02, 2024 at 11:58:02AM -0400, Jeff Layton wrote:
+> Yeah, mostly. We shrink struct inode by 8 bytes with that patch, and we
+> (probably) get a better cache footprint, since i_version ends up in the
+> same cacheline as the ctime. That's really a separate issue though, so
+> I'm not too worked up about dropping that patch.
+> 
+> As a bonus, leaving it split across separate fields means that we can
+> use unused bits in the nsec field for the flag, so we don't need to
+> sacrifice any timestamp granularity either.
+> 
+> I've got a draft rework that does this that I'm testing now. Assuming
+> it works OK, I'll resend in a few days.
 
-Yep, and this is a similar case here. I've actually implemented
-SRCU-based protection and benchmarked it (all other things being the
-same). I see 5% slowdown for the fastest uprobe kind (entry uprobe on
-nop) for the single-threaded use case. We go down from 3.15 millions/s
-triggerings to slightly below 3 millions/s. With more threads the
-difference increases a bit, though numbers vary a bit from run to run,
-so I don't want to put out the exact number. But I see that for
-SRCU-based implementation total aggregated peak achievable throughput
-is about 3.5-3.6 mln/s vs this implementation reaching 4-4.1 mln/s.
-Again, some of that could be variability, but I did run multiple
-rounds and that's the trend I'm seeing.
+So while shrinking the inodes sounds nice, the tradeoff to have to
+check all timestamps from disk / the server for validity doesn't
+sound as positive.  So I'm glade we're avoiding this at least for.
 
->
-> The other rule for RCU Tasks Trace is that although readers are permitted
-> to block, this blocking can be for no longer than a major page fault.
-> If you need longer-term blocking, then you should instead use SRCU.
->
-
-And this is the case here. Right now rcu_read_lock_trace() is
-protecting uprobes_treelock, which is only taken for the duration of
-RB tree lookup/insert/delete. In my subsequent changes to eliminate
-register_rwsem we might be executing uprobe_consumer under this RCU
-lock, but those also should be only sleeping for page faults.
-
-On the other hand, hot path (reader side) is quite hot with
-millions/second executions and should add as little overhead as
-possible (which is why I'm seeing SRCU-based implementation being
-slower, as I mentioned above).
-
->                                                         Thanx, Paul
->
-> > > >                 mutex_lock(&delayed_uprobe_lock);
-> > > >                 delayed_uprobe_remove(uprobe, NULL);
-> > > >                 mutex_unlock(&delayed_uprobe_lock);
-> > > > -               kfree(uprobe);
-> > > > +
-> > > > +               call_rcu(&uprobe->rcu, uprobe_free_rcu);
-> > > >         }
-> > > >  }
-> > > >
-> > > > @@ -668,12 +677,25 @@ static struct uprobe *__find_uprobe(struct in=
-ode *inode, loff_t offset)
-> > > >  static struct uprobe *find_uprobe(struct inode *inode, loff_t offs=
-et)
-> > > >  {
-> > > >         struct uprobe *uprobe;
-> > > > +       unsigned seq;
-> > > >
-> > > > -       read_lock(&uprobes_treelock);
-> > > > -       uprobe =3D __find_uprobe(inode, offset);
-> > > > -       read_unlock(&uprobes_treelock);
-> > > > +       guard(rcu)();
-> > > >
-> > > > -       return uprobe;
-> > > > +       do {
-> > > > +               seq =3D read_seqcount_begin(&uprobes_seqcount);
-> > > > +               uprobes =3D __find_uprobe(inode, offset);
-> > > > +               if (uprobes) {
-> > > > +                       /*
-> > > > +                        * Lockless RB-tree lookups are prone to fa=
-lse-negatives.
-> > > > +                        * If they find something, it's good. If th=
-ey do not find,
-> > > > +                        * it needs to be validated.
-> > > > +                        */
-> > > > +                       return uprobes;
-> > > > +               }
-> > > > +       } while (read_seqcount_retry(&uprobes_seqcount, seq));
-> > > > +
-> > > > +       /* Really didn't find anything. */
-> > > > +       return NULL;
-> > > >  }
-> > >
-> > > Honest question here, as I don't understand the tradeoffs well enough=
-.
-> > > Is there a lot of benefit to switching to seqcount lock vs using
-> > > percpu RW semaphore (previously recommended by Ingo). The latter is a
-> > > nice drop-in replacement and seems to be very fast and scale well.
-> >
-> > As you noted, that percpu-rwsem write side is quite insane. And you're
-> > creating this batch complexity to mitigate that.
-> >
-> > The patches you propose are quite complex, this alternative not so much=
-.
-> >
-> > > Right now we are bottlenecked on uprobe->register_rwsem (not
-> > > uprobes_treelock anymore), which is currently limiting the scalabilit=
-y
-> > > of uprobes and I'm going to work on that next once I'm done with this
-> > > series.
-> >
-> > Right, but it looks fairly simple to replace that rwsem with a mutex an=
-d
-> > srcu.
