@@ -1,95 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219E71E4BE;
-	Wed,  3 Jul 2024 13:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64007175555;
+	Wed,  3 Jul 2024 13:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720012530; cv=none; b=Y+MnERVqXC0LI5IRNXbw9B9K6NNtIR3gqYhP1Ckz+Q6xb1mJRsal4/ZQirQUOcQxo0qSQ4Uv06IbkjomhcFvEBCaE2ywBxr+0g6SRW2JZ7MKH8Zl2/jtYpnJWqPFlI9U5uOneNTSP3Q18L6Km5GqUOD2Yo/ZJ006CCF71kMavq0=
+	t=1720012743; cv=none; b=uPE/ZdaI9lBRQRRa1KxKjVqF8n03p5a+DlplQ9P8q/c7TmJCafs+5hZK6CdXCrGG+h91Jli+rI9mqBnAZwOk7A1XppRB3+aXj2BfuT1AaPHokX56ZNgDSYpKBwSH4vLrcZ4TER2BPvhXQvsbA1UNpcJJ9HGwmEuYcoTnW5d46Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720012530; c=relaxed/simple;
-	bh=pp9IYcc32SZRbVofOh0Qkhr0fzVFapnBx6KENqMEW60=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=QsoEXQg5ncoj8aEUHBmSa9vAqEI8u3Fa0HpmdcKKK/wvOulKC1hr3tM+GKleKozGY3isga74/5UAHROIFXf9sIORWOfMxMJ/zx9E80Qbs2LeGQ7qS2rdwtnMCWVn8GeGOUbNrJaWAJUnBy5nPuqaecj+2NiWSlC1BZZlDnHGB+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9tIHEnk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720012743; c=relaxed/simple;
+	bh=zUu2F1hV+miT5I8Gkjrxe7EVSNhBDwp44fj2E7hlYsg=;
+	h=Subject:MIME-Version:Content-Type:Date:Message-ID:From:To:CC:
+	 References:In-Reply-To; b=KTj/oKm/gJBi3UXE1D37oPapzdIYILnXosbFLyGgUnhx2a26JSYWFABRvOVQm3N9svGU3WQeve3NWz6+guGbTpcyCOVZs0KaRkmaXMJhikCaDyybylUapou2QN8NBlmvjoeUlGW1CuBZiFxzSsvnucAWxfQbfPp3SbAiDHtBs14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=h10xqMoj; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9tIHEnk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74258C2BD10;
-	Wed,  3 Jul 2024 13:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720012529;
-	bh=pp9IYcc32SZRbVofOh0Qkhr0fzVFapnBx6KENqMEW60=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a9tIHEnkLMgStKfgO2iJaVkYL3WlY6Lt9JVIKL0YOdbq/WtARvixdcj2ugHbMcyi4
-	 ef9/Dc1DxJBLp3j0GKKouMJ1Hlrg8wvOlxoM2GIyGl/bblde92pWuzUe3kqGafjVBG
-	 zbSYyC2jd4woe5tIAJ3ziKNt5Pup/zODIFTPdyn9ek09vz9TxiNKmukhfhVkyJ1J7X
-	 YUk40SEjG02Vo1dY9fU7aU0LnnSHId60lavxussjknn/SJf+RIjPdLUlbjO+iR82tK
-	 4AQfyjzyDzVUapudeia3Sasli15hGWPvsz9PaYwup7vFMmoPs4rXEyU0H7YwuGwMrU
-	 0o8LZ2DiDu+cA==
-Date: Wed, 3 Jul 2024 22:15:25 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
- oleg@redhat.com, peterz@infradead.org, mingo@redhat.com,
- bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com
-Subject: Re: [PATCH v2 02/12] uprobes: correct mmap_sem locking assumptions
- in uprobe_write_opcode()
-Message-Id: <20240703221525.dff79d6c71af3921ca7a7232@kernel.org>
-In-Reply-To: <20240701223935.3783951-3-andrii@kernel.org>
-References: <20240701223935.3783951-1-andrii@kernel.org>
-	<20240701223935.3783951-3-andrii@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="h10xqMoj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1720012742; x=1751548742;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   from:to:cc:references:in-reply-to:subject;
+  bh=zUu2F1hV+miT5I8Gkjrxe7EVSNhBDwp44fj2E7hlYsg=;
+  b=h10xqMojGvcnQ9vfl7ywtrgPImF73FdjFAK9o4Xgkl5eMqIDKEeupLrt
+   9dGOok6wCF8fVcjiL7Ep6bQ0hEN9RijbSI8V4z7CQJ5DQjOClb3gVxXj6
+   fO32zvVMbsehWh4krmsxZ/9qIPOvqdrpz7qx3R7zmJARcShegY9NAdpUU
+   w=;
+X-IronPort-AV: E=Sophos;i="6.09,182,1716249600"; 
+   d="scan'208";a="417489642"
+Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM Emulation
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 13:18:59 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:59500]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.20.30:2525] with esmtp (Farcaster)
+ id 4b69d89c-843b-442a-9219-fefd3322b1f3; Wed, 3 Jul 2024 13:18:58 +0000 (UTC)
+X-Farcaster-Flow-ID: 4b69d89c-843b-442a-9219-fefd3322b1f3
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 3 Jul 2024 13:18:57 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Wed, 3 Jul 2024
+ 13:18:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 3 Jul 2024 13:18:48 +0000
+Message-ID: <D2FXMJ39HOWV.MEBKDIO1F1TM@amazon.com>
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>, <seanjc@google.com>
+CC: <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
+	<dwmw2@infradead.org>, <pdurrant@amazon.co.uk>, <mlevitsk@redhat.com>,
+	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
+X-Mailer: aerc 0.17.0-152-g73bcb4661460-dirty
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com> <87ikxm63px.fsf@redhat.com>
+In-Reply-To: <87ikxm63px.fsf@redhat.com>
+X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On Mon,  1 Jul 2024 15:39:25 -0700
-Andrii Nakryiko <andrii@kernel.org> wrote:
+Hi Vitaly,
 
-> It seems like uprobe_write_opcode() doesn't require writer locked
-> mmap_sem, any lock (reader or writer) should be sufficient. This was
-> established in a discussion in [0] and looking through existing code
-> seems to confirm that there is no need for write-locked mmap_sem.
-> 
-> Fix the comment to state this clearly.
-> 
->   [0] https://lore.kernel.org/linux-trace-kernel/20240625190748.GC14254@redhat.com/
-> 
-> Fixes: 29dedee0e693 ("uprobes: Add mem_cgroup_charge_anon() into uprobe_write_opcode()")
+On Wed Jul 3, 2024 at 12:48 PM UTC, Vitaly Kuznetsov wrote:
+> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
+>
+> > Hi Sean,
+> >
+> > On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
+> >> This series introduces core KVM functionality necessary to emulate Hyp=
+er-V's
+> >> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
+> >
+> > Just wanted to make sure the series is in your radar.
+> >
+>
+> Not Sean here but I was planning to take a look at least at Hyper-V
+> parts of it next week.
 
-nit: why this has Fixes but [01/12] doesn't?
+Thanks for the update.
 
-Should I pick both to fixes branch?
-
-Thank you,
-
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  kernel/events/uprobes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 081821fd529a..f87049c08ee9 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -453,7 +453,7 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
->   * @vaddr: the virtual address to store the opcode.
->   * @opcode: opcode to be written at @vaddr.
->   *
-> - * Called with mm->mmap_lock held for write.
-> + * Called with mm->mmap_lock held for read or write.
->   * Return 0 (success) or a negative errno.
->   */
->  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
-> -- 
-> 2.43.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Nicolas
