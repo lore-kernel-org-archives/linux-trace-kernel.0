@@ -1,151 +1,149 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B3D17C7C;
-	Wed,  3 Jul 2024 16:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D54B18306E
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jul 2024 16:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023647; cv=none; b=bhfOkyHX6HW0vrxqLasJWeZaK6R5ToTx8FTK+Pac0fxzA2287u5/yc36DgSmmtfvqVPz7oH3VKVvzIG1W6/vParOJ9CG/zv3TvVh53bx3++4qK6UEGFvwePvl6eZwR2TrFLXTA/HHhhHK6Qd/myx9y7z2AxLLpwQX76PZpcUE24=
+	t=1720025820; cv=none; b=HWk0nAMySWp0vp/72xW2nc+F7OT3fY9+eVbGXK0ZxJn9/tFuNWX9IfopsBlHwN2cgvTl/90P4bKNOvPwBeaC5uvgn9FPjXWFD4tYjL5xXuqAdLdhMjXU4/xgjI21iqoYzOHQO9CsLPgBaIqTvPcK4KMtq59IVnql+K8NfOKtN/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023647; c=relaxed/simple;
-	bh=wwFT+vz81q5073dVZ1ppSrdYkyQllN4uMfPUMuY8sGM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qOQNhZqMpGvdXIVMjmrQuLnfW+14vnVpXIe2ugZXTZLhOolrf10UR1UXphquuDUnGIm/osjAdfBptr8hcS8MrHYsqZysjeqOXi7kdzqJkTrGvs+8N6XKNxMdzFx1of5Q5t5Ti9qgp9H42MSnPQxED/uPPRNYk3ww9A9sIuowh/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CchXGZN7; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720025820; c=relaxed/simple;
+	bh=teX37XgyvV7Ru/Jak1UKwFMmY5CaQcTdzWuf15lXc+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h9eAJodjEeEC8DUV6p5wMj7G9IS6kN6TkatpLwtLvkU/fHfEQ2/Ga7XYNYEdJjcfNk5Ctj91Um10il+QUGmmQOb5rZhwqft11trq6STOzPMbATw++zAcIl7mmA61gXMySzfYuoUheM4vzoWAgY3Wodn6LmhXz8O3XY5ZkNQUj/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vQZE0GZb; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CchXGZN7"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ee7885aa5fso22132231fa.1;
-        Wed, 03 Jul 2024 09:20:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQZE0GZb"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6b2c6291038so7752746d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jul 2024 09:56:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720023644; x=1720628444; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v6l054JVIhkosfS6xjtkQ8TNQqgCYBV3oASoIl/CMIQ=;
-        b=CchXGZN7MISAzlRkgz12MQNdSA+bZKmvZwLlJIoaZcHzMsGv3EULtVKnC2uogj22tI
-         ZcjE3ey6TNHtziX+GKwSOcZsyo0YXG2QM7IgC/SI6TuIav5hbzJNQ/PMzlvSJrtkfYzY
-         uB/I7Pb26d5KzOIxxN5qENvfhJrfkEBPnxQzHbzowmGx2t6ZUAzP01CgSyTdWwk9M1Pz
-         4y+VHXwjJGWPZTkZ6uZg0UgEkHk6r2jaZ0MdiQMAfKSXfoyVtL5PE0XUf2XuB95KvJkv
-         TBMR2ohTuphXUsbvRuR0kzmdDKsL11DYAbrX+Q9++FIQ0VAW+GMLa7ap0fen0NSvJ65d
-         W4rQ==
+        d=google.com; s=20230601; t=1720025817; x=1720630617; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZrJD6ayDYRlKNRvFck9p1oXm/3SuBonkBJdf4YKQA4Q=;
+        b=vQZE0GZb7fexqOcBdhRYPWAj0P4ObfKnMLiFFpPLEmD/xufEEl++ynxXqybA5aFUSP
+         kr4/XxCNQcPnfcgi0L32zq+/yxC1t2hvvqdx4xBe3HjZ/smRNixqDs2/WXoVZZknAM3L
+         WJTWnsdzRIBK1WMafbT/G283v09bfBV5zsJ+Zq7/hpfvn3r4DpBL+Ahyw9K4t4EFW5V+
+         RwrUTmV9adUhP0NdR4wl8WLp9xxDxHRU7XGmRZIUSdGYmt/9H4AxO+XwJgn6V1uIOuq2
+         RShRkje5Pjmx9VEP1HnD6OSPcHC+R/7+CLuAJEfwNsy5Pioa232pVhNz7kyzRLGaMgf1
+         jw9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720023644; x=1720628444;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v6l054JVIhkosfS6xjtkQ8TNQqgCYBV3oASoIl/CMIQ=;
-        b=FTz+nnjMhd3WRJl7LdydpN0chm8E2smutsypzkHvW17jXGG9/IlRaOoTrc8Wrqneea
-         fOeNcFoq4i7iXyr5cG9qIJsvGxNU4b7OMgyxtjoY2RxVJYZ6UH2itf6UrZlInOd0oGjx
-         crcqyVKN4lzU80AKbCg3zk8cKT6Ox4Z3p1QIHleEOerfbWanWvDc/n/PB+x8qsm/OBFK
-         IXGsZdcnIxtMgAaG3Kae58VnRavdpgfXicF/ooKjUFQWgDvHs9tvK385l01oweiXRQW9
-         Do7RcjUlG1FFmw1BtqihnbZF1vhnx4DdITkuRz07npgo/t9qIIhu4L2HwvFPQkA2SGSG
-         GMdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNXwtxLPap6RjB1dKW51VNrAoSAvLWtIgliVhb/e3YeLm7Q9071emnbd/cXuEgmWQDlrZxVf7jX3akSHpMEdy8S5sBUnEnMfXJXVWCyLBIjjBLPoUW0pQ/pxIfSLqjhuk/WCOCAsL8A3RivcKZcwnEhFrCzKREcsgLwWYs4+VY8GgHAUvv
-X-Gm-Message-State: AOJu0YzoURcB43Ewepa7QtxXthWrojMi022nFJ+YXXGR7IlhtPOYaEuM
-	lKsGACVDv7AUdtTieyiiFJMONcB/TBom9VOoOTLvfR2j6X9dJquX
-X-Google-Smtp-Source: AGHT+IHF602ROVoMJ5i/7KWiAX0EbFAF1zyRWMZ68q+6idsjw7RsAzLr+FNYROMIa1HOy3OmGVqm1Q==
-X-Received: by 2002:a2e:bc19:0:b0:2eb:d924:43fb with SMTP id 38308e7fff4ca-2ee5e6bc6f7mr90705151fa.41.1720023643632;
-        Wed, 03 Jul 2024 09:20:43 -0700 (PDT)
-Received: from krava ([176.105.156.1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b09a073sm244278305e9.32.2024.07.03.09.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 09:20:43 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 3 Jul 2024 18:20:36 +0200
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-ID: <ZoV6VK9PiryYZw2O@krava>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-2-jolsa@kernel.org>
- <20240702130408.GH11386@noisy.programming.kicks-ass.net>
- <ZoQmkiKwsy41JNt4@krava>
- <CAEf4BzYz-4eeNb1621LugDtm7NFshGJUgPzrVL7p4Wg+mq4Aqg@mail.gmail.com>
- <ZoVu1MKUZKtPJ7Am@krava>
+        d=1e100.net; s=20230601; t=1720025817; x=1720630617;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZrJD6ayDYRlKNRvFck9p1oXm/3SuBonkBJdf4YKQA4Q=;
+        b=guNCmIkrzWnX5BR7FI3J/m4yD5gxn9lNPF43SVQWlQKyc3HV2fRsGIOJh7KBimloFh
+         DTOXqCv43ifurVyGIRBMSk0TnMczzBfxOo9q7fwTY5bkztEhokh/XT8g340xUJVz5Tz/
+         kMkCZKJruNeYNiQwu9z/e7VRACmS/0+AiefDlasTyxwbtlP2eFuEUFDEilb/o3E+tRta
+         MRq+yt+w35eS/gLWpSmI2I/zeSQVZsLYbLPvEIgb4jvmRRAK9Qv4CTH/dGKEDcoKHcpn
+         AJmIn1kjTLQBaHrHnauML89Ye/QhCayppyDKPEtouHdufcJpe0B9XgcOScceb4vkDT26
+         /VcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoAmcGVAq00NTuoA5NwtlA0xHRLABklYB5E4Z1j8lVbe+yNIrEBL3MnxFT68VErikM5UKFDnPv9oqIsH7wGmAOJ1pvXgiT1wFqCeSJ4Y8Bx52r
+X-Gm-Message-State: AOJu0YwMe+b069AauLSIJCwwfFFyXLrBm+MbvjbQXpqBBZi7u7VoubIC
+	tZbe47eSire9CV4sBWGgtq5Ui0FjQsdnsLRXTncduoMkBKU0nzHdlOgmNGPFO+RHteY/4LPbGMH
+	Hb8ow6MJMijejxq73ZdHu2T2U+h3+T2uEszYT7V8DJKu4h7b9f7mgxhM=
+X-Google-Smtp-Source: AGHT+IHa/cTtQMTpCl1GUnThR28S74I0bK2ol+291xiVaR+Vs/Jxc9vIdy+MzRrhMch0GbY9JMd0YjCsO1EcciUeO1w=
+X-Received: by 2002:a05:6214:20e2:b0:6b5:198e:353d with SMTP id
+ 6a1803df08f44-6b5e18b18f4mr30603556d6.10.1720025817412; Wed, 03 Jul 2024
+ 09:56:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZoVu1MKUZKtPJ7Am@krava>
+References: <20240628003253.1694510-1-almasrymina@google.com>
+ <20240628003253.1694510-4-almasrymina@google.com> <20240702180908.0eccf78f@kernel.org>
+In-Reply-To: <20240702180908.0eccf78f@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 3 Jul 2024 09:56:45 -0700
+Message-ID: <CAHS8izOCuNZWfZR_jecFOMu2XGqcYUkuVf38wRqBvoE9tmGzoQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v15 03/14] netdev: support binding dma-buf to netdevice
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 03, 2024 at 05:31:32PM +0200, Jiri Olsa wrote:
-> On Tue, Jul 02, 2024 at 01:52:38PM -0700, Andrii Nakryiko wrote:
-> > On Tue, Jul 2, 2024 at 9:11 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Tue, Jul 02, 2024 at 03:04:08PM +0200, Peter Zijlstra wrote:
-> > > > On Mon, Jul 01, 2024 at 06:41:07PM +0200, Jiri Olsa wrote:
-> > > >
-> > > > > +static void
-> > > > > +uprobe_consumer_account(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> > > > > +{
-> > > > > +   static unsigned int session_id;
-> > > > > +
-> > > > > +   if (uc->session) {
-> > > > > +           uprobe->sessions_cnt++;
-> > > > > +           uc->session_id = ++session_id ?: ++session_id;
-> > > > > +   }
-> > > > > +}
-> > > >
-> > > > The way I understand this code, you create a consumer every time you do
-> > > > uprobe_register() and unregister makes it go away.
-> > > >
-> > > > Now, register one, then 4g-1 times register+unregister, then register
-> > > > again.
-> > > >
-> > > > The above seems to then result in two consumers with the same
-> > > > session_id, which leads to trouble.
-> > > >
-> > > > Hmm?
-> > >
-> > > ugh true.. will make it u64 :)
-> > >
-> > > I think we could store uprobe_consumer pointer+ref in session_consumer,
-> > > and that would make the unregister path more interesting.. will check
-> > 
-> > More interesting how? It's actually a great idea, uprobe_consumer
-> 
-> nah, got confused ;-)
+On Tue, Jul 2, 2024 at 6:09=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
+te:
+>
+> On Fri, 28 Jun 2024 00:32:40 +0000 Mina Almasry wrote:
+> > +     if (binding->list.next)
+> > +             list_del(&binding->list);
+> > +
+> > +     xa_for_each(&binding->bound_rxq_list, xa_idx, rxq) {
+>
+> nit: s/bound_rxq_list/bound_rxqs/ ? it's not a list
+>
+> > +             if (rxq->mp_params.mp_priv =3D=3D binding) {
+> > +                     /* We hold the rtnl_lock while binding/unbinding
+> > +                      * dma-buf, so we can't race with another thread =
+that
+> > +                      * is also modifying this value. However, the pag=
+e_pool
+> > +                      * may read this config while it's creating its
+> > +                      * rx-queues. WRITE_ONCE() here to match the
+> > +                      * READ_ONCE() in the page_pool.
+> > +                      */
+> > +                     WRITE_ONCE(rxq->mp_params.mp_priv, NULL);
+>
+> Is this really sufficient in terms of locking? @binding is not
+> RCU-protected and neither is the reader guaranteed to be in
+> an RCU critical section. Actually the "reader" tries to take a ref
+> and use this struct so it's not even a pure reader.
+>
+> Let's add a lock or use one of the existing locks
+>
 
-actually.. the idea was to store uprobe_consumer pointers in 'return_instance'
-and iterate them on return probe (not uprobe->consumers).. but that would
-require the unregister code to somehow remove them (replace with null)
+Can we just use rtnl_lock() for this synchronization? It seems it's
+already locked everywhere that access mp_params.mp_priv, so the
+WRITE/READ_ONCE are actually superfluous. Both the dmabuf bind/unbind
+already lock rtnl_lock, and the only other place that access
+mp_params.mp_priv is page_pool_init(). I think it's reasonable to
+assume rtnl_lock is also held during page_pool_init, no? AFAICT it
+would be very weird for some code path to be reconfiguring the driver
+page_pools without holding rtnl_lock?
 
-but we wouldn't need to do the search for matching consumer with session_id
+What I wanna do here is delete the incorrect comment, remove the
+READ/WRITE_ONCE, and maybe add a DEBUG_NET_WARN_ON(!rtnl_is_locked())
+in mp_dmabuf_devmem_init() but probably that is too defensive.
 
-also it probably regress current code, because we would execute only uprobe
-return consumers that were registered at the time the function entry was hit,
-whereas in current code the return uprobe executes all registered return
-consumers
+Will apply the other comments, thanks.
 
-jirka
-
-> 
-> > pointer itself is a unique ID and 64-bit. We can still use lowest bit
-> > for RC (see my other reply).
-> 
-> I used pointers in the previous version, but then I thought what if the
-> consumer gets free-ed and new one created (with same address.. maybe not
-> likely but possible, right?) before the return probe is hit
-> 
-> jirka
+--=20
+Thanks,
+Mina
