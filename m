@@ -1,90 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2EB1DFC7
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jul 2024 11:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6764D17A587
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jul 2024 12:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720006973; cv=none; b=IiC/yHvUbDchsrus4Py1ANhwNcUZLnz8uEkyzAWQfUzYxCMLIFXH7qQOy6JDkgiIHmy0BU5kKyeIkBON3blnWkbrDiTYprnWqdaBAvqBsmuKPs/LsuLHkNcjsJh5keK2k9V+Ofm0vJ3g014SWc6kMcNBZ1hX0JEH8Dom1sO3h5k=
+	t=1720010929; cv=none; b=GKPI0HNIXIATHsh2l1d0rNLeZBJTgBi0YpFhyaBF/W+1tq2amkZ3tkreyZPkwaBkfVDcD9SG7vsJ1e276TowIBZQ/kQj07FMkhkd++TUBSKPGydlxnxy2vVsYN37btW3PHvMO60FXMT+xq0zFzErKZx977byabaTHPrQxA8q4Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720006973; c=relaxed/simple;
-	bh=4sNK2ppBVN9/ZqYZi5JjZS4Zc7zCyu7uaoZJqNxVpwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8V052b9cMFg/Y8q+7/1uSqqFO1uVwr7Aqc0qmUuNaoGqp+o9Vcdn8+flXIcfDFM5edV1A0hcSkM1D1B4L7ySnyIrx7tz8JB2r6IE64OWkZLOm9JS3Dqspu4e8PMfIU+ZiZYbK4MqdWhEKy2XAhk+O/AC8ut15KcDJ4BZ9Tr6eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RBQ/Rckx; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1720010929; c=relaxed/simple;
+	bh=nOrLYdaQKWbCBzur09331cdOZ260WekYtYvlyXlVvNg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=M+Cgjvyn6uPP+e4WuY8s29uwKQ9SDYtDPayAceugkQfCeOqaf1ieuJh8RoVRr9LF980gVhxAIoFdwpICPP7oI4S2yKmrufQ+umw8xTlRzbZSsRyEMzFbMGzi+249GLyPMrqk/sJGvQXuIAI1tV3+dikWeG/4GZNrYHogfGalunw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7QCLfwU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RBQ/Rckx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7QCLfwU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720006971;
+	s=mimecast20190719; t=1720010927;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/PZ6xrKTnI/WBJhbaJ3sWlKKb/IBmTt/4C2c0YjNIAs=;
-	b=RBQ/Rckxp5VE/6ioAtNRFfBI6tu/83Lbsjv1EEar6MZ2SI0xGWB65bBkVaXwN+3HnNLTvq
-	6lGuK+YPGW8dJmE9UuW231scN/Bse38HDHh5itj4zTAuDpDG0YHoSu7uDvnCYsAR3XDwHj
-	Sglkfiv8GRtRQPgNtkVZ30/JVk81NSs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-326-yMnVDJd2OeOLH-_KWuHR9A-1; Wed,
- 03 Jul 2024 07:42:46 -0400
-X-MC-Unique: yMnVDJd2OeOLH-_KWuHR9A-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 373EC1956095;
-	Wed,  3 Jul 2024 11:42:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.202])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7117D1955F21;
-	Wed,  3 Jul 2024 11:42:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  3 Jul 2024 13:41:08 +0200 (CEST)
-Date: Wed, 3 Jul 2024 13:41:03 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	clm@meta.com
-Subject: Re: [PATCH v2 02/12] uprobes: correct mmap_sem locking assumptions
- in uprobe_write_opcode()
-Message-ID: <20240703114103.GB28444@redhat.com>
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240701223935.3783951-3-andrii@kernel.org>
+	bh=2MEP5KBKlMKx9T4CmY7WwoI0xWCk7Wv3Ry4wWTTbIMQ=;
+	b=P7QCLfwUcz3mg2A5ElG0ooCZzvadMZYJQAY+KS5kE9t26MDPBMjQjMeIVsODzCMY0DCEJe
+	Ep41J0lxy3oVja+gVxtNGpFAqxAWuEZ+B4IoZ6kbPZ0+Ce8G1w7kNVvkv7sURdc29q/d8S
+	McbqP4YFFDZhyIzrpg868ivJMZwIMfI=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-tBHi2sSAND2wkIGZdF7H7w-1; Wed, 03 Jul 2024 08:48:46 -0400
+X-MC-Unique: tBHi2sSAND2wkIGZdF7H7w-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ee890f0cecso2347431fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jul 2024 05:48:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720010924; x=1720615724;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2MEP5KBKlMKx9T4CmY7WwoI0xWCk7Wv3Ry4wWTTbIMQ=;
+        b=kv6H0JcMhI2CbqmpHOJe3TP2CNT802mhabNnBehWn26L8YVzh80ZGtqm001HplaBm2
+         6m0vUIhnstbnwqv0twQWv6Bt6VPpNz8ryGjlHM2013jSLcwCCqWIaedHBUe7tn3UoK0T
+         iBxbpnsTYbcSO/sSNSLvGMVFm+Eg4SytybKNGPpigL5WfovV3S9IW0eb5MMVjGqayrFc
+         9GfDuq2QRJlAudUI/NP5kPGacku/eXKyYJXJtXXwL6BtWNv0+LoqwD98hT/WS28XbAXV
+         Bp71ViZJvaPtSCJAHlNQe4KQuJm71lSUiUYBzYcfUglQAtqDV0cBLOGvBriiNcUxt86A
+         1fTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaRr5mRWTipp2sL4s8fs6g9hiz9N03RsdVZrGRWInF8N/z2fmWHFbmTx66mg843fyddnawdgACJDLr8CIn9JQ8Bub9iAiJs6k7il2SCeFxud9i
+X-Gm-Message-State: AOJu0YzA2ECj2uK0Mv1URW8z+GLgwQFc4KpN0MKs+QdpwsajHFUz9TVH
+	xUQx/PCfw62Zrghyt3Fr9lITrlnhM/Iitn22jTstkUjgGwBAp8Ovx7DSTDsAM6fO/NB8S3/Kw4i
+	RLwElXayG6k4fNSUwsxhF0r/4OPJGu5zJlFJPCazgc1VccmK/UYEcqgGCk0WVM5mm7vkqFw==
+X-Received: by 2002:a2e:a7c2:0:b0:2ee:45f3:1d13 with SMTP id 38308e7fff4ca-2ee5e704e51mr78433961fa.47.1720010924676;
+        Wed, 03 Jul 2024 05:48:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFP5TqWKFAuIwTILcZtQfViw3L54aF8RKuLImctjrV+bIlLQQRnHKZJF7c8esvbcZCiclXd1w==
+X-Received: by 2002:a2e:a7c2:0:b0:2ee:45f3:1d13 with SMTP id 38308e7fff4ca-2ee5e704e51mr78433691fa.47.1720010924256;
+        Wed, 03 Jul 2024 05:48:44 -0700 (PDT)
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d8cd8sm15773145f8f.27.2024.07.03.05.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 05:48:43 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>, seanjc@google.com
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+ nsaenz@amazon.com, linux-trace-kernel@vger.kernel.org, graf@amazon.de,
+ dwmw2@infradead.org, pdurrant@amazon.co.uk, mlevitsk@redhat.com,
+ jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, amoorthy@google.com
+Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM
+ Emulation
+In-Reply-To: <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <D2FTASL4CXLN.32GYJ8QZH4OCR@amazon.com>
+Date: Wed, 03 Jul 2024 14:48:42 +0200
+Message-ID: <87ikxm63px.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701223935.3783951-3-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On 07/01, Andrii Nakryiko wrote:
+Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
+
+> Hi Sean,
 >
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -453,7 +453,7 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
->   * @vaddr: the virtual address to store the opcode.
->   * @opcode: opcode to be written at @vaddr.
->   *
-> - * Called with mm->mmap_lock held for write.
-> + * Called with mm->mmap_lock held for read or write.
->   * Return 0 (success) or a negative errno.
+> On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
+>> This series introduces core KVM functionality necessary to emulate Hyper-V's
+>> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
+>
+> Just wanted to make sure the series is in your radar.
+>
 
-Thanks,
+Not Sean here but I was planning to take a look at least at Hyper-V
+parts of it next week.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-
-
-I'll try to send the patch which explains the reasons for mmap_write_lock()
-in register_for_each_vma() later.
-
-Oleg.
+-- 
+Vitaly
 
