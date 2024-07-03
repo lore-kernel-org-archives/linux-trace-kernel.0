@@ -1,144 +1,251 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A70C376;
-	Wed,  3 Jul 2024 00:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A860391;
+	Wed,  3 Jul 2024 00:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719965188; cv=none; b=GdGFeFWrqU2D6xQDMtQPgTh6yffOdLfe5JhfSHLBOOR0hHug586Mf+47PUzPRjiaF5nrnm/jz780sqBr56ooIy4dfQ6ZYcZC/mQPygNvHAWZAiVgl3EiTPFYKk3EgcWle0ZsFpMY9gs2AKkvJzhfVngWDeGvdtmcy40beUurPBA=
+	t=1719965637; cv=none; b=qmgeOeHZ73OrUOsL/2oWYvIBBYzjyfSXBcFrI5iF/TUDH2n0OzIOvcKxMqsklM11X6UWgbacAAH2+1Z9p1gOmB6+RDK2/o/tGXiYdbhobWlF7YAt58zC/rdoeY0bm6ZFgMGow56lcwiIA/jjooK4NfPNZbSoJR5b1HhcgPeYfik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719965188; c=relaxed/simple;
-	bh=iLySQHSzUBPABd8UEtGLypSLAhlfTYLP6knK4mQMZUk=;
+	s=arc-20240116; t=1719965637; c=relaxed/simple;
+	bh=Cy70R95d0TTPnsSurPVknJaO+cLRlCLzRchC6vAVzf4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mi/om9N8HoqO6ExqSatnNxa125kxZ8/BZST5+ppM3O+CgiHrt5nQuSkWssZXW+CtBfexGNeVG6yopY27nJFHxDADpoCSKgi5uDgWHGQV/RUKfGwVcCIp9aafNRmNgyhiRuMgcEbl6mf5zeyiueVNVz3MpNcNh3nKtNrGQOCCYA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kt9kvy54; arc=none smtp.client-ip=209.85.210.177
+	 To:Cc:Content-Type; b=oqspU2D5JrkuK2F+aMCHwH9RxtLyNXSWrULxMZMueiIKqBNeXt28iypBJLYFS+XeUgE3nsUu68dDOUyVa+nKHl7X9tU+uGp1RJ6ZOgXJdmsK5KcmreXWhRmJW67Vyr70EfItJlk7PlKLz73mfFcOXCD94kBRlgQKHtGVdm7nU24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CvUOzMmz; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kt9kvy54"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70699b6afddso3281272b3a.1;
-        Tue, 02 Jul 2024 17:06:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvUOzMmz"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a729d9d7086so17608666b.0;
+        Tue, 02 Jul 2024 17:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719965186; x=1720569986; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719965634; x=1720570434; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/N9kQ3oCI3jCbzKISRrCZxbj25Bb5h+emAQTUEwDQOk=;
-        b=Kt9kvy54jUkY8lkwjv6Q8Vm1K/dduqXmx9fZ7eXE9qqDhGt1d1R6bQ0JkaheVM8HtJ
-         M8pxh9pBBvHESS7pPaNV+l76DMFpyiIETCzP+7iyCv/6dmjhisBnkykWooE4vh4K5LSm
-         VuQgtnPvMtH2LsiDxnt1iR4IN/xrIDAKWBeNwrH41ArlP0q/E2Ph5gIwcvCQn9W/eRDk
-         2WlUIfP8EWvUys2HCEenZjdO3XsgOjZ1ZOK/oBfN+GfAysqyF8rBeRYGakABtfj+FMXx
-         QQldd3Ez68ZYLuOVOqq0vzGahiVeD1MyMmffOY4SQBWSePna00xXm1DHyDiwWTKFUnca
-         a1wg==
+        bh=9207vgNzRRpHmlo3+0pYZ1A8z8WeUNjVTxG9yx+nqJM=;
+        b=CvUOzMmzMz4C3Tpx1iu8/ASWqLMSJ5v0w0d5V+1C00wtQufRdJW+o/8WVynE7aPDKx
+         cqAXp67ntY9ZJcwDP7WBgFYqLW8TaEzU1vVrgEwHovnAO2jR/oyGcdZu0daqVxPDX2EZ
+         aqZLVo6C1sMY/gPCnlDuf6UnHNGRX5gzFexvMhRbth4kYR+VZmt7yuWURg4JMTjTz5xF
+         /fcp1kQVRucEY/RcJo0xhs5/aHu0k6SvnfDeE4c+EU7ofa7FRbgtb6EFwmYGw2PpcabF
+         wfd+HyDl/lc0gWemGFyobpqPZgNGewdYJJWCcD+vmHZzo4Au7k29X1YMKK9rZ9H3nK4Q
+         E2XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719965186; x=1720569986;
+        d=1e100.net; s=20230601; t=1719965634; x=1720570434;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/N9kQ3oCI3jCbzKISRrCZxbj25Bb5h+emAQTUEwDQOk=;
-        b=I308suFurGWwlxxWzQLcUXZbYYGVaS6QOBvmtxFbE4w38TxwWuln4teCkOzN5g1YfQ
-         iPD36zDaNtrgDAx559yDrsFIkekmYcRb7o5TwG/rRA22Bco3dxEsixBkxQ0yYEuugpZW
-         45KehInKRJuH2zDI2EpNJzAdcKdgfqKuS46Id0kU07CgLnILzTP1ZHGP9/IPUnJKHBOT
-         cdQI7iZQh/iSaY6DYyhy543jZI8yp9zdsDWNTe5RgPW2hG2M+eR34bxOhpjazw5pvrC2
-         0/K6xN4aCZ5Pk+ruhipAMA7lBdLeRnRq22giXhsZRJgxL7T9JVwS1KxKIL7YNb8/DRBI
-         r/lA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3AsyUmGWiiyL28h3U6qkg3ZU+ejmThJvCt1mLlP+Gps8GtHHQ+V8yuj1nnvxYj6m5ZZUwNSoHrxr7x/Zyei9p8ofBdU+hKtgBhk3KeKC2ZY9wdTEToADhbxqaszBTWA9aYtz110wk7xggzXCV4KW1nN0zmFbnLfmBO8jSjar6N0z6o0Ayg9UxIC1snRMqhfVw57y668vMFc1TJhf2K44y61x3RFxC4A==
-X-Gm-Message-State: AOJu0Yw9aP4C/NOwxfX9UkIYYHc/RY7NadVrV2cxEzmIOcM1npWQrueh
-	Xs0XLynjtNtoc850VmqD4Mhzln3tOhjo9CtVCVdfWVYywK+x1pOaZiMyXfD0XTx1WjvyQrqZ2by
-	PSAcl381nozQy4QvUfTjj5Z8kgTw=
-X-Google-Smtp-Source: AGHT+IEt2I99EiAmj3hGz/7iKIEOkBWscqSINfAgiYEzd5JTnR+pwhpKuTwdsTPLb+v8l7Q2zGlQHTCRAm1XB3bHhFs=
-X-Received: by 2002:a05:6a00:3c8b:b0:705:d8b8:682d with SMTP id
- d2e1a72fcca58-70aaaf2523amr9689557b3a.22.1719965186231; Tue, 02 Jul 2024
- 17:06:26 -0700 (PDT)
+        bh=9207vgNzRRpHmlo3+0pYZ1A8z8WeUNjVTxG9yx+nqJM=;
+        b=O/0+tpiexdHrHFTiQO0/h3o68UjlSugPWJ0h0vaqKB8tDX+tgGonnk4lH2wxZqc/G+
+         xyEC3lky1BmCynEjCDVnmDUJO+eP+Ugs1+OArKC2UCtvYjlW9kcPOKnCnP6irlB+GXb9
+         XI381hK41sH1jWe+D/UoZL6eLzKNRLht6lvTcLbnZTxQoapmDMNFNk2PcAEXDI0oEZab
+         mkQOkxgxeBO1sihXwYVf34mzEA89qh25cWkNJb+xCxIOEcUF0qegWMMuHG67qlF/WNEd
+         8bXgyJjU5LK3Us7kseBimx8DfIi9l3CNf7Jp0Xd0sgwHw1D4G8MrCJwVmuLpsZo8I8ri
+         Qlfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBI6gY3xgQKGXKeFDdOPUlhIRH9ZokuFUdPuRYChr47zWKzMEC58k+jfWWQnGiuHAROwAnFngmePkoQay9atd9VjgaRzYAjilDTxXpeQI3TnOscYaU7WoGXqmaNV+MWDw/TzMXSHuPm0PUjW+YKG5hAZvn+bGDrQmkGLca0saGIIiN9o3v
+X-Gm-Message-State: AOJu0Yza3wVKGH1X/BJqzIKFovMawa0S6nsvFk8JApE0IMxh9ikhIfbx
+	0QU/MfHBeJbWcd3/wrmgWvH0Yl8xNckU7/9cGd6TlXhgh3KOG7uWFqe98IfGbdCNxtY2yX/kls6
+	UgB9Y89/nJX14XZbcdMHgMg31sj70Ow==
+X-Google-Smtp-Source: AGHT+IENVPFB5EcHI1lAyIZKBEFqVrSjPCTSgsm/mC6F0RVndoB0s/2XOFfWi9TsW9akZ+oLPXBF8KeFqp7kkKAEkWw=
+X-Received: by 2002:a17:906:230f:b0:a6f:6df5:a264 with SMTP id
+ a640c23a62f3a-a77a2411d9dmr9151466b.1.1719965633249; Tue, 02 Jul 2024
+ 17:13:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702171858.187562-1-andrii@kernel.org> <20240702233554.slj6kh7dn2mc2w4n@treble>
- <20240702233902.p42gfhhnxo2veemf@treble>
-In-Reply-To: <20240702233902.p42gfhhnxo2veemf@treble>
+References: <20240701164115.723677-1-jolsa@kernel.org> <20240701164115.723677-2-jolsa@kernel.org>
+ <20240703085533.820f90544c3fc42edf79468d@kernel.org>
+In-Reply-To: <20240703085533.820f90544c3fc42edf79468d@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Jul 2024 17:06:14 -0700
-Message-ID: <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org
+Date: Tue, 2 Jul 2024 17:13:38 -0700
+Message-ID: <CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
+Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 2, 2024 at 4:39=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
- wrote:
+On Tue, Jul 2, 2024 at 4:55=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
 >
-> On Tue, Jul 02, 2024 at 04:35:56PM -0700, Josh Poimboeuf wrote:
-> > On Tue, Jul 02, 2024 at 10:18:58AM -0700, Andrii Nakryiko wrote:
-> > > When tracing user functions with uprobe functionality, it's common to
-> > > install the probe (e.g., a BPF program) at the first instruction of t=
-he
-> > > function. This is often going to be `push %rbp` instruction in functi=
-on
-> > > preamble, which means that within that function frame pointer hasn't
-> > > been established yet. This leads to consistently missing an actual
-> > > caller of the traced function, because perf_callchain_user() only
-> > > records current IP (capturing traced function) and then following fra=
-me
-> > > pointer chain (which would be caller's frame, containing the address =
-of
-> > > caller's caller).
-> > >
-> > > So when we have target_1 -> target_2 -> target_3 call chain and we ar=
-e
-> > > tracing an entry to target_3, captured stack trace will report
-> > > target_1 -> target_3 call chain, which is wrong and confusing.
-> > >
-> > > This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-> > > (`push %ebp` on 32-bit architecture) instruction being traced. Given
-> > > entire kernel implementation of user space stack trace capturing work=
-s
-> > > under assumption that user space code was compiled with frame pointer
-> > > register (%rbp/%ebp) preservation, it seems pretty reasonable to use
-> > > this instruction as a strong indicator that this is the entry to the
-> > > function. In that case, return address is still pointed to by %rsp/%e=
-sp,
-> > > so we fetch it and add to stack trace before proceeding to unwind the
-> > > rest using frame pointer-based logic.
-> > >
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> Hi Jiri,
+>
+> On Mon,  1 Jul 2024 18:41:07 +0200
+> Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> > Adding support for uprobe consumer to be defined as session and have
+> > new behaviour for consumer's 'handler' and 'ret_handler' callbacks.
 > >
-> > Should it also check for ENDBR64?
+> > The session means that 'handler' and 'ret_handler' callbacks are
+> > connected in a way that allows to:
 > >
-
-Sure, I can add a check for endbr64 as well. endbr64 probably can be
-used not just at function entry, is that right? So it might be another
-case of false positive (which I think is ok, see below).
-
-> > When compiled with -fcf-protection=3Dbranch, the first instruction of t=
-he
-> > function will almost always be ENDBR64.  I'm not sure about other
-> > distros, but at least Fedora compiles its binaries like that.
+> >   - control execution of 'ret_handler' from 'handler' callback
+> >   - share data between 'handler' and 'ret_handler' callbacks
+> >
+> > The session is enabled by setting new 'session' bool field to true
+> > in uprobe_consumer object.
+> >
+> > We keep count of session consumers for uprobe and allocate session_cons=
+umer
+> > object for each in return_instance object. This allows us to store
+> > return values of 'handler' callbacks and data pointers of shared
+> > data between both handlers.
+> >
+> > The session concept fits to our common use case where we do filtering
+> > on entry uprobe and based on the result we decide to run the return
+> > uprobe (or not).
+> >
+> > It's also convenient to share the data between session callbacks.
+> >
+> > The control of 'ret_handler' callback execution is done via return
+> > value of the 'handler' callback. If it's 0 we install and execute
+> > return uprobe, if it's 1 we do not.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  include/linux/uprobes.h     |  16 ++++-
+> >  kernel/events/uprobes.c     | 129 +++++++++++++++++++++++++++++++++---
+> >  kernel/trace/bpf_trace.c    |   6 +-
+> >  kernel/trace/trace_uprobe.c |  12 ++--
+> >  4 files changed, 144 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > index f46e0ca0169c..903a860a8d01 100644
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -34,15 +34,18 @@ enum uprobe_filter_ctx {
+> >  };
+> >
+> >  struct uprobe_consumer {
+> > -     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
+);
+> > +     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
+, __u64 *data);
+> >       int (*ret_handler)(struct uprobe_consumer *self,
+> >                               unsigned long func,
+> > -                             struct pt_regs *regs);
+> > +                             struct pt_regs *regs, __u64 *data);
+> >       bool (*filter)(struct uprobe_consumer *self,
+> >                               enum uprobe_filter_ctx ctx,
+> >                               struct mm_struct *mm);
+> >
+> >       struct uprobe_consumer *next;
+> > +
+> > +     bool                    session;        /* marks uprobe session c=
+onsumer */
+> > +     unsigned int            session_id;     /* set when uprobe_consum=
+er is registered */
 >
-> BTW, there are some cases (including leaf functions and some stack
-> alignment sequences) where a "push %rbp" can happen inside a function.
-> Then it would presumably add a bogus trace entry.  Are such false
-> positives ok?
+> Hmm, why this has both session and session_id?
 
-I think such cases should be rare. People mostly seem to trace user
-function entry/exit, rarely if ever they trace something within the
-function, except for USDT cases, where it will be a nop instruction
-that they trace.
+session is caller's request to establish session semantics. Jiri, I
+think it's better to move it higher next to
+handler/ret_handler/filter, that's the part of uprobe_consumer struct
+which has read-only caller-provided data (I'm adding offset and
+ref_ctr_offset there as well).
 
-In general, even with false positives, I think it's overwhelmingly
-better to get correct entry stack trace 99.9% of the time, and in the
-rest 0.01% cases it's fine having one extra bogus entry (but the rest
-should still be correct), which should be easy for humans to recognize
-and filter out, if necessary.
+> I also think we can use the address of uprobe_consumer itself as a unique=
+ id.
+
++1
 
 >
-> --
-> Josh
+> Also, if we can set session enabled by default, and skip ret_handler by h=
+andler's
+> return value, it is more simpler. (If handler returns a specific value, s=
+kip ret_handler)
+
+you mean derive if it's a session or not by both handler and
+ret_handler being set? I guess this works fine for BPF side, because
+there we never had them both set. If this doesn't regress others, I
+think it's OK. We just need to make sure we don't unnecessarily
+allocate session state for consumers that don't set both handler and
+ret_handler. That would be a waste.
+
+>
+> >  };
+> >
+> >  #ifdef CONFIG_UPROBES
+> > @@ -80,6 +83,12 @@ struct uprobe_task {
+> >       unsigned int                    depth;
+> >  };
+> >
+> > +struct session_consumer {
+> > +     __u64           cookie;
+>
+> And this cookie looks not scalable. If we can pass a data to handler, I w=
+ould like to
+> reuse it to pass the target function parameters to ret_handler as kretpro=
+be/fprobe does.
+>
+>         int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
+, void *data);
+>
+> uprobes can collect its uc's required sizes and allocate the memory (shad=
+ow stack frame)
+> at handler_chain().
+
+The goal here is to keep this simple and fast. I'd prefer to keep it
+small and fixed size, if possible. I'm thinking about caching and
+reusing return_instance as one of the future optimizations, so if we
+can keep this more or less fixed (assuming there is typically not more
+than 1 or 2 consumers per uprobe, which seems realistic), this will
+provide a way to avoid excessive memory allocations.
+
+>
+> > +     unsigned int    id;
+> > +     int             rc;
+> > +};
+> > +
+> >  struct return_instance {
+> >       struct uprobe           *uprobe;
+> >       unsigned long           func;
+> > @@ -88,6 +97,9 @@ struct return_instance {
+> >       bool                    chained;        /* true, if instance is n=
+ested */
+> >
+> >       struct return_instance  *next;          /* keep as stack */
+> > +
+> > +     int                     sessions_cnt;
+> > +     struct session_consumer sessions[];
+>
+> In that case, we don't have this array, but
+>
+>         char data[];
+>
+> And decode data array, which is a slice of variable length structure;
+>
+> struct session_consumer {
+>         struct uprobe_consumer *uc;
+>         char data[];
+> };
+>
+> The size of session_consumer is uc->session_data_size + sizeof(uc).
+>
+> What would you think?
+>
+> Thank you,
+>
+> >  };
+> >
+> >  enum rp_check {
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 2c83ba776fc7..4da410460f2a 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -63,6 +63,8 @@ struct uprobe {
+> >       loff_t                  ref_ctr_offset;
+> >       unsigned long           flags;
+> >
+> > +     unsigned int            sessions_cnt;
+
+[...]
