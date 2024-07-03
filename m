@@ -1,94 +1,125 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D281369A0;
-	Wed,  3 Jul 2024 22:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807051369A0;
+	Wed,  3 Jul 2024 22:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720047490; cv=none; b=acCt0Rr5Ow9QxR85Y252YRoI67ZB8FnlO1bfEJr2a7PQzUMyK2yPRv6/sS7GLumxn0cM0wrvcbPKEBbkJYz1FHYyhOIaE9fv+m8wcgCW3CpLz9bl0LkX103FPbzWxDYciIpujTWrztndX0qUe+UQbGqy8OhMH+PGnlbnLF+dXKQ=
+	t=1720047543; cv=none; b=T5BPvvqenHBPS0CXvN/T1WSrb0ZsJMZHp262Lz4xbycFtu40cDS7KsTqeyGkY4+JW0j5BaGp5dVechJ30pklPZYO/i5ScBn57/M9Bu74OSn/PJvGUBdrrjTkqVaBxGICIB33CJXsCy0SO6ebHM2tzvnZZp6Q2C6VumjznJI7hFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720047490; c=relaxed/simple;
-	bh=FR8dEXqV09197NPqymlT54ODyDN+miSN5IIK5LQEFUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYEjK11XqHdp8H4ixf3xmn8hHKfs7EB/Q4c9i5QcOg2PMy+LRRRbAJpzlbbke1XFynY3ZB4wmIsNrYrOmXfyoonRZTF3ZIhLRuO/HQX7lJCCvo9hapbMisc7wYj1vznAkDOCiauo+qVC5NQlGnaUJV9cO8J/FE8EL0BMLiWcSeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=nDTCb3q1; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1720047543; c=relaxed/simple;
+	bh=Dn6s3qu4JChWZeRiOFYv1ju6D+1sockuxvi7rzY6G94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KDsfY4+3hYGGR9cRE/lhLsyXztaF1lZ389FEWNQxQIkTp0LMcqSZousNHmxUn2RYSptc+RhSYxQ6c4r4lz4Hj5gSE9ox4bZ3c5aDwUKcDvC03l4TdvP0mq2tOyzTTA5Br/ZAvT5xLnt6Pdqp5hwtYI9WWfpE8d1v1w1ztBT87W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Irc4qML2; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nDTCb3q1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1720047477;
-	bh=FR8dEXqV09197NPqymlT54ODyDN+miSN5IIK5LQEFUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nDTCb3q1Gwtzk8tSp7otBWMEQmtdcCMwq0D96P1iJaNxuBod/FcRiGdFdcpy4Z85i
-	 B9PVrC5isiSKBL46XEa2tO9x4tELi2MDtK5fLCa0wCwAeaoWSup0rNpZwbpS/TnCr3
-	 X+bp6DnAjFjpP1Y3VYuEJ5lllzxe+xLZu5V0GQxE23hy3RF+OJMhCDgkhElFWaX+CI
-	 25m/Df2cttNhimhEx7557SZc/yWY3nJMX5nO3CcejO0FJx2c9663gGmc7/EyZ1owe4
-	 grWuUPKCKc14lTjQ1Fpt5mXJlZtQ4X77QC+FDZIMLPONNNTVtvuUwLA3xqyT2e2EzQ
-	 W76iAUhQYkuuw==
-Received: from localhost.localdomain (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WDwD51KC9z18fQ;
-	Wed,  3 Jul 2024 18:57:57 -0400 (EDT)
-Date: Wed, 3 Jul 2024 18:58:03 -0400
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, corbet@lwn.net,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH] Documentation: Document user_events ioctl code
-Message-ID: <ZoXXe8Tl9pRD6-dd@localhost.localdomain>
-References: <20240703222501.1547-1-beaub@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Irc4qML2"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-706b14044cbso44428b3a.2;
+        Wed, 03 Jul 2024 15:59:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720047542; x=1720652342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eUYRLpN1HsvQ9Iub7j78dAtckWGp5xsN9z0zcOVj+Ws=;
+        b=Irc4qML27MsHoKqIDTfa4buAbOMIWH2rOyUMW9uZHF1efhE8gZIIYm+mjX+bGXPaAO
+         FUcrx81NKL1JD1wccIrWz6o8udHePw74OzyCObze8jxFLa3bCVS9nnggIRneIJAOKO40
+         hJudQgeIaJdILrrst5fgnkENbk1C3VqVYD3hozoJ77vw8e17zoUtjgajRzOVLXaxyDhm
+         hvl3QOtSf0dEltlnSikbbJtw6WMqE6EnvRGFgPfem3eYyWoFyhEONOEL4UcmBLE+0DXI
+         K3xELYcbv83yr75p2REt8TsxHTczVzWI5wOVCiO78BkBRYQ8YD/2f0eqSYWZ+4v7OIH4
+         WHzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720047542; x=1720652342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eUYRLpN1HsvQ9Iub7j78dAtckWGp5xsN9z0zcOVj+Ws=;
+        b=rsVMAl98qH4Cu53Y5+029NKwUMPkvZb8KLaWQWSMVBzoOIYwMfuh06XK0fbwbL167R
+         jJadyEZV9lkt78vUYkNqBHW2SD09dMQSDlBD2lWd4MbD+Zknr1OKXcFpcMpQVv74k6sz
+         EGu/+0Ce3+49NAEu+lBwthVRkCH286wOfm9bMd5NBn0eBNu81ILxltwv04H/bBeS+WK8
+         pLQPLoVLM6YKbZY2DpTbZgnRrqJ9iU/QjtAT0jIO/ogyyewKpiSmWl/zvn7scQ4yTM6Y
+         JmqD5pOjBbk9S9/BAatdbkgx9qc0IFIJ3g3U4mnowK72eHEpE/hInv9sd4Lia7dCJEQC
+         UQ5w==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ey7UFkOp8OurwKtOjP+m006DNlWm9xr26evqlSmAxirPA0FynC3VvNK6DdLxkewhNbS3jkrBe427eOaRbNYPe1jJVNHjxPEvG4p1ZQEp/YD8bLGV97/u9DC4tjDeOqIp4NxlEghVVTJqdNaR2hWYI5ex4tSCS+NeCdXAcpnccXqAwvoJznAMUsJJTgxadXu4iSN8CeOXR++6JykgEPDgcwwx/bT9cw==
+X-Gm-Message-State: AOJu0YxjEoArqptrqvq14EaoMkXLgyJS3X10TDF/GUf1lKnKt8RFmFo1
+	MCIt4ehxpy1gqrV1MdUejw/72XYuHSWWSMeGHE0fuh7mPhfW1k2jkWBcc0eDSb16C2SXW6g62HS
+	WAqj2KstuVKAi/HXE2B7mLrImKrdzgNDt
+X-Google-Smtp-Source: AGHT+IFr04NbMFedS5PsaMHEQQnrJeYwnDmLyBo5tjso1mhnymhHom2UAmA9d+aMBqsaKF7js1jvSVq6zKf+eFeKz1I=
+X-Received: by 2002:a05:6a00:148c:b0:706:6937:cb9d with SMTP id
+ d2e1a72fcca58-70aaac1f237mr13299391b3a.0.1720047541566; Wed, 03 Jul 2024
+ 15:59:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703222501.1547-1-beaub@linux.microsoft.com>
+References: <20240702171858.187562-1-andrii@kernel.org> <20240702233554.slj6kh7dn2mc2w4n@treble>
+ <20240702233902.p42gfhhnxo2veemf@treble> <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
+ <20240703011153.jfg6jakxaiedyrom@treble> <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
+ <20240703061119.iamshulwf3qzsdu3@treble> <CAEf4Bza6YdQ5HCcuPozOwVx75UrcyZL_1DGnYrJ=2pz=DxJpPQ@mail.gmail.com>
+ <20240703224101.36r32g7j2atskidg@treble>
+In-Reply-To: <20240703224101.36r32g7j2atskidg@treble>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 3 Jul 2024 15:58:49 -0700
+Message-ID: <CAEf4Bzb+8FOcC0kRiW5D-OLfBkX6TcHfto9oK57yQRy_eFHepA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03-Jul-2024 10:25:01 PM, Beau Belgrave wrote:
-> The user events trace subsystem uses the 0x2A/'*' code for ioctls. These
-> are published via the uapi/linux/user_events.h header file.
-> 
-> Add a line indicating user events as the owner of the 0x2A/'*' code and the
-> current sequence numbers that are in use (00-02).
-> 
-> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> ---
->  Documentation/userspace-api/ioctl/ioctl-number.rst | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index a141e8e65c5d..191609fe4593 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -97,6 +97,8 @@ Code  Seq#    Include File                                           Comments
->  '%'   00-0F  include/uapi/linux/stm.h                                System Trace Module subsystem
->                                                                       <mailto:alexander.shishkin@linux.intel.com>
->  '&'   00-07  drivers/firewire/nosy-user.h
-> +'*'   00-02  uapi/linux/user_events.h                                User Events Subsystem
+On Wed, Jul 3, 2024 at 3:41=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
+ wrote:
+>
+> On Wed, Jul 03, 2024 at 01:23:39PM -0700, Andrii Nakryiko wrote:
+> > > >  [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdL=
+W55fHOut4co3Zs5akk0t4
+> > >
+> > > I don't seem to have permission to open it.
+> > >
+> >
+> > Argh, sorry, it's under my corporate account which doesn't allow
+> > others to view it. Try this, I "published" it, let me know if that
+> > still doesn't work:
+> >
+> >   [0] https://docs.google.com/presentation/d/e/2PACX-1vRgL3UPbkrznwtNPK=
+n-sSjvan7tFeMqOrIyZAFSSEPYiWG20JGSP80jBmZqGwqMuBGVmv9vyLU4KRTx/pub
+>
+> The new link doesn't work either :-)
+>
 
-You may want to consider reserving a wider sequence number range to plan
-ahead for future extensions to user events. This way you won't end up
-having to jump over sequence numbers eventually reserved by others
-within the '*' code.
+Goodness, sorry about that. I just recreated it under my public
+account and shared it with the world. This HAS to work:
 
-Thanks,
+  https://docs.google.com/presentation/d/1eaOf9CVZlCOD6b7_UtZBYMfTyYIDZw9cl=
+yjzu-IIOIo
 
-Mathieu
-
-
-> +                                                                     <mailto:linux-trace-kernel@vger.kernel.org>
->  '1'   00-1F  linux/timepps.h                                         PPS kit from Ulrich Windl
->                                                                       <ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
->  '2'   01-04  linux/i2o.h
-> -- 
-> 2.34.1
-> 
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> > > > Few questions, while we are at it. Does it mean that
+> > > > perf_callchain_user() will support working from sleepable context a=
+nd
+> > > > will wait for data to be paged in? Is anyone already working on thi=
+s?
+> > > > Any pointers?
+> > >
+> > > I had a prototype here:
+> > >
+> > >   https://lkml.kernel.org/lkml/cover.1699487758.git.jpoimboe@kernel.o=
+rg
+> > >
+> > > Hopefully I can get started on v2 soon.
+> >
+> > Ok, so you are going to work on this. Please cc me on future revisions
+> > then. Thanks!
+>
+> Will do!
+>
+> --
+> Josh
