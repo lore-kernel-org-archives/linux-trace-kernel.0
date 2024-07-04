@@ -1,55 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0F31AED55;
-	Thu,  4 Jul 2024 15:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFE21B011C
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  4 Jul 2024 15:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106026; cv=none; b=nFWM09bZQX36BM3zgvlfZwEwxy0om6HO2cs4nOGWYH+wrHBQ6Tbfx4rKrwjCfCelp9vDQ10GqkgG2ZjpxvumCzI3I6rOnQaHgalsQeypWiqb00y0QfYe3Oof4NTdr/OOBPLVz2LqrHwuwU+dNE5z8I7nn2pr/PpjEx+zZS0dxCA=
+	t=1720106431; cv=none; b=iLx14/lK/RjsEBQUDZTZyo6RVMEnqhCHGOzDskZL0WnsfKQD0h2BDQH2i7qyYCz/8pc4t0yHFu0Ge7l0Y8iFn+IXADghWPDVaxsiF5g0DVc7Gl4RNRlSMD5Z/6XV+Xi8RCMMlX2ZZPzeMkjkYX1JwUAj0dcIvCDq3vhKhlxvgGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106026; c=relaxed/simple;
-	bh=z7E+MknHGutSinOZE8ZFEWbblRdqQlH1U//ryH1/BB4=;
+	s=arc-20240116; t=1720106431; c=relaxed/simple;
+	bh=/PizTQVDlkIyNELY350ZONH8Gfc08NYf27/JwjBxgRI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NAcfp+F4yX/n4KH7I4HpgVyN5Db5zkIbODTnUgzOnFtZMZIexkFOWq0SO9V4/IZjTF11XzrhUCKh0EsYg55rMRehbrj8HSpzbc1IlHzOwTZTBo8RXK0DXHZMEpTrfqof+4eJ4t1oIx0/djJS1qTcjbQVQsK0rZSTJvKrcgohtPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjPdDL6C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQ8YUdQHCL0LcKvX7OrUE9euaSWCWRJNXmwFeT7bEYvEUNKOvWKY/1PMSQ7OvAHI8V1bbpytirz7CnCAJnEARpKLvko4S60yMB5S6nd1+ROX6hBWcSIRc4Wi85nc4tf4rjxQB6kCrWJAEpEq5blSaBpCTbTwyEIVu0kx+ZZpTLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fu1hIWQC; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjPdDL6C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D81C3277B;
-	Thu,  4 Jul 2024 15:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720106025;
-	bh=z7E+MknHGutSinOZE8ZFEWbblRdqQlH1U//ryH1/BB4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=NjPdDL6CQBJrq0/WmbQgLIoMGSBl5lUkuAp+B53vBy/alChCVD8VDqK490MdjOv96
-	 ItGHH12WL0HtHNWaVv+ZlExbr9a5G+D/ow1x3KzNaZ8TGWRrPOND3B0t1IlVXc8bqu
-	 XDZVx24zyj3/1K6CbLoU6jAJh925ERsGh7oJe4d8J9UTYt8hojYyuwi77x3proNI3E
-	 ihAH3V/v3O/svzggxKcL8xk4lD7S49HQiQQ2CJaIjdbwsDeg2SCXIkeLM6mEaP5GPd
-	 SUhdqP5GHGS284mhY38zoGGmMBnKkttsDARXs4ZsOAnR07hvX3izvUay9DwtSuOofB
-	 DPZWV6Z6xS57g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6D6F0CE09D9; Thu,  4 Jul 2024 08:13:45 -0700 (PDT)
-Date: Thu, 4 Jul 2024 08:13:45 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, clm@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-Message-ID: <2118e0a9-e878-4bc5-83d2-9a11b2d5efb9@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240702102353.GG11386@noisy.programming.kicks-ass.net>
- <20240702115447.GA28838@noisy.programming.kicks-ass.net>
- <CAEf4BzaQUzQdba2=F2NoV7=Th98fxz2EN62QX2Ej92bazt1GAg@mail.gmail.com>
- <20240702191857.GJ11386@noisy.programming.kicks-ass.net>
- <fd1d8b71-2a42-4649-b7ba-1b2e88028a20@paulmck-laptop>
- <20240703075057.GK11386@noisy.programming.kicks-ass.net>
- <6b728325-b628-488f-aabf-dbd9afa388fb@paulmck-laptop>
- <20240704083935.GR11386@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fu1hIWQC"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fb1c918860so11976675ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 Jul 2024 08:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720106429; x=1720711229; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wMtQ8G7gYG0PtXSm+9oSte5ras/tptARhMk8vAyTBpM=;
+        b=Fu1hIWQC/Sh/lpNuKEDxDoKokku3Y7aOEw1EuiIfNAFF3DTgfpsDw0pYkpgzopT6Xt
+         7UECkjZaO5+TPym0K8iv7eoNWcZrmT9O5jfpKVGSkISRGVKggSoes7aGcev7nTsp9gA8
+         fPXKDpkUfOp7Txy04cbUv9T5KDpQ6JLfrObHuQYnVGXn5kpt3jiphDkj0hnbapEDZFpr
+         6ncJvtDOLQAtaBAZhDLGfZmSg0jeGVZD4R3WFlFeJwXmbQtYWUfYHfN8G7RG2/KTM16i
+         Fh8SjLY45v6AX/qx64phLWH/9KLyYu1+/8RZwyMDiRV+Z9dffxfFgA+787OpAisg5HaL
+         k1xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720106429; x=1720711229;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wMtQ8G7gYG0PtXSm+9oSte5ras/tptARhMk8vAyTBpM=;
+        b=FbGlbNnud537jq1FpRi3jQHrLjfLCW3QkuOBxJaEwgQGN5fYe0dFYKzZGWyrxS59WK
+         sPK+a9LPNRD4BAZVEU1h9t6gORWIgFDOlTYPudN9DfyuYISDMV0Q5fHNmBHy8+TcOubB
+         e3+CTxvk8088idA6INNJ7MHZuYNc3a8iHIdB+Aw7mpN6qKLiNHftzjNeiLllCaB/oml5
+         CuCpW8EnVhgpedKKWYW5JTXBWnqjzlZvHJj7Sl6vQ3OMKmhsYWcjZdax73FVM/j9xNzd
+         9dMJPlO5E585mzBF32Mx9iaG8sPyiPMjyRXaQmvKeGL+rJSUCXST2zUvLtwuToS3CLFV
+         emdg==
+X-Forwarded-Encrypted: i=1; AJvYcCU40ho1Lc1WrW/gIQwC6PfGn1gqYKR4nWYtEQzbJl3/oRH/x3Rt8fuu7UzEMYMh6YdhuIKwgETmYs6infTCBpUJOcquXQgDDkKpJ0Zl+B6a+Hq8
+X-Gm-Message-State: AOJu0YziXZPLltgcllnU3cqdt2sXSIuK0at4D/y3JnnBzCsszpqUGlCl
+	O+Q3CuJjt4OlnIvKyTKdRMuVWEGDEnw4KDAGpJFFy4plRXto1EKjL7F4wmce5w==
+X-Google-Smtp-Source: AGHT+IGCoEg+2iwgq2yFecGonukG4K9qxoer7A69funkZsv0Vc/pIw4JkTQQWYN93RAWKE9BO0pBlQ==
+X-Received: by 2002:a17:902:dacd:b0:1fa:1a78:b5a9 with SMTP id d9443c01a7336-1fb3700ccffmr27138855ad.3.1720106429108;
+        Thu, 04 Jul 2024 08:20:29 -0700 (PDT)
+Received: from google.com (201.215.168.34.bc.googleusercontent.com. [34.168.215.201])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15388bdsm124081885ad.168.2024.07.04.08.20.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 08:20:28 -0700 (PDT)
+Date: Thu, 4 Jul 2024 15:20:24 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
+Message-ID: <Zoa9uMODCjTfM741@google.com>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+ <20240628-tracepoint-v4-2-353d523a9c15@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,44 +108,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240704083935.GR11386@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240628-tracepoint-v4-2-353d523a9c15@google.com>
 
-On Thu, Jul 04, 2024 at 10:39:35AM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 03, 2024 at 07:08:21AM -0700, Paul E. McKenney wrote:
-> > On Wed, Jul 03, 2024 at 09:50:57AM +0200, Peter Zijlstra wrote:
+On Fri, Jun 28, 2024 at 01:23:32PM +0000, Alice Ryhl wrote:
+> Make it possible to have Rust code call into tracepoints defined by C
+> code. It is still required that the tracepoint is declared in a C
+> header, and that this header is included in the input to bindgen.
 > 
-> > > Would it make sense to disable it for those architectures that have
-> > > already done this work?
-> > 
-> > It might well.  Any architectures other than x86 at this point?
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  include/linux/tracepoint.h      | 18 +++++++++++++++-
+>  include/trace/define_trace.h    | 12 +++++++++++
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/kernel/lib.rs              |  1 +
+>  rust/kernel/tracepoint.rs       | 47 +++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 78 insertions(+), 1 deletion(-)
 > 
-> Per 408b961146be ("tracing: WARN on rcuidle")
-> and git grep "select.*ARCH_WANTS_NO_INSTR"
-> arch/arm64/Kconfig:     select ARCH_WANTS_NO_INSTR
-> arch/loongarch/Kconfig: select ARCH_WANTS_NO_INSTR
-> arch/riscv/Kconfig:     select ARCH_WANTS_NO_INSTR
-> arch/s390/Kconfig:      select ARCH_WANTS_NO_INSTR
-> arch/x86/Kconfig:       select ARCH_WANTS_NO_INSTR
-> 
-> I'm thinking you can simply use that same condition here?
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 689b6d71590e..d82af4d77c9f 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -238,6 +238,20 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  #define __DECLARE_TRACE_RCU(name, proto, args, cond)
+>  #endif
+>  
+> +/*
+> + * Declare an exported function that Rust code can call to trigger this
+> + * tracepoint. This function does not include the static branch; that is done
+> + * in Rust to avoid a function call when the tracepoint is disabled.
+> + */
+> +#define DEFINE_RUST_DO_TRACE(name, proto, args)
+> +#define DEFINE_RUST_DO_TRACE_REAL(name, proto, args)			\
+nit: IMO using a __* prefix would be a better option to describe the
+internal use of the macro instead of the _REAL suffix.
 
-New one on me!  And it does look like that would work, and it also
-looks like other code assumes that these architectures have all of their
-deep-idle and entry/exit functions either inlined or noinstr-ed, so it
-should be OK for Tasks Trace Rude to do likewise.  Thank you!!!
+Other than that, this patch looks good to me:
 
-If you would like a sneak preview, please see the last few commits on
-the "dev" branch of -rcu.  And this is easier than my original plan
-immortalized (at least temporarily) on the "dev.2024.07.02a" branch.
-
-Things left to do: (1) Rebase fixes into original commits. (2)
-Make RCU Tasks stop ignoring idle tasks.  (3) Reorder the commits
-for bisectability.  (4) Make rcutorture test RCU Tasks Rude even when
-running on platforms that don't need it.  (5) Fix other bugs that I have
-not yet spotted.
-
-I expect to post an RFC patch early next week.  Unless there is some
-emergency, I will slate these for the v6.12 merge window to give them
-some soak time.
-
-							Thanx, Paul
+Reviewed-by: Carlos Llamas <cmllamas@google.com>
