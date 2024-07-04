@@ -1,64 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B829746E;
-	Thu,  4 Jul 2024 02:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B151CA84;
+	Thu,  4 Jul 2024 03:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720059517; cv=none; b=tlpYESLHymoSUyGBcoCxS4udvSfskUTZcwcvXNYrisFruEx8n1IhryLRXlTcalT3oruhg8dI4XPmdoBWSRMqBQyyde1fzG29An1CJ5JHJvaE6kI4Ll2ONWS/47adPfF7p+3T2eJTfIRlKg83xbAl5PAKgW/RZLV4dtsWMrOVvbw=
+	t=1720062212; cv=none; b=tOs1Vw4urOUf9calOC4iA+StECnUDlJ8ENfd98Y0xQusZjqmOCSiisD6ETXSjgOdocMArPCazl8M3CiilN50DSr/KY/orJRukcEztbNb8X6tP9S8j/Zpw4ofo+r0tLcef+JbLab7k1ttpEED+/3CIzGiBcBu+YEcARAzXFYzgd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720059517; c=relaxed/simple;
-	bh=bzxG6FQCK4DTM7wjB53HY0++y2BjGiKWfc9ZeGo4RZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hMiAuEQ2SnWQlZLGh4hVBbR3NVAOrAkF/Y/DMLrYFPawWvNCNBjNgFajm/cD5C08Fucyi6Vbo7/+zdRt+4NY2N8KNO6GRxT8r/jF45GVLhI8au25KSRHCGH4lPp6DTJYRWP3LiaNWSz3Uw7WksIcqMDCXqSMrazvOAuK7LinPz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCFgzSWM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCFgzSWM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD3AC2BD10;
-	Thu,  4 Jul 2024 02:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720059516;
-	bh=bzxG6FQCK4DTM7wjB53HY0++y2BjGiKWfc9ZeGo4RZk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jCFgzSWMImIi6srb9NugYrCifg2ICF3a660/AR9VIc9SY+/JC0+n7VbTxbWb/dlMa
-	 ZGOWxZuAn7x8e0zBzCJ1WQeq0QkuNmUNq4b2kTzZ+a6d/7Nm4jI6b79tYINvj77HwS
-	 0sFv3b7tISt77bxvcS5LiGipLD6O+A+y0ZGRQzPPoN58jR0wRto2wu4IHd9W76SeDP
-	 zqEmMPt/FIm3r0bszMmmrj71h1ADalSqRGcxyMEcq3GUL8GnFzTSVnbPotrE3mEJJp
-	 P1NrywAqtcpCsZe3+8WCNeqPBCGxpmS52bVn6gLQgEFo7kbBj507MS9JjZkEmEQZEl
-	 RKkZ7gft9F3CQ==
-Date: Wed, 3 Jul 2024 19:18:35 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Yunseong Kim <yskelg@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- Paolo Abeni <pabeni@redhat.com>, Sasha Levin <sashal@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, Taehee Yoo <ap420073@gmail.com>, Pedro
- Tammela <pctammela@mojatatu.com>, Austin Kim <austindh.kim@gmail.com>,
- MichelleJin <shjy180909@gmail.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
- ppbuk5246@gmail.com, Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: Re: [PATCH] tracing/net_sched: NULL pointer dereference in
- perf_trace_qdisc_reset()
-Message-ID: <20240703191835.2cc2606f@kernel.org>
-In-Reply-To: <20240702180146.5126-2-yskelg@gmail.com>
-References: <20240702180146.5126-2-yskelg@gmail.com>
+	s=arc-20240116; t=1720062212; c=relaxed/simple;
+	bh=gJgmr8iquJwncRQAJ9hj3W/YzioCZdhjL08I9J5UPt4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H2wCf/eUl9mXKaid2ES9j7t2i74xOx7z5lUy7mwmTpjzRaw/KVq/ynXmrB0lqCwMnIUpQZNjO65c6OG1LaOTF8dAUaHLhA0ZRyC4XqIFAdUHZEikX4ac/uJexhSsvLSWmPKNBKEIPohr2zLai5yiiutdSO67C2tUWH1kWqwuwfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WF1ZB2hMHzxTF6;
+	Thu,  4 Jul 2024 10:58:58 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9F06F180A9C;
+	Thu,  4 Jul 2024 11:03:26 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
+ (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Jul
+ 2024 11:03:26 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <muchun.song@linux.dev>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>
+CC: <linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <lihongbo22@huawei.com>
+Subject: [PATCH v2 0/2] Introduce tracepoint for hugetlbfs
+Date: Thu, 4 Jul 2024 11:07:02 +0800
+Message-ID: <20240704030704.2289667-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On Wed,  3 Jul 2024 03:01:47 +0900 Yunseong Kim wrote:
-> Support backports for stable version. There are two places where null
-> deref could happen before
-> commit 2c92ca849fcc ("tracing/treewide: Remove second parameter of __assign_str()")
-> Link: https://lore.kernel.org/linux-trace-kernel/20240516133454.681ba6a0@rorschach.local.home/
-> 
-> I've checked +v6.1.82 +v6.6.22 +v6.7.10, +v6.8, +6.9, this version need
-> to be applied, So, I applied the patch, tested it again, and confirmed
-> working fine.
+Here we add some basic tracepoints for debugging hugetlbfs: {alloc, free,
+evict}_inode, setattr and fallocate.
 
-You're missing the customary "[ Upstream commit <upstream commit> ]"
-line, not sure Greg will pick this up.
+v1 can be found at:
+https://lore.kernel.org/linux-mm/20240701194906.3a9b6765@gandalf.local.home/T/
+
+Changes since v1:
+  - Decrease the parameters for setattr tracer suggested by Steve and Mathieu.
+  - Replace current_user_ns() with init_user_ns when translate uid/gid.
+
+Hongbo Li (2):
+  hugetlbfs: support tracepoint
+  hugetlbfs: use tracepoints in hugetlbfs functions.
+
+ MAINTAINERS                      |   1 +
+ fs/hugetlbfs/inode.c             |  17 +++-
+ include/trace/events/hugetlbfs.h | 160 +++++++++++++++++++++++++++++++
+ 3 files changed, 176 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/hugetlbfs.h
+
+-- 
+2.34.1
+
