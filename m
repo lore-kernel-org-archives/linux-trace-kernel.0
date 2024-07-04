@@ -1,151 +1,94 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBDB17838D;
-	Wed,  3 Jul 2024 23:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD7BE5E;
+	Thu,  4 Jul 2024 01:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720049211; cv=none; b=W4LiBkKQ8tfLYhFx1BPhYx614150i4bidtNiYQfHfirm2WpUXL9T3QaneXi6dzvKmy5omJqBWcjJJeNfjUaNZysuUFgOMvpv+TrLOyR1SRhUILZPWki4jMCfgaxwcQ03NXjR/Gib8My0woRHtIX26n6x7Niz4hdA0FUSZyhGZlM=
+	t=1720057531; cv=none; b=uNkZCWeJx0RKUQLPjm0VgCVOJMHyWgTlw3d1qUkzHP0RpkkrYI+K2NU3t8Do+fPRfAkWbDaJGIq8rF5VO2cxtAylY43ExC8KkDk+/+qPMsJORZKa6Nwi43w8wTiBe0U97hep1qUMpN0kTvCFSRzfgUpkSzK/BRO9bj2vmitGd+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720049211; c=relaxed/simple;
-	bh=/I4zR2Jxebxcv3lm4liZ8+T/2eec+pcepi3f9aw53bA=;
+	s=arc-20240116; t=1720057531; c=relaxed/simple;
+	bh=SPvd8VwZD/E153NMdegZE4h/pGxOsQ6Y4bfsLGCF5kk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UBzKMZUKfb9poVkyto3YonLda4RrlNwo9hFhzuzrhqsyUrvoURjFJCfeQa/URd7DK8um5aDa23PZDoLj6neyNrXOtwAabFrheJoK/vqttiJ3Teeyo7SrVs0mGEOHTQUMvO7bh181JdLsoSMjI8IrRO2uaeVuqb8hnNQVbB7B9Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BaNBnZSf; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=nM5WojNe+IWFKu02qSk14gvADmbmpuaJjFNkn7pWCti47xmo7FdVdRSM2vQNOQs8ukaGBgeg2/dCeYMfMEVvEu8JRSz6lgorNrR/8P695eRBudNX6jnbvnqFvHKDE7uoV76PegFhRglC2aUrGMtt1hwCWCdoM0kgchwSmdyLDRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaNBnZSf"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d566d5eda9so49023b6e.0;
-        Wed, 03 Jul 2024 16:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720049209; x=1720654009; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8HXePwbqvjghg/jCRXhGgfiZPDFLMmhiGck4biFS5sU=;
-        b=BaNBnZSfIOiXNl3cpwBxxBUIRaCrt7dup/di+kQvAB5fdMDlOwI+AxMCCAwaJXirXB
-         l0LI96J9nuMEKbIAUCIz5KF2XR7YILwaxqRvCbxFil/hfAiaYHBJklo3zRrbNlnWPeqs
-         D96mL7Js6Zw94d+LzsPcsrpdVWfFun4eprMMOxBs4y5kpMwzWb9HkL9RBjqfjWB/v9m4
-         iL0tHkzhwfh+6hdZjGNYcc9UUdWy3uZwhr3SDZ9bfnB2NIJnlkHfMlv8YfJi4unnNlJb
-         Ixq4/gFpulGKu7m3EG1+dqP2xWN0XLy+TMHwiVm6XXkBXE+BmKBzzLNvw/uuE+x/hPnF
-         9j4w==
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70af5c40f8aso125118b3a.1;
+        Wed, 03 Jul 2024 18:45:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720049209; x=1720654009;
+        d=1e100.net; s=20230601; t=1720057529; x=1720662329;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8HXePwbqvjghg/jCRXhGgfiZPDFLMmhiGck4biFS5sU=;
-        b=uxVDMY220/Nus0L4hPYxtjlhcExKP+MHwOaAD1BIVD25ZGoggjGkg2BhZ9agEpDkqC
-         RMpjEJ6Nym/5uffbi23FZSWAmkVn+EGKu/LRXccMvkjPeMV7BNak/k2W0KO7fUMOa5Ap
-         ZsMcJlxpUw0kvMXqOsSybtwZoVPq136eQsqL0A4Qhv62AE4DoSfNaQsDozll0B1jUjTn
-         Gq8NmG5S0L/XSLlYbkpwQr8F6dDYhHslz7PsYBsRo1/GJ1sQDMttDJiCxR7CxKa52497
-         274SMOkr0iJnSZkcu6QsOspmcw3a3WbL6zhQilvX+rz0YfXXMzW+ajWh8xMrOcGZ7fRY
-         bGmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwaZoYXPQnq02/3XEBFoOFtCRyXzDo1m2TXt4Hg4l7s9kN6E4uZv99407SVU0N9G7usTZidhTM7x7H0DOQxwoen3tstyU6Z0VxwYQh0bzovybhjDq0lsWdRUlrmYjaIqVhF2mUc/gesipLm5MrHqZpjCTew6ku+jPXrSF9ipuHq8nJAkbM0EnBZY9JfWSM3Eip8H8a32dBGzPq14+sDK7M6dSV3YBwjQ==
-X-Gm-Message-State: AOJu0Yw1uwAFQT0HhQodL6jQtzvaNeN21Q6PiZIF0OKbZDSHGt0kDtKd
-	/ZLjx+MTGtv4E2g9J4tlIMI9/+HTHaNPV40mMdmE12pDjlg1Ung6LY4tFM7RAcG5sy469H4ZKQv
-	A0p5eqXsHnYFC77R2aXyxgo95PIY=
-X-Google-Smtp-Source: AGHT+IHawKE8y6ADXQN4QpihhsZLlwXk2aAtwmYmiDAT27uTStzJkBHG3ApvbBZ4tqnJtJI4D8hA2umF3on6Joe6pow=
-X-Received: by 2002:a05:6808:1918:b0:3d6:38c2:fcb5 with SMTP id
- 5614622812f47-3d914c4b21fmr64100b6e.3.1720049208375; Wed, 03 Jul 2024
- 16:26:48 -0700 (PDT)
+        bh=+YikNPi3mD5FM+s7PD6odmr1mocmGFb6M7JPjoY2/qg=;
+        b=ovDolLwxPrS686Hhy4eCSeUjuUUArHLMgw374fFeYIkUxci5R7qrKHzack8FhKDQja
+         k0emV2C0IvdiMTrzeOUPBtqXvOIWw0vCqjYSDZV6u9GtRQ4y/jp1XFCFLMd7Wk9UmQCD
+         VfroX0RuHOayxZbVW9stgDPciyk6NoFpqO8RGJkHcN6X117k5QJiQzdCOhR0Q9BDRr0N
+         hqEoT3W55Cge0gU7in+wrh/LfdoPWyJBGCeKw5MYWAbMcMZwJrPRQL6VHzsnh1ZQB7fj
+         pJO86Ss57cpIppI9QY8m6EPlFHFSnc2VWTEO0+0t+WZVDsFkgncFFVaMB6PUeXDm04WC
+         /ISg==
+X-Forwarded-Encrypted: i=1; AJvYcCVm/h6Y+WuQk6ecWMRFAi+DMk4ooGGH9cG/LuENPXj9AoWA1WMouTEh/meTTyCMHRFmM4pCn8eNBWsO0NIKUX7jSO1vKFnUH/hdOecQ1vVvGuFYueYn7gISK4B+d0fEyvRlqK3XtOVNNk2SjZTUFx0TLHN2xAA2o79KhodN7ljxxneZ7ahrFDJn8W/KCDC4vwsHCQ==
+X-Gm-Message-State: AOJu0YyzIJjqxDUw0OXLWCj6AORgvr/03FRF0O834DV3P5pj/Qq77O0I
+	8rCgp3eDiEgX+PJWivrvYPkB4FQAw9yjIazCTck9IG3EYD+7vRSG82UTxxQ3b8M7x0rDttF0f81
+	TDlUn/FiIkQSCrwVJDSmzaOzYhKc=
+X-Google-Smtp-Source: AGHT+IGrIktkFkR+oCtQa6tf3fiVVVoeQYpsPJ8mYibF+5dXfWH9YYbLGVSBQFJHg8B/JlVl4sg1Fc3jslXvRF8wQjU=
+X-Received: by 2002:a05:6a00:2d0c:b0:70a:f0f1:480f with SMTP id
+ d2e1a72fcca58-70b0092ada1mr300137b3a.3.1720057529184; Wed, 03 Jul 2024
+ 18:45:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703040203.3368505-1-andrii@kernel.org> <20240703223927.zby4glzbngjqxemd@treble>
-In-Reply-To: <20240703223927.zby4glzbngjqxemd@treble>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 3 Jul 2024 16:26:36 -0700
-Message-ID: <CAEf4BzYja7imAz-kW+6WF03dQGkwfugw79p6reVmHbc8BTFOjw@mail.gmail.com>
-Subject: Re: [PATCH v3] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org
+References: <20240628202608.3273329-1-amadio@gentoo.org> <20240628203432.3273625-1-amadio@gentoo.org>
+ <20240628203432.3273625-3-amadio@gentoo.org> <ZoSP_vFMVl83pxES@google.com>
+ <20240703153617.650fcc1c@rorschach.local.home> <ZoXDoajJqDiIcgwg@google.com> <20240703190502.392be247@rorschach.local.home>
+In-Reply-To: <20240703190502.392be247@rorschach.local.home>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 3 Jul 2024 18:45:18 -0700
+Message-ID: <CAM9d7cgVFRO-NR+bFNxB6SgWuxyr54LeSvnwHD4r+ncFhaDutg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] tools: Make pkg-config dependency checks usable by
+ other tools
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Guilherme Amadio <amadio@gentoo.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 3, 2024 at 3:39=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
+On Wed, Jul 3, 2024 at 4:05=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
  wrote:
 >
-> On Tue, Jul 02, 2024 at 09:02:03PM -0700, Andrii Nakryiko wrote:
-> > @@ -2833,6 +2858,18 @@ perf_callchain_user32(struct pt_regs *regs, stru=
-ct perf_callchain_entry_ctx *ent
+> On Wed, 3 Jul 2024 14:33:21 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> > On Wed, Jul 03, 2024 at 03:36:17PM -0400, Steven Rostedt wrote:
+> > > On Tue, 2 Jul 2024 16:40:46 -0700
+> > > Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > > +CC Steve and linux-trace-kernel list.
+> > >
+> > > There doesn't seem to be a cover page, and it doesn't apply on
+> > > v6.10-rc6 nor on tip.
 > >
-> >       fp =3D compat_ptr(ss_base + regs->bp);
-> >       pagefault_disable();
-> > +
-> > +#ifdef CONFIG_UPROBES
-> > +     /* see perf_callchain_user() below for why we do this */
-> > +     if (current->utask) {
-> > +             u32 ret_addr;
-> > +
-> > +             if (is_uprobe_at_func_entry(regs, current->utask->auprobe=
-) &&
-> > +                 !__get_user(ret_addr, (const u32 __user *)regs->sp))
+> > Oh, sorry.  You can find the whole series here.
+> >
+> > https://lore.kernel.org/linux-perf-users/20240628203432.3273625-1-amadi=
+o@gentoo.org/#r
+> >
+> > I think this is based on the perf-tools-next tree and depends on perf
+> > changes.  If you're ok with the change, I can carry it in the perf tree=
+.
+> >
 >
-> Shouldn't the regs->sp value be checked with __access_ok() before
-> calling __get_user()?
+> Hmm, I checked out git://git.kernel.org/pub/scm/linux/kernel/git/perf/per=
+f-tools-next.git
+> master branch, and it looks to contain just Linus's changes. Is there a s=
+pecific branch?
 
-Ah, it's __get_user vs get_user quirk, right? Should I just use
-get_user() here? It seems like existing code is trying to avoid two
-__access_ok() checks for two fields of stack_frame, but here we don't
-have that optimization opportunity anyways.
+Yep, it's the same as tree: 'perf-tools-next'
 
->
-> Also, instead of littering functions with ifdefs it would be better to
-> abstract this out into a separate function which has an "always return
-> false" version for !CONFIG_UPROBES.  Then the above could be simplified t=
-o
-> something like:
-
-Sure, can do.
-
->
->         ...
->         pagefault_disable();
-
-But I'd leave pagefault_disable() outside of that function, because
-caller has to do it either way.
-
->
->         if (is_uprobe_at_func_entry(regs, current) &&
->             __access_ok(regs->sp, 4) &&
->             !__get_user(ret_addr, (const u32 __user *)regs->sp))
->                 perf_callchain_store(entry, ret_addr);
->         ...
->
-> Also it's good practice to wait at least several days before posting new
-> versions to avoid spamming reviewers and to give them time to digest
-> what you've already sent.
-
-I'm not sure about "at least several days", tbh. I generally try to
-not post more often than once a day, and that only if I received some
-meaningful reviewing feedback (like in your case). I do wait a few
-days for reviews before pinging the mailing list again, though.
-
-Would I get this feedback if I haven't posted v3? Or we'd just be
-delaying the inevitable for a few more idle days? This particular
-change (in it's initial version before yours and recent Peter's
-comments) has been sitting under review since May 8th ([0], and then
-posted without changes on May 21st, [1]), so I'm not exactly rushing
-the things here.
-
-Either way, I won't get to this until next week, so I won't spam you
-too much anymore, sorry.
-
-  [0] https://lore.kernel.org/linux-trace-kernel/20240508212605.4012172-4-a=
-ndrii@kernel.org/
-  [1] https://lore.kernel.org/linux-trace-kernel/20240522013845.1631305-4-a=
-ndrii@kernel.org/
-
->
-> --
-> Josh
+Thanks,
+Namhyung
