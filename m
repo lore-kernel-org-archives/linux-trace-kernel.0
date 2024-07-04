@@ -1,52 +1,50 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB075107A0;
-	Thu,  4 Jul 2024 08:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC8616C6BA;
+	Thu,  4 Jul 2024 09:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720082737; cv=none; b=YjmuGu4H1Ka0NBX+ioQ8EfqBKCO7Yc/EcI1dJlHQtU5Woxc67u1h7Q1Ti4T86ko76X2SRbdDH9e8TdG/WLtrLWwSjD8wh8KHHopQt3l/HXpZHpAxk1OdagolhsXbKT5TNtxuATTfsOUg1rNhs0auc6L8lqwfvFq8/RYtBCEbwcA=
+	t=1720084572; cv=none; b=iO759uGt4tmOA+jrOfBAEabZeoXe9lqIpOR0ALvE1qSus/xITEVd/Lk0Y1y/kVp6dog+MFPvNHFTs/XGNiwyKJiYijfROAwWZeDbtDujTA40hsr783hrLtOeUu3bbPrWg312yLRBGN/zz4Zi5hjTZXv/wW134URFdA5SkrzFkto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720082737; c=relaxed/simple;
-	bh=42P6ixEL1/t0fNcYlCm/UnkNeBXltpyRarpLhm/27Ow=;
+	s=arc-20240116; t=1720084572; c=relaxed/simple;
+	bh=ihatN4AJ5XqzTEMYL7tfSvzND3MrgRo5Gw/35iMssV8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUDu86utP7vewXhpDWSVdJmNeXwtDxq9hWOjgXa1nEdLjDn64fI4B8IXQnx3vYPrIuClg+FmqFiFh+F4ysgtTix9vCPYkaIi9CgvneEoVbygWGGNC9PQ/IfdnMRGVYSoG8Hm5+iweWxo7X8iWCVC536HwN610C+FiBQFH+C+mpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gE1uYFwn; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZGmwf0gwbrqUXpfLcHxtMZVqYJQzI6FXI1F6fSqkFPnOmfW4gTaX/6ccKv6cwH7zmzIlLp31x2Dql4x93s9zunJx9Ej2oebgXQ5x/pSIaFxznc1kHjNxSRTZBa8u2YFAvg730SJJ1Q+pLKegjDARMQFo25+IxOafGv/Lt9fNDMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l+et9/WP; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gE1uYFwn"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l+et9/WP"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=IApq68reoIapG8KugSynJUOaPB90tTvNFzIcvMXZOhA=; b=gE1uYFwnXyoI/NJJNvRZ15qHRM
-	qP7WILc2ePpxx3GlfAfS3Lj9SOFnbI4LVY8+EYxxKQqtV7VIZj9yVbScKQn7A+zFje4ibIVH0nX6B
-	0xsH9o5cKMOzuzqBlfxQOtE2UjkpC+x0RfiPE3JwumDQ4cmpTho0cT2N88eoXib0IprevlI9tRDjd
-	zGK3m+dnQht9XQDx/0iiJdR+v41+/oUYBzjrRS12eq06YjFUwQ5ku3bPy9oK6lV5r4dnZ3H5oJ48R
-	Pg/XPQ8lXAcalRPwUx+DggZ+AZAW8zHsKBdLjIGPAo6m+TNcjYHfqzbERl8xUrCg8MIlNJyoiNLlQ
-	RInI6XfA==;
+	bh=EqNsEuxV/l/0e6GLDEy/5SmhvWKF+eO2yu493ws1VK4=; b=l+et9/WPwX8ueU339iK1+KMyB0
+	bOnduWl49NdtOeRDGEEuHiMYr54MZlCHKlWL1V0qNYny0oFYM1V3BVKzFjzOc4c34jGIEFIn2mCfE
+	1SJpol6tX8dw9VnIBmEE3x/AKsNLsy+IUy58QHsYk91AZ/VfmSbPpIVVAuJDgqLfgaLYceJFSrCsX
+	iRZ2cj3kFNMcXbMfdCQkW0B6Vgha88fzMuMrQ4zuMFl4EuTesbdhnKDWu1v6LPHfVEFXYbJOvP8rl
+	+dEiK7KY+SUqIwPrvnupMvDwyor+qwCTeGZOVUDHRjUXmo7FvuuHLQ76dA6MXtj8hZV22rtxGjdtf
+	Hv4rNWEw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPI5l-0000000ACcy-0RAA;
-	Thu, 04 Jul 2024 08:45:27 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sPIZQ-00000002gs3-1fca;
+	Thu, 04 Jul 2024 09:16:04 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B31713003FF; Thu,  4 Jul 2024 10:45:24 +0200 (CEST)
-Date: Thu, 4 Jul 2024 10:45:24 +0200
+	id D6A8C3003FF; Thu,  4 Jul 2024 11:15:59 +0200 (CEST)
+Date: Thu, 4 Jul 2024 11:15:59 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
 	rostedt@goodmis.org, mhiramat@kernel.org, oleg@redhat.com,
 	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org,
-	paulmck@kernel.org, clm@meta.com
-Subject: Re: [PATCH v2 04/12] uprobes: revamp uprobe refcounting and lifetime
- management
-Message-ID: <20240704084524.GC28838@noisy.programming.kicks-ass.net>
+	paulmck@kernel.org, clm@meta.com,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
+ and per-CPU RW semaphore
+Message-ID: <20240704091559.GS11386@noisy.programming.kicks-ass.net>
 References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240701223935.3783951-5-andrii@kernel.org>
- <20240703133608.GO11386@noisy.programming.kicks-ass.net>
- <CAEf4BzZQQJGrC+tCbrU90JNpXxH8-vBg_c5GzjS=FLZp0PfExA@mail.gmail.com>
- <20240704080348.GP11386@noisy.programming.kicks-ass.net>
+ <CAEf4BzaZhi+_MZ0M4Pz-1qmej6rrJeLO9x1+nR5QH9pnQXzwdw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,128 +53,91 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240704080348.GP11386@noisy.programming.kicks-ass.net>
+In-Reply-To: <CAEf4BzaZhi+_MZ0M4Pz-1qmej6rrJeLO9x1+nR5QH9pnQXzwdw@mail.gmail.com>
 
-On Thu, Jul 04, 2024 at 10:03:48AM +0200, Peter Zijlstra wrote:
+On Wed, Jul 03, 2024 at 02:33:06PM -0700, Andrii Nakryiko wrote:
 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index c98e3b3386ba..4aafb4485be7 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -1112,7 +1112,8 @@ static void __probe_event_disable(struct trace_probe *tp)
->  		if (!tu->inode)
->  			continue;
->  
-> -		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
-> +		uprobe_unregister(tu->inode, tu->offset, &tu->consumer,
-> +				  list_is_last(trace_probe_probe_list(tp), &tu->tp.list) ? 0 : URF_NO_SYNC);
->  		tu->inode = NULL;
->  	}
->  }
+> 2. More tactically, RCU protection seems like the best way forward. We
+> got hung up on SRCU vs RCU Tasks Trace. Thanks to Paul, we also
+> clarified that RCU Tasks Trace has nothing to do with Tasks Rude
+> flavor (whatever that is, I have no idea).
+> 
+> Now, RCU Tasks Trace were specifically designed for least overhead
+> hotpath (reader side) performance, at the expense of slowing down much
+> rarer writers. My microbenchmarking does show at least 5% difference.
+> Both flavors can handle sleepable uprobes waiting for page faults.
+> Tasks Trace flavor is already used for tracing in the BPF realm,
+> including for sleepable uprobes and works well. It's not going away.
 
+I need to look into this new RCU flavour and why it exists -- for
+example, why can't SRCU be improved to gain the same benefits. This is
+what we've always done, improve SRCU.
 
-Hmm, that continue clause might ruin things. Still easy enough to add
-uprobe_unregister_sync() and simpy always pass URF_NO_SYNC.
+> Now, you keep pushing for SRCU instead of RCU Tasks Trace, but I
+> haven't seen a single argument why. Please provide that, or let's
+> stick to RCU Tasks Trace, because uprobe's use case is an ideal case
+> of what Tasks Trace flavor was designed for.
 
-I really don't see why we should make this more complicated than it
-needs to be.
+Because I actually know SRCU, and because it provides a local scope.
+It isolates the unregister waiters from other random users. I'm not
+going to use this funky new flavour until I truly understand it.
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 354cab634341..681741a51df3 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -115,7 +115,9 @@ extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm
- extern int uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
- extern int uprobe_register_refctr(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
- extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
--extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-+#define URF_NO_SYNC	0x01
-+extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, unsigned int flags);
-+extern void uprobe_unregister_sync(void);
- extern int uprobe_mmap(struct vm_area_struct *vma);
- extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
- extern void uprobe_start_dup_mmap(void);
-@@ -165,7 +167,7 @@ uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, boo
- 	return -ENOSYS;
- }
- static inline void
--uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, unsigned int flags)
- {
- }
- static inline int uprobe_mmap(struct vm_area_struct *vma)
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 0b7574a54093..d09f7b942076 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1145,7 +1145,7 @@ __uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
-  * @offset: offset from the start of the file.
-  * @uc: identify which probe if multiple probes are colocated.
-  */
--void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, unsigned int flags)
- {
- 	scoped_guard (srcu, &uprobe_srcu) {
- 		struct uprobe *uprobe = find_uprobe(inode, offset);
-@@ -1157,10 +1157,17 @@ void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consume
- 		mutex_unlock(&uprobe->register_mutex);
- 	}
- 
--	synchronize_srcu(&uprobe_srcu); // XXX amortize / batch
-+	if (!(flags & URF_NO_SYNC))
-+		synchronize_srcu(&uprobe_srcu);
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister);
- 
-+void uprobe_unregister_sync(void)
-+{
-+	synchronize_srcu(&uprobe_srcu);
-+}
-+EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
-+
- /*
-  * __uprobe_register - register a probe
-  * @inode: the file in which the probe has to be placed.
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index d1daeab1bbc1..1f6adabbb1e7 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3181,9 +3181,10 @@ static void bpf_uprobe_unregister(struct path *path, struct bpf_uprobe *uprobes,
- 	u32 i;
- 
- 	for (i = 0; i < cnt; i++) {
--		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset,
--				  &uprobes[i].consumer);
-+		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset, URF_NO_SYNC);
- 	}
-+	if (cnt > 0)
-+		uprobe_unregister_sync();
- }
- 
- static void bpf_uprobe_multi_link_release(struct bpf_link *link)
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index c98e3b3386ba..6b64470a1c5c 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1104,6 +1104,7 @@ static int trace_uprobe_enable(struct trace_uprobe *tu, filter_func_t filter)
- static void __probe_event_disable(struct trace_probe *tp)
- {
- 	struct trace_uprobe *tu;
-+	bool sync = false;
- 
- 	tu = container_of(tp, struct trace_uprobe, tp);
- 	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
-@@ -1112,9 +1113,12 @@ static void __probe_event_disable(struct trace_probe *tp)
- 		if (!tu->inode)
- 			continue;
- 
--		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
-+		uprobe_unregister(tu->inode, tu->offset, &tu->consumer, URF_NO_SYNC);
-+		sync = true;
- 		tu->inode = NULL;
- 	}
-+	if (sync)
-+		uprobe_unregister_sync();
- }
- 
- static int probe_event_enable(struct trace_event_call *call,
+Also, we actually want two scopes here, there is no reason for the
+consumer unreg to wait for the retprobe stuff.
+
+> 3. Regardless of RCU flavor, due to RCU protection, we have to add
+> batched register/unregister APIs, so we can amortize sync_rcu cost
+> during deregistration. Can we please agree on that as well? This is
+> the main goal of this patch set and I'd like to land it before working
+> further on changing and improving the rest of the locking schema.
+
+See my patch here:
+
+  https://lkml.kernel.org/r/20240704084524.GC28838@noisy.programming.kicks-ass.net
+
+I don't think it needs to be more complicated than that.
+
+> I won't be happy about it, but just to move things forward, I can drop
+> a) custom refcounting and/or b) percpu RW semaphore. Both are
+> beneficial but not essential for batched APIs work. But if you force
+> me to do that, please state clearly your reasons/arguments.
+
+The reason I'm pushing RCU here is because AFAICT uprobes doesn't
+actually need the stronger serialisation that rwlock (any flavour)
+provide. It is a prime candidate for RCU, and I think you'll find plenty
+papers / articles (by both Paul and others) that show that RCU scales
+better.
+
+As a bonus, you avoid that horrific write side cost that per-cpu rwsem
+has.
+
+The reason I'm not keen on that refcount thing was initially because I
+did not understand the justification for it, but worse, once I did read
+your justification, your very own numbers convinced me that the refcount
+is fundamentally problematic, in any way shape or form.
+
+> No one had yet pointed out why refcounting is broken 
+
+Your very own numbers point out that refcounting is a problem here. 
+
+> and why percpu RW semaphore is bad. 
+
+Literature and history show us that RCU -- where possible -- is
+always better than any reader-writer locking scheme.
+
+> 4. Another tactical thing, but an important one. Refcounting schema
+> for uprobes. I've replied already, but I think refcounting is
+> unavoidable for uretprobes,
+
+I think we can fix that, I replied here:
+
+  https://lkml.kernel.org/r/20240704083152.GQ11386@noisy.programming.kicks-ass.net
+
+> and current refcounting schema is
+> problematic for batched APIs due to race between finding uprobe and
+> there still being a possibility we'd need to undo all that and retry
+> again.
+
+Right, I've not looked too deeply at that, because I've not seen a
+reason to actually change that. I can go think about it if you want, but
+meh.
