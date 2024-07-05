@@ -1,98 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B91143C41;
-	Fri,  5 Jul 2024 07:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1617B1F61C;
+	Fri,  5 Jul 2024 07:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720163435; cv=none; b=C4XCKgs3i1YSTWAVIo3LsGyFr0VUr2yc8z64pAqnmfVSLhE/BkYAjJvh+ITbybv9NmQ0ix0TzwvW4zAUTzfBOgVUlwy5uUFbL4fy7PmOlnLok1LnnPwMNr41p2Q6iqG81pFhmsbnYRQkO/LF6nvU3gsr1v2f2ddO37pQhIMdRac=
+	t=1720163452; cv=none; b=Inu68SFprun6VPXzyVW0rsY5kCfVP/gPtUoEcyimf2jwEwBfeP3I12lobYdJuCl/jQg9AIg9gE0d652oThCzFlGghUHj0rkZgI1n8AUOdw0Zfv38ElVMxpliC4NhuPs9PPyXoxn3CEL+mwkHGiW6xD/gV4aXuOGx7CuAJKMD85c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720163435; c=relaxed/simple;
-	bh=FXypFo382SIXThuXCUwX7hvFYjAAaZul3NTblqc7hn8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nHKd2nP4fxAMhNfiUD1q+Ybt7qZFAL8YJBNsaX0AIBiqHTt8gBoSmoQPuJWWsoXVIaiCiy0FMwErAVfrvJ+/z+rvGau+CjQ+3oFMspTbzCmlb8CDv1GltelC35f72UoJtFfYZL6eR4eULlzyi8e9mifPQaPQ5SZ7i1t8N80mp18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBNPC1wx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720163452; c=relaxed/simple;
+	bh=URZqfqwCRL/WjOjIr/reDxmP+5zhj0AQCqWJlDJ7XkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lR6AdAFcG1oUhETGq0b8aYv9gTzbfw9ntJSosaIK6T6CkUXj8GIyM0AaKSbP84bs9FazwGYQQhEREzW418qe7kInFkymcD0s0wIs4s1VZyhmab/cqeL+PUoFGBo55+bUsXZS64+Y0HZLUjmH4jrn68lTzR8hV8JwWz0Z3i1wa3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Eq/QQ1py; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBNPC1wx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7FFC32786;
-	Fri,  5 Jul 2024 07:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720163434;
-	bh=FXypFo382SIXThuXCUwX7hvFYjAAaZul3NTblqc7hn8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jBNPC1wxwVjFy+4oHxB3t0qmoHVmERtBps8NjFYfeBto6wvCAKNkH/0sDp/iX7+MD
-	 QZgxvH+j/zgTmQjW6bqLTcwzGarRfQ3I5URK516qArFsKhX8ipLeYU+IABcqa8sU+w
-	 l9Az9iG38HF/xnv/VLoDy/geWfGP5RUjdq6RrtpH6Vh4WYMqn4WYBb2UEdzwYQNnQs
-	 RPZepyEn5Ya6vKdbx4za8MP4haMFmiEH9p4ldDG16lna4xssH/4ksfLWIQdYOisZRe
-	 hAWtiIYpxBhldedl4ynisCH9tzBt35hRN1rQNkx/CtUh8IunW6G4DrQ2ynYp/A8ZdL
-	 Y0/6LPXij2VPA==
-Date: Fri, 5 Jul 2024 16:10:30 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Nikolay Kuratov <kniv@yandex-team.ru>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Francis Laniel
- <flaniel@linux.microsoft.com>
-Subject: Re: [PATCH] tracing/kprobes: Add missing check for skipping symbol
- counting logic
-Message-Id: <20240705161030.b3ddb33a8167013b9b1da202@kernel.org>
-In-Reply-To: <20240704164336.1176281-1-kniv@yandex-team.ru>
-References: <20240704164336.1176281-1-kniv@yandex-team.ru>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eq/QQ1py"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=URZqfqwCRL/WjOjIr/reDxmP+5zhj0AQCqWJlDJ7XkI=; b=Eq/QQ1pyIaqtqiVJQljE85cDjS
+	RHBmUWL2QU2dsvyXER8MrdufBN92zXSOziljnvz8bOZ4kAGqGgnz1UmpOvzROWtqUQmefjsi3IAzS
+	UV+KB/rVwP3xuZKtOMIjM73R7PM/W1l8NV74JISjTR7jGC19DiRIhWkzg/nWDAxIzdJoxj9KVzxC7
+	UFXfM+eAIOQCOm8pK7LRzsFRNctXBa9RE+aEg1f3O/6kgXQFh+fk4OyfuQPqnUpFv9zq5xn6XvN6s
+	l2MZUr8zH2lweBWIfJvbw6Hrpiv61PbvjNi+/GrsW6aJNEo5xzNbjB0jsedku0pvcb62H38wl1EP5
+	8zYUM4sA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sPd5c-00000003hXP-0a0h;
+	Fri, 05 Jul 2024 07:10:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CEEF93005AF; Fri,  5 Jul 2024 09:10:36 +0200 (CEST)
+Date: Fri, 5 Jul 2024 09:10:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
+Message-ID: <20240705071036.GW11386@noisy.programming.kicks-ass.net>
+References: <20240701164115.723677-1-jolsa@kernel.org>
+ <20240701164115.723677-2-jolsa@kernel.org>
+ <CAEf4BzZaTNTDauJYaES-q40UpvcjNyDSfSnuU+DkSuAPSuZ8Qw@mail.gmail.com>
+ <20240703081042.GM11386@noisy.programming.kicks-ass.net>
+ <CAEf4BzY9zi7pKmSmrCAqJ2GowZmCZ0EnZfA5f8YvxHRk2Pj8Zw@mail.gmail.com>
+ <202407031330.F9016C60B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202407031330.F9016C60B@keescook>
 
-Hi Nikolay,
+On Wed, Jul 03, 2024 at 01:36:19PM -0700, Kees Cook wrote:
 
-Thanks for the patch! But this remind me that I forgot to send a patch
-which can solve this issue more generically.
+> Yes, please use struct_size_t(). This is exactly what it was designed for.
 
-https://lore.kernel.org/all/171338679446.616570.14456856697191949345.stgit@devnote2/
+Kees, please, just let up, not going to happen. I'm getting really fed
+up having to endlessly repeat what a piece of shite struct_size() is.
 
-Why I did not send it...? Anyway let me send the update.
-
-Thank you,
-
-
-On Thu,  4 Jul 2024 19:43:36 +0300
-Nikolay Kuratov <kniv@yandex-team.ru> wrote:
-
-> In commit b022f0c7e404
-> ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
-> it was already done for symbol in __trace_kprobe_create(), but func in
-> create_local_trace_kprobe() is also valid usage.
-> Not doing so leads to ENOENT for module_name:symbol_name
-> constructions passed over perf_event_open().
-> 
-> Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
-> Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
-> ---
->  kernel/trace/trace_kprobe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 16383247bdbf..3f4c9195dc0d 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1834,7 +1834,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
->  	int ret;
->  	char *event;
->  
-> -	if (func) {
-> +	if (func && !strchr(func, ':')) {
->  		unsigned int count;
->  
->  		count = number_of_same_symbols(func);
-> -- 
-> 2.34.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Put your time and effort into doing a proper language extension so we
+can go and delete all that __builtin_*_overflow() based garbage.
