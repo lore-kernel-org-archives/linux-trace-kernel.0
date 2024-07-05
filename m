@@ -1,225 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E310114533A;
-	Fri,  5 Jul 2024 08:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E60F14C58A;
+	Fri,  5 Jul 2024 13:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720168551; cv=none; b=lBrQ6qd2lXXOq2G6kCehuyOCFMXefRBnW3HXBgEGU/funBgZMNPOGj4Ia04bYjgCntuLjyzm1F/7C/NBRWSFfVrHxzFp6tiEcp9K15x9YOKJivHLXagHLdvRQIbjWZTNURWlavmU37jLNlQC3Uw0BTx32D26GnrbDWiJW2bpy9U=
+	t=1720186182; cv=none; b=ly2ymMXC0v8GKWzzIQbG+gakg+8skjXzKj9EQJgFoF3MpeMpbwrYSgryuCdwPiCHNLSND8i+LyuwzcwZRLtC5StWETOyNNarFilqhj/92+PheW177fyEKQHSWbCCPw2memGT5mphp9QlZwoPYgtv6RaRVaxZBypiLrA+cjnVXJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720168551; c=relaxed/simple;
-	bh=MNz7b3od2m91SKCPk3ZE24cGHEIwGK1t0o1nU1+jcFI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Xy0/w/DfUjCzxHsf/JwfWAumMk5oVbJz075K7V/S5UXyN3vSH7zAR6W41jfuV+123PVCSItrcpDF+uVM8i98mK9nvYV81R28HIE89T3YLeuhasuqU+XOypGw9KsveNY7ozYdNHzeVlXXT2EP03mwqTjcWKpltI2k7K3jwp0hu0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rq9OZ0of; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720186182; c=relaxed/simple;
+	bh=Sn5s59O/NdJNCUezWqX1qa1IHRrl5kIcmolOISDixU4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ach7Xl0J+vjMkkFIU/bzapD6Os0YQUBhqGwHBvL0Uw8J1gcR2sK7OemrAXH7hyNP7F+blPZfONQZ0r5mxkKA/hQVavdjiRxVaUE600tD7WItrOjX98y3tFQtP4yh3tri74OmjiZt8SZeJbtnCuzT5QDqNquDQP0YtiLdhzEwZ1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B42TsceU; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rq9OZ0of"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52407C116B1;
-	Fri,  5 Jul 2024 08:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720168550;
-	bh=MNz7b3od2m91SKCPk3ZE24cGHEIwGK1t0o1nU1+jcFI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Rq9OZ0ofPLJmjTIoBCd5CVKHpFFerQqDFHtMzXUmsRMIj1dKCfG6Gm+1Omcf5aogy
-	 U5igp8YmSgCneI+jKUlDtVClH3yU8c+g7XjY6HhFd0lkpV3rIfQzspPaSxU+QoOJIf
-	 xSfxP5jjvALRgtV3m5+Gji8vlsi0FX1BSNT4owFxkabG+YAs7EHW1Vo5mgFA/ga7SX
-	 kZSEdUSxAjpS9xWLMbea51vZMpLCC4Zo9iG9gv4Tnev71Vcg16G3VhxC1lbdk0bmqh
-	 pjfxprBTKIRIEYl1OdTN7gacNIscQf6zIQFtwFEMhr3TK582cr4kyLDDaBi+xCJYAn
-	 sGlvb3pEk0kLQ==
-Date: Fri, 5 Jul 2024 17:35:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B42TsceU"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52ea3e499b1so1126358e87.3;
+        Fri, 05 Jul 2024 06:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720186178; x=1720790978; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aw0j1Lviadpf2ZsL4nF7pPLS0qZe4Z8jYOAWk2mW/4c=;
+        b=B42TsceUiAcgKTmDwcKBlhIFP1VTD4zIipRqJ2TviXd58KpCfHUT+ImlOFL/5ubtvU
+         APVDaskkkKiDk6uOqiumuOILk+7CYKgclwCk/ydSQaqAdzD7yVNOO901N9ImgbGoX1K5
+         iYexIjmyDetcGinC5ZfJ2RqbwhplRX5OePBqLd3AeR+YULDAcf8Sm6rZ3NKIzvRhQVIE
+         qJBLpaGXniSqka/r53VMs59hjZPs1rcM5wWrAhpl2enQerjNj+CIgks8NZH9gas4PHZL
+         ZUPWKHlSxwZ2hHhU0smPU0SgLBnIFUJhoW/gpxa0okSIUbVO3JrMhyFXsi6BefpCvFl8
+         58uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720186178; x=1720790978;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aw0j1Lviadpf2ZsL4nF7pPLS0qZe4Z8jYOAWk2mW/4c=;
+        b=X8xfdp3HfefiHlrv1ZitH0ThWSZpSW3M7RWd06sSDVUhR6rcn1LP7XM/eOQxeLvI5Y
+         9n0yhuEPk709Hl/f9uq+6ECg2Px0YlBony3xRXsm/JDL1gA05zT9zOmeHbkw6NG7iycV
+         OOjFYC05YLeob5k++7iAW5YaKqVfVF/ab0QKCbhdXRdEigOo7S4nM3wToXdrkBp28/Fy
+         cN67dN+SyuUXy/H7TfmQwucEwOOAshGG3W7gGSFLslwpqg4dkf0r/iZaD/RCt1ODPw2u
+         Tze2yGTjqtQkSKdRQrS2OJgL+jgHQVWjcWGqZ7WB4gBGti0O9+zru7zsdxiCo0dtKKxk
+         JRYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLdmMkjSoeeGJCdE7Srapj8rpwJ0Xi9gQo33nzMM2e1TktBvAMNBCViksHI9OR/uBVFtj92VfW6wmmVVZ/b1Qge9LnNN/Lqr8Nrcuz0qk8hcPqypf/nlfZi6PJBLAE0Ifh1R/BxB8sMDXbGbMkn7f9xf6+Vrmyj1XcjtyTXjKIYavqBnED
+X-Gm-Message-State: AOJu0Yx83+EckxkNoS1rnTJ3OYJijlzV3PNmNEP4V0kKD22juOoAbMJy
+	Lu9g87d/rT3wXC9IYd/Mc6psOAh+MvRd0Uz4pJiFzuxWWn33p1p1NYY/0pdx
+X-Google-Smtp-Source: AGHT+IHhHwPUMPvwQX6weNqntFkxeQjtYYCA77JffkZg73dPIGdqMUoP7TGNBZEzxDpnYuDesfo4Bg==
+X-Received: by 2002:ac2:484a:0:b0:52c:a88b:9992 with SMTP id 2adb3069b0e04-52ea06bca79mr3236891e87.52.1720186178173;
+        Fri, 05 Jul 2024 06:29:38 -0700 (PDT)
+Received: from krava (net-93-65-242-193.cust.vodafonedsl.it. [93.65.242.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861324f069sm9875701a12.33.2024.07.05.06.29.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 06:29:37 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 5 Jul 2024 15:29:34 +0200
 To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, Song Liu
- <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt
- <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-Id: <20240705173544.9ef034c30ae93c52164ecc1b@kernel.org>
-In-Reply-To: <CAEf4BzYKVbCEGupX47fwM0XSzwwmXs+0sVpcAdp3poFLkjMA6Q@mail.gmail.com>
+Message-ID: <Zof1PiQOI0kex_xY@krava>
 References: <20240701164115.723677-1-jolsa@kernel.org>
-	<20240701164115.723677-2-jolsa@kernel.org>
-	<20240703085533.820f90544c3fc42edf79468d@kernel.org>
-	<CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
-	<ZoV3rRUHEdvTmJjG@krava>
-	<CAEf4BzYKVbCEGupX47fwM0XSzwwmXs+0sVpcAdp3poFLkjMA6Q@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20240701164115.723677-2-jolsa@kernel.org>
+ <CAEf4BzZaTNTDauJYaES-q40UpvcjNyDSfSnuU+DkSuAPSuZ8Qw@mail.gmail.com>
+ <ZoWGrGYdyaimB_zF@krava>
+ <CAEf4BzbfKE1cWWXfWnWN510pai8Aq_W6J-WSLSAyGO_=rZWX_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbfKE1cWWXfWnWN510pai8Aq_W6J-WSLSAyGO_=rZWX_Q@mail.gmail.com>
 
-On Wed, 3 Jul 2024 14:43:27 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Wed, Jul 3, 2024 at 9:09 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Jul 03, 2024 at 02:48:28PM -0700, Andrii Nakryiko wrote:
+> On Wed, Jul 3, 2024 at 10:13 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 > >
-> > On Tue, Jul 02, 2024 at 05:13:38PM -0700, Andrii Nakryiko wrote:
-> > > On Tue, Jul 2, 2024 at 4:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > On Tue, Jul 02, 2024 at 01:51:28PM -0700, Andrii Nakryiko wrote:
+> >
+> > SNIP
+> >
+> > > >  #ifdef CONFIG_UPROBES
+> > > > @@ -80,6 +83,12 @@ struct uprobe_task {
+> > > >         unsigned int                    depth;
+> > > >  };
 > > > >
-> > > > Hi Jiri,
-> > > >
-> > > > On Mon,  1 Jul 2024 18:41:07 +0200
-> > > > Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > > Adding support for uprobe consumer to be defined as session and have
-> > > > > new behaviour for consumer's 'handler' and 'ret_handler' callbacks.
-> > > > >
-> > > > > The session means that 'handler' and 'ret_handler' callbacks are
-> > > > > connected in a way that allows to:
-> > > > >
-> > > > >   - control execution of 'ret_handler' from 'handler' callback
-> > > > >   - share data between 'handler' and 'ret_handler' callbacks
-> > > > >
-> > > > > The session is enabled by setting new 'session' bool field to true
-> > > > > in uprobe_consumer object.
-> > > > >
-> > > > > We keep count of session consumers for uprobe and allocate session_consumer
-> > > > > object for each in return_instance object. This allows us to store
-> > > > > return values of 'handler' callbacks and data pointers of shared
-> > > > > data between both handlers.
-> > > > >
-> > > > > The session concept fits to our common use case where we do filtering
-> > > > > on entry uprobe and based on the result we decide to run the return
-> > > > > uprobe (or not).
-> > > > >
-> > > > > It's also convenient to share the data between session callbacks.
-> > > > >
-> > > > > The control of 'ret_handler' callback execution is done via return
-> > > > > value of the 'handler' callback. If it's 0 we install and execute
-> > > > > return uprobe, if it's 1 we do not.
-> > > > >
-> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > ---
-> > > > >  include/linux/uprobes.h     |  16 ++++-
-> > > > >  kernel/events/uprobes.c     | 129 +++++++++++++++++++++++++++++++++---
-> > > > >  kernel/trace/bpf_trace.c    |   6 +-
-> > > > >  kernel/trace/trace_uprobe.c |  12 ++--
-> > > > >  4 files changed, 144 insertions(+), 19 deletions(-)
-> > > > >
-> > > > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > > > > index f46e0ca0169c..903a860a8d01 100644
-> > > > > --- a/include/linux/uprobes.h
-> > > > > +++ b/include/linux/uprobes.h
-> > > > > @@ -34,15 +34,18 @@ enum uprobe_filter_ctx {
-> > > > >  };
-> > > > >
-> > > > >  struct uprobe_consumer {
-> > > > > -     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
-> > > > > +     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, __u64 *data);
-> > > > >       int (*ret_handler)(struct uprobe_consumer *self,
-> > > > >                               unsigned long func,
-> > > > > -                             struct pt_regs *regs);
-> > > > > +                             struct pt_regs *regs, __u64 *data);
-> > > > >       bool (*filter)(struct uprobe_consumer *self,
-> > > > >                               enum uprobe_filter_ctx ctx,
-> > > > >                               struct mm_struct *mm);
-> > > > >
-> > > > >       struct uprobe_consumer *next;
-> > > > > +
-> > > > > +     bool                    session;        /* marks uprobe session consumer */
-> > > > > +     unsigned int            session_id;     /* set when uprobe_consumer is registered */
-> > > >
-> > > > Hmm, why this has both session and session_id?
+> > > > +struct session_consumer {
+> > > > +       __u64           cookie;
+> > > > +       unsigned int    id;
+> > > > +       int             rc;
 > > >
-> > > session is caller's request to establish session semantics. Jiri, I
+> > > you'll be using u64 for ID, right? so this struct will be 24 bytes.
 > >
-> > and session_id is set when uprobe is registered and used when
-> > return uprobe is executed to find matching uprobe_consumer,
-> > plz check handle_uretprobe_chain/session_consumer_find
+> > yes
 > >
-> > > think it's better to move it higher next to
-> > > handler/ret_handler/filter, that's the part of uprobe_consumer struct
-> > > which has read-only caller-provided data (I'm adding offset and
-> > > ref_ctr_offset there as well).
+> > > Maybe we can just use topmost bit of ID to store whether uretprobe
+> > > should run or not? It's trivial to mask out during ID comparisons
 > >
-> > ok, makes sense
-> >
-> > >
-> > > > I also think we can use the address of uprobe_consumer itself as a unique id.
-> > >
-> > > +1
-> > >
-> > > >
-> > > > Also, if we can set session enabled by default, and skip ret_handler by handler's
-> > > > return value, it is more simpler. (If handler returns a specific value, skip ret_handler)
-> > >
-> > > you mean derive if it's a session or not by both handler and
-> > > ret_handler being set? I guess this works fine for BPF side, because
-> > > there we never had them both set. If this doesn't regress others, I
-> > > think it's OK. We just need to make sure we don't unnecessarily
-> > > allocate session state for consumers that don't set both handler and
-> > > ret_handler. That would be a waste.
-> >
-> > hum.. so the current code installs return uprobe if there's ret_handler
-> > defined in consumer and also the entry 'handler' needs to return 0
-> >
-> > if entry 'handler' returns 1 the uprobe is unregistered
-> >
-> > we could define new return value from 'handler' to 'not execute the
-> > 'ret_handler' and have 'handler' return values:
-> >
-> >   0 - execute 'ret_handler' if defined
-> >   1 - remove the uprobe
-> >   2 - do NOT execute 'ret_handler'  // this current triggers WARN
-> >
-> > we could delay the allocation of 'return_instance' until the first
-> > consumer returns 0, so there's no perf regression
-> >
-> > that way we could treat all consumers the same and we wouldn't need
-> > the session flag..
-> >
-> > ok looks like good idea ;-) will try that
+> > actually.. I think we could store just consumers that need to be
+> > executed in return probe so there will be no need for 'rc' value
 > 
-> Just please double check that we don't pass through 1 or 2 as a return
-> result for BPF uprobes/multi-uprobes, so that we don't have any
-> accidental changes of behavior.
+> ah, nice idea. NULL would mean we have session uprobe, but for this
+> particular run we "disabled" uretprobe part of it. Great. And for
+> non-session uprobes we just won't have session_consumer at all, right?
 
-Agreed. BTW, even if the uprobe is removed, the ret_handler should be called?
-I think both 1 and 2 case, we should skip ret_handler.
+hm, I think we don't need to add both session or non-session consumer
+if it's not supposed to run.. let's see
 
-> > > > >
-> > > > >  #ifdef CONFIG_UPROBES
-> > > > > @@ -80,6 +83,12 @@ struct uprobe_task {
-> > > > >       unsigned int                    depth;
-> > > > >  };
-> > > > >
-> > > > > +struct session_consumer {
-> > > > > +     __u64           cookie;
-> > > >
-> > > > And this cookie looks not scalable. If we can pass a data to handler, I would like to
-> > > > reuse it to pass the target function parameters to ret_handler as kretprobe/fprobe does.
-> > > >
-> > > >         int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, void *data);
-> > > >
-> > > > uprobes can collect its uc's required sizes and allocate the memory (shadow stack frame)
-> > > > at handler_chain().
+> 
+> [...]
+> 
+> > > > +static struct session_consumer *
+> > > > +session_consumer_next(struct return_instance *ri, struct session_consumer *sc,
+> > > > +                     int session_id)
+> > > > +{
+> > > > +       struct session_consumer *next;
+> > > > +
+> > > > +       next = sc ? sc + 1 : &ri->sessions[0];
+> > > > +       next->id = session_id;
 > > >
-> > > The goal here is to keep this simple and fast. I'd prefer to keep it
-> > > small and fixed size, if possible. I'm thinking about caching and
-> > > reusing return_instance as one of the future optimizations, so if we
-> > > can keep this more or less fixed (assuming there is typically not more
-> > > than 1 or 2 consumers per uprobe, which seems realistic), this will
-> > > provide a way to avoid excessive memory allocations.
+> > > it's kind of unexpected that "session_consumer_next" would actually
+> > > set an ID... Maybe drop int session_id as input argument and fill it
+> > > out outside of this function, this function being just a simple
+> > > iterator?
+> >
+> > yea, I was going back and forth on what to have in that function
+> > or not, to keep the change minimal, but makes sense, will move
+> >
+> 
+> great, thanks
+> 
+> > >
+> > > > +       return next;
+> > > > +}
+> > > > +
+> 
+> [...]
+> 
+> > >
+> > > > +               } else if (uc->ret_handler) {
+> > > >                         need_prep = true;
+> > > > +               }
+> > > >
+> > > >                 remove &= rc;
+> > > >         }
+> > > >
+> > > > +       /* no removal if there's at least one session consumer */
+> > > > +       remove &= !uprobe->sessions_cnt;
+> > >
+> > > this is counter (not error, not pointer), let's stick to ` == 0`, please
+> > >
+> > > is this
+> > >
+> > > if (uprobe->sessions_cnt != 0)
+> > >    remove = 0;
+> >
+> > yes ;-) will change
+> >
+> 
+> Thanks, I feel bad for being the only one to call this out, but I find
+> all these '!<some_integer_variable>` constructs extremely unintuitive
+> and hard to reason about quickly. It's only pointers and error cases
+> that are more or less intuitive. Everything else, including
+> !strcmp(...) is just mind bending and exhausting... Perhaps I'm just
+> not a kernel engineer enough :)
 
-Hmm, so you mean user will allocate another "data map" and use cookie as
-a key to access the data? That is possible but sounds a bit redundant.
-If such "data map" allocation is also provided, it is more useful.
+heh I was going for minimal change.. but it's intrusive enough already,
+so let's keep it at least readable
 
-
-Thank you,
-
-
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+jirka
