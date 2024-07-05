@@ -1,259 +1,225 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEDF1448EF;
-	Fri,  5 Jul 2024 07:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E310114533A;
+	Fri,  5 Jul 2024 08:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720163490; cv=none; b=rAy31Dhi8FLZCex0z2dGyofe3M0gR74vi6xZiG9/B16UHYwXw12c7xSuMmF3KrrHJ7ERh/ZSQBaDtAakAK9vGwTnYsZffmG8RnFw7sdEpvkXgbRNkeCoHEiWKm4pmGYTuJYcEsTAm7ba+Wg6VKblrPopvKSlR+CjSM6sbgDzqGw=
+	t=1720168551; cv=none; b=lBrQ6qd2lXXOq2G6kCehuyOCFMXefRBnW3HXBgEGU/funBgZMNPOGj4Ia04bYjgCntuLjyzm1F/7C/NBRWSFfVrHxzFp6tiEcp9K15x9YOKJivHLXagHLdvRQIbjWZTNURWlavmU37jLNlQC3Uw0BTx32D26GnrbDWiJW2bpy9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720163490; c=relaxed/simple;
-	bh=7HuCT+66yaA77r/bURMz9JSlr+eJdbuAnDb6E+CJxOM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Gg+Ja+F6E0JPWClK6ecRvcFV4WBxAelfuJp51EDwHWobWrPbIn7C823KHahr2gcIR9REWXDg/JqxIrhPTrNeaG97qGCL5aigfrUR7yKNbVSamiS279e/D4iE2PPVsNs4bVHGI/FFdwTWwd5K5SYfLPT5nCHlMoR+DNFj+SCkTEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSibO4TD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720168551; c=relaxed/simple;
+	bh=MNz7b3od2m91SKCPk3ZE24cGHEIwGK1t0o1nU1+jcFI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Xy0/w/DfUjCzxHsf/JwfWAumMk5oVbJz075K7V/S5UXyN3vSH7zAR6W41jfuV+123PVCSItrcpDF+uVM8i98mK9nvYV81R28HIE89T3YLeuhasuqU+XOypGw9KsveNY7ozYdNHzeVlXXT2EP03mwqTjcWKpltI2k7K3jwp0hu0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rq9OZ0of; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSibO4TD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFA9C116B1;
-	Fri,  5 Jul 2024 07:11:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rq9OZ0of"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52407C116B1;
+	Fri,  5 Jul 2024 08:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720163489;
-	bh=7HuCT+66yaA77r/bURMz9JSlr+eJdbuAnDb6E+CJxOM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rSibO4TDXZ/TvAJ84hhSLERh5txetSM1aLGWK2c9rg0ugJ/vZTR0MqvoqR1WC+9lP
-	 qQih28ZFTIl5OvZrOgg1tuJJ4lcVoPUprGxU6Zz/O/9WfOmFsi0h7g2v4Q5IU3gMXb
-	 KgxrulubsSHOQ1z9cJJA8AXsk8NeUEYxXlg5P9kuUPXskQ/N+35VTu9RC2hHII53Y+
-	 mdcxXkaSZv6RJtnNSUrpwy86Tx81rRPA7Cq4wWl9Olf28Q9cfOPWr0NAJrI/Bcsuds
-	 cxu+T/wcpGggpKZ5F5ArQ/Vad80zJvlHmeSXSILdIYv8P0445vA2eNZh6cKYd0mc5o
-	 8iCEyapmrL7Ww==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Francis Laniel <flaniel@linux.microsoft.com>,
-	Nikolay Kuratov <kniv@yandex-team.ru>
-Subject: [PATCH for-next v3] tracing/kprobes: Add symbol counting check when module loads
-Date: Fri,  5 Jul 2024 16:11:25 +0900
-Message-Id: <172016348553.99543.2834679315611882137.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+	s=k20201202; t=1720168550;
+	bh=MNz7b3od2m91SKCPk3ZE24cGHEIwGK1t0o1nU1+jcFI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Rq9OZ0ofPLJmjTIoBCd5CVKHpFFerQqDFHtMzXUmsRMIj1dKCfG6Gm+1Omcf5aogy
+	 U5igp8YmSgCneI+jKUlDtVClH3yU8c+g7XjY6HhFd0lkpV3rIfQzspPaSxU+QoOJIf
+	 xSfxP5jjvALRgtV3m5+Gji8vlsi0FX1BSNT4owFxkabG+YAs7EHW1Vo5mgFA/ga7SX
+	 kZSEdUSxAjpS9xWLMbea51vZMpLCC4Zo9iG9gv4Tnev71Vcg16G3VhxC1lbdk0bmqh
+	 pjfxprBTKIRIEYl1OdTN7gacNIscQf6zIQFtwFEMhr3TK582cr4kyLDDaBi+xCJYAn
+	 sGlvb3pEk0kLQ==
+Date: Fri, 5 Jul 2024 17:35:44 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, Song Liu
+ <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
+Message-Id: <20240705173544.9ef034c30ae93c52164ecc1b@kernel.org>
+In-Reply-To: <CAEf4BzYKVbCEGupX47fwM0XSzwwmXs+0sVpcAdp3poFLkjMA6Q@mail.gmail.com>
+References: <20240701164115.723677-1-jolsa@kernel.org>
+	<20240701164115.723677-2-jolsa@kernel.org>
+	<20240703085533.820f90544c3fc42edf79468d@kernel.org>
+	<CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
+	<ZoV3rRUHEdvTmJjG@krava>
+	<CAEf4BzYKVbCEGupX47fwM0XSzwwmXs+0sVpcAdp3poFLkjMA6Q@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, 3 Jul 2024 14:43:27 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-Currently, kprobe event checks whether the target symbol name is unique
-or not, so that it does not put a probe on an unexpected place. But this
-skips the check if the target is on a module because the module may not
-be loaded.
+> On Wed, Jul 3, 2024 at 9:09 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Tue, Jul 02, 2024 at 05:13:38PM -0700, Andrii Nakryiko wrote:
+> > > On Tue, Jul 2, 2024 at 4:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > > Hi Jiri,
+> > > >
+> > > > On Mon,  1 Jul 2024 18:41:07 +0200
+> > > > Jiri Olsa <jolsa@kernel.org> wrote:
+> > > >
+> > > > > Adding support for uprobe consumer to be defined as session and have
+> > > > > new behaviour for consumer's 'handler' and 'ret_handler' callbacks.
+> > > > >
+> > > > > The session means that 'handler' and 'ret_handler' callbacks are
+> > > > > connected in a way that allows to:
+> > > > >
+> > > > >   - control execution of 'ret_handler' from 'handler' callback
+> > > > >   - share data between 'handler' and 'ret_handler' callbacks
+> > > > >
+> > > > > The session is enabled by setting new 'session' bool field to true
+> > > > > in uprobe_consumer object.
+> > > > >
+> > > > > We keep count of session consumers for uprobe and allocate session_consumer
+> > > > > object for each in return_instance object. This allows us to store
+> > > > > return values of 'handler' callbacks and data pointers of shared
+> > > > > data between both handlers.
+> > > > >
+> > > > > The session concept fits to our common use case where we do filtering
+> > > > > on entry uprobe and based on the result we decide to run the return
+> > > > > uprobe (or not).
+> > > > >
+> > > > > It's also convenient to share the data between session callbacks.
+> > > > >
+> > > > > The control of 'ret_handler' callback execution is done via return
+> > > > > value of the 'handler' callback. If it's 0 we install and execute
+> > > > > return uprobe, if it's 1 we do not.
+> > > > >
+> > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > ---
+> > > > >  include/linux/uprobes.h     |  16 ++++-
+> > > > >  kernel/events/uprobes.c     | 129 +++++++++++++++++++++++++++++++++---
+> > > > >  kernel/trace/bpf_trace.c    |   6 +-
+> > > > >  kernel/trace/trace_uprobe.c |  12 ++--
+> > > > >  4 files changed, 144 insertions(+), 19 deletions(-)
+> > > > >
+> > > > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > > > > index f46e0ca0169c..903a860a8d01 100644
+> > > > > --- a/include/linux/uprobes.h
+> > > > > +++ b/include/linux/uprobes.h
+> > > > > @@ -34,15 +34,18 @@ enum uprobe_filter_ctx {
+> > > > >  };
+> > > > >
+> > > > >  struct uprobe_consumer {
+> > > > > -     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
+> > > > > +     int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, __u64 *data);
+> > > > >       int (*ret_handler)(struct uprobe_consumer *self,
+> > > > >                               unsigned long func,
+> > > > > -                             struct pt_regs *regs);
+> > > > > +                             struct pt_regs *regs, __u64 *data);
+> > > > >       bool (*filter)(struct uprobe_consumer *self,
+> > > > >                               enum uprobe_filter_ctx ctx,
+> > > > >                               struct mm_struct *mm);
+> > > > >
+> > > > >       struct uprobe_consumer *next;
+> > > > > +
+> > > > > +     bool                    session;        /* marks uprobe session consumer */
+> > > > > +     unsigned int            session_id;     /* set when uprobe_consumer is registered */
+> > > >
+> > > > Hmm, why this has both session and session_id?
+> > >
+> > > session is caller's request to establish session semantics. Jiri, I
+> >
+> > and session_id is set when uprobe is registered and used when
+> > return uprobe is executed to find matching uprobe_consumer,
+> > plz check handle_uretprobe_chain/session_consumer_find
+> >
+> > > think it's better to move it higher next to
+> > > handler/ret_handler/filter, that's the part of uprobe_consumer struct
+> > > which has read-only caller-provided data (I'm adding offset and
+> > > ref_ctr_offset there as well).
+> >
+> > ok, makes sense
+> >
+> > >
+> > > > I also think we can use the address of uprobe_consumer itself as a unique id.
+> > >
+> > > +1
+> > >
+> > > >
+> > > > Also, if we can set session enabled by default, and skip ret_handler by handler's
+> > > > return value, it is more simpler. (If handler returns a specific value, skip ret_handler)
+> > >
+> > > you mean derive if it's a session or not by both handler and
+> > > ret_handler being set? I guess this works fine for BPF side, because
+> > > there we never had them both set. If this doesn't regress others, I
+> > > think it's OK. We just need to make sure we don't unnecessarily
+> > > allocate session state for consumers that don't set both handler and
+> > > ret_handler. That would be a waste.
+> >
+> > hum.. so the current code installs return uprobe if there's ret_handler
+> > defined in consumer and also the entry 'handler' needs to return 0
+> >
+> > if entry 'handler' returns 1 the uprobe is unregistered
+> >
+> > we could define new return value from 'handler' to 'not execute the
+> > 'ret_handler' and have 'handler' return values:
+> >
+> >   0 - execute 'ret_handler' if defined
+> >   1 - remove the uprobe
+> >   2 - do NOT execute 'ret_handler'  // this current triggers WARN
+> >
+> > we could delay the allocation of 'return_instance' until the first
+> > consumer returns 0, so there's no perf regression
+> >
+> > that way we could treat all consumers the same and we wouldn't need
+> > the session flag..
+> >
+> > ok looks like good idea ;-) will try that
+> 
+> Just please double check that we don't pass through 1 or 2 as a return
+> result for BPF uprobes/multi-uprobes, so that we don't have any
+> accidental changes of behavior.
 
-To fix this issue, this patch checks the number of probe target symbols
-in a target module when the module is loaded. If the probe is not on the
-unique name symbols in the module, it will be rejected at that point.
+Agreed. BTW, even if the uprobe is removed, the ret_handler should be called?
+I think both 1 and 2 case, we should skip ret_handler.
 
-Note that the symbol which has a unique name in the target module,
-it will be accepted even if there are same-name symbols in the
-kernel or other modules,
+> > > > >
+> > > > >  #ifdef CONFIG_UPROBES
+> > > > > @@ -80,6 +83,12 @@ struct uprobe_task {
+> > > > >       unsigned int                    depth;
+> > > > >  };
+> > > > >
+> > > > > +struct session_consumer {
+> > > > > +     __u64           cookie;
+> > > >
+> > > > And this cookie looks not scalable. If we can pass a data to handler, I would like to
+> > > > reuse it to pass the target function parameters to ret_handler as kretprobe/fprobe does.
+> > > >
+> > > >         int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, void *data);
+> > > >
+> > > > uprobes can collect its uc's required sizes and allocate the memory (shadow stack frame)
+> > > > at handler_chain().
+> > >
+> > > The goal here is to keep this simple and fast. I'd prefer to keep it
+> > > small and fixed size, if possible. I'm thinking about caching and
+> > > reusing return_instance as one of the future optimizations, so if we
+> > > can keep this more or less fixed (assuming there is typically not more
+> > > than 1 or 2 consumers per uprobe, which seems realistic), this will
+> > > provide a way to avoid excessive memory allocations.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v3:
-  - Update the patch description.
-  - Update for latest probe/for-next
- Updated from last October post, which was dropped by test failure:
-    https://lore.kernel.org/linux-trace-kernel/169854904604.132316.12500381416261460174.stgit@devnote2/
- Changes in v2:
-  - Fix to skip checking uniqueness if the target module is not loaded.
-  - Fix register_module_trace_kprobe() to pass correct symbol name.
-  - Fix to call __register_trace_kprobe() from module callback.
----
- kernel/trace/trace_kprobe.c |  125 ++++++++++++++++++++++++++++---------------
- 1 file changed, 81 insertions(+), 44 deletions(-)
+Hmm, so you mean user will allocate another "data map" and use cookie as
+a key to access the data? That is possible but sounds a bit redundant.
+If such "data map" allocation is also provided, it is more useful.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 7fd0f8576e4c..4cee3442bcce 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -678,6 +678,21 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
- }
- 
- #ifdef CONFIG_MODULES
-+static int validate_module_probe_symbol(const char *modname, const char *symbol);
-+
-+static int register_module_trace_kprobe(struct module *mod, struct trace_kprobe *tk)
-+{
-+	const char *p;
-+	int ret = 0;
-+
-+	p = strchr(trace_kprobe_symbol(tk), ':');
-+	if (p)
-+		ret = validate_module_probe_symbol(module_name(mod), p + 1);
-+	if (!ret)
-+		ret = __register_trace_kprobe(tk);
-+	return ret;
-+}
-+
- /* Module notifier call back, checking event on the module */
- static int trace_kprobe_module_callback(struct notifier_block *nb,
- 				       unsigned long val, void *data)
-@@ -696,7 +711,7 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
- 		if (trace_kprobe_within_module(tk, mod)) {
- 			/* Don't need to check busy - this should have gone. */
- 			__unregister_trace_kprobe(tk);
--			ret = __register_trace_kprobe(tk);
-+			ret = register_module_trace_kprobe(mod, tk);
- 			if (ret)
- 				pr_warn("Failed to re-register probe %s on %s: %d\n",
- 					trace_probe_name(&tk->tp),
-@@ -747,17 +762,68 @@ static int count_mod_symbols(void *data, const char *name, unsigned long unused)
- 	return 0;
- }
- 
--static unsigned int number_of_same_symbols(char *func_name)
-+static unsigned int number_of_same_symbols(const char *mod, const char *func_name)
- {
- 	struct sym_count_ctx ctx = { .count = 0, .name = func_name };
- 
--	kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
-+	if (!mod)
-+		kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
- 
--	module_kallsyms_on_each_symbol(NULL, count_mod_symbols, &ctx);
-+	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
- 
- 	return ctx.count;
- }
- 
-+static int validate_module_probe_symbol(const char *modname, const char *symbol)
-+{
-+	unsigned int count = number_of_same_symbols(modname, symbol);
-+
-+	if (count > 1) {
-+		/*
-+		 * Users should use ADDR to remove the ambiguity of
-+		 * using KSYM only.
-+		 */
-+		return -EADDRNOTAVAIL;
-+	} else if (count == 0) {
-+		/*
-+		 * We can return ENOENT earlier than when register the
-+		 * kprobe.
-+		 */
-+		return -ENOENT;
-+	}
-+	return 0;
-+}
-+
-+static int validate_probe_symbol(char *symbol)
-+{
-+	struct module *mod = NULL;
-+	char *modname = NULL, *p;
-+	int ret = 0;
-+
-+	p = strchr(symbol, ':');
-+	if (p) {
-+		modname = symbol;
-+		symbol = p + 1;
-+		*p = '\0';
-+		/* Return 0 (defer) if the module does not exist yet. */
-+		rcu_read_lock_sched();
-+		mod = find_module(modname);
-+		if (mod && !try_module_get(mod))
-+			mod = NULL;
-+		rcu_read_unlock_sched();
-+		if (!mod)
-+			goto out;
-+	}
-+
-+	ret = validate_module_probe_symbol(modname, symbol);
-+out:
-+	if (p)
-+		*p = ':';
-+	if (mod)
-+		module_put(mod);
-+	return ret;
-+}
-+
- static int trace_kprobe_entry_handler(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs);
- 
-@@ -881,6 +947,14 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 			trace_probe_log_err(0, BAD_PROBE_ADDR);
- 			goto parse_error;
- 		}
-+		ret = validate_probe_symbol(symbol);
-+		if (ret) {
-+			if (ret == -EADDRNOTAVAIL)
-+				trace_probe_log_err(0, NON_UNIQ_SYMBOL);
-+			else
-+				trace_probe_log_err(0, BAD_PROBE_ADDR);
-+			goto parse_error;
-+		}
- 		if (is_return)
- 			ctx.flags |= TPARG_FL_RETURN;
- 		ret = kprobe_on_func_entry(NULL, symbol, offset);
-@@ -893,31 +967,6 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		}
- 	}
- 
--	if (symbol && !strchr(symbol, ':')) {
--		unsigned int count;
--
--		count = number_of_same_symbols(symbol);
--		if (count > 1) {
--			/*
--			 * Users should use ADDR to remove the ambiguity of
--			 * using KSYM only.
--			 */
--			trace_probe_log_err(0, NON_UNIQ_SYMBOL);
--			ret = -EADDRNOTAVAIL;
--
--			goto error;
--		} else if (count == 0) {
--			/*
--			 * We can return ENOENT earlier than when register the
--			 * kprobe.
--			 */
--			trace_probe_log_err(0, BAD_PROBE_ADDR);
--			ret = -ENOENT;
--
--			goto error;
--		}
--	}
--
- 	trace_probe_log_set_index(0);
- 	if (event) {
- 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
-@@ -1835,21 +1884,9 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
- 	char *event;
- 
- 	if (func) {
--		unsigned int count;
--
--		count = number_of_same_symbols(func);
--		if (count > 1)
--			/*
--			 * Users should use addr to remove the ambiguity of
--			 * using func only.
--			 */
--			return ERR_PTR(-EADDRNOTAVAIL);
--		else if (count == 0)
--			/*
--			 * We can return ENOENT earlier than when register the
--			 * kprobe.
--			 */
--			return ERR_PTR(-ENOENT);
-+		ret = validate_probe_symbol(func);
-+		if (ret)
-+			return ERR_PTR(ret);
- 	}
- 
- 	/*
 
+Thank you,
+
+
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
