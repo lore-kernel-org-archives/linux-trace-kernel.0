@@ -1,109 +1,98 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C902C1E494;
-	Fri,  5 Jul 2024 06:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B91143C41;
+	Fri,  5 Jul 2024 07:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720160676; cv=none; b=dFCl/o5GMl7E+TG/zE2ySBHFznDvKGQv/Cbw+1NvfuGJ8aBTRxyg2JThVIQf0kyEnNjNkmFshsFarJbdSFKyw2LlXo7UdRMhKK4fWI2QnUYsorNVJe23WUUUmVN/dq733lzlo+/rbzlrz8ImPeOwfD7ZO7AVlRvndtqFYD3I/9o=
+	t=1720163435; cv=none; b=C4XCKgs3i1YSTWAVIo3LsGyFr0VUr2yc8z64pAqnmfVSLhE/BkYAjJvh+ITbybv9NmQ0ix0TzwvW4zAUTzfBOgVUlwy5uUFbL4fy7PmOlnLok1LnnPwMNr41p2Q6iqG81pFhmsbnYRQkO/LF6nvU3gsr1v2f2ddO37pQhIMdRac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720160676; c=relaxed/simple;
-	bh=wWLJqDfALFxXxpYQhQJ07mIjsuZYN1jZpqtAbk29Fvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sbrNs48YxMykPfW723JZHfqtJ4ZS3dGCJXsogGMVb128xGmjEz7dBmrr+0CA9Un6vOyNinrv5js6ECmHDqOndexKYp6A3YGTQiDBfTssJwVrjq6HHqufCYwJ5epYI+kcJCE/4QLCmvNxtFmy79purqXKV80IP8lHRLnBPBiXgyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WFk0Q47LlzQkMZ;
-	Fri,  5 Jul 2024 14:20:38 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFB4618009B;
-	Fri,  5 Jul 2024 14:24:28 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 5 Jul 2024 14:24:28 +0800
-Message-ID: <f23470ee-52cf-497c-b8c8-b44b09bee7eb@huawei.com>
-Date: Fri, 5 Jul 2024 14:24:27 +0800
+	s=arc-20240116; t=1720163435; c=relaxed/simple;
+	bh=FXypFo382SIXThuXCUwX7hvFYjAAaZul3NTblqc7hn8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nHKd2nP4fxAMhNfiUD1q+Ybt7qZFAL8YJBNsaX0AIBiqHTt8gBoSmoQPuJWWsoXVIaiCiy0FMwErAVfrvJ+/z+rvGau+CjQ+3oFMspTbzCmlb8CDv1GltelC35f72UoJtFfYZL6eR4eULlzyi8e9mifPQaPQ5SZ7i1t8N80mp18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBNPC1wx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBNPC1wx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7FFC32786;
+	Fri,  5 Jul 2024 07:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720163434;
+	bh=FXypFo382SIXThuXCUwX7hvFYjAAaZul3NTblqc7hn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jBNPC1wxwVjFy+4oHxB3t0qmoHVmERtBps8NjFYfeBto6wvCAKNkH/0sDp/iX7+MD
+	 QZgxvH+j/zgTmQjW6bqLTcwzGarRfQ3I5URK516qArFsKhX8ipLeYU+IABcqa8sU+w
+	 l9Az9iG38HF/xnv/VLoDy/geWfGP5RUjdq6RrtpH6Vh4WYMqn4WYBb2UEdzwYQNnQs
+	 RPZepyEn5Ya6vKdbx4za8MP4haMFmiEH9p4ldDG16lna4xssH/4ksfLWIQdYOisZRe
+	 hAWtiIYpxBhldedl4ynisCH9tzBt35hRN1rQNkx/CtUh8IunW6G4DrQ2ynYp/A8ZdL
+	 Y0/6LPXij2VPA==
+Date: Fri, 5 Jul 2024 16:10:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Nikolay Kuratov <kniv@yandex-team.ru>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Francis Laniel
+ <flaniel@linux.microsoft.com>
+Subject: Re: [PATCH] tracing/kprobes: Add missing check for skipping symbol
+ counting logic
+Message-Id: <20240705161030.b3ddb33a8167013b9b1da202@kernel.org>
+In-Reply-To: <20240704164336.1176281-1-kniv@yandex-team.ru>
+References: <20240704164336.1176281-1-kniv@yandex-team.ru>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] hugetlbfs: support tracepoint
-To: Dave Chinner <david@fromorbit.com>, Steven Rostedt <rostedt@goodmis.org>
-CC: Matthew Wilcox <willy@infradead.org>, <muchun.song@linux.dev>,
-	<mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>
-References: <20240704030704.2289667-1-lihongbo22@huawei.com>
- <20240704030704.2289667-2-lihongbo22@huawei.com>
- <ZoYY-sfj5jvs8UpQ@casper.infradead.org>
- <Zoab/VXoPkUna7L2@dread.disaster.area>
- <20240704101322.2743ec24@rorschach.local.home>
- <ZocxiSIQdm0tyaVG@dread.disaster.area>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <ZocxiSIQdm0tyaVG@dread.disaster.area>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+
+Hi Nikolay,
+
+Thanks for the patch! But this remind me that I forgot to send a patch
+which can solve this issue more generically.
+
+https://lore.kernel.org/all/171338679446.616570.14456856697191949345.stgit@devnote2/
+
+Why I did not send it...? Anyway let me send the update.
+
+Thank you,
 
 
+On Thu,  4 Jul 2024 19:43:36 +0300
+Nikolay Kuratov <kniv@yandex-team.ru> wrote:
 
-On 2024/7/5 7:34, Dave Chinner wrote:
-> On Thu, Jul 04, 2024 at 10:13:22AM -0400, Steven Rostedt wrote:
->> On Thu, 4 Jul 2024 22:56:29 +1000
->> Dave Chinner <david@fromorbit.com> wrote:
->>
->>> Having to do this is additional work when writing use-once scripts
->>> that get thrown away when the tracepoint output analysis is done
->>> is painful, and it's completely unnecessary if the tracepoint output
->>> is completely space separated from the start.
->>
->> If you are using scripts to parse the output, then you could just
->> enable the "fields" options, which will just ignore the TP_printk() and
->> print the fields in both their hex and decimal values:
->>
->>   # trace-cmd start -e filemap -O fields
->>
->> // the above fields change can also be done with:
->> //  echo 1 > /sys/kernel/tracing/options/fields
->>
->>   # trace-cmd show
->> # tracer: nop
->> #
->> # entries-in-buffer/entries-written: 8/8   #P:8
->> #
->> #                                _-----=> irqs-off/BH-disabled
->> #                               / _----=> need-resched
->> #                              | / _---=> hardirq/softirq
->> #                              || / _--=> preempt-depth
->> #                              ||| / _-=> migrate-disable
->> #                              |||| /     delay
->> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->> #              | |         |   |||||     |         |
->>              less-2527    [004] ..... 61949.896458: mm_filemap_add_to_page_cache: pfn=0x144625 (1328677) i_ino=0x335c6 (210374) index=0x0 (0) s_dev=0xfe00003 (266338307) order=(0)
->>              less-2527    [004] d..2. 61949.896926: mm_filemap_delete_from_page_cache: pfn=0x152b07 (1387271) i_ino=0x2d73a (186170) index=0x0 (0) s_dev=0xfe00003 (266338307) order=(0)
->>       jbd2/vda3-8-268     [005] ..... 61954.461964: mm_filemap_add_to_page_cache: pfn=0x152b70 (1387376) i_ino=0xfe00003 (266338307) index=0x30bd33 (3194163) s_dev=0x3 (3) order=(0)
->>       jbd2/vda3-8-268     [005] ..... 61954.462669: mm_filemap_add_to_page_cache: pfn=0x15335b (1389403) i_ino=0xfe00003 (266338307) index=0x30bd40 (3194176) s_dev=0x3 (3) order=(0)
->>       jbd2/vda3-8-268     [005] ..... 62001.565391: mm_filemap_add_to_page_cache: pfn=0x13a996 (1288598) i_ino=0xfe00003 (266338307) index=0x30bd41 (3194177) s_dev=0x3 (3) order=(0)
->>       jbd2/vda3-8-268     [005] ..... 62001.566081: mm_filemap_add_to_page_cache: pfn=0x1446b5 (1328821) i_ino=0xfe00003 (266338307) index=0x30bd43 (3194179) s_dev=0x3 (3) order=(0)
->>              less-2530    [004] ..... 62033.182309: mm_filemap_add_to_page_cache: pfn=0x13d755 (1300309) i_ino=0x2d73a (186170) index=0x0 (0) s_dev=0xfe00003 (266338307) order=(0)
->>              less-2530    [004] d..2. 62033.182801: mm_filemap_delete_from_page_cache: pfn=0x144625 (1328677) i_ino=0x335c6 (210374) index=0x0 (0) s_dev=0xfe00003 (266338307) order=(0)
+> In commit b022f0c7e404
+> ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> it was already done for symbol in __trace_kprobe_create(), but func in
+> create_local_trace_kprobe() is also valid usage.
+> Not doing so leads to ENOENT for module_name:symbol_name
+> constructions passed over perf_event_open().
 > 
-> Yes, I know about that. But this just makes things harder, because
-> now there are *3* different formats that have to be handled (i.e.
-> now we also have to strip "()" around numbers).
-Perhaps if users want to filter the format, they could enable the 
-"fields" option in a unified manner. As for TP_printk(), it depends on 
-how to better display the data used for debugging.
-
-Thanks,
-Hongbo
+> Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+> ---
+>  kernel/trace/trace_kprobe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> -Dave.
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 16383247bdbf..3f4c9195dc0d 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1834,7 +1834,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  	int ret;
+>  	char *event;
+>  
+> -	if (func) {
+> +	if (func && !strchr(func, ':')) {
+>  		unsigned int count;
+>  
+>  		count = number_of_same_symbols(func);
+> -- 
+> 2.34.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
