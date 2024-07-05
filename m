@@ -1,61 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FC6146A8A;
-	Fri,  5 Jul 2024 14:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7D414B06B
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  5 Jul 2024 15:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720189858; cv=none; b=LlwK3dcjIODJxN2wQtRJqUeqtQKw4t0/UeZLBaHFmV9+06rNfWUAZ//wt6X1OKAI1hyoBzYklqa7/4xZS9wRIBSbF2fvA6S0A/RtZyrLfMmckB2KmzYEF1U7mnM2RR5rlkPaUUSJ/SCvoEXlf3Y3k32hwIz3R4F7A1RrCN3+8gQ=
+	t=1720193934; cv=none; b=jlaDGftFzTD6EDun4C/NIgjfZvDM1ZRWwpbWovgeQftchH/FaMDM8Jsog53Os18SLv6BO8anYnHDxqKiNNnBsFhwBy0xTu9fyRPIp+EC2HIb3hOweWjgET6T/byDORhgLsjfpsUEaLLtM3LVtczUv6uyjJIVT9gtsmHptPWF0Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720189858; c=relaxed/simple;
-	bh=QNhUc31+DOIBjWg8E9pWy7RWFL1/sbz1daYZaABHAPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=smogRXECejlzipHjMtbSYG6REiL9HtpPmM+QdnFK/ElqecgsD9RHce1dKdgp3GSKVppyeKcIUeVV9lzwLQGHUCucvayQ5bP0d7uMucy2ulb2O320jsJwH4jF7NOEHh+a4VU8LBFy2giynhguvCSI9XsTiEa9uxFZWnoprH7cif0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2307C116B1;
-	Fri,  5 Jul 2024 14:30:56 +0000 (UTC)
-Date: Fri, 5 Jul 2024 10:30:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Francis Laniel <flaniel@linux.microsoft.com>, Nikolay Kuratov
- <kniv@yandex-team.ru>
-Subject: Re: [PATCH for-next v3] tracing/kprobes: Add symbol counting check
- when module loads
-Message-ID: <20240705103054.379b0cba@rorschach.local.home>
-In-Reply-To: <172016348553.99543.2834679315611882137.stgit@devnote2>
-References: <172016348553.99543.2834679315611882137.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720193934; c=relaxed/simple;
+	bh=41FDXoLRQbEfjnnHaMUInmuBQSDKm2cwwwRa5tJ+QTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCW50MdM/aO9FZwnpVe1KVD/I1+mbt5yO+Nr+Si1aE9M+SeFLS8qA/5pyAug79L2+HtCXHE0DfpgyI4ffo8k3HeJLw8OUDe1KVLZed78d5wFjc7FDUkvgyGyony8yjCRJ6tIgPiIJGr3x/ATfYQ4ehR6lsDlPni27UE4fKwot8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aS3zROQe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aS3zROQe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720193931;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=68WZ7TzyfoBWuOyYKBhJ9+r1SmixyKt9M1fmEXrjdZg=;
+	b=aS3zROQe32x76JWBrLFmfbhIJhewD2yagGv3Nq5E4CUyXl5+ve+JIB7CXKU8ofKPv2ieE0
+	tdJRpcRUStRNpzT954kandYWDT0ibgiplbZCdCYL33VMEeLuYV+KoYdh1ubXpjDwLm960S
+	Li9MCyWDARX/rOG3K1p2zbfqhxCmKjI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-439-gS6LY6k0NeyU_VwnY5SFrQ-1; Fri,
+ 05 Jul 2024 11:38:47 -0400
+X-MC-Unique: gS6LY6k0NeyU_VwnY5SFrQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAD321955F44;
+	Fri,  5 Jul 2024 15:38:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.9])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 332B1195605F;
+	Fri,  5 Jul 2024 15:38:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  5 Jul 2024 17:37:10 +0200 (CEST)
+Date: Fri, 5 Jul 2024 17:37:05 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	clm@meta.com
+Subject: Re: [PATCH v2 04/12] uprobes: revamp uprobe refcounting and lifetime
+ management
+Message-ID: <20240705153705.GA18551@redhat.com>
+References: <20240701223935.3783951-1-andrii@kernel.org>
+ <20240701223935.3783951-5-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701223935.3783951-5-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Fri,  5 Jul 2024 16:11:25 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Tried to read this patch, but I fail to understand it. It looks
+obvioulsy wrong to me, see below.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Currently, kprobe event checks whether the target symbol name is unique
-> or not, so that it does not put a probe on an unexpected place. But this
-> skips the check if the target is on a module because the module may not
-> be loaded.
-> 
-> To fix this issue, this patch checks the number of probe target symbols
-> in a target module when the module is loaded. If the probe is not on the
-> unique name symbols in the module, it will be rejected at that point.
-> 
-> Note that the symbol which has a unique name in the target module,
-> it will be accepted even if there are same-name symbols in the
-> kernel or other modules,
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I tend to agree with the comments from Peter, but lets ignore them
+for the moment.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On 07/01, Andrii Nakryiko wrote:
+>
+>  static void put_uprobe(struct uprobe *uprobe)
+>  {
+> -	if (refcount_dec_and_test(&uprobe->ref)) {
+> +	s64 v;
+> +
+> +	/*
+> +	 * here uprobe instance is guaranteed to be alive, so we use Tasks
+> +	 * Trace RCU to guarantee that uprobe won't be freed from under us, if
+> +	 * we end up being a losing "destructor" inside uprobe_treelock'ed
+> +	 * section double-checking uprobe->ref value below.
+> +	 * Note call_rcu_tasks_trace() + uprobe_free_rcu below.
+> +	 */
+> +	rcu_read_lock_trace();
+> +
+> +	v = atomic64_add_return(UPROBE_REFCNT_PUT, &uprobe->ref);
+> +
+> +	if (unlikely((u32)v == 0)) {
 
--- Steve
+I must have missed something, but how can this ever happen?
+
+Suppose uprobe_register(inode) is called the 1st time. To simplify, suppose
+that this binary is not used, so _register() doesn't install breakpoints/etc.
+
+IIUC, with this change (u32)uprobe->ref == 1 when uprobe_register() succeeds.
+
+Now suppose that uprobe_unregister() is called right after that. It does
+
+	uprobe = find_uprobe(inode, offset);
+
+this increments the counter, (u32)uprobe->ref == 2
+
+	__uprobe_unregister(...);
+
+this wont't change the counter,
+
+	put_uprobe(uprobe);
+
+this drops the reference added by find_uprobe(), (u32)uprobe->ref == 1.
+
+Where should the "final" put_uprobe() come from?
+
+IIUC, this patch lacks another put_uprobe() after consumer_del(), no?
+
+Oleg.
+
