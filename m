@@ -1,213 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF5110953;
-	Sat,  6 Jul 2024 23:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B318C31
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Jul 2024 12:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720309660; cv=none; b=gV2XJfbx1PUcmyyd+tKikMksXC0b5V2JWheDdwiBx6jDgjZ9PtmwjEx8uoBr/VeV2vH+uPnUJsco9sxtS1yLN1aFNpbNrOg4bEKOTmk+4CHrsfZxM+iVbptBJ9IOlIYv2IOBHfbNB4xkCW8ocuQ8703Ormy3c/fe6Q2Q2gVL2Ok=
+	t=1720356634; cv=none; b=ry19Ld5xjvxOladZeebicyJArWfRImNSikqA771MV6ugcx0HcxfBmSYOX798whfFoTiQLdQ0nyiPd9BIUzFuFncuU/OXse2xHqGB1ddho3U6VOB+TNAZ+gTTwUaWfwXYWwO6eSIa/5f7jQv0vX9u7BBGGdb0nO7+0Gs6/qyw/fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720309660; c=relaxed/simple;
-	bh=VpfDft53YaRE4Z0zvb6eY7RWf1Py+o10DDRZueu12H4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I0DWzAzNPQjwMdMh+w8hbv9oNV6ftY1+TiwTmdci/XtJz4LWPOZzNRdrwYJ6lTMFQ61LwH8PwJ0uCaqTlumk8k/iS2dwg5cKQwy8+X++r7jZHJju8mwgQ++RnnpJ3KFtAH5VNL7cS3t6bRjiPoCgFUpz5YD7LCVyL4JzgC2aUqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fvH+k6PH; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720356634; c=relaxed/simple;
+	bh=taH0YtrxQyEc0YzAXWGoaJZyN70H1TeiAKd9O10n1rs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cb1qY2CSEUrPovDf+ZCVnesFOltrInrVGMvGRIPG7vq4STvPZiHcUcTvkj5m7NPJX9KmUIz28w2HV+XQFpzv6g4EONVX/KWhsWB3mnJO44Lb20WKkLDZUahmThtCMVYYGs14n6gPNJq/mLQDxuM4OjhXGdYAqFB5mVepENCSkBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PHlYaJCP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fvH+k6PH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720309659; x=1751845659;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VpfDft53YaRE4Z0zvb6eY7RWf1Py+o10DDRZueu12H4=;
-  b=fvH+k6PH1UkvXOXPKPgMvbJ5zOTZBH++BWgMLd+rIbz1UWMwJYOECnv1
-   pFCxc3ShaWp1DjxdSci3EYfK2PhyDQFtcfeJokLaI6yuVC1kSTdlH6CVN
-   ewrzgfNygIQCsy/i5/ovielIbKzzT6mrTjcW/78fc7kEyOWs7HBVrgwXV
-   4R2ZhlLVCUWvfgCS/0Wh9P/ZslSbM7mHBPuC/g6SX0ByIRcIY8EVbDvXc
-   i8aDbDbPz0VRqBFcOtCkq9hxK15BfMQVoqQCDYrhEsfPAICX9SMk48gh0
-   B8Uh6OVk7FKUCtnMf2tyhkOLpPjaR+jLz8svzt0fSVdtM3497Sy9xAW8+
-   Q==;
-X-CSE-ConnectionGUID: k8zRK/yXT6Gcyw/eclU/cg==
-X-CSE-MsgGUID: Uyi0yAeRQquuZgIdvcZC7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="17677987"
-X-IronPort-AV: E=Sophos;i="6.09,188,1716274800"; 
-   d="scan'208";a="17677987"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 16:47:38 -0700
-X-CSE-ConnectionGUID: iXgeC2TgRt+Ewf86buihTA==
-X-CSE-MsgGUID: Lc4S215FTLubjjEKLAlKmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,188,1716274800"; 
-   d="scan'208";a="47113639"
-Received: from dgramcko-desk.amr.corp.intel.com (HELO [10.124.220.93]) ([10.124.220.93])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 16:47:37 -0700
-Message-ID: <9e33c98d-805a-4426-b7fb-3fba3d0f8fc7@linux.intel.com>
-Date: Sat, 6 Jul 2024 16:47:19 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHlYaJCP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720356631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D8olNbJRf/Z+tPofro/3YxVNnY4kbev5E8DXeMQ5ytA=;
+	b=PHlYaJCPtqCKiqlfkRlg7uLEmx951rCyS1Msd5mdYMB01EFBC79BZv+B0fLm6GNt8mZJdt
+	VUi3oprMd2Darw0tUAc7j4TZ1oc9b//v5Tl1j9rD9WGXX0RwRUO74bDKL/C/2frHgx1kMx
+	pqQTRhTJnK2La2OJo7lzaWnry1jrvcg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-252-53zLvoATMBqFv583PKcHpw-1; Sun,
+ 07 Jul 2024 08:50:29 -0400
+X-MC-Unique: 53zLvoATMBqFv583PKcHpw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 04F21195609E;
+	Sun,  7 Jul 2024 12:50:28 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EA33C1955F3B;
+	Sun,  7 Jul 2024 12:50:23 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  7 Jul 2024 14:48:51 +0200 (CEST)
+Date: Sun, 7 Jul 2024 14:48:46 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	clm@meta.com
+Subject: Re: [PATCH v2 05/12] uprobes: move offset and ref_ctr_offset into
+ uprobe_consumer
+Message-ID: <20240707124846.GA11914@redhat.com>
+References: <20240701223935.3783951-1-andrii@kernel.org>
+ <20240701223935.3783951-6-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] platform/x86/intel/ifs: Add SBAF test support
-To: "Joseph, Jithu" <jithu.joseph@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
- Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- Shankar Ravi V <ravi.v.shankar@intel.com>
-References: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20240627023516.3783454-4-sathyanarayanan.kuppuswamy@linux.intel.com>
- <62fd0e6b-7155-1393-ce18-f3a4ec25e63d@linux.intel.com>
- <35482322-8200-42c5-ba4f-8d50f1b1498d@intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <35482322-8200-42c5-ba4f-8d50f1b1498d@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701223935.3783951-6-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-
-On 7/6/24 10:20 AM, Joseph, Jithu wrote:
-> Thanks very much for the review Ilpo,
+On 07/01, Andrii Nakryiko wrote:
 >
-> On 7/6/2024 6:19 PM, Ilpo Järvinen wrote:
->> On Thu, 27 Jun 2024, Kuppuswamy Sathyanarayanan wrote:
->>
->>> From: Jithu Joseph <jithu.joseph@intel.com>
->>>
->>> In a core, the SBAF test engine is shared between sibling CPUs.
->>>
->>> An SBAF test image contains multiple bundles. Each bundle is further
->>> composed of subunits called programs. When a SBAF test (for a particular
->>> core) is triggered by the user, each SBAF bundle from the loaded test
->>> image is executed sequentially on all the threads on the core using
->>> the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
->>> writing to MSR_ACTIVATE_SBAF.
->>>
->>> SBAF test bundle execution may be aborted when an interrupt occurs or
->>> if the CPU does not have enough power budget for the test. In these
->>> cases the kernel restarts the test from the aborted bundle. SBAF
->>> execution is not retried if the test fails or if the test makes no
->>> forward progress after 5 retries.
->>>
->>> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
->>> Reviewed-by: Tony Luck <tony.luck@intel.com>
->>> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
->>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> ---
->>>  drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
->>>  drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
->>>  2 files changed, 264 insertions(+)
->>>
-> ...
->
->>> +
->>> +static void ifs_sbaf_test_core(int cpu, struct device *dev)
->>> +{
->>> +	struct sbaf_run_params run_params;
->>> +	union ifs_sbaf_status status;
->>> +	union ifs_sbaf activate;
->>> +	unsigned long timeout;
->>> +	struct ifs_data *ifsd;
->>> +	int stop_bundle;
->>> +	int retries;
->>> +
->>> +	ifsd = ifs_get_data(dev);
->>> +
->>> +	activate.data = 0;
->>> +	activate.delay = IFS_THREAD_WAIT;
->>> +
->>> +	timeout = jiffies + (2 * HZ);
->>> +	retries = MAX_IFS_RETRIES;
->>> +	activate.bundle_idx = 0;
->>> +	stop_bundle = ifsd->max_bundle;
->>> +
->>> +	while (activate.bundle_idx <= stop_bundle) {
->>> +		if (time_after(jiffies, timeout)) {
->>> +			status.error_code = IFS_SW_TIMEOUT;
->>> +			break;
->> If we take this branch on the first iteration...
->>
->>> +		}
->>> +
->>> +		atomic_set(&sbaf_cpus_in, 0);
->>> +
->>> +		run_params.ifsd = ifsd;
->>> +		run_params.activate = &activate;
->>> +		run_params.retry_cnt = &retries;
->>> +		stop_core_cpuslocked(cpu, dosbaf, &run_params);
->>> +
->>> +		status = run_params.status;
->>> +
->>> +		if (sbaf_bundle_completed(status)) {
->>> +			activate.bundle_idx = status.bundle_idx + 1;
->>> +			activate.pgm_idx = 0;
->>> +			retries = MAX_IFS_RETRIES;
->>> +			continue;
->>> +		}
->>> +
->>> +		/* Some cases can be retried, give up for others */
->>> +		if (!sbaf_can_restart(status))
->>> +			break;
->>> +
->>> +		if (status.pgm_idx == activate.pgm_idx) {
->>> +			/* If no progress retry */
->>> +			if (--retries == 0) {
->>> +				if (status.error_code == IFS_NO_ERROR)
->>> +					status.error_code = IFS_SW_PARTIAL_COMPLETION;
->>> +				break;
->>> +			}
->>> +		} else {
->>> +			/* if some progress, more pgms remaining in bundle, reset retries */
->>> +			retries = MAX_IFS_RETRIES;
->>> +			activate.bundle_idx = status.bundle_idx;
->>> +			activate.pgm_idx = status.pgm_idx;
->>> +		}
->>> +	}
->>> +
->>> +	/* Update status for this core */
->>> +	ifsd->scan_details = status.data;
->>> +
->>> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
->>> +	    status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
->> ...is status.sbar_status uninitialized? (And perhaps other fields too 
->> that are used after the loop?).
-> Will initialize status.data to 0 (at function entry, prior to the loop) to ensure that in the unlikely scenario of taking
-> the aforementioned branch (on the first iteration),  all the status fields will be zeroed (apart from status.error_code, 
-> which would be set to IFS_SW_TIMEOUT at the branch)
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -42,6 +42,11 @@ struct uprobe_consumer {
+>  				enum uprobe_filter_ctx ctx,
+>  				struct mm_struct *mm);
+>  
+> +	/* associated file offset of this probe */
+> +	loff_t offset;
+> +	/* associated refctr file offset of this probe, or zero */
+> +	loff_t ref_ctr_offset;
+> +	/* for internal uprobe infra use, consumers shouldn't touch fields below */
+>  	struct uprobe_consumer *next;
 
-Yes, it is better to initialize the status variable to 0. While moving the
-timeout check to the end of the loop could also address this issue,
-explicitly fixing it at the initialization is a cleaner solution.
 
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -542,7 +542,7 @@ static int dosbaf(void *data)
- static void ifs_sbaf_test_core(int cpu, struct device *dev)
- {
-        struct sbaf_run_params run_params;
--       union ifs_sbaf_status status;
-+       union ifs_sbaf_status status = {};
+Well, I don't really like this patch either...
 
-I think there is a similar usage in ifs_test_core() as well. Will fix that in
-a separate patch.
+If nothing else because all the consumers in uprobe->consumers list
+must have the same offset/ref_ctr_offset.
 
->
->> It could also be that the timeout check shouldn't be before the first real 
->> iteration inside the loop to ensure that kind of shortcut cannot occur?
+--------------------------------------------------------------------------
+But I agree, the ugly uprobe_register_refctr() must die, we need a single
+function
 
->>
-> Thanks
-> Jithu
+	int uprobe_register(inode, offset, ref_ctr_offset, consumer);
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+This change is trivial.
+
+--------------------------------------------------------------------------
+And speaking of cleanups, I think another change makes sense:
+
+	-	int uprobe_register(...);
+	+	struct uprobe* uprobe_register(...);
+
+so that uprobe_register() returns uprobe or ERR_PTR.
+
+	-	void uprobe_unregister(inode, offset, consumer);
+	+	void uprobe_unregister(uprobe, consumer);
+
+this way unregister() doesn't need the extra find_uprobe() + put_uprobe().
+The same for uprobe_apply().
+
+The necessary changes in kernel/trace/trace_uprobe.c are trivial, we just
+need to change struct trace_uprobe
+
+	-	struct inode                    *inode;
+	+	struct uprobe			*uprobe;
+
+and fix the compilation errors.
+
+
+As for kernel/trace/bpf_trace.c, I guess struct bpf_uprobe  needs the new
+->uprobe member, we can't kill bpf_uprobe->offset because of
+bpf_uprobe_multi_link_fill_link_info(), but I think this is not that bad.
+
+What do you think?
+
+Oleg.
 
