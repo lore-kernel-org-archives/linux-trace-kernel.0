@@ -1,59 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B318C31
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Jul 2024 12:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961212C87C
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Jul 2024 14:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720356634; cv=none; b=ry19Ld5xjvxOladZeebicyJArWfRImNSikqA771MV6ugcx0HcxfBmSYOX798whfFoTiQLdQ0nyiPd9BIUzFuFncuU/OXse2xHqGB1ddho3U6VOB+TNAZ+gTTwUaWfwXYWwO6eSIa/5f7jQv0vX9u7BBGGdb0nO7+0Gs6/qyw/fY=
+	t=1720363723; cv=none; b=DKzIikHyLdc+cujWh7XYLEabm0d1Yr0wT9ffEmATvWuV0c2iJ1HX6oIhjisYRWRprjv8jCEqPbVzes3ktRvVqk04mAZxMN/bsQlXdH451KGqOscz5Ufvn9+O7KQ4UADtJOm72zIHpz+iOGwpEXGfyAePBX6p+CTU7bhYfWncJgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720356634; c=relaxed/simple;
-	bh=taH0YtrxQyEc0YzAXWGoaJZyN70H1TeiAKd9O10n1rs=;
+	s=arc-20240116; t=1720363723; c=relaxed/simple;
+	bh=/l8NLaSri3IcJsgyhXFx4MKFlb+PT8ehYrJzUDUBWI4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cb1qY2CSEUrPovDf+ZCVnesFOltrInrVGMvGRIPG7vq4STvPZiHcUcTvkj5m7NPJX9KmUIz28w2HV+XQFpzv6g4EONVX/KWhsWB3mnJO44Lb20WKkLDZUahmThtCMVYYGs14n6gPNJq/mLQDxuM4OjhXGdYAqFB5mVepENCSkBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PHlYaJCP; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPvkS2m/GVAZPdWZsruxjKrTihJUj3NMrVqHp9+FLDl2lsBGTb9rSaVTM0fOfmniQJRHj1E/FWi1EwAz+lpg20pHBoj+42ZwoPepn5/+v7Qyg89ZWgtF9TNoVD/ktBvYYSperByTab0li95u3oy61WZnInAyhqKvuHHFyJcAYgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TlsnNvXO; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHlYaJCP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TlsnNvXO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720356631;
+	s=mimecast20190719; t=1720363720;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D8olNbJRf/Z+tPofro/3YxVNnY4kbev5E8DXeMQ5ytA=;
-	b=PHlYaJCPtqCKiqlfkRlg7uLEmx951rCyS1Msd5mdYMB01EFBC79BZv+B0fLm6GNt8mZJdt
-	VUi3oprMd2Darw0tUAc7j4TZ1oc9b//v5Tl1j9rD9WGXX0RwRUO74bDKL/C/2frHgx1kMx
-	pqQTRhTJnK2La2OJo7lzaWnry1jrvcg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=kPze5O53dVb0ihek2fyZH9t9ETrFiyFwh4FqEFeVXOc=;
+	b=TlsnNvXOC649ACFmyCZPC4/gr3GPnMKJBvlQLL8fV477UkVB+va3re/qkcvbuMVDbYrER2
+	OaizkixLw4xql+5NMgj2pD4IAT9H9MIKsh4Hyszg5N9a5LGghmSQ0Y56O/hy+hl4Fqv0oo
+	9HQXVzSDZvGspKUX8y2L1/arXNaOaKk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-252-53zLvoATMBqFv583PKcHpw-1; Sun,
- 07 Jul 2024 08:50:29 -0400
-X-MC-Unique: 53zLvoATMBqFv583PKcHpw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-X-5s_BthOpqSz0GMEoNEjg-1; Sun,
+ 07 Jul 2024 10:48:36 -0400
+X-MC-Unique: X-5s_BthOpqSz0GMEoNEjg-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 04F21195609E;
-	Sun,  7 Jul 2024 12:50:28 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD6C91955F0D;
+	Sun,  7 Jul 2024 14:48:34 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EA33C1955F3B;
-	Sun,  7 Jul 2024 12:50:23 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AB3CF1955F3B;
+	Sun,  7 Jul 2024 14:48:30 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  7 Jul 2024 14:48:51 +0200 (CEST)
-Date: Sun, 7 Jul 2024 14:48:46 +0200
+	oleg@redhat.com; Sun,  7 Jul 2024 16:46:58 +0200 (CEST)
+Date: Sun, 7 Jul 2024 16:46:53 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Andrii Nakryiko <andrii@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
 	mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
 	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
 	clm@meta.com
-Subject: Re: [PATCH v2 05/12] uprobes: move offset and ref_ctr_offset into
- uprobe_consumer
-Message-ID: <20240707124846.GA11914@redhat.com>
+Subject: Re: [PATCH v2 04/12] uprobes: revamp uprobe refcounting and lifetime
+ management
+Message-ID: <20240707144653.GB11914@redhat.com>
 References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240701223935.3783951-6-andrii@kernel.org>
+ <20240701223935.3783951-5-andrii@kernel.org>
+ <20240705153705.GA18551@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,67 +63,71 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240701223935.3783951-6-andrii@kernel.org>
+In-Reply-To: <20240705153705.GA18551@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 07/01, Andrii Nakryiko wrote:
+And I forgot to mention...
+
+In any case __uprobe_unregister() can't ignore the error code from
+register_for_each_vma(). If it fails to restore the original insn,
+we should not remove this uprobe from uprobes_tree.
+
+Otherwise the next handle_swbp() will send SIGTRAP to the (no longer)
+probed application.
+
+On 07/05, Oleg Nesterov wrote:
 >
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -42,6 +42,11 @@ struct uprobe_consumer {
->  				enum uprobe_filter_ctx ctx,
->  				struct mm_struct *mm);
->  
-> +	/* associated file offset of this probe */
-> +	loff_t offset;
-> +	/* associated refctr file offset of this probe, or zero */
-> +	loff_t ref_ctr_offset;
-> +	/* for internal uprobe infra use, consumers shouldn't touch fields below */
->  	struct uprobe_consumer *next;
-
-
-Well, I don't really like this patch either...
-
-If nothing else because all the consumers in uprobe->consumers list
-must have the same offset/ref_ctr_offset.
-
---------------------------------------------------------------------------
-But I agree, the ugly uprobe_register_refctr() must die, we need a single
-function
-
-	int uprobe_register(inode, offset, ref_ctr_offset, consumer);
-
-This change is trivial.
-
---------------------------------------------------------------------------
-And speaking of cleanups, I think another change makes sense:
-
-	-	int uprobe_register(...);
-	+	struct uprobe* uprobe_register(...);
-
-so that uprobe_register() returns uprobe or ERR_PTR.
-
-	-	void uprobe_unregister(inode, offset, consumer);
-	+	void uprobe_unregister(uprobe, consumer);
-
-this way unregister() doesn't need the extra find_uprobe() + put_uprobe().
-The same for uprobe_apply().
-
-The necessary changes in kernel/trace/trace_uprobe.c are trivial, we just
-need to change struct trace_uprobe
-
-	-	struct inode                    *inode;
-	+	struct uprobe			*uprobe;
-
-and fix the compilation errors.
-
-
-As for kernel/trace/bpf_trace.c, I guess struct bpf_uprobe  needs the new
-->uprobe member, we can't kill bpf_uprobe->offset because of
-bpf_uprobe_multi_link_fill_link_info(), but I think this is not that bad.
-
-What do you think?
-
-Oleg.
+> Tried to read this patch, but I fail to understand it. It looks
+> obvioulsy wrong to me, see below.
+>
+> I tend to agree with the comments from Peter, but lets ignore them
+> for the moment.
+>
+> On 07/01, Andrii Nakryiko wrote:
+> >
+> >  static void put_uprobe(struct uprobe *uprobe)
+> >  {
+> > -	if (refcount_dec_and_test(&uprobe->ref)) {
+> > +	s64 v;
+> > +
+> > +	/*
+> > +	 * here uprobe instance is guaranteed to be alive, so we use Tasks
+> > +	 * Trace RCU to guarantee that uprobe won't be freed from under us, if
+> > +	 * we end up being a losing "destructor" inside uprobe_treelock'ed
+> > +	 * section double-checking uprobe->ref value below.
+> > +	 * Note call_rcu_tasks_trace() + uprobe_free_rcu below.
+> > +	 */
+> > +	rcu_read_lock_trace();
+> > +
+> > +	v = atomic64_add_return(UPROBE_REFCNT_PUT, &uprobe->ref);
+> > +
+> > +	if (unlikely((u32)v == 0)) {
+>
+> I must have missed something, but how can this ever happen?
+>
+> Suppose uprobe_register(inode) is called the 1st time. To simplify, suppose
+> that this binary is not used, so _register() doesn't install breakpoints/etc.
+>
+> IIUC, with this change (u32)uprobe->ref == 1 when uprobe_register() succeeds.
+>
+> Now suppose that uprobe_unregister() is called right after that. It does
+>
+> 	uprobe = find_uprobe(inode, offset);
+>
+> this increments the counter, (u32)uprobe->ref == 2
+>
+> 	__uprobe_unregister(...);
+>
+> this wont't change the counter,
+>
+> 	put_uprobe(uprobe);
+>
+> this drops the reference added by find_uprobe(), (u32)uprobe->ref == 1.
+>
+> Where should the "final" put_uprobe() come from?
+>
+> IIUC, this patch lacks another put_uprobe() after consumer_del(), no?
+>
+> Oleg.
 
