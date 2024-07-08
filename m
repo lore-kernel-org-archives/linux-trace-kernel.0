@@ -1,201 +1,128 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D558225AF
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jul 2024 20:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3F3BA46;
+	Mon,  8 Jul 2024 22:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720469300; cv=none; b=r/58ps26/cXVzrHaksnODwD+oY96p6fKcB50MEvJX7LJTBoJlhUrEEoW4UjGZVFNfYUZ4wBwHZzzez7PaEtludJ4ErYRReBVFJ2/x6U+gm7ortKfbQoq13fzcSh3DHYOJ4TtwN4kV1xwP56wXPbqkNtwFTRz0Gv4cj62Vn/aH3Y=
+	t=1720478680; cv=none; b=E1KBDZIK9iT/hoj7wXbR9F6xLRoHJ/L5bZKxJRZ9hLrwEd3T08X3cAi1uwfWi9Nn2AuTtuDfDQaa4dCd7uL+t23NlqHPPjQvgrYt0INyXK34Hp1qT6Yoc7c7PHxPJb4NAkRNxEvZWtp37nHq3gTdWUQ7udGQvCVO8Z7eEAPuFTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720469300; c=relaxed/simple;
-	bh=ZRZU9TG8IKJPir335kv6uvmf5/6XvlnF0lVWn7S/s+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lmXtTDAgfQCn3ZCZylUHpG4V1vMePhArfiTAZMvbKONzGPYgcnZifbRd3SmjU/g0Aqyy6J2NP1xtJu8sskc6D3XtURN3d0QfuEW7939lC9nAg3gbzTcKxl2hIpmFUx4PB04ppTH0+KpZGMKzKiQM7B5y5O0dNFItuH/nVXFVEYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nvt70lDq; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720478680; c=relaxed/simple;
+	bh=3T/vx7wtTuSugpPLCQmC8NiPQXjKlfD8eD6FNiQIywE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=b0l3nVySdqwPRfSjsME6oSDS3ErAGJP2ASavGgXvnz1vfJG9WtpdEirNvdL7FznBmixmQLiz/ld67SSIs5rQH4jZuxNTldkkuXgLIqKLokKJcTJY4x9UShBQGOnJw9ijq4RjfGwkv9YhiJ8OPyVvztfAZ8bdLbWuSdOyi7ZGNd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4/Xol0o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nvt70lDq"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6adc63c2ee0so13663196d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jul 2024 13:08:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720469297; x=1721074097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ef8kYUavZDQKnlAolqYPRC/e9sM3ztTKFUbqIbLKTok=;
-        b=Nvt70lDqisNpfwC9Q3U8CpMPR/mXlio5gK5xUUEULro9iTsTMaVhWouG0PNbjJ764Z
-         XmuqOmW4OjLY/v8ncqtpAZLDqReczDacqRUd29wMBjK/Pl4UMDLOac/fYtgDxnPuoJuk
-         IvS6KFzrbX1CnMTF0cH7coo7IaDMyw1XZt115Qc3Z1r/aqwK4LbCLyhPxSQ+MKzH0BRY
-         su7qtvbvu/b/Gm6/C3zgPrrezPL6pUG/2KhsGXdSNhifEyjUHDw42lqBmvOsllSmGx37
-         m7jNmIPpAZLTMJS3tYsSuWUEADMiOD8uidBdDgUGHbJGi7yFwJGzzteXip+0OASqNo2g
-         7E3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720469297; x=1721074097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ef8kYUavZDQKnlAolqYPRC/e9sM3ztTKFUbqIbLKTok=;
-        b=rCIkQmTN9rIBgEnAbxaB4SOVblJiTWAbCbqrNFmc5c39dcgggr+abIGD3UsTUBtAn5
-         Lcp7hGrAn83/h3mf8xUe2Q/vD6Z0aArnG6mBMzvluXmJfLmTctdNDW+yOk3183n2zEEY
-         rnhPHekt3aQ+MV4vNiSNzIF0w9Ek7Gian05nPMvQwSU66L2Wit3q+9qUyThSq7GWdaXe
-         Yu1/jwj9F6SoxRWXQvSBGpo3goWJz2iPWbGtLX2p2U/SZDMAoqkzkCVXocEnh9F3Xs3u
-         6BA4zw0MER72HX+ZUmIa1rizy3mxR+X7wDIP3plpShXh7ZRKEbyb1mK9KqSQ7AabG/Lg
-         2EzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtJ7gvg1gKALOtYVZruROkrMOaNUxN1smYZOW5s3HRKUy5cWjYRN+/zcCLjSKi0oY7djQtAPJyTmpPSJmKFRMSvmUc5bu90HXPGIw0qOTTwkJ1
-X-Gm-Message-State: AOJu0Yyu9+rRuLORtV+3dUmkfQ7vksRtsxTb3c6insLpLkYAEH7g/Ran
-	ky7YshjBuI7TPWiVMhkHaeOwSvTI07chvnnJfQTKVvZL20lBfCoWfYlAvxW/yZ7G4nUw4oscv8o
-	A3uzTB0Wv0/4tSL7TTxgqkHgLZKMHChAah3WeRUThWcGxZUH+ZD43
-X-Google-Smtp-Source: AGHT+IHB+Sby5xb3KQY4fJme46cOICuiSOSK7oxUno8JfmvAwWNnn3nyYgyDJgtIcLGc/wIzDrQoP+07XuveT6i0qf0=
-X-Received: by 2002:a05:6214:c44:b0:6b4:b179:8eeb with SMTP id
- 6a1803df08f44-6b61c230e3fmr8398346d6.63.1720469296819; Mon, 08 Jul 2024
- 13:08:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4/Xol0o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522C4C116B1;
+	Mon,  8 Jul 2024 22:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720478679;
+	bh=3T/vx7wtTuSugpPLCQmC8NiPQXjKlfD8eD6FNiQIywE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=f4/Xol0oq6iH8WxUUzqxIw0HrccGe+hEbg+a1KTMrjaSgsKKTa4ys5l+jyEYyh7X0
+	 JmdAl5XcAfADZp+NftThrFFvZKp0ApH7nqMA95iOk7IUn/jYGKKawKe/Oad8clW9le
+	 Wzoqr+PlHCt0E0fMpjinV9h9x8fcXS6a3AGDglyGqJ5d5YodS/krmQJsW1D1sl8Iwl
+	 w80irGnckq/nWM8q/UPe44SWLyiqz36F6ZcryjP1x/+pI9F2eWlxWRr+y4CNpYSkao
+	 Ii88pV28DBXApv6Lel+vxJdWMgPX39b1KM/Vc2v+cD+pHMNJOaPN7pnLXEpG7xdbS+
+	 5axoyM8qVhZ0Q==
+Date: Tue, 9 Jul 2024 07:44:34 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, corbet@lwn.net, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation: Document user_events ioctl code
+Message-Id: <20240709074434.d3ff058a396d7020fa04f7e9@kernel.org>
+In-Reply-To: <20240703231343.GA408-beaub@linux.microsoft.com>
+References: <20240703222501.1547-1-beaub@linux.microsoft.com>
+	<ZoXXe8Tl9pRD6-dd@localhost.localdomain>
+	<20240703231343.GA408-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240628003253.1694510-1-almasrymina@google.com>
- <20240628003253.1694510-4-almasrymina@google.com> <CAMArcTUqqxam+BPwGExOFOLVi3t=dwA-5sSagKC5dndv07GDLQ@mail.gmail.com>
-In-Reply-To: <CAMArcTUqqxam+BPwGExOFOLVi3t=dwA-5sSagKC5dndv07GDLQ@mail.gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 8 Jul 2024 13:08:01 -0700
-Message-ID: <CAHS8izNS5jZjPfc-sARbHV7mzqzH+UhHfAtCTKRRTfSAdhY4Cw@mail.gmail.com>
-Subject: Re: [PATCH net-next v15 03/14] netdev: support binding dma-buf to netdevice
-To: Taehee Yoo <ap420073@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 4, 2024 at 10:57=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wro=
-te:
->
-> I found several locking warnings while testing.
->
+On Wed, 3 Jul 2024 16:13:43 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-Thanks for Testing Taehee! And sorry for the late reply. I was off for
-a couple of days. With some minor tweaks to my test setup I was able
-to reproduce and fix all 3 warnings.
+> On Wed, Jul 03, 2024 at 06:58:03PM -0400, Mathieu Desnoyers wrote:
+> > On 03-Jul-2024 10:25:01 PM, Beau Belgrave wrote:
+> > > The user events trace subsystem uses the 0x2A/'*' code for ioctls. These
+> > > are published via the uapi/linux/user_events.h header file.
+> > > 
+> > > Add a line indicating user events as the owner of the 0x2A/'*' code and the
+> > > current sequence numbers that are in use (00-02).
+> > > 
+> > > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> > > ---
+> > >  Documentation/userspace-api/ioctl/ioctl-number.rst | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > > index a141e8e65c5d..191609fe4593 100644
+> > > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > > @@ -97,6 +97,8 @@ Code  Seq#    Include File                                           Comments
+> > >  '%'   00-0F  include/uapi/linux/stm.h                                System Trace Module subsystem
+> > >                                                                       <mailto:alexander.shishkin@linux.intel.com>
+> > >  '&'   00-07  drivers/firewire/nosy-user.h
+> > > +'*'   00-02  uapi/linux/user_events.h                                User Events Subsystem
+> > 
+> > You may want to consider reserving a wider sequence number range to plan
+> > ahead for future extensions to user events. This way you won't end up
+> > having to jump over sequence numbers eventually reserved by others
+> > within the '*' code.
+> > 
+> > Thanks,
+> > 
+> > Mathieu
+> 
+> Yeah, I thought about that, but really didn't know how greedy we could
+> be. At first I had all, but then thought we would never use all of that
+> sequence. We'll likely want a few more for libside integration.
+> 
+> Maybe I'll grab the first 16, that should leave a lot for others and
+> give us quite bit of growing room.
 
-> [ 1135.125874] WARNING: CPU: 1 PID: 1644 at
-> drivers/dma-buf/dma-buf.c:1123 dma_buf_map_attachment+0x164/0x2f0
-...
-> [ 1136.178258] WARNING: CPU: 1 PID: 1644 at
-> drivers/dma-buf/dma-buf.c:1226 dma_buf_unmap_attachment+0x267/0x320
+I think that sounds reasonable, there is a sentence in the same file:
 
-Both of these are warnings that dma->resv is not locked when calling
-dma_buf_[un]map_attachment(). As far as I can tell so far, this can be
-resolved by using the unlocked versions:
-dma_buf_[un]map_attachment_unlocked() which is correct here for this
-static importer.
+----
+If you are writing a driver for a new device and need a letter, pick an
+unused block with enough room for expansion: 32 to 256 ioctl commands.
+----
 
-...
+Maybe you can reserve a block for 32 ioctl.
 
-> [ 1135.709313] WARNING: CPU: 3 PID: 1644 at
-> net/core/netdev_rx_queue.c:18 netdev_rx_queue_restart+0x3f4/0x5a0
+Thank you,
 
-This is due to rtnl_lock() actually not being acquired in the unbind
-path, when the netlink socket is closed. Sorry about that. This is
-fixed by obtaining rtnl_lock() in the unbind path.
-
-With the fixes below all the warnings disappear. I'm planning to
-squash them to the next version. Let me know if those don't work for
-you. Thanks!
-
-diff --git a/net/core/devmem.c b/net/core/devmem.c
-index e52bca1a55c7c..a6ef1485b80f2 100644
---- a/net/core/devmem.c
-+++ b/net/core/devmem.c
-@@ -46,8 +46,8 @@ void __net_devmem_dmabuf_binding_free(struct
-net_devmem_dmabuf_binding *binding)
-                  size, avail))
-                gen_pool_destroy(binding->chunk_pool);
-
--       dma_buf_unmap_attachment(binding->attachment, binding->sgt,
--                                DMA_FROM_DEVICE);
-+       dma_buf_unmap_attachment_unlocked(binding->attachment, binding->sgt=
-,
-+                                         DMA_FROM_DEVICE);
-        dma_buf_detach(binding->dmabuf, binding->attachment);
-        dma_buf_put(binding->dmabuf);
-        xa_destroy(&binding->bound_rxqs);
-@@ -157,8 +157,8 @@ struct net_devmem_dmabuf_binding
-*net_devmem_bind_dmabuf(struct net_device *dev,
-                goto err_free_id;
-        }
-
--       binding->sgt =3D
--               dma_buf_map_attachment(binding->attachment, DMA_FROM_DEVICE=
-);
-+       binding->sgt =3D dma_buf_map_attachment_unlocked(binding->attachmen=
-t,
-+                                                      DMA_FROM_DEVICE);
-        if (IS_ERR(binding->sgt)) {
-                err =3D PTR_ERR(binding->sgt);
-                goto err_detach;
-@@ -225,8 +225,8 @@ struct net_devmem_dmabuf_binding
-*net_devmem_bind_dmabuf(struct net_device *dev,
-                                net_devmem_dmabuf_free_chunk_owner, NULL);
-        gen_pool_destroy(binding->chunk_pool);
- err_unmap:
--       dma_buf_unmap_attachment(binding->attachment, binding->sgt,
--                                DMA_FROM_DEVICE);
-+       dma_buf_unmap_attachment_unlocked(binding->attachment, binding->sgt=
-,
-+                                         DMA_FROM_DEVICE);
- err_detach:
-        dma_buf_detach(dmabuf, binding->attachment);
- err_free_id:
-diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
-index 4b16b3ad2ec5b..33bb20c143997 100644
---- a/net/core/netdev-genl.c
-+++ b/net/core/netdev-genl.c
-@@ -861,6 +861,9 @@ void netdev_nl_sock_priv_destroy(struct list_head *priv=
-)
-        struct net_devmem_dmabuf_binding *binding;
-        struct net_devmem_dmabuf_binding *temp;
-
--       list_for_each_entry_safe(binding, temp, priv, list)
-+       list_for_each_entry_safe(binding, temp, priv, list) {
-+               rtnl_lock();
-                net_devmem_unbind_dmabuf(binding);
-+               rtnl_unlock();
-+       }
- }
+> 
+> How many do you think we'll need for libside? I think we'd only need 2-3
+> personally.
+> 
+> Thanks,
+> -Beau
+> 
+> > 
+> > 
+> > > +                                                                     <mailto:linux-trace-kernel@vger.kernel.org>
+> > >  '1'   00-1F  linux/timepps.h                                         PPS kit from Ulrich Windl
+> > >                                                                       <ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
+> > >  '2'   01-04  linux/i2o.h
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> > -- 
+> > Mathieu Desnoyers
+> > EfficiOS Inc.
+> > http://www.efficios.com
 
 
-
---
-Thanks,
-Mina
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
