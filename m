@@ -1,60 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961212C87C
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  7 Jul 2024 14:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CC44F88C;
+	Mon,  8 Jul 2024 09:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720363723; cv=none; b=DKzIikHyLdc+cujWh7XYLEabm0d1Yr0wT9ffEmATvWuV0c2iJ1HX6oIhjisYRWRprjv8jCEqPbVzes3ktRvVqk04mAZxMN/bsQlXdH451KGqOscz5Ufvn9+O7KQ4UADtJOm72zIHpz+iOGwpEXGfyAePBX6p+CTU7bhYfWncJgc=
+	t=1720431718; cv=none; b=qQ+VInCZSJv69Ks/lMVHTFoQz/p3020XaLLuc0HLgkhV9nyhNaSPcCJaJjETNUuF2jpKGCC9jZJFCvIHK87GeRLeV31Ll69CEjfBYs0Hq4Uc0sU6Vh4oqr6xzDxPSKEzLIjx7SgaArDLtjHryiCOX9Mz+XwAOP+4tqDGD7Nn0d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720363723; c=relaxed/simple;
-	bh=/l8NLaSri3IcJsgyhXFx4MKFlb+PT8ehYrJzUDUBWI4=;
+	s=arc-20240116; t=1720431718; c=relaxed/simple;
+	bh=ZlxeEDjHIcofzfH902WiH0niH94aGCc5LSZ68+IVe+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bPvkS2m/GVAZPdWZsruxjKrTihJUj3NMrVqHp9+FLDl2lsBGTb9rSaVTM0fOfmniQJRHj1E/FWi1EwAz+lpg20pHBoj+42ZwoPepn5/+v7Qyg89ZWgtF9TNoVD/ktBvYYSperByTab0li95u3oy61WZnInAyhqKvuHHFyJcAYgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TlsnNvXO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=utPY4LDv1TZpBkP76Qj6AQsj57H5pWEl7Hg+nlloCpAKDNekjCq8fLBm/7lERhEMZmXi6BIuEZp1jRZ6a0zSlM82w3Iqz90QpbIPcrzP2xEssaS2XWbmvFf8YZKzWgWb+2CaXQmTSwG3Zk+z8gPegigyluyVgqI4un6J7Bfklgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SSOGol7g; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TlsnNvXO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720363720;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kPze5O53dVb0ihek2fyZH9t9ETrFiyFwh4FqEFeVXOc=;
-	b=TlsnNvXOC649ACFmyCZPC4/gr3GPnMKJBvlQLL8fV477UkVB+va3re/qkcvbuMVDbYrER2
-	OaizkixLw4xql+5NMgj2pD4IAT9H9MIKsh4Hyszg5N9a5LGghmSQ0Y56O/hy+hl4Fqv0oo
-	9HQXVzSDZvGspKUX8y2L1/arXNaOaKk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-X-5s_BthOpqSz0GMEoNEjg-1; Sun,
- 07 Jul 2024 10:48:36 -0400
-X-MC-Unique: X-5s_BthOpqSz0GMEoNEjg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD6C91955F0D;
-	Sun,  7 Jul 2024 14:48:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AB3CF1955F3B;
-	Sun,  7 Jul 2024 14:48:30 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  7 Jul 2024 16:46:58 +0200 (CEST)
-Date: Sun, 7 Jul 2024 16:46:53 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	clm@meta.com
-Subject: Re: [PATCH v2 04/12] uprobes: revamp uprobe refcounting and lifetime
- management
-Message-ID: <20240707144653.GB11914@redhat.com>
-References: <20240701223935.3783951-1-andrii@kernel.org>
- <20240701223935.3783951-5-andrii@kernel.org>
- <20240705153705.GA18551@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SSOGol7g"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pKS+oSufz1eafXT5eQa4h84xYuDBPKzlEApXrtYxFeM=; b=SSOGol7g9Ouuq5bzRMTs9TPTdf
+	bxfJDiNRe9AYmR2Su0dkmTB9KpZnzBV8u1UpIMyRRXWjD85UglyZPIbo5SXBaxE1iAQhlP4+5oMTJ
+	Gb8wuLEwQ4Y/zMlSDUmm18ujvPgpc4Nv9LYS0XSmID9+g/6XkSkomrjfmzDuQDnhnesAvMpoOHH9w
+	f8eVIljRB8rTcbJn1xpB1VyGtD/4wpptt124Wg/tEAO8V81Av7jngZcp/CQ+kjZbjbpCpd0yNXET/
+	8NwoCUFgdSJ8eCDafpcc7JC1iaeY/1s6ZYNY3sxhuv/BjGx5B6eM1dPpDobg/Fjz9u2hIfUtsur/0
+	mgKoUZUg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sQksW-00000006hzd-22Z2;
+	Mon, 08 Jul 2024 09:41:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 20FB5300694; Mon,  8 Jul 2024 11:41:48 +0200 (CEST)
+Date: Mon, 8 Jul 2024 11:41:48 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
+Message-ID: <20240708094148.GH11386@noisy.programming.kicks-ass.net>
+References: <20240701164115.723677-1-jolsa@kernel.org>
+ <20240701164115.723677-2-jolsa@kernel.org>
+ <20240703085533.820f90544c3fc42edf79468d@kernel.org>
+ <CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
+ <ZoV3rRUHEdvTmJjG@krava>
+ <CAEf4BzYKVbCEGupX47fwM0XSzwwmXs+0sVpcAdp3poFLkjMA6Q@mail.gmail.com>
+ <20240705173544.9ef034c30ae93c52164ecc1b@kernel.org>
+ <Zof3RIqSl6TgaVKq@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,71 +66,19 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240705153705.GA18551@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <Zof3RIqSl6TgaVKq@krava>
 
-And I forgot to mention...
+On Fri, Jul 05, 2024 at 03:38:12PM +0200, Jiri Olsa wrote:
 
-In any case __uprobe_unregister() can't ignore the error code from
-register_for_each_vma(). If it fails to restore the original insn,
-we should not remove this uprobe from uprobes_tree.
+> > Agreed. BTW, even if the uprobe is removed, the ret_handler should be called?
+> > I think both 1 and 2 case, we should skip ret_handler.
+> 
+> do you mean what happens when the uretprobe is installed and its consumer
+> is unregistered before it's triggered?
+> 
+> I think it won't get executed, because the consumer is removed right away,
+> even if the uprobe object stays because the return_instance holds ref to it
 
-Otherwise the next handle_swbp() will send SIGTRAP to the (no longer)
-probed application.
-
-On 07/05, Oleg Nesterov wrote:
->
-> Tried to read this patch, but I fail to understand it. It looks
-> obvioulsy wrong to me, see below.
->
-> I tend to agree with the comments from Peter, but lets ignore them
-> for the moment.
->
-> On 07/01, Andrii Nakryiko wrote:
-> >
-> >  static void put_uprobe(struct uprobe *uprobe)
-> >  {
-> > -	if (refcount_dec_and_test(&uprobe->ref)) {
-> > +	s64 v;
-> > +
-> > +	/*
-> > +	 * here uprobe instance is guaranteed to be alive, so we use Tasks
-> > +	 * Trace RCU to guarantee that uprobe won't be freed from under us, if
-> > +	 * we end up being a losing "destructor" inside uprobe_treelock'ed
-> > +	 * section double-checking uprobe->ref value below.
-> > +	 * Note call_rcu_tasks_trace() + uprobe_free_rcu below.
-> > +	 */
-> > +	rcu_read_lock_trace();
-> > +
-> > +	v = atomic64_add_return(UPROBE_REFCNT_PUT, &uprobe->ref);
-> > +
-> > +	if (unlikely((u32)v == 0)) {
->
-> I must have missed something, but how can this ever happen?
->
-> Suppose uprobe_register(inode) is called the 1st time. To simplify, suppose
-> that this binary is not used, so _register() doesn't install breakpoints/etc.
->
-> IIUC, with this change (u32)uprobe->ref == 1 when uprobe_register() succeeds.
->
-> Now suppose that uprobe_unregister() is called right after that. It does
->
-> 	uprobe = find_uprobe(inode, offset);
->
-> this increments the counter, (u32)uprobe->ref == 2
->
-> 	__uprobe_unregister(...);
->
-> this wont't change the counter,
->
-> 	put_uprobe(uprobe);
->
-> this drops the reference added by find_uprobe(), (u32)uprobe->ref == 1.
->
-> Where should the "final" put_uprobe() come from?
->
-> IIUC, this patch lacks another put_uprobe() after consumer_del(), no?
->
-> Oleg.
+Yep, that is my understanding too. RI keeps the uprobe object around,
+but the consumers can go at any time.
 
