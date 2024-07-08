@@ -1,84 +1,151 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CC44F88C;
-	Mon,  8 Jul 2024 09:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEAD78C6B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jul 2024 10:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720431718; cv=none; b=qQ+VInCZSJv69Ks/lMVHTFoQz/p3020XaLLuc0HLgkhV9nyhNaSPcCJaJjETNUuF2jpKGCC9jZJFCvIHK87GeRLeV31Ll69CEjfBYs0Hq4Uc0sU6Vh4oqr6xzDxPSKEzLIjx7SgaArDLtjHryiCOX9Mz+XwAOP+4tqDGD7Nn0d0=
+	t=1720435980; cv=none; b=YBM28v+wqZD/1qvoQKwIivaKA7/ivbf/RvdNvqw/BXFVMBvxb4KUN6BBIm7h42u/dtsuDNEQrdnH5ZHS537lO+zxjXOCQXKBEu+09fy86i+lcb+/h66dpmxLpYoAcuRwIQ/EUfZ2I5KTtX7hWd1pDvgzU6Ln9rglHuhCzxfGw9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720431718; c=relaxed/simple;
-	bh=ZlxeEDjHIcofzfH902WiH0niH94aGCc5LSZ68+IVe+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=utPY4LDv1TZpBkP76Qj6AQsj57H5pWEl7Hg+nlloCpAKDNekjCq8fLBm/7lERhEMZmXi6BIuEZp1jRZ6a0zSlM82w3Iqz90QpbIPcrzP2xEssaS2XWbmvFf8YZKzWgWb+2CaXQmTSwG3Zk+z8gPegigyluyVgqI4un6J7Bfklgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SSOGol7g; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720435980; c=relaxed/simple;
+	bh=Yb0WIAoaOKNp5Xv4PSSI4KumM0UVBL2yI5MvTxK0YKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o1jMVGvgheCkI/3UHmgFhYWXbno28XmD//ETAxAF/McgWZlOK49W/AAnGeOKMV1hUf5Gs3CtR/HpJ0/0CIetPRDixfOU/+1derL3tmoJ6nq5NgMX/AT9ZsUqj7tENobkTy0TvudrWRSb4os/egWotDrHttNFfvhaOA1bbF4zwaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lpUfoC0d; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SSOGol7g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pKS+oSufz1eafXT5eQa4h84xYuDBPKzlEApXrtYxFeM=; b=SSOGol7g9Ouuq5bzRMTs9TPTdf
-	bxfJDiNRe9AYmR2Su0dkmTB9KpZnzBV8u1UpIMyRRXWjD85UglyZPIbo5SXBaxE1iAQhlP4+5oMTJ
-	Gb8wuLEwQ4Y/zMlSDUmm18ujvPgpc4Nv9LYS0XSmID9+g/6XkSkomrjfmzDuQDnhnesAvMpoOHH9w
-	f8eVIljRB8rTcbJn1xpB1VyGtD/4wpptt124Wg/tEAO8V81Av7jngZcp/CQ+kjZbjbpCpd0yNXET/
-	8NwoCUFgdSJ8eCDafpcc7JC1iaeY/1s6ZYNY3sxhuv/BjGx5B6eM1dPpDobg/Fjz9u2hIfUtsur/0
-	mgKoUZUg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQksW-00000006hzd-22Z2;
-	Mon, 08 Jul 2024 09:41:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 20FB5300694; Mon,  8 Jul 2024 11:41:48 +0200 (CEST)
-Date: Mon, 8 Jul 2024 11:41:48 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 bpf-next 1/9] uprobe: Add support for session consumer
-Message-ID: <20240708094148.GH11386@noisy.programming.kicks-ass.net>
-References: <20240701164115.723677-1-jolsa@kernel.org>
- <20240701164115.723677-2-jolsa@kernel.org>
- <20240703085533.820f90544c3fc42edf79468d@kernel.org>
- <CAEf4Bzbn+jky3hb+tUwmDCUgUmgCBxL5Ru_9G5SO3=uTWpi=kA@mail.gmail.com>
- <ZoV3rRUHEdvTmJjG@krava>
- <CAEf4BzYKVbCEGupX47fwM0XSzwwmXs+0sVpcAdp3poFLkjMA6Q@mail.gmail.com>
- <20240705173544.9ef034c30ae93c52164ecc1b@kernel.org>
- <Zof3RIqSl6TgaVKq@krava>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lpUfoC0d"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-36799fb93baso2534702f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jul 2024 03:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720435976; x=1721040776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9t9CW2ikDJ93nVzHMjsfMYNAYP8IQbMk6FtSVUZ+Oyo=;
+        b=lpUfoC0dLAyD9F/v1/cnFdgcq9/TJtG0vk8VwrRsPFlT9x/tMH4pQAzH1OfGJFLuC1
+         2y2zKrTVD0RHWUehsJbdbkkoB8GdwmwpK44JKRztK7IFZZ2rgJutyoNgwGeJzhiznWww
+         QXGTFkfO9CAkJoyEaYLPOdQICnLRxauUs2lFDbbi9q5PjVIhMP2z9EWwW3qjQYSg+yzC
+         ZbseQYn/vMufCgh5/kuytEVG35zfb5C8+UZrjwso37QKNCGVr1bwW1RlqPz+zc7mj054
+         mhrMu2sefqiik0kdT2/tLA0cUhL2eNoltXNk2Wgxot0S30PzBqxiJD2vDwjIOsGMoF3Y
+         T7rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720435976; x=1721040776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9t9CW2ikDJ93nVzHMjsfMYNAYP8IQbMk6FtSVUZ+Oyo=;
+        b=FNlu+crzJzUrKt5BW9kNbFa2B3kLDLp+Awe3EFnKbgyy1TYcM5qWAEeyVC3anBQkd9
+         pW6y97RYbyMLLMCxcW/s7M4gcaGMirzPKsy28UCdrrDgATCWs1elBmepblfDTU49oJV7
+         qMdx0a58CLAPqvFYk+9ViXzVhJ3CaQv6EGwA79LDgPn7wzgtW7ie578jAur1/Pd1xGKJ
+         cgkC4LWR3HgMiwSxRUe0UMUcMMGaVofrnmA1aTntdIfVXw30l+0yd58oD5YlvtFsR49J
+         TLud5UUh/ByrH+19X6dvc7P/YXwvQfVu6wgbIJ2016cocOH5EKIGyrrizlpFx8NuK44x
+         uq3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWEG2W2h7cqA90rXhMNXxr+N3PeGdt9BsGXUV265LfotL2AF6Rhh+Oedp9XcuUNSkdEcjpNIePWXe7wrINKXaT9Dps9Tc+sfOk5i6Upq3w5sQgg
+X-Gm-Message-State: AOJu0YzyyzAgoRoJAToOsSvwatKL1/peYNF9p28LxLaSj4pzpj9Uvj5N
+	l1YoHN+t4F5gE6yvAbWeeAfjlfl6csL5Mca9lL3n8H9g+306y023FlEmvJ1zf0Q=
+X-Google-Smtp-Source: AGHT+IGdYnypB7xTlH719+DjiVuD4czKnIEonrQHHTOzz00kZsM072lcPEtJDLFCd8IDnJcosZHsxA==
+X-Received: by 2002:a5d:698b:0:b0:367:8fee:443b with SMTP id ffacd0b85a97d-3679dd56208mr7132968f8f.41.1720435975893;
+        Mon, 08 Jul 2024 03:52:55 -0700 (PDT)
+Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3678a648dd3sm15478080f8f.89.2024.07.08.03.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 03:52:55 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/6] pwm: New abstraction and userspace API
+Date: Mon,  8 Jul 2024 12:52:26 +0200
+Message-ID: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zof3RIqSl6TgaVKq@krava>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2672; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=Yb0WIAoaOKNp5Xv4PSSI4KumM0UVBL2yI5MvTxK0YKQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmi8TrEwrhSTsU+WYFtDXfVOsElXp4JJimZYycX tewSw9AhzyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZovE6wAKCRCPgPtYfRL+ TpT8B/4vQpye6kHDXbHQtKqAcG7Sgx9KXOlhnKnRcpDujDsY4SrDDFUOJPa7BlanQ0cSAMjHreK rHzfyEKef43R5JBJF5F3jR9u1rUqEEeAiYbT9S9VnekSqSWvIM3urOm4iat7fF9u0rZcq6Vu+iB 67lAEXjus5D3kI01bmaOWTP07W2orpkPJJB5Wa92l+VIjTTLy0TzjfjWHDjdMdaIwS0sDlnWw5Z hFcXNfJnX9eL+HgkJ375kbLNlfZ3fmvCipjYjxtX/R6i+WszdErNUBtImwe7LEf1+8D0xo7drSn w2P2Sy2CLGEOZahAreDlzGG6Irq+Q8QsMCPI2lsnw+hBK1XH
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 05, 2024 at 03:38:12PM +0200, Jiri Olsa wrote:
+Hello,
 
-> > Agreed. BTW, even if the uprobe is removed, the ret_handler should be called?
-> > I think both 1 and 2 case, we should skip ret_handler.
-> 
-> do you mean what happens when the uretprobe is installed and its consumer
-> is unregistered before it's triggered?
-> 
-> I think it won't get executed, because the consumer is removed right away,
-> even if the uprobe object stays because the return_instance holds ref to it
+this series implements a new abstraction to model the output waveform of
+a PWM. The main improvement is that it defines a duty_offset instead of
+a polarity and so allows to model more wave forms. The motivation for
+this is that we need a PWM channel to have an offset compared to another
+channel from the same chip, that is something like that:
 
-Yep, that is my understanding too. RI keeps the uprobe object around,
-but the consumers can go at any time.
+         __                 __                 __
+        /  \_______________/  \_______________/  \_________
+        ^    __            ^    __            ^    __
+        ____/  \_______________/  \_______________/  \_____
+        ^                  ^                  ^
+
+The kernel API for that is still missing (so it cannot be used yet from
+the iio driver we intend to use it), but there is a userspace API that
+makes use of it.
+
+This is actually the 2nd series that implements a userspace API using a
+chardev, the userspace lib from the last iteration is updated
+accordingly. See
+
+        https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git
+
+The series bases on top of
+
+        https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
+
+plus the patch
+
+        pwm: Make info in traces about affected pwm more useful
+
+available at
+https://lore.kernel.org/linux-pwm/20240705211452.1157967-2-u.kleine-koenig@baylibre.com/
+.
+
+Unfortunately this requires a new set of callbacks for lowlevel drivers.
+In this series axi-pwmgen and stm32 are converted accordingly.
+
+The documentation situation is not optimal yet, and I expect that the
+locking patch triggers a lockdep warning for the meson driver. This is
+however a false positive and a problem that needs addressing in the clk
+subsystem.
+
+Looking forward to your feedback,
+Uwe Kleine-König
+
+Uwe Kleine-König (6):
+  pwm: Add more locking
+  pwm: New abstraction for PWM waveforms
+  pwm: Add support for pwmchip devices for faster and easier userspace
+    access
+  pwm: Add tracing for waveform callbacks
+  pwm: axi-pwmgen: Implementation of the waveform callbacks
+  pwm: stm32: Implementation of the waveform callbacks
+
+ drivers/pwm/core.c           | 678 +++++++++++++++++++++++++++++++++--
+ drivers/pwm/pwm-axi-pwmgen.c | 148 +++++---
+ drivers/pwm/pwm-stm32.c      | 605 +++++++++++++++++++------------
+ include/linux/pwm.h          |  51 +++
+ include/trace/events/pwm.h   | 134 ++++++-
+ include/uapi/linux/pwm.h     |  24 ++
+ 6 files changed, 1334 insertions(+), 306 deletions(-)
+ create mode 100644 include/uapi/linux/pwm.h
+
+
+base-commit: 120a528213b6693214e3cbc24a9c3052a4b1024b
+prerequisite-patch-id: 0e21153cd012f41ba9db52357fd08219af53e26c
+-- 
+2.43.0
 
