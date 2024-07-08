@@ -1,389 +1,517 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4B7147C71
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jul 2024 18:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B5D15A8;
+	Mon,  8 Jul 2024 18:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720462455; cv=none; b=KZt/VShtNCjK3DK3fpxRNin1xbBUHY7XnufY0b9I5ft9YKCynioRbVpZJU2hiKqjKB0ry/t+Y/gnMvSsAU71CFVooz0nZHM5IXNgVeqne+gqCE4KJrDLRvFvaWe14NxE0frInd0wU7fLiPaA1oHLtFEh0g/X0QXIROkpVd7j+/E=
+	t=1720463976; cv=none; b=D1wfhtUj6YlH06yHZV0TZd2Fb9UEbteg6oGE+WOmXGcgfoOtI7P2lYJi7FJR/3qk7K+jT6W0wc6bqqIDZOgJWZXhz0dJFzajFT69i3DKxeY6BOh9Mr2/1opHTG4/cAF6Q/hrLNwYHySUWRlZZJ9lmYCAVa5+z6Mtv8BDkHUGYfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720462455; c=relaxed/simple;
-	bh=XAqz2SfnWdOhnU654TXwOKtbz5OL0iwlbhXCXRKca98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CjEdXQaY9egzA1i60T9JBn5jWtV7Em5KHgy+JJgo4eILPAF32Kvxf+tC/LSCeM5jhtCeOOEb/dH44TjHWfE0O0bi64RrG7RXWjl1Xc66N1FSOrWd7YhrvTcF2NdoUrKRvw4l1RNNQ6WvHUydYaZluJDpTw8ofDkuDdw9BeATeiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mknpea0e; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720463976; c=relaxed/simple;
+	bh=ZfuNEYoOqOCSPJu9L+u4555sPJkVhSKzoTzDgt8B10g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uoYNjFc6Pw0zk8WJmgn5oqvv+1AA1k4+P07zLxI3TAVrIKT2bFAvIrQcDQRKgx2nviAjlZm2a6Cdc8K86rHccckyVnm9bmuTJCcl9fgvOKeR+zCOZhH4BPpnnwluLETC10Xn9z9gxpuqxFa43oO0VCBxPckVzK3JvooHb5Y4LWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okIw/pzu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mknpea0e"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3d92c13a2fbso922948b6e.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jul 2024 11:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720462452; x=1721067252; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rcJtxONO8DFrSfBKeeoipPW1tITMccUV/k01FLaxFTU=;
-        b=mknpea0e0XnIyv99rmYK3UfN8YNeBs8YF3MqC0jSkzYuuWU1TH16s3prPVCSfSZ2fC
-         cFUPeW+DRxsNF32dSuUY3ikPVkAtdIq/s+tGdNrbNaVbHgMtJ39hgs3h1B6hAgeodOze
-         h95FJN3AYsux1FAEFo/Qp2yju6Zszj8Yo6FLBuwPdCj9kFzjaizlVp7yjOzZaBHHgGkR
-         37WGv5ITYwQUL/DvmT8H/voIxKvbBwJbJ7FbJ1ZFrXPbqXIdKiRZF7UZIVX/74JuEVZC
-         VhpP3eJRpsR8XGkROeSpkNJj//UxXgaTDMaX6+WG4M79nWjpSR+zwWrdPIn0Uv4gbhIX
-         Ra5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720462452; x=1721067252;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rcJtxONO8DFrSfBKeeoipPW1tITMccUV/k01FLaxFTU=;
-        b=hPjeNc/b5zHvwxiPFPsCKpCZVZTh2Frh0mZ8cL8YJzhu9xo8X4ANvKU/jk+MajTfho
-         6suVeGZrR/MF1w1H2buTMvDxktcUb0JqAsN2VW6su0yoZhLabJQwIDQ3IR8GlthIrVke
-         SZWn4fHkoEvkVUMC7yVK9BJOcEH3DPoeI+ry4H5ljfSzQxmNZzsehqszjtmW4zmlldsE
-         uiD5cMRyxGqvv0elclMKAX/vbyj7qyvroNXCtKafpv5tZ7cUWyIs2w/IYvId3Kpky4CJ
-         8pJLuW1ccXI0DsDdE4toAK2fRy1UnNW+c5nWV1XQa5DWbx0qOpg/mr3DkBqjNeo3W7kK
-         pzhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/beaeZN+0S6SY4RRCmVX1jzwwKv+5D9p2HDi+IxA0aly4xQWcpfgtp7ExBsU1YqaqUdaI9IKeAftZiEkaXeb7mH6FIK85Y2wOhYMLp4jbdix+
-X-Gm-Message-State: AOJu0Yx9wqOcu1oTc8x2o4tkJB3NeNvWn/7TAEMLhPxDoSWYdB+quW0z
-	Dr92xKUMtsuF4wjNC7Rn8mHsJFWuQ+AZAd2pSTUFNyw1l+5qGsNTLK4CpGQHb8E=
-X-Google-Smtp-Source: AGHT+IHscVPZ0Pz+DS3pViZY6Kwa7+MgqVJz3MCO6Vk3uY4qysj8Cy9+sYheMm44kR7SiPc3myRIDw==
-X-Received: by 2002:a05:6808:1312:b0:3d9:24b1:74ae with SMTP id 5614622812f47-3d93c041072mr229408b6e.23.1720462450612;
-        Mon, 08 Jul 2024 11:14:10 -0700 (PDT)
-Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-447f9bd2649sm1809081cf.68.2024.07.08.11.14.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 11:14:10 -0700 (PDT)
-Message-ID: <c12fe2f2-404b-454a-8474-0020a4aaafb6@baylibre.com>
-Date: Mon, 8 Jul 2024 14:14:09 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okIw/pzu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F1AC116B1;
+	Mon,  8 Jul 2024 18:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720463975;
+	bh=ZfuNEYoOqOCSPJu9L+u4555sPJkVhSKzoTzDgt8B10g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=okIw/pzu3JfDI+SuRjRu6Lg2fZp59TABGNHzWtUMXi1yiV4im/7vbZvhr+yHyclWu
+	 b8pj1cCt7+dMkS3EMoClZpGKx4pIifLewsXrJj0jeCWztHaFeGJuioiwLFr3zN7Cvq
+	 F3ItIeCLtLwxhVCCaQvYTNKCIDaRbIcE+1VfvIN6mB0xOKOsV3dJUKK98XJN11zozX
+	 mZcawitHcP+3XP7RpcCbizP7HI0NE46D5X4wpRj8Mw/FJLB/17Tdyl8a+GvYD/7Wlu
+	 BqU8lVjWdx5gBP9TT1NDxEPhAg8Q7g1i58kXCA+/jDlt9rD6c7jEQjPvlBPbat14TE
+	 PeJy0uSWkPq3A==
+Date: Mon, 8 Jul 2024 11:39:34 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>, kernel-team@fb.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 1/9] fs: add infrastructure for multigrain timestamps
+Message-ID: <20240708183934.GO612460@frogsfrogsfrogs>
+References: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
+ <20240708-mgtime-v4-1-a0f3c6fb57f3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] pwm: Add tracing for waveform callbacks
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-pwm@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
- <7f7ce46efc76e02a472ed52ab1fc06c3575a14e8.1720435656.git.u.kleine-koenig@baylibre.com>
-Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <7f7ce46efc76e02a472ed52ab1fc06c3575a14e8.1720435656.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240708-mgtime-v4-1-a0f3c6fb57f3@kernel.org>
 
-Missing a sign-off?
+On Mon, Jul 08, 2024 at 11:53:34AM -0400, Jeff Layton wrote:
+> The VFS has always used coarse-grained timestamps when updating the
+> ctime and mtime after a change. This has the benefit of allowing
+> filesystems to optimize away a lot metadata updates, down to around 1
+> per jiffy, even when a file is under heavy writes.
+> 
+> Unfortunately, this has always been an issue when we're exporting via
+> NFSv3, which relies on timestamps to validate caches. A lot of changes
+> can happen in a jiffy, so timestamps aren't sufficient to help the
+> client decide when to invalidate the cache. Even with NFSv4, a lot of
+> exported filesystems don't properly support a change attribute and are
+> subject to the same problems with timestamp granularity. Other
+> applications have similar issues with timestamps (e.g backup
+> applications).
+> 
+> If we were to always use fine-grained timestamps, that would improve the
+> situation, but that becomes rather expensive, as the underlying
+> filesystem would have to log a lot more metadata updates.
+> 
+> What we need is a way to only use fine-grained timestamps when they are
+> being actively queried. Use the (unused) top bit in inode->i_ctime_nsec
+> as a flag that indicates whether the current timestamps have been
+> queried via stat() or the like. When it's set, we allow the kernel to
+> use a fine-grained timestamp iff it's necessary to make the ctime show
+> a different value.
 
-On 2024-07-08 6:52 a.m., Uwe Kleine-König wrote:
+I appreciate the v3->v4 change that we hide the QUERIED flag in the
+upper bit of the ctime nanoseconds, instead of all support for post-2262
+timestamps.  Thank you. :)
+
+> This solves the problem of being able to distinguish the timestamp
+> between updates, but introduces a new problem: it's now possible for a
+> file being changed to get a fine-grained timestamp. A file that is
+> altered just a bit later can then get a coarse-grained one that appears
+> older than the earlier fine-grained time. This violates timestamp
+> ordering guarantees.
+> 
+> To remedy this, keep a global monotonic ktime_t value that acts as a
+> timestamp floor.  When we go to stamp a file, we first get the latter of
+> the current floor value and the current coarse-grained time. If the
+> inode ctime hasn't been queried then we just attempt to stamp it with
+> that value.
+> 
+> If it has been queried, then first see whether the current coarse time
+> is later than the existing ctime. If it is, then we accept that value.
+> If it isn't, then we get a fine-grained time and try to swap that into
+> the global floor. Whether that succeeds or fails, we take the resulting
+> floor time, convert it to realtime and try to swap that into the ctime.
+
+Makes sense to me.  One question, though -- mgtime filesystems that want
+to persist a ctime to disk are going to have to do something like this,
+right?
+
+di_ctime_ns = cpu_to_be32(atomic_read(&inode->i_ctime_nsec) &
+			  ~I_CTIME_QUERIED);
+
+IOWs, they need to mask off the QUERIED flag (aka bit 31) so that they
+never store a strange looking nanoseconds value.  Probably they should
+already be doing this, but I wouldn't trust them already to be clamping
+the nsec value.
+
+I'm mostly thinking of xfs_inode_to_disk, which currently calls
+inode_get_ctime() but doesn't clamp nsec at all before writing it to
+disk.  Does that need to mask off I_CTIME_QUERIED explicitly?
+
+> We take the result of the ctime swap whether it succeeds or fails, since
+> either is just as valid.
+> 
+> Filesystems can opt into this by setting the FS_MGTIME fstype flag.
+> Others should be unaffected (other than being subject to the same floor
+> value as multigrain filesystems).
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->   drivers/pwm/core.c         |  68 ++++++++++++++++---
->   include/trace/events/pwm.h | 134 ++++++++++++++++++++++++++++++++++---
->   2 files changed, 183 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index d64c033c4cb2..a2320ae77220 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -138,6 +138,52 @@ static int pwm_check_rounding(const struct pwm_waveform *wf,
->   	return 0;
->   }
->   
-> +static int pwm_round_waveform_tohw(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				   const struct pwm_waveform *wf, void *wfhw)
+>  fs/inode.c         | 171 ++++++++++++++++++++++++++++++++++++++++++++---------
+>  fs/stat.c          |  36 ++++++++++-
+>  include/linux/fs.h |  34 ++++++++---
+>  3 files changed, 204 insertions(+), 37 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index f356fe2ec2b6..10ed1d3d9b52 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -60,6 +60,13 @@ static unsigned int i_hash_shift __ro_after_init;
+>  static struct hlist_head *inode_hashtable __ro_after_init;
+>  static __cacheline_aligned_in_smp DEFINE_SPINLOCK(inode_hash_lock);
+>  
+> +/*
+> + * This represents the latest fine-grained time that we have handed out as a
+> + * timestamp on the system. Tracked as a monotonic value, and converted to the
+> + * realtime clock on an as-needed basis.
+> + */
+> +static __cacheline_aligned_in_smp ktime_t ctime_floor;
+
+ktime_get claims that it stops when the system is suspended; will that
+cause problems after a resume?  I /think/ the answer is no because any
+change to the file after a resume will first determine the coarse grain
+ctime value, which will be far beyond the floor.  The new coarse grain
+ctime will be written to the inode and become the new floor, as provided
+by coarse_ctime().
+
+The rest of the code here makes sense to me.
+
+--D
+
+> +
+>  /*
+>   * Empty aops. Can be used for the cases where the user does not
+>   * define any of the address_space operations.
+> @@ -2127,19 +2134,72 @@ int file_remove_privs(struct file *file)
+>  }
+>  EXPORT_SYMBOL(file_remove_privs);
+>  
+> +/**
+> + * coarse_ctime - return the current coarse-grained time
+> + * @floor: current (monotonic) ctime_floor value
+> + *
+> + * Get the coarse-grained time, and then determine whether to
+> + * return it or the current floor value. Returns the later of the
+> + * floor and coarse grained timestamps, converted to realtime
+> + * clock value.
+> + */
+> +static ktime_t coarse_ctime(ktime_t floor)
 > +{
-> +	const struct pwm_ops *ops = chip->ops;
-> +	int ret;
+> +	ktime_t coarse = ktime_get_coarse();
 > +
-> +	ret = ops->round_waveform_tohw(chip, pwm, wf, wfhw);
-> +	trace_pwm_round_waveform_tohw(pwm, wf, wfhw, ret);
-> +
-> +	return ret;
+> +	/* If coarse time is already newer, return that */
+> +	if (!ktime_after(floor, coarse))
+> +		return ktime_mono_to_real(coarse);
+> +	return ktime_mono_to_real(floor);
 > +}
 > +
-> +static int pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				     const void *wfhw, struct pwm_waveform *wf)
+> +/**
+> + * current_time - Return FS time (possibly fine-grained)
+> + * @inode: inode.
+> + *
+> + * Return the current time truncated to the time granularity supported by
+> + * the fs, as suitable for a ctime/mtime change. If the ctime is flagged
+> + * as having been QUERIED, get a fine-grained timestamp.
+> + */
+> +struct timespec64 current_time(struct inode *inode)
 > +{
-> +	const struct pwm_ops *ops = chip->ops;
-> +	int ret;
+> +	ktime_t floor = smp_load_acquire(&ctime_floor);
+> +	ktime_t now = coarse_ctime(floor);
+> +	struct timespec64 now_ts = ktime_to_timespec64(now);
+> +	u32 cns;
 > +
-> +	ret = ops->round_waveform_fromhw(chip, pwm, wfhw, wf);
-> +	trace_pwm_round_waveform_fromhw(pwm, wfhw, wf, ret);
+> +	if (!is_mgtime(inode))
+> +		goto out;
 > +
-> +	return ret;
+> +	/* If nothing has queried it, then coarse time is fine */
+> +	cns = smp_load_acquire(&inode->i_ctime_nsec);
+> +	if (cns & I_CTIME_QUERIED) {
+> +		/*
+> +		 * If there is no apparent change, then
+> +		 * get a fine-grained timestamp.
+> +		 */
+> +		if (now_ts.tv_nsec == (cns & ~I_CTIME_QUERIED))
+> +			ktime_get_real_ts64(&now_ts);
+> +	}
+> +out:
+> +	return timestamp_truncate(now_ts, inode);
+> +}
+> +EXPORT_SYMBOL(current_time);
+> +
+>  static int inode_needs_update_time(struct inode *inode)
+>  {
+> +	struct timespec64 now, ts;
+>  	int sync_it = 0;
+> -	struct timespec64 now = current_time(inode);
+> -	struct timespec64 ts;
+>  
+>  	/* First try to exhaust all avenues to not sync */
+>  	if (IS_NOCMTIME(inode))
+>  		return 0;
+>  
+> +	now = current_time(inode);
+> +
+>  	ts = inode_get_mtime(inode);
+>  	if (!timespec64_equal(&ts, &now))
+> -		sync_it = S_MTIME;
+> +		sync_it |= S_MTIME;
+>  
+>  	ts = inode_get_ctime(inode);
+>  	if (!timespec64_equal(&ts, &now))
+> @@ -2507,6 +2567,14 @@ void inode_nohighmem(struct inode *inode)
+>  }
+>  EXPORT_SYMBOL(inode_nohighmem);
+>  
+> +struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct timespec64 ts)
+> +{
+> +	inode->i_ctime_sec = ts.tv_sec;
+> +	inode->i_ctime_nsec = ts.tv_nsec & ~I_CTIME_QUERIED;
+> +	return ts;
+> +}
+> +EXPORT_SYMBOL(inode_set_ctime_to_ts);
+> +
+>  /**
+>   * timestamp_truncate - Truncate timespec to a granularity
+>   * @t: Timespec
+> @@ -2538,38 +2606,87 @@ struct timespec64 timestamp_truncate(struct timespec64 t, struct inode *inode)
+>  }
+>  EXPORT_SYMBOL(timestamp_truncate);
+>  
+> -/**
+> - * current_time - Return FS time
+> - * @inode: inode.
+> - *
+> - * Return the current time truncated to the time granularity supported by
+> - * the fs.
+> - *
+> - * Note that inode and inode->sb cannot be NULL.
+> - * Otherwise, the function warns and returns time without truncation.
+> - */
+> -struct timespec64 current_time(struct inode *inode)
+> -{
+> -	struct timespec64 now;
+> -
+> -	ktime_get_coarse_real_ts64(&now);
+> -	return timestamp_truncate(now, inode);
+> -}
+> -EXPORT_SYMBOL(current_time);
+> -
+>  /**
+>   * inode_set_ctime_current - set the ctime to current_time
+>   * @inode: inode
+>   *
+> - * Set the inode->i_ctime to the current value for the inode. Returns
+> - * the current value that was assigned to i_ctime.
+> + * Set the inode's ctime to the current value for the inode. Returns the
+> + * current value that was assigned. If this is not a multigrain inode, then we
+> + * just set it to whatever the coarse_ctime is.
+> + *
+> + * If it is multigrain, then we first see if the coarse-grained timestamp is
+> + * distinct from what we have. If so, then we'll just use that. If we have to
+> + * get a fine-grained timestamp, then do so, and try to swap it into the floor.
+> + * We accept the new floor value regardless of the outcome of the cmpxchg.
+> + * After that, we try to swap the new value into i_ctime_nsec. Again, we take
+> + * the resulting ctime, regardless of the outcome of the swap.
+>   */
+>  struct timespec64 inode_set_ctime_current(struct inode *inode)
+>  {
+> -	struct timespec64 now = current_time(inode);
+> +	ktime_t now, floor = smp_load_acquire(&ctime_floor);
+> +	struct timespec64 now_ts;
+> +	u32 cns, cur;
+> +
+> +	now = coarse_ctime(floor);
+>  
+> -	inode_set_ctime_to_ts(inode, now);
+> -	return now;
+> +	/* Just return that if this is not a multigrain fs */
+> +	if (!is_mgtime(inode)) {
+> +		now_ts = ktime_to_timespec64(now);
+> +		inode_set_ctime_to_ts(inode, now_ts);
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * We only need a fine-grained time if someone has queried it,
+> +	 * and the current coarse grained time isn't later than what's
+> +	 * already there.
+> +	 */
+> +	cns = smp_load_acquire(&inode->i_ctime_nsec);
+> +	if (cns & I_CTIME_QUERIED) {
+> +		ktime_t ctime = ktime_set(inode->i_ctime_sec, cns & ~I_CTIME_QUERIED);
+> +
+> +		if (!ktime_after(now, ctime)) {
+> +			ktime_t old, fine;
+> +
+> +			/* Get a fine-grained time */
+> +			fine = ktime_get();
+> +
+> +			/*
+> +			 * If the cmpxchg works, we take the new floor value. If
+> +			 * not, then that means that someone else changed it after we
+> +			 * fetched it but before we got here. That value is just
+> +			 * as good, so keep it.
+> +			 */
+> +			old = floor;
+> +			if (!try_cmpxchg(&ctime_floor, &old, fine))
+> +				fine = old;
+> +			now = ktime_mono_to_real(fine);
+> +		}
+> +	}
+> +	now_ts = ktime_to_timespec64(now);
+> +	cur = cns;
+> +retry:
+> +	/* Try to swap the nsec value into place. */
+> +	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, now_ts.tv_nsec)) {
+> +		/* If swap occurred, then we're (mostly) done */
+> +		inode->i_ctime_sec = now_ts.tv_sec;
+> +	} else {
+> +		/*
+> +		 * Was the change due to someone marking the old ctime QUERIED?
+> +		 * If so then retry the swap. This can only happen once since
+> +		 * the only way to clear I_CTIME_QUERIED is to stamp the inode
+> +		 * with a new ctime.
+> +		 */
+> +		if (!(cns & I_CTIME_QUERIED) && (cns | I_CTIME_QUERIED) == cur) {
+> +			cns = cur;
+> +			goto retry;
+> +		}
+> +		/* Otherwise, keep the existing ctime */
+> +		now_ts.tv_sec = inode->i_ctime_sec;
+> +		now_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
+> +	}
+> +out:
+> +	return timestamp_truncate(now_ts, inode);
+>  }
+>  EXPORT_SYMBOL(inode_set_ctime_current);
+>  
+> diff --git a/fs/stat.c b/fs/stat.c
+> index 6f65b3456cad..df7fdd3afed9 100644
+> --- a/fs/stat.c
+> +++ b/fs/stat.c
+> @@ -26,6 +26,32 @@
+>  #include "internal.h"
+>  #include "mount.h"
+>  
+> +/**
+> + * fill_mg_cmtime - Fill in the mtime and ctime and flag ctime as QUERIED
+> + * @stat: where to store the resulting values
+> + * @request_mask: STATX_* values requested
+> + * @inode: inode from which to grab the c/mtime
+> + *
+> + * Given @inode, grab the ctime and mtime out if it and store the result
+> + * in @stat. When fetching the value, flag it as queried so the next write
+> + * will ensure a distinct timestamp.
+> + */
+> +void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode)
+> +{
+> +	atomic_t *pcn = (atomic_t *)&inode->i_ctime_nsec;
+> +
+> +	/* If neither time was requested, then don't report them */
+> +	if (!(request_mask & (STATX_CTIME|STATX_MTIME))) {
+> +		stat->result_mask &= ~(STATX_CTIME|STATX_MTIME);
+> +		return;
+> +	}
+> +
+> +	stat->mtime = inode_get_mtime(inode);
+> +	stat->ctime.tv_sec = inode->i_ctime_sec;
+> +	stat->ctime.tv_nsec = ((u32)atomic_fetch_or(I_CTIME_QUERIED, pcn)) & ~I_CTIME_QUERIED;
+> +}
+> +EXPORT_SYMBOL(fill_mg_cmtime);
+> +
+>  /**
+>   * generic_fillattr - Fill in the basic attributes from the inode struct
+>   * @idmap:		idmap of the mount the inode was found from
+> @@ -58,8 +84,14 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 request_mask,
+>  	stat->rdev = inode->i_rdev;
+>  	stat->size = i_size_read(inode);
+>  	stat->atime = inode_get_atime(inode);
+> -	stat->mtime = inode_get_mtime(inode);
+> -	stat->ctime = inode_get_ctime(inode);
+> +
+> +	if (is_mgtime(inode)) {
+> +		fill_mg_cmtime(stat, request_mask, inode);
+> +	} else {
+> +		stat->ctime = inode_get_ctime(inode);
+> +		stat->mtime = inode_get_mtime(inode);
+> +	}
+> +
+>  	stat->blksize = i_blocksize(inode);
+>  	stat->blocks = inode->i_blocks;
+>  
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index dc9f9c4b2572..f873f6c58669 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1608,6 +1608,17 @@ static inline struct timespec64 inode_set_mtime(struct inode *inode,
+>  	return inode_set_mtime_to_ts(inode, ts);
+>  }
+>  
+> +/*
+> + * Multigrain timestamps
+> + *
+> + * Conditionally use fine-grained ctime and mtime timestamps when there
+> + * are users actively observing them via getattr. The primary use-case
+> + * for this is NFS clients that use the ctime to distinguish between
+> + * different states of the file, and that are often fooled by multiple
+> + * operations that occur in the same coarse-grained timer tick.
+> + */
+> +#define I_CTIME_QUERIED		((u32)BIT(31))
+> +
+>  static inline time64_t inode_get_ctime_sec(const struct inode *inode)
+>  {
+>  	return inode->i_ctime_sec;
+> @@ -1615,7 +1626,7 @@ static inline time64_t inode_get_ctime_sec(const struct inode *inode)
+>  
+>  static inline long inode_get_ctime_nsec(const struct inode *inode)
+>  {
+> -	return inode->i_ctime_nsec;
+> +	return inode->i_ctime_nsec & ~I_CTIME_QUERIED;
+>  }
+>  
+>  static inline struct timespec64 inode_get_ctime(const struct inode *inode)
+> @@ -1626,13 +1637,7 @@ static inline struct timespec64 inode_get_ctime(const struct inode *inode)
+>  	return ts;
+>  }
+>  
+> -static inline struct timespec64 inode_set_ctime_to_ts(struct inode *inode,
+> -						      struct timespec64 ts)
+> -{
+> -	inode->i_ctime_sec = ts.tv_sec;
+> -	inode->i_ctime_nsec = ts.tv_nsec;
+> -	return ts;
+> -}
+> +struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct timespec64 ts);
+>  
+>  /**
+>   * inode_set_ctime - set the ctime in the inode
+> @@ -2490,6 +2495,7 @@ struct file_system_type {
+>  #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
+>  #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission events */
+>  #define FS_ALLOW_IDMAP         32      /* FS has been updated to handle vfs idmappings. */
+> +#define FS_MGTIME		64	/* FS uses multigrain timestamps */
+>  #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
+>  	int (*init_fs_context)(struct fs_context *);
+>  	const struct fs_parameter_spec *parameters;
+> @@ -2513,6 +2519,17 @@ struct file_system_type {
+>  
+>  #define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
+>  
+> +/**
+> + * is_mgtime: is this inode using multigrain timestamps
+> + * @inode: inode to test for multigrain timestamps
+> + *
+> + * Return true if the inode uses multigrain timestamps, false otherwise.
+> + */
+> +static inline bool is_mgtime(const struct inode *inode)
+> +{
+> +	return inode->i_sb->s_type->fs_flags & FS_MGTIME;
 > +}
 > +
-> +static int pwm_read_waveform(struct pwm_chip *chip, struct pwm_device *pwm, void *wfhw)
-> +{
-> +	const struct pwm_ops *ops = chip->ops;
-> +	int ret;
-> +
-> +	ret = ops->read_waveform(chip, pwm, wfhw);
-> +	trace_pwm_read_waveform(pwm, wfhw, ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, const void *wfhw)
-> +{
-> +	const struct pwm_ops *ops = chip->ops;
-> +	int ret;
-> +
-> +	ret = ops->write_waveform(chip, pwm, wfhw);
-> +	trace_pwm_write_waveform(pwm, wfhw, ret);
-> +
-> +	return ret;
-> +}
-> +
->   #define WFHWSIZE 20
->   
->   static int pwm_get_waveform(struct pwm_device *pwm,
-> @@ -155,11 +201,11 @@ static int pwm_get_waveform(struct pwm_device *pwm,
->   	if (!chip->operational)
->   		return -ENODEV;
->   
-> -	err = ops->read_waveform(chip, pwm, &wfhw);
-> +	err = pwm_read_waveform(chip, pwm, &wfhw);
->   	if (err)
->   		return err;
->   
-> -	return ops->round_waveform_fromhw(chip, pwm, &wfhw, wf);
-> +	return pwm_round_waveform_fromhw(chip, pwm, &wfhw, wf);
->   }
->   
->   /* Called with the pwmchip lock held */
-> @@ -180,12 +226,12 @@ static int __pwm_set_waveform(struct pwm_device *pwm,
->   	     wf->duty_offset >= wf->period_length))
->   		return -EINVAL;
->   
-> -	err = ops->round_waveform_tohw(chip, pwm, wf, &wfhw);
-> +	err = pwm_round_waveform_tohw(chip, pwm, wf, &wfhw);
->   	if (err)
->   		return err;
->   
->   	if ((IS_ENABLED(CONFIG_PWM_DEBUG) || exact) && wf->period_length) {
-> -		err = ops->round_waveform_fromhw(chip, pwm, &wfhw, &wf_rounded);
-> +		err = pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf_rounded);
->   		if (err)
->   			return err;
->   
-> @@ -203,7 +249,7 @@ static int __pwm_set_waveform(struct pwm_device *pwm,
->   		}
->   	}
->   
-> -	err = ops->write_waveform(chip, pwm, &wfhw);
-> +	err = pwm_write_waveform(chip, pwm, &wfhw);
->   	if (err)
->   		return err;
->   
-> @@ -213,12 +259,12 @@ static int __pwm_set_waveform(struct pwm_device *pwm,
->   	if (IS_ENABLED(CONFIG_PWM_DEBUG) && ops->read_waveform && wf->period_length) {
->   		struct pwm_waveform wf_set;
->   
-> -		err = ops->read_waveform(chip, pwm, &wfhw);
-> +		err = pwm_read_waveform(chip, pwm, &wfhw);
->   		if (err)
->   			/* maybe ignore? */
->   			return err;
->   
-> -		err = ops->round_waveform_fromhw(chip, pwm, &wfhw, &wf_set);
-> +		err = pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf_set);
->   		if (err)
->   			/* maybe ignore? */
->   			return err;
-> @@ -443,11 +489,11 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
->   		 * high.
->   		 */
->   
-> -		err = ops->round_waveform_tohw(chip, pwm, &wf, &wfhw);
-> +		err = pwm_round_waveform_tohw(chip, pwm, &wf, &wfhw);
->   		if (err)
->   			return err;
->   
-> -		err = ops->write_waveform(chip, pwm, &wfhw);
-> +		err = pwm_write_waveform(chip, pwm, &wfhw);
->   		if (err)
->   			return err;
->   
-> @@ -548,11 +594,11 @@ static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
->   
->   		scoped_guard(pwmchip, chip) {
->   
-> -			ret = ops->read_waveform(chip, pwm, &wfhw);
-> +			ret = pwm_read_waveform(chip, pwm, &wfhw);
->   			if (ret)
->   				return ret;
->   
-> -			ret = ops->round_waveform_fromhw(chip, pwm, &wfhw, &wf);
-> +			ret = pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
->   			if (ret)
->   				return ret;
->   		}
-> diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
-> index 8022701c446d..3b5b20d2aff0 100644
-> --- a/include/trace/events/pwm.h
-> +++ b/include/trace/events/pwm.h
-> @@ -8,15 +8,135 @@
->   #include <linux/pwm.h>
->   #include <linux/tracepoint.h>
->   
-> +#define TP_PROTO_pwm(args...)							\
-> +	TP_PROTO(struct pwm_device *pwm, args)
-> +
-> +#define TP_ARGS_pwm(args...)							\
-> +	TP_ARGS(pwm, args)
-> +
-> +#define TP_STRUCT__entry_pwm(args...)						\
-> +	TP_STRUCT__entry(							\
-> +		__field(unsigned int, chipid)					\
-> +		__field(unsigned int, hwpwm)					\
-> +		args)
-> +
-> +#define TP_fast_assign_pwm(args...)						\
-> +	TP_fast_assign(								\
-> +		__entry->chipid = pwm->chip->id;				\
-> +		__entry->hwpwm = pwm->hwpwm;					\
-> +		args)
-> +
-> +#define TP_printk_pwm(fmt, args...)						\
-> +	TP_printk("pwmchip%u.%u: " fmt, __entry->chipid, __entry->hwpwm, args)
-> +
-> +#define __field_pwmwf(wf)							\
-> +	__field(u64, wf ## _period_length)					\
-> +	__field(u64, wf ## _duty_length)					\
-> +	__field(u64, wf ## _duty_offset)					\
-> +
-> +#define fast_assign_pwmwf(wf)							\
-> +	__entry->wf ## _period_length = wf->period_length;			\
-> +	__entry->wf ## _duty_length = wf->duty_length;				\
-> +	__entry->wf ## _duty_offset = wf->duty_offset
-> +
-> +#define printk_pwmwf_format(wf)							\
-> +	"%lld/%lld [+%lld]"
-> +
-> +#define printk_pwmwf_formatargs(wf)						\
-> +	__entry->wf ## _duty_length, __entry->wf ## _period_length, __entry->wf ## _duty_offset
-> +
-> +TRACE_EVENT(pwm_round_waveform_tohw,
-> +
-> +	TP_PROTO_pwm(const struct pwm_waveform *wf, void *wfhw, int err),
-> +
-> +	TP_ARGS_pwm(wf, wfhw, err),
-> +
-> +	TP_STRUCT__entry_pwm(
-> +		__field_pwmwf(wf)
-> +		__field(void *, wfhw)
-> +		__field(int, err)
-> +	),
-> +
-> +	TP_fast_assign_pwm(
-> +		fast_assign_pwmwf(wf);
-> +		__entry->wfhw = wfhw;
-> +		__entry->err = err;
-> +	),
-> +
-> +	TP_printk_pwm(printk_pwmwf_format(wf) " > %p err=%d",
-> +		printk_pwmwf_formatargs(wf), __entry->wfhw, __entry->err)
-> +);
-> +
-> +TRACE_EVENT(pwm_round_waveform_fromhw,
-> +
-> +	TP_PROTO_pwm(const void *wfhw, struct pwm_waveform *wf, int err),
-> +
-> +	TP_ARGS_pwm(wfhw, wf, err),
-> +
-> +	TP_STRUCT__entry_pwm(
-> +		__field(const void *, wfhw)
-> +		__field_pwmwf(wf)
-> +		__field(int, err)
-> +	),
-> +
-> +	TP_fast_assign_pwm(
-> +		__entry->wfhw = wfhw;
-> +		fast_assign_pwmwf(wf);
-> +		__entry->err = err;
-> +	),
-> +
-> +	TP_printk_pwm("%p > " printk_pwmwf_format(wf) " err=%d",
-> +		__entry->wfhw, printk_pwmwf_formatargs(wf), __entry->err)
-> +);
-> +
-> +TRACE_EVENT(pwm_read_waveform,
-> +
-> +	TP_PROTO_pwm(void *wfhw, int err),
-> +
-> +	TP_ARGS_pwm(wfhw, err),
-> +
-> +	TP_STRUCT__entry_pwm(
-> +		__field(void *, wfhw)
-> +		__field(int, err)
-> +	),
-> +
-> +	TP_fast_assign_pwm(
-> +		__entry->wfhw = wfhw;
-> +		__entry->err = err;
-> +	),
-> +
-> +	TP_printk_pwm("%p err=%d",
-> +		__entry->wfhw, __entry->err)
-> +);
-> +
-> +TRACE_EVENT(pwm_write_waveform,
-> +
-> +	TP_PROTO_pwm(const void *wfhw, int err),
-> +
-> +	TP_ARGS_pwm(wfhw, err),
-> +
-> +	TP_STRUCT__entry_pwm(
-> +		__field(const void *, wfhw)
-> +		__field(int, err)
-> +	),
-> +
-> +	TP_fast_assign_pwm(
-> +		__entry->wfhw = wfhw;
-> +		__entry->err = err;
-> +	),
-> +
-> +	TP_printk_pwm("%p err=%d",
-> +		__entry->wfhw, __entry->err)
-> +);
-> +
-> +
->   DECLARE_EVENT_CLASS(pwm,
->   
->   	TP_PROTO(struct pwm_device *pwm, const struct pwm_state *state, int err),
->   
->   	TP_ARGS(pwm, state, err),
->   
-> -	TP_STRUCT__entry(
-> -		__field(unsigned int, chipid)
-> -		__field(unsigned int, hwpwm)
-> +	TP_STRUCT__entry_pwm(
->   		__field(u64, period)
->   		__field(u64, duty_cycle)
->   		__field(enum pwm_polarity, polarity)
-> @@ -24,9 +144,7 @@ DECLARE_EVENT_CLASS(pwm,
->   		__field(int, err)
->   	),
->   
-> -	TP_fast_assign(
-> -		__entry->chipid = pwm->chip->id;
-> -		__entry->hwpwm = pwm->hwpwm;
-> +	TP_fast_assign_pwm(
->   		__entry->period = state->period;
->   		__entry->duty_cycle = state->duty_cycle;
->   		__entry->polarity = state->polarity;
-> @@ -34,8 +152,8 @@ DECLARE_EVENT_CLASS(pwm,
->   		__entry->err = err;
->   	),
->   
-> -	TP_printk("pwmchip%u.%u: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
-> -		  __entry->chipid, __entry->hwpwm, __entry->period, __entry->duty_cycle,
-> +	TP_printk_pwm("period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
-> +		  __entry->period, __entry->duty_cycle,
->   		  __entry->polarity, __entry->enabled, __entry->err)
->   
->   );
+>  extern struct dentry *mount_bdev(struct file_system_type *fs_type,
+>  	int flags, const char *dev_name, void *data,
+>  	int (*fill_super)(struct super_block *, void *, int));
+> @@ -3252,6 +3269,7 @@ extern void page_put_link(void *);
+>  extern int page_symlink(struct inode *inode, const char *symname, int len);
+>  extern const struct inode_operations page_symlink_inode_operations;
+>  extern void kfree_link(void *);
+> +void fill_mg_cmtime(struct kstat *stat, u32 request_mask, struct inode *inode);
+>  void generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct kstat *);
+>  void generic_fill_statx_attr(struct inode *inode, struct kstat *stat);
+>  extern int vfs_getattr_nosec(const struct path *, struct kstat *, u32, unsigned int);
+> 
+> -- 
+> 2.45.2
+> 
+> 
