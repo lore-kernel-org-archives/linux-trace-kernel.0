@@ -1,128 +1,245 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3F3BA46;
-	Mon,  8 Jul 2024 22:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F578152537;
+	Mon,  8 Jul 2024 23:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720478680; cv=none; b=E1KBDZIK9iT/hoj7wXbR9F6xLRoHJ/L5bZKxJRZ9hLrwEd3T08X3cAi1uwfWi9Nn2AuTtuDfDQaa4dCd7uL+t23NlqHPPjQvgrYt0INyXK34Hp1qT6Yoc7c7PHxPJb4NAkRNxEvZWtp37nHq3gTdWUQ7udGQvCVO8Z7eEAPuFTE=
+	t=1720480300; cv=none; b=FqzKYx1BIa+YTObH5iVekjD+q93PVeGhlvEt6SNhbN1r86NLfzs6kNSXUUfRy4T3Iqjb7cg3B3ve8uazUdrT/FIy9Goqw6cnhKvs203yZsm8VtObg/lYcDWm+AKgms808E6r4fvZeBnbBhRdwy4VzPX2TB948PwL/TqOM4rEIt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720478680; c=relaxed/simple;
-	bh=3T/vx7wtTuSugpPLCQmC8NiPQXjKlfD8eD6FNiQIywE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=b0l3nVySdqwPRfSjsME6oSDS3ErAGJP2ASavGgXvnz1vfJG9WtpdEirNvdL7FznBmixmQLiz/ld67SSIs5rQH4jZuxNTldkkuXgLIqKLokKJcTJY4x9UShBQGOnJw9ijq4RjfGwkv9YhiJ8OPyVvztfAZ8bdLbWuSdOyi7ZGNd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4/Xol0o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720480300; c=relaxed/simple;
+	bh=DdmKJ8cyJRaKktRQcB/n8k2HkaWTT1vMXmfpVgv1gKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GyxPQKt5VSbVsLiWMAxQ9oWzd/a5yl5TLqDClqn7GH0SVhKJ1N50C6GR5h1MdtuHtoeudv3gVs/uwn/c6rNQi1N0pKd6w23y9ZscNxrw67qNGrsrJ/WtT4viukvApviS/MxYfqHfIvP39/8z3eqPDA3EiJX7e9OlUsGO1DvRvV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTmweUVh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4/Xol0o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522C4C116B1;
-	Mon,  8 Jul 2024 22:44:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTmweUVh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A92C2C116B1;
+	Mon,  8 Jul 2024 23:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720478679;
-	bh=3T/vx7wtTuSugpPLCQmC8NiPQXjKlfD8eD6FNiQIywE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f4/Xol0oq6iH8WxUUzqxIw0HrccGe+hEbg+a1KTMrjaSgsKKTa4ys5l+jyEYyh7X0
-	 JmdAl5XcAfADZp+NftThrFFvZKp0ApH7nqMA95iOk7IUn/jYGKKawKe/Oad8clW9le
-	 Wzoqr+PlHCt0E0fMpjinV9h9x8fcXS6a3AGDglyGqJ5d5YodS/krmQJsW1D1sl8Iwl
-	 w80irGnckq/nWM8q/UPe44SWLyiqz36F6ZcryjP1x/+pI9F2eWlxWRr+y4CNpYSkao
-	 Ii88pV28DBXApv6Lel+vxJdWMgPX39b1KM/Vc2v+cD+pHMNJOaPN7pnLXEpG7xdbS+
-	 5axoyM8qVhZ0Q==
-Date: Tue, 9 Jul 2024 07:44:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, corbet@lwn.net, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] Documentation: Document user_events ioctl code
-Message-Id: <20240709074434.d3ff058a396d7020fa04f7e9@kernel.org>
-In-Reply-To: <20240703231343.GA408-beaub@linux.microsoft.com>
-References: <20240703222501.1547-1-beaub@linux.microsoft.com>
-	<ZoXXe8Tl9pRD6-dd@localhost.localdomain>
-	<20240703231343.GA408-beaub@linux.microsoft.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1720480299;
+	bh=DdmKJ8cyJRaKktRQcB/n8k2HkaWTT1vMXmfpVgv1gKw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CTmweUVh5ytN2mIgtHxq1K3NK5QK8m3OT+DXOgiXQAwqKk87udm8bJdQHpSzbfdpU
+	 e26t6vwHrxtc/35GDHFsl2yLfBAv+ujvACgX3YAk9G6hPvoKBiSux7WDSdhe50Z55H
+	 v+4FNZx2FPo0eSraDF4Xwk5xkudpbKgzrPDX33u8K9BQtax5+3tnd/ZO41ISA7GmJZ
+	 Pjx8FLBE8tJHrT0b8UEs98vbaY2EXc2xG1wBmBFSPB5fw5uRqawGv+oxvlorNSkoZb
+	 MJ+6DLZkwsZOioqF9gEqjCJusibS3Ml9GPCP+R642KBuMLpaHZ0Hk3OInsOblSa4Eg
+	 MLMdz5rtkQIQA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	jpoimboe@redhat.com,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v4] perf,x86: avoid missing caller address in stack traces captured in uprobe
+Date: Mon,  8 Jul 2024 16:11:27 -0700
+Message-ID: <20240708231127.1055083-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 3 Jul 2024 16:13:43 -0700
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+When tracing user functions with uprobe functionality, it's common to
+install the probe (e.g., a BPF program) at the first instruction of the
+function. This is often going to be `push %rbp` instruction in function
+preamble, which means that within that function frame pointer hasn't
+been established yet. This leads to consistently missing an actual
+caller of the traced function, because perf_callchain_user() only
+records current IP (capturing traced function) and then following frame
+pointer chain (which would be caller's frame, containing the address of
+caller's caller).
 
-> On Wed, Jul 03, 2024 at 06:58:03PM -0400, Mathieu Desnoyers wrote:
-> > On 03-Jul-2024 10:25:01 PM, Beau Belgrave wrote:
-> > > The user events trace subsystem uses the 0x2A/'*' code for ioctls. These
-> > > are published via the uapi/linux/user_events.h header file.
-> > > 
-> > > Add a line indicating user events as the owner of the 0x2A/'*' code and the
-> > > current sequence numbers that are in use (00-02).
-> > > 
-> > > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> > > ---
-> > >  Documentation/userspace-api/ioctl/ioctl-number.rst | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > > index a141e8e65c5d..191609fe4593 100644
-> > > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > > @@ -97,6 +97,8 @@ Code  Seq#    Include File                                           Comments
-> > >  '%'   00-0F  include/uapi/linux/stm.h                                System Trace Module subsystem
-> > >                                                                       <mailto:alexander.shishkin@linux.intel.com>
-> > >  '&'   00-07  drivers/firewire/nosy-user.h
-> > > +'*'   00-02  uapi/linux/user_events.h                                User Events Subsystem
-> > 
-> > You may want to consider reserving a wider sequence number range to plan
-> > ahead for future extensions to user events. This way you won't end up
-> > having to jump over sequence numbers eventually reserved by others
-> > within the '*' code.
-> > 
-> > Thanks,
-> > 
-> > Mathieu
-> 
-> Yeah, I thought about that, but really didn't know how greedy we could
-> be. At first I had all, but then thought we would never use all of that
-> sequence. We'll likely want a few more for libside integration.
-> 
-> Maybe I'll grab the first 16, that should leave a lot for others and
-> give us quite bit of growing room.
+So when we have target_1 -> target_2 -> target_3 call chain and we are
+tracing an entry to target_3, captured stack trace will report
+target_1 -> target_3 call chain, which is wrong and confusing.
 
-I think that sounds reasonable, there is a sentence in the same file:
+This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+(`push %ebp` on 32-bit architecture) instruction being traced. Given
+entire kernel implementation of user space stack trace capturing works
+under assumption that user space code was compiled with frame pointer
+register (%rbp/%ebp) preservation, it seems pretty reasonable to use
+this instruction as a strong indicator that this is the entry to the
+function. In that case, return address is still pointed to by %rsp/%esp,
+so we fetch it and add to stack trace before proceeding to unwind the
+rest using frame pointer-based logic.
 
-----
-If you are writing a driver for a new device and need a letter, pick an
-unused block with enough room for expansion: 32 to 256 ioctl commands.
-----
+We also check for `endbr64` (for 64-bit modes) as another common pattern
+for function entry, as suggested by Josh Poimboeuf. Even if we get this
+wrong sometimes for uprobes attached not at the function entry, it's OK
+because stack trace will still be overall meaningful, just with one
+extra bogus entry. If we don't detect this, we end up with guaranteed to
+be missing caller function entry in the stack trace, which is worse
+overall.
 
-Maybe you can reserve a block for 32 ioctl.
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+v3->v4:
+  - use get_user() instead of __get_user(), given untrusted input (Josh);
+  - reduced #ifdef-ery (Josh);
+v2->v3:
+  - added endr64 detection and extracted heuristics into a function (Josh);
+v1->v2:
+  - use native unsigned long for ret_addr (Peter);
+  - add same logic for compat logic in perf_callchain_user32 (Peter).
 
-Thank you,
+ arch/x86/events/core.c  | 62 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/uprobes.h |  2 ++
+ kernel/events/uprobes.c |  2 ++
+ 3 files changed, 66 insertions(+)
 
-> 
-> How many do you think we'll need for libside? I think we'd only need 2-3
-> personally.
-> 
-> Thanks,
-> -Beau
-> 
-> > 
-> > 
-> > > +                                                                     <mailto:linux-trace-kernel@vger.kernel.org>
-> > >  '1'   00-1F  linux/timepps.h                                         PPS kit from Ulrich Windl
-> > >                                                                       <ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
-> > >  '2'   01-04  linux/i2o.h
-> > > -- 
-> > > 2.34.1
-> > > 
-> > 
-> > -- 
-> > Mathieu Desnoyers
-> > EfficiOS Inc.
-> > http://www.efficios.com
-
-
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 5b0dd07b1ef1..c09603d769a2 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -41,6 +41,7 @@
+ #include <asm/desc.h>
+ #include <asm/ldt.h>
+ #include <asm/unwind.h>
++#include <asm/uprobes.h>
+ 
+ #include "perf_event.h"
+ 
+@@ -2813,6 +2814,46 @@ static unsigned long get_segment_base(unsigned int segment)
+ 	return get_desc_base(desc);
+ }
+ 
++#ifdef CONFIG_UPROBES
++/*
++ * Heuristic-based check if uprobe is installed at the function entry.
++ *
++ * Under assumption of user code being compiled with frame pointers,
++ * `push %rbp/%ebp` is a good indicator that we indeed are.
++ *
++ * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
++ * If we get this wrong, captured stack trace might have one extra bogus
++ * entry, but the rest of stack trace will still be meaningful.
++ */
++static bool is_uprobe_at_func_entry(struct pt_regs *regs)
++{
++	struct arch_uprobe *auprobe;
++
++	if (!current->utask)
++		return false;
++
++	auprobe = current->utask->auprobe;
++	if (!auprobe)
++		return false;
++
++	/* push %rbp/%ebp */
++	if (auprobe->insn[0] == 0x55)
++		return true;
++
++	/* endbr64 (64-bit only) */
++	if (user_64bit_mode(regs) && *(u32 *)auprobe->insn == 0xfa1e0ff3)
++		return true;
++
++	return false;
++}
++
++#else
++static bool is_uprobe_at_func_entry(struct pt_regs *regs)
++{
++	return false;
++}
++#endif /* CONFIG_UPROBES */
++
+ #ifdef CONFIG_IA32_EMULATION
+ 
+ #include <linux/compat.h>
+@@ -2824,6 +2865,7 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 	unsigned long ss_base, cs_base;
+ 	struct stack_frame_ia32 frame;
+ 	const struct stack_frame_ia32 __user *fp;
++	u32 ret_addr;
+ 
+ 	if (user_64bit_mode(regs))
+ 		return 0;
+@@ -2833,6 +2875,12 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 
+ 	fp = compat_ptr(ss_base + regs->bp);
+ 	pagefault_disable();
++
++	/* see perf_callchain_user() below for why we do this */
++	if (is_uprobe_at_func_entry(regs) &&
++	    !get_user(ret_addr, (const u32 __user *)regs->sp))
++		perf_callchain_store(entry, ret_addr);
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+@@ -2861,6 +2909,7 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ {
+ 	struct stack_frame frame;
+ 	const struct stack_frame __user *fp;
++	unsigned long ret_addr;
+ 
+ 	if (perf_guest_state()) {
+ 		/* TODO: We don't support guest os callchain now */
+@@ -2884,6 +2933,19 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ 		return;
+ 
+ 	pagefault_disable();
++
++	/*
++	 * If we are called from uprobe handler, and we are indeed at the very
++	 * entry to user function (which is normally a `push %rbp` instruction,
++	 * under assumption of application being compiled with frame pointers),
++	 * we should read return address from *regs->sp before proceeding
++	 * to follow frame pointers, otherwise we'll skip immediate caller
++	 * as %rbp is not yet setup.
++	 */
++	if (is_uprobe_at_func_entry(regs) &&
++	    !get_user(ret_addr, (const unsigned long __user *)regs->sp))
++		perf_callchain_store(entry, ret_addr);
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index b503fafb7fb3..a270a5892ab4 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -76,6 +76,8 @@ struct uprobe_task {
+ 	struct uprobe			*active_uprobe;
+ 	unsigned long			xol_vaddr;
+ 
++	struct arch_uprobe              *auprobe;
++
+ 	struct return_instance		*return_instances;
+ 	unsigned int			depth;
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 99be2adedbc0..6e22e4d80f1e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 	bool need_prep = false; /* prepare return uprobe, when needed */
+ 
+ 	down_read(&uprobe->register_rwsem);
++	current->utask->auprobe = &uprobe->arch;
+ 	for (uc = uprobe->consumers; uc; uc = uc->next) {
+ 		int rc = 0;
+ 
+@@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 
+ 		remove &= rc;
+ 	}
++	current->utask->auprobe = NULL;
+ 
+ 	if (need_prep && !remove)
+ 		prepare_uretprobe(uprobe, regs); /* put bp at return */
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
