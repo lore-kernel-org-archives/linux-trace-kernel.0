@@ -1,199 +1,164 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7716684A4E;
-	Mon,  8 Jul 2024 17:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B706145B06;
+	Mon,  8 Jul 2024 17:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720460954; cv=none; b=j/KQ2sWMsMC78rb12892klPIp0Uzo7hUi9aJ7z3LbH/HFrv+FzcL2kXtTB+Tm8G8UTzey5Qt9Vc+vTD7wIPueZOpveviM1wOKtD1qfijCPE0eYriNReRLa2/oQikmOm8Y3SM7jlMbrrM9I48pCmce4YZvk9qZaycGYOQBgwO1zE=
+	t=1720461402; cv=none; b=gvzyTfcg1V18tRRzmk42a07805hS55/jcEgg5km47/6+cUHa7tlH60XsPjrDrguPK/XTWwO6y2y1lSXCQ8p7nxDB2DyHSJ67vtf0Tgso4QoKc1D8IculFqQy7xkoGW7xB/TOthyLIAUz89cdh4yksmqrB/LAie5o0q9CYXC7w1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720460954; c=relaxed/simple;
-	bh=ljvA7ZGwe6cs5dyKfeIfRfczHOFZV0hYLnUVsKu+hfo=;
+	s=arc-20240116; t=1720461402; c=relaxed/simple;
+	bh=a5uFJUtH4OkYhEdl/GavGOnWi0ZPk2fro1NJbGdOyOs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m96j8pakXq1TtHts+7f1b9eW/zXzi4h1A+nQe+eHQFEIjd0DXt+s+1AfCnbXuMpdzIyLVWfHWruVv5eb5cy3U578Cb0/9zkh234j3GCVTwtCwB62Wk0lUg99g8NcICrBqKPQtFhNDYXLOKLcHDFI4p2pmWrojrplkcRgwEM5l4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=huxJos3v; arc=none smtp.client-ip=209.85.161.46
+	 To:Cc:Content-Type; b=gE+itXtXzdMO+Mmv7MhXWSJiaEJZ7jQiBc0VN3jR89diizPWwH3k8ofi1JPX1k7ZoqkfBnMcMOFmKk+z/PHtvC3MCH4AhJodq1s8+W+oovpZ/ZGdzu6eTb+DqrEHqm3B2HXG3Slkvx21IoZQ5yPhpUxWO9mwfe/ro1PAXIZrwn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhDAgjtZ; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huxJos3v"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5b9776123a3so1974848eaf.0;
-        Mon, 08 Jul 2024 10:49:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhDAgjtZ"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70b05260c39so2231990b3a.0;
+        Mon, 08 Jul 2024 10:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720460951; x=1721065751; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720461400; x=1721066200; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QLr4VpzoU0x7SxOx86Qw7mNibo7Vi7FJZVfERxotGP8=;
-        b=huxJos3vbmZL66pGQoTBn96BDZPd7cBxwGvF/v7q5MDmNwzwH+eNEgKC3GTh1R6Sd+
-         rtZxgTRxVyzmZS42zY5l8JHdtuzR8FpA/7HWrE86AacEuobO9QS/Pzwv6mQYVbAWIDC4
-         5yspSe3Nm5QOQ8t7GbSi3eAlKsLAo0mU5BKYeB7/Azd4CNRZrXFK7DIEauEVbOedoctg
-         uJoCVRi3L7Y9uWwOC4Esq1RRSvbskI5nXOpBdtso/AtOGvfBO/Qh8RBlguWY1P1PFSKM
-         5y1weAZ8WOk9cGwAj5+hQxDfggKOD0yOfoiZ00TMYGoZE+yRgRwrLOIey2MkBCdA7elO
-         f11g==
+        bh=meYvuoSEnds9gjDjxTxQoAi0/56WetasMc7SJVzufQs=;
+        b=XhDAgjtZec9DK8gd8MKwesQo7iu/GqnoY4al2fLh56r6grwJcmYFfG43p2Ot0R2t6W
+         csS+0dAFFD52TVoz5aGpWjMqYC7cvAi02V+u7fGtjh1yPWyimUM+XjMnNp3XWcF6LQA4
+         pgdX1puivzGq9QLwC9Vfy/bESb0dNKKDI17wSZKZxplleLl4+iYryjQi9K73B2uBi1t/
+         n0Wz0KtyQAe5graEzhKw10YZdNJjb/k9ht8zRRCUjyKxu7cqiVRrEkdPJBpiQoTq3YSy
+         T5ipACJlPsWBY+oXyMPFPqyvl35mINB32GliuMU2lC3wfRfZsgk8gTg3XE32pSfcvIs7
+         PjjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720460951; x=1721065751;
+        d=1e100.net; s=20230601; t=1720461400; x=1721066200;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QLr4VpzoU0x7SxOx86Qw7mNibo7Vi7FJZVfERxotGP8=;
-        b=EIP1tHwXAxKYqEvIEHgV/ht/kTsRJG7N9BnCxJgOO0CfrVSG6R72msdXQ+NykR5+pI
-         R8Fu7uoQVrPbYVdSFCF1sbiK+znAgBRLs0kSuwWpOHU6VkFxuRwxOA04eZj47JFqzZPa
-         bdrxmEvtw/QiSIXevNXpxGkt8JApEVF7+SoU2slAaw4k+ckHfAuTnDpBiQ396dW1UF6K
-         FIZIIwle/W3ma6pxY6cnP87bEK0AGy4cTHf8QgPTY3YCcO/hieo3diNAJFHQ5fUcbaMG
-         ZxdrbaLCesVQqc71G5QQoxaSFkxt45gifVRsJ10ifgitK8oK9OGkADJgREPhG6KyEKQO
-         KPcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0jNQFwsELbLO10qGh1ydITVPZMypdhmJBsDNhxKYKs1wXAUwc0w2/lHuSTe1G42xsfz0xrWHqnZ5XZPgsjhdxdf86zBvs56kiAfAyyojt/sZNrgzN1DB0sqou9DgSu1JtrzVkqEoPU7ChBAmho15yM86K01ojURe52Fy+ywZ2cEBoD7YG
-X-Gm-Message-State: AOJu0YxwwIKeT8x1P+gFsVgpRlxonXJX8Y7xC2wMHPZmTXhcwFoeaZya
-	JsGi99WnVUk/o1Ljutl1+q/pzF0nHsDA5rJGaz2/NhfWrD9yxFACJuUHbRRRppd2EXc9qJHzWSq
-	acqgcCQu32teM6tJe7KfQW9dtKzO6Ew==
-X-Google-Smtp-Source: AGHT+IF3c3QRj8KXZ6xxR6LBcvnTrzUiRqpzoC/ZXbD4Pnmk7miQM7eU6tFAb1TgHTykhdnMryUbw68YNkeujU+eYCg=
-X-Received: by 2002:a05:6870:ac24:b0:254:963e:cc3f with SMTP id
- 586e51a60fabf-25eae755eb3mr83265fac.1.1720460951456; Mon, 08 Jul 2024
- 10:49:11 -0700 (PDT)
+        bh=meYvuoSEnds9gjDjxTxQoAi0/56WetasMc7SJVzufQs=;
+        b=Tvgfdv52cI/7J5CFTMHtIxed0RZQVzM7kFnEmmiRIAoNMOk8aKAayt7aNWlbuM+PgW
+         EXwUppZbXN7WGf3RmVhuiKLPK3ridY2eqgZAVjUwXPKPEry5hUZfPlk8dJRFW9hQDJQX
+         BmC2rilXV4AwPYnIpSvstSIY1ZSTSJ6gAkOUIManHY8n7KKvOXQqtqo/+WVLiAOPNBmk
+         vpcDK+lv+arEMToiX+3UK9GE+7tGIOa216PVpGx7QFDird58it2dOKzx+q5eI0u8A3aM
+         mVMaYuG5jiROxT6Bh9khUjigdLV5NSRKkP9YSNI6DmltHQTIFiEeBRbay9trqZtYzHRh
+         8sEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoMkvcC1UDi9TMeWFHR+LqHzL3PUFFfSyet+2lawOHTMAVXBqefzZeEzpDgpt0QXTtN8n8vcJwcA/m/md1pPzOmqUUVbpbPz96Q6Y0uVIKS9cQFiC/NFhDLJCG0VCw3hT7+HrDfrj5
+X-Gm-Message-State: AOJu0YwvpFtfTyXDQfhCV2ceXW+6giylcEfvhMWUMvXwyItX5ZOGPFc4
+	r4qTn0doZNWkKEzxjJ5CMOhxnRTipI3xFEe0ul9F1+9Ds3/MbOFyNPn+FPOF2TuHpNWHGo9wvMi
+	CBi8SMJOR1NQ0sdrj7v45MNhWGBg=
+X-Google-Smtp-Source: AGHT+IG1l1ohGcr3Whs1MOU6XENBpea2bUC+EVJsVlcKArTp0Dva0czQCF3+5WuKhp9lChnWtAcTCcSKMNyTN2dylMM=
+X-Received: by 2002:a05:6a00:124a:b0:70a:fdd8:51f2 with SMTP id
+ d2e1a72fcca58-70b43566035mr625092b3a.15.1720461400241; Mon, 08 Jul 2024
+ 10:56:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701223935.3783951-1-andrii@kernel.org> <CAEf4BzaZhi+_MZ0M4Pz-1qmej6rrJeLO9x1+nR5QH9pnQXzwdw@mail.gmail.com>
- <20240704091559.GS11386@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240704091559.GS11386@noisy.programming.kicks-ass.net>
+References: <20240701223935.3783951-1-andrii@kernel.org> <20240701223935.3783951-6-andrii@kernel.org>
+ <20240707124846.GA11914@redhat.com>
+In-Reply-To: <20240707124846.GA11914@redhat.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 8 Jul 2024 10:48:59 -0700
-Message-ID: <CAEf4BzZxsyFGy9Ny5ekc=hvso7vu3=1toq0hW+jR_EukMn3M_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] uprobes: add batched register/unregister APIs
- and per-CPU RW semaphore
-To: Peter Zijlstra <peterz@infradead.org>
+Date: Mon, 8 Jul 2024 10:56:28 -0700
+Message-ID: <CAEf4BzbH_SoxsgPEDZ72oZ7zSdEPvV99C20494bQaOmn8Z=QCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/12] uprobes: move offset and ref_ctr_offset into uprobe_consumer
+To: Oleg Nesterov <oleg@redhat.com>
 Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com, 
-	bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, clm@meta.com, 
-	open list <linux-kernel@vger.kernel.org>
+	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	clm@meta.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 4, 2024 at 2:16=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
+On Sun, Jul 7, 2024 at 5:50=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
 >
-> On Wed, Jul 03, 2024 at 02:33:06PM -0700, Andrii Nakryiko wrote:
->
-> > 2. More tactically, RCU protection seems like the best way forward. We
-> > got hung up on SRCU vs RCU Tasks Trace. Thanks to Paul, we also
-> > clarified that RCU Tasks Trace has nothing to do with Tasks Rude
-> > flavor (whatever that is, I have no idea).
+> On 07/01, Andrii Nakryiko wrote:
 > >
-> > Now, RCU Tasks Trace were specifically designed for least overhead
-> > hotpath (reader side) performance, at the expense of slowing down much
-> > rarer writers. My microbenchmarking does show at least 5% difference.
-> > Both flavors can handle sleepable uprobes waiting for page faults.
-> > Tasks Trace flavor is already used for tracing in the BPF realm,
-> > including for sleepable uprobes and works well. It's not going away.
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -42,6 +42,11 @@ struct uprobe_consumer {
+> >                               enum uprobe_filter_ctx ctx,
+> >                               struct mm_struct *mm);
+> >
+> > +     /* associated file offset of this probe */
+> > +     loff_t offset;
+> > +     /* associated refctr file offset of this probe, or zero */
+> > +     loff_t ref_ctr_offset;
+> > +     /* for internal uprobe infra use, consumers shouldn't touch field=
+s below */
+> >       struct uprobe_consumer *next;
 >
-> I need to look into this new RCU flavour and why it exists -- for
-> example, why can't SRCU be improved to gain the same benefits. This is
-> what we've always done, improve SRCU.
+>
+> Well, I don't really like this patch either...
+>
+> If nothing else because all the consumers in uprobe->consumers list
+> must have the same offset/ref_ctr_offset.
 
-Yes, that makes sense, in principle. But if it takes too much time to
-improve SRCU, I'd say it's reasonable to use the faster solution until
-it can be unified (if at all, of course).
+You are thinking from a per-uprobe's perspective. But during
+attachment you are attaching multiple consumers at different locations
+within a given inode (and that matches for consumers are already
+doing, they remember those offsets in their own structs), so each
+consumer has a different offset.
 
->
-> > Now, you keep pushing for SRCU instead of RCU Tasks Trace, but I
-> > haven't seen a single argument why. Please provide that, or let's
-> > stick to RCU Tasks Trace, because uprobe's use case is an ideal case
-> > of what Tasks Trace flavor was designed for.
->
-> Because I actually know SRCU, and because it provides a local scope.
-> It isolates the unregister waiters from other random users. I'm not
-> going to use this funky new flavour until I truly understand it.
->
-> Also, we actually want two scopes here, there is no reason for the
-> consumer unreg to wait for the retprobe stuff.
->
+Again, I'm just saying that I'm codifying what uprobe users already do
+and simplifying the interface (otherwise we'd need another set of
+callbacks or some new struct just to pass those
+offsets/ref_ctr_offset).
 
-Uprobe attachment/detachment (i.e., register/unregister) is a very
-rare operation. Its performance doesn't really matter in the great
-scheme of things. In the sense that whether it takes 1, 10, or 200
-milliseconds is immaterial compared to uprobe/uretprobe triggering
-performance. The only important thing is that it doesn't take multiple
-seconds and minutes (or even hours, if we do synchronize_rcu
-unconditionally after each unregister) to attach/detach 100s/1000s+
-uprobes.
-
-I'm just saying this is the wrong target to optimize for if we just
-ensure that it's reasonably performant in the face of multiple uprobes
-registering/unregistering. (so one common SRCU scope for
-registration/unregistration is totally fine, IMO)
-
-
-> > 3. Regardless of RCU flavor, due to RCU protection, we have to add
-> > batched register/unregister APIs, so we can amortize sync_rcu cost
-> > during deregistration. Can we please agree on that as well? This is
-> > the main goal of this patch set and I'd like to land it before working
-> > further on changing and improving the rest of the locking schema.
->
-> See my patch here:
->
->   https://lkml.kernel.org/r/20240704084524.GC28838@noisy.programming.kick=
-s-ass.net
->
-> I don't think it needs to be more complicated than that.
-
-Alright, I'll take a closer look this week and will run it through my
-tests and benchmarks, thanks for working on this and sending it out!
+But we can put all that on hold if Peter's approach works well enough.
+My goal is to have faster uprobes, not to land *my* patches.
 
 >
-> > I won't be happy about it, but just to move things forward, I can drop
-> > a) custom refcounting and/or b) percpu RW semaphore. Both are
-> > beneficial but not essential for batched APIs work. But if you force
-> > me to do that, please state clearly your reasons/arguments.
+> -------------------------------------------------------------------------=
+-
+> But I agree, the ugly uprobe_register_refctr() must die, we need a single
+> function
 >
-> The reason I'm pushing RCU here is because AFAICT uprobes doesn't
-> actually need the stronger serialisation that rwlock (any flavour)
-> provide. It is a prime candidate for RCU, and I think you'll find plenty
-> papers / articles (by both Paul and others) that show that RCU scales
-> better.
+>         int uprobe_register(inode, offset, ref_ctr_offset, consumer);
 >
-> As a bonus, you avoid that horrific write side cost that per-cpu rwsem
-> has.
+> This change is trivial.
 >
-> The reason I'm not keen on that refcount thing was initially because I
-> did not understand the justification for it, but worse, once I did read
-> your justification, your very own numbers convinced me that the refcount
-> is fundamentally problematic, in any way shape or form.
+> -------------------------------------------------------------------------=
+-
+> And speaking of cleanups, I think another change makes sense:
 >
-> > No one had yet pointed out why refcounting is broken
+>         -       int uprobe_register(...);
+>         +       struct uprobe* uprobe_register(...);
 >
-> Your very own numbers point out that refcounting is a problem here.
+> so that uprobe_register() returns uprobe or ERR_PTR.
+>
+>         -       void uprobe_unregister(inode, offset, consumer);
+>         +       void uprobe_unregister(uprobe, consumer);
+>
+> this way unregister() doesn't need the extra find_uprobe() + put_uprobe()=
+.
+> The same for uprobe_apply().
 
-Yes, I already agreed on avoiding refcounting if possible. The
-question above was why the refcounting I added was broken by itself.
-But it's a moot point (at least for now), let me go look at your
-patches.
+I'm achieving this by keeping uprobe pointer inside uprobe_consumer
+(and not requiring callers to keep explicit track of that)
 
 >
-> > and why percpu RW semaphore is bad.
+> The necessary changes in kernel/trace/trace_uprobe.c are trivial, we just
+> need to change struct trace_uprobe
 >
-> Literature and history show us that RCU -- where possible -- is
-> always better than any reader-writer locking scheme.
+>         -       struct inode                    *inode;
+>         +       struct uprobe                   *uprobe;
 >
-> > 4. Another tactical thing, but an important one. Refcounting schema
-> > for uprobes. I've replied already, but I think refcounting is
-> > unavoidable for uretprobes,
+> and fix the compilation errors.
 >
-> I think we can fix that, I replied here:
 >
->   https://lkml.kernel.org/r/20240704083152.GQ11386@noisy.programming.kick=
-s-ass.net
+> As for kernel/trace/bpf_trace.c, I guess struct bpf_uprobe  needs the new
+> ->uprobe member, we can't kill bpf_uprobe->offset because of
+> bpf_uprobe_multi_link_fill_link_info(), but I think this is not that bad.
 >
-> > and current refcounting schema is
-> > problematic for batched APIs due to race between finding uprobe and
-> > there still being a possibility we'd need to undo all that and retry
-> > again.
->
-> Right, I've not looked too deeply at that, because I've not seen a
-> reason to actually change that. I can go think about it if you want, but
-> meh.
+> What do you think?
 
-Ok, let's postpone that if we can get away with just sync/nosync
-uprobe_unregister.
+I'd add an uprobe field to uprobe_consumer, tbh, and keep callers
+simpler (less aware of uprobe existence in principle). Even if we
+don't do batch register/unregister APIs.
+
+>
+> Oleg.
+>
