@@ -1,107 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C750115253B;
-	Mon,  8 Jul 2024 15:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D0D13E41F;
+	Mon,  8 Jul 2024 17:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720454049; cv=none; b=Lbsyjndbh1jK6yEMpdB6UV0da/Ukv9aUX0Q9MCd8g+trlWpx5lASIwLvEgopLkJ4tGG3HAPA23C00Qlk0WgEWVkMpL6mY5/WsmZUP6xe9tPqqoU5dmyBzsOudtZZs7LR/+4FsrEzMV2du2VRJ4K02ybddMvRe5/y8oZsk5jjbf4=
+	t=1720460851; cv=none; b=PZTe8mFmWu6opdnVeW0Ey/i7LNs367Nb8MnGnQRyJinEG2JLzMlp4suZcDwbMZq4kN/30/OxaG829n8MHxYx1D9ljcFCwBMp0iLdwBL2byMMwD6/S9abHGUzazbyD1o416h9DS2DNRTLHr4vMBXhvYZBGRbYc8Eh55V2qBoZBjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720454049; c=relaxed/simple;
-	bh=pHEQop1T1fiyamd9jcpDhT/4UZTaEZSdDGTRt6fHlCQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pProLFYyJcMk9tKQ6Ysv7W6yOuCABZdT0rgyfEs5x6+21JBGPo9D7ld0xHFZZc5xj9L6uSsxp9lC2eamXiV0D+m4pWUEsmpxcnR18iTMTcKr/dFE223o/18K9+ldaGw9i5G1/STJhxHaxA8wAajwcFsAP0EsDEbASQSlz+wTgpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKGmbJG/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720460851; c=relaxed/simple;
+	bh=YmRJ/llYeqWDvkAYZ6TNULQzPAxdrLYFGHqHcqllx+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nXeoQhQhvWnLQ5J4510QqxIwZ2qXfIKwz+Xo9jLugF7X9jp0SA2JkmFLfCKcgAfeP+kk9ZGNZ4PEC6u8f0RIJwWoiSrCA8rW+h/Gx5QqIjKrhQTRrejAAnGwbslwT7HNgzANwiKnqnFqfvJ8nvvCQ2a2VPV+bI72+J354YUK8vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2ZXzLjj; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKGmbJG/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB567C116B1;
-	Mon,  8 Jul 2024 15:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720454049;
-	bh=pHEQop1T1fiyamd9jcpDhT/4UZTaEZSdDGTRt6fHlCQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UKGmbJG/7ixB3W/bGJpEZHxm4Uec9QfxZrgFj7++PEuKgl87p3bp8kWMv6leWLkSL
-	 SVE0ZwRWnyuoBKzcBAsY3hxdEa0X62Miv77RfoVOdaXSkuwwXlhguWYSVRCWyNSR8w
-	 UqoXJK6nxT/+k+DVz/Gl3FaKt6L25Cz9EQCL5H/2V/kCaXMFeFETwv0moyo4jhoEX4
-	 t/GJxOCYUspDoZ2uG4F5c2jWw9oAwJGe+MWpZhRyY2YBRCjpOE3bHMVzXy3RGvcUua
-	 XA3VRpPMWHL8cD2MZY1fzsiDd6vNFGncezD7lV3qig4l7B5Ga6JVX4VgJuYhxQ3ZER
-	 Zj6EIUg8C99vQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 08 Jul 2024 11:53:42 -0400
-Subject: [PATCH v4 9/9] tmpfs: add support for multigrain timestamps
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2ZXzLjj"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-767506e1136so2158833a12.0;
+        Mon, 08 Jul 2024 10:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720460849; x=1721065649; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o9QNspGgC5kgbd17kT8SP/v8QG2qYZqzuZld1mm1/6M=;
+        b=l2ZXzLjjEVrilF8QPtrokLcBp4zDV//tBcRU97d+ZIt2kY8Oxu6lmwGYk85pxfmhcE
+         AlNluJX82yeQx2j0uBe/F8SEGfHs6VQmavdWC8LztR5z9hcmd/6WxoRoVOuJyk52hA9r
+         jyPpgvaq8RKdqix6jpYxWBid9pz99LxR6ZTYjD4TBcZyktfAuI6xep+6u9sIyAyOSk9N
+         eEYxPhm7e/XgVrJJSihAWAx+9EL+vYftBUR7CmHRs+kIuWLaU2Ij5yqtsmfAMjlAIx27
+         GwkfllsTYfCvxdLLnoOlKM62Mcx5Hx8EhR4SabtnaXiUIrmkxtkHbFyRMgqhmEA3OOGR
+         3LHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720460849; x=1721065649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o9QNspGgC5kgbd17kT8SP/v8QG2qYZqzuZld1mm1/6M=;
+        b=TSlwLIkMEowK1ZTfvThgEGt6m+haiY+5G5gnGD2llu5NEJqOUh/M7WIRhtUXPeOyyY
+         0tbkJeBDgZBdFpx2zuG+QXfcbVH+EGtbFJg4AV61wu/wgxtUZsGZB8+JlNdi2RYkrwt5
+         RQpkLTN0t54smegvd4EIGtnuzAscr5AyfOc9dQJBcu0r9WzhdvOZu0TNlNw+vM0OivC9
+         iXdOXaKJ7FqQ6wplFAYLA8EoEs+oq5yYGLlzWjkad/RanNoY6Tl2IPmAK4u/IZGD25Qd
+         S6M+XAMmQ758RBIjYBKrPv9WIcGZPav2bEeBYmKaXm8xCzXZdwXCHcwzBtkp3W6iJjQ1
+         NrZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHbY22Qpv3VxymCCZ/IZy8rzxjeLe1cUVPlp5Blb43KB/CWbaFOm4rWbkgBiL0cozvDz8SQ3WpTXqGJdKium9pv9McpaDWB6bHTX4EB9RZxpUkUl1K9mrwH6qveTK6IYn8pfOcMekY
+X-Gm-Message-State: AOJu0YxWSG5Qhvis+/PTqvDsJRvhsOL0nRfp43O2RjdwWqFZVrPdPht6
+	w6qBZCBGN5A1ozE+u4Zm8jFgwKPBK0jm33ZzCjBRDElU/Fm1tFdtvJREggZfXBpkHktNRn2hDZO
+	SGFygklc1XZsDyfSiNymQJCV95F0=
+X-Google-Smtp-Source: AGHT+IGcB+YcUctnfqopoAMa1xqchCmZp7cNeI4mqNep7QNu9Igx4yldh0+di1tcnCo8ZMWa/pDE8iln6XAtdD6IUDY=
+X-Received: by 2002:a05:6a21:1698:b0:1c0:f1c5:524 with SMTP id
+ adf61e73a8af0-1c298530b2emr90618637.16.1720460848936; Mon, 08 Jul 2024
+ 10:47:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240708-mgtime-v4-9-a0f3c6fb57f3@kernel.org>
-References: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
-In-Reply-To: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
- Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
- Kent Overstreet <kent.overstreet@linux.dev>, kernel-team@fb.com, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=775; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=pHEQop1T1fiyamd9jcpDhT/4UZTaEZSdDGTRt6fHlCQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmjAuElSf4XFk52fOEHI6qnk5nkcaimuSsPCsyx
- xjkO5P9aUmJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZowLhAAKCRAADmhBGVaC
- FesvEADXYZRR3EQySwlhPXaMFRM3Jq6pfSUAjqchFJ5ZK46/YfRIrrnfJ4JbxYnbmshpJcBbFpR
- 0/5Av6Pr9UhcqUkFzuoN+lTegRgHwDiMg9lrS8JZ+RlrxJ/mI1jSkec7pdJeCA1o+uEspCwJlVV
- l2Cm9Wm5OJidm0vx4cGXlLZzmA4IHAdkNfWh2OXgnzFFtS0l40kW+3PF0/WGTPKccPdHhD862y6
- aGl4SZcQo2KyHwKsueuBZ4tdmXuTa0JkEAbMT4bH3FxqToAIDJA4U0MF44gKItQuNoJ2ZaL2Q80
- a3i190J0Loaigui6n9Cpypmy9nDd74qzubrfpMJbIqFWEwRZmDlHfRnv7nbY871QEYQ4xpJ3ili
- ceNhjnXNEO+drx5Re8ocxYDKT6KguzKI/aKc2WahemLhWKP7yaspe4q9VcpmjmlwAgf5tUCteyd
- vL0qw+tr6LTcIURjivpx/9GIxekvsxkhqUC8fzHzoPesyDiTUDc40q83qFeo7qhD1gSz4BEHkE9
- 0xREDDycM33VqUVh2mPB/yAqqTCv4QDPuSl6S7UbBkaTsKVuI4Ib3fx3f0H3D85+gcTUpsfJwua
- sVJEZzud7NP7tgknaFzBM7ymq8J2fUaKNM/KfI0Xna2HmKe/3idcid7UzQ8mWcD7n4ta6cF7NGN
- kEUJE/n2ZdSh2Sg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20240701223935.3783951-1-andrii@kernel.org> <20240701223935.3783951-5-andrii@kernel.org>
+ <20240705153705.GA18551@redhat.com>
+In-Reply-To: <20240705153705.GA18551@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 8 Jul 2024 10:47:16 -0700
+Message-ID: <CAEf4BzYDJMo0E=pVFkqctdPQa66kD-Lt7Rx7BkMKw6TQtLcjtA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] uprobes: revamp uprobe refcounting and lifetime management
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	clm@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the timestamp whenever it has been written after
-being actively observed via getattr.
+On Fri, Jul 5, 2024 at 8:38=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
+>
+> Tried to read this patch, but I fail to understand it. It looks
+> obvioulsy wrong to me, see below.
+>
+> I tend to agree with the comments from Peter, but lets ignore them
+> for the moment.
+>
+> On 07/01, Andrii Nakryiko wrote:
+> >
+> >  static void put_uprobe(struct uprobe *uprobe)
+> >  {
+> > -     if (refcount_dec_and_test(&uprobe->ref)) {
+> > +     s64 v;
+> > +
+> > +     /*
+> > +      * here uprobe instance is guaranteed to be alive, so we use Task=
+s
+> > +      * Trace RCU to guarantee that uprobe won't be freed from under u=
+s, if
+> > +      * we end up being a losing "destructor" inside uprobe_treelock'e=
+d
+> > +      * section double-checking uprobe->ref value below.
+> > +      * Note call_rcu_tasks_trace() + uprobe_free_rcu below.
+> > +      */
+> > +     rcu_read_lock_trace();
+> > +
+> > +     v =3D atomic64_add_return(UPROBE_REFCNT_PUT, &uprobe->ref);
+> > +
+> > +     if (unlikely((u32)v =3D=3D 0)) {
+>
+> I must have missed something, but how can this ever happen?
+>
+> Suppose uprobe_register(inode) is called the 1st time. To simplify, suppo=
+se
+> that this binary is not used, so _register() doesn't install breakpoints/=
+etc.
+>
+> IIUC, with this change (u32)uprobe->ref =3D=3D 1 when uprobe_register() s=
+ucceeds.
+>
+> Now suppose that uprobe_unregister() is called right after that. It does
+>
+>         uprobe =3D find_uprobe(inode, offset);
+>
+> this increments the counter, (u32)uprobe->ref =3D=3D 2
+>
+>         __uprobe_unregister(...);
+>
+> this wont't change the counter,
+>
+>         put_uprobe(uprobe);
+>
+> this drops the reference added by find_uprobe(), (u32)uprobe->ref =3D=3D =
+1.
+>
+> Where should the "final" put_uprobe() come from?
+>
+> IIUC, this patch lacks another put_uprobe() after consumer_del(), no?
 
-tmpfs only requires the FS_MGTIME flag.
+Argh, this is an artifact of splitting the overall change into
+separate patches. The final version of uprobe_unregister() doesn't do
+find_uprobe(), we just get it from uprobe_consumer->uprobe pointer
+without any tree lookup.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- mm/shmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 440e2a9d8726..6dc817064140 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4649,7 +4649,7 @@ static struct file_system_type shmem_fs_type = {
- 	.parameters	= shmem_fs_parameters,
- #endif
- 	.kill_sb	= kill_litter_super,
--	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
-+	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
- };
- 
- void __init shmem_init(void)
-
--- 
-2.45.2
-
+>
+> Oleg.
+>
