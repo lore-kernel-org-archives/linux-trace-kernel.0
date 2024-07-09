@@ -1,106 +1,137 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEA113213A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jul 2024 06:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50EE15216A;
+	Tue,  9 Jul 2024 08:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720508076; cv=none; b=ZsCRkU+JTR3qF55TjJL+bQxc4ILJkJCXCcWLMaTc59Lkfbqu36TqTelntSr1kRXUvdk/R1h7Sj0+RZtORnbcfGikrPpxeSPJlJeda1BrSUvzLu4QsPtUT9NpY2Ja9D8s+LtB+HlqXbkyirQBCEsGJBxaMqbG959jbprDyub4cxA=
+	t=1720512809; cv=none; b=N0BlcU0E5lCdCNK8Jbvz62IhfYVVGpMODO5xfE+OaaXPcRUeQJOF9tGbDOK9MVXq0BEzXGIp1lYkno6ZYkxViBr1uUt4FyL6JA8uy5DtAhXTYQT9CNxnKNB35E7PGCeA7kd3UjmkXxbq4ZbU0+NWw/YMQk2bKCJCU92VLWnpQDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720508076; c=relaxed/simple;
-	bh=rIZEIiPZR8PjUsYKnfS0bDTgQruNjA3bTRgWWcdleks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMpU4DwIU5oZR1n+KPAAfAzITqOOST6Vt1omZsTCFBsEQE2aB8lp0SY/3Q753JFMW7qzVHqoZ5u+n75kvWS9FILmPakT8TBxdYvmjQ6F2ldTPWy5lw8TCy/WWtEq9daibzv1gpwQN4nwpO3KvpO0ru3t8Vyq4I4LcCi/77/8mS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0T8OLOIJ; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0T8OLOIJ"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-58e76294858so7742127a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jul 2024 23:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720508073; x=1721112873; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rIZEIiPZR8PjUsYKnfS0bDTgQruNjA3bTRgWWcdleks=;
-        b=0T8OLOIJD1XAwRKy+aNUltYNjOVVxDVGl5i8W6Ox68sJdHim2ZrWyEj3Cx6u+fSard
-         VWVoG5z02ZDLg0j4IDUKyhGrZcdkJuAcyyTMsMyeGEelf9mwCqLrDSaPI6jc9LeUII3o
-         Vo1n07UrcsVuX+YMcvKeOvbhMJ9GdnZejYZthY6bxETJrCVJsoCgqhI2ZTBBvwbNAfeb
-         ABc6xryMDC0Ri8DnxvnLEhrjGF++C9T54Uabf22giGRNmMT6yl949BUwV1YKBgrzjbag
-         tVbf8PX5OhDSMFv67a5sTyZ8SE0wT2T5eLuGbQ4gFkfdGWdLRf/gluKnANHi15tpvwBz
-         LdPQ==
+	s=arc-20240116; t=1720512809; c=relaxed/simple;
+	bh=u+SFtLK8/aH+/6ShuSEacerQaiuddZJ11+oAKxLMbsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F5qErwpJcWm1cgL0CxeAZ2Cr3QQeNt718uXbH9CcGoQNYn/CdjyA5by1pgyPq6qewV1xYaokCiXb/OjhiTIqO7K+znzvG6ETV3P/b2oGLmuxoFwwn+Gnh5OLYBUw3c/QvKreDwimr7CGvl1TNMVvKN/DjYBalB8d+sxvkXwFc/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6504101cfd6so43667757b3.3;
+        Tue, 09 Jul 2024 01:13:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720508073; x=1721112873;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rIZEIiPZR8PjUsYKnfS0bDTgQruNjA3bTRgWWcdleks=;
-        b=WVLPe3gNc4SjNu2n0OHy+B8q8f4PoyoPwpYHEZzfHarqyOVzqtjiYyG1/O4vOfSaP5
-         BWp4AGMWPL/85QFG4NoiTsB+PufU2jJk1QOzBApT1h4ik8ZyPpUGnN8des7vVBNCO6H3
-         /8mYAp3Hg91RUBxQS29Sf+Sn3fcwcopaLAH7g2QR4vg4ExDAeT+l0t0VqnPhNYLSdfZV
-         GHIdH0qUsNlmbILQoKgTvUYRAVc9y0W3AO7zvQ5w9MPIJj2jIvhMM6a9TAXywZJUC4UK
-         uflIpP+vuNC1hVW6otz02IvI0MWk69/cjJc1z1DnzcCxIOmia5K4Lt5CkwdmAdfYtU6S
-         xiBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVexzMT/dWMnsmioTAuF4mn4A7MC6Mcm6K6Og8+nUk5D8lu8itmIBBg0zs2UKnOsgs1vnhKarDSAfvGXkH5/qGtn6DEP1/9tjdasuA4KG+e3AW8
-X-Gm-Message-State: AOJu0YxBmmbfIYlzeuxpJ2SRfhVFQrojWWGntr5Zk/wcADAcsiMBpNJ7
-	to4WtcxOAacdm5A3Kmg9t4Z6Xgjcr5PreRnM9l5aXP60LG+IcY8BwNtCLVj5J7s=
-X-Google-Smtp-Source: AGHT+IGwlKmGrMdFOnjAKchORxMJC1zLzVMahY0rbUUEDJMua3Vkl2zKW51j3oKcjCmefGMmIvJryA==
-X-Received: by 2002:a50:fa97:0:b0:58b:4a7:2a04 with SMTP id 4fb4d7f45d1cf-594de604d45mr902106a12.20.1720508072979;
-        Mon, 08 Jul 2024 23:54:32 -0700 (PDT)
-Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bbe2cf93sm706724a12.33.2024.07.08.23.54.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 23:54:32 -0700 (PDT)
-Date: Tue, 9 Jul 2024 08:54:31 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] pwm: Add tracing for waveform callbacks
-Message-ID: <yz57gqlyqk2f3r6rtwun3yplns2rxwfaqdgqey5ipmqmdqgrcu@koclgglkjtwq>
-References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
- <7f7ce46efc76e02a472ed52ab1fc06c3575a14e8.1720435656.git.u.kleine-koenig@baylibre.com>
- <c12fe2f2-404b-454a-8474-0020a4aaafb6@baylibre.com>
+        d=1e100.net; s=20230601; t=1720512805; x=1721117605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UWy5fM+Bn3PboFhjLeCT4KQSpv1r3KOtQtodjbe9XhQ=;
+        b=geR7/+YSRoDgJN+7xIGlABiF8UqvV0IzmLIckAf9rFK5cfMIzd9W6sZ6ZS7ZDH4ZEp
+         OEAg2lwwOPjdCzzv4VrbRxUt1npqCDjEH6ap0yak71Tk/ofZ2tormxt0IgVBoC9bsL1Q
+         q4MdHBlNdjjdepOOzt66NLhZ+JQvKFcutptnQsIyqcZRYD27DYgwyVuf/cs0xXNAxX1q
+         zYojWOGf7Uuyux3ynE39hnD0X9jo5QJsBNmmSiYbSqczIAkOOLUfqhsmgP/uNgXGZTzG
+         HpgikSybeKL5FJ6Ru2eAtwBZLDe7I+kfv1JDZXsFieznMfrxSzT8IY0waWVveU/FjOst
+         cEkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxJdCgcd9BU0LnBUqSJiZxbcpx3XNcRvWdVpEY/T3oJSB1pf3QDehbtl8ZKSJ//WzCK6uCKpFLh6s0+497fr3thFAQkPjHmFig/JmRbpLnsc08GtNTZncGLpmaxw8vieZvPB5SV2f8ALXy7hjeZxQp
+X-Gm-Message-State: AOJu0YyIPX42qa5dajmAbuMejAAkmujGullRGxGeZeYiH/flPrzoTkoW
+	rVHgEwHdXgfhFQw2PGoDFtIyB9DcV2bk/IixNxmNdc85vKNiUuhYO3+iRBQw4mE=
+X-Google-Smtp-Source: AGHT+IG2yXKEob6PAfUzJTw+lx3KCc3tYFOGMFaahhzaZ+tB6ulPEmpBAQLjSvE/jJlyswCuocq9Rg==
+X-Received: by 2002:a81:834a:0:b0:631:6970:eac with SMTP id 00721157ae682-658eed5df81mr20493917b3.13.1720512804524;
+        Tue, 09 Jul 2024 01:13:24 -0700 (PDT)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e4d2ab4bsm2764687b3.33.2024.07.09.01.13.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jul 2024 01:13:24 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-654cf0a069eso31509907b3.1;
+        Tue, 09 Jul 2024 01:13:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXCwGcMAJWlFyA/vwh5+8XyjnRtCn8GAT24XdD6cscbkVkBPQfdWgaJcBuQIfPlwPK+DslGz1UOZbI3hgO72qTzupO6jDi4WhAQrN5cXui2qtCcRCC23sxh5XkhfY/RuiNsCRZNcwRsTdkLBtvnl9Un
+X-Received: by 2002:a81:7cd6:0:b0:61a:ccb0:7cdd with SMTP id
+ 00721157ae682-658f07d7740mr22170947b3.46.1720512803761; Tue, 09 Jul 2024
+ 01:13:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tcjng6xahjawfwjm"
-Content-Disposition: inline
-In-Reply-To: <c12fe2f2-404b-454a-8474-0020a4aaafb6@baylibre.com>
+References: <20240624082141.153871-1-alexghiti@rivosinc.com>
+In-Reply-To: <20240624082141.153871-1-alexghiti@rivosinc.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 9 Jul 2024 10:13:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com>
+Message-ID: <CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com>
+Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after
+ patching to avoid illegal insns
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Andy Chiu <andy.chiu@sifive.com>, Puranjay Mohan <puranjay12@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Alexandre,
 
---tcjng6xahjawfwjm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Jun 24, 2024 at 10:23=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosin=
+c.com> wrote:
+> We cannot delay the icache flush after patching some functions as we may
+> have patched a function that will get called before the icache flush.
+>
+> The only way to completely avoid such scenario is by flushing the icache
+> as soon as we patch a function. This will probably be costly as we don't
+> batch the icache maintenance anymore.
+>
+> Fixes: 6ca445d8af0e ("riscv: Fix early ftrace nop patching")
+> Reported-by: Conor Dooley <conor.dooley@microchip.com>
+> Closes: https://lore.kernel.org/linux-riscv/20240613-lubricant-breath-061=
+192a9489a@wendy/
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-On Mon, Jul 08, 2024 at 02:14:09PM -0400, Trevor Gamblin wrote:
-> Missing a sign-off?
+Thanks for your patch, which is now commit edf2d546bfd6f5c4 ("riscv:
+patch: Flush the icache right after patching to avoid illegal
+insns") in v6.10-rc6.
 
-Yes, and a commit log.
+> --- a/arch/riscv/kernel/patch.c
+> +++ b/arch/riscv/kernel/patch.c
+> @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t le=
+n)
+>
+>         ret =3D patch_insn_set(tp, c, len);
+>
+> -       if (!ret)
+> -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
+> -
+>         return ret;
+>  }
+>  NOKPROBE_SYMBOL(patch_text_set_nosync);
 
-Thanks for your review!
+patch_text_set_nosync() is now identical to (static) patch_insn_set(),
+and the latter has no other callers.
 
-Best regards
-Uwe
+> @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns, =
+size_t len)
+>
+>         ret =3D patch_insn_write(tp, insns, len);
+>
+> -       if (!ret)
+> -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
+> -
+>         return ret;
+>  }
+>  NOKPROBE_SYMBOL(patch_text_nosync);
 
---tcjng6xahjawfwjm
-Content-Type: application/pgp-signature; name="signature.asc"
+patch_text_nosync() is now identical to patch_insn_write(), and both
+functions are called from outside this file.
 
------BEGIN PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaM3qUACgkQj4D7WH0S
-/k7jZggAi0uG9uwtF+gXHub7qdnBzopWLzdItTN+jviBIRaKZf1PiCnsFn5weriY
-VosJwlbLry9/TUtf3lqf2xHxo03IjrXxgzXUT+bMG9Kk91tbCDFsHhXwaCxEvbPF
-oAspz+V7PgEIN4o8zKQu4U3GvUUETWjGriDR9FtgBl2Pna04/zcg+GkGVJ11GbjW
-K1noG/Hsx71SASB6pnb2HxCUHd6L4QkctE8rFF84kc7CrgQQOEnjxAHw4ibQ4OU8
-44OCr/2J4dfhGO39bpZ//nuHeCg0DC6w6ps+M3cwh2JgUOSBurKuUrwh7wrF2JH8
-dWAgA6BoUj7lzjP6PInoMrfHpelCmQ==
-=fWj3
------END PGP SIGNATURE-----
+                        Geert
 
---tcjng6xahjawfwjm--
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
