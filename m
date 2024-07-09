@@ -1,109 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BBA187860;
-	Tue,  9 Jul 2024 23:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97901474BE;
+	Tue,  9 Jul 2024 23:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720568196; cv=none; b=Ozu4DWToU1zK+CcdsHJ0CWae/6YVE3cDFGMWaZJ+yXaz8jmFqCpBJgp928OxBmtvPep3bllOva2iiBR3vYYNenEAZTWGMwSpMX7T9ec2yjVaVdvY3AhISBEo+EehQMBYBDvrBr6yKQK+H7XKR9rc3+OyOr3dRTFank83vct6nq8=
+	t=1720569064; cv=none; b=TFvvw2c/yr6PwYfrGzm6e1X5N/XUsWe2WItObIjs2vjViq9ID1xxFxLYHEd15GReIPunxWkAJpg+eR5iv4qftlpHDkkmAlxBt+N1fD5ex+L9etrXb97uHhGmV9ZdAfmgOnh2OXFkguOpnxM9eHSSl1l0qR6X5CrjLcJfqXJQKvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720568196; c=relaxed/simple;
-	bh=Rzz2X632DwEjauRQmmY8Am/FI63cuDBIHSurv0RdLhc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NBktTerP3DbvU1vUOLnrB8s908Q6mdFGJ/mWyadmgujgEUYYzgY2aQCQ58uRqB/4vEprP24kmaJwCnjBdMvK4PqtSd+wmp2e7aUkbcv6PpFuaoPak8yoFBJ+E16LIHBXKXqIW7AoB8yd2m/8B+K4JTVV96XRY2oNZ9HVVyYZOac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q86xnVCh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720569064; c=relaxed/simple;
+	bh=06szhZhvI5y/0ml1HztEAZfKngl9g/YYJWu9WNQ4sLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rI+84Xf2G2rgFW86L2Zm+CaVFbcWAOIddwGqcFuW3PFvXG158EE3UuvVWI2bS9S2T+3Fy8Ii4WSpCg5yrDIJKu8pZgiPXCIWcBiZepm8uPvj+9eFzRhhlsc8i4kNrQEkMWZbuILInTWRCiF6gSxpigOPwAX40AGoaZHbzdrBjSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DCzTmhwt; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q86xnVCh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5D4C3277B;
-	Tue,  9 Jul 2024 23:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720568195;
-	bh=Rzz2X632DwEjauRQmmY8Am/FI63cuDBIHSurv0RdLhc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Q86xnVChYU/DBMONx+tr6qDI0rcs0dGHxhY/as7u4nuJ0hWFPa0PHq/HHK9k5HEOn
-	 dNbWw7YLZSzW5W/U7+L8AArgG594bqntRmaAFamMQmJGnjsKKeut6mk4aQl/7U7kl2
-	 airabSbwKUrk4crKFYJzyJ+c7hakcIC820s2o0Lx4FyhtogC3JcT/pChH0/Akskz4B
-	 Fu2QydABN+4dKHrKH8cK5rfZPcijM5MFvO5RBr5HmNbOaIMExEtcmG8fDRM6agIZKM
-	 f5qHZ9E3tE4X9PAcoGWY5pYVT3E07UgTzWC70INIIDlATH/FTJVn2MKDM/ROAIR3cl
-	 F/CHF55KEooMA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Francis Laniel <flaniel@linux.microsoft.com>,
-	Nikolay Kuratov <kniv@yandex-team.ru>,
-	bpf@vger.kernel.org
-Subject: [PATCH] tracing/kprobes: Fix build error when find_module() is not available
-Date: Wed, 10 Jul 2024 08:36:31 +0900
-Message-Id: <172056819167.201571.250053007194508038.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DCzTmhwt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=1MnKJi0jeAHhcjlp5AtWFQ8iIjqs+OJI3rZ7gK/CmMU=; b=DCzTmhwt94ownkzIzPjjLO9YFf
+	eu92ryb30Y5fTRUbNpYryFLMftlaguCeCXoN5EOazjbAsFOs+tBSCQRNU7Q9+73B6Auj6hO18pDHa
+	tVqNTGWjeWJdyOsHdlhu3/6ety3pwwmck57aAkc4fbaq1wmZauOvq+WLqpISS8yRZqCLos8OaPI4C
+	hs61AA6++huLcis6+2wfhFY8FKzdLoiDZGfl8hPNz2QPC/0WLP/nmKUoFVXt2uML9oLLHVZjGnISQ
+	SNynxgD4UGwrFpzo35YzDs92U2UM4UsY3+jCn/D4vFLAhvCA1+Qv96t7MNQa7spkBp1odrX3/w5pV
+	UYTO+k7A==;
+Received: from [50.53.4.147] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRKbT-00000008U6L-2tpi;
+	Tue, 09 Jul 2024 23:50:35 +0000
+Message-ID: <420ac42f-dad2-4fd9-b36a-6405d14b6e25@infradead.org>
+Date: Tue, 9 Jul 2024 16:50:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/9] Documentation: add a new file documenting
+ multigrain timestamps
+To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong"
+ <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
+ Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, kernel-team@fb.com,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+ linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org>
+ <20240708-mgtime-v4-5-a0f3c6fb57f3@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240708-mgtime-v4-5-a0f3c6fb57f3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-The kernel test robot reported that the find_module() is not available
-if CONFIG_MODULES=n.
-Fix this error by hiding find_modules() in #ifdef CONFIG_MODULES with
-related rcu locks as try_module_get_by_name().
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407070744.RcLkn8sq-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202407070917.VVUCBlaS-lkp@intel.com/
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_kprobe.c |   25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+On 7/8/24 8:53 AM, Jeff Layton wrote:
+> Add a high-level document that describes how multigrain timestamps work,
+> rationale for them, and some info about implementation and tradeoffs.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++++++++++++++++
+>  1 file changed, 120 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/multigrain-ts.rst b/Documentation/filesystems/multigrain-ts.rst
+> new file mode 100644
+> index 000000000000..e4f52a9e3c51
+> --- /dev/null
+> +++ b/Documentation/filesystems/multigrain-ts.rst
+> @@ -0,0 +1,120 @@
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 4cee3442bcce..61a6da808203 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -794,6 +794,24 @@ static int validate_module_probe_symbol(const char *modname, const char *symbol)
- 	return 0;
- }
- 
-+#ifdef CONFIG_MODULES
-+/* Return NULL if the module is not loaded or under unloading. */
-+static struct module *try_module_get_by_name(const char *name)
-+{
-+	struct module *mod;
-+
-+	rcu_read_lock_sched();
-+	mod = find_module(name);
-+	if (mod && !try_module_get(mod))
-+		mod = NULL;
-+	rcu_read_unlock_sched();
-+
-+	return mod;
-+}
-+#else
-+#define try_module_get_by_name(name)	(NULL)
-+#endif
-+
- static int validate_probe_symbol(char *symbol)
- {
- 	struct module *mod = NULL;
-@@ -805,12 +823,7 @@ static int validate_probe_symbol(char *symbol)
- 		modname = symbol;
- 		symbol = p + 1;
- 		*p = '\0';
--		/* Return 0 (defer) if the module does not exist yet. */
--		rcu_read_lock_sched();
--		mod = find_module(modname);
--		if (mod && !try_module_get(mod))
--			mod = NULL;
--		rcu_read_unlock_sched();
-+		mod = try_module_get_by_name(modname);
- 		if (!mod)
- 			goto out;
- 	}
+> +Inode Timestamp Ordering
+> +========================
+> +
+> +In addition just providing info about changes to individual files, file
+
+   In addition to just
+
+> +timestamps also serve an important purpose in applications like "make". These
+> +programs measure timestamps in order to determine whether source files might be
+> +newer than cached objects.
 
