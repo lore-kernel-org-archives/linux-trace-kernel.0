@@ -1,94 +1,102 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4812CDB6;
-	Tue,  9 Jul 2024 10:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CEF257D;
+	Tue,  9 Jul 2024 14:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720519904; cv=none; b=SoE9vfNoMMU8ND7Qs85myndHelEdwtoZgz4lpZRC33zIdxLxJ7weuI4P66llJLKEgjF6TmIcrtNeSYm90sPXqLiK4WasYd+8DPPQBg6P9P7NabNDoD2b1MmGiXsrOyPkfzt8C6XqakEelJDttU7rWm2CLB7ywLamMBgsX6MNPr8=
+	t=1720534223; cv=none; b=ivE+WXWP1e9F0NWlORA+y498WYeVkudwBoFY7/Jm4QeIdGlkHpdDKiyuU0O+EK2C2T40zzbH+VgC036aOdq0cDdO5+ap9EYNSz8nUJ6IWXDajv7m9o6vw6lwupEAOaGz7c5fZe5oFEgiEdSKgEJ/3j7hZ2Prdjirt0cMTP8V4zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720519904; c=relaxed/simple;
-	bh=e5M3p0E1OnXLX+OksumOytxTx8GR6YV6i9LlmZ9r+Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RQWC7pgd/XU2iS6iQgib41PUk0AeWQKMFBclRmhGaGEnVHoTy7X0MU+1kJLJWBBcapHL9Lvm81eGKuJEFqgVKdpKuoe2zybJX3Krj0DpW2bIfLWh9n0Cw/Xlpbco7pwDdZ2LqnU/HkweSqozpictNGXwcs7dbc+Wk6moDQ33vnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Heburb7a; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720534223; c=relaxed/simple;
+	bh=Vrb8yjdL/D92mOVV8Vty0L+ciGQXDNHk1wnDb0gv6fQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bFdXSInDbPb6R1XSdVTulY2np1+K40tIZUmsfl4BZuuABj6s5yK2hVUlOu+J6gSi9YcsIRGg4XPtJ1WPyCpoKBDOS43EQCjTW01+pYuMLPDV5xvRUgtgG1Y1VdPo88IYdYheIJ5ObTGUijDWf31sN8yqffICQWNNOZP+ep4NJNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKSydfxv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Heburb7a"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OP++PZjIdf0qPn4jB/USA0uLfYgm46JE6m2j6PR23Ks=; b=Heburb7aDknCv9CpbNOxE/4hhj
-	YmnWdkiGQInGRs51gTHtcNzz/2Rutv3iHu9X0p3awhekwpcKjxsEGqRqELnP/idw+KTczZXj3fzUA
-	XvJoWx3EptwErqlXLR3ggjw9bTClodrTb7bPdc+y3m110e0DjdBtsm/lg4Mv8S1qs4MTQkMJjWn4C
-	eVTnoyTKR+0JpWM69xcj9kgemavnfv/N11agPJSYq0Z9MpSbXeWWgBZw6SLJ63Q2VSpn7OAPpmuPl
-	HJzsykVGTT7ZlKy4FwH4FGH+UkuQBVGQ+ws2d/6v2QIluqrfG+nKq4Hk+FwajhGPhqTT2+BvQ4OgU
-	cAtUsR/A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sR7os-00000000iwt-3agU;
-	Tue, 09 Jul 2024 10:11:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C438F3006B7; Tue,  9 Jul 2024 12:11:33 +0200 (CEST)
-Date: Tue, 9 Jul 2024 12:11:33 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com,
-	tglx@linutronix.de, jpoimboe@redhat.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
-	linux-perf-users@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKSydfxv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F9DC3277B;
+	Tue,  9 Jul 2024 14:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720534223;
+	bh=Vrb8yjdL/D92mOVV8Vty0L+ciGQXDNHk1wnDb0gv6fQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GKSydfxvBgIArCp9fJE4FC22QF8thVQloQ0WFAdJs+Sw+nw4EXHZI2btEIU7KcMhg
+	 dcdN03E4/v/xk2SI6gvVWgDo0SEuylJehPw/IDyxXFmkE0gY0p+FpoKe/td3ououOa
+	 ETECJhplc5lDtTXQcuRkh5GqEUVA77JC54uUdMtZZUEsNvIial20jv1FN1qdNwc7oW
+	 SSqucLYfoPbE30S6xcV1LB2DGmp//uml0ewnCGQhEkepv09rns+ADLOp5Vfnozwln7
+	 ZjlsQycSX7SFqjqSIfs4AsG2zQ3vUOVT0Fe11zHOgCbteBvw7FjOytfxuUuMyTcqNW
+	 YxDZ3ZXYbVnmg==
+Date: Tue, 9 Jul 2024 23:10:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com,
+ tglx@linutronix.de, jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack
  traces captured in uprobe
-Message-ID: <20240709101133.GI27299@noisy.programming.kicks-ass.net>
+Message-Id: <20240709231017.e8d5a37c96d126d1f7591a0e@kernel.org>
+In-Reply-To: <20240709101133.GI27299@noisy.programming.kicks-ass.net>
 References: <20240708231127.1055083-1-andrii@kernel.org>
+	<20240709101133.GI27299@noisy.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240708231127.1055083-1-andrii@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 08, 2024 at 04:11:27PM -0700, Andrii Nakryiko wrote:
-> +#ifdef CONFIG_UPROBES
-> +/*
-> + * Heuristic-based check if uprobe is installed at the function entry.
-> + *
-> + * Under assumption of user code being compiled with frame pointers,
-> + * `push %rbp/%ebp` is a good indicator that we indeed are.
-> + *
-> + * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
-> + * If we get this wrong, captured stack trace might have one extra bogus
-> + * entry, but the rest of stack trace will still be meaningful.
-> + */
-> +static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-> +{
-> +	struct arch_uprobe *auprobe;
-> +
-> +	if (!current->utask)
-> +		return false;
-> +
-> +	auprobe = current->utask->auprobe;
-> +	if (!auprobe)
-> +		return false;
-> +
-> +	/* push %rbp/%ebp */
-> +	if (auprobe->insn[0] == 0x55)
-> +		return true;
-> +
-> +	/* endbr64 (64-bit only) */
-> +	if (user_64bit_mode(regs) && *(u32 *)auprobe->insn == 0xfa1e0ff3)
-> +		return true;
+On Tue, 9 Jul 2024 12:11:33 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-I meant to reply to Josh suggesting this, but... how can this be? If you
-scribble the ENDBR with an INT3 things will #CP and we'll never get to
-the #BP.
+> On Mon, Jul 08, 2024 at 04:11:27PM -0700, Andrii Nakryiko wrote:
+> > +#ifdef CONFIG_UPROBES
+> > +/*
+> > + * Heuristic-based check if uprobe is installed at the function entry.
+> > + *
+> > + * Under assumption of user code being compiled with frame pointers,
+> > + * `push %rbp/%ebp` is a good indicator that we indeed are.
+> > + *
+> > + * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
+> > + * If we get this wrong, captured stack trace might have one extra bogus
+> > + * entry, but the rest of stack trace will still be meaningful.
+> > + */
+> > +static bool is_uprobe_at_func_entry(struct pt_regs *regs)
+> > +{
+> > +	struct arch_uprobe *auprobe;
+> > +
+> > +	if (!current->utask)
+> > +		return false;
+> > +
+> > +	auprobe = current->utask->auprobe;
+> > +	if (!auprobe)
+> > +		return false;
+> > +
+> > +	/* push %rbp/%ebp */
+> > +	if (auprobe->insn[0] == 0x55)
+> > +		return true;
+> > +
+> > +	/* endbr64 (64-bit only) */
+> > +	if (user_64bit_mode(regs) && *(u32 *)auprobe->insn == 0xfa1e0ff3)
+> > +		return true;
+> 
+> I meant to reply to Josh suggesting this, but... how can this be? If you
+> scribble the ENDBR with an INT3 things will #CP and we'll never get to
+> the #BP.
 
-Also, we tried very hard to not have a literal encode ENDBR (I really
-should teach objtool about this one :/). If it somehow makes sense to
-keep this clause, please use: gen_endbr()
+Hmm, kprobes checks the instruction and reject if it is ENDBR.
+Shouldn't uprobe also skip the ENDBR too?
+
+Thank you,
+
+> 
+> Also, we tried very hard to not have a literal encode ENDBR (I really
+> should teach objtool about this one :/). If it somehow makes sense to
+> keep this clause, please use: gen_endbr()
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
