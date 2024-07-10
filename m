@@ -1,237 +1,245 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFFC198E6C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 20:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5F6198E6E;
+	Wed, 10 Jul 2024 20:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720643360; cv=none; b=twhFjC6uhErtST9jmy3rntx1NHpvCfeQyGWH9pGYjC909fBtIaXNa6t0otG4ZUQ1V0CCQyGINrvbY+66cbh7Y4kDoocDu+eqLRkfmAwFB2rB2+maj4f3j/gdcxjjQ50007eklkC3LYZCh7081XrfZ0TKMBvOHzRjD3xhJXbGq1c=
+	t=1720644409; cv=none; b=gVtMOZNwamZq7U6x80QAa7K8H79rmN5ffo3ws4jliymmCY0EsgRJCMT/SUrawCIbG0wM3+sqQFnUtW6HOt/+GJe6wZaeo64Zxaow/b225KkPivH0WNDsnTBweK7CPbLj3Z07LDbi0aGy0DpHKw8qCaejPcMzHo6GY7GRj05+1jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720643360; c=relaxed/simple;
-	bh=lUBEgBl64OukQYoXw+IzWRxkunsos7uu5wD0WIADxEc=;
+	s=arc-20240116; t=1720644409; c=relaxed/simple;
+	bh=pENnPF6Kzz5Y3pavfPC9emSBb++6nrbm8B8eU3jm9TQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hu1WmKl77GdFc3641kH/jd8p2LJs/GBTG3ABx1MoHzoY6CKMfz5qwuaZXwucvGM0r6HlThr4cNuOxJebOpM6w2qZPJM/c3+Ly5+Q3fk39q+xq2Vjlcupcbr53u3T6iyDysVqU3XPXO9mbeF+TOiKK2bHuK6zJWCJjY6fMajkjNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BJZxbkmN; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=j5ARvm4j7jOSfajNDKNeLV51N3E4+N74810lMIuBnT+zv2Bdj/Z9ZnB5cB2+8FOkGGTHVAmzbo+fL2zRn/OPKt3LSPZmfKcohswnZsGYvjrqTUnv3xLkvKN2Sg/kdQcfO3dIRwXUvsm8iOT1DTEc8WfH56ozXX8cEJqEJA76tHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O1Lcbqvb; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BJZxbkmN"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7039e4a4a03so72742a34.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 13:29:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1Lcbqvb"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2c98a97d1ccso948795a91.0;
+        Wed, 10 Jul 2024 13:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720643356; x=1721248156; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720644407; x=1721249207; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ip/0MDOrHp5lX/Irp7UEa2BIGo3LvwiW3nUCmkpVR3o=;
-        b=BJZxbkmNVvsrwsOuaaprwEqVg0CMet2325nHNs5uvMq63SzxrXSfmdtUd5/igfuBB5
-         jgvxXpBg+b5P9K4cSsYXndaGhb9pG6io8fOpsrAVQd6eQbisUPDp5GX2yK3xOT31K+hB
-         rLXwaUbLpXIB9Q8v6gUxwPZvMaiutAxat3yGpdgYDau0bKKtb1PqBwTj9smNTxWa9uqn
-         ZOCLTZyhZ/8hIrlgllUXJArVcKmiCm1dWbpOErCJbkZe5/sFJt4kL9PtuqFW0Ove1CUu
-         Nh8cY4TxxbDibsYnfTcPZ/+y1o+vX+c63l8fC/vydJq0Ce+I40QGkc0fyN+PLM3HKAgI
-         +oSg==
+        bh=PcMxJnp44TmbovGYRrSPkTmmfQU5JA0tqyT4xfX5zkk=;
+        b=O1LcbqvbhNGsnIAtVmSqz87AVw6/fhge/aIZiqNzsWt38RZ7gkguTklntXOSEg3fSF
+         nTbZOKSC5GXXI6bCAlY2TeZLrclNC+O2jtvQ98NKQzcRFTkziroLevv9toHDYo/8mzfr
+         vz9PI+8TzUNc2NAw1g46wmIw0SlAxhqZKCPxkqHapKiGgSUCX5msTYpKwM1ikC58FCb+
+         avWXhHsURQvhut8G+kjgBc/PpaoFwk3GQ6w/t80TtVgcE8qxNWEo24rg3zFY3myN1a6q
+         c0Z9o09ztWKVRG3eiG1af/wYD4Y8d8mp/l1IwncmmrboX3c/XJJ3exx1K1xlK5sd0ls8
+         nsFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720643356; x=1721248156;
+        d=1e100.net; s=20230601; t=1720644407; x=1721249207;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ip/0MDOrHp5lX/Irp7UEa2BIGo3LvwiW3nUCmkpVR3o=;
-        b=cBdyHo0yzWS0BfIfH0fwZlE7r5LbvPy6qG1vFhWUNQUd83R6AMAUpibpelfCcD2Ubs
-         twFWTjO+oPPftmT5hS1vRwyEIFe30WiVP73o7nElQTUmq4viW9of0/k7fBk118Ur2Dnk
-         aDCZ9cgejO4w8qknqJRRD9ZXE9HO/6fP8pyCh+6kz+hhdcUetwa0eTpF1qo2EOZPrFaq
-         I+CgqVUQzqhLP59UDHIxNDy3vMVsohYeLg6dbK+9Z0gc6adT9WaZT5F7wgBsxuiM2tNI
-         /jhAzDgGOPedRMoqyAo0nkMQQRPGTptx2+SfAsEKzHlnlIJ0oLckoiUKgwSKb7vkXQoi
-         sr+A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7/f1b/zYKY7psxsSmfZwQ4rIcak1W99m24wyV6n2pfa/tmtJHYb2GNJO6IF0uDJTzrzifaULThGjKVqQ31uaMbodZ7bBAmlwDTVf+UKNI6y+R
-X-Gm-Message-State: AOJu0Ywgv8NqFpUJ6Ind1mrHch0qHm7VVfwesvG2agY4kOHv9vVBzdro
-	8o9n6+1K3o11lM36vq+ZKuK63aGbanG3KjxmvFfJ8AYvSKPUoVH7bK5JK9s9+7SQz1UX1o1MsGw
-	gU8GQhIg0V74jmaTi51HoEB9/OWOUO8ZwYl9f
-X-Google-Smtp-Source: AGHT+IFh61JWNinxflrD0b4ZVWkvEczGu6mIg9bnLfCV6X6pe63Th6j/ytHY2kvRgro//9ydMtTk5x6Go2aTaB1/aws=
-X-Received: by 2002:a05:6830:22ed:b0:704:4995:3733 with SMTP id
- 46e09a7af769-704499539f5mr3557560a34.31.1720643355799; Wed, 10 Jul 2024
- 13:29:15 -0700 (PDT)
+        bh=PcMxJnp44TmbovGYRrSPkTmmfQU5JA0tqyT4xfX5zkk=;
+        b=wfCy/qUZE3QbWNYJDYAFo7X8hj6XLsNKrtidImJd4uBBA8HOLCbZ58O9SNUTabDOCJ
+         cxRyuwyEWKt/bBmB1bZ5Z/p7p/UiHe8C6lHMeEimystvK0EE5POcCWzKc/iYgPL8Zq88
+         WyQzCZoTcve2cuPEZa7sr3GZ9SfAoEQYxVJlPhaa5ASIe/KfGjIHL7HTLa1mvYchicS/
+         3fCPkjFXOFCnbTn/MvrCIJzH2KR9HV5fYK57QbuaK/KJtCV+cELtvktH59E4xYQru/uA
+         znjVXp7LtUZ31TM/Aab1Ak1a2sbQvixKZ5fznt/ecv3M4cZ5MX8Hi4ZTEoHGtThBnRnd
+         AGrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTGQDiAXYjCtVZHuVfcFHa5uzt/y3o6g7Z7UXHEACX5Z4+YQ0kfrru6J778lhC9vTVSeFCGrEnquLPPVyWbzlJQodNZkzlLgLA/v112FULCwEGnNGssREQITFGW77rP75w1Kr8TDA0A3A4z3U2hLy+
+X-Gm-Message-State: AOJu0YwAWegV6W9vmSXn+8jT6nQSAWZ9WhjgFSISiZ9NiKhqeA6iZ+LZ
+	E9r3GP5mmGrKX6yCaiT+5vwFo6JfT86keITYDuIAF6lePKV2J1F6NOaHjIMYz/piMoAvasEgdQ6
+	08sepR3QDoJQT7eJf4k966gclUoZ8o8Wx
+X-Google-Smtp-Source: AGHT+IG5Z4xp56J/PEe/k+HOJOtS48rG+AvNOhUolhF8kd0teihAoI63uxCkN8+7rKaBKHK7NhkudBSjldQ8uOgbJdI=
+X-Received: by 2002:a17:90a:b781:b0:2c9:90fa:b9f8 with SMTP id
+ 98e67ed59e1d1-2ca9d993cb2mr1037141a91.10.1720644406693; Wed, 10 Jul 2024
+ 13:46:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710001749.1388631-1-almasrymina@google.com>
- <20240710001749.1388631-6-almasrymina@google.com> <20240710094900.0f808684@kernel.org>
-In-Reply-To: <20240710094900.0f808684@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 10 Jul 2024 13:29:03 -0700
-Message-ID: <CAHS8izPnFxeEMEQkxq=A9Rp7T8ADJ__3eWfeQmC2hEBYQVzcvw@mail.gmail.com>
-Subject: Re: [PATCH net-next v16 05/13] page_pool: devmem support
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
-	Matthew Wilcox <willy@infradead.org>
+References: <20240710140017.GA1074@redhat.com> <20240710163022.GA13298@redhat.com>
+ <20240710163133.GD13298@redhat.com> <CAEf4BzZa0Ye83QfTbw6Sw3ERg2PJ7ioN_pEFHYui6JGEHhOg4Q@mail.gmail.com>
+ <20240710201651.GG9228@redhat.com>
+In-Reply-To: <20240710201651.GG9228@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 10 Jul 2024 13:46:34 -0700
+Message-ID: <CAEf4BzYHcKs5P2FruYaGZg_Nj3r12amyjd9-Fh_DbMB0=gFcZA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] uprobes: make uprobe_register() return struct uprobe *
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, clm@meta.com, 
+	jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org, rostedt@goodmis.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 9:49=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
+On Wed, Jul 10, 2024 at 1:18=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> On Wed, 10 Jul 2024 00:17:38 +0000 Mina Almasry wrote:
-> > @@ -68,17 +107,103 @@ static inline netmem_ref page_to_netmem(struct pa=
-ge *page)
+> On 07/10, Andrii Nakryiko wrote:
 > >
-> >  static inline int netmem_ref_count(netmem_ref netmem)
-> >  {
-> > +     /* The non-pp refcount of net_iov is always 1. On net_iov, we onl=
-y
-> > +      * support pp refcounting which uses the pp_ref_count field.
-> > +      */
-> > +     if (netmem_is_net_iov(netmem))
-> > +             return 1;
-> > +
-> >       return page_ref_count(netmem_to_page(netmem));
-> >  }
->
-> How can this work if we had to revert the patch which made all of
-> the networking stack take pp-aware refs? Maybe we should add the
-> refcount, and let it be bumped, but WARN() if the net_iov is released
-> with refcount other than 1? Or we need a very solid explanation why
-> the conversion had to be reverted and this is fine.
->
-
-Right, as you are aware, page refcounting is based on 2 refcounts: pp
-refs and full page refs. To be honest I find the 2-ref flow confusing
-and I made an effort to avoid porting this bit to net_iovs. net_iovs
-just supports 1 refcount, which is the pp-ref.
-
-My intention is that when a reference is needed on a net_iov, we
-obtain the pp-ref, and when we drop a reference on a net_iov, we drop
-the pp_ref. This is able to work for net_iov but not pages, because
-(as you explained to me) pages can be inserted into the net stack with
-full page refs. So when it comes to refcounting pages we need to be
-careful which ref to obtain or drop depending on is_pp_netmem() and
-skb->pp_recycle (as pp_recycle serves as a concurrency check, like you
-explained).
-
-AFAICT, since net_iovs always originate from the net stack, we can
-make the simplification that they're always seeded with 1 pp-ref, and
-never support non-pp-refs. This simplifies the refcounting such that:
-
-1. net_iov are always is_pp_netmem (they are never disconnected from
-the pp as they never have elevated non-pp refcount), and
-2. net_iov refcounting doesn't need to check skb->pp_recycle for
-refcounting, because we can be sure that the caller always has a
-non-pp ref (since it's the only one supported).
-
-Currently, as written, I just realized I did not add net_iov support
-to __skb_frag_ref(). But net_iov does support skb_pp_frag_ref(). So
-there is no way to increment a non-pp ref for net_iov.
-
-If we want to add __skb_frag_ref() support for net_iov I suggest something =
-like:
-
-diff --git a/include/linux/skbuff_ref.h b/include/linux/skbuff_ref.h
-index 0f3c58007488a..02f7f4c7d4821 100644
---- a/include/linux/skbuff_ref.h
-+++ b/include/linux/skbuff_ref.h
-@@ -17,7 +17,13 @@
-  */
- static inline void __skb_frag_ref(skb_frag_t *frag)
- {
--       get_page(skb_frag_page(frag));
-+       netmem_ref netmem =3D skb_frag_netmem(frag);
-+
-+       /* netmem always uses pp-refs for refcounting. Never non-pp refs. *=
-/
-+       if (!netmem_is_net_iov(netmem))
-+               get_page(netmem_to_page(netmem));
-+       else
-+               page_pool_ref_netmem(netmem);
- }
-
-If you don't like the 1 ref simplification, I can definitely add a
-second refcount as you suggest, but AFAICT the simplification is safe
-due to how net_iov are originated, and maybe also because devmem usage
-in the net stack is limited due to all the skb_is_readable() checks,
-and it's possible that the edge cases don't reproduce. I was looking
-to find a concrete bug report with devmem before taking a hammer and
-adding a secondary refcount, rather than do it preemptively, but I'm
-happy to look into it if you insist.
-
-> >  static inline unsigned long netmem_to_pfn(netmem_ref netmem)
-> >  {
-> > +     if (netmem_is_net_iov(netmem))
-> > +             return 0;
-> > +
-> >       return page_to_pfn(netmem_to_page(netmem));
-> >  }
->
-> Can we move this out and rename it to netmem_pfn_trace() ?
-> Silently returning 0 is not generally okay, but since it's only
-> for tracing we don't care.
->
-
-Yes, I will do.
-
-> > +static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-> > +{
-> > +     return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
-V);
-> > +}
-> > +
-> > +static inline unsigned long netmem_get_pp_magic(netmem_ref netmem)
-> > +{
-> > +     return __netmem_clear_lsb(netmem)->pp_magic;
-> > +}
-> > +
-> > +static inline void netmem_or_pp_magic(netmem_ref netmem, unsigned long=
- pp_magic)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp_magic |=3D pp_magic;
-> > +}
-> > +
-> > +static inline void netmem_clear_pp_magic(netmem_ref netmem)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp_magic =3D 0;
-> > +}
-> > +
-> > +static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
-> > +{
-> > +     return __netmem_clear_lsb(netmem)->pp;
-> > +}
-> > +
-> > +static inline void netmem_set_pp(netmem_ref netmem, struct page_pool *=
-pool)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp =3D pool;
-> > +}
->
-> Why is all this stuff in the main header? It's really low level.
-> Please put helpers which are only used by the core in a header
-> under net/core/, like net/core/dev.h
-
-Sorry, will do.
-
+> > On Wed, Jul 10, 2024 at 9:33=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > >
+> > > This way uprobe_unregister() and uprobe_apply() do not need find_upro=
+be() +
+> > > put_uprobe(). And to me this change simplifies the code a bit.
+> > >
+> > > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> > > ---
+> > >  include/linux/uprobes.h     | 14 ++++++------
+> > >  kernel/events/uprobes.c     | 45 ++++++++++++-----------------------=
 --
-Thanks,
-Mina
+> > >  kernel/trace/bpf_trace.c    | 12 +++++-----
+> > >  kernel/trace/trace_uprobe.c | 28 +++++++++++------------
+> > >  4 files changed, 41 insertions(+), 58 deletions(-)
+> > >
+> > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > > index aa89a8b67039..399509befcf4 100644
+> > > --- a/include/linux/uprobes.h
+> > > +++ b/include/linux/uprobes.h
+> >
+> > I don't see struct uprobe forward-declared in this header, maybe we
+> > should add it?
+>
+> Probably yes, thanks... Although the current code already uses
+> struct uprobes * without forward-declaration at least if CONFIG_UPROBES=
+=3Dy.
+> Thanks, will add.
+>
+
+Yep, I saw that and was wondering as well.
+
+> > >  static inline int
+> > > -uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consu=
+mer *uc, bool add)
+> > > +uprobe_apply(struct uprobe* uprobe, struct uprobe_consumer *uc, bool=
+ add)
+> > >  {
+> > >         return -ENOSYS;
+> > >  }
+> >
+> > complete aside, when I was looking at this code I was wondering why we
+> > even need uprobe_apply, it looks like some hacky variant of
+> > uprobe_register and uprobe_unregister.
+>
+> All I can say is that
+>
+>         - I can hardly recall this logic, I'll try to do this tomorrow
+>           and write another email
+>
+>         - in any case this logic is ugly and needs more cleanups
+>
+>         - but this patch only tries to simplify this code without any
+>           visible changes.
+
+yep, that's why it's an aside, up to you
+
+>
+> > > @@ -1133,41 +1126,39 @@ EXPORT_SYMBOL_GPL(uprobe_unregister);
+> > >   * refcount is released when the last @uc for the @uprobe
+> > >   * unregisters. Caller of uprobe_register() is required to keep @ino=
+de
+> > >   * (and the containing mount) referenced.
+> > > - *
+> > > - * Return errno if it cannot successully install probes
+> > > - * else return 0 (success)
+> >
+> > mention that it never returns NULL, but rather encodes error code
+> > inside the pointer on error? It's an important part of the contract.
+>
+> OK...
+>
+> > >  /*
+> >
+> > this should be /** for doccomment checking (you'd get a warning for
+> > missing @uprobe if there was this extra star)
+>
+> Well, this is what we have before this patch, but OK
+>
+> > >   * uprobe_apply - unregister an already registered probe.
+> > > - * @inode: the file in which the probe has to be removed.
+> > > - * @offset: offset from the start of the file.
+> >
+> > add @uprobe description now?
+>
+> If only I knew what this @uprobe description can say ;)
+
+I'm pointing this out because I accidentally used /** for comment for
+some function, and I got some bot report about missing argument. I
+think /** makes sense for documenting "public API" function, so which
+is why all the above.
+
+>
+> > > @@ -3180,10 +3181,8 @@ static void bpf_uprobe_unregister(struct path =
+*path, struct bpf_uprobe *uprobes,
+> > >  {
+> > >         u32 i;
+> > >
+> > > -       for (i =3D 0; i < cnt; i++) {
+> > > -               uprobe_unregister(d_real_inode(path->dentry), uprobes=
+[i].offset,
+> > > -                                 &uprobes[i].consumer);
+> > > -       }
+> > > +       for (i =3D 0; i < cnt; i++)
+> >
+> > you'll now need !IS_ERR_OR_NULL(uprobes[i].uprobe) check (or just NULL
+> > check if you null-out it below)
+>
+> Hmm... are you sure? I'll re-check... See also the end of my email.
+
+no, you are right, it should be fine
+
+>
+> > > @@ -3477,11 +3476,12 @@ int bpf_uprobe_multi_link_attach(const union =
+bpf_attr *attr, struct bpf_prog *pr
+> > >                       &bpf_uprobe_multi_link_lops, prog);
+> > >
+> > >         for (i =3D 0; i < cnt; i++) {
+> > > -               err =3D uprobe_register(d_real_inode(link->path.dentr=
+y),
+> > > +               uprobes[i].uprobe =3D uprobe_register(d_real_inode(li=
+nk->path.dentry),
+> >
+> > will uprobe keep inode alive as long as uprobe is attached?
+>
+> Why? No, this patch doesn't (shouldn't) change the current behaviour.
+>
+> The users still need kern_path/path_put to, say, prevent umount.
+
+ok, then link->path has to stay, I was just wondering if we need to
+keep it alive
+
+>
+> > we can NULL-out uprobe on error for bpf_uprobe_unregister() to handle
+> > only NULL vs non-NULL case
+>
+> Not sure I understand...
+>
+> > or maybe better yet let's just have local struct uprobe variable and
+> > only assign it if registration succeeded
+>
+> We can, but
+>
+> > (still need NULL check in
+> > bpf_uprobe_unregister above)
+>
+> Why?
+>
+> If bpf_uprobe_unregister() is called by bpf_uprobe_multi_link_attach() on
+> error, it passes cnt =3D i where is the 1st failed uprobe index. IOW,
+> uptobes[i].uprobe can't be IS_ERR_OR_NULL() in the 0..cnt-1 range.
+>
+> If it is called by bpf_uprobe_multi_link_release() then the whole
+> 0..umulti_link->cnt-1 range should be fine?
+
+yes, you are absolutely right, I missed that for this partial failure
+case we pass i as count into bpf_uprobe_unregister(), sorry about the
+noise!
+
+
+please feel free to add my ack for the next revision:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>
+> Oleg.
+>
