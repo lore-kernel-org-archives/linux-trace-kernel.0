@@ -1,170 +1,122 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699E215E88;
-	Wed, 10 Jul 2024 19:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC9119883B;
+	Wed, 10 Jul 2024 19:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720640952; cv=none; b=aGvBPDugCIBd0l81jhQxRYrFwaIQfbQwcIkdtV5xpZpWnctpRf+WMWGh1gpnX4HujYY35p+y0IVrzcQZuJU3wo6JhE9jK1qFkUCOMWiaaQPCeXbsWqbYqiVslrjYN/vjtxterNdqRbTopQtmHW1TeFzRbjn5HMk9dVpPjeOcBpI=
+	t=1720641336; cv=none; b=YuIqkJ8P3ippsRKB6QKUbN1Fu5NyVpso04Z1TvEyyyhXlepZ2Uzippq/2ye+KloZdo7ZYzF+ovbSn2yHxfDEAdvwriNLQmyRvQ4/C+JaBdgLMzx0kqnpBhSQCJZoApxs5vUChcb3OfaXqVAn9RUkJmHdttMtBoblFVmP3Zi+WXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720640952; c=relaxed/simple;
-	bh=41DGqMw1GDdETmiSQT1h9OdQDhmJvURfwVSdH/utu0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Faxbytvi8VxMQycGYY22GdQIciRASvKwMDEx0FBuiwPqiFSKLZ1SX3pFgfj7bfzyJoen3cZlAlamLnh5WJa3z5vypN4SPIY9YuRO3kPEXheZ72OnUBepq/RQbgrL/gIyWRiorOcsXTEVL0cupgQY6kHvJJU+9gSVLaBOD5hGx08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QXW78RfY; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720641336; c=relaxed/simple;
+	bh=m6YJRUhJFp+I/9POpuBvwDiHuMwf1S6qPgk80cnGhLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TwHcKb6n7xNLqXuMPof8E/vnNXqLyOA5h3Yw3UxUmuq73IPNGWWnwWoVHe12xQ8xFI65YscoYqFnzK19zwnO0C4zN093w0b510PAcnTIdS9R7Dz8ic3plSRHR4STVK1olk2LkU/kzBDIigPf+u1maD9Mq8FD8SPPdgMAnelogI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pi53vr1z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXW78RfY"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2c9df3eb0edso137607a91.3;
-        Wed, 10 Jul 2024 12:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720640951; x=1721245751; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iQkQezLi6TntpjP51t6t8ABeJbOZSStjb0u/VOLMsg8=;
-        b=QXW78RfYs8J6XkYOjuQa3x2eWxoNdUYwY3ufkzWSCi20EJK/ygBnIqZ6pK/BtRmsT+
-         rnK3aPrylCdfGqE4OYojpcxdIicXb8gIKwaqhr9vLNLtyTOJCgysvix1bL/hsOX9hdIM
-         lDeOYpJjFZWDaPJE7VNBYoy7+2d+WY9u+OquBFffmPzBaR1ZLK7Aei5tfz6s0cUoklL3
-         4cqR0uYP5ALdLaRqP5MVICB/U/xwce/4bRva9gJ6HHVHQ5hFlynEMgh/OaxahfKmRoSp
-         v1FplWdcdBEI2NrjRwuQyCN2vfeOASFytZr9uNTvX1vDGQMVzDnEkAq4GBA/dlyp7t0l
-         OTpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720640951; x=1721245751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iQkQezLi6TntpjP51t6t8ABeJbOZSStjb0u/VOLMsg8=;
-        b=KN6UsqvOzefIZOy/a/4ZD9lU9kKeJFyiG87jHKy7VJvpa7SMyCGMekgBGQjLqcqs7l
-         YwajFWokApuxmtnTFBtdkHTw06nyF9113lLfMwn7eAOkkGxhrm0YX7QWYYjU2RP0Z85K
-         5MW6VknH2mm/C8pxFXvdJE/9BvlF8i7aGiXKDPlg9O7Yj/bty0jtDl1bPi+VCqyCdRel
-         CQ+UId9pCSCKrobDCbsBhpHnHY6DpGyg9tA3dgPz2xKoMH+4GTvJKsO25+hfIV3IPtUI
-         sA2jMBS4igCE6gwAP/dylJthsR9Y+y6rt5iZ4fz91Tx+RTAL8hRRv6i1yR8dJM8X8rjG
-         aGmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdwuBu2XswzSClwMZoUNZPkIblISD4JGBI1gXns8yD/FnGzOmHJeMENjPerMeL81zTmSKV/hlzkL/vOYL7r/aRlKaiitmE24wR27r5y748Xqo1erhmip4uVmZ0M87kYriZbmFNH6PMapPybIEcu1k9
-X-Gm-Message-State: AOJu0YwGSrXFf7jEhvQotJFQGuIdy7MpWdAhVTEVg8aGVAFmaE+LR+DT
-	EldozQ4zegUoREl0tn87AVoOOATf/R1ts+LzhqAPx8JX+RBC5lhceyy5pi3NdIpkdx/CtM4BAD2
-	fkw2I/Wtnb9eVIW6+5yWD4g+4/6M=
-X-Google-Smtp-Source: AGHT+IG5NaOOtI0Wr2Xcdog1d21kSwwNc3K3gyRs7sdWa0Pe4Yw3XWWCNbzO8sOhuiN1Y+hVhx7M1NH069u2PeK9j7U=
-X-Received: by 2002:a17:90b:1645:b0:2c9:cbdd:ac8 with SMTP id
- 98e67ed59e1d1-2ca35d3b196mr5221212a91.37.1720640950677; Wed, 10 Jul 2024
- 12:49:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pi53vr1z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C4CC32781;
+	Wed, 10 Jul 2024 19:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720641335;
+	bh=m6YJRUhJFp+I/9POpuBvwDiHuMwf1S6qPgk80cnGhLU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Pi53vr1zI4Wks/2eTESosaaytYbnJD9ORg+iZn3xswrdEGtuLTa1eAmpA+XoMUmPE
+	 OIKdzsnskRaE5w/dUcmpuj19h5wUm5soO6dasphhXnMnpjSqDUcBTaNrFDfULJxAB4
+	 jTPMPee1sVnBxa6eE6wKPUMKGq8+OxITZmOBS8X9x3YNIxdrvhTwbGkZm5DEGK0EBZ
+	 gpYTsiZPbYeJ3QT4F+0bIjGIuNg8MesGlFQ507Ea6945SYDMBHjd84paGHbGJfJWjB
+	 k24VeKBn503ebkMeNYRgOL/8Oe3Igt3C7wga7w7aJbRCdrntWHnBTyydgKU3lK4l56
+	 qew0lqYdiLNuQ==
+Date: Wed, 10 Jul 2024 12:55:33 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, Kaiyuan
+ Zhang <kaiyuanz@google.com>
+Subject: Re: [PATCH net-next v16 04/13] netdev: netdevice devmem allocator
+Message-ID: <20240710125533.7a14bbe7@kernel.org>
+In-Reply-To: <CAHS8izOoM3YfcQorLJXL4H+t2OL+oJ4fPP5ZBJRhnH5AxsUqfQ@mail.gmail.com>
+References: <20240710001749.1388631-1-almasrymina@google.com>
+	<20240710001749.1388631-5-almasrymina@google.com>
+	<20240710093624.26d22f02@kernel.org>
+	<CAHS8izOoM3YfcQorLJXL4H+t2OL+oJ4fPP5ZBJRhnH5AxsUqfQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710140017.GA1074@redhat.com> <20240710163022.GA13298@redhat.com>
- <20240710163133.GD13298@redhat.com> <Zo67c9nvbRD0h4-b@krava>
- <CAEf4BzaSDUWiSywUNrDtd-yW6p53vFYkZkr5mb461jmUgWV_2g@mail.gmail.com> <Zo7jQOWyUGp6YTbz@krava>
-In-Reply-To: <Zo7jQOWyUGp6YTbz@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jul 2024 12:48:58 -0700
-Message-ID: <CAEf4BzaZuFZX8g+cEB9XUoQf0Q1Gvq-PqJwCXqfL7-AyAJVxaA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] uprobes: make uprobe_register() return struct uprobe *
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, andrii@kernel.org, mhiramat@kernel.org, 
-	peterz@infradead.org, clm@meta.com, mingo@kernel.org, paulmck@kernel.org, 
-	rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 12:38=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
->
-> On Wed, Jul 10, 2024 at 11:23:10AM -0700, Andrii Nakryiko wrote:
-> > On Wed, Jul 10, 2024 at 9:49=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> =
+On Wed, 10 Jul 2024 12:29:58 -0700 Mina Almasry wrote:
+> On Wed, Jul 10, 2024 at 9:37=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> =
 wrote:
-> > >
-> > > On Wed, Jul 10, 2024 at 06:31:33PM +0200, Oleg Nesterov wrote:
-> > >
-> > > SNIP
-> > >
-> > > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > > > index 467f358c8ce7..7571811127a2 100644
-> > > > --- a/kernel/trace/bpf_trace.c
-> > > > +++ b/kernel/trace/bpf_trace.c
-> > > > @@ -3157,6 +3157,7 @@ struct bpf_uprobe {
-> > > >       loff_t offset;
-> > > >       unsigned long ref_ctr_offset;
-> > > >       u64 cookie;
-> > > > +     struct uprobe *uprobe;
-> > > >       struct uprobe_consumer consumer;
-> > > >  };
-> > > >
-> > > > @@ -3180,10 +3181,8 @@ static void bpf_uprobe_unregister(struct pat=
-h *path, struct bpf_uprobe *uprobes,
-> > > >  {
-> > > >       u32 i;
-> > > >
-> > > > -     for (i =3D 0; i < cnt; i++) {
-> > > > -             uprobe_unregister(d_real_inode(path->dentry), uprobes=
-[i].offset,
-> > > > -                               &uprobes[i].consumer);
-> > > > -     }
-> > >
-> > > nice, we could also drop path argument now
+> > On Wed, 10 Jul 2024 00:17:37 +0000 Mina Almasry wrote: =20
+> > > +     net_devmem_dmabuf_binding_get(binding); =20
 > >
-> > see my comments to Oleg, I think we can/should get rid of link->path
-> > altogether if uprobe itself keeps inode alive.
->
-> yea, I was thinking of that, but then it's kind of useful to have it in
-> bpf_uprobe_multi_link_fill_link_info, otherwise we have to take it from
-> first uprobe in the link, but ok, still probably worth to remove it ;-)
+> > Why does every iov need to hold a ref? pp holds a ref and does its own
+> > accounting, so it won't disappear unless all the pages are returned. =20
+>=20
+> I guess it doesn't really need to, but this is the design/approach I
+> went with, and I actually prefer it a bit. The design is borrowed from
+> how struct dev_pagemap does this, IIRC. Every page allocated from the
+> pgmap holds a reference to the pgmap to ensure the pgmap doesn't go
+> away while some page that originated from it is out in the wild, and
+> similarly I did so in the binding here.
 
-if we need it for link_info, probably cleaner to just keep it, no big deal =
-then
+Oh, you napi_pp_put_page() on the other end! I can see how that could
+be fine.
 
->
-> anyway as you wrote it's ok for follow up cleanup, I'll check on that
->
-> >
-> > BTW, Jiri, do we have any test for multi-uprobe that simulates partial
-> > attachment success/failure (whichever way you want to look at it). It
-> > would be super useful to have to check at least some error handling
-> > code in the uprobe code base. If we don't, do you mind adding
-> > something simple to BPF selftests?
->
-> there's test_attach_api_fails, but I think all checked fails are before
-> actually calling uprobe_register function
->
-> I think there are few ways to fail the uprobe_register, like install it
-> on top of int3.. will check add some test for that
->
+> We could assume that the page_pool is accounting iovs for us, but that
+> is not always true, right? page_pool_return_page() disconnects a
+> netmem from the page_pool and AFAIU the page_pool can go away while
+> there is such a netmem still in use in the net stack. Currently this
+> can't happen with iovs because I currently don't support non-pp
+> refcounting for iovs (so they're always recyclable), but you have a
+> comment on the other patch asking why that works; depending on how we
+> converge on that conversation, the details of how the pp refcounting
+> could change.
 
-great, thank you!
+Even then - we could take the ref as the page "leaks" out of the pool,
+rather than doing it on the fast path, right? Or just BUG_ON() 'cause
+that reference ain't coming back ;)
 
-> jirka
->
-> >
-> > >
-> > > jirka
-> > >
-> > > > +     for (i =3D 0; i < cnt; i++)
-> > > > +             uprobe_unregister(uprobes[i].uprobe, &uprobes[i].cons=
-umer);
-> > > >  }
-> > > >
-> > > >  static void bpf_uprobe_multi_link_release(struct bpf_link *link)
-> > > > @@ -3477,11 +3476,12 @@ int bpf_uprobe_multi_link_attach(const unio=
-n bpf_attr *attr, struct bpf_prog *pr
-> > > >                     &bpf_uprobe_multi_link_lops, prog);
-> > > >
-> > > >       for (i =3D 0; i < cnt; i++) {
-> > > > -             err =3D uprobe_register(d_real_inode(link->path.dentr=
-y),
-> > > > +             uprobes[i].uprobe =3D uprobe_register(d_real_inode(li=
-nk->path.dentry),
-> > > >                                            uprobes[i].offset,
-> > > >                                            uprobes[i].ref_ctr_offse=
-t,
-> > > >                                            &uprobes[i].consumer);
-> > > > -             if (err) {
-> > > > +             if (IS_ERR(uprobes[i].uprobe)) {
-> > > > +                     err =3D PTR_ERR(uprobes[i].uprobe);
-> > > >                       bpf_uprobe_unregister(&path, uprobes, i);
-> > > >                       goto error_free;
-> > > >               }
+> It's nice to know that the binding refcounting will work regardless of
+> the details of how the pp refcounting works. IMHO having the binding
+> rely on the pp refcounting to ensure all the iovs are freed introduces
+> some fragility.
+>=20
+> Additionally IMO the net_devmem_dmabuf_binding_get/put aren't so
+> expensive to want to optimize out, right? The allocation is a slow
+> path anyway and the fast path recycles netmem.
+
+Yes, I should have read patch 10. I think it's avoidable :) but with
+recycling it can indeed perform just fine (do you happen to have
+recycling rate stats from prod runs?)
