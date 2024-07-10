@@ -1,112 +1,133 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA9D19007C;
-	Wed, 10 Jul 2024 19:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F01119581F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720639508; cv=none; b=Cowjkg0ETgnjNMPCV5tpBtRikEmiSi9VChn6SDMSJ2v8rWaYyeqMkhfyi2RV0+jz6qYIWOhpnJOXktOM4vBL6ej9csTsReQptJ/jNqfPaTvgq9YOnOmv9DxCP8wvjrXKJhvui/6TUfsXARbhJhDZtyi34DWrvSndpWdz73Rcf6Q=
+	t=1720639813; cv=none; b=YlJ6wdKmb2rsyAS7958cMoZqBE2F7RhRwGj9vMxRKQ7NaE0BjIQzhVPXsd00xQlxaN8U1koI/hhZq3c2JEb6T/z6rE8DYE6H0J19HoT2ZY54KR7sX7yjURt0i0w786ITPD6/NKE80jX9vw8WtuJdJTF0sPXZcKFMw5nNIq22ygM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720639508; c=relaxed/simple;
-	bh=omilDSKQECKeBUVSpSd4qOmn3xJFmiJMe5rmxSPa2d0=;
+	s=arc-20240116; t=1720639813; c=relaxed/simple;
+	bh=vBkDVZIJ1rRSVbjZ4GxH5dqIovbWI6t7z6ZQdTM1ZJ4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nPib8yMvVBJA7tIqaBn1HNWcENXHnc+zYSWHD22VlNWNg9K4D1E54kCA+Rq2iJmWYkN9UKJ6Fnum0nX0utYyajGzY6INYksVlCPCKpVHEnhRsMw62JO+DE3n5mtoDs2pXLq/Nl0oESAeg9iQH9cG823RUx1zyGe58sMz306vc2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LF24DBt8; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=JJF9B1f4n/13DBYqMEw4fGlohQ1HApWFq1ta0r2l6gjNrP6QIatZFW3lGXKME77nD2kvy8/5IAOaK+pxkxHAfoDSqEJ5s79LfvB/MGw/pF2WYhGcFDJvilaHiA7zA1DRRaD5OBvTGzGgohiBUG1adsCE6DFDSWgiDXm1evKBZac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OqZsEAaa; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LF24DBt8"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-6c5bcb8e8edso51467a12.2;
-        Wed, 10 Jul 2024 12:25:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqZsEAaa"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b553b1a159so1108296d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720639506; x=1721244306; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720639810; x=1721244610; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pEDs/EPHjLdDM6/Co61/kE6mDTJI2bCieTn1Dt+Dg9o=;
-        b=LF24DBt8jHKkfO7M2fcG0I1NMzrVdnTwb9eT7Qe5QfTT3wxPK9ltMng+Dbo77Hm9Al
-         EzMGMpiAkDMFH/xyg6DjucksLPf00PjcKJEl3cZ3zy/cdtk6EA5DNXHNRDE4qVuBPPPy
-         XkEsALJEdko8SmI1IkAUkJaeOvhQrUT9CLnziaCBSDBqKChsm3kUcBJ6T7ERacKr7oNB
-         G4QcQNu28cC19sEctiBTbgudfeNLzT4glMz2y+5oqWV4TKDRJe+g3GtFxgRlIkpwe6mD
-         RhKZgS25zlfSSrgbmLY6uk7GCSh9ZqAP3h0qcDIIppdrdQNB+u7EL1iXeYM32n3z8hN0
-         OIUA==
+        bh=TF9673pSKaG/iNj3QtazN19JWkU+6gU585Ojo9AihIY=;
+        b=OqZsEAaa1a5jqFMHFpslkD2j7n7HaqTLG7spVFgAz1qdJZ0JF6PyKAswzdU5e+XPfH
+         yTTt3zL2Mn6yGX/rpyjU0PVv8HmynNWyXLmpTyE0oMvSbkn+mKaW+PTIdCyHMVx7CfJe
+         voSJBUmeMcyAMOgs6Ch5+HIUt6LA7fItUtpKKtw6pqb3ejMSJITTd73AfzpNc68517c3
+         lG7FyrM8M1LFAc6m4jWZEiLfJId7uhyvQ40Ggr/kQqtcXO4JZos+RYZLSd7GgscPB+kT
+         uc4yfor3qNjc32CoYs0f/2oGgNRjl22iySaHo4HpSXKjb4ix1TMsUa+txl3wmrchMpHw
+         wbBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720639506; x=1721244306;
+        d=1e100.net; s=20230601; t=1720639810; x=1721244610;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pEDs/EPHjLdDM6/Co61/kE6mDTJI2bCieTn1Dt+Dg9o=;
-        b=ivJU1aVYSg6EQ+p3e4UHlu0sBfcBjylCyCstI6jrprgq7rLP76p3KKklBNiUmp+EYD
-         fxwgzXvV3DEunIor1OqQCK/He5Geg0l3HzLYYG+pvoLa0FuFfjUTWwqy2YY/QeUEUrzn
-         T65aJofP38DrGYA98Z049YDq6M26/1vOvxPUOlr8sBhxzz9WJW64o0/HZyPogoIPrX4l
-         mhJC+SUrAVBsjIJGv3JTicF7Sn8ODfGMRoKOAnXessRW0NYmsBwoIlYT/S+sYFFsA9P/
-         AtD+W8rByL/+bYqnrKxayc9U2MDTDUSFU3b7WCrlIOvCaGENqUbz0DEX0nIfWyI99vqT
-         F5CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgfmOdBnnl+JwAUymdYQtt67BsOubXaSB0ZTlK4UuXh6flufEMzfoNSSHgiS+qTHcXZgdYuwrUOr8UPI+MshKhfRXjkuEVS792W843rFovfheoKgLL7GkCvlf4vbH6s0RVqD//8CJ19hXUEWSrZhZiSvV8nXSSgPonxdJJhmG3ZMAupjlVpQk22Jg/uGEL1lVLQ/Qw0vVQaFxsAKhKg1c/NyHtclTjug==
-X-Gm-Message-State: AOJu0YycPdO7FLgvdQaOmhPOJGINz8RqtML0+gTtQWPhgzjvOdSvy4xV
-	/rwYdFrDmrV+72QJN7sbudYs7vWpqpepdvu+nVC1OVmox9a3Y35V6MtyDEwb0RoSTEXIKpXqwxO
-	3Q+GCX2NUXg68oS3Iiwcpvxqy0GM=
-X-Google-Smtp-Source: AGHT+IHtbuljG1IBcyBMraYfI+D6InQs6S3XkCH14VkcgnRT0bYon+i47a2S6g9RF2siZgkOGeoqVejPslbBitLPe1A=
-X-Received: by 2002:a05:6a21:6e4b:b0:1c3:b211:67e3 with SMTP id
- adf61e73a8af0-1c3b211680fmr626265637.50.1720639506034; Wed, 10 Jul 2024
- 12:25:06 -0700 (PDT)
+        bh=TF9673pSKaG/iNj3QtazN19JWkU+6gU585Ojo9AihIY=;
+        b=YIowgoQN1YcxXEH0A/anF3rEzNhKaQNpHLEs6AdmvTDhV9d+UDzwm31mF23FBJ0zGu
+         V0K81/Dty8iVZJJOsHSiew3+n8fnwirbr16mPxv3KG/a5BKcKRrqB5ieUrYZSRYLSe2R
+         +rbeQ//4/kCtx9TdPQvkZxnfzXC//6w4Lmvip/U5RySoPnObvvBwEFdLFbWEHBxFqXmK
+         vdhPzTdniHtpQWmXJX1V3Fh8SXeKc5oy2zuQTvD8iV4eCWTFAmWlYmtx0pQcKpKJy9ua
+         wlRwyec7lpqNUO6cgLwRgTSxBHSlZwCbaQMUKucRpO6ylhjQGUX4q4f4s/ICryzS5yp9
+         m0Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKjCmBRY11NkvgZ83A4ih4gyy3DMpF5W1IDDjC8PLRYAPh2IyMyFMt5f10IE73gTs9nJvPk5YcRzWRPPGdAdNgkw7UsVAh1jKVgZz+L6gqYYNO
+X-Gm-Message-State: AOJu0YzjKUwp5Nu5oqbTJR5vlUxpq5Gv5jJcLUSesRJGqaMMDr9RWtgp
+	cwJgnuTJ9/WyWBzikd1Btez7/T6L1xX1NNZj84yzKzoz2VP+zQYMd/Sr/KupTRxvX8N5L/Gk5gR
+	LQoQc43sGeyUdCVVQmzffKzeSYi6lh585AjCN
+X-Google-Smtp-Source: AGHT+IEMdp+uG7mJVElTTW/yEL8BYiZ2DRk3V7ywILd2rFJRrtwJG6ibX6vnK3fQMtsopMVC0v6jyUjKFfJoaAWAji4=
+X-Received: by 2002:a05:6214:20a4:b0:6b5:34b:8c02 with SMTP id
+ 6a1803df08f44-6b61bcf32cbmr76578266d6.27.1720639809913; Wed, 10 Jul 2024
+ 12:30:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708231127.1055083-1-andrii@kernel.org> <20240709101133.GI27299@noisy.programming.kicks-ass.net>
- <CAEf4Bza22X+vmirG=Xf4zPV0DTn9jVXi1SRTn9ff=LG=z2srNQ@mail.gmail.com>
- <20240710113855.GX27299@noisy.programming.kicks-ass.net> <CAEf4BzZFU6CEK-=eTo_LTScYCVoBCYXeH_O_AoZd8rBYiwWzdg@mail.gmail.com>
- <20240710162311.gz3njyjshraeuto7@treble>
-In-Reply-To: <20240710162311.gz3njyjshraeuto7@treble>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jul 2024 12:24:53 -0700
-Message-ID: <CAEf4BzZyskNTxq3jUgJ=TzCvZuCVTv5qbUwZrCtF5_+EGo7-mg@mail.gmail.com>
-Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org, rick.p.edgecombe@intel.com
+References: <20240710001749.1388631-1-almasrymina@google.com>
+ <20240710001749.1388631-5-almasrymina@google.com> <20240710093624.26d22f02@kernel.org>
+In-Reply-To: <20240710093624.26d22f02@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 10 Jul 2024 12:29:58 -0700
+Message-ID: <CAHS8izOoM3YfcQorLJXL4H+t2OL+oJ4fPP5ZBJRhnH5AxsUqfQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v16 04/13] netdev: netdevice devmem allocator
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 9:24=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
+On Wed, Jul 10, 2024 at 9:37=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
 >
-> On Wed, Jul 10, 2024 at 08:11:57AM -0700, Andrii Nakryiko wrote:
-> > On Wed, Jul 10, 2024 at 4:39=E2=80=AFAM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> > > On Tue, Jul 09, 2024 at 10:50:00AM -0700, Andrii Nakryiko wrote:
-> > > > You can see it replaced the first byte, the following 3 bytes are
-> > > > remnants of endb64 (gdb says it's a nop? :)), and then we proceeded=
-,
-> > > > you can see I stepped through a few more instructions.
-> > > >
-> > > > Works by accident?
-> > >
-> > > Yeah, we don't actually have Userspace IBT enabled yet, even on hardw=
-are
-> > > that supports it.
-> >
-> > OK, I don't know what the implications are, but it's a good accident :)
-> >
-> > Anyways, what should I do for v4? Drop is_endbr6() check or keep it?
+> On Wed, 10 Jul 2024 00:17:37 +0000 Mina Almasry wrote:
+> > +     net_devmem_dmabuf_binding_get(binding);
 >
-> Given the current behavior of uprobe overwriting ENDBR64 with INT3, the
-> is_endbr6() check still makes sense, otherwise is_uprobe_at_func_entry()
-> would never return true on OSes which have the ENDBR64 compiled in.
->
-> However, once userspace IBT actually gets enabled, uprobe should skip
-> the ENDBR64 and patch the subsequent instruction.  Then the is_endbr6()
-> check would no longer be needed.
->
+> Why does every iov need to hold a ref? pp holds a ref and does its own
+> accounting, so it won't disappear unless all the pages are returned.
 
-Ok, I'll keep it then, thanks.
+I guess it doesn't really need to, but this is the design/approach I
+went with, and I actually prefer it a bit. The design is borrowed from
+how struct dev_pagemap does this, IIRC. Every page allocated from the
+pgmap holds a reference to the pgmap to ensure the pgmap doesn't go
+away while some page that originated from it is out in the wild, and
+similarly I did so in the binding here.
 
-> --
-> Josh
+We could assume that the page_pool is accounting iovs for us, but that
+is not always true, right? page_pool_return_page() disconnects a
+netmem from the page_pool and AFAIU the page_pool can go away while
+there is such a netmem still in use in the net stack. Currently this
+can't happen with iovs because I currently don't support non-pp
+refcounting for iovs (so they're always recyclable), but you have a
+comment on the other patch asking why that works; depending on how we
+converge on that conversation, the details of how the pp refcounting
+could change.
+
+It's nice to know that the binding refcounting will work regardless of
+the details of how the pp refcounting works. IMHO having the binding
+rely on the pp refcounting to ensure all the iovs are freed introduces
+some fragility.
+
+Additionally IMO the net_devmem_dmabuf_binding_get/put aren't so
+expensive to want to optimize out, right? The allocation is a slow
+path anyway and the fast path recycles netmem.
+
+--
+Thanks,
+Mina
