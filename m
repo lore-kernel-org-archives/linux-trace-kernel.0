@@ -1,55 +1,55 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7B3194099;
-	Wed, 10 Jul 2024 18:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41041922E3;
+	Wed, 10 Jul 2024 18:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720634647; cv=none; b=JyxLmUZB8O1ZTLSu4aNXW7uxdc7LSoccuqaCivbO7qNA5r/ptFEU3tFRfIrAWPYr31JjSRrJDxxZDaqUziGeqalIWOZQbjFVwfmUDKl3OAYARiqQuyFdZiJkCSlzZ4bhvpH1r9Xv7BsleQ8DUM2T00qFME7QGLKamJbfiGeF8w4=
+	t=1720635722; cv=none; b=XsHo/YaBMpuNwc4hoVt44xmgVgjAcmmv9NkeV3HmqEzApFziwfbtnC4pqcpuVX50uS267mjz88/Mdm28AcuKWjmSQdKne5WlOqtnE8tYJcu4kAvAAGshZfV+19vcCNXpibwppTSQRBWOsuLCQuWLrVVCnkHmZ2S1QwX2RT80AKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720634647; c=relaxed/simple;
-	bh=03kxh5pdd60/OEQNjoXPbqHOMmMMfsErItVT3Snd2X0=;
+	s=arc-20240116; t=1720635722; c=relaxed/simple;
+	bh=JhqOtN7Nt4JZLvleltSaa3gZnSb0/3zsfDrUcKoA6rA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bp+uNy2S3L6aG8NuSVl+QyJ3XxLRU9Keih+9XOVYCma05muJbXkFl3UKQX8iwSix23Ju9mBfDQtkKdZs0k39VbDHIumfV7ICKoV+L1u/ai7sV4uAEVIThwOEKO3RP6qQ/2vWRd+Vxl2Fvh/ZkVIx0oE7FKkH9EI0yvmffk2qmm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ht5AEvMe; arc=none smtp.client-ip=209.85.210.173
+	 To:Cc:Content-Type; b=exdbhxyKyXgE5FmwUSnU6ajiZV6DiTKpnFbDRcUEYomzs/dPCyxUkB8zEsgE4geMuea66x2Gk0nV6/2svD223DuMAJW8arzH/EaJEG6Ubh2ov/KQz/hy/88gNsmp46uCGBHjJH+b4I+sflzeB2Mk9ybMQFsVGV1X6l4jYLWaMr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WfsP4bjL; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ht5AEvMe"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70af2b1a35aso81885b3a.1;
-        Wed, 10 Jul 2024 11:04:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfsP4bjL"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-6e7e23b42c3so4084a12.1;
+        Wed, 10 Jul 2024 11:22:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720634645; x=1721239445; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720635720; x=1721240520; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9Mf0qpFnrgMm7ZyO6IPiv9h5/mvXdyNwfvX9vXzksXE=;
-        b=Ht5AEvMedCneS1j4SkdYo8P040s7PkVrqrdgkdLeIqdLNL2X56B8qQ6o2S6xm+fTej
-         3EADYeZXyTCHa2OX1iSCA/xRmFYfP87z9UlKUYGHIO8vZuu5hQH1vTFulNPHtXWMO1VH
-         5OSQKNg9X06/vW0sgfAwwrBdToy39Og8j8pbSCXNDqM9TF0VTrRnEvtOuZeS54LfyUQP
-         tRkKzKBssdA4B5tpAIFfnsR30etyq4TwUqL+iQxCwI5pso8y/70fQxkbPS4DQ3d5Lf2/
-         fKNLhtiVPYMONUok0c/vYUYMLZpGx+7f8wMQEsYyCnWqxTScnNnJ1yM1g0EWeTX0Bp0D
-         XN7A==
+        bh=hijJCwlZElP88i4ewoTv3B36SaCunX2cH9w3pYqOHaM=;
+        b=WfsP4bjLrtLSyx4ZDMI8l/J7qqTgALcgMPEciYB77UZsSAF8yY3IwxZSqybWLZiUWF
+         UQm/pZhwOooxQoN2OPXilynYScqRSNJUFLNkYVszxAtYLj93YtCiraqwCxX7JNFY0N9a
+         exkqiqrPGup5/nq/NTPABke51FQtG6xzLZeJ2iPEh8GpzPqSAd2ilZbm22VaC1a4HTxt
+         mLF2BsYyweQT3kZ5KnfpvEtiVAp5ZUTW0t9E3S0x+p2VpAQR8EbEbYiAJ5iehBI50Knf
+         GCx4prJg0ZvuMSk3Ebb+x2TJiKE+9W3n/nAupjqbJ2dytlnf8P+bvlSmuRWNq3nj2OlM
+         3ihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720634645; x=1721239445;
+        d=1e100.net; s=20230601; t=1720635720; x=1721240520;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9Mf0qpFnrgMm7ZyO6IPiv9h5/mvXdyNwfvX9vXzksXE=;
-        b=usa4Y+nq+VbyhaU8jZ6wWKV0u6o23fEqlfelyOTXE9sdOhXN0PMSYIjOj8xd1+MmRG
-         QDGbhu9q6dktICQaJSsrQa/Vecf7L1GNHYLRRWmFE3ucBoLTHVzh7563jBAUHI+EpJvt
-         jHfaBJEJzVftWTEdVP8WGzDdVHiKHvZn/HVknzE8u6Pdu3/BDeMm3oyTW7o1g8yWeUqm
-         RYZw3OUH4zlZvWkZ7CiYvkjFHH8GQLZs5SE9lzPN0L/iITlSEp5ytzWNYF873qLyJ6CV
-         AaY/2f36EU7SNifjhNC2/rLJsYizGTmbHf211fcMt601slR/WrPLTcbw6z9Eo431B5CK
-         IikA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6AXjbZJkgiDDJDkZ4V743j0XX6rjmYg+Ip2p7DEOsNeH7LfJc4G8Y1vf+sfw0kRc7/69+fYRS/Rm4JD1SFX/F4B9vhbbYltcJ2N4CKYU88eExuYngPIW8Xf+7npVgma+EVytP7qtI7TVrqXPvFEoA
-X-Gm-Message-State: AOJu0YwG9c5E+HSuOJVWGvgQFOlenrHFE76sEpQNuNQQQr7N6kDLTLWZ
-	e7bbk3DZQ8kJ1Bzvgx1loZvUJDQWG13gZgnYwV6/KS0+2XJsi0LZ42G5MYim/t4hzW8Oqv+R17R
-	PHp9K3CZBhsKtbeCjvTgtHG0Rx6w=
-X-Google-Smtp-Source: AGHT+IGKJkC1mkn/dxcVBP1W/9U2WGlsIEcdENR8wOLqnWRuUG5gT4XLsXVVz/NFk9EzBy6diqy3D+5uCT6D1snWnQU=
-X-Received: by 2002:a05:6a20:244e:b0:1c2:89a3:4e19 with SMTP id
- adf61e73a8af0-1c29824370cmr6896548637.27.1720634645531; Wed, 10 Jul 2024
- 11:04:05 -0700 (PDT)
+        bh=hijJCwlZElP88i4ewoTv3B36SaCunX2cH9w3pYqOHaM=;
+        b=k6CFdzVg/mIbCHoRl2Uh3g1G0ylCQ2o9GYczwozRUGpAbtr6b80hfLZURGh1VtMMz/
+         O+Fcdw7+WlbbdxivaM1joKmMokDJZo/FQp+SrDBahwzieMjuSi6S/ZxVIiDEsOAe9pCw
+         IFrSsPV8t859p4+b4mZwVKwHxT6E2AYzDfEOtP+DT4llYjoXuy4lxzZjvhWP2IT61lJ2
+         /nbRWw2i55+aLp/cg5p3S2u0HiJWGukmmHzhi149Fn2QbjumdOXAh/RjFhkADbZ9HOcE
+         uXcxbAtgczgjFOD9NTR9RTY7xjzT/of8l7VHOFo1pjiFT+Oyk4tLqpqbWgz+qjEckWBe
+         AfxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvOARfvRlePMayMTvTyNHb6NzANgJh5pAS8fOhZSqNTnW6LQ+bA0mqAMCdrvCP57Y9KYl+tFFbubhBJNdox3y3Z/oBznTuYSnBl1skC3bKkZMnPnVQX0aUeF1ahcmGrJqwXA+ynqyw+dYFQFT16Wnd
+X-Gm-Message-State: AOJu0YwYkHuO2LAMTMpViTPTIU76E9ZX0c9Jnxer3ErZzg+uZdA4c8zN
+	qzLuMFY7C3PASVt/I1sf/UshQsrUmWxEORqF1oW92sS/Gv7hk1fFhQIzB5RASPzAa0KNl76/y/V
+	arL7r5CTcPB79lpmMOEu1cH0kFA0=
+X-Google-Smtp-Source: AGHT+IEOEXFcihCKMkga13FImtABbjE3JVDkFjywdAZCA6bcksqB7C829APoE+r8J/9VoRjRiwurJuvc1T+BQC/f6JM=
+X-Received: by 2002:a05:6a20:918d:b0:1c2:911f:4d30 with SMTP id
+ adf61e73a8af0-1c2982163cemr6971863637.3.1720635719815; Wed, 10 Jul 2024
+ 11:21:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,12 +57,12 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240710140017.GA1074@redhat.com> <20240710163022.GA13298@redhat.com>
- <20240710163047.GB13298@redhat.com>
-In-Reply-To: <20240710163047.GB13298@redhat.com>
+ <20240710163133.GD13298@redhat.com>
+In-Reply-To: <20240710163133.GD13298@redhat.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jul 2024 11:03:53 -0700
-Message-ID: <CAEf4BzZScUsh94P67-1rKOj=26ycj87nmT0fBrP9BvvmxAi8kQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] uprobes: kill uprobe_register_refctr()
+Date: Wed, 10 Jul 2024 11:21:47 -0700
+Message-ID: <CAEf4BzZa0Ye83QfTbw6Sw3ERg2PJ7ioN_pEFHYui6JGEHhOg4Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] uprobes: make uprobe_register() return struct uprobe *
 To: Oleg Nesterov <oleg@redhat.com>
 Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, clm@meta.com, 
 	jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org, rostedt@goodmis.org, 
@@ -70,77 +70,202 @@ Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, clm@meta.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 9:32=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+On Wed, Jul 10, 2024 at 9:33=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
 te:
 >
-> It doesn't make any sense to have 2 versions of _register(). Note that
-> trace_uprobe_enable(), the only user of uprobe_register(), doesn't need
-> to check tu->ref_ctr_offset to decide which one should be used, it could
-> safely pass ref_ctr_offset =3D=3D 0 to uprobe_register_refctr().
->
-> Add this argument to uprobe_register(), update the callers, and kill
-> uprobe_register_refctr().
+> This way uprobe_unregister() and uprobe_apply() do not need find_uprobe()=
+ +
+> put_uprobe(). And to me this change simplifies the code a bit.
 >
 > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 > ---
->  include/linux/uprobes.h     |  9 ++-------
->  kernel/events/uprobes.c     | 23 +++++------------------
->  kernel/trace/bpf_trace.c    |  2 +-
->  kernel/trace/trace_uprobe.c |  8 ++------
->  4 files changed, 10 insertions(+), 32 deletions(-)
+>  include/linux/uprobes.h     | 14 ++++++------
+>  kernel/events/uprobes.c     | 45 ++++++++++++-------------------------
+>  kernel/trace/bpf_trace.c    | 12 +++++-----
+>  kernel/trace/trace_uprobe.c | 28 +++++++++++------------
+>  4 files changed, 41 insertions(+), 58 deletions(-)
+>
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index aa89a8b67039..399509befcf4 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+
+I don't see struct uprobe forward-declared in this header, maybe we
+should add it?
+
+> @@ -110,9 +110,9 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
+>  extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+>  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+>  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_st=
+ruct *mm, unsigned long vaddr, uprobe_opcode_t);
+> -extern int uprobe_register(struct inode *inode, loff_t offset, loff_t re=
+f_ctr_offset, struct uprobe_consumer *uc);
+> -extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprob=
+e_consumer *uc, bool);
+> -extern void uprobe_unregister(struct inode *inode, loff_t offset, struct=
+ uprobe_consumer *uc);
+> +extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset=
+, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+> +extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *u=
+c, bool);
+> +extern void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consu=
+mer *uc);
+>  extern int uprobe_mmap(struct vm_area_struct *vma);
+>  extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long star=
+t, unsigned long end);
+>  extern void uprobe_start_dup_mmap(void);
+> @@ -147,18 +147,18 @@ static inline void uprobes_init(void)
+>
+>  #define uprobe_get_trap_addr(regs)     instruction_pointer(regs)
+>
+> -static inline int
+> +static inline struct uprobe *
+>  uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offse=
+t, struct uprobe_consumer *uc)
+>  {
+> -       return -ENOSYS;
+> +       return ERR_PTR(-ENOSYS);
+>  }
+>  static inline int
+> -uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer =
+*uc, bool add)
+> +uprobe_apply(struct uprobe* uprobe, struct uprobe_consumer *uc, bool add=
+)
+>  {
+>         return -ENOSYS;
+>  }
+
+complete aside, when I was looking at this code I was wondering why we
+even need uprobe_apply, it looks like some hacky variant of
+uprobe_register and uprobe_unregister. I didn't dig deeper, but think
+whether we even need this? If this is just to avoid (for some period)
+some consumer callback calling, then that could be handled at the
+consumer side by ignoring such calls.
+
+callback call is cheap, it's the int3 handling that's expensive and
+with uprobe_apply we are already paying it anyways, so what is this
+for?
+
+>  static inline void
+> -uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_cons=
+umer *uc)
+> +uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
+>  {
+>  }
+>  static inline int uprobe_mmap(struct vm_area_struct *vma)
+
+[...]
+
+>
+> @@ -1133,41 +1126,39 @@ EXPORT_SYMBOL_GPL(uprobe_unregister);
+>   * refcount is released when the last @uc for the @uprobe
+>   * unregisters. Caller of uprobe_register() is required to keep @inode
+>   * (and the containing mount) referenced.
+> - *
+> - * Return errno if it cannot successully install probes
+> - * else return 0 (success)
+
+mention that it never returns NULL, but rather encodes error code
+inside the pointer on error? It's an important part of the contract.
+
+>   */
+> -int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_o=
+ffset,
+> -                   struct uprobe_consumer *uc)
+> +struct uprobe *uprobe_register(struct inode *inode,
+> +                               loff_t offset, loff_t ref_ctr_offset,
+> +                               struct uprobe_consumer *uc)
+>  {
+
+[...]
+
+> @@ -1186,35 +1177,27 @@ int uprobe_register(struct inode *inode, loff_t o=
+ffset, loff_t ref_ctr_offset,
+>
+>         if (unlikely(ret =3D=3D -EAGAIN))
+>                 goto retry;
+> -       return ret;
+> +
+> +       return ret ? ERR_PTR(ret) : uprobe;
+>  }
+>  EXPORT_SYMBOL_GPL(uprobe_register);
+>
+>  /*
+
+this should be /** for doccomment checking (you'd get a warning for
+missing @uprobe if there was this extra star)
+
+>   * uprobe_apply - unregister an already registered probe.
+> - * @inode: the file in which the probe has to be removed.
+> - * @offset: offset from the start of the file.
+
+add @uprobe description now?
+
+>   * @uc: consumer which wants to add more or remove some breakpoints
+>   * @add: add or remove the breakpoints
+>   */
+> -int uprobe_apply(struct inode *inode, loff_t offset,
+> -                       struct uprobe_consumer *uc, bool add)
+> +int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool=
+ add)
+>  {
+> -       struct uprobe *uprobe;
+>         struct uprobe_consumer *con;
+>         int ret =3D -ENOENT;
 >
 
-LGTM with few nits below.
+[...]
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> @@ -3180,10 +3181,8 @@ static void bpf_uprobe_unregister(struct path *pat=
+h, struct bpf_uprobe *uprobes,
+>  {
+>         u32 i;
+>
+> -       for (i =3D 0; i < cnt; i++) {
+> -               uprobe_unregister(d_real_inode(path->dentry), uprobes[i].=
+offset,
+> -                                 &uprobes[i].consumer);
+> -       }
+> +       for (i =3D 0; i < cnt; i++)
 
->  /*
->   * uprobe_apply - unregister an already registered probe.
->   * @inode: the file in which the probe has to be removed.
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index d1daeab1bbc1..467f358c8ce7 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -3477,7 +3477,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_at=
-tr *attr, struct bpf_prog *pr
+you'll now need !IS_ERR_OR_NULL(uprobes[i].uprobe) check (or just NULL
+check if you null-out it below)
+
+> +               uprobe_unregister(uprobes[i].uprobe, &uprobes[i].consumer=
+);
+>  }
+>
+>  static void bpf_uprobe_multi_link_release(struct bpf_link *link)
+> @@ -3477,11 +3476,12 @@ int bpf_uprobe_multi_link_attach(const union bpf_=
+attr *attr, struct bpf_prog *pr
 >                       &bpf_uprobe_multi_link_lops, prog);
 >
 >         for (i =3D 0; i < cnt; i++) {
-> -               err =3D uprobe_register_refctr(d_real_inode(link->path.de=
-ntry),
-> +               err =3D uprobe_register(d_real_inode(link->path.dentry),
+> -               err =3D uprobe_register(d_real_inode(link->path.dentry),
+> +               uprobes[i].uprobe =3D uprobe_register(d_real_inode(link->=
+path.dentry),
+
+will uprobe keep inode alive as long as uprobe is attached? If that's
+the case we can get rid of link->path (have it only as a local
+variable which we put as soon as we are done with registration). We
+can probably do that clean up separately, I'll defer to Jiri.
+
 >                                              uprobes[i].offset,
 >                                              uprobes[i].ref_ctr_offset,
 >                                              &uprobes[i].consumer);
+> -               if (err) {
+> +               if (IS_ERR(uprobes[i].uprobe)) {
+> +                       err =3D PTR_ERR(uprobes[i].uprobe);
 
-please adjust indentation here
+we can NULL-out uprobe on error for bpf_uprobe_unregister() to handle
+only NULL vs non-NULL case
 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index c98e3b3386ba..78a5c40e885a 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -1089,12 +1089,8 @@ static int trace_uprobe_enable(struct trace_uprobe=
- *tu, filter_func_t filter)
->         tu->consumer.filter =3D filter;
->         tu->inode =3D d_real_inode(tu->path.dentry);
->
-> -       if (tu->ref_ctr_offset)
-> -               ret =3D uprobe_register_refctr(tu->inode, tu->offset,
-> -                               tu->ref_ctr_offset, &tu->consumer);
-> -       else
-> -               ret =3D uprobe_register(tu->inode, tu->offset, &tu->consu=
-mer);
-> -
-> +       ret =3D uprobe_register(tu->inode, tu->offset, tu->ref_ctr_offset=
-,
-> +                             &tu->consumer);
+or maybe better yet let's just have local struct uprobe variable and
+only assign it if registration succeeded (still need NULL check in
+bpf_uprobe_unregister above)
 
-doesn't fit under 100 characters? If it does, please keep as a single line.
+>                         bpf_uprobe_unregister(&path, uprobes, i);
+>                         goto error_free;
+>                 }
 
->         if (ret)
->                 tu->inode =3D NULL;
->
-> --
-> 2.25.1.362.g51ebf55
->
->
+[...]
