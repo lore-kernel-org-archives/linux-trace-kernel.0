@@ -1,116 +1,79 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1E218787A;
-	Wed, 10 Jul 2024 15:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71910A09;
+	Wed, 10 Jul 2024 15:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720624470; cv=none; b=ryv6IVwQO5Wz8Zr4/1shPjnVCtbb2Xh+P2BDXAgFvGa1JAukN4TihwRKT+YIH1ZNlNyyEQN0/PzWqY4wsOVNgBeueQJY1oB8ColP/e34TzMF9OQziwu7Tix6TQqx1wbnZBAWNn9GbZDKR0RalGu1OODwqXkTT4xn3eMLj/Hg95s=
+	t=1720625751; cv=none; b=cpVDIJOw9hBt/cjHMCfFmB/28MlAZcsb9fMoZBIpyrZTgphtdNMX62DFhqzKCDhpU2lETKqMaP+4recl3LfsuHwC5NJfFUsdji6EloT6rCexuEox2gMA8EIiRteN0iF2ihBFX8VCmPEK9tppYzUbHG4FF2WGLZZiHyWOsNcUVTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720624470; c=relaxed/simple;
-	bh=UrbByBksEGd+eZN60frnExNhYd+ywJzm4Do45Eb5hq0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MMaosm2qLj+IjRAEsHVPu98DtKTHuO1+JCi9QPaeqp3EbMQAhNlLd7PnHwvuZujLNkjKOZ/mr6ewrtJsRHJof8kuGM27WGKZ/YP7T7BrCv2eY17fEZ0v3UAWNC7pLhKB82Xqmv7CCxWSKT8aLRour0ogrOC0lUnQrN1vDnfDAKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YseaIVg4; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720625751; c=relaxed/simple;
+	bh=7nXaOQ2Y21REg/4hAQAvgB2v44nvBiwZIAy1N2EwgCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hjcEVsu79zWT/hf0wnL45AAPB4i2gj3zARouZJEg7JUFMi6FYvWODg2i2FX8FO9r7LUba59XqGt2EUi6LdUnWzSTLlVkkS36OYTeKVeT/aBZwnVVFvG8w+Bx+45lPWtaFPi0PzD1JxB0/UzUp+0YTKqQEUkQSlNYV+MIfFL8fXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfbpzxdf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YseaIVg4"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a77c25beae1so711467566b.2;
-        Wed, 10 Jul 2024 08:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720624467; x=1721229267; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/FP9XHDkE847XSteYtGeQXsUShUZifWlfXE9dC/r6b4=;
-        b=YseaIVg48fSUXwUB+MU4WMzrW2ON66ld0b55rvT5aS5wSbPkrQhOpREpVPzJu7EvBk
-         fR+H6vc7kLt9hNIW4mlJxr6GR3UrBf2Hl//bPA4rIMo2IZJGoLtHja+VzPMqr+yG4GzT
-         TCOOVxnuBHkpQVNcLme1T+yVztMZuZhC5x7l3ayEvsQZneeD2QTg4q//hL9t/Q4JbLMC
-         SFy81VVr/l7RVTkTqeXcKosgSpKzZ/IRJLvAkTWFy+7AXklnOCc4IXl20WS8WkNd2kEF
-         0QxmUj251qCV61l2UYHCXGalpXDw39MyulmxEbwQou219RDumY5fCZY9A7gQTcEoiW6B
-         wKeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720624467; x=1721229267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/FP9XHDkE847XSteYtGeQXsUShUZifWlfXE9dC/r6b4=;
-        b=vK2mckctnpEBuGE3IFJLm8kjjY4xGei+BYkwWh6oOBVKQpwVdUHflAkNG2ZjAFNDby
-         gzqy1FMI4oxBXq1pyUkQJ2rulGsZjxwmPaEOC0p+AqBCzxi7y5HU4ETrq+GEiXEyB35w
-         2HV8+EfFL/AzTMmXbIqcuV/CZQ2BCjMobgsrh2AMzl/Cu0q3evRfzA9PrkVdHrmGjQpI
-         beRuvTcUPveI4gJBOLy20BjTTl5amJOZtXSEAWIhBBrRCP/6q5c2UZJfAnGJ5uVrGgbG
-         4oQOawJM/8wRriGNq8s8Z2ySzT0Br5G/JdnugvX0i2YkSIsHKZzl4ro5wUBlfr3h3/jH
-         QG2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVya473d9c1aVwoDx++4NDlyHADqKTuGFy2XQbYyVQLswAV0Qo7YUMTtC1l+IikP+98OUaOQjDFV0DbbMCtQf1TLB+6e2E7spzGAjdXcfAnzaR626/ZWFjgN4NVeDgeO+7s5fgiADgT
-X-Gm-Message-State: AOJu0YzphCtncod7RC1cDnVR5ClRtI4UX8mNHDzrlFkA7gJ/aXNxws2p
-	Zw/LksCCO2cGjm+690Q17jK4CgSRqIk/ziClNVbdLetoJYVUaF9fTufEEbW9SSr9rNtTVuot+oR
-	B2DPWux4cIYObWz7RWnbSAYkiE4g=
-X-Google-Smtp-Source: AGHT+IGZfnEJuGTgH9DTC+FizTzB0QXdloA9vZ/oMq8M5hXxP7kM3pc8s5xpnpn7gxkuujvthkgFDMxtiaTxBY2c5So=
-X-Received: by 2002:a17:906:480d:b0:a77:c364:c4eb with SMTP id
- a640c23a62f3a-a780b6b164cmr350408466b.20.1720624467202; Wed, 10 Jul 2024
- 08:14:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfbpzxdf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10EF9C4AF0F;
+	Wed, 10 Jul 2024 15:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720625750;
+	bh=7nXaOQ2Y21REg/4hAQAvgB2v44nvBiwZIAy1N2EwgCI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kfbpzxdfM08YiMA9CnN1Ds8V/6cfkbBcUBSyJUyyszqmvYhChL4AE5DcSgHpHQIYk
+	 uK6ddvllWwmNjBDlk3YUhq9pHqSdF5gfYxmE2VWuRJ24IMML35Yn06oLI7IZlAIQyu
+	 e6KTtc0qNrFVdrEHQO4OpHLx928c8B5RM0yZfDSyHHGyN8gHHr0wE6R/0HM9//M+dF
+	 WOS/N61/Bw/aAKSPINmAQeel29qmosvlZBX5HDEDRV/WOCgFhRB43qP/dsRIiCfz9e
+	 iA0zOurNkwSguAGh8kpj73E0ZgtzvHfuDJS1HaVwMLIIvDDkUTbyuNZPVPHOiytyeH
+	 99nf/1JFxtdpw==
+Date: Wed, 10 Jul 2024 08:35:48 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v16 01/13] netdev: add
+ netdev_rx_queue_restart()
+Message-ID: <20240710083548.351e51e5@kernel.org>
+In-Reply-To: <20240710001749.1388631-2-almasrymina@google.com>
+References: <20240710001749.1388631-1-almasrymina@google.com>
+	<20240710001749.1388631-2-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240701223935.3783951-1-andrii@kernel.org> <20240701223935.3783951-2-andrii@kernel.org>
- <20240703113829.GA28444@redhat.com> <20240710133112.GA9228@redhat.com>
-In-Reply-To: <20240710133112.GA9228@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jul 2024 08:14:12 -0700
-Message-ID: <CAEf4BzYDPqVDkyt_Jagn8sRn_J7+f6eM1_H6o0T6-VpXbv6k-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 01/12] uprobes: update outdated comment
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, bpf@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	clm@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 10, 2024 at 6:33=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 07/03, Oleg Nesterov wrote:
-> >
-> > >     /*
-> > > -    * The NULL 'tsk' here ensures that any faults that occur here
-> > > -    * will not be accounted to the task.  'mm' *is* current->mm,
-> > > -    * but we treat this as a 'remote' access since it is
-> > > -    * essentially a kernel access to the memory.
-> > > +    * 'mm' *is* current->mm, but we treat this as a 'remote' access =
-since
-> > > +    * it is essentially a kernel access to the memory.
-> > >      */
-> > >     result =3D get_user_pages_remote(mm, vaddr, 1, FOLL_FORCE, &page,=
- NULL);
-> >
-> > OK, this makes it less confusing, so
-> >
-> > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> >
-> > ---------------------------------------------------------------------
-> > but it still looks confusing to me. This code used to pass tsk =3D NULL
-> > only to avoid tsk->maj/min_flt++ in faultin_page().
-> >
-> > But today mm_account_fault() increments these counters without checking
-> > FAULT_FLAG_REMOTE, mm =3D=3D current->mm, so it seems it would be bette=
-r to
-> > just use get_user_pages() and remove this comment?
->
-> Well, yes, it still looks confusing, imo.
->
-> Andrii, I hope you won't mind if I redo/resend this and the next cleanup?
->
-> The next one only updates the comment above uprobe_write_opcode(), but
-> it would be nice to explain mmap_write_lock() in register_for_each_vma().
->
+On Wed, 10 Jul 2024 00:17:34 +0000 Mina Almasry wrote:
+> +	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
 
-I don't mind a bit, thanks for sending the patches!
-
-> Oleg.
->
->
+ASSERT_RTNL() ?
