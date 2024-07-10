@@ -1,119 +1,125 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD457D08D;
-	Wed, 10 Jul 2024 09:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A2F17FD;
+	Wed, 10 Jul 2024 09:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720603215; cv=none; b=HXw3zRdvkd7WoJ35O10GuRuIDmjx9v5kB8r2qpaiVzVvP0709xUCOpzuLCwa6mqHPNszTYLxC1O8/fQVw7qhViNv5B+FWJyqXi1nQDdZ83Hm5F1jvI3eb8MijGuhKuWS62wGfI9lF6FMlXB+HMk3aC4Be3bT6TVVhE8ZoEClFpY=
+	t=1720604337; cv=none; b=Gm7aa93Q8Mc4hVFIKIP1IehzyBziEUu/NBPcnMoCy0gFE/8BWd3/nmCZSEpvKWPpMNQbtiQl71CZg9c2da+x583i+1RasKqD5db4SLwA55VykYiU0z8Z8xzC521l07lM7vYu7/zzOGCOI7EkFbraumvHLc5wuOctXW60QnjOyL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720603215; c=relaxed/simple;
-	bh=iiJTusJ4u14LeGpn7VxH39f7OV4SKz8UFp4fmuGIOSQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uYR0T0Vp8kqVO7KNkpIiXc235c79cCfzU0xvptriN2Zb4VQx+MIjk4EbNZJsidUSDwjDcuZEuqCHzar2gGNAxJFneRSjKWB9Bj7+s5pY3+6e7aDqe2J9V0O+fUQhblbudiJ7ldOaqh1fhfVFInO3aWtf9Wm9KIzIBIKOzRMqYSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=O/cGqZpr; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1720604337; c=relaxed/simple;
+	bh=BytwbyifiKESLkwzNohBtpgLDUZDoGmKbGcw/9M/2/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BKci7hso2bjcQAAAEDwY4M/tPzOhCHnjl5Yze2gFgUmmoNDoo7mt2YGZ96fUG4EQWO3iis/tV5Nj+5mQhtdJNE8SV2eFni/n79luHxvdydnlKbHe1fUwIqqnS/bdZEuq0xxFkXL6g31qF06xjE+YuySLmJBgLxVt8mTYeZsw0pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Pj4UUZzD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="O/cGqZpr"
-X-UUID: 98dae7a03e9d11efb5b96b43b535fdb4-20240710
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=gwqM7M4CejLnrb6PXGa1wK3vz+TNRJWDRKuQxwjYyBM=;
-	b=O/cGqZprTM4DrwyH+t66lCfKfaN7DGQhoz6Bq+iW93A9QHfNoJw+GyQGOzTxK33OHV5st2TxMm0hfiWAcIAx7wwOJF5RCImiEg65uODG8mA1LHDAr18aQBF4opE5msePrliJjOAuUS2Wx6eYNjQLH7KSNIPaeIr7WI0iSRzrg4k=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:8a4b6c98-70e6-4727-80d7-ff4540456c3e,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:6e152dd5-0d68-4615-a20f-01d7bd41f0bb,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 98dae7a03e9d11efb5b96b43b535fdb4-20240710
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <tze-nan.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1549598604; Wed, 10 Jul 2024 17:20:06 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 10 Jul 2024 02:20:06 -0700
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 10 Jul 2024 17:20:06 +0800
-From: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-To: <rostedt@goodmis.org>
-CC: <cheng-jui.wang@mediatek.com>, <bobule.chang@mediatek.com>,
-	<eric-yk.wu@mediatek.com>, <wsd_upstream@mediatek.com>, Tze-nan Wu
-	<Tze-nan.Wu@mediatek.com>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: [PATCH] tracing: Fix overflow in get_free_elt()
-Date: Wed, 10 Jul 2024 17:19:05 +0800
-Message-ID: <20240710091908.7030-1-Tze-nan.Wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Pj4UUZzD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D881940E019C;
+	Wed, 10 Jul 2024 09:38:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ZUC_3agCiurD; Wed, 10 Jul 2024 09:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720604327; bh=4tD55kRk58dzBkcPyPWKImU3k357bp6g9dUEFXRiH5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pj4UUZzD3z8BN3ScRN0bDvLplYjALfVoYh3H4FoAWcjoklLMm/Ibbl0ZdPlS5IFFw
+	 ouLNVb7H/H8KYCPtM63E4bN4qpeW4GYUqZNvoHE8AAkf0lSKN3UZMtIrq+f52ANGti
+	 Set4pCeQu/dAf8OsKNbXUHRFC5t2uzkp6uxkRf7kq9wtgiKzVvTi4SzXsZGFHX61DF
+	 XsOieiXltD7d8US6ccBWrW6JZptU3A/NkBpcRvt5EDAaSL5+YcspcPi2PnGZvrtwYx
+	 rtrPsyW8TzJt1OVuiCyEgpoweOkTrF1pBohA+idpm1GZzuTb8KJGcbzCsjGEynvy0x
+	 PY0wS3MjeESBrQCjAYhExEAQmYge/xqabxnaPgN1Qb1ehMBQRjc57hcLYNC03GFoBE
+	 UCgXv13WkJYt96YwuTARB3bDoklfU8tNocMlPdeGw4qklW0EWaYnhlxTrojbu2KTGL
+	 XxlZ8Sc7cbo1b7QdX9W5Haj+/SBXQnhZl2xgn1ld9x2NZUzVKVtOLJytZ3djQ2lUzr
+	 c1aY0ZLuxAlok9Tr88YqCnNkbKAe1w+91nM2BDvEDWX0IV7mT6cuawx+qQ11mmPNZW
+	 YB9LGO9XkK+33kWbuYR82elmqT6ruXSg1JkDFjIhFIyXRn7aXdNIrGWFJvxtuQKb4i
+	 7u+qClYOlf/gq9G3Fb8iGQRg=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 52FB640E019D;
+	Wed, 10 Jul 2024 09:38:29 +0000 (UTC)
+Date: Wed, 10 Jul 2024 11:38:28 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Naik, Avadhut" <avadnaik@amd.com>
+Cc: x86@kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tony.luck@intel.com,
+	rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	rostedt@goodmis.org, lenb@kernel.org, mchehab@kernel.org,
+	james.morse@arm.com, airlied@gmail.com, yazen.ghannam@amd.com,
+	john.allen@amd.com, Avadhut Naik <avadhut.naik@amd.com>
+Subject: Re: [PATCH v2 2/4] x86/mce, EDAC/mce_amd: Add support for new
+ MCA_SYND{1,2} registers
+Message-ID: <20240710093828.GDZo5WlPrXLg-SbBHd@fat_crate.local>
+References: <20240625195624.2565741-1-avadhut.naik@amd.com>
+ <20240625195624.2565741-3-avadhut.naik@amd.com>
+ <20240626111036.GOZnv3LFCPnYfrRYSE@fat_crate.local>
+ <6c318161-9ae4-4965-b8f3-e38bf1393628@amd.com>
+ <20240626181805.GDZnxbXRJlCecNeDGW@fat_crate.local>
+ <17bba31a-9bb0-40e5-be7e-96ac6d421066@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <17bba31a-9bb0-40e5-be7e-96ac6d421066@amd.com>
 
-"tracing_map->next_elt" in get_free_elt() is at risk of overflowing.
+On Tue, Jul 09, 2024 at 01:27:25AM -0500, Naik, Avadhut wrote:
+> IIUC, its an abbreviation of a Latin word and is used as a synonym for "namely"
+> or "that is to say".
+> Might not be the best choice in this case. Will change it.
 
-Once it overflows, new elements can still be inserted into the tracing_map
-even though the maximum number of elements (`max_elts`) has been reached.
-Continuing to insert elements after the overflow could result in the
-tracing_map containing "tracing_map->max_size" elements, leaving no empty
-entries.
-If any attempt is made to insert an element into a full tracing_map using
-`__tracing_map_insert()`, it will cause an infinite loop with preemption
-disabled, leading to a CPU hang problem.
+I learn new stuff every day:
 
-Fix this by preventing any further increments to "tracing_map->next_elt"
-once it reaches "tracing_map->max_elt".
+https://en.wikipedia.org/wiki/Viz.
 
-Co-developed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-Signed-off-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
----
- kernel/trace/tracing_map.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Userspace error decoding tools like the rasdaemon gather related hardware error
+> information through the tracepoints. As such, its important to have these two
+> registers in the tracepoint so that the tools like rasdaemon can parse them
+> and output the supplemental error information like FRU Text contained in them.
 
-diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-index a4dcf0f24352..3a56e7c8aa4f 100644
---- a/kernel/trace/tracing_map.c
-+++ b/kernel/trace/tracing_map.c
-@@ -454,7 +454,7 @@ static struct tracing_map_elt *get_free_elt(struct tracing_map *map)
- 	struct tracing_map_elt *elt = NULL;
- 	int idx;
- 
--	idx = atomic_inc_return(&map->next_elt);
-+	idx = atomic_fetch_add_unless(&map->next_elt, 1, map->max_elts);
- 	if (idx < map->max_elts) {
- 		elt = *(TRACING_MAP_ELT(map->elts, idx));
- 		if (map->ops && map->ops->elt_init)
-@@ -699,7 +699,7 @@ void tracing_map_clear(struct tracing_map *map)
- {
- 	unsigned int i;
- 
--	atomic_set(&map->next_elt, -1);
-+	atomic_set(&map->next_elt, 0);
- 	atomic64_set(&map->hits, 0);
- 	atomic64_set(&map->drops, 0);
- 
-@@ -783,7 +783,7 @@ struct tracing_map *tracing_map_create(unsigned int map_bits,
- 
- 	map->map_bits = map_bits;
- 	map->max_elts = (1 << map_bits);
--	atomic_set(&map->next_elt, -1);
-+	atomic_set(&map->next_elt, 0);
- 
- 	map->map_size = (1 << (map_bits + 1));
- 	map->ops = ops;
+Put *that* in the commit message - do not explain what the patch does.
+
+> Got it. The first SoB entry is of the primary author. The successive SoB's are
+> from the people handling and transporting the patch.
+
+Exactly!
+
+> IOW, the route taken by a patch, as its propagated, to maintainers and eventually
+> to Linus, should be evident from the SoB chain.
+
+You got it.
+
+> With this set, the first two elements of the vendor data dynamic array are SYND 1/2
+> registers while the third element is MCA_CONFIG (added through patch 4 of the set).
+> Now, in rasdaemon, SYND1/2 register contents (i.e. first two fields) are interpreted
+> as FRU Text only if BIT(9) of MCA_CONFIG (third field) is set.
+> 
+> Thus, we depend on array's layout for accurate FRU Text decoding in the rasdaemon.
+
+So it sounds to me like we want to document and thus freeze the
+vendor-specific blob layout because tools are going to be using and parsing
+it. And this will spare us the kernel version checks.
+
+And new additions to that AMD-specific blob will come at the end and will
+have to be documented too.
+
+That sounds like an ok compromise to me...
+
+Thx.
+
 -- 
-2.18.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
