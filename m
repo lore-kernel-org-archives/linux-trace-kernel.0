@@ -1,353 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FEB1953BB
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839DF198A06;
+	Wed, 10 Jul 2024 16:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720629204; cv=none; b=ohZZizvUOaRbPDgKmzFLtIVJczNccdtmF2jwVgEF/M/LNdUmS6Fsm6obZLBt33ZwcV5ZiQ2mGXxKm36+/Uf4FWZREOLauc872XS1cVHHQ1fBrboTT4WI9TAHpvvNLEQqRuEk9WOkYCECe1ZD5FLIwIcji6yBOJXC246TRslzZXA=
+	t=1720629387; cv=none; b=u/dlIfjXtGytyJgLOOCFnjXURJ+72mBWir/zeIc6u6VBGnLp9p4KzMbfzpTgrZ/c5r1sbSAL7fWx7FqMpkli0HFzOITUlrMc8Gh6qeFxvtYGhYO24GK1nC+Cs/5YFx+47ZkVGojTEkLrVH3ujfPoG12AnOWkw2IM9W41YaPgjWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720629204; c=relaxed/simple;
-	bh=xSn6aWn2VSQKHTpQ2P/SzpL4K8+RF4WT6iLKwi2Jo88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZ1yY3KtS5bWy2CHPkM+A2wL4qMRLktCX6z71ZIpLxydGYMasSsJI/m3wAEzO31Vqmdy/qWmZuuGgaat5+nl1P+jVNRNJ0U49Gkps+T+MI1maRpejmsLGBnpPIIsKBB6m63gz8F8sQknd6c8tz7cj6Zo1ejKmRw6YLanYgP/hO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V4hfGr+j; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720629387; c=relaxed/simple;
+	bh=VOEQami4KT93qBtaeJsQ3QrGdn1x7XmqJH9KjXDTUok=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YOQgTXVT5Mk+UUvrf7bx0Am8Ni026QrPub4DJP/2ixizPphjjbcILbWJK+zQkLUVToOJ3PbeM0uCXjdzbNSGfuIUXDQmK/LjGPhuI3Wm4Ewb7iojAAXERTJcJ1689SQg4EprXjIBvdyWrubmNaLla5v+raW2SRsYtKnDXX0mrmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aOB39CZJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V4hfGr+j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720629201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jbKCCwZUAG8+N7TuFtLLFIVTbn6KobI4S7EYoLAaXBE=;
-	b=V4hfGr+jideQtkqUDVfJ2Of+Pvbuw+U2cnl1XQ4zYS3ANU2ifAiL0kv+lO3kxEDiXVp6+T
-	E0sLL+CKWriCq5kUincHdv95N0AYecgwtPYDdsv1wgUoqXGdHRUaCHLRptU2EMhkNLdhZR
-	85q9m77v7xkROLwkmswV7BbvtP7t380=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-422-nzynZEw5OtCFZTzOKy9FUw-1; Wed,
- 10 Jul 2024 12:33:17 -0400
-X-MC-Unique: nzynZEw5OtCFZTzOKy9FUw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C689196CDEF;
-	Wed, 10 Jul 2024 16:33:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3EF321955E70;
-	Wed, 10 Jul 2024 16:33:10 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 10 Jul 2024 18:31:38 +0200 (CEST)
-Date: Wed, 10 Jul 2024 18:31:33 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org
-Cc: clm@meta.com, jolsa@kernel.org, mingo@kernel.org, paulmck@kernel.org,
-	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 3/3] uprobes: make uprobe_register() return struct uprobe *
-Message-ID: <20240710163133.GD13298@redhat.com>
-References: <20240710140017.GA1074@redhat.com>
- <20240710163022.GA13298@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aOB39CZJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D988C4AF0E;
+	Wed, 10 Jul 2024 16:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720629387;
+	bh=VOEQami4KT93qBtaeJsQ3QrGdn1x7XmqJH9KjXDTUok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aOB39CZJyMSyw1K+rruCMig4enLLpVwC4wmcFjrJNki6A1jlaMJwosJ9qi8gRob9s
+	 z7kFdpwuqr9jEMtf/y6F9JBirzQmzNumlVlD4b5l1/DcvZl1p0vOnft2M9nqMidkg2
+	 fMeKFVzWzpdKvcOJw8T8tVAueyIBUoE5fy6eFWwP05DhpQeDO1LP4UgyB2r6dI3IcB
+	 VwAb4piQ8k8z2t0MaNbM+KdSE042QTqyYizf8pBU/ymZjtyw0F38O1P7ZzGOvlO5KG
+	 spFlwBsXz0iOlmIq8Tsu0Zw/Wqy210Von3cqCm6mraFQxJZhjqMZtEzBl7xdBYwb2m
+	 CVueEk61o919A==
+Date: Wed, 10 Jul 2024 09:36:24 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, Kaiyuan
+ Zhang <kaiyuanz@google.com>
+Subject: Re: [PATCH net-next v16 04/13] netdev: netdevice devmem allocator
+Message-ID: <20240710093624.26d22f02@kernel.org>
+In-Reply-To: <20240710001749.1388631-5-almasrymina@google.com>
+References: <20240710001749.1388631-1-almasrymina@google.com>
+	<20240710001749.1388631-5-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240710163022.GA13298@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This way uprobe_unregister() and uprobe_apply() do not need find_uprobe() +
-put_uprobe(). And to me this change simplifies the code a bit.
+On Wed, 10 Jul 2024 00:17:37 +0000 Mina Almasry wrote:
+> +	net_devmem_dmabuf_binding_get(binding);
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- include/linux/uprobes.h     | 14 ++++++------
- kernel/events/uprobes.c     | 45 ++++++++++++-------------------------
- kernel/trace/bpf_trace.c    | 12 +++++-----
- kernel/trace/trace_uprobe.c | 28 +++++++++++------------
- 4 files changed, 41 insertions(+), 58 deletions(-)
-
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index aa89a8b67039..399509befcf4 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -110,9 +110,9 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
- extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
- extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
- extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
--extern int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
--extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
--extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-+extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
-+extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
-+extern void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc);
- extern int uprobe_mmap(struct vm_area_struct *vma);
- extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
- extern void uprobe_start_dup_mmap(void);
-@@ -147,18 +147,18 @@ static inline void uprobes_init(void)
- 
- #define uprobe_get_trap_addr(regs)	instruction_pointer(regs)
- 
--static inline int
-+static inline struct uprobe *
- uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc)
- {
--	return -ENOSYS;
-+	return ERR_PTR(-ENOSYS);
- }
- static inline int
--uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool add)
-+uprobe_apply(struct uprobe* uprobe, struct uprobe_consumer *uc, bool add)
- {
- 	return -ENOSYS;
- }
- static inline void
--uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
- }
- static inline int uprobe_mmap(struct vm_area_struct *vma)
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index e5b7c6239970..dba41403d7b8 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1100,22 +1100,15 @@ __uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
- 
- /*
-  * uprobe_unregister - unregister an already registered probe.
-- * @inode: the file in which the probe has to be removed.
-+ * @uprobe: uprobe to remove
-  * @offset: offset from the start of the file.
-  * @uc: identify which probe if multiple probes are colocated.
-  */
--void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
--	struct uprobe *uprobe;
--
--	uprobe = find_uprobe(inode, offset);
--	if (WARN_ON(!uprobe))
--		return;
--
- 	down_write(&uprobe->register_rwsem);
- 	__uprobe_unregister(uprobe, uc);
- 	up_write(&uprobe->register_rwsem);
--	put_uprobe(uprobe);
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister);
- 
-@@ -1133,41 +1126,39 @@ EXPORT_SYMBOL_GPL(uprobe_unregister);
-  * refcount is released when the last @uc for the @uprobe
-  * unregisters. Caller of uprobe_register() is required to keep @inode
-  * (and the containing mount) referenced.
-- *
-- * Return errno if it cannot successully install probes
-- * else return 0 (success)
-  */
--int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset,
--		    struct uprobe_consumer *uc)
-+struct uprobe *uprobe_register(struct inode *inode,
-+				loff_t offset, loff_t ref_ctr_offset,
-+				struct uprobe_consumer *uc)
- {
- 	struct uprobe *uprobe;
- 	int ret;
- 
- 	/* Uprobe must have at least one set consumer */
- 	if (!uc->handler && !uc->ret_handler)
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	/* copy_insn() uses read_mapping_page() or shmem_read_mapping_page() */
- 	if (!inode->i_mapping->a_ops->read_folio &&
- 	    !shmem_mapping(inode->i_mapping))
--		return -EIO;
-+		return ERR_PTR(-EIO);
- 	/* Racy, just to catch the obvious mistakes */
- 	if (offset > i_size_read(inode))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	/*
- 	 * This ensures that copy_from_page(), copy_to_page() and
- 	 * __update_ref_ctr() can't cross page boundary.
- 	 */
- 	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
-  retry:
- 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
- 	if (IS_ERR(uprobe))
--		return PTR_ERR(uprobe);
-+		return uprobe;
- 
- 	/*
- 	 * We can race with uprobe_unregister()->delete_uprobe().
-@@ -1186,35 +1177,27 @@ int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset,
- 
- 	if (unlikely(ret == -EAGAIN))
- 		goto retry;
--	return ret;
-+
-+	return ret ? ERR_PTR(ret) : uprobe;
- }
- EXPORT_SYMBOL_GPL(uprobe_register);
- 
- /*
-  * uprobe_apply - unregister an already registered probe.
-- * @inode: the file in which the probe has to be removed.
-- * @offset: offset from the start of the file.
-  * @uc: consumer which wants to add more or remove some breakpoints
-  * @add: add or remove the breakpoints
-  */
--int uprobe_apply(struct inode *inode, loff_t offset,
--			struct uprobe_consumer *uc, bool add)
-+int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
- {
--	struct uprobe *uprobe;
- 	struct uprobe_consumer *con;
- 	int ret = -ENOENT;
- 
--	uprobe = find_uprobe(inode, offset);
--	if (WARN_ON(!uprobe))
--		return ret;
--
- 	down_write(&uprobe->register_rwsem);
- 	for (con = uprobe->consumers; con && con != uc ; con = con->next)
- 		;
- 	if (con)
- 		ret = register_for_each_vma(uprobe, add ? uc : NULL);
- 	up_write(&uprobe->register_rwsem);
--	put_uprobe(uprobe);
- 
- 	return ret;
- }
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 467f358c8ce7..7571811127a2 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3157,6 +3157,7 @@ struct bpf_uprobe {
- 	loff_t offset;
- 	unsigned long ref_ctr_offset;
- 	u64 cookie;
-+	struct uprobe *uprobe;
- 	struct uprobe_consumer consumer;
- };
- 
-@@ -3180,10 +3181,8 @@ static void bpf_uprobe_unregister(struct path *path, struct bpf_uprobe *uprobes,
- {
- 	u32 i;
- 
--	for (i = 0; i < cnt; i++) {
--		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset,
--				  &uprobes[i].consumer);
--	}
-+	for (i = 0; i < cnt; i++)
-+		uprobe_unregister(uprobes[i].uprobe, &uprobes[i].consumer);
- }
- 
- static void bpf_uprobe_multi_link_release(struct bpf_link *link)
-@@ -3477,11 +3476,12 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 		      &bpf_uprobe_multi_link_lops, prog);
- 
- 	for (i = 0; i < cnt; i++) {
--		err = uprobe_register(d_real_inode(link->path.dentry),
-+		uprobes[i].uprobe = uprobe_register(d_real_inode(link->path.dentry),
- 					     uprobes[i].offset,
- 					     uprobes[i].ref_ctr_offset,
- 					     &uprobes[i].consumer);
--		if (err) {
-+		if (IS_ERR(uprobes[i].uprobe)) {
-+			err = PTR_ERR(uprobes[i].uprobe);
- 			bpf_uprobe_unregister(&path, uprobes, i);
- 			goto error_free;
- 		}
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 78a5c40e885a..2872955da202 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -58,8 +58,8 @@ struct trace_uprobe {
- 	struct dyn_event		devent;
- 	struct uprobe_consumer		consumer;
- 	struct path			path;
--	struct inode			*inode;
- 	char				*filename;
-+	struct uprobe			*uprobe;
- 	unsigned long			offset;
- 	unsigned long			ref_ctr_offset;
- 	unsigned long			nhit;
-@@ -1084,17 +1084,17 @@ typedef bool (*filter_func_t)(struct uprobe_consumer *self,
- 
- static int trace_uprobe_enable(struct trace_uprobe *tu, filter_func_t filter)
- {
--	int ret;
-+	struct inode *inode = d_real_inode(tu->path.dentry);
-+	struct uprobe *uprobe;
- 
- 	tu->consumer.filter = filter;
--	tu->inode = d_real_inode(tu->path.dentry);
--
--	ret = uprobe_register(tu->inode, tu->offset, tu->ref_ctr_offset,
--			      &tu->consumer);
--	if (ret)
--		tu->inode = NULL;
-+	uprobe = uprobe_register(inode, tu->offset, tu->ref_ctr_offset,
-+				&tu->consumer);
-+	if (IS_ERR(uprobe))
-+		return PTR_ERR(uprobe);
- 
--	return ret;
-+	tu->uprobe = uprobe;
-+	return 0;
- }
- 
- static void __probe_event_disable(struct trace_probe *tp)
-@@ -1105,11 +1105,11 @@ static void __probe_event_disable(struct trace_probe *tp)
- 	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
- 
- 	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
--		if (!tu->inode)
-+		if (!tu->uprobe)
- 			continue;
- 
--		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
--		tu->inode = NULL;
-+		uprobe_unregister(tu->uprobe, &tu->consumer);
-+		tu->uprobe = NULL;
- 	}
- }
- 
-@@ -1306,7 +1306,7 @@ static int uprobe_perf_close(struct trace_event_call *call,
- 		return 0;
- 
- 	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
--		ret = uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
-+		ret = uprobe_apply(tu->uprobe, &tu->consumer, false);
- 		if (ret)
- 			break;
- 	}
-@@ -1330,7 +1330,7 @@ static int uprobe_perf_open(struct trace_event_call *call,
- 		return 0;
- 
- 	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
--		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
-+		err = uprobe_apply(tu->uprobe, &tu->consumer, true);
- 		if (err) {
- 			uprobe_perf_close(call, event);
- 			break;
--- 
-2.25.1.362.g51ebf55
-
-
+Why does every iov need to hold a ref? pp holds a ref and does its own
+accounting, so it won't disappear unless all the pages are returned.
