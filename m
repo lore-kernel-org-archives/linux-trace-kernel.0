@@ -1,89 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44791194ACF;
-	Wed, 10 Jul 2024 15:56:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03AF194AC7;
+	Wed, 10 Jul 2024 16:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720627000; cv=none; b=Ubk1J8xN+AjpFPC3oyxn9cz6+lYGu7Xkd3KQzXIGpNIYRzdnUECoiNGX0uToNAn9Z80/VhSN80xaLDaUb1ZUtIXAjDhsur4akC68tVCa/IfFfk+XPIazT0xOMTauQoUKLLDsTpHnNES7rKZrG9MqL49zDc6Bz1X+bxTGbbY1+6s=
+	t=1720628696; cv=none; b=SQpmdQkzOD/W7ccyiSMwhLYqbC1vBw44jiXVnuBooOgMqQF000y3m/kW50r6WMsNBohSO7RFlTX5ynUIwCKsHEODc/n1pP7hEsAggHDSvHGODU5wqtYwHgJYHJrebYH6Qejox1PLxTAAdiZVnpSgBZgjZ8BmUCg0mxBQfrun5r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720627000; c=relaxed/simple;
-	bh=LnSN3f1kBTQZBMgn9k+Kpjy3WQodTEYNn6I5AuMkXR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TuEeR10RyODCEz/6odpBqwPSHdV90x2mLplpPnogrs5Yyq2V6R4cHtnzZd8+0lenBfbBz/UiAs0CFtPEg7WBmVknPX+WBtahQzv7hASpvvmD9qcnmlCCabSfj2kDuySohBJ4u0ZQlo+hmNPXX0hJI3SM7q41J2HyGGUQzamsifQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nhh6UqTy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720628696; c=relaxed/simple;
+	bh=b28R/GkwpJAm+sBRoYcqg6mX/F5BEuGwYUPhlVhgF1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Op49riLrpwqVsAaYKyk7Ps2gApYZQa4kDDnQtFC3il7+0MKAUe7W8H4ox5Urncptq3eip+Hqh51TRUYOG6ZVMGI3ARrTttljwZ7iS/1/cxkRRTNo/5QY/uNFY9RObj1x9QyeBD/jTFSQdjI1RkRBphkEDS90Rj4nfWDaNEJSucc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Htjm1nEQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nhh6UqTy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7A0C4AF0F;
-	Wed, 10 Jul 2024 15:56:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Htjm1nEQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA25C32786;
+	Wed, 10 Jul 2024 16:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720627000;
-	bh=LnSN3f1kBTQZBMgn9k+Kpjy3WQodTEYNn6I5AuMkXR0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Nhh6UqTyrSr0wo2AywZf2hg4eQ0qQGSBsIOTv4oGyXQTX6vabooxsZHLJX1VF1c59
-	 tSODVeFqtFA2V8MxwFzIpm4gp/4O29+s9eX715D6Rq36F5EKQOe6ryT2OR0gglz/UO
-	 UKohM+G9agXaWRQxMn6sSbc3DQYzoRrBXaqJz1VydZ+/IN+BVAkeuET3oh+YhAxE0R
-	 h9ouVOeN7urrk1jU9/IKmO48m/vG2HGtWSX6NNlntfMbLGdNMTy7dwUnWPRVqrmgpi
-	 D7BDS6Sqpuuv8GoHSGy+v01VvLPT8j1t851KKG4kjk87hcVQlLRJ/CcXiE7RBN/SZj
-	 F4nU4p5RcNZyw==
-Date: Wed, 10 Jul 2024 08:56:37 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
- Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
- <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, Kaiyuan
- Zhang <kaiyuanz@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH net-next v16 03/13] netdev: support binding dma-buf to
- netdevice
-Message-ID: <20240710085637.4284c7d7@kernel.org>
-In-Reply-To: <20240710001749.1388631-4-almasrymina@google.com>
-References: <20240710001749.1388631-1-almasrymina@google.com>
-	<20240710001749.1388631-4-almasrymina@google.com>
+	s=k20201202; t=1720628696;
+	bh=b28R/GkwpJAm+sBRoYcqg6mX/F5BEuGwYUPhlVhgF1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Htjm1nEQsAi2jYEy2QSuT09d1ss/ei5BNvSJXz6wJuRK7p+4OIfN4qD6grX+fVDq5
+	 y9CNXG77YqXBtjxyBxkFOq6V4BKI5iFbUmmFM5FekHsrhnNVRMbQ9Bd0QZaIb4Sl4D
+	 akkS5ECLtn+qUHj/AdL/1F+k+UTRkcsB14C15kgz7Z6ocrDNHpgYMhgpSEA0F57kC5
+	 0J8vEDcSb16YhBQrbXyALam7+X4VnSKS2eNni7hbSU6YgCGzY55xelvOqWol9hV2AT
+	 +inVoj5dlr82Y7V5mItiXEEByhEgwDJDwZJ0yVEwgnh0ajVHmbdmGaFbvJ9qSqPX4V
+	 0qnvhjuYQxP1A==
+Date: Wed, 10 Jul 2024 09:24:51 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com,
+	tglx@linutronix.de, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org, rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack
+ traces captured in uprobe
+Message-ID: <20240710162311.gz3njyjshraeuto7@treble>
+References: <20240708231127.1055083-1-andrii@kernel.org>
+ <20240709101133.GI27299@noisy.programming.kicks-ass.net>
+ <CAEf4Bza22X+vmirG=Xf4zPV0DTn9jVXi1SRTn9ff=LG=z2srNQ@mail.gmail.com>
+ <20240710113855.GX27299@noisy.programming.kicks-ass.net>
+ <CAEf4BzZFU6CEK-=eTo_LTScYCVoBCYXeH_O_AoZd8rBYiwWzdg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZFU6CEK-=eTo_LTScYCVoBCYXeH_O_AoZd8rBYiwWzdg@mail.gmail.com>
 
-On Wed, 10 Jul 2024 00:17:36 +0000 Mina Almasry wrote:
-> +		err = gen_pool_add_owner(binding->chunk_pool, dma_addr,
-> +					 dma_addr, len, dev_to_node(&dev->dev),
-> +					 owner);
-> +		if (err) {
+On Wed, Jul 10, 2024 at 08:11:57AM -0700, Andrii Nakryiko wrote:
+> On Wed, Jul 10, 2024 at 4:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Tue, Jul 09, 2024 at 10:50:00AM -0700, Andrii Nakryiko wrote:
+> > > You can see it replaced the first byte, the following 3 bytes are
+> > > remnants of endb64 (gdb says it's a nop? :)), and then we proceeded,
+> > > you can see I stepped through a few more instructions.
+> > >
+> > > Works by accident?
+> >
+> > Yeah, we don't actually have Userspace IBT enabled yet, even on hardware
+> > that supports it.
+> 
+> OK, I don't know what the implications are, but it's a good accident :)
+> 
+> Anyways, what should I do for v4? Drop is_endbr6() check or keep it?
 
-	kfree(owner);
+Given the current behavior of uprobe overwriting ENDBR64 with INT3, the
+is_endbr6() check still makes sense, otherwise is_uprobe_at_func_entry()
+would never return true on OSes which have the ENDBR64 compiled in.
 
-right? If the insert fails gen_pool_for_each_chunk() won't see it
+However, once userspace IBT actually gets enabled, uprobe should skip
+the ENDBR64 and patch the subsequent instruction.  Then the is_endbr6()
+check would no longer be needed.
 
-> +			err = -EINVAL;
-> +			goto err_free_chunks;
-> +		}
+-- 
+Josh
