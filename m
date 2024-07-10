@@ -1,133 +1,106 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F01119581F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A39129D06
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 19:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720639813; cv=none; b=YlJ6wdKmb2rsyAS7958cMoZqBE2F7RhRwGj9vMxRKQ7NaE0BjIQzhVPXsd00xQlxaN8U1koI/hhZq3c2JEb6T/z6rE8DYE6H0J19HoT2ZY54KR7sX7yjURt0i0w786ITPD6/NKE80jX9vw8WtuJdJTF0sPXZcKFMw5nNIq22ygM=
+	t=1720640074; cv=none; b=jhvkuqFJBRDVEFQRopugcmuk6XyGESEcPaYqzQ/Z2Tfthc9VG+tfeeKgUERfVw2T7WS2UoSewI6Gyv8nvHtBeLUdlgAwQTt6j0ClKFm+6XMeG7CMuiAPYdewGKPmiqI4OAUwNQFWe5tdCnAqW5zWg/sbrU/E6rVjl1ItnMNplns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720639813; c=relaxed/simple;
-	bh=vBkDVZIJ1rRSVbjZ4GxH5dqIovbWI6t7z6ZQdTM1ZJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JJF9B1f4n/13DBYqMEw4fGlohQ1HApWFq1ta0r2l6gjNrP6QIatZFW3lGXKME77nD2kvy8/5IAOaK+pxkxHAfoDSqEJ5s79LfvB/MGw/pF2WYhGcFDJvilaHiA7zA1DRRaD5OBvTGzGgohiBUG1adsCE6DFDSWgiDXm1evKBZac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OqZsEAaa; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720640074; c=relaxed/simple;
+	bh=64t0Aq4QgYaKBUkQonjMvxKiLmYxKlraga+aohTNPeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWMLUalVXP7XvPHkNK/ZjtT8PPiF2/erMkVP1hO33Lxago44iD/4A2cIhxsORhllJ08/QiHAWEQix2aMRrfgkD908A2F8QXjJLUXzPJbDgsNdUBpEIOtrPHZF8otT7/VTSVVFlUtnrvwuP2gl6cytVXWwB3xTGehJzoReNigSOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KeOcarth; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqZsEAaa"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b553b1a159so1108296d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 12:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720639810; x=1721244610; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TF9673pSKaG/iNj3QtazN19JWkU+6gU585Ojo9AihIY=;
-        b=OqZsEAaa1a5jqFMHFpslkD2j7n7HaqTLG7spVFgAz1qdJZ0JF6PyKAswzdU5e+XPfH
-         yTTt3zL2Mn6yGX/rpyjU0PVv8HmynNWyXLmpTyE0oMvSbkn+mKaW+PTIdCyHMVx7CfJe
-         voSJBUmeMcyAMOgs6Ch5+HIUt6LA7fItUtpKKtw6pqb3ejMSJITTd73AfzpNc68517c3
-         lG7FyrM8M1LFAc6m4jWZEiLfJId7uhyvQ40Ggr/kQqtcXO4JZos+RYZLSd7GgscPB+kT
-         uc4yfor3qNjc32CoYs0f/2oGgNRjl22iySaHo4HpSXKjb4ix1TMsUa+txl3wmrchMpHw
-         wbBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720639810; x=1721244610;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TF9673pSKaG/iNj3QtazN19JWkU+6gU585Ojo9AihIY=;
-        b=YIowgoQN1YcxXEH0A/anF3rEzNhKaQNpHLEs6AdmvTDhV9d+UDzwm31mF23FBJ0zGu
-         V0K81/Dty8iVZJJOsHSiew3+n8fnwirbr16mPxv3KG/a5BKcKRrqB5ieUrYZSRYLSe2R
-         +rbeQ//4/kCtx9TdPQvkZxnfzXC//6w4Lmvip/U5RySoPnObvvBwEFdLFbWEHBxFqXmK
-         vdhPzTdniHtpQWmXJX1V3Fh8SXeKc5oy2zuQTvD8iV4eCWTFAmWlYmtx0pQcKpKJy9ua
-         wlRwyec7lpqNUO6cgLwRgTSxBHSlZwCbaQMUKucRpO6ylhjQGUX4q4f4s/ICryzS5yp9
-         m0Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKjCmBRY11NkvgZ83A4ih4gyy3DMpF5W1IDDjC8PLRYAPh2IyMyFMt5f10IE73gTs9nJvPk5YcRzWRPPGdAdNgkw7UsVAh1jKVgZz+L6gqYYNO
-X-Gm-Message-State: AOJu0YzjKUwp5Nu5oqbTJR5vlUxpq5Gv5jJcLUSesRJGqaMMDr9RWtgp
-	cwJgnuTJ9/WyWBzikd1Btez7/T6L1xX1NNZj84yzKzoz2VP+zQYMd/Sr/KupTRxvX8N5L/Gk5gR
-	LQoQc43sGeyUdCVVQmzffKzeSYi6lh585AjCN
-X-Google-Smtp-Source: AGHT+IEMdp+uG7mJVElTTW/yEL8BYiZ2DRk3V7ywILd2rFJRrtwJG6ibX6vnK3fQMtsopMVC0v6jyUjKFfJoaAWAji4=
-X-Received: by 2002:a05:6214:20a4:b0:6b5:34b:8c02 with SMTP id
- 6a1803df08f44-6b61bcf32cbmr76578266d6.27.1720639809913; Wed, 10 Jul 2024
- 12:30:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KeOcarth"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720640071;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eOesnJNRQi3jaBPH6NJfpUI/R/hKqS/yl/hzu4dJSVA=;
+	b=KeOcarthZRxAqpD8CL9uzBBKPThNfRiYSlL+GvAYgW61KoKhCLFRmz75CZQ8vdyqPN8Vf2
+	t/Wvqgvr2lOIPHKWyxshT5qxHh9phQx7dJpOBtm7lfVRtOyNxsam3u2vsAGyJO3hjJxYjB
+	nKY5Z+cIhV6mLsIvEmd56+K3+4DUN64=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-3-3qm987oGP2yOPMv4RhNh_A-1; Wed,
+ 10 Jul 2024 15:34:29 -0400
+X-MC-Unique: 3qm987oGP2yOPMv4RhNh_A-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA6E5195608A;
+	Wed, 10 Jul 2024 19:34:26 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ABA071955F3B;
+	Wed, 10 Jul 2024 19:34:22 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 10 Jul 2024 21:32:50 +0200 (CEST)
+Date: Wed, 10 Jul 2024 21:32:45 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org,
+	clm@meta.com, jolsa@kernel.org, mingo@kernel.org,
+	paulmck@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] uprobes: kill uprobe_register_refctr()
+Message-ID: <20240710193245.GF9228@redhat.com>
+References: <20240710140017.GA1074@redhat.com>
+ <20240710163022.GA13298@redhat.com>
+ <20240710163047.GB13298@redhat.com>
+ <CAEf4BzZScUsh94P67-1rKOj=26ycj87nmT0fBrP9BvvmxAi8kQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710001749.1388631-1-almasrymina@google.com>
- <20240710001749.1388631-5-almasrymina@google.com> <20240710093624.26d22f02@kernel.org>
-In-Reply-To: <20240710093624.26d22f02@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 10 Jul 2024 12:29:58 -0700
-Message-ID: <CAHS8izOoM3YfcQorLJXL4H+t2OL+oJ4fPP5ZBJRhnH5AxsUqfQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v16 04/13] netdev: netdevice devmem allocator
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZScUsh94P67-1rKOj=26ycj87nmT0fBrP9BvvmxAi8kQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, Jul 10, 2024 at 9:37=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
+On 07/10, Andrii Nakryiko wrote:
 >
-> On Wed, 10 Jul 2024 00:17:37 +0000 Mina Almasry wrote:
-> > +     net_devmem_dmabuf_binding_get(binding);
+> LGTM with few nits below.
 >
-> Why does every iov need to hold a ref? pp holds a ref and does its own
-> accounting, so it won't disappear unless all the pages are returned.
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-I guess it doesn't really need to, but this is the design/approach I
-went with, and I actually prefer it a bit. The design is borrowed from
-how struct dev_pagemap does this, IIRC. Every page allocated from the
-pgmap holds a reference to the pgmap to ensure the pgmap doesn't go
-away while some page that originated from it is out in the wild, and
-similarly I did so in the binding here.
+Thanks for looking at this.
 
-We could assume that the page_pool is accounting iovs for us, but that
-is not always true, right? page_pool_return_page() disconnects a
-netmem from the page_pool and AFAIU the page_pool can go away while
-there is such a netmem still in use in the net stack. Currently this
-can't happen with iovs because I currently don't support non-pp
-refcounting for iovs (so they're always recyclable), but you have a
-comment on the other patch asking why that works; depending on how we
-converge on that conversation, the details of how the pp refcounting
-could change.
+> > @@ -3477,7 +3477,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+> >                       &bpf_uprobe_multi_link_lops, prog);
+> >
+> >         for (i = 0; i < cnt; i++) {
+> > -               err = uprobe_register_refctr(d_real_inode(link->path.dentry),
+> > +               err = uprobe_register(d_real_inode(link->path.dentry),
+> >                                              uprobes[i].offset,
+> >                                              uprobes[i].ref_ctr_offset,
+> >                                              &uprobes[i].consumer);
+>
+> please adjust indentation here
 
-It's nice to know that the binding refcounting will work regardless of
-the details of how the pp refcounting works. IMHO having the binding
-rely on the pp refcounting to ensure all the iovs are freed introduces
-some fragility.
+OK,
 
-Additionally IMO the net_devmem_dmabuf_binding_get/put aren't so
-expensive to want to optimize out, right? The allocation is a slow
-path anyway and the fast path recycles netmem.
+> > -       if (tu->ref_ctr_offset)
+> > -               ret = uprobe_register_refctr(tu->inode, tu->offset,
+> > -                               tu->ref_ctr_offset, &tu->consumer);
+> > -       else
+> > -               ret = uprobe_register(tu->inode, tu->offset, &tu->consumer);
+> > -
+> > +       ret = uprobe_register(tu->inode, tu->offset, tu->ref_ctr_offset,
+> > +                             &tu->consumer);
+>
+> doesn't fit under 100 characters? If it does, please keep as a single line.
 
---
-Thanks,
-Mina
+OK, will do.
+
+Oleg.
+
