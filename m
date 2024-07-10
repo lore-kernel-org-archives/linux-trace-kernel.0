@@ -1,125 +1,110 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A2F17FD;
-	Wed, 10 Jul 2024 09:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11E5192481;
+	Wed, 10 Jul 2024 10:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720604337; cv=none; b=Gm7aa93Q8Mc4hVFIKIP1IehzyBziEUu/NBPcnMoCy0gFE/8BWd3/nmCZSEpvKWPpMNQbtiQl71CZg9c2da+x583i+1RasKqD5db4SLwA55VykYiU0z8Z8xzC521l07lM7vYu7/zzOGCOI7EkFbraumvHLc5wuOctXW60QnjOyL4=
+	t=1720607839; cv=none; b=aNayA8N5++uzQ3TVWFUhliDL4UVbaoNcrnA3Esr9aB8PMJkoN5M9L6PVU7JZSeiOzWYpt9XyNAf7jqmhXOl4cjr/jt37q3JZaQeV0ZLHaWNz9zH4QwpdRUeltRCKPN5hI10P6u9fetZbQP2+aP7AZDvSiM7Jg6DhhiqoAbUc9AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720604337; c=relaxed/simple;
-	bh=BytwbyifiKESLkwzNohBtpgLDUZDoGmKbGcw/9M/2/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKci7hso2bjcQAAAEDwY4M/tPzOhCHnjl5Yze2gFgUmmoNDoo7mt2YGZ96fUG4EQWO3iis/tV5Nj+5mQhtdJNE8SV2eFni/n79luHxvdydnlKbHe1fUwIqqnS/bdZEuq0xxFkXL6g31qF06xjE+YuySLmJBgLxVt8mTYeZsw0pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Pj4UUZzD; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1720607839; c=relaxed/simple;
+	bh=jUv1TKKjUHthOG7mdtMKuqVjyWEdEs5skCdldKg/BLA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=kMZukcaJddbIiqTOmIFZ6suSUMjOkyAlvhgHEVSGB1jbJlFlRyo/EsNOhym7/Tht2xZUr6f5Hc+nZ+AFrYEzGM+gXsbD/r3zNpGcE6afSl/Jn39lEuUCOmGJOFvt6/WG/HLMSghsR/TQyKdAnqwUaBg73/DVqTfPuMRWQ7mOyX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZAFLShHr; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Pj4UUZzD"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D881940E019C;
-	Wed, 10 Jul 2024 09:38:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZUC_3agCiurD; Wed, 10 Jul 2024 09:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1720604327; bh=4tD55kRk58dzBkcPyPWKImU3k357bp6g9dUEFXRiH5s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pj4UUZzD3z8BN3ScRN0bDvLplYjALfVoYh3H4FoAWcjoklLMm/Ibbl0ZdPlS5IFFw
-	 ouLNVb7H/H8KYCPtM63E4bN4qpeW4GYUqZNvoHE8AAkf0lSKN3UZMtIrq+f52ANGti
-	 Set4pCeQu/dAf8OsKNbXUHRFC5t2uzkp6uxkRf7kq9wtgiKzVvTi4SzXsZGFHX61DF
-	 XsOieiXltD7d8US6ccBWrW6JZptU3A/NkBpcRvt5EDAaSL5+YcspcPi2PnGZvrtwYx
-	 rtrPsyW8TzJt1OVuiCyEgpoweOkTrF1pBohA+idpm1GZzuTb8KJGcbzCsjGEynvy0x
-	 PY0wS3MjeESBrQCjAYhExEAQmYge/xqabxnaPgN1Qb1ehMBQRjc57hcLYNC03GFoBE
-	 UCgXv13WkJYt96YwuTARB3bDoklfU8tNocMlPdeGw4qklW0EWaYnhlxTrojbu2KTGL
-	 XxlZ8Sc7cbo1b7QdX9W5Haj+/SBXQnhZl2xgn1ld9x2NZUzVKVtOLJytZ3djQ2lUzr
-	 c1aY0ZLuxAlok9Tr88YqCnNkbKAe1w+91nM2BDvEDWX0IV7mT6cuawx+qQ11mmPNZW
-	 YB9LGO9XkK+33kWbuYR82elmqT6ruXSg1JkDFjIhFIyXRn7aXdNIrGWFJvxtuQKb4i
-	 7u+qClYOlf/gq9G3Fb8iGQRg=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 52FB640E019D;
-	Wed, 10 Jul 2024 09:38:29 +0000 (UTC)
-Date: Wed, 10 Jul 2024 11:38:28 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Naik, Avadhut" <avadnaik@amd.com>
-Cc: x86@kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tony.luck@intel.com,
-	rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	rostedt@goodmis.org, lenb@kernel.org, mchehab@kernel.org,
-	james.morse@arm.com, airlied@gmail.com, yazen.ghannam@amd.com,
-	john.allen@amd.com, Avadhut Naik <avadhut.naik@amd.com>
-Subject: Re: [PATCH v2 2/4] x86/mce, EDAC/mce_amd: Add support for new
- MCA_SYND{1,2} registers
-Message-ID: <20240710093828.GDZo5WlPrXLg-SbBHd@fat_crate.local>
-References: <20240625195624.2565741-1-avadhut.naik@amd.com>
- <20240625195624.2565741-3-avadhut.naik@amd.com>
- <20240626111036.GOZnv3LFCPnYfrRYSE@fat_crate.local>
- <6c318161-9ae4-4965-b8f3-e38bf1393628@amd.com>
- <20240626181805.GDZnxbXRJlCecNeDGW@fat_crate.local>
- <17bba31a-9bb0-40e5-be7e-96ac6d421066@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAFLShHr"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52ea33671ffso5696090e87.3;
+        Wed, 10 Jul 2024 03:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720607836; x=1721212636; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jUv1TKKjUHthOG7mdtMKuqVjyWEdEs5skCdldKg/BLA=;
+        b=ZAFLShHrIPyDf9U9i1IcFoO9MUKQpzxDncyp7DVrvbXnDtj7tPW5MbBA/JfsGM31Mz
+         pSyVrkf+x3awC5bEkSWdhzl2/FwmVsvbtITxmLakw+VL0Hrxi/FFYhLKUR1UGDFf+ccJ
+         QwcWpXdvZbMAx3BNTzrWivW6vT5kwkOaNE7azBt/rf/DM78ZlxMrgcXOotKANa7cvt7M
+         fd61Smmo9Wrae22TbF0+qU1yvMmUKuN1hrBr2v+xXUO7+slgFrSHGx9/JI5bptSpfvoY
+         78SlWU+GwRJjqvLa+EOFFkbZeI/0naZVYq6CBzt02lNhdCdoOy+6xgJtrIYLVmt3AFPJ
+         8RwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720607836; x=1721212636;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jUv1TKKjUHthOG7mdtMKuqVjyWEdEs5skCdldKg/BLA=;
+        b=B1dA1BCsGKQt8tAIExuk+Xd13+y22ITgRcfME70CjDkBU3mkFikVurAkc5gpto+9+F
+         AlaQ6BmXiv5DtLDiFFJDvtkz41SJnMOs+tewHL2kG+JO+W6gS0RoMpGDQjB9c6w5b42Y
+         7aYJMOtHL9NphNlrNbTkeMqlqk2CjxuAqaxLI61HtvoSFawPDQqAGrMrqquPCb1RpQE2
+         DzrUu7Nchr9J9I88BaAnMX0PBhZpcUPAme9ko8CYppfFHDw/oXpADTuAXj47MJixJPu9
+         fOFpjv6/VF5nJWGquLhKR6mvsJEbcZ87V+cJq/Ew2mUoU2JQO5QAUiTcdTRoilloYHsz
+         4CSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPWIs8UcPggDr++kvOteVGb3nOU9S9xE0gmjIwwiwSVMKnpGac+D0zORHrW2kiw8wtCvG5+MgnGRiCSUWoi529PBvBL30rAFZwCF0IToDhZk6AcDiwporh81MSOqFnyhsP4SqOZJ9UkdpH9VrEoHSDzIbe9Ab8M5piVTO9yMZkq/o967he919fj/PhlXacGSWGF7DQWvIE/OtM5KbYngR4VvD0ekdy/keYMP3xSJRweeXUihoNouSpqX11OntlWYpY9YEw2U/LMNcI38hv4xl5AJgibxfBKyE/1DIk2Kt/RmOmPwXaxqPK6X589vfvQTu+psilLV50lVzhBUjBSOjpjAPIsEBufWev8lFmtqUD7I7eVQuuEKUC2c4mubEpYIFWinfYDD9NxkLoClH+/nBMFHG9F0OEr9e8FZs9beZpTC6jqYlW9CyMskh38d85dLAm16EhH99GZbOUvaffmxoKiPUWZAzsW6qIBOa2wQ==
+X-Gm-Message-State: AOJu0YzlO+PVpqSihBnDiVJsw9GeVK85phwyRsC/NsmI7iS0rTeYbTSB
+	dU32UsLWj1lokMtsFNF6QvzO6ggAEiKz0GjA/djCtzaqtQRKsA1Y
+X-Google-Smtp-Source: AGHT+IEYBZWIZpjV7C9ssz+2I4yf8GPHbR8l+2RYZAsApi0hWbugWj4h9Cu7wWaqd85eKzfkNy/N7w==
+X-Received: by 2002:a05:6512:3e19:b0:52c:e17c:3753 with SMTP id 2adb3069b0e04-52eb9991919mr3752798e87.5.1720607835793;
+        Wed, 10 Jul 2024 03:37:15 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:d1a7:2644:c75e:c5ee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266ac156easm114146345e9.38.2024.07.10.03.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 03:37:15 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-doc@vger.kernel.org,  linux-alpha@vger.kernel.org,
+  linux-mips@vger.kernel.org,  linux-parisc@vger.kernel.org,
+  sparclinux@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
+  linux-arch@vger.kernel.org,  linux-kselftest@vger.kernel.org,
+  bpf@vger.kernel.org,  linux-media@vger.kernel.org,
+  dri-devel@lists.freedesktop.org,  Jakub Kicinski <kuba@kernel.org>,
+  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Paolo Abeni <pabeni@redhat.com>,  Jonathan Corbet
+ <corbet@lwn.net>,  Richard Henderson <richard.henderson@linaro.org>,  Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>,  Matt Turner <mattst88@gmail.com>,
+  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,  "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>,  Helge Deller <deller@gmx.de>,
+  Andreas Larsson <andreas@gaisler.com>,  Jesper Dangaard Brouer
+ <hawk@kernel.org>,  Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+  Steven Rostedt <rostedt@goodmis.org>,  Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,  Arnd Bergmann <arnd@arndb.de>,  Steffen
+ Klassert <steffen.klassert@secunet.com>,  Herbert Xu
+ <herbert@gondor.apana.org.au>,  David Ahern <dsahern@kernel.org>,  Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>,  Shuah Khan
+ <shuah@kernel.org>,  Sumit Semwal <sumit.semwal@linaro.org>,  =?utf-8?Q?C?=
+ =?utf-8?Q?hristian_K=C3=B6nig?= <christian.koenig@amd.com>,  Bagas Sanjaya
+ <bagasdotme@gmail.com>,
+  Christoph Hellwig <hch@infradead.org>,  Nikolay Aleksandrov
+ <razor@blackwall.org>,  Taehee Yoo <ap420073@gmail.com>,  Pavel Begunkov
+ <asml.silence@gmail.com>,  David Wei <dw@davidwei.uk>,  Jason Gunthorpe
+ <jgg@ziepe.ca>,  Yunsheng Lin <linyunsheng@huawei.com>,  Shailend Chand
+ <shailend@google.com>,  Harshitha Ramamurthy <hramamurthy@google.com>,
+  Shakeel Butt <shakeel.butt@linux.dev>,  Jeroen de Borst
+ <jeroendb@google.com>,  Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v16 11/13] net: add devmem TCP documentation
+In-Reply-To: <20240710001749.1388631-12-almasrymina@google.com> (Mina
+	Almasry's message of "Wed, 10 Jul 2024 00:17:44 +0000")
+Date: Wed, 10 Jul 2024 11:28:37 +0100
+Message-ID: <m2a5ip1qy2.fsf@gmail.com>
+References: <20240710001749.1388631-1-almasrymina@google.com>
+	<20240710001749.1388631-12-almasrymina@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <17bba31a-9bb0-40e5-be7e-96ac6d421066@amd.com>
+Content-Type: text/plain
 
-On Tue, Jul 09, 2024 at 01:27:25AM -0500, Naik, Avadhut wrote:
-> IIUC, its an abbreviation of a Latin word and is used as a synonym for "namely"
-> or "that is to say".
-> Might not be the best choice in this case. Will change it.
+Mina Almasry <almasrymina@google.com> writes:
 
-I learn new stuff every day:
+> Add documentation outlining the usage and details of devmem TCP.
+>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-https://en.wikipedia.org/wiki/Viz.
-
-> Userspace error decoding tools like the rasdaemon gather related hardware error
-> information through the tracepoints. As such, its important to have these two
-> registers in the tracepoint so that the tools like rasdaemon can parse them
-> and output the supplemental error information like FRU Text contained in them.
-
-Put *that* in the commit message - do not explain what the patch does.
-
-> Got it. The first SoB entry is of the primary author. The successive SoB's are
-> from the people handling and transporting the patch.
-
-Exactly!
-
-> IOW, the route taken by a patch, as its propagated, to maintainers and eventually
-> to Linus, should be evident from the SoB chain.
-
-You got it.
-
-> With this set, the first two elements of the vendor data dynamic array are SYND 1/2
-> registers while the third element is MCA_CONFIG (added through patch 4 of the set).
-> Now, in rasdaemon, SYND1/2 register contents (i.e. first two fields) are interpreted
-> as FRU Text only if BIT(9) of MCA_CONFIG (third field) is set.
-> 
-> Thus, we depend on array's layout for accurate FRU Text decoding in the rasdaemon.
-
-So it sounds to me like we want to document and thus freeze the
-vendor-specific blob layout because tools are going to be using and parsing
-it. And this will spare us the kernel version checks.
-
-And new additions to that AMD-specific blob will come at the end and will
-have to be documented too.
-
-That sounds like an ok compromise to me...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
