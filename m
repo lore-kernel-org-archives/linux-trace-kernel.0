@@ -1,110 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814C71514ED
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 13:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193BD15F3E0;
+	Thu, 11 Jul 2024 13:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720704068; cv=none; b=nXQB3MhXvZx+lrClKmW1c4WG8jfUS4CC2WvXvyeCuiBP22ZnBFZBzA1+yYg1V0BMPf5auvFPHF7DttwAzMKJTkGuiot4ah2IfGjRFO22qdpqwMOi3bESBfL1+/N6/YgI4IJ3OKfF38Q54wnaIS3NhBNnEa7j4RnHTrdUATuasug=
+	t=1720706393; cv=none; b=M3Iz5hWKCix9mzJEVHcH1jHtB2j36fcyfZkNq794wrP9TyXivuaXxizYra1DHPXRylyHynBCwlux25FQUfpYGd4CSg/tG8mFnFCu7Si2i35773W+wLvRg35DJyZq48WDbfWcPDodq0ti/SJSGtYC0RxYMeumfPaV1muh1nBKxxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720704068; c=relaxed/simple;
-	bh=Uy9I9T/tN9JJUlWQ/p6H0LUGVt6skO0x/JqhCMzMy7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mwB8ZHKNqzAGl/eqxHcKHcOiOoIF9MZZJyy2gqI1vZcCScBlJMoTFfvtzhtMFeYHTxM/uzx+nfkrk0huF5q7YXky0WlQkfwsRpowWnRzYUzDpoAhgsVdo0Q1rUE8WhhCIlosdlhR6qtAjoEHLHFgsp6S1Syc+xUIbyJL+1XESew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dg2VxaQx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720706393; c=relaxed/simple;
+	bh=FHtR7Le/pcFbduWry3sn6ZwXUjgZS7NcvdrZwRRZGEg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=jC4Xjdrmldb7gepHGUA8fDN44gxpPioE9f5BUnq48tVN+pN4tMsUiQaS2gj7IYyPAhPvsRnT16jrQN/rxPEbuzg1jLUPH5cn4t21n1WcNwyoyIW1V80wAx60VWzdkKsVEHOlU+8aedaPvr3O6G04nQ7tlwP3RaMNoT4d2Jac6c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXyDIA12; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dg2VxaQx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720704066;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zCgO4S5Trmscfbn2cBjRYOQFsKPBWlxEUZ+TlU9yQ9Q=;
-	b=Dg2VxaQxAcigrsp0aIjUVv8TUkhDWkK+q0zzTlZi7Id22+WZGu9F0pk+N2wWL2Q6iSC/Av
-	l+xuPGsFGlJfnYAEvak3uJp7pUa7A1hI77GO1HIWHbEIvRiTyBdT6CHbKx5qPWitj1TMjH
-	asBeH6LEnuqdCeZMlfNFsATnAKGxK+M=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-119-IDrcX-ZUOW-EIF2bPrWOaA-1; Thu,
- 11 Jul 2024 09:21:03 -0400
-X-MC-Unique: IDrcX-ZUOW-EIF2bPrWOaA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 306381955BC7;
-	Thu, 11 Jul 2024 13:21:01 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.32])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 39A7019560AA;
-	Thu, 11 Jul 2024 13:20:56 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 11 Jul 2024 15:19:24 +0200 (CEST)
-Date: Thu, 11 Jul 2024 15:19:19 +0200
-From: Oleg Nesterov <oleg@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXyDIA12"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714C1C116B1;
+	Thu, 11 Jul 2024 13:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720706392;
+	bh=FHtR7Le/pcFbduWry3sn6ZwXUjgZS7NcvdrZwRRZGEg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PXyDIA12BIDFwWzR+Yr9MQsWSRU9BqpNwJifNM2hUeMA1DVnKnI69fGvJJdf19LEL
+	 1tFi858EvgUoqXYhTePpH8PLUw+WrcufDHcua5GlKmv6OLDdN2pCuZuymCIQkXyve6
+	 SzzvjNNe/XBrWo+qaIkoTxJ1lKKz9O/Jpzfaoajgt3ULb1DmzcStoGCbfiRPL09WcF
+	 RiZMNUUpJeYFCEpC48K308j1njvKbKgsbJm04obvEW6/Fr0PPeKWeghKQZxzsjrPbB
+	 sonLIm6x/l4tq212o49Z5DD5YL503RbCxrH8kl9Cr6oajVYmGROIv2XVGnsYeFdaYh
+	 4FVg+LvUSZISg==
+Date: Thu, 11 Jul 2024 22:59:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
-	paulmck@kernel.org
-Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
-Message-ID: <20240711131918.GC16902@redhat.com>
+Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
+ paulmck@kernel.org
+Subject: Re: [PATCH v2 04/11] perf/uprobe: RCU-ify find_uprobe()
+Message-Id: <20240711225947.72717378bc039555f9345814@kernel.org>
+In-Reply-To: <20240711110400.635302571@infradead.org>
 References: <20240711110235.098009979@infradead.org>
- <20240711110401.412779774@infradead.org>
+	<20240711110400.635302571@infradead.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711110401.412779774@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Not sure I read this patch correctly, but at first glance it looks
-suspicious..
+On Thu, 11 Jul 2024 13:02:39 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On 07/11, Peter Zijlstra wrote:
->
-> +static void return_instance_timer(struct timer_list *timer)
+> With handle_swbp() triggering concurrently on (all) CPUs, tree_lock
+> becomes a bottleneck. Avoid treelock by doing RCU lookups of the
+> uprobe.
+> 
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/events/uprobes.c |   49 +++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 40 insertions(+), 9 deletions(-)
+> 
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -40,6 +40,7 @@ static struct rb_root uprobes_tree = RB_
+>  #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+>  
+>  static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+> +static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
+>  
+>  #define UPROBES_HASH_SZ	13
+>  /* serialize uprobe->pending_list */
+> @@ -54,6 +55,7 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem)
+>  struct uprobe {
+>  	struct rb_node		rb_node;	/* node in the rb tree */
+>  	refcount_t		ref;
+> +	struct rcu_head		rcu;
+>  	struct rw_semaphore	register_rwsem;
+>  	struct rw_semaphore	consumer_rwsem;
+>  	struct list_head	pending_list;
+> @@ -587,12 +589,25 @@ set_orig_insn(struct arch_uprobe *auprob
+>  			*(uprobe_opcode_t *)&auprobe->insn);
+>  }
+>  
+> +static struct uprobe *try_get_uprobe(struct uprobe *uprobe)
 > +{
-> +	struct uprobe_task *utask = container_of(timer, struct uprobe_task, ri_timer);
-> +	task_work_add(utask->task, &utask->ri_task_work, TWA_SIGNAL);
+> +	if (refcount_inc_not_zero(&uprobe->ref))
+> +		return uprobe;
+> +	return NULL;
 > +}
+> +
+>  static struct uprobe *get_uprobe(struct uprobe *uprobe)
+>  {
+>  	refcount_inc(&uprobe->ref);
+>  	return uprobe;
+>  }
+>  
+> +static void uprobe_free_rcu(struct rcu_head *rcu)
+> +{
+> +	struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
+> +	kfree(uprobe);
+> +}
+> +
+>  static void put_uprobe(struct uprobe *uprobe)
+>  {
+>  	if (refcount_dec_and_test(&uprobe->ref)) {
+> @@ -604,7 +619,7 @@ static void put_uprobe(struct uprobe *up
+>  		mutex_lock(&delayed_uprobe_lock);
+>  		delayed_uprobe_remove(uprobe, NULL);
+>  		mutex_unlock(&delayed_uprobe_lock);
+> -		kfree(uprobe);
+> +		call_rcu(&uprobe->rcu, uprobe_free_rcu);
+>  	}
+>  }
+>  
+> @@ -653,10 +668,10 @@ static struct uprobe *__find_uprobe(stru
+>  		.inode = inode,
+>  		.offset = offset,
+>  	};
+> -	struct rb_node *node = rb_find(&key, &uprobes_tree, __uprobe_cmp_key);
+> +	struct rb_node *node = rb_find_rcu(&key, &uprobes_tree, __uprobe_cmp_key);
+>  
+>  	if (node)
+> -		return get_uprobe(__node_2_uprobe(node));
+> +		return try_get_uprobe(__node_2_uprobe(node));
+>  
+>  	return NULL;
+>  }
+> @@ -667,20 +682,32 @@ static struct uprobe *__find_uprobe(stru
+>   */
+>  static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+>  {
+> -	struct uprobe *uprobe;
+> +	unsigned int seq;
+>  
+> -	read_lock(&uprobes_treelock);
+> -	uprobe = __find_uprobe(inode, offset);
+> -	read_unlock(&uprobes_treelock);
+> +	guard(rcu)();
+>  
+> -	return uprobe;
+> +	do {
+> +		seq = read_seqcount_begin(&uprobes_seqcount);
+> +		struct uprobe *uprobe = __find_uprobe(inode, offset);
+> +		if (uprobe) {
+> +			/*
+> +			 * Lockless RB-tree lookups are prone to false-negatives.
+> +			 * If they find something, it's good. If they do not find,
+> +			 * it needs to be validated.
+> +			 */
+> +			return uprobe;
+> +		}
+> +	} while (read_seqcount_retry(&uprobes_seqcount, seq));
+> +
+> +	/* Really didn't find anything. */
+> +	return NULL;
+>  }
+>  
+>  static struct uprobe *__insert_uprobe(struct uprobe *uprobe)
+>  {
+>  	struct rb_node *node;
+>  
+> -	node = rb_find_add(&uprobe->rb_node, &uprobes_tree, __uprobe_cmp);
+> +	node = rb_find_add_rcu(&uprobe->rb_node, &uprobes_tree, __uprobe_cmp);
+>  	if (node)
+>  		return get_uprobe(__node_2_uprobe(node));
+>  
+> @@ -702,7 +729,9 @@ static struct uprobe *insert_uprobe(stru
+>  	struct uprobe *u;
+>  
+>  	write_lock(&uprobes_treelock);
+> +	write_seqcount_begin(&uprobes_seqcount);
+>  	u = __insert_uprobe(uprobe);
+> +	write_seqcount_end(&uprobes_seqcount);
+>  	write_unlock(&uprobes_treelock);
+>  
+>  	return u;
+> @@ -936,7 +965,9 @@ static void delete_uprobe(struct uprobe
+>  		return;
+>  
+>  	write_lock(&uprobes_treelock);
+> +	write_seqcount_begin(&uprobes_seqcount);
+>  	rb_erase(&uprobe->rb_node, &uprobes_tree);
+> +	write_seqcount_end(&uprobes_seqcount);
+>  	write_unlock(&uprobes_treelock);
+>  	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+>  	put_uprobe(uprobe);
+> 
+> 
 
-What if utask->task sleeps in TASK_STOPPED/TASK_TRACED state before
-return from the ret-probed function?
 
-In this case it won't react to TWA_SIGNAL until debugger or SIGCONT
-wakes it up.
-
----------------------------------------------------------------------------
-And it seems that even task_work_add() itself is not safe...
-
-Suppose we have 2 ret-probed functions
-
-	void f2() { ... }
-	void f1() { ...; f2(); }
-
-A task T calls f1(), hits the bp, and calls prepare_uretprobe() which does
-
-	mod_timer(&utask->ri_timer, jiffies + HZ);
-
-Then later it calls f2() and the pending timer expires after it enters the
-kernel, but before the next prepare_uretprobe() -> mod_timer().
-
-In this case ri_task_work is already queued and the timer is pending again.
-
-Now. Even if T goes to the exit_to_user_mode_loop() path immediately, in
-theory nothing can guarantee that it will call get_signal/task_work_run
-in less than 1 second, it can be preempted.
-
-But T can sleep in xol_take_insn_slot() before return from handle_swbp(),
-and this is not so theoretical.
-
-Oleg.
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
