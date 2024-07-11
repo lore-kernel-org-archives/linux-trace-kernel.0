@@ -1,214 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7149A1EB26;
-	Thu, 11 Jul 2024 14:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D32169AE3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 14:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720708341; cv=none; b=Ff/MpA4ZKFEPDe9XjwaNBHu7872HDvq87LpZPqxfH2bSrqvh9gcKehW5X5cwR6WpNhZJ37T/JerBS92P5+0P77J2tGDHOOgWHMjotZpQeZk+d0Biv8fMgSsuvD8sMLnXcvsyBF/LQnmo4JHd5+R++c8Gp9mnuFQEfm6FV2xq1t8=
+	t=1720709078; cv=none; b=oeFS6phl+q8/TZHcd33htzKdcVn79pQkhH7iPeiZ/NrTGAPQchwD8PvVEpXs0yuElguXkkYwujrwW4soekFbEU+eP1ulq0FBqzISrkNVNRgPYFYDr9BMkEMPSWyuS4Z/g2jGC+3DJZ5Wvs+2367Fuv+OnC5QFs+OHeDDn3oTWZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720708341; c=relaxed/simple;
-	bh=up6W1K9mpxjGZ1T7a2dLYu/IsvtphCU8x2Vb6BTu6Zk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sWzZ+Kf7q7kK24gD82ASCYCPwn9zsWjyCWIsfG2+g7cRZGOtlmgoyHqjVt0BxyqAOVE3cROPb23D8Cw3i29h4yz42sHYU8vdyYanmIU6Uz2b9OtJLXE9ja5ADPFnSDjQoEO7XMlGKe1z/owrrwth0j3ZOrqm6zMnx6PLPFk1JGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92796C116B1;
-	Thu, 11 Jul 2024 14:32:19 +0000 (UTC)
-Date: Thu, 11 Jul 2024 10:33:41 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: syzbot <syzbot+16b6ab88e66b34d09014@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, lizefan.x@bytedance.com,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
- netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
-Subject: Re: [syzbot] [mm?] possible deadlock in
- __mmap_lock_do_trace_released
-Message-ID: <20240711103341.18a4eb4e@gandalf.local.home>
-In-Reply-To: <95930836-5b56-4c40-b2a0-2ddd4a59ae74@kernel.org>
-References: <0000000000002be09b061c483ea1@google.com>
-	<95930836-5b56-4c40-b2a0-2ddd4a59ae74@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720709078; c=relaxed/simple;
+	bh=MMu6kiGgrdyVeIGgo0o2g5ISXoiklOJgpiyd0c6Mhcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCWxO5ltvvmUYd1cKIezGcfprAjH8VCK1MsRQPLA2TMNGHSSLPTaXNABOERnZGbaq/UVZ3PAw2UEq7pm2hqk2PSoEhPjti2neDbIA7NlxFMuPwP0TbB1VPpg/Xp9qN7nRr+TMrmtT613MP0IvwuvoXvVdnSwEueH/BPjx+t442M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=q1PXf1Gy; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="q1PXf1Gy"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-64b3655297aso9071477b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 07:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1720709075; x=1721313875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p6PLNSJZMY2HBtPFlfBgNDPZWDEOAS/uY6eb53FVzXU=;
+        b=q1PXf1GybYh1aDXkOQriXh3etXHQaQvAEvEHvmjzflwesjMtmTkIcKjsvkM3cvyMew
+         1ADOSrKUCZeN1Bc6ndt1rYxk0DDfHkzu9xezqPuUzubgvhJWQPvuMkrPn/0U5ZZxfo9i
+         fctEzUyU1X+gwXWNkJGT6Qb6Rul3J21Wfk7CiQmTfo+8/rA+YGP6qKw6dLORH3DeagL/
+         y8faZ8jpGGnpY3BUumaQJl7BBvPzevdG9+6FJ6dQodNUGNJSp/gYUNCG5drWdvmjx5Mn
+         cv8yTWT0bLgjhtN0Oa3FCF0hNCixvqUBhriTBD67tVMd36sVAEQFtLzVdeP7ReM7JUpg
+         nXbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720709075; x=1721313875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p6PLNSJZMY2HBtPFlfBgNDPZWDEOAS/uY6eb53FVzXU=;
+        b=cXwyDBRiSDCWeuiM4xzpUFBvQsc8vHzv29yAT7lFarKRRj1ukx1bKSULpWjvTsUgFV
+         onXfmBrsiQjdMbZRiVskoBnojBsHV7jvmGS2OjMGgN0pV82mBK8SJjmPsuDQEDT21jOR
+         GxuZmr8/FOEjd6tz08X60b2HlsGLYUmbrLOts2ScyD1KBKZZ8oCMMvIR2tSQoutVCqa4
+         DcDE9uJVJLVYREIIgt5dAeHkpGYSda7gSTYzi7G0Z3lQ+6+FFCmrzJY+WIRuGTqz7PaR
+         /DZQYKWS9EFa/k69WMUpXXPh57kmw4F+KWW1Rjaxfu3xdDD6kGUVv7mwlif49v0IPzQx
+         0RKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVu5k/h3gXDST7PWwxapYdRT5EvUvGG9nq9DWI5EKhgDcaQBH6R5n5syuzIMrugKmphdzIhPaAV8tWLpHRr6j39dLXTiO7UwrtZza6R9bCbjbOQ
+X-Gm-Message-State: AOJu0YxY52nHA6M1mPv4Ql3yh3349cKFpJ8EDp2QSi/DNHtfLg1rhmz8
+	1c9qnl1MRZL7rWqGgnLr1j1CTN5WE74jjcByhmoF8tfoob0aiVVllpdGZwW5VRQ=
+X-Google-Smtp-Source: AGHT+IFAnEDVnsGx1tZ1AxBo1QTn+tOSC2MfALvNb6Q+MllvTQBzHLMq8T3kjDK5yp3+1lqcT3GiRg==
+X-Received: by 2002:a05:690c:3385:b0:62f:2553:d3b3 with SMTP id 00721157ae682-658ef3414eemr120805467b3.29.1720709075414;
+        Thu, 11 Jul 2024 07:44:35 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e4936079sm11198567b3.15.2024.07.11.07.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 07:44:34 -0700 (PDT)
+Date: Thu, 11 Jul 2024 10:44:34 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>,
+	kernel-team@fb.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+	linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 0/9] fs: multigrain timestamp redux
+Message-ID: <20240711144434.GB1235314@perftesting>
+References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
 
-On Thu, 4 Jul 2024 22:12:45 +0200
-Jesper Dangaard Brouer <hawk@kernel.org> wrote:
-
-> > ============================================
-> > WARNING: possible recursive locking detected
-> > 6.10.0-rc2-syzkaller-00797-ga12978712d90 #0 Not tainted
-> > --------------------------------------------
-> > syz-executor646/5097 is trying to acquire lock:
-> > ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-> > ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: __mmap_lock_do_trace_released+0x83/0x620 mm/mmap_lock.c:243
-> > 
-> > but task is already holding lock:
-> > ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-> > ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: __mmap_lock_do_trace_released+0x83/0x620 mm/mmap_lock.c:243
-> > 
-> > other info that might help us debug this:
-> >   Possible unsafe locking scenario:
-> > 
-> >         CPU0
-> >         ----
-> >    lock(lock#9);
-> >    lock(lock#9);
-> > 
-> >   *** DEADLOCK ***
-
-Looks like it's trying to take the rwsem mm->mmap_lock recursively. And
-rwsems are *not* allowed to be recursively taken, as once there's a writer,
-all new acquires of the reader will block. Then you can have:
-
-   CPU0				    CPU1
-   ----				    ----
-  down_read(lockA);
-				down_write(lockA); // blocks
-  down_read(lockA); //blocks
-
-DEADLOCK!
-
-
-> > 
-> >   May be due to missing lock nesting notation
-> >   
+On Thu, Jul 11, 2024 at 07:08:04AM -0400, Jeff Layton wrote:
+> tl;dr for those who have been following along:
 > 
-> To me, this looks like a lockdep false-positive, but I might be wrong.
+> There are several changes in this version. The conversion of ctime to
+> be a ktime_t value has been dropped, and we now use an unused bit in
+> the nsec field as the QUERIED flag (like the earlier patchset did).
 > 
-> Could someone with more LOCKDEP knowledge give their interpretation?
+> The floor value is now tracked as a monotonic clock value, and is
+> converted to a realtime value on an as-needed basis. This eliminates the
+> problem of trying to detect when the realtime clock jumps backward.
 > 
-> The commit[1] adds a fairly standard trylock scheme.
-> Do I need to lockdep annotate trylock's in some special way?
+> Longer patch description for those just joining in:
 > 
->   [1] https://git.kernel.org/torvalds/c/21c38a3bd4ee3fb733
+> At LSF/MM this year, we had a discussion about the inode change
+> attribute. At the time I mentioned that I thought I could salvage the
+> multigrain timestamp work that had to be reverted last year [1].
 > 
-> Also notice change uses raw_spin_lock, which might be harder for lockdep?
-> So, I also enabled CONFIG_PROVE_RAW_LOCK_NESTING in my testlab to help
-> with this, and CONFIG_PROVE_LOCKING.
-> (And obviously I also enabled LOCKDEP*)
+> That version had to be reverted because it was possible for a file to
+> get a coarse grained timestamp that appeared to be earlier than another
+> file that had recently gotten a fine-grained stamp.
 > 
-> --Jesper
+> This version corrects the problem by establishing a per-time_namespace
+> ctime_floor value that should prevent this from occurring. In the above
+> situation, the two files might end up with the same timestamp value, but
+> they won't appear to have been modified in the wrong order.
 > 
-> > 5 locks held by syz-executor646/5097:
-> >   #0: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: mmap_read_lock include/linux/mmap_lock.h:144 [inline]
-> >   #0: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: acct_collect+0x1cf/0x830 kernel/acct.c:563
-> >   #1: ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-> >   #1: ffff8880b94387e8 (lock#9){+.+.}-{2:2}, at: __mmap_lock_do_trace_released+0x83/0x620 mm/mmap_lock.c:243
-> >   #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
-> >   #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
-> >   #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: get_memcg_path_buf mm/mmap_lock.c:139 [inline]
-> >   #2: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: get_mm_memcg_path+0xb1/0x600 mm/mmap_lock.c:209
-> >   #3: ffffffff8e333fa0 (rcu_read_lock){....}-{1:2}, at: trace_call_bpf+0xbc/0x8a0
-> >   #4: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: mmap_read_trylock include/linux/mmap_lock.h:163 [inline]
-> >   #4: ffff8880182eb118 (&mm->mmap_lock){++++}-{3:3}, at: stack_map_get_build_id_offset+0x237/0x9d0 kernel/bpf/stackmap.c:141
-> > 
-> > stack backtrace:
-> > CPU: 0 PID: 5097 Comm: syz-executor646 Not tainted 6.10.0-rc2-syzkaller-00797-ga12978712d90 #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-> > Call Trace:
-> >   <TASK>
-> >   __dump_stack lib/dump_stack.c:88 [inline]
-> >   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
-> >   check_deadlock kernel/locking/lockdep.c:3062 [inline]
-> >   validate_chain+0x15d3/0x5900 kernel/locking/lockdep.c:3856
-> >   __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-> >   lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-> >   local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-> >   __mmap_lock_do_trace_released+0x9c/0x620 mm/mmap_lock.c:243
+> That problem was discovered by the test-stat-time gnulib test. Note that
+> that test still fails on multigrain timestamps, but that's because its
+> method of determining the minimum delay that will show a timestamp
+> change will no longer work with multigrain timestamps. I have a patch to
+> change the testcase to use a different method that is in the process of
+> being merged.
+> 
+> The testing I've done seems to show performance parity with multigrain
+> timestamps enabled vs. disabled, but it's hard to rule this out
+> regressing some workload.
+> 
+> This set is based on top of Christian's vfs.misc branch (which has the
+> earlier change to track inode timestamps as discrete integers). If there
+> are no major objections, I'd like to have this considered for v6.12,
+> after a nice long full-cycle soak in linux-next.
+> 
+> PS: I took a stab at a conversion for bcachefs too, but it's not
+> trivial. bcachefs handles timestamps backward from the way most
+> block-based filesystems do. Instead of updating them in struct inode and
+> eventually copying them to a disk-based representation, it does the
+> reverse and updates the timestamps in its in-core image of the on-disk
+> inode, and then copies that into struct inode. Either that will need to
+> be changed, or we'll need to come up with a different way to do this for
+> bcachefs.
+> 
+> [1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Here we have:
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-  static inline void mmap_read_lock(struct mm_struct *mm)
-  {
-        __mmap_lock_trace_start_locking(mm, false);
-        down_read(&mm->mmap_lock);
-        __mmap_lock_trace_acquire_returned(mm, false, true);
-  }
+Thanks,
 
-Which is taking the mm->mmap_lock for read.
-
-> >   __mmap_lock_trace_released include/linux/mmap_lock.h:42 [inline]
-> >   mmap_read_unlock include/linux/mmap_lock.h:170 [inline]
-> >   bpf_mmap_unlock_mm kernel/bpf/mmap_unlock_work.h:52 [inline]
-> >   stack_map_get_build_id_offset+0x9c7/0x9d0 kernel/bpf/stackmap.c:173
-> >   __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
-> >   bpf_prog_e6cf5f9c69743609+0x42/0x46
-> >   bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
-> >   __bpf_prog_run include/linux/filter.h:691 [inline]
-> >   bpf_prog_run include/linux/filter.h:698 [inline]
-> >   bpf_prog_run_array include/linux/bpf.h:2104 [inline]
-> >   trace_call_bpf+0x369/0x8a0 kernel/trace/bpf_trace.c:147
-> >   perf_trace_run_bpf_submit+0x7c/0x1d0 kernel/events/core.c:10269
-> >   perf_trace_mmap_lock+0x3d7/0x510 include/trace/events/mmap_lock.h:16
-
-I'm guessing a bpf program attached to something within the same code:
-
-> >   trace_mmap_lock_released include/trace/events/mmap_lock.h:50 [inline]
-> >   __mmap_lock_do_trace_released+0x5bb/0x620 mm/mmap_lock.c:243
-
-Here is the same function as above where it took the mm->mmap_lock.
-
-My guess is the bpf program that attached to this event ends up calling the
-same function and it tries to take the rwsem again, and that poses a risk
-for deadlock.
-
--- Steve
-
-> >   __mmap_lock_trace_released include/linux/mmap_lock.h:42 [inline]
-> >   mmap_read_unlock include/linux/mmap_lock.h:170 [inline]
-> >   acct_collect+0x81d/0x830 kernel/acct.c:566
-> >   do_exit+0x936/0x27e0 kernel/exit.c:853
-> >   do_group_exit+0x207/0x2c0 kernel/exit.c:1023
-> >   __do_sys_exit_group kernel/exit.c:1034 [inline]
-> >   __se_sys_exit_group kernel/exit.c:1032 [inline]
-> >   __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1032
-> >   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> >   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-> >   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > RIP: 0033:0x7f8fac26d039
-> > Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f
-> > 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00
-> > f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00 RSP:
-> > 002b:00007ffd95d56e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7 RAX:
-> > ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8fac26d039 RDX:
-> > 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000 RBP:
-> > 00007f8fac2e82b0 R08: ffffffffffffffb8 R09: 00000000000000a0 R10:
-> > 0000000000000000 R11: 0000000000000246 R12: 00007f8fac2e82b0 R13:
-> > 0000000000000000 R14: 00007f8fac2e8d20 R15: 00007f8fac23e1e0 </TASK>
-> > 
-> > 
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > 
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > For information about bisection process
-> > see: https://goo.gl/tpsmEJ#bisection
-> > 
-> > If the report is already addressed, let syzbot know by replying with:
-> > #syz fix: exact-commit-title
-> > 
-> > If you want syzbot to run the reproducer, reply with:
-> > #syz test: git://repo/address.git branch-or-commit-hash
-> > If you attach or paste a git patch, syzbot will apply it before testing.
-> > 
-> > If you want to overwrite report's subsystems, reply with:
-> > #syz set subsystems: new-subsystem
-> > (See the list of subsystem names on the web dashboard)
-> > 
-> > If the report is a duplicate of another one, reply with:
-> > #syz dup: exact-subject-of-another-report
-> > 
-> > If you want to undo deduplication, reply with:
-> > #syz undup  
-
+Josef
