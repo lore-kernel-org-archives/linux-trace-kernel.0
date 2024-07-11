@@ -1,146 +1,128 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFD114D428
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 23:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE7D262B6;
+	Thu, 11 Jul 2024 00:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720654939; cv=none; b=recseHx9g+ODNfwNd5eHmLpFcqwdTQUayybGdMOwFAfiUSUBEAjfbzKTYtc7YwWOsp3s+a3V60wiO8EDap3gJ5KL5IlARBRiFtx9IG5RJMgFSfTD7Ubh7GCaluLaEUXvRCLTv22BxzOsDdbPqhFNLpqqaznsGKCMEpdVmGNgvo4=
+	t=1720656168; cv=none; b=cQsAEUvYOegYZLF6KtJ1Tz7SNJUQFbL2K8DQb2zNmPP+G4ZFztwiC0phgHAVScUAL6SeW7JfRHnElShgvPoswkc8EOPtrbb8SlBHBJVG1LVrp7C4rKFmrSbIQPpCGKVRlTOqd6i+MDzBtFPrLLvMzQNJPq62WW4X0SVFdXjtsFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720654939; c=relaxed/simple;
-	bh=WmCXshM9BwamSUxd01N4bO9J01nXQuiD7Ah98aEMfxw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PC1SqTulYesxzwUZbEvZ16mfqQmnFDluSWFB6goJZ5KDKNhU6v3gXkIrv0F7s1kDn0v++LTXWiWP5tVvdj+JjP/Y1HDJIzHq1GSr0+AUGRZZYTbaRdjBqkQ1pSquIDf9nTuXE94ufDWCYuN/toczn8p+fAwNUWN96s1twjUM1F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dWrM/6qT; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720656168; c=relaxed/simple;
+	bh=cuyxjV1A3pagPwWMlVL0Z0f21MocAdw285VBAeBfxUQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=df83I5FcSJBMtXGAFjFw2uIWBLEvSyrmAMZ4iu5j0GvJ6z03f6h16B5slGM+5vwhPPRrPFQZa+NGOvVo4UDF8cKIJnRYK27x73u891pd8NMDcnYJTt1JQRd/R003+Bjnu6sXBNa8PdrrbPiZl8GpSb10y8oQPhaTcvREXXpmChs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VKxHSxaD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dWrM/6qT"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6b5f128b199so2200166d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jul 2024 16:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720654936; x=1721259736; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xw22ZH4c8gyTKnFajh7vcYEJsOdrHlsxvg9OLt0kZtA=;
-        b=dWrM/6qT8jNEjecjc9s08cKSX4h+fb6bTc35XK4KJuziyKO+fD/7CbRZJ4UwApGsfl
-         1W71iFYoXZAhm3NUXU7xD7Et5TuKbhgYB9RICTMsmQqsulI9HWNXvdCZHwLpiCf52//6
-         G0IPDLquKspE/p1oSvCYSjr7fUwxb4l6eRxqgiHh75JUIw5D2hPSiYm8K+UJe5eH7SRd
-         /dF+ZtLkEny2rN/U/siaCZX8u0XTToiPx05I65KGy53ugYyndbw8ILn+iDK4dSayMnmE
-         xi0fKa2ZiL0jp2pJtdOoi+Vg+Muzkoc1dZnbx7V4UDdtpTsUIEoFy1CaPVb9D9iyk86J
-         c36A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720654936; x=1721259736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xw22ZH4c8gyTKnFajh7vcYEJsOdrHlsxvg9OLt0kZtA=;
-        b=FQKas8DF/Jegux+3EKfRz+9xNjpJnC3CRuRHbWTndXpUsELf0/AJZHMhilDnaB4ysq
-         F0a0ltAq4obiJ7zgLyPrPWpcrBoY0AisomqkTW++f7y486mXalTGpwj8iM8eiIdyBt2Q
-         t2fzbGR4BtpRcQ0uRTha0TDtjAKLiQcfc5xz27jcB+a7jbJvzBURD5VmHkOevFmuZ6zI
-         XZdQvKNO7XAEym1WWF65B62sYv14KBRforhD09LQEGb3I2+3wuLZGkQgeR2F7uc1Uznq
-         1b4iAfhC0R5iqy+Aod9y5Qu2h6z0jX2PHLHNCmfmBfePpyU3u9G+7AvvRH45coHahF+9
-         OHXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWrFB6/GOWQawPqjyqP/fHxgQjweAaFbY8jvxvLK9/ms/0B0ClJgMdcdHA9aFLJuDggbHQUOxhTsdgwjOYIC4Va7i3VOGmjOUT/aJbmkZ/Y2+B+
-X-Gm-Message-State: AOJu0YyTL+gCKtC01A+s5eWAE4CldnU+K1u5XUIKUUthYpjt8q7v8zsY
-	q9cyO5Hrieiu3tukvCBgQ0Uet7FTJ8YrN0s0KvUXAUSk/jWW3VKQwU54jqxkNqTUqswvXfP7I3T
-	dcCRHdnNogKU+FQ52IzZEUUM8zsDbNBl7IR6w
-X-Google-Smtp-Source: AGHT+IGOLOQ6K3/3da49V2eHyCz+KQjRCyIEiAYnB4b8F1iCu2D4bkJxhlzGFfxvSjmRGC6gzv7EI1OWCLflWXtCr4A=
-X-Received: by 2002:a05:6214:20e2:b0:6b5:9c9c:7baf with SMTP id
- 6a1803df08f44-6b61bca896amr97392016d6.23.1720654936406; Wed, 10 Jul 2024
- 16:42:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VKxHSxaD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720656166; x=1752192166;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cuyxjV1A3pagPwWMlVL0Z0f21MocAdw285VBAeBfxUQ=;
+  b=VKxHSxaDpeZFqdef5Uc2swO96D60KiP/gpHBlbjV3lyamHatwTlhGNKM
+   E4+9vZTW+0wRSpN2lgQAiTcH9H9f6FP8BC7JCxYxhWNX1aMqUTpGkggef
+   ZEZVEeT7zzI5HPZKuSkaR0dmh+lPvZxg938RjYSQk69+s+UQ3aEsJGKww
+   +P6fJG5/co3fw40adEE4n+wW0JYil5PPmSj79ojap73ngmQ4Pos7MIiin
+   X0AwVQfVYhVwsT1K3GTlTxxaW5te6xcwlVRETA/7US0eHp+5Dm/G50BGJ
+   R4+fnvvfiOcsATcEfITukSPNm8ChCFSw5r3F+hm1l8WSuu9tVmg5nzRDe
+   A==;
+X-CSE-ConnectionGUID: ZlgfyCK+SIiSMCG9zaUYLQ==
+X-CSE-MsgGUID: Z4HyalPaRLuG3WUCnlyWLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18153694"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="18153694"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 17:02:46 -0700
+X-CSE-ConnectionGUID: oa0LH8wYR3aLcwSVYH64Dg==
+X-CSE-MsgGUID: mvFlfmyCQxCa3nGUz0QHSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="48349887"
+Received: from cmdeoliv-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.125.109.234])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 17:02:45 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Jithu Joseph <jithu.joseph@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ashok Raj <ashok.raj@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	linux-trace-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shankar Ravi V <ravi.v.shankar@intel.com>
+Subject: [PATCH v2 0/4] Add SBAF test to IFS
+Date: Wed, 10 Jul 2024 17:02:29 -0700
+Message-Id: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710001749.1388631-1-almasrymina@google.com>
- <20240710001749.1388631-6-almasrymina@google.com> <20240710094900.0f808684@kernel.org>
-In-Reply-To: <20240710094900.0f808684@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 10 Jul 2024 16:42:04 -0700
-Message-ID: <CAHS8izPTqsNQnQWKpDPTxULTFL4vr4k6j9Zw8TQzJVDBMXWMaA@mail.gmail.com>
-Subject: Re: [PATCH net-next v16 05/13] page_pool: devmem support
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, linux-mm@kvack.org, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 10, 2024 at 9:49=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Wed, 10 Jul 2024 00:17:38 +0000 Mina Almasry wrote:
-> > +static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-> > +{
-> > +     return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
-V);
-> > +}
-> > +
-> > +static inline unsigned long netmem_get_pp_magic(netmem_ref netmem)
-> > +{
-> > +     return __netmem_clear_lsb(netmem)->pp_magic;
-> > +}
-> > +
-> > +static inline void netmem_or_pp_magic(netmem_ref netmem, unsigned long=
- pp_magic)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp_magic |=3D pp_magic;
-> > +}
-> > +
-> > +static inline void netmem_clear_pp_magic(netmem_ref netmem)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp_magic =3D 0;
-> > +}
-> > +
-> > +static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
-> > +{
-> > +     return __netmem_clear_lsb(netmem)->pp;
-> > +}
-> > +
-> > +static inline void netmem_set_pp(netmem_ref netmem, struct page_pool *=
-pool)
-> > +{
-> > +     __netmem_clear_lsb(netmem)->pp =3D pool;
-> > +}
->
-> Why is all this stuff in the main header? It's really low level.
-> Please put helpers which are only used by the core in a header
-> under net/core/, like net/core/dev.h
+This patch series adds support for Structural Based Functional Test at
+Field (SBAF) in the IFS driver. SBAF is a new type of testing that
+provides comprehensive core test coverage, complementing existing IFS
+tests like Scan at Field (SAF) and ArrayBist. Granite Rapids (GNR) is
+the first platform that supports SBAF.
 
-Sorry none of those are only used by net/core/*. Pretty much all of
-these are used by include/net/page_pool/helpers.h, and some have
-callers in net/core/devmem.c or net/core/skbuff.c
+SBAF mimics the manufacturing screening environment and leverages the
+same test suite. It makes use of Design For Test (DFT) observation
+sites and features to maximize coverage in minimum time.
 
-Would you like me to move these pp specific looking ones to
-include/net/page_pool/netmem.h or something similar?
+Similar to the SAF test, SBAF isolates the core under test from the
+rest of the system during execution. Upon completion, the core
+seamlessly resets to its pre-test state and resumes normal operation.
+Any machine checks or hangs encountered during the test are confined to
+the isolated core, preventing disruption to the overall system. Like
+SAF test, the SBAF test is also divided into multiple batches, and each
+batch test can take hundreds of milliseconds (100-200 ms) to complete.
+If such a lengthy interruption is undesirable, it is recommended to
+relocate the time-sensitive applications to other cores for the
+duration of the test.
 
---=20
-Thanks,
-Mina
+Patch Details:
+
+Patch 1/4: Refactors MSR usage in IFS image loading code to share the
+           code between SBAF and SAF tests.
+Patch 2/4: Leverages SAF image loading logic and adds SBAF image loading support.
+Patch 3/4: Adds support for user to trigger SBAF test.
+Patch 4/4: Adds trace support for SBAF tests.
+
+This series is originally authored by Jithu Joseph. I have made cleanups
+related to code reuse between the SBAF and SAF tests and resubmitting it for
+review.
+
+Changes since v1:
+ * Addressed trace struct hole issue (Steven)
+ * Fixed initialization issue in ifs_sbaf_test_core() (Ilpo)
+
+Jithu Joseph (3):
+  platform/x86/intel/ifs: Add SBAF test image loading support
+  platform/x86/intel/ifs: Add SBAF test support
+  trace: platform/x86/intel/ifs: Add SBAF trace support
+
+Kuppuswamy Sathyanarayanan (1):
+  platform/x86/intel/ifs: Refactor MSR usage in IFS test code
+
+ arch/x86/include/asm/msr-index.h         |   2 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  92 ++++++++-
+ include/trace/events/intel_ifs.h         |  27 +++
+ drivers/platform/x86/intel/ifs/core.c    |  33 ++++
+ drivers/platform/x86/intel/ifs/load.c    |  39 ++--
+ drivers/platform/x86/intel/ifs/runtest.c | 235 +++++++++++++++++++++++
+ 6 files changed, 413 insertions(+), 15 deletions(-)
+
+-- 
+2.25.1
+
