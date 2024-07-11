@@ -1,109 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4220EBE49;
-	Thu, 11 Jul 2024 01:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0006321D;
+	Thu, 11 Jul 2024 01:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720660105; cv=none; b=czTu4ZxLCoTQieDXwMOphjBrW1UejbYPanE73ICshhu7eUjg6FBlSKxDr8863gHBlZW4jU27fZKHzPV1YWrka0lijm8U1tHw7EyNcVjV/vGlvTGiVvxj1z20FY1O96o6mmrWublKoJV9/68nh6DgBhWn6/O4EHvI1T5FHX5/o8s=
+	t=1720660926; cv=none; b=OoB2JSqr0fMkK+OsRZGsYqFJrhQh3XNFOOOzqnKdSxHm1P4ldTF7T/FRwVmoZpj0N8I1nUpinDOHaT+pFbvkGqw1A+aovtohyifTLoJjM1Ltvz/LYO5k16uaDJNfkVAEn2hDxZC/0anyhX29OK+XNr+oNO2lrAohhqyK4djcd6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720660105; c=relaxed/simple;
-	bh=SMz9nJUL1CPqXAWfimtrxdGvpG09xA8QZ9vSjFy8kcI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FPtPx/OWDT4CR1ctvzX1t5CRqf4IB6Jw1PAOResu+cs+A79eWitSNd+S4F7HcxiRyDAfAe6hXmftZ6eM76zA5hfVfsQ5xdvs3Td7AOXIuJYGWchSP+1nvI6JNWX938i9surwfb8hBsP7HheUWLSTbHFUC1XhzOyhZKoCvWFvPRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qaswazhF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720660926; c=relaxed/simple;
+	bh=QjOULS8b+CZJ29PyHWRuJmie+Hn55IcoVG3HP/3LohE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VnLLlJrh8akdwLMbZgs6JyUadYlISBRD8TKjtAK0oRxNmJsBE4UHUK+CaoBHXWev/sMdN+uNmXaSy98TkuseZ9dbLyMGkdIwQ1UHDi6b5GP4U2+RbFNtsJ4m0J4TdBYOVW+eLRZhesxjMkORYNlidiT1d3CLO/iDP0omG8gj5/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nu7j9vqd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qaswazhF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD14FC32781;
-	Thu, 11 Jul 2024 01:08:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nu7j9vqd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA79C32781;
+	Thu, 11 Jul 2024 01:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720660105;
-	bh=SMz9nJUL1CPqXAWfimtrxdGvpG09xA8QZ9vSjFy8kcI=;
+	s=k20201202; t=1720660925;
+	bh=QjOULS8b+CZJ29PyHWRuJmie+Hn55IcoVG3HP/3LohE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qaswazhFSmg1dpTeaM4t2pY1GFbjcoS6h7TUfVvM47oTwdjOdhT36qqoYMlwDl0fq
-	 2VRFetKtL1GMczGeFtmSAOcvXI0euIqDs+//5u0RLaxfBjm+vnrjokUAbAC//Fnkwn
-	 4FcjFc2QwxD9CH9qDYsXix92bj7eByuuD9fSHLdhOmk1yqS9lurTIn5ofoM66doQ83
-	 6INEJYUjS50Le643jUajB7FaFbG+SZRzkUcZwhWxw2Jjrh/TyOYQAJL1eBOLoghDwk
-	 l5GZzfzLa5PCVk0OAZb1u3E6JCi5LnF5M/TDqT5eBYgSUXoLljhUGltMg+F3i4KPRk
-	 mNBR/25cLgJ+w==
-Date: Thu, 11 Jul 2024 10:08:21 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bootconfig: Remove duplicate included header file
- linux/bootconfig.h
-Message-Id: <20240711100821.a1ba1449c3be80d30ea6a697@kernel.org>
-In-Reply-To: <20240711002152.800028-2-thorsten.blum@toblux.com>
-References: <20240711002152.800028-2-thorsten.blum@toblux.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=Nu7j9vqdXFB65PlvnMG07kLL4ivK1FfVmXPHqTj2KJK596Mc9VqYs9lJeZEnKP7ON
+	 zXThKeg9bymdodZ2PIefG7emFD2gdT5qBsgTLm+H20XqJqPqzN0EFhC0m76b69HAKY
+	 IYbR340PfQzawxYhWyFufDRPBQHIiiklguQ7ygzJqm+l2Li6ovHnuc9HjM2IhUp6DQ
+	 /pG5oYdKyNVQMInWszt3EtEL8K4E758yZUnsbrn5XLQuIRBzGAmZ53YVSi6XiVF6Hp
+	 w6+ekApzB8N7QHyw3aeV+j7GzkIcFhh/EmmQxXvlulGRFFFtOWh1wCj2EME4SmvAhb
+	 q7RK7aphR1DUQ==
+Date: Wed, 10 Jul 2024 18:22:02 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, linux-mm@kvack.org, Matthew Wilcox
+ <willy@infradead.org>
+Subject: Re: [PATCH net-next v16 05/13] page_pool: devmem support
+Message-ID: <20240710182202.0324279f@kernel.org>
+In-Reply-To: <CAHS8izPnFxeEMEQkxq=A9Rp7T8ADJ__3eWfeQmC2hEBYQVzcvw@mail.gmail.com>
+References: <20240710001749.1388631-1-almasrymina@google.com>
+	<20240710001749.1388631-6-almasrymina@google.com>
+	<20240710094900.0f808684@kernel.org>
+	<CAHS8izPnFxeEMEQkxq=A9Rp7T8ADJ__3eWfeQmC2hEBYQVzcvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Jul 2024 02:21:53 +0200
-Thorsten Blum <thorsten.blum@toblux.com> wrote:
-
-> The header file linux/bootconfig.h is included whether __KERNEL__ is
-> defined or not.
+On Wed, 10 Jul 2024 13:29:03 -0700 Mina Almasry wrote:
+> If we want to add __skb_frag_ref() support for net_iov I suggest something like:
 > 
-> Include it only once before the #ifdef/#else/#endif preprocessor
-> directives and remove the following make includecheck warning:
-> 
->   linux/bootconfig.h is included more than once
-> 
-
-OK, but this leaves only a comment in !__KERNEL__ part.
-That comment should be moved and updated too. Please move this on the top of
-this file and remove `!__KERNEL__` part.
-
-/*
- * NOTE: This file is also used by tools/bootconfig, because tools/bootconfig
- * will run the parser for sanity test.
- * This does NOT mean lib/bootconfig.c is always available in the user space.
- * However, if you change this file, please make sure the tools/bootconfig
- * has no issue on building and running.
- */
-
-Thank you,
-
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
->  lib/bootconfig.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index 97f8911ea339..297871455db5 100644
-> --- a/lib/bootconfig.c
-> +++ b/lib/bootconfig.c
-> @@ -4,8 +4,9 @@
->   * Masami Hiramatsu <mhiramat@kernel.org>
+> diff --git a/include/linux/skbuff_ref.h b/include/linux/skbuff_ref.h
+> index 0f3c58007488a..02f7f4c7d4821 100644
+> --- a/include/linux/skbuff_ref.h
+> +++ b/include/linux/skbuff_ref.h
+> @@ -17,7 +17,13 @@
 >   */
->  
-> -#ifdef __KERNEL__
->  #include <linux/bootconfig.h>
+>  static inline void __skb_frag_ref(skb_frag_t *frag)
+>  {
+> -       get_page(skb_frag_page(frag));
+> +       netmem_ref netmem = skb_frag_netmem(frag);
 > +
-> +#ifdef __KERNEL__
->  #include <linux/bug.h>
->  #include <linux/ctype.h>
->  #include <linux/errno.h>
-> @@ -33,7 +34,6 @@ const char * __init xbc_get_embedded_bootconfig(size_t *size)
->   * However, if you change this file, please make sure the tools/bootconfig
->   * has no issue on building and running.
->   */
-> -#include <linux/bootconfig.h>
->  #endif
->  
->  /*
-> -- 
-> 2.45.2
-> 
+> +       /* netmem always uses pp-refs for refcounting. Never non-pp refs. */
+> +       if (!netmem_is_net_iov(netmem))
+> +               get_page(netmem_to_page(netmem));
+> +       else
+> +               page_pool_ref_netmem(netmem);
+>  }
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Probably not much better since freeing still looks at the recycle bit.
+Eric and Willem acked patch 8, maybe it works, and if it doesn't we
+know who to call :) I can't point out any case that won't work so if 
+y'all think this is fine, let's leave it.
