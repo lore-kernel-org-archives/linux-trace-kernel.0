@@ -1,144 +1,132 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D6F15FCFB
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDDE28FF;
+	Thu, 11 Jul 2024 15:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711701; cv=none; b=iEdkNmrm9yeJwf017ZFTcXV2YyTSde99MK/ywthSaFGhB0b3j5EmztgT/IvapE2mkTXrJb5wyg/m4KMzIYd/6JYWQfHDsCGT3nfo+te0P8krMcrZtIxm0tKEqls2azpAwkNpjwqESTomt0FFP/CmhNtshDeUr7DpwCgHFd1nkxQ=
+	t=1720713349; cv=none; b=dAMQoL4QO6fEggIcrRu7tsWXZ5vXQ+3IpLzReNyOSJZTGknFn6aXkziyTbiBv33226bSSunJRmU9nSNxVT0RJP6AKH/dZLxfA5alk48cNdOzZX6SsaVR0PlX+9Tiz7YJZ4ly5u7A66Tc4wngeyWOrfqmr3oyuUGAvMhdyeupYRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711701; c=relaxed/simple;
-	bh=SilAbBLlHxF1fFiXA5nZv8t2dj5EmTE+T6I22rXMb5M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sLLl9aZuLDBvmvUB3ufKhhaPPOdbb2ber9GWAI4BB7IR5UD8+CDUkQ2ifhAi0tvoSyjXAKK4bFbyqtdD9YU4Ilf10tZip5apGxGCfWgNczCnDl8UQaU1YkRIcNFnEwJAUIwSDuTuL0+DRWw3ExjQGnnCsMZFsfB+vwk964r4OQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tvbdEsk4; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1720713349; c=relaxed/simple;
+	bh=w+A3sOrmDUAx1OwvIRO2HQ+zODeOjMMWaJ4EeToH730=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KWYTv7Ymn5SidzulL8xt6nMXl86znDzNHWVuEaQbsU0rwb1vKeDd9xSwdxMh9NO9/ShIHvCYBTtWY/Pt9JqOd/YDOdi+s4GE6lG1TqPf0wE/gtMF2Vjx899w982uyTsTJedhArr+YPZsBL3Bm3DYcYL9rM3udezrXz2vMj7eB2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jyqLzf8B; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvbdEsk4"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b5eb69e04cso6059626d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720711699; x=1721316499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WQkM2Ryk0ZQZFnLcaLIzbhoe7KSMFKbN9WHRd1zSTLE=;
-        b=tvbdEsk4sodNSvw9dH8d0RTBCUCIMpLRnkDWzwu+htuFGz9CKFgr7WVU3tljAoy3nm
-         hq++uQy+j+zsmqSFprVU8kf2JMITO/neuc77g+lZ3I11/gED/4qmLT5sywvJtSN1P2s/
-         Rw0IPojdYEmIuRqp2FDXdstx+z4YbcILMMm4jeXPKt2fdJSHOO/4qy55yPCcQ4qfHb5n
-         OgfJPbuVjsIc2HSwdt/TVN7xX0RCdKr9VHnb2j4BZdpkA4MqKHZCNrF4ryhprX2kM1YH
-         nbBCiHiZyEnGJuvFSFv6/cC6OfZU0QYi/JDkO1yidn53SMazkEtK1qJwK6CdGXv22vGM
-         r3OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720711699; x=1721316499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WQkM2Ryk0ZQZFnLcaLIzbhoe7KSMFKbN9WHRd1zSTLE=;
-        b=VHC/cM4WXPg18fap4rOf+1L38rvd+dQezU6Uzy3io1Aer+YDJus18O906A4YyTM1RF
-         WrBy4sSekjsg2fa0WcSmn0RrSar0SmQTYEPO+lGRVlQkSO6cgFIXmkmZJjbmbFhN3QBh
-         C7/seO39xaLbSBQ6FKl1mMWbjgI4TCj74piVct/Tq2W/GdLmBCq45tCzgizO7R95CLZP
-         OQD0wwkDtT1c9riDJp4oln6s5RQ7KrQUmZURGKtjtH+ri0hxyPZ7jB6SHeNRgzNPK3fk
-         inNZBmqguqy4c/Cc6xGGS2qPvCfhpgjRbreLuq/Lo/xG5zRYyhWKki/QP1zCnLvYnaPz
-         hkMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPe0DWrxqI8H4pQfCXCOgBBYW8lIHL8KmIsScN7s/NtdbUxYx565Xzm2ThxV93acwUbggled+2Du1BpHybHRevLIKbtVm+4KrCEnSYFkAZpjQP
-X-Gm-Message-State: AOJu0YzLui7GEtSp4P127L5FyJkFOdTvNklxfcjwE0drIrB2sh1Yz2VY
-	3jpaBdIe08ZqtFxPaBYYlluqAtaxfpQwpcWmdMU7GI0yuNhpwqvzUq9MFZCCFcf1AokhS5PRdom
-	bbbulu0UuPjLMi7FUNa9Uw3tGTWWDhfoKhrAy
-X-Google-Smtp-Source: AGHT+IE8HI6rD0D7bFmLR1Mn8tZE0XSsSvK7NyBw9sFmyI90jMNxfVlBfEcxHI84DHJue4HhA0QN9oG7JH/Vd9MHPxg=
-X-Received: by 2002:a05:6214:cad:b0:6b0:76f1:8639 with SMTP id
- 6a1803df08f44-6b61c1b6d8fmr100368136d6.42.1720711698460; Thu, 11 Jul 2024
- 08:28:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jyqLzf8B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cSiIU7bwvCcF253N61ilnrKuKH5iA5GLzafJDCHXnS4=; b=jyqLzf8B8pIUmcgb3JcmiUOM+Z
+	bE3JlUZywstx1MO5Do98TzsIGLsGwPatYYuTM4KYlVr9H8oc7Ep3nPXsDTD0ZIM8c0Dj+wEG0Ldi+
+	iDTKykteijllru5XUAa557dJktIL82lGKwmQraIgLIl6WF+de5Dpx6wBcTCa+GgD5gI3IfAwlNB/V
+	jH79SFJgpY4FBBfKUyNjdlMaNg3ubwQGUYqaKI/lpjxJ7bgQKI/yZ4yj9l8vTYlx4nC6SAWTFavtb
+	i/nQlXnxsdwO5bs/2UrgAAkowqJN5/Z9UbYEDZon+yU9O/HbS5d8ZVYXoKiZ/l7AgDJd7gEGNb43g
+	a0mL2LWw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRw90-000000017wR-1tjP;
+	Thu, 11 Jul 2024 15:55:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 11B9030050D; Thu, 11 Jul 2024 17:55:42 +0200 (CEST)
+Date: Thu, 11 Jul 2024 17:55:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
+Message-ID: <20240711155542.GA34311@noisy.programming.kicks-ass.net>
+References: <20240711110235.098009979@infradead.org>
+ <20240711110401.412779774@infradead.org>
+ <20240711131918.GC16902@redhat.com>
+ <20240711150054.GA3285@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710001749.1388631-1-almasrymina@google.com>
- <20240710001749.1388631-13-almasrymina@google.com> <4b0479b0-1e0f-43db-8333-26b7a1fd791c@nvidia.com>
-In-Reply-To: <4b0479b0-1e0f-43db-8333-26b7a1fd791c@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 11 Jul 2024 08:28:03 -0700
-Message-ID: <CAHS8izOc4gZUP-aS747OVf3uyn8KAyfeBcYDx2CQc-L9RnvrXA@mail.gmail.com>
-Subject: Re: [PATCH net-next v16 12/13] selftests: add ncdevmem, netcat for
- devmem TCP
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Stanislav Fomichev <sdf@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711150054.GA3285@noisy.programming.kicks-ass.net>
 
-On Wed, Jul 10, 2024 at 5:44=E2=80=AFPM John Hubbard <jhubbard@nvidia.com> =
-wrote:
->
-> On 7/9/24 5:17 PM, Mina Almasry wrote:
-> ...
-> > diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selft=
-ests/net/Makefile
-> > index bc3925200637c..39420a6e86b7f 100644
-> > --- a/tools/testing/selftests/net/Makefile
-> > +++ b/tools/testing/selftests/net/Makefile
-> > @@ -95,6 +95,11 @@ TEST_PROGS +=3D fq_band_pktlimit.sh
-> >   TEST_PROGS +=3D vlan_hw_filter.sh
-> >   TEST_PROGS +=3D bpf_offload.py
-> >
-> > +# YNL files, must be before "include ..lib.mk"
-> > +EXTRA_CLEAN +=3D $(OUTPUT)/libynl.a
-> > +YNL_GEN_FILES :=3D ncdevmem
-> > +TEST_GEN_FILES +=3D $(YNL_GEN_FILES)
-> > +
-> >   TEST_FILES :=3D settings
-> >   TEST_FILES +=3D in_netns.sh lib.sh net_helper.sh setup_loopback.sh se=
-tup_veth.sh
-> >
-> > @@ -104,6 +109,10 @@ TEST_INCLUDES :=3D forwarding/lib.sh
-> >
-> >   include ../lib.mk
-> >
-> > +# YNL build
-> > +YNL_GENS :=3D netdev
-> > +include ynl.mk
->
-> This seems to be missing a rule to generate ynl.mk, right?
->
+On Thu, Jul 11, 2024 at 05:00:54PM +0200, Peter Zijlstra wrote:
 
-Hi John,
+> Let me ponder that a little, I *can* make it work, but all 'solutions'
+> I've come up with so far are really rather vile.
 
-tools/testing/selftests/net/ynl.mk was merged as part of this patch a
-few days ago:
+This is the least horrible solution I could come up with...
 
-https://patchwork.kernel.org/project/netdevbpf/patch/20240628003253.1694510=
--14-almasrymina@google.com/
-
-Is it not working for you by any chance?
-
---=20
-Thanks,
-Mina
+---
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -83,6 +83,7 @@ struct uprobe_task {
+ 
+ 	struct timer_list		ri_timer;
+ 	struct callback_head		ri_task_work;
++	bool				ri_work_pending;
+ 	struct task_struct		*task;
+ };
+ 
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1797,9 +1797,8 @@ void uprobe_free_utask(struct task_struc
+ 	t->utask = NULL;
+ }
+ 
+-static void return_instance_task_work(struct callback_head *head)
++static void __return_instance_put(struct uprobe_task *utask)
+ {
+-	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
+ 	struct return_instance *ri;
+ 
+ 	for (ri = utask->return_instances; ri; ri = ri->next) {
+@@ -1815,9 +1814,43 @@ static void return_instance_task_work(st
+ 	}
+ }
+ 
++static void return_instance_task_work(struct callback_head *head)
++{
++	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
++	utask->ri_work_pending = false;
++	__return_instance_put(utask);
++}
++
++static int return_instance_blocked(struct task_struct *p, void *arg)
++{
++	unsigned int state = READ_ONCE(p->__state);
++
++	if (state == TASK_RUNNING || state == TASK_WAKING)
++		return 0;
++
++	smp_rmb();
++	if (p->on_rq)
++		return 0;
++
++	/*
++	 * Per __task_needs_rq_locked() we now have: !p->on_cpu and only hold
++	 * p->pi_lock, and can consiter the task fully blocked.
++	 */
++
++	__return_instance_put(p->utask);
++	return 1;
++}
++
+ static void return_instance_timer(struct timer_list *timer)
+ {
+ 	struct uprobe_task *utask = container_of(timer, struct uprobe_task, ri_timer);
++	if (utask->ri_work_pending)
++		return;
++
++	if (task_call_func(utask->task, return_instance_blocked, NULL))
++		return;
++
++	utask->ri_work_pending = true;
+ 	task_work_add(utask->task, &utask->ri_task_work, TWA_SIGNAL);
+ }
+ 
