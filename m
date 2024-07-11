@@ -1,51 +1,59 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8B15957E;
-	Thu, 11 Jul 2024 16:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4833B16C857
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 16:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714017; cv=none; b=bhpdJmvxRM9i7AoASXuyaJ6MyXGIoXNUILQDkbY/JET6/RO4qPs7h2ktPyyIvKOijvWl4f8KJOY2PvIX6zPi9I/D9EhPpGJEoBDR5WrcdKIIuMmOU+U9UIdDB7bQBmfFwt5PSgUHhW4L27R/Oir/9zaHv8O5LxYMPJ9DS4ICVz0=
+	t=1720714125; cv=none; b=WbiZcoAgvicangtPX6Fd239vIcEgvQrHFW3llFnUvNPSk/NARdkp3fpj1LzqBoUCNGnSRZapnQvA2RP9hq5r7E/DGWNvigTa4cvncGu8oTGNtozeZb+BkhVT6Pru4gZG0X+SxoVQt1Y3rPJ5KcBTsSZ6CZmOAx/XASoTw0do+k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720714017; c=relaxed/simple;
-	bh=EYH+M99SRudXDUFJIpNYR6cWEdr01nHFRFQWzFsF4SQ=;
+	s=arc-20240116; t=1720714125; c=relaxed/simple;
+	bh=qN0wmCW/k1iCpLejR5R5JII4+LFenpvZ9gTPOETVeuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KyopiyKIpoSz0Dfza5OMUJb7gTvx6xWUVH+RYX02nPEatmitjE4hRJ1YP7gEZvLBlSGGGTzN/NzhCnFZKvHZoWd8ZbJDvqmFhDkafQHvGyQrb0YKQANDM3wo0oWfd8IRZIrs5ICnoOuzQZXw1zSrJQwUaXVZDdx/qOZUtKyxgb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l91vLQFX; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zj5bDaE6Wmh3hHkgu+AkWkQCjCG7H60mUxUAnt0wMonNmVxc0URpU3kP8/ycSZK1Y3RgnxquSAGrVLKwgBF52rZHGNJU5uAwtlybznOW3P4lP0G1+hMSOUP/waV6efgOH1aO83Pm8EN0fubUdON1qNRPQMIZjSSXGayC0g9GGcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=am57vXcj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l91vLQFX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4N7UMnqLPZtaeDiATujThtv1TVkAjKCUtfVGJAv//C0=; b=l91vLQFX1yoJ0q3HXPakSxROn/
-	9o/m04A3YGlgpW59SKbKI88gN29sSm8aywhv63zVPCRt0QDHs+8lYQKtTPlYfv5z+Mx/htzZww4g9
-	peSZoUpvKuvkFmkoO+5NB57rk5GSOycW5uScOMGQQ4wMyfn/yVIkABZKWIdRceoJ/xkOBjI0kW9OQ
-	qdQBd+FjQzI+4eO4Scp9mYeYENs/6vImAIsM5T6botPXz+jbEW7eKOaHLaq8Pw2faHvqUdV80/Y/x
-	7uR70ZgF5azsSqClNZn9GaHxETll5fce5pFeEhSTUFJL8ZxRd106UiPcgEv0JX76iZz6WVwxYI5vr
-	j0GrZYrg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRwJl-0000000180t-3gaO;
-	Thu, 11 Jul 2024 16:06:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4D57F30050D; Thu, 11 Jul 2024 18:06:49 +0200 (CEST)
-Date: Thu, 11 Jul 2024 18:06:49 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Oleg Nesterov <oleg@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="am57vXcj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720714123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hgGl9mF1/pdLfefEWwcTT04X38sx/DljoB18U/mp7y8=;
+	b=am57vXcjtcexc3lBqJbF+pS8HgdBI7dER4P4o8ydrzrmHEhZaHKvamhf4YNetH2ba5GmVX
+	uQY8+5PCf4H0QXH7CHynNKcIUqSbYdZUd+QOxhXaPqKlIGkr//ekIvbct72eOp73B81oSU
+	DcnmlYBlT4bQ9orshWaHM8AAncquRIA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-519-0LOXUkM0MVa3lAmAuDnXCg-1; Thu,
+ 11 Jul 2024 12:08:36 -0400
+X-MC-Unique: 0LOXUkM0MVa3lAmAuDnXCg-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0C291955F3E;
+	Thu, 11 Jul 2024 16:08:34 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.32])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 27A9519560AE;
+	Thu, 11 Jul 2024 16:08:30 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 11 Jul 2024 18:06:57 +0200 (CEST)
+Date: Thu, 11 Jul 2024 18:06:53 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
 	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
 	paulmck@kernel.org
-Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
-Message-ID: <20240711160649.GA38270@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
+ to SRCU
+Message-ID: <20240711160652.GE16902@redhat.com>
 References: <20240711110235.098009979@infradead.org>
- <20240711110401.412779774@infradead.org>
- <20240711131918.GC16902@redhat.com>
- <20240711150054.GA3285@noisy.programming.kicks-ass.net>
- <20240711155542.GA34311@noisy.programming.kicks-ass.net>
+ <20240711110401.311168524@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,71 +62,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240711155542.GA34311@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240711110401.311168524@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, Jul 11, 2024 at 05:55:42PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 11, 2024 at 05:00:54PM +0200, Peter Zijlstra wrote:
-> 
-> > Let me ponder that a little, I *can* make it work, but all 'solutions'
-> > I've come up with so far are really rather vile.
-> 
-> This is the least horrible solution I could come up with...
-> 
-> ---
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -83,6 +83,7 @@ struct uprobe_task {
->  
->  	struct timer_list		ri_timer;
->  	struct callback_head		ri_task_work;
-> +	bool				ri_work_pending;
->  	struct task_struct		*task;
->  };
->  
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1797,9 +1797,8 @@ void uprobe_free_utask(struct task_struc
->  	t->utask = NULL;
->  }
->  
-> -static void return_instance_task_work(struct callback_head *head)
-> +static void __return_instance_put(struct uprobe_task *utask)
->  {
-> -	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
->  	struct return_instance *ri;
->  
->  	for (ri = utask->return_instances; ri; ri = ri->next) {
-> @@ -1815,9 +1814,43 @@ static void return_instance_task_work(st
+I'll try to actually apply the whole series and read the code tomorrow.
+Right now I can't understand this change... Just one question for now.
+
+On 07/11, Peter Zijlstra wrote:
+>
+> @@ -1956,11 +1960,13 @@ static void prepare_uretprobe(struct upr
+>  			 * attack from user-space.
+>  			 */
+>  			uprobe_warn(current, "handle tail call");
+> -			goto err_uprobe;
+> +			goto err_mem;
+>  		}
+>  		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
 >  	}
->  }
->  
-> +static void return_instance_task_work(struct callback_head *head)
-> +{
-> +	struct uprobe_task *utask = container_of(head, struct uprobe_task, ri_task_work);
-> +	utask->ri_work_pending = false;
-> +	__return_instance_put(utask);
-> +}
-> +
-> +static int return_instance_blocked(struct task_struct *p, void *arg)
-> +{
-> +	unsigned int state = READ_ONCE(p->__state);
-> +
-> +	if (state == TASK_RUNNING || state == TASK_WAKING)
-> +		return 0;
-> +
-> +	smp_rmb();
-> +	if (p->on_rq)
-> +		return 0;
-> +
-> +	/*
-> +	 * Per __task_needs_rq_locked() we now have: !p->on_cpu and only hold
-> +	 * p->pi_lock, and can consiter the task fully blocked.
-> +	 */
-> +
-> +	__return_instance_put(p->utask);
+>
+> +	ri->srcu_idx = __srcu_read_lock(&uretprobes_srcu);
+> +	ri->uprobe = uprobe;
 
-PREEMPT_RT might not like this though, doing the full RI iteration under
-a raw_spinlock_t...
+It seems that, if we race with _unregister, this __srcu_read_lock()
+can happen after call_srcu(uprobes_srcu, uprobe, uprobe_free_stage1)
+was already called...
 
-I just can't think of anything saner just now. Oh well, let me go make
-dinner, perhaps something will come to me.
+In this case read_lock "has no effect" in that uprobe_free_stage1()
+can run before free_ret_instance() does srcu_read_unlock(ri->srcu_idx).
+
+Perhaps it is fine, uprobe_free_stage1() does another call_srcu(),
+but somehow I got lost.
+
+Could you re-check this logic? Most probably I missed something, but still...
+
+Oleg.
+
