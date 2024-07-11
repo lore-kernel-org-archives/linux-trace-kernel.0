@@ -1,66 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8AA16A382;
-	Thu, 11 Jul 2024 23:25:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8303B47F7F;
+	Thu, 11 Jul 2024 23:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720740310; cv=none; b=b5yU4Dxbm2coJcwts9N30ZxwBxrCvuE+99oOiMbuCEkzNnCdvkAsgnfNubtFeuJgPLdzMIKVMgoZ6/zUxTUNEY5qIvhSMWSTfYdfTQguEFRrrY2EaR8n7DEV4/9lMnnnBtrK/sI50FRmTh4tAlP/t4gBxmu0A6JLvtUx65WZ/mg=
+	t=1720740952; cv=none; b=sOaLyGnkpev0wKB662qkLGFsCbM8D9fVNmohj41XLWBClXkRvB1HONVlEJtaV2ba/QrL2wrRaUey4g4+KGBRRGWxtYZh/JY/82EJ0dm5hEaV7x2cibnZKIMvyp+hwuZPh4Ybr651QDtbK3f4sBfNPVEbgcWAGgLOwPejdmJfyBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720740310; c=relaxed/simple;
-	bh=O+gs07KNn0HdsNt8uk18GVj+jW6iv3pJrWaD/t+HDZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=buQTrlp5zdyWeCgarg36RdNlq1n+mnfrhXDUP7NHjDvMQvHFcrBDYydQKuz6Ry5VPflrjG3QIzAXJmeDlUgnlK++PWtIQNPUhpuHZQV0n+sW8XwOQ4XcDw02l5xMPEkV9IXGWoki8IDpEIl4ree0twShd4g7qyAjeM7xBVa9/Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1590C116B1;
-	Thu, 11 Jul 2024 23:25:08 +0000 (UTC)
-Date: Thu, 11 Jul 2024 19:26:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede
- <hdegoede@redhat.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj
- <ashok.raj@intel.com>, Tony Luck <tony.luck@intel.com>,
- linux-trace-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Shankar Ravi V <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v2 4/4] trace: platform/x86/intel/ifs: Add SBAF trace
- support
-Message-ID: <20240711192631.3c48c4bf@gandalf.local.home>
-In-Reply-To: <20240711000233.684642-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-	<20240711000233.684642-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720740952; c=relaxed/simple;
+	bh=w/5lAw+7InL9jCYKblkPnKzXc6bpFZzOZQ5eFWqCaEE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MPKy16nU1aWdIjBZR2EESuGGxuuex56dGDFGjb4cxSOwwYCeKzzuS+0sjQAINbRtPTi5NHvEKngzPg5OI7FcMztgR2t4Zq64hv3KCMt9pI9+8Ix5nMCkPSWM2Mo0CtRj8qrQNwwXhz6k/ISvUHXyhUg1yvBhUNLnRL8up+l99f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jH8FAlgP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jH8FAlgP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90E73C116B1;
+	Thu, 11 Jul 2024 23:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720740952;
+	bh=w/5lAw+7InL9jCYKblkPnKzXc6bpFZzOZQ5eFWqCaEE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jH8FAlgP0Q3QYghA6dTrhTbUG/JVY/VEQzFRdP5XRmO/OPhk+6EjXtyXjUuZRcbTr
+	 GR5sJs6X0zHIRCp7WmfkoU6XLq3+jMdjaGdwwGrTi9SBpDNyeJwBFR7eeZkxu0q2ws
+	 3RRyYDhXbkdWW20xPiOKHzAIAKEIzuQ3ndw6yWbGYcBHgGA7vkPzd84aq9XwbzjDQG
+	 vGMHmAQxesy58Mqi4sBMRhOmT7BQAZ1lBtf9EcttZNkCriXqI2NXpmh6+sq/Yyys5Q
+	 EkL+BYVCI4DluqTHNHT5/iTP7LSoSOjqy7wMcRb1rdQ+FHxuCK08XghKPn5EFChdGN
+	 0CNcFebDmFcVw==
+Date: Fri, 12 Jul 2024 08:35:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] bootconfig: Remove duplicate included header file
+ linux/bootconfig.h
+Message-Id: <20240712083548.374a6c4ff925251cd74db051@kernel.org>
+In-Reply-To: <20240711084315.1507-1-thorsten.blum@toblux.com>
+References: <20240711084315.1507-1-thorsten.blum@toblux.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Jul 2024 17:02:33 -0700
-Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+On Thu, 11 Jul 2024 10:43:16 +0200
+Thorsten Blum <thorsten.blum@toblux.com> wrote:
 
-> From: Jithu Joseph <jithu.joseph@intel.com>
+> The header file linux/bootconfig.h is included whether __KERNEL__ is
+> defined or not.
 > 
-> Add tracing support for the SBAF IFS tests, which may be useful for
-> debugging systems that fail these tests. Log details like test content
-> batch number, SBAF bundle ID, program index and the exact errors or
-> warnings encountered by each HT thread during the test.
+> Include it only once before the #ifdef/#else/#endif preprocessor
+> directives and remove the following make includecheck warning:
 > 
-> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>   linux/bootconfig.h is included more than once
+> 
+> Move the comment to the top and delete the now empty #else block.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
+Thanks, looks good to me. Let me pick it up.
 
 > ---
->  include/trace/events/intel_ifs.h         | 27 ++++++++++++++++++++++++
->  drivers/platform/x86/intel/ifs/runtest.c |  1 +
->  2 files changed, 28 insertions(+)
+> Changes in v2:
+> - Move comment and delete #else as suggested by Masami Hiramatsu
+> - Link to v1: https://lore.kernel.org/linux-kernel/20240711002152.800028-2-thorsten.blum@toblux.com/
+> ---
+>  lib/bootconfig.c | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
+> 
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index 97f8911ea339..81f29c29f47b 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -4,8 +4,16 @@
+>   * Masami Hiramatsu <mhiramat@kernel.org>
+>   */
+>  
+> -#ifdef __KERNEL__
+> +/*
+> + * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
+> + * run the parser sanity test.
+> + * This does NOT mean lib/bootconfig.c is available in the user space.
+> + * However, if you change this file, please make sure the tools/bootconfig
+> + * has no issue on building and running.
+> + */
+>  #include <linux/bootconfig.h>
+> +
+> +#ifdef __KERNEL__
+>  #include <linux/bug.h>
+>  #include <linux/ctype.h>
+>  #include <linux/errno.h>
+> @@ -24,16 +32,6 @@ const char * __init xbc_get_embedded_bootconfig(size_t *size)
+>  	return (*size) ? embedded_bootconfig_data : NULL;
+>  }
+>  #endif
+> -
+> -#else /* !__KERNEL__ */
+> -/*
+> - * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
+> - * run the parser sanity test.
+> - * This does NOT mean lib/bootconfig.c is available in the user space.
+> - * However, if you change this file, please make sure the tools/bootconfig
+> - * has no issue on building and running.
+> - */
+> -#include <linux/bootconfig.h>
+>  #endif
+>  
+>  /*
+> -- 
+> 2.39.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
