@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803ED15A858;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF95A15B0F0;
 	Thu, 11 Jul 2024 11:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696051; cv=none; b=PjjheLIB8aaao8vKIzX83ZOqTsO95Sz5SIYbRdYoHG5kV8scZS9mR8fhXZ39gwwaDVhil1sNAgdfAD2Ak1A0491IKpciNagSnBEnOgvWHNZoKghX+3f+SAGpH6vj4An8NLooTtM8Ol6pAwX8ZnKLgAI1rZUhrfsf20ZTXEvjVMQ=
+	t=1720696051; cv=none; b=KyUQAUU1CmreE0NTj1Xx0uJKHFzO+hWCRjHBTd1H5rWg6n5qHzGJJyXUrcuobSHcatSRP1piTyeUM2jTPSGXyyWoQg76AlXlAcsy0SLFsDToW+k5NKBBL6+K7e6IBQq6e5oDW1BdHQ7DgeSRSmn+2jS9vK2JexuTTsZDS4anj4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720696051; c=relaxed/simple;
-	bh=yWhZob/BPdfmsu4sMDxRN0GS62Spdk2BlA3DKMfmucc=;
+	bh=nf9OJKCU1+T+PW3uEaHa/oMWagtwoT8LK4SH6ZDVVn4=;
 	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Jimirk//bTdQFoNkD4hSrOlyvpLtIrVRGTHM60rHagRKhHVAzhPv35HyqsJ4XMtS7nmv1Ndw5A8AMvT6jW6SN+BVg0hsZkQaMLHZcpecstjbQ9vXbP6cvWb/cvmVKv8WC+LJ9cnj+VqObyTqQUeaGUNYm4253kgk3a6Mhy7dr3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UxG5cgI2; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=Ii8sTCHxQS6YbgAkb44S4fqRwuOtweFEgpchi0qFb+PgAKeb08WHpBHlxuBr4MzxVyfj6K0N8jL/3YOApHUJxw6M/KHYIzqFEbHogSOAqhHlqMcWwnfHJjcgov46DCmnnKdANKH4SDXqt6l2a+dBDGtrlvnkPudF6guolmnBkLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pIYoSkuG; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UxG5cgI2"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pIYoSkuG"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=s3nlTehZi84BQk5xkIwuRvVH+7l2BKBHmhJ6dERK42A=; b=UxG5cgI2PlV+kN2BaMvLp2uti+
-	SivKGvdWfRU5ftI6DRrV00GogYI7/qEdn5itwzJzGZTgYMChpZkcaQepMAe61HanCd+65s73Vb5gK
-	uEhsBthleKNzi3kHJceVE/JXA3Esfs/I2qHJmKjCAN1ULYrmMRA0Kt0R5d3MRjCZzgZUseNNJTvgV
-	7xqKTpj5W5cpW+0W8hRyxjRvL0lCMKkt1o4rktrUuxcoUj562iVIMVz8kHonwQGkI59J6Q0Q+XRIw
-	813658CY1VH6+QJg4jKaHwqCiGDFWp+wUqsRN5JfFL0SLanLDSlUX7+lPu/8/zjd4nHRl5MCNZtlu
-	pKqdusJg==;
+	bh=sauT9IQp+lYdD7ir99ipRaTNhTpKArZ3iIMwq8bpAT8=; b=pIYoSkuGCeGYIdMvoUZ2X5zTQW
+	VJN06xf/AsY2N+6fFwfab8OnR8ZeRCcrxM28RDAA13JmSgxFitOvJaCVt/o/uc304ghe1pZkNF8CO
+	IF84HqbhFLmQLtRheE88k84Kt7P2bWZJLJ9ADsc1HnqdI5LZvQ06ucIVl1+028bUp25zUZ1Xb/nzh
+	98LA82KFwKUiZJ+LKWzf6AmOQiyJBFnQVXFsbaB/MGOm4baztVUnjlbPpiCFXtVL9bXB+Wfx77T9O
+	Urj51FyPUDD0dFNqEQhZ6WpLIfa3ZVT2hfOHo2eacG0aue3hmyy5A45m08wQna9tKCPByVNDC+dF4
+	4ZgkfSAA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRre0-0000000Ax6Y-0FWb;
-	Thu, 11 Jul 2024 11:07:24 +0000
+	id 1sRrdz-0000000Ax6S-23mQ;
+	Thu, 11 Jul 2024 11:07:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id CE7C2302DCC; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
-Message-Id: <20240711110400.987380024@infradead.org>
+	id BC9F7300E46; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
+Message-Id: <20240711110400.529465037@infradead.org>
 User-Agent: quilt/0.65
-Date: Thu, 11 Jul 2024 13:02:42 +0200
+Date: Thu, 11 Jul 2024 13:02:38 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  andrii@kernel.org,
@@ -47,7 +47,7 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  clm@meta.com,
  paulmck@kernel.org
-Subject: [PATCH v2 07/11] perf/uprobe: Split uprobe_unregister()
+Subject: [PATCH v2 03/11] rbtree: Provide rb_find_rcu() / rb_find_add_rcu()
 References: <20240711110235.098009979@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,111 +57,98 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-With uprobe_unregister() having grown a synchronize_srcu(), it becomes
-fairly slow to call. Esp. since both users of this API call it in a
-loop.
-
-Peel off the sync_srcu() and do it once, after the loop.
+Much like latch_tree, add two RCU methods for the regular RB-tree,
+which can be used in conjunction with a seqcount to provide lockless
+lookups.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/linux/uprobes.h     |    8 ++++++--
- kernel/events/uprobes.c     |    8 ++++++--
- kernel/trace/bpf_trace.c    |    6 ++++--
- kernel/trace/trace_uprobe.c |    6 +++++-
- 4 files changed, 21 insertions(+), 7 deletions(-)
+ include/linux/rbtree.h |   67 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -113,7 +113,8 @@ extern int uprobe_write_opcode(struct ar
- extern int uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
- extern int uprobe_register_refctr(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
- extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
--extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-+extern void uprobe_unregister_nosync(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-+extern void uprobe_unregister_sync(void);
- extern int uprobe_mmap(struct vm_area_struct *vma);
- extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
- extern void uprobe_start_dup_mmap(void);
-@@ -163,7 +164,10 @@ uprobe_apply(struct inode *inode, loff_t
- 	return -ENOSYS;
+--- a/include/linux/rbtree.h
++++ b/include/linux/rbtree.h
+@@ -245,6 +245,42 @@ rb_find_add(struct rb_node *node, struct
  }
- static inline void
--uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+uprobe_unregister_nosync(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
+ 
+ /**
++ * rb_find_add_rcu() - find equivalent @node in @tree, or add @node
++ * @node: node to look-for / insert
++ * @tree: tree to search / modify
++ * @cmp: operator defining the node order
++ *
++ * Adds a Store-Release for link_node.
++ *
++ * Returns the rb_node matching @node, or NULL when no match is found and @node
++ * is inserted.
++ */
++static __always_inline struct rb_node *
++rb_find_add_rcu(struct rb_node *node, struct rb_root *tree,
++		int (*cmp)(struct rb_node *, const struct rb_node *))
 +{
++	struct rb_node **link = &tree->rb_node;
++	struct rb_node *parent = NULL;
++	int c;
++
++	while (*link) {
++		parent = *link;
++		c = cmp(node, parent);
++
++		if (c < 0)
++			link = &parent->rb_left;
++		else if (c > 0)
++			link = &parent->rb_right;
++		else
++			return parent;
++	}
++
++	rb_link_node_rcu(node, parent, link);
++	rb_insert_color(node, tree);
++	return NULL;
 +}
-+static inline void uprobes_unregister_sync(void)
- {
- }
- static inline int uprobe_mmap(struct vm_area_struct *vma)
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1138,7 +1138,7 @@ __uprobe_unregister(struct uprobe *uprob
-  * @offset: offset from the start of the file.
-  * @uc: identify which probe if multiple probes are colocated.
-  */
--void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+void uprobe_unregister_nosync(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
- {
- 	struct uprobe *uprobe;
- 
-@@ -1152,10 +1152,14 @@ void uprobe_unregister(struct inode *ino
- 	raw_write_seqcount_end(&uprobe->register_seq);
- 	up_write(&uprobe->register_rwsem);
- 	put_uprobe(uprobe);
++
++/**
+  * rb_find() - find @key in tree @tree
+  * @key: key to match
+  * @tree: tree to search
+@@ -268,6 +304,37 @@ rb_find(const void *key, const struct rb
+ 		else
+ 			return node;
+ 	}
++
++	return NULL;
 +}
-+EXPORT_SYMBOL_GPL(uprobe_unregister_nosync);
- 
-+void uprobe_unregister_sync(void)
++
++/**
++ * rb_find_rcu() - find @key in tree @tree
++ * @key: key to match
++ * @tree: tree to search
++ * @cmp: operator defining the node order
++ *
++ * Notably, tree descent vs concurrent tree rotations is unsound and can result
++ * in false-negatives.
++ *
++ * Returns the rb_node matching @key or NULL.
++ */
++static __always_inline struct rb_node *
++rb_find_rcu(const void *key, const struct rb_root *tree,
++	    int (*cmp)(const void *key, const struct rb_node *))
 +{
- 	synchronize_srcu(&uprobes_srcu);
++	struct rb_node *node = tree->rb_node;
++
++	while (node) {
++		int c = cmp(key, node);
++
++		if (c < 0)
++			node = rcu_dereference_raw(node->rb_left);
++		else if (c > 0)
++			node = rcu_dereference_raw(node->rb_right);
++		else
++			return node;
++	}
+ 
+ 	return NULL;
  }
--EXPORT_SYMBOL_GPL(uprobe_unregister);
-+EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
- 
- /*
-  * __uprobe_register - register a probe
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3181,9 +3181,11 @@ static void bpf_uprobe_unregister(struct
- 	u32 i;
- 
- 	for (i = 0; i < cnt; i++) {
--		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset,
--				  &uprobes[i].consumer);
-+		uprobe_unregister_nosync(d_real_inode(path->dentry), uprobes[i].offset,
-+					 &uprobes[i].consumer);
- 	}
-+	if (cnt)
-+		uprobe_unregister_sync();
- }
- 
- static void bpf_uprobe_multi_link_release(struct bpf_link *link)
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1104,6 +1104,7 @@ static int trace_uprobe_enable(struct tr
- static void __probe_event_disable(struct trace_probe *tp)
- {
- 	struct trace_uprobe *tu;
-+	bool sync = false;
- 
- 	tu = container_of(tp, struct trace_uprobe, tp);
- 	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
-@@ -1112,9 +1113,12 @@ static void __probe_event_disable(struct
- 		if (!tu->inode)
- 			continue;
- 
--		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
-+		uprobe_unregister_nosync(tu->inode, tu->offset, &tu->consumer);
-+		sync = true;
- 		tu->inode = NULL;
- 	}
-+	if (sync)
-+		uprobe_unregister_sync();
- }
- 
- static int probe_event_enable(struct trace_event_call *call,
 
 
