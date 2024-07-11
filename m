@@ -1,99 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C8F166317;
-	Thu, 11 Jul 2024 15:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D6F15FCFB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 15:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711092; cv=none; b=ukF0SJEMrLRF6jIA/ucBwm/KAE4GO9L1/3ZEXcHL7Z5rDcNenvwe4H61UZc6M6ty3PxPTtB5zFhNhk8d6Sqfp7hCfaN6svtCpgZjxOxIFAch5C9wTqOrowV2INf8qJL4jNAOKkuWu5nI198mxZ1+GBhMnjeJnX74y/emELWuWDU=
+	t=1720711701; cv=none; b=iEdkNmrm9yeJwf017ZFTcXV2YyTSde99MK/ywthSaFGhB0b3j5EmztgT/IvapE2mkTXrJb5wyg/m4KMzIYd/6JYWQfHDsCGT3nfo+te0P8krMcrZtIxm0tKEqls2azpAwkNpjwqESTomt0FFP/CmhNtshDeUr7DpwCgHFd1nkxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711092; c=relaxed/simple;
-	bh=d9RliYAECySZKv1l3D7lB1ybZJQjQsA3lRQS/PnpAMA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DTvp/R0Sl9z7z/J9oKKgc7abAjic2xIcQEtUrvzlp/e3hK74mkUREoAR+rVEVyiZfag9yqXnikiVUYV4iN4Y3D/lgH4kEj2weXXBel05EVMhtR3Q6jp8Bbpt4zb5HvZs8PSFyGFP6RZ7jeJevF5iTvU8PixFA7J9JF5NPbDKypc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2/0NtzS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720711701; c=relaxed/simple;
+	bh=SilAbBLlHxF1fFiXA5nZv8t2dj5EmTE+T6I22rXMb5M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sLLl9aZuLDBvmvUB3ufKhhaPPOdbb2ber9GWAI4BB7IR5UD8+CDUkQ2ifhAi0tvoSyjXAKK4bFbyqtdD9YU4Ilf10tZip5apGxGCfWgNczCnDl8UQaU1YkRIcNFnEwJAUIwSDuTuL0+DRWw3ExjQGnnCsMZFsfB+vwk964r4OQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tvbdEsk4; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2/0NtzS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A90C116B1;
-	Thu, 11 Jul 2024 15:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720711092;
-	bh=d9RliYAECySZKv1l3D7lB1ybZJQjQsA3lRQS/PnpAMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O2/0NtzSVMD/wpS8x0vwW2cLRXsacwfuKXur/arjRVVzXm93l7kpDmK8+FsujS3jK
-	 KUwPlSa6pEB7ZgMil/BxAhuomMqWGO+NK+drRXOInX70eQ8pxC+yo3HfmqWvOkoLI2
-	 vNCVB4W+YZPILvf+4p792MYwuxzvoobewIo4VPQe8fTKXcBhzej1N9LdyhaeWI9jNq
-	 mLB69SNSXQXOVn2+MaFGAPWua8V98pyD1HMkX4ApVSyHwC94YRMUxrW3u5m66GmK/k
-	 cTJqAoHD+LVfL/GmZe31XGn7a9ZBg/98cxTAt3keDMdQbO9jH6wrrdhwhYSguuSiPE
-	 5fqAhHMZMXPmw==
-Date: Fri, 12 Jul 2024 00:18:07 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: andrii@kernel.org, peterz@infradead.org, clm@meta.com, jolsa@kernel.org,
- mingo@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] uprobes: simplify error handling for alloc_uprobe()
-Message-Id: <20240712001807.bd7589fc4f910ad14154e06a@kernel.org>
-In-Reply-To: <20240710163111.GC13298@redhat.com>
-References: <20240710140017.GA1074@redhat.com>
-	<20240710163022.GA13298@redhat.com>
-	<20240710163111.GC13298@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvbdEsk4"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6b5eb69e04cso6059626d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jul 2024 08:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720711699; x=1721316499; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WQkM2Ryk0ZQZFnLcaLIzbhoe7KSMFKbN9WHRd1zSTLE=;
+        b=tvbdEsk4sodNSvw9dH8d0RTBCUCIMpLRnkDWzwu+htuFGz9CKFgr7WVU3tljAoy3nm
+         hq++uQy+j+zsmqSFprVU8kf2JMITO/neuc77g+lZ3I11/gED/4qmLT5sywvJtSN1P2s/
+         Rw0IPojdYEmIuRqp2FDXdstx+z4YbcILMMm4jeXPKt2fdJSHOO/4qy55yPCcQ4qfHb5n
+         OgfJPbuVjsIc2HSwdt/TVN7xX0RCdKr9VHnb2j4BZdpkA4MqKHZCNrF4ryhprX2kM1YH
+         nbBCiHiZyEnGJuvFSFv6/cC6OfZU0QYi/JDkO1yidn53SMazkEtK1qJwK6CdGXv22vGM
+         r3OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720711699; x=1721316499;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WQkM2Ryk0ZQZFnLcaLIzbhoe7KSMFKbN9WHRd1zSTLE=;
+        b=VHC/cM4WXPg18fap4rOf+1L38rvd+dQezU6Uzy3io1Aer+YDJus18O906A4YyTM1RF
+         WrBy4sSekjsg2fa0WcSmn0RrSar0SmQTYEPO+lGRVlQkSO6cgFIXmkmZJjbmbFhN3QBh
+         C7/seO39xaLbSBQ6FKl1mMWbjgI4TCj74piVct/Tq2W/GdLmBCq45tCzgizO7R95CLZP
+         OQD0wwkDtT1c9riDJp4oln6s5RQ7KrQUmZURGKtjtH+ri0hxyPZ7jB6SHeNRgzNPK3fk
+         inNZBmqguqy4c/Cc6xGGS2qPvCfhpgjRbreLuq/Lo/xG5zRYyhWKki/QP1zCnLvYnaPz
+         hkMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPe0DWrxqI8H4pQfCXCOgBBYW8lIHL8KmIsScN7s/NtdbUxYx565Xzm2ThxV93acwUbggled+2Du1BpHybHRevLIKbtVm+4KrCEnSYFkAZpjQP
+X-Gm-Message-State: AOJu0YzLui7GEtSp4P127L5FyJkFOdTvNklxfcjwE0drIrB2sh1Yz2VY
+	3jpaBdIe08ZqtFxPaBYYlluqAtaxfpQwpcWmdMU7GI0yuNhpwqvzUq9MFZCCFcf1AokhS5PRdom
+	bbbulu0UuPjLMi7FUNa9Uw3tGTWWDhfoKhrAy
+X-Google-Smtp-Source: AGHT+IE8HI6rD0D7bFmLR1Mn8tZE0XSsSvK7NyBw9sFmyI90jMNxfVlBfEcxHI84DHJue4HhA0QN9oG7JH/Vd9MHPxg=
+X-Received: by 2002:a05:6214:cad:b0:6b0:76f1:8639 with SMTP id
+ 6a1803df08f44-6b61c1b6d8fmr100368136d6.42.1720711698460; Thu, 11 Jul 2024
+ 08:28:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240710001749.1388631-1-almasrymina@google.com>
+ <20240710001749.1388631-13-almasrymina@google.com> <4b0479b0-1e0f-43db-8333-26b7a1fd791c@nvidia.com>
+In-Reply-To: <4b0479b0-1e0f-43db-8333-26b7a1fd791c@nvidia.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Thu, 11 Jul 2024 08:28:03 -0700
+Message-ID: <CAHS8izOc4gZUP-aS747OVf3uyn8KAyfeBcYDx2CQc-L9RnvrXA@mail.gmail.com>
+Subject: Re: [PATCH net-next v16 12/13] selftests: add ncdevmem, netcat for
+ devmem TCP
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Stanislav Fomichev <sdf@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 10 Jul 2024 18:31:11 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+On Wed, Jul 10, 2024 at 5:44=E2=80=AFPM John Hubbard <jhubbard@nvidia.com> =
+wrote:
+>
+> On 7/9/24 5:17 PM, Mina Almasry wrote:
+> ...
+> > diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selft=
+ests/net/Makefile
+> > index bc3925200637c..39420a6e86b7f 100644
+> > --- a/tools/testing/selftests/net/Makefile
+> > +++ b/tools/testing/selftests/net/Makefile
+> > @@ -95,6 +95,11 @@ TEST_PROGS +=3D fq_band_pktlimit.sh
+> >   TEST_PROGS +=3D vlan_hw_filter.sh
+> >   TEST_PROGS +=3D bpf_offload.py
+> >
+> > +# YNL files, must be before "include ..lib.mk"
+> > +EXTRA_CLEAN +=3D $(OUTPUT)/libynl.a
+> > +YNL_GEN_FILES :=3D ncdevmem
+> > +TEST_GEN_FILES +=3D $(YNL_GEN_FILES)
+> > +
+> >   TEST_FILES :=3D settings
+> >   TEST_FILES +=3D in_netns.sh lib.sh net_helper.sh setup_loopback.sh se=
+tup_veth.sh
+> >
+> > @@ -104,6 +109,10 @@ TEST_INCLUDES :=3D forwarding/lib.sh
+> >
+> >   include ../lib.mk
+> >
+> > +# YNL build
+> > +YNL_GENS :=3D netdev
+> > +include ynl.mk
+>
+> This seems to be missing a rule to generate ynl.mk, right?
+>
 
-> From: Andrii Nakryiko <andrii@kernel.org>
-> 
-> Return -ENOMEM instead of NULL, which makes caller's error handling just
-> a touch simpler.
-> 
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Hi John,
 
-Looks good to me.
+tools/testing/selftests/net/ynl.mk was merged as part of this patch a
+few days ago:
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+https://patchwork.kernel.org/project/netdevbpf/patch/20240628003253.1694510=
+-14-almasrymina@google.com/
 
-> ---
->  kernel/events/uprobes.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4950decebe5c..e5b7c6239970 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -725,7 +725,7 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
->  
->  	uprobe = kzalloc(sizeof(struct uprobe), GFP_KERNEL);
->  	if (!uprobe)
-> -		return NULL;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	uprobe->inode = inode;
->  	uprobe->offset = offset;
-> @@ -1166,8 +1166,6 @@ int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset,
->  
->   retry:
->  	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
-> -	if (!uprobe)
-> -		return -ENOMEM;
->  	if (IS_ERR(uprobe))
->  		return PTR_ERR(uprobe);
->  
-> -- 
-> 2.25.1.362.g51ebf55
-> 
-> 
+Is it not working for you by any chance?
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+Thanks,
+Mina
