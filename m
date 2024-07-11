@@ -1,40 +1,40 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF90515A874;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0FF15B0E8;
 	Thu, 11 Jul 2024 11:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696050; cv=none; b=lA3a6RL2A2p/hppTrGcnWG5srawKTGIB6zbjwFh6BXOcil3Cl1nS78DniKOgzSCN9z1n/Xv89ASpsxHdAEzCQHSjt4cs3drmVKRmJvmd41nwuiJ3fqz0aaGrwd5R4knb3fTp1D7KMAClDsjibW4f0ajsweqO9hixmTWnpDiV/Vo=
+	t=1720696050; cv=none; b=Ov76A9IGvKsqXM4ZukVQIBnIU9eUSEgzMXJ7Cdzhyu5QcDa1kwp1f8ExK8LotIm9Wm6VgxA5av16BXyOoCJH4/juC000xA+uJqaWtjreSIXV9nfXVYe8jOyuvL/rmQUYommnmZnDFVmHQ/SG1VF+tl/n/yxrXYNW5nYSA+7xo/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720696050; c=relaxed/simple;
-	bh=namzImpKkAE0SeDauxvgo7e0qpH+mTqxwz/WBAvffQw=;
+	bh=iPnzJDPYV69x97yqOMsVW8M8RvXBmzlPMZ6dojO6w9w=;
 	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ZEItV1K+XTJHl5zqLY8VVA1sbuiViadYboaXI3fEm9TBpTa36H7ux+jQk7Zb64uYrxIK93RqfJ/CKTfNl5l8zi2NJH889IuUDdoGRSkWOHMwJK8qRSoF+pVeq6qr/wCtEOyhzF0iyiTLO6fN1TC++GQkGkg9OoMSrOKIPqzIkCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j9RYO7cl; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=J876YGQY6EhwwhlCvtAC0jdcthCxu/gXEH7KuVs29HI6VJ0N2/G+JvW2udR9jzTXpwNzJZaFmihWIF7EIR80Dv8fTpUQ1uSCXPLJVEq69SHIlL2PgoF6lLo9CtKrgZ2Qet5lZeCauCWxxuxDrfLRVKxBWCfgKYq1QdeqblSfshk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oETD364e; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j9RYO7cl"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oETD364e"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=6enVwtxrhKY9z473ycfT5rwTE1B57qqsh+H+nST3cXo=; b=j9RYO7clZB4u3MSfWuo6QarfqL
-	g3fesYOQpUjOrvUFPJSaLKFf3CoX9IcSzasNr3plfgpWx33Tu87SOV3mtZR8drNmygV0azoTNQk3U
-	o/krgOwILVlvsXGUAUrWnpX0omF1MKpcbTCCy92kiJyf3AZYG0JEMO7KF/yDSmih9y/bfMEyt2XOh
-	4rmL/+GlqJtbPYMBGpyJqCU510Avjaz8RXDt2xW41+2PnPpzEMbSD1eB40M9J3v/UNM4Q/gkaQ/Be
-	gJ811YzpFRsvZMOW8MfIZ1i90lMDBJcEv4bbdVEt10VuoqOBnAmZND8ksrP7Vjb+1phnH1PQIwRr9
-	/fxd45Dw==;
+	bh=D/qnIt6lTHMe7dedD5Wou6cHbGCP/Pb/6K/ANgI22y8=; b=oETD364eYO3X8m54frROBJ4DTa
+	PLYe9JBO5SzzVZH17OWyRRRHTbHxUkdqQfaErD5ZR7Pqy2wC0U5AbKfHDN1DB5pSEeNkAdcrqhAfk
+	zThljKlATbWKBMO3zaq4p488VTXuJO3tEgtFhyf9vpt5MSe9i066Hn3TuQI3WTd83QIui76vLlojP
+	hiKEs28mhcB3EomOv74NHlrpzSqzxEo/0e5BabMDbMWfPfJERVjbgYei9ELYqnBjfe+QmUy3kDHoZ
+	8dhIcKkTXADhyrtAoxER4PWvWt9AGQiRfdCmjtHKjRRuG8hAGqXUjy5JIxhHjS9rt4Q5owlLLDOUw
+	NCO9FdJQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRrdz-0000000Ax6R-22mg;
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRrdz-000000015VS-1nLT;
 	Thu, 11 Jul 2024 11:07:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id C1463302182; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
-Message-Id: <20240711110400.635302571@infradead.org>
+	id B3690300848; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
+Message-Id: <20240711110400.309670567@infradead.org>
 User-Agent: quilt/0.65
-Date: Thu, 11 Jul 2024 13:02:39 +0200
+Date: Thu, 11 Jul 2024 13:02:36 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  andrii@kernel.org,
@@ -47,7 +47,7 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  clm@meta.com,
  paulmck@kernel.org
-Subject: [PATCH v2 04/11] perf/uprobe: RCU-ify find_uprobe()
+Subject: [PATCH v2 01/11] perf/uprobe: Re-indent labels
 References: <20240711110235.098009979@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,139 +57,123 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-With handle_swbp() triggering concurrently on (all) CPUs, tree_lock
-becomes a bottleneck. Avoid treelock by doing RCU lookups of the
-uprobe.
+Remove the silly label indenting.
+
+ s/^\ \([[:alnum:]]*\):$/\1:/g
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/uprobes.c |   49 +++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 40 insertions(+), 9 deletions(-)
+ kernel/events/uprobes.c |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -40,6 +40,7 @@ static struct rb_root uprobes_tree = RB_
- #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+@@ -205,7 +205,7 @@ static int __replace_page(struct vm_area
+ 	folio_put(old_folio);
  
- static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
-+static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
+ 	err = 0;
+- unlock:
++unlock:
+ 	mmu_notifier_invalidate_range_end(&range);
+ 	folio_unlock(old_folio);
+ 	return err;
+@@ -857,7 +857,7 @@ static int prepare_uprobe(struct uprobe
+ 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
+ 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
  
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
-@@ -54,6 +55,7 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem)
- struct uprobe {
- 	struct rb_node		rb_node;	/* node in the rb tree */
- 	refcount_t		ref;
-+	struct rcu_head		rcu;
- 	struct rw_semaphore	register_rwsem;
- 	struct rw_semaphore	consumer_rwsem;
- 	struct list_head	pending_list;
-@@ -587,12 +589,25 @@ set_orig_insn(struct arch_uprobe *auprob
- 			*(uprobe_opcode_t *)&auprobe->insn);
- }
+- out:
++out:
+ 	up_write(&uprobe->consumer_rwsem);
  
-+static struct uprobe *try_get_uprobe(struct uprobe *uprobe)
-+{
-+	if (refcount_inc_not_zero(&uprobe->ref))
-+		return uprobe;
-+	return NULL;
-+}
-+
- static struct uprobe *get_uprobe(struct uprobe *uprobe)
- {
- 	refcount_inc(&uprobe->ref);
- 	return uprobe;
- }
+ 	return ret;
+@@ -965,7 +965,7 @@ build_map_info(struct address_space *map
+ 	struct map_info *info;
+ 	int more = 0;
  
-+static void uprobe_free_rcu(struct rcu_head *rcu)
-+{
-+	struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
-+	kfree(uprobe);
-+}
-+
- static void put_uprobe(struct uprobe *uprobe)
- {
- 	if (refcount_dec_and_test(&uprobe->ref)) {
-@@ -604,7 +619,7 @@ static void put_uprobe(struct uprobe *up
- 		mutex_lock(&delayed_uprobe_lock);
- 		delayed_uprobe_remove(uprobe, NULL);
- 		mutex_unlock(&delayed_uprobe_lock);
--		kfree(uprobe);
-+		call_rcu(&uprobe->rcu, uprobe_free_rcu);
+- again:
++again:
+ 	i_mmap_lock_read(mapping);
+ 	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
+ 		if (!valid_vma(vma, is_register))
+@@ -1019,7 +1019,7 @@ build_map_info(struct address_space *map
+ 	} while (--more);
+ 
+ 	goto again;
+- out:
++out:
+ 	while (prev)
+ 		prev = free_map_info(prev);
+ 	return curr;
+@@ -1068,13 +1068,13 @@ register_for_each_vma(struct uprobe *upr
+ 				err |= remove_breakpoint(uprobe, mm, info->vaddr);
+ 		}
+ 
+- unlock:
++unlock:
+ 		mmap_write_unlock(mm);
+- free:
++free:
+ 		mmput(mm);
+ 		info = free_map_info(info);
  	}
+- out:
++out:
+ 	percpu_up_write(&dup_mmap_sem);
+ 	return err;
  }
+@@ -1159,7 +1159,7 @@ static int __uprobe_register(struct inod
+ 	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+ 		return -EINVAL;
  
-@@ -653,10 +668,10 @@ static struct uprobe *__find_uprobe(stru
- 		.inode = inode,
- 		.offset = offset,
- 	};
--	struct rb_node *node = rb_find(&key, &uprobes_tree, __uprobe_cmp_key);
-+	struct rb_node *node = rb_find_rcu(&key, &uprobes_tree, __uprobe_cmp_key);
+- retry:
++retry:
+ 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
+ 	if (!uprobe)
+ 		return -ENOMEM;
+@@ -1468,7 +1468,7 @@ static int xol_add_vma(struct mm_struct
+ 	ret = 0;
+ 	/* pairs with get_xol_area() */
+ 	smp_store_release(&mm->uprobes_state.xol_area, area); /* ^^^ */
+- fail:
++fail:
+ 	mmap_write_unlock(mm);
  
- 	if (node)
--		return get_uprobe(__node_2_uprobe(node));
-+		return try_get_uprobe(__node_2_uprobe(node));
- 
+ 	return ret;
+@@ -1512,7 +1512,7 @@ static struct xol_area *__create_xol_are
+ 	kfree(area->bitmap);
+  free_area:
+ 	kfree(area);
+- out:
++out:
  	return NULL;
  }
-@@ -667,20 +682,32 @@ static struct uprobe *__find_uprobe(stru
-  */
- static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- {
--	struct uprobe *uprobe;
-+	unsigned int seq;
  
--	read_lock(&uprobes_treelock);
--	uprobe = __find_uprobe(inode, offset);
--	read_unlock(&uprobes_treelock);
-+	guard(rcu)();
+@@ -1915,7 +1915,7 @@ static void prepare_uretprobe(struct upr
+ 	utask->return_instances = ri;
  
--	return uprobe;
-+	do {
-+		seq = read_seqcount_begin(&uprobes_seqcount);
-+		struct uprobe *uprobe = __find_uprobe(inode, offset);
-+		if (uprobe) {
-+			/*
-+			 * Lockless RB-tree lookups are prone to false-negatives.
-+			 * If they find something, it's good. If they do not find,
-+			 * it needs to be validated.
-+			 */
-+			return uprobe;
-+		}
-+	} while (read_seqcount_retry(&uprobes_seqcount, seq));
-+
-+	/* Really didn't find anything. */
-+	return NULL;
+ 	return;
+- fail:
++fail:
+ 	kfree(ri);
  }
  
- static struct uprobe *__insert_uprobe(struct uprobe *uprobe)
- {
- 	struct rb_node *node;
+@@ -2031,7 +2031,7 @@ static int is_trap_at_addr(struct mm_str
  
--	node = rb_find_add(&uprobe->rb_node, &uprobes_tree, __uprobe_cmp);
-+	node = rb_find_add_rcu(&uprobe->rb_node, &uprobes_tree, __uprobe_cmp);
- 	if (node)
- 		return get_uprobe(__node_2_uprobe(node));
+ 	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+ 	put_page(page);
+- out:
++out:
+ 	/* This needs to return true for any variant of the trap insn */
+ 	return is_trap_insn(&opcode);
+ }
+@@ -2159,7 +2159,7 @@ static void handle_trampoline(struct pt_
+ 	utask->return_instances = ri;
+ 	return;
  
-@@ -702,7 +729,9 @@ static struct uprobe *insert_uprobe(stru
- 	struct uprobe *u;
+- sigill:
++sigill:
+ 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
+ 	force_sig(SIGILL);
  
- 	write_lock(&uprobes_treelock);
-+	write_seqcount_begin(&uprobes_seqcount);
- 	u = __insert_uprobe(uprobe);
-+	write_seqcount_end(&uprobes_seqcount);
- 	write_unlock(&uprobes_treelock);
- 
- 	return u;
-@@ -936,7 +965,9 @@ static void delete_uprobe(struct uprobe
- 		return;
- 
- 	write_lock(&uprobes_treelock);
-+	write_seqcount_begin(&uprobes_seqcount);
- 	rb_erase(&uprobe->rb_node, &uprobes_tree);
-+	write_seqcount_end(&uprobes_seqcount);
- 	write_unlock(&uprobes_treelock);
- 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
 
 
