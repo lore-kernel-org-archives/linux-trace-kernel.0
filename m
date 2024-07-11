@@ -1,108 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC51116EC13;
-	Thu, 11 Jul 2024 11:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578BD156993;
+	Thu, 11 Jul 2024 11:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696132; cv=none; b=WiDNZQPMKCPB4neqpz6fWrlCsjNS2aqsmREd5Wy8GSiiEU6j+9sXOdfCgdDSzl75LL5BOfoGpTAjrSyGQVBHrlN33RTGWMpdcHpUBjM02s9U4FDzLcmlYeRdwyKOdzdKm0J2jUtiusnRXPZkgsfkvElq0J+5MH8umi85UMHiY+U=
+	t=1720699091; cv=none; b=Uz+AZx9njLySBfnnsBkAjehXH4fiRQnu1xHfwmcOOkN13VJHym79DYSNoruH+tiMSpXxc5d2uZk+NsQnrmEhBHX4iiLlOvo1OJyQgSJEFTLU3CLKIf/rzzNP55IV+2m7HLak9nHWP48kAY7ZKSPdoh7SM/03cCcZbhbdNWDMff4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696132; c=relaxed/simple;
-	bh=OTapqLUtOhOklsMt0JtGipDN7/MAEwqOBUQ+KnQBUIw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rGTIkZbdQXaTOpzkA+/lkrP89EoQlmxGB4SgocJhEIrIaFf9Rn2N3I1mDxyneWnS5zsofDjMwkXCEnXgEIDexDeI0SfpLnhsRV2wkKax73b7owcBbM4S9Ego08pcTpELRo9t3bvz8ahFBBaaZJbnzs+PNCFMoHfdvupxxXDJEdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZWlnKSt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720699091; c=relaxed/simple;
+	bh=4VkGcwTK7NS5884ZYM5DpYgIJ8oylqss9AoGtX7UMps=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G+vyuXpmXZhnAI5/zi+0J87Cmk3KGnuBtOgXyQvzQs1z0QU8ZRf2SrO9oL2+ZvBSFxucWEt6lZV8B0GDOmhEcksmPvjEJCPtS5Im7Xy8Rckx0otmZOHrunDInbOXR+SKj57wY6t9sxJYeVpPPlIINS6UzEicNCJFD38r6vX2iwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYNvllLu; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZWlnKSt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C94C4AF0D;
-	Thu, 11 Jul 2024 11:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720696132;
-	bh=OTapqLUtOhOklsMt0JtGipDN7/MAEwqOBUQ+KnQBUIw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kZWlnKStTWj/I08Tl3NCNpksnVXMXWM9yXlhktX3p2YwFtK1kZcembFkaADm1ByML
-	 2hqUuLfknzwwRWW8jz0tWvJZnTLio+NcpivJ7DKtiZzjradOKuHmkN/rEMucFiJoVD
-	 qrqSIY5CLhJuV+gEMUuHR4ZYrg39tcU+yG36QOb53fR2jfy+FtZv4VnGEX/i9um87T
-	 Hct1UhKTZePkdLV9+ldCeBWNs80da+df5Om6mWiOakKtFDt83ux9e+hcKRLH/jc+dO
-	 wb08v3rnt5ZOUgzIkWiy7lcUXUxtmHZ5Xyy9dCUoLkfwj8sgDCq5Us7mAzhTwXAyWR
-	 bhpic4mjWPRMQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 11 Jul 2024 07:08:13 -0400
-Subject: [PATCH v5 9/9] tmpfs: add support for multigrain timestamps
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYNvllLu"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a77c1658c68so94778466b.0;
+        Thu, 11 Jul 2024 04:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720699087; x=1721303887; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZWVsFOyE3ndT3xSslKal9U8tumbYoKdltL8oO0/zJmI=;
+        b=fYNvllLuxSLscPwhshJSJgorqUBvGJvlyyYMWka73f8UNHwZaBm3XK9zsGorFiq+QL
+         vdTJZhZF7iugVGcGCvr/UaUPdRS82lPoqYXoR3v8GnPNoxYVcMdxrKznMXvZbCaG5vS9
+         4REbD5wPltfUZeTZ2GzTv3IJzPdr4wEvpYmyNPkAjmjcgqVOIxl2bawFiCr1VQ5hV/8Q
+         wja2nOAxymKMyu4QaESu+DPeybFX3W6u7sg3Q0eFPzbA704tl35DNXI8i66CkOKcsqZY
+         pFijAeauU5Y5b3xGfCbawtlSaXi+nirRQ7rmNPhfAQVT/jddIw3BJINJ9aBVA+XrPLhP
+         ftGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720699087; x=1721303887;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZWVsFOyE3ndT3xSslKal9U8tumbYoKdltL8oO0/zJmI=;
+        b=dm3DXy8ZdHizrjXIrmi764aMi68V9oFHQ3uzyXGd5cuG2Zpm0/U9yRwsZxHc++qdDX
+         410+jK4EmYnsBqMFJQe5hQZ9K8AuiJD4V/IbhoQqRABrCLVcTW9upetSyeCDJhtrZGh9
+         dCm1VCTZbatVNna0L5Xzf60/zz3HkTbNqku8D2ywRG7M45NVCh0bpGOpU0jJI2zOFxj4
+         gYaBqOSIaQgheNRhCOs+SD18RWT/mmZAtw8kRWw9HfzmOb964mpv5DnhZdpK4RniOarO
+         ayZY4rop+9sDWZ/yMpNz64Iq67UjXX4/Mk8SpygA9CRa0cWQGAAHoa39cLIBR0PQV8Xr
+         cwMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfmEFpz7or908q1iDGUoVQLtCS9gGN/GaAjIhoUJxKlNCfm/CoWg0K1RICghqg4LL+9EqaYmgudy6jYf/IF7B4c5cU3mQIIzf4KYO2wjxzbd+IWTermeuCbPCyCRlzbf3aRTLuyZHz3/dfR9pSONtb
+X-Gm-Message-State: AOJu0YzKIBTk5pctcT1162wHPVnv6JQ1cIiFOUUCkKIxnQTtr9gboL3m
+	JdNWXcgPski8LSm4IvgAu+VgSIux2XKFaYFBAV38L3kc0pSAgv4n
+X-Google-Smtp-Source: AGHT+IG9W0ItYuE2l7FCvMw6VJgrPirWfwJT8roYevoHzEenR/AFP7poY7lQFJKUUvX50AA8Z1w+YA==
+X-Received: by 2002:a17:907:7da8:b0:a6f:e456:4207 with SMTP id a640c23a62f3a-a780b88498fmr713852466b.61.1720699087349;
+        Thu, 11 Jul 2024 04:58:07 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a855f09sm247380366b.164.2024.07.11.04.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 04:58:07 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 11 Jul 2024 13:58:04 +0200
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, clm@meta.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 01/11] perf/uprobe: Re-indent labels
+Message-ID: <Zo_IzLWMXOzu34pT@krava>
+References: <20240711110235.098009979@infradead.org>
+ <20240711110400.309670567@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-mgtime-v5-9-37bb5b465feb@kernel.org>
-References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
-In-Reply-To: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
- Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
- Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
- Randy Dunlap <rdunlap@infradead.org>, kernel-team@fb.com, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
- linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=775; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=OTapqLUtOhOklsMt0JtGipDN7/MAEwqOBUQ+KnQBUIw=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmj70l7ZnQeMlGHhjvFghMhoPkLSm0RtSQvRi/6
- iYpytjkGrGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZo+9JQAKCRAADmhBGVaC
- FZNfEADRHxrrM5sremg5UaJseVwuJj4hBX4wOg9PWhSGsvDhBSLnesYgeOMU7tABwVt/Z/8KcII
- E7FyeB7UeKZrk8KHbfDLrkFr4s2S/TsKPL0w538UEz8RtlzRM4BSv05QfJBJoRKpw3uBgJQA2St
- owelXYZBb5lXQeYVY3Xjg6yE03rw7iXm7Wu6v+u5+KVwkX9L5Cybg1j5UmqyA7WAs0lIqln/R+p
- wRjdQjL+3DK8MeqWiReYlmE9bBRLXa6DAseu3M4zC6xlaNGriEHoTWjFGbtyVwrPBailuJjRHrY
- wlIbkJBkkU72wY8rV4URo52g0iKX5b26BzHIzseEAqFJP6QHZGBVS6xFGsT/V4kw6EtPicdbsYN
- 7FlnO1dz1NWgv+TY02YEv5Gwd1Qxi3FeOHpJxt9o+5H5ASHjBGqlsdfjbp/hykirLGwFeBwQjAr
- vrz+47ffKte5ROyhV/V2djA/crlVqZq8xMxybO3ewVl5FymC+c4VbtWkTS60XsbXyFieFVR6Akb
- lnJcrsgvNEjeJoI01ocrq89wTYm9uYLYl6Z4W/Ffcp9WVS+BDgNe2Qk0r7JXbZ/aKZ8Jjm96txk
- +IdIydQLrUXuYBlPjpWI3oZp1xjrFddm/vOkQfR9dOD4JKH/hotMg3sRlNQzAo7lHreH0cGxP+Y
- TpESK6T5rsq7iwQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711110400.309670567@infradead.org>
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the timestamp whenever it has been written after
-being actively observed via getattr.
+On Thu, Jul 11, 2024 at 01:02:36PM +0200, Peter Zijlstra wrote:
 
-tmpfs only requires the FS_MGTIME flag.
+SNIP
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- mm/shmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> @@ -1159,7 +1159,7 @@ static int __uprobe_register(struct inod
+>  	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
+>  		return -EINVAL;
+>  
+> - retry:
+> +retry:
+>  	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
+>  	if (!uprobe)
+>  		return -ENOMEM;
+> @@ -1468,7 +1468,7 @@ static int xol_add_vma(struct mm_struct
+>  	ret = 0;
+>  	/* pairs with get_xol_area() */
+>  	smp_store_release(&mm->uprobes_state.xol_area, area); /* ^^^ */
+> - fail:
+> +fail:
+>  	mmap_write_unlock(mm);
+>  
+>  	return ret;
+> @@ -1512,7 +1512,7 @@ static struct xol_area *__create_xol_are
+>  	kfree(area->bitmap);
+>   free_area:
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 7f2b609945a5..75a9a73a769f 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4660,7 +4660,7 @@ static struct file_system_type shmem_fs_type = {
- 	.parameters	= shmem_fs_parameters,
- #endif
- 	.kill_sb	= kill_litter_super,
--	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
-+	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
- };
- 
- void __init shmem_init(void)
+hi,
+missed this one and another one few lines before that ;-)
 
--- 
-2.45.2
+jirka
 
+>  	kfree(area);
+> - out:
+> +out:
+>  	return NULL;
+>  }
+>  
+> @@ -1915,7 +1915,7 @@ static void prepare_uretprobe(struct upr
+>  	utask->return_instances = ri;
+>  
+>  	return;
+> - fail:
+> +fail:
+>  	kfree(ri);
+>  }
+>  
+> @@ -2031,7 +2031,7 @@ static int is_trap_at_addr(struct mm_str
+>  
+>  	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+>  	put_page(page);
+> - out:
+> +out:
+>  	/* This needs to return true for any variant of the trap insn */
+>  	return is_trap_insn(&opcode);
+>  }
+> @@ -2159,7 +2159,7 @@ static void handle_trampoline(struct pt_
+>  	utask->return_instances = ri;
+>  	return;
+>  
+> - sigill:
+> +sigill:
+>  	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
+>  	force_sig(SIGILL);
+>  
+> 
+> 
