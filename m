@@ -1,82 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6B5101E4;
-	Thu, 11 Jul 2024 01:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB65C152166;
+	Thu, 11 Jul 2024 08:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720661762; cv=none; b=B9R9OXe9g0dV02ttm6LG4dfmO4GAjo4YY16sf86dogVBnyf1ivL4xAQJlXHlUDI+TebYFhLNoAc4yCNXZPlClrx3QSjq8IPNgw1uGsepOqm2ZygYcK6eakn1yFiDGu3lONYVuPPobT8BczLLpiucSK0/NEUp/nO7cK9ADPsfnvM=
+	t=1720686464; cv=none; b=gqc9Ze7TC7RiMLoJMFZC+57FuBnjkEH88Js8kOVM/DlGVRoa0PYG/XnI9xwG0quGxRBbe62rBlTTAteLqhLkk+xO8fTUSmz6VoEVWWifx+gTon0KS305W6nDiwlznFuBKK7zZ65HdzGJVBkEokakyz+BSTfaRZrZ/R9mOrgnhhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720661762; c=relaxed/simple;
-	bh=Hqr9mmbkEJ+SKI+sb4EdVGkA9dVoZOX7yW+I50QePp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TJa1AAbj7Bnf0520iErKBWewyxfK6lpnv+bVKKNm9N2jbuO89Pi9EtAmU/n4H6VHXkA3elDXpKHmYJ9Ohy4dWsG+D9MF717ySfMLnsWG4TP05XzquezfOK5MWAi7uAjjCyw7NNIEa/Vw/MLeh4ajH4ZRxWQws/YxzZczoDWt5pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZ+GOJjB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720686464; c=relaxed/simple;
+	bh=QLkc0syHmfrJ4ooILR0YbhQf2XqmWSHnQs/1IzydFT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8WJFcBQSBWapKyneruJmTepKSJNSayqIQbIESECgifTkMiCgltwgt42tdlIuDk7XCZA8f1nSUK4rgEUm6re5LFeF8Lk4btXy5zmkNuBGPcb+YrLs5gw5aynHzOYrx3+bD/bsZUKfbjw57ivACuruhecvMAZ0CjWYLaCBv9JmMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SX17Fvi2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZ+GOJjB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F41FC32781;
-	Thu, 11 Jul 2024 01:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720661762;
-	bh=Hqr9mmbkEJ+SKI+sb4EdVGkA9dVoZOX7yW+I50QePp4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rZ+GOJjB93xoU6UJ2PdTrOFqj6GaZIkE9XcK6GAgChSeAygix+EySdQXQ0WR5Kz+H
-	 WCjNqakxEQLT6/Af+MwzHg1x4tCzR5hPjqsoOlVcL/1rcSJr6S9AeA4ZN0I0HittDJ
-	 bUGA3V+8b3i7ULWXkwvf6D//5Kzlg+/oUCcYIVgmnTeKxMRKg41EwjPD3SBCwBSYov
-	 ZTEFlT3e4YHM2jDotLjffFrrNk34zKJndcvFAfee3/1+SOhBbUPU7HaStIvkVPR6dW
-	 dYaO9ltHOHaCeXYK60ww88Q9AHqSlwIEYVIfGHWIGsPp/F1t2GYOu4fF58ce+oWeZp
-	 iBrKtAm718JUA==
-Date: Wed, 10 Jul 2024 18:35:59 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
- Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
- <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v16 13/13] netdev: add dmabuf introspection
-Message-ID: <20240710183559.64c9071f@kernel.org>
-In-Reply-To: <20240710001749.1388631-14-almasrymina@google.com>
-References: <20240710001749.1388631-1-almasrymina@google.com>
-	<20240710001749.1388631-14-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SX17Fvi2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zKpNKzwctbeTnY3N4R5E5wRN5p6CTobDSc8wD1nLfFg=; b=SX17Fvi2VRqdsTaVNibFtbV4pi
+	LIdgXbYzqeeXRveI3+F2hA29TmLO9uRv8uCfSGNLtKz3ai827zPP4a4dOuuCiIaBx7JTgkliDFwVA
+	cnnH2UOAF5doHsbfmroT/9AOWF1eWT+VPrOYLBGHa1fODjuRJWI4kOdCqwoj252hlt6rthkjjhdSI
+	MQ1KZLw2T3jmX1q65vzoHqMgCWuWSa0Ujl/2g3kMsMwCo06oSwI2yy4BV1Fd77GChxnGa9CYcZI5O
+	8wvf0/cHn5I2zRJWNcM6kt/3keU9JZpxbQqBIH8chYhlvD4/NRaCpQrNw1fbsR14Fbqv3EE67fMDt
+	C920SOyQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sRp9M-0000000Alir-4AQG;
+	Thu, 11 Jul 2024 08:27:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9A436300848; Thu, 11 Jul 2024 10:27:36 +0200 (CEST)
+Date: Thu, 11 Jul 2024 10:27:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: andrii@kernel.org, mhiramat@kernel.org, clm@meta.com, jolsa@kernel.org,
+	mingo@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] uprobes: future cleanups for review
+Message-ID: <20240711082736.GG4587@noisy.programming.kicks-ass.net>
+References: <20240710140017.GA1074@redhat.com>
+ <20240710163022.GA13298@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240710163022.GA13298@redhat.com>
 
-On Wed, 10 Jul 2024 00:17:46 +0000 Mina Almasry wrote:
-> Add dmabuf information to page_pool stats:
+On Wed, Jul 10, 2024 at 06:30:22PM +0200, Oleg Nesterov wrote:
+> On 07/10, Oleg Nesterov wrote:
+> >
+> > Peter, these simple cleanups should not conflict with your changes,
+> > but I can resend them later if it causes any inconvenience.
 > 
-> $ ./cli.py --spec ../netlink/specs/netdev.yaml --dump page-pool-get
+> In fact I would like to push 2 more cleanups before the more significant
+> changes, but they certainly conflict with your ongoing work, albeit only
+> textually.
+> 
+> Let me send the patches for review anyway, perhaps you can take at least
+> the 1st one.
+> 
+> 3/3 is only compile tested so far. Andrii, can you take a look?
 
-Aha, thanks!
+I was going to post a new version today, but I can wait and rebase on
+top of / include these 5 patches (or more, these things tend to grow).
 
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
