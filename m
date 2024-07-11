@@ -1,268 +1,193 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7766615B10F;
-	Thu, 11 Jul 2024 11:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28305158DC8;
+	Thu, 11 Jul 2024 11:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696052; cv=none; b=kolGEzBNiPgqmlE5HEyJSVa9xPoLY86vWXCUmJ6XZ7AHdX9sKhGYtwMMcb65YgLVNsITKT4AY3ibDZ9EPZiUdH4BfTXBABuxa/5qApYsZQzGTdg09JYexuUUkXfxwsLIKj2ct/CWm0Q635AKS3eXv09FO9m6x7YUSAVGcbei/1c=
+	t=1720696105; cv=none; b=EXGKbG5hFIYvWqZd4iLzD5rftg3iiN7f5jQYcSyldXj4NrKNolA20ALEvYOSrunMOzPXsgDgl/+wP2ITtRuajkZHihBbK7BvzRr/sWl0t5mWN2OtXr5xJMdkP3uljt0LzGOWLsas5yQ6+7+qLd0OD6LEwhB1IlZ/FnGywmwxujk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720696052; c=relaxed/simple;
-	bh=2T0ZeaCuHyE7S1MQjICNRCQqp1yquQA9xYneZhcf7yA=;
-	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=gCQj1qs7I7L8dC/0E+Vhn6VWllRZ/C6N+eytVoAZp74avJf8VJmPU9U8TFZVFXbLRNtBUwUsJiY4aKdHzZuvKtAF68PMINLN3NvNqbMPjvbqN3gOWqWzI95337WrXGPH5/EVba6SeGjC9Fl1fizpPQ2KUSkXyjRQgH1dxQkFLvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gvf8k7lx; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720696105; c=relaxed/simple;
+	bh=6RdMfN8GT5TlOHt8U/xfrPGOCLGbZMq30a98R04eApo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=U9Fr1Fmh2QHLcz6l5Z1mO30b2LrQCFu4QiyO5uO8PPcxYMz8Ck6Y7Sz2kmDquAOzKM4fZKg/ZM4GRmBkjBVDxIgmk+qvoch3hPS0FXA4/Lf9J76QkYGMnGZPZV+e2JfgqyZyaumEdXillw4noQ6SnTH9lE0MkjpXTycGfrzh054=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeooJrr2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gvf8k7lx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=JGAQJ9O4GQNJ+lSrwckhmSvTl5Z3WnOhBl9Cbykx5eM=; b=gvf8k7lxxuojFBCwj8OPBpbV5y
-	AXwBogmVlq5Ub110X0UB/t+tI0XMWU2pK80XoOy0UMkxEVHsKmcj5tjiz67BfFOPMNl8LJ9U7/oHE
-	M5XLS8EJtYrQ5V+FFWSp1Vi7ZZ8yGV4mBw/kYM8EDsMhnHXjBgkGIWuss27LVnz4OzZYV3YMCscYV
-	OdIe+JwhzStMl6Au4saLNYqp3S4KO++lSdLvxDgb69TTrWL5OOFt032cKIV3+Yowo8lsLnQmoK7L2
-	E8verntSNWxJK0TCdyfmkIrgpbQaPAHO9ZyVzzEISK7Ti9DreovSScemLUCdiDUtxfhzPIn8nQBV7
-	VpbjxThg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRre0-000000015VX-0L3j;
-	Thu, 11 Jul 2024 11:07:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id D9F793034B0; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
-Message-Id: <20240711110401.311168524@infradead.org>
-User-Agent: quilt/0.65
-Date: Thu, 11 Jul 2024 13:02:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: mingo@kernel.org,
- andrii@kernel.org,
- oleg@redhat.com
-Cc: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- peterz@infradead.org,
- rostedt@goodmis.org,
- mhiramat@kernel.org,
- jolsa@kernel.org,
- clm@meta.com,
- paulmck@kernel.org
-Subject: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe to SRCU
-References: <20240711110235.098009979@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeooJrr2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E947EC116B1;
+	Thu, 11 Jul 2024 11:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720696104;
+	bh=6RdMfN8GT5TlOHt8U/xfrPGOCLGbZMq30a98R04eApo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FeooJrr2+az8wlTlJzJNBNTQgbxo5CoT2v0Uu+ysdwGu6rdm2VDD2gtW/LX6qPqPB
+	 5Nvb3nBvD0x+DfyM0z1IuR/5LHBKrT6u30B7EgL0mgkd0jIpIYNnJObs3StrfSgtNP
+	 m/FzuafDk+x3L3bw1HyKZ+ayyU9bmpZwnIu6cJeEw+mRQ/Elti8ogWbdykQjEt6YfW
+	 mrpKLaYpU5r2jhB3LxfkqTs1P5CMvvJkBC16o8quM1AshhIP/IzGQzpiifFk1AdE63
+	 sdIfrjMieal+/+h+IfW0CbGzEWTPPjpuO6bsodSxLxx+UoSrZxPMwpKLR0cekPTkKA
+	 ZOAzKJn5iiz8Q==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v5 0/9] fs: multigrain timestamp redux
+Date: Thu, 11 Jul 2024 07:08:04 -0400
+Message-Id: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABS9j2YC/2XOTQ6DIBRG0a0YxqV5/Cl01H00HaCAklZtwJg2x
+ r0XHVgbh98L54YJRRu8jeiSTSjY0Uffd2mIU4aqRne1xd6kjShQDjnNcVsPvrVYVEZCSaSRBFB
+ 6/ArW+fcaut3Tbnwc+vBZuyNZrofESDBgTaRighpw0l0fNnT2ee5DjZbGSH+uALI5mhxRhhOqF
+ QejDo7tndgcS06KkhqtVcmYODi+d3JzfPknOFblrhSFY39unucvAjh/HUUBAAA=
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
+ Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
+ Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+ Randy Dunlap <rdunlap@infradead.org>, kernel-team@fb.com, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org, 
+ linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5229; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=6RdMfN8GT5TlOHt8U/xfrPGOCLGbZMq30a98R04eApo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBmj70f3nAKvVzwWbeFtmY26vMEGFNsy5Y6kvcLp
+ I62wXPcziGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZo+9HwAKCRAADmhBGVaC
+ FYmPD/46BtIEjpmLwuzvndS0jbI/Wx/CH2yPVhvmwMG/KhPp04qOzAI2cR4fpjbY48b1RS15EX/
+ eQh4kQ/ICIMpeQeqkfqd9DQVUzJgf3yVREXHgEii7ZZT0+h8aX1/Hu8DJ0gpA/MjjNNNX59wlCR
+ 8Bpt0pFE35x0cnXa1b763A2pyYAZQz/zvvBSIik1M4OtnFbfKg05c1gPsCyipDy4LZUG2E6g6dE
+ QaC1jw5+m2mRceWloHK08sosonspLLe6bKh6JiTM5PrlBbnOntz8jDYs+vxqJUSFNEGqOEgrOY9
+ SJO08W33hjJ/0tpz/xpTuExehB9mjd9Djal1+XCnJcou+si7ooTss3nQlK8sSyl+f5Mk+dFY8an
+ 8gx+8gCBWo51IiGREPJFAHG45iXx8jzYIhkgMCb8HtLaKpkB7uZE5mCQ9VWT6ELeBTJSLzJXhCh
+ as0kDeofDpVZftPnGQDqpGTRj42/oWHrVKYyOVH897WJs+HpI16CDYPbikYXz4f51hl7Z8LwKCU
+ qbC8oga88Ww5f5/lXGabKKIH/nFXA0ayz0Hn2NCQD+e9lbbUSzX5QoGQ7hEaURES6eEB/2PcXUR
+ JEMj2g5MEISh+nqOCHWZJAED0JYhV6HoSFGOvRZwyTz7Td+2fNU/LNyqmjiGQNob0GkH7LjxvcZ
+ eMV9Prfj8m7Iynw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Both single-step and uretprobes take a refcount on struct uprobe in
-handle_swbp() in order to ensure struct uprobe stays extant until a
-next trap.
+tl;dr for those who have been following along:
 
-Since uprobe_unregister() only cares about the uprobe_consumer
-life-time, and these intra-trap sections can be arbitrarily large,
-create a second SRCU domain to cover these.
+There are several changes in this version. The conversion of ctime to
+be a ktime_t value has been dropped, and we now use an unused bit in
+the nsec field as the QUERIED flag (like the earlier patchset did).
 
-Notably, a uretprobe with a registered return_instance that never
-triggers -- because userspace -- will currently pin the
-return_instance and related uprobe until the task dies. With this
-convertion to SRCU this behaviour will inhibit freeing of all uprobes.
+The floor value is now tracked as a monotonic clock value, and is
+converted to a realtime value on an as-needed basis. This eliminates the
+problem of trying to detect when the realtime clock jumps backward.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Longer patch description for those just joining in:
+
+At LSF/MM this year, we had a discussion about the inode change
+attribute. At the time I mentioned that I thought I could salvage the
+multigrain timestamp work that had to be reverted last year [1].
+
+That version had to be reverted because it was possible for a file to
+get a coarse grained timestamp that appeared to be earlier than another
+file that had recently gotten a fine-grained stamp.
+
+This version corrects the problem by establishing a per-time_namespace
+ctime_floor value that should prevent this from occurring. In the above
+situation, the two files might end up with the same timestamp value, but
+they won't appear to have been modified in the wrong order.
+
+That problem was discovered by the test-stat-time gnulib test. Note that
+that test still fails on multigrain timestamps, but that's because its
+method of determining the minimum delay that will show a timestamp
+change will no longer work with multigrain timestamps. I have a patch to
+change the testcase to use a different method that is in the process of
+being merged.
+
+The testing I've done seems to show performance parity with multigrain
+timestamps enabled vs. disabled, but it's hard to rule this out
+regressing some workload.
+
+This set is based on top of Christian's vfs.misc branch (which has the
+earlier change to track inode timestamps as discrete integers). If there
+are no major objections, I'd like to have this considered for v6.12,
+after a nice long full-cycle soak in linux-next.
+
+PS: I took a stab at a conversion for bcachefs too, but it's not
+trivial. bcachefs handles timestamps backward from the way most
+block-based filesystems do. Instead of updating them in struct inode and
+eventually copying them to a disk-based representation, it does the
+reverse and updates the timestamps in its in-core image of the on-disk
+inode, and then copies that into struct inode. Either that will need to
+be changed, or we'll need to come up with a different way to do this for
+bcachefs.
+
+[1]: https://lore.kernel.org/linux-fsdevel/20230807-mgctime-v7-0-d1dec143a704@kernel.org/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/uprobes.h |    2 +
- kernel/events/uprobes.c |   60 +++++++++++++++++++++++-------------------------
- 2 files changed, 31 insertions(+), 31 deletions(-)
+Changes in v5:
+- refetch coarse time in coarse_ctime if not returning floor
+- timestamp_truncate before swapping new ctime value into place
+- track floor value as atomic64_t
+- cleanups to Documentation file
+- Link to v4: https://lore.kernel.org/r/20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org
 
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -78,6 +78,7 @@ struct uprobe_task {
- 
- 	struct return_instance		*return_instances;
- 	unsigned int			depth;
-+	unsigned int			active_srcu_idx;
- };
- 
- struct return_instance {
-@@ -86,6 +87,7 @@ struct return_instance {
- 	unsigned long		stack;		/* stack pointer */
- 	unsigned long		orig_ret_vaddr; /* original return address */
- 	bool			chained;	/* true, if instance is nested */
-+	int			srcu_idx;
- 
- 	struct return_instance	*next;		/* keep as stack */
- };
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -54,6 +54,15 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem)
-  * Covers uprobe->consumers lifetime as well as struct uprobe.
-  */
- DEFINE_STATIC_SRCU(uprobes_srcu);
-+/*
-+ * Covers return_instance->uprobe and utask->active_uprobe. Separate from
-+ * uprobe_srcu because uprobe_unregister() doesn't need to wait for this
-+ * and these lifetimes can be fairly long.
-+ *
-+ * Notably, these sections span userspace and as such use
-+ * __srcu_read_{,un}lock() to elide lockdep.
-+ */
-+DEFINE_STATIC_SRCU(uretprobes_srcu);
- 
- /* Have a copy of original instruction */
- #define UPROBE_COPY_INSN	0
-@@ -596,25 +605,24 @@ set_orig_insn(struct arch_uprobe *auprob
- 			*(uprobe_opcode_t *)&auprobe->insn);
- }
- 
--static struct uprobe *try_get_uprobe(struct uprobe *uprobe)
--{
--	if (refcount_inc_not_zero(&uprobe->ref))
--		return uprobe;
--	return NULL;
--}
--
- static struct uprobe *get_uprobe(struct uprobe *uprobe)
- {
- 	refcount_inc(&uprobe->ref);
- 	return uprobe;
- }
- 
--static void uprobe_free_rcu(struct rcu_head *rcu)
-+static void uprobe_free_stage2(struct rcu_head *rcu)
- {
- 	struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
- 	kfree(uprobe);
- }
- 
-+static void uprobe_free_stage1(struct rcu_head *rcu)
-+{
-+	struct uprobe *uprobe = container_of(rcu, struct uprobe, rcu);
-+	call_srcu(&uretprobes_srcu, &uprobe->rcu, uprobe_free_stage2);
-+}
-+
- static void put_uprobe(struct uprobe *uprobe)
- {
- 	if (refcount_dec_and_test(&uprobe->ref)) {
-@@ -626,7 +634,7 @@ static void put_uprobe(struct uprobe *up
- 		mutex_lock(&delayed_uprobe_lock);
- 		delayed_uprobe_remove(uprobe, NULL);
- 		mutex_unlock(&delayed_uprobe_lock);
--		call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
-+		call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_stage1);
- 	}
- }
- 
-@@ -1753,7 +1761,7 @@ unsigned long uprobe_get_trap_addr(struc
- static struct return_instance *free_ret_instance(struct return_instance *ri)
- {
- 	struct return_instance *next = ri->next;
--	put_uprobe(ri->uprobe);
-+	__srcu_read_unlock(&uretprobes_srcu, ri->srcu_idx);
- 	kfree(ri);
- 	return next;
- }
-@@ -1771,7 +1779,7 @@ void uprobe_free_utask(struct task_struc
- 		return;
- 
- 	if (utask->active_uprobe)
--		put_uprobe(utask->active_uprobe);
-+		__srcu_read_unlock(&uretprobes_srcu, utask->active_srcu_idx);
- 
- 	ri = utask->return_instances;
- 	while (ri)
-@@ -1814,7 +1822,7 @@ static int dup_utask(struct task_struct
- 			return -ENOMEM;
- 
- 		*n = *o;
--		get_uprobe(n->uprobe);
-+		__srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
- 		n->next = NULL;
- 
- 		*p = n;
-@@ -1931,14 +1939,10 @@ static void prepare_uretprobe(struct upr
- 	if (!ri)
- 		return;
- 
--	ri->uprobe = try_get_uprobe(uprobe);
--	if (!ri->uprobe)
--		goto err_mem;
--
- 	trampoline_vaddr = get_trampoline_vaddr();
- 	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
- 	if (orig_ret_vaddr == -1)
--		goto err_uprobe;
-+		goto err_mem;
- 
- 	/* drop the entries invalidated by longjmp() */
- 	chained = (orig_ret_vaddr == trampoline_vaddr);
-@@ -1956,11 +1960,13 @@ static void prepare_uretprobe(struct upr
- 			 * attack from user-space.
- 			 */
- 			uprobe_warn(current, "handle tail call");
--			goto err_uprobe;
-+			goto err_mem;
- 		}
- 		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
- 	}
- 
-+	ri->srcu_idx = __srcu_read_lock(&uretprobes_srcu);
-+	ri->uprobe = uprobe;
- 	ri->func = instruction_pointer(regs);
- 	ri->stack = user_stack_pointer(regs);
- 	ri->orig_ret_vaddr = orig_ret_vaddr;
-@@ -1972,8 +1978,6 @@ static void prepare_uretprobe(struct upr
- 
- 	return;
- 
--err_uprobe:
--	uprobe_put(ri->uprobe);
- err_mem:
- 	kfree(ri);
- }
-@@ -1990,15 +1994,9 @@ pre_ssout(struct uprobe *uprobe, struct
- 	if (!utask)
- 		return -ENOMEM;
- 
--	utask->active_uprobe = try_get_uprobe(uprobe);
--	if (!utask->active_uprobe)
--		return -ESRCH;
--
- 	xol_vaddr = xol_get_insn_slot(uprobe);
--	if (!xol_vaddr) {
--		err = -ENOMEM;
--		goto err_uprobe;
--	}
-+	if (!xol_vaddr)
-+		return -ENOMEM;
- 
- 	utask->xol_vaddr = xol_vaddr;
- 	utask->vaddr = bp_vaddr;
-@@ -2007,13 +2005,13 @@ pre_ssout(struct uprobe *uprobe, struct
- 	if (unlikely(err))
- 		goto err_xol;
- 
-+	utask->active_srcu_idx = __srcu_read_lock(&uretprobes_srcu);
-+	utask->active_uprobe = uprobe;
- 	utask->state = UTASK_SSTEP;
- 	return 0;
- 
- err_xol:
- 	xol_free_insn_slot(current);
--err_uprobe:
--	put_uprobe(utask->active_uprobe);
- 	return err;
- }
- 
-@@ -2366,7 +2364,7 @@ static void handle_singlestep(struct upr
- 	else
- 		WARN_ON_ONCE(1);
- 
--	put_uprobe(uprobe);
-+	__srcu_read_unlock(&uretprobes_srcu, utask->active_srcu_idx);
- 	utask->active_uprobe = NULL;
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(current);
+Changes in v4:
+- reordered tracepoint fields for better packing
+- rework percpu counters again to also count fine grained timestamps
+- switch to try_cmpxchg for better efficiency
+- Link to v3: https://lore.kernel.org/r/20240705-mgtime-v3-0-85b2daa9b335@kernel.org
 
+Changes in v3:
+- Drop the conversion of i_ctime fields to ktime_t, and use an unused bit
+  of the i_ctime_nsec field as QUERIED flag.
+- Better tracepoints for tracking floor and ctime updates
+- Reworked percpu counters to be more useful
+- Track floor as monotonic value, which eliminates clock-jump problem
+
+Changes in v2:
+- Added Documentation file
+- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
+
+---
+Jeff Layton (9):
+      fs: add infrastructure for multigrain timestamps
+      fs: tracepoints around multigrain timestamp events
+      fs: add percpu counters for significant multigrain timestamp events
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      Documentation: add a new file documenting multigrain timestamps
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++
+ fs/attr.c                                   |  52 ++++++-
+ fs/btrfs/file.c                             |  25 +--
+ fs/btrfs/super.c                            |   3 +-
+ fs/ext4/super.c                             |   2 +-
+ fs/inode.c                                  | 234 ++++++++++++++++++++++++----
+ fs/stat.c                                   |  39 ++++-
+ fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
+ fs/xfs/xfs_iops.c                           |  10 +-
+ fs/xfs/xfs_super.c                          |   2 +-
+ include/linux/fs.h                          |  34 +++-
+ include/trace/events/timestamp.h            | 109 +++++++++++++
+ mm/shmem.c                                  |   2 +-
+ 13 files changed, 560 insertions(+), 78 deletions(-)
+---
+base-commit: 7507ae6c41bb8990d3ae98ad0f5b0c15ca4156fe
+change-id: 20240626-mgtime-5cd80b18d810
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
