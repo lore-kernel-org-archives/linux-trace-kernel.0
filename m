@@ -1,40 +1,40 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982F515B0E6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B77115B0FA;
 	Thu, 11 Jul 2024 11:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720696050; cv=none; b=rntd83IU0rTTd9xqmwuarZ1insESjK3dvzVYduuu4o+oBdl7s1ydosGo6OpMx0mcv6tQhvl6sFKrrYZAdVL+GrrBs/Aq9pC7uv3eqSSRGPDc906y0WMJDWqotlMLgCFNK6+P6Dy+vSfS2C4et6bMzPolApe0RZS/SNhR2qJgbJ0=
+	t=1720696050; cv=none; b=HoGLQUY/ZOXpPItxp5oY4/aJ0/LHw3O0iKluw1hAUbHhis9GW9Pm2fkpcgiJBrhCWG75hc7IC2Nlx1SS9yltm4MKckYEm62GDI0YhfUDnUMHYY1cx4UdEXNPTBBPRwikNtrYA4BLWiaGULNgoBgtllum/B+/gUd3xreDjDVYFh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720696050; c=relaxed/simple;
-	bh=V4VGBP/Aj8yPyI/IWKopehT3xnqmyYE9lEkZlZ4eNbc=;
+	bh=1M+rhtc/qaJHoSvWssThVK2Vgx9AVwkdXE4otbqqAQE=;
 	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=CxQRaPL7NqtCOTl5cTIh8978Wd++3wuWyZx5LegPT9q5qyDFMBPZg5EKeIvtibLhtMF75j3+J2bSJpFy06W+m4HEqe0ATFvjiCfWZkAGE6frv+vvA0PlLJl3mZwfhlZdGq9pS7wLmDRgdP6D4/ivI77scr5mLxtDgCW7LkgMQGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cBTbgars; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=WGqnNLOklXS3K8H79DFORko4LCs/hsKN+JHeDgBO8lq6yT+cixY3/++FkxGTrWYwiZNIPv0UGCilmOwJVVq/gLhog70ocETaoyQ4h9/lhdewPuu5H95RT9mykU61PrrrfA2DUzMvRQ2MsYn8XOJMU89Xs0mlqTtri4USmEYRc3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=opIittmj; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cBTbgars"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="opIittmj"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=Ny8uqMTS6OmqyT/DzZEZHx/QBmd5E9Ugn7LCsaDF+b4=; b=cBTbgars7f8Y40nO86kVz5kgFX
-	AgtvFMckaBT6iy89IDDORTrYKjmhfn+EZfVb6ROcfoC6nGC4uEsFavIPIuP8/iuyEIRpGYIqelkdN
-	Bl+dQU0eIW5wxRSaBvCUBJPx0XvXLsTLFg4jHBSzPgeQNXdf/CYIdj0F7ESkrbp1kItLagN4w8viL
-	bkO4we6zguzEkuaTTI4xzzU7OHlNklE92xbyqjAFdtuyxpm1zDmbVmLH21QlGLeTpfPGDvnTYv6IU
-	BL260nUD937hh2kcSb/v3JuKxIgewiKoudgsJ0Spz7YVlW5n5Sg8o8mHmaRODFV5F7rak5MjDYUw+
-	gKaQ4LqA==;
+	bh=oSWYpy59uOkf0yV2H/rgoKV+1idp02ib0EduwVb/ADY=; b=opIittmjzxeKvzGOiAX757Yf4/
+	ZE0VyqFSma3GLdV27tVOFaD7BrmuNz4gBpqZfWrunSXcNuUUXkP1Di5f2ptkV1qAwFd5H9DFL7PEJ
+	L2TS+FoAWabsx9MMJZQW1j0lezTIBPRy5H7jPmRHaFVzVO9FBL52TpNLo6Se8lWs/ZU/Ki/yNPfZJ
+	G9w39uGMO9drhG7EJHIrVaZUdjHJkhEF0CF2rJwCAcAarpqN/L8Mm0kVFQzrNqes54lXKop55Y7j8
+	yghDfx2eH2E9gBLnysbMpSI41yN7p1UwXlYJkKU7w01lBU6jwvatPMo41cAa8uB2JCxEEA0POAd3t
+	JMTxIhmg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRre0-000000015VV-0GeD;
+	id 1sRre0-000000015VW-0J2D;
 	Thu, 11 Jul 2024 11:07:24 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id CA50A302440; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
-Message-Id: <20240711110400.880800153@infradead.org>
+	id D27A7302DCD; Thu, 11 Jul 2024 13:07:22 +0200 (CEST)
+Message-Id: <20240711110401.096506262@infradead.org>
 User-Agent: quilt/0.65
-Date: Thu, 11 Jul 2024 13:02:41 +0200
+Date: Thu, 11 Jul 2024 13:02:43 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@kernel.org,
  andrii@kernel.org,
@@ -47,7 +47,7 @@ Cc: linux-kernel@vger.kernel.org,
  jolsa@kernel.org,
  clm@meta.com,
  paulmck@kernel.org
-Subject: [PATCH v2 06/11] perf/uprobe: SRCU-ify uprobe->consumer list
+Subject: [PATCH v2 08/11] perf/uprobe: Convert (some) uprobe->refcount to SRCU
 References: <20240711110235.098009979@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,191 +57,227 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-With handle_swbp() hitting concurrently on (all) CPUs the
-uprobe->register_rwsem can get very contended. Add an SRCU instance to
-cover the consumer list and consumer lifetime.
+With handle_swbp() hitting concurrently on (all) CPUs, potentially on
+the same uprobe, the uprobe->refcount can get *very* hot. Move the
+struct uprobe lifetime into uprobes_srcu such that it covers both the
+uprobe and the uprobe->consumers list.
 
-Since the consumer are externally embedded structures, unregister will
-have to suffer a synchronize_srcu().
+With this, handle_swbp() can use a single large SRCU critical section
+to avoid taking a refcount on the uprobe for it's duration.
 
-A notably complication is the UPROBE_HANDLER_REMOVE logic which can
-race against uprobe_register() such that it might want to remove a
-freshly installer handler that didn't get called. In order to close
-this hole, a seqcount is added. With that, the removal path can tell
-if anything changed and bail out of the removal.
+Notably, the single-step and uretprobe paths need a reference that
+leaves handle_swbp() and will, for now, still use ->refcount.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/uprobes.c |   60 ++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 50 insertions(+), 10 deletions(-)
+ kernel/events/uprobes.c |   68 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 41 insertions(+), 27 deletions(-)
 
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -26,6 +26,7 @@
- #include <linux/task_work.h>
- #include <linux/shmem_fs.h>
- #include <linux/khugepaged.h>
-+#include <linux/srcu.h>
- 
- #include <linux/uprobes.h>
- 
-@@ -49,6 +50,11 @@ static struct mutex uprobes_mmap_mutex[U
- 
+@@ -51,7 +51,7 @@ static struct mutex uprobes_mmap_mutex[U
  DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
  
-+/*
-+ * Covers uprobe->consumers lifetime.
-+ */
-+DEFINE_STATIC_SRCU(uprobes_srcu);
-+
- /* Have a copy of original instruction */
- #define UPROBE_COPY_INSN	0
+ /*
+- * Covers uprobe->consumers lifetime.
++ * Covers uprobe->consumers lifetime as well as struct uprobe.
+  */
+ DEFINE_STATIC_SRCU(uprobes_srcu);
  
-@@ -57,6 +63,7 @@ struct uprobe {
- 	refcount_t		ref;
- 	struct rcu_head		rcu;
- 	struct rw_semaphore	register_rwsem;
-+	seqcount_t		register_seq;
- 	struct rw_semaphore	consumer_rwsem;
- 	struct list_head	pending_list;
- 	struct uprobe_consumer	*consumers;
-@@ -760,6 +767,7 @@ static struct uprobe *alloc_uprobe(struc
- 	uprobe->offset = offset;
- 	uprobe->ref_ctr_offset = ref_ctr_offset;
- 	init_rwsem(&uprobe->register_rwsem);
-+	seqcount_init(&uprobe->register_seq);
- 	init_rwsem(&uprobe->consumer_rwsem);
- 
- 	/* add to uprobes_tree, sorted on inode:offset */
-@@ -782,8 +790,8 @@ static struct uprobe *alloc_uprobe(struc
- static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
- 	down_write(&uprobe->consumer_rwsem);
--	uc->next = uprobe->consumers;
--	uprobe->consumers = uc;
-+	WRITE_ONCE(uc->next, uprobe->consumers);
-+	rcu_assign_pointer(uprobe->consumers, uc);
- 	up_write(&uprobe->consumer_rwsem);
+@@ -626,7 +626,7 @@ static void put_uprobe(struct uprobe *up
+ 		mutex_lock(&delayed_uprobe_lock);
+ 		delayed_uprobe_remove(uprobe, NULL);
+ 		mutex_unlock(&delayed_uprobe_lock);
+-		call_rcu(&uprobe->rcu, uprobe_free_rcu);
++		call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
+ 	}
  }
  
-@@ -800,7 +808,7 @@ static bool consumer_del(struct uprobe *
- 	down_write(&uprobe->consumer_rwsem);
- 	for (con = &uprobe->consumers; *con; con = &(*con)->next) {
- 		if (*con == uc) {
--			*con = uc->next;
-+			WRITE_ONCE(*con, uc->next);
- 			ret = true;
- 			break;
- 		}
-@@ -1139,9 +1147,13 @@ void uprobe_unregister(struct inode *ino
+@@ -678,7 +678,7 @@ static struct uprobe *__find_uprobe(stru
+ 	struct rb_node *node = rb_find_rcu(&key, &uprobes_tree, __uprobe_cmp_key);
+ 
+ 	if (node)
+-		return try_get_uprobe(__node_2_uprobe(node));
++		return __node_2_uprobe(node);
+ 
+ 	return NULL;
+ }
+@@ -691,7 +691,7 @@ static struct uprobe *find_uprobe(struct
+ {
+ 	unsigned int seq;
+ 
+-	guard(rcu)();
++	lockdep_assert(srcu_read_lock_held(&uprobes_srcu));
+ 
+ 	do {
+ 		seq = read_seqcount_begin(&uprobes_seqcount);
+@@ -1142,6 +1142,8 @@ void uprobe_unregister_nosync(struct ino
+ {
+ 	struct uprobe *uprobe;
+ 
++	guard(srcu)(&uprobes_srcu);
++
+ 	uprobe = find_uprobe(inode, offset);
+ 	if (WARN_ON(!uprobe))
+ 		return;
+@@ -1151,7 +1153,6 @@ void uprobe_unregister_nosync(struct ino
+ 	__uprobe_unregister(uprobe, uc);
+ 	raw_write_seqcount_end(&uprobe->register_seq);
+ 	up_write(&uprobe->register_rwsem);
+-	put_uprobe(uprobe);
+ }
+ EXPORT_SYMBOL_GPL(uprobe_unregister_nosync);
+ 
+@@ -1263,6 +1264,8 @@ int uprobe_apply(struct inode *inode, lo
+ 	struct uprobe_consumer *con;
+ 	int ret = -ENOENT;
+ 
++	guard(srcu)(&uprobes_srcu);
++
+ 	uprobe = find_uprobe(inode, offset);
+ 	if (WARN_ON(!uprobe))
+ 		return ret;
+@@ -1275,7 +1278,6 @@ int uprobe_apply(struct inode *inode, lo
+ 		ret = register_for_each_vma(uprobe, add ? uc : NULL);
+ 	raw_write_seqcount_end(&uprobe->register_seq);
+ 	up_write(&uprobe->register_rwsem);
+-	put_uprobe(uprobe);
+ 
+ 	return ret;
+ }
+@@ -1929,10 +1931,14 @@ static void prepare_uretprobe(struct upr
+ 	if (!ri)
  		return;
  
- 	down_write(&uprobe->register_rwsem);
-+	raw_write_seqcount_begin(&uprobe->register_seq);
- 	__uprobe_unregister(uprobe, uc);
-+	raw_write_seqcount_end(&uprobe->register_seq);
- 	up_write(&uprobe->register_rwsem);
- 	put_uprobe(uprobe);
++	ri->uprobe = try_get_uprobe(uprobe);
++	if (!ri->uprobe)
++		goto err_mem;
 +
-+	synchronize_srcu(&uprobes_srcu);
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister);
+ 	trampoline_vaddr = get_trampoline_vaddr();
+ 	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
+ 	if (orig_ret_vaddr == -1)
+-		goto fail;
++		goto err_uprobe;
  
-@@ -1204,10 +1216,12 @@ static int __uprobe_register(struct inod
- 	down_write(&uprobe->register_rwsem);
- 	ret = -EAGAIN;
- 	if (likely(uprobe_is_active(uprobe))) {
-+		raw_write_seqcount_begin(&uprobe->register_seq);
- 		consumer_add(uprobe, uc);
- 		ret = register_for_each_vma(uprobe, uc);
- 		if (ret)
- 			__uprobe_unregister(uprobe, uc);
-+		raw_write_seqcount_end(&uprobe->register_seq);
+ 	/* drop the entries invalidated by longjmp() */
+ 	chained = (orig_ret_vaddr == trampoline_vaddr);
+@@ -1950,12 +1956,11 @@ static void prepare_uretprobe(struct upr
+ 			 * attack from user-space.
+ 			 */
+ 			uprobe_warn(current, "handle tail call");
+-			goto fail;
++			goto err_uprobe;
+ 		}
+ 		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
  	}
- 	up_write(&uprobe->register_rwsem);
- 	put_uprobe(uprobe);
-@@ -1250,10 +1264,12 @@ int uprobe_apply(struct inode *inode, lo
- 		return ret;
  
- 	down_write(&uprobe->register_rwsem);
-+	raw_write_seqcount_begin(&uprobe->register_seq);
- 	for (con = uprobe->consumers; con && con != uc ; con = con->next)
- 		;
- 	if (con)
- 		ret = register_for_each_vma(uprobe, add ? uc : NULL);
-+	raw_write_seqcount_end(&uprobe->register_seq);
- 	up_write(&uprobe->register_rwsem);
- 	put_uprobe(uprobe);
+-	ri->uprobe = get_uprobe(uprobe);
+ 	ri->func = instruction_pointer(regs);
+ 	ri->stack = user_stack_pointer(regs);
+ 	ri->orig_ret_vaddr = orig_ret_vaddr;
+@@ -1966,7 +1971,10 @@ static void prepare_uretprobe(struct upr
+ 	utask->return_instances = ri;
  
-@@ -2096,15 +2112,23 @@ static struct uprobe *find_active_uprobe
- 	return uprobe;
+ 	return;
+-fail:
++
++err_uprobe:
++	uprobe_put(ri->uprobe);
++err_mem:
+ 	kfree(ri);
  }
  
-+#define for_each_consumer_rcu(pos, head) \
-+	for (pos = rcu_dereference_raw(head); pos; \
-+	     pos = rcu_dereference_raw(pos->next))
-+
- static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- {
- 	struct uprobe_consumer *uc;
- 	int remove = UPROBE_HANDLER_REMOVE;
- 	bool need_prep = false; /* prepare return uprobe, when needed */
- 	bool had_handler = false;
-+	unsigned int seq;
+@@ -1982,22 +1990,31 @@ pre_ssout(struct uprobe *uprobe, struct
+ 	if (!utask)
+ 		return -ENOMEM;
  
--	down_read(&uprobe->register_rwsem);
--	for (uc = uprobe->consumers; uc; uc = uc->next) {
-+	guard(srcu)(&uprobes_srcu);
++	utask->active_uprobe = try_get_uprobe(uprobe);
++	if (!utask->active_uprobe)
++		return -ESRCH;
 +
-+	seq = raw_read_seqcount_begin(&uprobe->register_seq);
-+
-+	for_each_consumer_rcu(uc, uprobe->consumers) {
- 		int rc = 0;
- 
- 		if (uc->handler) {
-@@ -2134,9 +2158,25 @@ static void handler_chain(struct uprobe
- 	if (need_prep && !remove)
- 		prepare_uretprobe(uprobe, regs); /* put bp at return */
- 
--	if (remove)
-+	if (remove) {
-+		/*
-+		 * Removing uprobes is a slow path, after all, the more probes
-+		 * you remove, the less probe hits you get.
-+		 *
-+		 * This needs to serialize against uprobe_register(), such that
-+		 * if the above RCU iteration missed a new handler that
-+		 * would've liked to keep the probe, we don't go uninstall the
-+		 * probe after it already ran register_for_each_vma().
-+		 *
-+		 * The rwsem ensures exclusivity against uprobe_register()
-+		 * while the seqcount will avoid the removal if anything has
-+		 * changed since we started.
-+		 */
-+		guard(rwsem_read)(&uprobe->register_rwsem);
-+		if (read_seqcount_retry(&uprobe->register_seq, seq))
-+			return;
- 		unapply_uprobe(uprobe, current->mm);
--	up_read(&uprobe->register_rwsem);
+ 	xol_vaddr = xol_get_insn_slot(uprobe);
+-	if (!xol_vaddr)
+-		return -ENOMEM;
++	if (!xol_vaddr) {
++		err = -ENOMEM;
++		goto err_uprobe;
 +	}
+ 
+ 	utask->xol_vaddr = xol_vaddr;
+ 	utask->vaddr = bp_vaddr;
+ 
+ 	err = arch_uprobe_pre_xol(&uprobe->arch, regs);
+-	if (unlikely(err)) {
+-		xol_free_insn_slot(current);
+-		return err;
+-	}
++	if (unlikely(err))
++		goto err_xol;
+ 
+-	utask->active_uprobe = uprobe;
+ 	utask->state = UTASK_SSTEP;
+ 	return 0;
++
++err_xol:
++	xol_free_insn_slot(current);
++err_uprobe:
++	put_uprobe(utask->active_uprobe);
++	return err;
  }
  
- static void
-@@ -2145,12 +2185,12 @@ handle_uretprobe_chain(struct return_ins
- 	struct uprobe *uprobe = ri->uprobe;
- 	struct uprobe_consumer *uc;
+ /*
+@@ -2128,7 +2145,7 @@ static void handler_chain(struct uprobe
+ 	bool had_handler = false;
+ 	unsigned int seq;
  
--	down_read(&uprobe->register_rwsem);
--	for (uc = uprobe->consumers; uc; uc = uc->next) {
+-	guard(srcu)(&uprobes_srcu);
++	lockdep_assert(srcu_read_lock_held(&uprobes_srcu));
+ 
+ 	seq = raw_read_seqcount_begin(&uprobe->register_seq);
+ 
+@@ -2276,6 +2293,8 @@ static void handle_swbp(struct pt_regs *
+ 	if (bp_vaddr == get_trampoline_vaddr())
+ 		return handle_trampoline(regs);
+ 
 +	guard(srcu)(&uprobes_srcu);
 +
-+	for_each_consumer_rcu(uc, uprobe->consumers) {
- 		if (uc->ret_handler)
- 			uc->ret_handler(uc, ri->func, regs);
- 	}
--	up_read(&uprobe->register_rwsem);
+ 	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+ 	if (!uprobe) {
+ 		if (is_swbp > 0) {
+@@ -2304,7 +2323,7 @@ static void handle_swbp(struct pt_regs *
+ 	 * new and not-yet-analyzed uprobe at the same address, restart.
+ 	 */
+ 	if (unlikely(!test_bit(UPROBE_COPY_INSN, &uprobe->flags)))
+-		goto out;
++		return;
+ 
+ 	/*
+ 	 * Pairs with the smp_wmb() in prepare_uprobe().
+@@ -2317,22 +2336,17 @@ static void handle_swbp(struct pt_regs *
+ 
+ 	/* Tracing handlers use ->utask to communicate with fetch methods */
+ 	if (!get_utask())
+-		goto out;
++		return;
+ 
+ 	if (arch_uprobe_ignore(&uprobe->arch, regs))
+-		goto out;
++		return;
+ 
+ 	handler_chain(uprobe, regs);
+ 
+ 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+-		goto out;
+-
+-	if (!pre_ssout(uprobe, regs, bp_vaddr))
+ 		return;
+ 
+-	/* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
+-out:
+-	put_uprobe(uprobe);
++	pre_ssout(uprobe, regs, bp_vaddr);
  }
  
- static struct return_instance *find_next_ret_chain(struct return_instance *ri)
+ /*
 
 
