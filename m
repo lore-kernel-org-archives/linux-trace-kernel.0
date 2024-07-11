@@ -1,369 +1,285 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FD916D31D;
-	Thu, 11 Jul 2024 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2741642B;
+	Thu, 11 Jul 2024 15:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720713531; cv=none; b=hHqUVhIQmAijaaQux2CpP95rWF3OqoMrCN96MVEct9opre/qz1BJ+uGsPJ/epS4L6zRrvaffAJHcfvheUbhxNUxyW0j571FUeAaJ2rUVFrYe07Fog4HrxrYpZgTTkLLZqbKNxCNqSB8QG7I/MaBAT8DY/ETySZP2XKEg+oYU97g=
+	t=1720713544; cv=none; b=J8N0b2Nf8kl1udAgGOt9VmqmILYq8sZLyLF/fjOAKf7QXOl1jq2Xva4KLyLpeGZYA20goED1R1rfVEisTce8WWbG1Byh6ecOCAiwR25+HwamCsQhT4XKSetdPTSQQuKKtRn4QXWXCv+iQK08BnvtEVmynR4+nDsitm/wIb88H/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720713531; c=relaxed/simple;
-	bh=/Zkrnqj3Lqd9X1BOC6DYomk6gVS9TS6an3c/CYRKMMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T1TP0BPlZSAiX0BmchIAcIThHDY51nOMdcvNHmNhXhEB+b05g0eA6pdWutZhvew9F6i1d3dYzNcV+tca2OK6OPQ9wZ4p68IJWeOMI53v3UNyC6Tq5JV3EK7hg5HHqx6kmjvyHfGyB8ssiUKn/0TArl1QThREGkVkEosQHr+BvjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHClfChx; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720713544; c=relaxed/simple;
+	bh=1iLtZj+CaSFvlN0D+8+pdkXrtfvKV5SmTmwUWZ1gvV0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=THgJNlrMH2AirPc8jYoSpWKU+G6hLdFwNzXdUtIc+uwB3HU5aPy8ein3/ZSjLztPnKvCVWJMg+zQkiNtM9ODY670BBBMUm0pVXh9YhyIfmvDpx1wocxE+E4vFz5B/vExT8l4mTtGvJWiLG+WJ0AcTTEq6zXnSpdeXQPI6EI+5vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RilZTT6o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHClfChx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720713529; x=1752249529;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/Zkrnqj3Lqd9X1BOC6DYomk6gVS9TS6an3c/CYRKMMs=;
-  b=SHClfChxKmQGkeddHQeUygO/MJlDDMndCd2pup+DLdeCfp2mzS1vfA4g
-   2g8/PmFjNvnsX0nyjncGYJCUv9O1Ojv8ccmNvrjHt/GmKEX6eEj7GiaFd
-   RRvTCDMYa5EmnuOKdalSAEUSA9jppljUZaLm9IFeRGJ0/yMNCP433fvjy
-   8LI/YctYNALuNlz86HJDAWhsGjl8tqfNPk3DErK05lHBZtPD8ONclbABK
-   wsxdSpgur+c1TUfw8ws/6m0MVvvBe29Nc+iu2Fuk/aBvshWKDfrqXeAxA
-   1hPOLPk+7LXQ54PIoBhriR4m7RTgTUSK0EIniEtZJDMprV8jCouFvtMkW
-   Q==;
-X-CSE-ConnectionGUID: M+5eZRlrTQeHp/braZwq/A==
-X-CSE-MsgGUID: /UNS3NYkTwGkmUuhjn4M1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="17815330"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="17815330"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:58:48 -0700
-X-CSE-ConnectionGUID: 63tcTAldTZ67Xy4Qgrr/Ww==
-X-CSE-MsgGUID: 6ffhYOVmRmiyQydRcflAAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="48494761"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.221.134]) ([10.124.221.134])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:58:48 -0700
-Message-ID: <7e1e86b9-9578-441f-9f4a-23c274234344@linux.intel.com>
-Date: Thu, 11 Jul 2024 08:58:46 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RilZTT6o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE46C116B1;
+	Thu, 11 Jul 2024 15:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720713543;
+	bh=1iLtZj+CaSFvlN0D+8+pdkXrtfvKV5SmTmwUWZ1gvV0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=RilZTT6oQtB3tiFj/GIIBLC/ZRyo/VwTLg6HQJgTA712ulSCbnbRO4v0zINaanpUK
+	 ABZ8d+FUa1TePSU4UhYsEfvQh60kgDvbI4e/j/tlO+tAjM9R6/soCKIEYBMlPHBcWv
+	 cGrbjS0JEruStBXVgumxtfdnFeSH36LKmMd22fRmlYCDZprXXbDV2Gmz3IWyAAiiZZ
+	 hfkUQtRkrfRR6JUGbHe0VYIov2586luk7489V92JJ/E/qguhEy5iuGlQIJ57vMOrsc
+	 SUNeO2WIhbtrjGUoFyl/SiU9RRRQ6zQvzunSnGG3mjtAxql0i2eB1qXakgTalIYLOO
+	 sPbQM9506Agzg==
+Message-ID: <95a135dcec10423b9bcb9f53a1420d80b4afdba7.camel@kernel.org>
+Subject: Re: [PATCH v5 6/9] xfs: switch to multigrain timestamps
+From: Jeff Layton <jlayton@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R
+ <chandan.babu@oracle.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
+ <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Jonathan
+ Corbet <corbet@lwn.net>,  Dave Chinner <david@fromorbit.com>, Andi Kleen
+ <ak@linux.intel.com>, Christoph Hellwig <hch@infradead.org>,  Uros Bizjak
+ <ubizjak@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, Arnd
+ Bergmann <arnd@arndb.de>,  Randy Dunlap <rdunlap@infradead.org>,
+ kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+  linux-doc@vger.kernel.org
+Date: Thu, 11 Jul 2024 11:58:59 -0400
+In-Reply-To: <20240711150920.GU1998502@frogsfrogsfrogs>
+References: <20240711-mgtime-v5-0-37bb5b465feb@kernel.org>
+	 <20240711-mgtime-v5-6-37bb5b465feb@kernel.org>
+	 <20240711150920.GU1998502@frogsfrogsfrogs>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] platform/x86/intel/ifs: Add SBAF test support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede
- <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
- Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- Shankar Ravi V <ravi.v.shankar@intel.com>
-References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20240711000233.684642-4-sathyanarayanan.kuppuswamy@linux.intel.com>
- <6f445c03-21b9-87bc-1bc1-ca211c56eaa0@linux.intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <6f445c03-21b9-87bc-1bc1-ca211c56eaa0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+On Thu, 2024-07-11 at 08:09 -0700, Darrick J. Wong wrote:
+> On Thu, Jul 11, 2024 at 07:08:10AM -0400, Jeff Layton wrote:
+> > Enable multigrain timestamps, which should ensure that there is an
+> > apparent change to the timestamp whenever it has been written after
+> > being actively observed via getattr.
+> >=20
+> > Also, anytime the mtime changes, the ctime must also change, and those
+> > are now the only two options for xfs_trans_ichgtime. Have that function
+> > unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
+> > always set.
+> >=20
+> > Finally, stop setting STATX_CHANGE_COOKIE in getattr, since the ctime
+> > should give us better semantics now.
+>=20
+> Following up on "As long as the fs isn't touching i_ctime_nsec directly,
+> you shouldn't need to worry about this" from:
+> https://lore.kernel.org/linux-xfs/cae5c28f172ac57b7eaaa98a00b23f342f01ba6=
+4.camel@kernel.org/
+>=20
+> xfs /does/ touch i_ctime_nsec directly when it's writing inodes to disk.
+> From xfs_inode_to_disk, see:
+>=20
+> 	to->di_ctime =3D xfs_inode_to_disk_ts(ip, inode_get_ctime(inode));
+>=20
+> AFAICT, inode_get_ctime itself remains unchanged, and still returns
+> inode->__i_ctime, right?=C2=A0 In which case it's returning a raw timespe=
+c64,
+> which can include the QUERIED flag in tv_nsec, right?
+>=20
 
-On 7/11/24 2:44 AM, Ilpo Järvinen wrote:
-> On Wed, 10 Jul 2024, Kuppuswamy Sathyanarayanan wrote:
->
->> From: Jithu Joseph <jithu.joseph@intel.com>
->>
->> In a core, the SBAF test engine is shared between sibling CPUs.
->>
->> An SBAF test image contains multiple bundles. Each bundle is further
->> composed of subunits called programs. When a SBAF test (for a particular
->> core) is triggered by the user, each SBAF bundle from the loaded test
->> image is executed sequentially on all the threads on the core using
->> the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
->> writing to MSR_ACTIVATE_SBAF.
->>
->> SBAF test bundle execution may be aborted when an interrupt occurs or
->> if the CPU does not have enough power budget for the test. In these
->> cases the kernel restarts the test from the aborted bundle. SBAF
->> execution is not retried if the test fails or if the test makes no
->> forward progress after 5 retries.
->>
->> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
->> Reviewed-by: Tony Luck <tony.luck@intel.com>
->> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>  drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
->>  drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
->>  2 files changed, 264 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
->> index 600bb8a1b285..b261be46bce8 100644
->> --- a/drivers/platform/x86/intel/ifs/ifs.h
->> +++ b/drivers/platform/x86/intel/ifs/ifs.h
->> @@ -157,6 +157,8 @@
->>  #define MSR_SBAF_HASHES_STATUS			0x000002b9
->>  #define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK	0x000002ba
->>  #define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS	0x000002bb
->> +#define MSR_ACTIVATE_SBAF			0x000002bc
->> +#define MSR_SBAF_STATUS				0x000002bd
->>  
->>  #define MSR_COPY_SCAN_HASHES			0x000002c2
->>  #define MSR_SCAN_HASHES_STATUS			0x000002c3
->> @@ -283,6 +285,34 @@ union ifs_array {
->>  	};
->>  };
->>  
->> +/* MSR_ACTIVATE_SBAF bit fields */
->> +union ifs_sbaf {
->> +	u64	data;
->> +	struct {
->> +		u32	bundle_idx	:9;
->> +		u32	rsvd1		:5;
->> +		u32	pgm_idx		:2;
->> +		u32	rsvd2		:16;
->> +		u32	delay		:31;
->> +		u32	sigmce		:1;
->> +	};
->> +};
->> +
->> +/* MSR_SBAF_STATUS bit fields */
->> +union ifs_sbaf_status {
->> +	u64	data;
->> +	struct {
->> +		u32	bundle_idx	:9;
->> +		u32	rsvd1		:5;
->> +		u32	pgm_idx		:2;
->> +		u32	rsvd2		:16;
->> +		u32	error_code	:8;
->> +		u32	rsvd3		:21;
->> +		u32	test_fail	:1;
->> +		u32	sbaf_status	:2;
->> +	};
->> +};
->> +
->>  /*
->>   * Driver populated error-codes
->>   * 0xFD: Test timed out before completing all the chunks.
->> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
->> index 282e4bfe30da..a812ec7761b9 100644
->> --- a/drivers/platform/x86/intel/ifs/runtest.c
->> +++ b/drivers/platform/x86/intel/ifs/runtest.c
->> @@ -29,6 +29,13 @@ struct run_params {
->>  	union ifs_status status;
->>  };
->>  
->> +struct sbaf_run_params {
->> +	struct ifs_data *ifsd;
->> +	int *retry_cnt;
->> +	union ifs_sbaf *activate;
->> +	union ifs_sbaf_status status;
->> +};
->> +
->>  /*
->>   * Number of TSC cycles that a logical CPU will wait for the other
->>   * logical CPU on the core in the WRMSR(ACTIVATE_SCAN).
->> @@ -146,6 +153,7 @@ static bool can_restart(union ifs_status status)
->>  #define SPINUNIT 100 /* 100 nsec */
->>  static atomic_t array_cpus_in;
->>  static atomic_t scan_cpus_in;
->> +static atomic_t sbaf_cpus_in;
->>  
->>  /*
->>   * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
->> @@ -387,6 +395,226 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
->>  		ifsd->status = SCAN_TEST_PASS;
->>  }
->>  
->> +#define SBAF_STATUS_PASS			0
->> +#define SBAF_STATUS_SIGN_FAIL			1
->> +#define SBAF_STATUS_INTR			2
->> +#define SBAF_STATUS_TEST_FAIL			3
->> +
->> +enum sbaf_status_err_code {
->> +	IFS_SBAF_NO_ERROR				= 0,
->> +	IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN		= 1,
->> +	IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS		= 2,
->> +	IFS_SBAF_UNASSIGNED_ERROR_CODE3			= 3,
->> +	IFS_SBAF_INVALID_BUNDLE_INDEX			= 4,
->> +	IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS		= 5,
->> +	IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY		= 6,
->> +	IFS_SBAF_UNASSIGNED_ERROR_CODE7			= 7,
->> +	IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
->> +	IFS_SBAF_INTERRUPTED_DURING_EXECUTION		= 9,
->> +	IFS_SBAF_INVALID_PROGRAM_INDEX			= 0xA,
->> +	IFS_SBAF_CORRUPTED_CHUNK			= 0xB,
->> +	IFS_SBAF_DID_NOT_START				= 0xC,
->> +};
->> +
->> +static const char * const sbaf_test_status[] = {
->> +	[IFS_SBAF_NO_ERROR] = "SBAF no error",
->> +	[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] = "Other thread could not join.",
->> +	[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] = "Interrupt occurred prior to SBAF coordination.",
->> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE3] = "Unassigned error code 0x3",
->> +	[IFS_SBAF_INVALID_BUNDLE_INDEX] = "Non valid sbaf bundles. Reload test image",
-> Non-valid SBAF
->
-> ...but given your define is named "INVALID", why not use just Invalid 
-> SBAF?
+No, in the first patch in the series, inode_get_ctime becomes this:
 
-Above string is from the specification document.But I think it is ok to use
-"Invalid" or "Non-valid".
+#define I_CTIME_QUERIED         ((u32)BIT(31))
 
-Jithu, any concerns?
+static inline time64_t inode_get_ctime_sec(const struct inode *inode)
+{
+        return inode->i_ctime_sec;
+}
 
->> +	[IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS] = "Mismatch in arguments between threads T0/T1.",
->> +	[IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY] = "Core not capable of performing SBAF currently",
->> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE7] = "Unassigned error code 0x7",
->> +	[IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT] = "Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
->> +	[IFS_SBAF_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SBAF start",
->> +	[IFS_SBAF_INVALID_PROGRAM_INDEX] = "SBAF program index not valid",
->> +	[IFS_SBAF_CORRUPTED_CHUNK] = "SBAF operation aborted due to corrupted chunk",
->> +	[IFS_SBAF_DID_NOT_START] = "SBAF operation did not start",
->> +};
->> +
->> +static void sbaf_message_not_tested(struct device *dev, int cpu, u64 status_data)
->> +{
->> +	union ifs_sbaf_status status = (union ifs_sbaf_status)status_data;
->> +
->> +	if (status.error_code < ARRAY_SIZE(sbaf_test_status)) {
->> +		dev_info(dev, "CPU(s) %*pbl: SBAF operation did not start. %s\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)),
->> +			 sbaf_test_status[status.error_code]);
->> +	} else if (status.error_code == IFS_SW_TIMEOUT) {
->> +		dev_info(dev, "CPU(s) %*pbl: software timeout during scan\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)));
->> +	} else if (status.error_code == IFS_SW_PARTIAL_COMPLETION) {
->> +		dev_info(dev, "CPU(s) %*pbl: %s\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)),
->> +			 "Not all SBAF bundles executed. Maximum forward progress retries exceeded");
->> +	} else {
->> +		dev_info(dev, "CPU(s) %*pbl: SBAF unknown status %llx\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)), status.data);
->> +	}
->> +}
->> +
->> +static void sbaf_message_fail(struct device *dev, int cpu, union ifs_sbaf_status status)
->> +{
->> +	/* Failed signature check is set when SBAF signature did not match the expected value */
->> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL) {
->> +		dev_err(dev, "CPU(s) %*pbl: Failed signature check\n",
->> +			cpumask_pr_args(cpu_smt_mask(cpu)));
->> +	}
->> +
->> +	/* Failed to reach end of test */
->> +	if (status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
->> +		dev_err(dev, "CPU(s) %*pbl: Failed to complete test\n",
->> +			cpumask_pr_args(cpu_smt_mask(cpu)));
->> +	}
->> +}
->> +
->> +static bool sbaf_bundle_completed(union ifs_sbaf_status status)
->> +{
->> +	if (status.sbaf_status || status.error_code)
->> +		return false;
->> +	return true;
-> This is same as:
->
-> 	return !status.sbaf_status && !status.error_code;
+static inline long inode_get_ctime_nsec(const struct inode *inode)
+{
+        return inode->i_ctime_nsec & ~I_CTIME_QUERIED;
+}
 
-Yes. Your version looks good. Do you want me to send a version with
-this change or you can include it when merging it?
+static inline struct timespec64 inode_get_ctime(const struct inode *inode)
+{
+        struct timespec64 ts =3D { .tv_sec  =3D inode_get_ctime_sec(inode),
+                                 .tv_nsec =3D inode_get_ctime_nsec(inode) }=
+;
 
->> +}
->> +
->> +static bool sbaf_can_restart(union ifs_sbaf_status status)
->> +{
->> +	enum sbaf_status_err_code err_code = status.error_code;
->> +
->> +	/* Signature for chunk is bad, or scan test failed */
->> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
->> +	    status.sbaf_status == SBAF_STATUS_TEST_FAIL)
->> +		return false;
->> +
->> +	switch (err_code) {
->> +	case IFS_SBAF_NO_ERROR:
->> +	case IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN:
->> +	case IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS:
->> +	case IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT:
->> +	case IFS_SBAF_INTERRUPTED_DURING_EXECUTION:
->> +		return true;
->> +	case IFS_SBAF_UNASSIGNED_ERROR_CODE3:
->> +	case IFS_SBAF_INVALID_BUNDLE_INDEX:
->> +	case IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS:
->> +	case IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY:
->> +	case IFS_SBAF_UNASSIGNED_ERROR_CODE7:
->> +	case IFS_SBAF_INVALID_PROGRAM_INDEX:
->> +	case IFS_SBAF_CORRUPTED_CHUNK:
->> +	case IFS_SBAF_DID_NOT_START:
->> +		break;
->> +	}
->> +	return false;
->> +}
->> +
->> +/*
->> + * Execute the SBAF test. Called "simultaneously" on all threads of a core
->> + * at high priority using the stop_cpus mechanism.
->> + */
->> +static int dosbaf(void *data)
->> +{
->> +	struct sbaf_run_params *run_params = data;
->> +	int cpu = smp_processor_id();
->> +	union ifs_sbaf_status status;
->> +	struct ifs_data *ifsd;
->> +	int first;
->> +
->> +	ifsd = run_params->ifsd;
->> +
->> +	/* Only the first logical CPU on a core reports result */
->> +	first = cpumask_first(cpu_smt_mask(cpu));
->> +	wait_for_sibling_cpu(&sbaf_cpus_in, NSEC_PER_SEC);
->> +
->> +	/*
->> +	 * This WRMSR will wait for other HT threads to also write
->> +	 * to this MSR (at most for activate.delay cycles). Then it
->> +	 * starts scan of each requested bundle. The core test happens
->> +	 * during the "execution" of the WRMSR.
->> +	 */
->> +	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
->> +	rdmsrl(MSR_SBAF_STATUS, status.data);
->> +
->> +	/* Pass back the result of the test */
->> +	if (cpu == first)
->> +		run_params->status = status;
->> +
->> +	return 0;
->> +}
->> +
->> +static void ifs_sbaf_test_core(int cpu, struct device *dev)
->> +{
->> +	struct sbaf_run_params run_params;
->> +	union ifs_sbaf_status status = {};
->> +	union ifs_sbaf activate;
->> +	unsigned long timeout;
->> +	struct ifs_data *ifsd;
->> +	int stop_bundle;
->> +	int retries;
->> +
->> +	ifsd = ifs_get_data(dev);
->> +
->> +	activate.data = 0;
->> +	activate.delay = IFS_THREAD_WAIT;
->> +
->> +	timeout = jiffies + (2 * HZ);
-> Unnecessary parenthesis.
->
-> Other than those things mentioned above,
->
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+        return ts;
+}
 
+...which should ensure that you never store the QUERIED bit.
+
+> Now let's look at the consumer:
+>=20
+> static inline xfs_timestamp_t
+> xfs_inode_to_disk_ts(
+> 	struct xfs_inode		*ip,
+> 	const struct timespec64		tv)
+> {
+> 	struct xfs_legacy_timestamp	*lts;
+> 	xfs_timestamp_t			ts;
+>=20
+> 	if (xfs_inode_has_bigtime(ip))
+> 		return cpu_to_be64(xfs_inode_encode_bigtime(tv));
+>=20
+> 	lts =3D (struct xfs_legacy_timestamp *)&ts;
+> 	lts->t_sec =3D cpu_to_be32(tv.tv_sec);
+> 	lts->t_nsec =3D cpu_to_be32(tv.tv_nsec);
+>=20
+> 	return ts;
+> }
+>=20
+> For the !bigtime case (aka before we added y2038 support) the queried
+> flag gets encoded into the tv_nsec field since xfs doesn't filter the
+> queried flag.
+>=20
+> For the bigtime case, the timespec is turned into an absolute nsec count
+> since the xfs epoch (which is the minimum timestamp possible under the
+> old encoding scheme):
+>=20
+> static inline uint64_t xfs_inode_encode_bigtime(struct timespec64 tv)
+> {
+> 	return xfs_unix_to_bigtime(tv.tv_sec) * NSEC_PER_SEC + tv.tv_nsec;
+> }
+>=20
+> Here we'd also be mixing in the QUERIED flag, only now we've encoded a
+> time that's a second in the future.=C2=A0 I think the solution is to add =
+a:
+>=20
+> static inline struct timespec64
+> inode_peek_ctime(const struct inode *inode)
+> {
+> 	return (struct timespec64){
+> 		.tv_sec =3D inode->__i_ctime.tv_sec,
+> 		.tv_nsec =3D inode->__i_ctime.tv_nsec & ~I_CTIME_QUERIED,
+> 	};
+> }
+>=20
+> similar to what inode_peek_iversion does for iversion; and then
+> xfs_inode_to_disk can do:
+>=20
+> 	to->di_ctime =3D xfs_inode_to_disk_ts(ip, inode_peek_ctime(inode));
+>=20
+> which would prevent I_CTIME_QUERIED from going out to disk.
+>=20
+> At load time, xfs_inode_from_disk uses inode_set_ctime_to_ts so I think
+> xfs won't accidentally introduce QUERIED when it's loading an inode from
+> disk.
+>=20
+>=20
+
+Also already done in this patchset:
+
+struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct timespe=
+c64 ts)
+{
+        inode->i_ctime_sec =3D ts.tv_sec;
+        inode->i_ctime_nsec =3D ts.tv_nsec & ~I_CTIME_QUERIED;
+        trace_inode_set_ctime_to_ts(inode, &ts);
+        return ts;
+}
+EXPORT_SYMBOL(inode_set_ctime_to_ts);
+
+Basically, we never want to store or fetch the QUERIED flag from disk,
+and since it's in an unused bit, we can just universally mask it off
+when dealing with "external" users of it.
+
+One caveat -- I am using the sign bit for the QUERIED flag, so I'm
+assuming that no one should ever pass inode_set_ctime_to_ts a negative
+tv_nsec value.
+
+Maybe I should add a WARN_ON_ONCE here to check for that? It seems
+nonsensical, but you never know...
+
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > =C2=A0fs/xfs/libxfs/xfs_trans_inode.c |=C2=A0 6 +++---
+> > =C2=A0fs/xfs/xfs_iops.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +++-------
+> > =C2=A0fs/xfs/xfs_super.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> > =C2=A03 files changed, 7 insertions(+), 11 deletions(-)
+> >=20
+> > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_=
+inode.c
+> > index 69fc5b981352..1f3639bbf5f0 100644
+> > --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> > @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
+> > =C2=A0	ASSERT(tp);
+> > =C2=A0	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
+> > =C2=A0
+> > -	tv =3D current_time(inode);
+> > +	/* If the mtime changes, then ctime must also change */
+> > +	ASSERT(flags & XFS_ICHGTIME_CHG);
+> > =C2=A0
+> > +	tv =3D inode_set_ctime_current(inode);
+> > =C2=A0	if (flags & XFS_ICHGTIME_MOD)
+> > =C2=A0		inode_set_mtime_to_ts(inode, tv);
+> > -	if (flags & XFS_ICHGTIME_CHG)
+> > -		inode_set_ctime_to_ts(inode, tv);
+> > =C2=A0	if (flags & XFS_ICHGTIME_CREATE)
+> > =C2=A0		ip->i_crtime =3D tv;
+> > =C2=A0}
+> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > index a00dcbc77e12..d25872f818fa 100644
+> > --- a/fs/xfs/xfs_iops.c
+> > +++ b/fs/xfs/xfs_iops.c
+> > @@ -592,8 +592,9 @@ xfs_vn_getattr(
+> > =C2=A0	stat->gid =3D vfsgid_into_kgid(vfsgid);
+> > =C2=A0	stat->ino =3D ip->i_ino;
+> > =C2=A0	stat->atime =3D inode_get_atime(inode);
+> > -	stat->mtime =3D inode_get_mtime(inode);
+> > -	stat->ctime =3D inode_get_ctime(inode);
+> > +
+> > +	fill_mg_cmtime(stat, request_mask, inode);
+> > +
+> > =C2=A0	stat->blocks =3D XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed=
+_blks);
+> > =C2=A0
+> > =C2=A0	if (xfs_has_v3inodes(mp)) {
+> > @@ -603,11 +604,6 @@ xfs_vn_getattr(
+> > =C2=A0		}
+> > =C2=A0	}
+> > =C2=A0
+> > -	if ((request_mask & STATX_CHANGE_COOKIE) && IS_I_VERSION(inode)) {
+> > -		stat->change_cookie =3D inode_query_iversion(inode);
+> > -		stat->result_mask |=3D STATX_CHANGE_COOKIE;
+> > -	}
+> > -
+> > =C2=A0	/*
+> > =C2=A0	 * Note: If you add another clause to set an attribute flag, ple=
+ase
+> > =C2=A0	 * update attributes_mask below.
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index 27e9f749c4c7..210481b03fdb 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -2052,7 +2052,7 @@ static struct file_system_type xfs_fs_type =3D {
+> > =C2=A0	.init_fs_context	=3D xfs_init_fs_context,
+> > =C2=A0	.parameters		=3D xfs_fs_parameters,
+> > =C2=A0	.kill_sb		=3D xfs_kill_sb,
+> > -	.fs_flags		=3D FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
+> > +	.fs_flags		=3D FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
+> > =C2=A0};
+> > =C2=A0MODULE_ALIAS_FS("xfs");
+> > =C2=A0
+> >=20
+> > --=20
+> > 2.45.2
+> >=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
