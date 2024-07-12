@@ -1,67 +1,68 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7475481C4;
-	Fri, 12 Jul 2024 21:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CDB49634;
+	Fri, 12 Jul 2024 21:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720819309; cv=none; b=g4RtsRZdQ9TylKXWFQlu1R3swA7JlUXlH8D1I16fhWJw2M9y11Xkz/fjCgrdA+/SPVzpAuAm9J8nlHx5dO4bOLwLg4HfZ7GWZSv8IZuLmosj6gucsgEDBljbFV1xqPla6jEA5x5luV4G6aT08/7RKDuPJ3Vhfn91+csvuOzBwlM=
+	t=1720819707; cv=none; b=q9vwDk4P1s45pIpv5HDfV6Y2Hi7dB3/iwyj010ngv01nuQlb8Q+5bZJp/NEqq/JpuA9Jdvbm+4GdZjIO/Nolly+wrMy8QN98+Uf9ILoDiDd/ih6LUw0pEwEn/OVttgwwiDsGOnsbbpO/SWLh/hEyA6qG/I/pxgu9a0k4TVtZs8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720819309; c=relaxed/simple;
-	bh=v+xXYnxlsAxleAOTA1ncvDt5Xi1Xg9rGIfFCOE4Ol2o=;
+	s=arc-20240116; t=1720819707; c=relaxed/simple;
+	bh=lHwGeAKM0jsTKFbu/AtfPPmHTB9uFDXbNFkTbch5BXE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oGrYKJ/zCBdo7NOIt4Gxe6bt6RsMjPntBDHraW1CubvnpuqYnDuM9QSXCDVP2HDHcHQJKktdrWHSOc2V4y7Hxp85k34Fs8QRnJEg5ag6GGi1HR4sKsIpruzn809xjJpYDLPeLJvemxTygJyGrN0GqrVUWCRT4X7pfD+4w2sq43M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GRujuvTb; arc=none smtp.client-ip=209.85.216.51
+	 To:Cc:Content-Type; b=iyzDjqHve10CRGyXT3qKbmuPheVDeB7Muui7XKnMWeO+WOgBKcLHZYAq3KGwJy0DeoZ6YzuganeNBNwek1MutXm3rP+tJJ6jQLjycZrj9u5dRC9WqUrzkScz/fuVYX4Yj3Vcj2e6zJBfXx7bhFY5gFXxV26tGHLcGG6zvt+w7mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B6xbqbEw; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRujuvTb"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c2dee9d9cfso1868965a91.3;
-        Fri, 12 Jul 2024 14:21:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6xbqbEw"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7163489149eso1857077a12.1;
+        Fri, 12 Jul 2024 14:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720819307; x=1721424107; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720819705; x=1721424505; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y24z6qGDcPXhbPxvOoVUfJxIvbX7B5X90OmhrVqoPw4=;
-        b=GRujuvTbE++iVbpT/mLSbs9WtXpjfbCXLOribxL5+b9qGcAP5Oflz18mm+tX2bNclw
-         GLygEPoOiPL9GIBpgFr5QnHvdUROPl6hczaLMtyhe4kYqGLjfxX4nfzQ6OoXRfxgz0HG
-         3udOtvGA0XlJXm5IdYwNSgRDqyL9R5fu2GgFuZFvDTfJijOGZhh1GnLcsNRVJbDDUSkP
-         OWzVv5Oul/STXnWWiCgZmbx1DOxm9hexrX/ROHfig9aFgh7J0XNtZiiBlooGhSaRDSWO
-         m8Xja4KFJeXDqJKywuXQVi6C0TlAhGh+fLncJ48ZwUeM2C6A8m6/SX2hc9mumfOZ9iFa
-         iN2Q==
+        bh=U9pjFtLIZhu06DdBsjlmTJj0Bz96mDe+BpetLpyO+Sc=;
+        b=B6xbqbEwmy8CFmwHJ58zBsdi0HpbREcRAVSbGTUUyrdWjSqPlAflJR+CL454CqVKCW
+         MlCm/bfqhcCBPSUSB5GdjCtl1SUqLZ/YeCOkD2IITV5cSOy6/E42wgPc/F5IWd1l4kiW
+         vBYvZLJ4uQOHEhJITa1H6PMuFWup7BmKd8gzLbGrJ7fA+eAv5VMe1EqK1OpcU5bncrr/
+         gfovDUMudtAoTKFcanTLKzbRUYwlKYI5x0R1MwykZNhDz17Hl+tn52NpPMsrHdsG9Wep
+         XdO8GIPy8LxbmqXZDXQrceU54APwNVWkbo5awv/7m6l8pUtE4kRBhWDmwAV6oLQUUgKr
+         0Avw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720819307; x=1721424107;
+        d=1e100.net; s=20230601; t=1720819705; x=1721424505;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y24z6qGDcPXhbPxvOoVUfJxIvbX7B5X90OmhrVqoPw4=;
-        b=Ssi1osDlKPaJV2nmIRfsYyrhdVboqu9qNz1mI8o/7q9ZfhiFrxTpqa1+DaIuhSwojM
-         xIezsoinZ5WEp4VlFJAHFPfMhNbKzJQrSujtW5bfr230kNxl6CwBMIN80FMu73twrNKc
-         KAbF4VPNsF0m9FLFWvBbpb9Y0mV6DhgWgWJ08Si0JwIi1gX7FV9OJX5H0b0bvj2v8xJp
-         RxcZTyyLsRyAbi7U9bxnLT/fFjm5VEbuLd7Gn6sj3UBHfPb7q324AHau9h8f2mp3wcQ6
-         qmT3D4DLQk704QEHqBdOBmy/IBs/W108dWpmYY0ZVBWCXBxKlao6qyltdg+rfhA6XQnr
-         TLxg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqeDP+ytK99n56H8ErjQ+EwpLMHy/0mhITNxx01slgJOo9zStY9XNblAajjMBRkCQsCNR8S6bUboq+uZ6nvrY4n1YmSiZQrYuj+tQrnDNVN6f+zhOorwSlZmeqteROi+pioCtUId1flzN+AFzd4S+0CcXji6SWiYb+9YzxQMfIoqWP9Lan
-X-Gm-Message-State: AOJu0YwqST441PxbYtQcLYGcBD5fPwdy2xzj8lnzzD5P3l1HP9pawLbF
-	Kzfjxg9t9foy3lRnlNwfSkkpiGx9vcaucbTyk1Cmij78TPD310iHiJunVh60T8GKABqtJk5ngXL
-	84hTQiD+zXKMAdH9uH4rt/lzxHh8=
-X-Google-Smtp-Source: AGHT+IHxt/alBNukSln4XzuPDvUKYqFRc6yKjlD0M68iVlDQJwJsU+oEfZZVlVTmJDE/w0RwnJS7ML9pcS/f8E6jmpA=
-X-Received: by 2002:a17:90b:4f4b:b0:2ca:7f1f:9ae5 with SMTP id
- 98e67ed59e1d1-2ca7f1fa19emr6760289a91.19.1720819307246; Fri, 12 Jul 2024
- 14:21:47 -0700 (PDT)
+        bh=U9pjFtLIZhu06DdBsjlmTJj0Bz96mDe+BpetLpyO+Sc=;
+        b=pNUP4KMidxCsE+rI8fLsjaKzqG7V3hz/0wkziAW2DmsfOqgDTBs/MJnlGcZcMowlFj
+         F7yZ68KbJGJPA4oBS3aDFsuDBRe6dkM5tLXqqvEsrOjEZh39xb/R3btOqEqy7PPxWSZf
+         awDUkpoiUq1+dvGfxExWZek1dhYVbIp45FLpvXIpzEcHVrR23dqAQ5PcS98zr4A+gs/U
+         sCP7rRMnfmplkHodPk4mSL45dzgRby2QH5Tbbb20zMApMhUFJP0OEJpTTObmbexSewvg
+         n9Tiz5KyWKD8wpdUUXgjEllXEWFJdM1Hr2TK8008GYCutk7L0V77t/psTr0Wop/LZPsg
+         1yuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYt8skmxkJU3Kd16AN77AsFU770WLwhe+65Ms/yD5NhfYR6WXFO9rsniwCornRUOo2H8WBrwLGJ9ZpgSCexrZGVVALO+6m2BQTGZNRcXhcbOXG9EbRsqXuWzqSdZZstl+bW1M3T3cQQJ0lqxkB0em2dE7RMIAnt4m6X96SNzFLpcpvNjPm
+X-Gm-Message-State: AOJu0YxH/ZFVUE8ktu+33b78UpAsbanz3S8rRHAL+TGJfEZZjMPflrhn
+	FGiD8/l6Z2BMrJ8U6Pd3KPSNDHSYhrJLYlRI6SWXruCi7UCb/7ftgA7O0Sd6Evfj6M/BDZVNxCt
+	vOpmfaUUG+eMr3AYjahoaX6MQusE=
+X-Google-Smtp-Source: AGHT+IEsMX1uEfY5runz63h4lW6mEY9Jy+R+/Lak8T+hnNS2AjxA9XMigPz1WxRGXcPtwHpGPkHrOcjS/KJJxMaSeZM=
+X-Received: by 2002:a17:90b:3786:b0:2c9:79d3:a15d with SMTP id
+ 98e67ed59e1d1-2ca35c7bfb0mr10800565a91.29.1720819705183; Fri, 12 Jul 2024
+ 14:28:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711110235.098009979@infradead.org> <20240711110401.096506262@infradead.org>
-In-Reply-To: <20240711110401.096506262@infradead.org>
+References: <20240711110235.098009979@infradead.org> <20240711110401.311168524@infradead.org>
+In-Reply-To: <20240711110401.311168524@infradead.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 12 Jul 2024 14:21:34 -0700
-Message-ID: <CAEf4BzazYsP9uDJfwJJRP6wscgDo8tJpK2vp7eAWS2ca_KQvsA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] perf/uprobe: Convert (some) uprobe->refcount to SRCU
+Date: Fri, 12 Jul 2024 14:28:13 -0700
+Message-ID: <CAEf4BzZW56pgTqy4POud8P3t5gtdg53BX83VbieixtS1T-mg2w@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
+ to SRCU
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com, 
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
@@ -75,80 +76,229 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Jul 11, 2024 at 4:07=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
 g> wrote:
 >
-> With handle_swbp() hitting concurrently on (all) CPUs, potentially on
-> the same uprobe, the uprobe->refcount can get *very* hot. Move the
-> struct uprobe lifetime into uprobes_srcu such that it covers both the
-> uprobe and the uprobe->consumers list.
+> Both single-step and uretprobes take a refcount on struct uprobe in
+> handle_swbp() in order to ensure struct uprobe stays extant until a
+> next trap.
 >
-> With this, handle_swbp() can use a single large SRCU critical section
-> to avoid taking a refcount on the uprobe for it's duration.
+> Since uprobe_unregister() only cares about the uprobe_consumer
+> life-time, and these intra-trap sections can be arbitrarily large,
+> create a second SRCU domain to cover these.
 >
-> Notably, the single-step and uretprobe paths need a reference that
-> leaves handle_swbp() and will, for now, still use ->refcount.
+> Notably, a uretprobe with a registered return_instance that never
+> triggers -- because userspace -- will currently pin the
+> return_instance and related uprobe until the task dies. With this
+> convertion to SRCU this behaviour will inhibit freeing of all uprobes.
 >
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  kernel/events/uprobes.c |   68 ++++++++++++++++++++++++++++-------------=
+>  include/linux/uprobes.h |    2 +
+>  kernel/events/uprobes.c |   60 +++++++++++++++++++++++------------------=
 -------
->  1 file changed, 41 insertions(+), 27 deletions(-)
+>  2 files changed, 31 insertions(+), 31 deletions(-)
 >
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -78,6 +78,7 @@ struct uprobe_task {
+>
+>         struct return_instance          *return_instances;
+>         unsigned int                    depth;
+> +       unsigned int                    active_srcu_idx;
+>  };
+>
+>  struct return_instance {
+> @@ -86,6 +87,7 @@ struct return_instance {
+>         unsigned long           stack;          /* stack pointer */
+>         unsigned long           orig_ret_vaddr; /* original return addres=
+s */
+>         bool                    chained;        /* true, if instance is n=
+ested */
+> +       int                     srcu_idx;
+>
+>         struct return_instance  *next;          /* keep as stack */
+>  };
 > --- a/kernel/events/uprobes.c
 > +++ b/kernel/events/uprobes.c
-> @@ -51,7 +51,7 @@ static struct mutex uprobes_mmap_mutex[U
->  DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
+> @@ -54,6 +54,15 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem)
+>   * Covers uprobe->consumers lifetime as well as struct uprobe.
+>   */
+>  DEFINE_STATIC_SRCU(uprobes_srcu);
+> +/*
+> + * Covers return_instance->uprobe and utask->active_uprobe. Separate fro=
+m
+> + * uprobe_srcu because uprobe_unregister() doesn't need to wait for this
+> + * and these lifetimes can be fairly long.
+> + *
+> + * Notably, these sections span userspace and as such use
+> + * __srcu_read_{,un}lock() to elide lockdep.
+> + */
+> +DEFINE_STATIC_SRCU(uretprobes_srcu);
 >
+>  /* Have a copy of original instruction */
+>  #define UPROBE_COPY_INSN       0
+> @@ -596,25 +605,24 @@ set_orig_insn(struct arch_uprobe *auprob
+>                         *(uprobe_opcode_t *)&auprobe->insn);
+>  }
+>
+> -static struct uprobe *try_get_uprobe(struct uprobe *uprobe)
+> -{
+> -       if (refcount_inc_not_zero(&uprobe->ref))
+> -               return uprobe;
+> -       return NULL;
+> -}
+> -
+>  static struct uprobe *get_uprobe(struct uprobe *uprobe)
+>  {
+>         refcount_inc(&uprobe->ref);
+>         return uprobe;
+>  }
+>
+> -static void uprobe_free_rcu(struct rcu_head *rcu)
+> +static void uprobe_free_stage2(struct rcu_head *rcu)
+>  {
+>         struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rcu);
+>         kfree(uprobe);
+>  }
+>
+> +static void uprobe_free_stage1(struct rcu_head *rcu)
+> +{
+> +       struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rcu);
+> +       call_srcu(&uretprobes_srcu, &uprobe->rcu, uprobe_free_stage2);
+> +}
+> +
+>  static void put_uprobe(struct uprobe *uprobe)
+>  {
+>         if (refcount_dec_and_test(&uprobe->ref)) {
+> @@ -626,7 +634,7 @@ static void put_uprobe(struct uprobe *up
+>                 mutex_lock(&delayed_uprobe_lock);
+>                 delayed_uprobe_remove(uprobe, NULL);
+>                 mutex_unlock(&delayed_uprobe_lock);
+> -               call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
+> +               call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_stage1=
+);
+>         }
+>  }
+>
+> @@ -1753,7 +1761,7 @@ unsigned long uprobe_get_trap_addr(struc
+>  static struct return_instance *free_ret_instance(struct return_instance =
+*ri)
+>  {
+>         struct return_instance *next =3D ri->next;
+> -       put_uprobe(ri->uprobe);
+> +       __srcu_read_unlock(&uretprobes_srcu, ri->srcu_idx);
+>         kfree(ri);
+>         return next;
+>  }
+> @@ -1771,7 +1779,7 @@ void uprobe_free_utask(struct task_struc
+>                 return;
+>
+>         if (utask->active_uprobe)
+> -               put_uprobe(utask->active_uprobe);
+> +               __srcu_read_unlock(&uretprobes_srcu, utask->active_srcu_i=
+dx);
+>
+>         ri =3D utask->return_instances;
+>         while (ri)
+> @@ -1814,7 +1822,7 @@ static int dup_utask(struct task_struct
+>                         return -ENOMEM;
+>
+>                 *n =3D *o;
+> -               get_uprobe(n->uprobe);
+> +               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
 
-[...]
+do we need to add this __srcu_clone_read_lock hack just to avoid
+taking a refcount in dup_utask (i.e., on process fork)? This is not
+that frequent and performance-sensitive case, so it seems like it
+should be fine to take refcount and avoid doing srcu_read_unlock() in
+a new process. Just like the case with long-running uretprobes where
+you convert SRCU lock into refcount.
 
-> @@ -1982,22 +1990,31 @@ pre_ssout(struct uprobe *uprobe, struct
+>                 n->next =3D NULL;
+>
+>                 *p =3D n;
+> @@ -1931,14 +1939,10 @@ static void prepare_uretprobe(struct upr
+>         if (!ri)
+>                 return;
+>
+> -       ri->uprobe =3D try_get_uprobe(uprobe);
+> -       if (!ri->uprobe)
+> -               goto err_mem;
+> -
+>         trampoline_vaddr =3D get_trampoline_vaddr();
+>         orig_ret_vaddr =3D arch_uretprobe_hijack_return_addr(trampoline_v=
+addr, regs);
+>         if (orig_ret_vaddr =3D=3D -1)
+> -               goto err_uprobe;
+> +               goto err_mem;
+>
+>         /* drop the entries invalidated by longjmp() */
+>         chained =3D (orig_ret_vaddr =3D=3D trampoline_vaddr);
+> @@ -1956,11 +1960,13 @@ static void prepare_uretprobe(struct upr
+>                          * attack from user-space.
+>                          */
+>                         uprobe_warn(current, "handle tail call");
+> -                       goto err_uprobe;
+> +                       goto err_mem;
+>                 }
+>                 orig_ret_vaddr =3D utask->return_instances->orig_ret_vadd=
+r;
+>         }
+>
+> +       ri->srcu_idx =3D __srcu_read_lock(&uretprobes_srcu);
+> +       ri->uprobe =3D uprobe;
+>         ri->func =3D instruction_pointer(regs);
+>         ri->stack =3D user_stack_pointer(regs);
+>         ri->orig_ret_vaddr =3D orig_ret_vaddr;
+> @@ -1972,8 +1978,6 @@ static void prepare_uretprobe(struct upr
+>
+>         return;
+>
+> -err_uprobe:
+> -       uprobe_put(ri->uprobe);
+>  err_mem:
+>         kfree(ri);
+>  }
+> @@ -1990,15 +1994,9 @@ pre_ssout(struct uprobe *uprobe, struct
 >         if (!utask)
 >                 return -ENOMEM;
 >
-> +       utask->active_uprobe =3D try_get_uprobe(uprobe);
-> +       if (!utask->active_uprobe)
-> +               return -ESRCH;
-> +
+> -       utask->active_uprobe =3D try_get_uprobe(uprobe);
+> -       if (!utask->active_uprobe)
+> -               return -ESRCH;
+> -
 >         xol_vaddr =3D xol_get_insn_slot(uprobe);
-> -       if (!xol_vaddr)
-> -               return -ENOMEM;
-> +       if (!xol_vaddr) {
-> +               err =3D -ENOMEM;
-> +               goto err_uprobe;
-> +       }
+> -       if (!xol_vaddr) {
+> -               err =3D -ENOMEM;
+> -               goto err_uprobe;
+> -       }
+> +       if (!xol_vaddr)
+> +               return -ENOMEM;
 >
 >         utask->xol_vaddr =3D xol_vaddr;
 >         utask->vaddr =3D bp_vaddr;
+> @@ -2007,13 +2005,13 @@ pre_ssout(struct uprobe *uprobe, struct
+>         if (unlikely(err))
+>                 goto err_xol;
 >
->         err =3D arch_uprobe_pre_xol(&uprobe->arch, regs);
-> -       if (unlikely(err)) {
-> -               xol_free_insn_slot(current);
-
-let's keep this here, because you later remove err_uprobe part and
-err_xol is only jumped to from here; it's better to just drop err_xol
-and err_uprobe altogether and keep the original xol_free_insn_slot()
-here.
-
-> -               return err;
-> -       }
-> +       if (unlikely(err))
-> +               goto err_xol;
->
-> -       utask->active_uprobe =3D uprobe;
+> +       utask->active_srcu_idx =3D __srcu_read_lock(&uretprobes_srcu);
+> +       utask->active_uprobe =3D uprobe;
 >         utask->state =3D UTASK_SSTEP;
 >         return 0;
-> +
-> +err_xol:
-> +       xol_free_insn_slot(current);
-> +err_uprobe:
-> +       put_uprobe(utask->active_uprobe);
-
-utask->active_uprobe =3D NULL;
-
-let's not leave garbage in utask (even if you remove this later anyways)
-
-> +       return err;
+>
+>  err_xol:
+>         xol_free_insn_slot(current);
+> -err_uprobe:
+> -       put_uprobe(utask->active_uprobe);
+>         return err;
 >  }
 >
->  /*
-
-[...]
+> @@ -2366,7 +2364,7 @@ static void handle_singlestep(struct upr
+>         else
+>                 WARN_ON_ONCE(1);
+>
+> -       put_uprobe(uprobe);
+> +       __srcu_read_unlock(&uretprobes_srcu, utask->active_srcu_idx);
+>         utask->active_uprobe =3D NULL;
+>         utask->state =3D UTASK_RUNNING;
+>         xol_free_insn_slot(current);
+>
+>
