@@ -1,160 +1,108 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF2715E83;
-	Fri, 12 Jul 2024 04:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1600F15E86;
+	Fri, 12 Jul 2024 05:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720760278; cv=none; b=FDDEqjjfvqv/nEObbclCqJN9Ldpld7G23O7fwc/5wFYHDssLMZ+KBbwJTi1c4xrcYJrbbToc4na4mTIMYjxNx1BcIhNYMp2pOEzMfj27N/cmV6BqurNAI1AqXklERssVFFz7I5uNb72Vz2yJAnck1HPrT+92XtDSyOMrfg3g97Y=
+	t=1720760602; cv=none; b=Mp7QnqOPKwQcHq3/QeFRR5O7Bwbm0mSjKpScFlkGfh4OYYAmpIXu3fx4WwoxUPrSR32vj3kJGBKm9Y/cEzgupcAxvYxQx8wBdwwjQRkdyAZIksDCvBbmBQcQ63ZksRB9uNVxNBjniVoQVYzBu/l2XzMBvN6nRnxLF3SdkoJyqSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720760278; c=relaxed/simple;
-	bh=XF/ip4QNMmObtpMNy5uwbrxVBFm5W7dTrDLY8KaJIIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oFiNufLszvN3IaR25A0Ma3koAaJGdS8mXZaR2ovKP0yO+qI/mGTxyAQRkmiB7dY/yE3lekjCHBbxAGDF5sOJYs6qen7p8Tu7g23JYJlM9hYdpqkbhcMg/AE1zEu9bM0+zpr1160lPP+fyb29gHq2omhziCJnDJ14CRxsL7RRk3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jzak3L1Y; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720760602; c=relaxed/simple;
+	bh=uJycFH3NJIBIuG+gFB/IYFfH3iQJ7e8hH1DDh32UioA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pg+MOaz+Y9uXoj+ETIw7HIacXx+/mNHHjH3wsG/TzbU3NzXUdID8nH0cyyOwCFHHYa06PJscH/5fhvlq39ZIvmkK03PECpSky/xD4w5MaKKx3jx0//+MFN37s1NYeVWkL+CBuPUNheAujNDQaoSXkOng8+ueK2cahuU4l7WEqcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kdtvkkKT; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jzak3L1Y"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70b09cb7776so1346932b3a.1;
-        Thu, 11 Jul 2024 21:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720760276; x=1721365076; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cgc5qzxw5wK05hMWCEUdBVLXJ0/WrgFO139zlUvcUS4=;
-        b=Jzak3L1YcQe8kkaiizbvwRu/GquP85GqYgi9sRoQtUTL0lnTrbWo06VqhRPsvR4MQ0
-         kKvOsrsMgTvF5mjb0RneheQjiIFdyp6x1SRatVEyG/S261OF/kqqWlCGVknoWOnc9Knr
-         nZkZire9M26Z8Rg6PexeBxFe1sZCLe58D/MZSh4ihbAJE2xk5ouV86m5VPglywX3+P3X
-         zJJ/5RA49cdye2GbrW9TPan2EKIQu5QQQcD0GZAlYRN7pTCC3kHf/w3VIsujcFj1EqB/
-         9tf48fJXmm4N6gALddpJYV9kC5Ej3GQ+2Szp6QVaD7ylLZX3h5e2OWIXIJzh1jtaVr04
-         UkTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720760276; x=1721365076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cgc5qzxw5wK05hMWCEUdBVLXJ0/WrgFO139zlUvcUS4=;
-        b=eO17Z8PNG75OURJkMB8/gyyaqaPHVbu7ochY1QFvFjTZgD4VSVzim3lhpE5fBuabZV
-         EEfRHATDSgBiWGQuhdcnMCBv4ML0SKKzZ/vDBu/K0VXQnP3g5peiDb3s/mKHZTxt11BZ
-         8Okl9uq31JNoKO/SXl24XY5ohm6Z8Wc+LLVcSxnUmc+mT0rR8/I5HowHn10zrsRiYUnr
-         zKcSy3kABXHssRUgcGcaOke458l7jpeujunc7qACdQ+sK3Of8PzLfgNyjLA59AJxvL6G
-         xYOGF1cBgEwNS1GRM7R+HiZVylSwSVbVN0zsEGYAw8GM8rD7vcq35AqbmMO0GZYgxh19
-         70dw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Wp0Z6T4F4+wjyFcThx0DxLRFf+NFDDud/rDapcFeBo1XSOpTYmg2nxlI9wF96pXERxW/gsDFH/m/GoI/XcOBZRh5kHwuHV0oWMP8rMtP2uUhEEbnNsW2SvtL8BOJVOSfgAkKVilqH/KsB0Pl2dUk
-X-Gm-Message-State: AOJu0YxETB4IGHBYWYPC4jxc8yqujjURv+f/5BNqkCrdohpT4xNQAIrb
-	ubyimj+VSpqqFfNA3ExwcG5S2nWWM2QbTjzDYwCcTlrC3AxL4y3QYYMrjD2cJV4tOPu04XSRSYV
-	p6Qt78HqTgOZwddf4UuNwzlyfyjk=
-X-Google-Smtp-Source: AGHT+IEUkeZtcyGtlaj1RFsDY8XRb2zXNgRyQzpsu3Xb7SVhQeA1Hi5KxpSqWP6IoNyOD56FgMHHOTYrBBurmIi/o8Q=
-X-Received: by 2002:a05:6a21:39a:b0:1c0:f48e:a5ed with SMTP id
- adf61e73a8af0-1c29824d6d8mr10526627637.37.1720760276248; Thu, 11 Jul 2024
- 21:57:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kdtvkkKT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=2WZFKEc9WACGtPIZyva0QWyby7W17U1DEZ7Cz1V4Law=; b=kdtvkkKTRq5vO17iq0BnkmWF/L
+	N8sLOy/p0S5Oh70WXTDoixiK8UWtl0RKrWTLEmkuHWALen5077c449BM474s+/ZFbbojfvFkXNZb8
+	CeTaeAxDODFfQjYQeRSG49gyoar8zsnsCaQoUkTN2uENJBiQBLwCc3qsTZ+4gAue91fENIFFHsG8K
+	RcUtF9fQZAdXhDypfd6QedNqU9RxqRBDEJcpryvXvxP3SloLqjXCFXm8KqzLfQ7meTpJ26KLNu+RM
+	G2sHVbWSJ0f3KVj2KgWr9Su2rq5PxXCd7uBzzKji0z0NIhkJVK03W14/b7ww+Zqfnm5GUECEQy4Rj
+	iCtCV+qw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sS8RB-0000000GSJC-2Ujn;
+	Fri, 12 Jul 2024 05:03:17 +0000
+Date: Thu, 11 Jul 2024 22:03:17 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>
+Subject: Re: [PATCH] xfs: fix file_path handling in tracepoints
+Message-ID: <ZpC5FTEvLDbCije6@infradead.org>
+References: <ZpAB2HU8zE41s9j6@infradead.org>
+ <20240711211754.316de618@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711110235.098009979@infradead.org>
-In-Reply-To: <20240711110235.098009979@infradead.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 11 Jul 2024 21:57:44 -0700
-Message-ID: <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] perf/uprobe: Optimize uprobes
-To: Peter Zijlstra <peterz@infradead.org>, oleg@redhat.com
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	jolsa@kernel.org, clm@meta.com, paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711211754.316de618@gandalf.local.home>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Jul 11, 2024 at 4:07=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> Hi!
->
-> These patches implement the (S)RCU based proposal to optimize uprobes.
->
-> On my c^Htrusty old IVB-EP -- where each (of the 40) CPU calls 'func' in =
-a
-> tight loop:
->
->   perf probe -x ./uprobes test=3Dfunc
->   perf stat -ae probe_uprobe:test  -- sleep 1
->
->   perf probe -x ./uprobes test=3Dfunc%return
->   perf stat -ae probe_uprobe:test__return -- sleep 1
->
-> PRE:
->
->   4,038,804      probe_uprobe:test
->   2,356,275      probe_uprobe:test__return
->
-> POST:
->
->   7,216,579      probe_uprobe:test
->   6,744,786      probe_uprobe:test__return
->
-> (copy-paste FTW, I didn't do new numbers because the fast paths didn't ch=
-ange --
->  and quick test run shows similar numbers)
->
-> Patches also available here:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/upr=
-obes
->
->
-> Changes since last time:
->  - better split with intermediate inc_not_zero()
->  - fix UPROBE_HANDLER_REMOVE
->  - restored the lost rcu_assign_pointer()
->  - avoid lockdep for uretprobe_srcu
->  - add missing put_uprobe() -> srcu_read_unlock() conversion
->  - actually initialize return_instance::has_ref
->  - a few comments
->  - things I don't remember
->
->
+On Thu, Jul 11, 2024 at 09:17:54PM -0400, Steven Rostedt wrote:
+> That "f->f_path.dentry" is a dereference of the passed in pointer. If we
+> did that in the TP_printk(), then it would dereference that file pointer
+> saved by the trace. This would happen at some time later from when the file
+> pointer was saved. That is, it will dereference the pointer when the user
+> reads the trace, not when the trace occurred. This could be seconds,
+> minutes, hours, days even months later! So %pD would not work there.
 
-Hey Peter!
+Indeed.  I'm so used to these useful format strings that I keep
+forgetting about them doing non-trivial things.
 
-Thanks for the v2, I plan to look at it more thoroughly tomorrow. But
-meanwhile I spent a good chunk of today to write an uprobes
-stress-test, so we can validate that we are not regressing anything
-(yes, I don't trust lockless code and people in general ;)
+Which also brings up that it would be good if we had some kind of static
+checker that detects usage of these magic %p extensions in the trace
+macros and warns about them.
 
-Anyways, if you'd like to use it, it's at [0]. All you should need to
-build and run it is:
+> 		__dynamic_array(char, pathname, snprintf(NULL, 0, "%pD", xf->file) + 1);
+> 
+> // This will allocated the space needed for the string
+> 
 
-  $ cd examples/c
-  $ make -j$(nproc) uprobe-stress
-  $ sudo ./uprobe-stress -tN -aM -mP -fR
+> 		sprintf(__get_dynamic_array(pathname), "%pD", xf->file);
+> 
+> // and the above will copy it directly to that location.
+> // It assumes the value of the first snprintf() will be the same as the second.
+> 
 
+> 		  (char *)__get_dynamic_array(pathname),
+> 
+> // for accessing the string, although yes, __get_str(pathname) would work,
+> // but that's more by luck than design.
 
-N, M, P, R are number of threads dedicated to one of four functions of
-the stress test: triggering user space functions (N),
-attaching/detaching various random subsets of uprobes (M), mmap()ing
-parts of executable with uprobes (P), and forking the process and
-triggering uprobes for a little bit (R). The idea is to test various
-timings and interleavings of uprobe-related logic.
+That sounds pretty cool, but except for the dynamic sizing doesn't
+really buy us much over the version Darrick proposed, right?
 
-You should only need not-too-old Clang to build everything (Clang 12+
-should work, I believe). But do let me know if you run into troubles.
+> Looking at this file, I noticed that you have some open coded __string_len()
+> fields. Why not just use that? In fact, I think I even found a bug:
+> 
+> There's a:
+> 		memcpy(__get_str(name), name, name->len);
+> 
+> Where I think it should have been:
+> 
+> 		memcpy(__get_str(name), name->name, name->len);
+> 
+> Hmm, I should make sure that __string() and __string_len() are passed in
+> strings. As this is a common bug.
+> 
+> I can make this a formal patch if you like. Although, I haven't even tried
+> compile testing it ;-)
 
-I did run this stress test for a little while on current
-bpf-next/master with no issues detected (yay!).
+Without having compiled it either, this looks sensible to me.  As XFS
+was one of the earliest adopters of event tracing I suspect these
+predate the string helpers.
 
-But then I also ran it on Linux built from perf/uprobes branch (these
-patches), and after a few seconds I see that there is no more
-attachment/detachment happening. Eventually I got splats, which you
-can see in [1]. I used `sudo ./uprobe-stress -a10 -t5 -m5 -f3` command
-to run it inside my QEMU image.
-
-So there is still something off, hopefully this will help to debug and
-hammer out any remaining kinks. Thanks!
-
-  [0] https://github.com/libbpf/libbpf-bootstrap/commit/2f88cef90f9728ec8c7=
-bee7bd48fdbcf197806c3
-  [1] https://gist.github.com/anakryiko/f761690addf7aa5f08caec95fda9ef1a
