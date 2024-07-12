@@ -1,119 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EE8D512;
-	Fri, 12 Jul 2024 12:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA22624;
+	Fri, 12 Jul 2024 13:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720786382; cv=none; b=W+nnrx0T4og173ZvM2OYNygWj28Qx57+vLvuNyhcIaeItSXwY/joJpd3ePJCZVLS5sOnOTxZl/kCnGQZoXzsehbocLxGYksIX4w5Y6O8nEjtjctl4E8tLqidHbi65mRwfJxXM3W/cnMnwBjjoCdYYq7bxehbpHYd1paJnkb3vRM=
+	t=1720789832; cv=none; b=FjiXop4REaHRE3tDjXy9tPUZw3foESTPfjL3Nm/5VYfROvUVjJt0Ps+yAXAOwGBrO5ZHY0Ukl6zSKlbvAYeZPtS+WFRa3eaq3N/17Z68ccIOZhq0Zzw/X6yB0XQDWdWLz7XDl6odwOvaUkdgqXlVtJFrdR5dH9ApwxdgvohS8A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720786382; c=relaxed/simple;
-	bh=1+Yfdw6riiV8LwSEY6hqiRjwk2gF445GfiGNMNa0cJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BF/9XA2ZBULbYjJyIYywYPN7oEMi6m/f8hooHjJdSKGR8lPIJ2DYXl7niLtL7rO9KpAPDf5X/c26+yq4BBXRqCCHr5/uuHUKVy6GF+DlOzVdlKsTjk+A9oP9fUc3TAbLput88CUusQWcQExetsT1y6g4EpS0eKv/SPSNWsCt0Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526F9C32782;
-	Fri, 12 Jul 2024 12:13:01 +0000 (UTC)
-Date: Fri, 12 Jul 2024 08:14:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Dan Carpenter
- <dan.carpenter@linaro.org>, Julia Lawall <Julia.Lawall@inria.fr>
-Subject: Re: [PATCH] xfs: fix file_path handling in tracepoints
-Message-ID: <20240712081416.1e58e32d@gandalf.local.home>
-In-Reply-To: <ZpC5FTEvLDbCije6@infradead.org>
-References: <ZpAB2HU8zE41s9j6@infradead.org>
-	<20240711211754.316de618@gandalf.local.home>
-	<ZpC5FTEvLDbCije6@infradead.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720789832; c=relaxed/simple;
+	bh=Wd/y55LU2dzDLm3ncE/eYVAWkK86r0lKsYkhJVzCWLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CGJA+YrjB4aY+3+Rx8zsPedCJHb27LPcoCXOpMX/14qfSY87cEiBG2rd9n/WUNvqxlMbh454LgMFlMlkIbMzGySYuBFOxTO9yuwVBTOoI4OrQn07rIVvVok7YPwSY4ggVw1LaZTp9mLZacZZYvQOSmaSXLUsdkO8v2VgyTaUc/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Qpq3qlOO; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qpq3qlOO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JTQImQdeEtnT0WU6vnqgW1+IJ0T/HgauZhWUUHmvt1M=; b=Qpq3qlOODtmT/dbOCvyKoKxj6l
+	GFAnz2rAdM+oH7CkhQ0+qlUOCmkuGdCAg1pbXEXzXkpEyeYGtZh6fobGkSpt+htdsKs/n7L+LFUC+
+	OOYA4IbDDDhlZb8bMoN2lxfaKHfIPNcjmkrmR5tZQX/RjOuZoxLDnfojCit4DNyaWSZkdpt5htl5d
+	RKZJUnZAoxe3rKdMK/hkMgz3wj7hDzPcDK1HI+PcNarz6FGIwb5SLZxj+FWZnfR61SZAluAdxIkhZ
+	cdZPJTfnjys2efcLBsoJXMinKf42XCGTLs29D7I5/FnTtjIbTmfEwmmt0YagoTNjM18qGpdDA1bqa
+	gaU16odQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sSG2S-0000000CSbN-2aYg;
+	Fri, 12 Jul 2024 13:10:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 38D5F30050D; Fri, 12 Jul 2024 15:10:16 +0200 (CEST)
+Date: Fri, 12 Jul 2024 15:10:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: oleg@redhat.com, mingo@kernel.org, andrii@kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
+	clm@meta.com, paulmck@kernel.org
+Subject: Re: [PATCH v2 00/11] perf/uprobe: Optimize uprobes
+Message-ID: <20240712131016.GI27299@noisy.programming.kicks-ass.net>
+References: <20240711110235.098009979@infradead.org>
+ <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
 
-On Thu, 11 Jul 2024 22:03:17 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
+On Thu, Jul 11, 2024 at 09:57:44PM -0700, Andrii Nakryiko wrote:
 
-> On Thu, Jul 11, 2024 at 09:17:54PM -0400, Steven Rostedt wrote:
-> > That "f->f_path.dentry" is a dereference of the passed in pointer. If we
-> > did that in the TP_printk(), then it would dereference that file pointer
-> > saved by the trace. This would happen at some time later from when the file
-> > pointer was saved. That is, it will dereference the pointer when the user
-> > reads the trace, not when the trace occurred. This could be seconds,
-> > minutes, hours, days even months later! So %pD would not work there.  
+> Anyways, if you'd like to use it, it's at [0]. All you should need to
+> build and run it is:
 > 
-> Indeed.  I'm so used to these useful format strings that I keep
-> forgetting about them doing non-trivial things.
-> 
-> Which also brings up that it would be good if we had some kind of static
-> checker that detects usage of these magic %p extensions in the trace
-> macros and warns about them.
+>   $ cd examples/c
+>   $ make -j$(nproc) uprobe-stress
+>   $ sudo ./uprobe-stress -tN -aM -mP -fR
 
-Well, at bootup there's a runtime check that is done to every trace event
-that is registered (an also on module load). It looks at the TP_printk
-string for any dereference characters. If it finds one it then tests to
-make sure the pointer points to something that would be in the ring buffer.
-That is, if you have TP_printk("%pI", &__entry->saved_ip), that would be
-OK. But if you had: TP_printk("%pI", __entry->ip_addr) it would trigger a
-big WARN_ON() on boot.
+>   [0] https://github.com/libbpf/libbpf-bootstrap/commit/2f88cef90f9728ec8c7bee7bd48fdbcf197806c3
 
-See kernel/trace/trace_events.c: test_event_printk()
+So, I cannot clone that [0] URL I had to click around github shite for a
+while to figure out wtf to clone and where your commit lives, turns out
+it is:
 
-> 
-> > 		__dynamic_array(char, pathname, snprintf(NULL, 0, "%pD", xf->file) + 1);
-> > 
-> > // This will allocated the space needed for the string
-> >   
-> 
-> > 		sprintf(__get_dynamic_array(pathname), "%pD", xf->file);
-> > 
-> > // and the above will copy it directly to that location.
-> > // It assumes the value of the first snprintf() will be the same as the second.
-> >   
-> 
-> > 		  (char *)__get_dynamic_array(pathname),
-> > 
-> > // for accessing the string, although yes, __get_str(pathname) would work,
-> > // but that's more by luck than design.  
-> 
-> That sounds pretty cool, but except for the dynamic sizing doesn't
-> really buy us much over the version Darrick proposed, right?
+	$ git clone https://github.com/libbpf/libbpf-bootstrap.git
+	$ cd libbpf-bootstrap
+	$ git checkout uprobe-stress
 
-The difference is that you save more space on the ring buffer. Instead of
-just allocating 256 bytes for every path, it will only allocate what is
-need, plus 4 bytes of metadata. If most of your paths are less than 248
-characters in length, you will likely get much better use out of the ring
-buffer. That is, less dropped events.
+But then I do the above and I'm greeted with:
 
-> 
-> > Looking at this file, I noticed that you have some open coded __string_len()
-> > fields. Why not just use that? In fact, I think I even found a bug:
-> > 
-> > There's a:
-> > 		memcpy(__get_str(name), name, name->len);
-> > 
-> > Where I think it should have been:
-> > 
-> > 		memcpy(__get_str(name), name->name, name->len);
-> > 
-> > Hmm, I should make sure that __string() and __string_len() are passed in
-> > strings. As this is a common bug.
-> > 
-> > I can make this a formal patch if you like. Although, I haven't even tried
-> > compile testing it ;-)  
-> 
-> Without having compiled it either, this looks sensible to me.  As XFS
-> was one of the earliest adopters of event tracing I suspect these
-> predate the string helpers.
+root@ivb-ep:/usr/src/libbpf-bootstrap/examples/c# make -j40
+  MKDIR    .output
+  MKDIR    .output/libbpf
+  MKDIR    bpftool
+  LIB      libbpf.a
+  BPFTOOL  bpftool/bootstrap/bpftool
+make[1]: *** /usr/src/libbpf-bootstrap/libbpf/src: No such file or directory.  Stop.
+make: *** [Makefile:87: /usr/src/libbpf-bootstrap/examples/c/.output/libbpf.a] Error 2
+make: *** Waiting for unfinished jobs....
+make[1]: *** /usr/src/libbpf-bootstrap/bpftool/src: No such file or directory.  Stop.
+make: *** [Makefile:95: /usr/src/libbpf-bootstrap/examples/c/.output/bpftool/bootstrap/bpftool] Error 2
 
-Yeah, I was thinking that this was probably added before __string_len() was
-added for this exact purpose.
 
-I'll write the formal patch and test it too.
+Now what ?!?
 
--- Steve
+BPF is ever such unusable shite :/ It's very near as bad as qemu.
+
