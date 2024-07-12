@@ -1,417 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A777E6;
-	Fri, 12 Jul 2024 01:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720746992; cv=none; b=fehuJcvRxLRFd+q0WakzdOWJFeWEQVuw+2ewsMT07DuhewE3NnnVDK9jTrS7jmA3l1w3d+nT6iD2DzdSyFegfuQCrwVjYgbNuo5RuJNd4CoN1aMJiGOyiILBGoJgNwa8PRFc+5+rgcoSHxVT1MVofVxOzwQ5dWwqXY1YqzyxvRU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720746992; c=relaxed/simple;
-	bh=ByXbfI/FrLOIKII1lwb8zymOdcPzQWc7nSGrvcdTSvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PZDda3mBWEcqicnDbJrZkhlZXOGk9GDxEHCqrny/mgFWomuEpmd4KWCID8kq4AifNu6qD2RbrYBfT5pBK8/RY0DPnTLkWQ6sQWSepiQuIaRpwicbI34WKGlK8bM2T3S6Qxj20RqIi8b1/TCHjjLnpshgtU136qbwncVhp+KoOL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C99EC116B1;
-	Fri, 12 Jul 2024 01:16:31 +0000 (UTC)
-Date: Thu, 11 Jul 2024 21:17:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix file_path handling in tracepoints
-Message-ID: <20240711211754.316de618@gandalf.local.home>
-In-Reply-To: <ZpAB2HU8zE41s9j6@infradead.org>
-References: <ZpAB2HU8zE41s9j6@infradead.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9C9C8C0;
+	Fri, 12 Jul 2024 03:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720753462; cv=fail; b=sb+ESWG2w4StURxRXZ3tDJRNnZTcEVfW+w/3SNm9cACYomqSwBStM6yrBxGuYIt+Jkrh85wj/ghoOJbijqE34bbqW/b8ei0mxTMQ/hk1zVfkRY4/x+/+fD7Ujh48HTxCf1lN/CYXKQwaZx03XvnT8cu1N0Qa4ahu21k/LCz+I+M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720753462; c=relaxed/simple;
+	bh=13z2TALIXBtkvtIv2njmbnb3jqTxmmcUgYG75jSMx3I=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ewavENF6dm1d8jsuBfv/LgJkAoCZRssSWj+okvOJr+fV9jcxiwIbWZhvFkUrX0056tbJZHHbvpPR4R31xpVByddeNhT7GydIvxEekBbHR2C7zaFMVTJJRq51TiC5PmQzO0Hc9rOp7vlQAIXLFeMqyNipzN3aqKG6+FHP5gwzyN0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pbe99V5M; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pbe99V5M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720753460; x=1752289460;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=13z2TALIXBtkvtIv2njmbnb3jqTxmmcUgYG75jSMx3I=;
+  b=Pbe99V5MWvOIiB3QDfr6HewkZfnExN4lKKzL25+zXI47MGqTCdhzglkc
+   /jC8Iwi9jfMn0rXnmURsfiYAJu4tTvCXYprq7aFoF+A5Q4u/p8sEaeD8F
+   RWC1anyQkIDswbFqyu9ZxEbEE0nAsNCl0BVZyB+0AnLWtWpY2l7ey4pqs
+   i+DOizXnNQwpwovTYHKZ2Z8oRrDu4k6pUV4pB0nGGTgxnq7cCey2knlaw
+   WdqFhQhNbnEGOkaEZjEYtfo2AB7FHLDMd7YP2xgP0wo0wtFNx75UBK3PO
+   bSrKYxl//yBCoY3sMh7dDiXs37mh9vm745s4NyTCl1k+ATdhUPkY/B25i
+   Q==;
+X-CSE-ConnectionGUID: ky+N/PcmSziCXlkDiGaCGA==
+X-CSE-MsgGUID: TSbYYGEmSY+qVeSsHZRl1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="29329182"
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="29329182"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 20:04:20 -0700
+X-CSE-ConnectionGUID: pOE+hTXsRvig/d2vx+hzYw==
+X-CSE-MsgGUID: KhbNF7zuQIyBmET4glX+Ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="48852796"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jul 2024 20:04:19 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 11 Jul 2024 20:04:18 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 11 Jul 2024 20:04:18 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 11 Jul 2024 20:04:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HbmoFz/BtQ6lKD1GKzUhbs7WNvjdYa0M540joWOq+HH5wEVwhj35UppzIia6uXfnE5JvTEFSPVyBprhDY/Gdk8c9ALRKXTcj7JeaIeM7BI0FdRUZj3FKefcGKqAMGO9GZUZEdxLEvkW3bczVCD1kTfz7QKOlbNtEf9PI5txXt2F0IZagYVR/2oKCjNF0vnspcSMq/icBifT6VCxj4OyMZjDgxqB+cTv33OeeyRu7GrCL4F3BnFkyqfiZwcwZL8sXTCb13jp34yKqGOX5d7U/1TeW/ZgbWrbuiUvDjcKaUP5QUgcArBCk1NSqZnEiVWFlpIc+XyaM3QhBRz1lKMvhUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QHzLm3b1g+jxRjz4sWAaGYaFPGAU/q3qqEJj3cwMZQ0=;
+ b=wyhrxWfvz175V3I/NiMfJm1bg7m+Dz7PAXQABfYr40+aFM6Av/d1GkRRBZw8ew+ktEYcdbTnjZVVIXr+P/3oav9e71tdWeJ/1TKIYTXt1Osylw7dIjsRHqvPlrWs9zeA268V9OnboQAFPq+VxrgUpe9H1XMVy2z7RDAQ0v8A+mzTj+ZDqm1i26A8pUej8WAZbiI52h74zuy5blF3vXqiRlq83PYj1erMR2fcv8Xldbzkc/WacsdKl9AhnT96YpsYfNcEQM3ioepddRoVEklIFyGIbcwUlcpEXu/6IDzcxvoEh5nc4IA66MHkOTCG0astryb52g79oK8tT8e+dwqSEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3768.namprd11.prod.outlook.com (2603:10b6:a03:fa::20)
+ by PH0PR11MB7471.namprd11.prod.outlook.com (2603:10b6:510:28a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23; Fri, 12 Jul
+ 2024 03:04:17 +0000
+Received: from BYAPR11MB3768.namprd11.prod.outlook.com
+ ([fe80::c207:cd2b:43ba:3d38]) by BYAPR11MB3768.namprd11.prod.outlook.com
+ ([fe80::c207:cd2b:43ba:3d38%4]) with mapi id 15.20.7741.033; Fri, 12 Jul 2024
+ 03:04:16 +0000
+Message-ID: <1483b461-25f2-4eb7-95a8-5e150786d956@intel.com>
+Date: Fri, 12 Jul 2024 08:34:07 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] platform/x86/intel/ifs: Add SBAF test support
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj
+	<ashok.raj@intel.com>, Tony Luck <tony.luck@intel.com>,
+	<linux-trace-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+	Shankar Ravi V <ravi.v.shankar@intel.com>
+References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20240711000233.684642-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <6f445c03-21b9-87bc-1bc1-ca211c56eaa0@linux.intel.com>
+ <7e1e86b9-9578-441f-9f4a-23c274234344@linux.intel.com>
+Content-Language: en-US
+From: "Joseph, Jithu" <jithu.joseph@intel.com>
+In-Reply-To: <7e1e86b9-9578-441f-9f4a-23c274234344@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MAXP287CA0018.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::33) To BYAPR11MB3768.namprd11.prod.outlook.com
+ (2603:10b6:a03:fa::20)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3768:EE_|PH0PR11MB7471:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85325d86-7ec1-4eaa-d4d2-08dca21f50b9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?bHJ5YXdhVk01TWp5am1GNmRSdWpjeG1jbHNXMzQ5WWV4Mm9LYlgvUzBoUXlR?=
+ =?utf-8?B?ZzBvN0RrV2k3aDJMbFk1aDl5VDhVSGlJUVVMWFJTd0NUajhBQ0UvUDRpd2NF?=
+ =?utf-8?B?NkowSnVEL0ZtR1hLL1ozWFdud1ZPaDBBNk9zaGpjMnczN1kwTmRlcUJLenJZ?=
+ =?utf-8?B?NmpUTkpQdDRtUFgxZTI2aGtqaWl2WTY3ZVpPTnJZQmtRMmpqdHErWldYWHBa?=
+ =?utf-8?B?WDdiRHc0T2VVWG9Uc3hMMVhmVTNUUWNjSkVOZW9lcTgrUkd2aGNkbWZmQSt0?=
+ =?utf-8?B?VjZTejlPVTROSGxWckp5LzQ3VmNISFQ0eWxHVmRpUTNCajRqdkxWTVBTYlBN?=
+ =?utf-8?B?ai9rUnhWRVVjclU4bTlrdzZneHFMRlV2bURqWDVRYWd6dDBpRWUzaEFrNXZY?=
+ =?utf-8?B?MjJQOFc0TjA5L0VaVm1BWGY2OElSMHY4YjR2bm1abC9EZWZrVXlwMEcxNkd2?=
+ =?utf-8?B?ZUtEVnBGSmJBYkl2aVVtY1pLeGZKeWthQkJtYjJiTmFsQnd0ajB5aXNaVWs4?=
+ =?utf-8?B?R05nK1V6d1RXWlpHc2tZK0pCTUdlejNjaUJtTzRjczhCRVRXWE5jZXdUTGtN?=
+ =?utf-8?B?a1RBS2pOREk5MThBdGZuRUxVVnlPZWxKa1hBeDFEbldUb2gwU1lJZXB6Y2ZB?=
+ =?utf-8?B?SkU3QzY5bjdUUTNDb3NWaXYrN1BVUDVpMGNxSWcvVVlMUEk1eEdIYk5RSFZR?=
+ =?utf-8?B?VUNFWFgwc1hLWXVDS2Vic2QzSjRVei8rS0psQXd5dzE3RVlPMTA0cm5HNjV6?=
+ =?utf-8?B?OHJTMUdTSTRpM0luYnlUQnpOdnhKdXpVOE43dG9Oc05tekIvRHd3QTZDYy9O?=
+ =?utf-8?B?UkhjQ2VyczRIYStzSnlpR0dMQmtXdWtibC9sZUpMNnJMQUpNSnNoTTNDeWp0?=
+ =?utf-8?B?S2UzV1lDeW4xZWVZeXhHQkFOeE01OE9XSGdyMU1WMlM1dnJxdnBSQTFSRW9p?=
+ =?utf-8?B?ZUM5V1ZXWG9kaklXaTRCcmhQY2xFR1kydjk2cnZKRFBaV0wyNnFBTDFUVlhq?=
+ =?utf-8?B?MlRBZjNJQ005L0RVZ3BsSjl3KzhiZDMyOHVYS0duS1NvUFZiUTNUSWp1bVJj?=
+ =?utf-8?B?Zll3QWFieG01NHlTOGNJd1l6dlUxNmp6Vm04dHA0bW4yTVZ4QmxyV0YxbjVU?=
+ =?utf-8?B?WnJ6WVBySmxkekJaUTVYbnFhVTRTemVSVUk2YURXanBNUmN5MGJ5TTY2eUtS?=
+ =?utf-8?B?cEs2b2MrYnQ2aXhPSytTYXN4RDRMVVllak5zdkN3Wm1lNEQxbExMMUlnVjZJ?=
+ =?utf-8?B?RlVWWEtKYytod3RIZlduMDhLS0VwTitFLzY0MUgvbDVyVXBGQjlBUWQ1cmdz?=
+ =?utf-8?B?SHZtY0JaWEVJSk5BSUpOWEswU012aUtsNjNCVVo5SituN0M4TmdDT0lZZ3E3?=
+ =?utf-8?B?dnpsWWRJc2tvVE1sdiswR3Rqdy93aFR1ZVc5WnVzUldpQkl6eU1KZUNValJ5?=
+ =?utf-8?B?Q3pkZGNycXFWYXp1Zm1rQnVtbVgwRU9hT0dkd3pHc3JNNFJySmJhbzdrTmRW?=
+ =?utf-8?B?bE1wSTlBK2ZBQzRudmVKZ3ZueXZFNldIQjlydnhkRnpRelhYZ05YTUpTMVpj?=
+ =?utf-8?B?YVVzY3RsUWtZamxoQnNiMmw3NU9RQ3VjWXZHQ1BrUzBDMS9sUC84UDNuc2sx?=
+ =?utf-8?B?YVlJQnVnLzl0QSs4bkdiVWRHbjRjNjQ3TFEzbXkrZTZKRExoRnc1S3phUkRX?=
+ =?utf-8?B?VlhNWVBrUm1MelJHd3FIUGxqa0duNVovUDNJTjlCNjNjOUY3a0JRQ0diOERm?=
+ =?utf-8?B?cFo0cDd1a1lSclJQN0tvdmNId3lESTNSRE0zSWRld3FsRTFUelRZZ0VtL1cv?=
+ =?utf-8?B?a1dSZmhCR2xENlZ4ajFPZz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3768.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MFFkWnEvUVZ4eVB0Ni92cWxRY0pvZVBha1VQOTIxMDdqR3JlZnhVZXhvV0w1?=
+ =?utf-8?B?NUxDdVk5WFBrSUlsbVlHR0NVQVJJT3I3QWdNZFlzT3J6M3V3aUhqZGR1bDFj?=
+ =?utf-8?B?aVQybkpBdjRuT2RuL3V1MVZSNnNtZjFBU2M0Q3MzVGhNODhwRnpzY1N3RjM3?=
+ =?utf-8?B?M0VYeC9KU0tDd0ZUV2FoeHpzSzNWNlA5Y1NWcGFKYWZCcmZhV0t4dFBhUFpw?=
+ =?utf-8?B?Vm9XUm9jRUdSa0I5b0wzVE9IS0pzbGVONnFlU3VBTko0aHU2TWZ0ekJQWmdD?=
+ =?utf-8?B?NU0wckFrWnppbFJNUWpneFJXVTd5MXVNM2xaREhnYlhRcDFqZG5WR0djd0Qv?=
+ =?utf-8?B?UjZXWm4vb0M2MnBmcHZ0WU1YN3RRaUJqd1AvVlMrclpFVjRWd0d2R0F6dG1m?=
+ =?utf-8?B?TjNwYmVmbjZqMVlSN1NSSHJsSll2Y2ZFN1gyMmZqcUhyelFYOTdHa0JTU05x?=
+ =?utf-8?B?VE9TZVdTdlJ1N09HdEhFdTF4ZEJMRFJiNmthWWp0U3lCYnNieGsyZ3FYN0VL?=
+ =?utf-8?B?ZXNJMFhKYmpNbjFQTG4yN0k2Wkl1VGpYUzZvTUFDdGxkUVdtbWVtMks4T1NS?=
+ =?utf-8?B?MGNqaU5FcHQ3Q0s1VmpUME1RMzZRYnZSWDBSUG1Ya1hqaDM4azRXcEM5cWVl?=
+ =?utf-8?B?N21LR2FwczNIVTJ1V28vRk1vK1kya0dvRmp5UkdQdVlZbkJ1Uk9vcnlTc3lN?=
+ =?utf-8?B?SlZKbmNxem5qMlN5bUtyYkNPYW96V3BhWHBRWHFPdDIycGpIcURFYlpZVnE0?=
+ =?utf-8?B?bm5iQm9TdkM4WmF6MXZlU3RXTWxOMTlwTEtEeGlEdVh6ZTEvTE5Yb20wdUlu?=
+ =?utf-8?B?NG9mLzRoMG9TUk01Vzd4Tk9vUFNqOXhQSGpHVDZkbGoyM204UUd6V0hTdU9F?=
+ =?utf-8?B?TTMzVDRoZGRSUXNxZTRhZzNOakU0ZEdKYzZMY080MmZYdnVXbmg5L3ovN1FW?=
+ =?utf-8?B?TDVpZ0t3VWxGQTdoR3o5NHhwM24ybm1TeEZzRTZLUytoU3EyWG02WS9Hanl3?=
+ =?utf-8?B?TmtvTmNDUHYxRXZxUWEzVjQxTWpHRjdiMDB3dFJjL09CQkZOWVVCNGN2OHhQ?=
+ =?utf-8?B?aU5pQnNiNjFzVVJDWXZVZTF1c3lyUlQrR092UzNpWTdyR21pODZLUVZ5eGp6?=
+ =?utf-8?B?RUJ6ckdzdE5PMTRJc3I4NXJjL2plRGZQWVVjUzFwYmxYdG5BbktMSjV0WUx2?=
+ =?utf-8?B?T09lUFc0Y2prMjhSOGxlMzBzY3Z4TWd3VlNsZ2FIT1paeEFnQUhHZFNydG9M?=
+ =?utf-8?B?bjZNdFNYRW9PZHRKY3gvUUZNTFprWnJZSGdoTkttZURDa3l1a05wZ1dyRDRS?=
+ =?utf-8?B?cEhJOFBvVTR2YTd0NENjSldjc2h3d044MDNBWGNxZlhRajJsVkI2Rml6MURN?=
+ =?utf-8?B?UHNkR3N5TVBQUG5oZzF1TklTR05zK0htSkRUQlIrTDJ5NnNZVFZKL2Z6Q1A1?=
+ =?utf-8?B?UVF4RGIwLzRwZWNIOUR1WWJxSno1UkdFVEU2aHJmd3FSQXkxRDhUdUZlSFFJ?=
+ =?utf-8?B?akFlUUF0NHpxM3ZoaXhsckY3RUUwWU1rZUZCTGliUjlYbjh2NkFxSzA4eVps?=
+ =?utf-8?B?TUd0RTNpdkxJbGJaYjlKT1FyN0lQR3lMNEw3T0JuZUFDcmYzTEtxL3VETW9T?=
+ =?utf-8?B?NytNaWZaQnNVVlNOTmZQd01keFQ0WWJLQzQrcmJtU0RSWVo2ejQrZFVPSGRv?=
+ =?utf-8?B?TzNNOVZBZ0llWFp6b0ZUK1dNQ3hlYXRnejBPeWJPbEZ5OGRPem5FWjNRMWdK?=
+ =?utf-8?B?THlveWIrSnZSQTNGUTI5ckRjSlpJOVRyc2VIQmlTNm1BbFBhMHFDdUovbzNm?=
+ =?utf-8?B?QnVCN2VlanJLT015YjNnaGQxRVREZVE2SkFaTUdQcnBvdnYwWXlvd0xYU29n?=
+ =?utf-8?B?dFdLU3NSVWpjdmpydWMxUFdleTlWMFVsb1FBSmFVYmtYSGI2SHVwZzlvUVFO?=
+ =?utf-8?B?LzFDM2RudUQ5UWtkZWN4S3VwbjlDTmR2OUR4YURlL1lrYkxTaUZyWWl2L05m?=
+ =?utf-8?B?SEk5YUhKUUxNdzFGTk9hUXJxVlpuckhTSHplSkRXbWFvSUJqd1dsZ3kvd0Ft?=
+ =?utf-8?B?c1NONGhVa3g1ay9CVmJ5NHJFbWdGYzZDNnJ2SVhUWjlRVGM3WFFhZWZjOGE5?=
+ =?utf-8?B?V0xqZUN4OW5pZUptQTNkMkNOQUFoeWk3TFBYTHFHakRhSGhhZ3I3Sis3RjJn?=
+ =?utf-8?B?UkE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85325d86-7ec1-4eaa-d4d2-08dca21f50b9
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3768.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 03:04:16.5007
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DQz3xh6ZgpaYJ29zupVSfYLWx5qdqU/5G2CG14OwUOqkUxPNXHuLQl/IsmYXqEEXjA1v8N6h5RbMGq6ORNzrRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7471
+X-OriginatorOrg: intel.com
 
-On Thu, 11 Jul 2024 09:01:28 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
 
-> On Wed, Jul 10, 2024 at 10:43:53PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > Since file_path() takes the output buffer as one of its arguments, we
-> > might as well have it format directly into the tracepoint's char array
-> > instead of wasting stack space.  
+
+On 7/11/2024 9:28 PM, Kuppuswamy Sathyanarayanan wrote:
+
+>>> +
+>>> +static const char * const sbaf_test_status[] = {
+>>> +	[IFS_SBAF_NO_ERROR] = "SBAF no error",
+>>> +	[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] = "Other thread could not join.",
+>>> +	[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] = "Interrupt occurred prior to SBAF coordination.",
+>>> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE3] = "Unassigned error code 0x3",
+>>> +	[IFS_SBAF_INVALID_BUNDLE_INDEX] = "Non valid sbaf bundles. Reload test image",
+>> Non-valid SBAF
+>>
+>> ...but given your define is named "INVALID", why not use just Invalid 
+>> SBAF?
 > 
-> This looks sensible to me, but..
+> Above string is from the specification document.But I think it is ok to use
+> "Invalid" or "Non-valid".
 > 
-> The nicest way to format the interesting parts of a file path is to
-> simply use the magic %pD printk specificer, which removes the entire
-
-Would that even work? Looking at what %pD does in vsnprintf() we have:
-
-static noinline_for_stack
-char *file_dentry_name(char *buf, char *end, const struct file *f,
-			struct printf_spec spec, const char *fmt)
-{
-	if (check_pointer(&buf, end, f, spec))
-		return buf;
-
-	return dentry_name(buf, end, f->f_path.dentry, spec, fmt);
-}
-
-That "f->f_path.dentry" is a dereference of the passed in pointer. If we
-did that in the TP_printk(), then it would dereference that file pointer
-saved by the trace. This would happen at some time later from when the file
-pointer was saved. That is, it will dereference the pointer when the user
-reads the trace, not when the trace occurred. This could be seconds,
-minutes, hours, days even months later! So %pD would not work there.
-
-
-> need for an extra buffer.  It would be kinda nice to use that for
-> tracing, but I can't see how to accomodate the users of the binary
-> trace buffer with that.  Adding Steven and the trace list for
-> comments.
-
-With the above said, perhaps you could do something like:
-
-
+> Jithu, any concerns?
 > 
-> > -		__array(char, pathname, 256)
-> > +		__array(char, pathname, MAXNAMELEN)
 
-		__dynamic_array(char, pathname, snprintf(NULL, 0, "%pD", xf->file) + 1);
+Either seems okay, I think "Non-valid SBAF ..." is a bit more preferable as it is more in line with doc.
 
-// This will allocated the space needed for the string
-
-> >  	),
-> >  	TP_fast_assign(
-> > -		char		pathname[257];
-> >  		char		*path;
-> >  
-> >  		__entry->ino = file_inode(xf->file)->i_ino;
-
-		sprintf(__get_dynamic_array(pathname), "%pD", xf->file);
-
-// and the above will copy it directly to that location.
-// It assumes the value of the first snprintf() will be the same as the second.
-
-> > +		path = file_path(xf->file, __entry->pathname, MAXNAMELEN);
-> >  		if (IS_ERR(path))
-> > +			strncpy(__entry->pathname, "(unknown)",
-> > +					sizeof(__entry->pathname));
-> >  	),
-> >  	TP_printk("xfino 0x%lx path '%s'",
-> >  		  __entry->ino,
-
-		  (char *)__get_dynamic_array(pathname),
-
-// for accessing the string, although yes, __get_str(pathname) would work,
-// but that's more by luck than design.
-
-
-Looking at this file, I noticed that you have some open coded __string_len()
-fields. Why not just use that? In fact, I think I even found a bug:
-
-There's a:
-		memcpy(__get_str(name), name, name->len);
-
-Where I think it should have been:
-
-		memcpy(__get_str(name), name->name, name->len);
-
-Hmm, I should make sure that __string() and __string_len() are passed in
-strings. As this is a common bug.
-
-I can make this a formal patch if you like. Although, I haven't even tried
-compile testing it ;-)
-
--- Steve
-
-diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-index 92ef4cdc486e..bbb7b0a09ffe 100644
---- a/fs/xfs/scrub/trace.h
-+++ b/fs/xfs/scrub/trace.h
-@@ -1430,14 +1430,14 @@ TRACE_EVENT(xchk_nlinks_collect_dirent,
- 		__field(xfs_ino_t, dir)
- 		__field(xfs_ino_t, ino)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = mp->m_super->s_dev;
- 		__entry->dir = dp->i_ino;
- 		__entry->ino = ino;
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d dir 0x%llx -> ino 0x%llx name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -1457,14 +1457,14 @@ TRACE_EVENT(xchk_nlinks_collect_pptr,
- 		__field(xfs_ino_t, dir)
- 		__field(xfs_ino_t, ino)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = mp->m_super->s_dev;
- 		__entry->dir = dp->i_ino;
- 		__entry->ino = be64_to_cpu(pptr->p_ino);
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d dir 0x%llx -> ino 0x%llx name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -1502,7 +1502,7 @@ TRACE_EVENT(xchk_nlinks_live_update,
- 		__field(xfs_ino_t, ino)
- 		__field(int, delta)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, namelen)
-+		__string_len(name, name, namelen)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = mp->m_super->s_dev;
-@@ -1511,7 +1511,7 @@ TRACE_EVENT(xchk_nlinks_live_update,
- 		__entry->ino = ino;
- 		__entry->delta = delta;
- 		__entry->namelen = namelen;
--		memcpy(__get_str(name), name, namelen);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d dir 0x%llx ino 0x%llx nlink_delta %d name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -1630,14 +1630,14 @@ DECLARE_EVENT_CLASS(xchk_pptr_class,
- 		__field(dev_t, dev)
- 		__field(xfs_ino_t, ino)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 		__field(xfs_ino_t, far_ino)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = ip->i_mount->m_super->s_dev;
- 		__entry->ino = ip->i_ino;
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name, name->len);
-+		__assign_str(name);
- 		__entry->far_ino = far_ino;
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx name '%.*s' far_ino 0x%llx",
-@@ -1672,7 +1672,7 @@ DECLARE_EVENT_CLASS(xchk_dirtree_class,
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, parent_gen)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = sc->mp->m_super->s_dev;
-@@ -1682,7 +1682,7 @@ DECLARE_EVENT_CLASS(xchk_dirtree_class,
- 		__entry->parent_ino = be64_to_cpu(pptr->p_ino);
- 		__entry->parent_gen = be32_to_cpu(pptr->p_gen);
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d path %u child_ino 0x%llx child_gen 0x%x parent_ino 0x%llx parent_gen 0x%x name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -1718,7 +1718,7 @@ DECLARE_EVENT_CLASS(xchk_dirpath_class,
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, parent_gen)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = sc->mp->m_super->s_dev;
-@@ -1729,7 +1729,7 @@ DECLARE_EVENT_CLASS(xchk_dirpath_class,
- 		__entry->parent_ino = be64_to_cpu(pptr->p_ino);
- 		__entry->parent_gen = be32_to_cpu(pptr->p_gen);
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d path %u step %u child_ino 0x%llx child_gen 0x%x parent_ino 0x%llx parent_gen 0x%x name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -1863,7 +1863,7 @@ TRACE_EVENT(xchk_dirpath_changed,
- 		__field(xfs_ino_t, child_ino)
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, xname->len)
-+		__string_len(name, xname->name, xname->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = sc->mp->m_super->s_dev;
-@@ -1872,7 +1872,7 @@ TRACE_EVENT(xchk_dirpath_changed,
- 		__entry->child_ino = ip->i_ino;
- 		__entry->parent_ino = dp->i_ino;
- 		__entry->namelen = xname->len;
--		memcpy(__get_str(name), xname->name, xname->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d path %u step %u child_ino 0x%llx parent_ino 0x%llx name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -1896,7 +1896,7 @@ TRACE_EVENT(xchk_dirtree_live_update,
- 		__field(xfs_ino_t, child_ino)
- 		__field(int, delta)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, xname->len)
-+		__string_len(name, xname->name, xname->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = sc->mp->m_super->s_dev;
-@@ -1905,7 +1905,7 @@ TRACE_EVENT(xchk_dirtree_live_update,
- 		__entry->child_ino = ip->i_ino;
- 		__entry->delta = delta;
- 		__entry->namelen = xname->len;
--		memcpy(__get_str(name), xname->name, xname->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d parent_ino 0x%llx child_ino 0x%llx nlink_delta %d name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -2853,7 +2853,7 @@ DECLARE_EVENT_CLASS(xrep_xattr_salvage_class,
- 		__field(xfs_ino_t, ino)
- 		__field(unsigned int, flags)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, namelen)
-+		__string_len(name, name, namelen)
- 		__field(unsigned int, valuelen)
- 	),
- 	TP_fast_assign(
-@@ -2861,7 +2861,7 @@ DECLARE_EVENT_CLASS(xrep_xattr_salvage_class,
- 		__entry->ino = ip->i_ino;
- 		__entry->flags = flags;
- 		__entry->namelen = namelen;
--		memcpy(__get_str(name), name, namelen);
-+		__assign_str(name);
- 		__entry->valuelen = valuelen;
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx flags %s name '%.*s' valuelen 0x%x",
-@@ -2892,7 +2892,7 @@ DECLARE_EVENT_CLASS(xrep_pptr_salvage_class,
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, parent_gen)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, namelen)
-+		__string_len(name, name, namelen)
- 	),
- 	TP_fast_assign(
- 		const struct xfs_parent_rec	*rec = value;
-@@ -2902,7 +2902,7 @@ DECLARE_EVENT_CLASS(xrep_pptr_salvage_class,
- 		__entry->parent_ino = be64_to_cpu(rec->p_ino);
- 		__entry->parent_gen = be32_to_cpu(rec->p_gen);
- 		__entry->namelen = namelen;
--		memcpy(__get_str(name), name, namelen);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx parent_ino 0x%llx parent_gen 0x%x name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -2956,7 +2956,7 @@ DECLARE_EVENT_CLASS(xrep_xattr_pptr_scan_class,
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, parent_gen)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = ip->i_mount->m_super->s_dev;
-@@ -2964,7 +2964,7 @@ DECLARE_EVENT_CLASS(xrep_xattr_pptr_scan_class,
- 		__entry->parent_ino = dp->i_ino;
- 		__entry->parent_gen = VFS_IC(dp)->i_generation;
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx parent_ino 0x%llx parent_gen 0x%x name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -3042,7 +3042,7 @@ DECLARE_EVENT_CLASS(xrep_dirent_class,
- 		__field(dev_t, dev)
- 		__field(xfs_ino_t, dir_ino)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 		__field(xfs_ino_t, ino)
- 		__field(uint8_t, ftype)
- 	),
-@@ -3050,7 +3050,7 @@ DECLARE_EVENT_CLASS(xrep_dirent_class,
- 		__entry->dev = dp->i_mount->m_super->s_dev;
- 		__entry->dir_ino = dp->i_ino;
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 		__entry->ino = ino;
- 		__entry->ftype = name->type;
- 	),
-@@ -3137,7 +3137,7 @@ DECLARE_EVENT_CLASS(xrep_pptr_class,
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, parent_gen)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = ip->i_mount->m_super->s_dev;
-@@ -3145,7 +3145,7 @@ DECLARE_EVENT_CLASS(xrep_pptr_class,
- 		__entry->parent_ino = be64_to_cpu(pptr->p_ino);
- 		__entry->parent_gen = be32_to_cpu(pptr->p_gen);
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx parent_ino 0x%llx parent_gen 0x%x name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -3175,7 +3175,7 @@ DECLARE_EVENT_CLASS(xrep_pptr_scan_class,
- 		__field(xfs_ino_t, parent_ino)
- 		__field(unsigned int, parent_gen)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, name->len)
-+		__string_len(name, name->name, name->len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = ip->i_mount->m_super->s_dev;
-@@ -3183,7 +3183,7 @@ DECLARE_EVENT_CLASS(xrep_pptr_scan_class,
- 		__entry->parent_ino = dp->i_ino;
- 		__entry->parent_gen = VFS_IC(dp)->i_generation;
- 		__entry->namelen = name->len;
--		memcpy(__get_str(name), name->name, name->len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d ino 0x%llx parent_ino 0x%llx parent_gen 0x%x name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -3237,7 +3237,7 @@ DECLARE_EVENT_CLASS(xrep_dentry_class,
- 		__field(bool, positive)
- 		__field(unsigned long, parent_ino)
- 		__field(unsigned int, namelen)
--		__dynamic_array(char, name, dentry->d_name.len)
-+		__string_len(name, dentry->d_name.name, dentry->d_name.len)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = mp->m_super->s_dev;
-@@ -3249,7 +3249,7 @@ DECLARE_EVENT_CLASS(xrep_dentry_class,
- 			__entry->parent_ino = -1UL;
- 		__entry->ino = d_inode(dentry) ? d_inode(dentry)->i_ino : 0;
- 		__entry->namelen = dentry->d_name.len;
--		memcpy(__get_str(name), dentry->d_name.name, dentry->d_name.len);
-+		__assign_str(name);
- 	),
- 	TP_printk("dev %d:%d flags 0x%x positive? %d parent_ino 0x%lx ino 0x%lx name '%.*s'",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-@@ -3275,13 +3275,14 @@ TRACE_EVENT(xrep_symlink_salvage_target,
- 		__field(dev_t, dev)
- 		__field(xfs_ino_t, ino)
- 		__field(unsigned int, targetlen)
-+		__string_len(target, target, targetlen)
- 		__dynamic_array(char, target, targetlen + 1)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = ip->i_mount->m_super->s_dev;
- 		__entry->ino = ip->i_ino;
- 		__entry->targetlen = targetlen;
--		memcpy(__get_str(target), target, targetlen);
-+		__assign_str(target);
- 		__get_str(target)[targetlen] = 0;
- 	),
- 	TP_printk("dev %d:%d ip 0x%llx target '%.*s'",
+Jithu
