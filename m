@@ -1,89 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C57155382
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 12 Jul 2024 10:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EE8D512;
+	Fri, 12 Jul 2024 12:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720780096; cv=none; b=LLJhJPHWISziw5Iess6wslqVzcF3u+7XTPOmUZdxRZmNv5ZHgUMrdIkmZ/wTDWMGYlIr+bRlmh8c8GeoGhPRySdRk7gefNks+ZQ5j2G1AlKayo+td/4hvF1jjZvLwIeduI+n9QxK19dSmY0lPLbz8kWwpIB3qklJG58rF4lS9GA=
+	t=1720786382; cv=none; b=W+nnrx0T4og173ZvM2OYNygWj28Qx57+vLvuNyhcIaeItSXwY/joJpd3ePJCZVLS5sOnOTxZl/kCnGQZoXzsehbocLxGYksIX4w5Y6O8nEjtjctl4E8tLqidHbi65mRwfJxXM3W/cnMnwBjjoCdYYq7bxehbpHYd1paJnkb3vRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720780096; c=relaxed/simple;
-	bh=858t69WfL/tj9FR/9VOg/7LQIGZGuDl9bR4EsN6LxjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAJn9oC1YXlLqADttkhqOfoXP7mSKHcXKxpsrX8dR3/p+Uj6YRN5+w+hGTZ4eDTl93k4ZHFZTrHKjfyDoed6uPBiK1dsVKHwIlP4mDJGYdOS4fnK9h2FytPWdHzJbzexEX3dGzSXhaKYDLrvBg7DIA6vdD3ujtAR0AQz35Viktg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e/oEJ5tn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e/oEJ5tn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720780093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=epE1NcIup0vbrzaXG/uxhpSJU7vRRm4fO7gG8wrP94c=;
-	b=e/oEJ5tnql0KfceZeZc7VZoM4rWx8VRAzWPOvkHmniTl+AWF3VCS6ion8kUsCyMX1mllZk
-	OhkVA8y+VXq1gY3Ech2chyeFzTEEFm8bkodMnesV2ohpJpaQo21+6GbEXAtbPeQMp3fewS
-	o11gG1vtzETuWNpAtAB0icicyvrFWLg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-111-FpBauZnNNbie9WNCv3t6PA-1; Fri,
- 12 Jul 2024 06:28:12 -0400
-X-MC-Unique: FpBauZnNNbie9WNCv3t6PA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 079AE1954B38;
-	Fri, 12 Jul 2024 10:28:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.173])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6910119560AA;
-	Fri, 12 Jul 2024 10:28:05 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 12 Jul 2024 12:26:32 +0200 (CEST)
-Date: Fri, 12 Jul 2024 12:26:27 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, andrii@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com,
-	paulmck@kernel.org
-Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
- to SRCU
-Message-ID: <20240712102627.GA31100@redhat.com>
-References: <20240711110235.098009979@infradead.org>
- <20240711110401.311168524@infradead.org>
- <20240711160652.GE16902@redhat.com>
- <20240711184251.GD27299@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1720786382; c=relaxed/simple;
+	bh=1+Yfdw6riiV8LwSEY6hqiRjwk2gF445GfiGNMNa0cJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BF/9XA2ZBULbYjJyIYywYPN7oEMi6m/f8hooHjJdSKGR8lPIJ2DYXl7niLtL7rO9KpAPDf5X/c26+yq4BBXRqCCHr5/uuHUKVy6GF+DlOzVdlKsTjk+A9oP9fUc3TAbLput88CUusQWcQExetsT1y6g4EpS0eKv/SPSNWsCt0Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526F9C32782;
+	Fri, 12 Jul 2024 12:13:01 +0000 (UTC)
+Date: Fri, 12 Jul 2024 08:14:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Dan Carpenter
+ <dan.carpenter@linaro.org>, Julia Lawall <Julia.Lawall@inria.fr>
+Subject: Re: [PATCH] xfs: fix file_path handling in tracepoints
+Message-ID: <20240712081416.1e58e32d@gandalf.local.home>
+In-Reply-To: <ZpC5FTEvLDbCije6@infradead.org>
+References: <ZpAB2HU8zE41s9j6@infradead.org>
+	<20240711211754.316de618@gandalf.local.home>
+	<ZpC5FTEvLDbCije6@infradead.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711184251.GD27299@noisy.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 07/11, Peter Zijlstra wrote:
->
->   uprobe_free_stage1
->     call_srcu(&uretprobe_srcu, &uprobe->rcu, uprobe_free_stage2);
->
->   put_uprobe()
->     if (refcount_dec_and_test)
->       call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_stage1);
->
->
-> So my thinking was since we take uretprobe_srcu *inside* uprobe_srcu,
+On Thu, 11 Jul 2024 22:03:17 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Ah, indeed! Somehow misread the change in put_uprobe() as if it
-uses call_rcu(uretprobe_srcu).
+> On Thu, Jul 11, 2024 at 09:17:54PM -0400, Steven Rostedt wrote:
+> > That "f->f_path.dentry" is a dereference of the passed in pointer. If we
+> > did that in the TP_printk(), then it would dereference that file pointer
+> > saved by the trace. This would happen at some time later from when the file
+> > pointer was saved. That is, it will dereference the pointer when the user
+> > reads the trace, not when the trace occurred. This could be seconds,
+> > minutes, hours, days even months later! So %pD would not work there.  
+> 
+> Indeed.  I'm so used to these useful format strings that I keep
+> forgetting about them doing non-trivial things.
+> 
+> Which also brings up that it would be good if we had some kind of static
+> checker that detects usage of these magic %p extensions in the trace
+> macros and warns about them.
 
-Thanks,
+Well, at bootup there's a runtime check that is done to every trace event
+that is registered (an also on module load). It looks at the TP_printk
+string for any dereference characters. If it finds one it then tests to
+make sure the pointer points to something that would be in the ring buffer.
+That is, if you have TP_printk("%pI", &__entry->saved_ip), that would be
+OK. But if you had: TP_printk("%pI", __entry->ip_addr) it would trigger a
+big WARN_ON() on boot.
 
-Oleg.
+See kernel/trace/trace_events.c: test_event_printk()
 
+> 
+> > 		__dynamic_array(char, pathname, snprintf(NULL, 0, "%pD", xf->file) + 1);
+> > 
+> > // This will allocated the space needed for the string
+> >   
+> 
+> > 		sprintf(__get_dynamic_array(pathname), "%pD", xf->file);
+> > 
+> > // and the above will copy it directly to that location.
+> > // It assumes the value of the first snprintf() will be the same as the second.
+> >   
+> 
+> > 		  (char *)__get_dynamic_array(pathname),
+> > 
+> > // for accessing the string, although yes, __get_str(pathname) would work,
+> > // but that's more by luck than design.  
+> 
+> That sounds pretty cool, but except for the dynamic sizing doesn't
+> really buy us much over the version Darrick proposed, right?
+
+The difference is that you save more space on the ring buffer. Instead of
+just allocating 256 bytes for every path, it will only allocate what is
+need, plus 4 bytes of metadata. If most of your paths are less than 248
+characters in length, you will likely get much better use out of the ring
+buffer. That is, less dropped events.
+
+> 
+> > Looking at this file, I noticed that you have some open coded __string_len()
+> > fields. Why not just use that? In fact, I think I even found a bug:
+> > 
+> > There's a:
+> > 		memcpy(__get_str(name), name, name->len);
+> > 
+> > Where I think it should have been:
+> > 
+> > 		memcpy(__get_str(name), name->name, name->len);
+> > 
+> > Hmm, I should make sure that __string() and __string_len() are passed in
+> > strings. As this is a common bug.
+> > 
+> > I can make this a formal patch if you like. Although, I haven't even tried
+> > compile testing it ;-)  
+> 
+> Without having compiled it either, this looks sensible to me.  As XFS
+> was one of the earliest adopters of event tracing I suspect these
+> predate the string helpers.
+
+Yeah, I was thinking that this was probably added before __string_len() was
+added for this exact purpose.
+
+I'll write the formal patch and test it too.
+
+-- Steve
