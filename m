@@ -1,68 +1,67 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CDB49634;
-	Fri, 12 Jul 2024 21:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424854AECE;
+	Fri, 12 Jul 2024 21:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720819707; cv=none; b=q9vwDk4P1s45pIpv5HDfV6Y2Hi7dB3/iwyj010ngv01nuQlb8Q+5bZJp/NEqq/JpuA9Jdvbm+4GdZjIO/Nolly+wrMy8QN98+Uf9ILoDiDd/ih6LUw0pEwEn/OVttgwwiDsGOnsbbpO/SWLh/hEyA6qG/I/pxgu9a0k4TVtZs8Y=
+	t=1720820646; cv=none; b=IknUSCVKbcIY9FItv/IjPKmqS5D1OEsXpT9SmSQbAFkAmTGqq6BGHzyTr7gcETk4bYbBdH+5rmq4CE5eGvCSiBT9ftZMyuyxTqvnwplS4Q1pzPKgvYySPu0tNPEqemHH5ysZCqMKLZCRJe23Bm1hjdkq4RIcO+wtj86NfHTP76o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720819707; c=relaxed/simple;
-	bh=lHwGeAKM0jsTKFbu/AtfPPmHTB9uFDXbNFkTbch5BXE=;
+	s=arc-20240116; t=1720820646; c=relaxed/simple;
+	bh=kSsKQPuK7oyozBFA3sg9mWvKyLr4Thvo3hOzmz2YU0Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iyzDjqHve10CRGyXT3qKbmuPheVDeB7Muui7XKnMWeO+WOgBKcLHZYAq3KGwJy0DeoZ6YzuganeNBNwek1MutXm3rP+tJJ6jQLjycZrj9u5dRC9WqUrzkScz/fuVYX4Yj3Vcj2e6zJBfXx7bhFY5gFXxV26tGHLcGG6zvt+w7mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B6xbqbEw; arc=none smtp.client-ip=209.85.215.173
+	 To:Cc:Content-Type; b=qb8C//m2ELi9MNBZ+ekPvFylV7ubLPIl0G9rHUNTsH6GJSJzhLEGHuH1/FlZLVPd4pAqYiVRfsy9BvHTKBSAXxGVEHVy1uA2iuvGtGknNI/hedhF6+UtJyvLH97IdH8jFnJ07zE7+pqZTgC8+G6pbbHnUxxLR3SYdDaW3yD3Ayk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cild3n5D; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6xbqbEw"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7163489149eso1857077a12.1;
-        Fri, 12 Jul 2024 14:28:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cild3n5D"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c96187b3d1so1870677a91.3;
+        Fri, 12 Jul 2024 14:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720819705; x=1721424505; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720820644; x=1721425444; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=U9pjFtLIZhu06DdBsjlmTJj0Bz96mDe+BpetLpyO+Sc=;
-        b=B6xbqbEwmy8CFmwHJ58zBsdi0HpbREcRAVSbGTUUyrdWjSqPlAflJR+CL454CqVKCW
-         MlCm/bfqhcCBPSUSB5GdjCtl1SUqLZ/YeCOkD2IITV5cSOy6/E42wgPc/F5IWd1l4kiW
-         vBYvZLJ4uQOHEhJITa1H6PMuFWup7BmKd8gzLbGrJ7fA+eAv5VMe1EqK1OpcU5bncrr/
-         gfovDUMudtAoTKFcanTLKzbRUYwlKYI5x0R1MwykZNhDz17Hl+tn52NpPMsrHdsG9Wep
-         XdO8GIPy8LxbmqXZDXQrceU54APwNVWkbo5awv/7m6l8pUtE4kRBhWDmwAV6oLQUUgKr
-         0Avw==
+        bh=gmq1pCxKvJ1kyS2dIS+YPGG2LxnLKYrRDFXRW+UjEyg=;
+        b=cild3n5DoBOzEoIOIb7hxQqFVkIuNW+U+WobfYfkvkMUb9D2FL3w3F1PTbyHNAKuZq
+         80cfoOG36fvqb0T4qDA85kU2AaxLILvuCLIJ4LKG837ztqpw+2MFFVbE2286YgrCfV8h
+         5j4pxfQfxvRk0kD3bLYpN+X+uJAUmBfsyg0GPp6+Y4y39+t79pBnXYYjWYUJ9t47Gcpp
+         628ebJac8tjLY53d1YPzxN9i43vxkdfYAES8i4QoA4M+FWhekceyeaZ7h9+2P5su5JjH
+         OASyweo8LoGmSiMP8Ra1st3uZf4+7/t+PQe0F72j05/oMUnCtOPPBT9eCsDPeuS7Jd3I
+         wx7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720819705; x=1721424505;
+        d=1e100.net; s=20230601; t=1720820644; x=1721425444;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U9pjFtLIZhu06DdBsjlmTJj0Bz96mDe+BpetLpyO+Sc=;
-        b=pNUP4KMidxCsE+rI8fLsjaKzqG7V3hz/0wkziAW2DmsfOqgDTBs/MJnlGcZcMowlFj
-         F7yZ68KbJGJPA4oBS3aDFsuDBRe6dkM5tLXqqvEsrOjEZh39xb/R3btOqEqy7PPxWSZf
-         awDUkpoiUq1+dvGfxExWZek1dhYVbIp45FLpvXIpzEcHVrR23dqAQ5PcS98zr4A+gs/U
-         sCP7rRMnfmplkHodPk4mSL45dzgRby2QH5Tbbb20zMApMhUFJP0OEJpTTObmbexSewvg
-         n9Tiz5KyWKD8wpdUUXgjEllXEWFJdM1Hr2TK8008GYCutk7L0V77t/psTr0Wop/LZPsg
-         1yuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYt8skmxkJU3Kd16AN77AsFU770WLwhe+65Ms/yD5NhfYR6WXFO9rsniwCornRUOo2H8WBrwLGJ9ZpgSCexrZGVVALO+6m2BQTGZNRcXhcbOXG9EbRsqXuWzqSdZZstl+bW1M3T3cQQJ0lqxkB0em2dE7RMIAnt4m6X96SNzFLpcpvNjPm
-X-Gm-Message-State: AOJu0YxH/ZFVUE8ktu+33b78UpAsbanz3S8rRHAL+TGJfEZZjMPflrhn
-	FGiD8/l6Z2BMrJ8U6Pd3KPSNDHSYhrJLYlRI6SWXruCi7UCb/7ftgA7O0Sd6Evfj6M/BDZVNxCt
-	vOpmfaUUG+eMr3AYjahoaX6MQusE=
-X-Google-Smtp-Source: AGHT+IEsMX1uEfY5runz63h4lW6mEY9Jy+R+/Lak8T+hnNS2AjxA9XMigPz1WxRGXcPtwHpGPkHrOcjS/KJJxMaSeZM=
-X-Received: by 2002:a17:90b:3786:b0:2c9:79d3:a15d with SMTP id
- 98e67ed59e1d1-2ca35c7bfb0mr10800565a91.29.1720819705183; Fri, 12 Jul 2024
- 14:28:25 -0700 (PDT)
+        bh=gmq1pCxKvJ1kyS2dIS+YPGG2LxnLKYrRDFXRW+UjEyg=;
+        b=scuekm9CgJ4AW2u2B5mx0RBzMpOefw7aMYCYTCKZ4XRFeE54xOuoggcfKOYzJKRA0E
+         yVNBTXw4VSWaPTKSgpRzce68DsRMXNwIRjNAiKcYCr7TjDrB0aT1793g3VYoJu386CJ8
+         hAUHDhPmvtrp/cbUy6vEqKpNGs7XhLRr+YeetzId50BKodm4jkZIJCzYV7wJ+TkMI7i7
+         FM13nqnytsRZ/hEyQJAZssS1xfOBBDzAPkWEg0456WR3oiwHSKaBuqWQ2SIq6L2562do
+         83z/dKq/ky5roMTJYzivhhzbSBP4uyNd7l5tJUgjfDP+X0wVMdvqy9HwOu7HAtJB+azU
+         NOUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXw0TcGggbItcPRYLbsBofOj83P3xzci9M1eCNwPCPVAWFA3tQV47ayWti1K+xuiwhSIB2YuBQRpjw/bDfApCfQU1uXlDzyCsAf4YaWURe7s3NoJHjX97feKjDfZRaaDFndrjuc2I8gfKrPDPJYK2rHhK0BYYgDXGUr/3t1vDYoF7blUmrq
+X-Gm-Message-State: AOJu0YxMw/hu9eXmuS+IuxYeSP0Kf71j94NmeK28ZxXCGrLkQ6p1cxLj
+	KzFEeN8e0b92Gt8MqRnk2ZOgGlsAtSOB69pbFRh8ARjqrHnuaMjyT2kHhDGGSR0n4pHNSy5is28
+	fKAswS6JxBhdX53od5NGeGow702k=
+X-Google-Smtp-Source: AGHT+IE2Iln2pnBfx5RRwfNDrywBJ/2uI8jB96yufCjL8MRWhhZD+kUBl5CAtoU4zbfZJbHCVlNMcSNElL76l4+IqKU=
+X-Received: by 2002:a17:90a:65c1:b0:2ca:5e9f:51ab with SMTP id
+ 98e67ed59e1d1-2ca5e9f53b4mr7704368a91.45.1720820644504; Fri, 12 Jul 2024
+ 14:44:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711110235.098009979@infradead.org> <20240711110401.311168524@infradead.org>
-In-Reply-To: <20240711110401.311168524@infradead.org>
+References: <20240711110235.098009979@infradead.org> <20240711110401.412779774@infradead.org>
+In-Reply-To: <20240711110401.412779774@infradead.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 12 Jul 2024 14:28:13 -0700
-Message-ID: <CAEf4BzZW56pgTqy4POud8P3t5gtdg53BX83VbieixtS1T-mg2w@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
- to SRCU
+Date: Fri, 12 Jul 2024 14:43:52 -0700
+Message-ID: <CAEf4BzZCzqOsk55E0b8i9y5zFuf8t=zwrjORnVaLGK0ZVgJTFg@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com, 
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
@@ -76,229 +75,133 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Jul 11, 2024 at 4:07=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
 g> wrote:
 >
-> Both single-step and uretprobes take a refcount on struct uprobe in
-> handle_swbp() in order to ensure struct uprobe stays extant until a
-> next trap.
->
-> Since uprobe_unregister() only cares about the uprobe_consumer
-> life-time, and these intra-trap sections can be arbitrarily large,
-> create a second SRCU domain to cover these.
->
-> Notably, a uretprobe with a registered return_instance that never
-> triggers -- because userspace -- will currently pin the
-> return_instance and related uprobe until the task dies. With this
-> convertion to SRCU this behaviour will inhibit freeing of all uprobes.
+> In order to put a bound on the uretprobe_srcu critical section, add a
+> timer to uprobe_task. Upon every RI added or removed the timer is
+> pushed forward to now + 1s. If the timer were ever to fire, it would
+> convert the SRCU 'reference' to a refcount reference if possible.
 >
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  include/linux/uprobes.h |    2 +
->  kernel/events/uprobes.c |   60 +++++++++++++++++++++++------------------=
--------
->  2 files changed, 31 insertions(+), 31 deletions(-)
+>  include/linux/uprobes.h |    8 +++++
+>  kernel/events/uprobes.c |   67 +++++++++++++++++++++++++++++++++++++++++=
++++----
+>  2 files changed, 69 insertions(+), 6 deletions(-)
 >
 > --- a/include/linux/uprobes.h
 > +++ b/include/linux/uprobes.h
-> @@ -78,6 +78,7 @@ struct uprobe_task {
+> @@ -15,6 +15,7 @@
+>  #include <linux/rbtree.h>
+>  #include <linux/types.h>
+>  #include <linux/wait.h>
+> +#include <linux/timer.h>
 >
+>  struct vm_area_struct;
+>  struct mm_struct;
+> @@ -79,6 +80,10 @@ struct uprobe_task {
 >         struct return_instance          *return_instances;
 >         unsigned int                    depth;
-> +       unsigned int                    active_srcu_idx;
+>         unsigned int                    active_srcu_idx;
+> +
+> +       struct timer_list               ri_timer;
+> +       struct callback_head            ri_task_work;
+> +       struct task_struct              *task;
 >  };
 >
 >  struct return_instance {
-> @@ -86,6 +87,7 @@ struct return_instance {
+> @@ -86,7 +91,8 @@ struct return_instance {
+>         unsigned long           func;
 >         unsigned long           stack;          /* stack pointer */
 >         unsigned long           orig_ret_vaddr; /* original return addres=
 s */
->         bool                    chained;        /* true, if instance is n=
+> -       bool                    chained;        /* true, if instance is n=
 ested */
-> +       int                     srcu_idx;
+> +       u8                      chained;        /* true, if instance is n=
+ested */
+> +       u8                      has_ref;
+
+Why bool -> u8 switch? You don't touch chained, so why change its
+type? And for has_ref you interchangeably use 0 and true for the same
+field. Let's stick to bool as there is nothing wrong with it?
+
+>         int                     srcu_idx;
 >
 >         struct return_instance  *next;          /* keep as stack */
->  };
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -54,6 +54,15 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem)
->   * Covers uprobe->consumers lifetime as well as struct uprobe.
->   */
->  DEFINE_STATIC_SRCU(uprobes_srcu);
-> +/*
-> + * Covers return_instance->uprobe and utask->active_uprobe. Separate fro=
-m
-> + * uprobe_srcu because uprobe_unregister() doesn't need to wait for this
-> + * and these lifetimes can be fairly long.
-> + *
-> + * Notably, these sections span userspace and as such use
-> + * __srcu_read_{,un}lock() to elide lockdep.
-> + */
-> +DEFINE_STATIC_SRCU(uretprobes_srcu);
->
->  /* Have a copy of original instruction */
->  #define UPROBE_COPY_INSN       0
-> @@ -596,25 +605,24 @@ set_orig_insn(struct arch_uprobe *auprob
->                         *(uprobe_opcode_t *)&auprobe->insn);
->  }
->
-> -static struct uprobe *try_get_uprobe(struct uprobe *uprobe)
-> -{
-> -       if (refcount_inc_not_zero(&uprobe->ref))
-> -               return uprobe;
-> -       return NULL;
-> -}
-> -
->  static struct uprobe *get_uprobe(struct uprobe *uprobe)
->  {
->         refcount_inc(&uprobe->ref);
->         return uprobe;
->  }
->
-> -static void uprobe_free_rcu(struct rcu_head *rcu)
-> +static void uprobe_free_stage2(struct rcu_head *rcu)
->  {
->         struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rcu);
->         kfree(uprobe);
->  }
->
-> +static void uprobe_free_stage1(struct rcu_head *rcu)
-> +{
-> +       struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rcu);
-> +       call_srcu(&uretprobes_srcu, &uprobe->rcu, uprobe_free_stage2);
-> +}
-> +
->  static void put_uprobe(struct uprobe *uprobe)
->  {
->         if (refcount_dec_and_test(&uprobe->ref)) {
-> @@ -626,7 +634,7 @@ static void put_uprobe(struct uprobe *up
->                 mutex_lock(&delayed_uprobe_lock);
->                 delayed_uprobe_remove(uprobe, NULL);
->                 mutex_unlock(&delayed_uprobe_lock);
-> -               call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
-> +               call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_stage1=
-);
->         }
->  }
->
-> @@ -1753,7 +1761,7 @@ unsigned long uprobe_get_trap_addr(struc
->  static struct return_instance *free_ret_instance(struct return_instance =
-*ri)
->  {
->         struct return_instance *next =3D ri->next;
-> -       put_uprobe(ri->uprobe);
-> +       __srcu_read_unlock(&uretprobes_srcu, ri->srcu_idx);
->         kfree(ri);
->         return next;
->  }
-> @@ -1771,7 +1779,7 @@ void uprobe_free_utask(struct task_struc
->                 return;
->
->         if (utask->active_uprobe)
-> -               put_uprobe(utask->active_uprobe);
-> +               __srcu_read_unlock(&uretprobes_srcu, utask->active_srcu_i=
-dx);
->
->         ri =3D utask->return_instances;
->         while (ri)
-> @@ -1814,7 +1822,7 @@ static int dup_utask(struct task_struct
+
+[...]
+
+> @@ -1822,13 +1864,20 @@ static int dup_utask(struct task_struct
 >                         return -ENOMEM;
 >
 >                 *n =3D *o;
-> -               get_uprobe(n->uprobe);
-> +               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
-
-do we need to add this __srcu_clone_read_lock hack just to avoid
-taking a refcount in dup_utask (i.e., on process fork)? This is not
-that frequent and performance-sensitive case, so it seems like it
-should be fine to take refcount and avoid doing srcu_read_unlock() in
-a new process. Just like the case with long-running uretprobes where
-you convert SRCU lock into refcount.
-
+> -               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
+> +               if (n->uprobe) {
+> +                       if (n->has_ref)
+> +                               get_uprobe(n->uprobe);
+> +                       else
+> +                               __srcu_clone_read_lock(&uretprobes_srcu, =
+n->srcu_idx);
+> +               }
 >                 n->next =3D NULL;
 >
 >                 *p =3D n;
-> @@ -1931,14 +1939,10 @@ static void prepare_uretprobe(struct upr
->         if (!ri)
->                 return;
->
-> -       ri->uprobe =3D try_get_uprobe(uprobe);
-> -       if (!ri->uprobe)
-> -               goto err_mem;
-> -
->         trampoline_vaddr =3D get_trampoline_vaddr();
->         orig_ret_vaddr =3D arch_uretprobe_hijack_return_addr(trampoline_v=
-addr, regs);
->         if (orig_ret_vaddr =3D=3D -1)
-> -               goto err_uprobe;
-> +               goto err_mem;
->
->         /* drop the entries invalidated by longjmp() */
->         chained =3D (orig_ret_vaddr =3D=3D trampoline_vaddr);
-> @@ -1956,11 +1960,13 @@ static void prepare_uretprobe(struct upr
->                          * attack from user-space.
->                          */
->                         uprobe_warn(current, "handle tail call");
-> -                       goto err_uprobe;
-> +                       goto err_mem;
->                 }
->                 orig_ret_vaddr =3D utask->return_instances->orig_ret_vadd=
-r;
+>                 p =3D &n->next;
+>                 n_utask->depth++;
 >         }
+> +       if (n_utask->return_instances)
+> +               mod_timer(&n_utask->ri_timer, jiffies + HZ);
+
+let's add #define for HZ, so it's adjusted in just one place (instead
+of 3 as it is right now)
+
+Also, we can have up to 64 levels of uretprobe nesting, so,
+technically, the user can cause a delay of 64 seconds in total. Maybe
+let's use something smaller than a full second? After all, if the
+user-space function has high latency, then this refcount congestion is
+much less of a problem. I'd set it to something like 50-100 ms for
+starters.
+
 >
-> +       ri->srcu_idx =3D __srcu_read_lock(&uretprobes_srcu);
-> +       ri->uprobe =3D uprobe;
+>         return 0;
+>  }
+> @@ -1967,6 +2016,7 @@ static void prepare_uretprobe(struct upr
+>
+>         ri->srcu_idx =3D __srcu_read_lock(&uretprobes_srcu);
+>         ri->uprobe =3D uprobe;
+> +       ri->has_ref =3D 0;
 >         ri->func =3D instruction_pointer(regs);
 >         ri->stack =3D user_stack_pointer(regs);
 >         ri->orig_ret_vaddr =3D orig_ret_vaddr;
-> @@ -1972,8 +1978,6 @@ static void prepare_uretprobe(struct upr
+> @@ -1976,6 +2026,8 @@ static void prepare_uretprobe(struct upr
+>         ri->next =3D utask->return_instances;
+>         utask->return_instances =3D ri;
 >
+> +       mod_timer(&utask->ri_timer, jiffies + HZ);
+> +
 >         return;
 >
-> -err_uprobe:
-> -       uprobe_put(ri->uprobe);
 >  err_mem:
->         kfree(ri);
->  }
-> @@ -1990,15 +1994,9 @@ pre_ssout(struct uprobe *uprobe, struct
->         if (!utask)
->                 return -ENOMEM;
+> @@ -2204,6 +2256,9 @@ handle_uretprobe_chain(struct return_ins
+>         struct uprobe *uprobe =3D ri->uprobe;
+>         struct uprobe_consumer *uc;
 >
-> -       utask->active_uprobe =3D try_get_uprobe(uprobe);
-> -       if (!utask->active_uprobe)
-> -               return -ESRCH;
-> -
->         xol_vaddr =3D xol_get_insn_slot(uprobe);
-> -       if (!xol_vaddr) {
-> -               err =3D -ENOMEM;
-> -               goto err_uprobe;
-> -       }
-> +       if (!xol_vaddr)
-> +               return -ENOMEM;
+> +       if (!uprobe)
+> +               return;
+> +
+>         guard(srcu)(&uprobes_srcu);
 >
->         utask->xol_vaddr =3D xol_vaddr;
->         utask->vaddr =3D bp_vaddr;
-> @@ -2007,13 +2005,13 @@ pre_ssout(struct uprobe *uprobe, struct
->         if (unlikely(err))
->                 goto err_xol;
+>         for_each_consumer_rcu(uc, uprobe->consumers) {
+> @@ -2250,8 +2305,10 @@ static void handle_trampoline(struct pt_
 >
-> +       utask->active_srcu_idx =3D __srcu_read_lock(&uretprobes_srcu);
-> +       utask->active_uprobe =3D uprobe;
->         utask->state =3D UTASK_SSTEP;
->         return 0;
->
->  err_xol:
->         xol_free_insn_slot(current);
-> -err_uprobe:
-> -       put_uprobe(utask->active_uprobe);
->         return err;
->  }
->
-> @@ -2366,7 +2364,7 @@ static void handle_singlestep(struct upr
->         else
->                 WARN_ON_ONCE(1);
->
-> -       put_uprobe(uprobe);
-> +       __srcu_read_unlock(&uretprobes_srcu, utask->active_srcu_idx);
->         utask->active_uprobe =3D NULL;
->         utask->state =3D UTASK_RUNNING;
->         xol_free_insn_slot(current);
+>                 instruction_pointer_set(regs, ri->orig_ret_vaddr);
+>                 do {
+> -                       if (valid)
+> +                       if (valid) {
+>                                 handle_uretprobe_chain(ri, regs);
+> +                               mod_timer(&utask->ri_timer, jiffies + HZ)=
+;
+> +                       }
+>                         ri =3D free_ret_instance(ri);
+>                         utask->depth--;
+>                 } while (ri !=3D next);
 >
 >
