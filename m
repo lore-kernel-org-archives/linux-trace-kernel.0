@@ -1,417 +1,148 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E6E176AAF
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Jul 2024 22:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916E0DDD4;
+	Sun, 14 Jul 2024 08:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720911266; cv=none; b=GEn2cm+LpDoBy0TakfpFJ5pbiDOPpBADmOEP8Ck7eMxWm+vkUcGE91Jxb1q784UwDZ2AHFNT3vXG32BNjlJnSgMO4W5dw6PkAf1P4aD77E/RtgeaPnnX+GnfG7TR9KSdCbPcZpnhEpt917jUWIA+zQ7avRrnWtBk412UveOYBtc=
+	t=1720944012; cv=none; b=uOyyPhf+6cYBOVP9/51IVvI9UvXqrq2jHgZdpaZL2eVFI1Ak9EM9zVYJr4WZIb1g7oOHpN9eeAhLTabIsY/8f6rLkqfiPQH6ks6Afs6FxcTE2CZmOFs1JtdXpmMqSM80Vhb3/VEP290v3Do/tYd3/yXQy/GKZD32YmSLpvVMXPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720911266; c=relaxed/simple;
-	bh=BzUfjN29KRXwjYjajd8UoSeOxmvo1MVsOxftSxGhVrI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Uvdrc65LxMO2gqXcgeRUIQn8BFYTwLWTqMw7gcgSicChNJIlKMyQq2HU2Gq5vSNVU5gOIm6nkPCPc0XWAHkBxDlBaT01l9G3Pbjp5xcpSbnwogGCL2u0RDlLqG7gHcnCqECTjMTlR164Q31SjK3CcSw5dENH+RhrgNuRuCjRLpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f639551768so343528339f.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 13 Jul 2024 15:54:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720911263; x=1721516063;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7XguMzQQuZOL2+qopmj/CNe/qw/ctDqCt8JeyLm6oRU=;
-        b=oFMxFmeVlH6bdYJGUxLlFd202vTAat6GZzlMeXS6nmxaGF9PkyW3jFrgX6LNOB/rAr
-         YeGqXmGnoy1xA1H776jPqG0GIkkf2Kzvkwa8iAt4dBzQykC//Si8FXU9JzrMhVSHMCGm
-         roVZ/VzkBA2FtYzvd4JdyFFL7IdfAK2mQkhB/t+6DRyFKpFkk7U6YA6vQzkJpGQ+zlHO
-         7XczE6gF70VB2+OpTCOBL1gZgzxV1WogXFiRTWGOySTf7AZnGq1Y6fE64I25rHJnwW3q
-         C1Jp3TH+SWuiLR6RRYiqoNsFbl8TE3plbpsfQtU9odGzBnf8J2+Us6ze/GFHrKfayurY
-         fT4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWGfbobMf4bklFq2oSO9aFjKMf1mHJXlRlzqNzvWg/2X56OjxHz8T5h78MbgNUeIs3HtuEMWlxpi7Ewhac9vt9CNKKJdhAiTXAbfW6VPZzkxGF6
-X-Gm-Message-State: AOJu0YzASo3QZpzzSP1BfROeqf8uv+7KVgjFWybHltVOjyTew3IKB0is
-	7Fk6MjCAdO9NCudAJ2na30H1CqlN8vt1By3HOGGt1dOl+0VsqxC3H7BQFPLRTNxCiWc0Qyqr3QA
-	Is7B96EgWb2HtU1rRKwAkhyrNLjjX6Q9UAQs70LsiihQTIk7tjvw05e0=
-X-Google-Smtp-Source: AGHT+IEVJqCY+g6yuYZF4J2IvmeENBZJzH0KUKGofR0vhfiXSrVCcThkRh36OBkfoGZR2NxA6qWtupFjj5gDq4H3jTCxfD5EMfrr
+	s=arc-20240116; t=1720944012; c=relaxed/simple;
+	bh=4k9OuVo1gkeM46Ac6cZA8tvbi026HQl5WiZntWB/l3g=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:MIME-Version:
+	 Message-Id:Content-Type; b=RKiThyf8R1JecT3b3+IGLrsZLOQYZQDygw6HJSNAT74iHOoPJDRr6yyTl9j7q8zDtAZikpwmfQ50atj4Efhr+/rjHiMQcSepBHe8IB1fwuAnRJrO6r+YnJffC8xjV4NBe9LjUARdOHPlrmkw8RwH8vDD5ks+R+SjL/vD6lMgiVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEogC1L3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEogC1L3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D798C116B1;
+	Sun, 14 Jul 2024 08:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720944012;
+	bh=4k9OuVo1gkeM46Ac6cZA8tvbi026HQl5WiZntWB/l3g=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=LEogC1L3snWVGhXwarb0RqFyankIZvVGAYq2EFDjPEcpDjyiqOACgPVWMm4znF0M3
+	 gej7n7dr1ezf7bsbm4pWuYCq/DpBEXJRSAABQsS9EGix0QA8ENR7Iu+jLbcOTjbtza
+	 tnc6Gl9pZcm3MbT4CSJxJ91b6zWEW5Q1+cmkoNU1HvZHWwmyiZqyJMOUwlf6Kv7JMq
+	 ZnEhmZ080YLWRer/hmju+f9Ks6owLPTu1gaLyYNtoHb0q1Q5hPnlY83zEphkRYML+7
+	 KE6qh+ioYPqwj6PY1GERWyMfxEgovmm9c71BiMEG2adLPlVmpim/w7mJfUzBOSoZdd
+	 k1zf5jO2hCQrg==
+Date: Sun, 14 Jul 2024 13:22:49 +0530
+From: Naveen N Rao <naveen@kernel.org>
+Subject: Re: [RFC PATCH v3 00/11] powerpc: Add support for ftrace direct and
+ BPF trampolines
+To: Vishal Chourasia <vishalc@linux.ibm.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	bpf@vger.kernel.org, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	<john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <masahiroy@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>
+References: <cover.1718908016.git.naveen@kernel.org>
+	<ZoUx37C0bXB66MNG@linux.ibm.com>
+In-Reply-To: <ZoUx37C0bXB66MNG@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3793:b0:4c0:8165:c391 with SMTP id
- 8926c6da1cb9f-4c0b2b448b4mr1386726173.4.1720911263198; Sat, 13 Jul 2024
- 15:54:23 -0700 (PDT)
-Date: Sat, 13 Jul 2024 15:54:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008881c5061d28e041@google.com>
-Subject: [syzbot] [bpf?] [trace?] possible deadlock in console_flush_all (3)
-From: syzbot <syzbot+18cfb7f63482af8641df@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/0.16.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1720942451.kwuygmxy1r.naveen@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Vishal,
 
-syzbot found the following issue on:
+Vishal Chourasia wrote:
+> On Fri, Jun 21, 2024 at 12:24:03AM +0530, Naveen N Rao wrote:
+>> This is v3 of the patches posted here:
+>> http://lkml.kernel.org/r/cover.1718008093.git.naveen@kernel.org
+>>=20
+>> Since v2, I have addressed review comments from Steven and Masahiro=20
+>> along with a few fixes. Patches 7-11 are new in this series and add=20
+>> support for ftrace direct and bpf trampolines.=20
+>>=20
+>> This series depends on the patch series from Benjamin Gray adding=20
+>> support for patch_ulong():
+>> http://lkml.kernel.org/r/20240515024445.236364-1-bgray@linux.ibm.com
+>>=20
+>>=20
+>> - Naveen
+>=20
+> Hello Naveen,
+>=20
+> I've noticed an issue with `kstack()` in bpftrace [1] when using `kfunc`=20
+> compared to `kprobe`. Despite trying all three modes specified in the=20
+> documentation (bpftrace, perf, or raw), the stack isn't unwinding=20
+> properly with `kfunc`.=20
+>=20
+> [1] https://github.com/bpftrace/bpftrace/blob/master/man/adoc/bpftrace.ad=
+oc#kstack
+>=20
+>=20
+> for mode in modes; do
+> 	run bpftrace with kfunc
+> 	disable cpu
+> 	kill bpftrace
+> 	run bpftrace with kprobe
+> 	enable cpu
+> 	kill bpftrace
+>=20
+> # ./kprobe_vs_kfunc.sh
+> + bpftrace -e 'kfunc:vmlinux:build_sched_domains {@[kstack(bpftrace), com=
+m, tid]=3Dcount();}'
+> Attaching 1 probe...
+> + chcpu -d 2-3
+> CPU 2 disabled
+> CPU 3 disabled
+> + kill 35214
+>=20
+> @[
+>     bpf_prog_cfd8d6c8bb4898ce+972
+> , cpuhp/2, 33]: 1
+> @[
+>     bpf_prog_cfd8d6c8bb4898ce+972
+> , cpuhp/3, 38]: 1
 
-HEAD commit:    40ab9e0dc865 netxen_nic: Use {low,upp}er_32_bits() helpers
-git tree:       net-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=10a186a5980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db697e01efa9d1d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11bf8535980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1412869e980000
+Yeah, this is because we don't capture the full register state with bpf=20
+trampolines unlike with kprobes. BPF stackmap relies on=20
+perf_arch_fetch_caller_regs() to create a dummy pt_regs for use by=20
+get_perf_callchain(). We end up with a NULL LR, and bpftrace (and most=20
+other userspace tools) stop showing the backtrace when they encounter a=20
+NULL entry. I recall fixing some tools to continue to show backtrace=20
+inspite of a NULL entry, but I may be mis-remembering.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/82323446a05a/disk-40ab9e0d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9ef73ffa3427/vmlinux-40ab9e0d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/38572b425814/bzImage-40ab9e0d.xz
+Perhaps we should fix/change how the perf callchain is captured in the=20
+kernel. We filter out invalid entries, and capture an additional entry=20
+for perf since we can't be sure of our return address. We should revisit=20
+this and see if we can align with the usual expectations of a callchain=20
+not having a NULL entry. Something like this may help, but this needs=20
+more testing especially on the perf side:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+18cfb7f63482af8641df@syzkaller.appspotmail.com
-
-FAULT_INJECTION: forcing a failure.
-name fail_usercopy, interval 1, probability 0, space 0, times 1
-======================================================
-WARNING: possible circular locking dependency detected
-6.10.0-rc6-syzkaller-01403-g40ab9e0dc865 #0 Not tainted
-------------------------------------------------------
-syz-executor394/5097 is trying to acquire lock:
-ffffffff8e328140 (console_owner){....}-{0:0}, at: rcu_try_lock_acquire include/linux/rcupdate.h:334 [inline]
-ffffffff8e328140 (console_owner){....}-{0:0}, at: srcu_read_lock_nmisafe include/linux/srcu.h:232 [inline]
-ffffffff8e328140 (console_owner){....}-{0:0}, at: console_srcu_read_lock kernel/printk/printk.c:286 [inline]
-ffffffff8e328140 (console_owner){....}-{0:0}, at: console_flush_all+0x152/0xfd0 kernel/printk/printk.c:2971
-
-but task is already holding lock:
-ffff8880b943e858 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #4 (&rq->__lock){-.-.}-{2:2}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
-       raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
-       raw_spin_rq_lock kernel/sched/sched.h:1406 [inline]
-       rq_lock kernel/sched/sched.h:1702 [inline]
-       task_fork_fair+0x61/0x1e0 kernel/sched/fair.c:12710
-       sched_cgroup_fork+0x37c/0x410 kernel/sched/core.c:4844
-       copy_process+0x2217/0x3dc0 kernel/fork.c:2499
-       kernel_clone+0x226/0x8f0 kernel/fork.c:2797
-       user_mode_thread+0x132/0x1a0 kernel/fork.c:2875
-       rest_init+0x23/0x300 init/main.c:712
-       start_kernel+0x47a/0x500 init/main.c:1103
-       x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:507
-       x86_64_start_kernel+0x99/0xa0 arch/x86/kernel/head64.c:488
-       common_startup_64+0x13e/0x147
-
--> #3 (&p->pi_lock){-.-.}-{2:2}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
-       class_raw_spinlock_irqsave_constructor include/linux/spinlock.h:553 [inline]
-       try_to_wake_up+0xb0/0x1470 kernel/sched/core.c:4262
-       __wake_up_common kernel/sched/wait.c:89 [inline]
-       __wake_up_common_lock+0x130/0x1e0 kernel/sched/wait.c:106
-       tty_port_default_wakeup+0xa6/0xf0 drivers/tty/tty_port.c:69
-       serial8250_tx_chars+0x6e2/0x930 drivers/tty/serial/8250/8250_port.c:1821
-       serial8250_handle_irq+0x558/0x710 drivers/tty/serial/8250/8250_port.c:1929
-       serial8250_default_handle_irq+0xd1/0x1f0 drivers/tty/serial/8250/8250_port.c:1949
-       serial8250_interrupt+0xa9/0x1f0 drivers/tty/serial/8250/8250_core.c:127
-       __handle_irq_event_percpu+0x29a/0xa80 kernel/irq/handle.c:158
-       handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
-       handle_irq_event+0x89/0x1f0 kernel/irq/handle.c:210
-       handle_edge_irq+0x25f/0xc20 kernel/irq/chip.c:831
-       generic_handle_irq_desc include/linux/irqdesc.h:173 [inline]
-       handle_irq arch/x86/kernel/irq.c:247 [inline]
-       call_irq_handler arch/x86/kernel/irq.c:259 [inline]
-       __common_interrupt+0x136/0x230 arch/x86/kernel/irq.c:285
-       common_interrupt+0xa5/0xd0 arch/x86/kernel/irq.c:278
-       asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
-       rcu_read_unlock include/linux/rcupdate.h:810 [inline]
-       count_memcg_event_mm+0x334/0x420 include/linux/memcontrol.h:1078
-       mm_account_fault mm/memory.c:5558 [inline]
-       handle_mm_fault+0x16c4/0x1ba0 mm/memory.c:5705
-       do_user_addr_fault arch/x86/mm/fault.c:1338 [inline]
-       handle_page_fault arch/x86/mm/fault.c:1481 [inline]
-       exc_page_fault+0x459/0x8c0 arch/x86/mm/fault.c:1539
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #2 (&tty->write_wait){-.-.}-{2:2}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
-       __wake_up_common_lock+0x25/0x1e0 kernel/sched/wait.c:105
-       tty_port_default_wakeup+0xa6/0xf0 drivers/tty/tty_port.c:69
-       serial8250_tx_chars+0x6e2/0x930 drivers/tty/serial/8250/8250_port.c:1821
-       serial8250_handle_irq+0x558/0x710 drivers/tty/serial/8250/8250_port.c:1929
-       serial8250_default_handle_irq+0xd1/0x1f0 drivers/tty/serial/8250/8250_port.c:1949
-       serial8250_interrupt+0xa9/0x1f0 drivers/tty/serial/8250/8250_core.c:127
-       __handle_irq_event_percpu+0x29a/0xa80 kernel/irq/handle.c:158
-       handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
-       handle_irq_event+0x89/0x1f0 kernel/irq/handle.c:210
-       handle_edge_irq+0x25f/0xc20 kernel/irq/chip.c:831
-       generic_handle_irq_desc include/linux/irqdesc.h:173 [inline]
-       handle_irq arch/x86/kernel/irq.c:247 [inline]
-       call_irq_handler arch/x86/kernel/irq.c:259 [inline]
-       __common_interrupt+0x136/0x230 arch/x86/kernel/irq.c:285
-       common_interrupt+0xa5/0xd0 arch/x86/kernel/irq.c:278
-       asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
-       __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
-       _raw_spin_unlock_irqrestore+0xd8/0x140 kernel/locking/spinlock.c:194
-       spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
-       uart_port_unlock_irqrestore include/linux/serial_core.h:669 [inline]
-       uart_write+0x15d/0x380 drivers/tty/serial/serial_core.c:634
-       process_output_block drivers/tty/n_tty.c:574 [inline]
-       n_tty_write+0xd6a/0x1230 drivers/tty/n_tty.c:2389
-       iterate_tty_write drivers/tty/tty_io.c:1021 [inline]
-       file_tty_write+0x54f/0x9b0 drivers/tty/tty_io.c:1096
-       new_sync_write fs/read_write.c:497 [inline]
-       vfs_write+0xa72/0xc90 fs/read_write.c:590
-       ksys_write+0x1a0/0x2c0 fs/read_write.c:643
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&port_lock_key){-.-.}-{2:2}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
-       uart_port_lock_irqsave include/linux/serial_core.h:618 [inline]
-       serial8250_console_write+0x1a8/0x1770 drivers/tty/serial/8250/8250_port.c:3352
-       console_emit_next_record kernel/printk/printk.c:2913 [inline]
-       console_flush_all+0x867/0xfd0 kernel/printk/printk.c:2979
-       console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3048
-       vprintk_emit+0x5a6/0x770 kernel/printk/printk.c:2348
-       _printk+0xd5/0x120 kernel/printk/printk.c:2373
-       register_console+0x727/0xcf0 kernel/printk/printk.c:3581
-       univ8250_console_init+0x49/0x50 drivers/tty/serial/8250/8250_core.c:714
-       console_init+0x1b8/0x6f0 kernel/printk/printk.c:3727
-       start_kernel+0x2d3/0x500 init/main.c:1038
-       x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:507
-       x86_64_start_kernel+0x99/0xa0 arch/x86/kernel/head64.c:488
-       common_startup_64+0x13e/0x147
-
--> #0 (console_owner){....}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain+0x18e0/0x5900 kernel/locking/lockdep.c:3869
-       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
-       console_lock_spinning_enable kernel/printk/printk.c:1873 [inline]
-       console_emit_next_record kernel/printk/printk.c:2907 [inline]
-       console_flush_all+0x810/0xfd0 kernel/printk/printk.c:2979
-       console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3048
-       vprintk_emit+0x5a6/0x770 kernel/printk/printk.c:2348
-       _printk+0xd5/0x120 kernel/printk/printk.c:2373
-       fail_dump lib/fault-inject.c:45 [inline]
-       should_fail_ex+0x391/0x4e0 lib/fault-inject.c:153
-       strncpy_from_user+0x36/0x2f0 lib/strncpy_from_user.c:118
-       strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
-       bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:216 [inline]
-       ____bpf_probe_read_compat_str kernel/trace/bpf_trace.c:311 [inline]
-       bpf_probe_read_compat_str+0xe9/0x180 kernel/trace/bpf_trace.c:307
-       bpf_prog_f2ce78ec2d45df6f+0x3d/0x3f
-       bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
-       __bpf_prog_run include/linux/filter.h:691 [inline]
-       bpf_prog_run include/linux/filter.h:698 [inline]
-       __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
-       bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
-       trace_sched_switch include/trace/events/sched.h:222 [inline]
-       __schedule+0x2587/0x4a20 kernel/sched/core.c:6742
-       __schedule_loop kernel/sched/core.c:6822 [inline]
-       schedule+0x14b/0x320 kernel/sched/core.c:6837
-       synchronize_rcu_expedited+0x684/0x830 kernel/rcu/tree_exp.h:954
-       synchronize_rcu+0x11b/0x360 kernel/rcu/tree.c:3986
-       __nf_tables_abort net/netfilter/nf_tables_api.c:10786 [inline]
-       nf_tables_abort+0x6569/0x7a10 net/netfilter/nf_tables_api.c:10805
-       nfnetlink_rcv_batch net/netfilter/nfnetlink.c:590 [inline]
-       nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:644 [inline]
-       nfnetlink_rcv+0x20cf/0x2a90 net/netfilter/nfnetlink.c:662
-       netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
-       netlink_unicast+0x7f0/0x990 net/netlink/af_netlink.c:1357
-       netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1901
-       sock_sendmsg_nosec net/socket.c:730 [inline]
-       __sock_sendmsg+0x221/0x270 net/socket.c:745
-       ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
-       ___sys_sendmsg net/socket.c:2639 [inline]
-       __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  console_owner --> &p->pi_lock --> &rq->__lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&rq->__lock);
-                               lock(&p->pi_lock);
-                               lock(&rq->__lock);
-  lock(console_owner);
-
- *** DEADLOCK ***
-
-6 locks held by syz-executor394/5097:
- #0: ffff888029a9bcb8 (&nft_net->commit_mutex){+.+.}-{3:3}, at: nf_tables_valid_genid+0x32/0x100 net/netfilter/nf_tables_api.c:10828
- #1: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:291 [inline]
- #1: ffffffff8e3392f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x381/0x830 kernel/rcu/tree_exp.h:939
- #2: ffff8880b943e858 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
- #3: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #3: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #3: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2405 [inline]
- #3: ffffffff8e333f20 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run4+0x244/0x590 kernel/trace/bpf_trace.c:2449
- #4: ffffffff8e20fa60 (console_lock){+.+.}-{0:0}, at: _printk+0xd5/0x120 kernel/printk/printk.c:2373
- #5: ffffffff8e20f690 (console_srcu){....}-{0:0}, at: rcu_try_lock_acquire include/linux/rcupdate.h:334 [inline]
- #5: ffffffff8e20f690 (console_srcu){....}-{0:0}, at: srcu_read_lock_nmisafe include/linux/srcu.h:232 [inline]
- #5: ffffffff8e20f690 (console_srcu){....}-{0:0}, at: console_srcu_read_lock kernel/printk/printk.c:286 [inline]
- #5: ffffffff8e20f690 (console_srcu){....}-{0:0}, at: console_flush_all+0x152/0xfd0 kernel/printk/printk.c:2971
-
-stack backtrace:
-CPU: 0 PID: 5097 Comm: syz-executor394 Not tainted 6.10.0-rc6-syzkaller-01403-g40ab9e0dc865 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain+0x18e0/0x5900 kernel/locking/lockdep.c:3869
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
- console_lock_spinning_enable kernel/printk/printk.c:1873 [inline]
- console_emit_next_record kernel/printk/printk.c:2907 [inline]
- console_flush_all+0x810/0xfd0 kernel/printk/printk.c:2979
- console_unlock+0x13b/0x4d0 kernel/printk/printk.c:3048
- vprintk_emit+0x5a6/0x770 kernel/printk/printk.c:2348
- _printk+0xd5/0x120 kernel/printk/printk.c:2373
- fail_dump lib/fault-inject.c:45 [inline]
- should_fail_ex+0x391/0x4e0 lib/fault-inject.c:153
- strncpy_from_user+0x36/0x2f0 lib/strncpy_from_user.c:118
- strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
- bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:216 [inline]
- ____bpf_probe_read_compat_str kernel/trace/bpf_trace.c:311 [inline]
- bpf_probe_read_compat_str+0xe9/0x180 kernel/trace/bpf_trace.c:307
- bpf_prog_f2ce78ec2d45df6f+0x3d/0x3f
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
- bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
- trace_sched_switch include/trace/events/sched.h:222 [inline]
- __schedule+0x2587/0x4a20 kernel/sched/core.c:6742
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6837
- synchronize_rcu_expedited+0x684/0x830 kernel/rcu/tree_exp.h:954
- synchronize_rcu+0x11b/0x360 kernel/rcu/tree.c:3986
- __nf_tables_abort net/netfilter/nf_tables_api.c:10786 [inline]
- nf_tables_abort+0x6569/0x7a10 net/netfilter/nf_tables_api.c:10805
- nfnetlink_rcv_batch net/netfilter/nfnetlink.c:590 [inline]
- nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:644 [inline]
- nfnetlink_rcv+0x20cf/0x2a90 net/netfilter/nfnetlink.c:662
- netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
- netlink_unicast+0x7f0/0x990 net/netlink/af_netlink.c:1357
- netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1901
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:745
- ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
- ___sys_sendmsg net/socket.c:2639 [inline]
- __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa3b968c9e9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 a1 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd3e026948 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007ffd3e026960 RCX: 00007fa3b968c9e9
-RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000005
-RBP: 0000000000000002 R08: 00007ffd3e0266e6 R09: 00000000000000a0
-R10: 0000000000000002 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-CPU: 0 PID: 5097 Comm: syz-executor394 Not tainted 6.10.0-rc6-syzkaller-01403-g40ab9e0dc865 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 06/07/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- fail_dump lib/fault-inject.c:52 [inline]
- should_fail_ex+0x3b0/0x4e0 lib/fault-inject.c:153
- strncpy_from_user+0x36/0x2f0 lib/strncpy_from_user.c:118
- strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
- bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:216 [inline]
- ____bpf_probe_read_compat_str kernel/trace/bpf_trace.c:311 [inline]
- bpf_probe_read_compat_str+0xe9/0x180 kernel/trace/bpf_trace.c:307
- bpf_prog_f2ce78ec2d45df6f+0x3d/0x3f
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
- bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
- trace_sched_switch include/trace/events/sched.h:222 [inline]
- __schedule+0x2587/0x4a20 kernel/sched/core.c:6742
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6837
- synchronize_rcu_expedited+0x684/0x830 kernel/rcu/tree_exp.h:954
- synchronize_rcu+0x11b/0x360 kernel/rcu/tree.c:3986
- __nf_tables_abort net/netfilter/nf_tables_api.c:10786 [inline]
- nf_tables_abort+0x6569/0x7a10 net/netfilter/nf_tables_api.c:10805
- nfnetlink_rcv_batch net/netfilter/nfnetlink.c:590 [inline]
- nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:644 [inline]
- nfnetlink_rcv+0x20cf/0x2a90 net/netfilter/nfnetlink.c:662
- netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
- netlink_unicast+0x7f0/0x990 net/netlink/af_netlink.c:1357
- netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1901
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:745
- ____sys_sendmsg+0x525/0x7d0 net/socket.c:2585
- ___sys_sendmsg net/socket.c:2639 [inline]
- __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2668
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa3b968c9e9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 a1 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd3e026948 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007ffd3e026960 RCX: 00007fa3b968c9e9
-RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000005
-RBP: 0000000000000002 R08: 00007ffd3e0266e6 R09: 00000000000000a0
-R10: 0000000000000002 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index 6b4434dd0ff3..9f67b764da92 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -83,12 +83,12 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *=
+entry, struct pt_regs *re
+                         * We can't tell which of the first two addresses
+                         * we get are valid, but we can filter out the
+                         * obviously bogus ones here.  We replace them
+-                        * with 0 rather than removing them entirely so
++                        * with -1 rather than removing them entirely so
+                         * that userspace can tell which is which.
+                         */
+                        if ((level =3D=3D 1 && next_ip =3D=3D lr) ||
+                            (level <=3D 1 && !kernel_text_address(next_ip))=
+)
+-                               next_ip =3D 0;
++                               next_ip =3D -1;
+=20
+                        ++level;
+		}
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+- Naveen
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
