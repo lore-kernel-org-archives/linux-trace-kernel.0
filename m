@@ -1,156 +1,119 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36372184108
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3B61849D7;
+	Mon, 15 Jul 2024 08:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721031156; cv=none; b=C//Qlb2HA3xU80k7AFj2sg4/KxFBHknmOmVD1kDCwotK2qecxhXApOfyanNSvw2hS0yIfLQLe1CVLpccbk2dkqFtoBEZuJCQ1vmRWrN4DbVhLCYIhyvH3F0NnTTwnPhvoM+ECMNIwT4JIbt1aT4B7hWaGl158DWdR62N37wxdbA=
+	t=1721031923; cv=none; b=ThWdVjDZCM2epwpEh5Y/UPd5LEwpuPbdMmv8PIjxOLvmzLdSgmNfrL/JIXGPanGYD69LBPS7NZXOAgV2GJc63RfskODImIiR0UjO0WXV5uXsn2KB8u796uHg7RdVumzAmD7F2R2EEsWK/DPgnYUJhh/shEdjFClhm5qU8nWhTxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721031156; c=relaxed/simple;
-	bh=5NT0nQnnuvnj76YU9TmtoXstPxW/ueKhrxD8hU9yT+o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JTZw5utq8g1lLegNTEbs1D0f/g7Jjv5KRRD+fDQL4wx6tFFRtLCv7Fj4ZhzemPkmzjXeeiApsKs6KrCFFzO4C5rsq0+Wr/P3A9VJ07IBzPMz+WOA9o2fN7c4IMFJyrd+PIwZHblxJOYnf5p0LrvDS2erKNxOsocqSqET/p5QUoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jUKypdCY; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1721031923; c=relaxed/simple;
+	bh=sYTa3WNcV2F8VcxAC4M8JpZN4WhbxWbON/EkXLJ5Ojc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ewN21EMMj0YyR2Hld5ylURhtoFqVtkSsl7K7SH9WAfw+RBKh0MNmkzhUMFE8ZDD2NgLt1IDEAUB6fnyq2KNg6t5JWf4FvfuJs5e85s1nBoGqCogJ0cYADPOWyESKrv66LhTxDtJhRPehQArKnd5g1lgTKxme92Gmhs0L/FWp/Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GYvu4pSs; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jUKypdCY"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a77e7a6cfa7so437485666b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:12:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYvu4pSs"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7f6e9662880so185054239f.2;
+        Mon, 15 Jul 2024 01:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721031152; x=1721635952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1721031921; x=1721636721; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=03jWWWCVzc5/LJdqyioI99prKjte6wH3TiKjV7DS5tM=;
-        b=jUKypdCY0qNpX8Vc/i5UXyx0VbW9NdWlG8SWSGWJ89cL0H+9Fvjy9/b9SGpcdP1MCS
-         Eem2l1xkAg/SQgZXCCg2EPqABTBhZn9CCcWAP+ty7t9bWpULQwA+OORjW6KSd3Ld85AP
-         hFg1clu9Hh5Km27E8Aao28WbPhKipRK3gmLm+ep5iV8U6BWLEsmBmsRiu8o/yt8kbBLK
-         0IBJOpwuAX83n6Fs9aLUtX13p8ej0G3HMRtNrCgpnYHPOmrK08uJWzAqrim+Sv+GMrcD
-         b5sp3Tk85z8IbuZ5NTQn4/JQqp2oxri9gxHGUIjeUF3yB3YaVpSP2+KUDAm1E3rgrNfl
-         WnLA==
+        bh=rW2thNGYkRyZe8HIPJ8rpQcN6uYkUSeuH9TVqbqQqOM=;
+        b=GYvu4pSsyqgoKAFf6PcsNfdojmRklpIlh+GywOkhChVFcqRWHaDGJT4hi/lTOL6GXF
+         gKe99qYxtO6d+Ui4JF2Z+vrEYAB5rz2FowVZOb2Bp75YV5VuCcEHHf/zEoGky1WTOHcb
+         2lZ/Xw2e5CA4FXgBAqoSmYQJAo3L3x+Q0oy1MNnUk7dCPczF8IlsFnA/PhyP5vhCbuAf
+         9hqhg/MgUrnPMT2Ra/8AWX8M3Vr8hMuex7OvkhPaXHktiImv+Yh2ls45v+cjJPDdNWHw
+         U1B95XlYUhmP6ouS+dYYoGxIlSZf+sDtdCEjVTLKHKH6/3uLTcYlsKArSS2jL/37KB6s
+         xFzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721031152; x=1721635952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=03jWWWCVzc5/LJdqyioI99prKjte6wH3TiKjV7DS5tM=;
-        b=e1f2gbGx+ZlrTaHi+fXxEAcPcigwBo5AVWbMCCgJsuuE8EtrmWsYZpJigklzKLg5Iq
-         PUpCScrX1s2yQ+cHgouXc47oqcfufgrT+ABqvTvw8tV14MERg0oj9m9JtFS0XBeriPs4
-         kwgtUGpdOK1mQd7iesG4yTEpOqvLTe8uOEEcagherkSAG0eKIiaNaxEjX2aB+3PcdbRv
-         zauJ8C09FeCdxHVdY68mE15pW+ECgGc+43h/2JW61HAKgqh5ulwoGUMJzJU3fVXTGmEP
-         bF3vwU/sVLeENwaqxkgmNHUDay1mfGqgJHD2YFYHapwgJwLGrEFz1q17jtFKFcavfsnd
-         ur4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV2BxGGWXtIv/XDPTof3G31lY2iUC0weqVRm/KmfKFufdrrBKNXviA1UhqXlup24edVykmyJkrZ44101usp29HTCJG7SHeBYVxpB2Gk7iJgnSus
-X-Gm-Message-State: AOJu0YzIEXSb/0er6wqzlZy7ZlXu9PZKeZtxOi6/x4+ltGoLtBRDE+5h
-	tdXI7MouXPr0sH6llPSSnnvQkyZQqlAF0Hcq8dxwpS54LDumnDGbowZGHW9A8hwJe62LhuEniYG
-	eHxWWxwK5Zj85QlhsvQeeu+aPi637ZIZg2aiIdA==
-X-Google-Smtp-Source: AGHT+IFAM/JbPKSHGtXJzUtImNJqPcsuIujR27+IbnzngqO96PYEia8kBR8MYr6ACsxPM+BKbwLFE6qk68WRrNEudhw=
-X-Received: by 2002:a17:906:66c9:b0:a77:cf9d:f497 with SMTP id
- a640c23a62f3a-a780b70513emr1187421166b.40.1721031152552; Mon, 15 Jul 2024
- 01:12:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721031921; x=1721636721;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rW2thNGYkRyZe8HIPJ8rpQcN6uYkUSeuH9TVqbqQqOM=;
+        b=famRvm+cqMhxTUp5LxtLu9m7fldyK+05h2eDzBm8r4fcD6MbNsoVyvJ6plzMp8ny1R
+         718KSHQLzPNQO2ggA7gMg/xZOWtKQlq6aDiSISMr+X3Gq3nRsfSTOFY76T8M/waum2wB
+         x2SQ0geN2C+iaAqyKVIyzJgaDyzS32imn0GpXLHY6c6fLTcmz1GeniKuVZ2T2rmMDN4v
+         UbaS5cEcaX7NokAogTD7gOW3tK5SlhHc3IbpQaMSdB1TGi+PNTxBWrUZjOkE8Zafofap
+         eOMSvbaJeRu5DHXTXxY3wWQwNfwzrOJdizWYbrO/zf1uF9vQjekpGY7aSaz/ZDA8P6Lw
+         yzCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjxBYJf/KOwQetoqgEGyvQofQSn4Ha0Glw99HAqoeiqb+QaPWEaqkDuJw59HJg5ORfcQKXFzkwk+1MUVeRv4oqHm4V851IOTlu3q6+YTnkE8EC/gkLCapouSh11N2txJQsqRUadbTxoeWqu5+iU01aBBOZ7EdlJB8WJ4GVSySH7Ys447pGADr8PzidOnt/EXlmEFCU/sI7VHpmuoPcfq/pmk+V
+X-Gm-Message-State: AOJu0YzgG5hEpn1eqm3ECohbOYynB+VzW+odwA21TXZgfrEVxfgT0Ni/
+	WclQ/LTEHwCUr4TrR390iMyGinv8NYuBiwQR6UedJ2Y3vWNe/teh
+X-Google-Smtp-Source: AGHT+IEJOtY6h6sgqUX2Zqpq7jO4aSc5SbNrF10Bl+Cu1roWxg+N/2mw68X1fDSEsPnU5o1cPk9G6A==
+X-Received: by 2002:a6b:db0d:0:b0:805:e2bf:f303 with SMTP id ca18e2360f4ac-805e2bff70emr1391622039f.8.1721031920882;
+        Mon, 15 Jul 2024 01:25:20 -0700 (PDT)
+Received: from localhost ([1.146.120.6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7ec7eed2sm3770443b3a.116.2024.07.15.01.25.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jul 2024 01:25:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240624082141.153871-1-alexghiti@rivosinc.com> <CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Mon, 15 Jul 2024 10:12:21 +0200
-Message-ID: <CAHVXubicJ=g_vXWUh+uGbv00X0gnn24J3SCaU4PhRD-1ZReY8g@mail.gmail.com>
-Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after
- patching to avoid illegal insns
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Andy Chiu <andy.chiu@sifive.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 15 Jul 2024 18:25:10 +1000
+Message-Id: <D2PYW90LRVAY.3PCE9P3NE2NEB@gmail.com>
+Cc: "Michael Ellerman" <mpe@ellerman.id.au>, "Christophe Leroy"
+ <christophe.leroy@csgroup.eu>, "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland"
+ <mark.rutland@arm.com>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
+ Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>, "Hari Bathini"
+ <hbathini@linux.ibm.com>, "Mahesh Salgaonkar" <mahesh@linux.ibm.com>,
+ "Vishal Chourasia" <vishalc@linux.ibm.com>
+Subject: Re: [RFC PATCH v4 12/17] powerpc64/ftrace: Move ftrace sequence out
+ of line
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Naveen N Rao" <naveen@kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+ <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <cover.1720942106.git.naveen@kernel.org>
+ <9cf2cdddba74ec167ae1af5ec189bba8f704fb51.1720942106.git.naveen@kernel.org>
+In-Reply-To: <9cf2cdddba74ec167ae1af5ec189bba8f704fb51.1720942106.git.naveen@kernel.org>
 
-Hi Geert,
+On Sun Jul 14, 2024 at 6:27 PM AEST, Naveen N Rao wrote:
+> Function profile sequence on powerpc includes two instructions at the
+> beginning of each function:
+> 	mflr	r0
+> 	bl	ftrace_caller
+>
+> The call to ftrace_caller() gets nop'ed out during kernel boot and is
+> patched in when ftrace is enabled.
+>
+> Given the sequence, we cannot return from ftrace_caller with 'blr' as we
+> need to keep LR and r0 intact. This results in link stack (return
+> address predictor) imbalance when ftrace is enabled. To address that, we
+> would like to use a three instruction sequence:
+> 	mflr	r0
+> 	bl	ftrace_caller
+> 	mtlr	r0
+>
+> Further more, to support DYNAMIC_FTRACE_WITH_CALL_OPS, we need to
+> reserve two instruction slots before the function. This results in a
+> total of five instruction slots to be reserved for ftrace use on each
+> function that is traced.
+>
+> Move the function profile sequence out-of-line to minimize its impact.
+> To do this, we reserve a single nop at function entry using
+> -fpatchable-function-entry=3D1 and add a pass on vmlinux.o to determine
+> the total number of functions that can be traced. This is then used to
+> generate a .S file reserving the appropriate amount of space for use as
+> ftrace stubs, which is built and linked into vmlinux.
 
-On Tue, Jul 9, 2024 at 10:13=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Alexandre,
->
-> On Mon, Jun 24, 2024 at 10:23=E2=80=AFAM Alexandre Ghiti <alexghiti@rivos=
-inc.com> wrote:
-> > We cannot delay the icache flush after patching some functions as we ma=
-y
-> > have patched a function that will get called before the icache flush.
-> >
-> > The only way to completely avoid such scenario is by flushing the icach=
-e
-> > as soon as we patch a function. This will probably be costly as we don'=
-t
-> > batch the icache maintenance anymore.
-> >
-> > Fixes: 6ca445d8af0e ("riscv: Fix early ftrace nop patching")
-> > Reported-by: Conor Dooley <conor.dooley@microchip.com>
-> > Closes: https://lore.kernel.org/linux-riscv/20240613-lubricant-breath-0=
-61192a9489a@wendy/
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->
-> Thanks for your patch, which is now commit edf2d546bfd6f5c4 ("riscv:
-> patch: Flush the icache right after patching to avoid illegal
-> insns") in v6.10-rc6.
->
-> > --- a/arch/riscv/kernel/patch.c
-> > +++ b/arch/riscv/kernel/patch.c
-> > @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t =
-len)
-> >
-> >         ret =3D patch_insn_set(tp, c, len);
-> >
-> > -       if (!ret)
-> > -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
-> > -
-> >         return ret;
-> >  }
-> >  NOKPROBE_SYMBOL(patch_text_set_nosync);
->
-> patch_text_set_nosync() is now identical to (static) patch_insn_set(),
-> and the latter has no other callers.
->
-> > @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns=
-, size_t len)
-> >
-> >         ret =3D patch_insn_write(tp, insns, len);
-> >
-> > -       if (!ret)
-> > -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len=
-);
-> > -
-> >         return ret;
-> >  }
-> >  NOKPROBE_SYMBOL(patch_text_nosync);
->
-> patch_text_nosync() is now identical to patch_insn_write(), and both
-> functions are called from outside this file.
->
+These are all going into .tramp.ftrace.text AFAIKS? Should that be
+moved after some of the other text in the linker script then if it
+could get quite large? sched and lock and other things should be
+closer to the rest of text and hot code.
 
-I'll do something about that, thanks.
-
-Alex
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+Thanks,
+Nick
