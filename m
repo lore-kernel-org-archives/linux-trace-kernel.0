@@ -1,49 +1,49 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5230218732B;
-	Mon, 15 Jul 2024 11:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA172572;
+	Mon, 15 Jul 2024 11:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721042710; cv=none; b=rNDHl6hsTubtKgS5bzWs+KTpvIe1b+EN8+RvniEXHmZiWSmx8eIiiLHiZUTCH7EciAPhbL8THNER+mFxvzxTWwddHy4jbLVQC0almV+b8Bo7Dx+wy1JzYbO0KJt1ZtK6w8jP2KWPms9hw3qWzFmkr6Xavm7kQXmdCtox/kPXuo8=
+	t=1721043675; cv=none; b=kB8Yz06qndFya+8HXADFzGSiYsqZuPySSDg3bH2FqIecIuab58FcS8pu2+YgaJnfVUl35kffYIGdp7vN7JCbuBlIbmYXXmADN1nK6ywjQEcObYXgzddhjXmZEx5IwliSGjN6gc4uXJ6vKuq82MMC/x+0xf/Q0pnZwM+HsNAORi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721042710; c=relaxed/simple;
-	bh=PU6heb083DO9pyHUxuV6z2+EoTfM9IExe2kcCIHR/yQ=;
+	s=arc-20240116; t=1721043675; c=relaxed/simple;
+	bh=OXHU1MHxbj793Mtok78Gc21X5UrdTvA60vYMWvz7U+E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5WxoS/dHGetSlWL8XZ8IZhyWXoV8lKW0dtoLUTajhIr4l738FC2ua0ImfRwcv0hRg2IzDc/CYK8lvJV320jVW3KURFMmNhmeMjbm7GNESQZOXFlS8koPwp8t1l3d3ifcMom4FHudRyt52XBr/ZA6b36v2bBgGFD8N/8BqUw+Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pkDMsIrS; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kge2vGnK1Jf/PZ+KN+6bzX7XJE58cp4zXX08wYLwTztWIOPV3ySQXa+cLc/MjiDBgCUqJwfLubOhnWUQRQPlvGG1WsPwk82sKsTu/mXceHXXmFpso2XY/mGCndNymY+9wAeuEthQdlFlVF8WNayebBJEd0rnmhGs8t3eUtVm8OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ctwKmMfN; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pkDMsIrS"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ctwKmMfN"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Sender:Reply-To:Content-ID:Content-Description;
-	bh=w8PXDLltAFjw5n3aoL+clMKuIuqFeLfWcdi6geM4hp0=; b=pkDMsIrS5KJZN65XUaAW8DE0aS
-	u+YFD0M12x9ASk62JkDdGAtKBUcEaCCtbWAiLrn+ljHUQMm5jM6ZhZWDa4HI3O1N/Hu9NZ1rmjXe7
-	ssm5zVKgF8OK+qzqEWYBB4QfXDzq2hQ2uJA/qtsjgsGBpdXdHolEv2C3UQ5wPXDvaubpfb6kXFFD5
-	Xz+SZNSBBelhkvR/BfE0z1+ZSKdsw4wskOKiOqQuyjteC7sFH/Q/Yr4bUxFc4ih6+3YbC3u6VZMdM
-	OHjhVBPMkCGPaRDvHMRJVTabdSBCM1NQ/rqyk+0Yj98piwHp0nQfxNi4NWE7pmxpIvdW6lR1PqRLV
-	9M7jqpzQ==;
+	bh=y5Q7Vcvg0k0Ths9BKndB5/gtpLO3ynMN1NfxgNm2faI=; b=ctwKmMfNK/BqpHr7ftrEWvIBBR
+	bbsbK+lDxtD0xVDj1JytO98GqK+F1TB3L/yDWVAatHptf+NujI8dP8O1r+nXwaB40s2gsvtaqfoZU
+	HKs7Xg/ZsEfJ3B7KZBzdBIilKTYQrDaRKTXYholmM82iiaZWUYobEUPZ/LKvcYic//DGwTMsAZ2n6
+	w5XIo43thOCEpKGAL3d71s4kcSLdW7SoNJDwOH5Ki9ojbkcmN4k1tfyTRKTCNhGz/AR1VY1PH9ewF
+	WnnlHpk7Quk8YOMOPkkh459oVm8h/4fxgyUUgAWJTcEbrdc103EHpuJjt1xfAqMv1e+FiWSXIEqay
+	R1/2ki7Q==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTJpI-00000001mRi-30pu;
-	Mon, 15 Jul 2024 11:25:05 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sTK4q-0000000FkFX-0D7n;
+	Mon, 15 Jul 2024 11:41:08 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5BC3C3003FF; Mon, 15 Jul 2024 13:25:04 +0200 (CEST)
-Date: Mon, 15 Jul 2024 13:25:04 +0200
+	id 8AD433003FF; Mon, 15 Jul 2024 13:41:07 +0200 (CEST)
+Date: Mon, 15 Jul 2024 13:41:07 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
 	clm@meta.com, paulmck@kernel.org, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 06/11] perf/uprobe: SRCU-ify uprobe->consumer list
-Message-ID: <20240715112504.GD14400@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
+Message-ID: <20240715114107.GE14400@noisy.programming.kicks-ass.net>
 References: <20240711110235.098009979@infradead.org>
- <20240711110400.880800153@infradead.org>
- <CAEf4BzZUVe-dQNcb1VQbEcN4kBFOYrFOB537q4Vhtpm_ebL9aQ@mail.gmail.com>
+ <20240711110401.412779774@infradead.org>
+ <CAEf4BzZCzqOsk55E0b8i9y5zFuf8t=zwrjORnVaLGK0ZVgJTFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,79 +53,98 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZUVe-dQNcb1VQbEcN4kBFOYrFOB537q4Vhtpm_ebL9aQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzZCzqOsk55E0b8i9y5zFuf8t=zwrjORnVaLGK0ZVgJTFg@mail.gmail.com>
 
-On Fri, Jul 12, 2024 at 02:06:08PM -0700, Andrii Nakryiko wrote:
-> + bpf@vger, please cc bpf ML for the next revision, these changes are
-> very relevant there as well, thanks
+On Fri, Jul 12, 2024 at 02:43:52PM -0700, Andrii Nakryiko wrote:
+> + bpf
 > 
 > On Thu, Jul 11, 2024 at 4:07 AM Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > With handle_swbp() hitting concurrently on (all) CPUs the
-> > uprobe->register_rwsem can get very contended. Add an SRCU instance to
-> > cover the consumer list and consumer lifetime.
-> >
-> > Since the consumer are externally embedded structures, unregister will
-> > have to suffer a synchronize_srcu().
-> >
-> > A notably complication is the UPROBE_HANDLER_REMOVE logic which can
-> > race against uprobe_register() such that it might want to remove a
-> > freshly installer handler that didn't get called. In order to close
-> > this hole, a seqcount is added. With that, the removal path can tell
-> > if anything changed and bail out of the removal.
+> > In order to put a bound on the uretprobe_srcu critical section, add a
+> > timer to uprobe_task. Upon every RI added or removed the timer is
+> > pushed forward to now + 1s. If the timer were ever to fire, it would
+> > convert the SRCU 'reference' to a refcount reference if possible.
 > >
 > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > > ---
-> >  kernel/events/uprobes.c |   60 ++++++++++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 50 insertions(+), 10 deletions(-)
+> >  include/linux/uprobes.h |    8 +++++
+> >  kernel/events/uprobes.c |   67 ++++++++++++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 69 insertions(+), 6 deletions(-)
 > >
-> 
-> [...]
-> 
-> > @@ -800,7 +808,7 @@ static bool consumer_del(struct uprobe *
-> >         down_write(&uprobe->consumer_rwsem);
-> >         for (con = &uprobe->consumers; *con; con = &(*con)->next) {
-> >                 if (*con == uc) {
-> > -                       *con = uc->next;
-> > +                       WRITE_ONCE(*con, uc->next);
-> 
-> I have a dumb and mechanical question.
-> 
-> Above in consumer_add() you are doing WRITE_ONCE() for uc->next
-> assignment, but rcu_assign_pointer() for uprobe->consumers. Here, you
-> are doing WRITE_ONCE() for the same operation, if it so happens that
-> uc == *con == uprobe->consumers. So is rcu_assign_pointer() necessary
-> in consumer_addr()? If yes, we should have it here as well, no? And if
-> not, why bother with it in consumer_add()?
-
-add is a publish and needs to ensure all stores to the object are
-ordered before the object is linked in. Note that rcu_assign_pointer()
-is basically a fancy way of writing smp_store_release().
-
-del otoh does not publish, it removes and doesn't need ordering.
-
-It does however need to ensure the pointer write itself isn't torn. That
-is, without the WRITE_ONCE() the compiler is free to do byte stores in
-order to update the 8 byte pointer value (assuming 64bit). This is
-pretty dumb, but very much permitted by C and also utterly fatal in the
-case where an RCU iteration comes by and reads a half-half pointer
-value.
-
-> >                         ret = true;
-> >                         break;
-> >                 }
-> > @@ -1139,9 +1147,13 @@ void uprobe_unregister(struct inode *ino
-> >                 return;
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/rbtree.h>
+> >  #include <linux/types.h>
+> >  #include <linux/wait.h>
+> > +#include <linux/timer.h>
 > >
-> >         down_write(&uprobe->register_rwsem);
-> > +       raw_write_seqcount_begin(&uprobe->register_seq);
-> >         __uprobe_unregister(uprobe, uc);
-> > +       raw_write_seqcount_end(&uprobe->register_seq);
-> >         up_write(&uprobe->register_rwsem);
-> >         put_uprobe(uprobe);
+> >  struct vm_area_struct;
+> >  struct mm_struct;
+> > @@ -79,6 +80,10 @@ struct uprobe_task {
+> >         struct return_instance          *return_instances;
+> >         unsigned int                    depth;
+> >         unsigned int                    active_srcu_idx;
 > > +
-> > +       synchronize_srcu(&uprobes_srcu);
-> >  }
-> >  EXPORT_SYMBOL_GPL(uprobe_unregister);
+> > +       struct timer_list               ri_timer;
+> > +       struct callback_head            ri_task_work;
+> > +       struct task_struct              *task;
+> >  };
+> >
+> >  struct return_instance {
+> > @@ -86,7 +91,8 @@ struct return_instance {
+> >         unsigned long           func;
+> >         unsigned long           stack;          /* stack pointer */
+> >         unsigned long           orig_ret_vaddr; /* original return address */
+> > -       bool                    chained;        /* true, if instance is nested */
+> > +       u8                      chained;        /* true, if instance is nested */
+> > +       u8                      has_ref;
+> 
+> Why bool -> u8 switch? You don't touch chained, so why change its
+> type? And for has_ref you interchangeably use 0 and true for the same
+> field. Let's stick to bool as there is nothing wrong with it?
+
+sizeof(_Bool) is implementation defined. It is 1 for x86_64, but there
+are platforms where it ends up begin 4 (some PowerPC ABIs among others.
+I didn't want to grow this structure for no reason.
+
+> >         int                     srcu_idx;
+> >
+> >         struct return_instance  *next;          /* keep as stack */
 > 
 > [...]
+> 
+> > @@ -1822,13 +1864,20 @@ static int dup_utask(struct task_struct
+> >                         return -ENOMEM;
+> >
+> >                 *n = *o;
+> > -               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
+> > +               if (n->uprobe) {
+> > +                       if (n->has_ref)
+> > +                               get_uprobe(n->uprobe);
+> > +                       else
+> > +                               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
+> > +               }
+> >                 n->next = NULL;
+> >
+> >                 *p = n;
+> >                 p = &n->next;
+> >                 n_utask->depth++;
+> >         }
+> > +       if (n_utask->return_instances)
+> > +               mod_timer(&n_utask->ri_timer, jiffies + HZ);
+> 
+> let's add #define for HZ, so it's adjusted in just one place (instead
+> of 3 as it is right now)
+
+Can do I suppose.
+
+> Also, we can have up to 64 levels of uretprobe nesting, so,
+> technically, the user can cause a delay of 64 seconds in total. Maybe
+> let's use something smaller than a full second? After all, if the
+> user-space function has high latency, then this refcount congestion is
+> much less of a problem. I'd set it to something like 50-100 ms for
+> starters.
+
+Before you know it we'll have a sysctl :/ But sure, we can do something
+shorter.
