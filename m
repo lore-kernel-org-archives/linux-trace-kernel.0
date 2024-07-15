@@ -1,144 +1,156 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF36B64E;
-	Mon, 15 Jul 2024 07:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36372184108
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 08:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721028907; cv=none; b=jP4PNzi4OGSnYDxLFqcqN/3ZfTFsRtRZxDxihzBERgw7EtQJkhLmRowIceKE4pGZpR5zmR/L/ZCZu1gZOlonUKDf68Va2oVCAmwBy+vuEceJcfJ2kNNTFWmF/cKmWXxtT7PTJ1L0YEaCv57u5TkCV+OuxbSIXdtazbgc5NhZFEI=
+	t=1721031156; cv=none; b=C//Qlb2HA3xU80k7AFj2sg4/KxFBHknmOmVD1kDCwotK2qecxhXApOfyanNSvw2hS0yIfLQLe1CVLpccbk2dkqFtoBEZuJCQ1vmRWrN4DbVhLCYIhyvH3F0NnTTwnPhvoM+ECMNIwT4JIbt1aT4B7hWaGl158DWdR62N37wxdbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721028907; c=relaxed/simple;
-	bh=3WWL/jBQa0NLTVwdJTJpRNQUJfoVD8NFt+CYd5SjHNs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7wRLq3PaQMuvx/2PXUsRUTl2NyhGLw3cg/fM1Wqdn5NP/xpFFkt1isVZLG7dXpS6xGyEEcdRKX7+GdsjaRqnqnXLNwZujTvx1Gbey76I68Iq7vwEsYTseAQKN+DCoun7+aL2WWb+kcauEZVhbZwMklggYr37joYniqqea+SHT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRmdB0Lp; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721031156; c=relaxed/simple;
+	bh=5NT0nQnnuvnj76YU9TmtoXstPxW/ueKhrxD8hU9yT+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JTZw5utq8g1lLegNTEbs1D0f/g7Jjv5KRRD+fDQL4wx6tFFRtLCv7Fj4ZhzemPkmzjXeeiApsKs6KrCFFzO4C5rsq0+Wr/P3A9VJ07IBzPMz+WOA9o2fN7c4IMFJyrd+PIwZHblxJOYnf5p0LrvDS2erKNxOsocqSqET/p5QUoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jUKypdCY; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRmdB0Lp"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a77e85cb9b4so450534466b.0;
-        Mon, 15 Jul 2024 00:35:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jUKypdCY"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a77e7a6cfa7so437485666b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 01:12:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721028904; x=1721633704; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BcOgtWAypcf1P+ThgUe+PPTLQr2PLitubGeopMxoiNw=;
-        b=QRmdB0LpWSxpFrtD6u3x/0Pmxzf3oIYJEdVCfscgw3yZxIwLvxHZBEHJtgETD++oLb
-         uKRfOdES3LjmOSBg+fSgv5iycg4A6gfCw250/xdqgxozFj284aZM3HaleAjas5ISuj/B
-         VE2RRNNUqzUifLIkfYCenGgA48V1ODevIMNBzRsQeFybLF/fukEHqckfbzOqOsd/xvBq
-         tJO4LU7KYEvz9h7prGQ0CX85FaUDKJFfwYjVZtClTh1o1/2r2I/yiS0g3y3ky8kF+Rs9
-         dLgW7ryeA2MguEcYkB7DffBnl1d1XfYCH+rKcOonWWuoFiZigDgR09Z9aRQ6xe/wEirE
-         XBAg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1721031152; x=1721635952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=03jWWWCVzc5/LJdqyioI99prKjte6wH3TiKjV7DS5tM=;
+        b=jUKypdCY0qNpX8Vc/i5UXyx0VbW9NdWlG8SWSGWJ89cL0H+9Fvjy9/b9SGpcdP1MCS
+         Eem2l1xkAg/SQgZXCCg2EPqABTBhZn9CCcWAP+ty7t9bWpULQwA+OORjW6KSd3Ld85AP
+         hFg1clu9Hh5Km27E8Aao28WbPhKipRK3gmLm+ep5iV8U6BWLEsmBmsRiu8o/yt8kbBLK
+         0IBJOpwuAX83n6Fs9aLUtX13p8ej0G3HMRtNrCgpnYHPOmrK08uJWzAqrim+Sv+GMrcD
+         b5sp3Tk85z8IbuZ5NTQn4/JQqp2oxri9gxHGUIjeUF3yB3YaVpSP2+KUDAm1E3rgrNfl
+         WnLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721028904; x=1721633704;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BcOgtWAypcf1P+ThgUe+PPTLQr2PLitubGeopMxoiNw=;
-        b=JaMzFlECL8VV2ZgnfDMmNJ6BY8LpF88E/wiVF48mYEoUqItVGPEef2rjk0lDVmnuvX
-         0ALxNNy8BJhACbuo9Ui9hQBySUPWFpAWAkl/P/o6TBpNaHQOyXN9HslHOVl7bEZIqQPQ
-         4oJlgU8RlelZkK3J7dnht57Evf6EdVt8/sm+JYUyJAGaS/KIUY4tbRFDgbpyY8n4b81f
-         rno874iuFQDMaHihIHDglLeQ71D+uCrg2AnLVNFy+8ePbbL2Qxn0rfszmV8ENoKIJZxf
-         ZikT7UplKurqRfofhVpA89gaTEK6fBjM4X4ltJ7K2ueURk8DR0qlLJSqfmrHfPnwceLQ
-         vu6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVEnksMe66S4JSP+ntgnAhQSJ879+QcaqElPyVeHNuumTnYJ/nzEYWCGO6yZhl74jiDdvnxG9m3TL/DNQkm7CFbQiQQ/Yj3LWwVfXZYLz5/pQ6K4lkReIbkRG00WRdbBwcISqywnH8gzBcZlntfQxPW2jPZlnpEcHzXWFXEAJsuWCu6FV1FTS1KrJAxYRVc6kX7ZLuO8WP5W3Bg32yzjX/8
-X-Gm-Message-State: AOJu0Yznmiy6LlVKv5aSa+TIutT1zxpqIrGLF+hKSWx2NIf58xFEyMwZ
-	U25frPjyg48/MoQBRvIgDDX1YN2CRxZOzo9gdv+op88bcBzLY+3z
-X-Google-Smtp-Source: AGHT+IEKVP1zAahjz9aKLXWmRMsyrpaqAkpZLrsO+kL6HBBMg6LMXmL28y8wrOQyOfMmBNzrpCxAQQ==
-X-Received: by 2002:a17:907:d93:b0:a77:b3c4:cd28 with SMTP id a640c23a62f3a-a780b68a287mr1551287666b.9.1721028904192;
-        Mon, 15 Jul 2024 00:35:04 -0700 (PDT)
-Received: from krava ([2a00:102a:5016:2f5f:f580:e408:137f:9c83])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc822bfasm187916866b.222.2024.07.15.00.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 00:35:03 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 15 Jul 2024 09:34:57 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH 2/2] selftests/bpf: Change uretprobe syscall number in
- uprobe_syscall test
-Message-ID: <ZpTRIa2_sk4hKAQU@krava>
-References: <20240712135228.1619332-1-jolsa@kernel.org>
- <20240712135228.1619332-3-jolsa@kernel.org>
- <CAEf4BzY3Xo-g02r9TY9tHq49JLrrYoUNoXN=WXhJ02q4xUbGbA@mail.gmail.com>
- <20240715144651.98ef93f04a96a7aa9109d55e@kernel.org>
+        d=1e100.net; s=20230601; t=1721031152; x=1721635952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=03jWWWCVzc5/LJdqyioI99prKjte6wH3TiKjV7DS5tM=;
+        b=e1f2gbGx+ZlrTaHi+fXxEAcPcigwBo5AVWbMCCgJsuuE8EtrmWsYZpJigklzKLg5Iq
+         PUpCScrX1s2yQ+cHgouXc47oqcfufgrT+ABqvTvw8tV14MERg0oj9m9JtFS0XBeriPs4
+         kwgtUGpdOK1mQd7iesG4yTEpOqvLTe8uOEEcagherkSAG0eKIiaNaxEjX2aB+3PcdbRv
+         zauJ8C09FeCdxHVdY68mE15pW+ECgGc+43h/2JW61HAKgqh5ulwoGUMJzJU3fVXTGmEP
+         bF3vwU/sVLeENwaqxkgmNHUDay1mfGqgJHD2YFYHapwgJwLGrEFz1q17jtFKFcavfsnd
+         ur4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2BxGGWXtIv/XDPTof3G31lY2iUC0weqVRm/KmfKFufdrrBKNXviA1UhqXlup24edVykmyJkrZ44101usp29HTCJG7SHeBYVxpB2Gk7iJgnSus
+X-Gm-Message-State: AOJu0YzIEXSb/0er6wqzlZy7ZlXu9PZKeZtxOi6/x4+ltGoLtBRDE+5h
+	tdXI7MouXPr0sH6llPSSnnvQkyZQqlAF0Hcq8dxwpS54LDumnDGbowZGHW9A8hwJe62LhuEniYG
+	eHxWWxwK5Zj85QlhsvQeeu+aPi637ZIZg2aiIdA==
+X-Google-Smtp-Source: AGHT+IFAM/JbPKSHGtXJzUtImNJqPcsuIujR27+IbnzngqO96PYEia8kBR8MYr6ACsxPM+BKbwLFE6qk68WRrNEudhw=
+X-Received: by 2002:a17:906:66c9:b0:a77:cf9d:f497 with SMTP id
+ a640c23a62f3a-a780b70513emr1187421166b.40.1721031152552; Mon, 15 Jul 2024
+ 01:12:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240715144651.98ef93f04a96a7aa9109d55e@kernel.org>
+References: <20240624082141.153871-1-alexghiti@rivosinc.com> <CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com>
+In-Reply-To: <CAMuHMdUwx=rU2MWhFTE6KhYHm64phxx2Y6u05-aBLGfeG5696A@mail.gmail.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Mon, 15 Jul 2024 10:12:21 +0200
+Message-ID: <CAHVXubicJ=g_vXWUh+uGbv00X0gnn24J3SCaU4PhRD-1ZReY8g@mail.gmail.com>
+Subject: Re: [PATCH -fixes] riscv: patch: Flush the icache right after
+ patching to avoid illegal insns
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Andy Chiu <andy.chiu@sifive.com>, Puranjay Mohan <puranjay12@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 15, 2024 at 02:46:51PM +0900, Masami Hiramatsu wrote:
-> On Fri, 12 Jul 2024 11:27:30 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> 
-> > On Fri, Jul 12, 2024 at 6:53 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > Fixing the syscall number value.
-> > >
-> > > Fixes: 9e7f74e64ae5 ("selftests/bpf: Add uretprobe syscall call from user space test")
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > 
-> > is this selftest in probes/for-next already? If yes, I'd combine these
-> > two patches to avoid any bisection problems
+Hi Geert,
 
-yes it's all there.. I don't mind squashing it, I just did not want
-to combine kernel and user space parts.. up to Masami I guess
+On Tue, Jul 9, 2024 at 10:13=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Alexandre,
+>
+> On Mon, Jun 24, 2024 at 10:23=E2=80=AFAM Alexandre Ghiti <alexghiti@rivos=
+inc.com> wrote:
+> > We cannot delay the icache flush after patching some functions as we ma=
+y
+> > have patched a function that will get called before the icache flush.
+> >
+> > The only way to completely avoid such scenario is by flushing the icach=
+e
+> > as soon as we patch a function. This will probably be costly as we don'=
+t
+> > batch the icache maintenance anymore.
+> >
+> > Fixes: 6ca445d8af0e ("riscv: Fix early ftrace nop patching")
+> > Reported-by: Conor Dooley <conor.dooley@microchip.com>
+> > Closes: https://lore.kernel.org/linux-riscv/20240613-lubricant-breath-0=
+61192a9489a@wendy/
+> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>
+> Thanks for your patch, which is now commit edf2d546bfd6f5c4 ("riscv:
+> patch: Flush the icache right after patching to avoid illegal
+> insns") in v6.10-rc6.
+>
+> > --- a/arch/riscv/kernel/patch.c
+> > +++ b/arch/riscv/kernel/patch.c
+> > @@ -189,9 +205,6 @@ int patch_text_set_nosync(void *addr, u8 c, size_t =
+len)
+> >
+> >         ret =3D patch_insn_set(tp, c, len);
+> >
+> > -       if (!ret)
+> > -               flush_icache_range((uintptr_t)tp, (uintptr_t)tp + len);
+> > -
+> >         return ret;
+> >  }
+> >  NOKPROBE_SYMBOL(patch_text_set_nosync);
+>
+> patch_text_set_nosync() is now identical to (static) patch_insn_set(),
+> and the latter has no other callers.
+>
+> > @@ -224,9 +237,6 @@ int patch_text_nosync(void *addr, const void *insns=
+, size_t len)
+> >
+> >         ret =3D patch_insn_write(tp, insns, len);
+> >
+> > -       if (!ret)
+> > -               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len=
+);
+> > -
+> >         return ret;
+> >  }
+> >  NOKPROBE_SYMBOL(patch_text_nosync);
+>
+> patch_text_nosync() is now identical to patch_insn_write(), and both
+> functions are called from outside this file.
+>
 
-> > 
-> > but either way
-> > 
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> 
-> Thanks, let me pick it to for-next branch.
+I'll do something about that, thanks.
 
-thanks,
-jirka
+Alex
 
-> 
-> Thank you,
-> 
-> > 
-> > 
-> > > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > > index c8517c8f5313..bd8c75b620c2 100644
-> > > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > > @@ -216,7 +216,7 @@ static void test_uretprobe_regs_change(void)
-> > >  }
-> > >
-> > >  #ifndef __NR_uretprobe
-> > > -#define __NR_uretprobe 463
-> > > +#define __NR_uretprobe 467
-> > >  #endif
-> > >
-> > >  __naked unsigned long uretprobe_syscall_call_1(void)
-> > > --
-> > > 2.45.2
-> > >
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
