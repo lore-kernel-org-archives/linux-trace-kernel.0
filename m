@@ -1,150 +1,109 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA172572;
-	Mon, 15 Jul 2024 11:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA727187868;
+	Mon, 15 Jul 2024 11:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721043675; cv=none; b=kB8Yz06qndFya+8HXADFzGSiYsqZuPySSDg3bH2FqIecIuab58FcS8pu2+YgaJnfVUl35kffYIGdp7vN7JCbuBlIbmYXXmADN1nK6ywjQEcObYXgzddhjXmZEx5IwliSGjN6gc4uXJ6vKuq82MMC/x+0xf/Q0pnZwM+HsNAORi4=
+	t=1721044232; cv=none; b=EmQ48Gd9zqpAHUwqRROk7v8tlFAPUNHtgXnTlhtO2CEksSKf3EdAjzIedn7CdKnTaFqYEQrKUhMyaIWgaYE2817NZ1ljtsgXbYb8ZSR622W61opuAgcJzq65Heh/lL65Kvjw//YwTUxzU5uq2fVKUew1zgFjNJreNrdJdXqq578=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721043675; c=relaxed/simple;
-	bh=OXHU1MHxbj793Mtok78Gc21X5UrdTvA60vYMWvz7U+E=;
+	s=arc-20240116; t=1721044232; c=relaxed/simple;
+	bh=6HktQveZYZY8xj7VM6lTXVzRe46Y/bY66m6VrxTkVvM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kge2vGnK1Jf/PZ+KN+6bzX7XJE58cp4zXX08wYLwTztWIOPV3ySQXa+cLc/MjiDBgCUqJwfLubOhnWUQRQPlvGG1WsPwk82sKsTu/mXceHXXmFpso2XY/mGCndNymY+9wAeuEthQdlFlVF8WNayebBJEd0rnmhGs8t3eUtVm8OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ctwKmMfN; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=HdPstFJo+5vOj4+9Os7v2uAOCttn3XuDV6LVs7XnK49IbeYLuZZi9Gyr3Na0faQpFc/eLw96OT+VKXI9VjJrMbhRcCGqAS9r99KeXXgNIt23X6gUeABPeStuE6zg6VJ9g7EW5Pp4l110aN739/GU5cettBHaWpPhEgiVLZt0R74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jbSed8z8; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ctwKmMfN"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jbSed8z8"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=y5Q7Vcvg0k0Ths9BKndB5/gtpLO3ynMN1NfxgNm2faI=; b=ctwKmMfNK/BqpHr7ftrEWvIBBR
-	bbsbK+lDxtD0xVDj1JytO98GqK+F1TB3L/yDWVAatHptf+NujI8dP8O1r+nXwaB40s2gsvtaqfoZU
-	HKs7Xg/ZsEfJ3B7KZBzdBIilKTYQrDaRKTXYholmM82iiaZWUYobEUPZ/LKvcYic//DGwTMsAZ2n6
-	w5XIo43thOCEpKGAL3d71s4kcSLdW7SoNJDwOH5Ki9ojbkcmN4k1tfyTRKTCNhGz/AR1VY1PH9ewF
-	WnnlHpk7Quk8YOMOPkkh459oVm8h/4fxgyUUgAWJTcEbrdc103EHpuJjt1xfAqMv1e+FiWSXIEqay
-	R1/2ki7Q==;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=IgLqbIYYbf5VaLN+RYs8iTvm9G3RYQZaYHEJtEaSwz4=; b=jbSed8z8U4eNPiMh9yUAukoX7C
+	DvNVRfih/B79WBFOmvJxls1k8PXK+W8t6VZyqisRVTvici/2kL0dXupXMP/xInR8lq6zYpEJVx8jG
+	YHiagrxD5YdqY6EjBJpr/qGgEdtKcPoqTmrGnif5iQqqXAVmbPXLMK0UQSyszkE3E0b/qhXYFupzs
+	3ITb74NDInqIsN47QSEYGwGcmvmaXy5I1tzM7vkEI0559MGHOI/FtUEAplUJCdP+SQPwNSPcVdA+s
+	zbz8yPU9LE7ZaKIw6CqtzDzzfzocLRdRsObZujhu4ilzoCUvw+xyn+13+HKisiqJfJ5b7vgf+ltDu
+	67MPOu/Q==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTK4q-0000000FkFX-0D7n;
-	Mon, 15 Jul 2024 11:41:08 +0000
+	id 1sTKDr-0000000FkoJ-2Fm1;
+	Mon, 15 Jul 2024 11:50:27 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8AD433003FF; Mon, 15 Jul 2024 13:41:07 +0200 (CEST)
-Date: Mon, 15 Jul 2024 13:41:07 +0200
+	id 322553003FF; Mon, 15 Jul 2024 13:50:27 +0200 (CEST)
+Date: Mon, 15 Jul 2024 13:50:27 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
-	clm@meta.com, paulmck@kernel.org, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 11/11] perf/uprobe: Add uretprobe timer
-Message-ID: <20240715114107.GE14400@noisy.programming.kicks-ass.net>
-References: <20240711110235.098009979@infradead.org>
- <20240711110401.412779774@infradead.org>
- <CAEf4BzZCzqOsk55E0b8i9y5zFuf8t=zwrjORnVaLGK0ZVgJTFg@mail.gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>, mingo@kernel.org, andrii@kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add uprobes entry
+Message-ID: <20240715115027.GG14400@noisy.programming.kicks-ass.net>
+References: <172074397710.247544.17045299807723238107.stgit@devnote2>
+ <20240715181417.6421de1e1a18a39685533115@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZCzqOsk55E0b8i9y5zFuf8t=zwrjORnVaLGK0ZVgJTFg@mail.gmail.com>
+In-Reply-To: <20240715181417.6421de1e1a18a39685533115@kernel.org>
 
-On Fri, Jul 12, 2024 at 02:43:52PM -0700, Andrii Nakryiko wrote:
-> + bpf
+On Mon, Jul 15, 2024 at 06:14:17PM +0900, Masami Hiramatsu wrote:
+> Hi Peter, Oleg,
 > 
-> On Thu, Jul 11, 2024 at 4:07 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > In order to put a bound on the uretprobe_srcu critical section, add a
-> > timer to uprobe_task. Upon every RI added or removed the timer is
-> > pushed forward to now + 1s. If the timer were ever to fire, it would
-> > convert the SRCU 'reference' to a refcount reference if possible.
-> >
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> If this is OK for you, please give your Ack.
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+Please also collect Oleg's ack.
+
+> 
+> Thank you,
+> 
+> On Fri, 12 Jul 2024 09:26:17 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add uprobes entry to MAINTAINERS to clarify the maintainers.
+> > 
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > ---
-> >  include/linux/uprobes.h |    8 +++++
-> >  kernel/events/uprobes.c |   67 ++++++++++++++++++++++++++++++++++++++++++++----
-> >  2 files changed, 69 insertions(+), 6 deletions(-)
-> >
-> > --- a/include/linux/uprobes.h
-> > +++ b/include/linux/uprobes.h
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/rbtree.h>
-> >  #include <linux/types.h>
-> >  #include <linux/wait.h>
-> > +#include <linux/timer.h>
-> >
-> >  struct vm_area_struct;
-> >  struct mm_struct;
-> > @@ -79,6 +80,10 @@ struct uprobe_task {
-> >         struct return_instance          *return_instances;
-> >         unsigned int                    depth;
-> >         unsigned int                    active_srcu_idx;
+> >  MAINTAINERS |   13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index da5352dbd4f3..ae731fa2328c 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -23105,6 +23105,19 @@ F:	drivers/mtd/ubi/
+> >  F:	include/linux/mtd/ubi.h
+> >  F:	include/uapi/mtd/ubi-user.h
+> >  
+> > +UPROBES
+> > +M:	Masami Hiramatsu <mhiramat@kernel.org>
+> > +M:	Oleg Nesterov <oleg@redhat.com>
+> > +M:	Peter Zijlstra <peterz@infradead.org>
+> > +L:	linux-kernel@vger.kernel.org
+> > +L:	linux-trace-kernel@vger.kernel.org
+> > +S:	Maintained
+> > +F:	arch/*/include/asm/uprobes.h
+> > +F:	arch/*/kernel/probes/uprobes.c
+> > +F:	arch/*/kernel/uprobes.c
+> > +F:	include/linux/uprobes.h
+> > +F:	kernel/events/uprobes.c
 > > +
-> > +       struct timer_list               ri_timer;
-> > +       struct callback_head            ri_task_work;
-> > +       struct task_struct              *task;
-> >  };
-> >
-> >  struct return_instance {
-> > @@ -86,7 +91,8 @@ struct return_instance {
-> >         unsigned long           func;
-> >         unsigned long           stack;          /* stack pointer */
-> >         unsigned long           orig_ret_vaddr; /* original return address */
-> > -       bool                    chained;        /* true, if instance is nested */
-> > +       u8                      chained;        /* true, if instance is nested */
-> > +       u8                      has_ref;
+> >  USB "USBNET" DRIVER FRAMEWORK
+> >  M:	Oliver Neukum <oneukum@suse.com>
+> >  L:	netdev@vger.kernel.org
+> > 
 > 
-> Why bool -> u8 switch? You don't touch chained, so why change its
-> type? And for has_ref you interchangeably use 0 and true for the same
-> field. Let's stick to bool as there is nothing wrong with it?
-
-sizeof(_Bool) is implementation defined. It is 1 for x86_64, but there
-are platforms where it ends up begin 4 (some PowerPC ABIs among others.
-I didn't want to grow this structure for no reason.
-
-> >         int                     srcu_idx;
-> >
-> >         struct return_instance  *next;          /* keep as stack */
 > 
-> [...]
-> 
-> > @@ -1822,13 +1864,20 @@ static int dup_utask(struct task_struct
-> >                         return -ENOMEM;
-> >
-> >                 *n = *o;
-> > -               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
-> > +               if (n->uprobe) {
-> > +                       if (n->has_ref)
-> > +                               get_uprobe(n->uprobe);
-> > +                       else
-> > +                               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
-> > +               }
-> >                 n->next = NULL;
-> >
-> >                 *p = n;
-> >                 p = &n->next;
-> >                 n_utask->depth++;
-> >         }
-> > +       if (n_utask->return_instances)
-> > +               mod_timer(&n_utask->ri_timer, jiffies + HZ);
-> 
-> let's add #define for HZ, so it's adjusted in just one place (instead
-> of 3 as it is right now)
-
-Can do I suppose.
-
-> Also, we can have up to 64 levels of uretprobe nesting, so,
-> technically, the user can cause a delay of 64 seconds in total. Maybe
-> let's use something smaller than a full second? After all, if the
-> user-space function has high latency, then this refcount congestion is
-> much less of a problem. I'd set it to something like 50-100 ms for
-> starters.
-
-Before you know it we'll have a sysctl :/ But sure, we can do something
-shorter.
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
