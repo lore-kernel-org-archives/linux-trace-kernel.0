@@ -1,104 +1,164 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3CB18C324
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 12:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0826118C176;
+	Mon, 15 Jul 2024 12:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721047379; cv=none; b=lUXP1jHhNqukbc5osP2ZyABIKtEN1kzdfCn39Pzj+Z/V4FENkdKuQFsF55tYFJfSePC9mx27sDda7pMkziPaRNmS4z78skqIVMTumikKx0dg7qpgOyE6/bNe3VRw42Xjk1D67qoOt3BK+vl49h7VISoFv7mwneKSp62lQw68G3I=
+	t=1721047751; cv=none; b=UTiZOO4klNFjygCkS4m+7E39WP7fmJuCBRgSK0ZNDUcehapXaEMWxVO1J/n8LtobChAJ4gJyT+IugEg/LSWwQUS7+82jMKwW6UD7FWKWCjXDuDfvWU25FPmzDwIvTjnlE91zp6+Fljj+D9kz9wF4o2Sf5MDxDisAX4KWpbegyMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721047379; c=relaxed/simple;
-	bh=aPxbU1CRqN/ObjOco6L+kuqqgrjuH5Lv+0eg1N876o4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=JnFMwAchJ1DGDvirkarQqxnpsyBm98y4eMlWwkBAgxYCL0r4EpIu1Ad1j+QfxJgMERzo4FSh6IWGA2Uj2KAashMUMfqV76rEd92JcZVjcaYKrQNdHor4H1WmrgjruLh/hYwEvWWIJluVwI1R1F5jbbmpD63VnmsTZNY0gAssmJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-4-SUXMSojjO4CMOodAlWhuTQ-1; Mon, 15 Jul 2024 13:42:55 +0100
-X-MC-Unique: SUXMSojjO4CMOodAlWhuTQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 15 Jul
- 2024 13:42:08 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 15 Jul 2024 13:42:08 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Nicholas Piggin' <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-kbuild@vger.kernel.org"
-	<linux-kbuild@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Daniel Borkmann
-	<daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, "Alexei
- Starovoitov" <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, "Andrii
- Nakryiko" <andrii@kernel.org>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, Vishal Chourasia <vishalc@linux.ibm.com>,
-	Mahesh Salgaonkar <mahesh@linux.ibm.com>, Hari Bathini
-	<hbathini@linux.ibm.com>, "Masami Hiramatsu" <mhiramat@kernel.org>
-Subject: RE: [RFC PATCH v4 12/17] powerpc64/ftrace: Move ftrace sequence out
- of line
-Thread-Topic: [RFC PATCH v4 12/17] powerpc64/ftrace: Move ftrace sequence out
- of line
-Thread-Index: AQHa1pCD4cP620l/NEOwGIoX3oyFIrH3uX7Q
-Date: Mon, 15 Jul 2024 12:42:08 +0000
-Message-ID: <e7e31eaa04234dddaac660a38adedee4@AcuMS.aculab.com>
-References: <cover.1720942106.git.naveen@kernel.org>
- <9cf2cdddba74ec167ae1af5ec189bba8f704fb51.1720942106.git.naveen@kernel.org>
- <D2PYW90LRVAY.3PCE9P3NE2NEB@gmail.com>
-In-Reply-To: <D2PYW90LRVAY.3PCE9P3NE2NEB@gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1721047751; c=relaxed/simple;
+	bh=xFFgpft1Mea2W1k9CRfnoGMXT8jsvAC5W7aI49zY2Ho=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XsbhcRmzenHvMKxFjCO9t2VfP7tScdIiWJSDyORlINKZm+M11+6hne6RDEpdCfZn0eJGxYTSeOgHtvfVbmf7DmaOEK/Kpzzx1J264z8avgOWZQZwHNSrC/GFgIFel4fgsapAITcGgYeZUkYePxKcPHjySrVMnsOU4ymXVmdxGdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHO0YxtV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHO0YxtV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE245C32782;
+	Mon, 15 Jul 2024 12:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721047750;
+	bh=xFFgpft1Mea2W1k9CRfnoGMXT8jsvAC5W7aI49zY2Ho=;
+	h=From:Subject:Date:To:Cc:From;
+	b=hHO0YxtV0sA7lKQy/qpLsAUoBj1SK5dbWWh/2CEfEcmYykhD36/pSSmr7qi/ixBVF
+	 jQ0qVn2G1Kctx7Xm/CRjFjBCp0cmcJrckKdNxBA084n9hdWkj55fal7wkSfI0Bwhkn
+	 e2/wyIH70/thsGeXp+3qb9BEC1AxXsogak1p2XusxeoG/s9fCWGxD7amUEZz6nz/Kz
+	 +eSbbBfQMq8Oguwj6tUjlMYhaHKipf4O+J+TxukYaaBTMYbvn4bFjCkS0gS6nEDygw
+	 LOhWc+6Z9oxKKkF9i/dNle20vVbucj4mcDeyWNQz+SaZ0KzI1jvKqTywtRnUVppgrM
+	 frsjZG+6s597g==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v6 0/9] fs: multigrain timestamp redux
+Date: Mon, 15 Jul 2024 08:48:51 -0400
+Message-Id: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALMalWYC/2XOQW7DIBAF0KtErEs0AwyGrHqPqgsw4KA0doUjq
+ 1Xkuwdn4Tjy8o/mff07G2PJcWSnw52VOOUxD30N+uPA2rPru8hzqJkJEAq00Pza3fI1cmqDAY8
+ mGARWn39LTPnvWfT1XfM5j7eh/D97J1yuu4oJOXCHxkoSAZJJn5dY+vhzHErHlo5JvFwDuDpRH
+ dqgUDirINidk1tHq5PVGfIiOGe9lLRzauvM6tSyE5JsdfLUJLlztHH42knVycZ78kpTiv7NzfP
+ 8AGWAWtd9AQAA
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
+ Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
+ Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+ Randy Dunlap <rdunlap@infradead.org>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3631; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=xFFgpft1Mea2W1k9CRfnoGMXT8jsvAC5W7aI49zY2Ho=;
+ b=kA0DAAgBAA5oQRlWghUByyZiAGaVGr2g4UrC2NR/JuNqzaZKyhN0Ef4ZmpMvcH7PbDDPZHHRV
+ IkCMwQAAQgAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJmlRq9AAoJEAAOaEEZVoIVTjQP/jX+
+ FkDKAs3wVJ5Axae25xxqh3+9eKr0TZGpOgkPagjwLT6v3f9XdjTx2D+ny31MbxZx/8McTCh5CqJ
+ MGiEx4rfChljA39Fo/tW9wXGqNRPbnTWdKXc4PfP6WoC0NVtDBRFQtLB9NypjpBFG8NEMhzxWHi
+ 7d4e3cfDb9xiU6JM0NjmIligXvUQiWXAKnzPfPQO2IFF4dbLuMieQdwv2aJcpR6dFseL1XsEWSP
+ CEvJfHO1LicNtZ2HnTCUN4THmgXqRq2+DCAh13kGt63mbgaWg2ZdMaxzjlKn0Q6PzgYGca0jJJS
+ /6R4MROk86E+GnGt7CkR42Qll5QKwzReKTCAlZBQBuECkMcOTMGUaJnMKBb4aSH+pgfdEO53CQ3
+ f/jO/nubRe3e1M7r7xjT3fGDfTXAecDgT8CjXnAlGDjyXfapx+cjnMSROMycWqsPxaVAlZmSKXt
+ nxZ5qgK/wv5IwQt9KknfIKDoV6xiK+u27ekJ+feAYc/e5dUd+m2AzN+LIf3X0K8n917ky5sZKvB
+ mhpyaxFsNuX78/dILLUSGbie3FmjWHzJokfYwLfrwSUt3LYE4YXJ/gXEgHs+eQhmU8HV0GiD4QQ
+ nKvv2railk/i6NH5pvQy2msnvWcNvs2yvwaMevWsvEqFLM6yFTMJH90b3Rw/l3SSF7mq6YQrGzf
+ DJstS
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-RnJvbTogTmljaG9sYXMgUGlnZ2luDQo+IFNlbnQ6IDE1IEp1bHkgMjAyNCAwOToyNQ0KPiANCj4g
-T24gU3VuIEp1bCAxNCwgMjAyNCBhdCA2OjI3IFBNIEFFU1QsIE5hdmVlbiBOIFJhbyB3cm90ZToN
-Cj4gPiBGdW5jdGlvbiBwcm9maWxlIHNlcXVlbmNlIG9uIHBvd2VycGMgaW5jbHVkZXMgdHdvIGlu
-c3RydWN0aW9ucyBhdCB0aGUNCj4gPiBiZWdpbm5pbmcgb2YgZWFjaCBmdW5jdGlvbjoNCj4gPiAJ
-bWZscglyMA0KPiA+IAlibAlmdHJhY2VfY2FsbGVyDQo+ID4NCj4gPiBUaGUgY2FsbCB0byBmdHJh
-Y2VfY2FsbGVyKCkgZ2V0cyBub3AnZWQgb3V0IGR1cmluZyBrZXJuZWwgYm9vdCBhbmQgaXMNCj4g
-PiBwYXRjaGVkIGluIHdoZW4gZnRyYWNlIGlzIGVuYWJsZWQuDQo+ID4NCj4gPiBHaXZlbiB0aGUg
-c2VxdWVuY2UsIHdlIGNhbm5vdCByZXR1cm4gZnJvbSBmdHJhY2VfY2FsbGVyIHdpdGggJ2Jscicg
-YXMgd2UNCj4gPiBuZWVkIHRvIGtlZXAgTFIgYW5kIHIwIGludGFjdC4gVGhpcyByZXN1bHRzIGlu
-IGxpbmsgc3RhY2sgKHJldHVybg0KPiA+IGFkZHJlc3MgcHJlZGljdG9yKSBpbWJhbGFuY2Ugd2hl
-biBmdHJhY2UgaXMgZW5hYmxlZC4gVG8gYWRkcmVzcyB0aGF0LCB3ZQ0KPiA+IHdvdWxkIGxpa2Ug
-dG8gdXNlIGEgdGhyZWUgaW5zdHJ1Y3Rpb24gc2VxdWVuY2U6DQo+ID4gCW1mbHIJcjANCj4gPiAJ
-YmwJZnRyYWNlX2NhbGxlcg0KPiA+IAltdGxyCXIwDQo+ID4NCj4gPiBGdXJ0aGVyIG1vcmUsIHRv
-IHN1cHBvcnQgRFlOQU1JQ19GVFJBQ0VfV0lUSF9DQUxMX09QUywgd2UgbmVlZCB0bw0KPiA+IHJl
-c2VydmUgdHdvIGluc3RydWN0aW9uIHNsb3RzIGJlZm9yZSB0aGUgZnVuY3Rpb24uIFRoaXMgcmVz
-dWx0cyBpbiBhDQo+ID4gdG90YWwgb2YgZml2ZSBpbnN0cnVjdGlvbiBzbG90cyB0byBiZSByZXNl
-cnZlZCBmb3IgZnRyYWNlIHVzZSBvbiBlYWNoDQo+ID4gZnVuY3Rpb24gdGhhdCBpcyB0cmFjZWQu
-DQo+ID4NCj4gPiBNb3ZlIHRoZSBmdW5jdGlvbiBwcm9maWxlIHNlcXVlbmNlIG91dC1vZi1saW5l
-IHRvIG1pbmltaXplIGl0cyBpbXBhY3QuDQo+ID4gVG8gZG8gdGhpcywgd2UgcmVzZXJ2ZSBhIHNp
-bmdsZSBub3AgYXQgZnVuY3Rpb24gZW50cnkgdXNpbmcNCj4gPiAtZnBhdGNoYWJsZS1mdW5jdGlv
-bi1lbnRyeT0xIGFuZCBhZGQgYSBwYXNzIG9uIHZtbGludXgubyB0byBkZXRlcm1pbmUNCj4gPiB0
-aGUgdG90YWwgbnVtYmVyIG9mIGZ1bmN0aW9ucyB0aGF0IGNhbiBiZSB0cmFjZWQuIFRoaXMgaXMg
-dGhlbiB1c2VkIHRvDQo+ID4gZ2VuZXJhdGUgYSAuUyBmaWxlIHJlc2VydmluZyB0aGUgYXBwcm9w
-cmlhdGUgYW1vdW50IG9mIHNwYWNlIGZvciB1c2UgYXMNCj4gPiBmdHJhY2Ugc3R1YnMsIHdoaWNo
-IGlzIGJ1aWx0IGFuZCBsaW5rZWQgaW50byB2bWxpbnV4Lg0KPiANCj4gVGhlc2UgYXJlIGFsbCBn
-b2luZyBpbnRvIC50cmFtcC5mdHJhY2UudGV4dCBBRkFJS1M/IFNob3VsZCB0aGF0IGJlDQo+IG1v
-dmVkIGFmdGVyIHNvbWUgb2YgdGhlIG90aGVyIHRleHQgaW4gdGhlIGxpbmtlciBzY3JpcHQgdGhl
-biBpZiBpdA0KPiBjb3VsZCBnZXQgcXVpdGUgbGFyZ2U/IHNjaGVkIGFuZCBsb2NrIGFuZCBvdGhl
-ciB0aGluZ3Mgc2hvdWxkIGJlDQo+IGNsb3NlciB0byB0aGUgcmVzdCBvZiB0ZXh0IGFuZCBob3Qg
-Y29kZS4NCg0KQ2FuJ3QgeW91IGFsbG9jYXRlIHRoZSBzcGFjZSBmb3IgdGhlICdmdW5jdGlvbiBw
-cm9maWxlIHNlcXVlbmNlJw0KYXQgcnVuLXRpbWUgd2hlbiAoaWYpIGZ0cmFjZSBpcyBlbmFibGVk
-Pw0KV2hlbiBmdHJhY2UgZ2V0cyBkaXNhYmxlZCBpdCBpcyBsaWtlbHkgcG9zc2libGUgdG8gc2F2
-ZSB0aGUgdHJhbXBvbGluZQ0KbnVtYmVyIGluIHRoZSBub3AgLSBzbyB0aGUgc2FtZSBtZW1vcnkg
-Y2FuIGJlIHVzZWQgbmV4dCB0aW1lLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
-IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
-UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+I think this is pretty much ready for linux-next now. Since the latest
+changes are pretty minimal, I've left the Reviewed-by's intact. It would
+be nice to have acks or reviews from maintainers for ext4 and tmpfs too.
+
+I did try to plumb this into bcachefs too, but the way it handles
+timestamps makes that pretty difficult. It keeps the active copies in an
+internal representation of the on-disk inode and periodically copies
+them to struct inode. This is backward from the way most blockdev
+filesystems do this.
+
+Christian, would you be willing to pick these up  with an eye toward
+v6.12 after the merge window settles?
+
+Thanks!
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v6:
+- Normalize timespec64 in inode_set_ctime_to_ts
+- use DEFINE_PER_CPU counters for better vfs consistency
+- skip ctime cmpxchg if the result means nothing will change
+- add trace_ctime_xchg_skip to track skipped ctime updates
+- use __print_flags in ctime_ns_xchg tracepoint
+- Link to v5: https://lore.kernel.org/r/20240711-mgtime-v5-0-37bb5b465feb@kernel.org
+
+Changes in v5:
+- refetch coarse time in coarse_ctime if not returning floor
+- timestamp_truncate before swapping new ctime value into place
+- track floor value as atomic64_t
+- cleanups to Documentation file
+- Link to v4: https://lore.kernel.org/r/20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org
+
+Changes in v4:
+- reordered tracepoint fields for better packing
+- rework percpu counters again to also count fine grained timestamps
+- switch to try_cmpxchg for better efficiency
+- Link to v3: https://lore.kernel.org/r/20240705-mgtime-v3-0-85b2daa9b335@kernel.org
+
+Changes in v3:
+- Drop the conversion of i_ctime fields to ktime_t, and use an unused bit
+  of the i_ctime_nsec field as QUERIED flag.
+- Better tracepoints for tracking floor and ctime updates
+- Reworked percpu counters to be more useful
+- Track floor as monotonic value, which eliminates clock-jump problem
+
+Changes in v2:
+- Added Documentation file
+- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
+
+---
+Jeff Layton (9):
+      fs: add infrastructure for multigrain timestamps
+      fs: tracepoints around multigrain timestamp events
+      fs: add percpu counters for significant multigrain timestamp events
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      Documentation: add a new file documenting multigrain timestamps
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ Documentation/filesystems/multigrain-ts.rst | 120 +++++++++++++
+ fs/attr.c                                   |  52 +++++-
+ fs/btrfs/file.c                             |  25 +--
+ fs/btrfs/super.c                            |   3 +-
+ fs/ext4/super.c                             |   2 +-
+ fs/inode.c                                  | 251 +++++++++++++++++++++++++---
+ fs/stat.c                                   |  39 ++++-
+ fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
+ fs/xfs/xfs_iops.c                           |  10 +-
+ fs/xfs/xfs_super.c                          |   2 +-
+ include/linux/fs.h                          |  34 +++-
+ include/trace/events/timestamp.h            | 124 ++++++++++++++
+ mm/shmem.c                                  |   2 +-
+ 13 files changed, 592 insertions(+), 78 deletions(-)
+---
+base-commit: bb83a76c647a96db4c9ae77b0577170da4d7bd77
+change-id: 20240626-mgtime-5cd80b18d810
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
