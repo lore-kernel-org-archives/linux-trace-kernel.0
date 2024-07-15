@@ -1,123 +1,109 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEAB49659;
-	Mon, 15 Jul 2024 08:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2C713B5B2;
+	Mon, 15 Jul 2024 08:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721032065; cv=none; b=Sf8LyEGRPLBPYueRdmC1Wtc3B5i2tSK4YBfgIvtram+t40ytfIGxoXZW++7Ul2t+PdftMsTJhYM605InoNU0Qu7A60j/rbEfA/dK65mwXzs+b1ggwJ0620AOvIiBwRDEse7phDiyQXmLbdzf2/pUs2Twp5G/uwP66Ttl4xhKOUU=
+	t=1721032225; cv=none; b=lL3GExVZTXHGT+Gm3AkVyUVQPsB30gsehMW4w80KQnf+KfF3YO+qjLEK+zunDw3E41uqgUEW7jVGPRhScmqz+U/bhoPYUXiLxG9dGGkcFTCnjELPA09mYjjnXZDjhBq9yrfs0kvg3+wWItGamt8axpykYsqGc6WgLuKDpmWs3V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721032065; c=relaxed/simple;
-	bh=oX3nbkgDPK6ubobNu6nSiR2qOQhSYSnYP2i+a6Mok1U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ge5iD4gB+b4Vu/uzWkZH/WOkWZomR1FAxedcwF9P2vdiEqyLp+7cIQw6LEIBIUzO88ZUmwXavdXPsg6blZU+Gi0mdQy1DaawoB8HnIG0MeI/tJtbUe3L+OenO2zT33T4c99zHga9ZaLojWUP+e8Xz3rScBvVX0tz3kC68ximyZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UtsiajxF; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721032225; c=relaxed/simple;
+	bh=cnnjx6vN6SkcRwmo0gZuagUL8/r39lmyNh61FPnqguw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LnCp+JlL8GwiwObguRG7xDRzBBUuDfZgqeiGQWU0pBxrIfX2P142nyXkKIOWDIB1hzzcKsoJq9odBHhoSMD9weh4WsJtd8gcNrxv5dn1LKbWPUi/EN6aGjXQ8dY2IK7o2Dqj4z5RBMNLqP/d3cu0piO1nTLC7jWnjhs9zXOJo9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJ+GBtbJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtsiajxF"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c98a97d1ccso3512184a91.0;
-        Mon, 15 Jul 2024 01:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721032063; x=1721636863; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9wkUY0TLiU0e6n58LpHN87VKdeUeX7NPc3fuLII6KMA=;
-        b=UtsiajxFgP5xKdGw5P5RGsDggmYVFzMSItGxJxv1Rksd4WAnFAnf0X1jrY5KNoQEe6
-         0FAMMSBXrdF7VVHHIBLPadbRdEXYXfNWh9we/e2P3oXHr/rFw0KW3h/1KSy7H72OcCMz
-         sSs9ncH+ySj0pGo00WatZeb6yTY8+KL7bo0ND3JEPMEA86KmVtnPx3GAg6SPycetD6jS
-         owZnLb8DxKxX4jpZiBuyzzPILAeg9RvSihIRInzBo9UNZJBPO8YpGYRm0Qq7ErJ1fhIH
-         d2+OwEZj6fHAu+EHqXX36lzoERt6JKBsFo3ihfp44AUyOPCwv3Y3+sWvWgCWOI9nA8Sg
-         IfFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721032063; x=1721636863;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9wkUY0TLiU0e6n58LpHN87VKdeUeX7NPc3fuLII6KMA=;
-        b=JK+gJ0ldf1VLkHta5Flb6Xh3YyNg6IFRzpfQFZPsKIL/1wvo1zVfb9KCTkg99+BPMG
-         kiLybpksxuFd7AavUNSXbrLobWGCXHc8FYVsHDA19z8ncbDXdXOZZ4TLQvo17oXGZyJ7
-         qtwhxK8NqC4t1k4kVudRLgUyFufXkE16/P/XyrBeCYNaONe8MmUL0X35YtoHs9rf7T4e
-         UKnIbm9CzvprfoF/hLYJO7UKG8fxk+HDqHAy/a11L9MONWnzMDA4vjuvB3cYskEq6fBd
-         sPsEoOuPuAkRjykrH2U1pCF0oxNoUa4YT0By1UBL57HdhU6ci+JmTq4qVRgVgUn/Sa5J
-         ofnw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7MIjn7z23Bpa4a1QHsI97i5DmrZ8huay5NxwTSCB+1WSS2tbciPSqMu7box148Sb7+hiROci2KMz0iL0zhKPGBk2qJEY8XvBFDAJkPlL8mF4JXcet5Z4pXVYwlgXZdBP9czujW/QNvouA3NU4l4rmabNUDZ6GWkhLIkt9eU3xZk8NX174uPpuNIjw9FsFGONFdppyjBrWcAfnDPhjGquKZyDG
-X-Gm-Message-State: AOJu0Yxy2DU4hJt4rdsZAo4Ph3DSsD8ZTOxKJWUTiB8m1Xbahaklk5bn
-	ehieWQe6f6y2nPS76vNbaLCY5fMwOLLves7/mT7IzLaT/2zhsaoJ
-X-Google-Smtp-Source: AGHT+IHwqr+RXaxTe3zvOZmmoOk7k5D4/ZZfHGZDbpE+MX+vxW1lQni5wQo11I/QfXXSlIqhThZ8MA==
-X-Received: by 2002:a17:90a:fe05:b0:2c9:648f:f0ef with SMTP id 98e67ed59e1d1-2cac4ce5611mr14582715a91.9.1721032063467;
-        Mon, 15 Jul 2024 01:27:43 -0700 (PDT)
-Received: from localhost ([1.146.120.6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2caedc1709esm3724475a91.34.2024.07.15.01.27.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 01:27:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJ+GBtbJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94FAC32782;
+	Mon, 15 Jul 2024 08:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721032223;
+	bh=cnnjx6vN6SkcRwmo0gZuagUL8/r39lmyNh61FPnqguw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FJ+GBtbJX952GMve1l54H8b42/5kTc+0uO7eCtQjBidtFsdTBsV0dgxCLPZJq82If
+	 uU46t+HAwaiEu04a443yVFwd3ojZP1MXsdHsJqmooYZMhP58TFYvrp7g02KYzNXH2S
+	 /XGWTbhXiIAZKJdeinQIIIPDCCKIY4OLYE3hlylEBXRLnc/bDN3GNQgI+wu8RBfrob
+	 yL/LahS7ggKYwZJyZpfdX18HBr67Wrke4ogfop62DVDgq3bB3GlfSFnKgoABvdmIFe
+	 6rvE0ngwH3+Xqdj4tTHQm9un9fYYcPCW4NVKkLYYxDSzVjEAyF20+ISw1DhMF6ZDvX
+	 d7h+Fx71UiwQg==
+Date: Mon, 15 Jul 2024 17:30:19 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: wuqiang.matt <wuqiang.matt@bytedance.com>, Andrew Morton
+ <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+ <kernel-janitors@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] lib: test_objpool: add missing MODULE_DESCRIPTION()
+ macro
+Message-Id: <20240715173019.ebe734f2c8182ca0f13b7c7a@kernel.org>
+In-Reply-To: <3edb1529-744c-4b7a-acc9-12e166ada738@quicinc.com>
+References: <20240531-md-lib-test_objpool-v1-1-516efee92a05@quicinc.com>
+	<7ba64e00-373b-4c13-a30a-113646dad588@bytedance.com>
+	<20240603154549.4a338c065e42f07c8c3d1b82@kernel.org>
+	<3edb1529-744c-4b7a-acc9-12e166ada738@quicinc.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 15 Jul 2024 18:27:33 +1000
-Message-Id: <D2PYY2N7SOGR.1KKNYAQTUWL89@gmail.com>
-Cc: "Michael Ellerman" <mpe@ellerman.id.au>, "Christophe Leroy"
- <christophe.leroy@csgroup.eu>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland"
- <mark.rutland@arm.com>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
- Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>, "Hari Bathini"
- <hbathini@linux.ibm.com>, "Mahesh Salgaonkar" <mahesh@linux.ibm.com>,
- "Vishal Chourasia" <vishalc@linux.ibm.com>
-Subject: Re: [RFC PATCH v4 13/17] powerpc64/ftrace: Support .text larger
- than 32MB with out-of-line stubs
-From: "Nicholas Piggin" <npiggin@gmail.com>
-To: "Naveen N Rao" <naveen@kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <cover.1720942106.git.naveen@kernel.org>
- <f4faee243f85eec691f2d72133fcb8e4aa9912d0.1720942106.git.naveen@kernel.org>
-In-Reply-To: <f4faee243f85eec691f2d72133fcb8e4aa9912d0.1720942106.git.naveen@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun Jul 14, 2024 at 6:27 PM AEST, Naveen N Rao wrote:
-> We are restricted to a .text size of ~32MB when using out-of-line
-> function profile sequence. Allow this to be extended up to the previous
-> limit of ~64MB by reserving space in the middle of .text.
->
-> A new config option CONFIG_PPC_FTRACE_OUT_OF_LINE_NUM_RESERVE is
-> introduced to specify the number of function stubs that are reserved in
-> .text. On boot, ftrace utilizes stubs from this area first before using
-> the stub area at the end of .text.
+On Thu, 11 Jul 2024 11:14:20 -0700
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
-[snip]
+> On 6/2/24 23:45, Masami Hiramatsu (Google) wrote:
+> > On Mon, 3 Jun 2024 11:25:59 +0800
+> > "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+> > 
+> >> On 2024/6/1 08:31, Jeff Johnson wrote:
+> >>> make allmodconfig && make W=1 C=1 reports:
+> >>> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_objpool.o
+> >>>
+> >>> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> >>>
+> >>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> >>> ---
+> >>>    lib/test_objpool.c | 3 ++-
+> >>>    1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/lib/test_objpool.c b/lib/test_objpool.c
+> >>> index bfdb81599832..5a3f6961a70f 100644
+> >>> --- a/lib/test_objpool.c
+> >>> +++ b/lib/test_objpool.c
+> >>> @@ -687,4 +687,5 @@ static void __exit ot_mod_exit(void)
+> >>>    module_init(ot_mod_init);
+> >>>    module_exit(ot_mod_exit);
+> >>>    
+> >>> -MODULE_LICENSE("GPL");
+> >>> \ No newline at end of file
+> >>> +MODULE_DESCRIPTION("Test module for lockless object pool");
+> >>> +MODULE_LICENSE("GPL");
+> >>>
+> >>> ---
+> >>> base-commit: b050496579632f86ee1ef7e7501906db579f3457
+> >>> change-id: 20240531-md-lib-test_objpool-338d937f8666
+> >>>
+> >>
+> >> Looks good to me. Thanks for the update.
+> >>
+> >> I added Masami Hiramatsu and linux-trace in the loop.
+> >>
+> >> Reviewed-by: Matt Wu <wuqiang.matt@bytedance.com>
+> > 
+> > Thanks, let me pick this to probes/for-next branch.
+> Following up since I don't see this in linux-next.
+> I'm hoping to have these warnings fixed tree-wide in 6.11.
 
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kern=
-el/trace/ftrace_entry.S
-> index 71f6a63cd861..86dbaa87532a 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -374,6 +374,14 @@ _GLOBAL(return_to_handler)
->  	blr
->  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-> =20
-> +#ifdef CONFIG_PPC_FTRACE_OUT_OF_LINE
-> +SYM_DATA(ftrace_ool_stub_text_count, .long CONFIG_PPC_FTRACE_OUT_OF_LINE=
-_NUM_RESERVE)
-> +
-> +SYM_CODE_START(ftrace_ool_stub_text)
-> +	.space CONFIG_PPC_FTRACE_OUT_OF_LINE_NUM_RESERVE * FTRACE_OOL_STUB_SIZE
-> +SYM_CODE_END(ftrace_ool_stub_text)
-> +#endif
-> +
->  .pushsection ".tramp.ftrace.text","aw",@progbits;
->  .globl ftrace_tramp_text
->  ftrace_tramp_text:
+Oops, sorry, I missed this. Let me try.
 
-How are you ensuring these new stubs get to the middle of kernel text? I
-guess you just put it in regular .text and hope the linker puts it
-in a good place?
+Thank you,
 
-Thanks,
-Nick
+> 
+> /jeff
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
