@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1544B22EF0;
-	Mon, 15 Jul 2024 18:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565BC5025E;
+	Mon, 15 Jul 2024 18:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721069270; cv=none; b=t7VvGCZfN7Ad92ou85A84YiPnQoE/IF+gkbvxPiqLEMi6xBVLZdjbUUT2nAIDOy3YiWX6jff8u9cZjuZT6ZhEUzaUutMRsyXJQze18m15AzF+NouMSxWIRF0R4pCS8dKBhsFS6X855WiRtqihV6bWLkaRLqE8ISH7eg0zt03fr0=
+	t=1721069989; cv=none; b=T+BctRV0EQRBB5xlg0LPhZxDF96dpwkPccsB0BOy02FVa/06s3XqVh1hze4e4No2iZR6KoG4GPIxyguN6d1pzhN87EsKML9Oh3VA5513YHIIbfhOskBkscZTDCXNn7dhOmkVwyzod5HJJ06bi4UDFsMbwHOvzi/q28fpPJhgNOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721069270; c=relaxed/simple;
-	bh=h15kWJY170LAeuVz3f2p5QYCNVqSa2lCjIzW5LqLNfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=abHIzL1LKf2+ASTzT/L/JBhhhymZNKPSbovi4Fo0RQwp9XP7Dj3x6pY5XxrkLgBRcpV0+0cFOYQ0rPvdlj+dx/YiVzvB7V0pOPiPUaXgdGydIbU3vvn1/g9H8M4yMrQyG/mLkV/oqMHozhkV8v7Gw/nne18OQD2zWiTWe9bDSCY=
+	s=arc-20240116; t=1721069989; c=relaxed/simple;
+	bh=ZgGW9bXZE/kLmD96/SJrjdcH7vZ/Q8YeO7mIIIGKzzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WptsDtKWP+ICyq4UfQsBcCjcZWNeQwDD8+fo754EfPT13FKB9dtw66ddQ//tG6LIVb2VTsYokrf7XP0XULIXleXAdIhuHDppsWYXjXEhpBaEZzW80IeMZaaOnxvD6va5FvIRuuNuBza9iaQWboK/QnpPdl7VODctojJJgJ8S6cE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC48C4AF0A;
-	Mon, 15 Jul 2024 18:47:47 +0000 (UTC)
-Date: Mon, 15 Jul 2024 14:47:45 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08443C32782;
+	Mon, 15 Jul 2024 18:59:46 +0000 (UTC)
+Date: Mon, 15 Jul 2024 14:59:45 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Ingo
- Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Kate
- Stewart <kstewart@linuxfoundation.org>, Clark Williams
- <williams@redhat.com>, "Luis Claudio R. Goncalves" <lclaudio@uudg.org>,
- John Kacur <jkacur@redhat.com>
-Subject: [PATCH] tracing: Update MAINTAINERS file
-Message-ID: <20240715144745.51d887a9@rorschach.local.home>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com, david@redhat.com
+Subject: Re: [PATCH v2] ring-buffer: Align meta-page to sub-buffers for
+ improved TLB usage
+Message-ID: <20240715145945.17408deb@rorschach.local.home>
+In-Reply-To: <20240628104611.1443542-1-vdonnefort@google.com>
+References: <20240628104611.1443542-1-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,74 +35,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, 28 Jun 2024 11:46:11 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Gone but never forgotten.
+> This is based on the mm-unstable branch [1] as it depends on David's work [2]
+> for allowing the zero-page in vm_insert_page().
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
+> [2] https://lore.kernel.org/all/20240522125713.775114-1-david@redhat.com
 
-[ Also moved Daniel's name to be consistent with the alphabetical order ]
+I'll hold off to 6.12 merge window before pushing this. So that the
+above will be guaranteed to be there.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- CREDITS     | 10 +++++++---
- MAINTAINERS |  3 ---
- 2 files changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/CREDITS b/CREDITS
-index 88c4c08cb613..d7798910e99f 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -271,9 +271,6 @@ D: Driver for WaveFront soundcards (Turtle Beach Maui, Tropez, Tropez+)
- D: Various bugfixes and changes to sound drivers
- S: USA
- 
--N: Daniel Bristot de Oliveira
--D: Scheduler contributions, notably: SCHED_DEADLINE
--
- N: Carlos Henrique Bauer
- E: chbauer@acm.org
- E: bauer@atlas.unisinos.br
-@@ -534,6 +531,13 @@ S: Kopmansg 2
- S: 411 13  Goteborg
- S: Sweden
- 
-+N: Daniel Bristot de Oliveira
-+D: Scheduler contributions, notably: SCHED_DEADLINE
-+D: Real-time Linux Analysis
-+D: Runtime Verification
-+D: OS Noise and Latency Tracers
-+S: Brazil and Italy
-+
- N: Paul Bristow
- E: paul@paulbristow.net
- W: https://paulbristow.net/linux/idefloppy.html
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2e1b8bbacb5e..0b7e4cd4ffd7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18895,7 +18895,6 @@ F:	include/uapi/linux/rtc.h
- F:	tools/testing/selftests/rtc/
- 
- Real-time Linux Analysis (RTLA) tools
--M:	Daniel Bristot de Oliveira <bristot@kernel.org>
- M:	Steven Rostedt <rostedt@goodmis.org>
- L:	linux-trace-kernel@vger.kernel.org
- S:	Maintained
-@@ -19529,7 +19528,6 @@ S:	Maintained
- F:	drivers/infiniband/ulp/rtrs/
- 
- RUNTIME VERIFICATION (RV)
--M:	Daniel Bristot de Oliveira <bristot@kernel.org>
- M:	Steven Rostedt <rostedt@goodmis.org>
- L:	linux-trace-kernel@vger.kernel.org
- S:	Maintained
-@@ -22806,7 +22804,6 @@ F:	kernel/trace/trace_mmiotrace.c
- 
- TRACING OS NOISE / LATENCY TRACERS
- M:	Steven Rostedt <rostedt@goodmis.org>
--M:	Daniel Bristot de Oliveira <bristot@kernel.org>
- S:	Maintained
- F:	Documentation/trace/hwlat_detector.rst
- F:	Documentation/trace/osnoise-tracer.rst
--- 
-2.43.0
-
+-- Steve
