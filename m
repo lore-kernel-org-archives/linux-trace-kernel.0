@@ -1,76 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822782421D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 17:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D8E224EF;
+	Mon, 15 Jul 2024 17:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064223; cv=none; b=JjqU8vNBMaMEPYlsRB9IImxZvmCDApvjuN1LIi0DIvQQ3Jm8eiG4NI6VQOR3Vk4NoizJauH7P7Bqd8g+tO/zbbMSTzeytJblpQcy19HYJydUqFG008xNIJFETYKB1iTaxPvfc2pDMWKVbxQVev7Q8RpmVuDRdN2FtsHEDgzbU9A=
+	t=1721064662; cv=none; b=RVr8szsIcZMA3QQX+uE/R96vlbQgvTAPWA3PJqERPImT4xjIGZTnhfWc5qw7wxOpLTY4V21q9QKEfeMoCTapcG4AkHboRBBiRJi0Xl9tSw0R7Koh8CMrG02f77cqysTLVIn70hnUoup1KAn1GWMbeuZ2wOp3b+hr6V1yHbZTV6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064223; c=relaxed/simple;
-	bh=Yn9UsdTXq5qs6s0t/ZhLNW2lYcFWMWhKSZF03l3zX5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rLVPr9Iw6WQoFrS/3zKC61zSi6wx88uNbTHpaXflwWH1MnA8oFvoqxoMgvjISByksW34GFDbGbPycldB21SofaAJbGafyB8HfXOa7F9NZfTqz8wg3CEbUOcw2eEFbttu41lhONB87gZUDCsJObs5VeIYbXoVUhwphuc5Fbtlx4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gdFt8/Fz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1721064662; c=relaxed/simple;
+	bh=1o+44RtxCfSb7GucrEuzGXESuNxJ1wwd1GELlyBYmkI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CLwLJtiK3jMtrL28pEhsFlT6z53iUep4O63ZCC311xIBLEMW6bAyZD7ocilJwucoIwfDpcyCc+RzWc8JQRjmMHVQAs6KDrZSsv+/K3lmLtKygxSuR6p03cspqV675lM5rD4Ixa5CInGnN7bRzfMABOsyAssEOlZLpzmrcN84wYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QXYbxkif; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdFt8/Fz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721064220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yn9UsdTXq5qs6s0t/ZhLNW2lYcFWMWhKSZF03l3zX5g=;
-	b=gdFt8/FzMWW5v5HtS3t1jcpIhX+Y61Ghdpd5d/uhrkAaqPoCKN96nsanF7BXB4yf80i33I
-	T79a8zBVSZdJc2lKVkX1hy2YAGmSogeVDoI95hSnT8n+E0Ra34T9Q7HygSg+4erfPlkw0V
-	sA+KcFARy8uuCwe8N5Hoc9UN4ZtoHEg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-BLuKU4gvM56sSe62T6boQA-1; Mon,
- 15 Jul 2024 13:23:37 -0400
-X-MC-Unique: BLuKU4gvM56sSe62T6boQA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5346E1955F65;
-	Mon, 15 Jul 2024 17:23:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.45])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8DA891955E8C;
-	Mon, 15 Jul 2024 17:23:31 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 15 Jul 2024 19:21:57 +0200 (CEST)
-Date: Mon, 15 Jul 2024 19:21:52 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>, mingo@kernel.org, andrii@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add uprobes entry
-Message-ID: <20240715172152.GA15187@redhat.com>
-References: <172074397710.247544.17045299807723238107.stgit@devnote2>
- <20240715181417.6421de1e1a18a39685533115@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXYbxkif"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2c98b22638bso3190293a91.1;
+        Mon, 15 Jul 2024 10:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721064660; x=1721669460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EtP4aeSPEGk7iVglJ/94ERRThNBcFKWdiy/YtRf+yZM=;
+        b=QXYbxkifJCr0TYEKeKEq69qd3C7cVxB/t2U0XuMArfydkjk9XgZoVoGfIvFGIqgh0M
+         0FYP9QFP5Q5A+Lt8i/9nlBZK83Soht2oHELvzsFDrzcvsVQSlvbc/lVaXUCuI2M3EaGF
+         Ijf640/m7YO6xrqNjV5hjdSOpS7TJCNXQvKFQ/GvRP3yT1t4MQjcfJOh4NJlUdUYy2pF
+         DgX/l0rKe0X5NuSEK3qgXiwixx84AmgswA6Z+BXyoC14T3Pon8PkS6/zmWBGnfAlL8zj
+         5l/yZ1G7WMJYih3H314Yv243qkxQ834IuRAga4nmiN3U4F8h0WAltT/AAvw/ZmDouofJ
+         nTGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721064660; x=1721669460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EtP4aeSPEGk7iVglJ/94ERRThNBcFKWdiy/YtRf+yZM=;
+        b=ik5CZArEyMggBXL5yEjSCAHHS2r975ef1+gNtFwUVsGKy7DjEB0BBWt1c006v3iDAg
+         fwcBAOWwaLURrbZ3RXWhWyNjx9SICucG6wZPgwBKqDzoOyG3yZXfvEvV1dfDRFZcgfMX
+         zijTCqoikmsUleDnCAuysMPt4e+vNeQjjf5qYtK+xxiZh6roX3U+cgn91XH4OEw/NBDy
+         yJVlbpRnhrlcf8pGC7h/yjMp4bLp2gFrl68KSg7hxDdCTOvz357JDPuUBsdx3Do0ikBo
+         Nxup5JJiB6Y3NgW+0VcHPixAQrfYKSmpboromhmPsDI5duUqiTbZhbLmI1CRaRpBOibW
+         DtNA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1MJEUFsVH6ynJoYEd3KPol44uc3OdqHr+F3TFXmPm3assAUDXa53ql0GgjRSOApJfYkuvzDohQgBgng6QMUACZM0fqUvW6o7X04++fJv7pICUaoDVTUflB2CEuJgTxTJn2DLNKnaRpHZNj2KLbP+vV7moZlzq5gduZ9YMaD9e5zxr0I5y
+X-Gm-Message-State: AOJu0YyQKIFW4L2IFSNYlf8BCTW77yXpzkbWuVEJzKB2iQcT6IzwEIoQ
+	eXaC08GPpYaGNUZJo2VYCPHb+WGh/1DuiyDxbCbJnnot7dON4f3Q/xkTmHythhuA7rhZYyN2Ty+
+	ajvujfaRFd1PPoVVQnEovjaIok+M=
+X-Google-Smtp-Source: AGHT+IFIeeEF/sf4vDvJPuTRza3pKxrgkearLeh+rBXCaIF+tOEZNqXuxDQl3W6w/fPyfpxxFyDYTxYQylolnEycNv8=
+X-Received: by 2002:a17:90b:906:b0:2c8:5055:e24f with SMTP id
+ 98e67ed59e1d1-2cb33726539mr819687a91.2.1721064659641; Mon, 15 Jul 2024
+ 10:30:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715181417.6421de1e1a18a39685533115@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <20240711110235.098009979@infradead.org> <20240711110400.880800153@infradead.org>
+ <CAEf4BzZUVe-dQNcb1VQbEcN4kBFOYrFOB537q4Vhtpm_ebL9aQ@mail.gmail.com> <20240715112504.GD14400@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240715112504.GD14400@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 15 Jul 2024 10:30:47 -0700
+Message-ID: <CAEf4BzZ9z+J2TMNRGyE9idw2T+zZRe7YU8JzgsoihCLogW4_UA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/11] perf/uprobe: SRCU-ify uprobe->consumer list
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com, 
+	paulmck@kernel.org, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/15, Masami Hiramatsu wrote:
+On Mon, Jul 15, 2024 at 4:25=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 >
-> Hi Peter, Oleg,
+> On Fri, Jul 12, 2024 at 02:06:08PM -0700, Andrii Nakryiko wrote:
+> > + bpf@vger, please cc bpf ML for the next revision, these changes are
+> > very relevant there as well, thanks
+> >
+> > On Thu, Jul 11, 2024 at 4:07=E2=80=AFAM Peter Zijlstra <peterz@infradea=
+d.org> wrote:
+> > >
+> > > With handle_swbp() hitting concurrently on (all) CPUs the
+> > > uprobe->register_rwsem can get very contended. Add an SRCU instance t=
+o
+> > > cover the consumer list and consumer lifetime.
+> > >
+> > > Since the consumer are externally embedded structures, unregister wil=
+l
+> > > have to suffer a synchronize_srcu().
+> > >
+> > > A notably complication is the UPROBE_HANDLER_REMOVE logic which can
+> > > race against uprobe_register() such that it might want to remove a
+> > > freshly installer handler that didn't get called. In order to close
+> > > this hole, a seqcount is added. With that, the removal path can tell
+> > > if anything changed and bail out of the removal.
+> > >
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  kernel/events/uprobes.c |   60 +++++++++++++++++++++++++++++++++++++=
++++--------
+> > >  1 file changed, 50 insertions(+), 10 deletions(-)
+> > >
+> >
+> > [...]
+> >
+> > > @@ -800,7 +808,7 @@ static bool consumer_del(struct uprobe *
+> > >         down_write(&uprobe->consumer_rwsem);
+> > >         for (con =3D &uprobe->consumers; *con; con =3D &(*con)->next)=
+ {
+> > >                 if (*con =3D=3D uc) {
+> > > -                       *con =3D uc->next;
+> > > +                       WRITE_ONCE(*con, uc->next);
+> >
+> > I have a dumb and mechanical question.
+> >
+> > Above in consumer_add() you are doing WRITE_ONCE() for uc->next
+> > assignment, but rcu_assign_pointer() for uprobe->consumers. Here, you
+> > are doing WRITE_ONCE() for the same operation, if it so happens that
+> > uc =3D=3D *con =3D=3D uprobe->consumers. So is rcu_assign_pointer() nec=
+essary
+> > in consumer_addr()? If yes, we should have it here as well, no? And if
+> > not, why bother with it in consumer_add()?
 >
-> If this is OK for you, please give your Ack.
+> add is a publish and needs to ensure all stores to the object are
+> ordered before the object is linked in. Note that rcu_assign_pointer()
+> is basically a fancy way of writing smp_store_release().
+>
+> del otoh does not publish, it removes and doesn't need ordering.
+>
+> It does however need to ensure the pointer write itself isn't torn. That
+> is, without the WRITE_ONCE() the compiler is free to do byte stores in
+> order to update the 8 byte pointer value (assuming 64bit). This is
+> pretty dumb, but very much permitted by C and also utterly fatal in the
+> case where an RCU iteration comes by and reads a half-half pointer
+> value.
+>
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Thanks for elaborating, very helpful! It's basically the same idea as
+with rb_find_add_rcu(), got it.
 
+> > >                         ret =3D true;
+> > >                         break;
+> > >                 }
+> > > @@ -1139,9 +1147,13 @@ void uprobe_unregister(struct inode *ino
+> > >                 return;
+> > >
+> > >         down_write(&uprobe->register_rwsem);
+> > > +       raw_write_seqcount_begin(&uprobe->register_seq);
+> > >         __uprobe_unregister(uprobe, uc);
+> > > +       raw_write_seqcount_end(&uprobe->register_seq);
+> > >         up_write(&uprobe->register_rwsem);
+> > >         put_uprobe(uprobe);
+> > > +
+> > > +       synchronize_srcu(&uprobes_srcu);
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(uprobe_unregister);
+> >
+> > [...]
