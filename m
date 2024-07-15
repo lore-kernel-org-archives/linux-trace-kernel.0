@@ -1,75 +1,104 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C99446DB;
-	Mon, 15 Jul 2024 11:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3CB18C324
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jul 2024 12:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721044801; cv=none; b=XukYFi0vZePAPHOWP2u2LltuYJJ9l+w9VPDmekzuc8chnWDsQkZQlCn6nYAdU+Bk8gv+NfJLGcG4XSnLnV0f3Xv22/GWPPr96+P+t8rgyiJhpOJANfoHGQm85b4fDjON2oj4b+EyOEpjPLfF14YB0K/XP1IuYQ+NxM6YkUIIoao=
+	t=1721047379; cv=none; b=lUXP1jHhNqukbc5osP2ZyABIKtEN1kzdfCn39Pzj+Z/V4FENkdKuQFsF55tYFJfSePC9mx27sDda7pMkziPaRNmS4z78skqIVMTumikKx0dg7qpgOyE6/bNe3VRw42Xjk1D67qoOt3BK+vl49h7VISoFv7mwneKSp62lQw68G3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721044801; c=relaxed/simple;
-	bh=DpjUBrT659OvV7F4JubP2IsJgz38DBW2Ty8RgX0FSA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GTEfxJ5FNWqSYAARAw5P3KxrGmJNU4LHJC0xLTMd9U+7dqs1NKRKtU3eqoT8g9OcfRIbzwjJEesAi8yvr6bRVmqNJuENQrAPSm7uLrTTmtixRznWHCd3tmxfiALMQDgfAc6saVZibi+sWVqzFgjIG5Lcofu3u70HF1q056v7wn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B5MvMV75; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5MvMV75"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FzVAGPWzIcjmOl5/kaUv3UbG8zfj+jsoUZvJXnkQAls=; b=B5MvMV75Ikl3htMoYx2wveDRi3
-	07ApNyCcJygDHt47avviNr53SEqHxL37PVn9K/N4bG7MYknwNgBNnTZyL0JaYoD6/sGozbtoQtIpB
-	9H0vrtFSlfRoOqMi3oz1uav9R5W3k7PGKP7rKhktr4756etLFG5J/N0vAD2ckY9wo0Sp2dSLXpJwP
-	CwBQqKnmZWswMg0MPQ0AFkWG125as0nGZbR8ABDlPUBeqvsCCWig68IZjyFQurIcdo4+bz8nKlzfx
-	87iE6BF4zMtk4UjULPH4qweJ7yRhowkFr08OoivqOVtGbwyJ8gUMtr/DZOfQ0mv78U6jD37M4uO0W
-	UgASZ2Hg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTKN0-0000000FlDY-2MWh;
-	Mon, 15 Jul 2024 11:59:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 36BCB3003FF; Mon, 15 Jul 2024 13:59:54 +0200 (CEST)
-Date: Mon, 15 Jul 2024 13:59:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: mingo@kernel.org, andrii@kernel.org, oleg@redhat.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org,
-	clm@meta.com, paulmck@kernel.org, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 10/11] perf/uprobe: Convert single-step and uretprobe
- to SRCU
-Message-ID: <20240715115954.GH14400@noisy.programming.kicks-ass.net>
-References: <20240711110235.098009979@infradead.org>
- <20240711110401.311168524@infradead.org>
- <CAEf4BzZW56pgTqy4POud8P3t5gtdg53BX83VbieixtS1T-mg2w@mail.gmail.com>
+	s=arc-20240116; t=1721047379; c=relaxed/simple;
+	bh=aPxbU1CRqN/ObjOco6L+kuqqgrjuH5Lv+0eg1N876o4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=JnFMwAchJ1DGDvirkarQqxnpsyBm98y4eMlWwkBAgxYCL0r4EpIu1Ad1j+QfxJgMERzo4FSh6IWGA2Uj2KAashMUMfqV76rEd92JcZVjcaYKrQNdHor4H1WmrgjruLh/hYwEvWWIJluVwI1R1F5jbbmpD63VnmsTZNY0gAssmJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-4-SUXMSojjO4CMOodAlWhuTQ-1; Mon, 15 Jul 2024 13:42:55 +0100
+X-MC-Unique: SUXMSojjO4CMOodAlWhuTQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 15 Jul
+ 2024 13:42:08 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 15 Jul 2024 13:42:08 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Nicholas Piggin' <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-kbuild@vger.kernel.org"
+	<linux-kbuild@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Daniel Borkmann
+	<daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, "Alexei
+ Starovoitov" <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, "Andrii
+ Nakryiko" <andrii@kernel.org>, Christophe Leroy
+	<christophe.leroy@csgroup.eu>, Vishal Chourasia <vishalc@linux.ibm.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>, Hari Bathini
+	<hbathini@linux.ibm.com>, "Masami Hiramatsu" <mhiramat@kernel.org>
+Subject: RE: [RFC PATCH v4 12/17] powerpc64/ftrace: Move ftrace sequence out
+ of line
+Thread-Topic: [RFC PATCH v4 12/17] powerpc64/ftrace: Move ftrace sequence out
+ of line
+Thread-Index: AQHa1pCD4cP620l/NEOwGIoX3oyFIrH3uX7Q
+Date: Mon, 15 Jul 2024 12:42:08 +0000
+Message-ID: <e7e31eaa04234dddaac660a38adedee4@AcuMS.aculab.com>
+References: <cover.1720942106.git.naveen@kernel.org>
+ <9cf2cdddba74ec167ae1af5ec189bba8f704fb51.1720942106.git.naveen@kernel.org>
+ <D2PYW90LRVAY.3PCE9P3NE2NEB@gmail.com>
+In-Reply-To: <D2PYW90LRVAY.3PCE9P3NE2NEB@gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZW56pgTqy4POud8P3t5gtdg53BX83VbieixtS1T-mg2w@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Fri, Jul 12, 2024 at 02:28:13PM -0700, Andrii Nakryiko wrote:
+RnJvbTogTmljaG9sYXMgUGlnZ2luDQo+IFNlbnQ6IDE1IEp1bHkgMjAyNCAwOToyNQ0KPiANCj4g
+T24gU3VuIEp1bCAxNCwgMjAyNCBhdCA2OjI3IFBNIEFFU1QsIE5hdmVlbiBOIFJhbyB3cm90ZToN
+Cj4gPiBGdW5jdGlvbiBwcm9maWxlIHNlcXVlbmNlIG9uIHBvd2VycGMgaW5jbHVkZXMgdHdvIGlu
+c3RydWN0aW9ucyBhdCB0aGUNCj4gPiBiZWdpbm5pbmcgb2YgZWFjaCBmdW5jdGlvbjoNCj4gPiAJ
+bWZscglyMA0KPiA+IAlibAlmdHJhY2VfY2FsbGVyDQo+ID4NCj4gPiBUaGUgY2FsbCB0byBmdHJh
+Y2VfY2FsbGVyKCkgZ2V0cyBub3AnZWQgb3V0IGR1cmluZyBrZXJuZWwgYm9vdCBhbmQgaXMNCj4g
+PiBwYXRjaGVkIGluIHdoZW4gZnRyYWNlIGlzIGVuYWJsZWQuDQo+ID4NCj4gPiBHaXZlbiB0aGUg
+c2VxdWVuY2UsIHdlIGNhbm5vdCByZXR1cm4gZnJvbSBmdHJhY2VfY2FsbGVyIHdpdGggJ2Jscicg
+YXMgd2UNCj4gPiBuZWVkIHRvIGtlZXAgTFIgYW5kIHIwIGludGFjdC4gVGhpcyByZXN1bHRzIGlu
+IGxpbmsgc3RhY2sgKHJldHVybg0KPiA+IGFkZHJlc3MgcHJlZGljdG9yKSBpbWJhbGFuY2Ugd2hl
+biBmdHJhY2UgaXMgZW5hYmxlZC4gVG8gYWRkcmVzcyB0aGF0LCB3ZQ0KPiA+IHdvdWxkIGxpa2Ug
+dG8gdXNlIGEgdGhyZWUgaW5zdHJ1Y3Rpb24gc2VxdWVuY2U6DQo+ID4gCW1mbHIJcjANCj4gPiAJ
+YmwJZnRyYWNlX2NhbGxlcg0KPiA+IAltdGxyCXIwDQo+ID4NCj4gPiBGdXJ0aGVyIG1vcmUsIHRv
+IHN1cHBvcnQgRFlOQU1JQ19GVFJBQ0VfV0lUSF9DQUxMX09QUywgd2UgbmVlZCB0bw0KPiA+IHJl
+c2VydmUgdHdvIGluc3RydWN0aW9uIHNsb3RzIGJlZm9yZSB0aGUgZnVuY3Rpb24uIFRoaXMgcmVz
+dWx0cyBpbiBhDQo+ID4gdG90YWwgb2YgZml2ZSBpbnN0cnVjdGlvbiBzbG90cyB0byBiZSByZXNl
+cnZlZCBmb3IgZnRyYWNlIHVzZSBvbiBlYWNoDQo+ID4gZnVuY3Rpb24gdGhhdCBpcyB0cmFjZWQu
+DQo+ID4NCj4gPiBNb3ZlIHRoZSBmdW5jdGlvbiBwcm9maWxlIHNlcXVlbmNlIG91dC1vZi1saW5l
+IHRvIG1pbmltaXplIGl0cyBpbXBhY3QuDQo+ID4gVG8gZG8gdGhpcywgd2UgcmVzZXJ2ZSBhIHNp
+bmdsZSBub3AgYXQgZnVuY3Rpb24gZW50cnkgdXNpbmcNCj4gPiAtZnBhdGNoYWJsZS1mdW5jdGlv
+bi1lbnRyeT0xIGFuZCBhZGQgYSBwYXNzIG9uIHZtbGludXgubyB0byBkZXRlcm1pbmUNCj4gPiB0
+aGUgdG90YWwgbnVtYmVyIG9mIGZ1bmN0aW9ucyB0aGF0IGNhbiBiZSB0cmFjZWQuIFRoaXMgaXMg
+dGhlbiB1c2VkIHRvDQo+ID4gZ2VuZXJhdGUgYSAuUyBmaWxlIHJlc2VydmluZyB0aGUgYXBwcm9w
+cmlhdGUgYW1vdW50IG9mIHNwYWNlIGZvciB1c2UgYXMNCj4gPiBmdHJhY2Ugc3R1YnMsIHdoaWNo
+IGlzIGJ1aWx0IGFuZCBsaW5rZWQgaW50byB2bWxpbnV4Lg0KPiANCj4gVGhlc2UgYXJlIGFsbCBn
+b2luZyBpbnRvIC50cmFtcC5mdHJhY2UudGV4dCBBRkFJS1M/IFNob3VsZCB0aGF0IGJlDQo+IG1v
+dmVkIGFmdGVyIHNvbWUgb2YgdGhlIG90aGVyIHRleHQgaW4gdGhlIGxpbmtlciBzY3JpcHQgdGhl
+biBpZiBpdA0KPiBjb3VsZCBnZXQgcXVpdGUgbGFyZ2U/IHNjaGVkIGFuZCBsb2NrIGFuZCBvdGhl
+ciB0aGluZ3Mgc2hvdWxkIGJlDQo+IGNsb3NlciB0byB0aGUgcmVzdCBvZiB0ZXh0IGFuZCBob3Qg
+Y29kZS4NCg0KQ2FuJ3QgeW91IGFsbG9jYXRlIHRoZSBzcGFjZSBmb3IgdGhlICdmdW5jdGlvbiBw
+cm9maWxlIHNlcXVlbmNlJw0KYXQgcnVuLXRpbWUgd2hlbiAoaWYpIGZ0cmFjZSBpcyBlbmFibGVk
+Pw0KV2hlbiBmdHJhY2UgZ2V0cyBkaXNhYmxlZCBpdCBpcyBsaWtlbHkgcG9zc2libGUgdG8gc2F2
+ZSB0aGUgdHJhbXBvbGluZQ0KbnVtYmVyIGluIHRoZSBub3AgLSBzbyB0aGUgc2FtZSBtZW1vcnkg
+Y2FuIGJlIHVzZWQgbmV4dCB0aW1lLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
+IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
+UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-> > @@ -1814,7 +1822,7 @@ static int dup_utask(struct task_struct
-> >                         return -ENOMEM;
-> >
-> >                 *n = *o;
-> > -               get_uprobe(n->uprobe);
-> > +               __srcu_clone_read_lock(&uretprobes_srcu, n->srcu_idx);
-> 
-> do we need to add this __srcu_clone_read_lock hack just to avoid
-> taking a refcount in dup_utask (i.e., on process fork)? This is not
-> that frequent and performance-sensitive case, so it seems like it
-> should be fine to take refcount and avoid doing srcu_read_unlock() in
-> a new process. Just like the case with long-running uretprobes where
-> you convert SRCU lock into refcount.
-
-Yes, I suppose that is now possible too. But it makes the patches harder
-to split. Let me ponder that after I get it to pass your stress thing.
