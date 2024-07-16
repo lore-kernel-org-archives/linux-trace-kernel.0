@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7D333C5;
-	Tue, 16 Jul 2024 09:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824D133C5;
+	Tue, 16 Jul 2024 09:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121340; cv=none; b=LrhmVag57VSNZal4lBygJHxefKzPFOywAFtq47W+zv8A79SRPJP9BZSnUKWtOR00VSVXAbq49cMSt5Y8bBLLa4Kzh9HJbnbgQbym5Edg6bSw8YMSqMVU5XfGDqrRZUbgTKJTmamHD1oMr+X+/rGGfLv+k0L4ODNhKMxnr3iP3A4=
+	t=1721121456; cv=none; b=PoiFuEBC0id5hbj4IiSO2XhyQxnZEmcFWGNpFPblHvUe6Km8mR5AZ8MMQtFW7nMZ0oQ0MBtA2kIcpVX6Gp5GBmsj0Bs6Hk7oQiAQ5D9LwwlZyC3L7H7kcdqmoAPFSYGp2ipwUyOqq2QIcs8T+9OjPk0L0lkEDsc+59+q3PkgLm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121340; c=relaxed/simple;
-	bh=H5HK37QkNLxT1IPUoJzYLAXvCy0/RGtho2IMfDhQSvQ=;
+	s=arc-20240116; t=1721121456; c=relaxed/simple;
+	bh=Jh2m5Mtxle7H3bxudQx7Nj8SXrnw+4DUZa401WmDq5w=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=o4UnjSzd1J7WxY3TP/n7HtNMorS8DUxHnAjj/cKNFdFVt2ghh7/3z7DtLJr5WYkQtr3ccmBo2VURi6nD7BGZSPY2emRKL3zly2F8XuiGjVD7O6t+klkO+f0gNBkfJLr/zpwuBwfudKAI36p2El7d5X2YJSuASA58x9BMx8iC6zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHZIilrz; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ity//2hT346YyYtmla421yNSeyUCWyQupzSkB94hnO2PjCuHkigski8t1FmncEhmFYV4jYYpGqn8wNW3RvEVl9chwCXb8ep9rR4PpjinGJBPr/nelH76ZLLnHIkqozc/AvqNTsKdjrpu6KNWx+ItFXbb7wNBDULfDQmNwRycsDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSYaV4nt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHZIilrz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC173C116B1;
-	Tue, 16 Jul 2024 09:15:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSYaV4nt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10ADC116B1;
+	Tue, 16 Jul 2024 09:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721121340;
-	bh=H5HK37QkNLxT1IPUoJzYLAXvCy0/RGtho2IMfDhQSvQ=;
+	s=k20201202; t=1721121456;
+	bh=Jh2m5Mtxle7H3bxudQx7Nj8SXrnw+4DUZa401WmDq5w=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qHZIilrzH5O9XpYos9HbSsS/mcRWVOy8D+GsVZERnWVwhPsJ7R6WPrurt8t0zHXHT
-	 2ah3Riqm9qTd3kdpDGiIFEqL/A0KyVvfXt2uM3GElInd7G2YawhnfqdjAWZ6cEB6xl
-	 8RdCPfUMZzly6tWhdCTBSA0HdZ8TorI+p+k+w3gzV9+r3bQIJkmRlITglpySV903KW
-	 FhKJbDjtRBVMTS+bnTyQSRuosnMhM1oqlq6So+YS5ojM/8q7tLG149+Uu+JguFDpjk
-	 /PK+Z2HgizLZGgRFB2DjjubagwQ8D09cEgaogZTNTstRQZQKjUmpzs+h3/OST6mC0i
-	 ObbaG8HMnpGxA==
-Date: Tue, 16 Jul 2024 18:15:34 +0900
+	b=oSYaV4ntAyVcI6xVpaaoS7d/VuCLZyO7bR9XaG9mrMEPWNFFyR4hWaFJly6f50X+B
+	 wuqfD+9NNlWiDHGq22y8g+prueBzZok5iL4GQB1tagEL3lhuvsNSLTwROyeW9wfbFm
+	 1MIPu/2HKl9JoWlG8BbKDM46O+61h9E+BVpMMdJQ1hU4iJDHORs1cFkWE31ruBwk69
+	 txEBwTrnYP9PdTHC/Iw/3l/VpF4mYBEXFwXUIKPfcPG9RsRze9y2zJLzdmuok+lAVM
+	 YfrrNYFVogQ3bFRFkV85KFtdoqYLdTPDNcmwYM6zJCNUCPPG1KxDikiceTgePj7jle
+	 08jORK+X+fsHQ==
+Date: Tue, 16 Jul 2024 18:17:30 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Juri
- Lelli <juri.lelli@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>,
- Clark Williams <williams@redhat.com>, "Luis Claudio R. Goncalves"
- <lclaudio@uudg.org>, John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH] tracing: Update MAINTAINERS file
-Message-Id: <20240716181534.706734253e11290d117c0d64@kernel.org>
-In-Reply-To: <20240715144745.51d887a9@rorschach.local.home>
-References: <20240715144745.51d887a9@rorschach.local.home>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jiri
+ Olsa <olsajiri@gmail.com>, mingo@kernel.org, andrii@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add uprobes entry
+Message-Id: <20240716181730.28ae299f618b5fcb2429c3c8@kernel.org>
+In-Reply-To: <20240715172152.GA15187@redhat.com>
+References: <172074397710.247544.17045299807723238107.stgit@devnote2>
+	<20240715181417.6421de1e1a18a39685533115@kernel.org>
+	<20240715172152.GA15187@redhat.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,85 +49,19 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jul 2024 14:47:45 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 15 Jul 2024 19:21:52 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> On 07/15, Masami Hiramatsu wrote:
+> >
+> > Hi Peter, Oleg,
+> >
+> > If this is OK for you, please give your Ack.
 > 
-> Gone but never forgotten.
-> 
-> [ Also moved Daniel's name to be consistent with the alphabetical order ]
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
 > 
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  CREDITS     | 10 +++++++---
->  MAINTAINERS |  3 ---
->  2 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/CREDITS b/CREDITS
-> index 88c4c08cb613..d7798910e99f 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -271,9 +271,6 @@ D: Driver for WaveFront soundcards (Turtle Beach Maui, Tropez, Tropez+)
->  D: Various bugfixes and changes to sound drivers
->  S: USA
->  
-> -N: Daniel Bristot de Oliveira
-> -D: Scheduler contributions, notably: SCHED_DEADLINE
-> -
->  N: Carlos Henrique Bauer
->  E: chbauer@acm.org
->  E: bauer@atlas.unisinos.br
-> @@ -534,6 +531,13 @@ S: Kopmansg 2
->  S: 411 13  Goteborg
->  S: Sweden
->  
-> +N: Daniel Bristot de Oliveira
-> +D: Scheduler contributions, notably: SCHED_DEADLINE
-> +D: Real-time Linux Analysis
-> +D: Runtime Verification
-> +D: OS Noise and Latency Tracers
-> +S: Brazil and Italy
-> +
->  N: Paul Bristow
->  E: paul@paulbristow.net
->  W: https://paulbristow.net/linux/idefloppy.html
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2e1b8bbacb5e..0b7e4cd4ffd7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18895,7 +18895,6 @@ F:	include/uapi/linux/rtc.h
->  F:	tools/testing/selftests/rtc/
->  
->  Real-time Linux Analysis (RTLA) tools
-> -M:	Daniel Bristot de Oliveira <bristot@kernel.org>
->  M:	Steven Rostedt <rostedt@goodmis.org>
->  L:	linux-trace-kernel@vger.kernel.org
->  S:	Maintained
-> @@ -19529,7 +19528,6 @@ S:	Maintained
->  F:	drivers/infiniband/ulp/rtrs/
->  
->  RUNTIME VERIFICATION (RV)
-> -M:	Daniel Bristot de Oliveira <bristot@kernel.org>
->  M:	Steven Rostedt <rostedt@goodmis.org>
->  L:	linux-trace-kernel@vger.kernel.org
->  S:	Maintained
-> @@ -22806,7 +22804,6 @@ F:	kernel/trace/trace_mmiotrace.c
->  
->  TRACING OS NOISE / LATENCY TRACERS
->  M:	Steven Rostedt <rostedt@goodmis.org>
-> -M:	Daniel Bristot de Oliveira <bristot@kernel.org>
->  S:	Maintained
->  F:	Documentation/trace/hwlat_detector.rst
->  F:	Documentation/trace/osnoise-tracer.rst
-> -- 
-> 2.43.0
-> 
+Thanks for the Ack!
 
 
 -- 
