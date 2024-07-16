@@ -1,78 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B3157A43;
-	Tue, 16 Jul 2024 09:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1957196D98;
+	Tue, 16 Jul 2024 09:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121547; cv=none; b=Byhq0sz7mrC7zuzP0UZsKOgOFiS+Kq3ViJONKBpIY02r7aisVyvV7isWygwZY4cOW3ZLGPfYIR8gWDWqKwixd5iTJZjpymYSz4mRjFS5azhK7Ni3axVwD69DwlIYAkKbg0gEvTFta9a3RiJ07Vh3JsAknwuiOSNOJdXJRub6xco=
+	t=1721123557; cv=none; b=n4RMNOqo5DUUbKk67hkZ5ZDy+D2Ugv24Sgr6vJKEQBpGAaYWpHZTL70HrEi0n4gfwwR0ACs3PFNcgaRZVCz9wVtwkiwNee0DPcW9fe32K8KnjGbEDbYEoDqSKvtAlQSeI0JCyeYCJWh+Gs9oJEeJV+QXE/3XoLHI/MrVcMV6u8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121547; c=relaxed/simple;
-	bh=K8r96+NWXM9HvACg9ptDl+CrQpKzGn68GkYyfetMe1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5TkZ5feMuQIAtPsdJc0Z83npuHH86YIxggUv7T74yTmpITswwDR5oVOMIKdRM7q98QDwgUXnusipvBO56yBjQgAVtPhz62TlR2ffmzHMVQJ6FZdQ4+/8ZdLRg8KF96XvDatnnP1JZsDZHztSqnCeIHyc9AHkyg/P+XXhkO4KpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q9BYATXO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1721123557; c=relaxed/simple;
+	bh=IFxQxOBpCXNtHrOj1Qmg3nTitVZprBCWUOd6OttIEQo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=odp+OP+QiDw7c85qJIpMczd8sc8bqGgWIfpYPbwq0d9rjZtzBMqiwyxZ/Djzu4Vi0KhwlnwP+gz6HBoMBwl2pwvbaYUC1aI0WglltG2zYwtDh2uLalRaqfUDTAwJy6f0tPz7kcntQiHG7sOJnYsUc3sP3upkd5Qzjc1n5aGMsN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=jnGLM5wc; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q9BYATXO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Ar6ntNI1eFIpMIWTyK9TL2PHcE8HFBjg+tUUhYe8r28=; b=q9BYATXOq9EAT9t+HmMfI28VP1
-	wtThkq5hKkJ/Q9emhJBaxobyROhVF5sELkAlt7qqIE/VPpMzuY3MOTXOfsOSDju8BLBqkO1wPDiHV
-	fuPSm+Ka2Nc+bzByIPzFLZ5e75gDSUy7G8pLE+28HUYDu1bKjXZ054yHPzB/JimZlNkLnEXuugMrh
-	GcUOkYmovIqKWsh5ZoZ0ZHsWqHvYArrYioiHPUTRDasJe/A6LrX4zRxMx5vAsHgV+pMXuhG+3bGm5
-	1/2my1SdjHDfo1bZsGijuQmeqwH8bKaAw9bwmym3QweDt7xgX9BscIdLC50DuHbIlHl9nzdZc20fF
-	YS3DSk2A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sTeKi-0000000GvQS-366o;
-	Tue, 16 Jul 2024 09:18:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F346F300694; Tue, 16 Jul 2024 11:18:51 +0200 (CEST)
-Date: Tue, 16 Jul 2024 11:18:51 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tio Zhang <tiozhang@didiglobal.com>, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	vineethr@linux.ibm.com, akpm@linux-foundation.org,
-	mathieu.desnoyers@efficios.com, mingo@kernel.org,
-	mgorman@techsingularity.net, qyousef@layalina.io,
-	vincent.guittot@linaro.org, elver@google.com, zyhtheonly@gmail.com,
-	zyhtheonly@yeah.net, Juri Lelli <juri.lelli@gmail.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH 1/1] tracing/sched: sched_switch: place prev_comm and
- next_comm in right order
-Message-ID: <20240716091851.GC26750@noisy.programming.kicks-ass.net>
-References: <20240703033353.GA2833@didi-ThinkCentre-M930t-N000>
- <20240715150412.655abdda@rorschach.local.home>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="jnGLM5wc"
+Received: from [192.168.1.103] (unknown [88.230.7.215])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 2213E40B1E60;
+	Tue, 16 Jul 2024 09:45:24 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 2213E40B1E60
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1721123125;
+	bh=8z0xCwX0Y91Gmm3XU03ogAxSGYi69FQUcjo49bLpk9Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+	b=jnGLM5wcrVimEfWk1y7vQDrDHW/xKUD3au2jCxLJR5vwJ/T5iCPSVtDwoBM+TdrrX
+	 8jJ7bhxC6Rk1bSCcBlYhk2oGG1Wfnake8FULApF6Q/zQWFUwy+qDf+TcrrnZ7beoph
+	 tCS2Q2I7VejnBK1Ge9mb8n0Ze9WY0OHRQsYopWAc=
+Subject: Re: [lvc-project] [PATCH] tracing: remove unreachable trace_array_put
+To: Nikita Kiryushin <kiryushin@ancud.ru>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: lvc-project@linuxtesting.org, linux-trace-kernel@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
+References: <20240712201258.99070-1-kiryushin@ancud.ru>
+ <20240712193306.3174c85e@gandalf.local.home>
+ <98c01cc6-dcee-46d0-bdc8-0e35165ec68b@ancud.ru>
+From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Message-ID: <5ec2d185-0359-b0df-664a-d20722fe3666@ispras.ru>
+Date: Tue, 16 Jul 2024 12:45:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715150412.655abdda@rorschach.local.home>
+In-Reply-To: <98c01cc6-dcee-46d0-bdc8-0e35165ec68b@ancud.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 15, 2024 at 03:04:12PM -0400, Steven Rostedt wrote:
+On 15.07.2024 16:47, Nikita Kiryushin wrote:
+> As nonseekable_open() documentation states:
+> "The function is not supposed to ever fail, the only
+> reason it returns an 'int' and not 'void' is so that it can be plugged
+> directly into file_operations structure."
 > 
-> [ Adding sched maintainers, as this is a scheduling trace event ]
-> 
-> On Wed, 3 Jul 2024 11:33:53 +0800
-> Tio Zhang <tiozhang@didiglobal.com> wrote:
-> 
-> > Switch the order of prev_comm and next_comm in sched_switch's code to
-> > align with its printing order.
-> 
-> I'm going to pick this up in my tree, as it is pretty much a nop. It's
-> just changing the ordering of the assignments of the comm names so that
-> the copy of prev_comm is with the updates to the prev_fields, and the
-> next_comm is with the updates to the next fields.
+> So it seems, that it will not fail anytime as it is not meant to?
+> Otherwise,
+> there will be a huge problem with leaks in many other parts of code, as
+> there are plenty of places, where nonseekable_open() is not checked after
+> resource allocations.
 
-Right, have at. very close to a whitespace patch.
+Yes, but there is another possible modification: replacement of call to
+nonseekable_open() by a call to some other function that returns error.
+Current code is already ready for such modification.
+
+--
+Alexey
