@@ -1,66 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9C819E7F7;
-	Tue, 16 Jul 2024 19:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A064911712;
+	Wed, 17 Jul 2024 06:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721158475; cv=none; b=j97ALm3MgbzfybQnyKJiRv5R60CXdROnY0chMQMExDPt108xkMKt3u5msIWRf+TCjcFWwiRWZy5s+2f2wAfUAWzFthjuOD3l5dUnQEaaQpNMETOX0JchQqNF9TQ+9eZa86iIscRtDodIuM0znMQ66+h4lOjo82prRqx17Msba8w=
+	t=1721196069; cv=none; b=o94Hiwgs5R9Rqeh8P1lKw8lFZH+Q2Bn6ZCl8nYmPyLnCDds3jIMhkxljZ27fU4Uve34U5zjdr9L9tpgZZVNqPDJpnX1ES8b2CiFdbFUWa0dj4ddATmxdQ/ooNXDOCbOD3ntVB98+LfmAm7BZZ1iKFR7zCU0SDKOmIaUJ46sXxH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721158475; c=relaxed/simple;
-	bh=UP2B229J7ZxIe0tzEcSruqguvLjt6N+LMMfX0Qc+HN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YxKO9WGIBmEJF7M26aeYwikoVRVHEz+AMLP1yX8NKUmZF8E+BaADXaw8HCSzNZ9izhYH5/gk4Mktk0KvVheZ3KkLVtrqSb4Z8wQOlw+T3+gi2KB2ySGQconFOIWusi+3b76NHqHsUcsSawEC0Zg7r5X0bgGZxR7GDkX8RFnn83A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 631BAC116B1;
-	Tue, 16 Jul 2024 19:34:34 +0000 (UTC)
-Date: Tue, 16 Jul 2024 15:34:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nikita Kiryushin <kiryushin@ancud.ru>
-Cc: Alexey Khoroshilov <khoroshilov@ispras.ru>,
- lvc-project@linuxtesting.org, linux-trace-kernel@vger.kernel.org, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [lvc-project] [PATCH] tracing: remove unreachable
- trace_array_put
-Message-ID: <20240716153432.4024a180@rorschach.local.home>
-In-Reply-To: <38513f97-d99a-4758-b84e-278e30f5565c@ancud.ru>
-References: <20240712201258.99070-1-kiryushin@ancud.ru>
-	<20240712193306.3174c85e@gandalf.local.home>
-	<98c01cc6-dcee-46d0-bdc8-0e35165ec68b@ancud.ru>
-	<5ec2d185-0359-b0df-664a-d20722fe3666@ispras.ru>
-	<38513f97-d99a-4758-b84e-278e30f5565c@ancud.ru>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1721196069; c=relaxed/simple;
+	bh=RFXjAgM+5/fsswwUyL7uiUhCLmR4FoPb4Hf8nYZk960=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GJHUDww6S8De/kX2o/ohpWPr+9vymwGFU83s2CIGsUgnCj+jwl4LOd0QFGEyFCTwxLDs8NVlS+XieDT0pLFAzgz/Losi1wMmr7LAhD7YDvQVEt96vbEJ4qayzHNchWzkrCQP896LJIEPjHxzdr320u9RnFYqsVXTsF5U8ZLfndg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T2f0kHzh; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T2f0kHzh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=mf6/kkJicUX0q5FPWb7HFODThRUeroz1DuVg1N8KqDw=; b=T2f0kHzh4ncICrqU2OzBRJ1TBE
+	DSozUpfaSHF6jQ5mJABEqktRvZkcDaXtP9K83bXsV+Ml48DEoGnuTnNr+r2U8OXc05ebi6+S0gRmk
+	1QKIgs56iHnCkzgJeUCifl/101a/zpx+KSOpljmceVLI3WjZVfEymv8iUa1SlLDa1Gn/YEZbHwY9q
+	rVVHF8XX9vfMb8hseftIgewdvWFCiArdkHGIFAVFYL9DOp0KSl5vHjbTIqt/T2e6c/tkX3JqXzxCr
+	vvULFobdA7cTQHQ4lQPN2D7HzcH/U7lBfNcVnmmK2hWS8woyw+MPoh6IRuiTBvST0xmFvCHF2AR3s
+	1ivbwAFg==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sTxic-0000000CkkC-05Bv;
+	Wed, 17 Jul 2024 06:00:50 +0000
+Message-ID: <c65edd73-57b7-43d1-8012-6bdf318fcced@infradead.org>
+Date: Tue, 16 Jul 2024 23:00:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/9] Documentation: add a new file documenting
+ multigrain timestamps
+To: Jeff Layton <jlayton@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong"
+ <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>,
+ Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+ linux-nfs@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
+ <20240715-mgtime-v6-5-48e5d34bd2ba@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240715-mgtime-v6-5-48e5d34bd2ba@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 16 Jul 2024 22:19:05 +0300
-Nikita Kiryushin <kiryushin@ancud.ru> wrote:
 
-> On 7/16/24 12:45, Alexey Khoroshilov wrote:
-> > Yes, but there is another possible modification: replacement of call to
-> > nonseekable_open() by a call to some other function that returns error.
-> > Current code is already ready for such modification.  
+
+On 7/15/24 5:48 AM, Jeff Layton wrote:
+> Add a high-level document that describes how multigrain timestamps work,
+> rationale for them, and some info about implementation and tradeoffs.
 > 
-> The change of which function is called would change the behavior indeed, but,
-> TBH, I do not see it as a valid point: If we assume that nonseekable_open() changes to something else in the future, we may assume as well that some other call will be
-> added later with a risk of resource leaking. This is a thing, that whoever would do
-> such changes should be careful about.
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  Documentation/filesystems/multigrain-ts.rst | 120 ++++++++++++++++++++++++++++
+>  1 file changed, 120 insertions(+)
 > 
-> For me, the code as it is now, is not uniform with the other places that use
-> nonseekable_open().
 
-The point is moot. If something returns a value, even if it says it
-will never return failure, there's no harm in checking it. If we ignore
-the return value, that is a unneeded coupling of design between the
-function and its users.
 
-It does no harm in checking the value, so I rather just keep doing so.
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
--- Steve
+Thanks.
+
+-- 
+~Randy
