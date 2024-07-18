@@ -1,125 +1,108 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CF71459F8
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jul 2024 17:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6A61B86FD
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jul 2024 18:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721323030; cv=none; b=PSkaxUtAyRGC8US8/RQHzJMAKTXbTGd8ev82JHUa6XPpPvGnXGJY2wVSQW7+cP2XfYbpUVaXDU9o8rJnKyizX/id7KczH5P+V3230Ie1boz7EBDm0XrF+PxPeOb9R1MHw7Lp+FcCbDq/f2U93MiZ/XhfF6hwyO/oHhgy9DapVf0=
+	t=1721327462; cv=none; b=Uwf88nGZ79/JaUYx46l5Rt9dMoblEzd8SzQrXSYELKMdY/dBQYDqm5CLGO+36qIlJu5auCaV4wV0KcR7CH48l15A7w/pjQHBdJJ6GNttg59uwTAm53i2qzOkpNwb300C4JdfClBaRJ+V+IonF+EuXRHj54IU/xttpcx79R3iyG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721323030; c=relaxed/simple;
-	bh=rI4frp63Jxnsj31MWHYAeYEx6wRJkL13+FH1JRSRuiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K2DVNY0WjF3gUJ3qBaTiAwyImfL60bpIlkmj+rpu/XleDB7joS1eHBHo6zsGa3I8KygKvOVke3kVtp8mLuwYor4RF5Gy8tdpJiIwulvKGOTamVWq7RLwa1JfHINXubiqtgglydNVT3AI0QLLGQqt1YMm5jdCtAmwthub6jDTVpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fOiAXBC/; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721327462; c=relaxed/simple;
+	bh=fZy98nF3lGPRACLnzWV0B6LC4b609acfD7JHbx8VXNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BI9mLSXMlUrmVh2EkoRfqKwdA30Xnp8vnG3qcUP9DGCxYA+9blFia1JlKIW2kvLw/0nI7CgnfG0OHbMUtLg5IFDKhYjfHdqyzLriJoyYNRWtah4x9i1yYCUlfPzrdyrwQuv9xwEKZodGx2YxEMEs3hKG6GlTewiqru5D4XEjpes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cLAxATG2; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fOiAXBC/"
-X-Envelope-To: yikai.lin@vivo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721323026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C/vJB6s3AXh8HptKIgTma6VmUjB5HKeVFmr7SdBDgZU=;
-	b=fOiAXBC/kyz2LAaqNNHfG2fOAtNGuc5Ww5UfjpbSDyxyvaa7HOdLqQS0u7B0g6c0WbPuvv
-	+YIdQVsJS7dQX41is49dTAVl5/js2A9ZDEQoZj6qzrYFXq9dJ5t91aphMRNlxswUfTBMcD
-	or0l2TE/2+d7INfy8cRveItONpPrP4g=
-X-Envelope-To: ast@kernel.org
-X-Envelope-To: daniel@iogearbox.net
-X-Envelope-To: andrii@kernel.org
-X-Envelope-To: eddyz87@gmail.com
-X-Envelope-To: song@kernel.org
-X-Envelope-To: yonghong.song@linux.dev
-X-Envelope-To: john.fastabend@gmail.com
-X-Envelope-To: kpsingh@kernel.org
-X-Envelope-To: sdf@fomichev.me
-X-Envelope-To: haoluo@google.com
-X-Envelope-To: jolsa@kernel.org
-X-Envelope-To: mattbobrowski@google.com
-X-Envelope-To: rostedt@goodmis.org
-X-Envelope-To: mhiramat@kernel.org
-X-Envelope-To: mathieu.desnoyers@efficios.com
-X-Envelope-To: mykolal@fb.com
-X-Envelope-To: shuah@kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: bpf@vger.kernel.org
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-X-Envelope-To: linux-kselftest@vger.kernel.org
-X-Envelope-To: opensource.kernel@vivo.com
-Message-ID: <9642ad1d-e227-417e-a9ff-b69b2cb2d0d9@linux.dev>
-Date: Thu, 18 Jul 2024 10:16:54 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cLAxATG2"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7039e4a4a03so614040a34.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 18 Jul 2024 11:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721327460; x=1721932260; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RhSUkj+EOk8Y1j/3L/4ALuzPFdB2LmVxWhdONm5QOfo=;
+        b=cLAxATG2UXVWcMW2WEQl8bzkpm6d42ZilXu8TmVe/thqgittQ5Jsmagi9PxDZTs3wP
+         lK5KTJKJYUzBTlpx+YyG00t97Lftju/Tpql4DBpORuiEH70YJ6fp0r2CYRgRcO2C66Bd
+         3bRCkkTIN1LcTHfVmWCSUgYiTCpVMf5riM+nnf61l9SKFS6kwGkYBWBO71SCLCfWzp8Q
+         Pu85nIPtxUmw+vzBuVKRe6PkNDw6SJ5x4nC72vfeMqDMWxoVnnNc7WtEfIOGCgmZv3a8
+         9Yl9N1U70jMamuhERQmgCpdpom85YaDmjds3fvzi7TcVQ1PieWX3HlqamPm4/9e1Hhbo
+         G7uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721327460; x=1721932260;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RhSUkj+EOk8Y1j/3L/4ALuzPFdB2LmVxWhdONm5QOfo=;
+        b=NfvK+nwcgEJl0DrIjtZ9r/SNv+3OMgegKcJMpdcfN+KnniR4d7r0dO37btib0phlix
+         Qha/edNWMEfxeK1heEywZEFcZ7EVLXYbBOdTfQCtuA23SnaQZMyEAUTeo62JqAaKCb8r
+         9pPT87BTAZlt49VSU6UV0b0mbC55qgXY1Zn+2lRLdqxN0bxCU9wke9H4p8FVRZbHVtl9
+         GoIRDfGDd9YfzOZeR5WDfko6ihW3iA+dRj0rSNN3UVR50eLPe43ihGs0OfuB7GH3e9hQ
+         ZMiqnqzdwWNfOhoHJff5924BzGusQ0oYYzDwSjutPJQdhotcRPJCHExCYE7WhO7ANfa1
+         F+OA==
+X-Gm-Message-State: AOJu0YwOg2/4N+p2ALRwTO40ssbPARcUevIYMpOZSFlnO0vlZlDwjeRm
+	v07BKR7d79vDJXTHsqMYOKRO+lzc8xWJ+mDPHpcf60o1Q2eAFdc+Lg10MwM6Gm0GdIEib2qTUUV
+	7
+X-Google-Smtp-Source: AGHT+IE9UI/tXpAkS49jJTV6Qbc64zpbjrPkyzyV3qxnE5nCXaA0fWa/IXcZL0nSuAms1svRzb0trA==
+X-Received: by 2002:a05:6870:f112:b0:260:fbc0:96f0 with SMTP id 586e51a60fabf-260fbc0abdemr1676001fac.39.1721327460079;
+        Thu, 18 Jul 2024 11:31:00 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8d5a:14eb:55d7:f0ba])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-260ee759799sm438502fac.31.2024.07.18.11.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jul 2024 11:30:59 -0700 (PDT)
+Date: Thu, 18 Jul 2024 13:30:57 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: [bug report] tracing/kprobes: Add symbol counting check when module
+ loads
+Message-ID: <1c775c89-42fe-4c86-ac6d-d97170885ae8@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v1 0/3] add bpf_file_d_path helper and selftests
-To: Lin Yikai <yikai.lin@vivo.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- opensource.kernel@vivo.com
-References: <20240718115153.1967859-1-yikai.lin@vivo.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20240718115153.1967859-1-yikai.lin@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 7/18/24 4:51 AM, Lin Yikai wrote:
-> v1:
->   - patch 2:
->     - [1/2] add bpf_file_d_path helper
->     - [2/2] add selftest to it
-> 
-> Hi, we are looking to add the "bpf_file_d_path" helper,
-> used to retrieve the path from a struct file object.
-> 	bpf_file_d_path(void *file, char *dst, u32 size);
-> 	
-> It's worth noting that the "file" parameter is defined as "void*" type.
-> 
-> * Our problems *
-> Previously, we encountered issues
-> on some user-space operating systems(OS):
-> 
-> 1.Difficulty using vmlinux.h
-> (1) The OS lacks support for bpftool.
-> We can not use:
-> "bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h".
-> Bpftool need a separate complex cross-compilation environment to build.
-> 
-> (2) Many duplicate definitions between OS and vmlinux.h.
-> 
-> (3) The vmlinux.h size is large (2.8MB on arm64/Android),
-> causing increased ebpf prog size and user space consumption.
+Hello Masami Hiramatsu (Google),
 
-The compiled bpf prog size is increased by 2.8MB because it included vmlinux.h?
+Commit 9d8616034f16 ("tracing/kprobes: Add symbol counting check when
+module loads") from Jul 5, 2024 (linux-next), leads to the following
+Smatch static checker warning:
 
-> 
-> 2.The "struct file" has many internal variables and definitions,
-> and maybe change along with Linux version iterations,
-> making it hard to copy it to OS.
+	kernel/trace/trace_kprobe.c:828 validate_probe_symbol()
+	warn: missing error code here? 'try_module_get_by_name()' failed. 'ret' = '0'
 
-If vmlinux.h is not convenience in your use case, you can try to define "struct 
-file" with __attribute__((preserve_access_index)) and the libbpf will adjust the 
-bpf prog against the running kernel.
+kernel/trace/trace_kprobe.c
+    815 static int validate_probe_symbol(char *symbol)
+    816 {
+    817         struct module *mod = NULL;
+    818         char *modname = NULL, *p;
+    819         int ret = 0;
+    820 
+    821         p = strchr(symbol, ':');
+    822         if (p) {
+    823                 modname = symbol;
+    824                 symbol = p + 1;
+    825                 *p = '\0';
+    826                 mod = try_module_get_by_name(modname);
+    827                 if (!mod)
+--> 828                         goto out;
 
-There was a discussion a year ago about bpf helpers freeze. No new helper can be 
-added since then. The same goes for this one.
+Is it intentional that "ret = 0;" here?
 
-pw-bot: cr
+    829         }
+    830 
+    831         ret = validate_module_probe_symbol(modname, symbol);
+    832 out:
+    833         if (p)
+    834                 *p = ':';
+    835         if (mod)
+    836                 module_put(mod);
+    837         return ret;
+    838 }
+
+regards,
+dan carpenter
