@@ -1,376 +1,248 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2FE14600C;
-	Fri, 19 Jul 2024 18:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A5514830F;
+	Fri, 19 Jul 2024 18:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721414554; cv=none; b=DhB4h2V9C3Zqm7L1BouxCvuBFBoC8GqA+yTzLHwdyuW472UrE1eTgJ3Au+QOzRaCvK6hdH7HSPiT/994uwOdi+oLoRX/1gtrfMvv8PYjsgjhFfbyL4yWX1tWk0PHtvzW9f9euIy08VRzSdK8rmZcF8vAbk7Z2dUDDfT72Oojlzo=
+	t=1721415335; cv=none; b=oS/m5t1COEaLo0Vt4C1ZA66KrZwsPUaKXQVNHRhnIwTGT4oA5JfH9Yo0H76h/aWUZCHsjyuMJPPPUojtVg6D2JihFxZB1p/nmF8YEmcsDEvjgObz0XYcJms+DciG5o70LJktKvXtkJ5muGEofMNauUS7Xl9LGbu5RqdxJyZqCwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721414554; c=relaxed/simple;
-	bh=m/ac+9Yw82y4ztiI1mncP1Av5KAITHkdCydy+oBkt00=;
+	s=arc-20240116; t=1721415335; c=relaxed/simple;
+	bh=252hIiMFQyNjRymAtvRKZk0dXUoQ/lmkD2ClTFJUt2s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K86NN/XPO1sZE+fLmma+/Ml4mvjS0MljK/NWnsLYzLLC3Z82P74v5t4QJEo8Ws4/AVEGoL3Y+6X3pFxH3XuXpViKCn1wa6jFSGUuDjdnj+4629CyoYvoG9mmjf5+2DRVPgQU4ZWqUWb9vpaLQkjX5NtJOSoe6TlK7bRR5KL/Bs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P73MwVLD; arc=none smtp.client-ip=209.85.210.179
+	 To:Cc:Content-Type; b=cyO3irdfMDdL91ni4cq1AT3Hiw55ittHtmmBWsjsKFZDQkAE2oa38mch2xH9mPB75NN7+qgCCYaPGauVCRI+WT4MwQCOEvPxARpOCeorOM5OYGplLR811PUYfdQCkpJmG8GBWIzeHQhinLJDRud/ofnvE+rJNdWvQY4wppTQEfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTOPhsM2; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P73MwVLD"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70b2a0542c2so1058920b3a.3;
-        Fri, 19 Jul 2024 11:42:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTOPhsM2"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-75e15a48d6aso1476828a12.0;
+        Fri, 19 Jul 2024 11:55:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721414552; x=1722019352; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1721415333; x=1722020133; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=acMMqOosx8z5hC0y3ouFWfqvDio5p/n891XwmKrMAUI=;
-        b=P73MwVLDuEANHIdX7Ol13aGyo2UOejvkb0XeogWfYVNK83oOMcmXMM581T9M7qvikV
-         im8xIIfWQ3Vj3SHDVXfOl0Rz+1VLsSxGpf7LoDAyo0atSNG1BvKsbWjMJUwXoZdIzppJ
-         bhqCzFrO6Zwp8BHwSYOffHStqm8aMMpUbizNEjchfqlnGGXKoaVGuZCUugIcIRTi+aN+
-         MZNghWpUzc8wuMCaQOu7mEitAQm+1suG0X4n1zM6jj3Dkzu1eJNAbdGrKJSsj94QnNZ9
-         4PIiJMIIy4BZ4nuj1bsKC1IZeyI7ZhlO/pU0PQBdUID29WL+spdosVObOX2QezHTCi22
-         +HNA==
+        bh=wdjMAdiGXFE3E7lg0h/2y80rVQL9E2201XZypo3hCP8=;
+        b=UTOPhsM2a31WDvV09MfLkpDjblcDYUTLS9wzjMVq6wSw222dE6+AW2M8lQwi4fe8+r
+         DjVjmJRYrPc5XIfujO0ldteOHWqgcm+K9u3qp0iW2dCRdUToFeFPVDVFCwBDBaw0GQ7s
+         IccD2AJ3q1m0Y9szhK9p5W/eJa0bNAmKimZ5q/wunw0JX7jN9DnCq5x4bagOOWy1ytiS
+         ZMRds3KDvr0YLYUwFBtqRvdqBpjKEgA2OjpcsTBPXnc4CthjhhmRmDrVtF6btB0AGIJd
+         uOMNDtZUYJIzKsyY+ktSS/ED4TK2sht1eD4P4Pf5JoEN8KPJto2bZ9lBdECino5DOBDy
+         ZK0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721414552; x=1722019352;
+        d=1e100.net; s=20230601; t=1721415333; x=1722020133;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=acMMqOosx8z5hC0y3ouFWfqvDio5p/n891XwmKrMAUI=;
-        b=PC0uGOYTL8cuLH9VSKnVr4gQ8lAko7X2foTu3W7uTDlb/khSQNxXrOM8vyFqA2ii+1
-         PZRUGCOSarGt2DrlYatvHSPnBxj5qCWm3A6kQfJtvM6ejjMzltZYvgL6fbh6SrPLkWE2
-         Ulw2UzeScBa35ZUScCplnJuUGZzpz3zBZ76B5oNbZI8DLrhP2osITf6Mems0zFohe0Pg
-         lwvc8xudPlfHnFUjhIHAQZZzpNUIei7K2iEZi5T7Gbdz1siq0xBCnwwZZ6KN6DLNzlmk
-         NO/jdPQrWJH0+g1W00JroNHmGIuxC1BkGhu59/GxEyyDcAmc2+zl4MdNLKB9lVVfaTLy
-         AonA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfBoPN47JQrk1elok7FCWv2JgEe5DRCnPykzeeQJhfKpslVvA/GXLefnUbHZ5UqSD8gUa0x30Ldcb9mHpycw1t9lMmBE1Z3gEgWKQI4GBDse/JCUXyR/QiXbVjmh4ZCXcKu3FOtjVJ4EJ5JEQNZfT99hdmJ+dOCq3r8v9FfRvvRoBbVoxp
-X-Gm-Message-State: AOJu0YyW5Y3wSkVYil3xBwNH+byiqpY+/FiZaRPKoG/CqRdQdyOo5Ye2
-	q2cLFDv9wvfQd1JEub7rkztcZpRq30YaFHsB7ztSxgMP1e8/CTF9KJMRX0++cB//akud9WqcbNn
-	E7/TB4t+yUmoAvx1RJBK7mF9zF1Q=
-X-Google-Smtp-Source: AGHT+IFX4LDh1YKjGyp1JmaUu94rHq5Jedi8kdtFhHGXRXyw+jZaIrro6zflseIaASG6AayUAE4nhLfF4CuGbSlj6mA=
-X-Received: by 2002:a05:6a00:b96:b0:70a:efd7:ad9b with SMTP id
- d2e1a72fcca58-70d084f3693mr1357835b3a.17.1721414552202; Fri, 19 Jul 2024
- 11:42:32 -0700 (PDT)
+        bh=wdjMAdiGXFE3E7lg0h/2y80rVQL9E2201XZypo3hCP8=;
+        b=lN383UxTDRJp9wFRvHUTxDkEBtbLHCl6Ja4dXkM+arj1fEuAyA6tPfLlEu5sBQVI3p
+         M4DgGQHymqZ/wvZML0FpXULCiPYIVIeu08Irkcoi6/vWpNB+Mb0GB3dPbvDK7doyXWqg
+         Ggt53dfyweGWyFlJ2pP/j3Zs4VlyXX15vX3zEoaVjklnm8YD5vg9kjQTeBP0RSPzLhXL
+         fG6p0KgaxkkO0asUtB4TG0y19JH8nwOAcNS3IvA9NNO96RD3dj3AwSn+UQp7vVybXSJn
+         ilJJ0MTLKsF6/B8tLw7oanzhCB/L/zKBnw2OOqD7b8fZOadbPUAPw8v2M7gCfr1dYveD
+         OwQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXF01m419gyx0LjO0TlsOXK2iNFwaQpRsSRwheleJk9GmVvGMdzbnmcXb9g3Jjijj1MHJzeigS+Ii/wuAhePAWZHbamzZIYLUbyr7XlHLIIcVnpuKysWp7dKKtNWeE/HubDC+DDfVeMAIoQ2nqVrSnEVUItZTLoKnmOyS0i9Z2hLNYODYdsGX5TAmLIzIWZR6MGvqRDuCDmqhhNjOEv5+8OL+uw4S3z
+X-Gm-Message-State: AOJu0YykpVokMpAmbSPqfnL91vfCSLbjM2JeI9lDdrmanpVYbiq9c6+a
+	8eHBn0+CAmHrjUd7LyTwW9zt99ELHujHGYRJwLv9mPAuZyp2BPQQR1vBxlIiSrWAH4TrASghtmh
+	Kq6ftqZ0D2cMUBKbM6fLfIABvz1M=
+X-Google-Smtp-Source: AGHT+IF3HI5VDylwXI4gV6jZgA1oH8WgU+S0F7KP1w0qZXi39U0IsU4r43nlYEnu5CLQqFxIQ3L31cXlFLSKrsHjA+8=
+X-Received: by 2002:a05:6a20:b598:b0:1c3:3436:a244 with SMTP id
+ adf61e73a8af0-1c42285f3b0mr1122705637.1.1721415333107; Fri, 19 Jul 2024
+ 11:55:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711110235.098009979@infradead.org> <CAEf4BzZ+ygwfk8FKn5AS_Ny=igvGcFzdDLE2FjcvwjCKazEWMA@mail.gmail.com>
- <20240715144536.GI14400@noisy.programming.kicks-ass.net> <CAEf4BzZuR883FEuKAXp3DY1iJcL+ST8eNq5ioq8oRpDyg0w8Kw@mail.gmail.com>
- <CAEf4BzY-r2EcQEVxA=kDUvx-wX3t0hsG+66=iKTS5ZaAJF4zjw@mail.gmail.com>
-In-Reply-To: <CAEf4BzY-r2EcQEVxA=kDUvx-wX3t0hsG+66=iKTS5ZaAJF4zjw@mail.gmail.com>
+References: <20240718115153.1967859-1-yikai.lin@vivo.com> <20240718115153.1967859-2-yikai.lin@vivo.com>
+In-Reply-To: <20240718115153.1967859-2-yikai.lin@vivo.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 19 Jul 2024 11:42:20 -0700
-Message-ID: <CAEf4BzZC4grdZGJR0GUUtShZ7vz4pDPq9mQjHwBpqcnwF-LhrA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] perf/uprobe: Optimize uprobes
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: oleg@redhat.com, mingo@kernel.org, andrii@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, jolsa@kernel.org, clm@meta.com, 
-	paulmck@kernel.org, bpf <bpf@vger.kernel.org>
+Date: Fri, 19 Jul 2024 11:55:20 -0700
+Message-ID: <CAEf4BzZsqcnn8cWSig6Yu-RHvpsFVmJfeNT8CmHuHpN_rTrCwg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 1/3] bpf: Add bpf_file_d_path helper
+To: Lin Yikai <yikai.lin@vivo.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mykola Lysenko <mykolal@fb.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	opensource.kernel@vivo.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 15, 2024 at 11:10=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Thu, Jul 18, 2024 at 4:53=E2=80=AFAM Lin Yikai <yikai.lin@vivo.com> wrot=
+e:
 >
-> On Mon, Jul 15, 2024 at 10:10=E2=80=AFAM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Jul 15, 2024 at 7:45=E2=80=AFAM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> > >
-> > > On Thu, Jul 11, 2024 at 09:57:44PM -0700, Andrii Nakryiko wrote:
-> > >
-> > > > But then I also ran it on Linux built from perf/uprobes branch (the=
-se
-> > > > patches), and after a few seconds I see that there is no more
-> > > > attachment/detachment happening. Eventually I got splats, which you
-> > > > can see in [1]. I used `sudo ./uprobe-stress -a10 -t5 -m5 -f3` comm=
-and
-> > > > to run it inside my QEMU image.
-> > >
-> > > So them git voodoo incantations did work and I got it built. I'm runn=
-ing
-> > > that exact same line above (minus the sudo, because test box only has=
- a
-> > > root account I think) on real hardware.
-> > >
-> > > I'm now ~100 periods in and wondering what 'eventually' means...
-> >
-> > So I was running in a qemu set up with 16 cores on top of bare metal's
-> > 80 core CPU (Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz). I just tried
-> > it again, and I can reproduce it within first few periods:
-> >
-> > WORKING HARD!..
-> >
-> > PERIOD #1 STATS:
-> > FUNC CALLS               919632
-> > UPROBE HITS              706351
-> > URETPROBE HITS           641679
-> > ATTACHED LINKS              951
-> > ATTACHED UPROBES           2421
-> > ATTACHED URETPROBES        2343
-> > MMAP CALLS                33533
-> > FORKS CALLS                 241
-> >
-> > PERIOD #2 STATS:
-> > FUNC CALLS                11444
-> > UPROBE HITS               14320
-> > URETPROBE HITS             9896
-> > ATTACHED LINKS               26
-> > ATTACHED UPROBES             75
-> > ATTACHED URETPROBES          61
-> > MMAP CALLS                39093
-> > FORKS CALLS                  14
-> >
-> > PERIOD #3 STATS:
-> > FUNC CALLS                  230
-> > UPROBE HITS                 152
-> > URETPROBE HITS              145
-> > ATTACHED LINKS                2
-> > ATTACHED UPROBES              2
-> > ATTACHED URETPROBES           2
-> > MMAP CALLS                39121
-> > FORKS CALLS                   0
-> >
-> > PERIOD #4 STATS:
-> > FUNC CALLS                    0
-> > UPROBE HITS                   0
-> > URETPROBE HITS                0
-> > ATTACHED LINKS                0
-> > ATTACHED UPROBES              0
-> > ATTACHED URETPROBES           0
-> > MMAP CALLS                39010
-> > FORKS CALLS                   0
-> >
-> > You can see in the second period all the numbers drop and by period #4
-> > (which is about 20 seconds in) anything but mmap()ing stops. When I
-> > said "eventually" I meant about a minute tops, however long it takes
-> > to do soft lockup detection, 23 seconds this time.
-> >
-> > So it should be very fast.
-> >
-> > Note that I'm running with debug kernel configuration (see [0] for
-> > full kernel config), here are debug-related settings, in case that
-> > makes a difference:
-> >
-> > $ cat ~/linux-build/default/.config | rg -i debug | rg -v '^#'
-> > CONFIG_X86_DEBUGCTLMSR=3Dy
-> > CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC=3Dy
-> > CONFIG_BLK_DEBUG_FS=3Dy
-> > CONFIG_PNP_DEBUG_MESSAGES=3Dy
-> > CONFIG_AIC7XXX_DEBUG_MASK=3D0
-> > CONFIG_AIC79XX_DEBUG_MASK=3D0
-> > CONFIG_SCSI_MVSAS_DEBUG=3Dy
-> > CONFIG_DM_DEBUG=3Dy
-> > CONFIG_MLX4_DEBUG=3Dy
-> > CONFIG_USB_SERIAL_DEBUG=3Dm
-> > CONFIG_INFINIBAND_MTHCA_DEBUG=3Dy
-> > CONFIG_INFINIBAND_IPOIB_DEBUG=3Dy
-> > CONFIG_INFINIBAND_IPOIB_DEBUG_DATA=3Dy
-> > CONFIG_CIFS_DEBUG=3Dy
-> > CONFIG_DLM_DEBUG=3Dy
-> > CONFIG_DEBUG_BUGVERBOSE=3Dy
-> > CONFIG_DEBUG_KERNEL=3Dy
-> > CONFIG_DEBUG_INFO=3Dy
-> > CONFIG_DEBUG_INFO_DWARF4=3Dy
-> > CONFIG_DEBUG_INFO_COMPRESSED_NONE=3Dy
-> > CONFIG_DEBUG_INFO_BTF=3Dy
-> > CONFIG_DEBUG_INFO_BTF_MODULES=3Dy
-> > CONFIG_DEBUG_FS=3Dy
-> > CONFIG_DEBUG_FS_ALLOW_ALL=3Dy
-> > CONFIG_ARCH_HAS_DEBUG_WX=3Dy
-> > CONFIG_HAVE_DEBUG_KMEMLEAK=3Dy
-> > CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE=3Dy
-> > CONFIG_ARCH_HAS_DEBUG_VIRTUAL=3Dy
-> > CONFIG_SCHED_DEBUG=3Dy
-> > CONFIG_DEBUG_PREEMPT=3Dy
-> > CONFIG_LOCK_DEBUGGING_SUPPORT=3Dy
-> > CONFIG_DEBUG_RT_MUTEXES=3Dy
-> > CONFIG_DEBUG_SPINLOCK=3Dy
-> > CONFIG_DEBUG_MUTEXES=3Dy
-> > CONFIG_DEBUG_WW_MUTEX_SLOWPATH=3Dy
-> > CONFIG_DEBUG_RWSEMS=3Dy
-> > CONFIG_DEBUG_LOCK_ALLOC=3Dy
-> > CONFIG_DEBUG_LOCKDEP=3Dy
-> > CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
-> > CONFIG_DEBUG_IRQFLAGS=3Dy
-> > CONFIG_X86_DEBUG_FPU=3Dy
-> > CONFIG_FAULT_INJECTION_DEBUG_FS=3Dy
-> >
-> >   [0] https://gist.github.com/anakryiko/97a023a95b30fb0fe607ff743433e64=
-b
-> >
-> > >
-> > > Also, this is a 2 socket, 10 core per socket, 2 threads per core
-> > > ivybridge thing, are those parameters sufficient?
-> >
-> > Should be, I guess? It might be VM vs bare metal differences, though.
-> > I'll try to run this on bare metal with more production-like kernel
-> > configuration to see if I can still trigger this. Will let you know
-> > the results when I get them.
+> Add the "bpf_file_d_path" helper function
+> to retrieve the path from a struct file object.
+> But there is no need to include vmlinux.h
+> or reference the definition of struct file.
 >
-> Ok, so I ran it on bare metal host with production config. I didn't
-> really bother to specify parameters (so just one thread for
-> everything, the default):
+> Additionally, update the bpf.h tools uapi header.
 >
-> # ./uprobe-stress
-> WORKING HARD!..
+> Signed-off-by: Lin Yikai <yikai.lin@vivo.com>
+> ---
+>  include/uapi/linux/bpf.h       | 20 ++++++++++++++++++++
+>  kernel/trace/bpf_trace.c       | 34 ++++++++++++++++++++++++++++++++++
+>  tools/include/uapi/linux/bpf.h | 20 ++++++++++++++++++++
+>  3 files changed, 74 insertions(+)
 >
-> PERIOD #1 STATS:
-> FUNC CALLS              2959843
-> UPROBE HITS             1001312
-> URETPROBE HITS                0
-> ATTACHED LINKS                6
-> ATTACHED UPROBES             28
-> ATTACHED URETPROBES           0
-> MMAP CALLS                 8143
-> FORKS CALLS                 301
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 35bcf52dbc65..7e5cec61a877 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -5792,6 +5792,25 @@ union bpf_attr {
+>   *             0 on success.
+>   *
+>   *             **-ENOENT** if the bpf_local_storage cannot be found.
+> + *
+> + * long bpf_file_d_path(void *file, char *dst, u32 size)
+> + *     Description
+> + *             Return full path for the given *file* object.
+> + *
+> + *             In order to solve issues where certain eBPF programs can =
+not include
+> + *             the definition of struct file or vmlinux.h
+> + *             due to their complexity and conflicts on some operating s=
+ystem,
+> + *             the variable *file* here is declared as type void*
+> + *             instead of the traditional struct file*.
+> + *             It will be forcibly converted into type struct file* late=
+r.
+> + *
+> + *             If the path is larger than *size*, then only *size*
+> + *             bytes will be copied to *dst*
+> + *
+> + *     Return
+> + *             On success, the strictly positive length of the string,
+> + *             including the trailing NULL character. On error, a negati=
+ve
+> + *             value.
+>   */
+>  #define ___BPF_FUNC_MAPPER(FN, ctx...)                 \
+>         FN(unspec, 0, ##ctx)                            \
+> @@ -6006,6 +6025,7 @@ union bpf_attr {
+>         FN(user_ringbuf_drain, 209, ##ctx)              \
+>         FN(cgrp_storage_get, 210, ##ctx)                \
+>         FN(cgrp_storage_delete, 211, ##ctx)             \
+> +       FN(file_d_path, 212, ##ctx)                     \
+>         /* */
 >
-> PERIOD #2 STATS:
-> FUNC CALLS                    0
-> UPROBE HITS              822826
-> URETPROBE HITS                0
-> ATTACHED LINKS                0
-> ATTACHED UPROBES              0
-> ATTACHED URETPROBES           0
-> MMAP CALLS                 8006
-> FORKS CALLS                 270
+>  /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that do=
+n't
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index cd098846e251..70fde7f20e97 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1257,6 +1257,38 @@ static const struct bpf_func_proto bpf_get_func_ar=
+g_cnt_proto =3D {
+>         .arg1_type      =3D ARG_PTR_TO_CTX,
+>  };
 >
-> PERIOD #3 STATS:
-> FUNC CALLS                    0
-> UPROBE HITS              889534
-> URETPROBE HITS                0
-> ATTACHED LINKS                0
-> ATTACHED UPROBES              0
-> ATTACHED URETPROBES           0
-> MMAP CALLS                 8004
-> FORKS CALLS                 288
->
-> PERIOD #4 STATS:
-> FUNC CALLS                    0
-> UPROBE HITS              886506
-> URETPROBE HITS                0
-> ATTACHED LINKS                0
-> ATTACHED UPROBES              0
-> ATTACHED URETPROBES           0
-> MMAP CALLS                 8120
-> FORKS CALLS                 285
->
-> PERIOD #5 STATS:
-> FUNC CALLS                    0
-> UPROBE HITS              804556
-> URETPROBE HITS                0
-> ATTACHED LINKS                0
-> ATTACHED UPROBES              0
-> ATTACHED URETPROBES           0
-> MMAP CALLS                 7131
-> FORKS CALLS                 263
-> ^C
-> EXITING...
->
-> Message from syslogd@kerneltest003.10.atn6.facebook.com at Jul 15 11:06:3=
-3 ...
->  kernel:[ 2194.334618] watchdog: BUG: soft lockup - CPU#71 stuck for
-> 48s! [uprobe-stress:69900]
->
-> It was weird on the very first period (no uretprobes, small amount of
-> attachments). And sure enough (gmail will reformat below in the
-> garbage, so [0] has the splat with the original formatting).
->
->   [0] https://gist.github.com/anakryiko/3e3ddcccc5ea3ca70ce90b5491485fdc
->
-> I also keep getting:
->
-> Message from syslogd@kerneltest003.10.atn6.facebook.com at Jul 15 11:09:4=
-1 ...
->  kernel:[ 2382.334088] watchdog: BUG: soft lockup - CPU#71 stuck for
-> 223s! [uprobe-stress:69900]
->
-> so it's not just a temporary slowdown
->
->
-> [ 2166.893057] rcu: INFO: rcu_sched self-detected stall on CPU
-> [ 2166.904199] rcu:     71-....: (20999 ticks this GP)
-> idle=3D2c84/1/0x4000000000000000 softirq=3D30158/30158 fqs=3D8110
-> [ 2166.923810] rcu:              hardirqs   softirqs   csw/system
-> [ 2166.934939] rcu:      number:        0        183            0
-> [ 2166.946064] rcu:     cputime:       60          0        10438
-> =3D=3D> 10549(ms)
-> [ 2166.959969] rcu:     (t=3D21065 jiffies g=3D369217 q=3D207850 ncpus=3D=
-80)
-> [ 2166.971619] CPU: 71 PID: 69900 Comm: uprobe-stress Tainted: G S
->      E      6.10.0-rc7-00071-g9423ae8ef6ff #62
-> [ 2166.992275] Hardware name: Quanta Tioga Pass Single Side
-> 01-0032211004/Tioga Pass Single Side, BIOS F08_3A24 05/13/2020
-> [ 2167.013804] RIP: 0010:uprobe_notify_resume+0x622/0xe20
-> [ 2167.024064] Code: 8d 9d c0 00 00 00 48 89 df 4c 89 e6 e8 d7 f9 ff
-> ff 84 c0 0f 85 c6 06 00 00 48 89 5c 24 20 41 8b 6d 58 40 f6 c5 01 74
-> 23 f3 90 <eb> f2 83 7c 24 18 00 48 8b 44 24 10 0f 8e 71 01 00 00 bf 05
-> 00 00
-> [ 2167.061543] RSP: 0000:ffffc9004a49fe78 EFLAGS: 00000202
-> [ 2167.071973] RAX: 0000000000000000 RBX: ffff88a11d307fc0 RCX: ffff88a12=
-0752c40
-> [ 2167.086223] RDX: 00000000000042ec RSI: ffffc9004a49ff58 RDI: ffff88a11=
-d307fc0
-> [ 2167.100472] RBP: 0000000000000003 R08: ffff88a12516e500 R09: ffff88a12=
-516f208
-> [ 2167.114717] R10: 00000000004042ec R11: 000000000000000f R12: ffffc9004=
-a49ff58
-> [ 2167.128967] R13: ffff88a11d307f00 R14: 00000000004042ec R15: ffff88a09=
-042e000
-> [ 2167.143213] FS:  00007fd252000640(0000) GS:ffff88bfffbc0000(0000)
-> knlGS:0000000000000000
-> [ 2167.159368] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 2167.170843] CR2: 00007fd244000b60 CR3: 000000209090b001 CR4: 000000000=
-07706f0
-> [ 2167.185091] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000000000=
-0000000
-> [ 2167.199340] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000000000=
-0000400
-> [ 2167.213586] PKRU: 55555554
-> [ 2167.218994] Call Trace:
-> [ 2167.223883]  <IRQ>
-> [ 2167.227905]  ? rcu_dump_cpu_stacks+0x77/0xd0
-> [ 2167.236433]  ? print_cpu_stall+0x150/0x2a0
-> [ 2167.244615]  ? rcu_sched_clock_irq+0x319/0x490
-> [ 2167.253487]  ? update_process_times+0x71/0xa0
-> [ 2167.262191]  ? tick_nohz_handler+0xc0/0x100
-> [ 2167.270544]  ? tick_setup_sched_timer+0x170/0x170
-> [ 2167.279937]  ? __hrtimer_run_queues+0xe3/0x250
-> [ 2167.288815]  ? hrtimer_interrupt+0xf0/0x390
-> [ 2167.297168]  ? __sysvec_apic_timer_interrupt+0x47/0x110
-> [ 2167.307602]  ? sysvec_apic_timer_interrupt+0x68/0x80
-> [ 2167.317519]  </IRQ>
-> [ 2167.321710]  <TASK>
-> [ 2167.325905]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
-> [ 2167.336517]  ? uprobe_notify_resume+0x622/0xe20
-> [ 2167.345565]  ? uprobe_notify_resume+0x609/0xe20
-> [ 2167.354612]  ? __se_sys_futex+0xf3/0x180
-> [ 2167.362445]  ? arch_uprobe_exception_notify+0x29/0x40
-> [ 2167.372533]  ? notify_die+0x51/0xb0
-> [ 2167.379503]  irqentry_exit_to_user_mode+0x7f/0xd0
-> [ 2167.388896]  asm_exc_int3+0x35/0x40
-> [ 2167.395862] RIP: 0033:0x4042ec
-> [ 2167.401966] Code: fc 8b 45 fc 89 c7 e8 6f 07 00 00 83 c0 01 c9 c3
-> cc 48 89 e5 48 83 ec 10 89 7d fc 8b 45 fc 89 c7 e8 55 07 00 00 83 c0
-> 01 c9 c3 <cc> 48 89 e5 48 83 ec 10 89 7d fc 8b 45 fc 89 c7 e8 3b 07 00
-> 00 83
-> [ 2167.439439] RSP: 002b:00007fd251fff8a8 EFLAGS: 00000206
-> [ 2167.449874] RAX: 00000000004042ec RBX: 00007fd252000640 RCX: 000000000=
-000001c
-> [ 2167.464122] RDX: 0000000000000033 RSI: 0000000000000064 RDI: 000000000=
-0000033
-> [ 2167.478368] RBP: 00007fd251fff8d0 R08: 00007fd2523fa234 R09: 00007fd25=
-23fa280
-> [ 2167.492617] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd25=
-2000640
-> [ 2167.506866] R13: 0000000000000016 R14: 00007fd252289930 R15: 000000000=
-0000000
-> [ 2167.521117]  </TASK>
+> +BPF_CALL_3(bpf_file_d_path, void *, file, char*, dst, u32, size)
+> +{
+> +       long len;
+> +       struct file copy;
+> +       char *ptr;
+> +
+> +       if (!size)
+> +               return 0;
+> +
+> +       len =3D copy_from_kernel_nofault(&copy, (struct file *)file, size=
+of(struct file));
+> +       if (len < 0)
+> +               return len;
+> +
+> +       ptr =3D d_path(&(copy.f_path), dst, size);
+> +       if (IS_ERR(ptr)) {
+> +               len =3D PTR_ERR(ptr);
+> +       } else {
+> +               len =3D dst + size - ptr;
+> +               memmove(dst, ptr, len);
+> +       }
+> +       return len;
+> +}
+> +
+> +const struct bpf_func_proto bpf_file_d_path_proto =3D {
+> +       .func           =3D bpf_file_d_path,
+> +       .gpl_only       =3D false,
+> +       .ret_type       =3D RET_INTEGER,
+> +       .arg1_type      =3D ARG_ANYTHING,
 
-Peter,
+you can't just accept any random value as `struct file *`, this is a
+complete no-go. It will have to accept some sort of PTR_TRUSTED
+argument, be added as kfunc, etc, etc. We had earlier discussion
+around this, I don't remember all the details, but this is definitely
+not the way forward.
 
-Did you manage to reproduce this?
+> +       .arg2_type      =3D ARG_PTR_TO_MEM,
+> +       .arg3_type      =3D ARG_CONST_SIZE_OR_ZERO,
+> +};
+> +
+>  #ifdef CONFIG_KEYS
+>  __bpf_kfunc_start_defs();
+>
+> @@ -1629,6 +1661,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, co=
+nst struct bpf_prog *prog)
+>                 return &bpf_find_vma_proto;
+>         case BPF_FUNC_trace_vprintk:
+>                 return bpf_get_trace_vprintk_proto();
+> +       case BPF_FUNC_file_d_path:
+> +               return &bpf_file_d_path_proto;
+>         default:
+>                 return bpf_base_func_proto(func_id, prog);
+>         }
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bp=
+f.h
+> index 35bcf52dbc65..7e5cec61a877 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -5792,6 +5792,25 @@ union bpf_attr {
+>   *             0 on success.
+>   *
+>   *             **-ENOENT** if the bpf_local_storage cannot be found.
+> + *
+> + * long bpf_file_d_path(void *file, char *dst, u32 size)
+> + *     Description
+> + *             Return full path for the given *file* object.
+> + *
+> + *             In order to solve issues where certain eBPF programs can =
+not include
+> + *             the definition of struct file or vmlinux.h
+> + *             due to their complexity and conflicts on some operating s=
+ystem,
+> + *             the variable *file* here is declared as type void*
+> + *             instead of the traditional struct file*.
+> + *             It will be forcibly converted into type struct file* late=
+r.
+> + *
+> + *             If the path is larger than *size*, then only *size*
+> + *             bytes will be copied to *dst*
+> + *
+> + *     Return
+> + *             On success, the strictly positive length of the string,
+> + *             including the trailing NULL character. On error, a negati=
+ve
+> + *             value.
+>   */
+>  #define ___BPF_FUNC_MAPPER(FN, ctx...)                 \
+>         FN(unspec, 0, ##ctx)                            \
+> @@ -6006,6 +6025,7 @@ union bpf_attr {
+>         FN(user_ringbuf_drain, 209, ##ctx)              \
+>         FN(cgrp_storage_get, 210, ##ctx)                \
+>         FN(cgrp_storage_delete, 211, ##ctx)             \
+> +       FN(file_d_path, 212, ##ctx)                     \
+>         /* */
+>
+>  /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that do=
+n't
+> --
+> 2.34.1
+>
