@@ -1,125 +1,88 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0188085283;
-	Fri, 19 Jul 2024 13:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F6113C679;
+	Fri, 19 Jul 2024 13:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721395090; cv=none; b=qiVXjWN2VvTUOqSdcoiMU1mHc2iXEy77c3sKYPzp9en4SzF4queOc/MyE8KmVr0cNUhc0DOkMbuZhg1J2gcrT3Io6dWrJJJqh4gH4mdcVQ1IMMP4tBJubmGtGo1Za7GmNOV+MyzkTccNnoeHlTrb5Dy0R8sidf/v3J542F3NYBY=
+	t=1721397372; cv=none; b=d4z0d6azOlymj2bMqnrDhOJq3qA0T9xVysaEpbDxaYdBOL/k6KQmcnKkOMMTq3jQX2KrgctF+pUvwUtSN6Z6XIOVQId8A8Ysh/9RJeI9FMO21TFr1xdDr22CocoC6rwfraontiNN0h1zol/DrCDXzPE0BDZ8boDbFRnVl/oc0GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721395090; c=relaxed/simple;
-	bh=6Yf1a4CqCvgyHibq+QJ66enVOigVRsT4lUW7P+j1EnE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=IuXvfEBxbEm8quGldCS6y4AgQwXpXnlagy2udXuh/4E3btxKeATZN9R+31nyN+/RvNt+mFd1Kjpik14H+nrEcv54O0MDjH3JUgwGUzfEU0uyVLiZrZNCaJqw5gswsglQzSU8nNBSVultYUZH+7fdhiRCrUyGY6N42r13m6yrn8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav412.sakura.ne.jp (fsav412.sakura.ne.jp [133.242.250.111])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 46JDH2Fn077284;
-	Fri, 19 Jul 2024 22:17:02 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav412.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp);
- Fri, 19 Jul 2024 22:17:02 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 46JDH1Qj077278
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 19 Jul 2024 22:17:01 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <94c1499a-2325-4bbf-b7bc-04a1e9090488@I-love.SAKURA.ne.jp>
-Date: Fri, 19 Jul 2024 22:17:01 +0900
+	s=arc-20240116; t=1721397372; c=relaxed/simple;
+	bh=KKhBgZBUTuQkO5A5vGVz2Ey1wmgXc0rIGGDKBtZU1B0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kv87BC4M1Fp1+6z5fVgB3+zHdT675+jJKtmRt3YLCYyaBrWYS+bEAkwOH6ix3H7cUmN0tvp2rVjFvVwMO2CHZGfwVjA4016QBq88kTKLM8DTnrFGoFtXS49TYlzLrlA5OeaNdNpFA4z7X/EweW5JT9apFAymEJ67xKJwVzO5+2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D440C4AF0B;
+	Fri, 19 Jul 2024 13:56:10 +0000 (UTC)
+Date: Fri, 19 Jul 2024 09:56:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Zheng Yejian
+ <zhengyejian1@huawei.com>, Vincent Donnefort <vdonnefort@google.com>, Huang
+ Yiwei <quic_hyiwei@quicinc.com>, "Tzvetomir Stoyanov (VMware)"
+ <tz.stoyanov@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/ring-buffer: hide unused last_boot_fops
+Message-ID: <20240719095608.31e4c67f@rorschach.local.home>
+In-Reply-To: <20240719102640.718554-1-arnd@kernel.org>
+References: <20240719102640.718554-1-arnd@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH (repost)] sched/core: defer printk() while rq lock is held
-To: syzbot <syzbot+18cfb7f63482af8641df@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <0000000000008881c5061d28e041@google.com>
-Content-Language: en-US
-Cc: tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-        netdev@vger.kernel.org, andrii@kernel.org, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net,
-        Steven Rostedt <rostedt@goodmis.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <0000000000008881c5061d28e041@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-syzbot is reporting circular locking dependency inside __bpf_prog_run()
-when trace_sched_switch() hook is called from __schedule(), for fault
-injection calls printk() despite rq lock is already held.
+On Fri, 19 Jul 2024 12:26:33 +0200
+Arnd Bergmann <arnd@kernel.org> wrote:
 
-Since any debugging functionality such as lockdep, fault injection,
-KASAN/KCSAN/KMSAN etc. might call printk(), guard the whole section
-between raw_spin_rq_{lock,lock_nested,trylock}() and raw_spin_rq_unlock()
-using printk_deferred_{enter,exit}().
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> This variable is used only in an #ifdef, which causes a W=1 warning
+> with some compilers:
+> 
+> kernel/trace/trace.c:7570:37: error: 'last_boot_fops' defined but not used [-Werror=unused-const-variable=]
+>  7570 | static const struct file_operations last_boot_fops = {
+> 
+> Guard this one with the same #ifdef.
+> 
+> Fixes: 7a1d1e4b9639 ("tracing/ring-buffer: Add last_boot_info file to boot instance")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Reported-by: syzbot <syzbot+18cfb7f63482af8641df@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
-This is a repost of https://lkml.kernel.org/r/b55e5f24-01ad-4a3d-94dc-e8a6bc15ac42@I-love.SAKURA.ne.jp .
-Scheduler developers, can you agree with addressing this problem at locations where rq lock is held?
+Actually "last_boot_info" and snapshot should be mutually exclusive.
+That is, an instance can have a snapshot or the "last_boot_info" but not
+both. The real fix is:
 
- kernel/sched/core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index bcf2c4cc0522..134f5196b9c4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -559,6 +559,7 @@ void raw_spin_rq_lock_nested(struct rq *rq, int subclass)
- 		raw_spin_lock_nested(&rq->__lock, subclass);
- 		/* preempt_count *MUST* be > 1 */
- 		preempt_enable_no_resched();
-+		printk_deferred_enter();
- 		return;
- 	}
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5462fb10ff64..0d1841b3363e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9828,15 +9828,15 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	if (ftrace_create_function_files(tr, d_tracer))
+ 		MEM_FAIL(1, "Could not allocate function filter files");
  
-@@ -568,6 +569,7 @@ void raw_spin_rq_lock_nested(struct rq *rq, int subclass)
- 		if (likely(lock == __rq_lockp(rq))) {
- 			/* preempt_count *MUST* be > 1 */
- 			preempt_enable_no_resched();
-+			printk_deferred_enter();
- 			return;
- 		}
- 		raw_spin_unlock(lock);
-@@ -584,6 +586,8 @@ bool raw_spin_rq_trylock(struct rq *rq)
- 	if (sched_core_disabled()) {
- 		ret = raw_spin_trylock(&rq->__lock);
- 		preempt_enable();
-+		if (ret)
-+			printk_deferred_enter();
- 		return ret;
- 	}
+-#ifdef CONFIG_TRACER_SNAPSHOT
+ 	if (tr->range_addr_start) {
+ 		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
+ 				  tr, &last_boot_fops);
++#ifdef CONFIG_TRACER_SNAPSHOT
+ 	} else {
+ 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
+ 				  tr, &snapshot_fops);
+-	}
+ #endif
++	}
  
-@@ -592,6 +596,8 @@ bool raw_spin_rq_trylock(struct rq *rq)
- 		ret = raw_spin_trylock(lock);
- 		if (!ret || (likely(lock == __rq_lockp(rq)))) {
- 			preempt_enable();
-+			if (ret)
-+				printk_deferred_enter();
- 			return ret;
- 		}
- 		raw_spin_unlock(lock);
-@@ -600,6 +606,7 @@ bool raw_spin_rq_trylock(struct rq *rq)
- 
- void raw_spin_rq_unlock(struct rq *rq)
- {
-+	printk_deferred_exit();
- 	raw_spin_unlock(rq_lockp(rq));
- }
- 
--- 
-2.43.0
+ 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
+ 			  tr, &tracing_err_log_fops);
 
+
+I'll write up a patch and give you the "reported-by".
+
+Thanks!
+
+-- Steve
