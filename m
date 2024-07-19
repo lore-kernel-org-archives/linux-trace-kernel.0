@@ -1,248 +1,356 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A5514830F;
-	Fri, 19 Jul 2024 18:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF10A2C697
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jul 2024 20:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721415335; cv=none; b=oS/m5t1COEaLo0Vt4C1ZA66KrZwsPUaKXQVNHRhnIwTGT4oA5JfH9Yo0H76h/aWUZCHsjyuMJPPPUojtVg6D2JihFxZB1p/nmF8YEmcsDEvjgObz0XYcJms+DciG5o70LJktKvXtkJ5muGEofMNauUS7Xl9LGbu5RqdxJyZqCwE=
+	t=1721422059; cv=none; b=dIJFd2maday8l1bm5x+Fv9c6RPPUKAWRJM7ux+VQrKcXyxfqnVs+FN840TLL+Rb8yUNMWTMq4kbrISnrYVnjt9XHvsrMkBIIzmuC3rS2limmXOeydyAkBbjTHpbqoBcJ6aKW8LC6G2wqvEUNHh93/wwOwR71b2pQSjLIceEnbpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721415335; c=relaxed/simple;
-	bh=252hIiMFQyNjRymAtvRKZk0dXUoQ/lmkD2ClTFJUt2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cyO3irdfMDdL91ni4cq1AT3Hiw55ittHtmmBWsjsKFZDQkAE2oa38mch2xH9mPB75NN7+qgCCYaPGauVCRI+WT4MwQCOEvPxARpOCeorOM5OYGplLR811PUYfdQCkpJmG8GBWIzeHQhinLJDRud/ofnvE+rJNdWvQY4wppTQEfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTOPhsM2; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721422059; c=relaxed/simple;
+	bh=1GyjGYqHMP/A/W86GpRpNyi5x4lMwNiMYdecFOMVeTY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s+JXapWy7LnxSyJMMk3bEFG2z8h3Yx8GijOaH3EATvpOVd0XxF7LRWT5KiVVZ0oBvmqhk7tvGXIP8pOm205IT77R1TsmxiJNc73yy6tPloQHwbHwmg2H3RQKInC7bSwyfBuRnhQYZtnikySa2yZ3Fgt70pLcfYPeVcYTp6OEazU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=kNyj26vy; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensrcsec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTOPhsM2"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-75e15a48d6aso1476828a12.0;
-        Fri, 19 Jul 2024 11:55:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="kNyj26vy"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2eeb1ba0481so35260091fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jul 2024 13:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721415333; x=1722020133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wdjMAdiGXFE3E7lg0h/2y80rVQL9E2201XZypo3hCP8=;
-        b=UTOPhsM2a31WDvV09MfLkpDjblcDYUTLS9wzjMVq6wSw222dE6+AW2M8lQwi4fe8+r
-         DjVjmJRYrPc5XIfujO0ldteOHWqgcm+K9u3qp0iW2dCRdUToFeFPVDVFCwBDBaw0GQ7s
-         IccD2AJ3q1m0Y9szhK9p5W/eJa0bNAmKimZ5q/wunw0JX7jN9DnCq5x4bagOOWy1ytiS
-         ZMRds3KDvr0YLYUwFBtqRvdqBpjKEgA2OjpcsTBPXnc4CthjhhmRmDrVtF6btB0AGIJd
-         uOMNDtZUYJIzKsyY+ktSS/ED4TK2sht1eD4P4Pf5JoEN8KPJto2bZ9lBdECino5DOBDy
-         ZK0A==
+        d=grsecurity.net; s=grsec; t=1721422055; x=1722026855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+ssixjm9drmuvO6h9QSUpMd4NDnlmfOcGX+fMJGRNA=;
+        b=kNyj26vyOgndOwaI/eZlx1KVy3o/RGV358Tr+mjkVqgGtV+OV9ETt5rBRJUyIKPSjF
+         6FgXOSezHoSyc24GUGmT7JHdJE9DfEyYMjlw4vNiVRzA8ALww5tD37PqekNNuiJF2p+e
+         ivDIh5AwvKxrxA1BdaeIUPzmIdaoUpactvzulkKiPOdwSzmtkx/p3jPfG7rRTptA77dt
+         3XkFqjZaq4jOaw0qfXcF9Q5g7m7RxXCYzK/F9IBfxM/2ywx9cL2GljB4d7y+otP9bLc2
+         lMJM28PmhB8vzfBKsU1Qw9orYJMTYB4UgLZZmQV6Z3bHsXsZuCFqUW9J/BpGsLnGirt4
+         yKRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721415333; x=1722020133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wdjMAdiGXFE3E7lg0h/2y80rVQL9E2201XZypo3hCP8=;
-        b=lN383UxTDRJp9wFRvHUTxDkEBtbLHCl6Ja4dXkM+arj1fEuAyA6tPfLlEu5sBQVI3p
-         M4DgGQHymqZ/wvZML0FpXULCiPYIVIeu08Irkcoi6/vWpNB+Mb0GB3dPbvDK7doyXWqg
-         Ggt53dfyweGWyFlJ2pP/j3Zs4VlyXX15vX3zEoaVjklnm8YD5vg9kjQTeBP0RSPzLhXL
-         fG6p0KgaxkkO0asUtB4TG0y19JH8nwOAcNS3IvA9NNO96RD3dj3AwSn+UQp7vVybXSJn
-         ilJJ0MTLKsF6/B8tLw7oanzhCB/L/zKBnw2OOqD7b8fZOadbPUAPw8v2M7gCfr1dYveD
-         OwQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXF01m419gyx0LjO0TlsOXK2iNFwaQpRsSRwheleJk9GmVvGMdzbnmcXb9g3Jjijj1MHJzeigS+Ii/wuAhePAWZHbamzZIYLUbyr7XlHLIIcVnpuKysWp7dKKtNWeE/HubDC+DDfVeMAIoQ2nqVrSnEVUItZTLoKnmOyS0i9Z2hLNYODYdsGX5TAmLIzIWZR6MGvqRDuCDmqhhNjOEv5+8OL+uw4S3z
-X-Gm-Message-State: AOJu0YykpVokMpAmbSPqfnL91vfCSLbjM2JeI9lDdrmanpVYbiq9c6+a
-	8eHBn0+CAmHrjUd7LyTwW9zt99ELHujHGYRJwLv9mPAuZyp2BPQQR1vBxlIiSrWAH4TrASghtmh
-	Kq6ftqZ0D2cMUBKbM6fLfIABvz1M=
-X-Google-Smtp-Source: AGHT+IF3HI5VDylwXI4gV6jZgA1oH8WgU+S0F7KP1w0qZXi39U0IsU4r43nlYEnu5CLQqFxIQ3L31cXlFLSKrsHjA+8=
-X-Received: by 2002:a05:6a20:b598:b0:1c3:3436:a244 with SMTP id
- adf61e73a8af0-1c42285f3b0mr1122705637.1.1721415333107; Fri, 19 Jul 2024
- 11:55:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721422055; x=1722026855;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H+ssixjm9drmuvO6h9QSUpMd4NDnlmfOcGX+fMJGRNA=;
+        b=ioYnZLyR3FOsCBqG6SeocYntBav9ueqIqj2KVj3LLvn/50qaYP6bDJBe/Q77pJtuuj
+         feX9qGmJfdLG+M6+Hiwctcjn06bgVS0dRgQEw6IDIRTidjGvdCtqpiS0dAJoBQiAdMpR
+         JXnscCmDAWOkoE0SH4Gxfe14W1eiDNamtvPp89fWLosuwP8+wCtPG5EKensHpX4tRtIG
+         cThcT67qcnSQdrllZfDYKroo9ZYvMp6zNlkhoSD8iWbiAtEK97w34tMq+RUbxiOdCkwy
+         ClOp4wqXi0cOmDxE4/YjjoXpFstk9KglawHHJRPzq9aJE3lXqwj+idEvo6D2Ai1m1Dbr
+         lwpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1dnR0MfVrmf0MejCPnAg7t7EGY4w6uO1iyL5LETbzLGJq3P67nI9Iyns6II9/HyuJFHncb/Ovqj5KdDEtRctfnH5F9bJtUzHqzyy+CnA+qhhz
+X-Gm-Message-State: AOJu0YwuimamyLI2NK8GgRk8q8d+G4JqF8n91Qw/LlAGgVJYBgxaxW0x
+	Tup3krxdizWb0G0+l/rcZYNTSQGOMRaloC8UAs9ObQ6PuSCv7NsCYMKsVTvIFxE=
+X-Google-Smtp-Source: AGHT+IGBE+48DmDUPjLPdyaj1eW4vRE9WsJ+VsEj9YOETti0MuWj8hrx4NVnSz1jD7BnEJhJJG/0NA==
+X-Received: by 2002:a2e:a7d0:0:b0:2ee:87ef:825b with SMTP id 38308e7fff4ca-2ef1684299emr5725621fa.40.1721422054762;
+        Fri, 19 Jul 2024 13:47:34 -0700 (PDT)
+Received: from bell.fritz.box (p200300f6af097400399c635aeda415ff.dip0.t-ipconnect.de. [2003:f6:af09:7400:399c:635a:eda4:15ff])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a30c7d32c6sm1679695a12.90.2024.07.19.13.47.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jul 2024 13:47:34 -0700 (PDT)
+From: Mathias Krause <minipli@grsecurity.net>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ajay Kaher <ajay.kaher@broadcom.com>
+Cc: Mathias Krause <minipli@grsecurity.net>,
+	=?UTF-8?q?Ilkka=20Naulap=C3=A4=C3=A4?= <digirigawa@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: tracing: user events UAF crash report
+Date: Fri, 19 Jul 2024 22:47:01 +0200
+Message-Id: <20240719204701.1605950-1-minipli@grsecurity.net>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240718115153.1967859-1-yikai.lin@vivo.com> <20240718115153.1967859-2-yikai.lin@vivo.com>
-In-Reply-To: <20240718115153.1967859-2-yikai.lin@vivo.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 19 Jul 2024 11:55:20 -0700
-Message-ID: <CAEf4BzZsqcnn8cWSig6Yu-RHvpsFVmJfeNT8CmHuHpN_rTrCwg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 1/3] bpf: Add bpf_file_d_path helper
-To: Lin Yikai <yikai.lin@vivo.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 18, 2024 at 4:53=E2=80=AFAM Lin Yikai <yikai.lin@vivo.com> wrot=
-e:
->
-> Add the "bpf_file_d_path" helper function
-> to retrieve the path from a struct file object.
-> But there is no need to include vmlinux.h
-> or reference the definition of struct file.
->
-> Additionally, update the bpf.h tools uapi header.
->
-> Signed-off-by: Lin Yikai <yikai.lin@vivo.com>
-> ---
->  include/uapi/linux/bpf.h       | 20 ++++++++++++++++++++
->  kernel/trace/bpf_trace.c       | 34 ++++++++++++++++++++++++++++++++++
->  tools/include/uapi/linux/bpf.h | 20 ++++++++++++++++++++
->  3 files changed, 74 insertions(+)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 35bcf52dbc65..7e5cec61a877 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -5792,6 +5792,25 @@ union bpf_attr {
->   *             0 on success.
->   *
->   *             **-ENOENT** if the bpf_local_storage cannot be found.
-> + *
-> + * long bpf_file_d_path(void *file, char *dst, u32 size)
-> + *     Description
-> + *             Return full path for the given *file* object.
-> + *
-> + *             In order to solve issues where certain eBPF programs can =
-not include
-> + *             the definition of struct file or vmlinux.h
-> + *             due to their complexity and conflicts on some operating s=
-ystem,
-> + *             the variable *file* here is declared as type void*
-> + *             instead of the traditional struct file*.
-> + *             It will be forcibly converted into type struct file* late=
-r.
-> + *
-> + *             If the path is larger than *size*, then only *size*
-> + *             bytes will be copied to *dst*
-> + *
-> + *     Return
-> + *             On success, the strictly positive length of the string,
-> + *             including the trailing NULL character. On error, a negati=
-ve
-> + *             value.
->   */
->  #define ___BPF_FUNC_MAPPER(FN, ctx...)                 \
->         FN(unspec, 0, ##ctx)                            \
-> @@ -6006,6 +6025,7 @@ union bpf_attr {
->         FN(user_ringbuf_drain, 209, ##ctx)              \
->         FN(cgrp_storage_get, 210, ##ctx)                \
->         FN(cgrp_storage_delete, 211, ##ctx)             \
-> +       FN(file_d_path, 212, ##ctx)                     \
->         /* */
->
->  /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that do=
-n't
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index cd098846e251..70fde7f20e97 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1257,6 +1257,38 @@ static const struct bpf_func_proto bpf_get_func_ar=
-g_cnt_proto =3D {
->         .arg1_type      =3D ARG_PTR_TO_CTX,
->  };
->
-> +BPF_CALL_3(bpf_file_d_path, void *, file, char*, dst, u32, size)
-> +{
-> +       long len;
-> +       struct file copy;
-> +       char *ptr;
-> +
-> +       if (!size)
-> +               return 0;
-> +
-> +       len =3D copy_from_kernel_nofault(&copy, (struct file *)file, size=
-of(struct file));
-> +       if (len < 0)
-> +               return len;
-> +
-> +       ptr =3D d_path(&(copy.f_path), dst, size);
-> +       if (IS_ERR(ptr)) {
-> +               len =3D PTR_ERR(ptr);
-> +       } else {
-> +               len =3D dst + size - ptr;
-> +               memmove(dst, ptr, len);
-> +       }
-> +       return len;
-> +}
-> +
-> +const struct bpf_func_proto bpf_file_d_path_proto =3D {
-> +       .func           =3D bpf_file_d_path,
-> +       .gpl_only       =3D false,
-> +       .ret_type       =3D RET_INTEGER,
-> +       .arg1_type      =3D ARG_ANYTHING,
+Hi Steven, Ajay,
 
-you can't just accept any random value as `struct file *`, this is a
-complete no-go. It will have to accept some sort of PTR_TRUSTED
-argument, be added as kfunc, etc, etc. We had earlier discussion
-around this, I don't remember all the details, but this is definitely
-not the way forward.
+[ @Cc list: I found out issues with tracefs have been reported /
+  attempted to get fixed in the past, so you may be interested. ]
 
-> +       .arg2_type      =3D ARG_PTR_TO_MEM,
-> +       .arg3_type      =3D ARG_CONST_SIZE_OR_ZERO,
-> +};
-> +
->  #ifdef CONFIG_KEYS
->  __bpf_kfunc_start_defs();
->
-> @@ -1629,6 +1661,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, co=
-nst struct bpf_prog *prog)
->                 return &bpf_find_vma_proto;
->         case BPF_FUNC_trace_vprintk:
->                 return bpf_get_trace_vprintk_proto();
-> +       case BPF_FUNC_file_d_path:
-> +               return &bpf_file_d_path_proto;
->         default:
->                 return bpf_base_func_proto(func_id, prog);
->         }
-> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bp=
-f.h
-> index 35bcf52dbc65..7e5cec61a877 100644
-> --- a/tools/include/uapi/linux/bpf.h
-> +++ b/tools/include/uapi/linux/bpf.h
-> @@ -5792,6 +5792,25 @@ union bpf_attr {
->   *             0 on success.
->   *
->   *             **-ENOENT** if the bpf_local_storage cannot be found.
-> + *
-> + * long bpf_file_d_path(void *file, char *dst, u32 size)
-> + *     Description
-> + *             Return full path for the given *file* object.
-> + *
-> + *             In order to solve issues where certain eBPF programs can =
-not include
-> + *             the definition of struct file or vmlinux.h
-> + *             due to their complexity and conflicts on some operating s=
-ystem,
-> + *             the variable *file* here is declared as type void*
-> + *             instead of the traditional struct file*.
-> + *             It will be forcibly converted into type struct file* late=
-r.
-> + *
-> + *             If the path is larger than *size*, then only *size*
-> + *             bytes will be copied to *dst*
-> + *
-> + *     Return
-> + *             On success, the strictly positive length of the string,
-> + *             including the trailing NULL character. On error, a negati=
-ve
-> + *             value.
->   */
->  #define ___BPF_FUNC_MAPPER(FN, ctx...)                 \
->         FN(unspec, 0, ##ctx)                            \
-> @@ -6006,6 +6025,7 @@ union bpf_attr {
->         FN(user_ringbuf_drain, 209, ##ctx)              \
->         FN(cgrp_storage_get, 210, ##ctx)                \
->         FN(cgrp_storage_delete, 211, ##ctx)             \
-> +       FN(file_d_path, 212, ##ctx)                     \
->         /* */
->
->  /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that do=
-n't
-> --
-> 2.34.1
->
+I noticed, the user events ftrace selftest is crashing every now and
+then in our automated tests. Digging into, I found that the following
+is triggering the issue very reliable:
+
+- in one shell, as root:
+  # while true; do ./kselftest/user_events/ftrace_test; done
+
+- in a second shell, again as root:
+  # cd /sys/kernel/tracing
+  # while true; do cat events/user_events/__test_event/format; done 2>/dev/null
+
+Ignoring that the selftest fails for half of its tests -- which is a
+regression and therefore yet another bug, I guess -- this triggers an
+access fault (GFP/PF/NULL deref) after a few iterations, usually within
+a minute, mostly mere seconds. With KASAN enabled it generates a splat
+almost instantly, like following:
+
+[   23.790955] ==================================================================
+[   23.791692] BUG: KASAN: slab-use-after-free in f_show+0x43b/0x470
+[   23.792244] Read of size 8 at addr ffff888007076878 by task cat/755
+[   23.792753]
+[   23.792947] CPU: 1 PID: 755 Comm: cat Tainted: G      D          N 6.10.0-vanilla-dirty #30
+[   23.793563] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   23.794280] Call Trace:
+[   23.794470]  <TASK>
+[   23.794642]  dump_stack_lvl+0x66/0xa0
+[   23.794909]  print_report+0xd0/0x630
+[   23.795180]  ? f_show+0x43b/0x470
+[   23.795415]  ? __virt_addr_valid+0x208/0x3f0
+[   23.795700]  ? f_show+0x43b/0x470
+[   23.795935]  kasan_report+0xd8/0x110
+[   23.796183]  ? f_show+0x43b/0x470
+[   23.796418]  f_show+0x43b/0x470
+[   23.796645]  seq_read_iter+0x418/0x11e0
+[   23.796907]  ? __page_table_check_ptes_set+0x166/0x1a0
+[   23.797280]  seq_read+0x261/0x350
+[   23.797537]  ? lock_release+0x453/0x600
+[   23.797819]  ? __pfx_seq_read+0x10/0x10
+[   23.798103]  ? set_ptes.isra.0+0x11b/0x150
+[   23.798402]  vfs_read+0x171/0x9e0
+[   23.798657]  ? lock_acquire+0x408/0x4b0
+[   23.798970]  ? __pfx_vfs_read+0x10/0x10
+[   23.799267]  ? lock_release+0x453/0x600
+[   23.799549]  ? do_user_addr_fault+0x45b/0x8b0
+[   23.799862]  ? __pfx_lock_release+0x10/0x10
+[   23.800162]  ? __pfx___up_read+0x10/0x10
+[   23.800448]  ksys_read+0xdd/0x1a0
+[   23.800704]  ? __pfx_ksys_read+0x10/0x10
+[   23.801007]  ? do_user_addr_fault+0x465/0x8b0
+[   23.801341]  do_syscall_64+0x66/0x130
+[   23.801615]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+[   23.801959] RIP: 0033:0x7f1fdb9df40e
+[   23.802230] Code: c0 e9 b6 fe ff ff 50 48 8d 3d 2e 08 0b 00 e8 69 01 02 00 66 0f 1f 84 00 00 00 00 00 64 8b 04 25 18 00 00 00 85 c0 75 14 0f 05 <48> 3d 00 f0 ff ff 77 5a c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 28
+[   23.803352] RSP: 002b:00007fff86d62658 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[   23.803848] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f1fdb9df40e
+[   23.804302] RDX: 0000000000020000 RSI: 00007f1fdb8d3000 RDI: 0000000000000003
+[   23.804753] RBP: 00007f1fdb8d3000 R08: 00007f1fdb8d2010 R09: 0000000000000000
+[   23.805239] R10: fffffffffffffbc5 R11: 0000000000000246 R12: 0000000000000000
+[   23.805694] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
+[   23.806153]  </TASK>
+[   23.806352]
+[   23.806518] Allocated by task 753:
+[   23.806781]  kasan_save_stack+0x20/0x40
+[   23.807094]  kasan_save_track+0x14/0x30
+[   23.807377]  __kasan_kmalloc+0x8f/0xa0
+[   23.807656]  user_event_parse_cmd+0x590/0x25e0
+[   23.807969]  user_events_ioctl+0xa52/0x17f0
+[   23.808267]  __x64_sys_ioctl+0x133/0x190
+[   23.808555]  do_syscall_64+0x66/0x130
+[   23.808830]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+[   23.809208]
+[   23.809370] Freed by task 58:
+[   23.809609]  kasan_save_stack+0x20/0x40
+[   23.809890]  kasan_save_track+0x14/0x30
+[   23.810173]  kasan_save_free_info+0x3b/0x60
+[   23.810473]  poison_slab_object+0x10a/0x170
+[   23.810771]  __kasan_slab_free+0x14/0x30
+[   23.811090]  kfree+0xe0/0x2f0
+[   23.811338]  destroy_user_event+0x305/0x450
+[   23.811639]  delayed_destroy_user_event+0x5c/0xe0
+[   23.811965]  process_one_work+0x81c/0x1970
+[   23.812259]  worker_thread+0x608/0x1160
+[   23.812542]  kthread+0x2be/0x3b0
+[   23.812794]  ret_from_fork+0x2c/0x70
+[   23.813098]  ret_from_fork_asm+0x1a/0x30
+[   23.813387]
+[   23.813551] Last potentially related work creation:
+[   23.813885]  kasan_save_stack+0x20/0x40
+[   23.814168]  __kasan_record_aux_stack+0x8e/0xa0
+[   23.814489]  insert_work+0x20/0x1b0
+[   23.814756]  __queue_work+0x67a/0xc60
+[   23.815079]  queue_work_on+0x63/0x90
+[   23.815350]  user_event_put+0x1f9/0x390
+[   23.815631]  user_events_ioctl+0x11ed/0x17f0
+[   23.815935]  __x64_sys_ioctl+0x133/0x190
+[   23.816223]  do_syscall_64+0x66/0x130
+[   23.816498]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+[   23.816841]
+[   23.817019] The buggy address belongs to the object at ffff888007076800
+[   23.817019]  which belongs to the cache kmalloc-cg-512 of size 512
+[   23.817799] The buggy address is located 120 bytes inside of
+[   23.817799]  freed 512-byte region [ffff888007076800, ffff888007076a00)
+[   23.818530]
+[   23.818694] The buggy address belongs to the physical page:
+[   23.819092] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7074
+[   23.819602] head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   23.820323] memcg:ffff88800277fd01
+[   23.820595] anon flags: 0x40(head|zone=0)
+[   23.820885] page_type: 0xffffefff(slab)
+[   23.821203] raw: 0000000000000040 ffff88800014cdc0 0000000000000000 0000000000000001
+[   23.821706] raw: 0000000000000000 0000000080100010 00000001ffffefff ffff88800277fd01
+[   23.822206] head: 0000000000000040 ffff88800014cdc0 0000000000000000 0000000000000001
+[   23.822711] head: 0000000000000000 0000000080100010 00000001ffffefff ffff88800277fd01
+[   23.823261] head: 0000000000000002 ffffea00001c1d01 ffffffffffffffff 0000000000000000
+[   23.823764] head: ffff888000000004 0000000000000000 00000000ffffffff 0000000000000000
+[   23.824271] page dumped because: kasan: bad access detected
+[   23.824638]
+[   23.824799] Memory state around the buggy address:
+[   23.825162]  ffff888007076700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   23.825641]  ffff888007076780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   23.826116] >ffff888007076800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   23.826588]                                                                 ^
+[   23.827070]  ffff888007076880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   23.827545]  ffff888007076900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[   23.828018] ==================================================================
+
+I did a bisect run and ended up on commit 27152bceea1d ("eventfs: Move
+tracing/events to eventfs"). This is, of cause, only the enabling
+commit. The bug is likely in one of the preceeding commits introducing
+eventfs infrastructure.
+
+The git bisect log (I jumped around a little in the beginning, but yeah,
+v6.10 is still broken):
+
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
+git bisect bad a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+# status: waiting for good commit(s), bad commit known
+# bad: [0c3836482481200ead7b416ca80c68a29cfdaabd] Linux 6.10
+git bisect bad 0c3836482481200ead7b416ca80c68a29cfdaabd
+# status: waiting for good commit(s), bad commit known
+# bad: [ffc253263a1375a65fa6c9f62a893e9767fbebfa] Linux 6.6
+git bisect bad ffc253263a1375a65fa6c9f62a893e9767fbebfa
+# status: waiting for good commit(s), bad commit known
+# good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
+# good: [692f5510159c79bfa312a4e27a15e266232bfb4c] Merge tag 'asoc-v6.6' of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-linus
+git bisect good 692f5510159c79bfa312a4e27a15e266232bfb4c
+# good: [0e72db77672ff4758a31fb5259c754a7bb229751] Merge tag 'soc-dt-6.6' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect good 0e72db77672ff4758a31fb5259c754a7bb229751
+# bad: [5eea5820c7340d39e56e169e1b87199391105f6b] Merge tag 'mm-stable-2023-09-04-14-00' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+git bisect bad 5eea5820c7340d39e56e169e1b87199391105f6b
+# good: [28a4f91f5f251689c69155bc6a0b1afc9916c874] Merge tag 'driver-core-6.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+git bisect good 28a4f91f5f251689c69155bc6a0b1afc9916c874
+# bad: [f7e97ce26972ae7be8bbbae8d819ff311d4c5900] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+git bisect bad f7e97ce26972ae7be8bbbae8d819ff311d4c5900
+# good: [9a5d660fdb25d20748d7f9e9559c86073c3bb368] media: ivsc: Add ACPI dependency
+git bisect good 9a5d660fdb25d20748d7f9e9559c86073c3bb368
+# good: [704e2c6107f1a5353a1038bac137dda0df2a6dd0] Merge tag 'icc-6.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc into char-misc-next
+git bisect good 704e2c6107f1a5353a1038bac137dda0df2a6dd0
+# good: [bd30fe6a7d9b72e73c5ac9109cbc3066dde08034] Merge tag 'wq-for-6.6' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq
+git bisect good bd30fe6a7d9b72e73c5ac9109cbc3066dde08034
+# good: [d952f54d01ec2ea5ee9d5e21f2ea3a5807b4bcbc] RDMA/hns: Remove unused declaration hns_roce_modify_srq()
+git bisect good d952f54d01ec2ea5ee9d5e21f2ea3a5807b4bcbc
+# bad: [34232fcfe9a383bea802af682baae5c99f22376c] Merge tag 'trace-v6.6' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace
+git bisect bad 34232fcfe9a383bea802af682baae5c99f22376c
+# bad: [7c1130ea5cae215588e6d51242b877fd405e6c32] test: ftrace: Fix kprobe test for eventfs
+git bisect bad 7c1130ea5cae215588e6d51242b877fd405e6c32
+# good: [5bdcd5f5331a276a3ddf1fba8605986d0d15298a] eventfs: Implement removal of meta data from eventfs
+git bisect good 5bdcd5f5331a276a3ddf1fba8605986d0d15298a
+# bad: [27152bceea1df27ffebb12ac9cd9adbf2c4c3f35] eventfs: Move tracing/events to eventfs
+git bisect bad 27152bceea1df27ffebb12ac9cd9adbf2c4c3f35
+# first bad commit: [27152bceea1df27ffebb12ac9cd9adbf2c4c3f35] eventfs: Move tracing/events to eventfs
+
+I stared quite hard at the inode/dentry/file handling and, imho, it's
+quite broken as it leaks pointers to refcounted objects which may go
+away anytime, e.g. &user->call via trace_add_event_call() in
+user_event_set_call_visible(). That'll lead to a user reachable file
+hierarchy below events/user_events/$eventname/ that isn't bound to the
+creator's mm.
+
+Assume one process opens events/user_events/$eventname/format, then the
+walked fields -- the whole object, actually -- may go away anytime, once
+the creator either removes the user probe again or closes its fd to
+/sys/kernel/tracing/user_events_data, leading to user_events_release()
+doing the final user_event_put() leading to object destruction. The
+concurrent reader of events/user_events/$eventname/format will now
+operate on a free'd object. Boom!
+
+As mentioned, I stared quite hard at the code and tried to fix it via
+numerous ways but the core issue is, imho, the lack of refcounting the
+&user->call object, or even better, 'user', for the files created below
+events/user_events/$eventname/. However, I found no easy way to do that.
+
+My hopes are, you may be able to, now that there's an easy reproducer.
+
+Beside the obvious bug, I noticed the following (not fixing the issue,
+tho):
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 5d88c184f0fc..687ad0a26458 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -112,7 +112,7 @@ static void release_ei(struct kref *ref)
+ 			entry->release(entry->name, ei->data);
+ 	}
+ 
+-	call_rcu(&ei->rcu, free_ei_rcu);
++	call_srcu(&eventfs_srcu, &ei->rcu, free_ei_rcu);
+ }
+ 
+ static inline void put_ei(struct eventfs_inode *ei)
+@@ -735,7 +735,9 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 
+ 	/* Was the parent freed? */
+ 	if (list_empty(&ei->list)) {
++		mutex_lock(&eventfs_mutex);
+ 		cleanup_ei(ei);
++		mutex_unlock(&eventfs_mutex);
+ 		ei = NULL;
+ 	}
+ 	return ei;
+
+The s/call_rcu/call_srcu/ one is because not only do the comments talk
+about SRCU protection, the code does so as well, e.g. eventfs_iterate().
+
+Similar argumentation for taking the mutex around cleanup_ei(). It sets
+the 'is_freed' member which others expect only to be set -- or at least
+to have a stable value -- when the mutex is hold. As 'ei' was exposed to
+its parent before, it may have escaped to other users, e.g. via
+eventfs_iterate().
+
+I may have missed something, painting these changes completely void,
+therefore spared me the time to do proper patches. However, below one is
+legit ("git am --scissors ..." yada yada):
+
+---8<---
+Subject: [PATCH] eventfs: Don't return NULL in eventfs_create_dir()
+
+Commit 77a06c33a22d ("eventfs: Test for ei->is_freed when accessing
+ei->dentry") added another check, testing if the parent was freed after
+we released the mutex. If so, the function returns NULL. However, all
+callers expect it to either return a valid pointer or an error pointer,
+at least since commit 5264a2f4bb3b ("tracing: Fix a NULL vs IS_ERR() bug
+in event_subsystem_dir()"). Returning NULL will therefore fail the error
+condition check in the caller.
+
+Fix this by substituting the NULL return value with a fitting error
+pointer.
+
+Fixes: 77a06c33a22d ("eventfs: Test for ei->is_freed when accessing ei->dentry")
+Cc: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Mathias Krause <minipli@grsecurity.net>
+---
+ fs/tracefs/event_inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 5d88c184f0fc..a9c28a1d5dc8 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -736,7 +736,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	/* Was the parent freed? */
+ 	if (list_empty(&ei->list)) {
+ 		cleanup_ei(ei);
+-		ei = NULL;
++		ei = ERR_PTR(-EBUSY);
+ 	}
+ 	return ei;
+ }
+--->8---
+
+Thanks,
+Mathias
