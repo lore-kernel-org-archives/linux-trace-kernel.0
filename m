@@ -1,107 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CAFEEC0;
-	Fri, 19 Jul 2024 10:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0188085283;
+	Fri, 19 Jul 2024 13:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721384806; cv=none; b=U/NFeqRczSBtWe4BQlppegPmwuRUQoaPQ8k/59pp6rzN6hjM7FOVvo0MYxS5TjwDq9DtkJKXpcRtTInlkVGmDja9t9papCVLBIG/BZXQ/EIycLpRjN4C3aL7bIRZ69HYPUWOepsQ0yr7uaHeLoWeu6wTLlH6hlm/E9gVEerhrCU=
+	t=1721395090; cv=none; b=qiVXjWN2VvTUOqSdcoiMU1mHc2iXEy77c3sKYPzp9en4SzF4queOc/MyE8KmVr0cNUhc0DOkMbuZhg1J2gcrT3Io6dWrJJJqh4gH4mdcVQ1IMMP4tBJubmGtGo1Za7GmNOV+MyzkTccNnoeHlTrb5Dy0R8sidf/v3J542F3NYBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721384806; c=relaxed/simple;
-	bh=aNwTxU96+ZwmKiLWvRO7l2ZzPLTFWz/5G7HpgjGUAOg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=feTQy4VI0j01BGyvZw4NhogNdteVQEOKoDPKKlBm8BhQ+3kXnO/xIriIa92xUqho5dJKhW81ZOL4uAUd4HHQZ4XP6GPHWsMmHT00aZVCwtsd1mcoTKbebgn44N3XTIl57w3I0TC1OlIO4Y9Fw8yhJfxTvdn0MAomegwSV6fMsSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9SW12+9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9SW12+9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EECC32782;
-	Fri, 19 Jul 2024 10:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721384806;
-	bh=aNwTxU96+ZwmKiLWvRO7l2ZzPLTFWz/5G7HpgjGUAOg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=I9SW12+9YDrCMpPaq6rlUHRg2C23GG743yfeXQ794uc0qsrckBrHZrVKDQtqHDbxp
-	 Sm7hXiMPXxtCO4OgT0cNi5YhQvC2vXljrM3xSXmL0lvUNrRNxK7FurYZx/XZjjgP/p
-	 VBV3AxRXwGpY8QO7+nEMcRbFHayiRTOKDQRJojShaVTgb2PRHVBVIsg3+7uwfygJyO
-	 uxcaXpMSj0+04twMUaWtx2yfFNXwPbD05pF+4yE9FyAJWJ0crnC0ikgRDEdTvP2tuA
-	 4GIRiOuuUdf/9OkLrXl/72UaCwyh+9gKzoAwTmqnu891sNlTRravbeyuv3lna4Bu8d
-	 JPz6+YSpFxo9w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Zheng Yejian <zhengyejian1@huawei.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Huang Yiwei <quic_hyiwei@quicinc.com>,
-	"Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing/ring-buffer: hide unused last_boot_fops
-Date: Fri, 19 Jul 2024 12:26:33 +0200
-Message-Id: <20240719102640.718554-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1721395090; c=relaxed/simple;
+	bh=6Yf1a4CqCvgyHibq+QJ66enVOigVRsT4lUW7P+j1EnE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=IuXvfEBxbEm8quGldCS6y4AgQwXpXnlagy2udXuh/4E3btxKeATZN9R+31nyN+/RvNt+mFd1Kjpik14H+nrEcv54O0MDjH3JUgwGUzfEU0uyVLiZrZNCaJqw5gswsglQzSU8nNBSVultYUZH+7fdhiRCrUyGY6N42r13m6yrn8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav412.sakura.ne.jp (fsav412.sakura.ne.jp [133.242.250.111])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 46JDH2Fn077284;
+	Fri, 19 Jul 2024 22:17:02 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav412.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp);
+ Fri, 19 Jul 2024 22:17:02 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 46JDH1Qj077278
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 19 Jul 2024 22:17:01 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <94c1499a-2325-4bbf-b7bc-04a1e9090488@I-love.SAKURA.ne.jp>
+Date: Fri, 19 Jul 2024 22:17:01 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH (repost)] sched/core: defer printk() while rq lock is held
+To: syzbot <syzbot+18cfb7f63482af8641df@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <0000000000008881c5061d28e041@google.com>
+Content-Language: en-US
+Cc: tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+        netdev@vger.kernel.org, andrii@kernel.org, ast@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net,
+        Steven Rostedt <rostedt@goodmis.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <0000000000008881c5061d28e041@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+syzbot is reporting circular locking dependency inside __bpf_prog_run()
+when trace_sched_switch() hook is called from __schedule(), for fault
+injection calls printk() despite rq lock is already held.
 
-This variable is used only in an #ifdef, which causes a W=1 warning
-with some compilers:
+Since any debugging functionality such as lockdep, fault injection,
+KASAN/KCSAN/KMSAN etc. might call printk(), guard the whole section
+between raw_spin_rq_{lock,lock_nested,trylock}() and raw_spin_rq_unlock()
+using printk_deferred_{enter,exit}().
 
-kernel/trace/trace.c:7570:37: error: 'last_boot_fops' defined but not used [-Werror=unused-const-variable=]
- 7570 | static const struct file_operations last_boot_fops = {
-
-Guard this one with the same #ifdef.
-
-Fixes: 7a1d1e4b9639 ("tracing/ring-buffer: Add last_boot_info file to boot instance")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: syzbot <syzbot+18cfb7f63482af8641df@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
-Alternatively it could be marked as __maybe_unused, but I tried to follow
-the style used in this file.
----
- kernel/trace/trace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This is a repost of https://lkml.kernel.org/r/b55e5f24-01ad-4a3d-94dc-e8a6bc15ac42@I-love.SAKURA.ne.jp .
+Scheduler developers, can you agree with addressing this problem at locations where rq lock is held?
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5462fb10ff64..6ab24213d496 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6913,6 +6913,7 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+ kernel/sched/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bcf2c4cc0522..134f5196b9c4 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -559,6 +559,7 @@ void raw_spin_rq_lock_nested(struct rq *rq, int subclass)
+ 		raw_spin_lock_nested(&rq->__lock, subclass);
+ 		/* preempt_count *MUST* be > 1 */
+ 		preempt_enable_no_resched();
++		printk_deferred_enter();
+ 		return;
+ 	}
+ 
+@@ -568,6 +569,7 @@ void raw_spin_rq_lock_nested(struct rq *rq, int subclass)
+ 		if (likely(lock == __rq_lockp(rq))) {
+ 			/* preempt_count *MUST* be > 1 */
+ 			preempt_enable_no_resched();
++			printk_deferred_enter();
+ 			return;
+ 		}
+ 		raw_spin_unlock(lock);
+@@ -584,6 +586,8 @@ bool raw_spin_rq_trylock(struct rq *rq)
+ 	if (sched_core_disabled()) {
+ 		ret = raw_spin_trylock(&rq->__lock);
+ 		preempt_enable();
++		if (ret)
++			printk_deferred_enter();
+ 		return ret;
+ 	}
+ 
+@@ -592,6 +596,8 @@ bool raw_spin_rq_trylock(struct rq *rq)
+ 		ret = raw_spin_trylock(lock);
+ 		if (!ret || (likely(lock == __rq_lockp(rq)))) {
+ 			preempt_enable();
++			if (ret)
++				printk_deferred_enter();
+ 			return ret;
+ 		}
+ 		raw_spin_unlock(lock);
+@@ -600,6 +606,7 @@ bool raw_spin_rq_trylock(struct rq *rq)
+ 
+ void raw_spin_rq_unlock(struct rq *rq)
+ {
++	printk_deferred_exit();
+ 	raw_spin_unlock(rq_lockp(rq));
  }
  
-+#ifdef CONFIG_TRACER_SNAPSHOT
- static ssize_t
- tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- {
-@@ -6927,6 +6928,7 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
- 
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
- }
-+#endif
- 
- static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
- {
-@@ -7567,12 +7569,14 @@ static const struct file_operations trace_time_stamp_mode_fops = {
- 	.release	= tracing_single_release_tr,
- };
- 
-+#ifdef CONFIG_TRACER_SNAPSHOT
- static const struct file_operations last_boot_fops = {
- 	.open		= tracing_open_generic_tr,
- 	.read		= tracing_last_boot_read,
- 	.llseek		= generic_file_llseek,
- 	.release	= tracing_release_generic_tr,
- };
-+#endif
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
- static const struct file_operations snapshot_fops = {
 -- 
-2.39.2
+2.43.0
 
