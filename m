@@ -1,245 +1,450 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7FF175AB;
-	Mon, 22 Jul 2024 05:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721627725; cv=fail; b=T0JGhwpM0qvhmSnBa3FtCnCGpveyboCK0llUpmKbtoVdxe9psMCGHACDNvRfg/xbHpVp8b0VvakbgxsqqIjwyKm1gHZw2dgrYduAi09pL1XQbcJPd/euJULpkIvH6IKUvW/SZAtDxengBlJ0ZNBVAeUXJZ7Fa+eD2+9Mohp6sHo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721627725; c=relaxed/simple;
-	bh=hOwGQvrcrVddRJOkDpoaB/WxHY7sgtRCwcdjH3BlyKQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HGN3mck/crm+eXS0sx3vafL9/vqEKLXcHUD88+S4s8YTxqZtfRu3yyD2Oso57/JJ0BHN+HHUTb8fFk31F1qcW5PlkDZkDrlg/8GXulkB3zqhSWGgaKpE48IAi3vyWCU3ds4DuKgSw8FqA+gkQrmnT0Hnfvf6so9IKonzeI9Vg68=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=irnE1sx2; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=u4ZMSXXK; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD0A16D308
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jul 2024 11:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721646850; cv=none; b=h069wh57EFRivIaqvv85n6IQMf5FbpdT8AdzWju5Dk9p5A37TGuu/BUPbbBp2VzNTX3l3qm1dTLAMt3Y1bPhjTl5jDPGkwHANsvLkpMZUFYCxRYMwErbnW9aeyFGD66MniHP2tL5mDSDtflN4eSgd643SPTOCHrobu5M6IV48fI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721646850; c=relaxed/simple;
+	bh=Lx1df/P1YIPn1K2EDzNkCNWL6DIk//CqJwytFoey0KM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FX2ohqnI27jLUGxUYtsrvN1pRZ+m6/0YIDEzswJTx+2FngL6aPcfzk9/Nt/g1FZpIzw13XvHP8knCZ+3Bee41pmMf1nDsYeJW+V0kGjAkgUBFVcINTdbookWajHp2ve1ImuFDvnAYARfi2161ztOqID6AEUARRp3SMgXgx55svg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S/XLcyWn; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="irnE1sx2";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="u4ZMSXXK"
-X-UUID: f6fa8d0e47ee11efb5b96b43b535fdb4-20240722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=hOwGQvrcrVddRJOkDpoaB/WxHY7sgtRCwcdjH3BlyKQ=;
-	b=irnE1sx2URsjRclC1jwSwtW0I/b/psBp249FXEIwH0IgeiODOGHX9jBblv5yACA1/diODInnrbthtT+ddy1XiGPB/mujDPJA0aQQN0yo4eT5apEegqN/+OkbnC78ivnISRIKNOHi6R6teAagueW3QMVdMe2HIEjptyBJFBNaIis=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.40,REQID:9f9d477b-e752-4ed0-a049-68d03e3e17c6,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:ba885a6,CLOUDID:52289fd5-0d68-4615-a20f-01d7bd41f0bb,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:1,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: f6fa8d0e47ee11efb5b96b43b535fdb4-20240722
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <tze-nan.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1323051974; Mon, 22 Jul 2024 13:55:14 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 22 Jul 2024 13:55:14 +0800
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 22 Jul 2024 13:55:14 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WOakkfg/PWdHSFWG0YCmKsGrYolhl1+8jrMM7cDMRdA8H4/WPXD9h/4DJQXkwzl1b1TJSDok9bMK65GKvue3vwdp83IlElzjLId9yCDer06cpRpBdZ9B2DNVILyff6xh6o8cPBdk7/XODQrIWfQWTbBZ+k5dq0oPUFG3sHYSOPxNcsJrjIO4ibvWJcMGOQSQoUlsdr4LO9UAMOnG24c5gPVHEA2hE3b+TSpDw/y4L72U+/5FjgIF3UJAFxEhYXpm+mNdrxHSItS/PH+lqrHPF5QLYBf9/jw3mJYK2jdlpWBSKEAmjMUc5vpG0s6YscF+lwzR4uUKUCqxtVx6A6f6Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hOwGQvrcrVddRJOkDpoaB/WxHY7sgtRCwcdjH3BlyKQ=;
- b=u75OcgXolFIvXM4QX4yzFQ6I5hBJ2bnojQhy1vxIFVhyQ3ENy4ppd1uuHbQ+hJWBuhZWQ0c2uIxBuB3rtSA1xEMeoKbOrmzFwQRbTi4p6HEcA7Ha0oKlBqu7EIMC/xi6sIWXkbFkY9Oqgzo34wBUzAZBDbOdwngYynojSpFYcmnebQr3cjYbuLxcziQHGXUQ8+cKUEE7EeYTNtYjefat1TWxtGZDGaXZjSw3YJfmyE4AX6lnpaHNKaXAemUC1B4r+5TygahORm3R6+djxHCdZkXkW3OOZjlkoCk52jZakyo0/lu7DDQY87yYTCFQT2S3Yn7sRNPRy5ePosFVCj9L/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S/XLcyWn"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52f01613acbso932290e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jul 2024 04:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hOwGQvrcrVddRJOkDpoaB/WxHY7sgtRCwcdjH3BlyKQ=;
- b=u4ZMSXXK84Ym1odBR+bTcOxLBzJvDZNs1UfwgjHeX5x/HSfjbaqFk7DNK6bxwsVti0OMDfapmx6E9cyiNhocxlSLb9jR1ZapggG5MkEnp9pERpm9r80oPm4eVfHPqZn+gxdwrh+e8rMVptrQG0MQZS4325BtunMfUOf7GLwhSGo=
-Received: from TYZPR03MB7183.apcprd03.prod.outlook.com (2603:1096:400:33a::11)
- by JH0PR03MB7983.apcprd03.prod.outlook.com (2603:1096:990:3d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16; Mon, 22 Jul
- 2024 05:55:12 +0000
-Received: from TYZPR03MB7183.apcprd03.prod.outlook.com
- ([fe80::5a8:982:e044:3350]) by TYZPR03MB7183.apcprd03.prod.outlook.com
- ([fe80::5a8:982:e044:3350%4]) with mapi id 15.20.7784.016; Mon, 22 Jul 2024
- 05:55:12 +0000
-From: =?utf-8?B?VHplLW5hbiBXdSAo5ZCz5r6k5Y2XKQ==?= <Tze-nan.Wu@mediatek.com>
-To: "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	=?utf-8?B?Q2hlbmctSnVpIFdhbmcgKOeOi+ato+edvyk=?=
-	<Cheng-Jui.Wang@mediatek.com>, =?utf-8?B?RXJpYy1ZSyBXdSAo5ZCz6IKy6JG1KQ==?=
-	<eric-yk.wu@mediatek.com>, wsd_upstream <wsd_upstream@mediatek.com>,
-	=?utf-8?B?Qm9idWxlIENoYW5nICjlvLXlvJjnvqkp?= <bobule.chang@mediatek.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "mathieu.desnoyers@efficios.com"
-	<mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Fix overflow in get_free_elt()
-Thread-Topic: [PATCH] tracing: Fix overflow in get_free_elt()
-Thread-Index: AQHa0qpf22nVOPpfRUCHcXPJHksJELICUhiA
-Date: Mon, 22 Jul 2024 05:55:12 +0000
-Message-ID: <b8a07b3e60ea173bdb1362dbe8e7034b4a1f25b6.camel@mediatek.com>
-References: <20240710091908.7030-1-Tze-nan.Wu@mediatek.com>
-In-Reply-To: <20240710091908.7030-1-Tze-nan.Wu@mediatek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB7183:EE_|JH0PR03MB7983:EE_
-x-ms-office365-filtering-correlation-id: e0ea325f-db30-44aa-abda-08dcaa12d9fb
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?QW9wRHdvWnBaNUNPZGc3ZkFFeTkwSExGM2hPZm9PS2o1NjJPZVVmSXU2c1JO?=
- =?utf-8?B?YmlGNVk0NTBRY1Z5em4raTFVODhRQmMvVCtvQmZrU2xKb2tqM09kc0dVT1k4?=
- =?utf-8?B?eEpoc3VOSG5TM0J0QnhmaVVqWm9BOVh2NFdQUjBaQXVwV3YzRklTMHRUK25j?=
- =?utf-8?B?K0JtYjh6M2NxN21XNEZNRzk5a2kza2h5bE55NVQ2NE9lb09mdS95T0liNEdO?=
- =?utf-8?B?MDFSeXJlZXdnL3h3dEkvcGtGdVpTL0pzOUpIY2tLdTNTcjVaYmFZTDFEOUth?=
- =?utf-8?B?b3dGYjE0akRKZC8zME15TC9aZDRrc0lkNWpHM1VqOXpibk1sdUdnU1I4ZUVN?=
- =?utf-8?B?dy9DaVkvdWxETDdaVUxuYXpibjM1TFRtVFRwRnhYV0JJelJXWkZUTUF1aFN5?=
- =?utf-8?B?Z1NsbXRPcTVOaTV1Y1g4dHg4c3JXOVRlRXQxcU1iMWdJMWVWMXZBbEl2NEx3?=
- =?utf-8?B?RmxleVpwWHJ1T2EySXVnbkp3dWhSckVZOFdyT29QVmNsVFJzUnd2NGFnclpy?=
- =?utf-8?B?SmtyOUFIWFI5cDVsZFluSkxVSVpBeUpNaUJKbTFzdGlZYnpubnJmemZDT3dk?=
- =?utf-8?B?bFJFWHBpSFJ4ZUJqdnQ4bk53amdMd2lwRGF6YzRUKy9iMUdCMk5uNVFNaG5t?=
- =?utf-8?B?RkQ4cnkrckd6ZjJLcUZwRnFBMW5Vc1AwaUZtaFl5cGRPbUpUbUJTbmYyMk8r?=
- =?utf-8?B?VHRUNCtnMHBlNzluS3huQ1l4VSt6K1BlTko5NGdWVmk2RnE2TVRLUnh3UjZO?=
- =?utf-8?B?aEtwVXY0ZGxiNmVsRk1JL056WGxZVjFSbFA1SGh4U3hIOHh3SmxEVUhFZGxy?=
- =?utf-8?B?RGxlVGtSSHk3c3Vna09WRjlqRFlEbUdVTzVOUXM3RktvZGZYL3h5Mmg1UCtD?=
- =?utf-8?B?cVhRcDhaK2lLUU45Tzg4L09WZUppdUhnczl0ejZUUGRUd1c2cWRHbDlaNElo?=
- =?utf-8?B?bkd3UzdQVnZmNHlmRnY3SWlsTGZzeHhaU1BjSXFJQklEbWFoWkwvY3ovT29m?=
- =?utf-8?B?TytydUtWakpLckFPd1NvVU8yS1NyR3hYNmE0Y1IraEZjM1NtNTBUZFZtdEpM?=
- =?utf-8?B?TE1OT3k5V1YzNk5renptNWVFaS9waGkxRDR5VWtPMnpqWE1veTk3aHE5Ukti?=
- =?utf-8?B?SGxZT05VUVlYVHVGSXJuOGFxTVE2UHorWElaelNrRUVxZFpDSmROV3d2ODZ6?=
- =?utf-8?B?UlhyTzcwRlhZMFp2N0tZUWxxbmw3WXpOaXdWanZnZkwva1pxSTN6aTZSOCtn?=
- =?utf-8?B?YjBrbjNlTDREWjduc2VJNzJGakkrZUZnSktlMWNZTThGMllOK1E2VVlvTC9h?=
- =?utf-8?B?SjJJa3ZtbXVXT01KZHJrUXJZV3pnUTZTcng2azBsTWxpMHZVMFJZUWI2YWZa?=
- =?utf-8?B?ZU9Qek82SjQ4WmY5aXVoN1h2cmFtVlhJdmtlelljNzdmVW5zVUhFeW9lRGVn?=
- =?utf-8?B?ZUJ5bHBkdzZJMXpSS0tJbW9jVDhoVWJiTzQ2KzJjR2tjdUhxV3BPNDdUMnBS?=
- =?utf-8?B?VUhiWmI3Q3p6UXJMVVJHVld4SUIxSlJPOEYyM1M4Q2J2ZHd6WVZqM3J6b0x1?=
- =?utf-8?B?UDFhMVlBVzhUMktzbTNLR2M1YXV3eU9VVkRlYnRXL3pZQVd1TlFWbFM5Ungz?=
- =?utf-8?B?N3ZlK1kvb0NCOHV3M3lCbERpYWlQQURnUk1lbVlIUWRqb3NFRUpNRjU5S28y?=
- =?utf-8?B?dUxTejVlNWxKZjB2dnUwS3Bra1YzTnFXVzh2WjJCR1FhOGRUeUhJbjdMYlRz?=
- =?utf-8?B?bHJCQ2YvMFVjYXNMMUcxREhpZjM2T2g4YVhKYXMvME1vQ0IxOTFIUHZrRTkv?=
- =?utf-8?B?REU3MWFPYWhsRkJpM2JNYWFuTUJRT3E1MWNDK1V4anA5SlRabVlUUjlleEpI?=
- =?utf-8?B?dHgzUGljT2s2ZUFndWkxSmI2TGNuV251M2FuUW1SNm4rSnc9PQ==?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7183.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a3MrUjNpcVRBaWJwemQ4czVZS3BQdC8waWQ4VjA2TFgvY3Fqa3Mxb3FZWE5H?=
- =?utf-8?B?V3c1T1JhUjNVZUc3LzUvZ3Y2RmhFT2Myc09vbmkxdVZlOHpyTEJHalpJWHdJ?=
- =?utf-8?B?T3BQY0xnYjQrOC9MMWt5OEFubnBCTExrTmNsRmZGclQyOFhNSWtiajFFbnpj?=
- =?utf-8?B?TzdSa1dPb255YVFyQ1YxNVl6dzRYTWhic1ZlamY2ejRZcitreTJvMlQ1dmdC?=
- =?utf-8?B?c1BrVENHaXRKL2lNUnVHVHp1ZmNYbWo1K1Y5aHZKbmRGbDRkNm9XZmFMMHFT?=
- =?utf-8?B?R1p3cVlpWGlUQ0tjaDdhbm1XdWJUaUV0cXJ4N29DQTNCazJxdkNEcDJ4Ujdh?=
- =?utf-8?B?Mk1pZTVBMnFEaHF2UzR5MHk1elkrOFdWN3hXdE83V2oyaHlPY3lkeXlxeHhh?=
- =?utf-8?B?ZEhCSFdCT2VXK1lPT2wxZldjWmUyY1ZONUpObUplRzE4QWxRY2NOQVRGRUNB?=
- =?utf-8?B?UmQyK3JRVnFvRExVYldzQXNIS3I4bWk1dkRRbndSdnRPREhZRW9LNGRSYUZz?=
- =?utf-8?B?SW0zTGZodERrSXlxQ2wxY093S2ZIMTd0VVhJVnZEb2RrS052c1lNbGtKVUY5?=
- =?utf-8?B?WnhTWm93eCt5bEZXc21TNVYyaXYrN1RhOTI3NnBhSWhEYzBYbmFtWWZPY3hP?=
- =?utf-8?B?a1V1SlZqdkZKMXZIWTlqeXhJaTIyQ3p2VkRudy92M3QvSkIxeXNuTnd1cGFH?=
- =?utf-8?B?U0JPL2czV0U2K0Q5RmVYWlZIbCtUTzJNQmFMUStNUjNibXcxOEhTSnlnWEtx?=
- =?utf-8?B?L1Z5NHUyeWdkY2UyWUJvdGRwa1FMVXRNTkFUZE9Benc1WnBYTUZWMFJXOStE?=
- =?utf-8?B?TlBlRi94ckh5MmZTbmJzRHpzNU1XS3ExdndrcEFFRGdBVitOWWw3MnYyQ0Jo?=
- =?utf-8?B?UmlRZnoycmlTYXhKUHZEYXdMeTlsK3pabThxb2NzdGl2TTFLSmpHUkRnZVU5?=
- =?utf-8?B?SWFsMnUzRVUrZUFBU20wOXFLWFduTVh4SUxRTlBCTDY1V3NGYmVxTTIyYTE1?=
- =?utf-8?B?dERsVnowS2crbU5LQlppZy9JZFEwNURLeFRuM2tVdFUrbGJ1L0p5dDFveW1Z?=
- =?utf-8?B?RENITWZsWVNEUVEzRmNRNEE3bWUzOTNhSUtSaGF2eGl4NE5zZFRxVDl3cmlS?=
- =?utf-8?B?TmhudElsNFBUSDhZcDlHVmtmWHcyeHVza09OWmtQOWgzYjlySVBPcldzcFBM?=
- =?utf-8?B?WjNTaXVPbkNYaVloekhwVVFISG1xWnloTlB2c2RFaHZqRGptekR3cXM2ZVZW?=
- =?utf-8?B?STN1dytWRGVGTlFzeXJnR2t5SUdhRWNjTnZMS0VQYldZVzN3VGcwWmhvMVc1?=
- =?utf-8?B?K0RYMllXR1NSSitqYU8yZ3dRY1kxM0FPemJoYXZ6MWlBN0FQcTJPWm9YelRu?=
- =?utf-8?B?YWZwRXNmRVdUOW5SbHMwMTM3ejhqa1J3MkdCb0w3ZDJidHV5d3ZRYkpGTFJl?=
- =?utf-8?B?UEVNazBrV000M1dnejUvQ0N0SnQvUk5xeER5ZEFHcjlubGk3azl6MVRGWVNN?=
- =?utf-8?B?MThNU1BDOHhmeEs1T2RicWFnbWF2cHprYUZ5UUJlalZpM3p5WjRZUkQ2VVJy?=
- =?utf-8?B?U0htQllWV28zbGNSd3ZBUitZMnZiaktCZkNwLy9EL0crb2ZwV0gwMW1teGpM?=
- =?utf-8?B?YTd6NWpHeEp3NVNVWDJ2QWFJaWFldUhJbUVMOG1nWHl5OVgzTENqbEdCbU9r?=
- =?utf-8?B?Ri9kSFZaVkZFMENZZmhJRVpSa1VTeFI3MUlxbCtaWDVoV25GRmtRRjlmL2pP?=
- =?utf-8?B?Sjl0amlFSGRNUEdjK1dwOURGWHJkQ0F2UHl0OHUramd1UXpLVTVWcnBlcWJN?=
- =?utf-8?B?QzZQQUgydmtTK3N2MW1iZ1NaaDI4QXJYTFA5VCtvRlNBMFRLSy9NU0xyazlU?=
- =?utf-8?B?VUdndVYrS3BiTis3UVdLZms4d2FOdGRvVXBiQWZ6cS9IRzR5aDBLakhuTzkz?=
- =?utf-8?B?dzhQU3FWYVdMM1BCLzJnckl0Qk1HMVpXSTAvR1NoSVdtVm1PZjQvWmRKTWsv?=
- =?utf-8?B?YUdGVkVMN3RLQmcraCs4MVpNRjB2MndqVWFGaTBlc2lDdkcrRWRHbnBpWnJa?=
- =?utf-8?B?QlVMRnB4RDN5TzIwemhQTldhQndWTjVxeS85ZmNNZUVUWThTNG9FYUlxeVhx?=
- =?utf-8?B?ZC9aaFJVcGFnR3dsaWJLQkZTY2hlb2FjTXZOL3ExRkR4VTRQRWZGcC9uMGdB?=
- =?utf-8?B?REE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <25616A5402691247AA5B5D87528C0502@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=broadcom.com; s=google; t=1721646845; x=1722251645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ZXKLz5P0ywNhoP8JTwYu3CGZOE/ombj7NQm0gRurZc=;
+        b=S/XLcyWndAcZDBen+5notzMd89WEjYiSefv7Xm9vFZGKW+3JODQjrcA422p5S8fx5U
+         5UqysJqWwJKHILURsnEkAnp3Pijpm5CZz7xxs0cKJIyL2Sm5lvSP1S0nM3Ed6Xg+u3+q
+         DSvezdYbRGMAK24LKRTNkSWr5ytCiVwP+neoo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721646845; x=1722251645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4ZXKLz5P0ywNhoP8JTwYu3CGZOE/ombj7NQm0gRurZc=;
+        b=WXKuuCLgEPkiPZjG5SznOIC4uLYr59HgaZqSHM08e5T3zhELOSvpobn2yIMmEIlOD6
+         d6VQ/qK2J8T2smQh/FT4ObdtSG3Ezv6m8QM5z/vgDHSjo1zlMt5G4DS9zyn7NbBfnsYk
+         EH17AjqZUw65Ueq0S1FAEzcVbnWYb+5W2XjTyJBCmytd0+KP3FRWkeqs0Yn7IowdKUh4
+         q9Z9yyeUcOqwBtVGziLhFYI62wN9pXHgywmws5PHZp2N/aaxekvPXJJm7g2CSpbAcTA6
+         LACnY2SOA2q4LAuibSBWiUsnLwup7nHtUVeJgNwXefmAfVM2/ple1QXvFnpOm2y+4JRm
+         xXBw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/CPgR8YhdeJXn8YEbs8lDQ+lCkEgVQgs0QWKck4EsM5tJOXv0ofSRhatDDkktH5KUZgGPEeQzTFv5e0iKWelPEfyueqd0JNlij1J7rFnKnCh0
+X-Gm-Message-State: AOJu0YwACIJhq+wt7gVYu+v53wn5rnbJso11Hk4w30iSt/tSqrUFCGnO
+	oRzbLfGT/wfJktmqagMqM3w7DLego1v1bOznmNfiNOJTv/NWE8NRevm4bAxoP4NOYWfVXMYYl+m
+	a0AARsGkFaiI23iqrZ/Iv1NVYrFE4kHtMQYcH
+X-Google-Smtp-Source: AGHT+IFGuuTqrpDONyESpB2eij3Xy7ahNtfI4rTGFC3pPCpy6bUi8Xwm55MEoYvW2Jq69p2dznPY1gEzgyevW711/N4=
+X-Received: by 2002:a05:6512:6c4:b0:52c:81ba:aeba with SMTP id
+ 2adb3069b0e04-52ef8a0c3c2mr1729458e87.14.1721646844820; Mon, 22 Jul 2024
+ 04:14:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7183.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0ea325f-db30-44aa-abda-08dcaa12d9fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2024 05:55:12.2968
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ETBr1Kes96W9KUL8CtlMFSGt8fxM4a9ZEl4IXxA1e6N+JhP2EKYvfD4I0O0COrhL28gt1F5PZ74cNP+GWSLYCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB7983
+References: <20240719204701.1605950-1-minipli@grsecurity.net>
+In-Reply-To: <20240719204701.1605950-1-minipli@grsecurity.net>
+From: Ajay Kaher <ajay.kaher@broadcom.com>
+Date: Mon, 22 Jul 2024 16:43:52 +0530
+Message-ID: <CAD2QZ9bDcQ46jOAc_Hxy6sG5-N5RPxw4zPuLK6R+M_GhxZR+=g@mail.gmail.com>
+Subject: Re: tracing: user events UAF crash report
+To: Mathias Krause <minipli@grsecurity.net>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	=?UTF-8?B?SWxra2EgTmF1bGFww6TDpA==?= <digirigawa@gmail.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@leemhuis.info, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Vasavi Sirnapalli <vasavi.sirnapalli@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gV2VkLCAyMDI0LTA3LTEwIGF0IDE3OjE5ICswODAwLCBUemUtbmFuIFd1IHdyb3RlOg0KPiAi
-dHJhY2luZ19tYXAtPm5leHRfZWx0IiBpbiBnZXRfZnJlZV9lbHQoKSBpcyBhdCByaXNrIG9mIG92
-ZXJmbG93aW5nLg0KPiANCj4gT25jZSBpdCBvdmVyZmxvd3MsIG5ldyBlbGVtZW50cyBjYW4gc3Rp
-bGwgYmUgaW5zZXJ0ZWQgaW50byB0aGUNCj4gdHJhY2luZ19tYXANCj4gZXZlbiB0aG91Z2ggdGhl
-IG1heGltdW0gbnVtYmVyIG9mIGVsZW1lbnRzIChgbWF4X2VsdHNgKSBoYXMgYmVlbg0KPiByZWFj
-aGVkLg0KPiBDb250aW51aW5nIHRvIGluc2VydCBlbGVtZW50cyBhZnRlciB0aGUgb3ZlcmZsb3cg
-Y291bGQgcmVzdWx0IGluIHRoZQ0KPiB0cmFjaW5nX21hcCBjb250YWluaW5nICJ0cmFjaW5nX21h
-cC0+bWF4X3NpemUiIGVsZW1lbnRzLCBsZWF2aW5nIG5vDQo+IGVtcHR5DQo+IGVudHJpZXMuDQo+
-IElmIGFueSBhdHRlbXB0IGlzIG1hZGUgdG8gaW5zZXJ0IGFuIGVsZW1lbnQgaW50byBhIGZ1bGwg
-dHJhY2luZ19tYXANCj4gdXNpbmcNCj4gYF9fdHJhY2luZ19tYXBfaW5zZXJ0KClgLCBpdCB3aWxs
-IGNhdXNlIGFuIGluZmluaXRlIGxvb3Agd2l0aA0KPiBwcmVlbXB0aW9uDQo+IGRpc2FibGVkLCBs
-ZWFkaW5nIHRvIGEgQ1BVIGhhbmcgcHJvYmxlbS4NCj4gDQo+IEZpeCB0aGlzIGJ5IHByZXZlbnRp
-bmcgYW55IGZ1cnRoZXIgaW5jcmVtZW50cyB0byAidHJhY2luZ19tYXAtDQo+ID5uZXh0X2VsdCIN
-Cj4gb25jZSBpdCByZWFjaGVzICJ0cmFjaW5nX21hcC0+bWF4X2VsdCIuDQo+IA0KPiBDby1kZXZl
-bG9wZWQtYnk6IENoZW5nLUp1aSBXYW5nIDxjaGVuZy1qdWkud2FuZ0BtZWRpYXRlay5jb20+DQo+
-IFNpZ25lZC1vZmYtYnk6IENoZW5nLUp1aSBXYW5nIDxjaGVuZy1qdWkud2FuZ0BtZWRpYXRlay5j
-b20+DQo+IFNpZ25lZC1vZmYtYnk6IFR6ZS1uYW4gV3UgPFR6ZS1uYW4uV3VAbWVkaWF0ZWsuY29t
-Pg0KPiAtLS0NCj4gIGtlcm5lbC90cmFjZS90cmFjaW5nX21hcC5jIHwgNiArKystLS0NCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KSnVzdCBh
-IGdlbnRsZSBwaW5nLiBBbnkgY29tbWVudHMgb24gdGhpcyBwYXRjaCB3aWxsIGJlIGFwcHJlY2lh
-dGVkLg0KQWN0dWFsbHkgd2UgaGF2ZSBlbmNvdW50ZXJlZCB0aGlzIGlzc3VlIGludGVybmFsbHkg
-YWZ0ZXIgZW5hYmxpbmcgdGhlDQp0aHJvdHRsZV9yc3Nfc3RhdCBmZWF0dXJlIGluIFBlcmZldHRv
-IGZvciBhbiBleHRlbmRlZCBkdXJhdGlvbiwgZHVyaW5nDQp3aGljaCB0aGUgcnNzX3N0YXQgdHJh
-Y2Vwb2ludCB3YXMgaW52b2tlZCBvdmVyIDJeMzIgdGltZXMuDQpUaGVuIHRoZSBDUFUgY291bGQg
-aGFuZyBpbiBmdW5jdGlvbiAiX190cmFjaW5nX21hcF9pbnNlcnQoKSIgYWZ0ZXIgdGhlDQp0cmFj
-aW5nX21hcCBsZWZ0IG5vIGVtcHR5IGVudHJ5Lg0KDQp0aHJvdHRsZV9yc3Nfc3RhdCBpcyBsaXRl
-cmFsbHk6DQoxLiAkZWNobyAicnNzX3N0YXRfdGhyb3R0bGVkIHVuc2lnbmVkIGludCBtbV9pZCB1
-bnNpZ25lZCBpbnQgY3VyciBpbnQNCm1lbWJlciBsb25nIHNpemUiID4+IC9zeXMva2VybmVsL3Ry
-YWNpbmcvc3ludGhldGljX2V2ZW50cw0KMi4gJGVjaG8NCidoaXN0OmtleXM9bW1faWQsbWVtYmVy
-OmJ1Y2tldD1zaXplLzB4ODAwMDA6b25jaGFuZ2UoJGJ1Y2tldCkucnNzX3N0YXRfDQp0aHJvdHRs
-ZWQobW1faWQsY3VycixtZW1iZXIsc2l6ZSknID4NCi9zeXMva2VybmVsL3RyYWNpbmcvZXZlbnRz
-L2ttZW0vcnNzX3N0YXQvdHJpZ2dlcg0KDQo+IGRpZmYgLS1naXQgYS9rZXJuZWwvdHJhY2UvdHJh
-Y2luZ19tYXAuYyBiL2tlcm5lbC90cmFjZS90cmFjaW5nX21hcC5jDQo+IGluZGV4IGE0ZGNmMGYy
-NDM1Mi4uM2E1NmU3YzhhYTRmIDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvdHJhY2UvdHJhY2luZ19t
-YXAuYw0KPiArKysgYi9rZXJuZWwvdHJhY2UvdHJhY2luZ19tYXAuYw0KPiBAQCAtNDU0LDcgKzQ1
-NCw3IEBAIHN0YXRpYyBzdHJ1Y3QgdHJhY2luZ19tYXBfZWx0DQo+ICpnZXRfZnJlZV9lbHQoc3Ry
-dWN0IHRyYWNpbmdfbWFwICptYXApDQo+ICAJc3RydWN0IHRyYWNpbmdfbWFwX2VsdCAqZWx0ID0g
-TlVMTDsNCj4gIAlpbnQgaWR4Ow0KPiAgDQo+IC0JaWR4ID0gYXRvbWljX2luY19yZXR1cm4oJm1h
-cC0+bmV4dF9lbHQpOw0KPiArCWlkeCA9IGF0b21pY19mZXRjaF9hZGRfdW5sZXNzKCZtYXAtPm5l
-eHRfZWx0LCAxLCBtYXAtDQo+ID5tYXhfZWx0cyk7DQo+ICAJaWYgKGlkeCA8IG1hcC0+bWF4X2Vs
-dHMpIHsNCj4gIAkJZWx0ID0gKihUUkFDSU5HX01BUF9FTFQobWFwLT5lbHRzLCBpZHgpKTsNCj4g
-IAkJaWYgKG1hcC0+b3BzICYmIG1hcC0+b3BzLT5lbHRfaW5pdCkNCj4gQEAgLTY5OSw3ICs2OTks
-NyBAQCB2b2lkIHRyYWNpbmdfbWFwX2NsZWFyKHN0cnVjdCB0cmFjaW5nX21hcCAqbWFwKQ0KPiAg
-ew0KPiAgCXVuc2lnbmVkIGludCBpOw0KPiAgDQo+IC0JYXRvbWljX3NldCgmbWFwLT5uZXh0X2Vs
-dCwgLTEpOw0KPiArCWF0b21pY19zZXQoJm1hcC0+bmV4dF9lbHQsIDApOw0KPiAgCWF0b21pYzY0
-X3NldCgmbWFwLT5oaXRzLCAwKTsNCj4gIAlhdG9taWM2NF9zZXQoJm1hcC0+ZHJvcHMsIDApOw0K
-PiAgDQo+IEBAIC03ODMsNyArNzgzLDcgQEAgc3RydWN0IHRyYWNpbmdfbWFwICp0cmFjaW5nX21h
-cF9jcmVhdGUodW5zaWduZWQNCj4gaW50IG1hcF9iaXRzLA0KPiAgDQo+ICAJbWFwLT5tYXBfYml0
-cyA9IG1hcF9iaXRzOw0KPiAgCW1hcC0+bWF4X2VsdHMgPSAoMSA8PCBtYXBfYml0cyk7DQo+IC0J
-YXRvbWljX3NldCgmbWFwLT5uZXh0X2VsdCwgLTEpOw0KPiArCWF0b21pY19zZXQoJm1hcC0+bmV4
-dF9lbHQsIDApOw0KPiAgDQo+ICAJbWFwLT5tYXBfc2l6ZSA9ICgxIDw8IChtYXBfYml0cyArIDEp
-KTsNCj4gIAltYXAtPm9wcyA9IG9wczsNCg==
+On Sat, Jul 20, 2024 at 2:17=E2=80=AFAM Mathias Krause <minipli@grsecurity.=
+net> wrote:
+>
+> Hi Steven, Ajay,
+>
+> [ @Cc list: I found out issues with tracefs have been reported /
+>   attempted to get fixed in the past, so you may be interested. ]
+>
+> I noticed, the user events ftrace selftest is crashing every now and
+> then in our automated tests. Digging into, I found that the following
+> is triggering the issue very reliable:
+>
+> - in one shell, as root:
+>   # while true; do ./kselftest/user_events/ftrace_test; done
+>
+> - in a second shell, again as root:
+>   # cd /sys/kernel/tracing
+>   # while true; do cat events/user_events/__test_event/format; done 2>/de=
+v/null
+>
+
+Tried to reproduced on 6.10.0-rc7-100.ph5+, only getting repeated output as=
+:
+
+# while true; do cat events/user_events/__test_event/format; done 2>/dev/nu=
+ll
+print fmt: ""
+name: __test_event
+ID: 2390
+format:
+field:unsigned short common_type; offset:0; size:2; signed:0;
+field:unsigned char common_flags; offset:2; size:1; signed:0;
+field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
+field:int common_pid; offset:4; size:4; signed:1;
+
+# while true; do ./kselftest/user_events/ftrace_test; done
+TAP version 13
+1..6
+# Starting 6 tests from 1 test cases.
+#  RUN           user.register_events ...
+#            OK  user.register_events
+ok 1 user.register_events
+#  RUN           user.write_events ...
+#            OK  user.write_events
+ok 2 user.write_events
+#  RUN           user.write_empty_events ...
+#            OK  user.write_empty_events
+ok 3 user.write_empty_events
+#  RUN           user.write_fault ...
+#            OK  user.write_fault
+ok 4 user.write_fault
+#  RUN           user.write_validator ...
+#            OK  user.write_validator
+ok 5 user.write_validator
+#  RUN           user.print_fmt ...
+#            OK  user.print_fmt
+ok 6 user.print_fmt
+# PASSED: 6 / 6 tests passed.
+# Totals: pass:6 fail:0 xfail:0 xpass:0 skip:0 error:0
+
+Am I missing any step?
+
+> Ignoring that the selftest fails for half of its tests -- which is a
+> regression and therefore yet another bug, I guess -- this triggers an
+> access fault (GFP/PF/NULL deref) after a few iterations, usually within
+> a minute, mostly mere seconds. With KASAN enabled it generates a splat
+> almost instantly, like following:
+>
+> [   23.790955] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   23.791692] BUG: KASAN: slab-use-after-free in f_show+0x43b/0x470
+> [   23.792244] Read of size 8 at addr ffff888007076878 by task cat/755
+> [   23.792753]
+> [   23.792947] CPU: 1 PID: 755 Comm: cat Tainted: G      D          N 6.1=
+0.0-vanilla-dirty #30
+> [   23.793563] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+> [   23.794280] Call Trace:
+> [   23.794470]  <TASK>
+> [   23.794642]  dump_stack_lvl+0x66/0xa0
+> [   23.794909]  print_report+0xd0/0x630
+> [   23.795180]  ? f_show+0x43b/0x470
+> [   23.795415]  ? __virt_addr_valid+0x208/0x3f0
+> [   23.795700]  ? f_show+0x43b/0x470
+> [   23.795935]  kasan_report+0xd8/0x110
+> [   23.796183]  ? f_show+0x43b/0x470
+> [   23.796418]  f_show+0x43b/0x470
+> [   23.796645]  seq_read_iter+0x418/0x11e0
+> [   23.796907]  ? __page_table_check_ptes_set+0x166/0x1a0
+> [   23.797280]  seq_read+0x261/0x350
+> [   23.797537]  ? lock_release+0x453/0x600
+> [   23.797819]  ? __pfx_seq_read+0x10/0x10
+> [   23.798103]  ? set_ptes.isra.0+0x11b/0x150
+> [   23.798402]  vfs_read+0x171/0x9e0
+> [   23.798657]  ? lock_acquire+0x408/0x4b0
+> [   23.798970]  ? __pfx_vfs_read+0x10/0x10
+> [   23.799267]  ? lock_release+0x453/0x600
+> [   23.799549]  ? do_user_addr_fault+0x45b/0x8b0
+> [   23.799862]  ? __pfx_lock_release+0x10/0x10
+> [   23.800162]  ? __pfx___up_read+0x10/0x10
+> [   23.800448]  ksys_read+0xdd/0x1a0
+> [   23.800704]  ? __pfx_ksys_read+0x10/0x10
+> [   23.801007]  ? do_user_addr_fault+0x465/0x8b0
+> [   23.801341]  do_syscall_64+0x66/0x130
+> [   23.801615]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+> [   23.801959] RIP: 0033:0x7f1fdb9df40e
+> [   23.802230] Code: c0 e9 b6 fe ff ff 50 48 8d 3d 2e 08 0b 00 e8 69 01 0=
+2 00 66 0f 1f 84 00 00 00 00 00 64 8b 04 25 18 00 00 00 85 c0 75 14 0f 05 <=
+48> 3d 00 f0 ff ff 77 5a c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 28
+> [   23.803352] RSP: 002b:00007fff86d62658 EFLAGS: 00000246 ORIG_RAX: 0000=
+000000000000
+> [   23.803848] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f1fd=
+b9df40e
+> [   23.804302] RDX: 0000000000020000 RSI: 00007f1fdb8d3000 RDI: 000000000=
+0000003
+> [   23.804753] RBP: 00007f1fdb8d3000 R08: 00007f1fdb8d2010 R09: 000000000=
+0000000
+> [   23.805239] R10: fffffffffffffbc5 R11: 0000000000000246 R12: 000000000=
+0000000
+> [   23.805694] R13: 0000000000000003 R14: 0000000000020000 R15: 000000000=
+0020000
+> [   23.806153]  </TASK>
+> [   23.806352]
+> [   23.806518] Allocated by task 753:
+> [   23.806781]  kasan_save_stack+0x20/0x40
+> [   23.807094]  kasan_save_track+0x14/0x30
+> [   23.807377]  __kasan_kmalloc+0x8f/0xa0
+> [   23.807656]  user_event_parse_cmd+0x590/0x25e0
+> [   23.807969]  user_events_ioctl+0xa52/0x17f0
+> [   23.808267]  __x64_sys_ioctl+0x133/0x190
+> [   23.808555]  do_syscall_64+0x66/0x130
+> [   23.808830]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+> [   23.809208]
+> [   23.809370] Freed by task 58:
+> [   23.809609]  kasan_save_stack+0x20/0x40
+> [   23.809890]  kasan_save_track+0x14/0x30
+> [   23.810173]  kasan_save_free_info+0x3b/0x60
+> [   23.810473]  poison_slab_object+0x10a/0x170
+> [   23.810771]  __kasan_slab_free+0x14/0x30
+> [   23.811090]  kfree+0xe0/0x2f0
+> [   23.811338]  destroy_user_event+0x305/0x450
+> [   23.811639]  delayed_destroy_user_event+0x5c/0xe0
+> [   23.811965]  process_one_work+0x81c/0x1970
+> [   23.812259]  worker_thread+0x608/0x1160
+> [   23.812542]  kthread+0x2be/0x3b0
+> [   23.812794]  ret_from_fork+0x2c/0x70
+> [   23.813098]  ret_from_fork_asm+0x1a/0x30
+> [   23.813387]
+> [   23.813551] Last potentially related work creation:
+> [   23.813885]  kasan_save_stack+0x20/0x40
+> [   23.814168]  __kasan_record_aux_stack+0x8e/0xa0
+> [   23.814489]  insert_work+0x20/0x1b0
+> [   23.814756]  __queue_work+0x67a/0xc60
+> [   23.815079]  queue_work_on+0x63/0x90
+> [   23.815350]  user_event_put+0x1f9/0x390
+> [   23.815631]  user_events_ioctl+0x11ed/0x17f0
+> [   23.815935]  __x64_sys_ioctl+0x133/0x190
+> [   23.816223]  do_syscall_64+0x66/0x130
+> [   23.816498]  entry_SYSCALL_64_after_hwframe+0x71/0x79
+> [   23.816841]
+> [   23.817019] The buggy address belongs to the object at ffff88800707680=
+0
+> [   23.817019]  which belongs to the cache kmalloc-cg-512 of size 512
+> [   23.817799] The buggy address is located 120 bytes inside of
+> [   23.817799]  freed 512-byte region [ffff888007076800, ffff888007076a00=
+)
+> [   23.818530]
+> [   23.818694] The buggy address belongs to the physical page:
+> [   23.819092] page: refcount:1 mapcount:0 mapping:0000000000000000 index=
+:0x0 pfn:0x7074
+> [   23.819602] head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped=
+:0 pincount:0
+> [   23.820323] memcg:ffff88800277fd01
+> [   23.820595] anon flags: 0x40(head|zone=3D0)
+> [   23.820885] page_type: 0xffffefff(slab)
+> [   23.821203] raw: 0000000000000040 ffff88800014cdc0 0000000000000000 00=
+00000000000001
+> [   23.821706] raw: 0000000000000000 0000000080100010 00000001ffffefff ff=
+ff88800277fd01
+> [   23.822206] head: 0000000000000040 ffff88800014cdc0 0000000000000000 0=
+000000000000001
+> [   23.822711] head: 0000000000000000 0000000080100010 00000001ffffefff f=
+fff88800277fd01
+> [   23.823261] head: 0000000000000002 ffffea00001c1d01 ffffffffffffffff 0=
+000000000000000
+> [   23.823764] head: ffff888000000004 0000000000000000 00000000ffffffff 0=
+000000000000000
+> [   23.824271] page dumped because: kasan: bad access detected
+> [   23.824638]
+> [   23.824799] Memory state around the buggy address:
+> [   23.825162]  ffff888007076700: fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc
+> [   23.825641]  ffff888007076780: fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc
+> [   23.826116] >ffff888007076800: fa fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb
+> [   23.826588]                                                           =
+      ^
+> [   23.827070]  ffff888007076880: fb fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb
+> [   23.827545]  ffff888007076900: fb fb fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb
+> [   23.828018] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> I did a bisect run and ended up on commit 27152bceea1d ("eventfs: Move
+> tracing/events to eventfs"). This is, of cause, only the enabling
+> commit. The bug is likely in one of the preceeding commits introducing
+> eventfs infrastructure.
+>
+> The git bisect log (I jumped around a little in the beginning, but yeah,
+> v6.10 is still broken):
+>
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
+> git bisect bad a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+> # status: waiting for good commit(s), bad commit known
+> # bad: [0c3836482481200ead7b416ca80c68a29cfdaabd] Linux 6.10
+> git bisect bad 0c3836482481200ead7b416ca80c68a29cfdaabd
+> # status: waiting for good commit(s), bad commit known
+> # bad: [ffc253263a1375a65fa6c9f62a893e9767fbebfa] Linux 6.6
+> git bisect bad ffc253263a1375a65fa6c9f62a893e9767fbebfa
+> # status: waiting for good commit(s), bad commit known
+> # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+> git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
+> # good: [692f5510159c79bfa312a4e27a15e266232bfb4c] Merge tag 'asoc-v6.6' =
+of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-l=
+inus
+> git bisect good 692f5510159c79bfa312a4e27a15e266232bfb4c
+> # good: [0e72db77672ff4758a31fb5259c754a7bb229751] Merge tag 'soc-dt-6.6'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+> git bisect good 0e72db77672ff4758a31fb5259c754a7bb229751
+> # bad: [5eea5820c7340d39e56e169e1b87199391105f6b] Merge tag 'mm-stable-20=
+23-09-04-14-00' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> git bisect bad 5eea5820c7340d39e56e169e1b87199391105f6b
+> # good: [28a4f91f5f251689c69155bc6a0b1afc9916c874] Merge tag 'driver-core=
+-6.6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-co=
+re
+> git bisect good 28a4f91f5f251689c69155bc6a0b1afc9916c874
+> # bad: [f7e97ce26972ae7be8bbbae8d819ff311d4c5900] Merge tag 'for-linus' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+> git bisect bad f7e97ce26972ae7be8bbbae8d819ff311d4c5900
+> # good: [9a5d660fdb25d20748d7f9e9559c86073c3bb368] media: ivsc: Add ACPI =
+dependency
+> git bisect good 9a5d660fdb25d20748d7f9e9559c86073c3bb368
+> # good: [704e2c6107f1a5353a1038bac137dda0df2a6dd0] Merge tag 'icc-6.6-rc1=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc into char-mis=
+c-next
+> git bisect good 704e2c6107f1a5353a1038bac137dda0df2a6dd0
+> # good: [bd30fe6a7d9b72e73c5ac9109cbc3066dde08034] Merge tag 'wq-for-6.6'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq
+> git bisect good bd30fe6a7d9b72e73c5ac9109cbc3066dde08034
+> # good: [d952f54d01ec2ea5ee9d5e21f2ea3a5807b4bcbc] RDMA/hns: Remove unuse=
+d declaration hns_roce_modify_srq()
+> git bisect good d952f54d01ec2ea5ee9d5e21f2ea3a5807b4bcbc
+> # bad: [34232fcfe9a383bea802af682baae5c99f22376c] Merge tag 'trace-v6.6' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace
+> git bisect bad 34232fcfe9a383bea802af682baae5c99f22376c
+> # bad: [7c1130ea5cae215588e6d51242b877fd405e6c32] test: ftrace: Fix kprob=
+e test for eventfs
+> git bisect bad 7c1130ea5cae215588e6d51242b877fd405e6c32
+> # good: [5bdcd5f5331a276a3ddf1fba8605986d0d15298a] eventfs: Implement rem=
+oval of meta data from eventfs
+> git bisect good 5bdcd5f5331a276a3ddf1fba8605986d0d15298a
+> # bad: [27152bceea1df27ffebb12ac9cd9adbf2c4c3f35] eventfs: Move tracing/e=
+vents to eventfs
+> git bisect bad 27152bceea1df27ffebb12ac9cd9adbf2c4c3f35
+> # first bad commit: [27152bceea1df27ffebb12ac9cd9adbf2c4c3f35] eventfs: M=
+ove tracing/events to eventfs
+>
+> I stared quite hard at the inode/dentry/file handling and, imho, it's
+> quite broken as it leaks pointers to refcounted objects which may go
+> away anytime, e.g. &user->call via trace_add_event_call() in
+> user_event_set_call_visible(). That'll lead to a user reachable file
+> hierarchy below events/user_events/$eventname/ that isn't bound to the
+> creator's mm.
+>
+> Assume one process opens events/user_events/$eventname/format, then the
+> walked fields -- the whole object, actually -- may go away anytime, once
+> the creator either removes the user probe again or closes its fd to
+> /sys/kernel/tracing/user_events_data, leading to user_events_release()
+> doing the final user_event_put() leading to object destruction. The
+> concurrent reader of events/user_events/$eventname/format will now
+> operate on a free'd object. Boom!
+>
+> As mentioned, I stared quite hard at the code and tried to fix it via
+> numerous ways but the core issue is, imho, the lack of refcounting the
+> &user->call object, or even better, 'user', for the files created below
+> events/user_events/$eventname/. However, I found no easy way to do that.
+>
+> My hopes are, you may be able to, now that there's an easy reproducer.
+>
+> Beside the obvious bug, I noticed the following (not fixing the issue,
+> tho):
+>
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 5d88c184f0fc..687ad0a26458 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -112,7 +112,7 @@ static void release_ei(struct kref *ref)
+>                         entry->release(entry->name, ei->data);
+>         }
+>
+> -       call_rcu(&ei->rcu, free_ei_rcu);
+> +       call_srcu(&eventfs_srcu, &ei->rcu, free_ei_rcu);
+>  }
+>
+>  static inline void put_ei(struct eventfs_inode *ei)
+> @@ -735,7 +735,9 @@ struct eventfs_inode *eventfs_create_dir(const char *=
+name, struct eventfs_inode
+>
+>         /* Was the parent freed? */
+>         if (list_empty(&ei->list)) {
+> +               mutex_lock(&eventfs_mutex);
+>                 cleanup_ei(ei);
+> +               mutex_unlock(&eventfs_mutex);
+>                 ei =3D NULL;
+>         }
+>         return ei;
+>
+> The s/call_rcu/call_srcu/ one is because not only do the comments talk
+> about SRCU protection, the code does so as well, e.g. eventfs_iterate().
+>
+> Similar argumentation for taking the mutex around cleanup_ei(). It sets
+> the 'is_freed' member which others expect only to be set -- or at least
+> to have a stable value -- when the mutex is hold. As 'ei' was exposed to
+> its parent before, it may have escaped to other users, e.g. via
+> eventfs_iterate().
+>
+> I may have missed something, painting these changes completely void,
+> therefore spared me the time to do proper patches. However, below one is
+> legit ("git am --scissors ..." yada yada):
+>
+> ---8<---
+> Subject: [PATCH] eventfs: Don't return NULL in eventfs_create_dir()
+>
+> Commit 77a06c33a22d ("eventfs: Test for ei->is_freed when accessing
+> ei->dentry") added another check, testing if the parent was freed after
+> we released the mutex. If so, the function returns NULL. However, all
+> callers expect it to either return a valid pointer or an error pointer,
+> at least since commit 5264a2f4bb3b ("tracing: Fix a NULL vs IS_ERR() bug
+> in event_subsystem_dir()"). Returning NULL will therefore fail the error
+> condition check in the caller.
+>
+> Fix this by substituting the NULL return value with a fitting error
+> pointer.
+>
+> Fixes: 77a06c33a22d ("eventfs: Test for ei->is_freed when accessing ei->d=
+entry")
+> Cc: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Mathias Krause <minipli@grsecurity.net>
+> ---
+>  fs/tracefs/event_inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 5d88c184f0fc..a9c28a1d5dc8 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -736,7 +736,7 @@ struct eventfs_inode *eventfs_create_dir(const char *=
+name, struct eventfs_inode
+>         /* Was the parent freed? */
+>         if (list_empty(&ei->list)) {
+>                 cleanup_ei(ei);
+> -               ei =3D NULL;
+> +               ei =3D ERR_PTR(-EBUSY);
+>         }
+>         return ei;
+>  }
+
+Must have. LGTM. Thanks.
+Reviewed-by: Ajay Kaher <ajay.kaher@broadcom.com>
+
+- Ajay
