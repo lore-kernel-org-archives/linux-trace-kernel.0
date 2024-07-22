@@ -1,75 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5176B166308;
-	Mon, 22 Jul 2024 14:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F58C2FD;
+	Mon, 22 Jul 2024 15:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721658035; cv=none; b=QtSn8+n/zlDoOqsFGWHpuxlthnecvggjFuJ1pdEVDg7EN3KtZuyGJm6zPPuhvR6S9FADZ/Ay2K4zoN1WPGBBwSDdghFsMFCFsXvuIpWmol2NVDppmtjWvwnkv2FgbvTCvuN2wwWFO01Uwnx8reT40HmBYnKvfAzk2yFyEjE57mI=
+	t=1721662227; cv=none; b=p8FN06doOpvaxjdxpphp8fwlG6O/IxIkn/c6iJut3nFZAdgI6JLcbN31k7Y7LGuB9e6rGetoRLOOFZ0XA+fw6eYX1bBDGkh/GX/ogb1olU8GjJH3YxHTRAevCspNEA2rRXEY18BgZxJhq7SbdbAHc6uD7sDz4hvmwJMMhRjvHpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721658035; c=relaxed/simple;
-	bh=07OKVXPlL2k0nMN/FFjyw5zCAvkTGVa75D8oPfGpIV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fiicngH+mWaZY9Wz7BzROvNwmXENhQOCtM78zPBU5ZTHV00UUNPK0qCeBUMLB66grmzpTkDx+ueONajrPvys/MtamaAlvw39V7CH1iE2Km5hlzZK6tT7HVZx/IR6Zke/SQFjbIGMUtgVxDU4Quk6Gwe/hazowBC9/ZsXVB9s+hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YO5V4H3D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721662227; c=relaxed/simple;
+	bh=qeOMl00DgHVITw+FjVR23dUDZQ0dZ2F3RbfRASJShYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjkMXh2+Ieay6zEP/Wtr7UfLo4dPHN+SxoK+rirZ2t1ex+JnC55HDr6cbUYB1+fi2PG5vJbSfoVOEjouIdw5x3auBu+UTCH4DCINZW0o3Q1rJEKmmzQmC68U8fmVKQwRIG23RtRnQS68NBQquvB2ECLv2EB5xaeWPedWaQ83mLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udibmumu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YO5V4H3D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1674C116B1;
-	Mon, 22 Jul 2024 14:20:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udibmumu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F691C116B1;
+	Mon, 22 Jul 2024 15:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721658034;
-	bh=07OKVXPlL2k0nMN/FFjyw5zCAvkTGVa75D8oPfGpIV4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YO5V4H3DNBvnikJLtBZ0h2pojob4SemU3BvK9ZPA9+QevYemJ891Uqb1sQGemfT0I
-	 le+gdZziLOUgVIXLYlLtMotXzFgjDRSoJJ9e1PvO4Nrs3HygKOxKr0kalSJG6kWf3t
-	 uZwKy1VRlYvCwCPG2aQ1w6DgN2lczei3SUdUaxgNWQTuwgA7OLDMooYcBy/ZIqHU4y
-	 VH5mxe3syD945lhmF3YklGKIMK7fD3qizbdUy3B56L+m8EmZoZ8uYfXF2DrCeQacZT
-	 PpJU0mc229JKIty3rn+fnvHX8bmHphIjFJspDUf7qJRrNJWzZD2mG0nTVnblGm4QUq
-	 6dBGg2opmpRnw==
-Date: Mon, 22 Jul 2024 07:20:32 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Yury Norov
- <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, David
- Gow <davidgow@google.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Andy
- Shevchenko <andy@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller"
- <davem@davemloft.net>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown
- <broonie@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>,
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, Palmer
- Dabbelt <palmer@rivosinc.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Charlie Jenkins <charlie@rivosinc.com>,
- Simon Horman <horms@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan
- <skhan@linuxfoundation.org>, Daniel Latypov <dlatypov@google.com>, Guenter
- Roeck <linux@roeck-us.net>, David Howells <dhowells@redhat.com>,
- =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, Marco Elver
- <elver@google.com>, Mark Rutland <mark.rutland@arm.com>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, Geert
- Uytterhoeven <geert@linux-m68k.org>, Nathan Chancellor <nathan@kernel.org>,
- Fangrui Song <maskray@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib: Move KUnit tests into tests/ subdirectory
-Message-ID: <20240722072032.6284c2c3@kernel.org>
-In-Reply-To: <20240720181025.work.002-kees@kernel.org>
-References: <20240720181025.work.002-kees@kernel.org>
+	s=k20201202; t=1721662227;
+	bh=qeOMl00DgHVITw+FjVR23dUDZQ0dZ2F3RbfRASJShYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Udibmumu7SLzxEKxqIecKZDLnygO3K9IPmsYRL3I6hL5eYqNIVWX7mLjSpajAEdtJ
+	 +34Wwg7S23Sx/TsNHnSCLXzlaT8K9BzSvT0TpzDZp4qpSIexecgt4YBIFxTyDVKdR4
+	 zoGjpH6i7DCAVXe/q3qIV7BqGL/VhVJeejTJZQ5AjoBDa5DUQ2nz2ml/skzftzqSlC
+	 5qNp9evMwxpnZuVl0mgCMoNVIFBdte25OlWnbcPfa0aHZjnWFch12yFrsCVCKAOuGg
+	 mqnhjXYfz2YA35SyHO1xRH0Y7C6QIOmi+MTocaJsucU4+99bRjM3aqFDZEN/X/Fw9k
+	 bZ6cWyiYCD1kA==
+Date: Mon, 22 Jul 2024 17:30:17 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R <chandan.babu@oracle.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
+	Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+	Randy Dunlap <rdunlap@infradead.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 0/9] fs: multigrain timestamp redux
+Message-ID: <20240722-festmachen-lehrstellen-f86d1bd28997@brauner>
+References: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
+ <20240716-zerlegen-haudegen-ba86a22f4322@brauner>
+ <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
 
-On Sat, 20 Jul 2024 11:10:30 -0700 Kees Cook wrote:
-> Following from the recent KUnit file naming discussion[1], move all
-> KUnit tests in lib/ into lib/tests/.
+On Tue, Jul 16, 2024 at 08:45:16AM GMT, Jeff Layton wrote:
+> On Tue, 2024-07-16 at 09:37 +0200, Christian Brauner wrote:
+> > On Mon, Jul 15, 2024 at 08:48:51AM GMT, Jeff Layton wrote:
+> > > I think this is pretty much ready for linux-next now. Since the latest
+> > > changes are pretty minimal, I've left the Reviewed-by's intact. It would
+> > > be nice to have acks or reviews from maintainers for ext4 and tmpfs too.
+> > > 
+> > > I did try to plumb this into bcachefs too, but the way it handles
+> > > timestamps makes that pretty difficult. It keeps the active copies in an
+> > > internal representation of the on-disk inode and periodically copies
+> > > them to struct inode. This is backward from the way most blockdev
+> > > filesystems do this.
+> > > 
+> > > Christian, would you be willing to pick these up  with an eye toward
+> > > v6.12 after the merge window settles?
+> > 
+> > Yup. About to queue it up. I'll try to find some time to go through it
+> > so I might have some replies later but that shouldn't hold up linux-next
+> > at all.
 > 
-> Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Great!
+> 
+> There is one minor update to the percpu counter patch to compile those
+> out when debugfs isn't enabled, so it may be best to pick the series
+> from the "mgtime" branch in my public git tree. Let me know if you'd
 
-Makes sense:
-
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-
-BTW love the suggested guidelines hidden in the Link.
+I did that now and pushed to vfs.mgtime. Please take a look as I rebased
+onto current master and resolved conflicts in xfs and btrfs. Thanks!
