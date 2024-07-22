@@ -1,198 +1,224 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20E816E88D;
-	Mon, 22 Jul 2024 18:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5186038F83;
+	Mon, 22 Jul 2024 21:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721672459; cv=none; b=kDJXFtJCx/jfchDO/a9/H9NIHXYUCZ8Mah13zSVd3e3ZNTyZAQEB/EZ865ppo11w03Oxf0bQINVDLI0/aJI46r2M2XqtTMk7TX1ByGhQbRum4W59GljlVuUZkMTRT87X4OgK2ojrRjKJtfe9TVcBp0oWZWe9r9uGNZrS7LmYTcM=
+	t=1721682496; cv=none; b=pAznC+eTFTWbrc2ha/7HuzY4nT1rYGJ9yec3E+cTHzoVLnn1aAYKIfxyASf5PGuadnzpztN3pKlPpCog7QDXFhSIJxDrLWXPJe2HpfcZIvlgaetZqdbCl3MEmpJxvtRM8yk5bGxowYiYIkdM3a7E1qJXS+0MFLG/5QEMcjCzUJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721672459; c=relaxed/simple;
-	bh=9QITy/ysO04KAzIEcVMjSMaF5cda3E6OOdnV1y1KtRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NwGbeUfNJaQnGVg1fjZs9GaVpPfjNrAJ/XQFJ+ufvacsdSK5Zfvc7sOSCseU42NocftSvmOwb2H27nI4MSXn5vfXl0E5F/QJiIvzBr8ZsMwK/zyuJN5c8SaHNyVPCKq5p135ebjDsH47Yh5A7/I8zObYWR07pZMQ1SbDZLotSJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5Gsc6Pv; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1721682496; c=relaxed/simple;
+	bh=Xbyd/70IHOv1ezkPeRZVUOlK4Zy9BuBOOSYr+GjtXjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aDtHTIFwcOHU34k64s2WYuhPXaZcBjFv0B6S2XBvHI72/LBjR1H46xGvgyXqntcPFCTsKEjF0/3r/e2OIU5hKuXRHxMcpUV6TYfE71LZD2OSC9mC+0sdhcb8ZtbFe5NyvAnGllmsEiKCr7HUcfOQ7s6Spz0xmH+FAgf5BJYLTfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYm75zr2; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5Gsc6Pv"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a77b60cafecso496114266b.1;
-        Mon, 22 Jul 2024 11:20:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYm75zr2"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70d316f0060so625277b3a.1;
+        Mon, 22 Jul 2024 14:08:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721672456; x=1722277256; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7KjI/l1S9Ni3Ev56WeA0r+6LXF5+0YFxGoPrT+v289Q=;
-        b=M5Gsc6PvGShWLd3D8mcH1UQyl3XWcSKjX61J60Zi/nek6YLcRuvAO+AcGXNxRUO+d1
-         Hg8OrHIOm+qfY26voyvnlnCjToHDjBgB/Y6tlwgNx/Q2FK3RrWxa+YwrqkPWuNy5FHfa
-         uxRThzvZClH3wh6dBjmRGRBpljKZ2MVTA6x95W463gaNOs2Sk0AihoIKx9ElcsKZDJNE
-         azrKG4lsLAgQN59R2OwS+RFW5f2Ep5azK5RbSUUGFShIsDDmdEN/35WnoBbVZKXGvuYy
-         LTibYuUDs1+6Rz0SKVSnFBw3jQWTjqpR8/O09euG5Wb+Hs7TL2AU2/1hkQUocHI8H/9l
-         zrFw==
+        d=gmail.com; s=20230601; t=1721682495; x=1722287295; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YLNHOJdoQ1OpK4qxqT1/Vb6qgV4yW7MKmMSvNb+jevk=;
+        b=LYm75zr2ucNXwhgCcqwAjda8W2r34SeXxeoDbwMXt0q+mYrm8ODeuJWgCWwoH3AQ53
+         0mW0g9WZ54KflV/xowVzaYjXi+SOMsKQ5zxN/kXqLQRJ3HFnAu7TNvNJRw0BjN6JJ/vf
+         11z9k9kCjPBX+tBlaQTaXNFiX0wu5ii5hAq0tl/xQbsTmvxiB+U2kKiti1TJ2/u9818j
+         VawYvmQxT5YD9TfdxldPnjO123fJYbziUEDflY2obgVs1gUxsxcvXw7SWx1Glqd6Ri6L
+         UXguq8fEykqaIQb4IIBFTi+BEGvnLK6aetvpiBgKAB9Ii5TmyJexln/kKteuIvyyFHLs
+         7DFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721672456; x=1722277256;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7KjI/l1S9Ni3Ev56WeA0r+6LXF5+0YFxGoPrT+v289Q=;
-        b=nvlgN6/yI/lkGHQ4pR1gnKkZu7lA/89rLS12ea/ytUuvFwO8mX7VvJLp4AdCvhSZaG
-         fNsvLag32uMxE1sgGYcETwpwkFGwWOF4Z4JmWsAdABPrTwt3RRraY/Sx0gkgYK+45pvK
-         faBXhCljGRTf/oFFa54OJeTQPdxGCPqFSR5rcewBFqbKNl99poowGHuGO+6kVXWthbGL
-         2r74G4ce52tjtvMAaqDLDoMtpDYcyHYW0yESD0dvpKOWpcSS9i7jH3FAuhdVvJNWJHQI
-         jmSOP3ocHvpntGwGVVWGIqexJxCASc6uEB08YnM3tVwU4OLnOzTH8YFGwxRd7XDwAYEt
-         nZiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVURrY/0orhN1BxBBYWHss5PUoRWScycqr8UpAwfC20Zlq6SKrFZfGj8pEABdWqvOnufy/EXgckVwQIZYrEIkkxtIJ3vGcGDzB+T/56r3JODGwXVSDU6LC9sL+5du5K/LwjLq6iGu0+
-X-Gm-Message-State: AOJu0Yw4cw/uvNW6oWhkFPIPBQvtWjGlFW8KSqM1krDQcoYVMzh94TJU
-	+fwczXVtpEyik/c1ezT2RrhAnEzrhYVfO/eKKsDmPsiGnpwiEAog
-X-Google-Smtp-Source: AGHT+IGvkfn3VV2EaivlCkf6YAO9NrgJWYsNRBM7RHoP7OChA9B5KqdHmk1biVhP6JLTEOKyudUCyA==
-X-Received: by 2002:a17:907:9493:b0:a72:7e5f:a0c4 with SMTP id a640c23a62f3a-a7a4c225808mr521722166b.56.1721672455681;
-        Mon, 22 Jul 2024 11:20:55 -0700 (PDT)
-Received: from lenovo.teknoraver.net (net-93-66-31-10.cust.vodafonedsl.it. [93.66.31.10])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7a3c922c8fsm457962666b.145.2024.07.22.11.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 11:20:54 -0700 (PDT)
-From: technoboy85@gmail.com
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Matteo Croce <teknoraver@meta.com>
-Subject: [PATCH bpf-next] bpf: allow bpf_current_task_under_cgroup() with BPF_CGROUP_*
-Date: Mon, 22 Jul 2024 20:20:50 +0200
-Message-ID: <20240722182050.38513-1-technoboy85@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1721682495; x=1722287295;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YLNHOJdoQ1OpK4qxqT1/Vb6qgV4yW7MKmMSvNb+jevk=;
+        b=I1FeoE8oAZf1ZGD0uGT3rcQ83ON+J28bghzjiAhIOnAfaiIsurz0DB7uD3qtDy6Hp2
+         VlozvJrPZ9Yd2bxK9vq7W0xfOyM1Khs+b4/ORQgDyAmE0dDFxJ5+9Xyciivtqefk8UNv
+         JORROPXy3aLocctsDzBT3qMEQ+gV1fCWXWPyHXhgqIQMIEC7nX0bJlZpFbs26biLTCUn
+         fwBIRN+HtouEy1uApthA0/oyUxkrt5x7PRnVpaRcGcwryjMDUQuxWfPTIq+3fl7nIxG1
+         Hb1pvtpXQs4k5dKJFT3ikCSAn/1Rk8L4L952WpyYtXaeCNHJB2ocJF9Xy5DoCMyc0Ejn
+         43rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGZf+0Se/0oNqffTznd9EOVLicehOIY6nV/dNu85IaSnMWHAPjNicytTaAg4r9R64+qKef7WytkZq9q3jOJOBOo9SSY+S364eJ+b58jYY6gjplilwxLun8yAiekHSmEmSiJduM+o0aUd3OtOZbXzuYh4dzqh9eAnxUaRaLH62/+UH9fdeb
+X-Gm-Message-State: AOJu0YwCI6PRQHDiT+QubIIckNu2p9BlvR80EyhoY5NlmCjHtZC3zifO
+	DHbZE2dPTL6xf3FsU+LPrt7XVZ/MMIR309GKPOLZs/KQUNNvpz623/rVkJXjDgx2gM2sypKsz82
+	+4dF+eLoXVsGOqs4Fql0P9b9h4fU=
+X-Google-Smtp-Source: AGHT+IHfxRH5gJ/iWcX51rzb+TbNkPuOf3fN5Ga2EkXNJJCXLrrTS9QRLiA+Qsgb5/ys1MirkiBCuk5xVq8GLhhrvkE=
+X-Received: by 2002:a17:90a:bd8f:b0:2c8:2cd1:881b with SMTP id
+ 98e67ed59e1d1-2cd8d11ca43mr150402a91.20.1721682494568; Mon, 22 Jul 2024
+ 14:08:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240722182050.38513-1-technoboy85@gmail.com>
+In-Reply-To: <20240722182050.38513-1-technoboy85@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 22 Jul 2024 14:08:02 -0700
+Message-ID: <CAEf4BzbzPWCY0uJGNG-hBvDrUc_KMYNpQ2KnzFO6+K3ML6NcwQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: allow bpf_current_task_under_cgroup() with BPF_CGROUP_*
+To: technoboy85@gmail.com
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Matteo Croce <teknoraver@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Matteo Croce <teknoraver@meta.com>
+On Mon, Jul 22, 2024 at 11:21=E2=80=AFAM <technoboy85@gmail.com> wrote:
+>
+> From: Matteo Croce <teknoraver@meta.com>
+>
+> The helper bpf_current_task_under_cgroup() currently is only allowed for
+> tracing programs.
+> Allow its usage also in the BPF_CGROUP_* program types.
+> Move the code from kernel/trace/bpf_trace.c to kernel/bpf/cgroup.c,
+> so it compiles also without CONFIG_BPF_EVENTS.
+>
+> Signed-off-by: Matteo Croce <teknoraver@meta.com>
+> ---
+>  include/linux/bpf.h      |  1 +
+>  kernel/bpf/cgroup.c      | 25 +++++++++++++++++++++++++
+>  kernel/trace/bpf_trace.c | 27 ++-------------------------
+>  3 files changed, 28 insertions(+), 25 deletions(-)
+>
 
-The helper bpf_current_task_under_cgroup() currently is only allowed for
-tracing programs.
-Allow its usage also in the BPF_CGROUP_* program types.
-Move the code from kernel/trace/bpf_trace.c to kernel/bpf/cgroup.c,
-so it compiles also without CONFIG_BPF_EVENTS.
+It seems fine to allow this, but also note that we have
+bpf_task_under_cgroup() kfunc, which you might want to check if it is
+allowed where you need it as well.
 
-Signed-off-by: Matteo Croce <teknoraver@meta.com>
----
- include/linux/bpf.h      |  1 +
- kernel/bpf/cgroup.c      | 25 +++++++++++++++++++++++++
- kernel/trace/bpf_trace.c | 27 ++-------------------------
- 3 files changed, 28 insertions(+), 25 deletions(-)
+And the latter one is defined in kernel/bpf/helpers.c, so I'd move
+this one next to it to keep them close.
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 4f1d4a97b9d1..4000fd161dda 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -3188,6 +3188,7 @@ extern const struct bpf_func_proto bpf_sock_hash_update_proto;
- extern const struct bpf_func_proto bpf_get_current_cgroup_id_proto;
- extern const struct bpf_func_proto bpf_get_current_ancestor_cgroup_id_proto;
- extern const struct bpf_func_proto bpf_get_cgroup_classid_curr_proto;
-+extern const struct bpf_func_proto bpf_current_task_under_cgroup_proto;
- extern const struct bpf_func_proto bpf_msg_redirect_hash_proto;
- extern const struct bpf_func_proto bpf_msg_redirect_map_proto;
- extern const struct bpf_func_proto bpf_sk_redirect_hash_proto;
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 8ba73042a239..b99add9570e6 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -2308,6 +2308,29 @@ static const struct bpf_func_proto bpf_get_netns_cookie_sockopt_proto = {
- };
- #endif
- 
-+BPF_CALL_2(bpf_current_task_under_cgroup, struct bpf_map *, map, u32, idx)
-+{
-+	struct bpf_array *array = container_of(map, struct bpf_array, map);
-+	struct cgroup *cgrp;
-+
-+	if (unlikely(idx >= array->map.max_entries))
-+		return -E2BIG;
-+
-+	cgrp = READ_ONCE(array->ptrs[idx]);
-+	if (unlikely(!cgrp))
-+		return -EAGAIN;
-+
-+	return task_under_cgroup_hierarchy(current, cgrp);
-+}
-+
-+const struct bpf_func_proto bpf_current_task_under_cgroup_proto = {
-+	.func           = bpf_current_task_under_cgroup,
-+	.gpl_only       = false,
-+	.ret_type       = RET_INTEGER,
-+	.arg1_type      = ARG_CONST_MAP_PTR,
-+	.arg2_type      = ARG_ANYTHING,
-+};
-+
- static const struct bpf_func_proto *
- cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-@@ -2581,6 +2604,8 @@ cgroup_current_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_cgroup_classid:
- 		return &bpf_get_cgroup_classid_curr_proto;
- #endif
-+	case BPF_FUNC_current_task_under_cgroup:
-+		return &bpf_current_task_under_cgroup_proto;
- 	default:
- 		return NULL;
- 	}
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index cd098846e251..ea5cdd122024 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -798,29 +798,6 @@ const struct bpf_func_proto bpf_task_pt_regs_proto = {
- 	.ret_btf_id	= &bpf_task_pt_regs_ids[0],
- };
- 
--BPF_CALL_2(bpf_current_task_under_cgroup, struct bpf_map *, map, u32, idx)
--{
--	struct bpf_array *array = container_of(map, struct bpf_array, map);
--	struct cgroup *cgrp;
--
--	if (unlikely(idx >= array->map.max_entries))
--		return -E2BIG;
--
--	cgrp = READ_ONCE(array->ptrs[idx]);
--	if (unlikely(!cgrp))
--		return -EAGAIN;
--
--	return task_under_cgroup_hierarchy(current, cgrp);
--}
--
--static const struct bpf_func_proto bpf_current_task_under_cgroup_proto = {
--	.func           = bpf_current_task_under_cgroup,
--	.gpl_only       = false,
--	.ret_type       = RET_INTEGER,
--	.arg1_type      = ARG_CONST_MAP_PTR,
--	.arg2_type      = ARG_ANYTHING,
--};
--
- struct send_signal_irq_work {
- 	struct irq_work irq_work;
- 	struct task_struct *task;
-@@ -1548,8 +1525,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_numa_node_id_proto;
- 	case BPF_FUNC_perf_event_read:
- 		return &bpf_perf_event_read_proto;
--	case BPF_FUNC_current_task_under_cgroup:
--		return &bpf_current_task_under_cgroup_proto;
- 	case BPF_FUNC_get_prandom_u32:
- 		return &bpf_get_prandom_u32_proto;
- 	case BPF_FUNC_probe_write_user:
-@@ -1578,6 +1553,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_cgrp_storage_get_proto;
- 	case BPF_FUNC_cgrp_storage_delete:
- 		return &bpf_cgrp_storage_delete_proto;
-+	case BPF_FUNC_current_task_under_cgroup:
-+		return &bpf_current_task_under_cgroup_proto;
- #endif
- 	case BPF_FUNC_send_signal:
- 		return &bpf_send_signal_proto;
--- 
-2.45.2
+pw-bot: cr
 
+
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 4f1d4a97b9d1..4000fd161dda 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -3188,6 +3188,7 @@ extern const struct bpf_func_proto bpf_sock_hash_up=
+date_proto;
+>  extern const struct bpf_func_proto bpf_get_current_cgroup_id_proto;
+>  extern const struct bpf_func_proto bpf_get_current_ancestor_cgroup_id_pr=
+oto;
+>  extern const struct bpf_func_proto bpf_get_cgroup_classid_curr_proto;
+> +extern const struct bpf_func_proto bpf_current_task_under_cgroup_proto;
+>  extern const struct bpf_func_proto bpf_msg_redirect_hash_proto;
+>  extern const struct bpf_func_proto bpf_msg_redirect_map_proto;
+>  extern const struct bpf_func_proto bpf_sk_redirect_hash_proto;
+> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+> index 8ba73042a239..b99add9570e6 100644
+> --- a/kernel/bpf/cgroup.c
+> +++ b/kernel/bpf/cgroup.c
+> @@ -2308,6 +2308,29 @@ static const struct bpf_func_proto bpf_get_netns_c=
+ookie_sockopt_proto =3D {
+>  };
+>  #endif
+>
+> +BPF_CALL_2(bpf_current_task_under_cgroup, struct bpf_map *, map, u32, id=
+x)
+> +{
+> +       struct bpf_array *array =3D container_of(map, struct bpf_array, m=
+ap);
+> +       struct cgroup *cgrp;
+> +
+> +       if (unlikely(idx >=3D array->map.max_entries))
+> +               return -E2BIG;
+> +
+> +       cgrp =3D READ_ONCE(array->ptrs[idx]);
+> +       if (unlikely(!cgrp))
+> +               return -EAGAIN;
+> +
+> +       return task_under_cgroup_hierarchy(current, cgrp);
+> +}
+> +
+> +const struct bpf_func_proto bpf_current_task_under_cgroup_proto =3D {
+> +       .func           =3D bpf_current_task_under_cgroup,
+> +       .gpl_only       =3D false,
+> +       .ret_type       =3D RET_INTEGER,
+> +       .arg1_type      =3D ARG_CONST_MAP_PTR,
+> +       .arg2_type      =3D ARG_ANYTHING,
+> +};
+> +
+>  static const struct bpf_func_proto *
+>  cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *p=
+rog)
+>  {
+> @@ -2581,6 +2604,8 @@ cgroup_current_func_proto(enum bpf_func_id func_id,=
+ const struct bpf_prog *prog)
+>         case BPF_FUNC_get_cgroup_classid:
+>                 return &bpf_get_cgroup_classid_curr_proto;
+>  #endif
+> +       case BPF_FUNC_current_task_under_cgroup:
+> +               return &bpf_current_task_under_cgroup_proto;
+>         default:
+>                 return NULL;
+>         }
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index cd098846e251..ea5cdd122024 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -798,29 +798,6 @@ const struct bpf_func_proto bpf_task_pt_regs_proto =
+=3D {
+>         .ret_btf_id     =3D &bpf_task_pt_regs_ids[0],
+>  };
+>
+> -BPF_CALL_2(bpf_current_task_under_cgroup, struct bpf_map *, map, u32, id=
+x)
+> -{
+> -       struct bpf_array *array =3D container_of(map, struct bpf_array, m=
+ap);
+> -       struct cgroup *cgrp;
+> -
+> -       if (unlikely(idx >=3D array->map.max_entries))
+> -               return -E2BIG;
+> -
+> -       cgrp =3D READ_ONCE(array->ptrs[idx]);
+> -       if (unlikely(!cgrp))
+> -               return -EAGAIN;
+> -
+> -       return task_under_cgroup_hierarchy(current, cgrp);
+> -}
+> -
+> -static const struct bpf_func_proto bpf_current_task_under_cgroup_proto =
+=3D {
+> -       .func           =3D bpf_current_task_under_cgroup,
+> -       .gpl_only       =3D false,
+> -       .ret_type       =3D RET_INTEGER,
+> -       .arg1_type      =3D ARG_CONST_MAP_PTR,
+> -       .arg2_type      =3D ARG_ANYTHING,
+> -};
+> -
+>  struct send_signal_irq_work {
+>         struct irq_work irq_work;
+>         struct task_struct *task;
+> @@ -1548,8 +1525,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, co=
+nst struct bpf_prog *prog)
+>                 return &bpf_get_numa_node_id_proto;
+>         case BPF_FUNC_perf_event_read:
+>                 return &bpf_perf_event_read_proto;
+> -       case BPF_FUNC_current_task_under_cgroup:
+> -               return &bpf_current_task_under_cgroup_proto;
+>         case BPF_FUNC_get_prandom_u32:
+>                 return &bpf_get_prandom_u32_proto;
+>         case BPF_FUNC_probe_write_user:
+> @@ -1578,6 +1553,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, co=
+nst struct bpf_prog *prog)
+>                 return &bpf_cgrp_storage_get_proto;
+>         case BPF_FUNC_cgrp_storage_delete:
+>                 return &bpf_cgrp_storage_delete_proto;
+> +       case BPF_FUNC_current_task_under_cgroup:
+> +               return &bpf_current_task_under_cgroup_proto;
+>  #endif
+>         case BPF_FUNC_send_signal:
+>                 return &bpf_send_signal_proto;
+> --
+> 2.45.2
+>
+>
