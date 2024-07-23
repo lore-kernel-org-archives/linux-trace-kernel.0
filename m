@@ -1,55 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6921A13DDDB;
-	Tue, 23 Jul 2024 21:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFB2146D43
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jul 2024 21:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721769803; cv=none; b=ZgSkPHGCjWZy3V3KDqN3F0lIJ++SOca9mc1EZu3wE6Q5vBW15Rd77d23oK3KHnJT5qzKtqnFhmWlr/5oX/Q9TC7D8FejIxazZ5fqTLylWl2fIGFJYEnQ3LEaVbcX9NleY5oXwTkTT92TmSCJNYSRylaviHX4J8OXn2La67xCLbc=
+	t=1721771391; cv=none; b=Tlok7pUE/veFd6bbG4xFTZkmuTmbwp7u3S/GNK4cPM6/3/oG4sbbjy7MjmqxPL/4DZ7YjglRsYIl8YfHXgEg9Z4UCToD68atbjvEvZmUi/XuvBW3DQylbTbhOyRxs9GLDPoH2Hspi+bIJOpwTIvNs406prRDroBUQtu3XvN99PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721769803; c=relaxed/simple;
-	bh=2SAWRssX8A/4xbiIP7zHne2YDpWVCC2yjhgyZeNTbBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MtyL2fQx9pELVrkNfa6g3ODBW/UXeJcrU2JV6WemahUgdQtXYLp63H3qoEM627cEoPQbr53N1IulyTzBQSK9BKCufT/upCOoRg4ve/QfvY2przICrsrC4YGkA47/B+zdXTqoNK4MAlOHZYvnQWNZ1hCwQsLOvGzAGcZpUbzBV9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 192F6C4AF09;
-	Tue, 23 Jul 2024 21:23:21 +0000 (UTC)
-Date: Tue, 23 Jul 2024 17:23:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathias Krause <minipli@grsecurity.net>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, Linus
- Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] eventfs: Use SRCU for freeing eventfs_inodes
-Message-ID: <20240723172320.4e36d9d5@rorschach.local.home>
-In-Reply-To: <20240723210755.8970-1-minipli@grsecurity.net>
-References: <20240723104348.645bf027@gandalf.local.home>
-	<20240723210755.8970-1-minipli@grsecurity.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1721771391; c=relaxed/simple;
+	bh=2SPyJdYRw87M7kH/eiezDyPqKNLNQ+jlKjgodNew6rA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sb/Qx8xJo7v/uiHosirHmR8T73RlTrEy0YiqYEmJ/bAEEl8b+I3/5HLYp0fscVXq1cVdD9yh01b1VmiFoAJkshljOoBdwh/w903/zsRpapJ1Iu9HYXYQ6fPoq9f9najd8JpHjXudCWmCq6vASOGlronMF7tP2QVGtJR/GnVbfLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fyfp56ZR; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fyfp56ZR"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e0b10e8b6b7so14537276.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jul 2024 14:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721771388; x=1722376188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yF33mP3g3PVeShTJgLfx3fwdjlEE8z1s+DJQDSjcr+Y=;
+        b=Fyfp56ZR1ESGsr5WcO9ANtOIhEqOM3JSjZfk33f5RdokqN6GS9KYDSotLO4rDc3quS
+         RjaSdEa0xexo57qp/8eaJFSf+zj5XZipWjYU5j75zimicvyKmO6rnpXwNNJR6lYmWmJk
+         SG8Xxr9K0V+ggX/45/VWRKhbVNl7RGpR5nqlxjZgEbAojfKUDkcdkYwfHCzinB3T4Wye
+         jU2Gr6XsGMiaC47jaEWYclfWUf4OEtEWFLohdXMcuV2HfjZSalRjbdEiMVf9YPTCh+7y
+         F4XQxmwOHpl+ni2pn+YZF4mTb/UoJS4vHc26G62cqtXWxBfuopA2MLJPu0kXOMGaDy+R
+         Ijxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721771388; x=1722376188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yF33mP3g3PVeShTJgLfx3fwdjlEE8z1s+DJQDSjcr+Y=;
+        b=T8uxz81nT+CKFCpEBm+XCz/1S3oPffXnmcI8BhB4zUdemzdNFfnaQDoIb2bduYysfz
+         gcUsuFbqLBK0P6pHNUhKXAAbHpIQRj8xenpx9ER8Aj0XKGtKQkpT/Qh4G/w0d0d+up0O
+         YROeA5cHoq2frAs5LEho38qdz2SI4fZCqh9WQg/cszCELBfpedInqFcMlBuUm0gXx8N0
+         8Pbdk2VaL3YYxH8Tsfn6pa6oAgX1pFgkKU000ldUjT7PNLnvsZOkmL3bUohT6GQTIKxe
+         0Uo5ECcEZJmyo/1VtzGZFYh11Oc4zmXdYph8uypIiRqU6i0ED5V1nNIMIXmv2PeCAWNL
+         l7aA==
+X-Forwarded-Encrypted: i=1; AJvYcCVq9Fy9l5G1XBH3VaNXQEhNVsxnKEyzCYdv4/uEtrpk2dMW8tx6LA4eG+ngHA8Iut/+I1AUi3hOnmq8xxa6EEPylInZLkWwjCZEp5YaVltam6Hv
+X-Gm-Message-State: AOJu0YxPRlXFU7+k7Y51onZoSoNgPbaAo8d23jVfNOeM1LRQ3sYkQQqL
+	Mi5zc1A+zrQnAsFC+y7twyDAtTZu6HeRl7GHIZK9A2uu0n8JJa6ECCL51zSmPwUvvV/IDKcxR8E
+	rV+7QAuzJ0S1NeTq9ReTfEOIXgZ5Q1Loi0+oY
+X-Google-Smtp-Source: AGHT+IH5JJRTlNbepSdsOAGPfU8tDz3MNG4de1Wtf/RZgU4beT2V9Y9SRFjNnPwNA1SLBZA82p/Z63pCaOnO/csApGk=
+X-Received: by 2002:a05:6902:1108:b0:e08:7607:bbf3 with SMTP id
+ 3f1490d57ef6-e0b097d5744mr1316657276.34.1721771388342; Tue, 23 Jul 2024
+ 14:49:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240628003253.1694510-1-almasrymina@google.com>
+ <20240628003253.1694510-4-almasrymina@google.com> <CAMArcTUqqxam+BPwGExOFOLVi3t=dwA-5sSagKC5dndv07GDLQ@mail.gmail.com>
+ <CAHS8izNS5jZjPfc-sARbHV7mzqzH+UhHfAtCTKRRTfSAdhY4Cw@mail.gmail.com> <CAMArcTUdCxOBYGF3vpbq=eBvqZfnc44KBaQTN7H-wqdUxZdziw@mail.gmail.com>
+In-Reply-To: <CAMArcTUdCxOBYGF3vpbq=eBvqZfnc44KBaQTN7H-wqdUxZdziw@mail.gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 23 Jul 2024 14:49:34 -0700
+Message-ID: <CAHS8izMTGgZ+4fOKegUDLqAoxrdVEb+nqjQEt8bP0WLBV=FfrQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v15 03/14] netdev: support binding dma-buf to netdevice
+To: Taehee Yoo <ap420073@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 23 Jul 2024 23:07:53 +0200
-Mathias Krause <minipli@grsecurity.net> wrote:
+On Tue, Jul 9, 2024 at 8:37=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wrot=
+e:
+...
+> Reproducer:
+> ./ncdevmem -f <interface name> -l -p 5201 -v 7 -t 0 -q 2 &
+> sleep 10
+> modprobe -rv bnxt_en
+> killall ncdevmem
+>
+> I think it's a devmemTCP core bug so this issue would be reproduced
+> with other drivers.
 
-> To mirror the SRCU lock held in eventfs_iterate() when iterating over
-> eventfs inodes, use call_srcu() to free them too.
-> 
-> This was accidentally(?) degraded to RCU in commit 43aa6f97c2d0
-> ("eventfs: Get rid of dentry pointers without refcounts").
+Sorry for the late reply. I was out at netdev.
 
-Yeah, I missed that. Linus cleaned up the code code quite a bit, but
-missed the subtleties of the RCU clean ups. I should have caught that
-in my review.
+I'm also having trouble reproducing this, not because the bug doesn't
+exist, but quirks with my test setup that I need to figure out. AFAICT
+this diff should fix the issue. If you have time to confirm, let me
+know if it doesn't work for you. It should apply on top of v16:
 
-Thanks for sending this.
+commit 795b8ff01906d ("fix for release issue")
+Author: Mina Almasry <almasrymina@google.com>
+Date:   Tue Jul 23 00:18:23 2024 +0000
 
--- Steve
+    fix for release issue
 
+    Change-Id: Ib45a0aa6cba2918db5f7ba535414ffa860911fa4
+
+
+
+diff --git a/include/net/devmem.h b/include/net/devmem.h
+index 51b25ba193c96..df52526bb516a 100644
+--- a/include/net/devmem.h
++++ b/include/net/devmem.h
+@@ -68,6 +68,9 @@ net_devmem_bind_dmabuf(struct net_device *dev,
+unsigned int dmabuf_fd);
+ void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding);
+ int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
+                                    struct net_devmem_dmabuf_binding *bindi=
+ng);
++
++void dev_dmabuf_uninstall(struct net_device *dev);
++
+ struct net_iov *
+ net_devmem_alloc_dmabuf(struct net_devmem_dmabuf_binding *binding);
+ void net_devmem_free_dmabuf(struct net_iov *ppiov);
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 5882ddc3f8592..7be084e4936e4 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -11320,6 +11320,7 @@ void unregister_netdevice_many_notify(struct
+list_head *head,
+                dev_tcx_uninstall(dev);
+                dev_xdp_uninstall(dev);
+                bpf_dev_bound_netdev_unregister(dev);
++               dev_dmabuf_uninstall(dev);
+
+                netdev_offload_xstats_disable_all(dev);
+
+diff --git a/net/core/devmem.c b/net/core/devmem.c
+index e75057ecfa6de..227bcb1070ec0 100644
+--- a/net/core/devmem.c
++++ b/net/core/devmem.c
+@@ -362,4 +362,20 @@ bool mp_dmabuf_devmem_release_page(struct
+page_pool *pool, netmem_ref netmem)
+        return false;
+ }
+
++void dev_dmabuf_uninstall(struct net_device *dev)
++{
++       unsigned int i, count =3D dev->num_rx_queues;
++       struct net_devmem_dmabuf_binding *binding;
++       struct netdev_rx_queue *rxq;
++       unsigned long xa_idx;
++
++       for (i =3D 0; i < count; i++) {
++               binding =3D dev->_rx[i].mp_params.mp_priv;
++               if (binding)
++                       xa_for_each(&binding->bound_rxqs, xa_idx, rxq)
++                               if (rxq =3D=3D &dev->_rx[i])
++                                       xa_erase(&binding->bound_rxqs, xa_i=
+dx);
++       }
++}
++
+ #endif
+
+--=20
+Thanks,
+Mina
