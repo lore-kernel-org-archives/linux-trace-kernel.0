@@ -1,48 +1,60 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4D113C8EE;
-	Tue, 23 Jul 2024 18:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32514386A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jul 2024 20:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721760706; cv=none; b=BB8FB1TAQVCTjYW0aw+B6qjF35r00rHYiTkQHvKI3AqxnD6wonva356/zlmcj2F/Ci0jAp4/TWAe4+2CFNl6N/JG+1g8LbOW0F33/YF/2RuUeRgKmAdGD2HIADulcD2VZXBhBtVhzFXzBV0UHSYISOidPcWrA9w3eTu9r0UiuVg=
+	t=1721768095; cv=none; b=KeioT3AiIqat92jNmg+h9AtSXqimDhgM9bnC1NNnBVZunGgzOOKKFX+taaE9pkwmc7ulelG2HbI4VTleVSIV5fwd6MKcDmw7l0sRBAK2T3RDrgkkCKWWn3/NXHsweqh0d7LbO9NqGtbaREguWDdkZoTiV6tQY5mGbe8lgnjR+ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721760706; c=relaxed/simple;
-	bh=zgEgzPzWIL5/uR06XUc4aHE8qz5w7Gc0KiYpZls9yH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=A2fSwvTDnUWQ7Lt6GAMJ8VOmLdqPY0JUO/6F0Os//dRaXZz8Z/c0q4TBJG3Cz8j9nnfonbRmrX/E5IaEdqfYUcd0ySjYIsQxSYUsealD26v3n4TfURjcQ8UY2pt7Pb6qGuRUphpVgmoawQcSsVZtiG4QZEWNQ+lq3tbPNn5/jhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FCzAKF2T; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1721768095; c=relaxed/simple;
+	bh=c3dJCxNCMuvmNluI2NbiwjAxlTld8R1ci3G2AZApap8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hNXjb9ZjV60912Mi9qiJXRrvDmUpNEyCC68FTGizUb4BEaUqyewjK6QJcgVi4kX3g+9+0HXMOHFU1qQ/GCv4j5Ro/7qvuAZ9QDBcjF7Mq1lri3KCVN1RBMygMK5bbvbAw78MJDgB2N1/Ox7SJCFh3ohChe4tcYO/8QcKwmzV+lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=mxLocVfX; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensrcsec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FCzAKF2T"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46NHeIaq001122;
-	Tue, 23 Jul 2024 18:51:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	J6qbwvgfpGm7xn7klCCRE2coOxI0Cm8K6uhuWyo3smM=; b=FCzAKF2TWRhkC0WD
-	rNGUGlghQPitHSdj38dzd1tg3U2KLDI9k59j3QQF1xV4ZV5kJVF30fffww08SwDB
-	YnH4h98atECc4H5j98qCzgAMMyZUaguJhRL/mbUtft/nADP83Om7+NX32xGWjZno
-	XArd9rimPG0F62DvXTjCB/iJ2yLE+/e7HHfmzkX80BKSuWaFfzj21jmj07o0WoY2
-	eTdyQV4XswgzTqxFzWW2F4pHyLW4o2U+3wO1XsTsJA6YFUe0Eh1gkxh8h/D3aQzs
-	9otDQoK8yVWrA4VO3uZkUON78cl/zudBkhTc+1S3jsp9uEoNW7ZMjACDsBTaYN/2
-	cz7dig==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40g5auqxtw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 18:51:37 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46NIpaNK020641
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 18:51:36 GMT
-Received: from [10.111.176.36] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 23 Jul
- 2024 11:51:36 -0700
-Message-ID: <eeca779c-233c-4b26-b5a6-d2104a2d834e@quicinc.com>
-Date: Tue, 23 Jul 2024 11:51:35 -0700
+	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="mxLocVfX"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5a20de39cfbso5424663a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jul 2024 13:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=grsecurity.net; s=grsec; t=1721768092; x=1722372892; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=0C5KvvCKRFRHGyXQ0+xgCLiKx4jBjXnWC42JoYTxDRM=;
+        b=mxLocVfXwaJxVyhse8Z3hD7E4Bu/Fndwki4cvuTqLjJUAT28+3TwfFxwZTWOGhVtD7
+         jWvIDh1LIJx7ZwPnp/TGbJJ3ouQ5tddPR/eN/OYSRegkDRbKVFH2RJvrFldxjPMxqSSR
+         Bn0vfaDKUxcLFfD2HMemGsmo3ssQQ8LsPT4vqjOCOplNaMV9jdTTj9B0U8fnedi78U3i
+         K21ntKLrWUlSV2Ja6I5+D3Kbqn0YWoHIZqO3ox/lYzsGfNVkpoygVqI0iO5QTJMNPwjU
+         kFydnuFrHBJfcivkUjgrJOlKBokkAfvMsQm0u+w+X6EqGLjtQcG2w116BXjXicBmzT6p
+         sv6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721768092; x=1722372892;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0C5KvvCKRFRHGyXQ0+xgCLiKx4jBjXnWC42JoYTxDRM=;
+        b=IfZKgXfmRxx3rOHnHHZ1N1S11QMc7CN1Ye4RbvpYF6YLNXr3RkP2oZ63IIb/wVW3il
+         0mFQVBtdf1BpovCjZc3XDCnrTCXGZEN5QeyeMrjwDc6Mstv6FYdNUFVmgOofx3OJvdoE
+         5LsTHbvTaMPI10iN4aM1gLF8pfHuaASSejOWO3hQVj6zin9HLyaIwPt/1ZOZ7hgIsADp
+         YO8/vf3egJuNlBpK2WbzvtxMPMgwsVfsJILwHMKQ9FKBKRLZx0dsKMFNj5fcZDd564lX
+         lE+hgngKz59XGD+72vHJtxtxUM3yFmc4c+ewuV3KtoWZld3hYPPTvU2i54PcqQYGwgyS
+         gElA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDOkgfZf3Iops+ethzJAGy5L9/LmGesLZrewIpPJhdsIM2zJ1M6k6d3GkDyQnl6Z8ze5ut0GbyOkPuF6B27A9aXFDxiq3PpTdeLG86YpuQu2UV
+X-Gm-Message-State: AOJu0Yz7DryHK2UNP+aNmQG5x9wTV9rb7P2uaL7b4K5P6TdyGRQioVQm
+	PAwYqHBvecYksiKX2DmFe3kOTYKGPTOc34y/pG325uOoxDcwvwcnpCrK3OzQe6U=
+X-Google-Smtp-Source: AGHT+IHynNSHyiGdoWpM/KpuEMOPO9NWXApR3ESELw9oE4siucbrVU7Vr6SSMFDZbdHuyjkpVjXyEg==
+X-Received: by 2002:a17:906:d550:b0:a77:f65d:39ff with SMTP id a640c23a62f3a-a7a8847a636mr320365966b.53.1721768092203;
+        Tue, 23 Jul 2024 13:54:52 -0700 (PDT)
+Received: from ?IPV6:2003:f6:af04:ba00:683d:7717:ab42:e94? (p200300f6af04ba00683d7717ab420e94.dip0.t-ipconnect.de. [2003:f6:af04:ba00:683d:7717:ab42:e94])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7aa8d8d0cesm38200066b.138.2024.07.23.13.54.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jul 2024 13:54:51 -0700 (PDT)
+Message-ID: <10dd9e0f-fb2d-4667-8fba-171040690055@grsecurity.net>
+Date: Tue, 23 Jul 2024 22:54:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,75 +62,132 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] lib: test_objpool: add missing MODULE_DESCRIPTION()
- macro
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Matt Wu
-	<wuqiang.matt@bytedance.com>,
-        "Masami Hiramatsu (Google)"
-	<mhiramat@kernel.org>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20240715-md-lib-test_objpool-v2-1-5a2b9369c37e@quicinc.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240715-md-lib-test_objpool-v2-1-5a2b9369c37e@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: tracing: user events UAF crash report
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?=
+ <digirigawa@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ Dan Carpenter <dan.carpenter@linaro.org>
+References: <20240719204701.1605950-1-minipli@grsecurity.net>
+ <20240723104348.645bf027@gandalf.local.home>
+Content-Language: en-US, de-DE
+From: Mathias Krause <minipli@grsecurity.net>
+Autocrypt: addr=minipli@grsecurity.net; keydata=
+ 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
+ RzDVkdgPJkL/NFTKZHo5foFXNi89kA==
+In-Reply-To: <20240723104348.645bf027@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: EmSBpHuImWrR9WXVZOh1ZDof3iSMiaEG
-X-Proofpoint-GUID: EmSBpHuImWrR9WXVZOh1ZDof3iSMiaEG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-23_09,2024-07-23_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- clxscore=1015 phishscore=0 spamscore=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407230131
 
-On 7/15/2024 7:18 AM, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_objpool.o
+On 23.07.24 16:43, Steven Rostedt wrote:
+> On Fri, 19 Jul 2024 22:47:01 +0200
+> Mathias Krause <minipli@grsecurity.net> wrote:
 > 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+>> Beside the obvious bug, I noticed the following (not fixing the issue,
+>> tho):
+>>
+>> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+>> index 5d88c184f0fc..687ad0a26458 100644
+>> --- a/fs/tracefs/event_inode.c
+>> +++ b/fs/tracefs/event_inode.c
+>> @@ -112,7 +112,7 @@ static void release_ei(struct kref *ref)
+>>  			entry->release(entry->name, ei->data);
+>>  	}
+>>  
+>> -	call_rcu(&ei->rcu, free_ei_rcu);
+>> +	call_srcu(&eventfs_srcu, &ei->rcu, free_ei_rcu);
+>>  }
 > 
-> Reviewed-by: Matt Wu <wuqiang.matt@bytedance.com>
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> Changes in v2:
-> - No changes to actual patch, just rebased, picked up Matt's Reviewed-by
->   tag, and added Masami & linux-trace-kernel
-> - Link to v1: https://lore.kernel.org/r/20240531-md-lib-test_objpool-v1-1-516efee92a05@quicinc.com
-> ---
->  lib/test_objpool.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/test_objpool.c b/lib/test_objpool.c
-> index bfdb81599832..5a3f6961a70f 100644
-> --- a/lib/test_objpool.c
-> +++ b/lib/test_objpool.c
-> @@ -687,4 +687,5 @@ static void __exit ot_mod_exit(void)
->  module_init(ot_mod_init);
->  module_exit(ot_mod_exit);
->  
-> -MODULE_LICENSE("GPL");
-> \ No newline at end of file
-> +MODULE_DESCRIPTION("Test module for lockless object pool");
-> +MODULE_LICENSE("GPL");
-> 
-> ---
-> base-commit: 0c3836482481200ead7b416ca80c68a29cfdaabd
-> change-id: 20240531-md-lib-test_objpool-338d937f8666
-> 
+> This should be fixed too. Care to send a patch for this as well?
 
-Hi Andrew & Masami,
-I see this landed in linux-next, but is not currently in Linus' tree for 6.11.
-Will you be able to have this pulled during the merge window?
-I'm trying to eradicate all of these warnings before 6.11 rc-final.
+Sure, will do.
 
-Thanks!
-/jeff
+> 
+> It use to need RCU but then everything was switched over to SRCU. This was
+> just leftover.
+
+SRCU usage came up with commit 63940449555e ("eventfs: Implement eventfs
+lookup, read, open functions") and following, was further extended just
+to get almost completely nuked by [1] earlier this year.
+
+[1]
+https://lore.kernel.org/linux-trace-kernel/20240131184918.945345370@goodmis.org/
+
+> 
+>>  
+>>  static inline void put_ei(struct eventfs_inode *ei)
+>> @@ -735,7 +735,9 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+>>  
+>>  	/* Was the parent freed? */
+>>  	if (list_empty(&ei->list)) {
+>> +		mutex_lock(&eventfs_mutex);
+>>  		cleanup_ei(ei);
+>> +		mutex_unlock(&eventfs_mutex);
+> 
+> Why do you think this is needed? The ei is not on the list and has not been
+> made visible. It was just allocated but the parent it was going to be
+> attached to is about to be freed.
+
+I have no strong understanding of the code, just reading into what the
+context told me the rules should be, which would be on one hand the
+following comment...:
+
+/*
+ * The eventfs_inode (ei) itself is protected by SRCU. It is released from
+ * its parent's list and will have is_freed set (under eventfs_mutex).
+ * After the SRCU grace period is over and the last dput() is called
+ * the ei is freed.
+ */
+
+...and on the other the common pattern, mostly complying to the rule of
+first taking the eventfs_mutex, then checking 'is_freed' for a given ei
+-- supposedly implying, it can only be set under that very same mutex.
+
+As cleanup_ei() is just a glorified free_ei() which sets ei->is_freed to
+1, I was implying the lack of taking eventfs_mutex is a bug. But looking
+further for the precondition, getting 'ei' unchained again after it was
+put to the parent's children list, I can find eventfs_remove_rec() which
+is only ever called under eventfs_mutex and does:
+
+    list_del(&ei->list);
+    free_ei(ei);
+
+So you're right and I wasn't paying close enough attention and got
+mislead by cleanup_ei() also setting ei->is_freed. But as it should
+already be 1 at that point, no bug here.
+
+Thanks,
+Mathias
