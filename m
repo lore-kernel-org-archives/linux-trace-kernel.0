@@ -1,82 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120417F;
-	Tue, 23 Jul 2024 00:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB82B433A0;
+	Tue, 23 Jul 2024 01:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721693473; cv=none; b=hLfl4hM/Ol1MTGNRVIugVvXpGZXJJEH6TU8esj3ieZueTIBAk/MBW/sa6dVg0WIvTDIW42ATegmXhh4cAeilsuOvt+WtF66l+4R94hPnJeQ6C+uuesIfe+gQrd0k05IzEva2w2w99xqpuYBoMnZ8DFzF1jbq5RNXw6tMQg7WnIA=
+	t=1721698114; cv=none; b=uvM8KZO9MwbfC+cNooQabkE/dfhgzL+6GX4XgrMn/Wzq1WOJqeNvA/GtSFIRv4JK0mKEcI4/+A8e28UZfz8JZtM9I+KdLGzBprrYJ51kwuBY0lPnFTGVOkE9d9dblhj7m/yh7+GvD97+bE2xVR6yHgHVRknPd9hBU0D3GSxFzZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721693473; c=relaxed/simple;
-	bh=MGKVCS0F4YI/ru64iTRyCUSnR5+KkP1YrDjKMBlfxjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Li86+ItYx0ZJtV55Rovcs061sCQXazweTxl1v0+vGftmmd0p4ZrTdaPElCnDg5TQxikOAqALYcKDrS+CD+8cB/Zvb3qD5PCt9kNh1ks3quLyW8WAbIc9bsp2MiTXMYyStxR2K5ZoliFjodRSUVogrHeWyno3ydHbPXhDfzrrWvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C2A2C116B1;
-	Tue, 23 Jul 2024 00:11:11 +0000 (UTC)
-Date: Mon, 22 Jul 2024 20:11:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathias Krause <minipli@grsecurity.net>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?=
- <digirigawa@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Al
- Viro <viro@zeniv.linux.org.uk>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info, Dan Carpenter
- <dan.carpenter@linaro.org>
-Subject: Re: tracing: user events UAF crash report
-Message-ID: <20240722201125.3fa6314b@gandalf.local.home>
-In-Reply-To: <20240719204701.1605950-1-minipli@grsecurity.net>
-References: <20240719204701.1605950-1-minipli@grsecurity.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1721698114; c=relaxed/simple;
+	bh=yjGH39SPD58tKkkaS9g1OTDSm4BKOetID5oYRjpbCpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pRsU721TbuqbQU59fqIExnJJRJTdA/VONUhIeBzXZhfO7/sYacHtRZ35GhTKeAIMG7cGqbzo4AW46qKOMQJDH57SCzP/vJdFeqFT7SwNQjD0WULjsyLdIHfJPvX7dtWek+BU0wX36ZFmilfbLuIYilKsTUFidIOShlmjE/ycXE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gB5lOOtm; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gB5lOOtm"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a7a843bef98so12645366b.2;
+        Mon, 22 Jul 2024 18:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721698111; x=1722302911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8sUCnc1nw0XSqrVsGJcDbaBalVpm03eTGsBAvPbAzRY=;
+        b=gB5lOOtmHO+aDKOJtYzVqP8iZb4u2ORsOA49mtwSpoN/wif00Wf4nLa6rJROsECEUY
+         PfO5qUl1WOvAIPPL3Oa+pjjsZztdCDVaeWhgYn2CwLm6B4+sjzK4UvYJGh6IxKRSfDVU
+         02487eB8+lx3RGFBT6ECO5uv/VM4Ycq7l1QUbNUrznWdu+p8UEnMYRk9OTQ3FMJ/fcVq
+         rgQm9wrpZ0DpJK0lOAfdvCycORZQcSGK+DB/bEAndtbqh1a+sQTf4WjLIHYDDbQyKv68
+         k54mn2zgQYY/il0/qTdnmgSe11AiyBbi2bV8VsWoWvGuhzOLT5XXYNn48BzOHtyXn89C
+         ZQCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721698111; x=1722302911;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8sUCnc1nw0XSqrVsGJcDbaBalVpm03eTGsBAvPbAzRY=;
+        b=jxo6npMkaJLUkZHhKTAp0Xxr6vWOnqzxtKjmonZhuVh0PLcqICqsdIdahsVys0tIU9
+         JvS3s/Ewnoijsskpzg7vVGL2zPsYW5ECPmbXgNCxIgn3GyR6F6/EehqJk03wvONA8T5T
+         wL2AJe+tAenh3C53ij5g0tdIS02M/VPqrt8jvd7+acTS4nilBX1xcKSRSz0Yxkftqc0G
+         xdzU/V97zSntZCN3hBCSi98NlFlIv75o+2Yldhhf5kUDNz/cikaHJqkVJdWPr5kTxxup
+         NW1epkEr1KaiO2mrE4+4uMmIBZ3XvEZMhbgas3OLXcdpOCBXB2D8FroAuHT3ILKPD6C0
+         gJ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3RlRIvrDIFpzgyeTCpiwZwzoM85hhFYltf+EQPuTxQHPtapBt7Sp9/bcpnvTxUXzjbOJqFPYZRdS9RUo5wSF3aWc0x3+e3uHM0AL4BVSnl+HpZ99rY4jGnx/NfL9PVsqAjAq3GTki
+X-Gm-Message-State: AOJu0YxHu4TPwidENKbq4wtfmrYHOZjIglJ1k37p1+FK30dAZ0tXdJe7
+	JJ4O9hNNw1dvXskGjnNox9E4j9oICbUjH1M3fQkaUvt5ru49jsxE
+X-Google-Smtp-Source: AGHT+IHr0fqGmoAQCN3JwcmLjpz+NgdPLLhpndRfXKKj9LEmlUAUgsMjZpvMMnCLXnvv8ztKENEJHw==
+X-Received: by 2002:a17:907:96a8:b0:a72:6055:788d with SMTP id a640c23a62f3a-a7a4c12338bmr648515966b.42.1721698110949;
+        Mon, 22 Jul 2024 18:28:30 -0700 (PDT)
+Received: from lenovo.teknoraver.net (net-93-66-31-10.cust.vodafonedsl.it. [93.66.31.10])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7a8f3a47d2sm31435366b.81.2024.07.22.18.28.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jul 2024 18:28:30 -0700 (PDT)
+From: technoboy85@gmail.com
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Matteo Croce <teknoraver@meta.com>
+Subject: [PATCH bpf-next v2 0/2] bpf: enable some functions in cgroup programs
+Date: Tue, 23 Jul 2024 03:28:25 +0200
+Message-ID: <20240723012827.13280-1-technoboy85@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 19 Jul 2024 22:47:01 +0200
-Mathias Krause <minipli@grsecurity.net> wrote:
+From: Matteo Croce <teknoraver@meta.com>
 
-> Subject: [PATCH] eventfs: Don't return NULL in eventfs_create_dir()
-> 
-> Commit 77a06c33a22d ("eventfs: Test for ei->is_freed when accessing
-> ei->dentry") added another check, testing if the parent was freed after
-> we released the mutex. If so, the function returns NULL. However, all
-> callers expect it to either return a valid pointer or an error pointer,
-> at least since commit 5264a2f4bb3b ("tracing: Fix a NULL vs IS_ERR() bug
-> in event_subsystem_dir()"). Returning NULL will therefore fail the error
-> condition check in the caller.
-> 
-> Fix this by substituting the NULL return value with a fitting error
-> pointer.
-> 
-> Fixes: 77a06c33a22d ("eventfs: Test for ei->is_freed when accessing ei->dentry")
-> Cc: Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Mathias Krause <minipli@grsecurity.net>
+Enable some BPF kfuncs and the helper bpf_current_task_under_cgroup()
+for program types BPF_CGROUP_*.
+These will be used by systemd-networkd:
+https://github.com/systemd/systemd/pull/32212
 
-This will not get into the workflow without being sent as a normal patch.
+Matteo Croce (2):
+  bpf: enable generic kfuncs for BPF_CGROUP_* programs
+  bpf: allow bpf_current_task_under_cgroup() with BPF_CGROUP_*
 
-Please send it and Cc those listed in MAINTAINERS (see get_maintainers.pl).
+ include/linux/bpf.h      |  1 +
+ kernel/bpf/cgroup.c      |  2 ++
+ kernel/bpf/helpers.c     | 29 +++++++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c | 27 ++-------------------------
+ 4 files changed, 34 insertions(+), 25 deletions(-)
 
--- Steve
+-- 
+2.45.2
 
-
-> ---
->  fs/tracefs/event_inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 5d88c184f0fc..a9c28a1d5dc8 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -736,7 +736,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
->  	/* Was the parent freed? */
->  	if (list_empty(&ei->list)) {
->  		cleanup_ei(ei);
-> -		ei = NULL;
-> +		ei = ERR_PTR(-EBUSY);
->  	}
->  	return ei;
