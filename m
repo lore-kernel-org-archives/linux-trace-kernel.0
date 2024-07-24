@@ -1,202 +1,206 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1528A613D;
-	Wed, 24 Jul 2024 14:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C6215884F;
+	Wed, 24 Jul 2024 14:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721830313; cv=none; b=iF0ROX+ZoiXBNUXo6Ba4GR6zCU7263721jE3jUhoqnBFf1tFZc1h7iIF0dv9EvY2Roy2+blMF+D1xn/gAGtR+IzFA7hFoAEoWLOBdYGe9fS9d27FtTRnU4pyLTysT45oWL9rJGygEIrPFEp1lprk1hqTRgoWNzpz3SduIe0EQX0=
+	t=1721832045; cv=none; b=iQtJEoclCV/tau5tcit4vwOG6deRrnSd2L1M/GuglGpezliN/ROKVkUxLKn7jjMdYLIuVAsAh+BHVk7lW1K7ZQwZ8qIHwZsyC0vcu0kAJd1R3BG0PVanAhjMHrg4YoExKHJ7+VAbTIjPiWqtuAyr3J5WVtxiz0y3jVYb4zIkb1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721830313; c=relaxed/simple;
-	bh=2VH/lDRbPN4RINJJZ5hFdT7nrCTOneMqyfk6RFrnmxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lgoo3/JnMxNTshqbxaduYG0KswXtAHk6yBTqh+KBCK96CpMvO/mvgHUwieEMwKwh7rxYQjJnmL4WSnNAsJbP8gNq86eEgHZCFd9VUN13hqTvDjejdbux7aTGEzKRhNY5jcLddABqvjG/PyeoGoAFVLPW2dejRixTaDA2HsWUk7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XYGJd4Mw; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721832045; c=relaxed/simple;
+	bh=Tyv11+StWRcTJYiBlpVVwI64X4RXvYmIxnRwH2GK1sQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=leE2CL8onzCnu8KLi4IHJUrzXmLt9ChDRKszHfAGOXgD9m+MDKO3VxF05DikOjXKSycPZ5u9ghmNBn4YhLQdeanwL+jx36ERSlkQrcE2VZ/Mb+YZ5CyrkFHEpF5whVPjAcHCeQlBDb5xvoteCoGza1tScmKB1NXMR3IZU6m44Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uavkczRl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vYV9t0cp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uavkczRl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vYV9t0cp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYGJd4Mw"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-595856e2336so1710012a12.1;
-        Wed, 24 Jul 2024 07:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721830310; x=1722435110; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lgUOovEPki3yBEx+HU/YvZISoKa1Q0srqrZyf9xBznA=;
-        b=XYGJd4MwHTywVVp5oBH5bu9spsUAnyZ/+z/oKlLODDDYYF4jgqpGMBbuYUFm3JBMYS
-         ZV3WcaXSMqY2ZiTCJhH65MGWnci/GTJNFPtK54l0s8azXmxDNi2Y168cKO7B8i4NeGD4
-         N7RQtXbXdAnr8b0xGf6+Aa3GHkor083omgSYeIOq4Jgl7hTtmwnoJ26YfRAcQoiDXUXS
-         PFEEXRZgZSp7LfRTV2rt6JzW9Yku8TiF02f0vvPgdORWtVd+ftmSTl5LJv3sFHtoxqbx
-         ZfRqWh4i49Zw0p0iI8/f8fLmH1hAakwutKwbDplEhl88fmZ6jzmU+jd7Y+sEOCaGaYbB
-         O3QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721830310; x=1722435110;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lgUOovEPki3yBEx+HU/YvZISoKa1Q0srqrZyf9xBznA=;
-        b=sb1Jxx94I+43CwNESYbToMm3YcCf9fdUbh+7nBE7hPsqdri8H5Rx6zhINkQThIHxpG
-         bbd5ToJqYY+BQ8fpFRzOkeH0ow41GaGB1jlwO4ogpy8C7k6vz6qDFbPJPLHuSO6GC6P8
-         8l+1fP+qah4XCV2xxB10xOjSbF/35d6Dl4WwfJtCcFcnm9uGHi6vOwLSszIM3zCWimPx
-         IywRpQxNUtWNI2295sWRNynHlrZzcluIJsmfnEGGcH61SpU3AgOemOREyzHn0/b/RzHN
-         mp/cxYHX0Ai9O9j8rlCgrRBF3oLokHySRi27xNp5DZsUKQeWSY3vdPh3B7gQf5enZ5KW
-         fJ4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVDgNCrU1umi43UTA6baTrl4Dk2yGds24bxpjjrktLeEbVZjwoh2QoM8twuNjO8X7GMHsNO/JOK5sFZIeXqc7fYoySk7tD5WtJmpfJxWUg9PkNAOIOanKbmTM0ArYTvgW7D1CJ7CQb02LCFdmtN73SJPNh/LCVg2Z/Y4jmvQyacYH9zMDB461g3gVSM/nIMQnyZBm7l7Fr1ysOgw0ZwyJ7c/ngaIahlXC0yCn1T/A4oNWVQ6ECxWwziPRYToqIvrIQjCBO9js87P57mJnSzdqmswf+5sSzRLL2M0Bq9fmaUTuabejpahy+2XJbwi+cRV5LOft0UOUfam58CwIT+vR8/GAkKW0M/ZPyk/aEMFEeTfJMzxiXUFyClwnEZidCS6dyz+lCM5gxGseKIGc3H4YQtW15pk780a0nwAe5E/Nn7PClCsHKiqgZcKjrIjdt++K+wHXe+6m/3ITlfmdBqupMPZ36JohqX+HzRM6Zjiw==
-X-Gm-Message-State: AOJu0Yyg98PnVgrqEgFP+TaVBItjZhrkDJjTX6jWOmucoUd8F0FRZoQw
-	dKRHS3v9W3LtMqwUa5caIO7EmBr982dkQAXTq+NNZ3Uli+3nEksmUuT11SJe4NA/52DtUEZ654t
-	YHWZmXeZofrlFsB0TY5BefXhgw58=
-X-Google-Smtp-Source: AGHT+IG/1TrYzfuz6s4kFpxFSpAieWqNsCB9Wez//cHoFLQxMdVPOa+ue/JHVhn9Ez2PRYWu7hG701fjzbR8kwC+GR4=
-X-Received: by 2002:a05:6402:2788:b0:58c:77b4:404b with SMTP id
- 4fb4d7f45d1cf-5ab1b167270mr2342309a12.15.1721830310221; Wed, 24 Jul 2024
- 07:11:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uavkczRl";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vYV9t0cp";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uavkczRl";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vYV9t0cp"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 64F991F7A8;
+	Wed, 24 Jul 2024 14:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721832042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=K2oU6KeNMEKKrmlqYMEEXIL0CAP2uyQ2NxyjtiwdL5s=;
+	b=uavkczRlmYpLPla5thNBXjNOtQrfeZmoLODNnhDoNwt1YT4O7KRINMVR3uU/OdYyzoGAIQ
+	9FmDa6uZAeR/rN8CrdzkDvIJOSiQ6Eg3psRzaw8nQ5NO+0ahoOCTXJ/b807SlT8+0x58L+
+	8NGOxKujsAuumRKkCg0UqP8EKl/44DA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721832042;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=K2oU6KeNMEKKrmlqYMEEXIL0CAP2uyQ2NxyjtiwdL5s=;
+	b=vYV9t0cpsRrzF4ou/Se02S5+p69GDo3m/rLsX9R3uumUu3wcnC2k2lDLWKnPuNqlVQyM+C
+	r87DOnRYRQ9N6OBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1721832042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=K2oU6KeNMEKKrmlqYMEEXIL0CAP2uyQ2NxyjtiwdL5s=;
+	b=uavkczRlmYpLPla5thNBXjNOtQrfeZmoLODNnhDoNwt1YT4O7KRINMVR3uU/OdYyzoGAIQ
+	9FmDa6uZAeR/rN8CrdzkDvIJOSiQ6Eg3psRzaw8nQ5NO+0ahoOCTXJ/b807SlT8+0x58L+
+	8NGOxKujsAuumRKkCg0UqP8EKl/44DA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1721832042;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=K2oU6KeNMEKKrmlqYMEEXIL0CAP2uyQ2NxyjtiwdL5s=;
+	b=vYV9t0cpsRrzF4ou/Se02S5+p69GDo3m/rLsX9R3uumUu3wcnC2k2lDLWKnPuNqlVQyM+C
+	r87DOnRYRQ9N6OBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2C05813411;
+	Wed, 24 Jul 2024 14:40:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fARjCmoSoWa1KQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 24 Jul 2024 14:40:42 +0000
+Message-ID: <38207d5c-c052-4701-8ccd-fe6381a97194@suse.cz>
+Date: Wed, 24 Jul 2024 16:40:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628003253.1694510-1-almasrymina@google.com>
- <20240628003253.1694510-4-almasrymina@google.com> <CAMArcTUqqxam+BPwGExOFOLVi3t=dwA-5sSagKC5dndv07GDLQ@mail.gmail.com>
- <CAHS8izNS5jZjPfc-sARbHV7mzqzH+UhHfAtCTKRRTfSAdhY4Cw@mail.gmail.com>
- <CAMArcTUdCxOBYGF3vpbq=eBvqZfnc44KBaQTN7H-wqdUxZdziw@mail.gmail.com> <CAHS8izMTGgZ+4fOKegUDLqAoxrdVEb+nqjQEt8bP0WLBV=FfrQ@mail.gmail.com>
-In-Reply-To: <CAHS8izMTGgZ+4fOKegUDLqAoxrdVEb+nqjQEt8bP0WLBV=FfrQ@mail.gmail.com>
-From: Taehee Yoo <ap420073@gmail.com>
-Date: Wed, 24 Jul 2024 23:11:38 +0900
-Message-ID: <CAMArcTUC2q-SEcc4FP8Rnz8goroXj52FWThX4O4C2R1uPW_VHQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v15 03/14] netdev: support binding dma-buf to netdevice
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Content-Language: en-US
+To: paulmck@kernel.org
+Cc: Uladzislau Rezki <urezki@gmail.com>, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>, Jakub Kicinski <kuba@kernel.org>,
+ Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, bridge@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, kvm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+ wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+ ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ kasan-dev <kasan-dev@googlegroups.com>
+References: <6711935d-20b5-41c1-8864-db3fc7d7823d@suse.cz>
+ <ZnCDgdg1EH6V7w5d@pc636> <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz>
+ <ZnFT1Czb8oRb0SE7@pc636>
+ <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop>
+ <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz>
+ <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
+ <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz> <ZnVInAV8BXhgAjP_@pc636>
+ <df0716ac-c995-498c-83ee-b8c25302f9ed@suse.cz>
+ <b3d9710a-805e-4e37-8295-b5ec1133d15c@paulmck-laptop>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <b3d9710a-805e-4e37-8295-b5ec1133d15c@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.09 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,zx2c4.com,kernel.org,inria.fr,vger.kernel.org,lists.linux.dev,efficios.com,lists.ozlabs.org,linux.ibm.com,csgroup.eu,lists.zx2c4.com,suse.de,netapp.com,oracle.com,talpey.com,netfilter.org,googlegroups.com];
+	R_RATELIMIT(0.00)[to_ip_from(RLr583pch5u74edj9dsne3chzi)];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.09
 
-On Wed, Jul 24, 2024 at 6:49=E2=80=AFAM Mina Almasry <almasrymina@google.co=
-m> wrote:
->
-> On Tue, Jul 9, 2024 at 8:37=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wr=
-ote:
-> ...
-> > Reproducer:
-> > ./ncdevmem -f <interface name> -l -p 5201 -v 7 -t 0 -q 2 &
-> > sleep 10
-> > modprobe -rv bnxt_en
-> > killall ncdevmem
-> >
-> > I think it's a devmemTCP core bug so this issue would be reproduced
-> > with other drivers.
->
-> Sorry for the late reply. I was out at netdev.
->
-> I'm also having trouble reproducing this, not because the bug doesn't
-> exist, but quirks with my test setup that I need to figure out. AFAICT
-> this diff should fix the issue. If you have time to confirm, let me
-> know if it doesn't work for you. It should apply on top of v16:
->
-> commit 795b8ff01906d ("fix for release issue")
-> Author: Mina Almasry <almasrymina@google.com>
-> Date:   Tue Jul 23 00:18:23 2024 +0000
->
->     fix for release issue
->
->     Change-Id: Ib45a0aa6cba2918db5f7ba535414ffa860911fa4
->
->
->
-> diff --git a/include/net/devmem.h b/include/net/devmem.h
-> index 51b25ba193c96..df52526bb516a 100644
-> --- a/include/net/devmem.h
-> +++ b/include/net/devmem.h
-> @@ -68,6 +68,9 @@ net_devmem_bind_dmabuf(struct net_device *dev,
-> unsigned int dmabuf_fd);
->  void net_devmem_unbind_dmabuf(struct net_devmem_dmabuf_binding *binding)=
-;
->  int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
->                                     struct net_devmem_dmabuf_binding *bin=
-ding);
-> +
-> +void dev_dmabuf_uninstall(struct net_device *dev);
-> +
->  struct net_iov *
->  net_devmem_alloc_dmabuf(struct net_devmem_dmabuf_binding *binding);
->  void net_devmem_free_dmabuf(struct net_iov *ppiov);
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index 5882ddc3f8592..7be084e4936e4 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -11320,6 +11320,7 @@ void unregister_netdevice_many_notify(struct
-> list_head *head,
->                 dev_tcx_uninstall(dev);
->                 dev_xdp_uninstall(dev);
->                 bpf_dev_bound_netdev_unregister(dev);
-> +               dev_dmabuf_uninstall(dev);
->
->                 netdev_offload_xstats_disable_all(dev);
->
-> diff --git a/net/core/devmem.c b/net/core/devmem.c
-> index e75057ecfa6de..227bcb1070ec0 100644
-> --- a/net/core/devmem.c
-> +++ b/net/core/devmem.c
-> @@ -362,4 +362,20 @@ bool mp_dmabuf_devmem_release_page(struct
-> page_pool *pool, netmem_ref netmem)
->         return false;
->  }
->
-> +void dev_dmabuf_uninstall(struct net_device *dev)
-> +{
-> +       unsigned int i, count =3D dev->num_rx_queues;
-> +       struct net_devmem_dmabuf_binding *binding;
-> +       struct netdev_rx_queue *rxq;
-> +       unsigned long xa_idx;
-> +
-> +       for (i =3D 0; i < count; i++) {
-> +               binding =3D dev->_rx[i].mp_params.mp_priv;
-> +               if (binding)
-> +                       xa_for_each(&binding->bound_rxqs, xa_idx, rxq)
-> +                               if (rxq =3D=3D &dev->_rx[i])
-> +                                       xa_erase(&binding->bound_rxqs, xa=
-_idx);
-> +       }
-> +}
-> +
->  #endif
->
+On 7/24/24 3:53 PM, Paul E. McKenney wrote:
+> On Mon, Jul 15, 2024 at 10:39:38PM +0200, Vlastimil Babka wrote:
+>> On 6/21/24 11:32 AM, Uladzislau Rezki wrote:
+>> > On Wed, Jun 19, 2024 at 11:28:13AM +0200, Vlastimil Babka wrote:
+>> > One question. Maybe it is already late but it is better to ask rather than not.
+>> > 
+>> > What do you think if we have a small discussion about it on the LPC 2024 as a
+>> > topic? It might be it is already late or a schedule is set by now. Or we fix
+>> > it by a conference time.
+>> > 
+>> > Just a thought.
+>> 
+>> Sorry for the late reply. The MM MC turned out to be so packed I didn't even
+>> propose a slab topic. We could discuss in hallway track or a BOF, but
+>> hopefully if the current direction taken by my RFC brings no unexpected
+>> surprise, and the necessary RCU barrier side is also feasible, this will be
+>> settled by time of plumbers.
+> 
+> That would be even better!
 
-I tested this patch and it works well.
-Thanks a lot for this work!
+I should have linked to the RFC :)
 
-Thanks a lot!
-Taehee Yoo
+https://lore.kernel.org/all/20240715-b4-slab-kfree_rcu-destroy-v1-0-46b2984c2205@suse.cz/
 
-> --
-> Thanks,
-> Mina
