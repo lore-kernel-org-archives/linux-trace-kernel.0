@@ -1,111 +1,137 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255D076048
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 20:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216D711711;
+	Thu, 25 Jul 2024 20:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721938309; cv=none; b=Xvqccejfg9crJEiBUno2bK+LJBiu1eyzmFgNfLHjNxbKIEuHWr1cf8EF4xH4R0dof9Ye6A1ijwDPD9hcYZqbjw5gvvxAcxaL/To4y2lbFLyXzAITX0RY6UDmH4R4tk/oe/+EoVkutRS+JZ5kjHDf2zhkYaxnGTIQUaeNK7c9ttQ=
+	t=1721938501; cv=none; b=OwyevQRZO1tR4j6926ZrhImH6N9JAqZsTHRpF9zTObzcCn0Xzz07/4rqm1X5+lzZ0bzMgBTxO129Zv7CH0W373g+MI2mpUKSw4kYyR6AQQbiFe0pFYmUlt5YVe9cIsdDptwRGCB+94og4RBd+4dtF+WIsKGdeBPhw3yzsu3iXC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721938309; c=relaxed/simple;
-	bh=IvdqZvTacjy6MAQ5qDRh4fw3aGKlpJ5TgBBkoXVfd24=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ah0q5X74ivT80Je0iU+hG0U+pHzDfFkGSX10GZXWPc/PsRDdZEw6bJv1yvKlhCUl+49WPgKynDjafzydMQ5wrUDvlX1DZ+bncFI1dkRSa4u38242qOKm/ex4Mlsh8C8INJZREkLpu0zjLDlQoFPwP43gJhX4OaIQq9pRaXieH6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VGGJpc9z; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VGGJpc9z"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5a88be88a3aso1718418a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 13:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721938306; x=1722543106; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYXza095pMOoHpnczk24pBNsoS9nyihsTN3J/3umgZw=;
-        b=VGGJpc9zDN+mkjvHijUbdgW3//dooXZcuMo645a1xri5k48VE1AQuIbTGr9azz1xnQ
-         mUhlZMOj1qSMYJYlVdttSq/JTONsicPW1ho5S1GHxC2nPVMvXLJxTKH64P+X/1BtC5ks
-         ZNNTyxSR3pCAijP16sHF2EwMekMt33xW8Nmu8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721938306; x=1722543106;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HYXza095pMOoHpnczk24pBNsoS9nyihsTN3J/3umgZw=;
-        b=lEneWXX7mjYspWLtooK8VuBWw22eV+/M4sLOdwRDDZlUXxLyrCSp+2aFbfKYF64jXm
-         jEwYCk+H+WwmH3Mfnqp1vY4TKmyPc4Bw59wxQNlM6fsvJsHkfHx8BHqTQ83/8ZgxLpjf
-         57BW+jnZXq/RAq9Vql3ra6X01fQkcSbfmnclBcVoTM6ijg0ZIZRg6bEIWxSc1a0WL4Mb
-         kQ4F5kqgrmwwvN1mCY/Ba8BG1Qbm3f9+ZENAZNrE9G6isZl5XpbOBgjjVUWBEcxxCo+A
-         jyoX7vDAorjcD+Yk9csD8V8hVZ+6OFLpMLgmLYAjN6xyGFXr/u8VJFvfwV4tw/br7+U9
-         7kaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmUR/0zfvih7RpVCps/d0GLlD+jc/rBvGTbaj157yCTjybrvSa2UMeDsoOhcj+KZC4MBI9kaVY1zCvj6N8JGxKvcM2HJGzMhYT0Fa6xFoOAeTe
-X-Gm-Message-State: AOJu0Yyc2DDxxeLKaVwPEQf+TWkvkGkw5N3RlOVfQzC7SV0elCYbfMD7
-	F9yCNJWfv3G8IENm0iZ6O2X7YhCM4SjQqhVraD1ZCpMjLYXU1siNrRfSWthzSlmyVKifQ1a0apo
-	OMSo=
-X-Google-Smtp-Source: AGHT+IGXYQXuoBIKD6ct8JyWcr5s567JCHGYH1f343Y89bJI3VfPhs1aOPCVqi8fE4H5x4Kd6ucujA==
-X-Received: by 2002:a17:907:2d29:b0:a70:c02f:8a7e with SMTP id a640c23a62f3a-a7acb8230f7mr246881566b.54.1721938306251;
-        Thu, 25 Jul 2024 13:11:46 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad41462sm101116466b.119.2024.07.25.13.11.44
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jul 2024 13:11:45 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5a156557026so1635787a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 13:11:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXJX5TrSFeZm/sssLQQ7bZjR1/psy/afRpOwhYkyUsL8RKmG/e9A3kCNUAsOlYK9CDDCiP2uqjF1uuQPe0h5o9kvPr+zhTpPN0rqOGeMUqqp2f/
-X-Received: by 2002:a50:a686:0:b0:5a1:1:27a9 with SMTP id 4fb4d7f45d1cf-5ac63b59c17mr2468749a12.18.1721938304541;
- Thu, 25 Jul 2024 13:11:44 -0700 (PDT)
+	s=arc-20240116; t=1721938501; c=relaxed/simple;
+	bh=NF2RIxo1fJp8yqecDhIOyEG8HypVCg/sr20j0WVp5hQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dG3PSdeQg033Yc9AvBGHBeWqcRaXbxUq06QHuPAdTAXwlCixWq1R1Eme5hhh51Cv/jC6RMiKpNHKx3wbHMqoSTnLE54fxvb3+q6OCEnQsR9PTYINWAX+ZJJwhVURmBMXTHqWrn17mcNXfCHfsUyx+RBRG8FAKHe8zAFXMe3DrdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E24DC116B1;
+	Thu, 25 Jul 2024 20:14:58 +0000 (UTC)
+Date: Thu, 25 Jul 2024 16:15:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathias Krause <minipli@grsecurity.net>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?=
+ <digirigawa@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Al
+ Viro <viro@zeniv.linux.org.uk>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info, Dan Carpenter
+ <dan.carpenter@linaro.org>, Vasavi Sirnapalli
+ <vasavi.sirnapalli@broadcom.com>, Alexey Makhalov
+ <alexey.makhalov@broadcom.com>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, Beau Belgrave <beaub@linux.microsoft.com>
+Subject: Re: tracing: user events UAF crash report
+Message-ID: <20240725161519.35fd3bd6@gandalf.local.home>
+In-Reply-To: <0d1a8c46-43a7-42d6-bcbf-647a5a68c3c5@grsecurity.net>
+References: <20240719204701.1605950-1-minipli@grsecurity.net>
+	<CAD2QZ9bDcQ46jOAc_Hxy6sG5-N5RPxw4zPuLK6R+M_GhxZR+=g@mail.gmail.com>
+	<5083301c-6dc9-45c9-8106-da683ac6bfbb@grsecurity.net>
+	<CAD2QZ9ZxZ+mjfju2JMw3fPATNNWkqT1p97QxXgeGo54AFzQ-Cw@mail.gmail.com>
+	<CAD2QZ9bTrQ1p3zTZOXe6Gk4Xq8kjYSziAYAdbTrvRSZzAGPY9A@mail.gmail.com>
+	<CAD2QZ9YAzq3jq8CyAcoG9YuMD9XWHbk3jKxAmszuSkJ3mtGoGw@mail.gmail.com>
+	<20240725131021.788374d0@gandalf.local.home>
+	<20240725131632.64cab267@gandalf.local.home>
+	<cff51d4b-80eb-4587-b4ad-bfe7d7361b19@grsecurity.net>
+	<20240725150517.3184e078@gandalf.local.home>
+	<0d1a8c46-43a7-42d6-bcbf-647a5a68c3c5@grsecurity.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61@eucas1p2.samsung.com>
- <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-In-Reply-To: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 25 Jul 2024 13:11:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiHHDGQ03qJc+yZKmUpmKOgbz26Tq=XBrYcmNww8L_V0A@mail.gmail.com>
-Message-ID: <CAHk-=wiHHDGQ03qJc+yZKmUpmKOgbz26Tq=XBrYcmNww8L_V0A@mail.gmail.com>
-Subject: Re: [GIT PULL] sysctl constification changes for v6.11-rc1
-To: Joel Granados <j.granados@samsung.com>
-Cc: =?UTF-8?B?VGhvbWFzIFdlae+/vXNjaHVo?= <linux@weissschuh.net>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Dave Chinner <david@fromorbit.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	coreteam@netfilter.org, bpf@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
-	mptcp@lists.linux.dev, lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 24 Jul 2024 at 14:00, Joel Granados <j.granados@samsung.com> wrote:
->
-> This is my first time sending out a semantic patch, so get back to me if
-> you have issues or prefer some other way of receiving it.
+On Thu, 25 Jul 2024 21:42:41 +0200
+Mathias Krause <minipli@grsecurity.net> wrote:
 
-Looks fine to me.
+> Right. But the point is, that 'event_call' is really some '&user->call'.
+> With 'user' being free'd memory, what gives? Dereferencing 'event_call'
+> is UB, so this function is doomed to fail because it cannot know if its
+> only argument points to still valid memory or not. And that's the core
+> issue -- calling that function for an object that's long gone -- the
+> missing refcounting I hinted at in my first Email.
 
-Sometimes if it's just a pure scripting change, people send me the
-script itself and just ask me to run it as a final thing before the
-rc1 release or something like that.
+Ah, I missed that the call was part of the user structure. But I think I
+found the real fix.
 
-But since in practice there's almost always some additional manual
-cleanup, doing it this way with the script documented in the commit is
-typically the right way to go.
+> 
+> > 
+> > Where it calls the ->class->get_fields(event_call);
+> > 
+> > that calls this function. By setting:
+> > 
+> > 	user->call.get_fields = NULL;
+> > 
+> > this will never get called and no random data will be accessed.  
+> 
+> As 'user' is free'd or soon-to-be-free'd memory, that's a non-starter.
+> 
+> > 
+> > That said, I was talking with Beau, we concluded that this shouldn't be the
+> > responsibility of the user of event call, and should be cleaned up by the
+> > event system.
+> > 
+> > Here's the proper fix:
+> > 
+> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> > index 6ef29eba90ce..3a2d2ff1625b 100644
+> > --- a/kernel/trace/trace_events.c
+> > +++ b/kernel/trace/trace_events.c
+> > @@ -3140,8 +3140,10 @@ EXPORT_SYMBOL_GPL(trace_add_event_call);
+> >   */
+> >  static void __trace_remove_event_call(struct trace_event_call *call)
+> >  {
+> > +	lockdep_assert_held(&event_mutex);
+> >  	event_remove(call);
+> >  	trace_destroy_fields(call);
+> > +	call->get_fields = NULL;
 
-This time it was details like whitespace alignment, sometimes it's
-"the script did 95%, but there was another call site that also needed
-updating", or just a documentation update to go in together with the
-change or whatever.
+Actually, this is wrong as it would be: call->class->get_fields, and this
+is not the right place to clear it, as class can be used by multiple calls.
 
-Anyway, pulled and just going through my build tests now.
+> >  	free_event_filter(call->filter);
+> >  	call->filter = NULL;
+> >  }
+> > 
+> > Can you try it out?  
+> 
+> I can try but I don't think that's the proper fix for above reasons, I'm
+> sorry.
 
-              Linus
+I believe the issue is that f_start() needs to check if the event file has
+been freed.
+
+New patch:
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 6ef29eba90ce..5fbfa1c885de 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1627,12 +1627,14 @@ static int f_show(struct seq_file *m, void *v)
+ 
+ static void *f_start(struct seq_file *m, loff_t *pos)
+ {
++	struct trace_event_file *file;
+ 	void *p = (void *)FORMAT_HEADER;
+ 	loff_t l = 0;
+ 
+ 	/* ->stop() is called even if ->start() fails */
+ 	mutex_lock(&event_mutex);
+-	if (!event_file_data(m->private))
++	file = event_file_data(m->private);
++	if (!file || (file->flags & EVENT_FILE_FL_FREED))
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	while (l < *pos && p)
+
+
+-- Steve
