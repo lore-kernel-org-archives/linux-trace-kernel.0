@@ -1,60 +1,60 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F0F2E3E8
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 19:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AAE52F9E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 19:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721936566; cv=none; b=iwOxALM68L7PUmu1HiGEUlMEgHE3aBl4HjIkjFHjqn5TgIdSKQkPTq1fyAFiN3S1A1Hw38GiGVW0ad1MzXVur7sKhVJYfnJvVcAKc7yoX/Eu/FEUGtMtbdjwOd3AKwMgnOdRsULyBo+oNgrofTd6jQvfY6fBa5KCVGiAo76VCBE=
+	t=1721937191; cv=none; b=USOtRXSVhG6qSgT/CCSKajIhJWwtgwRnx/SviCkMXOwSdTGyG81sRVTdSk8Ci9wYODJgYhZb8wYQR/eUTZ5g1JABiH41sDCalDszbrrfJl1YBMRpxe8lryWz6E0i2o+ht8QBHzGP4tNFMbReZKJzndYU4sP/D2gznVsJos47CMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721936566; c=relaxed/simple;
-	bh=A/p7FxrZ7NB9QQWCuGcHnOqYVTSYUTD3YARi1FnytCk=;
+	s=arc-20240116; t=1721937191; c=relaxed/simple;
+	bh=qrjAX8ZtHszttz8vYdvcF125vc7Dv4IRgnScP5SMCZE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IFLf+JuQumjryjddVllgNF/wjDAvGbNCQwWHrRfqH/5rlivfraz/5Fz9zdsF8lvJaAxf07orxgJKEpFUqz1qPm29fEFi+YwT1a9h5/yV9DSf6btnbM/FO2scd4XovjceEgIFONHRCieuR+SyJ5bKb0x+BiYUC++WMffkoXcnB5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=Ts2qSIR3; arc=none smtp.client-ip=209.85.218.44
+	 In-Reply-To:Content-Type; b=GHRhcHWTmGyb7isbfVRPIzkMXg3k3+IlmYIAzYV3CujK5uZ4i8KW8tSctepyl46XszIrj2eu1KESnj8TYIQ3Jtcez+mrruxdBsMdBi7e9cuFgMC0sEiVlpvDCWDvXITBlKM7INd4zzib7JV6fRxymU4j7xGu4llklMjLD3Mz7f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=Pe/xwgN+; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensrcsec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="Ts2qSIR3"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7a9a7af0d0so125505166b.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 12:42:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="Pe/xwgN+"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a7979c3ffb1so53657466b.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 25 Jul 2024 12:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=grsecurity.net; s=grsec; t=1721936563; x=1722541363; darn=vger.kernel.org;
+        d=grsecurity.net; s=grsec; t=1721937187; x=1722541987; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JqtTvVFp0BnLiN7tLJLe0UGmp5oVTE40fFINTIQjJE=;
-        b=Ts2qSIR3jWBHlOkz1pRW290oSUzv8L4G9st7UbjvMkKcuORWvupOvowFu5z40YwGxU
-         j6vG7qfe12Sx8CHZiVFj2ztnlDI8/n9za9h3OnspO42NAhk4OoyyDN2JXHHxOVOJUXum
-         zaRP7Qj8gCDpCa7F7rsAy5qHFcoy/+V3dhBEAYUebtVEcCgNTBLdQu69NCPg/vkCmFVl
-         8ioLt7SD5Z3I6uofSL5MuG4fiGQCg+l49Ynjl9NgJMEeBONarIjERJQwege5H5vG2EMC
-         IGCKEW5V0Fei44CgLTnwAJHJOomGjKNmEez4DhLnjOiZR8UbUUpU20xrk24w8JWB/krC
-         L1yw==
+        bh=yatjSPCxEhwoast5v6pfaV1MSY3YApoRr8CTZJv1ZFM=;
+        b=Pe/xwgN+XshlstaDPMStX4gkrVOFdgAhI2/0qr0AnX9UUsKugiuZvwdLHyrehihkfX
+         x6ujJWl4uFgRrVFFv7RRNIEh2Ae+qEjX1FgGIXk4VX4t0z9Jb3rfmM6lgUqM259n06zb
+         syLysvxCZzPM+I6zxBIU1cR3bN4zzO9X9SMfaLNGN4YaIa+FiRM30eU25cieJ6fvEPtX
+         7yi+8961By0VcQGqpZJuIUvyKPB3A09rydutQkCICSTEOV8rvvo8gT31XVMVT8IAcn9Y
+         zMW+APJwwl8OwZNWiYVYW0kAIZz84Fpfu6O7Fd0K4XycKDJbZuY+iASWYfB45YbkRRGn
+         mz0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721936563; x=1722541363;
+        d=1e100.net; s=20230601; t=1721937187; x=1722541987;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4JqtTvVFp0BnLiN7tLJLe0UGmp5oVTE40fFINTIQjJE=;
-        b=i66UPwY3swpYpHu9vclKBN6eNtDD4tG+L3LHtK0rEOdJoeyTSrKCLlnq7A17kx/soF
-         FpskdvlVi6O4hUPLqZIrTtRWUoAjwiSxqoVFvoW1ITfXN5Ku7AP2mBjHyFw60J4RCGRO
-         29nCo3qtTBmfbrIZkAhpHyD11rqdRDftMIobtKhbHMd/1gsTUC/vO/3wr/yLjP+1GOhC
-         qLWZ4ot390MK7gq6EhfCNl/Nmq4+jdrjywyyPEJ7yphbCPtvaWEA7hYulBFdnZkCn/Wp
-         I+ky2Ut9eGGyyr13fTuyNkMRQDtLOJb9rH7xM6Drs/g+lCspNhxIMqhEcn35E0DA/R0T
-         7Rpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbQo7MALKQt5NBb3009eiZ3hVV+ER9Utj2uCduP5tuDdpkoCFgpQiM0A/NtCD2w+SRFsyAuCZNKDLFhW3MClNryoVV0703rhJRJWk0sTYl6tie
-X-Gm-Message-State: AOJu0Yzx6Vd4EXrpnCwYPmlc1kGMH1WL6haVMb8JfRe4+fJQEYhDCyf7
-	ljGaHahIPPxE+INXf0oOY/hOW6faWCrrlmOZx8X1Xp3gNeU09nQSavQt84IVMeQ=
-X-Google-Smtp-Source: AGHT+IF3L9OFHSP0BzpVzKX25iSS/PLDPOb+0Psfi7MI8yG/PTzIG+UKwUnt7XveVIq+9zsOZ0YvPQ==
-X-Received: by 2002:a17:907:6ea0:b0:a7d:2391:6037 with SMTP id a640c23a62f3a-a7d23916250mr166564366b.41.1721936562604;
-        Thu, 25 Jul 2024 12:42:42 -0700 (PDT)
+        bh=yatjSPCxEhwoast5v6pfaV1MSY3YApoRr8CTZJv1ZFM=;
+        b=iDHTan7V5pQ2AC9ttxuUQcJfdXUr6hYUGTM8VZ6rTeHoC8xMFwNFJfl2eQ+o0MDUwN
+         EMJh1Vz1jluzfFv67QafszPaKF2oO7GAiNEGB0eGDMSU1UcZGGS7wYVJWHpLCL85fJHP
+         hBs9rsM0qvLou/DONsHNxKUCSkJHc7a2woUO7T/hX93vXb3DQVTUXNQhwEw03J/bEt18
+         DW0Mw/w/s2H5hgQ4Si6pVMQH9A9LHiADduHv0+s0YW/7AvY+t+JoYWtndkUsSZwz5Cdc
+         XwIhM7ktnKBdA68pyjhhPvBeBQzxbBxM5riYw/gX5/8uap6XUtjdhgUA8BDfLqrzS3vW
+         zmtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQrOF6barrfhaUjsI62+F7WTUXoMsrnXu1jh9LQ7KGuY3w3z3rYjFMqo7vxF+PyydbbGtIF56YWr5xRXHp/Nr29RDOS7LP7al16Zj0jYmZJVVD
+X-Gm-Message-State: AOJu0YyYvfeEk3QkZMHsWqdS3Sdmf735LqYG+ghksPDalPqOnrvxBOPp
+	1JKKeUeEtSveBDSwR3qq5Sbwr+hNJcvx9cuaBfUznqVpliviFYbp++5w4yN+pks=
+X-Google-Smtp-Source: AGHT+IFs3lsnbIAhS4feK8PTtWLYT9H0xjTGQ5V1Cz9O6ywu3vLst4rAEJ0budxAVRrhMcoSy/Yzqw==
+X-Received: by 2002:a05:6402:2684:b0:57d:3df:f881 with SMTP id 4fb4d7f45d1cf-5ac6203a217mr3720133a12.3.1721937187016;
+        Thu, 25 Jul 2024 12:53:07 -0700 (PDT)
 Received: from ?IPV6:2003:f6:af0d:f500:3285:7112:e461:c95c? (p200300f6af0df50032857112e461c95c.dip0.t-ipconnect.de. [2003:f6:af0d:f500:3285:7112:e461:c95c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad414d7sm101512566b.110.2024.07.25.12.42.41
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ac63b5a7absm1111914a12.54.2024.07.25.12.53.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jul 2024 12:42:42 -0700 (PDT)
-Message-ID: <0d1a8c46-43a7-42d6-bcbf-647a5a68c3c5@grsecurity.net>
-Date: Thu, 25 Jul 2024 21:42:41 +0200
+        Thu, 25 Jul 2024 12:53:06 -0700 (PDT)
+Message-ID: <b8d5c42d-160d-47a9-81e8-289b49606c9d@grsecurity.net>
+Date: Thu, 25 Jul 2024 21:53:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -125,54 +125,6 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 25.07.24 21:05, Steven Rostedt wrote:
-> On Thu, 25 Jul 2024 20:12:33 +0200
-> Mathias Krause <minipli@grsecurity.net> wrote:
->>>> @@ -973,6 +975,11 @@ size_t copy_nofault(void *addr, size_t bytes, struct iov_iter *i)
->>>>  static struct list_head *user_event_get_fields(struct trace_event_call *call)
->>>>  {
->>>>  	struct user_event *user = (struct user_event *)call->data;  
->>
->> Dereferencing a potentially free'd object, so 'user' is now "random" data.
-> 
-> This is the callback function of user->call.get_fields.
-> 
-> That is, we have:
-> 
-> 	user->call.get_fields = user_event_get_fields;
-> 
-> And the f_start() code eventually calls trace_get_fields() that has (from a
-> previous email in this thread).
-> 
->     trace_get_fields(struct trace_event_call *event_call)
->     {
-> 	if (!event_call->class->get_fields)
->         	return &event_call->class->fields;
->         return event_call->class->get_fields(event_call);
->     }
-
-Right. But the point is, that 'event_call' is really some '&user->call'.
-With 'user' being free'd memory, what gives? Dereferencing 'event_call'
-is UB, so this function is doomed to fail because it cannot know if its
-only argument points to still valid memory or not. And that's the core
-issue -- calling that function for an object that's long gone -- the
-missing refcounting I hinted at in my first Email.
-
-> 
-> Where it calls the ->class->get_fields(event_call);
-> 
-> that calls this function. By setting:
-> 
-> 	user->call.get_fields = NULL;
-> 
-> this will never get called and no random data will be accessed.
-
-As 'user' is free'd or soon-to-be-free'd memory, that's a non-starter.
-
-> 
-> That said, I was talking with Beau, we concluded that this shouldn't be the
-> responsibility of the user of event call, and should be cleaned up by the
-> event system.
-> 
 > Here's the proper fix:
 > 
 > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
@@ -187,14 +139,17 @@ As 'user' is free'd or soon-to-be-free'd memory, that's a non-starter.
 >  	event_remove(call);
 >  	trace_destroy_fields(call);
 > +	call->get_fields = NULL;
+
+That should be:
++       call->class->get_fields = NULL;
+
 >  	free_event_filter(call->filter);
 >  	call->filter = NULL;
 >  }
 > 
 > Can you try it out?
 
-I can try but I don't think that's the proper fix for above reasons, I'm
-sorry.
+Just tried, dies the same way, as expected.
 
 Thanks,
 Mathias
