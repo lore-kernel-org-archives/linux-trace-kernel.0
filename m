@@ -1,49 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AF9131E38;
-	Thu, 25 Jul 2024 23:06:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10442628;
+	Fri, 26 Jul 2024 00:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721948773; cv=none; b=FvbJd+b9Wq/ZgERYAwNNJwBibggn/Km/CAe0ULB3tSKa0aReWx5rDInD7i6rxZN2TqIuSCGEjov3WhZtn6LBwP/i7Mq2/hra8jbWb7AYlNESpc1P3sJScC6vbtwslq7AxOlEq5R+uegfQExJabAT/yQogxPWP91wgJkD5/V3cfU=
+	t=1721952899; cv=none; b=BRPhtu+vlMeHoXkoCin1nXoNmBNjnECPTNjpl3o9tlQkUP95/Gd9V/N/SbVtigfNVNk8HjMArzusUVSyPdQPA4e425ZBEDPvz7Nz7Fb4RFXywbkqx8QICyDGDGwXx/EE5tWTSP8p3oXDYStY1zqBpGZaQJVZsTwYA7sbv5QVyzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721948773; c=relaxed/simple;
-	bh=GQ44ueZPDL1u8vh1JS5SlJF8AZnKpW0TAjJWT8PZGhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=etPIgjam3BtAHKk+ahq5knD1Abh1g1NnzD3fpBkYg03pMs+cziW5oZ93OUQHyCZaqQKqFOMcKEhPSinY0n9WLdJNH4ioONebdLw3CZUaJG5U45f2euFzg3Iznk9vaZJqZlESPix6fsnXHs9dj5gOFQwsWYOhf/aGp5L0PhSekRo=
+	s=arc-20240116; t=1721952899; c=relaxed/simple;
+	bh=ULsy+5juy5A2H2W0D+6nkjJ8aD8NK569vF3qGn+6+oU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oc077u+SVA7YMrYslIkODLDCN+DSiDPZH04J2gTvly4ErJMusprLvpJ9BTnheKNr7AtH6ACM6Morq1BroWvqQyUrjMM0lR8s56m6vliA5qdL2mD7aLkRcK9hpwJSv9pZ2D9Zkijcw6LW1uasZQoSixH7hRvFgVDE50fttw98pFs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF851C116B1;
-	Thu, 25 Jul 2024 23:06:11 +0000 (UTC)
-Date: Thu, 25 Jul 2024 19:06:32 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B22C116B1;
+	Fri, 26 Jul 2024 00:14:56 +0000 (UTC)
+Date: Thu, 25 Jul 2024 20:15:17 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathias Krause <minipli@grsecurity.net>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?=
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Mathias Krause <minipli@grsecurity.net>, Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?=
  <digirigawa@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Al
- Viro <viro@zeniv.linux.org.uk>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info, Dan Carpenter
- <dan.carpenter@linaro.org>, Vasavi Sirnapalli
- <vasavi.sirnapalli@broadcom.com>, Alexey Makhalov
- <alexey.makhalov@broadcom.com>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Beau Belgrave <beaub@linux.microsoft.com>
-Subject: Re: tracing: user events UAF crash report
-Message-ID: <20240725190632.2755cb70@gandalf.local.home>
-In-Reply-To: <a7d66736-80d3-4f3d-9cca-ec46e019b4cb@grsecurity.net>
-References: <20240719204701.1605950-1-minipli@grsecurity.net>
-	<CAD2QZ9bDcQ46jOAc_Hxy6sG5-N5RPxw4zPuLK6R+M_GhxZR+=g@mail.gmail.com>
-	<5083301c-6dc9-45c9-8106-da683ac6bfbb@grsecurity.net>
-	<CAD2QZ9ZxZ+mjfju2JMw3fPATNNWkqT1p97QxXgeGo54AFzQ-Cw@mail.gmail.com>
-	<CAD2QZ9bTrQ1p3zTZOXe6Gk4Xq8kjYSziAYAdbTrvRSZzAGPY9A@mail.gmail.com>
-	<CAD2QZ9YAzq3jq8CyAcoG9YuMD9XWHbk3jKxAmszuSkJ3mtGoGw@mail.gmail.com>
-	<20240725131021.788374d0@gandalf.local.home>
-	<20240725131632.64cab267@gandalf.local.home>
-	<cff51d4b-80eb-4587-b4ad-bfe7d7361b19@grsecurity.net>
-	<20240725150517.3184e078@gandalf.local.home>
-	<0d1a8c46-43a7-42d6-bcbf-647a5a68c3c5@grsecurity.net>
-	<20240725161519.35fd3bd6@gandalf.local.home>
-	<1b1b09fa-0064-429c-9f78-385119c5e691@grsecurity.net>
-	<20240725171459.598d9500@gandalf.local.home>
-	<a7d66736-80d3-4f3d-9cca-ec46e019b4cb@grsecurity.net>
+ Viro <viro@zeniv.linux.org.uk>, regressions@leemhuis.info, Dan Carpenter
+ <dan.carpenter@linaro.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Florian Fainelli  <florian.fainelli@broadcom.com>, Alexey Makhalov 
+ <alexey.makhalov@broadcom.com>, Vasavi Sirnapalli 
+ <vasavi.sirnapalli@broadcom.com>
+Subject: [PATCH] tracing: Have format file honor EVENT_FILE_FL_FREED
+Message-ID: <20240725201517.3c52e4b0@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,61 +38,64 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jul 2024 23:32:30 +0200
-Mathias Krause <minipli@grsecurity.net> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> That was for a single run of
-> tools/testing/selftests/user_events/ftrace_test with the read loop of
-> /sys/kernel/tracing/events/user_events/__test_event/format in a
-> different shell.
-> 
-> > 
-> > destroy_user_event() which is under event_mutex calls
-> > user_event_set_call_visible() with false, that will then call:
-> > 
-> > trace_remove_event_call() -> probe_remove_event_call() ->
-> >  __trace_remove_event_call() -> event_remove() ->
-> >  remove_event_from_tracers()
-> > 
-> > Where remove_event_from_tracers() loops over all the instances and will set
-> > each of the file pointers flags associated to the event: EVENT_FILE_FL_FREED
-> > 
-> > Then it returns back to destroy_user_event() that would free the event.
-> > 
-> > The f_start() that was in your crash, with the new patch, should take the
-> > event_mutex before referencing the event that was freed. And with that flag
-> > being set, it should exit out.  
-> 
-> Looking at the very first report:
-> 
-> [   76.306946] BUG: KASAN: slab-use-after-free in f_start+0x36e/0x3d0
-> 
-> That's what faddr2line gives me:
-> 
-> f_start+0x36e/0x3d0:
-> f_start at kernel/trace/trace_events.c:1637 (discriminator 1)
-> 
-> Which is:
-> 1635     mutex_lock(&event_mutex);
-> 1636     file = event_file_data(m->private);
-> 1637     if (!file || (file->flags & EVENT_FILE_FL_FREED))
-> 1638         return ERR_PTR(-ENODEV);
+When eventfs was introduced, special care had to be done to coordinate the
+freeing of the file meta data with the files that are exposed to user
+space. The file meta data would have a ref count that is set when the file
+is created and would be decremented and freed after the last user that
+opened the file closed it. When the file meta data was to be freed, it
+would set a flag (EVENT_FILE_FL_FREED) to denote that the file is freed,
+and any new references made (like new opens or reads) would fail as it is
+marked freed. This allowed other meta data to be freed after this flag was
+set (under the event_mutex).
 
-BAH! I finally figured it out.
+All the files that were dynamically created in the events directory had a
+pointer to the file meta data and would call event_release() when the last
+reference to the user space file was closed. This would be the time that it
+is safe to free the file meta data.
 
-I was able to reproduce it and this does stop the UAF from happening.
+A short cut was made for the "format" file. It's i_private would point to
+the "call" entry directly and not point to the file's meta data. This is
+because all format files are the same for the same "call", so it was
+thought there was no reason to differentiate them.  The other files
+maintain state (like the "enable", "trigger", etc). But this meant if the
+file were to disappear, the "format" file would be unaware of it.
 
-The issue was, as a short cut, I had the "format" file's i_private point to
-the "call" entry directly, and not go via the "file". This is because the
-all format files are the same for the same "call", so no reason to
-differentiate them.  The other files maintain state (like the "enable",
-"trigger", etc). But this means if the file were to disappear, the "format"
-file would be unaware of it.
+This fixes two bugs in the same code. One is a race that could be trigger
+via the user_events test (that would create dynamic events and free them),
+and running a loop that would read the user_events format files:
 
-This should fix it for you. It fixed it for me.
+In one console run:
 
--- Steve
+ # cd tools/testing/selftests/user_events
+ # while true; do ./ftrace_test; done
 
+And in another console run:
+
+ # cd /sys/kernel/tracing/
+ # while true; do cat events/user_events/__test_event/format; done 2>/dev/null
+
+With KASAN memory checking, it would trigger a use-after-free bug. This was
+because the format file was not checking the file's meta data flag
+"EVENT_FILE_FL_FREED", so it would access the event that the file meta data
+pointed to after it was freed.
+
+The second bug is that the dynamic "format" file also registered a callback
+to decrement the meta data, but the "data" pointer passed to the callback
+was the event itself. Not the meta data to free. This would either cause a
+memory leak (the meta data never was freed) or a crash as it could have
+incorrectly freed the event itself.
+
+Link: https://lore.kernel.org/all/20240719204701.1605950-1-minipli@grsecurity.net/
+
+Cc: stable@vger.kernel.org
+Reported-by: Mathias Krause <minipli@grsecurity.net>
+Fixes: b63db58e2fa5d ("eventfs/tracing: Add callback for release of an eventfs_inode")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
 index 6ef29eba90ce..852643d957de 100644
