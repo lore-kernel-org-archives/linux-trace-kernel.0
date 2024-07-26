@@ -1,60 +1,60 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BB1176AB6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jul 2024 08:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6411149C62
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jul 2024 10:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721982310; cv=none; b=jjPKyP/kTYXmNU73t7mpcsLyHlDAInBrps9f3MmYAfsgri/vmvi0UlQFTQjoonLIknyYNm84Udv5zcnMhEFNU/8P8Lxr/gkMK6EgOBKTlWCjYJzbBwi7vAfX5Z2ar6omtHflbN/Urz/kx8cU/td3Vy2TQznsi9xqtwPMdnr4vF4=
+	t=1721988982; cv=none; b=B0jkt+KtHzcQT2eTO1OIgsoOCchdQk1WJNjKfpSLxwNvV5obQLCqT74jGy6uLiAYl8acQzYwThldQ1FXrtj6ccn1Bjb81flOh5/lHopjizFi6fnrpfX1feRyNZIHpQAj8LtgWa6AwhOikXgOcb9C9uJVrJ1gh/6wFgt8eBpYBTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721982310; c=relaxed/simple;
-	bh=jbjIlEsz/rUHNNmvK3K3tBZC2zL1xHqph3zcFTj8ugs=;
+	s=arc-20240116; t=1721988982; c=relaxed/simple;
+	bh=S2Cw4wOqKp7rlOo/3FdPX92/BV8wem10EFtuaXR9M4s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s+yfN6rwNCuraeb/ciJ5TTKpWmy7ABn/0wvPrVxrmdtNgZ6vpjHgTnseDpmjazAarGuqZL+0Tm+Oy9luJOvHMzTRyzCvD2fWpWw0R2dInuAKvKrF+2zgmMSpiEqBFm4br8jqip91bLi8mKAvl13c7k8rQoetCFxPCYSxrIl+oyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=RXWvlyzu; arc=none smtp.client-ip=209.85.218.53
+	 In-Reply-To:Content-Type; b=WQ4H8wUr17KqfujRxxM5pte0asUqJ4zzhzhw8Bde3ylOOn+dAQKgw6zkCr2b8sOx2a7vsecJORzvDW+pyrwOl2L4bKfBs9TYaRAbxa9q74kscJ6Mofxg7VP2C/e1YZ04uKw6V/UwRdFzMYVQNgdLrlirvPrncC3J5lxALGOl4/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=IdsSbbfS; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensrcsec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="RXWvlyzu"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a7ad02501c3so160744366b.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jul 2024 01:25:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="IdsSbbfS"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2eecd2c6432so16036021fa.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jul 2024 03:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=grsecurity.net; s=grsec; t=1721982307; x=1722587107; darn=vger.kernel.org;
+        d=grsecurity.net; s=grsec; t=1721988978; x=1722593778; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HaNgKcqQ131GMelXGkTt/N9gIuFIqTNTFxN3e5+3Ods=;
-        b=RXWvlyzu/TgFPc1QIKy7lBfTvy0G5VIC8l5KV6AFhp/kDgCsOwNsrgZVFjFlRUwyKz
-         vKEGlsQ04r5S4ANQtl6dzBe6bIzSjXvYeK6j8zGUD0GiHCXO3uzX80xnHUQi1Ya3aIT4
-         xjGpRbfMgIr87Zd0Baue9RrrFNdaCzT7lkYMaMmLw+sXLGND7LcBi7ByhBbQ7noeEc/G
-         4VozIXEtx0sHIhwIOfmhvH5fjOMW+mxy6hAuD47sV7bwuCAOpBBGCXlrni7f1xwQzAnp
-         9ygS7qc3rpZLuzo40eStw4/zdt7jmV/Kv8NLP942pIO9INUX925SG6O9okz6yJFescHh
-         Wukg==
+        bh=WNNs2x+PGb5CySsof7Q5TyyDOU7D7ycw4aCjdYZo8dU=;
+        b=IdsSbbfSnU+nOfDYlpa1YaiU5sM5tAAn/MhzXbGteoQxQYkUvgq7bvFEyvoXAoI1qW
+         VtMrczbFJtPqyFKxRcAhzeDuVtFwQ3UfL1vjok8Vxam7wLrd6N48C2adCS9ygMqaX/ad
+         QOEYDdmfSrlXFyITVslfcoWgkHN8rYscLH5XESJ9o6qS+pPAw7KCDbAkRIS45xqQRwgq
+         dMZGPTUzc+0+pBiY+2iC8baVY4UXSVUowQ1G69ppezLSCbTQ4xfl84FvXUXQNtaeJ/qv
+         S/nRDdIQkovJCjtuQCJJLzsFn8N8XfxtnvQeaaKVt5a1Y0TsJ3y7nTBgNTCeEdpALIO9
+         7U8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721982307; x=1722587107;
+        d=1e100.net; s=20230601; t=1721988978; x=1722593778;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HaNgKcqQ131GMelXGkTt/N9gIuFIqTNTFxN3e5+3Ods=;
-        b=S9YGXpSkijS23gySIzlMADOeA66Ku6k+iNr99H2t1Gx7JPbW5ebQdC89KWhtmG+x6t
-         Es1s14/Y29xDgP+OeWFf1imcZ8A8fxjaj71TyJxELSfhpRCxDnvakLHyKg7uriYmbYJu
-         JCOnnXgqqrv1gMN8jZ3jaAhR5IvPckxL6a8xg+dcNHPMryxCyidoF6uTaadimNbDaEmc
-         eMP11o8b15YKfJ+w+u8rvSW8anbVkOxKgAta1qS/KKxtAmyjaWo32Mq+slqzBaj2ck/A
-         HQKqAyUzjaX5FfKgXnagbJWvFbWrl9WPcYGuW08/ZSYEYdxbLAXwhDEujEdzV5hPL/k7
-         jErA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFaTv3kVJCfq+17groEfG2B6+FBO73Ey08Mq054jK3ITlLjcN/iTpepse5jJx/T3qeIlPmbAKY5dJMA7blagj7QaDNjOZVrttljut/8snTdjuq
-X-Gm-Message-State: AOJu0YxmKlWqUsxUhaWOuxdM4V+bNvJJwc1Dt3D/rtnpDrgYDLu5oyJi
-	89zrVK7IUEucbx0jNFEYAd+a//d8a+DEu4b6nB9u+5A9VvN8aOUxvBkhm/n7JVI=
-X-Google-Smtp-Source: AGHT+IFD5ZWCc4dCfBtA9ZCYaVf+brFxoknqOvdwuFJtVkY3bhxwenyjYOSPAWlDJgICSvm+vFoTug==
-X-Received: by 2002:a17:907:7244:b0:a7a:a2b7:93ff with SMTP id a640c23a62f3a-a7acb933074mr341973066b.57.1721982307120;
-        Fri, 26 Jul 2024 01:25:07 -0700 (PDT)
+        bh=WNNs2x+PGb5CySsof7Q5TyyDOU7D7ycw4aCjdYZo8dU=;
+        b=fmIwnj+zPBalV0kI7FwrqhbQfHCCyG8nTFeDNWr8h4XHNPopirkHp6cq6jWRKQUZ4/
+         n3R5VrIzDmHFwy7p9DbjeC9oo774eij1hmVKpolyxMTBUARIbMhWQl2C2no3xVLkGLVw
+         ETDxpNL2TM4YkzI7+iUWaLySO5HrH2Z1kZJHcYth9mOJAiQlDB3TOuaJeI/rIBbSOORt
+         xigGpjd9eN2cnLkDAwvKvQgraT+Mdo5S4Scafmf24v5lnIKw4Zawgf2/7bb1toq6itI5
+         ndurgZwQTy28p953cD3HMzp/vY6tO4akHVElBiCRMiXbO7cOM9dQ3hfZ6TzO07JllQON
+         /3Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2E6uE/uAzltFQhXfwnAhhlU57ByK0skrckUWPClME1vaVjOS31tYzr3EGrRJD70kPVx0PYMINDkoWdq+kfkJ35cU2nq+ZKXuXdPxDxeZQ5qHM
+X-Gm-Message-State: AOJu0YzB9ubow8qK3jW5lyM6WrG1O4uRXjz0v3YyXs/Wih2NvqB86j8C
+	Risg1M/svzXn9ws0UJ45jdrylDTev/mt9ELcJKxGYFrgWHCcDixSEGFt0A+qPTg=
+X-Google-Smtp-Source: AGHT+IEyY6IvDlyOtYgHD+CHfInBPlkpTAZJi1Iry+kFQDhDX3pe+WEfSrOXAjIAvLh0rrwdw/mHgQ==
+X-Received: by 2002:a2e:b6d0:0:b0:2ef:2c3c:512a with SMTP id 38308e7fff4ca-2f03dbc65fdmr37557921fa.42.1721988978217;
+        Fri, 26 Jul 2024 03:16:18 -0700 (PDT)
 Received: from ?IPV6:2003:f6:af24:a900:7e45:2c14:7bcc:f1b? (p200300f6af24a9007e452c147bcc0f1b.dip0.t-ipconnect.de. [2003:f6:af24:a900:7e45:2c14:7bcc:f1b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acab4de12sm148075666b.51.2024.07.26.01.25.06
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acab22ffcsm160735366b.12.2024.07.26.03.16.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jul 2024 01:25:06 -0700 (PDT)
-Message-ID: <920258cb-d2d5-4065-874a-df5a36c6a563@grsecurity.net>
-Date: Fri, 26 Jul 2024 10:25:05 +0200
+        Fri, 26 Jul 2024 03:16:17 -0700 (PDT)
+Message-ID: <0b80cb48-6604-44ec-bfa9-f5ec1fc5d7d7@grsecurity.net>
+Date: Fri, 26 Jul 2024 12:16:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,34 +62,21 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: tracing: user events UAF crash report
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?=
+Subject: Re: [PATCH] tracing: Have format file honor EVENT_FILE_FL_FREED
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?=
  <digirigawa@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>,
- Al Viro <viro@zeniv.linux.org.uk>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ Al Viro <viro@zeniv.linux.org.uk>, regressions@leemhuis.info,
  Dan Carpenter <dan.carpenter@linaro.org>,
- Vasavi Sirnapalli <vasavi.sirnapalli@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
  Florian Fainelli <florian.fainelli@broadcom.com>,
- Beau Belgrave <beaub@linux.microsoft.com>
-References: <20240719204701.1605950-1-minipli@grsecurity.net>
- <CAD2QZ9bDcQ46jOAc_Hxy6sG5-N5RPxw4zPuLK6R+M_GhxZR+=g@mail.gmail.com>
- <5083301c-6dc9-45c9-8106-da683ac6bfbb@grsecurity.net>
- <CAD2QZ9ZxZ+mjfju2JMw3fPATNNWkqT1p97QxXgeGo54AFzQ-Cw@mail.gmail.com>
- <CAD2QZ9bTrQ1p3zTZOXe6Gk4Xq8kjYSziAYAdbTrvRSZzAGPY9A@mail.gmail.com>
- <CAD2QZ9YAzq3jq8CyAcoG9YuMD9XWHbk3jKxAmszuSkJ3mtGoGw@mail.gmail.com>
- <20240725131021.788374d0@gandalf.local.home>
- <20240725131632.64cab267@gandalf.local.home>
- <cff51d4b-80eb-4587-b4ad-bfe7d7361b19@grsecurity.net>
- <20240725150517.3184e078@gandalf.local.home>
- <0d1a8c46-43a7-42d6-bcbf-647a5a68c3c5@grsecurity.net>
- <20240725161519.35fd3bd6@gandalf.local.home>
- <1b1b09fa-0064-429c-9f78-385119c5e691@grsecurity.net>
- <20240725171459.598d9500@gandalf.local.home>
- <a7d66736-80d3-4f3d-9cca-ec46e019b4cb@grsecurity.net>
- <20240725190632.2755cb70@gandalf.local.home>
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Vasavi Sirnapalli <vasavi.sirnapalli@broadcom.com>
+References: <20240725201517.3c52e4b0@gandalf.local.home>
 Content-Language: en-US, de-DE
 From: Mathias Krause <minipli@grsecurity.net>
 Autocrypt: addr=minipli@grsecurity.net; keydata=
@@ -126,71 +113,91 @@ Autocrypt: addr=minipli@grsecurity.net; keydata=
  zz3lozuC5nsm1nIbY62mR25Kikx7N6uL7TAZQWazURzVRe1xq2MqcF+18JTDdjzn53PEbg7L
  VeNDGqQ5lJk+rATW2VAy8zasP2/aqCPmSjlCogC6vgCot9mj+lmMkRUxspxCHDEms13K41tH
  RzDVkdgPJkL/NFTKZHo5foFXNi89kA==
-In-Reply-To: <20240725190632.2755cb70@gandalf.local.home>
+In-Reply-To: <20240725201517.3c52e4b0@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26.07.24 01:06, Steven Rostedt wrote:
-> On Thu, 25 Jul 2024 23:32:30 +0200
-> Mathias Krause <minipli@grsecurity.net> wrote:
+On 26.07.24 02:15, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
->> That was for a single run of
->> tools/testing/selftests/user_events/ftrace_test with the read loop of
->> /sys/kernel/tracing/events/user_events/__test_event/format in a
->> different shell.
->>
->>>
->>> destroy_user_event() which is under event_mutex calls
->>> user_event_set_call_visible() with false, that will then call:
->>>
->>> trace_remove_event_call() -> probe_remove_event_call() ->
->>>  __trace_remove_event_call() -> event_remove() ->
->>>  remove_event_from_tracers()
->>>
->>> Where remove_event_from_tracers() loops over all the instances and will set
->>> each of the file pointers flags associated to the event: EVENT_FILE_FL_FREED
->>>
->>> Then it returns back to destroy_user_event() that would free the event.
->>>
->>> The f_start() that was in your crash, with the new patch, should take the
->>> event_mutex before referencing the event that was freed. And with that flag
->>> being set, it should exit out.  
->>
->> Looking at the very first report:
->>
->> [   76.306946] BUG: KASAN: slab-use-after-free in f_start+0x36e/0x3d0
->>
->> That's what faddr2line gives me:
->>
->> f_start+0x36e/0x3d0:
->> f_start at kernel/trace/trace_events.c:1637 (discriminator 1)
->>
->> Which is:
->> 1635     mutex_lock(&event_mutex);
->> 1636     file = event_file_data(m->private);
->> 1637     if (!file || (file->flags & EVENT_FILE_FL_FREED))
->> 1638         return ERR_PTR(-ENODEV);
+> When eventfs was introduced, special care had to be done to coordinate the
+> freeing of the file meta data with the files that are exposed to user
+> space. The file meta data would have a ref count that is set when the file
+> is created and would be decremented and freed after the last user that
+> opened the file closed it. When the file meta data was to be freed, it
+> would set a flag (EVENT_FILE_FL_FREED) to denote that the file is freed,
+> and any new references made (like new opens or reads) would fail as it is
+> marked freed. This allowed other meta data to be freed after this flag was
+> set (under the event_mutex).
 > 
-> BAH! I finally figured it out.
+> All the files that were dynamically created in the events directory had a
+> pointer to the file meta data and would call event_release() when the last
+> reference to the user space file was closed. This would be the time that it
+> is safe to free the file meta data.
 > 
-> I was able to reproduce it and this does stop the UAF from happening.
+> A short cut was made for the "format" file. It's i_private would point to
+> the "call" entry directly and not point to the file's meta data. This is
+> because all format files are the same for the same "call", so it was
+> thought there was no reason to differentiate them.  The other files
+> maintain state (like the "enable", "trigger", etc). But this meant if the
+> file were to disappear, the "format" file would be unaware of it.
 > 
-> The issue was, as a short cut, I had the "format" file's i_private point to
-> the "call" entry directly, and not go via the "file". This is because the
-> all format files are the same for the same "call", so no reason to
-> differentiate them.  The other files maintain state (like the "enable",
-> "trigger", etc). But this means if the file were to disappear, the "format"
-> file would be unaware of it.
+> This fixes two bugs in the same code. One is a race that could be trigger
+> via the user_events test (that would create dynamic events and free them),
+> and running a loop that would read the user_events format files:
 > 
-> This should fix it for you. It fixed it for me.
+> In one console run:
+> 
+>  # cd tools/testing/selftests/user_events
+>  # while true; do ./ftrace_test; done
+> 
+> And in another console run:
+> 
+>  # cd /sys/kernel/tracing/
+>  # while true; do cat events/user_events/__test_event/format; done 2>/dev/null
+> 
+> With KASAN memory checking, it would trigger a use-after-free bug. This was
 
-Heureka, it did!
+The UAF bug is there even without KASAN. It's just that KASAN makes it
+much easier to detect and catch early.
 
-Thanks, Steve!
+> because the format file was not checking the file's meta data flag
+> "EVENT_FILE_FL_FREED", so it would access the event that the file meta data
+> pointed to after it was freed.
+> 
+> The second bug is that the dynamic "format" file also registered a callback
+> to decrement the meta data, but the "data" pointer passed to the callback
+> was the event itself. Not the meta data to free. This would either cause a
+> memory leak (the meta data never was freed) or a crash as it could have
+> incorrectly freed the event itself.
+> 
+> Link: https://lore.kernel.org/all/20240719204701.1605950-1-minipli@grsecurity.net/
+> 
+> Cc: stable@vger.kernel.org
+> Reported-by: Mathias Krause <minipli@grsecurity.net>
+> Fixes: b63db58e2fa5d ("eventfs/tracing: Add callback for release of an eventfs_inode")
 
-> 
-> -- Steve
-> 
+That fixes tag looks odd as it didn't introduce the bug. It's some late
+change to v6.9 but my bisect run showed, it's triggering as early as in
+v6.6 (commit 27152bceea1d ("eventfs: Move tracing/events to eventfs")).
+
+git blame points to 5790b1fb3d67 ("eventfs: Remove eventfs_file and just
+use eventfs_inode"), which is still too young, as it's v6.7.
+
+IMHO, this needs at least the following additional fixes tags to ensure
+all stable kernels get covered:
+
+Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use
+eventfs_inode")
+Fixes: 27152bceea1d ("eventfs: Move tracing/events to eventfs")
+
+Even if 27152bceea1d is not the real cause, just the commit making the
+bug reachable. But from looking at the history, this was always wrong?
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
 > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
 > index 6ef29eba90ce..852643d957de 100644
@@ -241,7 +248,7 @@ Thanks, Steve!
 >  	}
 >  
 
-Will ack the patch you send.
+Tested-by: Mathias Krause <minipli@grsecurity.net>
 
-Thanks again,
+Thanks,
 Mathias
