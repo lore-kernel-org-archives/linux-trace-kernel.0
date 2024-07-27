@@ -1,34 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FAD59164;
-	Sat, 27 Jul 2024 10:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ED62868D;
+	Sat, 27 Jul 2024 22:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722074606; cv=none; b=dDYu9w1ZfLMDU57R2wefjT+8HldlQ0M7s9sZVeoAnpE7Dq/iXH1HqjVArKJG8sAfD0UEUa97b0vycJGwvstFQypxDq4Ues5QPF3txUzqGfPR/ybmkoKY/Ku3wTz2s0ycV+s74brfOXrtsfFGvrFhACNhDimBp1oDDxswDcO1EAI=
+	t=1722120375; cv=none; b=KhZTPsJhP3sv7mOuxxQbosH47OwEDEoIo7q73AZfwX5XrrHTQgwuqJDxoE+EtWdqYBZTkxqPiuNy4BgGY1hAz3JdmwrCMs89DRkkSwILqS18wQO7dncjhBoeIje9EiTopY9OHGMnccqMzkKH50e9xu0NSb3QLXEuL7oQ80F1Vp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722074606; c=relaxed/simple;
-	bh=CTR8gewU45gvgKEmuXT6+SEcMEUMSca6hJ/huUAc6Qs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fdCzN8f+jnt78f2sydNoK3eN9+7FlwcVfosqwu4yG/vCfESSt+jlsLIMnL3khRcFjtZvLJ328xD5W1Hql0loN7WHqPGvAplWHA5FWISi4Pk6FrtTHZ46H3k81e3Hlo4AtIM/JoYOP4ZQ5HhRR/0P70JgYA+bjtSmesyotkQOBqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTv0zcme; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722120375; c=relaxed/simple;
+	bh=aDJjbXwnFvbp/meaBLelsG01dGldMgZcb4pOsgF+lnc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mt4P7YpeoBB9xGQIOryJsGVXOG9nzDZmlzpeW/CojJwQRWEc7Vh4Fx2mVk9r8Uu7zh93WzJROiUe/HieAvQPyvmBr/kaVTfqF3dV3+J+tTInmoNHdjjpzJESrqKjMCAaFgyGLKOfGaYO1TxkUX/t9cQmsJKu9I1Q0jjeLbdQaHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=LyTDtUhF; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=LyTDtUhF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTv0zcme"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF75C32786;
-	Sat, 27 Jul 2024 10:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722074606;
-	bh=CTR8gewU45gvgKEmuXT6+SEcMEUMSca6hJ/huUAc6Qs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=JTv0zcmeog67C7bb8VAnToMDxxvCq0h4WlJkI+swrmTCG12ND6Dgs4UXe815gke1I
-	 RM6DP7FCJaYKiiIjBey4lNdB7NAM4+JIbO5BBW6cY383pSg0nUs6YsgXffHwsoAPgt
-	 cBQW0LEgyVzrGfUF+/qmcdGehOYZZkh89VszyGA2PIpLUAiitMYuXwP524TJc957s8
-	 UGDJDJ3Ld3d0x3SM2RRIaR8Pgh+SgSaknUaaHciHNvFlQdUgz05h48XldVd7aOHoka
-	 ySHQrxcE1lG3ynnmeCDS1X9hAkWQEWESar6bChfv+qWEv8zMjg1ZERaiNjtfsiZAug
-	 cTv5JfR6Z3XvA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 27 Jul 2024 12:01:23 +0200
-Subject: [PATCH net 1/7] mptcp: sched: check both directions for backup
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="LyTDtUhF";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="LyTDtUhF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C1D3B219E3;
+	Sat, 27 Jul 2024 22:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1722120369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=b7DMp1KqPlaViwj4csucqd4HpUGMBGXA2KLNDAroxf8=;
+	b=LyTDtUhFvv1zQWB+DQ6YWVz0Q8ApsEw5Gt+8EenXfjLk5YV8vGE69zGGwb672e3AO/V56+
+	NqhaL1N4vBXeCiES4DK/0oQtqmY+fzwMGTHwVsyDzub1K9lo56e0OfmZPdIovcWLnkKOpP
+	1CNMhGPwgmZoUr7SZoe6sutGTtNI8Uc=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=LyTDtUhF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1722120369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=b7DMp1KqPlaViwj4csucqd4HpUGMBGXA2KLNDAroxf8=;
+	b=LyTDtUhFvv1zQWB+DQ6YWVz0Q8ApsEw5Gt+8EenXfjLk5YV8vGE69zGGwb672e3AO/V56+
+	NqhaL1N4vBXeCiES4DK/0oQtqmY+fzwMGTHwVsyDzub1K9lo56e0OfmZPdIovcWLnkKOpP
+	1CNMhGPwgmZoUr7SZoe6sutGTtNI8Uc=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 54751138A7;
+	Sat, 27 Jul 2024 22:46:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rxrMCLF4pWaUQQAAD6G6ig
+	(envelope-from <mpdesouza@suse.com>); Sat, 27 Jul 2024 22:46:09 +0000
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+Date: Sat, 27 Jul 2024 19:45:54 -0300
+Subject: [PATCH] Documentation: ftrace-uses: Change pt_regs to ftrace_regs
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,118 +61,113 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240727-upstream-net-20240727-mptcp-backup-signal-v1-1-f50b31604cf1@kernel.org>
-References: <20240727-upstream-net-20240727-mptcp-backup-signal-v1-0-f50b31604cf1@kernel.org>
-In-Reply-To: <20240727-upstream-net-20240727-mptcp-backup-signal-v1-0-f50b31604cf1@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
- Steven Rostedt <rostedt@goodmis.org>, 
+Message-Id: <20240727-ftrace-docs-cb-args-v1-1-e37141235c8e@suse.com>
+X-B4-Tracking: v=1; b=H4sIAKF4pWYC/x3MQQ5AMBBA0avIrE1C0eIqYlE1ZTbIjIhE3F1j+
+ Rb/P6AkTAp99oDQxcr7llDmGYTVbwshz8lgClMXzjiMp/hAOO9BMUzoZVHsbEWxsc76toRUHkK
+ R7/86jO/7AW/0c9RlAAAA
+To: Steven Rostedt <rostedt@goodmis.org>, 
  Masami Hiramatsu <mhiramat@kernel.org>, 
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3069; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=CTR8gewU45gvgKEmuXT6+SEcMEUMSca6hJ/huUAc6Qs=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmpMXljQzK46ZBbvKWMgbuUfFw/J5D3FsIfpAgv
- /dWr6A9NHyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqTF5QAKCRD2t4JPQmmg
- c131D/0VgKZjBEl/VO1L6HiKYnWh8ruH6wVt98Cvix/y+by2D3zFS8aN/iv8VtDJHNDy0onTiZA
- Iwqz7YvxKR66Q8piZMqV65/C5TW0KwSOqHgmRx0vZqb3gnf3S/ke6LD6E8tsqKgCRbroAOQrvxf
- 1BFi4ZijEuWb24FOq0hW0AdFSqO1pD4NHMa9asspvRxCFHjTNrOWOdXZLRsGrhQSQVMxMfBaD0Z
- n1sYmwYmumo3Fb90p1KyBJ/2qPyqtAP2nHCuC0nAKsHAvehwIGTV+hvCoST+zBnByWyQv3X6NT5
- 2HC4GZjAZupcIPnNZYYmsMv+YnjpkEx4U7kNqyEJAGC8apfmU6WpybTMD+24KdIHdFzF4mooAu1
- jlijtoyQo8yp0JRg1OtVwyqPpIex8m9BUnK6ZwpZDB+wq1v+DrRv8CTeeG9cAEye5T8FYnp4ZId
- DNHf9hiqVJK4ALaJiNVhNkgx6l8ybTepQL5BmyIxq78GiX351+sbHtYxypKdKHxxOsT0VCKH+rl
- bfJfJwqLK9MAr5EvHmwccR8IFxnPSlI/iDHkUMUYIgHC5XxVD9wMK4U6/dPFDB1ynEGV8+bGJOS
- pKRRQpuV3AYTGuaga+ldm6dPOLkY58PzDqQcIDLmQrKOhpP4dq0wdJwdIyGXeuMaozxBBBt/ke9
- THaO5iTZOiO56Rw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+ Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Marcos Paulo de Souza <mpdesouza@suse.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1722120367; l=2850;
+ i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
+ bh=aDJjbXwnFvbp/meaBLelsG01dGldMgZcb4pOsgF+lnc=;
+ b=SZW9yFlt2aySCPEv5CGUzHss1PAcs/4uh2iV0ysgWj//03l/d4OStuAX0G1/ZriWzk2on2xfY
+ rI1NCY4C4mcCjlurNzdQRlO0UDWPj3sx2OZkD4mVlZ8sRXtlJ0er/A5
+X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
+ pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: C1D3B219E3
+X-Spam-Score: -6.31
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-6.31 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.com:dkim];
+	DKIM_TRACE(0.00)[suse.com:+]
 
-The 'mptcp_subflow_context' structure has two items related to the
-backup flags:
+Since commit d19ad0775dcd ("ftrace: Have the callbacks receive a struct
+ftrace_regs instead of pt_regs") the callback function receives a
+ftrace_regs argument, and not a pt_regs anymore. Change the
+documentation to reflect the reality.
 
- - 'backup': the subflow has been marked as backup by the other peer
-
- - 'request_bkup': the backup flag has been set by the host
-
-Before this patch, the scheduler was only looking at the 'backup' flag.
-That can make sense in some cases, but it looks like that's not what we
-wanted for the general use, because either the path-manager was setting
-both of them when sending an MP_PRIO, or the receiver was duplicating
-the 'backup' flag in the subflow request.
-
-Note that the use of these two flags in the path-manager are going to be
-fixed in the next commits, but this change here is needed not to modify
-the behaviour.
-
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 ---
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
+ Documentation/trace/ftrace-uses.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/trace/ftrace-uses.rst b/Documentation/trace/ftrace-uses.rst
+index e198854ace79..05620714d99f 100644
+--- a/Documentation/trace/ftrace-uses.rst
++++ b/Documentation/trace/ftrace-uses.rst
+@@ -87,7 +87,7 @@ The prototype of the callback function is as follows (as of v4.14):
+ .. code-block:: c
+ 
+    void callback_func(unsigned long ip, unsigned long parent_ip,
+-                      struct ftrace_ops *op, struct pt_regs *regs);
++                      struct ftrace_ops *op, struct ftrace_regs *regs);
+ 
+ @ip
+ 	 This is the instruction pointer of the function that is being traced.
+@@ -104,7 +104,7 @@ The prototype of the callback function is as follows (as of v4.14):
+ @regs
+ 	If the FTRACE_OPS_FL_SAVE_REGS or FTRACE_OPS_FL_SAVE_REGS_IF_SUPPORTED
+ 	flags are set in the ftrace_ops structure, then this will be pointing
+-	to the pt_regs structure like it would be if an breakpoint was placed
++	to the ftrace_regs structure like it would be if an breakpoint was placed
+ 	at the start of the function where ftrace was tracing. Otherwise it
+ 	either contains garbage, or NULL.
+ 
+@@ -169,10 +169,10 @@ Some of the flags are used for internal infrastructure of ftrace, but the
+ ones that users should be aware of are the following:
+ 
+ FTRACE_OPS_FL_SAVE_REGS
+-	If the callback requires reading or modifying the pt_regs
++	If the callback requires reading or modifying the ftrace_regs
+ 	passed to the callback, then it must set this flag. Registering
+ 	a ftrace_ops with this flag set on an architecture that does not
+-	support passing of pt_regs to the callback will fail.
++	support passing of ftrace_regs to the callback will fail.
+ 
+ FTRACE_OPS_FL_SAVE_REGS_IF_SUPPORTED
+ 	Similar to SAVE_REGS but the registering of a
+@@ -199,7 +199,7 @@ FTRACE_OPS_FL_IPMODIFY
+ 	Requires FTRACE_OPS_FL_SAVE_REGS set. If the callback is to "hijack"
+ 	the traced function (have another function called instead of the
+ 	traced function), it requires setting this flag. This is what live
+-	kernel patches uses. Without this flag the pt_regs->ip can not be
++	kernel patches uses. Without this flag the ftrace_regs->ip can not be
+ 	modified.
+ 
+ 	Note, only one ftrace_ops with FTRACE_OPS_FL_IPMODIFY set may be
+
 ---
- include/trace/events/mptcp.h |  2 +-
- net/mptcp/protocol.c         | 10 ++++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+base-commit: 256abd8e550ce977b728be79a74e1729438b4948
+change-id: 20240727-ftrace-docs-cb-args-963ef5676a81
 
-diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
-index 09e72215b9f9..085b749cdd97 100644
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -34,7 +34,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
- 		struct sock *ssk;
- 
- 		__entry->active = mptcp_subflow_active(subflow);
--		__entry->backup = subflow->backup;
-+		__entry->backup = subflow->backup || subflow->request_bkup;
- 
- 		if (subflow->tcp_sock && sk_fullsock(subflow->tcp_sock))
- 			__entry->free = sk_stream_memory_free(subflow->tcp_sock);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index a26c2c840fd9..a2fc54ed68c0 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1422,13 +1422,15 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 	}
- 
- 	mptcp_for_each_subflow(msk, subflow) {
-+		bool backup = subflow->backup || subflow->request_bkup;
-+
- 		trace_mptcp_subflow_get_send(subflow);
- 		ssk =  mptcp_subflow_tcp_sock(subflow);
- 		if (!mptcp_subflow_active(subflow))
- 			continue;
- 
- 		tout = max(tout, mptcp_timeout_from_subflow(subflow));
--		nr_active += !subflow->backup;
-+		nr_active += !backup;
- 		pace = subflow->avg_pacing_rate;
- 		if (unlikely(!pace)) {
- 			/* init pacing rate from socket */
-@@ -1439,9 +1441,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
- 		}
- 
- 		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
--		if (linger_time < send_info[subflow->backup].linger_time) {
--			send_info[subflow->backup].ssk = ssk;
--			send_info[subflow->backup].linger_time = linger_time;
-+		if (linger_time < send_info[backup].linger_time) {
-+			send_info[backup].ssk = ssk;
-+			send_info[backup].linger_time = linger_time;
- 		}
- 	}
- 	__mptcp_set_timeout(sk, tout);
-
+Best regards,
 -- 
-2.45.2
+Marcos Paulo de Souza <mpdesouza@suse.com>
 
