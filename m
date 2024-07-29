@@ -1,73 +1,70 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CBC15B119
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 14:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E92D15B541
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 14:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722263709; cv=none; b=MSURVT1fna7y6Vhjhkc8NshbzPE/Zuy3nYjHhIAwiv9B/RmlKK+JMqEDUFjln2BGPn2uzzIe3wvU7UQ8HEFRq5kPklNiCASpN9A8B396DCbpKAVKYLFdD6JOGFOQaPpnvCHfREaYACPqqayulTmHklzjIR410bjJxQFkC0R37Iw=
+	t=1722263721; cv=none; b=OwqZAm2MkyO8WrzWL54+r/KNEcUiI4mQ9n/XPCVe044WzgaSDSVuK/kvs3bZlJB4qVc7U5unZCD/qFUiMk4grJjdl0oWOfBx996JupAgdmNXZGGBxmq23Vo4IYS0oRncVzjQphTsRT2Rr1420/iB67/zpLfWGCdHFuLGnWW/icI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722263709; c=relaxed/simple;
-	bh=5lbmiKqvBboL1pVsuj1bTn4xbLJ3cUxP0YgCBw+dVpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uiVpuNP45u+mvzta81UqaESGzp9kRdyHtORIWrlWmrCKKCpR0TJIkKZPyMo9YAMj4hMyq3RpnDoFoGSIyOF0UDJ5LITolrHmWENI2TI0z3LWAnobABEWKhotTFLSqOFe8jjMeO8COimoHbAgnjNF8bt4EgnlEDk0gbvMIVFK5S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Tk2HF6sn; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1722263721; c=relaxed/simple;
+	bh=suh8lj5U75UfHLAikpWSAju24qSZjPOfB+HigRwu20c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dnf/a4Rgacb13+wnVLJj+6q7iwCZMvGzZbeUc7mfcPLAR2bzay5U+gGqgXXTseEfPiIT+cRBEDsSi8fWZTrXPGWB7VaZpz8HpKyUJteCLQdhejCS+laVYlUH2mDKc8UeXzMyysE0asmPNF/0/wgnN7F4lKCm768WCv4Z9yaKipE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Q9mNZuGb; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Tk2HF6sn"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4281ca54fd3so9169325e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 07:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Q9mNZuGb"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3685b3dbcdcso1637073f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 07:35:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722263705; x=1722868505; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pf2db82vhdizcqTMN+1MBUArjDRrCG8c+iUPxc5CsU4=;
-        b=Tk2HF6snxJ2vymmzm8xZ+wlJDNDZRmPkTRaeheqYe+wh5pZeinaA/2vaSAebqMWO3a
-         8hsJ+9shnuJhhAGkUxgPc8chXH+YRAVPYoeMoWz21Bm+0MNgQNtUhU9pFFF+U1cIwBFK
-         PLAa2L47WAGvUhTaDI2puwFtOTzQ506cWQS69UPkOt+Gz4ewpzPI0YRhtRADxEoOIpDv
-         WuyzbJ4TR5JCMdOMaf4diWvUV0iT6YFJJJBFpr8fLgMAw4/CBePNDJx77diYSiHubGMs
-         tDjc7d33alSJ/u7vBQKQa5H0C/9FzMeyCfObV3v9o2fS3r9nVJO6Bx3A33mcL2K3S8uD
-         k88g==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722263718; x=1722868518; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5wvUKWDbbhCXQe3vpeoWnQvXqGR+nLQUfmDvJ2uq4cw=;
+        b=Q9mNZuGbzJeEUICCYpHFKp3DFYoPBXLfz/vQCUnACG5Ucv2DYENh9e4atVGHvW9iA9
+         UXXkW6xXr1/DbJztT5VQ7NOvywj31V0fY+oPfDuzWGySh2ZvBWEOI+XKpSg7OcVT1XKN
+         r21dA0HFTGl1bLZpXMPWrwN7iI1TyYW0/iLSV5QOcZ4sNlg4TGmLnHktBDVjsEvQK0c5
+         BIFMhDoV9ArhesIjf83AgbYTOn8Vv0xNQftH8s4+kdhtxroBZXD9ZmraK3r2uC8d7yJL
+         kwpp+VnhRWcna+ghBZdsnVAox/yOmbnK0YTljOPmBfR0VjiyRpMIJkZYcNgwLWPB3QCj
+         HoWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722263705; x=1722868505;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pf2db82vhdizcqTMN+1MBUArjDRrCG8c+iUPxc5CsU4=;
-        b=U9tTfXwxoah7zEHH7GOGEuMP6sUd7JBjEf61GSYYBCtagd1vDyRWL1FqB9IqRaEQYG
-         omAsHwOYT0T9DHWj38PpuyBtHzquiFrVhZX2yDaa/9NU4U38eaDZodi71Bj9g1UHWlHq
-         tOd0ATPI0ljVNMDvfBiTk7yCA3FHEC4/klrRMzoKcB48wNHeccwvxGTuDiOcq12EWLnk
-         F9iXnqCRv1u7pm+F6LaDSJWgh09+/LYpx9V350QKxWc/+NBEneP2odcTA2+ovyE5Izt7
-         MPmZYoEiUJGfF+fP0lKKF4Qd1f7at8lMfhM1SCwhGtnpycXvC/PZRI5WMIWbuIy2supr
-         bdug==
-X-Forwarded-Encrypted: i=1; AJvYcCWYyfqEoPZdQEv2+k1ZRxDqLRRJTOpR+1AqciyGrJMedIqZ15t1NMBm5EIiqmKZgBmnwUJkEocX1VqsPGSwLmNP7JQZKaQh2VEF6HDJMp4yebvD
-X-Gm-Message-State: AOJu0YyUinqbduWE+ueg5ug0Z0f7C3+FWCpK5w27QHdeJrVZ31CXwvDh
-	PXm03yRGfYabNHCBbJk12synXZLPmqpm/pUhXfqjOEJaJT3cPcx5vfeCO88REyI=
-X-Google-Smtp-Source: AGHT+IGt6eS97Xgca8KV0NOgFfHn5nHcp4nZrPormB0sSwBcBc31n8q1yejiOGdqCUHmIOkFibwqOw==
-X-Received: by 2002:a05:600c:4511:b0:427:abed:3602 with SMTP id 5b1f17b1804b1-42811e12d41mr57503285e9.24.1722263704828;
-        Mon, 29 Jul 2024 07:35:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722263718; x=1722868518;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5wvUKWDbbhCXQe3vpeoWnQvXqGR+nLQUfmDvJ2uq4cw=;
+        b=HEONF1lnn0AhtC0UqSAXX5f5x9VLIreV+IKQ7PWwVi2pivOBPgZV+8kRtOyNyQxdNv
+         Wrcw/vbizl2GpXK7XrcjxvviW/uwqmHFn7qGq3+dtN7Dt6c6DjXNwRCXKlkvXk840I+y
+         MUmLjzhff2SJY2R2SupAHYKV5vd5Jwi2f4iYnptnaw3OWiUveEw1Ugq4OH2Zsn8y4Vd0
+         ro4rAwyEetWU/3JKrsKr5RAi8/v1OdIEmOflgAcBudHg63PhZiCVFqO9C93U0tsa2Mso
+         oDGjApwavknfZCV3oTCON6bxorYID7IkXNmJIXiBnMvkDd/gczaPAumOUBJVNYGBl3va
+         Z+2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVgcfh/9K276qkCVhgkeDUfhQ/kaek//5Up7W9aPROyvWKRsveKxISObAh7Eaw1lzX5Kc+yrOCi5MUyTpxE+88Y5yqjPeaOrYMa7DqbvEn6RJyy
+X-Gm-Message-State: AOJu0YzhGYWlrK7he3tHJOhqcyNxR3fk033UTRd8d83XSWvo46Oh1I86
+	sFpkn5hE4huONqZuJQ4Tg24ut351AVLZtWTOgkU/eCmtyyxsfpWKd3Aw7YjGEG0=
+X-Google-Smtp-Source: AGHT+IEkgWMlUsc544E5LVvkbpdFtBtCkGuAxc3whEOFDWg38/1P2KS0HyrYffvmWz30E0pcqetJ4w==
+X-Received: by 2002:adf:cd0e:0:b0:367:8875:dd4c with SMTP id ffacd0b85a97d-36b5d0c447fmr5179528f8f.23.1722263717674;
+        Mon, 29 Jul 2024 07:35:17 -0700 (PDT)
 Received: from localhost ([2a02:8071:b783:6940:59dd:510e:47d0:643f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280a867e7esm135348575e9.27.2024.07.29.07.35.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b367c0829sm12380354f8f.17.2024.07.29.07.35.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jul 2024 07:35:04 -0700 (PDT)
+        Mon, 29 Jul 2024 07:35:17 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-pwm@vger.kernel.org
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
 	Trevor Gamblin <tgamblin@baylibre.com>
-Subject: [PATCH v3 0/8] pwm: New abstraction and userspace API
-Date: Mon, 29 Jul 2024 16:34:16 +0200
-Message-ID: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
+Subject: [PATCH v3 6/8] pwm: Add tracing for waveform callbacks
+Date: Mon, 29 Jul 2024 16:34:22 +0200
+Message-ID:  <7b9c9ee490df1df1de3bbfafd501f45c6cb2ec4c.1722261050.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
+References: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,83 +72,240 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3152; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=5lbmiKqvBboL1pVsuj1bTn4xbLJ3cUxP0YgCBw+dVpI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmp6hqpBrMchkTq7UblpQiiB/gXoWgj5QCpOMh5 UeL+gmP5SWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZqeoagAKCRCPgPtYfRL+ TlqNB/9IGnXLN9EXn6TBjOIgvmlIXGnB8Qjq58LozRpFWTT6bUlCZDNhYGIClk+Gc1Pz+lGVx7+ 4bVNReS62OkAxag/y/JjyVittMs1CR++VAuDxsMtxT7nCUVGYoXGS3AClsDjJQUgYHMv4HNaCHH NvpiitBaP2ro3UIlBLtsUrDVYSzsrK5VBtb+EKUAGC4i1BZvUV6DfJhiKLiX4THlPnxcjMlxrE/ 8AI1yyGUL+dEFeAKwhF+ezl5z5gunHggAc1DUrIO6Nw+R+8zhX/I4ZM8Lnnevce03fLD2Zdu7eB zCBFbI6JTMZCR1kU4Oz9fqKJBo2ugwZfCYLmi49CCy/9iEKu
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6305; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=suh8lj5U75UfHLAikpWSAju24qSZjPOfB+HigRwu20c=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmp6h8+2aKe76vTcEkVhxflMS6tCD98MRU23Ao+ 8oDdHvgR6yJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZqeofAAKCRCPgPtYfRL+ TsWtCACKvnjYofCuiycqmy9MFrD8NFZ6FwGaNaLQwc0rKaf/+ivXoME+L3JwVoNAjLagosyu3+P 87U5esZJdBxp5bx4VkixuySJ4U8Fg1JYtVAuU/Cei/l7KZzXp2BkhBCBeIG1cHAD03FxHQI9u0v 4A0yAyB+1qfQdCn2aH0iHli4deXMzkMcIMB6t8SFwaOIB1I+qN5xEhLWU/HDdF20WG7mcX113Tj IISZ224m7dZaZ/6zZSJA6tqnATtyzLu/I7O5hKYp1v7V+z5PZ+dbfolqX4eCDMlfqWfAqCquCxC tg5vUYJ7TT/xjmcZsI7P1WMpB3JwmS0H2zrB2ejCBXrzPFYQ
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Hello,
+This adds trace events for the recently introduced waveform callbacks.
+With the introduction of some helper macros consistency among the
+different events is ensured.
 
-here comes v3 of the series to add support for duty offset in PWM
-waveforms. For a single PWM output there is no gain, but if you have a
-chip with two (or more) outputs and both operate with the same period,
-you can generate an output like:
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/core.c         |  24 +++++--
+ include/trace/events/pwm.h | 134 ++++++++++++++++++++++++++++++++++---
+ 2 files changed, 146 insertions(+), 12 deletions(-)
 
-
-               ______         ______         ______         ______
-   PWM #0  ___/      \_______/      \_______/      \_______/      \_______
-                 __             __             __             __    
-   PWM #1  _____/  \___________/  \___________/  \___________/  \_________
-              ^              ^              ^              ^
-
-Changes since v2, which is available from
-https://lore.kernel.org/linux-pwm/cover.1721040875.git.u.kleine-koenig@baylibre.com
-include:
-
- - Degrade a dev_alert() to dev_warn() on feedback by David Lechner
-
- - Improvement of various comments (partly in reply to David Lechner)
-
- - Add _ns suffixes for members of pwm_waveform, thanks David for that suggestion.
-
- - Rebased to v6.11-rc1 + pwm/for-next.
-
-Because of these changes I didn't add Trevor's Reviewed-by tag for patch
-#3.
-
-I kept the BUG_ONs. There are a few check_patch warnings about it, but I still
-prefer these given that it is safe they don't trigger without further (bogus)
-code changes and when they trigger crashing early is better than stack
-corruption. Also checkpatch tells
-        WARNING: Comparisons should place the constant on the right side of the test
-        #158: FILE: drivers/pwm/core.c:262:
-        +       BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
-
-But as the BUG_ON is about WFHWSIZE being wrong, this order is OK.
-
-There are a few more checkpatch warnings about line lengths. Breaking
-the criticised lines further hurts readability IMHO, so I kept them. It
-gets a bit better once stm32_pwm_mul_u64_u64_div_u64_roundup() is
-implemented (without the stm32_pwm prefix) alongside
-mul_u64_u64_div_u64() in lib/math/div64.c, but I don't want to wait for
-that. I will address that once Nicolas's patch improving precision of
-mul_u64_u64_div_u64() landed. (Hmm, it's not in next any more since
-next-20240724, before it was 3cc8bf1a81efde105d8e57398cf8554b57768777 +
-dbbe95af0fad2a9d22a4b910cfc4b87949d61a3c).
-
-Best regards
-Uwe
-
-Uwe Kleine-König (8):
-  pwm: Simplify pwm_capture()
-  pwm: Add more locking
-  pwm: New abstraction for PWM waveforms
-  pwm: Provide new consumer API functions for waveforms
-  pwm: Add support for pwmchip devices for faster and easier userspace
-    access
-  pwm: Add tracing for waveform callbacks
-  pwm: axi-pwmgen: Implementation of the waveform callbacks
-  pwm: stm32: Implementation of the waveform callbacks
-
- drivers/pwm/core.c           | 809 +++++++++++++++++++++++++++++++++--
- drivers/pwm/pwm-axi-pwmgen.c | 154 +++++--
- drivers/pwm/pwm-stm32.c      | 607 ++++++++++++++++----------
- include/linux/pwm.h          |  58 ++-
- include/trace/events/pwm.h   | 134 +++++-
- include/uapi/linux/pwm.h     |  25 ++
- 6 files changed, 1479 insertions(+), 308 deletions(-)
- create mode 100644 include/uapi/linux/pwm.h
-
-base-commit: b9b6bd3dcceed371829a022caeb6b51cb9f67be9
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 888cd4f51c6e..bad0c8e65f56 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -166,30 +166,46 @@ static int __pwm_round_waveform_tohw(struct pwm_chip *chip, struct pwm_device *p
+ 				     const struct pwm_waveform *wf, void *wfhw)
+ {
+ 	const struct pwm_ops *ops = chip->ops;
++	int ret;
+ 
+-	return ops->round_waveform_tohw(chip, pwm, wf, wfhw);
++	ret = ops->round_waveform_tohw(chip, pwm, wf, wfhw);
++	trace_pwm_round_waveform_tohw(pwm, wf, wfhw, ret);
++
++	return ret;
+ }
+ 
+ static int __pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
+ 				       const void *wfhw, struct pwm_waveform *wf)
+ {
+ 	const struct pwm_ops *ops = chip->ops;
++	int ret;
+ 
+-	return ops->round_waveform_fromhw(chip, pwm, wfhw, wf);
++	ret = ops->round_waveform_fromhw(chip, pwm, wfhw, wf);
++	trace_pwm_round_waveform_fromhw(pwm, wfhw, wf, ret);
++
++	return ret;
+ }
+ 
+ static int __pwm_read_waveform(struct pwm_chip *chip, struct pwm_device *pwm, void *wfhw)
+ {
+ 	const struct pwm_ops *ops = chip->ops;
++	int ret;
+ 
+-	return ops->read_waveform(chip, pwm, wfhw);
++	ret = ops->read_waveform(chip, pwm, wfhw);
++	trace_pwm_read_waveform(pwm, wfhw, ret);
++
++	return ret;
+ }
+ 
+ static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, const void *wfhw)
+ {
+ 	const struct pwm_ops *ops = chip->ops;
++	int ret;
+ 
+-	return ops->write_waveform(chip, pwm, wfhw);
++	ret = ops->write_waveform(chip, pwm, wfhw);
++	trace_pwm_write_waveform(pwm, wfhw, ret);
++
++	return ret;
+ }
+ 
+ #define WFHWSIZE 20
+diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
+index 8022701c446d..8ba898fd335c 100644
+--- a/include/trace/events/pwm.h
++++ b/include/trace/events/pwm.h
+@@ -8,15 +8,135 @@
+ #include <linux/pwm.h>
+ #include <linux/tracepoint.h>
+ 
++#define TP_PROTO_pwm(args...)							\
++	TP_PROTO(struct pwm_device *pwm, args)
++
++#define TP_ARGS_pwm(args...)							\
++	TP_ARGS(pwm, args)
++
++#define TP_STRUCT__entry_pwm(args...)						\
++	TP_STRUCT__entry(							\
++		__field(unsigned int, chipid)					\
++		__field(unsigned int, hwpwm)					\
++		args)
++
++#define TP_fast_assign_pwm(args...)						\
++	TP_fast_assign(								\
++		__entry->chipid = pwm->chip->id;				\
++		__entry->hwpwm = pwm->hwpwm;					\
++		args)
++
++#define TP_printk_pwm(fmt, args...)						\
++	TP_printk("pwmchip%u.%u: " fmt, __entry->chipid, __entry->hwpwm, args)
++
++#define __field_pwmwf(wf)							\
++	__field(u64, wf ## _period_length_ns)					\
++	__field(u64, wf ## _duty_length_ns)					\
++	__field(u64, wf ## _duty_offset_ns)					\
++
++#define fast_assign_pwmwf(wf)							\
++	__entry->wf ## _period_length_ns = wf->period_length_ns;		\
++	__entry->wf ## _duty_length_ns = wf->duty_length_ns;			\
++	__entry->wf ## _duty_offset_ns = wf->duty_offset_ns
++
++#define printk_pwmwf_format(wf)							\
++	"%lld/%lld [+%lld]"
++
++#define printk_pwmwf_formatargs(wf)						\
++	__entry->wf ## _duty_length_ns, __entry->wf ## _period_length_ns, __entry->wf ## _duty_offset_ns
++
++TRACE_EVENT(pwm_round_waveform_tohw,
++
++	TP_PROTO_pwm(const struct pwm_waveform *wf, void *wfhw, int err),
++
++	TP_ARGS_pwm(wf, wfhw, err),
++
++	TP_STRUCT__entry_pwm(
++		__field_pwmwf(wf)
++		__field(void *, wfhw)
++		__field(int, err)
++	),
++
++	TP_fast_assign_pwm(
++		fast_assign_pwmwf(wf);
++		__entry->wfhw = wfhw;
++		__entry->err = err;
++	),
++
++	TP_printk_pwm(printk_pwmwf_format(wf) " > %p err=%d",
++		printk_pwmwf_formatargs(wf), __entry->wfhw, __entry->err)
++);
++
++TRACE_EVENT(pwm_round_waveform_fromhw,
++
++	TP_PROTO_pwm(const void *wfhw, struct pwm_waveform *wf, int err),
++
++	TP_ARGS_pwm(wfhw, wf, err),
++
++	TP_STRUCT__entry_pwm(
++		__field(const void *, wfhw)
++		__field_pwmwf(wf)
++		__field(int, err)
++	),
++
++	TP_fast_assign_pwm(
++		__entry->wfhw = wfhw;
++		fast_assign_pwmwf(wf);
++		__entry->err = err;
++	),
++
++	TP_printk_pwm("%p > " printk_pwmwf_format(wf) " err=%d",
++		__entry->wfhw, printk_pwmwf_formatargs(wf), __entry->err)
++);
++
++TRACE_EVENT(pwm_read_waveform,
++
++	TP_PROTO_pwm(void *wfhw, int err),
++
++	TP_ARGS_pwm(wfhw, err),
++
++	TP_STRUCT__entry_pwm(
++		__field(void *, wfhw)
++		__field(int, err)
++	),
++
++	TP_fast_assign_pwm(
++		__entry->wfhw = wfhw;
++		__entry->err = err;
++	),
++
++	TP_printk_pwm("%p err=%d",
++		__entry->wfhw, __entry->err)
++);
++
++TRACE_EVENT(pwm_write_waveform,
++
++	TP_PROTO_pwm(const void *wfhw, int err),
++
++	TP_ARGS_pwm(wfhw, err),
++
++	TP_STRUCT__entry_pwm(
++		__field(const void *, wfhw)
++		__field(int, err)
++	),
++
++	TP_fast_assign_pwm(
++		__entry->wfhw = wfhw;
++		__entry->err = err;
++	),
++
++	TP_printk_pwm("%p err=%d",
++		__entry->wfhw, __entry->err)
++);
++
++
+ DECLARE_EVENT_CLASS(pwm,
+ 
+ 	TP_PROTO(struct pwm_device *pwm, const struct pwm_state *state, int err),
+ 
+ 	TP_ARGS(pwm, state, err),
+ 
+-	TP_STRUCT__entry(
+-		__field(unsigned int, chipid)
+-		__field(unsigned int, hwpwm)
++	TP_STRUCT__entry_pwm(
+ 		__field(u64, period)
+ 		__field(u64, duty_cycle)
+ 		__field(enum pwm_polarity, polarity)
+@@ -24,9 +144,7 @@ DECLARE_EVENT_CLASS(pwm,
+ 		__field(int, err)
+ 	),
+ 
+-	TP_fast_assign(
+-		__entry->chipid = pwm->chip->id;
+-		__entry->hwpwm = pwm->hwpwm;
++	TP_fast_assign_pwm(
+ 		__entry->period = state->period;
+ 		__entry->duty_cycle = state->duty_cycle;
+ 		__entry->polarity = state->polarity;
+@@ -34,8 +152,8 @@ DECLARE_EVENT_CLASS(pwm,
+ 		__entry->err = err;
+ 	),
+ 
+-	TP_printk("pwmchip%u.%u: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
+-		  __entry->chipid, __entry->hwpwm, __entry->period, __entry->duty_cycle,
++	TP_printk_pwm("period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
++		  __entry->period, __entry->duty_cycle,
+ 		  __entry->polarity, __entry->enabled, __entry->err)
+ 
+ );
 -- 
 2.43.0
 
