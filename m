@@ -1,146 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F5914A0B7
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 13:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CBC15B119
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 14:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722261222; cv=none; b=du7EQuVnjG8RyNWfJW5CJe7k4uXBy/Sjt5DEhkn1SscXMT8HMeJc3hzHEypMEFkWS1pXmc0Zx+fLsmFEoXSSJN1ElFAwy8wdsHT0K+lI6OH4V3PD5mkOgnR+INE5yBwLsEq12s3Ss5njX2GKVxvLANBKgNTYX7j0b1zSGHw47wA=
+	t=1722263709; cv=none; b=MSURVT1fna7y6Vhjhkc8NshbzPE/Zuy3nYjHhIAwiv9B/RmlKK+JMqEDUFjln2BGPn2uzzIe3wvU7UQ8HEFRq5kPklNiCASpN9A8B396DCbpKAVKYLFdD6JOGFOQaPpnvCHfREaYACPqqayulTmHklzjIR410bjJxQFkC0R37Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722261222; c=relaxed/simple;
-	bh=zevFigggh9gav77vOeUqQEZLN00S3klYyCxmhPrpO0k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WMBqcsm1ESG07uQuCXzf6N/kxd84hBijmdJNN0a8MikMBOGV/dRh3RqrBldCDCwwHfsgoybjy4ID/Gvn4MuuWm8fV5VLOP58KA06DKXoBEaQVzNnm62vwXYtZKmeJ05vjp4alNiia9S2wdHxxSykt08pTudyGV0WHAXUrDrSFuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhKZrnP3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1722263709; c=relaxed/simple;
+	bh=5lbmiKqvBboL1pVsuj1bTn4xbLJ3cUxP0YgCBw+dVpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uiVpuNP45u+mvzta81UqaESGzp9kRdyHtORIWrlWmrCKKCpR0TJIkKZPyMo9YAMj4hMyq3RpnDoFoGSIyOF0UDJ5LITolrHmWENI2TI0z3LWAnobABEWKhotTFLSqOFe8jjMeO8COimoHbAgnjNF8bt4EgnlEDk0gbvMIVFK5S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Tk2HF6sn; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhKZrnP3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722261219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6yEq5CChoNdWngYsHC+lDcujFG99veLH/xTIPSOMsNE=;
-	b=DhKZrnP3TxhUnvl5fLyd12xOmSxvn4skU5fsVqsQEV2PT8pCCWG/snxQSYP+VTDtLyRo90
-	Gpjvpz1poJL9YSYjHOXtWRY8rEVO6jkk+BtlifOZvFf6yzfjiYvc+00vnClJDauvtOWjqT
-	W+zda9g/c/ZUCPEZV6kUQdqLMPJVYxs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-61-k9W-6ycDPTeJPqQR543Slg-1; Mon, 29 Jul 2024 09:53:38 -0400
-X-MC-Unique: k9W-6ycDPTeJPqQR543Slg-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42820c29a76so2841045e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 06:53:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Tk2HF6sn"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4281ca54fd3so9169325e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 07:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722263705; x=1722868505; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pf2db82vhdizcqTMN+1MBUArjDRrCG8c+iUPxc5CsU4=;
+        b=Tk2HF6snxJ2vymmzm8xZ+wlJDNDZRmPkTRaeheqYe+wh5pZeinaA/2vaSAebqMWO3a
+         8hsJ+9shnuJhhAGkUxgPc8chXH+YRAVPYoeMoWz21Bm+0MNgQNtUhU9pFFF+U1cIwBFK
+         PLAa2L47WAGvUhTaDI2puwFtOTzQ506cWQS69UPkOt+Gz4ewpzPI0YRhtRADxEoOIpDv
+         WuyzbJ4TR5JCMdOMaf4diWvUV0iT6YFJJJBFpr8fLgMAw4/CBePNDJx77diYSiHubGMs
+         tDjc7d33alSJ/u7vBQKQa5H0C/9FzMeyCfObV3v9o2fS3r9nVJO6Bx3A33mcL2K3S8uD
+         k88g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722261217; x=1722866017;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6yEq5CChoNdWngYsHC+lDcujFG99veLH/xTIPSOMsNE=;
-        b=uHqnpk20HMtfkCrKGA+SaHtkueebOkPVDHo5aqSLRsJBAI//cefUTZZjsRDmgnofjK
-         vJn8b1/Vec/tmnZMCI+QEYmFBLTFrZpOJ4FSS1Oux9NGUhbrheG2xGoh+xAU6tby6MIa
-         KwFHOtFOE2ASOhymFP3Ak8qDM+OVe3HpnTfIskvDbWP3l9IRsntymDjEpa0dzDitauWi
-         4Ue/z83iW9a6JXxnRrDISAnFudST+rU49/kwib6YxPFNxamvfxU5y6FhRWhbRKueyGAM
-         O5+Y4vxOSQkVL0lqvTpWL85EyYZSaztS/WFloKiNzqcHi03l4ADtGWmaVIJhvv60DeWH
-         LSzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtTj2O2Ka3typyNKGfI66lNX3eVOZtLwYUZhNedSzCAHkmyggvu0UJpc3SsjToWEuHFBA+3ONY9NtGxGszo/+Ogf23XwLiAEuR+UuzT0+JSF41
-X-Gm-Message-State: AOJu0YxAqM3mP96U9pa7izIAMq7em6uQzDv5iOEgmShn3lP/pRZ9OMRP
-	8mLRysmiK6IEIUsKXmUplp/VtxJ41A3QUh8tJ1X9Hpa9BHzFxeGOa4JMacuPbQtWq5bodJije6g
-	dK5AV8l4ioWq3sa96KOEqRINJfO9bk0JlJZRpdfremrqop+PAOxLzdS/lIYrOxQUVYIDs1g==
-X-Received: by 2002:a05:600c:444d:b0:426:65bf:5cc2 with SMTP id 5b1f17b1804b1-42811d83c38mr50666535e9.1.1722261216890;
-        Mon, 29 Jul 2024 06:53:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQ34nlwG6HFfNMqNvetJJ+pbG8/TxeOUBuPfISPhjduWTs2MRaELaUuF0Pc7fNro9Ocof+NQ==
-X-Received: by 2002:a05:600c:444d:b0:426:65bf:5cc2 with SMTP id 5b1f17b1804b1-42811d83c38mr50666185e9.1.1722261216359;
-        Mon, 29 Jul 2024 06:53:36 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280d13570bsm123111095e9.7.2024.07.29.06.53.35
+        d=1e100.net; s=20230601; t=1722263705; x=1722868505;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pf2db82vhdizcqTMN+1MBUArjDRrCG8c+iUPxc5CsU4=;
+        b=U9tTfXwxoah7zEHH7GOGEuMP6sUd7JBjEf61GSYYBCtagd1vDyRWL1FqB9IqRaEQYG
+         omAsHwOYT0T9DHWj38PpuyBtHzquiFrVhZX2yDaa/9NU4U38eaDZodi71Bj9g1UHWlHq
+         tOd0ATPI0ljVNMDvfBiTk7yCA3FHEC4/klrRMzoKcB48wNHeccwvxGTuDiOcq12EWLnk
+         F9iXnqCRv1u7pm+F6LaDSJWgh09+/LYpx9V350QKxWc/+NBEneP2odcTA2+ovyE5Izt7
+         MPmZYoEiUJGfF+fP0lKKF4Qd1f7at8lMfhM1SCwhGtnpycXvC/PZRI5WMIWbuIy2supr
+         bdug==
+X-Forwarded-Encrypted: i=1; AJvYcCWYyfqEoPZdQEv2+k1ZRxDqLRRJTOpR+1AqciyGrJMedIqZ15t1NMBm5EIiqmKZgBmnwUJkEocX1VqsPGSwLmNP7JQZKaQh2VEF6HDJMp4yebvD
+X-Gm-Message-State: AOJu0YyUinqbduWE+ueg5ug0Z0f7C3+FWCpK5w27QHdeJrVZ31CXwvDh
+	PXm03yRGfYabNHCBbJk12synXZLPmqpm/pUhXfqjOEJaJT3cPcx5vfeCO88REyI=
+X-Google-Smtp-Source: AGHT+IGt6eS97Xgca8KV0NOgFfHn5nHcp4nZrPormB0sSwBcBc31n8q1yejiOGdqCUHmIOkFibwqOw==
+X-Received: by 2002:a05:600c:4511:b0:427:abed:3602 with SMTP id 5b1f17b1804b1-42811e12d41mr57503285e9.24.1722263704828;
+        Mon, 29 Jul 2024 07:35:04 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:59dd:510e:47d0:643f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280a867e7esm135348575e9.27.2024.07.29.07.35.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jul 2024 06:53:36 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-doc@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, graf@amazon.de, dwmw2@infradead.org,
- pdurrant@amazon.com, mlevitsk@redhat.com, jgowans@amazon.com,
- corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- amoorthy@google.com
-Subject: Re: [PATCH 01/18] KVM: x86: hyper-v: Introduce XMM output support
-In-Reply-To: <D2RVJ6QCVNOU.XC0OC54QHI51@amazon.com>
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <20240609154945.55332-2-nsaenz@amazon.com> <87tth0rku3.fsf@redhat.com>
- <D2RVJ6QCVNOU.XC0OC54QHI51@amazon.com>
-Date: Mon, 29 Jul 2024 15:53:34 +0200
-Message-ID: <878qxk5mox.fsf@redhat.com>
+        Mon, 29 Jul 2024 07:35:04 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Trevor Gamblin <tgamblin@baylibre.com>
+Subject: [PATCH v3 0/8] pwm: New abstraction and userspace API
+Date: Mon, 29 Jul 2024 16:34:16 +0200
+Message-ID: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3152; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=5lbmiKqvBboL1pVsuj1bTn4xbLJ3cUxP0YgCBw+dVpI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmp6hqpBrMchkTq7UblpQiiB/gXoWgj5QCpOMh5 UeL+gmP5SWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZqeoagAKCRCPgPtYfRL+ TlqNB/9IGnXLN9EXn6TBjOIgvmlIXGnB8Qjq58LozRpFWTT6bUlCZDNhYGIClk+Gc1Pz+lGVx7+ 4bVNReS62OkAxag/y/JjyVittMs1CR++VAuDxsMtxT7nCUVGYoXGS3AClsDjJQUgYHMv4HNaCHH NvpiitBaP2ro3UIlBLtsUrDVYSzsrK5VBtb+EKUAGC4i1BZvUV6DfJhiKLiX4THlPnxcjMlxrE/ 8AI1yyGUL+dEFeAKwhF+ezl5z5gunHggAc1DUrIO6Nw+R+8zhX/I4ZM8Lnnevce03fLD2Zdu7eB zCBFbI6JTMZCR1kU4Oz9fqKJBo2ugwZfCYLmi49CCy/9iEKu
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
+Hello,
 
-> Hi Vitaly,
-> Thanks for having a look at this.
->
-> On Mon Jul 8, 2024 at 2:59 PM UTC, Vitaly Kuznetsov wrote:
->> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
->>
->> > Prepare infrastructure to be able to return data through the XMM
->> > registers when Hyper-V hypercalls are issues in fast mode. The XMM
->> > registers are exposed to user-space through KVM_EXIT_HYPERV_HCALL and
->> > restored on successful hypercall completion.
->> >
->> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
->> >
->> > ---
->> >
->> > There was some discussion in the RFC about whether growing 'struct
->> > kvm_hyperv_exit' is ABI breakage. IMO it isn't:
->> > - There is padding in 'struct kvm_run' that ensures that a bigger
->> >   'struct kvm_hyperv_exit' doesn't alter the offsets within that struct.
->> > - Adding a new field at the bottom of the 'hcall' field within the
->> >   'struct kvm_hyperv_exit' should be fine as well, as it doesn't alter
->> >   the offsets within that struct either.
->> > - Ultimately, previous updates to 'struct kvm_hyperv_exit's hint that
->> >   its size isn't part of the uABI. It already grew when syndbg was
->> >   introduced.
->>
->> Yes but SYNDBG exit comes with KVM_EXIT_HYPERV_SYNDBG. While I don't see
->> any immediate issues with the current approach, we may want to introduce
->> something like KVM_EXIT_HYPERV_HCALL_XMM: the userspace must be prepared
->> to handle this new information anyway and it is better to make
->> unprepared userspace fail with 'unknown exit' then to mishandle a
->> hypercall by ignoring XMM portion of the data.
->
-> OK, I'll go that way. Just wanted to get a better understanding of why
-> you felt it was necessary.
->
+here comes v3 of the series to add support for duty offset in PWM
+waveforms. For a single PWM output there is no gain, but if you have a
+chip with two (or more) outputs and both operate with the same period,
+you can generate an output like:
 
-(sorry for delayed reply, I was on vacation)
 
-I don't think it's an absolute must but it appears as a cleaner approach
-to me. 
+               ______         ______         ______         ______
+   PWM #0  ___/      \_______/      \_______/      \_______/      \_______
+                 __             __             __             __    
+   PWM #1  _____/  \___________/  \___________/  \___________/  \_________
+              ^              ^              ^              ^
 
-Imagine there's some userspace which handles KVM_EXIT_HYPERV_HCALL today
-and we want to add XMM handling there. How would we know if xmm portion
-of the data is actually filled by KVM or not? With your patch, we can of
-course check for HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE in
-KVM_GET_SUPPORTED_HV_CPUID but this is not really straightforward, is
-it? Checking the size is not good either. E.g. think about downstream
-versions of KVM which may or may not have certain backports. In case we
-(theoretically) do several additions to 'struct kvm_hyperv_exit', it
-will quickly become a nightmare.
+Changes since v2, which is available from
+https://lore.kernel.org/linux-pwm/cover.1721040875.git.u.kleine-koenig@baylibre.com
+include:
 
-On the contrary, KVM_EXIT_HYPERV_HCALL_XMM (or just
-KVM_EXIT_HYPERV_HCALL2) approach looks cleaner: once userspace sees it,
-it knows that 'xmm' portion of the data can be relied upon.
+ - Degrade a dev_alert() to dev_warn() on feedback by David Lechner
 
+ - Improvement of various comments (partly in reply to David Lechner)
+
+ - Add _ns suffixes for members of pwm_waveform, thanks David for that suggestion.
+
+ - Rebased to v6.11-rc1 + pwm/for-next.
+
+Because of these changes I didn't add Trevor's Reviewed-by tag for patch
+#3.
+
+I kept the BUG_ONs. There are a few check_patch warnings about it, but I still
+prefer these given that it is safe they don't trigger without further (bogus)
+code changes and when they trigger crashing early is better than stack
+corruption. Also checkpatch tells
+        WARNING: Comparisons should place the constant on the right side of the test
+        #158: FILE: drivers/pwm/core.c:262:
+        +       BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+
+But as the BUG_ON is about WFHWSIZE being wrong, this order is OK.
+
+There are a few more checkpatch warnings about line lengths. Breaking
+the criticised lines further hurts readability IMHO, so I kept them. It
+gets a bit better once stm32_pwm_mul_u64_u64_div_u64_roundup() is
+implemented (without the stm32_pwm prefix) alongside
+mul_u64_u64_div_u64() in lib/math/div64.c, but I don't want to wait for
+that. I will address that once Nicolas's patch improving precision of
+mul_u64_u64_div_u64() landed. (Hmm, it's not in next any more since
+next-20240724, before it was 3cc8bf1a81efde105d8e57398cf8554b57768777 +
+dbbe95af0fad2a9d22a4b910cfc4b87949d61a3c).
+
+Best regards
+Uwe
+
+Uwe Kleine-König (8):
+  pwm: Simplify pwm_capture()
+  pwm: Add more locking
+  pwm: New abstraction for PWM waveforms
+  pwm: Provide new consumer API functions for waveforms
+  pwm: Add support for pwmchip devices for faster and easier userspace
+    access
+  pwm: Add tracing for waveform callbacks
+  pwm: axi-pwmgen: Implementation of the waveform callbacks
+  pwm: stm32: Implementation of the waveform callbacks
+
+ drivers/pwm/core.c           | 809 +++++++++++++++++++++++++++++++++--
+ drivers/pwm/pwm-axi-pwmgen.c | 154 +++++--
+ drivers/pwm/pwm-stm32.c      | 607 ++++++++++++++++----------
+ include/linux/pwm.h          |  58 ++-
+ include/trace/events/pwm.h   | 134 +++++-
+ include/uapi/linux/pwm.h     |  25 ++
+ 6 files changed, 1479 insertions(+), 308 deletions(-)
+ create mode 100644 include/uapi/linux/pwm.h
+
+base-commit: b9b6bd3dcceed371829a022caeb6b51cb9f67be9
 -- 
-Vitaly
+2.43.0
 
