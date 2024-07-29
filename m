@@ -1,392 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC85155321
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 13:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F5914A0B7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 13:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722260747; cv=none; b=QVK111+PtggEx66wVKC7Ll9gjd7EUZM5GabivrYXIBmYMqj7KrTRftDp8dhAQJbyaWIZviSR3fQGFar0e+Lbqozy8KRlRwMknDxjGH/8wMLT4vf+V+tPvFYVX2z3z+9VskJY+JrCIucnxCe1u0CAVIfnUSJl4j7r0N5ZKKbICz8=
+	t=1722261222; cv=none; b=du7EQuVnjG8RyNWfJW5CJe7k4uXBy/Sjt5DEhkn1SscXMT8HMeJc3hzHEypMEFkWS1pXmc0Zx+fLsmFEoXSSJN1ElFAwy8wdsHT0K+lI6OH4V3PD5mkOgnR+INE5yBwLsEq12s3Ss5njX2GKVxvLANBKgNTYX7j0b1zSGHw47wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722260747; c=relaxed/simple;
-	bh=g+s5zWQ+1bjLhV5trF8N1eSvfylYTcdt0aXRUvyr3B0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bOv/TqP+6wLVvdx6pSJeWrNeaqJ4vXLxFM3KcE0Ly/PcDZLggMW/HnlUJ9XkemMly3mbv0a2hBn0ibt66svslTAYe35cIHzwolIHzrcN4NJ1Gxqwn1KVrtsr3EM3a2lgv6vkJiTlNlkN4Y/1XFg5h6Alpq55Xt8gnbOPTDP9I1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M1u88upd; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1722261222; c=relaxed/simple;
+	bh=zevFigggh9gav77vOeUqQEZLN00S3klYyCxmhPrpO0k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WMBqcsm1ESG07uQuCXzf6N/kxd84hBijmdJNN0a8MikMBOGV/dRh3RqrBldCDCwwHfsgoybjy4ID/Gvn4MuuWm8fV5VLOP58KA06DKXoBEaQVzNnm62vwXYtZKmeJ05vjp4alNiia9S2wdHxxSykt08pTudyGV0WHAXUrDrSFuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhKZrnP3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M1u88upd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhKZrnP3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722260744;
+	s=mimecast20190719; t=1722261219;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=doSH2GJ4WKzw7yVJQbebYQerdG+8934K9oPj26npbuU=;
-	b=M1u88updFriU2VK++qzNLCUwFpPdi851MmcJsPRK2i58wf45ISGzcfmyhKoMUAz+rG4+H0
-	goq36NFGBWvumeAEofgSBoueyDxkaIuNQLecGrPNjOujyVZqZM0PPFn3llzWudLIxI2Fqy
-	qEMrZlrDtLaLOaGfw3TyPvtiZIBAnR4=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-176-S4zvsVJjOqKQOqNNjQG5bA-1; Mon,
- 29 Jul 2024 09:45:40 -0400
-X-MC-Unique: S4zvsVJjOqKQOqNNjQG5bA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A296B1955D4A;
-	Mon, 29 Jul 2024 13:45:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.232])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E5D3019560AE;
-	Mon, 29 Jul 2024 13:45:35 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 29 Jul 2024 15:45:39 +0200 (CEST)
-Date: Mon, 29 Jul 2024 15:45:35 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org
-Cc: jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] uprobes: make uprobe_register() return struct uprobe *
-Message-ID: <20240729134535.GA12332@redhat.com>
+	 in-reply-to:in-reply-to:references:references;
+	bh=6yEq5CChoNdWngYsHC+lDcujFG99veLH/xTIPSOMsNE=;
+	b=DhKZrnP3TxhUnvl5fLyd12xOmSxvn4skU5fsVqsQEV2PT8pCCWG/snxQSYP+VTDtLyRo90
+	Gpjvpz1poJL9YSYjHOXtWRY8rEVO6jkk+BtlifOZvFf6yzfjiYvc+00vnClJDauvtOWjqT
+	W+zda9g/c/ZUCPEZV6kUQdqLMPJVYxs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-k9W-6ycDPTeJPqQR543Slg-1; Mon, 29 Jul 2024 09:53:38 -0400
+X-MC-Unique: k9W-6ycDPTeJPqQR543Slg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42820c29a76so2841045e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jul 2024 06:53:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722261217; x=1722866017;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6yEq5CChoNdWngYsHC+lDcujFG99veLH/xTIPSOMsNE=;
+        b=uHqnpk20HMtfkCrKGA+SaHtkueebOkPVDHo5aqSLRsJBAI//cefUTZZjsRDmgnofjK
+         vJn8b1/Vec/tmnZMCI+QEYmFBLTFrZpOJ4FSS1Oux9NGUhbrheG2xGoh+xAU6tby6MIa
+         KwFHOtFOE2ASOhymFP3Ak8qDM+OVe3HpnTfIskvDbWP3l9IRsntymDjEpa0dzDitauWi
+         4Ue/z83iW9a6JXxnRrDISAnFudST+rU49/kwib6YxPFNxamvfxU5y6FhRWhbRKueyGAM
+         O5+Y4vxOSQkVL0lqvTpWL85EyYZSaztS/WFloKiNzqcHi03l4ADtGWmaVIJhvv60DeWH
+         LSzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtTj2O2Ka3typyNKGfI66lNX3eVOZtLwYUZhNedSzCAHkmyggvu0UJpc3SsjToWEuHFBA+3ONY9NtGxGszo/+Ogf23XwLiAEuR+UuzT0+JSF41
+X-Gm-Message-State: AOJu0YxAqM3mP96U9pa7izIAMq7em6uQzDv5iOEgmShn3lP/pRZ9OMRP
+	8mLRysmiK6IEIUsKXmUplp/VtxJ41A3QUh8tJ1X9Hpa9BHzFxeGOa4JMacuPbQtWq5bodJije6g
+	dK5AV8l4ioWq3sa96KOEqRINJfO9bk0JlJZRpdfremrqop+PAOxLzdS/lIYrOxQUVYIDs1g==
+X-Received: by 2002:a05:600c:444d:b0:426:65bf:5cc2 with SMTP id 5b1f17b1804b1-42811d83c38mr50666535e9.1.1722261216890;
+        Mon, 29 Jul 2024 06:53:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQ34nlwG6HFfNMqNvetJJ+pbG8/TxeOUBuPfISPhjduWTs2MRaELaUuF0Pc7fNro9Ocof+NQ==
+X-Received: by 2002:a05:600c:444d:b0:426:65bf:5cc2 with SMTP id 5b1f17b1804b1-42811d83c38mr50666185e9.1.1722261216359;
+        Mon, 29 Jul 2024 06:53:36 -0700 (PDT)
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280d13570bsm123111095e9.7.2024.07.29.06.53.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 06:53:36 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-doc@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, graf@amazon.de, dwmw2@infradead.org,
+ pdurrant@amazon.com, mlevitsk@redhat.com, jgowans@amazon.com,
+ corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ amoorthy@google.com
+Subject: Re: [PATCH 01/18] KVM: x86: hyper-v: Introduce XMM output support
+In-Reply-To: <D2RVJ6QCVNOU.XC0OC54QHI51@amazon.com>
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <20240609154945.55332-2-nsaenz@amazon.com> <87tth0rku3.fsf@redhat.com>
+ <D2RVJ6QCVNOU.XC0OC54QHI51@amazon.com>
+Date: Mon, 29 Jul 2024 15:53:34 +0200
+Message-ID: <878qxk5mox.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240729134444.GA12293@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-This way uprobe_unregister() and uprobe_apply() can use "struct uprobe *"
-rather than inode + offset. This simplifies the code and allows to avoid
-the unnecessary find_uprobe() + put_uprobe() in these functions.
+Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
 
-TODO: uprobe_unregister() still needs get_uprobe/put_uprobe to ensure that
-this uprobe can't be freed before up_write(&uprobe->register_rwsem).
+> Hi Vitaly,
+> Thanks for having a look at this.
+>
+> On Mon Jul 8, 2024 at 2:59 PM UTC, Vitaly Kuznetsov wrote:
+>> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
+>>
+>> > Prepare infrastructure to be able to return data through the XMM
+>> > registers when Hyper-V hypercalls are issues in fast mode. The XMM
+>> > registers are exposed to user-space through KVM_EXIT_HYPERV_HCALL and
+>> > restored on successful hypercall completion.
+>> >
+>> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
+>> >
+>> > ---
+>> >
+>> > There was some discussion in the RFC about whether growing 'struct
+>> > kvm_hyperv_exit' is ABI breakage. IMO it isn't:
+>> > - There is padding in 'struct kvm_run' that ensures that a bigger
+>> >   'struct kvm_hyperv_exit' doesn't alter the offsets within that struct.
+>> > - Adding a new field at the bottom of the 'hcall' field within the
+>> >   'struct kvm_hyperv_exit' should be fine as well, as it doesn't alter
+>> >   the offsets within that struct either.
+>> > - Ultimately, previous updates to 'struct kvm_hyperv_exit's hint that
+>> >   its size isn't part of the uABI. It already grew when syndbg was
+>> >   introduced.
+>>
+>> Yes but SYNDBG exit comes with KVM_EXIT_HYPERV_SYNDBG. While I don't see
+>> any immediate issues with the current approach, we may want to introduce
+>> something like KVM_EXIT_HYPERV_HCALL_XMM: the userspace must be prepared
+>> to handle this new information anyway and it is better to make
+>> unprepared userspace fail with 'unknown exit' then to mishandle a
+>> hypercall by ignoring XMM portion of the data.
+>
+> OK, I'll go that way. Just wanted to get a better understanding of why
+> you felt it was necessary.
+>
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
----
- include/linux/uprobes.h     | 15 +++++-----
- kernel/events/uprobes.c     | 56 +++++++++++++++----------------------
- kernel/trace/bpf_trace.c    | 25 ++++++++---------
- kernel/trace/trace_uprobe.c | 26 ++++++++---------
- 4 files changed, 55 insertions(+), 67 deletions(-)
+(sorry for delayed reply, I was on vacation)
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 440316fbf3c6..137ddfc0b2f8 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -16,6 +16,7 @@
- #include <linux/types.h>
- #include <linux/wait.h>
- 
-+struct uprobe;
- struct vm_area_struct;
- struct mm_struct;
- struct inode;
-@@ -110,9 +111,9 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
- extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
- extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
- extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
--extern int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
--extern int uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool);
--extern void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc);
-+extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
-+extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
-+extern void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc);
- extern int uprobe_mmap(struct vm_area_struct *vma);
- extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
- extern void uprobe_start_dup_mmap(void);
-@@ -150,18 +151,18 @@ static inline void uprobes_init(void)
- 
- #define uprobe_get_trap_addr(regs)	instruction_pointer(regs)
- 
--static inline int
-+static inline struct uprobe *
- uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc)
- {
--	return -ENOSYS;
-+	return ERR_PTR(-ENOSYS);
- }
- static inline int
--uprobe_apply(struct inode *inode, loff_t offset, struct uprobe_consumer *uc, bool add)
-+uprobe_apply(struct uprobe* uprobe, struct uprobe_consumer *uc, bool add)
- {
- 	return -ENOSYS;
- }
- static inline void
--uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
- }
- static inline int uprobe_mmap(struct vm_area_struct *vma)
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index b7f40bad8abc..974474680820 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1099,20 +1099,14 @@ __uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
- 		delete_uprobe(uprobe);
- }
- 
--/*
-+/**
-  * uprobe_unregister - unregister an already registered probe.
-- * @inode: the file in which the probe has to be removed.
-- * @offset: offset from the start of the file.
-+ * @uprobe: uprobe to remove
-  * @uc: identify which probe if multiple probes are colocated.
-  */
--void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consumer *uc)
-+void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
- {
--	struct uprobe *uprobe;
--
--	uprobe = find_uprobe(inode, offset);
--	if (WARN_ON(!uprobe))
--		return;
--
-+	get_uprobe(uprobe);
- 	down_write(&uprobe->register_rwsem);
- 	__uprobe_unregister(uprobe, uc);
- 	up_write(&uprobe->register_rwsem);
-@@ -1120,7 +1114,7 @@ void uprobe_unregister(struct inode *inode, loff_t offset, struct uprobe_consume
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister);
- 
--/*
-+/**
-  * uprobe_register - register a probe
-  * @inode: the file in which the probe has to be placed.
-  * @offset: offset from the start of the file.
-@@ -1136,40 +1130,40 @@ EXPORT_SYMBOL_GPL(uprobe_unregister);
-  * unregisters. Caller of uprobe_register() is required to keep @inode
-  * (and the containing mount) referenced.
-  *
-- * Return errno if it cannot successully install probes
-- * else return 0 (success)
-+ * Return: pointer to the new uprobe on success or an ERR_PTR on failure.
-  */
--int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset,
--		    struct uprobe_consumer *uc)
-+struct uprobe *uprobe_register(struct inode *inode,
-+				loff_t offset, loff_t ref_ctr_offset,
-+				struct uprobe_consumer *uc)
- {
- 	struct uprobe *uprobe;
- 	int ret;
- 
- 	/* Uprobe must have at least one set consumer */
- 	if (!uc->handler && !uc->ret_handler)
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	/* copy_insn() uses read_mapping_page() or shmem_read_mapping_page() */
- 	if (!inode->i_mapping->a_ops->read_folio &&
- 	    !shmem_mapping(inode->i_mapping))
--		return -EIO;
-+		return ERR_PTR(-EIO);
- 	/* Racy, just to catch the obvious mistakes */
- 	if (offset > i_size_read(inode))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	/*
- 	 * This ensures that copy_from_page(), copy_to_page() and
- 	 * __update_ref_ctr() can't cross page boundary.
- 	 */
- 	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
-  retry:
- 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
- 	if (IS_ERR(uprobe))
--		return PTR_ERR(uprobe);
-+		return uprobe;
- 
- 	/*
- 	 * We can race with uprobe_unregister()->delete_uprobe().
-@@ -1188,35 +1182,29 @@ int uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset,
- 
- 	if (unlikely(ret == -EAGAIN))
- 		goto retry;
--	return ret;
-+
-+	return ret ? ERR_PTR(ret) : uprobe;
- }
- EXPORT_SYMBOL_GPL(uprobe_register);
- 
--/*
-- * uprobe_apply - unregister an already registered probe.
-- * @inode: the file in which the probe has to be removed.
-- * @offset: offset from the start of the file.
-+/**
-+ * uprobe_apply - add or remove the breakpoints according to @uc->filter
-+ * @uprobe: uprobe which "owns" the breakpoint
-  * @uc: consumer which wants to add more or remove some breakpoints
-  * @add: add or remove the breakpoints
-+ * Return: 0 on success or negative error code.
-  */
--int uprobe_apply(struct inode *inode, loff_t offset,
--			struct uprobe_consumer *uc, bool add)
-+int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
- {
--	struct uprobe *uprobe;
- 	struct uprobe_consumer *con;
- 	int ret = -ENOENT;
- 
--	uprobe = find_uprobe(inode, offset);
--	if (WARN_ON(!uprobe))
--		return ret;
--
- 	down_write(&uprobe->register_rwsem);
- 	for (con = uprobe->consumers; con && con != uc ; con = con->next)
- 		;
- 	if (con)
- 		ret = register_for_each_vma(uprobe, add ? uc : NULL);
- 	up_write(&uprobe->register_rwsem);
--	put_uprobe(uprobe);
- 
- 	return ret;
- }
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index afa909e17824..4e391daafa64 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3160,6 +3160,7 @@ struct bpf_uprobe {
- 	loff_t offset;
- 	unsigned long ref_ctr_offset;
- 	u64 cookie;
-+	struct uprobe *uprobe;
- 	struct uprobe_consumer consumer;
- };
- 
-@@ -3178,15 +3179,12 @@ struct bpf_uprobe_multi_run_ctx {
- 	struct bpf_uprobe *uprobe;
- };
- 
--static void bpf_uprobe_unregister(struct path *path, struct bpf_uprobe *uprobes,
--				  u32 cnt)
-+static void bpf_uprobe_unregister(struct bpf_uprobe *uprobes, u32 cnt)
- {
- 	u32 i;
- 
--	for (i = 0; i < cnt; i++) {
--		uprobe_unregister(d_real_inode(path->dentry), uprobes[i].offset,
--				  &uprobes[i].consumer);
--	}
-+	for (i = 0; i < cnt; i++)
-+		uprobe_unregister(uprobes[i].uprobe, &uprobes[i].consumer);
- }
- 
- static void bpf_uprobe_multi_link_release(struct bpf_link *link)
-@@ -3194,7 +3192,7 @@ static void bpf_uprobe_multi_link_release(struct bpf_link *link)
- 	struct bpf_uprobe_multi_link *umulti_link;
- 
- 	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
--	bpf_uprobe_unregister(&umulti_link->path, umulti_link->uprobes, umulti_link->cnt);
-+	bpf_uprobe_unregister(umulti_link->uprobes, umulti_link->cnt);
- 	if (umulti_link->task)
- 		put_task_struct(umulti_link->task);
- 	path_put(&umulti_link->path);
-@@ -3480,12 +3478,13 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 		      &bpf_uprobe_multi_link_lops, prog);
- 
- 	for (i = 0; i < cnt; i++) {
--		err = uprobe_register(d_real_inode(link->path.dentry),
--				      uprobes[i].offset,
--				      uprobes[i].ref_ctr_offset,
--				      &uprobes[i].consumer);
--		if (err) {
--			bpf_uprobe_unregister(&path, uprobes, i);
-+		uprobes[i].uprobe = uprobe_register(d_real_inode(link->path.dentry),
-+						    uprobes[i].offset,
-+						    uprobes[i].ref_ctr_offset,
-+						    &uprobes[i].consumer);
-+		if (IS_ERR(uprobes[i].uprobe)) {
-+			err = PTR_ERR(uprobes[i].uprobe);
-+			bpf_uprobe_unregister(uprobes, i);
- 			goto error_free;
- 		}
- 	}
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 1f590f989c1e..52e76a73fa7c 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -58,8 +58,8 @@ struct trace_uprobe {
- 	struct dyn_event		devent;
- 	struct uprobe_consumer		consumer;
- 	struct path			path;
--	struct inode			*inode;
- 	char				*filename;
-+	struct uprobe			*uprobe;
- 	unsigned long			offset;
- 	unsigned long			ref_ctr_offset;
- 	unsigned long			nhit;
-@@ -1084,16 +1084,16 @@ typedef bool (*filter_func_t)(struct uprobe_consumer *self,
- 
- static int trace_uprobe_enable(struct trace_uprobe *tu, filter_func_t filter)
- {
--	int ret;
-+	struct inode *inode = d_real_inode(tu->path.dentry);
-+	struct uprobe *uprobe;
- 
- 	tu->consumer.filter = filter;
--	tu->inode = d_real_inode(tu->path.dentry);
--
--	ret = uprobe_register(tu->inode, tu->offset, tu->ref_ctr_offset, &tu->consumer);
--	if (ret)
--		tu->inode = NULL;
-+	uprobe = uprobe_register(inode, tu->offset, tu->ref_ctr_offset, &tu->consumer);
-+	if (IS_ERR(uprobe))
-+		return PTR_ERR(uprobe);
- 
--	return ret;
-+	tu->uprobe = uprobe;
-+	return 0;
- }
- 
- static void __probe_event_disable(struct trace_probe *tp)
-@@ -1104,11 +1104,11 @@ static void __probe_event_disable(struct trace_probe *tp)
- 	WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
- 
- 	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
--		if (!tu->inode)
-+		if (!tu->uprobe)
- 			continue;
- 
--		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
--		tu->inode = NULL;
-+		uprobe_unregister(tu->uprobe, &tu->consumer);
-+		tu->uprobe = NULL;
- 	}
- }
- 
-@@ -1305,7 +1305,7 @@ static int uprobe_perf_close(struct trace_event_call *call,
- 		return 0;
- 
- 	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
--		ret = uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
-+		ret = uprobe_apply(tu->uprobe, &tu->consumer, false);
- 		if (ret)
- 			break;
- 	}
-@@ -1329,7 +1329,7 @@ static int uprobe_perf_open(struct trace_event_call *call,
- 		return 0;
- 
- 	list_for_each_entry(tu, trace_probe_probe_list(tp), tp.list) {
--		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
-+		err = uprobe_apply(tu->uprobe, &tu->consumer, true);
- 		if (err) {
- 			uprobe_perf_close(call, event);
- 			break;
+I don't think it's an absolute must but it appears as a cleaner approach
+to me. 
+
+Imagine there's some userspace which handles KVM_EXIT_HYPERV_HCALL today
+and we want to add XMM handling there. How would we know if xmm portion
+of the data is actually filled by KVM or not? With your patch, we can of
+course check for HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE in
+KVM_GET_SUPPORTED_HV_CPUID but this is not really straightforward, is
+it? Checking the size is not good either. E.g. think about downstream
+versions of KVM which may or may not have certain backports. In case we
+(theoretically) do several additions to 'struct kvm_hyperv_exit', it
+will quickly become a nightmare.
+
+On the contrary, KVM_EXIT_HYPERV_HCALL_XMM (or just
+KVM_EXIT_HYPERV_HCALL2) approach looks cleaner: once userspace sees it,
+it knows that 'xmm' portion of the data can be relied upon.
+
 -- 
-2.25.1.362.g51ebf55
+Vitaly
 
