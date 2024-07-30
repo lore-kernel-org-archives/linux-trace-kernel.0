@@ -1,109 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5857F623;
-	Tue, 30 Jul 2024 13:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06E819F499;
+	Tue, 30 Jul 2024 14:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722344665; cv=none; b=KadhSg9JOSSQlgPTTtag6XYl0eQz+YdqDKZR+5i20RBWdUAzwP5vM3RQjHAE4NKKXisVu6XDLq2p9MqhRkGAWXaY+tl28aUuaGv6EEkUehj1Oj6gctH79wAQ6UhLjBdqmLVGp302+oM6nmVXkQ+mNX67/GgNJ1pymdpElt/yNSI=
+	t=1722348736; cv=none; b=p/C5zKg5nCzqKPmGQYsjxr/JdnvvmZY4WRkI9NE71IRa0yi8l+Z0Ubirk92URDsa3tiQ8XmGioF8xaqc8c39yrw9J5ITuus5ZdxnQv8Ca+I/InCbGU2022DX/j1KBQCxrzCuud8U95B5eoUl+GOh2WHcKQgjGaMgeDSKCSm8E3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722344665; c=relaxed/simple;
-	bh=Vds91/wtGjgWmouaxLlCIsUy+law5p/u5wFwIQDfHaU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EW9oSL/IFAS/VnrES/0WsOqGzLWhrRln/sQZXBLQXSiv4dKJUVF4U2fG1y5aMnDR9lASEkvWJ+IgjhzbO3k2teU3sDq9UK/dA6XebfT+auN+uHlf/o+S5FaIA2mAWnwujbREnYz+5TXFdChZDq0DP6Zg2+ocAbEiPNI0qlcj+ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfHN9phs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfHN9phs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210EFC32782;
-	Tue, 30 Jul 2024 13:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722344664;
-	bh=Vds91/wtGjgWmouaxLlCIsUy+law5p/u5wFwIQDfHaU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kfHN9phsPk9frydWNCHlfkOLGu1hsD7bZCcTVbqpHQnGCM41VuzFJjkYE2djFG/uU
-	 2uQNIzZEO4uRvgdwdthH5H8IGcbtGoX+ECVQ7fnSmod/4yUb+NuLhkvM5n34ZEzfAH
-	 3hmavpi+iGBFebQcExbEO1JQAuTUVuJgVuQId4WL+Bx6QxwllIXLF6S73YIb/h9OFN
-	 X8WN8M8qvMoZNG4Fxy0d5lpg6G3GUvkFch1inmJZhaWgfPsUgQHnX/uBIhEx8+Boew
-	 L0NAa7sO5Ufy370etXsv1fB27rAPYtcQLMAv8SU1XjK1QMAutFY5nt8cwOOhv71z42
-	 bhpJniyvcYe8Q==
-Date: Tue, 30 Jul 2024 22:04:17 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, jpoimboe@kernel.org, jikos@kernel.org,
- mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
- nathan@kernel.org, morbo@google.com, justinstitt@google.com,
- mcgrof@kernel.org, thunder.leizhen@huawei.com, kees@kernel.org,
- kernel-team@meta.com, mmaurer@google.com, samitolvanen@google.com,
- mhiramat@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH 3/3] tracing/kprobes: Use APIs that matches symbols with
- .llvm.<hash> suffix
-Message-Id: <20240730220417.33bd5f0d75c3742c413136d1@kernel.org>
-In-Reply-To: <20240730005433.3559731-4-song@kernel.org>
-References: <20240730005433.3559731-1-song@kernel.org>
-	<20240730005433.3559731-4-song@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1722348736; c=relaxed/simple;
+	bh=EIyDO6moySu65v83gDl+oNa2dyM42z0e1qjHWoEuFsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HrXVH+40uYxeTetcPFq2bezVO6G1zfEahuxolQdHqu9tcr87vPa0EplCJLm9k0JWKCLt2XGUezrplvCXgnEOvm8lZgPbZG/ntvS/KnKX/D3xcSfCDEK473LRx22kweml/YTLRWA0bKO9i95fdBbg5fR3KRfOTVA5XIplPJy7hbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F37C32782;
+	Tue, 30 Jul 2024 14:12:14 +0000 (UTC)
+Date: Tue, 30 Jul 2024 10:12:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-pwm@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>
+Subject: Re: [PATCH v3 6/8] pwm: Add tracing for waveform callbacks
+Message-ID: <20240730101246.5fef41fb@gandalf.local.home>
+In-Reply-To: <7b9c9ee490df1df1de3bbfafd501f45c6cb2ec4c.1722261050.git.u.kleine-koenig@baylibre.com>
+References: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
+	<7b9c9ee490df1df1de3bbfafd501f45c6cb2ec4c.1722261050.git.u.kleine-koenig@baylibre.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Jul 2024 17:54:33 -0700
-Song Liu <song@kernel.org> wrote:
+On Mon, 29 Jul 2024 16:34:22 +0200
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
 
-> Use the new kallsyms APIs that matches symbols name with .llvm.<hash>
-> suffix. This allows userspace tools to get kprobes on the expected
-> function name, while the actual symbol has a .llvm.<hash> suffix.
-> 
-
-_kprobe_addr@kernel/kprobes.c may also fail with this change.
-
-Thanks,
-
-> This only effects kernel compared with CONFIG_LTO_CLANG.
-> 
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  kernel/trace/trace_kprobe.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 61a6da808203..c319382c1a09 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -202,7 +202,8 @@ unsigned long trace_kprobe_address(struct trace_kprobe *tk)
->  
->  	if (tk->symbol) {
->  		addr = (unsigned long)
-> -			kallsyms_lookup_name(trace_kprobe_symbol(tk));
-> +			kallsyms_lookup_name_or_prefix(trace_kprobe_symbol(tk));
+> diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
+> index 8022701c446d..8ba898fd335c 100644
+> --- a/include/trace/events/pwm.h
+> +++ b/include/trace/events/pwm.h
+> @@ -8,15 +8,135 @@
+>  #include <linux/pwm.h>
+>  #include <linux/tracepoint.h>
+> =20
+> +#define TP_PROTO_pwm(args...)							\
+> +	TP_PROTO(struct pwm_device *pwm, args)
 > +
->  		if (addr)
->  			addr += tk->rp.kp.offset;
->  	} else {
-> @@ -766,8 +767,13 @@ static unsigned int number_of_same_symbols(const char *mod, const char *func_nam
->  {
->  	struct sym_count_ctx ctx = { .count = 0, .name = func_name };
->  
-> -	if (!mod)
-> +	if (!mod) {
->  		kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
-> +		if (IS_ENABLED(CONFIG_LTO_CLANG) && !ctx.count) {
-> +			kallsyms_on_each_match_symbol_or_prefix(
-> +				count_symbols, func_name, &ctx.count);
-> +		}
-> +	}
->  
->  	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
->  
-> -- 
-> 2.43.0
-> 
+> +#define TP_ARGS_pwm(args...)							\
+> +	TP_ARGS(pwm, args)
+> +
+> +#define TP_STRUCT__entry_pwm(args...)						\
+> +	TP_STRUCT__entry(							\
+> +		__field(unsigned int, chipid)					\
+> +		__field(unsigned int, hwpwm)					\
+> +		args)
+> +
+> +#define TP_fast_assign_pwm(args...)						\
+> +	TP_fast_assign(								\
+> +		__entry->chipid =3D pwm->chip->id;				\
+> +		__entry->hwpwm =3D pwm->hwpwm;					\
+> +		args)
+> +
+> +#define TP_printk_pwm(fmt, args...)						\
+> +	TP_printk("pwmchip%u.%u: " fmt, __entry->chipid, __entry->hwpwm, args)
+> +
+> +#define __field_pwmwf(wf)							\
+> +	__field(u64, wf ## _period_length_ns)					\
+> +	__field(u64, wf ## _duty_length_ns)					\
+> +	__field(u64, wf ## _duty_offset_ns)					\
+> +
+> +#define fast_assign_pwmwf(wf)							\
+> +	__entry->wf ## _period_length_ns =3D wf->period_length_ns;		\
+> +	__entry->wf ## _duty_length_ns =3D wf->duty_length_ns;			\
+> +	__entry->wf ## _duty_offset_ns =3D wf->duty_offset_ns
+> +
+> +#define printk_pwmwf_format(wf)							\
+> +	"%lld/%lld [+%lld]"
+> +
+> +#define printk_pwmwf_formatargs(wf)						\
+> +	__entry->wf ## _duty_length_ns, __entry->wf ## _period_length_ns, __ent=
+ry->wf ## _duty_offset_ns
+> +
+
+The above is interesting. But if it works for you, then you do you ;-)
+
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> +TRACE_EVENT(pwm_round_waveform_tohw,
+> +
+> +	TP_PROTO_pwm(const struct pwm_waveform *wf, void *wfhw, int err),
+> +
+> +	TP_ARGS_pwm(wf, wfhw, err),
+> +
+> +	TP_STRUCT__entry_pwm(
+> +		__field_pwmwf(wf)
+> +		__field(void *, wfhw)
+> +		__field(int, err)
+> +	),
+> +
+> +	TP_fast_assign_pwm(
+> +		fast_assign_pwmwf(wf);
+> +		__entry->wfhw =3D wfhw;
+> +		__entry->err =3D err;
+> +	),
+> +
+> +	TP_printk_pwm(printk_pwmwf_format(wf) " > %p err=3D%d",
+> +		printk_pwmwf_formatargs(wf), __entry->wfhw, __entry->err)
+> +);
+> +
