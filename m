@@ -1,83 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DE6524C;
-	Tue, 30 Jul 2024 05:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46AE524C;
+	Tue, 30 Jul 2024 05:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722317825; cv=none; b=JqXWKcjvfOsl6o9ii8E0RhIulctZRulWpBpiJ+kDzSpYSsGyQkXrgAbvwIJGvG1cdz62W+4Odl1dFUCQkBUd/KxDyn0L+9N6sfMLZePOnK1+CxVJWYYWXQ+wpmgY7dsflo/9Mp3agW0nEBbO7Pv3gj6rStanIcsTGF1L1IyS71U=
+	t=1722317901; cv=none; b=IOIOHYZJ/GUfJmad+apEj0V/wuV7A8po8NZkINkDneCSDTHPN1cMcykMu67iFj2UmmkbBeobco4c5NUNH4IX6EFtfJjZXjkCwtxnhGhRP5CrnG+g+flDWZoh/nOp/iHXdl9/dx2LfZJdNxux51WFDtygrHdPi8H0YCpqNsPwdE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722317825; c=relaxed/simple;
-	bh=KRszrQnUQoFtxFgqo9LOrTSnfqqtRugOvuglH2iCdok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=npXD3qfliv5wRNzhoSLkCptg3ryRLtKlgdihxbYR147Zv0ZCwPbPEO6s3J5P6dvXPaXCg+MMyv4pa5UYH8tGphIpDdtkTUfeH3gcJFYCDWUJsHYS5EEFjEaHvt+zKqmhKvZqHV9Lw795ZFifvfO+NXG901ef8w94iGq+3ij1tKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijTW8R1g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722317901; c=relaxed/simple;
+	bh=z7jqy9viQO88sVvGeGwwa9OTW/LCLfaSHpJzK/pqR/Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rlHVbedCPRDQBwH7jnwNUnb10fPHrc9YsZZrNpDaP8IGfZi+ESw6t4s9R82njhT0A2Pkpy5Jjj6NIZREtASRQ6gdcbGAeLRIG1F/2ORTJR0kydpXQkNiytUtoQPBCBeJCkcqHDhao9NXKBMCaCBDxeP2blABy5qCB6vJDIkY3c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCQn9Zp5; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijTW8R1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBBFC4AF0E;
-	Tue, 30 Jul 2024 05:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722317824;
-	bh=KRszrQnUQoFtxFgqo9LOrTSnfqqtRugOvuglH2iCdok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ijTW8R1gAxzFz4jiR7a+TDlYWcKZv2hG5Sxu4OZ46QyLNLNab76FSOuznVVHHNl0o
-	 +YaIpSzUWBlv8EcQBTL5DtILcZFixfj2HfLH1Tu1l/b6bP2vJdjolVZJ8WtXU6NCEu
-	 siTMQoPVwyk7El9Ch7CduYaRJDjp6MnG1TiFz/sWcanMIuBZ4kOfc7gxXE4+LxKRZ0
-	 YUTfnISlqiYPtSa8ck7Jg8Aa+rRoNd1Q28jqInK4E6EbsUp44UXK3vovnw23jIVU8A
-	 4qwQ0tQKkQQOYfiMMzdDlN7LEQxpg4dt+jP7QsZtLnVHeO3PsOsf5yJxywIOlS1WIv
-	 F1YbPIbOLfQmQ==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52efbc57456so4388470e87.1;
-        Mon, 29 Jul 2024 22:37:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXW925osYjn18zvvlUmSNqHWXrBB/mTUtw8DTZd742eH1oKtF5AN5/O9oBN7NBJTAMa1VA8FcVAOA3MQ4cbAwDbTy4nd+676xhaaIciad9uYOMDfjClOhQX99p66iylaCFQ81LMiOFNG6qXUPxdPf7e
-X-Gm-Message-State: AOJu0YzWTC1sPyVD5kCU/G6Q64C/mZV1ScTwwp1o1xDYFd0lhaiHdDG6
-	ky4O70tc/0eeh2b4Gb9evQoPp6ug/DN9Xp1CnB9Afh80WRfU4wyom9bfgjxxKPE0r4lopS2vYZv
-	ugnQN/HU+WRkD23M0hGFD6+65aUk=
-X-Google-Smtp-Source: AGHT+IGZj6ErhQ9Wobk3LKh4BFaoT/B5vA2dOc8dfQlmtWCKyrM2DWjR37r1hk53LLlIdu6v/6m8mO/qLVaSr4y6PwM=
-X-Received: by 2002:ac2:4f07:0:b0:52c:e3bd:c70b with SMTP id
- 2adb3069b0e04-5309b269c4amr8365653e87.1.1722317823216; Mon, 29 Jul 2024
- 22:37:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCQn9Zp5"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-7aa7703cf08so3048404a12.2;
+        Mon, 29 Jul 2024 22:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722317899; x=1722922699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kmh3DiaajWwrBcHe87HWokqCyVdNgn4Hwb3gpF51Ru0=;
+        b=mCQn9Zp5zxxPyEh3I9ra0GQPRi5yOPJLnIs8scWsJHKjRvnEo61J0WsJyrSr/XyIoR
+         qTrlgx1wxkFZ5IC7hRIor+V9MbhrE/V29Js689NSVFdCQP3y4+qmfjpwnmudnUG1PYpR
+         7rhcgBnRH1JvIiyLq4TFn4jUZn1JS2ehbY3QlkIxCkYcWBmIqo1hu/7UL0Fwa+2369OL
+         d9UwVMLsps4TlT/m2CA8E3Tk26GK/xhlJJ53vPznkUSlDugk1SI51vtMrWjsqNYyrkX5
+         gE54iSJmFNiGI8VpY/5Ftv9qhy4GwR7/gz2FNkAGfKBr9RyAaLkMuPkKxi24eDW9zSWE
+         ihFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722317899; x=1722922699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kmh3DiaajWwrBcHe87HWokqCyVdNgn4Hwb3gpF51Ru0=;
+        b=iJQFiPhCxySfThP+3nhgFT3cdMP73iBr1qcpZJ0RpBAi/dXtBl5si0RqRntZTON6/A
+         p443FqJoz6julQ0cIPPBMkoJ3ezIjkOT/SV2c6UDjFkIF+uVPh8qkaZdT/UGYH25/EmD
+         DErRk7hCjnxEb4+9c426i/KbiRco0lTihg8GP8bq2Z0ChvbYWiTpDWGH5qz8Z6ZajdYX
+         xXPvX59pQiDBHeGJRdi+Pi7Slw8UUHsl4GGz+e/nz09mrrw4xUlTSxzwRYnczrCSMT6f
+         84FOQafop5vsALcJOCy1R/RcftbcKn5/sV1Q3LvljX5dU/6DPH7ecoP21oEkEMXECg9H
+         qtNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSsiuKPsvnI3ffZgmEhkAQ/7mVSCGYWGpwc2nnOOsAkiuElj4BivBYWAQzc66vzV/L/qjsN/ndTn4PiHFnJJMLLHnA45QkBIFlfTHfsZ81lvZ7u0lRVkClNDAfLpCqComgPMr8eb1p32ZxXs4DzOk/umM0KoFs24e4xJeCXcXEgyy02SZJ
+X-Gm-Message-State: AOJu0Yz9SCxHcEnCTYONQWI5ShdWa0G64SvBp6RpVh/SFTKy47EifjkE
+	pum910nexg5ts5LX2JKlBX2NOXx1+kt2kympP4xTFlisIEXhvW7w
+X-Google-Smtp-Source: AGHT+IHNY4b7Xfl4xFRKOR7b7ZHsMIx0qRx7KvFAb6XcCvqxuQ+R3UgYzh/MFH7NdOR1pxeazNm6yA==
+X-Received: by 2002:a17:90a:db98:b0:2c9:69d2:67a8 with SMTP id 98e67ed59e1d1-2cf7e097508mr10934649a91.9.1722317899025;
+        Mon, 29 Jul 2024 22:38:19 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.25.208])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cf28c9ce0esm9691206a91.30.2024.07.29.22.38.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 22:38:18 -0700 (PDT)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Menglong Dong <dongml2@chinatelecom.cn>
+Subject: [PATCH bpf-next v2] bpf: kprobe: remove unused declaring of bpf_kprobe_override
+Date: Tue, 30 Jul 2024 13:37:33 +0800
+Message-Id: <20240730053733.885785-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240730005433.3559731-1-song@kernel.org>
-In-Reply-To: <20240730005433.3559731-1-song@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Mon, 29 Jul 2024 22:36:50 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6fXrgL-r+XRs_pVg-3XSv21pbSPcZ8djYRjcs2sHDj7g@mail.gmail.com>
-Message-ID: <CAPhsuW6fXrgL-r+XRs_pVg-3XSv21pbSPcZ8djYRjcs2sHDj7g@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Fix kallsyms with CONFIG_LTO_CLANG
-To: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, 
-	joe.lawrence@redhat.com, nathan@kernel.org, morbo@google.com, 
-	justinstitt@google.com, mcgrof@kernel.org, thunder.leizhen@huawei.com, 
-	kees@kernel.org, kernel-team@meta.com, mmaurer@google.com, 
-	samitolvanen@google.com, mhiramat@kernel.org, rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 29, 2024 at 5:54=E2=80=AFPM Song Liu <song@kernel.org> wrote:
->
-> With CONFIG_LTO_CLANG, the compiler/linker adds .llvm.<hash> suffix to
-> local symbols to avoid duplications. Existing scripts/kallsyms sorts
-> symbols without .llvm.<hash> suffix. However, this causes quite some
-> issues later on. Some users of kallsyms, such as livepatch, have to match
-> symbols exactly; while other users, such as kprobe, would match symbols
-> without the suffix.
->
-> Address this by sorting full symbols (with .llvm.<hash>) at build time, a=
-nd
-> split kallsyms APIs to explicitly match full symbols or without suffix.
-> Specifically, exiting APIs will match symbols exactly. Two new APIs are
-> added to match symbols with suffix. Use the new APIs in tracing/kprobes.
+After the commit 66665ad2f102 ("tracing/kprobe: bpf: Compare instruction
+pointer with original one"), "bpf_kprobe_override" is not used anywhere
+anymore, and we can remove it now.
 
-Forgot to mention: This is to follow up the discussions in this thread:
+Fixes: 66665ad2f102 ("tracing/kprobe: bpf: Compare instruction pointer with original one")
+Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+---
+v2: add the Fixes tag
+---
+ include/linux/trace_events.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-https://lore.kernel.org/live-patching/20240605032120.3179157-1-song@kernel.=
-org/T/#u
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 9df3e2973626..9435185c10ef 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -880,7 +880,6 @@ do {									\
+ struct perf_event;
+ 
+ DECLARE_PER_CPU(struct pt_regs, perf_trace_regs);
+-DECLARE_PER_CPU(int, bpf_kprobe_override);
+ 
+ extern int  perf_trace_init(struct perf_event *event);
+ extern void perf_trace_destroy(struct perf_event *event);
+-- 
+2.39.2
 
-Thanks,
-Song
