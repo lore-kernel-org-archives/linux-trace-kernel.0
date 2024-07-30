@@ -1,172 +1,215 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2081.outbound.protection.outlook.com [40.107.102.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848431A76BF;
-	Tue, 30 Jul 2024 17:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722360435; cv=none; b=QR/vd6wekj2b5GJ9bqc0qjIV5259hAwtYWwAuiC02VyYNHZ+ggst9MXqKKB6yjzc4c1227nI/7Tq61DGtpEwPwmc2egrq78SnWc9WWpmw4dqPfiiHhDExfE2DPr8babAXKsJVqJZt0fPhLHlMjOeXTk3VKJT4yx1ki8/MsB/JdM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722360435; c=relaxed/simple;
-	bh=6p98u6SIWlhiVPjvsPXIichyblzQjYvfVT+RJ4u9t1E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tch57oXDXRxkDBtf4tMpx/FeZv3WwyjCIFkbeTVh3m9by0kP1Eo9lnxF+dPvjk9rsrRcIn2bl0atzg2PgsZYQR6k8WOenwE7BS9TOfw1Y6QuY1IfZReGhVvrAPcrNGlcY4/OK8C9M+kW1PhKj7Q2Bl51gsApPhtOYhf0by7yxos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cFaH+AD3; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7466A1AA3C6;
+	Tue, 30 Jul 2024 18:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722365659; cv=fail; b=eo0Ho9RKacA7WG0T/00KXrSILWIhkrD5N4hXZOmi2mS4Kwpv40mWa1wW4c3NTdPhzhRd6raJCtIwiIdDBvJ26qcW9xNy69IBcog3BfH97i/ppXBgLGh+/dq3Wd7eApXEb2+ZRGxXFHvAW/vG4UbdKoDu/janedhx8M8ZOLwsCDo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722365659; c=relaxed/simple;
+	bh=Q0K4IwQlXAX0rsN6szKXM1RyMTy0vjjrSeMwP8XtPWE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QATMqWRBzQrZK4O0e0DJA7/Llht4/nXBodugwp7bOBrH2jPishKlmo2r98kPs4Ckdh4BeSoyWbhFeSoU1oTh1qgYQ3N0v668MEnS862/FHXM3fu7WzKxJ/0Z3uxpWBUaaLtvYyl+qpm2+JzjgU1eudB8MQ9BfdcCaDlLNFc+8Nw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ucnAKy94; arc=fail smtp.client-ip=40.107.102.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFaH+AD3"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2cb585375f6so3522840a91.3;
-        Tue, 30 Jul 2024 10:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722360434; x=1722965234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CuhSbZfPq+Y1KO4HN8+egIKvw/xvt2Rrevesh1kZBJ4=;
-        b=cFaH+AD3moFnrl3dRz4LcvjdA9zecQPtgInw9UBCSPfupLNmvt043mjkmfENCsydGL
-         oCPZjwDuiGPY+ePaPzd92eFfqmKt1h1r4WidFQa1TaFZ3Z4PIMTURjJ+uSTezHzgtnYX
-         O6Q9Q6YuFSe3LIm2Lm0jmgh06gfT6ILZsrU0AxSivof+kvQojQ/XJ75CsY0yx1z7+qBO
-         uEUy94fVY1JOrbdt6/6+yYoS+BnFk/9ZSlF9hXR0thNqz33cY6JiJgzAT0XC7z6AsoFH
-         MxMo7mRfUzOyxFouILoYZ3Z202evLDC+SaFOWIWlUVzEeNEH/3G7x9FSF1yzagbsGjsr
-         2FIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722360434; x=1722965234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CuhSbZfPq+Y1KO4HN8+egIKvw/xvt2Rrevesh1kZBJ4=;
-        b=A1w4dDnvscTZG5Sb8jam1uK5hgLwf2WTU/znlDRFUrFIsJ0Dae+2QcUWoKqcide8Gv
-         X5hZHjWxvLbI4n4AAgcDTrhMvGAMZOyb33smO+WPQ2RV1GY+4dFqXPeNALMIC7rfYEdV
-         KlDv+j3G635+qvLIkkKMQ6KGGqmyagc29Un0PObnZACVl9spES3G5hEMA2gXchflBxc1
-         bpwkcZahyWdxrzF6YYgJVm2iV15J1OGX9rR9iNFbKBlwHJ1tvifB8WiQQIAJk0VEn8In
-         6CnM05AK3MWn1jqK6MuT6L1YuWfBBYGjJFlivfKq0jriWMuOUhZZFsOwOx0QqG1h5XK0
-         W0Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCXS9nrqgsuyj8RYpZ3lZnR8EjbQuo1Tx1MssneWOQqjc6xv/J5pCux8uXMoRjLgWK8kkLD9uTO0V0RENhEKcFnmBUlobYS0hz8YDyJ14gc7gqtlrHJbdD/6feB1/kFS0SecotnMTh5RR8VL3e7klmpu
-X-Gm-Message-State: AOJu0Yww9jS/MVuXZSmsWfwSzq5QsB9tQ0CzhKlIkGyWqaI0Ae6ps1j3
-	jlchXJE3i3p1XXiNI0/noe9pkxAB/ujFayN2YQQvpgQ92HO5roGU7uQBzhIYDmlpbI/xemsrokj
-	qooZMlmgt0OCR5XTXzJ3ADhasMgJCxg==
-X-Google-Smtp-Source: AGHT+IGyFsC7HtS+vcCAFkEG6c3/pZQY9ndO8lwrAr/jOWY1HEkXVfMbtT4EPMLKGJ6cXR84zz3jk9btVaOgA1mGI44=
-X-Received: by 2002:a17:90a:9e6:b0:2c9:8b23:15ba with SMTP id
- 98e67ed59e1d1-2cf7e71fcb4mr12928584a91.42.1722360433715; Tue, 30 Jul 2024
- 10:27:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ucnAKy94"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vNszcNVV8cL4bZvqC60EhMI/6JSJbCMK+T+3VNPPBvYkRJbBG+vWr7MZd9z2CYpNcWeU6ml4huTyTP2ul1EYszZqkLVvRs2A8mQeMfqnYIXEmBqpG2l5Y5+W006GmBrb0apy/4VeuHbGQfqFSfVYexc0umCn5N+pnPW67pgGmrK2063nmAKDLXRf13hxbInD7YGiVokDcnNY2LJ8NAvS4p1kwBvGdTYmBXS0wfeip6L3f5/nGQSF0yzxOHKOgvFXcdpi/SMhD8OzT8GIuxOXod4Ax3yfhMni4B9859t7iPvT0N+pmpDRMd5/hM1hj0BCfF3CUzN5qgdGZB5lITq2Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RMtrEfp0NdsRRgS06mz/Xs0zSUynypwJuUmYPidt9YA=;
+ b=qUszttUiZScqB0fu1jUbq7vwsM235JsUnVlqP39EGGI+dSzQjllmVrtW7od0Xg5aCX9AJtoUz2xxtUOt/Y7yeYLSkmWGdSfyhwo+A4Zk9+DVlceNyViiggxpM+ERiwdn5dJOiTSirJlT5dl2OQ6Au0Qb0dpkDDXzlWi9fNDPv1gbJ0Jljam8XBPHb5QEernl4b/fkGxEHRpIKicWUwlAB2Ui7tBDwCWi3KYkjhAQsuURBVx/AYNGX8yAV/vBtORirRgGuSFax6jrUgS64+jaNp/9FcbEbdB/CO57THYkko/rXdTTkWVlpLCgHSaG/zYHT1lW9k+4lRbUBRmc/U7jyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMtrEfp0NdsRRgS06mz/Xs0zSUynypwJuUmYPidt9YA=;
+ b=ucnAKy94P9gjYFxlQS1mH9w6AWsIsw+ASeLZF7MyBLK0ONUOKFdl6kO4/ZgNvsfZTGFmx3d2h9eiP8jWdq58QhExVmL1bp5RHrKtSQqfwGJIFlmueu59fXKW+bhw9EEYBRlYO3oqwd2bw+g0pDlcu29LbdDgQ6NyMXS+osH/5j4=
+Received: from CH0PR03CA0083.namprd03.prod.outlook.com (2603:10b6:610:cc::28)
+ by IA1PR12MB7688.namprd12.prod.outlook.com (2603:10b6:208:420::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.29; Tue, 30 Jul
+ 2024 18:54:14 +0000
+Received: from CH1PEPF0000AD74.namprd04.prod.outlook.com
+ (2603:10b6:610:cc:cafe::dd) by CH0PR03CA0083.outlook.office365.com
+ (2603:10b6:610:cc::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.34 via Frontend
+ Transport; Tue, 30 Jul 2024 18:54:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000AD74.mail.protection.outlook.com (10.167.244.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7828.19 via Frontend Transport; Tue, 30 Jul 2024 18:54:13 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 30 Jul 2024 13:54:12 -0500
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <x86@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<rafael@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<rostedt@goodmis.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<james.morse@arm.com>, <airlied@gmail.com>, <yazen.ghannam@amd.com>,
+	<john.allen@amd.com>, <avadnaik@amd.com>
+Subject: [PATCH v3 0/4] MCE wrapper and support for new SMCA syndrome MSRs
+Date: Tue, 30 Jul 2024 13:54:02 -0500
+Message-ID: <20240730185406.3709876-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240730123421.GA9085@redhat.com> <20240730123457.GA9108@redhat.com>
- <CAEf4BzZ=vMh9=t3iH+pqwTDaYGfXvuF-0BqaLsOgAx2qV7Vqzw@mail.gmail.com> <20240730171733.GA10822@redhat.com>
-In-Reply-To: <20240730171733.GA10822@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 30 Jul 2024 10:27:01 -0700
-Message-ID: <CAEf4BzYiBgqJwmh=rJiL+5gfwbZprEp81wnmq219w5j5WEGAFg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] uprobes: shift put_uprobe() from delete_uprobe() to uprobe_unregister()
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, 
-	jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD74:EE_|IA1PR12MB7688:EE_
+X-MS-Office365-Filtering-Correlation-Id: 608b56d0-26d7-4eb5-bd1a-08dcb0c90150
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|7416014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?t2Q3PADq3vTXgV5v1elU5ObE1SL7UmHgxKM0oeIQrDGUpIjzvXMnhztZD8pp?=
+ =?us-ascii?Q?oY24mPNeCaTaFBthYUHydWeC78iitkcKNhY1kRaTC47B+jfIHJim2FSshSXG?=
+ =?us-ascii?Q?UG1IkU9IMwHieHgP7iKM1nPjuAZw2uuDFGDpmR/j1PS++nPBRYZr69FTw0PR?=
+ =?us-ascii?Q?/S+JV9ccrj8qC5dECV5xcbpkN9vG+lusCgtb6sEVNBtJwoVRmLWxXeCPZh3w?=
+ =?us-ascii?Q?xaZ+PmdME0/1S7SMTDurUUDWuIb4Q6ZRmeJdyFXIYvWn1oKsfRO3Qje7gLXx?=
+ =?us-ascii?Q?3NSxwaER/YWDQOSm53MXHbOdyzpnVOJXkx1HnUEmoQgjG1KxkC8pHPrf0j2T?=
+ =?us-ascii?Q?BJuoxhWlaNM7NTvarg0MtBwnJs/wRz2yEz5b8Pcs9qkU5Sn2Za9ta7Vr9NQc?=
+ =?us-ascii?Q?Gs2Scqzn0e1a/et0d0QI/hZnHgT7ZR2boQHmRzEiO1PSIzxiEU7Esl4TPqch?=
+ =?us-ascii?Q?C7aF9i9tCyW466CpE/ck0RJUiGHtOtEDnDnmtSSCt4YkdDmpxA/LJIkmaD7C?=
+ =?us-ascii?Q?2lIM8UJg/5bbCVO8X9z7Arcx0YjB0RaTrXS1GWzXc0uH9PulypQgnu6JFGJ7?=
+ =?us-ascii?Q?vJIYz9mu95M/+ohYN4D0rrdXcvPZNTWE0LUBCijgZ9EdZM5hmu90LVNkYQQu?=
+ =?us-ascii?Q?861gDnBLGhhFdLgo4piNFx2PAs4sbP2rOymiv0cGjvFtWE/IUcgqefjRrzzt?=
+ =?us-ascii?Q?j+jt6NcnZOYBva4o/XbgOBVRvBaByy9eYmCJHBmogIYMe2j6vxtgP7UNnrxM?=
+ =?us-ascii?Q?+1g60rMSgw+M9BEFEqnwVsjYXOxmC4U4BVUGvoy0+lRhRo0d/DO3HZLoYVAd?=
+ =?us-ascii?Q?YOlhAwRNtoVzVJyXJQlDgynskG6WUZJy+WoI7Zajv/MVQFsGvpZvNJ8M10i2?=
+ =?us-ascii?Q?HUwQwFodMgq1w4YVnwicaaiKgzbPwGigYytCx6atUo+qU3JHH6ynSM5e+hMI?=
+ =?us-ascii?Q?HtHJJBLN+IFKumEHTl9wTApwl2ELWpj5W1OiPV+gUexKHNJ6QyXXxgB4IPlx?=
+ =?us-ascii?Q?LedEeet1jdOWcLJz65KK6D8t9dWGKxYpN4GsFdCZfor44dL8/RUqRDmJC+An?=
+ =?us-ascii?Q?wtCShXBVT4v1ytLiSw4WhAzgdq1SzI3foNTA99NsPNvCkZ68qLz3PvWFBGcY?=
+ =?us-ascii?Q?yVp5+grNaDiLx46bK/ulgenk1WM6GCiiLDuGJTpCw3qWE0fNfe/rsZM0VYd1?=
+ =?us-ascii?Q?QZXRZoIBzYe4VfA+MAX4I+4mEkLXDskXrkiDjlgVscgIJ5CHYc7gp+SOCTsE?=
+ =?us-ascii?Q?uY1KjJQ7og99l+iuH8Vna8su978uNjf4R7lf8yUoMgqMBFsLWZ62ZZvXTCYS?=
+ =?us-ascii?Q?qq14wEWQjFr25PHCt/ZpwCp/VgbvR6zXoUrKQj5I0OTCKt1q+xT7WGauDz38?=
+ =?us-ascii?Q?TT66zVVORry75HBlv3btdlzTHzZ0VGNhs7Lc9v1omzp/i0Wg/g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2024 18:54:13.5970
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 608b56d0-26d7-4eb5-bd1a-08dcb0c90150
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD74.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7688
 
-On Tue, Jul 30, 2024 at 10:17=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wr=
-ote:
->
-> Thanks for looking at this!
->
-> On 07/30, Andrii Nakryiko wrote:
-> >
-> > BTW, do you have anything against me changing refcounting so that
-> > uprobes_tree itself doesn't hold a refcount, and all the refcounting
-> > is done based on consumers holding implicit refcount and whatever
-> > temporary get/put uprobe is necessary for runtime uprobe/uretprobe
-> > functioning.
->
-> No, I have nothing against.
->
-> To be honest, I don't really understand the value of this change, but
-> a) this is probably because I didn't see a separate patch(es) which
-> does this and b) assuming that it doesn't complicate the code too much
-> I won't argue in any case ;)
->
-> And in fact I had your proposed change in mind when I did these cleanups.
-> I think that they can even simplify this change, at least I hope they can
-> not complicate it.
+This patchset adds a new wrapper for struct mce to prevent its bloating
+and export vendor specific error information. Additionally, support is
+also introduced for two new "syndrome" MSRs used in newer AMD Scalable
+MCA (SMCA) systems. Also, a new "FRU Text in MCA" feature that uses these
+new "syndrome" MSRs has been addded.
 
-I just find this logic to drop refcount if the consumer list is empty
-super confusing and hard to intuitively reason about. It's just very
-unconventional and seems problematic every time I think about this.
+Patch 1 adds the new wrapper structure mce_hw_err for the struct mce
+while also modifying the mce_record tracepoint to use the new wrapper.
 
-Either way, we can discuss once you see the code, it's not really
-complicated if I stick to refcount_t instead of my fancy atomic-based
-refcounting.
+Patch 2 adds support for the new "syndrome" registers. They are read/printed
+wherever the existing MCA_SYND register is used.
 
->
-> > BTW, do you plan
-> > any more clean ups like this? It's a bit of a moving target because of
-> > your refactoring, so I'd appreciate some stability to build upon :)
->
-> Well yes... may be this week.
->
-> I'd like to (try to) optimize/de-uglify register_for_each_vma() for
-> the multiple-consumers case. And, more importantly, the case when perf
-> does uprobe_register() + uprobe_apply().
->
-> But. All these changes will only touch the register_for_each_vma() paths,
-> so this is completely orthogonal to this series and your and/or Peter's
-> changes.
->
+Patch 3 updates the function that pulls MCA information from UEFI x86
+Common Platform Error Records (CPERs) to handle systems that support the
+new registers.
 
-Ok, sounds good, it would be nice to keep the other part more or less
-intact for the time being. Thanks!
+Patch 4 adds support to the AMD MCE decoder module to detect and use the
+"FRU Text in MCA" feature which leverages the new registers.
 
-> > Also, can you please push this and your previous patch set into some
-> > branch somewhere I can pull from, preferably based on the latest
-> > linux-trace's probes/for-next? Thanks!
->
-> Cough ;)
->
-> No, sorry, I can't. I lost my kernel.org account years ago (and this is
-> the second time this has happened!), but since I am a lazy dog I didn't
-> even bother to try to restore it.
+NOTE:
 
-It doesn't have to be kernel.org repo :-P Github would work just fine,
-but ok, if it's too much trouble I'll just go download emails one by
-one and apply them locally.
+This set was initially submitted as part of the larger MCA Updates set.
 
->
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
->
-> Thanks!
->
-> > > @@ -1102,10 +1100,16 @@ void uprobe_unregister(struct uprobe *uprobe,=
- struct uprobe_consumer *uc)
-> > >                 err =3D register_for_each_vma(uprobe, NULL);
-> > >
-> > >         /* TODO : cant unregister? schedule a worker thread */
-> > > -       if (!err && !uprobe->consumers)
-> > > -               delete_uprobe(uprobe);
-> > > +       if (!err) {
-> > > +               if (!uprobe->consumers)
-> > > +                       delete_uprobe(uprobe);
-> > > +               else
-> > > +                       err =3D -EBUSY;
-> >
-> > This bit is weird because really it's not an error... but this makes
-> > this change simpler and moves put_uprobe outside of rwsem.
->
-> Agreed, uprobe->consumers !=3D NULL is not an error. But we don't return
-> this error code, just we need to ensure that "err =3D=3D 0" means that
-> "delete_uprobe() was actually called".
->
+v1: https://lore.kernel.org/linux-edac/20231118193248.1296798-1-yazen.ghannam@amd.com/
+v2: https://lore.kernel.org/linux-edac/20240404151359.47970-1-yazen.ghannam@amd.com/
 
-yep
+However, since the MCA Updates set has been split up into smaller sets,
+this set, going forward, will be submitted independently.
 
-> > With my
-> > proposed change to refcounting schema this would be unnecessary,
->
-> Yes.
->
-> Oleg.
->
+Having said that, this set set depends on and applies cleanly on top of
+the below two sets.
+
+[1] https://lore.kernel.org/linux-edac/20240521125434.1555845-1-yazen.ghannam@amd.com/
+[2] https://lore.kernel.org/linux-edac/20240523155641.2805411-1-yazen.ghannam@amd.com/
+
+Changes in v2:
+ - Drop dependencies on sets [1] and [2] above and rebase on top of
+   tip/master. 
+
+Changes in v3:
+ - Move wrapper changes required in mce_read_aux() and mce_no_way_out()
+   from second patch to the first patch.
+ - Modify commit messages for second and fourth patch per feedback
+   received.
+ - Add comments to explain purpose of the new wrapper structure.
+ - Incorporate suggested touchup in the third patch.
+ - Remove call to memset() for the frutext string in the fourth patch.
+   Instead, just ensure that the string is NULL terminated.
+ - Fix SoB chains on all patches to properly reflect the patch path.
+
+Links:
+v1: https://lore.kernel.org/linux-edac/20240530211620.1829453-1-avadhut.naik@amd.com/
+v2: https://lore.kernel.org/linux-edac/20240625195624.2565741-1-avadhut.naik@amd.com/
+
+Avadhut Naik (2):
+  x86/mce: Add wrapper for struct mce to export vendor specific info
+  x86/mce, EDAC/mce_amd: Add support for new MCA_SYND{1,2} registers
+
+Yazen Ghannam (2):
+  x86/mce/apei: Handle variable register array size
+  EDAC/mce_amd: Add support for FRU Text in MCA
+
+ arch/x86/include/asm/mce.h              |  34 +++-
+ arch/x86/include/uapi/asm/mce.h         |   3 +-
+ arch/x86/kernel/cpu/mce/amd.c           |  33 ++--
+ arch/x86/kernel/cpu/mce/apei.c          | 118 ++++++++++----
+ arch/x86/kernel/cpu/mce/core.c          | 201 ++++++++++++++----------
+ arch/x86/kernel/cpu/mce/dev-mcelog.c    |   2 +-
+ arch/x86/kernel/cpu/mce/genpool.c       |  20 +--
+ arch/x86/kernel/cpu/mce/inject.c        |   4 +-
+ arch/x86/kernel/cpu/mce/internal.h      |   4 +-
+ drivers/acpi/acpi_extlog.c              |   2 +-
+ drivers/acpi/nfit/mce.c                 |   2 +-
+ drivers/edac/i7core_edac.c              |   2 +-
+ drivers/edac/igen6_edac.c               |   2 +-
+ drivers/edac/mce_amd.c                  |  27 +++-
+ drivers/edac/pnd2_edac.c                |   2 +-
+ drivers/edac/sb_edac.c                  |   2 +-
+ drivers/edac/skx_common.c               |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c |   2 +-
+ drivers/ras/amd/fmpm.c                  |   2 +-
+ drivers/ras/cec.c                       |   2 +-
+ include/trace/events/mce.h              |  51 +++---
+ 21 files changed, 331 insertions(+), 186 deletions(-)
+
+
+base-commit: dee974604f7870167161cbe51e8f3b9c2858de34
+-- 
+2.34.1
+
