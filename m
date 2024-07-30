@@ -1,321 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1809219E7D1;
-	Tue, 30 Jul 2024 15:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF41B1A2C1E;
+	Tue, 30 Jul 2024 15:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722351988; cv=none; b=q91YG6+t5zB5cK+TlH9eg5YiCwV1Oygm5aIHLrIwKlkUx/vK8oJBxaWmn5KJ9ArN6Ceiag6JSJesP+vEbT5FqVdvjIdNJPlSaWmsFDzGAafeZB/xyEcJYB3G/eZlgQseupn09+QiC4vPvYh/0CaKvZOL9PW+6XFc1FYCDs+W4MQ=
+	t=1722352143; cv=none; b=FWxGWe7rxODkCbOdr6ECe+0INz8xgQLb0ql27V8rDR2VVWtXI4SE6pL3boaIEhBQIN3v0CU4svscHCpUO94VQ+Iilu2Y8Jkgz2Ap0r02sxVdwBDFFAIDFUcyMi0RSqJNT4mGW7jZTrCwnUjR8nAaf2elvrDkP70jMPZ7pzdPk3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722351988; c=relaxed/simple;
-	bh=RN7PLKyOec9Ie9QnazVGvkDHyZY3E6LKutJuncjDfyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ff2omGe4i1bA3SDua/IzObWerBiBK2Ec85Da9tRVPUWcJYBdTAbAG9ziSpaqmbOZ7edyb67QGBK9uTL6mI1/VNt3OPzKJM5bkcTeIQVeQv3xIG91MZwtHwYgbimUbdM5vSGCi+YHDOIlX65mHVccT4uhsvXFRPt64SCEb6b1+SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C83B3C4AF0A;
-	Tue, 30 Jul 2024 15:06:25 +0000 (UTC)
-Date: Tue, 30 Jul 2024 11:06:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers  
- <mathieu.desnoyers@efficios.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Mathias Krause <minipli@grsecurity.net>, Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?=
-   <digirigawa@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>,
- Al   Viro <viro@zeniv.linux.org.uk>, regressions@leemhuis.info, Dan
- Carpenter   <dan.carpenter@linaro.org>, Beau Belgrave
- <beaub@linux.microsoft.com>, Florian Fainelli 
- <florian.fainelli@broadcom.com>, Alexey Makhalov   
- <alexey.makhalov@broadcom.com>, Vasavi Sirnapalli   
- <vasavi.sirnapalli@broadcom.com>
-Subject: [PATCH v3] tracing: Have format file honor EVENT_FILE_FL_FREED
-Message-ID: <20240730110657.3b69d3c1@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1722352143; c=relaxed/simple;
+	bh=8ENJOjZwJdGgNFQOL8N6OJHTAv8NY+3Jqa9OsnFVcBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sd5RG8R6AV3FZz56z3JNrwySrYw3h/Ni199U557hyEFUrkNfXrOcx7s9BzZmSD/MvEafLe1bfK/hcH4Xrc2bgBTwLlUs7K1GC+UrcdOEsfPxHgAIRj1SNmNz5tyYAoY/uj2elK6B92vZJP8uLdTuoh/s8p7DMA4cOuYPyVmCOiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXCctCsa; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXCctCsa"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2cb510cd097so3408253a91.1;
+        Tue, 30 Jul 2024 08:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722352141; x=1722956941; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UiEQQfSFvVIlUjdarShKIntPOK/qyPeJHSyrwGVtIbs=;
+        b=FXCctCsayOZNnuuSdPncFPrOOdmitTQHxmnDj71ZMSgAsbr9Ep83X8kq/xJr47gprI
+         bQtbiXR7mqQekSHiLTV7H1SF/pfk6Ik5iZ9ZWPx5ixPg7pGTQKkVSoApP/unXlGisQwE
+         QTCWkZFvpURbwHebEOyESjSEWqB+Ne45S8EsgHw2Srm02/JcFzR9W9Pl1wxdCsL9RfN9
+         Sili3FrtgxfJ+N7MJkz/q4NVNzmfzJwwcIY/IYT8OvAGS7rB+937AIR5dN5xUYhqXyD2
+         2iP6uHrR8ZMl5h5Be3D24LhjSuS5vao+aK47/t5Pr+UmL2lAS3FSB9jTg9rYRCaXk4+8
+         tNcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722352141; x=1722956941;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UiEQQfSFvVIlUjdarShKIntPOK/qyPeJHSyrwGVtIbs=;
+        b=dkbrbFg2Cne46sMWjiSEAfQL9K2NSiteWWOJqMX0MLfcOJFalr8tK+/2NZaGihd0es
+         ElmoZcpUIAPnOHoOFuD7btDC6E30ndaGJC1bn0zoOlhz+H/9rC829vp+LjbktxkNoNBt
+         ZJBgDVXOuX60bimu5JTyXUI378joA7k5Nn8gUMtkSdXIDBgQ0g7+6LtX8EQVJIuvcYw4
+         gzq1NrE275iErjgR6qlajfDZFxJqlDXdgVTn9VYaUNSQc8bL8TKJrHfcnGu+CewYAqbY
+         INT/2OOPfDxV7ZYFOcAEc9/muS90FuxXhiEJ7PACKI8XIDutJFuNqEpWthOJ6P0KbmRS
+         v7wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUocgXN76FLLF10CVVcuEU18x1Y+rdyqoK51+poLLeEdNN8vegHwYFku0GEGypG8doHfZFAnbDgG06Xn15zRf12H98DmpDDHCclCc93ooYXj6RJgCh+r6T8uStTGmkH8G7K5xSs/rJepg2mb8fv2Qc0
+X-Gm-Message-State: AOJu0YxyU2TfEU83koh23nAZCfUYEzyxauCCuHSRhG3yH+L44ZabLlAi
+	B5JuAuAgWcnB34qxFYIgF4iqMZlWbwDihsQByffaZ4cHW7LOQTFcsbN58JOBD69IlJd4aiEN8To
+	tQ2gtWe6QenHrdn96FSiLY9jfkgc=
+X-Google-Smtp-Source: AGHT+IGlO6F6UOrUzQz8J2QDhkFJHgPfixGJLN9Qvf4u+3VqNqRQOQE9sqawX452qNdusKAUSXmkFBKym34FJXwOlSE=
+X-Received: by 2002:a17:90a:5d17:b0:2c9:a151:44fb with SMTP id
+ 98e67ed59e1d1-2cf7e1fad43mr13111838a91.22.1722352141201; Tue, 30 Jul 2024
+ 08:09:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240730123421.GA9085@redhat.com> <20240730123457.GA9108@redhat.com>
+In-Reply-To: <20240730123457.GA9108@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 30 Jul 2024 08:08:49 -0700
+Message-ID: <CAEf4BzZ=vMh9=t3iH+pqwTDaYGfXvuF-0BqaLsOgAx2qV7Vqzw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] uprobes: shift put_uprobe() from delete_uprobe() to uprobe_unregister()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, 
+	jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Jul 30, 2024 at 5:35=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> Kill the extra get_uprobe() + put_uprobe() in uprobe_unregister() and
+> move the possibly final put_uprobe() from delete_uprobe() to its only
+> caller, uprobe_unregister().
+>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> ---
+>  kernel/events/uprobes.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>
 
-When eventfs was introduced, special care had to be done to coordinate the
-freeing of the file meta data with the files that are exposed to user
-space. The file meta data would have a ref count that is set when the file
-is created and would be decremented and freed after the last user that
-opened the file closed it. When the file meta data was to be freed, it
-would set a flag (EVENT_FILE_FL_FREED) to denote that the file is freed,
-and any new references made (like new opens or reads) would fail as it is
-marked freed. This allowed other meta data to be freed after this flag was
-set (under the event_mutex).
+LGTM as well.
 
-All the files that were dynamically created in the events directory had a
-pointer to the file meta data and would call event_release() when the last
-reference to the user space file was closed. This would be the time that it
-is safe to free the file meta data.
+BTW, do you have anything against me changing refcounting so that
+uprobes_tree itself doesn't hold a refcount, and all the refcounting
+is done based on consumers holding implicit refcount and whatever
+temporary get/put uprobe is necessary for runtime uprobe/uretprobe
+functioning.
 
-A shortcut was made for the "format" file. It's i_private would point to
-the "call" entry directly and not point to the file's meta data. This is
-because all format files are the same for the same "call", so it was
-thought there was no reason to differentiate them.  The other files
-maintain state (like the "enable", "trigger", etc). But this meant if the
-file were to disappear, the "format" file would be unaware of it.
+I can do that with a simple refcount_t and refcount_inc_not_zero(), no
+fancy custom refcounting. This schema makes most sense to me, it will
+also simplify registration by avoiding that annoying
+is_uprobe_active() check + retry. Thoughts?
 
-This caused a race that could be trigger via the user_events test (that
-would create dynamic events and free them), and running a loop that would
-read the user_events format files:
+All that would be additional on top of your change. BTW, do you plan
+any more clean ups like this? It's a bit of a moving target because of
+your refactoring, so I'd appreciate some stability to build upon :)
 
-In one console run:
+Also, can you please push this and your previous patch set into some
+branch somewhere I can pull from, preferably based on the latest
+linux-trace's probes/for-next? Thanks!
 
- # cd tools/testing/selftests/user_events
- # while true; do ./ftrace_test; done
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-And in another console run:
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index c06e1a5f1783..f88b7ff20587 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -939,7 +939,6 @@ static void delete_uprobe(struct uprobe *uprobe)
+>         rb_erase(&uprobe->rb_node, &uprobes_tree);
+>         write_unlock(&uprobes_treelock);
+>         RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> -       put_uprobe(uprobe);
+>  }
+>
+>  struct map_info {
+> @@ -1094,7 +1093,6 @@ void uprobe_unregister(struct uprobe *uprobe, struc=
+t uprobe_consumer *uc)
+>  {
+>         int err;
+>
+> -       get_uprobe(uprobe);
+>         down_write(&uprobe->register_rwsem);
+>         if (WARN_ON(!consumer_del(uprobe, uc)))
+>                 err =3D -ENOENT;
+> @@ -1102,10 +1100,16 @@ void uprobe_unregister(struct uprobe *uprobe, str=
+uct uprobe_consumer *uc)
+>                 err =3D register_for_each_vma(uprobe, NULL);
+>
+>         /* TODO : cant unregister? schedule a worker thread */
+> -       if (!err && !uprobe->consumers)
+> -               delete_uprobe(uprobe);
+> +       if (!err) {
+> +               if (!uprobe->consumers)
+> +                       delete_uprobe(uprobe);
+> +               else
+> +                       err =3D -EBUSY;
 
- # cd /sys/kernel/tracing/
- # while true; do cat events/user_events/__test_event/format; done 2>/dev/null
+This bit is weird because really it's not an error... but this makes
+this change simpler and moves put_uprobe outside of rwsem. With my
+proposed change to refcounting schema this would be unnecessary, but
+let's see what you think.
 
-With KASAN memory checking, it would trigger a use-after-free bug report
-(which was a real bug). This was because the format file was not checking
-the file's meta data flag "EVENT_FILE_FL_FREED", so it would access the
-event that the file meta data pointed to after the event was freed.
-
-After inspection, there are other locations that were found to not check
-the EVENT_FILE_FL_FREED flag when accessing the trace_event_file. Add a
-new helper function: event_file_file() that will make sure that the
-event_mutex is held, and will return NULL if the trace_event_file has the
-EVENT_FILE_FL_FREED flag set. Have the first reference of the struct file
-pointer use event_file_file() and check for NULL. Later uses can still use
-the event_file_data() helper function if the event_mutex is still held and
-was not released since the event_file_file() call.
-
-Link: https://lore.kernel.org/all/20240719204701.1605950-1-minipli@grsecurity.net/
-
-Cc: stable@vger.kernel.org
-Fixes: b63db58e2fa5d ("eventfs/tracing: Add callback for release of an eventfs_inode")
-Reported-by: Mathias Krause <minipli@grsecurity.net>
-Tested-by: Mathias Krause <minipli@grsecurity.net>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v3: https://lore.kernel.org/20240726132811.306a449e@rorschach.local.home
-
-- After inspecting the code, there's several users of event_file_data()
-  that return the trace_event_file descriptor when it could be set to be
-  freed. Add a new helper function: event_file_file() that will make sure
-  the event_mutex is held and check the flag and return NULL if the file is
-  freed.
-
- kernel/trace/trace.h                | 23 ++++++++++++++++++++
- kernel/trace/trace_events.c         | 33 +++++++++++++++++------------
- kernel/trace/trace_events_hist.c    |  4 ++--
- kernel/trace/trace_events_inject.c  |  2 +-
- kernel/trace/trace_events_trigger.c |  6 +++---
- 5 files changed, 49 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 749a182dab48..8edab43580d5 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1573,6 +1573,29 @@ static inline void *event_file_data(struct file *filp)
- extern struct mutex event_mutex;
- extern struct list_head ftrace_events;
- 
-+/*
-+ * When the trace_event_file is the filp->i_private pointer,
-+ * it must be taken under the event_mutex lock, and then checked
-+ * if the EVENT_FILE_FL_FREED flag is set. If it is, then the
-+ * data pointed to by the trace_event_file can not be trusted.
-+ *
-+ * Use the event_file_file() to access the trace_event_file from
-+ * the filp the first time under the event_mutex and check for
-+ * NULL. If it is needed to be retrieved again and the event_mutex
-+ * is still held, then the event_file_data() can be used and it
-+ * is guaranteed to be valid.
-+ */
-+static inline struct trace_event_file *event_file_file(struct file *filp)
-+{
-+	struct trace_event_file *file;
-+
-+	lockdep_assert_held(&event_mutex);
-+	file = READ_ONCE(file_inode(filp)->i_private);
-+	if (!file || file->flags & EVENT_FILE_FL_FREED)
-+		return NULL;
-+	return file;
-+}
-+
- extern const struct file_operations event_trigger_fops;
- extern const struct file_operations event_hist_fops;
- extern const struct file_operations event_hist_debug_fops;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 6ef29eba90ce..f08fbaf8cad6 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1386,12 +1386,12 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	char buf[4] = "0";
- 
- 	mutex_lock(&event_mutex);
--	file = event_file_data(filp);
-+	file = event_file_file(filp);
- 	if (likely(file))
- 		flags = file->flags;
- 	mutex_unlock(&event_mutex);
- 
--	if (!file || flags & EVENT_FILE_FL_FREED)
-+	if (!file)
- 		return -ENODEV;
- 
- 	if (flags & EVENT_FILE_FL_ENABLED &&
-@@ -1424,8 +1424,8 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	case 1:
- 		ret = -ENODEV;
- 		mutex_lock(&event_mutex);
--		file = event_file_data(filp);
--		if (likely(file && !(file->flags & EVENT_FILE_FL_FREED))) {
-+		file = event_file_file(filp);
-+		if (likely(file)) {
- 			ret = tracing_update_buffers(file->tr);
- 			if (ret < 0) {
- 				mutex_unlock(&event_mutex);
-@@ -1540,7 +1540,8 @@ enum {
- 
- static void *f_next(struct seq_file *m, void *v, loff_t *pos)
- {
--	struct trace_event_call *call = event_file_data(m->private);
-+	struct trace_event_file *file = event_file_data(m->private);
-+	struct trace_event_call *call = file->event_call;
- 	struct list_head *common_head = &ftrace_common_fields;
- 	struct list_head *head = trace_get_fields(call);
- 	struct list_head *node = v;
-@@ -1572,7 +1573,8 @@ static void *f_next(struct seq_file *m, void *v, loff_t *pos)
- 
- static int f_show(struct seq_file *m, void *v)
- {
--	struct trace_event_call *call = event_file_data(m->private);
-+	struct trace_event_file *file = event_file_data(m->private);
-+	struct trace_event_call *call = file->event_call;
- 	struct ftrace_event_field *field;
- 	const char *array_descriptor;
- 
-@@ -1627,12 +1629,14 @@ static int f_show(struct seq_file *m, void *v)
- 
- static void *f_start(struct seq_file *m, loff_t *pos)
- {
-+	struct trace_event_file *file;
- 	void *p = (void *)FORMAT_HEADER;
- 	loff_t l = 0;
- 
- 	/* ->stop() is called even if ->start() fails */
- 	mutex_lock(&event_mutex);
--	if (!event_file_data(m->private))
-+	file = event_file_file(m->private);
-+	if (!file)
- 		return ERR_PTR(-ENODEV);
- 
- 	while (l < *pos && p)
-@@ -1706,8 +1710,8 @@ event_filter_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	trace_seq_init(s);
- 
- 	mutex_lock(&event_mutex);
--	file = event_file_data(filp);
--	if (file && !(file->flags & EVENT_FILE_FL_FREED))
-+	file = event_file_file(filp);
-+	if (file)
- 		print_event_filter(file, s);
- 	mutex_unlock(&event_mutex);
- 
-@@ -1736,9 +1740,13 @@ event_filter_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		return PTR_ERR(buf);
- 
- 	mutex_lock(&event_mutex);
--	file = event_file_data(filp);
--	if (file)
--		err = apply_event_filter(file, buf);
-+	file = event_file_file(filp);
-+	if (file) {
-+		if (file->flags & EVENT_FILE_FL_FREED)
-+			err = -ENODEV;
-+		else
-+			err = apply_event_filter(file, buf);
-+	}
- 	mutex_unlock(&event_mutex);
- 
- 	kfree(buf);
-@@ -2485,7 +2493,6 @@ static int event_callback(const char *name, umode_t *mode, void **data,
- 	if (strcmp(name, "format") == 0) {
- 		*mode = TRACE_MODE_READ;
- 		*fops = &ftrace_event_format_fops;
--		*data = call;
- 		return 1;
- 	}
- 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 6ece1308d36a..5f9119eb7c67 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -5601,7 +5601,7 @@ static int hist_show(struct seq_file *m, void *v)
- 
- 	mutex_lock(&event_mutex);
- 
--	event_file = event_file_data(m->private);
-+	event_file = event_file_file(m->private);
- 	if (unlikely(!event_file)) {
- 		ret = -ENODEV;
- 		goto out_unlock;
-@@ -5880,7 +5880,7 @@ static int hist_debug_show(struct seq_file *m, void *v)
- 
- 	mutex_lock(&event_mutex);
- 
--	event_file = event_file_data(m->private);
-+	event_file = event_file_file(m->private);
- 	if (unlikely(!event_file)) {
- 		ret = -ENODEV;
- 		goto out_unlock;
-diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-index 8650562bdaa9..a8f076809db4 100644
---- a/kernel/trace/trace_events_inject.c
-+++ b/kernel/trace/trace_events_inject.c
-@@ -299,7 +299,7 @@ event_inject_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	strim(buf);
- 
- 	mutex_lock(&event_mutex);
--	file = event_file_data(filp);
-+	file = event_file_file(filp);
- 	if (file) {
- 		call = file->event_call;
- 		size = parse_entry(buf, call, &entry);
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 4bec043c8690..a5e3d6acf1e1 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -159,7 +159,7 @@ static void *trigger_start(struct seq_file *m, loff_t *pos)
- 
- 	/* ->stop() is called even if ->start() fails */
- 	mutex_lock(&event_mutex);
--	event_file = event_file_data(m->private);
-+	event_file = event_file_file(m->private);
- 	if (unlikely(!event_file))
- 		return ERR_PTR(-ENODEV);
- 
-@@ -213,7 +213,7 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 
- 	mutex_lock(&event_mutex);
- 
--	if (unlikely(!event_file_data(file))) {
-+	if (unlikely(!event_file_file(file))) {
- 		mutex_unlock(&event_mutex);
- 		return -ENODEV;
- 	}
-@@ -293,7 +293,7 @@ static ssize_t event_trigger_regex_write(struct file *file,
- 	strim(buf);
- 
- 	mutex_lock(&event_mutex);
--	event_file = event_file_data(file);
-+	event_file = event_file_file(file);
- 	if (unlikely(!event_file)) {
- 		mutex_unlock(&event_mutex);
- 		kfree(buf);
--- 
-2.43.0
-
+> +       }
+>         up_write(&uprobe->register_rwsem);
+> -       put_uprobe(uprobe);
+> +
+> +       if (!err)
+> +               put_uprobe(uprobe);
+>  }
+>  EXPORT_SYMBOL_GPL(uprobe_unregister);
+>
+> --
+> 2.25.1.362.g51ebf55
+>
