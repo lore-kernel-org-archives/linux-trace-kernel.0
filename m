@@ -1,118 +1,78 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35D51BD4FB;
-	Wed, 31 Jul 2024 17:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8DE1396
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 17:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722445980; cv=none; b=DgTBfW8iTXtYmnBG3qDmNUOgBZmwIOxVuX6wpCWzD/NVA1Ch4AmtKcJN8CwzOcU/FCjzjjzUzYFNflGNTuWw3JM67JAWe/UNOnelLcHGmJUrffGliELon87nO1PeRjBT+SJ/1rMOAbwF5nuyOM7rxoElyEw9+v94LQwBskzt4hk=
+	t=1722446269; cv=none; b=Vc7DX/f5J/+X3KBYolQqieXWeeVrP+9DRoTfJKOiBFsio9NFlRoeWW1vRx7j4oqqE4VZI+5aSeENL0n2NIVK3kDRyB311GArxGjmBFw1xo7eGWsSuCRklGzyueiY/j+87a51LQip4UHAJmj7HUT5w9dpePe2vavtMBp2VYHi7F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722445980; c=relaxed/simple;
-	bh=r65fSjPQ8O9ACzXWIzjVq2aULtuRMZ7QPY0CSn2vRDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mZugg53ltuj3atkqMLSUsG3jjempRVBWGV+rnt2EKGaia+xL1wdq0H0ZNrORf2f8m7poOrbqZuQ4oMZgSUggpb9nfYlgVNrIqkr1wd0lxGg8lXjPKX3Wcwo7qews9M+4bQoyFIH+NOftQV22/u45/sG3C7r5YzQRAP8g2mGvc5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bc+bQCH7; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722446269; c=relaxed/simple;
+	bh=WUx/M4+1jhIUgwiAVPxAGlK3xL8kzwraYQRiOxtSloY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBwtAEp2r/t7dImHSvpFPoUncWOjxx35h9swqvZBpyEzbLRs60IDWdt75qV0BB+0x+pR8x/e7GS5Et5Oc5rTyB9vFNfxDM9c/Q1OVOwHI2jIhTF0cPGCH737xjoAosKodWC8W82ktHoShrDqVYRZkXMn12AKx/XniAi1TulkFbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=edAuapGt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bc+bQCH7"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2cf11b91813so3999011a91.1;
-        Wed, 31 Jul 2024 10:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722445978; x=1723050778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zDSCWhELRBdtlc7/5+Htsyc9brjO2KaQhGoF8NY2ITg=;
-        b=Bc+bQCH7ze4x5IOkLN3h6iLJ8OG2Jc78wwan6Ob2x5XmiK/WfUDWMlVPsF16mjCuwq
-         +Qi2ZeSqszeb/FX9J+lfwG7oR1Am+fAsaYlSRxkAmGGJrxaJLYUd3g0wUmYmiRvSTaNm
-         2TRwD+6n3OXQH0yOoJMXS+o6Bz9+y7aGu/j5sp3e/TqlQih3Xqeg7OUB+dREpAQTOU9A
-         FsNW920f4hRIK8zles57+C/5qlY5EK6lVunSeQJj7Mr6N7Ne13CGp6ONHGummPFQTZ6L
-         fSuLzGg4M51p8Dcuo3yY7rYgMs7+8dUe7joMSDzti6SPt5zcOdjeJl/Ob+3IMQ37qOzm
-         BPXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722445978; x=1723050778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zDSCWhELRBdtlc7/5+Htsyc9brjO2KaQhGoF8NY2ITg=;
-        b=sUrD2F5yk+Ck47J8SbL6a5aSiw6QZsDL9SbikeTiyTLn91EDmUWQo07cJuPRy0am21
-         CSSKByRqmUhnUZBmrxKFFffIqgvFLbaBqCqYacn78iyVuJJHESJ9suvtumtOKZrCpSVL
-         vkgtplNGH/kH/Sevx6GL9/RsN10E5Bjg4YmMRBgzPBBsSyPdTPT3GzzYsrabmOzwcuDi
-         iiX0wVbEVYwZto78QSaimc9kM6dYofEWCzk+Nx7JqoboYG0l0r6b04FyNjvoLw29Izc2
-         YUWXXahFj+mW5GayvbfYEJcfsFIl7BH0w9y24/aIH6x6AD9Hv8IRB5CXwlZop/TqJXk2
-         YoJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY8Y1iVLd1c8FORNW6byWSujCRWJe8FmAPr4owoIvys0Jnaez4blK/fJbK78xDjMOk3t6XlRfK0zwcWcY6CsQUqXG9qCSNlXOgg1LwZtaEfXFg4fehQxqV08s2xnHgEKMborOQ+t3U3HgTxzH/YtKb
-X-Gm-Message-State: AOJu0YwsFmg1uMQ9bB/fVztARqt8BTvmB5SxB5elHeo6QEVyxfaghzQM
-	Pyrr/BMTxao6x8h7gltT1wqhw4HuuPtBDnl74VwUBlNpv730jlF9sXSrXGQB4MvaBRNPolB4/LD
-	GHI7Qt8jAqKoYqYQbZJdVRna3Duc=
-X-Google-Smtp-Source: AGHT+IGaonZcBJspp25j6c3POADFGz9J5x0DFcX1Z2PPjOvRj/EFikdZvqegcHo9A2jVLebbB+ZtZHEoCwulXyiU2ZY=
-X-Received: by 2002:a17:90a:bb83:b0:2c9:888a:7a7b with SMTP id
- 98e67ed59e1d1-2cf7e1ffa35mr14141634a91.25.1722445978002; Wed, 31 Jul 2024
- 10:12:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="edAuapGt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722446267;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WUx/M4+1jhIUgwiAVPxAGlK3xL8kzwraYQRiOxtSloY=;
+	b=edAuapGtIDc0NEcSEhHOc2iIgDSKSAC3VDINWPEKsWo+vvYpAS5CPghllPqlsjQe1BwRUW
+	sYYeXJDH3LyP7+h3El6bMkjTuew5KDDYfxBKPO4WfI7qLPigvpzEnKtQsappUers0wMdyB
+	TU8QkP8ph3FqW7Nf993j5pThrB1br34=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-BL5xakLTPhyQoHBsW22cFA-1; Wed,
+ 31 Jul 2024 13:17:40 -0400
+X-MC-Unique: BL5xakLTPhyQoHBsW22cFA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B47941955D47;
+	Wed, 31 Jul 2024 17:17:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.31])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2535F19560AA;
+	Wed, 31 Jul 2024 17:17:34 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 31 Jul 2024 19:17:37 +0200 (CEST)
+Date: Wed, 31 Jul 2024 19:17:33 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, andrii@kernel.org,
+	mhiramat@kernel.org, jolsa@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] uprobes: make uprobe_register() return struct
+ uprobe *
+Message-ID: <20240731171732.GA2752@redhat.com>
+References: <20240729134444.GA12293@redhat.com>
+ <20240729134535.GA12332@redhat.com>
+ <CAEf4Bza1_njsVUad8so9EFxy8VmJsTfzaaAahBYFtOqdF1HAjA@mail.gmail.com>
+ <20240731165614.GI33588@noisy.programming.kicks-ass.net>
+ <CAEf4BzZXze8wRQwEJSy5nFzH=uk4wZPHY-gWw6j7iZfeBEiO0g@mail.gmail.com>
+ <20240731170551.GK33588@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240729134444.GA12293@redhat.com> <20240729134535.GA12332@redhat.com>
- <CAEf4Bza1_njsVUad8so9EFxy8VmJsTfzaaAahBYFtOqdF1HAjA@mail.gmail.com>
- <20240731165614.GI33588@noisy.programming.kicks-ass.net> <CAEf4BzZXze8wRQwEJSy5nFzH=uk4wZPHY-gWw6j7iZfeBEiO0g@mail.gmail.com>
- <20240731170551.GK33588@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240731170551.GK33588@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 31 Jul 2024 10:12:45 -0700
-Message-ID: <CAEf4BzYTMTNoGbL6keMhj4hRty-tw5XDeiLHOXMJxRyxZv6Efg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] uprobes: make uprobe_register() return struct
- uprobe *
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, andrii@kernel.org, mhiramat@kernel.org, 
-	jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Jul 31, 2024 at 10:05=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
+On 07/31, Peter Zijlstra wrote:
 >
 > On Wed, Jul 31, 2024 at 10:01:47AM -0700, Andrii Nakryiko wrote:
-> > On Wed, Jul 31, 2024 at 9:56=E2=80=AFAM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> > >
-> > > On Wed, Jul 31, 2024 at 09:18:00AM -0700, Andrii Nakryiko wrote:
-> > > > On Mon, Jul 29, 2024 at 6:45=E2=80=AFAM Oleg Nesterov <oleg@redhat.=
-com> wrote:
-> > > > >
-> > > > > This way uprobe_unregister() and uprobe_apply() can use "struct u=
-probe *"
-> > > > > rather than inode + offset. This simplifies the code and allows t=
-o avoid
-> > > > > the unnecessary find_uprobe() + put_uprobe() in these functions.
-> > > > >
-> > > > > TODO: uprobe_unregister() still needs get_uprobe/put_uprobe to en=
-sure that
-> > > > > this uprobe can't be freed before up_write(&uprobe->register_rwse=
-m).
-> > > > >
-> > > > > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> > > > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > > ---
-> > > > >  include/linux/uprobes.h     | 15 +++++-----
-> > > > >  kernel/events/uprobes.c     | 56 +++++++++++++++----------------=
-------
-> > > > >  kernel/trace/bpf_trace.c    | 25 ++++++++---------
-> > > > >  kernel/trace/trace_uprobe.c | 26 ++++++++---------
-> > > > >  4 files changed, 55 insertions(+), 67 deletions(-)
-> > > > >
-> > > >
-> > > > You'll need something like below to not break our bpf_testmod. And
-> > > > please send pull patch sets, not individually updated patches, it's=
- a
-> > > > PITA to deal with. Thanks!
-> > >
-> > > Do I stuff this on top of Oleg's patch or do you want me to fold it i=
-n
+> > > Do I stuff this on top of Oleg's patch or do you want me to fold it in
 > > > one of them?
 > >
 > > Please fold so we have better (potential) bisectability of BPF
@@ -120,9 +80,10 @@ n
 >
 > Fold where, patch 5?
 
-Yep, this one, where Oleg changed uprobe_register/uprobe_unregister API.
+Yes...
 
-But note, I did the lazy thing and just copy/pasted `git show` output
-into Gmail. So all the whitespaces are butchered and unlikely you'll
-be able to apply that patch as is. My expectation was that Oleg will
-just incorporate that by hand and will send the final v4 patch set.
+Or I can resend these 2 series as v3 1-8 with 5/5 updated (thanks Andrii !!!),
+whatever is more convenient for you.
+
+Oleg.
+
