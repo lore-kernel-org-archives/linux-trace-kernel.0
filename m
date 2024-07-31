@@ -1,30 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623E01B3F1A;
-	Wed, 31 Jul 2024 15:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A6A1AD9FE;
+	Wed, 31 Jul 2024 15:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722440464; cv=none; b=rdnf3CFOk+U6kjhx6OTTT3HUEuSyG3xjDa3vHEpRN+HVrU2OPzMVA5lYpRLpEBhQEYHCVKanUJwSuFUvuIqzk8sP3v5HPDtwpzCCDQiueJ0PynzWxRTOXkp/LiZ335rxJIpblHhmP623sXSI8yvT4iZxgGhB/0p1QJa8ofL9zhg=
+	t=1722441109; cv=none; b=tc4xQfd/K2vYgTLXjlah8PVYPNP5KzVN9xdUpT9DGzmk0rqHIcTN7D09SnCe5EyM7OazIH534WLg6yFqJs3BM7782oGeR/cI8zjYoUCPBEpIVfIgiDuLU03YRGbdR0IkuGgJ0uJvYuEhzS2C9vbIkR3NJctXGyQHuT7mBOaHvKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722440464; c=relaxed/simple;
-	bh=f6F2YV6TXCd873BSdle7/ezYe3fOeMDEOWQSFQ9HZdM=;
+	s=arc-20240116; t=1722441109; c=relaxed/simple;
+	bh=sHoaTphO82tBC4+EhCDCDI0u09HIu+sTJ4X78ZvWgJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y3lDdLAkRGG4/jGgD5DQlXiWzvA8S2U7k/NQosQ2qjndUqqfbWd7dCKgLF6NbS8q4wX7xnNucgRyMEpe8PjMn9vUdsGJrcI+JORopsjdT1HBRQ4EOvN2rRdZX1vEcPAMOGpcw13Gi2KhGoYnLBjyRVE74y5CP9kvQPCwt1EOKws=
+	 MIME-Version:Content-Type; b=hDEh2dBAXm6Ii1ulcw+QYSNhEDD4XLDuQEMFkV9XlIwr3RPKgISsUB6RNfFgwExEsj2ZPFfttOEk3FgZo70WmJ8Fez/xw/67a25oJab9KQLMwe0+d4ai7HnmhThDybLQo72LkkedWe9SFzjghhk18NGZTFwflFZx4BUWsWy/UQQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444E9C116B1;
-	Wed, 31 Jul 2024 15:41:03 +0000 (UTC)
-Date: Wed, 31 Jul 2024 11:41:37 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9804BC116B1;
+	Wed, 31 Jul 2024 15:51:48 +0000 (UTC)
+Date: Wed, 31 Jul 2024 11:52:22 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: tglozar@redhat.com
 Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
  jwyatt@redhat.com, jkacur@redhat.com
-Subject: Re: [PATCH v2 3/6] rtla/utils: Add idle state disabling via
- libcpupower
-Message-ID: <20240731114137.21499fed@gandalf.local.home>
-In-Reply-To: <20240731083655.375293-4-tglozar@redhat.com>
+Subject: Re: [PATCH v2 4/6] rtla/timerlat: Add --deepest-idle-state for top
+Message-ID: <20240731115222.21e99427@gandalf.local.home>
+In-Reply-To: <20240731083655.375293-5-tglozar@redhat.com>
 References: <20240731083655.375293-1-tglozar@redhat.com>
-	<20240731083655.375293-4-tglozar@redhat.com>
+	<20240731083655.375293-5-tglozar@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,217 +34,199 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jul 2024 10:36:52 +0200
+On Wed, 31 Jul 2024 10:36:53 +0200
 tglozar@redhat.com wrote:
 
 > From: Tomas Glozar <tglozar@redhat.com>
 > 
-> Add functions to utils.c to disable idle states through functions of
-> libcpupower. This will serve as the basis for disabling idle states
-> per cpu when running timerlat.
+> Add option to limit deepest idle state on CPUs where timerlat is running
+> for the duration of the workload.
 > 
 > Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 > ---
->  tools/tracing/rtla/src/utils.c | 140 +++++++++++++++++++++++++++++++++
->  tools/tracing/rtla/src/utils.h |   6 ++
->  2 files changed, 146 insertions(+)
+>  tools/tracing/rtla/src/timerlat_top.c | 46 ++++++++++++++++++++++++++-
+>  1 file changed, 45 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-> index 9ac71a66840c..9279b8ce08c3 100644
-> --- a/tools/tracing/rtla/src/utils.c
-> +++ b/tools/tracing/rtla/src/utils.c
-> @@ -4,6 +4,9 @@
->   */
+> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+> index 8c16419fe22a..ef1d3affef95 100644
+> --- a/tools/tracing/rtla/src/timerlat_top.c
+> +++ b/tools/tracing/rtla/src/timerlat_top.c
+> @@ -48,6 +48,7 @@ struct timerlat_top_params {
+>  	int			pretty_output;
+>  	int			warmup;
+>  	int			buffer_size;
+> +	int			deepest_idle_state;
+>  	cpu_set_t		hk_cpu_set;
+>  	struct sched_attr	sched_param;
+>  	struct trace_events	*events;
+> @@ -447,7 +448,7 @@ static void timerlat_top_usage(char *usage)
+>  		"",
+>  		"  usage: rtla timerlat [top] [-h] [-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
+>  		"	  [[-t[file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+> -		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C[=cgroup_name]] [-u|-k] [--warm-up s]",
+> +		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C[=cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
+>  		"",
+>  		"	  -h/--help: print this menu",
+>  		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
+> @@ -481,6 +482,7 @@ static void timerlat_top_usage(char *usage)
+>  		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
+>  		"	     --warm-up s: let the workload run for s seconds before collecting data",
+>  		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+
+Could probably do:
+
+#ifdef HAVE_LIBCPUPOWER_SUPPORT
+> +		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
+#else
++		"	     --deepest-idle-state n: [rtla built without libcpupower, --deepest-idle-state is not supported]",
+#endif
+
+>  		NULL,
+>  	};
 >  
->  #define _GNU_SOURCE
+> @@ -518,6 +520,9 @@ static struct timerlat_top_params
+>  	/* disabled by default */
+>  	params->dma_latency = -1;
+>  
+> +	/* disabled by default */
+> +	params->deepest_idle_state = -2;
+> +
+>  	/* display data in microseconds */
+>  	params->output_divisor = 1000;
+>  
+> @@ -550,6 +555,7 @@ static struct timerlat_top_params
+>  			{"aa-only",		required_argument,	0, '5'},
+>  			{"warm-up",		required_argument,	0, '6'},
+>  			{"trace-buffer-size",	required_argument,	0, '7'},
+> +			{"deepest-idle-state",	required_argument,	0, '8'},
+>  			{0, 0, 0, 0}
+>  		};
+>  
+> @@ -726,6 +732,9 @@ static struct timerlat_top_params
+>  		case '7':
+>  			params->buffer_size = get_llong_from_str(optarg);
+>  			break;
+> +		case '8':
+> +			params->deepest_idle_state = get_llong_from_str(optarg);
+> +			break;
+>  		default:
+>  			timerlat_top_usage("Invalid option");
+>  		}
+> @@ -922,6 +931,9 @@ int timerlat_top_main(int argc, char *argv[])
+>  	int return_value = 1;
+>  	char *max_lat;
+>  	int retval;
 > +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +#include <cpuidle.h>
+> +	int i;
 > +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
->  #include <dirent.h>
->  #include <stdarg.h>
->  #include <stdlib.h>
-> @@ -519,6 +522,143 @@ int set_cpu_dma_latency(int32_t latency)
->  	return fd;
->  }
 >  
+>  	params = timerlat_top_parse_args(argc, argv);
+>  	if (!params)
+> @@ -971,6 +983,26 @@ int timerlat_top_main(int argc, char *argv[])
+>  		}
+>  	}
+>  
+> +	if (params->deepest_idle_state >= -1) {
 > +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +static unsigned int **saved_cpu_idle_disable_state;
-> +static size_t saved_cpu_idle_disable_state_alloc_ctr;
-> +
-> +/*
-> + * save_cpu_idle_state_disable - save disable for all idle states of a cpu
-> + *
-> + * Saves the current disable of all idle states of a cpu, to be subsequently
-> + * restored via restore_cpu_idle_disable_state.
-> + *
-> + * Return: idle state count on success, negative on error
-> + */
-> +int save_cpu_idle_disable_state(unsigned int cpu)
-> +{
-> +	unsigned int nr_states;
-> +	unsigned int state;
-> +	int disabled;
-> +	int nr_cpus;
-> +
-> +	nr_states = cpuidle_state_count(cpu);
-> +
-> +	if (nr_states == 0)
-> +		return 0;
-> +
-> +	if (saved_cpu_idle_disable_state == NULL) {
-> +		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-> +		saved_cpu_idle_disable_state = calloc(nr_cpus, sizeof(unsigned int *));
+> +		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++) {
+> +			if (params->cpus && !CPU_ISSET(i, &params->monitored_cpus))
+> +				continue;
+> +			if (save_cpu_idle_disable_state(i) < 0) {
+> +				err_msg("Could not save cpu idle state.\n");
+> +				goto out_free;
+> +			}
+> +			if (set_deepest_cpu_idle_state(i, params->deepest_idle_state) < 0) {
+> +				err_msg("Could not set deepest cpu idle state.\n");
+> +				goto out_free;
+> +			}
+> +		}
+> +#else
+> +		err_msg("rtla built without libcpupower, --deepest-idle-state is not supported\n");
+> +		goto out_free;
+> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
 
-Need to check if the calloc failed and return an error if it did.
+We could get rid of most of the ifdefs if you changed the header file to be:
+
+#ifdef HAVE_LIBCPUPOWER_SUPPORT
+int save_cpu_idle_disable_state(unsigned int cpu);
+int restore_cpu_idle_disable_state(unsigned int cpu);
+void free_cpu_idle_disable_states(void);
+int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state);
+static inline have_libcpower_support(void) { return 1; }
+#else
+static inline int save_cpu_idle_disable_state(unsigned int cpu) { return -1 }
+static inline int restore_cpu_idle_disable_state(unsigned int cpu) { return -1; }
+static inline void free_cpu_idle_disable_states(void) { }
+static inline int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state) { return -1 }
+static inline have_libcpower_support(void) { return 0; }
+#endif /* HAVE_LIBCPUPOWER_SUPPORT */
+
+
+Then the above can simply be:
+
+	if (params->deepest_idle_state >= -1) {
+
+		if (!have_libcpower_support()) {
+			err_msg("rtla built without libcpupower, --deepest-idle-state is not supported\n");
+			goto out_free;
+		}
+
+		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++) {
+			if (params->cpus && !CPU_ISSET(i, &params->monitored_cpus))
+				continue;
+			if (save_cpu_idle_disable_state(i) < 0) {
+				err_msg("Could not save cpu idle state.\n");
+				goto out_free;
+			}
+			if (set_deepest_cpu_idle_state(i, params->deepest_idle_state) < 0) {
+				err_msg("Could not set deepest cpu idle state.\n");
+				goto out_free;
+			}
+		}
+
+Makes the code much nicer to look at.
 
 > +	}
 > +
-> +	saved_cpu_idle_disable_state[cpu] = calloc(nr_states, sizeof(unsigned int));
+>  	if (params->trace_output) {
+>  		record = osnoise_init_trace_tool("timerlat");
+>  		if (!record) {
+> @@ -1125,6 +1157,15 @@ int timerlat_top_main(int argc, char *argv[])
+>  	timerlat_aa_destroy();
+>  	if (dma_latency_fd >= 0)
+>  		close(dma_latency_fd);
+> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
+> +	if (params->deepest_idle_state >= -1) {
+> +		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++) {
 
-Here too.
+You would think gcc may optimize it, but I don't have that much confidence
+it can or would. You may want to change that to:
 
-> +	saved_cpu_idle_disable_state_alloc_ctr++;
-> +
-> +	for (state = 0; state < nr_states; state++) {
-> +		disabled = cpuidle_is_state_disabled(cpu, state);
-> +		if (disabled < 0)
-> +			return disabled;
+		int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
 
-Hmm, should this warn if state is not zero and disabled is negative.
+		for (i = 0; i < nr_cpus; i++) {
 
-> +		saved_cpu_idle_disable_state[cpu][state] = disabled;
-> +	}
-> +
-> +	return nr_states;
-> +}
-> +
-> +/*
-> + * restore_cpu_idle_disable_state - restore disable for all idle states of a cpu
-> + *
-> + * Restores the current disable state of all idle states of a cpu that was
-> + * previously saved by save_cpu_idle_disable_state.
-> + *
-> + * Return: idle state count on success, negative on error
-> + */
-> +int restore_cpu_idle_disable_state(unsigned int cpu)
-> +{
-> +	unsigned int nr_states;
-> +	unsigned int state;
-> +	int disabled;
-> +	int result;
-> +
-
-Should probably have a check to see if saved_cpu_idle_disable exists.
-
-> +	nr_states = cpuidle_state_count(cpu);
-> +
-> +	if (nr_states == 0)
-> +		return 0;
-> +
-
-As well as saved_cpu_idle_disable_state[cpu] exists.
-
-Just for robustness.
-
-> +	for (state = 0; state < nr_states; state++) {
-> +		disabled = saved_cpu_idle_disable_state[cpu][state];
-> +		result = cpuidle_state_disable(cpu, state, disabled);
-> +		if (result < 0)
-> +			return result;
-> +	}
-> +
-> +	free(saved_cpu_idle_disable_state[cpu]);
-> +	saved_cpu_idle_disable_state[cpu] = NULL;
-> +	saved_cpu_idle_disable_state_alloc_ctr--;
-> +	if (saved_cpu_idle_disable_state_alloc_ctr == 0) {
-> +		free(saved_cpu_idle_disable_state);
-> +		saved_cpu_idle_disable_state = NULL;
-> +	}
-> +
-> +	return nr_states;
-> +}
-> +
-> +/*
-> + * free_cpu_idle_disable_states - free saved idle state disable for all cpus
-> + *
-> + * Frees the memory used for storing cpu idle state disable for all cpus
-> + * and states.
-> + *
-> + * Normally, the memory is freed automatically in
-> + * restore_cpu_idle_disable_state; this is mostly for cleaning up after an
-> + * error.
-> + */
-> +void free_cpu_idle_disable_states(void)
-> +{
-> +	int cpu;
-> +
-> +	if (!saved_cpu_idle_disable_state)
-> +		return;
-> +
-> +	for (cpu = 0; cpu < sysconf(_SC_NPROCESSORS_CONF); cpu++) {
-
-> +		if (!saved_cpu_idle_disable_state[cpu])
-> +			continue;
-
-No need to check here. free() works fine with passing NULL to it.
+Otherwise you may be calling that sysconf() for each iteration of the loop.
 
 -- Steve
 
-> +		free(saved_cpu_idle_disable_state[cpu]);
-> +		saved_cpu_idle_disable_state[cpu] = NULL;
+> +			if (params->cpus && !CPU_ISSET(i, &params->monitored_cpus))
+> +				continue;
+> +			restore_cpu_idle_disable_state(i);
+> +		}
 > +	}
-> +
-> +	free(saved_cpu_idle_disable_state);
-> +	saved_cpu_idle_disable_state = NULL;
-> +}
-> +
-> +/*
-> + * set_deepest_cpu_idle_state - limit idle state of cpu
-> + *
-> + * Disables all idle states deeper than the one given in
-> + * deepest_state (assuming states with higher number are deeper).
-> + *
-> + * This is used to reduce the exit from idle latency. Unlike
-> + * set_cpu_dma_latency, it can disable idle states per cpu.
-> + *
-> + * Return: idle state count on success, negative on error
-> + */
-> +int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int deepest_state)
-> +{
-> +	unsigned int nr_states;
-> +	unsigned int state;
-> +	int result;
-> +
-> +	nr_states = cpuidle_state_count(cpu);
-> +
-> +	for (state = deepest_state + 1; state < nr_states; state++) {
-> +		result = cpuidle_state_disable(cpu, state, 1);
-> +		if (result < 0)
-> +			return result;
-> +	}
-> +
-> +	return nr_states;
-> +}
 > +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
-> +
->  #define _STR(x) #x
->  #define STR(x) _STR(x)
->  
-> diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-> index d44513e6c66a..51b6054c2679 100644
-> --- a/tools/tracing/rtla/src/utils.h
-> +++ b/tools/tracing/rtla/src/utils.h
-> @@ -64,6 +64,12 @@ int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
->  int set_comm_cgroup(const char *comm_prefix, const char *cgroup);
->  int set_pid_cgroup(pid_t pid, const char *cgroup);
->  int set_cpu_dma_latency(int32_t latency);
+>  	trace_events_destroy(&record->trace, params->events);
+>  	params->events = NULL;
+>  out_free:
+> @@ -1134,6 +1175,9 @@ int timerlat_top_main(int argc, char *argv[])
+>  	osnoise_destroy_tool(record);
+>  	osnoise_destroy_tool(top);
+>  	free(params);
 > +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +int save_cpu_idle_disable_state(unsigned int cpu);
-> +int restore_cpu_idle_disable_state(unsigned int cpu);
-> +void free_cpu_idle_disable_states(void);
-> +int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state);
+> +	free_cpu_idle_disable_states();
 > +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
->  int auto_house_keeping(cpu_set_t *monitored_cpus);
->  
->  #define ns_to_usf(x) (((double)x/1000))
+>  out_exit:
+>  	exit(return_value);
+>  }
 
