@@ -1,173 +1,154 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309811B5AA;
-	Wed, 31 Jul 2024 17:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C59C1AC443;
+	Wed, 31 Jul 2024 17:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722445322; cv=none; b=R5OTFlIM8zctAxPSieSIo7ZjqFc3wSKWHiNhs9Vaa+I6A9rnAkzH/mjCkcOw9lUAxlB5GjvF9x3QS82NK5L6JEXAD191JKC1Tn1f6nzYl6x/Qa6hEcosOzl49RhRrIJctEj44hc+dUCv90SHaDQSC+lvqyVl1pz4itnGMYV59q0=
+	t=1722445534; cv=none; b=AaHX2c6RGvF7z8gBthZe+HdAOPzAowZjZFZE1urvuZwCnnMIwppT0JIBb8fiP9HLWmgpUDBhtj85OGTHRIahg//d2fnGYr6hYyDEKkLwj8qz/bmsJ3vcpgCgkDdUqhnu+xSKzYUgUIMlS7a2avn+XDlPZyb0zFwRzGnwBRJTXPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722445322; c=relaxed/simple;
-	bh=M7XfYP4jB9PHxC7I1Mbcu8PF16k1/ZNXZFQOSFqw/jM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VfXKIGk6BRcM908J+a3uYIdphxtoWhsV71PFpwCQajSeU9NqhHUtNANYaAghduiwm3fwrPVJ9SS5fJnaF9l0Ekb1kUun6GFKw2ybGtX0ClR6ycKTxW6+syurHbpVTI5+bqk5tjdzO/3ITZNSe6sjqa0zcOcI7p7Ls04qCpoFAek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5hxNc+S; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722445534; c=relaxed/simple;
+	bh=Kvo+Qg69Lf9bUXUEg3NaEQbb4hHBPQA3suJvsVKDU/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tNAb1jqmCFqkddOq555fxOExQGX7KlKDDh9ikzL3z5UOWcP6yM9UGCKG7SKhYpvf3r0YRoiQQCwUi3frzH6CvunxNIZBirRAgnWc7/QsV4CNOoffnsKwNOwQQHdPyhFIvHzIixRsdy2e2nVqz/FIZwp/jHPJ1EnG+muqMWzBfYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=URmAXo4v; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5hxNc+S"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2cfcbdfa572so1555724a91.3;
-        Wed, 31 Jul 2024 10:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722445319; x=1723050119; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8+1Ga1arjNxx7kizUnJk9pLWONwqIibdpZUKJOK6ZU=;
-        b=g5hxNc+Sx96ZD21qD/9FXES3f6GW5nCQWxKNcrYLmLGEra3lmAzZqZQjFFOYiWFlJZ
-         bm1M/BmcRQTzxIx8UcXzVtjRN4rKYLI2qM0vprfifXUZz0a430Yrh6TYD6j5hQsTEfPT
-         DEqipo1OiDmklsy1Wydv8zg7VEj6PUI2fPsfJEhaRoRQN1IFE5e12vXnP+GlFPzWbWGl
-         ExDsr5rBmAPGJhsVCu917lMU8PEs+rs3RcQnamwJ70+AEdqGEm+nkDYIaZcTvwHSDTwy
-         b4yEIQoSIn7bIptLgZBOj0kj2On41EtaPaKP+jbbSfskO4rAwY1oh+m8uTx833eHWr84
-         hUXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722445319; x=1723050119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W8+1Ga1arjNxx7kizUnJk9pLWONwqIibdpZUKJOK6ZU=;
-        b=E3RSjUSP+Oc6B8kRm80RhW/IdCPpcflFXoc2flPeuBd0tNG6KKq1EpRynhuVL/pRID
-         tvZxhlc6bsODJeEGYVwhgQI1NpjH2IcYPT+F9+UrwrD38vQ0drEpGS4omlp09jjazFqq
-         HHaMBJEv0s/ilLRgzwHYnfl18IHvPIKnT5boZ06RmdnwgjEKZYvBDvleVyszQNjfVn46
-         L0HrfL8ZDggIg3xireRtqcLf3u+qVL2/MomnPJkKcKzbMSQ4AOA0EBQIYWtz/Rspf36q
-         s+duoUzRhsx0PfZ6E3BOX3zwdiD3Py1caDKaq0aUWk3mpHTvSXMpK3mGbAmLjCCVAAFh
-         tQtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUK1pT8pC3xn/28LYscPv6mJsEwzTNrxGLm4HntiJ8arCjhWwP/OAQjADUrrMYo+D7l61gVZ1qPyTzxyFnt+xX/WeoiYHZUOUA6MpI8AYOmNZi7IYSSnvpBRZg5XcLgCnsjWaysD5vQhgLF78FtAVgh
-X-Gm-Message-State: AOJu0YxMqqZiL4ChQycYjQGsI3Kj48/DMC8pgSPv3wBtZGT7/QaADG5p
-	3bHVlM46Nlh+qco76oM/SvJg4cj6yzLnYpQsPEzJTovBwhz9z+1YEM41r0/Hz/cVra5+JgNQEja
-	SrkXfKkTYXwT0usYa0R4dWv+ug/A=
-X-Google-Smtp-Source: AGHT+IEENT0NDPRwWvh2L1GmLJe+Zqny1LoZGQAplTQI4qrsuk/ksFj5pyZ9O2O+MbNDnCl89V6Qc256Fm7F7jQVmxw=
-X-Received: by 2002:a17:90b:3003:b0:2cd:3331:ebc7 with SMTP id
- 98e67ed59e1d1-2cf7e0959a8mr12990006a91.2.1722445319422; Wed, 31 Jul 2024
- 10:01:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="URmAXo4v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=loxjFiVI2FUEfLt+uJa/RoAUGOvN0EDyWPzOQRMKPYM=; b=URmAXo4vciLmD8RF26rtYBhhPA
+	G31cEdVvEozLEj+TiA4d2wRtMbewzkqNphoc2s1IzH1fwbGdgUMbQNYsKuTX+GtkdZ8pEsRGMt9Wn
+	tZQSzzAqb3x2Uk9yvAISY4PyRWfI4rIeUhfqY+XHg229yLUoAWWG6EtbDAEJOBSVAIZeFSjmu/2V8
+	Pe2mEvZC+zNGXJ1eBrKKrLSpn1gYZQVD7rVJktSOYg7A9wFPxSPVGGsY8mXuYJcnjrATmgmr+YrWG
+	DAC751NQGurBuTOXhxDSNHxQTCs/XNPevta1qUx7LxS11QH1clIvk+t7MXDQ5uCJXdDON6+G+Q0Gx
+	vGpwi0oA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZClB-0000000GMnQ-09lX;
+	Wed, 31 Jul 2024 17:05:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3BB5F300820; Wed, 31 Jul 2024 19:05:08 +0200 (CEST)
+Date: Wed, 31 Jul 2024 19:05:08 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradaed.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 1/2] rust: add static_key_false
+Message-ID: <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+ <20240628-tracepoint-v4-1-353d523a9c15@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240729134444.GA12293@redhat.com> <20240729134535.GA12332@redhat.com>
- <CAEf4Bza1_njsVUad8so9EFxy8VmJsTfzaaAahBYFtOqdF1HAjA@mail.gmail.com> <20240731165614.GI33588@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240731165614.GI33588@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 31 Jul 2024 10:01:47 -0700
-Message-ID: <CAEf4BzZXze8wRQwEJSy5nFzH=uk4wZPHY-gWw6j7iZfeBEiO0g@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] uprobes: make uprobe_register() return struct
- uprobe *
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, andrii@kernel.org, mhiramat@kernel.org, 
-	jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628-tracepoint-v4-1-353d523a9c15@google.com>
 
-On Wed, Jul 31, 2024 at 9:56=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, Jul 31, 2024 at 09:18:00AM -0700, Andrii Nakryiko wrote:
-> > On Mon, Jul 29, 2024 at 6:45=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > > This way uprobe_unregister() and uprobe_apply() can use "struct uprob=
-e *"
-> > > rather than inode + offset. This simplifies the code and allows to av=
-oid
-> > > the unnecessary find_uprobe() + put_uprobe() in these functions.
-> > >
-> > > TODO: uprobe_unregister() still needs get_uprobe/put_uprobe to ensure=
- that
-> > > this uprobe can't be freed before up_write(&uprobe->register_rwsem).
-> > >
-> > > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > >  include/linux/uprobes.h     | 15 +++++-----
-> > >  kernel/events/uprobes.c     | 56 +++++++++++++++--------------------=
---
-> > >  kernel/trace/bpf_trace.c    | 25 ++++++++---------
-> > >  kernel/trace/trace_uprobe.c | 26 ++++++++---------
-> > >  4 files changed, 55 insertions(+), 67 deletions(-)
-> > >
-> >
-> > You'll need something like below to not break our bpf_testmod. And
-> > please send pull patch sets, not individually updated patches, it's a
-> > PITA to deal with. Thanks!
->
-> Do I stuff this on top of Oleg's patch or do you want me to fold it in
-> one of them?
+On Fri, Jun 28, 2024 at 01:23:31PM +0000, Alice Ryhl wrote:
 
-Please fold so we have better (potential) bisectability of BPF
-selftests, thanks!
+>  rust/kernel/arch/arm64/jump_label.rs     | 34 ++++++++++++++++++++++++++++
+>  rust/kernel/arch/loongarch/jump_label.rs | 35 +++++++++++++++++++++++++++++
+>  rust/kernel/arch/mod.rs                  | 24 ++++++++++++++++++++
+>  rust/kernel/arch/riscv/jump_label.rs     | 38 ++++++++++++++++++++++++++++++++
+>  rust/kernel/arch/x86/jump_label.rs       | 35 +++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs                       |  2 ++
+>  rust/kernel/static_key.rs                | 32 +++++++++++++++++++++++++++
+>  scripts/Makefile.build                   |  2 +-
+>  8 files changed, 201 insertions(+), 1 deletion(-)
 
->
-> > commit 9f739a9997ab833394196459fa7e6dd4d13dd48b (HEAD -> uprobes-oleg-c=
-leanups)
-> > Author: Andrii Nakryiko <andrii@kernel.org>
-> > Date:   Wed Jul 31 09:15:46 2024 -0700
-> >
-> >     uprobes: fix bpf_testmod after uprobe_register/uprobe_unregister AP=
-I change
-> >
-> >     Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > index 5f152afdec2f..73a6b041bcce 100644
-> > --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > @@ -431,6 +431,7 @@ uprobe_ret_handler(struct uprobe_consumer *self,
-> > unsigned long func,
-> >  }
-> >
-> >  struct testmod_uprobe {
-> > +       struct uprobe *uprobe;
-> >         struct path path;
-> >         loff_t offset;
-> >         struct uprobe_consumer consumer;
-> > @@ -458,12 +459,14 @@ static int testmod_register_uprobe(loff_t offset)
-> >         if (err)
-> >                 goto out;
-> >
-> > -       err =3D uprobe_register(d_real_inode(uprobe.path.dentry),
-> > -                             offset, 0, &uprobe.consumer);
-> > -       if (err)
-> > +       uprobe.uprobe =3D uprobe_register(d_real_inode(uprobe.path.dent=
-ry),
-> > +                                       offset, 0, &uprobe.consumer);
-> > +       if (IS_ERR(uprobe.uprobe)) {
-> >                 path_put(&uprobe.path);
-> > -       else
-> > +               uprobe.uprobe =3D NULL;
-> > +       } else {
-> >                 uprobe.offset =3D offset;
-> > +       }
-> >
-> >  out:
-> >         mutex_unlock(&testmod_uprobe_mutex);
-> > @@ -474,10 +477,10 @@ static void testmod_unregister_uprobe(void)
-> >  {
-> >         mutex_lock(&testmod_uprobe_mutex);
-> >
-> > -       if (uprobe.offset) {
-> > -               uprobe_unregister(d_real_inode(uprobe.path.dentry),
-> > -                                 uprobe.offset, &uprobe.consumer);
-> > +       if (uprobe.uprobe) {
-> > +               uprobe_unregister(uprobe.uprobe, &uprobe.consumer);
-> >                 uprobe.offset =3D 0;
-> > +               uprobe.uprobe =3D NULL;
-> >         }
-> >
-> >         mutex_unlock(&testmod_uprobe_mutex);
-> >
-> >
-> > [...]
+So I really find the amount of duplicated asm offensive. Is is far too
+easy for any of this to get out of sync.
+
+> diff --git a/rust/kernel/arch/x86/jump_label.rs b/rust/kernel/arch/x86/jump_label.rs
+> new file mode 100644
+> index 000000000000..383bed273c50
+> --- /dev/null
+> +++ b/rust/kernel/arch/x86/jump_label.rs
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2024 Google LLC.
+> +
+> +//! X86 Rust implementation of jump_label.h
+> +
+> +/// x86 implementation of arch_static_branch
+> +#[macro_export]
+> +#[cfg(target_arch = "x86_64")]
+> +macro_rules! arch_static_branch {
+> +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
+> +        core::arch::asm!(
+> +            r#"
+> +            1: .byte 0x0f,0x1f,0x44,0x00,0x00
+> +
+> +            .pushsection __jump_table,  "aw"
+> +            .balign 8
+> +            .long 1b - .
+> +            .long {0} - .
+> +            .quad {1} + {2} + {3} - .
+> +            .popsection
+> +            "#,
+> +            label {
+> +                break 'my_label true;
+> +            },
+> +            sym $key,
+> +            const ::core::mem::offset_of!($keytyp, $field),
+> +            const $crate::arch::bool_to_int($branch),
+> +        );
+> +
+> +        break 'my_label false;
+> +    }};
+> +}
+
+Note that this uses the forced 5 byte version, and not the dynamic sized
+one. On top of that it hard-codes the nop5 string :/
+
+Please work harder to not have to duplicate stuff like this.
+
+NAK.
+
