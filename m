@@ -1,188 +1,215 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7C33F9C5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 21:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A586B16CD02;
+	Wed, 31 Jul 2024 21:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722461668; cv=none; b=BlbqyMFu+1OOF8Jl6cXAVhx/u9354Ss/E9D2Ly0pkhhQdICgestKvkRPukTzrVxPj90YbNcslRpHgYSyOGg+czOJrkOrydCwxheaiTjwqcVWDBPI/1tUkvzoAoGaZsafunD4iLH7MlNjm+6tDx3/dzOIbCp2740bk7Q5wNbEZ64=
+	t=1722462180; cv=none; b=r/dpi2kN2LNPnG9+W3/28shtJqkG4Ii4Ni1k6/uVFDk/cBdsNM11jTAQnSASo3xO3t8GrKGHia0H1fZ02H9DAuHYPDg+9UpFi9ffxAe823zkHNr71TLJgCMyJFsDTsUHDMmuFkSnzh30OaHnmVjMn0MgZ9s8cltJEMYejirSusg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722461668; c=relaxed/simple;
-	bh=7409YPGD84DSohjrVEJAwG5xvR83yL1kGxaxMdosLHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sOOImTO7K6nw+gdAFtZUi8x23wY8FQtfaLZb0cJfu/F5dvVFDp6xU2mixa6uQBPtsTElLjcyWgjNZIlYhRFNDUAqhTZ4mlp/+0rVFFaB/3G2WvRDR4qCxWDcOq/jhVLhrAbGigB3cRFzn2HJxZ84OnGlOCn5dzpdY1vyHwxqQAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GQu1F0BL; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722462180; c=relaxed/simple;
+	bh=E2jvhnSanOgMRk5JqjTLjkM7N4NIRHzQOh015OlXJUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IdLehxyuQdpBGS2Xor9AHBUjI2oZGFBamIM/+dHW07eLHYvG+Y6JXViV0/HKDmNIo7Fx8Ptp4sVjQLYlIGzEgKCwQrPtTj7q9YtJ2vGgm/+5br68qOH5vzYuyhpyPVkFp575nX2KI3v+PFBgOnwGelMcOWWy2d+ymc8WlfJaPjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9obK/gz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GQu1F0BL"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42809d6e719so41581055e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 14:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722461665; x=1723066465; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bli9lhI61IaRjVxZ6El/2TlE2JOrlJn5Lbi96Tzc1cY=;
-        b=GQu1F0BLQxTE5HrRAYdznGPthK87JO7jzNA+e0LtPBS1Xeb7WCoXTu2o2+hnzBzEUl
-         buBKc8MLsCIEA0Bjx1nzCTqT1i+hXRpUbn5iBBD2SbfwEsIe35BUVWVchgQPPD+DFajC
-         lgje4uUGsgJyywhKyYgL3ztHIrUUCdz3okoNP58tNgHhPgWtwYf9i8AxVGsRIaJgg9X8
-         CKcJQ2zOdQWlDWO3kjiYGEMSBdXzPvWGQVqYoBqIqg7REf/xE5sFBvxtZ1ndtnA7kFmX
-         qadHFbyDM1p2Ld/bexaE0vVnZucLwHYBDMHOjdX234OwQF4buenYjN+cAaHLeLST4GQT
-         nxzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722461665; x=1723066465;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bli9lhI61IaRjVxZ6El/2TlE2JOrlJn5Lbi96Tzc1cY=;
-        b=Hz/p2o8AUAOOs065+/NxnUpXNVEXaKo/wLlKylanJSp1qXFolkCfCfA0y3grH/HKdB
-         s36HIz8xSGkqDeRcNvs1zbI0lOhwQ38EV9I61Xh9h1Tr9naEC4XYlJ+Gko8/01J3CArv
-         yNj49n2VN/6Gc0TRoA7Klwnm2+LH/7bUjNUakEWMKQ9j0gpnZerq/EH5+DtjWUEjNAOx
-         ICOSZfUV4VKWwUrEN4Cp7XmD68yIw3avEtOoa/lNOsojGtykNfTgRoWs8+hl1NdzeGIa
-         6e76yBQ/7dO0YKe3Hzh4+UVxSNuk1Czkergg0VFrSUs/jX9QIriAS/VmJZwb2dt3/4lk
-         t4vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWf2Wa+La3+eNBMOo83p+4odJUFpQb6reJthKeQqzLWn1dHomcPYbv4DQBnHi1Bzogiea+cwjrclAQ+fmsjpTf7IA9+n3f1xwWQ2C35yjSGIza8
-X-Gm-Message-State: AOJu0YwHPsrGgktj45TSq0wUQUeavg4mqOE+Yhb+/r6AxmIVvdIFGMlO
-	KyinCvF5KpC2QDzQrqoJ1pBJeuF5pxQ4xRalpBAXc3/1NxW6u+0THrWCjtbwMsonkaUDv2YbEFo
-	fWqOBnQ0Vf3/RYATwxlMXAZWEf/VFh9zfU3F0
-X-Google-Smtp-Source: AGHT+IEnnH7Vl1oPP/7poRoKnYi3pQkDBFhO+xnBb/MH3dLIwjkKyZ7/ziEU66uYwoK2Ox4X3gDKYbUA6wyDWgsUmeg=
-X-Received: by 2002:a05:600c:3543:b0:426:6ee7:c05a with SMTP id
- 5b1f17b1804b1-428a9bdcd50mr4067365e9.15.1722461664765; Wed, 31 Jul 2024
- 14:34:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9obK/gz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2228BC116B1;
+	Wed, 31 Jul 2024 21:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722462180;
+	bh=E2jvhnSanOgMRk5JqjTLjkM7N4NIRHzQOh015OlXJUQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N9obK/gztkef9gk3qCnb28zYlOBbwn8cEpysXWb3Q/+ZvShCddrJF1l2V3pm1+jcE
+	 aC657mqPH3tNrLfHJI5AJttfuzBXP+HSTGO16V6CzWEBpLT5knnadnXNEJwfZ5VYre
+	 tyHWI4LaBcK+yCIZU1mBETvxblGBdhjzRtb4JbHW1IYZgUAr1jFkuDSptK7uvBQHSL
+	 oXFZPNGvwZJVv5lNiJaBP44YLsSNUW9IPsulOCRZcZZsRSctIjLQ0vTpYXz4/6qkyo
+	 6dXRhF83IqVP/YA32m9kfUuVjYGQDOuEa4kQIGcMH0P4u/9Bd8G5UWFcnTRUL8WuO7
+	 azazmXOlUNgIw==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	oleg@redhat.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jolsa@kernel.org,
+	paulmck@kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH 0/8] uprobes: RCU-protected hot path optimizations
+Date: Wed, 31 Jul 2024 14:42:48 -0700
+Message-ID: <20240731214256.3588718-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
- <20240628-tracepoint-v4-1-353d523a9c15@google.com> <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 31 Jul 2024 23:34:13 +0200
-Message-ID: <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust: add static_key_false
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, 
-	Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 31, 2024 at 7:05=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Fri, Jun 28, 2024 at 01:23:31PM +0000, Alice Ryhl wrote:
->
-> >  rust/kernel/arch/arm64/jump_label.rs     | 34 ++++++++++++++++++++++++=
-++++
-> >  rust/kernel/arch/loongarch/jump_label.rs | 35 ++++++++++++++++++++++++=
-+++++
-> >  rust/kernel/arch/mod.rs                  | 24 ++++++++++++++++++++
-> >  rust/kernel/arch/riscv/jump_label.rs     | 38 ++++++++++++++++++++++++=
-++++++++
-> >  rust/kernel/arch/x86/jump_label.rs       | 35 ++++++++++++++++++++++++=
-+++++
-> >  rust/kernel/lib.rs                       |  2 ++
-> >  rust/kernel/static_key.rs                | 32 ++++++++++++++++++++++++=
-+++
-> >  scripts/Makefile.build                   |  2 +-
-> >  8 files changed, 201 insertions(+), 1 deletion(-)
->
-> So I really find the amount of duplicated asm offensive. Is is far too
-> easy for any of this to get out of sync.
->
-> > diff --git a/rust/kernel/arch/x86/jump_label.rs b/rust/kernel/arch/x86/=
-jump_label.rs
-> > new file mode 100644
-> > index 000000000000..383bed273c50
-> > --- /dev/null
-> > +++ b/rust/kernel/arch/x86/jump_label.rs
-> > @@ -0,0 +1,35 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +// Copyright (C) 2024 Google LLC.
-> > +
-> > +//! X86 Rust implementation of jump_label.h
-> > +
-> > +/// x86 implementation of arch_static_branch
-> > +#[macro_export]
-> > +#[cfg(target_arch =3D "x86_64")]
-> > +macro_rules! arch_static_branch {
-> > +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) =3D> {'my_labe=
-l: {
-> > +        core::arch::asm!(
-> > +            r#"
-> > +            1: .byte 0x0f,0x1f,0x44,0x00,0x00
-> > +
-> > +            .pushsection __jump_table,  "aw"
-> > +            .balign 8
-> > +            .long 1b - .
-> > +            .long {0} - .
-> > +            .quad {1} + {2} + {3} - .
-> > +            .popsection
-> > +            "#,
-> > +            label {
-> > +                break 'my_label true;
-> > +            },
-> > +            sym $key,
-> > +            const ::core::mem::offset_of!($keytyp, $field),
-> > +            const $crate::arch::bool_to_int($branch),
-> > +        );
-> > +
-> > +        break 'my_label false;
-> > +    }};
-> > +}
->
-> Note that this uses the forced 5 byte version, and not the dynamic sized
-> one. On top of that it hard-codes the nop5 string :/
->
-> Please work harder to not have to duplicate stuff like this.
+This patch set is heavily inspired by Peter Zijlstra's uprobe optimization
+patches ([0]) and continue that work, albeit trying to keep complexity to the
+minimum, and attepting to reuse existing primitives as much as possible. The
+goal here is to optimize obvious uprobe triggering hot path, while keeping the
+rest of locking mostly intact.
 
-I really didn't want to duplicate it, but it's very hard to find a
-performant alternative. Is there any way we could accept duplication
-only in the cases where an 'i' parameter is used? I don't have the
-choice of using a Rust helper for 'i' parameters.
+I've reused rb_find_rcu()/rb_find_add_rcu() patches as is, and the "split
+uprobe_unregister()" is mostly intact, but I've added uprobe_unregister_sync()
+into the error handling code path inside uprobe_unregister(). This is due to
+recent refactorings from Oleg Nesterov ([1]), which necessitates this
+addition. I'm not sure I got Co-Developed-by/SOB pieces right, for which
+I apoligize in advance.
 
-Perhaps one option could be to put the Rust code inside jump_label.h
-and have the header file evaluate to either C or Rust depending on the
-value of some #ifdefs?
+Except for refcounting change patch (which I stongly believe is a good
+improvement we should do and forget about quasi-refcounting schema of
+uprobe->consumers list), the rest of the changes are similar to Peter's
+initial changes in [0].
 
-#ifndef RUST_ASM
-/* existing C code goes here */
-#endif
-#ifdef RUST_ASM
-// rust code goes here
-#endif
+Main differences would be:
+  - no special RCU protection for mmap and fork handling, we just stick to
+    refcounts there, as those are infrequent and not performance-sensitive
+    code, while being complex and thus benefiting from proper locking;
+  - the above means we don't need to do any custom SRCU additions to handle
+    forking code path;
+  - I handled UPROBE_HANDLER_REMOVE problem in handler_chain() differently,
+    again, leveraging existing locking scheam;
+  - I kept refcount usage for uretprobe and single-stepping uprobes, I plan to
+    address that in a separate follow up patches. The plan is to avoid
+    task_work, but I need to sit down and write and test the code.
+  - finally, I dutifully was using SRCU throughout all the changes, and only
+    last patch switches SRCU to RCU Tasks Trace and demonstrates significant
+    performance and scalability gains from this.
 
-That way the duplication is all in a single file. It would also avoid
-the need for duplicating the nop5 string, as the Rust case is still
-going through the C preprocessor and can use the existing #define.
+The changes in this patch set were tested using BPF selftests and using
+uprobe-stress ([2]) tool. One recent BPF selftest (uprobe_multi/consumers),
+only recently added by Jiri Olsa will need a single-line adjustment to the
+counting logic, but the patch itself is in bpf-next/master, so we'll have to
+address that once linux-trace or tip and bpf-next trees merge. I'll take care
+of that when this happens.
 
-I'm also open to other alternatives. But I don't have infinite
-resources to drive major language changes.
+Now, for the benchmarking results. I've used the following script (which
+utilizes BPF selftests-based bench tool). The CPU used was 80-core Intel Xeon
+Gold 6138 CPU @ 2.00GHz running kernel with production-like config. I minimized
+background noise by stopping any service I could identify and stop, so results
+are pretty stable and variability is pretty small, overall.
 
-Alice
+Benchmark script:
+
+#!/bin/bash
+
+set -eufo pipefail
+
+for i in uprobe-nop uretprobe-nop; do
+    for p in 1 2 4 8 16 32 64; do
+        summary=$(sudo ./bench -w3 -d5 -p$p -a trig-$i | tail -n1)
+        total=$(echo "$summary" | cut -d'(' -f1 | cut -d' ' -f3-)
+        percpu=$(echo "$summary" | cut -d'(' -f2 | cut -d')' -f1 | cut -d'/' -f1)
+        printf "%-15s (%2d cpus): %s (%s/s/cpu)\n" $i $p "$total" "$percpu"
+    done
+    echo
+done
+
+With all the lock-avoiding changes done in this patch set, we get a pretty
+decent improvement in performance and scalability of uprobes with number of
+CPUs, even though we are still nowhere near linear scalability. This is due to
+the remaning mmap_lock, which is currently taken to resolve interrupt address
+to inode+offset and then uprobe instance. And, of course, uretprobes still need
+similar RCU to avoid refcount in the hot path, which will be addressed in the
+follow up patches.
+
+BASELINE (on top of Oleg's clean up patches)
+============================================
+uprobe-nop      ( 1 cpus):    3.032 ± 0.023M/s  (  3.032M/s/cpu)
+uprobe-nop      ( 2 cpus):    3.452 ± 0.005M/s  (  1.726M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.663 ± 0.005M/s  (  0.916M/s/cpu)
+uprobe-nop      ( 8 cpus):    3.718 ± 0.038M/s  (  0.465M/s/cpu)
+uprobe-nop      (16 cpus):    3.344 ± 0.008M/s  (  0.209M/s/cpu)
+uprobe-nop      (32 cpus):    2.288 ± 0.021M/s  (  0.071M/s/cpu)
+uprobe-nop      (64 cpus):    3.205 ± 0.004M/s  (  0.050M/s/cpu)
+
+uretprobe-nop   ( 1 cpus):    1.979 ± 0.005M/s  (  1.979M/s/cpu)
+uretprobe-nop   ( 2 cpus):    2.361 ± 0.005M/s  (  1.180M/s/cpu)
+uretprobe-nop   ( 4 cpus):    2.309 ± 0.002M/s  (  0.577M/s/cpu)
+uretprobe-nop   ( 8 cpus):    2.253 ± 0.001M/s  (  0.282M/s/cpu)
+uretprobe-nop   (16 cpus):    2.007 ± 0.000M/s  (  0.125M/s/cpu)
+uretprobe-nop   (32 cpus):    1.624 ± 0.003M/s  (  0.051M/s/cpu)
+uretprobe-nop   (64 cpus):    2.149 ± 0.001M/s  (  0.034M/s/cpu)
+
+Up to second-to-last patch (i.e., SRCU-based optimizations)
+===========================================================
+uprobe-nop      ( 1 cpus):    3.276 ± 0.005M/s  (  3.276M/s/cpu)
+uprobe-nop      ( 2 cpus):    4.125 ± 0.002M/s  (  2.063M/s/cpu)
+uprobe-nop      ( 4 cpus):    7.713 ± 0.002M/s  (  1.928M/s/cpu)
+uprobe-nop      ( 8 cpus):    8.097 ± 0.006M/s  (  1.012M/s/cpu)
+uprobe-nop      (16 cpus):    6.501 ± 0.056M/s  (  0.406M/s/cpu)
+uprobe-nop      (32 cpus):    4.398 ± 0.084M/s  (  0.137M/s/cpu)
+uprobe-nop      (64 cpus):    6.452 ± 0.000M/s  (  0.101M/s/cpu)
+
+uretprobe-nop   ( 1 cpus):    2.055 ± 0.001M/s  (  2.055M/s/cpu)
+uretprobe-nop   ( 2 cpus):    2.677 ± 0.000M/s  (  1.339M/s/cpu)
+uretprobe-nop   ( 4 cpus):    4.561 ± 0.003M/s  (  1.140M/s/cpu)
+uretprobe-nop   ( 8 cpus):    5.291 ± 0.002M/s  (  0.661M/s/cpu)
+uretprobe-nop   (16 cpus):    5.065 ± 0.019M/s  (  0.317M/s/cpu)
+uretprobe-nop   (32 cpus):    3.622 ± 0.003M/s  (  0.113M/s/cpu)
+uretprobe-nop   (64 cpus):    3.723 ± 0.002M/s  (  0.058M/s/cpu)
+
+RCU Tasks Trace
+===============
+uprobe-nop      ( 1 cpus):    3.396 ± 0.002M/s  (  3.396M/s/cpu)
+uprobe-nop      ( 2 cpus):    4.271 ± 0.006M/s  (  2.135M/s/cpu)
+uprobe-nop      ( 4 cpus):    8.499 ± 0.015M/s  (  2.125M/s/cpu)
+uprobe-nop      ( 8 cpus):   10.355 ± 0.028M/s  (  1.294M/s/cpu)
+uprobe-nop      (16 cpus):    7.615 ± 0.099M/s  (  0.476M/s/cpu)
+uprobe-nop      (32 cpus):    4.430 ± 0.007M/s  (  0.138M/s/cpu)
+uprobe-nop      (64 cpus):    6.887 ± 0.020M/s  (  0.108M/s/cpu)
+
+uretprobe-nop   ( 1 cpus):    2.174 ± 0.001M/s  (  2.174M/s/cpu)
+uretprobe-nop   ( 2 cpus):    2.853 ± 0.001M/s  (  1.426M/s/cpu)
+uretprobe-nop   ( 4 cpus):    4.913 ± 0.002M/s  (  1.228M/s/cpu)
+uretprobe-nop   ( 8 cpus):    5.883 ± 0.002M/s  (  0.735M/s/cpu)
+uretprobe-nop   (16 cpus):    5.147 ± 0.001M/s  (  0.322M/s/cpu)
+uretprobe-nop   (32 cpus):    3.738 ± 0.008M/s  (  0.117M/s/cpu)
+uretprobe-nop   (64 cpus):    4.397 ± 0.002M/s  (  0.069M/s/cpu)
+
+For baseline vs SRCU, peak througput increased from 3.7 M/s (million uprobe
+triggerings per second) up to about 8 M/s. For uretprobes it's a bit more
+modest with bump from 2.4 M/s to 5 M/s.
+
+For SRCU vs RCU Tasks Trace, peak throughput for uprobes increases further from
+8 M/s to 10.3 M/s (+28%!), and for uretprobes from 5.3 M/s to 5.8 M/s (+11%),
+as we have more work to do on uretprobes side.
+
+Even single-thread (no contention) performance is slightly better: 3.276 M/s to
+3.396 M/s (+3.5%) for uprobes, and 2.055 M/s to 2.174 M/s (+5.8%)
+for uretprobes.
+
+  [0] https://lore.kernel.org/linux-trace-kernel/20240711110235.098009979@infradead.org/
+  [1] https://lore.kernel.org/linux-trace-kernel/20240729134444.GA12293@redhat.com/
+  [2] https://github.com/libbpf/libbpf-bootstrap/tree/uprobe-stress
+
+Andrii Nakryiko (6):
+  uprobes: revamp uprobe refcounting and lifetime management
+  uprobes: protected uprobe lifetime with SRCU
+  uprobes: get rid of enum uprobe_filter_ctx in uprobe filter callbacks
+  uprobes: travers uprobe's consumer list locklessly under SRCU
+    protection
+  uprobes: perform lockless SRCU-protected uprobes_tree lookup
+  uprobes: switch to RCU Tasks Trace flavor for better performance
+
+Peter Zijlstra (2):
+  rbtree: provide rb_find_rcu() / rb_find_add_rcu()
+  perf/uprobe: split uprobe_unregister()
+
+ include/linux/rbtree.h                        |  67 ++++
+ include/linux/uprobes.h                       |  20 +-
+ kernel/events/uprobes.c                       | 375 ++++++++++--------
+ kernel/trace/bpf_trace.c                      |   8 +-
+ kernel/trace/trace_uprobe.c                   |  15 +-
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c   |   3 +-
+ 6 files changed, 305 insertions(+), 183 deletions(-)
+
+-- 
+2.43.0
+
