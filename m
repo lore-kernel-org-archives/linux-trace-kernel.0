@@ -1,140 +1,188 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3081BC40
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 21:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7C33F9C5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 21:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722460771; cv=none; b=cX959dPXHbj17/JsFt2OD4H4oGV5T0lDys8WWqs8utZ0VgU63GI2DeTiEz+dSit6udgaDVtCDnnR0UetZqHfQWOsjPHLuyOt4N44myTCy0equh1VCzi167sEWOzvaA14AHUs4QSXs/pxK0h/lneXzMtf/FFJvPa69wh8hGszc50=
+	t=1722461668; cv=none; b=BlbqyMFu+1OOF8Jl6cXAVhx/u9354Ss/E9D2Ly0pkhhQdICgestKvkRPukTzrVxPj90YbNcslRpHgYSyOGg+czOJrkOrydCwxheaiTjwqcVWDBPI/1tUkvzoAoGaZsafunD4iLH7MlNjm+6tDx3/dzOIbCp2740bk7Q5wNbEZ64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722460771; c=relaxed/simple;
-	bh=dEiu0hhQh0Jy26qjQV9Cqq27juU/IGB072cpo+oEEG0=;
+	s=arc-20240116; t=1722461668; c=relaxed/simple;
+	bh=7409YPGD84DSohjrVEJAwG5xvR83yL1kGxaxMdosLHg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TcZSaEc9UM2xcMA/++96tx1hptj/VYy+nHzWGjwY/iTJs9zxx10dvqxlPG8/UoFoe0sukaWVY0ee8IOaIjQRFhKTqtQwhxcPGrHlEMXv0CLwG534rcATK/HJcufEH++R8EljS6j8Rxz5JJZ4i9PH9vjiyoYr1jC8EcpaCpxFTpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5AOJVde; arc=none smtp.client-ip=209.85.221.50
+	 To:Cc:Content-Type; b=sOOImTO7K6nw+gdAFtZUi8x23wY8FQtfaLZb0cJfu/F5dvVFDp6xU2mixa6uQBPtsTElLjcyWgjNZIlYhRFNDUAqhTZ4mlp/+0rVFFaB/3G2WvRDR4qCxWDcOq/jhVLhrAbGigB3cRFzn2HJxZ84OnGlOCn5dzpdY1vyHwxqQAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GQu1F0BL; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5AOJVde"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3684bea9728so3501541f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 14:19:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GQu1F0BL"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42809d6e719so41581055e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 14:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722460767; x=1723065567; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722461665; x=1723066465; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dEiu0hhQh0Jy26qjQV9Cqq27juU/IGB072cpo+oEEG0=;
-        b=G5AOJVdeww95s7Qb7CjW1AIB44U8JoB3hsMVjtKEas3JXf1vwCfGamISn0W9Aq/kdy
-         yNL1Zqv/cr4RhFQKyRJmPJ6INVWA7HaLN4BA3TPWJOgIpZunPibJa8lDt4dea35PXJMa
-         WJnXVfFa8qRDUEOjUhndXkLLFeV3WIfifKMKBtqyAQTnivbTT+brnZBgFMNZdAo8vEjt
-         AHpE8w7Pa18w2XjTHFuKm63OtcCWPoxDqHBhXedIrvxFQBDm2ZqArJ12gP+H0TWV+pTi
-         hMTXlVceo15PAg4VK22DsRHYu0TuNLhY74kcM8C3XJhIyn3vkFywG3eHmMbwTKrnO4Hh
-         vx9w==
+        bh=Bli9lhI61IaRjVxZ6El/2TlE2JOrlJn5Lbi96Tzc1cY=;
+        b=GQu1F0BLQxTE5HrRAYdznGPthK87JO7jzNA+e0LtPBS1Xeb7WCoXTu2o2+hnzBzEUl
+         buBKc8MLsCIEA0Bjx1nzCTqT1i+hXRpUbn5iBBD2SbfwEsIe35BUVWVchgQPPD+DFajC
+         lgje4uUGsgJyywhKyYgL3ztHIrUUCdz3okoNP58tNgHhPgWtwYf9i8AxVGsRIaJgg9X8
+         CKcJQ2zOdQWlDWO3kjiYGEMSBdXzPvWGQVqYoBqIqg7REf/xE5sFBvxtZ1ndtnA7kFmX
+         qadHFbyDM1p2Ld/bexaE0vVnZucLwHYBDMHOjdX234OwQF4buenYjN+cAaHLeLST4GQT
+         nxzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722460767; x=1723065567;
+        d=1e100.net; s=20230601; t=1722461665; x=1723066465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dEiu0hhQh0Jy26qjQV9Cqq27juU/IGB072cpo+oEEG0=;
-        b=m+IL4nFysrXlQum4QHDa2UGAhiUQJncBx32k6cA1gDSHf+b/ZOHni3ClCcgUh+31V4
-         BqJXRhgIrbB5CVobLqYeZRIQiAVnSd+skvRJX+xb7yBZXXW8I18npA7bmUIrjlzbS2Zy
-         3bGWaNWOf0iFfCbnb6Z9kagluthm+/laftniIGxT2IyZoAT4971m84iOmBFBVjj/RSCv
-         ebOPPThEj9G+cn/W5xEAXTgM0fCMkAO3/ve0OrOPcOZrKRPr6cTjZc8go3ZW/CnA6P8K
-         9CtDW3gx0nxl/Mh/b37W5bNCjugm+8LvQu4fy15leXtsncSiqK7faUGx7mHRVmlT7VfE
-         LUew==
-X-Forwarded-Encrypted: i=1; AJvYcCV803D6VM77cmlrXv5YlBS3Ij+hk6oFvEpK3SWl0BpnYxmGeYcil1PX94nacUlna0l4x6pwf7jRh9tNU87lt4ULyhL79yD7LTUKPhcEXQxAVnCr
-X-Gm-Message-State: AOJu0Yy2vTnxyN/CW1jpHMF5TrC86vqpErovqcY41rMYp6nxoj56US5W
-	qmCneD4XbFHCVK9SntQqRi8AB4om6ynBCt4S3NYYZSiX6K9h7C6QpeA11fgYb22RJBvhSigQBRo
-	IaiG3zO9CIIUQzS651/xkRLhvKol4xk12UBfR
-X-Google-Smtp-Source: AGHT+IGCGvp/48H8qaH6fLYg7SPbNiiWFxJtKT/J7GEsXh7PoxMKp+lvuqPbXyBiSW9seEuLTTgslLee6nJ92gY4vjU=
-X-Received: by 2002:a5d:4483:0:b0:368:6d75:1bde with SMTP id
- ffacd0b85a97d-36baacdd8aamr351815f8f.15.1722460767120; Wed, 31 Jul 2024
- 14:19:27 -0700 (PDT)
+        bh=Bli9lhI61IaRjVxZ6El/2TlE2JOrlJn5Lbi96Tzc1cY=;
+        b=Hz/p2o8AUAOOs065+/NxnUpXNVEXaKo/wLlKylanJSp1qXFolkCfCfA0y3grH/HKdB
+         s36HIz8xSGkqDeRcNvs1zbI0lOhwQ38EV9I61Xh9h1Tr9naEC4XYlJ+Gko8/01J3CArv
+         yNj49n2VN/6Gc0TRoA7Klwnm2+LH/7bUjNUakEWMKQ9j0gpnZerq/EH5+DtjWUEjNAOx
+         ICOSZfUV4VKWwUrEN4Cp7XmD68yIw3avEtOoa/lNOsojGtykNfTgRoWs8+hl1NdzeGIa
+         6e76yBQ/7dO0YKe3Hzh4+UVxSNuk1Czkergg0VFrSUs/jX9QIriAS/VmJZwb2dt3/4lk
+         t4vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWf2Wa+La3+eNBMOo83p+4odJUFpQb6reJthKeQqzLWn1dHomcPYbv4DQBnHi1Bzogiea+cwjrclAQ+fmsjpTf7IA9+n3f1xwWQ2C35yjSGIza8
+X-Gm-Message-State: AOJu0YwHPsrGgktj45TSq0wUQUeavg4mqOE+Yhb+/r6AxmIVvdIFGMlO
+	KyinCvF5KpC2QDzQrqoJ1pBJeuF5pxQ4xRalpBAXc3/1NxW6u+0THrWCjtbwMsonkaUDv2YbEFo
+	fWqOBnQ0Vf3/RYATwxlMXAZWEf/VFh9zfU3F0
+X-Google-Smtp-Source: AGHT+IEnnH7Vl1oPP/7poRoKnYi3pQkDBFhO+xnBb/MH3dLIwjkKyZ7/ziEU66uYwoK2Ox4X3gDKYbUA6wyDWgsUmeg=
+X-Received: by 2002:a05:600c:3543:b0:426:6ee7:c05a with SMTP id
+ 5b1f17b1804b1-428a9bdcd50mr4067365e9.15.1722461664765; Wed, 31 Jul 2024
+ 14:34:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240730022623.98909-1-almasrymina@google.com>
- <20240730022623.98909-2-almasrymina@google.com> <1722327259.5659568-1-xuanzhuo@linux.alibaba.com>
-In-Reply-To: <1722327259.5659568-1-xuanzhuo@linux.alibaba.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 31 Jul 2024 17:19:11 -0400
-Message-ID: <CAHS8izMZQLsBWPXWiqPwaQHfupKc5VAuxW+6kpWmzi-vw8JEWQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v17 01/14] netdev: add netdev_rx_queue_restart()
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+ <20240628-tracepoint-v4-1-353d523a9c15@google.com> <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240731170508.GJ33588@noisy.programming.kicks-ass.net>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 31 Jul 2024 23:34:13 +0200
+Message-ID: <CAH5fLghYodekhH-1A0BWZVwgbqkWbP3WP70-us2FtHqvOqD_Hw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rust: add static_key_false
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, 
+	Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 30, 2024 at 4:17=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.alibaba.c=
-om> wrote:
+On Wed, Jul 31, 2024 at 7:05=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 >
-> On Tue, 30 Jul 2024 02:26:05 +0000, Mina Almasry <almasrymina@google.com>=
- wrote:
-> > Add netdev_rx_queue_restart() function to netdev_rx_queue.h
+> On Fri, Jun 28, 2024 at 01:23:31PM +0000, Alice Ryhl wrote:
 >
+> >  rust/kernel/arch/arm64/jump_label.rs     | 34 ++++++++++++++++++++++++=
+++++
+> >  rust/kernel/arch/loongarch/jump_label.rs | 35 ++++++++++++++++++++++++=
++++++
+> >  rust/kernel/arch/mod.rs                  | 24 ++++++++++++++++++++
+> >  rust/kernel/arch/riscv/jump_label.rs     | 38 ++++++++++++++++++++++++=
+++++++++
+> >  rust/kernel/arch/x86/jump_label.rs       | 35 ++++++++++++++++++++++++=
++++++
+> >  rust/kernel/lib.rs                       |  2 ++
+> >  rust/kernel/static_key.rs                | 32 ++++++++++++++++++++++++=
++++
+> >  scripts/Makefile.build                   |  2 +-
+> >  8 files changed, 201 insertions(+), 1 deletion(-)
 >
-> Can you say more? As far as I understand, we just release the buffer
-> submitted to the rx ring and get a new page pool.
+> So I really find the amount of duplicated asm offensive. Is is far too
+> easy for any of this to get out of sync.
 >
-
-Yes, I just noticed that this commit message is underwritten. I'll add
-more color. Maybe something like;
-
-=3D=3D=3D=3D
-Add netdev_rx_queue_restart(), which resets an rx queue using the
-queue API recently merged[1].
-
-The queue API was merged to enable the core net stack reset individual
-rx queues to actuate changes in the rx queue's configuration. In later
-patches in this series, we will use netdev_rx_queue_restart() to reset
-rx queues after binding or unbinding dmabuf configuration, which will
-cause reallocation of the page_pool to repopulate its memory using the
-new configuration.
-
-[1] https://lore.kernel.org/netdev/20240430231420.699177-1-shailend@google.=
-com/T/
-=3D=3D=3D=3D
-
-> But I personally feel that the interface here is a bit too complicated. I=
-n
-> particular, we also need to copy the rx struct memory, which means it is =
-a
-> dangerous operation for many pointers.
+> > diff --git a/rust/kernel/arch/x86/jump_label.rs b/rust/kernel/arch/x86/=
+jump_label.rs
+> > new file mode 100644
+> > index 000000000000..383bed273c50
+> > --- /dev/null
+> > +++ b/rust/kernel/arch/x86/jump_label.rs
+> > @@ -0,0 +1,35 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +// Copyright (C) 2024 Google LLC.
+> > +
+> > +//! X86 Rust implementation of jump_label.h
+> > +
+> > +/// x86 implementation of arch_static_branch
+> > +#[macro_export]
+> > +#[cfg(target_arch =3D "x86_64")]
+> > +macro_rules! arch_static_branch {
+> > +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) =3D> {'my_labe=
+l: {
+> > +        core::arch::asm!(
+> > +            r#"
+> > +            1: .byte 0x0f,0x1f,0x44,0x00,0x00
+> > +
+> > +            .pushsection __jump_table,  "aw"
+> > +            .balign 8
+> > +            .long 1b - .
+> > +            .long {0} - .
+> > +            .quad {1} + {2} + {3} - .
+> > +            .popsection
+> > +            "#,
+> > +            label {
+> > +                break 'my_label true;
+> > +            },
+> > +            sym $key,
+> > +            const ::core::mem::offset_of!($keytyp, $field),
+> > +            const $crate::arch::bool_to_int($branch),
+> > +        );
+> > +
+> > +        break 'my_label false;
+> > +    }};
+> > +}
 >
+> Note that this uses the forced 5 byte version, and not the dynamic sized
+> one. On top of that it hard-codes the nop5 string :/
+>
+> Please work harder to not have to duplicate stuff like this.
 
-Understood, but the complication is necessary based on previous
-discussions. Jakub requests that we must allocate memory for a new rx
-queues before bringing down the existing queue, to guard against the
-interface remaining down on ENOMEM error.
+I really didn't want to duplicate it, but it's very hard to find a
+performant alternative. Is there any way we could accept duplication
+only in the cases where an 'i' parameter is used? I don't have the
+choice of using a Rust helper for 'i' parameters.
 
-Btw, I notice the series was marked as changes requested; the only
-feedback I got was this one and the incorrect netmem_priv.h header.
-I'll fix and repost. It's just slightly weird because both v16 and v17
-are marked as changes requested in patchwork.
+Perhaps one option could be to put the Rust code inside jump_label.h
+and have the header file evaluate to either C or Rust depending on the
+value of some #ifdefs?
+
+#ifndef RUST_ASM
+/* existing C code goes here */
+#endif
+#ifdef RUST_ASM
+// rust code goes here
+#endif
+
+That way the duplication is all in a single file. It would also avoid
+the need for duplicating the nop5 string, as the Rust case is still
+going through the C preprocessor and can use the existing #define.
+
+I'm also open to other alternatives. But I don't have infinite
+resources to drive major language changes.
+
+Alice
