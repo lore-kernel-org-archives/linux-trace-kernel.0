@@ -1,86 +1,251 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0420916D4CB
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 14:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623E01B3F1A;
+	Wed, 31 Jul 2024 15:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722435169; cv=none; b=B5BI7bNVXy+6Dbu+OZYBR6G+hRI0pk6vIfyQf/NtiyIV5Q5X4bmwnUi4pOUbgghbjcd+8gGG2h9u+SwY+DJzmAbnfqZDXOWHwbbkCe1AkVr73BwEVFw9aECSrrY8ExNITqM5Zx067diu2SZBXK8Y3ssgbvRCp8AQXyPLAcTFFnQ=
+	t=1722440464; cv=none; b=rdnf3CFOk+U6kjhx6OTTT3HUEuSyG3xjDa3vHEpRN+HVrU2OPzMVA5lYpRLpEBhQEYHCVKanUJwSuFUvuIqzk8sP3v5HPDtwpzCCDQiueJ0PynzWxRTOXkp/LiZ335rxJIpblHhmP623sXSI8yvT4iZxgGhB/0p1QJa8ofL9zhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722435169; c=relaxed/simple;
-	bh=Zz+2JU1gZn+RJNksX9qA9JVoiTKdjSe1B3qxuuo/L0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lfVOgtvrxIzbf/ZGwyhRBVBpDGY8iTN/+I3C2rkIHedk+mDCzPrwDJHHZ0WcpFiC8/oZt0CpaRmWpVOnnAxwJ1gmNXa9/LiUH1tMASFFH/xcElW1YopRkyTIpGC3sxHR4mD/hiK0AuOtOhhlpPxOvP1CFTpsVujBI5H2IHq51uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OEKM2EiO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEKM2EiO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722435167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=geNpHNcR5/qllA/FEF4u0Jq+w/nr4b1yAQe+s+buY6s=;
-	b=OEKM2EiOGg/MBn5N5rLavvByGUNnVtewNnKUoi07Im0MAzRdbeqW/qUmA++FilpBIwjM0b
-	XPUbbCaWPaLC6mWO8qPxleo+b1HlFIF63MZ4GoZIWIW9IHbOlQCQhDmHOEA0zegzMeAbVZ
-	WU0qx5ZqYVFfh1KE6wt0J84wF7XZWR4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-DmNa3MIqOWafNcde4BQbZw-1; Wed,
- 31 Jul 2024 10:12:43 -0400
-X-MC-Unique: DmNa3MIqOWafNcde4BQbZw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A631978F5D;
-	Wed, 31 Jul 2024 14:12:39 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.31])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4B5031955E89;
-	Wed, 31 Jul 2024 14:12:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 31 Jul 2024 16:12:38 +0200 (CEST)
-Date: Wed, 31 Jul 2024 16:12:32 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, mhiramat@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Remove redundant spinlock in uprobe_deny_signal
-Message-ID: <20240731141231.GB16718@redhat.com>
-References: <20240731095017.1560516-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1722440464; c=relaxed/simple;
+	bh=f6F2YV6TXCd873BSdle7/ezYe3fOeMDEOWQSFQ9HZdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y3lDdLAkRGG4/jGgD5DQlXiWzvA8S2U7k/NQosQ2qjndUqqfbWd7dCKgLF6NbS8q4wX7xnNucgRyMEpe8PjMn9vUdsGJrcI+JORopsjdT1HBRQ4EOvN2rRdZX1vEcPAMOGpcw13Gi2KhGoYnLBjyRVE74y5CP9kvQPCwt1EOKws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444E9C116B1;
+	Wed, 31 Jul 2024 15:41:03 +0000 (UTC)
+Date: Wed, 31 Jul 2024 11:41:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: tglozar@redhat.com
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jwyatt@redhat.com, jkacur@redhat.com
+Subject: Re: [PATCH v2 3/6] rtla/utils: Add idle state disabling via
+ libcpupower
+Message-ID: <20240731114137.21499fed@gandalf.local.home>
+In-Reply-To: <20240731083655.375293-4-tglozar@redhat.com>
+References: <20240731083655.375293-1-tglozar@redhat.com>
+	<20240731083655.375293-4-tglozar@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240731095017.1560516-1-liaochang1@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 07/31, Liao Chang wrote:
->
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
->  	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+On Wed, 31 Jul 2024 10:36:52 +0200
+tglozar@redhat.com wrote:
+
+> From: Tomas Glozar <tglozar@redhat.com>
+> 
+> Add functions to utils.c to disable idle states through functions of
+> libcpupower. This will serve as the basis for disabling idle states
+> per cpu when running timerlat.
+> 
+> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> ---
+>  tools/tracing/rtla/src/utils.c | 140 +++++++++++++++++++++++++++++++++
+>  tools/tracing/rtla/src/utils.h |   6 ++
+>  2 files changed, 146 insertions(+)
+> 
+> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+> index 9ac71a66840c..9279b8ce08c3 100644
+> --- a/tools/tracing/rtla/src/utils.c
+> +++ b/tools/tracing/rtla/src/utils.c
+> @@ -4,6 +4,9 @@
+>   */
 >  
->  	if (task_sigpending(t)) {
-> -		spin_lock_irq(&t->sighand->siglock);
->  		clear_tsk_thread_flag(t, TIF_SIGPENDING);
-> -		spin_unlock_irq(&t->sighand->siglock);
+>  #define _GNU_SOURCE
+> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
+> +#include <cpuidle.h>
+> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
+>  #include <dirent.h>
+>  #include <stdarg.h>
+>  #include <stdlib.h>
+> @@ -519,6 +522,143 @@ int set_cpu_dma_latency(int32_t latency)
+>  	return fd;
+>  }
+>  
+> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
+> +static unsigned int **saved_cpu_idle_disable_state;
+> +static size_t saved_cpu_idle_disable_state_alloc_ctr;
+> +
+> +/*
+> + * save_cpu_idle_state_disable - save disable for all idle states of a cpu
+> + *
+> + * Saves the current disable of all idle states of a cpu, to be subsequently
+> + * restored via restore_cpu_idle_disable_state.
+> + *
+> + * Return: idle state count on success, negative on error
+> + */
+> +int save_cpu_idle_disable_state(unsigned int cpu)
+> +{
+> +	unsigned int nr_states;
+> +	unsigned int state;
+> +	int disabled;
+> +	int nr_cpus;
+> +
+> +	nr_states = cpuidle_state_count(cpu);
+> +
+> +	if (nr_states == 0)
+> +		return 0;
+> +
+> +	if (saved_cpu_idle_disable_state == NULL) {
+> +		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> +		saved_cpu_idle_disable_state = calloc(nr_cpus, sizeof(unsigned int *));
 
-Agreed, in this case ->siglock buys nothing, another signal can come
-right after spin_unlock().
+Need to check if the calloc failed and return an error if it did.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+> +	}
+> +
+> +	saved_cpu_idle_disable_state[cpu] = calloc(nr_states, sizeof(unsigned int));
+
+Here too.
+
+> +	saved_cpu_idle_disable_state_alloc_ctr++;
+> +
+> +	for (state = 0; state < nr_states; state++) {
+> +		disabled = cpuidle_is_state_disabled(cpu, state);
+> +		if (disabled < 0)
+> +			return disabled;
+
+Hmm, should this warn if state is not zero and disabled is negative.
+
+> +		saved_cpu_idle_disable_state[cpu][state] = disabled;
+> +	}
+> +
+> +	return nr_states;
+> +}
+> +
+> +/*
+> + * restore_cpu_idle_disable_state - restore disable for all idle states of a cpu
+> + *
+> + * Restores the current disable state of all idle states of a cpu that was
+> + * previously saved by save_cpu_idle_disable_state.
+> + *
+> + * Return: idle state count on success, negative on error
+> + */
+> +int restore_cpu_idle_disable_state(unsigned int cpu)
+> +{
+> +	unsigned int nr_states;
+> +	unsigned int state;
+> +	int disabled;
+> +	int result;
+> +
+
+Should probably have a check to see if saved_cpu_idle_disable exists.
+
+> +	nr_states = cpuidle_state_count(cpu);
+> +
+> +	if (nr_states == 0)
+> +		return 0;
+> +
+
+As well as saved_cpu_idle_disable_state[cpu] exists.
+
+Just for robustness.
+
+> +	for (state = 0; state < nr_states; state++) {
+> +		disabled = saved_cpu_idle_disable_state[cpu][state];
+> +		result = cpuidle_state_disable(cpu, state, disabled);
+> +		if (result < 0)
+> +			return result;
+> +	}
+> +
+> +	free(saved_cpu_idle_disable_state[cpu]);
+> +	saved_cpu_idle_disable_state[cpu] = NULL;
+> +	saved_cpu_idle_disable_state_alloc_ctr--;
+> +	if (saved_cpu_idle_disable_state_alloc_ctr == 0) {
+> +		free(saved_cpu_idle_disable_state);
+> +		saved_cpu_idle_disable_state = NULL;
+> +	}
+> +
+> +	return nr_states;
+> +}
+> +
+> +/*
+> + * free_cpu_idle_disable_states - free saved idle state disable for all cpus
+> + *
+> + * Frees the memory used for storing cpu idle state disable for all cpus
+> + * and states.
+> + *
+> + * Normally, the memory is freed automatically in
+> + * restore_cpu_idle_disable_state; this is mostly for cleaning up after an
+> + * error.
+> + */
+> +void free_cpu_idle_disable_states(void)
+> +{
+> +	int cpu;
+> +
+> +	if (!saved_cpu_idle_disable_state)
+> +		return;
+> +
+> +	for (cpu = 0; cpu < sysconf(_SC_NPROCESSORS_CONF); cpu++) {
+
+> +		if (!saved_cpu_idle_disable_state[cpu])
+> +			continue;
+
+No need to check here. free() works fine with passing NULL to it.
+
+-- Steve
+
+> +		free(saved_cpu_idle_disable_state[cpu]);
+> +		saved_cpu_idle_disable_state[cpu] = NULL;
+> +	}
+> +
+> +	free(saved_cpu_idle_disable_state);
+> +	saved_cpu_idle_disable_state = NULL;
+> +}
+> +
+> +/*
+> + * set_deepest_cpu_idle_state - limit idle state of cpu
+> + *
+> + * Disables all idle states deeper than the one given in
+> + * deepest_state (assuming states with higher number are deeper).
+> + *
+> + * This is used to reduce the exit from idle latency. Unlike
+> + * set_cpu_dma_latency, it can disable idle states per cpu.
+> + *
+> + * Return: idle state count on success, negative on error
+> + */
+> +int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int deepest_state)
+> +{
+> +	unsigned int nr_states;
+> +	unsigned int state;
+> +	int result;
+> +
+> +	nr_states = cpuidle_state_count(cpu);
+> +
+> +	for (state = deepest_state + 1; state < nr_states; state++) {
+> +		result = cpuidle_state_disable(cpu, state, 1);
+> +		if (result < 0)
+> +			return result;
+> +	}
+> +
+> +	return nr_states;
+> +}
+> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
+> +
+>  #define _STR(x) #x
+>  #define STR(x) _STR(x)
+>  
+> diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+> index d44513e6c66a..51b6054c2679 100644
+> --- a/tools/tracing/rtla/src/utils.h
+> +++ b/tools/tracing/rtla/src/utils.h
+> @@ -64,6 +64,12 @@ int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
+>  int set_comm_cgroup(const char *comm_prefix, const char *cgroup);
+>  int set_pid_cgroup(pid_t pid, const char *cgroup);
+>  int set_cpu_dma_latency(int32_t latency);
+> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
+> +int save_cpu_idle_disable_state(unsigned int cpu);
+> +int restore_cpu_idle_disable_state(unsigned int cpu);
+> +void free_cpu_idle_disable_states(void);
+> +int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state);
+> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
+>  int auto_house_keeping(cpu_set_t *monitored_cpus);
+>  
+>  #define ns_to_usf(x) (((double)x/1000))
 
