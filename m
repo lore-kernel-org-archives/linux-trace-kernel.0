@@ -1,75 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CFE16B395;
-	Wed, 31 Jul 2024 09:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16F71A7F7B;
+	Wed, 31 Jul 2024 09:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722419192; cv=none; b=Nzt5KUwAMFoL+kfG45l2DGnrjuD/ByUK/5CXkKCkXPwLCDZZgD0SDVHFyWsuOjveEIJZfbMuI04kfdcS41WSHA3ChnaYzH3Zt1N+4keTnD4Tdx9rnSSsjMjYS6onsBOxrQFU1jGOwUrGD8GseYkySelVRUmDEj9Fmza2m1Auy2w=
+	t=1722419959; cv=none; b=XJPR6gg64/N9RBezleeF+fxIHzhqFyIBtYjS7+4jbvjCRW2WvgEevMq9paeszeN0qvslSbqcQpVuh3VxUnJ5ngs/2usSFRfhn0Xz5PI/rcKFQ+hfDu7cQWFBbU2IEVJjUgfoo1H/4/CRzeF4cBWVeq4MocRPelk+WfhV2OziX5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722419192; c=relaxed/simple;
-	bh=yVnJOIKofacfRq64hTVjmvQiITuTD5zdQUZVRt40Yno=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=u5vk2HGNgVTysjeewzSsLpXe8wJn2gjd9XOf19MTDu4+yml1Rp628z4fucMYoKWl11V34S/rh+SViadLrsKULy3uuKSWBrqzq/p8fG52XwdEUsKQnodaP2ylL/0wqZRGFqohtFPppzrQOuWUAp0nisHywFJvNKkNIYf0uDJGq44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4lpqQ+P; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4lpqQ+P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC6EC4AF09;
-	Wed, 31 Jul 2024 09:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722419191;
-	bh=yVnJOIKofacfRq64hTVjmvQiITuTD5zdQUZVRt40Yno=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B4lpqQ+P9vRln1D2CljbDitQrBQQUg9tA7S5n2HIBeFfC/QsCcfpUKSe2cGhfneks
-	 120CM5t5t6nOpG36h8ZSMQ9yqUQ2N+IvyKRHNcqTcH35M8+TYh/bJsjuDTKLZkwLAP
-	 QQOOU7oyk/yyEWV9mTGCGPLeXvReEUJScRIcpx9Os5WAcbCDtpKrpI4vnVrNKDzyuv
-	 gF/JZVcNKpsVc6aGmmRbGbVV2DduK+SbUVHGJmo8n7SEqDM1grXWiI0SmzuN/jV9wq
-	 3ZhBLy5kZINwC0Oy2/dOQAYdVSUhWwpZZRd7yc1Nmd2I3oX/T4L1TdtI+bonrp0tj1
-	 xRRmXrUNGYQjw==
-Date: Wed, 31 Jul 2024 18:46:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: andrii@kernel.org, peterz@infradead.org, jolsa@kernel.org,
- rostedt@goodmis.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] uprobes: simplify _unregister paths
-Message-Id: <20240731184627.c61cfa6ef8748f71f41e9407@kernel.org>
-In-Reply-To: <20240730123421.GA9085@redhat.com>
-References: <20240730123421.GA9085@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1722419959; c=relaxed/simple;
+	bh=0zDPImMfP8uELHlerqU/ZcC4S1MlQRyeKlXnKm1s8bY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mKHNhdZ6xbNLlIFJ+ZOwvlJZgmtzZYIqclIA0EHEK5TdXQ2N92WbX0/I6DSHxeC6ckIfgYWp8DagNmAsXSQAolNZgc1hSp16GjAU4gPztBKRLPUluyFJ+n6i5LuWCU9SlsQ+FtjcfviicqL1n13Y/B/ieqov/iPEkuOESCawVJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WYnYP0xv9z1HFkd;
+	Wed, 31 Jul 2024 17:56:25 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0942014037C;
+	Wed, 31 Jul 2024 17:59:14 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 31 Jul
+ 2024 17:59:13 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<mhiramat@kernel.org>, <oleg@redhat.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] uprobes: Remove redundant spinlock in uprobe_deny_signal
+Date: Wed, 31 Jul 2024 09:50:17 +0000
+Message-ID: <20240731095017.1560516-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Tue, 30 Jul 2024 14:34:21 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+Since clearing a bit in thread_info is an atomic operation, the spinlock
+is redundant and can be removed, reducing lock contention is good for
+performance.
 
-> On top of
-> 
-> 	[PATCH v2 0/5] uprobes: misc cleanups/simplifications
-> 	https://lore.kernel.org/all/20240729134444.GA12293@redhat.com/
-> 
-> I sent yesterday.
-> 
+Signed-off-by: Liao Chang <liaochang1@huawei.com>
+---
+ kernel/events/uprobes.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-OK, this series looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> Oleg.
-> ---
-> 
->  kernel/events/uprobes.c | 47 ++++++++++++++++++++++++-----------------------
->  1 file changed, 24 insertions(+), 23 deletions(-)
-> 
-
-
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 73cc47708679..76a51a1f51e2 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
+ 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+ 
+ 	if (task_sigpending(t)) {
+-		spin_lock_irq(&t->sighand->siglock);
+ 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
+-		spin_unlock_irq(&t->sighand->siglock);
+ 
+ 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
+ 			utask->state = UTASK_SSTEP_TRAPPED;
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
