@@ -1,101 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8338E1AAE08;
-	Wed, 31 Jul 2024 08:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CFE16B395;
+	Wed, 31 Jul 2024 09:46:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722416266; cv=none; b=MCE/fWqmoX+7kR0dpxr01aEAWJJ4for3F8ryHgNyPw+mkfVC9nqcadqerspQlcyoiH/xBCB5D8wg+xc7BJ4cHmmUL6GvxnIcxQvSJ2rLWn1NDzOpYjtgAdPeXs8cPj6sIvWmO9fHCjNWurQ3FdqLPSQl3352FWJtVw8Nz/0m4Qo=
+	t=1722419192; cv=none; b=Nzt5KUwAMFoL+kfG45l2DGnrjuD/ByUK/5CXkKCkXPwLCDZZgD0SDVHFyWsuOjveEIJZfbMuI04kfdcS41WSHA3ChnaYzH3Zt1N+4keTnD4Tdx9rnSSsjMjYS6onsBOxrQFU1jGOwUrGD8GseYkySelVRUmDEj9Fmza2m1Auy2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722416266; c=relaxed/simple;
-	bh=hopejYkFDlRXosQSrN9FNvd2qXYNt97CgMPgExHWjLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHLfRSG799wYTA1w7RzRq4ubcbDxl3X8xNrRmqS6L2dIsm/thJsaliPBKVkz6zKI/onlR/GfZH/IjaX7COzhchX6f0e7D4JwiDJHdm8zPXVHhElMvF+MEqrZsopUkBSb/gf3w6nPHW5lJlalFsqO+TVO+/g/0mc1ce+6HWift9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgcv9F/j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722419192; c=relaxed/simple;
+	bh=yVnJOIKofacfRq64hTVjmvQiITuTD5zdQUZVRt40Yno=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=u5vk2HGNgVTysjeewzSsLpXe8wJn2gjd9XOf19MTDu4+yml1Rp628z4fucMYoKWl11V34S/rh+SViadLrsKULy3uuKSWBrqzq/p8fG52XwdEUsKQnodaP2ylL/0wqZRGFqohtFPppzrQOuWUAp0nisHywFJvNKkNIYf0uDJGq44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4lpqQ+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgcv9F/j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC84C116B1;
-	Wed, 31 Jul 2024 08:57:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4lpqQ+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC6EC4AF09;
+	Wed, 31 Jul 2024 09:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722416266;
-	bh=hopejYkFDlRXosQSrN9FNvd2qXYNt97CgMPgExHWjLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kgcv9F/j4hbv4sY33GK6d58MNdprg7Tk6x7Afte7Yvm+pO9ukFm6JSZHFhVrQctV8
-	 HCJvnQ2SmAqj0sAQJBgaQF2tt0TOI5PcJu9v2fmRxV2XUWaFGKRqLMu52qnFc79kh9
-	 OZIH/2SJJc8An60ZA3qB06AemJlpRn3qE0hIldQMIveR5FOpyQA8u8NtVxm3+jHQKb
-	 ZIR6/5PDzOSoOQ9rfNdotTn6qFvjblvNuBAip+B091FmD2fG07ijLMGLRyGcJCwF7M
-	 F0eioAeNeRBymaNwU7QnKVLzgg6Jy9Kkg6kC/bxm0G3R6V0OdCYTZd0D5ASDSWuS9d
-	 gv5IYS+rqKdFw==
-Date: Wed, 31 Jul 2024 09:57:39 +0100
-From: Simon Horman <horms@kernel.org>
-To: Liju-clr Chen <liju-clr.chen@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Yingshiuan Pan <Yingshiuan.Pan@mediatek.com>,
-	Ze-yu Wang <Ze-yu.Wang@mediatek.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	Shawn Hsiao <shawn.hsiao@mediatek.com>,
-	PeiLun Suei <PeiLun.Suei@mediatek.com>,
-	Chi-shen Yeh <Chi-shen.Yeh@mediatek.com>,
-	Kevenny Hsieh <Kevenny.Hsieh@mediatek.com>
-Subject: Re: [PATCH v12 11/24] virt: geniezone: Add ioeventfd support
-Message-ID: <20240731085739.GO1967603@kernel.org>
-References: <20240730082436.9151-1-liju-clr.chen@mediatek.com>
- <20240730082436.9151-12-liju-clr.chen@mediatek.com>
+	s=k20201202; t=1722419191;
+	bh=yVnJOIKofacfRq64hTVjmvQiITuTD5zdQUZVRt40Yno=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=B4lpqQ+P9vRln1D2CljbDitQrBQQUg9tA7S5n2HIBeFfC/QsCcfpUKSe2cGhfneks
+	 120CM5t5t6nOpG36h8ZSMQ9yqUQ2N+IvyKRHNcqTcH35M8+TYh/bJsjuDTKLZkwLAP
+	 QQOOU7oyk/yyEWV9mTGCGPLeXvReEUJScRIcpx9Os5WAcbCDtpKrpI4vnVrNKDzyuv
+	 gF/JZVcNKpsVc6aGmmRbGbVV2DduK+SbUVHGJmo8n7SEqDM1grXWiI0SmzuN/jV9wq
+	 3ZhBLy5kZINwC0Oy2/dOQAYdVSUhWwpZZRd7yc1Nmd2I3oX/T4L1TdtI+bonrp0tj1
+	 xRRmXrUNGYQjw==
+Date: Wed, 31 Jul 2024 18:46:27 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: andrii@kernel.org, peterz@infradead.org, jolsa@kernel.org,
+ rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] uprobes: simplify _unregister paths
+Message-Id: <20240731184627.c61cfa6ef8748f71f41e9407@kernel.org>
+In-Reply-To: <20240730123421.GA9085@redhat.com>
+References: <20240730123421.GA9085@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240730082436.9151-12-liju-clr.chen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 30, 2024 at 04:24:23PM +0800, Liju-clr Chen wrote:
-> From: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
+On Tue, 30 Jul 2024 14:34:21 +0200
+Oleg Nesterov <oleg@redhat.com> wrote:
+
+> On top of
 > 
-> Ioeventfd leverages eventfd to provide asynchronous notification
-> mechanism for VMM. VMM can register a mmio address and bind with an
-> eventfd. Once a mmio trap occurs on this registered region, its
-> corresponding eventfd will be notified.
+> 	[PATCH v2 0/5] uprobes: misc cleanups/simplifications
+> 	https://lore.kernel.org/all/20240729134444.GA12293@redhat.com/
 > 
-> Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
-> Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
+> I sent yesterday.
+> 
 
-...
+OK, this series looks good to me.
 
-> diff --git a/drivers/virt/geniezone/gzvm_ioeventfd.c b/drivers/virt/geniezone/gzvm_ioeventfd.c
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-...
+Thanks,
 
-> +/**
-> + * ioeventfd_check_collision() - Check collison assumes gzvm->ioevent_lock held.
+> Oleg.
+> ---
+> 
+>  kernel/events/uprobes.c | 47 ++++++++++++++++++++++++-----------------------
+>  1 file changed, 24 insertions(+), 23 deletions(-)
+> 
 
-nit: collision
 
-     Likewise elsewhere in this patch.
-
-     Flagged by checkpatch.pl --codespell
-
-> + * @gzvm: Pointer to gzvm.
-> + * @p: Pointer to gzvm_ioevent.
-> + *
-> + * Return:
-> + * * true			- collison found
-> + * * false			- no collison
-> + */
-
-...
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
