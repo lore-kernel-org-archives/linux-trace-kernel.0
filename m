@@ -1,111 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732A1BC2A;
-	Wed, 31 Jul 2024 16:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0B31A76C2;
+	Wed, 31 Jul 2024 16:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722442510; cv=none; b=Wfvp/0zL/C13uDMspEjbFTjD5EGSTDvVrB+h9u5nbOI/J+9GjhjxfZtYp23ihqDWbw6ctaQeAnVrvI0nThWnmzXBVs6m1jQdfkiYDNLBofClUuIsg8YGTM80FsjZjZ5afKwvY5SCThdKnn9wk/qvvt3Iy0wc1cbbEXnUfj3XeYE=
+	t=1722442695; cv=none; b=tdsrxNHo3CfoUeo4Wu70h4JYz1rcSBBHtENjfKp9Ze8S/ixP07cG7c97VVPF68UCV321YgTnf7d7Y+GZ/01SSbQ0Epag+fgf4/wUaRS1uOqPTUu1JxvFpHo3PHC30e3ADMTQG4F56D1jL85oJJid+QF34M4Z9mndBkv7ipbxUIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722442510; c=relaxed/simple;
-	bh=pfHnPMYK0TtleosbWCfB/5JPB/LqQy3ukFb8Be23aPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBPNbVwP5N7Twdzu+RLivXWR0SPEroLFYPNvBCxXbJrrXIBiScysvNFjc5UA/fbl1Z+rnMYrO/NzAWk73N9AHTSTE2s5PqWvY04uIYBLU+2DtjYRdCnJEqRYxzmlv7q+dloM7M1usijOrh5Pp0tUg1yZ3BntccR35f2eYbCYXsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC10C116B1;
-	Wed, 31 Jul 2024 16:15:04 +0000 (UTC)
-Date: Wed, 31 Jul 2024 12:15:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gary Guo <gary@garyguo.net>
-Cc: Alice Ryhl <aliceryhl@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
- <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
- <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
- Feng <boqun.feng@gmail.com>, "=?UTF-8?B?QmrDtnJu?= Roy Baron"
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@samsung.com>, linux-trace-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
- <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
- <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros
- Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
- <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-arm-kernel@lists.infradead.org, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
- <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
- Dooley <conor.dooley@microchip.com>, Samuel Holland
- <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
- <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
- <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
-Message-ID: <20240731121539.0888738b@gandalf.local.home>
-In-Reply-To: <20240730113527.5c9896db@eugeo>
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
-	<20240628-tracepoint-v4-2-353d523a9c15@google.com>
-	<20240730113527.5c9896db@eugeo>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1722442695; c=relaxed/simple;
+	bh=ovFU0Zf+8cz15sgZhAPHqWvuYPbiiCZrvHyBq2enEdU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bFSxpIHwrPzdTtakgLqTiaIQVy+uBTkrYFZibYKXlX5f4Ohu2Ejrz1nZezTrg7BlwFWHU/rvDYBM3LmpUi1offG8Xm5zw+DDwJqeTKkWr9XI1iCZHOG7zdc85poTHphvprDgfRQ4yMU0BaZD1kk6zcgxoN7EhvuJJiyzqesRNOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pnu9uk3k; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pnu9uk3k"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70d2b921cd1so5238987b3a.1;
+        Wed, 31 Jul 2024 09:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722442693; x=1723047493; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgDDogKZ9F9yepFCVhK1mwghljJiMnC+ohG+x8Fh7OI=;
+        b=Pnu9uk3kS1zteiIAITsusWSIRQp1R6ZlD70stwlwlwTFBvFxW3O7iyJ/o1we6HkfQ5
+         zYsZjpKpB4F1phR9w7PBNmYjCpYJ1wWSMpG3L/z2hYlohrYX12PxZCqk9iVCKZHQCAgX
+         4oh+iwm9Sho1lDlD2VIYeeQGuHKfZo7jpQSAOgBY+HqBJFh3krULKtdY/uDtZ3sMaiW5
+         R76RIYLELJAd9XRgG6bzLDjx2018KIjd1XJf/1nDnHUa3jyQGmwrzOckZ9P9yIAzhTi9
+         2IZvtu9rKVCvHkQd8ORAOStcT1kQ0TymyueMtb7JJ1KqqbkrVmojK6ouLvxM4SBdWRju
+         h6sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722442693; x=1723047493;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BgDDogKZ9F9yepFCVhK1mwghljJiMnC+ohG+x8Fh7OI=;
+        b=NaJMjcGXWHFtoq2fgOHUIDEXH1Ccoat3IGXqFVsMa/6m6oWCRB/u1sf7Va8uD5Va0f
+         yUFIFoefs1MXCgOjpCt57abHiewmNsK2wVnf/pLEsnppP+DSK3zKRgsfnBRrwawbNmUM
+         VR2kQ8DMF9pLQDCZ69mwg6LeaGxJnfwd8dWvJDNnfqP5R6eIrKhLYkbtwDskRhE6GOWD
+         xeuOVUTIELLTLWspnsq5HXWxiRmqND9x0H73j7GJFkkGkuV7iA61H2uIXD++MlAlAc2z
+         MsSiM3fSFvzxXbb4FZJOlIryaLGIJTIzjOjNqkDXU1dWjp+w5n5HRUMPdlyYkDml9+V7
+         Ix+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUY3M2mTfZpI9XqsT5icDtbdhyJlfgGaiDHOVWohEXr29riV7b+1NlRG2LaJMBIPmAc6yKzkPTTlGCsQpl1SFKQNwDqqNvjPsNd8KEqymJc4QkvnQaRZnR7U2bh4p9G7y4WTDKgvstqp+GZM4MjPcQT
+X-Gm-Message-State: AOJu0YykhyPHkm3GqRWezL0txr9xidqH2HTt3GfwuKSIlBC9f95iGFtO
+	tGu2r/kbsLCvrNHO4jzgdAotfvZtlUeJKgVhPc+JUVp8HULHh+SG/THRmz3HbyrAhQMg6SCul2J
+	NbP2cgTcK7RKs4P6FuPd0UaWs9cI=
+X-Google-Smtp-Source: AGHT+IGW4q5z7MPymSwiMszjOGrKLeLp213GRDveS53IgwTywyLG1F1GinxVCAtC0nyQEKaeOyUAGPic0q5yJkL7YMI=
+X-Received: by 2002:a17:90a:cc3:b0:2cd:619:6826 with SMTP id
+ 98e67ed59e1d1-2cf7e60bee6mr17336756a91.34.1722442692615; Wed, 31 Jul 2024
+ 09:18:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240729134444.GA12293@redhat.com> <20240729134535.GA12332@redhat.com>
+In-Reply-To: <20240729134535.GA12332@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 31 Jul 2024 09:18:00 -0700
+Message-ID: <CAEf4Bza1_njsVUad8so9EFxy8VmJsTfzaaAahBYFtOqdF1HAjA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] uprobes: make uprobe_register() return struct
+ uprobe *
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: andrii@kernel.org, mhiramat@kernel.org, peterz@infradead.org, 
+	jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Jul 2024 11:35:27 +0100
-Gary Guo <gary@garyguo.net> wrote:
+On Mon, Jul 29, 2024 at 6:45=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> This way uprobe_unregister() and uprobe_apply() can use "struct uprobe *"
+> rather than inode + offset. This simplifies the code and allows to avoid
+> the unnecessary find_uprobe() + put_uprobe() in these functions.
+>
+> TODO: uprobe_unregister() still needs get_uprobe/put_uprobe to ensure tha=
+t
+> this uprobe can't be freed before up_write(&uprobe->register_rwsem).
+>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  include/linux/uprobes.h     | 15 +++++-----
+>  kernel/events/uprobes.c     | 56 +++++++++++++++----------------------
+>  kernel/trace/bpf_trace.c    | 25 ++++++++---------
+>  kernel/trace/trace_uprobe.c | 26 ++++++++---------
+>  4 files changed, 55 insertions(+), 67 deletions(-)
+>
 
-> > +/*
-> > + * Declare an exported function that Rust code can call to trigger this
-> > + * tracepoint. This function does not include the static branch; that is done
-> > + * in Rust to avoid a function call when the tracepoint is disabled.
-> > + */
-> > +#define DEFINE_RUST_DO_TRACE(name, proto, args)
-> > +#define DEFINE_RUST_DO_TRACE_REAL(name, proto, args)			\
-> > +	notrace void rust_do_trace_##name(proto)			\
-> > +	{								\
-> > +		__DO_TRACE(name,					\
-> > +			TP_ARGS(args),					\
-> > +			cpu_online(raw_smp_processor_id()), 0);		\  
-> 
-> I guess this doesn't support conditions. Currently the conditions are
-> specified during declaration and not during definition.
-> 
-> Would it make sense to have
-> 
-> 	static inline void do_trace_##name(proto)
-> 	{
-> 		__DO_TRACE(name, TP_ARGS(args), TP_CONDITION(cond), 0);
+You'll need something like below to not break our bpf_testmod. And
+please send pull patch sets, not individually updated patches, it's a
+PITA to deal with. Thanks!
 
-But where is the "cond" passed in from?
+commit 9f739a9997ab833394196459fa7e6dd4d13dd48b (HEAD -> uprobes-oleg-clean=
+ups)
+Author: Andrii Nakryiko <andrii@kernel.org>
+Date:   Wed Jul 31 09:15:46 2024 -0700
 
-I guess in the future if you want to add conditions, you would then just
-add:
+    uprobes: fix bpf_testmod after uprobe_register/uprobe_unregister API ch=
+ange
 
-#define DEFINE_RUST_DO_TRACE_REAL_CONDITION(name, proto, args, cond)			\
-	notrace void rust_do_trace_##name(proto)			\
-	{								\
-		__DO_TRACE(name,					\
-			TP_ARGS(args),					\
-			cpu_online(raw_smp_processor_id()) &&		\
-			TP_CONDITION(cond), 0);				\  
+    Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
--- Steve
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+index 5f152afdec2f..73a6b041bcce 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+@@ -431,6 +431,7 @@ uprobe_ret_handler(struct uprobe_consumer *self,
+unsigned long func,
+ }
 
-> 	}
-> 
-> in `__DECLARE_TRACE` and then simply call it in `rust_do_trace_##name`?
-> 
-> > +	}
-> > +
-> >  /*
+ struct testmod_uprobe {
++       struct uprobe *uprobe;
+        struct path path;
+        loff_t offset;
+        struct uprobe_consumer consumer;
+@@ -458,12 +459,14 @@ static int testmod_register_uprobe(loff_t offset)
+        if (err)
+                goto out;
+
+-       err =3D uprobe_register(d_real_inode(uprobe.path.dentry),
+-                             offset, 0, &uprobe.consumer);
+-       if (err)
++       uprobe.uprobe =3D uprobe_register(d_real_inode(uprobe.path.dentry),
++                                       offset, 0, &uprobe.consumer);
++       if (IS_ERR(uprobe.uprobe)) {
+                path_put(&uprobe.path);
+-       else
++               uprobe.uprobe =3D NULL;
++       } else {
+                uprobe.offset =3D offset;
++       }
+
+ out:
+        mutex_unlock(&testmod_uprobe_mutex);
+@@ -474,10 +477,10 @@ static void testmod_unregister_uprobe(void)
+ {
+        mutex_lock(&testmod_uprobe_mutex);
+
+-       if (uprobe.offset) {
+-               uprobe_unregister(d_real_inode(uprobe.path.dentry),
+-                                 uprobe.offset, &uprobe.consumer);
++       if (uprobe.uprobe) {
++               uprobe_unregister(uprobe.uprobe, &uprobe.consumer);
+                uprobe.offset =3D 0;
++               uprobe.uprobe =3D NULL;
+        }
+
+        mutex_unlock(&testmod_uprobe_mutex);
+
+
+[...]
