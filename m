@@ -1,81 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F89A1BD01D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 17:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480C813BC1E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 18:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722446702; cv=none; b=TFCTndopQzrRGCSyzW05tDzbXGudFZA+0B6Xj1O3A5zY9SH8bwnisZF4SCfVcalgSruDfDgL2aWICZJ6L11Q54j5nbH+F9dNc3yfTLCR/W+xjBEYlqkdD/qjw0BixbIWFlfwm/7pfamoiBZJkMnIxgi2vOAtsuqPFTQxQGu6XfM=
+	t=1722452325; cv=none; b=KNIEhmJILgyUznGgyhfL2JPgQPN3BxTrpt/g0LGw5YNp8xHcfyADD1mnfGjcggkxhGBmAja32RBhHx6CkSAFHqxEwCX22hOlA+Jy38q8vs7ysGmZabTLiRtgiXDUBQ/aPcziAovbi5gyBtL703MAax1rmLgctawzbp9ANFs4rcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722446702; c=relaxed/simple;
-	bh=iQu9CEXuLc6l42Svgzj+WtxBlKFzFHW7zLfsoyk92/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eD8X/95TKR8bankjXmKeLCtfCIwSFITkbPeIDlu/MAusLz+LpRlwPjhcLV7S+Kszq9IgqBFF69x0TDo35U6ZYJcVMTf4fLOW8rZeUzVxXpycIfN+KtvHukhEBw+35nll68b7CknScEh0DPp11P1Aov1lmZz8MIdxIKJQCPburUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YV3omJab; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1722452325; c=relaxed/simple;
+	bh=Os8qowKsxDSRcPHPF/e1AaWARnryjEqWztOmIrjOGZI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eF1dUgpb5OjSrOhW0cEY4Mcy3eJVstbH7ya5MzlG0rYImGV6TKzH+BVfA2+jQdw21fyMhii+5zhbu4jQ9O0XbsTxWmlaKDLx2TS9fYnG8886EAdPmngKxXaqSeWIjg4ehThhyHMyGxH6H7CgMetwMDnxR3PYtNQtjrAkTqnIEAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b1nTHKn2; arc=none smtp.client-ip=185.70.40.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YV3omJab"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722446700;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iQu9CEXuLc6l42Svgzj+WtxBlKFzFHW7zLfsoyk92/s=;
-	b=YV3omJabzkygD6w1srmMVXbgkkMy6FgAPiFNlEISNTxQ2tg01Ej6MDkw33UtNQ67thLyuy
-	wsPyzlnqzXIyTY4C/LsKyPrMuEKKq6YTbZ7a2FTPODeW8Vw2/B27hZTgAt7znwz3hcdOEr
-	gCCV+VFCrvtVn068cu4snk5guB9phvY=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-439-7QYG4-FLMGiqndV50fVrmw-1; Wed,
- 31 Jul 2024 13:24:56 -0400
-X-MC-Unique: 7QYG4-FLMGiqndV50fVrmw-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDA9A1944B2A;
-	Wed, 31 Jul 2024 17:24:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.31])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DFFF1300018D;
-	Wed, 31 Jul 2024 17:24:50 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 31 Jul 2024 19:24:53 +0200 (CEST)
-Date: Wed, 31 Jul 2024 19:24:48 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, andrii@kernel.org,
-	mhiramat@kernel.org, jolsa@kernel.org, rostedt@goodmis.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] uprobes: make uprobe_register() return struct
- uprobe *
-Message-ID: <20240731172448.GB2752@redhat.com>
-References: <20240729134444.GA12293@redhat.com>
- <20240729134535.GA12332@redhat.com>
- <CAEf4Bza1_njsVUad8so9EFxy8VmJsTfzaaAahBYFtOqdF1HAjA@mail.gmail.com>
- <20240731165614.GI33588@noisy.programming.kicks-ass.net>
- <CAEf4BzZXze8wRQwEJSy5nFzH=uk4wZPHY-gWw6j7iZfeBEiO0g@mail.gmail.com>
- <20240731170551.GK33588@noisy.programming.kicks-ass.net>
- <CAEf4BzYTMTNoGbL6keMhj4hRty-tw5XDeiLHOXMJxRyxZv6Efg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b1nTHKn2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1722452314; x=1722711514;
+	bh=Ok2jcwhhpJcH2GHlECFhqT7lAO056VLfnNsP0CYcDJg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=b1nTHKn2T1dmR8vteP/M2sWrDZnltmVMV+WeJpQaWHdshFgouh8mtm6NWkSOyvsxv
+	 zbvWJCt5CARyolCYp8jYPTiMMC2/kamd6t1bN+hVlgjMjCiCQAFbJEnz1IMoa3ET7b
+	 dv/+gkT8NoDZWbongMdRmVuvEm5gxl2UjI9LZZyU/hVmY7z8FZclgaMloojKNlSXGl
+	 3JDlf6u0EO7lKkTxR5KncuBvKc2QYLLC9GUUqnUn8OIok9sbIj5OjDnyv1rHUrCrft
+	 30wBI2Y8WrNCEUZoxCwk/KYw5Ic9fuzfIcT71pq+GI6qDGIg08sGLP7pGBPC44S4xU
+	 28vEKBj2xRsUw==
+Date: Wed, 31 Jul 2024 18:58:28 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti
+	<alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
+Message-ID: <b675e620-6a20-496a-8d23-8e184d7bde6b@proton.me>
+In-Reply-To: <20240628-tracepoint-v4-2-353d523a9c15@google.com>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com> <20240628-tracepoint-v4-2-353d523a9c15@google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 8ba1730ad398f749464698fd1f1be0f27b26c0d0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzYTMTNoGbL6keMhj4hRty-tw5XDeiLHOXMJxRyxZv6Efg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 07/31, Andrii Nakryiko wrote:
->
-> My expectation was that Oleg will
-> just incorporate that by hand and will send the final v4 patch set.
+On 28.06.24 15:23, Alice Ryhl wrote:
+> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
+> new file mode 100644
+> index 000000000000..1005f09e0330
+> --- /dev/null
+> +++ b/rust/kernel/tracepoint.rs
+> @@ -0,0 +1,47 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2024 Google LLC.
+> +
+> +//! Logic for tracepoints.
+> +
+> +/// Declare the Rust entry point for a tracepoint.
+> +#[macro_export]
+> +macro_rules! declare_trace {
+> +    ($($(#[$attr:meta])* $pub:vis fn $name:ident($($argname:ident : $arg=
+typ:ty),* $(,)?);)*) =3D> {$(
+> +        $( #[$attr] )*
+> +        #[inline(always)]
+> +        $pub unsafe fn $name($($argname : $argtyp),*) {
+> +            #[cfg(CONFIG_TRACEPOINTS)]
+> +            {
+> +                use $crate::bindings::*;
 
-Will do tomorrow, thanks.
+Why is this needed, can't you put this into the invocation of `paste!`?
+ie `[< $crate::bindings::__tracepoint_ $name >]`?
 
-Oleg.
+> +
+> +                // SAFETY: It's always okay to query the static key for =
+a tracepoint.
+> +                let should_trace =3D unsafe {
+> +                    $crate::macros::paste! {
+> +                        $crate::static_key::static_key_false!(
+> +                            [< __tracepoint_ $name >],
+> +                            $crate::bindings::tracepoint,
+> +                            key
+> +                        )
+> +                    }
+> +                };
+> +
+> +                if should_trace {
+> +                    $crate::macros::paste! {
+> +                        // SAFETY: The caller guarantees that it is okay=
+ to call this tracepoint.
+
+Can you add this on the docs of `$name`? ie add a Safety section.
+The docs should still appear when creating them/when LSPs show them to
+you.
+
+---
+Cheers,
+Benno
+
+> +                        unsafe { [< rust_do_trace_ $name >]($($argname),=
+*) };
+> +                    }
+> +                }
+> +            }
+> +
+> +            #[cfg(not(CONFIG_TRACEPOINTS))]
+> +            {
+> +                // If tracepoints are disabled, insert a trivial use of =
+each argument
+> +                // to avoid unused argument warnings.
+> +                $( let _unused =3D $argname; )*
+> +            }
+> +        }
+> +    )*}
+> +}
+> +
+> +pub use declare_trace;
+>=20
+> --
+> 2.45.2.803.g4e1b14247a-goog
+>=20
 
