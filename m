@@ -1,29 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A6A1AD9FE;
-	Wed, 31 Jul 2024 15:51:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732A1BC2A;
+	Wed, 31 Jul 2024 16:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722441109; cv=none; b=tc4xQfd/K2vYgTLXjlah8PVYPNP5KzVN9xdUpT9DGzmk0rqHIcTN7D09SnCe5EyM7OazIH534WLg6yFqJs3BM7782oGeR/cI8zjYoUCPBEpIVfIgiDuLU03YRGbdR0IkuGgJ0uJvYuEhzS2C9vbIkR3NJctXGyQHuT7mBOaHvKw=
+	t=1722442510; cv=none; b=Wfvp/0zL/C13uDMspEjbFTjD5EGSTDvVrB+h9u5nbOI/J+9GjhjxfZtYp23ihqDWbw6ctaQeAnVrvI0nThWnmzXBVs6m1jQdfkiYDNLBofClUuIsg8YGTM80FsjZjZ5afKwvY5SCThdKnn9wk/qvvt3Iy0wc1cbbEXnUfj3XeYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722441109; c=relaxed/simple;
-	bh=sHoaTphO82tBC4+EhCDCDI0u09HIu+sTJ4X78ZvWgJk=;
+	s=arc-20240116; t=1722442510; c=relaxed/simple;
+	bh=pfHnPMYK0TtleosbWCfB/5JPB/LqQy3ukFb8Be23aPU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hDEh2dBAXm6Ii1ulcw+QYSNhEDD4XLDuQEMFkV9XlIwr3RPKgISsUB6RNfFgwExEsj2ZPFfttOEk3FgZo70WmJ8Fez/xw/67a25oJab9KQLMwe0+d4ai7HnmhThDybLQo72LkkedWe9SFzjghhk18NGZTFwflFZx4BUWsWy/UQQ=
+	 MIME-Version:Content-Type; b=FBPNbVwP5N7Twdzu+RLivXWR0SPEroLFYPNvBCxXbJrrXIBiScysvNFjc5UA/fbl1Z+rnMYrO/NzAWk73N9AHTSTE2s5PqWvY04uIYBLU+2DtjYRdCnJEqRYxzmlv7q+dloM7M1usijOrh5Pp0tUg1yZ3BntccR35f2eYbCYXsE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9804BC116B1;
-	Wed, 31 Jul 2024 15:51:48 +0000 (UTC)
-Date: Wed, 31 Jul 2024 11:52:22 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC10C116B1;
+	Wed, 31 Jul 2024 16:15:04 +0000 (UTC)
+Date: Wed, 31 Jul 2024 12:15:39 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: tglozar@redhat.com
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- jwyatt@redhat.com, jkacur@redhat.com
-Subject: Re: [PATCH v2 4/6] rtla/timerlat: Add --deepest-idle-state for top
-Message-ID: <20240731115222.21e99427@gandalf.local.home>
-In-Reply-To: <20240731083655.375293-5-tglozar@redhat.com>
-References: <20240731083655.375293-1-tglozar@redhat.com>
-	<20240731083655.375293-5-tglozar@redhat.com>
+To: Gary Guo <gary@garyguo.net>
+Cc: Alice Ryhl <aliceryhl@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, "=?UTF-8?B?QmrDtnJu?= Roy Baron"
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
+ Hindborg <a.hindborg@samsung.com>, linux-trace-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
+ <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
+ <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros
+ Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-arm-kernel@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Samuel Holland
+ <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
+ <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
+ <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
+Message-ID: <20240731121539.0888738b@gandalf.local.home>
+In-Reply-To: <20240730113527.5c9896db@eugeo>
+References: <20240628-tracepoint-v4-0-353d523a9c15@google.com>
+	<20240628-tracepoint-v4-2-353d523a9c15@google.com>
+	<20240730113527.5c9896db@eugeo>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,199 +62,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jul 2024 10:36:53 +0200
-tglozar@redhat.com wrote:
+On Tue, 30 Jul 2024 11:35:27 +0100
+Gary Guo <gary@garyguo.net> wrote:
 
-> From: Tomas Glozar <tglozar@redhat.com>
+> > +/*
+> > + * Declare an exported function that Rust code can call to trigger this
+> > + * tracepoint. This function does not include the static branch; that is done
+> > + * in Rust to avoid a function call when the tracepoint is disabled.
+> > + */
+> > +#define DEFINE_RUST_DO_TRACE(name, proto, args)
+> > +#define DEFINE_RUST_DO_TRACE_REAL(name, proto, args)			\
+> > +	notrace void rust_do_trace_##name(proto)			\
+> > +	{								\
+> > +		__DO_TRACE(name,					\
+> > +			TP_ARGS(args),					\
+> > +			cpu_online(raw_smp_processor_id()), 0);		\  
 > 
-> Add option to limit deepest idle state on CPUs where timerlat is running
-> for the duration of the workload.
+> I guess this doesn't support conditions. Currently the conditions are
+> specified during declaration and not during definition.
 > 
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-> ---
->  tools/tracing/rtla/src/timerlat_top.c | 46 ++++++++++++++++++++++++++-
->  1 file changed, 45 insertions(+), 1 deletion(-)
+> Would it make sense to have
 > 
-> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-> index 8c16419fe22a..ef1d3affef95 100644
-> --- a/tools/tracing/rtla/src/timerlat_top.c
-> +++ b/tools/tracing/rtla/src/timerlat_top.c
-> @@ -48,6 +48,7 @@ struct timerlat_top_params {
->  	int			pretty_output;
->  	int			warmup;
->  	int			buffer_size;
-> +	int			deepest_idle_state;
->  	cpu_set_t		hk_cpu_set;
->  	struct sched_attr	sched_param;
->  	struct trace_events	*events;
-> @@ -447,7 +448,7 @@ static void timerlat_top_usage(char *usage)
->  		"",
->  		"  usage: rtla timerlat [top] [-h] [-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
->  		"	  [[-t[file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
-> -		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C[=cgroup_name]] [-u|-k] [--warm-up s]",
-> +		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C[=cgroup_name]] [-u|-k] [--warm-up s] [--deepest-idle-state n]",
->  		"",
->  		"	  -h/--help: print this menu",
->  		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
-> @@ -481,6 +482,7 @@ static void timerlat_top_usage(char *usage)
->  		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
->  		"	     --warm-up s: let the workload run for s seconds before collecting data",
->  		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+> 	static inline void do_trace_##name(proto)
+> 	{
+> 		__DO_TRACE(name, TP_ARGS(args), TP_CONDITION(cond), 0);
 
-Could probably do:
+But where is the "cond" passed in from?
 
-#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
-#else
-+		"	     --deepest-idle-state n: [rtla built without libcpupower, --deepest-idle-state is not supported]",
-#endif
+I guess in the future if you want to add conditions, you would then just
+add:
 
->  		NULL,
->  	};
->  
-> @@ -518,6 +520,9 @@ static struct timerlat_top_params
->  	/* disabled by default */
->  	params->dma_latency = -1;
->  
-> +	/* disabled by default */
-> +	params->deepest_idle_state = -2;
-> +
->  	/* display data in microseconds */
->  	params->output_divisor = 1000;
->  
-> @@ -550,6 +555,7 @@ static struct timerlat_top_params
->  			{"aa-only",		required_argument,	0, '5'},
->  			{"warm-up",		required_argument,	0, '6'},
->  			{"trace-buffer-size",	required_argument,	0, '7'},
-> +			{"deepest-idle-state",	required_argument,	0, '8'},
->  			{0, 0, 0, 0}
->  		};
->  
-> @@ -726,6 +732,9 @@ static struct timerlat_top_params
->  		case '7':
->  			params->buffer_size = get_llong_from_str(optarg);
->  			break;
-> +		case '8':
-> +			params->deepest_idle_state = get_llong_from_str(optarg);
-> +			break;
->  		default:
->  			timerlat_top_usage("Invalid option");
->  		}
-> @@ -922,6 +931,9 @@ int timerlat_top_main(int argc, char *argv[])
->  	int return_value = 1;
->  	char *max_lat;
->  	int retval;
-> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +	int i;
-> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
->  
->  	params = timerlat_top_parse_args(argc, argv);
->  	if (!params)
-> @@ -971,6 +983,26 @@ int timerlat_top_main(int argc, char *argv[])
->  		}
->  	}
->  
-> +	if (params->deepest_idle_state >= -1) {
-> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++) {
-> +			if (params->cpus && !CPU_ISSET(i, &params->monitored_cpus))
-> +				continue;
-> +			if (save_cpu_idle_disable_state(i) < 0) {
-> +				err_msg("Could not save cpu idle state.\n");
-> +				goto out_free;
-> +			}
-> +			if (set_deepest_cpu_idle_state(i, params->deepest_idle_state) < 0) {
-> +				err_msg("Could not set deepest cpu idle state.\n");
-> +				goto out_free;
-> +			}
-> +		}
-> +#else
-> +		err_msg("rtla built without libcpupower, --deepest-idle-state is not supported\n");
-> +		goto out_free;
-> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
-
-We could get rid of most of the ifdefs if you changed the header file to be:
-
-#ifdef HAVE_LIBCPUPOWER_SUPPORT
-int save_cpu_idle_disable_state(unsigned int cpu);
-int restore_cpu_idle_disable_state(unsigned int cpu);
-void free_cpu_idle_disable_states(void);
-int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state);
-static inline have_libcpower_support(void) { return 1; }
-#else
-static inline int save_cpu_idle_disable_state(unsigned int cpu) { return -1 }
-static inline int restore_cpu_idle_disable_state(unsigned int cpu) { return -1; }
-static inline void free_cpu_idle_disable_states(void) { }
-static inline int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state) { return -1 }
-static inline have_libcpower_support(void) { return 0; }
-#endif /* HAVE_LIBCPUPOWER_SUPPORT */
-
-
-Then the above can simply be:
-
-	if (params->deepest_idle_state >= -1) {
-
-		if (!have_libcpower_support()) {
-			err_msg("rtla built without libcpupower, --deepest-idle-state is not supported\n");
-			goto out_free;
-		}
-
-		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++) {
-			if (params->cpus && !CPU_ISSET(i, &params->monitored_cpus))
-				continue;
-			if (save_cpu_idle_disable_state(i) < 0) {
-				err_msg("Could not save cpu idle state.\n");
-				goto out_free;
-			}
-			if (set_deepest_cpu_idle_state(i, params->deepest_idle_state) < 0) {
-				err_msg("Could not set deepest cpu idle state.\n");
-				goto out_free;
-			}
-		}
-
-Makes the code much nicer to look at.
-
-> +	}
-> +
->  	if (params->trace_output) {
->  		record = osnoise_init_trace_tool("timerlat");
->  		if (!record) {
-> @@ -1125,6 +1157,15 @@ int timerlat_top_main(int argc, char *argv[])
->  	timerlat_aa_destroy();
->  	if (dma_latency_fd >= 0)
->  		close(dma_latency_fd);
-> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +	if (params->deepest_idle_state >= -1) {
-> +		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++) {
-
-You would think gcc may optimize it, but I don't have that much confidence
-it can or would. You may want to change that to:
-
-		int nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-
-		for (i = 0; i < nr_cpus; i++) {
-
-Otherwise you may be calling that sysconf() for each iteration of the loop.
+#define DEFINE_RUST_DO_TRACE_REAL_CONDITION(name, proto, args, cond)			\
+	notrace void rust_do_trace_##name(proto)			\
+	{								\
+		__DO_TRACE(name,					\
+			TP_ARGS(args),					\
+			cpu_online(raw_smp_processor_id()) &&		\
+			TP_CONDITION(cond), 0);				\  
 
 -- Steve
 
-> +			if (params->cpus && !CPU_ISSET(i, &params->monitored_cpus))
-> +				continue;
-> +			restore_cpu_idle_disable_state(i);
-> +		}
-> +	}
-> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
->  	trace_events_destroy(&record->trace, params->events);
->  	params->events = NULL;
->  out_free:
-> @@ -1134,6 +1175,9 @@ int timerlat_top_main(int argc, char *argv[])
->  	osnoise_destroy_tool(record);
->  	osnoise_destroy_tool(top);
->  	free(params);
-> +#ifdef HAVE_LIBCPUPOWER_SUPPORT
-> +	free_cpu_idle_disable_states();
-> +#endif /* HAVE_LIBCPUPOWER_SUPPORT */
->  out_exit:
->  	exit(return_value);
->  }
-
+> 	}
+> 
+> in `__DECLARE_TRACE` and then simply call it in `rust_do_trace_##name`?
+> 
+> > +	}
+> > +
+> >  /*
