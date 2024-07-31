@@ -1,127 +1,140 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480C813BC1E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 18:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3081BC40
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 21:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722452325; cv=none; b=KNIEhmJILgyUznGgyhfL2JPgQPN3BxTrpt/g0LGw5YNp8xHcfyADD1mnfGjcggkxhGBmAja32RBhHx6CkSAFHqxEwCX22hOlA+Jy38q8vs7ysGmZabTLiRtgiXDUBQ/aPcziAovbi5gyBtL703MAax1rmLgctawzbp9ANFs4rcU=
+	t=1722460771; cv=none; b=cX959dPXHbj17/JsFt2OD4H4oGV5T0lDys8WWqs8utZ0VgU63GI2DeTiEz+dSit6udgaDVtCDnnR0UetZqHfQWOsjPHLuyOt4N44myTCy0equh1VCzi167sEWOzvaA14AHUs4QSXs/pxK0h/lneXzMtf/FFJvPa69wh8hGszc50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722452325; c=relaxed/simple;
-	bh=Os8qowKsxDSRcPHPF/e1AaWARnryjEqWztOmIrjOGZI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eF1dUgpb5OjSrOhW0cEY4Mcy3eJVstbH7ya5MzlG0rYImGV6TKzH+BVfA2+jQdw21fyMhii+5zhbu4jQ9O0XbsTxWmlaKDLx2TS9fYnG8886EAdPmngKxXaqSeWIjg4ehThhyHMyGxH6H7CgMetwMDnxR3PYtNQtjrAkTqnIEAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b1nTHKn2; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1722460771; c=relaxed/simple;
+	bh=dEiu0hhQh0Jy26qjQV9Cqq27juU/IGB072cpo+oEEG0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TcZSaEc9UM2xcMA/++96tx1hptj/VYy+nHzWGjwY/iTJs9zxx10dvqxlPG8/UoFoe0sukaWVY0ee8IOaIjQRFhKTqtQwhxcPGrHlEMXv0CLwG534rcATK/HJcufEH++R8EljS6j8Rxz5JJZ4i9PH9vjiyoYr1jC8EcpaCpxFTpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5AOJVde; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b1nTHKn2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1722452314; x=1722711514;
-	bh=Ok2jcwhhpJcH2GHlECFhqT7lAO056VLfnNsP0CYcDJg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=b1nTHKn2T1dmR8vteP/M2sWrDZnltmVMV+WeJpQaWHdshFgouh8mtm6NWkSOyvsxv
-	 zbvWJCt5CARyolCYp8jYPTiMMC2/kamd6t1bN+hVlgjMjCiCQAFbJEnz1IMoa3ET7b
-	 dv/+gkT8NoDZWbongMdRmVuvEm5gxl2UjI9LZZyU/hVmY7z8FZclgaMloojKNlSXGl
-	 3JDlf6u0EO7lKkTxR5KncuBvKc2QYLLC9GUUqnUn8OIok9sbIj5OjDnyv1rHUrCrft
-	 30wBI2Y8WrNCEUZoxCwk/KYw5Ic9fuzfIcT71pq+GI6qDGIg08sGLP7pGBPC44S4xU
-	 28vEKBj2xRsUw==
-Date: Wed, 31 Jul 2024 18:58:28 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)" <peterz@infradaed.org>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti
-	<alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] rust: add tracepoint support
-Message-ID: <b675e620-6a20-496a-8d23-8e184d7bde6b@proton.me>
-In-Reply-To: <20240628-tracepoint-v4-2-353d523a9c15@google.com>
-References: <20240628-tracepoint-v4-0-353d523a9c15@google.com> <20240628-tracepoint-v4-2-353d523a9c15@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 8ba1730ad398f749464698fd1f1be0f27b26c0d0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5AOJVde"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3684bea9728so3501541f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 14:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722460767; x=1723065567; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dEiu0hhQh0Jy26qjQV9Cqq27juU/IGB072cpo+oEEG0=;
+        b=G5AOJVdeww95s7Qb7CjW1AIB44U8JoB3hsMVjtKEas3JXf1vwCfGamISn0W9Aq/kdy
+         yNL1Zqv/cr4RhFQKyRJmPJ6INVWA7HaLN4BA3TPWJOgIpZunPibJa8lDt4dea35PXJMa
+         WJnXVfFa8qRDUEOjUhndXkLLFeV3WIfifKMKBtqyAQTnivbTT+brnZBgFMNZdAo8vEjt
+         AHpE8w7Pa18w2XjTHFuKm63OtcCWPoxDqHBhXedIrvxFQBDm2ZqArJ12gP+H0TWV+pTi
+         hMTXlVceo15PAg4VK22DsRHYu0TuNLhY74kcM8C3XJhIyn3vkFywG3eHmMbwTKrnO4Hh
+         vx9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722460767; x=1723065567;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dEiu0hhQh0Jy26qjQV9Cqq27juU/IGB072cpo+oEEG0=;
+        b=m+IL4nFysrXlQum4QHDa2UGAhiUQJncBx32k6cA1gDSHf+b/ZOHni3ClCcgUh+31V4
+         BqJXRhgIrbB5CVobLqYeZRIQiAVnSd+skvRJX+xb7yBZXXW8I18npA7bmUIrjlzbS2Zy
+         3bGWaNWOf0iFfCbnb6Z9kagluthm+/laftniIGxT2IyZoAT4971m84iOmBFBVjj/RSCv
+         ebOPPThEj9G+cn/W5xEAXTgM0fCMkAO3/ve0OrOPcOZrKRPr6cTjZc8go3ZW/CnA6P8K
+         9CtDW3gx0nxl/Mh/b37W5bNCjugm+8LvQu4fy15leXtsncSiqK7faUGx7mHRVmlT7VfE
+         LUew==
+X-Forwarded-Encrypted: i=1; AJvYcCV803D6VM77cmlrXv5YlBS3Ij+hk6oFvEpK3SWl0BpnYxmGeYcil1PX94nacUlna0l4x6pwf7jRh9tNU87lt4ULyhL79yD7LTUKPhcEXQxAVnCr
+X-Gm-Message-State: AOJu0Yy2vTnxyN/CW1jpHMF5TrC86vqpErovqcY41rMYp6nxoj56US5W
+	qmCneD4XbFHCVK9SntQqRi8AB4om6ynBCt4S3NYYZSiX6K9h7C6QpeA11fgYb22RJBvhSigQBRo
+	IaiG3zO9CIIUQzS651/xkRLhvKol4xk12UBfR
+X-Google-Smtp-Source: AGHT+IGCGvp/48H8qaH6fLYg7SPbNiiWFxJtKT/J7GEsXh7PoxMKp+lvuqPbXyBiSW9seEuLTTgslLee6nJ92gY4vjU=
+X-Received: by 2002:a5d:4483:0:b0:368:6d75:1bde with SMTP id
+ ffacd0b85a97d-36baacdd8aamr351815f8f.15.1722460767120; Wed, 31 Jul 2024
+ 14:19:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240730022623.98909-1-almasrymina@google.com>
+ <20240730022623.98909-2-almasrymina@google.com> <1722327259.5659568-1-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <1722327259.5659568-1-xuanzhuo@linux.alibaba.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 31 Jul 2024 17:19:11 -0400
+Message-ID: <CAHS8izMZQLsBWPXWiqPwaQHfupKc5VAuxW+6kpWmzi-vw8JEWQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v17 01/14] netdev: add netdev_rx_queue_restart()
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 28.06.24 15:23, Alice Ryhl wrote:
-> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> new file mode 100644
-> index 000000000000..1005f09e0330
-> --- /dev/null
-> +++ b/rust/kernel/tracepoint.rs
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024 Google LLC.
-> +
-> +//! Logic for tracepoints.
-> +
-> +/// Declare the Rust entry point for a tracepoint.
-> +#[macro_export]
-> +macro_rules! declare_trace {
-> +    ($($(#[$attr:meta])* $pub:vis fn $name:ident($($argname:ident : $arg=
-typ:ty),* $(,)?);)*) =3D> {$(
-> +        $( #[$attr] )*
-> +        #[inline(always)]
-> +        $pub unsafe fn $name($($argname : $argtyp),*) {
-> +            #[cfg(CONFIG_TRACEPOINTS)]
-> +            {
-> +                use $crate::bindings::*;
+On Tue, Jul 30, 2024 at 4:17=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.alibaba.c=
+om> wrote:
+>
+> On Tue, 30 Jul 2024 02:26:05 +0000, Mina Almasry <almasrymina@google.com>=
+ wrote:
+> > Add netdev_rx_queue_restart() function to netdev_rx_queue.h
+>
+>
+> Can you say more? As far as I understand, we just release the buffer
+> submitted to the rx ring and get a new page pool.
+>
 
-Why is this needed, can't you put this into the invocation of `paste!`?
-ie `[< $crate::bindings::__tracepoint_ $name >]`?
+Yes, I just noticed that this commit message is underwritten. I'll add
+more color. Maybe something like;
 
-> +
-> +                // SAFETY: It's always okay to query the static key for =
-a tracepoint.
-> +                let should_trace =3D unsafe {
-> +                    $crate::macros::paste! {
-> +                        $crate::static_key::static_key_false!(
-> +                            [< __tracepoint_ $name >],
-> +                            $crate::bindings::tracepoint,
-> +                            key
-> +                        )
-> +                    }
-> +                };
-> +
-> +                if should_trace {
-> +                    $crate::macros::paste! {
-> +                        // SAFETY: The caller guarantees that it is okay=
- to call this tracepoint.
+=3D=3D=3D=3D
+Add netdev_rx_queue_restart(), which resets an rx queue using the
+queue API recently merged[1].
 
-Can you add this on the docs of `$name`? ie add a Safety section.
-The docs should still appear when creating them/when LSPs show them to
-you.
+The queue API was merged to enable the core net stack reset individual
+rx queues to actuate changes in the rx queue's configuration. In later
+patches in this series, we will use netdev_rx_queue_restart() to reset
+rx queues after binding or unbinding dmabuf configuration, which will
+cause reallocation of the page_pool to repopulate its memory using the
+new configuration.
 
----
-Cheers,
-Benno
+[1] https://lore.kernel.org/netdev/20240430231420.699177-1-shailend@google.=
+com/T/
+=3D=3D=3D=3D
 
-> +                        unsafe { [< rust_do_trace_ $name >]($($argname),=
-*) };
-> +                    }
-> +                }
-> +            }
-> +
-> +            #[cfg(not(CONFIG_TRACEPOINTS))]
-> +            {
-> +                // If tracepoints are disabled, insert a trivial use of =
-each argument
-> +                // to avoid unused argument warnings.
-> +                $( let _unused =3D $argname; )*
-> +            }
-> +        }
-> +    )*}
-> +}
-> +
-> +pub use declare_trace;
->=20
-> --
-> 2.45.2.803.g4e1b14247a-goog
->=20
+> But I personally feel that the interface here is a bit too complicated. I=
+n
+> particular, we also need to copy the rx struct memory, which means it is =
+a
+> dangerous operation for many pointers.
+>
 
+Understood, but the complication is necessary based on previous
+discussions. Jakub requests that we must allocate memory for a new rx
+queues before bringing down the existing queue, to guard against the
+interface remaining down on ENOMEM error.
+
+Btw, I notice the series was marked as changes requested; the only
+feedback I got was this one and the incorrect netmem_priv.h header.
+I'll fix and repost. It's just slightly weird because both v16 and v17
+are marked as changes requested in patchwork.
