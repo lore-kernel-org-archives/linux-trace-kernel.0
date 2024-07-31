@@ -1,107 +1,99 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF44495E5;
-	Wed, 31 Jul 2024 07:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4501A76C1
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 07:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722411913; cv=none; b=ppTUDY2tYYtUxNjLBVFtHMEG3XcJ5EDVCiD6jz3j7U20opEDw1aL2yHy4iH0nZgpyzChiVWsg6gK3b9qXmuvL/VzSKVZGzPMOIHNumBCPP5w68wyn6j4S63cqS9Jk3a5cIKVxRDghkMT/VGOjGPnzcLRSsdmKzyyJ887C9/cRfA=
+	t=1722412626; cv=none; b=CygLsOH1FGAxD2P538I3kkDMCYvnCm3RjmWUuCppr5BK+eJW354aBizn+unRf36iXuNST5QOJewrj/JRJen/ueo6CaVsDVnlVxeipFhs749I9RhL4bH3A8oLUcq+rdIEKbvlrblPlB0LAD+Nt6zwtmIAhmKDKxD3nsZz50Mp5IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722411913; c=relaxed/simple;
-	bh=uBiILv9ml2mco3Oqm8DnzDlkUq5xH2DYhlwHYgbwHpI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WtAjIhyeR2WvvM/9APFTz86sFXpc8HVx+wXuKuFgBb9L/115rJvF7vdxXSl17qp5pG82L4sJWAa3s/nqTBLk8rRQAW2k/RhUBj+eFVSifwTJ3MIAh+VJ3Y1GhBOf5VwLm8h3rgU3ZuYVAD1MlI35BeMgdvWYQb5+vXkfFclzoZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WYkX94DTDzyNws;
-	Wed, 31 Jul 2024 15:40:09 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0E41180087;
-	Wed, 31 Jul 2024 15:45:07 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
- (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 31 Jul
- 2024 15:45:07 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH] tracing: Replace strncpy() with strscpy() when copying comm
-Date: Wed, 31 Jul 2024 15:50:58 +0800
-Message-ID: <20240731075058.617588-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1722412626; c=relaxed/simple;
+	bh=ozgdOpWtF81Hf/gEOh3bpv8GZZcV0210ozHrG8wclUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aP5Y6TFD6MhS6Gk1qI2qygyuf87Mg1HSHju607RPKDnlO3IEUkwKR3V/tP+4uLga0Co9bBOScCov+Waf0rltZmpbD7vyPcMPyV/RCxjp6wYZwD9F5Mm3BRkblz589Z/fJfixAfnuy/G+ZTQ7qH2fhknriqH65R/JdkyVoO3yqeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NqFsm2Ke; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqFsm2Ke"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722412623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B9AaEcQYPcilFXNuPPHJ/dNKFao/QXRMpFdXw24PBoM=;
+	b=NqFsm2KeIxVGM7Q268PVrCgu6XLJ0jaNyGgE4cAEJAjweUyjnSv2lfykl1UfBUeVrXaHN+
+	T1w6IfT1WOmQ/yFPRaX48GpSFBvppCKLAF94IYrIC6OaD9MYryJfp6VgkyRmR9nzb97wzR
+	8PK4HhfJ4AE7f9/xNR+7JIh3UsbcAQA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-C2IrSy3XMNKsyP_OYuMCBQ-1; Wed,
+ 31 Jul 2024 03:56:58 -0400
+X-MC-Unique: C2IrSy3XMNKsyP_OYuMCBQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20CE61955D4C;
+	Wed, 31 Jul 2024 07:56:57 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.143])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0611B1955F3B;
+	Wed, 31 Jul 2024 07:56:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 31 Jul 2024 09:56:56 +0200 (CEST)
+Date: Wed, 31 Jul 2024 09:56:52 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: andrii@kernel.org, peterz@infradead.org, jolsa@kernel.org,
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] uprobes: kill uprobe_register_refctr()
+Message-ID: <20240731075651.GB12813@redhat.com>
+References: <20240729134444.GA12293@redhat.com>
+ <20240729134530.GA12318@redhat.com>
+ <20240731143748.55bb97c1d68aea1f1946729d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi100008.china.huawei.com (7.221.188.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731143748.55bb97c1d68aea1f1946729d@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Replace the depreciated[1] strncpy() calls with strscpy()
-when copying comm.
+On 07/31, Masami Hiramatsu wrote:
+>
+> OK, but it seems
+>
+> tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+>
+> is still using uprobe_register_refctr().
+>
+> That should be updated too.
 
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- kernel/trace/trace.c              | 2 +-
- kernel/trace/trace_events_hist.c  | 4 ++--
- kernel/trace/trace_sched_switch.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+OOPS, thanks a lot :/
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d0af984a5337..73cfdc704eec 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1907,7 +1907,7 @@ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
- 	max_data->critical_start = data->critical_start;
- 	max_data->critical_end = data->critical_end;
+I'll send v3 with the additional change below in reply to 4/5 in a minute.
+
+Masami, Peter, please let me know if you want me to resend the whole series.
+
+Oleg.
+
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+@@ -458,8 +458,8 @@ static int testmod_register_uprobe(loff_t offset)
+ 	if (err)
+ 		goto out;
  
--	strncpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
-+	strscpy(max_data->comm, tsk->comm);
- 	max_data->pid = tsk->pid;
- 	/*
- 	 * If tsk == current, then use current_uid(), as that does not use
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 6ece1308d36a..4ee0e64719fa 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1599,7 +1599,7 @@ static inline void save_comm(char *comm, struct task_struct *task)
- 		return;
- 	}
- 
--	strncpy(comm, task->comm, TASK_COMM_LEN);
-+	strscpy(comm, task->comm);
- }
- 
- static void hist_elt_data_free(struct hist_elt_data *elt_data)
-@@ -3405,7 +3405,7 @@ static bool cond_snapshot_update(struct trace_array *tr, void *cond_data)
- 	elt_data = context->elt->private_data;
- 	track_elt_data = track_data->elt.private_data;
- 	if (elt_data->comm)
--		strncpy(track_elt_data->comm, elt_data->comm, TASK_COMM_LEN);
-+		strscpy(track_elt_data->comm, elt_data->comm);
- 
- 	track_data->updated = true;
- 
-diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index 8a407adb0e1c..573b5d8e8a28 100644
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -187,7 +187,7 @@ static inline char *get_saved_cmdlines(int idx)
- 
- static inline void set_cmdline(int idx, const char *cmdline)
- {
--	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
-+	strscpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
- }
- 
- static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
--- 
-2.34.1
+-	err = uprobe_register_refctr(d_real_inode(uprobe.path.dentry),
+-				     offset, 0, &uprobe.consumer);
++	err = uprobe_register(d_real_inode(uprobe.path.dentry),
++			      offset, 0, &uprobe.consumer);
+ 	if (err)
+ 		path_put(&uprobe.path);
+ 	else
 
