@@ -1,74 +1,86 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16F71A7F7B;
-	Wed, 31 Jul 2024 09:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0420916D4CB
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jul 2024 14:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722419959; cv=none; b=XJPR6gg64/N9RBezleeF+fxIHzhqFyIBtYjS7+4jbvjCRW2WvgEevMq9paeszeN0qvslSbqcQpVuh3VxUnJ5ngs/2usSFRfhn0Xz5PI/rcKFQ+hfDu7cQWFBbU2IEVJjUgfoo1H/4/CRzeF4cBWVeq4MocRPelk+WfhV2OziX5E=
+	t=1722435169; cv=none; b=B5BI7bNVXy+6Dbu+OZYBR6G+hRI0pk6vIfyQf/NtiyIV5Q5X4bmwnUi4pOUbgghbjcd+8gGG2h9u+SwY+DJzmAbnfqZDXOWHwbbkCe1AkVr73BwEVFw9aECSrrY8ExNITqM5Zx067diu2SZBXK8Y3ssgbvRCp8AQXyPLAcTFFnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722419959; c=relaxed/simple;
-	bh=0zDPImMfP8uELHlerqU/ZcC4S1MlQRyeKlXnKm1s8bY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mKHNhdZ6xbNLlIFJ+ZOwvlJZgmtzZYIqclIA0EHEK5TdXQ2N92WbX0/I6DSHxeC6ckIfgYWp8DagNmAsXSQAolNZgc1hSp16GjAU4gPztBKRLPUluyFJ+n6i5LuWCU9SlsQ+FtjcfviicqL1n13Y/B/ieqov/iPEkuOESCawVJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WYnYP0xv9z1HFkd;
-	Wed, 31 Jul 2024 17:56:25 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0942014037C;
-	Wed, 31 Jul 2024 17:59:14 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 31 Jul
- 2024 17:59:13 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<mhiramat@kernel.org>, <oleg@redhat.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH] uprobes: Remove redundant spinlock in uprobe_deny_signal
-Date: Wed, 31 Jul 2024 09:50:17 +0000
-Message-ID: <20240731095017.1560516-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1722435169; c=relaxed/simple;
+	bh=Zz+2JU1gZn+RJNksX9qA9JVoiTKdjSe1B3qxuuo/L0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lfVOgtvrxIzbf/ZGwyhRBVBpDGY8iTN/+I3C2rkIHedk+mDCzPrwDJHHZ0WcpFiC8/oZt0CpaRmWpVOnnAxwJ1gmNXa9/LiUH1tMASFFH/xcElW1YopRkyTIpGC3sxHR4mD/hiK0AuOtOhhlpPxOvP1CFTpsVujBI5H2IHq51uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OEKM2EiO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEKM2EiO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722435167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=geNpHNcR5/qllA/FEF4u0Jq+w/nr4b1yAQe+s+buY6s=;
+	b=OEKM2EiOGg/MBn5N5rLavvByGUNnVtewNnKUoi07Im0MAzRdbeqW/qUmA++FilpBIwjM0b
+	XPUbbCaWPaLC6mWO8qPxleo+b1HlFIF63MZ4GoZIWIW9IHbOlQCQhDmHOEA0zegzMeAbVZ
+	WU0qx5ZqYVFfh1KE6wt0J84wF7XZWR4=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-DmNa3MIqOWafNcde4BQbZw-1; Wed,
+ 31 Jul 2024 10:12:43 -0400
+X-MC-Unique: DmNa3MIqOWafNcde4BQbZw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A631978F5D;
+	Wed, 31 Jul 2024 14:12:39 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.31])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4B5031955E89;
+	Wed, 31 Jul 2024 14:12:33 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 31 Jul 2024 16:12:38 +0200 (CEST)
+Date: Wed, 31 Jul 2024 16:12:32 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, mhiramat@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Remove redundant spinlock in uprobe_deny_signal
+Message-ID: <20240731141231.GB16718@redhat.com>
+References: <20240731095017.1560516-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731095017.1560516-1-liaochang1@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Since clearing a bit in thread_info is an atomic operation, the spinlock
-is redundant and can be removed, reducing lock contention is good for
-performance.
+On 07/31, Liao Chang wrote:
+>
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
+>  	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+>  
+>  	if (task_sigpending(t)) {
+> -		spin_lock_irq(&t->sighand->siglock);
+>  		clear_tsk_thread_flag(t, TIF_SIGPENDING);
+> -		spin_unlock_irq(&t->sighand->siglock);
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- kernel/events/uprobes.c | 2 --
- 1 file changed, 2 deletions(-)
+Agreed, in this case ->siglock buys nothing, another signal can come
+right after spin_unlock().
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 73cc47708679..76a51a1f51e2 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
- 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
- 
- 	if (task_sigpending(t)) {
--		spin_lock_irq(&t->sighand->siglock);
- 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
--		spin_unlock_irq(&t->sighand->siglock);
- 
- 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
- 			utask->state = UTASK_SSTEP_TRAPPED;
--- 
-2.34.1
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
