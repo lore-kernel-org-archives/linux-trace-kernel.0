@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6A913DDDC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB1A1411E0;
 	Thu,  1 Aug 2024 05:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722489651; cv=none; b=OVZtgvV8P9XyKKKspD94gplvmHIEKnVr++NB/YGK4J2TwgQFiGyndgBcH2PsL1vhTU7PmlSffQ64ZBuSbo5TfsliEY8f/Rz39jT0ImsGoVKMYeG2a9V3x592Dkv9eY486plTQ26/VrxTqiEyjtv9B71MOME3pwcYOSvEJEagfow=
+	t=1722489652; cv=none; b=JUYLg+wy4MzT3zk1aUCzFdW4qJI7SaqFZy7+8tAE6C4R5tpDf9QjhIfuUj7saP7RaI7MPT+XnssWqO5qcYFZfFzrD5SoAjBrkhzoDEFKzK4TRkL6usJWEDjcljKqyes/B75+/Evf8/qztjNwZ3SNhwDXwVYuibJogiwXYJNZKwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722489651; c=relaxed/simple;
-	bh=68YiapbQtvvR5pOi7DFgMf/tjPRRiO9PO74ZsxZJ7rI=;
+	s=arc-20240116; t=1722489652; c=relaxed/simple;
+	bh=GMvsuWvsUx18M/IXFAvzOMBmw5beRnwP1zUwvmx/LJE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vzu88yiQTHRncsOJb2v8CNFl8x6hwwJ9JqRi7rhbqtSyWIZO564C7+IGNs5sjsvEjUk0p6Wtvlbw5GM/GCsaMFTE/xfXwHarXx8gd3yZ/S7yAuBvGJO6mBJlVYKeAnyn3avjMNAOBXwIbyxCNYAV5yJ+7b5MUjpLBmL5351CF98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CbQ45w+p; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=sPCc6NcQYD2JOt325VyBBOS636oRWpTeAL0ZnUxGYuBDgOkrxUe2++iD9UDAjDJggTLyT5qmDFwg3BwxfHnuSLxDT8Tba/6916/mRcX7vPCavpQqhx1NMkR6jPxgcJK+RXldVJEmU3IM5UrScoSy+oHYxsQ1zVA9Em0peLyqaM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b1upw9NC; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CbQ45w+p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b1upw9NC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722489649; x=1754025649;
+  t=1722489650; x=1754025650;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=68YiapbQtvvR5pOi7DFgMf/tjPRRiO9PO74ZsxZJ7rI=;
-  b=CbQ45w+pW7kc7iTp5gwJ+Z+iSjAN565oRYbDJceocuwJy87yL+Ia90Me
-   CWFWNjsY9gITlILMdeIHH87+2umc4NiGSzBAyLRAisr7crQDzmA1Ct1J2
-   eSmXRTnuQFS2IkFFco7bSMPjygiZFcvyXi29mJ8u0qdWy+I7WJ79JVzpC
-   JA1+UCq12LHru9EWYgEEj1AsLSZlWhqmmdhcgns/9SRndjHucDvFV4ceM
-   d3hjrFVDCaM0oUfkCY1dVcEEYyvMBG9kfkeLX/4ynSU5Y0eMKh4x4lr+l
-   dRRbSB1WfmMKtAw2t6bcbUH2+GV3aMTIu5TJrwGjfAwPdyh7wE3KZ6IMy
-   w==;
-X-CSE-ConnectionGUID: H32gauu5QReen01HmUacwg==
-X-CSE-MsgGUID: M2AKOO83R9KBLAookB1ENw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12821735"
+  bh=GMvsuWvsUx18M/IXFAvzOMBmw5beRnwP1zUwvmx/LJE=;
+  b=b1upw9NC/Dlf+A+GM5RL8OgP2f/5dBFSu6TMhKCDKPN5amhHPVJsM8Ru
+   fvP61KIPbJlENONvpqwZuVP29bvQZWGV89NAvicTCP75GTP5QXme49omV
+   1G6ZzHei609FWkEIKw3SoYst9KPp1k5VejZjbNKoCafU7mT8smOcGmLCR
+   J/fw6vrtmzv6SuiCXKXy8EfBE3p1kHUHeNFm7rV23s9gdy0ijvSwWSoKv
+   B3PZ5XsjvCu1WIyddsGLDDIN3BAQmUOXE81AzQNuD7NTOppMCwtKPq94o
+   SrUQPaJhJaU6V0NmdyBYWqLkB34k1Dhd996kI2+GBeQAgygfIPAlF62qm
+   Q==;
+X-CSE-ConnectionGUID: a0Z8ESfCQSGhjB3Xio8qfA==
+X-CSE-MsgGUID: k11p+5GhQFqI/eGG01kC6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12821736"
 X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
-   d="scan'208";a="12821735"
+   d="scan'208";a="12821736"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
-X-CSE-ConnectionGUID: wf76Cby/T32pF8mmddAvmw==
-X-CSE-MsgGUID: o2rhRZB2RhmnXlTtP4V8kQ==
+X-CSE-ConnectionGUID: HSe2A23KQyiRzcSFLvcKXA==
+X-CSE-MsgGUID: D7/fdtzAT/WTG0F2mDS3yg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
-   d="scan'208";a="59951365"
+   d="scan'208";a="59951368"
 Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
   by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -60,9 +60,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	platform-driver-x86@vger.kernel.org,
 	Shankar Ravi V <ravi.v.shankar@intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] platform/x86/intel/ifs: Refactor MSR usage in IFS test code
-Date: Thu,  1 Aug 2024 05:18:11 +0000
-Message-Id: <20240801051814.1935149-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v4 2/4] platform/x86/intel/ifs: Add SBAF test image loading support
+Date: Thu,  1 Aug 2024 05:18:12 +0000
+Message-Id: <20240801051814.1935149-3-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -75,183 +75,260 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-IFS tests such as Scan at Field (SAF) or Structural Based Functional
-Test at Field (SBAF), require the user to load a test image. The image
-loading process is similar across these tests, with the only difference
-being MSR addresses used. To reuse the code between these tests, remove
-the hard coding of MSR addresses and allow the driver to pass the MSR
-addresses per IFS test (via driver device data).
+From: Jithu Joseph <jithu.joseph@intel.com>
 
-Add a new structure named "struct ifs_test_msrs" to specify the
-test-specific MSR addresses. Each IFS test will provide this structure,
-enabling them to reuse the common code.
+Structural Based Functional Test at Field (SBAF) is a new type of
+testing that provides comprehensive core test coverage complementing
+existing IFS tests like Scan at Field (SAF) or ArrayBist.
 
-This is a preliminary patch in preparation for the addition of SBAF
-support.
+SBAF device will appear as a new device instance (intel_ifs_2) under
+/sys/devices/virtual/misc. The user interaction necessary to load the
+test image and test a particular core is the same as the existing scan
+test (intel_ifs_0).
+
+During the loading stage, the driver will look for a file named
+ff-mm-ss-<batch02x>.sbft in the /lib/firmware/intel/ifs_2 directory.
+The hardware interaction needed for loading the image is similar to
+SAF, with the only difference being the MSR addresses used. Reuse the
+SAF image loading code, passing the SBAF-specific MSR addresses via
+struct ifs_test_msrs in the driver device data.
+
+Unlike SAF, the SBAF test image chunks are further divided into smaller
+logical entities called bundles. Since the SBAF test is initiated per
+bundle, cache the maximum number of bundles in the current image, which
+is used for iterating through bundles during SBAF test execution.
 
 Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h  | 25 +++++++++++++++++++++++++
- drivers/platform/x86/intel/ifs/core.c |  9 +++++++++
- drivers/platform/x86/intel/ifs/load.c | 24 ++++++++++++++----------
- 3 files changed, 48 insertions(+), 10 deletions(-)
 
+Changes since v3:
+ * Added missing error return in validate_ifs_metadata().
+
+ arch/x86/include/asm/msr-index.h      |  2 ++
+ drivers/platform/x86/intel/ifs/ifs.h  | 37 ++++++++++++++++++++++++++-
+ drivers/platform/x86/intel/ifs/core.c | 24 +++++++++++++++++
+ drivers/platform/x86/intel/ifs/load.c | 16 +++++++++---
+ 4 files changed, 74 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 82c6a4d350e0..a7c06a46fb76 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -247,6 +247,8 @@
+ #define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT)
+ #define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT	4
+ #define MSR_INTEGRITY_CAPS_PERIODIC_BIST	BIT(MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT)
++#define MSR_INTEGRITY_CAPS_SBAF_BIT		8
++#define MSR_INTEGRITY_CAPS_SBAF			BIT(MSR_INTEGRITY_CAPS_SBAF_BIT)
+ #define MSR_INTEGRITY_CAPS_SAF_GEN_MASK	GENMASK_ULL(10, 9)
+ 
+ #define MSR_LBR_NHM_FROM		0x00000680
 diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 56b9f3e3cf76..738cbc7a5d00 100644
+index 738cbc7a5d00..600bb8a1b285 100644
 --- a/drivers/platform/x86/intel/ifs/ifs.h
 +++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -266,6 +266,22 @@ struct ifs_test_caps {
+@@ -126,11 +126,38 @@
+  * The driver does not make use of this, it only tests one core at a time.
+  *
+  * .. [#f1] https://github.com/intel/TBD
++ *
++ *
++ * Structural Based Functional Test at Field (SBAF):
++ * ------------------------------------------------
++ *
++ * SBAF is a new type of testing that provides comprehensive core test
++ * coverage complementing Scan at Field (SAF) testing. SBAF mimics the
++ * manufacturing screening environment and leverages the same test suite.
++ * It makes use of Design For Test (DFT) observation sites and features
++ * to maximize coverage in minimum time.
++ *
++ * Similar to the SAF test, SBAF isolates the core under test from the
++ * rest of the system during execution. Upon completion, the core
++ * seamlessly resets to its pre-test state and resumes normal operation.
++ * Any machine checks or hangs encountered during the test are confined to
++ * the isolated core, preventing disruption to the overall system.
++ *
++ * Like the SAF test, the SBAF test is also divided into multiple batches,
++ * and each batch test can take hundreds of milliseconds (100-200 ms) to
++ * complete. If such a lengthy interruption is undesirable, it is
++ * recommended to relocate the time-sensitive applications to other cores.
+  */
+ #include <linux/device.h>
+ #include <linux/miscdevice.h>
+ 
+ #define MSR_ARRAY_BIST				0x00000105
++
++#define MSR_COPY_SBAF_HASHES			0x000002b8
++#define MSR_SBAF_HASHES_STATUS			0x000002b9
++#define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK	0x000002ba
++#define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS	0x000002bb
++
+ #define MSR_COPY_SCAN_HASHES			0x000002c2
+ #define MSR_SCAN_HASHES_STATUS			0x000002c3
+ #define MSR_AUTHENTICATE_AND_COPY_CHUNK		0x000002c4
+@@ -140,6 +167,7 @@
+ #define MSR_ARRAY_TRIGGER			0x000002d6
+ #define MSR_ARRAY_STATUS			0x000002d7
+ #define MSR_SAF_CTRL				0x000004f0
++#define MSR_SBAF_CTRL				0x000004f8
+ 
+ #define SCAN_NOT_TESTED				0
+ #define SCAN_TEST_PASS				1
+@@ -147,6 +175,7 @@
+ 
+ #define IFS_TYPE_SAF			0
+ #define IFS_TYPE_ARRAY_BIST		1
++#define IFS_TYPE_SBAF			2
+ 
+ #define ARRAY_GEN0			0
+ #define ARRAY_GEN1			1
+@@ -196,7 +225,8 @@ union ifs_chunks_auth_status_gen2 {
+ 		u16	valid_chunks;
+ 		u16	total_chunks;
+ 		u32	error_code	:8;
+-		u32	rsvd2		:24;
++		u32	rsvd2		:8;
++		u32	max_bundle	:16;
+ 	};
+ };
+ 
+@@ -261,9 +291,12 @@ union ifs_array {
+ #define IFS_SW_TIMEOUT				0xFD
+ #define IFS_SW_PARTIAL_COMPLETION		0xFE
+ 
++#define IFS_SUFFIX_SZ		5
++
+ struct ifs_test_caps {
+ 	int	integrity_cap_bit;
  	int	test_num;
++	char	image_suffix[IFS_SUFFIX_SZ];
  };
  
-+/**
-+ * struct ifs_test_msrs - MSRs used in IFS tests
-+ * @copy_hashes: Copy test hash data
-+ * @copy_hashes_status: Status of copied test hash data
-+ * @copy_chunks: Copy chunks of the test data
-+ * @copy_chunks_status: Status of the copied test data chunks
-+ * @test_ctrl: Control the test attributes
-+ */
-+struct ifs_test_msrs {
-+	u32	copy_hashes;
-+	u32	copy_hashes_status;
-+	u32	copy_chunks;
-+	u32	copy_chunks_status;
-+	u32	test_ctrl;
-+};
-+
  /**
-  * struct ifs_data - attributes related to intel IFS driver
-  * @loaded_version: stores the currently loaded ifs image version.
-@@ -299,6 +315,7 @@ struct ifs_work {
- 
- struct ifs_device {
- 	const struct ifs_test_caps *test_caps;
-+	const struct ifs_test_msrs *test_msrs;
- 	struct ifs_data rw_data;
- 	struct miscdevice misc;
+@@ -294,6 +327,7 @@ struct ifs_test_msrs {
+  * @generation: IFS test generation enumerated by hardware
+  * @chunk_size: size of a test chunk
+  * @array_gen: test generation of array test
++ * @max_bundle: maximum bundle index
+  */
+ struct ifs_data {
+ 	int	loaded_version;
+@@ -306,6 +340,7 @@ struct ifs_data {
+ 	u32	generation;
+ 	u32	chunk_size;
+ 	u32	array_gen;
++	u32	max_bundle;
  };
-@@ -319,6 +336,14 @@ static inline const struct ifs_test_caps *ifs_get_test_caps(struct device *dev)
- 	return d->test_caps;
- }
  
-+static inline const struct ifs_test_msrs *ifs_get_test_msrs(struct device *dev)
-+{
-+	struct miscdevice *m = dev_get_drvdata(dev);
-+	struct ifs_device *d = container_of(m, struct ifs_device, misc);
-+
-+	return d->test_msrs;
-+}
-+
- extern bool *ifs_pkg_auth;
- int ifs_load_firmware(struct device *dev);
- int do_core_test(int cpu, struct device *dev);
+ struct ifs_work {
 diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
-index 33412a584836..f204ebbbf769 100644
+index f204ebbbf769..bc252b883210 100644
 --- a/drivers/platform/x86/intel/ifs/core.c
 +++ b/drivers/platform/x86/intel/ifs/core.c
-@@ -39,9 +39,18 @@ static const struct ifs_test_caps array_test = {
- 	.test_num = IFS_TYPE_ARRAY_BIST,
+@@ -32,6 +32,7 @@ bool *ifs_pkg_auth;
+ static const struct ifs_test_caps scan_test = {
+ 	.integrity_cap_bit = MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
+ 	.test_num = IFS_TYPE_SAF,
++	.image_suffix = "scan",
  };
  
-+static const struct ifs_test_msrs scan_msrs = {
-+	.copy_hashes = MSR_COPY_SCAN_HASHES,
-+	.copy_hashes_status = MSR_SCAN_HASHES_STATUS,
-+	.copy_chunks = MSR_AUTHENTICATE_AND_COPY_CHUNK,
-+	.copy_chunks_status = MSR_CHUNKS_AUTHENTICATION_STATUS,
-+	.test_ctrl = MSR_SAF_CTRL,
+ static const struct ifs_test_caps array_test = {
+@@ -47,6 +48,20 @@ static const struct ifs_test_msrs scan_msrs = {
+ 	.test_ctrl = MSR_SAF_CTRL,
+ };
+ 
++static const struct ifs_test_msrs sbaf_msrs = {
++	.copy_hashes = MSR_COPY_SBAF_HASHES,
++	.copy_hashes_status = MSR_SBAF_HASHES_STATUS,
++	.copy_chunks = MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK,
++	.copy_chunks_status = MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS,
++	.test_ctrl = MSR_SBAF_CTRL,
++};
++
++static const struct ifs_test_caps sbaf_test = {
++	.integrity_cap_bit = MSR_INTEGRITY_CAPS_SBAF_BIT,
++	.test_num = IFS_TYPE_SBAF,
++	.image_suffix = "sbft",
 +};
 +
  static struct ifs_device ifs_devices[] = {
  	[IFS_TYPE_SAF] = {
  		.test_caps = &scan_test,
-+		.test_msrs = &scan_msrs,
- 		.misc = {
- 			.name = "intel_ifs_0",
- 			.minor = MISC_DYNAMIC_MINOR,
+@@ -65,6 +80,15 @@ static struct ifs_device ifs_devices[] = {
+ 			.groups = plat_ifs_array_groups,
+ 		},
+ 	},
++	[IFS_TYPE_SBAF] = {
++		.test_caps = &sbaf_test,
++		.test_msrs = &sbaf_msrs,
++		.misc = {
++			.name = "intel_ifs_2",
++			.minor = MISC_DYNAMIC_MINOR,
++			.groups = plat_ifs_groups,
++		},
++	},
+ };
+ 
+ #define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
 diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 39f19cb51749..ad0c107f0922 100644
+index ad0c107f0922..de54bd1a5970 100644
 --- a/drivers/platform/x86/intel/ifs/load.c
 +++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -118,15 +118,17 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
- 	union ifs_scan_hashes_status hashes_status;
- 	union ifs_chunks_auth_status chunk_status;
- 	struct device *dev = local_work->dev;
-+	const struct ifs_test_msrs *msrs;
- 	int i, num_chunks, chunk_size;
- 	struct ifs_data *ifsd;
- 	u64 linear_addr, base;
- 	u32 err_code;
+@@ -261,20 +261,22 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
+ 		return -EIO;
+ 	}
+ 	ifsd->valid_chunks = valid_chunks;
++	ifsd->max_bundle = chunk_status.max_bundle;
  
- 	ifsd = ifs_get_data(dev);
-+	msrs = ifs_get_test_msrs(dev);
- 	/* run scan hash copy */
--	wrmsrl(MSR_COPY_SCAN_HASHES, ifs_hash_ptr);
--	rdmsrl(MSR_SCAN_HASHES_STATUS, hashes_status.data);
-+	wrmsrl(msrs->copy_hashes, ifs_hash_ptr);
-+	rdmsrl(msrs->copy_hashes_status, hashes_status.data);
+ 	return 0;
+ }
  
- 	/* enumerate the scan image information */
- 	num_chunks = hashes_status.num_chunks;
-@@ -147,8 +149,8 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
- 		linear_addr = base + i * chunk_size;
- 		linear_addr |= i;
- 
--		wrmsrl(MSR_AUTHENTICATE_AND_COPY_CHUNK, linear_addr);
--		rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
-+		wrmsrl(msrs->copy_chunks, linear_addr);
-+		rdmsrl(msrs->copy_chunks_status, chunk_status.data);
- 
- 		ifsd->valid_chunks = chunk_status.valid_chunks;
- 		err_code = chunk_status.error_code;
-@@ -180,6 +182,7 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
- 	union ifs_scan_hashes_status_gen2 hashes_status;
- 	union ifs_chunks_auth_status_gen2 chunk_status;
- 	u32 err_code, valid_chunks, total_chunks;
-+	const struct ifs_test_msrs *msrs;
- 	int i, num_chunks, chunk_size;
+ static int validate_ifs_metadata(struct device *dev)
+ {
++	const struct ifs_test_caps *test = ifs_get_test_caps(dev);
+ 	struct ifs_data *ifsd = ifs_get_data(dev);
  	union meta_data *ifs_meta;
- 	int starting_chunk_nr;
-@@ -189,10 +192,11 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
- 	int retry_count;
+ 	char test_file[64];
+ 	int ret = -EINVAL;
  
- 	ifsd = ifs_get_data(dev);
-+	msrs = ifs_get_test_msrs(dev);
+-	snprintf(test_file, sizeof(test_file), "%02x-%02x-%02x-%02x.scan",
++	snprintf(test_file, sizeof(test_file), "%02x-%02x-%02x-%02x.%s",
+ 		 boot_cpu_data.x86, boot_cpu_data.x86_model,
+-		 boot_cpu_data.x86_stepping, ifsd->cur_batch);
++		 boot_cpu_data.x86_stepping, ifsd->cur_batch, test->image_suffix);
  
- 	if (need_copy_scan_hashes(ifsd)) {
--		wrmsrl(MSR_COPY_SCAN_HASHES, ifs_hash_ptr);
--		rdmsrl(MSR_SCAN_HASHES_STATUS, hashes_status.data);
-+		wrmsrl(msrs->copy_hashes, ifs_hash_ptr);
-+		rdmsrl(msrs->copy_hashes_status, hashes_status.data);
- 
- 		/* enumerate the scan image information */
- 		chunk_size = hashes_status.chunk_size * SZ_1K;
-@@ -212,8 +216,8 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
+ 	ifs_meta = (union meta_data *)find_meta_data(ifs_header_ptr, META_TYPE_IFS);
+ 	if (!ifs_meta) {
+@@ -304,6 +306,12 @@ static int validate_ifs_metadata(struct device *dev)
+ 		return ret;
  	}
  
- 	if (ifsd->generation >= IFS_GEN_STRIDE_AWARE) {
--		wrmsrl(MSR_SAF_CTRL, INVALIDATE_STRIDE);
--		rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
-+		wrmsrl(msrs->test_ctrl, INVALIDATE_STRIDE);
-+		rdmsrl(msrs->copy_chunks_status, chunk_status.data);
- 		if (chunk_status.valid_chunks != 0) {
- 			dev_err(dev, "Couldn't invalidate installed stride - %d\n",
- 				chunk_status.valid_chunks);
-@@ -234,9 +238,9 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
- 		chunk_table[1] = linear_addr;
- 		do {
- 			local_irq_disable();
--			wrmsrl(MSR_AUTHENTICATE_AND_COPY_CHUNK, (u64)chunk_table);
-+			wrmsrl(msrs->copy_chunks, (u64)chunk_table);
- 			local_irq_enable();
--			rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
-+			rdmsrl(msrs->copy_chunks_status, chunk_status.data);
- 			err_code = chunk_status.error_code;
- 		} while (err_code == AUTH_INTERRUPTED_ERROR && --retry_count);
++	if (ifs_meta->test_type != test->test_num) {
++		dev_warn(dev, "Metadata test_type %d mismatches with device type\n",
++			 ifs_meta->test_type);
++		return ret;
++	}
++
+ 	return 0;
+ }
  
+@@ -391,9 +399,9 @@ int ifs_load_firmware(struct device *dev)
+ 	char scan_path[64];
+ 	int ret;
+ 
+-	snprintf(scan_path, sizeof(scan_path), "intel/ifs_%d/%02x-%02x-%02x-%02x.scan",
++	snprintf(scan_path, sizeof(scan_path), "intel/ifs_%d/%02x-%02x-%02x-%02x.%s",
+ 		 test->test_num, boot_cpu_data.x86, boot_cpu_data.x86_model,
+-		 boot_cpu_data.x86_stepping, ifsd->cur_batch);
++		 boot_cpu_data.x86_stepping, ifsd->cur_batch, test->image_suffix);
+ 
+ 	ret = request_firmware_direct(&fw, scan_path, dev);
+ 	if (ret) {
 -- 
 2.25.1
 
