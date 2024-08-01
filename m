@@ -1,190 +1,71 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7A019478;
-	Thu,  1 Aug 2024 08:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E197916F267;
+	Thu,  1 Aug 2024 09:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722501195; cv=none; b=gFKpItVP69SVI31WYSF+r6XzY02fFejkVLFC/+NED1SeRwIgPGOh+7Ib0NCFDdkLlWjtrFXEZ9/Bzhc9FiTcwMU8w/XCDW14B3t+w7VmSmXFtKVZMAuS+RSq9hpeTQQUbZ22ebyTF7LUXbmFLng5JmUz+aXfJvp6oY1HS2pefW8=
+	t=1722504910; cv=none; b=DhwUYGF/PnsSEBCmEX/waHU4ZyK6Fot9EJlyLPYxsZUIyNgL9+y9FKQ9k32m+2nJhVY1GYNG/qGEMfXYZmcxy8U3OOtxgz8GCd5UUBfSyrtiYJKpMapMrJf1Rp2breqteVi8tSqID4DIi0yOU8kp7TQMDDRPGwHrW07GlFeVmbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722501195; c=relaxed/simple;
-	bh=lIpiNVrmuN4O95JtHnznPihjGVbvpzkeroPNt7BitXA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mNS50Ab+w7IoEJ1cJitAT7xcXp9XPLODYnbtB4ft43RwZKphicLXc+/raC1pbNYJdGT3i4++mHeZVsg329LAY8xkR8yauo/2ESUCaRTv/Kr79QF5A6bQO3HLzTXpoPOtbJs/tg3AEa5C0p17xj6IYEihjDLlED6/XbYsux0Ckgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WZMdc0lHYzncvB;
-	Thu,  1 Aug 2024 16:32:04 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id E3D101800A0;
-	Thu,  1 Aug 2024 16:33:04 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 1 Aug
- 2024 16:33:04 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<kan.liang@linux.intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-Subject: [PATCH] uprobes: Improve scalability by reducing the contention on siglock
-Date: Thu, 1 Aug 2024 08:24:07 +0000
-Message-ID: <20240801082407.1618451-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1722504910; c=relaxed/simple;
+	bh=ayapRnAa1le9nfXZPiuif0xUtIRAkLKcntn7oOM9diQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L090ppGHGe7PDvPn3/K67h7HP1NXMzO+ctbJBscRQLl8k6mNY7iH8Yo7qUJPOlsRKY+78IJI6l1ve9Ib58w46x88+0UVUMI2L202TlwU2KOLuZi5ywFMaGMPmTVqKt/5xVKka4NqkD4cpt8oMI5VvsmRzvS/ZEEJP8/3Ablqwsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ion0ssjP; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ion0ssjP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KAh+Y1GaVDxSrqV6y/eFMe2W+Op7o4l23YzOcNg+zOw=; b=Ion0ssjPgSBYM7tuFL823RH36F
+	yLhLYla6wE6dnaG9Sk9EG0JLdb8RI7ctWcs36bVuJ8lWPbJuut6bmdqpoOAUdVfsw7AcHpV5NsjoK
+	HHAkEGirmeF5/uUzTkCbrMEjXzJwBrpe2Njr0qIhpzJpuGPlX5k5DuSZR961rHd3w/c+LjUsgx3dw
+	9BvABmMspvMnCV+2Xr22NFUDaN5J2Y3ETY0Tx+hOGwLatWH4IoIF7WX63t4WayT2kAiDC6cp/I8ub
+	GxDgKIB78bOb4q4wpqlPAhw62PVpDm1ar7FmCvvVeRXZ6ADNsy2xQ/YiwHY/nbXNQaoJzihipLYk2
+	6I5LFReQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZSDC-0000000HGXy-1vc0;
+	Thu, 01 Aug 2024 09:35:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F184A30074E; Thu,  1 Aug 2024 11:35:05 +0200 (CEST)
+Date: Thu, 1 Aug 2024 11:35:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, oleg@redhat.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH 8/8] uprobes: switch to RCU Tasks Trace flavor for better
+ performance
+Message-ID: <20240801093505.GP33588@noisy.programming.kicks-ass.net>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240731214256.3588718-9-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731214256.3588718-9-andrii@kernel.org>
 
-The profiling result of BPF selftest on ARM64 platform reveals the
-significant contention on the current->sighand->siglock within the
-handle_singlestep() is the scalability bottleneck. The reason is also
-very straightforward that all producer threads of benchmark have to
-contend the spinlock mentioned to resume the TIF_SIGPENDING bit in the
-thread_info that might be removed in uprobe_deny_signal().
+On Wed, Jul 31, 2024 at 02:42:56PM -0700, Andrii Nakryiko wrote:
+> This patch switches uprobes SRCU usage to RCU Tasks Trace flavor, which
+> is optimized for more lightweight and quick readers (at the expense of
+> slower writers, which for uprobes is a fine tradeof) and has better
+> performance and scalability with number of CPUs.
+> 
+> Similarly to baseline vs SRCU, we've benchmarked SRCU-based
+> implementation vs RCU Tasks Trace implementation.
 
-This patch introduces UTASK_SSTEP_DENY_SIGNAL to mark TIF_SIGPENDING is
-suppress temporarily during the uprobe single-step. Upon uprobe single-step
-is handled and UTASK_SSTEP_DENY_SIGNAL is confirmed, it could resume the
-TIF_SIGPENDING directly without acquiring the siglock in most case, then
-reducing contention and improving overall performance.
+Yes, this one can be the trace flavour, the other one for the retprobes
+must be SRCU because it crosses over into userspace. But you've not yet
+done that side.
 
-I've use the script developed by Andrii in [1] to run benchmark. The CPU
-used was Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@2.4GHz running
-upstream kernel v6.11-rc1 + my optimization [2] for get_xol_insn_slot().
-
-before-opt
-----------
-uprobe-nop      ( 1 cpus):    0.907 ± 0.003M/s  (  0.907M/s/cpu)
-uprobe-nop      ( 2 cpus):    1.676 ± 0.008M/s  (  0.838M/s/cpu)
-uprobe-nop      ( 4 cpus):    3.210 ± 0.003M/s  (  0.802M/s/cpu)
-uprobe-nop      ( 8 cpus):    4.457 ± 0.003M/s  (  0.557M/s/cpu)
-uprobe-nop      (16 cpus):    3.724 ± 0.011M/s  (  0.233M/s/cpu)
-uprobe-nop      (32 cpus):    2.761 ± 0.003M/s  (  0.086M/s/cpu)
-uprobe-nop      (64 cpus):    1.293 ± 0.015M/s  (  0.020M/s/cpu)
-
-uprobe-push     ( 1 cpus):    0.883 ± 0.001M/s  (  0.883M/s/cpu)
-uprobe-push     ( 2 cpus):    1.642 ± 0.005M/s  (  0.821M/s/cpu)
-uprobe-push     ( 4 cpus):    3.086 ± 0.002M/s  (  0.771M/s/cpu)
-uprobe-push     ( 8 cpus):    3.390 ± 0.003M/s  (  0.424M/s/cpu)
-uprobe-push     (16 cpus):    2.652 ± 0.005M/s  (  0.166M/s/cpu)
-uprobe-push     (32 cpus):    2.713 ± 0.005M/s  (  0.085M/s/cpu)
-uprobe-push     (64 cpus):    1.313 ± 0.009M/s  (  0.021M/s/cpu)
-
-uprobe-ret      ( 1 cpus):    1.774 ± 0.000M/s  (  1.774M/s/cpu)
-uprobe-ret      ( 2 cpus):    3.350 ± 0.001M/s  (  1.675M/s/cpu)
-uprobe-ret      ( 4 cpus):    6.604 ± 0.000M/s  (  1.651M/s/cpu)
-uprobe-ret      ( 8 cpus):    6.706 ± 0.005M/s  (  0.838M/s/cpu)
-uprobe-ret      (16 cpus):    5.231 ± 0.001M/s  (  0.327M/s/cpu)
-uprobe-ret      (32 cpus):    5.743 ± 0.003M/s  (  0.179M/s/cpu)
-uprobe-ret      (64 cpus):    4.726 ± 0.016M/s  (  0.074M/s/cpu)
-
-after-opt
----------
-uprobe-nop      ( 1 cpus):    0.985 ± 0.002M/s  (  0.985M/s/cpu)
-uprobe-nop      ( 2 cpus):    1.773 ± 0.005M/s  (  0.887M/s/cpu)
-uprobe-nop      ( 4 cpus):    3.304 ± 0.001M/s  (  0.826M/s/cpu)
-uprobe-nop      ( 8 cpus):    5.328 ± 0.002M/s  (  0.666M/s/cpu)
-uprobe-nop      (16 cpus):    6.475 ± 0.002M/s  (  0.405M/s/cpu)
-uprobe-nop      (32 cpus):    4.831 ± 0.082M/s  (  0.151M/s/cpu)
-uprobe-nop      (64 cpus):    2.564 ± 0.053M/s  (  0.040M/s/cpu)
-
-uprobe-push     ( 1 cpus):    0.964 ± 0.001M/s  (  0.964M/s/cpu)
-uprobe-push     ( 2 cpus):    1.766 ± 0.002M/s  (  0.883M/s/cpu)
-uprobe-push     ( 4 cpus):    3.290 ± 0.009M/s  (  0.823M/s/cpu)
-uprobe-push     ( 8 cpus):    4.670 ± 0.002M/s  (  0.584M/s/cpu)
-uprobe-push     (16 cpus):    5.197 ± 0.004M/s  (  0.325M/s/cpu)
-uprobe-push     (32 cpus):    5.068 ± 0.161M/s  (  0.158M/s/cpu)
-uprobe-push     (64 cpus):    2.605 ± 0.026M/s  (  0.041M/s/cpu)
-
-uprobe-ret      ( 1 cpus):    1.833 ± 0.001M/s  (  1.833M/s/cpu)
-uprobe-ret      ( 2 cpus):    3.384 ± 0.003M/s  (  1.692M/s/cpu)
-uprobe-ret      ( 4 cpus):    6.677 ± 0.004M/s  (  1.669M/s/cpu)
-uprobe-ret      ( 8 cpus):    6.854 ± 0.005M/s  (  0.857M/s/cpu)
-uprobe-ret      (16 cpus):    6.508 ± 0.006M/s  (  0.407M/s/cpu)
-uprobe-ret      (32 cpus):    5.793 ± 0.009M/s  (  0.181M/s/cpu)
-uprobe-ret      (64 cpus):    4.743 ± 0.016M/s  (  0.074M/s/cpu)
-
-Above benchmark results demonstrates a obivious improvement in the
-scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughput
-of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
-
-[1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.org
-[2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@huawei.com
-
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- include/linux/uprobes.h |  1 +
- kernel/events/uprobes.c | 18 +++++++++++-------
- 2 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b503fafb7fb3..50acbf96bccd 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -53,6 +53,7 @@ enum uprobe_task_state {
- 	UTASK_SSTEP,
- 	UTASK_SSTEP_ACK,
- 	UTASK_SSTEP_TRAPPED,
-+	UTASK_SSTEP_DENY_SIGNAL,
- };
- 
- /*
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 76a51a1f51e2..4f9c10b3c7b9 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
- 
- 	if (task_sigpending(t)) {
- 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
-+		utask->state = UTASK_SSTEP_DENY_SIGNAL;
- 
- 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
- 			utask->state = UTASK_SSTEP_TRAPPED;
-@@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 	int err = 0;
- 
- 	uprobe = utask->active_uprobe;
--	if (utask->state == UTASK_SSTEP_ACK)
-+	switch (utask->state) {
-+	case UTASK_SSTEP_ACK:
- 		err = arch_uprobe_post_xol(&uprobe->arch, regs);
--	else if (utask->state == UTASK_SSTEP_TRAPPED)
-+		break;
-+	case UTASK_SSTEP_TRAPPED:
- 		arch_uprobe_abort_xol(&uprobe->arch, regs);
--	else
-+		fallthrough;
-+	case UTASK_SSTEP_DENY_SIGNAL:
-+		set_tsk_thread_flag(current, TIF_SIGPENDING);
-+		break;
-+	default:
- 		WARN_ON_ONCE(1);
-+	}
- 
- 	put_uprobe(uprobe);
- 	utask->active_uprobe = NULL;
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(current);
- 
--	spin_lock_irq(&current->sighand->siglock);
--	recalc_sigpending(); /* see uprobe_deny_signal() */
--	spin_unlock_irq(&current->sighand->siglock);
--
- 	if (unlikely(err)) {
- 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
- 		force_sig(SIGILL);
--- 
-2.34.1
-
+Anyway, I think I can make the SRCU read_{,un}lock() smp_mb()
+conditional, much like we have for percpu_rwsem and trace rcu, but I
+definitely don't have time to poke at that in the foreseeable future :(
