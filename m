@@ -1,48 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AAE16EB5E;
-	Wed, 31 Jul 2024 21:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4670132114;
+	Thu,  1 Aug 2024 05:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722462207; cv=none; b=nDnH6QyI6oafQAH2CWjp5/BuU7RaxZCMsvtgx2KCzTB0THQLpG69JuxgRztBc2Tbft9I9qKVAeJ9ksPMMSYUyE0tXqlABnj7wSe2A1asFNDSsfMUDngH70fTh3wBiz5D3MuZvcLFvhuigE1WbmwJDA+zQp0f5e/X6k7pYWNtWt4=
+	t=1722489649; cv=none; b=OY3z8ja+oTbVxfZ2GQ0NCDC0D34kjVywmQyxA85uVUAL3kBeBDaez37jj3d++ZZgSCcK37eqZIILTsUUDzhW+1SuNjPmELTc8ISoeJWTBjH33VPyD8uJ0XgXZ/gQ+07PVd+8rFwzTfi4q/KE6UT2tQzCVzJxU9cxgZ1hWXdbjEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722462207; c=relaxed/simple;
-	bh=3Up2x3Nsu059ngkFWBfnfc1N6oPXYNPJasw54szZ3LA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sVRS8vqxl6pcEqe3KvW/gedXLg8IxKpyA5Oj+wD9648gXuRRCHQQVD9Wd45cdN7cvHbLIuU5IBW+UXKx7hhRvC4e8Eifxh8fDRRXxdQcyuopdqXZHT/nfPlHuAiRE7lgdJcy15GpMJN/piXCVwJaoAc/QQtETupx3VqLxFSF66c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpSCwLNN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722489649; c=relaxed/simple;
+	bh=YU/63FNruDeAFMPEDziJs8zsHHNVgZHddDQyLvPxjlU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NElOGtziBLIkPsSBMrAxz3GEQbQeY7Qq/DKvmmnHqmxY3xezvc4IiRmaZBPfzhWA5Gr2YImhR0wVpAIxMHrEQYm80Ldy57yHDMpDhx4zKjC4llOcHtiy/XJrLmbDfwxGFAu5w+sYM50FTFNW1mKdYQKL/8hK2ogqohUTWwQ90Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bNtAANL7; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpSCwLNN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3242C116B1;
-	Wed, 31 Jul 2024 21:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722462207;
-	bh=3Up2x3Nsu059ngkFWBfnfc1N6oPXYNPJasw54szZ3LA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KpSCwLNNZ0CvRYwYHiEcmBcn8uMYIhjR3l1zqeq7eXDrWtL2NtpOg7ub0BO5tVqK2
-	 qY3u74GVN/fOlNbBRcQ+C1IY00Ng0cFIvgitr1kS5PeQYtLuRpLuiQAYu/nWhvNayh
-	 LCUBJQACUfeD6z5HbJc2oEZrR45hPnUqLcfggBmeiybCYyme3UKImL6N6nw4oM2RcS
-	 noMXmC8ZiZh9pG7Z4kGo1A0cd9/5mJrtTGqVfxCHX6s+GQsloQy4FaWgpKqfa9/Mup
-	 hZ1vErQQdcODQNCisZzoV7vrVtYeddIOsLuK1kJhXZsc7L653EdR+Zo8nNjVUtrKGG
-	 ziLn6VgFekMhQ==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	oleg@redhat.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	paulmck@kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH 8/8] uprobes: switch to RCU Tasks Trace flavor for better performance
-Date: Wed, 31 Jul 2024 14:42:56 -0700
-Message-ID: <20240731214256.3588718-9-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240731214256.3588718-1-andrii@kernel.org>
-References: <20240731214256.3588718-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bNtAANL7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722489648; x=1754025648;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YU/63FNruDeAFMPEDziJs8zsHHNVgZHddDQyLvPxjlU=;
+  b=bNtAANL7D/qVYdAUie5WTTxuEH4P8jZk5X4nVs0axv/YYlnUrOwOkHTb
+   9VtEDScLLsCEvqF/AwgA/8PVDxu2pVKeC8o9k3htlMRAUMXgj+xqyHIV+
+   bGFJXp2hYDRE4jH4WbvRqQHwdEhmU9WewdHdCHsnBe4aP9OGtWblXWMVA
+   tj+5vHrtgAtOxvMMnJKUno2BICOywFh8t9DUtdpsS12DkTSmZY/HVrkBc
+   pHz/yl0115WiBOcEByatP7haeXb5R8+bdJB5H7PWk5fMdXXQ42AlpX59a
+   s2K8dPZcu7TmNWyiFo53EvXop/RBkk9e/r+w/6Wf0yGvki/se5xXVd9wv
+   A==;
+X-CSE-ConnectionGUID: jz/avY4oTK2SaFYqce16gA==
+X-CSE-MsgGUID: GBLJlWMwQzyyUkLFVR+74g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12821721"
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="12821721"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
+X-CSE-ConnectionGUID: bOp73MO1TJKYTzo1pn40ag==
+X-CSE-MsgGUID: joynoDV1R9areN3oEVhvkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="59951363"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Jithu Joseph <jithu.joseph@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ashok Raj <ashok.raj@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	linux-trace-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shankar Ravi V <ravi.v.shankar@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Add SBAF test to IFS
+Date: Thu,  1 Aug 2024 05:18:10 +0000
+Message-Id: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,201 +72,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch switches uprobes SRCU usage to RCU Tasks Trace flavor, which
-is optimized for more lightweight and quick readers (at the expense of
-slower writers, which for uprobes is a fine tradeof) and has better
-performance and scalability with number of CPUs.
+This patch series adds support for Structural Based Functional Test at
+Field (SBAF) in the IFS driver. SBAF is a new type of testing that
+provides comprehensive core test coverage, complementing existing IFS
+tests like Scan at Field (SAF) and ArrayBist. Granite Rapids (GNR) is
+the first platform that supports SBAF.
 
-Similarly to baseline vs SRCU, we've benchmarked SRCU-based
-implementation vs RCU Tasks Trace implementation.
+SBAF mimics the manufacturing screening environment and leverages the
+same test suite. It makes use of Design For Test (DFT) observation
+sites and features to maximize coverage in minimum time.
 
-SRCU
-====
-uprobe-nop      ( 1 cpus):    3.276 ± 0.005M/s  (  3.276M/s/cpu)
-uprobe-nop      ( 2 cpus):    4.125 ± 0.002M/s  (  2.063M/s/cpu)
-uprobe-nop      ( 4 cpus):    7.713 ± 0.002M/s  (  1.928M/s/cpu)
-uprobe-nop      ( 8 cpus):    8.097 ± 0.006M/s  (  1.012M/s/cpu)
-uprobe-nop      (16 cpus):    6.501 ± 0.056M/s  (  0.406M/s/cpu)
-uprobe-nop      (32 cpus):    4.398 ± 0.084M/s  (  0.137M/s/cpu)
-uprobe-nop      (64 cpus):    6.452 ± 0.000M/s  (  0.101M/s/cpu)
+Similar to the SAF test, SBAF isolates the core under test from the
+rest of the system during execution. Upon completion, the core
+seamlessly resets to its pre-test state and resumes normal operation.
+Any machine checks or hangs encountered during the test are confined to
+the isolated core, preventing disruption to the overall system. Like
+SAF test, the SBAF test is also divided into multiple batches, and each
+batch test can take hundreds of milliseconds (100-200 ms) to complete.
+If such a lengthy interruption is undesirable, it is recommended to
+relocate the time-sensitive applications to other cores for the
+duration of the test.
 
-uretprobe-nop   ( 1 cpus):    2.055 ± 0.001M/s  (  2.055M/s/cpu)
-uretprobe-nop   ( 2 cpus):    2.677 ± 0.000M/s  (  1.339M/s/cpu)
-uretprobe-nop   ( 4 cpus):    4.561 ± 0.003M/s  (  1.140M/s/cpu)
-uretprobe-nop   ( 8 cpus):    5.291 ± 0.002M/s  (  0.661M/s/cpu)
-uretprobe-nop   (16 cpus):    5.065 ± 0.019M/s  (  0.317M/s/cpu)
-uretprobe-nop   (32 cpus):    3.622 ± 0.003M/s  (  0.113M/s/cpu)
-uretprobe-nop   (64 cpus):    3.723 ± 0.002M/s  (  0.058M/s/cpu)
+Patch Details:
 
-RCU Tasks Trace
-===============
-uprobe-nop      ( 1 cpus):    3.396 ± 0.002M/s  (  3.396M/s/cpu)
-uprobe-nop      ( 2 cpus):    4.271 ± 0.006M/s  (  2.135M/s/cpu)
-uprobe-nop      ( 4 cpus):    8.499 ± 0.015M/s  (  2.125M/s/cpu)
-uprobe-nop      ( 8 cpus):   10.355 ± 0.028M/s  (  1.294M/s/cpu)
-uprobe-nop      (16 cpus):    7.615 ± 0.099M/s  (  0.476M/s/cpu)
-uprobe-nop      (32 cpus):    4.430 ± 0.007M/s  (  0.138M/s/cpu)
-uprobe-nop      (64 cpus):    6.887 ± 0.020M/s  (  0.108M/s/cpu)
+Patch 1/4: Refactors MSR usage in IFS image loading code to share the
+           code between SBAF and SAF tests.
+Patch 2/4: Leverages SAF image loading logic and adds SBAF image loading support.
+Patch 3/4: Adds support for user to trigger SBAF test.
+Patch 4/4: Adds trace support for SBAF tests.
 
-uretprobe-nop   ( 1 cpus):    2.174 ± 0.001M/s  (  2.174M/s/cpu)
-uretprobe-nop   ( 2 cpus):    2.853 ± 0.001M/s  (  1.426M/s/cpu)
-uretprobe-nop   ( 4 cpus):    4.913 ± 0.002M/s  (  1.228M/s/cpu)
-uretprobe-nop   ( 8 cpus):    5.883 ± 0.002M/s  (  0.735M/s/cpu)
-uretprobe-nop   (16 cpus):    5.147 ± 0.001M/s  (  0.322M/s/cpu)
-uretprobe-nop   (32 cpus):    3.738 ± 0.008M/s  (  0.117M/s/cpu)
-uretprobe-nop   (64 cpus):    4.397 ± 0.002M/s  (  0.069M/s/cpu)
+This series is originally authored by Jithu Joseph. I have made cleanups
+related to code reuse between the SBAF and SAF tests and resubmitting it for
+review.
 
-Peak throughput for uprobes increases from 8 mln/s to 10.3 mln/s
-(+28%!), and for uretprobes from 5.3 mln/s to 5.8 mln/s (+11%), as we
-have more work to do on uretprobes side.
+Changes since v3:
+ * Rebased on top of v6.11-rc1
+ * Added missing error return value in validate_ifs_metadata().
 
-Even single-thread (no contention) performance is slightly better: 3.276
-mln/s to 3.396 mln/s (+3.5%) for uprobes, and 2.055 mln/s to 2.174 mln/s
-(+5.8%) for uretprobes.
+Changes since v2:
+ * Added Reviewed-by tags from Ilpo and Steven.
+ * Fixed minor issues raised by Ilpo.
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- kernel/events/uprobes.c | 40 +++++++++++++++++-----------------------
- 1 file changed, 17 insertions(+), 23 deletions(-)
+Changes since v1:
+ * Addressed trace struct hole issue (Steven)
+ * Fixed initialization issue in ifs_sbaf_test_core() (Ilpo)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d03962cc96de..ef915f87d27f 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -42,8 +42,6 @@ static struct rb_root uprobes_tree = RB_ROOT;
- static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
- static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
- 
--DEFINE_STATIC_SRCU(uprobes_srcu);
--
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
- static struct mutex uprobes_mmap_mutex[UPROBES_HASH_SZ];
-@@ -647,7 +645,7 @@ static void put_uprobe(struct uprobe *uprobe)
- 	delayed_uprobe_remove(uprobe, NULL);
- 	mutex_unlock(&delayed_uprobe_lock);
- 
--	call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
-+	call_rcu_tasks_trace(&uprobe->rcu, uprobe_free_rcu);
- }
- 
- static __always_inline
-@@ -702,7 +700,7 @@ static struct uprobe *find_uprobe_rcu(struct inode *inode, loff_t offset)
- 	struct rb_node *node;
- 	unsigned int seq;
- 
--	lockdep_assert(srcu_read_lock_held(&uprobes_srcu));
-+	lockdep_assert(rcu_read_lock_trace_held());
- 
- 	do {
- 		seq = read_seqcount_begin(&uprobes_seqcount);
-@@ -919,8 +917,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
-@@ -1132,7 +1129,7 @@ EXPORT_SYMBOL_GPL(uprobe_unregister_nosync);
- 
- void uprobe_unregister_sync(void)
- {
--	synchronize_srcu(&uprobes_srcu);
-+	synchronize_rcu_tasks_trace();
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
- 
-@@ -1216,19 +1213,18 @@ EXPORT_SYMBOL_GPL(uprobe_register);
- int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
- {
- 	struct uprobe_consumer *con;
--	int ret = -ENOENT, srcu_idx;
-+	int ret = -ENOENT;
- 
- 	down_write(&uprobe->register_rwsem);
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
--	list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	rcu_read_lock_trace();
-+	list_for_each_entry_rcu(con, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		if (con == uc) {
- 			ret = register_for_each_vma(uprobe, add ? uc : NULL);
- 			break;
- 		}
- 	}
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- 
- 	up_write(&uprobe->register_rwsem);
- 
-@@ -2105,8 +2101,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 	bool need_prep = false; /* prepare return uprobe, when needed */
- 	bool has_consumers = false;
- 
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		int rc = 0;
- 
- 		if (uc->handler) {
-@@ -2143,15 +2138,14 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
- {
- 	struct uprobe *uprobe = ri->uprobe;
- 	struct uprobe_consumer *uc;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	rcu_read_lock_trace();
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node,
-+				 rcu_read_lock_trace_held()) {
- 		if (uc->ret_handler)
- 			uc->ret_handler(uc, ri->func, regs);
- 	}
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- }
- 
- static struct return_instance *find_next_ret_chain(struct return_instance *ri)
-@@ -2236,13 +2230,13 @@ static void handle_swbp(struct pt_regs *regs)
- {
- 	struct uprobe *uprobe;
- 	unsigned long bp_vaddr;
--	int is_swbp, srcu_idx;
-+	int is_swbp;
- 
- 	bp_vaddr = uprobe_get_swbp_addr(regs);
- 	if (bp_vaddr == uprobe_get_trampoline_vaddr())
- 		return uprobe_handle_trampoline(regs);
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
-+	rcu_read_lock_trace();
- 
- 	uprobe = find_active_uprobe_rcu(bp_vaddr, &is_swbp);
- 	if (!uprobe) {
-@@ -2260,7 +2254,7 @@ static void handle_swbp(struct pt_regs *regs)
- 			 */
- 			instruction_pointer_set(regs, bp_vaddr);
- 		}
--		srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+		rcu_read_unlock_trace();
- 		return;
- 	}
- 
-@@ -2301,7 +2295,7 @@ static void handle_swbp(struct pt_regs *regs)
- 
- out:
- 	/* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- }
- 
- /*
+Jithu Joseph (3):
+  platform/x86/intel/ifs: Add SBAF test image loading support
+  platform/x86/intel/ifs: Add SBAF test support
+  trace: platform/x86/intel/ifs: Add SBAF trace support
+
+Kuppuswamy Sathyanarayanan (1):
+  platform/x86/intel/ifs: Refactor MSR usage in IFS test code
+
+ arch/x86/include/asm/msr-index.h         |   2 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  92 ++++++++-
+ include/trace/events/intel_ifs.h         |  27 +++
+ drivers/platform/x86/intel/ifs/core.c    |  33 ++++
+ drivers/platform/x86/intel/ifs/load.c    |  40 ++--
+ drivers/platform/x86/intel/ifs/runtest.c | 233 +++++++++++++++++++++++
+ 6 files changed, 412 insertions(+), 15 deletions(-)
+
 -- 
-2.43.0
+2.25.1
 
