@@ -1,46 +1,61 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5713D520;
-	Thu,  1 Aug 2024 13:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BD561FF2
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Aug 2024 14:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722519382; cv=none; b=g+gZOULVNqkeZoZTvTqAZnscokDVZawGFsH2WxqyI1yVrUwCRIXJNaJyvjwf3+6GfuDibhmoUDGN0cnUs9uTsfWaeRQsx5w2QBOT0QhzJqj0+SATBQQnCgSt39WoyKxp38eEtstDdZIqi/5RhYkbC6q1qOmNjMIyWqEC9hJEOF0=
+	t=1722521218; cv=none; b=s/HyyOW1xpT937mTgsrRbtRM/Q0X0EQPxJCBMKWg0L8gtGK4ydvsPNmmlEoI+EfEfkfY5DYOepiFONFkCkBHdjb1ALVCja9cpIfARf6Us9m4T4p0kiK/XRGf0AQKkTl8CKKX0+L4ozepxEfu07TyZ/8u/XnYt03PnMSGVPS5f0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722519382; c=relaxed/simple;
-	bh=5uoTlD88MjhSCVgxTKLb4XpctYOlDRDeyGiwMWJEoOk=;
+	s=arc-20240116; t=1722521218; c=relaxed/simple;
+	bh=bz3wKeF8rsjmjXrGrtC9eTN/ZKuBFkTMUakuVj5aqKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LvHjgE2nropD2b+P11+c1cPIpVT+/QBDixWCk3SLvm2VOjN8fOm4UhivaBXH1AVfhgiF8U5hTWMzL5b7UWxuCFXhn/B4+QEsZk/JVw8OFgeGhhMusxEyhkThGkHoJJmM45WW6aPf+HFWTTqbg5wRQRrXXwYclxcedxvZydit7aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gXl0Gxtk; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=n4zArGESijibEQFsEeBhOexUk0g19JspTvRu+SujNjkDDJz8vYlOwM3SnfPd/eKGUufD6dsKqIz+/FsFSY2Ix91jjArjMcnEEQxYWSGjnAyOoMT27vubOsA0CArLtA/1J23eoRK+RJimtIz1Mej9bAT5b2emXU4WJ2Kz+3voo+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I3mQpYtN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gXl0Gxtk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5uoTlD88MjhSCVgxTKLb4XpctYOlDRDeyGiwMWJEoOk=; b=gXl0Gxtke94g4eaSAKQXNZrGOg
-	UrR5xhsOI5W9XYoGMi7x/mn7ModVo/mh3AJgYhbB6m3vdeX8se5CaOvlRZ4j7796VF2BuLvl+xsEJ
-	dyQA2fjQtfqnlQ69xlXcEM5YaSj/2fEpxGmzqqq6wM2gM3zwnfGekSrtpin9IzT5jG6qSFppfV0sM
-	WeWAAGjeI/U6x9rA42UYN+eVWxScj7TAJkgUGVMkcEz1TNkdhSkG0/7FB2X85VE3VtN3bEqQ3jVuG
-	DQ3HAiKIArVGik4xwrHO6e0aAAiDhMhiIHTZSMGVMYyIqVYmdOlF1SDd68R5UnJvVpwFm/1vOgmSm
-	Ky1NhSIg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZVyc-0000000HVae-0K0C;
-	Thu, 01 Aug 2024 13:36:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9D12330074E; Thu,  1 Aug 2024 15:36:17 +0200 (CEST)
-Date: Thu, 1 Aug 2024 15:36:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: andrii@kernel.org, mhiramat@kernel.org, jolsa@kernel.org,
-	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] uprobes: misc cleanups/simplifications
-Message-ID: <20240801133617.GA39708@noisy.programming.kicks-ass.net>
-References: <20240801132638.GA8759@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3mQpYtN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722521216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtpgAPFp+k8BUIgugrTLAvk4bvPd8UTPqZtLDxDKKxg=;
+	b=I3mQpYtNnDzolpHgtotE/DmEvPhV9ZGbsdb29lzDHLmDVZxoTd7duqQcMpeDG9Wbc5KOCW
+	5AGL2bdwl4/MVaI9Qgb1U5eBSRQVrFQ37HahK1hu79i1d1I61333vT/ns4/ozWJhdnopqV
+	1cD+Waavae/uYjoKP3mbvWk+QvMHZ+M=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-390-PwqJlKqZN-yuHHxW4zmYrA-1; Thu,
+ 01 Aug 2024 10:06:50 -0400
+X-MC-Unique: PwqJlKqZN-yuHHxW4zmYrA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EB7D1955D4B;
+	Thu,  1 Aug 2024 14:06:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.183])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DE9561955D48;
+	Thu,  1 Aug 2024 14:06:40 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  1 Aug 2024 16:06:46 +0200 (CEST)
+Date: Thu, 1 Aug 2024 16:06:39 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
+ on siglock
+Message-ID: <20240801140639.GE4038@redhat.com>
+References: <20240801082407.1618451-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -49,12 +64,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240801132638.GA8759@redhat.com>
+In-Reply-To: <20240801082407.1618451-1-liaochang1@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Thu, Aug 01, 2024 at 03:26:38PM +0200, Oleg Nesterov wrote:
-> (Andrii, I'll try to look at your new series on Weekend).
+On 08/01, Liao Chang wrote:
+>
+> @@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+>  	int err = 0;
+>  
+>  	uprobe = utask->active_uprobe;
+> -	if (utask->state == UTASK_SSTEP_ACK)
+> +	switch (utask->state) {
+> +	case UTASK_SSTEP_ACK:
+>  		err = arch_uprobe_post_xol(&uprobe->arch, regs);
+> -	else if (utask->state == UTASK_SSTEP_TRAPPED)
+> +		break;
+> +	case UTASK_SSTEP_TRAPPED:
+>  		arch_uprobe_abort_xol(&uprobe->arch, regs);
+> -	else
+> +		fallthrough;
+> +	case UTASK_SSTEP_DENY_SIGNAL:
+> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
+> +		break;
+> +	default:
+>  		WARN_ON_ONCE(1);
+> +	}
 
-OK, I dropped all your previous patches and stuffed these in.
+Liao, at first glance this change looks "obviously wrong" to me.
 
-They should all be visible in queue/perf/core, and provided the robot
-doesn't scream, I'll push them into tip/perf/core soonish.
+But let me read this patch more carefully and reply on weekend,
+I am a bit busy right now.
+
+Thanks,
+
+Oleg.
+
