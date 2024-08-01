@@ -1,130 +1,103 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D8F16DECD;
-	Thu,  1 Aug 2024 14:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE04D14287;
+	Thu,  1 Aug 2024 16:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722522449; cv=none; b=IMg1JtWy/VBtdUP4CTIRU9MOC2BFCaWfoViyuoReu4Jp9wtf2+S6DxAB4/WVUBfV6c7Gytm6Gy8gZUiRa+wt36OucU3yBRTQiSIWZBFkut8B/fqct39e9ybI0+Nk8uneutarBu5d8lnJGq2wCbo+3pyj1JN8uOk4W+5LKoYn/fA=
+	t=1722530971; cv=none; b=DWaFFTlY2PoBtbbC5bRfZJcVI50bOkYA8V0TRsIzFgjBakaJHKxb37JpKJoq873cM7i4EpPZDynzIHeEOuuLMU4RUbDjAa/XFH+orjjnfx4MhT5H4HdirMUJ+nHdDO7Cmn/OHmDGwHkB1kU6cU78HsW8WeCi7Vh8hrND/bcxTrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722522449; c=relaxed/simple;
-	bh=1eCtyjCb2ulZJKrZXpSy4GAaQXl3s174LMRrlhPrCvA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvYfGXIxXl+fXW0zy2Y7Q795HDlWkXizWvMW+YqxSbsKolCRZ65PJurzQWMA4257TKe3mbcyeSry/xLljE3exqWonbimdTa6VAu7TncFbL7ulS0EFYs+2qH3kCI50GEPAXUV4zydFxoBw+szjqAK7GXWv+o1CTCHg1QG8J/JhY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l0SYYWVp; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1722530971; c=relaxed/simple;
+	bh=ZoLrijijgwFNxBejfTFFhWhAvCG7Dju+HPeEzW18op8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ivJutUBG30tbVSoVdq0PqzKb5tBRTuy1vQSwU/nm1z8cXImtSctBvQgECE5LchtVkNdDz7GgPh1Kq+z+BB50d1wCOC5Eivghw+YcSMqqg7aQRNEDJAcZSnFjC3T1OmrIJRD3raZVHU6l31q683nWP8iYrw5CeZkaZCkauyFyLW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nK9DUUol; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0SYYWVp"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3684e8220f9so1210487f8f.1;
-        Thu, 01 Aug 2024 07:27:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nK9DUUol"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2cb57e25387so5523558a91.3;
+        Thu, 01 Aug 2024 09:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722522446; x=1723127246; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mfKbjBr7r6HcdKc0OHBJ+FJnRWwVUcGXiKdD6HFJQMc=;
-        b=l0SYYWVpXU7Q3w5GROE4czLMuBG0qRCrNfMmHK6ipc5207lo8I4pgBoucwL7oXbfUn
-         VP/SH388RniSngjSDJ1shH+yNv2uLvt37KX27X1SM1AL7UFJhzjI6D5078JYmR05gbmj
-         znEWpzHB4Tb03V0E3L/5SytbZVUT3NCAemMKLn4STgIHG42RDVhxfNrls7udFayVH9gR
-         WO08VGfsuWjCLKfjLHaEhBG85zcFALkbR6acwj5dodJQqLDwCXG2SQRYfhbAgXcL5II3
-         tdCIj2pmII7PkQVQWi4yco2+5ZGnJEUlIpZxXEOkuxt623NUAj8BjAsEoY3GrPdxIbaI
-         MuoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722522446; x=1723127246;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1722530969; x=1723135769; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mfKbjBr7r6HcdKc0OHBJ+FJnRWwVUcGXiKdD6HFJQMc=;
-        b=Hh0XRiZjXOQpzpOh0YpPE/KRdHeq9bg0OUtXv5F9MUH6U88P43DPfhBD4aPov/76Aq
-         WLQW+o622fKVX5uoZe0uk59l6h5zH2XU+YcWpNJ4Vj37AtuGNw+5KhYlF2lP3ab+skXZ
-         S/nAAyOKcMVVPevuZgz9k72+4XjQ952Ob8Bz6Hf0HXtgak6dTygunU16c7Q8NsriOVL0
-         E4r3vtfIQZdMObdN4pak3EM3UHqY23hPIspC0QptRXzDq3cj6AbDffUZT+E4VbOP2EwN
-         hLZ8Gd8e/bpSwWSJVI1iO05lcGFoo/TrVkSmY7b/BErSFxAs5Xq9eqWy8ykYBO/oGmdr
-         c1vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwaY5ZHo+JrK19RVugfQC9zt8EAb4xFOxTVGf0kDFgMggJfks7rREHixh6qgo2094QOWEiHuKP3i90AqXeZtOH8ix0H9ZXtolYr0U6mmFe8Z8o2Zg2w16f0WzO8NJ6mntn
-X-Gm-Message-State: AOJu0Yx0V8ZwxRZe3pMnUSXX90RGRFPFE1BFdMPUwSMcKUKZt94miZeA
-	2P2KfcrycTBldOYTsN9+VjjS04sWLUA8EUwHA7fAOLUXfPoeEUOk
-X-Google-Smtp-Source: AGHT+IFwthUZ5sW7c80c6OwV/xPl71OKvvZGW+mhzAMZR8/ZmM4lkVp1D/y4saHnLynHpvKPRHtIEA==
-X-Received: by 2002:adf:b102:0:b0:368:318a:a191 with SMTP id ffacd0b85a97d-36bb359d0ddmr1413042f8f.8.1722522445264;
-        Thu, 01 Aug 2024 07:27:25 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b367d966csm19610878f8f.38.2024.08.01.07.27.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Aug 2024 07:27:24 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 1 Aug 2024 16:27:17 +0200
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org
-Subject: Re: [PATCH 5/8] uprobes: travers uprobe's consumer list locklessly
- under SRCU protection
-Message-ID: <ZqubRQ3TRsZbV9fo@krava>
-References: <20240731214256.3588718-1-andrii@kernel.org>
- <20240731214256.3588718-6-andrii@kernel.org>
+        bh=ZoLrijijgwFNxBejfTFFhWhAvCG7Dju+HPeEzW18op8=;
+        b=nK9DUUolpQlzHvsSRSJs6+s/plMz58gnQ+ubnhpbkr3Ck1u37dpC5K3+EoPyA9nABx
+         L1/sTgq18uL7nnW9sGyueqB0/be2pbCFlgPpXyzS3s/CKnMKCKqpPU8x3Zae1bpvdocg
+         H3HrkrUAxNyrR6KqPiBWVokOloIaVRY5YPiQn7VUKp/KyF39lHv4bfFxufB+bFe8g3bv
+         FxttLWRoGXdUdw6TPyzdhBbiokgUH7SSrsEr/aOkWPj4h8o8dd9WDyNe5BWYofLNz576
+         +a/vtfi8n7/5RiiTd8QR8Naw0Onr5uC4aORSyGGCIe2mxMW9PHJ8r5AXvS//cf81Qge7
+         4zUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722530969; x=1723135769;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZoLrijijgwFNxBejfTFFhWhAvCG7Dju+HPeEzW18op8=;
+        b=Wq09CN2urPCINuIjdhoXYHL1KPU37Mk7qHL5tX84LW2ZFGoDizTcqEA+PYt5cy7/tl
+         ITbU5dhJYZWZjOOL04anJz4yb4C4wIbELwIBTkC7P3K1/f7yn6ooOoxB+ulLrl9l0qDx
+         BANFdDq4GYV2tRTnIUdijxwSclNWfLnjPjCziDh99JyDbnU8Al6iGBeIod03KxCLcblc
+         wA9r3knfblHPlrqqZrRr2aYGwSLFfSWBse4tz1A4od/GT3UyGaYclKEa2uoyekaQAKH6
+         1JCraIPfLaHip4ylZtz9Jz3Yuu1YVTZQ9fs06pkgLW/Vwwqyu9DOqii47GSETdln8b8C
+         aK2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4vQ1oIqwhW7Ij2UPjhLlZsNMu/TuyccD/HLeyFBoN+NetgL6Ha725vabeGtt8CtibiB1IyOgY2Kc/hiyy/8vWghK578yeu/adreM5r8oJtn04InxvMZXGVi1nFVt7VYkp/CsVOb+OwC6qm9dRwpz2uEmpaSRNUginP19/3SXjLOdm27uc
+X-Gm-Message-State: AOJu0YzB8b0xf4E+njcuwzDKbaErH1XGjpgQvC2vtk0CskC/R4FSDfTR
+	K8kkndg15Hv2D3xW/0tOz2LJjhNyqapMcaSRluNu6ZeAx22xddig01vXPH2aVJMdh1R/6/FBuTO
+	nv70NR6lcyv7PqldVG5BH4aHQUdyEcA==
+X-Google-Smtp-Source: AGHT+IGLbkaS8k7aaBPBkCKKRBC3XVr/aP3dM2O1zoIPQJxwY7EtTRyK8hlp6nXSD0YMaOxOIrup0VUr8AlMpdb4psw=
+X-Received: by 2002:a17:90b:4a52:b0:2c9:7f3d:6aea with SMTP id
+ 98e67ed59e1d1-2cff9559addmr931744a91.32.1722530968961; Thu, 01 Aug 2024
+ 09:49:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240731214256.3588718-6-andrii@kernel.org>
+References: <20240731214256.3588718-1-andrii@kernel.org> <20240731214256.3588718-9-andrii@kernel.org>
+ <20240801093505.GP33588@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240801093505.GP33588@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 1 Aug 2024 09:49:16 -0700
+Message-ID: <CAEf4BzZNbJMqxbH1Ge8q1AM_d6XcbG3dxTdkZs5H1eK-ABvVzQ@mail.gmail.com>
+Subject: Re: [PATCH 8/8] uprobes: switch to RCU Tasks Trace flavor for better performance
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 31, 2024 at 02:42:53PM -0700, Andrii Nakryiko wrote:
+On Thu, Aug 1, 2024 at 2:35=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+> On Wed, Jul 31, 2024 at 02:42:56PM -0700, Andrii Nakryiko wrote:
+> > This patch switches uprobes SRCU usage to RCU Tasks Trace flavor, which
+> > is optimized for more lightweight and quick readers (at the expense of
+> > slower writers, which for uprobes is a fine tradeof) and has better
+> > performance and scalability with number of CPUs.
+> >
+> > Similarly to baseline vs SRCU, we've benchmarked SRCU-based
+> > implementation vs RCU Tasks Trace implementation.
+>
+> Yes, this one can be the trace flavour, the other one for the retprobes
+> must be SRCU because it crosses over into userspace. But you've not yet
+> done that side.
 
-SNIP
+Yep, working on it at the moment. I'm trying to avoid task_work but
+keep main logic as unaware of parallel timer callback as possible.
+Will post patches once I have everything figured out and tested.
 
->  static int __copy_insn(struct address_space *mapping, struct file *filp,
->  			void *insn, int nbytes, loff_t offset)
->  {
-> @@ -924,7 +901,8 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
->  	bool ret = false;
->  
->  	down_read(&uprobe->consumer_rwsem);
-> -	for (uc = uprobe->consumers; uc; uc = uc->next) {
-> +	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
-> +				 srcu_read_lock_held(&uprobes_srcu)) {
->  		ret = consumer_filter(uc, mm);
->  		if (ret)
->  			break;
-> @@ -1120,17 +1098,19 @@ void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
->  	int err;
->  
->  	down_write(&uprobe->register_rwsem);
-> -	if (WARN_ON(!consumer_del(uprobe, uc))) {
-> -		err = -ENOENT;
-> -	} else {
-> -		err = register_for_each_vma(uprobe, NULL);
-> -		/* TODO : cant unregister? schedule a worker thread */
-> -		WARN(err, "leaking uprobe due to failed unregistration");
-> -	}
-> +
-> +	list_del_rcu(&uc->cons_node);
+And yes, I think I'll stick to SRCU for uretprobes parts, as you said.
 
-hum, so previous code had a check to verify that consumer is actually
-registered in the uprobe, so it'd survive wrong argument while the new
-code could likely do things?
+>
+> Anyway, I think I can make the SRCU read_{,un}lock() smp_mb()
+> conditional, much like we have for percpu_rwsem and trace rcu, but I
+> definitely don't have time to poke at that in the foreseeable future :(
 
-> +	err = register_for_each_vma(uprobe, NULL);
-> +
->  	up_write(&uprobe->register_rwsem);
->  
-> -	if (!err)
-> -		put_uprobe(uprobe);
-> +	/* TODO : cant unregister? schedule a worker thread */
-> +	if (WARN(err, "leaking uprobe due to failed unregistration"))
-> +		return;
-> +
-> +	put_uprobe(uprobe);
-> +
-> +	synchronize_srcu(&uprobes_srcu);
-
-could you comment on why it's needed in here? there's already potential
-call_srcu(&uprobes_srcu, ... ) call in put_uprobe above
-
-thanks,
-jirka
+Who knows, maybe we can convince Paul McKenney to help :) But
+regardless, mmap_lock is going to be a much bigger win if we can avoid
+it in the hot path, so let's see how far we can get with
+TYPESAFE_BY_RCU approach that's being discussed.
