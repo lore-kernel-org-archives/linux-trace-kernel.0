@@ -1,137 +1,160 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664BE1DF660
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Aug 2024 11:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CBF15ADAF;
+	Fri,  2 Aug 2024 13:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722597154; cv=none; b=Acc55oO2lR2TvengcZYsXfOOlS8su5c411lRea7+ltykb9yTNON7C21e5cGhdKN4ZyUxnOwGTI6puzoZVrKfbzThexJPAbWV+RcfPjFZSeu8Bs6sVDCXCD8Qo9L7ndXeYIAP90Cg7AoxeEWQrpszEs1L0MAt2ts24jwmqc5lfaw=
+	t=1722603876; cv=none; b=R6tu41oYiv15ClksGpbvdq0S9BQrfg6tzxpFSqwrWWMFtlrzLZeFtJD7aQ9zC7Ej7y6WuSxIuRUKhVJ8UxMG4wl4SesiavKHfmE6X/w5ZmE65KgpK1tJ4LM38uILHImZPSIYZB7WEYZGgpvi1qwZcF2wwBGlU2cI3zf2Bpigi08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722597154; c=relaxed/simple;
-	bh=gnO4O/zcd8S789cTMN1Qt5kvGy1SLpzswI2NiU04r2A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L4dRmc54FXQZHvlRxsNcjbnTODD5LWGn8aCKaQNsToDACpNgg9ncUp+sYfuBFrZiHVslAvQkKe3YpQGjfMnYLxOgcPoVSoJTdT5oSlsT8yi0HsFDy3EtPQEpXs0KWMGt7oldmXzNlUlSgww/AWCjr6DqASFzGoraF8ke12gLqQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NzRv3Uf8; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722603876; c=relaxed/simple;
+	bh=VflgIIbp+lhPEiXxccrUrj9diNoe+1N4TMkV1XN+3ls=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=H2sxMijIS38GMmHbr3kV60Fg3SJXMNTJvIJGHdHvTi09LBfZYKIQ12wzRrKN89SgF8bC9x/oIQW0r517v9PqvkClhWt3PrLeYWILufND5TUKLdT7hYTzZaPY+fcYSA8M0LNkwdFTf8ZxfpobP7IAfbG2PJT8UibuO/cFLjBF72M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJkQJHK+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NzRv3Uf8"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-428141be2ddso53073475e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Aug 2024 04:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722597151; x=1723201951; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NckEZuTbgzBxmHzYz0RgKDaRsejCSb0E4WOQCnSKCEw=;
-        b=NzRv3Uf8j9XYUci2hOMz58fa6xCSuLN9oR9B9p2cnSSUklhka/SOfrJufOaFSIoFS2
-         G5RIlYRXHOWRtOdKCwtw3CTiivlkA0+SSuNAGhfU16W8E5C2dwnr3w1TEqM5ZYQLEFrq
-         qBxng01LxP3SyJ0+adunwLkIYAwFZflp6YNwipjnjgacBhuR4k8oIcauyqC+YO25MpET
-         P6rbgOqcADJuZN0jG78fHF00juYAk6Qh1IG6jWX76CFWtTZtUPheXJ3MZxspJ/uEWOUp
-         sS0gNltaZbQvXj5oC5jHoyydBsBZ/UGUr8i3lNJ1rya7VJfohzPdQgjzDbtnpznNeSgB
-         N7Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722597151; x=1723201951;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NckEZuTbgzBxmHzYz0RgKDaRsejCSb0E4WOQCnSKCEw=;
-        b=wUQGT0DWKhn7xBoi7omn6c67m/GEa14JG8eoyRP1MtNs19WUazICJ+UuThx5EAhsoX
-         4DKXpe/QNCdURj+br233u/bEW+APhMf4iZF0OcM674bnIYC7mrG2QqivSCLk2nCAmajP
-         u1LvIkcmBlWTg58iTlEIIJConMGeOLJ1JK/lyDXei0Ah/AULN2DlsYiKLZwVQqETrbpq
-         AI+szTsu7BAahQXupuYuWtm0ickzJ9fUhmaWYG4xdi/HyiUX7umT6d5bwqj6tRDg4gFF
-         ynklHGZgDicIcYYj2vb/wVQgS/56VAWXjDbaK9FDfeaUedP+ipiAfV3aLJfrehQpjiem
-         JQmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUazHH3o3+xnIwlb0H0HEdb6R5FGmBPFOAFqwWMBPpK5Jr3dVKARcKHExyjhq+0VOYNnayxZpWz0lXzFLJOdDVFrtjKnzhDpPKB5jaNd57J3C43
-X-Gm-Message-State: AOJu0Yz1h2KEx/5o1CibW0Pu5j07N+x7LZ+T+e0zHHMnBsQh9byMrFi5
-	Gs3qOeh6yCGWZFaFSSACsKBgIIWidyZUG+B1IeZLmYNS3FxIJgCML347yiRtyLZ0O6efkDRzX6t
-	soiFU4+bBPqJflCV8WW0E/hjrlLYaBj4cmlRi
-X-Google-Smtp-Source: AGHT+IHG8YT0Tl3r67jSeYzzG/u+IjzVWq2bWRMReS90gVbkEE3+W7//BJg0NubXE694omwJobmhmLbd7NfxN4kakP4=
-X-Received: by 2002:a5d:4003:0:b0:368:4edc:611e with SMTP id
- ffacd0b85a97d-36bbc0db7c9mr1721957f8f.14.1722597150322; Fri, 02 Aug 2024
- 04:12:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJkQJHK+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA1DAC32782;
+	Fri,  2 Aug 2024 13:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722603875;
+	bh=VflgIIbp+lhPEiXxccrUrj9diNoe+1N4TMkV1XN+3ls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oJkQJHK+ZFIkgeOSbbXvv/p9z1KbPzhIXSV/0DEyAc3P0WsohqkKGkxfN90DBOr2p
+	 sRxXJ2iyQhTNw7ArC92qhgCRTeHsBWbnu9d3zDB38SXvrj+ZOZEwYk3jbfSk9/Ymkm
+	 +yKiy3+J2D04QWOuQalVvFb+/HsaPO8VTY+doSc5u2SIG6AymD47ZegkgafOiXVVVC
+	 vOJHCImXh6At3jmdiEtY2gbYeFOrhoas0DuHvid1R+NO1OI1cwOYja2qY+bg7AscUX
+	 Uz0YxDMfAns637xTsOq+b0N7h1Vi3zD05laQHcN+47TOX2FFJ6A7zBEHc0IXUB4agM
+	 eLq4k1AZRRXiA==
+Date: Fri, 2 Aug 2024 22:04:27 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Song Liu <songliubraving@meta.com>
+Cc: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Song Liu <song@kernel.org>,
+ "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr
+ Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Nathan
+ Chancellor <nathan@kernel.org>, "morbo@google.com" <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
+ "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
+ Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/3] kallsyms: Add APIs to match symbol without
+ .llmv.<hash> suffix.
+Message-Id: <20240802220427.8404fa9081b9a740c4f9cb06@kernel.org>
+In-Reply-To: <FE4F231A-5D24-4337-AE00-9B251733EC53@fb.com>
+References: <20240730005433.3559731-1-song@kernel.org>
+	<20240730005433.3559731-3-song@kernel.org>
+	<20240730220304.558355ff215d0ee74b56a04b@kernel.org>
+	<5E9D7211-5902-47D3-9F4D-8DEFD8365B57@fb.com>
+	<9f6c6c81-c8d1-adaf-2570-7e40a10ee0b8@huaweicloud.com>
+	<FE4F231A-5D24-4337-AE00-9B251733EC53@fb.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240802-tracepoint-v5-0-faa164494dcb@google.com>
- <20240802-tracepoint-v5-1-faa164494dcb@google.com> <20240802093954.GH39708@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240802093954.GH39708@noisy.programming.kicks-ass.net>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 2 Aug 2024 13:12:17 +0200
-Message-ID: <CAH5fLggBRBOrGb_2RLP=tFyGeiMmkH+86F-d0Pidv5z-shZ8Vg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] rust: add static_key_false
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	WANG Rui <wangrui@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 2, 2024 at 11:40=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Fri, Aug 02, 2024 at 09:31:27AM +0000, Alice Ryhl wrote:
-> > Add just enough support for static key so that we can use it from
-> > tracepoints. Tracepoints rely on `static_key_false` even though it is
-> > deprecated, so we add the same functionality to Rust.
-> >
-> > It is not possible to use the existing C implementation of
-> > arch_static_branch because it passes the argument `key` to inline
-> > assembly as an 'i' parameter, so any attempt to add a C helper for this
-> > function will fail to compile because the value of `key` must be known
-> > at compile-time.
-> >
-> > One disadvantage of this patch is that it introduces a fair amount of
-> > duplicated inline assembly. However, this is a limited and temporary
-> > situation:
-> >
-> > 1. Most inline assembly has no reason to be duplicated like this. It is
-> >    only needed here due to the use of 'i' parameters.
-> >
-> > 2. Alice will submit a patch along the lines of [1] that removes the
-> >    duplication. This will happen as a follow-up to this patch series.
->
-> You're talking about yourself in the 3rd person?
+Hi,
 
-I'm not sure if commit messages are supposed to be a personal message
-from me, or an impersonal description of the patch. I'm happy to
-reword.
+Sorry for late reply.
 
-> What's the rush, why not do it right first?
+On Fri, 2 Aug 2024 03:45:42 +0000
+Song Liu <songliubraving@meta.com> wrote:
 
-Well for one, this version of the series mostly just makes changes to
-the second patch.
+> 
+> 
+> > On Aug 1, 2024, at 6:18 PM, Leizhen (ThunderTown) <thunder.leizhen@huaweicloud.com> wrote:
+> > 
+> > On 2024/7/31 9:00, Song Liu wrote:
+> >> Hi Masami, 
+> >> 
+> >>> On Jul 30, 2024, at 6:03 AM, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >>> 
+> >>> On Mon, 29 Jul 2024 17:54:32 -0700
+> >>> Song Liu <song@kernel.org> wrote:
+> >>> 
+> >>>> With CONFIG_LTO_CLANG=y, the compiler may add suffix to function names
+> >>>> to avoid duplication. This causes confusion with users of kallsyms.
+> >>>> On one hand, users like livepatch are required to match the symbols
+> >>>> exactly. On the other hand, users like kprobe would like to match to
+> >>>> original function names.
+> >>>> 
+> >>>> Solve this by splitting kallsyms APIs. Specifically, existing APIs now
+> >>>> should match the symbols exactly. Add two APIs that matches the full
+> >>>> symbol, or only the part without .llvm.suffix. Specifically, the following
+> >>>> two APIs are added:
+> >>>> 
+> >>>> 1. kallsyms_lookup_name_or_prefix()
+> >>>> 2. kallsyms_on_each_match_symbol_or_prefix()
+> >>> 
+> >>> Since this API only removes the suffix, "match prefix" is a bit confusing.
+> >>> (this sounds like matching "foo" with "foo" and "foo_bar", but in reality,
+> >>> it only matches "foo" and "foo.llvm.*")
+> >>> What about the name below?
+> >>> 
+> >>> kallsyms_lookup_name_without_suffix()
+> >>> kallsyms_on_each_match_symbol_without_suffix()
+> >> 
+> >> I am open to name suggestions. I named it as xx or prefix to highlight
+> >> that these two APIs will try match full name first, and they only match
+> >> the symbol without suffix when there is no full name match. 
+> >> 
+> >> Maybe we can call them: 
+> >> - kallsyms_lookup_name_or_without_suffix()
+> >> - kallsyms_on_each_match_symbol_or_without_suffix()
 
-But also, maybe I'm being too aggressive about it, but I have large
-amounts of out-of-tree code that I've been working on upstreaming, and
-it's a lot of work to keep it all up-to-date and rebased. I want to
-reduce it as much as I can. I was hoping that I could get the changes
-to include/linux/tracepoint.h off my plate, even if more work is
-needed on the static_key side of things.
+No, I think "_or_without_suffix" is a bit complicated. If we have
 
-Alice
+0x1234 "foo.llvm.XXX"
+0x2356 "bar"
+
+and user calls
+
+  kallsyms_lookup_name_without_suffix("bar");
+
+This returns "bar"'s address(0x2356). Also,
+
+  kallsyms_lookup_name_without_suffix("foo");
+
+this will returns 0x1234. These commonly just ignore the suffix.
+The difference of kallsyms_lookup_name() is that point.
+
+> >> 
+> >> Again, I am open to any name selections here.
+> > 
+> > Only static functions have suffixes. In my opinion, explicitly marking static
+> > might be a little clearer.
+> > kallsyms_lookup_static_name()
+> > kallsyms_on_each_match_static_symbol()
+
+But this is not correctly check the symbol is static or not. If you
+check the symbol is really static, it is OK. (return NULL if the symbol
+is global.)
+
+Thank you,
+
+> 
+> While these names are shorter, I think they are more confusing. Not all
+> folks know that only static functions can have suffixes. 
+> 
+> Maybe we should not hide the "try match full name first first" in the
+> API, and let the users handle it. Then, we can safely call the new APIs
+> *_without_suffix(), as Masami suggested. 
+> 
+> If there is no objections, I will send v2 based on this direction. 
+> 
+> Thanks,
+> Song
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
