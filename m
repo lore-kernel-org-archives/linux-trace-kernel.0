@@ -1,116 +1,116 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5476E1C2BD;
-	Fri,  2 Aug 2024 09:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A7E14A4E0;
+	Fri,  2 Aug 2024 11:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722591620; cv=none; b=hmsmlMeQwSwJ1SzFTuVFl9DxZfFZ8/6MQsE96XU6P54JGSuIt4GFc/nSwJOFc0vBbl2XgrenNjeGZNbKX24DiHR7xc0eImuY2Xs6HIuesN2pgVbaXm0U09prYmxVIOWlbZHCt8mp/BiuVugmELgwHTEfKaUAzOiDkbZSG592h3A=
+	t=1722596579; cv=none; b=kRWlOqu8jUsA46qkQMUDSghg6kL1ixBzXU952bItCKTxCWXNz6hORI6tI4POg+vNBbqgjQOzNXJ4C6D/d9mcMKQUlNnKyavvzBFTk5Zn5Zu2LZMmds7MKI/9Nz4ByuQzzOWORHBM9qE/UWTfBNEVoLEi4Kob4+9LaegMWU1cnMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722591620; c=relaxed/simple;
-	bh=msG2bFBQBZqPQE+/Mc9DqGJxJPZH2XOVibyXJ4vjKh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dd7GzLm6K/uQ4IZYPmDM6zGfWOv97dipwj2luUUe0B49BFs4rb47WltcQLF4r56SNqofOKoezyqt22NOIS+rVgeKkd4YENVqciHm+TKequNhVnog+LYl42YxePnwVXwuO9JOJW4MbAM3vjHNsnJ1eHrKEDoxvphSSzBKjBbHP48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zw/KFesV; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1722596579; c=relaxed/simple;
+	bh=CMYOm/3+qnwFmb8aGdAmrZXX3x0lbRKjufit5kztRMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OznwLgc1BgytxivPh61W4ZBJLWIty/N/JONVA24MAqu9ohDKHz92lr9fyboK8NSIR15mFEAFHu1n6ln8MPBHou6/SdjaqreTTpK2QmQ8zrluJDC7DEX/n0D/o3aZk/Q5Kf2jj3mQEFcmhPJbj3kVbPcYF6ZsW8fRScyPfPFusS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7PJajqC; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zw/KFesV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9Z+aZs0SZ0YC0bCCXeGs8Vm6t97KZ36rxeFA4yv6VTs=; b=Zw/KFesVnIdv3zfmHq5Lgrs5Kv
-	latri07BG8i4S1nwE+kxVm9CRqcaJllTU0uxtIwT+uKPxG/dphWK7zASeRnTfEmWTLCOvBAx4B+z1
-	Ern+lvCmTDVXbcv1dPN0zqMgMzI33TKcRsu4+hzgnhPyCmKqs/Bp988YBtzUM25rpb14ipJQ85AVw
-	A1qBCb2qKv9XsTXMMRilLG3dSTaFmu2TAPcrSPMf3fgPRaPA0fNV8MXpDhCO0KnujT0DRLJAQNj5X
-	5mfm7dVDr1DErxLIcmXKv4X2gk+qdWI705etIfroB8ccBkAw6pd1ol+D+g0iBbcD4UIEBWrLj46po
-	txqO3NeQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sZolO-00000005g5O-43JP;
-	Fri, 02 Aug 2024 09:39:55 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7E0F230088D; Fri,  2 Aug 2024 11:39:54 +0200 (CEST)
-Date: Fri, 2 Aug 2024 11:39:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
-	WANG Rui <wangrui@loongson.cn>
-Subject: Re: [PATCH v5 1/2] rust: add static_key_false
-Message-ID: <20240802093954.GH39708@noisy.programming.kicks-ass.net>
-References: <20240802-tracepoint-v5-0-faa164494dcb@google.com>
- <20240802-tracepoint-v5-1-faa164494dcb@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7PJajqC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722596577; x=1754132577;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CMYOm/3+qnwFmb8aGdAmrZXX3x0lbRKjufit5kztRMs=;
+  b=U7PJajqC0Jqk4Gj3NSOf1RGhsJCtatYvGc8c6HnEt1nfTljUFTDzXIw0
+   pTyAJHdspfHNTyZ5DQhyK+Sdf1ya4t5Jr1GT0f76sWzCBnMWrmWB3OCJO
+   8ZBFOsBId5ay8/DfaS1ZRagwUWrWnNXKC4GZF/SxohqOw76N5ZoRr8SZr
+   sIsj/YuGXBfI+/vy2UmNpcC0G4tPCvK2ktirkU4ov4GSNkkW84utcdxZQ
+   05Tt8nzBJq70C1/JS6jveP+ha/NYVwN8hjOr9eobUaPWwy6jUDNxxxUSg
+   mHYv2Tu49RfnUPk20om9dxXHx/atM9PpaMso+eGRbr+wf49TtClNEeSFZ
+   Q==;
+X-CSE-ConnectionGUID: eC2nCy/oQIWf1s1O2ojTpg==
+X-CSE-MsgGUID: zRHKJkb4TPSJg9SiipqV+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11151"; a="38070596"
+X-IronPort-AV: E=Sophos;i="6.09,257,1716274800"; 
+   d="scan'208";a="38070596"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 04:02:56 -0700
+X-CSE-ConnectionGUID: R2bxbhkZQo2KnJnluuTulw==
+X-CSE-MsgGUID: xYPtSlgKQkihCfgw12rpAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,257,1716274800"; 
+   d="scan'208";a="56133529"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.248.12])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 04:02:54 -0700
+Message-ID: <775c414e-03f3-4ae2-80df-9821014e1c32@intel.com>
+Date: Fri, 2 Aug 2024 14:02:48 +0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240802-tracepoint-v5-1-faa164494dcb@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/9] uprobes: misc cleanups/simplifications
+To: Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, andrii@kernel.org, mhiramat@kernel.org,
+ jolsa@kernel.org, rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf <bpf@vger.kernel.org>
+References: <20240801132638.GA8759@redhat.com>
+ <20240801133617.GA39708@noisy.programming.kicks-ass.net>
+ <CAEf4BzY-gNWHhjnSh3myb0sStjm0Qjsu6nhFtXEULLvo_E=i5w@mail.gmail.com>
+ <CAEf4BzY9diEi2_tHsLxB4Yk-ZAWHT=XJNmagjQtOXc7qShqgrA@mail.gmail.com>
+ <20240802092528.GF39708@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240802092528.GF39708@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 02, 2024 at 09:31:27AM +0000, Alice Ryhl wrote:
-> Add just enough support for static key so that we can use it from
-> tracepoints. Tracepoints rely on `static_key_false` even though it is
-> deprecated, so we add the same functionality to Rust.
+On 2/08/24 12:25, Peter Zijlstra wrote:
+> On Thu, Aug 01, 2024 at 02:13:41PM -0700, Andrii Nakryiko wrote:
 > 
-> It is not possible to use the existing C implementation of
-> arch_static_branch because it passes the argument `key` to inline
-> assembly as an 'i' parameter, so any attempt to add a C helper for this
-> function will fail to compile because the value of `key` must be known
-> at compile-time.
+>> Ok, this bisected to:
+>>
+>> 675ad74989c2 ("perf/core: Add aux_pause, aux_resume, aux_start_paused")
 > 
-> One disadvantage of this patch is that it introduces a fair amount of
-> duplicated inline assembly. However, this is a limited and temporary
-> situation:
+> Adrian, there are at least two obvious bugs there:
 > 
-> 1. Most inline assembly has no reason to be duplicated like this. It is
->    only needed here due to the use of 'i' parameters.
+>  - aux_action was key's off of PERF_PMU_CAP_AUX_OUTPUT, which is not
+>    right, that's the capability where events can output to AUX -- aka.
+>    PEBS-to-PT. It should be PERF_PMU_CAP_ITRACE, which is the
+>    PT/CoreSight thing.
 > 
-> 2. Alice will submit a patch along the lines of [1] that removes the
->    duplication. This will happen as a follow-up to this patch series.
+>  - it sets aux_paused unconditionally, which is scribbling in the giant
+>    union which is overwriting state set by perf_init_event().
+> 
+> But I think there's more problems, we need to do the aux_action
+> validation after perf_get_aux_event(), we can't know if having those
+> bits set makes sense before that. This means the perf_event_alloc() site
+> is wrong in the first place.
+> 
+> I'm going to drop these patches for now. Please rework.
 
-You're talking about yourself in the 3rd person?
+Yes I will do that.
 
-What's the rush, why not do it right first?
+FWIW, I'd expect the reported issue would go away with just:
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e4cb6e5a5f40..2072aaa4d449 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12151,7 +12151,8 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		err = -EOPNOTSUPP;
+ 		goto err_pmu;
+ 	}
+-	event->hw.aux_paused = event->attr.aux_start_paused;
++	if (event->attr.aux_start_paused)
++		event->hw.aux_paused = 1;
+ 
+ 	if (cgroup_fd != -1) {
+ 		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+
