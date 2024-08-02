@@ -1,31 +1,31 @@
 Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0AD4C9D;
-	Fri,  2 Aug 2024 01:31:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBCB23BE;
+	Fri,  2 Aug 2024 01:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722562266; cv=none; b=NFrO1/9MkibxDkWoJyer2U0iiBYNen8KHkQyvd7txbOCKJnq1lz8eMyGOB3wKOeSoUTTMK2ulePJnq6P1GLYfQt37DTDL89ZmNeixzcUp63KBNR7RSQ7aXg5CZKO5mx7mfdB8Nn/HjP71Lsl79wrfsf0VJCv+xabB9AfcMv2CBo=
+	t=1722562691; cv=none; b=QAaP3KjP76rK0yynVS7ftxELFTGK9FagyzonGM8jnY5moUrpzVor129N7BC4JndAyhrEGrqg3iaLe/PH5YIzpgEPL0HhEONoko1+jHjMIkwUXsqEMWd5UxQatGaWLNI2gdgG5Uzi/m7FkMDejryevXS0g2EA/h8Mc9aDw7/+yxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722562266; c=relaxed/simple;
-	bh=WRTBl5tZuoCzj2joN/rr56sMEY2AcntMrQulsLgvhMI=;
+	s=arc-20240116; t=1722562691; c=relaxed/simple;
+	bh=mIpy2kd8VdwIWeSn1wpqNNhPbAFJkACF1nbu/Ftpb9c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hr+7WZZmtl752OBtsr4BrhmNdzrRixeJlz2jvOUyW4Cy4NfGoKY9HJy194UmOgIEiBMsEszQ7JKYB/5ZMDqCjx83pDuBANDtAGvGbKJLPEb6hHptobBORZMsfrTawLjBSE2ijUmugIbF+xXo3nBJVcguOBVR+EvsMZSsdSWSR9Q=
+	 In-Reply-To:Content-Type; b=hkLJo6k1ZrhPYHL2QJbw1fWz/45JOFXKYSotJ2HT4HlLC2N5rlpexv//4Sofd5FrwH+xz73iL8KgEq+6c77NUL86IaNYmP/VerNB1O47FuQef7Sh8HAnrNbj9nuCskbX9pF9lbnAkD7R9OxCtfh7IyEkJ7FoseKb22UXtKd2ZRc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WZp9t6fDDz1HFp5;
-	Fri,  2 Aug 2024 09:28:02 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WZpLC4L2yz1HFgL;
+	Fri,  2 Aug 2024 09:35:15 +0800 (CST)
 Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id A234914037D;
-	Fri,  2 Aug 2024 09:30:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 54E6D1402E0;
+	Fri,  2 Aug 2024 09:38:06 +0800 (CST)
 Received: from [10.67.110.108] (10.67.110.108) by
  kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 2 Aug 2024 09:30:52 +0800
-Message-ID: <175e2c47-ad81-cc1d-18b9-d9644bc15925@huawei.com>
-Date: Fri, 2 Aug 2024 09:30:52 +0800
+ 15.2.1258.34; Fri, 2 Aug 2024 09:38:05 +0800
+Message-ID: <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
+Date: Fri, 2 Aug 2024 09:38:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -34,97 +34,66 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
-Subject: Re: [PATCH 3/8] uprobes: protected uprobe lifetime with SRCU
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: Andrii Nakryiko <andrii@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<peterz@infradead.org>, <oleg@redhat.com>, <rostedt@goodmis.org>,
-	<mhiramat@kernel.org>, <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<jolsa@kernel.org>, <paulmck@kernel.org>
-References: <20240731214256.3588718-1-andrii@kernel.org>
- <20240731214256.3588718-4-andrii@kernel.org>
- <5cf9866c-28bc-8654-07c2-269a95219ada@huawei.com>
- <CAEf4BzYzqw7zO1dBXSgh1sQoFtdg2sa5avOch8jJW=_iRJuquQ@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
+ on siglock
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <mhiramat@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+References: <20240801082407.1618451-1-liaochang1@huawei.com>
+ <20240801140639.GE4038@redhat.com>
 From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzYzqw7zO1dBXSgh1sQoFtdg2sa5avOch8jJW=_iRJuquQ@mail.gmail.com>
+In-Reply-To: <20240801140639.GE4038@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemd200013.china.huawei.com (7.221.188.133)
 
 
 
-在 2024/8/2 0:49, Andrii Nakryiko 写道:
-> On Thu, Aug 1, 2024 at 5:23 AM Liao, Chang <liaochang1@huawei.com> wrote:
+在 2024/8/1 22:06, Oleg Nesterov 写道:
+> On 08/01, Liao Chang wrote:
 >>
->>
->>
->> 在 2024/8/1 5:42, Andrii Nakryiko 写道:
->>> To avoid unnecessarily taking a (brief) refcount on uprobe during
->>> breakpoint handling in handle_swbp for entry uprobes, make find_uprobe()
->>> not take refcount, but protect the lifetime of a uprobe instance with
->>> RCU. This improves scalability, as refcount gets quite expensive due to
->>> cache line bouncing between multiple CPUs.
->>>
->>> Specifically, we utilize our own uprobe-specific SRCU instance for this
->>> RCU protection. put_uprobe() will delay actual kfree() using call_srcu().
->>>
->>> For now, uretprobe and single-stepping handling will still acquire
->>> refcount as necessary. We'll address these issues in follow up patches
->>> by making them use SRCU with timeout.
->>>
->>> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
->>> ---
->>>  kernel/events/uprobes.c | 93 ++++++++++++++++++++++++-----------------
->>>  1 file changed, 55 insertions(+), 38 deletions(-)
->>>
+>> @@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+>>  	int err = 0;
+>>  
+>>  	uprobe = utask->active_uprobe;
+>> -	if (utask->state == UTASK_SSTEP_ACK)
+>> +	switch (utask->state) {
+>> +	case UTASK_SSTEP_ACK:
+>>  		err = arch_uprobe_post_xol(&uprobe->arch, regs);
+>> -	else if (utask->state == UTASK_SSTEP_TRAPPED)
+>> +		break;
+>> +	case UTASK_SSTEP_TRAPPED:
+>>  		arch_uprobe_abort_xol(&uprobe->arch, regs);
+>> -	else
+>> +		fallthrough;
+>> +	case UTASK_SSTEP_DENY_SIGNAL:
+>> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
+>> +		break;
+>> +	default:
+>>  		WARN_ON_ONCE(1);
+>> +	}
 > 
-> [...]
-> 
->>>
->>> @@ -2258,12 +2275,12 @@ static void handle_swbp(struct pt_regs *regs)
->>>       if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
->>>               goto out;
->>>
->>> -     if (!pre_ssout(uprobe, regs, bp_vaddr))
->>> -             return;
->>> +     if (pre_ssout(uprobe, regs, bp_vaddr))
->>> +             goto out;
->>>
->>
->> Regardless what pre_ssout() returns, it always reach the label 'out', so the
->> if block is unnecessary.
-> 
-> yep, I know, but I felt like
-> 
-> if (something is wrong)
->     goto out;
-> 
-> pattern was important to keep for each possible failing step for consistency.
-> 
-> so unless this is a big deal, I'd keep it as is, as in the future
-> there might be some other steps after pre_ssout() before returning, so
-> this is a bit more "composable"
-> 
-OK, I would say this conditional-check pattern is likely to be optimized away by
-modern compiler.
+> Liao, at first glance this change looks "obviously wrong" to me.
 
-Thanks.
+Oleg. Did i overlook some thing obvious here?
 
 > 
->>
->>
->>> -     /* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
->>>  out:
->>> -     put_uprobe(uprobe);
->>> +     /* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
->>> +     srcu_read_unlock(&uprobes_srcu, srcu_idx);
->>>  }
->>>
->>>  /*
->>
->> --
->> BR
->> Liao, Chang
+> But let me read this patch more carefully and reply on weekend,
+> I am a bit busy right now.
+
+Sure, thanks.
+
+> 
+> Thanks,
+> 
+> Oleg.
+> 
+> 
 
 -- 
 BR
