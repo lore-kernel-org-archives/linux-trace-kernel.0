@@ -1,269 +1,188 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CE01DAC4F;
-	Fri,  2 Aug 2024 15:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4A6175D30
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Aug 2024 15:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722611138; cv=none; b=uO1MzdM02Cjyfmd3h8xVlp+k8CEWvi0/vdIPJaAOLRUoF2RfYt7ShYqBKuhUovkGfavTPpCf+QZPdCxGDVUHs0Fe3/TdpJCO0gpqOa1X4E3ZJ11gbN4n3cfHPWnxTnY+U/Su+LtvPj8kZXe6VrxDjpjcijtjVOkAZvYfQUUSZJY=
+	t=1722613517; cv=none; b=aZ/3zAv8fGWI06II6OLnlV7HK8H3k103MYRh461W0lPoJswYvFPydfB+gt9CMWkI47Xo9KFS1mgkXRZEWEgIpBIgxNBWbYrEOSNnPHCHQfCyzJlf8v6z2oP/uKeHHtCxF9q/Zv3dJtXKhq7xf3EI/W+Hmk7WN6sSye9xN6pYaSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722611138; c=relaxed/simple;
-	bh=RBRAeZBBYoe2LXhw8LghRfF6wQcafFS9pPEQGc32G0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZyppxTAilTNh2gk6dok+XYFaZVTLpJ8lqLMahw2LtyP/VFl1Wuk3ZVFzg/T0tRtWDdVKSVeYFGsjyQAQD5jX6PRuTx7XH25BD4ayNVJqR71FR4Y8gCHCTmeR37/tKxIZeyP3T3TGrm4wkZ98z29YNvS5mgKNsfiHeIeQzHjt7TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZYQxjmB1; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722613517; c=relaxed/simple;
+	bh=vfeB93M/fkKcif1ZBMwCAiqTjJhujRl0H2Mr8mI9Ydo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMdfKweYB3u5h2tC3dguRWdbsaI5DeVkqm9q66Cud9TQQlk+arFVkX+jZ8vC5lJU3Fgh5NzLsvft0l/rk8m0y9+uCacVdGlNRgXp2VN7ErIkwcmTmoNG+JWPb/5QvUxKl2EzpGoqJ5whbkm0Z+wCzErLrDsoE7kZYwlSiW8qo3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Di+TKaP2; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYQxjmB1"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a7a9e25008aso1102428566b.0;
-        Fri, 02 Aug 2024 08:05:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Di+TKaP2"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-530ae4ef29dso7033837e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Aug 2024 08:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722611135; x=1723215935; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3UyWAM+msyPF6QGXrwvMTh/SmGbZRENZMvN4/PcJhyU=;
-        b=ZYQxjmB1AQWyOmgjnh7QzsWDoGRHYhRwlPnV+TahrW7R/bH2e0lwv9D9yUZggpdkMd
-         o2EN40+CopYdjcVgzNldlvRkSuaA3ymFgGzmAbkPTxOut4ytJmfD4dpFaktLpZfQrGED
-         DtRrSs9N4E4YHZV1XRvjJYJ6ApNiVqX+mB+Jy/q3zYEJwh1360rY3PdUX30h0YfVSPrT
-         p1PtES3vCv0ifuFUVM5pOWmFkDdDicI4t/uMUao4xkl+lJtNUiwbHxO5l3kswEbKQ0Z0
-         M6TnnGpKxwblJPeAWajR943niQwHMDg53ymPKJ3Kjo0WN+ZCHWn84zuS+NHMFwS3PcGl
-         dDJg==
+        d=suse.com; s=google; t=1722613514; x=1723218314; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g344hXeVyHKh0h8Ndl7PidMPNboqwCMD43esLIm9SlI=;
+        b=Di+TKaP2InY16OJIfI4jSxahjUCfKt8Il0uV0pneeAngKIzAGoLMZX5Hch/xinnOEn
+         IY/dHcX5QrHCVQ82AS4Ovd4AWhq/WaVoFXsOcIUIUCH5UpGvI9A3kr+2CxL97NsauzRl
+         yNJUwRFmwEI09HzYNv2UUZGGVdAFoRed7I8xJJW7QS3RQF4iuVR19n8YBcaK08F1HPkE
+         6IgqKKR+IpMPrBba/gsPJPJ3JD3FI1X+851+rk5+K+FF93aNszhd2vda1iR/uAPguJ/y
+         k87Oiw4W0rwxemTE8FLJMr5DbfD+DG1EmMdI3raKU4ibfQUfZ3eto32yRRpsvP28lcea
+         QCgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722611135; x=1723215935;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3UyWAM+msyPF6QGXrwvMTh/SmGbZRENZMvN4/PcJhyU=;
-        b=FgHz2rkdC3m1DYO988N/SDR6OTeuyfV2vol3Idmd+8x+4AR61WzzDqSGZEYZqLKVcv
-         cAc46zrw+agPsAcNhn75+WHqv2okB2Ts3IPN+tuey78N2tLU6d7YacbnXwGMcLHl6tYD
-         LMX7ZAkCG5OfCwHOngMmtIpd+V5YN9WlfqRGSISMpeN2aNY9gHDTYNdYjdskbO4H+LtI
-         6bkWpArXGIzQIrn68LQcAM0zD8KPagqVK36QUFgZdhSzv9zug7ODvDzOXBpre3Hv/2C4
-         zGE76DaFeAfaibKIzUgnvuqCqu9Jpz4lNuLJ/n2nmT9PEQ+smTinNb0a+VJ81shBqU8j
-         0cRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvXu0p5xDs/IY0G5irDo4nD8q2bjdraaRHG4XlPrti5S/D3HXmelZfAow5rTAnc8/NsP1NgS9TVfR7pIZCDsrPaZLg1/oGABFs2dmobkT+31xjgCTuAn0Wa2+3A8/L6vqwiLYaHb3cGrv86J0N4csWC6g2rpRXZeRcC63F4WhE2W7Q4J3m
-X-Gm-Message-State: AOJu0YwCIBJrfREFKo6pl5/kuELQn1kcpJPI2xE+EQu2fz4OGzJFFH3b
-	n7JxPIAfGx51ZmkYiqd5zb221FL5EyjDTIiAvTSGrJnYMRMWaPumN6rw7OfFv2eWYKSMwEIwIn3
-	eKzFQ3ObFiLOxA2ww+VNAg/2+8zU=
-X-Google-Smtp-Source: AGHT+IElMIr/ebjjVoiS+upJcSsQBtMTff/+jRibSomwARdE7S8RvH9GjM+u5Fc8asTVB7YKAdQ5e2uYe0cQpkk+4V4=
-X-Received: by 2002:a17:906:c10a:b0:a72:8296:ca1f with SMTP id
- a640c23a62f3a-a7dc506dc64mr257607166b.50.1722611134200; Fri, 02 Aug 2024
- 08:05:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722613514; x=1723218314;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g344hXeVyHKh0h8Ndl7PidMPNboqwCMD43esLIm9SlI=;
+        b=CC4DfZ7e7K2BZx76s6vEejYMM7TxyoCH47+HOjy7lGLi9V3SvPnnKoGOKXwLYMxqOK
+         CK0igy8Jcn81Z1ur9pn80N4x+jbHIJ2sx60IqsUQ7qXllDebRKYQUCVfvcMDHcRPaf51
+         6mHGkHy7/RUx2VGfDVCaHvBHcA/uD7BCilBVr7lN+xAbBRlMUPidXT6a2DoWvWPW2ofe
+         aUKvmn/WsloM/t1S7+ozA51ZOZX5fxjaDO4yfdJGydjbpQBO7HEbyFmV7z1MkOzEb2bO
+         4JCqNHpTbrs7veqMr+ETpmngEEZuFvZVPrfUDywXrx4A+vEEgZdsfFeF5n2BDFXJQWce
+         XqlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWiidJnSrRXbRomANQzJd4nz8/OXurp99lDTVP/9K2wgq/M7njkWjET72LSMJfoqVOQPO4ztV0uwjr9+GN0sxrg8NhcJc0ajMzYY6iUvTg3n8Zz
+X-Gm-Message-State: AOJu0YzuXem5fF/KKXT+FbWqGus2YIpjf0wcyPYYxfXAM0zuTCbljBzl
+	7Iz0hcHWtKB3UUPaWmzbWD3+f98J9lgSCWe0uYL0S9+XEZf/PG63nAkSZrzoNDs=
+X-Google-Smtp-Source: AGHT+IF92mf30V2shYY8+BYVIGZyQAWoW9P1sG2SndbCMSqUU1iSOZo/jY/ZBXunuWJPJ+uhL/fIPQ==
+X-Received: by 2002:a05:6512:1593:b0:52d:582e:4111 with SMTP id 2adb3069b0e04-530bb3810c5mr3672332e87.18.1722613513633;
+        Fri, 02 Aug 2024 08:45:13 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c0b761sm112174766b.55.2024.08.02.08.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Aug 2024 08:45:13 -0700 (PDT)
+Date: Fri, 2 Aug 2024 17:45:11 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Song Liu <songliubraving@meta.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Song Liu <song@kernel.org>,
+	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"morbo@google.com" <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Leizhen <thunder.leizhen@huawei.com>,
+	"kees@kernel.org" <kees@kernel.org>,
+	Kernel Team <kernel-team@meta.com>,
+	Matthew Maurer <mmaurer@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/3] kallsyms: Add APIs to match symbol without
+ .llmv.<hash> suffix.
+Message-ID: <Zqz_BwG1fcQaUsoY@pathway.suse.cz>
+References: <20240730005433.3559731-1-song@kernel.org>
+ <20240730005433.3559731-3-song@kernel.org>
+ <20240730220304.558355ff215d0ee74b56a04b@kernel.org>
+ <5E9D7211-5902-47D3-9F4D-8DEFD8365B57@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240731214256.3588718-1-andrii@kernel.org> <20240731214256.3588718-7-andrii@kernel.org>
- <eb6d1474-a292-af20-b8b1-1c2de61405f4@huawei.com>
-In-Reply-To: <eb6d1474-a292-af20-b8b1-1c2de61405f4@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 2 Aug 2024 08:05:18 -0700
-Message-ID: <CAEf4BzZR6a4OSqsvyci0_-P+_o2PErM_PyC9y9eSc4J4A+Uabw@mail.gmail.com>
-Subject: Re: [PATCH 6/8] perf/uprobe: split uprobe_unregister()
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jolsa@kernel.org, paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5E9D7211-5902-47D3-9F4D-8DEFD8365B57@fb.com>
 
-On Thu, Aug 1, 2024 at 7:41=E2=80=AFPM Liao, Chang <liaochang1@huawei.com> =
-wrote:
->
->
->
-> =E5=9C=A8 2024/8/1 5:42, Andrii Nakryiko =E5=86=99=E9=81=93:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> >
-> > With uprobe_unregister() having grown a synchronize_srcu(), it becomes
-> > fairly slow to call. Esp. since both users of this API call it in a
-> > loop.
-> >
-> > Peel off the sync_srcu() and do it once, after the loop.
-> >
-> > With recent uprobe_register()'s error handling reusing full
-> > uprobe_unregister() call, we need to be careful about returning to the
-> > caller before we have a guarantee that partially attached consumer won'=
-t
-> > be called anymore. So add uprobe_unregister_sync() in the error handlin=
-g
-> > path. This is an unlikely slow path and this should be totally fine to
-> > be slow in the case of an failed attach.
-> >
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Co-developed-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  include/linux/uprobes.h                        |  8 ++++++--
-> >  kernel/events/uprobes.c                        | 18 ++++++++++++++----
-> >  kernel/trace/bpf_trace.c                       |  5 ++++-
-> >  kernel/trace/trace_uprobe.c                    |  6 +++++-
-> >  .../selftests/bpf/bpf_testmod/bpf_testmod.c    |  3 ++-
-> >  5 files changed, 31 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > index a1686c1ebcb6..8f1999eb9d9f 100644
-> > --- a/include/linux/uprobes.h
-> > +++ b/include/linux/uprobes.h
-> > @@ -105,7 +105,8 @@ extern unsigned long uprobe_get_trap_addr(struct pt=
-_regs *regs);
-> >  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_=
-struct *mm, unsigned long vaddr, uprobe_opcode_t);
-> >  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offs=
-et, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
-> >  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer =
-*uc, bool);
-> > -extern void uprobe_unregister(struct uprobe *uprobe, struct uprobe_con=
-sumer *uc);
-> > +extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct upr=
-obe_consumer *uc);
-> > +extern void uprobe_unregister_sync(void);
->
-> [...]
->
-> >  static inline void
-> > -uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> > +uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer=
- *uc)
-> > +{
-> > +}
-> > +static inline void uprobes_unregister_sync(void)
->
-> *uprobes*_unregister_sync, is it a typo?
->
+On Wed 2024-07-31 01:00:34, Song Liu wrote:
+> Hi Masami, 
+> 
+> > On Jul 30, 2024, at 6:03 AM, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > On Mon, 29 Jul 2024 17:54:32 -0700
+> > Song Liu <song@kernel.org> wrote:
+> > 
+> >> With CONFIG_LTO_CLANG=y, the compiler may add suffix to function names
+> >> to avoid duplication. This causes confusion with users of kallsyms.
+> >> On one hand, users like livepatch are required to match the symbols
+> >> exactly. On the other hand, users like kprobe would like to match to
+> >> original function names.
+> >> 
+> >> Solve this by splitting kallsyms APIs. Specifically, existing APIs now
+> >> should match the symbols exactly. Add two APIs that matches the full
+> >> symbol, or only the part without .llvm.suffix. Specifically, the following
+> >> two APIs are added:
+> >> 
+> >> 1. kallsyms_lookup_name_or_prefix()
+> >> 2. kallsyms_on_each_match_symbol_or_prefix()
+> > 
+> > Since this API only removes the suffix, "match prefix" is a bit confusing.
+> > (this sounds like matching "foo" with "foo" and "foo_bar", but in reality,
+> > it only matches "foo" and "foo.llvm.*")
+> > What about the name below?
+> > 
+> > kallsyms_lookup_name_without_suffix()
+> > kallsyms_on_each_match_symbol_without_suffix()
 
-I think the idea behind this is that you do a lot of individual uprobe
-unregistrations with multiple uprobe_unregister() calls, and then
-follow with a single *uprobes*_unregister_sync(), because in general
-it is meant to sync multiple uprobes unregistrations.
+This looks like the best variant to me. A reasonable compromise.
 
-> >  {
-> >  }
-> >  static inline int uprobe_mmap(struct vm_area_struct *vma)
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 3b42fd355256..b0488d356399 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -1089,11 +1089,11 @@ register_for_each_vma(struct uprobe *uprobe, st=
-ruct uprobe_consumer *new)
-> >  }
-> >
-> >  /**
-> > - * uprobe_unregister - unregister an already registered probe.
-> > + * uprobe_unregister_nosync - unregister an already registered probe.
-> >   * @uprobe: uprobe to remove
-> >   * @uc: identify which probe if multiple probes are colocated.
-> >   */
-> > -void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *=
-uc)
-> > +void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_con=
-sumer *uc)
-> >  {
-> >       int err;
-> >
-> > @@ -1109,10 +1109,14 @@ void uprobe_unregister(struct uprobe *uprobe, s=
-truct uprobe_consumer *uc)
-> >               return;
-> >
-> >       put_uprobe(uprobe);
-> > +}
-> > +EXPORT_SYMBOL_GPL(uprobe_unregister_nosync);
-> >
-> > +void uprobe_unregister_sync(void)
-> > +{
-> >       synchronize_srcu(&uprobes_srcu);
-> >  }
-> > -EXPORT_SYMBOL_GPL(uprobe_unregister);
-> > +EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
-> >
-> >  /**
-> >   * uprobe_register - register a probe
-> > @@ -1170,7 +1174,13 @@ struct uprobe *uprobe_register(struct inode *ino=
-de,
-> >       up_write(&uprobe->register_rwsem);
-> >
-> >       if (ret) {
-> > -             uprobe_unregister(uprobe, uc);
-> > +             uprobe_unregister_nosync(uprobe, uc);
-> > +             /*
-> > +              * Registration might have partially succeeded, so we can=
- have
-> > +              * this consumer being called right at this time. We need=
- to
-> > +              * sync here. It's ok, it's unlikely slow path.
-> > +              */
-> > +             uprobe_unregister_sync();
-> >               return ERR_PTR(ret);
-> >       }
-> >
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 73c570b5988b..6b632710c98e 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -3184,7 +3184,10 @@ static void bpf_uprobe_unregister(struct bpf_upr=
-obe *uprobes, u32 cnt)
-> >       u32 i;
-> >
-> >       for (i =3D 0; i < cnt; i++)
-> > -             uprobe_unregister(uprobes[i].uprobe, &uprobes[i].consumer=
-);
-> > +             uprobe_unregister_nosync(uprobes[i].uprobe, &uprobes[i].c=
-onsumer);
-> > +
-> > +     if (cnt)
-> > +             uprobe_unregister_sync();
-> >  }
-> >
-> >  static void bpf_uprobe_multi_link_release(struct bpf_link *link)
-> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> > index 7eb79e0a5352..f7443e996b1b 100644
-> > --- a/kernel/trace/trace_uprobe.c
-> > +++ b/kernel/trace/trace_uprobe.c
-> > @@ -1097,6 +1097,7 @@ static int trace_uprobe_enable(struct trace_uprob=
-e *tu, filter_func_t filter)
-> >  static void __probe_event_disable(struct trace_probe *tp)
-> >  {
-> >       struct trace_uprobe *tu;
-> > +     bool sync =3D false;
-> >
-> >       tu =3D container_of(tp, struct trace_uprobe, tp);
-> >       WARN_ON(!uprobe_filter_is_empty(tu->tp.event->filter));
-> > @@ -1105,9 +1106,12 @@ static void __probe_event_disable(struct trace_p=
-robe *tp)
-> >               if (!tu->uprobe)
-> >                       continue;
-> >
-> > -             uprobe_unregister(tu->uprobe, &tu->consumer);
-> > +             uprobe_unregister_nosync(tu->uprobe, &tu->consumer);
-> > +             sync =3D true;
-> >               tu->uprobe =3D NULL;
-> >       }
-> > +     if (sync)
-> > +             uprobe_unregister_sync();
-> >  }
-> >
-> >  static int probe_event_enable(struct trace_event_call *call,
-> > diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/to=
-ols/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > index 73a6b041bcce..928c73cde32e 100644
-> > --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > @@ -478,7 +478,8 @@ static void testmod_unregister_uprobe(void)
-> >       mutex_lock(&testmod_uprobe_mutex);
-> >
-> >       if (uprobe.uprobe) {
-> > -             uprobe_unregister(uprobe.uprobe, &uprobe.consumer);
-> > +             uprobe_unregister_nosync(uprobe.uprobe, &uprobe.consumer)=
-;
-> > +             uprobe_unregister_sync();
-> >               uprobe.offset =3D 0;
-> >               uprobe.uprobe =3D NULL;
-> >       }
->
-> --
-> BR
-> Liao, Chang
+> >> These APIs will be used by kprobe.
+> > 
+> > No other user need this?
+> 
+> AFACIT, kprobe is the only use case here. Sami, please correct 
+> me if I missed any users. 
+> 
+> 
+> More thoughts on this: 
+> 
+> I actually hope we don't need these two new APIs, as they are 
+> confusing. Modern compilers can do many things to the code 
+> (inlining, etc.). So when we are tracing a function, we are not 
+> really tracing "function in the source code". Instead, we are 
+> tracing "function in the binary". If a function is inlined, it 
+> will not show up in the binary. If a function is _partially_ 
+> inlined (inlined by some callers, but not by others), it will 
+> show up in the binary, but we won't be tracing it as it appears
+> in the source code. Therefore, tracing functions by their names 
+> in the source code only works under certain assumptions. And 
+> these assumptions may not hold with modern compilers. Ideally, 
+> I think we cannot promise the user can use name "ping_table" to
+> trace function "ping_table.llvm.15394922576589127018"
+> 
+> Does this make sense?
+
+IMHO, it depends on the use case. Let's keep "ping_table/"
+as an example. Why people would want to trace this function?
+There might be various reasons, for example:
+
+  1. ping_table.llvm.15394922576589127018 appeared in a backtrace
+
+  2. ping_table.llvm.15394922576589127018 appeared in a histogram
+
+  3. ping_table looks interesting when reading code sources
+
+  4. ping_table need to be monitored on all systems because
+     of security/performance.
+
+The full name "ping_table.llvm.15394922576589127018" is perfectly
+fine in the 1st and 2nd scenario. People knew this name already
+before they start thinking about tracing.
+
+The short name is more practical in 3rd and 4th scenario. Especially,
+when there is only one static symbol with this short name. Otherwise,
+the user would need an extra step to find the full name.
+
+The full name is even more problematic for system monitors. These
+applications might need to probe particular symbols. They might
+have hard times when the symbol is:
+
+    <symbol_name_from_sources>.<random_suffix_generated_by_compiler>
+
+They will have to deal with it. But it means that every such tool
+would need an extra (non-trivial) code for this. Every tool would
+try its own approach => a lot of problems.
+
+IMHO, the two APIs could make the life easier.
+
+Well, even kprobe might need two APIs to allow probing by
+full name or without the suffix.
+
+Best Regards,
+Petr
