@@ -1,130 +1,97 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F661537A0;
-	Fri,  2 Aug 2024 17:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01319219FC;
+	Fri,  2 Aug 2024 21:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722619450; cv=none; b=TA7DlaeOy2zHmtJOBmuefSenD9P37r2JwJ5zWh01erAifXo+uWASfCdV6y+xFb+M/tAT57+vEIRVt/6AAu6/8mSqMZevp3i+DTmytPzFdKeeKwoi3Pbo9Qj9A93dCOa3ABKWruo0MrBgnKvw2MPa12vTVnDSZVDd+Pmh5Ldq9CY=
+	t=1722632929; cv=none; b=HnyZlCMUBCnpHpkzEiwIA5u87Hb+wPa25kAS9Wdr0HyNYiuXLAExhh5C5DY4JypcV+jCWupkACCNLgYft4SWOuuqvpMmIAPTyotaw4uHCQtEXn/ceHkme0i/sETxVXiS4C2tC9KH4Z0UKZTccdUEQRO0MDWNm4V9HcRXaW71vT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722619450; c=relaxed/simple;
-	bh=WFAHa2ete4Xb+JbywsGV+pLk9gCOl+vYhLmCllbETPw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uRMSxlC+UBENbYmTNjSFv2V4jOPB7SmXCrPRNylip1LQQXAnQDwU6iHbtjcrNC4hwbhulAQbTWlBnwOCweFmrI4OxDWSnzmwb8VG3UDH3OLDvtWwsSj1bgYC243HaSWxh6nKZMECFIb7ZLIMdYPdfGUNRRPHokzkUsZOCoT/UZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=NvaGzkys; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1722632929; c=relaxed/simple;
+	bh=rKeew/LVSi1nYEKIe21+NRX/sk9+UYPtQUpEfCVuEPg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rFJ0tivHZNmNq766XrIVI+IECeByGbh0ReaNba/1iB471ZOpdj1BZv11kpzGMPIoN6N1DgjLeMLznEKZKEdJ+I0kLSkQeurWnOAOzC14cW3FOc1+7kbGf/Mt9wKhPmeFbioTUeUspvUt9Wt/gyHqTOepflqcQGPiI8hOLBIzuEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejuWtFmV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="NvaGzkys"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1722619446; x=1722878646;
-	bh=KYJ880DzvybbissblwMCNzUlLxxe1Ktl0TOAACRRXAQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=NvaGzkysirXcjizn6Jo4e4bFXgCgbyugGW/9RojsJdsReD3ddkqxDsLLila/aLRf6
-	 zAbt4EB/1Gu795L1QQ/3CavkmtMHt7uIFQq8t2ItVC3iOl9fwTeC1AthRSX4z+8iNe
-	 oTr8wCRurge3wMmBL2CzZSMR6HFHR48iZ/RMDQcD0zhPEJL/htJer4r63YJ548B1tb
-	 J6FK0Z9l/PtQc892UbtZkC+5Plst5EtSJMIYvNubk7qKCDAz8J/AnUw2YqS/s397gC
-	 G+gnJ0EzhLYfOWcLjc7ypKcE9FOL5T0G59OgxWS4zTsdbw3CdY61bx6jAIVXRefpsV
-	 feUbG72Eojoow==
-Date: Fri, 02 Aug 2024 17:23:59 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, Carlos Llamas <cmllamas@google.com>
-Subject: Re: [PATCH v5 2/2] rust: add tracepoint support
-Message-ID: <a381ef22-96f4-4a72-8e3a-cc023dee111a@proton.me>
-In-Reply-To: <20240802-tracepoint-v5-2-faa164494dcb@google.com>
-References: <20240802-tracepoint-v5-0-faa164494dcb@google.com> <20240802-tracepoint-v5-2-faa164494dcb@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: d47c8e3b3391333c5a5926396deb7ee3ad135f33
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejuWtFmV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F7F6C32782;
+	Fri,  2 Aug 2024 21:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722632928;
+	bh=rKeew/LVSi1nYEKIe21+NRX/sk9+UYPtQUpEfCVuEPg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ejuWtFmViglvHp19JdY95N2VMi9snvGFQ1AMA+7hpqmkJtRSteHNGP8m/oA6sGaQH
+	 iDQXE+8kJtXgcBtEvT+cdRJBmkQCsOGif+h7evRVZNEovATezJ1UKrVJLMlH+qrN1x
+	 bbISSR71U+c8SQKTLR5srppvUJSrDWFo9Bkr/gMZqKunZr48XVeeGmKgEUeYRoOPmU
+	 TtQXAxblogXGTNJZy+0NGJnORLZEgCJJNCj3wNC1uI/qbpwfP2IIMDIyHkp7lNa9K7
+	 Nq3m6ud7ZfpiJx68/eCAN/iy3fqdIMjgcZTLcZKKo8UDT1a3MtbPu8Oco2n3XQCaHP
+	 Jb5fOPACBnESQ==
+From: Song Liu <song@kernel.org>
+To: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	nathan@kernel.org,
+	morbo@google.com,
+	justinstitt@google.com,
+	mcgrof@kernel.org,
+	thunder.leizhen@huawei.com,
+	kees@kernel.org,
+	kernel-team@meta.com,
+	song@kernel.org,
+	mmaurer@google.com,
+	samitolvanen@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org
+Subject: [PATCH v2 0/3] Fix kallsyms with CONFIG_LTO_CLANG
+Date: Fri,  2 Aug 2024 14:08:32 -0700
+Message-ID: <20240802210836.2210140-1-song@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 02.08.24 11:31, Alice Ryhl wrote:
-> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> new file mode 100644
-> index 000000000000..69dafdb8bfe8
-> --- /dev/null
-> +++ b/rust/kernel/tracepoint.rs
-> @@ -0,0 +1,49 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024 Google LLC.
-> +
-> +//! Logic for tracepoints.
-> +
-> +/// Declare the Rust entry point for a tracepoint.
-> +///
-> +/// This macro generates an unsafe function that calls into C, and its s=
-afety requirements will be
-> +/// whatever the relevant C code requires. To document these safety requ=
-irements, you may add
-> +/// doc-comments when invoking the macro.
+With CONFIG_LTO_CLANG, the compiler/linker adds .llvm.<hash> suffix to
+local symbols to avoid duplications. Existing scripts/kallsyms sorts
+symbols without .llvm.<hash> suffix. However, this causes quite some
+issues later on. Some users of kallsyms, such as livepatch, have to match
+symbols exactly; while other users, such as kprobe, would match symbols
+without the suffix.
 
-I think we should mandate safety documentation for the function.
+Address this by sorting full symbols at build time, and split kallsyms
+APIs to explicitly match full symbols or without suffix. Specifically,
+exiting APIs will match symbols exactly. Two new APIs are added to match
+symbols with suffix. Use the new APIs in tracing/kprobes.
 
-> +#[macro_export]
-> +macro_rules! declare_trace {
-> +    ($($(#[$attr:meta])* $pub:vis fn $name:ident($($argname:ident : $arg=
-typ:ty),* $(,)?);)*) =3D> {$(
 
-Can you add an `unsafe` in front of `fn`, since this macro generates an
-`unsafe` function? Otherwise I don't see how the SAFETY comment below is
-correct.
+Changes v1 => v2:
+1. Update the APIs to remove all .XXX suffixes (v1 only removes .llvm.*).
+2. Rename the APIs as *_without_suffix. (Masami Hiramatsu)
+3. Fix another user from kprobe. (Masami Hiramatsu)
+4. Add tests for the new APIs in kallsyms_selftests.
 
----
-Cheers,
-Benno
+v1: https://lore.kernel.org/live-patching/20240730005433.3559731-1-song@kernel.org/T/#u
 
-> +        $( #[$attr] )*
-> +        #[inline(always)]
-> +        $pub unsafe fn $name($($argname : $argtyp),*) {
-> +            #[cfg(CONFIG_TRACEPOINTS)]
-> +            {
-> +                // SAFETY: It's always okay to query the static key for =
-a tracepoint.
-> +                let should_trace =3D unsafe {
-> +                    $crate::macros::paste! {
-> +                        $crate::static_key::static_key_false!(
-> +                            $crate::bindings::[< __tracepoint_ $name >],
-> +                            $crate::bindings::tracepoint,
-> +                            key
-> +                        )
-> +                    }
-> +                };
-> +
-> +                if should_trace {
-> +                    $crate::macros::paste! {
-> +                        // SAFETY: The caller guarantees that it is okay=
- to call this tracepoint.
-> +                        unsafe { $crate::bindings::[< rust_do_trace_ $na=
-me >]($($argname),*) };
-> +                    }
-> +                }
-> +            }
-> +
-> +            #[cfg(not(CONFIG_TRACEPOINTS))]
-> +            {
-> +                // If tracepoints are disabled, insert a trivial use of =
-each argument
-> +                // to avoid unused argument warnings.
-> +                $( let _unused =3D $argname; )*
-> +            }
-> +        }
-> +    )*}
-> +}
-> +
-> +pub use declare_trace;
->=20
-> --
-> 2.46.0.rc2.264.g509ed76dc8-goog
->=20
+Song Liu (3):
+  kallsyms: Do not cleanup .llvm.<hash> suffix before sorting symbols
+  kallsyms: Add APIs to match symbol without .XXXX suffix.
+  tracing/kprobes: Use APIs that matches symbols without .XXX suffix
 
+ include/linux/kallsyms.h    | 14 ++++++
+ kernel/kallsyms.c           | 88 +++++++++++++++++++++++++------------
+ kernel/kallsyms_selftest.c  | 75 ++++++++++++++++++++++---------
+ kernel/kprobes.c            |  6 ++-
+ kernel/trace/trace_kprobe.c | 11 ++++-
+ scripts/kallsyms.c          | 31 +------------
+ scripts/link-vmlinux.sh     |  4 --
+ 7 files changed, 145 insertions(+), 84 deletions(-)
+
+--
+2.43.0
