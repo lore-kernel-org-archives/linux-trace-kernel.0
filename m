@@ -1,98 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C151C37A2
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Aug 2024 08:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12E11DB421
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Aug 2024 09:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722588659; cv=none; b=IZvfkPll0BxjauCp+vLG6zKZgPUaAT/FNBpryL0cYoqR7cYD8kBQjV8lLRYJ0+qPjvuIOceuXeT8Iv0VQwMoIIOm6Q3clTGNlNwAJI+muCUNwg6C9sybvOCQ/2ru5H8ZyNVgQQByje+r1GD70HkR9Fh+AsSUu9r9okWNz/aPXkY=
+	t=1722590666; cv=none; b=n5VsTmRUXwsAwqVhtCsaRlt5vBbzYi25HELm22GuGJZzpkV++/FHjQIKxKzslxvYCrj9+xQF45OfSRV35LivVf1g49qywQVZUO6WWa0jss98bzVX0qvO/NOFit+5+f7O6b9qbCjbBqC5URzphV2wwfBrgCswxv0t/7paUOH4XOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722588659; c=relaxed/simple;
-	bh=HPlsNDCyl1pA4SJW2l3/u62IkAccM0lCQp9d6Y4qNO8=;
+	s=arc-20240116; t=1722590666; c=relaxed/simple;
+	bh=uVXNxDR7qKY3f5mtHytO19EwACmQxiXxAxl8I5EYMdw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tCuOdBHXIhURKauxplU+GMYwa7CDtzxYFjzO5VkgSL3SoCgegUuvrl9nmv88IeDdGO76Qe2FwnoBPRrdUPUIL0x5qDebnxs7o0HzpoHFW3kY+ACxI6LXz46COmIYo+BLoB4vuALuG3Uk112Av9yMbHqk7Tzv91SuBflPnf5oM2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HACVXGOV; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=awk/1m7JDTZOXqRfGIzOF/BXd0ipKZCeH5d5vAmmPWIfEVZgNs48k7RwJ7/ItovqzawgVjVpT/6/J7uNFs1sXud4ipyjA3awbHkMovghJN0qVebxRCdFhyC+yOaSgx+oLDYVQxLIOU5+odjSOtCtdKRFZzH1GHPrQw8hWUtq3+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J6DF4pDB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HACVXGOV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J6DF4pDB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722588656;
+	s=mimecast20190719; t=1722590662;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s5DZo4o3X4z7a84jIBvonPi5Z0Gb8BZSJthltxDUVjw=;
-	b=HACVXGOVxYp7VXqzzKQSjI5zn6DsqNFMV1GKNckxuyz10VfkGPyNohZhEi8cIVSSFjaGA8
-	Hd++WqahM6m/AuTRmNYFyr5gENdknqKP3o0/5TkM/Vqy0fZ7Rr9//ka7O2araQjBUeDQpg
-	kYF5YdEZ5aiEzzJxmpy0lxGrg1r6+1Y=
+	bh=tFZYSjXj/nOTS7A0u95Mfk5cT+BFdZgMlnPQnliy2J8=;
+	b=J6DF4pDBs6Xf1mAxmzdztlHsCl2byG2kzrB3VoJFT6XDH2c5TSe+5TXUQ2k5Dm5oVy9e8a
+	PxQ/5kvvi35xy61P2OSyEuk0AAqzR4v2gS1FxEuQ9TiaXNQoNjqzfcee8Jcexys4vg58HR
+	8Ycv6NlRoOdwK19dBU68hBpRmgScaPg=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-7kBEnFfKMK6GyAT2Jrsglw-1; Fri,
- 02 Aug 2024 04:50:50 -0400
-X-MC-Unique: 7kBEnFfKMK6GyAT2Jrsglw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-wiluX6t3MMmF-6vA305zDg-1; Fri,
+ 02 Aug 2024 05:24:17 -0400
+X-MC-Unique: wiluX6t3MMmF-6vA305zDg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5236B19560B4;
-	Fri,  2 Aug 2024 08:50:48 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35FD91956064;
+	Fri,  2 Aug 2024 09:24:15 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.207])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6362B19560AA;
-	Fri,  2 Aug 2024 08:50:44 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 704E1300018D;
+	Fri,  2 Aug 2024 09:24:08 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri,  2 Aug 2024 10:50:46 +0200 (CEST)
-Date: Fri, 2 Aug 2024 10:50:41 +0200
+	oleg@redhat.com; Fri,  2 Aug 2024 11:24:13 +0200 (CEST)
+Date: Fri, 2 Aug 2024 11:24:06 +0200
 From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-	paulmck@kernel.org
-Subject: Re: [PATCH 2/8] uprobes: revamp uprobe refcounting and lifetime
- management
-Message-ID: <20240802085040.GA12343@redhat.com>
-References: <20240731214256.3588718-1-andrii@kernel.org>
- <20240731214256.3588718-3-andrii@kernel.org>
- <CAEf4BzYZ7yudWK2ff4nZr36b1yv-wRcN+7WM9q2S2tGr6cV=rA@mail.gmail.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
+ on siglock
+Message-ID: <20240802092406.GC12343@redhat.com>
+References: <20240801082407.1618451-1-liaochang1@huawei.com>
+ <20240801140639.GE4038@redhat.com>
+ <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzYZ7yudWK2ff4nZr36b1yv-wRcN+7WM9q2S2tGr6cV=rA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 08/01, Andrii Nakryiko wrote:
+On 08/02, Liao, Chang wrote:
 >
-> > +               /* TODO : cant unregister? schedule a worker thread */
-> > +               WARN(err, "leaking uprobe due to failed unregistration");
+>
+> 在 2024/8/1 22:06, Oleg Nesterov 写道:
+> > On 08/01, Liao Chang wrote:
+> >>
+> >> @@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+> >>  	int err = 0;
+> >>
+> >>  	uprobe = utask->active_uprobe;
+> >> -	if (utask->state == UTASK_SSTEP_ACK)
+> >> +	switch (utask->state) {
+> >> +	case UTASK_SSTEP_ACK:
+> >>  		err = arch_uprobe_post_xol(&uprobe->arch, regs);
+> >> -	else if (utask->state == UTASK_SSTEP_TRAPPED)
+> >> +		break;
+> >> +	case UTASK_SSTEP_TRAPPED:
+> >>  		arch_uprobe_abort_xol(&uprobe->arch, regs);
+> >> -	else
+> >> +		fallthrough;
+> >> +	case UTASK_SSTEP_DENY_SIGNAL:
+> >> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
+> >> +		break;
+> >> +	default:
+> >>  		WARN_ON_ONCE(1);
+> >> +	}
+> >
+> > Liao, at first glance this change looks "obviously wrong" to me.
+>
+> Oleg. Did i overlook some thing obvious here?
 
-> Ok, so now that I added this very loud warning if
-> register_for_each_vma(uprobe, NULL) returns error, it turns out it's
-> not that unusual for this unregistration to fail.
+OK, lets suppose uprobe_deny_signal() sets UTASK_SSTEP_DENY_SIGNAL.
 
-...
+In this case handle_singlestep() will only set TIF_SIGPENDING and
+do nothing else. This is wrong, either _post_xol() or _abort_xol()
+must be called.
 
-> So, is there something smarter we can do in this case besides leaking
-> an uprobe (and note, my changes don't change this behavior)?
-
-Something like schedule_work() which retries register_for_each_vma()...
-
-> I can of course just drop the WARN given it's sort of expected now,
-
-Or least replace it with pr_warn() or uprobe_warn(), WARN() certainly
-makes no sense imo...
-
-> I don't
-> think that should block optimization work, but just something to keep
-> in mind and maybe fix as a follow up.
-
-Agreed, lets do this separately.
+But I think handle_singlestep() will never hit this case. In the
+likely case uprobe_post_sstep_notifier() will replace _DENY_SIGNAL
+with _ACK, and this means that handle_singlestep() won't restore
+TIF_SIGPENDING cleared by uprobe_deny_signal().
 
 Oleg.
 
