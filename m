@@ -1,95 +1,100 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B181C37AF
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Aug 2024 08:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5176513FF6;
+	Fri,  2 Aug 2024 08:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722586080; cv=none; b=dAeUxBUtFC9ndJadl50oXn1AJA7KYpnyyS4S5XbtaURA6Eyd0rtiP/fC6io1cyi7TGayFZQa4OsWMyDOjr3DgWaqTyFNxUMwSVwUu2W0uHGO2xrbWV1jdHhqhP4dCzTKzAsQHW4PUmgnuQbuxOw0Df3xrDmWlVKGTAC6N46Fw0Q=
+	t=1722587261; cv=none; b=KQ8IyxZUa9dkQxe/rmtGj4u/++jZOBm68ieCkpDJ4RvUlkZHTBl7267+pBR5VQSio9SaKKK8BlXLoRjKUjR1UU+tUdP0CmcoaUKvPvu07tIKz+kgiDIlDBzB++4ubmTBin/8x8VKftiMscj7hpeZKvjPVrQyejADKPh3K5B/wHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722586080; c=relaxed/simple;
-	bh=zr17in5873w0D7frEzn9Z1BvBNMtjb7Z9MPgUwnjjT0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r09ZSka1XO7JtZSF0h09fKC00V8MVFyFbG19oXQFNjEHLngucVrLcNjmk0iRqlHVHSqrdeJi1SimfODwXqrtKO9gFADt6K4jMDH/b+8DTMJ88r0LIA7Ho08HxhPSdAI/cxNKMn63olwtU4JDlJpojoez2ezMk7nHgPTCUz0Wq7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AUAsQ+Mc; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722587261; c=relaxed/simple;
+	bh=h+h6qklDL9o4ftiLeV0/tVt+paMOZfiKFQqSc3OJ6Kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kj9MPL3l9zB5PrQXZGA6dTBFCCfqnjps8TIzkV00LCCHYBHB49556m79Rgklz8TfSVQpAqOyT/uuR5MQgJ9XIfsJgTTeOwMi4OHv3ghPCiEQ4IEI+4/jvXM/Azv0x4ZqqU0KireV0N/pzISJFZrsvVo2rivz00HVM9D7BcgrLo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XeuOp4XH; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUAsQ+Mc"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52f01afa11cso11699077e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Aug 2024 01:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722586077; x=1723190877; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=escxcbn6CQpzZVjl6z5VUlZK10Wql4Sh9GSQYpnvjOs=;
-        b=AUAsQ+McMuzLxujWxipKKVvsbaANZuzCFHavP/5J3zHzFJvUvDkvpAaZL33cXrMu/Y
-         0rTRdYLnnucYRfSjI8KSy0GKyaYNsOaZL2iaJiu51UZIHTsURE5bn2IhoUfYHDtCMcE0
-         Nd4y1L7xeJjpolmoCxHzlStf7VLdme0ZLZ0YMZ5BjHOwzHseqAg3OJ2MLXuy9Cnp9bJd
-         Ki4dNeKgGelrJvkn8yujKLCxzbd6gkgiu2yrl4LMsUYyLlu3EyxFlLI7fefjt0ClHIhq
-         wYFWg0zNp5CywCUim4xSql+1xIdmw85KyZEiY7qtlI344XdajqfQ9af6xXmSNWf7x1yC
-         dXbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722586077; x=1723190877;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=escxcbn6CQpzZVjl6z5VUlZK10Wql4Sh9GSQYpnvjOs=;
-        b=SMzqCHUwlmdjnimuuYtY/mA6GGjOMbw7Zd1NQDZ0W4x1n2K0PDTKodNyxSMIyc8kC9
-         jWZV1MAygjMqEOxYoYgtPn9goKwbtVkVmxO3UTzDBmhgbK7KbjtLgcdDZ0V4IWik01uI
-         bZPSP1pBl+omMqkKJDl4QG0QFsAQ63V5nWvn87+Vn+eKz2EkhiSA6+ORn+E5e6Cie6Vj
-         q6oafAQlA2V37KcgTt/7HHdEns5geQiNuD+PdreiCnjWE8kYA/PHIIvo2u9B0l0em+Fb
-         mxBETarsPdFu3kwURoOTAQXy4hg2v+kGrE8dLShUJONo/Q+ry36ZePpxsBinC8+k5avM
-         bS0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWjdWT1Mr7rSFA+4YsAmgWnxPfaKukfZj14Jjtg1rAKEvjScM+Xifrl6jSlX98lF1jvVUDcZu5L9hX7betAzC3CMU1rzPOJ7mCMqplIzAY1HQTQ
-X-Gm-Message-State: AOJu0Yy4qnyD4Icb+yqrHWK8HyODlUzr6bHHOnyf+zXiHYANk+eR6nlF
-	nmLddeHyOWs9MBZf/VZteMUmffGvdtJbJVvMtVrW74yBDRCBoGAmblEGlyMDfHhb/6baSYb6QVg
-	7hQ1mUDho6nDYQ5xj3Ap1yRGEh3pBFp28RdQE
-X-Google-Smtp-Source: AGHT+IG+xKO0y/MDURV7v5Ye973aEWq2ZhirgU9AGFasanOfoT8SM2QxjIQmJdkM6GFLTO/y2v5+4WlaF2T/WZYjysc=
-X-Received: by 2002:a05:6512:b8d:b0:52e:f367:709b with SMTP id
- 2adb3069b0e04-530bb3a34f9mr1726621e87.42.1722586076673; Fri, 02 Aug 2024
- 01:07:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XeuOp4XH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=cVjjEKKBcVLAmoDniQWcBQ8wxvJtaWVESHunm41KKbw=; b=XeuOp4XHsYvEcn9o4h+vqY4LKQ
+	j05p09EpCwvWzsGPdHGS1/8HYx/CEZI5gCKbEhUPh97BmnRzxSRXD4lLKiNd08WAgzgm74Lo08TQB
+	ffPKT4sufyi9edTrGD13YAea/IyG2Uz0sQXOVy2Mrb5hEYxGPdFq9uiTRWrCKfjv87baVafaAVwjf
+	tcK/Mew0A78XqRZtL+neDs2lpOLpKg+mMty/VYYEZlWcllMyD9R8lGPu0gz7grNjC0eBIfIopvCme
+	FqbGhixoJ29ke8EJYhwK8V7Oah3oJoTFjYa2F8FtImoLbxa1SUSKqWWT1dc39KFA6DhduWrvYLkak
+	dc7xXf+A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZndF-00000005f0t-2eS3;
+	Fri, 02 Aug 2024 08:27:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A2E1830049D; Fri,  2 Aug 2024 10:27:24 +0200 (CEST)
+Date: Fri, 2 Aug 2024 10:27:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Oleg Nesterov <oleg@redhat.com>, andrii@kernel.org,
+	mhiramat@kernel.org, jolsa@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH v4 0/9] uprobes: misc cleanups/simplifications
+Message-ID: <20240802082724.GE39708@noisy.programming.kicks-ass.net>
+References: <20240801132638.GA8759@redhat.com>
+ <20240801133617.GA39708@noisy.programming.kicks-ass.net>
+ <CAEf4BzY-gNWHhjnSh3myb0sStjm0Qjsu6nhFtXEULLvo_E=i5w@mail.gmail.com>
+ <CAEf4BzY9diEi2_tHsLxB4Yk-ZAWHT=XJNmagjQtOXc7qShqgrA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <00000000000052aa15061eaeb1fd@google.com>
-In-Reply-To: <00000000000052aa15061eaeb1fd@google.com>
-From: Marco Elver <elver@google.com>
-Date: Fri, 2 Aug 2024 10:07:19 +0200
-Message-ID: <CANpmjNMENK5NG+gjMm67--p-4h+c89bkSngoRJ3XTpkqrH0=Gg@mail.gmail.com>
-Subject: Re: [syzbot] [trace?] linux-next test error: WARNING in rcu_core
-To: syzbot <syzbot+263726e59eab6b442723@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org, sfr@canb.auug.org.au, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzY9diEi2_tHsLxB4Yk-ZAWHT=XJNmagjQtOXc7qShqgrA@mail.gmail.com>
 
-On Fri, 2 Aug 2024 at 09:58, syzbot
-<syzbot+263726e59eab6b442723@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    f524a5e4dfb7 Add linux-next specific files for 20240802
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=174c896d980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a66a5509e9947c4c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=263726e59eab6b442723
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/8c0255b9a6ad/disk-f524a5e4.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/71d89466ea60/vmlinux-f524a5e4.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/ba8fcf059463/bzImage-f524a5e4.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+263726e59eab6b442723@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 1 at mm/slub.c:4550 slab_free_after_rcu_debug+0x18b/0x270 mm/slub.c:4550
+On Thu, Aug 01, 2024 at 02:13:41PM -0700, Andrii Nakryiko wrote:
+> On Thu, Aug 1, 2024 at 11:58 AM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > + bpf
+> >
+> > On Thu, Aug 1, 2024 at 6:36 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Thu, Aug 01, 2024 at 03:26:38PM +0200, Oleg Nesterov wrote:
+> > > > (Andrii, I'll try to look at your new series on Weekend).
+> > >
+> > > OK, I dropped all your previous patches and stuffed these in.
+> > >
+> > > They should all be visible in queue/perf/core, and provided the robot
+> > > doesn't scream, I'll push them into tip/perf/core soonish.
+> >
+> > Just FYI, it seems like tip/perf/core is currently broken for uprobes
+> > (and by implication also queue/perf/core). Also torvalds/linux/master
+> > master is broken. See what I'm getting when running BPF selftests
+> > dealing with uprobes. Sometimes I only get that WARNING and nothing
+> > else.
+> >
+> > I'm bisecting at the moment with bpf/master being a "good" checkpoint,
+> > will let you know once I bisect.
+> 
+> Ok, this bisected to:
+> 
+> 675ad74989c2 ("perf/core: Add aux_pause, aux_resume, aux_start_paused")
+> 
+> Reverting all (applied to tip/perf/core) four patches from that series:
+> 
+> 6763ebdb4983 (tip/perf/core) perf/x86/intel: Do not enable large PEBS
+> for events with aux actions or aux sampling
+> 6a45d8847597 perf/x86/intel/pt: Add support for pause / resume
+> 675ad74989c2 perf/core: Add aux_pause, aux_resume, aux_start_paused
+> d92792a4b26e perf/x86/intel/pt: Fix sampling synchronization
+> 
+> ... makes everything work again. I'll leave it up to you and Adrian to
+> figure this out.
 
-See https://lore.kernel.org/all/ZqyThs-o85nqueaF@elver.google.com/T/#u
+Thanks for catching this. I'll go have a look.
