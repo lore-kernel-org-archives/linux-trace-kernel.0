@@ -1,125 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683B4132116;
-	Fri,  2 Aug 2024 21:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC571ABEB9
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Aug 2024 22:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722632951; cv=none; b=NYjXJI/UlafUmFuoDp3VRff4q++EO4TISGHlhMHXMnjrT0qJHQX9e1p4oxdsJihPm/QQAAOpKnQmVfIvLXT3mFvMfW9ARYBnrHXOz1w5k6uP1IW4hv1SfLClmUabYtGOUVTNAr4T/yj6pBZjpN1OT6DrLSKHJDPepmMmEHqs+6c=
+	t=1722637157; cv=none; b=tYyoPhU6wrohyUmDu73fA5Oe7RBua2u1Pv3TKNGhbbQ20ppQ++P6TiCrfygb355NTc72xQahrIJk61xw04M0cwmFZ7H4C7TpGGkCDu6CNiw1JhUTZmM7M/XUEEJEWugJkPkXZYfimKUaQ9aQJ6Kel4t8DRRXeLORcVJY8LZK/8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722632951; c=relaxed/simple;
-	bh=wSgBrkC0s9VfLt3cNhMld8TVeciJRDopmo/jk6FLqrA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FagvSkFaNJ5ZVjeGol8nQz1rRe00baeKRKjjDcIAa9bs+D8ym+ZZ94JUtjDydMxRXhHfg9+VgUOUasJg9XUMZ2+jju9CEKUOAwAXOvO1acwnxvtdimaEgzb8rvDbRuZT59j+bqq+D3dc2dCOfzJuwA7RDXvZasP9HoJQ21FK3JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnauKxwb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722637157; c=relaxed/simple;
+	bh=zjDuUj9eWtqN6r8ONlCdjkOqYfYxbs7W4wvu3c5lOPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m5H5SKcf9Ypv4vN/H3G6LvQ4vpZexGpTFPP6OjAi95VXqFcYqdkz+ToRyr4bCm/RuAWlMrbzc7T9TRAYIik+6y7Utmo8wbIwcco1sTvua1qIcW79BxamnatMQlQxAK86icfd2s9nUh6VynXRit4UOsIttVyW564iP805FFAQEm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EmdyV/zr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnauKxwb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEAEC4AF0A;
-	Fri,  2 Aug 2024 21:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722632951;
-	bh=wSgBrkC0s9VfLt3cNhMld8TVeciJRDopmo/jk6FLqrA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pnauKxwbrdbBR+VxAYGejfu2s56HQwIyB0A837TBxAWpfGkY8Bl4ygKbjUpY/4n+b
-	 tBEfjJFtLaqVJM9u0IuzifVtekyBQ7sFh1ketqs0TcEJuSSPsD2DtKM1i02qB0FhMH
-	 TGFQ5RI3+qiFsyCduGBlOW12igwNpZnH98aIaJUz+aDXrvg4bTsqYpJZBEsyuYmXRt
-	 B3pmwwAwTHKFKJoRCYuvrEdagZ8di6MpS3zoQ5ZNCXpPJ2CHCYXfV2AyS6/pOjy8ec
-	 x+V8inj+xFHuDrWGANKJHRJfjpiu+nH029ixLD3Pc7e/MMtWX+aVk/ACjt97i7MqID
-	 FrF7GO+P3WCTg==
-From: Song Liu <song@kernel.org>
-To: live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: jpoimboe@kernel.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com,
-	joe.lawrence@redhat.com,
-	nathan@kernel.org,
-	morbo@google.com,
-	justinstitt@google.com,
-	mcgrof@kernel.org,
-	thunder.leizhen@huawei.com,
-	kees@kernel.org,
-	kernel-team@meta.com,
-	song@kernel.org,
-	mmaurer@google.com,
-	samitolvanen@google.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org
-Subject: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols without .XXX suffix
-Date: Fri,  2 Aug 2024 14:08:35 -0700
-Message-ID: <20240802210836.2210140-4-song@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240802210836.2210140-1-song@kernel.org>
-References: <20240802210836.2210140-1-song@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EmdyV/zr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722637155;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nr8Txo5D6NSIUjs4UMtM8VDYYilFkkV0/HEbDlasuVw=;
+	b=EmdyV/zrNMqLK7s87UQcg4t0FPt3kX9vG0ZjAjT7F5nEKbP1Uj5b+PaC3zU3HdB+T3buKu
+	/6nSPaGLvuxdmqSySV7ByES4OQwf456xh+tvHPfIWl/yyAi+xJInDgGiG22g+HtFndHVwI
+	vKdfdqcJFW9Qh6e1QX2G2N6AaQPjmeU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-ux8m-Y0dMlusQHBdh_VCOQ-1; Fri,
+ 02 Aug 2024 18:19:11 -0400
+X-MC-Unique: ux8m-Y0dMlusQHBdh_VCOQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5CF5A1955D42;
+	Fri,  2 Aug 2024 22:19:09 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.3])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6B319300018D;
+	Fri,  2 Aug 2024 22:19:05 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat,  3 Aug 2024 00:19:08 +0200 (CEST)
+Date: Sat, 3 Aug 2024 00:19:03 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+	paulmck@kernel.org
+Subject: Re: [PATCH 2/8] uprobes: revamp uprobe refcounting and lifetime
+ management
+Message-ID: <20240802221902.GB20135@redhat.com>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240731214256.3588718-3-andrii@kernel.org>
+ <CAEf4BzYZ7yudWK2ff4nZr36b1yv-wRcN+7WM9q2S2tGr6cV=rA@mail.gmail.com>
+ <20240802085040.GA12343@redhat.com>
+ <CAEf4BzY7fBZBJo3PGaDLp6yzpi7S9QTkcirP+Nz03rL2wcU-0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzY7fBZBJo3PGaDLp6yzpi7S9QTkcirP+Nz03rL2wcU-0A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Use the new kallsyms APIs that matches symbols name with .XXX
-suffix. This allows userspace tools to get kprobes on the expected
-function name, while the actual symbol has a .llvm.<hash> suffix.
+On 08/02, Andrii Nakryiko wrote:
+>
+> On Fri, Aug 2, 2024 at 1:50 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 08/01, Andrii Nakryiko wrote:
+> > >
+> > > > +               /* TODO : cant unregister? schedule a worker thread */
+> > > > +               WARN(err, "leaking uprobe due to failed unregistration");
+> >
+> > > Ok, so now that I added this very loud warning if
+> > > register_for_each_vma(uprobe, NULL) returns error, it turns out it's
+> > > not that unusual for this unregistration to fail.
+> >
+> > ...
+> >
+> > > So, is there something smarter we can do in this case besides leaking
+> > > an uprobe (and note, my changes don't change this behavior)?
+> >
+> > Something like schedule_work() which retries register_for_each_vma()...
+>
+> And if that fails again, what do we do?
 
-This only effects kernel compile with CONFIG_LTO_CLANG.
+try again after some timeout ;)
 
-Signed-off-by: Song Liu <song@kernel.org>
----
- kernel/kprobes.c            |  6 +++++-
- kernel/trace/trace_kprobe.c | 11 ++++++++++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
+> Because I don't think we even
+> need schedule_work(), we can just keep some list of "pending to be
+> retried" items and check them after each
+> uprobe_register()/uprobe_unregister() call.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index e85de37d9e1e..99102283b076 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -70,7 +70,11 @@ static DEFINE_PER_CPU(struct kprobe *, kprobe_instance);
- kprobe_opcode_t * __weak kprobe_lookup_name(const char *name,
- 					unsigned int __unused)
- {
--	return ((kprobe_opcode_t *)(kallsyms_lookup_name(name)));
-+	unsigned long addr = kallsyms_lookup_name(name);
-+
-+	if (IS_ENABLED(CONFIG_LTO_CLANG) && !addr)
-+		addr = kallsyms_lookup_name_without_suffix(name);
-+	return ((kprobe_opcode_t *)(addr));
- }
- 
- /*
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 61a6da808203..d2ad0c561c83 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -203,6 +203,10 @@ unsigned long trace_kprobe_address(struct trace_kprobe *tk)
- 	if (tk->symbol) {
- 		addr = (unsigned long)
- 			kallsyms_lookup_name(trace_kprobe_symbol(tk));
-+
-+		if (IS_ENABLED(CONFIG_LTO_CLANG) && !addr)
-+			addr = kallsyms_lookup_name_without_suffix(trace_kprobe_symbol(tk));
-+
- 		if (addr)
- 			addr += tk->rp.kp.offset;
- 	} else {
-@@ -766,8 +770,13 @@ static unsigned int number_of_same_symbols(const char *mod, const char *func_nam
- {
- 	struct sym_count_ctx ctx = { .count = 0, .name = func_name };
- 
--	if (!mod)
-+	if (!mod) {
- 		kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
-+		if (IS_ENABLED(CONFIG_LTO_CLANG) && !ctx.count) {
-+			kallsyms_on_each_match_symbol_without_suffix(
-+				count_symbols, func_name, &ctx.count);
-+		}
-+	}
- 
- 	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
- 
--- 
-2.43.0
+Agreed, we need a list of "pending to be retried", but rightly or not
+I think this should be done from work_struct->func.
+
+Lets discuss this later? We seem to agree this is a known problem, and
+this has nothing to do with your optimizations.
+
+> I'm just not clear how we
+> should handle stubborn cases (but honestly I haven't even tried to
+> understand all the details about this just yet).
+
+Same here.
+
+Oleg.
 
