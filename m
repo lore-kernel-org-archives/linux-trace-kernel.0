@@ -1,112 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC9A15B13A
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Aug 2024 15:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2967315C14F
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Aug 2024 16:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722873589; cv=none; b=TSy8DvvyxWSh22L5Tq4UlqHSx78r8mxrBY29vyT2Hy+M0mrcuI96Bgw9ZTD7tJjC+oE92p7c0//aGlMJTTqy+Aj2r283ZI9dVvJmLGYwSbkz8tb82tT5XHaZwIy/0dJYclpel9BjYVAVFjmkMOQrZmhLzbUW01MgW2117g1DdtE=
+	t=1722875652; cv=none; b=j0KVJNk03Gj9YtN1vxgaMEtPLCf3faiYvMP/xyFFBY04Ryz/PFiQdoVSJya3zyaaauVZmQzpa+9yfQBQPin4OMntbtStisxu0xy3aX8/VIeXs5lnZw6zDFnLUFBivQvfZ1U5EWrUd8WzsBLvpzU9KArCqr7CjKtD5k67yBwXX/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722873589; c=relaxed/simple;
-	bh=q73GkdMAUsuhmAurIE+4Rh4oA3WCaPz5k88nx2PWlUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Va3wagHS701w7JrzZXpLgPq3y2DhAHH55J433r3arVrQfFAYE3A6upF5F5KIiH/k7/PKKa6lfRBKSD/zFznVOVer0Gngw7ue0+Ac5Vq+Mgbm9no6bIoVOYG7bvaYV/rs4os3gpe8x5UJ30z2XcYrV83ETxphI3YRkYPH1Q/aQOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AOH3DJeT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1722875652; c=relaxed/simple;
+	bh=WShIfcyB1WIBp1LMFRNAOGPYq4so52JcsO4pudunr3k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f2ZkKvX3YGqusEVnEicc2qEERmCKGk34T2TOG6jgdOaUUy4Q9jAwz5mBAxU7gPcju0YcFjWEWXgYw52JR68ULh5J4jy/nct6VttZ7+KyCLbF6IaKfCfkgKmdZ8Dko/HbCaBaJk6RD6SoLF6xkJjN/qYCnqXu1/QEUX+ibo+aQcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ooMfse3W; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOH3DJeT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722873586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F5WoF7SpMgNw9Tt7F4AdxuqhGssiOGa0SxaZrKFwOpc=;
-	b=AOH3DJeT//Li3jMDTPWCjoxYsqU3H9TBQl7Tmc+IaVQL7X4i4oZhO4MxEbT4Lk5FWqQwby
-	uCuO+ZthIG0A4iBpsCaEIW/HJieSgl/6sAQCl9EIgKlA+5ST6uUTSF5m9gz+dxMYP7Ck3k
-	K/zaLHTWv/SGaUQKH79SJJxQ18xiL5s=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-63-MA47QDb7PJSsHtxBMgmnig-1; Mon,
- 05 Aug 2024 11:59:40 -0400
-X-MC-Unique: MA47QDb7PJSsHtxBMgmnig-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A1B11955D52;
-	Mon,  5 Aug 2024 15:59:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9BA311955D44;
-	Mon,  5 Aug 2024 15:59:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  5 Aug 2024 17:59:36 +0200 (CEST)
-Date: Mon, 5 Aug 2024 17:59:32 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH 5/8] uprobes: travers uprobe's consumer list locklessly
- under SRCU protection
-Message-ID: <20240805155931.GC11049@redhat.com>
-References: <20240731214256.3588718-1-andrii@kernel.org>
- <20240731214256.3588718-6-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ooMfse3W"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-44fe9cf83c7so58414841cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Aug 2024 09:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722875649; x=1723480449; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WShIfcyB1WIBp1LMFRNAOGPYq4so52JcsO4pudunr3k=;
+        b=ooMfse3WVKfuxOLSSKdlcT9aqFqVw/RtyRXpOBsgOCTn9wKceQcM71mSUyFUCGbjdh
+         26+ROdikowegVtjSUS4uWVUhtc95hLL23dlnWFj8cp65MVc4drKNIX9u43DWF2Bats8h
+         t0heAI4eFDoxqmiGWoYtMgQD56gP+7qgIFOqzvLbDpke6iJR6YapJ+kA8HjUL+DyHiKy
+         +7NkKP96kiTMdLcfY8EpRMfItKrh6siytmWkC/b0tGgiJkDeyeXjOqlFRgZJ9luyNyNG
+         6FpewpnZhlzpQ9biBgMEY7x44yXFsfP3XIyl2lb1fAFA0jwMYwVdtCGFuyqF5RwPlBAL
+         hg0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722875649; x=1723480449;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WShIfcyB1WIBp1LMFRNAOGPYq4so52JcsO4pudunr3k=;
+        b=Xc2i1iRd1C4Qs5p8HM46wxLnTd6qlE5I1rZDAVxK3ivOFypUvCOctGvPjueEw1OLOE
+         xOTQDLpWTkL6skuNUz1uIOkpXhFnUGopr6A76U0+mCqjnzY98qdatveUzmZdVtoEOcbu
+         P6p5BKQpM8zX+DCdYK9ywArJq/ye1sfe9kmFJ/R7Bng8+TSbTOxnicuKQJp4qYYYWNQp
+         eT7ylp4N+nh8pg/bajdJ9cV4KXNltvY3a5Tjt3ssmbwNFkZSylvr1sZo3W8XelFWbIAN
+         dZ5i3sIxJAPr7rB5HqiIXC2soZ5ka9A+wA9oz0TXJtL77HOyN33pY/HzcLdosR9drhgB
+         Kj/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXSjONWZhcpDliJ2pNjuItPGdbS7hgpdYKvmIGYwzGTuZgdJG68UiM6Jl53YcQ6sYyriQ8jfFm8aqpbvnXS0bH9QI1BJVrRQahHRCJaKSe6mrYe
+X-Gm-Message-State: AOJu0YyMBVa0NAwSzCc3UZ5fDYWfPJ7DvoHa4nM2HovkmAIYjVAipa/f
+	k9ws3+uGBprEo92YylyMk66yHd6I+RpVgcVVVGqLGWlgRfoU60/UGhtlrDiT7D4S38koHCAk7Ie
+	NfJMU26JmVa818zjCyyMB0fGWbadZD/PHJLxO
+X-Google-Smtp-Source: AGHT+IE3X2dzKDTfvW579W1ONWZvzHmSuPdaFYmL6fjjzD5I45yXHVQPoF1XfHnvXWK/VzgEqMK+gXEJqks0i1Xyhdk=
+X-Received: by 2002:a05:6214:4412:b0:6b5:7e97:7151 with SMTP id
+ 6a1803df08f44-6bb98345fa9mr131458736d6.17.1722875648824; Mon, 05 Aug 2024
+ 09:34:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240731214256.3588718-6-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20240730022623.98909-4-almasrymina@google.com> <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
+In-Reply-To: <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 5 Aug 2024 12:33:55 -0400
+Message-ID: <CAHS8izPxfCv1VMFBK1FahGTjVmUSSfrabgY5y6V+XtaszoHQ4w@mail.gmail.com>
+Subject: Re: [PATCH net-next v17 03/14] netdev: support binding dma-buf to netdevice
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Kaiyuan Zhang <kaiyuanz@google.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+	Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Christoph Hellwig <hch@infradead.org>, David Ahern <dsahern@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>, 
+	Donald Hunter <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Helge Deller <deller@gmx.de>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Jakub Kicinski <kuba@kernel.org>, 
+	"James E. J. Bottomley" <James.Bottomley@hansenpartnership.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jeroen de Borst <jeroendb@google.com>, Jesper Dangaard Brouer <hawk@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matt Turner <mattst88@gmail.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, Shailend Chand <shailend@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Shuah Khan <shuah@kernel.org>, 
+	Steffen Klassert <steffen.klassert@secunet.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Yunsheng Lin <linyunsheng@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/31, Andrii Nakryiko wrote:
+On Tue, Jul 30, 2024 at 4:38=E2=80=AFAM Markus Elfring <Markus.Elfring@web.=
+de> wrote:
 >
-> @@ -1120,17 +1098,19 @@ void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
->  	int err;
+> =E2=80=A6
+> > +++ b/include/net/devmem.h
+> > @@ -0,0 +1,115 @@
+> =E2=80=A6
+> > +#ifndef _NET_DEVMEM_H
+> > +#define _NET_DEVMEM_H
+> =E2=80=A6
 >
->  	down_write(&uprobe->register_rwsem);
-> -	if (WARN_ON(!consumer_del(uprobe, uc))) {
-> -		err = -ENOENT;
-
-OK, I agree, this should never happen.
-
-But if you remove this check, then
-
->  int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
->  {
->  	struct uprobe_consumer *con;
-> -	int ret = -ENOENT;
-> +	int ret = -ENOENT, srcu_idx;
+> I suggest to omit leading underscores from such identifiers.
+> https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+or+=
+define+a+reserved+identifier
 >
->  	down_write(&uprobe->register_rwsem);
-> -	for (con = uprobe->consumers; con && con != uc ; con = con->next)
-> -		;
-> -	if (con)
-> -		ret = register_for_each_vma(uprobe, add ? uc : NULL);
-> +
-> +	srcu_idx = srcu_read_lock(&uprobes_srcu);
-> +	list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
-> +				 srcu_read_lock_held(&uprobes_srcu)) {
-> +		if (con == uc) {
-> +			ret = register_for_each_vma(uprobe, add ? uc : NULL);
-> +			break;
-> +		}
-> +	}
 
-we can probably remove the similar check above?
+I was gonna apply this change, but I ack'd existing files and I find
+that all of them include leading underscores, including some very
+recently added files like net/core/page_pool_priv.h.
 
-I mean, why do we need the list_for_each_entry_srcu() above? Is it possible
-that uprobe_apply(uprobe, uc) is called when "uc" is not on the ->consumers
-list?
+I would prefer to stick to existing conventions if that's OK, unless
+there is widespread agreement to the contrary.
 
-At first glance I see no problems in this patch... but you know, my eyes are
-already blurring, I'll continue tomorrow and read this patch again.
-
-Oleg.
-
+--=20
+Thanks,
+Mina
