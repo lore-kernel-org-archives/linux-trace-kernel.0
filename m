@@ -1,143 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60A51553BD;
-	Mon,  5 Aug 2024 12:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5377383B2
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Aug 2024 13:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722862427; cv=none; b=jpTmscI5R4ocxs04eYgLk0ElqGY/DgrTNeqmgPHeuxfKKB5GTk2ggUo74dY/Pp9aAXHxRGaerFnYXkLx7dPRcRrilHOMfuntpX0iLUo+ymsFBFmoSCX0tELIuDAFh5nLIufcWFn/wnaOMXFmig3pqHS/kz4ziEZrD/Nov8dfGlI=
+	t=1722865478; cv=none; b=B9QKN4iIR7MeV7gL3gA+plNXb5hP5HSf2lo15S8VXGpU5KmZEGqeriX7LRCrw8ISQUYQQDTvhhKP3PDM3qiHvF487p3YbNNnFFP6xaf6a/+J8MEnf6C8LAhFDdPgC1vDvGY3W4i8Dfb0lMqXFD9v8dS/Cbl4DGBptctcpj2ndYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722862427; c=relaxed/simple;
-	bh=zkSccOrcHN9PwIDKSBmcd1Mtr3VA44oYrKtVXgICUv4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RerpdFYGFmn65jcLtOiDqgpCnPFeV5fi/BNir7/hOXjnLkxr/46mazg1idloupRyuC3MV0kRJy7Qf6D2MrBDirhuMXsZnUmj1RKVelHMaKgszTJQ3agDGvBG8MY3Xr/BXZpDdY0ets42Cco4BLzR+1fIcKh82lqnNzmZrgIYjmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rf0caaJm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722865478; c=relaxed/simple;
+	bh=PI66hrhlN5T6OU7VevTwzxYp0S1w1b9mYvo63Sk6qDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QSTG/k7jb5K+anyQeuJerPLO+Oouchh0nc5+0CLO7zOyjNUxTpapt0E3DyT7dtvffpwgOhh9ebcVqfY8cBiUYAQwH6Y6xlgOPWzEDKDd69T87xA/Flr1jraN4lvlccWAYzQCCdbYokn97neJZUTvEQcZKrx9rwm7fiY/iA0ZFHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AURk3Y63; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rf0caaJm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C153C32782;
-	Mon,  5 Aug 2024 12:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722862427;
-	bh=zkSccOrcHN9PwIDKSBmcd1Mtr3VA44oYrKtVXgICUv4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rf0caaJmPTBZhGYv+4fGx3xwDnH3mr0CxL4hNFHK18ODZW5F+yGiLiBNzHvB7f0FX
-	 nfLpSC3vtXOsN5osjOWYQTW1NeqMw9wX+5lorxNQGHMawSU+0b0TDemKZ80usZBDbm
-	 b0icR/chV3fzrg5niUdj/EjwrvM/D0uhKCQUZ0s6Qbg2YCMuw+KqpMmo6bnefnZsMu
-	 clB9gP4BThQ8quESKZrYEKCw0bF/BJj5QrLore2V8ZpQZEniOM5GUWa4ckB/hnBIxW
-	 9qGTxRlc7zS2/1fEvCDxWohPLu+P2/8GgwWVUlIwL1wLNQy9mGA9dmRfb3JMrZn0hH
-	 +G1idVf2Fj2TQ==
-Date: Mon, 5 Aug 2024 21:53:40 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Song Liu <songliubraving@meta.com>
-Cc: Petr Mladek <pmladek@suse.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Song Liu <song@kernel.org>, "live-patching@vger.kernel.org"
- <live-patching@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Miroslav Benes <mbenes@suse.cz>, Joe Lawrence <joe.lawrence@redhat.com>,
- Nathan Chancellor <nathan@kernel.org>, "morbo@google.com"
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Luis Chamberlain
- <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
- "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
- Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
- <samitolvanen@google.com>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 2/3] kallsyms: Add APIs to match symbol without
- .llmv.<hash> suffix.
-Message-Id: <20240805215340.1e647b9bb1f35af6bd4b909c@kernel.org>
-In-Reply-To: <2F42C167-319A-46F2-A6C8-95B59F675D65@fb.com>
-References: <20240730005433.3559731-1-song@kernel.org>
-	<20240730005433.3559731-3-song@kernel.org>
-	<20240730220304.558355ff215d0ee74b56a04b@kernel.org>
-	<5E9D7211-5902-47D3-9F4D-8DEFD8365B57@fb.com>
-	<Zqz_BwG1fcQaUsoY@pathway.suse.cz>
-	<2F42C167-319A-46F2-A6C8-95B59F675D65@fb.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AURk3Y63"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722865475;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=slMM8m9qTpPlMHtZj0YMq5nEN8sovoUKAlpfjXtwiuk=;
+	b=AURk3Y637G/wBYqqPpcrfgWV4euiMLsSfv4VKfIf2w7tm/R00wIyoxzpk7cG3j2g5Ns6Ra
+	qoEZwv1obaf9bBcXdEcjcrrvBtykmQKgFO9CIUGnL8pdrnmlkxdNCmwiapFUfcPAa0G3KI
+	HMbg7AfhuUOZJ8H0CIijVghof9R9kJk=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-179-3hlHpkU-NV-uulNCy4HPeA-1; Mon,
+ 05 Aug 2024 09:44:27 -0400
+X-MC-Unique: 3hlHpkU-NV-uulNCy4HPeA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 172DF1955BF7;
+	Mon,  5 Aug 2024 13:44:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5CB0130001A6;
+	Mon,  5 Aug 2024 13:44:21 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  5 Aug 2024 15:44:23 +0200 (CEST)
+Date: Mon, 5 Aug 2024 15:44:18 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH 2/8] uprobes: revamp uprobe refcounting and lifetime
+ management
+Message-ID: <20240805134418.GA11049@redhat.com>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240731214256.3588718-3-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731214256.3588718-3-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Fri, 2 Aug 2024 17:09:12 +0000
-Song Liu <songliubraving@meta.com> wrote:
+On 07/31, Andrii Nakryiko wrote:
+>
+> @@ -732,11 +776,13 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
+>  	uprobe->ref_ctr_offset = ref_ctr_offset;
+>  	init_rwsem(&uprobe->register_rwsem);
+>  	init_rwsem(&uprobe->consumer_rwsem);
+> +	RB_CLEAR_NODE(&uprobe->rb_node);
 
-> Hi Petr, 
-> 
-> > On Aug 2, 2024, at 8:45 AM, Petr Mladek <pmladek@suse.com> wrote:
-> 
-> [...]
-> 
-> > 
-> > IMHO, it depends on the use case. Let's keep "ping_table/"
-> > as an example. Why people would want to trace this function?
-> > There might be various reasons, for example:
-> > 
-> >  1. ping_table.llvm.15394922576589127018 appeared in a backtrace
-> > 
-> >  2. ping_table.llvm.15394922576589127018 appeared in a histogram
-> > 
-> >  3. ping_table looks interesting when reading code sources
-> > 
-> >  4. ping_table need to be monitored on all systems because
-> >     of security/performance.
-> > 
-> > The full name "ping_table.llvm.15394922576589127018" is perfectly
-> > fine in the 1st and 2nd scenario. People knew this name already
-> > before they start thinking about tracing.
-> > 
-> > The short name is more practical in 3rd and 4th scenario. Especially,
-> > when there is only one static symbol with this short name. Otherwise,
-> > the user would need an extra step to find the full name.
-> > 
-> > The full name is even more problematic for system monitors. These
-> > applications might need to probe particular symbols. They might
-> > have hard times when the symbol is:
-> > 
-> >    <symbol_name_from_sources>.<random_suffix_generated_by_compiler>
-> > 
-> > They will have to deal with it. But it means that every such tool
-> > would need an extra (non-trivial) code for this. Every tool would
-> > try its own approach => a lot of problems.
-> > 
-> > IMHO, the two APIs could make the life easier.
-> > 
-> > Well, even kprobe might need two APIs to allow probing by
-> > full name or without the suffix.
-> 
-> The problem is, with potential partial inlining by modern compilers, 
-> tracing "symbol name from sources" is not accurate. In our production 
-> kernels, we have to add some explicit "noline" to make sure we can 
-> trace these functions reliably. 
-> 
-> Of course, this issue exists without random suffix: any function 
-> could be partially inlined. However, allowing tracing without the 
-> suffix seems to hint that tracing with "symbol name from sources" 
-> is valid, which is not really true. 
-> 
-> At the moment, I have no objections to keep the _without_suffix
-> APIs. But for long term, I still think we need to set clear 
-> expectations for the users: tracing symbols from sources is not
-> reliable. 
+I guess RB_CLEAR_NODE() is not necessary?
 
-OK, I understand this part. I agree the problem. Even if the symbol
-is unique on kallsyms (without suffix), it may have a suffix and is
-not correct function entry.
+> @@ -1286,15 +1296,19 @@ static void build_probe_list(struct inode *inode,
+>  			u = rb_entry(t, struct uprobe, rb_node);
+>  			if (u->inode != inode || u->offset < min)
+>  				break;
+> +			u = try_get_uprobe(u);
+> +			if (!u) /* uprobe already went away, safe to ignore */
+> +				continue;
+>  			list_add(&u->pending_list, head);
 
-I think to solve this issue, we need a better DWARF, or add a symbol
-suffix like;
+cosmetic nit, feel to ignore, but to me
 
-https://lkml.org/lkml/2023/12/4/1535
+			if (try_get_uprobe(u))
+				list_add(&u->pending_list, head);
 
-Thank you,
+looks more readable.
 
-> 
-> Thanks,
-> Song
-> 
+Other than the lack of kfree() in put_uprobe() and WARN() in _unregister()
+the patch looks good to me.
 
+Oleg.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
