@@ -1,145 +1,122 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A727517C64;
-	Mon,  5 Aug 2024 14:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0A313C3EE
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Aug 2024 14:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722867137; cv=none; b=oTh0NtzpuDRx0iuYyGfJCMFOTLxbjnfDWQxb4reuQcYmDcu1gKKUp31oYSWlYnaquGGeyFxszI3o1OFvIQAIxTR50UPsD8wp7brb+I8GIIeP4D+Oe9vWfBtfVcZj5Das1QmqE5TYZ0YYQv98YIpQU7lnIK8XGSwxN3aJ7Bv1pmA=
+	t=1722869531; cv=none; b=soLwTzQe+aLhNdTbFvE0RltKRSES9sIKYJLz+FNCoqg1Cu7qGdplV0LQMzxVhRmIVIiqJdtqzbhnd867tc9z+3DIjJWvRDirbKohndThX10IRQXEGukvURkMx3xx0gj0ZHrcfpT+V1IaI/UMr6HFNm/QcxamvwThMkRIFcND5Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722867137; c=relaxed/simple;
-	bh=9M4xpkoH3LimV0O0XQcpYnwFUNXxsSPpdOBU2ZuvMyY=;
-	h=Subject:MIME-Version:Content-Type:Date:Message-ID:CC:From:To:
-	 References:In-Reply-To; b=MfR2Uo70qspShBNPq0l2OxJaCH9rvj5Nl6YeiOv/wOWcoA5fi5qlUhEcFRoGH3zAaLS6Rb3MQnkN2XiS8jRjpNUihHrFOfcsum1VIpnCNddadXd+MY1cXbHkYH6FG1qVcmi35OOtSzFLrIDQ7+gP1I3RxKOid60PeSfAHak/yDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Lo2Ip46l; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1722869531; c=relaxed/simple;
+	bh=4OYN+uwqmllS1ifCVYqfqrP0wsuDr0tVy3A/D+B1b7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bzgH5/kw2thuEVE9uiroX/NTKxsraWJjq6xjg25V4zjHRVvLPhOQgybpuMtRtlRTDMqN187m2yNAr7Y71EEm0/1xT+J1mGJCp6STcBfBx48M2RC+Ae+2ygsXQdIbd1hQx0wQXZvGSeVKGE93U/9jYJFlWeMNtsxymHNTtexnPS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DpaZorHH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Lo2Ip46l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1722867135; x=1754403135;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   cc:from:to:references:in-reply-to:subject;
-  bh=MK25yrGsMeryEu/GddZa4lO4IjN5z+54ON7xDCNErE8=;
-  b=Lo2Ip46lrst1H5aB7j2LI1HD6MWx6P2XQcFLmajRQ4QXSczhFQRQEcKJ
-   9YjGWrwxdBeaWGWBYJgEI9sT2HCT+BH5PUousdxcNxhSDX6FLlkFc72KK
-   JvHMkPIJPYl1jMOrRB/60O2TJpkhsnmwS2Nn8iADSrfV+bBOnMczxgagP
-   s=;
-X-IronPort-AV: E=Sophos;i="6.09,264,1716249600"; 
-   d="scan'208";a="112496171"
-Subject: Re: [PATCH 01/18] KVM: x86: hyper-v: Introduce XMM output support
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 14:08:58 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:29010]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.0.23:2525] with esmtp (Farcaster)
- id e194f651-d149-4251-920f-bb202d846005; Mon, 5 Aug 2024 14:08:57 +0000 (UTC)
-X-Farcaster-Flow-ID: e194f651-d149-4251-920f-bb202d846005
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Mon, 5 Aug 2024 14:08:56 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Mon, 5 Aug 2024
- 14:08:50 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpaZorHH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722869529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OHZfGYL5T6FMYKUtqsFLa7gkK/CdeKX+rspJ2D4JRhI=;
+	b=DpaZorHH99CG4YX8tuW2ndK+ctx03hopRUiOTxf97hoMaHkwArPjCsdYKtru7Uk2pdEhk0
+	gyG9eAlfVFwCA6Ys0ChDa2AhSk80aPwMJnolb3/IVVlsTfhKrR1cZf42F6x/cue3d93Qn1
+	l5I/g8399jaN5X/mTDind5kQYpENXqI=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-177-2dl5GU_qO0elz3KG8l5Nsw-1; Mon,
+ 05 Aug 2024 10:52:04 -0400
+X-MC-Unique: 2dl5GU_qO0elz3KG8l5Nsw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A28211955D4A;
+	Mon,  5 Aug 2024 14:52:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1872D1955D42;
+	Mon,  5 Aug 2024 14:51:58 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  5 Aug 2024 16:52:00 +0200 (CEST)
+Date: Mon, 5 Aug 2024 16:51:56 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH 3/8] uprobes: protected uprobe lifetime with SRCU
+Message-ID: <20240805145156.GB11049@redhat.com>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240731214256.3588718-4-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Mon, 5 Aug 2024 14:08:46 +0000
-Message-ID: <D381CRQ2XJL9.1NBVMKT4SR51P@amazon.com>
-CC: <pbonzini@redhat.com>, <seanjc@google.com>, <linux-doc@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
-	<dwmw2@infradead.org>, <pdurrant@amazon.com>, <mlevitsk@redhat.com>,
-	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>
-X-Mailer: aerc 0.17.0-152-g73bcb4661460-dirty
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <20240609154945.55332-2-nsaenz@amazon.com> <87tth0rku3.fsf@redhat.com>
- <D2RVJ6QCVNOU.XC0OC54QHI51@amazon.com> <878qxk5mox.fsf@redhat.com>
-In-Reply-To: <878qxk5mox.fsf@redhat.com>
-X-ClientProxiedBy: EX19D046UWA004.ant.amazon.com (10.13.139.76) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731214256.3588718-4-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Mon Jul 29, 2024 at 1:53 PM UTC, Vitaly Kuznetsov wrote:
-> CAUTION: This email originated from outside of the organization. Do not c=
-lick links or open attachments unless you can confirm the sender and know t=
-he content is safe.
-> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
->
-> > Hi Vitaly,
-> > Thanks for having a look at this.
-> >
-> > On Mon Jul 8, 2024 at 2:59 PM UTC, Vitaly Kuznetsov wrote:
-> >> Nicolas Saenz Julienne <nsaenz@amazon.com> writes:
-> >>
-> >> > Prepare infrastructure to be able to return data through the XMM
-> >> > registers when Hyper-V hypercalls are issues in fast mode. The XMM
-> >> > registers are exposed to user-space through KVM_EXIT_HYPERV_HCALL an=
-d
-> >> > restored on successful hypercall completion.
-> >> >
-> >> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
-> >> >
-> >> > ---
-> >> >
-> >> > There was some discussion in the RFC about whether growing 'struct
-> >> > kvm_hyperv_exit' is ABI breakage. IMO it isn't:
-> >> > - There is padding in 'struct kvm_run' that ensures that a bigger
-> >> >   'struct kvm_hyperv_exit' doesn't alter the offsets within that str=
-uct.
-> >> > - Adding a new field at the bottom of the 'hcall' field within the
-> >> >   'struct kvm_hyperv_exit' should be fine as well, as it doesn't alt=
-er
-> >> >   the offsets within that struct either.
-> >> > - Ultimately, previous updates to 'struct kvm_hyperv_exit's hint tha=
-t
-> >> >   its size isn't part of the uABI. It already grew when syndbg was
-> >> >   introduced.
-> >>
-> >> Yes but SYNDBG exit comes with KVM_EXIT_HYPERV_SYNDBG. While I don't s=
-ee
-> >> any immediate issues with the current approach, we may want to introdu=
-ce
-> >> something like KVM_EXIT_HYPERV_HCALL_XMM: the userspace must be prepar=
-ed
-> >> to handle this new information anyway and it is better to make
-> >> unprepared userspace fail with 'unknown exit' then to mishandle a
-> >> hypercall by ignoring XMM portion of the data.
-> >
-> > OK, I'll go that way. Just wanted to get a better understanding of why
-> > you felt it was necessary.
-> >
->
-> (sorry for delayed reply, I was on vacation)
->
-> I don't think it's an absolute must but it appears as a cleaner approach
-> to me.
->
-> Imagine there's some userspace which handles KVM_EXIT_HYPERV_HCALL today
-> and we want to add XMM handling there. How would we know if xmm portion
-> of the data is actually filled by KVM or not? With your patch, we can of
-> course check for HV_X64_HYPERCALL_XMM_OUTPUT_AVAILABLE in
-> KVM_GET_SUPPORTED_HV_CPUID but this is not really straightforward, is
-> it? Checking the size is not good either. E.g. think about downstream
-> versions of KVM which may or may not have certain backports. In case we
-> (theoretically) do several additions to 'struct kvm_hyperv_exit', it
-> will quickly become a nightmare.
->
-> On the contrary, KVM_EXIT_HYPERV_HCALL_XMM (or just
-> KVM_EXIT_HYPERV_HCALL2) approach looks cleaner: once userspace sees it,
-> it knows that 'xmm' portion of the data can be relied upon.
+LGTM, just a few notes...
 
-Makes sense, thanks for the explanation.
+On 07/31, Andrii Nakryiko wrote:
+>
+> @@ -59,6 +61,7 @@ struct uprobe {
+>  	struct list_head	pending_list;
+>  	struct uprobe_consumer	*consumers;
+>  	struct inode		*inode;		/* Also hold a ref to inode */
+> +	struct rcu_head		rcu;
 
-Nicolas
+you can probably put the new member into the union with, say, rb_node.
+
+> @@ -1945,9 +1950,14 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
+>  	if (!utask)
+>  		return -ENOMEM;
+>
+> +	if (!try_get_uprobe(uprobe))
+> +		return -EINVAL;
+> +
+
+a bit off-topic right now, but it seems that we can simply kill
+utask->active_uprobe. We can turn into into "bool has_active_uprobe"
+and copy uprobe->arch into uprobe_task. Lets discuss this later.
+
+> @@ -2201,13 +2215,15 @@ static void handle_swbp(struct pt_regs *regs)
+>  {
+>  	struct uprobe *uprobe;
+>  	unsigned long bp_vaddr;
+> -	int is_swbp;
+> +	int is_swbp, srcu_idx;
+>
+>  	bp_vaddr = uprobe_get_swbp_addr(regs);
+>  	if (bp_vaddr == uprobe_get_trampoline_vaddr())
+>  		return uprobe_handle_trampoline(regs);
+>
+> -	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+> +	srcu_idx = srcu_read_lock(&uprobes_srcu);
+> +
+> +	uprobe = find_active_uprobe_rcu(bp_vaddr, &is_swbp);
+>  	if (!uprobe) {
+>  		if (is_swbp > 0) {
+>  			/* No matching uprobe; signal SIGTRAP. */
+> @@ -2223,6 +2239,7 @@ static void handle_swbp(struct pt_regs *regs)
+>  			 */
+>  			instruction_pointer_set(regs, bp_vaddr);
+>  		}
+> +		srcu_read_unlock(&uprobes_srcu, srcu_idx);
+>  		return;
+
+Why not
+		goto out;
+
+?
+
+Oleg.
+
