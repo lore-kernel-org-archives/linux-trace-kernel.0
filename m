@@ -1,114 +1,143 @@
-Received: from out162-62-63-194.mail.qq.com (out162-62-63-194.mail.qq.com [162.62.63.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6DC13634B;
-	Mon,  5 Aug 2024 12:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.63.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60A51553BD;
+	Mon,  5 Aug 2024 12:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722859941; cv=none; b=fItJPYcThtu57HrwHoEcILnuyiqcnjT2qx6Jx3kxHXbs/IWCAry7P6fMcuzvW+gFlzTpwNveUd7BMAP0ztgCoFSZtVAjOdf1GiT0E9uJ6tpbC6ntsFbYjVUR44qhokT8lso8mdKjL/34bBfSQoXVXjgPKGcl030v6f6rpnpRnpQ=
+	t=1722862427; cv=none; b=jpTmscI5R4ocxs04eYgLk0ElqGY/DgrTNeqmgPHeuxfKKB5GTk2ggUo74dY/Pp9aAXHxRGaerFnYXkLx7dPRcRrilHOMfuntpX0iLUo+ymsFBFmoSCX0tELIuDAFh5nLIufcWFn/wnaOMXFmig3pqHS/kz4ziEZrD/Nov8dfGlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722859941; c=relaxed/simple;
-	bh=Qp11J6O8h+Au2NLWQbsXI+AfZKm4YW5Ca9Z9Tion6Rs=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=V4A3BF62QmOnjrlR8HUkaYuc/EuG3w0u2uHdAGpRpftO0loWltHMsm01kZEco6oiHubwRHFxXbnGOgxDTdqSct1q3/NgxHOdAhqVNxy2CzjtmVwrvjRKP8r7vG0sQK90Dq23nSowR71iQAJ2g8Xdms69BnKbrxYfl+az7STNeH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=jjsMdWDE; arc=none smtp.client-ip=162.62.63.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1722862427; c=relaxed/simple;
+	bh=zkSccOrcHN9PwIDKSBmcd1Mtr3VA44oYrKtVXgICUv4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RerpdFYGFmn65jcLtOiDqgpCnPFeV5fi/BNir7/hOXjnLkxr/46mazg1idloupRyuC3MV0kRJy7Qf6D2MrBDirhuMXsZnUmj1RKVelHMaKgszTJQ3agDGvBG8MY3Xr/BXZpDdY0ets42Cco4BLzR+1fIcKh82lqnNzmZrgIYjmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rf0caaJm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="jjsMdWDE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1722859632; bh=Y2rrQFMokNYbGpjkz/AFFe2SO8TaXfJsr5mUngwNA/Q=;
-	h=From:To:Cc:Subject:Date;
-	b=jjsMdWDEMTNkYCaOWD4VVWiEtqEYoDxf9ZXGws6FcVM7A4bhR8YcuEJU8XbjpQPUA
-	 8AVfD+Uz1er34Neen43iD8h7BJlNDNWNXLEgLCwfpK+EijopkzDLOJN0afLSWtrlqZ
-	 NXwh4SZIRRmg0IqPscCeQzC2368ibdd+PlbrTvWo=
-Received: from localhost.localdomain ([101.82.163.228])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 9220F486; Mon, 05 Aug 2024 19:36:34 +0800
-X-QQ-mid: xmsmtpt1722857794tbhq1pyes
-Message-ID: <tencent_F4A7E9AB337F44E0F4B858D07D19EF460708@qq.com>
-X-QQ-XMAILINFO: NkbC4iGUzta9XSUi1sBkV0QzuvHM43S0o+b5rIXMas1Vrm7RxL2UkWyCKE8eCM
-	 KqgghwUnybUi+qTHHLpgM3DN5jWoS8tzjjn/szOqP7srKpLPJnVukuCGpnWODc+oFTPZofXST/3y
-	 YVaeCfwjiqw03PXtH1RwTQFQNjxxQkhHva86Es/0xz6dgNMI8Tlnvu44MUWwvn9vSddtdRxTe1Pq
-	 hMTgWRhzbYRWS9VrzwQfLYzEyrpNB6jSFtI4VD7mkFhPXDagRcaZ5nAzGyZgfePq0HtoePwlBkIK
-	 YsSeWpB+oPAOeQ7zsaYXZDA/zHEEtJX/ZHvWde7PBlUlNG2OBdX35yZELLZ65aBNFgyZkgchgG8h
-	 knCTpe0JpGxGOcv9MfymrbNgr7hkYCBbXGWusDxhRQVZwOhzRKnX+Zx7dnzw+1+dYyItOrb1xUj7
-	 vPrs2SdcvaTQgxR/ihg0Lvlmdb4c96qDuOa88MW59Ebb+1wc4Hv603GmCYdM2S5QHUrQk5l9+sxF
-	 E3RA1b5Zdb4eCIq1vxPQr+f6+RW3cK+UCmJmv/ho/JNylpZ+/z/kRPGcc9QYNK9dGgE/EtE93YXu
-	 AIPT0TvJ0jKuM3elAwWp3YkfJkSD3wBlkQPE3vWtlC/+U/uisV+7gzxWflazxdPob5QwhdKkfWwq
-	 RBuIvUVZeynYJJDn6GEJJYLt2dOeIIeC4F8vN/2Tvhqf0SYZEc50RMf77MLrOZHthoezZ0CDM7sb
-	 fUid1Y1w9UN2T+0zPkz3X4dSgEUZ7RVMzseBbyeiE4uyTlvXcBwVTuFUIAWe1kWZQ/EyT4R7iHMy
-	 35pDIMWovw7Ar1O2IrkAS1bKcEkUsgZU4jbfHg9yLoLigi7fEXg4mM34uojXkUJPz+/nF0y9qGuF
-	 ZEtkDPigsTZfYlnjip9j/Jd4OQjUuq39tMCoPx5ApVwCLzpx+eyoie0RogIhgc0rgnuV8soUgMe+
-	 Iw7jZXbkrOmddf9euy2I8V7fHLHiHyvDzXqrQmN4W2e9tJcJKzlZuU2L8JAsJ6UWRMeKLX3OVkOV
-	 atVGKOB6U6V6Z31xjjMlWiKXIPnqmPxcj0jTHWOO4zjvhWw/9SKeuiMhH9rb/wvQds4sO/Eg==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: 912460177@qq.com
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	JonasZhou@zhaoxin.com,
-	912460177@qq.com
-Subject: [PATCH] ring-buffer: remove ring_buffer_nr_pages()
-Date: Mon,  5 Aug 2024 19:36:31 +0800
-X-OQ-MSGID: <20240805113631.4118-1-912460177@qq.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rf0caaJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C153C32782;
+	Mon,  5 Aug 2024 12:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722862427;
+	bh=zkSccOrcHN9PwIDKSBmcd1Mtr3VA44oYrKtVXgICUv4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rf0caaJmPTBZhGYv+4fGx3xwDnH3mr0CxL4hNFHK18ODZW5F+yGiLiBNzHvB7f0FX
+	 nfLpSC3vtXOsN5osjOWYQTW1NeqMw9wX+5lorxNQGHMawSU+0b0TDemKZ80usZBDbm
+	 b0icR/chV3fzrg5niUdj/EjwrvM/D0uhKCQUZ0s6Qbg2YCMuw+KqpMmo6bnefnZsMu
+	 clB9gP4BThQ8quESKZrYEKCw0bF/BJj5QrLore2V8ZpQZEniOM5GUWa4ckB/hnBIxW
+	 9qGTxRlc7zS2/1fEvCDxWohPLu+P2/8GgwWVUlIwL1wLNQy9mGA9dmRfb3JMrZn0hH
+	 +G1idVf2Fj2TQ==
+Date: Mon, 5 Aug 2024 21:53:40 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Song Liu <songliubraving@meta.com>
+Cc: Petr Mladek <pmladek@suse.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Song Liu <song@kernel.org>, "live-patching@vger.kernel.org"
+ <live-patching@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Miroslav Benes <mbenes@suse.cz>, Joe Lawrence <joe.lawrence@redhat.com>,
+ Nathan Chancellor <nathan@kernel.org>, "morbo@google.com"
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
+ "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
+ Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 2/3] kallsyms: Add APIs to match symbol without
+ .llmv.<hash> suffix.
+Message-Id: <20240805215340.1e647b9bb1f35af6bd4b909c@kernel.org>
+In-Reply-To: <2F42C167-319A-46F2-A6C8-95B59F675D65@fb.com>
+References: <20240730005433.3559731-1-song@kernel.org>
+	<20240730005433.3559731-3-song@kernel.org>
+	<20240730220304.558355ff215d0ee74b56a04b@kernel.org>
+	<5E9D7211-5902-47D3-9F4D-8DEFD8365B57@fb.com>
+	<Zqz_BwG1fcQaUsoY@pathway.suse.cz>
+	<2F42C167-319A-46F2-A6C8-95B59F675D65@fb.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Jianhui Zhou <912460177@qq.com>
+On Fri, 2 Aug 2024 17:09:12 +0000
+Song Liu <songliubraving@meta.com> wrote:
 
-Because ring_buffer_nr_pages() is not an inline function and user accesses
-buffer->buffers[cpu]->nr_pages directly, the function ring_buffer_nr_pages
-is removed.
+> Hi Petr, 
+> 
+> > On Aug 2, 2024, at 8:45 AM, Petr Mladek <pmladek@suse.com> wrote:
+> 
+> [...]
+> 
+> > 
+> > IMHO, it depends on the use case. Let's keep "ping_table/"
+> > as an example. Why people would want to trace this function?
+> > There might be various reasons, for example:
+> > 
+> >  1. ping_table.llvm.15394922576589127018 appeared in a backtrace
+> > 
+> >  2. ping_table.llvm.15394922576589127018 appeared in a histogram
+> > 
+> >  3. ping_table looks interesting when reading code sources
+> > 
+> >  4. ping_table need to be monitored on all systems because
+> >     of security/performance.
+> > 
+> > The full name "ping_table.llvm.15394922576589127018" is perfectly
+> > fine in the 1st and 2nd scenario. People knew this name already
+> > before they start thinking about tracing.
+> > 
+> > The short name is more practical in 3rd and 4th scenario. Especially,
+> > when there is only one static symbol with this short name. Otherwise,
+> > the user would need an extra step to find the full name.
+> > 
+> > The full name is even more problematic for system monitors. These
+> > applications might need to probe particular symbols. They might
+> > have hard times when the symbol is:
+> > 
+> >    <symbol_name_from_sources>.<random_suffix_generated_by_compiler>
+> > 
+> > They will have to deal with it. But it means that every such tool
+> > would need an extra (non-trivial) code for this. Every tool would
+> > try its own approach => a lot of problems.
+> > 
+> > IMHO, the two APIs could make the life easier.
+> > 
+> > Well, even kprobe might need two APIs to allow probing by
+> > full name or without the suffix.
+> 
+> The problem is, with potential partial inlining by modern compilers, 
+> tracing "symbol name from sources" is not accurate. In our production 
+> kernels, we have to add some explicit "noline" to make sure we can 
+> trace these functions reliably. 
+> 
+> Of course, this issue exists without random suffix: any function 
+> could be partially inlined. However, allowing tracing without the 
+> suffix seems to hint that tracing with "symbol name from sources" 
+> is valid, which is not really true. 
+> 
+> At the moment, I have no objections to keep the _without_suffix
+> APIs. But for long term, I still think we need to set clear 
+> expectations for the users: tracing symbols from sources is not
+> reliable. 
 
-Signed-off-by: Jianhui Zhou <912460177@qq.com>
----
- include/linux/ring_buffer.h |  1 -
- kernel/trace/ring_buffer.c  | 12 ------------
- 2 files changed, 13 deletions(-)
+OK, I understand this part. I agree the problem. Even if the symbol
+is unique on kallsyms (without suffix), it may have a suffix and is
+not correct function entry.
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 96d2140b471e..fd35d4ec12e1 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -193,7 +193,6 @@ void ring_buffer_set_clock(struct trace_buffer *buffer,
- void ring_buffer_set_time_stamp_abs(struct trace_buffer *buffer, bool abs);
- bool ring_buffer_time_stamp_abs(struct trace_buffer *buffer);
- 
--size_t ring_buffer_nr_pages(struct trace_buffer *buffer, int cpu);
- size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu);
- 
- struct buffer_data_read_page;
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 28853966aa9a..cebd879a30cb 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -692,18 +692,6 @@ u64 ring_buffer_event_time_stamp(struct trace_buffer *buffer,
- 	return ts;
- }
- 
--/**
-- * ring_buffer_nr_pages - get the number of buffer pages in the ring buffer
-- * @buffer: The ring_buffer to get the number of pages from
-- * @cpu: The cpu of the ring_buffer to get the number of pages from
-- *
-- * Returns the number of pages used by a per_cpu buffer of the ring buffer.
-- */
--size_t ring_buffer_nr_pages(struct trace_buffer *buffer, int cpu)
--{
--	return buffer->buffers[cpu]->nr_pages;
--}
--
- /**
-  * ring_buffer_nr_dirty_pages - get the number of used pages in the ring buffer
-  * @buffer: The ring_buffer to get the number of pages from
+I think to solve this issue, we need a better DWARF, or add a symbol
+suffix like;
+
+https://lkml.org/lkml/2023/12/4/1535
+
+Thank you,
+
+> 
+> Thanks,
+> Song
+> 
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
