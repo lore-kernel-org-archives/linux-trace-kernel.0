@@ -1,129 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B22481A7;
-	Mon,  5 Aug 2024 17:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DE71DFF7;
+	Mon,  5 Aug 2024 20:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722879995; cv=none; b=dAjShRN0BIp8aV6uxpHCKJHXdLIeVQCejGwI3LpMSEQZR4O1S9QP0jxEzjbH061XF84I+FPOOBJVy4wTD9aSTnY341R7eFGYE4uYkGzVd7a8KOISXWJ5et7gUOrkYxi9ltGZo2S0fDEZgmcwuI1ghB89DRDIJgfzYfC6EOt1eec=
+	t=1722888108; cv=none; b=doaRusjMmUJZ1P6oIXPNNpi+aS1SpzzkC/6WoGjUXpcvX3JSoj5lcKHvhjprj2Rj/7CbO2OacT0VFO0dOIzMTIhtMOc/ed4CEXpEylQzjh9eUhj7Z4eH+qlgKBgPqQ9y/ejeeRIHbix4Vx4eGhVfEiO1pOYy/2B2dAzrJDS0cDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722879995; c=relaxed/simple;
-	bh=Gx+4NhliD1/MYKaWvRPgeKiC8Ozr9TsuLJGZf7Sl7gk=;
+	s=arc-20240116; t=1722888108; c=relaxed/simple;
+	bh=otVCQOKvV/5nqUEhS8HgGXaV+fDxdHkNMHORoD4ZlJI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ttn4FVBwawrBUHzzUYHXHKgL1OQZXVO4VNPSD1Tmq6YT3kFIJXsuaf/tSTwZpA8tR8D0E6LIg+Pf25w1e6kj/KgkEnkgGPkfpQMJjEVaeFDMXuN7RErb9jgynj4/NC+PDkNQwSq+BKpMTsSty3pZ+IinUGDpbak4NBM6qLnSDFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aU0Hxp7W; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=K1C4x+uLh1Ih3+V17lONhm9EX/J+noOdMLvIuwoKqLpIQOLjQx0T76OExHbZmOJLOJWlgA6WWDxW2DqI79CcBgTpdXx9fkW23FXBSv5qqOozQDlGWEXYYRbryozAvXsAWMSbff6+3Q0b5XmN2ZwWWLnmWArLGCsdn2/0bOU0Kns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gI9UzQOG; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aU0Hxp7W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F26D3C4AF12;
-	Mon,  5 Aug 2024 17:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722879995;
-	bh=Gx+4NhliD1/MYKaWvRPgeKiC8Ozr9TsuLJGZf7Sl7gk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aU0Hxp7WYGPBt79fq/G1zNMFeWp4pEOTSLgWTye4U4GLssF1IkI8HcaFDQrZU6cMb
-	 Nfx69UwUFStApMMVK+1tICy6JbHpYkKuK9czhsq3P3+6xFWOhkhqrl+cEraBWYRScq
-	 vrA9p08uvFPoUn/Enct6x9loVbTcGGBV9T+ogf0hDSNqIjNz+GtMFk7bWAExlqAzat
-	 kckiXQN2JWW41RwmmptnZPwiLajRWFHmI+HWifKHe+XYvglptrw7t/M1SIMoLBxLAI
-	 6/G1LmNTfoWtE7+Ga4JYJ/73LJVSrm/jSYTrzmeyFA9WkbbvmalgNsY7Ek+3kEv9QB
-	 960/8cC0kQt1g==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-530ae4ef29dso11517546e87.3;
-        Mon, 05 Aug 2024 10:46:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWhOUscwc6zo8Nf4p+0/Xc691GdshHYbR4PwSRXA6Z76bsMZY6d3kTeuywfPVCfJxMsmzQcn+8h1dc+FveaT/WEjBp+DVwCvhKcRdh2PZUMf2LR+rjFyneGLXv04la1x3aFQ5cNwRKXjQCQ4xTD/BpG
-X-Gm-Message-State: AOJu0YzKAjDdLEIqaejAVkymGPDQyRmR+l8wixBgONb4v6tpxCTRrsR1
-	zWPBeSyFUaQ5Kd50IIksWlu0lxpKaSKKCw0RSkCmmcx9IO9dOSDGtYLvK0Rtl4IQ1Lta36QQc9V
-	iKM+wiHjkFtm3+exf7AWfP0hxEZU=
-X-Google-Smtp-Source: AGHT+IG3yL9p3oXntJjAV6RufVVHtCDR8RPr8Pey/VmQyx+q/WuBdDKFYhg2gH+XnhoFAiL0xDOEsCTDYsBcMMEMijg=
-X-Received: by 2002:a05:6512:1593:b0:52d:582e:4111 with SMTP id
- 2adb3069b0e04-530bb3810c5mr11445282e87.18.1722879993290; Mon, 05 Aug 2024
- 10:46:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gI9UzQOG"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2cf78366187so7712603a91.3;
+        Mon, 05 Aug 2024 13:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722888106; x=1723492906; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0mOHNfXvdN3GMWTEPdB5xSVFxudx+LI1nOP2dCz9qsM=;
+        b=gI9UzQOGHfxaGi/Tc9dvtf9trdAZtk1KYpW7vgotvL/QiOe/omZHEvfyFuOHmNIWP+
+         1bZLj8GlklI0+uEt1PhkxApUswp12aWZL58kERkPUmE9mKU7Ia3YcvKt4CO/1jrgth83
+         05TmR7j+Fiz3mUBdAEuz93PNRT69Dk28QVF1a7YwycykVuotRLIzi0CHHRHlCOh+q8x6
+         unVAnO3sGors9wS+ZQkBbYPsFfhh1C75Az5hHlb4yzL54crX9ZhtXZVG/UYEfw54wcrv
+         d0SOKbhEGwZnMYUESOPtnhQ5QvJmcuD4Hmb5DeRrnE+YcmA7rnC7MiotoOhZpJ19vjvL
+         FKFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722888106; x=1723492906;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0mOHNfXvdN3GMWTEPdB5xSVFxudx+LI1nOP2dCz9qsM=;
+        b=EJ/dreWQmmnCcqrhkfJGiRfsk/FdbTlhnTAZDCoufkoRjweTtsIE6BsNCDMWx1QmZx
+         A0lFQFUjs701rdbWH/jkJF9st6CtOV1szKEje9dGqf0wadlUe5uEfSL59wXApFAkwZZB
+         BEesfwqpg1o00IeGTjtnVICsPN4ZYd7cU4tKl+mBsnivpmyKSt/7XjJJR+dOWZe45UQY
+         +7czKA41nx2+iYG2N5+9oAOqC+Wp0TY23pfesFtgbFnCu5Y01REyj3fnacCdJoFqyrZT
+         A0w2VQp//ejFxvwMCjVIe15hc4QWY7gy+J7mHzBZNb3yybdM2lYRm9/ONWK2QsB0vxC3
+         Cybg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRQ32/PLmRv+JXz9ZuSE1lnESDH24pFExt77TcR/kgPCPrPm78W4ArowMzZ/oOMgEzHFG10+kO5c9iAg1VHAFT2AM/RCW0FSPSdJV7DUm07XdSoqDAaruFc7lsmK12cNEWdiOMIF4CIL2YgMDok63g8TVlSjJ5E7282FHx7ISGb+VeW7xA
+X-Gm-Message-State: AOJu0Yx9pyjjKbNbai4+lMtjn4hmBARGMvZIkEDBSMyXSC4sR0d+6LcB
+	Kz1yYnYhOGev3UidfUZAEkPAahderyogbQ7iwQi5MzydEIbgwe0tWZvPHSGzkQ8k2CRKqyoB8Y+
+	yi/S9neESCKmNpUZ7YQzEtGTiQ04=
+X-Google-Smtp-Source: AGHT+IFP0uMu/YLTAtRb/rfz95PivfdwXs9VYSFQ3nN2dVooF3Hw+AB8vrnTT7JSHf7wyhRcVwb80Xu2+Wkf9vkIWTg=
+X-Received: by 2002:a17:90a:8a93:b0:2cd:3445:f87e with SMTP id
+ 98e67ed59e1d1-2cff93c618bmr15080533a91.2.1722888105898; Mon, 05 Aug 2024
+ 13:01:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240802210836.2210140-1-song@kernel.org> <20240802210836.2210140-3-song@kernel.org>
- <20240805224544.e0a4277dff4ac41d867c6bc1@kernel.org>
-In-Reply-To: <20240805224544.e0a4277dff4ac41d867c6bc1@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Mon, 5 Aug 2024 10:46:20 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6Axj1LaK3D09KuevQo2Otg7U0toDEPjop1dEnrUFtzAA@mail.gmail.com>
-Message-ID: <CAPhsuW6Axj1LaK3D09KuevQo2Otg7U0toDEPjop1dEnrUFtzAA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] kallsyms: Add APIs to match symbol without .XXXX suffix.
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, jpoimboe@kernel.org, jikos@kernel.org, 
-	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com, nathan@kernel.org, 
-	morbo@google.com, justinstitt@google.com, mcgrof@kernel.org, 
-	thunder.leizhen@huawei.com, kees@kernel.org, kernel-team@meta.com, 
-	mmaurer@google.com, samitolvanen@google.com, rostedt@goodmis.org
+References: <20240731214256.3588718-1-andrii@kernel.org> <20240731214256.3588718-7-andrii@kernel.org>
+ <eb6d1474-a292-af20-b8b1-1c2de61405f4@huawei.com> <CAEf4BzZR6a4OSqsvyci0_-P+_o2PErM_PyC9y9eSc4J4A+Uabw@mail.gmail.com>
+In-Reply-To: <CAEf4BzZR6a4OSqsvyci0_-P+_o2PErM_PyC9y9eSc4J4A+Uabw@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 5 Aug 2024 13:01:33 -0700
+Message-ID: <CAEf4BzYuGo572m+zi3KD51zp82a63mL9f5F2kz1w8ZvEBQB_VA@mail.gmail.com>
+Subject: Re: [PATCH 6/8] perf/uprobe: split uprobe_unregister()
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Masami,
-
-On Mon, Aug 5, 2024 at 6:45=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
+On Fri, Aug 2, 2024 at 8:05=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> On Fri,  2 Aug 2024 14:08:34 -0700
-> Song Liu <song@kernel.org> wrote:
->
-> > With CONFIG_LTO_CLANG=3Dy, the compiler may add suffix to function name=
+> On Thu, Aug 1, 2024 at 7:41=E2=80=AFPM Liao, Chang <liaochang1@huawei.com=
+> wrote:
+> >
+> >
+> >
+> > =E5=9C=A8 2024/8/1 5:42, Andrii Nakryiko =E5=86=99=E9=81=93:
+> > > From: Peter Zijlstra <peterz@infradead.org>
+> > >
+> > > With uprobe_unregister() having grown a synchronize_srcu(), it become=
 s
-> > to avoid duplication. This causes confusion with users of kallsyms.
-> > On one hand, users like livepatch are required to match the symbols
-> > exactly. On the other hand, users like kprobe would like to match to
-> > original function names.
+> > > fairly slow to call. Esp. since both users of this API call it in a
+> > > loop.
+> > >
+> > > Peel off the sync_srcu() and do it once, after the loop.
+> > >
+> > > With recent uprobe_register()'s error handling reusing full
+> > > uprobe_unregister() call, we need to be careful about returning to th=
+e
+> > > caller before we have a guarantee that partially attached consumer wo=
+n't
+> > > be called anymore. So add uprobe_unregister_sync() in the error handl=
+ing
+> > > path. This is an unlikely slow path and this should be totally fine t=
+o
+> > > be slow in the case of an failed attach.
+> > >
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Co-developed-by: Andrii Nakryiko <andrii@kernel.org>
+> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > > ---
+> > >  include/linux/uprobes.h                        |  8 ++++++--
+> > >  kernel/events/uprobes.c                        | 18 ++++++++++++++--=
+--
+> > >  kernel/trace/bpf_trace.c                       |  5 ++++-
+> > >  kernel/trace/trace_uprobe.c                    |  6 +++++-
+> > >  .../selftests/bpf/bpf_testmod/bpf_testmod.c    |  3 ++-
+> > >  5 files changed, 31 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > > index a1686c1ebcb6..8f1999eb9d9f 100644
+> > > --- a/include/linux/uprobes.h
+> > > +++ b/include/linux/uprobes.h
+> > > @@ -105,7 +105,8 @@ extern unsigned long uprobe_get_trap_addr(struct =
+pt_regs *regs);
+> > >  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct m=
+m_struct *mm, unsigned long vaddr, uprobe_opcode_t);
+> > >  extern struct uprobe *uprobe_register(struct inode *inode, loff_t of=
+fset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+> > >  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consume=
+r *uc, bool);
+> > > -extern void uprobe_unregister(struct uprobe *uprobe, struct uprobe_c=
+onsumer *uc);
+> > > +extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct u=
+probe_consumer *uc);
+> > > +extern void uprobe_unregister_sync(void);
 > >
-> > Solve this by splitting kallsyms APIs. Specifically, existing APIs now
-> > should match the symbols exactly. Add two APIs that match only the part
-> > without .XXXX suffix. Specifically, the following two APIs are added.
+> > [...]
 > >
-> > 1. kallsyms_lookup_name_without_suffix()
-> > 2. kallsyms_on_each_match_symbol_without_suffix()
+> > >  static inline void
+> > > -uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
+> > > +uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consum=
+er *uc)
+> > > +{
+> > > +}
+> > > +static inline void uprobes_unregister_sync(void)
 > >
-> > These APIs will be used by kprobe.
+> > *uprobes*_unregister_sync, is it a typo?
 > >
-> > Also cleanup some code and update kallsyms_selftests accordingly.
-> >
-> > Signed-off-by: Song Liu <song@kernel.org>
 >
-> Looks good to me, but I have a nitpick.
->
->
-> > --- a/kernel/kallsyms.c
-> > +++ b/kernel/kallsyms.c
-> > @@ -164,30 +164,27 @@ static void cleanup_symbol_name(char *s)
-> >  {
-> >       char *res;
-> >
-> > -     if (!IS_ENABLED(CONFIG_LTO_CLANG))
-> > -             return;
-> > -
-> >       /*
-> >        * LLVM appends various suffixes for local functions and variable=
-s that
-> >        * must be promoted to global scope as part of LTO.  This can bre=
-ak
-> >        * hooking of static functions with kprobes. '.' is not a valid
-> > -      * character in an identifier in C. Suffixes only in LLVM LTO obs=
-erved:
-> > -      * - foo.llvm.[0-9a-f]+
-> > +      * character in an identifier in C, so we can just remove the
-> > +      * suffix.
-> >        */
-> > -     res =3D strstr(s, ".llvm.");
-> > +     res =3D strstr(s, ".");
->
-> nit: "strchr(s, '.')" ?
->
-> Anyway,
->
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I think the idea behind this is that you do a lot of individual uprobe
+> unregistrations with multiple uprobe_unregister() calls, and then
+> follow with a single *uprobes*_unregister_sync(), because in general
+> it is meant to sync multiple uprobes unregistrations.
 
-Thanks for your kind review!
+Ah, I think you were trying to say that only static inline
+implementation here is called uprobes_unregister_sync, while all the
+other ones are uprobe_unregister_sync(). I fixed it up, kept it as
+singular uprobe_unregister_sync().
 
-If we have another version, I will fold this change (and the one in
-kallsyms_selftest.c) in.
+>
+> > >  {
+> > >  }
+> > >  static inline int uprobe_mmap(struct vm_area_struct *vma)
+> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > index 3b42fd355256..b0488d356399 100644
+> > > --- a/kernel/events/uprobes.c
+> > > +++ b/kernel/events/uprobes.c
 
-Song
+[...]
