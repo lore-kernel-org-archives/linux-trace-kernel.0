@@ -1,237 +1,159 @@
-Received: from out28-172.mail.aliyun.com (out28-172.mail.aliyun.com [115.124.28.172])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A283C0C;
-	Mon,  5 Aug 2024 02:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBFF6A01E;
+	Mon,  5 Aug 2024 06:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722824294; cv=none; b=OXSLgX3S0awOwiWkGqcZIWf54w3f1NToSNj/QJ7ktgkrKc2fmli8rj8kfP/5APNxTfRXIsJuF5Fy+YDLqDo3OL8eBJW8RrZ2P09oV7/tqFy+JwqwXz+vQAGhzlQFqVZ3ha6N63T7GE+DLz5HvL2OOTZtNYG8SapF+aP7i99nnHY=
+	t=1722837722; cv=none; b=Sgol3sFZ093x72wBS4cBSEHqkVzpApN5jjrJoc/j5JWn2aZpKN5rwey/vQGZPH5bwAhoHNAd9JPa8DgbIApYKATIqMzJtgvU4aKHSSuPk7r3xnHnnYxNEwazF1RRWLd8VJhPAtYdQwjAQvsTipJgcxVbrfArKozm2f+IBhBFr8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722824294; c=relaxed/simple;
-	bh=7iTQIQGx++ScDyVqbXJZ/r8+gXEubt342FCQASfvsRE=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=l1uVDwuudVAF4d3IAlwmmneQJj/kLKlgSadkFUHnpvcVJaUh1DqLJjDgMFWXuvf5EkoZeBT1wTk226Pg/ZyNHvkHERXLN2dX45cXKYqOO0sk5gesuRPvwBnGPg+EkpRjwvNiDdIpij1Gn1O4CvebRTelFcbzkwZrGIRR++XSi+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valiantsec.com; spf=pass smtp.mailfrom=valiantsec.com; arc=none smtp.client-ip=115.124.28.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valiantsec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valiantsec.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07912007|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.0894296-0.00145174-0.909119;FP=9278079136122624237|0|0|0|3811953609304649720|0|0|0;HT=maildocker-contentspam033045207070;MF=bugreport@valiantsec.com;NM=1;PH=DW;RN=6;RT=6;SR=0;TI=W4_0.2.3_v5ForWebDing_21250B98_1722823860561_o7001c82p;
-Received: from WS-web (bugreport@valiantsec.com[W4_0.2.3_v5ForWebDing_21250B98_1722823860561_o7001c82p]) at Mon, 05 Aug 2024 10:18:00 +0800
-Date: Mon, 05 Aug 2024 10:18:00 +0800
-From: "Ubisectech Sirius" <bugreport@valiantsec.com>
-To: "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>,
-  "linux-kernel" <linux-kernel@vger.kernel.org>
-Cc: "peterz" <peterz@infradead.org>,
-  "mingo" <mingo@redhat.com>,
-  "acme" <acme@kernel.org>,
-  "namhyung" <namhyung@kernel.org>
-Reply-To: "Ubisectech Sirius" <bugreport@valiantsec.com>
-Message-ID: <c6333ada-aa38-4876-9e57-881b3774397b.bugreport@valiantsec.com>
-Subject: =?UTF-8?B?V0FSTklORyBpbiBmcmVlX2V2ZW50?=
-X-Mailer: [Alimail-Mailagent revision 974][W4_0.2.3][v5ForWebDing][Chrome]
+	s=arc-20240116; t=1722837722; c=relaxed/simple;
+	bh=EQfTXamtOcyHVKS4XDp2V+TAeokrJwtmEV7u0lOIUXA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xle8uWli2f96swUzaWUeryojyjbv24BNlQi/Inr69vtL3WPnE57DfLrt62a99d+Gh09WLC40WvXa1DZ1lo6kWYPNipLNnqv82x2qGuQ4a3ObNGFpH9BJylouTs28SLwIJlfbV0AnNz87m+yahy6kQ5GBDYERQbRd2p7Clx0X9kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=PCJWrEZ+; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PCJWrEZ+"
+X-UUID: 309fc41452f011ef9a4e6796c666300c-20240805
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=KCCE+7BB5PHXZJjrX/rPFtOvm22mgzZ/W4Yze4U9Lr4=;
+	b=PCJWrEZ+eirVfFlx/rQUoxdkZMYvYGaeGKBaWzTkw69yznHBzbQ05YXmUZzWoxyoW8hyA39h5s/ka+N25ohrm6B0sKvF4I2hk99edIsOiFXT7IGG20ZbN7PkX+mDPGTVWh6Zk6WCaDBv09mLzAAjKttE5hqNN8Wlq+6eksluj1A=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.41,REQID:ec16bdef-5aec-4104-9ba7-cfde7f3d7fc1,IP:0,U
+	RL:0,TC:0,Content:-20,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-20
+X-CID-META: VersionHash:6dc6a47,CLOUDID:999ab700-587b-483a-a965-b30738d68bc8,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:1,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 309fc41452f011ef9a4e6796c666300c-20240805
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
+	(envelope-from <tze-nan.wu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 739743914; Mon, 05 Aug 2024 14:01:43 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Sun, 4 Aug 2024 23:01:44 -0700
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 5 Aug 2024 14:01:44 +0800
+From: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>
+CC: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <bobule.chang@mediatek.com>,
+	<eric-yc.wu@mediatek.com>, <wsd_upstream@mediatek.com>, Tze-nan Wu
+	<Tze-nan.Wu@mediatek.com>, Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+Subject: [PATCH RESEND] tracing: Fix overflow in get_free_elt()
+Date: Mon, 5 Aug 2024 13:59:22 +0800
+Message-ID: <20240805055922.6277-1-Tze-nan.Wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-x-aliyun-im-through: {"mailThroughImNew":true}
-x-aliyun-mail-creator: W4_0.2.3_v5ForWebDing_M3LTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEyNy4wLjAuMCBTYWZhcmkvNTM3LjM2vN
-Content-Type: multipart/mixed;
-  boundary="----=ALIBOUNDARY_1745_7f467ffab700_66b03658_12408c"
+Content-Type: text/plain
 
-This is a multi-part message in MIME format.
+"tracing_map->next_elt" in get_free_elt() is at risk of overflowing.
 
-------=ALIBOUNDARY_1745_7f467ffab700_66b03658_12408c
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Once it overflows, new elements can still be inserted into the tracing_map
+even though the maximum number of elements (`max_elts`) has been reached.
+Continuing to insert elements after the overflow could result in the
+tracing_map containing "tracing_map->max_size" elements, leaving no empty
+entries.
+If any attempt is made to insert an element into a full tracing_map using
+`__tracing_map_insert()`, it will cause an infinite loop with preemption
+disabled, leading to a CPU hang problem.
 
-CkhlbGxvLgpXZSBhcmUgVWJpc2VjdGVjaCBTaXJpdXMgVGVhbSwgdGhlIHZ1bG5lcmFiaWxpdHkg
-bGFiIG9mIENoaW5hIFZhbGlhbnRTZWMuIFJlY2VudGx5LCBvdXIgdGVhbSBoYXMgZGlzY292ZXJl
-ZCBhIGlzc3VlIGluIExpbnV4IGtlcm5lbCA2LjguIEF0dGFjaGVkIHRvIHRoZSBlbWFpbCB3ZXJl
-IGEgUG9DIGZpbGUgb2YgdGhlIGlzc3VlLgoKU3RhY2sgZHVtcDoKCi0tLS0tLS0tLS0tLVsgY3V0
-IGhlcmUgXS0tLS0tLS0tLS0tLQp1bmV4cGVjdGVkIGV2ZW50IHJlZmNvdW50OiAyOyBwdHI9ZmZm
-Zjg4ODAxOTU4OTgyMApXQVJOSU5HOiBDUFU6IDAgUElEOiAxMzU5MyBhdCBrZXJuZWwvZXZlbnRz
-L2NvcmUuYzo1MjU0IGZyZWVfZXZlbnQrMHhhMy8weGMwIGtlcm5lbC9ldmVudHMvY29yZS5jOjUy
-NTQKTW9kdWxlcyBsaW5rZWQgaW46CkNQVTogMCBQSUQ6IDEzNTkzIENvbW06IHN5ei4zLjM0NiBO
-b3QgdGFpbnRlZCA2LjguMCAjMQpIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQw
-RlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjE1LjAtMSAwNC8wMS8yMDE0ClJJUDogMDAxMDpmcmVl
-X2V2ZW50KzB4YTMvMHhjMCBrZXJuZWwvZXZlbnRzL2NvcmUuYzo1MjU0CkNvZGU6IGI4IDAwIDAw
-IDAwIDAwIDAwIGZjIGZmIGRmIDQ4IGMxIGVhIDAzIDgwIDNjIDAyIDAwIDc1IDI1IDQ4IDhiIGI1
-IDM4IDAyIDAwIDAwIDQ4IDg5IGVhIDQ4IGM3IGM3IDAwIDAzIGQ3IDhhIGU4IDNlIGE5IDlhIGZm
-IDkwIDwwZj4gMGIgOTAgOTAgNWQgNDEgNWMgNDEgNWQgZTkgYmYgZWQgZDUgZmYgNGMgODkgZWYg
-ZTggNzcgYjEgMmQgMDAKUlNQOiAwMDE4OmZmZmZjOTAwMDFiMzc5YzggRUZMQUdTOiAwMDAxMDI4
-NgpSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBkZmZmZmMwMDAwMDAwMDAwIFJDWDogZmZmZmZm
-ZmY4MTRmNjk5YQpSRFg6IGZmZmY4ODgwMWU3YjQ5ODAgUlNJOiBmZmZmZmZmZjgxNGY2OWE3IFJE
-STogMDAwMDAwMDAwMDAwMDAwMQpSQlA6IGZmZmY4ODgwMTk1ODk4MjAgUjA4OiAwMDAwMDAwMDAw
-MDAwMDAxIFIwOTogMDAwMDAwMDAwMDAwMDAwMApSMTA6IDAwMDAwMDAwMDAwMDAwMDEgUjExOiAw
-MDAwMDAwMDAwMDAwMDAxIFIxMjogMDAwMDAwMDAwMDAwMDAwMgpSMTM6IGZmZmY4ODgwMTk1ODlh
-NTggUjE0OiBmZmZmODg4MDE5NTg5YjAwIFIxNTogZmZmZjg4ODAxOTU4OTgyMApGUzogIDAwMDAw
-MDAwMDAwMDAwMDAoMDAwMCkgR1M6ZmZmZjg4ODAyYzYwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAw
-MDAwMDAwMDAwCkNTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAw
-MzMKQ1IyOiAwMDAwN2Y1MDc0NjRjMzYwIENSMzogMDAwMDAwMDA1M2ZhNDAwMCBDUjQ6IDAwMDAw
-MDAwMDA3NTBlZjAKRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBE
-UjI6IDAwMDAwMDAwMDAwMDAwMDAKRFIzOiAwMDAwMDAwMDAwMDAwMDAwIERSNjogMDAwMDAwMDBm
-ZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0MDAKUEtSVTogNTU1NTU1NTQKQ2FsbCBUcmFjZToK
-IDxUQVNLPgogcGVyZl9ldmVudF9yZWxlYXNlX2tlcm5lbCsweDVkNC8weDhmMCBrZXJuZWwvZXZl
-bnRzL2NvcmUuYzo1NDIxCiBwZXJmX3JlbGVhc2UrMHgzNy8weDUwIGtlcm5lbC9ldmVudHMvY29y
-ZS5jOjU0NDIKIF9fZnB1dCsweDI4Mi8weGJjMCBmcy9maWxlX3RhYmxlLmM6Mzc2CiB0YXNrX3dv
-cmtfcnVuKzB4MTZhLzB4MjYwIGtlcm5lbC90YXNrX3dvcmsuYzoxODAKIGV4aXRfdGFza193b3Jr
-IGluY2x1ZGUvbGludXgvdGFza193b3JrLmg6MzggW2lubGluZV0KIGRvX2V4aXQrMHhhZjAvMHgy
-YTQwIGtlcm5lbC9leGl0LmM6ODcxCiBkb19ncm91cF9leGl0KzB4ZDQvMHgyYTAga2VybmVsL2V4
-aXQuYzoxMDIwCiBnZXRfc2lnbmFsKzB4MjQ0MC8weDI2MzAga2VybmVsL3NpZ25hbC5jOjI4OTMK
-IGFyY2hfZG9fc2lnbmFsX29yX3Jlc3RhcnQrMHg4MS8weDdlMCBhcmNoL3g4Ni9rZXJuZWwvc2ln
-bmFsLmM6MzEwCiBleGl0X3RvX3VzZXJfbW9kZV9sb29wIGtlcm5lbC9lbnRyeS9jb21tb24uYzox
-MDUgW2lubGluZV0KIGV4aXRfdG9fdXNlcl9tb2RlX3ByZXBhcmUgaW5jbHVkZS9saW51eC9lbnRy
-eS1jb21tb24uaDozMjggW2lubGluZV0KIGlycWVudHJ5X2V4aXRfdG9fdXNlcl9tb2RlKzB4MTNj
-LzB4MjgwIGtlcm5lbC9lbnRyeS9jb21tb24uYzoyMjUKIGV4Y19wYWdlX2ZhdWx0KzB4YzYvMHgx
-ODAgYXJjaC94ODYvbW0vZmF1bHQuYzoxNTU3CiBhc21fZXhjX3BhZ2VfZmF1bHQrMHgyNi8weDMw
-IGFyY2gveDg2L2luY2x1ZGUvYXNtL2lkdGVudHJ5Lmg6NTcwClJJUDogMDAzMzoweDdmZDVlYzk5
-NThkNQpDb2RlOiBVbmFibGUgdG8gYWNjZXNzIG9wY29kZSBieXRlcyBhdCAweDdmZDVlYzk5NThh
-Yi4KUlNQOiAwMDJiOjAwMDAwMDAwMDAwMDAwNTAgRUZMQUdTOiAwMDAxMDIxNwpSQVg6IDAwMDAw
-MDAwMDAwMDAwMDAgUkJYOiAwMDAwN2ZkNWVjYjMzZjYwIFJDWDogMDAwMDdmZDVlYzk5NThjZApS
-RFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDUwIFJESTogMDAwMDAwMDAw
-MDAwMDI4MApSQlA6IDAwMDA3ZmQ1ZWNhMWJiMDYgUjA4OiAwMDAwMDAwMDAwMDAwMDAwIFIwOTog
-MDAwMDAwMDAwMDAwMDAwMApSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAw
-MjAyIFIxMjogMDAwMDAwMDAwMDAwMDAwMApSMTM6IDAwMDAwMDAwMDAwMDAwMGIgUjE0OiAwMDAw
-N2ZkNWVjYjMzZjYwIFIxNTogMDAwMDdmZDVlZDc3YTAwMAogPC9UQVNLPgoKClRoYW5rIHlvdSBm
-b3IgdGFraW5nIHRoZSB0aW1lIHRvIHJlYWQgdGhpcyBlbWFpbCBhbmQgd2UgbG9vayBmb3J3YXJk
-IHRvIHdvcmtpbmcgd2l0aCB5b3UgZnVydGhlci4KCgoKCgo=
-------=ALIBOUNDARY_1745_7f467ffab700_66b03658_12408c
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename="=?UTF-8?B?cG9jLmM=?="
-Content-Transfer-Encoding: base64
+Fix this by preventing any further increments to "tracing_map->next_elt"
+once it reaches "tracing_map->max_elt".
 
-Ly8gYXV0b2dlbmVyYXRlZCBieSBzeXprYWxsZXIgKGh0dHBzOi8vZ2l0aHViLmNvbS9nb29nbGUv
-c3l6a2FsbGVyKQoKI2RlZmluZSBfR05VX1NPVVJDRQoKI2luY2x1ZGUgPGRpcmVudC5oPgojaW5j
-bHVkZSA8ZW5kaWFuLmg+CiNpbmNsdWRlIDxlcnJuby5oPgojaW5jbHVkZSA8ZmNudGwuaD4KI2lu
-Y2x1ZGUgPHNjaGVkLmg+CiNpbmNsdWRlIDxzaWduYWwuaD4KI2luY2x1ZGUgPHN0ZGFyZy5oPgoj
-aW5jbHVkZSA8c3RkYm9vbC5oPgojaW5jbHVkZSA8c3RkaW50Lmg+CiNpbmNsdWRlIDxzdGRpby5o
-PgojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHN5cy9w
-cmN0bC5oPgojaW5jbHVkZSA8c3lzL3N0YXQuaD4KI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CiNp
-bmNsdWRlIDxzeXMvdHlwZXMuaD4KI2luY2x1ZGUgPHN5cy93YWl0Lmg+CiNpbmNsdWRlIDx0aW1l
-Lmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KCnN0YXRpYyB2b2lkIHNsZWVwX21zKHVpbnQ2NF90IG1z
-KQp7CiAgdXNsZWVwKG1zICogMTAwMCk7Cn0KCnN0YXRpYyB1aW50NjRfdCBjdXJyZW50X3RpbWVf
-bXModm9pZCkKewogIHN0cnVjdCB0aW1lc3BlYyB0czsKICBpZiAoY2xvY2tfZ2V0dGltZShDTE9D
-S19NT05PVE9OSUMsICZ0cykpCiAgICBleGl0KDEpOwogIHJldHVybiAodWludDY0X3QpdHMudHZf
-c2VjICogMTAwMCArICh1aW50NjRfdCl0cy50dl9uc2VjIC8gMTAwMDAwMDsKfQoKI2RlZmluZSBC
-SVRNQVNLKGJmX29mZiwgYmZfbGVuKSAoKCgxdWxsIDw8IChiZl9sZW4pKSAtIDEpIDw8IChiZl9v
-ZmYpKQojZGVmaW5lIFNUT1JFX0JZX0JJVE1BU0sodHlwZSwgaHRvYmUsIGFkZHIsIHZhbCwgYmZf
-b2ZmLCBiZl9sZW4pICAgICAgICAgICAgICAgXAogICoodHlwZSopKGFkZHIpID0gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAogICAg
-ICBodG9iZSgoaHRvYmUoKih0eXBlKikoYWRkcikpICYgfkJJVE1BU0soKGJmX29mZiksIChiZl9s
-ZW4pKSkgfCAgICAgICAgICAgXAogICAgICAgICAgICAoKCh0eXBlKSh2YWwpIDw8IChiZl9vZmYp
-KSAmIEJJVE1BU0soKGJmX29mZiksIChiZl9sZW4pKSkpCgpzdGF0aWMgYm9vbCB3cml0ZV9maWxl
-KGNvbnN0IGNoYXIqIGZpbGUsIGNvbnN0IGNoYXIqIHdoYXQsIC4uLikKewogIGNoYXIgYnVmWzEw
-MjRdOwogIHZhX2xpc3QgYXJnczsKICB2YV9zdGFydChhcmdzLCB3aGF0KTsKICB2c25wcmludGYo
-YnVmLCBzaXplb2YoYnVmKSwgd2hhdCwgYXJncyk7CiAgdmFfZW5kKGFyZ3MpOwogIGJ1ZltzaXpl
-b2YoYnVmKSAtIDFdID0gMDsKICBpbnQgbGVuID0gc3RybGVuKGJ1Zik7CiAgaW50IGZkID0gb3Bl
-bihmaWxlLCBPX1dST05MWSB8IE9fQ0xPRVhFQyk7CiAgaWYgKGZkID09IC0xKQogICAgcmV0dXJu
-IGZhbHNlOwogIGlmICh3cml0ZShmZCwgYnVmLCBsZW4pICE9IGxlbikgewogICAgaW50IGVyciA9
-IGVycm5vOwogICAgY2xvc2UoZmQpOwogICAgZXJybm8gPSBlcnI7CiAgICByZXR1cm4gZmFsc2U7
-CiAgfQogIGNsb3NlKGZkKTsKICByZXR1cm4gdHJ1ZTsKfQoKc3RhdGljIHZvaWQga2lsbF9hbmRf
-d2FpdChpbnQgcGlkLCBpbnQqIHN0YXR1cykKewogIGtpbGwoLXBpZCwgU0lHS0lMTCk7CiAga2ls
-bChwaWQsIFNJR0tJTEwpOwogIGZvciAoaW50IGkgPSAwOyBpIDwgMTAwOyBpKyspIHsKICAgIGlm
-ICh3YWl0cGlkKC0xLCBzdGF0dXMsIFdOT0hBTkcgfCBfX1dBTEwpID09IHBpZCkKICAgICAgcmV0
-dXJuOwogICAgdXNsZWVwKDEwMDApOwogIH0KICBESVIqIGRpciA9IG9wZW5kaXIoIi9zeXMvZnMv
-ZnVzZS9jb25uZWN0aW9ucyIpOwogIGlmIChkaXIpIHsKICAgIGZvciAoOzspIHsKICAgICAgc3Ry
-dWN0IGRpcmVudCogZW50ID0gcmVhZGRpcihkaXIpOwogICAgICBpZiAoIWVudCkKICAgICAgICBi
-cmVhazsKICAgICAgaWYgKHN0cmNtcChlbnQtPmRfbmFtZSwgIi4iKSA9PSAwIHx8IHN0cmNtcChl
-bnQtPmRfbmFtZSwgIi4uIikgPT0gMCkKICAgICAgICBjb250aW51ZTsKICAgICAgY2hhciBhYm9y
-dFszMDBdOwogICAgICBzbnByaW50ZihhYm9ydCwgc2l6ZW9mKGFib3J0KSwgIi9zeXMvZnMvZnVz
-ZS9jb25uZWN0aW9ucy8lcy9hYm9ydCIsCiAgICAgICAgICAgICAgIGVudC0+ZF9uYW1lKTsKICAg
-ICAgaW50IGZkID0gb3BlbihhYm9ydCwgT19XUk9OTFkpOwogICAgICBpZiAoZmQgPT0gLTEpIHsK
-ICAgICAgICBjb250aW51ZTsKICAgICAgfQogICAgICBpZiAod3JpdGUoZmQsIGFib3J0LCAxKSA8
-IDApIHsKICAgICAgfQogICAgICBjbG9zZShmZCk7CiAgICB9CiAgICBjbG9zZWRpcihkaXIpOwog
-IH0gZWxzZSB7CiAgfQogIHdoaWxlICh3YWl0cGlkKC0xLCBzdGF0dXMsIF9fV0FMTCkgIT0gcGlk
-KSB7CiAgfQp9CgpzdGF0aWMgdm9pZCBzZXR1cF90ZXN0KCkKewogIHByY3RsKFBSX1NFVF9QREVB
-VEhTSUcsIFNJR0tJTEwsIDAsIDAsIDApOwogIHNldHBncnAoKTsKICB3cml0ZV9maWxlKCIvcHJv
-Yy9zZWxmL29vbV9zY29yZV9hZGoiLCAiMTAwMCIpOwp9CgojZGVmaW5lIFVTTEVFUF9GT1JLRURf
-Q0hJTEQgKDMgKiA1MCAqIDEwMDApCgpzdGF0aWMgbG9uZyBoYW5kbGVfY2xvbmVfcmV0KGxvbmcg
-cmV0KQp7CiAgaWYgKHJldCAhPSAwKSB7CiAgICByZXR1cm4gcmV0OwogIH0KICB1c2xlZXAoVVNM
-RUVQX0ZPUktFRF9DSElMRCk7CiAgc3lzY2FsbChfX05SX2V4aXQsIDApOwogIHdoaWxlICgxKSB7
-CiAgfQp9CgpzdGF0aWMgbG9uZyBzeXpfY2xvbmUodm9sYXRpbGUgbG9uZyBmbGFncywgdm9sYXRp
-bGUgbG9uZyBzdGFjaywKICAgICAgICAgICAgICAgICAgICAgIHZvbGF0aWxlIGxvbmcgc3RhY2tf
-bGVuLCB2b2xhdGlsZSBsb25nIHB0aWQsCiAgICAgICAgICAgICAgICAgICAgICB2b2xhdGlsZSBs
-b25nIGN0aWQsIHZvbGF0aWxlIGxvbmcgdGxzKQp7CiAgbG9uZyBzcCA9IChzdGFjayArIHN0YWNr
-X2xlbikgJiB+MTU7CiAgbG9uZyByZXQgPSAobG9uZylzeXNjYWxsKF9fTlJfY2xvbmUsIGZsYWdz
-ICYgfkNMT05FX1ZNLCBzcCwgcHRpZCwgY3RpZCwgdGxzKTsKICByZXR1cm4gaGFuZGxlX2Nsb25l
-X3JldChyZXQpOwp9CgpzdGF0aWMgdm9pZCBleGVjdXRlX29uZSh2b2lkKTsKCiNkZWZpbmUgV0FJ
-VF9GTEFHUyBfX1dBTEwKCnN0YXRpYyB2b2lkIGxvb3Aodm9pZCkKewogIGludCBpdGVyID0gMDsK
-ICBmb3IgKDs7IGl0ZXIrKykgewogICAgaW50IHBpZCA9IGZvcmsoKTsKICAgIGlmIChwaWQgPCAw
-KQogICAgICBleGl0KDEpOwogICAgaWYgKHBpZCA9PSAwKSB7CiAgICAgIHNldHVwX3Rlc3QoKTsK
-ICAgICAgZXhlY3V0ZV9vbmUoKTsKICAgICAgZXhpdCgwKTsKICAgIH0KICAgIGludCBzdGF0dXMg
-PSAwOwogICAgdWludDY0X3Qgc3RhcnQgPSBjdXJyZW50X3RpbWVfbXMoKTsKICAgIGZvciAoOzsp
-IHsKICAgICAgc2xlZXBfbXMoMTApOwogICAgICBpZiAod2FpdHBpZCgtMSwgJnN0YXR1cywgV05P
-SEFORyB8IFdBSVRfRkxBR1MpID09IHBpZCkKICAgICAgICBicmVhazsKICAgICAgaWYgKGN1cnJl
-bnRfdGltZV9tcygpIC0gc3RhcnQgPCA1MDAwKQogICAgICAgIGNvbnRpbnVlOwogICAgICBraWxs
-X2FuZF93YWl0KHBpZCwgJnN0YXR1cyk7CiAgICAgIGJyZWFrOwogICAgfQogIH0KfQoKdm9pZCBl
-eGVjdXRlX29uZSh2b2lkKQp7CiAgaWYgKHdyaXRlKDEsICJleGVjdXRpbmcgcHJvZ3JhbVxuIiwg
-c2l6ZW9mKCJleGVjdXRpbmcgcHJvZ3JhbVxuIikgLSAxKSkgewogIH0KICAqKHVpbnQzMl90Kikw
-eDIwMDAwMGMwID0gMDsKICAqKHVpbnQzMl90KikweDIwMDAwMGM0ID0gMHg4MDsKICAqKHVpbnQ4
-X3QqKTB4MjAwMDAwYzggPSAxOwogICoodWludDhfdCopMHgyMDAwMDBjOSA9IDA7CiAgKih1aW50
-OF90KikweDIwMDAwMGNhID0gMDsKICAqKHVpbnQ4X3QqKTB4MjAwMDAwY2IgPSAwOwogICoodWlu
-dDMyX3QqKTB4MjAwMDAwY2MgPSAwOwogICoodWludDY0X3QqKTB4MjAwMDAwZDAgPSAweGZmZmY7
-CiAgKih1aW50NjRfdCopMHgyMDAwMDBkOCA9IDB4ODAwNDsKICAqKHVpbnQ2NF90KikweDIwMDAw
-MGUwID0gMjsKICBTVE9SRV9CWV9CSVRNQVNLKHVpbnQ2NF90LCAsIDB4MjAwMDAwZTgsIDAsIDAs
-IDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMSwgMSwgMSk7
-CiAgU1RPUkVfQllfQklUTUFTSyh1aW50NjRfdCwgLCAweDIwMDAwMGU4LCAwLCAyLCAxKTsKICBT
-VE9SRV9CWV9CSVRNQVNLKHVpbnQ2NF90LCAsIDB4MjAwMDAwZTgsIDAsIDMsIDEpOwogIFNUT1JF
-X0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgNCwgMSk7CiAgU1RPUkVfQllf
-QklUTUFTSyh1aW50NjRfdCwgLCAweDIwMDAwMGU4LCAwLCA1LCAxKTsKICBTVE9SRV9CWV9CSVRN
-QVNLKHVpbnQ2NF90LCAsIDB4MjAwMDAwZTgsIDAsIDYsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0so
-dWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgNywgMSk7CiAgU1RPUkVfQllfQklUTUFTSyh1aW50
-NjRfdCwgLCAweDIwMDAwMGU4LCAwLCA4LCAxKTsKICBTVE9SRV9CWV9CSVRNQVNLKHVpbnQ2NF90
-LCAsIDB4MjAwMDAwZTgsIDAsIDksIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwg
-MHgyMDAwMDBlOCwgMCwgMTAsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgy
-MDAwMDBlOCwgMCwgMTEsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAw
-MDBlOCwgMCwgMTIsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBl
-OCwgMCwgMTMsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwg
-MCwgMTQsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwg
-MTUsIDIpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMTcs
-IDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMTgsIDEp
-OwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMTksIDEpOwog
-IFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjAsIDEpOwogIFNU
-T1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjEsIDEpOwogIFNUT1JF
-X0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjIsIDEpOwogIFNUT1JFX0JZ
-X0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjMsIDEpOwogIFNUT1JFX0JZX0JJ
-VE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjQsIDEpOwogIFNUT1JFX0JZX0JJVE1B
-U0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjUsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0so
-dWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjYsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWlu
-dDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMjcsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0
-X3QsICwgMHgyMDAwMDBlOCwgMCwgMjgsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3Qs
-ICwgMHgyMDAwMDBlOCwgMCwgMjksIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwg
-MHgyMDAwMDBlOCwgMCwgMzAsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgy
-MDAwMDBlOCwgMCwgMzEsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAw
-MDBlOCwgMCwgMzIsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBl
-OCwgMCwgMzMsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwg
-MCwgMzQsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwg
-MzUsIDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMSwgMzYs
-IDEpOwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMSwgMzcsIDEp
-OwogIFNUT1JFX0JZX0JJVE1BU0sodWludDY0X3QsICwgMHgyMDAwMDBlOCwgMCwgMzgsIDI2KTsK
-ICAqKHVpbnQzMl90KikweDIwMDAwMGYwID0gMDsKICAqKHVpbnQzMl90KikweDIwMDAwMGY0ID0g
-MDsKICAqKHVpbnQ2NF90KikweDIwMDAwMGY4ID0gMDsKICAqKHVpbnQ2NF90KikweDIwMDAwMTAw
-ID0gMDsKICAqKHVpbnQ2NF90KikweDIwMDAwMTA4ID0gMDsKICAqKHVpbnQ2NF90KikweDIwMDAw
-MTEwID0gMDsKICAqKHVpbnQzMl90KikweDIwMDAwMTE4ID0gMDsKICAqKHVpbnQzMl90KikweDIw
-MDAwMTFjID0gMDsKICAqKHVpbnQ2NF90KikweDIwMDAwMTIwID0gMDsKICAqKHVpbnQzMl90Kikw
-eDIwMDAwMTI4ID0gMDsKICAqKHVpbnQxNl90KikweDIwMDAwMTJjID0gMDsKICAqKHVpbnQxNl90
-KikweDIwMDAwMTJlID0gMDsKICAqKHVpbnQzMl90KikweDIwMDAwMTMwID0gMDsKICAqKHVpbnQz
-Ml90KikweDIwMDAwMTM0ID0gMDsKICAqKHVpbnQ2NF90KikweDIwMDAwMTM4ID0gMDsKICBzeXNj
-YWxsKF9fTlJfcGVyZl9ldmVudF9vcGVuLCAvKmF0dHI9Ki8weDIwMDAwMGMwdWwsIC8qcGlkPSov
-MCwgLypjcHU9Ki8wdWwsCiAgICAgICAgICAvKmdyb3VwPSovLTEsIC8qZmxhZ3M9Ki8wdWwpOwog
-IHN5el9jbG9uZSgvKmZsYWdzPUNMT05FX05FV1RJTUV8Q0xPTkVfRlMqLyAweDI4MCwgLypzdGFj
-az0qLzAsCiAgICAgICAgICAgIC8qc3RhY2tfbGVuPSovMHg1NCwgLypwYXJlbnRpZD0qLzAsIC8q
-Y2hpbGR0aWQ9Ki8wLCAvKnRscz0qLzApOwp9CmludCBtYWluKHZvaWQpCnsKICBzeXNjYWxsKF9f
-TlJfbW1hcCwgLyphZGRyPSovMHgxZmZmZjAwMHVsLCAvKmxlbj0qLzB4MTAwMHVsLCAvKnByb3Q9
-Ki8wdWwsCiAgICAgICAgICAvKmZsYWdzPU1BUF9GSVhFRHxNQVBfQU5PTllNT1VTfE1BUF9QUklW
-QVRFKi8gMHgzMnVsLCAvKmZkPSovLTEsCiAgICAgICAgICAvKm9mZnNldD0qLzB1bCk7CiAgc3lz
-Y2FsbChfX05SX21tYXAsIC8qYWRkcj0qLzB4MjAwMDAwMDB1bCwgLypsZW49Ki8weDEwMDAwMDB1
-bCwKICAgICAgICAgIC8qcHJvdD1QUk9UX1dSSVRFfFBST1RfUkVBRHxQUk9UX0VYRUMqLyA3dWws
-CiAgICAgICAgICAvKmZsYWdzPU1BUF9GSVhFRHxNQVBfQU5PTllNT1VTfE1BUF9QUklWQVRFKi8g
-MHgzMnVsLCAvKmZkPSovLTEsCiAgICAgICAgICAvKm9mZnNldD0qLzB1bCk7CiAgc3lzY2FsbChf
-X05SX21tYXAsIC8qYWRkcj0qLzB4MjEwMDAwMDB1bCwgLypsZW49Ki8weDEwMDB1bCwgLypwcm90
-PSovMHVsLAogICAgICAgICAgLypmbGFncz1NQVBfRklYRUR8TUFQX0FOT05ZTU9VU3xNQVBfUFJJ
-VkFURSovIDB4MzJ1bCwgLypmZD0qLy0xLAogICAgICAgICAgLypvZmZzZXQ9Ki8wdWwpOwogIGNv
-bnN0IGNoYXIqIHJlYXNvbjsKICAodm9pZClyZWFzb247CiAgbG9vcCgpOwogIHJldHVybiAwOwp9
-Cg==
+Co-developed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+Signed-off-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+---
+We have encountered this issue internally after enabling the
+throttle_rss_stat feature provided by Perfetto in background for more than
+two days, during which `rss_stat` tracepoint was invoked over 2^32 times.
+After tracing_map->next_elt overflow, new elements can continue to be 
+inserted to the tracing_map belong to `rss_stat`.
+Then the CPU could hang inside the while dead loop in function
+`__tracing_map_insert()` by calling it after the tracing_map left no empty
+entry.
 
-------=ALIBOUNDARY_1745_7f467ffab700_66b03658_12408c--
+Call trace during hang:
+  __tracing_map_insert()
+  tracing_map_insert()
+  event_hist_trigger()
+  event_triggers_call()
+  __event_trigger_test_discard()
+  trace_event_buffer_commit()
+  trace_event_raw_event_rss_stat()
+  __traceiter_rss_stat()
+  trace_rss_stat()
+  mm_trace_rss_stat()
+  inc_mm_counter()
+  do_swap_page()
+
+throttle_rss_stat is literally a synthetic event triggered by `rss_stat`
+with condition:
+ 1. $echo "rss_stat_throttled unsigned int mm_id unsigned int curr int
+    member long size" >> /sys/kernel/tracing/synthetic_events
+ 2. $echo
+    'hist:keys=mm_id,member:bucket=size/0x80000:onchange($bucket).rss_stat_
+    throttled(mm_id,curr,member,size)' >
+    /sys/kernel/tracing/events/kmem/rss_stat/trigger
+
+The hang issue could also be reproduced easily by calling a customize
+trace event `myevent(u64 mycount)` for more than 2^32+(map_size-max_elts)
+times during its histogram enabled with the key set to variable "mycount".
+While we call `myevent` with different argument "mycount" everytime.
+
+BTW, I added Cheng-jui to Co-developed because we have a lot of discussions
+during debugging this.
+---
+ kernel/trace/tracing_map.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+index a4dcf0f24352..3a56e7c8aa4f 100644
+--- a/kernel/trace/tracing_map.c
++++ b/kernel/trace/tracing_map.c
+@@ -454,7 +454,7 @@ static struct tracing_map_elt *get_free_elt(struct tracing_map *map)
+ 	struct tracing_map_elt *elt = NULL;
+ 	int idx;
+ 
+-	idx = atomic_inc_return(&map->next_elt);
++	idx = atomic_fetch_add_unless(&map->next_elt, 1, map->max_elts);
+ 	if (idx < map->max_elts) {
+ 		elt = *(TRACING_MAP_ELT(map->elts, idx));
+ 		if (map->ops && map->ops->elt_init)
+@@ -699,7 +699,7 @@ void tracing_map_clear(struct tracing_map *map)
+ {
+ 	unsigned int i;
+ 
+-	atomic_set(&map->next_elt, -1);
++	atomic_set(&map->next_elt, 0);
+ 	atomic64_set(&map->hits, 0);
+ 	atomic64_set(&map->drops, 0);
+ 
+@@ -783,7 +783,7 @@ struct tracing_map *tracing_map_create(unsigned int map_bits,
+ 
+ 	map->map_bits = map_bits;
+ 	map->max_elts = (1 << map_bits);
+-	atomic_set(&map->next_elt, -1);
++	atomic_set(&map->next_elt, 0);
+ 
+ 	map->map_size = (1 << (map_bits + 1));
+ 	map->ops = ops;
+-- 
+2.18.0
 
