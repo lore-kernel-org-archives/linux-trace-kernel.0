@@ -1,122 +1,142 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2967315C14F
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Aug 2024 16:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6202B2C684;
+	Mon,  5 Aug 2024 17:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722875652; cv=none; b=j0KVJNk03Gj9YtN1vxgaMEtPLCf3faiYvMP/xyFFBY04Ryz/PFiQdoVSJya3zyaaauVZmQzpa+9yfQBQPin4OMntbtStisxu0xy3aX8/VIeXs5lnZw6zDFnLUFBivQvfZ1U5EWrUd8WzsBLvpzU9KArCqr7CjKtD5k67yBwXX/4=
+	t=1722878961; cv=none; b=q+R/MGNotzdTU/jYDHufF8kQV3MgSU5OWtZjHtqdQ1zP1Y/e7BKzClasLPRC8lXAJpZsgsYMKRyG773ZaU5KJzasXYBrPNoPqqWw9YG83uW0PMulHuURwC3lVQHFybAyECapRDXS6+N3P54VEUyBg90RWA4NJ3LJWQORYIi6fno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722875652; c=relaxed/simple;
-	bh=WShIfcyB1WIBp1LMFRNAOGPYq4so52JcsO4pudunr3k=;
+	s=arc-20240116; t=1722878961; c=relaxed/simple;
+	bh=2/s/hJWqPoKTJBCPiqfHbjHv+o4VX2TJ2kwz23v/VGI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f2ZkKvX3YGqusEVnEicc2qEERmCKGk34T2TOG6jgdOaUUy4Q9jAwz5mBAxU7gPcju0YcFjWEWXgYw52JR68ULh5J4jy/nct6VttZ7+KyCLbF6IaKfCfkgKmdZ8Dko/HbCaBaJk6RD6SoLF6xkJjN/qYCnqXu1/QEUX+ibo+aQcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ooMfse3W; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=tt0a2wdmBYGME5SSaxSSFcVCMpxlCGHqUl4W0HfJ2YYax4Ix38iKIjXOldlpGxkWzC+VusJ3PVrvEE5EqQYsHU9Sd7tgYsHkCWcAsoWdhOVQSO7g7lIA7sTHCDBenIMqWxgceidDK8WLrVe7aBoZXPKOgJgCh1LR9A6NW7tw0Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jodIVSc5; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ooMfse3W"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-44fe9cf83c7so58414841cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Aug 2024 09:34:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jodIVSc5"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7b0c9bbddb4so5156344a12.3;
+        Mon, 05 Aug 2024 10:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722875649; x=1723480449; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1722878960; x=1723483760; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WShIfcyB1WIBp1LMFRNAOGPYq4so52JcsO4pudunr3k=;
-        b=ooMfse3WVKfuxOLSSKdlcT9aqFqVw/RtyRXpOBsgOCTn9wKceQcM71mSUyFUCGbjdh
-         26+ROdikowegVtjSUS4uWVUhtc95hLL23dlnWFj8cp65MVc4drKNIX9u43DWF2Bats8h
-         t0heAI4eFDoxqmiGWoYtMgQD56gP+7qgIFOqzvLbDpke6iJR6YapJ+kA8HjUL+DyHiKy
-         +7NkKP96kiTMdLcfY8EpRMfItKrh6siytmWkC/b0tGgiJkDeyeXjOqlFRgZJ9luyNyNG
-         6FpewpnZhlzpQ9biBgMEY7x44yXFsfP3XIyl2lb1fAFA0jwMYwVdtCGFuyqF5RwPlBAL
-         hg0A==
+        bh=3HFEevnrc72PQ6Jhj0m4i/B6uiLdJ3YShD8APoLscWU=;
+        b=jodIVSc5U48LOrEXHeKjge3CSNrHV16/f8Q8dsmWbio6FkwLSzT/gw/Pv1fvWND2wJ
+         UTrVyfPqSuihI1e3we5bDRt3c9J3QhVYajz4C4Lkd+cAK10y3zBhBQ8kSC47DPcbzjQ7
+         Av6eH5qy8+rmpOY6GvWTO9iH4P9dnRzyjNFySUjxYyzr7aNm0DniZ72FJGwNJNkJ8ITe
+         iV3K8KjQUzsvrfKTJKPQktoYZL+u1ZcJ1JJdq5W+wbN2ySodCPu4rUzwoW/aq9uFEhYa
+         0F1Bsz8P+yss+FafOUmvcJLoNGMJ/Uw3fkl/ij2eVuOMppR72dLgUaz3U7FTLpyMlL9w
+         4zxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722875649; x=1723480449;
+        d=1e100.net; s=20230601; t=1722878960; x=1723483760;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WShIfcyB1WIBp1LMFRNAOGPYq4so52JcsO4pudunr3k=;
-        b=Xc2i1iRd1C4Qs5p8HM46wxLnTd6qlE5I1rZDAVxK3ivOFypUvCOctGvPjueEw1OLOE
-         xOTQDLpWTkL6skuNUz1uIOkpXhFnUGopr6A76U0+mCqjnzY98qdatveUzmZdVtoEOcbu
-         P6p5BKQpM8zX+DCdYK9ywArJq/ye1sfe9kmFJ/R7Bng8+TSbTOxnicuKQJp4qYYYWNQp
-         eT7ylp4N+nh8pg/bajdJ9cV4KXNltvY3a5Tjt3ssmbwNFkZSylvr1sZo3W8XelFWbIAN
-         dZ5i3sIxJAPr7rB5HqiIXC2soZ5ka9A+wA9oz0TXJtL77HOyN33pY/HzcLdosR9drhgB
-         Kj/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXSjONWZhcpDliJ2pNjuItPGdbS7hgpdYKvmIGYwzGTuZgdJG68UiM6Jl53YcQ6sYyriQ8jfFm8aqpbvnXS0bH9QI1BJVrRQahHRCJaKSe6mrYe
-X-Gm-Message-State: AOJu0YyMBVa0NAwSzCc3UZ5fDYWfPJ7DvoHa4nM2HovkmAIYjVAipa/f
-	k9ws3+uGBprEo92YylyMk66yHd6I+RpVgcVVVGqLGWlgRfoU60/UGhtlrDiT7D4S38koHCAk7Ie
-	NfJMU26JmVa818zjCyyMB0fGWbadZD/PHJLxO
-X-Google-Smtp-Source: AGHT+IE3X2dzKDTfvW579W1ONWZvzHmSuPdaFYmL6fjjzD5I45yXHVQPoF1XfHnvXWK/VzgEqMK+gXEJqks0i1Xyhdk=
-X-Received: by 2002:a05:6214:4412:b0:6b5:7e97:7151 with SMTP id
- 6a1803df08f44-6bb98345fa9mr131458736d6.17.1722875648824; Mon, 05 Aug 2024
- 09:34:08 -0700 (PDT)
+        bh=3HFEevnrc72PQ6Jhj0m4i/B6uiLdJ3YShD8APoLscWU=;
+        b=kRa2/0FixI/f8Ko5NYQLliIYS7u1Jp1VV+aGstZMjQcw0C7T6mdPJaqSgdUpo0/p72
+         4aGMA7CtV+ktf4Z7SHH2bTjr8Xm16EogOWMtMYnUW28Uk++BYUWeMUihIEgTmAS9tLEZ
+         P/ZZZluRwHIID3VeO3FOhUUlEfxbC7ed5BszEOS+Zr1jkqfRy/pbdW4UjHH7EyN5eJhn
+         I0F9RAM3R8L5XKvmdxU/dtkcilXLUVEsrX0n+ybuojdysj6ZjxlRjl7WvhVEJEConTPc
+         rn7OIbHqDtqJ7WCTonlFitklRPTelu5P1OBxIyeKUgUb8JhUnYGA66Uam5rtjTMazqmk
+         Qruw==
+X-Forwarded-Encrypted: i=1; AJvYcCXONk2QaCiq0dMHIGpWnDBVMYvVv/Iyq7YkC4qTM/H8nWAKBH47qHv6sUI0M/+W4tp+Abo0IGMRF0ZbUUuuvb0HjwBA1/9gKstbqIxexvo/z3JbZmF/uBGSpltVhsvvbcJzxBsZQFVDPa2ZM5zCwyOSxvRNb670OAOTP6U5hIWPdN8PtiJW
+X-Gm-Message-State: AOJu0YzqZI7LAqaJfSNJCe1loGNmqykHgeIJgeOw8mBJRKr7obkvxkKh
+	oA0xRxysofeZ1NXDBjcCt/4WW+oQCUu85SOgzhwGUPKW9eRcWo4u7nh1pYLF3RBLDJPIFMRGY7y
+	tb1QCfYjwXrxhgBQpIY7bJRFtinDC8w==
+X-Google-Smtp-Source: AGHT+IGPt0LdYeJUltHWC3xC3JOU5FRo3Qhx8UDMnsai9X4ebykuBgYkP8LjG7B2eFoKj2OxlFGohlAvgPXyi2A/+mE=
+X-Received: by 2002:a17:90b:354f:b0:2ca:f33b:9f26 with SMTP id
+ 98e67ed59e1d1-2cff95405b4mr10563202a91.28.1722878959607; Mon, 05 Aug 2024
+ 10:29:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240730022623.98909-4-almasrymina@google.com> <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
-In-Reply-To: <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 5 Aug 2024 12:33:55 -0400
-Message-ID: <CAHS8izPxfCv1VMFBK1FahGTjVmUSSfrabgY5y6V+XtaszoHQ4w@mail.gmail.com>
-Subject: Re: [PATCH net-next v17 03/14] netdev: support binding dma-buf to netdevice
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Kaiyuan Zhang <kaiyuanz@google.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-	Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Christoph Hellwig <hch@infradead.org>, David Ahern <dsahern@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>, 
-	Donald Hunter <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Helge Deller <deller@gmx.de>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Jakub Kicinski <kuba@kernel.org>, 
-	"James E. J. Bottomley" <James.Bottomley@hansenpartnership.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Jeroen de Borst <jeroendb@google.com>, Jesper Dangaard Brouer <hawk@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Matt Turner <mattst88@gmail.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Shailend Chand <shailend@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Shuah Khan <shuah@kernel.org>, 
-	Steffen Klassert <steffen.klassert@secunet.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Yunsheng Lin <linyunsheng@huawei.com>
+References: <20240731214256.3588718-1-andrii@kernel.org> <20240731214256.3588718-3-andrii@kernel.org>
+ <20240805134418.GA11049@redhat.com>
+In-Reply-To: <20240805134418.GA11049@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 5 Aug 2024 10:29:07 -0700
+Message-ID: <CAEf4BzYvkAYL4pPcA7ayiR_VT=g4Y1SMZy4MNX3QEV3H=PjYvw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] uprobes: revamp uprobe refcounting and lifetime management
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 30, 2024 at 4:38=E2=80=AFAM Markus Elfring <Markus.Elfring@web.=
-de> wrote:
+On Mon, Aug 5, 2024 at 6:44=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
 >
-> =E2=80=A6
-> > +++ b/include/net/devmem.h
-> > @@ -0,0 +1,115 @@
-> =E2=80=A6
-> > +#ifndef _NET_DEVMEM_H
-> > +#define _NET_DEVMEM_H
-> =E2=80=A6
+> On 07/31, Andrii Nakryiko wrote:
+> >
+> > @@ -732,11 +776,13 @@ static struct uprobe *alloc_uprobe(struct inode *=
+inode, loff_t offset,
+> >       uprobe->ref_ctr_offset =3D ref_ctr_offset;
+> >       init_rwsem(&uprobe->register_rwsem);
+> >       init_rwsem(&uprobe->consumer_rwsem);
+> > +     RB_CLEAR_NODE(&uprobe->rb_node);
 >
-> I suggest to omit leading underscores from such identifiers.
-> https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+or+=
-define+a+reserved+identifier
+> I guess RB_CLEAR_NODE() is not necessary?
+
+I definitely needed that with my batch API changes, but it might be
+that I don't need it anymore. But I'm a bit hesitant to remove it,
+because if we ever get put_uprobe() on an uprobe that hasn't been
+inserted into RB-tree yet, this will cause a hard to understand crash.
+RB_CLEAR_NODE() in __insert_uprobe() is critical to have, this one is
+kind of optional (but still feels right to initialize the field
+properly).
+
+Let me know if you feel strongly about this, though.
+
 >
+> > @@ -1286,15 +1296,19 @@ static void build_probe_list(struct inode *inod=
+e,
+> >                       u =3D rb_entry(t, struct uprobe, rb_node);
+> >                       if (u->inode !=3D inode || u->offset < min)
+> >                               break;
+> > +                     u =3D try_get_uprobe(u);
+> > +                     if (!u) /* uprobe already went away, safe to igno=
+re */
+> > +                             continue;
+> >                       list_add(&u->pending_list, head);
+>
+> cosmetic nit, feel to ignore, but to me
+>
+>                         if (try_get_uprobe(u))
+>                                 list_add(&u->pending_list, head);
+>
+> looks more readable.
 
-I was gonna apply this change, but I ack'd existing files and I find
-that all of them include leading underscores, including some very
-recently added files like net/core/page_pool_priv.h.
+It's not my code base to enforce my preferences, but I'll at least
+explain why I disagree. To me, something like `if (some condition)
+<break/continue>;` is a very clear indication that this item (or even
+the rest of items in case of break) won't be processed anymore.
 
-I would prefer to stick to existing conventions if that's OK, unless
-there is widespread agreement to the contrary.
+While
 
---=20
-Thanks,
-Mina
+if (some inverted condition)
+   <do some something useful>
+<might be some more code>
+
+... is a pattern that requires double-checking that we really are not
+going to use that item later on.
+
+So I'll invert this just to not be PITA, but I disagree :)
+
+>
+> Other than the lack of kfree() in put_uprobe() and WARN() in _unregister(=
+)
+> the patch looks good to me.
+
+yep, fixed that locally already. Thanks for the review!
+
+>
+> Oleg.
+>
