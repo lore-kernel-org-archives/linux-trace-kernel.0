@@ -1,165 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D185481B7
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Aug 2024 17:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4DC3D984;
+	Tue,  6 Aug 2024 17:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722965148; cv=none; b=jdLk/+D1vgYwQV1Fyek01DwAQmJDvJDJmzJ+CQ+KuaUGdLW9IMwNMO2z0McNJ3O1CONuC5TNolnegumtvu0urq31X0pn95iV8YFyjSyAEKE9Lo7Fknb0GvlTVi38Mq6TenqciILmmdFdMuSaG4BxEfL5BBW8lpm84kjNa71LrKc=
+	t=1722965199; cv=none; b=Pz3aGC/yq6AhoC8a2+vwPgJvbyjRitS1BT9/CcwjLTDOnHmpqUlH/aPNIYQXcA8EyRewA0+5OlXG0QTzAa/C+4LjPTIdo8bRWNeU2ygsuxrTtOlw6c29sYSXi64w4Y6DEYuIDy3bHS0R8olXcKdfMTM0uBqq0sh9lZnZuvvkqPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722965148; c=relaxed/simple;
-	bh=rwF7zEYBr1cCawdnogP3aKnAgnE27YD8P1dhMskhzIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=asH/ozSIDKleEWFywX4rp7LFfn4F+1NdyIj6DD7HO1gdN52mK8gIKvUmABweSo30ca4WDhHeWE+fB8zyYbOTGSoPJPQZURmtGEHL0h0IRuMO+wtzh0AferZaqj5iovxyPF5RGT24H65xQWi7+RM+tGnMkdTO9R3pPGuCxTkVQ40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AqdOrpGN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1722965199; c=relaxed/simple;
+	bh=HMPRMX12R6eOvtWfBaZTU/fH1BllL8R0dascJhuc85I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z6npEljxK01tSpDkps7rxHD78yvAxzwl6ZtQgqIxOg998uLe30sLyuiJ/vqdf0x0aEcm3lbz/Ixbin9CMy5vQs/kqFkVZ7ANBiAtbTToXosX6ndOaY2N1w87wMQ5iBukdwtnmnBGqXY69899GCFAkdYQqGOcYBv1F2o64tlY2ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFc1DjMY; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AqdOrpGN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722965145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3QrFC/2gKkg0zTzsJSyXYftIHvsny08W2eAJL61Pv6A=;
-	b=AqdOrpGN+f8aMj+H5u6qMS6oYDIOr92Rt3H5ZoM6SmQmdg5LvFApAtvMnnA1sK/9A5Rb9a
-	MsTqPTdpHr6i3iZ/vpilpB8qcDyD3iyRa9xt4TimzHIGLUz5I/QofBtfOMGBJbRp6snAqe
-	zrkTpNm5XIZuSA1BKfnoz4Qg0EgQrJ8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-394-vN1vuqx9OzGAVHK44an-ew-1; Tue,
- 06 Aug 2024 13:25:42 -0400
-X-MC-Unique: vN1vuqx9OzGAVHK44an-ew-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40F501956080;
-	Tue,  6 Aug 2024 17:25:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.155])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ABE3619560AE;
-	Tue,  6 Aug 2024 17:25:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  6 Aug 2024 19:25:36 +0200 (CEST)
-Date: Tue, 6 Aug 2024 19:25:29 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-Message-ID: <20240806172529.GC20881@redhat.com>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
- <20240801140639.GE4038@redhat.com>
- <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
- <20240802092406.GC12343@redhat.com>
- <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFc1DjMY"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-70f5ef740b7so693080b3a.2;
+        Tue, 06 Aug 2024 10:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722965197; x=1723569997; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f2pnVkniru5CoPEoFm4XT1qKCTw6sOWq0Ou4QzAPznI=;
+        b=lFc1DjMYqF5NozjjEQL89M30MLmsyKUx9skA2xfYMJ4Enr+wz3/1Usv8zYSg33TpWY
+         OOx8fkfy2pOvZg2/e3SRFtxE3oP8v6/elWGZszfo50wZGsJ/IO9mULaPRbG5mTB3w6fG
+         0L6tblhbpNowvyhSYhR2E8ZEjtV/eKskVIvR1pfbKacFgx7AiABsrP+xM4h5dotsCZrc
+         VEwTBpJpp3Yq+Q8MDVtegB+Ause31GFLWK9Jhavu/ySSC7cp8nd/+0h4HXyaYqXP+PXA
+         J8C60ByQfs1ndEIjar/JaFGuJ+NrYxu8ZJ+bQwCTXoWfjwa4YYElHGqxj66gyQfCxcG/
+         VXEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722965197; x=1723569997;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f2pnVkniru5CoPEoFm4XT1qKCTw6sOWq0Ou4QzAPznI=;
+        b=V6psm2tNtWGcbw307c6tAUADQK76TPolMx0I7mSEY/oH3NODtA+l0rKthImLkXrT5T
+         9yqhqYznkIlq5HuNETkooG1dOvYDHUaG7t5HtgoN2xhw99T+oWL2cnyaoi57FEvhDOZX
+         /Fai8q9QgtZfGXm5Li1QHly1SJjBCwbeBEgUgzyrIyYNgAvfvjtDNsyNRtsRxZvnDeN2
+         lhZddd/G5y8Zb0iq9otqDllzDlZmElSUyB3M+MLIljTnVJtRXyE3nbSCRFFI3UuX4/Hz
+         XhJDK/Ll6BiWeNK+82WRempduKH+4PwUzlzdVIxb7zjQNYGLsK15w/7pze2BZ2zvjtDz
+         v1lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVD8NoOh7KCP1OneuVnf3qcwXxBMIv1LBVc8szjGVOdj5qbN2wjtiaov3JYOAf09hSZFNuQgKjxndjyJuxW@vger.kernel.org, AJvYcCVnahJ2KJ3fxE9KSzfUysECsv0Gkdxm/O2TAqHOwcZ5MHqzmSPXB5j9ZDAAxvpU06nlpSdHCfn0nqk9AXqlkrbsjDvB@vger.kernel.org, AJvYcCVxh3L3J0ne+eUksacPK4/CLxsD12Imu2kZ2QbPVL3BG9N4E+lwftVqibnLGmkDEdKZuWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJZThXTjsKVMbSC1YVEMEAJQcD8uSfWcpAZczJc+ly5TwA8z9/
+	O++z+EEYbjju/QBqnytGtIKlAn3szjDPpHsrFAGs4892IITa5jQGrW0Y5AFEvXXV1pWiRRLFjK3
+	mTZJ/qTrLT5yUGACRA7qcLOlbd6I=
+X-Google-Smtp-Source: AGHT+IHL0i9gBda7B+KBaowzKiYJQ5lO01ijNUCmYEemdZoNEj2e4g/b33BMAbMPNg7JYYk+8auHyi6Y/CwIYov6UKI=
+X-Received: by 2002:a05:6a21:e90:b0:1c4:d0d9:50aa with SMTP id
+ adf61e73a8af0-1c699582380mr20651863637.20.1722965197101; Tue, 06 Aug 2024
+ 10:26:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20240805202803.1813090-1-andrii@kernel.org> <ZrHSts7eySxHs4wh@krava>
+In-Reply-To: <ZrHSts7eySxHs4wh@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 6 Aug 2024 10:26:25 -0700
+Message-ID: <CAEf4Bzaq86fPVGWtXqvxLtbsk06coGBebnAO5YiuvuUF2v7++w@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: get rid of bogus trace_uprobe hit counter
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
+	oleg@redhat.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/06, Liao, Chang wrote:
+On Tue, Aug 6, 2024 at 12:37=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
 >
-> You're absolutely right. handle_signlestep() has chance to handle _DENY_SIGANL
-> unless it followed by setting TIF_UPROBE in uprobe_deny_signal(). This means
-> _DENY_SIGNAL is likey replaced during next uprobe single-stepping.
+> On Mon, Aug 05, 2024 at 01:28:03PM -0700, Andrii Nakryiko wrote:
+> > trace_uprobe->nhit counter is not incremented atomically, so its value
+> > is bogus in practice. On the other hand, it's actually a pretty big
+> > uprobe scalability problem due to heavy cache line bouncing between CPU=
+s
+> > triggering the same uprobe.
 >
-> I believe introducing _DENY_SIGNAL as the immediate state between UTASK_SSTEP
-> and UTASK_SSTEP_ACK is still necessary. This allow uprobe_post_sstep_notifier()
-> to correctly restore TIF_SIGPENDING upon the completion of single-step.
+> so you're seeing that in the benchmark, right? I'm curious how bad
+> the numbers are
 >
-> A revised implementation would look like this:
 
-Still looks "obviously wrong" to me... even the approach itself.
+Yes. So, once we get rid of all the uprobe/uretprobe/mm locks (ongoing
+work), this one was the last limiter to linear scalability.
 
-Perhaps I am wrong, yet another day when I can't even read emails on lkml
-carefully, sorry.
+With this counter, I was topping out at about 12 mln/s uprobe
+triggering (I think it was 32 CPUs, but I don't remember exactly now).
+About 30% of CPU cycles were spent in this increment.
 
-But can you please send the patch which I could actually apply? This one
-looks white-space damaged...
+But those 30% don't paint the full picture. Once the counter is
+removed, the same uprobe throughput jumps to 62 mln/s or so. So we
+definitely have to do something about it.
 
-I'll try to reply with more details as soon I convince myself I fully
-understand what does your patch actually do, but most probably not tomorrow.
+> >
+> > Drop it and emit obviously unrealistic value in its stead in
+> > uporbe_profiler seq file.
+> >
+> > The alternative would be allocating per-CPU counter, but I'm not sure
+> > it's justified.
+> >
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  kernel/trace/trace_uprobe.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > index 52e76a73fa7c..5d38207db479 100644
+> > --- a/kernel/trace/trace_uprobe.c
+> > +++ b/kernel/trace/trace_uprobe.c
+> > @@ -62,7 +62,6 @@ struct trace_uprobe {
+> >       struct uprobe                   *uprobe;
+> >       unsigned long                   offset;
+> >       unsigned long                   ref_ctr_offset;
+> > -     unsigned long                   nhit;
+> >       struct trace_probe              tp;
+> >  };
+> >
+> > @@ -821,7 +820,7 @@ static int probes_profile_seq_show(struct seq_file =
+*m, void *v)
+> >
+> >       tu =3D to_trace_uprobe(ev);
+> >       seq_printf(m, "  %s %-44s %15lu\n", tu->filename,
+> > -                     trace_probe_name(&tu->tp), tu->nhit);
+> > +                trace_probe_name(&tu->tp), ULONG_MAX);
+>
+> seems harsh.. would it be that bad to create per cpu counter for that?
 
-Thanks,
+Well, consider this patch a conversation starter. There are two
+reasons why I'm removing the counter instead of doing per-CPU one:
 
-Oleg.
+  - it's less work to send out a patch pointing out the problem (but
+the solution might change)
+  - this counter was never correct in the presence of multiple
+threads, so I'm not sure how useful it is.
 
-> ------------------%<------------------
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
-> 
->         if (task_sigpending(t)) {
->                 clear_tsk_thread_flag(t, TIF_SIGPENDING);
-> +               utask->state = UTASK_SSTEP_DENY_SIGNAL;
-> 
->                 if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
->                         utask->state = UTASK_SSTEP_TRAPPED;
-> @@ -2276,22 +2277,23 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
->         int err = 0;
-> 
->         uprobe = utask->active_uprobe;
-> -       if (utask->state == UTASK_SSTEP_ACK)
-> +       switch (utask->state) {
-> +       case UTASK_SSTEP_ACK:
->                 err = arch_uprobe_post_xol(&uprobe->arch, regs);
-> -       else if (utask->state == UTASK_SSTEP_TRAPPED)
-> +               break;
-> +       case UTASK_SSTEP_TRAPPED:
->                 arch_uprobe_abort_xol(&uprobe->arch, regs);
-> -       else
-> +               set_thread_flag(TIF_SIGPENDING);
-> +               break;
-> +       default:
->                 WARN_ON_ONCE(1);
-> +       }
-> 
->         put_uprobe(uprobe);
->         utask->active_uprobe = NULL;
->         utask->state = UTASK_RUNNING;
->         xol_free_insn_slot(current);
-> 
-> -       spin_lock_irq(&current->sighand->siglock);
-> -       recalc_sigpending(); /* see uprobe_deny_signal() */
-> -       spin_unlock_irq(&current->sighand->siglock);
-> -
->         if (unlikely(err)) {
->                 uprobe_warn(current, "execute the probed insn, sending SIGILL.");
->                 force_sig(SIGILL);
-> @@ -2351,6 +2353,8 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
->                 /* task is currently not uprobed */
->                 return 0;
-> 
-> +       if (utask->state == UTASK_SSTEP_DENY_SIGNAL)
-> +               set_thread_flag(TIF_SIGPENDING);
->         utask->state = UTASK_SSTEP_ACK;
->         set_thread_flag(TIF_UPROBE);
->         return 1;
-> 
-> ------------------>%------------------
-> 
-> > 
-> > Oleg.
-> > 
-> > 
-> 
-> -- 
-> BR
-> Liao, Chang
-> 
+Yes, I think we can do per-CPU counters, but do we want to pay the
+memory price? That's what I want to get from Masami, Steven, or Peter
+(whoever cares enough).
 
+>
+> jirka
+>
+> >       return 0;
+> >  }
+> >
+> > @@ -1507,7 +1506,6 @@ static int uprobe_dispatcher(struct uprobe_consum=
+er *con, struct pt_regs *regs)
+> >       int ret =3D 0;
+> >
+> >       tu =3D container_of(con, struct trace_uprobe, consumer);
+> > -     tu->nhit++;
+> >
+> >       udd.tu =3D tu;
+> >       udd.bp_addr =3D instruction_pointer(regs);
+> > --
+> > 2.43.5
+> >
