@@ -1,117 +1,140 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4310D17C203;
-	Tue,  6 Aug 2024 03:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6801C165F08;
+	Tue,  6 Aug 2024 07:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722916279; cv=none; b=qJr8968gQbcWAQjCIvJWmq9q1KHXSSVMcn7Rc2+4wwnqkQWAS3L49AxBBlrsPNDMysY2Aw0bFtKt0oaCnm/Yf89qk2jI8rDkuh3E2Bxgz7617aAx30oZSviIhs8AUeqR55zbly7C4qQ6NVNXls5191KyIydZDRJW6pO4oKxkjU0=
+	t=1722928289; cv=none; b=QFgLB4SHdvVNqSR1aoWk7ap+uoF1BBb+WVECraaqvmJqzn49rfLwfkJj6Y4zW8WcRHl0ydZHk+Wq6aWLKMV37z0iT35J3hT2Z6w87o+PvyzJ+EQ0+3tAcNG3Irg5xFdxr2xDpVsuHOiEtv12jl87vARzVrZINHJsf09xbQeG1bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722916279; c=relaxed/simple;
-	bh=o2qOFURtd6COH4J6FuPiVJ1ZknbpD5fuWh18UJ6DnM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f/lvq5Ach1gD+89H8EFPhKNrQvqI2rd+3rZKlOhSvAgvZcbRLNVFQcdCPwhiIcVHeuYRIEID7jM4NLL8FpyWaK++efhpd1Bbk2P9c6cu5mEDPzJtERQ7iwmlj2eELUOwizRsocHKM90DgxoP7ptH5LpI55SZCDSPfzGb0sYipVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VVTmZjs5; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722928289; c=relaxed/simple;
+	bh=7HePuyoWPygVPxh4qKr24Yod2wxAsQz31TbzWEQpLRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bCPHua2SW85CCcYg73datwMjbM2HOssSC0l2FUnJzHmw6Q6J92DxDxL8aAX1fPVQLB4wMheE+eVeEIrpshAhF0vzpcoHz9PwAmf+px6K3lYlLnnho3Z53SnQZB5tfXCdRuZe/HvMIQ38j3sF6KfLD+Vmrv5L/SmuvXjwtXoPWCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=aLC7wrbu; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVTmZjs5"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b797fb1c4aso1840246d6.2;
-        Mon, 05 Aug 2024 20:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722916277; x=1723521077; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c/kd4WiMmD7cvf5H5grwZdB0fA+VVTIeAtsfQV3Ag+U=;
-        b=VVTmZjs5ps5PZ1tDWhb8RhFE1bgS9BEJ9OveKZV9cm36Mx9R4JgaQ9hJDwdOMjJMiv
-         /SG94mlrH/JLN9cz1cxXaZ1wVCa/4wketftPb4n5jEmy1lmY+nB0Fz4wdF4KPaotsNeB
-         Izwhu1/x/U8Vdua4sVdMt2MObws4WQarIIyfLiq/6ObFXasbIZe1ac+gRvYm28zrVW1o
-         VB+5qIbOHrmVlg6LEqc+4axVFmWwZkmo0NqKyLOHYcPHl6wVKZuLPe/qbJ/NPeOsMWIR
-         in5RphwO/PZF0KzgZZdNmltFOnS+VuM7Zo80SLXQ1hufIwkSIzDQJEW+ROY+RHEHvHxK
-         PqZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722916277; x=1723521077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c/kd4WiMmD7cvf5H5grwZdB0fA+VVTIeAtsfQV3Ag+U=;
-        b=iw/dVFNNbfZ5NJ+l8vXzNEF4f+eWPMpgIyM5eZ+xmXeKWe2NdBYzhC8RrQEdroMZkg
-         WjJdekYE6oXmRDBbwiWAbYOfM/4+g+w9QUtcbhzVbuaLEnk18j51jUjou8YBk/vADg9G
-         AxUvjan1vlpe7cIo5cqDt663ejthjBJZA4SS5pS6THwXzhtX7CXHH+1cpOn//Ey7Jvrf
-         6/MSCj+xtoDrSjaUgdcjAITJXlTqypcOACu4Wc0K+VQvnlmcl9DQ8jLKRcIZxVwQYcLD
-         Q0LyKvht/9+7LqR4mFdQZDGF4aqSr+XyO+vE6XuGRwtqYrSXSJVvwipLu6NGVQQjjeeM
-         KaYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGbB2URhxUzEnELooS88p8BSCxJ9lN8EBG5fu7UssUEKG7spao7IITZD3M1EX8QmeDHouGyxrdVhXKyze8Zc4VEj9m70dbwE9RIp9t7EPM+MVzJJws7nkftDeZEBeVgjFn11D4tp8ir2LCHyKCIqDr431BgeMVog/s8O6M75h83flN3JzrWpMv62O/VUCDvYO0WSLDrMVhQmnG53rBHUTg0oTGKbGdvrNs8zsxHtGnAfZzLNxDehVDeISR1jwbZhSs1lGqH6+WgqR2gyiKerjNpdJ/R2WZc97Z6IjJJM4a8HuEoknOXkSsYneDcWtVADdwyU783Q==
-X-Gm-Message-State: AOJu0YxsiQVXpPfa+UCtdefoQrgjd4z3toFYC24OBUmTm+zMEg1YOAlO
-	JVVT2iYoU+3CEzq7s5rhG+/SW6rBJvfPnUhMTQ33V05beFuAsvzifWk3NXRhaZdwoDuGLA5lIA5
-	AncdDMRJ0DWu2Oc80EDkUCuDxD5s=
-X-Google-Smtp-Source: AGHT+IE2RlAR/mG/tj72IoVOm1m9SyAB0Xj2ZC0vDvmPd0pDeOdqpJgJne85/B4nYiYlXvIL6sxOK+OpkyaCbeLF13M=
-X-Received: by 2002:a05:6214:5687:b0:6b4:f973:d423 with SMTP id
- 6a1803df08f44-6bb983477a8mr176949846d6.7.1722916276927; Mon, 05 Aug 2024
- 20:51:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="aLC7wrbu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1722928283; x=1723533083; i=markus.elfring@web.de;
+	bh=7HePuyoWPygVPxh4qKr24Yod2wxAsQz31TbzWEQpLRQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=aLC7wrbugvHbc7JitVGK+UbcVshwtENRbS63MrtuGO+FdCGD2lnXqmw9CP9GnaeC
+	 TFfrydT8yJue9bUo/wS8AtmAk6nut6jcbgQIBqgITOjiRRLa3VB1qGG0JiIl4CYsR
+	 CkEQXMkLNvcXuDaYsPfRyyJZTDNY6Srf0tSU0Q3anf3BEVehnreZ+oVlvm7JJAl5g
+	 4nC0KYEBxKRytoI1WgG+epHzc7IVXjXLUweerikYV6Bjs16L/pZuhHC0tOthxGXfY
+	 SkQboLneSY9dYwF4taCPUoAcJcTqxWmK357OMq33GxwfPee2lBJx6wmYhg27NInOU
+	 L1ATh6GHpOYXVQoftw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MbTL1-1s3oIK0Nk9-00mINb; Tue, 06
+ Aug 2024 09:04:09 +0200
+Message-ID: <9aad36fe-cd4c-4ce5-b4d8-6c8619d10c46@web.de>
+Date: Tue, 6 Aug 2024 09:03:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240804075619.20804-1-laoar.shao@gmail.com> <CAHk-=whWtUC-AjmGJveAETKOMeMFSTwKwu99v7+b6AyHMmaDFA@mail.gmail.com>
- <CALOAHbCVk08DyYtRovXWchm9JHB3-fGFpYD-cA+CKoAsVLNmuw@mail.gmail.com> <CAHk-=wgXYkMueFpxgSY_vfCzdcCnyoaPcjS8e0BXiRfgceRHfQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgXYkMueFpxgSY_vfCzdcCnyoaPcjS8e0BXiRfgceRHfQ@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 6 Aug 2024 11:50:40 +0800
-Message-ID: <CALOAHbDPToZDrsB2wSp6Ss5L0ksrCb1ufx3SZ1GWeqQ2jP7Daw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Improve the copy of task comm
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: akpm@linux-foundation.org, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
-	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v17 03/14] netdev: support binding dma-buf to
+ netdevice
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Kaiyuan Zhang <kaiyuanz@google.com>, Pavel Begunkov
+ <asml.silence@gmail.com>, Willem de Bruijn <willemb@google.com>,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ LKML <linux-kernel@vger.kernel.org>, Andreas Larsson <andreas@gaisler.com>,
+ Arnd Bergmann <arnd@arndb.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Christoph Hellwig <hch@infradead.org>, David Ahern <dsahern@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+ Donald Hunter <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>, Helge Deller <deller@gmx.de>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jakub Kicinski
+ <kuba@kernel.org>,
+ "James E. J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jeroen de Borst <jeroendb@google.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Matt Turner <mattst88@gmail.com>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Praveen Kaligineedi <pkaligineedi@google.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Shailend Chand <shailend@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Shuah Khan <shuah@kernel.org>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Taehee Yoo <ap420073@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Yunsheng Lin <linyunsheng@huawei.com>
+References: <20240730022623.98909-4-almasrymina@google.com>
+ <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
+ <CAHS8izPxfCv1VMFBK1FahGTjVmUSSfrabgY5y6V+XtaszoHQ4w@mail.gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <CAHS8izPxfCv1VMFBK1FahGTjVmUSSfrabgY5y6V+XtaszoHQ4w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ud03T+VJ0WQWkNGa/SuDGe/nuF0sGbh6xFVs6sj7mBpoHZmEK9m
+ /g8pgN0ga+9LIF+xkm8yuxipRI1qpxk9O/iv4my6GHrRWDZdHWWggRKyAqliCerii6f6rsb
+ 4m+YAthbpuAnnWrnfbwf6MXbKNd/W6OA+m2MMbRtZr+OncP4jJnp6T9Z97ykCCWrjKOacd6
+ hZrRGnLMzDmwJNYA5qgFQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zPsCc1lrsyU=;Y7DEz/vBBmk+SeE6JgoellZvOuX
+ kcZRuFvCRXoAHvpu4L73XmcVhTOHNgehO96ILvjt1EA+Yfwm+WDObNm8eksbv1ELbJYKHqYuz
+ C40nciD9oSUI3qebeUWhWAWNw7O1ZrFCxPEqgZbaIkIgGvz/ZvU+Edr2+r3atRNSYhdojMJGs
+ qWNCXPBNGKklLG5YXjAmVynAryjZPyB4DRUWZuWuUZbVGnrzr/dfLX/m4iZiFVpuknIlxfLaS
+ xWcqEOkcpgXpzyLmDKyCj2LOpicZIF8SfFwd5XFuIKa3K66sjfL+BkUlwpxAv7IpIijQA5uFB
+ NMsuhO3BGbozyiyAPZ7SxPzrj+NoB+HSLSdffc9wC8m9fIO9zlY+RDpLSBXtfaqoSFdlE8Az+
+ LQ4ucimoajT41/N7wv7fvsZri+AdA955Db3MF3Dd+TUWIr4dx5BdvpTc9KN8qH8s4Z3U6YKrq
+ A6ohigBF8yZiYbPlA7HiLOZaWbX3o6tzjjX0bezEBmpfmnPEa63AfPvVSwsUGK8N2420+lMCV
+ g1jPz/Et77QWGhKdme4mxWFmIYMlkhE4IVdnOfRmy2yYk28FC16LtnfwsXRLH+TzXHEznXqv+
+ 1OteD/9c2ul0sK2Y4eVn7vXLx2oN9+dzooNND404WbnJfqoRnLeEAdhrRHOc6IBP8m3r252jT
+ e9hstn4baSSLD5NLSETphdL/3gwE897NmkuQvEGSR36s5Wk5yJSaRRiWtAHAZFN9pzMnJzQRn
+ MySFB0ZEJi/ForUpyXH7UsRV8W2zYGkuWK9oriuaNLDHkUvpbnFnBefK38oMRYALjMqQRa8IU
+ qJ0sxMyEwM1fCeDOojdWCPwQ==
 
-On Tue, Aug 6, 2024 at 11:10=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+>> =E2=80=A6
+>>> +++ b/include/net/devmem.h
+>>> @@ -0,0 +1,115 @@
+>> =E2=80=A6
+>>> +#ifndef _NET_DEVMEM_H
+>>> +#define _NET_DEVMEM_H
+>> =E2=80=A6
+>>
+>> I suggest to omit leading underscores from such identifiers.
+>> https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+o=
+r+define+a+reserved+identifier
+>>
 >
-> On Mon, 5 Aug 2024 at 20:01, Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > One concern about removing the BUILD_BUG_ON() is that if we extend
-> > TASK_COMM_LEN to a larger size, such as 24, the caller with a
-> > hardcoded 16-byte buffer may overflow.
+> I was gonna apply this change, but I ack'd existing files and I find
+> that all of them include leading underscores, including some very
+> recently added files like net/core/page_pool_priv.h.
 >
-> No, not at all. Because get_task_comm() - and the replacements - would
-> never use TASK_COMM_LEN.
->
-> They'd use the size of the *destination*. That's what the code already do=
-es:
->
->   #define get_task_comm(buf, tsk) ({                      \
->   ...
->         __get_task_comm(buf, sizeof(buf), tsk);         \
->
-> note how it uses "sizeof(buf)".
->
-> Now, it might be a good idea to also verify that 'buf' is an actual
-> array, and that this code doesn't do some silly "sizeof(ptr)" thing.
->
-> We do have a helper for that, so we could do something like
->
->    #define get_task_comm(buf, tsk) \
->         strscpy_pad(buf, __must_be_array(buf)+sizeof(buf), (tsk)->comm)
->
-> as a helper macro for this all.
->
-> (Although I'm not convinced we generally want the "_pad()" version,
-> but whatever).
->
+> I would prefer to stick to existing conventions if that's OK, unless
+> there is widespread agreement to the contrary.
 
-Will do it.
-Thanks for your explanation.
+Under which circumstances would you become interested to reduce developmen=
+t risks
+also according to undefined behaviour?
+https://wiki.sei.cmu.edu/confluence/display/c/CC.+Undefined+Behavior#CC.Un=
+definedBehavior-ub_106
 
---=20
-Regards
-Yafang
+Regards,
+Markus
