@@ -1,42 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E98F5339D;
-	Tue,  6 Aug 2024 17:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38622B9C6
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Aug 2024 17:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722965320; cv=none; b=gHLTCYKB0RwoHLVQqOv2vooqfwrqbZF2n1E64HmNJh8AgHEKSRnw+4Za25TxYR5gGk7Qrv9oDgdbN7ZqjwJhUWGLrDtqJxCKSW7hxxeyP4s0dGgDiHAznRRTCflV9ughUc1QiizD3HJMHvvfe9k179eY+qTuXnHqlK6ElP4xLeA=
+	t=1722966694; cv=none; b=IDJb2mEueSJJkCd2zOxw5KGSj77NIY3iJa1X7EjZdjzLFgGpo1J83RDXRmCwi1RyZ/I+UXmarHXLIhtT4Li63ESxaDc5AwdBtWGKG3l7C9bWp1SG6K+Z9icsrfHQF5b8GKg6l/A5hfdAsbnE1XtfYw1Xe/S/5l7TOkdVQuAeqVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722965320; c=relaxed/simple;
-	bh=Qi5WxmMVqmR0matvwiMljokUy+VSTuQ68dFhDYopPqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=T01016j0dgpAEoRn+WCPGEvcPtTnuAFP4m0fZ8oNhJMMIV8I+NYT9AKfoU2RTaku6YGfcH/aVRDiVgz3DQL6VXlO12CWqqAGl0zsk3BtReSAZd6CAhhtDTgTWmVT8boJhScLjQ+NPos4OcehdzegcSSqbkRl9u/YfWqKGre9RcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FAXvUE0K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722966694; c=relaxed/simple;
+	bh=jSP80QQ3RIwbB9d2cbCqSvQyj8bH6VyQMJspvBsB0A4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U0D786yptaL8Sc0uKPeqRBsue0Uo6EICXqHVpS7WNw5gMvEdRdNZAQnkuJUUB9tsvOSfDNz7rnXvsA1hmPS/MgbCakShyeGxtS/4DH30CxNPOkPAXYPi0I66TcyLXlUep6VGfHSrzFI4L3XL//1hPKCIx2r26Gr42HqPiddGOLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=P10s3HNE; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FAXvUE0K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A25ADC32786;
-	Tue,  6 Aug 2024 17:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722965320;
-	bh=Qi5WxmMVqmR0matvwiMljokUy+VSTuQ68dFhDYopPqQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FAXvUE0KIKhlW+bPfH7nEjVfB9pnfTRAVLFxq3YBnRaBNeyQInhLUDkVNQ1Yne4fy
-	 1rji3IM/XkY/aW1PHguSfjzwzQu98iEfNi5pJJ3IUWyIkZ2yNjX/LoJRXFU5dO5thy
-	 QDjrU5CIX1ZsXeIt25qlgPx4T8POowARlFSSu32UltQi9hmb751L6+Dnoz1HzEqmAm
-	 dUZ7DRZuCUXA7cCWOngjT52mIrgqZxCQWprWnfRYF5/GqtCVIGmtwAcYK/b3UKXLSz
-	 pQp9ukAAaey9TMGScKUWq38FHIr/ODo+01aCy7rH6Q8pEXYnzbVNa3tBkdjai/iDOo
-	 Hd3b4NCiL9SPA==
-Date: Tue, 6 Aug 2024 19:28:34 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: akpm@linux-foundation.org, alexei.starovoitov@gmail.com, 
-	audit@vger.kernel.org, bpf@vger.kernel.org, catalin.marinas@arm.com, 
-	dri-devel@lists.freedesktop.org, ebiederm@xmission.com, laoar.shao@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp, 
-	rostedt@goodmis.org, selinux@vger.kernel.org, serge@hallyn.com
-Subject: Re: [PATCH v5 0/9] Improve the copy of task comm
-Message-ID: <2jxak5v6dfxlpbxhpm3ey7oup4g2lnr3ueurfbosf5wdo65dk4@srb3hsk72zwq>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="P10s3HNE"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2f1798eaee6so9976571fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Aug 2024 10:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722966690; x=1723571490; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cEPV8O/bobIi5p9nTTiWHc/1HlnUPMSVdRAVbmjiJfA=;
+        b=P10s3HNEmmZGmCx90vULhdlcrb7A96X4fR12ATSZMCfscuS90h5t/Byaf70Jrxqehk
+         6/twOFQ4VoISHzNk3564BgSvZTpU474tPYfGNuW7sPuVYfydXnZsR+LZE9KwFGXcgeco
+         2WAtjHxfeMir2vjrANbXkADp5R9JmBSvXwG3LDm0GyoGxsnE6oms0zRtX4MWWx4a3JIg
+         zcWhmy55jQkwRS+sGn8imCkCZRhcl0dewQ6Al8E4P5RSMazCmpssKAnPektZfL5QCh2K
+         1uKx33t5xXJfPYq7c8MGhzDIjQeltLqlMdKRTjcrCw1Ahtfh4gVG6oZnlEIzMW/yLIHX
+         suzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722966690; x=1723571490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cEPV8O/bobIi5p9nTTiWHc/1HlnUPMSVdRAVbmjiJfA=;
+        b=VEENf6BgGZzgUJvQtcKgi0wOWjo3VxXVs4FBtJXkYkKyYNa3I+YCDki7UelIMzwztg
+         xKEn1odZJO2h0DIpMK3YxB/+PqLSxCptxRQ8HKfJgLliwTrLOC8WmSAuh1Wj7f9Or15V
+         brkOYdL76dBO68oSDqz48J5jrvpCWEURrjOPzU8h5lReY9fRYQagGd0UUkqBXzEBnTDP
+         rOG2YpKwTt7l8q5MJeVqAW6Xu+IrX0VfFxtm80aBtF9muDc/KbNSLfLvBT6AyWKnRnES
+         ejHj+5YeWLWYmEi3WxAfSYEZ4++QEPlISn+N6fP7WFJzbbZG85DgIccEw3TDJI97zEYF
+         /2aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLI2NOnZfzNgyQP4Yqy6KAJodFOQ+m1bnEIgczwhKynSHM84EYzc4DRlVFe6nr9Dt9hkGZFRpzJjm65v2QAnVuWRNPKRcJDW7Cv6+0PZST7v3d
+X-Gm-Message-State: AOJu0Yx1NvSKh6f3Yak0mKfljrWmIo+L4munm1+8BIF93yiitP/wgoCX
+	MnN/da5gZWgzq8lbjZFlyRPO0Vui3yA6ANyJAWgTPDpXSDtfIEqHSoVuZWC7Uz4=
+X-Google-Smtp-Source: AGHT+IGSi4GuJh9qmDt/eZ6cr3AQur9jVGY7A+ektYUqG98TbGGq6brOhPykx5o83fi+1WZZTOQ8kw==
+X-Received: by 2002:a05:6512:3ba5:b0:52e:fefe:49c9 with SMTP id 2adb3069b0e04-530bb39ddf8mr12022225e87.36.1722966689606;
+        Tue, 06 Aug 2024 10:51:29 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ba442ed7f1sm4416778a12.81.2024.08.06.10.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 10:51:29 -0700 (PDT)
+Date: Tue, 6 Aug 2024 19:51:27 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
+	Trevor Gamblin <tgamblin@baylibre.com>
+Subject: Re: [PATCH v3 0/8] pwm: New abstraction and userspace API
+Message-ID: <ld2hbd7tnltcrwihhcjrloicpoorrve7ugtjxgyjcowoneas6p@dircm3eb6yok>
+References: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,182 +71,107 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d4izvc7wnp2wjet3"
+	protocol="application/pgp-signature"; boundary="rnjsu6vonelo7pj6"
 Content-Disposition: inline
+In-Reply-To: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
 
 
---d4izvc7wnp2wjet3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--rnjsu6vonelo7pj6
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: akpm@linux-foundation.org, alexei.starovoitov@gmail.com, 
-	audit@vger.kernel.org, bpf@vger.kernel.org, catalin.marinas@arm.com, 
-	dri-devel@lists.freedesktop.org, ebiederm@xmission.com, laoar.shao@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp, 
-	rostedt@goodmis.org, selinux@vger.kernel.org, serge@hallyn.com
-Subject: Re: [PATCH v5 0/9] Improve the copy of task comm
-MIME-Version: 1.0
 
-Hi Linus,
-
-Serge let me know about this thread earlier today.
-
-On 2024-08-05, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Mon, 5 Aug 2024 at 20:01, Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > One concern about removing the BUILD_BUG_ON() is that if we extend
-> > TASK_COMM_LEN to a larger size, such as 24, the caller with a
-> > hardcoded 16-byte buffer may overflow.
+On Mon, Jul 29, 2024 at 04:34:16PM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
 >=20
-> No, not at all. Because get_task_comm() - and the replacements - would
-> never use TASK_COMM_LEN.
+> here comes v3 of the series to add support for duty offset in PWM
+> waveforms. For a single PWM output there is no gain, but if you have a
+> chip with two (or more) outputs and both operate with the same period,
+> you can generate an output like:
 >=20
-> They'd use the size of the *destination*. That's what the code already do=
-es:
 >=20
->   #define get_task_comm(buf, tsk) ({                      \
->   ...
->         __get_task_comm(buf, sizeof(buf), tsk);         \
+>                ______         ______         ______         ______
+>    PWM #0  ___/      \_______/      \_______/      \_______/      \_______
+>                  __             __             __             __   =20
+>    PWM #1  _____/  \___________/  \___________/  \___________/  \_________
+>               ^              ^              ^              ^
 >=20
-> note how it uses "sizeof(buf)".
-
-In shadow.git, we also implemented macros that are named after functions
-and calculate the appropriate number of elements internally.
-
-	$ grepc -h STRNCAT .
-	#define STRNCAT(dst, src)  strncat(dst, src, NITEMS(src))
-	$ grepc -h STRNCPY .
-	#define STRNCPY(dst, src)  strncpy(dst, src, NITEMS(dst))
-	$ grepc -h STRTCPY .
-	#define STRTCPY(dst, src)  strtcpy(dst, src, NITEMS(dst))
-	$ grepc -h STRFTIME .
-	#define STRFTIME(dst, fmt, tm)  strftime(dst, NITEMS(dst), fmt, tm)
-	$ grepc -h DAY_TO_STR .
-	#define DAY_TO_STR(str, day, iso)   day_to_str(NITEMS(str), str, day, iso)
-
-They're quite useful, and when implementing them we found and fixed
-several bugs thanks to them.
-
-> Now, it might be a good idea to also verify that 'buf' is an actual
-> array, and that this code doesn't do some silly "sizeof(ptr)" thing.
-
-I decided to use NITEMS() instead of sizeof() for that reason.
-(NITEMS() is just our name for ARRAY_SIZE().)
-
-	$ grepc -h NITEMS .
-	#define NITEMS(a)            (SIZEOF_ARRAY((a)) / sizeof((a)[0]))
-
-> We do have a helper for that, so we could do something like
+> Changes since v2, which is available from
+> https://lore.kernel.org/linux-pwm/cover.1721040875.git.u.kleine-koenig@ba=
+ylibre.com
+> include:
 >=20
->    #define get_task_comm(buf, tsk) \
->         strscpy_pad(buf, __must_be_array(buf)+sizeof(buf), (tsk)->comm)
-
-We have SIZEOF_ARRAY() for when you want the size of an array:
-
-	$ grepc -h SIZEOF_ARRAY .
-	#define SIZEOF_ARRAY(a)      (sizeof(a) + must_be_array(a))
-
-However, I don't think you want sizeof().  Let me explain why:
-
--  Let's say you want to call wcsncpy(3) (I know nobody should be using
-   that function, not strncpy(3), but I'm using it as a standard example
-   of a wide-character string function).
-
-   You should call wcsncpy(dst, src, NITEMS(dst)).
-   A call wcsncpy(dst, src, sizeof(dst)) is bogus, since the argument is
-   the number of wide characters, not the number of bytes.
-
-   When translating that to normal characters, you want conceptually the
-   same operation, but on (normal) characters.  That is, you want
-   strncpy(dst, src, NITEMS(dst)).  While strncpy(3) with sizeof() works
-   just fine because sizeof(char)=3D=3D1 by definition, it is conceptually
-   wrong to use it.
-
-   By using NITEMS() (i.e., ARRAY_SIZE()), you get the __must_be_array()
-   check for free.
-
-In the end, SIZEOF_ARRAY() is something we very rarely use.  It's there
-only used in the following two cases at the moment:
-
-	#define NITEMS(a)            (SIZEOF_ARRAY((a)) / sizeof((a)[0]))
-	#define MEMZERO(arr)  memzero(arr, SIZEOF_ARRAY(arr))
-
-Does that sound convincing?
-
-For memcpy(3) for example, you do want sizeof(), because you're copying
-raw bytes, but with strings, in which characters are conceptually
-meaningful elements, NITEMS() makes more sense.
-
-BTW, I'm working on a __lengthof__ operator that will soon allow using
-it on function parameters declared with array notation.  That is,
-
-	size_t
-	f(size_t n, int a[n])
-	{
-		return __lengthof__(a);  // This will return n.
-	}
-
-If you're interested in it, I'm developing and discussing it here:
-<https://inbox.sourceware.org/gcc-patches/20240806122218.3827577-1-alx@kern=
-el.org/>
-
+>  - Degrade a dev_alert() to dev_warn() on feedback by David Lechner
 >=20
-> as a helper macro for this all.
+>  - Improvement of various comments (partly in reply to David Lechner)
 >=20
-> (Although I'm not convinced we generally want the "_pad()" version,
-> but whatever).
-
-We had problems with it in shadow recently.  In user-space, it's similar
-to strncpy(3) (at least if you wrap it in a macro that makes sure that
-it terminates the string with a null byte).
-
-We had a lot of uses of strncpy(3), from old times where that was used
-to copy strings with truncation.  I audited all of that code (and
-haven't really finished yet), and translated to calls similar to
-strscpy(9) (we call it strtcpy(), as it _t_runcates).  The problem was
-that in some cases the padding was necessary, and in others it was not,
-and it was very hard to distinguish those.
-
-I recommend not zeroing strings unnecessarily, since that will make it
-hard to review the code later.  E.g., twenty years from now, someone
-takes a piece of code with a _pad() call, and has no clue if the zeroing
-was for a reason, or for no reason.
-
-On the other hand, not zeroing may make it easier to explot bugs, so
-whatever you think best.  In the kernel you may need to be more worried
-than in user space.  Whatever.  :)
-
+>  - Add _ns suffixes for members of pwm_waveform, thanks David for that su=
+ggestion.
 >=20
->                     Linus
+>  - Rebased to v6.11-rc1 + pwm/for-next.
+>=20
+> Because of these changes I didn't add Trevor's Reviewed-by tag for patch
+> #3.
+>=20
+> I kept the BUG_ONs. There are a few check_patch warnings about it, but I =
+still
+> prefer these given that it is safe they don't trigger without further (bo=
+gus)
+> code changes and when they trigger crashing early is better than stack
+> corruption. Also checkpatch tells
+>         WARNING: Comparisons should place the constant on the right side =
+of the test
+>         #158: FILE: drivers/pwm/core.c:262:
+>         +       BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+>=20
+> But as the BUG_ON is about WFHWSIZE being wrong, this order is OK.
+>=20
+> There are a few more checkpatch warnings about line lengths. Breaking
+> the criticised lines further hurts readability IMHO, so I kept them. It
+> gets a bit better once stm32_pwm_mul_u64_u64_div_u64_roundup() is
+> implemented (without the stm32_pwm prefix) alongside
+> mul_u64_u64_div_u64() in lib/math/div64.c, but I don't want to wait for
+> that. I will address that once Nicolas's patch improving precision of
+> mul_u64_u64_div_u64() landed. (Hmm, it's not in next any more since
+> next-20240724, before it was 3cc8bf1a81efde105d8e57398cf8554b57768777 +
+> dbbe95af0fad2a9d22a4b910cfc4b87949d61a3c).
+>=20
+> Best regards
+> Uwe
+>=20
+> Uwe Kleine-K=F6nig (8):
+>   pwm: Simplify pwm_capture()
+>   pwm: Add more locking
+>   pwm: New abstraction for PWM waveforms
+>   pwm: Provide new consumer API functions for waveforms
+>   pwm: Add support for pwmchip devices for faster and easier userspace
+>     access
+>   pwm: Add tracing for waveform callbacks
+>   pwm: axi-pwmgen: Implementation of the waveform callbacks
+>   pwm: stm32: Implementation of the waveform callbacks
 
-Have a lovely day!
-Alex
+I applied patch #1 which is a harmless cleanup for now. I will wait a
+bit for the rest of the series, as during August I won't be able to
+react to fall-outs reliably and quickly. I plan to apply this series
+with PWM_IOCTL_GET_NUM_PWMS dropped directly after the next merge window
+for cooking in next as long as possible.
 
+Best regards
+Uwe
 
---=20
-<https://www.alejandro-colomar.es/>
-
---d4izvc7wnp2wjet3
+--rnjsu6vonelo7pj6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmayXTwACgkQnowa+77/
-2zKkGg//QGKZL+2Xhpb6wdoKoQMt5Ixm8AxcrhEng31CT2FlaXxnveqkjC9CXsUS
-hvuVRQFMFyhrARydHNtx/Ps5q5f/TSv4qX+5PI6hBFPAIJOuHCh2UfXqPEMrCXb5
-iAhq73HPqXL20Igr1+n9W9buunf2ow4fBxTsK+7eMZCPnTAuS3lMkRpmne8d7ks1
-iOHorYSEbJYJqWUyOCq7i/KNufR7nALJzBHzqPcAE47Gsp0/N0DA/NEzO6zbCRS4
-HLODuEC8T6iWnEh+qoBTS0Gn1ksmVNCQPVyLj4OurtSYeX0pGL6NQWxKjMgxCaQ9
-r0rN2v+o8ULJIOBI1ZVKAqlXZdPxtPpwPxyim82IB5Mok0bkqGSZQYMqEL27YkK0
-k/Ec5R/AkO8Zhc/i3YFzTwa8peXA9s4D2xFCB/hYTdTNL138ugVV1fevoPo6qt9t
-eqA/fKesf5pK9OXftXBdqHNqsDGe6Ps76ahK9FsQNj0ZEi1JLTmWoEGRQMHQ6iZ+
-yXlgOkn3625L2Q0Qofv3x943QicRe8eahFyW/YV7a+8B+n7PP9RQEo95DTv1QjGU
-wCP6XYatwx1uKgauYWE2if5RiXyhsUBbCjEAUrXTmLBAxk/5zJ+vSpDl3j3fr4D0
-hm5Pe6kB02HnX7NQKrnlgmPJi7PhBVGSRSDc+Lj4r4q7e3BYDuY=
-=TwdF
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmayYpwACgkQj4D7WH0S
+/k5X6Af5AcYk85/lzILYN6aUXwXaafFzMLqD0NyuhAkvVU5nIXZV4zCAe5RIcAPQ
+aMYc9HZgZcjnSLLwQdfUviOyI4O5pRXsTHlbhCww1G1iS5o0QWb5ioODTaJUmAFc
+cgqGhmkIlFjA98c8ByAtxtS7NqpnuAcMmZSGf5YoFj7EAElBxKEOXApRVL6oUkpc
+JURo6Ea4n/grMcvwkdT0px09TdCs80ZK5efU5QgVduB3ME8fzoI/S4vvNjgp10x6
+Ur4eoGnXGRoJ4Uzcv3OY/ydc3STvoJ6mmTvFO2cgCDdpdHs8LwNM7GoDx8/jJ8gZ
+HW0SHHwcjYziOe9BuAsEz4bw4JwdkA==
+=FH+q
 -----END PGP SIGNATURE-----
 
---d4izvc7wnp2wjet3--
+--rnjsu6vonelo7pj6--
