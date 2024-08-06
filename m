@@ -1,119 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F001C0DE8
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Aug 2024 10:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EFC1C57BD;
+	Tue,  6 Aug 2024 12:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722941669; cv=none; b=vC626I4LnW1S4AYFwfZRNRyBal//Qt1SAtnfs3GthuQOKDw6XmNxjg/A7f+QryhzJ9TYMWUurSGt8BFrNaRcTKZE1KZ4EdXcRiHrJtdL1Ppxq/PpF+poCgUEdWGCFI5Q4NSvVhmob9EF1bZJNUdNhg3gLgo79Qf0d0DhNXpcR8s=
+	t=1722947978; cv=none; b=B7IWww1Fg6972u4BDApPUB8xMKPbdGTTLWK8zv/Rcz78+M8yuv4Ntqf4OSP4zzQD6co6C/q4OW0ygKWL4t2PzzLpTOpoagQ5sQUbSt3TkfMYQlIE0luURcExN6BblQPmSn+oWPIIDBAWg/OA8FKse0wrkXTVoZ/ZxJ4wlkZpLGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722941669; c=relaxed/simple;
-	bh=QI76W/6+qyfi/f/458udiZ+vMPBWVCY8s3vj6UfuSig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvRP8Lqa1nHZhhlYRjzKFoV9vUVodiPM5ValWdwq2hJ3HbfHLazDENo0eYlGRIeWcg5PBnDrK01TrBWUwlQAzx5dI1kjoIzUGGnqHLox40R9XOaCACnDMaLFG1pzCQwdCyJ9RI25VCqcBQKSM7lWQuK5pzkJErNHkPJBe59VpXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jIiJRDgN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1722947978; c=relaxed/simple;
+	bh=pRGjwMQFuXx8nS2LCderaOx79LtJsbSQjU6aMaxd08o=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=TKK2KnVVy1rJbTHObhoK3/wKw5taAyFPyFvVG0RZpbtLNHUJ15pfoX+fEnYFWkkgCrkj90LaHHeTPz54ahzTFBBpb37lZQ0b8fuEUtGvgLQ5Nr/krMquGBR8NuPLanCWQsQY0Hmwqb/6qIDGrktMHds0OUcA0ut4GWUxNQP1NTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKlxrqan; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIiJRDgN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722941666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gegv+FUrL3Bk/gUnU9MjiVdI0lIqs6KIEoJQDH9Pkv4=;
-	b=jIiJRDgNBpCOC0rzfJp8uXmLJ1dMJ9pipdSAE1fKiFO97NUCzTY6dt2pobCOjHvEe9PbLV
-	XXibprHM3W5IJbRbvS04yR6qMUeNbmyEvy+lefAMF/iczVGlLdcYxbqznkAI/bu5KUwePC
-	RpLFmGc8xVKUMcuMGgqZOMZHKBo3Azk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-503-WwuZVDk4MyCT6EGtkw8uxA-1; Tue,
- 06 Aug 2024 06:54:21 -0400
-X-MC-Unique: WwuZVDk4MyCT6EGtkw8uxA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C1AE19560AA;
-	Tue,  6 Aug 2024 10:54:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.155])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EABC81955D44;
-	Tue,  6 Aug 2024 10:54:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  6 Aug 2024 12:54:16 +0200 (CEST)
-Date: Tue, 6 Aug 2024 12:54:11 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-	paulmck@kernel.org
-Subject: Re: [PATCH 5/8] uprobes: travers uprobe's consumer list locklessly
- under SRCU protection
-Message-ID: <20240806105411.GB20881@redhat.com>
-References: <20240731214256.3588718-1-andrii@kernel.org>
- <20240731214256.3588718-6-andrii@kernel.org>
- <20240805155931.GC11049@redhat.com>
- <CAEf4BzZ=W3JLfpYcxEevMGS4whXQ2-nn5ezA+p3zV_WhiGG4iQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKlxrqan"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4f50dd3eab9so240273e0c.1;
+        Tue, 06 Aug 2024 05:39:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722947976; x=1723552776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zrdmTtiXVmTM/1NHHOYdmmDXOI3jR7XQcOI+pwOJhWY=;
+        b=VKlxrqanIheS9Sd5XzmNfv9ScS8GGE/obB6rli6JcQfzv8OQyH1ms5LfzyftBPJlAw
+         sfZMoNB7fMIUVJbfSp28rtM1yLUdMdnW27USd+yevM4WhMxcn2tC0kCwT21BzrtIUUHR
+         Gs3J1wl0qryBTZV4pStD26pH1HB09vV81qeXzTdRPH8cT7SCJpF5PsIvdPYcQcoZb/bU
+         lS+DuGbMun0iJwWow8q9nb7YSa1fpQ79XatO8EdXq8FWVvnWo4atP4i/rHxrlW27fHfJ
+         SUpp7IX8Dh3JdPkm8lpi4n5ypupMKNxoU+XW+rEQCrGBXD5UQfBs/vy59JIZ6bD1Fmo1
+         zdgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722947976; x=1723552776;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zrdmTtiXVmTM/1NHHOYdmmDXOI3jR7XQcOI+pwOJhWY=;
+        b=YwoX+XXfHLFESv4nU6ef39maHkPDlzto+lpgxBYhmTJEGyg2MbrBTQuBRLzRIMetp7
+         MQo8C31NtC9IZUGo9PHUc9W5l2dFksMlgvi0QohkNNrkdg4xQrtwhhuVJp8AE+/6ZwsQ
+         18SRSbZ2kcflIWn99kpghh+EsNMIKy603tqnS5oZtciShQj7G1+LyGSVb1bWbmQlC4s6
+         zOFuUMxal+8Y4F6zIsS88V3ZjSIHwj26kh2J0B93/ye4/Pfxq7mRdnBEDbepUUVUF+Un
+         E/8H1bwvmgq3UU6gjegXYWuZJmcJeH8x9s01MRCBTsNyyPGs315OJchwwKbtfo1ePb8w
+         FjPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCTL3GifOoTkGotVQKHsht3DH11hDZibW61aSUOHYmvH8IO2m8nbbHB4vV63n+wNxBJfCcxiS88C2+z1upzJbLrWmIu6BvineuFcHLv+zQRkbWwJ5woYB0Rp6z1J9OsObiq0BDbZy8aUaI/o8DoCpcfiIn5M4NjWpUVOucS89c+cCJYuFy3hblNRb+aS9l7uNxbvPYmIqIO/SKZa//lBNIJmEfQGAWGB6KOX6w4lu0PECsvwrDEIHRoSypUvkwoM6wr8nbiwptxAlGu0Q2nfri3ivhFPaQ0a58BZ3JjhgHBkMZ+ZxRbGFJjExm9gtw7Q6DN/0jI/infzNnGKupNyYRy9ob9tkjzf4Giii2kSAGYdSkDzMcMup97D6whg1Arys+dL0HfUhjVC2cdmgR+NzVZX2Dcq6rmsYNH42+t182nBhSh2GY21ecMPVrx3+rk6rROHyUGoWoVjbrnX1mVY8JOfgyEYZALUMv2CcFUQDww0dClYG9XRp3hPYyliKGX6G+v7PhjQ==
+X-Gm-Message-State: AOJu0YwpsNYteLdDFoX1IKaNFFCuUC+P89kqXZcyX2ui47QVOzUubQGf
+	/7ZVPgtJdbk9sA4CS5+NFrTN9dPmJbKUl6w6X+olQ2zL47KdPisM
+X-Google-Smtp-Source: AGHT+IEzF8kEieTvm400vGSAD/FxkfKWUdB+Qp9zmFjvlH9NnaUdLi1L0Oe0+UqgMX4/h+bhgaOPVA==
+X-Received: by 2002:a05:6122:4584:b0:4eb:5cb9:f219 with SMTP id 71dfb90a1353d-4f89fe84d6fmr18355377e0c.0.1722947975581;
+        Tue, 06 Aug 2024 05:39:35 -0700 (PDT)
+Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a34f6dce75sm450350985a.14.2024.08.06.05.39.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 05:39:34 -0700 (PDT)
+Date: Tue, 06 Aug 2024 08:39:34 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Markus Elfring <Markus.Elfring@web.de>, 
+ Mina Almasry <almasrymina@google.com>, 
+ netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, 
+ Kaiyuan Zhang <kaiyuanz@google.com>, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ linux-alpha@vger.kernel.org, 
+ linux-mips@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, 
+ sparclinux@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ linux-arch@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, 
+ LKML <linux-kernel@vger.kernel.org>, 
+ Andreas Larsson <andreas@gaisler.com>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Bagas Sanjaya <bagasdotme@gmail.com>, 
+ =?UTF-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>, 
+ Christoph Hellwig <hch@infradead.org>, 
+ David Ahern <dsahern@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Wei <dw@davidwei.uk>, 
+ Donald Hunter <donald.hunter@gmail.com>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Harshitha Ramamurthy <hramamurthy@google.com>, 
+ Helge Deller <deller@gmx.de>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ "James E. J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, 
+ Jeroen de Borst <jeroendb@google.com>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Matt Turner <mattst88@gmail.com>, 
+ Nikolay Aleksandrov <razor@blackwall.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Praveen Kaligineedi <pkaligineedi@google.com>, 
+ Richard Henderson <richard.henderson@linaro.org>, 
+ Shailend Chand <shailend@google.com>, 
+ Shakeel Butt <shakeel.butt@linux.dev>, 
+ Shuah Khan <shuah@kernel.org>, 
+ Steffen Klassert <steffen.klassert@secunet.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ Taehee Yoo <ap420073@gmail.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <66b2198686b91_3206cf29453@willemb.c.googlers.com.notmuch>
+In-Reply-To: <9aad36fe-cd4c-4ce5-b4d8-6c8619d10c46@web.de>
+References: <20240730022623.98909-4-almasrymina@google.com>
+ <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
+ <CAHS8izPxfCv1VMFBK1FahGTjVmUSSfrabgY5y6V+XtaszoHQ4w@mail.gmail.com>
+ <9aad36fe-cd4c-4ce5-b4d8-6c8619d10c46@web.de>
+Subject: Re: [PATCH net-next v17 03/14] netdev: support binding dma-buf to
+ netdevice
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZ=W3JLfpYcxEevMGS4whXQ2-nn5ezA+p3zV_WhiGG4iQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 08/05, Andrii Nakryiko wrote:
->
-> On Mon, Aug 5, 2024 at 8:59 AM Oleg Nesterov <oleg@redhat.com> wrote:
+Markus Elfring wrote:
+> >> =E2=80=A6
+> >>> +++ b/include/net/devmem.h
+> >>> @@ -0,0 +1,115 @@
+> >> =E2=80=A6
+> >>> +#ifndef _NET_DEVMEM_H
+> >>> +#define _NET_DEVMEM_H
+> >> =E2=80=A6
+> >>
+> >> I suggest to omit leading underscores from such identifiers.
+> >> https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declar=
+e+or+define+a+reserved+identifier
+> >>
 > >
-> > >  int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
-> > >  {
-> > >       struct uprobe_consumer *con;
-> > > -     int ret = -ENOENT;
-> > > +     int ret = -ENOENT, srcu_idx;
-> > >
-> > >       down_write(&uprobe->register_rwsem);
-> > > -     for (con = uprobe->consumers; con && con != uc ; con = con->next)
-> > > -             ;
-> > > -     if (con)
-> > > -             ret = register_for_each_vma(uprobe, add ? uc : NULL);
-> > > +
-> > > +     srcu_idx = srcu_read_lock(&uprobes_srcu);
-> > > +     list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
-> > > +                              srcu_read_lock_held(&uprobes_srcu)) {
-> > > +             if (con == uc) {
-> > > +                     ret = register_for_each_vma(uprobe, add ? uc : NULL);
-> > > +                     break;
-> > > +             }
-> > > +     }
+> > I was gonna apply this change, but I ack'd existing files and I find
+> > that all of them include leading underscores, including some very
+> > recently added files like net/core/page_pool_priv.h.
 > >
-> > we can probably remove the similar check above?
-> >
-> > I mean, why do we need the list_for_each_entry_srcu() above? Is it possible
-> > that uprobe_apply(uprobe, uc) is called when "uc" is not on the ->consumers
-> > list?
->
-> Tbh, I just don't completely understand how (and why) uprobe_apply()
-> is used from kernel/trace/trace_uprobe.c, so I wanted to preserve the
-> logic exactly. I still don't see when this consumer is added before
-> uprobe_apply()... Exposing uprobe_apply() seems like a huge API
-> violation to me and I'd rather get rid of its users. But one step at a
-> time.
+> > I would prefer to stick to existing conventions if that's OK, unless
+> > there is widespread agreement to the contrary.
+> =
 
-Agreed. Unlike uprobe_unregister(), uprobe_apply() doesn't WARN() or
-even explains this check, lets preserve the current logic for now.
+> Under which circumstances would you become interested to reduce develop=
+ment risks
+> also according to undefined behaviour?
+> https://wiki.sei.cmu.edu/confluence/display/c/CC.+Undefined+Behavior#CC=
+.UndefinedBehavior-ub_106
 
-And just in case... I am not sure too that the con == NULL case is not
-possible with the current code. The recent discussions forced me to recall
-some bits in uprobe.c, but not in trace_uprobe.c ;)
+This series is following established practice in kernel networking.
 
-Oleg.
+If that conflicts with a C standard, then perhaps that needs to be
+resolved project wide.
 
+Forcing an individual feature to diverge just brings inconsistency.
+That said, this appears to be inconsistent already.
+
+Main question is whether this is worth respinning a series already at
+v17 with no more fundamental feedback.
+
+For reference:
+
+$ grep -nrI '^#ifndef\ _\+NET[_A-Z]\+H' include/  | wc -l
+149
+
+$ grep -nrI '^#ifndef\ NET[_A-Z]\+H' include/  | wc -l
+4
+
+$ grep -nrI '^#ifndef\ [_]\+[A-Z][_A-Z]\+H' include/  | wc -l
+3805
+
+$ grep -nrI '^#ifndef\ [A-Z][_A-Z]\+H' include/  | wc -l
+583
