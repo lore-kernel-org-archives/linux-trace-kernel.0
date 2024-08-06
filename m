@@ -1,85 +1,112 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D0D15C125
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Aug 2024 20:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C0416D9DC;
+	Tue,  6 Aug 2024 20:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722976952; cv=none; b=ue0uRMTHnY0wSApTwQYKDRCB+RM7HBbowruBZKH5qXYWxk3syhzDLuwoRqw6sFFKliDx5bIdREj03p/bhhG3nS8jAh7phQlFMPGURQ3N/kjhnT7+1AR9txl+nHLGxTP4WUC//+5KQbtgXCBDZx5mJe52i4Nba3ZpyQK33J91TqU=
+	t=1722976978; cv=none; b=sLlfVW/1PTmT87cGOdjTbLrbKTYtkPBEnwkc3IXyWc87c8VOeC8x9T/W0R+M9Xvls53rOY2edB6MLg1Euv7PMMNW6pf1zCsk6CushhntWuNlNKvb49ZBnuKxALsjfIRjN7qGBu2LdFZCu1kioiIDACFfLSwOl1IG05zqPaMnr0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722976952; c=relaxed/simple;
-	bh=jY5BSyz0WxKp3foQy0heEmwmOgRG1MujzFV7BIR9lGc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Z6cXR33MV7f+e7OoT2MRzB5kJW/7guRQa60ASs/nyins4RRdfvLpMEEce2f/4gX1IuAdtdaS5SGAzwKWd41Ly6FecH0oprTgD/BUIMiSyYl5zqJS3FAFSnnp0lK4JAk/ZYv2tTJkP6Iny4vNSTXL499GB6yIlmkrTmOxk/36MUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-81f93601444so117207839f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Aug 2024 13:42:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722976950; x=1723581750;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JX9QYjiWYjUgmKNDiSd4NlOfDvEN68gZgPgKnOqjx6k=;
-        b=QcmYWH+rr3yNDaMnvhsQJCIiVjNr97dvjKAWu8Erk7CovlOMLlu2OxbIlnIJjI75ws
-         DMydgEE4bjn9S4wuBrax7ugUUKKVGLyikLV0q2kCkYrHMTN9smsI5U7iB5MTXb4LexJM
-         16Kxx9LY1eAcGd4FCPIOwxSNBwapqnvXYLhnRuTyCAYhCmuqMFITfkro9JiMnUH3ViXl
-         vs73uvgyd4xrVWquVL7nAjSYA3sjx7N3P52LMt9U+aKDcpTp6jgD2a6rKJv+AFB87fHV
-         s4GAIEFRmL0uuz1S4bj//3OugYtf4PK9BGDA8hsek7Cwy5rp09ZjUCMgAKnkbP7BiSCZ
-         Z0MA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpG7cT6v1+bkB5m/xw5dH4U+DCxpmWqLF6t4rGl8o5t8RhAZ4KlsmV8+Kjoy18IpCSuOsjDGFymDuQX8dOJwXbQEifR7kqOMqujhsmtb63PYEn
-X-Gm-Message-State: AOJu0YxhJ1+qpuxFBtFvqskX32Uk9uH6wNmh5+LfSRZ4f5C/4nh+rRzt
-	gMb1RKDlBR+rykVkVqbqOcQ1PSXeA8Qi2ZICFBukcecRRCfDGWwO17PyhaOhD0Mo1JVr/FrzQwj
-	aAyaEKss5zUCLqjLvrEDxTM+GNMvJMJmTOngByz2yJDKoBlvDkNej110=
-X-Google-Smtp-Source: AGHT+IGF4e/GFwfgWeNbCb2WIyMKO8ukObWNCcVcX0YSzht50pJko1r/BYAdWiL4CQZHgicxTTh86b3ncEZNutAdHBXRJVf+ogMI
+	s=arc-20240116; t=1722976978; c=relaxed/simple;
+	bh=DaWt36xVGk9LrklCuq9Y0WSIGFkdQ2NrucnH139qhVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WirFopVNhzVmvlENe3gj+ukigyCMyU+eTnnFh7do3IeovVtnotkk4ABiSaXdVx04XhKYqX6jFoON5OEZs+g4ofvfpay9FeYPK04UiaheniwcPJ5zpT0PUvFp8bBCvbyKeuk2PBng6bbBO8tiA9SAbNlbU/S0CxiYeaqKm/wp+gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8zSpgND; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8zSpgND"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47D02C4AF0C;
+	Tue,  6 Aug 2024 20:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722976977;
+	bh=DaWt36xVGk9LrklCuq9Y0WSIGFkdQ2NrucnH139qhVI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R8zSpgNDpucslJ9LhHrQaMFd6aOxtjVFNEMk72wbX0BbIXsv1hWz5ikW325uy5hAX
+	 b9LL2LirkHn6itCJ2gENxcbo+u4UY28lITGzhQfEk1w1qEblRxpxf0KGH1/tbuIFIj
+	 B8qkvfb7eya3zycothhbQgRmzJoqJYIYuDVblJoKiRyk0ezPjDEnOEkIikiLyOw4lM
+	 MbQ3rHHYOVNtFYvjsXeFob26WqDOEfua5n4XkL1yftJAKY+pZysVkedFwKlNtoxU6l
+	 cOWmdEg7sfcXdnL031h9LxhlO28iHpjp8CJWr3VjvOUXn96T6a+mmquVofe/a0KqTO
+	 /FAxA9i1hII4w==
+Date: Tue, 6 Aug 2024 13:42:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v18 05/14] page_pool: move dmaddr helpers to .c
+ file
+Message-ID: <20240806134254.265e2bfb@kernel.org>
+In-Reply-To: <20240805212536.2172174-6-almasrymina@google.com>
+References: <20240805212536.2172174-1-almasrymina@google.com>
+	<20240805212536.2172174-6-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2486:b0:4c0:7f0f:b42e with SMTP id
- 8926c6da1cb9f-4c8d55992aemr879272173.1.1722976950404; Tue, 06 Aug 2024
- 13:42:30 -0700 (PDT)
-Date: Tue, 06 Aug 2024 13:42:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000015d75e061f09d592@google.com>
-Subject: [syzbot] Monthly trace report (Aug 2024)
-From: syzbot <syzbot+listc4b13dec77030d708b1d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello trace maintainers/developers,
+On Mon,  5 Aug 2024 21:25:18 +0000 Mina Almasry wrote:
+> +dma_addr_t page_pool_get_dma_addr_netmem(netmem_ref netmem)
+> +{
+> +	struct page *page = netmem_to_page(netmem);
+> +
+> +	dma_addr_t ret = page->dma_addr;
+> +
+> +	if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA)
+> +		ret <<= PAGE_SHIFT;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(page_pool_get_dma_addr_netmem);
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+Get should stay in the header.
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 8 issues are still open and 37 have been fixed so far.
+> +bool page_pool_set_dma_addr_netmem(netmem_ref netmem, dma_addr_t addr)
+> +{
+> +	struct page *page = netmem_to_page(netmem);
+> +
+> +	if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA) {
+> +		page->dma_addr = addr >> PAGE_SHIFT;
+> +
+> +		/* We assume page alignment to shave off bottom bits,
+> +		 * if this "compression" doesn't work we need to drop.
+> +		 */
+> +		return addr != (dma_addr_t)page->dma_addr << PAGE_SHIFT;
+> +	}
+> +
+> +	page->dma_addr = addr;
+> +	return false;
+> +}
+> +EXPORT_SYMBOL(page_pool_set_dma_addr_netmem);
 
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 987     Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<2> 269     Yes   possible deadlock in console_flush_all (3)
-                  https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
-<3> 30      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<4> 7       Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Set should not be in the public (include/linux) header at all,
+and should not be exported. net/core/page_pool_priv.h already
+exists. Feel free to break this out of the series.
