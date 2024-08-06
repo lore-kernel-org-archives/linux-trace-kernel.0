@@ -1,32 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B49146D60;
-	Tue,  6 Aug 2024 19:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8EA150990;
+	Tue,  6 Aug 2024 20:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722973161; cv=none; b=d8IDiwFjpPwhhrXAMOBcimnnZubJFKhxVt/7jt6V9t0Bk0pjHMt/vfihlPI7cm+lM0okveLacidYhNPphkhHBpmycYkDs2kzzktudSfrHG1a3ECwMu2cPUzSfXrTtj8O50/lhjB+KtfDJzB2c7JlkUBzygRsbdVLVQBvFt3w/Yc=
+	t=1722974403; cv=none; b=vFjMv/xNFRMqpeNsydMLW7tHEIDbHGeM5iTPk1MCAisk0p5K1mXin3lzLCM7Elf4O3KkNudfk+8HC7LINYbUGX2louMNltPW5D66+U/uyYdEng3l5G+R6u/UDnFWoO74aeLJEnZH0YMbHlpruYhqfun+r4NTwClktDFNsb0FddA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722973161; c=relaxed/simple;
-	bh=fobuBFVm7tP9vWvwnleJQ5ICaKqCFDIsuZQteHTKK5g=;
+	s=arc-20240116; t=1722974403; c=relaxed/simple;
+	bh=+x5ve0HRYkjcLiAz/qnvZdILQ43gdamPuiGt+Vf0EMA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K9c3eUimBWgJjjtHVRlYDOq5FYRVtp2OQrwnhtzSfvoH0XXYCQYPHa7vloNX87Cd1mLuARdR6YOG9iOvcTfyl1kU6yQ7tPRgH/yVlM2civN3UxlHcs3t2WL23GGZcU0XhOuB/cyui3OK9r2IzNAi/Sk4qCCQbvKn49RxbfsBY0E=
+	 MIME-Version:Content-Type; b=a1TcOyqO6XN7co0GVSkYkm/wF0GKCSoLYiN8Fjmyz3Gd9wFPX9undxQQdGU1/bZDTGtOwmySH+QbKhz6+gMYIm/PBpZMTPevr9LKd+pL/715CQfPQg7idF+u08dmBj0qBgb8HYbHRvOeKEFKSMUsDSGYvuJ9WIbQ8lDBeIQVeNg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFCDAC32786;
-	Tue,  6 Aug 2024 19:39:19 +0000 (UTC)
-Date: Tue, 6 Aug 2024 15:40:08 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE363C32786;
+	Tue,  6 Aug 2024 20:00:00 +0000 (UTC)
+Date: Tue, 6 Aug 2024 16:00:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
- <bobule.chang@mediatek.com>, <eric-yc.wu@mediatek.com>,
- <wsd_upstream@mediatek.com>, Cheng-Jui Wang <cheng-jui.wang@mediatek.com>,
- Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH RESEND] tracing: Fix overflow in get_free_elt()
-Message-ID: <20240806154008.502b6c7d@gandalf.local.home>
-In-Reply-To: <20240805055922.6277-1-Tze-nan.Wu@mediatek.com>
-References: <20240805055922.6277-1-Tze-nan.Wu@mediatek.com>
+To: Song Liu <songliubraving@meta.com>
+Cc: Song Liu <song@kernel.org>, "live-patching@vger.kernel.org"
+ <live-patching@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Joe
+ Lawrence <joe.lawrence@redhat.com>, Nathan Chancellor <nathan@kernel.org>,
+ "morbo@google.com" <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Leizhen
+ <thunder.leizhen@huawei.com>, "kees@kernel.org" <kees@kernel.org>, Kernel
+ Team <kernel-team@meta.com>, Matthew Maurer <mmaurer@google.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
+ without .XXX suffix
+Message-ID: <20240806160049.617500de@gandalf.local.home>
+In-Reply-To: <B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
+References: <20240802210836.2210140-1-song@kernel.org>
+	<20240802210836.2210140-4-song@kernel.org>
+	<20240806144426.00ed349f@gandalf.local.home>
+	<B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,112 +46,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 5 Aug 2024 13:59:22 +0800
-Tze-nan Wu <Tze-nan.Wu@mediatek.com> wrote:
+On Tue, 6 Aug 2024 19:35:07 +0000
+Song Liu <songliubraving@meta.com> wrote:
 
-> "tracing_map->next_elt" in get_free_elt() is at risk of overflowing.
+> >> + if (IS_ENABLED(CONFIG_LTO_CLANG) && !addr)
+> >> + addr = kallsyms_lookup_name_without_suffix(trace_kprobe_symbol(tk));
+> >> +  
+> > 
+> > So you do the lookup twice if this is enabled?
+> > 
+> > Why not just use "kallsyms_lookup_name_without_suffix()" the entire time,
+> > and it should work just the same as "kallsyms_lookup_name()" if it's not
+> > needed?  
 > 
-> Once it overflows, new elements can still be inserted into the tracing_map
-> even though the maximum number of elements (`max_elts`) has been reached.
-> Continuing to insert elements after the overflow could result in the
-> tracing_map containing "tracing_map->max_size" elements, leaving no empty
-> entries.
-> If any attempt is made to insert an element into a full tracing_map using
-> `__tracing_map_insert()`, it will cause an infinite loop with preemption
-> disabled, leading to a CPU hang problem.
+> We still want to give priority to full match. For example, we have:
 > 
-> Fix this by preventing any further increments to "tracing_map->next_elt"
-> once it reaches "tracing_map->max_elt".
+> [root@~]# grep c_next /proc/kallsyms
+> ffffffff81419dc0 t c_next.llvm.7567888411731313343
+> ffffffff81680600 t c_next
+> ffffffff81854380 t c_next.llvm.14337844803752139461
 > 
-> Co-developed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-> Signed-off-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-> Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-> ---
-> We have encountered this issue internally after enabling the
-> throttle_rss_stat feature provided by Perfetto in background for more than
-> two days, during which `rss_stat` tracepoint was invoked over 2^32 times.
-> After tracing_map->next_elt overflow, new elements can continue to be 
-> inserted to the tracing_map belong to `rss_stat`.
-> Then the CPU could hang inside the while dead loop in function
-> `__tracing_map_insert()` by calling it after the tracing_map left no empty
-> entry.
+> If the goal is to explicitly trace c_next.llvm.7567888411731313343, the
+> user can provide the full name. If we always match _without_suffix, all
+> of the 3 will match to the first one. 
 > 
-> Call trace during hang:
->   __tracing_map_insert()
->   tracing_map_insert()
->   event_hist_trigger()
->   event_triggers_call()
->   __event_trigger_test_discard()
->   trace_event_buffer_commit()
->   trace_event_raw_event_rss_stat()
->   __traceiter_rss_stat()
->   trace_rss_stat()
->   mm_trace_rss_stat()
->   inc_mm_counter()
->   do_swap_page()
-> 
-> throttle_rss_stat is literally a synthetic event triggered by `rss_stat`
-> with condition:
->  1. $echo "rss_stat_throttled unsigned int mm_id unsigned int curr int
->     member long size" >> /sys/kernel/tracing/synthetic_events
->  2. $echo
->     'hist:keys=mm_id,member:bucket=size/0x80000:onchange($bucket).rss_stat_
->     throttled(mm_id,curr,member,size)' >
->     /sys/kernel/tracing/events/kmem/rss_stat/trigger
-> 
-> The hang issue could also be reproduced easily by calling a customize
-> trace event `myevent(u64 mycount)` for more than 2^32+(map_size-max_elts)
-> times during its histogram enabled with the key set to variable "mycount".
-> While we call `myevent` with different argument "mycount" everytime.
-> 
-> BTW, I added Cheng-jui to Co-developed because we have a lot of discussions
-> during debugging this.
-> ---
->  kernel/trace/tracing_map.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-> index a4dcf0f24352..3a56e7c8aa4f 100644
-> --- a/kernel/trace/tracing_map.c
-> +++ b/kernel/trace/tracing_map.c
-> @@ -454,7 +454,7 @@ static struct tracing_map_elt *get_free_elt(struct tracing_map *map)
->  	struct tracing_map_elt *elt = NULL;
->  	int idx;
->  
-> -	idx = atomic_inc_return(&map->next_elt);
-> +	idx = atomic_fetch_add_unless(&map->next_elt, 1, map->max_elts);
+> Does this make sense?
 
-I guess we need to add (with a comment):
+Yes. Sorry, I missed the "&& !addr)" after the "IS_ENABLED()", which looked
+like you did the command twice.
 
-	idx--;
-
->  	if (idx < map->max_elts) {
-
-Otherwise the max elements will be off by one.
-
->  		elt = *(TRACING_MAP_ELT(map->elts, idx));
-
-And the index will skip position zero.
+I blame jetlag ;-)
 
 -- Steve
-
->  		if (map->ops && map->ops->elt_init)
-> @@ -699,7 +699,7 @@ void tracing_map_clear(struct tracing_map *map)
->  {
->  	unsigned int i;
->  
-> -	atomic_set(&map->next_elt, -1);
-> +	atomic_set(&map->next_elt, 0);
->  	atomic64_set(&map->hits, 0);
->  	atomic64_set(&map->drops, 0);
->  
-> @@ -783,7 +783,7 @@ struct tracing_map *tracing_map_create(unsigned int map_bits,
->  
->  	map->map_bits = map_bits;
->  	map->max_elts = (1 << map_bits);
-> -	atomic_set(&map->next_elt, -1);
-> +	atomic_set(&map->next_elt, 0);
->  
->  	map->map_size = (1 << (map_bits + 1));
->  	map->ops = ops;
-
