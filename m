@@ -1,173 +1,113 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03F946426;
-	Tue,  6 Aug 2024 03:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF32A57CBC
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Aug 2024 03:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722913602; cv=none; b=h8CmtkDU+m3WTqBXVA/zTbI0E91UwSKVxScrSlAwgKwwuMiXj/Wz2A348rLvnNkPkhnzfP+NCq3Q/mDU9hYczzzgYGsHjVpUrQ0a3lR8P0Lbt4Ww0mu08oJcEC4ZBnxeVN66KZi4sr8Eug44yCK7iv9dn1rtki8n3EWESnKx744=
+	t=1722913813; cv=none; b=pm5F837+QVZY6XIq6luLSs9//T951/cTKVGnjg8U+0OX14pIl4l5vaYpsPFKLs0VAZpWTrQIIAz/nhYWcqVvIdCByJV98IwnTFMQzbJjgnTzecIHJXu7FiUrP6yTrrCW8ej5JfnpBQzlN0PwG5qIIUWor0+E+vN7U+bOhFKWt48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722913602; c=relaxed/simple;
-	bh=smMDiTbaBRj4i9fHbX1UswDY5rROW12ggIkv10ZoIpQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JojuyyOjdWJa5p7Hls74a/dCFuhhDsxKjtAiqbq/bkznKiKl0u5/T3BVtXIO+AH5bOueVIxO9zTvg5Y1hEALDsfdtMYXhvatCw3cH4Gmtd40ATv0c0dr0zW6bDQeCg6ojuBE+AyXRBEkLNF18DSdy4CzTTMu2wzISHPnI26AGxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WdJ7c1wlkz1xtxv;
-	Tue,  6 Aug 2024 11:04:44 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id EDB9A1A016C;
-	Tue,  6 Aug 2024 11:06:31 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 6 Aug 2024 11:06:30 +0800
-Message-ID: <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
-Date: Tue, 6 Aug 2024 11:06:30 +0800
+	s=arc-20240116; t=1722913813; c=relaxed/simple;
+	bh=M8lCPbpz8MJ7MmX8w6ySSM335BKWQPUYdlyNM4pcNL8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r/yfMsE+UMnAWCrdJtGTrxHIGok8gijREnxQhmivWym+ZihF1VbeDaI6nY35R0wd2WP6NLbPx7Svh9uNC4+N+Y3MpEJik/XQy1gadI1gIPqev4vyrTY/OPoEW7iQpS72aM27eGZQlQoQSTitX7vpTdGRpyxdWzLdPs79pJ0Rtto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Vt6hGsg8; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Vt6hGsg8"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f15790b472so1283671fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Aug 2024 20:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1722913810; x=1723518610; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ddVwpujzlJzBqKH8my+rFJponoM7SG54MA80H5/+gq8=;
+        b=Vt6hGsg8tkeVi0W2Xbo+GM0jM3j+HYRG6Rox3/TRTDwNVT7wkm0brw7CzdCMhxmcsN
+         MmuzchUm9+i9yxsf5mvvEzdvyi5lHBRu2duGKq+cLF3CTfXvpcKJZZ80UApX+EByeqc8
+         eR7SUZtjdP4hZ7kCBKuGIb3jVFoeyp+g92EiI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722913810; x=1723518610;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ddVwpujzlJzBqKH8my+rFJponoM7SG54MA80H5/+gq8=;
+        b=EMBpoeqXENQ1rUAQGrbpsIuJG3F/G5vrOYGWv4vg3poc848McQfFFkd1oSQDfFblwv
+         pp2/rOMq/TQLFbSqfnyNeLDqjBng46emVOhqxGnklmxOCnBhViBFtse2kK/9P5gogYvu
+         Xm1ZJ4c8t1/IxBPf1XHkeOVR0uxrs4GjuPmDJai0BMeK/zyOgBSidj+mwUyRyQSnXbpB
+         DCgvQKQkJGBtRn+GxsH/xs4yG+zIJPiEfbPk+Md9F9GFRZQpcwDMSQ1Z06uJzuLmWeLL
+         7shh2sDZ4NI+7j5RzPzD8lGG64fmFdihIK4X1TaycMSMWKC8Rn+Vz1mightotlmoOFq/
+         uBpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMMTJO74//Q9Q84xmN2wzRChgHCGqisrJFfy+S8W5oKa3TJJfEibvPH41qnJFhT5auYKKezxl7if3wyYTSct+j9fD1AMIFvpXWDJqzkY9QX7rZ
+X-Gm-Message-State: AOJu0YwJOylMYrZcfsPPHTUrEzTVMGpI0jodCKO3vei1GN7gJIXwiOhE
+	qTc7mhsRAKrxqYJLRNPGzkYchGSPz6e/JcHx3NQWGSwrNIx9XjdecMBbjs7wiMrXyMiXiR54/R0
+	ZLX3ynw==
+X-Google-Smtp-Source: AGHT+IGICBEQwGAeQokG1cjj4Rf+ZxWsyBWgTa5CPadzbCZAbmemyOGd+wy3RrukJJhyfGAvuvwd8w==
+X-Received: by 2002:a05:6512:baa:b0:530:aa3f:7889 with SMTP id 2adb3069b0e04-530bb6c7bd9mr8720724e87.56.1722913809481;
+        Mon, 05 Aug 2024 20:10:09 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5b836a804a2sm5572181a12.0.2024.08.05.20.10.08
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Aug 2024 20:10:08 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7a9a7af0d0so4329966b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Aug 2024 20:10:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKhQAqjruwmRBpygc5tHTkr5sNK4IMMOSpoYp2h9aa/AZp11plHlLxXXvXHCaIAV57th7IT3UZZXjP9hYuHzOmjQtp3w66fA9m8gy52vQkifAx
+X-Received: by 2002:a17:907:da9:b0:a6f:4fc8:266b with SMTP id
+ a640c23a62f3a-a7dc4db9f44mr1005005366b.3.1722913808064; Mon, 05 Aug 2024
+ 20:10:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-To: Oleg Nesterov <oleg@redhat.com>
-CC: <mhiramat@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
- <20240801140639.GE4038@redhat.com>
- <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
- <20240802092406.GC12343@redhat.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <20240802092406.GC12343@redhat.com>
+References: <20240804075619.20804-1-laoar.shao@gmail.com> <CAHk-=whWtUC-AjmGJveAETKOMeMFSTwKwu99v7+b6AyHMmaDFA@mail.gmail.com>
+ <CALOAHbCVk08DyYtRovXWchm9JHB3-fGFpYD-cA+CKoAsVLNmuw@mail.gmail.com>
+In-Reply-To: <CALOAHbCVk08DyYtRovXWchm9JHB3-fGFpYD-cA+CKoAsVLNmuw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 5 Aug 2024 20:09:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgXYkMueFpxgSY_vfCzdcCnyoaPcjS8e0BXiRfgceRHfQ@mail.gmail.com>
+Message-ID: <CAHk-=wgXYkMueFpxgSY_vfCzdcCnyoaPcjS8e0BXiRfgceRHfQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Improve the copy of task comm
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: akpm@linux-foundation.org, ebiederm@xmission.com, 
+	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
+	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
+On Mon, 5 Aug 2024 at 20:01, Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> One concern about removing the BUILD_BUG_ON() is that if we extend
+> TASK_COMM_LEN to a larger size, such as 24, the caller with a
+> hardcoded 16-byte buffer may overflow.
 
+No, not at all. Because get_task_comm() - and the replacements - would
+never use TASK_COMM_LEN.
 
-在 2024/8/2 17:24, Oleg Nesterov 写道:
-> On 08/02, Liao, Chang wrote:
->>
->>
->> 在 2024/8/1 22:06, Oleg Nesterov 写道:
->>> On 08/01, Liao Chang wrote:
->>>>
->>>> @@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
->>>>  	int err = 0;
->>>>
->>>>  	uprobe = utask->active_uprobe;
->>>> -	if (utask->state == UTASK_SSTEP_ACK)
->>>> +	switch (utask->state) {
->>>> +	case UTASK_SSTEP_ACK:
->>>>  		err = arch_uprobe_post_xol(&uprobe->arch, regs);
->>>> -	else if (utask->state == UTASK_SSTEP_TRAPPED)
->>>> +		break;
->>>> +	case UTASK_SSTEP_TRAPPED:
->>>>  		arch_uprobe_abort_xol(&uprobe->arch, regs);
->>>> -	else
->>>> +		fallthrough;
->>>> +	case UTASK_SSTEP_DENY_SIGNAL:
->>>> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
->>>> +		break;
->>>> +	default:
->>>>  		WARN_ON_ONCE(1);
->>>> +	}
->>>
->>> Liao, at first glance this change looks "obviously wrong" to me.
->>
->> Oleg. Did i overlook some thing obvious here?
-> 
-> OK, lets suppose uprobe_deny_signal() sets UTASK_SSTEP_DENY_SIGNAL.
-> 
-> In this case handle_singlestep() will only set TIF_SIGPENDING and
-> do nothing else. This is wrong, either _post_xol() or _abort_xol()
-> must be called.
-> 
-> But I think handle_singlestep() will never hit this case. In the
-> likely case uprobe_post_sstep_notifier() will replace _DENY_SIGNAL
-> with _ACK, and this means that handle_singlestep() won't restore
-> TIF_SIGPENDING cleared by uprobe_deny_signal().
+They'd use the size of the *destination*. That's what the code already does:
 
-You're absolutely right. handle_signlestep() has chance to handle _DENY_SIGANL
-unless it followed by setting TIF_UPROBE in uprobe_deny_signal(). This means
-_DENY_SIGNAL is likey replaced during next uprobe single-stepping.
+  #define get_task_comm(buf, tsk) ({                      \
+  ...
+        __get_task_comm(buf, sizeof(buf), tsk);         \
 
-I believe introducing _DENY_SIGNAL as the immediate state between UTASK_SSTEP
-and UTASK_SSTEP_ACK is still necessary. This allow uprobe_post_sstep_notifier()
-to correctly restore TIF_SIGPENDING upon the completion of single-step.
+note how it uses "sizeof(buf)".
 
-A revised implementation would look like this:
+Now, it might be a good idea to also verify that 'buf' is an actual
+array, and that this code doesn't do some silly "sizeof(ptr)" thing.
 
-------------------%<------------------
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
+We do have a helper for that, so we could do something like
 
-        if (task_sigpending(t)) {
-                clear_tsk_thread_flag(t, TIF_SIGPENDING);
-+               utask->state = UTASK_SSTEP_DENY_SIGNAL;
+   #define get_task_comm(buf, tsk) \
+        strscpy_pad(buf, __must_be_array(buf)+sizeof(buf), (tsk)->comm)
 
-                if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
-                        utask->state = UTASK_SSTEP_TRAPPED;
-@@ -2276,22 +2277,23 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
-        int err = 0;
+as a helper macro for this all.
 
-        uprobe = utask->active_uprobe;
--       if (utask->state == UTASK_SSTEP_ACK)
-+       switch (utask->state) {
-+       case UTASK_SSTEP_ACK:
-                err = arch_uprobe_post_xol(&uprobe->arch, regs);
--       else if (utask->state == UTASK_SSTEP_TRAPPED)
-+               break;
-+       case UTASK_SSTEP_TRAPPED:
-                arch_uprobe_abort_xol(&uprobe->arch, regs);
--       else
-+               set_thread_flag(TIF_SIGPENDING);
-+               break;
-+       default:
-                WARN_ON_ONCE(1);
-+       }
+(Although I'm not convinced we generally want the "_pad()" version,
+but whatever).
 
-        put_uprobe(uprobe);
-        utask->active_uprobe = NULL;
-        utask->state = UTASK_RUNNING;
-        xol_free_insn_slot(current);
-
--       spin_lock_irq(&current->sighand->siglock);
--       recalc_sigpending(); /* see uprobe_deny_signal() */
--       spin_unlock_irq(&current->sighand->siglock);
--
-        if (unlikely(err)) {
-                uprobe_warn(current, "execute the probed insn, sending SIGILL.");
-                force_sig(SIGILL);
-@@ -2351,6 +2353,8 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
-                /* task is currently not uprobed */
-                return 0;
-
-+       if (utask->state == UTASK_SSTEP_DENY_SIGNAL)
-+               set_thread_flag(TIF_SIGPENDING);
-        utask->state = UTASK_SSTEP_ACK;
-        set_thread_flag(TIF_UPROBE);
-        return 1;
-
------------------->%------------------
-
-> 
-> Oleg.
-> 
-> 
-
--- 
-BR
-Liao, Chang
+                    Linus
