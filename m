@@ -1,117 +1,142 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9756516D9B9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Aug 2024 21:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB5B5680;
+	Tue,  6 Aug 2024 01:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722893324; cv=none; b=GFJyT4VupEQlihNJeO8bdBNRnfUn5FIiS2EaFGmie/I3hJVNCz++2X/RJBYGy6NBE2AUS+cGS+nEKAlZcf78sj13IznprwraKrhsxVfW1UhgHiYW/0ktb2aa84shNFEE/Qi3CS7QWmzKrqilfF/rrTNP+FdWzd7pQ/UEWrIWZD4=
+	t=1722909047; cv=none; b=ZNSS8dPowttkFzEwsp4/ysCghyvVFZ2Egijk8iySlDF0tu75HV+QLksZjBqdCWiXPW8Frw9VRtJ2LMgwlrCkYLk0ktH+tl8L1XR+tVWuwBRakeeFhXMvvRWN+OBg7hcgXt1eRgLnkbFZ/3O/I1lmrF4DfyVoa227ONFEBNKxI28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722893324; c=relaxed/simple;
-	bh=CTTjcSVZh00GG8bK8bn079xIUwIcu3ks1xC9HUn/WHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZnX65Hnqii4fmT82UCO9erH1tMiKRsDk6FSI3nGZJ8vQwcmX9UutA/FXAQ1avKD1GkSBxcgCnYStzR4Tplt2o8Y6tTYONXQ/q+IClaHtb8UcZEuMK9MbuDeno7wWsGfBg8YjyV610agfeWceNUuJH6qgDARhY2/fQ7UD3i4fQX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Z3WL/weh; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Z3WL/weh"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7ad02501c3so451806066b.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Aug 2024 14:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1722893321; x=1723498121; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JmhoGoeqp0EkHzxnqjsByi1+fgV+qGizB/Udaf1KjI=;
-        b=Z3WL/wehUA5oHx3YiNUr8peqdqJXXgq+u0kf/MCKZGVY29llW5P9dlZLF8LCL+bnGe
-         OrxAmsczeLx2sKEdHBpzdD0FVhnhPnYYOFnTRAur5Sq6vFbyLYR1pspKrM36I7MnHaSq
-         opiT21XaeDREo7lFKx+kdwZ6CQlW4dBqbihzE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722893321; x=1723498121;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4JmhoGoeqp0EkHzxnqjsByi1+fgV+qGizB/Udaf1KjI=;
-        b=j4tq+HalBcdktcfzWdcBDPoS/MW+5B/+QA7PUogSsHHUo67jfqNarNggIL2PchU4wn
-         tqfFlNc36glXXOaaqidtEWzwhktxZVLFaMAwGOsdxKAaxfaLd77UyqzJVI7rLReIfYrk
-         T6ukk/J6PL1tUlWOwJdDuzlsr6qz+s5llcDFek/AlUfKe0A/cVf9Nf8HbQ0r7caotWFp
-         c602yBn91A1VCUot69sbO0jNqNB/mukxr4Gu45EzmKy2iOm2ZNWJldyLgHcljn/s6985
-         YFPtZpvKdskGf8Gff0XnhISCF/1H172Mz2+y2MjWoDKvt61C53zojZWdivNkeYKVKs6x
-         VvtA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9zQao8pAAbrsXPYij4Zr7If/P0SR56bkf9y0xRe8SlsjE1S8jqGaMGRM97vQY53dbOwLmbjUIxPzNWmZd0vaTgxRzfT0jylQ6QONRwNuyG8Qu
-X-Gm-Message-State: AOJu0YzOpU1BlmZibn4lRNKAKmJwHm95+oDT/6e6RBrBgDL/g+D2cUpj
-	LT8mn1B3CFVk888fPzOG3T+7/EminhhchRbpYnWHCCsHr8D6m2gIv4cSPmyR6fN508P0Hb3l228
-	t98uxHA==
-X-Google-Smtp-Source: AGHT+IHZ0KZNG2P4/zl7hCwB7f1RcO6qCgBsDowBGp06ziUpb3g1Snj1+L/e7fUlz6UZh64+K3vOZA==
-X-Received: by 2002:a17:907:6d17:b0:a7a:3928:3529 with SMTP id a640c23a62f3a-a7dc4fd8665mr882988766b.13.1722893320658;
-        Mon, 05 Aug 2024 14:28:40 -0700 (PDT)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9bc3ca6sm492272466b.20.2024.08.05.14.28.39
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Aug 2024 14:28:39 -0700 (PDT)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ba43b433beso2515362a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Aug 2024 14:28:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU5WbHdQMLUJb4GcXfRKdjbn1boInYtvNtn5pVciZHUx/UZ8Hsv4A0uWGZOAdZfIIu81lwIyarh7F/0LNsyKoO1rs7GbF9zMI4WIAnbsuSHsseq
-X-Received: by 2002:aa7:df97:0:b0:5af:758a:6934 with SMTP id
- 4fb4d7f45d1cf-5b7f0fc7f1amr8956337a12.0.1722893319128; Mon, 05 Aug 2024
- 14:28:39 -0700 (PDT)
+	s=arc-20240116; t=1722909047; c=relaxed/simple;
+	bh=CbFPcbzdUucTRMFRAZx+VAj9onOepdSbvwXioYnWy7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cvbdSxn39hvvmK5c2yOTVYhxjf4Rkjs9KbQP6spjPXu/Eltupp/TdfXIYETiTanXdlQ2bzUSrmdUKPjtIejELAsy7MZ9IUm+APM0rPhft95xc4ZuocZdIoZFVeu09mjvTnFxdwoQIRPSje9rBZZlv9Lp+SrlLAp0Epqn6vklRyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WdGTn6DrwzyNty;
+	Tue,  6 Aug 2024 09:50:21 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id D5DF91400CF;
+	Tue,  6 Aug 2024 09:50:40 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 6 Aug 2024 09:50:39 +0800
+Message-ID: <103e02a3-8dab-f1a4-0b2d-e84915df14fe@huawei.com>
+Date: Tue, 6 Aug 2024 09:50:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240804075619.20804-1-laoar.shao@gmail.com>
-In-Reply-To: <20240804075619.20804-1-laoar.shao@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 5 Aug 2024 14:28:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whWtUC-AjmGJveAETKOMeMFSTwKwu99v7+b6AyHMmaDFA@mail.gmail.com>
-Message-ID: <CAHk-=whWtUC-AjmGJveAETKOMeMFSTwKwu99v7+b6AyHMmaDFA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Improve the copy of task comm
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: akpm@linux-foundation.org, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
-	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 6/8] perf/uprobe: split uprobe_unregister()
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC: Andrii Nakryiko <andrii@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<peterz@infradead.org>, <oleg@redhat.com>, <rostedt@goodmis.org>,
+	<mhiramat@kernel.org>, <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<jolsa@kernel.org>, <paulmck@kernel.org>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240731214256.3588718-7-andrii@kernel.org>
+ <eb6d1474-a292-af20-b8b1-1c2de61405f4@huawei.com>
+ <CAEf4BzZR6a4OSqsvyci0_-P+_o2PErM_PyC9y9eSc4J4A+Uabw@mail.gmail.com>
+ <CAEf4BzYuGo572m+zi3KD51zp82a63mL9f5F2kz1w8ZvEBQB_VA@mail.gmail.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <CAEf4BzYuGo572m+zi3KD51zp82a63mL9f5F2kz1w8ZvEBQB_VA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Sun, 4 Aug 2024 at 00:56, Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> There is a BUILD_BUG_ON() inside get_task_comm(), so when you use
-> get_task_comm(), it implies that the BUILD_BUG_ON() is necessary.
 
-Let's just remove that silly BUILD_BUG_ON(). I don't think it adds any
-value, and honestly, it really only makes this patch-series uglier
-when reasonable uses suddenly pointlessly need that double-underscore
-version..
 
-So let's aim at
+在 2024/8/6 4:01, Andrii Nakryiko 写道:
+> On Fri, Aug 2, 2024 at 8:05 AM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+>>
+>> On Thu, Aug 1, 2024 at 7:41 PM Liao, Chang <liaochang1@huawei.com> wrote:
+>>>
+>>>
+>>>
+>>> 在 2024/8/1 5:42, Andrii Nakryiko 写道:
+>>>> From: Peter Zijlstra <peterz@infradead.org>
+>>>>
+>>>> With uprobe_unregister() having grown a synchronize_srcu(), it becomes
+>>>> fairly slow to call. Esp. since both users of this API call it in a
+>>>> loop.
+>>>>
+>>>> Peel off the sync_srcu() and do it once, after the loop.
+>>>>
+>>>> With recent uprobe_register()'s error handling reusing full
+>>>> uprobe_unregister() call, we need to be careful about returning to the
+>>>> caller before we have a guarantee that partially attached consumer won't
+>>>> be called anymore. So add uprobe_unregister_sync() in the error handling
+>>>> path. This is an unlikely slow path and this should be totally fine to
+>>>> be slow in the case of an failed attach.
+>>>>
+>>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>>> Co-developed-by: Andrii Nakryiko <andrii@kernel.org>
+>>>> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+>>>> ---
+>>>>  include/linux/uprobes.h                        |  8 ++++++--
+>>>>  kernel/events/uprobes.c                        | 18 ++++++++++++++----
+>>>>  kernel/trace/bpf_trace.c                       |  5 ++++-
+>>>>  kernel/trace/trace_uprobe.c                    |  6 +++++-
+>>>>  .../selftests/bpf/bpf_testmod/bpf_testmod.c    |  3 ++-
+>>>>  5 files changed, 31 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+>>>> index a1686c1ebcb6..8f1999eb9d9f 100644
+>>>> --- a/include/linux/uprobes.h
+>>>> +++ b/include/linux/uprobes.h
+>>>> @@ -105,7 +105,8 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+>>>>  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
+>>>>  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+>>>>  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+>>>> -extern void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc);
+>>>> +extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+>>>> +extern void uprobe_unregister_sync(void);
+>>>
+>>> [...]
+>>>
+>>>>  static inline void
+>>>> -uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
+>>>> +uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc)
+>>>> +{
+>>>> +}
+>>>> +static inline void uprobes_unregister_sync(void)
+>>>
+>>> *uprobes*_unregister_sync, is it a typo?
+>>>
+>>
+>> I think the idea behind this is that you do a lot of individual uprobe
+>> unregistrations with multiple uprobe_unregister() calls, and then
+>> follow with a single *uprobes*_unregister_sync(), because in general
+>> it is meant to sync multiple uprobes unregistrations.
+> 
+> Ah, I think you were trying to say that only static inline
+> implementation here is called uprobes_unregister_sync, while all the
+> other ones are uprobe_unregister_sync(). I fixed it up, kept it as
+> singular uprobe_unregister_sync().
+> 
 
- (a) documenting that the last byte in 'tsk->comm{}' is always
-guaranteed to be NUL, so that the thing can always just be treated as
-a string. Yes, it may change under us, but as long as we know there is
-always a stable NUL there *somewhere*, we really really don't care.
+Yes, that's exactly what i meant :)
 
- (b) removing __get_task_comm() entirely, and replacing it with a
-plain 'str*cpy*()' functions
+>>
+>>>>  {
+>>>>  }
+>>>>  static inline int uprobe_mmap(struct vm_area_struct *vma)
+>>>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+>>>> index 3b42fd355256..b0488d356399 100644
+>>>> --- a/kernel/events/uprobes.c
+>>>> +++ b/kernel/events/uprobes.c
+> 
+> [...]
 
-The whole (a) thing is a requirement anyway, since the *bulk* of
-tsk->comm really just seems to be various '%s' things in printk
-strings etc.
-
-And once we just admit that we can use the string functions, all the
-get_task_comm() stuff is just unnecessary.
-
-And yes, some people may want to use the strscpy_pad() function
-because they want to fill the whole destination buffer. But that's
-entirely about the *destination* use, not the tsk->comm[] source, so
-it has nothing to do with any kind of "get_task_comm()" logic, and it
-was always wrong to care about the buffer sizes magically matching.
-
-Hmm?
-
-                Linus
+-- 
+BR
+Liao, Chang
