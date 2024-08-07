@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE5484A51;
-	Wed,  7 Aug 2024 20:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505BA364BC;
+	Wed,  7 Aug 2024 20:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723060965; cv=none; b=LIbHYuDOKRasz0EoGJCpAuqL8D+Yx7NwzPbcqgD1esQ+6g1KZWfTL8L6P5rethmtiYndObRQdRbfz8HdtSc6p0S5Mb6CldEiKLgqbmptuN1TZXtqdKXWDJ0GkK/AX5OS80jkMUL4+mpM5GvrlBlYscIUjNHxwAstK2vnpSTxOa8=
+	t=1723061312; cv=none; b=E2RTvzq1hPsporr6oSmjEJpjNSC7FRz7BOLSs6JhhEKyp2G3QAilCxhG+uEibQbYoBt6cobHON6yXaNewQowJ+1Upgk8pDe6aXHIASQhR01G8ki4kpbrWxef7Yh02x1udfx+0b6F32LQiTJ21MerQ+dEwtCw5uDKdl6YrRC/Sjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723060965; c=relaxed/simple;
-	bh=6E6ue2xLntVa0zLAon87+tkD4nau8DimoBNDAvRZzrM=;
+	s=arc-20240116; t=1723061312; c=relaxed/simple;
+	bh=VlF0Eedmz7/4NAV+JIdWlb1hHgZwCVfOaxXUkFTCDCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VD+9AqXeN0AIhIkH4fA3qFPcMRSiGM4AFswMYopf3R/iSIhRkolZCXC1rp6nlNZBWZQho8UyS5woxTxVbhDAHyAkIwkY9nDb130YOfJeKBbXRsgSFGl8yj2ze0hOwKLYTZLi6wCklLvNGQ+/Nfp6/qxz2BoGuuUzkNAqDfQ5NEg=
+	 MIME-Version:Content-Type; b=GLNQ6kF0uX5o7MniYdRQMU7QiEBgvCjn/S5zwqu8dDPlMWuMpG2RD8wgug1B1vJcBuOEc7ASWQjmMwreKFHZl8CeFkhIZYvMigk+kK+iUUniTMKY0vJ39tpWmL8INfgzjNzaa8o3kEBiFhnbt4Ugbc2oOiYfMxi6O5omo50pp6c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E624C32781;
-	Wed,  7 Aug 2024 20:02:42 +0000 (UTC)
-Date: Wed, 7 Aug 2024 16:02:41 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0ACC32781;
+	Wed,  7 Aug 2024 20:08:27 +0000 (UTC)
+Date: Wed, 7 Aug 2024 16:08:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Liju-clr Chen <liju-clr.chen@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Richard Cochran
- <richardcochran@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Yingshiuan Pan <Yingshiuan.Pan@mediatek.com>, Ze-yu Wang
- <Ze-yu.Wang@mediatek.com>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-mediatek@lists.infradead.org>, Shawn Hsiao
- <shawn.hsiao@mediatek.com>, PeiLun Suei <PeiLun.Suei@mediatek.com>,
- Chi-shen Yeh <Chi-shen.Yeh@mediatek.com>, Kevenny Hsieh
- <Kevenny.Hsieh@mediatek.com>
-Subject: Re: [PATCH v12 20/24] virt: geniezone: Add tracing support for hyp
- call and vcpu exit_reason
-Message-ID: <20240807160241.2370ae9b@gandalf.local.home>
-In-Reply-To: <20240730082436.9151-21-liju-clr.chen@mediatek.com>
-References: <20240730082436.9151-1-liju-clr.chen@mediatek.com>
-	<20240730082436.9151-21-liju-clr.chen@mediatek.com>
+To: Song Liu <songliubraving@meta.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Song Liu <song@kernel.org>,
+ "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr
+ Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Nathan
+ Chancellor <nathan@kernel.org>, "morbo@google.com" <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
+ "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
+ Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
+ <samitolvanen@google.com>
+Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
+ without .XXX suffix
+Message-ID: <20240807160826.269f27f8@gandalf.local.home>
+In-Reply-To: <2622EED3-19EF-4F3B-8681-B4EB19370436@fb.com>
+References: <20240802210836.2210140-1-song@kernel.org>
+	<20240802210836.2210140-4-song@kernel.org>
+	<20240806144426.00ed349f@gandalf.local.home>
+	<B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
+	<20240806160049.617500de@gandalf.local.home>
+	<20240806160149.48606a0b@gandalf.local.home>
+	<6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+	<20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
+	<BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
+	<20240807190809.cd316e7f813400a209aae72a@kernel.org>
+	<2622EED3-19EF-4F3B-8681-B4EB19370436@fb.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,64 +52,45 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jul 2024 16:24:32 +0800
-Liju-clr Chen <liju-clr.chen@mediatek.com> wrote:
+On Wed, 7 Aug 2024 19:41:11 +0000
+Song Liu <songliubraving@meta.com> wrote:
 
-> From: Liju Chen <liju-clr.chen@mediatek.com>
->=20
-> Add tracepoints for hypervisor calls and VCPU exit reasons in GenieZone
-> driver. It aids performance debugging by providing more information
-> about hypervisor operations and VCPU behavior.
->=20
-> Command Usage:
-> echo geniezone:* >> /sys/kernel/tracing/set_event
-> echo 1 > /sys/kernel/tracing/tracing_on
-> echo 0 > /sys/kernel/tracing/tracing_on
-> cat /sys/kernel/tracing/trace
->=20
-> For example:
-> crosvm_vcpu0-4874    [007] .....    94.757349: mtk_hypcall_enter: id=3D0x=
-fb001005
-> crosvm_vcpu0-4874    [007] .....    94.760902: mtk_hypcall_leave: id=3D0x=
-fb001005 invalid=3D0
-> crosvm_vcpu0-4874    [007] .....    94.760902: mtk_vcpu_exit: vcpu exit_r=
-eason=3DIRQ(0x92920003)
->=20
-> This example tracks a hypervisor function call by an ID (`0xbb001005`)
-> from initiation to termination, which is supported (invalid=3D0). A vCPU
-> exit is triggered by an Interrupt Request (IRQ) (exit reason: 0x92920003).
->=20
-> /* VM exit reason */
-> enum {
-> 	GZVM_EXIT_UNKNOWN =3D 0x92920000,
-> 	GZVM_EXIT_MMIO =3D 0x92920001,
-> 	GZVM_EXIT_HYPERCALL =3D 0x92920002,
-> 	GZVM_EXIT_IRQ =3D 0x92920003,
-> 	GZVM_EXIT_EXCEPTION =3D 0x92920004,
-> 	GZVM_EXIT_DEBUG =3D 0x92920005,
-> 	GZVM_EXIT_FAIL_ENTRY =3D 0x92920006,
-> 	GZVM_EXIT_INTERNAL_ERROR =3D 0x92920007,
-> 	GZVM_EXIT_SYSTEM_EVENT =3D 0x92920008,
-> 	GZVM_EXIT_SHUTDOWN =3D 0x92920009,
-> 	GZVM_EXIT_GZ =3D 0x9292000a,
-> };
->=20
-> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
-> Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
 
-=46rom a tracing POV, I don't see any issues with this patch.
+> It appears there are multiple APIs that may need change. For example, on gcc
+> built kernel, /sys/kernel/tracing/available_filter_functions does not show 
+> the suffix: 
+> 
+>   [root@(none)]# grep cmos_irq_enable /proc/kallsyms
+>   ffffffff81db5470 t __pfx_cmos_irq_enable.constprop.0
+>   ffffffff81db5480 t cmos_irq_enable.constprop.0
+>   ffffffff822dec6e t cmos_irq_enable.constprop.0.cold
+> 
+>   [root@(none)]# grep cmos_irq_enable /sys/kernel/tracing/available_filter_functions
+>   cmos_irq_enable
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Strange, I don't see that:
+
+  ~# grep cmos_irq_enable /proc/kallsyms 
+  ffffffff8f4b2500 t __pfx_cmos_irq_enable.constprop.0
+  ffffffff8f4b2510 t cmos_irq_enable.constprop.0
+
+  ~# grep cmos_irq_enable /sys/kernel/tracing/available_filter_functions
+  cmos_irq_enable.constprop.0
 
 -- Steve
 
-
-> ---
->  arch/arm64/geniezone/vm.c          |  4 ++
->  drivers/virt/geniezone/gzvm_vcpu.c |  3 ++
->  include/trace/events/geniezone.h   | 84 ++++++++++++++++++++++++++++++
->  3 files changed, 91 insertions(+)
->  create mode 100644 include/trace/events/geniezone.h
+> 
+> perf-probe uses _text+<offset> for such cases:
+> 
+>   [root@(none)]# cat /sys/kernel/tracing/kprobe_events
+>   p:probe/cmos_irq_enable _text+14374016 
+> 
+> I am not sure which APIs do we need to change here. 
+> 
+> Thanks,
+> Song
+> 
+> 
 
