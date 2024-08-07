@@ -1,129 +1,148 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2587582499
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 15:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D312CDBF;
+	Wed,  7 Aug 2024 15:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723044829; cv=none; b=cWTE3TpZKH/w3/ggDbY8mS+up4XaFgAVRYxKhp7vbGJXdNPou3lcV9RUvGVfLjhcH4pEyVGGrwiF4PbcRrgoI1qWihlcsKM3WJy23EwIzcy2w3PUWPD34+REBDmyG4TpKCmz8kasZwrndsWGEz8XiDzaiqg0oBitZRDx5J3LABE=
+	t=1723045791; cv=none; b=RiH1eH/7/3Xit2TlUUbTawh+ElkDeb//3qrhvnbpbIDxWsWp16eueWwtbQcVj+ZKidoafhA3OW1APTXBa9S2Gp3s/306q6PR1cZH0k75mlYOyU3ka2ArmHIeS9pmOW5XFNch1Sr1E25E0IBAxds4apHed1VNDe8niBG+dv5vwik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723044829; c=relaxed/simple;
-	bh=GJJ6/4J63aPzip8F3qmZkagOt3HQBmrPhv3cmrweDFo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=At6RVLpF6/C+79InoyeW6YIE0VH4FF3ckuYE1UEvoz1iaGj3m5Ff2qxiaSTjKTVapk+NuiwgMqkYA4+1JxTw8b46sYOn5VLRD1OVjBFX1wzsaxAwIiRh2ecKS9JDacf4nN8prfHUbZ+inwkfpohyKD55UiQe+EgDA7bmYjaBQQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TeuRPo18; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TeuRPo18"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b7a36f26f3so9086076d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Aug 2024 08:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723044827; x=1723649627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GJJ6/4J63aPzip8F3qmZkagOt3HQBmrPhv3cmrweDFo=;
-        b=TeuRPo189UPeBJcfUFNEcChlYCN/U3x9Wp+dAlIMF2vbwR8JngjWPMCd+W7Ui9o16D
-         brhjmBY3QqHIwc56WqnrsajMLAwhTj3FaRp4HaKZ5bbCcU5o0cUP5QBHRoXRV0zM+btU
-         KMtC/H0SBlYn5y7nD5ejio1X5vezxuJYHamlz0UTQq9HZW8B7F4kAWpZGUu+JC1fgT30
-         nlK6ilQTU1Us0W32pqXtdgEN1l+pgKf3O/1KXeAdPvQ7+wlPVYM0P5eKYYPila/QHZ2B
-         nce9O30z0Bnh7UQgKRMFNAsW9Frgu4IYt2a/yZsh2KulBMYFWsX3o2oKEEQwR8iBi8dR
-         NeVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723044827; x=1723649627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GJJ6/4J63aPzip8F3qmZkagOt3HQBmrPhv3cmrweDFo=;
-        b=h/yTior1k/y2Hl9VEQDjxXgAeiqo825JrCFIk8OUm4kYvill2FgzagVJZ+EQ9IipuT
-         H1VkxlTvA64s5+MfwvNfpF9ylUiRC1lO47ydhnBGlvNlGwgyTi0XIfX2fogNUrqlehUO
-         cec4lI8tmItoZtcUmwZQ4nBTfkxhcUkCIEF2G2lPHV/IekI3wNHDOnk4DixITl+ITpCz
-         8qjITD171twFN4E9lOQlElPEMMh0rWIbZP2Vnzoi9dS9Sl4kd5PRWdytptt4fbjeDFPO
-         TOEFu2meh+J/dHzn+u9bMdDuqDFQK2X2GJOWvUWZShAyZlwLQVb2FMvG6MDPDN4lDMvG
-         Q5aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4zjr84Qx9JD9CB9DXTf+5b2U63lphhivQg5H4UYSQBYc0fWhzNBarwG/N2alqRlUp1WCSBDuWFS0v56VNRn8C5Hmdh2g1GMTtKxaArw0dKaz4
-X-Gm-Message-State: AOJu0YxgKd4ls3cehoHY3+avyBCbh+VUv2mO2Ye6uwj/VjvFvZzcGQx1
-	TU5JVdlpfiUlYsj63HWyOl/HDuJBgWBmNTLR76UW/uEchCvWLTATwOJHjoj8M1yrNK4ZKXmFzUu
-	mNERPXNZvZ6/XpOsGXywFeTuvqxtEjmvxWq4e
-X-Google-Smtp-Source: AGHT+IHvWa/Ytvp6xlpQo9w1vpfSyPNJKRWxay0t5bOW4D+l2HThaPS/mn8FuAJ+0xTb3yWOKivyVOA2NWpU5uN6aX8=
-X-Received: by 2002:a0c:e6e3:0:b0:6b5:33c6:9caf with SMTP id
- 6a1803df08f44-6bbbbdf4ae6mr44862646d6.16.1723044826883; Wed, 07 Aug 2024
- 08:33:46 -0700 (PDT)
+	s=arc-20240116; t=1723045791; c=relaxed/simple;
+	bh=zSjQCmlr2o7LzRlv1gR6+tsqoni0n9y0ZEa8DcvWYsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=knTOuanliThB7sPafTfKW/BbiAlVYBoz1GhBB6k17FdgOBL7r0yb1yXMgyBBnWF+WdxRy4LFoqDJrCroPKYDF5czGb+gqDZqXlu+10LTduCS6XoAdNgg/qI5AsG+iGO7ogunIX7UU1L0CpdtT/h3rfLYC1Zrmzpt9ft6+zMDhKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E7FC32781;
+	Wed,  7 Aug 2024 15:49:49 +0000 (UTC)
+Date: Wed, 7 Aug 2024 11:49:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Mathias Krause <minipli@grsecurity.net>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ilkka =?UTF-8?B?TmF1bGFww6TDpA==?=
+ <digirigawa@gmail.com>, Brad Spengler <spender@grsecurity.net>
+Subject: Re: [PATCH 2/2] tracefs: Don't overlay 'struct inode'
+Message-ID: <20240807114948.6d57af23@gandalf.local.home>
+In-Reply-To: <20240807134453.GZ5334@ZenIV>
+References: <20240807115143.45927-1-minipli@grsecurity.net>
+	<20240807115143.45927-3-minipli@grsecurity.net>
+	<20240807093545.4ec51d61@gandalf.local.home>
+	<20240807134453.GZ5334@ZenIV>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240802210836.2210140-1-song@kernel.org> <20240802210836.2210140-4-song@kernel.org>
- <20240806144426.00ed349f@gandalf.local.home> <B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
- <20240806160049.617500de@gandalf.local.home> <20240806160149.48606a0b@gandalf.local.home>
- <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com> <20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
- <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com> <20240807190809.cd316e7f813400a209aae72a@kernel.org>
-In-Reply-To: <20240807190809.cd316e7f813400a209aae72a@kernel.org>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 7 Aug 2024 08:33:07 -0700
-Message-ID: <CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
- without .XXX suffix
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Song Liu <songliubraving@meta.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Song Liu <song@kernel.org>, 
-	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, Nathan Chancellor <nathan@kernel.org>, 
-	"morbo@google.com" <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>, 
-	"kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Matthew Maurer <mmaurer@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Wed, 7 Aug 2024 14:44:53 +0100
+Al Viro <viro@zeniv.linux.org.uk> wrote:
 
-On Wed, Aug 7, 2024 at 3:08=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Wed, 7 Aug 2024 00:19:20 +0000
-> Song Liu <songliubraving@meta.com> wrote:
->
-> > Do you mean we do not want patch 3/3, but would like to keep 1/3 and pa=
-rt
-> > of 2/3 (remove the _without_suffix APIs)? If this is the case, we are
-> > undoing the change by Sami in [1], and thus may break some tracing tool=
-s.
->
-> What tracing tools may be broke and why?
+> On Wed, Aug 07, 2024 at 09:35:45AM -0400, Steven Rostedt wrote:
+> 
+> > Perhaps:
+> > 
+> > diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+> > index f704d8348357..ab6d6c3d835d 100644
+> > --- a/fs/tracefs/internal.h
+> > +++ b/fs/tracefs/internal.h
+> > @@ -10,12 +10,12 @@ enum {
+> >  };
+> >  
+> >  struct tracefs_inode {
+> > +	struct inode            vfs_inode;
+> > +	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+> >  	union {
+> > -		struct inode            vfs_inode;
+> > +		struct list_head	list;
+> >  		struct rcu_head		rcu;
+> >  	};
+> > -	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+> > -	struct list_head	list;
+> >  	unsigned long           flags;
+> >  	void                    *private;
+> >  };  
+> 
+> 	Your current variant gives you an RCU-delayed call of
+> tracefs_free_inode(), which schedules an RCU-delayed call of
+> tracefs_free_inode_rcu().
+> 
+> 	Do you really need that double RCU delay to start with?
+> Because if you do not, just do that list_del_rcu() in ->destroy_inode()
+> (which is called without an RCU delay) and have kmem_cache_free()
+> in ->free_inode() (which is called *with* RCU delay started after
+> the call of ->destroy_inode()).
 
-This was a few years ago when we were first adding LTO support, but
-the unexpected suffixes in tracing output broke systrace in Android,
-presumably because the tools expected to find specific function names
-without suffixes. I'm not sure if systrace would still be a problem
-today, but other tools might still make assumptions about the function
-name format. At the time, we decided to filter out the suffixes in all
-user space visible output to avoid these issues.
+Thanks, I didn't know about these.
 
-> For this suffix problem, I would like to add another patch to allow probi=
-ng on
-> suffixed symbols. (It seems suffixed symbols are not available at this po=
-int)
->
-> The problem is that the suffixed symbols maybe a "part" of the original f=
-unction,
-> thus user has to carefully use it.
->
-> >
-> > Sami, could you please share your thoughts on this?
->
-> Sami, I would like to know what problem you have on kprobes.
+So I could use destroy_inode() for the removing of the link list, and then
+free_inode to free it. Something like:
 
-The reports we received back then were about registering kprobes for
-static functions, which obviously failed if the compiler added a
-suffix to the function name. This was more of a problem with ThinLTO
-and Clang CFI at the time because the compiler used to rename _all_
-static functions, but one can obviously run into the same issue with
-just LTO.
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 1028ab6d9a74..ae2cb2221acd 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -53,15 +53,14 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+ 	return &ti->vfs_inode;
+ }
+ 
+-static void tracefs_free_inode_rcu(struct rcu_head *rcu)
++static void tracefs_free_inode(struct inode *inode)
+ {
+-	struct tracefs_inode *ti;
++	struct tracefs_inode *ti = get_tracefs(inode);
+ 
+-	ti = container_of(rcu, struct tracefs_inode, rcu);
+ 	kmem_cache_free(tracefs_inode_cachep, ti);
+ }
+ 
+-static void tracefs_free_inode(struct inode *inode)
++static void tracefs_destroy_inode(struct inode *inode)
+ {
+ 	struct tracefs_inode *ti = get_tracefs(inode);
+ 	unsigned long flags;
+@@ -69,8 +68,6 @@ static void tracefs_free_inode(struct inode *inode)
+ 	spin_lock_irqsave(&tracefs_inode_lock, flags);
+ 	list_del_rcu(&ti->list);
+ 	spin_unlock_irqrestore(&tracefs_inode_lock, flags);
+-
+-	call_rcu(&ti->rcu, tracefs_free_inode_rcu);
+ }
+ 
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+@@ -437,6 +434,7 @@ static int tracefs_drop_inode(struct inode *inode)
+ static const struct super_operations tracefs_super_operations = {
+ 	.alloc_inode    = tracefs_alloc_inode,
+ 	.free_inode     = tracefs_free_inode,
++	.destroy_inode  = tracefs_destroy_inode,
+ 	.drop_inode     = tracefs_drop_inode,
+ 	.statfs		= simple_statfs,
+ 	.show_options	= tracefs_show_options,
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index f704d8348357..d83c2a25f288 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -10,10 +10,7 @@ enum {
+ };
+ 
+ struct tracefs_inode {
+-	union {
+-		struct inode            vfs_inode;
+-		struct rcu_head		rcu;
+-	};
++	struct inode            vfs_inode;
+ 	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+ 	struct list_head	list;
+ 	unsigned long           flags;
 
-Sami
+
+I'll run this under some more tests and see if it doesn't crash.
+
+I'll apply the first patch of this series too, and then probably use this
+one.
+
+-- Steve
