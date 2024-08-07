@@ -1,69 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ADB155336;
-	Wed,  7 Aug 2024 21:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CE7146599;
+	Wed,  7 Aug 2024 22:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723067847; cv=none; b=C+JCmPTquyw+AoM9WAEJA/KeyiECvj+94eyqiISmotqdK5XgODzfOmy1UgFWypWGx00qukJmUsgZvVbXRWHnJOXUAw0xlnXxUfESh7R9eRz4M9kZU36j2g7GrRInsxHLfamc644s6OdheNIbJSkwdO5PrRs/KhJ/XZwrQq3KIfQ=
+	t=1723068328; cv=none; b=nrSs7J3vwOFCGQc+/Nhvyn1XG6JLoa+yjM2F/8ltmPOKa/XdzTcthQ6AY1cDTucZ1NCnUCNmittvNlmeOuxk7YgMKkC4OOWU50dcwMXCG3OsS4r/9wGxztBAmPByM2A4VxHtbLyDPPfFmDDatKi54JZ6FrbbI/pdJD+AnxE7M2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723067847; c=relaxed/simple;
-	bh=ab42EY7AePAQAjjiN0FjmKz697SEyB0rVErEnmbUBY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g1xp3Ng6rk3U46Skh8B4bJasrqolWfAVrHvdUokUnBbI8E5tyErx09pQNNX2McshprgVHZ55ET5JqMQXNaBWqvCQVjQ699spIZOZS/rJWE8GWu+o050bHZTlm+3Ym96l9h51awgwyygLuVDze1kF0C+BqZgWa3/e7mU5UVzuphk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b89+P3kh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723068328; c=relaxed/simple;
+	bh=bxHeSoKyMDMAGaESLACU55/FdN8ERxl3gla+Fif5osg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VcBLFVgLMj5clPLkeUOoYih3OzOzQNjS0xZDUpK01mndi1OIkD14CSWYPQBB8t41ygqUnHnQEDoP6BfiVsk5fKItHYoLtxrj1Lhck/9yflSZVYzW8lyxFkMHDxjlKozu4OpGNCeheUzg1h3UHDYtAN8rhT5VwfRbWa0TU+tJX+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnLPVeB1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b89+P3kh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82502C32781;
-	Wed,  7 Aug 2024 21:57:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnLPVeB1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9E0C32781;
+	Wed,  7 Aug 2024 22:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723067846;
-	bh=ab42EY7AePAQAjjiN0FjmKz697SEyB0rVErEnmbUBY4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b89+P3kh2B7Idb0H9qgYUXh+1gIGIdwOPnNvhriOXfNvZXNJEzgvsAkKQLVyYZB6y
-	 Ub14NXI5zmEr7X86he1OSMEewOnMCjjAO5mJ7kCPcHcHsFQOMLVPbQHAj/8HZcuI9f
-	 MZYsxDcUt73IOFrJYV7RguWhJQ3J9PX85Zlt1D+hlwlWxJRPGpJITTFtdFOgBzYWaZ
-	 xcCjyLNWc5DPix+/I53lS1hkrqnt5LKHP0CdjDVYEmNOfY4NeCHQ5XYl6w54zjwTjk
-	 dkU350YZlHcsxx1u2uCR23pMExi+C13By1rnydam7mxhO6MhfHJsDaQO6UbeL50diP
-	 n091XFNSyqaZg==
-From: Kees Cook <kees@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH] pstore/ramoops: Fix typo as there is no "reserver"
-Date: Wed,  7 Aug 2024 14:57:21 -0700
-Message-Id: <172306784057.66923.16977092081545994826.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240807170029.3c1ff651@gandalf.local.home>
-References: <20240807170029.3c1ff651@gandalf.local.home>
+	s=k20201202; t=1723068327;
+	bh=bxHeSoKyMDMAGaESLACU55/FdN8ERxl3gla+Fif5osg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OnLPVeB1h72TiCvuX8iTZB5hsPipEHrh5jliRuGSQo3Pawpc/mPsOCgpdkMknZEN8
+	 n7n9kv8BdUXu7GaWax4K3+1cj22xYAl8Y2AYgaoa5Hzt/IxKWIPdvCzeoVeV1NQc+9
+	 A6qUD2EENnx901g/3cUTNh8pTg/0hqzX+MW+okDPUBQW+zJXmAYyiOaoPxWjt/fp+2
+	 LPow8Aol2pBNBb1yMyCBy49POV50/Y8y8SfqVRUWzs7WQTqIdQOleIV27MWvpVJs3e
+	 S12QiTlHNNg7Q0C8OotG+LmahNJDxFJK0MXdreR7GQYJ5INd6Y7KgRaTEmk/4k2qI8
+	 hykLLZmXPg+7Q==
+From: Song Liu <song@kernel.org>
+To: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	nathan@kernel.org,
+	morbo@google.com,
+	justinstitt@google.com,
+	mcgrof@kernel.org,
+	thunder.leizhen@huawei.com,
+	kees@kernel.org,
+	kernel-team@meta.com,
+	song@kernel.org,
+	mmaurer@google.com,
+	samitolvanen@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org
+Subject: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
+Date: Wed,  7 Aug 2024 15:05:11 -0700
+Message-ID: <20240807220513.3100483-1-song@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 07 Aug 2024 17:00:29 -0400, Steven Rostedt wrote:
-> For some reason my finger always hits the 'r' after typing "reserve".
-> Fix the typo in the Documentation example.
-> 
-> 
+With CONFIG_LTO_CLANG, the compiler/linker adds .llvm.<hash> suffix to
+local symbols to avoid duplications. Existing scripts/kallsyms sorts
+symbols without .llvm.<hash> suffix. However, this causes quite some
+issues later on. Some users of kallsyms, such as livepatch, have to match
+symbols exactly.
 
-Applied to for-next/pstore, thanks!
+Address this by sorting full symbols at build time, and let kallsyms
+lookup APIs to match the symbols exactly.
 
-[1/1] pstore/ramoops: Fix typo as there is no "reserver"
-      https://git.kernel.org/kees/c/08043b1dabf8
+Changes v2 => v3:
+1. Remove the _without_suffix APIs, as kprobe will not use them.
+   (Masami Hiramatsu)
 
-Take care,
+v2: https://lore.kernel.org/live-patching/20240802210836.2210140-1-song@kernel.org/T/#u
 
--- 
-Kees Cook
+Changes v1 => v2:
+1. Update the APIs to remove all .XXX suffixes (v1 only removes .llvm.*).
+2. Rename the APIs as *_without_suffix. (Masami Hiramatsu)
+3. Fix another user from kprobe. (Masami Hiramatsu)
+4. Add tests for the new APIs in kallsyms_selftests.
 
+v1: https://lore.kernel.org/live-patching/20240730005433.3559731-1-song@kernel.org/T/#u
+
+Song Liu (2):
+  kallsyms: Do not cleanup .llvm.<hash> suffix before sorting symbols
+  kallsyms: Match symbols exactly with CONFIG_LTO_CLANG
+
+ kernel/kallsyms.c          | 55 +++++---------------------------------
+ kernel/kallsyms_selftest.c | 22 +--------------
+ scripts/kallsyms.c         | 31 ++-------------------
+ scripts/link-vmlinux.sh    |  4 ---
+ 4 files changed, 9 insertions(+), 103 deletions(-)
+
+--
+2.43.5
