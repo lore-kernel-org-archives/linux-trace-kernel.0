@@ -1,91 +1,116 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07591E7A47;
-	Wed,  7 Aug 2024 13:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9CC81741;
+	Wed,  7 Aug 2024 14:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723038303; cv=none; b=g3aWLqLpWj56tcHjUP3ESdCWYHwwzaERufR1bDY6aJ7QXpDTyCsFAp2QeBz/aUzLr4JkdPlb6ml1KAZbVJH9EHHtOv+mOnJl1yPkp3/KU0oKlU81zKMg4KNjzoh7chni4osLZb8hy7KgaXR71lro1EfOMnHP+MnmL30qAgAQMHo=
+	t=1723042746; cv=none; b=c7RKLtU35+m9g+lwPV6dQGvhzqo+tcAF5birZU9kFDgBBR7crfHiALGIfINcjZduMkouTs1dBaCvFG0eReLyo7oMyP9D6TAQNcC006yJbNJwAvJ56c/Y9VkchlQwpJ2K82l/1Oz0xIoJBrwadYcHlRRZa4WXhyanZzvQjei004A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723038303; c=relaxed/simple;
-	bh=0xuQ4iOhDsxhBk/3z5AcRuq999n8AJQaLh+BimCMlw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jb3ZrGq6z5NwwHJXn6eU0GjsTyHaT5k6r3n41bg7I7cEr9Oxsr/lHE1Fc+I5UR+uommelKkGhysouDoWi1HTvGg950CUlPYgVHySeCtX8MQTV1sdbP2kj7vO7S99UCSGiBG/ntd82gp+WiSSkB5lb9m26KEHgfqVKKfU85pbefk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=PDxsnHN6; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1723042746; c=relaxed/simple;
+	bh=jIZP+sl5/iGS7v+002+u+LGIiUOJgvJy5rw6ynbQTrw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Thd3JcRXIsmGSkMTQLDS+y2L+YaDCitWoevTk1gZG3dnhllLjFyJPFPmH28srwy0GUciKhahUDV1W0pVchutABRl9rKi3az1nTDujzFVibFVG75lDlCzCjPLMyT2999+Rv3sbgPR8s/SqNcGIEyqtp1Wap3ubU5W83uuhROBTAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AomYONQg; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="PDxsnHN6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+hnoNX97yZXGCx3rbzGZoJTpnmkh5qBJoQ7ckJ8plKc=; b=PDxsnHN6zjyWSjpCALBKZVWkPU
-	eID/coAG/TBbkytScXbMlELZvMimEWWVXbtVGDmEpMdYNRzikxJMVOvcLG2gq5pDVKotQS5UxJINE
-	C0So1axRuoTs+NQ4Qq3MWEEIfsYceq3ET3K0z+1ifGtmrtCxqKLtGprWkdHTNtXvztUXysS2nLZ+h
-	820jbmOuUaVgSRHVXRwHijcrkACe2N1N1qatRF0HmxBFNZ1qOQd27JHK0v4UybrYFNgya0Z4lZu3m
-	K+B1/Mdv7GsPbsRlDR/i0jRoa3BqY9bL+qU37DgEvJ8HXx3Ct6Bxl0WlVxjoF6ClqtuASitNLX8lo
-	AKKW/nfQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1sbgyD-00000002M29-0efs;
-	Wed, 07 Aug 2024 13:44:53 +0000
-Date: Wed, 7 Aug 2024 14:44:53 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathias Krause <minipli@grsecurity.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ilkka =?iso-8859-1?Q?Naulap=E4=E4?= <digirigawa@gmail.com>,
-	Brad Spengler <spender@grsecurity.net>
-Subject: Re: [PATCH 2/2] tracefs: Don't overlay 'struct inode'
-Message-ID: <20240807134453.GZ5334@ZenIV>
-References: <20240807115143.45927-1-minipli@grsecurity.net>
- <20240807115143.45927-3-minipli@grsecurity.net>
- <20240807093545.4ec51d61@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AomYONQg"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-71871d5e087so1140843a12.1;
+        Wed, 07 Aug 2024 07:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723042744; x=1723647544; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jIZP+sl5/iGS7v+002+u+LGIiUOJgvJy5rw6ynbQTrw=;
+        b=AomYONQguoWf/a1cj5l6r7Q1uvvQz3zfOUljhZfFCl/BqIeJAykfHC1R2JdD7qCXjv
+         7X6vuTWFW5+A8Om6GzI2M7Uul1l5yXFmY/dFh2l9L3MoJtmKjBgW1j97ggsnscbqT89K
+         Idy583StQMCtFS0XYHETGvA9cGnFhxhcVO6qPmJsQZO22nSL4NcnWbAevcn2t1GwkwHt
+         1jRxeM+q5E61iMxU1E3SM2xulh9AwdqBYm4uadgmMIBhTMqAi9TANoY9ENEzzLMwyYR3
+         nUTZ4yr94TDyx1Gd0Q5PzD0M2GNDRrC8ymQoXzBPDQBMEtMogTrIDB0628rDwGu6wiPc
+         Pjpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723042744; x=1723647544;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jIZP+sl5/iGS7v+002+u+LGIiUOJgvJy5rw6ynbQTrw=;
+        b=e+XToCuuLs7J/xqIHWVxMdZwo8K2cJOr4BTr4wVS3XgyhVDasY7gtHmNN4CvxnBLRc
+         Lv6QK5WKGH8ufhupUzX4dz7esyttTxhkTITq81SuLBYSqKZ342xqIeM1Ukt6MMxuIJt4
+         hdTkjMJUNosAWXs+bDQziKYp0alltXJ53wEGRwsqIAbJ+1+ph7EPtiajD/YAm7+D63DJ
+         MvcchEms9xNFUqHEyZVYzTLgO2fNFAKX/u7n69f+WI2UrxGcwxhC3t2auPAlXUZDYEZh
+         1Qx2YIkE7F1QHQmepC/cjPBbJMjAoJU0e0MH+L1Stn3IAVhPT/EkACNBKFkcB/cwpCWF
+         KjOA==
+X-Forwarded-Encrypted: i=1; AJvYcCV17Zl4SbAI5d8UGSMNVDC9KUclg0oiSA9AHfyPIh+UkrgdzUwAto7Wn137RyEnvXsEsY0rkcfL0SdkCZmUVxv3Ai0bUJ+sSDFDEEKig7Xzat39Lclqoz8eWwlFXTW+l3bHwT+Q9nBObew5iDqsglTodU1Zl1d3Z1LMFcHicH+DYebXTWKJk6bLUKM9gntSHg==
+X-Gm-Message-State: AOJu0YwrwryXL4QzV1VP8GzMK8MvVJW3GTP2QVCu24v0LCVNPRod/MG6
+	bugBKiLtd0/hPK+ta4VV+5pWWcrfprBnuXg9MJ4GzVoBZJha30fs
+X-Google-Smtp-Source: AGHT+IEdFO0DZXDicBs2YtJa8wnYLQgX0gWvZJCaWeA2D/Fqngr0IrjmGs2S8E5C38UI9Lm2WpxoaQ==
+X-Received: by 2002:a05:6a20:12d1:b0:1c4:87d5:c7c8 with SMTP id adf61e73a8af0-1c699550d42mr22562207637.3.1723042743916;
+        Wed, 07 Aug 2024 07:59:03 -0700 (PDT)
+Received: from smtpclient.apple ([47.89.225.180])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed2ac2dsm8488114b3a.194.2024.08.07.07.58.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2024 07:59:03 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240807093545.4ec51d61@gandalf.local.home>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
+ without .XXX suffix
+From: zhang warden <zhangwarden@gmail.com>
+In-Reply-To: <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+Date: Wed, 7 Aug 2024 22:58:45 +0800
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Song Liu <song@kernel.org>,
+ "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>,
+ Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>,
+ Joe Lawrence <joe.lawrence@redhat.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ "morbo@google.com" <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ Leizhen <thunder.leizhen@huawei.com>,
+ "kees@kernel.org" <kees@kernel.org>,
+ Kernel Team <kernel-team@meta.com>,
+ Matthew Maurer <mmaurer@google.com>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <87F7024C-9049-4573-829B-79261FC87984@gmail.com>
+References: <20240802210836.2210140-1-song@kernel.org>
+ <20240802210836.2210140-4-song@kernel.org>
+ <20240806144426.00ed349f@gandalf.local.home>
+ <B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
+ <20240806160049.617500de@gandalf.local.home>
+ <20240806160149.48606a0b@gandalf.local.home>
+ <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+To: Song Liu <songliubraving@meta.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-On Wed, Aug 07, 2024 at 09:35:45AM -0400, Steven Rostedt wrote:
 
-> Perhaps:
-> 
-> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-> index f704d8348357..ab6d6c3d835d 100644
-> --- a/fs/tracefs/internal.h
-> +++ b/fs/tracefs/internal.h
-> @@ -10,12 +10,12 @@ enum {
->  };
->  
->  struct tracefs_inode {
-> +	struct inode            vfs_inode;
-> +	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
->  	union {
-> -		struct inode            vfs_inode;
-> +		struct list_head	list;
->  		struct rcu_head		rcu;
->  	};
-> -	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
-> -	struct list_head	list;
->  	unsigned long           flags;
->  	void                    *private;
->  };
+> In my GCC built, we have suffixes like ".constprop.0", ".part.0", =
+".isra.0",=20
+> and ".isra.0.cold".=20
 
-	Your current variant gives you an RCU-delayed call of
-tracefs_free_inode(), which schedules an RCU-delayed call of
-tracefs_free_inode_rcu().
+A fresher's eye, I met sometime when try to build a livepatch module and =
+found some mistake caused by ".constprop.0" ".part.0" which is generated =
+by GCC.
 
-	Do you really need that double RCU delay to start with?
-Because if you do not, just do that list_del_rcu() in ->destroy_inode()
-(which is called without an RCU delay) and have kmem_cache_free()
-in ->free_inode() (which is called *with* RCU delay started after
-the call of ->destroy_inode()).
+These section with such suffixes is special and sometime the symbol =
+st_value is quite different. What is these kind of section (or symbol) =
+use for?
+
+Regards
+Wardenjohn
+
+
