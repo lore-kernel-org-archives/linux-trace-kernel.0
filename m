@@ -1,61 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490A113D882;
-	Wed,  7 Aug 2024 21:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C77153BE4;
+	Wed,  7 Aug 2024 21:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723065971; cv=none; b=Ap+yWZ/I3qiVjcmMvkmVZXCGUhUMrOGdK/+3ChnEwOe4Yua60pjFoVTvOCht0UKlbBsC8dM1neGnxYu+JRcDfbupYS21nrZZO0g5XgDmxYTFe5mqiFIEEc5ZhHbcunHLqs9a4Nyta/tTx4UVGcuE5sRY/G3FLceC7EiB8SYESNQ=
+	t=1723067039; cv=none; b=IGApIfhIh7APBBRFuR+BgMUs49OH3HxIfwXdG0OYOcGpzUtJ6mNFNcHkKFnFEBQkGOeyeupBhARw3sNf/lW/KLjxmLg7eEEDuCbyFi4fhpNCMv7wzoV3OgzChAxtGst2+hvnTXamjAA5hRRPKX1xcN3iYDUi++A0S3+Iozwt7D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723065971; c=relaxed/simple;
-	bh=+dF/DQa58fdxlXROLNrt5+UDez98yoEbLnwBDvuLovA=;
+	s=arc-20240116; t=1723067039; c=relaxed/simple;
+	bh=6RYRCXp3tJXW+jHyCgJ5i8XLYq6reLmVdAIigIAsnpQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DCsZGoeVdMOXqzkWsX8V+8KcHu3MfmM0sH0j5YT5J/vmPbnzqKAIk3dn6kqGPalV79NXSpGL5aeFj1eBlxe7nIWpgEYOrtq0s/RR0j8hMwl8PrMlS2ZG4lEV/UCIk72gKG8ChlR6dDl63j0+2QxrXfcK1OmDNl98BXUOkf1etSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg2YAtJX; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=JFRgg8JNFGB3dKZ7Qdbt8KrdCnhvwHFWv/9bLaE+tiL4E8ENdm5L574YbNYGTS2fGELQR680L94RzRrj2WuMHUt85pLY6NA6rtnKz5hSQvCNFm3Iqt9Js0/5y77Q6WDVRWWYQqFwgJF3OnE7WxQPHMkpbHq1XeVeWHcQSP4wN7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVKkwnSq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg2YAtJX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E05C32781;
-	Wed,  7 Aug 2024 21:26:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVKkwnSq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C697EC32781;
+	Wed,  7 Aug 2024 21:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723065969;
-	bh=+dF/DQa58fdxlXROLNrt5+UDez98yoEbLnwBDvuLovA=;
+	s=k20201202; t=1723067038;
+	bh=6RYRCXp3tJXW+jHyCgJ5i8XLYq6reLmVdAIigIAsnpQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pg2YAtJXDKA754iQY+O3kbADxENpHpsAdpDWJGatyql4gId7PKN+B0/r4xpU61ZuD
-	 jq6CjU3MmBp4GpJ5a72C1wIoebH4uH8slbBwBaMYINMx3rC3kEzfgJu25iLyWvS1Ao
-	 6efRaYvmuIGfp9bUGiz0EQJjCzABdQkcGQr70PklaEs92T8yHmfn3wegyqqPHCWQaC
-	 3wW3fFQObp2papUPaIyN8OIjNVASSOJ2aJgesRbYfdzYlyVGk2NSEGNPA7RCorDR9R
-	 esWqya0UovOtkENcu3bn22i5ErRNq1EICgVSya/85q5qFgAtkSyEDPi9gu0isR7WPk
-	 Lhod3alLOjvLw==
-Date: Thu, 8 Aug 2024 06:26:03 +0900
+	b=TVKkwnSqhiL/ZC4W7Lv5btmc7UDVlTEAJn+PaJOB+eJiGPyhploOr4XVUKcblWpQP
+	 DEG+OuIw39QXYKCLrls/pCuCytSOGdgl5/Jwhn504mOhYWI+R418MtbTrwgx3RZ0UM
+	 bS04EGHhNXOZl6tByOnbkhBvk7p54E8bAuHbXq0GHBGHFJyGS1eB39+mzvoQhZGb6Q
+	 EX7rT/EXbuxGdE0Iq9AQ1aEOyaCdiUpOtsZEW7FBm+k8XjP9WgMtAAriDm5ef+rqDh
+	 AxQLjV9ak817yT4rxPjXPM74l5orkBRohNE84CipC5ZlzmtLMgPqCU5IBe+C3Tzzbg
+	 nnv+iL3LAt73g==
+Date: Thu, 8 Aug 2024 06:43:53 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: Song Liu <songliubraving@meta.com>, Steven Rostedt
- <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
- "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr
- Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Nathan
- Chancellor <nathan@kernel.org>, "morbo@google.com" <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Luis Chamberlain
- <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
- "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
- Matthew Maurer <mmaurer@google.com>
-Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
- without .XXX suffix
-Message-Id: <20240808062603.f4a180fa2153881874eb0dc0@kernel.org>
-In-Reply-To: <CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
-References: <20240802210836.2210140-1-song@kernel.org>
-	<20240802210836.2210140-4-song@kernel.org>
-	<20240806144426.00ed349f@gandalf.local.home>
-	<B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
-	<20240806160049.617500de@gandalf.local.home>
-	<20240806160149.48606a0b@gandalf.local.home>
-	<6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
-	<20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
-	<BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
-	<20240807190809.cd316e7f813400a209aae72a@kernel.org>
-	<CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, peterz@infradead.org, oleg@redhat.com,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: get rid of bogus trace_uprobe hit counter
+Message-Id: <20240808064353.7470f6bfab89bd28dbcdebe0@kernel.org>
+In-Reply-To: <CAEf4Bzaq86fPVGWtXqvxLtbsk06coGBebnAO5YiuvuUF2v7++w@mail.gmail.com>
+References: <20240805202803.1813090-1-andrii@kernel.org>
+	<ZrHSts7eySxHs4wh@krava>
+	<CAEf4Bzaq86fPVGWtXqvxLtbsk06coGBebnAO5YiuvuUF2v7++w@mail.gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -66,61 +49,106 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Wed, 7 Aug 2024 08:33:07 -0700
-Sami Tolvanen <samitolvanen@google.com> wrote:
+On Tue, 6 Aug 2024 10:26:25 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> Hi,
+> On Tue, Aug 6, 2024 at 12:37 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Mon, Aug 05, 2024 at 01:28:03PM -0700, Andrii Nakryiko wrote:
+> > > trace_uprobe->nhit counter is not incremented atomically, so its value
+> > > is bogus in practice. On the other hand, it's actually a pretty big
+> > > uprobe scalability problem due to heavy cache line bouncing between CPUs
+> > > triggering the same uprobe.
+> >
+> > so you're seeing that in the benchmark, right? I'm curious how bad
+> > the numbers are
+> >
 > 
-> On Wed, Aug 7, 2024 at 3:08 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Wed, 7 Aug 2024 00:19:20 +0000
-> > Song Liu <songliubraving@meta.com> wrote:
-> >
-> > > Do you mean we do not want patch 3/3, but would like to keep 1/3 and part
-> > > of 2/3 (remove the _without_suffix APIs)? If this is the case, we are
-> > > undoing the change by Sami in [1], and thus may break some tracing tools.
-> >
-> > What tracing tools may be broke and why?
+> Yes. So, once we get rid of all the uprobe/uretprobe/mm locks (ongoing
+> work), this one was the last limiter to linear scalability.
 > 
-> This was a few years ago when we were first adding LTO support, but
-> the unexpected suffixes in tracing output broke systrace in Android,
-> presumably because the tools expected to find specific function names
-> without suffixes. I'm not sure if systrace would still be a problem
-> today, but other tools might still make assumptions about the function
-> name format. At the time, we decided to filter out the suffixes in all
-> user space visible output to avoid these issues.
-
-Thanks for explanation.
-IMHO, those tools might change their assumptions and decide the policy
-that it drops suffixes (as you did) or keep the suffixes as it is.
-
-> > For this suffix problem, I would like to add another patch to allow probing on
-> > suffixed symbols. (It seems suffixed symbols are not available at this point)
-> >
-> > The problem is that the suffixed symbols maybe a "part" of the original function,
-> > thus user has to carefully use it.
-> >
+> With this counter, I was topping out at about 12 mln/s uprobe
+> triggering (I think it was 32 CPUs, but I don't remember exactly now).
+> About 30% of CPU cycles were spent in this increment.
+> 
+> But those 30% don't paint the full picture. Once the counter is
+> removed, the same uprobe throughput jumps to 62 mln/s or so. So we
+> definitely have to do something about it.
+> 
 > > >
-> > > Sami, could you please share your thoughts on this?
+> > > Drop it and emit obviously unrealistic value in its stead in
+> > > uporbe_profiler seq file.
+> > >
+> > > The alternative would be allocating per-CPU counter, but I'm not sure
+> > > it's justified.
+> > >
+> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > > ---
+> > >  kernel/trace/trace_uprobe.c | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > >
+> > > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > > index 52e76a73fa7c..5d38207db479 100644
+> > > --- a/kernel/trace/trace_uprobe.c
+> > > +++ b/kernel/trace/trace_uprobe.c
+> > > @@ -62,7 +62,6 @@ struct trace_uprobe {
+> > >       struct uprobe                   *uprobe;
+> > >       unsigned long                   offset;
+> > >       unsigned long                   ref_ctr_offset;
+> > > -     unsigned long                   nhit;
+> > >       struct trace_probe              tp;
+> > >  };
+> > >
+> > > @@ -821,7 +820,7 @@ static int probes_profile_seq_show(struct seq_file *m, void *v)
+> > >
+> > >       tu = to_trace_uprobe(ev);
+> > >       seq_printf(m, "  %s %-44s %15lu\n", tu->filename,
+> > > -                     trace_probe_name(&tu->tp), tu->nhit);
+> > > +                trace_probe_name(&tu->tp), ULONG_MAX);
 > >
-> > Sami, I would like to know what problem you have on kprobes.
+> > seems harsh.. would it be that bad to create per cpu counter for that?
 > 
-> The reports we received back then were about registering kprobes for
-> static functions, which obviously failed if the compiler added a
-> suffix to the function name. This was more of a problem with ThinLTO
-> and Clang CFI at the time because the compiler used to rename _all_
-> static functions, but one can obviously run into the same issue with
-> just LTO.
+> Well, consider this patch a conversation starter. There are two
+> reasons why I'm removing the counter instead of doing per-CPU one:
+> 
+>   - it's less work to send out a patch pointing out the problem (but
+> the solution might change)
+>   - this counter was never correct in the presence of multiple
+> threads, so I'm not sure how useful it is.
+> 
+> Yes, I think we can do per-CPU counters, but do we want to pay the
+> memory price? That's what I want to get from Masami, Steven, or Peter
+> (whoever cares enough).
 
-Yeah, without 1/3 of this series, user can not specify llvm suffixed
-symbols on kprobe events. However, as perf-probe does, users can use
-the relative offset from a unique symbol too. (kprobe does not care
-the function boundary.)
+I would like to make it per-cpu counter *and* make it kconfig optional.
+Or just remove with the file (but it changes the user interface without
+option).
+
+For the kprobes, the profile file is useful because it shows "missed"
+counter. This tells user whether your trace data drops some events or not.
+But if uprobes profile only shows the number of hit, we can use the
+histogram trigger if needed.
 
 Thank you,
 
 > 
-> Sami
+> >
+> > jirka
+> >
+> > >       return 0;
+> > >  }
+> > >
+> > > @@ -1507,7 +1506,6 @@ static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
+> > >       int ret = 0;
+> > >
+> > >       tu = container_of(con, struct trace_uprobe, consumer);
+> > > -     tu->nhit++;
+> > >
+> > >       udd.tu = tu;
+> > >       udd.bp_addr = instruction_pointer(regs);
+> > > --
+> > > 2.43.5
+> > >
 
 
 -- 
