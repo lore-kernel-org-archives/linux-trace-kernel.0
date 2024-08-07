@@ -1,29 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E97713A3F0;
-	Wed,  7 Aug 2024 13:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835EA1EA0B4;
+	Wed,  7 Aug 2024 13:34:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723037608; cv=none; b=LzXNHgljauY97m/ffyU/4q3erZium2mWDpvgTurDVLdKS/xLpMjAeAGUSccWr6zvsN7J/F3ZDNVvlV0qgeN2yIFj0En0X0LTL7pn+ZtDbpsTnZQQn3H4ltp3oHyaU5eYUOzraa4+Jj5NZy8vHJzmd40CNkaWuHoDO/JY7vhNzik=
+	t=1723037696; cv=none; b=P0Iu/uwp+RQFyerQom6vP/2Hto5ojLc4rCKewge9yto/CrDz2r8aijwNaKRVGEM7XnaTrXRPjdVIgMNRk8dzCS+F686p+j46obFD1NAU0m2em4vDbWVcaDK4+F5fb5HZdKYnSHUT+pGh8BM/gY8vUHwrf9YppLKzs0FN5PYPIzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723037608; c=relaxed/simple;
-	bh=BBBxhGFN3mpe3H/SDIuazQz/Lh524jPf1nS8AgHDdfU=;
+	s=arc-20240116; t=1723037696; c=relaxed/simple;
+	bh=CTrdCerDujY+vsVqTwoflpjSLcluhDUvQV948FIeU3A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qqPdwWGKyHo0fJdOTPztMQuRTZO0MsHBLsU2A+e1nGFtRERvKtyyxOxCZkGjEgAWA19uQQoFCLYlpaG8Im97LZa7m/v6SDd6h2Z46hrxxwf4Gx6yVWkgZdR907KtvSWeux86kxxyq0bUM6ZJA0RLVkiiiKOnQU+YRuSH9T4bMXI=
+	 MIME-Version:Content-Type; b=KtFGyJ2L11FU/IKBbMIXYjcla/vo1GPNL9dtfI39j5T2Yfws7ikqQOdB5NFF0+0az8RsSPJGWhU8yRc3SQ9GcDmAyibuPhd5/70wii/F4VOa5pY1hczCFmlmeIrgGxRZRwo6yyJDloOY7z6HrPDwN+oWvNVqZ5Kfxl16Q+XOvAk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33357C32782;
-	Wed,  7 Aug 2024 13:33:27 +0000 (UTC)
-Date: Wed, 7 Aug 2024 09:34:17 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10869C32782;
+	Wed,  7 Aug 2024 13:34:54 +0000 (UTC)
+Date: Wed, 7 Aug 2024 09:35:45 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Mathias Krause <minipli@grsecurity.net>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] tracefs: inode alloc/free related fixes
-Message-ID: <20240807093417.4d93b11b@gandalf.local.home>
-In-Reply-To: <20240807115143.45927-1-minipli@grsecurity.net>
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Ilkka
+ =?UTF-8?B?TmF1bGFww6TDpA==?= <digirigawa@gmail.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, Brad Spengler <spender@grsecurity.net>
+Subject: Re: [PATCH 2/2] tracefs: Don't overlay 'struct inode'
+Message-ID: <20240807093545.4ec51d61@gandalf.local.home>
+In-Reply-To: <20240807115143.45927-3-minipli@grsecurity.net>
 References: <20240807115143.45927-1-minipli@grsecurity.net>
+	<20240807115143.45927-3-minipli@grsecurity.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,45 +37,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  7 Aug 2024 13:51:37 +0200
+On Wed,  7 Aug 2024 13:51:39 +0200
 Mathias Krause <minipli@grsecurity.net> wrote:
 
-> Hi Steven,
-> 
-> We ran into yet another tracefs related bug but, fortunately, were able
-> to root cause it ourselves.
-> 
-> The problem only occurs when CONFIG_RANDSTRUCT is enabled and one gets
-> (un)lucky to hit a random seed that'll overlay the 'rcu' member of the
-> union with a list_head in 'vfs_inode' -- quite unlikely but, apparently,
-> we're exceptional "lucky" with our testing ;)
-> 
-> The first patch is more of an API correctness fix, to bring the tracefs
-> inode cache in line with all the other filesystems. The second patch
-> actually fixes the bug, which, I think, may also be the cause for what
-> Ilkka is seeing[1].
+> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+> index f704d8348357..a7769857962a 100644
+> --- a/fs/tracefs/internal.h
+> +++ b/fs/tracefs/internal.h
+> @@ -10,10 +10,8 @@ enum {
+>  };
+>  
+>  struct tracefs_inode {
+> -	union {
+> -		struct inode            vfs_inode;
+> -		struct rcu_head		rcu;
+> -	};
+> +	struct inode		vfs_inode;
+> +	struct rcu_head		rcu;
 
-Ah, that would explain it, and why I never triggered it.
+I rather not make this structure any bigger for the rcu element that is not
+used until freed.
 
-> 
-> Please apply!
+>  	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+>  	struct list_head	list;
+>  	unsigned long           flags;
 
-I have an update though.
+Perhaps:
+
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index f704d8348357..ab6d6c3d835d 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -10,12 +10,12 @@ enum {
+ };
+ 
+ struct tracefs_inode {
++	struct inode            vfs_inode;
++	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+ 	union {
+-		struct inode            vfs_inode;
++		struct list_head	list;
+ 		struct rcu_head		rcu;
+ 	};
+-	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+-	struct list_head	list;
+ 	unsigned long           flags;
+ 	void                    *private;
+ };
+
 
 -- Steve
-
-> 
-> Thanks,
-> Mathias
-> 
-> [1] https://lore.kernel.org/all/CAE4VaREzY+a2PvQJYJbfh8DwB4OP7kucZG-e28H22xyWob1w_A@mail.gmail.com/
-> 
-> Mathias Krause (2):
->   tracefs: Fix inode allocation
->   tracefs: Don't overlay 'struct inode'
-> 
->  fs/tracefs/inode.c    | 2 +-
->  fs/tracefs/internal.h | 6 ++----
->  2 files changed, 3 insertions(+), 5 deletions(-)
-> 
-
