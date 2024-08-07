@@ -1,60 +1,60 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4C2364BC
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 20:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D90364BC
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 20:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723061992; cv=none; b=Sfq052AlU9Zw7pkVV5ZqVQt8RYNdoSIl8kOWlISRJnG4IvKe202xVU2mAlzG0f2r9KEBiKefiVEKEb7mSIVbpn27QnCgUtB4xxcj502qhNcBQ3zH8IxgCyXH4VwNA8agx0kFl3/vOvYejFvZDzMUqZRFucKPDlrpmufcBJUCROI=
+	t=1723062254; cv=none; b=MQuZ81DZtOEFKEWT97MNixl0qblm4FknyehJ0PTV9Vus8d3Hpeof6bwNmVfKSNiDGyq5zIpQCwUZS2YF+dX5Q/2ShjhceC7WnsknrM6XuNztGBNdBFWoN7wxFKoihWZvxXpyvwOx9xS4zzl8Zxv/8PGNHOrskWJfI4XwML8CvzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723061992; c=relaxed/simple;
-	bh=Mm5xBsEiMBizqy8uFWth36byIVjNv5JDXV//ZZE3CgE=;
+	s=arc-20240116; t=1723062254; c=relaxed/simple;
+	bh=TYgIdAzq3lDBI2YyReVQ2cAg1vqcDOqFH3Ci+NG71Ko=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nIFY6CqcQIrcsuUdL9n46k947ffJSWgpIi1QZ7hkZQD4rZdKC1NzCV0h61FVJF82XaIggqL7d9ZxAqgidIaq6oQ2RGCyuzAymqTQfLqDoc0PvHX0TQH8s4cNZJ1ivY6eFB5NZQRlcYO6AcYu3o8c6kcsVQLnqHyYk2NeEDBkk7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=TNLazwZP; arc=none smtp.client-ip=209.85.208.49
+	 In-Reply-To:Content-Type; b=gPMedXVAwLC6m8+0LG387CCwgnlEeVRqI8CD2nRj6RQf4g8IxvPUfqyi8Os3j+P3b1SvLXlVJNzTab2GLtUe/hYMf1cFbBpZpEf86iKUCxExajkErHPsJxGmdWKHxmyAZSFPkOJE0OeXzH7ITwhIIAeW6JzZAndhdyRZiBOYE/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net; spf=pass smtp.mailfrom=opensrcsec.com; dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b=XuGTXLIR; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=grsecurity.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensrcsec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="TNLazwZP"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5b9d48d1456so375509a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Aug 2024 13:19:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=grsecurity.net header.i=@grsecurity.net header.b="XuGTXLIR"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52efdf02d13so408945e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Aug 2024 13:24:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=grsecurity.net; s=grsec; t=1723061988; x=1723666788; darn=vger.kernel.org;
+        d=grsecurity.net; s=grsec; t=1723062251; x=1723667051; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=l7FXBsAmmx0UR85DFWCTR+dBZBa9+irjHF1xNp8r5Cc=;
-        b=TNLazwZPVc8f4wBBs65ruk0Fd1xfgAJfbj+gOPU6adNS1g8FvT3z9/BtaYPBukZL4U
-         9LSthpNK8UPtuZPSNsUWw43R+9O86kPdhYlN/RjuJaXUHELvkkz0HDQuaw1/rBS0FSgK
-         DMhAsvknulp62p+PYlG8Exm1MKC5I+YHdy6aT9KGUkd/J7nvq88OHUaKzmo69jFj1Dnx
-         p/w+VqT5Ubs9y/6SIe5ElZ3oZqaWbtC4c1nEYOtba3SdaQmBlYLAAsF3h0fuFey5fRf4
-         QQtKzjBG6ULntcK07KqPuJeoEAR/MDbtSm8cTq9j442pURpDI3PKVbGoBI+WoAjdrgZq
-         t9hg==
+        bh=iNk4Cu9oSx8itq3xzUHxSImZEvn1IJh/znmJ08m2Xck=;
+        b=XuGTXLIRBwX8lairgqmwAeBkQakbNmE8OyCHyN5NeWpIBPJePqIk3sXgLB4m6dWULO
+         8hshUXiRjZZa4uHWdBn29fpvOG4ZiMrg1CffwgYN6+fmQ42XPR20KG3aqjYIflpIAMkE
+         +Dv/p0Ro5x2lIi1k9iM5c8o39wBPPULiCM1OrPqUczTBgf++tFq+BD9vKQHyl+ERoa0w
+         GzIY0bRVO4LjWNj3/mHs0cTgtZPsdXhEruRkIjDapvPLfLXm82hH16YIY2ev+rT2AELH
+         xiiNoEavsICqDkD62+hNgI0TqKRcTcqI/y0G7HLVa6AgSw2bBMjFjzRy8aw+9SFNHOHY
+         w1ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723061988; x=1723666788;
+        d=1e100.net; s=20230601; t=1723062251; x=1723667051;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l7FXBsAmmx0UR85DFWCTR+dBZBa9+irjHF1xNp8r5Cc=;
-        b=VJl/4ndbQtVM3xCz9cZuMe8jpsKhjuk1YUdsY1cu4a/oc/AFCfdL2mEIzid0ryCREX
-         FUTXwTOHaJDokyWIwDpF6L8DYGeOUlFSsH/D1U5djfcmvlp+scgNsRaJycu25/BtWuLn
-         1U2UcC98pll7g6Pclh0sAw2T5XAsiZjr1pdYtAzUVgWvMhG6yuEz5thyp9LpfcPsduYg
-         mIhVTWFGVi6yIHUJzFOKGqMlpdWdXNGA+yk59xwO3vkWU1p9euF6c9F6fw9WaN+5HQEE
-         NrGFVoMTTjC00xcopCR1Mz0K7cqepjVTjST+aA0HgC3tB0qZAuoT/QiuqkU2R1vjxCJ9
-         1BMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtDWLc1l9RxGzV504Htk+lbWHcrsHnoP6zmfZ0Fa44eIWttxMvQos8HxXstChUpnBk9xqw4CYhLLJDtM6kdeCyuYDTwTpS1wDzHxtT96LRpUpY
-X-Gm-Message-State: AOJu0YwQnUxzhm86n4y9rEPbcQBc6a5yv8Fwxt0Df++iFQEAXgXIsKjS
-	7f/h8Pc+dE9+SRg2kHLfE0bP31AN9TmQiDdZbEA1AzRjIam2h7/uRs7D09lfkec=
-X-Google-Smtp-Source: AGHT+IGq+5OOobsAtqc09kR2IC6V2HMMsXNeozGUItHZXoV2jzuY8WjysyjBN8Z08Bx6GiPskP/Ntw==
-X-Received: by 2002:a05:6402:2690:b0:5b4:cbba:902a with SMTP id 4fb4d7f45d1cf-5bba3672b67mr2880824a12.4.1723061987575;
-        Wed, 07 Aug 2024 13:19:47 -0700 (PDT)
+        bh=iNk4Cu9oSx8itq3xzUHxSImZEvn1IJh/znmJ08m2Xck=;
+        b=SUajYh6OAU/k0AuoNQe8Ceg35s48eEcosdtmBLwFr8YLPF2ZEyWe4oJePg/wl+A7rf
+         3RUt7kQkeAtebDhIG8I7Hhk42Q6InKG2j13vIM4VIA5afLTAtZNXYrZ5IxX5wWMAdGZi
+         8zbBE83e4BXddT+R8BVRVYL3PwF8naxAAuNBCm/xFoxrhRTFi7MXm+VSSO/6qYHW8yVZ
+         14Lm4iQBvW5E2eU1j/TMQ43PbQUC9ttSfFWTEYPf8x5vhGgmMpX6p1QjZmBiqhqhyNwN
+         DPS2cSH1gicMv5Q0Z/G6vJsid3z12TSPV2bpXp0azlazHOpdXAbN9jYrDCk5rAZiSIH5
+         RqKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXE/JqmmzsiPhu5KoX2rdCVBbVez8xIagZkuwD/RJGFpLFbuqS3/O9WlsDEa48BVCAqUp28YzFuB1gFmQNQ+hHJp9YpusXzrj9NbolSpObWnwm6
+X-Gm-Message-State: AOJu0YySzv/yYtG0oMBd7eXgFS+y2HDDDbDOxk349/CzB3pvD5BrIYU5
+	dtguJAYimPS9rql7+49OI3x7+nXSTnXJCJllWJQT3pfRYQkqofBX5qhSu+bF70E=
+X-Google-Smtp-Source: AGHT+IECYnNuieGTAlEZH7ObyQIZpLVSySYzDhc1oG6OjCO52lqln+B+MkyK/wrWRz68pgqQqwJwRQ==
+X-Received: by 2002:a05:6512:ad4:b0:52c:8342:6699 with SMTP id 2adb3069b0e04-530bb3bc058mr17852673e87.55.1723062251039;
+        Wed, 07 Aug 2024 13:24:11 -0700 (PDT)
 Received: from ?IPV6:2003:f6:af11:9b00:1236:f9a6:4d0d:776? (p200300f6af119b001236f9a64d0d0776.dip0.t-ipconnect.de. [2003:f6:af11:9b00:1236:f9a6:4d0d:776])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ba442ed7f1sm5650505a12.81.2024.08.07.13.19.46
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8067efcf0fsm179933166b.145.2024.08.07.13.24.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Aug 2024 13:19:47 -0700 (PDT)
-Message-ID: <178d8e10-1dd8-48de-858f-1a04c419c331@grsecurity.net>
-Date: Wed, 7 Aug 2024 22:19:46 +0200
+        Wed, 07 Aug 2024 13:24:10 -0700 (PDT)
+Message-ID: <e10e465e-98d9-430f-bb71-cf4b8e046a71@grsecurity.net>
+Date: Wed, 7 Aug 2024 22:24:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,16 +63,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 2/2] tracefs: Don't overlay 'struct inode'
-To: Steven Rostedt <rostedt@goodmis.org>
+To: Al Viro <viro@zeniv.linux.org.uk>, Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org, =?UTF-8?Q?Ilkka_Naulap=C3=A4=C3=A4?=
- <digirigawa@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
- Brad Spengler <spender@grsecurity.net>
+ <digirigawa@gmail.com>, Brad Spengler <spender@grsecurity.net>
 References: <20240807115143.45927-1-minipli@grsecurity.net>
  <20240807115143.45927-3-minipli@grsecurity.net>
- <20240807093545.4ec51d61@gandalf.local.home>
+ <20240807093545.4ec51d61@gandalf.local.home> <20240807134453.GZ5334@ZenIV>
 Content-Language: en-US, de-DE
 From: Mathias Krause <minipli@grsecurity.net>
 Autocrypt: addr=minipli@grsecurity.net; keydata=
@@ -109,86 +108,48 @@ Autocrypt: addr=minipli@grsecurity.net; keydata=
  zz3lozuC5nsm1nIbY62mR25Kikx7N6uL7TAZQWazURzVRe1xq2MqcF+18JTDdjzn53PEbg7L
  VeNDGqQ5lJk+rATW2VAy8zasP2/aqCPmSjlCogC6vgCot9mj+lmMkRUxspxCHDEms13K41tH
  RzDVkdgPJkL/NFTKZHo5foFXNi89kA==
-In-Reply-To: <20240807093545.4ec51d61@gandalf.local.home>
+In-Reply-To: <20240807134453.GZ5334@ZenIV>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07.08.24 15:35, Steven Rostedt wrote:
-> On Wed,  7 Aug 2024 13:51:39 +0200
-> Mathias Krause <minipli@grsecurity.net> wrote:
+On 07.08.24 15:44, Al Viro wrote:
+> On Wed, Aug 07, 2024 at 09:35:45AM -0400, Steven Rostedt wrote:
 > 
+>> Perhaps:
+>>
 >> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
->> index f704d8348357..a7769857962a 100644
+>> index f704d8348357..ab6d6c3d835d 100644
 >> --- a/fs/tracefs/internal.h
 >> +++ b/fs/tracefs/internal.h
->> @@ -10,10 +10,8 @@ enum {
+>> @@ -10,12 +10,12 @@ enum {
 >>  };
 >>  
 >>  struct tracefs_inode {
->> -	union {
+>> +	struct inode            vfs_inode;
+>> +	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+>>  	union {
 >> -		struct inode            vfs_inode;
->> -		struct rcu_head		rcu;
->> -	};
->> +	struct inode		vfs_inode;
->> +	struct rcu_head		rcu;
-> 
-> I rather not make this structure any bigger for the rcu element that is not
-> used until freed.
-
-Uhm, at least for my config, it won't consume more memory, as the slab
-object is big enough to cover up for the additional two machine words:
-
-root@deb11-amd64:~# slabinfo tracefs_inode_cache
-
-Slabcache: tracefs_inode_cache  Aliases:  0 Order :  3 Objects: 144
-** Reclaim accounting active
-
-Sizes (bytes)     Slabs              Debug                Memory
-------------------------------------------------------------------------
-Object :    1200  Total  :       6   Sanity Checks : Off  Total:  196608
-SlabObj:    1328  Full   :       4   Redzoning     : Off  Used :  172800
-SlabSiz:   32768  Partial:       0   Poisoning     : Off  Loss :   23808
-Loss   :     128  CpuSlab:       2   Tracking      : Off  Lalig:   18432
-Align  :       8  Objects:      24   Tracing       : Off  Lpadd:    5376
-[...]
-
-While the size of 'struct tracefs_inode' is 1200 bytes for my kernel
-build (LOCKDEP bloats it quite a lot), the slab object size is 1328
-bytes, i.e. 128 bytes wasted per object which can, for sure, cover up
-for these additional members.
-
-> 
->>  	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
->>  	struct list_head	list;
+>> +		struct list_head	list;
+>>  		struct rcu_head		rcu;
+>>  	};
+>> -	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
+>> -	struct list_head	list;
 >>  	unsigned long           flags;
+>>  	void                    *private;
+>>  };
 > 
-> Perhaps:
+> 	Your current variant gives you an RCU-delayed call of
+> tracefs_free_inode(), which schedules an RCU-delayed call of
+> tracefs_free_inode_rcu().
 > 
-> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-> index f704d8348357..ab6d6c3d835d 100644
-> --- a/fs/tracefs/internal.h
-> +++ b/fs/tracefs/internal.h
-> @@ -10,12 +10,12 @@ enum {
->  };
->  
->  struct tracefs_inode {
-> +	struct inode            vfs_inode;
-> +	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
->  	union {
-> -		struct inode            vfs_inode;
-> +		struct list_head	list;
->  		struct rcu_head		rcu;
->  	};
-> -	/* The below gets initialized with memset_after(ti, 0, vfs_inode) */
-> -	struct list_head	list;
->  	unsigned long           flags;
->  	void                    *private;
->  };
+> 	Do you really need that double RCU delay to start with?
+> Because if you do not, just do that list_del_rcu() in ->destroy_inode()
+> (which is called without an RCU delay) and have kmem_cache_free()
+> in ->free_inode() (which is called *with* RCU delay started after
+> the call of ->destroy_inode()).
 
-I'd rather not exchange trashing one RCU-walked list for another. Or how
-will this play out for the RCU walk in tracefs_apply_options() if
-there's a concurrent call to tracefs_free_inode() which will now trash
-the list_head tracefs_apply_options() is walking over?
+Jepp, sounds much better indeed and doesn't require 'struct
+tracefs_inode' to have its own 'struct rcu_head' member.
 
 Thanks,
 Mathias
