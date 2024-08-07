@@ -1,100 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50179158DDC;
-	Tue,  6 Aug 2024 20:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A704E817;
+	Wed,  7 Aug 2024 00:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722977968; cv=none; b=jnyKKzJB86LyfIogb9FV3tp2NilDiN6apXGRofxGwLftFU0rLww3QykJbxNu/JGQmaBXg0KEzfkxM5cOZBmzS/wEyYYJzwpEln4RjpW/ZdTox2/8OBjSSlZERp4+YRXLFA1NiQ04kGzUh1y6vLmec0lyI0FxDbuWMyYiYqB6Bek=
+	t=1722988928; cv=none; b=DYJupc3n4PnL2gcs7byUckOVZvFTfW18Fv07twd0dXrQXu7wiWYWCHWxSjQcDf0jH0U6s8OZDDRmwGA83gAFBHl5w4l+naHKq65aeLQbTg6EraXvm69iAk6Wi3dMF0CBWERE5NXJodsmJYQudJKjmiL6D9BaZNxdxHm2uLo7pN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722977968; c=relaxed/simple;
-	bh=oQ7qityzvDiPJTZS3Szpb70s0aIQdtnagYi0Qj0kT00=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AEEW477lcgjBGq7yGuKF5TgqGMVBoWFAcobVzlRbN7vhgmmESrDqCfXXAb9DqAlc2Ij2Bei5pW/M8Tayz+OIzBDetdw526ZFhNlJCleNjqROiheIb20yDLN4vhBV1/3snfrIWF+65LbhW/O1DeLVQHFTSmLsgTz7bBVkvwHV75s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bD3DuZ2+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722988928; c=relaxed/simple;
+	bh=iZQwoKXmd4y5JYgAIsSoD5NbVcgC7h8OZcIMlcokcP8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=q2NHxnpTwwzkTt7ghnXzXTo8XJSuLn+A6FHuWhrdLU1Vh9hiEZLYB8KD6H3GZ9h+bsO45iArBxOiB1p9JfohSP1X2QoVAaSpkmsCb40/Aczt+LEisAugkI335fCRdXkf57mFneZJqOgj02qNLNa316ZDUzkkd13MLqWF/BltyMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VyArvJZm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bD3DuZ2+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A82C3C32786;
-	Tue,  6 Aug 2024 20:59:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VyArvJZm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C2FDC32786;
+	Wed,  7 Aug 2024 00:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722977967;
-	bh=oQ7qityzvDiPJTZS3Szpb70s0aIQdtnagYi0Qj0kT00=;
+	s=k20201202; t=1722988928;
+	bh=iZQwoKXmd4y5JYgAIsSoD5NbVcgC7h8OZcIMlcokcP8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bD3DuZ2+SxmgaCgzJWHtZH/BYbg66l2gd+LZppP8V0SjvcVqsJKtaaiDssO1v+eTr
-	 DepGkqmJxITFe54Lre2tS/vEGrc22Vu63ljH1RRMC3HUSH2BP59CbVsybYRx5BroxY
-	 QzqlaSzYfm+jheMBLL1UJu7QHVFmgQmRAU9zimWldMZ8D1XFiUqchTvoNAaiXS7hzH
-	 URysUscNMnVRS9xQk9PTPdzDrWF0jmd8XP7i5YGixpWl4NoGrnzp/dD/HTEvG8s/13
-	 HUuL28HXkNnUqRHm0Cu4xB/2+bNxvDDDYP/Iqrw7CXRtllgNPubXkFhZKGOucEcp/W
-	 CHGsOnZxxgIOw==
-Date: Tue, 6 Aug 2024 13:59:24 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
- Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
- <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, Kaiyuan
- Zhang <kaiyuanz@google.com>
-Subject: Re: [PATCH net-next v18 07/14] memory-provider: dmabuf devmem
- memory provider
-Message-ID: <20240806135924.5bb65ec7@kernel.org>
-In-Reply-To: <20240805212536.2172174-8-almasrymina@google.com>
-References: <20240805212536.2172174-1-almasrymina@google.com>
-	<20240805212536.2172174-8-almasrymina@google.com>
+	b=VyArvJZm6q6+ZSi0ZNleZzuoGBGiVnfpUl+UtLX+KRz8pcLWO43m+UOr/54QSXwtF
+	 QL9IVNfonB8WhvjE6swnefbUW25OWEYtjdKguZsDrKD50vGML8FxoGSccjXRLN42Xh
+	 UjvVPH0DCG/JQOLqVAeP7ds6+tVdttWWRIbhqav/J+HSU2sUa6yspbbSpGkijv2c9c
+	 E2UPQ2taDlDLTSoVyK8Hk5V5MbywU7rsnfTA706mgULWSNUz1LuQhAefVi16fG4hV9
+	 d3iy3B7n3OfJOMPTsgbht67bb9mSsZUgMI9smplZIuFMJa3MK1PVpuY2TcwTfcZ+AB
+	 o6fNjIOPvp9KQ==
+Date: Wed, 7 Aug 2024 09:01:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Song Liu <songliubraving@meta.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
+ "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr
+ Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Nathan
+ Chancellor <nathan@kernel.org>, "morbo@google.com" <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
+ "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
+ Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
+ without .XXX suffix
+Message-Id: <20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
+In-Reply-To: <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+References: <20240802210836.2210140-1-song@kernel.org>
+	<20240802210836.2210140-4-song@kernel.org>
+	<20240806144426.00ed349f@gandalf.local.home>
+	<B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
+	<20240806160049.617500de@gandalf.local.home>
+	<20240806160149.48606a0b@gandalf.local.home>
+	<6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon,  5 Aug 2024 21:25:20 +0000 Mina Almasry wrote:
-> +	if (pool->p.queue) {
-> +		/* We rely on rtnl_lock()ing to make sure netdev_rx_queue
-> +		 * configuration doesn't change while we're initializing the
-> +		 * page_pool.
-> +		 */
-> +		ASSERT_RTNL();
-> +		pool->mp_priv = pool->p.queue->mp_params.mp_priv;
+On Tue, 6 Aug 2024 20:12:55 +0000
+Song Liu <songliubraving@meta.com> wrote:
 
-How do you know that the driver:
- - supports net_iov at all (let's not make implicit assumptions based
-   on presence of queue API);
- - supports net_iov in current configuration (eg header-data split is
-   enabled)
- - supports net_iov for _this_ pool (all drivers must have separate
-   buffer pools for headers and data for this to work, some will use
-   page pool for both)
+> 
+> 
+> > On Aug 6, 2024, at 1:01 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > On Tue, 6 Aug 2024 16:00:49 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> >>>>> + if (IS_ENABLED(CONFIG_LTO_CLANG) && !addr)
+> >>>>> + addr = kallsyms_lookup_name_without_suffix(trace_kprobe_symbol(tk));
+> >>>>> +    
+> >>>> 
+> >>>> So you do the lookup twice if this is enabled?
+> >>>> 
+> >>>> Why not just use "kallsyms_lookup_name_without_suffix()" the entire time,
+> >>>> and it should work just the same as "kallsyms_lookup_name()" if it's not
+> >>>> needed?    
+> >>> 
+> >>> We still want to give priority to full match. For example, we have:
+> >>> 
+> >>> [root@~]# grep c_next /proc/kallsyms
+> >>> ffffffff81419dc0 t c_next.llvm.7567888411731313343
+> >>> ffffffff81680600 t c_next
+> >>> ffffffff81854380 t c_next.llvm.14337844803752139461
+> >>> 
+> >>> If the goal is to explicitly trace c_next.llvm.7567888411731313343, the
+> >>> user can provide the full name. If we always match _without_suffix, all
+> >>> of the 3 will match to the first one. 
+> >>> 
+> >>> Does this make sense?  
+> >> 
+> >> Yes. Sorry, I missed the "&& !addr)" after the "IS_ENABLED()", which looked
+> >> like you did the command twice.
+> > 
+> > But that said, does this only have to be for llvm? Or should we do this for
+> > even gcc? As I believe gcc can give strange symbols too.
+> 
+> I think most of the issue comes with LTO, as LTO promotes local static
+> functions to global functions. IIUC, we don't have GCC built, LTO enabled
+> kernel yet.
+> 
+> In my GCC built, we have suffixes like ".constprop.0", ".part.0", ".isra.0", 
+> and ".isra.0.cold". We didn't do anything about these before this set. So I 
+> think we are OK not handling them now. We sure can enable it for GCC built
+> kernel in the future. 
 
-What comes to mind is adding an "I can gobble up net_iovs from this
-pool" flag in page pool params (the struct that comes from the driver),
-and then on the installation path we can check if after queue reset
-the refcount of the binding has increased. If it did - driver has
-created a pool as we expected, otherwise - fail, something must be off.
-Maybe that's a bit hacky?
+Hmm, I think it should be handled as it is. This means it should do as
+livepatch does. Since I expected user will check kallsyms if gets error,
+we should keep this as it is. (if a symbol has suffix, it should accept
+symbol with suffix, or user will get confused because they can not find
+which symbol is kprobed.)
+
+Sorry about the conclusion (so I NAK this), but this is a good discussion. 
+
+Thanks,
+
+> 
+> Thanks,
+> Song
+> 
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
