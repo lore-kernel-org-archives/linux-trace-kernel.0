@@ -1,160 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05251D1F73;
-	Wed,  7 Aug 2024 10:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3AA1DD39A
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 10:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723025296; cv=none; b=VAC0geUZsNeZ8GMH1H9cx8xkujfvZfSa6l0VgAiMxaqMbMZcjFHVy5hNXI5Qw5HFCMwbpfOYRavs+vMfHwM6tB/j38KOVdbiZ6ifegDh1XOGddJXvKjt0/6Kj5UUYbYG4l7MPeuR4ezfhP/21KNkS9u0c+dHgCex4rwReIiOmvA=
+	t=1723025886; cv=none; b=VhsN8PZSI3El6pFsZ+0xvMwTWfX1gZzq69qr8PoLosjmcC6z+TSCX2E5gv8KLR5hRsB8MLBtoB2CunLudCB0QQkv4FO4NcNOLdGtuohXKawDJpN9KmJjdEHkPeAekoKK4Uw40+maSnrK9BqYFdUSdgtA08D8CALVEdMDSiDac2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723025296; c=relaxed/simple;
-	bh=pbz9/mWikLj58LPIdHZGqQeOO3Hv+c3Hn1bmQqtGTqE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=n/M3HFW6h9pFEvgDBhoRiAMLZ1GBRGTUPwr4gFKnW92NnigUCf9/WPv05jtazXY/nfZfkIXB2e9u3s+zsBEQG1DIBYAsJ7XEHYXLRVhC+qBUhDCOOwniMOgMaFT90XUzTgKy1nWCem//qDZxPXHYdjZtKywynMV28TLyAlV3uOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGwv+vRz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723025886; c=relaxed/simple;
+	bh=dU34Jk/zdBG66KdZqoSvUYqEsvh2JWx8pa6AroZH7QU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IxajJOIAC3vpt7c9cP15vm3/Qv/xUcSHXIq60VLx+URhnINK1m1TNcq+7pf2QIqlIKA900dbfwN5iAhZNIMnWvlB+oT7LAHw/w05uy3K5UUSQeIOq3RcOdmXGzVWd9V8/56BrM9WFXoQ9LHXWyAJplfYI/5K8uJOA0UyHcVqFQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O2ItaG2m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGwv+vRz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E3CC32782;
-	Wed,  7 Aug 2024 10:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723025295;
-	bh=pbz9/mWikLj58LPIdHZGqQeOO3Hv+c3Hn1bmQqtGTqE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JGwv+vRzTcQ/uEot7V4X4z1XWtWOrbl9g9l//D1Nyh/AxgOt7LhAFiqLL8DBuyrsC
-	 3INwE3Wn0kxGybNgy0/e2C8aF3fIld4pSPt4R1ZY1RybxNcL2I7BM8rJH5S68rBZtV
-	 E2Z0S8T55WUSOGxp+cHmdbMgeMWdNDwP/CAOc/wkbo1OhSKAH88I1y0mpdE9drrqRg
-	 zjUehHRCWdVufCGZVz1vJJbcqbrlR71U6AJy/DIXT6WhN/EGF90M3LZlaj/iFSllSV
-	 Dh45g7qpHLyXl1lt9aMTz5eYBnzTAclzE+xpZLZRDZt7VoMBbZ4YOijy6J5i8FpFM1
-	 KW1eQv3GTbAtQ==
-Date: Wed, 7 Aug 2024 19:08:09 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Song Liu <songliubraving@meta.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
- "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr
- Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Nathan
- Chancellor <nathan@kernel.org>, "morbo@google.com" <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Luis Chamberlain
- <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
- "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
- Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
- <samitolvanen@google.com>
-Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
- without .XXX suffix
-Message-Id: <20240807190809.cd316e7f813400a209aae72a@kernel.org>
-In-Reply-To: <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
-References: <20240802210836.2210140-1-song@kernel.org>
-	<20240802210836.2210140-4-song@kernel.org>
-	<20240806144426.00ed349f@gandalf.local.home>
-	<B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
-	<20240806160049.617500de@gandalf.local.home>
-	<20240806160149.48606a0b@gandalf.local.home>
-	<6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
-	<20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
-	<BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2ItaG2m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723025884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fToBX/B6bWnrDNLZMpsbxGATEy0ptfzvMuaWk2wqyMQ=;
+	b=O2ItaG2mut55LPyXYZnxDXGSKLmvf+w0JSxBxfYWKurPZdI0L8Up3Lh4bz84K6N1srUJBX
+	zZt0YhNZnIk0HQiXxKeS859tWCNL/opRgx5VYWDlBfAeNixtdwVH9yCyWTx5HjtIIxrpea
+	tMUEttNTUbgB8rDvL6tV/dN8PfuL2Sc=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-303-nAzyQwZnOiWBYSemnvehCg-1; Wed,
+ 07 Aug 2024 06:17:58 -0400
+X-MC-Unique: nAzyQwZnOiWBYSemnvehCg-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 419A01944AA9;
+	Wed,  7 Aug 2024 10:17:55 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.97])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 118BD1953BB9;
+	Wed,  7 Aug 2024 10:17:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  7 Aug 2024 12:17:53 +0200 (CEST)
+Date: Wed, 7 Aug 2024 12:17:47 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
+ on siglock
+Message-ID: <20240807101746.GA27715@redhat.com>
+References: <20240801082407.1618451-1-liaochang1@huawei.com>
+ <20240801140639.GE4038@redhat.com>
+ <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
+ <20240802092406.GC12343@redhat.com>
+ <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
+ <20240806172529.GC20881@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240806172529.GC20881@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, 7 Aug 2024 00:19:20 +0000
-Song Liu <songliubraving@meta.com> wrote:
+So. Liao, I am sorry, but I dislike your patch/approach in any case.
 
-> 
-> 
-> > On Aug 6, 2024, at 5:01 PM, Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > On Tue, 6 Aug 2024 20:12:55 +0000
-> > Song Liu <songliubraving@meta.com> wrote:
-> > 
-> >> 
-> >> 
-> >>> On Aug 6, 2024, at 1:01 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >>> 
-> >>> On Tue, 6 Aug 2024 16:00:49 -0400
-> >>> Steven Rostedt <rostedt@goodmis.org> wrote:
-> >>> 
-> >>>>>>> + if (IS_ENABLED(CONFIG_LTO_CLANG) && !addr)
-> >>>>>>> + addr = kallsyms_lookup_name_without_suffix(trace_kprobe_symbol(tk));
-> >>>>>>> +    
-> >>>>>> 
-> >>>>>> So you do the lookup twice if this is enabled?
-> >>>>>> 
-> >>>>>> Why not just use "kallsyms_lookup_name_without_suffix()" the entire time,
-> >>>>>> and it should work just the same as "kallsyms_lookup_name()" if it's not
-> >>>>>> needed?    
-> >>>>> 
-> >>>>> We still want to give priority to full match. For example, we have:
-> >>>>> 
-> >>>>> [root@~]# grep c_next /proc/kallsyms
-> >>>>> ffffffff81419dc0 t c_next.llvm.7567888411731313343
-> >>>>> ffffffff81680600 t c_next
-> >>>>> ffffffff81854380 t c_next.llvm.14337844803752139461
-> >>>>> 
-> >>>>> If the goal is to explicitly trace c_next.llvm.7567888411731313343, the
-> >>>>> user can provide the full name. If we always match _without_suffix, all
-> >>>>> of the 3 will match to the first one. 
-> >>>>> 
-> >>>>> Does this make sense?  
-> >>>> 
-> >>>> Yes. Sorry, I missed the "&& !addr)" after the "IS_ENABLED()", which looked
-> >>>> like you did the command twice.
-> >>> 
-> >>> But that said, does this only have to be for llvm? Or should we do this for
-> >>> even gcc? As I believe gcc can give strange symbols too.
-> >> 
-> >> I think most of the issue comes with LTO, as LTO promotes local static
-> >> functions to global functions. IIUC, we don't have GCC built, LTO enabled
-> >> kernel yet.
-> >> 
-> >> In my GCC built, we have suffixes like ".constprop.0", ".part.0", ".isra.0", 
-> >> and ".isra.0.cold". We didn't do anything about these before this set. So I 
-> >> think we are OK not handling them now. We sure can enable it for GCC built
-> >> kernel in the future.
-> > 
-> > Hmm, I think it should be handled as it is. This means it should do as
-> > livepatch does. Since I expected user will check kallsyms if gets error,
-> > we should keep this as it is. (if a symbol has suffix, it should accept
-> > symbol with suffix, or user will get confused because they can not find
-> > which symbol is kprobed.)
-> > 
-> > Sorry about the conclusion (so I NAK this), but this is a good discussion. 
-> 
-> Do you mean we do not want patch 3/3, but would like to keep 1/3 and part 
-> of 2/3 (remove the _without_suffix APIs)? If this is the case, we are 
-> undoing the change by Sami in [1], and thus may break some tracing tools. 
+UTASK_SSTEP_DENY_SIGNAL complicates the state machine. And I don't like the fact
+that set_thread_flag(TIF_SIGPENDING) is called twice, from handle_singlestep()
+and uprobe_post_sstep_notifier(), this complicates the logic even more.
 
-What tracing tools may be broke and why?
+We need a flag, not the new state.
 
-For this suffix problem, I would like to add another patch to allow probing on
-suffixed symbols. (It seems suffixed symbols are not available at this point)
+And if I read this patch correctly it is wrong:
 
-The problem is that the suffixed symbols maybe a "part" of the original function,
-thus user has to carefully use it.
+	- uprobe_deny_signal() clears TIF_SIGPENDING and sets UTASK_SSTEP_DENY_SIGNAL
 
-> 
-> Sami, could you please share your thoughts on this? 
+	- another signal cames after that and sets TIF_SIGPENDING again
 
-Sami, I would like to know what problem you have on kprobes.
+	- in this case the task won't return to user-space and execute the probed
+	  insn, exit_to_user_mode_loop() will notice another TIF_SIGPENDING and
+	  call arch_do_signal_or_restart()->get_signal() again.
 
-Thank you,
+	- get_signal() will call uprobe_deny_signal() again hit
 
-> 
-> If this works, I will send next version with 1/3 and part of 2/3. 
-> 
+		WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+
+
+And no, we shouldn't change this check into UTASK_SSTEP || UTASK_SSTEP_DENY_SIGNAL.
+Again, the fact that uprobe_deny_signal() cleared TIF_SIGPENDING must not be the
+new state.
+
+Oleg.
+
+On 08/06, Oleg Nesterov wrote:
+>
+> On 08/06, Liao, Chang wrote:
+> >
+> > You're absolutely right. handle_signlestep() has chance to handle _DENY_SIGANL
+> > unless it followed by setting TIF_UPROBE in uprobe_deny_signal(). This means
+> > _DENY_SIGNAL is likey replaced during next uprobe single-stepping.
+> >
+> > I believe introducing _DENY_SIGNAL as the immediate state between UTASK_SSTEP
+> > and UTASK_SSTEP_ACK is still necessary. This allow uprobe_post_sstep_notifier()
+> > to correctly restore TIF_SIGPENDING upon the completion of single-step.
+> >
+> > A revised implementation would look like this:
+>
+> Still looks "obviously wrong" to me... even the approach itself.
+>
+> Perhaps I am wrong, yet another day when I can't even read emails on lkml
+> carefully, sorry.
+>
+> But can you please send the patch which I could actually apply? This one
+> looks white-space damaged...
+>
+> I'll try to reply with more details as soon I convince myself I fully
+> understand what does your patch actually do, but most probably not tomorrow.
+>
 > Thanks,
-> Song
-> 
-> [1] https://lore.kernel.org/all/20210408182843.1754385-8-samitolvanen@google.com/
-> 
+>
+> Oleg.
+>
+> > ------------------%<------------------
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
+> >
+> >         if (task_sigpending(t)) {
+> >                 clear_tsk_thread_flag(t, TIF_SIGPENDING);
+> > +               utask->state = UTASK_SSTEP_DENY_SIGNAL;
+> >
+> >                 if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
+> >                         utask->state = UTASK_SSTEP_TRAPPED;
+> > @@ -2276,22 +2277,23 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+> >         int err = 0;
+> >
+> >         uprobe = utask->active_uprobe;
+> > -       if (utask->state == UTASK_SSTEP_ACK)
+> > +       switch (utask->state) {
+> > +       case UTASK_SSTEP_ACK:
+> >                 err = arch_uprobe_post_xol(&uprobe->arch, regs);
+> > -       else if (utask->state == UTASK_SSTEP_TRAPPED)
+> > +               break;
+> > +       case UTASK_SSTEP_TRAPPED:
+> >                 arch_uprobe_abort_xol(&uprobe->arch, regs);
+> > -       else
+> > +               set_thread_flag(TIF_SIGPENDING);
+> > +               break;
+> > +       default:
+> >                 WARN_ON_ONCE(1);
+> > +       }
+> >
+> >         put_uprobe(uprobe);
+> >         utask->active_uprobe = NULL;
+> >         utask->state = UTASK_RUNNING;
+> >         xol_free_insn_slot(current);
+> >
+> > -       spin_lock_irq(&current->sighand->siglock);
+> > -       recalc_sigpending(); /* see uprobe_deny_signal() */
+> > -       spin_unlock_irq(&current->sighand->siglock);
+> > -
+> >         if (unlikely(err)) {
+> >                 uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+> >                 force_sig(SIGILL);
+> > @@ -2351,6 +2353,8 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
+> >                 /* task is currently not uprobed */
+> >                 return 0;
+> >
+> > +       if (utask->state == UTASK_SSTEP_DENY_SIGNAL)
+> > +               set_thread_flag(TIF_SIGPENDING);
+> >         utask->state = UTASK_SSTEP_ACK;
+> >         set_thread_flag(TIF_UPROBE);
+> >         return 1;
+> >
+> > ------------------>%------------------
+> >
+> > >
+> > > Oleg.
+> > >
+> > >
+> >
+> > --
+> > BR
+> > Liao, Chang
+> >
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
