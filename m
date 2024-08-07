@@ -1,116 +1,133 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9CC81741;
-	Wed,  7 Aug 2024 14:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D6C8172A;
+	Wed,  7 Aug 2024 15:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723042746; cv=none; b=c7RKLtU35+m9g+lwPV6dQGvhzqo+tcAF5birZU9kFDgBBR7crfHiALGIfINcjZduMkouTs1dBaCvFG0eReLyo7oMyP9D6TAQNcC006yJbNJwAvJ56c/Y9VkchlQwpJ2K82l/1Oz0xIoJBrwadYcHlRRZa4WXhyanZzvQjei004A=
+	t=1723044259; cv=none; b=Gf6NWLl1xZ7FVqXyUlBpIPh3jfpHXJRB3GzGvOfoMJUV9PBFSZm4Yg7QMBl02OIU1CWvcWCXkTCZxJFxGwLEspgtT6Mbiq+K7ZfgWvcgmrehnL+Pi80A9tJkQ1u4Mgo7Uk2Ht7ipZI024BXpQgdlV+mDeOrHaQ3793fryyJFbAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723042746; c=relaxed/simple;
-	bh=jIZP+sl5/iGS7v+002+u+LGIiUOJgvJy5rw6ynbQTrw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Thd3JcRXIsmGSkMTQLDS+y2L+YaDCitWoevTk1gZG3dnhllLjFyJPFPmH28srwy0GUciKhahUDV1W0pVchutABRl9rKi3az1nTDujzFVibFVG75lDlCzCjPLMyT2999+Rv3sbgPR8s/SqNcGIEyqtp1Wap3ubU5W83uuhROBTAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AomYONQg; arc=none smtp.client-ip=209.85.215.175
+	s=arc-20240116; t=1723044259; c=relaxed/simple;
+	bh=SEjKNP9Fe5ihcvTOrovnqpB71SkawQ3ddYeJkcUyS/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NLG1e0ciXwEBg2lPFLTZDg7RSm43EHNrjAyCF/1lugB9qdnRBOyQt+0Cpl2hqkBflJBKi9JN/P1sAPGD9fmsYA9EVh8qPdmUaB3rz+8AMMcH8h8/DuQwLOYxuqCHbVkJEwyGNhx7Ilxxi+aRdpuXqxk39g7GuQkUJDMpj/yGTOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lxyiRcep; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AomYONQg"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-71871d5e087so1140843a12.1;
-        Wed, 07 Aug 2024 07:59:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxyiRcep"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7a18ba4143bso1404300a12.2;
+        Wed, 07 Aug 2024 08:24:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723042744; x=1723647544; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1723044257; x=1723649057; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jIZP+sl5/iGS7v+002+u+LGIiUOJgvJy5rw6ynbQTrw=;
-        b=AomYONQguoWf/a1cj5l6r7Q1uvvQz3zfOUljhZfFCl/BqIeJAykfHC1R2JdD7qCXjv
-         7X6vuTWFW5+A8Om6GzI2M7Uul1l5yXFmY/dFh2l9L3MoJtmKjBgW1j97ggsnscbqT89K
-         Idy583StQMCtFS0XYHETGvA9cGnFhxhcVO6qPmJsQZO22nSL4NcnWbAevcn2t1GwkwHt
-         1jRxeM+q5E61iMxU1E3SM2xulh9AwdqBYm4uadgmMIBhTMqAi9TANoY9ENEzzLMwyYR3
-         nUTZ4yr94TDyx1Gd0Q5PzD0M2GNDRrC8ymQoXzBPDQBMEtMogTrIDB0628rDwGu6wiPc
-         Pjpw==
+        bh=VbDcCJvPNRNpC4aX1OzirY7PNPGSPI/8NwUARfS27JY=;
+        b=lxyiRcepOfch8JyB6COnqGajU/fwqGMYI7krrkNrS/flT7UH+swzurqZ4QXfw5Sykx
+         JsSd66xlqWGzY3pzm/6YYQoIfwMJidvPO9pmBQ5vQlidRQ8LGFCfSdBKvz9mUSDHketx
+         b8CDDsS3GdAzsvAN1sv+ypn5WysAOkJTwYsuOahShG9KJm40Sn3/zoBZXA4Wh5z67Ioo
+         Vm8mLXLAn6M2MHT+nXi2IQEgwZ0sKlCgg3DarZ5cArdhrDhtsv5DRAKtsw/a3eefPj/l
+         WWE3EeSMYBJ1588D95xO4E7X93koFT8h4sZIuGvBF4d4OU/0LBAN2MuZLLdcwSiWA2ZS
+         f1Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723042744; x=1723647544;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1723044257; x=1723649057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jIZP+sl5/iGS7v+002+u+LGIiUOJgvJy5rw6ynbQTrw=;
-        b=e+XToCuuLs7J/xqIHWVxMdZwo8K2cJOr4BTr4wVS3XgyhVDasY7gtHmNN4CvxnBLRc
-         Lv6QK5WKGH8ufhupUzX4dz7esyttTxhkTITq81SuLBYSqKZ342xqIeM1Ukt6MMxuIJt4
-         hdTkjMJUNosAWXs+bDQziKYp0alltXJ53wEGRwsqIAbJ+1+ph7EPtiajD/YAm7+D63DJ
-         MvcchEms9xNFUqHEyZVYzTLgO2fNFAKX/u7n69f+WI2UrxGcwxhC3t2auPAlXUZDYEZh
-         1Qx2YIkE7F1QHQmepC/cjPBbJMjAoJU0e0MH+L1Stn3IAVhPT/EkACNBKFkcB/cwpCWF
-         KjOA==
-X-Forwarded-Encrypted: i=1; AJvYcCV17Zl4SbAI5d8UGSMNVDC9KUclg0oiSA9AHfyPIh+UkrgdzUwAto7Wn137RyEnvXsEsY0rkcfL0SdkCZmUVxv3Ai0bUJ+sSDFDEEKig7Xzat39Lclqoz8eWwlFXTW+l3bHwT+Q9nBObew5iDqsglTodU1Zl1d3Z1LMFcHicH+DYebXTWKJk6bLUKM9gntSHg==
-X-Gm-Message-State: AOJu0YwrwryXL4QzV1VP8GzMK8MvVJW3GTP2QVCu24v0LCVNPRod/MG6
-	bugBKiLtd0/hPK+ta4VV+5pWWcrfprBnuXg9MJ4GzVoBZJha30fs
-X-Google-Smtp-Source: AGHT+IEdFO0DZXDicBs2YtJa8wnYLQgX0gWvZJCaWeA2D/Fqngr0IrjmGs2S8E5C38UI9Lm2WpxoaQ==
-X-Received: by 2002:a05:6a20:12d1:b0:1c4:87d5:c7c8 with SMTP id adf61e73a8af0-1c699550d42mr22562207637.3.1723042743916;
-        Wed, 07 Aug 2024 07:59:03 -0700 (PDT)
-Received: from smtpclient.apple ([47.89.225.180])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed2ac2dsm8488114b3a.194.2024.08.07.07.58.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2024 07:59:03 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+        bh=VbDcCJvPNRNpC4aX1OzirY7PNPGSPI/8NwUARfS27JY=;
+        b=btecsGiGW7ZMeC83SWUzNwhV/fmRqK0MYbUuj8CTKFf7JoZ3LAwNEgUk56eLB5okzl
+         UZFoDsI60zlXjGSe8SoXh5IGZDXFtAoWXyPUY1TpSJuShaeVEOvVIcxI1djES2fSMGrp
+         WvJDDWysa4mxfoTrO72/7hxz44wg5oruJQG1ghqQ18OHZvir3ikw7PChpwcZHTrWa6Rj
+         /lsKi92tpTWTEabX5R1mQ29jcDvs5EwcMOMgnJdCmniI6/9kNKT+qcNrxE9iBVIx2w5k
+         Wkmw+XjzKw0QzUsMJLeVDTSJNJoL5/mp1HI4DwlEgrtmSa0QBMO9IvZajY/XAq/QSyUW
+         spvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWScgcDOZgNrdlXaqezqGWAd/yQnAPfAg/ltlOtXUv3xW+NsmLK2xcm0FWIERjNie3QgrMlfRHmQdtWEBcdbBbjnwCgZYwWlheFGab3KZa6s2rTItnEUPLkdyPuTGO5WL1sU2PJlCEpJpiVZ0q0d6PIV6i4ufE6fJ2Pge13hJcvIsMRh6bZ
+X-Gm-Message-State: AOJu0YxX5wHQT/k2bij28V0C+kRlm6dxuVv2YA2sU7Bi6RHFO4Fmywia
+	bG0ZhywHhILdLuj1gQfUZrf2rwfiucEo4P+8nb4DtPBvh2eVtXISmLuuBOerbvXAU5iJ4zquW7C
+	AkhtHvuSgHVf7msMB0opVRHK3GIA=
+X-Google-Smtp-Source: AGHT+IHd5L60soA69oQfvZaSbKGh/Af6O+NhckWDP+Cq/EbKRh8dwZPSOptlz5tGokig2e1+QZMY3Nr7YqZ14+6R27o=
+X-Received: by 2002:a17:90b:8c2:b0:2ca:1c9e:e012 with SMTP id
+ 98e67ed59e1d1-2cff93d4117mr18278788a91.6.1723044256637; Wed, 07 Aug 2024
+ 08:24:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
- without .XXX suffix
-From: zhang warden <zhangwarden@gmail.com>
-In-Reply-To: <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
-Date: Wed, 7 Aug 2024 22:58:45 +0800
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Song Liu <song@kernel.org>,
- "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Jiri Kosina <jikos@kernel.org>,
- Miroslav Benes <mbenes@suse.cz>,
- Petr Mladek <pmladek@suse.com>,
- Joe Lawrence <joe.lawrence@redhat.com>,
- Nathan Chancellor <nathan@kernel.org>,
- "morbo@google.com" <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>,
- Luis Chamberlain <mcgrof@kernel.org>,
- Leizhen <thunder.leizhen@huawei.com>,
- "kees@kernel.org" <kees@kernel.org>,
- Kernel Team <kernel-team@meta.com>,
- Matthew Maurer <mmaurer@google.com>,
- Sami Tolvanen <samitolvanen@google.com>,
- Masami Hiramatsu <mhiramat@kernel.org>
+MIME-Version: 1.0
+References: <20240731214256.3588718-1-andrii@kernel.org> <20240807132922.GC27715@redhat.com>
+In-Reply-To: <20240807132922.GC27715@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 7 Aug 2024 08:24:04 -0700
+Message-ID: <CAEf4BzZSyuFexZfwZs1bA9S=O0FHejw_tE6PXm5h8ftMsuSROw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] uprobes: RCU-protected hot path optimizations
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <87F7024C-9049-4573-829B-79261FC87984@gmail.com>
-References: <20240802210836.2210140-1-song@kernel.org>
- <20240802210836.2210140-4-song@kernel.org>
- <20240806144426.00ed349f@gandalf.local.home>
- <B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
- <20240806160049.617500de@gandalf.local.home>
- <20240806160149.48606a0b@gandalf.local.home>
- <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
-To: Song Liu <songliubraving@meta.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
+On Wed, Aug 7, 2024 at 6:30=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
+>
+> On 07/31, Andrii Nakryiko wrote:
+> >
+> > Andrii Nakryiko (6):
+> >   uprobes: revamp uprobe refcounting and lifetime management
+> >   uprobes: protected uprobe lifetime with SRCU
+> >   uprobes: get rid of enum uprobe_filter_ctx in uprobe filter callbacks
+> >   uprobes: travers uprobe's consumer list locklessly under SRCU
+> >     protection
+> >   uprobes: perform lockless SRCU-protected uprobes_tree lookup
+> >   uprobes: switch to RCU Tasks Trace flavor for better performance
+> >
+> > Peter Zijlstra (2):
+> >   rbtree: provide rb_find_rcu() / rb_find_add_rcu()
+> >   perf/uprobe: split uprobe_unregister()
+>
+> I see nothing wrong in 1-7. LGTM.
+>
 
-> In my GCC built, we have suffixes like ".constprop.0", ".part.0", =
-".isra.0",=20
-> and ".isra.0.cold".=20
+So, I don't know how it slipped the first time, because I tested
+overnight with uprobe-stress, perhaps I adjusted some parameters (more
+threads or different ratio of threads, not sure by now), but it turns
+out that lockless RB-tree traversal actually crashes after a few
+minutes of running uprobe-stress. I'll post details separately later
+today, but I suspect that rb_find_rcu() and rb_find_add_rcu() is not
+enough to make it safe.
 
-A fresher's eye, I met sometime when try to build a livepatch module and =
-found some mistake caused by ".constprop.0" ".part.0" which is generated =
-by GCC.
+Hopefully someone can help me figure this out.
 
-These section with such suffixes is special and sometime the symbol =
-st_value is quite different. What is these kind of section (or symbol) =
-use for?
+> But since you are going to send the new version, I'd like to apply V2
+> and then try to re-check the resulting code.
 
-Regards
-Wardenjohn
+Yes, I was waiting for more of Peter's comments, but I guess I'll just
+send a v2 today. I'll probably include the SRCU+timeout logic for
+return_instances, and maybe lockless VMA parts as well. Those won't be
+yet for landing, but it's probably useful to see everything
+end-to-end.
 
+Given the hiccup with lockless uprobes_tree lookup, we should land
+that change, but the first 4 patches hopefully are in good enough
+shape to apply and reduce the amount of patches that need to be
+juggled around.
 
+>
+> As for 8/8 - I leave it to you and Peter. I'd prefer SRCU though ;)
+
+Honestly curious, why the preference?
+
+>
+> Oleg.
+>
+
+BTW, while you are here :) What can you say about
+current->sighand->siglock use in handle_singlestep()? Is there any way
+to avoid that (or at least not have to take it every single time a
+single-stepped uprobe is triggered?). This turned out to be a huge
+issue for single-stepped uprobe when scaling to multiple CPUs even
+with all the other things (all the SRCU and lockless VMA lookup) taken
+care of.
