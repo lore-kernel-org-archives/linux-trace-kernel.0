@@ -1,66 +1,59 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5A913AA26
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 16:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1813342F
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 17:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723048785; cv=none; b=VuXTz+iPWuzZ5Mz4Upbg4JekNpT2ejCW64pdExevVHrNKstJC5NxoJSWbzqjUVM8QwkKo8aNALNuRFQUOhmYaA87tb/cfxdmI/AmiPL3G9LSJvVQMmo7dx5ymF35iYRR7fw5XafNEf/Uodb/US+fv57il725NJjnwBDh27HtgwA=
+	t=1723050687; cv=none; b=C28I/cp/Lr5tapWpyLjdBH+9pX20+LOkuhX0oKSXuo0IrUO9kMFBKWxX6F/6nGf1zJJKJLp9rfvWMAWY55a5Gehrh39UxQNMBbUT4T4KKjerd1kxEog+0Ai1Efn7MtdkesGowHJCttyV+cGvVFltzoiIzBMmmJOmub5AOt3axGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723048785; c=relaxed/simple;
-	bh=LPdAnUCvP/1/42vQX7gvD0FSLRCj53R2KV60JM7JR70=;
+	s=arc-20240116; t=1723050687; c=relaxed/simple;
+	bh=KvEjb23X87A6JzXK9BKvxQ/d0z1ZHIL3IyVVU+EyAMA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NNmVqlU30abbUhJ2CJFGAGxQd5vQpk7ugdK7aj4DO9v8amzHFlbqtYdm08JesdqxmlfYldL7lBHI01my7Ntv+wtiTgqZSLLsWPA2KvuzqyT26dqYzYa42U2RxCq/I9ZpkLrk3IRb15L1yV9cDh0cSXDLi/AaYiD6C8HK8fuAfXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VWMiSgvb; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G1bpcRF2ZxBhTmEk7eZrDqEU17ds5d0tqtUghBmx9nfOqoTYtf1M5nxQAFbRH74lsRkH/BAwJZBblQ7NSzB/423wEmxYYbuVHyM7Pa5ukY0j4l9LyjQvDo4W0okh4UMyYnW8bPjvSoEqi/0A2IVVYG5eBs0PUaDHh6MzPUUvjIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HmlzQQRV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VWMiSgvb"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3687f8fcab5so20494f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Aug 2024 09:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723048782; x=1723653582; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QHW1mxXo99BTncFCV2Od8EwldJIdp0HcoBntkRqHPbI=;
-        b=VWMiSgvbZ5ssFRaWVBcm4QTnPYHerHzX+4ssnUmW9E/o8i8sSbdSxFxNyXJiRImFSU
-         9bQ2v5PBhgn1aSHoB14w/YCHMgakE3de+YBShsWGH6HjmXHXCev2q+ifO3YnwD+27zPC
-         OLdu10sP9OTRPfaTg5z2w18CdJujADtISwN3eTZlWIhGy1CpvIBrbiimvNCt8ZN/VQ1J
-         StO5fdqmvNboPQTih5r+M8VvMjy2zA5vlzGxulR7IBXRiasXSFVe5MtydOnstQGVVUNj
-         w7TPOmO3UscUTMU8Sly7YdHDA7UtocH4DNP+1L85wXikOyFMHkHw5cniXfpl+mE+e29k
-         cJZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723048782; x=1723653582;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QHW1mxXo99BTncFCV2Od8EwldJIdp0HcoBntkRqHPbI=;
-        b=mXlYUrFzgQuKhE6qCkAik1zLb/ZiodY4U0KdjOMXujRPdAIlFdIE75HJOidfl4aKbl
-         wqYPca8O+82Xnrg5pVGTQT2Adkog0YPv6aUIw6NSBQ+vCoV5k/Qy63xRtwMRohs6Trio
-         EGzUgTNVy6FCzkaAFdncp0ZXvxwq1kyd4ipK8nIv7ubPHIPKgiBSPVOWuCpnYbXKg4Iv
-         N66gzbV2+Kpo8UOWIRiGTvDguJTobGCqSeQQu/Bb66ClUO3UF5CL3bfYxiYriGdppDON
-         ky5cG/NVE+Lg5cCNvYO6Y6YE++PKxYQAaybCRsD/w1pSyNnnAQZ+VGD175tUxvwtVQ9j
-         xInQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIL+3VqmZX3VUute9RyMBVGJVXVXC9A62aSGq5SDxsncaWGJMtXpWJ5n0mvYQmEJ3cs/P/s0to7sZ1zIwaYb6yy1a6uTusoAWdAw44SkHKCpOl
-X-Gm-Message-State: AOJu0YzP2sRfS8X/9LJc0KAKBvrBeE3cNy0Da7I9hYO1rZAWY9dn+H2x
-	WBTMZlTYesQlWOF9g5o0L8x6KAuJdpL2arE0L6fXLdumqVxcdb8QNjr6ry7oJw==
-X-Google-Smtp-Source: AGHT+IFpj8OAf/zU2P5H1nf7aSDiDGP+hlwNCJGS6cZvB3Vvk1HpMfsIAD1gNsJAlgupqm5KpgXoAQ==
-X-Received: by 2002:a5d:6d49:0:b0:368:36e6:b248 with SMTP id ffacd0b85a97d-36bbc0cc71cmr14259786f8f.23.1723048782179;
-        Wed, 07 Aug 2024 09:39:42 -0700 (PDT)
-Received: from google.com (203.75.199.104.bc.googleusercontent.com. [104.199.75.203])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36bbd05ad0csm16751056f8f.79.2024.08.07.09.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 09:39:41 -0700 (PDT)
-Date: Wed, 7 Aug 2024 17:39:37 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, maz@kernel.org,
-	oliver.upton@linux.dev, kvmarm@lists.linux.dev, will@kernel.org,
-	qperret@google.com, kernel-team@android.com
-Subject: Re: [RFC PATCH 00/11] Tracefs support for pKVM
-Message-ID: <ZrOjSZ_JfcaLnCgh@google.com>
-References: <20240805173234.3542917-1-vdonnefort@google.com>
- <20240806161138.3a91c04a@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmlzQQRV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723050684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KvEjb23X87A6JzXK9BKvxQ/d0z1ZHIL3IyVVU+EyAMA=;
+	b=HmlzQQRV1gBIHkXKlV74hWoc0CGIXRwLcliveWA4DinBqN2elW19tOrQN6IKyHNohB8xkQ
+	nfJlE3RMut4VUzPszKWgl5wu3Cr3y0B8CNiABReP0uFojcZu6dKBezRupTxy/72UwCxy2z
+	OCsa/uxYILuJMq1e4FLqrU8bmAVZh1c=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-ZUSnP5WfM2GTQj0wfKTwXw-1; Wed,
+ 07 Aug 2024 13:11:21 -0400
+X-MC-Unique: ZUSnP5WfM2GTQj0wfKTwXw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 168071944B25;
+	Wed,  7 Aug 2024 17:11:20 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.97])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 47D2B19560A3;
+	Wed,  7 Aug 2024 17:11:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  7 Aug 2024 19:11:18 +0200 (CEST)
+Date: Wed, 7 Aug 2024 19:11:13 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+	paulmck@kernel.org
+Subject: Re: [PATCH 0/8] uprobes: RCU-protected hot path optimizations
+Message-ID: <20240807171113.GD27715@redhat.com>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240807132922.GC27715@redhat.com>
+ <CAEf4BzZSyuFexZfwZs1bA9S=O0FHejw_tE6PXm5h8ftMsuSROw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,89 +62,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240806161138.3a91c04a@gandalf.local.home>
+In-Reply-To: <CAEf4BzZSyuFexZfwZs1bA9S=O0FHejw_tE6PXm5h8ftMsuSROw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Aug 06, 2024 at 04:11:38PM -0400, Steven Rostedt wrote:
-> 
-> Hi Vincent,
-> 
-> Thanks for sending this!
+On 08/07, Andrii Nakryiko wrote:
+>
+> Yes, I was waiting for more of Peter's comments, but I guess I'll just
+> send a v2 today.
 
-And thanks for already having a look at it!
+OK,
 
-[..]
+> I'll probably include the SRCU+timeout logic for
+> return_instances, and maybe lockless VMA parts as well.
 
-> > 2. Tracefs interface
-> > --------------------
-> > 
-> > The interface is a hyp/ folder at the root of the tracefs mount point.
-> > This folder is like an instance and you'll find there a subset of the
-> > regular Tracefs user-space interface:
-> > 
-> >   hyp/
-> 
-> Hmm, do we really need to shorten it? Why not just call it "hypervisor". I
-> mean tab completion helps with the typing.
+Well, feel free to do what you think right, but perhaps it would be
+better to push this series first? at least 1-4.
 
-In most of the code we do refer to hyp, that's why we kept the naming here too.
-But yeah we could expand it.
+As for lockless VMA. To me this needs more discussions. I didn't read
+your conversation with Peter and Suren carefully, but I too have some
+concerns. Most probably I am wrong, and until I saw this thread I didn't
+even know that vm_area_free() uses call_rcu() if CONFIG_PER_VMA_LOCK,
+but still.
 
-> 
-> >      buffer_size_kb
-> >      trace_pipe
-> >      trace_pipe_raw
-> >      trace
-> >      per_cpu/
-> >              cpuX/
-> >                  trace_pipe
-> >                  trace_pipe_raw
-> >      events/
-> >             hyp/
-> >                 hyp_enter/
-> >                           enable
-> >                           id
-> > 
+> > As for 8/8 - I leave it to you and Peter. I'd prefer SRCU though ;)
+>
+> Honestly curious, why the preference?
 
-[...]
+Well, you can safely ignore me, but since you have asked ;)
 
-> > 
-> > 4. Few limitations:
-> > -------------------
-> > 
-> > Non consuming reading of the buffer isn't supported (i.e. cat trace) due
-> > to the lack of support in the ring-buffer meta-page.
-> 
-> Hmm, I don't think it should be hard to support that. I've been looking
-> into it for the user mapping. But that can be added later. For now, perhaps
-> "cat trace" just returns -EPERM?
+I understand what SRCU does, and years ago I even understood (I hope)
+the implementation. More or less the same for rcu_tasks. But as for
+the _trace flavour, I simply fail to understand its semantics.
 
-Yeah, I am sure that's something we can make work. But definitely not a priority
-as it is less reliable than _pipe and unused by user-space tools I believe.
+> BTW, while you are here :) What can you say about
+> current->sighand->siglock use in handle_singlestep()?
 
-For now we print "Not supported yet". But happy to modify it to a EPERM.
+It should die, and this looks simple. I disagree with the patches
+from Liao, see the
+https://lore.kernel.org/all/20240801082407.1618451-1-liaochang1@huawei.com/
+thread, but I agree with the intent.
 
-> 
-> > 
-> > Tracing must be stopped for the buffer to be reset. i.e. (echo 0 >
-> > tracing_on; echo 0 > trace)
-> 
-> Hmm, why this?  I haven't looked at the patches yet, but why can't the
-> write to trace just stop tracing and re-enable it after the reset?
+IMO, we need a simple "bool restore_sigpending" in uprobe_task, it will make the
+necessary changes really simple.
 
-I could reset the buffers from the hypervisor with a dedicated hypercall.
+(To clarify. In fact I think that a new TIF_ or even PF_ flag makes more sense,
+ afaics it can have more users. But I don't think that uprobes can provide enough
+ justification for that right now)
 
-However I'd still need a way to "teardown" the buffer, that is unsharing it with
-the hypervisor and freeing the allocated memory. Using that reset for this
-purpose was nice even though it implied to stop tracing in a first place. 
+Oleg.
 
-Perhaps `echo 0 > trace` could reset the buffer if tracing_on=1 and teardown the
-buffers if tracing_on=0?
-
-Alternatively, I could use `echo 0 > buffer_size_kb` for the teardown. But I
-prefer the former solution: interface users are more likely to just 0 tracing_on
-and trace.
-
-> 
-> > 
-> 
-> -- Steve
