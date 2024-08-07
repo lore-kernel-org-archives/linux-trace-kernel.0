@@ -1,92 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED061E7A36
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 13:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3F01E7A4D;
+	Wed,  7 Aug 2024 13:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723036643; cv=none; b=kMK9hOFqjeO+Q0ZacO7S2K+KdGRQPKknub0Uojbj4FzWrj3p1MEBDESxd3JZSSM0Fmb0FdkfTRgVsIXyIEiIDRQB3ENdtsgCGBSf4EKENzsW2z0SWRvYA8QrQD2/R5OGmPhileVo4x95Azt7jpTqEEFO1R/CU6tK/xDDnntVP70=
+	t=1723037328; cv=none; b=ZPYIPtCDYsQw5Ay4ilqGr5LZpeGqa7uzFX1ZyFZXVjsPwedfFUgbKYpivd/4davKFLFGb35PVWhQMfkMa+jaIctWgsYxypYdeAH3DXwpy3jJnBo/BgX/oByeDEwKZ+zMX6d3d7uVvc4DMagoJxKorTEY3aWGOf9TcwI1SWOwdnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723036643; c=relaxed/simple;
-	bh=vSo75lzjQkETXPUOV+jM9s7j37MlUuGx+J1YmnX/Wf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gm2ch0MsNrixVe7nPjB7rRWwzTHwvUbWnQTakZj24vgNnIt4/3j/fqEdkS2w7ck+FL9JzUgocL/V4OZN19Z1J3Xpv4vuuN4EPyHYCvP/nO8dq89qwmttajTaCdGUFDIQ3IEAdhbDDjfMfxQaUtImo2DxC+KACDhhIoRhi737IpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K6BsYy/j; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K6BsYy/j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723036641;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HHA0OK62AwchNJ57FFfHC78h5WPF4JbQaFxR5tsk1xg=;
-	b=K6BsYy/j6ZPbu4XK2Gep75WwMe5jgd479xXscDNRkhlDtCLEJU52RdyivUq/K30fSLHAFf
-	/WkHJ3rovfE/8MKODbH1ao0KXIIhCVXaqkwiTvgguEKnKlVlvZwsy/1eA22LAnGG7JzSe6
-	GdQXq+QD3ovviT0JFg213jK5C+Bl6Vk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-nl3OrPbNP4W8m8ZBwtmkdg-1; Wed,
- 07 Aug 2024 09:17:15 -0400
-X-MC-Unique: nl3OrPbNP4W8m8ZBwtmkdg-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B6F1F19541AA;
-	Wed,  7 Aug 2024 13:17:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.97])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5BAB819560A3;
-	Wed,  7 Aug 2024 13:17:10 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  7 Aug 2024 15:17:11 +0200 (CEST)
-Date: Wed, 7 Aug 2024 15:17:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH 6/8] perf/uprobe: split uprobe_unregister()
-Message-ID: <20240807131707.GB27715@redhat.com>
-References: <20240731214256.3588718-1-andrii@kernel.org>
- <20240731214256.3588718-7-andrii@kernel.org>
+	s=arc-20240116; t=1723037328; c=relaxed/simple;
+	bh=quUyFQ2V7pqEMz1oIqvvgqIOrE37FB49Q5wPzg898gQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MGQtIJaAl1LdqIf36GmRLWsuRQJRgJvSSHFNOUrygJhHlHXhVj4lI4z7dszR0pVUApsI71ak4/aVBFvFf0g7L/796UQ1f2KbET7x37rthl3YIgjienv0tcIIy/RaG3shexssZfazmZqb5qfPUNpB2S9CGhJr8oDbryrl9Rlj2ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66897C32782;
+	Wed,  7 Aug 2024 13:28:46 +0000 (UTC)
+Date: Wed, 7 Aug 2024 09:29:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Tze-nan Wu (=?UTF-8?B?5ZCz5r6k5Y2X?=)" <Tze-nan.Wu@mediatek.com>
+Cc: "zanussi@kernel.org" <zanussi@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "Cheng-Jui Wang (=?UTF-8?B?546L5q2j552/?=)" <Cheng-Jui.Wang@mediatek.com>,
+ wsd_upstream <wsd_upstream@mediatek.com>, "Bobule Chang (=?UTF-8?B?5by1?=
+ =?UTF-8?B?5byY576p?=)" <bobule.chang@mediatek.com>, "mhiramat@kernel.org"
+ <mhiramat@kernel.org>, "eric-yc.wu@mediatek.com" <eric-yc.wu@mediatek.com>,
+ "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH RESEND] tracing: Fix overflow in get_free_elt()
+Message-ID: <20240807092936.1661ce6a@gandalf.local.home>
+In-Reply-To: <52e8ccc5dd82668c17877c97fb96f255dc2e7052.camel@mediatek.com>
+References: <20240805055922.6277-1-Tze-nan.Wu@mediatek.com>
+	<20240806154008.502b6c7d@gandalf.local.home>
+	<52e8ccc5dd82668c17877c97fb96f255dc2e7052.camel@mediatek.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240731214256.3588718-7-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I guess you know this, but just in case...
+On Wed, 7 Aug 2024 11:34:43 +0000
+Tze-nan Wu (=E5=90=B3=E6=BE=A4=E5=8D=97) <Tze-nan.Wu@mediatek.com> wrote:
 
-On 07/31, Andrii Nakryiko wrote:
->
-> --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> @@ -478,7 +478,8 @@ static void testmod_unregister_uprobe(void)
->  	mutex_lock(&testmod_uprobe_mutex);
->  
->  	if (uprobe.uprobe) {
-> -		uprobe_unregister(uprobe.uprobe, &uprobe.consumer);
-> +		uprobe_unregister_nosync(uprobe.uprobe, &uprobe.consumer);
-> +		uprobe_unregister_sync();
->  		uprobe.offset = 0;
->  		uprobe.uprobe = NULL;
+> > > -idx =3D atomic_inc_return(&map->next_elt);
+> > > +idx =3D atomic_fetch_add_unless(&map->next_elt, 1, map->max_elts); =
+=20
+> >=20
+> > I guess we need to add (with a comment):
+> >=20
+> > idx--;
+> >  =20
+> Thanks for reviewing this!
+>=20
+> By reference to "/include/linux/atomic/atomic-instrumented.h",
+> `atomic_fetch_add_unless` will return the original value before the
+> adding happens on operands.
 
-this chunk has the trivial conlicts with tip perf/core
+Ah, right. I haven't used that before and was thinking this was the same as
+the inc_return().
 
-db61e6a4eee5a selftests/bpf: fix uprobe.path leak in bpf_testmod
-adds path_put(&uprobe.path) here
-
-3c83a9ad0295e make uprobe_register() return struct uprobe *
-removes the "uprobe.offset = 0;" line.
-
-Oleg.
-
+-- Steve
