@@ -1,100 +1,157 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79647145B39
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Aug 2024 20:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112D62575F;
+	Wed,  7 Aug 2024 20:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723063765; cv=none; b=RNEh87W9hUIBqcTC//oGmSIWwyu6fpNdgDUD0jqH+tk6YU9U2YdFtv4vMefdzHCl2vfgKAHe862NF6CmmTgvl22dD9L6vOaC3I2bV9+Oma7FnQ5Eai82O63o2QOYZneJepCkxj5+GKhFtTNnIhVarHUKRBbgX5LNvhYVDvUH1cA=
+	t=1723064154; cv=none; b=YjEX/+jELMQluf/LsLwjxZabetIrcKostuEvUdotqLtkoc7wK3ZTliioZXa5lEyDSN/ZMQigMFjhcpFrI0D7OgQh3pQjGKotxw6m8VRv7krxk0rTncOikhPgnYlhHJSiu3x5mW/U2H//zsW74coF2N8RSc0QDM8hxE7Kym2Bcqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723063765; c=relaxed/simple;
-	bh=A4ifWneIPuKomiFloatclvYw6Xk4unBhHN3C0QE/lo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NJg0yqZHvsUE5MaD4tRfxkU63k5pm+OswmwCFeTIKuSIHE6A87PMvNLh0QfcU4fEuqAZ/2ZHzPOSEusaPIyGzhalzF7hlJaCJ3ThIeKUyjY1IEylgOqwbVZNc8KtMsjp3e1//w8lnVUVCWxtrzOIquqeiiXiSXwl3HY5fme8Cyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QGsRVJfv; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1723064154; c=relaxed/simple;
+	bh=EaZgcA3NtRAmtxQ7KZE96Vk2UBjW9UO69pLCY10zeOU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Ib9Fbx2Yiin7hmxrLsXAJiDyEpsfcN36t4hHCn4n3Y6wDOxJnMC4wM6OoVq/9aae5ghqaU3Bpjw4P6A4uuoBi55qvttFBfGXgnhnkGJvfMutnToQVtb2tkZeLZYzAYeGMSv0DaxRKR1XnAA53AzpYhG2bDl0aDte5aiW0ZciCA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPtmR41C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QGsRVJfv"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-39b0826297bso208685ab.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Aug 2024 13:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1723063763; x=1723668563; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A35BH8i+y+G8lGp+6rsc8DzC+k6rWSsJ3H+i3Ublu24=;
-        b=QGsRVJfvlAFqqJKWctZsP2dz70cnlo8eJllS9ev8pJhI6SjgBxgzem/XDIEI2cC4Fk
-         co0UNaudAY3qgDH6T/zXauFZQH0XndgOkHXw4x+7ibbu6I/0ybFMEM0swzJ7okzwcw7q
-         Mk7s4/cZuXvVF/vqByZjfRX1JxMGHGBfuvYlE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723063763; x=1723668563;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A35BH8i+y+G8lGp+6rsc8DzC+k6rWSsJ3H+i3Ublu24=;
-        b=dND3RbTwD+UscMGwvro6qityb5zgtVAgjjC1qUc9zgoPYYVtaKygBYyYGKdU0bL8ru
-         QTk5JGRNkSkxDnpSWh81IqV4pkwLIjry3EWUvJbRsdQisHIbqM+25z8E2NRpXoM8rdlC
-         PKSSn2DF5VafuuAPlpHlERjPnVbGhAjMD1m63bcNVfy2VgythH8x0MtUVoWejSqyPlj5
-         NS/bjZRNHg+cMJSvHc+tuKvLFbJbbMosIiFNdIUXFUl82plFnfNJWrP8HJkElKaPRkMj
-         //QE4zeDvOZMH55S2+44/RAaBT6jJSOy+xAUq+Imw9iDpq/EgABPchbUUe9qbmjIFpF2
-         +lhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXj7j6h6b9Q4bwl2btFCW0228CdcxwIY/yfuJkNNcqS8qWVuz48IrZgoSAvvThIjDFVms9UBO3h8CYgz6DpAG3XUqA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMrAWugC9rpgOU7n4vbHn5je28zG1GgiPv9qSI4oDcjo702GNU
-	UjiG2RRrmuuv54ggNF8q4QmgaIYRVqLmu7yb3Zbp+zeHAjjbPLYm3VbzjhM4JcwshrTwT//g9Rd
-	h
-X-Google-Smtp-Source: AGHT+IHC1uRe6tBWqp0tbGMzIoqWnCCrA+bdekxnsQrOQFruZsBen7mj3WNpnf9rnrR3Xd5pZgqJVw==
-X-Received: by 2002:a5d:9052:0:b0:81f:9219:4494 with SMTP id ca18e2360f4ac-81fd43e5cdemr1169419239f.2.1723063763601;
-        Wed, 07 Aug 2024 13:49:23 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c8d6a27813sm2969273173.96.2024.08.07.13.49.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Aug 2024 13:49:23 -0700 (PDT)
-Message-ID: <81512257-d6ab-4488-b400-aeeda1d38649@linuxfoundation.org>
-Date: Wed, 7 Aug 2024 14:49:22 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPtmR41C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3EFC32781;
+	Wed,  7 Aug 2024 20:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723064153;
+	bh=EaZgcA3NtRAmtxQ7KZE96Vk2UBjW9UO69pLCY10zeOU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lPtmR41C4gg3atA2WrJ4WPsI4+3VjEXnkpMl/2QBNAD9rzgCm805CjQUYQIrVG4oI
+	 myMKNdhyxoMIRaiZep7hSjD1qYN598NiOe9vWsWZ5StkTgod1PQ3rYNHDgmYdgim1p
+	 CQabP3YQaQfw4qR1adoDmX/+2R0mZbWQiiuyiYtvbJg7O5XxGva++AMnYJQnrSdKtC
+	 3aiFa7aO4yQhiK7VFAy0o87UPWGKpo+2DOdF50i/pHVJrIg+FWKKXuUtRTl/B4Gfc4
+	 5h7WOXXs5H1cw7lMYniX81Vsa1GD24Uf/S8AVma0JmwOWo52fY0fm2g1e6HsW9MYg/
+	 i77DTdIrALRgQ==
+Date: Thu, 8 Aug 2024 05:55:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Song Liu <songliubraving@meta.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
+ "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr
+ Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Nathan
+ Chancellor <nathan@kernel.org>, "morbo@google.com" <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>,
+ "kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>,
+ Matthew Maurer <mmaurer@google.com>, Sami Tolvanen
+ <samitolvanen@google.com>
+Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
+ without .XXX suffix
+Message-Id: <20240808055546.9b7f8089a10713d83ba29a75@kernel.org>
+In-Reply-To: <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
+References: <20240802210836.2210140-1-song@kernel.org>
+	<20240802210836.2210140-4-song@kernel.org>
+	<20240806144426.00ed349f@gandalf.local.home>
+	<B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
+	<20240806160049.617500de@gandalf.local.home>
+	<20240806160149.48606a0b@gandalf.local.home>
+	<6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+	<20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
+	<BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/selftests: Run the ownership test twice
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ali Zahraee <ahzahraee@gmail.com>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240523124541.7dd4cca9@gandalf.local.home>
- <20240614124151.33ee0dc6@rorschach.local.home>
- <20240807162900.32c8e32f@gandalf.local.home>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240807162900.32c8e32f@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 8/7/24 14:29, Steven Rostedt wrote:
-> On Fri, 14 Jun 2024 12:41:51 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 7 Aug 2024 00:19:20 +0000
+Song Liu <songliubraving@meta.com> wrote:
+
 > 
->> Shuah,
->>
->> Can you take this through your tree?
 > 
-> Ping!
+> > On Aug 6, 2024, at 5:01 PM, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > On Tue, 6 Aug 2024 20:12:55 +0000
+> > Song Liu <songliubraving@meta.com> wrote:
+> > 
+> >> 
+> >> 
+> >>> On Aug 6, 2024, at 1:01 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >>> 
+> >>> On Tue, 6 Aug 2024 16:00:49 -0400
+> >>> Steven Rostedt <rostedt@goodmis.org> wrote:
+> >>> 
+> >>>>>>> + if (IS_ENABLED(CONFIG_LTO_CLANG) && !addr)
+> >>>>>>> + addr = kallsyms_lookup_name_without_suffix(trace_kprobe_symbol(tk));
+> >>>>>>> +    
+> >>>>>> 
+> >>>>>> So you do the lookup twice if this is enabled?
+> >>>>>> 
+> >>>>>> Why not just use "kallsyms_lookup_name_without_suffix()" the entire time,
+> >>>>>> and it should work just the same as "kallsyms_lookup_name()" if it's not
+> >>>>>> needed?    
+> >>>>> 
+> >>>>> We still want to give priority to full match. For example, we have:
+> >>>>> 
+> >>>>> [root@~]# grep c_next /proc/kallsyms
+> >>>>> ffffffff81419dc0 t c_next.llvm.7567888411731313343
+> >>>>> ffffffff81680600 t c_next
+> >>>>> ffffffff81854380 t c_next.llvm.14337844803752139461
+> >>>>> 
+> >>>>> If the goal is to explicitly trace c_next.llvm.7567888411731313343, the
+> >>>>> user can provide the full name. If we always match _without_suffix, all
+> >>>>> of the 3 will match to the first one. 
+> >>>>> 
+> >>>>> Does this make sense?  
+> >>>> 
+> >>>> Yes. Sorry, I missed the "&& !addr)" after the "IS_ENABLED()", which looked
+> >>>> like you did the command twice.
+> >>> 
+> >>> But that said, does this only have to be for llvm? Or should we do this for
+> >>> even gcc? As I believe gcc can give strange symbols too.
+> >> 
+> >> I think most of the issue comes with LTO, as LTO promotes local static
+> >> functions to global functions. IIUC, we don't have GCC built, LTO enabled
+> >> kernel yet.
+> >> 
+> >> In my GCC built, we have suffixes like ".constprop.0", ".part.0", ".isra.0", 
+> >> and ".isra.0.cold". We didn't do anything about these before this set. So I 
+> >> think we are OK not handling them now. We sure can enable it for GCC built
+> >> kernel in the future.
+> > 
+> > Hmm, I think it should be handled as it is. This means it should do as
+> > livepatch does. Since I expected user will check kallsyms if gets error,
+> > we should keep this as it is. (if a symbol has suffix, it should accept
+> > symbol with suffix, or user will get confused because they can not find
+> > which symbol is kprobed.)
+> > 
+> > Sorry about the conclusion (so I NAK this), but this is a good discussion. 
 > 
-> -- Steve
+> Do you mean we do not want patch 3/3, but would like to keep 1/3 and part 
+> of 2/3 (remove the _without_suffix APIs)? If this is the case, we are 
+> undoing the change by Sami in [1], and thus may break some tracing tools. 
+
+BTW, I confirmed that the PATCH 1/3 and 2/3 fixes kprobes to probe on suffixed
+symbols correctly. (because 1/3 allows to search suffixed symbols) 
+
+/sys/kernel/tracing # cat dynamic_events 
+p:kprobes/p_c_stop_llvm_17132674095431275852_0 c_stop.llvm.17132674095431275852
+p:kprobes/p_c_stop_llvm_8011538628216713357_0 c_stop.llvm.8011538628216713357
+p:kprobes/p_c_stop_0 c_stop
+
+Thank you,
+
+> 
+> Sami, could you please share your thoughts on this? 
+> 
+> If this works, I will send next version with 1/3 and part of 2/3. 
+> 
+> Thanks,
+> Song
+> 
+> [1] https://lore.kernel.org/all/20210408182843.1754385-8-samitolvanen@google.com/
 > 
 
-Sorry for the delay.
 
-Applied it o linux-kselftest next for Linux 6.12-rc1.
-
-thanks,
--- Shuah
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
