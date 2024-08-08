@@ -1,107 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F8818DF95
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Aug 2024 13:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDE518E024
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Aug 2024 13:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723123063; cv=none; b=FlB3hm64108RFk7AE1wfn0uhI3qloAWxcFdWgZf5DCE20edhxKaguTdA3hO8VoRunHhooJjVlZcGd6Q04HX0zF7+no+8jrshnJ09bm4RRICr7vZrvgs19JOXJf2qzkMoYuDR1PCJxZ27banKe+aQwaMBefsvupMXRkJkuAUuI20=
+	t=1723124422; cv=none; b=T5Uyr+Dp1Tl+A17jTz9Rkq9oFnt27DB62/tM9ETjuTr77zeiTzwNpLjxvRqVPMqoEtEWStbqn8HRDVBdCPm7ZvnsDppqRIjwshmRUhf0MR4j3F5U6JDDdbFSDiH24BJ+8hpJjtbnJYaBaWN/cx+sUUwmVVcS7JUFQsYzeG5DYic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723123063; c=relaxed/simple;
-	bh=t+LPtWnKwFmta+rcn4kHZtopq4a0rOzX4dLqMmte6o8=;
+	s=arc-20240116; t=1723124422; c=relaxed/simple;
+	bh=E7qPM6Za/OUweacjnMkcLSYOGg27RehJJPlMm6etOas=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CNpyDImMUrpUnHiESflohN/vwpj7K3XFsg1FgEOfimzA2Rf1GVrvfsFWqyvoUTyU/3LiB1gNeeWqUoYAfKboGiz9kk6vfVWlufnKOyHtW2iQ76sPvL1EcORa6NZUnsyduiRMDcrXx6Gu+RvBrEyUN5sZO7/Q1wyinmVxl5+OZfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N/L8YIQC; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=BBj88C+E76bJlZ7yKwKguCeGcpRt2Dfwrd8rfdCXQSVBNaPefeCA7uISll0hJ8MSP1QJiMwPLyKRbwCK+ORQG8BnDSzKaV6WmfC+ZOwPLK0UpzefcDUqZ7FNt1cKv/KhMn008tsLpQzIrjXY0HGFkFqy6xRsgV/wZ1XL9EXiDNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aX700LF0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/L8YIQC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aX700LF0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723123061;
+	s=mimecast20190719; t=1723124420;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XD7FvdIckarUhrXzB2SzlPRAVb193xDecLuQI6dSDYI=;
-	b=N/L8YIQClWvNmIrTPkoPo/3lSWH8BBGCusBHrKHYQmF8dN0B4BNUstFB1tbzU0rjPA2oNF
-	FwWeuqSbK2ytngpW2rpmZKm1mjPvVDqp5DPkgYdneUZTP9OYzwujRGu8MygPIHQBqovFtE
-	snI6dd07jL/t/A/GkUVEvQLIZf+bm4s=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=BzXJpaP0eGm9JAF0HD6UstKeBReW0UlULvpo8rzaNMQ=;
+	b=aX700LF0bYswE2i8VrKHZlk2sJhQCf5ahwU8h9SgUv80Dehi+VR3FIoSIxdazoou2GhX+L
+	LRV1sso5UOaEOOM8h68QkW+PMBqA9mzwK1zVN8ITed7nEeIqHjihMGWw6mb2y1q545yIAv
+	C9c6K3QOiPQGWqsLcwteYCaD2gE6Uko=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-435-2rSh06GzOoKOsVWkOzbomQ-1; Thu,
- 08 Aug 2024 09:17:34 -0400
-X-MC-Unique: 2rSh06GzOoKOsVWkOzbomQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-qdhrjKtiPpmbMdJcVjijYQ-1; Thu,
+ 08 Aug 2024 09:40:15 -0400
+X-MC-Unique: qdhrjKtiPpmbMdJcVjijYQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF5811955D59;
-	Thu,  8 Aug 2024 13:17:31 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAE361955BCF;
+	Thu,  8 Aug 2024 13:40:13 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.189])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 182F319560AA;
-	Thu,  8 Aug 2024 13:17:24 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 27C9919560A3;
+	Thu,  8 Aug 2024 13:40:09 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  8 Aug 2024 15:17:30 +0200 (CEST)
-Date: Thu, 8 Aug 2024 15:17:22 +0200
+	oleg@redhat.com; Thu,  8 Aug 2024 15:40:12 +0200 (CEST)
+Date: Thu, 8 Aug 2024 15:40:07 +0200
 From: Oleg Nesterov <oleg@redhat.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-Message-ID: <20240808131722.GD8020@redhat.com>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
- <20240801140639.GE4038@redhat.com>
- <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
- <20240802092406.GC12343@redhat.com>
- <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
- <20240806172529.GC20881@redhat.com>
- <20240807101746.GA27715@redhat.com>
- <3bb87fb4-c32e-0a35-0e93-5e1971fe8268@huawei.com>
- <20240808102837.GC8020@redhat.com>
- <ef7b6889-7e15-1ff3-c7a5-b3c6dabb13d4@huawei.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH 7/8] uprobes: perform lockless SRCU-protected
+ uprobes_tree lookup
+Message-ID: <20240808134007.GE8020@redhat.com>
+References: <20240731214256.3588718-1-andrii@kernel.org>
+ <20240731214256.3588718-8-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef7b6889-7e15-1ff3-c7a5-b3c6dabb13d4@huawei.com>
+In-Reply-To: <20240731214256.3588718-8-andrii@kernel.org>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 08/08, Liao, Chang wrote:
+On 07/31, Andrii Nakryiko wrote:
 >
->
-> 在 2024/8/8 18:28, Oleg Nesterov 写道:
-> > --- x/kernel/events/uprobes.c
-> > +++ x/kernel/events/uprobes.c
-> > @@ -2308,9 +2308,10 @@ static void handle_singlestep(struct upr
-> >  	utask->state = UTASK_RUNNING;
-> >  	xol_free_insn_slot(current);
-> >
-> > -	spin_lock_irq(&current->sighand->siglock);
-> > -	recalc_sigpending(); /* see uprobe_deny_signal() */
-> > -	spin_unlock_irq(&current->sighand->siglock);
-> > +	if (utask->xxx) {
-> > +		set_thread_flag(TIF_SIGPENDING);
-> > +		utask->xxx = 0;
-> > +	}
->
-> Agree, if no more discussion about this flag, I will just send v2 today.
+>  static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
+> +static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
 
-Please also resend the previous patch a 1/2, this one as 2/2.
+Just noticed... Why seqcount_rwlock_t?
+
+find_uprobe_rcu() doesn't use read_seqbegin_or_lock(),
+seqcount_t should work just fine.
 
 Oleg.
 
