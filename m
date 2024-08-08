@@ -1,61 +1,62 @@
 Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7DE148856
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Aug 2024 09:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9791494BB
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Aug 2024 09:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723110519; cv=none; b=g0lELZC/5b1kaW3ApDFVPMRzjM7YMPbR/g0tXmDeQF4oeM/XYP4qYJgHp/Rj9tPTN0a+9+42nFu4ulEQBfVzYdBgfHP6Lr4bntq2IYqY9AU6ZzwaWZ8XMR5vimw75Lx1TSgzkHN6BIFi3UhqcZnqn6Sru16eR+xHVbSfh75J1tk=
+	t=1723111146; cv=none; b=slJQR+rmqFoC3d3igN/TvpeGlGRWm7FwDDxvg+DjF7wLwKpp4LCRb0WflPooEEnvMMuyE6dB2qyK47SanrTQTxB3KCdOQwhTqcKkB0LATdQgdDOIOwGn0OS9VXXvvSoj6ArYwqX7Quu2Ul/k1elP0W01z9EjjOoJ48J0klFdgPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723110519; c=relaxed/simple;
-	bh=bl3bOi05m/h7JLmHIwyve6X2Hujnul+rZJ1BQOQv/5E=;
+	s=arc-20240116; t=1723111146; c=relaxed/simple;
+	bh=pGmVQpP4pPuD5fcNHJ1UuHYXYgUIFk/XFz533Uf3FT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eljfM+78XatxmzOHHDmmh+4muxXYh2DM7WI4nX23GBjYSn6mTvZpNHRTi7m+MkC80esh6VrCE3fSIlBdEG7mpKSrBcs3T5wxxCivm0cetu5GUl2SSiiBKH6KseqY8ATlP++QMBJVmhaEJoG9wcgy38AE8dqUD8r5A1OTKmX91uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ORTtui13; arc=none smtp.client-ip=209.85.208.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNz29CILE7Tbr8O+v1jyQBGA5dt7wWAuWD5Jt+DdH7K4dZ5dp3H8/6+oP+RcDSSTZHd5ArtX5CXwR4tk27ObjyiCRhA986F1ix/Bn1k5ofpdZ9o2hByV3BTgbdznop2ri796Lln2lJdDsjnWOI33TAyJ7iSIpl0J3ZhVCHCSsKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WVDId8eX; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ORTtui13"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5a1c49632deso785943a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Aug 2024 02:48:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WVDId8eX"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5af326eddb2so3019166a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Aug 2024 02:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1723110516; x=1723715316; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1723111143; x=1723715943; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=UP7WYb2s6W/huDcH8KCmTjaOFF/lSa6GQFZ21g6l3D8=;
-        b=ORTtui135wiYry1wFosyPqxrXggzAsDeAKJeYcKg/jN4IGd/MylNaWu4g9gPsXt2O3
-         Zcglx70KwWYmvkVhw+Lv+bDW7VuRSz1v51DstSwIh1vSHj984Kt+OsRVyJX1pC2Klvf+
-         5FAyV9FK7qbyYHzqSA55DPhJ3SfyA4+VNUACtPuU3f76D4ScxTXTOky031hVZCrrYPpM
-         YlI2z/O6SLxHCOlIqyB29/WPdPrNMQ2v37rmrPgL0bLXbqb4cU1CXCdY3YT16dK+TKPl
-         JeKsBsezLLvZIevuTVTKDxwoCkPELu92Rox5uknpNJOrN6BuFsAIHOgnPRV0Xe3bNQ6k
-         uGLA==
+        bh=Fcx2EwOfwUSAtVSfh1fPy+at8W7SLWNzydZ39p3XCNI=;
+        b=WVDId8eX6lPO9kdf2jVLsCEg0J4NMOgEYR9iAzg1qVy+gizxXXWjV/yj4MezEeZq0+
+         +55Q9exR22Yq0QNwWRYLg88iL+N8ns8hxOorkY2P7fxICMcL1EtCMQHYxxUThjbDkIEk
+         zLkdURoilTq54bAQT3C/RM4xPs0Y5G9Q/ND2+hcp/GL8x51+I77o58GH+R26aPDITOPd
+         It+GZb50gRZLvH+COLoIsGQbFxw79djhaguhWxN6wCTdPvfpW41fkNJwYl48MoPjvjqW
+         DJO8vxLDpwRKchKzK2umgJSXQXrxNoJw8b4sJlmOCpEyzdi6VTadSQYm6rlr9ANbIOEj
+         gT+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723110516; x=1723715316;
+        d=1e100.net; s=20230601; t=1723111143; x=1723715943;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UP7WYb2s6W/huDcH8KCmTjaOFF/lSa6GQFZ21g6l3D8=;
-        b=JQGlC5KG1IfTEAEpzXIg66L2AFSmYoVTYNdbqMw77MzIElYFTc1l+p63ijISSG+RR3
-         ESmgqCHPVWN/wRBSGgDBVovN/BuQyu+EhfxDyTIItGu5MTX/BDE9Dk/kEF9huH0Lr/GK
-         r+YBbasdE9Jq11JIjA4Sz5+AyJdINNvitLaUgiR7dkgsw+py0J0hgEtiaZi8OEMLfgXe
-         bpNGDUQCJYaz9ddhfC+ZLyKYPLIqZsJAjIeTQ3os/QAbTAOIR8XfiRgF32TmxV0a4T/1
-         2Aq+492EeB907YfUZW0uMcm5oaXl9jm7MSr6GKe7A7h4jWcsTf2ng1qkPyT+7bUHlvGy
-         EVTw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1pGToaWzORC8q6sPn9EqfrPWnmHTg5zIEZDqFJYpxcJcLuoRTVzILN6hR+e8IiYPw00qRTapKetc0iCiQQUmnpSCor6P57QdRqVs5nFhvA4oR
-X-Gm-Message-State: AOJu0YzYP9phiZ9agfKmdPmI5AD0Jk55EX5OLxLVs0kSe5azARFFYY16
-	p0v88V1SoMjo5vwK8Dvb/pmDiuKrbbZVo21CgINjlhLCDFwOcC2yHbFSsEjGKb8=
-X-Google-Smtp-Source: AGHT+IFixvHVqElBCp/LQrILvS+YLJTdWswh0h0/ODW6H+h6Way2eP9DERfLit0CUsvaDC6vb4y/lA==
-X-Received: by 2002:a17:906:f59f:b0:a7a:bae8:f299 with SMTP id a640c23a62f3a-a8090e3d151mr108104266b.51.1723110515536;
-        Thu, 08 Aug 2024 02:48:35 -0700 (PDT)
+        bh=Fcx2EwOfwUSAtVSfh1fPy+at8W7SLWNzydZ39p3XCNI=;
+        b=dcW6grCf8mkiF/xssoGlmjLCR3I28zI0BQUBy+jG8sekTovl5ynG7+u2FhuAwQNMAA
+         d+VNcFwqBOPTuVDBtAAF5cpY3lmCWMiRJ/5fL38kzF+IdZxmBEGEKkdxJ40b74Qc6GPz
+         CswuDgl3+s9g/H6S5SFnvHHBovhhSsGMo0loQ3p+qSXolqkpSdFdAKnjsle4YVaNYlER
+         9UJfsdqZZ5jlasj5WWkbgyxY0bw2KNDq7wPjtwjupNx28B/1j3X++pNyeOiqjmHC0sqx
+         mPpNpOoAyx9lt9zJoeXb+Ec3Xsmm9c6tg+b2uW1xaXUF6HQbJRYULDBZv6uC4i428kBm
+         LFTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUakP8fC9KUWmiizbq9XjGPAT0a4kXI17TqYKCkOeID9xYDrU0PuI+e2LENbLXH1fw7pqpDy4oAQysQe6MyM7ULCO2g4nEIeObyp9E/fjy1r8jP
+X-Gm-Message-State: AOJu0YxXgdqNLa4r5ocFUv+bzmHzSXHi5UUneFdpCQ3VC6MZc5utfLp4
+	I2yPthaBNi4sLwMVPnh2cR+psQ0fQydzQVc6p3RA8XmrvEgNoernC4LpNpQeIsc=
+X-Google-Smtp-Source: AGHT+IFL8ep1gZsn49dY0KctCRlF+ZQwvI1yNn8Wrf1nzNSBPa/BG9Ul0XeVVDKTQY+z/+grscb8pg==
+X-Received: by 2002:a17:907:9814:b0:a7a:afe8:1013 with SMTP id a640c23a62f3a-a8091ed3d11mr121335066b.1.1723111143072;
+        Thu, 08 Aug 2024 02:59:03 -0700 (PDT)
 Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9d426e6sm718153366b.122.2024.08.08.02.48.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9bc3be2sm729036866b.38.2024.08.08.02.59.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 02:48:35 -0700 (PDT)
-Date: Thu, 8 Aug 2024 11:48:33 +0200
+        Thu, 08 Aug 2024 02:59:02 -0700 (PDT)
+Date: Thu, 8 Aug 2024 11:59:00 +0200
 From: Petr Mladek <pmladek@suse.com>
 To: Song Liu <songliubraving@meta.com>
-Cc: zhang warden <zhangwarden@gmail.com>,
+Cc: Sami Tolvanen <samitolvanen@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
 	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
@@ -71,20 +72,20 @@ Cc: zhang warden <zhangwarden@gmail.com>,
 	"kees@kernel.org" <kees@kernel.org>,
 	Kernel Team <kernel-team@meta.com>,
 	Matthew Maurer <mmaurer@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
+	"Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
 Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
  without .XXX suffix
-Message-ID: <ZrSUcbOtNc18D8ax@pathway.suse.cz>
-References: <20240802210836.2210140-1-song@kernel.org>
- <20240802210836.2210140-4-song@kernel.org>
- <20240806144426.00ed349f@gandalf.local.home>
+Message-ID: <ZrSW5KgFMjlB1Rn2@pathway.suse.cz>
+References: <20240806144426.00ed349f@gandalf.local.home>
  <B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
  <20240806160049.617500de@gandalf.local.home>
  <20240806160149.48606a0b@gandalf.local.home>
  <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
- <87F7024C-9049-4573-829B-79261FC87984@gmail.com>
- <22D3CE6E-945B-43C4-A3A2-C57588B12BD0@fb.com>
+ <20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
+ <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
+ <20240807190809.cd316e7f813400a209aae72a@kernel.org>
+ <CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
+ <09ED7762-A464-45FF-9062-9560C59F304E@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -94,35 +95,72 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <22D3CE6E-945B-43C4-A3A2-C57588B12BD0@fb.com>
+In-Reply-To: <09ED7762-A464-45FF-9062-9560C59F304E@fb.com>
 
-On Wed 2024-08-07 19:46:31, Song Liu wrote:
+On Wed 2024-08-07 20:48:48, Song Liu wrote:
 > 
 > 
-> > On Aug 7, 2024, at 7:58 AM, zhang warden <zhangwarden@gmail.com> wrote:
+> > On Aug 7, 2024, at 8:33 AM, Sami Tolvanen <samitolvanen@google.com> wrote:
 > > 
+> > Hi,
 > > 
-> >> In my GCC built, we have suffixes like ".constprop.0", ".part.0", ".isra.0", 
-> >> and ".isra.0.cold".
+> > On Wed, Aug 7, 2024 at 3:08 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >> 
+> >> On Wed, 7 Aug 2024 00:19:20 +0000
+> >> Song Liu <songliubraving@meta.com> wrote:
+> >> 
+> >>> Do you mean we do not want patch 3/3, but would like to keep 1/3 and part
+> >>> of 2/3 (remove the _without_suffix APIs)? If this is the case, we are
+> >>> undoing the change by Sami in [1], and thus may break some tracing tools.
+> >> 
+> >> What tracing tools may be broke and why?
 > > 
-> > A fresher's eye, I met sometime when try to build a livepatch module and found some mistake caused by ".constprop.0" ".part.0" which is generated by GCC.
+> > This was a few years ago when we were first adding LTO support, but
+> > the unexpected suffixes in tracing output broke systrace in Android,
+> > presumably because the tools expected to find specific function names
+> > without suffixes. I'm not sure if systrace would still be a problem
+> > today, but other tools might still make assumptions about the function
+> > name format. At the time, we decided to filter out the suffixes in all
+> > user space visible output to avoid these issues.
 > > 
-> > These section with such suffixes is special and sometime the symbol st_value is quite different. What is these kind of section (or symbol) use for?
+> >> For this suffix problem, I would like to add another patch to allow probing on
+> >> suffixed symbols. (It seems suffixed symbols are not available at this point)
+> >> 
+> >> The problem is that the suffixed symbols maybe a "part" of the original function,
+> >> thus user has to carefully use it.
+> >> 
+> >>> 
+> >>> Sami, could you please share your thoughts on this?
+> >> 
+> >> Sami, I would like to know what problem you have on kprobes.
+> > 
+> > The reports we received back then were about registering kprobes for
+> > static functions, which obviously failed if the compiler added a
+> > suffix to the function name. This was more of a problem with ThinLTO
+> > and Clang CFI at the time because the compiler used to rename _all_
+> > static functions, but one can obviously run into the same issue with
+> > just LTO.
 > 
+> I think newer LLVM/clang no longer add suffixes to all static functions
+> with LTO and CFI. So this may not be a real issue any more?
 > 
-> IIUC, constprop means const propagation. For example, function 
-> "foo(int a, int b)" that is called as "foo(a, 10)" will be come 
-> "foo(int a)" with a hard-coded b = 10 inside. 
-> 
-> .part.0 is part of the function, as the other part is inlined in 
-> the caller. 
+> If we still need to allow tracing without suffix, I think the approach
+> in this patch set is correct (sort syms based on full name,
 
-Hmm, we should not remove the suffixes like .constprop*, .part*,
-.isra*. They implement a special optimized variant of the function.
-It is not longer the original full-featured one.
+Yes, we should allow to find the symbols via the full name, definitely.
 
-This is a difference against adding a suffix for a static function.
-Such a symbol implements the original full-featured function.
+> remove suffixes in special APIs during lookup).
+
+Just an idea. Alternative solution would be to make make an alias
+without the suffix when there is only one symbol with the same
+name.
+
+It would be complementary with the patch adding aliases for symbols
+with the same name, see
+https://lore.kernel.org/r/20231204214635.2916691-1-alessandro.carminati@gmail.com
+
+I would allow to find the symbols with and without the suffix using
+a single API.
 
 Best Regards,
 Petr
