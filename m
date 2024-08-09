@@ -1,137 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013EA1552EB;
-	Fri,  9 Aug 2024 07:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D191DFF5
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Aug 2024 12:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723190188; cv=none; b=q/icM8tm/GJw5AQmaxamY0zCZ+d7puypdEBlXsVnmGXFm3qgU5ZumjLFz44PqwyjmMTts65fVHiepjd5mgB4OvprVL9Xbqg6UGtfnychHv6wEotwSsI5FGXuHlKrGb3dxBSoT3pDDzqkrkXajJuGpWY8Rev4RoEnA81aK3mRo3w=
+	t=1723206877; cv=none; b=mqKYTVJaf02t/8ww7FZvHxnDdEkMYjibo1CFlPADzfNHFPsGE67jqd+/AEreQ30pB4XAJvZjLDy/CR2V26O8Foi5CrylbLktdaDRGvtqDjbQIIKEyPJbcHwEGUNeYPY8IzvL3tdZnKCgAo/JKENbSg2/Jy0pXgye4YPEgph/tA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723190188; c=relaxed/simple;
-	bh=WciictBvnZZognJdSB//Vkpj36Vtrbm418N+k4gXKM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lue6vbwtS3HJzRZ4DDuQJNKtEil0h6h4lG6IFkP1B5hZIGG8ikUOuuF5Kcihcvq2LJABgU2zkSn7SqbHzVyIsJVSGrB0gMVkoRhgO4qxg5JpAJ98rXp/4ZTYvfg+2Q4hTsM6NO+bTCsHgTb5IFuX9QdMpXBrbmjngJBHjJfFHqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWy7JWX6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723206877; c=relaxed/simple;
+	bh=dFQRHkthV2CiGWZy7z+Br0AUOk55fvfBCAujfUth+ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=eC460S+xFbacQpJKgczEZVb0FtAHMuonTqHME1fDQsO5gO19JWjXQJVnevkZRd/80gQWU6huTfi68WF14amxIbzYOq6t4vx37Qf8K+1lFtoRpSi9ENA6lC+WjTM0vwdNF9yuZzwYx5F9iZ6ax815rWPdtzZFkiUZPNXG6G5Xg3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XiyMs+Pe; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWy7JWX6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 952AFC4AF0D;
-	Fri,  9 Aug 2024 07:56:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723190187;
-	bh=WciictBvnZZognJdSB//Vkpj36Vtrbm418N+k4gXKM8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iWy7JWX63DlQVy2d0mNGhQfP+E5wTH7yt+zLcJ0XE+/2H7ya+xPuYTTvng2lSdR0P
-	 fY3FcxC8uU8GMeAkyI60nvRDENoJPGv+KO8RJqpQagYElLNKgByK/OFTroSX355YCs
-	 LkPyVbDTwM5NLcPamf6V9UY8mS/5OHdlCJ1Bf0Wrzy8CzH4nnoBsnommLbSLYVYa0S
-	 vit/eTqSx1gLR+UhLsyyqz5moCQu5XrPJ2lKHYZlMNpbvAKOB2UKpjpb3hjS9c0GG8
-	 efszcgVI6ngSguWbXJ9ztgvoCk8mZPBFojeGqb+x30Hdvr6lK6GLQBG40LF/KOtnNT
-	 rWCJ8B29HDgmg==
-Date: Fri, 9 Aug 2024 08:56:15 +0100
-From: Simon Horman <horms@kernel.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>,
-	Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Kaiyuan Zhang <kaiyuanz@google.com>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Willem de Bruijn <willemb@google.com>, linux-alpha@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	bpf@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bagas Sanjaya <bagasdotme@gmail.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Helge Deller <deller@gmx.de>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"James E. J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Matt Turner <mattst88@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Shailend Chand <shailend@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Shuah Khan <shuah@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Yunsheng Lin <linyunsheng@huawei.com>
-Subject: Re: [PATCH net-next v17 03/14] netdev: support binding dma-buf to
- netdevice
-Message-ID: <20240809075615.GD3075665@kernel.org>
-References: <20240730022623.98909-4-almasrymina@google.com>
- <5d3c74da-7d44-4b88-8961-60f21f84f0ac@web.de>
- <CAHS8izPxfCv1VMFBK1FahGTjVmUSSfrabgY5y6V+XtaszoHQ4w@mail.gmail.com>
- <9aad36fe-cd4c-4ce5-b4d8-6c8619d10c46@web.de>
- <66b2198686b91_3206cf29453@willemb.c.googlers.com.notmuch>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XiyMs+Pe"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a7a81bd549eso174116066b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Aug 2024 05:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723206874; x=1723811674; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PZDoeVn0Ui9DaBYyRf0yS/xJKDLJH8VgYEQMX6ljq/0=;
+        b=XiyMs+PexbDUrvUz2Nls1SXA28OiFJAidssFsVyx+O/62AhitBne17u5Jj0MUZxILT
+         Z8bAhCOB541b+4YsZNzd9L86loCGvZXGSr9Fo4A+ILgBIBP9aHPieCWMFZzoUkJ0Z5CE
+         h0uvsv1nKh4kqEEDsx7enbLb1TK8FS94k9NTWmxox8XEOWlWH0eYPYvjPfyjzSK6s90i
+         R8aKeviuP3YCNZUB5sWHK0DXCwCHhPEimE01wVetOwskh4ftbtSNrh9SuHOEy4IWt0AM
+         5Zpjy/I9pyI+1xQpKqSMZT07YgfltJz1Hd08oNjAgDGzDdEh6Uixzsx1HLi59PCMazji
+         ALfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723206874; x=1723811674;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PZDoeVn0Ui9DaBYyRf0yS/xJKDLJH8VgYEQMX6ljq/0=;
+        b=Yhg9IMNEfXoHN9/fDYkNpEOADh48GAa7bvzlGpe1bNUUTXQFZ4Iv5x9vYp0YUXTxQa
+         qYdni312F4IZ/YZEmeGH8352reR9VxoSbzQSu8pmNvHqz3p4T2vjVS2/0FEPZdBiMHI7
+         9Xh/O4Jayui6EzSta7GOozFiUwYhNZ7w2bIlW18rR0gInSJLUrYe+lYgROfK9ra0j+1A
+         INRSVTDp8aWjITLvr5jPyVztO3TJPHHgSXfqgn72hmj0RHuev11rZ5IdZNuBmwf2pawG
+         q6KB5UTMEHRq74ghCBKb79aM6L43DDfX2cGTQzAtHKQ4Uax1Z9eslAXLt8fbRiA28nn2
+         y5KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXG9NfL+Vx1GUPFAdAuBfpREYBk4l3oa0tk9Fbsu3H8zT4SRBpGqeMP13YH5543nT/hxtTam6e7VE8Ah4om4EwURYoqihDOp+0G3AhcMwRfWU+f
+X-Gm-Message-State: AOJu0Yx+8crHA6pNSBgE6vFpGwNJxfZXTyXamTj9iU/s5s7t2yjw0iuk
+	YQ3sqfn+Pko8WrjbUXaEIaUT8Mqc2SJzmS+GwS6Bxwy9DkilbdPb++ceuAXwq1I=
+X-Google-Smtp-Source: AGHT+IHhcQkeSlgaiaLuH3O2urxwGk6K9tJx15iJPwIKKgrG2LT/FmwImrhs1ImaNZ2v2YJcFRxg3A==
+X-Received: by 2002:a17:907:60cd:b0:a7a:ab8a:38f with SMTP id a640c23a62f3a-a80aa5fb107mr120044866b.41.1723206874085;
+        Fri, 09 Aug 2024 05:34:34 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9d4545dsm837841266b.124.2024.08.09.05.34.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Aug 2024 05:34:33 -0700 (PDT)
+Date: Fri, 9 Aug 2024 15:34:30 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] rtla/osnoise: prevent NULL dereference in error handling
+Message-ID: <f964ed1f-64d2-4fde-ad3e-708331f8f358@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <66b2198686b91_3206cf29453@willemb.c.googlers.com.notmuch>
+X-Mailer: git-send-email haha only kidding
 
-On Tue, Aug 06, 2024 at 08:39:34AM -0400, Willem de Bruijn wrote:
-> Markus Elfring wrote:
-> > >> …
-> > >>> +++ b/include/net/devmem.h
-> > >>> @@ -0,0 +1,115 @@
-> > >> …
-> > >>> +#ifndef _NET_DEVMEM_H
-> > >>> +#define _NET_DEVMEM_H
-> > >> …
-> > >>
-> > >> I suggest to omit leading underscores from such identifiers.
-> > >> https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+or+define+a+reserved+identifier
-> > >>
-> > >
-> > > I was gonna apply this change, but I ack'd existing files and I find
-> > > that all of them include leading underscores, including some very
-> > > recently added files like net/core/page_pool_priv.h.
-> > >
-> > > I would prefer to stick to existing conventions if that's OK, unless
-> > > there is widespread agreement to the contrary.
-> > 
-> > Under which circumstances would you become interested to reduce development risks
-> > also according to undefined behaviour?
-> > https://wiki.sei.cmu.edu/confluence/display/c/CC.+Undefined+Behavior#CC.UndefinedBehavior-ub_106
-> 
-> This series is following established practice in kernel networking.
-> 
-> If that conflicts with a C standard, then perhaps that needs to be
-> resolved project wide.
-> 
-> Forcing an individual feature to diverge just brings inconsistency.
-> That said, this appears to be inconsistent already.
-> 
-> Main question is whether this is worth respinning a series already at
-> v17 with no more fundamental feedback.
+If the "tool->data" allocation fails then there is no need to call
+osnoise_free_top() and, in fact, doing so will lead to a NULL dereference.
 
-No, from my point of view, it is not.
+Fixes: 1eceb2fc2ca5 ("rtla/osnoise: Add osnoise top mode")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ tools/tracing/rtla/src/osnoise_top.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-This really is a trivial and somewhat subjective mater.
-I don't think it should hold up a substantial piece of work.
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index f594a44df840..2f756628613d 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -651,8 +651,10 @@ struct osnoise_tool *osnoise_init_top(struct osnoise_top_params *params)
+ 		return NULL;
+ 
+ 	tool->data = osnoise_alloc_top(nr_cpus);
+-	if (!tool->data)
+-		goto out_err;
++	if (!tool->data) {
++		osnoise_destroy_tool(tool);
++		return NULL;
++	}
+ 
+ 	tool->params = params;
+ 
+@@ -660,11 +662,6 @@ struct osnoise_tool *osnoise_init_top(struct osnoise_top_params *params)
+ 				   osnoise_top_handler, NULL);
+ 
+ 	return tool;
+-
+-out_err:
+-	osnoise_free_top(tool->data);
+-	osnoise_destroy_tool(tool);
+-	return NULL;
+ }
+ 
+ static int stop_tracing;
+-- 
+2.43.0
+
