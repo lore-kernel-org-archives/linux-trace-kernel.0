@@ -1,113 +1,161 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D191DFF5
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Aug 2024 12:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040B2190470
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Aug 2024 14:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723206877; cv=none; b=mqKYTVJaf02t/8ww7FZvHxnDdEkMYjibo1CFlPADzfNHFPsGE67jqd+/AEreQ30pB4XAJvZjLDy/CR2V26O8Foi5CrylbLktdaDRGvtqDjbQIIKEyPJbcHwEGUNeYPY8IzvL3tdZnKCgAo/JKENbSg2/Jy0pXgye4YPEgph/tA0=
+	t=1723212651; cv=none; b=u4jT4XVHFOrS1luTU9QWL0X1X2Wgjf4Woyt1+mrMYrhaMmKBE5MgLmB3VSBQFnr+sdoePiK9e0uyfILwxiXQba0/YeODxXfb+OzhJ5AsthPPSB9CcnnlbOnsqu0G/ffpq4AccOL+3OfAkZBBLs8T207v9l8Sdx9X6dT9WgqhMYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723206877; c=relaxed/simple;
-	bh=dFQRHkthV2CiGWZy7z+Br0AUOk55fvfBCAujfUth+ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eC460S+xFbacQpJKgczEZVb0FtAHMuonTqHME1fDQsO5gO19JWjXQJVnevkZRd/80gQWU6huTfi68WF14amxIbzYOq6t4vx37Qf8K+1lFtoRpSi9ENA6lC+WjTM0vwdNF9yuZzwYx5F9iZ6ax815rWPdtzZFkiUZPNXG6G5Xg3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XiyMs+Pe; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1723212651; c=relaxed/simple;
+	bh=pB3wkCjy5BE4htN+Z4c0bK/ig1XSKbZvFviaBIbuCvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eMViLz68/FFRyYnv9hMitDuk2OpArjI9STduxHVSdUfEDYI4CtaQ2aEyLy7z+PcwoouqwdaHCMG+zdj2Kt44mv9meiG+Nv7DeJ1y9EaQs+hFPSMiWsQnFuLuG6xKY+7Lzrw4U9ocYCes/qHEjojBhWX564FbIO9YZ7BO1VSqy1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGkVC6hx; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XiyMs+Pe"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a7a81bd549eso174116066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Aug 2024 05:34:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGkVC6hx"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6bb5a4668faso12596396d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Aug 2024 07:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723206874; x=1723811674; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PZDoeVn0Ui9DaBYyRf0yS/xJKDLJH8VgYEQMX6ljq/0=;
-        b=XiyMs+PexbDUrvUz2Nls1SXA28OiFJAidssFsVyx+O/62AhitBne17u5Jj0MUZxILT
-         Z8bAhCOB541b+4YsZNzd9L86loCGvZXGSr9Fo4A+ILgBIBP9aHPieCWMFZzoUkJ0Z5CE
-         h0uvsv1nKh4kqEEDsx7enbLb1TK8FS94k9NTWmxox8XEOWlWH0eYPYvjPfyjzSK6s90i
-         R8aKeviuP3YCNZUB5sWHK0DXCwCHhPEimE01wVetOwskh4ftbtSNrh9SuHOEy4IWt0AM
-         5Zpjy/I9pyI+1xQpKqSMZT07YgfltJz1Hd08oNjAgDGzDdEh6Uixzsx1HLi59PCMazji
-         ALfg==
+        d=google.com; s=20230601; t=1723212648; x=1723817448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FAq+1P/w8tI0/3HVArG8ZV5u6VZadlBPolUAhgI5gl8=;
+        b=nGkVC6hxQ9S94WAmAtW1FrPD+sAJjm1t7W7DWwmib99g2VOp5oTHDqQ2+68I0/eYEp
+         8eXTYe57hgcorkTI0JKHeahl4P1an0OMTZJyKUgIk/fnniE8fpC2PA8fRhBa8WE7BGS7
+         H6kaid+22SIrTnql0Fd5G0ajp25ihNBSedmRiVL8yvZbAgJlHstkcnxGnQidLwuoJoxv
+         jE10ts1fOpJY6oTcNJnhYJqnSpKGwBgdJjrcov8NiuS9zokXBd11N3junnsVVJK/+G7A
+         OCeem5nn2uPObKCluMe/lty6tymkNrEoW+CwVVQiwF50Y2F/2uuTESyNfQw5rFhgwlSP
+         Hhlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723206874; x=1723811674;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PZDoeVn0Ui9DaBYyRf0yS/xJKDLJH8VgYEQMX6ljq/0=;
-        b=Yhg9IMNEfXoHN9/fDYkNpEOADh48GAa7bvzlGpe1bNUUTXQFZ4Iv5x9vYp0YUXTxQa
-         qYdni312F4IZ/YZEmeGH8352reR9VxoSbzQSu8pmNvHqz3p4T2vjVS2/0FEPZdBiMHI7
-         9Xh/O4Jayui6EzSta7GOozFiUwYhNZ7w2bIlW18rR0gInSJLUrYe+lYgROfK9ra0j+1A
-         INRSVTDp8aWjITLvr5jPyVztO3TJPHHgSXfqgn72hmj0RHuev11rZ5IdZNuBmwf2pawG
-         q6KB5UTMEHRq74ghCBKb79aM6L43DDfX2cGTQzAtHKQ4Uax1Z9eslAXLt8fbRiA28nn2
-         y5KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXG9NfL+Vx1GUPFAdAuBfpREYBk4l3oa0tk9Fbsu3H8zT4SRBpGqeMP13YH5543nT/hxtTam6e7VE8Ah4om4EwURYoqihDOp+0G3AhcMwRfWU+f
-X-Gm-Message-State: AOJu0Yx+8crHA6pNSBgE6vFpGwNJxfZXTyXamTj9iU/s5s7t2yjw0iuk
-	YQ3sqfn+Pko8WrjbUXaEIaUT8Mqc2SJzmS+GwS6Bxwy9DkilbdPb++ceuAXwq1I=
-X-Google-Smtp-Source: AGHT+IHhcQkeSlgaiaLuH3O2urxwGk6K9tJx15iJPwIKKgrG2LT/FmwImrhs1ImaNZ2v2YJcFRxg3A==
-X-Received: by 2002:a17:907:60cd:b0:a7a:ab8a:38f with SMTP id a640c23a62f3a-a80aa5fb107mr120044866b.41.1723206874085;
-        Fri, 09 Aug 2024 05:34:34 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9d4545dsm837841266b.124.2024.08.09.05.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Aug 2024 05:34:33 -0700 (PDT)
-Date: Fri, 9 Aug 2024 15:34:30 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] rtla/osnoise: prevent NULL dereference in error handling
-Message-ID: <f964ed1f-64d2-4fde-ad3e-708331f8f358@stanley.mountain>
+        d=1e100.net; s=20230601; t=1723212648; x=1723817448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FAq+1P/w8tI0/3HVArG8ZV5u6VZadlBPolUAhgI5gl8=;
+        b=E0Ou3qXB9sTPLw3UlDW4L7MQplQum1/fmzY4tvOL3x/Hbf40Uofi4Fu8BcivpUOkIU
+         PGonLXF/ZeMieykYmXtBWUHfk9GlJkScDxRAw1jSJU3LCLHpq8NZy70JIta5JBr+Hopy
+         EByWTbIBZ89W0PHKPDry68B5WhQQszt6YM+iicd8O9+ZZoxkfCERy3+wXcqql+ImDqFg
+         SK60DSSxmGWIKY6u/l4JvfSfWpCMeoDI8hsRDN9EGVXDbH36tDQkmz7sVMXstYoh+cQf
+         848eXQdyXigshtAGzLFv9Y3D+/TMIs/8Vbc9TTe/qGW9edE5aoGfF+q1FxAyObyZ4f+p
+         hy4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXEoHrnPsO77A7m1c4hgslLdgr+U4WEiyZGKLDzP0uR28LnBwFFjATtCrpMRdMgbV7g1LmHTmAykjm0cuWa/MYqJvgiB4ikVqLgPAGAkvrq4ntx
+X-Gm-Message-State: AOJu0Yy2/quHpfrgVUR1K5wdcStoK7+kJ6BqB6VwidNJdQFxIVssdO+/
+	14vXYuouQSx+KIQuyRuCOnBv9sIyJHz3yhMUcIttSQ8ULQzaVzeiTIARHNuKaxNELY14HbeNSao
+	gr/m5rybkTz+aHnokb3IR+2jskvtbhLaXomsm
+X-Google-Smtp-Source: AGHT+IHtXT623FzOsQrwA3QF53Omar/D5N9kMqOW264VduXGeLM8mfJ22+dFZ2QyvytnqYSwbN8pGocgZbvLtoABiDw=
+X-Received: by 2002:a05:6214:459a:b0:6b7:a947:18ea with SMTP id
+ 6a1803df08f44-6bd78dcb419mr20493616d6.34.1723212647651; Fri, 09 Aug 2024
+ 07:10:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20240805212536.2172174-1-almasrymina@google.com>
+ <20240805212536.2172174-8-almasrymina@google.com> <20240806135924.5bb65ec7@kernel.org>
+ <CAHS8izOA80dxpB9rzOwv7Oe_1w4A7vo5S3c3=uCES8TSnjyzpg@mail.gmail.com> <20240808192410.37a49724@kernel.org>
+In-Reply-To: <20240808192410.37a49724@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 9 Aug 2024 10:10:35 -0400
+Message-ID: <CAHS8izMH4UhD+UDYqMjt9d=gu-wpGPQBLyewzVrCWRyoVtQcgA@mail.gmail.com>
+Subject: Re: [PATCH net-next v18 07/14] memory-provider: dmabuf devmem memory provider
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If the "tool->data" allocation fails then there is no need to call
-osnoise_free_top() and, in fact, doing so will lead to a NULL dereference.
+On Thu, Aug 8, 2024 at 10:24=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Thu, 8 Aug 2024 16:36:24 -0400 Mina Almasry wrote:
+> > > How do you know that the driver:
+> > >  - supports net_iov at all (let's not make implicit assumptions based
+> > >    on presence of queue API);
+> > >  - supports net_iov in current configuration (eg header-data split is
+> > >    enabled)
+> > >  - supports net_iov for _this_ pool (all drivers must have separate
+> > >    buffer pools for headers and data for this to work, some will use
+> > >    page pool for both)
+> > >
+> > > What comes to mind is adding an "I can gobble up net_iovs from this
+> > > pool" flag in page pool params (the struct that comes from the driver=
+),
+> >
+> > This already sorta exists in the current iteration, although maybe in
+> > an implicit way. As written, drivers need to set params.queue,
+> > otherwise core will not attempt to grab the mp information from
+> > params.queue. A driver can set params.queue for its data pages pool
+> > and not set it for the headers pool. AFAICT that deals with all 3
+> > issues you present above.
+> >
+> > The awkward part is if params.queue starts getting used for other
+> > reasons rather than passing mp configuration, but as of today that's
+> > not the case so I didn't add the secondary flag. If you want a second
+> > flag to be added preemptively, I can do that, no problem. Can you
+> > confirm params.queue is not good enough?
+>
+> I'd prefer a flag. The setting queue in a param struct is not a good
+> API for conveying that the page pool is for netmem payloads only.
+>
+> > > and then on the installation path we can check if after queue reset
+> > > the refcount of the binding has increased. If it did - driver has
+> > > created a pool as we expected, otherwise - fail, something must be of=
+f.
+> > > Maybe that's a bit hacky?
+> >
+> > What's missing is for core to check at binding time that the driver
+> > supports net_iov. I had relied on the implicit presence of the
+> > queue-API.
+> >
+> > What you're proposing works, but AFAICT it's quite hacky, yes. I
+> > basically need to ASSERT_RTNL in net_devmem_binding_get() to ensure
+> > nothing can increment the refcount while the binding is happening so
+> > that the refcount check is valid.
+>
+> True. Shooting from the hip, but we could walk the page pools of the
+> netdev and find the one that has the right mp installed, and matches
+> queue? The page pools are on a list hooked up to the netdev, trivial
+> to walk.
+>
 
-Fixes: 1eceb2fc2ca5 ("rtla/osnoise: Add osnoise top mode")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- tools/tracing/rtla/src/osnoise_top.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+I think this is good, and it doesn't seem hacky to me, because we can
+check the page_pools of the netdev while we hold rtnl, so we can be
+sure nothing is messing with the pp configuration in the meantime.
+Like you say below it does validate the driver rather than rely on the
+driver saying it's doing the right thing. I'll look into putting this
+in the next version.
 
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index f594a44df840..2f756628613d 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -651,8 +651,10 @@ struct osnoise_tool *osnoise_init_top(struct osnoise_top_params *params)
- 		return NULL;
- 
- 	tool->data = osnoise_alloc_top(nr_cpus);
--	if (!tool->data)
--		goto out_err;
-+	if (!tool->data) {
-+		osnoise_destroy_tool(tool);
-+		return NULL;
-+	}
- 
- 	tool->params = params;
- 
-@@ -660,11 +662,6 @@ struct osnoise_tool *osnoise_init_top(struct osnoise_top_params *params)
- 				   osnoise_top_handler, NULL);
- 
- 	return tool;
--
--out_err:
--	osnoise_free_top(tool->data);
--	osnoise_destroy_tool(tool);
--	return NULL;
- }
- 
- static int stop_tracing;
--- 
-2.43.0
 
+--
+Thanks,
+Mina
