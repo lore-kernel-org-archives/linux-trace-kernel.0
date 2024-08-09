@@ -1,187 +1,549 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA2D16C6B0;
-	Fri,  9 Aug 2024 06:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FD11B964;
+	Fri,  9 Aug 2024 06:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723184454; cv=none; b=bMLbSRMLanrM9JNmVsWrkEsWPBZ0AQq8EWTqoA5XgCiPyVUMNpchVsnFLZsigHQn9l6KT3ZF5p1F0eK/gSLgaHeDvfrN826aKtAibE+MbkWJxSLJtzMOU0qgOYhN5DIMEPNwAAw0elmHeXc/F2UNTgLtbTo5nXEmtzaVBt1tTXQ=
+	t=1723186264; cv=none; b=PWL4JwCwIUixHr88Jz9AjjxYjjVOyZw/nhA3GHVWKMf4KL/iYYYjU5NjYHWdN5mds9KH/LzUi9IiIqtE9Qv25eD4uwhaDKBOqeBzRIvbzxWUZba4P6YTDfNBeBOKei2RqegHb+1yEU4miBR43/1d3Dlc5VliTLO0nrUf9GsTZxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723184454; c=relaxed/simple;
-	bh=aA11aefebB4utmXirba0ehrdoaznzBhD9HVwhEzt0Js=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HUszUX0Vjx0q2UDphkfDLsCjRuGH6uU4ePwCGeORurxlAJ22eQYt/h7/XHP/sFrNlAtvF+yOtXk1sFwqYNYEpOYW3UrSMxQ7yDlG2QxS+y6zk5bQjvQW7VJwO5pSUVhT7a11TDrGnDoigHiaIRrLhFj8EsTZCLavM5KB8km/Nmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CyGYLiua; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyGYLiua"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-260fed6c380so1172181fac.1;
-        Thu, 08 Aug 2024 23:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723184452; x=1723789252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aA11aefebB4utmXirba0ehrdoaznzBhD9HVwhEzt0Js=;
-        b=CyGYLiuaM1qYcT7AzPkICy3RlDDFs+BRtygCsPorqv+RREwDTWKlXclvr3RJ8ECbEX
-         KAt88Z+B6G4ZYXbzTYzGs3TW2Rzm6hrTjycLVW2PHs6Jnj4Xx5j8gw7lAvwKmmaDym49
-         Mt5R6XHw3GNI9wHklpXG2//IyGrDCI3mdn4JornYDalUy3MteSqCrD3JH9I7GejX4+yo
-         NPLKWVxidX1r2kPO0sS1B0exdbwzOQ08GX7PfnrJu8KHV5mlpUtDkdq/ptka3kKHIsNn
-         8YUl06KlpAbWaBuLdLvgaaSRSoKwGbqzkwWfNaQWnrtFNE+4qAbxL44ObESLQ82vXV9Z
-         4fgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723184452; x=1723789252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aA11aefebB4utmXirba0ehrdoaznzBhD9HVwhEzt0Js=;
-        b=hV0ZW0gvAZhyRGEC+8EDutkQ0R102A6D9cU4bnivz/RYkvsCFn7hHoZPNcXyPNdYWv
-         yCGcKXS8UosmUNLhe/0OFLOzhwt1ir5kVUiXlcv0JHGX5LuwLEBuFArgOBqyjXGwOaNs
-         6XgePe/px36HoojWZi0wqh/RBYpCvPl/3CjouOOSleg4oDYvkByACJHrMf8nRZfoSTxZ
-         Mc0R5qn0c8VCShw4KOwUpG1+LXTCaNXFj23njSefkk4Snmbm3gjmqpkqOqnkebTNRUXT
-         2AZGOFQbWsFvIq8Ie263u0v/U8B45sZpuiwmDylhk8XBTOSGeqUl2eoOLr6hTERqNIv3
-         nblw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+5Y/KrdQs4pCGzZclWf1HoCPwn3DCsLz0K2sf4QSTO/D2lAEQyxfihKtJHgzSdRQmdyR8O1TIxYh+JBJaIqwDP3SRazwwydiymPHvjBztXo8WisO15nsm3Brw3y5Y0bjGeLuWL2vIUVGxkr+ormwXUk8as9DfydV/NOpgDM/26XOHYRAXGqFZkOBWv0yc/w==
-X-Gm-Message-State: AOJu0YyQP0iiVwTd+Mj9rl0iasKsY51WB0cwqFMJ+fqRJTmGIqawR7/D
-	0Net4lalCQBRTi1Xz0L0eWYbQ7nqEILsd7zbDRP5fMliM7uW/JTVO2dbF1e0lDp12c3gBOZ3Nm2
-	6sbsCkWW0GfoAMnCI0KeGg0Ocjl0=
-X-Google-Smtp-Source: AGHT+IERl9zszuKHpdxDLyBONioVd83Ghs//vh0vz6AsfGDCLL5VPWLygNQb5UlKj78iwLdmDEqGOYhU/ZPjWH4ShcM=
-X-Received: by 2002:a05:6870:f112:b0:261:65f:ca5e with SMTP id
- 586e51a60fabf-26c62c184a2mr852005fac.8.1723184451636; Thu, 08 Aug 2024
- 23:20:51 -0700 (PDT)
+	s=arc-20240116; t=1723186264; c=relaxed/simple;
+	bh=8whcUsEwVV5ZfCjLchtc+BBGZbBizZ8MPfeKDhGWdGs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Uz6qXIY767k+8IWjc2UG5QghRIYjN895J+3Al83tPbe+5aDADRZSiQMI5cF6gU/4LCAXmp9LSS7zjlBC3Oh6ab9Os6zVI3j+ZGv6W+nN+gjKRqvMCxGwaYLbP7FijlR9KGgtMpSiBTccgOWICI1ycYhN4seJxmmF3kFOgqVaBks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4WgDvf73hnz1S7RY;
+	Fri,  9 Aug 2024 14:46:06 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id A4B351A0188;
+	Fri,  9 Aug 2024 14:50:52 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 9 Aug 2024 14:50:51 +0800
+Message-ID: <412a40bd-385d-08b7-e6b0-4b1dd77a28af@huawei.com>
+Date: Fri, 9 Aug 2024 14:50:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240806144426.00ed349f@gandalf.local.home> <B53E6C7F-7FC4-4B4B-9F06-8D7F37B8E0EB@fb.com>
- <20240806160049.617500de@gandalf.local.home> <20240806160149.48606a0b@gandalf.local.home>
- <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com> <20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
- <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com> <20240807190809.cd316e7f813400a209aae72a@kernel.org>
- <CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
- <09ED7762-A464-45FF-9062-9560C59F304E@fb.com> <ZrSW5KgFMjlB1Rn2@pathway.suse.cz>
-In-Reply-To: <ZrSW5KgFMjlB1Rn2@pathway.suse.cz>
-From: Alessandro Carminati <alessandro.carminati@gmail.com>
-Date: Fri, 9 Aug 2024 08:20:15 +0200
-Message-ID: <CAPp5cGRZZxxxMez4B5dqjQCD6307K==5-aTLfqDmZu2Ui9mEmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
- without .XXX suffix
-To: Petr Mladek <pmladek@suse.com>
-Cc: Song Liu <songliubraving@meta.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>, 
-	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, Nathan Chancellor <nathan@kernel.org>, 
-	"morbo@google.com" <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Leizhen <thunder.leizhen@huawei.com>, 
-	"kees@kernel.org" <kees@kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Matthew Maurer <mmaurer@google.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
+ performance
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, <paulmck@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+References: <20240727094405.1362496-1-liaochang1@huawei.com>
+ <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
+ <20240808184911.GH8020@redhat.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <20240808184911.GH8020@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Hello,
-sorry to join late at the party.
 
-Il giorno gio 8 ago 2024 alle ore 11:59 Petr Mladek <pmladek@suse.com>
-ha scritto:
->
-> On Wed 2024-08-07 20:48:48, Song Liu wrote:
-> >
-> >
-> > > On Aug 7, 2024, at 8:33=E2=80=AFAM, Sami Tolvanen <samitolvanen@googl=
-e.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Wed, Aug 7, 2024 at 3:08=E2=80=AFAM Masami Hiramatsu <mhiramat@ker=
-nel.org> wrote:
-> > >>
-> > >> On Wed, 7 Aug 2024 00:19:20 +0000
-> > >> Song Liu <songliubraving@meta.com> wrote:
-> > >>
-> > >>> Do you mean we do not want patch 3/3, but would like to keep 1/3 an=
-d part
-> > >>> of 2/3 (remove the _without_suffix APIs)? If this is the case, we a=
-re
-> > >>> undoing the change by Sami in [1], and thus may break some tracing =
-tools.
-> > >>
-> > >> What tracing tools may be broke and why?
-> > >
-> > > This was a few years ago when we were first adding LTO support, but
-> > > the unexpected suffixes in tracing output broke systrace in Android,
-> > > presumably because the tools expected to find specific function names
-> > > without suffixes. I'm not sure if systrace would still be a problem
-> > > today, but other tools might still make assumptions about the functio=
-n
-> > > name format. At the time, we decided to filter out the suffixes in al=
-l
-> > > user space visible output to avoid these issues.
-> > >
-> > >> For this suffix problem, I would like to add another patch to allow =
-probing on
-> > >> suffixed symbols. (It seems suffixed symbols are not available at th=
-is point)
-> > >>
-> > >> The problem is that the suffixed symbols maybe a "part" of the origi=
-nal function,
-> > >> thus user has to carefully use it.
-> > >>
-> > >>>
-> > >>> Sami, could you please share your thoughts on this?
-> > >>
-> > >> Sami, I would like to know what problem you have on kprobes.
-> > >
-> > > The reports we received back then were about registering kprobes for
-> > > static functions, which obviously failed if the compiler added a
-> > > suffix to the function name. This was more of a problem with ThinLTO
-> > > and Clang CFI at the time because the compiler used to rename _all_
-> > > static functions, but one can obviously run into the same issue with
-> > > just LTO.
-> >
-> > I think newer LLVM/clang no longer add suffixes to all static functions
-> > with LTO and CFI. So this may not be a real issue any more?
-> >
-> > If we still need to allow tracing without suffix, I think the approach
-> > in this patch set is correct (sort syms based on full name,
->
-> Yes, we should allow to find the symbols via the full name, definitely.
->
-> > remove suffixes in special APIs during lookup).
->
-> Just an idea. Alternative solution would be to make make an alias
-> without the suffix when there is only one symbol with the same
-> name.
->
-> It would be complementary with the patch adding aliases for symbols
-> with the same name, see
-> https://lore.kernel.org/r/20231204214635.2916691-1-alessandro.carminati@g=
-mail.com
->
-> I would allow to find the symbols with and without the suffix using
-> a single API.
 
-kas_alias isn't handling LTO as effectively as it should.
-This is something I plan to address in the next patch version.
-Introducing aliases is the best approach I found to preserve current
-tools behavior while adding this new feature.
-While I believe it will deliver the promised benefits, there is a trade-off=
-,
-particularly affecting features like live patching, which rely on handling
-duplicate symbols.
-For instance, kallsyms_lookup_names typically returns the last occurrence
-of a symbol when the end argument is not NULL, but introducing aliases
-disrupts this behavior.
-I'm working on a solution to manage duplicate symbols, ensuring compatibili=
-ty
-with both LTO and kallsyms_lookup_names.
+在 2024/8/9 2:49, Oleg Nesterov 写道:
+> Hi Liao,
+> 
+> To be honest I didn't even try to look at your patch, sorry.
+> 
+> Because I think it would be better to delay it in an case. Until Andrii
+> finishes/pushes his optimization changes which (in particular) include
+> find_active_uprobe_rcu/etc.
+> 
+> Then you can rebease and re-benchmark your patch on top of these changes.
 
-thanks,
-Alessandro
+Oleg, Thanks for your guidance. I'll keep an eye on the development of Andrii's
+changes and re-evaluate my patch. To ensure minimal disruption, I'll hold off
+on further pushing the patch until Andrii's changes are settle down.
 
->
-> Best Regards,
-> Petr
+> 
+> Oleg.
+> 
+> 
+> On 08/08, Liao, Chang wrote:
+>>
+>> Hi Andrii and Oleg.
+>>
+>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
+>> on arm64. I notice recent discussions on the performance and scalability of uprobes
+>> within the mailing list. Considering this interest, I've added you and other relevant
+>> maintainers to the CC list for broader visibility and potential collaboration.
+>>
+>> Thanks.
+>>
+>> 在 2024/7/27 17:44, Liao Chang 写道:
+>>> The profiling result of single-thread model of selftests bench reveals
+>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
+>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
+>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
+>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
+>>>
+>>> This patch introduce struct uprobe_breakpoint to track previously
+>>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
+>>> need for redundant insn_slot writes and subsequent expensive cache
+>>> flush, especially on architecture like ARM64. This patch has been tested
+>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
+>>> bench and Redis GET/SET benchmark result below reveal obivious
+>>> performance gain.
+>>>
+>>> before-opt
+>>> ----------
+>>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
+>>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
+>>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
+>>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
+>>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
+>>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
+>>> Redis SET (RPS) uprobe: 42728.52
+>>> Redis GET (RPS) uprobe: 43640.18
+>>> Redis SET (RPS) uretprobe: 40624.54
+>>> Redis GET (RPS) uretprobe: 41180.56
+>>>
+>>> after-opt
+>>> ---------
+>>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+>>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+>>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+>>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+>>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+>>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+>>> Redis SET (RPS) uprobe: 43939.69
+>>> Redis GET (RPS) uprobe: 45200.80
+>>> Redis SET (RPS) uretprobe: 41658.58
+>>> Redis GET (RPS) uretprobe: 42805.80
+>>>
+>>> While some uprobes might still need to share the same insn_slot, this
+>>> patch compare the instructions in the resued insn_slot with the
+>>> instructions execute out-of-line firstly to decides allocate a new one
+>>> or not.
+>>>
+>>> Additionally, this patch use a rbtree associated with each thread that
+>>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
+>>> rbtree of uprobe_breakpoints has smaller node, better locality and less
+>>> contention, it result in faster lookup times compared to find_uprobe().
+>>>
+>>> The other part of this patch are some necessary memory management for
+>>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
+>>> hit uprobe that doesn't already have a corresponding node in rbtree. All
+>>> uprobe_breakpoints will be freed when thread exit.
+>>>
+>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>>> ---
+>>>  include/linux/uprobes.h |   3 +
+>>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
+>>>  2 files changed, 211 insertions(+), 38 deletions(-)
+>>>
+>>> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+>>> index f46e0ca0169c..04ee465980af 100644
+>>> --- a/include/linux/uprobes.h
+>>> +++ b/include/linux/uprobes.h
+>>> @@ -78,6 +78,9 @@ struct uprobe_task {
+>>>
+>>>  	struct return_instance		*return_instances;
+>>>  	unsigned int			depth;
+>>> +
+>>> +	struct rb_root			breakpoints_tree;
+>>> +	rwlock_t			breakpoints_treelock;
+>>>  };
+>>>
+>>>  struct return_instance {
+>>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+>>> index 2c83ba776fc7..3f1a6dc2a327 100644
+>>> --- a/kernel/events/uprobes.c
+>>> +++ b/kernel/events/uprobes.c
+>>> @@ -33,6 +33,7 @@
+>>>  #define MAX_UPROBE_XOL_SLOTS		UINSNS_PER_PAGE
+>>>
+>>>  static struct rb_root uprobes_tree = RB_ROOT;
+>>> +
+>>>  /*
+>>>   * allows us to skip the uprobe_mmap if there are no uprobe events active
+>>>   * at this time.  Probably a fine grained per inode count is better?
+>>> @@ -886,6 +887,174 @@ static bool filter_chain(struct uprobe *uprobe,
+>>>  	return ret;
+>>>  }
+>>>
+>>> +static struct uprobe_task *get_utask(void);
+>>> +static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr);
+>>> +static struct uprobe *find_active_uprobe(unsigned long bp_vaddr, int *is_swbp);
+>>> +
+>>> +struct uprobe_breakpoint {
+>>> +	struct rb_node		rb_node;
+>>> +	refcount_t		ref;
+>>> +	unsigned long		slot;
+>>> +	unsigned long		vaddr;
+>>> +	struct uprobe		*uprobe;
+>>> +};
+>>> +
+>>> +static void put_ubp(struct uprobe_breakpoint *ubp)
+>>> +{
+>>> +	if (refcount_dec_and_test(&ubp->ref)) {
+>>> +		put_uprobe(ubp->uprobe);
+>>> +		kfree(ubp);
+>>> +	}
+>>> +}
+>>> +
+>>> +static struct uprobe_breakpoint *get_ubp(struct uprobe_breakpoint *ubp)
+>>> +{
+>>> +	refcount_inc(&ubp->ref);
+>>> +	return ubp;
+>>> +}
+>>> +
+>>> +#define __node_2_ubp(node) rb_entry((node), struct uprobe_breakpoint, rb_node)
+>>> +
+>>> +struct __ubp_key {
+>>> +	unsigned long bp_vaddr;
+>>> +};
+>>> +
+>>> +static int ubp_cmp(const unsigned long bp_vaddr,
+>>> +		   const struct uprobe_breakpoint *ubp)
+>>> +{
+>>> +	if (bp_vaddr < ubp->vaddr)
+>>> +		return -1;
+>>> +
+>>> +	if (bp_vaddr > ubp->vaddr)
+>>> +		return 1;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int __ubp_cmp_key(const void *k, const struct rb_node *b)
+>>> +{
+>>> +	const struct __ubp_key *key = k;
+>>> +
+>>> +	return ubp_cmp(key->bp_vaddr, __node_2_ubp(b));
+>>> +}
+>>> +
+>>> +static int __ubp_cmp(struct rb_node *a, const struct rb_node *b)
+>>> +{
+>>> +	const struct uprobe_breakpoint *ubp = __node_2_ubp(a);
+>>> +
+>>> +	return ubp_cmp(ubp->vaddr, __node_2_ubp(b));
+>>> +}
+>>> +
+>>> +static void delete_breakpoint(struct uprobe_task *utask)
+>>> +{
+>>> +	struct rb_node *node;
+>>> +
+>>> +	write_lock(&utask->breakpoints_treelock);
+>>> +	node = rb_first(&utask->breakpoints_tree);
+>>> +	while (node) {
+>>> +		rb_erase(node, &utask->breakpoints_tree);
+>>> +		write_unlock(&utask->breakpoints_treelock);
+>>> +
+>>> +		put_ubp(__node_2_ubp(node));
+>>> +
+>>> +		write_lock(&utask->breakpoints_treelock);
+>>> +		node = rb_next(node);
+>>> +	}
+>>> +	write_unlock(&utask->breakpoints_treelock);
+>>> +}
+>>> +
+>>> +static struct uprobe_breakpoint *alloc_breakpoint(struct uprobe_task *utask,
+>>> +						  struct uprobe *uprobe,
+>>> +						  unsigned long bp_vaddr)
+>>> +{
+>>> +	struct uprobe_breakpoint *ubp;
+>>> +	struct rb_node *node;
+>>> +
+>>> +	ubp = kzalloc(sizeof(struct uprobe_breakpoint), GFP_KERNEL);
+>>> +	if (!ubp)
+>>> +		return NULL;
+>>> +
+>>> +	ubp->vaddr = bp_vaddr;
+>>> +	ubp->uprobe = uprobe;
+>>> +	/* get access + creation ref */
+>>> +	refcount_set(&ubp->ref, 2);
+>>> +	ubp->slot = UINSNS_PER_PAGE;
+>>> +
+>>> +	write_lock(&utask->breakpoints_treelock);
+>>> +	node = rb_find_add(&ubp->rb_node, &utask->breakpoints_tree, __ubp_cmp);
+>>> +	write_unlock(&utask->breakpoints_treelock);
+>>> +
+>>> +	/* Two or more threads hit the same breakpoint */
+>>> +	if (node) {
+>>> +		WARN_ON(uprobe != __node_2_ubp(node)->upobre);
+>>
+>> A stupid typo.
+>>
+>> s/upobre/uprobe/g
+>>
+>>> +		kfree(ubp);
+>>> +		return get_ubp(__node_2_ubp(node));
+>>> +	}
+>>> +
+>>> +	return ubp;
+>>> +}
+>>> +
+>>> +static struct uprobe_breakpoint *find_breakpoint(struct uprobe_task *utask,
+>>> +						 unsigned long bp_vaddr)
+>>> +{
+>>> +	struct rb_node *node;
+>>> +	struct __ubp_key key = {
+>>> +		.bp_vaddr = bp_vaddr,
+>>> +	};
+>>> +
+>>> +	read_lock(&utask->breakpoints_treelock);
+>>> +	node = rb_find(&key, &utask->breakpoints_tree, __ubp_cmp_key);
+>>> +	read_unlock(&utask->breakpoints_treelock);
+>>> +
+>>> +	if (node)
+>>> +		return get_ubp(__node_2_ubp(node));
+>>> +
+>>> +	return NULL;
+>>> +}
+>>> +
+>>> +static struct uprobe_breakpoint *find_active_breakpoint(struct pt_regs *regs,
+>>> +							unsigned long bp_vaddr)
+>>> +{
+>>> +	struct uprobe_task *utask = get_utask();
+>>> +	struct uprobe_breakpoint *ubp;
+>>> +	struct uprobe *uprobe;
+>>> +	int is_swbp;
+>>> +
+>>> +	if (unlikely(!utask))
+>>> +		return NULL;
+>>> +
+>>> +	ubp = find_breakpoint(utask, bp_vaddr);
+>>> +	if (ubp)
+>>> +		return ubp;
+>>> +
+>>> +	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+>>> +	if (!uprobe) {
+>>> +		if (is_swbp > 0) {
+>>> +			/* No matching uprobe; signal SIGTRAP. */
+>>> +			force_sig(SIGTRAP);
+>>> +		} else {
+>>> +			/*
+>>> +			 * Either we raced with uprobe_unregister() or we can't
+>>> +			 * access this memory. The latter is only possible if
+>>> +			 * another thread plays with our ->mm. In both cases
+>>> +			 * we can simply restart. If this vma was unmapped we
+>>> +			 * can pretend this insn was not executed yet and get
+>>> +			 * the (correct) SIGSEGV after restart.
+>>> +			 */
+>>> +			instruction_pointer_set(regs, bp_vaddr);
+>>> +		}
+>>> +		return NULL;
+>>> +	}
+>>> +
+>>> +	ubp = alloc_breakpoint(utask, uprobe, bp_vaddr);
+>>> +	if (!ubp) {
+>>> +		put_uprobe(uprobe);
+>>> +		return NULL;
+>>> +	}
+>>> +
+>>> +	return ubp;
+>>> +}
+>>> +
+>>>  static int
+>>>  install_breakpoint(struct uprobe *uprobe, struct mm_struct *mm,
+>>>  			struct vm_area_struct *vma, unsigned long vaddr)
+>>> @@ -1576,9 +1745,8 @@ void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm)
+>>>  /*
+>>>   *  - search for a free slot.
+>>>   */
+>>> -static unsigned long xol_take_insn_slot(struct xol_area *area)
+>>> +static __always_inline int xol_take_insn_slot(struct xol_area *area)
+>>>  {
+>>> -	unsigned long slot_addr;
+>>>  	int slot_nr;
+>>>
+>>>  	do {
+>>> @@ -1590,34 +1758,48 @@ static unsigned long xol_take_insn_slot(struct xol_area *area)
+>>>  			slot_nr = UINSNS_PER_PAGE;
+>>>  			continue;
+>>>  		}
+>>> -		wait_event(area->wq, (atomic_read(&area->slot_count) < UINSNS_PER_PAGE));
+>>> +		wait_event(area->wq,
+>>> +			   (atomic_read(&area->slot_count) < UINSNS_PER_PAGE));
+>>>  	} while (slot_nr >= UINSNS_PER_PAGE);
+>>>
+>>> -	slot_addr = area->vaddr + (slot_nr * UPROBE_XOL_SLOT_BYTES);
+>>> -	atomic_inc(&area->slot_count);
+>>> +	return slot_nr;
+>>> +}
+>>> +
+>>> +static __always_inline unsigned long
+>>> +choose_insn_slot(struct xol_area *area, struct uprobe_breakpoint *ubp)
+>>> +{
+>>> +	if ((ubp->slot == UINSNS_PER_PAGE) ||
+>>> +	    test_and_set_bit(ubp->slot, area->bitmap)) {
+>>> +		ubp->slot = xol_take_insn_slot(area);
+>>> +	}
+>>>
+>>> -	return slot_addr;
+>>> +	atomic_inc(&area->slot_count);
+>>> +	return area->vaddr + ubp->slot * UPROBE_XOL_SLOT_BYTES;
+>>>  }
+>>>
+>>>  /*
+>>>   * xol_get_insn_slot - allocate a slot for xol.
+>>>   * Returns the allocated slot address or 0.
+>>>   */
+>>> -static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+>>> +static unsigned long xol_get_insn_slot(struct uprobe_breakpoint *ubp)
+>>>  {
+>>>  	struct xol_area *area;
+>>>  	unsigned long xol_vaddr;
+>>> +	struct uprobe *uprobe = ubp->uprobe;
+>>>
+>>>  	area = get_xol_area();
+>>>  	if (!area)
+>>>  		return 0;
+>>>
+>>> -	xol_vaddr = xol_take_insn_slot(area);
+>>> +	xol_vaddr = choose_insn_slot(area, ubp);
+>>>  	if (unlikely(!xol_vaddr))
+>>>  		return 0;
+>>>
+>>> -	arch_uprobe_copy_ixol(area->pages[0], xol_vaddr,
+>>> -			      &uprobe->arch.ixol, sizeof(uprobe->arch.ixol));
+>>> +	if (memcmp((void *)xol_vaddr, &uprobe->arch.ixol,
+>>> +		   sizeof(uprobe->arch.ixol)))
+>>> +		arch_uprobe_copy_ixol(area->pages[0], xol_vaddr,
+>>> +				      &uprobe->arch.ixol,
+>>> +				      sizeof(uprobe->arch.ixol));
+>>
+>> Perhaps, should i move memcmp() to the arch_uprobe_copy_ixol() provided by the architecture
+>> code?
+>>
+>>>
+>>>  	return xol_vaddr;
+>>>  }
+>>> @@ -1717,8 +1899,7 @@ void uprobe_free_utask(struct task_struct *t)
+>>>  	if (!utask)
+>>>  		return;
+>>>
+>>> -	if (utask->active_uprobe)
+>>> -		put_uprobe(utask->active_uprobe);
+>>> +	delete_breakpoint(utask);
+>>>
+>>>  	ri = utask->return_instances;
+>>>  	while (ri)
+>>> @@ -1739,8 +1920,11 @@ void uprobe_free_utask(struct task_struct *t)
+>>>   */
+>>>  static struct uprobe_task *get_utask(void)
+>>>  {
+>>> -	if (!current->utask)
+>>> +	if (!current->utask) {
+>>>  		current->utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
+>>> +		current->utask->breakpoints_tree = RB_ROOT;
+>>> +		rwlock_init(&current->utask->breakpoints_treelock);
+>>> +	}
+>>>  	return current->utask;
+>>>  }
+>>>
+>>> @@ -1921,7 +2105,8 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+>>>
+>>>  /* Prepare to single-step probed instruction out of line. */
+>>>  static int
+>>> -pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
+>>> +pre_ssout(struct uprobe *uprobe, struct pt_regs *regs,
+>>> +	  struct uprobe_breakpoint *ubp)
+>>>  {
+>>>  	struct uprobe_task *utask;
+>>>  	unsigned long xol_vaddr;
+>>> @@ -1931,12 +2116,12 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
+>>>  	if (!utask)
+>>>  		return -ENOMEM;
+>>>
+>>> -	xol_vaddr = xol_get_insn_slot(uprobe);
+>>> +	xol_vaddr = xol_get_insn_slot(ubp);
+>>>  	if (!xol_vaddr)
+>>>  		return -ENOMEM;
+>>>
+>>>  	utask->xol_vaddr = xol_vaddr;
+>>> -	utask->vaddr = bp_vaddr;
+>>> +	utask->vaddr = ubp->vaddr;
+>>>
+>>>  	err = arch_uprobe_pre_xol(&uprobe->arch, regs);
+>>>  	if (unlikely(err)) {
+>>> @@ -2182,32 +2367,19 @@ bool __weak arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
+>>>   */
+>>>  static void handle_swbp(struct pt_regs *regs)
+>>>  {
+>>> +	struct uprobe_breakpoint *ubp;
+>>>  	struct uprobe *uprobe;
+>>>  	unsigned long bp_vaddr;
+>>> -	int is_swbp;
+>>>
+>>>  	bp_vaddr = uprobe_get_swbp_addr(regs);
+>>>  	if (bp_vaddr == get_trampoline_vaddr())
+>>>  		return handle_trampoline(regs);
+>>>
+>>> -	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+>>> -	if (!uprobe) {
+>>> -		if (is_swbp > 0) {
+>>> -			/* No matching uprobe; signal SIGTRAP. */
+>>> -			force_sig(SIGTRAP);
+>>> -		} else {
+>>> -			/*
+>>> -			 * Either we raced with uprobe_unregister() or we can't
+>>> -			 * access this memory. The latter is only possible if
+>>> -			 * another thread plays with our ->mm. In both cases
+>>> -			 * we can simply restart. If this vma was unmapped we
+>>> -			 * can pretend this insn was not executed yet and get
+>>> -			 * the (correct) SIGSEGV after restart.
+>>> -			 */
+>>> -			instruction_pointer_set(regs, bp_vaddr);
+>>> -		}
+>>> +	ubp = find_active_breakpoint(regs, bp_vaddr);
+>>> +	if (!ubp)
+>>>  		return;
+>>> -	}
+>>> +
+>>> +	uprobe = ubp->uprobe;
+>>>
+>>>  	/* change it in advance for ->handler() and restart */
+>>>  	instruction_pointer_set(regs, bp_vaddr);
+>>> @@ -2241,12 +2413,11 @@ static void handle_swbp(struct pt_regs *regs)
+>>>  	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+>>>  		goto out;
+>>>
+>>> -	if (!pre_ssout(uprobe, regs, bp_vaddr))
+>>> -		return;
+>>> +	pre_ssout(uprobe, regs, ubp);
+>>>
+>>>  	/* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
+>>>  out:
+>>> -	put_uprobe(uprobe);
+>>> +	put_ubp(ubp);
+>>>  }
+>>>
+>>>  /*
+>>> @@ -2266,7 +2437,6 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+>>>  	else
+>>>  		WARN_ON_ONCE(1);
+>>>
+>>> -	put_uprobe(uprobe);
+>>>  	utask->active_uprobe = NULL;
+>>>  	utask->state = UTASK_RUNNING;
+>>>  	xol_free_insn_slot(current);
+>>
+>> --
+>> BR
+>> Liao, Chang
+>>
+> 
+> 
+
+-- 
+BR
+Liao, Chang
