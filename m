@@ -1,199 +1,178 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3938A198E70
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Aug 2024 15:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CCA1990C3;
+	Fri,  9 Aug 2024 15:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723218010; cv=none; b=U/ww5N9u4KEKN3OOJh0trsRUHGysuIJ4wq2k+O2wLbui/knB89N4A89BgHynE1pd356IN3zdGfH7e6YBfWIriKeAq5H7LbJlh/BhwT56FVzXoIqhnkTjrco4R50ise1Xf8Z1Sn1KWEjFpfOgqJsa4zY4QGjzG4PXzKF51ct4B8E=
+	t=1723218323; cv=none; b=o77Qps3mt2JAQoidVyVSxRUAu7eRZgeVpFxy/IttbUJgbPQwrRg6rHqzYpU1OaVhxau9fY5oZMBtHUUK1u0bghz6UaK92ChQ4wcw3oPQ7jx1vEih8EvQfZZe3BEC0XCX3I4KFNrRz1V6kstggbuZ8kLFLNHbeU1v8gerpqdZuCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723218010; c=relaxed/simple;
-	bh=7uxpbX0dUiV2nAtAAnEFPVZf9an/qeChOgroY1rCZn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owCMmbam50aEw70FCoHjTlTqlFIwowc+UoyRms8hrJLCrhB6vVJPQLliZBMiV8UH6/kQm6P2yGlE5yvJ8WqseX5EIU/7TSlFFmLp1y3e5vxSkgAXXiM4Kx6b+POPFkGtIB4CkNhpfb3ZyOsMFb0o+llWo90J5hYCm09+W2UvQZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CdMgFVBZ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1723218323; c=relaxed/simple;
+	bh=Bd6gp8vS1KnlhuO7wKJxo1DLFOwvyo1WP/CqGQTLnXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FXcOi6frJN0oXRrUnuo1RRu7xLeXIFz/3dqz6btKCPsYmSuDF+/qQaBocCkzZMmddp0xHS4HfEpZpyJhYMFGUqYh7yMivcArpPTH4muRpfXCz17b1tsvP0bWiB7E9iCEjXtvrpZLUDdU/rPdoXovkQHIKIiPcFYXq8hEroEc9Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W4XRIGju; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CdMgFVBZ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a7a9a369055so211021466b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Aug 2024 08:40:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4XRIGju"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a7ac469e4c4so366688866b.0;
+        Fri, 09 Aug 2024 08:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1723218005; x=1723822805; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g9/gdXLxSnsU9nxoiw00oEcO7EcPaiVsBgSH221d6bo=;
-        b=CdMgFVBZj9uRB6Hm+ZK6IAvIQd51ws0M+duKz3z1OCIT7NvOdmMEZ9uqDmXTdv2oG3
-         BKH43dITcFZhdqPo7pOW9EMNXM8VroSJGCzEBQZe3+H3Cu1Eni1rbUiEPud0pSIwkVS0
-         l5h35eSSleDacrFJQQQoB1UQmwSTA0EcLFzEs1kEeM+iH2/LrFdnYeX9ihwLW6EOPzF9
-         mbmsu1Hcda4pOPVI6EQpCR/GaGIc09oM3cz37duFUaOzMcYPbxgXuvXnvHE1yJybProF
-         yKZrOSd8XpyPZtIRtdS7V2G5xUhlvLNPGSndqkdxAjzaYQ182jpGhf8yWGMazstZ71uO
-         g/fA==
+        d=gmail.com; s=20230601; t=1723218320; x=1723823120; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wa1W3WV7VpGrEaPcisbcd/cWnkBoUbT/sIRi8LearZg=;
+        b=W4XRIGjulb1hhqjAyCp1O8TsdHK84PqMuKKM93hSEjVdTnLzQkSRL90qAOFYqhdc2x
+         GHHRQ6iOT4UtmN3GVhlzQjLa0vDteJEAyLn714ra0LYy3BuponwmsNGMW/Vslir6VdCC
+         v+hTJYFqi3DEF+FXs2c6a4WeWQ8IerANOeYarjUGhAP4fxi/3U992SwlEA2kuBFZopgb
+         XkxENzw3feEJkIzmv5il4b/5DJAJb8mLi8fNOZrvMQpxWz/SBRJXJ4GHzhwDqmGAQ1ou
+         BtpoCepeF9L/xlED6ZgqbH1/56yaTKh4461zxjnMxi8WFonr1C7T14acXOjq/DSDHhGH
+         SzmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723218005; x=1723822805;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1723218320; x=1723823120;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g9/gdXLxSnsU9nxoiw00oEcO7EcPaiVsBgSH221d6bo=;
-        b=J+v/F2GbhM2HLgqVWbkKeknI2EY7H8gfVVpS9ldelczWhjUk41LQtxRAD/mNPz/p45
-         AoIQYHgZyT9ltP3PquFVYfIVp54rVp3KYtUVkIiVHH50OpZj2UC5I6zJ936AiaksHIAC
-         gh6UI8dNjZLGtrcc+HKRnj2baA+s8weCrw9ao6eNbFcUcmbOnnenVWy/jQ+HOKk9R/79
-         B2t3KAeF/GdnjsifruYIsPtgcoUHhNbq/aUcV+8t7PesCN/dCzD/S0dDoqh6fGtugcLk
-         ttCMXjVkLmwJpdE4yRioRQGfs+mYrykv/N0vmZJvrMYKELup0d6wnJtaJLNllSiGxEaX
-         F6Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGvd8OuWVzTSXM004iRYxDkahhB+gjYi1VVqbE9wGF5xtn/YgiuqVK0N29de5620F/WIepUEnEI7iaSUMBYkyt5yuC6C9ugAyLixTAX9niPGhQ
-X-Gm-Message-State: AOJu0Ywy8vSAZd9cI98eB3+Hn8egsRu+CLlvys+hkx9Omh7a5R36Y5Ag
-	njlXa85QsUsHk01u7keOYMaQONFltHVmNlR0xDypXg+HsT9O5GqSVNCHE8QHJys=
-X-Google-Smtp-Source: AGHT+IGaMJDQMYJCSNSGSCt/WttKifUKYpng5iXyE2ihkAwEcQvtfaW+DwlSQS3puMV/UUa3yUyaPg==
-X-Received: by 2002:a17:907:e6a4:b0:a7a:929f:c0cb with SMTP id a640c23a62f3a-a80aa5eb16amr149281466b.38.1723218005223;
-        Fri, 09 Aug 2024 08:40:05 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c12ad3sm851185966b.88.2024.08.09.08.40.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Aug 2024 08:40:04 -0700 (PDT)
-Date: Fri, 9 Aug 2024 17:40:02 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Song Liu <songliubraving@meta.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
-	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	"morbo@google.com" <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Leizhen <thunder.leizhen@huawei.com>,
-	"kees@kernel.org" <kees@kernel.org>,
-	Kernel Team <kernel-team@meta.com>,
-	Matthew Maurer <mmaurer@google.com>,
-	"Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
-Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
- without .XXX suffix
-Message-ID: <ZrY4UhJpsFP_vuds@pathway.suse.cz>
-References: <20240806160049.617500de@gandalf.local.home>
- <20240806160149.48606a0b@gandalf.local.home>
- <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
- <20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
- <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
- <20240807190809.cd316e7f813400a209aae72a@kernel.org>
- <CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
- <09ED7762-A464-45FF-9062-9560C59F304E@fb.com>
- <ZrSW5KgFMjlB1Rn2@pathway.suse.cz>
- <A3701B71-D95F-4E99-A32D-C1604575D40F@fb.com>
+        bh=Wa1W3WV7VpGrEaPcisbcd/cWnkBoUbT/sIRi8LearZg=;
+        b=xIIjkLwrXoma+d/hYXaVKjoUW1yxiBMWJvWC92d95xm7YMETni6VkPKuvGxvPQ1Hj5
+         ihjFrxc5mOzKA5ip9CedgUaTV0a+n+cEilyOXuU0SxVOLMZrm8/6INcJ2g3P55QAqsUw
+         6JBqubANfazW+hgyh5Ldt2s/rrIgMNgFZQsgMI4+wRjyRJ33DMqPyQwqSOO3608YBAkb
+         d1HdD5voBvpsBxDPplLg7nqcOfJJRCmbzT27Uq/bVnc/MoqtFMkjZkIm8PJwPXehDDaS
+         gVpr33Atdn4Yueq+8URtwyooMjld6L5GQwyJx12/RIBYMd15rOgd5gWcrI2tyG5KGyuA
+         Er8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWh11OvVxxylBmePJXMeNLWZ+psob5agcVwUIU/0NtWNfocc+5cedl+ogFaUWOceQKCLbtZqMz50Rbo4yz22maNRgxDE7zigUXbA+o3vxjqJxDDXeoiqIrUv41LrExF8L2yHawBAK5b4frFexEt6CIfv425yjuTYD6DbAh7zWS3PGHRZupYAw3f79UqzF5Xl/GCi3A9MlPqHAxbVoA3uuxNNSJSq66UQoUEqKVKuwT8INUFXHp8r8goCKUniByQzBpYm2SI9Gth6QBPYw6e0qQFbDn6sDRIzpPVfgmIWLyHSFpt7105PFi+ynhB1CPkkAyrGUzE0zJZAzPANOx/L9aIDbEaJQsYxEYGehaQ+QV9LX3lj33R/LwICNcjIlfhgKz4AoKH9ARGIroMLK1BkPFlrrBXl2zc3stNyqxNLUFrifK3Nmkz8zx/+Wm69cDg6h2A5unnHqqFBSBY4dkPdPGO+k/v2p0mixd5dWMTQQ==
+X-Gm-Message-State: AOJu0YztZaIFx2AatPbhRTbcpSwEYFLaToikQzct0+VFDUdUET4TcY1T
+	p415RZPlkcrbJfWwFG9Akvf+TP3khg7Me8ee0W4qFUopFUfLkGn7
+X-Google-Smtp-Source: AGHT+IGaWJiDPaSc3UHkzWGM2j8RhpJMnAUdZZgUzu3ws85xIf7phwHYyeL4ZJReXHb3Sd+69ayIRw==
+X-Received: by 2002:a17:907:6d14:b0:a7a:8a38:9d99 with SMTP id a640c23a62f3a-a80aba196d6mr130567366b.35.1723218319823;
+        Fri, 09 Aug 2024 08:45:19 -0700 (PDT)
+Received: from [192.168.42.29] (82-132-212-15.dab.02.net. [82.132.212.15])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9e80e77sm847390266b.169.2024.08.09.08.45.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Aug 2024 08:45:19 -0700 (PDT)
+Message-ID: <fc6a8f0a-cdb4-4705-a08f-7033ef15213e@gmail.com>
+Date: Fri, 9 Aug 2024 16:45:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v18 07/14] memory-provider: dmabuf devmem memory
+ provider
+To: Mina Almasry <almasrymina@google.com>, Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240805212536.2172174-1-almasrymina@google.com>
+ <20240805212536.2172174-8-almasrymina@google.com>
+ <20240806135924.5bb65ec7@kernel.org>
+ <CAHS8izOA80dxpB9rzOwv7Oe_1w4A7vo5S3c3=uCES8TSnjyzpg@mail.gmail.com>
+ <20240808192410.37a49724@kernel.org>
+ <CAHS8izMH4UhD+UDYqMjt9d=gu-wpGPQBLyewzVrCWRyoVtQcgA@mail.gmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <CAHS8izMH4UhD+UDYqMjt9d=gu-wpGPQBLyewzVrCWRyoVtQcgA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <A3701B71-D95F-4E99-A32D-C1604575D40F@fb.com>
 
-On Thu 2024-08-08 15:20:26, Song Liu wrote:
+On 8/9/24 15:10, Mina Almasry wrote:
+> On Thu, Aug 8, 2024 at 10:24 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>
+>> On Thu, 8 Aug 2024 16:36:24 -0400 Mina Almasry wrote:
+>>>> How do you know that the driver:
+>>>>   - supports net_iov at all (let's not make implicit assumptions based
+>>>>     on presence of queue API);
+>>>>   - supports net_iov in current configuration (eg header-data split is
+>>>>     enabled)
+>>>>   - supports net_iov for _this_ pool (all drivers must have separate
+>>>>     buffer pools for headers and data for this to work, some will use
+>>>>     page pool for both)
+>>>>
+>>>> What comes to mind is adding an "I can gobble up net_iovs from this
+>>>> pool" flag in page pool params (the struct that comes from the driver),
+>>>
+>>> This already sorta exists in the current iteration, although maybe in
+>>> an implicit way. As written, drivers need to set params.queue,
+>>> otherwise core will not attempt to grab the mp information from
+>>> params.queue. A driver can set params.queue for its data pages pool
+>>> and not set it for the headers pool. AFAICT that deals with all 3
+>>> issues you present above.
+>>>
+>>> The awkward part is if params.queue starts getting used for other
+>>> reasons rather than passing mp configuration, but as of today that's
+>>> not the case so I didn't add the secondary flag. If you want a second
+>>> flag to be added preemptively, I can do that, no problem. Can you
+>>> confirm params.queue is not good enough?
+>>
+>> I'd prefer a flag. The setting queue in a param struct is not a good
+>> API for conveying that the page pool is for netmem payloads only.
+>>
+>>>> and then on the installation path we can check if after queue reset
+>>>> the refcount of the binding has increased. If it did - driver has
+>>>> created a pool as we expected, otherwise - fail, something must be off.
+>>>> Maybe that's a bit hacky?
+>>>
+>>> What's missing is for core to check at binding time that the driver
+>>> supports net_iov. I had relied on the implicit presence of the
+>>> queue-API.
+>>>
+>>> What you're proposing works, but AFAICT it's quite hacky, yes. I
+>>> basically need to ASSERT_RTNL in net_devmem_binding_get() to ensure
+>>> nothing can increment the refcount while the binding is happening so
+>>> that the refcount check is valid.
+>>
+>> True. Shooting from the hip, but we could walk the page pools of the
+>> netdev and find the one that has the right mp installed, and matches
+>> queue? The page pools are on a list hooked up to the netdev, trivial
+>> to walk.
+>>
 > 
-> 
-> > On Aug 8, 2024, at 2:59 AM, Petr Mladek <pmladek@suse.com> wrote:
-> > 
-> > On Wed 2024-08-07 20:48:48, Song Liu wrote:
-> >> 
-> >> 
-> >>> On Aug 7, 2024, at 8:33 AM, Sami Tolvanen <samitolvanen@google.com> wrote:
-> >>> 
-> >>> Hi,
-> >>> 
-> >>> On Wed, Aug 7, 2024 at 3:08 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >>>> 
-> >>>> On Wed, 7 Aug 2024 00:19:20 +0000
-> >>>> Song Liu <songliubraving@meta.com> wrote:
-> >>>> 
-> >>>>> Do you mean we do not want patch 3/3, but would like to keep 1/3 and part
-> >>>>> of 2/3 (remove the _without_suffix APIs)? If this is the case, we are
-> >>>>> undoing the change by Sami in [1], and thus may break some tracing tools.
-> >>>> 
-> >>>> What tracing tools may be broke and why?
-> >>> 
-> >>> This was a few years ago when we were first adding LTO support, but
-> >>> the unexpected suffixes in tracing output broke systrace in Android,
-> >>> presumably because the tools expected to find specific function names
-> >>> without suffixes. I'm not sure if systrace would still be a problem
-> >>> today, but other tools might still make assumptions about the function
-> >>> name format. At the time, we decided to filter out the suffixes in all
-> >>> user space visible output to avoid these issues.
-> >>> 
-> >>>> For this suffix problem, I would like to add another patch to allow probing on
-> >>>> suffixed symbols. (It seems suffixed symbols are not available at this point)
-> >>>> 
-> >>>> The problem is that the suffixed symbols maybe a "part" of the original function,
-> >>>> thus user has to carefully use it.
-> >>>> 
-> >>>>> 
-> >>>>> Sami, could you please share your thoughts on this?
-> >>>> 
-> >>>> Sami, I would like to know what problem you have on kprobes.
-> >>> 
-> >>> The reports we received back then were about registering kprobes for
-> >>> static functions, which obviously failed if the compiler added a
-> >>> suffix to the function name. This was more of a problem with ThinLTO
-> >>> and Clang CFI at the time because the compiler used to rename _all_
-> >>> static functions, but one can obviously run into the same issue with
-> >>> just LTO.
-> >> 
-> >> I think newer LLVM/clang no longer add suffixes to all static functions
-> >> with LTO and CFI. So this may not be a real issue any more?
-> >> 
-> >> If we still need to allow tracing without suffix, I think the approach
-> >> in this patch set is correct (sort syms based on full name,
-> > 
-> > Yes, we should allow to find the symbols via the full name, definitely.
-> > 
-> >> remove suffixes in special APIs during lookup).
-> > 
-> > Just an idea. Alternative solution would be to make make an alias
-> > without the suffix when there is only one symbol with the same
-> > name.
-> > 
-> > It would be complementary with the patch adding aliases for symbols
-> > with the same name, see
-> > https://lore.kernel.org/r/20231204214635.2916691-1-alessandro.carminati@gmail.com
-> 
-> I guess v3 plus this work may work well together.  
-> 
-> > I would allow to find the symbols with and without the suffix using
-> > a single API.
-> 
-> Could you please describe how this API would work? I tried some 
-> idea in v1, but it turned out to be quite confusing. So I decided 
-> to leave this logic to the users of kallsyms APIs in v2. 
+> I think this is good, and it doesn't seem hacky to me, because we can
+> check the page_pools of the netdev while we hold rtnl, so we can be
+> sure nothing is messing with the pp configuration in the meantime.
+> Like you say below it does validate the driver rather than rely on the
+> driver saying it's doing the right thing. I'll look into putting this
+> in the next version.
 
-If we create an alias without the suffix but only when there is only
-one symbol with such a name then we have, for example:
+Why not have a flag set by the driver and advertising whether it
+supports providers or not, which should be checked for instance in
+netdev_rx_queue_restart()? If set, the driver should do the right
+thing. That's in addition to a new pp_params flag explicitly telling
+if pp should use providers. It's more explicit and feels a little
+less hacky.
 
-  klp_complete_transition.lwn.123456
-  klp_complete_transition		[alias]
-
-  init_once.lwn.2131221
-  init_once.lwn.3443243
-  init_once.lwn.4324322
-  init_once.lwn.5214121
-  init_once.lwn.2153121
-  init_once.lwn.4342343
-
-This way, it will be possible to find the static symbol
-"klp_complete_transition" without the suffix via the alias.
-It will have the alias because it has an unique name.
-
-While "init_once" symbol must always be searched with the suffix
-because it is not unique.
-
-It looks like >99% of static symbols have unique name.
-
-Best Regards,
-Petr
+-- 
+Pavel Begunkov
