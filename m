@@ -1,140 +1,199 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453D1DFE1;
-	Fri,  9 Aug 2024 14:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3938A198E70
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Aug 2024 15:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723214681; cv=none; b=ZZ49QHIrLlKrxQqy9qyyR8m/Jme1knx8EP8Tr47ds37CqMjad98xuGtKg6BgNJCWYcPRFcwKSwsI799lvPQM9BY8UR2cI2+xL5MkFGbIztcpxE2WxU//2CEZmZtkoaZv3tU7W9UXVyoiwQk8cgcXbkxUh89uGqjrDE2rUAT51p8=
+	t=1723218010; cv=none; b=U/ww5N9u4KEKN3OOJh0trsRUHGysuIJ4wq2k+O2wLbui/knB89N4A89BgHynE1pd356IN3zdGfH7e6YBfWIriKeAq5H7LbJlh/BhwT56FVzXoIqhnkTjrco4R50ise1Xf8Z1Sn1KWEjFpfOgqJsa4zY4QGjzG4PXzKF51ct4B8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723214681; c=relaxed/simple;
-	bh=TrF/mr/2zI8FT+BViDYpEcVJbQ3l7PzuFtp6y3/Szts=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XaqvUGkJ4hcgq3CYSiOvUPyyr2tcs2nQleS7V5+DeZRz87nF/FzfjibSmf0Gh3g7eg/za6gTah7QmDznBkQRVDK1xGQOZyHL7JNsz8x1+Ax8s4k7Rf2Obut6y96nxMoK0RRXAZCX/wyHST9rd2vjS/m0OtL8c3QszUIjpjPFNgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=mKrqswFu; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1723218010; c=relaxed/simple;
+	bh=7uxpbX0dUiV2nAtAAnEFPVZf9an/qeChOgroY1rCZn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=owCMmbam50aEw70FCoHjTlTqlFIwowc+UoyRms8hrJLCrhB6vVJPQLliZBMiV8UH6/kQm6P2yGlE5yvJ8WqseX5EIU/7TSlFFmLp1y3e5vxSkgAXXiM4Kx6b+POPFkGtIB4CkNhpfb3ZyOsMFb0o+llWo90J5hYCm09+W2UvQZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CdMgFVBZ; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="mKrqswFu"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 479E0b2x019365;
-	Fri, 9 Aug 2024 14:16:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=default; bh=pzF8DEytzWMJR
-	E2Zo3V+oeXaX+x2DcWjDmWLTnsk25A=; b=mKrqswFupu7596N0VzXCAg5YXFtiF
-	WxPasbQtAQYVosQkXDhVqJQQZ3nfwCuob2mDmWiBEUbcjE17CVSVECb5xOCNMOh+
-	hgn5J0LCPbaKCBwvGsy+xTkhUxmYdRXLX9d4fWq6Cs++JyD6y/AAV4wsxpv+QgRO
-	FHgXCt2YrOX8Z+eWLyOi0fDPYeLXXzGH0i7IQXI2vB80SoNqgkjvd8LX7ktRCPDw
-	B8tfpN34xXl9gp8W9Ow0mnGGdHM7RJL7b2oQbYyUnf2cr03dwmeOmaVDC+MyRnSg
-	0yTRAbEnwE5ahp+HdWor2MEzNIbjiNCUrAeuDqYGfYl60GecODQ6qG+yg==
-Received: from 03wpexch12.crowdstrike.sys (74-209-223-77.static.ash01.latisys.net [74.209.223.77] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 40wf908qvw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Aug 2024 14:16:55 +0000 (GMT)
-Received: from 03wpexch13.crowdstrike.sys (10.80.52.143) by
- 03WPEXCH12.crowdstrike.sys (10.80.52.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 9 Aug 2024 07:16:54 -0700
-Received: from 03wpexch13.crowdstrike.sys ([fe80::595e:a96f:853f:da0d]) by
- 03wpexch13.crowdstrike.sys ([fe80::595e:a96f:853f:da0d%14]) with mapi id
- 15.02.1544.009; Fri, 9 Aug 2024 14:16:54 +0000
-From: Rahul Shah <rahul.shah@crowdstrike.com>
-To: "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-CC: Marco Vedovati <marco.vedovati@crowdstrike.com>,
-        Kelly Martin
-	<kelly.martin@crowdstrike.com>,
-        "andrii@kernel.org" <andrii@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-        Rahul Shah <rahul.shah@crowdstrike.com>
-Subject: uprobe causing a process to crash on file modification
-Thread-Topic: uprobe causing a process to crash on file modification
-Thread-Index: AQHa6mU1CRKX5L7u10y95iAPiGl51Q==
-Date: Fri, 9 Aug 2024 14:16:54 +0000
-Message-ID: <d26368538d5f4504b9ca239b14328d33@crowdstrike.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-disclaimer: USA
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CdMgFVBZ"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a7a9a369055so211021466b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Aug 2024 08:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1723218005; x=1723822805; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g9/gdXLxSnsU9nxoiw00oEcO7EcPaiVsBgSH221d6bo=;
+        b=CdMgFVBZj9uRB6Hm+ZK6IAvIQd51ws0M+duKz3z1OCIT7NvOdmMEZ9uqDmXTdv2oG3
+         BKH43dITcFZhdqPo7pOW9EMNXM8VroSJGCzEBQZe3+H3Cu1Eni1rbUiEPud0pSIwkVS0
+         l5h35eSSleDacrFJQQQoB1UQmwSTA0EcLFzEs1kEeM+iH2/LrFdnYeX9ihwLW6EOPzF9
+         mbmsu1Hcda4pOPVI6EQpCR/GaGIc09oM3cz37duFUaOzMcYPbxgXuvXnvHE1yJybProF
+         yKZrOSd8XpyPZtIRtdS7V2G5xUhlvLNPGSndqkdxAjzaYQ182jpGhf8yWGMazstZ71uO
+         g/fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723218005; x=1723822805;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g9/gdXLxSnsU9nxoiw00oEcO7EcPaiVsBgSH221d6bo=;
+        b=J+v/F2GbhM2HLgqVWbkKeknI2EY7H8gfVVpS9ldelczWhjUk41LQtxRAD/mNPz/p45
+         AoIQYHgZyT9ltP3PquFVYfIVp54rVp3KYtUVkIiVHH50OpZj2UC5I6zJ936AiaksHIAC
+         gh6UI8dNjZLGtrcc+HKRnj2baA+s8weCrw9ao6eNbFcUcmbOnnenVWy/jQ+HOKk9R/79
+         B2t3KAeF/GdnjsifruYIsPtgcoUHhNbq/aUcV+8t7PesCN/dCzD/S0dDoqh6fGtugcLk
+         ttCMXjVkLmwJpdE4yRioRQGfs+mYrykv/N0vmZJvrMYKELup0d6wnJtaJLNllSiGxEaX
+         F6Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGvd8OuWVzTSXM004iRYxDkahhB+gjYi1VVqbE9wGF5xtn/YgiuqVK0N29de5620F/WIepUEnEI7iaSUMBYkyt5yuC6C9ugAyLixTAX9niPGhQ
+X-Gm-Message-State: AOJu0Ywy8vSAZd9cI98eB3+Hn8egsRu+CLlvys+hkx9Omh7a5R36Y5Ag
+	njlXa85QsUsHk01u7keOYMaQONFltHVmNlR0xDypXg+HsT9O5GqSVNCHE8QHJys=
+X-Google-Smtp-Source: AGHT+IGaMJDQMYJCSNSGSCt/WttKifUKYpng5iXyE2ihkAwEcQvtfaW+DwlSQS3puMV/UUa3yUyaPg==
+X-Received: by 2002:a17:907:e6a4:b0:a7a:929f:c0cb with SMTP id a640c23a62f3a-a80aa5eb16amr149281466b.38.1723218005223;
+        Fri, 09 Aug 2024 08:40:05 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c12ad3sm851185966b.88.2024.08.09.08.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Aug 2024 08:40:04 -0700 (PDT)
+Date: Fri, 9 Aug 2024 17:40:02 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Song Liu <songliubraving@meta.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Song Liu <song@kernel.org>,
+	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"morbo@google.com" <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Leizhen <thunder.leizhen@huawei.com>,
+	"kees@kernel.org" <kees@kernel.org>,
+	Kernel Team <kernel-team@meta.com>,
+	Matthew Maurer <mmaurer@google.com>,
+	"Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
+Subject: Re: [PATCH v2 3/3] tracing/kprobes: Use APIs that matches symbols
+ without .XXX suffix
+Message-ID: <ZrY4UhJpsFP_vuds@pathway.suse.cz>
+References: <20240806160049.617500de@gandalf.local.home>
+ <20240806160149.48606a0b@gandalf.local.home>
+ <6F6AC75C-89F9-45C3-98FF-07AD73C38078@fb.com>
+ <20240807090146.88b38c2fbd1cd8db683be22c@kernel.org>
+ <BEEE3F89-717B-44A4-8571-68DA69408DA4@fb.com>
+ <20240807190809.cd316e7f813400a209aae72a@kernel.org>
+ <CABCJKucdMS1hkWjHWty8JyACjZy2R9juusABcbsMYzNej=pB2Q@mail.gmail.com>
+ <09ED7762-A464-45FF-9062-9560C59F304E@fb.com>
+ <ZrSW5KgFMjlB1Rn2@pathway.suse.cz>
+ <A3701B71-D95F-4E99-A32D-C1604575D40F@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authority-Analysis: v=2.4 cv=AqC83/9P c=1 sm=1 tr=0 ts=66b624d7 cx=c_pps a=gZx6DIAxr9wtOoIAvRqG0Q==:117 a=gZx6DIAxr9wtOoIAvRqG0Q==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=N659UExz7-8A:10 a=yoJbH4e0A30A:10 a=gYw7AgALRtIvlrhRB3wA:9 a=pILNOxqGKmIA:10
-X-Proofpoint-ORIG-GUID: KE0GaMDCDTws6WXWNTkzS1AeEiMiYAxT
-X-Proofpoint-GUID: KE0GaMDCDTws6WXWNTkzS1AeEiMiYAxT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-09_10,2024-08-07_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1011
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2408090103
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <A3701B71-D95F-4E99-A32D-C1604575D40F@fb.com>
 
+On Thu 2024-08-08 15:20:26, Song Liu wrote:
+> 
+> 
+> > On Aug 8, 2024, at 2:59 AM, Petr Mladek <pmladek@suse.com> wrote:
+> > 
+> > On Wed 2024-08-07 20:48:48, Song Liu wrote:
+> >> 
+> >> 
+> >>> On Aug 7, 2024, at 8:33 AM, Sami Tolvanen <samitolvanen@google.com> wrote:
+> >>> 
+> >>> Hi,
+> >>> 
+> >>> On Wed, Aug 7, 2024 at 3:08 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >>>> 
+> >>>> On Wed, 7 Aug 2024 00:19:20 +0000
+> >>>> Song Liu <songliubraving@meta.com> wrote:
+> >>>> 
+> >>>>> Do you mean we do not want patch 3/3, but would like to keep 1/3 and part
+> >>>>> of 2/3 (remove the _without_suffix APIs)? If this is the case, we are
+> >>>>> undoing the change by Sami in [1], and thus may break some tracing tools.
+> >>>> 
+> >>>> What tracing tools may be broke and why?
+> >>> 
+> >>> This was a few years ago when we were first adding LTO support, but
+> >>> the unexpected suffixes in tracing output broke systrace in Android,
+> >>> presumably because the tools expected to find specific function names
+> >>> without suffixes. I'm not sure if systrace would still be a problem
+> >>> today, but other tools might still make assumptions about the function
+> >>> name format. At the time, we decided to filter out the suffixes in all
+> >>> user space visible output to avoid these issues.
+> >>> 
+> >>>> For this suffix problem, I would like to add another patch to allow probing on
+> >>>> suffixed symbols. (It seems suffixed symbols are not available at this point)
+> >>>> 
+> >>>> The problem is that the suffixed symbols maybe a "part" of the original function,
+> >>>> thus user has to carefully use it.
+> >>>> 
+> >>>>> 
+> >>>>> Sami, could you please share your thoughts on this?
+> >>>> 
+> >>>> Sami, I would like to know what problem you have on kprobes.
+> >>> 
+> >>> The reports we received back then were about registering kprobes for
+> >>> static functions, which obviously failed if the compiler added a
+> >>> suffix to the function name. This was more of a problem with ThinLTO
+> >>> and Clang CFI at the time because the compiler used to rename _all_
+> >>> static functions, but one can obviously run into the same issue with
+> >>> just LTO.
+> >> 
+> >> I think newer LLVM/clang no longer add suffixes to all static functions
+> >> with LTO and CFI. So this may not be a real issue any more?
+> >> 
+> >> If we still need to allow tracing without suffix, I think the approach
+> >> in this patch set is correct (sort syms based on full name,
+> > 
+> > Yes, we should allow to find the symbols via the full name, definitely.
+> > 
+> >> remove suffixes in special APIs during lookup).
+> > 
+> > Just an idea. Alternative solution would be to make make an alias
+> > without the suffix when there is only one symbol with the same
+> > name.
+> > 
+> > It would be complementary with the patch adding aliases for symbols
+> > with the same name, see
+> > https://lore.kernel.org/r/20231204214635.2916691-1-alessandro.carminati@gmail.com
+> 
+> I guess v3 plus this work may work well together.  
+> 
+> > I would allow to find the symbols with and without the suffix using
+> > a single API.
+> 
+> Could you please describe how this API would work? I tried some 
+> idea in v1, but it turned out to be quite confusing. So I decided 
+> to leave this logic to the users of kallsyms APIs in v2. 
 
-We have noticed an issue when a uprobe is attached to a valid file offset, =
-and the content of that file is modified (with no inode change).
-Executing from a modified file while the uprobe is attached may cause a pro=
-cess to crash. The crash happens if the probed offset is invalid for the ne=
-w file content.
+If we create an alias without the suffix but only when there is only
+one symbol with such a name then we have, for example:
 
-Here's a simple scenario for an executable leading to consistent crashes (b=
-ut something similar can happen for DSO too):
+  klp_complete_transition.lwn.123456
+  klp_complete_transition		[alias]
 
-1. Create a simple binary B1 that has symbol S1 at offset O1. The binary B1=
- has inode INO_1.
-2. Start a new process P1 and attach an uprobe to this binary at B1:S1:O1
-3. Run the binary B1 and the uprobe is fired as expected.
-4. Continue to run the process P1 (a.k.a the uprobe is still attached to B1=
-:S1:O1)
-5. Create a new binary B2 that no longer has the symbol S1 at offset O1. Th=
-e binary B2 has inode INO_2
-6. Copy the content of binary INO_2 to INO_1 using cp command. As a result =
-the original binary B1 with INO_1  has new contents and no longer has symbo=
-l S1 at offset O1. The key here is it=92s the same inode.
-7. The original process P1 still has an uprobe attached to B1:S1:O1.
-8. Re-run the binary B1 and it seg faults immediately. In short any B1 beco=
-me completely unusable.
-9. Detach the uprobe.
-10. Re-run the binary B1 and all good
+  init_once.lwn.2131221
+  init_once.lwn.3443243
+  init_once.lwn.4324322
+  init_once.lwn.5214121
+  init_once.lwn.2153121
+  init_once.lwn.4342343
 
-Sample gdb output where it crashes (Notice the (bad))
+This way, it will be possible to find the static symbol
+"klp_complete_transition" without the suffix via the alias.
+It will have the alias because it has an unique name.
 
-0x0000555555555154 in _fini ()
-(gdb) x/20i _fini
-   0x555555555148 <_fini>:	repz int3
-   0x55555555514a <_fini+2>:	(bad)
-   0x55555555514b <_fini+3>:	cli
-   0x55555555514c <_fini+4>:	sub    $0x8,%rsp
-   0x555555555150 <_fini+8>:	add    $0x8,%rsp
-=3D> 0x555555555154 <_fini+12>:	ret
+While "init_once" symbol must always be searched with the suffix
+because it is not unique.
 
-Syslogs output:
-Aug  8 21:33:00 rshahvm2 kernel: [50553.686400] hello_world[30144]: segfaul=
-t at f7d3e9c8 ip 00007f9701b40144 sp 00000000f7d3e9c8 error 4 in libfoo.so[=
-7f9701b40000+1000]
-Aug  8 21:33:00 rshahvm2 kernel: [50553.686409] Code: 0f 1e fa 55 48 89 e5 =
-90 90 90 5d c3 f3 0f 1e fa 55 48 89 e5 e8 1d ff ff ff 5d c3 00 00 00 f3 cc =
-1e fa 48 83 ec 08 48 83 c4 08 <c3> 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00
+It looks like >99% of static symbols have unique name.
 
-What we saw is that when a file (executable or a DSO) is mapped in a proces=
-s memory, the kernel installs all uprobes registered for that file's inode,=
- no matter if the file has been changed since the initial uprobe registrati=
-on.
-
-If uprobes are installed at a offset that's mo more valid, this behavior ca=
-n make all new application completely unusable.
-
-Just wondering if there is any fix in the kernel for this of if anyone else=
- has observed similar behavior.
-
-Thanks,
-Rahul
+Best Regards,
+Petr
