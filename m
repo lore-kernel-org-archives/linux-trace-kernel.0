@@ -1,155 +1,157 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265C561FFC;
-	Mon, 12 Aug 2024 20:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8CE170A0F;
+	Mon, 12 Aug 2024 21:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723492814; cv=none; b=cz1wH0a8zAeOTwpKx1xDfAE8m+wXJrArDFqqAkkY0bU5cxUE2t8VX8q0WmLZas3IcnoUDFmp0a7B5KpLuMlENsrQSqtEUrFZlZiHnNMIJJZ2pRJrDEacuGW7ZJfKzqE1MjraOCFlaF5WxIHd3LXSYiSxbuLsmKmkwd9BTsWxBv8=
+	t=1723499353; cv=none; b=jvc/QP1J5+8eLUbv0E3qaPP5KcQ5wbbw8poCjrhnIP8Pwh9AovIYy8n+u7iYiWKjzwAcxwxWgBnCXcUd4k970I4eI250TetfLo8oFYgWW/CWBulQyGD8toJtqUI8Lmh87vDo+IF5HEK6huM3+37d8GE3nujmqyyuogJ+mwIZRxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723492814; c=relaxed/simple;
-	bh=KstVNJ3L2qzscAMgj5Jf9zkpCjcBT4Mr9zo3QRiI65g=;
+	s=arc-20240116; t=1723499353; c=relaxed/simple;
+	bh=9uVulOEMr9LodJCHTYEdKXXyHout8mwRFuQN+Zhom1o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uznqG1SAkhkvfGgqGncB0XLN3Ju++AzFJZicmpcojHLP64Fr+AmubyWK/CQI0yHUqv8NBocFsnYpu+PrQi4LXF7DAcJar7BETXMD9Tp2/jLmYOl3z9V12bp5E/lxxI/2x66AvZb0eYcCwsSmc0NhV7/PkRy5B63PFEvF+GOvZak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moAwArip; arc=none smtp.client-ip=209.85.216.49
+	 To:Cc:Content-Type; b=Vq6ic4/Zjko+h4RQz8himtWOaXUVTOwit5WFAZjn6ukD0umtr83N/AxdTzWwvcW/sfTtHDTxIBSD+ZZpGOx2qM+qh8cBJqoBV4AaAkq+p0sYPMIg4YphXA2btZ4RpYNTADBSJxP6J575QxQs+sj56bgL4zRTlMA/co8OgS0rihU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S5dmvrOV; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moAwArip"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2cb4c584029so3677552a91.3;
-        Mon, 12 Aug 2024 13:00:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5dmvrOV"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2cdadce1a57so3745678a91.2;
+        Mon, 12 Aug 2024 14:49:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723492812; x=1724097612; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723499351; x=1724104151; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a9w/uBXZ5D6MzP4JJL1EO+fWDE4hnfbBDw04URWpP+U=;
-        b=moAwAripv35LUnMKbwwc1lLYBB71QOCotIDhXbLzNEkt+rYfOQ9tPBUFsx8vdQ9MNx
-         hfoRSJI+xTg4ujksp6HmZsV799Qr0qL0J/aklRPPQ12tqZ5yfSTbSQZ/qwdVB2zRx6Y9
-         gdSHcwF56/QMzmDW4T3YHPEgVn4iJU9mFVH9w3gLr4V39TbqsEnNiYsBXiGHlKzlguHI
-         wmhvmpLke1xJjCWa0hz9Xy0HOaJKs4iLK8KIYeED4n4xKWpqhVTdzTtTZel2C/pgGopJ
-         HskVRWrXEy3OO5zuR2mQzlw2wPUACE6/I7cD3yUvLE35N432f0vvcIc1BduqmUZgtIBK
-         CoCg==
+        bh=LiqUCLx0Px9nEA6ezZXCyC9UdSf8Ot8v0J1DWNyXIA8=;
+        b=S5dmvrOVAS1F3HCC5KISdaWhT6El1rhBt1rUf0JGp5p3aM2nH3Lg7fyRgB4lWQaEuQ
+         wvLt5iE7ANZBc67eUPz/aFhK/8P6SjCU1x79hZvqg6PrBAGmSoE4AczGvQ6SceYsSYlF
+         7maQcYUZHazWC9zEwgr5dvQNez+GprHXX9jqy3kjkY4tBO6F1aGUoLIJ792uTpzwzQmB
+         q3GzkMEB8VHBogygVIKhCirlbAdxGePo8tJ7A7FFgvdZ0Bwx0ZesL5hjl4znRArAYkEJ
+         1k7GrMUcFk+8Ym/MkgQIGY97l7+g90d7Ad79Uw6bvw+5jDEdYvot1NZp7dnLacwXVdPg
+         r5ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723492812; x=1724097612;
+        d=1e100.net; s=20230601; t=1723499351; x=1724104151;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a9w/uBXZ5D6MzP4JJL1EO+fWDE4hnfbBDw04URWpP+U=;
-        b=houn5Kaxww4+RKbRjpvL5CHzIXPA8jxfJgOHKRRLIPjX3XyXnDCZwXsKpoejnI/ovU
-         8CcvXXpegQ6KhlVE/AOc+p0yxj96uUI7MBkSpqkXEJDbtcdjszANf9jTEQHDfukI4Y5j
-         p+p71VbFH6ReAvhvWRN9aIQN+xWlnEa8CQ+uVn7+lZUec26ZTbJ8mPV1kGG54XeMnSjP
-         myG8y18CgkKcTH57G7wliRSC7cxdhEEFzFbmelECOzWmLeDhI5Allpb6PrdIOVJbmA+6
-         Gzg0oyKxzuRu3rH4pc3gwMRhw8eitQ7o8SvyTEg57JJ0CXg9frfNsd7PUMJPw63UDYXT
-         Ze0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXj58BYvYbCRQ3FdhiwjDpXFS67myWFINKgD0QpomME/AUoOkYez2rX60W488uYHoT2+g+zrqTFj/fU1/NiepM9+/waTJpP2BzlsPneQQksg8advf9gzF7NfAizuKJfoYKrCmOskF2orytObw4HayyPA6/eY7+vNhlb6DZ/QrXLrYV9MrN7eHK5WctjMuqXv60sT5oMXRkJXoCdKwavTOB8VTINRnU3xw==
-X-Gm-Message-State: AOJu0YzogxFm6dz4sKasIZJ3U73DnbCYYXGOy9RiysFj5JXKPfexr0ok
-	FLvE5aYsBKlXqkyz9831j2IoU0MDd7exUHHJFjVrwOQ8R6X1uaNaA6tBbgZ4lNljj63cOfSIKDQ
-	+hejxy1HaAwd3twXClVFk7zr7ojw=
-X-Google-Smtp-Source: AGHT+IFQv65X7h0W+swS6SZWsFIogJb9kuzpuwC+BM97J3qO7vfuuD5CfkZJOLfnuW0vYUsROGAtj1ZcEEQzP4muKUw=
-X-Received: by 2002:a17:90b:33d2:b0:2c9:9fdf:f72e with SMTP id
- 98e67ed59e1d1-2d3926340bemr1552158a91.26.1723492812304; Mon, 12 Aug 2024
- 13:00:12 -0700 (PDT)
+        bh=LiqUCLx0Px9nEA6ezZXCyC9UdSf8Ot8v0J1DWNyXIA8=;
+        b=jMze2NfIDY56bbCpL/VwamlPnimjSY4f655W1SDbLwN9+yXK2bhuHHXkOHCD3OWi6A
+         VxOmk5nhyIHJNAF2IQ0Kae61aHbqoKh6kr3VQNpduUQVMueHzFJPL6bKl6Kj57i8n9n7
+         bAXKcvZul73R9W7cycZvt40xw9envGRCtoEMrJLR7VCOxBLD/ny4k11XPrqLk0sThBPk
+         aF/7bXfJ9MZNQuOc4EbjGW59gH2uGNzvMDIROLEAOdtZ0JEiuoNNxO8UMaPBECU7a5cL
+         RoN1gWEoYoNsoBYe6jmURCBhOXdT8VsQJ++Jfg/nkNGdvJRGpYbvyVSh3uraDXQxFhTm
+         ZINw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+8Z0fUeA/0tEfr0wN1XJc3AEQ0nLE/vTCWB8yNPHDAjwcQT/hurY0nyYJPQLswTv1/qqu1NKGWOw1Zru4GpNVVRZz0yLkFA4JMzsJ0iHsVDJ00PvITr12eO/0QglWqqckJTg/vEFxKqpBXmq78cbLWyO1FtgnMrey2GLjpnxM2Ebf32Xk
+X-Gm-Message-State: AOJu0YxULxcerOgALIWL7skuvsWfgx3WVTeaWgZCy8AP8duWAKcICymW
+	iOM9Z13DzwIzjFQ2lptufxbVo2UK4cVDbqOBztKo/9tn646MsZohH5OIcDJ3XFkTiDdCRS61T4c
+	XkLqAdZl0PxyuhMs5lwTAab8MSVU=
+X-Google-Smtp-Source: AGHT+IERh+nGlSMxB2vmGQvEm5TMoeATPxY/+oKBXTHHMWVbIopfiaW0TqWgMQZXDsGcI1qwG70rpZ831Zplc79lJbY=
+X-Received: by 2002:a17:90b:4c12:b0:2c8:538d:95b7 with SMTP id
+ 98e67ed59e1d1-2d39263415fmr1690708a91.32.1723499351336; Mon, 12 Aug 2024
+ 14:49:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000382d39061f59f2dd@google.com> <20240811121444.GA30068@redhat.com>
- <20240811123504.GB30068@redhat.com> <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
- <20240812100028.GA11656@redhat.com> <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
- <20240812192405.GD11656@redhat.com>
-In-Reply-To: <20240812192405.GD11656@redhat.com>
+References: <20240725001411.39614-1-technoboy85@gmail.com> <20240725001411.39614-2-technoboy85@gmail.com>
+ <CAFnufp1jxnjL2apUwxWKkNzS5QKpDXYTWPnVLn-VQyZazFujCg@mail.gmail.com>
+In-Reply-To: <CAFnufp1jxnjL2apUwxWKkNzS5QKpDXYTWPnVLn-VQyZazFujCg@mail.gmail.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 12 Aug 2024 13:00:00 -0700
-Message-ID: <CAEf4BzbW9frgUDE+9mbrAyMj0eshPOoqgLs11ynb91spWkdAzw@mail.gmail.com>
-Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org, acme@kernel.org, 
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	irogers@google.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
-	bpf <bpf@vger.kernel.org>
+Date: Mon, 12 Aug 2024 14:48:59 -0700
+Message-ID: <CAEf4BzZCxtUV66LG_1F_v7iFm=_1X-Hs9i9houEvMiQW=hdOTA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 1/2] bpf: enable generic kfuncs for
+ BPF_CGROUP_* programs
+To: Matteo Croce <technoboy85@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Matteo Croce <teknoraver@meta.com>, Andrii Nakryiko <andrii@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 12, 2024 at 12:25=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wr=
-ote:
+On Mon, Aug 12, 2024 at 9:49=E2=80=AFAM Matteo Croce <technoboy85@gmail.com=
+> wrote:
 >
-> On 08/12, Andrii Nakryiko wrote:
-> >
-> > adding bpf ML, given it's bpf's code base
+> Il giorno gio 25 lug 2024 alle ore 02:14 <technoboy85@gmail.com> ha scrit=
+to:
+> > --- a/kernel/bpf/helpers.c
+> > +++ b/kernel/bpf/helpers.c
+> > @@ -3052,6 +3052,12 @@ static int __init kfunc_init(void)
+> >         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_XDP, &ge=
+neric_kfunc_set);
+> >         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_O=
+PS, &generic_kfunc_set);
+> >         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL,=
+ &generic_kfunc_set);
+> > +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_S=
+KB, &generic_kfunc_set);
+> > +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_S=
+OCK, &generic_kfunc_set);
+> > +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_D=
+EVICE, &generic_kfunc_set);
+> > +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_S=
+OCK_ADDR, &generic_kfunc_set);
+> > +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_S=
+YSCTL, &generic_kfunc_set);
+> > +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_S=
+OCKOPT, &generic_kfunc_set);
+> >         ret =3D ret ?: register_btf_id_dtor_kfuncs(generic_dtors,
+> >                                                   ARRAY_SIZE(generic_dt=
+ors),
+> >                                                   THIS_MODULE);
 >
-> Thanks,
+> This seems not enough, some kfuncs like bpf_cgroup_from_id are still reje=
+cted.
+> To fix this we need also this chunk:
 >
-> > On Mon, Aug 12, 2024 at 3:00=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > > > --- a/kernel/trace/bpf_trace.c
-> > > > +++ b/kernel/trace/bpf_trace.c
-> > > > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
-> > > > bpf_attr *attr, struct bpf_prog *pr
-> > > >         }
-> > > >
-> > > >         err =3D bpf_link_prime(&link->link, &link_primer);
-> > > > -       if (err)
-> > > > +       if (err) {
-> > > > +               bpf_uprobe_unregister(&path, uprobes, cnt);
-> > >
-> > > I disagree. This code already uses the "goto error_xxx" pattern, why
-> >
-> > Well, if you have strong preferences,
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -8309,7 +8319,11 @@ static int bpf_prog_type_to_kfunc_hook(enum
+> bpf_prog_type prog_type)
+>         case BPF_PROG_TYPE_SYSCALL:
+>                 return BTF_KFUNC_HOOK_SYSCALL;
+>         case BPF_PROG_TYPE_CGROUP_SKB:
+> +       case BPF_PROG_TYPE_CGROUP_SOCK:
+> +       case BPF_PROG_TYPE_CGROUP_DEVICE:
+>         case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
+> +       case BPF_PROG_TYPE_CGROUP_SYSCTL:
+> +       case BPF_PROG_TYPE_CGROUP_SOCKOPT:
+>                 return BTF_KFUNC_HOOK_CGROUP_SKB;
+>         case BPF_PROG_TYPE_SCHED_ACT:
+>                 return BTF_KFUNC_HOOK_SCHED_ACT;
 >
-> Well, YES and NO ;) please see below.
+> but even with this it won't work, because
+> bpf_prog_type_to_kfunc_hook() aliases many program types with a single
+> hook, and btf_kfunc_id_set_contains() will fail to check if the kfunc
+> is in the set.
 >
-> > so be it (it's too trivial code
-> > to argue about).
+> One solution could be to extend the btf_kfunc_hook enum with an entry
+> for every CGROUP program type, but a thing I wanted to avoid is to let
+> this enum proliferate in this way.
+> I wish to group all the CGROUP_ program types into a single hook, and
+> perhaps drop the "SKB" in "BTF_KFUNC_HOOK_CGROUP_SKB" which will have
+> no meaning anymore.
 >
-> Agreed. On a closer look both the code and the problem look very trivial.
->
-> But note that nobody noticed this trivial problem before. Including me wh=
-o
-> had to change this trivial code to adapt to the recent API changes.
+> Ideas?
 
-Yep, error handling problems tend to go unnoticed frequently. The good
-thing is that this is quite unlikely in practice for bpf_link_prime()
-to fail, which is why it was a syzbot that found this.
+Given BPF_PROG_TYPE_CGROUP_SKB and BPF_PROG_TYPE_CGROUP_SOCK_ADDR are
+already grouped into the same hook type, and
+bpf_sock_addr_set_sun_path() is meant to be enabled for
+BPF_PROG_TYPE_CGROUP_SOCK_ADDR (but really it's enabled for
+BPF_PROG_TYPE_CGROUP_SKB as well), I guess it's fine to just have one
+CGROUP hook type for all those cgroup-related program types and just
+rely on BTF type matching logic.
+
+I'd say that register_btf_kfunc_id_set() should just accept enum
+bpf_kfunc_hook instead of enum bpf_prog_type (I don't see where we
+remember or use prog_type beyond just translating that to
+bpf_kfunc_hook), but that can be left for follow up clean ups.
 
 >
-> May be this means that we should keep the error handling in this function
-> more consistent ;)
+> --
+> Matteo Croce
 >
-> > We do have quite a lot of "hybrid" error handling
->
-> And YES, I don't like this kind of error handling.
->
-> But, at the same time: NO, I never-never argue with the maintainers when =
-it
-> comes to "cosmetic" issues.
->
-> My main point was (and you seem to agree) that this simpler patch above w=
-on't
-> simplify the routing. I too thought about the change above initially.
->
-
-Agreed. Just stick to your code, it's fine. Thanks!
-
-> -------------------------------------------------------------------------=
-------
-> > Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
-> > any problem for it to go together with your refactorings.
-> >
-> > For the fix:
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
->
-> Thanks! I'll write the changelog and send this patch with your ack includ=
-ed
-> tomorrow.
->
-> Oleg.
->
+> perl -e 'for($t=3D0;;$t++){print chr($t*($t>>8|$t>>13)&255)}' |aplay
