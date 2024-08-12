@@ -1,187 +1,175 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D164B183CB4;
-	Mon, 12 Aug 2024 15:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4820F184538
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 15:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723476172; cv=none; b=N/IwmZ3mMeuX8cwikALv+F7llCg6tBXMZQpcNQKCcba1FaGUKBpygtZDH36fFD0FRsA1lzNUVAtOL0UB3M2+QlU7TJso7yvDRzcasJhL0vPP4tOrfPIPtauN0Seie92jPe2z1Hum3UYJwhzJX2wReWwGZ2o52I0yd23F2AsnPJI=
+	t=1723477222; cv=none; b=m8L5LK9FdPxmIEMiDMbecBScBtp89alT3XYJcCxONMjhZcxJxt/r4diybGu/7ZgKKiyhvONUWYFLE3TJO0uQLgQ5c2G3LW9f/UpRgVjaTZw8A9HwFRfhuqJGL8L8DGVYgN490D0d59WElE3oKhQ5NseWGyhmURTNukFErh5C+CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723476172; c=relaxed/simple;
-	bh=qpEUS3rYpbENzBlOxYTw3kKabVJQQCAW1JuPdQCxAng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bCoKV5940LKusLot1OEoz6C7GWbvOylbgxoch3X5TDIsu2vmH8tmMRQVPnESMD0HxmsEMMJiwqQF1zX19n2FmTccgbKpMtYlLFedIj/fFBRFkmjOnIr4MDz6Jz0yqf+PlCz6EZM74kzyXVpSk7z0ys/6H26DYlC00PbYcKCEbd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iErFR8Wx; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723477222; c=relaxed/simple;
+	bh=0OYeQ2fZ3PWhJcSem+khrvGeqAFHfT8q/YAWv+E7EUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oaC0X/iKRAGIcO/HybzRccMneMV96baQKjY2pPEbIEymBQvk0lecnGgqNvfJ3IL8nH/Qr8B0sHw27jkT9N1T6fIySIq/q3znpgBkwsgwCjD151/dxXouvbSZ4hbH5iq37IzTe0NePWul9dnQ0i1//+umLf4qSiKl30qX8cvh86k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SDa6xcHs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iErFR8Wx"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-656d8b346d2so2590982a12.2;
-        Mon, 12 Aug 2024 08:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723476170; x=1724080970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dpZ18i+l3ZklnBKOQpiJoYi+QXkzGYaSATzzcHWTrOQ=;
-        b=iErFR8Wx2xwquzphdV5/+GVA1NsWMX0iNPnVfAbUV+P8HvbhXX9nZS/FYr4SwRjlWq
-         yR3zblQpjnmmgxjLIhEPyJLovNeEmC2AEG+KIYm67BwyoP9nNsoVUAvd+tERck2ErKIs
-         M95iYbmMJN8OxJjCPS7+AH7PR07oKbD/lkda4cNHPZYDRgtXnp+6jhYssmnx2QaZ0PGx
-         7bMqHvCoJuJS1nUAlsUg5rihKETToC3dc6VnQC9RSU3XUfcA9O9FnjR5SaR8uhyYYn3Q
-         AMLpSLL8pMMT936A7X+BZhSHwuNhYaSYjK0x4PJtwMyzwN5ewtTImDhSKbxZ7wap1uw+
-         GIzw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SDa6xcHs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723477220;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IsDajGJ5npBRUKxZy3yJy39+Yw8rcRxs978LRc3+/7c=;
+	b=SDa6xcHsBVTJtoFfkRmGTPgReWVatUD57Jhg2mBvAtYl9g8IoySj4PAfJi4rKW5RA0zP5E
+	+ZzLJNcTegq7M7E5OG9zvOyvQznU4egw75JtMhzV7zTTExjR/Ioh/i9rnDNtxUqHA0cXxg
+	i3n5/auDsZpmWu1JSFpf1cL9nCoqznA=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-94-B39VP6NWN9K3VgANdaT5Ag-1; Mon, 12 Aug 2024 11:40:16 -0400
+X-MC-Unique: B39VP6NWN9K3VgANdaT5Ag-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-530e1f3ed95so4728110e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 08:40:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723476170; x=1724080970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dpZ18i+l3ZklnBKOQpiJoYi+QXkzGYaSATzzcHWTrOQ=;
-        b=aSNFc1CJB5U6+HZO+r01P0PaEyYin1ULeQONLZ1kxoYgBqIAzdq/S7eVu3k3rLBLBB
-         gKvQ8UhynGKXpbZQOzFtYupqWypgKLclcrcpb+BS0IKcx7bR79AjYyIgMyIiwkLgWHFY
-         H8BmrHwgQguAWAZhkidkfS0kTi1zRCAeiNyLQzDP3+ExdSfFx8Ah/Vh4ZKfGYgd8XNai
-         i81gHceQ+MBiLQ+85eo1w9Ul9bdpC8Tm1SZqWyDWp/heC+y+eiyEeuimPlQGmBtuPSe+
-         raHYVexMhdvNkKcPaZUikxcgjJ2vXleq7kiZUDFMbgwbPmbP6/D/X+nAzhBYYlBxmw4Q
-         cnsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUy+hDhMD/fE4Faqcu5YZKzaWRudWTae/g9nQ0Pts76mSyop6S4TXKU+LwHR+HVSIXZ1Gf+rtiiRLUte+zo3eM1MlXH9C10YtN55jkih62yaxcVo+GRC8fiKfwq/vHY6PHcUoojlq1NDGe2uDWs8rACF98fJ+DddbacsO6kcvTJf3EOTYqlLFQk80LptZ07UR96+3K1vTIZ6VN7g/KEQ2MYapD6VQyXBw==
-X-Gm-Message-State: AOJu0YydfWMW9N4iDC0MiBz8setgJCrE7o2hlNtxcPpgjoVR+F83uhbQ
-	c2RdFONpAoagaUIxECpGByyrouFsCGH+ZwKaOGNlYVvTdJ9UqMBxAGY1z/EDenFSI1irZTh2GYU
-	a5Jsiov9PhHyTbujYOIac6sI05gI=
-X-Google-Smtp-Source: AGHT+IHnFJyV11a3EU8J8N3K1x1M16K/y4cKmqEh2p++7UG3C19tPYQT99trjEzXWSi0Zkhm9/1S8wZ1G2i0SavJEA8=
-X-Received: by 2002:a17:90a:d90d:b0:2c9:8189:7b4f with SMTP id
- 98e67ed59e1d1-2d39264bf9emr567114a91.32.1723476169915; Mon, 12 Aug 2024
- 08:22:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723477215; x=1724082015;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IsDajGJ5npBRUKxZy3yJy39+Yw8rcRxs978LRc3+/7c=;
+        b=gLrQYYLXYK+xPCRllvbiAgH2yxhMaS+5Z1PTAq/5MbRgoOARLySJy22XW5GRwX95yj
+         YXli+u6cvonEltUlK1QhVmtK8VfFrB885oYwffi0eeuhIrMn5F9JJ9QtFx24m8BUBI97
+         KxacrlqiBgoC5Xqw4VsuPGG5SyUqDVCsBdJ/nCmciwdCv+7XzNuogD/hWMfrYo/nO5pL
+         4aA1hDe4NrW+L5edjuRqfvGWRTcSK3vv9VTw8fdXwYtA4OWoTxgNQXWxIP7vcFb4R7In
+         RMFNpxSfggX9gyWz9NEaWAbyOzba2ivMObnnZnHa+Bqj4Gyr/rfwNDBJ+1kZjgLfX4ly
+         3ftQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfoP0PwZsp9aIp2HfwhVTbk/8ylHUh00TRt2UlMPI5+29YhndZfujaaGQ0Td6G+LOzyMQp9cibltAbIRVQaBPLQEPhrZN2tfMKYooNw2p1Eum4
+X-Gm-Message-State: AOJu0YzRf3GJiAmsKz3s3GktepK+wgt8wlki/8qEkeyyZTby2VhsVeGk
+	Zg2aF6h7eZpx++SzIVZdjDIUtc5h/9Byz1tSimB8vWDazthwjmwiMrowieiVz6SnrYBEACmWXPw
+	oNKabFKD19Evq01PkAwXdrUulYGm47v+dBboQNuSl5OSswuRg84yvVoSqHXWvZD8s4uQ9rg==
+X-Received: by 2002:a05:6512:3b87:b0:52e:7448:e137 with SMTP id 2adb3069b0e04-5321364ba0dmr418505e87.6.1723477215102;
+        Mon, 12 Aug 2024 08:40:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHqTTm4i3yqoXwWcafjzWggvBAabRk27LvUse2Kqz/vx+0uXL/DvRLAZpeNUfxBVdHPwqM8g==
+X-Received: by 2002:a05:6512:3b87:b0:52e:7448:e137 with SMTP id 2adb3069b0e04-5321364ba0dmr418486e87.6.1723477214491;
+        Mon, 12 Aug 2024 08:40:14 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd190ac8b9sm2235220a12.23.2024.08.12.08.40.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Aug 2024 08:40:13 -0700 (PDT)
+Message-ID: <4efba0de-bf41-4e53-899a-19a27f565249@redhat.com>
+Date: Mon, 12 Aug 2024 17:40:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000382d39061f59f2dd@google.com> <20240811121444.GA30068@redhat.com>
- <20240811123504.GB30068@redhat.com> <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
- <20240812100028.GA11656@redhat.com>
-In-Reply-To: <20240812100028.GA11656@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 12 Aug 2024 08:22:37 -0700
-Message-ID: <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
-Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org, acme@kernel.org, 
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	irogers@google.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
-	bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] Add SBAF test to IFS
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Jithu Joseph <jithu.joseph@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+ Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ Shankar Ravi V <ravi.v.shankar@intel.com>, linux-kernel@vger.kernel.org
+References: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-adding bpf ML, given it's bpf's code base
+Hi,
 
-On Mon, Aug 12, 2024 at 3:00=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 08/11, Andrii Nakryiko wrote:
-> >
-> > On Sun, Aug 11, 2024 at 5:35=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > > Something like below on top of perf/core. But I don't like the usage =
-of
-> > > "i" in the +error_unregister path...
-> > >
-> >
-> > Wouldn't the below be cleaner?
-> >
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index cd098846e251..3ca65454f888 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
-> > bpf_attr *attr, struct bpf_prog *pr
-> >         }
-> >
-> >         err =3D bpf_link_prime(&link->link, &link_primer);
-> > -       if (err)
-> > +       if (err) {
-> > +               bpf_uprobe_unregister(&path, uprobes, cnt);
->
-> I disagree. This code already uses the "goto error_xxx" pattern, why
+On 8/1/24 7:18 AM, Kuppuswamy Sathyanarayanan wrote:
+> This patch series adds support for Structural Based Functional Test at
+> Field (SBAF) in the IFS driver. SBAF is a new type of testing that
+> provides comprehensive core test coverage, complementing existing IFS
+> tests like Scan at Field (SAF) and ArrayBist. Granite Rapids (GNR) is
+> the first platform that supports SBAF.
+> 
+> SBAF mimics the manufacturing screening environment and leverages the
+> same test suite. It makes use of Design For Test (DFT) observation
+> sites and features to maximize coverage in minimum time.
+> 
+> Similar to the SAF test, SBAF isolates the core under test from the
+> rest of the system during execution. Upon completion, the core
+> seamlessly resets to its pre-test state and resumes normal operation.
+> Any machine checks or hangs encountered during the test are confined to
+> the isolated core, preventing disruption to the overall system. Like
+> SAF test, the SBAF test is also divided into multiple batches, and each
+> batch test can take hundreds of milliseconds (100-200 ms) to complete.
+> If such a lengthy interruption is undesirable, it is recommended to
+> relocate the time-sensitive applications to other cores for the
+> duration of the test.
 
-Well, if you have strong preferences, so be it (it's too trivial code
-to argue about). We do have quite a lot of "hybrid" error handling
-code that combines undoing the last step (especially if it's a simple
-function call) and then doing goto for the rest of common error
-handling, so I didn't (and still don't) see any problem with that.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-> duplicate bpf_uprobe_unregister() ? What if another "can fail" code
-> comes between register and bpf_link_prime() ?
->
-> See the patch below, on top of perf/core.
->
-> > We should probably route this through the bpf tree, I don't think it
-> > will conflict with your changes, right?
->
-> It will conflict, and in this sense it is even worse than the "#syz test"
-> patch I sent in https://lore.kernel.org/all/20240811125816.GC30068@redhat=
-.com/
->
-> Because with your version above the necessary change
->
->         -       bpf_uprobe_unregister(&path, uprobes, cnt);
->         +       bpf_uprobe_unregister(uprobes, cnt);
->
-> won't be noticed during the merge, I guess.
->
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Yeah, my bad, I forgot that the signature of bpf_uprobe_unregister()
-also changed with your patches.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-> So can we route this fix through the perf/core ? I'll add "cc: stable",
-> in the next merge window the Greg's scripts will report the "FAILED"
-> status of the -stable patch, I'll send the trivial backport in reply.
+Regards,
 
-Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
-any problem for it to go together with your refactorings.
+Hans
 
-For the fix:
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> 
+> Patch Details:
+> 
+> Patch 1/4: Refactors MSR usage in IFS image loading code to share the
+>            code between SBAF and SAF tests.
+> Patch 2/4: Leverages SAF image loading logic and adds SBAF image loading support.
+> Patch 3/4: Adds support for user to trigger SBAF test.
+> Patch 4/4: Adds trace support for SBAF tests.
+> 
+> This series is originally authored by Jithu Joseph. I have made cleanups
+> related to code reuse between the SBAF and SAF tests and resubmitting it for
+> review.
 
->
-> No?
->
-> Oleg.
-> ---
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 4e391daafa64..90cd30e9723e 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -3484,17 +3484,20 @@ int bpf_uprobe_multi_link_attach(const union bpf_=
-attr *attr, struct bpf_prog *pr
->                                                     &uprobes[i].consumer)=
-;
->                 if (IS_ERR(uprobes[i].uprobe)) {
->                         err =3D PTR_ERR(uprobes[i].uprobe);
-> -                       bpf_uprobe_unregister(uprobes, i);
-> -                       goto error_free;
-> +                       link->cnt =3D i;
-> +                       goto error_unregister;
->                 }
->         }
->
->         err =3D bpf_link_prime(&link->link, &link_primer);
->         if (err)
-> -               goto error_free;
-> +               goto error_unregister;
->
->         return bpf_link_settle(&link_primer);
->
-> +error_unregister:
-> +       bpf_uprobe_unregister(uprobes, link->cnt);
-> +
->  error_free:
->         kvfree(uprobes);
->         kfree(link);
->
+
+
+> 
+> Changes since v3:
+>  * Rebased on top of v6.11-rc1
+>  * Added missing error return value in validate_ifs_metadata().
+> 
+> Changes since v2:
+>  * Added Reviewed-by tags from Ilpo and Steven.
+>  * Fixed minor issues raised by Ilpo.
+> 
+> Changes since v1:
+>  * Addressed trace struct hole issue (Steven)
+>  * Fixed initialization issue in ifs_sbaf_test_core() (Ilpo)
+> 
+> Jithu Joseph (3):
+>   platform/x86/intel/ifs: Add SBAF test image loading support
+>   platform/x86/intel/ifs: Add SBAF test support
+>   trace: platform/x86/intel/ifs: Add SBAF trace support
+> 
+> Kuppuswamy Sathyanarayanan (1):
+>   platform/x86/intel/ifs: Refactor MSR usage in IFS test code
+> 
+>  arch/x86/include/asm/msr-index.h         |   2 +
+>  drivers/platform/x86/intel/ifs/ifs.h     |  92 ++++++++-
+>  include/trace/events/intel_ifs.h         |  27 +++
+>  drivers/platform/x86/intel/ifs/core.c    |  33 ++++
+>  drivers/platform/x86/intel/ifs/load.c    |  40 ++--
+>  drivers/platform/x86/intel/ifs/runtest.c | 233 +++++++++++++++++++++++
+>  6 files changed, 412 insertions(+), 15 deletions(-)
+> 
+
