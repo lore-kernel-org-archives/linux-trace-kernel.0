@@ -1,238 +1,196 @@
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E493189BA2;
-	Mon, 12 Aug 2024 18:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.153.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723486410; cv=fail; b=lSO2hrDzSrRikHHB/A2HX2jik4SpYTQWUqg75+mi/FLvhiKs0DT/E1w1Bku4rpxu4NLdcjcqGtH3WBEiWOpWc69iE75EA1Tr07V8Dr72KajK37p/IKluHu0jzrisRUpZNj4QgINYtjiUmL+gIxV1ecbC3Z9WDAPaTh33KQWUXK0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723486410; c=relaxed/simple;
-	bh=UqF7zI360E1BQF6lf+i5AFOnCEWJgHsgQowNKQ6oaIk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SndhbGNmNYqBh3XEAYjnC58NWQTULtZY9jTqi6bRJE1lhJ9QoJVVIN8XY+TCmDTxN+8NnZuOBZ7XkIfFIY4JxrtaW9BvcfuiuKsj1k4+iDORUeStBb+6RxXZY5fUl1yVojX9wc2j7Rl4nfMRVAkEPwGNXrN1rp20fg5WTWj8JPQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ZLPV8/mY; arc=fail smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB87718C330
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 18:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723488944; cv=none; b=IO5DB6ACYkSddrPIv7p2aB3lnd7Svj5GN5hPGxLX/ox+RBFUlOteNV/K6uwUiCwVfnkQBDnYpHpXHDahQCLrsJ/NKML9U3ddnSMs5xvgGThwrMg79RUNozTcnxVK76LYWgF8O49KDPRtPKzXw03D2hH/a2TeIjgjBqNu1B59Unw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723488944; c=relaxed/simple;
+	bh=Y9p37RqX7l1j3N2jsmOssPQ5ESl1rjQuTqBm9jOVt8A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nKwtabZcS+oawDwWOYlgevMhGpNqCu+0QQT8ted9zgQZ2YL0CSpAWZ8Ce6GFWN7T2uqeC3o5w3ssJVoA3p0cKdPL1wYyqemflKXADVvTI0ffUM9GqPDBeisMyJojLDNwotkHuaqFc927wqLPy/Ksl07YgEvoPFy1uy7WC8cBKfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JE2EDoSb; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ZLPV8/mY"
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-	by m0001303.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 47CI4xpD028954;
-	Mon, 12 Aug 2024 11:13:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
-	:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-id:content-transfer-encoding:mime-version;
-	 s=s2048-2021-q4; bh=UqF7zI360E1BQF6lf+i5AFOnCEWJgHsgQowNKQ6oaIk
-	=; b=ZLPV8/mYFoccLdKaIUWDktizbViLDcRrEJcGEWz1UarK85LgAtE6v3SF2c4
-	nO62BCSJkdkKwiHpc/R49oW9uAuAtEl6Jq7bXPhpUyYE5ICD6ZJTEZwMFIz3sIsH
-	KAwfAFoXfWjkGO64hR2K7ve5n8kCcLKacwrqE0mKREl3GG4KJZOwj+RlqOWYJl37
-	DxnNNCckqunHW5zta9+hkleA9RndmTY1zcIKqM3yE7/F8I5P5mYNEsmrZs+S6N6G
-	GvPeCREV2RWdPsnvCaQY+tmDYDqlelHbK7k/tS0AIuKm1qi4Oy3n29GYjcxb93lw
-	Q4j0dTWuOgqYNNoJG+n1R+gAvEQ==
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
-	by m0001303.ppops.net (PPS) with ESMTPS id 40x3vs2mc8-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Aug 2024 11:13:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fOnn4KRIv+0qDvWOQ3SBvvK9Tr4Ve11VYEewLcnPhwxSEmvyQ04cWC/20J/5qoANzmXPyj9IFIZO/QMLrAR3yaHmZQnPTVVnzH5gJHkjfG/r6/WyCCil83K+ThBCym4Xd6Yf2eRGNGO9NP0VKb/CiEfJLaelkeXSGyBRY0twOCEuJSJoxEdMPRkljrLcV4kVj5+QvStDVRZZcom7Gh5VOHGugCFcH2+E06ki3KuBXcnytTt1TcRD5JhLKR/BAGVoTGLh1lqKC3dRYgdp+59KT2iXw3VKGdgDRdyDJV6Y7wL+3lVABpKyaM4IGIEeOgrJ2i1PYkPKisBoaccXXZesPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UqF7zI360E1BQF6lf+i5AFOnCEWJgHsgQowNKQ6oaIk=;
- b=vcwnbLCEieaiCRnhbNCJi9RZHJhGTkJ1plfuUvCW7tjvFlp52lxGI8Gpq2VVXdPXj5pUiHJ7apTr97a7OJQG3oGv4YWUToDS0m3N24X4qFLdX1XNSnghCcg1NHQT1+zqTq7XcJNWaEgzPirHrliAh/aFXMA37qMWuISlpRD/CWlbgE94Xx6ArtrtISynazRUEryAvBzKbuWshN3tQnzmHjx3IccpDOk2kqkarD7B0pRr1hgvVP7GX/DtbldTiKIsNCSC/mQW5Aw+FZ7Nx5dF+Fae0OW175AUxAGUq8V2tFzYGdHxV1kSV0J8KRArBSxW/ehfTpl0Lkjv/pVHDvnKeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from SA1PR15MB5109.namprd15.prod.outlook.com (2603:10b6:806:1dc::10)
- by MN6PR15MB6344.namprd15.prod.outlook.com (2603:10b6:208:476::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.20; Mon, 12 Aug
- 2024 18:13:23 +0000
-Received: from SA1PR15MB5109.namprd15.prod.outlook.com
- ([fe80::662b:d7bd:ab1b:2610]) by SA1PR15MB5109.namprd15.prod.outlook.com
- ([fe80::662b:d7bd:ab1b:2610%4]) with mapi id 15.20.7849.019; Mon, 12 Aug 2024
- 18:13:22 +0000
-From: Song Liu <songliubraving@meta.com>
-To: Luis Chamberlain <mcgrof@kernel.org>
-CC: Song Liu <song@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>, KE.LI <like1@oppo.com>,
-        Padmanabha
- Srinivasaiah <treasure4paddy@gmail.com>,
-        Sami Tolvanen
-	<samitolvanen@google.com>,
-        Fangrui Song <maskray@google.com>,
-        "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
-        LKML
-	<linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org"
-	<linux-trace-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, Petr Mladek
-	<pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        "morbo@google.com" <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>,
-        Leizhen <thunder.leizhen@huawei.com>,
-        "kees@kernel.org" <kees@kernel.org>,
-        Kernel Team <kernel-team@meta.com>,
-        Matthew Maurer <mmaurer@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
-Thread-Topic: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
-Thread-Index: AQHa6RXv/gSdKg0smE2fR+VNyjAMObIj1RMAgAAKOICAABUdgA==
-Date: Mon, 12 Aug 2024 18:13:22 +0000
-Message-ID: <5D28C926-467B-4032-A31F-06DBA50A1970@fb.com>
-References: <20240807220513.3100483-1-song@kernel.org>
- <CAPhsuW64RyYhHsFeJSj7=+4uHBo7LucWtWY5xOxN20aujxadGg@mail.gmail.com>
- <Zro_AeCacGaLL3jq@bombadil.infradead.org>
-In-Reply-To: <Zro_AeCacGaLL3jq@bombadil.infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: Apple Mail (2.3774.600.62)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR15MB5109:EE_|MN6PR15MB6344:EE_
-x-ms-office365-filtering-correlation-id: a062a836-4261-428b-7b01-08dcbafa73cc
-x-fb-source: Internal
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?ZGNyU0pDUlVIcHhBdDh0VDJOcTJyay9lSUpMSjA2cEgxWGt2bnY1VHRRZzFR?=
- =?utf-8?B?aFcrdVFRRFY0Q3RROC9mOVJWY0FqTzNOU21KMHhuNjhPbVhvekZKL3BiUGxn?=
- =?utf-8?B?bnhmSERWYjZmSkZqaVVvbHlqNzlFY05WVFY1OVY4NTZiVFhaSkJYSXBOSUZ0?=
- =?utf-8?B?dlI2RWRYNGZ2S3Y4NEFaK3hVdnJZbjZGa2tGM1AyRnRDM1BneVo1RTYrSjF4?=
- =?utf-8?B?UUx0MXVlOUJFZ1ZpZCtUSnRKeEY0cmFEUUdtMGsyekc1N2toZEYwRHRsSkxz?=
- =?utf-8?B?UWgwa2Z1ZGVaaUdqUmMzMkJLOVRlQkFQWlVtTmlkaG5Zak5zQ0I4Wmgrazk5?=
- =?utf-8?B?bkRNak93di9DSCtKRGw0ZlRnYzM2YXE0bWpCZnNxNzdZekVGUjl3UFZKTS9E?=
- =?utf-8?B?ZGhFV0xobEpKTzNpNUR4dzNqU2dhSnZKeHhxaFhaR1grQW0vL25hSGpuRjA5?=
- =?utf-8?B?dXB0MmNMTmNNcDlyb0o3REJXSGhWb3pVRkMzbktQdFp1Z2g3Mm5DejUzMGZk?=
- =?utf-8?B?SFpEWjRiWDJra0VLUFArQ1FzNUJEb21iYkJKbTlVQ21qMDZtTzNLUDROeERZ?=
- =?utf-8?B?MW8reDRGWTJkOHZ2WWJSWi9VT2RUUnJtenh6Tm85NjNCUVd6ZlJtaWI0V3Ny?=
- =?utf-8?B?S1pMTXhOenN3dnlLaHh6NSsySXgzc045aHBoZ0piYlh2UFRZOEJmYWFmb3Fj?=
- =?utf-8?B?WVBLN0l4WEg5Z1RtRUxuK0MraWFNOXlLcno3MWVyVEZwQWRIRVRYQW5zaWpR?=
- =?utf-8?B?TW1oQXQyVHZiU1QxWGpnM3lTTzFYNmV4M2RkT2FIVlNsRmVrcHVtendud3lT?=
- =?utf-8?B?L2FobTRLd2lmZXNmRnFSenNhU0RxMXIzZkZ3cmFta2dlaE5OSGNyWkdNUU1U?=
- =?utf-8?B?RU51ZFlPM3kreUlqQ0JydmZrV0RLYkEweE5QNDltdE5tSERSRjcyei90eHRB?=
- =?utf-8?B?cE9xbUEybUJjYmdLZysxYzYxQTZkQzVnMVJTV0hMQkpJazlISEdhNHNta1Q4?=
- =?utf-8?B?TGVkY24wK2IyTGJMcnJsOVdJRjBoc2NsQW4xcEtReUdVd2VYNkZYQnBDeWpH?=
- =?utf-8?B?b0w2QWgvNGJXYVdHZTIzUk1nSU1vUU5QRFkvVWV2K2c4UjlBbEdWRTZiUzY5?=
- =?utf-8?B?cFk5bmVNSEVsYmhnSzJWT29iZEZUOVVKN05KRUJ6VTFUa3hjbGpQc3JyTEk2?=
- =?utf-8?B?eWNkZERwanZBQkIvSW5wSE1KRXV5VytaVzNmcUgwa3VaYVpuZllKWVRLTnVa?=
- =?utf-8?B?ZCs3TTlNb0l2Mzc4dlhucmlJaU5XRXlDYlFiV3Y2aWF4WjVNcy9qenBSRFRo?=
- =?utf-8?B?S0ZvekN6a1l4QmdnbWZLYlFOVm5pa2Y0RnFiRTh4NTNGYTR2NDBVZ0VSSHVG?=
- =?utf-8?B?WFFGTTJkWXd2R0dmaVNKSzExS1hQMDBYQXd5MDFrbjFsbDJYY3hPOEkreHhh?=
- =?utf-8?B?MlhWL01OY0thZ1UrL3pzZUloY2JuRFNDSXU3dlU4Uzc3dnNnL09hRmxHWmVR?=
- =?utf-8?B?Rldsc1ZSU0V1K3FWOW5DZERTNFJXMHBTMFkzQkxlVHVIL25wV0lSQm5yR1lL?=
- =?utf-8?B?ODZkd3V5eEhDRlo4bEJpclhtN2QwU3d4OVhpSnZmVWZKNkV4bDRBbXVtSHpE?=
- =?utf-8?B?MFBrZkx6ZmYyRlBqRU1EQm96dEIzSXFsQUptN21pVUs2NGg1UXJyZmFBeEpF?=
- =?utf-8?B?YWJxK3V0K3hCaUFQaUZGRjFYenY1ait4UUZqN3FsZm1YdS91aENBMy9aaTdI?=
- =?utf-8?B?YzhjM3U5K20xSTFmd21NQ04zZ2xPOFg2cWdvanFuZDR3RDNLNVRjL0dwSHJX?=
- =?utf-8?B?UUZMSUxWdmRtMjhENkszajFWL3NmYkoweVd5MndtcVB4dWdsaXo5bXZtYU1T?=
- =?utf-8?B?eWpGNGRaSnVFck56TTRpMjBYSEFLcDB4YktYTThVS1N0RGc9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5109.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?QzdLZitId283Qm50YnVMTjExRVZxOUZPSzVCY2hqN1loSHRnSzJEUCtaMUJL?=
- =?utf-8?B?b3E2MFhPbGQyZmF3a3B2QUZldE5WVnVzcTNyc3o1Wm1Cbkx3cEJrSFZ2cUtD?=
- =?utf-8?B?ZCtRM2ZQV0M5UGVzbGRyQ2VDU2VJZVVLY1F6bFFEVnJoRm0vZEFCa3pRVmlF?=
- =?utf-8?B?OFlnT28zZVdkeDJKMTRJc0VBWmFNTncvQnNqOTdhcVd3TGx4TStGYlFMekVN?=
- =?utf-8?B?LzBNa0krWGMrd0VOVXJXUUwrd0lGYUovRjlYWld6TWpBbGlNVGlST2pWcGht?=
- =?utf-8?B?S1ZYeWZTUUlkc3NWVEhoUzNqcVRaV2lNNFUzSFNkRnJjWWEzNUUyVUN3NmhY?=
- =?utf-8?B?bEF5WitiTFpCdGtUeS9BMHhIK3RoT2VQbEpTWXlqVDQwUWhvUGhkOXQ5WUgx?=
- =?utf-8?B?WW9iUTE3QkhNenNzWUVDc2twSVg2L2xKOENsTTg5Y2pHTUhkZitkczhFeWVp?=
- =?utf-8?B?aVQ1bVFoUTE0S3lEUDVxYTFvQ1R1NFJCcEZYeUtFZVVnSStMRS9CZjBmYmdO?=
- =?utf-8?B?VFdERUtxaXpHMlkzdHY1OVljc3hUT0FUWlQrOW8xKzZMM0RyeGxzTUJ3RUZR?=
- =?utf-8?B?NTR3VWdSbXUwcG51T2twQTdDLzJnWHFDcEI2RE9wQUlHQ3FHUDNwY1laREw3?=
- =?utf-8?B?MFF2d2tJZ2ZPbnFNc3oyVC9SSEd2UE82TkM1b3hGVnJ0V1dWc09GREZwNnNH?=
- =?utf-8?B?anlTbk1IbkJud2gwU0Y3Y0RDTGIxdjZpYVhGN0JLcVgvRklmM1ByMUxYdnFr?=
- =?utf-8?B?T2ZKRVlqTGxPcTFQTzUxcnd5aDJqU2xCR2NJRzc4ekF3QjB0REpXZUthSkRi?=
- =?utf-8?B?Slp1bklEQ2g2dFlXMjE5cDk4SGdoREEwb2dueStVR01zdGFZS042WG5qd1g0?=
- =?utf-8?B?ZnNtVG0ra3lNcHFVR3BZZHE1OXdBTVg3Y2ROL3QyOExya2lkRFpMejRPN09k?=
- =?utf-8?B?VW9hTjlOMjlDSk9FRlMrQVpKK3ByOHBTZm55b2d5QmNKdzFCRG8xQ01CV1lj?=
- =?utf-8?B?SzZuK1JLL0N1bHdYTTlFSWdpQzQwaE9Vd0J0ZkZSVUl4bHNMMTBjRkN5SzlG?=
- =?utf-8?B?aGh2R3N1U3dlY1dLNGpJT1QrTXhydXFHNktGQ0VhalMyQ1VWVWNXUmpuWTJh?=
- =?utf-8?B?eWtadFhlWmJNVEpkdmo3YnR0RmI1QlJSNlJOUGQ5OGQ0YkhJNStJQW54RFNV?=
- =?utf-8?B?aE1VaS8rWDdFb2w4K1krQllJcWJYSkR0OTFNU1RnbGpsdXdXaEdZWVFEMjZm?=
- =?utf-8?B?T0F1NkdRZkVDK0NNSW1tdzNkWkpqYjRjdUwyK1AvRXpLanJOWElsdU9UbWRC?=
- =?utf-8?B?R0JXSGdYZ3FvVWx2ZVF6ZTFhaXp2WDZSQi80dnZaS1VNTmRVOUdyQ0ZPYUJl?=
- =?utf-8?B?a2JQb2J6UXA0UmcwaHRYMkpBbTdNa054SDZabmUzQ3IzVlpOY01xVUxRSWVz?=
- =?utf-8?B?SENuQnhzaHk3SmI2UVhOdTZ5TVJGbWxONkVhQ2g3bkhFNW54MnpXQ3Z0QTQx?=
- =?utf-8?B?TXVmSVUxTllBWjN4MWEwTHJoeVljSnR5dzBPcTVYeUNGUGowVEplb0tTMlZN?=
- =?utf-8?B?SjdiVTJzZlRlVkljS0x6YkZZbXpOdlZoc1I2NkFyc2ZNQmlibDZoNHZOeTdn?=
- =?utf-8?B?Z3pkL01XbFBTdnc2aGpST29YK1ZEQW4rOThhMzdIV29seXQzT2MvaEI2M1Nx?=
- =?utf-8?B?Y2lTaFY3ekQ0TDNiQ055N0FuMnV2MmV1Ykp1R2k0ZUFMeGRvVFJSYkNha0Vv?=
- =?utf-8?B?MXRFOUdVaTNoRHVGbjAzNnJjWW5yT0RGdzVjL3JUTXRJV1lJU3FzWGZIV1Rm?=
- =?utf-8?B?SG5sbStmNWF0WFA2azBmL1FpM3hxODJIdmhuOStUL0FlK2hvMHg0bUlaMVBq?=
- =?utf-8?B?MjVhVXlqd1hMVkg2dGU3enBZNjVmOHZqTE1RMXdnN2hCOFhTaUJNSFJWZDBD?=
- =?utf-8?B?NHIwOFpKU0sxOWlrMlZ0WnNIKzM1VWwxb2d4ZysvOTRRUXhWb3ZjNWpBc2xN?=
- =?utf-8?B?VnVzd1RzL0lVeGV4SVRmMUwvOUI3akV6eHZZMGxvMUVTN1REM1R5N2U1dnpq?=
- =?utf-8?B?SGtYb2psT3U0cHBheHpVaVk1RTZyUEZGUkExM2x5cGYrRml4UmlMaS9XZ2Va?=
- =?utf-8?B?ZGZ6U1RzQU9nRDJTVDArWXo4b3ZmRWdQYmZLQTB6eElrZllramhjSlpPS3h3?=
- =?utf-8?B?OGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8BAA4E4EE87DFC44A859E15631A325C1@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JE2EDoSb"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6bd777e6623so19437186d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 11:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723488942; x=1724093742; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tyADFD9WQhxzp2ay1aw2WKRVvkg6TDMP0WC4+Y4/ivc=;
+        b=JE2EDoSbtq6wm1B9727dhIKwZo1odsMWmGQUvsIHhtojihAluxR+78riU33b4Mtvpt
+         en9AG09BzK8ajop61MN1jdbhnn88cq1YjWw9J2WiwyS4Zrz1tpFRudHPUrb7cLkklA3E
+         5rlPYmR4kXHmqoMwoFdqxKQgkJWju8br5/2zBgwDT/Y/5kvzpQ+Z4kChbi46wHrOs7BW
+         pTeUttZXztoBAsLvecysgVjobbovM0HOMKKnopdKG6mS6L/DvZ8MzvylOvzJQ9qK5pz+
+         qBEkQH8igzNobNXRzQs7ei3cybfZ/PN/ONO4DqqR09ntQ4CaHNxy3VR82+dPVzX2HoWn
+         pq2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723488942; x=1724093742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tyADFD9WQhxzp2ay1aw2WKRVvkg6TDMP0WC4+Y4/ivc=;
+        b=GnEY2kCvcLENbwzMLbP/xASzxsov8lWWV3ntA7pmvTlxiHBdU3mJT+67gYixpnm/G4
+         VatDmvFuDa40hFie/NRfn250GO/zJM1GJD3t4KUGPa1tuFsNTn1TpDqZR10SEiU9R4nc
+         gyagmVKKQBTofokkNDg0jcZsgEH5f2Diua2MtHUmgSZy+k0jX/OlDDubvD0rmEJD3I5u
+         T4Ueq77PIUBjHtSP+vnq/LbzrC10ZT5INWKMX5bq5K4G2B68vBHO0qgJOho355NUQLlB
+         stcyeLA7UYo4cEP0I6t6l/bBc2gC1P/HsAZ4ZjZz41RKJ3t7+xZzjjQtE62QRW8boYoB
+         SAKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQncxjdscJvMrGjgQv2xojpfqaWi0ZxMwv/UqagerDKQp6sER3qGraU4BFvh8iIiT0HROwbxeT7x714ofBPszHz2ghk9wJRaojVKeNo81f93LI
+X-Gm-Message-State: AOJu0YxM7CL1FBnToUSa7vScid02DGMHF1rm5I8z7vY2XauuabC2gGa8
+	+n7o5KnditgKWTUZBQECrKE/X1hD5Z7LevDMlu6kIt7h+clBqIA+bFxXkD+c1FCr4nV9ufVUbjv
+	v3sx+BWmYza3buFeRd0OdBrpodtkjiKPi0XGs
+X-Google-Smtp-Source: AGHT+IFp1FOu+6VTl1SH9buQrdLY2XqoeRggmpmtFnspQqVeWmDUabh+mYhlUvwOU41NX/UJ102jz8xe1dWJwc2epkA=
+X-Received: by 2002:a05:6214:3a8b:b0:6bf:4f29:bdac with SMTP id
+ 6a1803df08f44-6bf4f8ad213mr10468556d6.57.1723488941777; Mon, 12 Aug 2024
+ 11:55:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5109.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a062a836-4261-428b-7b01-08dcbafa73cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2024 18:13:22.6628
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +TV9eBql62AJyLeWGa7kxyqPp+oFTdWVOIDqOcg2P5plcrmDTc2Hkcdf6Kts6PoGJMLYzM15eRN8PaLnxWKgMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR15MB6344
-X-Proofpoint-GUID: 68JTCMOrPu7cFfbZJUSb-ZcvpvhUnECC
-X-Proofpoint-ORIG-GUID: 68JTCMOrPu7cFfbZJUSb-ZcvpvhUnECC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-12_11,2024-08-12_02,2024-05-17_01
+References: <20240805212536.2172174-1-almasrymina@google.com>
+ <20240805212536.2172174-8-almasrymina@google.com> <20240806135924.5bb65ec7@kernel.org>
+ <CAHS8izOA80dxpB9rzOwv7Oe_1w4A7vo5S3c3=uCES8TSnjyzpg@mail.gmail.com>
+ <20240808192410.37a49724@kernel.org> <CAHS8izMH4UhD+UDYqMjt9d=gu-wpGPQBLyewzVrCWRyoVtQcgA@mail.gmail.com>
+ <fc6a8f0a-cdb4-4705-a08f-7033ef15213e@gmail.com> <20240809205236.77c959b0@kernel.org>
+ <CAHS8izOXwZS-8sfvn3DuT1XWhjc--7-ZLjr8rMn1XHr5F+ckbA@mail.gmail.com>
+ <48f3a61f-9e04-4755-b50c-8fae6e6112eb@gmail.com> <20240812105732.5d2845e4@kernel.org>
+In-Reply-To: <20240812105732.5d2845e4@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 12 Aug 2024 14:55:28 -0400
+Message-ID: <CAHS8izPb51gvEHGHeQwWTs4YmimLLamau1c4j=Z4KGM8ZJrx5g@mail.gmail.com>
+Subject: Re: [PATCH net-next v18 07/14] memory-provider: dmabuf devmem memory provider
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgTHVpcywNCg0KPiBPbiBBdWcgMTIsIDIwMjQsIGF0IDk6NTfigK9BTSwgTHVpcyBDaGFtYmVy
-bGFpbiA8bWNncm9mQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gT24gTW9uLCBBdWcgMTIsIDIw
-MjQgYXQgMDk6MjE6MDJBTSAtMDcwMCwgU29uZyBMaXUgd3JvdGU6DQo+PiBIaSBmb2xrcywNCj4+
-IA0KPj4gRG8gd2UgaGF2ZSBtb3JlIGNvbmNlcm5zIGFuZC9vciBzdWdnZXN0aW9ucyB3aXRoIHRo
-aXMgc2V0PyBJZiBub3QsDQo+PiB3aGF0IHdvdWxkIGJlIHRoZSBuZXh0IHN0ZXAgZm9yIGl0Pw0K
-PiANCj4gSSdtIGFsbCBmb3Igc2ltcGxpZnlpbmcgdGhpbmdzLCBhbmQgdGhpcyBkb2VzIGp1c3Qg
-dGhhdCwgaG93ZXZlciwNCj4gSSdtIG5vdCB0aGUgb25lIHlvdSBuZWVkIHRvIGNvbnZpbmNlLCB0
-aGUgZm9sa3Mgd2hvIGFkZGVkIHRoZSBvcmlnaW5hbA0KPiBoYWNrcyBzaG91bGQgcHJvdmlkZSB0
-aGVpciBSZXZpZXdlZC1ieSAvIFRlc3RlZC1ieSBub3QganVzdCBmb3IgQ09ORklHX0xUT19DTEFO
-Rw0KPiBidXQgYWxzbyBnaXZlbiB0aGlzIHByb3ZpZGVzIGFuIGFsdGVybmF0aXZlIGZpeCwgZG9u
-J3Qgd2Ugd2FudCB0byBpbnZlcnQNCj4gdGhlIG9yZGVyIHNvIHdlIGRvbid0IHJlZ3Jlc3MgQ09O
-RklHX0xUT19DTEFORyA/IEFuZCBzaG91bGRuJ3QgdGhlIHBhdGNoZXMNCj4gYWxzbyBoYXZlIHRo
-ZWlyIHJlc3BlY3RpdmUgRml4ZXMgdGFnPw0KDQprYWxsc3ltcyBoYXMgZ290IHF1aXRlIGEgZmV3
-IGNoYW5nZXMvaW1wcm92ZW1lbnRzIGluIHRoZSBwYXN0IGZldyB5ZWFyczoNCg0KMS4gU2FtaSBh
-ZGRlZCBsb2dpYyB0byB0cmltIExUTyBoYXNoIGluIDIwMjEgWzFdOw0KMi4gWmhlbiBhZGRlZCBs
-b2dpYyB0byBzb3J0IGthbGxzeW1zIGluIDIwMjIgWzJdOw0KMy4gWW9uZ2hvbmcgY2hhbmdlZCBj
-bGVhbnVwX3N5bWJvbF9uYW1lKCkgaW4gMjAyMyBbM10uIA0KDQpJbiB0aGlzIHNldCwgd2UgYXJl
-IHVuZG9pbmcgMSBhbmQgMywgYnV0IHdlIGtlZXAgMi4gU2hhbGwgd2UgcG9pbnQgRml4ZXMNCnRh
-ZyB0byBbMV0gb3IgWzNdPyBUaGUgcGF0Y2ggd29uJ3QgYXBwbHkgdG8gYSBrZXJuZWwgd2l0aCBv
-bmx5IFsxXSANCih3aXRob3V0IFsyXSBhbmQgWzNdKTsgd2hpbGUgdGhpcyBzZXQgaXMgbm90IGp1
-c3QgZml4aW5nIFszXS4gU28gSSB0aGluaw0KaXQgaXMgbm90IGFjY3VyYXRlIGVpdGhlciB3YXku
-IE9UT0gsIHRoZSBjb21iaW5hdGlvbiBvZiBDT05GSUdfTFRPX0NMQU5HDQphbmQgbGl2ZXBhdGNo
-aW5nIGlzIHByb2JhYmx5IG5vdCB1c2VkIGJ5IGEgbG90IG9mIHVzZXJzLCBzbyBJIGd1ZXNzIHdl
-IA0KYXJlIE9LIHdpdGhvdXQgRml4ZXMgdGFncz8gSSBwZXJzb25hbGx5IGRvbid0IGhhdmUgYSBz
-dHJvbmcgcHJlZmVyZW5jZSANCmVpdGhlciB3YXkuIA0KDQpJdCBpcyBub3QgbmVjZXNzYXJ5IHRv
-IGludmVydCB0aGUgb3JkZXIgb2YgdGhlIHR3byBwYXRjaGVzLiBPbmx5IGFwcGx5aW5nDQpvbmUg
-b2YgdGhlIHR3byBwYXRjaGVzIHdvbid0IGNhdXNlIG1vcmUgaXNzdWVzIHRoYW4gd2hhdCB3ZSBo
-YXZlIHRvZGF5LiANCg0KVGhhbmtzLA0KU29uZw0KDQoNCj4gDQo+IFByb3ZpZGVkIHRoZSBjb21t
-aXQgbG9ncyBhcmUgZXh0ZW5kZWQgd2l0aCBGaXhlcyBhbmQgb3JkZXIgaXMgbWFpbnRhaW5lZA0K
-PiB0byBiZSBhYmxlIHRvIGJpc2VjdCBjb3JyZWN0bHk6DQo+IA0KPiBSZXZpZXdlZC1ieTogTHVp
-cyBDaGFtYmVybGFpbiA8bWNncm9mQGtlcm5lbC5vcmc+DQo+IA0KPiAgTHVpcw0KDQoNClsxXSA4
-YjhlNmI1ZDNiMDEgKCJrYWxsc3ltczogc3RyaXAgVGhpbkxUTyBoYXNoZXMgZnJvbSBzdGF0aWMg
-ZnVuY3Rpb25zIikNClsyXSA2MDQ0M2M4OGYzYTggKCJrYWxsc3ltczogSW1wcm92ZSB0aGUgcGVy
-Zm9ybWFuY2Ugb2Yga2FsbHN5bXNfbG9va3VwX25hbWUoKSIpDQpbM10gOGNjMzJhOWJiZjI5ICgi
-a2FsbHN5bXM6IHN0cmlwIExUTy1vbmx5IHN1ZmZpeGVzIGZyb20gcHJvbW90ZWQgZ2xvYmFsIGZ1
-bmN0aW9ucyIp
+On Mon, Aug 12, 2024 at 1:57=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Sun, 11 Aug 2024 22:51:13 +0100 Pavel Begunkov wrote:
+> > > I think we're talking about 2 slightly different flags, AFAIU.>
+> > > Pavel and I are suggesting the driver reports "I support memory
+> > > providers" directly to core (via the queue-api or what not), and we
+> > > check that flag directly in netdev_rx_queue_restart(), and fail
+> > > immediately if the support is not there.
+> >
+> > I might've misread Jakub, but yes, I believe it's different. It'd
+> > communicate about support for providers to upper layers, so we can
+> > fail even before attempting to allocate a new queue and init a
+> > page pool.
+>
+> Got it. Since allocating memory happens before stopping traffic
+> I think it's acceptable to stick to a single flag.
+>
+> > > Jakub is suggesting a page_pool_params flag which lets the driver
+> > > report "I support memory providers". If the driver doesn't support it
+> > > but core is trying to configure that, then the page_pool_create will
+> > > fail, which will cause the queue API operation
+> > > (ndo_queue_alloc_mem_alloc) to fail, which causes
+> > > netdev_rx_queue_restart() to fail.
+> >
+> > And I'm not against this way either if we explicitly get an error
+> > back instead of trying to figure it out post-factum like by
+> > checking the references and possibly reverting the allocation.
+> > Maybe that's where I was confused, and that refcount thing was
+> > suggested as a WARN_ONCE?
+>
+> Yup, the refcount (now: check of the page pool list) was meant
+> as a WARN_ONCE() to catch bad drivers.
+>
+> > FWIW, I think it warrants two flags. The first saying that the
+> > driver supports providers at all:
+> >
+> > page_pool_init() {
+> >       if (rxq->mp_params)
+> >               if (!(flags & PP_PROVIDERS_SUPPORTED))
+> >                       goto fail;
+> > }
+> >
+> > And the second telling whether the driver wants to install
+> > providers for this particular page pool, so if there is a
+> > separate pool for headers we can set it with plain old kernel
+> > pages.
+>
+> The implementation of the queue API should be resilient against
+> failures in alloc, and not being MP capable is just a form of
+> alloc failure. I don't see the upside of double-flag.
+>
+> > payload_pool =3D page_pool_create(rqx, PP_PROVIDERS_SUPPORTED);
+> > header_pool =3D page_pool_create(rqx, PP_PROVIDERS_SUPPORTED |
+> >                                      PP_IGNORE_PROVIDERS);
+>
+> Also don't see the upside of the explicit "non-capable" flag,
+> but I haven't thought of that. Is there any use?
+>
+
+There are 2 things we're trying to accomplish:
+
+1. Drivers need to be able to say "I support unreadable netmem".
+Failure to report unreadable netmem support should cause the netlink
+API to fail when the user tries to bind dmabuf/io uring memory.
+
+2. Drivers need to be able to say "I want a header pool (with readable
+netmem)" or "I want a data pool (potentially with unreadable netmem)".
+
+Pavel is suggesting implementing both of these in 2 different flags.
+
+Jakub is suggesting implementing both with 1 flag which says "I can
+support unreadable netmem for this pool" , and guarding against #1
+with a refcount check to detect if a dmabuf pool should have been
+created but wasn't.
+
+I prefer Jakub's suggestion, but beware that if we go with Jakub's
+suggestion, we can't WARN_ON when the core-net check fails, because
+it's not a kernel warning. All that's happening is that the user asked
+for dmabuf binding but the driver didn't ask for it (because likely it
+doesn't support it). That's not cause for a warning to be printed in
+the kernel. The netlink API should just fail and return -EOPNOTSUPP or
+something.
+
+> One important note. The flag should not be tied to memory providers
+> but rather to netmem, IOW unreadable memory. MP is an internal detail,
+> the important fact from the driver-facing API perspective is that the
+> driver doesn't need struct pages.
+>
+
+Agreed.
+
+--=20
+Thanks,
+Mina
