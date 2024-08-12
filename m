@@ -1,185 +1,162 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A082C1A5;
-	Sun, 11 Aug 2024 21:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F6461FE9;
+	Mon, 12 Aug 2024 02:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723413047; cv=none; b=crVy5sXgKm1FYeTBemh8xBPQQVOSWSj/Hv4vP5OQXHCigcJRt2fwGTg21pGmBDitcSVeXyzax/OqRHhQpWyVPAuz5jmPgjR6xA+4zns0HObGqWBEd/m0dIypqTxlbhVy9uO3kYehWHgGA465KUnPVA+S9WMToXEbrQbcnMGE924=
+	t=1723429805; cv=none; b=HabHkVIQpkxcdHuOSh8sxDd0oupWbYEc6tszpyxNcuWTz0qcyrAsB+xtBVl5/d5amStgYj849GSRGapzrG+Boi6Wu3sXEWTO+THnlrs7UdehLOW2215mxgzODUbdD6ipGSjR0C+AIX96jTlCm/LaB1Qvpyv+XxS4f5EWagp1NRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723413047; c=relaxed/simple;
-	bh=Ideq94+P9om5h9G1gC4jNDnoTihqThz8+wk2lRChR4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c4fwQO5uqkwqTP0n58zVWgaogE3Ln3DWbC1ZhZd17gjK603qf+CYYjH7Oo+/r9rylJjbLdu8aNkMfXd7pb9coPshqpip+d7tunm7LhK8+gjrLkVWSTrp+LrcFhrHIKF9WCZNG0Fh2/QKFBxktfsbN8p6vcpHNLLggcldsjDdj+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GDhSiqyi; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1723429805; c=relaxed/simple;
+	bh=qrFhDBoxjeR+uUI0kPeuVPn5TUPX509p72xmhgEo0yM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PiOj210oQuGVKERaVE72KnZXCGCeo1Ckwpn1/7NSQ6t8SqewcG4hbLwJQwqgNU6spCgYzDSdJjCdY84qVooTkpNS94U85GyoB4Qo/e9KS0WhrFgFjjJ0FNXay0XLrAGlL7VhMEo1eOEpriLV5Tmb146Cx6t7GzOA7G/cKH9B8VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O8z1iV6r; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDhSiqyi"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4281ca54fd3so28252255e9.2;
-        Sun, 11 Aug 2024 14:50:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8z1iV6r"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fc52394c92so36124215ad.1;
+        Sun, 11 Aug 2024 19:30:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723413044; x=1724017844; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zmy5SX4/jWP7boerv8nNkQKhYLkyFlWX6WV0T42uhIk=;
-        b=GDhSiqyiuHfQYjT8IakKlwh+Z2G4zzJRzlN6Gm8dOrhnznxUZwI1P1mdw8UB55poHQ
-         U53J7kpisD59WrVsIAhCtoKGgzLvhibyT7lT1gINKLpgJYtAObg9BfwSxRbMDHKFrNzH
-         ob6Wf6ZzCufzB+xUAv3PYXDbu3A3FzM7Kz9cFAoYfQfR+YZr3LszV5aTzD77XcboYfGz
-         RqErGrMHEXEs7hRw7ANk5rxNfrcXfWoIwSOQPeAdXz9mlCoGLRjb1PS0UlhVMPkYxqie
-         IrEeeFyKx6KyKjEqZif17jdJdbq4MKZ9g4w7b2qKulcEcss4PKn1wj+n9rhGlM09PO8g
-         Kgvg==
+        d=gmail.com; s=20230601; t=1723429804; x=1724034604; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CPcfP+fHyMLz6sCkXjXj/fN1cAsrryKdxQYaf/+RRmQ=;
+        b=O8z1iV6r/rAgFSYMSBzj1TOYK/tczo/bTX4r6znPybKuYpA7I45sQU1KvcEJY86kau
+         mcBJaIYNCteyjvVNBdvsH0atYNAYlW1xDj/ZwR3xeOcMcvV/x6BOyBrE/By/TlDNjn8i
+         xMpzKsj0tbpOmkxfPMCTwAK+We6RX3SW2rQpiI368MjWP+d828I/HPanOhMg+QHFfbTQ
+         EDpGvYPlxwlmfTw8NPVVj3zbSxtI7BfQxH/H+3undPt+iGFjfa+PNUd4Q/uRbcYwxD1U
+         lcTfwv88kEkbGapLF7UtrrUwemsuPKu1/N9M0W1lVbIQEzOGbfm9DTZeV51k/AJZH5Sk
+         A+cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723413044; x=1724017844;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zmy5SX4/jWP7boerv8nNkQKhYLkyFlWX6WV0T42uhIk=;
-        b=CVUtaBRhJBKKqmeJDCemnkzfMtmqw53DmmdXjZ5u/GQTP75K54RTKzyy0MPHJW/L1f
-         YLCgzy9powg7MTD3CPLHpHiHVhFpID4bpSUDfd+ojjXZ3s+CSN3ygczmjx0BGDwq2NUQ
-         dIVnG9fiI2l5MDBZyeDtYlnzeMa5UswmaqjlrRnZQWBbpNsviW7Utr7RPyZEfIbcKVNi
-         mRW6mLISiKq+XZPWy/tXzhJwZodSsJtM8KcGKNUbUGwFZbJ19QCMUeo5l6gDtKktjwzY
-         ka6Iuhszh3lQYsFLoheZS7X2frBtOL/+fH8stbz9aCStFQGC6zYE69e8O+JiG6Bx5VS6
-         2arg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ8+XNRBZALhAeum6FOD7q9qwUVF5eWL8AKhMEBY2+83t53OqP2bxsXWpgguipptmRXMabjZoghlZO@vger.kernel.org, AJvYcCURIUGy5lcZroZlhzPoBgfvggICH5edH39BkEFvSHmdnbx2rUZXPGhdlkyt4qPB+hOusJazjYM8pR6Ib66E@vger.kernel.org, AJvYcCUShQgfGkPqSZhWgJ9LF7Lx9MFlyqJ/2eWjyK5DhBZro/+dDJQ/9z/E8+Jjw1qqR2v2y1U=@vger.kernel.org, AJvYcCUZveQrqa/QrtLr9ltr+4xt0Vk8u4gnz8C9Uwa1bmG2kIFSfEUpCfMGxj/V6sx1S2+X9znyyhKRb0VE73iYbQZf@vger.kernel.org, AJvYcCUmj88nEhODmSUJRxG3l+0dYQ7zOYSrZxyWPfVMXADu8dIb7lXHgePoA65bT3+cHIsyMbJdwC/363+rxbwa@vger.kernel.org, AJvYcCV9SGEY9Pljp7GJrw90TwUpSAmlnW/33WGKXOhkm3k4Dagzamdx/3sIJo/4VXKp+XqO+7aiO01OJ+uiEw==@vger.kernel.org, AJvYcCVKxqSIAJkGwzl6plFWSMFz/HYVgbhD7gba/ggy8fWiLT524vbhV/72WmCXzl9zv9ZjO/8ZeYoF1jYDhQY=@vger.kernel.org, AJvYcCVfxUOCT8sU2P87ACj5vC8JO7Hu9RC52fL5skZqZg8+GGjdPJ8m5rLEFYvzztwbIU9JVWenlZ2G+W+Dbnw=@vger.kernel.org, AJvYcCW1EEsLQa2Ho5soiWD3aJVXqKE+nFuNQ9vSmjT/oBTmsS1rbDOQaSI5as2mCDnPrWY+yNI7FSZ6LGnYxg==@vger.kernel.org, AJvYcCXKVLDtwJb2bV7ejrfxblrnbaBqjt+zmI3/y3uBeXQJbPEKos0+l1tHa3a6VzYveoREOJtweu9SIqylIw==@vger.kernel.org, AJvYcCXST0g8JYhm+CJbGvQLD2/COFez8630ylhs8G2Tun40q46n5d5JyJ5T6dKT5o5mS+xb+DxkkiXP3XbKyc6cCea8MOcK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT8/lmDh/UcI1QJTiZMLgE4bppmnSXkNfkhTlZ1YcoN/GHkfk/
-	gBLBYmn5sTKOeJ59Iw0U9HeluSrp7oMjt6paI0JNBWty5Pb1ZoN4
-X-Google-Smtp-Source: AGHT+IFfo5+dE1Jz9ZaN7Mp86F0AFdfQ3J5qxDNb9cWZpuIKnM/ndN7vtT5TpeLfisL5UKGERSXV1w==
-X-Received: by 2002:a05:600c:4eca:b0:426:6773:17 with SMTP id 5b1f17b1804b1-429c3a517e5mr43332115e9.30.1723413044174;
-        Sun, 11 Aug 2024 14:50:44 -0700 (PDT)
-Received: from [192.168.42.175] ([85.255.232.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429c750ef58sm79243045e9.16.2024.08.11.14.50.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Aug 2024 14:50:43 -0700 (PDT)
-Message-ID: <48f3a61f-9e04-4755-b50c-8fae6e6112eb@gmail.com>
-Date: Sun, 11 Aug 2024 22:51:13 +0100
+        d=1e100.net; s=20230601; t=1723429804; x=1724034604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CPcfP+fHyMLz6sCkXjXj/fN1cAsrryKdxQYaf/+RRmQ=;
+        b=KeYt9O2HKAAN8Ev+edzRc0JPOZbzy9/6q6/SI+Iou6uanmMjqoOPKYTsRGhrB2tXPc
+         nAFq5Fnc3+P4QELq+iOsnW7SIBcdQY5u/XZErWl/JoQPDY1zpiOeY9VqneuWKfx5O588
+         h5NcNCBMlDNmuf98PmjlH9CiisOXQ3OlyXEoeEZMxTLzvchm/GiJ0tpaP1vgRkMsijnO
+         XYtkBeXH+TYe/QBXOTlsruyNjaw1LTgA0gABL7pVRMKH5pkY8VeSVrwgOAYJkibuPvgv
+         2OxFVLNgoODi4l2guevAvcM38R1WYv4PzRNlwxOmMqSzBWR1MHpBQynkPXSrBMd0ehoG
+         1Bug==
+X-Forwarded-Encrypted: i=1; AJvYcCUg+jTDF1XEexXok+d71NSrwzwr/CnG6pWEVrIYkShULSDn9CuGrT3XkJw+yf/4vXC4DsbJ0QqXmvOvG7Ura0WuTXX6QgvRm86Krx2FFFa/Kij0zF6NEg1zo5+lnZTxeoZu1Bvl19Gq/pP1QYZgIw8CN0PEv/vzY/ltrurIwMHjfVyyaLMMcGDjdp1Iwi7xJ1AXmGLAYO9p3o717blpgg0nst0ANn6musKA3wfRlm3tNFbiORoaJkU4ZmjrrYesLNd4qWYd3ZNDeO6CY1TtqO4geUGV44kskNbMylqLLpGG3d+MecUy3FS/v+vwh1dr/d8jErTl/A==
+X-Gm-Message-State: AOJu0YzI2yOaVT1b+1NJlfNaFSPlP5U0ujKk2s5GHDebm9IZDsTjUAO1
+	soKf2PQruMPNBnF0BW0oDL1XHt/eUYdRcTYt3L72Pv6IIYVLvKxT
+X-Google-Smtp-Source: AGHT+IHWjfWk9Yvp8Xz47EmfqTOyYIqZTpLYHww0hZawPQZt6bgoSLmdtP7yW5PiZUmHJmuoGirzew==
+X-Received: by 2002:a17:902:ce03:b0:1fb:7b01:7980 with SMTP id d9443c01a7336-200ae250234mr122466755ad.0.1723429803589;
+        Sun, 11 Aug 2024 19:30:03 -0700 (PDT)
+Received: from localhost.localdomain ([39.144.39.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-200bb9fed69sm27884765ad.188.2024.08.11.19.29.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 11 Aug 2024 19:30:02 -0700 (PDT)
+From: Yafang Shao <laoar.shao@gmail.com>
+To: akpm@linux-foundation.org
+Cc: torvalds@linux-foundation.org,
+	ebiederm@xmission.com,
+	alexei.starovoitov@gmail.com,
+	rostedt@goodmis.org,
+	catalin.marinas@arm.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v6 0/9] Improve the copy of task comm
+Date: Mon, 12 Aug 2024 10:29:24 +0800
+Message-Id: <20240812022933.69850-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v18 07/14] memory-provider: dmabuf devmem memory
- provider
-To: Mina Almasry <almasrymina@google.com>, Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20240805212536.2172174-1-almasrymina@google.com>
- <20240805212536.2172174-8-almasrymina@google.com>
- <20240806135924.5bb65ec7@kernel.org>
- <CAHS8izOA80dxpB9rzOwv7Oe_1w4A7vo5S3c3=uCES8TSnjyzpg@mail.gmail.com>
- <20240808192410.37a49724@kernel.org>
- <CAHS8izMH4UhD+UDYqMjt9d=gu-wpGPQBLyewzVrCWRyoVtQcgA@mail.gmail.com>
- <fc6a8f0a-cdb4-4705-a08f-7033ef15213e@gmail.com>
- <20240809205236.77c959b0@kernel.org>
- <CAHS8izOXwZS-8sfvn3DuT1XWhjc--7-ZLjr8rMn1XHr5F+ckbA@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izOXwZS-8sfvn3DuT1XWhjc--7-ZLjr8rMn1XHr5F+ckbA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 8/11/24 03:21, Mina Almasry wrote:
-> On Fri, Aug 9, 2024 at 11:52 PM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> On Fri, 9 Aug 2024 16:45:50 +0100 Pavel Begunkov wrote:
->>>> I think this is good, and it doesn't seem hacky to me, because we can
->>>> check the page_pools of the netdev while we hold rtnl, so we can be
->>>> sure nothing is messing with the pp configuration in the meantime.
->>>> Like you say below it does validate the driver rather than rely on the
->>>> driver saying it's doing the right thing. I'll look into putting this
->>>> in the next version.
->>>
->>> Why not have a flag set by the driver and advertising whether it
->>> supports providers or not, which should be checked for instance in
->>> netdev_rx_queue_restart()? If set, the driver should do the right
->>> thing. That's in addition to a new pp_params flag explicitly telling
->>> if pp should use providers. It's more explicit and feels a little
->>> less hacky.
->>
->> You mean like I suggested in the previous two emails? :)
->>
->> Given how easy the check is to implement, I think it's worth
->> adding as a sanity check. But the flag should be the main API,
->> if the sanity check starts to be annoying we'll ditch it.
-> 
-> I think we're talking about 2 slightly different flags, AFAIU.>
-> Pavel and I are suggesting the driver reports "I support memory
-> providers" directly to core (via the queue-api or what not), and we
-> check that flag directly in netdev_rx_queue_restart(), and fail
-> immediately if the support is not there.
+Using {memcpy,strncpy,strcpy,kstrdup} to copy the task comm relies on the
+length of task comm. Changes in the task comm could result in a destination
+string that is overflow. Therefore, we should explicitly ensure the
+destination string is always NUL-terminated, regardless of the task comm.
+This approach will facilitate future extensions to the task comm.
 
-I might've misread Jakub, but yes, I believe it's different. It'd
-communicate about support for providers to upper layers, so we can
-fail even before attempting to allocate a new queue and init a
-page pool.
+As suggested by Linus [0], we can identify all relevant code with the
+following git grep command:
 
-> Jakub is suggesting a page_pool_params flag which lets the driver
-> report "I support memory providers". If the driver doesn't support it
-> but core is trying to configure that, then the page_pool_create will
-> fail, which will cause the queue API operation
-> (ndo_queue_alloc_mem_alloc) to fail, which causes
-> netdev_rx_queue_restart() to fail.
+  git grep 'memcpy.*->comm\>'
+  git grep 'kstrdup.*->comm\>'
+  git grep 'strncpy.*->comm\>'
+  git grep 'strcpy.*->comm\>'
 
-And I'm not against this way either if we explicitly get an error
-back instead of trying to figure it out post-factum like by
-checking the references and possibly reverting the allocation.
-Maybe that's where I was confused, and that refcount thing was
-suggested as a WARN_ONCE?
+PATCH #2~#4:   memcpy
+PATCH #5~#6:   kstrdup
+PATCH #7:      strncpy
+PATCH #8~#9:   strcpy
 
-FWIW, I think it warrants two flags. The first saying that the
-driver supports providers at all:
+In this series, we have removed __get_task_comm() because the task_lock()
+and BUILD_BUG_ON() within it are unnecessary.
 
-page_pool_init() {
-	if (rxq->mp_params)
-		if (!(flags & PP_PROVIDERS_SUPPORTED))
-			goto fail;
-}
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/ [0]
 
-And the second telling whether the driver wants to install
-providers for this particular page pool, so if there is a
-separate pool for headers we can set it with plain old kernel
-pages.
+Changes:
+v5->v6:
+- Get rid of __get_task_comm() (Linus)
+- Use ARRAY_SIZE() in get_task_comm() (Alejandro)
 
-payload_pool = page_pool_create(rqx, PP_PROVIDERS_SUPPORTED);
-header_pool = page_pool_create(rqx, PP_PROVIDERS_SUPPORTED |
-                                     PP_IGNORE_PROVIDERS);
+v4->v5: https://lore.kernel.org/all/20240804075619.20804-1-laoar.shao@gmail.com/
+- Drop changes in the mm/kmemleak.c as it was fixed by
+  commit 0b84780134fb ("mm/kmemleak: replace strncpy() with strscpy()")
+- Drop changes in kernel/tsacct.c as it was fixed by
+  commmit 0fe2356434e ("tsacct: replace strncpy() with strscpy()")
 
-(or invert the flag). That's assuming page_pool_params::queue is
-a generic thing and we don't want to draw equivalence between
-it and memory providers.
+v3->v4: https://lore.kernel.org/linux-mm/20240729023719.1933-1-laoar.shao@gmail.com/
+- Rename __kstrndup() to __kmemdup_nul() and define it inside mm/util.c
+  (Matthew)
+- Remove unused local varaible (Simon)
+
+v2->v3: https://lore.kernel.org/all/20240621022959.9124-1-laoar.shao@gmail.com/
+- Deduplicate code around kstrdup (Andrew)
+- Add commit log for dropping task_lock (Catalin)
+
+v1->v2: https://lore.kernel.org/bpf/20240613023044.45873-1-laoar.shao@gmail.com/
+- Add comment for dropping task_lock() in __get_task_comm() (Alexei)
+- Drop changes in trace event (Steven)
+- Fix comment on task comm (Matus)
+
+Yafang Shao (9):
+  Get rid of __get_task_comm()
+  auditsc: Replace memcpy() with strscpy()
+  security: Replace memcpy() with get_task_comm()
+  bpftool: Ensure task comm is always NUL-terminated
+  mm/util: Fix possible race condition in kstrdup()
+  mm/util: Deduplicate code in {kstrdup,kstrndup,kmemdup_nul}
+  tracing: Replace strncpy() with strscpy()
+  net: Replace strcpy() with strscpy()
+  drm: Replace strcpy() with strscpy()
+
+ drivers/gpu/drm/drm_framebuffer.c     |  2 +-
+ drivers/gpu/drm/i915/i915_gpu_error.c |  2 +-
+ fs/exec.c                             | 10 -----
+ fs/proc/array.c                       |  2 +-
+ include/linux/sched.h                 | 31 +++++++++++---
+ kernel/auditsc.c                      |  6 +--
+ kernel/kthread.c                      |  2 +-
+ kernel/trace/trace.c                  |  2 +-
+ kernel/trace/trace_events_hist.c      |  2 +-
+ mm/util.c                             | 61 ++++++++++++---------------
+ net/ipv6/ndisc.c                      |  2 +-
+ security/lsm_audit.c                  |  4 +-
+ security/selinux/selinuxfs.c          |  2 +-
+ tools/bpf/bpftool/pids.c              |  2 +
+ 14 files changed, 66 insertions(+), 64 deletions(-)
 
 -- 
-Pavel Begunkov
+2.43.5
+
