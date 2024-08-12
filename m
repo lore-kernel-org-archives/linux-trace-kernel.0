@@ -1,110 +1,187 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D5C175D27
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 13:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D164B183CB4;
+	Mon, 12 Aug 2024 15:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723469594; cv=none; b=i3/TH7POU7E3T6YaZsg3ALSLspVBGULL3cQMSwnHSBpWH3sZ6uN94S+Q+fIjh6xNPpFek7kAvNBwnhtlL3GwiSpVwHbBBP+eufUjawwFJ2BvgI/IlkzDS2HFkZ3La93AWQL0F0J6iXVo83+sRjc+rWVw/nZD1u2JvMqxwZ5D3kg=
+	t=1723476172; cv=none; b=N/IwmZ3mMeuX8cwikALv+F7llCg6tBXMZQpcNQKCcba1FaGUKBpygtZDH36fFD0FRsA1lzNUVAtOL0UB3M2+QlU7TJso7yvDRzcasJhL0vPP4tOrfPIPtauN0Seie92jPe2z1Hum3UYJwhzJX2wReWwGZ2o52I0yd23F2AsnPJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723469594; c=relaxed/simple;
-	bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
+	s=arc-20240116; t=1723476172; c=relaxed/simple;
+	bh=qpEUS3rYpbENzBlOxYTw3kKabVJQQCAW1JuPdQCxAng=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XqVI0mnQdygBB807dlA8iHiNMiPphDBztbTJh5RGvXfcWF5S1jocjr+zJdh4GneUpObLb1GJSL6i/xoyecGY+9BJcZdDkuy1Dpl9cdJU61yMPPsw6SXGArx05FgoWmYCrYWj3WBDeFkInjZGE2GHIhKlrNO4v0dXf9iB01GmOJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r1dhUITP; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=bCoKV5940LKusLot1OEoz6C7GWbvOylbgxoch3X5TDIsu2vmH8tmMRQVPnESMD0HxmsEMMJiwqQF1zX19n2FmTccgbKpMtYlLFedIj/fFBRFkmjOnIr4MDz6Jz0yqf+PlCz6EZM74kzyXVpSk7z0ys/6H26DYlC00PbYcKCEbd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iErFR8Wx; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1dhUITP"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-428ec6c190eso33349315e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 06:33:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iErFR8Wx"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-656d8b346d2so2590982a12.2;
+        Mon, 12 Aug 2024 08:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723469592; x=1724074392; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723476170; x=1724080970; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
-        b=r1dhUITPF2KaKWUHuGt9L0UVrLIpXu1j3oDeBfzMj3qb/7xnIdSOHJDaeFjXBqA+/j
-         3L4JhAgndp58gnheOPPVWwym12IrrbyovNAOIukmUPJkzw40p82jTbrHsBdLdJJDIkXT
-         yj5IuHlkvpw86z0YdjKB2jF3trnGfBzhrtVAK6eJBsUSD6g3YNRfa9xYcIjNXKDLmbzS
-         feQ9Xs0YAVbSGJkCoZB/Od1A72G27YYP2gmE8kOgLuqPpdzZ5foyrWmnakaXyjoEboiB
-         g7WUnHfQqro1LEPUKcMOJr9vmW6vu7UsUsVgv6629ko65W6WYwQjbnWmfWt5oUZhavck
-         5U6Q==
+        bh=dpZ18i+l3ZklnBKOQpiJoYi+QXkzGYaSATzzcHWTrOQ=;
+        b=iErFR8Wx2xwquzphdV5/+GVA1NsWMX0iNPnVfAbUV+P8HvbhXX9nZS/FYr4SwRjlWq
+         yR3zblQpjnmmgxjLIhEPyJLovNeEmC2AEG+KIYm67BwyoP9nNsoVUAvd+tERck2ErKIs
+         M95iYbmMJN8OxJjCPS7+AH7PR07oKbD/lkda4cNHPZYDRgtXnp+6jhYssmnx2QaZ0PGx
+         7bMqHvCoJuJS1nUAlsUg5rihKETToC3dc6VnQC9RSU3XUfcA9O9FnjR5SaR8uhyYYn3Q
+         AMLpSLL8pMMT936A7X+BZhSHwuNhYaSYjK0x4PJtwMyzwN5ewtTImDhSKbxZ7wap1uw+
+         GIzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723469592; x=1724074392;
+        d=1e100.net; s=20230601; t=1723476170; x=1724080970;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yQGH4wTqdj6UgcbMWJ/OlXYfokf0rrWK3E7OaiXkuCI=;
-        b=eTHMjJ54ihbiOTsuYbHnrRczKSlhmC7qCeR+9v4d6sIpERR2+rGfph1yyCzikdL6rE
-         ePyupteZOMkyjFZKUDM+Jx1GUlmWsGoPV1KrNs4gsuZA0ElpIyZ11YvtUBhC8x1hn5PF
-         kQ/HEYjfpP1MKBAEtH0oYPErUavDSRgCBkLw36T3c68p0iEkSzKBp+zH4HLPGIqzDhzs
-         h/KLk92i2tqlmMfFwrpxgh/XkEfKw1hUQ8uqGj3bwA5bYW/7OsDc13Ybjac6vus2LU/n
-         R4m8anWiL+4Fpo6wzkSRQhP2PpDm9axVM3TlTdjXyxG94frpUE+fa9+bbr7cXw4PSd7b
-         e4tQ==
-X-Gm-Message-State: AOJu0Yw/ITW6fdrxszFUMvF7fgX7pMpHuukC5UbFuZQMPmsvxaJ+93F7
-	S7gcgadWTGl08h6UG3bsI3EO1/ZzKhnskW5BsNnO9GheswQ2QWhJJQCo++TQkPGnCzixYwJZemO
-	wxj7npLf0dx+1EM8BMyb1aLxqPwURXT4Ixuyi
-X-Google-Smtp-Source: AGHT+IHW60xClnCiQEYYTC8Z9PZ33xaYy4WZgALT6Q+LMP95jazFgPNu9OZ8W3SxyYi1G4TpTJOyz0WQCdXu9YQVFvk=
-X-Received: by 2002:a05:6000:b42:b0:363:d980:9a9e with SMTP id
- ffacd0b85a97d-3716cd267abmr226021f8f.55.1723469591316; Mon, 12 Aug 2024
- 06:33:11 -0700 (PDT)
+        bh=dpZ18i+l3ZklnBKOQpiJoYi+QXkzGYaSATzzcHWTrOQ=;
+        b=aSNFc1CJB5U6+HZO+r01P0PaEyYin1ULeQONLZ1kxoYgBqIAzdq/S7eVu3k3rLBLBB
+         gKvQ8UhynGKXpbZQOzFtYupqWypgKLclcrcpb+BS0IKcx7bR79AjYyIgMyIiwkLgWHFY
+         H8BmrHwgQguAWAZhkidkfS0kTi1zRCAeiNyLQzDP3+ExdSfFx8Ah/Vh4ZKfGYgd8XNai
+         i81gHceQ+MBiLQ+85eo1w9Ul9bdpC8Tm1SZqWyDWp/heC+y+eiyEeuimPlQGmBtuPSe+
+         raHYVexMhdvNkKcPaZUikxcgjJ2vXleq7kiZUDFMbgwbPmbP6/D/X+nAzhBYYlBxmw4Q
+         cnsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUy+hDhMD/fE4Faqcu5YZKzaWRudWTae/g9nQ0Pts76mSyop6S4TXKU+LwHR+HVSIXZ1Gf+rtiiRLUte+zo3eM1MlXH9C10YtN55jkih62yaxcVo+GRC8fiKfwq/vHY6PHcUoojlq1NDGe2uDWs8rACF98fJ+DddbacsO6kcvTJf3EOTYqlLFQk80LptZ07UR96+3K1vTIZ6VN7g/KEQ2MYapD6VQyXBw==
+X-Gm-Message-State: AOJu0YydfWMW9N4iDC0MiBz8setgJCrE7o2hlNtxcPpgjoVR+F83uhbQ
+	c2RdFONpAoagaUIxECpGByyrouFsCGH+ZwKaOGNlYVvTdJ9UqMBxAGY1z/EDenFSI1irZTh2GYU
+	a5Jsiov9PhHyTbujYOIac6sI05gI=
+X-Google-Smtp-Source: AGHT+IHnFJyV11a3EU8J8N3K1x1M16K/y4cKmqEh2p++7UG3C19tPYQT99trjEzXWSi0Zkhm9/1S8wZ1G2i0SavJEA8=
+X-Received: by 2002:a17:90a:d90d:b0:2c9:8189:7b4f with SMTP id
+ 98e67ed59e1d1-2d39264bf9emr567114a91.32.1723476169915; Mon, 12 Aug 2024
+ 08:22:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808-tracepoint-v6-0-a23f800f1189@google.com> <20240808-tracepoint-v6-4-a23f800f1189@google.com>
-In-Reply-To: <20240808-tracepoint-v6-4-a23f800f1189@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 12 Aug 2024 15:32:59 +0200
-Message-ID: <CAH5fLggC_73YQGLLjUsGnsUjAr9vOS-ebG0=-dWGqS7euzzf4Q@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] jump_label: adjust inline asm to be consistent
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+References: <000000000000382d39061f59f2dd@google.com> <20240811121444.GA30068@redhat.com>
+ <20240811123504.GB30068@redhat.com> <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
+ <20240812100028.GA11656@redhat.com>
+In-Reply-To: <20240812100028.GA11656@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 12 Aug 2024 08:22:37 -0700
+Message-ID: <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org, acme@kernel.org, 
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	irogers@google.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
+	bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 8, 2024 at 7:23=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
->
-> To avoid duplication of inline asm between C and Rust, we need to
-> import the inline asm from the relevant `jump_label.h` header into Rust.
-> To make that easier, this patch updates the header files to expose the
-> inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
->
-> The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
-> takes the same arguments in a consistent order so that Rust can use the
-> same logic for every architecture.
->
-> Link: https://lore.kernel.org/r/20240725183325.122827-7-ojeda@kernel.org =
-[1]
+adding bpf ML, given it's bpf's code base
 
-This link is in the wrong place. It's supposed to be mentioned as a
-dependency for this series. Also, I intended to have the same tags
-here as I did on the last patch.
+On Mon, Aug 12, 2024 at 3:00=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/11, Andrii Nakryiko wrote:
+> >
+> > On Sun, Aug 11, 2024 at 5:35=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > >
+> > > Something like below on top of perf/core. But I don't like the usage =
+of
+> > > "i" in the +error_unregister path...
+> > >
+> >
+> > Wouldn't the below be cleaner?
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index cd098846e251..3ca65454f888 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
+> > bpf_attr *attr, struct bpf_prog *pr
+> >         }
+> >
+> >         err =3D bpf_link_prime(&link->link, &link_primer);
+> > -       if (err)
+> > +       if (err) {
+> > +               bpf_uprobe_unregister(&path, uprobes, cnt);
+>
+> I disagree. This code already uses the "goto error_xxx" pattern, why
 
-Alice
+Well, if you have strong preferences, so be it (it's too trivial code
+to argue about). We do have quite a lot of "hybrid" error handling
+code that combines undoing the last step (especially if it's a simple
+function call) and then doing goto for the rest of common error
+handling, so I didn't (and still don't) see any problem with that.
+
+> duplicate bpf_uprobe_unregister() ? What if another "can fail" code
+> comes between register and bpf_link_prime() ?
+>
+> See the patch below, on top of perf/core.
+>
+> > We should probably route this through the bpf tree, I don't think it
+> > will conflict with your changes, right?
+>
+> It will conflict, and in this sense it is even worse than the "#syz test"
+> patch I sent in https://lore.kernel.org/all/20240811125816.GC30068@redhat=
+.com/
+>
+> Because with your version above the necessary change
+>
+>         -       bpf_uprobe_unregister(&path, uprobes, cnt);
+>         +       bpf_uprobe_unregister(uprobes, cnt);
+>
+> won't be noticed during the merge, I guess.
+>
+
+Yeah, my bad, I forgot that the signature of bpf_uprobe_unregister()
+also changed with your patches.
+
+> So can we route this fix through the perf/core ? I'll add "cc: stable",
+> in the next merge window the Greg's scripts will report the "FAILED"
+> status of the -stable patch, I'll send the trivial backport in reply.
+
+Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
+any problem for it to go together with your refactorings.
+
+For the fix:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>
+> No?
+>
+> Oleg.
+> ---
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 4e391daafa64..90cd30e9723e 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3484,17 +3484,20 @@ int bpf_uprobe_multi_link_attach(const union bpf_=
+attr *attr, struct bpf_prog *pr
+>                                                     &uprobes[i].consumer)=
+;
+>                 if (IS_ERR(uprobes[i].uprobe)) {
+>                         err =3D PTR_ERR(uprobes[i].uprobe);
+> -                       bpf_uprobe_unregister(uprobes, i);
+> -                       goto error_free;
+> +                       link->cnt =3D i;
+> +                       goto error_unregister;
+>                 }
+>         }
+>
+>         err =3D bpf_link_prime(&link->link, &link_primer);
+>         if (err)
+> -               goto error_free;
+> +               goto error_unregister;
+>
+>         return bpf_link_settle(&link_primer);
+>
+> +error_unregister:
+> +       bpf_uprobe_unregister(uprobes, link->cnt);
+> +
+>  error_free:
+>         kvfree(uprobes);
+>         kfree(link);
+>
