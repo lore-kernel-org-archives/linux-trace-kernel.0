@@ -1,126 +1,78 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328A318754F;
-	Mon, 12 Aug 2024 16:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F124317C;
+	Mon, 12 Aug 2024 16:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723481369; cv=none; b=AOsTXnun3OCN4y8n8JyNO65qbE4vR4i1Itk9/2+/kDXWBX+0DnX/0x8yj4PslUMqeQQCg+Yi7JZ3FeyvbdDkipqOESrzVkuudQbs0XUJFHrdu5cUCGzw1RQd0AhiQaCdd1HYZEqdgbE3IXqORkkyfDWrQxDxVr6I9eVYH+Cjsd0=
+	t=1723481861; cv=none; b=GF8JL6pWsqgPFjQBEhr7Q7xhe/XIJHr556LuqWDkLu+Bc+SQ26IpWfEQfHPOpIgJqX9ZaO4tKJ6EEdW61Jz+TyXT0rslfF5S/5Rku2+SaCodfzCmbe3RnI8YnO4tSd90T1hTS14ZFkGlZpmzw5IpjkxAiAYWfzXsZrs0EMU0Sdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723481369; c=relaxed/simple;
-	bh=gZ71JIUY6ZArmzi4xtfLFI83/0QyzpC82m2h2ix6kPA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f8bUKEGR2jFPWVPxek7tGqSjzpnJKbAx2mpiSugShKwspbTQ9ITCsZYyJhQUKVsVk9lBOfihxrt6PZ9EPsMCWZ6eidCAP/qAOdXauy2fD2TeWkzMMFR2NcyTuSpfVKvleIXqbCkNu3kSydFcmNvUQ759Up2i1ryZxip0stIYUCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jRS48Se6; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723481861; c=relaxed/simple;
+	bh=txzhRNbmX6zZAFmH+HTZX0oiIhxSTK3mHHI7oZiES8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G6ZF/6HoM4L7acJolsaXdD0fKZ5XtWJLLrrbnfkBrHs8pFKK3orntwQbMewcKF5a2vPsDgEnVlX7eW31RVj1g+o+Cz9dxksrit/1KR5ltNa5+HHQBT/pW56cUo/2HvjFYvLJ2CNI5iw71ZoEeNEAY+R+FR3E0c8O/WPJqJDOH2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kkFVSmwV; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRS48Se6"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7a975fb47eso513215466b.3;
-        Mon, 12 Aug 2024 09:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723481366; x=1724086166; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9uZeDuPO0pLPh6ITetlZN/9YjMUNqFK4FAQ3VBPba0Q=;
-        b=jRS48Se6tt/CDLr5Lg+Hz/7EfP8Zjs3TKHuUkdRAdcpWOHZMCaE3Yk7IFuGQvvzTqQ
-         wxjQ9NT1ENSbLoSaMBIXb8jn0kR7RLpFkJrlveH7cTM3+pm1SS8dxEbr2G+zq8H7HNQ2
-         0CtiGpYK5Y6PxkUGFNngcRexhZh0bD3DfS8nSMgBk6E2eKmdBFuIH5CBTbTbQWykc0SB
-         rt74Oz+zbEPigwNxNR3t6DCNk9xE1ROTbOlw4ShudbqI6NZEGeN5NxWpbuY+ppHAAcpv
-         rfb7xMGcT85jki1Q4A0KYPfFxng2KVtKBsExGXOyH3UAyjdkm0M49S/w5lcxCWzsQJLY
-         o7rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723481366; x=1724086166;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9uZeDuPO0pLPh6ITetlZN/9YjMUNqFK4FAQ3VBPba0Q=;
-        b=kmL0u9GYfHmXs+Em9wdkU/6fnX6Zs8Uk3sfela99syyj+t0FAiH6wltImCVOlSgEwi
-         WO0/8cCcasBI5P78llT7ZCWb2w5hNhtJEc3r3dwCWsYkeCrkE+wg7Hg6hJf/TgrpBZwo
-         aAlktNGRsiakby8hQlznxTNTMD853qEcun+yO/W/AWckU3IoZPrnqO2B+Og+oty1GeeG
-         rtk6N4FsPREe6h+9NHlaZT1o2c9AsVCeqTOrWbH6ktylKFGZu5UYa5osCxDNkeNAsQJe
-         aMXY/Z4ewHGqsclC3B5zTRuBXGYZx6T27FW0T2t7FRErIbYmFJHQNDJUfoCMCS7NjbZg
-         WIWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXb2t1XOM7Q6+NRmIespY3hRD3bNKqVywmkYw6nrcpDjDGrQ6BcEk+RgGHewB6jTqQINkVyarLVGVKSr8vg2iXJYjDH085uhZV8kMDGB09RZHo/I1/O7kmw1TB9RhDHKBZlVEyh2rx3
-X-Gm-Message-State: AOJu0YytxWRGTH0OnQ5J3jeD+9DJY7R3v/RTYMCoAVf68+6Y08qL7ENC
-	75i04NGr6cLepIq+cFHu7YzHOJ+Fi6bxJMOMKuqM3YkuZCRZGpYRg3sE1f+tim+uPbWLALcu6pM
-	0ySso5EWvVxfwB5rGVhQVp3OplAY=
-X-Google-Smtp-Source: AGHT+IETp1u9kozZxrM/pEb5Ga6JdC1ydH2ooYxdgtbe72RB1uSrOXzZBoXZJqJAfxGhl/H6Kyo/lTiGipnefw1tkUU=
-X-Received: by 2002:a17:907:e607:b0:a7a:c256:3cb with SMTP id
- a640c23a62f3a-a80ed25af8cmr67309966b.39.1723481365998; Mon, 12 Aug 2024
- 09:49:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kkFVSmwV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Tc/Gv4mvT00bJfk4/I8PkOr0Zzy+OONb/HA1C3fFiK8=; b=kkFVSmwVEffvXLoCi3EkDCQKnp
+	MLVSW54uOnl2TS2wdx5G3eNMebO2SqmGZUI0rQMKLZ7BxyxTCLvQpTNO7lmJTvP8xA6tPhNiGjG2L
+	ozEQmKezp2iqfe1f+tbT0RXoPPYqNS4Vw6vp1aAl9U17a6rsF0U2auYy5rfUjLRFJgdfWrPRql6tp
+	zfjoH0AwP/BhjZYOwFMQueH9YH2lcRTAYKoSNaF/660fkOjo3ZO6mYokJmwMguFTz14fZjJ2NM+E9
+	5ZL7sF+xFfQ+bzdKANChL4Pg/hyaf8xYwK68y85SlbiDI/UVdxHoZ3GQYhTuWYTwxdlRKa8e2CEUo
+	BidHDa4A==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sdYMT-00000000xgw-332D;
+	Mon, 12 Aug 2024 16:57:37 +0000
+Date: Mon, 12 Aug 2024 09:57:37 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Song Liu <song@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>, "KE.LI" <like1@oppo.com>,
+	Padmanabha Srinivasaiah <treasure4paddy@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Fangrui Song <maskray@google.com>
+Cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, jpoimboe@kernel.org,
+	jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	joe.lawrence@redhat.com, morbo@google.com, justinstitt@google.com,
+	thunder.leizhen@huawei.com, kees@kernel.org, kernel-team@meta.com,
+	mmaurer@google.com, mhiramat@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
+Message-ID: <Zro_AeCacGaLL3jq@bombadil.infradead.org>
+References: <20240807220513.3100483-1-song@kernel.org>
+ <CAPhsuW64RyYhHsFeJSj7=+4uHBo7LucWtWY5xOxN20aujxadGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240725001411.39614-1-technoboy85@gmail.com> <20240725001411.39614-2-technoboy85@gmail.com>
-In-Reply-To: <20240725001411.39614-2-technoboy85@gmail.com>
-From: Matteo Croce <technoboy85@gmail.com>
-Date: Mon, 12 Aug 2024 18:48:47 +0200
-Message-ID: <CAFnufp1jxnjL2apUwxWKkNzS5QKpDXYTWPnVLn-VQyZazFujCg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 1/2] bpf: enable generic kfuncs for
- BPF_CGROUP_* programs
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Matteo Croce <teknoraver@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPhsuW64RyYhHsFeJSj7=+4uHBo7LucWtWY5xOxN20aujxadGg@mail.gmail.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Il giorno gio 25 lug 2024 alle ore 02:14 <technoboy85@gmail.com> ha scritto:
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -3052,6 +3052,12 @@ static int __init kfunc_init(void)
->         ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_XDP, &generic_kfunc_set);
->         ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS, &generic_kfunc_set);
->         ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &generic_kfunc_set);
-> +       ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SKB, &generic_kfunc_set);
-> +       ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCK, &generic_kfunc_set);
-> +       ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_DEVICE, &generic_kfunc_set);
-> +       ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCK_ADDR, &generic_kfunc_set);
-> +       ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SYSCTL, &generic_kfunc_set);
-> +       ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCKOPT, &generic_kfunc_set);
->         ret = ret ?: register_btf_id_dtor_kfuncs(generic_dtors,
->                                                   ARRAY_SIZE(generic_dtors),
->                                                   THIS_MODULE);
+On Mon, Aug 12, 2024 at 09:21:02AM -0700, Song Liu wrote:
+> Hi folks,
+> 
+> Do we have more concerns and/or suggestions with this set? If not,
+> what would be the next step for it?
 
-This seems not enough, some kfuncs like bpf_cgroup_from_id are still rejected.
-To fix this we need also this chunk:
+I'm all for simplifying things, and this does just that, however,
+I'm not the one you need to convince, the folks who added the original
+hacks should provide their Reviewed-by / Tested-by not just for CONFIG_LTO_CLANG
+but also given this provides an alternative fix, don't we want to invert
+the order so we don't regress CONFIG_LTO_CLANG ? And shouldn't the patches
+also have their respective Fixes tag?
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -8309,7 +8319,11 @@ static int bpf_prog_type_to_kfunc_hook(enum
-bpf_prog_type prog_type)
-        case BPF_PROG_TYPE_SYSCALL:
-                return BTF_KFUNC_HOOK_SYSCALL;
-        case BPF_PROG_TYPE_CGROUP_SKB:
-+       case BPF_PROG_TYPE_CGROUP_SOCK:
-+       case BPF_PROG_TYPE_CGROUP_DEVICE:
-        case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
-+       case BPF_PROG_TYPE_CGROUP_SYSCTL:
-+       case BPF_PROG_TYPE_CGROUP_SOCKOPT:
-                return BTF_KFUNC_HOOK_CGROUP_SKB;
-        case BPF_PROG_TYPE_SCHED_ACT:
-                return BTF_KFUNC_HOOK_SCHED_ACT;
+Provided the commit logs are extended with Fixes and order is maintained
+to be able to bisect correctly:
 
-but even with this it won't work, because
-bpf_prog_type_to_kfunc_hook() aliases many program types with a single
-hook, and btf_kfunc_id_set_contains() will fail to check if the kfunc
-is in the set.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-One solution could be to extend the btf_kfunc_hook enum with an entry
-for every CGROUP program type, but a thing I wanted to avoid is to let
-this enum proliferate in this way.
-I wish to group all the CGROUP_ program types into a single hook, and
-perhaps drop the "SKB" in "BTF_KFUNC_HOOK_CGROUP_SKB" which will have
-no meaning anymore.
-
-Ideas?
-
--- 
-Matteo Croce
-
-perl -e 'for($t=0;;$t++){print chr($t*($t>>8|$t>>13)&255)}' |aplay
+  Luis
