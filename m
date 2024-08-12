@@ -1,135 +1,158 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60445130495;
-	Mon, 12 Aug 2024 02:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4F03398A;
+	Mon, 12 Aug 2024 04:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723429896; cv=none; b=apZYoQEn3MAuMhHc4DMM/0cHlkLbRR+yDriCX6IvIK0sCpljxCcZ+zbrRwVeIgs6Dk8ITfbHHSqJ/CPaQ30TkA4z5/6h/m/1m1f5rQHr+KON85kc66BgoAHYo6RPsbU9uZj2OwudtWVs6O2B6pke0vyZbUNLCRg2+G4KB+BZSII=
+	t=1723436469; cv=none; b=ifLzRojkUAitN5bJk0+KADbvj4OhfXng7IZtqoUjGycGU2eSMkzlZF9Xv1r4gw7RNQiwBvU9CUmeqbHTW6ROJowrvgt6SAf9w5sal0naZh2JqK5grsjsKuHbiKEUwZ//3PHji/xmQwkHKD0fWJa+kJg5MfgWMQCdGzKCTFauEQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723429896; c=relaxed/simple;
-	bh=jPqIfx5S0Qm/nWYbQ6kouB0I6PeJnKoCsF8vfwSHWTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h8/tFK3R8ZZoxPUTp4W/yYp2IL4hHqH3rZUG0njtrWNeWhWjsy380jI0Mulj2xd04Z60X1zV/e7DhmhYaodf8fgF2fvi/p79I+YYnRapRexTFWHeJiQoHZxInhjkZ5KfE6LnsNqZFqeKTTU2WplqrTlYhrbaengWwpI1T7Duzas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMf+uBW4; arc=none smtp.client-ip=209.85.215.176
+	s=arc-20240116; t=1723436469; c=relaxed/simple;
+	bh=i6Z9QOF+wXpHhshCsztokE7Qyta1vVDcz+yTKbS/qus=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EHmWovr6er/fbaMbsXID7S+0TOAsQdbOR9Shfz1XxD51Ix6KrehDpFP8qclUlUyhSrbAG0Xh5RYXOw/319gUac05oSmvxcH/uFSyQ7GpBwkUxl67GZmZyorNzb1crRfWctOYdO/HUSK+FTuBVDpIc7gNOhehBl3fmvgX8DS0L74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adnMxyrU; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMf+uBW4"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-76cb5b6b3e4so2473385a12.1;
-        Sun, 11 Aug 2024 19:31:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adnMxyrU"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fc569440e1so35927925ad.3;
+        Sun, 11 Aug 2024 21:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723429895; x=1724034695; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1723436468; x=1724041268; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zZu3KZG3iOINXwUvnWcZKbey2aLH0BWohtl6uQ29mP4=;
-        b=RMf+uBW4sxFLUX3cCivR3zxx3+1yfKOe8+fM959PJO8tvrt7gNLao9QJfguSbAqcI5
-         yNsRW/IQN6LLwSelbbg9jzI5k9ticQxNPuPN0UqC5YxnUeWlT6KUJP4fdMW08ILVeSsZ
-         ws7Fc+JD5BW2aiV2NlGnTuUMPfLIncdd7YSFvhxGAB7x3x2OwQsOV4niS41JKFLgvC/U
-         BRJ2cHnv/DX7TGro2w7f3TaXjNlRxHqIiLX14x5ogqoGA1yyW4PTtTOgmRTUaB63Vrqq
-         6yxxKp1VGS5A0n0Kx/iK/3uOdOhy09Q+nO4chgguTokpVRioqd4cSVurT5YosoAZvObK
-         475g==
+        bh=jVDrxjT+8nm8KTZI61JkdreIkVU4lBBy75kFdM495qM=;
+        b=adnMxyrUV36PDA1VWMf6MEZUM9gA8+/3xdBAob6+S07OtIheBNL+4GyUKwv6z+87p9
+         vO7QaoQlRnEe7TMuwBriv5xOBMUrnknekezv8zdwsPt03zgo0y31NGv+IPn9SJ2US6Np
+         6uwKJ9YuEohsx+vnQnGmqTIvSYYmQAOmlrVu+y0bmOnCVYlXG1k2DFzLsP4q6gCty3Cm
+         WWHXiBRCSVEUoo4Px0TbPgf7popH/guJ8jRrmVPxuRwHCnF6j7sDijgosLOQ/AxWoNPs
+         tsPy94Mu2lRtGlY5D6UDob9jI2BzlYOCc27LCYoLbyMuOXnwFEi4HxFuwqow2QaoJQwK
+         weUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723429895; x=1724034695;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1723436468; x=1724041268;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zZu3KZG3iOINXwUvnWcZKbey2aLH0BWohtl6uQ29mP4=;
-        b=FfEs/nmh2WS4OuXPUmTpgMlUZEVEvxjKOIGuc+bcbfhE8aa6AH+A2cpoFzLALe+HTO
-         hAiGbKfyyhUNpdJ+InylZATxphT9plFDGmsDp/Dm5/qRCtoF6d+ocj1Jw+StOBLvlrdW
-         xxglr19iIdn8vtiKZ62pbW4SwkWPbh/ynImSc4eV9v6lPdqOh8niqSX9/h6TlVt55W2z
-         1OSnkgwE/i613LEd5DzCiLxMFiTiepinigEmy5RaQioJR5aAiDFwvpfik5Txo9z1mW0j
-         NastlsQIFKTGwyNhh7avL7YLpymzuE5wGPdOnYaHCqD/8tIqjTvZCxUKlNresFcmBxav
-         E4AA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1VrkdGCs5o9Khy6/twURfh/c13Xcx8HFvPjbYP4HJ1ABb64b/MHGVxkp9jvxoUgnjN0gzq0u0idBTwMj+2pdz7x01QYApwcGoO+MBULPsK4djkv5fOgj4f5zAjardzQ1/VS5MTs+TZb0WJ1XH/bcEUrQ4apofrVG/kFN334QqvbYTDSmlVotP/YMRGkI0trXa+bM4vhcZbmcdHn29CxzpNFxbV6TlQuzRthwsjaTkHAfSsPpCR+4sWV7ySbqRJXcmZAffYLwrUSt5V9RdkLJeeoL5GKkkvPt5dzZsAD8dJrenQQwFygOZuqngf1xRAxBNOpj3jQ==
-X-Gm-Message-State: AOJu0Yzx/mD1uDSjswVpgxOaumRS32vNat8kKlXMajeZcxR6uE92cC80
-	I8l9r4Tly4m8YWjRK8xQYjuE27ySuT1dYrBMw+lYH4L6uAy+znOx
-X-Google-Smtp-Source: AGHT+IHdX1dJ6B1gxMt4DoIS5gsxO+K0m5bSRRhjzARSl7z6wL1zfkA/bgMgo4cA342XfY8E/QA2Rw==
-X-Received: by 2002:a05:6a21:b85:b0:1c6:fc56:744 with SMTP id adf61e73a8af0-1c89fd26229mr6526380637.31.1723429894568;
-        Sun, 11 Aug 2024 19:31:34 -0700 (PDT)
-Received: from localhost.localdomain ([39.144.39.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-200bb9fed69sm27884765ad.188.2024.08.11.19.31.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 11 Aug 2024 19:31:34 -0700 (PDT)
-From: Yafang Shao <laoar.shao@gmail.com>
-To: akpm@linux-foundation.org
-Cc: torvalds@linux-foundation.org,
-	ebiederm@xmission.com,
-	alexei.starovoitov@gmail.com,
-	rostedt@goodmis.org,
-	catalin.marinas@arm.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	audit@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	selinux@vger.kernel.org,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>
-Subject: [PATCH v6 9/9] drm: Replace strcpy() with strscpy()
-Date: Mon, 12 Aug 2024 10:29:33 +0800
-Message-Id: <20240812022933.69850-10-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20240812022933.69850-1-laoar.shao@gmail.com>
-References: <20240812022933.69850-1-laoar.shao@gmail.com>
+        bh=jVDrxjT+8nm8KTZI61JkdreIkVU4lBBy75kFdM495qM=;
+        b=wuNxu6suyxDw6fd5FE81+jh34YiWIr8cFdPmCvjJONK00t8uR9bFrRIey+o7EVevuA
+         EUx6eAdjTtS40lfyUMozT0O+wJIRqu/ibTI7g0VqT/MQJOxgqaX2DQelPAX+F4WhEQKT
+         qLE05ikSXo4zBzWiDhxa0IdP1jRQkLhHHcBgxN/I+IsMpq29LpAvD+KmzZQDBmlyaOYw
+         SjxLD7WU49pRltnpYSceaibDpu5oA+w1kYYTlyv1F8H+wjs/hV+fl1uGGCpPlRSbxwcO
+         cH7Ze9zLHISKDfeKBT4qk3duSUNoUsxkuwMYysc3xcNjG1k9GPRGcSZg3qTRcFmP/rlG
+         BDTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjLN6ngmA3v6qNwB+GtnkdEBgRDLVTs0Sb9mrOmPyvhdOtU4MyhiGqLimc2qAh2lxSsRnHVydlly/BBjo=@vger.kernel.org, AJvYcCWF+WwjO00R8SYWPIidGx+JGPCn1iDt7qb6Zx7ZGKTxEpo9M9S7MMScnpgZ9ZuAEtop/tUp7EL6an64oP5RX0YJ3Q==@vger.kernel.org, AJvYcCXkSgeJXi04iW8bXBAFGy0nmfdkpbsWLoF62ivhPsy6e/Mc7tu3m1b3J1tVuIPYSRB9IDmjrOKlPZVSHO6elEJT02E2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgzW/jPtSivoXR2Tg/ejjorS/NdhRWknTSdO4WgLxdfGetxVWR
+	sAvegvYZF8Pr41/32plvkxo/YnNxpxAMd1DVhI4pj4d7/yC1OVJDKVAa9dqodWdFw9/fqPCjiTA
+	+dyShJcLFpffvzzjoOnPbHa3/Jdg=
+X-Google-Smtp-Source: AGHT+IEWPDAYmSAPMQYVoUcRGrmEI9ad5GDG8PWnRZlz5I/qjCM2d1Yn+agRrO59Un5QLOxI6B3/meqUgBEXA0Q7NRg=
+X-Received: by 2002:a17:90a:5647:b0:2c7:c788:d34d with SMTP id
+ 98e67ed59e1d1-2d1e80798f8mr8798212a91.38.1723436467612; Sun, 11 Aug 2024
+ 21:21:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000382d39061f59f2dd@google.com> <20240811121444.GA30068@redhat.com>
+ <20240811123504.GB30068@redhat.com>
+In-Reply-To: <20240811123504.GB30068@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Sun, 11 Aug 2024 21:20:55 -0700
+Message-ID: <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org, acme@kernel.org, 
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	irogers@google.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To prevent erros from occurring when the src string is longer than the
-dst string in strcpy(), we should use strscpy() instead. This
-approach also facilitates future extensions to the task comm.
+On Sun, Aug 11, 2024 at 5:35=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/11, Oleg Nesterov wrote:
+> >
+> > Hmm, bpf_uprobe_multi_link_attach() looks obviously wrong.
+> >
+> > bpf_link_prime() is called after the
+> >
+> >       for (i =3D 0; i < cnt; i++) {
+> >               uprobe_register(...);
+> >               ...
+> >       }
+> >
+> > loop. If bpf_link_prime() fails, bpf_uprobe_multi_link_attach() just do
+> > kvfree(uprobes) without _unregister(). In particular, this leaks the fr=
+eed
+> > bpf_uprobe->consumer in the uprobe->consumers list.
+> >
+> > After that another _unregister() on the same uprobe can hit the problem=
+.
+> >
+> > I guess we need a simple patch for -stable...
+>
+> Something like below on top of perf/core. But I don't like the usage of
+> "i" in the +error_unregister path...
+>
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
----
- drivers/gpu/drm/drm_framebuffer.c     | 2 +-
- drivers/gpu/drm/i915/i915_gpu_error.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Wouldn't the below be cleaner?
 
-diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-index 888aadb6a4ac..71bf8997eddf 100644
---- a/drivers/gpu/drm/drm_framebuffer.c
-+++ b/drivers/gpu/drm/drm_framebuffer.c
-@@ -868,7 +868,7 @@ int drm_framebuffer_init(struct drm_device *dev, struct drm_framebuffer *fb,
- 	INIT_LIST_HEAD(&fb->filp_head);
- 
- 	fb->funcs = funcs;
--	strcpy(fb->comm, current->comm);
-+	strscpy(fb->comm, current->comm, sizeof(fb->comm));
- 
- 	ret = __drm_mode_object_add(dev, &fb->base, DRM_MODE_OBJECT_FB,
- 				    false, drm_framebuffer_free);
-diff --git a/drivers/gpu/drm/i915/i915_gpu_error.c b/drivers/gpu/drm/i915/i915_gpu_error.c
-index 625b3c024540..97424a53bf9e 100644
---- a/drivers/gpu/drm/i915/i915_gpu_error.c
-+++ b/drivers/gpu/drm/i915/i915_gpu_error.c
-@@ -1411,7 +1411,7 @@ static bool record_context(struct i915_gem_context_coredump *e,
- 	rcu_read_lock();
- 	task = pid_task(ctx->pid, PIDTYPE_PID);
- 	if (task) {
--		strcpy(e->comm, task->comm);
-+		strscpy(e->comm, task->comm, sizeof(e->comm));
- 		e->pid = task->pid;
- 	}
- 	rcu_read_unlock();
--- 
-2.43.5
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index cd098846e251..3ca65454f888 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
+bpf_attr *attr, struct bpf_prog *pr
+        }
 
+        err =3D bpf_link_prime(&link->link, &link_primer);
+-       if (err)
++       if (err) {
++               bpf_uprobe_unregister(&path, uprobes, cnt);
+                goto error_free;
++       }
+
+        return bpf_link_settle(&link_primer);
+
+
+We should probably route this through the bpf tree, I don't think it
+will conflict with your changes, right?
+
+
+> Oleg.
+>
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3486,17 +3486,19 @@ int bpf_uprobe_multi_link_attach(const union bpf_=
+attr *attr, struct bpf_prog *pr
+>                                                     &uprobes[i].consumer)=
+;
+>                 if (IS_ERR(uprobes[i].uprobe)) {
+>                         err =3D PTR_ERR(uprobes[i].uprobe);
+> -                       bpf_uprobe_unregister(uprobes, i);
+> -                       goto error_free;
+> +                       goto error_unregister;
+>                 }
+>         }
+>
+>         err =3D bpf_link_prime(&link->link, &link_primer);
+>         if (err)
+> -               goto error_free;
+> +               goto error_unregister;
+>
+>         return bpf_link_settle(&link_primer);
+>
+> +error_unregister:
+> +       bpf_uprobe_unregister(uprobes, i);
+> +
+>  error_free:
+>         kvfree(uprobes);
+>         kfree(link);
+>
