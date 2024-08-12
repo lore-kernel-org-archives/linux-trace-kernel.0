@@ -1,139 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261D418FC75
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Aug 2024 19:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265C561FFC;
+	Mon, 12 Aug 2024 20:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723490719; cv=none; b=uP7rxW6bYm+xG07v7N9B5+6U1pq6AfxIQj2Iubx8vnefcoYobGI5LlApBxYDz80xdJsYu4tcggMcC7XWhjvgPM+iRsUcHchaIvMl4rpmq7DZh+Yb2anmRaPNa0f9E6Yr/KvM9xeiD3wEqKvkp5IGdnZZ+joUvNvJkvEatX7ElMk=
+	t=1723492814; cv=none; b=cz1wH0a8zAeOTwpKx1xDfAE8m+wXJrArDFqqAkkY0bU5cxUE2t8VX8q0WmLZas3IcnoUDFmp0a7B5KpLuMlENsrQSqtEUrFZlZiHnNMIJJZ2pRJrDEacuGW7ZJfKzqE1MjraOCFlaF5WxIHd3LXSYiSxbuLsmKmkwd9BTsWxBv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723490719; c=relaxed/simple;
-	bh=iaYZkpwvbW8Fxk0F02wbvEY/BH18iaDQKbywqSsY6CM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2ay2XMP00kESWk7zJRgyqwsnlEXoaT73lyn4448lZ5H/jU/VbHeLjccPsa5RYUoLp4V6me7XlKu7bWEbHUWR+o2TjeXBp6XRo2Ga1/OmjnRYDVSBs/7+0WuNnruNonRTue9E9HbrgJceDYW2QbQSXeRRKRZ1Q+Ymlm2eLX4LqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eu11UoJv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723492814; c=relaxed/simple;
+	bh=KstVNJ3L2qzscAMgj5Jf9zkpCjcBT4Mr9zo3QRiI65g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uznqG1SAkhkvfGgqGncB0XLN3Ju++AzFJZicmpcojHLP64Fr+AmubyWK/CQI0yHUqv8NBocFsnYpu+PrQi4LXF7DAcJar7BETXMD9Tp2/jLmYOl3z9V12bp5E/lxxI/2x66AvZb0eYcCwsSmc0NhV7/PkRy5B63PFEvF+GOvZak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moAwArip; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eu11UoJv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723490717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V0i5d9v7X1l3ubpz0F2qG2g28SR1YyQRgT0SFjyAASI=;
-	b=eu11UoJv5SuAEFqHxdm6pY7ZuR8hnl2HCvHGVdgqDjxIh0kSQHJ5fXa1yv69xLPOpleVk/
-	EfwMbkKlgglCMwgL2HwxstJb8ofVe3nGvgJt+3TyC2b5Dp1ZLpyIV+sATtdWrZP8dsuSBs
-	4OKkpRO1EHz2XeT7D+sqhns3yNppp9o=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-128-lA2PaeWKMh2j0Hy6U-uE_Q-1; Mon,
- 12 Aug 2024 15:25:11 -0400
-X-MC-Unique: lA2PaeWKMh2j0Hy6U-uE_Q-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 18AE5188FE4F;
-	Mon, 12 Aug 2024 19:25:01 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.73])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1CFDE19541B6;
-	Mon, 12 Aug 2024 19:24:35 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 12 Aug 2024 21:24:54 +0200 (CEST)
-Date: Mon, 12 Aug 2024 21:24:31 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org,
-	acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-	bpf <bpf@vger.kernel.org>
-Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in
- __uprobe_unregister
-Message-ID: <20240812192405.GD11656@redhat.com>
-References: <000000000000382d39061f59f2dd@google.com>
- <20240811121444.GA30068@redhat.com>
- <20240811123504.GB30068@redhat.com>
- <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
- <20240812100028.GA11656@redhat.com>
- <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moAwArip"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2cb4c584029so3677552a91.3;
+        Mon, 12 Aug 2024 13:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723492812; x=1724097612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a9w/uBXZ5D6MzP4JJL1EO+fWDE4hnfbBDw04URWpP+U=;
+        b=moAwAripv35LUnMKbwwc1lLYBB71QOCotIDhXbLzNEkt+rYfOQ9tPBUFsx8vdQ9MNx
+         hfoRSJI+xTg4ujksp6HmZsV799Qr0qL0J/aklRPPQ12tqZ5yfSTbSQZ/qwdVB2zRx6Y9
+         gdSHcwF56/QMzmDW4T3YHPEgVn4iJU9mFVH9w3gLr4V39TbqsEnNiYsBXiGHlKzlguHI
+         wmhvmpLke1xJjCWa0hz9Xy0HOaJKs4iLK8KIYeED4n4xKWpqhVTdzTtTZel2C/pgGopJ
+         HskVRWrXEy3OO5zuR2mQzlw2wPUACE6/I7cD3yUvLE35N432f0vvcIc1BduqmUZgtIBK
+         CoCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723492812; x=1724097612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a9w/uBXZ5D6MzP4JJL1EO+fWDE4hnfbBDw04URWpP+U=;
+        b=houn5Kaxww4+RKbRjpvL5CHzIXPA8jxfJgOHKRRLIPjX3XyXnDCZwXsKpoejnI/ovU
+         8CcvXXpegQ6KhlVE/AOc+p0yxj96uUI7MBkSpqkXEJDbtcdjszANf9jTEQHDfukI4Y5j
+         p+p71VbFH6ReAvhvWRN9aIQN+xWlnEa8CQ+uVn7+lZUec26ZTbJ8mPV1kGG54XeMnSjP
+         myG8y18CgkKcTH57G7wliRSC7cxdhEEFzFbmelECOzWmLeDhI5Allpb6PrdIOVJbmA+6
+         Gzg0oyKxzuRu3rH4pc3gwMRhw8eitQ7o8SvyTEg57JJ0CXg9frfNsd7PUMJPw63UDYXT
+         Ze0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXj58BYvYbCRQ3FdhiwjDpXFS67myWFINKgD0QpomME/AUoOkYez2rX60W488uYHoT2+g+zrqTFj/fU1/NiepM9+/waTJpP2BzlsPneQQksg8advf9gzF7NfAizuKJfoYKrCmOskF2orytObw4HayyPA6/eY7+vNhlb6DZ/QrXLrYV9MrN7eHK5WctjMuqXv60sT5oMXRkJXoCdKwavTOB8VTINRnU3xw==
+X-Gm-Message-State: AOJu0YzogxFm6dz4sKasIZJ3U73DnbCYYXGOy9RiysFj5JXKPfexr0ok
+	FLvE5aYsBKlXqkyz9831j2IoU0MDd7exUHHJFjVrwOQ8R6X1uaNaA6tBbgZ4lNljj63cOfSIKDQ
+	+hejxy1HaAwd3twXClVFk7zr7ojw=
+X-Google-Smtp-Source: AGHT+IFQv65X7h0W+swS6SZWsFIogJb9kuzpuwC+BM97J3qO7vfuuD5CfkZJOLfnuW0vYUsROGAtj1ZcEEQzP4muKUw=
+X-Received: by 2002:a17:90b:33d2:b0:2c9:9fdf:f72e with SMTP id
+ 98e67ed59e1d1-2d3926340bemr1552158a91.26.1723492812304; Mon, 12 Aug 2024
+ 13:00:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+References: <000000000000382d39061f59f2dd@google.com> <20240811121444.GA30068@redhat.com>
+ <20240811123504.GB30068@redhat.com> <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
+ <20240812100028.GA11656@redhat.com> <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
+ <20240812192405.GD11656@redhat.com>
+In-Reply-To: <20240812192405.GD11656@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 12 Aug 2024 13:00:00 -0700
+Message-ID: <CAEf4BzbW9frgUDE+9mbrAyMj0eshPOoqgLs11ynb91spWkdAzw@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org, acme@kernel.org, 
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	irogers@google.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
+	bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/12, Andrii Nakryiko wrote:
+On Mon, Aug 12, 2024 at 12:25=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wr=
+ote:
 >
-> adding bpf ML, given it's bpf's code base
-
-Thanks,
-
-> On Mon, Aug 12, 2024 at 3:00 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> On 08/12, Andrii Nakryiko wrote:
 > >
-> > > --- a/kernel/trace/bpf_trace.c
-> > > +++ b/kernel/trace/bpf_trace.c
-> > > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
-> > > bpf_attr *attr, struct bpf_prog *pr
-> > >         }
+> > adding bpf ML, given it's bpf's code base
+>
+> Thanks,
+>
+> > On Mon, Aug 12, 2024 at 3:00=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
 > > >
-> > >         err = bpf_link_prime(&link->link, &link_primer);
-> > > -       if (err)
-> > > +       if (err) {
-> > > +               bpf_uprobe_unregister(&path, uprobes, cnt);
+> > > > --- a/kernel/trace/bpf_trace.c
+> > > > +++ b/kernel/trace/bpf_trace.c
+> > > > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
+> > > > bpf_attr *attr, struct bpf_prog *pr
+> > > >         }
+> > > >
+> > > >         err =3D bpf_link_prime(&link->link, &link_primer);
+> > > > -       if (err)
+> > > > +       if (err) {
+> > > > +               bpf_uprobe_unregister(&path, uprobes, cnt);
+> > >
+> > > I disagree. This code already uses the "goto error_xxx" pattern, why
 > >
-> > I disagree. This code already uses the "goto error_xxx" pattern, why
+> > Well, if you have strong preferences,
 >
-> Well, if you have strong preferences,
-
-Well, YES and NO ;) please see below.
-
-> so be it (it's too trivial code
-> to argue about).
-
-Agreed. On a closer look both the code and the problem look very trivial.
-
-But note that nobody noticed this trivial problem before. Including me who
-had to change this trivial code to adapt to the recent API changes.
-
-May be this means that we should keep the error handling in this function
-more consistent ;)
-
-> We do have quite a lot of "hybrid" error handling
-
-And YES, I don't like this kind of error handling.
-
-But, at the same time: NO, I never-never argue with the maintainers when it
-comes to "cosmetic" issues.
-
-My main point was (and you seem to agree) that this simpler patch above won't
-simplify the routing. I too thought about the change above initially.
-
--------------------------------------------------------------------------------
-> Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
-> any problem for it to go together with your refactorings.
+> Well, YES and NO ;) please see below.
 >
-> For the fix:
+> > so be it (it's too trivial code
+> > to argue about).
 >
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Agreed. On a closer look both the code and the problem look very trivial.
+>
+> But note that nobody noticed this trivial problem before. Including me wh=
+o
+> had to change this trivial code to adapt to the recent API changes.
 
-Thanks! I'll write the changelog and send this patch with your ack included
-tomorrow.
+Yep, error handling problems tend to go unnoticed frequently. The good
+thing is that this is quite unlikely in practice for bpf_link_prime()
+to fail, which is why it was a syzbot that found this.
 
-Oleg.
+>
+> May be this means that we should keep the error handling in this function
+> more consistent ;)
+>
+> > We do have quite a lot of "hybrid" error handling
+>
+> And YES, I don't like this kind of error handling.
+>
+> But, at the same time: NO, I never-never argue with the maintainers when =
+it
+> comes to "cosmetic" issues.
+>
+> My main point was (and you seem to agree) that this simpler patch above w=
+on't
+> simplify the routing. I too thought about the change above initially.
+>
 
+Agreed. Just stick to your code, it's fine. Thanks!
+
+> -------------------------------------------------------------------------=
+------
+> > Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
+> > any problem for it to go together with your refactorings.
+> >
+> > For the fix:
+> >
+> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+>
+> Thanks! I'll write the changelog and send this patch with your ack includ=
+ed
+> tomorrow.
+>
+> Oleg.
+>
