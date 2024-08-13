@@ -1,115 +1,110 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3408199397;
-	Tue, 13 Aug 2024 12:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4354B19412F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 12:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723552240; cv=none; b=IYYEiqvBv5t9jV0AQYN0BdJ6Wfh9SHQGo1ua0616vnwm5mDjHukDoluA1DAr/UsvQMoNNda1shy0YS17EOR0NlNlXs9BnRQq6WLy7FcLKP3YvVdF/rUwV2X8e2TRZZ1/hUpajpLwnqYotxr+idyLK0PhOfe7yu9DuCqu9voNQ/4=
+	t=1723552615; cv=none; b=RG11/MNHrRzT4Gpv/58l8yehIIesOM5ScYVnCBlTqmbX9ax8KlXjuPCo0ThP5m0rxfERdMR8+aE1HctyHX25VTl4HgjhepRNj4MgO3beP3vhahKVlrojbPFzdhnZHIRsWxKHdC7yqa+vhWUTcSn3qtqYS9NSD0vTkLb6eqNa9lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723552240; c=relaxed/simple;
-	bh=Ui7mxf+XESXbl2/Tywo0mYfgT4r8ajOKrUstfrEfPZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lQJsh/hklzH53Zwxv6H+8laWxVJfur4fQmj4IgWlTaqp1/4Wr1zxJxElF2bSmGsyw9r9R+Reh85AIQ4eIRzhOXdIqgeVxUjUdGq/6TLk+gt3eXp2bfUtDpLFE8bdFqvFTR/cWBno621kkFYFyb7KTeIrZ5EGiuSPBVVOayFygzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WjrFg6WPxz2CmQ7;
-	Tue, 13 Aug 2024 20:25:43 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC948180018;
-	Tue, 13 Aug 2024 20:30:34 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 13 Aug 2024 20:30:33 +0800
-Message-ID: <2971107e-75e7-8438-c858-b95202d7b5ea@huawei.com>
-Date: Tue, 13 Aug 2024 20:30:32 +0800
+	s=arc-20240116; t=1723552615; c=relaxed/simple;
+	bh=68SsCUaNEsnCqAjErgExTVGZL/KYU14liaZVe7k297U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y8tKtyfa3NIkqWpF+UnymulCLXWfYKF59tHlM2LA8ZLu/gvz291iN5qlYpIdnO7nqNFBu3dM5Z4/vXwmI9TXHahR3nUDFntM59YTGvPRqT0Wc6g/ExFHQYp/2IEeec77oqeOMURN/mMnCeaWlaCgCOAlzbdFyObdmI8Y3+f/14Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PBatn2AY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBatn2AY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723552612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z0TUSbcTCIH1WGQQ2wF7pJ/BOblSyxCtN4itWRR3eIo=;
+	b=PBatn2AYRQGgQuW7b7VqO6reXGKBNfL17CHgl7uxesWPM86AioFsxq76xFZnMX2CQz+i46
+	B/qQiE+N1yvdM670QQCC+eBVGGLDxZu4R4Yh4/UnoKfxUlFLWK07c0w9fDcVUmLwz1KRVw
+	zxQN2ioJcbPWzi+kgaUn8Yeqq8ElTj8=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-672-bG1DWg6cNnKRavA1jD4QTw-1; Tue, 13 Aug 2024 08:36:50 -0400
+X-MC-Unique: bG1DWg6cNnKRavA1jD4QTw-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ef233fb86bso57207011fa.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 05:36:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723552609; x=1724157409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z0TUSbcTCIH1WGQQ2wF7pJ/BOblSyxCtN4itWRR3eIo=;
+        b=IrFnje8EVp5pGwtlWhjtufoXIK/8xJRJ2hvjDmoWkN8ioX635NNGO33lwR3eMNUGT9
+         ihtFmehF1bzfPew/RqEUGIsq4jq64syiwSaQjMTW7Hz+XgNxXiUOvmDtZ0MXw/pJcB3m
+         D9HIwPH9EjZteRko+/dZjpAUO7qdLiGB8YgQ9FaJQ60zukx99BuCjhbNfPX+Y9tzVch6
+         SGP+98b0lp/CBgXcRjNe/Z/tV+tuESMMusDEwp7KvinvCbb0X/Fm/2CU4XUtOqvXkNQn
+         n1x/h/WJJgUEfaOfU0b0jnhLRz1IO7rI6chKVvZ4UApsrhJ1Wgl60Nk5nSGPgjOVAqfG
+         0SEA==
+X-Gm-Message-State: AOJu0YzVumx58JRLQkal8oH8MZ9e/aCVSvMdUVeE+gKoCJT0uh+uLr4U
+	ePAXwPikzg8BzIBnnTW8DHCeYKekQtSdZ4wUXtR1wh6+/vNF+OnXP78982/LJJEZ+6d8QR1I+vy
+	3fw/qkUwHeVoJg4jFQr5WEtN0izP+GWVNVxTFDKAyoN3gBIW5Mu4IUlUVQ0jTN9HQyQmhtDaRq6
+	r2KIJAvfJ4D7b7eZ/MXWJlyfMACGJ5lpfaWI2JerHTKrzw
+X-Received: by 2002:a05:6512:3d86:b0:52c:9ae0:beed with SMTP id 2adb3069b0e04-53213692a78mr2562627e87.52.1723552609339;
+        Tue, 13 Aug 2024 05:36:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7BlMoT6OL41Ug/pNECmFOkEoEPNi3/UKnqqTuK9qlZuO7CRYCYGlTo2lbdBTKuEA/yp7JLiadree+/Y/FFMs=
+X-Received: by 2002:a05:6512:3d86:b0:52c:9ae0:beed with SMTP id
+ 2adb3069b0e04-53213692a78mr2562595e87.52.1723552608809; Tue, 13 Aug 2024
+ 05:36:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v2 1/2] uprobes: Remove redundant spinlock in
- uprobe_deny_signal()
-To: Oleg Nesterov <oleg@redhat.com>
-CC: <mhiramat@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<andrii@kernel.org>, <rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-References: <20240809061004.2112369-1-liaochang1@huawei.com>
- <20240809061004.2112369-2-liaochang1@huawei.com>
- <20240812120738.GC11656@redhat.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <20240812120738.GC11656@redhat.com>
+References: <20240813114931.360823-1-ezulian@redhat.com>
+In-Reply-To: <20240813114931.360823-1-ezulian@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 13 Aug 2024 14:36:37 +0200
+Message-ID: <CAP4=nvROfKr8s75B=POefQozE88se6zrfPcfaP_n5TqtXY9ABQ@mail.gmail.com>
+Subject: Re: [PATCH] rtla: Sync the help text between hist tools
+To: Eder Zulian <ezulian@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, jlelli@redhat.com, lgoncalv@redhat.com, 
+	jkacur@redhat.com, williams@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Transfer-Encoding: quoted-printable
+
+=C3=BAt 13. 8. 2024 v 13:49 odes=C3=ADlatel Eder Zulian <ezulian@redhat.com=
+> napsal:
+>
+> In addition, fix a typo in the error message generated when the
+> specified duration is invalid.
+>
+> Signed-off-by: Eder Zulian <ezulian@redhat.com>
+> ---
+>  tools/tracing/rtla/src/osnoise_hist.c  | 4 ++--
+>  tools/tracing/rtla/src/timerlat_hist.c | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+
+FYI some of the issues you fixed for hist are also in timerlat_top.c:
+
+        "      -d/--duration time[m|h|d]: duration of the session in second=
+s",
+...
+        case 'd':
+            params->duration =3D parse_seconds_duration(optarg);
+            if (!params->duration)
+                timerlat_top_usage("Invalid -D duration\n");
+            break;
+
+and the "Invalid -D duration" (instead of "-d") one is also in
+osnoise_top.c. Those would probably go to a separate patch, though.
+
+Reviewed-by: Tomas Glozar <tglozar@redhat.com>
 
 
+Tomas
 
-在 2024/8/12 20:07, Oleg Nesterov 写道:
-> On 08/09, Liao Chang wrote:
->>
->> Since clearing a bit in thread_info is an atomic operation, the spinlock
->> is redundant and can be removed, reducing lock contention is good for
->> performance.
-> 
-> My ack still stays, but let me add some notes...
-> 
-> sighand->siglock doesn't protect clear_bit() per se. It was used to not
-> break the "the state of TIF_SIGPENDING of every thread is stable with
-> sighand->siglock held" rule.
-> 
-> But we already have the lockless users of clear_thread_flag(TIF_SIGPENDING)
-> (some if not most of them look buggy), and afaics in this (very special)
-> case it should be fine.
-
-Oleg, your explaination is more accurate. So I will reword the commit log and
-quote some of your note like this:
-
-  Since we already have the lockless user of clear_thread_flag(TIF_SIGPENDING).
-  And for uprobe singlestep case, it doesn't break the rule of "the state of
-  TIF_SIGPENDING of every thread is stable with sighand->siglock held". So
-  removing sighand->siglock to reduce contention for better performance.
-
-> 
-> Oleg.
-> 
->> Acked-by: Oleg Nesterov <oleg@redhat.com>
->> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->> ---
->>  kernel/events/uprobes.c | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index 73cc47708679..76a51a1f51e2 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
->>  	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
->>  
->>  	if (task_sigpending(t)) {
->> -		spin_lock_irq(&t->sighand->siglock);
->>  		clear_tsk_thread_flag(t, TIF_SIGPENDING);
->> -		spin_unlock_irq(&t->sighand->siglock);
->>  
->>  		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
->>  			utask->state = UTASK_SSTEP_TRAPPED;
->> -- 
->> 2.34.1
->>
-> 
-> 
-
--- 
-BR
-Liao, Chang
