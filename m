@@ -1,98 +1,157 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE621AAE15
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 21:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48431AAE32
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 22:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723586161; cv=none; b=kOBuAbG5HAFxtGz9b6cObL1gnQU8o6Crki/9CHUrgzVgUq+pJivujiFZH1Kbkcnop9AN9a7dsEYGJTBkUOQPOClbXHN5ORdq7TCKGWqRyEyxReUXxETPVs0Z5LHlG6cHTmhDILBH41BjeeXiV3zjnPg7b5UVbGQA4RDIC5tx1Wo=
+	t=1723587571; cv=none; b=kI2dKfZVbKEE8dcOIEUAPh5NB/9CiSaa2dmSljW/wdKYZ4DGA+8ypu7lOWYp9rWVfdwyhR/DmnRmwOQ5edmGUyVLgu0mZ4muIaQjCv+0BCoVnCnVSpMzIeX0T5cLqga3iDydzCEaTV7Ref0JtSxwzOZ3+JpGzjyB7mklWICIjWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723586161; c=relaxed/simple;
-	bh=sYf7AubHKLRPISUz3iaN4Z/uAM0QtxXN1uvk9ImBQQA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cpLMjcHiWs4KhVfK/pZCSJ5u/V8oGfZGzVmBxKtxTHFBlTxECM1TbzrUq4bFTo69dxMmP7RKgyhFVpW9oTmW3T8EC5ChSvQkzFrmx4IqP/nJ1XACCQZDI5s37wgOGH38PB92goKhVGEiCZkSoWbrqvH4gaLmnoKekWHGxc32bw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IelEeAII; arc=none smtp.client-ip=209.85.217.54
+	s=arc-20240116; t=1723587571; c=relaxed/simple;
+	bh=nUuj1yFQwQctPZyeaZf8ffYlrw7QeFKprNsInQ+jTuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BgpcPglcpJsMszeBI28HyYW/K8z89K1CY/nmDJ5KpEOm0DoVIT6LChsoRJZrhYKT9aVlA3Kz08zifnNkUUJ7BSX88EN6AysPt8dVR0XLq88eXzLJYr8e9c2qZU7HZGeG/M5eVyLnzw5fLcpLndxTGCr3j3ThbOwkef9GoDUk/xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XmuOb7JL; arc=none smtp.client-ip=209.85.166.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IelEeAII"
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-493d748ba72so2174205137.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 14:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XmuOb7JL"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-81fd1e05a5aso256812039f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 15:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723586158; x=1724190958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sYf7AubHKLRPISUz3iaN4Z/uAM0QtxXN1uvk9ImBQQA=;
-        b=IelEeAIITogoo1SSJngz6zvknUJ23IORg0IIzoNgFQaInn6XdLBzk3zjG6skLppVPM
-         gZuMdKd/IHfJezdOBdq1BSQtiDM0CLhxEcc2hgTtKMejxIffJwHmHz+xlE1l86gD4sHi
-         BUt3LKrCBzkF/D5vnqjm6MpaE0ZHecrjK6xYAs0ycZG6Lnoo1AsyNMjLaSupNabxxVvT
-         r6q+UU2ooXyoN/YK2K5ekvlNQVWnA1QrxZq/xIT0ubLDLqA8f74xqG9ELIcgtUovxR6j
-         kRmtZf8oyWzEdk8Gc4dvAAcY/wmx13wlTJ0qiH0eT2wASvokQUYp9un55joVbGb0KRYO
-         sVgA==
+        d=google.com; s=20230601; t=1723587569; x=1724192369; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+QN8X+bBf4e4pg8ECVJmLV7aoGPPE4M9h9y5SfDnco4=;
+        b=XmuOb7JLvyzRoKVkigT8zV8uE0biCueUrdLC+6pXN5AjqeaxqAFGWT1hU9rPNRvsDZ
+         3fU5eBj4VHgEnvMbyOxDo4SlyF1dqm7T4zhNy+oWaV1J6qezOEKZ865/5a5QD6yf2zSE
+         zsQq6zZ31fcYemRtrJa5mxHUIsD3W7QlY7Iahg5D168bjobssTF11yaUpsmZBmKP3QY6
+         5ld4bJnVvmBPuUbevyZk00bRd5Lb1Yj1wt/HAHV8cdrDd/44dWqWllW0xGH36kY1+DHb
+         i0Jm6spuAdClmzuVQhUe8wMeuVMAO2Cv8iEw7Ie6jVlsxGLfspWZBbVehKyGXuViZ+tw
+         x0Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723586158; x=1724190958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sYf7AubHKLRPISUz3iaN4Z/uAM0QtxXN1uvk9ImBQQA=;
-        b=mDPTtAg4fLJkLn/rZvrjE2tPqeYDcjR1c1PPH6c/BnzAFOVq5l77rADHXNe/51Ak3y
-         eGW4AWe7cBJKFD6Y2z6x2pb+Q+LnRyl7PfFJ90HIL8v1ewKd3RY/Qnb5Eq/su+Qx2ay9
-         zU4R8Dt7gC2gnh/29sv7kzkPCCcTBqFkRLIJNcVB2ohk0r9cMdVJ6zTr0XVDLdGL1WcP
-         ziRIrY/UXhGGpO4fDXVG3UR81j88wJen7nH8Rg75Wh2jrVCf85+WarQm91WnP3gHvNs1
-         iI4pcLQj7gx8slCJka2N2kPZX2U69J+FZWRShb5YC8xa2ia3bnZOFn+WSS74Hdm7Mgcm
-         BmqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXeXdkYhxrB6hShbVvxHMz3XPR/uaap1u2VflID/XvBLg4WfhLeJ44C7XEr4jr3q/FJN3/uImmqBICWbOJOBPtg7BrohZ4SnVOT60UwqWwFfTfL
-X-Gm-Message-State: AOJu0Yz46i9v4iziqZg9xu9diYTPAWen+ODO1JrHjSAYb8C+6oVXMszA
-	R1T7xIy3ubCJe2TAFjkIhvr0M/OXa9FWWamlPk98+OTPEQ9iciBAZOx9G3yPnCjWMlPeJZ3y5OK
-	AltiQ+uxm4ZiYfl4um3peTGcTqp+Qkxpsl0ib
-X-Google-Smtp-Source: AGHT+IEQaFW6VTjl/NN5Addyayq2vESbO77ln4J7ElHigTL7AZmOrMHtx/th7RP9aYyJh8HhQcoWsHroq+JpTV9PMHI=
-X-Received: by 2002:a05:6102:2ac1:b0:492:9adb:f4de with SMTP id
- ada2fe7eead31-497598af685mr1378119137.5.1723586158313; Tue, 13 Aug 2024
- 14:55:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723587569; x=1724192369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+QN8X+bBf4e4pg8ECVJmLV7aoGPPE4M9h9y5SfDnco4=;
+        b=Zg/Oh94upfmI4FoIG21wmU57QoF5TDG4CIEp1AwM4dsMC1kbxRAFAFjE1jXlhNvd1+
+         TDDjAc7YHT4LQ9MeyGtCiiXMWIUvX4XoJqY1uoafLhL/Ixdz+gCNYIA5volOCGdkYftV
+         aX2JalS2/xV0nJIV49/T1IdxdJyRXukXzC/ez/TXduYfweQS02TzZ87Z05vsOZhWfc62
+         SptbLqaFcWtLhVmEvkD6s1n9S/xBfRmNXxiwHwcAwJ1FxkSmEYQQcQxrK7QyCPWXg87R
+         yZ+Wvk24FoyKShWsqT6OnT/BK7lxkJF95ZwcqeckwRXBJEnG5oFYNoB66aTg7Gn+poiq
+         MOSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuwmbcYFXmQg9JGemWBwb8rUWlFA+CUTsKpGiUf2H0wVcpN5Cg2XTQEgV70TTvObygfsVKBlA2BCEUl4U9+JnlUd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyE2Sd7aHvLEnJqlpWxY5QrXD7hJC5GxOnwJVxskbI4JaSHgmle
+	xmc/r6CIPvD3/Gfl0SEn3fXQoq0Zp9JU7fBycLR+/fkdAkFamBD7xEUYeIR4excBF9Bp9jfRqDs
+	jHg==
+X-Google-Smtp-Source: AGHT+IH+Vc3rvDiFEg5ElrB7bMI7N4hpSdsoFZYx8k23AbxObZpcHIjRmC/uICTdWR81lxtCEKl/zQ==
+X-Received: by 2002:a05:6602:27c1:b0:824:d58c:ec9 with SMTP id ca18e2360f4ac-824dad3f48bmr165323439f.10.1723587568538;
+        Tue, 13 Aug 2024 15:19:28 -0700 (PDT)
+Received: from google.com (194.225.68.34.bc.googleusercontent.com. [34.68.225.194])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ca769f9d7dsm2773101173.118.2024.08.13.15.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2024 15:19:28 -0700 (PDT)
+Date: Tue, 13 Aug 2024 15:19:25 -0700
+From: Justin Stitt <justinstitt@google.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
+	ebiederm@xmission.com, alexei.starovoitov@gmail.com, rostedt@goodmis.org, 
+	catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, bpf@vger.kernel.org, 
+	netdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v6 7/9] tracing: Replace strncpy() with strscpy()
+Message-ID: <hbjxkyhugi27mbrj5zo2thfdg2gotz6syz6qoeows6l6qwbzkt@c3yb26z4pn62>
+References: <20240812022933.69850-1-laoar.shao@gmail.com>
+ <20240812022933.69850-8-laoar.shao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807220513.3100483-1-song@kernel.org> <20240813132907.e6f392ec38bcc08e6796a014@kernel.org>
- <0C1544B6-60CF-44DC-A10C-73F1504F81D1@fb.com>
-In-Reply-To: <0C1544B6-60CF-44DC-A10C-73F1504F81D1@fb.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Tue, 13 Aug 2024 14:55:20 -0700
-Message-ID: <CABCJKudPg+5Q3Y3H7LVa0DmN8ARati_oREVUqsLSvQpAgE5hWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
-To: Song Liu <songliubraving@meta.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Song Liu <song@kernel.org>, 
-	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, "mbenes@suse.cz" <mbenes@suse.cz>, "pmladek@suse.com" <pmladek@suse.com>, 
-	"joe.lawrence@redhat.com" <joe.lawrence@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>, 
-	"morbo@google.com" <morbo@google.com>, "justinstitt@google.com" <justinstitt@google.com>, 
-	"mcgrof@kernel.org" <mcgrof@kernel.org>, 
-	"thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "kees@kernel.org" <kees@kernel.org>, 
-	Kernel Team <kernel-team@meta.com>, "mmaurer@google.com" <mmaurer@google.com>, 
-	"rostedt@goodmis.org" <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240812022933.69850-8-laoar.shao@gmail.com>
 
 Hi,
 
-On Tue, Aug 13, 2024 at 2:20=E2=80=AFPM Song Liu <songliubraving@meta.com> =
-wrote:
->
-> Hi Masami,
->
-> Thanks for your review and test!
->
-> @Sami, could you please also review the set?
+On Mon, Aug 12, 2024 at 10:29:31AM GMT, Yafang Shao wrote:
+> Using strscpy() to read the task comm ensures that the name is
+> always NUL-terminated, regardless of the source string. This approach also
+> facilitates future extensions to the task comm.
 
-As the kernel no longer uses the Clang feature combination that was
-the primary motivation for adding these kallsyms changes in the first
-place, this series looks reasonable to me. Thanks for cleaning this
-up!
+Thanks for sending patches replacing str{n}cpy's!
 
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+I believe there's at least two more instances of strncpy in trace.c as
+well as in trace_events_hist.c (for a grand total of 6 instances in the
+files you've touched in this specific patch).
 
-Sami
+It'd be great if you could replace those instances in this patch as well :>)
+
+This would help greatly with [1].
+
+> 
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> ---
+>  kernel/trace/trace.c             | 2 +-
+>  kernel/trace/trace_events_hist.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 578a49ff5c32..1b2577f9d734 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -1907,7 +1907,7 @@ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
+>  	max_data->critical_start = data->critical_start;
+>  	max_data->critical_end = data->critical_end;
+>  
+> -	strncpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
+> +	strscpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
+
+If max_data->comm wants to be NUL-terminated then this is the right
+replacement. Without knowing how the trace stack works at all, it's hard
+for me to tell if that is the case.
+
+There's a length-supplied format specifier for which this comm field is
+used with; Either this is just another safeguard against spilling over
+the buffer or this field really doesn't care about NUL-termination.
+| seq_printf(m, "#    | task: %.16s-%d "
+|       "(uid:%d nice:%ld policy:%ld rt_prio:%ld)\n",
+|       data->comm, data->pid,
+
+In the event this field doesn't need to be NUL-terminated then we are
+introducing an off-by-one error where we are copying one less useful
+byte with strscpy -- Linus pointed out earlier [2] that these things all
+just want to be c-strings so this is probably the right change :>)
+
+>  	max_data->pid = tsk->pid;
+>  	/*
+>  	 * If tsk == current, then use current_uid(), as that does not use
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 6ece1308d36a..4cd24c25ce05 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1599,7 +1599,7 @@ static inline void save_comm(char *comm, struct task_struct *task)
+>  		return;
+>  	}
+>  
+> -	strncpy(comm, task->comm, TASK_COMM_LEN);
+> +	strscpy(comm, task->comm, TASK_COMM_LEN);
+>  }
+>  
+>  static void hist_elt_data_free(struct hist_elt_data *elt_data)
+> -- 
+> 2.43.5
+> 
+
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Link: https://lore.kernel.org/all/CAHk-=whWtUC-AjmGJveAETKOMeMFSTwKwu99v7+b6AyHMmaDFA@mail.gmail.com/ [2]
+
+Thanks
+Justin
