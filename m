@@ -1,110 +1,89 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4354B19412F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 12:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A8D1993A7
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 12:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723552615; cv=none; b=RG11/MNHrRzT4Gpv/58l8yehIIesOM5ScYVnCBlTqmbX9ax8KlXjuPCo0ThP5m0rxfERdMR8+aE1HctyHX25VTl4HgjhepRNj4MgO3beP3vhahKVlrojbPFzdhnZHIRsWxKHdC7yqa+vhWUTcSn3qtqYS9NSD0vTkLb6eqNa9lQ=
+	t=1723553276; cv=none; b=p/niAI2f5fbJme5HDZPOmyFJuVl+t8O4CLPHdhmIhBwA0GoLiSWlEfsZqsBXcHhxo9oqcJnjxHfrOZ7nkQiTdXYt1e4NWn9KCjHYj9tnEtRDyKlIh2F7AtR/bexrOSkFRv31x0e6zPAjaVmulsCv9LcIWMVUE8d7iCEJw48H8A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723552615; c=relaxed/simple;
-	bh=68SsCUaNEsnCqAjErgExTVGZL/KYU14liaZVe7k297U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y8tKtyfa3NIkqWpF+UnymulCLXWfYKF59tHlM2LA8ZLu/gvz291iN5qlYpIdnO7nqNFBu3dM5Z4/vXwmI9TXHahR3nUDFntM59YTGvPRqT0Wc6g/ExFHQYp/2IEeec77oqeOMURN/mMnCeaWlaCgCOAlzbdFyObdmI8Y3+f/14Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PBatn2AY; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1723553276; c=relaxed/simple;
+	bh=0KWhrcU0YHbJiksdyGvlsjytVHRYOXJJLdmQ+/bgpig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2is0/Rw1yv3zRQ9o0+JPkDG1tZzBPhnQ72qi5uGaEu1neQfu7g2j8mnnPqrQxEP+xA7QJkF25zR3K59ELv2wcHh4rcrHxsv5xrAJZhuuXTkIKoskXZ51ZFw+Z1hwkB64aaGL3iiyULbu2yxMwmgC/0aO3yhtflUOlx0BYjQ9X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CT0Dulfu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBatn2AY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CT0Dulfu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723552612;
+	s=mimecast20190719; t=1723553274;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=z0TUSbcTCIH1WGQQ2wF7pJ/BOblSyxCtN4itWRR3eIo=;
-	b=PBatn2AYRQGgQuW7b7VqO6reXGKBNfL17CHgl7uxesWPM86AioFsxq76xFZnMX2CQz+i46
-	B/qQiE+N1yvdM670QQCC+eBVGGLDxZu4R4Yh4/UnoKfxUlFLWK07c0w9fDcVUmLwz1KRVw
-	zxQN2ioJcbPWzi+kgaUn8Yeqq8ElTj8=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-672-bG1DWg6cNnKRavA1jD4QTw-1; Tue, 13 Aug 2024 08:36:50 -0400
-X-MC-Unique: bG1DWg6cNnKRavA1jD4QTw-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ef233fb86bso57207011fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 05:36:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723552609; x=1724157409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z0TUSbcTCIH1WGQQ2wF7pJ/BOblSyxCtN4itWRR3eIo=;
-        b=IrFnje8EVp5pGwtlWhjtufoXIK/8xJRJ2hvjDmoWkN8ioX635NNGO33lwR3eMNUGT9
-         ihtFmehF1bzfPew/RqEUGIsq4jq64syiwSaQjMTW7Hz+XgNxXiUOvmDtZ0MXw/pJcB3m
-         D9HIwPH9EjZteRko+/dZjpAUO7qdLiGB8YgQ9FaJQ60zukx99BuCjhbNfPX+Y9tzVch6
-         SGP+98b0lp/CBgXcRjNe/Z/tV+tuESMMusDEwp7KvinvCbb0X/Fm/2CU4XUtOqvXkNQn
-         n1x/h/WJJgUEfaOfU0b0jnhLRz1IO7rI6chKVvZ4UApsrhJ1Wgl60Nk5nSGPgjOVAqfG
-         0SEA==
-X-Gm-Message-State: AOJu0YzVumx58JRLQkal8oH8MZ9e/aCVSvMdUVeE+gKoCJT0uh+uLr4U
-	ePAXwPikzg8BzIBnnTW8DHCeYKekQtSdZ4wUXtR1wh6+/vNF+OnXP78982/LJJEZ+6d8QR1I+vy
-	3fw/qkUwHeVoJg4jFQr5WEtN0izP+GWVNVxTFDKAyoN3gBIW5Mu4IUlUVQ0jTN9HQyQmhtDaRq6
-	r2KIJAvfJ4D7b7eZ/MXWJlyfMACGJ5lpfaWI2JerHTKrzw
-X-Received: by 2002:a05:6512:3d86:b0:52c:9ae0:beed with SMTP id 2adb3069b0e04-53213692a78mr2562627e87.52.1723552609339;
-        Tue, 13 Aug 2024 05:36:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7BlMoT6OL41Ug/pNECmFOkEoEPNi3/UKnqqTuK9qlZuO7CRYCYGlTo2lbdBTKuEA/yp7JLiadree+/Y/FFMs=
-X-Received: by 2002:a05:6512:3d86:b0:52c:9ae0:beed with SMTP id
- 2adb3069b0e04-53213692a78mr2562595e87.52.1723552608809; Tue, 13 Aug 2024
- 05:36:48 -0700 (PDT)
+	bh=1XjhAxPmiM++L3njaRU1wOJhxoxtQOjrtQvzpozAwi8=;
+	b=CT0DulfuxgFB9gGQBdfwM9QY3QRKaDIUW2nfDQcuYDRNzYH/W1hS4ngTddquhKcXoJ2Kyf
+	f7pNUErxPw1hQlv1OG0eq/hCYktbpXj4lKbQgnnb/cJu/wX4ziKec38aoeiLDUcD5UWkSR
+	/r3T2zPcCbIc9u6W9tecftHjUEquesw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-9cj9z-qYMRa2lP7hsRm5jg-1; Tue,
+ 13 Aug 2024 08:47:51 -0400
+X-MC-Unique: 9cj9z-qYMRa2lP7hsRm5jg-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 329EF1953957;
+	Tue, 13 Aug 2024 12:47:48 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.159])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CB21F1955F66;
+	Tue, 13 Aug 2024 12:47:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 13 Aug 2024 14:47:45 +0200 (CEST)
+Date: Tue, 13 Aug 2024 14:47:37 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, andrii@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] uprobes: Remove redundant spinlock in
+ uprobe_deny_signal()
+Message-ID: <20240813124737.GA31977@redhat.com>
+References: <20240809061004.2112369-1-liaochang1@huawei.com>
+ <20240809061004.2112369-2-liaochang1@huawei.com>
+ <20240812120738.GC11656@redhat.com>
+ <2971107e-75e7-8438-c858-b95202d7b5ea@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813114931.360823-1-ezulian@redhat.com>
-In-Reply-To: <20240813114931.360823-1-ezulian@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 13 Aug 2024 14:36:37 +0200
-Message-ID: <CAP4=nvROfKr8s75B=POefQozE88se6zrfPcfaP_n5TqtXY9ABQ@mail.gmail.com>
-Subject: Re: [PATCH] rtla: Sync the help text between hist tools
-To: Eder Zulian <ezulian@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, jlelli@redhat.com, lgoncalv@redhat.com, 
-	jkacur@redhat.com, williams@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2971107e-75e7-8438-c858-b95202d7b5ea@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-=C3=BAt 13. 8. 2024 v 13:49 odes=C3=ADlatel Eder Zulian <ezulian@redhat.com=
-> napsal:
+On 08/13, Liao, Chang wrote:
 >
-> In addition, fix a typo in the error message generated when the
-> specified duration is invalid.
 >
-> Signed-off-by: Eder Zulian <ezulian@redhat.com>
-> ---
->  tools/tracing/rtla/src/osnoise_hist.c  | 4 ++--
->  tools/tracing/rtla/src/timerlat_hist.c | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
+> Oleg, your explaination is more accurate. So I will reword the commit log and
+> quote some of your note like this:
 
-FYI some of the issues you fixed for hist are also in timerlat_top.c:
+Oh, please don't. I just tried to explain the history of this spin_lock(siglock).
 
-        "      -d/--duration time[m|h|d]: duration of the session in second=
-s",
-...
-        case 'd':
-            params->duration =3D parse_seconds_duration(optarg);
-            if (!params->duration)
-                timerlat_top_usage("Invalid -D duration\n");
-            break;
+>   Since we already have the lockless user of clear_thread_flag(TIF_SIGPENDING).
+>   And for uprobe singlestep case, it doesn't break the rule of "the state of
+>   TIF_SIGPENDING of every thread is stable with sighand->siglock held".
 
-and the "Invalid -D duration" (instead of "-d") one is also in
-osnoise_top.c. Those would probably go to a separate patch, though.
+It obviously does break the rule above. Please keep your changelog as is.
 
-Reviewed-by: Tomas Glozar <tglozar@redhat.com>
-
-
-Tomas
+Oleg.
 
