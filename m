@@ -1,154 +1,244 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415C617C7DA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 09:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EA419AA73
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 10:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723539828; cv=none; b=Ulxir08C7g/PelUu07n8UXr8vA1iAXzmNbOywDMH8XSHkNe0e66AMUBFdILsBLHg7DtivfGWwu3mMiRXJLSi8GoDwY73+Iu6AmznjF7dq4sYOGgm87q76cWIDsOrtbBfVIMMN28mCAmmemD0Q6bY31OWehTfrB7O+cSq3ymtjoc=
+	t=1723543401; cv=none; b=eyZSRfmAIOy4atQPpxU7/0FgyXlIrTtp0CAFUoqLwSwimnbOK/XFm7p5y+f770X4MGRQ3WvOUlzQCLOdxyYgrRbLILEP6FMUttdvzcmboeKFli9XnffCMMh8zVsLIB2ay+BxdqoRKKKaKQ3Xh2zy8qgOwkB6YPzs/F6p88n6UaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723539828; c=relaxed/simple;
-	bh=OFLmnkChNt3TrBDQB3OchS9v9nydUBdhsCvm9Qr0paQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dlFj7juiTT/6hHoCRVN7TkSV3ue5t3+9BOQyfS36ylRkhEkOEnp7bC0Rqq9eQKfYQ4B/638+W8kNc66gKWIKUs1AmHPXuEyUE+QXBsKrrwxHnDO74CuS2PQmdmYZzI1opiVGWn5aHmPhwHgixTY+v6O38FZz2B2r+iTWNuAJFIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uY3Czher; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723543401; c=relaxed/simple;
+	bh=ZaRZPIKMb9tT1bgJXnZN+jAzi+AtsUj/jTsR+EdbRoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gv2oe8XuKp0IiSQyh3cmG0MH8Mq9AooWkL4AcsLRCnY4LWoMNLA8d9kgyr3fc7VrrVhxyeCfICyROVgjTMbJcKFoDK9BzkOGih49InR2orERsRzeXBH3lFQZO94QGMNOh/vMAtWHpZzB4hRU7X9l4D4dzKwFv/bnt0rgLNBGwzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gB7aL9K8; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uY3Czher"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-8223f0614b6so1701275241.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 02:03:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gB7aL9K8"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7a1843b4cdbso3638276a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 03:03:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723539825; x=1724144625; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MqfnVnhHsKTNIdZ3g99elQ8N0kSquMZj93pvaOSIp0U=;
-        b=uY3CzherVSUXaUL2L45nDDjUe851uSDwoUak+sWbM5SLZgqZu0RzWakWib6600bcM3
-         nkpN48NnEKFdKHNu45FDUJ+iB/gabNPMokNHB4mnqALGdAwZ3ybYGg6whRFoVc9NBxZW
-         U1SkhkP4aChDRMPRkgx8vXA+ZlnLtATO+602voSTI274QqM7RicCA6o3qPCI+mW0gOB9
-         y+K0HPR/eBxpYqeHyFh6JP/dbTfsAN//pojGBDgYuWYY8y4FA/tPQh+K1e2yh39e3RSp
-         NiRMGNuOEyiuVZmbB7CHeVf5LcFuLYiHjUtvhEDA4gf4pNEQxoUNr8DV9kVgMMw88MOS
-         ZbOA==
+        d=chromium.org; s=google; t=1723543399; x=1724148199; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NoxN63bBPaM/wCd8ZvlEoxvS8xfn7jCuCDDPzEXx9AA=;
+        b=gB7aL9K8rxT92KTPA0kUHFxVnq8g92F1/0AKw6e+zNZQ1SNqtgs+5iCbJPK89PagJa
+         YQF478bmuSxDbkLlx5Qq1QqS0aH740VuEc7k8iTU5Yrjj61C/lmA74GZIHLWGEM+7FuR
+         AA1zaADBs8Ye7lXJUM/vy2HwYIvJ9E2jt4A3Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723539825; x=1724144625;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MqfnVnhHsKTNIdZ3g99elQ8N0kSquMZj93pvaOSIp0U=;
-        b=g0i65I/T22sZR3HOukGWJNPUZgu6zSg4NyKuLmhJ9tgdetYTUl8i0pO1nYtZgCw78o
-         hM51S7mS48BYU0dfkBoyngC2JZ1JZw2ndJ9FJNs4OtCjDPlckMj+/w5DScYGEhYWByNU
-         6N6Y5PZPuJF1GvbZ5kJzP3Zvzx8o1AMjczPYa1cqpRfBmu/jFZWp+/bbWeuG/iLDLEAs
-         td5PtoSRr6rxJSqLD+bSVP8iBjzppQnDikXIw7IagsP94lImn46zx9qSBWtcJjqfwXtZ
-         SCe6aiRSN+7UmLufNO6DT6dvgO2MaOgIbt7HKfrU0/qRVvDzK2UqrAJCWpMR+L+rbFOH
-         bIJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcjPvyE8lxBnbZ5B1lSz9+MolyDxoHeSYlfM3x57FPOwtMHeeHhlfB4VImbicLAXZVUb2n/w2s9V5axfcZNwaSPQOER3zPebhQ4GCaXhPufLCx
-X-Gm-Message-State: AOJu0YykWRJax4SiWDMFyKUB42inr79eiCc8XZvSFgrTZjpALA1I4YaI
-	+EP6npFCKj8veqasS+/LH68hF+mqvoU2nF+FLG63iW4y32cyXgaz5s4ZeWJY5AKSglmXVuM6IyA
-	w0t9NQUvbWE77IDIspvrlYFG9qnTtxYX9Od7F
-X-Google-Smtp-Source: AGHT+IEDjVBWF1MtU621r7c9KTxxkpXecwmSkiD37eYz3ttGuDqjz8Aa65UHLyu0qffTTOccInI+PGwQjjCKHuK8rFw=
-X-Received: by 2002:a05:6102:3e94:b0:48f:a858:2b52 with SMTP id
- ada2fe7eead31-49743b56abemr3993740137.29.1723539824928; Tue, 13 Aug 2024
- 02:03:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723543399; x=1724148199;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NoxN63bBPaM/wCd8ZvlEoxvS8xfn7jCuCDDPzEXx9AA=;
+        b=aTCybK9FPWcXPe0J252E+pXm6QmAoGEAAzCW4BF1o3cehWEutof4BAtpSrp61LQBO0
+         4/eBrXtF8HWEDcwvA4+KeVQdkjh0YyjLGKY5Iaj8Asj9HK2o5jO6ybsEo+kT9VBrzLLB
+         IS4YRyPZV2hK8syh3Yz+kcG1SkPhbIHCVFlpi/zNET1TauwSRyof6BMgy4tsNtkYPakT
+         +LfZ9pYYyZkqjuLE9xRNKcTdbEcMcdugL8I9OMY1zcW0pDPVSXDM1WtcQtgZ/FQfpUmG
+         CiLnF9cfGUrDw/n4OxTfQITT5o6ZNqmSs4A9bY7XKnpW+rLipaJNb2+o3UDvfspzM/TP
+         6teg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/5f3Xe+oXfwbbRi+AWpkF8lNzU9QTRCe1N5iYZq65oL3esH0NARelnIk1avI0h60uyksGGJ3sHaxc1dA4JNPKoVrxMfW6X4/Avu02AflmedIR
+X-Gm-Message-State: AOJu0YztGjGM2VRhN3MhICE9iAbsKOuwbL1srgQTVKA+7M/fNNriGqjd
+	1ddbdDF3TSHgA3tDqfNHng3lHjgVYxytWxNY2DRAmEZVA/bU9jDOacptxz6v
+X-Google-Smtp-Source: AGHT+IFosWR7zkd7jgDT2HviKT6vEjybZ5RhsLylZWQSu4p1a07i1ADAXGsNcDrKZxIxqrj/LlkKPw==
+X-Received: by 2002:a05:6a20:96c8:b0:1c8:d7b7:dcbd with SMTP id adf61e73a8af0-1c8d7b7dcf2mr2811688637.1.1723543399534;
+        Tue, 13 Aug 2024 03:03:19 -0700 (PDT)
+Received: from localhost (0.223.81.34.bc.googleusercontent.com. [34.81.223.0])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-7c697a549d8sm944650a12.67.2024.08.13.03.03.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Aug 2024 03:03:18 -0700 (PDT)
+From: Takaya Saeki <takayas@chromium.org>
+To: Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Junichi Uekawa <uekawa@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Takaya Saeki <takayas@chromium.org>
+Subject: [PATCH v3] filemap: add trace events for get_pages, map_pages, and fault
+Date: Tue, 13 Aug 2024 10:03:12 +0000
+Message-ID: <20240813100312.3930505-1-takayas@chromium.org>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240805212536.2172174-1-almasrymina@google.com>
- <20240805212536.2172174-8-almasrymina@google.com> <20240806135924.5bb65ec7@kernel.org>
- <CAHS8izOA80dxpB9rzOwv7Oe_1w4A7vo5S3c3=uCES8TSnjyzpg@mail.gmail.com>
- <20240808192410.37a49724@kernel.org> <CAHS8izMH4UhD+UDYqMjt9d=gu-wpGPQBLyewzVrCWRyoVtQcgA@mail.gmail.com>
- <fc6a8f0a-cdb4-4705-a08f-7033ef15213e@gmail.com> <20240809205236.77c959b0@kernel.org>
- <CAHS8izOXwZS-8sfvn3DuT1XWhjc--7-ZLjr8rMn1XHr5F+ckbA@mail.gmail.com>
- <48f3a61f-9e04-4755-b50c-8fae6e6112eb@gmail.com> <20240812105732.5d2845e4@kernel.org>
- <7e2ffe62-032a-4c5e-953b-b7117ab076be@gmail.com> <71260e3c-dee4-4bf0-b257-cdabd8cff3f1@gmail.com>
- <20240812171548.509ca539@kernel.org> <CAHS8izPyGwe_i4eNemW+A+MgMVHqJ0fdp=+-ju2ynqgc0mb_Ow@mail.gmail.com>
-In-Reply-To: <CAHS8izPyGwe_i4eNemW+A+MgMVHqJ0fdp=+-ju2ynqgc0mb_Ow@mail.gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 13 Aug 2024 05:03:33 -0400
-Message-ID: <CAHS8izM=d9pe0V3BWAY_gguNGymdc4DSFAz0DWyCMoGX6QVhDw@mail.gmail.com>
-Subject: Re: [PATCH net-next v18 07/14] memory-provider: dmabuf devmem memory provider
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 13, 2024 at 4:39=E2=80=AFAM Mina Almasry <almasrymina@google.co=
-m> wrote:
->
-> On Mon, Aug 12, 2024 at 8:15=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> =
-wrote:
-> > BTW, Mina, the core should probably also check that XDP isn't installed
-> > before / while the netmem is bound to a queue.
->
-> Sorry if noob question, but what is the proper check for this? I tried
-> adding this to net_devmem_bind_dmabuf_to_queue():
->
-> if (xdp_rxq_info_is_reg(&rxq->xdp_rxq))
->                  return -EEXIST;
->
-> But quickly found out that in  netif_alloc_rx_queues() we initialize
-> all the rxq->xdp_rxq to state REGISTERED regardless whether xdp is
-> installed or not, so this check actually fails.
->
-> Worthy of note is that GVE holds an instance of xdp_rxq_info in
-> gve_rx_ring, and seems to use that for its xdp information, not the
-> one that hangs off of netdev_rx_queue in core.
->
+To allow precise tracking of page caches accessed, add new tracepoints
+that trigger when a process actually accesses them.
 
-To elaborate further, in order to disable binding dmabuf and XDP on
-the same rx queue for GVE, AFAIT the check would need to be inside of
-GVE. Inside of GVE I'd check if gve_priv->xdp_prog is installed, and
-check if the gve_rx_ring->xdp_info is registered. If so, then the rx
-queue is XDP enabled, and should not be bound to dmabuf. I think that
-would work.
+The ureadahead program used by ChromeOS traces the disk access of
+programs as they start up at boot up. It uses mincore(2) or the
+'mm_filemap_add_to_page_cache' trace event to accomplish this. It stores
+this information in a "pack" file and on subsequent boots, it will read
+the pack file and call readahead(2) on the information so that disk
+storage can be loaded into RAM before the applications actually need it.
 
-At the moment I can't think of a check inside of core that would be
-compatible with GVE, but above you clearly are specifically asking for
-a check in core. Any pointers to what you have in mind would be
-appreciated here, but I'll try to take a deeper look.
+A problem we see is that due to the kernel's readahead algorithm that
+can aggressively pull in more data than needed (to try and accomplish
+the same goal) and this data is also recorded. The end result is that
+the pack file contains a lot of pages on disk that are never actually
+used. Calling readahead(2) on these unused pages can slow down the
+system boot up times.
 
-> Additionally, my understanding of XDP is limited, but why do we want
-> to disable it? My understanding is that XDP is a kernel bypass that
-> hands the data directly to userspace. In theory at least there should
-> be no issue binding dmabuf to a queue, then getting the data in the
-> queue via an XDP program instead of via TCP sockets or io uring. Is
-> there some fundamental reason why dmabuf and XDP are incompatible?
->
-> --
-> Thanks,
-> Mina
+To solve this, add 3 new trace events, get_pages, map_pages, and fault.
+These will be used to trace the pages are not only pulled in from disk,
+but are actually used by the application. Only those pages will be
+stored in the pack file, and this helps out the performance of boot up.
 
+With the combination of these 3 new trace events and
+mm_filemap_add_to_page_cache, we observed a reduction in the pack file
+by 7.3% - 20% on ChromeOS varying by device.
 
+Signed-off-by: Takaya Saeki <takayas@chromium.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changelog between v3 and v2
+- Use a range notation in the printf format 
 
---=20
-Thanks,
-Mina
+Changelog between v2 and v1
+- Fix a file offset type usage by casting pgoff_t to loff_t
+- Fix format string of dev and inode
+
+ include/trace/events/filemap.h | 84 ++++++++++++++++++++++++++++++++++
+ mm/filemap.c                   |  4 ++
+ 2 files changed, 88 insertions(+)
+
+V2:https://lore.kernel.org/all/20240620161903.3176859-1-takayas@chromium.org/
+V1:https://lore.kernel.org/all/20240618093656.1944210-1-takayas@chromium.org/
+
+diff --git a/include/trace/events/filemap.h b/include/trace/events/filemap.h
+index 46c89c1e460c..f48fe637bfd2 100644
+--- a/include/trace/events/filemap.h
++++ b/include/trace/events/filemap.h
+@@ -56,6 +56,90 @@ DEFINE_EVENT(mm_filemap_op_page_cache, mm_filemap_add_to_page_cache,
+ 	TP_ARGS(folio)
+ 	);
+ 
++DECLARE_EVENT_CLASS(mm_filemap_op_page_cache_range,
++
++	TP_PROTO(
++		struct address_space *mapping,
++		pgoff_t index,
++		pgoff_t last_index
++	),
++
++	TP_ARGS(mapping, index, last_index),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, i_ino)
++		__field(dev_t, s_dev)
++		__field(unsigned long, index)
++		__field(unsigned long, last_index)
++	),
++
++	TP_fast_assign(
++		__entry->i_ino = mapping->host->i_ino;
++		if (mapping->host->i_sb)
++			__entry->s_dev =
++				mapping->host->i_sb->s_dev;
++		else
++			__entry->s_dev = mapping->host->i_rdev;
++		__entry->index = index;
++		__entry->last_index = last_index;
++	),
++
++	TP_printk(
++		"dev=%d:%d ino=%lx ofs=%lld-%lld",
++		MAJOR(__entry->s_dev),
++		MINOR(__entry->s_dev), __entry->i_ino,
++		((loff_t)__entry->index) << PAGE_SHIFT,
++		((((loff_t)__entry->last_index + 1) << PAGE_SHIFT) - 1)
++	)
++);
++
++DEFINE_EVENT(mm_filemap_op_page_cache_range, mm_filemap_get_pages,
++	TP_PROTO(
++		struct address_space *mapping,
++		pgoff_t index,
++		pgoff_t last_index
++	),
++	TP_ARGS(mapping, index, last_index)
++);
++
++DEFINE_EVENT(mm_filemap_op_page_cache_range, mm_filemap_map_pages,
++	TP_PROTO(
++		struct address_space *mapping,
++		pgoff_t index,
++		pgoff_t last_index
++	),
++	TP_ARGS(mapping, index, last_index)
++);
++
++TRACE_EVENT(mm_filemap_fault,
++	TP_PROTO(struct address_space *mapping, pgoff_t index),
++
++	TP_ARGS(mapping, index),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, i_ino)
++		__field(dev_t, s_dev)
++		__field(unsigned long, index)
++	),
++
++	TP_fast_assign(
++		__entry->i_ino = mapping->host->i_ino;
++		if (mapping->host->i_sb)
++			__entry->s_dev =
++				mapping->host->i_sb->s_dev;
++		else
++			__entry->s_dev = mapping->host->i_rdev;
++		__entry->index = index;
++	),
++
++	TP_printk(
++		"dev=%d:%d ino=%lx ofs=%lld",
++		MAJOR(__entry->s_dev),
++		MINOR(__entry->s_dev), __entry->i_ino,
++		((loff_t)__entry->index) << PAGE_SHIFT
++	)
++);
++
+ TRACE_EVENT(filemap_set_wb_err,
+ 		TP_PROTO(struct address_space *mapping, errseq_t eseq),
+ 
+diff --git a/mm/filemap.c b/mm/filemap.c
+index d62150418b91..925eef5e16f0 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2556,6 +2556,7 @@ static int filemap_get_pages(struct kiocb *iocb, size_t count,
+ 			goto err;
+ 	}
+ 
++	trace_mm_filemap_get_pages(mapping, index, last_index);
+ 	return 0;
+ err:
+ 	if (err < 0)
+@@ -3287,6 +3288,8 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+ 	if (unlikely(index >= max_idx))
+ 		return VM_FAULT_SIGBUS;
+ 
++	trace_mm_filemap_fault(mapping, index);
++
+ 	/*
+ 	 * Do we have something in the page cache already?
+ 	 */
+@@ -3653,6 +3656,7 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
+ 	} while ((folio = next_uptodate_folio(&xas, mapping, end_pgoff)) != NULL);
+ 	add_mm_counter(vma->vm_mm, folio_type, rss);
+ 	pte_unmap_unlock(vmf->pte, vmf->ptl);
++	trace_mm_filemap_map_pages(mapping, start_pgoff, end_pgoff);
+ out:
+ 	rcu_read_unlock();
+ 
+-- 
+2.46.0.76.ge559c4bf1a-goog
+
