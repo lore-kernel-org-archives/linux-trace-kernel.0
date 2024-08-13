@@ -1,67 +1,68 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA21364A4;
-	Tue, 13 Aug 2024 06:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A09A3218B;
+	Tue, 13 Aug 2024 06:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723529262; cv=none; b=nbZUFinBrmPJHGTWyORZBEi47tcM73WVn4b+uS39b9qQtrsSTx6GRgtBQETxplTb0LxveLv0b+BsYuoGxKzVxz24WKCEB88uHpF+YbWjP9dJn8umAD55ksKoSyFWtiGFXo/QmA3g0EOMmQB0z7wFQ6GapPgxVBNNrcioRwHD1WM=
+	t=1723529890; cv=none; b=S8ivkWZCnto4QVfnSfdWL+CV7xngqbobexNdw/xILruNoGeajsMSj4gaDvSytyD450yZNHVlRCGDD11qrc9Hg1q0hplhb4ibWBxvFMK7wDTpW4zQ7U+4c3rE+GCAoDqYvNT3GyZm0dG/Nv9Uu0QRjNMx6f6BH7A5CP0FzzTqWxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723529262; c=relaxed/simple;
-	bh=TJoSsv5ABYblOjpvDjHqYsTixnzTW1adFMkqtMzggNc=;
+	s=arc-20240116; t=1723529890; c=relaxed/simple;
+	bh=/Ei6GoN2hxx7Ohgs4IlFABwqjL70ijI6xfsf2Q/iUHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTOl1+8tNCkmXiapnNuEawD2iveL7tXuHqbPVr12++GlhLlJ6gf4CAWF4jSPberZpfRCWvy16VBe2CTgbmQwHq6dSAyBgy1joclhYu//TGTKi44EU/U2YQtxWhqlTtowx74tH/pUrAgTxhtkYhzkL7xpEW755IiB860gQtiZuQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cBnUvDV7; arc=none smtp.client-ip=209.85.218.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=pt2sHIrpjIWBDlUBr26F/rkovVshtSrulssjunvNutn6KKVG4m+R090NjAOflm8ashQe/7JAepwn2D2MQtgLB2cShPng863HXHLZbAcu0I4KaPpVYf1UfgIQIV+yjCxIWDjZV/+qoX7O1mEUIyBqRmdPXKtvLSq3tNhaS1sEZJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dpp8QfbE; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBnUvDV7"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a80eab3945eso113604866b.1;
-        Mon, 12 Aug 2024 23:07:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpp8QfbE"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a7aac70e30dso568704666b.1;
+        Mon, 12 Aug 2024 23:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723529259; x=1724134059; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723529887; x=1724134687; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O6W3pizzixO+op8gso/0Y0Z2ApdaicAeVY96VNeWzoo=;
-        b=cBnUvDV7zTmita6Xc8eRkCikwsM8bB+dTucCDBQjaL8X8xcCis8CiSzarlYSsMd4T/
-         mLZhSnEed4cF0W14k47PAYNXaCM4UFnhbu8saKBkZivfgNlc+BeYBqWyRQbJyGtZ6Jwl
-         OlFyUYfsbr2Z5KgBv9kq2X7wQMd67ASTCGLORJvzohIgVD7Szxz3ZkqN6277A3XrlrgE
-         8s4y+33ymslYtrP4TizhOgKIstb0OETtoX0dws+jhxw/hW5T4jZFw3xxA2zyTwu7fdCt
-         6c5zvUVlGpXfiYHzW2CcmMcfRVjWbLV58IrrAWaWASelVO8Ro7yiZZxhMz7+OUMaqGCP
-         6WIQ==
+        bh=16pKIYRPYzAZ2cVZGoDKE+g4e+Tu4+gU68ARoHo8H9E=;
+        b=dpp8QfbE/rcdScINSvN4mH2meYoq5Hi2KZ7iW2ejFUz18kesvv1dGXcZlCZFG8XeHy
+         fDxTtQ0ReAZE3mce3iOf9YBVPvjDYWEo/W5FBJT38zpDvROGLd2UAIZHPr7T2jGPq7fv
+         +1mx2NTrdTq8l/GySOTz0e7iVNtG92OqYet0TmWURBFeubOV1S8oxBY9PMxEUpnJSc/V
+         hHWcBS3L3zUZywQIEM3NM+lGoqqctYEknSAnZu/I8MVLTSw/Y+jxn5tI4CjB/vzyZlSD
+         Ac5k5g/n4OxNxNxo5hGBSfJOBNuN5F7QyBPumactwzPPgOIIlRZkNFbJOTVfRHnZYKEN
+         GjmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723529259; x=1724134059;
+        d=1e100.net; s=20230601; t=1723529887; x=1724134687;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O6W3pizzixO+op8gso/0Y0Z2ApdaicAeVY96VNeWzoo=;
-        b=df5mpGgtozftndp2FcCLXS0YM6e6wb/IH2Vv82XK5ODXzBC0j403YZwihCGqq27HX6
-         SGDuFom+Ar8jwNKXV5lp7beShK1h3e9B+pIOCRArriFYvbabByTBNAKhyUpcoADAd7a0
-         bZvrm5/WaAJIJlIHmxBtLwvrkgJAO5pGQmsyAawVLq9xKIIN/ethHewYCrjwhzPAjPem
-         T0g4X0UrDa7YehvFYwLEKqN9fDTaa6XEvdNCr4aEVwlQG/RFPzO9CypyhBWZNH+KdNe6
-         Kj0XWGJvXp9D9CFnys59xpFYcifYkgDT7A2nXGY6eu5d0jP7NhKdipBCpaeGYSk7qpU4
-         Su9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVo8fMIPmtb7Q/EFqyC/Ic26yR1lgyzvQ5GqoyKVLi4RvAj8MSNNA9gDKpx41czTiujF70AYbhdbEZm5lntIepdt0ovfSzwnNrOlbgL2+slxoLvVr2SlL5/UbDg0nJkT4PV
-X-Gm-Message-State: AOJu0Yx8YeHCijixw9Ne0b+D0g3jVdGSIoONVSARZpNFqrWSwUUD8HmS
-	5SQlqXs5MOGHm5MzEG8dscKCQUzqlt93OFFKkKSPNpgjtEMyQ2SI
-X-Google-Smtp-Source: AGHT+IHTWcWRM+Y+tscS4yq8v9ySddW6y+BenvpTNTo7KMVI9XXYGRGZ7LJZc3rJYGFBHxCbukOLZg==
-X-Received: by 2002:a17:907:7fa1:b0:a6f:4fc8:266b with SMTP id a640c23a62f3a-a80ed1b598emr188899766b.3.1723529258931;
-        Mon, 12 Aug 2024 23:07:38 -0700 (PDT)
+        bh=16pKIYRPYzAZ2cVZGoDKE+g4e+Tu4+gU68ARoHo8H9E=;
+        b=BuLwvI4TpX7fi16MdbHeo1XU2Ug8foi5SlZsHWIxQZM5dooz3FCvYyf6avDrFVPVvq
+         s85G05mL2nOxkivBkAavLTaoddO4qrRwM8fdhrboCE0sF7eV0HkXsixMzafhw/9BbUD/
+         v9H6CSYHhOYrvMaVpphAt//f00mNyNFa8aCEFGJULUd3vis8VRdq4hsB42eFNitoAgwU
+         7etPrGBCaAwtjW4J2bPNLw8ByioVxz9hZjGeIacEPgTdcxcj53EEgsq4tTIQZDMCsWIQ
+         2RftzEX1DsjDK14AiAfzVD4lrt43fXBEGdj1qRjsh7pb/CFB/VFe2fm7+APaXwmtG3BD
+         mjmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcA1AWhoMw5COms2fL9gAOpTuQbzVWYdHB14TbJMoeelH+EXH0JULvPvUE9D3JPYmBgEBL0DbzvjubL87RkyDzs+tamdkTPg8eX4AsEhbR6LOK3ZqvptsNeIJOzZif/0WQ
+X-Gm-Message-State: AOJu0YzzPVostkixM8dUB5k2v2GiGXAbM/9m6ntdMo+JP1mqGY43O6GK
+	2cxhK3MdMpfhvimESSJhsXIaNHb+eaR7bSrrL6Oz4k87Bu9MxWpd
+X-Google-Smtp-Source: AGHT+IFgZG9it8OjdYZb1L8HgN1g3Lf1MfTdxpAh434F1nFJT65wNOswN2hy9m/9TLGYCshL1AT9Rg==
+X-Received: by 2002:a17:907:7d8c:b0:a7a:91e0:5f1b with SMTP id a640c23a62f3a-a80ed2dc9c4mr166308266b.68.1723529886757;
+        Mon, 12 Aug 2024 23:18:06 -0700 (PDT)
 Received: from f (cst-prg-84-71.cust.vodafone.cz. [46.135.84.71])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80f414e4b6sm39584766b.151.2024.08.12.23.07.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80f4183aa5sm40432566b.211.2024.08.12.23.18.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Aug 2024 23:07:38 -0700 (PDT)
-Date: Tue, 13 Aug 2024 08:07:27 +0200
+        Mon, 12 Aug 2024 23:18:06 -0700 (PDT)
+Date: Tue, 13 Aug 2024 08:17:57 +0200
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: Andrii Nakryiko <andrii@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, 
 	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, 
 	surenb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org
-Subject: Re: [PATCH RFC v3 12/13] mm: add SLAB_TYPESAFE_BY_RCU to files_cache
-Message-ID: <jdsuyu4ny4bzpzncyhuc54vqmnxb6wsshvnvd6eat4cknoxvqd@g4mrvwiokb2d>
+Subject: Re: [PATCH RFC v3 13/13] uprobes: add speculative lockless VMA to
+ inode resolution
+Message-ID: <7byqni7pmnufzjj73eqee2hvpk47tzgwot32gez3lb2u5lucs2@5m7dvjrvtmv2>
 References: <20240813042917.506057-1-andrii@kernel.org>
- <20240813042917.506057-13-andrii@kernel.org>
+ <20240813042917.506057-14-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,47 +71,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240813042917.506057-13-andrii@kernel.org>
+In-Reply-To: <20240813042917.506057-14-andrii@kernel.org>
 
-On Mon, Aug 12, 2024 at 09:29:16PM -0700, Andrii Nakryiko wrote:
-> Add RCU protection for file struct's backing memory by adding
-> SLAB_TYPESAFE_BY_RCU flag to files_cachep. This will allow to locklessly
-> access struct file's fields under RCU lock protection without having to
-> take much more expensive and contended locks.
+On Mon, Aug 12, 2024 at 09:29:17PM -0700, Andrii Nakryiko wrote:
+> Now that files_cachep is SLAB_TYPESAFE_BY_RCU, we can safely access
+> vma->vm_file->f_inode lockless only under rcu_read_lock() protection,
+> attempting uprobe look up speculatively.
 > 
-> This is going to be used for lockless uprobe look up in the next patch.
+> We rely on newly added mmap_lock_speculation_{start,end}() helpers to
+> validate that mm_struct stays intact for entire duration of this
+> speculation. If not, we fall back to mmap_lock-protected lookup.
 > 
-> Suggested-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  kernel/fork.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> This allows to avoid contention on mmap_lock in absolutely majority of
+> cases, nicely improving uprobe/uretprobe scalability.
 > 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 76ebafb956a6..91ecc32a491c 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -3157,8 +3157,8 @@ void __init proc_caches_init(void)
->  			NULL);
->  	files_cachep = kmem_cache_create("files_cache",
->  			sizeof(struct files_struct), 0,
-> -			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
-> -			NULL);
-> +			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
-> +			SLAB_ACCOUNT, NULL);
->  	fs_cachep = kmem_cache_create("fs_cache",
->  			sizeof(struct fs_struct), 0,
->  			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
 
-Did you mean to add it to the cache backing 'struct file' allocations?
+Here I have to admit to being mostly ignorant about the mm, so bear with
+me. :>
 
-That cache is created in fs/file_table.c and already has the flag:
-        filp_cachep = kmem_cache_create("filp", sizeof(struct file), 0,
-                                SLAB_TYPESAFE_BY_RCU | SLAB_HWCACHE_ALIGN |
-                                SLAB_PANIC | SLAB_ACCOUNT, NULL);
+I note the result of find_active_uprobe_speculative is immediately stale
+in face of modifications.
 
-The cache you are modifying in this patch contains the fd array et al
-and is of no consequence to "uprobes: add speculative lockless VMA to
-inode resolution".
+The thing I'm after is that the mmap_lock_speculation business adds
+overhead on archs where a release fence is not a de facto nop and I
+don't believe the commit message justifies it. Definitely a bummer to
+add merely it for uprobes. If there are bigger plans concerning it
+that's a different story of course.
 
-iow this patch needs to be dropped
+With this in mind I have to ask if instead you could perhaps get away
+with the already present per-vma sequence counter?
