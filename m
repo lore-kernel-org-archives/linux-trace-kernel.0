@@ -1,80 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF5919AD97;
-	Tue, 13 Aug 2024 12:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517AF199E82;
+	Tue, 13 Aug 2024 13:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723553977; cv=none; b=Q00B2uhoPp8wAgNKh87x18fbUPQX2EsJaRlulqBPJQtrGUIAV/BwcHaR9fEVFZiooiEVxM9nZYpUbnAqDw1JP0OqgFnJHglcxIu6vVQwvNSTvI9azoSBYbBhJSo7L9uJLysnn5CxNOg7JPpiwnbFgFug9vHLYo3mC8oxuZ+dLF8=
+	t=1723555721; cv=none; b=rvgNRmnJPdZoKnwudzLScKf2+ObUCqSJTynsoPN5o7o3mP8R6dlRq5dOq2PI7/mxPZ+lGKXEadtsDeaTSaJ05ISIpQV8zujbsa0Fkw3v+osPag2wmtV210GJjo3MxHK3iawF0F3Vo4PyZP7ZSv0PuNqdRDpFYQu9iLWz5ky/60k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723553977; c=relaxed/simple;
-	bh=FBnPKp/Sfb0dMuen8B5ZicK/kINmYY9a4pZ7ojCdmUs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=j+qLBXv9qEiZqKzEco2agNNgCjWtP+t0J0nolMlMwZSJoPFAY16Qf1YwrzYMet6v6kljnCnr/HeCxNrpCRVLAPqyflWtI9JjU4Ebb7ZDKRCdDPT0MXGTKU7/VsuyVgSi5SMEGq0xp8OmWc4yLuEylt10HrhhrdjiWdDu0zPFjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg57j4bH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723555721; c=relaxed/simple;
+	bh=omIJfKYw2egwVmf5lbet99q1zMk5J+CI0zdkAO5zrK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SpubVeGWHIIYpvej4gGHB01I18nshblMMF6PJTpygbUiRzndiBbCZaC+BrbZ0d3TGeShQAW01f9cAJQOCqt0l/JI21ZIP7QVGfbnqsUuHill8R8fhmxmf17GsNU0dh4gS/VDBvxBwqc9Djk5Joj2zn/a86obcCT3fbAWZ52V0h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HHrOXJtn; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg57j4bH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 602EFC4AF0B;
-	Tue, 13 Aug 2024 12:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723553977;
-	bh=FBnPKp/Sfb0dMuen8B5ZicK/kINmYY9a4pZ7ojCdmUs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pg57j4bHDYZnvfDOpaB+yXdwGdeZYEXBLkiU5UIR3WYMyq5UsWNp8ej62eEm3RwOT
-	 4fCQr96XJ20UquGkBggvppDZgNEL6lfGVLNTkFFFln/ZurL8WvJwjcyFPCXmLVyA4z
-	 whibcX/j58SvV7z8mBHeEGukxGDtbVTBFqxTNxLWW4rmtTbl+g7xbut8TWpv+FW6Zn
-	 3jYMKITa5TDAYYIyQDtk9pEyfDnMswDEw4GRm68j4opLh73LVVTFouuteMmnf3JPKZ
-	 Nk0jX/ORLyfpq4v7npU3hd8yn7LrDI4Jvi/znzIov/upnHhmUyo/Q9wyezsO1eI7i+
-	 MbB6LF+seiY0g==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Andy Chiu <andy.chiu@sifive.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li
- <zong.li@sifive.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
- <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, Puranjay Mohan <puranjay@kernel.org>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Andy Chiu <andy.chiu@sifive.com>
-Subject: Re: [PATCH v2 3/6] riscv: ftrace: prepare ftrace for atomic code
- patching
-In-Reply-To: <20240628-dev-andyc-dyn-ftrace-v4-v2-3-1e5f4cb1f049@sifive.com>
-References: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
- <20240628-dev-andyc-dyn-ftrace-v4-v2-3-1e5f4cb1f049@sifive.com>
-Date: Tue, 13 Aug 2024 14:59:33 +0200
-Message-ID: <87wmkk8toq.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHrOXJtn"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52f04b3cb33so10999810e87.0;
+        Tue, 13 Aug 2024 06:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723555718; x=1724160518; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ufyp1YewT3UBL0l7saBKEpm/91exDWMVMxtzbazdbk=;
+        b=HHrOXJtnk7QrSqaFPrJ0Z4+ViYCCL/W39WD9LhtTV3KY+wupbYlqtevnjpIDAD0yPO
+         K5+I4vqy/abWFDStZ8NCUf+I3HL++KkYr4iNFhsr+bKBaeR70CWGLhWLzhfeC/fI81M+
+         ss0ZR3bnsm2ilH5E8HHeUUwOQkTyxAQtsZ8ZpeCirKsP+VGJ1DHFUfccrtwXO09/VAT8
+         rN8onsY0duyWV8iMaw1isss04lUMZGW0v1Vzosy/jt9Ssl5ix6V8b2vcZDdHndTBImT+
+         CgIZaH6bpDO75KtWFLo+S+KU3yObuE9G650RZhhemQIocoCPcwtJrJLVCUdLNsIwajPO
+         Drng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723555718; x=1724160518;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+ufyp1YewT3UBL0l7saBKEpm/91exDWMVMxtzbazdbk=;
+        b=tyfCbnjxWpF4DHqv/YQ1SZpwxS3bAye/iRsc5iAG0gvukma6i1f5iSsE/kWs6E2dgD
+         Pl7MfxGVIQvT222o+xnrPykh2tDDSIduvlqxUWpBoRepf+ec5LEy1XynEyUuA5Ei8asQ
+         /5lLWz+PzW2PMgSrnYJKMUdJmSit7/tOqkGjG54DJ3Sluz19/1312OU/pb7EADsXJ2U9
+         0eCUQJLBLe53G5jdtBVnSgkahf7vkcR6ock+OlYSAmIyrSnqw9DmOGUm4VZCbhJJvmph
+         YLH65wq/GqCQWnYjvZ2ealIBuLLwEJuxuqJGlG67MlcEz+4Z8a28CLULolrywxvwsEh1
+         66qg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCVzRhl2NUeUN+4V5aCLXgKXMNUZhb1pSGeSbqK1X/xeukuTwD7pkDP3BQlyNcOuwRtU7bbV4ntiJ1BhvCVjmam9i9EUMhCmdjI6RE7BL3UVSVVWg3Y8DoEmYmhu/rd5wUcdda7xZQ
+X-Gm-Message-State: AOJu0YwtJ0l2c41cKff1/dF97v21dJmUGwSJ296c6RFkoWSncQeES7k0
+	E8glrXgVsl+TJMnXpyLuQTTj+keg92Sve7fgmDKjXp5sJEHe6Hzy
+X-Google-Smtp-Source: AGHT+IHbsSgAHK1PYVI2pml4zpwK340pt4pevStZqO5NlzVhCEcDUHLi5mX6a7F3DIgVXMu0YR0MQw==
+X-Received: by 2002:a05:6512:114c:b0:530:ad8d:dcdb with SMTP id 2adb3069b0e04-53213653341mr3033154e87.19.1723555717803;
+        Tue, 13 Aug 2024 06:28:37 -0700 (PDT)
+Received: from lenovo.homenet.telecomitalia.it (host-79-17-17-86.retail.telecomitalia.it. [79.17.17.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80f414afe2sm70426766b.144.2024.08.13.06.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2024 06:28:37 -0700 (PDT)
+From: Matteo Croce <technoboy85@gmail.com>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Matteo Croce <teknoraver@meta.com>
+Subject: [PATCH bpf-next v5 0/2] bpf: enable some functions in cgroup programs
+Date: Tue, 13 Aug 2024 15:28:29 +0200
+Message-ID: <20240813132831.184362-1-technoboy85@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Andy Chiu <andy.chiu@sifive.com> writes:
+From: Matteo Croce <teknoraver@meta.com>
 
-> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
-> instruction fetch can break down to 4 byte at a time, it is impossible
-> to update two instructions without a race. In order to mitigate it, we
-> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
-> patching can change NOP4 to JALR to eable/disable ftrcae from a
-                                      enable        ftrace
+Enable some BPF kfuncs and the helper bpf_current_task_under_cgroup()
+for program types BPF_CGROUP_*.
+These will be used by systemd-networkd:
+https://github.com/systemd/systemd/pull/32212
 
-> function. This limits the reach of each ftrace entry to +-2KB displacing
-> from ftrace_caller.
->
-> Starting from the trampoline, we add a level of indirection for it to
-> reach ftrace caller target. Now, it loads the target address from a
-> memory location, then perform the jump. This enable the kernel to update
-> the target atomically.
+v4->v5:
+Same code, but v4 had an old cover letter
 
-The +-2K limit is for direct calls, right?
+v3->v4:
+Reset all the acked-by tags because the code changed a bit.
 
-...and this I would say breaks DIRECT_CALLS (which should be implemented
-using call_ops later)?
+Signed-off-by: Matteo Croce <teknoraver@meta.com>
 
+Matteo Croce (2):
+  bpf: enable generic kfuncs for BPF_CGROUP_* programs
+  bpf: allow bpf_current_task_under_cgroup() with BPF_CGROUP_*
 
-Bj=C3=B6rn
+ include/linux/bpf.h      |  1 +
+ kernel/bpf/btf.c         |  8 ++++++--
+ kernel/bpf/cgroup.c      |  2 ++
+ kernel/bpf/helpers.c     | 29 +++++++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c | 23 -----------------------
+ 5 files changed, 38 insertions(+), 25 deletions(-)
+
+-- 
+2.46.0
+
