@@ -1,295 +1,210 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C1A1AE86D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 21:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723583632; cv=none; b=M7iFhiJHoukEC0MUfL/Yo6kLlhWAQ9ahAVcajuByMowBSx+ofHhxPP+fWaehLAknI7jYIscPEiodvuhVKV19lz2zZNn3PmwwqeiXvlNVUP6lBZT8tIY7mKDYvQ7JD8+tQDZX4QY+gBX+8Ydd1iKm6vHYuxUvrv4Va+NBC/fTgPI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723583632; c=relaxed/simple;
-	bh=e4G5JvNaur+zqHlm2owDRW9K+aQAG/77haI5TcQ7l1w=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YJ5xaF0xgUBoy/lsfTPCoAyhM3DodEe4GRI8OaZQdLc79YhRAXMOdv2lHgWyOjsG1Gd6UI4RHJ83NHLQ3IO5b/AsosllXmv86o0pf+GuFFTRa7UFQ1vlYPbRpxVr6RgqkxoZOnnCl5UTxnjLHxVchhOWGbiiQFN1std0f9ZSeOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uo3f19j/; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7751AC44E;
+	Tue, 13 Aug 2024 21:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723583750; cv=fail; b=N71hEqvY1s95XyBbbza6UIuYBD9Js1YOOX75wU7/n9jIWxsbQBq+Pprkoab0iH7H+6qMzzXyFEgBMiUZ9i42NgdSsmLYI/W+cNQqbKpRSkw8IRkOe6KXZXIbk0aqnvb0c+Ipqz1tqyghTIgB4w+v+6BcUyAx6muwo0ZUGq8LNbo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723583750; c=relaxed/simple;
+	bh=N1D1MmZD9EviwzufyDjFcqwnk7npIIIeLDc7JtuiqRA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WFVdvM+lxAPfrWZDJybdF/O597oi3OxoUs6ZeTqGnYnjUunxokvsqbXLYfEZpkDezrtUOru1czoEubFwfIG8vfy+46Jjb8WjBPv/87DXVgUm7sZfKwI2BUSgp5ees/lsNZc0Zy46ZLYYN/wvMFy4tC/BrWKl8qolvmW5n3U83WQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=jsThv5IQ; arc=fail smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uo3f19j/"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-66b3b4415c7so128289167b3.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 14:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723583625; x=1724188425; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vVCV87jZy8PxhPLAls7YmMLOhmnFqtjE+KOvYzSFbII=;
-        b=Uo3f19j/2YevWTLyJx+U4ptOWemBHxZhbHNlUldnIxzQqWpv8YNqeUtBICQn07gDIj
-         jPciVtfD9AqyGvWJRPB9P796PF13EKIrIby3FiIkYo0dvQPIPu/vdUouljFTXgpSccZt
-         BRYt/xLhYPpCeFM9SF+xMf8Lir/HKgefOOWRZw1Dzs0hfD0IVLs6Yl8QshETJCLOOeL7
-         NUX22F693WMmIYW3QnH5IJDIkh9EoffIYxeHosKk3dvIvGIvlEJnzX2N/+ZVgZWzXZXb
-         5ByP0EPKuVbsX7wToIKmrYCfRI800EmOWvd80L32e8v1A+A8bgp8XX8DaG79Pk4y2459
-         ovDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723583625; x=1724188425;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vVCV87jZy8PxhPLAls7YmMLOhmnFqtjE+KOvYzSFbII=;
-        b=SAFNTLG5OuPzDtDALA597p5t/ASINQZc86ldP6l1LTL5o+6WzzipA2am5VM5KKKkWI
-         yFcjHRCB+dDfCZ4PUrTyXzscquvBQLC2hDCkvSZPebaKgtWjKEka9sp56JTPmtzd4QZQ
-         bJ5HkAkh8/+xwgBMtUwAq4eFr6C7qHg33mKJsvIb9aorY8tnRS77tlhomrsg0R7x8gbn
-         lSEV68dxZ5Y4SNqm0Qxu38lwIsqSXXBShNPiPTagnG7fewJniZ9QWuDWe5B/lcMVB9G9
-         zW7aWHrH/O6B+LTavGKdJ7Z372pmhrRlQOSvpp4yQFBGmRXbn4uVc7fbRX1QidzUXWdT
-         W3xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbhQaWaZva/b+AGxNKRKG/knbUF1D3VOU9B7t/6XzKu0OjjuB5IDS6bqWb1jWNyQvm2y2NuqymwUyvHqRM2wH1fT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwfA9SqlfX4k3yTlXTsfu+U3VljMW3MG3IOdpFt0WcYKdNNEMK
-	fq8BXDLieDzG86OOW5SgGiU5ynxH9Nbzhlct5oYzOFQF7y/7xrF0J+ORQI6IXnF3xVnxfwiJzDF
-	KHdMb8rGSpKDgyKbTaaxJjA==
-X-Google-Smtp-Source: AGHT+IEUS873qk8VJeJaElarGm2oSh0h5cRThNQuqxPVzKK1sq1PaPCKqLN7RDPePKRRnOoG+C0KKCx0gcyeGVu8jA==
-X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
- (user=almasrymina job=sendgmr) by 2002:a81:e80a:0:b0:62c:f6fd:5401 with SMTP
- id 00721157ae682-6ac99fa910bmr65837b3.6.1723583624619; Tue, 13 Aug 2024
- 14:13:44 -0700 (PDT)
-Date: Tue, 13 Aug 2024 21:13:15 +0000
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="jsThv5IQ"
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47DLDxYI007436;
+	Tue, 13 Aug 2024 14:15:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
+	:to:cc:subject:date:message-id:references:in-reply-to
+	:content-type:content-id:content-transfer-encoding:mime-version;
+	 s=s2048-2021-q4; bh=N1D1MmZD9EviwzufyDjFcqwnk7npIIIeLDc7JtuiqRA
+	=; b=jsThv5IQyRLyt1IYQ8CohxLTeYtQhSnrys769sL0ccOubSy7UkoaAsLb4Oe
+	3upIS8gtfPEdYEKMySwGIrvFVFNcLLYmsnf0eJhIQ3qwjLjZSm1a6YaLMlSLvEqQ
+	yim0eAGZ7/ngTV+DV+Z4ZqKFBItN2+2PN6xaDmmf35AY9g9TnAS4xjRLfAmDcEG4
+	PUPLJ8n5aY49z0CrfEbbjzJsqQ0biaLNhdxnrMHnbEng8tPC34n8Jq62SE0ZtRGz
+	72L0y5kLgsIkrTt1mLNmRTHRvLA8fIMCc/andbH8uPSepfTkgPjw6ErO0e5TT4SP
+	eB5HancPalOaM4QAEA1pVdEWD8A==
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4103kcckas-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 14:15:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T96xDSBY8o4N9ZbBRpqIxnABye73G/QWX0S2FG4VeEJryCfpRUeY4a7inlkl1lCyViijCGgZGh/1d2Bztdy8Psy+sNXpSzJrwSFmixpP0fHEr5reUrGVHD1yOKgcJHF5JOjRPsWRiMT/lVRvkYcuQKbxT3WApz0yWKbxPXUm4djwt6Bf9ZPKwzjXCFCsyyvnoWxzr321ficN+0DTSgDUBLW0p99GHQMtHAk6H3WahAomhSuvotYbgxC1oMm9gShupgpt3NmSli1XcNwzh/c4h2T0RfTfYCmYNiL3sFdOnt9hx0y5iAr9uZQwITcvtEHJtQgi4GVXlQrsoWt1Q8dsZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N1D1MmZD9EviwzufyDjFcqwnk7npIIIeLDc7JtuiqRA=;
+ b=BFhTvTm08ZwAAAQKqxqLnNYggL77WGZ4dKpbRsEYhK6Mjclc1A5EyqHBtK31oDX1nMGOW6tBTdBTAPsRYx7lct7UKTbSkGRTPksM0MPD4L0HbW25nQBi/e57Vj6rCVY62MBQVLyJIZn5mcRHQNKDrgPp7i52RT5BZsEyqkJ10R4xgPLKEIqmjtdWGhV3Zp9FmhZHH3CUJ1D02ObxZHBKhboQjEKtGhcj6Z0SsCq6SNJjMi+srNJ/ETCJrNxoGNrxbtBBOYy1wH8MF49WVao6lH37Ft/wymaqoyTN+sin1CblG7AB6KsvqEnqm836FAOKR6Hg5l5lKaji009N3JXwig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from SA1PR15MB5109.namprd15.prod.outlook.com (2603:10b6:806:1dc::10)
+ by MW4PR15MB5160.namprd15.prod.outlook.com (2603:10b6:303:187::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.22; Tue, 13 Aug
+ 2024 21:15:44 +0000
+Received: from SA1PR15MB5109.namprd15.prod.outlook.com
+ ([fe80::662b:d7bd:ab1b:2610]) by SA1PR15MB5109.namprd15.prod.outlook.com
+ ([fe80::662b:d7bd:ab1b:2610%4]) with mapi id 15.20.7849.021; Tue, 13 Aug 2024
+ 21:15:43 +0000
+From: Song Liu <songliubraving@meta.com>
+To: Song Liu <song@kernel.org>
+CC: "live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
+        LKML
+	<linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org"
+	<linux-trace-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, Petr Mladek
+	<pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Nathan Chancellor
+	<nathan@kernel.org>,
+        "morbo@google.com" <morbo@google.com>,
+        Justin Stitt
+	<justinstitt@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Leizhen
+	<thunder.leizhen@huawei.com>,
+        "kees@kernel.org" <kees@kernel.org>,
+        Kernel
+ Team <kernel-team@meta.com>,
+        Matthew Maurer <mmaurer@google.com>,
+        Sami
+ Tolvanen <samitolvanen@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 1/2] kallsyms: Do not cleanup .llvm.<hash> suffix
+ before sorting symbols
+Thread-Topic: [PATCH v3 1/2] kallsyms: Do not cleanup .llvm.<hash> suffix
+ before sorting symbols
+Thread-Index: AQHa6RYWMtYCd61ONkGa/JznFx3CWLIlubGA
+Date: Tue, 13 Aug 2024 21:15:43 +0000
+Message-ID: <BE78D994-83E8-49E4-868E-8ECEDD39D580@fb.com>
+References: <20240807220513.3100483-1-song@kernel.org>
+ <20240807220513.3100483-2-song@kernel.org>
+In-Reply-To: <20240807220513.3100483-2-song@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: Apple Mail (2.3774.600.62)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR15MB5109:EE_|MW4PR15MB5160:EE_
+x-ms-office365-filtering-correlation-id: c870c3ad-182e-4c94-39ca-08dcbbdd1787
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UDZ2TDdHSlJSWkpham1FSldtY3RFSzA2T1NUUTk2cG9KaFhFV3dsRVQ3Yk8v?=
+ =?utf-8?B?cGR6WkxuTngzVWE1cmtSODVKS1M2L3UxZHlOVCsxbFYrU0tMU0dvQ3VpTDBV?=
+ =?utf-8?B?UU1uVjJDQS9ONDh4bE1WbVhKZVR2cW5lVHJoQ0Z2RG9YUWxMSXpqdkw4bU5I?=
+ =?utf-8?B?NHdwUVFVOUVCNi9Kak45ekJXT2w2ZFo5ek91SkhPWk5aaERqRjQ0cmwwL1ZL?=
+ =?utf-8?B?N2lzVWY5RW4rUkR6RFVzRDZ3YzVwOHAvYklqaEVBRkhWdGx0T2pjV0cwNlNM?=
+ =?utf-8?B?WksrQ3FUb1c4eVpXSlVralVNdktkS1JEVzNyQ21zandDVC9Qa0REUHcyYjg5?=
+ =?utf-8?B?c2dJd2ZCeldqa282cTNtL0FuN1ZFNzFNSGJ1WGpFSzRyTnh6R240amIzcUhH?=
+ =?utf-8?B?NXplYWtZcXFNaGF5emZXK2g1SlozQVNkY2tpWGhrdWc4WTRKMXdPVEQ1MGlh?=
+ =?utf-8?B?L0xlMWw2V09XaS8zczA2MkNtL1lCZkpXb2t1bitwdnd2Z3RKOW5PWmRwbkta?=
+ =?utf-8?B?bWc4UTY0NGNvVkR6RkNFVHJNTW9kYmZ2Y3NKanlxU2ExZ2xTak9vVGx1cXhN?=
+ =?utf-8?B?MXJNM05iUlc5SjBwKzQzZ015cjI3OG9zUXJRcGtYSC8rVFpBbjU0RDRLNzFk?=
+ =?utf-8?B?WnRBQzBvclBiME9TTWo4aStlOE5WSlVQN3NlblRKL3NLVkJyaEhEU0gveXJW?=
+ =?utf-8?B?cGJoRGVKYUhpcmxiUUJiS2R3eWFoZWdsUThDMGRSeHR0Z0hZODN6MCt6M2E1?=
+ =?utf-8?B?Q0pkMEsvYUVOdnEwWmtTWFVsNVdiRXRObUMvaFE1RE13U1dRRVNHOUozc3Ey?=
+ =?utf-8?B?RkcxMHRLWnhMRWtFRUtKcjdSSWcvclhDRmZMMWIxR1F6VDlTTml5YW0vWUR5?=
+ =?utf-8?B?RUZyM29FTHFINzNKMWh1Z1U5aGFOQUNkSE1iZ0hoY1NWcTFEcTVRdGxDVjVn?=
+ =?utf-8?B?WHZ4RUE5SytuQTRmRHNwa3hodTdNbTlVOE9IMit1MDdrblIxdnNSb1lzamR3?=
+ =?utf-8?B?Tk5hVVo4NHMwT1NtOURoSkJpdmIxelhJdkRJYU9GQ29MVDBRaUowZEF3bmhh?=
+ =?utf-8?B?c1RKQzZrWVdDcHphaEllVy9LU1hFMVNaajJmNEZmR3NMeFI1UHlXTHlmdEpR?=
+ =?utf-8?B?TTF5NGh6N2xNTERZYUJzY2krMHlsU3RGa3VoUHJNT1J6VWNrQUxQb2FzcmJE?=
+ =?utf-8?B?TzlubWtDY01pUUxmUzNtZFdLWEY0b2JnS2pNV1ZDSXJDQk1lTzJucVF3WWpP?=
+ =?utf-8?B?WkR6eTl3bWlkMXZrNXkwcE9oazhiRXU5aGJvZ213ekJTRE5zQWNxcm9qYkQx?=
+ =?utf-8?B?NzZPZkhtbXhWdmFpNmRPSzlITFphNmQraExZbGpwdVFTYUZMVjM0QnNkM3NI?=
+ =?utf-8?B?V0lXbXBZM0M3TXlGcUFtUmZ0Y3RHVkdXc20rUXVIZ0ZYeEhUcGhNK0dQMk5V?=
+ =?utf-8?B?QmNCcmFjQTVJUnVNMmpyS2doSm9Pck9UZDVsRktVakFXMUJHM0JxKytXTG9y?=
+ =?utf-8?B?MG4vYXN0ZEJpbUlyNkJxUFcrVTduL3I1K2d1dGNubGZHemlzNzdaR1NQWkhH?=
+ =?utf-8?B?WkcrdENoRUtBcnd3R0ZJT0pqT3BhakZUMHltbmE5Mk9JRCtMMGN5dm9hTklR?=
+ =?utf-8?B?ZGZYc1FwZ2wwZEN1NmNqNlI0Y3N3b0lnY01jYUFDd1NtaUJPMENOWmZpb0VN?=
+ =?utf-8?B?NHZjMTVsYnpMMXhmOEhQZVkrNC9QdmZNOGRidUlwU21YWWpCS2o0d2ZRb3FI?=
+ =?utf-8?B?LzBXUDRyZCtQYm8yY0NTbHdmc1QvS1kyUzUrNmlBWnJTK1VIR2RjdHQ3Sk85?=
+ =?utf-8?B?d3FQNHgxMVdFZzBKcHg3emVmRjlaWFNrUllZQmZpeVhJUlFoVEVaRXN3R2tO?=
+ =?utf-8?B?NWRjd1FUQWc2L1p4SjFDQVhld2xkTGZTc2FzS0poYWtVWFE9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5109.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aE82eHYyRG1pUGxHRU0wSTV0dTZ5SXVvQUJwMU9aMzhQNnN3RTVRM2QwVTZ5?=
+ =?utf-8?B?R1ExUGFpcGxLS29Ub29MVFFOdlRJQjRPUldvdkE3TDJISmFtZ2Q4ZnA2eHo3?=
+ =?utf-8?B?dEk4K3BDOERndTlwcEJvU1VFNTZKYklBV0g4VEp3SGxOS1hrUE1JVEhnRWFE?=
+ =?utf-8?B?OE04WUN3eGRRM2hMUVBKQzRld1NwMmlaZ2Mya2pqdUhRMlhMUWZzbUkyY08w?=
+ =?utf-8?B?U203UWRhR0ZkWUllcnVDY3BOaXUxM3d5dmE5MmswVEpLUUxCMXZvdDMrSEVU?=
+ =?utf-8?B?blY4UnJDOE1mYnJEdk1OSGNIdFEydmVrbWNQTmVRZ25Za0x3VS9KVVdrQ0Z6?=
+ =?utf-8?B?d3ZXWU84UnhLVzE3cmdSbVZTc1JkRWswUGdSdzRtVzZXY2w5RDNCbjNORUF0?=
+ =?utf-8?B?OXV4Si95cFhQbTAvalY2SWxURUs3SDQvVEIvMURVQWhzeFMxaWFveWpteEJm?=
+ =?utf-8?B?aGg0WmIwd2dEVUpxZDFOVW1LaVdST29LOEJjVEFjajlkY1hNeUx3LzVJYmwr?=
+ =?utf-8?B?dDZMSSt2SVFUZnh4VkozbDllYWhiL2pSbmFWVG1RTHJmcDRSR3d0aWYrTkZO?=
+ =?utf-8?B?a0N3SWhrRmJxRURremVjc1hQVElLcTBLNDc2OFhVdVlvZEMvNVdxR0RESnRF?=
+ =?utf-8?B?S1laQms3ckpJdVZwMFFpMGoxa2JYS3Q3MENVbFBhc1NhdGJ5NW5SUForWkNh?=
+ =?utf-8?B?RDNPWUloZUNYNFpjKzlNTlVFVFRZSE1HTnpIWHJ3aUNGcndLRThtWXR6M05y?=
+ =?utf-8?B?MElNYlZ5bmlqa0dWMkhwNytYT0krTFphR3NDK1RkS0xPRHVESDFOWnV3Z0tw?=
+ =?utf-8?B?Rk52b2ZoMlFibHdsNmI0UWthbGZUV1dpUS8rVXVSZDVXMDR5eVhiSS9kQlJt?=
+ =?utf-8?B?U25hNmhOeUNBQk42TVFvVGtaWVlUanFHTjRDVnZSUENKL2paSFlJVG9MNWZs?=
+ =?utf-8?B?eVQ3eFVBaFB3OFp0V3BUTUp6bFhTOWJjUjl4L3ZIa2Y3eWVpV0FYTUkwVXJM?=
+ =?utf-8?B?bzhYNGJXM1ppUUdieStKMVdkTTFHOVh1d2ZybVpEMTFOWkc1K3ZRVDdCajNK?=
+ =?utf-8?B?bWZtWnRhZ3ZxajZ6aHlWSGhoeDBNbHBDQUFNK25qZ0ExWUNacTZ1NU9CVkNO?=
+ =?utf-8?B?YUtUeHV2bWhPT2xHSHVqODJmQU5mRElWYmRpM3d6aW1EQ0xTMDZCVUlqL3hy?=
+ =?utf-8?B?TUJGbjZWWGh4WDlzdVVXc2NVWEIwY1N2MmhNaVI5ZEpWV2hQNUtaNkp6R285?=
+ =?utf-8?B?MTMvSk10dS9HTStHc0ZJMUtPcFJDWnpzSlpkWitNSVRkRHJPTlh0Z3lHOGNj?=
+ =?utf-8?B?bzduQTEzckR3NklRa0lETzhDeE40OFFrYmFqT0ZYVHhBSEc5dUxwLzFSZHQr?=
+ =?utf-8?B?V29GSEVOZ1hCcis1T1VpeUxXdkRydFliTUtvMHZ5dnFvbFR2TWZ2RTBTcEJn?=
+ =?utf-8?B?UWQ4dWRaRmMwVUdESEVZTEFwV1lGN2tkZllZOFV5eGVyUGJQUWpkN2lia1ZI?=
+ =?utf-8?B?aStXYnR5ZS94STd0MlY2WWFrVGNpRlVHd1lLK3lTVWtpcWdmVWgxeDhhTnl3?=
+ =?utf-8?B?UFd5TDV2azgxVmlQZk1PUHhoSVU1WFJYRm40ZWFRUW81djltTnhva3diak84?=
+ =?utf-8?B?Q0JRUCtnbTRxaVJKQ0ozS0lwamM1VnVzNkliTmpNbkRqQktRSjgrWGJIMHg1?=
+ =?utf-8?B?SGRWRTF4WUpEbEtEVDhMakRtbnlsekpCbjB6cUR5cWNtNEROakNORWJ0TU9t?=
+ =?utf-8?B?OS8wdXVHYzJyd1gwTlFxMEM3bWFQdGxKN3JZbWFRejg5L2JSaGxQamVTajlF?=
+ =?utf-8?B?emorUXovbHRuQTdMRE43Yi8wblR4OVY3S2wrMjVHQXNGdWd6ZHM4ckZwUGtR?=
+ =?utf-8?B?bHQxU3RTelNxczh5eGhManp0bnF6ZG41dm11N0UxQkUyTUsrQkNITENXVk1F?=
+ =?utf-8?B?Nmc5eFdGSkhmekRKeVJ5RFNqSWt4V0IwWERLUnVCY1VpYkVoSkR1d3YyOEl5?=
+ =?utf-8?B?T3hsd0dsUG9ubGFwVTNDSFk1R3hzMWd5Zm1pckhSSjRSNEk3Q2tmeWZOdGtN?=
+ =?utf-8?B?ai9ERGdiOHRpMEFEWGZsOE5xZFVTZ0JzREc3RVRJTTl1YWhFUXJkYUtUbnFK?=
+ =?utf-8?B?SDE4ZjZaSGw2TkF5cktGYzJ3TjNVUzlnVmhoakt0WVJkTE5mUXJjOU94YWF4?=
+ =?utf-8?Q?6+H19WNtcsRZ+2Dyx1oi0ik=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4D5ADBB13849B54DAF819C93AC0801A7@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
-Message-ID: <20240813211317.3381180-14-almasrymina@google.com>
-Subject: [PATCH net-next v19 13/13] netdev: add dmabuf introspection
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5109.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c870c3ad-182e-4c94-39ca-08dcbbdd1787
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2024 21:15:43.6488
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K5mrMntoFCsdM3CNFaVv8b2p3f/ybBbtOc8pDmf/tWBNIXX5T2blNr7mMS7z/+Jr035T2riVieFxTJlkO3J9Vw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR15MB5160
+X-Proofpoint-GUID: 4ue7caAgOPEbiVVp14kwjF8Wzr9HXU4Z
+X-Proofpoint-ORIG-GUID: 4ue7caAgOPEbiVVp14kwjF8Wzr9HXU4Z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-13_12,2024-08-13_02,2024-05-17_01
 
-Add dmabuf information to page_pool stats:
-
-$ ./cli.py --spec ../netlink/specs/netdev.yaml --dump page-pool-get
-...
- {'dmabuf': 10,
-  'id': 456,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 455,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 454,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 453,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 452,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 451,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 450,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 449,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
-
-And queue stats:
-
-$ ./cli.py --spec ../netlink/specs/netdev.yaml --dump queue-get
-...
-{'dmabuf': 10, 'id': 8, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 9, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 10, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 11, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 12, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 13, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 14, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 15, 'ifindex': 3, 'type': 'rx'},
-
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-
----
- Documentation/netlink/specs/netdev.yaml | 10 ++++++++++
- include/uapi/linux/netdev.h             |  2 ++
- net/core/netdev-genl.c                  | 10 ++++++++++
- net/core/page_pool_user.c               |  4 ++++
- tools/include/uapi/linux/netdev.h       |  2 ++
- 5 files changed, 28 insertions(+)
-
-diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
-index 0c747530c275..08412c279297 100644
---- a/Documentation/netlink/specs/netdev.yaml
-+++ b/Documentation/netlink/specs/netdev.yaml
-@@ -167,6 +167,10 @@ attribute-sets:
-           "re-attached", they are just waiting to disappear.
-           Attribute is absent if Page Pool has not been detached, and
-           can still be used to allocate new memory.
-+      -
-+        name: dmabuf
-+        doc: ID of the dmabuf this page-pool is attached to.
-+        type: u32
-   -
-     name: page-pool-info
-     subset-of: page-pool
-@@ -268,6 +272,10 @@ attribute-sets:
-         name: napi-id
-         doc: ID of the NAPI instance which services this queue.
-         type: u32
-+      -
-+        name: dmabuf
-+        doc: ID of the dmabuf attached to this queue, if any.
-+        type: u32
- 
-   -
-     name: qstats
-@@ -543,6 +551,7 @@ operations:
-             - inflight
-             - inflight-mem
-             - detach-time
-+            - dmabuf
-       dump:
-         reply: *pp-reply
-       config-cond: page-pool
-@@ -607,6 +616,7 @@ operations:
-             - type
-             - napi-id
-             - ifindex
-+            - dmabuf
-       dump:
-         request:
-           attributes:
-diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
-index 91bf3ecc5f1d..7c308f04e7a0 100644
---- a/include/uapi/linux/netdev.h
-+++ b/include/uapi/linux/netdev.h
-@@ -93,6 +93,7 @@ enum {
- 	NETDEV_A_PAGE_POOL_INFLIGHT,
- 	NETDEV_A_PAGE_POOL_INFLIGHT_MEM,
- 	NETDEV_A_PAGE_POOL_DETACH_TIME,
-+	NETDEV_A_PAGE_POOL_DMABUF,
- 
- 	__NETDEV_A_PAGE_POOL_MAX,
- 	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
-@@ -131,6 +132,7 @@ enum {
- 	NETDEV_A_QUEUE_IFINDEX,
- 	NETDEV_A_QUEUE_TYPE,
- 	NETDEV_A_QUEUE_NAPI_ID,
-+	NETDEV_A_QUEUE_DMABUF,
- 
- 	__NETDEV_A_QUEUE_MAX,
- 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
-diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
-index 88017ee22d2f..56b7790607b1 100644
---- a/net/core/netdev-genl.c
-+++ b/net/core/netdev-genl.c
-@@ -293,6 +293,7 @@ static int
- netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
- 			 u32 q_idx, u32 q_type, const struct genl_info *info)
- {
-+	struct net_devmem_dmabuf_binding *binding;
- 	struct netdev_rx_queue *rxq;
- 	struct netdev_queue *txq;
- 	void *hdr;
-@@ -312,6 +313,15 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
- 		if (rxq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
- 					     rxq->napi->napi_id))
- 			goto nla_put_failure;
-+
-+		binding = (struct net_devmem_dmabuf_binding *)
-+				  rxq->mp_params.mp_priv;
-+		if (binding) {
-+			if (nla_put_u32(rsp, NETDEV_A_QUEUE_DMABUF,
-+					binding->id))
-+				goto nla_put_failure;
-+		}
-+
- 		break;
- 	case NETDEV_QUEUE_TYPE_TX:
- 		txq = netdev_get_tx_queue(netdev, q_idx);
-diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
-index cbc54ee4f670..4e18db82450e 100644
---- a/net/core/page_pool_user.c
-+++ b/net/core/page_pool_user.c
-@@ -212,6 +212,7 @@ static int
- page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
- 		  const struct genl_info *info)
- {
-+	struct net_devmem_dmabuf_binding *binding = pool->mp_priv;
- 	size_t inflight, refsz;
- 	void *hdr;
- 
-@@ -241,6 +242,9 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
- 			 pool->user.detach_time))
- 		goto err_cancel;
- 
-+	if (binding && nla_put_u32(rsp, NETDEV_A_PAGE_POOL_DMABUF, binding->id))
-+		goto err_cancel;
-+
- 	genlmsg_end(rsp, hdr);
- 
- 	return 0;
-diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
-index 91bf3ecc5f1d..7c308f04e7a0 100644
---- a/tools/include/uapi/linux/netdev.h
-+++ b/tools/include/uapi/linux/netdev.h
-@@ -93,6 +93,7 @@ enum {
- 	NETDEV_A_PAGE_POOL_INFLIGHT,
- 	NETDEV_A_PAGE_POOL_INFLIGHT_MEM,
- 	NETDEV_A_PAGE_POOL_DETACH_TIME,
-+	NETDEV_A_PAGE_POOL_DMABUF,
- 
- 	__NETDEV_A_PAGE_POOL_MAX,
- 	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
-@@ -131,6 +132,7 @@ enum {
- 	NETDEV_A_QUEUE_IFINDEX,
- 	NETDEV_A_QUEUE_TYPE,
- 	NETDEV_A_QUEUE_NAPI_ID,
-+	NETDEV_A_QUEUE_DMABUF,
- 
- 	__NETDEV_A_QUEUE_MAX,
- 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
--- 
-2.46.0.76.ge559c4bf1a-goog
-
+DQoNCj4gT24gQXVnIDcsIDIwMjQsIGF0IDM6MDXigK9QTSwgU29uZyBMaXUgPHNvbmdAa2VybmVs
+Lm9yZz4gd3JvdGU6DQo+IA0KPiBDbGVhbmluZyB1cCB0aGUgc3ltYm9scyBjYXVzZXMgdmFyaW91
+cyBpc3N1ZXMgYWZ0ZXJ3YXJkcy4gTGV0J3Mgc29ydA0KPiB0aGUgbGlzdCBiYXNlZCBvbiBvcmln
+aW5hbCBuYW1lLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU29uZyBMaXUgPHNvbmdAa2VybmVsLm9y
+Zz4NCg0KRml4ZXM6IDhjYzMyYTliYmYyOSAoImthbGxzeW1zOiBzdHJpcCBMVE8tb25seSBzdWZm
+aXhlcyBmcm9tIHByb21vdGVkIGdsb2JhbCBmdW5jdGlvbnMiKQ0KDQoNCg==
