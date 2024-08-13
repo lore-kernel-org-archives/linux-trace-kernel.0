@@ -1,110 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C882F1A0709
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F8A1A2577;
+	Tue, 13 Aug 2024 17:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723564730; cv=none; b=ZAdJIiXCqHe05oQmC5TkQHCMEr28uo1JsxydVlHnQIb3i0ArhBF1cu5ZyxMVi7CWFoM4ILguYRyveW/SwdIFzLAW/ItIKL9+3pZBzqRX1YugkYdBCRwUxfxbApOM0gr/EcX+6HUP08YPNGa1+P5KcyERmW0a7A/yAblx4NrQH0I=
+	t=1723568817; cv=none; b=FLFMoPqj3N8Ph7kfcHaQKbD6kC9rIRxNT2tfShWDcwSxkXKGQkkQg1yH/tsoe99IF8zayfMVK1fVxZSs9OjV5JMCVoRXmtlet25U0VCpKdkLp92NVf2dCVSmdRJYZMab78KC9okDSZ7Pga9id2PrwO5QVZ6/5nB5dG9n8a9kFgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723564730; c=relaxed/simple;
-	bh=faQ30bhsxMCzAuzrzTxRnC0eldEHqYwJ/9YpR+f9NTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GhNOL1mlxgWZxQQIA23slOr6mrg3TdD1riNTaW6ajgGu44b19i+VPhEtm4yF3xTVipRqwqlmdUoBCoXXvjIcg9im+En08smPRM7BK2rSSYBGCaP9vp+r4dl0wQXNVt2wsD75f+lreQtjUmgZ1pLx3oERw/O59fttpsRISaRkzug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IMj1u1+A; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723568817; c=relaxed/simple;
+	bh=DbTs+6qUSxM/zQtbMATbgJnGl+ENAqWdNNjHdEwF6DE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gBmcyrqfBV14/Xk6+ITCboQaOmmFsVfZcD6/CiPJwkLrIJycNBkGy03hX3smwe159nna+OyLSBRspdMswDbTJ4MC33wwDYUqOU5XbUmx/D14FC2o9N7nx9lzZkKjIJiL11/eTMu16WzHlBsvcb9LleptM27D7IZPhgzVuJCOuIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsylJmIm; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IMj1u1+A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723564727;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EFhCdmKsJsPzstjdHKLzvluRw926TZ73hvSP8heyV50=;
-	b=IMj1u1+Ar3M6GkWT2CuJ5d9RdVCmq6SSC3NP0QzohoZ+DIa+df1yF7J4LEo+n/FUmxXSPF
-	1j+HoTU7rlECz51LMoT60N9tdm7ku03RfGvHkUbn42ivoo7o859LOVQu6jeC/+lqHmvNQW
-	HV7ck5nW4eA+kGKoPJIgwUCTCU6gpW4=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-523-u0twb30mP8yMdVEEKJ0oJA-1; Tue,
- 13 Aug 2024 11:58:46 -0400
-X-MC-Unique: u0twb30mP8yMdVEEKJ0oJA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 77C6918EA817;
-	Tue, 13 Aug 2024 15:58:45 +0000 (UTC)
-Received: from f39.redhat.com (unknown [10.39.192.249])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 959F81955F2D;
-	Tue, 13 Aug 2024 15:58:38 +0000 (UTC)
-From: Eder Zulian <ezulian@redhat.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: rostedt@goodmis.org,
-	jlelli@redhat.com,
-	jkacur@redhat.com,
-	williams@redhat.com,
-	tglozar@redhat.com
-Subject: [PATCH] rtla: Sync the help text between top tools
-Date: Tue, 13 Aug 2024 17:58:31 +0200
-Message-ID: <20240813155831.384446-1-ezulian@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsylJmIm"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-44fee8813c3so34230441cf.2;
+        Tue, 13 Aug 2024 10:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723568815; x=1724173615; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2i/rjbVHkUl3elxDfPidCteOPniWSNb8rDJSw5+dOgQ=;
+        b=HsylJmIm7FfYP5eQ+dT8Y/58J0OdyJZ/Icp9x3iF167AM3Bhjto/tERV9/ZdGWww3f
+         dVpEcueI6mBv9ETKEuT7Gt3mWwQBhR+7vfooWzCko9+qliVSBubb0pP7n99Xdf9bPW4X
+         JiebKH9J99U91wBJCjNzNtNyMmlx0XX+f+zJ85rDvsFBw8pp74AAZXuwQJxZ97gq5tM/
+         0gRWNT5yDg/YdrONwUmob7Lryz+Vh1vEJ1Ku9Tr5o6tqA0GEenCZNlhHcJXULgsiPWBO
+         M+8OgUXcAui4FMbOuaKt1soySmyKHj/6KFTrAID0KZqrp8MExPjAVTexCSZNTK5wOqV8
+         5iTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723568815; x=1724173615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2i/rjbVHkUl3elxDfPidCteOPniWSNb8rDJSw5+dOgQ=;
+        b=wyJAfUjLhGNsJz5SEKSpO0nlQAxmegGsmjZaJ7LSbuOnszIIlQ0GVveWjNRDEFLQTo
+         CBrJSTtyOM8m1vc0e4wL8Up9Rrc2qZdBIP6wlGLZ/DodzRy9Mm85jLXKa0eKKhjOa5hi
+         HoxIZrJeBBW7j4mcOFOULYnzWEMwL2biTPsg9hbvEBGprpJDuInQxP7fd2+mL4cZ+ljc
+         IMuGf15Tvsug4/+JLKStUC6D/YDe0PQ+U2ZLaQy4v5K5PIK26h8oZ5NEYcs1c64G8TK9
+         NIw12TBTuww2FzPDoB1UPMjEsGU3UIJfXu+lMF0MRyJLu1YvE2OgTjAYYCWsoCFtb32x
+         ecfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUioA8x+rIJ5JNMQyiS9x0d04YF+T52V/dtj0HZPzQYmNqzi/K2aZXZhPEFYETIMsUmkktlOTsTquFF2F0WmXi4QjuIaSSt55J4eGv/3jqm92D3aeRwOaLcEPlwF2+RdBtErug01dJ/Eq51osp0B+cL94tobTzVhQ3LXOMflHKK2lE/M6Cp
+X-Gm-Message-State: AOJu0Yw9XG+M4JgJ+vZwcDt2MnSmw7qNTHPytOfKGml82VAIty/3ByTl
+	AvIDcDs3ICui6cfeGL5N+z8SB8FUnGfGOLGaLAuwCKfyoeE8/B9oK9FhoM0whjugkcsUnUTN1Ub
+	aqq/vajZ3UCl0dgvmZHxzvEu9nOO7QA==
+X-Google-Smtp-Source: AGHT+IEBuCVr/hLGN/Rndh5a/GKEbP2oA+HSkbMf9t7jLqYr/5kJ+ETG2zaUTGtw3I0ir3CzebnigjOR7XD9xalig2U=
+X-Received: by 2002:a17:90a:4811:b0:2c9:7aa6:e15d with SMTP id
+ 98e67ed59e1d1-2d3aaabea62mr150642a91.20.1723568766613; Tue, 13 Aug 2024
+ 10:06:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+References: <20240809192357.4061484-1-andrii@kernel.org> <20240813145002.GB31977@redhat.com>
+In-Reply-To: <20240813145002.GB31977@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 13 Aug 2024 10:05:54 -0700
+Message-ID: <CAEf4BzZmaH4y82DemPqmS-Eho-4iX91fQ2z=bhauhiDOb=98cg@mail.gmail.com>
+Subject: Re: [PATCH v2] uprobes: make trace_uprobe->nhit counter a per-CPU one
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In addition, fix a typo in the error message generated when the
-specified duration is invalid. Suggested by Tomas Glozar.
+On Tue, Aug 13, 2024 at 7:50=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/09, Andrii Nakryiko wrote:
+> >
+> > @@ -815,13 +824,21 @@ static int probes_profile_seq_show(struct seq_fil=
+e *m, void *v)
+> >  {
+> >       struct dyn_event *ev =3D v;
+> >       struct trace_uprobe *tu;
+> > +     unsigned long nhits;
+> > +     int cpu;
+> >
+> >       if (!is_trace_uprobe(ev))
+> >               return 0;
+> >
+> >       tu =3D to_trace_uprobe(ev);
+> > +
+> > +     nhits =3D 0;
+> > +     for_each_possible_cpu(cpu) {
+> > +             nhits +=3D READ_ONCE(*per_cpu_ptr(tu->nhits, cpu));
+>
+> why not
+>
+>                 nhits +=3D per_cpu(*tu->nhits, cpu);
+>
+> ?
+>
+> See for example per_cpu_sum() or nr_processes(), per_cpu() should work ju=
+st fine...
+>
 
-Signed-off-by: Eder Zulian <ezulian@redhat.com>
----
- tools/tracing/rtla/src/osnoise_top.c  | 2 +-
- tools/tracing/rtla/src/timerlat_top.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+I just monkeyed it from some existing code somewhere in the BPF code
+base. I like per_cpu, will send a v3 and rebase it onto a linux-trace
+tree.
 
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 73106683c281..50e97dbc951d 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -442,7 +442,7 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
- 		case 'd':
- 			params->duration = parse_seconds_duration(optarg);
- 			if (!params->duration)
--				osnoise_top_usage(params, "Invalid -D duration\n");
-+				osnoise_top_usage(params, "Invalid -d duration\n");
- 			break;
- 		case 'e':
- 			tevent = trace_event_alloc(optarg);
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 94a2f5bbaeb7..312fc7e833ba 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -459,7 +459,7 @@ static void timerlat_top_usage(char *usage)
- 		"	  -c/--cpus cpus: run the tracer only on the given cpus",
- 		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
- 		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
--		"	  -d/--duration time[m|h|d]: duration of the session in seconds",
-+		"	  -d/--duration time[s|m|h|d]: duration of the session",
- 		"	  -D/--debug: print debug info",
- 		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
- 		"	  -t/--trace[file]: save the stopped trace to [file|timerlat_trace.txt]",
-@@ -613,7 +613,7 @@ static struct timerlat_top_params
- 		case 'd':
- 			params->duration = parse_seconds_duration(optarg);
- 			if (!params->duration)
--				timerlat_top_usage("Invalid -D duration\n");
-+				timerlat_top_usage("Invalid -d duration\n");
- 			break;
- 		case 'e':
- 			tevent = trace_event_alloc(optarg);
--- 
-2.46.0
-
+> Other than that
+>
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+>
