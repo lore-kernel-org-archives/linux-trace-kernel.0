@@ -1,135 +1,118 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E671B948;
-	Tue, 13 Aug 2024 03:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559831C68C;
+	Tue, 13 Aug 2024 04:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723520503; cv=none; b=WpyaUYj1kD3uIJ8DkHSUP9ITFeYfhzUHkwBIm4b5GGbPpwlgaCSGu9p3fq2NyO+Q0jipeqWOFHF/RH4z4j6pFg5klNFAHU9maKjhHVbUFZoHNfweEQwLMgrPhvC4zN2L3l0DbW4GSHEpSQGXjFgXQ+LIWPHT6GHuAQ2HGDEbOmQ=
+	t=1723523354; cv=none; b=o1iVr+JOfsocOCCkXSnsvP1WWMtozt7CcSq+m829J4JcE6FQHJFsqj6US1UPqoMV0yv+LTH5Mo1/OjEWMzRqurJj6BOx4R9F1R7o/bJdBsariFbPl36hD/PeBP7GZnGBIu+jz0/JVJIssEsoorrnNy6ZIAhL6xCRzZsSzdrQPWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723520503; c=relaxed/simple;
-	bh=q6HAOL4mRIzCYmRvTt3tiEI4ewsKYdQjER4H6kU/+uw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o5pgXW1rXpANQHV5kcYUYuOwrUwiJoxvl8Vui0u8oKX6rTxfKkU4yYCR9QQxFj9VwF9HKQzBip47aFK09XlFqNj5aI5Zm6eO5RTjYjnn1SZ6xJ3VJa8wM+ToSB6F150ItRTUxmWIcflRKK7ljj36H9+K2vWKyNEy7BWW+TB+o8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nE8jvefF; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1723523354; c=relaxed/simple;
+	bh=5yRDZMRHZuD+/2KSqyv63RNLA87tSz/Y9Y0k+5NAKIc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=csRV//sW1ZrpWpaKnoNVfTyQhprwA3H36dVlw1mIjd+xBNo+lFrRUUz0JMKj2ovcSQiwlJwNng6boxbKLE0fFrPo4FTtwT+Eww/rBy6h49VXndc9NKBaBUduekiHW+gOPWEuKYuPt3tHkW8eootbQBckMwCbNCD8K5/LUFLhWn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9icMtwW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nE8jvefF"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47D1IOIw007050;
-	Tue, 13 Aug 2024 03:41:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pp1; bh=wuA4OOGCw/LRUjquaq3jyi/i5d
-	2AjgeKB54bI8qNFNM=; b=nE8jvefFbqmVG0VPaPKAco0mJ9Snl5iE9OC7WcKAqO
-	2cIwxlOUrCW7O83u3MuDeT1OJEv2rdCRj65oem9Nxdku9f0jQ5PKfkhYvLA+p2vn
-	6oo9b7fJjilhE0yFGxOw2LINGKhIPJNcC2siQf1nogAEGw8UqB6mbUM2T795WWxp
-	WICQrcDd0x2dIHWDlgHvGWt2E02uF4r1ARUN3HOUFl0LRDQrD5YYx8+JcDgEymeC
-	gWizzCSW5w801tXMPzjoBLVsk1MnbtnMjv6Pct127geF7obKTGvo8YNRIs9WiHxb
-	oLy2zbvHqAQ/+BSPdxIBnxYKFvab8OueAqsGou417Eng==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wwm7pkhw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 03:41:33 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47CNLaAT016237;
-	Tue, 13 Aug 2024 03:41:32 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40xkhphm6x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 03:41:32 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47D3fSON46858594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Aug 2024 03:41:30 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8BBF920040;
-	Tue, 13 Aug 2024 03:41:28 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96EF920043;
-	Tue, 13 Aug 2024 03:41:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.209.27])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 13 Aug 2024 03:41:26 +0000 (GMT)
-From: Akanksha J N <akanksha@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc: shuah@kernel.org, mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-        rostedt@goodmis.org, akanksha@linux.ibm.com
-Subject: [PATCH v2] selftests/ftrace: Skip test for optimized probes on PowerPC if Secure Boot is enabled
-Date: Tue, 13 Aug 2024 09:10:56 +0530
-Message-ID: <20240813034056.74717-1-akanksha@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9icMtwW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0E5C4AF11;
+	Tue, 13 Aug 2024 04:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723523353;
+	bh=5yRDZMRHZuD+/2KSqyv63RNLA87tSz/Y9Y0k+5NAKIc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=G9icMtwWdCjSXMe+1oYPqKm22QG6tmcl+25xu7j10bOW4VbnWBN9QAwkYLxElOVID
+	 +yGkC/lp8YJmwNGjAjNO7vDx15eQPFy9S8BzQxezpA6qd+sm92Ugyt6V355cawysgm
+	 Fuzmu0aaMwnzAnEjtKUILM4RlT/oZM4Y4Yb3JyKoiK8q1RYCRKXsZoIPU0MAj+dGGQ
+	 IvtzxKXqJ/AdXlVNM2XF2S6uHyax1SD+xG11qgm1IbNrsMvcZjvT7cx5lGhWfE5U6J
+	 yoUh6m+JmADrNBKZDTKz1CPYPEHpd17q8kEYK4iOqPTMk4bftayAjx1VuRjVq1/iqq
+	 VzJFJf/FI4kfQ==
+Date: Tue, 13 Aug 2024 13:29:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, jpoimboe@kernel.org, jikos@kernel.org,
+ mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+ nathan@kernel.org, morbo@google.com, justinstitt@google.com,
+ mcgrof@kernel.org, thunder.leizhen@huawei.com, kees@kernel.org,
+ kernel-team@meta.com, mmaurer@google.com, samitolvanen@google.com,
+ mhiramat@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
+Message-Id: <20240813132907.e6f392ec38bcc08e6796a014@kernel.org>
+In-Reply-To: <20240807220513.3100483-1-song@kernel.org>
+References: <20240807220513.3100483-1-song@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: BzKMvMwRMCQiFVZe88XLAjvNzytP1O3u
-X-Proofpoint-ORIG-GUID: BzKMvMwRMCQiFVZe88XLAjvNzytP1O3u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-12_12,2024-08-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 clxscore=1011 adultscore=0
- lowpriorityscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
- bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408130022
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Currently while accessing debugfs with Secure Boot enabled on PowerPC,
-it is causing the kprobe_opt_types.tc test to fail. Below is the snippet
-of the error:
+On Wed,  7 Aug 2024 15:05:11 -0700
+Song Liu <song@kernel.org> wrote:
 
-+++ grep kernel_clone /sys/kernel/debug/kprobes/list
-grep: /sys/kernel/debug/kprobes/list: Operation not permitted
-++ PROBE=
-+ '[' 2 -ne 0 ']'
-+ kill -s 37 7595
-++ SIG_RESULT=1
-+ eval_result 1
-+ case $1 in
-+ prlog '	[\033[31mFAIL\033[0m]'
-+ newline='\n'
-+ '[' '	[\033[31mFAIL\033[0m]' = -n ']'
-+ printf '	[\033[31mFAIL\033[0m]\n'
-	[FAIL]
+> With CONFIG_LTO_CLANG, the compiler/linker adds .llvm.<hash> suffix to
+> local symbols to avoid duplications. Existing scripts/kallsyms sorts
+> symbols without .llvm.<hash> suffix. However, this causes quite some
+> issues later on. Some users of kallsyms, such as livepatch, have to match
+> symbols exactly.
+> 
+> Address this by sorting full symbols at build time, and let kallsyms
+> lookup APIs to match the symbols exactly.
+> 
 
-This is happening when secure boot is enabled, as it enables lockdown
-by default. With lockdown, access to certain debug features and
-filesystems like debugfs may be restricted or completely disabled.
+I've tested this series and confirmed it makes kprobes work with llvm suffixed
+symbols.
 
-To fix this, modify the test to check for Secure Boot status using
-lsprop /proc/device-tree/ibm,secure-boot. And, skip execution of the
-test on PowerPC if Secure Boot is enabled (00000002).
+/sys/kernel/tracing # echo "p c_start.llvm.8011538628216713357" >> kprobe_events
+ /sys/kernel/tracing # cat kprobe_events 
+p:kprobes/p_c_start_llvm_8011538628216713357_0 c_start.llvm.8011538628216713357
+/sys/kernel/tracing # echo "p c_start" >> kprobe_events 
+/sys/kernel/tracing # cat kprobe_events 
+p:kprobes/p_c_start_llvm_8011538628216713357_0 c_start.llvm.8011538628216713357
+p:kprobes/p_c_start_0 c_start
 
-With this patch, test skips as unsupported:
-=== Ftrace unit tests ===
-[1] Register/unregister optimized probe	[UNSUPPORTED]
+And ftrace too.
 
-Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
----
- .../selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc       | 5 +++++
- 1 file changed, 5 insertions(+)
+/sys/kernel/tracing # grep ^c_start available_filter_functions
+c_start.llvm.8011538628216713357
+c_start
+c_start.llvm.17132674095431275852
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-index 9f5d99328086..925e74d6acc7 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
-@@ -10,6 +10,11 @@ x86_64)
- arm*)
- ;;
- ppc*)
-+  lsprop_output=$(lsprop /proc/device-tree/ibm,secure-boot)
-+  if echo "$lsprop_output" | grep -q "00000002"; then
-+    echo "Secure Boot is enabled on PowerPC."
-+    exit_unsupported
-+  fi
- ;;
- *)
-   echo "Please implement other architecture here"
+Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+for this series.
+
+> Changes v2 => v3:
+> 1. Remove the _without_suffix APIs, as kprobe will not use them.
+>    (Masami Hiramatsu)
+> 
+> v2: https://lore.kernel.org/live-patching/20240802210836.2210140-1-song@kernel.org/T/#u
+> 
+> Changes v1 => v2:
+> 1. Update the APIs to remove all .XXX suffixes (v1 only removes .llvm.*).
+> 2. Rename the APIs as *_without_suffix. (Masami Hiramatsu)
+> 3. Fix another user from kprobe. (Masami Hiramatsu)
+> 4. Add tests for the new APIs in kallsyms_selftests.
+> 
+> v1: https://lore.kernel.org/live-patching/20240730005433.3559731-1-song@kernel.org/T/#u
+> 
+> Song Liu (2):
+>   kallsyms: Do not cleanup .llvm.<hash> suffix before sorting symbols
+>   kallsyms: Match symbols exactly with CONFIG_LTO_CLANG
+> 
+>  kernel/kallsyms.c          | 55 +++++---------------------------------
+>  kernel/kallsyms_selftest.c | 22 +--------------
+>  scripts/kallsyms.c         | 31 ++-------------------
+>  scripts/link-vmlinux.sh    |  4 ---
+>  4 files changed, 9 insertions(+), 103 deletions(-)
+> 
+> --
+> 2.43.5
+
+
 -- 
-2.45.2
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
