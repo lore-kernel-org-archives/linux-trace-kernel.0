@@ -1,244 +1,132 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EA419AA73
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 10:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05F2198A16;
+	Tue, 13 Aug 2024 11:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723543401; cv=none; b=eyZSRfmAIOy4atQPpxU7/0FgyXlIrTtp0CAFUoqLwSwimnbOK/XFm7p5y+f770X4MGRQ3WvOUlzQCLOdxyYgrRbLILEP6FMUttdvzcmboeKFli9XnffCMMh8zVsLIB2ay+BxdqoRKKKaKQ3Xh2zy8qgOwkB6YPzs/F6p88n6UaA=
+	t=1723546835; cv=none; b=Hm16uEx0BHSgwxHwpGtncwF65oF8ZBJV+7LcvrPQ6Wxykz3AZ17hNnRCj2e2PiWFbkTeTgtk0UovzY5kYEkLSYRRgm9ZNzFpwV32a07wJer5HGF8kLPCisq3o55rTu9pjrCDWkMyCUeDZCvsia+mtzonWw+C4QVf1IqQTY+eHac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723543401; c=relaxed/simple;
-	bh=ZaRZPIKMb9tT1bgJXnZN+jAzi+AtsUj/jTsR+EdbRoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gv2oe8XuKp0IiSQyh3cmG0MH8Mq9AooWkL4AcsLRCnY4LWoMNLA8d9kgyr3fc7VrrVhxyeCfICyROVgjTMbJcKFoDK9BzkOGih49InR2orERsRzeXBH3lFQZO94QGMNOh/vMAtWHpZzB4hRU7X9l4D4dzKwFv/bnt0rgLNBGwzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gB7aL9K8; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1723546835; c=relaxed/simple;
+	bh=B808EudKWrHxZfYg+a3UwZuglHevVcZNFkJtnW2kji4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HRRy814m5joWF3KyNIQNV/dU3n0v5zaqRuWmVj1wLWp3SUKxtY7HqyOubzMIbUXmA8K7VXvRGOIL7xi/yhc7WkVlTAZFoXj9Gmt4BBSDXnQ37L28J+iGCzHGRW//reqDwA6MY6mBpzu39O3XZL1FztNiZKVAhkBSx2HMTeNIWhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tb+0FW+t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gB7aL9K8"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7a1843b4cdbso3638276a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Aug 2024 03:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1723543399; x=1724148199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NoxN63bBPaM/wCd8ZvlEoxvS8xfn7jCuCDDPzEXx9AA=;
-        b=gB7aL9K8rxT92KTPA0kUHFxVnq8g92F1/0AKw6e+zNZQ1SNqtgs+5iCbJPK89PagJa
-         YQF478bmuSxDbkLlx5Qq1QqS0aH740VuEc7k8iTU5Yrjj61C/lmA74GZIHLWGEM+7FuR
-         AA1zaADBs8Ye7lXJUM/vy2HwYIvJ9E2jt4A3Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723543399; x=1724148199;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NoxN63bBPaM/wCd8ZvlEoxvS8xfn7jCuCDDPzEXx9AA=;
-        b=aTCybK9FPWcXPe0J252E+pXm6QmAoGEAAzCW4BF1o3cehWEutof4BAtpSrp61LQBO0
-         4/eBrXtF8HWEDcwvA4+KeVQdkjh0YyjLGKY5Iaj8Asj9HK2o5jO6ybsEo+kT9VBrzLLB
-         IS4YRyPZV2hK8syh3Yz+kcG1SkPhbIHCVFlpi/zNET1TauwSRyof6BMgy4tsNtkYPakT
-         +LfZ9pYYyZkqjuLE9xRNKcTdbEcMcdugL8I9OMY1zcW0pDPVSXDM1WtcQtgZ/FQfpUmG
-         CiLnF9cfGUrDw/n4OxTfQITT5o6ZNqmSs4A9bY7XKnpW+rLipaJNb2+o3UDvfspzM/TP
-         6teg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/5f3Xe+oXfwbbRi+AWpkF8lNzU9QTRCe1N5iYZq65oL3esH0NARelnIk1avI0h60uyksGGJ3sHaxc1dA4JNPKoVrxMfW6X4/Avu02AflmedIR
-X-Gm-Message-State: AOJu0YztGjGM2VRhN3MhICE9iAbsKOuwbL1srgQTVKA+7M/fNNriGqjd
-	1ddbdDF3TSHgA3tDqfNHng3lHjgVYxytWxNY2DRAmEZVA/bU9jDOacptxz6v
-X-Google-Smtp-Source: AGHT+IFosWR7zkd7jgDT2HviKT6vEjybZ5RhsLylZWQSu4p1a07i1ADAXGsNcDrKZxIxqrj/LlkKPw==
-X-Received: by 2002:a05:6a20:96c8:b0:1c8:d7b7:dcbd with SMTP id adf61e73a8af0-1c8d7b7dcf2mr2811688637.1.1723543399534;
-        Tue, 13 Aug 2024 03:03:19 -0700 (PDT)
-Received: from localhost (0.223.81.34.bc.googleusercontent.com. [34.81.223.0])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-7c697a549d8sm944650a12.67.2024.08.13.03.03.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2024 03:03:18 -0700 (PDT)
-From: Takaya Saeki <takayas@chromium.org>
-To: Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Junichi Uekawa <uekawa@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Takaya Saeki <takayas@chromium.org>
-Subject: [PATCH v3] filemap: add trace events for get_pages, map_pages, and fault
-Date: Tue, 13 Aug 2024 10:03:12 +0000
-Message-ID: <20240813100312.3930505-1-takayas@chromium.org>
-X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tb+0FW+t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D780BC4AF10;
+	Tue, 13 Aug 2024 11:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723546835;
+	bh=B808EudKWrHxZfYg+a3UwZuglHevVcZNFkJtnW2kji4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=tb+0FW+tZf+oPwB7sp1BP0xAvdBX0bocm7umTDDTc2QtHC4wg9unm2yzSoVx1Yjz3
+	 0HpVeUz5XPlAjZsWbPNaCl3+gl3RbfWrkMJNRUi9oTMafXERRKlJtfdB0KgiKAXo86
+	 FUOMRocHoHBhCewj4woksJz6ZX5CIfnW6DFsox5GUUxtV5f2utGyxad7d8JCYWL00n
+	 uNGQl6ygAxKPZvZry8w9OqdCnJnj8iB0qUACpviY1MNS45N8En7CRBfTFaisBEBZxy
+	 Q4HJT8usc4u+xLYAQIE7ApsQKjFAJSPDM9CsOlxct0GUW81MdbE2PF8G7/pkicL30R
+	 V2pQ3jPuIJOhQ==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Andy Chiu <andy.chiu@sifive.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li
+ <zong.li@sifive.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Puranjay Mohan <puranjay@kernel.org>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, Evgenii Shatokhin <e.shatokhin@yadro.com>, Andy Chiu
+ <andy.chiu@sifive.com>
+Subject: Re: [PATCH v2 0/6] riscv: ftrace: atmoic patching and preempt
+ improvements
+In-Reply-To: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
+References: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
+Date: Tue, 13 Aug 2024 13:00:31 +0200
+Message-ID: <87cymcadrk.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-To allow precise tracking of page caches accessed, add new tracepoints
-that trigger when a process actually accesses them.
+Andy,
 
-The ureadahead program used by ChromeOS traces the disk access of
-programs as they start up at boot up. It uses mincore(2) or the
-'mm_filemap_add_to_page_cache' trace event to accomplish this. It stores
-this information in a "pack" file and on subsequent boots, it will read
-the pack file and call readahead(2) on the information so that disk
-storage can be loaded into RAM before the applications actually need it.
+Way over due; I'm back from my vacation, I've finally started to look at
+the series. Thanks for working on it.
 
-A problem we see is that due to the kernel's readahead algorithm that
-can aggressively pull in more data than needed (to try and accomplish
-the same goal) and this data is also recorded. The end result is that
-the pack file contains a lot of pages on disk that are never actually
-used. Calling readahead(2) on these unused pages can slow down the
-system boot up times.
+Andy Chiu <andy.chiu@sifive.com> writes:
 
-To solve this, add 3 new trace events, get_pages, map_pages, and fault.
-These will be used to trace the pages are not only pulled in from disk,
-but are actually used by the application. Only those pages will be
-stored in the pack file, and this helps out the performance of boot up.
+> This series makes atmoic code patching possible in riscv ftrace. A
+                    atomic
 
-With the combination of these 3 new trace events and
-mm_filemap_add_to_page_cache, we observed a reduction in the pack file
-by 7.3% - 20% on ChromeOS varying by device.
+> direct benefit of this is that we can get rid of stop_machine() when
+> patching function entries. This also makes it possible to run ftrace
+> with full kernel preemption. Before this series, the kernel initializes
+> patchable function entries to NOP4 + NOP4. To start tracing, it updates
+> entries to AUIPC + JALR while holding other cores in stop_machine.
+> stop_machine() is required because it is impossible to update 2
+> instructions, and be seen atomically. And preemption must have to be
+> prevented, as kernel preemption allows process to be scheduled out while
+> executing on one of these instruction pairs.
+>
+> This series addresses the problem by initializing the first NOP4 to
+> AUIPC. So, atmoic patching is possible because the kernel only has to
+             atomic
 
-Signed-off-by: Takaya Saeki <takayas@chromium.org>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changelog between v3 and v2
-- Use a range notation in the printf format 
+> update one instruction. As long as the instruction is naturally aligned,
+> then it is expected to be updated atomically.
 
-Changelog between v2 and v1
-- Fix a file offset type usage by casting pgoff_t to loff_t
-- Fix format string of dev and inode
+This came up on the last weekly patchwork call; Given that RISC-V does
+not yet (WIP!) has a formal specfication expressing cmodx behaviour, the
+assumptions done in this series (what you're describing here pretty
+much) should be properly documented in Documentation/riscv the next
+revision.
 
- include/trace/events/filemap.h | 84 ++++++++++++++++++++++++++++++++++
- mm/filemap.c                   |  4 ++
- 2 files changed, 88 insertions(+)
+From the earlier public discussions [1], this is "option A".
 
-V2:https://lore.kernel.org/all/20240620161903.3176859-1-takayas@chromium.org/
-V1:https://lore.kernel.org/all/20240618093656.1944210-1-takayas@chromium.org/
+> However, the address range of the ftrace trampoline is limited to +-2K
+> from ftrace_caller after appplying this series. This issue is expected
+> to be solved by Puranjay's CALL_OPS, where it adds 8B naturally align
+> data in front of pacthable functions and can  use it to direct execution
+                   patchable
 
-diff --git a/include/trace/events/filemap.h b/include/trace/events/filemap.h
-index 46c89c1e460c..f48fe637bfd2 100644
---- a/include/trace/events/filemap.h
-+++ b/include/trace/events/filemap.h
-@@ -56,6 +56,90 @@ DEFINE_EVENT(mm_filemap_op_page_cache, mm_filemap_add_to_page_cache,
- 	TP_ARGS(folio)
- 	);
- 
-+DECLARE_EVENT_CLASS(mm_filemap_op_page_cache_range,
-+
-+	TP_PROTO(
-+		struct address_space *mapping,
-+		pgoff_t index,
-+		pgoff_t last_index
-+	),
-+
-+	TP_ARGS(mapping, index, last_index),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, i_ino)
-+		__field(dev_t, s_dev)
-+		__field(unsigned long, index)
-+		__field(unsigned long, last_index)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->i_ino = mapping->host->i_ino;
-+		if (mapping->host->i_sb)
-+			__entry->s_dev =
-+				mapping->host->i_sb->s_dev;
-+		else
-+			__entry->s_dev = mapping->host->i_rdev;
-+		__entry->index = index;
-+		__entry->last_index = last_index;
-+	),
-+
-+	TP_printk(
-+		"dev=%d:%d ino=%lx ofs=%lld-%lld",
-+		MAJOR(__entry->s_dev),
-+		MINOR(__entry->s_dev), __entry->i_ino,
-+		((loff_t)__entry->index) << PAGE_SHIFT,
-+		((((loff_t)__entry->last_index + 1) << PAGE_SHIFT) - 1)
-+	)
-+);
-+
-+DEFINE_EVENT(mm_filemap_op_page_cache_range, mm_filemap_get_pages,
-+	TP_PROTO(
-+		struct address_space *mapping,
-+		pgoff_t index,
-+		pgoff_t last_index
-+	),
-+	TP_ARGS(mapping, index, last_index)
-+);
-+
-+DEFINE_EVENT(mm_filemap_op_page_cache_range, mm_filemap_map_pages,
-+	TP_PROTO(
-+		struct address_space *mapping,
-+		pgoff_t index,
-+		pgoff_t last_index
-+	),
-+	TP_ARGS(mapping, index, last_index)
-+);
-+
-+TRACE_EVENT(mm_filemap_fault,
-+	TP_PROTO(struct address_space *mapping, pgoff_t index),
-+
-+	TP_ARGS(mapping, index),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, i_ino)
-+		__field(dev_t, s_dev)
-+		__field(unsigned long, index)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->i_ino = mapping->host->i_ino;
-+		if (mapping->host->i_sb)
-+			__entry->s_dev =
-+				mapping->host->i_sb->s_dev;
-+		else
-+			__entry->s_dev = mapping->host->i_rdev;
-+		__entry->index = index;
-+	),
-+
-+	TP_printk(
-+		"dev=%d:%d ino=%lx ofs=%lld",
-+		MAJOR(__entry->s_dev),
-+		MINOR(__entry->s_dev), __entry->i_ino,
-+		((loff_t)__entry->index) << PAGE_SHIFT
-+	)
-+);
-+
- TRACE_EVENT(filemap_set_wb_err,
- 		TP_PROTO(struct address_space *mapping, errseq_t eseq),
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index d62150418b91..925eef5e16f0 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2556,6 +2556,7 @@ static int filemap_get_pages(struct kiocb *iocb, size_t count,
- 			goto err;
- 	}
- 
-+	trace_mm_filemap_get_pages(mapping, index, last_index);
- 	return 0;
- err:
- 	if (err < 0)
-@@ -3287,6 +3288,8 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
- 	if (unlikely(index >= max_idx))
- 		return VM_FAULT_SIGBUS;
- 
-+	trace_mm_filemap_fault(mapping, index);
-+
- 	/*
- 	 * Do we have something in the page cache already?
- 	 */
-@@ -3653,6 +3656,7 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
- 	} while ((folio = next_uptodate_folio(&xas, mapping, end_pgoff)) != NULL);
- 	add_mm_counter(vma->vm_mm, folio_type, rss);
- 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-+	trace_mm_filemap_map_pages(mapping, start_pgoff, end_pgoff);
- out:
- 	rcu_read_unlock();
- 
--- 
-2.46.0.76.ge559c4bf1a-goog
+Is it really usable to enable with the limit 2K range? Makes me wonder
+if we should bake in Puranjay CALL_OPS work directly in this series.
+Thoughts?
 
+> out to any custom trampolines.
+>
+> The series is composed by three parts. The first part cleans up the
+> existing issues when the kernel is compiled with clang.The second part
+> modifies the ftrace code patching mechanism (2-4) as mentioned above.
+> Then prepare ftrace to be able to run with kernel preemption (5,6)
+>
+> This series is tested after applying the following ftrace/patching in
+> the fixes branch:
+>
+> - commit 57a369b6f2ee ("riscv: patch: Flush the icache right after
+>                         patching to avoid illegal insns")
+> - commit a2bd3a5b4b63 ("riscv: stacktrace: convert arch_stack_walk() to
+>                         noinstr")
+>
+> Changes in v2:
+> - Drop patch 1 as it is merged through fixes.
+> - Drop patch 2, which converts kernel_text_address into notrace. As
+>   users can prevent tracing it by configuring the tracefs.
+> - Use a more generic way in kconfig to align functions.
+> - Link to v1: https://lore.kernel.org/r/20240613-dev-andyc-dyn-ftrace-v4-=
+v1-0-1a538e12c01e@sifive.com
+
+More input in subsequent patches.
+
+
+Cheers,
+Bj=C3=B6rn
+
+[1] https://lore.kernel.org/linux-riscv/87zfv0onre.fsf@all.your.base.are.be=
+long.to.us/
