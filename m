@@ -1,111 +1,99 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F8A1A2577;
-	Tue, 13 Aug 2024 17:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE233D38E;
+	Tue, 13 Aug 2024 17:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723568817; cv=none; b=FLFMoPqj3N8Ph7kfcHaQKbD6kC9rIRxNT2tfShWDcwSxkXKGQkkQg1yH/tsoe99IF8zayfMVK1fVxZSs9OjV5JMCVoRXmtlet25U0VCpKdkLp92NVf2dCVSmdRJYZMab78KC9okDSZ7Pga9id2PrwO5QVZ6/5nB5dG9n8a9kFgI=
+	t=1723569165; cv=none; b=Q6dwC7MbDY9ND5dE7vliIJ9XTdkTUF99VqF1v8PP+tdPa2JPEwlgPr2dpCwt2iaiY4QN9nR5cukKn+TJaRzdXqrxX2lwKCBp1QjUh6WiV8FZIZaWxp53mhw8/2NC4KzAF+kRqvXecrBCOCdGogFtBFcx5CONABHKvlw+mhH6K/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723568817; c=relaxed/simple;
-	bh=DbTs+6qUSxM/zQtbMATbgJnGl+ENAqWdNNjHdEwF6DE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gBmcyrqfBV14/Xk6+ITCboQaOmmFsVfZcD6/CiPJwkLrIJycNBkGy03hX3smwe159nna+OyLSBRspdMswDbTJ4MC33wwDYUqOU5XbUmx/D14FC2o9N7nx9lzZkKjIJiL11/eTMu16WzHlBsvcb9LleptM27D7IZPhgzVuJCOuIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsylJmIm; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsylJmIm"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-44fee8813c3so34230441cf.2;
-        Tue, 13 Aug 2024 10:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723568815; x=1724173615; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2i/rjbVHkUl3elxDfPidCteOPniWSNb8rDJSw5+dOgQ=;
-        b=HsylJmIm7FfYP5eQ+dT8Y/58J0OdyJZ/Icp9x3iF167AM3Bhjto/tERV9/ZdGWww3f
-         dVpEcueI6mBv9ETKEuT7Gt3mWwQBhR+7vfooWzCko9+qliVSBubb0pP7n99Xdf9bPW4X
-         JiebKH9J99U91wBJCjNzNtNyMmlx0XX+f+zJ85rDvsFBw8pp74AAZXuwQJxZ97gq5tM/
-         0gRWNT5yDg/YdrONwUmob7Lryz+Vh1vEJ1Ku9Tr5o6tqA0GEenCZNlhHcJXULgsiPWBO
-         M+8OgUXcAui4FMbOuaKt1soySmyKHj/6KFTrAID0KZqrp8MExPjAVTexCSZNTK5wOqV8
-         5iTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723568815; x=1724173615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2i/rjbVHkUl3elxDfPidCteOPniWSNb8rDJSw5+dOgQ=;
-        b=wyJAfUjLhGNsJz5SEKSpO0nlQAxmegGsmjZaJ7LSbuOnszIIlQ0GVveWjNRDEFLQTo
-         CBrJSTtyOM8m1vc0e4wL8Up9Rrc2qZdBIP6wlGLZ/DodzRy9Mm85jLXKa0eKKhjOa5hi
-         HoxIZrJeBBW7j4mcOFOULYnzWEMwL2biTPsg9hbvEBGprpJDuInQxP7fd2+mL4cZ+ljc
-         IMuGf15Tvsug4/+JLKStUC6D/YDe0PQ+U2ZLaQy4v5K5PIK26h8oZ5NEYcs1c64G8TK9
-         NIw12TBTuww2FzPDoB1UPMjEsGU3UIJfXu+lMF0MRyJLu1YvE2OgTjAYYCWsoCFtb32x
-         ecfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUioA8x+rIJ5JNMQyiS9x0d04YF+T52V/dtj0HZPzQYmNqzi/K2aZXZhPEFYETIMsUmkktlOTsTquFF2F0WmXi4QjuIaSSt55J4eGv/3jqm92D3aeRwOaLcEPlwF2+RdBtErug01dJ/Eq51osp0B+cL94tobTzVhQ3LXOMflHKK2lE/M6Cp
-X-Gm-Message-State: AOJu0Yw9XG+M4JgJ+vZwcDt2MnSmw7qNTHPytOfKGml82VAIty/3ByTl
-	AvIDcDs3ICui6cfeGL5N+z8SB8FUnGfGOLGaLAuwCKfyoeE8/B9oK9FhoM0whjugkcsUnUTN1Ub
-	aqq/vajZ3UCl0dgvmZHxzvEu9nOO7QA==
-X-Google-Smtp-Source: AGHT+IEBuCVr/hLGN/Rndh5a/GKEbP2oA+HSkbMf9t7jLqYr/5kJ+ETG2zaUTGtw3I0ir3CzebnigjOR7XD9xalig2U=
-X-Received: by 2002:a17:90a:4811:b0:2c9:7aa6:e15d with SMTP id
- 98e67ed59e1d1-2d3aaabea62mr150642a91.20.1723568766613; Tue, 13 Aug 2024
- 10:06:06 -0700 (PDT)
+	s=arc-20240116; t=1723569165; c=relaxed/simple;
+	bh=LCqfXSkkEPSeZ1kiAFPjShQDR+HMV48XK4nlBDvBQ3U=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=OW73Ikzd7HjU4VPgMm0ILVcJkXm62jgaJfJ74tq1rq5rvDtiFpBgjxO6v4oaKUpQQekYtQVESCP8412yuG/tSss9NPMlk+u4Cps0LsSr7oUxzd2Lf8AQ5CcpAQRvD3qbNuupHa1wVN/gltP5uMjd3SLRBhkxTqE97Tt17jcETn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F6EC4AF09;
+	Tue, 13 Aug 2024 17:12:45 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sdv4r-00000001TP3-1E3J;
+	Tue, 13 Aug 2024 13:12:57 -0400
+Message-ID: <20240813171104.950972475@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 13 Aug 2024 13:11:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Ross Zwisler <zwisler@google.com>,
+ Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH 0/2] tracing: Have boot instance use reserve_mem option and use fgraph tracer
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240809192357.4061484-1-andrii@kernel.org> <20240813145002.GB31977@redhat.com>
-In-Reply-To: <20240813145002.GB31977@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 13 Aug 2024 10:05:54 -0700
-Message-ID: <CAEf4BzZmaH4y82DemPqmS-Eho-4iX91fQ2z=bhauhiDOb=98cg@mail.gmail.com>
-Subject: Re: [PATCH v2] uprobes: make trace_uprobe->nhit counter a per-CPU one
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, peterz@infradead.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 13, 2024 at 7:50=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 08/09, Andrii Nakryiko wrote:
-> >
-> > @@ -815,13 +824,21 @@ static int probes_profile_seq_show(struct seq_fil=
-e *m, void *v)
-> >  {
-> >       struct dyn_event *ev =3D v;
-> >       struct trace_uprobe *tu;
-> > +     unsigned long nhits;
-> > +     int cpu;
-> >
-> >       if (!is_trace_uprobe(ev))
-> >               return 0;
-> >
-> >       tu =3D to_trace_uprobe(ev);
-> > +
-> > +     nhits =3D 0;
-> > +     for_each_possible_cpu(cpu) {
-> > +             nhits +=3D READ_ONCE(*per_cpu_ptr(tu->nhits, cpu));
->
-> why not
->
->                 nhits +=3D per_cpu(*tu->nhits, cpu);
->
-> ?
->
-> See for example per_cpu_sum() or nr_processes(), per_cpu() should work ju=
-st fine...
->
 
-I just monkeyed it from some existing code somewhere in the BPF code
-base. I like per_cpu, will send a v3 and rebase it onto a linux-trace
-tree.
+Now that "reserve_mem" kernel command line option is upstream, add a patch
+to use it with the ring buffer boot up mappings. That is:
 
-> Other than that
->
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
->
+  reserve_mem=12M:4096:trace trace_instance=boot_mapped@trace
+
+Will allocate 12 megabytes at boot up that is aligned by 4096 bytes and
+label it with "trace". A trace_instance with the name "boot_mapped" will be
+created on top of that memory.
+
+Documentation has been updated about this and it states that KASLR can make
+it somewhat unreliable for every boot as well as the layout of the memory
+for the ring buffer may change with new kernel versions which will clear the
+previous buffer.
+
+Also, now that function graph tracing can be used by trace instances,
+update its code to be able to be used by this boot process. This can give a
+nicer trace of a reboot:
+
+           swapper/0-1       [000] d..1.   363.079162:  0)               |              lapic_shutdown() {
+           swapper/0-1       [000] d..1.   363.079163:  0)               |                disable_local_APIC() {
+           swapper/0-1       [000] d..1.   363.079163:  0) + 26.144 us   |                  clear_local_APIC.part.0();
+           swapper/0-1       [000] d....   363.079192:  0) + 29.424 us   |                }
+           swapper/0-1       [000] d....   363.079192:  0) + 30.376 us   |              }
+           swapper/0-1       [000] d..1.   363.079193:  0)               |              restore_boot_irq_mode() {
+           swapper/0-1       [000] d..1.   363.079194:  0)               |                native_restore_boot_irq_mode() {
+           swapper/0-1       [000] d..1.   363.079194:  0) + 13.863 us   |                  disconnect_bsp_APIC();
+           swapper/0-1       [000] d....   363.079209:  0) + 14.933 us   |                }
+           swapper/0-1       [000] d....   363.079209:  0) + 16.009 us   |              }
+           swapper/0-1       [000] d..1.   363.079210:  0)   0.694 us    |              hpet_disable();
+           swapper/0-1       [000] d..1.   363.079211:  0)   0.511 us    |              iommu_shutdown_noop();
+           swapper/0-1       [000] d....   363.079212:  0) # 3980.260 us |            }
+           swapper/0-1       [000] d..1.   363.079212:  0)               |            native_machine_emergency_restart() {
+           swapper/0-1       [000] d..1.   363.079213:  0)   0.495 us    |              tboot_shutdown();
+           swapper/0-1       [000] d..1.   363.079230:  0)               |              acpi_reboot() {
+           swapper/0-1       [000] d..1.   363.079231:  0)               |                acpi_reset() {
+           swapper/0-1       [000] d..1.   363.079232:  0)               |                  acpi_os_write_port() {
+
+This is based on top of:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+     branch: ring-buffer/for-next
+
+Which was supposed to go in the last merge window, but due to
+miscommunication, it did not. As it has been in linux-next, I do not want to
+rebase it, so instead I merged in v6.11-rc1 to get access to the
+reserve_mem kernel command line parameter and applied these patches on top.
+
+
+Steven Rostedt (1):
+      tracing/fgraph: Have fgraph handle previous boot function addresses
+
+Steven Rostedt (Google) (1):
+      tracing: Allow boot instances to use reserve_mem boot memory
+
+----
+ Documentation/admin-guide/kernel-parameters.txt | 13 +++++++++++++
+ kernel/trace/trace.c                            | 19 +++++++++++++------
+ kernel/trace/trace_functions_graph.c            | 23 ++++++++++++++++++-----
+ 3 files changed, 44 insertions(+), 11 deletions(-)
