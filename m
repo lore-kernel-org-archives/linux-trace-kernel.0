@@ -1,78 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAE160EC4;
-	Tue, 13 Aug 2024 11:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FFB194A6B;
+	Tue, 13 Aug 2024 11:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723547480; cv=none; b=JFg4ITJAcre6DU5iB899JiDwySsCIipb2/Kdoi6WWfFyxKCg6M4ifnuG3bdfLryHLPye7WPRNMZmg0Y5BQAk8IcMeNSLy+xUzHRYbL4dB9sTHtNdpJn5eQLvyf0/bGSnNbx5Lg5A9hkGSNQ+VAc7c3g25Sczaw23ZMe3BlXvpCc=
+	t=1723549614; cv=none; b=TO1ah8EuSrduF4R+l33t9E/6UmJRY5Vg/W12bXa0PES6QcQLWc6C2+m8/6IHzXqkvTpQKASwLjsoHbSKv6ZIjs479XaBM0p8Q1A6lPqjOMoLJOzdoUHu76vwlT+aoRcO7gU59Lfewj1jN0pYXW3mK+Ly299cJ9HVWuCARO8aDik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723547480; c=relaxed/simple;
-	bh=7vMHxHM8TbnXx+CW98SMeo13Ag/I/2RdZ+PSHBbBZcI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BfMD1SksDT/etx+sxGgUTeVQ0g2wgcR1PoKXNkR4LsEmCnzEBIOaJZaV/dIvuvxq6Qj6+SlNBg3U70NZ+UgwmqE8Qisw10P6hwvSZfTkp4hwrnFs483Bhxxy1B1cN68rzFchk3XUVysVZyqne0dfZ5mXMudHxVDkTgQcUbExngQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjCvZe0x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjCvZe0x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50EACC4AF0B;
-	Tue, 13 Aug 2024 11:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723547479;
-	bh=7vMHxHM8TbnXx+CW98SMeo13Ag/I/2RdZ+PSHBbBZcI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=OjCvZe0xH8EUIyX5H9zqZY2xV/EjiUon2wi6mGqbET0G465tITzVLs0SXkhMz+Ylh
-	 hJqCx8/i9EtDCNb0GGgy+OFOsGk6W8elpacVMFYpr0Il+Emw0DDzJ8cBnA4M2I9Wxy
-	 15M0FjO6wYzyGVymwnNy2PxtuvnZk5N/HCSh3Ubz6xn3pABNmdOoV61uiUU+lGqb3U
-	 VU71eAge68VeHKcqu/66h50rdxu2wp/DOdKvWxpom5TM7gtavnZuZIZO6iMrr/2vij
-	 JhvvFf1udeeMFBIyjj+eGyCB9ZUhUY6oYRf8EqhYwHMntAf0fa0PXbeoJv31NYVH4C
-	 THdmz7rCl7yQA==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Andy Chiu <andy.chiu@sifive.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, Zong Li
- <zong.li@sifive.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
- <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, Puranjay Mohan <puranjay@kernel.org>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Evgenii Shatokhin <e.shatokhin@yadro.com>, Andy Chiu
- <andy.chiu@sifive.com>
-Subject: Re: [PATCH v2 2/6] riscv: ftrace: align patchable functions to 4
- Byte boundary
-In-Reply-To: <20240628-dev-andyc-dyn-ftrace-v4-v2-2-1e5f4cb1f049@sifive.com>
-References: <20240628-dev-andyc-dyn-ftrace-v4-v2-0-1e5f4cb1f049@sifive.com>
- <20240628-dev-andyc-dyn-ftrace-v4-v2-2-1e5f4cb1f049@sifive.com>
-Date: Tue, 13 Aug 2024 13:11:16 +0200
-Message-ID: <8734n8ad9n.fsf@all.your.base.are.belong.to.us>
+	s=arc-20240116; t=1723549614; c=relaxed/simple;
+	bh=MAmrxpD9wvZgKozC9uZnUlR3orbBDYiN6UzZ+jrxcKI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FcBvJzPtEWe83XxrKE6i5zbOQ+IIfIAuVFjqoeha0i1vAztvbn0uglQ/kasElcN9SrID/7Rhwd20AcfnexYS+Mcm9FVPPaFHC49SinNgIwxYVp9ekt7Xut29dB9v7hRVHsBU/0rVc2NYoD8DzCMIr9BbIkiWuHP82W+T3kjjzN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WjqHW2qntz20l3L;
+	Tue, 13 Aug 2024 19:42:15 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3B32E140134;
+	Tue, 13 Aug 2024 19:46:48 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 13 Aug
+ 2024 19:46:47 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
+	<davem@davemloft.net>, <mhiramat@kernel.org>, <kees@kernel.org>,
+	<gustavoars@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH 0/3] kprobes: Annotate structs with __counted_by()
+Date: Tue, 13 Aug 2024 19:53:31 +0800
+Message-ID: <20240813115334.3922580-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-Andy Chiu <andy.chiu@sifive.com> writes:
+Annotate structs with __counted_by() for kprobe and do some cleanup.
 
-> We are changing ftrace code patching in order to remove dependency from
-> stop_machine() and enable kernel preemption. This requires us to align
-> functions entry at a 4-B align address.
->
-> However, -falign-functions on older versions of GCC alone was not strong
-> enoungh to align all functions. In fact, cold functions are not aligned
-> after turning on optimizations. We consider this is a bug in GCC and
-> turn off guess-branch-probility as a workaround to align all functions.
->
-> GCC bug id: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D88345
->
-> The option -fmin-function-alignment is able to align all functions
-> properly on newer versions of gcc. So, we add a cc-option to test if
-> the toolchain supports it.
->
-> Suggested-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
-> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+Jinjie Ruan (3):
+  kprobes: Annotate structs with __counted_by()
+  kprobes: Cleanup the config comment
+  kprobes: Cleanup collect_one_slot() and __disable_kprobe()
 
-Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+ kernel/kprobes.c | 87 ++++++++++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 43 deletions(-)
+
+-- 
+2.34.1
+
