@@ -1,244 +1,378 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA52D3A29F;
-	Wed, 14 Aug 2024 18:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88A113C673;
+	Wed, 14 Aug 2024 19:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723660950; cv=none; b=SC3V4J4htsLr29LZdoN9t6eRKVpgDZ4f16EyZ5j08aoAZZjcLrCLEKujOQgbaznatbQLuRFlDnW45Vb2H3KFkn3A+e2RMElRVUdOPnETS/y8XVustOAzVZj++WWtgsY6YdO/RvaPV+KvmNnpsmAQCk/S5SWmg6JbtEHEztRra00=
+	t=1723662233; cv=none; b=MQ/Pkh8LTAlEPF7/lr3/zW07DuEVMa7vIqFVcy+iEeZoiJwo2SM6M3/oDB2ANhjRwuAB+iaq2DQMdC046247k1Q2NHJSsN79Nsh3TNkitsibX7gjz8jSPsqOuf8DqCtq6/IDaJwxVyrbVIUNXza4yvvJtJNM1B3L9X4XuEMT6R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723660950; c=relaxed/simple;
-	bh=TU37DmTr1YEKbhnSgEzMaXP11iT9JVzF9g5jJFV02Ck=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l6OEU1MFC9LsZLvHUDnsDamlFVpXQ+BIxcNS3xazdDUyGQ9QOYZ4fD8tBhEqrBq/09cSg5t5dn/ijViRbSbuqp5I71vnbMyjkfSQp5l1u/LU7CKIyeskBkbY5tW6FG9JeL6eDIL4KlCGJBqsBmUo8723Kxq/0QuwLa+wgO3JctI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b9iUWvZL; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9iUWvZL"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d3bc043e81so69060a91.2;
-        Wed, 14 Aug 2024 11:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723660947; x=1724265747; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gbsct0TgfVPvlu225RGcCO8r+10kIKBz4cC1cmHdeGA=;
-        b=b9iUWvZLamhv5SpSG32V4s83NrmWfpsfneQHRGQiTas9xnxT52KsYu+n3h7zbWcYAI
-         10ws9b1B3JKhutQxyS67buPeVXHuD8DSKk77C0R1P9yMKqTseMVDZBJc+k317toq32q2
-         J2RCHCK0rDYza+MaF5uZtRTwtSy9rUoyvJmGw2/UYmfgYeOXuSNUN7LyiJk58NsX0fFW
-         Tnp2Ajm7Mf46lVyL+12vAEghBq3+wrJl0t/zkUZDIFuE38fFUwMtrvTl9VgVunWeVgsO
-         2ZiDmDwPJt9ttPFRpSJ6x3qUqFMFNiUR8IvnMIP0EJQJ+FvpjGZ8I1ic4rvWkV0y/rfO
-         BnJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723660947; x=1724265747;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gbsct0TgfVPvlu225RGcCO8r+10kIKBz4cC1cmHdeGA=;
-        b=jP5ITl5tz4lJTdQYwUWI8YnNS+YgiSH7K8WyIKPheT3guoBVJxvR0egstdxpdapfmF
-         6+9H12hoahTJ4nsCCNzZsPl6pAVRre6cjkKqyu6DmCoFntXCScAkwVF4YRJ9C8wjotI0
-         mY63GwE1NIIw9cAfV3X47GfeG5lpgJvLfOps2ItafZVDZ5VgaW4K/x8pPCnpSxbMEVgS
-         7b4BXTYombv6N2eoM3G1SmasVQQsRoIhCRVCqnQkKodNSiJLOPBHQHNcAJpX60s4PJJE
-         6pp19mqD/7ajH2gUC9caoafQINJOhr53mb2NaLXhHYoUDKh/hXEanc/U+QLx9TaYx4HE
-         T4Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDk+ayi2r/5wx46mSCg6zOZOclR9eDWGhiGJSiuUIJZtCg0WVB/6Yt4U9We7axvEUdkzE=@vger.kernel.org, AJvYcCWlc5xYtv4sOpPb2UmWNOyZ63kO5UIlJhUnnkDF99Wd1TcUIunpuMk3sCruKauPJ+zKYXpPImrtWzynebeO@vger.kernel.org, AJvYcCXP6vWrINao+WPJNiOk7rjUUvJfT2/k5XCJ45aJIKezzczcX+aRfM8YuVsw5sV2NffWeWJEj1aV7SxZ1cIgVLAiOA==@vger.kernel.org, AJvYcCXU1KyqAFVLQFt/3RLtyRVEBPGJR6QW3vzp9NHaosKfNMM6bgALfrxlqZ13+ul7Ka682ethR1/zZVMNpWifM7lkSUKl@vger.kernel.org
-X-Gm-Message-State: AOJu0YywSGxCcaWbU8Gu3sBN79DTmTTTdk6lTGNO9Luqq/FqMpt/JKGU
-	y5oDtbx6tpRNMGRy4fWPpGK/69NnrQBfiqMYxt0LRCtdSkkSZ6zfd751WhmH2stj9OZFM83t4S/
-	WHeUpLW8XdITOB8HO/TqluV/gyT0=
-X-Google-Smtp-Source: AGHT+IFJ6JssHR0s8HbeTx/tfoS96h/siWUufY6QMnrBcZAbsTdaxpmf1b1R02GXN5tUtFJZi6fIJLG0SBYdN93Wvdw=
-X-Received: by 2002:a17:90b:3a8b:b0:2cd:7d6f:31ad with SMTP id
- 98e67ed59e1d1-2d3aab489d1mr4273540a91.31.1723660946658; Wed, 14 Aug 2024
- 11:42:26 -0700 (PDT)
+	s=arc-20240116; t=1723662233; c=relaxed/simple;
+	bh=BUklLjjJOfsRkWi8ogPNyB8jK2KTfJhO8KrMS47mczY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NhrNM2/P3brDQ2MMXaBrcfToTeYI+taJWQqDR63hxSmPj6z3oaghuiKr/rUC5tFICfBBYzeTYvEHUN5Xqj5HwQlRaO8y2SekwVWzZfvVTrDo4dL5FlyRptKgDCF6hG5uD7KUviWO/D+i2+nE0Vtr03kJK6f3LNi+U273HgUrrKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87B9C116B1;
+	Wed, 14 Aug 2024 19:03:51 +0000 (UTC)
+Date: Wed, 14 Aug 2024 15:04:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Nick
+ Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>,
+ Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
+ Elena Zannoni <elena.zannoni@oracle.com>
+Subject: Re: [PATCH v5 2/4] kbuild, kconfig: generate offset range data for
+ builtin modules
+Message-ID: <20240814150405.0f55335d@gandalf.local.home>
+In-Reply-To: <20240716031045.1781332-3-kris.van.hees@oracle.com>
+References: <20240716031045.1781332-1-kris.van.hees@oracle.com>
+	<20240716031045.1781332-3-kris.van.hees@oracle.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com> <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
- <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com> <CAEf4BzYvpgfFGckcKdzkC_g1J1SFi7xBe=_cjdVy4KEMikvGMw@mail.gmail.com>
- <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
-In-Reply-To: <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 14 Aug 2024 11:42:14 -0700
-Message-ID: <CAEf4BzZkXWcE7=2FNm-DrSFOR-Pd9LqrQJvV0ShXfPnXzSzYjg@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for performance
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, 
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 13, 2024 at 9:17=E2=80=AFPM Liao, Chang <liaochang1@huawei.com>=
- wrote:
->
->
->
-> =E5=9C=A8 2024/8/13 1:49, Andrii Nakryiko =E5=86=99=E9=81=93:
-> > On Mon, Aug 12, 2024 at 4:11=E2=80=AFAM Liao, Chang <liaochang1@huawei.=
-com> wrote:
-> >>
-> >>
-> >>
-> >> =E5=9C=A8 2024/8/9 2:26, Andrii Nakryiko =E5=86=99=E9=81=93:
-> >>> On Thu, Aug 8, 2024 at 1:45=E2=80=AFAM Liao, Chang <liaochang1@huawei=
-.com> wrote:
-> >>>>
-> >>>> Hi Andrii and Oleg.
-> >>>>
-> >>>> This patch sent by me two weeks ago also aim to optimize the perform=
-ance of uprobe
-> >>>> on arm64. I notice recent discussions on the performance and scalabi=
-lity of uprobes
-> >>>> within the mailing list. Considering this interest, I've added you a=
-nd other relevant
-> >>>> maintainers to the CC list for broader visibility and potential coll=
-aboration.
-> >>>>
-> >>>
-> >>> Hi Liao,
-> >>>
-> >>> As you can see there is an active work to improve uprobes, that
-> >>> changes lifetime management of uprobes, removes a bunch of locks take=
-n
-> >>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
-> >>> hold off a bit with your changes until all that lands. And then
-> >>> re-benchmark, as costs might shift.
-> >>>
-> >>> But also see some remarks below.
-> >>>
-> >>>> Thanks.
-> >>>>
-> >>>> =E5=9C=A8 2024/7/27 17:44, Liao Chang =E5=86=99=E9=81=93:
-> >>>>> The profiling result of single-thread model of selftests bench reve=
-als
-> >>>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou=
-() on
-> >>>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
-> >>>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() t=
-ake
-> >>>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
-> >>>>>
-> >>>>> This patch introduce struct uprobe_breakpoint to track previously
-> >>>>> allocated insn_slot for frequently hit uprobe. it effectively reduc=
-e the
-> >>>>> need for redundant insn_slot writes and subsequent expensive cache
-> >>>>> flush, especially on architecture like ARM64. This patch has been t=
-ested
-> >>>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftes=
-t
-> >>>>> bench and Redis GET/SET benchmark result below reveal obivious
-> >>>>> performance gain.
-> >>>>>
-> >>>>> before-opt
-> >>>>> ----------
-> >>>>> trig-uprobe-nop:  0.371 =C2=B1 0.001M/s (0.371M/prod)
-> >>>>> trig-uprobe-push: 0.370 =C2=B1 0.001M/s (0.370M/prod)
-> >>>>> trig-uprobe-ret:  1.637 =C2=B1 0.001M/s (1.647M/prod)
-> >>>
-> >>> I'm surprised that nop and push variants are much slower than ret
-> >>> variant. This is exactly opposite on x86-64. Do you have an
-> >>> explanation why this might be happening? I see you are trying to
-> >>> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
-> >>> variant of uprobe that normally shouldn't be used. Typically uprobe i=
-s
-> >>> installed on nop (for USDT) and on function entry (which would be pus=
-h
-> >>> variant, `push %rbp` instruction).
-> >>>
-> >>> ret variant, for x86-64, causes one extra step to go back to user
-> >>> space to execute original instruction out-of-line, and then trapping
-> >>> back to kernel for running uprobe. Which is what you normally want to
-> >>> avoid.
-> >>>
-> >>> What I'm getting at here. It seems like maybe arm arch is missing fas=
-t
-> >>> emulated implementations for nops/push or whatever equivalents for
-> >>> ARM64 that is. Please take a look at that and see why those are slow
-> >>> and whether you can make those into fast uprobe cases?
-> >>
-> >> Hi Andrii,
-> >>
-> >> As you correctly pointed out, the benchmark result on Arm64 is counter=
-intuitive
-> >> compared to X86 behavior. My investigation revealed that the root caus=
-e lies in
-> >> the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents i=
-nstructions
-> >> of 'nop' and 'push' from the emulatable instruction list. This forces =
-the kernel
-> >> to handle these instructions out-of-line in userspace upon breakpoint =
-exception
-> >> is handled, leading to a significant performance overhead compared to =
-'ret' variant,
-> >> which is already emulated.
-> >>
-> >> To address this issue, I've developed a patch supports  the emulation =
-of 'nop' and
-> >> 'push' variants. The benchmark results below indicates the performance=
- gain of
-> >> emulation is obivious.
-> >>
-> >> xol (1 cpus)
-> >> ------------
-> >> uprobe-nop:  0.916 =C2=B1 0.001M/s (0.916M/prod)
-> >> uprobe-push: 0.908 =C2=B1 0.001M/s (0.908M/prod)
-> >> uprobe-ret:  1.855 =C2=B1 0.000M/s (1.855M/prod)
-> >> uretprobe-nop:  0.640 =C2=B1 0.000M/s (0.640M/prod)
-> >> uretprobe-push: 0.633 =C2=B1 0.001M/s (0.633M/prod)
-> >> uretprobe-ret:  0.978 =C2=B1 0.003M/s (0.978M/prod)
-> >>
-> >> emulation (1 cpus)
-> >> -------------------
-> >> uprobe-nop:  1.862 =C2=B1 0.002M/s  (1.862M/s/cpu)
-> >> uprobe-push: 1.743 =C2=B1 0.006M/s  (1.743M/s/cpu)
-> >> uprobe-ret:  1.840 =C2=B1 0.001M/s  (1.840M/s/cpu)
-> >> uretprobe-nop:  0.964 =C2=B1 0.004M/s  (0.964M/s/cpu)
-> >> uretprobe-push: 0.936 =C2=B1 0.004M/s  (0.936M/s/cpu)
-> >> uretprobe-ret:  0.940 =C2=B1 0.001M/s  (0.940M/s/cpu)
-> >>
-> >> As you can see, the performance gap between nop/push and ret variants =
-has been significantly
-> >> reduced. Due to the emulation of 'push' instruction need to access use=
-rspace memory, it spent
-> >> more cycles than the other.
-> >
-> > Great, it's an obvious improvement. Are you going to send patches
-> > upstream? Please cc bpf@vger.kernel.org as well.
->
-> I'll need more time to thoroughly test this patch. The emulation o push/n=
-op
-> instructions also impacts the kprobe/kretprobe paths on Arm64, As as resu=
-lt,
-> I'm working on enhancements to trig-kprobe/kretprobe to prevent performan=
-ce
-> regression.
+On Mon, 15 Jul 2024 23:10:43 -0400
+Kris Van Hees <kris.van.hees@oracle.com> wrote:
 
-Why would the *benchmarks* have to be modified? The typical
-kprobe/kretprobe attachment should be fast, and those benchmarks
-simulate typical fast path kprobe/kretprobe. Is there some simulation
-logic that is shared between uprobes and kprobes or something?
+> The offset range data for builtin modules is generated using:
+>  - modules.builtin: associates object files with module names
+>  - vmlinux.map: provides load order of sections and offset of first member
+>     per section
+>  - vmlinux.o.map: provides offset of object file content per section
+>  - .*.cmd: build cmd file with KBUILD_MODFILE and KBUILD_MODNAME
 
->
-> >
-> >
-> > I'm also thinking we should update uprobe/uretprobe benchmarks to be
-> > less x86-specific. Right now "-nop" is the happy fastest case, "-push"
-> > is still happy, slightly slower case (due to the need to emulate stack
-> > operation) and "-ret" is meant to be the slow single-step case. We
-> > should adjust the naming and make sure that on ARM64 we hit similar
-> > code paths. Given you seem to know arm64 pretty well, can you please
-> > take a look at updating bench tool for ARM64 (we can also rename
-> > benchmarks to something a bit more generic, rather than using
-> > instruction names)?
->
+No where in the change log does it state the name of the file that is going
+to be created. That should be the first thing mentioned.
 
-[...]
+   Create file module.builtin.ranges that can be used to find where
+   built-in modules are located by their addresses. This will be useful for
+   tracing tools to find what functions are for various built-in modules.
+
+
+> 
+> The generated data will look like:
+> 
+> .text 00000000-00000000 = _text
+> .text 0000baf0-0000cb10 amd_uncore
+> .text 0009bd10-0009c8e0 iosf_mbi
+> ...
+> .text 008e6660-008e9630 snd_soc_wcd_mbhc
+> .text 008e9630-008ea610 snd_soc_wcd9335 snd_soc_wcd934x snd_soc_wcd938x
+> .text 008ea610-008ea780 snd_soc_wcd9335
+> ...
+> .data 00000000-00000000 = _sdata
+> .data 0000f020-0000f680 amd_uncore
+> 
+> For each ELF section, it lists the offset of the first symbol.  This can
+> be used to determine the base address of the section at runtime.
+> 
+> Next, it lists (in strict ascending order) offset ranges in that section
+> that cover the symbols of one or more builtin modules.  Multiple ranges
+> can apply to a single module, and ranges can be shared between modules.
+> 
+> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range data
+> is generated for kernel modules that are built into the kernel image.
+> 
+> How it works:
+> 
+>   1. The modules.builtin file is parsed to obtain a list of built-in
+>      module names and their associated object names (the .ko file that
+>      the module would be in if it were a loadable module, hereafter
+>      referred to as <kmodfile>).  This object name can be used to
+>      identify objects in the kernel compile because any C or assembler
+>      code that ends up into a built-in module will have the option
+>      -DKBUILD_MODFILE=<kmodfile> present in its build command, and those
+>      can be found in the .<obj>.cmd file in the kernel build tree.
+> 
+>      If an object is part of multiple modules, they will all be listed
+>      in the KBUILD_MODFILE option argument.
+> 
+>      This allows us to conclusively determine whether an object in the
+>      kernel build belong to any modules, and which.
+> 
+>  2. The vmlinux.map is parsed next to determine the base address of each
+>     top level section so that all addresses into the section can be
+>     turned into offsets.  This makes it possible to handle sections
+>     getting loaded at different addresses at system boot.
+> 
+>     We also determine an 'anchor' symbol at the beginning of each
+>     section to make it possible to calculate the true base address of
+>     a section at runtime (i.e. symbol address - symbol offset).
+> 
+>     We collect start addresses of sections that are included in the top
+>     level section.  This is used when vmlinux is linked using vmlinux.o,
+>     because in that case, we need to look at the vmlinux.o linker map to
+>     know what object a symbol is found in.
+> 
+>     And finally, we process each symbol that is listed in vmlinux.map
+>     (or vmlinux.o.map) based on the following structure:
+> 
+>     vmlinux linked from vmlinux.a:
+> 
+>       vmlinux.map:
+>         <top level section>
+>           <included section>  -- might be same as top level section)
+>             <object>          -- built-in association known
+>               <symbol>        -- belongs to module(s) object belongs to
+>               ...
+> 
+>     vmlinux linked from vmlinux.o:
+> 
+>       vmlinux.map:
+>         <top level section>
+>           <included section>  -- might be same as top level section)
+>             vmlinux.o         -- need to use vmlinux.o.map
+>               <symbol>        -- ignored
+>               ...
+> 
+>       vmlinux.o.map:
+>         <section>
+>             <object>          -- built-in association known
+>               <symbol>        -- belongs to module(s) object belongs to
+>               ...
+> 
+>  3. As sections, objects, and symbols are processed, offset ranges are
+>     constructed in a striaght-forward way:
+> 
+>       - If the symbol belongs to one or more built-in modules:
+>           - It we were working on the same module(s), extend the range
+
+             "If we" ?
+
+>             to include this object
+>           - If we were working on another module(s), close that range,
+>             and start the new one
+>       - If the symbol does not belong to any built-in modules:
+>           - It we were working on a module(s) range, close that range
+
+             "If we" ?
+> 
+> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+> 
+> Notes:
+>     Changes since v4:
+>      - Improved commit description to explain the why and how.
+>      - Documented dependency on GNU AWK for CONFIG_BUILTIN_MODULE_RANGES.
+>      - Improved comments in generate_builtin_ranges.awk
+>      - Improved logic in generate_builtin_ranges.awk to handle incorrect
+>        object size information in linker maps
+>     
+>     Changes since v3:
+>      - Consolidated patches 2 through 5 into a single patch
+>      - Move CONFIG_BUILTIN_MODULE_RANGES to Kconfig.debug
+>      - Make CONFIG_BUILTIN_MODULE_RANGES select CONFIG_VMLINUX_MAP
+>      - Disable CONFIG_BUILTIN_MODULE_RANGES if
+> CONFIG_LTO_CLANG_(FULL|THIN)=y
+>      - Support LLVM (lld) compiles in generate_builtin_ranges.awk
+>      - Support CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y
+>     
+>     Changes since v2:
+>      - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
+>      - 1st arg to generate_builtin_ranges.awk is now
+> modules.builtin.modinfo
+>      - Switched from using modules.builtin.objs to parsing .*.cmd files
+>      - Parse data from .*.cmd in generate_builtin_ranges.awk
+>      - Use $(real-prereqs) rather than $(filter-out ...)
+>     ---
+> 
+>  Documentation/process/changes.rst   |   7 +
+>  lib/Kconfig.debug                   |  19 +
+>  scripts/Makefile.vmlinux            |  16 +
+>  scripts/Makefile.vmlinux_o          |   3 +
+>  scripts/generate_builtin_ranges.awk | 515 ++++++++++++++++++++++++++++
+>  5 files changed, 560 insertions(+)
+>  create mode 100755 scripts/generate_builtin_ranges.awk
+> 
+> diff --git a/Documentation/process/changes.rst
+> b/Documentation/process/changes.rst index 5685d7bfe4d0..a37b9c22241d
+> 100644 --- a/Documentation/process/changes.rst
+> +++ b/Documentation/process/changes.rst
+> @@ -63,6 +63,7 @@ cpio                   any              cpio --version
+>  GNU tar                1.28             tar --version
+>  gtags (optional)       6.6.5            gtags --version
+>  mkimage (optional)     2017.01          mkimage --version
+> +GNU AWK (optional)     5.1.0            gawk --version
+
+Note, this needs to be rebased on top of the latest Linus tagged branch as
+it didn't apply cleanly.
+
+>  ====================== ===============
+> ======================================== 
+>  .. [#f1] Sphinx is needed only to build the Kernel documentation
+> @@ -198,6 +199,12 @@ platforms. The tool is available via the
+> ``u-boot-tools`` package or can be built from the U-Boot source code. See
+> the instructions
+> at https://docs.u-boot.org/en/latest/build/tools.html#building-tools-for-linux 
+> +GNU AWK
+> +-------
+> +
+> +GNU AWK is needed if you want kernel builds to generate address range
+> data for +builtin modules (CONFIG_BUILTIN_MODULE_RANGES).
+> +
+>  System utilities
+>  ****************
+>  
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 59b6765d86b8..ab8428c0e2fd 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -571,6 +571,25 @@ config VMLINUX_MAP
+>  	  pieces of code get eliminated with
+>  	  CONFIG_LD_DEAD_CODE_DATA_ELIMINATION.
+>  
+> +config BUILTIN_MODULE_RANGES
+> +	bool "Generate address range information for builtin modules"
+> +	depends on !LTO_CLANG_FULL
+> +	depends on !LTO_CLANG_THIN
+> +	select VMLINUX_MAP
+> +	help
+> +	 When modules are built into the kernel, there will be no module name
+> +	 associated with its symbols in /proc/kallsyms.  Tracers may want to
+> +	 identify symbols by module name and symbol name regardless of whether
+> +	 the module is configured as loadable or not.
+> +
+> +	 This option generates modules.builtin.ranges in the build tree with
+> +	 offset ranges (per ELF section) for the module(s) they belong to.
+> +	 It also records an anchor symbol to determine the load address of the
+> +	 section.
+> +
+
+
+> +	 It is fully compatible with CONFIG_RANDOMIZE_BASE and similar late-
+> +	 address-modification options.
+
+Hmm, is the above needed? Usually a comment like that is for incompatible
+usages.
+
+> +
+>  config DEBUG_FORCE_WEAK_PER_CPU
+>  	bool "Force weak per-cpu definitions"
+>  	depends on DEBUG_KERNEL
+> diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+> index 49946cb96844..7e21162e9de1 100644
+> --- a/scripts/Makefile.vmlinux
+> +++ b/scripts/Makefile.vmlinux
+> @@ -33,6 +33,22 @@ targets += vmlinux
+>  vmlinux: scripts/link-vmlinux.sh vmlinux.o $(KBUILD_LDS) FORCE
+>  	+$(call if_changed_dep,link_vmlinux)
+>  
+> +# module.builtin.ranges
+> +#
+> ---------------------------------------------------------------------------
+> +ifdef CONFIG_BUILTIN_MODULE_RANGES +__default: modules.builtin.ranges
+> +
+> +quiet_cmd_modules_builtin_ranges = GEN     $@
+> +      cmd_modules_builtin_ranges = \
+> +	$(srctree)/scripts/generate_builtin_ranges.awk $(real-prereqs) >
+> $@ +
+> +vmlinux.map: vmlinux
+> +
+> +targets += modules.builtin.ranges
+> +modules.builtin.ranges: modules.builtin vmlinux.map vmlinux.o.map FORCE
+> +	$(call if_changed,modules_builtin_ranges)
+> +endif
+> +
+>  # Add FORCE to the prequisites of a target to force it to be always
+> rebuilt. #
+> --------------------------------------------------------------------------- 
+> diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
+> index 6de297916ce6..252505505e0e 100644
+> --- a/scripts/Makefile.vmlinux_o
+> +++ b/scripts/Makefile.vmlinux_o
+> @@ -45,9 +45,12 @@ objtool-args = $(vmlinux-objtool-args-y) --link
+>  # Link of vmlinux.o used for section mismatch analysis
+>  #
+> --------------------------------------------------------------------------- 
+> +vmlinux-o-ld-args-$(CONFIG_BUILTIN_MODULE_RANGES)	+= -Map=$@.map
+> +
+>  quiet_cmd_ld_vmlinux.o = LD      $@
+>        cmd_ld_vmlinux.o = \
+>  	$(LD) ${KBUILD_LDFLAGS} -r -o $@ \
+> +	$(vmlinux-o-ld-args-y) \
+>  	$(addprefix -T , $(initcalls-lds)) \
+>  	--whole-archive vmlinux.a --no-whole-archive \
+>  	--start-group $(KBUILD_VMLINUX_LIBS) --end-group \
+> diff --git a/scripts/generate_builtin_ranges.awk b/scripts/generate_builtin_ranges.awk
+> new file mode 100755
+> index 000000000000..9b647781d5fe
+> --- /dev/null
+> +++ b/scripts/generate_builtin_ranges.awk
+> @@ -0,0 +1,515 @@
+> +#!/usr/bin/gawk -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +# generate_builtin_ranges.awk: Generate address range data for builtin modules +# Written by Kris Van Hees <kris.van.hees@oracle.com>
+> +#
+> +# Usage: generate_builtin_ranges.awk modules.builtin vmlinux.map \
+> +#		vmlinux.o.map > modules.builtin.ranges
+> +#
+
+My only concern about this script is how fragile it may be. Is there any
+possibility that the input files may change that will break this script,
+and if so, is there a way we can detect and warn about it?
+
+Other then that:
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
+
+
+> +
+> +# Return the module name(s) (if any) associated with the given object.
+> +#
+> +# If we have seen this object before, return information from the cache.
+> +# Otherwise, retrieve it from the corresponding .cmd file.
+> +#
+> +function get_module_info(fn, mod, obj, mfn, s) {
+> +	if (fn in omod)
+> +		return omod[fn];
+> +
+> +	if (match(fn, /\/[^/]+$/) == 0)
+> +		return "";
+> +
+> +	obj = fn;
+> +	mod = "";
+> +	mfn = "";
+> +	fn = substr(fn, 1, RSTART) "." substr(fn, RSTART + 1) ".cmd";
+> +	if (getline s <fn == 1) {
+> +		if (match(s, /DKBUILD_MODFILE=['"]+[^'"]+/) > 0) {
+> +			mfn = substr(s, RSTART + 16, RLENGTH - 16);
+> +			gsub(/['"]/, "", mfn);
+> +
+> +			mod = mfn;
+> +			gsub(/([^/ ]*\/)+/, "", mod);
+> +			gsub(/-/, "_", mod);
+> +		}
+> +	}
+> +	close(fn);
+> +
+> +	# A single module (common case) also reflects objects that are not part
+> +	# of a module.  Some of those objects have names that are also a module
+> +	# name (e.g. core).  We check the associated module file name, and if
+> +	# they do not match, the object is not part of a module.
+> +	if (mod !~ / /) {
+> +		if (!(mod in mods))
+> +			mod = "";
+> +		if (mods[mod] != mfn)
+> +			mod = "";
+> +	}
+> +
+> +	# At this point, mod is a single (valid) module name, or a list of
+> +	# module names (that do not need validation).
+> +	omod[obj] = mod;
+> +	close(fn);
+> +
+> +	return mod;
+> +}
