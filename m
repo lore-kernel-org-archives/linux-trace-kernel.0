@@ -1,247 +1,265 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE356394;
-	Wed, 14 Aug 2024 08:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81811AED3C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 11:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723623199; cv=none; b=FtkCI9rdR6wEwL47qioo1kmneqtUwJWko/ZnItUZRo6Wke8mLIpDerNfrvnVv/ZCcgmpOllhraUfM2Gbxtj7Ch0Lo2ky5D5c1PzXDNUJKmBseqmWTmdyR9Z+Zt0KkvYvggYGwKe0gER02XYbauq4IUeuYS96dfcyTLU2JkY7Wno=
+	t=1723635512; cv=none; b=JTC59/DSKu9d906HqoQ37sghIQsCF3cXKT03E7tuFJa5qZL6NokXKuiPVV4u0+nvWGBSESojmJRK5I3KOZmfEO5+MVcAfpuVBa7/KJGQiVIgSS2d1KX45yGaBaxHX2Y+mRAflZt3CsdhOkyYpwZQgkSzCUtCZ+S2OBC4Z8cmei0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723623199; c=relaxed/simple;
-	bh=MGDQcVscA9rJ1A+eZT5iYZE4lC8HyxO0eR2ZAnsUjAg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uz5MgJcSke6gbXvvBPWys3+vYt3ZzQgVcG4EqzTv+qhBwZJ1SC1rbdFMsKUy61nh08jccF0PRSSU5SUvIqI0RjJXoYzIjjlfnMmQ1GBjBYw1OUDokwdwsnWCRXYi7k6zEKs/JnAYnB8S9heOT4oSLGPfpS80XOqorKh5LbF5kak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WkLbZ6WLTzcdRD;
-	Wed, 14 Aug 2024 16:12:58 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id B3A981400C9;
-	Wed, 14 Aug 2024 16:13:13 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 14 Aug
- 2024 16:13:13 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
-	<oleg@redhat.com>, <peterz@infradead.org>, <puranjay@kernel.org>,
-	<ast@kernel.org>, <andrii@kernel.org>, <xukuohai@huawei.com>,
-	<revest@chromium.org>, <liaochang1@huawei.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-Subject: [PATCH] arm64: insn: Simulate nop and push instruction for better uprobe performance
-Date: Wed, 14 Aug 2024 08:03:56 +0000
-Message-ID: <20240814080356.2639544-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1723635512; c=relaxed/simple;
+	bh=JSPcamH+sNGiM5g1Yg2W18/X/3so4oRE7sqdh0jPD7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OfT7vTRG4R1ZlCLA93b1jUWUE/ikzMxomk3nof06XonWy25HBVgrfDUEkppvBudg5J6WbrpP+u/D2n5ygEX1yLvHvttD2C7VOU3A+f7a/czGcsynonWzZFwnPple2uid6AC4cbsT9/zbPgqFds4LMwb1O4AueIf3VMqMO+u/4fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y6A8IUj7; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y6A8IUj7"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2cd16900ec5so99575a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 04:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1723635510; x=1724240310; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=asggk/QXp9CMUZLmCX38cnR4hEwxRfJpnzjB+4PaQdM=;
+        b=Y6A8IUj7nRR7RurErhYLV8NGefPwKd2K+fKfSKDierPtKYVJ2kstiV1wcxByQS/jSq
+         tvW+mAyp8x0J7Hap0od/SkZwv6p9rqP+5wwSVvv0GIuGTNUAL5/EtQz0APlC81FEv2/X
+         faK676Q0wXjzD19c6z8EB55LB+T28cwHxvWHU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723635510; x=1724240310;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=asggk/QXp9CMUZLmCX38cnR4hEwxRfJpnzjB+4PaQdM=;
+        b=oR48dRwhwnYBY2F+iQ+4vcpi1+gjcB9+WqoGtpoTWRqGXuXFgb2TDeuyUWhwJtczuV
+         xRxgTu3HStob/Zx3VtZXd5mtTJAUY4a6q8XnD43oQSn/WtBINMSd8COF6MqTbQKiHKMQ
+         RPZXDdOjECd+o0AmJ2Q33R2SPvstDFx7+WZv1cRaAGlPTSkS4IAcgafDvH7zWMuPW+6Z
+         Zb0iAmOMZapxOKtXUO6ygG/xTinYNerLSELwRAKoHuc7RchKWVYCu65ldUCj1osl83UK
+         QY91Ydv4U3L2MKZZkmMD7IHDZFDFOrSH/LfRz8bKrrAaVLO4y2nAfxKm3csTtyE8t74L
+         hFnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWw2oX+VMT7T7hPR1am3/NA64cOJYoDTmZVGuMGOphMGZ4xA2zmiSFYeOt2cKsIRWUS6yqXjBkqO3R6zXM9mzabM+1La8VGZEsvVN9Z1e6IshQY
+X-Gm-Message-State: AOJu0YwhfKYPKTq0GDoAM2LYKZr96VITrIa3n+DceACpG2WKapK1mTM7
+	Xf8YWpEeZPaJsQK29vWibKvh5VxUDg6zPKFkiFyEXmJGfG8bC05mLs22v0X5cfE=
+X-Google-Smtp-Source: AGHT+IE4/SfOX9SrqC8Lo28qMZlrqPPd9smyceqkhnEHoaDeCM97VxNhJioQDkrnbMi/8elozNCKOQ==
+X-Received: by 2002:a17:90a:1f42:b0:2c8:4bca:f904 with SMTP id 98e67ed59e1d1-2d3aa879f6cmr1674581a91.0.1723635509945;
+        Wed, 14 Aug 2024 04:38:29 -0700 (PDT)
+Received: from [192.168.104.75] ([223.118.51.114])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3ac7dd3f0sm1464865a91.18.2024.08.14.04.38.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Aug 2024 04:38:29 -0700 (PDT)
+Message-ID: <2c13840e-2717-4f88-b613-f6a770be2d75@linuxfoundation.org>
+Date: Wed, 14 Aug 2024 05:38:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] selftests/tracing: Add hist poll() support test
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
+Cc: Tom Zanussi <zanussi@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <172359427367.323666.6446548762874507863.stgit@devnote2>
+ <172359430351.323666.9768554440535494357.stgit@devnote2>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <172359430351.323666.9768554440535494357.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-As Andrii pointed out, the uprobe/uretprobe selftest bench run into a
-counterintuitive result that nop and push variants are much slower than
-ret variant [0]. The root cause lies in the arch_probe_analyse_insn(),
-which excludes 'nop' and 'stp' from the emulatable instructions list.
-This force the kernel returns to userspace and execute them out-of-line,
-then trapping back to kernel for running uprobe callback functions. This
-leads to a significant performance overhead compared to 'ret' variant,
-which is already emulated.
+On 8/13/24 18:11, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a testcase for poll() on hist file. This introduces a helper binary
+> to the ftracetest, because there is no good way to reliably execute
+> poll() on hist file.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>   Changes in v2:
+>    - Update poll command to support both of POLLIN and POLLPRI, and timeout.
+>    - Identify unsupported stable kernel if poll-in returns soon.
+>    - Test both of POLLIN and POLLPRI.
+> ---
+>   tools/testing/selftests/ftrace/Makefile            |    2 +
+>   tools/testing/selftests/ftrace/poll.c              |   62 +++++++++++++++++
+>   .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 ++++++++++++++++++++
+>   3 files changed, 138 insertions(+)
+>   create mode 100644 tools/testing/selftests/ftrace/poll.c
+>   create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+> index a1e955d2de4c..49d96bb16355 100644
+> --- a/tools/testing/selftests/ftrace/Makefile
+> +++ b/tools/testing/selftests/ftrace/Makefile
+> @@ -6,4 +6,6 @@ TEST_PROGS := ftracetest-ktap
+>   TEST_FILES := test.d settings
+>   EXTRA_CLEAN := $(OUTPUT)/logs/*
+>   
+> +TEST_GEN_PROGS = poll
+> +
+>   include ../lib.mk
+> diff --git a/tools/testing/selftests/ftrace/poll.c b/tools/testing/selftests/ftrace/poll.c
+> new file mode 100644
+> index 000000000000..8003a59fe042
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/poll.c
+> @@ -0,0 +1,62 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Simple poll on a file.
+> + *
+> + * Copyright (c) 2024 Google LLC.
+> + */
+> +
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <poll.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +
+> +#define BUFSIZE 4096
+> +
+> +/*
+> + * Usage:
+> + *  poll <in|pri> <FILE> [timeout]
+> + */
+> +int main(int argc, char *argv[])
+> +{
+> +	struct pollfd pfd;
+> +	char buf[BUFSIZE];
+> +	int timeout = -1;
+> +	int ret;
+> +
+> +	if (argc < 3)
+> +		return -1;
+> +
+> +	if (!strcmp(argv[1], "in"))
+> +		pfd.events = POLLIN;
+> +	else if (!strcmp(argv[1], "pri"))
+> +		pfd.events = POLLPRI;
+> +
+> +	pfd.fd = open(argv[2], O_RDONLY);
+> +	if (pfd.fd < 0) {
+> +		perror("open");
+> +		return -1;
+> +	}
+> +
+> +	if (argc == 4)
+> +		timeout = atoi(argv[3]);
 
-Typicall uprobe is installed on 'nop' for USDT and on function entry
-which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to push lr
-and fp into stack regardless kernel or userspace binary. In order to
-improve the performance of handling uprobe for common usecases. This
-patch supports the emulation of Arm64 equvialents instructions of 'nop'
-and 'push'. The benchmark results below indicates the performance gain
-of emulation is obvious.
+This code can be simpler and more maintainable using getopt.
+Any reason why you didn't use it?
 
-On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
+> +
+> +	/* Reset poll by read if POLLIN is specified. */
+> +	if (pfd.events & POLLIN)
+> +		do {} while (read(pfd.fd, buf, BUFSIZE) == BUFSIZE);
+> +
+> +	ret = poll(&pfd, 1, timeout);
+> +	if (ret < 0 && errno != EINTR) {
+> +		perror("poll")> +		return -1;
+> +	}
+> +	close(pfd.fd);
+> +
+> +	/* If timeout happned, return code is 0 */
 
-xol (1 cpus)
-------------
-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+Spelling - happened
 
-emulation (1 cpus)
--------------------
-uprobe-nop:  1.862 ± 0.002M/s  (1.862M/prod)
-uprobe-push: 1.743 ± 0.006M/s  (1.743M/prod)
-uprobe-ret:  1.840 ± 0.001M/s  (1.840M/prod)
-uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/prod)
-uretprobe-push: 0.936 ± 0.004M/s  (0.936M/prod)
-uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/prod)
+> +	if (ret == 0)
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> new file mode 100644
+> index 000000000000..53bea74e2234
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> @@ -0,0 +1,74 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: event trigger - test poll wait on histogram
+> +# requires: set_event events/sched/sched_process_free/trigger events/sched/sched_process_free/hist
+> +# flags: instance
+> +
+> +POLL=${FTRACETEST_ROOT}/poll
+> +
+> +if [ ! -x ${POLL} ]; then
+> +  echo "poll program is not compiled!"
+> +  exit_unresolved
+> +fi
+> +
+> +EVENT=events/sched/sched_process_free/
+> +
+> +# Check poll ops is supported. Before implementing poll on hist file, it
+> +# returns soon with POLLIN | POLLOUT, but not POLLPRI.
+> +
+> +# This must wait >1 sec and return 1 (timeout).
+> +set +e
+> +${POLL} in ${EVENT}/hist 1000
+> +ret=$?
+> +set -e
+> +if [ ${ret} != 1 ]; then
+> +  echo "poll on hist file is not supported"
+> +  exit_unsupported
+> +fi
+> +
+> +# Test POLLIN
+> +echo > trace
+> +echo "hist:key=comm" > ${EVENT}/trigger
+> +echo 1 > ${EVENT}/enable
+> +
+> +# This sleep command will exit after 2 seconds.
+> +sleep 2 &
+> +BGPID=$!
+> +# if timeout happens, poll returns 1.
+> +${POLL} in ${EVENT}/hist 4000
+> +echo 0 > tracing_on
+> +
+> +if [ -d /proc/${BGPID} ]; then
+> +  echo "poll exits too soon"
+> +  kill -KILL ${BGPID} ||:
+> +  exit_fail
+> +fi
+> +
+> +if ! grep -qw "sleep" trace; then
+> +  echo "poll exits before event happens"
+> +  exit_fail
+> +fi
+> +
+> +# Test POLLPRI
+> +echo > trace
+> +echo 1 > tracing_on
+> +
+> +# This sleep command will exit after 2 seconds.
+> +sleep 2 &
+> +BGPID=$!
+> +# if timeout happens, poll returns 1.
+> +${POLL} pri ${EVENT}/hist 4000
+> +echo 0 > tracing_on
+> +
+> +if [ -d /proc/${BGPID} ]; then
+> +  echo "poll exits too soon"
+> +  kill -KILL ${BGPID} ||:
+> +  exit_fail
+> +fi
+> +
+> +if ! grep -qw "sleep" trace; then
+> +  echo "poll exits before event happens"
+> +  exit_fail
+> +fi
+> +
+> +exit_pass
+> 
 
-As shown above, the performance gap between 'nop/push' and 'ret'
-variants has been significantly reduced. Due to the emulation of 'push'
-instruction needs to access userspace memory, it spent more cycles than
-the other.
-
-[0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
-
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/include/asm/insn.h            | 21 ++++++++++++++++++
- arch/arm64/kernel/probes/decode-insn.c   | 18 +++++++++++++--
- arch/arm64/kernel/probes/decode-insn.h   |  3 ++-
- arch/arm64/kernel/probes/simulate-insn.c | 28 ++++++++++++++++++++++++
- arch/arm64/kernel/probes/simulate-insn.h |  2 ++
- arch/arm64/kernel/probes/uprobes.c       |  2 +-
- 6 files changed, 70 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
-index 8c0a36f72d6f..a246e6e550ba 100644
---- a/arch/arm64/include/asm/insn.h
-+++ b/arch/arm64/include/asm/insn.h
-@@ -549,6 +549,27 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
- 	       aarch64_insn_is_prfm_lit(insn);
- }
- 
-+static __always_inline bool aarch64_insn_is_nop(u32 insn)
-+{
-+	/* nop */
-+	return aarch64_insn_is_hint(insn) &&
-+	       ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
-+}
-+
-+static __always_inline bool aarch64_insn_is_stp_fp_lr_sp_64b(u32 insn)
-+{
-+	/*
-+	 * The 1st instruction on function entry often follows the
-+	 * patten 'stp x29, x30, [sp, #imm]!' that pushing fp and lr
-+	 * into stack.
-+	 */
-+	return aarch64_insn_is_stp_pre(insn) &&
-+	       (((insn >> 30) & 0x03) ==  2) && /* opc == 10 */
-+	       (((insn >>  5) & 0x1F) == 31) && /* Rn  is sp */
-+	       (((insn >> 10) & 0x1F) == 30) && /* Rt2 is x29 */
-+	       (((insn >>  0) & 0x1F) == 29);	/* Rt  is x30 */
-+}
-+
- enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
- u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
- u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
-diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-index 968d5fffe233..df7ca16fc763 100644
---- a/arch/arm64/kernel/probes/decode-insn.c
-+++ b/arch/arm64/kernel/probes/decode-insn.c
-@@ -73,8 +73,22 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
-  *   INSN_GOOD_NO_SLOT If instruction is supported but doesn't use its slot.
-  */
- enum probe_insn __kprobes
--arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
-+arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api,
-+		      bool kernel)
- {
-+	/*
-+	 * While 'nop' and 'stp x29, x30, [sp, #imm]! instructions can
-+	 * execute in the out-of-line slot, simulating them in breakpoint
-+	 * handling offers better performance.
-+	 */
-+	if (aarch64_insn_is_nop(insn)) {
-+		api->handler = simulate_nop;
-+		return INSN_GOOD_NO_SLOT;
-+	} else if (!kernel && aarch64_insn_is_stp_fp_lr_sp_64b(insn)) {
-+		api->handler = simulate_stp_fp_lr_sp_64b;
-+		return INSN_GOOD_NO_SLOT;
-+	}
-+
- 	/*
- 	 * Instructions reading or modifying the PC won't work from the XOL
- 	 * slot.
-@@ -157,7 +171,7 @@ arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi)
- 		else
- 			scan_end = addr - MAX_ATOMIC_CONTEXT_SIZE;
- 	}
--	decoded = arm_probe_decode_insn(insn, &asi->api);
-+	decoded = arm_probe_decode_insn(insn, &asi->api, true);
- 
- 	if (decoded != INSN_REJECTED && scan_end)
- 		if (is_probed_address_atomic(addr - 1, scan_end))
-diff --git a/arch/arm64/kernel/probes/decode-insn.h b/arch/arm64/kernel/probes/decode-insn.h
-index 8b758c5a2062..ec4607189933 100644
---- a/arch/arm64/kernel/probes/decode-insn.h
-+++ b/arch/arm64/kernel/probes/decode-insn.h
-@@ -28,6 +28,7 @@ enum probe_insn __kprobes
- arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi);
- #endif
- enum probe_insn __kprobes
--arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi);
-+arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi,
-+		      bool kernel);
- 
- #endif /* _ARM_KERNEL_KPROBES_ARM64_H */
-diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-index 22d0b3252476..0b1623fa7003 100644
---- a/arch/arm64/kernel/probes/simulate-insn.c
-+++ b/arch/arm64/kernel/probes/simulate-insn.c
-@@ -200,3 +200,31 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
- 
- 	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
- }
-+
-+void __kprobes
-+simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-+{
-+	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
-+}
-+
-+void __kprobes
-+simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *regs)
-+{
-+	long imm7;
-+	u64 buf[2];
-+	long new_sp;
-+
-+	imm7 = sign_extend64((opcode >> 15) & 0x7f, 6);
-+	new_sp = regs->sp + (imm7 << 3);
-+
-+	buf[0] = regs->regs[29];
-+	buf[1] = regs->regs[30];
-+
-+	if (copy_to_user((void __user *)new_sp, buf, sizeof(buf))) {
-+		force_sig(SIGSEGV);
-+		return;
-+	}
-+
-+	regs->sp = new_sp;
-+	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
-+}
-diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
-index e065dc92218e..733a47ffa2e5 100644
---- a/arch/arm64/kernel/probes/simulate-insn.h
-+++ b/arch/arm64/kernel/probes/simulate-insn.h
-@@ -16,5 +16,7 @@ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *regs);
- 
- #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
-diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-index d49aef2657cd..ec5881db3b7a 100644
---- a/arch/arm64/kernel/probes/uprobes.c
-+++ b/arch/arm64/kernel/probes/uprobes.c
-@@ -44,7 +44,7 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 
- 	insn = *(probe_opcode_t *)(&auprobe->insn[0]);
- 
--	switch (arm_probe_decode_insn(insn, &auprobe->api)) {
-+	switch (arm_probe_decode_insn(insn, &auprobe->api, false)) {
- 	case INSN_REJECTED:
- 		return -EINVAL;
- 
--- 
-2.34.1
-
+thanks,
+-- Shuah
