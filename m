@@ -1,233 +1,222 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F671B32A9;
-	Wed, 14 Aug 2024 14:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723645634; cv=fail; b=iWE9cr2Zda5+o2e2UuGHd5sbCvVWqUr/fFqsUWjHY6tW+Od6uVU5ApoD+UE9tNNHX5oBfrH0isjdCNyhcDJjkJBMIfYWuw5mZHH5D1Rg4yTWOJ6WtRK1qC32TA1SBUN0zROflBDYRtS62qGhaBYW37r6mx+w7YL0apHKUUBlCC0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723645634; c=relaxed/simple;
-	bh=48bpWpOS5XGr2XN1ElfeARnkB2G5kGdm0WOYJcIEj/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fSKYlCqRD/xy6uT0aiou2NowBgIPuuv5lT3cVtUS/4JPX+82fsWFEb5lSO/67ExOD1SJW6S94+fq6k5oBs9/PH95GiCvgQXwaGs67mhXY9pvp8mLstokrKPNDU9IU/L7UPrq7Q9lHO1VRocs1TptZZIHZP8ri3cqBJNfINHpxv0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DT2VPbJp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aDNrg0BU; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849CE1B3F26
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 14:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723647367; cv=none; b=XSEu7MlueUMI+y8I6miY8n1oyGBdjEuB3euQGrGieXzCCn1WxiogDeHQCHkUBwkUeKedy4mxrRd4DR4cOxZjymFLggZ+fDCi50N1EVOBlErjMANt518iurV+b0w7vAYBCiVqmavgIVAnCRBeYwBPGes8L3DFJlWQK25jyA7jXEI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723647367; c=relaxed/simple;
+	bh=tR8RzbqOolXZg8cJLIUMhkkkWhqNewrEo1ZX+xr0SVk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eoXYQP+uNFzi/CR9ryWWr79ehnuXUGm7EnlLxEeonBQNpjRW2ZwehlTk1X8cERE9Q2d4hC1a3o6LvwsnBxzW9sQ24YB9RSRLLK/LaYMyVESWaciSyjqWxRatgIG1ICsg8NZ1A4si1ySLb0zRMiZjwM51vSDZ6EeJ6LBcjiyRNwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uj7JpQog; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DT2VPbJp";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aDNrg0BU"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EBtbfh003723;
-	Wed, 14 Aug 2024 14:27:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=corp-2023-11-20; bh=oFXFXLiJqnhRP8m
-	2inEO1iWnyuFKp3ocjXzti8wmdP4=; b=DT2VPbJpxhYjYH4qureMyhE0J8LdXZh
-	bb8RBBH+rnRH2veHdfqA6pZzgu4A9g8rswnvLaXPVjaEPyW2suW+JQcGCz9CiGlP
-	XhROiAZDIvb+upA73dRUN5UOz9pt++dpNCONPoFguX61LSHkuBBqnlBpeL7iADPj
-	TlRVB7pc70BzWSHlLj1txrhhqpJZ699zOmnrMOmhbcPnm5UwlXCRqauBKD7oA+vM
-	/bYTRbtcgVul9KZPJpV0ezl2kB5bx/LaWaLevgl/9DwwXSSjzrRT/CEGo6b/3hv2
-	4W86Qyfe7UfTBwD9ZNQkMHcHfce63ZUZgQFTqFYMxGzedsWZ2dQohHA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 40wxmd0bev-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Aug 2024 14:27:05 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 47ED8eIA010707;
-	Wed, 14 Aug 2024 14:27:05 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2040.outbound.protection.outlook.com [104.47.55.40])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 40wxna09aw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Aug 2024 14:27:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q/S4oLQGigN7bFMNDzAIymMZk2h0bsyfQpNNZNGcQqF5Twx80qVaOVLcFghfhRzQfQu7HjgARGYiL+U6MxhxV1/1jx5depwEyN20z8Sz7HO8HPVRGiVxPoAnPbOu3R2lU3toEB1FmfjSxRqEyi9wIaV3hFJu3u5cUjHJoh3D9YUjixjMEL0xhyTMQEhJHyHxSaZwKpwI0wZjEaUQs1IcuIqe7ZZUgE7zN9NXwqESYazoFZGKLlispTsulVDz+soW6DbqldlhWJCh5TDg2wX/3n4ZikLWaV2Jg9NN23BNWnQrKipFtwfNvFBmTbon/AJoPoT0M4XPLgPcIBONMIgKag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oFXFXLiJqnhRP8m2inEO1iWnyuFKp3ocjXzti8wmdP4=;
- b=eFoF0OPHVZyqylZ/e50aoiKSjrk5WGriMFhr9+hWP34ja0P1m9PmL78y2DkpOJ6WQ0d+RoYcUQ4SpsmaT2MtCVZDfzJDubmk9CXpUHavl4Gv9x5GU5rwtrKI/IlLb3ZAWjSy9PYR5djvrhuaO6tjM777MEbBU8or94Mj/zap8DubfvLKxlgPfb+S85N0EaWXQxZx5Ezmv98+BHwNHX/n258EMMCShrEhGCiGC5Lp7yAdEOPw9MfSQDs0xWrxYtgfrOVcFE1xlGu602TpN4qBZm2Xe482hft00E/W4jAzHFnHEcXIvlaA2jBqMwjv0hlP0y0OlRzYGFX4jl9yw8NL1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uj7JpQog"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5c661e75ff6so4279696eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 07:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oFXFXLiJqnhRP8m2inEO1iWnyuFKp3ocjXzti8wmdP4=;
- b=aDNrg0BU8jbeIgetAKacDlceNax9aqwjvNbcFaurMwTzDX8Pmh4+PjjsNPMRYAnDhkYH1CigEwcMEvqVTeLB5Fm5ggMFWgFNEz/Y6Bk+UKkVHl5KvXP7o5qLY/3OpKHueA2KWqYfnweYPufSIzyLQkkIcMg6Fd+mQPSgmV7Kb0U=
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com (2603:10b6:806:26d::14)
- by SJ0PR10MB4717.namprd10.prod.outlook.com (2603:10b6:a03:2ac::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.15; Wed, 14 Aug
- 2024 14:27:00 +0000
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29]) by SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29%3]) with mapi id 15.20.7875.008; Wed, 14 Aug 2024
- 14:27:00 +0000
-Date: Wed, 14 Aug 2024 10:26:57 -0400
-From: Kris Van Hees <kris.van.hees@oracle.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kris Van Hees <kris.van.hees@oracle.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-modules@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Elena Zannoni <elena.zannoni@oracle.com>
-Subject: Re: [PATCH v4 1/3] kbuild: add mod(name,file)_flags to assembler
- flags for module objects
-Message-ID: <Zry+sYwzCnZ94IwR@oracle.com>
-References: <20240614171428.968174-1-kris.van.hees@oracle.com>
- <20240614171428.968174-2-kris.van.hees@oracle.com>
- <20240614134651.4ed2091d@rorschach.local.home>
- <ZmyHsnXQoWgp7F2X@oracle.com>
- <20240614142621.5ac455c8@rorschach.local.home>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614142621.5ac455c8@rorschach.local.home>
-X-ClientProxiedBy: MN2PR10CA0027.namprd10.prod.outlook.com
- (2603:10b6:208:120::40) To SN7PR10MB6287.namprd10.prod.outlook.com
- (2603:10b6:806:26d::14)
+        d=google.com; s=20230601; t=1723647364; x=1724252164; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ApWhKzlunlw9OulyCe3WVtwOx7m9YQFR6kgphgn0hHM=;
+        b=uj7JpQogyJ0OQXhKYv2IbMfZ2YTiwSo4zcuyjtQWF/0GzdtRQiJ2jkQt0EcM4+ZzsA
+         fOQYD6iJqbLNmdRHjB4Y/7zVuo4yVmMKrl5FeRa04/B1LmN52h+XtGQAHHb7Va+kX1uk
+         C08ZlVAOH7Ejq3lMv3H+gaEckIUJCWDsLaVw/06PKt3VcmrpR6nHFn/TZVnLrp8sqneL
+         u6hJqiTvBpVMQHRHqUusyh+gObrIjtKyoRszz8hGgbKbMhrfR7OIC6hyD52dEF164ogr
+         ziCyGX5wCAAKkZa/R57UJBIiYTn8lyoWqaLM4CoObQ7UQB6FdZco57zYzVaVhT+/pQdQ
+         wKQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723647364; x=1724252164;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ApWhKzlunlw9OulyCe3WVtwOx7m9YQFR6kgphgn0hHM=;
+        b=BzfKIKQaKML7rqcHayMiBkylmwM+RbctpBpw/s+EK+6+RowfqgWmEr4gouWjjBvWi0
+         +7R25N39lW6JWpQjlGIrkwIayfJWQQeng/3xaPQeiePReANR5VJf1ud2A1iJmOr/wD/I
+         X+fCmint9oMAhlDEyMFDhHmZPuyKAGXr1A02HA35lpJqpR15P7sZWAyl/3yiF4SZUblp
+         uzWxHGk/56vQyNDx9J6fq7iy2lsBXqfFjToTPnBRYKI2az426bLQzR3bv6oxDpfOO+u+
+         B9EHjkEKGaTPiF0iPy5hCcY5/yjhcNAw23Snq7e+vpaUKReh4Diu4uYfvTp8K7QwoDZK
+         okGA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Qdglp+FRmyq3Q4SLv7Yx8H3u4Oi5So2zsOOFYdfwmpcM6fj2W+TqXBptqfv75fUyAZBd8m6kjW2NvIVZkivO5skRYVydw8YhmriLWG1mJgy2
+X-Gm-Message-State: AOJu0Yxnmzc/vmwKoDPy3qhZiJdBtl62a5tA0iof1BTLlEBrU9wGxk6j
+	/+NnSMu+HOi8jstkan+JohhqyxY8N3PqnovTR3eGVBXI09DvyePexvfaPnzXjVFjuPhoBQCf5Xd
+	ebOihoHQ1rZ4vXTC+gRpIEFGM7nXEPUV+yw00
+X-Google-Smtp-Source: AGHT+IH9ZAeOvcFpU0wz9rOmS3Zjvy3bWAzT1a2IrWWyXOegJsZPD7qSytaVr6toGHZ8oDdMhi5a1Ic9JEJSRxy3OYE=
+X-Received: by 2002:a05:6359:4c83:b0:1ac:f5dc:5163 with SMTP id
+ e5c5f4694b2df-1b1aad5b0a8mr340642555d.29.1723647364192; Wed, 14 Aug 2024
+ 07:56:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR10MB6287:EE_|SJ0PR10MB4717:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2432f4aa-b2d2-4889-91de-08dcbc6d2900
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HCgQfenlFmIrOVQ7PVGnFV9H33ppAIKgXfWAEIdoLVu40vrDxe89y3OdCHI9?=
- =?us-ascii?Q?ArhzLikyD/YpJa3Dobf+AXglpO1gZQNj02USl5H/ljNCnUg286c5gvvacgnm?=
- =?us-ascii?Q?doJ1RiLo1QEmt0U6dodqM11ZlGOjkPCTMy7XDQiuiWRpO7ZC8Chubu4wV3GX?=
- =?us-ascii?Q?VDcQK64SIdNzF77OwSTkCZX/q+LAV0Gd+u7LZohZy2kg09apQkwcRCm+HtlE?=
- =?us-ascii?Q?wr+KQiHNfqPyLp2EqCHalj4XGaMpsMFU4uKhEK5LXEGi8nVY9SN43jfhLqU3?=
- =?us-ascii?Q?OZ3sNHrn1ftHGWq+P3qQsTt9rpn8lcJiWQl1x0QhaodvyJKjq2INfG9+VUh5?=
- =?us-ascii?Q?yoQbTKBXQvpB5/3w1RnawJKrQjxJp98FYtAO2D84RgpzuU0mVL8I5N6sBid6?=
- =?us-ascii?Q?xl5UPZ6dxijExUnBCLmxU1WG5Da4UKt7Yo3UKpI5qkF7uPVqWH3GTdJIcbiy?=
- =?us-ascii?Q?tx7pQWgFlPzeAqkbrzkimzfbHw+T58rs04BviSG6Bwtm8oQUp/EKim0AIORN?=
- =?us-ascii?Q?SeoTAhJgZx2w0ofO5n69gM9XgObFpID9l80REBSPqBNYo/r+SwQ9KbZJH7cs?=
- =?us-ascii?Q?7myVOifo6PMy2KEP5PaUCoIWX1Ytla3SY/GfSF37SbXl2iQ/2VHovEXs0u7K?=
- =?us-ascii?Q?EJpENnTK3Q+HhemN8m1q57DHZ1Qb9o/ux/Zx/fbazvzbf15KGfDy9g7kVQQj?=
- =?us-ascii?Q?BCcEP7L84eHVUT1iADITDrW/LYfuxXBh4RVEtGFIpK006nvpKsgf6sM5x21r?=
- =?us-ascii?Q?Q8HtiahysXnkl7wCs0hroWMXM6YFAoRa6+dEyFg3RjTyfSqLRaDpO7i30QT5?=
- =?us-ascii?Q?/BpSF0mjR9C/td7OhTa/OaIeOsd8SqZqBbjWOdo+BaQ4k8xwHkge62XJJXLh?=
- =?us-ascii?Q?R/r5Kq34XfUSdR3obIMPoK2xgUClEeVnjjNWvaggqxKc9rPk9BDKvPW2l3y0?=
- =?us-ascii?Q?ues6hVegs/H5UkfPiz+A3z+3WijXIB97Ssy2ypejovUiAJGMEdCOXHoBuVAX?=
- =?us-ascii?Q?e++tz2HLZ5sjsmCah7M4Q8mVsRxU4shwHOF7aQBAMfxP7DY21YBwI+xptz42?=
- =?us-ascii?Q?aM/GXUluRm6kC+KXL25e5zSCb98cIP3iviETDzuddxlDaZbRqtqx/d5lzkXv?=
- =?us-ascii?Q?KH42j/JCr8oKidj4g8hka7P+Hhesh8LSgOLFcTIkPd+dr5iO22OE7rnP9QIL?=
- =?us-ascii?Q?ig60qmlvtyBceDNxQZUNe6O1fEmXfweFywBZCAIXFJj6pD2gIKIMfx/F8sjd?=
- =?us-ascii?Q?yHjTmitJPO/mTnn778DY9le/VB1wfD+ajEykBeRdUlwBBYnVB3q+Ou6ep+hc?=
- =?us-ascii?Q?7aPrkEGAk0hmSCx4BuWyHExeT/2854FWNuq8zP9U/+BVPw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR10MB6287.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bNh/WidEzATrkqlFB0wTK5h5UGh87FBjbKZHzb99CaqSzlzZJZefB9KVMx0N?=
- =?us-ascii?Q?Kpx2jhKFNMA6OTIjFKDU7egqn+LlW0rX7G7xL5EVRzI9eqvuU0FqglkAYQ2N?=
- =?us-ascii?Q?/qWV8VrFStbEsUETAjf3b8Wu+DSJ7b2qnRgkg7ZFmUVSilhw2TBUt9z53xj3?=
- =?us-ascii?Q?ocVp4v0CEvGc89TWy/Pnb9hVSP1ogwmgsqVgeexz31PCTDRnK9bJhxPZcuI1?=
- =?us-ascii?Q?ReH46B51xFDTU1GxudPAEP4vziaj8zi0p8mHnT5+Xl3V/nQS9oE+szfgxCaR?=
- =?us-ascii?Q?UdPAT5BKhpJutQajpo69mc1aiBLwBmUI/NPyz17JkmABZanDEDWUTXeOC3lS?=
- =?us-ascii?Q?XvmtOnaS1YIuQr2lFqx0CKv1e2/9IcNZm5rIzfFpQUj18wresr3g64tlB+xe?=
- =?us-ascii?Q?zcYfW2XtJAMPXUkUxlbFKVCI01u50mhLE6msRzH8py9JkQA92M6dbgbV3zMc?=
- =?us-ascii?Q?JZQey7LCp14feA6RGZbPStwjw0qlHOZHVqX2Nc5b6TsBIh9p3zpxayPVRVZv?=
- =?us-ascii?Q?2JEZrbKHDuoSQqE4oCltxnYzpOU1gG+Pc+xu2rYPYYxaPbaB0VISSTCLRJcb?=
- =?us-ascii?Q?GprJNK3+SI/1CNZNIhqRjyncYnAEosaN2BhOqxv9Ckt2ROb0eviq5s5urUsy?=
- =?us-ascii?Q?+SAU8NUeVn0hMD9ltDdr0S2YJgH9vOZ+kQOhiMnWvb33oFQhR6HAu4nEnB7W?=
- =?us-ascii?Q?McHzvsTw0RzBKCCyqAQ6Cph90x4/bL5CqGaEpR2UGEEdSfltE58o6P3S2zdU?=
- =?us-ascii?Q?5poGr3eI3nZcKTrp/vWW5QKA9xaoGQ0SySWG8k08qtsG3QFzCInQ8Nxb2aiQ?=
- =?us-ascii?Q?HJZTyNVAf3lQxT+1I1fMTAazrXAjAjYE9V7L6Za6hv+19fb8YujNC3HELRa6?=
- =?us-ascii?Q?Cmm7d7z96jCM3Ltrfdd5HmVazGcO1frgda81bCzjMILRIyi/aJCODdLkngyW?=
- =?us-ascii?Q?DQ02UE2u/kenlmOrB9x44Aoiy0bKiidDBg6BJSzotnUUbcXunxQku5gGNF0+?=
- =?us-ascii?Q?kLMGk2bKB/WIA5ygGyu+g/9RQEVln/Hjict5KvlLzmL5m/mlluke/RQmyU5t?=
- =?us-ascii?Q?Ry19TuSeY32c+oRf0/6ZtxwWRTZPcqmakiIPmnySmJVM3ykDAYtNhFCoaYl+?=
- =?us-ascii?Q?ZmVdfkH+zzeKn0M9QTjq6tFfTKm7o53s77/ESEhlL/QcLno77ZSHBPMdtX/g?=
- =?us-ascii?Q?Wh6VYeFcKy8nS3ji4xdoxb3hw+gl/kGESFQTuBofXzSAwogANaWctEkDqkkq?=
- =?us-ascii?Q?3eugzHU620osAd+wtbgAPqsNsBf+1qNGf21+1NkhNO4Se+69IweM9I7ZuWwO?=
- =?us-ascii?Q?4wlKG0iz7EfeMJ8iF0djFa9p5/kfGtNpf69sgPQOWp1sC7i+9+gqoVHNYmvz?=
- =?us-ascii?Q?rY/6Yc27WAbixhW2gDWOCWC+hkZVK9C3b9y6SalORrqZFAFPWz/zqCGdt4yf?=
- =?us-ascii?Q?YynbegEnft5927Y5hVv96rw60H6DZI3QNbwgIKt+K10xg9kLeoy6oAFhbx5r?=
- =?us-ascii?Q?3zVyddSkZGJ1GsdaPRWSCYaxALSuWkFOm7fCzycOcTOSAD6uh3tK9trOk05u?=
- =?us-ascii?Q?fJdofh1CqY8TyY3UyCFn94jlGMfXKywYcCvZLEANjgeUEammHVL5DDvAlaip?=
- =?us-ascii?Q?3g=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	4wLwRo/G7llDvlLO3hiw1NfWvHLkU0zGrNP4X038CCNS/51FnxB6yCckRfIbDpZPbZBAh2YqB8550JEFUKNseLmUibh4mwH+4TB6eJK3xJbFt31g0f7HXsJm7ckOq6i/Qhxm0R5x45k5gJGbImClEnYv4WPaR9XpqjH3Ip/LCi/H1bOYagepPYs6/OA/So1011UUr/TTDea7D7DGVEOYpME2COE88LACj4yyuer4jOfAEfjca2j5o3I22mOHn28cdBtEGimJmpjdSGZ1A57ITQEbyUpMDb7XPe5CflHmUhW7tUARYj5Zozip9WcsVeu0u2uM6vkumZPva7bjnQ4CrworZAKQDTG2m9U2e/ADGCOd2zB9ODFdNVW9MWyEXPEXKRWwfrIix7Bi3/L5dZy3z6hzFHuDbDTyHSk5IfbkuJLlUaFmn/o4sasxt6VrBSNwYZPLnsxfaWLbxFur3pWDAGGANHsWQ4edR7ExCRa6tczT3QgdEVf95tdMkSg7aiTx5QuToj5hleKEJkQtYvy+yzTqlUL1smT+0z7t+T99JIVqGiewAlxOsYX4d4olqtResz7Y1kp8gkosGH9S1oJvilRKFD8xPSnOp3Jg4oMtePo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2432f4aa-b2d2-4889-91de-08dcbc6d2900
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR10MB6287.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2024 14:27:00.6488
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q6I7UEx+TTnt76bdPYwFn9FHKPtkXc4v0uWKHepkh5mgvx9fAAObeND2oT5LX3hofmcUt1FnxmZsMyf+L0xzGEphXpSD3b9NXKhwE7e2mc8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4717
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-14_10,2024-08-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 bulkscore=0
- adultscore=0 suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2407110000
- definitions=main-2408140101
-X-Proofpoint-ORIG-GUID: j8VM2j783eVnnUAEXI_xgn3RX64UTNTJ
-X-Proofpoint-GUID: j8VM2j783eVnnUAEXI_xgn3RX64UTNTJ
+References: <20240813211317.3381180-7-almasrymina@google.com> <de7daf80-a2e4-4451-b666-2a67ccc3649e@gmail.com>
+In-Reply-To: <de7daf80-a2e4-4451-b666-2a67ccc3649e@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 14 Aug 2024 10:55:49 -0400
+Message-ID: <CAHS8izPMC+XhXKbJOQ3ymizyKuARSOv_cO_xO+q1EG4zoy6Gig@mail.gmail.com>
+Subject: Re: [PATCH net-next v19 06/13] memory-provider: dmabuf devmem memory provider
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 14, 2024 at 02:26:21PM -0400, Steven Rostedt wrote:
-> On Fri, 14 Jun 2024 14:10:58 -0400
-> Kris Van Hees <kris.van.hees@oracle.com> wrote:
-> 
-> > On Fri, Jun 14, 2024 at 01:46:51PM -0400, Steven Rostedt wrote:
-> > > On Fri, 14 Jun 2024 13:14:26 -0400
-> > > Kris Van Hees <kris.van.hees@oracle.com> wrote:
-> > >   
-> > > > Module objects compiled from C source can be identified by the presence
-> > > > of -DKBUILD_MODFILE and -DKBUILD_MODNAME on their compile command lines.
-> > > > However, module objects from assembler source do not have this defines.
-> > > > 
-> > > > Add $(modfile_flags) to modkern_aflags (similar to modkern_cflahs), and
-> > > > add $(modname_flags) to a_flags (similar to c_flags).  
-> > > 
-> > > You explain what this does but not why it does it.  
-> > 
-> > The first paragraph is meant to estabish the "why" (being able to identify
-> > what objects are module objects, even if they are compiled from assembler
-> > source).
-> 
-> Perhaps there's a lack of context. Sure, the cover letter can help in
-> this regard, but I always look at each commit as a stand alone.
-> 
-> > 
-> > As I mention, for objects compiled from C source code, those defines being
-> > present identifies those objects as belonging to a module.  For objects
-> > compiled from assembler source code, those defines are not present.  Passing
-> > them on the compile command line for assembler source code files for objects
-> > that are part of one or more modules allows us to identify all objects that
-> > are part of modules with a single consistent mechanism.
-> 
-> Sure, but why do we care? Again, if this was the only patch you sent,
-> it should explain why it is being done.
-> 
-> Perhaps something like: "In order to be able to identify what code is
-> from a module, even if it is built in, ..."
-> 
-> But what you are saying is just "C code has these flags, make
-> assembly have them too". Which is meaningless.
-> 
-> The other patches could use some more explanation too.
+On Wed, Aug 14, 2024 at 10:11=E2=80=AFAM Pavel Begunkov <asml.silence@gmail=
+.com> wrote:
+...
+> > diff --git a/net/core/devmem.c b/net/core/devmem.c
+> > index 301f4250ca82..2f2a7f4dee4c 100644
+> > --- a/net/core/devmem.c
+> > +++ b/net/core/devmem.c
+> > @@ -17,6 +17,7 @@
+> >   #include <linux/genalloc.h>
+> >   #include <linux/dma-buf.h>
+> >   #include <net/devmem.h>
+> > +#include <net/mp_dmabuf_devmem.h>
+> >   #include <net/netdev_queues.h>
+> >
+> >   #include "page_pool_priv.h"
+> > @@ -153,6 +154,10 @@ int net_devmem_bind_dmabuf_to_queue(struct net_dev=
+ice *dev, u32 rxq_idx,
+> >       if (err)
+> >               goto err_xa_erase;
+> >
+> > +     err =3D page_pool_check_memory_provider(dev, rxq, binding);
+>
+> Frankly, I pretty much don't like it.
+>
+> 1. We do it after reconfiguring the queue just to fail and reconfigure
+> it again.
+>
 
-Hi Steve,
+I don't see an issue with that? Or is it just me?
 
-Thank you for your feedback.  I hope that my new patch series [0] addresses
-your questions.
+> 2. It should be a part of the common path like netdev_rx_queue_restart(),
+> not specific to devmem TCP.
+>
+> These two can be fixed by moving the check into
+> netdev_rx_queue_restart() just after ->ndo_queue_mem_alloc, assuming
+> that the callback where we init page pools.
+>
 
-Kris
+The only reason is that the page_pool_check_memory_provider() needs to
+know the memory provider to check for. Separating them keep
+netdev_rx_queue_restart() usable for other future use cases that don't
+expect a memory provider to be bound, but you are correct in that this
+can be easily resolved by passing the binding to
+netdev_rx_queue_restart() and doing the
+page_pool_check_memory_providers() check inside of that function.
+
+> 3. That implicit check gives me bad feeling, instead of just getting
+> direct feedback from the driver, either it's a flag or an error
+> returned, we have to try to figure what exactly the driver did, with
+> a high chance this inference will fail us at some point.
+>
+
+This is where I get a bit confused. Jakub did mention that it is
+desirable for core to verify that the driver did the right thing,
+instead of trusting that a driver did the right thing without
+verifying. Relying on a flag from the driver opens the door for the
+driver to say "I support this" but actually not create the mp
+page_pool. In my mind the explicit check is superior to getting
+feedback from the driver.
+
+Additionally this approach lets us detect support in core using 10
+lines of code or so, rather than ask every driver that wants to
+support mp to add boilerplate code to declare support (and run into
+subtle bugs when this boilerplate is missing). There are minor pros
+and cons to each approach; I don't see a showstopping reason to go
+with one over the other.
+
+> And page_pool_check_memory_provider() is not that straightforward,
+> it doesn't walk through pools of a queue.
+
+Right, we don't save the pp of a queue, only a netdev. The outer loop
+checks all the pps of the netdev to find one with the correct binding,
+and the inner loop checks that this binding is attached to the correct
+queue.
+
+> Not looking too deep,
+> but it seems like the nested loop can be moved out with the same
+> effect, so it first looks for a pool in the device and the follows
+> with the bound_rxqs. And seems the bound_rxqs check would always turn
+> true, you set the binding into the map in
+> net_devmem_bind_dmabuf_to_queue() before the restart and it'll be there
+> after restart for page_pool_check_memory_provider(). Maybe I missed
+> something, but it's not super clear.
+>
+> 4. And the last thing Jakub mentioned is that we need to be prepared
+> to expose a flag to the userspace for whether a queue supports
+> netiov. Not really doable in a sane manner with such implicit
+> post configuration checks.
+>
+
+I don't see a very strong reason to expose the flag to the userspace
+now. userspace can try to bind dmabuf and get an EOPNOTSUPP if the
+operation is not supported, right? In the future if passing the flag
+to userspace becomes needed for some usecase, we do need feedback from
+the driver, and it would be trivial to add similarly to what you
+suggested.
+
+> And that brings us back to the first approach I mentioned, where
+> we have a flag in the queue structure, drivers set it, and
+> netdev_rx_queue_restart() checks it before any callback. That's
+> where the thread with Jakub stopped, and it reads like at least
+> he's not against the idea.
+
+Hmm, the netdev_rx_queue array is created in core, not by the driver,
+does the driver set this flag during initialization? We could run into
+subtle bugs with races if a code path checks for support after core
+has allocated the netdev_rx_queue array but before the driver has had
+a chance to declare support, right? Maybe a minor issue. Instead we
+could add an ndo to the queue API that lets the driver tell us that it
+could support binding on a given rx queue, and check that in
+net_devmem_bind_dmabuf_to_queue() right before we do the bind?
+
+But this is only if declaring support to userspace becomes needed for
+some use case. At the moment I'm under the impression that verifying
+in core that the driver did the right thing is preferred, and I'd like
+to minimize the boilerplate the driver needs to implement if possible.
+
+Additionally this series is big and blocks multiple interesting follow
+up work; maybe going forward with an approach that works - and can
+easily be iterated on later if we run into issues - could be wise. I
+do not see an issue with adding a driver signal in the future (if
+needed) and deprecating the core check (if needed), right?
+
+--
+Thanks,
+Mina
