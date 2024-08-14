@@ -1,100 +1,96 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEC91AED47
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 11:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51E31AC44E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 12:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723635819; cv=none; b=C5OPN0wh7s4v9LY4yytVQvhcazkaZnGIukBpNeZGyMVlZWf5dy41rq+a7ccDV3EQZYpzc8zvl9XlnHK2i1/X+J3/g7mNnltVvz3BXq7ai0jXwes6XrtQRO8n4rnJYl5XiIcG23TA35AhH525gJris3V+t7AqSLkIwaS5SxZnL6E=
+	t=1723637388; cv=none; b=HS/wR74ScqbsFbD+p+Ya+rNpx6FkRNbFo66WCP+BEP1GS9S1LkeO1Vu4KBnrbmHmb9HtK2qMOYO2RI0PcSoiuQCe0gIBt+JdFGC/D+fs/9jerGfbagmeZA5MnDDpm5Wqc0sXdLraEDDmCrHlBSzkRSDtrau7kNQb3IMuTEWUYFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723635819; c=relaxed/simple;
-	bh=TB/0oHN5F5NutnVQ1VWFaykvrUJTjk/6Yb5WW2uT8gU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W6EHXovdmKFkxP/P8rDftfLWEAC9Z85Yqlm5vZA7Yh1a8r4uoMQophNr7KwcNMQeKth9SSd/rFgEU0BaI5zhfDCy+ozbHxlcZx56dks4kLog/cpfOKUgelGuLug00wQMrv6Pxf1RBi7hnhrpfIMAWp6EIAUjEZ7Y2cNbxLrques=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YS7Fsndh; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1723637388; c=relaxed/simple;
+	bh=tn4995DAyVsJ3De0XVz7+XmF9zO0iObunLUXxBhv6F0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KG6iqKtpGojyesyRvHmc15aCdYBIEp8OKy8/+0CgpDu1/4ztD1jM9qGBqNUz7ccQdjCGoRi5g/oHb7akAbLqCLbuFtdx9JZ8N60kkeldh9adFuN745yoFSL58KApKiWQXhvjulnjwRrQfwaZvHK55nVDyVr+39RX4Pe7J2n4kMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CSW5WiCU; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YS7Fsndh"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-201d9a78011so393805ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 04:43:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CSW5WiCU"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a7de4364ca8so688553666b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Aug 2024 05:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1723635817; x=1724240617; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u39ng7G3Zk1YPobD4C5U+D2PWpoaCE9N8Zqv41C64w4=;
-        b=YS7FsndhK3EA4mr8eYrQXKght7/mm7PlXOgK65uRhsCrJTwqvThQpT0NLfWZqq8bAM
-         lAL02hd4nhN+xCoYFsMeJO+4H8qyd4uB9ao62kda0Om6X9bn3Prw2zQItOBB2cWq1wEZ
-         MzFba5s4CVBm/fjDxz/kWKl41EMoM/bX3jcdk=
+        d=suse.com; s=google; t=1723637385; x=1724242185; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s8+OgZPrbcfevzxKpS5z7cjOxcrGutO4dpVagSt8VMo=;
+        b=CSW5WiCUYPohFVsyMc3HNlRN7wjSwqp/gKFHAoBKDA8RIl/OzVVucDZhv/U7SZwt6p
+         kWQ+x8wk5Me8NxAm9pWci1aE3FTmoElnmMEa6Wbnu3Dc4ov+bTLlAfZTcrsg7oTXT6sD
+         QFkaYZDqBoJaD06ANS10A/d1SXkaMMYYz/7Fb7kHJdWt7tku7+HmArKidmQok6owf3X6
+         /SQFVvYYIK0BAuMutDVDzKWLQ1GtxKOwaBN+e60fqPDYBHnnm3+Xj7l7mBQ2P0DfmJ1Z
+         yZRb1b9WjY9Hh/pL8pgO2dPOiFDqzNNvvb6Yoc2fFGWS2eYHKNBQd2R0GTGX3LLTUMzq
+         sfDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723635817; x=1724240617;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u39ng7G3Zk1YPobD4C5U+D2PWpoaCE9N8Zqv41C64w4=;
-        b=qvCe/sOLWyXFL3xjor7SazcXUbbSEuMBi3uLRE4HitRAVZKQOvGb6LgEaSna4k306h
-         vZOAlhE5AxGjAhn3glD4Eakizo53wiexD09snHdlSdcb8/uF9/s79lcqyjlS87DB41BU
-         qxThLofYFTejQ++X4sKoisDL3I3C5OkakvO4MudyngdeuXT8Dc4GsbXbSKltSirqHa+u
-         PHEj7l/+FHgtiomOBsu/Tt4CauxICyMOEkgc0GVd1RvKGHKtNTeXEjxUCDQdjRZBhi0p
-         eKjqdc/noOxY2Amv95Srb9usdDo3iwZ3b4fvw8ZipibxCxgguq4UQK0pNLgiPWNp74aP
-         7DnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPl/iRT0TLcoF4bqYU922at0B/yiZknUpTmrnQGeuCQXETTa5IAKSw2mBCup4P20LuE60IIh2EX8Hhz1/tZRJRI1k4d+HsqzBZIx30ntF128WD
-X-Gm-Message-State: AOJu0YzrOpbiC/4UUgrIYDS6c23VR6p1zmhwPCiujtFPFD9QzMk3nIWu
-	V4/JWno5y2KcC9Ay2c3lxCuM9UVZuwwQogSrEZcPbIuxnzEI4qJt2ARzamJ2bGc=
-X-Google-Smtp-Source: AGHT+IEz4zBtaa0fPbf9nGtUh5Q7nwM6G4j1+p2RsMPWqPZhHyGalhtvg6CVchZywIYfMtCQ354e6w==
-X-Received: by 2002:a17:902:f0cc:b0:1fb:1ff1:89d2 with SMTP id d9443c01a7336-201d647f0f5mr17105525ad.6.1723635816658;
-        Wed, 14 Aug 2024 04:43:36 -0700 (PDT)
-Received: from [192.168.104.75] ([223.118.51.114])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201cd1a93e2sm28176755ad.141.2024.08.14.04.43.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Aug 2024 04:43:36 -0700 (PDT)
-Message-ID: <9016df04-041b-4837-9590-1c5159609826@linuxfoundation.org>
-Date: Wed, 14 Aug 2024 05:43:29 -0600
+        d=1e100.net; s=20230601; t=1723637385; x=1724242185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s8+OgZPrbcfevzxKpS5z7cjOxcrGutO4dpVagSt8VMo=;
+        b=V8IfGhzwyWBVDNJnXyzcCV9zAMqJ856RibXQLN7D1u+7f04nwOGEU6CX08tmfqojhA
+         Ln7fsk3peexHagMDXt1YYkaHMBMw2Sel9gNaS4Vo6Q6ma8njQn0Cqnm5cXqNsZhtLVc6
+         2MitDfegA/IYmivkvJf0jbCYMMxoY7S8dofsA8Eel3DZIqowY2SzkYyD/0KOJd01sOZl
+         G25xp0mvCC7B0TAA3+didKi3HgkypEPqnzPFe6TcxZi0+EOrwSEoWhl+oKPMLW9AJQI4
+         VlV4rIjXl7jFSeH2HXHZ5ouQsXOSKILDQwweW8arzawyWmXgFQHQFRdP2ywWGvYKIO3b
+         DbTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUBiQIWgfquuHM4tZcyGPqwDuTF6w/4FjoHQ3QfW2VES2Npwuy0QjKQNrvy5CKkyGnl0H0c+v5n5Pb0eUPJCVhKuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7xheYP3ygROpaDTh3boCdk8GBG8hLzxD2l0mnMqrZh3awOOHI
+	7qj4ndAImt8mVdY7XHCWNfA3aMwfdu/EqRiRmpccypFX1lUBh5lEdE2WpbpnG1Y=
+X-Google-Smtp-Source: AGHT+IF/AQc5OsMsDO36uU4URAWXHfYH7FJV3YMENI/3lH9Cf+i/PLRvceCxirD4CDWV6m/Rt52jZQ==
+X-Received: by 2002:a17:907:efe2:b0:a77:dcda:1fe1 with SMTP id a640c23a62f3a-a8366c32199mr159835466b.25.1723637385039;
+        Wed, 14 Aug 2024 05:09:45 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80f3fa69c3sm165813266b.55.2024.08.14.05.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2024 05:09:44 -0700 (PDT)
+Date: Wed, 14 Aug 2024 14:09:42 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Song Liu <song@kernel.org>
+Cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, jpoimboe@kernel.org,
+	jikos@kernel.org, mbenes@suse.cz, joe.lawrence@redhat.com,
+	nathan@kernel.org, morbo@google.com, justinstitt@google.com,
+	mcgrof@kernel.org, thunder.leizhen@huawei.com, kees@kernel.org,
+	kernel-team@meta.com, mmaurer@google.com, samitolvanen@google.com,
+	mhiramat@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
+Message-ID: <ZryehvKuUogvtYhW@pathway.suse.cz>
+References: <20240807220513.3100483-1-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ftrace: Add required dependency for kprobe
- tests
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Shuah Khan <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <171823033048.152840.662759412433336839.stgit@devnote2>
- <20240814095323.c8458e2cb6031c3014a7b7e0@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240814095323.c8458e2cb6031c3014a7b7e0@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240807220513.3100483-1-song@kernel.org>
 
-On 8/13/24 18:53, Masami Hiramatsu (Google) wrote:
-> Hi Shuah,
+On Wed 2024-08-07 15:05:11, Song Liu wrote:
+> With CONFIG_LTO_CLANG, the compiler/linker adds .llvm.<hash> suffix to
+> local symbols to avoid duplications. Existing scripts/kallsyms sorts
+> symbols without .llvm.<hash> suffix. However, this causes quite some
+> issues later on. Some users of kallsyms, such as livepatch, have to match
+> symbols exactly.
 > 
-> Can you pick this? I confirmed this can be applied on v6.11-rc3.
-> 
-> 
-> 
-> On Thu, 13 Jun 2024 07:12:10 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
->> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>
->> kprobe_args_{char,string}.tc are using available_filter_functions file
->> which is provided by function tracer. Thus if function tracer is disabled,
->> these tests are failed on recent kernels because tracefs_create_dir is
->> not raised events by adding a dynamic event.
->> Add available_filter_functions to requires line.
->>
->> Fixes: 7c1130ea5cae ("test: ftrace: Fix kprobe test for eventfs")
->> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Address this by sorting full symbols at build time, and let kallsyms
+> lookup APIs to match the symbols exactly.
 
-Applied to linux-kselftest next for Linux 6.12-rc1
+The changes look good from the livepatching POV. For both patches,
+feel free to use:
 
-thanks,
--- Shuah
+Acked-by: Petr Mladek <pmladek@suse.com>
+
+I made a quick glance over the code changes. They look sane. But I did
+not check them deep enough to provide a valuable Reviewed-by ;-)
+
+Best Regards,
+Petr
