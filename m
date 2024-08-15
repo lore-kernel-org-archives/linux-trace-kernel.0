@@ -1,202 +1,222 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2062.outbound.protection.outlook.com [40.107.236.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E51138DF2;
-	Thu, 15 Aug 2024 20:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723753040; cv=none; b=Z60V/Fe4dam74BErtYpll5H94sIhU8g+aMb2WTRt197lrprJHQToxY27EhjNS6iiO1lRaPXo3RYIn47z16nIR24JdctjOu1fcncFJu0YYeeg7RH+TQfrvta0lCQuNpHeX6iXajmL2wLxezESuGr9tNJyeimqJK1RZapDUgHwhkw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723753040; c=relaxed/simple;
-	bh=lQ+EvvnnqRtmWrFJp3Xd9Te12DStmE4knki2NE8OWrA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OWWFuJUbqAib6H1J1nrWr2KfMLvV7XvDuBvA3SLbsphUJSuDyZp6N4NdC89gCikt4GLfLvdxBbRt/cbbPIgJRiLSdzqhCZPZMR9hZ4m8Fj2gQfHy4NMfQDjWQHOaj4tHY+YUJX2tw8epRszI3CXEdxNGhC4Cckf5byKBUOEGCMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K+65usFr; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C72149C7D;
+	Thu, 15 Aug 2024 21:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723756609; cv=fail; b=T2Z50jvLGmY3Go+hI7+87pQiD2acVRScPp+zwdmj/VHgc4Wt1YrXGjrKHRmRHeLvvs8ujsXPmqOc/OslnrfrAwrhaGlOQ9XYhHWlu0TUNox2M+4lC3yxqu7qxbbL2HtmKgNkntCRQbKqLInmqlv+Qu5dwLP99Ykwjz+EwETmJJ4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723756609; c=relaxed/simple;
+	bh=47/jaZ/co0wFkJ27mIB8eHq4etPkj1AQSqHmGDIF738=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=siC838xFUXuOo+ddhmYlirp0EB0hZ24vIYXfTDd3ug0SQwYQV7AFrMqH/yoDAe6ygh1a5sodbWZCS2MOhteDB97n+pBRuKtC4d5rCCuVg+vbQoylOYlHIUc9hG1HBGNT2GLmhGaRQchcsUTsZrO5hO37oXsLG1TeJh6553F+mhc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Pg2eGC6S; arc=fail smtp.client-ip=40.107.236.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+65usFr"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7ae3d7222d4so991868a12.3;
-        Thu, 15 Aug 2024 13:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723753038; x=1724357838; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0cdTKPtoN4CzKbsNc3MnpYWSX4bpB5XCY/L4ADgd1ls=;
-        b=K+65usFrR6AZrlMOdxoVXUam9O9KRNXAmZnebswswFWSHgbdhbuyaBdcVi1L+RF4v1
-         KckBCI2FZ4tHFVogDwXe/To//fDN5bwkW935UhIMvegXM5DH5jnvUgM2ytJyJQV4j5KJ
-         VyINrW1GgetCOXSJuGtcs3OlLfj/7rCCMs6FOI6OIqRuHSAIat5aS7UXFDW7Z3irvXvP
-         iiEYGrf960+0/EuxrU0gzREA+C7DJ1M6pshWj7BLloFUNs2FmITMqYm97t5eztF/1/V2
-         Y4eFVbGGimd3qH/51KJM42v8qqPHrPrPsmk4Yz0A4E92eK/M04LO4bxkkUFEm3IeVAkn
-         DQpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723753038; x=1724357838;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0cdTKPtoN4CzKbsNc3MnpYWSX4bpB5XCY/L4ADgd1ls=;
-        b=Mm0ZvsojByyVJ8pPoBFIdSXswxxCRMf+MyvqGh9Ij79JCn8De73bJasH0DTfhe93AO
-         AdP2Hq71s2DSY3XJSkopyhjBoMT3/Sb+htZmyV/rmdaC5Ux1+59yyMEFPAxRdwFNPNrK
-         V+l2ih8QQlVYElUgh0x98cQDnNeHIOekZMdFTtSNJyEQxLxlo5vvgWTC+PBnb5xZG5Ps
-         xIeT2OzmZnCT4ypXieZlABcuvIwBms2o4Rn+lZF2WRN2F3yIvWznR3N804m3lJq41Oml
-         keULO4hEFVNXe7G9JrBhucRksR5JGvFZQfvRGOP5ZSBTg8ZLPrwNZNb509EuGYXEbuSU
-         7DTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZjizrBGAD5+U8OJ3Qr4Fh+oXQQWe5/5Fh0CXHMRvK5bvq6gHflBhjYVF7198Drkm92hs7M3eJe3REliVSNr6eC5dnFmXSri0lzXHe2UGhgFqIy1Lls1jLO0cuX9gCW8gLL2cRtks/k8+ZA9b80gbuM2ZEYodigIaV3Ja/iZli3hQYJRHc
-X-Gm-Message-State: AOJu0YzkwoOGpZlV80So9JhITwrG2kQqOdoq03ab/6zkAXvgsexQgFPW
-	YK8rpwOK0BlZjgKdHEOBFR9mTIpmIHiDL5tmiGS70L2QCzi5IPz5etCtr/0MXOFWZJA9kk3o6sA
-	y1Zruh9MmEtro6Wtgy1vafFxtVgw=
-X-Google-Smtp-Source: AGHT+IG/3Oe6f9E+qWnqbNQJ7WtZ8Qle8wXpUdO9SOJikgKPAM96ccSiRAJmaUC3x7vChs7vGIIh2bwQVsa4vRL1h70=
-X-Received: by 2002:a17:90b:1247:b0:2cd:5d13:40ba with SMTP id
- 98e67ed59e1d1-2d3dffc8f3bmr928532a91.14.1723753037724; Thu, 15 Aug 2024
- 13:17:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Pg2eGC6S"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DG1JsexlhD35+NBSefhkIzaNqRwt2DOXTFjLYS0x0Jb7VjrTL86+1sHPDt6zUaANgYlxNmLMx8FrWaPXURSBwgDCPXVnoIjWPjg0vuS70Tx0fyhBlF+138xxYzaeqYwGD3OjIxDRw9sPkkqQldK2pTZL7Sh1aOKTZrRlGSwpxJXYlBnwz1ytwxBflV0KMvbeHzvOatMxwotVo+38F4jV4/J+luKGgz6PCvlEwksDVGfToB+5wReRlvfHBR46YjWSwBiMtCiN/hfp8djjbB4bHbbLiHYklTjOaeGZ/YgEuN+vaqdzzcmm+B/+4vNEE7dyon0im1J1qFdOjY+MHZ3oog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6/yl6PzR9t8Km0UD1Fj5udwgS/8N789dzUR9tVg/ipk=;
+ b=UtvOb/V/i94E1FbKvZZGhilPRRexNp5RquzmRFNBGNXrMr1ky5DE29C4HxdXMSWBcbs3jVKYyg8LNaqlw1UFCae+21nfkvNLjYVzoH1KHZKznG+DlphTiWPv47WdPE9IWmrtYMTOYcxgbWIEzozMBlqo0d6N9Mu+P7ZbfHocevzS0JjFvLSYHiPwcxSVjSCwZn9oRHOckY+Ux+QbdOfqeYvt2vQBy63RemRuqU2OaD8jHfhn8YZQ8vPKBk7kCZqWDJd4G7Y8wTcSDtQfVn48H4KEZvzA4XF7npD/KXEW5kqJKAWeDkTLdxLsvR+q2U2/6oQ0OgFdbqLhM7/kDP8g8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6/yl6PzR9t8Km0UD1Fj5udwgS/8N789dzUR9tVg/ipk=;
+ b=Pg2eGC6SdpkftPAhCdwzysJdWDBtaSc2WoWV9SDTcpLQc5L+PHVUM28l+xVxddpWvbj3qmbswZiinEVztZcERJGwfz4s5B67/WD34pHZpOwl7Pj356RZV1W2rDcJnGPpi2FeJsEfG5mG9tCXQ0gWHKzs5pp2aBiQsTSZxUts6q4=
+Received: from MN2PR08CA0030.namprd08.prod.outlook.com (2603:10b6:208:239::35)
+ by CH2PR12MB4183.namprd12.prod.outlook.com (2603:10b6:610:7a::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.19; Thu, 15 Aug
+ 2024 21:16:42 +0000
+Received: from BL02EPF0001A105.namprd05.prod.outlook.com
+ (2603:10b6:208:239:cafe::c) by MN2PR08CA0030.outlook.office365.com
+ (2603:10b6:208:239::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.23 via Frontend
+ Transport; Thu, 15 Aug 2024 21:16:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A105.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7849.8 via Frontend Transport; Thu, 15 Aug 2024 21:16:42 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 15 Aug 2024 16:16:41 -0500
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <x86@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<rafael@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<rostedt@goodmis.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
+	<james.morse@arm.com>, <airlied@gmail.com>, <yazen.ghannam@amd.com>,
+	<john.allen@amd.com>, <avadnaik@amd.com>
+Subject: [PATCH v4 0/4] MCE wrapper and support for new SMCA syndrome MSRs
+Date: Thu, 15 Aug 2024 16:16:31 -0500
+Message-ID: <20240815211635.1336721-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-14-andrii@kernel.org>
- <7byqni7pmnufzjj73eqee2hvpk47tzgwot32gez3lb2u5lucs2@5m7dvjrvtmv2>
- <CAJuCfpG8hCNjqmttb91yq5kPaSGaYLL1ozkHKqUjD7X3n_60+w@mail.gmail.com>
- <o46u6b2w4b2ijrh3yzj7rc4c3outqmmtzbgbnzhscfuqsu4i4u@uhv65maza2d5>
- <CAEf4BzZ6jSFr_75cWQdxZOHzR-MyJS1xUY-TkG0=2A8Z1gP42g@mail.gmail.com>
- <CAJuCfpGZT+ci0eDfTuLvo-3=jtEfMLYswnDJ0CQHfittou0GZQ@mail.gmail.com> <CAG48ez2VwmFU7ubongD1AnYJDf2-RrFod33Zvbjy1NwRj4-Y1A@mail.gmail.com>
-In-Reply-To: <CAG48ez2VwmFU7ubongD1AnYJDf2-RrFod33Zvbjy1NwRj4-Y1A@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 15 Aug 2024 13:17:05 -0700
-Message-ID: <CAEf4BzY6zSe_u4vtCBDwZp4R_hVsE3weZ+-UpXJsohrUeJeE4Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 13/13] uprobes: add speculative lockless VMA to
- inode resolution
-To: Jann Horn <jannh@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Mateusz Guzik <mjguzik@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A105:EE_|CH2PR12MB4183:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6eea754b-dd09-41e3-d619-08dcbd6f8f61
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?i/RWK/Mh+/caZ+oMabj1t/fBC1mPjN22lWxYgLlulDTF78CvERvh1mJ/iZB5?=
+ =?us-ascii?Q?PyXDvCDmqgaeSIOuMMl+HV1NIifDmVXACRhuemlpr1op2iqg4+fKUUinQGIQ?=
+ =?us-ascii?Q?XI9CrxkUZIoD7m2T6i7hdVgSvASQHv74+tocCIjcUqCTTgaahg0sSGHOEsP6?=
+ =?us-ascii?Q?TwCXPTMbAnSIbfd/Bz5XF7RmIhFTn89R+59fwK4pApMZGilhWF/hBtPPtM8y?=
+ =?us-ascii?Q?Wpofx93v1Ae5bxFcMZQTPyb1HP847KPT4hSZDBxTv/8XnrHOkiT300gI3LbS?=
+ =?us-ascii?Q?ZvMmp3VkbZLjLYxSBUCV66alhmXj8Mu9+kCnHRAgS+R9wsCesl7TKoGFlhAA?=
+ =?us-ascii?Q?EeJ+3mUS0OgGZKv7wnxgu2yRmWTHXJ86l+K150s34hZQnGhLqyMlilrPQWpE?=
+ =?us-ascii?Q?WqDTRt2VUaRBZTKEUXCCY24yu4lze+mTE3CLBLdvzOn225rpR5mMAz8OHEsz?=
+ =?us-ascii?Q?gzf9MKi5tQOrnpv/nIkT9i1T4pQxUGoO3eavLKijaqec/A8TY8NxWr5ZG09p?=
+ =?us-ascii?Q?rJJdG3yRnKeITbOhRTMV64xD/xQOidDSD9FL2FBWShKcSqai6QtDn0Tu/gMR?=
+ =?us-ascii?Q?UVydqA/jQhOCMiBCTzcVzYoXLSgctKusPj/qRNcu/du+Wwo1uNoE/e6UpQUl?=
+ =?us-ascii?Q?c+hC7jHCUyEPzc/a1PJRpWQGh/A7QxxB6jQqqUb5CmNwdHBF1M3ljKa3rNEa?=
+ =?us-ascii?Q?nNcXs1daE454ZrjRKWCbPLzDeGSCmEvCNsBukhlzrmkmvSKLQ+Pt/gV7OkrE?=
+ =?us-ascii?Q?9OeUN3G8AtPo0+c+Frezwj82lz/J3dxzp0EW5guHUtnNsnoZo892cTgJmiqO?=
+ =?us-ascii?Q?GVSy0PHZOCBIEtTsDuLmM92sC++XgYuIIlC2XMeCg1RuLLhOBEhUHStNv3VC?=
+ =?us-ascii?Q?qGXoEHiD9+qqTF6L2Tluww3NHqBnCogR1IEF+njp2FAPDaamKJ6Zm8U9ThjV?=
+ =?us-ascii?Q?dwc89x98bOldreJS3Ca0Wr1i8/eKvYxuYTlTlcLH+GypO1OgOTPXxIJ2lm9T?=
+ =?us-ascii?Q?dFeeilRzXhVrFY8jMh6Hf2yfGZB+Wh5RyunEX/WsYgElX98HkwuGJXqm3ER4?=
+ =?us-ascii?Q?gyIeb+43XSwm/1kX/WXidtU/WWa/FOW2Xp/x1E0Otm5bTB48lbX5jGGomN4t?=
+ =?us-ascii?Q?KB2exCUvDacj4xW6kr9TlMEwgzXXVqgXti/fpO5nJnEXJ41W+b6eCz9d4Ntm?=
+ =?us-ascii?Q?2MFx27lt+pGP2s0GSPGnbpMgcU7Vei7IeYdizJylhPZ3J5FrNKA6gvGSrQFC?=
+ =?us-ascii?Q?e41fa/NbiYhev68wzBKo1Eov83azl15ugbJvl/1uNj0/iTG2lXtSncVEE2cC?=
+ =?us-ascii?Q?bKREKtzFrkNbddwCSbNW1URndlIHMyB8plcI033dZX+GACqNxTjfGAO2Fi6C?=
+ =?us-ascii?Q?X9QKyJHwXFsQex0rpWrYRJdJHLi7U1Kldpyblnk8ZofnER7vg+5stJHtAulg?=
+ =?us-ascii?Q?70Ar0KsTGOCob6sk9W3kcI/ecf5FAFLkD3QksaaI8fF1beTVYzcBVQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2024 21:16:42.3559
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eea754b-dd09-41e3-d619-08dcbd6f8f61
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A105.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4183
 
-On Thu, Aug 15, 2024 at 11:58=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
-:
->
-> +brauner for "struct file" lifetime
->
-> On Thu, Aug 15, 2024 at 7:45=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> > On Thu, Aug 15, 2024 at 9:47=E2=80=AFAM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Thu, Aug 15, 2024 at 6:44=E2=80=AFAM Mateusz Guzik <mjguzik@gmail.=
-com> wrote:
-> > > >
-> > > > On Tue, Aug 13, 2024 at 08:36:03AM -0700, Suren Baghdasaryan wrote:
-> > > > > On Mon, Aug 12, 2024 at 11:18=E2=80=AFPM Mateusz Guzik <mjguzik@g=
-mail.com> wrote:
-> > > > > >
-> > > > > > On Mon, Aug 12, 2024 at 09:29:17PM -0700, Andrii Nakryiko wrote=
-:
-> > > > > > > Now that files_cachep is SLAB_TYPESAFE_BY_RCU, we can safely =
-access
-> > > > > > > vma->vm_file->f_inode lockless only under rcu_read_lock() pro=
-tection,
-> > > > > > > attempting uprobe look up speculatively.
->
-> Stupid question: Is this uprobe stuff actually such a hot codepath
-> that it makes sense to optimize it to be faster than the page fault
-> path?
+This patchset adds a new wrapper for struct mce to prevent its bloating
+and export vendor specific error information. Additionally, support is
+also introduced for two new "syndrome" MSRs used in newer AMD Scalable
+MCA (SMCA) systems. Also, a new "FRU Text in MCA" feature that uses these
+new "syndrome" MSRs has been addded.
 
-Not a stupid question, but yes, generally speaking uprobe performance
-is critical for a bunch of tracing use cases. And having independent
-threads implicitly contending with each other just because of uprobe's
-internal implementation detail (while conceptually there should be no
-dependencies for triggering uprobe from multiple parallel threads) is
-a big surprise to users and affects production use cases beyond just
-uprobe-handling BPF logic overhead ("useful overhead") they assume.
+Patch 1 adds the new wrapper structure mce_hw_err for the struct mce
+while also modifying the mce_record tracepoint to use the new wrapper.
 
->
-> (Sidenote: I find it kinda interesting that this is sort of going back
-> in the direction of the old Speculative Page Faults design.)
->
-> > > > > > > We rely on newly added mmap_lock_speculation_{start,end}() he=
-lpers to
-> > > > > > > validate that mm_struct stays intact for entire duration of t=
-his
-> > > > > > > speculation. If not, we fall back to mmap_lock-protected look=
-up.
-> > > > > > >
-> > > > > > > This allows to avoid contention on mmap_lock in absolutely ma=
-jority of
-> > > > > > > cases, nicely improving uprobe/uretprobe scalability.
-> > > > > > >
-> > > > > >
+Patch 2 adds support for the new "syndrome" registers. They are read/printed
+wherever the existing MCA_SYND register is used.
 
-[...]
+Patch 3 updates the function that pulls MCA information from UEFI x86
+Common Platform Error Records (CPERs) to handle systems that support the
+new registers.
 
-> > Note: up_write(&vma->vm_lock->lock) in the vma_start_write() is not
-> > enough because it's one-way permeable (it's a "RELEASE operation") and
-> > later vma->vm_file store (or any other VMA modification) can move
-> > before our vma->vm_lock_seq store.
-> >
-> > This makes vma_start_write() heavier but again, it's write-locking, so
-> > should not be considered a fast path.
-> > With this change we can use the code suggested by Andrii in
-> > https://lore.kernel.org/all/CAEf4BzZeLg0WsYw2M7KFy0+APrPaPVBY7FbawB9vjc=
-A2+6k69Q@mail.gmail.com/
-> > with an additional smp_rmb():
-> >
-> > rcu_read_lock()
-> > vma =3D find_vma(...)
-> > if (!vma) /* bail */
->
-> And maybe add some comments like:
->
-> /*
->  * Load the current VMA lock sequence - we will detect if anyone concurre=
-ntly
->  * locks the VMA after this point.
->  * Pairs with smp_wmb() in vma_start_write().
->  */
-> > vm_lock_seq =3D smp_load_acquire(&vma->vm_lock_seq);
-> /*
->  * Now we just have to detect if the VMA is already locked with its curre=
-nt
->  * sequence count.
->  *
->  * The following load is ordered against the vm_lock_seq load above (usin=
-g
->  * smp_load_acquire() for the load above), and pairs with implicit memory
->  * ordering between the mm_lock_seq write in mmap_write_unlock() and the
->  * vm_lock_seq write in the next vma_start_write() after that (which can =
-only
->  * occur after an mmap_write_lock()).
->  */
-> > mm_lock_seq =3D smp_load_acquire(&vma->mm->mm_lock_seq);
-> > /* I think vm_lock has to be acquired first to avoid the race */
-> > if (mm_lock_seq =3D=3D vm_lock_seq)
-> >         /* bail, vma is write-locked */
-> > ... perform uprobe lookup logic based on vma->vm_file->f_inode ...
-> /*
->  * Order the speculative accesses above against the following vm_lock_seq
->  * recheck.
->  */
-> > smp_rmb();
-> > if (vma->vm_lock_seq !=3D vm_lock_seq)
->
+Patch 4 adds support to the AMD MCE decoder module to detect and use the
+"FRU Text in MCA" feature which leverages the new registers.
 
-thanks, will incorporate these comments into the next revision
+NOTE:
 
-> (As I said on the other thread: Since this now relies on
-> vma->vm_lock_seq not wrapping back to the same value for correctness,
-> I'd like to see vma->vm_lock_seq being at least an "unsigned long", or
-> even better, an atomic64_t... though I realize we don't currently do
-> that for seqlocks either.)
->
-> >         /* bail, VMA might have changed */
-> >
-> > The smp_rmb() is needed so that vma->vm_lock_seq load does not get
-> > reordered and moved up before speculation.
-> >
-> > I'm CC'ing Jann since he understands memory barriers way better than
-> > me and will keep me honest.
+This set was initially submitted as part of the larger MCA Updates set.
+
+v1: https://lore.kernel.org/linux-edac/20231118193248.1296798-1-yazen.ghannam@amd.com/
+v2: https://lore.kernel.org/linux-edac/20240404151359.47970-1-yazen.ghannam@amd.com/
+
+However, since the MCA Updates set has been split up into smaller sets,
+this set, going forward, will be submitted independently.
+
+Having said that, this set set depends on and applies cleanly on top of
+the below two sets.
+
+[1] https://lore.kernel.org/linux-edac/20240521125434.1555845-1-yazen.ghannam@amd.com/
+[2] https://lore.kernel.org/linux-edac/20240523155641.2805411-1-yazen.ghannam@amd.com/
+
+Changes in v2:
+ - Drop dependencies on sets [1] and [2] above and rebase on top of
+   tip/master.
+
+Changes in v3:
+ - Move wrapper changes required in mce_read_aux() and mce_no_way_out()
+   from second patch to the first patch.
+ - Modify commit messages for second and fourth patch per feedback
+   received.
+ - Add comments to explain purpose of the new wrapper structure.
+ - Incorporate suggested touchup in the third patch.
+ - Remove call to memset() for the frutext string in the fourth patch.
+   Instead, just ensure that the string is NULL terminated.
+ - Fix SoB chains on all patches to properly reflect the patch path.
+
+Changes in v4:
+ - Resolve kernel test robot's warning on the use of memset() in
+   do_machine_check().
+ - Rebase on top of tip/master to avoid merge conflicts.
+
+Links:
+v1: https://lore.kernel.org/linux-edac/20240530211620.1829453-1-avadhut.naik@amd.com/
+v2: https://lore.kernel.org/linux-edac/20240625195624.2565741-1-avadhut.naik@amd.com/
+v3: https://lore.kernel.org/linux-edac/20240730185406.3709876-1-avadhut.naik@amd.com/T/#t
+
+Avadhut Naik (2):
+  x86/mce: Add wrapper for struct mce to export vendor specific info
+  x86/mce, EDAC/mce_amd: Add support for new MCA_SYND{1,2} registers
+
+Yazen Ghannam (2):
+  x86/mce/apei: Handle variable register array size
+  EDAC/mce_amd: Add support for FRU Text in MCA
+
+ arch/x86/include/asm/mce.h              |  36 +++-
+ arch/x86/include/uapi/asm/mce.h         |   3 +-
+ arch/x86/kernel/cpu/mce/amd.c           |  31 ++--
+ arch/x86/kernel/cpu/mce/apei.c          | 109 ++++++++----
+ arch/x86/kernel/cpu/mce/core.c          | 210 ++++++++++++++----------
+ arch/x86/kernel/cpu/mce/dev-mcelog.c    |   2 +-
+ arch/x86/kernel/cpu/mce/genpool.c       |  20 +--
+ arch/x86/kernel/cpu/mce/inject.c        |   4 +-
+ arch/x86/kernel/cpu/mce/internal.h      |   4 +-
+ drivers/acpi/acpi_extlog.c              |   2 +-
+ drivers/acpi/nfit/mce.c                 |   2 +-
+ drivers/edac/i7core_edac.c              |   2 +-
+ drivers/edac/igen6_edac.c               |   2 +-
+ drivers/edac/mce_amd.c                  |  27 ++-
+ drivers/edac/pnd2_edac.c                |   2 +-
+ drivers/edac/sb_edac.c                  |   2 +-
+ drivers/edac/skx_common.c               |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c |   2 +-
+ drivers/ras/amd/fmpm.c                  |   2 +-
+ drivers/ras/cec.c                       |   2 +-
+ include/trace/events/mce.h              |  51 +++---
+ 21 files changed, 329 insertions(+), 188 deletions(-)
+
+
+base-commit: 1d00f3427bfdb9f5b7a817b1f4f44c5b02da3edd
+-- 
+2.34.1
+
