@@ -1,68 +1,68 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C6180B;
-	Thu, 15 Aug 2024 22:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AE814F12F;
+	Thu, 15 Aug 2024 22:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723760356; cv=none; b=Wn7MeMyIMDEeKGGpAiKmYWaR1CRslI0y545R7n5+jfN/sOGXgAzrEUu7hq72Q0jHTnF1IQdzrwOsnxNORQAPtp2NuaFfKj3i58sSQLyfFwDDjwtnTzju+0LWOBYxGHFM4nze6zyvW/As9249QdRvevhe9yS1EMttPyh0HYCi9cY=
+	t=1723760644; cv=none; b=It2PbooxJnUpCgicr569U/3dbc+AvhoN6EQ8qGcq2XIvqsjxuNzc3uAq5bSccodgNXI1IhUn/tR369aBlNXkHzFzChnQEZPxHHZhZD6DjrGX40iMK7rerdG/LXoDgMG9buG4aXW8ipzLI0n+7yvVxETGYmNgcQHUc3H+liq80Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723760356; c=relaxed/simple;
-	bh=icHSIu0l7pBrco4Eu2cNoXgmfprBwfnaEs5muYDiy20=;
+	s=arc-20240116; t=1723760644; c=relaxed/simple;
+	bh=5gHL2W6+2LdrbOOiuc7/mt9rBJLzNQU5VbTap5irY4E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j86enu4UxSjFLDJIv6N5AJJ4epiIIrKvaT2Wd9L11PDdfrmQ2SRbG68WImzh8x7qJfUXK/BtzuZO/V0oyZQ0U2mIQvESCd8BpxZdkApKNfjO/PU3PADXuWZb//9sHek+/Ev5eaUP9TElJ/nwTcL/+BboYXPiAk+91PqXgXmZMbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ljuaBqxA; arc=none smtp.client-ip=209.85.216.50
+	 To:Cc:Content-Type; b=OyQPf1mPcKQaWf6dOuVQaZtoqbu5BJ4oWJ3IeQ2BIw413uIjXJ/OhbBqLfjuF3zEZ1QEVdiffLGXosXLsc7yTjNLePiZfvNH47KImHBlV+8ZY7yCBc2LHcKDbnNDbO1SBqW88c84+2jE9WzlsIzHUW4MKrlSP0TG4ZeSYprhSpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WRG/LJax; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljuaBqxA"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2d3c071d276so1039660a91.1;
-        Thu, 15 Aug 2024 15:19:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRG/LJax"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2d3c05dc63eso1037667a91.0;
+        Thu, 15 Aug 2024 15:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723760354; x=1724365154; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723760642; x=1724365442; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lLJHHKDAwig/AQRi9bGoaIZfCY+PqMjFwCKMZdglFC0=;
-        b=ljuaBqxABx8qS2Jb4TdU4XyDTwzM2OSDI7GtXuyKhxgpEFpoeCKy3++r+m3XI157iM
-         x6FluH7DNUTiKdaVoESZH0aQHbwJuxQtIFHI3L8r3os3va0YSKGxSV0Hg5Z3wBQcoZ8J
-         tD9TB2BQGEaa+Dj9qcviAoMaJh79rNwevJqLcFTXUTesKUNh1TrTsyM2WjaYI/W7bRnj
-         akTcD4fwuJef0jxodYpr26lOMZDH9YNoJltRkal60jhxd55GQkJcnn0uiOHvxr8epsvR
-         IQ+DAkdyIcgVFhyN3dhJ/p3/inxgNRy4bZZaBYlJP7B4UO+83RCWWIA0Zu/YIs0BgY2H
-         JlRw==
+        bh=Fb3MI3AyTHKAYC7F+1evxF8uf5GKN6AVavaMK377xno=;
+        b=WRG/LJaxHZolWmnkY8kNOIz4DftQARvky39cgWw1+S9+5HP6q+wquodWiARJkqf6mL
+         eTtFsr0ESDBox5oTJ/LPFjrxLJwQPaqLQfKL3RErWpFChQOeEfD+w7BmXbVlphOzloZh
+         9HEnE8oJXRO5nvcu1p2bPsYWA+rXkBgYBGuhaRWtIBPDOH8A+jr42pOZNEHw85wDzk+r
+         kmumXxuHPk0ckzsBZlyoj2HegxuQiEiHsJ1Pi3ydyLzXy136peSYVhvBa5ZnPuxmSrpN
+         QcYT9+uVwR/K3+cTjAqBHnuux+rZsSPdd5LFVf2PkGnWZq5emxjfbX055DQdc0jA+WmN
+         NZ5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723760354; x=1724365154;
+        d=1e100.net; s=20230601; t=1723760642; x=1724365442;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lLJHHKDAwig/AQRi9bGoaIZfCY+PqMjFwCKMZdglFC0=;
-        b=GfKbgRmllFFMKKfP++LaRFuSAmMovkyehCU3ABX3lfkoVRYm9FOHqYMnYf2NFxthyH
-         flOM39qp7dLmWPZXFVGeqddZbQn7glOkMadTGddCl8/Uhx0cvZiZKuPLFV9xSYfJoIO+
-         /8Z5cqOwCTHe5R6ewMueGm3lULOYd3odtJJQD9C/mAFSSNFNJgGnWwr653e77tqqduOR
-         q/+KTGDt6G5+yMfMiOKvepUqMSRUQQuTAZH0t2bgSJU59FnaJfTcqtwzLLlVGPUKKt4E
-         LNZrl9JvBuFHK8FFp7G3xjlfx1HzHOvVlK48CR22Phbyi4Xd/Nz7+gE3IolMF671HA5v
-         2ggA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4MV9qcUKrXXybizO9dYrG6Z2nF+m3pSKEit+lMjgU0k8jOQX9PhmWSw94jv5/NCTYj9qWw5mZ4lwLHGwbpGJS1U7UUy5xKILYzQxqHF2CS0EPsCYGhJ0YS1pRIyCqJsWvF9XDa7STnHqtDh0YInE/I8+GjhVuigZw9FISudDtBuHQGtlP
-X-Gm-Message-State: AOJu0YzaXhJ1SrWpOkNyj1gthRMEVvafEOPx88G+QCkMkDSvYLRt5g6I
-	c4n7zVFeELAJzkkZIkFpXIi/Yn+6YQIT4vkCXTG4x8Tkfq6Ge+8Fy1hiAQMkKuoBNMk3IvGIuEw
-	QMVH13PtV0TvlMIBN1JyjQchuYcPNb8aH
-X-Google-Smtp-Source: AGHT+IFG7mY0qYN+Y5hIyJtTq3AVU8LkUpa5/f8B367RmJz9R34MnxjEQ9P6YpDxp84/cNS2FYoD+Ad1Kk9lMjzUvA8=
-X-Received: by 2002:a17:90a:5e0f:b0:2c8:e3e6:ec99 with SMTP id
- 98e67ed59e1d1-2d3e03f2820mr1075505a91.43.1723760354003; Thu, 15 Aug 2024
- 15:19:14 -0700 (PDT)
+        bh=Fb3MI3AyTHKAYC7F+1evxF8uf5GKN6AVavaMK377xno=;
+        b=NuUqKVD+qrIEJ3WnAcKt8xJ7NzJ9lY90nUoI7k7bPFFdHeVMVTmxsbtv6xdudWDZvA
+         gG+jJxAteP7zE7edX3P5sbILn35XZZTENiFIr8OcEjnj+tafYi7ZZ8wCmq70Aial6Dku
+         ZLugQ72MBpD7vBvf4LzbNB0aJjQbJjurox6qvf6nopOcwJ382KPWdRUxjuUJ2fAnF0qo
+         H/NHH9RfTex68+QVjVpxQl8+Zp7XJC9VD2VVNggD2BSibHRcjpqyYOdiK1y+YXEl48eC
+         4YYI5MX/lVOGoIRciya6kUNlBAUz/fmaoKfyIkDp70eMTReQZKzAqFWNAquXBz+dpAsR
+         k71Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVQLxbDqvUTgkjfaSk07l381NkxReJmLpeI0tGTzK2UBIy6tnaCtEmqGBb0Fhk3RGYlwt6Hq1eHcPUB808tG8b4x+UP9PZzI0TZcnlosDN8xHrJrNgLjCNtTlwVtFyqCHr0SCWoLwDrZjCcYHryIRFatw+0O1d6NB8c3tWUUltI4dDp5/UI
+X-Gm-Message-State: AOJu0Yzeivi/VuzvnCRqPXHdj2a815W634nzcagQ4q02M9SV8bFyE1eF
+	+me+IXCDEv96R4PfZ23pd+0+t0G+1B1TVniN5tkaVcaoA3H6jexJ3yQQU1XS4QrGdc6KyvDShQo
+	iyORaCl2ljnSxdSNiGHtqnEfYMnQ=
+X-Google-Smtp-Source: AGHT+IF8x0g2NwhyPc5r0SlfDFXJpXXi6Asxaf8ldKXtPfS6lKjgWRo7oC0rXQtwdfV+sNlR9D70b1LLSAhHB3fMdig=
+X-Received: by 2002:a17:90b:234f:b0:2d3:dd75:224a with SMTP id
+ 98e67ed59e1d1-2d3dfc7e4b7mr1288247a91.23.1723760642213; Thu, 15 Aug 2024
+ 15:24:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813132831.184362-1-technoboy85@gmail.com> <20240813132831.184362-2-technoboy85@gmail.com>
-In-Reply-To: <20240813132831.184362-2-technoboy85@gmail.com>
+References: <20240813132831.184362-1-technoboy85@gmail.com> <20240813132831.184362-3-technoboy85@gmail.com>
+In-Reply-To: <20240813132831.184362-3-technoboy85@gmail.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 15 Aug 2024 15:19:02 -0700
-Message-ID: <CAEf4Bzbq6YoSW3VOENP6AKBXHXF6C2UJbreq6Y=bfGHA-e3YKQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 1/2] bpf: enable generic kfuncs for
- BPF_CGROUP_* programs
+Date: Thu, 15 Aug 2024 15:23:50 -0700
+Message-ID: <CAEf4BzZiO1XdiRcrNu6n=_cdxT+0zRnByCuL7zNi0Aw7ohUCnA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 2/2] bpf: allow bpf_current_task_under_cgroup()
+ with BPF_CGROUP_*
 To: Matteo Croce <technoboy85@gmail.com>
 Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
 	Daniel Borkmann <daniel@iogearbox.net>, Steven Rostedt <rostedt@goodmis.org>, 
@@ -77,89 +77,134 @@ On Tue, Aug 13, 2024 at 6:28=E2=80=AFAM Matteo Croce <technoboy85@gmail.com=
 >
 > From: Matteo Croce <teknoraver@meta.com>
 >
-> These kfuncs are enabled even in BPF_PROG_TYPE_TRACING, so they
-> should be safe also in BPF_CGROUP_* programs.
+> The helper bpf_current_task_under_cgroup() currently is only allowed for
+> tracing programs, allow its usage also in the BPF_CGROUP_* program types.
 >
-> In enum btf_kfunc_hook, rename BTF_KFUNC_HOOK_CGROUP_SKB to a more
-> generic BTF_KFUNC_HOOK_CGROUP, since it's used for all the cgroup
-> related program types.
+> Move the code from kernel/trace/bpf_trace.c to kernel/bpf/helpers.c,
+> so it compiles also without CONFIG_BPF_EVENTS.
+>
+> This will be used in systemd-networkd to monitor the sysctl writes,
+> and filter it's own writes from others:
+> https://github.com/systemd/systemd/pull/32212
 >
 > Signed-off-by: Matteo Croce <teknoraver@meta.com>
 > ---
->  kernel/bpf/btf.c     | 8 ++++++--
->  kernel/bpf/helpers.c | 6 ++++++
->  2 files changed, 12 insertions(+), 2 deletions(-)
+>  include/linux/bpf.h      |  1 +
+>  kernel/bpf/cgroup.c      |  2 ++
+>  kernel/bpf/helpers.c     | 23 +++++++++++++++++++++++
+>  kernel/trace/bpf_trace.c | 23 -----------------------
+>  4 files changed, 26 insertions(+), 23 deletions(-)
 >
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 95426d5b634e..08d094875f00 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -212,7 +212,7 @@ enum btf_kfunc_hook {
->         BTF_KFUNC_HOOK_TRACING,
->         BTF_KFUNC_HOOK_SYSCALL,
->         BTF_KFUNC_HOOK_FMODRET,
-> -       BTF_KFUNC_HOOK_CGROUP_SKB,
-> +       BTF_KFUNC_HOOK_CGROUP,
->         BTF_KFUNC_HOOK_SCHED_ACT,
->         BTF_KFUNC_HOOK_SK_SKB,
->         BTF_KFUNC_HOOK_SOCKET_FILTER,
-> @@ -8312,8 +8312,12 @@ static int bpf_prog_type_to_kfunc_hook(enum bpf_pr=
-og_type prog_type)
->         case BPF_PROG_TYPE_SYSCALL:
->                 return BTF_KFUNC_HOOK_SYSCALL;
->         case BPF_PROG_TYPE_CGROUP_SKB:
-> +       case BPF_PROG_TYPE_CGROUP_SOCK:
-> +       case BPF_PROG_TYPE_CGROUP_DEVICE:
->         case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
-> -               return BTF_KFUNC_HOOK_CGROUP_SKB;
-> +       case BPF_PROG_TYPE_CGROUP_SOCKOPT:
-> +       case BPF_PROG_TYPE_CGROUP_SYSCTL:
-> +               return BTF_KFUNC_HOOK_CGROUP;
->         case BPF_PROG_TYPE_SCHED_ACT:
->                 return BTF_KFUNC_HOOK_SCHED_ACT;
->         case BPF_PROG_TYPE_SK_SKB:
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index b9425e410bcb..f0192c173ed8 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -3206,6 +3206,7 @@ extern const struct bpf_func_proto bpf_sock_hash_up=
+date_proto;
+>  extern const struct bpf_func_proto bpf_get_current_cgroup_id_proto;
+>  extern const struct bpf_func_proto bpf_get_current_ancestor_cgroup_id_pr=
+oto;
+>  extern const struct bpf_func_proto bpf_get_cgroup_classid_curr_proto;
+> +extern const struct bpf_func_proto bpf_current_task_under_cgroup_proto;
+>  extern const struct bpf_func_proto bpf_msg_redirect_hash_proto;
+>  extern const struct bpf_func_proto bpf_msg_redirect_map_proto;
+>  extern const struct bpf_func_proto bpf_sk_redirect_hash_proto;
+> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+> index 8ba73042a239..e7113d700b87 100644
+> --- a/kernel/bpf/cgroup.c
+> +++ b/kernel/bpf/cgroup.c
+> @@ -2581,6 +2581,8 @@ cgroup_current_func_proto(enum bpf_func_id func_id,=
+ const struct bpf_prog *prog)
+>         case BPF_FUNC_get_cgroup_classid:
+>                 return &bpf_get_cgroup_classid_curr_proto;
+>  #endif
+> +       case BPF_FUNC_current_task_under_cgroup:
+> +               return &bpf_current_task_under_cgroup_proto;
+>         default:
+>                 return NULL;
+>         }
 > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index d02ae323996b..0d1d97d968b0 100644
+> index 0d1d97d968b0..8502cfed2926 100644
 > --- a/kernel/bpf/helpers.c
 > +++ b/kernel/bpf/helpers.c
-> @@ -3052,6 +3052,12 @@ static int __init kfunc_init(void)
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_XDP, &gene=
-ric_kfunc_set);
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS=
-, &generic_kfunc_set);
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &=
-generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SKB=
-, &generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
-K, &generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_DEV=
-ICE, &generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
-K_ADDR, &generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SYS=
-CTL, &generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOC=
-KOPT, &generic_kfunc_set);
+> @@ -2458,6 +2458,29 @@ __bpf_kfunc long bpf_task_under_cgroup(struct task=
+_struct *task,
+>         return ret;
+>  }
+>
+> +BPF_CALL_2(bpf_current_task_under_cgroup, struct bpf_map *, map, u32, id=
+x)
+> +{
+> +       struct bpf_array *array =3D container_of(map, struct bpf_array, m=
+ap);
+> +       struct cgroup *cgrp;
+> +
+> +       if (unlikely(idx >=3D array->map.max_entries))
+> +               return -E2BIG;
+> +
+> +       cgrp =3D READ_ONCE(array->ptrs[idx]);
+> +       if (unlikely(!cgrp))
+> +               return -EAGAIN;
+> +
+> +       return task_under_cgroup_hierarchy(current, cgrp);
+> +}
+> +
+> +const struct bpf_func_proto bpf_current_task_under_cgroup_proto =3D {
+> +       .func           =3D bpf_current_task_under_cgroup,
+> +       .gpl_only       =3D false,
+> +       .ret_type       =3D RET_INTEGER,
+> +       .arg1_type      =3D ARG_CONST_MAP_PTR,
+> +       .arg2_type      =3D ARG_ANYTHING,
+> +};
+> +
+>  /**
+>   * bpf_task_get_cgroup1 - Acquires the associated cgroup of a task withi=
+n a
+>   * specific cgroup1 hierarchy. The cgroup1 hierarchy is identified by it=
+s
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index d557bb11e0ff..e4e1f5d8b2a6 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -797,29 +797,6 @@ const struct bpf_func_proto bpf_task_pt_regs_proto =
+=3D {
+>         .ret_btf_id     =3D &bpf_task_pt_regs_ids[0],
+>  };
+>
+> -BPF_CALL_2(bpf_current_task_under_cgroup, struct bpf_map *, map, u32, id=
+x)
+> -{
+> -       struct bpf_array *array =3D container_of(map, struct bpf_array, m=
+ap);
+> -       struct cgroup *cgrp;
+> -
+> -       if (unlikely(idx >=3D array->map.max_entries))
+> -               return -E2BIG;
+> -
+> -       cgrp =3D READ_ONCE(array->ptrs[idx]);
+> -       if (unlikely(!cgrp))
+> -               return -EAGAIN;
+> -
+> -       return task_under_cgroup_hierarchy(current, cgrp);
+> -}
+> -
+> -static const struct bpf_func_proto bpf_current_task_under_cgroup_proto =
+=3D {
+> -       .func           =3D bpf_current_task_under_cgroup,
+> -       .gpl_only       =3D false,
+> -       .ret_type       =3D RET_INTEGER,
+> -       .arg1_type      =3D ARG_CONST_MAP_PTR,
+> -       .arg2_type      =3D ARG_ANYTHING,
+> -};
+> -
 
-So given all those CGROUP_xxx program types map to the same
-cgroup-generic BTF_KFUNC_HOOK_CGROUP hook, why do we need 6
-repetitions of the same thing?
+Seems like you need to adjust bpf_tracing_func_proto() function and
+move BPF_FUNC_current_task_under_cgroup into #ifdef CONFIG_CGROUPS
+block together with cgrp_storage_get and delete.
 
-I'd say let's keep just one (pick any, CGROUP_SKB, for example)
-registration. And then we should follow up with cleaning up
-register_btf_kfunc_id_set() to accept hook type, not program type. And
-then it will be clean and will make most sense.
-
-But other than that looks good to me.
-
-pw-bot: cr
-
-
->         ret =3D ret ?: register_btf_id_dtor_kfuncs(generic_dtors,
->                                                   ARRAY_SIZE(generic_dtor=
-s),
->                                                   THIS_MODULE);
+>  struct send_signal_irq_work {
+>         struct irq_work irq_work;
+>         struct task_struct *task;
 > --
 > 2.46.0
 >
