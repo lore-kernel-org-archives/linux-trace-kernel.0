@@ -1,89 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165A419EEA4;
-	Thu, 15 Aug 2024 15:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535294C69;
+	Thu, 15 Aug 2024 16:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723737035; cv=none; b=t8qwHyRv1ru1hJf8YQI5jroyimnTj3h225t27MpoZr003KDmL6JE6J+oz3LCzGn6B33n3+3ooExbmie1PYdfrCSaKs25fUztcAN0GChgxWoMtNZi5wrTIbW/Np9MZ9HxTDQDkewc5zxRHwSQrZ+rJ2AbRaNsU1PeuXlpPpSBtcU=
+	t=1723737951; cv=none; b=RIxa3sp1/Fg7tr8o9NjBqLCYrVQEKA92WKZiGLAV+FEqv3YK6eKk/HsT559+YuYt8JOMcvDXxkORj0xz6PjDJ0sjaAMdi+Gxfmi3blkn3nRBET6TBVSrMqf63WbNvoX7amQsfHeP1OehxZeG6l9kN0Wz/WU28EBVyiT9+mle5uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723737035; c=relaxed/simple;
-	bh=R8HdVbH/c1X4P4zF6q1ObFI49LFeJcgJjRZMzDcnxCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SqGW62Lj5GNZgsTKEk5rSB5avIfN248hx2Pz/rdP6XNzu64rmkS524+5N5cCcLRuwkj40WH760gvX0ibPw5/YOljKeIiTGrFj6aBHZdDdKkaWgjnt7FJot+2TyLyjRNIvz6T6hKcnI4SfluVj008f5zhFWbskJ7qoRNU9cIDOjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1320C32786;
-	Thu, 15 Aug 2024 15:50:33 +0000 (UTC)
-Date: Thu, 15 Aug 2024 11:50:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Add magic and struct size to boot up meta data
-Message-ID: <20240815115032.0c197b32@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1723737951; c=relaxed/simple;
+	bh=CBOevHigSWlKc1CP6LXMym86BM1K1D2QL4AShtyZ3dM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szVqlF7zdmNLOuQy4klC/aegeYFnNBU8v98RNIv0/SXtbn0E8/59HMD9dDuVrq3hYMkbvV0s46psO1wlKa0R3ulZkiuXs2rJDT/vBpQp1XvcN1da0JiwegQx1UEw6Bexl1JcgMrpJ9FHIPdKdlyQQ/Q+ajGpTh+2PnN6Eodpb7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fltmfZLk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fltmfZLk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15E3C4AF09;
+	Thu, 15 Aug 2024 16:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723737950;
+	bh=CBOevHigSWlKc1CP6LXMym86BM1K1D2QL4AShtyZ3dM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fltmfZLk+i9IGTOFePmU6zvkcECcUpd+M0zdk5vP1UgwshC7lQT/Fhq4DVpd+yz3h
+	 YDTp6ytmPlMFD51nP+EvWjZ20ZIf6QKIL5fOn7o4oK2hk4lYUFNBpYrUbLVo+z6DTX
+	 EVKY7xe58vo4U4OvikxPg9LIce//9dfTBvyTN1bM35DeMPqHVRpE0k1a/w5CGCzp6H
+	 ZQsS2kzgPRUryjCVonh6uV2y16ZY3u8HGKPrse/GeiAp4wxSxCn+ER73sLGGxHbZuH
+	 rbAhG3B2hdsCwo0QvGw5qIYmA7HRxLcGJhJz4AO4l1sCnfwlz/7WjrR4nsqvnksU9R
+	 KTrbYsikT34+Q==
+Date: Thu, 15 Aug 2024 09:05:50 -0700
+From: Kees Cook <kees@kernel.org>
+To: Song Liu <songliubraving@meta.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Song Liu <song@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>, "KE.LI" <like1@oppo.com>,
+	Padmanabha Srinivasaiah <treasure4paddy@gmail.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Fangrui Song <maskray@google.com>,
+	"live-patching@vger.kernel.org" <live-patching@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+	Petr Mladek <pmladek@suse.com>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	"morbo@google.com" <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Leizhen <thunder.leizhen@huawei.com>,
+	Kernel Team <kernel-team@meta.com>,
+	Matthew Maurer <mmaurer@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
+Message-ID: <202408150905.97DAE1A@keescook>
+References: <20240807220513.3100483-1-song@kernel.org>
+ <CAPhsuW64RyYhHsFeJSj7=+4uHBo7LucWtWY5xOxN20aujxadGg@mail.gmail.com>
+ <Zro_AeCacGaLL3jq@bombadil.infradead.org>
+ <5D28C926-467B-4032-A31F-06DBA50A1970@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5D28C926-467B-4032-A31F-06DBA50A1970@fb.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, Aug 12, 2024 at 06:13:22PM +0000, Song Liu wrote:
+> Hi Luis,
+> 
+> > On Aug 12, 2024, at 9:57 AM, Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > 
+> > On Mon, Aug 12, 2024 at 09:21:02AM -0700, Song Liu wrote:
+> >> Hi folks,
+> >> 
+> >> Do we have more concerns and/or suggestions with this set? If not,
+> >> what would be the next step for it?
+> > 
+> > I'm all for simplifying things, and this does just that, however,
+> > I'm not the one you need to convince, the folks who added the original
+> > hacks should provide their Reviewed-by / Tested-by not just for CONFIG_LTO_CLANG
+> > but also given this provides an alternative fix, don't we want to invert
+> > the order so we don't regress CONFIG_LTO_CLANG ? And shouldn't the patches
+> > also have their respective Fixes tag?
+> 
+> kallsyms has got quite a few changes/improvements in the past few years:
+> 
+> 1. Sami added logic to trim LTO hash in 2021 [1];
+> 2. Zhen added logic to sort kallsyms in 2022 [2];
+> 3. Yonghong changed cleanup_symbol_name() in 2023 [3]. 
+> 
+> In this set, we are undoing 1 and 3, but we keep 2. Shall we point Fixes
+> tag to [1] or [3]? The patch won't apply to a kernel with only [1] 
+> (without [2] and [3]); while this set is not just fixing [3]. So I think
+> it is not accurate either way. OTOH, the combination of CONFIG_LTO_CLANG
+> and livepatching is probably not used by a lot of users, so I guess we 
+> are OK without Fixes tags? I personally don't have a strong preference 
+> either way. 
+> 
+> It is not necessary to invert the order of the two patches. Only applying
+> one of the two patches won't cause more issues than what we have today. 
 
-Add a magic number as well as save the struct size of the ring_buffer_meta
-structure in the meta data to also use as validation. Updating the magic
-number could be used to force a invalidation between kernel versions, and
-saving the structure size is also a good method to make sure the content
-is what is expected.
+Which tree should carry this series?
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index b16f301b8a93..c3a5e6cbb940 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -44,7 +44,11 @@
- 
- static void update_pages_handler(struct work_struct *work);
- 
-+#define RING_BUFFER_META_MAGIC	0xBADFEED
-+
- struct ring_buffer_meta {
-+	int		magic;
-+	int		struct_size;
- 	unsigned long	text_addr;
- 	unsigned long	data_addr;
- 	unsigned long	first_buffer;
-@@ -1627,6 +1631,13 @@ static bool rb_meta_valid(struct ring_buffer_meta *meta, int cpu,
- 	unsigned long buffers_end;
- 	int i;
- 
-+	/* Check the meta magic and meta struct size */
-+	if (meta->magic != RING_BUFFER_META_MAGIC ||
-+	    meta->struct_size != sizeof(*meta)) {
-+		pr_info("Ring buffer boot meta[%d] mismatch of magic or struct size\n", cpu);
-+		return false;
-+	}
-+
- 	/* The subbuffer's size and number of subbuffers must match */
- 	if (meta->subbuf_size != subbuf_size ||
- 	    meta->nr_subbufs != nr_pages + 1) {
-@@ -1858,6 +1869,9 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
- 
- 		memset(meta, 0, next_meta - (void *)meta);
- 
-+		meta->magic = RING_BUFFER_META_MAGIC;
-+		meta->struct_size = sizeof(*meta);
-+
- 		meta->nr_subbufs = nr_pages + 1;
- 		meta->subbuf_size = PAGE_SIZE;
- 
 -- 
-2.43.0
-
+Kees Cook
