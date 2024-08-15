@@ -1,155 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2866314884B;
-	Thu, 15 Aug 2024 12:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1591714A8;
+	Thu, 15 Aug 2024 13:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723724877; cv=none; b=MPbqwLdVlnQ+lUIFzXILxFqpv6rDFCVqIrCisC4pgI/gxRnJQyMKwGPDoG/eyPopR6W9bCJplayq50d18lw9GWTSToVrF9HzQraNze+iOlYGma+Swd15YpTLjwdgJtEAHqfCEcqnw1yqpfZdIHnywnv0qUQ3T9qdNg+//0QppZY=
+	t=1723726945; cv=none; b=QFKLH9s8zS34nd0URmdjB4UVwj6xjs+iCppjDfKxWsXmIBhxPEUysFA76TxuaJ6v7i/jZ+YcjQx1efMx9xyNquTO6jgKo5PXiy5o9mRHdS8IciJrLPg6llAE259W8ux5i+eEDcc+L+yiaFnQKxJwNmlD+ZXxfrvVZ/rX6q+6n14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723724877; c=relaxed/simple;
-	bh=ReQuDQIToWZBlBw02ZmqJVlAuG9/z85X0gnMftUVdvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s58LRumTZmufhu01yiYoM7y4/3k3uMZpj/c7MPcTlJ8eeQOKEgVYeNps+iWhkVfrQRrkNCzLrGHqAOsdwy8GVKjf68nggXNLJ08T9qNLTgr39Wnpjwe5rMp8QmsjPQg2CzhVL3HdlAyx4btb0Kk6GxtILbg67ylTqJhxpZhXuPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E1DC32786;
-	Thu, 15 Aug 2024 12:27:55 +0000 (UTC)
-Date: Thu, 15 Aug 2024 08:28:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Ross Zwisler <zwisler@google.com>, Vincent
- Donnefort <vdonnefort@google.com>
-Subject: [PATCH v2] tracing: Allow boot instances to use reserve_mem boot
- memory
-Message-ID: <20240815082811.669f7d8c@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1723726945; c=relaxed/simple;
+	bh=ruw0kR6QL67m9p5ATfOebNl04pXe+HMJSF12N15As44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X5d39blLBMMzc9ZfzMxpokUhkOwdenNcPXwMqs1jrO3cxTFVTIo5nEAmuMtYOGboFn5il4uIaY7aXLJy/4IuOSkeBy1K7WoOBSYyf1aButi5u7b5PdMsFYzcQQGRo2OI5Rz5izmYk1Hh/6tJAUI7TUjbBKMlpNkwx9CrWxZ1p2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MCUgXCBB; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MCUgXCBB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723726943; x=1755262943;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ruw0kR6QL67m9p5ATfOebNl04pXe+HMJSF12N15As44=;
+  b=MCUgXCBBkzdwuwUlxdeyNw+s1fVFdJlZEcGxcMQFfa0QQPKtvJ0xlct2
+   FLVS82gOFxgMAAyDw+2fpkePPTrftHGHPXJjJEUPDcOU4qg5whxQn1wSD
+   faz7OOFAB8uhf2gKvBGmKJmGxzhfOeCpmRG3nt93ECOoxBSgqRUX2QtS2
+   7uHKVBJOnMD9phADQUceRYyaHS+qQOEY3pwZdqmvyd1gnZg/NukBS98JR
+   TGCp7V1rz9YDEW0EWO58PDVXoyU9OTtZNel89cokrgYOa+NfVLcw6qbYK
+   XBGs5S7oNZBEUNDnkNHRfIIJ6MAagxaRz3ba4Vc8U5cr5oab59IeQYXf3
+   w==;
+X-CSE-ConnectionGUID: gsb13RZaQSW2/Dhr97nAKA==
+X-CSE-MsgGUID: czB9Y0u4Rd2EiWfr7BiP7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11165"; a="33370189"
+X-IronPort-AV: E=Sophos;i="6.10,148,1719903600"; 
+   d="scan'208";a="33370189"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 06:02:22 -0700
+X-CSE-ConnectionGUID: nrr5JKJqS02OWSBwyb1GOg==
+X-CSE-MsgGUID: Esz7EGA9RoGTZElslC6VyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,148,1719903600"; 
+   d="scan'208";a="60110901"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 15 Aug 2024 06:02:20 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sea7N-0003bW-0I;
+	Thu, 15 Aug 2024 13:02:17 +0000
+Date: Thu, 15 Aug 2024 21:01:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matteo Croce <technoboy85@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Matteo Croce <teknoraver@meta.com>
+Subject: Re: [PATCH bpf-next v5 2/2] bpf: allow
+ bpf_current_task_under_cgroup() with BPF_CGROUP_*
+Message-ID: <202408152026.xtFpPaaI-lkp@intel.com>
+References: <20240813132831.184362-3-technoboy85@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240813132831.184362-3-technoboy85@gmail.com>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi Matteo,
 
-Allow boot instances to use memory reserved by the reserve_mem boot
-option.
+kernel test robot noticed the following build errors:
 
-  reserve_mem=12M:4096:trace  trace_instance=boot_mapped@trace
+[auto build test ERROR on bpf-next/master]
 
-The above will allocate 12 megs with 4096 alignment and label it "trace".
-The second parameter will create a "boot_mapped" instance and use the
-memory reserved and labeled as "trace" as the memory for the ring buffer.
+url:    https://github.com/intel-lab-lkp/linux/commits/Matteo-Croce/bpf-enable-generic-kfuncs-for-BPF_CGROUP_-programs/20240815-000517
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20240813132831.184362-3-technoboy85%40gmail.com
+patch subject: [PATCH bpf-next v5 2/2] bpf: allow bpf_current_task_under_cgroup() with BPF_CGROUP_*
+config: arm-randconfig-003-20240815 (https://download.01.org/0day-ci/archive/20240815/202408152026.xtFpPaaI-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240815/202408152026.xtFpPaaI-lkp@intel.com/reproduce)
 
-That will create an instance called "boot_mapped":
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408152026.xtFpPaaI-lkp@intel.com/
 
-  /sys/kernel/tracing/instances/boot_mapped
+All errors (new ones prefixed by >>):
 
-Note, because the ring buffer is using a defined memory ranged, it will
-act just like a memory mapped ring buffer. It will not have a snapshot
-buffer, as it can't swap out the buffer. The snapshot files as well as any
-tracers that uses a snapshot will not be present in the boot_mapped
-instance.
+   arm-linux-gnueabi-ld: kernel/trace/bpf_trace.o: in function `bpf_tracing_func_proto':
+>> bpf_trace.c:(.text+0x41bc): undefined reference to `bpf_current_task_under_cgroup_proto'
 
-Also note that reserve_mem is not reliable in acquiring the same physical
-memory at each soft reboot. It is possible that KALSR could map the kernel
-at the previous boot memory location forcing the reserve_mem to return a
-different memory location. In this case, the previous ring buffer will be
-lost.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20240813171257.319724335@goodmis.org
-
-- Fixed pr_info() to handle change of start and size going from unsigned long
-  to phys_addr_t, as that can not use the "%lx" format.
-
- .../admin-guide/kernel-parameters.txt         | 13 +++++++++++
- kernel/trace/trace.c                          | 23 ++++++++++++-------
- 2 files changed, 28 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 35b592823338..388653448e72 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6752,6 +6752,19 @@
- 			memory at 0x284500000 that is 12Megs. The per CPU buffers of that
- 			instance will be split up accordingly.
- 
-+			Alternatively, the memory can be reserved by the reserve_mem option:
-+
-+				reserve_mem=12M:4096:trace trace_instance=boot_map@trace
-+
-+			This will reserve 12 megabytes at boot up with a 4096 byte alignment
-+			and place the ring buffer in this memory. Note that due to KASLR, the
-+			memory may not be the same location each time, which will not preserve
-+			the buffer content.
-+
-+			Also note that the layout of the ring buffer data may change between
-+			kernel versions where the validator will fail and reset the ring buffer
-+			if the layout is not the same as the previous kernel.
-+
- 	trace_options=[option-list]
- 			[FTRACE] Enable or disable tracer options at boot.
- 			The option-list is a comma delimited list of options
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8e5a4ca9fd70..9bcef199ae90 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10465,22 +10465,20 @@ __init static void enable_instances(void)
- 	str = boot_instance_info;
- 
- 	while ((curr_str = strsep(&str, "\t"))) {
--		unsigned long start = 0;
--		unsigned long size = 0;
-+		phys_addr_t start = 0;
-+		phys_addr_t size = 0;
- 		unsigned long addr = 0;
- 
- 		tok = strsep(&curr_str, ",");
- 		name = strsep(&tok, "@");
--		if (tok) {
-+
-+		if (tok && isdigit(*tok)) {
- 			start = memparse(tok, &tok);
- 			if (!start) {
- 				pr_warn("Tracing: Invalid boot instance address for %s\n",
- 					name);
- 				continue;
- 			}
--		}
--
--		if (start) {
- 			if (*tok != ':') {
- 				pr_warn("Tracing: No size specified for instance %s\n", name);
- 				continue;
-@@ -10492,10 +10490,19 @@ __init static void enable_instances(void)
- 					name);
- 				continue;
- 			}
-+		} else if (tok) {
-+			if (!reserve_mem_find_by_name(tok, &start, &size)) {
-+				start = 0;
-+				pr_warn("Failed to map boot instance %s to %s\n", name, tok);
-+				continue;
-+			}
-+		}
-+
-+		if (start) {
- 			addr = map_pages(start, size);
- 			if (addr) {
--				pr_info("Tracing: mapped boot instance %s at physical memory 0x%lx of size 0x%lx\n",
--					name, start, size);
-+				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
-+					name, &start, (unsigned long)size);
- 			} else {
- 				pr_warn("Tracing: Failed to map boot instance %s\n", name);
- 				continue;
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
