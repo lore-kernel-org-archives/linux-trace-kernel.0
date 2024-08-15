@@ -1,55 +1,55 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C377580A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Aug 2024 19:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E51138DF2;
+	Thu, 15 Aug 2024 20:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723751096; cv=none; b=K7Ncmck+JWSbur5FT47vfwOmlC7bGqCYsxHtp2S7PIsTXN5pBNVruxVkFw0KRKT1SDGKSlZFw05kgVYHPSzuSFjVpnux0tfgp4sBRCw6FybU4NYfNTWrsaGtJcrvvOaTcQ20+208rR11C9bv0HGQnPiM0LcDkakqHiWYVvMatDQ=
+	t=1723753040; cv=none; b=Z60V/Fe4dam74BErtYpll5H94sIhU8g+aMb2WTRt197lrprJHQToxY27EhjNS6iiO1lRaPXo3RYIn47z16nIR24JdctjOu1fcncFJu0YYeeg7RH+TQfrvta0lCQuNpHeX6iXajmL2wLxezESuGr9tNJyeimqJK1RZapDUgHwhkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723751096; c=relaxed/simple;
-	bh=DJMzCw/sPBoyqxze5PdK49JRsfTIoeGbAf/4FlFl0gk=;
+	s=arc-20240116; t=1723753040; c=relaxed/simple;
+	bh=lQ+EvvnnqRtmWrFJp3Xd9Te12DStmE4knki2NE8OWrA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GUg9xMBGfg7TRFBzj3TjnQyp3d1BAmiUPdI2RLoLPu1Tp4pr/hZDt9OiuO73oYWj0L726A+zta6ld3CGLcdMThnYvIRr53x+e60urLHPYDrdWkJCpN4uYn9d8kbb9ftUnRIwn/vcDWXhzQYb/ifMbU23dxohS2hbEmWPtikMm8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cUCDj9Ko; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=OWWFuJUbqAib6H1J1nrWr2KfMLvV7XvDuBvA3SLbsphUJSuDyZp6N4NdC89gCikt4GLfLvdxBbRt/cbbPIgJRiLSdzqhCZPZMR9hZ4m8Fj2gQfHy4NMfQDjWQHOaj4tHY+YUJX2tw8epRszI3CXEdxNGhC4Cckf5byKBUOEGCMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K+65usFr; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUCDj9Ko"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e05f25fb96eso1296826276.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Aug 2024 12:44:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+65usFr"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7ae3d7222d4so991868a12.3;
+        Thu, 15 Aug 2024 13:17:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723751093; x=1724355893; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723753038; x=1724357838; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6t6XhYIEZnyVh3jH9KKsmGdUUyO+tWe72GSzHcBC0Bs=;
-        b=cUCDj9Ko9grR8KeCdzwyOJPtKANqfYZnqGFl7tacb02yhw1XIt8pdgieuRVFx/AOdy
-         ks+l5+cgw8WE2Vr71XCAZbLdG9NRdmQhtWBKqC2xrgqZJnWql4ggK5VRbjs5UlSVx+gz
-         By7qa3K9hY+0FmzjQm47Phiiu3zzHkZ2HiyMIyBkkeA69/f1FdSZYx+sZIF7YFrWRRNp
-         qZSn/vC3cxxkAAFdDp8kpgD3tCfekRX6RUeAU+aIATCpjuJoWCYdbb040ge9KiFiHudp
-         /M+d08WVsmtIN0vgXh7D2cvrZJk7ghtU9GZXXqCJ0hTF4HYavFyCTLr3lUPKVyrPWnBg
-         Oavg==
+        bh=0cdTKPtoN4CzKbsNc3MnpYWSX4bpB5XCY/L4ADgd1ls=;
+        b=K+65usFrR6AZrlMOdxoVXUam9O9KRNXAmZnebswswFWSHgbdhbuyaBdcVi1L+RF4v1
+         KckBCI2FZ4tHFVogDwXe/To//fDN5bwkW935UhIMvegXM5DH5jnvUgM2ytJyJQV4j5KJ
+         VyINrW1GgetCOXSJuGtcs3OlLfj/7rCCMs6FOI6OIqRuHSAIat5aS7UXFDW7Z3irvXvP
+         iiEYGrf960+0/EuxrU0gzREA+C7DJ1M6pshWj7BLloFUNs2FmITMqYm97t5eztF/1/V2
+         Y4eFVbGGimd3qH/51KJM42v8qqPHrPrPsmk4Yz0A4E92eK/M04LO4bxkkUFEm3IeVAkn
+         DQpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723751093; x=1724355893;
+        d=1e100.net; s=20230601; t=1723753038; x=1724357838;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6t6XhYIEZnyVh3jH9KKsmGdUUyO+tWe72GSzHcBC0Bs=;
-        b=S3lMgRLG05OtpQiyOhZr+Gv6zBLY3moSbx8jkJTaCvzFvG9O0bME5TRZdmyoB87Mln
-         phaFjHe7W69/SBkWJd3F7GroOnG+WGOtZky0rwPXchN6abWLSQV2lh/gbJjA2Xb5oBSh
-         U1Hchnyt0VCkQj+hc0r9Veyfyt1vYxEfdx92Zc2udDcF9f7R6HjfXOY0suqjzWEm+Oge
-         pr/rc5jPVu7gm1GH697XS/xcstgk0EWKbVkKzkvEx7C88CCw6Wx20kXrNYG+yg3Sn07r
-         OJGR16vGcgJtsFMWUKQx+ANkpK5bGovulO6WI7W/CjlnNJzL/HMsvGmvuLx+Kcr2KboY
-         ue1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWEOhsT17ULnHKlTZgfTT2lVWxMH+TG+BnUmAApTTVsSwc4/j/q/cd7DYtcpQUa4lUol8W0JYQingFxZF8BoYyn70Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP4izgOveeQ/uDPwBPRLpNcBOhB7dTLHQ99zKD9Jr/b6ffxEp8
-	Vqz5w6vgn1/qh8OmINJ+jYXQOeYwnnGHXESM9+RnLEfIFQtlQXVmuLBtmcZMIVYAxyirEejIycW
-	JEw2RsMtMmSnFVRDvC+lO94cCCSeyxBPrrIM8
-X-Google-Smtp-Source: AGHT+IGFiu2dsnb0iBEpNTaU9KVmRuLZuyiJNu/FnHWtHgC8Ueh3DZGTkW2v1iGQuV1T8XRCWB8LYxP6YszCk0z50XQ=
-X-Received: by 2002:a05:690c:4c8f:b0:664:a85d:47c6 with SMTP id
- 00721157ae682-6b1bdb21ae8mr8811077b3.33.1723751093161; Thu, 15 Aug 2024
- 12:44:53 -0700 (PDT)
+        bh=0cdTKPtoN4CzKbsNc3MnpYWSX4bpB5XCY/L4ADgd1ls=;
+        b=Mm0ZvsojByyVJ8pPoBFIdSXswxxCRMf+MyvqGh9Ij79JCn8De73bJasH0DTfhe93AO
+         AdP2Hq71s2DSY3XJSkopyhjBoMT3/Sb+htZmyV/rmdaC5Ux1+59yyMEFPAxRdwFNPNrK
+         V+l2ih8QQlVYElUgh0x98cQDnNeHIOekZMdFTtSNJyEQxLxlo5vvgWTC+PBnb5xZG5Ps
+         xIeT2OzmZnCT4ypXieZlABcuvIwBms2o4Rn+lZF2WRN2F3yIvWznR3N804m3lJq41Oml
+         keULO4hEFVNXe7G9JrBhucRksR5JGvFZQfvRGOP5ZSBTg8ZLPrwNZNb509EuGYXEbuSU
+         7DTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZjizrBGAD5+U8OJ3Qr4Fh+oXQQWe5/5Fh0CXHMRvK5bvq6gHflBhjYVF7198Drkm92hs7M3eJe3REliVSNr6eC5dnFmXSri0lzXHe2UGhgFqIy1Lls1jLO0cuX9gCW8gLL2cRtks/k8+ZA9b80gbuM2ZEYodigIaV3Ja/iZli3hQYJRHc
+X-Gm-Message-State: AOJu0YzkwoOGpZlV80So9JhITwrG2kQqOdoq03ab/6zkAXvgsexQgFPW
+	YK8rpwOK0BlZjgKdHEOBFR9mTIpmIHiDL5tmiGS70L2QCzi5IPz5etCtr/0MXOFWZJA9kk3o6sA
+	y1Zruh9MmEtro6Wtgy1vafFxtVgw=
+X-Google-Smtp-Source: AGHT+IG/3Oe6f9E+qWnqbNQJ7WtZ8Qle8wXpUdO9SOJikgKPAM96ccSiRAJmaUC3x7vChs7vGIIh2bwQVsa4vRL1h70=
+X-Received: by 2002:a17:90b:1247:b0:2cd:5d13:40ba with SMTP id
+ 98e67ed59e1d1-2d3dffc8f3bmr928532a91.14.1723753037724; Thu, 15 Aug 2024
+ 13:17:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,13 +63,13 @@ References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-1
  <CAEf4BzZ6jSFr_75cWQdxZOHzR-MyJS1xUY-TkG0=2A8Z1gP42g@mail.gmail.com>
  <CAJuCfpGZT+ci0eDfTuLvo-3=jtEfMLYswnDJ0CQHfittou0GZQ@mail.gmail.com> <CAG48ez2VwmFU7ubongD1AnYJDf2-RrFod33Zvbjy1NwRj4-Y1A@mail.gmail.com>
 In-Reply-To: <CAG48ez2VwmFU7ubongD1AnYJDf2-RrFod33Zvbjy1NwRj4-Y1A@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 15 Aug 2024 12:44:37 -0700
-Message-ID: <CAJuCfpF0Cvk0D_tLqiFmFze9ErgNe-_z1HHZoY34DcZ8CPd7yA@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 15 Aug 2024 13:17:05 -0700
+Message-ID: <CAEf4BzY6zSe_u4vtCBDwZp4R_hVsE3weZ+-UpXJsohrUeJeE4Q@mail.gmail.com>
 Subject: Re: [PATCH RFC v3 13/13] uprobes: add speculative lockless VMA to
  inode resolution
 To: Jann Horn <jannh@google.com>
-Cc: Christian Brauner <brauner@kernel.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+Cc: Suren Baghdasaryan <surenb@google.com>, Christian Brauner <brauner@kernel.org>, 
 	Mateusz Guzik <mjguzik@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
 	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
 	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
@@ -106,6 +106,15 @@ tection,
 > Stupid question: Is this uprobe stuff actually such a hot codepath
 > that it makes sense to optimize it to be faster than the page fault
 > path?
+
+Not a stupid question, but yes, generally speaking uprobe performance
+is critical for a bunch of tracing use cases. And having independent
+threads implicitly contending with each other just because of uprobe's
+internal implementation detail (while conceptually there should be no
+dependencies for triggering uprobe from multiple parallel threads) is
+a big surprise to users and affects production use cases beyond just
+uprobe-handling BPF logic overhead ("useful overhead") they assume.
+
 >
 > (Sidenote: I find it kinda interesting that this is sort of going back
 > in the direction of the old Speculative Page Faults design.)
@@ -122,299 +131,9 @@ jority of
 > > > > > > > cases, nicely improving uprobe/uretprobe scalability.
 > > > > > > >
 > > > > > >
-> > > > > > Here I have to admit to being mostly ignorant about the mm, so =
-bear with
-> > > > > > me. :>
-> > > > > >
-> > > > > > I note the result of find_active_uprobe_speculative is immediat=
-ely stale
-> > > > > > in face of modifications.
-> > > > > >
-> > > > > > The thing I'm after is that the mmap_lock_speculation business =
-adds
-> > > > > > overhead on archs where a release fence is not a de facto nop a=
-nd I
-> > > > > > don't believe the commit message justifies it. Definitely a bum=
-mer to
-> > > > > > add merely it for uprobes. If there are bigger plans concerning=
- it
-> > > > > > that's a different story of course.
-> > > > > >
-> > > > > > With this in mind I have to ask if instead you could perhaps ge=
-t away
-> > > > > > with the already present per-vma sequence counter?
-> > > > >
-> > > > > per-vma sequence counter does not implement acquire/release logic=
-, it
-> > > > > relies on vma->vm_lock for synchronization. So if we want to use =
-it,
-> > > > > we would have to add additional memory barriers here. This is lik=
-ely
-> > > > > possible but as I mentioned before we would need to ensure the
-> > > > > pagefault path does not regress. OTOH mm->mm_lock_seq already hal=
-fway
-> > > > > there (it implements acquire/release logic), we just had to ensur=
-e
-> > > > > mmap_write_lock() increments mm->mm_lock_seq.
-> > > > >
-> > > > > So, from the release fence overhead POV I think whether we use
-> > > > > mm->mm_lock_seq or vma->vm_lock, we would still need a proper fen=
-ce
-> > > > > here.
-> > > > >
-> > > >
-> > > > Per my previous e-mail I'm not particularly familiar with mm intern=
-als,
-> > > > so I'm going to handwave a little bit with my $0,03 concerning mult=
-icore
-> > > > in general and if you disagree with it that's your business. For th=
-e
-> > > > time being I have no interest in digging into any of this.
-> > > >
-> > > > Before I do, to prevent this thread from being a total waste, here =
-are
-> > > > some remarks concerning the patch with the assumption that the core=
- idea
-> > > > lands.
-> > > >
-> > > > From the commit message:
-> > > > > Now that files_cachep is SLAB_TYPESAFE_BY_RCU, we can safely acce=
-ss
-> > > > > vma->vm_file->f_inode lockless only under rcu_read_lock() protect=
-ion,
-> > > > > attempting uprobe look up speculatively.
-> > > >
-> > > > Just in case I'll note a nit that this paragraph will need to be re=
-moved
-> > > > since the patch adding the flag is getting dropped.
-> > >
-> > > Yep, of course, I'll update all that for the next revision (I'll wait
-> > > for non-RFC patches to land first before reposting).
-> > >
-> > > >
-> > > > A non-nit which may or may not end up mattering is that the flag (w=
-hich
-> > > > *is* set on the filep slab cache) makes things more difficult to
-> > > > validate. Normal RCU usage guarantees that the object itself wont b=
-e
-> > > > freed as long you follow the rules. However, the SLAB_TYPESAFE_BY_R=
-CU
-> > > > flag weakens it significantly -- the thing at hand will always be a
-> > > > 'struct file', but it may get reallocated to *another* file from un=
-der
-> > > > you. Whether this aspect plays a role here I don't know.
-> > >
-> > > Yes, that's ok and is accounted for. We care about that memory not
-> > > going even from under us (I'm not even sure if it matters that it is
-> > > still a struct file, tbh; I think that shouldn't matter as we are
-> > > prepared to deal with completely garbage values read from struct
-> > > file).
-> >
-> > Correct, with SLAB_TYPESAFE_BY_RCU we do need an additional check that
-> > vma->vm_file has not been freed and reused. That's where
-> > mmap_lock_speculation_{start|end} helps us. For vma->vm_file to change
-> > from under us one would have to take mmap_lock for write. If that
-> > happens mmap_lock_speculation_{start|end} should detect that and
-> > terminate our speculation.
-> >
-> > >
-> > > >
-> > > > > +static struct uprobe *find_active_uprobe_speculative(unsigned lo=
-ng bp_vaddr)
-> > > > > +{
-> > > > > +     const vm_flags_t flags =3D VM_HUGETLB | VM_MAYEXEC | VM_MAY=
-SHARE;
-> > > > > +     struct mm_struct *mm =3D current->mm;
-> > > > > +     struct uprobe *uprobe;
-> > > > > +     struct vm_area_struct *vma;
-> > > > > +     struct file *vm_file;
-> > > > > +     struct inode *vm_inode;
-> > > > > +     unsigned long vm_pgoff, vm_start;
-> > > > > +     int seq;
-> > > > > +     loff_t offset;
-> > > > > +
-> > > > > +     if (!mmap_lock_speculation_start(mm, &seq))
-> > > > > +             return NULL;
-> > > > > +
-> > > > > +     rcu_read_lock();
-> > > > > +
-> > > >
-> > > > I don't think there is a correctness problem here, but entering rcu
-> > > > *after* deciding to speculatively do the lookup feels backwards.
-> > >
-> > > RCU should protect VMA and file, mm itself won't go anywhere, so this=
- seems ok.
-> > >
-> > > >
-> > > > > +     vma =3D vma_lookup(mm, bp_vaddr);
-> > > > > +     if (!vma)
-> > > > > +             goto bail;
-> > > > > +
-> > > > > +     vm_file =3D data_race(vma->vm_file);
-> > > > > +     if (!vm_file || (vma->vm_flags & flags) !=3D VM_MAYEXEC)
-> > > > > +             goto bail;
-> > > > > +
-> > > >
-> > > > If vma teardown is allowed to progress and the file got fput'ed...
-> > > >
-> > > > > +     vm_inode =3D data_race(vm_file->f_inode);
-> > > >
-> > > > ... the inode can be NULL, I don't know if that's handled.
-> > > >
-> > >
-> > > Yep, inode pointer value is part of RB-tree key, so if it's NULL, we
-> > > just won't find a matching uprobe. Same for any other "garbage"
-> > > f_inode value. Importantly, we never should dereference such inode
-> > > pointers, at least until we find a valid uprobe (in which case we kee=
-p
-> > > inode reference to it).
-> > >
-> > > > More importantly though, per my previous description of
-> > > > SLAB_TYPESAFE_BY_RCU, by now the file could have been reallocated a=
-nd
-> > > > the inode you did find is completely unrelated.
-> > > >
-> > > > I understand the intent is to backpedal from everything should the =
-mm
-> > > > seqc change, but the above may happen to matter.
-> > >
-> > > Yes, I think we took that into account. All that we care about is
-> > > memory "type safety", i.e., even if struct file's memory is reused,
-> > > it's ok, we'll eventually detect the change and will discard wrong
-> > > uprobe that we might by accident lookup (though probably in most case=
-s
-> > > we just won't find a uprobe at all).
-> > >
-> > > >
-> > > > > +     vm_pgoff =3D data_race(vma->vm_pgoff);
-> > > > > +     vm_start =3D data_race(vma->vm_start);
-> > > > > +
-> > > > > +     offset =3D (loff_t)(vm_pgoff << PAGE_SHIFT) + (bp_vaddr - v=
-m_start);
-> > > > > +     uprobe =3D find_uprobe_rcu(vm_inode, offset);
-> > > > > +     if (!uprobe)
-> > > > > +             goto bail;
-> > > > > +
-> > > > > +     /* now double check that nothing about MM changed */
-> > > > > +     if (!mmap_lock_speculation_end(mm, seq))
-> > > > > +             goto bail;
-> > > >
-> > > > This leaks the reference obtained by find_uprobe_rcu().
-> > >
-> > > find_uprobe_rcu() doesn't obtain a reference, uprobe is RCU-protected=
-,
-> > > and if caller need a refcount bump it will have to use
-> > > try_get_uprobe() (which might fail).
-> > >
-> > > >
-> > > > > +
-> > > > > +     rcu_read_unlock();
-> > > > > +
-> > > > > +     /* happy case, we speculated successfully */
-> > > > > +     return uprobe;
-> > > > > +bail:
-> > > > > +     rcu_read_unlock();
-> > > > > +     return NULL;
-> > > > > +}
-> > > >
-> > > > Now to some handwaving, here it is:
-> > > >
-> > > > The core of my concern is that adding more work to down_write on th=
-e
-> > > > mmap semaphore comes with certain side-effects and plausibly more t=
-han a
-> > > > sufficient speed up can be achieved without doing it.
-> >
-> > AFAIK writers of mmap_lock are not considered a fast path. In a sense
-> > yes, we made any writer a bit heavier but OTOH we also made
-> > mm->mm_lock_seq a proper sequence count which allows us to locklessly
-> > check if mmap_lock is write-locked. I think you asked whether there
-> > will be other uses for mmap_lock_speculation_{start|end} and yes. For
-> > example, I am planning to use them for printing /proc/{pid}/maps
-> > without taking mmap_lock (when it's uncontended).
->
-> What would be the goal of this - to avoid cacheline bouncing of the
-> mmap lock between readers? Or to allow mmap_write_lock() to preempt
-> /proc/{pid}/maps readers who started out uncontended?
 
-The latter, from my early patchset which I need to refine
-(https://lore.kernel.org/all/20240123231014.3801041-3-surenb@google.com/):
+[...]
 
-This change is designed to reduce mmap_lock contention and prevent a
-process reading /proc/pid/maps files (often a low priority task, such as
-monitoring/data collection services) from blocking address space updates.
-
->
-> Is the idea that you'd change show_map_vma() to first do something
-> like get_file_active() to increment the file refcount (because
-> otherwise the dentry can be freed under you and you need the dentry
-> for path printing), then recheck your sequence count on the mm or vma
-> (to avoid accessing the dentry of an unrelated file that hasn't become
-> userspace-visible yet and may not have a proper dentry pointer yet),
-> then print the file path, drop the file reference again, and in the
-> end recheck the sequence count again before actually returning the
-> printed data to userspace?
-
-Yeah, you can see the details in that link I posted above. See
-get_vma_snapshot() function.
-
->
-> > If we have VMA seq
-> > counter-based detection it would be better (see below).
-> >
-> > > >
-> > > > An mm-wide mechanism is just incredibly coarse-grained and it may h=
-appen
-> > > > to perform poorly when faced with a program which likes to mess wit=
-h its
-> > > > address space -- the fast path is going to keep failing and only
-> > > > inducing *more* overhead as the code decides to down_read the mmap
-> > > > semaphore.
-> > > >
-> > > > Furthermore there may be work currently synchronized with down_writ=
-e
-> > > > which perhaps can transition to "merely" down_read, but by the time=
- it
-> > > > happens this and possibly other consumers expect a change in the
-> > > > sequence counter, messing with it.
-> > > >
-> > > > To my understanding the kernel supports parallel faults with per-vm=
-a
-> > > > locking. I would find it surprising if the same machinery could not=
- be
-> > > > used to sort out uprobe handling above.
-> >
-> > From all the above, my understanding of your objection is that
-> > checking mmap_lock during our speculation is too coarse-grained and
-> > you would prefer to use the VMA seq counter to check that the VMA we
-> > are working on is unchanged. I agree, that would be ideal. I had a
-> > quick chat with Jann about this and the conclusion we came to is that
-> > we would need to add an additional smp_wmb() barrier inside
-> > vma_start_write() and a smp_rmb() in the speculation code:
-> >
-> > static inline void vma_start_write(struct vm_area_struct *vma)
-> > {
-> >         int mm_lock_seq;
-> >
-> >         if (__is_vma_write_locked(vma, &mm_lock_seq))
-> >                 return;
-> >
-> >         down_write(&vma->vm_lock->lock);
-> >         /*
-> >          * We should use WRITE_ONCE() here because we can have concurre=
-nt reads
-> >          * from the early lockless pessimistic check in vma_start_read(=
-).
-> >          * We don't really care about the correctness of that early che=
-ck, but
-> >          * we should use WRITE_ONCE() for cleanliness and to keep KCSAN=
- happy.
-> >          */
-> >         WRITE_ONCE(vma->vm_lock_seq, mm_lock_seq);
-> > +        smp_wmb();
-> >         up_write(&vma->vm_lock->lock);
-> > }
-> >
 > > Note: up_write(&vma->vm_lock->lock) in the vma_start_write() is not
 > > enough because it's one-way permeable (it's a "RELEASE operation") and
 > > later vma->vm_file store (or any other VMA modification) can move
@@ -465,6 +184,9 @@ only
 > > smp_rmb();
 > > if (vma->vm_lock_seq !=3D vm_lock_seq)
 >
+
+thanks, will incorporate these comments into the next revision
+
 > (As I said on the other thread: Since this now relies on
 > vma->vm_lock_seq not wrapping back to the same value for correctness,
 > I'd like to see vma->vm_lock_seq being at least an "unsigned long", or
