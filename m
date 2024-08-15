@@ -1,31 +1,31 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB3C38382;
-	Thu, 15 Aug 2024 02:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB54198E78;
+	Thu, 15 Aug 2024 07:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723690729; cv=none; b=so+zn0p31FG4g0vuf6CfL1SQN/D6oUZdbMaYvwVtvagHmqdIW3meGZ+THX5ABXcJLlE2WT/lXoOedk3/cDWC2nTcrpgHidzBRQD/jIoxXdJR+iPWnHoFWmh3zkbd2BBQBsDXAr+fe0iY1YaMvQqBRtOr9eFhTJHHB2qqfesIheA=
+	t=1723708800; cv=none; b=t01oqhcY9PaZoEHgzLMip+tjTwdkuwpQHEGzhs9EzlK5k8YQhLXr7Gzvhi8Mtq3KWwVCyRv/PUCaVLdGApmNTjWINyqybml23RLciDW/ThTJ02Q0+J3SmuFkGrH4vt2tjcVPmrqsBpcNgh4XmroxOHrmh5J54KbBLGska6G2dLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723690729; c=relaxed/simple;
-	bh=86J0cKNCLMIx8ugIr/ubHmolU32V6osL0szusAhIeNk=;
+	s=arc-20240116; t=1723708800; c=relaxed/simple;
+	bh=XwDdYd67nw6O4gN2C/AFvJ5qOri7xBwic0zMAeUdy14=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DxRdYQOtWIeofKLuy20hiEYw7YCs5p52zAk+fQNNJ0O0P4hQ6mnx5RHaJiINmyMIxVIA315SfA4wIG905yc3RUzJzAtmfjlqoMDpTfJeH0Cuse86FfOSHBaQm05XY0UGjZLf+T5vd0Y5jG7mJtixuVFBjhF2jUlqMGBQUvXNqYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 In-Reply-To:Content-Type; b=mjZ0rnUeXWAtAFi9SwBge1O6mjqg1VVM10eXvqS9FjFtvW/OKptf8QdigEz8MYnJNsDUpqrE8k/71bV7IfNSFnb7O5QCU9cyuma9WJGPqwF+r1JZJjGseR8NlqdWJvCXUQ0KiO8qWGZ9GMn7qCWwz+BFoLGX1x/tIGRHiWX7CpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WkqXy3MGgzpTDN;
-	Thu, 15 Aug 2024 10:57:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WkyFQ1B2Hz1T4GR;
+	Thu, 15 Aug 2024 15:59:22 +0800 (CST)
 Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3AB981800A0;
-	Thu, 15 Aug 2024 10:58:44 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 11267140159;
+	Thu, 15 Aug 2024 15:59:53 +0800 (CST)
 Received: from [10.67.110.108] (10.67.110.108) by
  kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 15 Aug 2024 10:58:42 +0800
-Message-ID: <9044640f-727a-f4ec-cb70-35eeeb28111e@huawei.com>
-Date: Thu, 15 Aug 2024 10:58:42 +0800
+ 15.2.1258.34; Thu, 15 Aug 2024 15:59:51 +0800
+Message-ID: <e17cf2d1-e3e0-f549-b04a-664ca2708817@huawei.com>
+Date: Thu, 15 Aug 2024 15:59:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,17 +52,17 @@ References: <20240727094405.1362496-1-liaochang1@huawei.com>
  <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
  <CAEf4BzYvpgfFGckcKdzkC_g1J1SFi7xBe=_cjdVy4KEMikvGMw@mail.gmail.com>
  <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
- <CAEf4BzZkXWcE7=2FNm-DrSFOR-Pd9LqrQJvV0ShXfPnXzSzYjg@mail.gmail.com>
+ <CAEf4BzYSC+OQ0D+B0oEi3uN0kyZ07kPaneLJLJqF=oA6gTXLbg@mail.gmail.com>
 From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzZkXWcE7=2FNm-DrSFOR-Pd9LqrQJvV0ShXfPnXzSzYjg@mail.gmail.com>
+In-Reply-To: <CAEf4BzYSC+OQ0D+B0oEi3uN0kyZ07kPaneLJLJqF=oA6gTXLbg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemd200013.china.huawei.com (7.221.188.133)
 
 
 
-在 2024/8/15 2:42, Andrii Nakryiko 写道:
+在 2024/8/15 0:57, Andrii Nakryiko 写道:
 > On Tue, Aug 13, 2024 at 9:17 PM Liao, Chang <liaochang1@huawei.com> wrote:
 >>
 >>
@@ -177,27 +177,6 @@ X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
 >> instructions also impacts the kprobe/kretprobe paths on Arm64, As as result,
 >> I'm working on enhancements to trig-kprobe/kretprobe to prevent performance
 >> regression.
-> 
-> Why would the *benchmarks* have to be modified? The typical
-> kprobe/kretprobe attachment should be fast, and those benchmarks
-> simulate typical fast path kprobe/kretprobe. Is there some simulation
-> logic that is shared between uprobes and kprobes or something?
-
-Yes, kprobe and uprobe share many things for Arm64, but there are curical
-difference. Let me explain further. Simulating a 'push' instruction on
-arm64 will modify the stack pointer at *probe breakpoint. However, kprobe
-and uprobe use different way to restore the stack pointer upon returning
-from the breakpoint exception. Consequently.sharing the same simulation
-logic for both would result in kernel panic for kprobe.
-
-To avoid complicating the exception return logic, I've opted to simuate
-'push' only for uprobe and maintain the single-stepping for kprobe [0].
-This trade-off avoid the impacts to kprobe/kretprobe, and no need to
-change the kprobe/kretprobe related benchmark.
-
-[0] https://lore.kernel.org/all/20240814080356.2639544-1-liaochang1@huawei.com/
-
-> 
 >>
 >>>
 >>>
@@ -211,8 +190,131 @@ change the kprobe/kretprobe related benchmark.
 >>> benchmarks to something a bit more generic, rather than using
 >>> instruction names)?
 >>
+>> Let me use a matrix below for the structured comparsion of uprobe/uretprobe
+>> benchmarks on X86 and Arm64:
+>>
+>> Architecture  Instrution Type   Handling method   Performance
+>> X86           nop               Emulated          Fastest
+>> X86           push              Emulated          Fast
+>> X86           ret               Single-step       Slow
+>> Arm64         nop               Emulated          Fastest
+>> Arm64         push              Emulated          Fast
+>> Arm64         ret               Emulated          Faster
+>>
+>> I suggest categorize benchmarks into 'emu' for emulated instructions and 'ss'
+>> for 'single-steppable' instructions. Generally, emulated instructions should
+>> outperform single-step ones across different architectures. Regarding the
+>> generic naming, I propose using a self-explanatory style, such as
+>> s/nop/empty-insn/g, s/push/push-stack/g, s/ret/func-return/g.
+>>
+>> Above all, example "bench --list" output:
+>>
+>> X86:
+>>   ...
+>>   trig-uprobe-emu-empty-insn
+>>   trig-uprobe-ss-func-return
+>>   trig-uprobe-emu-push-stack
+>>   trig-uretprobe-emu-empyt-insn
+>>   trig-uretprobe-ss-func-return
+>>   trig-uretprobe-emu-push-stack
+>>   ...
+>>
+>> Arm64:
+>>   ...
+>>   trig-uprobe-emu-empty-insn
+>>   trig-uprobe-emu-func-return
+>>   trig-uprobe-emu-push-stack
+>>   trig-uretprobe-emu-empyt-insn
+>>   trig-uretprobe-emu-func-return
+>>   trig-uretprobe-emu-push-stack
+>>   ...
+>>
+>> This structure will allow for direct comparison of uprobe/uretprobe
+>> performance across different architectures and instruction types.
+>> Please let me know your thought, Andrii.
 > 
-> [...]
+> Tbh, sounds a bit like an overkill. But before we decide on naming,
+> what kind of situation is single-stepped on arm64?
+
+On Arm64, the following instruction types are generally not single-steppable.
+
+  - Modifying and reading PC, including 'ret' and various branch instructions.
+
+  - Forming a PC-relative address using the PC and an immediate value.
+
+  - Generating exception, includes BRK, HLT, HVC, SMC, SVC.
+
+  - Loading memory at address calculated based on the PC and an immediate offset.
+
+  - Moving general-purpose register to system registers of PE (similar to logical cores on x86).
+
+  - Hint instruction cause exception or unintend behavior for single-stepping.
+    However, 'nop' is steppable hint.
+
+Most parts of instructions that doesn't fall into any of these types are single-stepped,
+including the Arm64 equvialents of 'push'.
+
+Thanks.
+
+> 
+>>
+>> Thanks.
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
+>>>>>>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
+>>>>>>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
+>>>>>>> Redis SET (RPS) uprobe: 42728.52
+>>>>>>> Redis GET (RPS) uprobe: 43640.18
+>>>>>>> Redis SET (RPS) uretprobe: 40624.54
+>>>>>>> Redis GET (RPS) uretprobe: 41180.56
+>>>>>>>
+>>>>>>> after-opt
+>>>>>>> ---------
+>>>>>>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+>>>>>>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+>>>>>>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+>>>>>>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+>>>>>>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+>>>>>>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+>>>>>>> Redis SET (RPS) uprobe: 43939.69
+>>>>>>> Redis GET (RPS) uprobe: 45200.80
+>>>>>>> Redis SET (RPS) uretprobe: 41658.58
+>>>>>>> Redis GET (RPS) uretprobe: 42805.80
+>>>>>>>
+>>>>>>> While some uprobes might still need to share the same insn_slot, this
+>>>>>>> patch compare the instructions in the resued insn_slot with the
+>>>>>>> instructions execute out-of-line firstly to decides allocate a new one
+>>>>>>> or not.
+>>>>>>>
+>>>>>>> Additionally, this patch use a rbtree associated with each thread that
+>>>>>>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
+>>>>>>> rbtree of uprobe_breakpoints has smaller node, better locality and less
+>>>>>>> contention, it result in faster lookup times compared to find_uprobe().
+>>>>>>>
+>>>>>>> The other part of this patch are some necessary memory management for
+>>>>>>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
+>>>>>>> hit uprobe that doesn't already have a corresponding node in rbtree. All
+>>>>>>> uprobe_breakpoints will be freed when thread exit.
+>>>>>>>
+>>>>>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>>>>>>> ---
+>>>>>>>  include/linux/uprobes.h |   3 +
+>>>>>>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
+>>>>>>>  2 files changed, 211 insertions(+), 38 deletions(-)
+>>>>>>>
+>>>>>
+>>>>> [...]
+>>>>
+>>>> --
+>>>> BR
+>>>> Liao, Chang
+>>
+>> --
+>> BR
+>> Liao, Chang
 
 -- 
 BR
