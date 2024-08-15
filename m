@@ -1,321 +1,272 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB54198E78;
-	Thu, 15 Aug 2024 07:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DCB17C9BB;
+	Thu, 15 Aug 2024 09:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723708800; cv=none; b=t01oqhcY9PaZoEHgzLMip+tjTwdkuwpQHEGzhs9EzlK5k8YQhLXr7Gzvhi8Mtq3KWwVCyRv/PUCaVLdGApmNTjWINyqybml23RLciDW/ThTJ02Q0+J3SmuFkGrH4vt2tjcVPmrqsBpcNgh4XmroxOHrmh5J54KbBLGska6G2dLk=
+	t=1723715905; cv=none; b=nR+IMxZNhd4cwwXtZcjjSsnaSu4KtimoVILGaXVVJ8ICRILh17h0udKfUMJr/cQQE6s4BLHk8kAxdYSdCrqnMECL+90qh7BEJSga96na2gEWayvGazju7h6VEXo21V1ncmCJw1J6YLFxDf6wYyAFWp3bad1pK/XooFiJlxqGJqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723708800; c=relaxed/simple;
-	bh=XwDdYd67nw6O4gN2C/AFvJ5qOri7xBwic0zMAeUdy14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mjZ0rnUeXWAtAFi9SwBge1O6mjqg1VVM10eXvqS9FjFtvW/OKptf8QdigEz8MYnJNsDUpqrE8k/71bV7IfNSFnb7O5QCU9cyuma9WJGPqwF+r1JZJjGseR8NlqdWJvCXUQ0KiO8qWGZ9GMn7qCWwz+BFoLGX1x/tIGRHiWX7CpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WkyFQ1B2Hz1T4GR;
-	Thu, 15 Aug 2024 15:59:22 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11267140159;
-	Thu, 15 Aug 2024 15:59:53 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 15 Aug 2024 15:59:51 +0800
-Message-ID: <e17cf2d1-e3e0-f549-b04a-664ca2708817@huawei.com>
-Date: Thu, 15 Aug 2024 15:59:50 +0800
+	s=arc-20240116; t=1723715905; c=relaxed/simple;
+	bh=vKo9hspsXvC/ePUKhbA6qWkIsei7vnTadE3TXtNfLwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9Gc/YLmFYJYThNsuS9W+Y+ILksvP/4tEbjp9Y8gCFXs8PXjGeW4QvIsRmqm7hyCctOY/+2u781cchgE2Q3apQ8pu3S3p2byE7cw+5Q54V7CZ+gRgTWFU6LX9GnzxPN2OVwLl8NkShlAGdCdAhTy0Yxvl+CZ+j1rvHG+NOa1iZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EA36169E;
+	Thu, 15 Aug 2024 02:58:48 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1154C3F73B;
+	Thu, 15 Aug 2024 02:58:19 -0700 (PDT)
+Date: Thu, 15 Aug 2024 10:58:15 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
+	oleg@redhat.com, peterz@infradead.org, puranjay@kernel.org,
+	ast@kernel.org, andrii@kernel.org, xukuohai@huawei.com,
+	revest@chromium.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] arm64: insn: Simulate nop and push instruction for
+ better uprobe performance
+Message-ID: <Zr3RN4zxF5XPgjEB@J2N7QTR9R3>
+References: <20240814080356.2639544-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
- performance
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
- <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
- <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
- <CAEf4BzYvpgfFGckcKdzkC_g1J1SFi7xBe=_cjdVy4KEMikvGMw@mail.gmail.com>
- <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
- <CAEf4BzYSC+OQ0D+B0oEi3uN0kyZ07kPaneLJLJqF=oA6gTXLbg@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzYSC+OQ0D+B0oEi3uN0kyZ07kPaneLJLJqF=oA6gTXLbg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+In-Reply-To: <20240814080356.2639544-1-liaochang1@huawei.com>
 
+On Wed, Aug 14, 2024 at 08:03:56AM +0000, Liao Chang wrote:
+> As Andrii pointed out, the uprobe/uretprobe selftest bench run into a
+> counterintuitive result that nop and push variants are much slower than
+> ret variant [0]. The root cause lies in the arch_probe_analyse_insn(),
+> which excludes 'nop' and 'stp' from the emulatable instructions list.
+> This force the kernel returns to userspace and execute them out-of-line,
+> then trapping back to kernel for running uprobe callback functions. This
+> leads to a significant performance overhead compared to 'ret' variant,
+> which is already emulated.
 
+I appreciate this might be surprising, but does it actually matter
+outside of a microbenchmark?
 
-在 2024/8/15 0:57, Andrii Nakryiko 写道:
-> On Tue, Aug 13, 2024 at 9:17 PM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/8/13 1:49, Andrii Nakryiko 写道:
->>> On Mon, Aug 12, 2024 at 4:11 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>
->>>>
->>>>
->>>> 在 2024/8/9 2:26, Andrii Nakryiko 写道:
->>>>> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>>>
->>>>>> Hi Andrii and Oleg.
->>>>>>
->>>>>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
->>>>>> on arm64. I notice recent discussions on the performance and scalability of uprobes
->>>>>> within the mailing list. Considering this interest, I've added you and other relevant
->>>>>> maintainers to the CC list for broader visibility and potential collaboration.
->>>>>>
->>>>>
->>>>> Hi Liao,
->>>>>
->>>>> As you can see there is an active work to improve uprobes, that
->>>>> changes lifetime management of uprobes, removes a bunch of locks taken
->>>>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
->>>>> hold off a bit with your changes until all that lands. And then
->>>>> re-benchmark, as costs might shift.
->>>>>
->>>>> But also see some remarks below.
->>>>>
->>>>>> Thanks.
->>>>>>
->>>>>> 在 2024/7/27 17:44, Liao Chang 写道:
->>>>>>> The profiling result of single-thread model of selftests bench reveals
->>>>>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
->>>>>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
->>>>>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
->>>>>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
->>>>>>>
->>>>>>> This patch introduce struct uprobe_breakpoint to track previously
->>>>>>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
->>>>>>> need for redundant insn_slot writes and subsequent expensive cache
->>>>>>> flush, especially on architecture like ARM64. This patch has been tested
->>>>>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
->>>>>>> bench and Redis GET/SET benchmark result below reveal obivious
->>>>>>> performance gain.
->>>>>>>
->>>>>>> before-opt
->>>>>>> ----------
->>>>>>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
->>>>>>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
->>>>>>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
->>>>>
->>>>> I'm surprised that nop and push variants are much slower than ret
->>>>> variant. This is exactly opposite on x86-64. Do you have an
->>>>> explanation why this might be happening? I see you are trying to
->>>>> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
->>>>> variant of uprobe that normally shouldn't be used. Typically uprobe is
->>>>> installed on nop (for USDT) and on function entry (which would be push
->>>>> variant, `push %rbp` instruction).
->>>>>
->>>>> ret variant, for x86-64, causes one extra step to go back to user
->>>>> space to execute original instruction out-of-line, and then trapping
->>>>> back to kernel for running uprobe. Which is what you normally want to
->>>>> avoid.
->>>>>
->>>>> What I'm getting at here. It seems like maybe arm arch is missing fast
->>>>> emulated implementations for nops/push or whatever equivalents for
->>>>> ARM64 that is. Please take a look at that and see why those are slow
->>>>> and whether you can make those into fast uprobe cases?
->>>>
->>>> Hi Andrii,
->>>>
->>>> As you correctly pointed out, the benchmark result on Arm64 is counterintuitive
->>>> compared to X86 behavior. My investigation revealed that the root cause lies in
->>>> the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents instructions
->>>> of 'nop' and 'push' from the emulatable instruction list. This forces the kernel
->>>> to handle these instructions out-of-line in userspace upon breakpoint exception
->>>> is handled, leading to a significant performance overhead compared to 'ret' variant,
->>>> which is already emulated.
->>>>
->>>> To address this issue, I've developed a patch supports  the emulation of 'nop' and
->>>> 'push' variants. The benchmark results below indicates the performance gain of
->>>> emulation is obivious.
->>>>
->>>> xol (1 cpus)
->>>> ------------
->>>> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->>>> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->>>> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->>>> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->>>> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->>>> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>>>
->>>> emulation (1 cpus)
->>>> -------------------
->>>> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/s/cpu)
->>>> uprobe-push: 1.743 ± 0.006M/s  (1.743M/s/cpu)
->>>> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/s/cpu)
->>>> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/s/cpu)
->>>> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/s/cpu)
->>>> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/s/cpu)
->>>>
->>>> As you can see, the performance gap between nop/push and ret variants has been significantly
->>>> reduced. Due to the emulation of 'push' instruction need to access userspace memory, it spent
->>>> more cycles than the other.
->>>
->>> Great, it's an obvious improvement. Are you going to send patches
->>> upstream? Please cc bpf@vger.kernel.org as well.
->>
->> I'll need more time to thoroughly test this patch. The emulation o push/nop
->> instructions also impacts the kprobe/kretprobe paths on Arm64, As as result,
->> I'm working on enhancements to trig-kprobe/kretprobe to prevent performance
->> regression.
->>
->>>
->>>
->>> I'm also thinking we should update uprobe/uretprobe benchmarks to be
->>> less x86-specific. Right now "-nop" is the happy fastest case, "-push"
->>> is still happy, slightly slower case (due to the need to emulate stack
->>> operation) and "-ret" is meant to be the slow single-step case. We
->>> should adjust the naming and make sure that on ARM64 we hit similar
->>> code paths. Given you seem to know arm64 pretty well, can you please
->>> take a look at updating bench tool for ARM64 (we can also rename
->>> benchmarks to something a bit more generic, rather than using
->>> instruction names)?
->>
->> Let me use a matrix below for the structured comparsion of uprobe/uretprobe
->> benchmarks on X86 and Arm64:
->>
->> Architecture  Instrution Type   Handling method   Performance
->> X86           nop               Emulated          Fastest
->> X86           push              Emulated          Fast
->> X86           ret               Single-step       Slow
->> Arm64         nop               Emulated          Fastest
->> Arm64         push              Emulated          Fast
->> Arm64         ret               Emulated          Faster
->>
->> I suggest categorize benchmarks into 'emu' for emulated instructions and 'ss'
->> for 'single-steppable' instructions. Generally, emulated instructions should
->> outperform single-step ones across different architectures. Regarding the
->> generic naming, I propose using a self-explanatory style, such as
->> s/nop/empty-insn/g, s/push/push-stack/g, s/ret/func-return/g.
->>
->> Above all, example "bench --list" output:
->>
->> X86:
->>   ...
->>   trig-uprobe-emu-empty-insn
->>   trig-uprobe-ss-func-return
->>   trig-uprobe-emu-push-stack
->>   trig-uretprobe-emu-empyt-insn
->>   trig-uretprobe-ss-func-return
->>   trig-uretprobe-emu-push-stack
->>   ...
->>
->> Arm64:
->>   ...
->>   trig-uprobe-emu-empty-insn
->>   trig-uprobe-emu-func-return
->>   trig-uprobe-emu-push-stack
->>   trig-uretprobe-emu-empyt-insn
->>   trig-uretprobe-emu-func-return
->>   trig-uretprobe-emu-push-stack
->>   ...
->>
->> This structure will allow for direct comparison of uprobe/uretprobe
->> performance across different architectures and instruction types.
->> Please let me know your thought, Andrii.
+> Typicall uprobe is installed on 'nop' for USDT and on function entry
+> which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to push lr
+> and fp into stack regardless kernel or userspace binary. 
+
+Function entry doesn't always start with a STP; these days it's often a
+BTI or PACIASP, and for non-leaf functions (or with shrink-wrapping in
+the compiler), it could be any arbitrary instruction. This might happen
+to be the common case today, but there are certain;y codebases where it
+is not.
+
+STP (or any instruction that accesses memory) is fairly painful to
+emulate because you need to ensure that the correct atomicity and
+ordering properties are provided (e.g. an aligned STP should be
+single-copy-atomic, but copy_to_user() doesn't guarantee that except by
+chance), and that the correct VMSA behaviour is provided (e.g. when
+interacting with MTE, POE, etc, while the uaccess primitives don't try
+to be 100% equivalent to instructions in userspace).
+
+For those reasons, in general I don't think we should be emulating any
+instruction which accesses memory, and we should not try to emulate the
+STP, but I think it's entirely reasonable to emulate NOP.
+
+> In order to
+> improve the performance of handling uprobe for common usecases. This
+> patch supports the emulation of Arm64 equvialents instructions of 'nop'
+> and 'push'. The benchmark results below indicates the performance gain
+> of emulation is obvious.
 > 
-> Tbh, sounds a bit like an overkill. But before we decide on naming,
-> what kind of situation is single-stepped on arm64?
-
-On Arm64, the following instruction types are generally not single-steppable.
-
-  - Modifying and reading PC, including 'ret' and various branch instructions.
-
-  - Forming a PC-relative address using the PC and an immediate value.
-
-  - Generating exception, includes BRK, HLT, HVC, SMC, SVC.
-
-  - Loading memory at address calculated based on the PC and an immediate offset.
-
-  - Moving general-purpose register to system registers of PE (similar to logical cores on x86).
-
-  - Hint instruction cause exception or unintend behavior for single-stepping.
-    However, 'nop' is steppable hint.
-
-Most parts of instructions that doesn't fall into any of these types are single-stepped,
-including the Arm64 equvialents of 'push'.
-
-Thanks.
-
+> On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
 > 
->>
->> Thanks.
->>
->>>
->>>>
->>>>>
->>>>>>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
->>>>>>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
->>>>>>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
->>>>>>> Redis SET (RPS) uprobe: 42728.52
->>>>>>> Redis GET (RPS) uprobe: 43640.18
->>>>>>> Redis SET (RPS) uretprobe: 40624.54
->>>>>>> Redis GET (RPS) uretprobe: 41180.56
->>>>>>>
->>>>>>> after-opt
->>>>>>> ---------
->>>>>>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->>>>>>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->>>>>>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->>>>>>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->>>>>>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->>>>>>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>>>>>> Redis SET (RPS) uprobe: 43939.69
->>>>>>> Redis GET (RPS) uprobe: 45200.80
->>>>>>> Redis SET (RPS) uretprobe: 41658.58
->>>>>>> Redis GET (RPS) uretprobe: 42805.80
->>>>>>>
->>>>>>> While some uprobes might still need to share the same insn_slot, this
->>>>>>> patch compare the instructions in the resued insn_slot with the
->>>>>>> instructions execute out-of-line firstly to decides allocate a new one
->>>>>>> or not.
->>>>>>>
->>>>>>> Additionally, this patch use a rbtree associated with each thread that
->>>>>>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
->>>>>>> rbtree of uprobe_breakpoints has smaller node, better locality and less
->>>>>>> contention, it result in faster lookup times compared to find_uprobe().
->>>>>>>
->>>>>>> The other part of this patch are some necessary memory management for
->>>>>>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
->>>>>>> hit uprobe that doesn't already have a corresponding node in rbtree. All
->>>>>>> uprobe_breakpoints will be freed when thread exit.
->>>>>>>
->>>>>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->>>>>>> ---
->>>>>>>  include/linux/uprobes.h |   3 +
->>>>>>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
->>>>>>>  2 files changed, 211 insertions(+), 38 deletions(-)
->>>>>>>
->>>>>
->>>>> [...]
->>>>
->>>> --
->>>> BR
->>>> Liao, Chang
->>
->> --
->> BR
->> Liao, Chang
+> xol (1 cpus)
+> ------------
+> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+> 
+> emulation (1 cpus)
+> -------------------
+> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/prod)
+> uprobe-push: 1.743 ± 0.006M/s  (1.743M/prod)
+> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/prod)
+> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/prod)
+> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/prod)
+> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/prod)
+> 
+> As shown above, the performance gap between 'nop/push' and 'ret'
+> variants has been significantly reduced. Due to the emulation of 'push'
+> instruction needs to access userspace memory, it spent more cycles than
+> the other.
+> 
+> [0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
+> 
+> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+> ---
+>  arch/arm64/include/asm/insn.h            | 21 ++++++++++++++++++
+>  arch/arm64/kernel/probes/decode-insn.c   | 18 +++++++++++++--
+>  arch/arm64/kernel/probes/decode-insn.h   |  3 ++-
+>  arch/arm64/kernel/probes/simulate-insn.c | 28 ++++++++++++++++++++++++
+>  arch/arm64/kernel/probes/simulate-insn.h |  2 ++
+>  arch/arm64/kernel/probes/uprobes.c       |  2 +-
+>  6 files changed, 70 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
+> index 8c0a36f72d6f..a246e6e550ba 100644
+> --- a/arch/arm64/include/asm/insn.h
+> +++ b/arch/arm64/include/asm/insn.h
+> @@ -549,6 +549,27 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
+>  	       aarch64_insn_is_prfm_lit(insn);
+>  }
+>  
+> +static __always_inline bool aarch64_insn_is_nop(u32 insn)
+> +{
+> +	/* nop */
+> +	return aarch64_insn_is_hint(insn) &&
+> +	       ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
+> +}
 
--- 
-BR
-Liao, Chang
+This looks fine, but the comment can go.
+
+> +static __always_inline bool aarch64_insn_is_stp_fp_lr_sp_64b(u32 insn)
+> +{
+> +	/*
+> +	 * The 1st instruction on function entry often follows the
+> +	 * patten 'stp x29, x30, [sp, #imm]!' that pushing fp and lr
+> +	 * into stack.
+> +	 */
+> +	return aarch64_insn_is_stp_pre(insn) &&
+> +	       (((insn >> 30) & 0x03) ==  2) && /* opc == 10 */
+> +	       (((insn >>  5) & 0x1F) == 31) && /* Rn  is sp */
+> +	       (((insn >> 10) & 0x1F) == 30) && /* Rt2 is x29 */
+> +	       (((insn >>  0) & 0x1F) == 29);	/* Rt  is x30 */
+> +}
+
+We have accessors for these fields. Please use them.
+
+Regardless, as above I do not think we should have a helper this
+specific (with Rn, Rt, and Rt2 values hard-coded) inside <asm/insn.h>.
+
+>  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
+>  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
+>  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
+> diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
+> index 968d5fffe233..df7ca16fc763 100644
+> --- a/arch/arm64/kernel/probes/decode-insn.c
+> +++ b/arch/arm64/kernel/probes/decode-insn.c
+> @@ -73,8 +73,22 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
+>   *   INSN_GOOD_NO_SLOT If instruction is supported but doesn't use its slot.
+>   */
+>  enum probe_insn __kprobes
+> -arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
+> +arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api,
+> +		      bool kernel)
+>  {
+> +	/*
+> +	 * While 'nop' and 'stp x29, x30, [sp, #imm]! instructions can
+> +	 * execute in the out-of-line slot, simulating them in breakpoint
+> +	 * handling offers better performance.
+> +	 */
+> +	if (aarch64_insn_is_nop(insn)) {
+> +		api->handler = simulate_nop;
+> +		return INSN_GOOD_NO_SLOT;
+> +	} else if (!kernel && aarch64_insn_is_stp_fp_lr_sp_64b(insn)) {
+> +		api->handler = simulate_stp_fp_lr_sp_64b;
+> +		return INSN_GOOD_NO_SLOT;
+> +	}
+
+With the STP emulation gone, you won't need the kernel parameter here.
+
+> +
+>  	/*
+>  	 * Instructions reading or modifying the PC won't work from the XOL
+>  	 * slot.
+> @@ -157,7 +171,7 @@ arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi)
+>  		else
+>  			scan_end = addr - MAX_ATOMIC_CONTEXT_SIZE;
+>  	}
+> -	decoded = arm_probe_decode_insn(insn, &asi->api);
+> +	decoded = arm_probe_decode_insn(insn, &asi->api, true);
+>  
+>  	if (decoded != INSN_REJECTED && scan_end)
+>  		if (is_probed_address_atomic(addr - 1, scan_end))
+> diff --git a/arch/arm64/kernel/probes/decode-insn.h b/arch/arm64/kernel/probes/decode-insn.h
+> index 8b758c5a2062..ec4607189933 100644
+> --- a/arch/arm64/kernel/probes/decode-insn.h
+> +++ b/arch/arm64/kernel/probes/decode-insn.h
+> @@ -28,6 +28,7 @@ enum probe_insn __kprobes
+>  arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi);
+>  #endif
+>  enum probe_insn __kprobes
+> -arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi);
+> +arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi,
+> +		      bool kernel);
+>  
+>  #endif /* _ARM_KERNEL_KPROBES_ARM64_H */
+> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
+> index 22d0b3252476..0b1623fa7003 100644
+> --- a/arch/arm64/kernel/probes/simulate-insn.c
+> +++ b/arch/arm64/kernel/probes/simulate-insn.c
+> @@ -200,3 +200,31 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
+>  
+>  	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+>  }
+> +
+> +void __kprobes
+> +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
+> +{
+> +	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+> +}
+
+Hmm, this forgets to update the single-step state machine and PSTATE.BT,
+and that's an extant bug in arch_uprobe_post_xol(). This can be:
+
+| void __kprobes
+| simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
+| {
+| 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+| }
+
+> +
+> +void __kprobes
+> +simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *regs)
+> +{
+> +	long imm7;
+> +	u64 buf[2];
+> +	long new_sp;
+> +
+> +	imm7 = sign_extend64((opcode >> 15) & 0x7f, 6);
+> +	new_sp = regs->sp + (imm7 << 3);
+
+We have accessors for these fields, please use them.
+
+> +
+> +	buf[0] = regs->regs[29];
+> +	buf[1] = regs->regs[30];
+> +
+> +	if (copy_to_user((void __user *)new_sp, buf, sizeof(buf))) {
+> +		force_sig(SIGSEGV);
+> +		return;
+> +	}
+
+As above, this won't interact with VMSA features (e.g. MTE, POE) in the
+same way as an STP in userspace, and this will not have the same
+atomicity properties as an STP.
+
+> +
+> +	regs->sp = new_sp;
+> +	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+
+Likewise, this sould need ot use arm64_skip_faulting_instruction(),
+though as above I think we should drop STP emulation entirely.
+
+Mark.
