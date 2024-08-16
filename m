@@ -1,133 +1,194 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1408A1B9B2A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Aug 2024 13:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7EC1BC083
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Aug 2024 14:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723816615; cv=none; b=MlMvxaZx+wxcZQquoXHEUn/OZE9YAQfe95NeskKcFhSHneB/19zi12tvMvO0GRu17gwQ4WPoGoSS8CmT0wEpglnOeosy46nIYYld20RQE6YQapA/E4m3OsR7XgPRxDYnEoU7u8IsLoh1z81QIliTtT/v/pkzTZNUvfq01yp/oso=
+	t=1723817085; cv=none; b=cEOcgG5tS/PeaHRUenuZQ9aJmam78GeMw7FYfs/Ta10vKDb7gc7zeeZQrQJpO9ALAwQz7JAK9XtVqfdDxUXfJRvgucEsAuwaTOeGQ8TWj2d5APQe1Ba1qiko8H1Qk+DdBo1cYBmbp9AvDPMgcUXvxXNT6e8x5XDjEYUEmKdR3dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723816615; c=relaxed/simple;
-	bh=l9MAxaCNe54/qqO/Y+exMLKMOMV8xf6Li74gXljpzr4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O0mh++xPekfO1HrJZzAUpLVVnjGznd9QGB/Tr6IQGz8zHBuiSkt1bfoPXPzBIsSEeuY/HnvRoNe79GtbyLADTuwrbMEke0k9/XyTmUwd3Claarg7vWnA3XE+X1J8S8wR6jK+kgNMXmkFbC7YLrEz7bAPeaLJBWj8+mvm9L6FsuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=djTjyzGW; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723817085; c=relaxed/simple;
+	bh=DKdtCQNn1Ae1ClNw9sfwALxFvuUJ0xe9hgH7+K7WQNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VUlOAAwtpfuOBPoYPNMG6RwGWtx4mdUPL0EwziiSSZBMTKn5U3MjGDnPzpJZrI0sthhI0IhfjnBA2B9GeA8xG5d8qgoW5yVlohE8jqFy6c/jifbF3Jj5KPQRAkN8y79n1aFEYOZ196l5oLPqsVtoH/Q+INT0ENofXBK/D5EdWLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LgJJazgh; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="djTjyzGW"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-428fb103724so16208025e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Aug 2024 06:56:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LgJJazgh"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ff496707beso1196065ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Aug 2024 07:04:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723816611; x=1724421411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXX2C3wnh7+8WNV/qSncynwi6/HDTD/vyOk/QMV0TUQ=;
-        b=djTjyzGWtKWLKEYbuPG4VyWD46rmku+Cbncmua5RgE6+yjnHx/52DaiFUIyw/bVzjQ
-         JniurdlfaHT66rRZK3qduwM32/9I1DDz3RPt9k02p1N3g2GZmIqebX+SwGZTWWeAJ9yd
-         +lTzw8o/DjqVBVaHT+JLnt4HmdYkIIXQP3KBVJwxNqQfgiNaXIYsaBB/a2B4Q/zjfcEl
-         rk9FehhMG8YKBJnzCwBhvoxnxHi7pD3Sz2p8MSN3P6PLJPTEQf3DAjzoGy/wI8/8mdnA
-         qvsGv7q0zMTfXuqB2aGa3k9HCX56rPUR+/LD3VEDFUDFRHpUDoPs0K5Q5/Yubjt83TBC
-         Eblw==
+        d=linuxfoundation.org; s=google; t=1723817083; x=1724421883; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LJx6+ABJszFBmRQz7LIBes/dgvF9i5l9+CDarpSPbAA=;
+        b=LgJJazghTbBqbF3Mgv8hTOL2D+w+tefrDzZkIfq5b1Tdy2Bxh4sDz1fJPMi4EN946u
+         UAgtk9dHXL6yfgmRiJXW4Ir042h8cWFrJA0DCWbb30Ac7DDvtqRuvvGknFADCTyDk/zQ
+         SFMHpZRUV72LD5YneAvIRr6mCgGyWNHWGX7s4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723816611; x=1724421411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WXX2C3wnh7+8WNV/qSncynwi6/HDTD/vyOk/QMV0TUQ=;
-        b=XobrdVbul3/iEtSbL9TBlUcVnsJsF5J2pUzc13p8Kf/P/RtFm90va6gNQadUziQFLh
-         sAb+QibhGDmQxJOujNoSAXjm9ZdYQuDTw4zWRbmz3m6EgVaGkNm5BmDMlIm1yI2QXtak
-         xrI83WqzU3bMFwSEs1+ulVZCL3WR929CpQN6E6xKjDrKn8smp6meE6mqMMpmIRDlHXYo
-         qnXxMZtBIygQCRgFfIbMEcFPyXTzp3LWs32hbE6kNc/Q2UYYM3rvh0JMzlDCCppXbpIN
-         /+9hT0AXdu0w+jHrXfUqggwiWaSJkBa/6/vpYjtWZyQbmAhAtWQztwlsxBVSheP45gh4
-         gcOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV34UC8UjvpS+uXEQu7t0ouvQNQod5BNj7S7SHvXWT1I900pkFGKFKlFK+Qaw81Y/MvmhDuo2+969fs7Gk4Xv+NXMP8qOrjEDAJCjCULbgs6EQK
-X-Gm-Message-State: AOJu0YzdUGpX7uZ5PLCmqAvFEbKQg6LQte6g1A/OsdsjKihFtHiz0mTT
-	o+T+goAoD3WRHuOwTYhplacYVVJ6KywC+CP7/VmZRiMfiAU25JoGW2SziJnyEauP9bKiAEKs/JA
-	X+j3Pgja0dBchq2SR7kFNHoDuXT1s2IA7V1n2
-X-Google-Smtp-Source: AGHT+IE0JOrXVLQSixhP01cdcARFbW0ccbM6G+qKTpkPzMcItcOgty9rR4OVVmPUNtu/xY88xZ5p9Oo2vXeH/2ggoXM=
-X-Received: by 2002:adf:fecd:0:b0:366:f455:e7c1 with SMTP id
- ffacd0b85a97d-37194c3390amr2137247f8f.27.1723816610994; Fri, 16 Aug 2024
- 06:56:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723817083; x=1724421883;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJx6+ABJszFBmRQz7LIBes/dgvF9i5l9+CDarpSPbAA=;
+        b=e11Ku2BkUw5Vw7nHuDXIBfA2IDObtIV8ItKLM5bmOjuemp6A/qZrdKiJ2BKR5QOtoW
+         7UyRNQ32D4Glmp6m9t4Xx3C3AWTwBlZXkjCj+Kd8Gf+QJjFQJGWK9gzQIKQWhnpmCxaP
+         cwctB0PcYaMOfo3Js07czwKJy86CXsRoSRQRrYcpGd3Rc0uQzHnwxFglMQMDZyU+lDeY
+         3FnQlrTzX9Fy6RyrquIoQ30X3b8REqXHoLkUWs+A1FkVmL86E8+iKVF9z1dfXVcyJ4Ld
+         HXmbhgOglm2vUd5/hXPOiWQt4//0+I5mbdYWtkMLt2XYSaqX0OywmZZJoytRAaniY3GY
+         6EJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZIXrFShNteQfNryJxR5JprHJJQFH7uXbf3ZOg7s0zmZJR0mrHzwpL17wVRgkl8Gsn/LQ1dI3B+xrMD1kt8Is8qos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBl3dTWpXgqh5zwdggfIEelydu3ORBfdcF5044zh4HlVc7RuQq
+	hHXukn6AuXoHJyL/iVzZx3ElMyw1AKVNH01BHHSQId3Q8aA96qaCrU6+quVQjKk=
+X-Google-Smtp-Source: AGHT+IHRjCaeXF3zQ9rBloJkIn9HWEdDyDwMW64ZBBRl6S4m9hTKrEeF/N+BLY3ZO8uBXzbJ9eEvxg==
+X-Received: by 2002:a17:903:52:b0:202:c94:1462 with SMTP id d9443c01a7336-2020c941a8amr10299505ad.5.1723817082576;
+        Fri, 16 Aug 2024 07:04:42 -0700 (PDT)
+Received: from [192.168.23.95] ([126.249.175.210])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7c6b636b07fsm3035053a12.86.2024.08.16.07.04.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Aug 2024 07:04:41 -0700 (PDT)
+Message-ID: <fdd141e8-337b-4f6c-a721-7d20dc63b50d@linuxfoundation.org>
+Date: Fri, 16 Aug 2024 08:04:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813211317.3381180-4-almasrymina@google.com> <20240815174852.48bbfccf@kernel.org>
-In-Reply-To: <20240815174852.48bbfccf@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 16 Aug 2024 09:56:36 -0400
-Message-ID: <CAHS8izN0Wb7isGbhO+cvYNfG+v2bsvvfy7P0cSsMD7USfd+4bQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v19 03/13] netdev: support binding dma-buf to netdevice
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>, 
-	Daniel Vetter <daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] selftests/tracing: Add hist poll() support test
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
+Cc: Tom Zanussi <zanussi@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <172377544331.67914.7474878424159759789.stgit@devnote2>
+ <172377547205.67914.494998437883733530.stgit@devnote2>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <172377547205.67914.494998437883733530.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 15, 2024 at 8:48=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Tue, 13 Aug 2024 21:13:05 +0000 Mina Almasry wrote:
-> > +int dev_get_max_mp_channel(const struct net_device *dev)
-> > +{
-> > +     int i, max =3D -1;
->
-> I presume the bug from yesterday is self evident once reported? :)
->
+On 8/15/24 20:31, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a testcase for poll() on hist file. This introduces a helper binary
+> to the ftracetest, because there is no good way to reliably execute
+> poll() on hist file.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>   Changes in v4:
+>    - Use getopt() in poll.c (command options are changed)
+>    - Update test code according to the new command options.
+>   Changes in v2:
+>    - Update poll command to support both of POLLIN and POLLPRI, and timeout.
+>    - Identify unsupported stable kernel if poll-in returns soon.
+>    - Test both of POLLIN and POLLPRI.
+> ---
+>   tools/testing/selftests/ftrace/Makefile            |    2 +
+>   tools/testing/selftests/ftrace/poll.c              |   74 ++++++++++++++++++++
+>   .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 ++++++++++++++++++++
+>   3 files changed, 150 insertions(+)
+>   create mode 100644 tools/testing/selftests/ftrace/poll.c
+>   create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+> index a1e955d2de4c..49d96bb16355 100644
+> --- a/tools/testing/selftests/ftrace/Makefile
+> +++ b/tools/testing/selftests/ftrace/Makefile
+> @@ -6,4 +6,6 @@ TEST_PROGS := ftracetest-ktap
+>   TEST_FILES := test.d settings
+>   EXTRA_CLEAN := $(OUTPUT)/logs/*
+>   
+> +TEST_GEN_PROGS = poll
+> +
+>   include ../lib.mk
+> diff --git a/tools/testing/selftests/ftrace/poll.c b/tools/testing/selftests/ftrace/poll.c
+> new file mode 100644
+> index 000000000000..584f159654b1
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/poll.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Simple poll on a file.
+> + *
+> + * Copyright (c) 2024 Google LLC.
+> + */
+> +
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <poll.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +
+> +#define BUFSIZE 4096
+> +
+> +/*
+> + * Usage:
+> + *  poll [-I|-P] [-t timeout] FILE
+> + */
+> +int main(int argc, char *argv[])
+> +{
+> +	struct pollfd pfd = {.events = POLLIN};
+> +	char buf[BUFSIZE];
+> +	int timeout = -1;
+> +	int ret, opt;
+> +
+> +	while ((opt = getopt(argc, argv, "IPt:")) != -1) {
+> +		switch (opt) {
+> +		case 'I':
+> +			pfd.events = POLLIN;
+> +			break;
+> +		case 'P':
+> +			pfd.events = POLLPRI;
+> +			break;
+> +		case 't':
+> +			timeout = atoi(optarg);
+> +			break;
+> +		default:
+> +			fprintf(stderr, "Usage: %s [-I|-P] [-t timeout] FILE\n",
+> +				argv[0]);
+> +			return -1;
+> +		}
+> +	}
+> +	if (optind >= argc) {
+> +		fprintf(stderr, "Error: Polling file is not specified\n");
+> +		return -1;
+> +	}
+> +
+> +	pfd.fd = open(argv[optind], O_RDONLY);
+> +	if (pfd.fd < 0) {
+> +		fprintf(stderr, "failed to open %s", argv[optind]);
+> +		perror("open");
+> +		return -1;
+> +	}
+> +
+> +	/* Reset poll by read if POLLIN is specified. */
+> +	if (pfd.events & POLLIN)
+> +		do {} while (read(pfd.fd, buf, BUFSIZE) == BUFSIZE);
+> +
+> +	ret = poll(&pfd, 1, timeout);
+> +	if (ret < 0 && errno != EINTR) {
+> +		perror("poll");
+> +		return -1;
+> +	}
+> +	close(pfd.fd);
+> +
+> +	/* If timeout happned, return code is 0 */
 
-Yes, my apologies. The int return value from this function was being
-implicitly cast to unsigned in the check I think, and that failed the
-check.
+Looks like you missed this one :) Otherwise looks good to me.
 
-My test didn't catch that due to a test environment issue. I had 2
-ethtools installed by accident on the machine, and the test was
-invoking the wrong one. I think I have that ironed out now.
+With this fixed
 
-> > +     ASSERT_RTNL();
-> > +
-> > +     for (i =3D 0; i < dev->real_num_rx_queues; i++)
-> > +             if (dev->_rx[i].mp_params.mp_priv)
-> > +                     /* The number of queues is the idx plus 1. */
-> > +                     max =3D i + 1;
->
-> The +1 is odd. The function as it stands reports min channel count.
-> Not max_mp_channel, if you ask me. And if you renamed it, you don't
-> have to use -1 as "not installed".
->
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Will do.
-
---
-Thanks,
-Mina
+thanks,
+-- Shuah
