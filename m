@@ -1,203 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E822954BD4;
-	Fri, 16 Aug 2024 11:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFE719FA91
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Aug 2024 12:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723808553; cv=none; b=pUqfLrmuS3UPGdMbFP6v3BIDAz6yFdJFP0gQhrLnXP3I+2KduoZgO4Vg8Upm51V47P8+BI0gpVdn1XzKQdqsRsbsV72O/IxeBIE3ZgfrvcqnLJ8tuEwTaCN3sYCZqn/NMD0ktlj8RI5c7HckBD55r1cF+SzERQZS6lcli+rPIzQ=
+	t=1723810860; cv=none; b=tm2lcSeU7eW4WnxworY3IF0oZEXA57STHp0jNChZQTnnHzDXL+8+4XlyqmLkMsQyjSV8NBA99i5Uo/ySnDlulKUCHqRwNyUhaUFiGZ657OTbjY2bgfOuhGLJrt3cUKUu21S0IOVn/nlO40gWYSHKd8xVcZp3/Vb6KysFi+xPPhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723808553; c=relaxed/simple;
-	bh=J+GSTdLpJEZfAk/f/yXm2p8gFmA0yCS+q76KUgXiJdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZfR+WWv6y0ZTJIlm/Td1zD/Wo+WR9vfTg72sRpzqC2C3lqeeyfV/vUacQZFqZaOI4ZH0Ll9uSTU+FScgpU4APIBfxNnQQbYYOLXOAFcxmCTQh+jjU5p+KHyP1o4UPLD8JU+R0siptEQ1wL4+oqdsZIwzMrFPaatF4ZZJdCv9Kko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKfX+cDL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723810860; c=relaxed/simple;
+	bh=uDHRwF0otXkj+agrQEA0lwHEUq1GTb5X3dySo2OqWmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i1Vsg9p70T//TdeNm2RxqX65kcLC2FXKFTQmA6smHuc00KzC0ug1BZMh66yYxJv/EN3u1aDudvxDrjDVvDafgG61VJTvYWHFqRCoLZHK1e4FnwDgDy1IGS0Ejw+dvO8bW0JmqtfE5m8OQ2Ma6N5d0SIIt3vq3DBKXM2MjXMItgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vepJIgQv; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKfX+cDL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42484C4AF0D;
-	Fri, 16 Aug 2024 11:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723808552;
-	bh=J+GSTdLpJEZfAk/f/yXm2p8gFmA0yCS+q76KUgXiJdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZKfX+cDLe9cWJg0Jsc/3IFVH4xssQrIdWDyXAdVBkooWS2TBxzTytsXYgh+KarcPq
-	 SOdGJvmrOoHFMr1br8qx8sAr7lIAl8AMBgau8VodV9yQXD98IDOzQaEOMEEQwOXTFi
-	 BVGM6D+6SEc3sh/DaeqzG5IOCMeUfE8n+fn3velhWq2ju0ry0LjdIUkyMnwz8mmI1M
-	 SO8/UYZ7360FyeDOgQk65crCXPbEVqp+59srpUbtAW+vsLBetnOdpDXoLV1KIde5pp
-	 7Kkq4r+M8kdWWjbQ+cGA2oqDi19LN14UpktOzg+AbJ8cZwkymF2msZHXuXAZ6HHYH+
-	 IWFG7sEs1rG+w==
-Date: Fri, 16 Aug 2024 13:42:26 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCHv8 9/9] man2: Add uretprobe syscall page
-Message-ID: <ygpwfyjvhuctug2bsibvc7exbirahojuivglcfjusw4rrqeqhc@44h23muvk3xb>
-References: <20240611112158.40795-1-jolsa@kernel.org>
- <20240611112158.40795-10-jolsa@kernel.org>
- <20240611233022.82e8abfa2ff0e43fd36798b2@kernel.org>
- <3pc746tolavkbac4n62ku5h4qqkbcinvttvcnkib6nxvzzfzym@k6vozf6totdw>
- <20240807162734.100d3b55@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vepJIgQv"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6bf66fe9d8bso9528946d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 16 Aug 2024 05:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723810857; x=1724415657; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60gFb7YBVOLPqGwy/Oc6xhCaH/QA9b9t6B6yBp4eA0s=;
+        b=vepJIgQvm2wUGg7wPKHnb+cadQKMpOzbWijLOw8Y601NGnc5kVVQQPvwKuFuHmO9dT
+         MJgiqk3ifseVfRq/1H89bggOm/n7pq2Mm8dmsp81hGSa5WPe8joH83P6y+SfpVSL5VCH
+         lZLxAXq0w4X5pjPxczK8MnzECXq4GfetXQZQfQsE1q5cckXfkWtkW5TRvbSxcOYtVr4U
+         /ROBZ3uaTofnbmaov+YziEU4mN5Jx1qhndecyk+dDXswFTYJQF2zRTdUbbakad1/rIsM
+         DwzU5Muj2HTFtxM1/A66Nbfr3az4ejPZ29MAKl9DO+8SgPw7kWqtxMFRF8n5JpvPCqFk
+         yYhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723810857; x=1724415657;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60gFb7YBVOLPqGwy/Oc6xhCaH/QA9b9t6B6yBp4eA0s=;
+        b=cPjlzpD60/mdYJ+jrhZH57oYl5E5/syjgSEsUwEAdtbnIjIFcc1xbLlM4MM9za09Bv
+         TTy3nob313NSYmqsmTB4IHtleFzCkkirF6nI3S43GX6TmfpeFgECzC7ZsAo5cvkTRiwM
+         zqV080dbk9KErL7mkyldlFjCBe8xi5hOEuvHrsIv9TF1b/v1M1oZmRp15DUMYfvfxT6x
+         AFL427kVRTLQVWzC0VsEgfAivKqYgbUnI4Se6HowNh3VxZQ3dhB4ODJn6qYIXwe9+Nby
+         A6x3TXjv1LGB5SeOCUc0dEIQNG3TKOvzxu4GqBRsFl4mOoZsDfbTFMSTeJ23hRxg4knG
+         f5gA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYltGSCnVycCF5ZLQ+aSVYKxrqHNinFVwdB/g2M/X6N3DgmYV+Xaz8ElzTK5EUrb5NxlgDOyJuC0T1ccdzvGpEJsi5q4/HcixG49l8w8jSBgK4
+X-Gm-Message-State: AOJu0Yz4y7cLbs7gzbonUBiFdin/i6agDTGmAzqvlA+suWV6HWyd+hty
+	Vhs9CcwzbfcAa+ff1BjvNxNpvrygYH0aTILslekTKhJtxRErZOXpVIH01FaR03u/7Yhb4Sv+RHy
+	oNqR6H7W6M9IABmWz5HziJyyi3wOl/jISi0pOyeoEEaqeoHpEKQ==
+X-Google-Smtp-Source: AGHT+IGZmdSIKsIbNLMCWhDr7siS0fg53Dzm3mUEgRlOmZUGtYHuIW2VVl49SrIQcFwsu42Q03aJr/PwI9drpzidh7Q=
+X-Received: by 2002:a05:6214:5713:b0:6bf:7c34:e419 with SMTP id
+ 6a1803df08f44-6bf7cdcb101mr38991616d6.5.1723810857192; Fri, 16 Aug 2024
+ 05:20:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o547xbwl3zxtiyuh"
-Content-Disposition: inline
-In-Reply-To: <20240807162734.100d3b55@gandalf.local.home>
-
-
---o547xbwl3zxtiyuh
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20240813211317.3381180-7-almasrymina@google.com>
+ <de7daf80-a2e4-4451-b666-2a67ccc3649e@gmail.com> <CAHS8izPMC+XhXKbJOQ3ymizyKuARSOv_cO_xO+q1EG4zoy6Gig@mail.gmail.com>
+ <31640ff4-25a6-4115-85e6-82092ce57393@gmail.com> <20240815182245.2b5e3f44@kernel.org>
+In-Reply-To: <20240815182245.2b5e3f44@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 16 Aug 2024 08:20:44 -0400
+Message-ID: <CAHS8izO9LDM9rLVnJPgp6QXb4YLW5+3ziGOHTqScy-SKOLejYA@mail.gmail.com>
+Subject: Re: [PATCH net-next v19 06/13] memory-provider: dmabuf devmem memory provider
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCHv8 9/9] man2: Add uretprobe syscall page
-References: <20240611112158.40795-1-jolsa@kernel.org>
- <20240611112158.40795-10-jolsa@kernel.org>
- <20240611233022.82e8abfa2ff0e43fd36798b2@kernel.org>
- <3pc746tolavkbac4n62ku5h4qqkbcinvttvcnkib6nxvzzfzym@k6vozf6totdw>
- <20240807162734.100d3b55@gandalf.local.home>
-MIME-Version: 1.0
-In-Reply-To: <20240807162734.100d3b55@gandalf.local.home>
 
-Hi Steven, Jiri,
+On Thu, Aug 15, 2024 at 9:22=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Wed, 14 Aug 2024 17:32:53 +0100 Pavel Begunkov wrote:
+> > > This is where I get a bit confused. Jakub did mention that it is
+> > > desirable for core to verify that the driver did the right thing,
+> > > instead of trusting that a driver did the right thing without
+> > > verifying. Relying on a flag from the driver opens the door for the
+> > > driver to say "I support this" but actually not create the mp
+> > > page_pool. In my mind the explicit check is superior to getting
+> > > feedback from the driver.
+> >
+> > You can apply the same argument to anything, but not like
+> > after each for example ->ndo_start_xmit we dig into the
+> > interface's pending queue to make sure it was actually queued.
+> >
+> > And even if you check that there is a page pool, the driver
+> > can just create an empty pool that it'll never use. There
+> > are always ways to make it wrong.
+> >
+> > Yes, there is a difference, and I'm not against it as a
+> > WARN_ON_ONCE after failing it in a more explicit way.
+> >
+> > Jakub might have a different opinion on how it should look
+> > like, and we can clarify on that, but I do believe it's a
+> > confusing interface that can be easily made better.
+>
+> My queue API RFC patches had configuration arguments, not sure if this
+> is the right version but you'll get the idea:
+> https://github.com/kuba-moo/linux/blob/qcfg/include/net/netdev_cfg.h#L43-=
+L50
+> This way we can _tell_ the driver what the config should be. That part
+> got lost somewhere along the way, because perhaps in its embryonic form
+> it doesn't make sense.
+>
+> We can bring it back, add HDS with threshold of 0, to it, and a bit for
+> non-readable memory. On top of that "capability bits" in struct
+> netdev_queue_mgmt_ops to mark that the driver pays attention to particula=
+r
+> fields of the config.
+>
+> Not sure if it should block the series, but that'd be the way I'd do it
+> (for now?)
+>
 
-On Wed, Aug 07, 2024 at 04:27:34PM GMT, Steven Rostedt wrote:
-> Just in case nobody pinged you, the rest of the series is now in Linus's
-> tree.
+I'm not sure I want to go into a rabbit hole of adding configuration
+via the queue API, blocking this series . We had discussed this months
+back and figured that it's a significant undertaking on its own. I'm
+not sure GVE has HDS threshold capability for example, and I'm also
+not sure how to coexist header split negotiability via the queue API
+when an ethtool API exists alongside it. I think this is worthy of
+separating in its own follow up series.
 
-Thanks for the ping!
+For now detecting that the driver was able to create the page_pool
+with the correct memory provider in core should be sufficient. Also
+asking the driver to set a
+netdev_rx_queue->unreadable_netmem_supported flag should also be
+sufficient. I've implemented both locally and they work well.
 
-I have prepared some tweaks to the patch (see below).
-Also, I have some doubts.  The prototype shows that it has no arguments
-(void), but the text said that arguments, if any, are arch-specific.
-Does any arch have arguments?  Should we use a variadic prototype (...)?
+> I'd keep the current check with a WARN_ON_ONCE(), tho.
+> Given the absence of tests driver developers can use.
+> Especially those who _aren't_ supporting the feature.
+>
 
-Please add the changes proposed below to your patch, tweak anything if
-you consider it appropriate) and send it as v10.
+Yes what I have locally is the driver setting
+netdev_rx_queue->unreadable_netmem_supported when header split is
+turned on, and additionally a WARN_ON_ONCE around the check in core. I
+was about to send that when I read your email. I'm hoping we don't
+have to go through the scope creep of adding configuration via the
+queue API, which I think is a very significant undertaking.
 
-Have a lovely day!
-Alex
+> > > and cons to each approach; I don't see a showstopping reason to go
+> > > with one over the other.
+> > >
+> > >> And page_pool_check_memory_provider() is not that straightforward,
+> > >> it doesn't walk through pools of a queue.
+> > >
+> > > Right, we don't save the pp of a queue, only a netdev. The outer loop
+> > > checks all the pps of the netdev to find one with the correct binding=
+,
+> > > and the inner loop checks that this binding is attached to the correc=
+t
+> > > queue.
+> >
+> > That's the thing, I doubt about the second part.
+> >
+> > net_devmem_bind_dmabuf_to_queue() {
+> >       err =3D xa_alloc(&binding->bound_rxqs, &xa_idx, rxq);
+> >       if (err)
+> >               return err;
+> >
+> >       netdev_rx_queue_restart();
+> >
+> >       // page_pool_check_memory_provider
+> >       ...
+> >       xa_for_each(&binding->bound_rxqs, xa_idx, binding_rxq) {
+> >               if (rxq =3D=3D binding_rxq)
+> >                       return success;
+> > }
+> >
+> > Can't b4 the patches for some reason, but that's the highlight
+> > from the patchset, correct me if I'm wrong. That xa_for_each
+> > check is always true because you put the queue in there right
+> > before it, and I don't that anyone could've erased it.
+> >
+> > The problem here is that it seems the ->bound_rxqs state doesn't
+> > depend on what page pools were actually created and with what mp.
+>
+> FWIW I don't understand the point of walking the xa either.
+> Just check the queue number of the pp you found matches,
+> page pool params are saved in the page pool. No?
+>
 
-
-diff --git i/man/man2/uretprobe.2 w/man/man2/uretprobe.2
-index cf1c2b0d8..51b566998 100644
---- i/man/man2/uretprobe.2
-+++ w/man/man2/uretprobe.2
-@@ -7,50 +7,43 @@ .SH NAME
- uretprobe \- execute pending return uprobes
- .SH SYNOPSIS
- .nf
--.B int uretprobe(void)
-+.B int uretprobe(void);
- .fi
- .SH DESCRIPTION
--The
- .BR uretprobe ()
--system call is an alternative to breakpoint instructions for triggering re=
-turn
--uprobe consumers.
-+is an alternative to breakpoint instructions
-+for triggering return uprobe consumers.
- .P
- Calls to
- .BR uretprobe ()
--system call are only made from the user-space trampoline provided by the k=
-ernel.
-+are only made from the user-space trampoline provided by the kernel.
- Calls from any other place result in a
- .BR SIGILL .
--.SH RETURN VALUE
--The
-+.P
-+Details of the arguments (if any) passed to
- .BR uretprobe ()
--system call return value is architecture-specific.
-+are architecture-specific.
-+.SH RETURN VALUE
-+The return value is architecture-specific.
- .SH ERRORS
- .TP
- .B SIGILL
--The
- .BR uretprobe ()
--system call was called by a user-space program.
-+was called by a user-space program.
- .SH VERSIONS
--Details of the
--.BR uretprobe ()
--system call behavior vary across systems.
-+The behavior varies across systems.
- .SH STANDARDS
- None.
- .SH HISTORY
--TBD
--.SH NOTES
--The
-+Linux 6.11.
-+.P
- .BR uretprobe ()
--system call was initially introduced for the x86_64 architecture
-+was initially introduced for the x86_64 architecture
- where it was shown to be faster than breakpoint traps.
- It might be extended to other architectures.
--.P
--The
-+.SH CAVEATS
- .BR uretprobe ()
--system call exists only to allow the invocation of return uprobe consumers.
-+exists only to allow the invocation of return uprobe consumers.
- It should
- .B never
- be called directly.
--Details of the arguments (if any) passed to
--.BR uretprobe ()
--and the return value are architecture-specific.
+Yes, I changed this check to check pool->p.queue, and it works fine.
 
 --=20
-<https://www.alejandro-colomar.es/>
-
---o547xbwl3zxtiyuh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAma/OyEACgkQnowa+77/
-2zJDCxAAhQ1Ra2KloypCCqkmA4dXbkaqQJyIuJ1Nmls+E5zYqiF2zKYI6OZ9njtq
-Ev/Fx+c59cm2r0DQtu04LfbzrymBLncErRofjceDWAU7Z28hYtFtVEs+Rx4Mdrxu
-5LwnSiLgTv0rwjj3rz91liRasAxBRmDBx/llAHrwO3fYQk2Zp2Y0UrT3GT02moSG
-f/LXSx/DihVQzoZJPvDC0hy+sYix6Lkr/hZRdlBSclfQJJsm1xv79N0qG6lKCgP9
-Au4DW4Pvjfw1xeYtfHAHLvw2cyvHUcHvLyH2uvX5F+33kk1hLGf81DjraL3wFsyj
-z0uDA/TkNHrLiMu8fxNnG6CBxasaZYk8U7EsUFqtC3gVMleDZFxLzuSrRI4xprBe
-rxJ/SxkVl0pLOGMMlj+Q3yjilgPQqBklZK1fOwqdNQ7fWAKR2K7vRXj+fRb84Xck
-O3LJg02hlH8Oquh3QmlGFl9QaMZn8FHV16Rpk4Vl3q+Y3I48rg8n+bhT7vuhOK+H
-4G5yEMLB5BfmQ5DSDlpSmN7jQlK9NVoPgk9yV09LkBtlW29pDvJXaTth9H0Is3ci
-DxTJySu/USezOarYS/AUjbTGJT943EtGj5KMHwcixS6ub+CsufI6CAnyXkfJMvzt
-CdseNjZW7MfslXPlP3fpVehUSUXSA36CDIH754UV4xZLoxrOHs0=
-=J420
------END PGP SIGNATURE-----
-
---o547xbwl3zxtiyuh--
+Thanks,
+Mina
