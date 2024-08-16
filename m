@@ -1,162 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37ED2BCFF;
-	Fri, 16 Aug 2024 01:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596DF2BCFF;
+	Fri, 16 Aug 2024 02:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723771370; cv=none; b=HHliaLykvjS5QHln6rT75b1KHsOpJJP2q8e6aqOrydJoQ/vNHZCS9x+9GSiJi6et39DAB/zouVTGGuU3NKzJ2cfpfxPtliwdOviG54D4kgoRQv2Rqx0ldcATxsU6nYmf1fAXNWYIgT0BbO7Jjf3C8PTyJFoaIqQdK2lZ3B57+ZE=
+	t=1723775448; cv=none; b=myz94hzpJaiL+dNwwZRyl0+fIo5LykeK2jc73ilbFhCgznTdNzSj2o+V+XlD5DdT48NqVqEy8VJIAtBjN7p3uboeLAirEy5b+mnV0qEUm39mO7QRQE2FF6HK86VUEb8zgpsZNx4EzKi71fQqTJv2pvGNIGNbQD8KHkEzmu0PqWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723771370; c=relaxed/simple;
-	bh=IkxgNU5lZE6GtoPPMNJU9i4n15FLyHYKT67mAHsJDsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jjXxlA+OcErznBVhV1xxC/pcFs0oBTNVMuFhQQVR89PC29oO7Tm6didaOPDcV/wikNf2pxWyrk/0wkZwXbWNfzcwWO8vluFEGbPsX1MlI1b2sLE/rkTDuFi163eWPHdeEbq1WCEDRpVZlJs4X8mawfGF/5hY2muFK7BFmzdef0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcPBNpDC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723775448; c=relaxed/simple;
+	bh=6sTPTHmCqB521M+gs5j5T2U6Eqy5Os/J32FMSdEHQwY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Sdo+hcb+rZCAqMwg2cjDRdiahOQ3Ge81d9t/Kn0NELHnZTLOyaGLr9qbKnyUX34bnDFUTwswkktZ72gfNJtcS5v2Pl5pfM9yzIMOOhyBT3d6melKyN7jVM/Ya8zkiOtli+AMAXdYL8bxsCPjnNQWkPM9kD7OAYLsVULMq430dWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oU/rC2ij; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcPBNpDC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C07B2C4AF09;
-	Fri, 16 Aug 2024 01:22:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oU/rC2ij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECAE4C32786;
+	Fri, 16 Aug 2024 02:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723771369;
-	bh=IkxgNU5lZE6GtoPPMNJU9i4n15FLyHYKT67mAHsJDsU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TcPBNpDCRFXY8kGxpg2OnRKk1wK1Dnq5Nh134fk9HH+HXrxS9P35iW+jorPaKYS1N
-	 xAMygGZ/o8VttaAfDJ73kbiQunXv00m488MEt5zFzKx0LmQ+yM91SMEj/TOTfvHriW
-	 5gsmMzKyX4hCr0NdhJXl+6EFrUUTMZlDnL9mk+hbDY69YRrM4P0eypdGanoGEqyjwW
-	 VnKH4FrMCPyOazttbwCRLeHANRE3uJJckxjidvB49sZn2byX+9sHs42dntssCrTNqq
-	 kbYFHxD1BHqZoc/Cao/daL6ihfXWV1GKXL7xuhyFlGg+FRagNIGfP4rt1DbGZ2ks8D
-	 3C5SoToFZwuJg==
-Date: Thu, 15 Aug 2024 18:22:45 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Richard Henderson
- <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Sumit
- Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, David Wei <dw@davidwei.uk>, Jason
- Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, Shailend
- Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
- Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Subject: Re: [PATCH net-next v19 06/13] memory-provider: dmabuf devmem
- memory provider
-Message-ID: <20240815182245.2b5e3f44@kernel.org>
-In-Reply-To: <31640ff4-25a6-4115-85e6-82092ce57393@gmail.com>
-References: <20240813211317.3381180-7-almasrymina@google.com>
-	<de7daf80-a2e4-4451-b666-2a67ccc3649e@gmail.com>
-	<CAHS8izPMC+XhXKbJOQ3ymizyKuARSOv_cO_xO+q1EG4zoy6Gig@mail.gmail.com>
-	<31640ff4-25a6-4115-85e6-82092ce57393@gmail.com>
+	s=k20201202; t=1723775447;
+	bh=6sTPTHmCqB521M+gs5j5T2U6Eqy5Os/J32FMSdEHQwY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oU/rC2ijUo3o5kDBnNfb9x2sbpqrjeyYftu5ssZyDQsd/qs10T1QTsQgSP4OMDIXi
+	 Raoi0cxKYneLHyjQTzIF1DAyuz4g8xF8ZF07sMa1Z2vIZ27sUcR8o4HTsLgYHwqMvZ
+	 CrNWecMxIAF5Qs63jrlWwZ2HWjOdbDIiCIOyv29+K7QqHjC2pFjIBsvF8dn8KqeIHU
+	 YjlPoLITG8c3cgXd00zVCaTDIGmZsaUI0VdJTpdyVz9o4Z2y5kAD3CVFXfePvWp5yi
+	 dzggA12KOtMehGasaHMSbr2a4LC8z6oRFRQQf1Ewk+0p6ai1AX9MGgV1PO5FuBagpe
+	 BE7XQLRwaWq3w==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Tom Zanussi <zanussi@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v4 0/3] tracing: Support poll on event hist file
+Date: Fri, 16 Aug 2024 11:30:43 +0900
+Message-Id: <172377544331.67914.7474878424159759789.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 Aug 2024 17:32:53 +0100 Pavel Begunkov wrote:
-> > This is where I get a bit confused. Jakub did mention that it is
-> > desirable for core to verify that the driver did the right thing,
-> > instead of trusting that a driver did the right thing without
-> > verifying. Relying on a flag from the driver opens the door for the
-> > driver to say "I support this" but actually not create the mp
-> > page_pool. In my mind the explicit check is superior to getting
-> > feedback from the driver.  
-> 
-> You can apply the same argument to anything, but not like
-> after each for example ->ndo_start_xmit we dig into the
-> interface's pending queue to make sure it was actually queued.
-> 
-> And even if you check that there is a page pool, the driver
-> can just create an empty pool that it'll never use. There
-> are always ways to make it wrong.
-> 
-> Yes, there is a difference, and I'm not against it as a
-> WARN_ON_ONCE after failing it in a more explicit way.
-> 
-> Jakub might have a different opinion on how it should look
-> like, and we can clarify on that, but I do believe it's a
-> confusing interface that can be easily made better.
+Hi,
 
-My queue API RFC patches had configuration arguments, not sure if this
-is the right version but you'll get the idea:
-https://github.com/kuba-moo/linux/blob/qcfg/include/net/netdev_cfg.h#L43-L50
-This way we can _tell_ the driver what the config should be. That part
-got lost somewhere along the way, because perhaps in its embryonic form
-it doesn't make sense.
+Here is the v4 patch to support polling on event 'hist' file.
+The previous version is here;
 
-We can bring it back, add HDS with threshold of 0, to it, and a bit for
-non-readable memory. On top of that "capability bits" in struct
-netdev_queue_mgmt_ops to mark that the driver pays attention to particular
-fields of the config.
+https://lore.kernel.org/all/172359427367.323666.6446548762874507863.stgit@devnote2/
 
-Not sure if it should block the series, but that'd be the way I'd do it
-(for now?)
+This version uses getopt() in poll test command in [3/3] according to
+Shuah's comment in the previous thread.
 
-I'd keep the current check with a WARN_ON_ONCE(), tho.
-Given the absence of tests driver developers can use.
-Especially those who _aren't_ supporting the feature.
+Background
+----------
+There has been interest in allowing user programs to monitor kernel
+events in real time. Ftrace provides `trace_pipe` interface to wait
+on events in the ring buffer, but it is needed to wait until filling
+up a page with events in the ring buffer. We can also peek the
+`trace` file periodically, but that is inefficient way to monitor
+a randomely happening event.
 
-> > and cons to each approach; I don't see a showstopping reason to go
-> > with one over the other.
-> >   
-> >> And page_pool_check_memory_provider() is not that straightforward,
-> >> it doesn't walk through pools of a queue.  
-> > 
-> > Right, we don't save the pp of a queue, only a netdev. The outer loop
-> > checks all the pps of the netdev to find one with the correct binding,
-> > and the inner loop checks that this binding is attached to the correct
-> > queue.  
-> 
-> That's the thing, I doubt about the second part.
-> 
-> net_devmem_bind_dmabuf_to_queue() {
-> 	err = xa_alloc(&binding->bound_rxqs, &xa_idx, rxq);
-> 	if (err)
-> 		return err;
-> 
-> 	netdev_rx_queue_restart();
-> 
-> 	// page_pool_check_memory_provider
-> 	...
-> 	xa_for_each(&binding->bound_rxqs, xa_idx, binding_rxq) {
-> 		if (rxq == binding_rxq)
-> 			return success;
-> }
-> 
-> Can't b4 the patches for some reason, but that's the highlight
-> from the patchset, correct me if I'm wrong. That xa_for_each
-> check is always true because you put the queue in there right
-> before it, and I don't that anyone could've erased it.
-> 
-> The problem here is that it seems the ->bound_rxqs state doesn't
-> depend on what page pools were actually created and with what mp.
+Overview
+--------
+This patch set allows user to `poll`(or `select`, `epoll`) on event
+histogram interface. As you know each event has its own `hist` file
+which shows histograms generated by trigger action. So user can set
+a new hist trigger on any event you want to monitor, and poll on the
+`hist` file until it is updated.
 
-FWIW I don't understand the point of walking the xa either.
-Just check the queue number of the pp you found matches,
-page pool params are saved in the page pool. No?
+There are 2 poll events are supported, POLLIN and POLLPRI. POLLIN
+means that there are any readable update on `hist` file and this
+event will be flashed only when you call read(). So, this is
+useful if you want to read the histogram periodically.
+The other POLLPRI event is for monitoring trace event. Like the
+POLLIN, this will be returned when the histogram is updated, but
+you don't need to read() the file and use poll() again.
 
+Note that this waits for histogram update (not event arrival), thus
+you must set a histogram on the event at first.
+
+Usage
+-----
+Here is an example usage:
+
+----
+TRACEFS=/sys/kernel/tracing
+EVENT=$TRACEFS/events/sched/sched_process_free
+
+# setup histogram trigger and enable event
+echo "hist:key=comm" >> $EVENT/trigger
+echo 1 > $EVENT/enable
+
+# Wait for update
+poll pri $EVENT/hist
+
+# Event arrived.
+echo "process free event is comming"
+tail $TRACEFS/trace
+----
+
+The 'poll' command is in the selftest patch.
+
+You can take this series also from here;
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/event-hist-poll
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (3):
+      tracing/hist: Add poll(POLLIN) support on hist file
+      tracing/hist: Support POLLPRI event for poll on histogram
+      selftests/tracing: Add hist poll() support test
+
+
+ include/linux/trace_events.h                       |    5 +
+ kernel/trace/trace_events.c                        |   18 ++++
+ kernel/trace/trace_events_hist.c                   |  101 +++++++++++++++++++-
+ tools/testing/selftests/ftrace/Makefile            |    2 
+ tools/testing/selftests/ftrace/poll.c              |   74 +++++++++++++++
+ .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 +++++++++++++++
+ 6 files changed, 271 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/poll.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
