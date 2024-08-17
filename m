@@ -1,149 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293EB1C57B4;
-	Fri, 16 Aug 2024 21:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACC2EEA9;
+	Sat, 17 Aug 2024 02:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723845406; cv=none; b=BhVuyn+WpG3hh8K/iMI3FB355tEcJXnmNzU3juap8DeyPCoj6N8v4WPpgqqzudiibgqitJSMFvXxlUrXrfLoZNPG/8joQwpqdcKUAJkMfWlOK3VPFQY1je2RUk3np8RMTcu5pN/UHLZ8TwZ/KwrdGUZxionn7rHZAuoRcDGweZc=
+	t=1723863409; cv=none; b=iLjUvmxcNjWYah9SZLsbta215GBhyuZ91hr737o4KGpIkfpMxsKgEsSgkM9aHaa6jQ9+fOvyCmoce+BocU9f5oZThRE7kapjhrl2JkdG75it/QF5Wbzz8BLpBcQx1Qth7g1Sjrmal7wsZMlLiYyVRZ1rTN0o1WJNWTUrAgD0ug0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723845406; c=relaxed/simple;
-	bh=iDFw77pu0YUWQ2wI2VHQzi76pQTpMJz3zqKX0bgLUgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0L6QmA2djdJPoiZZ1qW41aysotQ+Rxl0weMVLGng/45UUqjFNpjlGfkyyZCi6Thi0CjWdN2sHK0mmFz3iRU6N3C83h9tEKOgupYHVXXQ6JuF8AY7YttcrtFdcCSBbqrKHryNg5YqPLxcCScqK0xUKQbhhGW5oNN1miJsRU/jOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sM2HJ8Gf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723863409; c=relaxed/simple;
+	bh=+jKitb4HkbCFufAiexrmRMipOSoKL+6Eqar2mQ6apRA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VNzXMwoIQnbxhSAn8X/SQiETs6M3yFp+iTA5Xsp9bfQvbgtnlljYTcaLU7pADnAmyPPmitpQxqMDM+Sq051NwDTcTp4s7WxBML39HHFKfZksw4YBeF1F9H6QJ5CjvOC61RB/G9x2Za44KEgGlky/Q6YQTgZOGBlAcBIY+Z+TSzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AeAOtq7b; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sM2HJ8Gf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95121C32782;
-	Fri, 16 Aug 2024 21:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723845405;
-	bh=iDFw77pu0YUWQ2wI2VHQzi76pQTpMJz3zqKX0bgLUgA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sM2HJ8GfFXS0+FJtifnI0dbBBuJKDmYfeZLUV9JjkRaqV0T8oJaPfpyT696ASzWYU
-	 yh+/eqSivlRIAUlBDCWvajswyJHITfN7X3P3sdK59YfU9ZVd/GItyGpI3NnixbATJ8
-	 zYSewzkJqq8giure+UCdOdh9Lh/hiy2p3ApKLnmij9D2fux3jz8K87L2GHdhVxB2U4
-	 DA60itAY11CNxjfO4t+1MwlG6szzcfU/nlaugb3AT9MALQMP4MQoWhC4OCVWZMbzR2
-	 vxpPX9SjMz5gmbH1Tmf4n38fb/uNrJDt7cN6cZ3Svwsv48T7g1BvHBde04nO+zGoeQ
-	 F41brTy75WumQ==
-Date: Fri, 16 Aug 2024 23:56:39 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCHv8 9/9] man2: Add uretprobe syscall page
-Message-ID: <ht6hc5dbvgx3ny22pvhiazs7vxjhiockr6glpho5bpp6hrwn4f@oew3iu7a62j2>
-References: <20240611112158.40795-1-jolsa@kernel.org>
- <20240611112158.40795-10-jolsa@kernel.org>
- <20240611233022.82e8abfa2ff0e43fd36798b2@kernel.org>
- <3pc746tolavkbac4n62ku5h4qqkbcinvttvcnkib6nxvzzfzym@k6vozf6totdw>
- <20240807162734.100d3b55@gandalf.local.home>
- <ygpwfyjvhuctug2bsibvc7exbirahojuivglcfjusw4rrqeqhc@44h23muvk3xb>
- <Zr-Gf3EEganRSzGM@krava>
- <c7v4einpsvpswvj3rqn5esap2e5lpeiwacylqlzwdcp7slsgvg@jfmchkiqru4u>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AeAOtq7b"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2021a99af5eso3132755ad.1;
+        Fri, 16 Aug 2024 19:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723863407; x=1724468207; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKgZtG9uOqD3DFxRKcQkjZTQLILEzoQhivhfaU9Nqo4=;
+        b=AeAOtq7bWuoSSO0yj2nCikUif0Lsq2DVexFN4MXYcuW1CaCcGMIeL+szogLsrbG+P8
+         8W1SfycMZgZxCuP2Rh9vgdgBg/FNJ0DWThDUsUTOBUX4Dm0OoCt/Zmb7Nnb16UtEyY0B
+         1LpPidN42ifDf0c6BQgW7y1Le+76JauDFlF2ZoAjWWz7X/BYYS+SfnV1unSSThdZtIQa
+         wOPvuqUOEL/V7GL1jauEjSEzj5EEEp1V6zxOACD5pLnfEOYwbZ3G9lX1csRIoaxHaGTw
+         uGdMBMBv4lvLTBGUr9Sq7UuxvH8NvAJ+R10IUpJZin5d1lPNn3HjqdaNOdA6tf8MIdby
+         ogLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723863407; x=1724468207;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rKgZtG9uOqD3DFxRKcQkjZTQLILEzoQhivhfaU9Nqo4=;
+        b=rpHZYXdqOJKGOHSV2CjrMVm0+w3SuLQNLQI0qTlJhvZBvLVoxvRAxzqh1/1obHEdfZ
+         /p6SXr8sOCZ3CaloWNukbQBQKz6BGeJDJLZrBqfXgMSRVb6tPI5gO3Rn30VBOBpMAMc+
+         jzma2tsz4NuW7bcaquq9agd5h1QE8TmxbcxZVtCdH3jq+AOuBysZYBlfO9a4W1uMt1YF
+         ujetsh+aSLUH0/VxMekw5p1Q/g5f2WD4uP9O3TYFdDgUKcjDTVHkQ1L1iUEMrd0S4LGM
+         bvFYfnfwirJuhEN4hBG/tyPII2J33ehqHaOT/BcM+RvRqZqQSCFCkhXBx1iGqEAx2fRz
+         VJ8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU4l18vrccTxSZbnLmVu7mD8aB4sXFBd/GPYGdbTR7sAD5Hw4FOJXSnyEGDCSvqy81HwLiT7vrsjyBmIcyctm+UumpydSuage72ilFbHim3yTNNL6NoAbf7Qlz+XlvoP/sa7kjk+18OTwXLV/Dal3hwX04d1ivgIkzEkL6RplRiQp2i5SUb2JjpMtrHy7ddD+xh5wXXkH9aCj4+zO1Z6CMGYRBhAaKsvg1GJ/ymrEZjiJwtQjAiuh6GUNyY8UwH7lz79fwiXRwHHuaZarg/DqvdyrzfH73P19MksKL2o+7sMahzE2kP4zUpg9fgA0bOng3vXC5RLA==
+X-Gm-Message-State: AOJu0Yz3wF3VKUbRcrV95ImbRYwrpFpEpAFBscnn+qUYqPzxFGk6HnSg
+	1AJQPLxoQxpalFJIJ922tv8qPn+xlZFflrUmLChc+3MO4+CNsntK
+X-Google-Smtp-Source: AGHT+IEbPGpqoRSYF8jBgPK+pTBiTQRphrHbJ0rUSgdEvQgjtWO3Wff4DwqW4cJKQwtvK2mv0b1kNQ==
+X-Received: by 2002:a17:903:124e:b0:1f7:1b08:dda9 with SMTP id d9443c01a7336-20203e50e27mr63144585ad.8.1723863407171;
+        Fri, 16 Aug 2024 19:56:47 -0700 (PDT)
+Received: from localhost.localdomain ([183.193.177.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f031c5e1sm31801785ad.94.2024.08.16.19.56.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2024 19:56:46 -0700 (PDT)
+From: Yafang Shao <laoar.shao@gmail.com>
+To: akpm@linux-foundation.org
+Cc: torvalds@linux-foundation.org,
+	alx@kernel.org,
+	justinstitt@google.com,
+	ebiederm@xmission.com,
+	alexei.starovoitov@gmail.com,
+	rostedt@goodmis.org,
+	catalin.marinas@arm.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v7 0/8] Improve the copy of task comm
+Date: Sat, 17 Aug 2024 10:56:16 +0800
+Message-Id: <20240817025624.13157-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="plljbzi2pasmdt6h"
-Content-Disposition: inline
-In-Reply-To: <c7v4einpsvpswvj3rqn5esap2e5lpeiwacylqlzwdcp7slsgvg@jfmchkiqru4u>
+Content-Transfer-Encoding: 8bit
 
+Using {memcpy,strncpy,strcpy,kstrdup} to copy the task comm relies on the
+length of task comm. Changes in the task comm could result in a destination
+string that is overflow. Therefore, we should explicitly ensure the
+destination string is always NUL-terminated, regardless of the task comm.
+This approach will facilitate future extensions to the task comm.
 
---plljbzi2pasmdt6h
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
-	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, Deepak Gupta <debug@rivosinc.com>
-Subject: Re: [PATCHv8 9/9] man2: Add uretprobe syscall page
-References: <20240611112158.40795-1-jolsa@kernel.org>
- <20240611112158.40795-10-jolsa@kernel.org>
- <20240611233022.82e8abfa2ff0e43fd36798b2@kernel.org>
- <3pc746tolavkbac4n62ku5h4qqkbcinvttvcnkib6nxvzzfzym@k6vozf6totdw>
- <20240807162734.100d3b55@gandalf.local.home>
- <ygpwfyjvhuctug2bsibvc7exbirahojuivglcfjusw4rrqeqhc@44h23muvk3xb>
- <Zr-Gf3EEganRSzGM@krava>
- <c7v4einpsvpswvj3rqn5esap2e5lpeiwacylqlzwdcp7slsgvg@jfmchkiqru4u>
-MIME-Version: 1.0
-In-Reply-To: <c7v4einpsvpswvj3rqn5esap2e5lpeiwacylqlzwdcp7slsgvg@jfmchkiqru4u>
+As suggested by Linus [0], we can identify all relevant code with the
+following git grep command:
 
-Hi Jiri, Steven,
+  git grep 'memcpy.*->comm\>'
+  git grep 'kstrdup.*->comm\>'
+  git grep 'strncpy.*->comm\>'
+  git grep 'strcpy.*->comm\>'
 
-On Fri, Aug 16, 2024 at 08:55:47PM GMT, Alejandro Colomar wrote:
-> > hi,
-> > there are no args for x86.. it's there just to note that it might
-> > be different on other archs, so not sure what man page should say
-> > in such case.. keeping (void) is fine with me
->=20
-> Hmmm, then I'll remove that paragraph.  If that function is implemented
-> in another arch and the args are different, we can change the manual
-> page then.
->=20
-> >=20
-> > >=20
-> > > Please add the changes proposed below to your patch, tweak anything if
-> > > you consider it appropriate) and send it as v10.
-> >=20
-> > it looks good to me, thanks a lot
-> >=20
-> > Acked-by: From: Jiri Olsa <jolsa@kernel.org>
+PATCH #2~#4:   memcpy
+PATCH #5~#6:   kstrdup
+PATCH #7~#8:   strcpy
 
-I have applied your patch with the tweaks I mentioned, and added several
-tags to the commit message.
+Please note that strncpy() is not included in this series as it is being
+tracked by another effort. [1]
 
-It's currently here:
-<https://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git/com=
-mit/?h=3Dcontrib&id=3D977e3eecbb81b7398defc4e4f41810ca31d63c1b>
+In this series, we have removed __get_task_comm() because the task_lock()
+and BUILD_BUG_ON() within it are unnecessary.
 
-and will $soon be pushed to master.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/ [0]
 
-Have a lovely night!
-Alex
+Changes:
+v6->v7:
+- Improve the comment (Alejandro)
+- Drop strncpy as it is being tracked by another effort (Justin)
+  https://github.com/KSPP/linux/issues/90 [1]
 
+v5->v6: https://lore.kernel.org/linux-mm/20240812022933.69850-1-laoar.shao@gmail.com/
+- Get rid of __get_task_comm() (Linus)
+- Use ARRAY_SIZE() in get_task_comm() (Alejandro)
 
---=20
-<https://www.alejandro-colomar.es/>
+v4->v5: https://lore.kernel.org/all/20240804075619.20804-1-laoar.shao@gmail.com/
+- Drop changes in the mm/kmemleak.c as it was fixed by
+  commit 0b84780134fb ("mm/kmemleak: replace strncpy() with strscpy()")
+- Drop changes in kernel/tsacct.c as it was fixed by
+  commmit 0fe2356434e ("tsacct: replace strncpy() with strscpy()")
 
---plljbzi2pasmdt6h
-Content-Type: application/pgp-signature; name="signature.asc"
+v3->v4: https://lore.kernel.org/linux-mm/20240729023719.1933-1-laoar.shao@gmail.com/
+- Rename __kstrndup() to __kmemdup_nul() and define it inside mm/util.c
+  (Matthew)
+- Remove unused local varaible (Simon)
 
------BEGIN PGP SIGNATURE-----
+v2->v3: https://lore.kernel.org/all/20240621022959.9124-1-laoar.shao@gmail.com/
+- Deduplicate code around kstrdup (Andrew)
+- Add commit log for dropping task_lock (Catalin)
 
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAma/yxcACgkQnowa+77/
-2zK97A//WrXlVppm6sreVtUPEfxfYfGTPE4VAT4lYZRcQ2HboHlCPNMLRXu9kv0G
-wDgwW3P5KiI5XqGtB/oVo9osSWqt2yAQg5JHe2iUAnBjWpN4oDnpMgqFAw00j6J4
-WqV6rsmm81NPfXi3G2ReSBarakNscIRk+IGrF3wso9zu3yLfVUrus80aATLD18vA
-cnEXaJCKrk/gi4S4zeF/YDZsd6CTx6HYpYR4kI8Cgdu5Qhsj1cEN4SOzuRPg1wYB
-tLQ9CWKnpJPOvt0x//7Iwj1dHwSEt69sRUmFs/Gwnapj+lRcRmc2Li3N3xn9oJCq
-RUM0c4i9GAESo5UL6Mps96QZa9MRIHUHQDE7LTSz9Qm66vZt7GyOtHm28xgfrzGZ
-syFEcocjr7viVkf8mCg3wX9o3KGkev+e7r8qQglBlIcn7ycSGnu5qq+qxKiFkbGp
-leB1BXF0uTr6OHrOC2DKC2GcwdpkQjHxwNoOxyFSaDFb+5AWZLwu3JbmcqkGP6TX
-0Xt+pEGTKLEDwV+IMa8v69L8DOM4Mf97SFvmbQjPbzm+0x0ZigzNnxpq7HeYdcV7
-/x0FIG69F7zlEQUoTF8HMfl8fI9YBOdQ2cNzLIcpRdrtvt7Ap6GGKoKfNFMSr+4t
-Rf8AS/JcqJqexPlBbSIuCBOW8P+4BnxCVI/mlmF3vu5SkZv+p8U=
-=bM7I
------END PGP SIGNATURE-----
+v1->v2: https://lore.kernel.org/bpf/20240613023044.45873-1-laoar.shao@gmail.com/
+- Add comment for dropping task_lock() in __get_task_comm() (Alexei)
+- Drop changes in trace event (Steven)
+- Fix comment on task comm (Matus)
 
---plljbzi2pasmdt6h--
+v1: https://lore.kernel.org/all/20240602023754.25443-1-laoar.shao@gmail.com/
+
+Yafang Shao (8):
+  Get rid of __get_task_comm()
+  auditsc: Replace memcpy() with strscpy()
+  security: Replace memcpy() with get_task_comm()
+  bpftool: Ensure task comm is always NUL-terminated
+  mm/util: Fix possible race condition in kstrdup()
+  mm/util: Deduplicate code in {kstrdup,kstrndup,kmemdup_nul}
+  net: Replace strcpy() with strscpy()
+  drm: Replace strcpy() with strscpy()
+
+ drivers/gpu/drm/drm_framebuffer.c     |  2 +-
+ drivers/gpu/drm/i915/i915_gpu_error.c |  2 +-
+ fs/exec.c                             | 10 -----
+ fs/proc/array.c                       |  2 +-
+ include/linux/sched.h                 | 32 +++++++++++---
+ kernel/auditsc.c                      |  6 +--
+ kernel/kthread.c                      |  2 +-
+ mm/util.c                             | 61 ++++++++++++---------------
+ net/ipv6/ndisc.c                      |  2 +-
+ security/lsm_audit.c                  |  4 +-
+ security/selinux/selinuxfs.c          |  2 +-
+ tools/bpf/bpftool/pids.c              |  2 +
+ 12 files changed, 65 insertions(+), 62 deletions(-)
+
+-- 
+2.43.5
+
