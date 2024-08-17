@@ -1,188 +1,101 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D7F83A17
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Aug 2024 15:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8088BE8
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Aug 2024 16:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723907632; cv=none; b=YkmCLnT8/ZZHb7AtUv6vwB8FRijBgygLwLZFq6KCVbo+JX2TZ5DjeXfPQHbq94AnStbKzYIggXMKmZIDssrmMJJtCcy/ysyPdKizGileyKZXle/bjxWXkwnrQH+ubRYYnKj2Ypu8+/pJMNRUkrfT04YJCoDFBcGGyuucFc9xBvM=
+	t=1723912003; cv=none; b=LKhC9PvJHXhFWjphcz9l7Y1mxGd9BIT1cDjNACPH/oki30ET4qfe/gm8h2E+EgFp2uL6qo8pcncvi7rh4py4vBFSrAmHFuhM1S8kkkQxwZ2jajYZGcpZAUhrCUj+i4astowSvkr5VN4ax6j5vtQlc0lf0po6m7EyH950/mXOlOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723907632; c=relaxed/simple;
-	bh=f4FKGxVYQxxLRQXGi6/ad1xe8zUcE9oY9HGYW6YKezU=;
+	s=arc-20240116; t=1723912003; c=relaxed/simple;
+	bh=9dkMY8jFzFQfn6EKGYFPV4tiA60zbFODArOLJ5YzeIA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t+Ozg/5Hh1LHo2t+N+pog+k2tF68lEbSnlKe8Qy6XhIDPcS16LTRZeerce8kyA+BZkEqHjInlNXAwXrCrbbHenZtit4F856g5qfbTwaNeAH6NBoXVFWLCk1J0SWr3UEbnnKsqGHn2A1rdVIDDJs1nJb2pEcuQBHziiGBtDhECp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U9+1GQSU; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=cCg7J6qi7DlSiGu+H+sOkvOXBWLo+36vxCKUb3MdQKhk+cMMgzkTsOC/ia9TxEln98+wsHC0wmU2SdA4jLkvOBJl7ICDlZYZq8Eqor2PsQDUG9Q0pJQd7VXDyau8Ry7POlL9DVTgar8VUNFPEKZTHlkR0Kx8K2HuTVErwdU1MHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MGX4RmWe; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U9+1GQSU"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6bf8b41b34dso3206096d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Aug 2024 08:13:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MGX4RmWe"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-37198a6da58so1089159f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Aug 2024 09:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723907629; x=1724512429; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h8fuP4rXSYs0IsxsahVa0Q55YFfnXxVc+PpufNcWYNA=;
-        b=U9+1GQSUeEWxIibtppep4qqj4OpdA4mm2tCOuBsqsxkbvUJXxxoHvC/1DD8XHYEu8i
-         WjEgJp64Wh0LjJMNctGnsHDdI4LWWS4i1de+9JlsKLbjhuxqNGnqQc6jEWF/WIZdyoE8
-         Ood0I9cMludlmhZXLRIR99I6NTR03YjLyd2UU8aPRBzFY2EVJN3zKFaiACpBDkuLmbAs
-         KhMnNOiWEb+OtTL7MMrHZDKy9Eh+cAn0nWsdeIFVr9qOqYdsd6BN0FHrwHGsI7Ewhy3K
-         sam5K1XJncYJcHKCyUHyfaQ13LVvQhnOQYzacwOTyK4ahx+PK34TLjUH1vu5Rlz3DzPk
-         osJw==
+        d=linux-foundation.org; s=google; t=1723911999; x=1724516799; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bJUpF+ZilJ5tJUWYdG1B4XodSC5itu+LywsKXdFMvvc=;
+        b=MGX4RmWezwlCBP/5oE47a8Mb750ikLW7ITLf3BYDp0a3qpipFAowooHLbj91B4slgD
+         ojO7XMWv/R1bgoN/oewxQCPfaNAWr5C4mYbh6bGHKzgu9n6FnFQ6f47QD7Od3jyhkVUy
+         2RNpzmEYrbA0l4dl7/p9NqlTgxf9rdWRt6Z7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723907629; x=1724512429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h8fuP4rXSYs0IsxsahVa0Q55YFfnXxVc+PpufNcWYNA=;
-        b=LZiVUTXO7f9lrOOnfAsg20JP/ziFBMJ6I1B3lm50cbid548Q7/Q4WQAE0Zj+M80Qt1
-         RadxGwRw5D77wRPRf7bbrpBA2uOR/WZGWHIv5wzhSP6KTUOOxhUcBqw+iIOL36d9aXZu
-         ZXc5lQE6KFtzBIQRIliTbggiwa1rVoPEMIa8zTH6u5DWdlitBShTUlo7F8oBKxKuzymt
-         /CehmQU3+yLng4X76yh2l8kJl/Z5sGtiaQYjGn8gBRchcTNiI24T955CSOVIUqik8InC
-         1SFJJdQ1qriD6LG7Uw9+3z/hGiMbvDuwVcsFeULbpKi8U0EznzNji+vrV1RJpzTteIXT
-         i1zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXUTpL9o8W/BhruouAcPFBiuW+Nt0IP3PoUiGTEaWn+wvacWaT+fdjroEyZ2EVqcxoXzlH2J97dPZqi+zFYboKI6uiuk4oZMhLHbPRQkq0GHkT
-X-Gm-Message-State: AOJu0Yznl3PKKEY6JtyFj3Ycp9B8ZmjBJ1895kFwfGe3P7fxGDJ6o5so
-	XayY60VVF7zv6Jg9kpiUIfkeHjzAu3NwWlIm/SOvKKl82UaKi6+hilFCuxK9zqdu5O6d2w9sUmr
-	WwEgzGuGOF+5+oj8sha6W98X8q6KZHfxBoUI4
-X-Google-Smtp-Source: AGHT+IEVoTrHdVFvEzEpKQmmtV0mdfaBBccZW7R2wrmBmSZjuFbL1LJHUNlqx3hUH+/ws9eu5VXMD1mp4i3r/g0VSRU=
-X-Received: by 2002:a0c:f40d:0:b0:6bf:79c1:b9aa with SMTP id
- 6a1803df08f44-6bf8950a6c2mr26142936d6.33.1723907629272; Sat, 17 Aug 2024
- 08:13:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723911999; x=1724516799;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bJUpF+ZilJ5tJUWYdG1B4XodSC5itu+LywsKXdFMvvc=;
+        b=ikd1rbDs8d+vJXsvu/ZViqtGBeRtX8x+Lk6lawc/ktuwG7+g7sNutxVRtTR/yrxwmZ
+         CV2qVQVKdm404kxyBTphA2kOy7nYKgXKUsEjq78NheunhLOEUZbJGeWqsETwF2y4ISes
+         E8ZrjiYKcaY7X4EkzCIKavU1UmBmtW4hWjaZwijfXwmj69sphN3fKRkNqoejtcdAmfhv
+         0DsvedagiA/heLSIb/ZjeZlwaFexKHrlTsUOTY50Ov1vRg2VmWZ/izCaUSbUGxf+LbTP
+         me/Xi1eN0ghaZqAfBh98jwu2wLn4LwbmT+gWwges6/vMwkHu0B8dqr1FOjsA6gdF8QVa
+         GeHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNZdNNKOoFvw7kseUK92WfGp7obYM/MBuQotiMgaUYRmzLZ8QO6XxTqehvum/cqzVli+/9hHRq3aXF4mauUr3Fuq28gnysJS72kN9fwrQjQ7S5
+X-Gm-Message-State: AOJu0YyIC1404xSTC1mOflTG+8+QBf8fHJjNS8KUc6bI3ZOlvjWNxAJO
+	cfE4/CTEdPwBuRUXzW8L3wbY76jmHlNesvWqkIyFoaHqWiA+AHzVvsdNeLiNKo+4127OITnDtDI
+	wmsl/wg==
+X-Google-Smtp-Source: AGHT+IFN35krX7o/Dd3bBuVgJSyik/UGu5IuMSQbpI+mh3hGiH2zvuiB42LWthe/PLRCZQj6zukKRw==
+X-Received: by 2002:a5d:4682:0:b0:368:5042:25f3 with SMTP id ffacd0b85a97d-37194652c1dmr5226561f8f.34.1723911999244;
+        Sat, 17 Aug 2024 09:26:39 -0700 (PDT)
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838cf0eesm417200366b.52.2024.08.17.09.26.38
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Aug 2024 09:26:39 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a83856c6f51so130344866b.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Aug 2024 09:26:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAA9HqA9FjlL0dt53jtJq36uF2dURvzHmukIAs4eLGkhla9zrcsrOm2rhdsVtJPHaBrYOx76nVH8DczrtGfXgO1V2bSCbHt+6Lb6nJ4Pb98u8A
+X-Received: by 2002:a05:6402:278b:b0:5a1:b6d8:b561 with SMTP id
+ 4fb4d7f45d1cf-5beca527ec4mr6027442a12.9.1723911998605; Sat, 17 Aug 2024
+ 09:26:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813211317.3381180-10-almasrymina@google.com> <CAMArcTW=mg2gF_e6spPWOCuQdDAWSuKTCdCNPWGqcU1ciq30EQ@mail.gmail.com>
-In-Reply-To: <CAMArcTW=mg2gF_e6spPWOCuQdDAWSuKTCdCNPWGqcU1ciq30EQ@mail.gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Sat, 17 Aug 2024 11:13:34 -0400
-Message-ID: <CAHS8izOqGMiZNkfQ6G-29UuG64GVo7L+fAzWn5A1713cDAgbgg@mail.gmail.com>
-Subject: Re: [PATCH net-next v19 09/13] tcp: RX path for devmem TCP
-To: Taehee Yoo <ap420073@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240817025624.13157-1-laoar.shao@gmail.com> <20240817025624.13157-6-laoar.shao@gmail.com>
+ <w6fx3gozq73slfpge4xucpezffrdioauzvoscdw2is5xf7viea@a4doumg264s4>
+In-Reply-To: <w6fx3gozq73slfpge4xucpezffrdioauzvoscdw2is5xf7viea@a4doumg264s4>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 17 Aug 2024 09:26:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi_U7S=R2ptr3dN21fOVbDGimY3-qpkSebeGtYh6pDCKA@mail.gmail.com>
+Message-ID: <CAHk-=wi_U7S=R2ptr3dN21fOVbDGimY3-qpkSebeGtYh6pDCKA@mail.gmail.com>
+Subject: Re: [PATCH v7 5/8] mm/util: Fix possible race condition in kstrdup()
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org, justinstitt@google.com, 
+	ebiederm@xmission.com, alexei.starovoitov@gmail.com, rostedt@goodmis.org, 
+	catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 17, 2024 at 9:58=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wro=
-te:
+On Sat, 17 Aug 2024 at 01:48, Alejandro Colomar <alx@kernel.org> wrote:
 >
-> On Wed, Aug 14, 2024 at 6:13=E2=80=AFAM Mina Almasry <almasrymina@google.=
-com> wrote:
-> >
+> I would compact the above to:
 >
-> Hi Mina,
->
-> > In tcp_recvmsg_locked(), detect if the skb being received by the user
-> > is a devmem skb. In this case - if the user provided the MSG_SOCK_DEVME=
-M
-> > flag - pass it to tcp_recvmsg_devmem() for custom handling.
-> >
-> > tcp_recvmsg_devmem() copies any data in the skb header to the linear
-> > buffer, and returns a cmsg to the user indicating the number of bytes
-> > returned in the linear buffer.
-> >
-> > tcp_recvmsg_devmem() then loops over the unaccessible devmem skb frags,
-> > and returns to the user a cmsg_devmem indicating the location of the
-> > data in the dmabuf device memory. cmsg_devmem contains this information=
-:
-> >
-> > 1. the offset into the dmabuf where the payload starts. 'frag_offset'.
->
-> I have been testing this patch and I found a bug.
+>         len = strlen(s);
+>         buf = kmalloc_track_caller(len + 1, gfp);
+>         if (buf)
+>                 strcpy(mempcpy(buf, s, len), "");
 
-Thanks Taehee. It's exciting to see that you have gotten this far in
-your testing!! You seem to have devmem TCP (almost) fully working!!
-May I ask which driver this is? I assume it's bnxt. Do you have the
-driver support somewhere on github or something? I'm curious what your
-driver implementation looks like.
+No, we're not doing this kind of horror.
 
-> While testing it with the ncdevmem cmd, it fails to validate buffers
-> after some period.
-> This is because tcp_recvmsg_dmabuf() can't handle skb properly when
-> the parameter offset !=3D 0.
+If _FORTIFY_SOURCE has problems with a simple "memcpy and add NUL",
+then _FORTIFY_SOURCE needs to be fixed.
 
-Sadly I'm unable to reproduce this issue, but I think I know where to
-suspect the bug is. Thanks for taking the time to root cause this and
-provide a fix.
+We don't replace a "buf[len] = 0" with strcpy(,""). Yes, compilers may
+simplify it, but dammit, it's an unreadable incomprehensible mess to
+humans, and humans still matter a LOT more.
 
-...
-
-> > +               offset =3D 0;
->
-> If the offset is 5000 and only 4500 bytes are skipped at this point,
-> the offset should be 500, not 0.
-> We need to add a condition to set the offset correctly.
->
-
-I highly suspect this is a regression that was introduced in v13. In
-v12 Pavel asked if offset can just be set to 0 here, and I didn't see
-any reason why not, so I made the change:
-
-    -+          offset =3D offset - start;
-    ++          offset =3D 0;
-
-It looks like we missed something. I suspect reverting that may
-resolve the issue, because __skb_copy_datagram() in earlier kernels
-modified offset like this and it's well tested. Can you test with this
-change reverted? Diff like so:
-
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 40e7335dae6e..984e28c5d096 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2522,7 +2522,7 @@ static int tcp_recvmsg_dmabuf(struct sock *sk,
-const struct sk_buff *skb,
-                 */
-                skb =3D skb_shinfo(skb)->frag_list ?: skb->next;
-
--               offset =3D 0;
-+               offset =3D offset - start;
-        } while (skb);
-
-        if (remaining_len) {
-
-I'm running a long test to try to reproduce this issue, but I have ran
-many long tests before and was not able to. For some reason my setup
-is not able to reproduce this edge case. Are you doing anything
-special with ncdevmem? Or simply running commands like these on the
-server client?
-
-server: ./ncdevmem -s SERVER -c CLIENT -l -p 5224 -v 7
-client: yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | tr \\n \\0 |
-nc SERVER 5224 -p 5224
-
-
---=20
-Thanks,
-Mina
+                Linus
