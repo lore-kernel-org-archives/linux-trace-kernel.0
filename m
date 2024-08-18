@@ -1,44 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29238384;
-	Sun, 18 Aug 2024 10:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE6023AD;
+	Sun, 18 Aug 2024 12:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723977818; cv=none; b=jwp6ZY6A7Kj6DUYI7DuKAfot1aSLmY25ymaUaI31vcZ0XxZjC6uXUD3uxOPd+xAvfkA0eUayMateD2eUDP87CMWh94vAE8AixlHpdE8lhaSvto8wL0fyE2B61wws+7RIETvtKbjzapi/j+Z9TEp/Q8kfQiD+bNMaEsgVWSC2IQY=
+	t=1723985278; cv=none; b=jVT4gtncpDjD8QqM54SyFB8s4DeYvgq6lu2FMiyeYzBVpytD/wNvDBy14Zng6FcbrYSIZTnrUY1z42pSrDSZSUD8DJEb8EbraQeVx+OUTVRqQ2SVEC2npwjp86SoNbMQaqmag+P+KcVDBKPfklrLqeTwaKrD/ZeLJXXSCi0t918=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723977818; c=relaxed/simple;
-	bh=rCdP5URlZYm+NPBg5WLaSak0xP7BHvZX5yXjGEZvYzE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CH2a/eiu6c2BlmAxLTZiYxlwCSQFY036aaPXA8khCjWnunf6j67w3A4f8h6muohKdn2qlJWpusgrY2gjTOW3IL7NkdKNI5vA+soLOmxfPE3Bbj6/+oQCPjFaf3Uj0ulcd1jx43O9jEq3Ev1fFNEnucu7q30jhG+CXSMu9UC1Qhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rB8D/Rah; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723985278; c=relaxed/simple;
+	bh=n5LlMdQ4HOYFc/E5TiKpCvbftvs6Tvl0p4sQ5eg7fvU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sLx+mQM23JDKzYoU3+t1Pq+wSo+WdJi5K+lXpgwbuDFEHIzH4Rk2cGCCVEr7L0uEsx/zgZWRvDOTkYPWyKlB6povAoW9oLZNTBuT+tUx/mLXfhkeaQFRWUZv6uZq+9r0AcdPwEfxANRvWW4AXkB2iolMBCIXZ17Vy9pslgtDt+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqhPY2i1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rB8D/Rah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 121BAC32786;
-	Sun, 18 Aug 2024 10:43:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqhPY2i1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B6DC32786;
+	Sun, 18 Aug 2024 12:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723977818;
-	bh=rCdP5URlZYm+NPBg5WLaSak0xP7BHvZX5yXjGEZvYzE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rB8D/RahpCQQCg6W6bLp6TlMu846obvdQ29lzrB45XX3KQZM2815ExD0G6EK5sHsD
-	 aJIBwjYCcnk9TNtKGM0nIho4gUxX4FczOMVt7DvPxq0YyKat4U6ntIsgSb5usWKc39
-	 xvSYLWaesVl6a+w/Ecxj3ZvUsV2TN4ZNiM6Rx8WoxBbYbMYGX6fNPl6mZb4P1QTY7l
-	 EqncrjPsY1yNk1dotjSd4wc66EPgftsZ75QEV4W30L7Zin+wVr8QjvW8v12V4Sz/gf
-	 Tq/8FaJsuRyMio7gGxbpTTPe45MwdPDWdmMZ4tMqgEcR6+IFLA06kazM85gBZ6Nkg0
-	 rX1mxoPj3xbaw==
+	s=k20201202; t=1723985278;
+	bh=n5LlMdQ4HOYFc/E5TiKpCvbftvs6Tvl0p4sQ5eg7fvU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VqhPY2i1rc7JZAzOX43eN+kS1ntivIBaKmdBG4ME5TPOEVfCnR6ahqsRrQe6Lj9dx
+	 lvBrSSNj/bZLx9sCh8MLbT3/svCDzlBxW4Bgga37C1GW7G9LmluSY4ZJLqoO6cihDN
+	 O4SIHQs2Ebbri/2E+pXiAdRpS4JguOXfXNOmtABKGx31qsAimZYh8Xw7UcKnsIfcs/
+	 SAM69NKqWFYfhU6pD4cTvm7A1d7ZmFX4Wa3ryIiwVyChUOzchTkwtAQeYcbGT+fxgt
+	 XBCBSoZppMseX9s98uU5qV5LPX90K/E47vs/Fr+kvZ7Vq+AdX33cSmzgIrqf49TTvz
+	 UhNHhU/1jDVkA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	don <zds100@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org
-Subject: [PATCH v3 5/5] sefltests/tracing: Add a test for tracepoint events on modules
-Date: Sun, 18 Aug 2024 19:43:35 +0900
-Message-Id: <172397781494.286558.7581515061075998225.stgit@devnote2>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v13 00/20] tracing: fprobe: function_graph: Multi-function graph and fprobe on fgraph
+Date: Sun, 18 Aug 2024 21:47:53 +0900
+Message-Id: <172398527264.293426.2050093948411376857.stgit@devnote2>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <172397776900.286558.8986646398199362026.stgit@devnote2>
-References: <172397776900.286558.8986646398199362026.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,98 +57,176 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi,
 
-Add a test case for tracepoint events on modules. This checks if it can add
-and remove the events correctly.
+Here is the 13th version of the series to re-implement the fprobe on
+function-graph tracer. The previous version is;
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+https://lore.kernel.org/all/172000134410.63468.13742222887213469474.stgit@devnote2/
+
+This version is based on v6.11-rc3.
+In this version, I added a bugfix as [1/20], which should go to urgent
+branch, and dropped the performance improvement patch which was introduced
+in v12 because I found that does not work with new kernel.
+
+Overview
+--------
+This series rewrites the fprobe on this function-graph.
+The purposes of this change are;
+
+ 1) Remove dependency of the rethook from fprobe so that we can reduce
+   the return hook code and shadow stack.
+
+ 2) Make 'ftrace_regs' the common trace interface for the function
+   boundary.
+
+1) Currently we have 2(or 3) different function return hook codes,
+ the function-graph tracer and rethook (and legacy kretprobe).
+ But since this  is redundant and needs double maintenance cost,
+ I would like to unify those. From the user's viewpoint, function-
+ graph tracer is very useful to grasp the execution path. For this
+ purpose, it is hard to use the rethook in the function-graph
+ tracer, but the opposite is possible. (Strictly speaking, kretprobe
+ can not use it because it requires 'pt_regs' for historical reasons.)
+
+2) Now the fprobe provides the 'pt_regs' for its handler, but that is
+ wrong for the function entry and exit. Moreover, depending on the
+ architecture, there is no way to accurately reproduce 'pt_regs'
+ outside of interrupt or exception handlers. This means fprobe should
+ not use 'pt_regs' because it does not use such exceptions.
+ (Conversely, kprobe should use 'pt_regs' because it is an abstract
+  interface of the software breakpoint exception.)
+
+This series changes fprobe to use function-graph tracer for tracing
+function entry and exit, instead of mixture of ftrace and rethook.
+Unlike the rethook which is a per-task list of system-wide allocated
+nodes, the function graph's ret_stack is a per-task shadow stack.
+Thus it does not need to set 'nr_maxactive' (which is the number of
+pre-allocated nodes).
+Also the handlers will get the 'ftrace_regs' instead of 'pt_regs'.
+Since eBPF mulit_kprobe/multi_kretprobe events still use 'pt_regs' as
+their register interface, this changes it to convert 'ftrace_regs' to
+'pt_regs'. Of course this conversion makes an incomplete 'pt_regs',
+so users must access only registers for function parameters or
+return value. 
+
+Design
+------
+Instead of using ftrace's function entry hook directly, the new fprobe
+is built on top of the function-graph's entry and return callbacks
+with 'ftrace_regs'.
+
+Since the fprobe requires access to 'ftrace_regs', the architecture
+must support CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS and
+CONFIG_HAVE_FTRACE_GRAPH_FUNC, which enables to call function-graph
+entry callback with 'ftrace_regs', and also
+CONFIG_HAVE_FUNCTION_GRAPH_FREGS, which passes the ftrace_regs to
+return_to_handler.
+
+All fprobes share a single function-graph ops (means shares a common
+ftrace filter) similar to the kprobe-on-ftrace. This needs another
+layer to find corresponding fprobe in the common function-graph
+callbacks, but has much better scalability, since the number of
+registered function-graph ops is limited.
+
+In the entry callback, the fprobe runs its entry_handler and saves the
+address of 'fprobe' on the function-graph's shadow stack as data. The
+return callback decodes the data to get the 'fprobe' address, and runs
+the exit_handler.
+
+The fprobe introduces two hash-tables, one is for entry callback which
+searches fprobes related to the given function address passed by entry
+callback. The other is for a return callback which checks if the given
+'fprobe' data structure pointer is still valid. Note that it is
+possible to unregister fprobe before the return callback runs. Thus
+the address validation must be done before using it in the return
+callback.
+
+Download
+--------
+This series can be applied against the ftrace/for-next branch in
+linux-trace tree.
+
+This series can also be found below branch.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/fprobe-on-fgraph
+
+Thank you,
+
 ---
- Changes in v3:
-  - Add not-loaded module test.
----
- tools/testing/selftests/ftrace/config              |    1 
- .../test.d/dynevent/add_remove_tprobe_module.tc    |   61 ++++++++++++++++++++
- 2 files changed, 62 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe_module.tc
 
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index 048a312abf40..544de0db5f58 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -20,6 +20,7 @@ CONFIG_PREEMPT_TRACER=y
- CONFIG_PROBE_EVENTS_BTF_ARGS=y
- CONFIG_SAMPLES=y
- CONFIG_SAMPLE_FTRACE_DIRECT=m
-+CONFIG_SAMPLE_TRACE_EVENTS=m
- CONFIG_SAMPLE_TRACE_PRINTK=m
- CONFIG_SCHED_TRACER=y
- CONFIG_STACK_TRACER=y
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe_module.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe_module.tc
-new file mode 100644
-index 000000000000..d319d5ed4226
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe_module.tc
-@@ -0,0 +1,61 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Generic dynamic event - add/remove tracepoint probe events on module
-+# requires: dynamic_events "t[:[<group>/][<event>]] <tracepoint> [<args>]":README
-+
-+rmmod trace-events-sample ||:
-+if ! modprobe trace-events-sample ; then
-+  echo "No trace-events sample module - please make CONFIG_SAMPLE_TRACE_EVENTS=m"
-+  exit_unresolved;
-+fi
-+trap "rmmod trace-events-sample" EXIT
-+
-+echo 0 > events/enable
-+echo > dynamic_events
-+
-+TRACEPOINT1=foo_bar
-+TRACEPOINT2=foo_bar_with_cond
-+
-+echo "t:myevent1 $TRACEPOINT1" >> dynamic_events
-+echo "t:myevent2 $TRACEPOINT2" >> dynamic_events
-+
-+grep -q myevent1 dynamic_events
-+grep -q myevent2 dynamic_events
-+test -d events/tracepoints/myevent1
-+test -d events/tracepoints/myevent2
-+
-+echo "-:myevent2" >> dynamic_events
-+
-+grep -q myevent1 dynamic_events
-+! grep -q myevent2 dynamic_events
-+
-+echo > dynamic_events
-+
-+clear_trace
-+
-+:;: "Try to put a probe on a tracepoint in non-loaded module" ;:
-+rmmod trace-events-sample
-+
-+echo "t:myevent1 $TRACEPOINT1" >> dynamic_events
-+echo "t:myevent2 $TRACEPOINT2" >> dynamic_events
-+
-+grep -q myevent1 dynamic_events
-+grep -q myevent2 dynamic_events
-+test -d events/tracepoints/myevent1
-+test -d events/tracepoints/myevent2
-+
-+echo 1 > events/tracepoints/enable
-+
-+modprobe trace-events-sample
-+
-+sleep 2
-+
-+grep -q "myevent1" trace
-+grep -q "myevent2" trace
-+
-+rmmod trace-events-sample
-+trap "" EXIT
-+
-+echo 0 > events/tracepoints/enable
-+echo > dynamic_events
-+clear_trace
+Masami Hiramatsu (Google) (20):
+      tracing: fgraph: Fix to add new fgraph_ops to array after ftrace_startup_subops()
+      tracing: Add a comment about ftrace_regs definition
+      tracing: Rename ftrace_regs_return_value to ftrace_regs_get_return_value
+      function_graph: Pass ftrace_regs to entryfunc
+      function_graph: Replace fgraph_ret_regs with ftrace_regs
+      function_graph: Pass ftrace_regs to retfunc
+      fprobe: Use ftrace_regs in fprobe entry handler
+      fprobe: Use ftrace_regs in fprobe exit handler
+      tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs
+      tracing: Add ftrace_fill_perf_regs() for perf event
+      tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+      bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
+      ftrace: Add CONFIG_HAVE_FTRACE_GRAPH_FUNC
+      fprobe: Rewrite fprobe on function-graph tracer
+      tracing: Fix function timing profiler to initialize hashtable
+      tracing/fprobe: Remove nr_maxactive from fprobe
+      selftests: ftrace: Remove obsolate maxactive syntax check
+      selftests/ftrace: Add a test case for repeating register/unregister fprobe
+      Documentation: probes: Update fprobe on function-graph tracer
+      fgraph: Skip recording calltime/rettime if it is not nneeded
 
+
+ Documentation/trace/fprobe.rst                     |   42 +
+ arch/arm64/Kconfig                                 |    2 
+ arch/arm64/include/asm/ftrace.h                    |   47 +
+ arch/arm64/kernel/asm-offsets.c                    |   12 
+ arch/arm64/kernel/entry-ftrace.S                   |   32 +
+ arch/arm64/kernel/ftrace.c                         |   20 +
+ arch/loongarch/Kconfig                             |    4 
+ arch/loongarch/include/asm/ftrace.h                |   32 -
+ arch/loongarch/kernel/asm-offsets.c                |   12 
+ arch/loongarch/kernel/ftrace_dyn.c                 |   10 
+ arch/loongarch/kernel/mcount.S                     |   17 -
+ arch/loongarch/kernel/mcount_dyn.S                 |   14 
+ arch/powerpc/Kconfig                               |    1 
+ arch/powerpc/include/asm/ftrace.h                  |   15 
+ arch/powerpc/kernel/trace/ftrace.c                 |    2 
+ arch/powerpc/kernel/trace/ftrace_64_pg.c           |   10 
+ arch/riscv/Kconfig                                 |    3 
+ arch/riscv/include/asm/ftrace.h                    |   26 -
+ arch/riscv/kernel/ftrace.c                         |   17 +
+ arch/riscv/kernel/mcount.S                         |   24 -
+ arch/s390/Kconfig                                  |    3 
+ arch/s390/include/asm/ftrace.h                     |   39 +
+ arch/s390/kernel/asm-offsets.c                     |    6 
+ arch/s390/kernel/mcount.S                          |    9 
+ arch/x86/Kconfig                                   |    4 
+ arch/x86/include/asm/ftrace.h                      |   37 +
+ arch/x86/kernel/ftrace.c                           |   50 +-
+ arch/x86/kernel/ftrace_32.S                        |   15 
+ arch/x86/kernel/ftrace_64.S                        |   17 -
+ include/linux/fprobe.h                             |   57 +-
+ include/linux/ftrace.h                             |  136 ++++
+ kernel/trace/Kconfig                               |   23 +
+ kernel/trace/bpf_trace.c                           |   19 -
+ kernel/trace/fgraph.c                              |  127 +++-
+ kernel/trace/fprobe.c                              |  638 ++++++++++++++------
+ kernel/trace/ftrace.c                              |   10 
+ kernel/trace/trace.h                               |    6 
+ kernel/trace/trace_fprobe.c                        |  147 ++---
+ kernel/trace/trace_functions_graph.c               |   10 
+ kernel/trace/trace_irqsoff.c                       |    6 
+ kernel/trace/trace_probe_tmpl.h                    |    2 
+ kernel/trace/trace_sched_wakeup.c                  |    6 
+ kernel/trace/trace_selftest.c                      |   11 
+ lib/test_fprobe.c                                  |   51 --
+ samples/fprobe/fprobe_example.c                    |    4 
+ .../test.d/dynevent/add_remove_fprobe_repeat.tc    |   19 +
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
+ 47 files changed, 1168 insertions(+), 630 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_repeat.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
