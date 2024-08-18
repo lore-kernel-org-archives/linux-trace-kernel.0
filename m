@@ -1,220 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD30B674;
-	Sun, 18 Aug 2024 12:51:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3691BA41;
+	Sun, 18 Aug 2024 13:16:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723985488; cv=none; b=J9bg/UiVoMBA7+TLpOhZrH6f3W3c/XSZNqS6JQ84+96KS8qy0egVeBQ9NPN6a4QQrpRNiSH91MIJyKggFj4NGHvBBxuulGTcbK3Fbt+hT2BoUGg6gMd0aqafcsTuswMEqJcsbl4gx3hNQQKPmo6tI8lt9Eo1I2DAJxkyLOiEwyY=
+	t=1723986962; cv=none; b=fShYpY4JX1aSXGHMNMs8NymPGuL7b+VPLbrXht1cOWI3Y3ppHGoo5WJbY1eeWl/DbciMBYvApKSe79Di7XSUxgLZRyDlJmLc/4jVap630zGz/RSHDiQ9tBaeJWbnTdjtAeIcU+/Vsdss7QAkS54NHUGFeRajst8sWdA+P0KvMPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723985488; c=relaxed/simple;
-	bh=amoRD0d8bJ/7dPaqGBhYcBhuedEEvM42PqERJ3MQPSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=reMGWEFvkeqJfzgFAj89HDPmLid/xWIKt1T+OgT/DeTSGD/wRniMIM+WTdIyoO9PgJP0bZi3RMz10M1AV22Hsyzkhjjt9753q8rxnhf4JXJGCZJZ/j4Q04BUU1mhHHxRLK4mSrdFRdG1f6yVVEvqnNueVahf9MdfV+maCjy6Gb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOonnQkR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723986962; c=relaxed/simple;
+	bh=qjyAnxGo0Ey4xlVAJWap15pvsIzgGullqMnE00VmukE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Z8ypNj30H4VfHSRCCHwIg9FhYHOmM3LJrZOsc0gn4XBUVMMcDIDU07fz783+3QxYVUtuxA1FurqOqfHGgLJT1RYtMTRvrlteIr1zi5mRmM58U3SaAY7WpJv7tCIFY3hkVsi8xY8T9GVIw8DyQBwoukFUEl9Tyh5mXvXBcqOQEeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2JdmBUf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOonnQkR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CA5C32786;
-	Sun, 18 Aug 2024 12:51:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2JdmBUf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A31BC32786;
+	Sun, 18 Aug 2024 13:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723985487;
-	bh=amoRD0d8bJ/7dPaqGBhYcBhuedEEvM42PqERJ3MQPSg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dOonnQkRwbLhJdN89o1+DXgEpdvb0iNbe5GC1i+NAX3yQ63Jkp1JH82FhgSfYUygD
-	 H9s60jqmdxO3ro1PqkoE3t66A5sWyEzIcj3c6Fj81dEktPjC8yRnxP4qNoP1BzUHwa
-	 zluxk3lhGG9VpBMzO8AJyp0XRcsCzJD/gurFpEIsRQJ6VT0+c17cpJuUvIPl7rnWyo
-	 SQKWGIJ+Cryb9dYrRIJ/tnSvPspD3oLOjzxWCIRr5iVc149XqqDQdD73myFGble3TB
-	 qyviqvuC0Aj4puPG5FzgzAw9kYXRKrQHA0Gpj8znyL2dZxzuVFHxkawweNi2SgeBh0
-	 He56kKP5NCvKw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v13 20/20] fgraph: Skip recording calltime/rettime if it is not nneeded
-Date: Sun, 18 Aug 2024 21:51:22 +0900
-Message-Id: <172398548220.293426.5389568053134223004.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <172398527264.293426.2050093948411376857.stgit@devnote2>
-References: <172398527264.293426.2050093948411376857.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1723986962;
+	bh=qjyAnxGo0Ey4xlVAJWap15pvsIzgGullqMnE00VmukE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u2JdmBUfT6mRrgCXkOXIUkXLbKSN1QbUfuRSlBKt2KYEHkhar162Tw5T2OYhRexu/
+	 CKtxl0X64aFSUUl/xINo8AeDr0vAfKFRk0pPyfw/uiTFt390vRZfKJe2OfRHjCsw/5
+	 ls/HL1HPE1KUJjOnnf4It3Ia5lulFJ8UkQ+1oOge9wpi6bOukeh0eQgRrxFSkggAqv
+	 7QqqOZRSnmlOswePyPD++YvIJfUNJYjefNo4h2epq8e1CBWNyXgLwTqtbsoHlFIe6/
+	 odoTGG9BVrIrsO56qfIAMahtXbPTBagfeTGqaBsEOk9w3/xco06dISFS3oc7VH+lUA
+	 SlrmwHrZtoawQ==
+Date: Sun, 18 Aug 2024 22:15:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>, Tom Zanussi
+ <zanussi@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] selftests/tracing: Add hist poll() support test
+Message-Id: <20240818221556.49146df39698986646a6c867@kernel.org>
+In-Reply-To: <20240818000620.ba9a93ccb82bc48cd3155cc7@kernel.org>
+References: <172377544331.67914.7474878424159759789.stgit@devnote2>
+	<172377547205.67914.494998437883733530.stgit@devnote2>
+	<fdd141e8-337b-4f6c-a721-7d20dc63b50d@linuxfoundation.org>
+	<20240818000620.ba9a93ccb82bc48cd3155cc7@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sun, 18 Aug 2024 00:06:20 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Skip recording calltime and rettime if the fgraph_ops does not need it.
-This is a kind of performance optimization for fprobe. Since the fprobe
-user does not use these entries, recording timestamp in fgraph is just
-a overhead (e.g. eBPF, ftrace). So introduce the skip_timestamp flag,
-and all fgraph_ops sets this flag, skip recording calltime and rettime.
+> On Fri, 16 Aug 2024 08:04:41 -0600
+> Shuah Khan <skhan@linuxfoundation.org> wrote:
+> 
+> > On 8/15/24 20:31, Masami Hiramatsu (Google) wrote:
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Add a testcase for poll() on hist file. This introduces a helper binary
+> > > to the ftracetest, because there is no good way to reliably execute
+> > > poll() on hist file.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > ---
+> > >   Changes in v4:
+> > >    - Use getopt() in poll.c (command options are changed)
+> > >    - Update test code according to the new command options.
+> > >   Changes in v2:
+> > >    - Update poll command to support both of POLLIN and POLLPRI, and timeout.
+> > >    - Identify unsupported stable kernel if poll-in returns soon.
+> > >    - Test both of POLLIN and POLLPRI.
+> > > ---
+> > >   tools/testing/selftests/ftrace/Makefile            |    2 +
+> > >   tools/testing/selftests/ftrace/poll.c              |   74 ++++++++++++++++++++
+> > >   .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 ++++++++++++++++++++
+> > >   3 files changed, 150 insertions(+)
+> > >   create mode 100644 tools/testing/selftests/ftrace/poll.c
+> > >   create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> > > 
+> > > diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+> > > index a1e955d2de4c..49d96bb16355 100644
+> > > --- a/tools/testing/selftests/ftrace/Makefile
+> > > +++ b/tools/testing/selftests/ftrace/Makefile
+> > > @@ -6,4 +6,6 @@ TEST_PROGS := ftracetest-ktap
+> > >   TEST_FILES := test.d settings
+> > >   EXTRA_CLEAN := $(OUTPUT)/logs/*
+> > >   
+> > > +TEST_GEN_PROGS = poll
+> > > +
+> > >   include ../lib.mk
+> > > diff --git a/tools/testing/selftests/ftrace/poll.c b/tools/testing/selftests/ftrace/poll.c
+> > > new file mode 100644
+> > > index 000000000000..584f159654b1
+> > > --- /dev/null
+> > > +++ b/tools/testing/selftests/ftrace/poll.c
+> > > @@ -0,0 +1,74 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Simple poll on a file.
+> > > + *
+> > > + * Copyright (c) 2024 Google LLC.
+> > > + */
+> > > +
+> > > +#include <errno.h>
+> > > +#include <fcntl.h>
+> > > +#include <poll.h>
+> > > +#include <stdio.h>
+> > > +#include <stdlib.h>
+> > > +#include <string.h>
+> > > +#include <unistd.h>
+> > > +
+> > > +#define BUFSIZE 4096
+> > > +
+> > > +/*
+> > > + * Usage:
+> > > + *  poll [-I|-P] [-t timeout] FILE
+> > > + */
+> > > +int main(int argc, char *argv[])
+> > > +{
+> > > +	struct pollfd pfd = {.events = POLLIN};
+> > > +	char buf[BUFSIZE];
+> > > +	int timeout = -1;
+> > > +	int ret, opt;
+> > > +
+> > > +	while ((opt = getopt(argc, argv, "IPt:")) != -1) {
+> > > +		switch (opt) {
+> > > +		case 'I':
+> > > +			pfd.events = POLLIN;
+> > > +			break;
+> > > +		case 'P':
+> > > +			pfd.events = POLLPRI;
+> > > +			break;
+> > > +		case 't':
+> > > +			timeout = atoi(optarg);
+> > > +			break;
+> > > +		default:
+> > > +			fprintf(stderr, "Usage: %s [-I|-P] [-t timeout] FILE\n",
+> > > +				argv[0]);
+> > > +			return -1;
+> > > +		}
+> > > +	}
+> > > +	if (optind >= argc) {
+> > > +		fprintf(stderr, "Error: Polling file is not specified\n");
+> > > +		return -1;
+> > > +	}
+> > > +
+> > > +	pfd.fd = open(argv[optind], O_RDONLY);
+> > > +	if (pfd.fd < 0) {
+> > > +		fprintf(stderr, "failed to open %s", argv[optind]);
+> > > +		perror("open");
+> > > +		return -1;
+> > > +	}
+> > > +
+> > > +	/* Reset poll by read if POLLIN is specified. */
+> > > +	if (pfd.events & POLLIN)
+> > > +		do {} while (read(pfd.fd, buf, BUFSIZE) == BUFSIZE);
+> > > +
+> > > +	ret = poll(&pfd, 1, timeout);
+> > > +	if (ret < 0 && errno != EINTR) {
+> > > +		perror("poll");
+> > > +		return -1;
+> > > +	}
+> > > +	close(pfd.fd);
+> > > +
+> > > +	/* If timeout happned, return code is 0 */
+> > 
+> > Looks like you missed this one :) Otherwise looks good to me.
+> > 
+> Oops, indeed.
 
-Here is the performance results measured by
- tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
+Hm, this comment is correct but misleadable. I meant that the poll()
+returns 0 if timeout happens.
 
-Without this:
-kprobe-multi   :    5.700 ± 0.065M/s
-kretprobe-multi:    4.239 ± 0.006M/s
+-----
+RETURN VALUE
+       On success, poll() returns a nonnegative value which is the  number  of  elements  in  the
+       pollfds  whose  revents fields have been set to a nonzero value (indicating an event or an
+       error).  A return value of zero indicates that the system call timed out before  any  file
+       descriptors became read.
+-----
 
-With skip-timestamp:
-kprobe-multi   :    6.265 ± 0.033M/s	+9.91%
-kretprobe-multi:    4.758 ± 0.009M/s	+12.24%
+But the comment should tell what this command does.
 
-Suggested-by: Jiri Olsa <olsajiri@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v11:
-  - Simplify it to be symmetric on push and pop. (Thus the timestamp
-    getting place is a bit shifted.)
- Changes in v10:
-  - Add likely() to skipping timestamp.
- Changes in v9:
-  - Newly added.
----
- include/linux/ftrace.h |    2 ++
- kernel/trace/fgraph.c  |   36 +++++++++++++++++++++++++++++++++---
- kernel/trace/fprobe.c  |    1 +
- 3 files changed, 36 insertions(+), 3 deletions(-)
+Thanks,
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 63fb91088a23..bab6fabb3fa1 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1160,6 +1160,8 @@ struct fgraph_ops {
- 	void				*private;
- 	trace_func_graph_ent_t		saved_func;
- 	int				idx;
-+	/* If skip_timestamp is true, this does not record timestamps. */
-+	bool				skip_timestamp;
- };
- 
- void *fgraph_reserve_data(int idx, int size_bytes);
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 6a3e2db16aa4..c116a92839ae 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -174,6 +174,7 @@ int ftrace_graph_active;
- 
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
- static unsigned long fgraph_array_bitmask;
-+static bool fgraph_skip_timestamp;
- 
- /* LRU index table for fgraph_array */
- static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-@@ -557,7 +558,11 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 		return -EBUSY;
- 	}
- 
--	calltime = trace_clock_local();
-+	/* This is not really 'likely' but for keeping the least path to be faster. */
-+	if (likely(fgraph_skip_timestamp))
-+		calltime = 0LL;
-+	else
-+		calltime = trace_clock_local();
- 
- 	offset = READ_ONCE(current->curr_ret_stack);
- 	ret_stack = RET_STACK(current, offset);
-@@ -728,6 +733,12 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
- 	*ret = ret_stack->ret;
- 	trace->func = ret_stack->func;
- 	trace->calltime = ret_stack->calltime;
-+	/* This is not really 'likely' but for keeping the least path to be faster. */
-+	if (likely(!trace->calltime))
-+		trace->rettime = 0LL;
-+	else
-+		trace->rettime = trace_clock_local();
-+
- 	trace->overrun = atomic_read(&current->trace_overrun);
- 	trace->depth = current->curr_ret_depth;
- 	/*
-@@ -788,7 +799,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 		return (unsigned long)panic;
- 	}
- 
--	trace.rettime = trace_clock_local();
- 	if (fregs)
- 		ftrace_regs_set_instruction_pointer(fregs, ret);
- 
-@@ -1248,6 +1258,24 @@ static void ftrace_graph_disable_direct(bool disable_branch)
- 	fgraph_direct_gops = &fgraph_stub;
- }
- 
-+static void update_fgraph_skip_timestamp(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
-+		struct fgraph_ops *gops = fgraph_array[i];
-+
-+		if (gops == &fgraph_stub)
-+			continue;
-+
-+		if (!gops->skip_timestamp) {
-+			fgraph_skip_timestamp = false;
-+			return;
-+		}
-+	}
-+	fgraph_skip_timestamp = true;
-+}
-+
- int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
-@@ -1271,6 +1299,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 	gops->idx = i;
- 
- 	ftrace_graph_active++;
-+	update_fgraph_skip_timestamp();
- 
- 	if (ftrace_graph_active == 2)
- 		ftrace_graph_disable_direct(true);
-@@ -1303,6 +1332,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		ftrace_graph_active--;
- 		gops->saved_func = NULL;
- 		fgraph_lru_release_index(i);
-+		update_fgraph_skip_timestamp();
- 	}
- out:
- 	mutex_unlock(&ftrace_lock);
-@@ -1326,8 +1356,8 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		goto out;
- 
- 	fgraph_array[gops->idx] = &fgraph_stub;
--
- 	ftrace_graph_active--;
-+	update_fgraph_skip_timestamp();
- 
- 	if (!ftrace_graph_active)
- 		command = FTRACE_STOP_FUNC_RET;
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 5a0b4ef52fa7..b108d26d7ee5 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -345,6 +345,7 @@ NOKPROBE_SYMBOL(fprobe_return);
- static struct fgraph_ops fprobe_graph_ops = {
- 	.entryfunc	= fprobe_entry,
- 	.retfunc	= fprobe_return,
-+	.skip_timestamp = true,
- };
- static int fprobe_graph_active;
- 
+> 
+> > With this fixed
+> > 
+> > Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
+> Thanks!
+> 
+> > 
+> > thanks,
+> > -- Shuah
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
