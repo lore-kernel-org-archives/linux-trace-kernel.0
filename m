@@ -1,214 +1,134 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3011158216;
-	Mon, 19 Aug 2024 20:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB941598EE
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 20:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724099712; cv=none; b=fCRgGUl3E3gw3kGZtLurM4o2KAE/vD1n/R97KVcwO8Jl3cA4yfbnzIRDhnmeD6LF81XUNtmEtBfYAvtxtI4rpiAXzjo49QaRnRT+zQo4UJYDvKayZAIez5fZPmOlVy46pSgV37Jx67wq/omFVANmZAHP2qgHhz/sd4Ca2S12EtU=
+	t=1724099930; cv=none; b=R/CJmNFcfVWbKVNZbV+xGGJQG9sq1KAv6C+ZgqcsrTgFfgZJULU1ZwaMCxko+zrzT50eVzRm21aC9p8NvvL8TFV8oU6juqaI+fGwTKfnMUgyqR6xG1LxEHzX1ET2DlDIY3/wSgzObrAh2mPb5hPPYa7YzvOZe4m09nXeI2uf72k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724099712; c=relaxed/simple;
-	bh=Pd4LwYZUpfjrvY2IOV4MUo7zqr83SAkZktPyGVkDZmU=;
+	s=arc-20240116; t=1724099930; c=relaxed/simple;
+	bh=5hCWg1nbsBli0YGHvlLtJZAoYo565YPePTccPZa0G94=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BgqyaTq1z1+BH3FH5pCoq4XTsG+wYCRzhvXPX3GVdKjYNr2U6MbN2mv6ZYtjdIIStfekR+GKoOtAl9EeZEzw9eG4VyWbG9WTDvtKTe4KUmyFbAChrpGmMthjWzUFHqFmP7zzW2Zn9MYcdKH0NuIK9LLIu5bn7ioykOapAs2jmC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jlO2eKbC; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=LveEVsCzgGQ5v7U+h1PB1QzVY6f6hhu8Ytsy7c4302AoWXJxPpP90oO8giZHv0a5TfmTrjwzGXmPAspK7X6CTwS5wHfTtzBLwehibnzn0yVqZ/F9NDkxdlJViuD/dvhA+0gqXoXsDu68GGun5Tht4BLIzNuZ7u4Gp7BbYsgV72M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dQt9NvXr; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlO2eKbC"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d46f2816c0so354279a91.2;
-        Mon, 19 Aug 2024 13:35:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dQt9NvXr"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7a1e2ac1ee5so347031185a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 13:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724099710; x=1724704510; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1724099926; x=1724704726; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nH6MJrjwaF1DExwqq1BAG9TBOgQJbeO0AdhOsYCARpQ=;
-        b=jlO2eKbCXof7f4BKEavBZX+YnswIPcRFFcSGWps9FMhr2EKqdJTIDvBmwdTigowT7n
-         sb3RKC4S+NS2gusjrICQdwiM6xFz5V2dZhr8ICxbmIOV1w6qUWU5tdcd8PNHmSaMcTc6
-         NXMqlGTJv9aliysJ2Fe49UWhwkfCMOGSGI+/FFNPj2aj4vbS04xydBJZIgjOjoIMGiqD
-         F1cPy/qN4Tz9rmbiNyFnkkg40Xdr+fT2GA6s7+ZZFj3matM/VPEZyDOs14UPfk21n2d0
-         nAgWqAMi9CJW6tJTL9Jiv4A6w3YOYplCfaOJ/Izx6N2d79co4che4cpozxK6M3JKstFB
-         /lPw==
+        bh=WfUQmRn/EFhMiTzRoHA7ZDzm1OmxjBuZj9W18S8T8rE=;
+        b=dQt9NvXrN1VKYzQEcAZvli+TpnUjgqP6GUFJu04Q8N5MsPSHDtblHkM88vHPNmSbf4
+         LYLqj/n5ogic1iqNa4Ll9lehU3Gk8/gvI+DrOgO90HkhmVTYUWp/HUadFOdh+q4PHRwS
+         uYznAFDmM0qQ16DcdaKNuIrvq5Eqp2ZfyEex5VzrUeVbQNMg4TGvFaZakwXH1qUBTDLq
+         dZv0/TDlNmsYrqccyMM25RCA4VdQz5ou3WazXwTrJ7pLK39nxxmCDJXLUwLDCYidmqHI
+         U19a6NDUC14Ry56OQV3MwhjC8XFkXSfP6MSqU69zJ9C0q6zOzjsvFoWzeWYLZ6ATRnPR
+         ekDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724099710; x=1724704510;
+        d=1e100.net; s=20230601; t=1724099926; x=1724704726;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nH6MJrjwaF1DExwqq1BAG9TBOgQJbeO0AdhOsYCARpQ=;
-        b=iQfZN2EWyjxlnxNpPAYiJ8Aa4KXfkqUdnG3YkGTClvpt7Hb6s/O9e6A3yafm6lDEyt
-         XTOgUQjIsvMJXJrlH2hY0pHmLYFoT3HhByFCbYrQE+oPjqwYjXB1Q3lFc7Dcb8Lq4H+T
-         wa1URh6tA2v4J2vfwDjOvwig7kA3hhVXGAPezKR9nnEfcOzOZz9M3bVkaphE4NxvQRyN
-         hMLEcqkmEz3D4Kv3ZZfO2CzHmm5IYJu+cWGOFLR5wMssCIB02JqBZ+Vhs1qv0CYMzyrs
-         UtHesnWa9H9dpqeS5oYPRsyzqNgTtiGO5KpIkQhOuLjv1byV+uyOU1bO0iuDOIb3KQbK
-         YRCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ9VAEPGWWDAiCXMVxHuMdyLReUec9jyBCPOZDTVQL4nVQ88u27hSnAfrHprP0QAwdRNM+XzsBGkpHkQJ/BmwzjZT/6gfJpvVFyzKXR/SbzqyUhPVBasVdOjpetE3560KqpYk5RT9TuG5JIHv9aIg65BOSSf/OnUc2uVgFjyQkWqnIBDSu
-X-Gm-Message-State: AOJu0YwX5j0lV01bgevkzMWK5KeMob/tJDfu5f+6LY36GrRQYNlDF098
-	XIDIwnVv1M+739lOSbgH4dwuMHabRQjDWnMiV2UKsrHzpsOoXsfCKt3atixY6O2MjrFBLn3uKN5
-	EYaeLwsiHNc7xlDH2LqPkYDbt2Xk=
-X-Google-Smtp-Source: AGHT+IGUFaAMZSC62zrt9/XK41cBx3H4cq8e6deI++UilY88ciWZUojNh5L48XclPwKgVRRXTxRm7ziIqLii28R7Rmk=
-X-Received: by 2002:a17:90a:bc81:b0:2c8:3f5:37d2 with SMTP id
- 98e67ed59e1d1-2d3dfc75e41mr13272600a91.20.1724099710147; Mon, 19 Aug 2024
- 13:35:10 -0700 (PDT)
+        bh=WfUQmRn/EFhMiTzRoHA7ZDzm1OmxjBuZj9W18S8T8rE=;
+        b=Ia6DLnjIrV8M9K0UQGsWm7/YCAzxCCTwDje+jwcBeHeLdS8jrRdKriAZnMOBgYLjJs
+         A/I22fFihuExF/ZNV83IvuF8PbhlJgN4j3grP0vyA4dIFg3OmoFJpcp0AoSjGpsrryDz
+         7xxsEVv98dN5N6C5X5ewOruN1yH/mAUzoyDUgymGvolbGffb1Nj2eHcp0qGrQboZUbJQ
+         Rar8/KWvuR5aT/RQlxOqGbHu1ZrAWAAFYBEOS6ucVEt6RLhgJ5etb7JEur/MMgJxtnab
+         1sfoT0jxUAfsany2NqfsDHh4yOu+ar+Gh9sw8BT9Mg5xUifIa38894OwFMt+OxxQFtfN
+         oPig==
+X-Forwarded-Encrypted: i=1; AJvYcCVXBossY84q91psD2+sOcPswUtp4JiWAOhSKvJ3rBX6LZ0WnSar9J5Y0VW6WPjWOndne4PqfLl0JPkxVFKurZTxNsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzHRpx9gWm0uiRQszKnpW9CH6Yq+sxg6e2uJjAD9NXt31Sdzu7
+	KW5Cf0iha93yTJDr/pjE6zIm29TupB0Q39iKcdyeEekm9Nz3MeVV7yjRBsXKAgGmMpIfdfMCJGD
+	3qvpXckOifm2GrcwIKlEm0uyozDugL7F3plu0
+X-Google-Smtp-Source: AGHT+IH9NK+VEbJYkN3LP0eycR7QieY0LFTeKOUKys5z+kSU7zJQmMHAEMe3u1Xxmij2PKgwfzIhek+Uv3hwzgQnvEA=
+X-Received: by 2002:a05:6214:53c5:b0:6b7:ab98:b8b4 with SMTP id
+ 6a1803df08f44-6bf7ce6839cmr162319456d6.48.1724099926079; Mon, 19 Aug 2024
+ 13:38:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-10-andrii@kernel.org>
- <20240819134107.GB3515@redhat.com>
-In-Reply-To: <20240819134107.GB3515@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 19 Aug 2024 13:34:57 -0700
-Message-ID: <CAEf4BzYFXmCU83mr9YHy2JtF35WmYBvKpyrmBV4QxFuqubk_6A@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 09/13] uprobes: SRCU-protect uretprobe lifetime
- (with timeout)
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
-	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
-	akpm@linux-foundation.org, linux-mm@kvack.org
+References: <20240819035448.2473195-1-almasrymina@google.com>
+In-Reply-To: <20240819035448.2473195-1-almasrymina@google.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 19 Aug 2024 16:38:32 -0400
+Message-ID: <CAHS8izMqcLnmo9792FPkkXPQSBWSjFGO+QHhkou=PaDHLwtsRw@mail.gmail.com>
+Subject: Re: [PATCH net-next v20 00/13] Device Memory TCP
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 19, 2024 at 6:41=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
+On Sun, Aug 18, 2024 at 11:54=E2=80=AFPM Mina Almasry <almasrymina@google.c=
+om> wrote:
 >
-> On 08/12, Andrii Nakryiko wrote:
-> >
-> > Avoid taking refcount on uprobe in prepare_uretprobe(), instead take
-> > uretprobe-specific SRCU lock and keep it active as kernel transfers
-> > control back to user space.
-> ...
-> >  include/linux/uprobes.h |  49 ++++++-
-> >  kernel/events/uprobes.c | 294 ++++++++++++++++++++++++++++++++++------
-> >  2 files changed, 301 insertions(+), 42 deletions(-)
+> v20: https://patchwork.kernel.org/project/netdevbpf/list/?series=3D879373=
+&state=3D*
+> =3D=3D=3D=3D
 >
-> Oh. To be honest I don't like this patch.
+> v20 aims to resolve a couple of bug reports against v19, and addresses
+> some review comments around the page_pool_check_memory_provider
+> mechanism.
 >
-> I would like to know what other reviewers think, but to me it adds too ma=
-ny
-> complications that I can't even fully understand...
-
-Which parts? The atomic xchg() and cmpxchg() parts? What exactly do
-you feel like you don't fully understand?
-
->
-> And how much does it help performance-wise?
-
-A lot, as we increase uprobe parallelism. Here's a subset of
-benchmarks for 1-4, 8, 16, 32, 64, and 80 threads firing uretprobe.
-With and without this SRCU change, but including all the other
-changes, including the lockless VMA lookup. It's noticeable already
-with just two competing CPUs/threads, and it just gets much worse from
-there.
-
-Of course in production you shouldn't come close to such rates of
-uprobe/uretprobe firing, so this is definitely a microbenchmark
-emphasizing the sharing between CPUs, but it still adds up. And we do
-have production use cases that would like to fire uprobes at 100K+ per
-second rates.
-
-WITH SRCU for uretprobes
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-uretprobe-nop         ( 1 cpus):    1.968 =C2=B1 0.001M/s  (  1.968M/s/cpu)
-uretprobe-nop         ( 2 cpus):    3.739 =C2=B1 0.003M/s  (  1.869M/s/cpu)
-uretprobe-nop         ( 3 cpus):    5.616 =C2=B1 0.003M/s  (  1.872M/s/cpu)
-uretprobe-nop         ( 4 cpus):    7.286 =C2=B1 0.002M/s  (  1.822M/s/cpu)
-uretprobe-nop         ( 8 cpus):   13.657 =C2=B1 0.007M/s  (  1.707M/s/cpu)
-uretprobe-nop         (32 cpus):   45.305 =C2=B1 0.066M/s  (  1.416M/s/cpu)
-uretprobe-nop         (64 cpus):   42.390 =C2=B1 0.922M/s  (  0.662M/s/cpu)
-uretprobe-nop         (80 cpus):   47.554 =C2=B1 2.411M/s  (  0.594M/s/cpu)
-
-WITHOUT SRCU for uretprobes
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-uretprobe-nop         ( 1 cpus):    2.197 =C2=B1 0.002M/s  (  2.197M/s/cpu)
-uretprobe-nop         ( 2 cpus):    3.325 =C2=B1 0.001M/s  (  1.662M/s/cpu)
-uretprobe-nop         ( 3 cpus):    4.129 =C2=B1 0.002M/s  (  1.376M/s/cpu)
-uretprobe-nop         ( 4 cpus):    6.180 =C2=B1 0.003M/s  (  1.545M/s/cpu)
-uretprobe-nop         ( 8 cpus):    7.323 =C2=B1 0.005M/s  (  0.915M/s/cpu)
-uretprobe-nop         (16 cpus):    6.943 =C2=B1 0.005M/s  (  0.434M/s/cpu)
-uretprobe-nop         (32 cpus):    5.931 =C2=B1 0.014M/s  (  0.185M/s/cpu)
-uretprobe-nop         (64 cpus):    5.145 =C2=B1 0.003M/s  (  0.080M/s/cpu)
-uretprobe-nop         (80 cpus):    4.925 =C2=B1 0.005M/s  (  0.062M/s/cpu)
-
->
-> I'll try to take another look, and I'll try to think about other approach=
-es,
-> not that I have something better in mind...
-
-Ok.
-
->
->
-> But lets forgets this patch for the moment. The next one adds even more
-> complications, and I think it doesn't make sense.
+> Major changes:
+> - Test edge cases such as header split disabled in selftest.
+> - Change `offset =3D 0` back to `offset =3D offset - start` to resolve is=
+sue
+>   found in RX path by Taehee (thanks!)
+> - Address a few comments around page_pool_check_memory_provider() from
+>   Pavel & Jakub.
+> - Removed some unnecessary includes across various patches in the
+>   series.
+> - Removed unnecessary EXPORT_SYMBOL(page_pool_mem_providers) (Jakub).
+> - Fix regression caused by incorrect dev_get_max_mp_channel check, along
+>   with rename (Jakub).
 >
 
-"Even more complications" is a bit of an overstatement. It just
-applies everything we do for uretprobes in this patch to a very
-straightforward single-stepped case.
+Looks like in this iteration I resolved the previous test failure, but
+introduced a build regression with certain configs:
 
-> As I have already mentioned in the previous discussions, we can simply ki=
-ll
-> utask->active_uprobe. And utask->auprobe.
+ld: vmlinux.o: in function `netdev_rx_queue_restart':
+(.text+0x6a4133): undefined reference to `page_pool_check_memory_provider'
+make[3]: *** [../scripts/Makefile.vmlinux:34: vmlinux] Error 1
+make[2]: *** [/home/kunit/testing/Makefile:1156: vmlinux] Error 2
+make[1]: *** [/home/kunit/testing/Makefile:224: __sub-make] Error 2
+make: *** [Makefile:224: __sub-make] Error 2
 
-I don't have anything against that, in principle, but let's benchmark
-and test that thoroughly. I'm a bit uneasy about the possibility that
-some arch-specific code will do container_of() on this arch_uprobe in
-order to get to uprobe, we'd need to audit all the code to make sure
-that can't happen. Also it's a bit unfortunate that we have to assume
-that struct arch_uprobe is small on all architectures, and there is no
-code that assumes it can't be moved, etc, etc. (I also don't get why
-you need memcpy
-
->
-> So can't we start with the patch below? On top of your 08/13. It doesn't =
-kill
-> utask->auprobe yet, this needs a bit more trivial changes.
->
-> What do you think?
-
-I think that single-stepped case isn't the main use case (typically
-uprobe/uretprobe will be installed on nop or push %rbp, both
-emulated). uretprobes, though, are the main use case (along with
-optimized entry uprobes). So what we do about single-stepped is a bit
-secondary (for me, looking at production use cases).
-
-But we do need to do something with uretprobes first and foremost.
-
->
-> Oleg.
->
-> -------------------------------------------------------------------------=
-------
-> From d7cb674eb6f7bb891408b2b6a5fb872a6c2f0f6c Mon Sep 17 00:00:00 2001
-> From: Oleg Nesterov <oleg@redhat.com>
-> Date: Mon, 19 Aug 2024 15:34:55 +0200
-> Subject: [RFC PATCH] uprobe: kill uprobe_task->active_uprobe
->
-> Untested, not for inclusion yet, and I need to split it into 2 changes.
-> It does 2 simple things:
->
->         1. active_uprobe !=3D NULL is possible if and only if utask->stat=
-e !=3D 0,
->            so it turns the active_uprobe checks into the utask->state che=
-cks.
->
->         2. handle_singlestep() doesn't really need ->active_uprobe, it on=
-ly
->            needs uprobe->arch which is "const" after prepare_uprobe().
->
->            So this patch adds the new "arch_uprobe uarch" member into uta=
-sk
->            and changes pre_ssout() to do memcpy(&utask->uarch, &uprobe->a=
-rch).
-> ---
->  include/linux/uprobes.h |  2 +-
->  kernel/events/uprobes.c | 37 +++++++++++--------------------------
->  2 files changed, 12 insertions(+), 27 deletions(-)
-
-[...]
+Looks like I'm not build testing with enough config variations (in
+this case CONFIG_NET=3Dy but CONFIG_PAGE_POOL=3Dn). I've fixed the issue
+locally and added a test to my presubmit checks with this config and a
+couple of risky others. Sorry about that.
