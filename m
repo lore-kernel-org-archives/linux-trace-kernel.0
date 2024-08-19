@@ -1,77 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A293C482;
-	Mon, 19 Aug 2024 22:59:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7A315A865;
+	Mon, 19 Aug 2024 23:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724108391; cv=none; b=h370V11pymE6S1w+t55Gmnbq2uyp21yR4jmtjHL7+9zlismpkVKqvWIm/zhsl3bhS9chWkOcIcrO6N9EbFbAbCKQpZne8i1VEzq2ydt1CBm3b0JLilDYcgfkZBF1pAug/3NCzwQ/XwMZEGZM4Lv7Q0CPI6RKrsyw/LcF0Vxvl74=
+	t=1724110476; cv=none; b=GTuFQ5EIxeeKguj+R8VHIXi12Y4WcCQcMK7dfPb/dxSlpC3MLK5zHOEKavIo54zSuRylbIMQkFwHbvCq0NDdr3fKnyA+orXaV04xgAOtx8ndC+lOtlfGbPe2WY2X7LdMnIYRmhcIgrQ2e5zzrvwnya4lxtMhY7brXJoNogg6W+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724108391; c=relaxed/simple;
-	bh=goE9FASlTR08YPoTrpnjiOKgWeMuOdfR18sy63+kd4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QQmdJ2LQJnZ1qI+E5Xrjr7aylD7337NgU7amXWBVRi1b+in6GkIA6E7QuR+2nHA962GQmnxZBIo4X8s51PAI/3+BheQqaMUWBZizbTEIBCD38WYAfbP4DRJQNZONu0wCXKA3ebSwXFKZZZDnbdU37lo35x2ZhSuVNzHoo5+V4mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4C68C4AF12;
-	Mon, 19 Aug 2024 22:59:48 +0000 (UTC)
-Date: Mon, 19 Aug 2024 19:00:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Peter
- Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
- Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org, Joel Fernandes
- <joel@joelfernandes.org>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Greg KH
- <gregkh@linuxfoundation.org>, Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCH v5 3/8] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and
- activate_guard
-Message-ID: <20240819190014.31ab74d8@gandalf.local.home>
-In-Reply-To: <20240627152340.82413-4-mathieu.desnoyers@efficios.com>
-References: <20240627152340.82413-1-mathieu.desnoyers@efficios.com>
-	<20240627152340.82413-4-mathieu.desnoyers@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1724110476; c=relaxed/simple;
+	bh=EskfZYxtcQRI39nS+fX7B611q9gHlN6kBxvW78AdaLg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=EYc+RAIn5bnpK8bOLiyZYtykjy3UIuB+YQ0hVWM20I6A9JDVLdMw/B8uoqM5SNPEEucSscs1KgxV5h+NWuKt1JNO3f22+x/l3PdxBMl0ERHzAwZduLIJkAot8r6Zb9b9I6QklqV7ZKb66A1kkxoHJJdGq8X6TRjW6Km/AIknQCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZ/TkekZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZ/TkekZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD45C4AF0E;
+	Mon, 19 Aug 2024 23:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724110476;
+	bh=EskfZYxtcQRI39nS+fX7B611q9gHlN6kBxvW78AdaLg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NZ/TkekZ7xLBFqExd33rckwX0fOQMBv1NDzHnldXfBNeZc2Gn1mXUH/RnJnFJblrg
+	 XxLxd6K9AMb/tBzaXuDRqqErkzQQtyFA5enThJMnRClf2f6X9FBIfDMsnzl4a71X6a
+	 FlxN4kXIq+/qqA4kblxsLeMTVOYtbCWbAv95IcZqHzeHobhLwdJYWNycun87BlSDdI
+	 uZF3hgZ72VLus6v1ISYCpBS26KLQKgiMhji5sopQTmOHq4F9HjYpkSvBo+7ufbRPVA
+	 obXOXCvxTfSiwQ+20bTJ7roeVNM/M/9UDidtd6iCkPZvQsYKuKqIaMUcug8Y7oFezE
+	 zLzNHE3UWaPGQ==
+Date: Tue, 20 Aug 2024 08:34:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [BUG] tracing: dynamic ftrace selftest detected failures
+Message-Id: <20240820083431.0dd9ff59b894d2174b1cd512@kernel.org>
+In-Reply-To: <20240819120244.5657eb2f@gandalf.local.home>
+References: <20240819171152.12f05e0ae5c9472004d1b00a@kernel.org>
+	<20240819112902.11451fe8@gandalf.local.home>
+	<20240820005649.dd019cfa70a8955d91cf85a0@kernel.org>
+	<20240819120244.5657eb2f@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Jun 2024 11:23:35 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Mon, 19 Aug 2024 12:02:44 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> To cover scenarios where the scope of the guard differs from the scope
-> of its activation, introduce DEFINE_INACTIVE_GUARD() and activate_guard().
+> On Tue, 20 Aug 2024 00:56:49 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > 
+> > > 
+> > > We may need to add "noinline" or something to make sure those functions
+> > > don't get inlined for LTO.  
+> > 
+> > Yeah, we need such option at least for function call test.
 > 
-> Here is an example use for a conditionally activated guard variable:
-> 
-> void func(bool a)
-> {
-> 	DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
-> 
-> 	[...]
-> 	if (a) {
-> 		might_sleep();
-> 		activate_guard(preempt_notrace, myguard)();
-> 	}
-> 	[ protected code ]
-> }
-> 
+> Could you add the noinline, and if it fixes the issue send a patch?
 
-Hi Mathieu,
-
-The three cleanup patches fail to apply (I believe one has already been
-fixed by Ingo too). Could you have the clean up patches be a separate
-series that is likely to get in, especially since it's more of a moving
-target.
+OK, BTW, I got warnings from kmemleak when I disabled LTO in the selftest.
+Let me fix it too.
 
 Thanks,
 
--- Steve
+> 
+> Thanks,
+> 
+> -- Steve
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
