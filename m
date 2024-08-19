@@ -1,93 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1383C158DA9;
-	Mon, 19 Aug 2024 22:45:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C56C159565;
+	Mon, 19 Aug 2024 22:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724107552; cv=none; b=lyGdXIjrlOSK4XqAHpXuUDC1fSJmAjaohJxrKkZp8QAnN3wLK9xhl/fHjpyCuvkYgSBq0pWiS8G+A26iHOfGJvygaBh7OW16mwHaBpnpTQhkvb3yYxmVARQzdF2MCdJF0gSqMAouONNKxlGBFcLLEt04Hax4TvWaGt1wNbX0t7w=
+	t=1724107833; cv=none; b=WiyuhkLZDzGlx87e1UzgKtAmCAsWGJeYJthQ2/0P/JUw04O33Lr+lZr9sTbiWdcpb/D9NJHwSQgXhWBxvTacHHqL+chBMBFmKXH4MYiwc0amEaEmA5LpesFIUb2TEwdpFDfSr5h/FTdds4aYxj2VzQdSsrsSmyubeMolIgSEOYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724107552; c=relaxed/simple;
-	bh=J5q5uBzN4noHKYqi53b0GrvoaGSBGa+HJHli2/GUX5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tyNzV+5yF2F9hRTm5bWRCreLgBl+/4RXSBNwK6RlBqZRtjkRliCi9a/UiJYDIXwNFSk0ee5v5EY2x+niahePhlPOgFW3oLO49C+YOpzjAI91xq7swM4aFJfKPUl1P2AFMys8nM0wFujT6et/1+OIonbqSsqPhBMFFaYyKQrgF48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SROf+HJO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724107833; c=relaxed/simple;
+	bh=9q6ObvN1GVz8kWo7AMGxLBtDDqun6t1WntSnsOHdJzM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=uEZQy77Jr/0i9v7lCRe1b3pRnRtTT+W3+Z8oR0IZaqNXHbG8+qQr6HMPsugGkFFeuVb+1awQCTw2Bmm0wq45zlxOnxvIFngxYezahoFxDQ2+nQPuB9aYouN/XEhzLFMh7p5oZlvZUgwdzg8mo9KkseZ5DsOHx5ajKd90kyHDMTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKGR5r9o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SROf+HJO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C33C32782;
-	Mon, 19 Aug 2024 22:45:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKGR5r9o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6764C32782;
+	Mon, 19 Aug 2024 22:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724107551;
-	bh=J5q5uBzN4noHKYqi53b0GrvoaGSBGa+HJHli2/GUX5Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SROf+HJOW26xj6Eb+qvALMO23ofHkbMQrVuGD3hxiBBOOf8QwTZfzJfrwfxf+r6E9
-	 wvoW3HyjL7Vl7oKFURngKHRPu97VZpVepVHUruLzXrsqmXaGWayRKkzHhVvMlP0HJz
-	 gByRQYGWCnTlYf1PNzBfYOzjxHh9SYtiVHR4/JD5r/zCfkpyPjN3YRM4W56FElDu7b
-	 1Q1t/oB2/EY13LwPzw2uQWwAQzaAymTW20GIvRjXkYHIGrCkPVEapoOmbk1OTEL8OA
-	 t22Zqjorjg2+Sy9rlyf8eXrW5NLJY6VtwY1WrPs0+cQYIwBjnQNSt2fHyeokmG7VIr
-	 7nav8hvllxaCA==
-Date: Mon, 19 Aug 2024 15:45:49 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald
- Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
- Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
- <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Sumit
- Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, Pavel Begunkov <asml.silence@gmail.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v20 00/13] Device Memory TCP
-Message-ID: <20240819154549.3df4589b@kernel.org>
-In-Reply-To: <CAHS8izMqcLnmo9792FPkkXPQSBWSjFGO+QHhkou=PaDHLwtsRw@mail.gmail.com>
-References: <20240819035448.2473195-1-almasrymina@google.com>
-	<CAHS8izMqcLnmo9792FPkkXPQSBWSjFGO+QHhkou=PaDHLwtsRw@mail.gmail.com>
+	s=k20201202; t=1724107832;
+	bh=9q6ObvN1GVz8kWo7AMGxLBtDDqun6t1WntSnsOHdJzM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LKGR5r9oy+GuUjBMBotYr/o25yO4ecTNEtKrEXY7Mh/XhC1BAYp/wmlXIykGpIEBn
+	 KaNPwqjVaJPt3qnKJaCV2ORJkqHRbC/LGO/c5b6wRWbi05rznd3S22ymQikbk5ALTe
+	 fOoHaQAMerPlxNdY2YJz1lCa5dfr2vynkAd//r0uTBvj/8+cSlayx0im58faPIRjeF
+	 jZuE+qBoUF30cWWeno/rKps+J2Ostp490RVijvPmWe/GjQ+Ls6WvNib6m8AN40ZHmd
+	 P+yKNdhbNOCKvfpbgOOIClfjDkn4xYTWL3hMSulbKNa5Iie+DaP8tWKUbRCPoX2Q+V
+	 qbmTZr/if+GeQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7129B3823271;
+	Mon, 19 Aug 2024 22:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v6 0/2] bpf: enable some functions in cgroup programs
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172410783198.676416.16139699146556980950.git-patchwork-notify@kernel.org>
+Date: Mon, 19 Aug 2024 22:50:31 +0000
+References: <20240819162805.78235-1-technoboy85@gmail.com>
+In-Reply-To: <20240819162805.78235-1-technoboy85@gmail.com>
+To: Matteo Croce <technoboy85@gmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ teknoraver@meta.com
 
-On Mon, 19 Aug 2024 16:38:32 -0400 Mina Almasry wrote:
-> Looks like in this iteration I resolved the previous test failure, but
-> introduced a build regression with certain configs:
-> 
-> ld: vmlinux.o: in function `netdev_rx_queue_restart':
-> (.text+0x6a4133): undefined reference to `page_pool_check_memory_provider'
-> make[3]: *** [../scripts/Makefile.vmlinux:34: vmlinux] Error 1
-> make[2]: *** [/home/kunit/testing/Makefile:1156: vmlinux] Error 2
-> make[1]: *** [/home/kunit/testing/Makefile:224: __sub-make] Error 2
-> make: *** [Makefile:224: __sub-make] Error 2
-> 
-> Looks like I'm not build testing with enough config variations (in
-> this case CONFIG_NET=y but CONFIG_PAGE_POOL=n). I've fixed the issue
-> locally and added a test to my presubmit checks with this config and a
-> couple of risky others. Sorry about that.
+Hello:
 
-Happens! Please share v21 later today I'll skip reviewing this one.
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
+
+On Mon, 19 Aug 2024 18:28:03 +0200 you wrote:
+> From: Matteo Croce <teknoraver@meta.com>
+> 
+> Enable some BPF kfuncs and the helper bpf_current_task_under_cgroup()
+> for program types BPF_CGROUP_*.
+> These will be used by systemd-networkd:
+> https://github.com/systemd/systemd/pull/32212
+> 
+> [...]
+
+Here is the summary with links:
+  - [bpf-next,v6,1/2] bpf: enable generic kfuncs for BPF_CGROUP_* programs
+    https://git.kernel.org/bpf/bpf-next/c/67666479edf1
+  - [bpf-next,v6,2/2] bpf: allow bpf_current_task_under_cgroup() with BPF_CGROUP_*
+    https://git.kernel.org/bpf/bpf-next/c/7f6287417baf
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
