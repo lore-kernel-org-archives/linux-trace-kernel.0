@@ -1,265 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8A8154C19
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 13:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6158E381C2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 15:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724074889; cv=none; b=gri0sGxF7u6C6lX+XASV/krbwEdcejfwbyN1BdhRGLhI0q/RhiZKZO+Iwg++NpYz1AfuOVZ6bsvx1Fp48FelTSrV/hDt65OpBrKcAHxBKBzS+Up5wSMuSosvrGEyriDqKqvtvUvYYSdWEZtiQhNz7jSvChUGfXZIfue6oo+eNe8=
+	t=1724080958; cv=none; b=f6Oy4E+eDGPe+w9sJS2R6qaAzPfv3TF7awR6uS6C2z7bNPiLL9hcOIM1SOZZ84J54OfZh9OjiqJeybilx2jfPZKQzGMAN1M5tIOx2Bggg1nCJAFrpV1mwcSpxcqtdpZGwCodPyfNvXyuaGgQBf2W/60LGKnCblpANkGdAFjX9hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724074889; c=relaxed/simple;
-	bh=eB5Y74Zx/sSE5nnvYuaBg++kv5XFfqNRDtJ49BBh1rs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s4NSKG0Sr3u8LSe0RI5u6xmjovTjd35uXCqpRwyQXu0xNtGubvAVa2P8qEaFX3ivKQi0xAxx0wXid5Rpw1eNxrPIe3Ns52AE33g9I/c4X5yOcAZP7vXyg5TVwKpyqABdmCLwq5CVcEBOlZ4UOdkssG+jorPQQHUPq7WYX47aVaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ABfNMhEV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABfNMhEV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724074887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PnscDpV0loAdA10GHqqV4Sk/NPtRpYZGLZNubtluAas=;
-	b=ABfNMhEVAq1lP3r00Y+WdZrMT4GOixaGIDMEEvj/AdTpffEvKrD4PqJ+uRPivpXXEin/aj
-	MAJhhkENZtWZsXJtPUXDrhvlHDnmUU6p8ajxBlxp7RcfO76PdXJTrDa1z5KKKnnlDb9b+v
-	DsOXn7YhavV/Qhu/Tag8hD8t/dAzLiM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-om71W1M8Mt-rOYGSwdksHw-1; Mon,
- 19 Aug 2024 09:41:22 -0400
-X-MC-Unique: om71W1M8Mt-rOYGSwdksHw-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 33EDE18EB228;
-	Mon, 19 Aug 2024 13:41:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.68])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5CC2219560A3;
-	Mon, 19 Aug 2024 13:41:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 19 Aug 2024 15:41:14 +0200 (CEST)
-Date: Mon, 19 Aug 2024 15:41:08 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH RFC v3 09/13] uprobes: SRCU-protect uretprobe lifetime
- (with timeout)
-Message-ID: <20240819134107.GB3515@redhat.com>
-References: <20240813042917.506057-1-andrii@kernel.org>
- <20240813042917.506057-10-andrii@kernel.org>
+	s=arc-20240116; t=1724080958; c=relaxed/simple;
+	bh=UDUMuejQybUaJH1a5uYtfSKi7sLSZysE1PEhP7+fMDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c0zd7ixI5otIUQ8Qgo0IkK5cQNtRmRFq6TBmqih6jCAEnoGiRVEOK6gS5fM32JaGF6zLEhIHMNKjNzxtTN8DOU0UzHfN8cL0xb8Iqs6iDJ15iDUIa4KFhZtbqPC/H8gW5oQnnGERfsF8swrN0nmE04bSMTvi6Siv06JivGg4nX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23373C4AF0F;
+	Mon, 19 Aug 2024 15:22:37 +0000 (UTC)
+Date: Mon, 19 Aug 2024 11:23:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Li Chen <me@linux.beauty>
+Cc: linux-trace-kernel@vger.kernel.org, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] ftrace: Use this_cpu_ptr() instead of
+ per_cpu_ptr(smp_processor_id())
+Message-ID: <20240819112301.7c178eff@gandalf.local.home>
+In-Reply-To: <87y14t6ofi.wl-me@linux.beauty>
+References: <87y14t6ofi.wl-me@linux.beauty>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240813042917.506057-10-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 08/12, Andrii Nakryiko wrote:
->
-> Avoid taking refcount on uprobe in prepare_uretprobe(), instead take
-> uretprobe-specific SRCU lock and keep it active as kernel transfers
-> control back to user space.
-...
->  include/linux/uprobes.h |  49 ++++++-
->  kernel/events/uprobes.c | 294 ++++++++++++++++++++++++++++++++++------
->  2 files changed, 301 insertions(+), 42 deletions(-)
+On Mon, 19 Aug 2024 14:01:53 +0800
+Li Chen <me@linux.beauty> wrote:
 
-Oh. To be honest I don't like this patch.
+> From: Li Chen <chenl311@chinatelecom.cn>
+> 
+> Use this_cpu_ptr() instead of open coding the equivalent in various
+> ftrace functions.
 
-I would like to know what other reviewers think, but to me it adds too many
-complications that I can't even fully understand...
+Thanks.
 
-And how much does it help performance-wise?
+This code was written (2009) before this_cpu_ptr() was introduced (2010).
 
-I'll try to take another look, and I'll try to think about other approaches,
-not that I have something better in mind...
+-- Steve
 
-
-But lets forgets this patch for the moment. The next one adds even more
-complications, and I think it doesn't make sense.
-
-As I have already mentioned in the previous discussions, we can simply kill
-utask->active_uprobe. And utask->auprobe.
-
-So can't we start with the patch below? On top of your 08/13. It doesn't kill
-utask->auprobe yet, this needs a bit more trivial changes.
-
-What do you think?
-
-Oleg.
-
--------------------------------------------------------------------------------
-From d7cb674eb6f7bb891408b2b6a5fb872a6c2f0f6c Mon Sep 17 00:00:00 2001
-From: Oleg Nesterov <oleg@redhat.com>
-Date: Mon, 19 Aug 2024 15:34:55 +0200
-Subject: [RFC PATCH] uprobe: kill uprobe_task->active_uprobe
-
-Untested, not for inclusion yet, and I need to split it into 2 changes.
-It does 2 simple things:
-
-	1. active_uprobe != NULL is possible if and only if utask->state != 0,
-	   so it turns the active_uprobe checks into the utask->state checks.
-
-	2. handle_singlestep() doesn't really need ->active_uprobe, it only
-	   needs uprobe->arch which is "const" after prepare_uprobe().
-
-	   So this patch adds the new "arch_uprobe uarch" member into utask
-	   and changes pre_ssout() to do memcpy(&utask->uarch, &uprobe->arch).
----
- include/linux/uprobes.h |  2 +-
- kernel/events/uprobes.c | 37 +++++++++++--------------------------
- 2 files changed, 12 insertions(+), 27 deletions(-)
-
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 3a3154b74fe0..df6f3dab032c 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -56,6 +56,7 @@ struct uprobe_task {
- 
- 	union {
- 		struct {
-+			struct arch_uprobe	uarch;
- 			struct arch_uprobe_task	autask;
- 			unsigned long		vaddr;
- 		};
-@@ -66,7 +67,6 @@ struct uprobe_task {
- 		};
- 	};
- 
--	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
- 
- 	struct arch_uprobe              *auprobe;
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index acc73c1bc54c..9689b557a5cf 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1721,7 +1721,7 @@ unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
- {
- 	struct uprobe_task *utask = current->utask;
- 
--	if (unlikely(utask && utask->active_uprobe))
-+	if (unlikely(utask && utask->state))
- 		return utask->vaddr;
- 
- 	return instruction_pointer(regs);
-@@ -1747,9 +1747,6 @@ void uprobe_free_utask(struct task_struct *t)
- 	if (!utask)
- 		return;
- 
--	if (utask->active_uprobe)
--		put_uprobe(utask->active_uprobe);
--
- 	ri = utask->return_instances;
- 	while (ri)
- 		ri = free_ret_instance(ri);
-@@ -1965,14 +1962,9 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
- 	if (!utask)
- 		return -ENOMEM;
- 
--	if (!try_get_uprobe(uprobe))
--		return -EINVAL;
--
- 	xol_vaddr = xol_get_insn_slot(uprobe);
--	if (!xol_vaddr) {
--		err = -ENOMEM;
--		goto err_out;
--	}
-+	if (!xol_vaddr)
-+		return -ENOMEM;
- 
- 	utask->xol_vaddr = xol_vaddr;
- 	utask->vaddr = bp_vaddr;
-@@ -1980,15 +1972,12 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
- 	err = arch_uprobe_pre_xol(&uprobe->arch, regs);
- 	if (unlikely(err)) {
- 		xol_free_insn_slot(current);
--		goto err_out;
-+		return err;
- 	}
- 
--	utask->active_uprobe = uprobe;
-+	memcpy(&utask->uarch, &uprobe->arch, sizeof(utask->uarch));
- 	utask->state = UTASK_SSTEP;
- 	return 0;
--err_out:
--	put_uprobe(uprobe);
--	return err;
- }
- 
- /*
-@@ -2005,7 +1994,7 @@ bool uprobe_deny_signal(void)
- 	struct task_struct *t = current;
- 	struct uprobe_task *utask = t->utask;
- 
--	if (likely(!utask || !utask->active_uprobe))
-+	if (likely(!utask || !utask->state))
- 		return false;
- 
- 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
-@@ -2313,19 +2302,15 @@ static void handle_swbp(struct pt_regs *regs)
-  */
- static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- {
--	struct uprobe *uprobe;
- 	int err = 0;
- 
--	uprobe = utask->active_uprobe;
- 	if (utask->state == UTASK_SSTEP_ACK)
--		err = arch_uprobe_post_xol(&uprobe->arch, regs);
-+		err = arch_uprobe_post_xol(&utask->uarch, regs);
- 	else if (utask->state == UTASK_SSTEP_TRAPPED)
--		arch_uprobe_abort_xol(&uprobe->arch, regs);
-+		arch_uprobe_abort_xol(&utask->uarch, regs);
- 	else
- 		WARN_ON_ONCE(1);
- 
--	put_uprobe(uprobe);
--	utask->active_uprobe = NULL;
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(current);
- 
-@@ -2342,7 +2327,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- /*
-  * On breakpoint hit, breakpoint notifier sets the TIF_UPROBE flag and
-  * allows the thread to return from interrupt. After that handle_swbp()
-- * sets utask->active_uprobe.
-+ * sets utask->state != 0.
-  *
-  * On singlestep exception, singlestep notifier sets the TIF_UPROBE flag
-  * and allows the thread to return from interrupt.
-@@ -2357,7 +2342,7 @@ void uprobe_notify_resume(struct pt_regs *regs)
- 	clear_thread_flag(TIF_UPROBE);
- 
- 	utask = current->utask;
--	if (utask && utask->active_uprobe)
-+	if (utask && utask->state)
- 		handle_singlestep(utask, regs);
- 	else
- 		handle_swbp(regs);
-@@ -2388,7 +2373,7 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
- {
- 	struct uprobe_task *utask = current->utask;
- 
--	if (!current->mm || !utask || !utask->active_uprobe)
-+	if (!current->mm || !utask || !utask->state)
- 		/* task is currently not uprobed */
- 		return 0;
- 
--- 
-2.25.1.362.g51ebf55
-
+> 
+> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+> ---
+>  kernel/trace/trace_functions.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+> index 3b0cea37e0297..65fed0bbc5c22 100644
+> --- a/kernel/trace/trace_functions.c
+> +++ b/kernel/trace/trace_functions.c
+> @@ -184,7 +184,6 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	struct trace_array_cpu *data;
+>  	unsigned int trace_ctx;
+>  	int bit;
+> -	int cpu;
+>  
+>  	if (unlikely(!tr->function_enabled))
+>  		return;
+> @@ -195,8 +194,7 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+>  
+>  	trace_ctx = tracing_gen_ctx();
+>  
+> -	cpu = smp_processor_id();
+> -	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+> +	data = this_cpu_ptr(tr->array_buffer.data);
+>  	if (!atomic_read(&data->disabled))
+>  		trace_function(tr, ip, parent_ip, trace_ctx);
+>  
+> @@ -300,7 +298,6 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	unsigned int trace_ctx;
+>  	unsigned long flags;
+>  	int bit;
+> -	int cpu;
+>  
+>  	if (unlikely(!tr->function_enabled))
+>  		return;
+> @@ -309,8 +306,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	if (bit < 0)
+>  		return;
+>  
+> -	cpu = smp_processor_id();
+> -	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+> +	data = this_cpu_ptr(tr->array_buffer.data);
+>  	if (atomic_read(&data->disabled))
+>  		goto out;
+>  
+> @@ -321,7 +317,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	 * TODO: think about a solution that is better than just hoping to be
+>  	 * lucky.
+>  	 */
+> -	last_info = per_cpu_ptr(tr->last_func_repeats, cpu);
+> +	last_info = this_cpu_ptr(tr->last_func_repeats);
+>  	if (is_repeat_check(tr, last_info, ip, parent_ip))
+>  		goto out;
+>  
 
