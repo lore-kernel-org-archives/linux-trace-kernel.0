@@ -1,81 +1,116 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A133913B5B9
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 04:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724042405; cv=none; b=Vy+Pd/GJ2yukTJtRLLxOg+t3eljFCpb0QvZiF2ebaBKSunNslZqkmDFX1VWbx1h6Vy12z24o+CpfdG30A4ovy0a5tfQXdlUCbbx7q8/JSXSTUhoZbNLBG5dspqhddFQJQCCc3eGQMXOP6X+So/i1QbQE+mMoTc+dRC3j8Xf5O2M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724042405; c=relaxed/simple;
-	bh=ndPGcz+uTi/bIYAnyjXxTlLhFjz2KeP5UQ4eUxYbKxE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=V0Am6/64AWxDiIoVZV6IEyj+yzsilGNHxFxBWVCYsOEI1965LcCpmN9ywcvOxbIrlDUPw8ry8Q/VbftjF7Junfx7Kd8025YFpi0Pop/jyJTL8JQKcqQy5U7Pkhz4RW+MaB8W7LBB/SqTYXKojpTzuCA//9ZB5sgk+Rr2R/XAWVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-81f8d1720ebso380470239f.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 18 Aug 2024 21:40:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724042402; x=1724647202;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4QxjT7FBtIf+YOOl5Ydo57Y1HRHDgzWdhn/AVlpRKbU=;
-        b=ZycrnJhKH6rsDjTucdv8hEIoOjy+UN22Rn+8aKOgbNXRdI8MZ+sv51XNqmI99scQDV
-         F4UFsRMBH3TuFnaI4VprxozEFS/EA1EYHPwyZloR91MMAztJPDHuUaCUcr/JW18/G4Jw
-         lt9FHIFvnA0T6l9pJTKuIys1E7CyJnoZ3XAKB0bXB64o9fvJ6fWtCSOiKD0bsPvANSQh
-         AXNE3l1dzWWaKCGkwbrLpwNTjHBquH1P+pYhy/UisyMMV6etuW8eXzsSejlRUaVk2ODc
-         v1i4vjzWUVpQF+d0WZ2DdZ0vz4mihb38yo2CdfppKK/UUd9f1a5Wa5DvjpujTOdLid6q
-         tC1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVsLrgG0+RuCxaKtrh/G9kWalp1a2/2MA4C8pF2MGrp7edbLAkHI3Ih0uRTYq4Av5PNfEE/N7VBYE55QN85udfbKMGFdr3J+yWUypG5CJHO1AyV
-X-Gm-Message-State: AOJu0Yzw4iC4Pko0ObmDAmnEsuj8IOrFUAMR8PQCfWptDDO/WwvbBrwa
-	az3OubiexR06AG6I2xAIMvO4+mX3hwrvUvxmvVmpOBr012DK0sxySaRb99+dYVFLM9SNqLOIQBQ
-	hFyDEHXgq/RcPxCGNdaSPCM22SZ7nMk450xzNjBxB7YrUEXzV156IHqw=
-X-Google-Smtp-Source: AGHT+IH316qYQj7K/SEBVPvVeG35zflMK2F/Sc4nwXd5p9/IyQ5MeXxoQPgP4Q0j6l2BAJ0YCA/7X4FcoFqLlYh6md2L53cvBiuo
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FFA14A4C6
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 06:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724047335; cv=pass; b=MJW5yqHdk5TET08iECPyxoKgvf8YscjrMgp6nli6gnyWiqgQx6FX7ygKnXBd5vwDAFDRfGuin6WsxiAaJWIJZepEkWKHufKQ+KLe2H6vxXjcUyuL5+j1MrWTjupBkGOxhzZ83LNooUTAecvxQ1941JCRIf0ntb4FGFlBRBKeyfM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724047335; c=relaxed/simple;
+	bh=TiIejifxjXNe2dIwc9B/6sG0Ue2sD5DWgj7qc4Z/Z1g=;
+	h=Date:Message-ID:From:To:Subject:MIME-Version:Content-Type; b=ZZ4ma21pQP/QMAKiVZgZeB13gDixX5jkeCwyQ971Ykqta1Ni1HxjbTXKrGn7AXPAb/4u+xmWBtumDYzPTJuUvZfCkf3cLNcPHoZB7D8yikrwIXtrpXxYyg51CHMHOQFp9sDFyH8VSGoaJqbJOVjw5QY9cAEy4sLmLbQFXjYe+dg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=hI+deuSS; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="hI+deuSS"
+ARC-Seal: i=1; a=rsa-sha256; t=1724047325; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=luyhpgoIQapup4/4axDhAckGysrFitJS/PDoJfE7oq1ipQbdhPQhvsoKr43U9meKMMnpWU34WUbA8rzyb9104D3TRXVToei6rVI4ajyz8WS9/VsPIcqjjYyE5QQLc/GTo9krJpJjBwGCXV8m/Tq/HHRfH17p1vehB6IwqvK8Rwg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724047325; h=Content-Type:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=NaLr5sdKjzEjkp303RQnNmcsIjbXJuKkaqMFa+MgYd4=; 
+	b=azPmOQDYOe3pmhp6qCnrqLAYmZIpnaA9bIQFkYl7ceAOMxfo+c9e1cn9KVZyaDizIGn0rA6T+6tEwcb/8NQA74SVZ3qGijyUOsnEKPbkdIXc2fJVudAqfFUmXTn/+2+kEjX5bMdjF4y+sa4vV53MguhlArb9CMJp4sHO0QE4JNg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724047325;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=Date:Date:Message-ID:From:From:To:To:Subject:Subject:MIME-Version:Content-Type:Message-Id:Reply-To:Cc;
+	bh=NaLr5sdKjzEjkp303RQnNmcsIjbXJuKkaqMFa+MgYd4=;
+	b=hI+deuSSZ81zFVBS2AF3MW9AuIdpO+3co5IqtU0zb8pYz6U6h2U4X2ZnCqbdYuNY
+	GZV3EXMrzUL5gEPaCpx+kw+yXGQ+oqrLggUcb5G2nawHgzSCUAEGCLqtoROZuhO+Epk
+	1UHvVlS9qOKp2F/li3Fja6jtOCRaqW7vwW8rW030=
+Received: by mx.zohomail.com with SMTPS id 172404732437886.60265887675257;
+	Sun, 18 Aug 2024 23:02:04 -0700 (PDT)
+Date: Mon, 19 Aug 2024 14:01:53 +0800
+Message-ID: <87y14t6ofi.wl-me@linux.beauty>
+From: Li Chen <me@linux.beauty>
+To: linux-trace-kernel@vger.kernel.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] ftrace: Use this_cpu_ptr() instead of per_cpu_ptr(smp_processor_id())
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/29.4 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:370f:b0:4b9:e5b4:67fd with SMTP id
- 8926c6da1cb9f-4cce15cdbd5mr504210173.1.1724042401927; Sun, 18 Aug 2024
- 21:40:01 -0700 (PDT)
-Date: Sun, 18 Aug 2024 21:40:01 -0700
-In-Reply-To: <0000000000002be09b061c483ea1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1e97e062001e6b2@google.com>
-Subject: Re: [syzbot] [mm?] possible deadlock in __mmap_lock_do_trace_released
-From: syzbot <syzbot+16b6ab88e66b34d09014@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, axelrasmussen@google.com, bpf@vger.kernel.org, 
-	cgroups@vger.kernel.org, hannes@cmpxchg.org, hawk@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, lizefan.x@bytedance.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, netdev@vger.kernel.org, 
-	nsaenz@amazon.com, nsaenzju@redhat.com, penguin-kernel@I-love.SAKURA.ne.jp, 
-	penguin-kernel@i-love.sakura.ne.jp, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-ZohoMailClient: External
 
-syzbot suspects this issue was fixed by commit:
+From: Li Chen <chenl311@chinatelecom.cn>
 
-commit 7d6be67cfdd4a53cea7147313ca13c531e3a470f
-Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date:   Fri Jun 21 01:08:41 2024 +0000
+Use this_cpu_ptr() instead of open coding the equivalent in various
+ftrace functions.
 
-    mm: mmap_lock: replace get_memcg_path_buf() with on-stack buffer
+Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+---
+ kernel/trace/trace_functions.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d48893980000
-start commit:   a12978712d90 selftests/bpf: Move ARRAY_SIZE to bpf_misc.h
-git tree:       bpf-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=736daf12bd72e034
-dashboard link: https://syzkaller.appspot.com/bug?extid=16b6ab88e66b34d09014
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125718be980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14528876980000
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 3b0cea37e0297..65fed0bbc5c22 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -184,7 +184,6 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
+ 	int bit;
+-	int cpu;
+ 
+ 	if (unlikely(!tr->function_enabled))
+ 		return;
+@@ -195,8 +194,7 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 
+ 	trace_ctx = tracing_gen_ctx();
+ 
+-	cpu = smp_processor_id();
+-	data = per_cpu_ptr(tr->array_buffer.data, cpu);
++	data = this_cpu_ptr(tr->array_buffer.data);
+ 	if (!atomic_read(&data->disabled))
+ 		trace_function(tr, ip, parent_ip, trace_ctx);
+ 
+@@ -300,7 +298,6 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	unsigned int trace_ctx;
+ 	unsigned long flags;
+ 	int bit;
+-	int cpu;
+ 
+ 	if (unlikely(!tr->function_enabled))
+ 		return;
+@@ -309,8 +306,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (bit < 0)
+ 		return;
+ 
+-	cpu = smp_processor_id();
+-	data = per_cpu_ptr(tr->array_buffer.data, cpu);
++	data = this_cpu_ptr(tr->array_buffer.data);
+ 	if (atomic_read(&data->disabled))
+ 		goto out;
+ 
+@@ -321,7 +317,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	 * TODO: think about a solution that is better than just hoping to be
+ 	 * lucky.
+ 	 */
+-	last_info = per_cpu_ptr(tr->last_func_repeats, cpu);
++	last_info = this_cpu_ptr(tr->last_func_repeats);
+ 	if (is_repeat_check(tr, last_info, ip, parent_ip))
+ 		goto out;
+ 
+-- 
+2.46.0
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: mm: mmap_lock: replace get_memcg_path_buf() with on-stack buffer
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
