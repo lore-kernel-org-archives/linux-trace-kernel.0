@@ -1,157 +1,209 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931C21BE228
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Aug 2024 17:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726CF10A24;
+	Tue, 20 Aug 2024 18:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724173897; cv=none; b=lXIRk35nvOwQctGwA89PkwTQwIt0awH/nNBt1Q4lZMFJxVr7NwspVaQlQfClM4XLgIhVz5rkJenKaYsT/hvomQQgFtQ9x/BV+N8TwUfvp0BBuapVOJJaNlwAql9KwFdD0vOhIPsYsPOJqXSEJwso4UETaodGfzPnfIRMeaKXpAg=
+	t=1724176887; cv=none; b=F34W8mnT75Y4Y/oK5jvJd47Vh4ZbVjcPSEUHmnzPTZSWd9jHmOs7aFFctSLrNT02+QqRFLf8rklbkqpbicp0pmPkmN6KtV0l3Kh7Z6dYoFBcDa9m4t797jHmXbF/vHU6QFmbzSKn861i2Q1uPk+BhS1vRXSsMra7Obcb+S5owO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724173897; c=relaxed/simple;
-	bh=ikTvvm8hy1BF7FARpr0gNXmT5GHf2xyQyuwgTHN+X+g=;
+	s=arc-20240116; t=1724176887; c=relaxed/simple;
+	bh=bV34x7MYYztAMqSEYzWOGsAv/cwdogusL3EtVW2BvRQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A0itFdT0ARSwGbhg27RxSG7sFOPwRMw2113hC4gLa2jTotczz5EnvqPbdrhzGkGq/c/+WU7dFzi527UTGlaOj/SQiaOmmjM64CCMX6Kd8PcutKNhqPy4Vz4iv9hDWqihRDH+tuEiGOQVldJhIa1ycZZWWgfEZ1v5l6HM+A+ix4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JWmOKv5y; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=i7XVtDOV8ehrfhj5li+7iwiAN900rGUVLphoHwhlUN0Ju+KEZLPtPrb84YarKawwsOJ75YNwPoFBr0vkFoizoHX1rv1DefFPXGOpe/DslD4wEOffV/efeZJPnleYg/GvdJVB5LqyT842wQds3XzaWy8p48oeWKjp2CSYqBFAEUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMpjauNj; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWmOKv5y"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-44fee2bfd28so12771cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Aug 2024 10:11:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMpjauNj"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-201f7fb09f6so41322345ad.2;
+        Tue, 20 Aug 2024 11:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724173894; x=1724778694; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724176886; x=1724781686; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BnG3mTCoiILr908gRTdf9mnBK5WkLmZC0rD5sCvrluY=;
-        b=JWmOKv5yFFrJYd0LYbJtplkPK52qutozBVpTDlR6h+LSHVOjhg/2SljhLQIvJ2HEQT
-         +NNa8SD7+iSJfKA9KL+U2Ogypc/RK9UMZq2bPTXyrSme/uujKl349EEvAT3ITGGZBK62
-         tBlrIe9SgCjTtx9JmA8eROKqjtV5WeB5KjOZsjtoGmWTinqVuLhTv5O601XQi4aeYVYg
-         T70IWupGYoYP44H5SD6gORN8+FMaJIM+CJWXJF38Vk1zIF6sWECLdX9yGsOKELtiPcVX
-         chxzwT2WtIBUY2XO36g+aSgU5ewta39r0aoyRdar4rChdI6kBTc1HGotditr/kHFXPni
-         x9Eg==
+        bh=XW2EDQsveDHftwUoUVuswpkNq+gO1+8ZL6TivHjfcJ0=;
+        b=LMpjauNjWCcto40/tLFancuyAdZcJR55pFuX7AIwaL7poNB9tIj9ni2J0lw3J9veJC
+         Zl+EXEezIYbEsrBQmrBR5vj0JYAtS9Wgyq4EIbHB1+Y4Kv70EXw/CD0MVxesVTX2PFol
+         hrTSVQtkMdhm8Dw7Sf61uzWBTwAeNXDR3OSbRwlaUtzcywjpE/b6yTCA5q2B5RAGfH1d
+         JAY8geaVZd53PZXKwnISvWGv9NHGKzoaaog0r1nMbi74MTokwDpHS2Gcijqu8QBqldmV
+         EE2TJkmw/ljtTPghIPUFFABzx66lSerrIp4Ve3Ktqeqb60gwVjz3Aj/uMdXOXkkvfBzm
+         TbGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724173894; x=1724778694;
+        d=1e100.net; s=20230601; t=1724176886; x=1724781686;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BnG3mTCoiILr908gRTdf9mnBK5WkLmZC0rD5sCvrluY=;
-        b=s/k+SUL99jGjFl4fG7mmluF+jIFoCSIHVBI0p1HTmDbeX3XdNvHvHtRV1fEV56G3uz
-         xBvoeYm6TPJuY58Em68l0SQQ+sCR53Yymq7vSh73xHBHaDukPgPZLlLhofav+vag7Sl8
-         hK5T6b5E+9q7/UXy6Hwqbl3HgFluUx6niF0GUg6KosKI0F2IzA1xs2P4y+X3ldLgdpvu
-         V+9jO+dGhQEoOWq6SOE0pogvDbDLnpa9MAG0CWdDVDeND3yf66Mluq8njN+4AZv+9qW2
-         8IWiuFcWvJsSj9WUbesisaAH9cYwz4Gy1AMe4kn/ow6sPCCj8ZJXKdswMuxxxHPmpeOS
-         8Ymg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVqj7MxbxHds2INup3VLj4UhqlY6v5msLoBLT2S5ohDh8W2RzA/u44OXXwpt8wf4Axza/L659LKM3Xwr/Cr4fp11U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp3p90WA3DW8zDpoDakv1xvZsJhvB8WXqXzANyJ2/KVoN++Znt
-	c0weahNm+w5AQo35k8YyX6WVD9+YmVondBQZwepKkDSTNXTaoqDz/lO4quxE+FJBER5CBGwNVq3
-	ZgEJZja2vnstxVpO6dKpIisDC0AnmjxYtupma
-X-Google-Smtp-Source: AGHT+IEBYChI7KLbhDnxhptDasxvi66SSRGAyIIecU3g/9eHhycAcmIuoWtzgGhG2Nmu+KCELaheAYpAv+Ak2asKVEA=
-X-Received: by 2002:a05:622a:5297:b0:453:5f2f:d5d2 with SMTP id
- d75a77b69052e-454e852f800mr2224121cf.1.1724173894153; Tue, 20 Aug 2024
- 10:11:34 -0700 (PDT)
+        bh=XW2EDQsveDHftwUoUVuswpkNq+gO1+8ZL6TivHjfcJ0=;
+        b=Uv1Qou6Xa0L2kLQeW7vNxq7CqAUntB07pUtWpNWbLqo574n70XdP4qe5BKWAWHhEyA
+         uQp06r8Bmp9n/55zKmXtzjt5NiMsOzoqG423vszMDlL4AkZ88liQuBdPX56rpXPPM82w
+         1rtYJzvHHcnqjx3CSbyJtatZ7+Q5e7DOM6NXq9AGrtL0xsdzdHrdfkvPbd9/DEKMebRl
+         HLa3N6QmLA4sv82I5T6qDrAlh+xRIGxR8d+7a9l6w2ZcDgxwTgBMWHL8doXQToNnyBa2
+         oI1aoI1537JEJWX22hpnQXHo+zZ5aG4EhZb+RBUMqK50X/cCf/oq689fEm1ccGKQvKqp
+         3K2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUUsOIbLxZivOM9nWhjkuYnHnN+EuJAf8PUM1uZ+COJvN/pF+MIW+aSFm2th2v2dYhjv6/gIoi96E/4fE73@vger.kernel.org, AJvYcCXkZsiekaqWTGbzxoHmul943ZYWS4gN9EOARrM8NMf+sEwwRFffkytuFuomE8cN+mEyZj3lIv2iMjahzpR58rGoDaL+@vger.kernel.org, AJvYcCXr6TnoeCq5nNsrFOwdSd8G+sPpbAnnpxbxHnLsOTti2lGJMibjWuICFdhakCr46QYq598=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8x0D3wlo8mbd23ze9Zf+yzHlMWeZjzOKm1TKoT9aeu8DAKrvE
+	zRezd/adggCABHCh79cdw0OcvqKA3onYw1s4rEv1uF4WjLI2lS0fCObHIPwMIx0hYiuIalktWwz
+	arETI4DmN8WGe6m1+avx+xE88nvs=
+X-Google-Smtp-Source: AGHT+IH+ytdwRHSzvQk3nNnD41x0T2rOFsEZheRcnQGQLslFa+6HExdYnCpFoslduDeAxl5b3tb0cFOh9PB4zP2KLbg=
+X-Received: by 2002:a17:90a:744a:b0:2c9:61ad:dcd9 with SMTP id
+ 98e67ed59e1d1-2d3e00ec17dmr14073007a91.27.1724176885685; Tue, 20 Aug 2024
+ 11:01:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813211317.3381180-4-almasrymina@google.com>
- <CAMArcTWWxjsg_zwS6waWkLpyHhwdXDm_NJeVGm_dr+eT5QDZiA@mail.gmail.com>
- <20240819155257.1148e869@kernel.org> <CAHS8izPL4YdqFjkTpYavdxQn816=kkUv0xravQJF4Uno7Bn3ZQ@mail.gmail.com>
- <20240820081920.6630a73f@kernel.org>
-In-Reply-To: <20240820081920.6630a73f@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 20 Aug 2024 13:11:20 -0400
-Message-ID: <CAHS8izO-F2qwbEEtYONOYgNFsP3jxpv0etgSKknnAQ8itA5Cdw@mail.gmail.com>
-Subject: Re: [PATCH net-next v19 03/13] netdev: support binding dma-buf to netdevice
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-10-andrii@kernel.org>
+ <20240819134107.GB3515@redhat.com> <CAEf4BzYFXmCU83mr9YHy2JtF35WmYBvKpyrmBV4QxFuqubk_6A@mail.gmail.com>
+ <20240820150534.GD12400@redhat.com>
+In-Reply-To: <20240820150534.GD12400@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 20 Aug 2024 11:01:13 -0700
+Message-ID: <CAEf4Bzb7gQEKk26B4-KXS_ht8LyCRA7SdThc7ZS05gOEuNZjrQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 09/13] uprobes: SRCU-protect uretprobe lifetime
+ (with timeout)
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	akpm@linux-foundation.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 20, 2024 at 11:19=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> w=
-rote:
+On Tue, Aug 20, 2024 at 8:06=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> On Tue, 20 Aug 2024 00:01:02 -0400 Mina Almasry wrote:
-> > Took a bit of a look here. Forgive me, I'm not that familiar with XDP
-> > and virtual interfaces, so I'm a bit unsure what to do here.
+> On 08/19, Andrii Nakryiko wrote:
 > >
-> > For veth, it seems, the device behind the veth is stored in
-> > veth_priv->peer, so it seems maybe a dev_get_max_mp_channel() check on
-> > veth_priv->peer is the way to go to disable this for veth? I think we
-> > need to do this check on creation of the veth and on the ndo_bpf of
-> > veth.
+> > On Mon, Aug 19, 2024 at 6:41=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > >
+> > > On 08/12, Andrii Nakryiko wrote:
+> > > >
+> > > > Avoid taking refcount on uprobe in prepare_uretprobe(), instead tak=
+e
+> > > > uretprobe-specific SRCU lock and keep it active as kernel transfers
+> > > > control back to user space.
+> > > ...
+> > > >  include/linux/uprobes.h |  49 ++++++-
+> > > >  kernel/events/uprobes.c | 294 ++++++++++++++++++++++++++++++++++--=
+----
+> > > >  2 files changed, 301 insertions(+), 42 deletions(-)
+> > >
+> > > Oh. To be honest I don't like this patch.
+> > >
+> > > I would like to know what other reviewers think, but to me it adds to=
+o many
+> > > complications that I can't even fully understand...
+> >
+> > Which parts? The atomic xchg() and cmpxchg() parts? What exactly do
+> > you feel like you don't fully understand?
 >
-> veth is a SW device pair, it can't reasonably support netmem.
-> Given all the unreasonable features it grew over time we can't
-> rule out that someone will try, but that's not our problem now.
+> Heh, everything looks too complex for me ;)
+
+Well, the best code is no code. But I'm not doing this just for fun,
+so I'm happy with the simplest solution *that works*.
+
 >
-> > For bonding, it seems we need to add mp channel check in bond_xdp_set,
-> > and bond_enslave?
+> Say, hprobe_expire(). It is also called by ri_timer() in softirq context,
+> right? And it does
 >
-> Sort of, I'd factor out that logic into the core first, as some
-> sort of "xdp propagate" helper. Then we can add that check once.
-> I don't see anything bond specific in the logic.
+>         /* We lost the race, undo our refcount bump. It can drop to zero.=
+ */
+>         put_uprobe(uprobe);
 >
-> > There are a few other drivers that define ndo_add_slave, seems a check
-> > in br_add_slave is needed as well.
->
-> I don't think it's that broad. Not many drivers propagate XDP:
->
-> $ git grep -C 200 '\.ndo_add_slave' | grep '\.ndo_bpf'
-> drivers/net/bonding/bond_main.c-        .ndo_bpf                =3D bond_=
-xdp,
->
-> $ git grep --files-with-matches  'ops->ndo_bpf' -- drivers/
-> drivers/net/bonding/bond_main.c
-> drivers/net/hyperv/netvsc_bpf.c
+> How so? If the refcount goes to zero, put_uprobe() does mutex_lock(),
+> but it must not sleep in softirq context.
 >
 
-OK, got it, I'll take a deeper look and hopefully figure out something
-reasonable here.
+Now we are talking about specific issues, thank you! It's hard to
+discuss "I don't like".
 
-> > This seems like a potentially deep rabbit hole with a few checks to
-> > add all of the place. Is this blocking the series?
+Yes, I think you are right and it is certainly a problem with
+put_uprobe() that it can't be called from softirq (just having to
+remember that is error-prone, as is evidenced by me forgetting about
+this issue).
+
+It's easy enough to solve. We can either schedule work from timer
+thread (and that will solve this particular issue only), or we can
+teach put_uprobe() to schedule work item if it drops refcount to zero
+from softirq and other restricted contexts.
+
+I vote for making put_uprobe() flexible in this regard, add
+work_struct to uprobe, and schedule all this to be done in the work
+queue callback. WDYT?
+
 >
-> Protecting the stack from unreadable memory is *the* challenge
-> in this series. The rest is a fairly straightforward.
+> Or, prepare_uretprobe() which does
+>
+>         rcu_assign_pointer(utask->return_instances, ri);
+>
+>         if (!timer_pending(&utask->ri_timer))
+>                 mod_timer(&utask->ri_timer, ...);
+>
+> Suppose that the timer was pending and it was fired right before
+> rcu_assign_pointer(). What guarantees that prepare_uretprobe() will see
+> timer_pending() =3D=3D false?
+>
+> rcu_assign_pointer()->smp_store_release() is a one-way barrier. This
+> timer_pending() check may appear to happen before rcu_assign_pointer()
+> completes.
+>
+> In this (yes, theoretical) case ri_timer() can miss the new return_instan=
+ce,
+> while prepare_uretprobe() can miss the necessary mod_timer(). I think thi=
+s
+> needs another mb() in between.
+>
 
-Understandable. I pulled the trigger on v21 with the build fix last
-night after reading your response on the other thread. If you manage
-to review that and let me know of any other issues I'm going to run
-into down the road, that would be great. But I read in some other
-thread that you're overloaded. Sorry if I'm piling on. Feel free to cr
-it if necessary, of course.
+Ok, that's fair. I felt like this pattern might be a bit problematic,
+but I also felt like it's good to have to ensure that we do
+occasionally have a race between timer callback and uretprobe, even if
+uretprobe returns very quickly. (and I did confirm we get those races
+and they seem to be handled fine, i.e., I saw uprobes being "expired"
+into refcounted ones from ri_timer)
 
---
-Thanks,
-Mina
+But the really simple way to solve this is to do unconditional
+mod_timer(), so I can do just that to keep this less tricky. Would you
+be ok with that?
+
+>
+> And I can't convince myself hprobe_expire() is correct... OK, I don't
+> fully understand the logic, but why data_race(READ_ONCE(hprobe->leased)) =
+?
+> READ_ONCE() should be enough in this case?
+
+you mean why data_race() annotation? To appease KCSAN, given that we
+modify hprobe->leased with xchg/cmpxchg, but read here with
+READ_ONCE(). Maybe I'm overthinking it, not sure. There is a reason
+why this is an RFC ;)
+
+>
+>
+> > > As I have already mentioned in the previous discussions, we can simpl=
+y kill
+> > > utask->active_uprobe. And utask->auprobe.
+> >
+> > I don't have anything against that, in principle, but let's benchmark
+> > and test that thoroughly. I'm a bit uneasy about the possibility that
+> > some arch-specific code will do container_of() on this arch_uprobe in
+> > order to get to uprobe,
+>
+> Well, struct uprobe is not "exported", the arch-specific code can't do th=
+is.
+>
+
+Ah, good point, that's great. But as I said, uretprobe is actually
+*the common* use case, not single-stepped uprobe. Still not very happy
+about that memcpy() and assumption that it's cheap, but that's minor.
+
+But no matter what we do for single-stepped one, uretprobe needs some
+solution. (and if that solution works for uretprobe, why wouldn't it
+work for single-step?...)
+
+> Oleg.
+>
