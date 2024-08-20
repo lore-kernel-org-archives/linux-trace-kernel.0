@@ -1,109 +1,107 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AA61E2122;
-	Tue, 20 Aug 2024 06:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3342D18B462;
+	Tue, 20 Aug 2024 09:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724135678; cv=none; b=u6gISV62KybrXl+5CchUYgnWDU+PajXWhGl/YxjGpLJr00NX3Kru2BNIdKwkjT/QLtFcg74NEKGywsR1SfhO/LChPkTroT4XT130qRf+FkWgrCpyEAf6SEUSmNQjJBXAhgymmtctPQi9QPXV1QmLxSVFeiaIm+8nAV/RLKL+pq0=
+	t=1724147371; cv=none; b=uuj5oZSi8ZJMu+s7+l6GEXauRIm2EgBBfJFjtqUyjWMr5PJuwQ08YIh5BSei98Db4GSjNTXPKp+qDNGxeH3ZPUHLpoVEfiyP2DIH6FVF0dEb2fjNVL8m2w2obP0knDwToY5/dTL/3PO4UipjnkhgCckHKV2/YA223rQG5txAPrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724135678; c=relaxed/simple;
-	bh=Cp3w7kkVxT1uWBiSkJuqzh8y0qcCGvAe5kQ4ewJ5zHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GfsLQmtZSm7z2jSXHOsjvPS+9Ja6/bTtivGY2/H7+JErL2neFRIufa0J2XFQypVtKU7TkL6fSOAmQ5CSUJogPBoKC1VzRe8dXXn6ydrD7ztVL7UE+Unxqqmn+RuNXqeyXHASE32gWmsBzeaxGpRF49+qjqtDNc5Yp8aPuBoi8K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMi/vOG0; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1724147371; c=relaxed/simple;
+	bh=8VZjNFrNswWpOmns2LxJtRv26FRpYGO9OKZ3n8H2CPA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Hu/Te23q1rDrOELbQd62Cj49RFnHrRqh3N8yxGTVQDILnH0p3xbnWLeqnEXF3F707Bqq5KZmoBZItVhOoPtnkMJ3nmL4JBm/xnCaRWENbefLG3GCcSAZmPEsZzsPI03KuBLq4XWvwjMu69MQX6p0NZ5pTzBGpgaDmFs7abHE56Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGls2WAE; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMi/vOG0"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4280bca3960so44799175e9.3;
-        Mon, 19 Aug 2024 23:34:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGls2WAE"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-656d8b346d2so3105682a12.2;
+        Tue, 20 Aug 2024 02:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724135675; x=1724740475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cp3w7kkVxT1uWBiSkJuqzh8y0qcCGvAe5kQ4ewJ5zHg=;
-        b=aMi/vOG0w4Ujctyqn9JdNEMZot+mwgry6EY1K+2p3E76SrYdPCfvRbXWP+twFoYWCP
-         H7Ky+JnCrF5RfFHOjm1EbSCEtHKiI69HzcsBFvg0SXR+89uYMe7lbLq6iz7/pYdLjhRB
-         WsO7X5PnHagvB1+l1akD3vOvmRShzp+fBPYzD3WychOBGLyanwPzcmrNgOH7TM8kDR6w
-         1bwvv2KjmsqNsJGHaU2q24RueNNVfj8MRJo2QW3THhJcCOTf80VIC9kfRvxpqps7M35c
-         OvyUMysOlxgl/PPFQoJ+BVOSlx1+iLGZqNvdelAKb+AzEffL1T1oO/z0TDYRuJ8ErW6+
-         QgjA==
+        d=gmail.com; s=20230601; t=1724147369; x=1724752169; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oksjuiJ+Fd+IdFBbr4NtZxm8Q/7F80HnKwwrINvO5XE=;
+        b=AGls2WAEpBJMY9jdxa3M0+xi7CPJQ+OsrrdWeXZfm1OzMvxwPCxYVyS2zJ1T9qCssH
+         nT6WRzVcBQz0edcW59S5M/lhMnyNXiY3nxHd52ixvkmKOK0tlmZkqBSN3TPkmOMEANn0
+         S68EiDd0mH+vAhTEyAweXKSDj3KyqfJGHFJJD8LxYnurtVhp6hvlhzth+0yZv5oXrb6e
+         J1AznvH5wYKxC9aiFmh2rPoo0erD7ViJgwn/D+k47Quqs00TkHYBhCSNz8qn6OJPiQaC
+         KyURn70xLEzDZvivjdXOSIyBys6/BQRVyhsGDyUN1DFclI9oNfrphNEhVREcTu7m1LKR
+         YiVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724135675; x=1724740475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cp3w7kkVxT1uWBiSkJuqzh8y0qcCGvAe5kQ4ewJ5zHg=;
-        b=gOj9+lfbykWidLGYX3sYOlkFRZ4fWXRmRkyhIs2EhK26fPYjDfFMU5CLa0Ct+XQvp7
-         MkBGK5a0eDOGFe5Fv6jcREucSlyTO2K0YBJesdL1zWEERt3atnb5HXnQ2Y+fxmee7ikb
-         db4zK3MYkhDQiUl2FxR/Raw9krb5SkqeasUeZzljFaNIJ/J6lbFJ6bun/apa9oYRUCS3
-         CN0OeMxopxJ1KAkwZ/NC+GjduiClszT7/DZt1KxU8J00bpoDs6ipzMT0binahYBarF+m
-         QIxHrcV+L1edSDQ+iaM5BxgLp5VC1eBpXfYeFpwN/iEC/1Cb4fEzecCELfg2LYg607hs
-         khSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHDiIOVPg1g91eSD7OGexSLDOFJvS3zcMkHGHVztWvqoYcTsPxyX1my3iKjmxl5WBd2+3lyDaC/vLhbpfRqIvjbUUT@vger.kernel.org, AJvYcCUJ5Z2+yEWh/CRA8eQvvtD/R+pbemEekHTU2kMxl7R9gxqblUpwiz6n7iESUst86PtpJH01ugJmawwJiRzhsg==@vger.kernel.org, AJvYcCUJC+giXO/G+aMc5k0Zwp6AbUbHVNgnf+1c9N3APxDh6joo/EFoa+UfQQ4QTjidce+QKNSaGcoX6AGS762l@vger.kernel.org, AJvYcCUWftmaz7HN34cJrsabgktD87GlhM4op9c83UGxLEnW0MYn91om7DaW/N/1FuDPrfX+1W2Mept+eQns@vger.kernel.org, AJvYcCUYo3pZyseWL8Rd4St27B6ilQBBF1kwYlj0YzOmBnDRGGHvbaQjel1RUk+dEthY4BlUrVP7uYSE@vger.kernel.org, AJvYcCV0YfjI+lkLrSE9VmW5gSnZBigdVF/gHk+x5/FNQQSoy2EgQIcLDG35lyIO9iM+wRT2Ia0WO+dewGIrjLh5mPSH@vger.kernel.org, AJvYcCVKX6LoBJMKg4DlseA0aT3Pt6nLmqKg70sUPox43oZsc95LTZwj8oeyCEzCBVVtmEU0NZwucOzw7k66lRcM0X9S@vger.kernel.org, AJvYcCWboRS8CSBbE9+epPETx7FSt6DWFSfq4fagxTl/B6WOVvpKjIQibierJ8P89Mno7iJ6Gl11N1dHVBzqXzE=@vger.kernel.org, AJvYcCXjmZW0MVweeOUmZH20WONnv6dIAXZN8tYdgPjaNUl6ws7omwM6pfFfBdITk7cR9oET7v+spaYR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdYOX985kSnkyz8+Y7BFXhKep7fL18Y/djYC9kVMsaK7Tq1mAn
-	Q048aFSrIh1KR66ZIP2aICBmzQw7WRUTKxon82zJyDnjfH06q97Mnx5VvD7NLXcPUUfc/SO6Iwo
-	coSD0lqwNLwY1WjjHPC0H/BggP2M=
-X-Google-Smtp-Source: AGHT+IF6za5LfGR9PignCMfdAU4RNKydBE/DzDRowSAFw6jEwJKhTPBuMISHwbyJUdIMUQaOdSTMFb1oGckbgA2aLOw=
-X-Received: by 2002:a05:600c:3ba5:b0:426:6667:5c42 with SMTP id
- 5b1f17b1804b1-429ed7856camr83213885e9.4.1724135674405; Mon, 19 Aug 2024
- 23:34:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724147369; x=1724752169;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oksjuiJ+Fd+IdFBbr4NtZxm8Q/7F80HnKwwrINvO5XE=;
+        b=a8vFba6D61BcIybN0ctQha2QPJGWVujqTQEd/qVLp4GYLpIiJNlvWf9JrgRM7KrfLI
+         AFW8UEhPI3SG+Jmf6oepcUpL+VN+es3JGB/nFoQebjn4VTj5bHitA3NJO5EQ9Y30EN63
+         4aASQCerW1pwxIfRed3iUR4ZVQT9vQEqMuHOpnX/Eu/mjiliyYRLPx4UqeTPaYjYsALH
+         wveZmWtJEFyp0DuKAxRKv7VhSEYuW1PBaceWiUEfdTCJoFuZ2YQN1yydWC9/fRUlp7Go
+         8I7UFkE7XLmPPFJezoiiTdJxbLyGYoBseqKttTLcpMq9W+vK54Cp1q6LggjvW8N41FFq
+         VLiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeLVr4lzNh6AhtBMTlVvAb6RHkR4w6kB/9Oay1r5rFUAUYZhbsQjK4Q26kqBPPjOHy2RbpN2NsQxG6m0S8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFkse+tIwhuFi1TFB0gl2Ub0LzC40nKGmNIyIRzM6EzVpm3Kgg
+	t8RrT9sw/HinJmBb7kTI9oSy3NzYpqJR4njOJp/4Cc5LkWn3+7mYlaZbb4xa
+X-Google-Smtp-Source: AGHT+IG6/xe5UEm9QVs9Mz3JJM4sk29hmdtHxRZZ8AE5ozJ2XFTkdo3vxJzfrSjyoo4BEk4H3aeoaQ==
+X-Received: by 2002:a05:6a20:6f05:b0:1c2:8c32:1392 with SMTP id adf61e73a8af0-1c904f91cf4mr14693271637.22.1724147368677;
+        Tue, 20 Aug 2024 02:49:28 -0700 (PDT)
+Received: from localhost ([123.113.110.156])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d427efec73sm5014596a91.48.2024.08.20.02.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2024 02:49:28 -0700 (PDT)
+From: Julian Sun <sunjunchao2870@gmail.com>
+To: linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: jack@suse.cz,
+	brauner@kernel.org,
+	viro@zeniv.linux.org.uk,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	Julian Sun <sunjunchao2870@gmail.com>
+Subject: [PATCH] writeback: Refine the show_inode_state() macro definition
+Date: Tue, 20 Aug 2024 17:49:22 +0800
+Message-Id: <20240820094922.375996-1-sunjunchao2870@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240820000245.61787-1-technoboy85@gmail.com>
-In-Reply-To: <20240820000245.61787-1-technoboy85@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 20 Aug 2024 08:34:23 +0200
-Message-ID: <CAADnVQKYLu4gW95gK=kbFUCT+vCZtb595vdd5jVNVzcLn7qsiw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: use kfunc hooks instead of program types
-To: Matteo Croce <technoboy85@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	David Ahern <dsahern@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>, 
-	Jozsef Kadlecsik <kadlec@netfilter.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Shuah Khan <shuah@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
-	fsverity@lists.linux.dev, 
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, netfilter-devel <netfilter-devel@vger.kernel.org>, 
-	coreteam@netfilter.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Matteo Croce <teknoraver@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 20, 2024 at 2:03=E2=80=AFAM Matteo Croce <technoboy85@gmail.com=
-> wrote:
->
-> From: Matteo Croce <teknoraver@meta.com>
->
-> Pass to register_btf_kfunc_id_set() a btf_kfunc_hook directly, instead
-> of a bpf_prog_type.
-> Many program types share the same kfunc hook, so some calls to
-> register_btf_kfunc_id_set() can be removed.
->
-> Tested compiling the kernel with -Werror=3Denum-conversion to catch all
-> the occourrences.
->
-> Signed-off-by: Matteo Croce <teknoraver@meta.com>
+Currently, the show_inode_state() macro only prints
+part of the state of inode->i_state. Let’s improve it
+to display more of its state.
 
-I think it's too soon to do this kind of cleanup.
-We need to refactor this logic to accommodate sched-ext
-allow/deny pattern for kfunc per struct-ops hook.
-Let's keep this code as-is for now.
-pw-bot: cr
+Signed-off-by: Julian Sun <sunjunchao2870@gmail.com>
+---
+ include/trace/events/writeback.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 54e353c9f919..a2c2bb1cddd7 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -21,6 +21,15 @@
+ 		{I_SYNC,		"I_SYNC"},		\
+ 		{I_DIRTY_TIME,		"I_DIRTY_TIME"},	\
+ 		{I_REFERENCED,		"I_REFERENCED"}		\
++		{I_DIO_WAKEUP,	"I_DIO_WAKEUP"}	\
++		{I_LINKABLE,	"I_LINKABLE"}	\
++		{I_DIRTY_TIME,	"I_DIRTY_TIME"}	\
++		{I_WB_SWITCH,	"I_WB_SWITCH"}	\
++		{I_OVL_INUSE,	"I_OVL_INUSE"}	\
++		{I_CREATING,	"I_CREATING"}	\
++		{I_DONTCACHE,	"I_DONTCACHE"}	\
++		{I_SYNC_QUEUED,	"I_SYNC_QUEUED"}	\
++		{I_PINNING_NETFS_WB, "I_PINNING_NETFS_WB"} \
+ 	)
+ 
+ /* enums need to be exported to user space */
+-- 
+2.39.2
+
