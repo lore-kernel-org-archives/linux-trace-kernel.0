@@ -1,77 +1,60 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B92191477;
-	Tue, 20 Aug 2024 13:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385DD19067C;
+	Tue, 20 Aug 2024 13:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724161962; cv=none; b=r+CWPyh6/dUvIZV5YBkuUryh02+AqYMnvW1YNc7GhgGjR/bzfpW5IH1DFR3zFWAIUQieI32jKMGQu71nubnlhkFyXFrUqCQRGCREzMlCTRW0at9EwVodf9NkKyh195M86dot/13And+T28Z70kq+4i4EUv/z8vtTyC92Hb441O4=
+	t=1724162176; cv=none; b=e/xPHT+CTEnAAhHHG61dxRwxZc1z8w6eVVsfPEqYWXpk59eKaPhFDsyCwDXyd8bkmQu2xhCT5iO5oq5ta/xbEFC6ymPRq89Rbo5nUYjYuGpMDpCzaUP8vWfe1eb/SIHnavsCiSvodzaUr2YxqKFzGMUYNwWlKC864sQjsx5Wt2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724161962; c=relaxed/simple;
-	bh=aoGgvXxneXVWbzG5PcZX/RqdYS4kVM9UKC1ewzOZhP0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fPX9ZwnJEP2JtZhYBwWi5fkC6ud0tGavixJDZntRylH0UFYKdVkdo3C/SeWwVH62hXCVtnBvNrBs8Jb1rn6cYgbpTHsU2NHdPOT/K11m6KEjOk4qc5Xb/IfYtMFIC22oNECrrm1mfmVvYMIQz8S5pLvdaFkfVLG9HMo16EWeqlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Wp9pV1vH6z1xvW2;
-	Tue, 20 Aug 2024 21:50:42 +0800 (CST)
-Received: from dggpemf100006.china.huawei.com (unknown [7.185.36.228])
-	by mail.maildlp.com (Postfix) with ESMTPS id 65E611A0188;
-	Tue, 20 Aug 2024 21:52:36 +0800 (CST)
-Received: from thunder-town.china.huawei.com (10.174.178.55) by
- dggpemf100006.china.huawei.com (7.185.36.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 20 Aug 2024 21:52:35 +0800
-From: Zhen Lei <thunder.leizhen@huawei.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] uprobe: fix comment of uprobe_apply()
-Date: Tue, 20 Aug 2024 21:52:31 +0800
-Message-ID: <20240820135232.1913-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.37.3.windows.1
+	s=arc-20240116; t=1724162176; c=relaxed/simple;
+	bh=RofX8uJMXAhMRx/mQGA5JX2iXZa55j9cSx1hV2QqdnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Abwhc0N14Q6+fZ/tQ64t4AaVy4vui96wrSAv/Ti0CqWlAhpsj0IYqf3zjukwry8RJrnIt/8HSssBTS1dcqGgCXBgAVzXp4vyJa5FyEE7+XIpSbn6zQgco7Wj/x1R1k2n95tnh1UuuEZLHS5jaS0bf/1ki+P5nMRHjvhvL0KsuHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288D2C4AF0F;
+	Tue, 20 Aug 2024 13:56:15 +0000 (UTC)
+Date: Tue, 20 Aug 2024 09:56:41 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] tracing: dynamic ftrace selftest detected failures
+Message-ID: <20240820095641.1c74302f@gandalf.local.home>
+In-Reply-To: <ZsR0Z6DxSHOI-wNj@J2N7QTR9R3>
+References: <20240819171152.12f05e0ae5c9472004d1b00a@kernel.org>
+	<20240819112902.11451fe8@gandalf.local.home>
+	<20240820005649.dd019cfa70a8955d91cf85a0@kernel.org>
+	<20240819120244.5657eb2f@gandalf.local.home>
+	<20240820100330.9ee6f3d51f22bb9bab7c4b83@kernel.org>
+	<ZsR0Z6DxSHOI-wNj@J2N7QTR9R3>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemf100006.china.huawei.com (7.185.36.228)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Depending on the argument 'add', uprobe_apply() may be registering or
-unregistering a probe. The current comment misses the description of the
-registration.
+On Tue, 20 Aug 2024 11:48:07 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- kernel/events/uprobes.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > I found the target function already has "noinline". I tried to add noinline
+> > to the testing function (callsite), but it also did not work.
+> > I think "noinline" is for the compiler, but LTO is done by the linker.  
+> 
+> If LTO is breaking noinline, then that has much larger implications for
+> noinstr code and similar, and means that LTO is unsound...
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 73cc47708679f0c..c9de255e56e777f 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1201,8 +1201,8 @@ int uprobe_register_refctr(struct inode *inode, loff_t offset,
- EXPORT_SYMBOL_GPL(uprobe_register_refctr);
- 
- /*
-- * uprobe_apply - unregister an already registered probe.
-- * @inode: the file in which the probe has to be removed.
-+ * uprobe_apply - register a probe or unregister an already registered probe.
-+ * @inode: the file in which the probe has to be placed or removed.
-  * @offset: offset from the start of the file.
-  * @uc: consumer which wants to add more or remove some breakpoints
-  * @add: add or remove the breakpoints
--- 
-2.34.1
+Hmm, doesn't noinstr place the code in a separate section?
 
+I wonder if we create a separate section for the test function that LTO is
+inlining, if it will prevent it from being inlined. That is, noinline tells
+the compiler not to inline, but LTO happens after the compiler is done and
+may inline functions in the same section. But the linker does see separate
+sections and I don't think it will try to inline that code into another
+section. But I could be wrong. ;-)
+
+-- Steve
