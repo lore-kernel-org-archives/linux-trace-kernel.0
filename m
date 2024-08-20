@@ -1,299 +1,109 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922861E4F18
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Aug 2024 06:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AA61E2122;
+	Tue, 20 Aug 2024 06:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724133932; cv=none; b=pz8IHy/oRHgvDmFWrTifRO5U0kRb+S6EoaKBZBZgM+sbQi5iE/9zdVhBkUqWiDR9fSQjDLIntgHOz1KosDeWGD2MhEBmLxrDkIhN2tbQaVGkgbJb5wXW8z2Qq353wI8XF6UAMXlAEpGwhqnrQEJnHdXT/CVC2lXZRxHH8XePsSU=
+	t=1724135678; cv=none; b=u6gISV62KybrXl+5CchUYgnWDU+PajXWhGl/YxjGpLJr00NX3Kru2BNIdKwkjT/QLtFcg74NEKGywsR1SfhO/LChPkTroT4XT130qRf+FkWgrCpyEAf6SEUSmNQjJBXAhgymmtctPQi9QPXV1QmLxSVFeiaIm+8nAV/RLKL+pq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724133932; c=relaxed/simple;
-	bh=G7DEbNSfdulJZL7B+4tp/pE0LZ4T6ArGyQS38ScvR+s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bMKAOPNw7k/f1Eco0NN2tiQpucwNBsyEBJ+aZl0xreFxXTFwVZWBjJNjNxV5BqPEI6b67u6ERlyblgfbmNuECwCioXeSqqSnD0dDTm2JqZXEN77BAkMXTghCjvCI8C98PWFs5u8oRJ3g7Z4/o+Sq8E6h5+7edbzLiJn/CIPHTtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hoWB11aP; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1724135678; c=relaxed/simple;
+	bh=Cp3w7kkVxT1uWBiSkJuqzh8y0qcCGvAe5kQ4ewJ5zHg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GfsLQmtZSm7z2jSXHOsjvPS+9Ja6/bTtivGY2/H7+JErL2neFRIufa0J2XFQypVtKU7TkL6fSOAmQ5CSUJogPBoKC1VzRe8dXXn6ydrD7ztVL7UE+Unxqqmn+RuNXqeyXHASE32gWmsBzeaxGpRF49+qjqtDNc5Yp8aPuBoi8K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMi/vOG0; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hoWB11aP"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e1159159528so4205711276.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Aug 2024 23:05:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMi/vOG0"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4280bca3960so44799175e9.3;
+        Mon, 19 Aug 2024 23:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724133923; x=1724738723; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=boXjESgdTWQLiG6t6XpDdGr7L3LSCk/sMDntOjdOAS4=;
-        b=hoWB11aPAWPzMsj6YkI54A2UvMZFcofbq8fbH1HsX0Wg9RrJ9YsQ+5GHxtoN8F/gge
-         0W8kNPNP7d2+yWDMYld+vGVQRAy6iC4kgpGx8T4q9mHwB+jD3xcKSR3C/V5Iqbe8Purr
-         R0yfMJ/rneqJ+EuZlY3Da0BNTBkn7n7lGWniakN2uayYK5uCb/63itR+aEMF9Nsz74vK
-         jRNXxD6M2PFS51KOGPjZIQwIOzyYH9mC+BCn4AkEe2KYEWQsWW5g5M7+nP/353S6jIK5
-         ZrS8Tls+dtqLB8qjU2KlACaXtYDHOCvhJsNqnFo7RapZLeZdiAcaRFHm9Ra+tvDtuz0s
-         hUFQ==
+        d=gmail.com; s=20230601; t=1724135675; x=1724740475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cp3w7kkVxT1uWBiSkJuqzh8y0qcCGvAe5kQ4ewJ5zHg=;
+        b=aMi/vOG0w4Ujctyqn9JdNEMZot+mwgry6EY1K+2p3E76SrYdPCfvRbXWP+twFoYWCP
+         H7Ky+JnCrF5RfFHOjm1EbSCEtHKiI69HzcsBFvg0SXR+89uYMe7lbLq6iz7/pYdLjhRB
+         WsO7X5PnHagvB1+l1akD3vOvmRShzp+fBPYzD3WychOBGLyanwPzcmrNgOH7TM8kDR6w
+         1bwvv2KjmsqNsJGHaU2q24RueNNVfj8MRJo2QW3THhJcCOTf80VIC9kfRvxpqps7M35c
+         OvyUMysOlxgl/PPFQoJ+BVOSlx1+iLGZqNvdelAKb+AzEffL1T1oO/z0TDYRuJ8ErW6+
+         QgjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724133923; x=1724738723;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=boXjESgdTWQLiG6t6XpDdGr7L3LSCk/sMDntOjdOAS4=;
-        b=asItq7BqdgZxYZupot1QQk0UHXE+ZAZj5RfA4L+CfeVDeki5b8jjwP6A4qU+pfs2wk
-         L307ay8QsUKvtE1aCEoP7m0OGGo6MjjW+nDQ2ktDe1vGcLYnTxo9sD1mp1PD1+OeIfqE
-         EmBg/fka8o8Y04nR7pilaP0GVYKDQkU41kS7ir4zJ7NuIjJTUBRd6NbkVteA7N0uy353
-         TsaKTXCSHoDzuSN5B8jS+NnoPo4Hudo6L//CFej5jCz4sVuseTURL6aH5Y7VPOvnIbQE
-         +yNqS6vPdj+hix2rApF0o54vfYkVn1c5zbbx8+QplnyrkYGdN37Hs2OSPWIkM/j5rpHe
-         KtEA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3cXBaB1MgF10bAWFrV1aKDtZGeS2A917JLpXUG7bCQkhUKtjWx5dPKIa77Cma3b7mAG1/IfK22tEVQlbKqCSO8ilovv0ryvEUpfzIr0FX1xid
-X-Gm-Message-State: AOJu0YzIQft7ZXnmoE9/PMIyZvY6Vl7Rt+ryaMP9qlNSHVs8ButW/9iB
-	0xcJGgYq2ar0wHsXsT6FhXe13sAEFe0PttXZRK8qNhxyk3hPxooq/4VIgACW+rrP/xJ/ZeYqM1Q
-	fEeP99pvlPx/xWISvxDMAfg==
-X-Google-Smtp-Source: AGHT+IF1IcORSZBpF0a8U9UqqOrvZwBvlCqM5J5ZbExC11762cMrANS4lMhprPx2fvEkEV3s2z8Cw4BvxAxblD6vOQ==
-X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
- (user=almasrymina job=sendgmr) by 2002:a25:9cc3:0:b0:e11:691e:999c with SMTP
- id 3f1490d57ef6-e164aafc9b1mr49638276.5.1724133923346; Mon, 19 Aug 2024
- 23:05:23 -0700 (PDT)
-Date: Tue, 20 Aug 2024 06:04:56 +0000
-In-Reply-To: <20240820060456.1485518-1-almasrymina@google.com>
+        d=1e100.net; s=20230601; t=1724135675; x=1724740475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cp3w7kkVxT1uWBiSkJuqzh8y0qcCGvAe5kQ4ewJ5zHg=;
+        b=gOj9+lfbykWidLGYX3sYOlkFRZ4fWXRmRkyhIs2EhK26fPYjDfFMU5CLa0Ct+XQvp7
+         MkBGK5a0eDOGFe5Fv6jcREucSlyTO2K0YBJesdL1zWEERt3atnb5HXnQ2Y+fxmee7ikb
+         db4zK3MYkhDQiUl2FxR/Raw9krb5SkqeasUeZzljFaNIJ/J6lbFJ6bun/apa9oYRUCS3
+         CN0OeMxopxJ1KAkwZ/NC+GjduiClszT7/DZt1KxU8J00bpoDs6ipzMT0binahYBarF+m
+         QIxHrcV+L1edSDQ+iaM5BxgLp5VC1eBpXfYeFpwN/iEC/1Cb4fEzecCELfg2LYg607hs
+         khSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHDiIOVPg1g91eSD7OGexSLDOFJvS3zcMkHGHVztWvqoYcTsPxyX1my3iKjmxl5WBd2+3lyDaC/vLhbpfRqIvjbUUT@vger.kernel.org, AJvYcCUJ5Z2+yEWh/CRA8eQvvtD/R+pbemEekHTU2kMxl7R9gxqblUpwiz6n7iESUst86PtpJH01ugJmawwJiRzhsg==@vger.kernel.org, AJvYcCUJC+giXO/G+aMc5k0Zwp6AbUbHVNgnf+1c9N3APxDh6joo/EFoa+UfQQ4QTjidce+QKNSaGcoX6AGS762l@vger.kernel.org, AJvYcCUWftmaz7HN34cJrsabgktD87GlhM4op9c83UGxLEnW0MYn91om7DaW/N/1FuDPrfX+1W2Mept+eQns@vger.kernel.org, AJvYcCUYo3pZyseWL8Rd4St27B6ilQBBF1kwYlj0YzOmBnDRGGHvbaQjel1RUk+dEthY4BlUrVP7uYSE@vger.kernel.org, AJvYcCV0YfjI+lkLrSE9VmW5gSnZBigdVF/gHk+x5/FNQQSoy2EgQIcLDG35lyIO9iM+wRT2Ia0WO+dewGIrjLh5mPSH@vger.kernel.org, AJvYcCVKX6LoBJMKg4DlseA0aT3Pt6nLmqKg70sUPox43oZsc95LTZwj8oeyCEzCBVVtmEU0NZwucOzw7k66lRcM0X9S@vger.kernel.org, AJvYcCWboRS8CSBbE9+epPETx7FSt6DWFSfq4fagxTl/B6WOVvpKjIQibierJ8P89Mno7iJ6Gl11N1dHVBzqXzE=@vger.kernel.org, AJvYcCXjmZW0MVweeOUmZH20WONnv6dIAXZN8tYdgPjaNUl6ws7omwM6pfFfBdITk7cR9oET7v+spaYR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdYOX985kSnkyz8+Y7BFXhKep7fL18Y/djYC9kVMsaK7Tq1mAn
+	Q048aFSrIh1KR66ZIP2aICBmzQw7WRUTKxon82zJyDnjfH06q97Mnx5VvD7NLXcPUUfc/SO6Iwo
+	coSD0lqwNLwY1WjjHPC0H/BggP2M=
+X-Google-Smtp-Source: AGHT+IF6za5LfGR9PignCMfdAU4RNKydBE/DzDRowSAFw6jEwJKhTPBuMISHwbyJUdIMUQaOdSTMFb1oGckbgA2aLOw=
+X-Received: by 2002:a05:600c:3ba5:b0:426:6667:5c42 with SMTP id
+ 5b1f17b1804b1-429ed7856camr83213885e9.4.1724135674405; Mon, 19 Aug 2024
+ 23:34:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240820060456.1485518-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
-Message-ID: <20240820060456.1485518-14-almasrymina@google.com>
-Subject: [PATCH net-next v21 13/13] netdev: add dmabuf introspection
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+MIME-Version: 1.0
+References: <20240820000245.61787-1-technoboy85@gmail.com>
+In-Reply-To: <20240820000245.61787-1-technoboy85@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 20 Aug 2024 08:34:23 +0200
+Message-ID: <CAADnVQKYLu4gW95gK=kbFUCT+vCZtb595vdd5jVNVzcLn7qsiw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: use kfunc hooks instead of program types
+To: Matteo Croce <technoboy85@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	David Ahern <dsahern@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>, 
+	Jozsef Kadlecsik <kadlec@netfilter.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Shuah Khan <shuah@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
+	fsverity@lists.linux.dev, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, netfilter-devel <netfilter-devel@vger.kernel.org>, 
+	coreteam@netfilter.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Matteo Croce <teknoraver@meta.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add dmabuf information to page_pool stats:
+On Tue, Aug 20, 2024 at 2:03=E2=80=AFAM Matteo Croce <technoboy85@gmail.com=
+> wrote:
+>
+> From: Matteo Croce <teknoraver@meta.com>
+>
+> Pass to register_btf_kfunc_id_set() a btf_kfunc_hook directly, instead
+> of a bpf_prog_type.
+> Many program types share the same kfunc hook, so some calls to
+> register_btf_kfunc_id_set() can be removed.
+>
+> Tested compiling the kernel with -Werror=3Denum-conversion to catch all
+> the occourrences.
+>
+> Signed-off-by: Matteo Croce <teknoraver@meta.com>
 
-$ ./cli.py --spec ../netlink/specs/netdev.yaml --dump page-pool-get
-...
- {'dmabuf': 10,
-  'id': 456,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 455,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 454,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 453,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 452,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 451,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 450,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
- {'dmabuf': 10,
-  'id': 449,
-  'ifindex': 3,
-  'inflight': 1023,
-  'inflight-mem': 4190208},
-
-And queue stats:
-
-$ ./cli.py --spec ../netlink/specs/netdev.yaml --dump queue-get
-...
-{'dmabuf': 10, 'id': 8, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 9, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 10, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 11, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 12, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 13, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 14, 'ifindex': 3, 'type': 'rx'},
-{'dmabuf': 10, 'id': 15, 'ifindex': 3, 'type': 'rx'},
-
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-
----
- Documentation/netlink/specs/netdev.yaml | 10 ++++++++++
- include/uapi/linux/netdev.h             |  2 ++
- net/core/netdev-genl.c                  | 10 ++++++++++
- net/core/page_pool_user.c               |  4 ++++
- tools/include/uapi/linux/netdev.h       |  2 ++
- 5 files changed, 28 insertions(+)
-
-diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
-index 0c747530c275..08412c279297 100644
---- a/Documentation/netlink/specs/netdev.yaml
-+++ b/Documentation/netlink/specs/netdev.yaml
-@@ -167,6 +167,10 @@ attribute-sets:
-           "re-attached", they are just waiting to disappear.
-           Attribute is absent if Page Pool has not been detached, and
-           can still be used to allocate new memory.
-+      -
-+        name: dmabuf
-+        doc: ID of the dmabuf this page-pool is attached to.
-+        type: u32
-   -
-     name: page-pool-info
-     subset-of: page-pool
-@@ -268,6 +272,10 @@ attribute-sets:
-         name: napi-id
-         doc: ID of the NAPI instance which services this queue.
-         type: u32
-+      -
-+        name: dmabuf
-+        doc: ID of the dmabuf attached to this queue, if any.
-+        type: u32
- 
-   -
-     name: qstats
-@@ -543,6 +551,7 @@ operations:
-             - inflight
-             - inflight-mem
-             - detach-time
-+            - dmabuf
-       dump:
-         reply: *pp-reply
-       config-cond: page-pool
-@@ -607,6 +616,7 @@ operations:
-             - type
-             - napi-id
-             - ifindex
-+            - dmabuf
-       dump:
-         request:
-           attributes:
-diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
-index 91bf3ecc5f1d..7c308f04e7a0 100644
---- a/include/uapi/linux/netdev.h
-+++ b/include/uapi/linux/netdev.h
-@@ -93,6 +93,7 @@ enum {
- 	NETDEV_A_PAGE_POOL_INFLIGHT,
- 	NETDEV_A_PAGE_POOL_INFLIGHT_MEM,
- 	NETDEV_A_PAGE_POOL_DETACH_TIME,
-+	NETDEV_A_PAGE_POOL_DMABUF,
- 
- 	__NETDEV_A_PAGE_POOL_MAX,
- 	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
-@@ -131,6 +132,7 @@ enum {
- 	NETDEV_A_QUEUE_IFINDEX,
- 	NETDEV_A_QUEUE_TYPE,
- 	NETDEV_A_QUEUE_NAPI_ID,
-+	NETDEV_A_QUEUE_DMABUF,
- 
- 	__NETDEV_A_QUEUE_MAX,
- 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
-diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
-index 4201f9555772..c2ae57e7f291 100644
---- a/net/core/netdev-genl.c
-+++ b/net/core/netdev-genl.c
-@@ -293,6 +293,7 @@ static int
- netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
- 			 u32 q_idx, u32 q_type, const struct genl_info *info)
- {
-+	struct net_devmem_dmabuf_binding *binding;
- 	struct netdev_rx_queue *rxq;
- 	struct netdev_queue *txq;
- 	void *hdr;
-@@ -312,6 +313,15 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
- 		if (rxq->napi && nla_put_u32(rsp, NETDEV_A_QUEUE_NAPI_ID,
- 					     rxq->napi->napi_id))
- 			goto nla_put_failure;
-+
-+		binding = (struct net_devmem_dmabuf_binding *)
-+				  rxq->mp_params.mp_priv;
-+		if (binding) {
-+			if (nla_put_u32(rsp, NETDEV_A_QUEUE_DMABUF,
-+					binding->id))
-+				goto nla_put_failure;
-+		}
-+
- 		break;
- 	case NETDEV_QUEUE_TYPE_TX:
- 		txq = netdev_get_tx_queue(netdev, q_idx);
-diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
-index 9b69066cc07e..7995c1e3477d 100644
---- a/net/core/page_pool_user.c
-+++ b/net/core/page_pool_user.c
-@@ -213,6 +213,7 @@ static int
- page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
- 		  const struct genl_info *info)
- {
-+	struct net_devmem_dmabuf_binding *binding = pool->mp_priv;
- 	size_t inflight, refsz;
- 	void *hdr;
- 
-@@ -242,6 +243,9 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
- 			 pool->user.detach_time))
- 		goto err_cancel;
- 
-+	if (binding && nla_put_u32(rsp, NETDEV_A_PAGE_POOL_DMABUF, binding->id))
-+		goto err_cancel;
-+
- 	genlmsg_end(rsp, hdr);
- 
- 	return 0;
-diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
-index 91bf3ecc5f1d..7c308f04e7a0 100644
---- a/tools/include/uapi/linux/netdev.h
-+++ b/tools/include/uapi/linux/netdev.h
-@@ -93,6 +93,7 @@ enum {
- 	NETDEV_A_PAGE_POOL_INFLIGHT,
- 	NETDEV_A_PAGE_POOL_INFLIGHT_MEM,
- 	NETDEV_A_PAGE_POOL_DETACH_TIME,
-+	NETDEV_A_PAGE_POOL_DMABUF,
- 
- 	__NETDEV_A_PAGE_POOL_MAX,
- 	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
-@@ -131,6 +132,7 @@ enum {
- 	NETDEV_A_QUEUE_IFINDEX,
- 	NETDEV_A_QUEUE_TYPE,
- 	NETDEV_A_QUEUE_NAPI_ID,
-+	NETDEV_A_QUEUE_DMABUF,
- 
- 	__NETDEV_A_QUEUE_MAX,
- 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
--- 
-2.46.0.184.g6999bdac58-goog
-
+I think it's too soon to do this kind of cleanup.
+We need to refactor this logic to accommodate sched-ext
+allow/deny pattern for kfunc per struct-ops hook.
+Let's keep this code as-is for now.
+pw-bot: cr
