@@ -1,88 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6383414D2B4;
-	Wed, 21 Aug 2024 15:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B881531DD;
+	Wed, 21 Aug 2024 16:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724255770; cv=none; b=VsWu7VF158HGwSe9Yib1SmrGd7IaLFHG8lfxbiWYuPtZQzQJKyw10oBX74d0AUf8wKzb2elJcTym0XT6zSToPFKZfiYzjSMahrLStq/HXGXyQIJZLWPa+rEtPFAIXfy7i/1DNtucDwWMAgsjCLgPUHPZIDIhl9iyv6THheWajJ0=
+	t=1724258339; cv=none; b=YBl0cuhEx9FvLsP0VNhbRw+f/PYJhxMIDyMVTI4MiTvfYQc1JWFrtLQUwoYcN2MgwUBAvSyEa6Cr9eaIfM3ZTjVb6aidfHf5i42aNCmxdgVj7u3dt/OPei67fmJTvxcSA6fK/PrbXd6u8sNUYBXGIxwMVRlQar8jtTy4jJJ5LDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724255770; c=relaxed/simple;
-	bh=tk3tV88gD6hBTFFbuvzrZ2GOP6Y+PNIPKOVHzLmKSko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TKxHONyowtnigK1CJp7s1y7jqi0o6SjQJ7LLR6zVjCQpEvKaT3eSa8iq5T22HB6W5Yc5W1I/+AjLSBOOL7L9HZXbpCEV10892FKTN1xBzPR9aLNsc43liSEBTAfSRbdlFoA/FP5etjVwOb0unh3mOR1BdnlktWalXJagry4qoK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AA5C32781;
-	Wed, 21 Aug 2024 15:56:07 +0000 (UTC)
-Date: Wed, 21 Aug 2024 11:56:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com, david@redhat.com
-Subject: Re: [PATCH v2] ring-buffer: Align meta-page to sub-buffers for
- improved TLB usage
-Message-ID: <20240821115636.3546f684@gandalf.local.home>
-In-Reply-To: <20240628104611.1443542-1-vdonnefort@google.com>
-References: <20240628104611.1443542-1-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1724258339; c=relaxed/simple;
+	bh=nI1kfnd2AQwutPhf1hifBDEGMiu0e4Ykf6os4DdKgJk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hDFEcJCnMA9gSxnrnqFDJLbJHtihtzm05WYaB7iOOFVqf0GPQbUeW89ryZBnGglUNEDT4zYHFatSy+67S09nrFerO/2PARa/B/lS+//qgfZx7Uq9FQEP2xXp5IoEsWSOkEPyfuO3PQwbY4iH7IfeavHEC+/TxiN4pCvY0P+XFls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GdTa+j/l; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdTa+j/l"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2d3c098792bso5397027a91.1;
+        Wed, 21 Aug 2024 09:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724258337; x=1724863137; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3dGCCMIKQLvLb5lnBclxR1FcGee18F5yKa1iehrvVxc=;
+        b=GdTa+j/lpC28XxOZok+cDrM/UfhW6Y7CUm/IK19bxxVTatfC2+xhbIRepSmrW0DuD+
+         zwoU9HxfpQEA+BXAJdY7LvL1hhiP8sNrlQE1Y63N6QKRjgzK3ILxA6vGocJp/i9JQts7
+         nMMQTqoY3ysgroAkX3ZofiLW13ilRY2QJKDo/vzcDJMG+GgF2LDHTalFfILqzQAiibJf
+         guaUEmVNNoiFoN5fMcxe9IYl4Li/kQoHAWgLLseELXSzqEfj2cyfn3Ofj+RaFtnU3djk
+         VLVN/bdAtBKIHizuZj/TU2tezR3Xzur+mX2PjTyaN+c6ING0qXqP/52SqwPcBveCA8rd
+         uMog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724258337; x=1724863137;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3dGCCMIKQLvLb5lnBclxR1FcGee18F5yKa1iehrvVxc=;
+        b=Gi8R0k3YCQYt5aLKUlHOH7Qq28+7NMqDRKUATVwyl86oHeauGZVEHrzwioZgjYjL3K
+         HS0MJ5VOQAgwXtdPQAGGt/n5oYLa20EsrcFBTD5ZDx3U+BrI1JLSp79djpkM8O25dQzj
+         DELZWLmhVXf+21j785cRgr5Q3AunRO9XqmLZ1cHt5anpGxNMaNvYP2R8s/f1+4jvJOnI
+         JBdRBwCIAiSgrgcqwgdZSCPCGSV5gzu+DPjfQ6tw90aN7S51Sx3E/cYY50wHWPLwwJn3
+         uTdLnPXi0d6PA+8rMLu5Mmoi4YSTJkgjB7701E9YCFJimYqjhHLynzA9fBiggun+qxoi
+         TkiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVItMmnJPbJwInwnpK9JMtzgzkFD1NbphAWOGzOlWwZiEvl1S8+RdFh3kmRXhB+EqEYbTM=@vger.kernel.org, AJvYcCWT1hTpwSYOmOL3qJ0kbFF0IsSs+mkliaxzYYY20MlUiSO8YWvpzm9F5zk10eqT1R0/iaUozW9z3wqJhTdM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7unVlJUOo+SOTep0vYHOmBPByBIsk6uzWdHtPodRLdWjWvEL8
+	eLhEKz6KFGv8kJQ45WwjtDGyoTdu32Qdx9KgATIPaozOOUZc/DGVd21GZv4rsfMV024xMyK20kM
+	jb5R75SnoM513yUvjYlPyftyhlnM=
+X-Google-Smtp-Source: AGHT+IHgxlHE0G6w+twguixO3/VlEkkkbuLBd55NFEezH/MWu9XzW4Z1Kp0q4Y3McHwDxo7Ps6VEC2chZal/3Cl1/P4=
+X-Received: by 2002:a17:90a:e54a:b0:2d3:cc31:5fdc with SMTP id
+ 98e67ed59e1d1-2d5e99c59f9mr3369843a91.5.1724258336829; Wed, 21 Aug 2024
+ 09:38:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240813203409.3985398-1-andrii@kernel.org>
+In-Reply-To: <20240813203409.3985398-1-andrii@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 21 Aug 2024 09:38:44 -0700
+Message-ID: <CAEf4BzaKcrKXsdEu9Jo6=QAgn+SX3QxjmAt3vQEQ46UOkLh5eg@mail.gmail.com>
+Subject: Re: [PATCH v3] uprobes: turn trace_uprobe's nhit counter to be
+ per-CPU one
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, peterz@infradead.org, oleg@redhat.com, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 28 Jun 2024 11:46:11 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Tue, Aug 13, 2024 at 1:34=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
+ wrote:
+>
+> trace_uprobe->nhit counter is not incremented atomically, so its value
+> is questionable in when uprobe is hit on multiple CPUs simultaneously.
+>
+> Also, doing this shared counter increment across many CPUs causes heavy
+> cache line bouncing, limiting uprobe/uretprobe performance scaling with
+> number of CPUs.
+>
+> Solve both problems by making this a per-CPU counter.
+>
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  kernel/trace/trace_uprobe.c | 24 +++++++++++++++++++++---
+>  1 file changed, 21 insertions(+), 3 deletions(-)
+>
 
-> diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-> index a9006fa7097e..4bb0192e43f3 100644
-> --- a/tools/testing/selftests/ring-buffer/map_test.c
-> +++ b/tools/testing/selftests/ring-buffer/map_test.c
-> @@ -228,6 +228,20 @@ TEST_F(map, data_mmap)
->  	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED,
->  		    desc->cpu_fd, meta_len);
->  	ASSERT_EQ(data, MAP_FAILED);
+Is there anything else I'm expected to do about this patch? If not,
+can this please be applied? Thanks!
+
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index c98e3b3386ba..c3df411a2684 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/string.h>
+>  #include <linux/rculist.h>
+>  #include <linux/filter.h>
+> +#include <linux/percpu.h>
+>
+>  #include "trace_dynevent.h"
+>  #include "trace_probe.h"
+> @@ -62,7 +63,7 @@ struct trace_uprobe {
+>         char                            *filename;
+>         unsigned long                   offset;
+>         unsigned long                   ref_ctr_offset;
+> -       unsigned long                   nhit;
+> +       unsigned long __percpu          *nhits;
+>         struct trace_probe              tp;
+>  };
+>
+> @@ -337,6 +338,12 @@ alloc_trace_uprobe(const char *group, const char *ev=
+ent, int nargs, bool is_ret)
+>         if (!tu)
+>                 return ERR_PTR(-ENOMEM);
+>
+> +       tu->nhits =3D alloc_percpu(unsigned long);
+> +       if (!tu->nhits) {
+> +               ret =3D -ENOMEM;
+> +               goto error;
+> +       }
 > +
-> +	/* Verify meta-page padding */
-> +	if (desc->meta->meta_page_size > getpagesize()) {
-> +		void *addr;
-> +
-> +		data_len = desc->meta->meta_page_size;
-> +		data = mmap(NULL, data_len,
-> +			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-> +		ASSERT_NE(data, MAP_FAILED);
-> +
-> +		addr = (void *)((unsigned long)data + getpagesize());
-> +		ASSERT_EQ(*((int *)addr), 0);
-
-Should we make this a test that the entire page is zero?
-
-		for (int i = desc->meta->meta_struct_len; i < desc->meta->meta_page_size; i += sizeof(int))
-			ASSERT_EQ(((int *)data)[i], 0);
-
-?
-
-> +		munmap(data, data_len);
-> +	}
+>         ret =3D trace_probe_init(&tu->tp, event, group, true, nargs);
+>         if (ret < 0)
+>                 goto error;
+> @@ -349,6 +356,7 @@ alloc_trace_uprobe(const char *group, const char *eve=
+nt, int nargs, bool is_ret)
+>         return tu;
+>
+>  error:
+> +       free_percpu(tu->nhits);
+>         kfree(tu);
+>
+>         return ERR_PTR(ret);
+> @@ -362,6 +370,7 @@ static void free_trace_uprobe(struct trace_uprobe *tu=
+)
+>         path_put(&tu->path);
+>         trace_probe_cleanup(&tu->tp);
+>         kfree(tu->filename);
+> +       free_percpu(tu->nhits);
+>         kfree(tu);
 >  }
-
-Also, looking at the init, if for some reason (I highly doubt it may
-happen) that the meta_struct_len becomes bigger than page_size, we should
-update the init section to:
-
-	/* Handle the case where meta_struct_len is greater than page size */
-	if (page_size < desc->meta->meta_struct_len) {
-		/* meta_page_size is >= meta_struct_len */
-		page_size = desc->meta->meta_page_size;
-		munmap(desc->meta, page_size);
-		map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-		if (map == MAP_FAILED)
-			return -errno;
-		desc->meta = (struct trace_buffer_meta *)map;
-	}
-
--- Steve
+>
+> @@ -815,13 +824,21 @@ static int probes_profile_seq_show(struct seq_file =
+*m, void *v)
+>  {
+>         struct dyn_event *ev =3D v;
+>         struct trace_uprobe *tu;
+> +       unsigned long nhits;
+> +       int cpu;
+>
+>         if (!is_trace_uprobe(ev))
+>                 return 0;
+>
+>         tu =3D to_trace_uprobe(ev);
+> +
+> +       nhits =3D 0;
+> +       for_each_possible_cpu(cpu) {
+> +               nhits +=3D per_cpu(*tu->nhits, cpu);
+> +       }
+> +
+>         seq_printf(m, "  %s %-44s %15lu\n", tu->filename,
+> -                       trace_probe_name(&tu->tp), tu->nhit);
+> +                  trace_probe_name(&tu->tp), nhits);
+>         return 0;
+>  }
+>
+> @@ -1512,7 +1529,8 @@ static int uprobe_dispatcher(struct uprobe_consumer=
+ *con, struct pt_regs *regs)
+>         int ret =3D 0;
+>
+>         tu =3D container_of(con, struct trace_uprobe, consumer);
+> -       tu->nhit++;
+> +
+> +       this_cpu_inc(*tu->nhits);
+>
+>         udd.tu =3D tu;
+>         udd.bp_addr =3D instruction_pointer(regs);
+> --
+> 2.43.5
+>
