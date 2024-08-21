@@ -1,373 +1,213 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DC71ACDEC;
-	Wed, 21 Aug 2024 07:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C8B1CB14D;
+	Wed, 21 Aug 2024 08:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724226967; cv=none; b=e7dVRmEr0g+5gXNmfx4t3Isv3a0/JbByt0QCuDnKBGCFzQX7FRbE/+Gf0bgrk8ggzgE9InpJBU5AvWQ0ZJaHRKBukmNiTrYL3llcuRdKHLM3BKFCu1bFU66UMmmyMQR6lEixAvcRsRj0HauMvVlNQsy8NFyhjgMydif+ci20Nx4=
+	t=1724228465; cv=none; b=YA0aaZyqnE0kw5jmfxuxfJniLGDPIsMFp9Xir0taAy23UA2tcB7w21PT+5OrZ4WcqKAp2K89QRD6cEDXS++inXftaz6JaXLKg0IlujXWPcNS38L4NgCdy8LGHFcWH27ihBg60SZac72YT9JjBD/nkrrQRndKCdUQmvhdXMvOGLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724226967; c=relaxed/simple;
-	bh=P/TjomqdaPbRuRz2SsCmKrPxYIziUGYb9V8462M0o2Y=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=dV1aVhe/7Jm1SR8+AQf0fP5jT1pwfLKRi3xoKOgJIxiJefdfRUo65i/ppQNovLqgQYtJrahrjjOHw8jEwNxFvimjww3bjEFKo0lOGq37HmYv+wix7CjPI12bWsMURECm4l8M236YvsqRXxfvu9SdOywCgtLon5rQx8t2OeiA1OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WpdnM1TFWz68JW;
-	Wed, 21 Aug 2024 15:51:19 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 28E621400D1;
-	Wed, 21 Aug 2024 15:56:01 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 21 Aug 2024 15:56:00 +0800
-Message-ID: <f95fc55b-2f17-7333-2eae-52caae46f8b2@huawei.com>
-Date: Wed, 21 Aug 2024 15:55:59 +0800
+	s=arc-20240116; t=1724228465; c=relaxed/simple;
+	bh=DyeQTiVLIwnKP7nDbihUPIy5GAmQ7YvIMEcNM/HThdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qjEyE/Tx/nH3rV5I5gH0s6/N/Ouk92p1lj+gY7aSLveoQLE7o7X+Zm2oBbbE36m9HXuZF3QIZwJtztfscECjXvegxoq6hRkamZWc9NcPrcS8uh/EYByHsu+TTe95d4rIFfOWY3IAoUPakF/MbAUQ1w4ogIamRohT2CZRUd/NrRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af269.dynamic.kabel-deutschland.de [95.90.242.105])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id A93C661E5FE05;
+	Wed, 21 Aug 2024 10:20:13 +0200 (CEST)
+Message-ID: <1cf78f6f-af21-48bc-a9d8-755dd7bf8503@molgen.mpg.de>
+Date: Wed, 21 Aug 2024 10:20:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-From: "Liao, Chang" <liaochang1@huawei.com>
-Subject: Re: [PATCH] arm64: insn: Simulate nop and push instruction for better
- uprobe performance
-To: Mark Rutland <mark.rutland@arm.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
-	<oleg@redhat.com>, <peterz@infradead.org>, <puranjay@kernel.org>,
-	<ast@kernel.org>, <andrii@kernel.org>, <xukuohai@huawei.com>,
-	<revest@chromium.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-References: <20240814080356.2639544-1-liaochang1@huawei.com>
- <Zr3RN4zxF5XPgjEB@J2N7QTR9R3>
-In-Reply-To: <Zr3RN4zxF5XPgjEB@J2N7QTR9R3>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
+ #08!!! on Dell XPS 13 9360
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <354a2690-9bbf-4ccb-8769-fa94707a9340@molgen.mpg.de>
+ <87o7ak411y.fsf@somnus> <256fdb2e-9b83-4837-bd31-0c34e4267c31@molgen.mpg.de>
+ <87sezv7ytw.fsf@somnus>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <87sezv7ytw.fsf@somnus>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-Hi, Mark
+Dear Anna-Maria,
 
-My bad for taking so long to rely, I generally agree with your suggestions to
-STP emulation.
 
-在 2024/8/15 17:58, Mark Rutland 写道:
-> On Wed, Aug 14, 2024 at 08:03:56AM +0000, Liao Chang wrote:
->> As Andrii pointed out, the uprobe/uretprobe selftest bench run into a
->> counterintuitive result that nop and push variants are much slower than
->> ret variant [0]. The root cause lies in the arch_probe_analyse_insn(),
->> which excludes 'nop' and 'stp' from the emulatable instructions list.
->> This force the kernel returns to userspace and execute them out-of-line,
->> then trapping back to kernel for running uprobe callback functions. This
->> leads to a significant performance overhead compared to 'ret' variant,
->> which is already emulated.
-> 
-> I appreciate this might be surprising, but does it actually matter
-> outside of a microbenchmark?
+Thank you very much for the support. I was finally able to collect the 
+data you asked for.
 
-I just do a simple comparsion the performance impact of single-stepped and
-emulated STP on my local machine. Three user cases were measured: Redis GET and
-SET throughput (Request Per Second, RPS), and the time taken to execute a grep
-command on the "arch_uprobe_copy_xol" string within the kernel source.
+Am 09.04.24 um 09:57 schrieb Anna-Maria Behnsen:
+> Paul Menzel writes:
 
-Redis GET (higher is better)
-----------------------------
-No uprobe: 49149.71 RPS
-Single-stepped STP: 46750.82 RPS
-Emulated STP: 48981.19 RPS
+[…]
 
-Redis SET (larger is better)
-----------------------------
-No uprobe: 49761.14 RPS
-Single-stepped STP: 45255.01 RPS
-Emulated stp: 48619.21 RPS
-
-Grep (lower is better)
-----------------------
-No uprobe: 2.165s
-Single-stepped STP: 15.314s
-Emualted STP: 2.216s
-
-The result reveals single-stepped STP instruction that used to push fp/lr into
-stack significantly impacts the Redis and grep performance, leading to a notable
-notable decrease RPS and increase time individually. So emulating STP on the
-function entry might be a more viable option for uprobe.
-
-> 
->> Typicall uprobe is installed on 'nop' for USDT and on function entry
->> which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to push lr
->> and fp into stack regardless kernel or userspace binary. 
-> 
-> Function entry doesn't always start with a STP; these days it's often a
-> BTI or PACIASP, and for non-leaf functions (or with shrink-wrapping in
-> the compiler), it could be any arbitrary instruction. This might happen
-> to be the common case today, but there are certain;y codebases where it
-> is not.
-
-Sure, if kernel, CPU and compiler support BTI and PAC, the entry instruction
-is definitly not STP. But for CPU and kernel lack of these supports, STP as
-the entry instruction is still the common case. And I profiled the entry
-instruction for all leaf and non-leaf function, the ratio of STP is 64.5%
-for redis, 76.1% for the BPF selftest bench. So I am thinking it is still
-useful to emulate the STP on the function entry. Perhaps, for CPU and kernel
-with BTI and PAC enabled, uprobe chooses the slower single-stepping to execute
-STP for pushing stack.
-
-> 
-> STP (or any instruction that accesses memory) is fairly painful to
-> emulate because you need to ensure that the correct atomicity and
-> ordering properties are provided (e.g. an aligned STP should be
-> single-copy-atomic, but copy_to_user() doesn't guarantee that except by
-> chance), and that the correct VMSA behaviour is provided (e.g. when
-> interacting with MTE, POE, etc, while the uaccess primitives don't try
-> to be 100% equivalent to instructions in userspace).
-Agreed, but I don't think it has to emulate strictly the single-copy-atomic
-feature of STP that is used to push fp/lr into stack. In most cases, only one
-CPU will push registers to the same position on stack. And I barely understand
-why other CPUs would depends on the ordering of pushing data into stack. So it
-means the atomicity and ordering is not so important for this scenario. Regarding
-MTE and POE, a similar stragety to BTI and PAC can be applied: for CPUs and kernel
-with MTE and POE enabled, uprobe chooses the slower single-stepping to execute
-STP for pushing stack.
-
-> 
-> For those reasons, in general I don't think we should be emulating any
-> instruction which accesses memory, and we should not try to emulate the
-> STP, but I think it's entirely reasonable to emulate NOP.
-> 
->> In order to
->> improve the performance of handling uprobe for common usecases. This
->> patch supports the emulation of Arm64 equvialents instructions of 'nop'
->> and 'push'. The benchmark results below indicates the performance gain
->> of emulation is obvious.
+>> Am 08.04.24 um 12:10 schrieb Anna-Maria Behnsen:
 >>
->> On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
+>>> Paul Menzel writes:
 >>
->> xol (1 cpus)
->> ------------
->> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>
->> emulation (1 cpus)
->> -------------------
->> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/prod)
->> uprobe-push: 1.743 ± 0.006M/s  (1.743M/prod)
->> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/prod)
->> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/prod)
->> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/prod)
->> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/prod)
->>
->> As shown above, the performance gap between 'nop/push' and 'ret'
->> variants has been significantly reduced. Due to the emulation of 'push'
->> instruction needs to access userspace memory, it spent more cycles than
->> the other.
->>
->> [0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
->>
->> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->> ---
->>  arch/arm64/include/asm/insn.h            | 21 ++++++++++++++++++
->>  arch/arm64/kernel/probes/decode-insn.c   | 18 +++++++++++++--
->>  arch/arm64/kernel/probes/decode-insn.h   |  3 ++-
->>  arch/arm64/kernel/probes/simulate-insn.c | 28 ++++++++++++++++++++++++
->>  arch/arm64/kernel/probes/simulate-insn.h |  2 ++
->>  arch/arm64/kernel/probes/uprobes.c       |  2 +-
->>  6 files changed, 70 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
->> index 8c0a36f72d6f..a246e6e550ba 100644
->> --- a/arch/arm64/include/asm/insn.h
->> +++ b/arch/arm64/include/asm/insn.h
->> @@ -549,6 +549,27 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
->>  	       aarch64_insn_is_prfm_lit(insn);
->>  }
->>  
->> +static __always_inline bool aarch64_insn_is_nop(u32 insn)
->> +{
->> +	/* nop */
->> +	return aarch64_insn_is_hint(insn) &&
->> +	       ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
->> +}
+>>>> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 6.9-rc2+
+>>>> built from commit b1e6ec0a0fd0 (Merge tag 'docs-6.9-fixes' of
+>>>> git://git.lwn.net/linux) the external USB-C adapter Dell DA300 stopped
+>>>> working (only the Ethernet port was used). Linux logged:
+>>>
+>>> thanks for the report. Can you please provide a trace beside the dmesg
+>>> output? The following trace events should be enabled (via kernel command
+>>> line):
+>>>
+>>> trace_event=timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit
+>> Unfortunately I haven’t been able to reproduce it until now. Should it
+>> happen again, I am going to try your suggestion.
 > 
-> This looks fine, but the comment can go.
+> Thanks for letting me know.
 
-Removed.
+I wanted to configure that in the running system, but wasn’t able to set 
+all of these at once with `set_event`:
 
-> 
->> +static __always_inline bool aarch64_insn_is_stp_fp_lr_sp_64b(u32 insn)
->> +{
->> +	/*
->> +	 * The 1st instruction on function entry often follows the
->> +	 * patten 'stp x29, x30, [sp, #imm]!' that pushing fp and lr
->> +	 * into stack.
->> +	 */
->> +	return aarch64_insn_is_stp_pre(insn) &&
->> +	       (((insn >> 30) & 0x03) ==  2) && /* opc == 10 */
->> +	       (((insn >>  5) & 0x1F) == 31) && /* Rn  is sp */
->> +	       (((insn >> 10) & 0x1F) == 30) && /* Rt2 is x29 */
->> +	       (((insn >>  0) & 0x1F) == 29);	/* Rt  is x30 */
->> +}
-> 
-> We have accessors for these fields. Please use them.
+     echo 
+'timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit' 
+| sudo tee /sys/kernel/tracing/set_event
 
-Do you mean aarch64_insn_decode_register()?
+For some reason setting them individually also did *not* work:
 
-> 
-> Regardless, as above I do not think we should have a helper this
-> specific (with Rn, Rt, and Rt2 values hard-coded) inside <asm/insn.h>.
+     for e in timer:* timer_migration:* sched:sched_switch 
+sched:sched_wakeup sched:sched_process_hang irq:softirq_entry 
+irq:softirq_raise irq:softirq_exit'; do echo "$e" | sudo tee -a 
+/sys/kernel/tracing/set_event; done
 
-If we left necessary of emulation of STP aside, where would the best file to
-place these hard-coded decoder helper?
+I then used
 
-> 
->>  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
->>  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
->>  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
->> diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
->> index 968d5fffe233..df7ca16fc763 100644
->> --- a/arch/arm64/kernel/probes/decode-insn.c
->> +++ b/arch/arm64/kernel/probes/decode-insn.c
->> @@ -73,8 +73,22 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
->>   *   INSN_GOOD_NO_SLOT If instruction is supported but doesn't use its slot.
->>   */
->>  enum probe_insn __kprobes
->> -arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
->> +arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api,
->> +		      bool kernel)
->>  {
->> +	/*
->> +	 * While 'nop' and 'stp x29, x30, [sp, #imm]! instructions can
->> +	 * execute in the out-of-line slot, simulating them in breakpoint
->> +	 * handling offers better performance.
->> +	 */
->> +	if (aarch64_insn_is_nop(insn)) {
->> +		api->handler = simulate_nop;
->> +		return INSN_GOOD_NO_SLOT;
->> +	} else if (!kernel && aarch64_insn_is_stp_fp_lr_sp_64b(insn)) {
->> +		api->handler = simulate_stp_fp_lr_sp_64b;
->> +		return INSN_GOOD_NO_SLOT;
->> +	}
-> 
-> With the STP emulation gone, you won't need the kernel parameter here.>
->> +
->>  	/*
->>  	 * Instructions reading or modifying the PC won't work from the XOL
->>  	 * slot.
->> @@ -157,7 +171,7 @@ arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi)
->>  		else
->>  			scan_end = addr - MAX_ATOMIC_CONTEXT_SIZE;
->>  	}
->> -	decoded = arm_probe_decode_insn(insn, &asi->api);
->> +	decoded = arm_probe_decode_insn(insn, &asi->api, true);
->>  
->>  	if (decoded != INSN_REJECTED && scan_end)
->>  		if (is_probed_address_atomic(addr - 1, scan_end))
->> diff --git a/arch/arm64/kernel/probes/decode-insn.h b/arch/arm64/kernel/probes/decode-insn.h
->> index 8b758c5a2062..ec4607189933 100644
->> --- a/arch/arm64/kernel/probes/decode-insn.h
->> +++ b/arch/arm64/kernel/probes/decode-insn.h
->> @@ -28,6 +28,7 @@ enum probe_insn __kprobes
->>  arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi);
->>  #endif
->>  enum probe_insn __kprobes
->> -arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi);
->> +arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi,
->> +		      bool kernel);
->>  
->>  #endif /* _ARM_KERNEL_KPROBES_ARM64_H */
->> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
->> index 22d0b3252476..0b1623fa7003 100644
->> --- a/arch/arm64/kernel/probes/simulate-insn.c
->> +++ b/arch/arm64/kernel/probes/simulate-insn.c
->> @@ -200,3 +200,31 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
->>  
->>  	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
->>  }
->> +
->> +void __kprobes
->> +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
->> +{
->> +	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
->> +}
-> 
-> Hmm, this forgets to update the single-step state machine and PSTATE.BT,
-> and that's an extant bug in arch_uprobe_post_xol(). This can be:
+     echo 1 | sudo tee /sys/kernel/tracing/events/timer/enable
+     echo 1 | sudo tee /sys/kernel/tracing/events/timer_migration/enable
+     echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_switch/enable
+     echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_wakeup/enable
+     echo 1 | sudo tee 
+/sys/kernel/tracing/events/sched/sched_process_hang/enable
+     echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_entry/enable
+     echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_raise/enable
+     echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_exit/enable
 
-For emulated instruction, uprobe won't enable single-step mode of CPU,
-please check the handle_swbp() in kernel/events/uprobes.c:
+and also had to increase the buffer to bridge the gap between the event 
+and me noticing it:
 
-  if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
-          goto out;
+     echo 96000 | sudo tee /sys/kernel/tracing/buffer_size_kb
 
-  if (!pre_ssout(uprobe, regs, bp_vaddr))
-          return;
+Then, with Linux v6.11-rc4-11-g521b1e7f4cf0b, I was able to get the 
+trace for the event below:
 
-For emualted instruction, It will skip entire single-stepping and associated
-exception, which typically begins with pre_ssout() and ends with
-arch_uprobe_post_xol(). Therefore, using instruction_pointer_set() to emulate
-NOP is generally not a bad idea.
+     [ 7542.706299] NOHZ tick-stop error: local softirq work is pending, 
+handler #08!!!
 
-> 
-> | void __kprobes
-> | simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-> | {
-> | 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> | }
-> 
->> +
->> +void __kprobes
->> +simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *regs)
->> +{
->> +	long imm7;
->> +	u64 buf[2];
->> +	long new_sp;
->> +
->> +	imm7 = sign_extend64((opcode >> 15) & 0x7f, 6);
->> +	new_sp = regs->sp + (imm7 << 3);
-> 
-> We have accessors for these fields, please use them.
+$ sudo cat /sys/kernel/tracing/trace
+[…]
+  MediaPD~der #28-14000   [000] d..1.  7542.703768: hrtimer_cancel: 
+hrtimer=000000008d2c9f3f
+  MediaPD~der #28-14000   [000] .....  7542.703810: hrtimer_init: 
+hrtimer=00000000c6f259e7 clockid=CLOCK_MONOTONIC mode=ABS
+  MediaPD~der #28-14000   [000] d..1.  7542.703812: hrtimer_start: 
+hrtimer=00000000c6f259e7 function=hrtimer_wakeup expires=7602581538204 
+softexpires=7602581488204 mode=ABS
+  MediaPD~der #28-14000   [000] d..2.  7542.703821: sched_switch: 
+prev_comm=MediaPD~der #28 prev_pid=14000 prev_prio=120 prev_state=S ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] dN.2.  7542.703931: sched_wakeup: 
+comm=ImageBridgeChld pid=6041 prio=120 target_cpu=000
+           <idle>-0       [000] d..2.  7542.703937: sched_switch: 
+prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> 
+next_comm=ImageBridgeChld next_pid=6041 next_prio=120
+  ImageBridgeChld-6041    [000] d..2.  7542.704041: sched_switch: 
+prev_comm=ImageBridgeChld prev_pid=6041 prev_prio=120 prev_state=S ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] dN.2.  7542.704174: sched_wakeup: 
+comm=Renderer pid=4113 prio=120 target_cpu=000
+           <idle>-0       [000] d..2.  7542.704179: sched_switch: 
+prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> 
+next_comm=Renderer next_pid=4113 next_prio=120
+         Renderer-4113    [000] d..2.  7542.704245: sched_switch: 
+prev_comm=Renderer prev_pid=4113 prev_prio=120 prev_state=S ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] dNh2.  7542.704260: sched_wakeup: 
+comm=IPC I/O Child pid=6029 prio=120 target_cpu=000
+           <idle>-0       [000] d..2.  7542.704267: sched_switch: 
+prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> 
+next_comm=IPC I/O Child next_pid=6029 next_prio=120
+    IPC I/O Child-6029    [000] d..2.  7542.704340: sched_switch: 
+prev_comm=IPC I/O Child prev_pid=6029 prev_prio=120 prev_state=S ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] dN.2.  7542.704786: sched_wakeup: 
+comm=Compositor pid=4123 prio=120 target_cpu=000
+           <idle>-0       [000] d..2.  7542.704791: sched_switch: 
+prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> 
+next_comm=Compositor next_pid=4123 next_prio=120
+       Compositor-4123    [000] d..2.  7542.704944: sched_switch: 
+prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] dN.2.  7542.705943: sched_wakeup: 
+comm=Compositor pid=4123 prio=120 target_cpu=000
+           <idle>-0       [000] d..2.  7542.705950: sched_switch: 
+prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> 
+next_comm=Compositor next_pid=4123 next_prio=120
+       Compositor-4123    [000] d..2.  7542.706105: sched_switch: 
+prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] d.h2.  7542.706328: hrtimer_cancel: 
+hrtimer=000000009bbda66a
+           <idle>-0       [000] d.h1.  7542.706329: 
+hrtimer_expire_entry: hrtimer=000000009bbda66a 
+function=tick_nohz_handler now=7542584007490
+           <idle>-0       [000] d.h1.  7542.706333: softirq_raise: vec=9 
+[action=RCU]
+           <idle>-0       [000] d.h1.  7542.706338: softirq_raise: vec=7 
+[action=SCHED]
+           <idle>-0       [000] d.h1.  7542.706339: hrtimer_expire_exit: 
+hrtimer=000000009bbda66a
+           <idle>-0       [000] d.h2.  7542.706340: hrtimer_start: 
+hrtimer=000000009bbda66a function=tick_nohz_handler 
+expires=7542588000000 softexpires=7542588000000 mode=ABS
+           <idle>-0       [000] ..s1.  7542.706345: softirq_entry: vec=7 
+[action=SCHED]
+           <idle>-0       [000] ..s1.  7542.706359: softirq_exit: vec=7 
+[action=SCHED]
+           <idle>-0       [000] ..s1.  7542.706360: softirq_entry: vec=9 
+[action=RCU]
+           <idle>-0       [000] ..s1.  7542.706362: softirq_exit: vec=9 
+[action=RCU]
+           <idle>-0       [000] dNh4.  7542.707672: sched_wakeup: 
+comm=irq/51-DLL075B: pid=194 prio=49 target_cpu=000
+           <idle>-0       [000] d..2.  7542.707685: sched_switch: 
+prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> 
+next_comm=irq/51-DLL075B: next_pid=194 next_prio=49
+  irq/51-DLL075B:-194     [000] .....  7542.707708: timer_init: 
+timer=00000000630ae178
+  irq/51-DLL075B:-194     [000] d..1.  7542.707710: timer_start: 
+timer=00000000630ae178 function=process_timeout expires=4296778179 
+[timeout=250] bucket_expiry=4296778184 cpu=0 idx=121 flags=
+  irq/51-DLL075B:-194     [000] d..2.  7542.707718: sched_switch: 
+prev_comm=irq/51-DLL075B: prev_pid=194 prev_prio=49 prev_state=D ==> 
+next_comm=swapper/0 next_pid=0 next_prio=120
+           <idle>-0       [000] dN.2.  7542.709072: sched_wakeup: 
+comm=AudioIP~ent RPC pid=6671 prio=120 target_cpu=000
+[…]
 
-Do you mean aarch64_insn_decode_immediate()?
+The trace file is 320 MB big. If you need the full trace and log, please 
+tell me, and I’ll upload it somewhere.
 
-> 
->> +
->> +	buf[0] = regs->regs[29];
->> +	buf[1] = regs->regs[30];
->> +
->> +	if (copy_to_user((void __user *)new_sp, buf, sizeof(buf))) {
->> +		force_sig(SIGSEGV);
->> +		return;
->> +	}
-> 
-> As above, this won't interact with VMSA features (e.g. MTE, POE) in the
-> same way as an STP in userspace, and this will not have the same
-> atomicity properties as an STP>
->> +
->> +	regs->sp = new_sp;
->> +	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
-> 
-> Likewise, this sould need ot use arm64_skip_faulting_instruction(),
-> though as above I think we should drop STP emulation entirely.
 
-I explain the reason why using instruction_pointer_set() under your comments
-for simulate_nop().
+Kind regards,
 
-Thanks.
-
-> 
-> Mark.
-> 
-
--- 
-BR
-Liao, Chang
+Paul
