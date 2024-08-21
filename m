@@ -1,94 +1,97 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71AC4D8CE;
-	Wed, 21 Aug 2024 01:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B97222619;
+	Wed, 21 Aug 2024 01:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724204363; cv=none; b=rmgkHzIZJJzYtsk3dLXpbSQWUxIPgaCA50YlAwKIOXQugE13kypowKt0fAJ3iKYXZ/VxEnPtuePAZO86ySZ5nzK1M7IBOaJFJRTX9tI/XGNRxOtOFu0+xDngD9x8ipVaaqhfP1qeko3WCBhd+1R91kPcw5KXnq0tQrJGQ1UmcmY=
+	t=1724204983; cv=none; b=fDzMpk7BrNJPj5OWIiWw3VoR91npcZ6u4Oyi78ZR0ytegB4fAzz2F4kItRQGmw+qfhXi3/UgFn0AoU8wnxZ40KkgpnofplcxFxkCqdHNiVRvay2q/S5pnJO6NNPRwXuE/72Qm1whNXQONp6g36kTXkgO2Gpc9DA//Pzvqa4Sido=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724204363; c=relaxed/simple;
-	bh=UJHalFk+nApOOHUpDeWowIIoi4cZRSx8rCxcwx6QPh8=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=C86R/N4E3D5y6piosvIi27VaMWKtl9VlnovOc5zIMLOMnB2QPno31zozKZsIVdWr/OqV0m3yGQUR4tXTF3dRAmp9iAnkpUk06LvrujpOs+2SFLyhYInaPKsgqPHLC3kMSPDl2OFKqVn1o46jBXeLZnLS9uFHBMfpXixza7F4ux4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WpTWM3kCQz13jPS;
-	Wed, 21 Aug 2024 09:38:39 +0800 (CST)
-Received: from dggpemf100006.china.huawei.com (unknown [7.185.36.228])
-	by mail.maildlp.com (Postfix) with ESMTPS id F398B1401F4;
-	Wed, 21 Aug 2024 09:39:17 +0800 (CST)
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemf100006.china.huawei.com (7.185.36.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 21 Aug 2024 09:39:17 +0800
-Subject: Re: [PATCH 1/1] uprobe: fix comment of uprobe_apply()
-To: Oleg Nesterov <oleg@redhat.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang
- Kan <kan.liang@linux.intel.com>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240820135232.1913-1-thunder.leizhen@huawei.com>
- <20240820143001.GC12400@redhat.com>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <01c48cd3-9675-8350-217b-039a6812a2e8@huawei.com>
-Date: Wed, 21 Aug 2024 09:39:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+	s=arc-20240116; t=1724204983; c=relaxed/simple;
+	bh=QEcP0D5pWqJNvY0cdxNsEMzC1z85w9dK6ebctCCsuV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jvvdf4NX8YzdSN+TUPj9g5/TjsL/VkQwdWZWE36GJazKtwQagJfl8xeWswsana1KCO3OyTQab3nBBX6t84dVk1PbkcdMV6kjXTfBW40GCzU6JLn98Wqrwz2aBxaf9JiNSYwVpAnarpcZQABHKUqjhr7OQgJPMLOn8KPq1fqgZ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2iT7nVX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2iT7nVX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08F7C4AF0E;
+	Wed, 21 Aug 2024 01:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724204983;
+	bh=QEcP0D5pWqJNvY0cdxNsEMzC1z85w9dK6ebctCCsuV0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W2iT7nVXCenGsX9Oubfa9dTGURB+eoci50JGFgIlkmI342HyusXhc8AyBnwB+ywLf
+	 ZQtmlnQUNDrCsZw+AUuG7W9A3FAObsjhOc+gk+umK4RuOqyL/8QL+62PEAtvBoUnjB
+	 6IymVrFBIkHkliksUN0JXCdRCtEuXkyaVmmMMIl22AEpbJGpiaWmOtI5g4XAP69s+z
+	 V1vs89QQNhPc0UFEfcL6cRZoJhWzXdaN1vipw0+lKUkhWfYpMGwhbQ1zvnLb9/E0zZ
+	 QfNZfQmvivEdqVncvanJZF41b7MJHe6hO6UU9qoyHymgCtnfOQNdURwOz0w5omEp+i
+	 hwuwhwYfKeeBA==
+Date: Tue, 20 Aug 2024 18:49:39 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Richard Henderson
+ <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Sumit
+ Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, Shailend
+ Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH net-next v19 03/13] netdev: support binding dma-buf to
+ netdevice
+Message-ID: <20240820184939.47708aac@kernel.org>
+In-Reply-To: <CAHS8izO-F2qwbEEtYONOYgNFsP3jxpv0etgSKknnAQ8itA5Cdw@mail.gmail.com>
+References: <20240813211317.3381180-4-almasrymina@google.com>
+	<CAMArcTWWxjsg_zwS6waWkLpyHhwdXDm_NJeVGm_dr+eT5QDZiA@mail.gmail.com>
+	<20240819155257.1148e869@kernel.org>
+	<CAHS8izPL4YdqFjkTpYavdxQn816=kkUv0xravQJF4Uno7Bn3ZQ@mail.gmail.com>
+	<20240820081920.6630a73f@kernel.org>
+	<CAHS8izO-F2qwbEEtYONOYgNFsP3jxpv0etgSKknnAQ8itA5Cdw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240820143001.GC12400@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf100006.china.huawei.com (7.185.36.228)
 
+On Tue, 20 Aug 2024 13:11:20 -0400 Mina Almasry wrote:
+> > Protecting the stack from unreadable memory is *the* challenge
+> > in this series. The rest is a fairly straightforward.  
+> 
+> Understandable. I pulled the trigger on v21 with the build fix last
+> night after reading your response on the other thread. If you manage
+> to review that and let me know of any other issues I'm going to run
+> into down the road, that would be great. But I read in some other
+> thread that you're overloaded. Sorry if I'm piling on. Feel free to cr
+> it if necessary, of course.
 
-
-On 2024/8/20 22:30, Oleg Nesterov wrote:
-> On 08/20, Zhen Lei wrote:
->>
->> Depending on the argument 'add', uprobe_apply() may be registering or
->> unregistering a probe.
-> 
-> ...
-> 
->>  /*
->> - * uprobe_apply - unregister an already registered probe.
->> - * @inode: the file in which the probe has to be removed.
->> + * uprobe_apply - register a probe or unregister an already registered probe.
-> 
-> Not really.
-> 
-> See the commit 3c83a9ad0295eb63bd ("uprobes: make uprobe_register() return struct uprobe *")
-> in tip/perf/core which changed this description
-> 
-> 	* uprobe_apply - add or remove the breakpoints according to @uc->filter
-> 
-> still looks confusing, yes...
-
-OK, I got it. I mistakenly thought the comment was based on register_for_each_vma.
-It seems necessary to rename 'register_for_each_vma' to 'apply_for_each_vma',
-or some other more appropriate name.
-
-> 
-> Oleg.
-> 
-> 
-> .
-> 
-
--- 
-Regards,
-  Zhen Lei
+Sorry, I was hoping to but the Intel series with its layers of magic
+macros exhausted my mental capacity (and time). Feel free to resubmit
+without the full 24h wait.
