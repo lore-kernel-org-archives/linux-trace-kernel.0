@@ -1,229 +1,116 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D314C5BA
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Aug 2024 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0472B14F9C5;
+	Wed, 21 Aug 2024 15:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724254608; cv=none; b=ToILX40f+a9iatKhs4mLegUbtFlx33GaE+vn09sdy/D7OS97f9gLvM0dFUgjHOIQuV0lDxl/gqA6GLSHgcIHCPT+8eLpO75ey2TgfHrY9MlNJNxcFm7v5XVqDv6GqOsekJ02+p6qYbKnK1UC+0F0BqqF9cqdB/ZDYm2TVlP/LV0=
+	t=1724254933; cv=none; b=uFtpdNuKg7lKcoyQd2My4T+p/GzPkMgy1tWQNjadzjEe5jBcX/dRzX9U2TYCNTYPixCvc8/5Gp4SDDMQ9QWYDSV8pFoNl7TGUI9K0OSGVtteoYNF4eKahUfdcorZl+NoY4ajfRdGgFOj894ROxoKGs8zDiJblY5uJNP8CiTWLGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724254608; c=relaxed/simple;
-	bh=lRtlmbjL10N9pND329duqEBS2XO74LAzcfVhekR0HYk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B4f5l94XkI3DfrDurCGyZD6f9FITGQTEqFh1uY0MR0ENeP22DDr5vKBvKPqLlN09CNQEDENFtylW0+fYkFZi9V00e23/uamM3Mn10zBhAug/ukMmQgwUAZk+QefaLi3mnUst+9kAUg/SdHMVl5dShveS5eay3Y0wuu2ZxbxxMkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VawqCO9A; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VawqCO9A"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-44fee2bfd28so325291cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Aug 2024 08:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724254605; x=1724859405; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XUZoeSiNO641pI3EuPxhZcOUo6QCsmcEaLeGMupG+Zk=;
-        b=VawqCO9Ap+dfG9m5J2m0lw/Kt22zqA+IUqPCZmZb15ns7NM1w7XhIHRfB0KFAyxY8W
-         vFYidURPYefAUs0AoQdCss4vjJs0hRhqr43gVHbsFiw1B9ldI0kIQS0dPYFs4nkxhRBO
-         VWr9iHG8WuLjsD5se9v2lReEV4/I+6inz0ZPbW5M9F4umNk5sbLVejBxxOMS+TUrfZEO
-         CONEh2i35AR7tfgTyzMzRYcMqBG/TbKMsxIKZneIW745qgGVc/CHc/VkwvNYZ3ELJxSH
-         Dr/c81HgwIJYlN3IKpB4dL58faG9ZHOBRQcc1OoHLmOX2F1tfDbzZOV877FLg9cCkcPw
-         8cPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724254605; x=1724859405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XUZoeSiNO641pI3EuPxhZcOUo6QCsmcEaLeGMupG+Zk=;
-        b=cwfZbL9l1Lpj5kzQIGBorodL0C2HAf44f5onqfYIpM0zhJSz9GOn2Wb9TKwIhOjN0w
-         1feKwYu+/y6lXijFchNqruvIwq66SbQOcKx4pC0bpdkORcv1XxatEXiEGbY5AGw7Wq5q
-         K7M4Ztfu8i6M+jdD1CdqgsNRkgXLgZlKiQBJYtWQAbh7iBCTZpWDUBCZhdhXXDR8GcA/
-         hEITCkymnziYaJoiQ5XGe7KXUA1e6cltLDc2w20FUAKO0J2R/DVaNZYEbhCrl8tT0k67
-         rTajEvJs3eFBVnIUl9bITT0toDgSsExC45jO6fVv6g5ChRngQlZOiqibhRonFOHs7TJX
-         8AHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWr0tZIQWu+r2k8rsFOlo9lQDX3+e+0uFPlYhll8AwJeo/W3Q2GB0fqRbSeA54EAt+ztoGA0ql8nyN4q8wCmk3vxLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBYSSAynL540Z5OK6iMua2jpLy2oY/GMyrQrQmrsLR72ShUdJG
-	s/mFdDe2AlBD8KUNZOPpykKnkTfSgcK3ed7go1HeZYKfhbOQ7Fcpq3Z/nb9CZV1Zh1pVtT/zz6/
-	V85zHucgT6cvCgAxNHPgCeHECrgLSDi+XOjBgmRpluCu4SkVw3/inVZ0=
-X-Google-Smtp-Source: AGHT+IGfHATnjXtnGmfmB/4D15ItV4+y4fk90XQNkiarco8smx060mhOYYV6TW3lde4cXDjE7q2OcPZA07rGH+zC+AM=
-X-Received: by 2002:a05:622a:1816:b0:447:d555:7035 with SMTP id
- d75a77b69052e-454e86e342amr6626771cf.13.1724254604541; Wed, 21 Aug 2024
- 08:36:44 -0700 (PDT)
+	s=arc-20240116; t=1724254933; c=relaxed/simple;
+	bh=jegzxbbiB+UZX2v3Bp9jNKjbmv+Bhs7rh5DY+VeeNII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCIQ8Bi4FI8auAD8ssFlHThRY6tN34BeEtyGKqYBTd9DesnfWiwwCObmUzd4jNSq1BQIIcmtOIOKUT5+3ZNzzwMlJss5FUdVMpxl5/FLZ2/PklPKEQRnbiOkzJJM7IIOL61/bxVJj++2a/nmdpY9/NK4v3HvuIsMvC8ZaQqZTr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95578152B;
+	Wed, 21 Aug 2024 08:42:37 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 587AB3F73B;
+	Wed, 21 Aug 2024 08:42:10 -0700 (PDT)
+Date: Wed, 21 Aug 2024 16:42:07 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [BUG] tracing: dynamic ftrace selftest detected failures
+Message-ID: <ZsYKz6ycI8fiQbdh@J2N7QTR9R3.cambridge.arm.com>
+References: <20240819171152.12f05e0ae5c9472004d1b00a@kernel.org>
+ <20240819112902.11451fe8@gandalf.local.home>
+ <20240820005649.dd019cfa70a8955d91cf85a0@kernel.org>
+ <20240819120244.5657eb2f@gandalf.local.home>
+ <20240820100330.9ee6f3d51f22bb9bab7c4b83@kernel.org>
+ <ZsR0Z6DxSHOI-wNj@J2N7QTR9R3>
+ <CABCJKueKhDVarco4mgNeR0hkAhxDtxBjdpu=QaYVi+TGoiqd2g@mail.gmail.com>
+ <20240821070539.981b42e5f3b939c5ce5e3a71@kernel.org>
+ <ZsYInqSc-WS4UldP@J2N7QTR9R3.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813211317.3381180-4-almasrymina@google.com>
- <CAMArcTWWxjsg_zwS6waWkLpyHhwdXDm_NJeVGm_dr+eT5QDZiA@mail.gmail.com>
- <20240819155257.1148e869@kernel.org> <CAHS8izPL4YdqFjkTpYavdxQn816=kkUv0xravQJF4Uno7Bn3ZQ@mail.gmail.com>
- <CAMArcTXvccYBPZTEuW-z=uTK7W67utd9-xjPzfxEOvUWhPS7bg@mail.gmail.com>
-In-Reply-To: <CAMArcTXvccYBPZTEuW-z=uTK7W67utd9-xjPzfxEOvUWhPS7bg@mail.gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 21 Aug 2024 11:36:31 -0400
-Message-ID: <CAHS8izPZ9Jiu9Gj+Kk3cQ_+t22M4n4-mbPLhx+fti_HiWzL57Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v19 03/13] netdev: support binding dma-buf to netdevice
-To: Taehee Yoo <ap420073@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZsYInqSc-WS4UldP@J2N7QTR9R3.cambridge.arm.com>
 
-On Wed, Aug 21, 2024 at 5:15=E2=80=AFAM Taehee Yoo <ap420073@gmail.com> wro=
-te:
->
-> On Tue, Aug 20, 2024 at 1:01=E2=80=AFPM Mina Almasry <almasrymina@google.=
-com> wrote:
-> >
-> > On Mon, Aug 19, 2024 at 6:53=E2=80=AFPM Jakub Kicinski <kuba@kernel.org=
-> wrote:
-> > >
-> > > On Mon, 19 Aug 2024 00:44:27 +0900 Taehee Yoo wrote:
-> > > > > @@ -9537,6 +9540,10 @@ static int dev_xdp_attach(struct net_devic=
-e *dev, struct netlink_ext_ack *extack
-> > > > >                         NL_SET_ERR_MSG(extack, "Native and generi=
-c XDP can't be active at the same time");
-> > > > >                         return -EEXIST;
-> > > > >                 }
-> > > > > +               if (dev_get_max_mp_channel(dev) !=3D -1) {
-> > > > > +                       NL_SET_ERR_MSG(extack, "XDP can't be inst=
-alled on a netdev using memory providers");
-> > > > > +                       return -EINVAL;
-> > > > > +               }
+On Wed, Aug 21, 2024 at 04:32:46PM +0100, Mark Rutland wrote:
+> On Wed, Aug 21, 2024 at 07:05:39AM +0900, Masami Hiramatsu wrote:
+> > On Tue, 20 Aug 2024 08:10:42 -0700
+> > Sami Tolvanen <samitolvanen@google.com> wrote:
+> > 
+> > > On Tue, Aug 20, 2024 at 3:48 AM Mark Rutland <mark.rutland@arm.com> wrote:
 > > > >
-> > > > Should we consider virtual interfaces like bonding, bridge, etc?
-> > > > Virtual interfaces as an upper interface of physical interfaces can
-> > > > still install XDP prog.
+> > > > On Tue, Aug 20, 2024 at 10:03:30AM +0900, Masami Hiramatsu wrote:
+> > > > > On Mon, 19 Aug 2024 12:02:44 -0400
+> > > > > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > > >
+> > > > > > On Tue, 20 Aug 2024 00:56:49 +0900
+> > > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > > > > > >
+> > > > > > > >
+> > > > > > > > We may need to add "noinline" or something to make sure those functions
+> > > > > > > > don't get inlined for LTO.
+> > > > > > >
+> > > > > > > Yeah, we need such option at least for function call test.
+> > > > > >
+> > > > > > Could you add the noinline, and if it fixes the issue send a patch?
+> > > > >
+> > > > > I found the target function already has "noinline". I tried to add noinline
+> > > > > to the testing function (callsite), but it also did not work.
+> > > > > I think "noinline" is for the compiler, but LTO is done by the linker.
 > > > >
-> > > > # ip link add bond0 type bond
-> > > > # ip link set eth0 master bond0
-> > > > # ip link set bond0 xdp pin /sys/fs/bpf/x/y
-> > > > and
-> > > > # ip link set bond0 xdpgeneric pin /sys/fs/bpf/x/y
-> > > >
-> > > > All virtual interfaces can install generic XDP prog.
-> > > > The bonding interface can install native XDP prog.
-> > >
-> > > Good point. We may need some common helpers to place the checks for X=
-DP.
-> > > They are spread all over the place now.
-> >
-> > Took a bit of a look here. Forgive me, I'm not that familiar with XDP
-> > and virtual interfaces, so I'm a bit unsure what to do here.
-> >
-> > For veth, it seems, the device behind the veth is stored in
-> > veth_priv->peer, so it seems maybe a dev_get_max_mp_channel() check on
-> > veth_priv->peer is the way to go to disable this for veth? I think we
-> > need to do this check on creation of the veth and on the ndo_bpf of
-> > veth.
-> >
-> > For bonding, it seems we need to add mp channel check in bond_xdp_set,
-> > and bond_enslave?
-> >
-> > There are a few other drivers that define ndo_add_slave, seems a check
-> > in br_add_slave is needed as well.
-> >
-> > This seems like a potentially deep rabbit hole with a few checks to
-> > add all of the place. Is this blocking the series? AFAICT if XDP fails
-> > with mp-bound queues with a benign error, that seems fine to me; I
-> > don't have a use case for memory providers + xdp yet. This should only
-> > be blocking if someone can repro a very serious error (kernel crash)
-> > or something with this combination.
-> >
-> > I can try to add these checks locally and propose as a follow up
-> > series. Let me know if I'm on the right track with figuring out how to
-> > implement this, and, if you feel like it's blocking.
-> >
-> > --
-> > Thanks,
-> > Mina
->
-> I agree with the current approach, which uses the
-> dev_get_min_mp_channel_count() in the dev_xdp_attach().
-> The only problem that I am concerned about is the
-> dev_get_min_mp_channel_count() can't check lower interfaces.
-> So, how about just making the current code to be able to check lower
-> interfaces?
+> > > > If LTO is breaking noinline, then that has much larger implications for
+> > > > noinstr code and similar, and means that LTO is unsound...
+> > > 
+> > > The noinline attribute is preserved in LLVM IR, so it should continue
+> > > to work with LTO. Which function are we talking about here? Are you
+> > > sure the function was inlined instead of being dropped completely?
+> > > Does marking the function __used help?
+> > 
+> > We are talking about trace_selftest_startup_dynamic_tracing() in
+> > kernel/trace/trace_selftest.c. The callee is func() which is actually
+> > DYN_FTRACE_TEST_NAME() in kernel/trace/trace_selftest_dynamic.c.
+> > That function passed as pointer (but the compiler can embed it by constant
+> > propagation.)
+> 
+> Ah, so IIUC the function isn't being inlined; the call is being
+> optimized away becase callee() has no side-effects.
+> 
+> That can happen without LTO if the caller is in the same compilation
+> unit, and I have worked around that in the past by adding a barrier()
+> into the callee.
 
-Thank you for the code snippet! It's very useful! I have been
-wondering how to walk lower/upper devices!
+FWIW, that was in samples/ftrace/ftrace-ops.c, where tracee_relevant() and
+tracee_irrelevant() have the barrier():
 
-To be honest, I think maybe Jakub's suggestion to refactor all the
-->ndo_bpf calls needs to happen anyway. The reason is that there are
-->ndo_bpf calls in the core net stack, like net/xdp/xsk_buff_pool.c
-and kernel/bpf/offload.c. AFAICT we need to add checks in these places
-as well, so refactoring them into one place is nice?
+| /*
+|  * Marked as noinline to ensure that an out-of-line traceable copy is
+|  * generated by the compiler.
+|  *
+|  * The barrier() ensures the compiler won't elide calls by determining there
+|  * are no side-effects.
+|  */
+| static noinline void tracee_relevant(void)
+| {
+|         barrier();
+| }
 
-Note I sent the refactor for review. Sorry, I forgot to CC Taehee:
-https://patchwork.kernel.org/project/netdevbpf/patch/20240821045629.2856641=
--1-almasrymina@google.com/
+... so we already have precedent for that in tracing code.
 
-Additionally I'm wondering if we should disable adding mp-bound
-devices as slaves completely, regardless of xdp. My concern is that if
-the lower device is using unreadable memory, then the upper device may
-see unreadable memory in its code paths, and will not be expecting
-that, so it may break. From the look at the code, it looks like
-net/batman-adv calls ndo_add_slave, and a bunch of code that touches
-skb_frags:
-
-$ ackc -i ndo_add_slave
-soft-interface.c
-889:    .ndo_add_slave =3D batadv_softif_slave_add,
-
-$ ackc -i skb_frag
-fragmentation.c
-403:    struct sk_buff *skb_fragment;
-407:    skb_fragment =3D dev_alloc_skb(ll_reserved + mtu + tailroom);
-408:    if (!skb_fragment)
-411:    skb_fragment->priority =3D skb->priority;
-414:    skb_reserve(skb_fragment, ll_reserved + header_size);
-415:    skb_split(skb, skb_fragment, skb->len - fragment_size);
-418:    skb_push(skb_fragment, header_size);
-419:    memcpy(skb_fragment->data, frag_head, header_size);
-422:    return skb_fragment;
-441:    struct sk_buff *skb_fragment;
-513:            skb_fragment =3D batadv_frag_create(net_dev, skb, &frag_hea=
-der,
-515:            if (!skb_fragment) {
-522:                               skb_fragment->len + ETH_HLEN);
-523:            ret =3D batadv_send_unicast_skb(skb_fragment, neigh_node);
-
-If we disable ndo_add_slave on mp devices, then we don't need to walk
-lower or upper devices. What do you think? If we don't disable mp
-lower devices entirely, then yes, we can make
-dev_get_min_mp_channel_count() do a recursive check.
-
-Note that we can add support for mp bound devices as slaves in the
-future if we have a use case for it, and it's well tested to be safe
-with selftests added.
-
-If we disable adding mp devices as lower devices, then during the mp
-binding we should also check if the device has upper devices.
+Mark.
